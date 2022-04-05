@@ -2,117 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E85BD4F4037
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Apr 2022 23:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B94C24F42CA
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Apr 2022 23:51:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240752AbiDEUTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Apr 2022 16:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43876 "EHLO
+        id S243043AbiDEUT6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Apr 2022 16:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1443197AbiDEPjJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Apr 2022 11:39:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3197147AE3;
-        Tue,  5 Apr 2022 06:55:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 60F6AB81C6D;
-        Tue,  5 Apr 2022 13:55:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 109E2C385A8;
-        Tue,  5 Apr 2022 13:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649166904;
-        bh=t8pTv4fue03rDbmW0c2vFERKy3L8DUcOeDN48ij1fxs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flP9kT021gG4aSMIHS2JnxoXJiVwTz6Iy6PYbfItKeTEaEJLs/X4FSzl3/T7l3d3b
-         TZLzN8JBylLtsg7zih/IWefEfixHHNkyHIdsBmJlxa1N7uva7JIMx+5hD+R8rG7NMy
-         TSw0vo82sfIOY7r7olBbRXsErixaEMktVaZj9hf8NpOy/USUXOM4910eE98E6Xqlv0
-         dIUwMvhzGEt6GwF4SqMoaZ2MPDgXo57dxaaGIJXO4flUS3dcZefpNNOM/vAlcVLGyw
-         jWQe8aydmCs3ogiiyh9/PB5rSbNddZyQ5kGxmF0xx2XY0Frf9RLVXOUS3N2ZLgFzxD
-         hg+JeeiTZVpjw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nbjeA-001q4g-0J; Tue, 05 Apr 2022 14:55:02 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
-Subject: [PATCH v2 09/10] gpio: Update TODO to mention immutable irq_chip structures
-Date:   Tue,  5 Apr 2022 14:54:43 +0100
-Message-Id: <20220405135444.199295-10-maz@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220405135444.199295-1-maz@kernel.org>
-References: <20220405135444.199295-1-maz@kernel.org>
+        with ESMTP id S1458158AbiDERLc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Apr 2022 13:11:32 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8FD210FC9;
+        Tue,  5 Apr 2022 10:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649178574; x=1680714574;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8FLDvBJ8TPT/3p6/EmiWMYN4z3XTwsiEyt2sJI3V2fI=;
+  b=Lzy0JYR86o+X4VigqAaVWXVJDQJyiMgoghpPm8W3MDy9/poV918bG09L
+   /TyU+hb2GDklmj7fBpNG8/0nHP/OGvvtmihZ1evfWwwLg9T5hoVyTx5Nn
+   eGiFf2kwwlhaQKU70Mbt0rHV2lQEyq83CUXrPwbufqYjPT3YJ6CIoJzdY
+   IWsz82DuLhgZ7NKtn1/KJGvvzjuuzkMYj6FlDzbr3JdUFXbDBqBTgfZiU
+   Zd2BolqpLjLFsYxpL+NvfcxVaNOO9bWO5Yvn5OKlQYFFL6ZzFPDvnxpcT
+   j62nJHYJE9tH3TuNzpdNIyILFpsr/nx8ITOkLduOWweK0t8Y8VEkC97Zl
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="260983259"
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="260983259"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 10:08:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="505361177"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 05 Apr 2022 10:08:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 16FFA32E; Tue,  5 Apr 2022 20:02:54 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: alderlake: Fix register offsets for ADL-N variant
+Date:   Tue,  5 Apr 2022 20:02:51 +0300
+Message-Id: <20220405170251.72154-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com, joey.gouly@arm.com, jonathanh@nvidia.com, marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io, bjorn.andersson@linaro.org, agross@kernel.org, jeffrey.l.hugo@gmail.com, tglx@linutronix.de, Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-5 drivers are converted, a few hundred to go. Definitely worth of
-a TODO entry, in the hope that someone will notice it and do
-a bulk update.
+It appears that almost traditionally the N variants have deviations
+in the register offsets in comparison to S one. This is the case
+for Intel Alder Lake as well. Fix register offsets for ADL-N variant.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixes: 114b610b9048 ("pinctrl: alderlake: Add Intel Alder Lake-N pin controller support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/TODO | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/pinctrl/intel/pinctrl-alderlake.c | 60 +++++++++++++++--------
+ 1 file changed, 40 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index b8b1473a5b1e..f87ff3fa8a53 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -178,3 +178,22 @@ discussed but the idea is to provide a low-level access point
- for debugging and hacking and to expose all lines without the
- need of any exporting. Also provide ample ammunition to shoot
- oneself in the foot, because this is debugfs after all.
+diff --git a/drivers/pinctrl/intel/pinctrl-alderlake.c b/drivers/pinctrl/intel/pinctrl-alderlake.c
+index 32ba50efbceb..62dbd1e67513 100644
+--- a/drivers/pinctrl/intel/pinctrl-alderlake.c
++++ b/drivers/pinctrl/intel/pinctrl-alderlake.c
+@@ -14,11 +14,17 @@
+ 
+ #include "pinctrl-intel.h"
+ 
+-#define ADL_PAD_OWN	0x0a0
+-#define ADL_PADCFGLOCK	0x110
+-#define ADL_HOSTSW_OWN	0x150
+-#define ADL_GPI_IS	0x200
+-#define ADL_GPI_IE	0x220
++#define ADL_N_PAD_OWN		0x020
++#define ADL_N_PADCFGLOCK	0x080
++#define ADL_N_HOSTSW_OWN	0x0b0
++#define ADL_N_GPI_IS		0x100
++#define ADL_N_GPI_IE		0x120
 +
++#define ADL_S_PAD_OWN		0x0a0
++#define ADL_S_PADCFGLOCK	0x110
++#define ADL_S_HOSTSW_OWN	0x150
++#define ADL_S_GPI_IS		0x200
++#define ADL_S_GPI_IE		0x220
+ 
+ #define ADL_GPP(r, s, e, g)				\
+ 	{						\
+@@ -28,14 +34,28 @@
+ 		.gpio_base = (g),			\
+ 	}
+ 
+-#define ADL_COMMUNITY(b, s, e, g)			\
++#define ADL_N_COMMUNITY(b, s, e, g)			\
++	{						\
++		.barno = (b),				\
++		.padown_offset = ADL_N_PAD_OWN,		\
++		.padcfglock_offset = ADL_N_PADCFGLOCK,	\
++		.hostown_offset = ADL_N_HOSTSW_OWN,	\
++		.is_offset = ADL_N_GPI_IS,		\
++		.ie_offset = ADL_N_GPI_IE,		\
++		.pin_base = (s),			\
++		.npins = ((e) - (s) + 1),		\
++		.gpps = (g),				\
++		.ngpps = ARRAY_SIZE(g),			\
++	}
 +
-+Moving over to immutable irq_chip structures
-+
-+Most of the gpio chips implementing interrupt support rely on gpiolib
-+intercepting some of the irq_chip callbacks, preventing the structures
-+from being made read-only and forcing duplication of structures that
-+should otherwise be unique.
-+
-+The solution is to call into the gpiolib code when needed (resource
-+management, enable/disable or unmask/mask callbacks), and to let the
-+core code know about that by exposing a flag (IRQCHIP_IMMUTABLE) in
-+the irq_chip structure. The irq_chip structure can then be made unique
-+and const.
-+
-+A small number of drivers have been converted (pl061, tegra186, msm,
-+amd, apple), and can be used as examples of how to proceed with this
-+conversion. Note that drivers using the generic irqchip framework
-+cannot be converted yet, but watch this space!
++#define ADL_S_COMMUNITY(b, s, e, g)			\
+ 	{						\
+ 		.barno = (b),				\
+-		.padown_offset = ADL_PAD_OWN,		\
+-		.padcfglock_offset = ADL_PADCFGLOCK,	\
+-		.hostown_offset = ADL_HOSTSW_OWN,	\
+-		.is_offset = ADL_GPI_IS,		\
+-		.ie_offset = ADL_GPI_IE,		\
++		.padown_offset = ADL_S_PAD_OWN,		\
++		.padcfglock_offset = ADL_S_PADCFGLOCK,	\
++		.hostown_offset = ADL_S_HOSTSW_OWN,	\
++		.is_offset = ADL_S_GPI_IS,		\
++		.ie_offset = ADL_S_GPI_IE,		\
+ 		.pin_base = (s),			\
+ 		.npins = ((e) - (s) + 1),		\
+ 		.gpps = (g),				\
+@@ -342,10 +362,10 @@ static const struct intel_padgroup adln_community5_gpps[] = {
+ };
+ 
+ static const struct intel_community adln_communities[] = {
+-	ADL_COMMUNITY(0, 0, 66, adln_community0_gpps),
+-	ADL_COMMUNITY(1, 67, 168, adln_community1_gpps),
+-	ADL_COMMUNITY(2, 169, 248, adln_community4_gpps),
+-	ADL_COMMUNITY(3, 249, 256, adln_community5_gpps),
++	ADL_N_COMMUNITY(0, 0, 66, adln_community0_gpps),
++	ADL_N_COMMUNITY(1, 67, 168, adln_community1_gpps),
++	ADL_N_COMMUNITY(2, 169, 248, adln_community4_gpps),
++	ADL_N_COMMUNITY(3, 249, 256, adln_community5_gpps),
+ };
+ 
+ static const struct intel_pinctrl_soc_data adln_soc_data = {
+@@ -713,11 +733,11 @@ static const struct intel_padgroup adls_community5_gpps[] = {
+ };
+ 
+ static const struct intel_community adls_communities[] = {
+-	ADL_COMMUNITY(0, 0, 94, adls_community0_gpps),
+-	ADL_COMMUNITY(1, 95, 150, adls_community1_gpps),
+-	ADL_COMMUNITY(2, 151, 199, adls_community3_gpps),
+-	ADL_COMMUNITY(3, 200, 269, adls_community4_gpps),
+-	ADL_COMMUNITY(4, 270, 303, adls_community5_gpps),
++	ADL_S_COMMUNITY(0, 0, 94, adls_community0_gpps),
++	ADL_S_COMMUNITY(1, 95, 150, adls_community1_gpps),
++	ADL_S_COMMUNITY(2, 151, 199, adls_community3_gpps),
++	ADL_S_COMMUNITY(3, 200, 269, adls_community4_gpps),
++	ADL_S_COMMUNITY(4, 270, 303, adls_community5_gpps),
+ };
+ 
+ static const struct intel_pinctrl_soc_data adls_soc_data = {
 -- 
-2.34.1
+2.35.1
 
