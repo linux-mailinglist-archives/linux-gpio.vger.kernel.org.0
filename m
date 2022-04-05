@@ -2,61 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B99F4F4080
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Apr 2022 23:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 378BB4F41DC
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Apr 2022 23:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242986AbiDEUTy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Apr 2022 16:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40618 "EHLO
+        id S243091AbiDEUUB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Apr 2022 16:20:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355285AbiDEOmM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Apr 2022 10:42:12 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460F52250A
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Apr 2022 06:19:55 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id r13so26646253ejd.5
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Apr 2022 06:19:55 -0700 (PDT)
+        with ESMTP id S1351239AbiDEOz7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Apr 2022 10:55:59 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD1436174
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Apr 2022 06:22:47 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id p15so26647029ejc.7
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Apr 2022 06:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DX7l2sM9QqiFOKXhsLfPsQIRCmsC3YYcfigAqtbzngw=;
-        b=MIIuNLWwZ8KZnliB5S7EokleWD/rLB9gDpC+rSIhM934CcyyANhIJZVpIts8INYuek
-         43DojUsQl8/+1hmzew/jJYwNv8GRFitnp9+IE0TFrNQi4fHz3+SNNGBYRZFbuhM38tT4
-         +sEeCg+J4oLLfaLMQkcSiF4bGHcFq//+pDz+lx1omRM4p0/lP+xCgOyzBqUvMguk2Al7
-         SB2Savh02L/DSVDCdV1o5z0vgKttGVjH5G6g7bJQgZNH9xfrdeNU8914hipmWyEvqoDN
-         87GaAGwit9a/glHMnbyJTwSw+pY+vsu8JlHJqcZKU+T97MidDgCvsfn2RRFbTXobbBDt
-         OgtQ==
+        bh=ArxUbiuZW45zmoWln4XidCmaX5lVZ1fz/MoyRJCJrzc=;
+        b=WyjTjD250UOOOcaMHf+btUSOzVb6K4fm/+8z1PkXSK/d1lS8FXzz+mXdo9kmu5OIcx
+         MKkyTYyofz3b5Vdeg5aI689W4jqD2GlfZvq+x6mvB65xOMXIIMj/skrvI7JkKWu0OMPO
+         r4c1wLet+uix2eAIDBsv6a59HTkbAq1KSxQaxAb2t8YeCels8LsV7MDVmxGSPTIhplEE
+         9BnUP5JGLpftcJk0AJsqEew593rFq/693m+lsxAytlXFZidN8vVIBMkb72OKWo5DihUi
+         A/AQgGmjIL1tsTsaRc4042z0kbqax/Q1uiCSAcN8NvGxFe5cWAJRa0vYg0y5zHNjRIEo
+         7eAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DX7l2sM9QqiFOKXhsLfPsQIRCmsC3YYcfigAqtbzngw=;
-        b=0QA+yLzdkzdvSMZdtngmMkKgbsCX3NTvXY/gS8DwlFgSBFDAn6cKup2N/2ymrhptae
-         pPCPc+HYknRRLPU2pmTJzJXj1aChbKxSyrfXSLkCa4+bxBbI7/LMeidtnErEkdex4h+O
-         YjbOsbj1PmiAji0BEylx93iUIpRN/6vGONsQygj7Lqk3A5lXq2uYfNudL8D2A1Zi5dLe
-         qWHLEBsH2PzkPO0/htc1UWLsLClGizEygl8a1/vGZpU/2PZXbNSHaFJmrC6UlkbrIwfn
-         nfQoelsoMpdtY8CsON9LFD5ZOKIGOI+lwE69Y2Awu+0Aem1Z7qwUaEX6JKUkykmfDp6F
-         UYdA==
-X-Gm-Message-State: AOAM531iBfX+2seXn+dLXO34WKJ94gMgXt0dW/HJDRm33vCoEWCjbMrY
-        Z4F33x4K5BTXbGHnDt/691cyHPMPTbhTRSBjp8cysw==
-X-Google-Smtp-Source: ABdhPJxdkpcqywi0Dnnv3TZA7cMfATjjPrQEcps7eS+U2c2eZK6FJLlYj9QgffOiSwol2BYhsCWYsZ1FW7SXEGnJj+g=
-X-Received: by 2002:a17:907:968e:b0:6db:aed5:43c8 with SMTP id
- hd14-20020a170907968e00b006dbaed543c8mr3580349ejc.636.1649164793827; Tue, 05
- Apr 2022 06:19:53 -0700 (PDT)
+        bh=ArxUbiuZW45zmoWln4XidCmaX5lVZ1fz/MoyRJCJrzc=;
+        b=Sfzhvjh1E+7PxT9GA9u23CsZlkpm856HX1i3KhJeGWbg1JiDKb6S0kb8mc5fnwcrMS
+         jOUO6e/Jc+huoCq3oG/yEKZhqgACXUuFVoaiQ2PWtXtDUrUPIPD0z5Dm7gTwGR5rBYgi
+         8pFHutu+8LewPxh10PEXvs/psfszXEWGYF00urqAondwDY46LceSdzX4YTT6v5l5kxBo
+         xQqcbMW9DaGJJtrpf6DeD2lPudLciCcTGtMWqOFbBXQMywwep1LhK96o70SECjLfEKKk
+         7KlTXSkX6ClyDB1OvWFjHj51aBt62oJwGsSsfSzmqgf9ZYvh9sBYO7JCWmJgxHxQXRvH
+         d40Q==
+X-Gm-Message-State: AOAM530/tfDwpmIRy9q+n05W8bl6EPR2vM2WbfLYIrLVhL6h5CEmQPgE
+        ryK6yXwJq8uHfKQenOS6K+tVCUD+/rCjMhpyWYYK0LRBnq+uzw==
+X-Google-Smtp-Source: ABdhPJztxYX98yWbJiTDM/Z50zf4RY1c+niI0HpF/9BQcL7jg5QWmkDrDQxafYmWHSKH9gMMc5a8x+UTj0MNid8/b7I=
+X-Received: by 2002:a17:907:97cf:b0:6df:846f:ad0a with SMTP id
+ js15-20020a17090797cf00b006df846fad0amr3714997ejc.286.1649164965670; Tue, 05
+ Apr 2022 06:22:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1649085875.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1649085875.git.geert+renesas@glider.be>
+References: <20220405132158.33433-1-brgl@bgdev.pl>
+In-Reply-To: <20220405132158.33433-1-brgl@bgdev.pl>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 5 Apr 2022 15:19:43 +0200
-Message-ID: <CAMRc=MdapT5rWfijUDQYj-GDvJ8ZrrpnZ6dwScev0WirCsuAyQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio: rcar: Add-R-Car S4-8 GPIO support
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
+Date:   Tue, 5 Apr 2022 15:22:35 +0200
+Message-ID: <CAMRc=MdcVdJwB0zcJX0gVRWw-EhtTCs-eYtFc76p12PzZcLfeQ@mail.gmail.com>
+Subject: Re: [PATCH] API: rename gpiod_chip_find_line()
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -67,44 +65,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 4, 2022 at 5:29 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Tue, Apr 5, 2022 at 3:22 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
->         Hi Linus, Bartosz,
+> The name "find_line" is quite ambigous. We should indicate that the
+> purpose of this routine is to map the line name to its HW offset.
+> Kent suggested get_line_get_offset_from_name() which is hard to beat
+> when it comes to being explicit.
 >
-> This patch series adds support for the Renesas R-Car S4-8 Soc to the
-> R-Car GPIO DT bindings and driver.  It has been tested with i2c-gpio,
-> by reading the contents from the I2C EEPROMs on the Spider development
-> board.
->
-> Changes compared to v1:
->   - Drop RFC,
->   - Split series in DT bindings+driver and DTS series.
->
-> Thanks!
->
-> Geert Uytterhoeven (2):
->   dt-bindings: gpio: renesas,rcar-gpio: Add r8a779f0 support
->   gpio: rcar: Add R-Car Gen4 support
->
->  .../devicetree/bindings/gpio/renesas,rcar-gpio.yaml        | 5 +++++
->  drivers/gpio/gpio-rcar.c                                   | 7 +++++--
->  2 files changed, 10 insertions(+), 2 deletions(-)
->
-> --
-> 2.25.1
->
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                                             -- Linus Torvalds
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
 
-Applied, thanks!
+Ugh, this was of course supposed to be [libgpiod v2]. Sorry.
 
 Bart
