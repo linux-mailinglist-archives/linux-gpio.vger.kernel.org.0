@@ -2,59 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9D204F57A7
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 10:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C17C4F5D5C
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 14:20:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229883AbiDFG4Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Apr 2022 02:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41806 "EHLO
+        id S232197AbiDFMKj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Apr 2022 08:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377408AbiDFFwB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 01:52:01 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F73D344FE1;
-        Tue,  5 Apr 2022 22:09:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649221793; x=1680757793;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7akzH623VSv4BBE9/ra9/iPv62pdaCdpBK5z80L2VRs=;
-  b=jqov6GriHomjrrVGxh5CFqpZd0AhtAO/LykuWK0WIkYSjH4fsJBMkA8D
-   Jozos8DVbyjpxf9jeGWbFuwc74mf587+BvjUW3qBqK5cz3ABkEqF3wXr5
-   70tGoMeYyu+EkyZlL5MLSMH9ZnU02J8+m8gsdXvGIQlmbgKsNbucfbo1v
-   3a7ZaKPCkzAqlF3j1UppBnvKxILsdsSjvQ3XfKrBKcc8A0bgTLrC/I1Qp
-   l3Oi7JbCD2p2PskPoA/+4GJt84E7JYvdb+e1Lu+e8I6PcnCpDlapVKHJf
-   62NljGxTDeKd3UMRyeRTVVVSEWLgsTcgufIlmf1Dx17ED7cwrkluoSLHx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="259785423"
-X-IronPort-AV: E=Sophos;i="5.90,239,1643702400"; 
-   d="scan'208";a="259785423"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 22:09:53 -0700
-X-IronPort-AV: E=Sophos;i="5.90,239,1643702400"; 
-   d="scan'208";a="523776195"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 22:09:50 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 06 Apr 2022 08:09:48 +0300
-Date:   Wed, 6 Apr 2022 08:09:48 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: alderlake: Fix register offsets for
- ADL-N variant
-Message-ID: <Yk0gnG+oqpARzC+m@lahna>
-References: <20220405170251.72154-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220405170251.72154-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        with ESMTP id S230100AbiDFMKa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 08:10:30 -0400
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D9F491544A2;
+        Wed,  6 Apr 2022 00:53:37 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.90,239,1643641200"; 
+   d="scan'208";a="115880851"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 06 Apr 2022 16:53:37 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A2A75400F941;
+        Wed,  6 Apr 2022 16:53:35 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] pinctrl: renesas: Kconfig: Select PINCTRL_RZG2L if ARCH_RZG2L is enabled
+Date:   Wed,  6 Apr 2022 08:53:18 +0100
+Message-Id: <20220406075318.14385-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,12 +41,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 05, 2022 at 08:02:51PM +0300, Andy Shevchenko wrote:
-> It appears that almost traditionally the N variants have deviations
-> in the register offsets in comparison to S one. This is the case
-> for Intel Alder Lake as well. Fix register offsets for ADL-N variant.
-> 
-> Fixes: 114b610b9048 ("pinctrl: alderlake: Add Intel Alder Lake-N pin controller support")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+GPIO (PINCTRL) block is identical on Renesas RZ/G2L, RZ/G2UL and RZ/V2L
+SoC's, so instead of selecting PINCTRL_RZG2L config for each SoC select
+PINCTRL_RZG2L config option if ARCH_RZG2L is enabled. The ARCH_RZG2L
+config option is already selected by ARCH_R9A07G043, ARCH_R9A07G044 and
+ARCH_R9A07G054.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
+index 6b38720c56e3..217c8ca9896a 100644
+--- a/drivers/pinctrl/renesas/Kconfig
++++ b/drivers/pinctrl/renesas/Kconfig
+@@ -38,8 +38,7 @@ config PINCTRL_RENESAS
+ 	select PINCTRL_PFC_R8A77995 if ARCH_R8A77995
+ 	select PINCTRL_PFC_R8A779A0 if ARCH_R8A779A0
+ 	select PINCTRL_PFC_R8A779F0 if ARCH_R8A779F0
+-	select PINCTRL_RZG2L if ARCH_R9A07G044
+-	select PINCTRL_RZG2L if ARCH_R9A07G054
++	select PINCTRL_RZG2L if ARCH_RZG2L
+ 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
+ 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
+ 	select PINCTRL_PFC_SH7269 if CPU_SUBTYPE_SH7269
+-- 
+2.17.1
+
