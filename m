@@ -2,85 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7870B4F6347
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 17:34:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69DAB4F6486
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 18:08:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235866AbiDFPaY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Apr 2022 11:30:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50726 "EHLO
+        id S236534AbiDFPxo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Apr 2022 11:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236136AbiDFPaB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 11:30:01 -0400
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5F66B7487;
-        Wed,  6 Apr 2022 05:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649249231; x=1680785231;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wlWFg6t46t3NvWgILYEYk3MILOUFjuxD9AUfU8kuuVg=;
-  b=TCgXXVlkyLjNyEHKq0mtGbR0eaa55oDLcIf73AJth0ZmfoyiPIa5CFBx
-   Va8rzz7S0ZYI/Nf0Ld8rWfRuFuXoEP4Jp8ahOgWWNGIh68ae2cPle3ms+
-   GpgQxFw9tfTySzKB4rlY0qjdITuk2Wqlt2UZYaEVwfnG9w9fdUl8iEqJj
-   FksQplCOKsbEKt6+pA6W6LrlezzyBiaBd9oUWCex7F+4qN/qVdG4zYtpd
-   8pRRIATzMGWWwphdVo6+CySDC7Z0jBeJUBe6Sm/aIsDCmj2SUUju8xSE+
-   T/T75MQOs9Xh0PCorKBiEqM5Y4IJ+ONrg0rIkF2wxHsccKNFWpyO/4vfE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="321729238"
-X-IronPort-AV: E=Sophos;i="5.90,239,1643702400"; 
-   d="scan'208";a="321729238"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2022 05:44:41 -0700
-X-IronPort-AV: E=Sophos;i="5.90,239,1643702400"; 
-   d="scan'208";a="523909218"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2022 05:44:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nc509-000DvT-HH;
-        Wed, 06 Apr 2022 15:43:09 +0300
-Date:   Wed, 6 Apr 2022 15:43:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: alderlake: Fix register offsets for
- ADL-N variant
-Message-ID: <Yk2K3T0dLrBWgjPS@smile.fi.intel.com>
-References: <20220405170251.72154-1-andriy.shevchenko@linux.intel.com>
- <Yk0gnG+oqpARzC+m@lahna>
+        with ESMTP id S236570AbiDFPxc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 11:53:32 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAEC58F736;
+        Wed,  6 Apr 2022 06:17:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=94sQlQmKAhs+bhZl9YeISZUchG1U5ciTRG/I6OMRF+E=; b=2mWpJbh/i+hFie80O/CmsQdpfd
+        XAejkE9gd5BDMAg12TWppD0Ul7D43s3rge8vIfIpv8UIH3kcw2A3W0bg+n6YOyG985IhwzfpYNzyU
+        scYJqqfIDqGUG/y9WFhaR+94GgCoBNB3OaZa7JZwqGyoBukl8AfnHuQ8qBNMz7fIWuUg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1nc4ti-00ERc1-7z; Wed, 06 Apr 2022 14:36:30 +0200
+Date:   Wed, 6 Apr 2022 14:36:30 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        kostap@marvell.com, robert.marko@sartura.hr,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/4] pinctrl: mvebu: pinctrl driver for 98DX2530 SoC
+Message-ID: <Yk2JTo91sZHunEpN@lunn.ch>
+References: <20220406032158.1449049-1-chris.packham@alliedtelesis.co.nz>
+ <20220406032158.1449049-3-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yk0gnG+oqpARzC+m@lahna>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220406032158.1449049-3-chris.packham@alliedtelesis.co.nz>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 06, 2022 at 08:09:48AM +0300, Mika Westerberg wrote:
-> On Tue, Apr 05, 2022 at 08:02:51PM +0300, Andy Shevchenko wrote:
-> > It appears that almost traditionally the N variants have deviations
-> > in the register offsets in comparison to S one. This is the case
-> > for Intel Alder Lake as well. Fix register offsets for ADL-N variant.
-> > 
-> > Fixes: 114b610b9048 ("pinctrl: alderlake: Add Intel Alder Lake-N pin controller support")
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Wed, Apr 06, 2022 at 03:21:56PM +1200, Chris Packham wrote:
+> This pinctrl driver supports the 98DX25xx and 98DX35xx family of chips
+> from Marvell. It is based on the Marvell SDK with additions for various
+> (non-gpio) pin configurations based on the datasheet.
 > 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> ---
+> 
+> Notes:
+>     Changes in v3:
+>     - Use mmio instead of syscon
 
-Pushed for fixes, thanks!
+Hi Chris
 
--- 
-With Best Regards,
-Andy Shevchenko
+syscon is used when the register space is shared with other
+devices. Is that not the case here? You can share mmio spaces, but you
+have to use the correct call to reserve it, so that the system knows
+it is to be shared. Or are all the pinctl registers contiguous and you
+are only reserve just the registers you need, leaving other drivers
+fee to take what they need?
 
+I'm just trying to ensure you are not going to have trouble later when
+you add other drivers.
 
+    Andrew
