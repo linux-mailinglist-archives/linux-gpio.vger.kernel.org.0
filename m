@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2802B4F6EA4
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 01:37:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08A204F6EA9
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 01:37:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238039AbiDFXjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Apr 2022 19:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59458 "EHLO
+        id S238066AbiDFXjX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Apr 2022 19:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237934AbiDFXjR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 19:39:17 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8034B1FE261
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Apr 2022 16:37:12 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id fu5so3999207pjb.1
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Apr 2022 16:37:12 -0700 (PDT)
+        with ESMTP id S237965AbiDFXjS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 19:39:18 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AEBB1FE57E
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Apr 2022 16:37:14 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id ku13-20020a17090b218d00b001ca8fcd3adeso7302026pjb.2
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Apr 2022 16:37:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=pensando.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vbl0tI5xWg5AbixL0vHnmPtEGDrnQab/dcpQD6r+8gY=;
-        b=lz4NLZqcbFnGC7NhpX3Lae6m6aNJN8k/gEoTYdschgXlHu6O6EOfvqWnLyJ2cCIfdQ
-         zg3Pevrwe8qeihORSIEva+g+tiakkbGcenhQKaqJarxzZ1vz0Fi/Ej7yv5Z9Rt2Dvgib
-         t1Yzo7LVZHrxMmmRU7+IvC6AkrEPgAxurGHO7sA1h9aYOK2d0IagsOxHfbjlSFnFo9Lb
-         XLUISq3b+lJe8Rl4YOem0xLXPK7wZXEr+fyruSKRzReiwFr837+08CQqzymNJU8zxluH
-         a1x+w0KoazDUm7ueKBF72kCKsxrpKEnShQhYA5EJ9kdrPmSjida07C6DhJcXnEENKv3a
-         hJPA==
+        bh=gIzwccQNstjbI8Jl7SR9taQgWIVFJXtb5BS39OaAyj4=;
+        b=tJSle1eBYuyRF/RzNLAbOHjceFghTYZ48wwtBV/h/pv2SngLWpQ/HePZR8bo4tZjkA
+         ed7bgmE43wrskvYyLBX3FUuGPM8Ubn4nhrtimazbTf+wPJsEzkhp6NVByy2KHNNYWuE5
+         NnBUffUZnblWHOe7wV3LPB9pI4rL22+Fon+K13e2nf9tFYv4lWzH4/kwGw9++j54TYTE
+         2E34E0EFg//jGbw/L4pc4O+1MlumBxoPQcHWyD2fdoJbG1Ciez1+5DQIyeHJmyiSO0GW
+         72P8Wca/hV4kX/JWqY8AJJ/4jRSMeImIVvD0H5UpApwWtPLEiFGENCn0nTTtvLlwisDJ
+         1PKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=vbl0tI5xWg5AbixL0vHnmPtEGDrnQab/dcpQD6r+8gY=;
-        b=unrufQ9eMGFXtKNTsK0I3jXAdjib4YfCCwL+dYo0mESvVFTkQObRjEpTsBVRpb8UP6
-         1Y/uRs8CjjnLPYZZqbjtJXMKqn7hBoV42UPhEDJYn2bCOhbxswN+clPu7CZm69sY77mi
-         v8Us0TViM+4Tj/n3gJkacHWsrgUModkp0Yh1BBIri6EbNCqfvHAOdwZ/jM5xoeBkRP+b
-         ErKXQ6gTd2pKMA9i9Nk4cIY9bBfPygZ8zhpiIRhPP9LnqrBTMgFdobba4OHYNsf3rcZN
-         g9etQTepRh7jsehbsPyqNKQO8tykQjIDSNHPqMr1OFHu0+Z0RdEbGs4TrFDBhwU6TNi1
-         98kA==
-X-Gm-Message-State: AOAM530+UpUr1GqtFipJmucc/OHPdiLHALw8QbYeUuhvvZxiE2N0EyV6
-        3GiMlzqCv6CxIigejtWsR4J0fw==
-X-Google-Smtp-Source: ABdhPJzNbeu9YbyTYgQk5M1AHgqT1izjhc3Ykg1Y14Qdk9e6F6VJyciuXGztQIPXioXWLdqBuiLAXw==
-X-Received: by 2002:a17:90a:4897:b0:1c7:5fce:cbcd with SMTP id b23-20020a17090a489700b001c75fcecbcdmr12753579pjh.45.1649288231948;
-        Wed, 06 Apr 2022 16:37:11 -0700 (PDT)
+        bh=gIzwccQNstjbI8Jl7SR9taQgWIVFJXtb5BS39OaAyj4=;
+        b=Hlifa7S5O7+Tyqo2imGkLeBYD6yRnCeQYpKWr+KSDkkwDGOCCwnuWZX3mqkcY0fwvB
+         d0gO/sHy+359cfgwvNEi2BtBDty/3zfA4TKhJFltzFM3h/KPDQJ8e2RB4+No45X2/JrN
+         h1mc1TL708f+dR+5naaCCes+iTO1dxdxcFX5Bu/CsqikXcEgtJvn71WA2YSot2tY2JjX
+         9qK56q2savM9PxWdqwPbeEa7OgdVGz5hWghH67rpXcr7pzoLl21L7Q3XCLp3pB/pWN6F
+         NpoGPmXA11g4+IwkN+9r7G45SNDXdx+2VYB6Lz22wNapW8igNUsbdKgbJAjKCkMuJENp
+         baKA==
+X-Gm-Message-State: AOAM531VvxGJBc85wlO6J3343XNyhPiGBan+erYYp4odVXZifI/s9/FS
+        fvCJ2w2aj9vIFdhK9/iilfjREA==
+X-Google-Smtp-Source: ABdhPJx5p2ryl+phBOsVWDdOQDKQvRDAZg+iuAsPG+ozWuTx1ku7n25dB4S8JPxvOXVotqcTQykyXg==
+X-Received: by 2002:a17:90b:3b50:b0:1c7:5d55:3cb8 with SMTP id ot16-20020a17090b3b5000b001c75d553cb8mr12740813pjb.78.1649288233781;
+        Wed, 06 Apr 2022 16:37:13 -0700 (PDT)
 Received: from platform-dev1.pensando.io ([12.226.153.42])
-        by smtp.gmail.com with ESMTPSA id m21-20020a17090a7f9500b001c97c6bcaf4sm6903667pjl.39.2022.04.06.16.37.10
+        by smtp.gmail.com with ESMTPSA id m21-20020a17090a7f9500b001c97c6bcaf4sm6903667pjl.39.2022.04.06.16.37.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 16:37:11 -0700 (PDT)
+        Wed, 06 Apr 2022 16:37:13 -0700 (PDT)
 From:   Brad Larson <brad@pensando.io>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com,
@@ -54,9 +54,9 @@ Cc:     arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         brad@pensando.io, dac2@pensando.io, linux-gpio@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/11] dt-bindings: spi: Add compatible for Pensando Elba SoC
-Date:   Wed,  6 Apr 2022 16:36:41 -0700
-Message-Id: <20220406233648.21644-5-brad@pensando.io>
+Subject: [PATCH 05/11] dt-bindings: spi: dw: Add Pensando Elba SoC SPI Controller bindings
+Date:   Wed,  6 Apr 2022 16:36:42 -0700
+Message-Id: <20220406233648.21644-6-brad@pensando.io>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220406233648.21644-1-brad@pensando.io>
 References: <20220406233648.21644-1-brad@pensando.io>
@@ -69,35 +69,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document the cadence qspi controller compatible for Pensando Elba SoC
-boards.  The Elba qspi fifo size is 1024.
+The Pensando Elba SoC has integrated the DW APB SPI Controller
+and requires the property pensando,syscon-spics for access
+to the spics control register.
 
 Signed-off-by: Brad Larson <brad@pensando.io>
 ---
- Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Change from V3:
+- Add required property pensando,syscon-spics to go with
+  pensando,elba-spi
 
-diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-index 0a537fa3a641..bc298e413842 100644
---- a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-+++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-@@ -30,6 +30,7 @@ properties:
-               - intel,lgm-qspi
-               - xlnx,versal-ospi-1.0
-               - intel,socfpga-qspi
-+              - pensando,elba-qspi
-           - const: cdns,qspi-nor
-       - const: cdns,qspi-nor
+ .../bindings/spi/snps,dw-apb-ssi.yaml           | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+index d7e08b03e204..41c3bbf5a55c 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+@@ -37,6 +37,21 @@ allOf:
+     else:
+       required:
+         - interrupts
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - pensando,elba-spi
++    then:
++      properties:
++        pensando,syscon-spics:
++          $ref: /schemas/types.yaml#/definitions/phandle
++          description:
++            Phandle to the system control device node which provides access to
++            the spics control register
++      required:
++        - pensando,syscon-spics
  
-@@ -48,7 +49,7 @@ properties:
-     description:
-       Size of the data FIFO in words.
-     $ref: "/schemas/types.yaml#/definitions/uint32"
--    enum: [ 128, 256 ]
-+    enum: [ 128, 256, 1024 ]
-     default: 128
+ properties:
+   compatible:
+@@ -73,6 +88,8 @@ properties:
+               - renesas,r9a06g032-spi # RZ/N1D
+               - renesas,r9a06g033-spi # RZ/N1S
+           - const: renesas,rzn1-spi   # RZ/N1
++      - description: Pensando SoC SPI Controller
++        const: pensando,elba-spi
  
-   cdns,fifo-width:
+   reg:
+     minItems: 1
 -- 
 2.17.1
 
