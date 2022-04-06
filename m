@@ -2,38 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C17C4F5D5C
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 14:20:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E07784F61AF
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 16:37:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232197AbiDFMKj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Apr 2022 08:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43508 "EHLO
+        id S234921AbiDFOhK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Apr 2022 10:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230100AbiDFMKa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 08:10:30 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D9F491544A2;
-        Wed,  6 Apr 2022 00:53:37 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.90,239,1643641200"; 
-   d="scan'208";a="115880851"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 06 Apr 2022 16:53:37 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A2A75400F941;
-        Wed,  6 Apr 2022 16:53:35 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] pinctrl: renesas: Kconfig: Select PINCTRL_RZG2L if ARCH_RZG2L is enabled
-Date:   Wed,  6 Apr 2022 08:53:18 +0100
-Message-Id: <20220406075318.14385-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        with ESMTP id S234910AbiDFOg4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 10:36:56 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A0AF955C
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Apr 2022 20:22:36 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9B1932C099C;
+        Wed,  6 Apr 2022 03:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1649215353;
+        bh=seiZ/zSp40ediZ6FUmAYZUa2TlaIBma6k+oU9iypC9Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=p7kUNgincIv8zKjRb34f5nPBGVG90YYSEtTUwz7W9x48PS6ccq4ecNp+Iwbx3x9P2
+         iSotw5k7jId6xOeiJM5AiDSrbX7qE/5eBzW+T7oeNci5iTsuV0TnEod1jOBIKCemta
+         eK+CtEizFevPRQpzW6QYI1ILysq/M2nlh5Lw7V4q0cbYONrZfNRGjuqXOfrvxsfl49
+         f5aWQEt09mqqiXHDru3j5uQgoLNz8CRAGBR5y35vddijh3/UIlj/otEjJOFl3XES+s
+         gIkbiKh4p6nY6A5+Ys9JXZ5YpnhAy00wjAFg+9L0HGeMgRXmE0h1/ftIwxOXYkuDaX
+         Nq8gV5gYWEXlQ==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B624d07790000>; Wed, 06 Apr 2022 15:22:33 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by pat.atlnz.lc (Postfix) with ESMTP id 3D98013EE37;
+        Wed,  6 Apr 2022 15:22:33 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id A97D62A2679; Wed,  6 Apr 2022 15:22:28 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        kostap@marvell.com, robert.marko@sartura.hr
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v3 0/4] arm64: mvebu: Support for Marvell 98DX2530 (and variants)
+Date:   Wed,  6 Apr 2022 15:21:54 +1200
+Message-Id: <20220406032158.1449049-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=JcrCUnCV c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=z0gMJWrwH1QA:10 a=jGREw9QuPlHGdXEqdN8A:9
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -41,31 +64,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO (PINCTRL) block is identical on Renesas RZ/G2L, RZ/G2UL and RZ/V2L
-SoC's, so instead of selecting PINCTRL_RZG2L config for each SoC select
-PINCTRL_RZG2L config option if ARCH_RZG2L is enabled. The ARCH_RZG2L
-config option is already selected by ARCH_R9A07G043, ARCH_R9A07G044 and
-ARCH_R9A07G054.
+This series adds support for the Marvell 98DX2530 SoC which is the Contro=
+l and
+Management CPU integrated into the AlleyCat5/AlleyCat5X series of Marvell
+switches.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/pinctrl/renesas/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The CPU core is an ARM Cortex-A55 with neon, simd and crypto extensions.
 
-diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index 6b38720c56e3..217c8ca9896a 100644
---- a/drivers/pinctrl/renesas/Kconfig
-+++ b/drivers/pinctrl/renesas/Kconfig
-@@ -38,8 +38,7 @@ config PINCTRL_RENESAS
- 	select PINCTRL_PFC_R8A77995 if ARCH_R8A77995
- 	select PINCTRL_PFC_R8A779A0 if ARCH_R8A779A0
- 	select PINCTRL_PFC_R8A779F0 if ARCH_R8A779F0
--	select PINCTRL_RZG2L if ARCH_R9A07G044
--	select PINCTRL_RZG2L if ARCH_R9A07G054
-+	select PINCTRL_RZG2L if ARCH_RZG2L
- 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
- 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
- 	select PINCTRL_PFC_SH7269 if CPU_SUBTYPE_SH7269
--- 
-2.17.1
+This is fairly similar to the Armada-3700 SoC so most of the required
+peripherals are already supported. This series adds a devicetree and pinc=
+trl
+driver for the SoC and the RD-AC5X-32G16HVG6HLG reference board.
+
+In the v3 series I've dropped out a few patches. The MMC stuff is more
+complicated than just adding a compatible string. The mvneta changes have=
+ gone
+in via net-next.
+
+Chris Packham (4):
+  dt-bindings: pinctrl: mvebu: Document bindings for AC5
+  pinctrl: mvebu: pinctrl driver for 98DX2530 SoC
+  arm64: dts: marvell: Add Armada 98DX2530 SoC and RD-AC5X board
+  arm64: marvell: enable the 98DX2530 pinctrl driver
+
+ .../bindings/pinctrl/marvell,ac5-pinctrl.yaml |  72 +++++
+ arch/arm64/Kconfig.platforms                  |   2 +
+ arch/arm64/boot/dts/marvell/Makefile          |   1 +
+ .../boot/dts/marvell/armada-98dx2530.dtsi     | 302 ++++++++++++++++++
+ arch/arm64/boot/dts/marvell/rd-ac5x.dts       |  74 +++++
+ drivers/pinctrl/mvebu/Kconfig                 |   4 +
+ drivers/pinctrl/mvebu/Makefile                |   1 +
+ drivers/pinctrl/mvebu/pinctrl-ac5.c           | 261 +++++++++++++++
+ 8 files changed, 717 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,ac5=
+-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-98dx2530.dtsi
+ create mode 100644 arch/arm64/boot/dts/marvell/rd-ac5x.dts
+ create mode 100644 drivers/pinctrl/mvebu/pinctrl-ac5.c
+
+--=20
+2.35.1
 
