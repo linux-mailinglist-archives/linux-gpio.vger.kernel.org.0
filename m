@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E43514F6ECD
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 01:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2802B4F6EA4
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 01:37:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237907AbiDFXjt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Apr 2022 19:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59488 "EHLO
+        id S238039AbiDFXjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Apr 2022 19:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237908AbiDFXjR (ORCPT
+        with ESMTP id S237934AbiDFXjR (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 19:39:17 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFEF71FD56C
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Apr 2022 16:37:09 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id s2so3910334pfh.6
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Apr 2022 16:37:09 -0700 (PDT)
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8034B1FE261
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Apr 2022 16:37:12 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id fu5so3999207pjb.1
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Apr 2022 16:37:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=pensando.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0OrPaJyrNtxdYQN2eUUc53MSYLY563Wz1I/VuReoN00=;
-        b=Dbg6SprLBcZ/b+fA0iU9Xy+06BmvDC2M6BrIIsneZxH5B4//nq+XUL431w4efQ5rL3
-         8N8kA5Yg7I/wIxbqnKh5WgI/hwl9bQfrxlYHE29WJoeTMhuZZVsPinrLf+g52Nd0qnLh
-         sBjOnKCa/sTDmuScW4GN/5Eht4Wji1OlUf4OPloSwCqyx18qR8D4D62NLMEU5psH2hS1
-         uLkteB1vO06tjmYLlmkLnx3okSIcrjLPJpOi+nLMpKvDLaJAcNi4MRdtVBdDHJMmPjHI
-         k+U/78EiYPCHWXZSQKLRkpraXX1zNwG4p0Fw8OzjiGrbabHFv+UyA8a6bviZTodNkW7e
-         vO8A==
+        bh=vbl0tI5xWg5AbixL0vHnmPtEGDrnQab/dcpQD6r+8gY=;
+        b=lz4NLZqcbFnGC7NhpX3Lae6m6aNJN8k/gEoTYdschgXlHu6O6EOfvqWnLyJ2cCIfdQ
+         zg3Pevrwe8qeihORSIEva+g+tiakkbGcenhQKaqJarxzZ1vz0Fi/Ej7yv5Z9Rt2Dvgib
+         t1Yzo7LVZHrxMmmRU7+IvC6AkrEPgAxurGHO7sA1h9aYOK2d0IagsOxHfbjlSFnFo9Lb
+         XLUISq3b+lJe8Rl4YOem0xLXPK7wZXEr+fyruSKRzReiwFr837+08CQqzymNJU8zxluH
+         a1x+w0KoazDUm7ueKBF72kCKsxrpKEnShQhYA5EJ9kdrPmSjida07C6DhJcXnEENKv3a
+         hJPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0OrPaJyrNtxdYQN2eUUc53MSYLY563Wz1I/VuReoN00=;
-        b=xvAH77mPbb+tahmrNliinwNa4xbB5Qr9Ou/wTP2F2BZw7YAEHhRHgtLhSJAXKo5hQI
-         j8Juv/WQDo2d43gVueEdqNKxxv2A6/zupV6L+y2uE+ogqFuBC3uZL3pdZ3anlC5StoKn
-         FGBk6qIbEZVWKop8QKB6ZfV7SGziv/Ym8Oe6ohHwefrPdBtPxCKoy0rzS6y5spM6Zvpl
-         EByujARW7Voxfq5/mU7PU1+ogErkyhM4JTcHmh1hl8KRO/e5LO6rNXOwXkm1hfUurOl0
-         zLq1iXteHlpde7e07xP8bQWUuv7b30UOYR6CpijkPR79PqUTLUHWhqY++MaaTjQMIRcA
-         FrCw==
-X-Gm-Message-State: AOAM531OYjhDBjXj73PqioQOQQOpfPFju6+UxodTWu/TAWrBiubSnOVU
-        MoF7FyEUvH7JTW5h35LGS90l/w==
-X-Google-Smtp-Source: ABdhPJy16RLl1fbmdH/DVh4KgzoGeIdWjm0Exvh4PryssRnqUrTSm9dnSx3oYd3qoOZxW5jIO5aCWQ==
-X-Received: by 2002:a63:b24b:0:b0:398:9894:b8be with SMTP id t11-20020a63b24b000000b003989894b8bemr9237480pgo.108.1649288229198;
-        Wed, 06 Apr 2022 16:37:09 -0700 (PDT)
+        bh=vbl0tI5xWg5AbixL0vHnmPtEGDrnQab/dcpQD6r+8gY=;
+        b=unrufQ9eMGFXtKNTsK0I3jXAdjib4YfCCwL+dYo0mESvVFTkQObRjEpTsBVRpb8UP6
+         1Y/uRs8CjjnLPYZZqbjtJXMKqn7hBoV42UPhEDJYn2bCOhbxswN+clPu7CZm69sY77mi
+         v8Us0TViM+4Tj/n3gJkacHWsrgUModkp0Yh1BBIri6EbNCqfvHAOdwZ/jM5xoeBkRP+b
+         ErKXQ6gTd2pKMA9i9Nk4cIY9bBfPygZ8zhpiIRhPP9LnqrBTMgFdobba4OHYNsf3rcZN
+         g9etQTepRh7jsehbsPyqNKQO8tykQjIDSNHPqMr1OFHu0+Z0RdEbGs4TrFDBhwU6TNi1
+         98kA==
+X-Gm-Message-State: AOAM530+UpUr1GqtFipJmucc/OHPdiLHALw8QbYeUuhvvZxiE2N0EyV6
+        3GiMlzqCv6CxIigejtWsR4J0fw==
+X-Google-Smtp-Source: ABdhPJzNbeu9YbyTYgQk5M1AHgqT1izjhc3Ykg1Y14Qdk9e6F6VJyciuXGztQIPXioXWLdqBuiLAXw==
+X-Received: by 2002:a17:90a:4897:b0:1c7:5fce:cbcd with SMTP id b23-20020a17090a489700b001c75fcecbcdmr12753579pjh.45.1649288231948;
+        Wed, 06 Apr 2022 16:37:11 -0700 (PDT)
 Received: from platform-dev1.pensando.io ([12.226.153.42])
-        by smtp.gmail.com with ESMTPSA id m21-20020a17090a7f9500b001c97c6bcaf4sm6903667pjl.39.2022.04.06.16.37.07
+        by smtp.gmail.com with ESMTPSA id m21-20020a17090a7f9500b001c97c6bcaf4sm6903667pjl.39.2022.04.06.16.37.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 16:37:08 -0700 (PDT)
+        Wed, 06 Apr 2022 16:37:11 -0700 (PDT)
 From:   Brad Larson <brad@pensando.io>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com,
@@ -54,9 +54,9 @@ Cc:     arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         brad@pensando.io, dac2@pensando.io, linux-gpio@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/11] dt-bindings: mmc: Add Pensando Elba SoC binding
-Date:   Wed,  6 Apr 2022 16:36:40 -0700
-Message-Id: <20220406233648.21644-4-brad@pensando.io>
+Subject: [PATCH 04/11] dt-bindings: spi: Add compatible for Pensando Elba SoC
+Date:   Wed,  6 Apr 2022 16:36:41 -0700
+Message-Id: <20220406233648.21644-5-brad@pensando.io>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220406233648.21644-1-brad@pensando.io>
 References: <20220406233648.21644-1-brad@pensando.io>
@@ -69,37 +69,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Pensando Elba ARM 64-bit SoC is integrated with this IP and
-explicitly controls byte-lane enables resulting in an additional
-reg property resource.
+Document the cadence qspi controller compatible for Pensando Elba SoC
+boards.  The Elba qspi fifo size is 1024.
 
 Signed-off-by: Brad Larson <brad@pensando.io>
 ---
-Change from V3:
-- Change from elba-emmc to elba-sd4hc to match file convention
-- Use minItems: 1 and maxItems: 2 to pass schema check
+ Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-index 4207fed62dfe..278a71b27488 100644
---- a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-+++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-@@ -19,10 +19,12 @@ properties:
-       - enum:
-           - microchip,mpfs-sd4hc
-           - socionext,uniphier-sd4hc
-+          - pensando,elba-sd4hc
-       - const: cdns,sd4hc
+diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+index 0a537fa3a641..bc298e413842 100644
+--- a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
++++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+@@ -30,6 +30,7 @@ properties:
+               - intel,lgm-qspi
+               - xlnx,versal-ospi-1.0
+               - intel,socfpga-qspi
++              - pensando,elba-qspi
+           - const: cdns,qspi-nor
+       - const: cdns,qspi-nor
  
-   reg:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 2
+@@ -48,7 +49,7 @@ properties:
+     description:
+       Size of the data FIFO in words.
+     $ref: "/schemas/types.yaml#/definitions/uint32"
+-    enum: [ 128, 256 ]
++    enum: [ 128, 256, 1024 ]
+     default: 128
  
-   interrupts:
-     maxItems: 1
+   cdns,fifo-width:
 -- 
 2.17.1
 
