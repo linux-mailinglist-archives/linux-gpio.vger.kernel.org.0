@@ -2,58 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 347E04F6CCE
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 23:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D8BB4F6CE5
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Apr 2022 23:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiDFVel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Apr 2022 17:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58250 "EHLO
+        id S236375AbiDFVjp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Apr 2022 17:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236243AbiDFVeL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 17:34:11 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BB115D38E
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Apr 2022 13:48:44 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id z12so6142231lfu.10
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Apr 2022 13:48:44 -0700 (PDT)
+        with ESMTP id S237039AbiDFVh5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 17:37:57 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1118C156099
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Apr 2022 13:54:03 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id b21so6193118lfb.5
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Apr 2022 13:54:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=eeGHdFfh5VhQWNvv5IFYwXioLDFPoHM5b7mw7PLA+Oo=;
-        b=gqbWoV/kiWZJFr/o6xg5LiTaLGAZKRFrQsVB3xLZ5qktjkhLciIwU8BmW//ENNHo1L
-         jBqAsYnCUMOxLRjxz9Qs4bbv2v5u2kQdSag28FxlJIJERO+2LHtjbaSzGQDlevofCRmW
-         aHna3sugKFIgypYlWhxiYjucf75l0ZRMnE7Q6InNOI3YaX0HPoHj4jNAJ6JbvzQX95J4
-         B6QGWGONgtKB5VOW+FH8J6gaqtTNNdRjcI/p+/+LvR5E0Osj6V3ifuJ4FDILRgTWJOyy
-         LGaK6hwQnssoeVLUkulwCGypAnAQNDa5lK4gPFgQuVQ0yox33FOUzy8G4SSDyTMMhjwS
-         U2TQ==
+        b=YNHEYGfNZMp6swwFFqRx8OevK88MjuRAO/DMMsFvFnPR3cMlwqKW3HruQ8fnVZjiPm
+         Nj3hakK+mGhPMgH5GxK5Y/DIHF1sNsqYVBFzl2hfE2haRB20ICOd9yuG0AXFcd/dCc6B
+         pcGORDX70MDxYC3wZyIin8RKgytWDUT4a0ip7k0wX7s5p/6Q60qTONZIQrmlW24KbZAP
+         eKXFiewoV3Mbyv19mv2qCjwzhXADmtyFlZ1Q7+jDFR2/w0MQQ4NoztmuzfSSRt4w8Wu2
+         R3PGe2coK41p7nZoyc9mnEVLpmW1+y4huGJvmMarll0a9zCsZuxsY1ZrAW4ZH4Kx5QmJ
+         SCdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=eeGHdFfh5VhQWNvv5IFYwXioLDFPoHM5b7mw7PLA+Oo=;
-        b=3XYSzauAX8N6+F7/V9S4CLGdmbwsKmk8dpcYmQwkdz833J9gEhPtf287RT5jFCihno
-         D0MQdUGrV/Z6CqbaMZy6vQxG4lKrdzruP8UuATMedz0Iqzv5wy7s5yQc46s9XsZ5QorV
-         y67F7h9qcObLX6aPAN7WiqPYFC47nPUwtjRjWBJiR7LBOu+e/F5VYYhmZfI+dN85wCes
-         mvy/lFr7c0W3Xcr0pjsEpv1lHzwaDRYOIIp3YG2y+NdeWzGmjEI8mKjs9g8xKH/BcAFe
-         T0oviMgcdbaMm2HYHke54QuSujtYExIV0cxl79LA3ON3B+CeGIXuNwqfThCQv+q0jRfg
-         cDoQ==
-X-Gm-Message-State: AOAM531g2WE6pg3Bn8G1GXO+pWADhZzBu7hcW3hPCfCO3q0u7jBsdO7x
-        2bJ6cWUWee5dW7g5T70dUa8gfWW5cM8K/Q==
-X-Google-Smtp-Source: ABdhPJyLZ/flM7Yt8jJCF5uMkaawU5E0ukrw/3T4hgpUEbBCezcYNAVzVaZTTw+H7CGvC/+pwTVcAQ==
-X-Received: by 2002:a05:6512:1516:b0:448:39b8:d603 with SMTP id bq22-20020a056512151600b0044839b8d603mr6999611lfb.599.1649278122737;
-        Wed, 06 Apr 2022 13:48:42 -0700 (PDT)
+        b=5i6QAdktnzEK814QSdjx5CgHMjr10cDo0VpLauKjeHU1FVrNCYJ2B7KtoUcB9eqRmq
+         xw94kOa9vFTGwSL5KvTK/JGCxP66O0Rmtt/Dd8pH7r3wB1EQvxydhSKfKsEejtxwE7DU
+         VyLh3TGrXVeXHKbqM17aL3V1nh2BDEh6zrlexEWeAVkE+ecnqRndERjalLmi3vipkAE6
+         AmkTm04UIyQJztQ/L3pDpdMiY6pf5K0dD0AcXD2gyy2p5vYh0BZq3mk3PfLy9Dd+MSjZ
+         06wP/hARaS74p7PqlJMuYNpKEqqmuLMMhZdiFqKFeRaXTCwTMvi+hECk2cSwQF088WaA
+         f85w==
+X-Gm-Message-State: AOAM5334O5LrF+O4MNXJIf2nXvx/QpLzSOHxcR6BF8PoyWmwtY9bHeG6
+        YyfLTFj1SCQPdiRmnuIjhazd4yBLJDP0Ag==
+X-Google-Smtp-Source: ABdhPJzrMfVIzt7TOHsFctT/nslRVLO2dCN95fdkUszlvHoMnnZMNu4BRYbSRpzSwDNh1ePy+W1aJQ==
+X-Received: by 2002:a05:6512:3192:b0:44a:b43f:d58f with SMTP id i18-20020a056512319200b0044ab43fd58fmr7179844lfe.179.1649278441105;
+        Wed, 06 Apr 2022 13:54:01 -0700 (PDT)
 Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id h14-20020a2e900e000000b0024b14fa6038sm1183868ljg.12.2022.04.06.13.48.42
+        by smtp.gmail.com with ESMTPSA id x40-20020a056512132800b004489691436esm1951647lfu.146.2022.04.06.13.54.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 13:48:42 -0700 (PDT)
+        Wed, 06 Apr 2022 13:54:00 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>
 Subject: [PATCH v2] gpio: ixp4xx: Detect special machines by compatible
-Date:   Wed,  6 Apr 2022 22:46:37 +0200
-Message-Id: <20220406204637.2332100-1-linus.walleij@linaro.org>
+Date:   Wed,  6 Apr 2022 22:51:56 +0200
+Message-Id: <20220406205156.2332627-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
