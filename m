@@ -2,757 +2,272 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 642814F6EB6
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 01:38:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C9D04F71A3
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 03:42:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238027AbiDFXje (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Apr 2022 19:39:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59488 "EHLO
+        id S239046AbiDGBok (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Apr 2022 21:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238063AbiDFXjX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 19:39:23 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E0461FD569
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Apr 2022 16:37:24 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id 32so1370309pgl.4
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Apr 2022 16:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xrGEseTnOXDcnInp7rslAcipRSkuafy8vIlxmx/yJcU=;
-        b=HcgEsBp04qCCkMBHxRxOS+f0hIdsP2aK5TZwDBI7d7E2DdWajYMb9TLh2NSLG8SOTH
-         zXmvMXYWf7bEIKnHJohA6yqCfsI4mLrHUfY+4Qdfhh23DnY9fcIVS7DBGz1NDnL71Z0m
-         o6rPSWC43kQs0YAEVga03WLzlg0Aw+x6PNEgjNh5JZ8WITbZIQCzTnHhLjdnAjvmNKft
-         DgFdJSGHC8ZvlL7bAvwhypP/dMAIy4Vxll57nKEFPFirOont78WOxBfV1z8Kx/n0Fvvh
-         GTtkOMEJQMXspTyKwWYzPXzQAlKGxfMhUmvSoMkgj48mBm5XuCzYrspXOxwxUjh3D63f
-         U89w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xrGEseTnOXDcnInp7rslAcipRSkuafy8vIlxmx/yJcU=;
-        b=l2AyPR0QHzLFfCG6SLBzPLy9+DtGk85s7uQ0CsdKyeQUH1482gi4mKyzvmTzNcKgyt
-         qlygFLjlcNOtxRaft17OMe+i4bxUjHHK86GjTxwK7lWM3HyoNXB9qUVlOtXzeBVk3/KV
-         Q4gd6lPBl0Ro/xdCsbEZOTZcAFhMC3hMhQsQZXA7f0WAPFnomrs4HIkubtf7cIQr1UUe
-         SKJ/+cW87+QRInZxykFgyUuDW+EDkYsrZuTA6WcrgBFXsCbgj+KVnHnsWtldJNJ3YLMj
-         B3QaJ0wq0IrCYZwHjSNXxZ4g2cHx3pf8ytOLKxtLoEeWBegQmP+vSQ8vgrA6sjmaH39a
-         Ujkg==
-X-Gm-Message-State: AOAM532Li7DxOOoWfRhoePkemsi/fFA4QQkLwk86l7lpcGvfvzS2gNGs
-        58z2ZamaiTd/7bAOZA2PjQuOMw==
-X-Google-Smtp-Source: ABdhPJzpy5tTVO/wbXcozmIXXbEI911CpYygGjCgdbrfTSuag/66aqmNZIO0YgMlghdNPQOX6MESrA==
-X-Received: by 2002:a63:2b84:0:b0:398:2527:df55 with SMTP id r126-20020a632b84000000b003982527df55mr9065640pgr.281.1649288243871;
-        Wed, 06 Apr 2022 16:37:23 -0700 (PDT)
-Received: from platform-dev1.pensando.io ([12.226.153.42])
-        by smtp.gmail.com with ESMTPSA id m21-20020a17090a7f9500b001c97c6bcaf4sm6903667pjl.39.2022.04.06.16.37.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 16:37:23 -0700 (PDT)
-From:   Brad Larson <brad@pensando.io>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        broonie@kernel.org, fancer.lancer@gmail.com,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org, olof@lixom.net,
-        brad@pensando.io, dac2@pensando.io, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/11] arm64: dts: Add Pensando Elba SoC support
-Date:   Wed,  6 Apr 2022 16:36:48 -0700
-Message-Id: <20220406233648.21644-12-brad@pensando.io>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220406233648.21644-1-brad@pensando.io>
-References: <20220406233648.21644-1-brad@pensando.io>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S239107AbiDGBob (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Apr 2022 21:44:31 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2045.outbound.protection.outlook.com [40.107.237.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EB1E9CB3;
+        Wed,  6 Apr 2022 18:40:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iiglgNT7j7aRTiPqkEZ9tJ8rPBJUEJFgMFfAOjwL/R/KFHA4yhqSNM+RueTkyBddW0GZj2kNs2ZrLhGPOvsLDhJYWmfLWBElM0LH6mwUojLSW+fd9NvmhcXtMBX9a4FT9iNgb4gdhYrx/d7yBLtk2OxbKj/8rzLm3qiE5SQ4d2OlVe7vp0ihFrg+ZqJ6dUmj4quhZ237GvzAzIov6a0NQ/9Zq0S3/kqL04p8M5wx6ftkZEeB2E/E56hYRAAgFtpta33tegHoaVb/inb/3iIZgOlw1NIgzjQikEicA88EZ2YKCQ5JguGgXL96yfgQYtqKOd3+99BR6eYz5QOXjgUmgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UkMLMyR1jltJdA8lEbIf8SlcEo+FnDGxjqoZxM7breA=;
+ b=V222wQ5fqRQen4MD/f/QibR/O6MuPliUW/BDFCnWP1EUeUIMdgNZ5q6eGh//+zQHajR1W3deQ3CxFQohOfLrCzq3sfDPRKmeI5PIfgUVsekSnT3fzukUAHHYDQf5rNc8pu/sbG+nS+kKu0VHO+xDCI+yw9b3yKpUvKRwcTvvZvxmCInoZb6eR0/Za4qcSql5CnDgoZswj3tCcl/uQYsSNyXuJj/YLZQMTrgOVQzgwGE9mPwMISjAk8QNcVFzvGPyYyg+cX0FbKxvsgLHIxedB8cdDR3CuGbV4vbFeut1RNfkKvpBGNEOHQzbgMDFQ/3XoS1mnAxZPPebBkM6XF67YQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UkMLMyR1jltJdA8lEbIf8SlcEo+FnDGxjqoZxM7breA=;
+ b=N5A/CAgVVfU5Gvymv3gYcnKibAoqiyMsZ57BsoETp1q/TPN/u2OmsDPsM5z4Bc01gCaj8MYz3A3LaFjPyMKuQINkIT6i3vevCaPIp9CoRZv+mNprJdsPjXYcOWgFt/M2FLy9OhHqhrLb4VKVHNjzysn7yi3Sf3ovd0NS7ROXZAtibnOuBMNv/eOTiyyZqlPWN53Rdxym92qocxypFNeT+i1EMPCatqhrwjwwsQeHJUTO2qaBqBLjHqsiM7iG0SLxdzqW0GKShsozI4YZAANTlaV/z+88u32UtkbM1Ts4uMcRJozcuNY9dDmXnbokigxFNCTmzM7ro/u8c6PgJNysyw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4116.namprd12.prod.outlook.com (2603:10b6:a03:210::13)
+ by DS7PR12MB5717.namprd12.prod.outlook.com (2603:10b6:8:70::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Thu, 7 Apr
+ 2022 01:40:26 +0000
+Received: from BY5PR12MB4116.namprd12.prod.outlook.com
+ ([fe80::b998:eed3:9088:780c]) by BY5PR12MB4116.namprd12.prod.outlook.com
+ ([fe80::b998:eed3:9088:780c%7]) with mapi id 15.20.5144.021; Thu, 7 Apr 2022
+ 01:40:26 +0000
+Message-ID: <35e1a5da-a35a-cbaa-f70b-44c2f98c63ac@nvidia.com>
+Date:   Wed, 6 Apr 2022 18:40:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v5 04/11] dt-bindings: Add HTE bindings
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        smangipudi@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        warthog618@gmail.com, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20220329054521.14420-1-dipenp@nvidia.com>
+ <20220329054521.14420-5-dipenp@nvidia.com>
+ <YkOVgRBtXX0k9zr1@robh.at.kernel.org>
+ <3b0f3430-bc1c-26df-c93f-517ba395d9e3@nvidia.com>
+ <YkRtzJjHQvmYNlK8@robh.at.kernel.org>
+X-Nvconfidentiality: public
+From:   Dipen Patel <dipenp@nvidia.com>
+In-Reply-To: <YkRtzJjHQvmYNlK8@robh.at.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR20CA0026.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::39) To BY5PR12MB4116.namprd12.prod.outlook.com
+ (2603:10b6:a03:210::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 56cb9a6e-d3b0-46df-e6c1-08da183796ab
+X-MS-TrafficTypeDiagnostic: DS7PR12MB5717:EE_
+X-Microsoft-Antispam-PRVS: <DS7PR12MB571740B699A77DC0930ADD77AEE69@DS7PR12MB5717.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1SuZU0scXcyNnXQLabe5VzrBb/bJYOCzqa1XP+y3QSdJkyx9F/A5LYLhJuwsQBpPG5cpVBPKadyXtqpq0lKfn7ph3auGaehEYqC0FpqUUIRo8sldsWQpaFoKrK5jldCDenn1zqVJzPcqfakKYl1EjMFZcrGPv9M1/bzeDd2PbxdO4Wh+53khMqdUTxpv94X4Fcd6F5OpvOsvQNiRi+Ms0fJYOQ6yOwbFXtxUURHpBFd4Tt/ZchdzyIAMa+FUBtzp1WhzVuZTGXMIlssuelhi1vnrpYZwaBwYE26RC3LLYJmSYjvQ6im9lZESrvP7NNOSknOmFIXa6jXE7fDShxjUwOWsVJ9j4oBltmTxg6n2aj3tHimX7yitCaVHd4QoxYaNylpS5FgUKwyPx4UL144AHBZOGduqM6RuEf586amPIF5XXD9ZQtMMXSny0KqbtNFWwP/2jOPwozB3aV4+utBop6RYGNuxzS3UWaGRUYENfQmYSmoAIchIb6yJNpWvVJG12icOWwI/+4JhSATl19A53trh7XW7zJbtAFdbDvAMfmU2u6o3vGzM4sK6SVrm5uGKDzhlV/1RL68Yr69Z9bX7jaoO6lhTkDv1sQkVb2foeHn/qZpY7Idaoijl8sBuUs0bW1+VTCl+xJ1zu9Ge9Zu3DSd1L41kZ10cZE4yX85HDVzO/jepUMrURkl0fuEfN5aZgUtz5qa+L+cjgKUj2e5nUyZHD6AYYfhzUJ9O4JnSdDpQvhMY+oA/2827ad4QAn+ID7c7bs5YbjrCs0HmCCoHqiW3EHDJPx7dXNC8cnbTdtu/Vxl3EqtInTMPagXlClEhj82onF68ud2qg+aDTuS82ZAlWuhMS+nMl//eiop0K21QUQEvUtyiQj8hqXg3fPeL
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4116.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(316002)(45080400002)(6916009)(2616005)(6666004)(86362001)(31696002)(38100700002)(26005)(31686004)(36756003)(186003)(966005)(2906002)(6486002)(508600001)(5660300002)(4326008)(53546011)(8676002)(66556008)(66476007)(6512007)(83380400001)(8936002)(66946007)(7416002)(6506007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WGk1QnJ5bjNWWWd6OXQ3eitYWUo4MjFMRkREenFsZHlndnhwT3ArL25rK3Q5?=
+ =?utf-8?B?eGtzRWJjdGs3Vno5TURLaURUY1ZhTTdkV0YyYXBiVDl5S1ZWOGcrY3lySVdG?=
+ =?utf-8?B?ME1OMFV0emJkRXVUbEQvRGtDM0t3LzlxTXNOaVNUUU5vNTEyV1QrZG5PdXhH?=
+ =?utf-8?B?eTdnK0g5d1ZqSUNhMFlsSjd5KzNCTzErMklkUXo4TWRvV1FEb2NNMm14SkVR?=
+ =?utf-8?B?ZGxGeXB0WUF3TE10cnN1V0hKRC9yeFJtcHhwQVNuaU5lL2MzNnNYRnNrbjhZ?=
+ =?utf-8?B?d05oMm1tbFUyUjNuZ0tGWWs5OEllWEtoMEhtbWJxelBDZlF5b3hpd2ZrUGgx?=
+ =?utf-8?B?MzZwb0Z0aHRXM0NzTlg2SC9GeEtiWG5Ua2FlQ2x4bTh6a2owYmQva1JKT0dr?=
+ =?utf-8?B?Yks4Y1BtMnppU216RlVYMWtHUTlGZVh1ZVRvOWNvMHFpb0NXa3RWNlBFUlRh?=
+ =?utf-8?B?OGxLZmUwbEZ2VGhHdnNNOHFhNTVjNU0xVEl4ZHg3NUZOM3I2UE1GSTRhRXIy?=
+ =?utf-8?B?WlRCdzVMN01UR3lHbWZZci9jZkdpL3BaWEtjR3J2U2ltNnBjcDUyZTF6TTFP?=
+ =?utf-8?B?VmVxSldiL04vK3BuS2tQMUw4MnRja2V6bjBhM0NmSG55dG9iTWdTREJ4NTZp?=
+ =?utf-8?B?RnZOaU5HZi9CM3hwSjFRZnhlV0xtNlNOMUV4djFkam5jdGZqVEpRZk9LSmtE?=
+ =?utf-8?B?OFpuTHdWVWZEbHE4NnFNbWdGMVcyNFo2dExKQlZrc0x2OGV6SmFueGlXTE1C?=
+ =?utf-8?B?QnFqRDVObGlmN291Ym42Sk9KczBxOVJML0VjM1R2Z3laYWN6NFRrVWZKSnpR?=
+ =?utf-8?B?MnQxMVVFS2ZTN082dGtmSFZaelZKUWJseVJrY044Umd0SWdqTENRN1BuTDB6?=
+ =?utf-8?B?c2daMW9sRDZxeW5qb05aNXBpd1VXb3hhWWZJd25DYWxkMkVqRjRnOGFvYjhJ?=
+ =?utf-8?B?VzNESjNNWUFoa282MnRGL01WUnN2ekpIbmVGV1A1NlB2QlhKZUNXSjg0czV5?=
+ =?utf-8?B?MFJUZytHdkNsMmZ5Y1IxS1VNQjg1aExYQTAvN2o0UW1hTldybzZUQmdiWlFi?=
+ =?utf-8?B?cDZRbUxYSWFhMnZ5OFBicTVnVTQ4S2tPbmJIS040MjVxRlJBR0JkSjE5TElV?=
+ =?utf-8?B?dCticTVMWTYyU3ZSOUd4OW54Zy85aDErL3AyRnA1eS9DNVF4eHBVM3VSVC9z?=
+ =?utf-8?B?TklSa2dIMVBMNU1GelJlczhOOGRCZ0FrOGVOODgrNDJVTjFUMUhsWG01ODVi?=
+ =?utf-8?B?Ym5TWnBrYWRrVUdDT09iMnA2bW5NQjdhVVkvTDAxcld0R3dnVDZ2MWkzNUVl?=
+ =?utf-8?B?VU1MSVRBR1dlYTg2ZC9sNlRmODBvc0VtdnlkWGJpcWhRQkNKZndmVHcyRWJy?=
+ =?utf-8?B?N3UrME0rQzJoTU5YNnZVZjJIK0tqanFJaHZxamtGZ3lJeHNtT0tGMmUwS3BV?=
+ =?utf-8?B?bFhIT0VNMjVEb29QTjBwUGc4TXF3NFozVW96OEZWbVB0ME9kOHhnK1FyQkFO?=
+ =?utf-8?B?RmNoZlM1WllaVnZuTEhYaDZSUG9GY0JXSzMzUXNKQStyODBIRWlNZnFRcTd4?=
+ =?utf-8?B?WGlrcFArQklzUmFMaC9McG5qcUVqNGFaTHN5d3ZRaGhYWkhNV0N4U1VNRzZh?=
+ =?utf-8?B?czU4cGRRTE1td1V1SU1teFlIUzFOK3NacDYvbGJua0x5ZVdyZURxL1FUUWdr?=
+ =?utf-8?B?blU3RTQycFZLUWlFUWFlSUREdHA0RWdkVUtlb3JXaVc2K0lNWHpsQ1pNSGFW?=
+ =?utf-8?B?MVh6OHgzTDJaVm5YcXpnU2JvUmVnYitNZjBRbjRCbmx2bzBGdGx5QVE5bE1C?=
+ =?utf-8?B?K0Uyek1hNHhCbVpzK0FJdzVLTSs0MUJWNXlRQndmZHNVY3Q0WWlaQUY4RmlH?=
+ =?utf-8?B?L0ZtdHkwMTI3ZWFWYWRORFhpaXEvTXI0MVJ3UDZwZjRUa3EwcVRqZ01jVDZy?=
+ =?utf-8?B?Z1l2T2RDKzhLYnVSSDJQQWlValFKa2c1M2t3bklXM1NlOVFqMkRmUFQ4VnNR?=
+ =?utf-8?B?eWdDS0d0c25kZDBQc2MyRm5vYUhvTExPM0piMlEwUXdFSzFMVXM1c3VDRG50?=
+ =?utf-8?B?NDhLZ0VqckEzOFA2aFF6RFZGWWQwRmRIeFNNZ1BLdWRkbWRmeHhVVkQxNisx?=
+ =?utf-8?B?RENPcWdzVlJHbUZQVzJGZGNMZ3MwTW5vdTk0S0dDQ1NkbW1nNThHS00wamQy?=
+ =?utf-8?B?MUFnOFVMOXVYd2pjaExzNTEzWHp4MDFQRVJHSGREKzhqMjJKTloyZzcyTHZU?=
+ =?utf-8?B?S3QrcEpNWDcydUxWRzVPMHo3Y1lEUi9ieWVXaktscVkzWC82ODlLN2JVWHNu?=
+ =?utf-8?B?dGtyakUzUUhoRytYMWJUeEk2aUZsbmxleUU4dGUxRS9tTDI4WnZpUT09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56cb9a6e-d3b0-46df-e6c1-08da183796ab
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4116.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2022 01:40:25.9419
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UzxybCjJ4Tp/EPkzIij7mTdbZpGlTbfu24fjv16jY/vI8x9FJzik0ktSoxGKKAcgTi83XtTfxt/RqVXblxNV2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5717
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add Pensando common and Elba SoC specific device nodes
 
-Signed-off-by: Brad Larson <brad@pensando.io>
----
-Change from V3:
-- Changed to dual copyright (GPL-2.0+ OR MIT)
-- Minor changes from review input
+On 3/30/22 7:48 AM, Rob Herring wrote:
+> On Tue, Mar 29, 2022 at 05:19:10PM -0700, Dipen Patel wrote:
+>> Hi,
+>>
+>> On 3/29/22 4:25 PM, Rob Herring wrote:
+>>> On Mon, Mar 28, 2022 at 10:45:14PM -0700, Dipen Patel wrote:
+>>>> Introduces HTE devicetree binding details for the HTE subsystem. It
+>>>> includes examples for the consumers, binding details for the providers
+>>>> and specific binding details for the Tegra194 based HTE providers.
+>>>>
+>>>> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> - Replace hte with hardware-timestamp for property names
+>>>> - Renamed file
+>>>> - Removed example from the common dt binding file.
+>>>>
+>>>> Changes in v3:
+>>>> - Addressed grammatical errors.
+>>>> - Removed double plural from the respective properties.
+>>>> - Added dual license.
+>>>> - Prefixed "nvidia" in nvidia specific properties.
+>>>>
+>>>> Changes in v4:
+>>>> - Corrected make dt_binding_check error.
+>>>>
+>>>> Changes in v5:
+>>>> - Addressed review comments.
+>>>>
+>>>>  .../hte/hardware-timestamps-common.yaml       | 29 +++++++
+>>>>  .../devicetree/bindings/hte/hte-consumer.yaml | 43 ++++++++++
+>>>>  .../bindings/hte/nvidia,tegra194-hte.yaml     | 82 +++++++++++++++++++
+>>>>  3 files changed, 154 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
+>>>>  create mode 100644 Documentation/devicetree/bindings/hte/hte-consumer.yaml
+>>>>  create mode 100644 Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..e8a69ceccd56
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
+>>>> @@ -0,0 +1,29 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: https://nam11.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fhte%2Fhardware-timestamps-common.yaml%23&amp;data=04%7C01%7Cdipenp%40nvidia.com%7C0e094f6ae7b642c970f308da125c64d4%7C43083d15727340c1b7db39efd9ccc17a%7C0%7C0%7C637842485301457320%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=4UcTV375zNF44HeIpQcDV%2Bp3VJXdtjomZYGWWsUJf%2FA%3D&amp;reserved=0
+>>>> +$schema: https://nam11.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=04%7C01%7Cdipenp%40nvidia.com%7C0e094f6ae7b642c970f308da125c64d4%7C43083d15727340c1b7db39efd9ccc17a%7C0%7C0%7C637842485301457320%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=fGoLuKpVFMNOsh%2BbJ6dLhpky63Y6zQ1oNkiOHDQ%2Bud0%3D&amp;reserved=0
+>>>> +
+>>>> +title: Hardware timestamp providers
+>>>> +
+>>>> +maintainers:
+>>>> +  - Dipen Patel <dipenp@nvidia.com>
+>>>> +
+>>>> +description:
+>>>> +  Some devices/SoCs have hardware time stamping engines which can use hardware
+>>>> +  means to timestamp entity in realtime. The entity could be anything from
+>>>> +  GPIOs, IRQs, Bus and so on. The hardware timestamp engine (HTE) present
+>>>> +  itself as a provider with the bindings described in this document.
+>>>> +
+>>>> +properties:
+>>>> +  $nodename:
+>>>> +    pattern: "^hardware-timestamp(@.*|-[0-9a-f])?$"
+>>>> +
+>>>> +  "#hardware-timestamp-cells":
+>>>> +    description:
+>>>> +      Number of cells in a HTE specifier.
+>>>> +
+>>>> +required:
+>>>> +  - "#hardware-timestamp-cells"
+>>>> +
+>>>> +additionalProperties: true
+>>>> diff --git a/Documentation/devicetree/bindings/hte/hte-consumer.yaml b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..be69f63aa8c3
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
+>>>> @@ -0,0 +1,43 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: https://nam11.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fhte%2Fhte-consumer.yaml%23&amp;data=04%7C01%7Cdipenp%40nvidia.com%7C0e094f6ae7b642c970f308da125c64d4%7C43083d15727340c1b7db39efd9ccc17a%7C0%7C0%7C637842485301457320%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=E3fspCvDDE5%2F6opK%2FdtpaY5%2FscsPURvDV7O7%2B%2FdbtEQ%3D&amp;reserved=0
+>>>> +$schema: https://nam11.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=04%7C01%7Cdipenp%40nvidia.com%7C0e094f6ae7b642c970f308da125c64d4%7C43083d15727340c1b7db39efd9ccc17a%7C0%7C0%7C637842485301457320%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=fGoLuKpVFMNOsh%2BbJ6dLhpky63Y6zQ1oNkiOHDQ%2Bud0%3D&amp;reserved=0
+>>>> +
+>>>> +title: HTE Consumer Device Tree Bindings
+>>>> +
+>>>> +maintainers:
+>>>> +  - Dipen Patel <dipenp@nvidia.com>
+>>>> +
+>>>> +select: true
+>>>> +
+>>>> +description:
+>>>> +  HTE properties should be named "hardware-timestamps". The exact meaning of
+>>>> +  each hardware-timestamps property must be documented in the device tree
+>>> The meaning of the cells needs to be documented. You are documenting the 
+>>> meaning of 'hardware-timestamps' here.
+>> This is for the consumer side, meaning of the cells will be documented in the provider
+>>
+>> binding document.
+> Right cells are opaque to the consumer. What bothered me is 
+> hardware-timestamps already has an 'exact meaning'. You need to me more 
+> exact as to what should be documented. We don't want what 
+> 'hardware-timestamps' is described again. What needs to be documented is 
+> how many entries, what each entry is (for the consumer), and the order.
+>
+>
+>>>> +  binding for each device. An optional property "hardware-timestamp-names" may
+>>>> +  contain a list of strings to label each of the HTE devices listed in the
+>>>> +  "hardware-timestamps" property.
+>>>> +
+>>>> +properties:
+>>>> +  hardware-timestamps:
+>>> I'm wondering if we should just drop 'hardware'. What other kind of 
+>>> timestamps are we going to have in DT? software-timestamps? No.
+>> I believe this makes it explicit and leaves no room for second guess. If
+>>
+>> only timestamps, ambiguity then will be which timestamp it is i.e. through hardware
+>>
+>> engine, pps, ptp and so on...
+> Those aren't hardware timestamps, too? If those needed a similar 
+> binding, couldn't they use this binding? PTP at least is sometimes an 
+> separate, external chip IIRC.
 
- arch/arm64/boot/dts/Makefile                  |   1 +
- arch/arm64/boot/dts/pensando/Makefile         |   3 +
- arch/arm64/boot/dts/pensando/elba-16core.dtsi | 189 ++++++++++++++++++
- .../boot/dts/pensando/elba-asic-common.dtsi   |  98 +++++++++
- arch/arm64/boot/dts/pensando/elba-asic.dts    |  28 +++
- .../boot/dts/pensando/elba-flash-parts.dtsi   | 106 ++++++++++
- arch/arm64/boot/dts/pensando/elba.dtsi        | 189 ++++++++++++++++++
- 7 files changed, 614 insertions(+)
- create mode 100644 arch/arm64/boot/dts/pensando/Makefile
- create mode 100644 arch/arm64/boot/dts/pensando/elba-16core.dtsi
- create mode 100644 arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
- create mode 100644 arch/arm64/boot/dts/pensando/elba-asic.dts
- create mode 100644 arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
- create mode 100644 arch/arm64/boot/dts/pensando/elba.dtsi
+I am fine with this idea of dropping "hardware" prefix, will update the patch.
 
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index 1ba04e31a438..cb697f9be2a4 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -20,6 +20,7 @@ subdir-y += marvell
- subdir-y += mediatek
- subdir-y += microchip
- subdir-y += nvidia
-+subdir-y += pensando
- subdir-y += qcom
- subdir-y += realtek
- subdir-y += renesas
-diff --git a/arch/arm64/boot/dts/pensando/Makefile b/arch/arm64/boot/dts/pensando/Makefile
-new file mode 100644
-index 000000000000..3d34b8a28a3f
---- /dev/null
-+++ b/arch/arm64/boot/dts/pensando/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+dtb-$(CONFIG_ARCH_PENSANDO) += elba-asic.dtb
-diff --git a/arch/arm64/boot/dts/pensando/elba-16core.dtsi b/arch/arm64/boot/dts/pensando/elba-16core.dtsi
-new file mode 100644
-index 000000000000..9de602cdeb8b
---- /dev/null
-+++ b/arch/arm64/boot/dts/pensando/elba-16core.dtsi
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020-2022 Pensando Systems Inc.
-+ */
-+
-+/ {
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 { cpu = <&cpu0>; };
-+				core1 { cpu = <&cpu1>; };
-+				core2 { cpu = <&cpu2>; };
-+				core3 { cpu = <&cpu3>; };
-+			};
-+
-+			cluster1 {
-+				core0 { cpu = <&cpu4>; };
-+				core1 { cpu = <&cpu5>; };
-+				core2 { cpu = <&cpu6>; };
-+				core3 { cpu = <&cpu7>; };
-+			};
-+
-+			cluster2 {
-+				core0 { cpu = <&cpu8>; };
-+				core1 { cpu = <&cpu9>; };
-+				core2 { cpu = <&cpu10>; };
-+				core3 { cpu = <&cpu11>; };
-+			};
-+
-+			cluster3 {
-+				core0 { cpu = <&cpu12>; };
-+				core1 { cpu = <&cpu13>; };
-+				core2 { cpu = <&cpu14>; };
-+				core3 { cpu = <&cpu15>; };
-+			};
-+		};
-+
-+		/* CLUSTER 0 */
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x0>;
-+			next-level-cache = <&l2_0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x1>;
-+			next-level-cache = <&l2_0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x2>;
-+			next-level-cache = <&l2_0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x3>;
-+			next-level-cache = <&l2_0>;
-+			enable-method = "psci";
-+		};
-+
-+		l2_0: l2-cache0 {
-+			compatible = "cache";
-+		};
-+
-+		/* CLUSTER 1 */
-+		cpu4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x100>;
-+			next-level-cache = <&l2_1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x101>;
-+			next-level-cache = <&l2_1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu6: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x102>;
-+			next-level-cache = <&l2_1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu7: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x103>;
-+			next-level-cache = <&l2_1>;
-+			enable-method = "psci";
-+		};
-+
-+		l2_1: l2-cache1 {
-+			compatible = "cache";
-+		};
-+
-+		/* CLUSTER 2 */
-+		cpu8: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x200>;
-+			next-level-cache = <&l2_2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu9: cpu@201 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x201>;
-+			next-level-cache = <&l2_2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu10: cpu@202 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x202>;
-+			next-level-cache = <&l2_2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu11: cpu@203 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x203>;
-+			next-level-cache = <&l2_2>;
-+			enable-method = "psci";
-+		};
-+
-+		l2_2: l2-cache2 {
-+			compatible = "cache";
-+		};
-+
-+		/* CLUSTER 3 */
-+		cpu12: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x300>;
-+			next-level-cache = <&l2_3>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu13: cpu@301 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x301>;
-+			next-level-cache = <&l2_3>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu14: cpu@302 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x302>;
-+			next-level-cache = <&l2_3>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu15: cpu@303 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0 0x303>;
-+			next-level-cache = <&l2_3>;
-+			enable-method = "psci";
-+		};
-+
-+		l2_3: l2-cache3 {
-+			compatible = "cache";
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi b/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
-new file mode 100644
-index 000000000000..7a89df68fdf7
---- /dev/null
-+++ b/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020-2022, Pensando Systems Inc.
-+ */
-+
-+&ahb_clk {
-+	clock-frequency = <400000000>;
-+};
-+
-+&emmc_clk {
-+	clock-frequency = <200000000>;
-+};
-+
-+&flash_clk {
-+	clock-frequency = <400000000>;
-+};
-+
-+&ref_clk {
-+	clock-frequency = <156250000>;
-+};
-+
-+&qspi {
-+	status = "okay";
-+	flash0: flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+		spi-rx-bus-width = <2>;
-+		m25p,fast-read;
-+		cdns,read-delay = <0>;
-+		cdns,tshsl-ns = <0>;
-+		cdns,tsd2d-ns = <0>;
-+		cdns,tchsh-ns = <0>;
-+		cdns,tslch-ns = <0>;
-+	};
-+};
-+
-+&gpio0 {
-+	status = "okay";
-+};
-+
-+&emmc {
-+	bus-width = <8>;
-+	status = "okay";
-+};
-+
-+&wdt0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	status = "okay";
-+	rtc@51 {
-+		compatible = "nxp,pcf85263";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&spi0 {
-+	num-cs = <4>;
-+	cs-gpios = <0>, <0>, <&porta 1 GPIO_ACTIVE_LOW>,
-+		   <&porta 7 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+	spi0_cs0@0 {
-+		compatible = "semtech,sx1301";	/* Enable spidev */
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <12000000>;
-+		reg = <0>;
-+	};
-+
-+	spi0_cs1@1 {
-+		compatible = "semtech,sx1301";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <12000000>;
-+		reg = <1>;
-+	};
-+
-+	spi0_cs2@2 {
-+		compatible = "semtech,sx1301";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <12000000>;
-+		reg = <2>;
-+		interrupt-parent = <&porta>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	spi0_cs3@3 {
-+		compatible = "semtech,sx1301";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <12000000>;
-+		reg = <3>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/pensando/elba-asic.dts b/arch/arm64/boot/dts/pensando/elba-asic.dts
-new file mode 100644
-index 000000000000..01251143dd5e
---- /dev/null
-+++ b/arch/arm64/boot/dts/pensando/elba-asic.dts
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for Pensando Elba Board.
-+ *
-+ * Copyright (c) 2020-2022 Pensando Systems Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include "elba.dtsi"
-+#include "elba-16core.dtsi"
-+#include "elba-asic-common.dtsi"
-+#include "elba-flash-parts.dtsi"
-+
-+/ {
-+	model = "Pensando Elba Board";
-+	compatible = "pensando,elba-ortano", "pensando,elba";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		spi0 = &spi0;
-+		spi1 = &qspi;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi b/arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
-new file mode 100644
-index 000000000000..4b2e54d97494
---- /dev/null
-+++ b/arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
-@@ -0,0 +1,106 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020-2022 Pensando Systems Inc.
-+ */
-+
-+&flash0 {
-+	partitions {
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		partition@0 {
-+			label = "flash";
-+			reg = <0x10000 0xfff0000>;
-+		};
-+
-+		partition@f0000 {
-+			label = "golduenv";
-+			reg = <0xf0000 0x10000>;
-+		};
-+
-+		partition@100000 {
-+			label = "boot0";
-+			reg = <0x100000 0x80000>;
-+		};
-+
-+		partition@180000 {
-+			label = "golduboot";
-+			reg = <0x180000 0x200000>;
-+		};
-+
-+		partition@380000 {
-+			label = "brdcfg0";
-+			reg = <0x380000 0x10000>;
-+		};
-+
-+		partition@390000 {
-+			label = "brdcfg1";
-+			reg = <0x390000 0x10000>;
-+		};
-+
-+		partition@400000 {
-+			label = "goldfw";
-+			reg = <0x400000 0x3c00000>;
-+		};
-+
-+		partition@4010000 {
-+			label = "fwmap";
-+			reg = <0x4010000 0x20000>;
-+		};
-+
-+		partition@4030000 {
-+			label = "fwsel";
-+			reg = <0x4030000 0x20000>;
-+		};
-+
-+		partition@4090000 {
-+			label = "bootlog";
-+			reg = <0x4090000 0x20000>;
-+		};
-+
-+		partition@40b0000 {
-+			label = "panicbuf";
-+			reg = <0x40b0000 0x20000>;
-+		};
-+
-+		partition@40d0000 {
-+			label = "uservars";
-+			reg = <0x40d0000 0x20000>;
-+		};
-+
-+		partition@4200000 {
-+			label = "uboota";
-+			reg = <0x4200000 0x400000>;
-+		};
-+
-+		partition@4600000 {
-+			label = "ubootb";
-+			reg = <0x4600000 0x400000>;
-+		};
-+
-+		partition@4a00000 {
-+			label = "mainfwa";
-+			reg = <0x4a00000 0x1000000>;
-+		};
-+
-+		partition@5a00000 {
-+			label = "mainfwb";
-+			reg = <0x5a00000 0x1000000>;
-+		};
-+
-+		partition@6a00000 {
-+			label = "diaguboot";
-+			reg = <0x6a00000 0x400000>;
-+		};
-+
-+		partition@8000000 {
-+			label = "diagfw";
-+			reg = <0x8000000 0x7fe0000>;
-+		};
-+
-+		partition@ffe0000 {
-+			label = "ubootenv";
-+			reg = <0xffe0000 0x10000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/pensando/elba.dtsi b/arch/arm64/boot/dts/pensando/elba.dtsi
-new file mode 100644
-index 000000000000..10e06eb8cda6
---- /dev/null
-+++ b/arch/arm64/boot/dts/pensando/elba.dtsi
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020-2022, Pensando Systems Inc.
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include "dt-bindings/interrupt-controller/arm-gic.h"
-+
-+/ {
-+	model = "Elba ASIC Board";
-+	compatible = "pensando,elba";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	dma-coherent;
-+
-+	ahb_clk: oscillator0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	emmc_clk: oscillator2 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	flash_clk: oscillator3 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	ref_clk: oscillator4 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a72-pmu";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		i2c0: i2c@400 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0x400 0x0 0x100>;
-+			clocks = <&ahb_clk>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			i2c-sda-hold-time-ns = <480>;
-+			snps,sda-timeout-ms = <750>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		wdt0: watchdog@1400 {
-+			compatible = "snps,dw-wdt";
-+			reg = <0x0 0x1400 0x0 0x100>;
-+			clocks = <&ahb_clk>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		qspi: spi@2400 {
-+			compatible = "pensando,elba-qspi", "cdns,qspi-nor";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2400 0x0 0x400>,
-+			      <0x0 0x7fff0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&flash_clk>;
-+			cdns,fifo-depth = <1024>;
-+			cdns,fifo-width = <4>;
-+			cdns,trigger-address = <0x7fff0000>;
-+			status = "disabled";
-+		};
-+
-+		spi0: spi@2800 {
-+			compatible = "pensando,elba-spi";
-+			reg = <0x0 0x2800 0x0 0x100>;
-+			pensando,syscon-spics = <&mssoc 0x2468>;
-+			clocks = <&ahb_clk>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			num-cs = <2>;
-+			status = "disabled";
-+		};
-+
-+		gpio0: gpio@4000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x0 0x4000 0x0 0x78>;
-+			status = "disabled";
-+
-+			porta: gpio-port@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				reg = <0>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				ngpios = <8>;
-+				interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				interrupt-parent = <&gic>;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			portb: gpio-port@1 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				reg = <1>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				ngpios = <8>;
-+			};
-+		};
-+
-+		uart0: serial@4800 {
-+			compatible = "ns16550a";
-+			reg = <0x0 0x4800 0x0 0x100>;
-+			clocks = <&ref_clk>;
-+			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		gic: interrupt-controller@800000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			interrupt-controller;
-+			reg = <0x0 0x800000 0x0 0x200000>,	/* GICD */
-+			      <0x0 0xa00000 0x0 0x200000>;	/* GICR */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			/*
-+			 * Elba specific pre-ITS is enabled using the
-+			 * existing property socionext,synquacer-pre-its
-+			 */
-+			gic_its: msi-controller@820000 {
-+				compatible = "arm,gic-v3-its";
-+				msi-controller;
-+				#msi-cells = <1>;
-+				reg = <0x0 0x820000 0x0 0x10000>;
-+				socionext,synquacer-pre-its =
-+							<0xc00000 0x1000000>;
-+			};
-+		};
-+
-+		emmc: mmc@30440000 {
-+			compatible = "pensando,elba-sd4hc", "cdns,sd4hc";
-+			clocks = <&emmc_clk>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x0 0x30440000 0x0 0x10000>,
-+			      <0x0 0x30480044 0x0 0x4>;	/* byte-lane ctrl */
-+			cdns,phy-input-delay-sd-highspeed = <0x4>;
-+			cdns,phy-input-delay-legacy = <0x4>;
-+			cdns,phy-input-delay-sd-uhs-sdr50 = <0x6>;
-+			cdns,phy-input-delay-sd-uhs-ddr50 = <0x16>;
-+			mmc-ddr-1_8v;
-+			status = "disabled";
-+		};
-+
-+		mssoc: mssoc@307c0000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x0 0x307c0000 0x0 0x3000>;
-+		};
-+	};
-+};
--- 
-2.17.1
+I believe this will be applicable to all other properties for example hardware-timestamp-cell
 
+as well, right?
+
+>
+> Rob
