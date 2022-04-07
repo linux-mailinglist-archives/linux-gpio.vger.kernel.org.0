@@ -2,132 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74B814F788F
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 10:00:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE4504F824A
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 16:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242421AbiDGH7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Apr 2022 03:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
+        id S1344360AbiDGO75 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Apr 2022 10:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242408AbiDGH7r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Apr 2022 03:59:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B7510DA50;
-        Thu,  7 Apr 2022 00:57:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7323D61E59;
-        Thu,  7 Apr 2022 07:57:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA8EC385A5;
-        Thu,  7 Apr 2022 07:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649318267;
-        bh=Ww1dxa+3bAwj5Iok8ViSt3VRfDANMYAW8WjVDv/Vg50=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=R3wXsf7IdmT3qfxmc9PfyS342yh65B4d9KWZXK0OgfCmRmwJPdbVRlJGzKR3lajqW
-         YpPiAyabUo62zVXM5bX7v1ZIOs2p9CGmGlitEdtB2d2Dv5Z/yjViG3843CAra/1IBv
-         iBL8mjSv+nUIENJRpS5tOxstcriye5A61a2ZFE9+dvFDIoHYnb2Bv01PKi8Oum1COF
-         D9pNNoWkTJBchHc1MD6OhMO17OeBTPk01Z7J8YM6dMf8DG+8uh5L7fRSy6me+pKVy7
-         iuCTTAbQhun4i8EVPTHE38lLmdhR4jajZN7P+VNMDPSld+4ue3ZkaqCeA+YE5a7Fz/
-         arG+St2Lk/weQ==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1ncN1U-002Ou6-VB; Thu, 07 Apr 2022 08:57:45 +0100
+        with ESMTP id S230356AbiDGO74 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Apr 2022 10:59:56 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 260011EF9C6
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Apr 2022 07:57:55 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id k23so11432801ejd.3
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Apr 2022 07:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=u7Y/aNQfLOwE+LBFzRyrpOju2aGQFF727w+dXMJ2SrY=;
+        b=Ip0dKJQiDzsTJAhtYnl6GKLlnZ2kukygCRHMumgjgX1VoT8+tBIQG3KltQkZyhPM4Y
+         z+r8NpCaOLV+t5Mk2fFSixvFqNCbMgGPe5845TcB3EmUdT1BHv9Ho2tYXcWP6qUkf1c/
+         o7+reyWn4O5jApV7Ki6BsTBmEC9G9Bv8CDXURui7XdHDbj804ffguikggHoJ80zG39cj
+         1wFGsVuynltytVfO2Jkkfkef8NEGpP60M/wHx30161SHlSl0EwF55KqKy9IFwW4W+Jgf
+         rrkmGXPdZplj14tkTGOHve9PEvJbEbkQ02Ff5Sx+1yFb2LPft2U6FPdO7qsKVDln5w+M
+         M+rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=u7Y/aNQfLOwE+LBFzRyrpOju2aGQFF727w+dXMJ2SrY=;
+        b=g0tJPhsuHWCeJDpNvINDmO3+lnGHf81nmkVH+hB7Ss4e/SPTg6QMBfe9ZVgxy5jfL2
+         pdjQLRL8ShFCP4USXW5TcfZ4OS1KUHMBlyzwTnYNjsfH9fzEdShq5ahvfldLC/4q60lA
+         yqfSIGCmShxgEVlocurKim/Xw5XBl9nSEPbsCfBcfsIE21hkxe9auZB5i4x4oauH8JgL
+         G/bsFsQmXVamf5UdCIYD/v3Kpc6KjTsfztH8xJgGbCjWJlhpSjplpsg05Uo3M/zaCwjh
+         aMqHm+fUyIWDXi4rn+o0YmlLdnKCzBXAKD7OiLKMkeRGbkEAwuEyDK4i7GQ3/yEGIXKt
+         b6+A==
+X-Gm-Message-State: AOAM533n2teePp2E6VZgt52WZ4DzMmHdKlyMXNpKx/fImaZCpWqmuGGB
+        2Ta97oSDYOELRL3m5ASo5fBqUQzvltOIsLx89TE=
+X-Google-Smtp-Source: ABdhPJzbGYcNkGDxM8dSDGjgSrtbl6/VJS/Pti8dDBEPlPZDkd56KfQ2VO+5/UB2EoVeNo3ZusZN6x7umlOLiiL8m+g=
+X-Received: by 2002:a17:907:97d4:b0:6e7:e45a:ad48 with SMTP id
+ js20-20020a17090797d400b006e7e45aad48mr13939568ejc.23.1649343474499; Thu, 07
+ Apr 2022 07:57:54 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Thu, 07 Apr 2022 08:57:44 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Brad Larson <brad@pensando.io>
-Cc:     linux-arm-kernel@lists.infradead.org, arnd@arndb.de,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        broonie@kernel.org, fancer.lancer@gmail.com,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org, olof@lixom.net,
-        dac2@pensando.io, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/11] arm64: dts: Add Pensando Elba SoC support
-In-Reply-To: <20220406233648.21644-12-brad@pensando.io>
-References: <20220406233648.21644-1-brad@pensando.io>
- <20220406233648.21644-12-brad@pensando.io>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <9c08f621be28dba65e811bc9cdedc882@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: brad@pensando.io, linux-arm-kernel@lists.infradead.org, arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com, broonie@kernel.org, fancer.lancer@gmail.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, olof@lixom.net, dac2@pensando.io, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a50:709a:0:0:0:0:0 with HTTP; Thu, 7 Apr 2022 07:57:53 -0700 (PDT)
+Reply-To: jbi880375@gmail.com
+From:   Julian Bikarm <julianbikarm44@gmail.com>
+Date:   Thu, 7 Apr 2022 07:57:53 -0700
+Message-ID: <CAHp73j8WzTAbmZEEz+T9zZ3wPeG_GxHWGg55r_xYzqqOLqm28w@mail.gmail.com>
+Subject: Please can i have your attention
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_40,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:631 listed in]
+        [list.dnswl.org]
+        * -0.0 BAYES_40 BODY: Bayes spam probability is 20 to 40%
+        *      [score: 0.2528]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [jbi880375[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [julianbikarm44[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [julianbikarm44[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.8 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-04-07 00:36, Brad Larson wrote:
-> Add Pensando common and Elba SoC specific device nodes
-> 
-> Signed-off-by: Brad Larson <brad@pensando.io>
-> ---
-> Change from V3:
-> - Changed to dual copyright (GPL-2.0+ OR MIT)
-> - Minor changes from review input
-> 
->  arch/arm64/boot/dts/Makefile                  |   1 +
->  arch/arm64/boot/dts/pensando/Makefile         |   3 +
->  arch/arm64/boot/dts/pensando/elba-16core.dtsi | 189 ++++++++++++++++++
->  .../boot/dts/pensando/elba-asic-common.dtsi   |  98 +++++++++
->  arch/arm64/boot/dts/pensando/elba-asic.dts    |  28 +++
->  .../boot/dts/pensando/elba-flash-parts.dtsi   | 106 ++++++++++
->  arch/arm64/boot/dts/pensando/elba.dtsi        | 189 ++++++++++++++++++
->  7 files changed, 614 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/pensando/Makefile
->  create mode 100644 arch/arm64/boot/dts/pensando/elba-16core.dtsi
->  create mode 100644 arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
->  create mode 100644 arch/arm64/boot/dts/pensando/elba-asic.dts
->  create mode 100644 arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
->  create mode 100644 arch/arm64/boot/dts/pensando/elba.dtsi
-> 
+Dear ,
 
-[...]
+Please can I have your attention and possibly help me for humanity's
+sake please. I am writing this message with a heavy heart filled with
+sorrows and sadness.
 
-> diff --git a/arch/arm64/boot/dts/pensando/elba.dtsi
-> b/arch/arm64/boot/dts/pensando/elba.dtsi
-> new file mode 100644
-> index 000000000000..10e06eb8cda6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/pensando/elba.dtsi
+Please if you can respond, i have an issue that i will be most
+grateful if you could help me deal with it please.
 
-[...]
-
-> +		gic: interrupt-controller@800000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			interrupt-controller;
-> +			reg = <0x0 0x800000 0x0 0x200000>,	/* GICD */
-> +			      <0x0 0xa00000 0x0 0x200000>;	/* GICR */
-
-You are still missing the GICV and GICH regions that are
-provided by the CPU. I already pointed that out in [1].
-
-The Cortex-A72 TRM will tell you where to find them (at
-an offset from PERIPHBASE).
-
-Please fix this.
-
-         M.
-
-[1] 
-https://lore.kernel.org/all/a20805de16e1196c2ed46dd949473c9a@kernel.org
--- 
-Jazz is not dead. It just smells funny...
+Julian
