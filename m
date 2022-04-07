@@ -2,133 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 051C14F7684
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 08:46:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5311D4F769C
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Apr 2022 08:51:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239832AbiDGGr1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Apr 2022 02:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50822 "EHLO
+        id S241417AbiDGGxE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Apr 2022 02:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235680AbiDGGr0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Apr 2022 02:47:26 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E08B207A34;
-        Wed,  6 Apr 2022 23:45:26 -0700 (PDT)
-Received: from mail-wr1-f48.google.com ([209.85.221.48]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MKbXu-1nHWBt0UBg-00KyG1; Thu, 07 Apr 2022 08:45:25 +0200
-Received: by mail-wr1-f48.google.com with SMTP id u3so6355900wrg.3;
-        Wed, 06 Apr 2022 23:45:24 -0700 (PDT)
-X-Gm-Message-State: AOAM531W2o5KY3VJWh4KsSVH8HI8tkuFTDmT8uFeyfwUAKfejUnRDo91
-        /D/PFMVgOcW+H7tHrofPPpTOEQbY33+eU5b8X7E=
-X-Google-Smtp-Source: ABdhPJwsoybhLaXFjVbw9+Vc+qPMhYVfNmGEl4gaT+Zb4xyPM1SU8zwIvCuEH2wtfDORtGv8O2YNAP5pFGOwsiaZ1iY=
-X-Received: by 2002:adf:d081:0:b0:1ef:9378:b7cc with SMTP id
- y1-20020adfd081000000b001ef9378b7ccmr9605655wrh.407.1649313924632; Wed, 06
- Apr 2022 23:45:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220406233648.21644-1-brad@pensando.io> <20220406233648.21644-10-brad@pensando.io>
-In-Reply-To: <20220406233648.21644-10-brad@pensando.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 7 Apr 2022 08:45:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1RdHTngDVqg4KnVA3N8EjDfbpQ=cEcz_CK8NmG2EgYLQ@mail.gmail.com>
-Message-ID: <CAK8P3a1RdHTngDVqg4KnVA3N8EjDfbpQ=cEcz_CK8NmG2EgYLQ@mail.gmail.com>
-Subject: Re: [PATCH 09/11] mmc: sdhci-cadence: Add Pensando Elba SoC support
-To:     Brad Larson <brad@pensando.io>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        with ESMTP id S241411AbiDGGxD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Apr 2022 02:53:03 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900E3E72BD;
+        Wed,  6 Apr 2022 23:51:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id B24A7CE26BA;
+        Thu,  7 Apr 2022 06:51:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB4FC385A4;
+        Thu,  7 Apr 2022 06:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649314259;
+        bh=4oVEZkitbUyJ2WcA8xnEcAUG11WYeSMx4D4hUHxh2S4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GOaeKSSipVHnAmCCRwNQxYNcM4uIBQ3w83D4N/xxVG3waAmjLFeZ8EQdGPJ/Jl+0i
+         BecBMVzH142WkJ2PSf00+N9TY7dbxDLhp3MC16dN3sA9u2b9m3OXwf7f3bDLdXTSsd
+         dSpJ38oaJ3q3/xAvE6eEtWPcM3b2YUb6R7/EqIYBeTeALZxpdYlbKwtBlkb83yr782
+         H1/3HPbvr0q/uOWxQ/XD8vJVidjbUuEY0jymARP5+/D7oG+0yXnhhRpeBySxf13zvv
+         OeE5l+kiwjtcLAZT29vWhZ8AZSLWcXWS1mcE5u+0e4YbtqfrCNRn3PvWlMGJz1YNbt
+         5gp/pZxiQxoNA==
+Date:   Thu, 7 Apr 2022 08:50:55 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/2] pinctrl: renesas: r8a77990: Add RPC pins, groups,
+ and functions
+Message-ID: <Yk6Jzyqegso3Iec8@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>, dac2@pensando.io,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:16QUAd4m1hM+RCRM1ldXGIJ7ItAtpJGmDbRF74wz3JHNwuXUB22
- WMvO4cpdgDkTXruzTypokbYXHC4lCkDSYV8f9kF15CohYnWf9ZYIGKJTt+3MgiGeEKY4wpG
- 5TbyUbEhnJaQdrIQ0d5kTCOGydOXeOkDpop4iOMyW7kG2XzBXfIJutCykU8czNNSDK0pHWB
- qGFPjjdLRY5lasyx40EWA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IJJS/BzDVK0=:xk0Lcc4sVb2EaVlKnHWqH4
- tPb/S8lOBJ+fTK4GuZ9Yg+qIa0NzWC5AaeO3NuL1NLyqlpN0uIw6XbsRDWm4GPfQlPdJ/FZf2
- nvWa8weLhr363hyM7JNvdP+RbP8ZKfCZmtHJsAPxerbecIQSYlfFFeShtg43JAM21NtSuzXR2
- NVbZkiXRxjz8MC5Cb1GQ6tsxZqASeeqfdkxQaxYUUi67gOE1g8fdlB/ARWN87PR+oATALsmi7
- x2PQJ+VxyBjO6zziBZEKq9wz7vG3lAe51/DqeFuumIy/DTK1OIgtAwhImz7ykLAMtkIeLAFdv
- FTKzjawxf+v430v7soR00qQuEkK5BNAMR84HJpSUe94gzl+YgvSIciv38meIRqBZpvshnf7fs
- 9rxnK6/HP9L0NRrKN+WNlgQ2Ji+WQg+fIvIAda4nOhNmnndhbYEvveylk7SrYqpvdbTNIZmIm
- A1If3U1mOxkOQ3uiEmQ7YI0sMOZSRJJrq/dkDz7Vw9a+/DKxGhRPWXwi9NwKPy7kd7FjcqW7Z
- TQe5aO2JZ7C3dtLksZPYnE4ubp153Zpv4lRSydE+n8d4MoI7CgZrZzMs/jn7ctc0zaXajpAWZ
- cSiCrFS2nEPZ7DLVtC8Fmnnqza+TQ3GNu+t9Z5BlUXmy5ZK67furvUfK30ncQMGvFMq+Y8kaQ
- XZiUF5QrqnBRgz1w6j+njsviKZ9Kg4KyoeNfD0VvSBD/EsHMrzZuYvKlkjPaPC4d3XiGFIYla
- 6CNpKCdEpqk8hKT0j6i/ciLe6iC51v2YPR7SffrBzeu/Qx3JgFzfYFkkaE4V+PLYq4ojOlHJC
- wDS78SvKMB8tkE4dWgXvnb+cQEc5bp7m+cveWcMFh46O8eV/d4=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <cover.1648547080.git.geert+renesas@glider.be>
+ <ec9735bb3468225e04ac6cb95e11a0e237b2b9ed.1648547080.git.geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PMaWAcIGVQtKV1m9"
+Content-Disposition: inline
+In-Reply-To: <ec9735bb3468225e04ac6cb95e11a0e237b2b9ed.1648547080.git.geert+renesas@glider.be>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 7, 2022 at 1:36 AM Brad Larson <brad@pensando.io> wrote:
-> @@ -350,7 +461,7 @@ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
->  static int sdhci_cdns_probe(struct platform_device *pdev)
->  {
->         struct sdhci_host *host;
-> -       const struct sdhci_pltfm_data *data;
-> +       const struct sdhci_cdns_drv_data *data;
->         struct sdhci_pltfm_host *pltfm_host;
->         struct sdhci_cdns_priv *priv;
->         struct clk *clk;
-> @@ -369,10 +480,10 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
->
->         data = of_device_get_match_data(dev);
->         if (!data)
-> -               data = &sdhci_cdns_pltfm_data;
-> +               data = &sdhci_cdns_drv_data;
->
->         nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
-> -       host = sdhci_pltfm_init(pdev, data,
-> +       host = sdhci_pltfm_init(pdev, &data->pltfm_data,
->                                 struct_size(priv, phy_params, nr_phy_params));
->         if (IS_ERR(host)) {
->                 ret = PTR_ERR(host);
-> @@ -389,6 +500,11 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
->         host->ioaddr += SDHCI_CDNS_SRS_BASE;
->         host->mmc_host_ops.hs400_enhanced_strobe =
->                                 sdhci_cdns_hs400_enhanced_strobe;
-> +       if (data->init) {
-> +               ret = data->init(pdev);
-> +               if (ret)
-> +                       goto free;
-> +       }
->         sdhci_enable_v4_mode(host);
->         __sdhci_read_caps(host, &version, NULL, NULL);
 
-I'm not sure about the abstraction here. The approach of having a single
-driver with some platform specific quirks like you do here works fine if the
-differences between hardware implementations are fairly minor, but if there
-are a larger number of variants, or the differences become too big, the
-better approach is to have separate top-level driver instances that call
-into a more generic driver, continuing the call chain
+--PMaWAcIGVQtKV1m9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-elba_drv_init()
- -> sdhci_cdns_probe()
-     -> sdhci_pltfm_init()
-         -> sdhci_add_host()
-             -> mmc_add_host()
+On Tue, Mar 29, 2022 at 11:48:50AM +0200, Geert Uytterhoeven wrote:
+> Add pins, groups, and functions for the SPI Multi I/O Bus Controller
+> (RPC-IF) to the R8A77990 PFC driver.  They are to be used when an
+> Octal-SPI Flash or HyperFlash is connected.
+>=20
+> Redefine the QSPI[01] pin groups using the RPC DQ[0:7] pin data, to save
+> memory.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-with each one being a more specific version of the one below it.
-At the moment, it doesn't quite require having a custom driver,
-but I fear that it it would get hard to rework if it continues to grow
-other front-ends. It may be better to do the abstraction right away,
-even if the elba driver becomes rather trivial.
+I trust you with the pinctrl patches :)
 
-Ulf, any preferences?
 
-         Arnd
+--PMaWAcIGVQtKV1m9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmJOic8ACgkQFA3kzBSg
+KbYGZBAAptv6VEPXqNtyqYVQcON8va0f6eSfCnTrY10Dk5BZ7LGfsS84AioWpFYF
+ZtbXsCKIeDPPUIz5GhevVKIDZ5jj/MsZsSjBaUWZcyGiPEIG+8+tpj0q5BSsffSs
+qQ5Oz2qBudFtPUICIZX7Mp4K19J3Fyzwf166IbCzK8Oli5VwQ0P8Dbr1V3ZUtiV2
+oOpyx1OJ0wB7kQ43SPuoCGW3AWwUEF93mNT4WMVUojl0346drKhbEFKs1+QNpRdS
+y8CUiAO6Y5uPfN5yYvuzC9I/167rGmEomd8mIQYTgwCZeqilIdk+3NTy1s/b6pFt
+9b1uZpxPCtQdLS0TULQ+c02pZ0P7pL8sRfcWSMX2U/oaYWRTnxKSFHRjZ4lNBeT8
+XdSeTerM2wfzKAWYG4cCTMR9WAL1z6TOXFSDq5Hfshj/RSCOvxALJtmjLEvYwNx5
+e/Ug/xRFaOCfQti+FcwgQj8eIM+iSJHvyZMQUca4hf6hliWirzL4T23rPRHOQ1wN
+1ZLvXjCclAZ3WZjY1fpzQK74tv5o8+QkPylFVdE1BBMF3KRNdCuVY3npUCw0SwpW
+ZZ3Cw8wMIInogbyxTXRQ3E2u60UsRH4yVM475WB/cb+leix1CSEjdf7fXlk9f4m9
+1LfF2bNZnndeR7mFXOv/PPvpAhHNu/CVL5v5cFl+KDyXnx9nHlI=
+=sTd1
+-----END PGP SIGNATURE-----
+
+--PMaWAcIGVQtKV1m9--
