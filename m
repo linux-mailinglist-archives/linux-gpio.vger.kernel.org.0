@@ -2,90 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E07914F99C5
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Apr 2022 17:44:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AF0D4F9C67
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Apr 2022 20:19:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237765AbiDHPqK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Apr 2022 11:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
+        id S238496AbiDHSV4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Apr 2022 14:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237751AbiDHPqI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Apr 2022 11:46:08 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CCF939DF;
-        Fri,  8 Apr 2022 08:44:02 -0700 (PDT)
+        with ESMTP id S233475AbiDHSVz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Apr 2022 14:21:55 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A45F11A545;
+        Fri,  8 Apr 2022 11:19:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649432643; x=1680968643;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gcJtOPIX2/0B3YxiUGz/EyzDxp0SAsqb/v7kxf3M3BU=;
-  b=YIlwpyceiHV/M2vrggkScgP/UKLnGgX4BOlZCRHXsY94hevyknTt0V+F
-   W4tGLSACYa5ddnCJtgehG86r8Fw4X6+M4ordmitHeV1GeoQPzSt+fFvP2
-   EL6IQKBWeVhjawwd1UGPcQkfPKw02Ev2XQXkywbKSQl6AZ2g164mfsAwf
-   74PE0+6bFJquoP0IneXW6qdWQY/eec5Diaaz8q9L4xRyWsUndLUE0BeC3
-   +ejLVXqSJHwQ95Fnl4jb33fZ2Kv21BoMFyKxpGULirjSWcrVz6dzUKIJ7
-   F1kcuvgyvQomHEVjVf1wrp0fOdn8sbEmxXDktcFCpKc+ZSnznDDjjwJRl
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10310"; a="259218709"
+  t=1649441991; x=1680977991;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EphYyiMevZDlJs+2824J9QD6Peqsq22Jz9uC9UNYWl0=;
+  b=fT6ifnCRh5tUethjQaRABMDlhA2QNDB3wGST7CY+yupuFAkHjcM6GNos
+   AIDoqGt0csOAUIKOk9HTmU/o45c/NtwIX7KgSK7J3i4KlOvFEznwBsQ8z
+   /D2LE2HM9pnhquWrTdvf+SkhKCw8M43VI8nE2UmQKP5EKggxWTUurJIni
+   qkkeMZfPqdtNKOh+8m+LLmR+Oh1BkkfZ0yWKrWZdnX7fCDu1C2JJMMF1E
+   obw9tpub5zaawS2QLzwcQ8bD9y9ALE1+EDM6eBW9GgoGKvsKR3PGNMQsM
+   bLdWiKvBgEzIyPLVav2TFUEneW63Y+zMd5Gu8YW3c0nPuYZonipzAu38w
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10311"; a="242253245"
 X-IronPort-AV: E=Sophos;i="5.90,245,1643702400"; 
-   d="scan'208";a="259218709"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 08:43:44 -0700
+   d="scan'208";a="242253245"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 11:19:45 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,245,1643702400"; 
-   d="scan'208";a="589257568"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 08:43:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ncqiH-000Lsk-PD;
-        Fri, 08 Apr 2022 18:39:53 +0300
-Date:   Fri, 8 Apr 2022 18:39:53 +0300
+   d="scan'208";a="557874351"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 08 Apr 2022 11:19:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 0D5FE144; Fri,  8 Apr 2022 21:18:55 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Qianggui Song <qianggui.song@amlogic.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marc Zyngier <maz@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 05/13] pinctrl: samsung: Switch to use
- for_each_gpiochip_node() helper
-Message-ID: <YlBXSVyj88CqjGj4@smile.fi.intel.com>
-References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
- <20220401103604.8705-6-andriy.shevchenko@linux.intel.com>
- <d1f873c6-150f-5f4d-7aa8-7bb15823d991@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 1/5] gpiolib: Embed iterator variable into for_each_gpio_desc_with_flag()
+Date:   Fri,  8 Apr 2022 21:18:50 +0300
+Message-Id: <20220408181854.73528-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1f873c6-150f-5f4d-7aa8-7bb15823d991@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -94,68 +60,90 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 08, 2022 at 05:22:21PM +0200, Krzysztof Kozlowski wrote:
-> On 01/04/2022 12:35, Andy Shevchenko wrote:
-> > Switch the code to use for_each_gpiochip_node() helper.
+The iterator loop is used exclusively to get a descriptor, which in its
+turn is what is being used by the caller. Embed the iterator variable
+into the loop in the for_each_gpio_desc_with_flag() macro helper.
 
-(...)
+Suggested-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: new patch
+ drivers/gpio/gpiolib-of.c    | 3 +--
+ drivers/gpio/gpiolib-sysfs.c | 3 +--
+ drivers/gpio/gpiolib.c       | 3 +--
+ drivers/gpio/gpiolib.h       | 8 ++++----
+ 4 files changed, 7 insertions(+), 10 deletions(-)
 
-> >  /*
-> >   * Iterate over all driver pin banks to find one matching the name of node,
-> >   * skipping optional "-gpio" node suffix. When found, assign node to the bank.
-> >   */
-> > -static void samsung_banks_of_node_get(struct device *dev,
-> > -				      struct samsung_pinctrl_drv_data *d,
-> > -				      struct device_node *node)
-> > +static void samsung_banks_node_get(struct device *dev, struct samsung_pinctrl_drv_data *d)
-> 
-> This is worth simplification anyway, so please split it to separate patch.
-
-Not sure what to do and why it worth an additional churn.
-
-> >  {
-> >  	const char *suffix = "-gpio-bank";
-> >  	struct samsung_pin_bank *bank;
-> > -	struct device_node *child;
-> > +	struct fwnode_handle *child;
-> >  	/* Pin bank names are up to 4 characters */
-> >  	char node_name[20];
-> >  	unsigned int i;
-> > @@ -1038,17 +1037,17 @@ static void samsung_banks_of_node_get(struct device *dev,
-> >  			continue;
-> >  		}
-> >  
-> > -		for_each_child_of_node(node, child) {
-> > -			if (!of_find_property(child, "gpio-controller", NULL))
-> > -				continue;
-> 
-> This does not look equivalent. There are nodes without this property.
-
-Not sure I understand why not. The macro checks for the property and
-iterates over nodes that have this property.
-
-Can you elaborate, please?
-
-> > -			if (of_node_name_eq(child, node_name))
-> > +		for_each_gpiochip_node(dev, child) {
-> > +			struct device_node *np = to_of_node(child);
-> > +
-> > +			if (of_node_name_eq(np, node_name))
-> >  				break;
-> > -			else if (of_node_name_eq(child, bank->name))
-> > +			if (of_node_name_eq(np, bank->name))
-> >  				break;
-> >  		}
-> 
-> This patch has to wait till someone provides you a tested-by. I might do
-> it around next week.
-
-Fine with me, I will drop it from my repo for now.
-
-Thanks for review!
-
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index ae1ce319cd78..47c0e07802d6 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -712,9 +712,8 @@ static void of_gpiochip_remove_hog(struct gpio_chip *chip,
+ 				   struct device_node *hog)
+ {
+ 	struct gpio_desc *desc;
+-	unsigned int i;
+ 
+-	for_each_gpio_desc_with_flag(i, chip, desc, FLAG_IS_HOGGED)
++	for_each_gpio_desc_with_flag(chip, desc, FLAG_IS_HOGGED)
+ 		if (desc->hog == hog)
+ 			gpiochip_free_own_desc(desc);
+ }
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index d44ffea038f5..cd27bf173dec 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -760,7 +760,6 @@ void gpiochip_sysfs_unregister(struct gpio_device *gdev)
+ {
+ 	struct gpio_desc *desc;
+ 	struct gpio_chip *chip = gdev->chip;
+-	unsigned int i;
+ 
+ 	if (!gdev->mockdev)
+ 		return;
+@@ -773,7 +772,7 @@ void gpiochip_sysfs_unregister(struct gpio_device *gdev)
+ 	mutex_unlock(&sysfs_lock);
+ 
+ 	/* unregister gpiod class devices owned by sysfs */
+-	for_each_gpio_desc_with_flag(i, chip, desc, FLAG_SYSFS)
++	for_each_gpio_desc_with_flag(chip, desc, FLAG_SYSFS)
+ 		gpiod_free(desc);
+ }
+ 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a199d2ff7689..96b5da6a8c3b 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4138,9 +4138,8 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
+ static void gpiochip_free_hogs(struct gpio_chip *gc)
+ {
+ 	struct gpio_desc *desc;
+-	int id;
+ 
+-	for_each_gpio_desc_with_flag(id, gc, desc, FLAG_IS_HOGGED)
++	for_each_gpio_desc_with_flag(gc, desc, FLAG_IS_HOGGED)
+ 		gpiochip_free_own_desc(desc);
+ }
+ 
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 06f3faa9fbef..7bac62d36f0c 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -100,10 +100,10 @@ struct gpio_array {
+ 
+ struct gpio_desc *gpiochip_get_desc(struct gpio_chip *gc, unsigned int hwnum);
+ 
+-#define for_each_gpio_desc_with_flag(i, gc, desc, flag)		\
+-	for (i = 0, desc = gpiochip_get_desc(gc, i);		\
+-	     i < gc->ngpio;					\
+-	     i++, desc = gpiochip_get_desc(gc, i))		\
++#define for_each_gpio_desc_with_flag(gc, desc, flag)			\
++	for (unsigned int __i = 0;					\
++	     __i < gc->ngpio && (desc = gpiochip_get_desc(gc, __i));	\
++	     __i++)							\
+ 		if (!test_bit(flag, &desc->flags)) {} else
+ 
+ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
