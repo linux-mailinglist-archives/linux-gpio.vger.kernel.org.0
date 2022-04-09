@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76CF04FA69B
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Apr 2022 11:52:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B9A04FA6A7
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Apr 2022 12:05:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236071AbiDIJyk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 Apr 2022 05:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41600 "EHLO
+        id S234860AbiDIKHn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 Apr 2022 06:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231248AbiDIJyh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Apr 2022 05:54:37 -0400
+        with ESMTP id S240982AbiDIKHi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Apr 2022 06:07:38 -0400
 Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBF5E0C9;
-        Sat,  9 Apr 2022 02:52:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF5929B7C1;
+        Sat,  9 Apr 2022 03:05:30 -0700 (PDT)
 Received: from localhost.localdomain ([37.4.249.94]) by
  mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MBV6n-1npXAT3Sr1-00Cxks; Sat, 09 Apr 2022 11:52:10 +0200
+ id 1MvaO8-1nwR4B47S2-00sfL5; Sat, 09 Apr 2022 11:52:10 +0200
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -31,30 +31,28 @@ Cc:     bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 2/2] pinctrl: bcm2835: implement hook for missing gpio-ranges
-Date:   Sat,  9 Apr 2022 11:51:29 +0200
-Message-Id: <20220409095129.45786-3-stefan.wahren@i2se.com>
+Subject: [PATCH 0/2] gpiolib: of: Introduce hook for missing gpio-ranges
+Date:   Sat,  9 Apr 2022 11:51:27 +0200
+Message-Id: <20220409095129.45786-1-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220409095129.45786-1-stefan.wahren@i2se.com>
-References: <20220409095129.45786-1-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:cH2GKa+Sesy4auWa0VxnAWA+V7gGDs0vWaXC0MA5wpS30ZmOxNy
- 72XkB2bF7mkrbuvbdVznQ2DjMkkDbtkd5KoUAyfITurWA5IOVgYc01mzxVwM79/AsToEgch
- FJjFy8NZrEgxf7wgwdqjQfPBtAZYk59Gremkt00fncwW0AxEygWkhZOas7PfxUnqK0NQNAN
- LYvpzILW+iywikCkVLFPg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JqHmuGSbNs8=:FzsvNdzM/oO96oe/XgwyYm
- 9JfYEADvpCauvjeo+NvCGThP3aeMYK/nagZMAQTUdjMooygGYCZXZgFCdm8oQRMSdfPAiLYCb
- c0AfFQGgy1af6o4a3AfVzmMEdqdrGeOBp7EKu+zaIGSRPr+VJz8Z/i4H2OCG2FWbVq3EmQwig
- noSiKcLLq797cEgKn1MoC2tM+Jd/rEK1UwRsHuGwn42+zYznyA0bbEKWDgsmEgsddyhHHKwWL
- tEmrJmPyQFeAtiDgbCppliWG2oLcukTCvpsMSXVu37hq0uvpnkosgFP4kEy8X6m/Ksc5o/W7F
- ieOY3PfX2ZxhsyzG7E3IrioIfxMJYIbOF+pSo8EKTUox9FgsZX3m0gthTsq668J0/brX9AOiF
- RhCHg1eQIJCDmaKmy7PleeUIAMQqXgRZRfYfBzcT43vKhxwoOft5BoPh+b2YFZAE/di7QEpIs
- RQDntgYg+5CAqiFmIQqVXdkFznb9lVeYG3nWy3hcqClik1k5XxOzZIUJgD0wLcdqqeimulnVZ
- 0j7NTXtfis2UcO79GVps/NvIubauDO/5iR29JEgaYPKVPE2RcVQlP28sIMX+cFDGNp2x6IDLx
- iz2j9Pyr3kHFV+Lv7eP01ElyZGvBMSL2lpd31IflM0IHUIvwBXrfRanYHF77aj6zgoEI/QML/
- i1nt5ZH1gijrPqRvS5avAq2MN2LzCYIj5P12bIZfqtzjvHt2BWGojBdW2kJpY1RtR8L0Y2S/6
- 3/cEK/JaoLpQTdLa
+X-Provags-ID: V03:K1:Oa5fkx4bjn2+J48sY8Hx7pETzPyWykaUGf3Qsqu1texR7OHUIj8
+ Ix9/syXJABqqE6e0/uGyBnt5FAGQFyTMEuJ/tv28VNrW5DCUHxuxmS2Pj37Co5Bzq21sdUi
+ /9LTYrGPsHHgyo/NJ8NVvwpc3zOvqlUFwbs0zqb6TkQIZEW3v1mej2Cx/cCtlR0D9NQM8yA
+ oE3pYIHa3MMKCsvF40qmw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VSTeunK1aR0=:HebRN2Cby++pbRxZpgL7f4
+ agqdxpzVz7M10/MfNnw+z2I9qjlfrKYDfG0quHedVFJglKhw9uRyS0i7XHK9ws3v3tehaTMJN
+ oPVqKZyrSCcV+ounLicZSHT8vpZkD5bSjkVpeozQqycq10IW8dJwr5sykANxhaX3+ZnaTcq5H
+ IPQcbFMYEEERE1CuN8RiNic7inmLQdtHomUfWmthQpvwJqdsxZ2W1qFzlfJrk0e3lBW+ITrPl
+ 1OI/fa3pbdZb62pubJzzrtB2wKz1O7kNVsyuv+Ui9rZ14xlI/uUzj/4QMts+2yu7xmgPIumTy
+ MVS/R3wdVboBbQguV5r5Q4wKaVYozCOr91Cx98G6uDrPDjQYteUsk15+K/pLkjQMEnaNcVmF7
+ AC8SSKbzmWN5WhH0k4ycenBHxYYW5raxQz/j0hwHH5fhZOtSF/qA8GuJG/KGfWqtU420XHX7I
+ sn8NiBMaW6/aAutK67MbtKb31GTyh/9YLh/6Am2+PSwPMfnkZGIUOIVMmMnoADoWBOP8nEzJo
+ h3j4rHaiFhxeyh484kPRuCGgLpBJzTYlVsjxQaF/UbVylra++nJ1ouTvAnISYcenADjwgL4vE
+ b9cYfB0xQi1Po7aBmVSxgZTOxnQdH5+dz+ytExs0DgOHLYcrZyeEmPrgYun0Q9cQAKMFHez9L
+ kfxxEbPN4xe1XqPR6A6vNjVzC8SznKPFcw2LQHhIBBGHSCr3yX0Jws0XD69idCnsdePzVFwr3
+ GZLVSbmrI8cIGpfs
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -64,65 +62,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit c8013355ead6 ("ARM: dts: gpio-ranges property is now required")
-fixed the GPIO probing issues caused by "pinctrl: bcm2835: Change init
-order for gpio hogs". This changed only the kernel DTS files. Unfortunately
-it isn't guaranteed that these files are shipped to all users.
+This patch series tries to provide backward compatibility for DTB which
+lacks the gpio-ranges property.
 
-So implement the necessary backward compatibility for BCM2835 and
-BCM2711 platform.
+The commit ("pinctrl: msm: fix gpio-hog related boot issues") by Christian
+Lamparter already contains a fallback in case the gpio-ranges property
+is missing. But this approach doesn't work on BCM2835 with a gpio-hog
+defined for the SoC GPIOs.
 
-Fixes: 266423e60ea1 ("pinctrl: bcm2835: Change init order for gpio hogs")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
----
+Based Christian's on explanation i conclude that the fallback must happen
+during the gpiochip_add() call and not afterwards. So the approach is to
+call an optional hook, which can be implemented in the platform driver.
+
+This series has been tested on Raspberry Pi 3 B Plus.
+
+Changes since RFC:
+- just add all collected Fixes, Reviewed-by, Tested-by and Acked-by
+
+Stefan Wahren (2):
+  gpiolib: of: Introduce hook for missing gpio-ranges
+  pinctrl: bcm2835: implement hook for missing gpio-ranges
+
+ drivers/gpio/gpiolib-of.c             |  5 +++++
  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ include/linux/gpio/driver.h           | 12 ++++++++++++
+ 3 files changed, 35 insertions(+)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 47e433e09c5c..dad453054776 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -358,6 +358,22 @@ static int bcm2835_gpio_direction_output(struct gpio_chip *chip,
- 	return 0;
- }
- 
-+static int bcm2835_of_gpio_ranges_fallback(struct gpio_chip *gc,
-+					   struct device_node *np)
-+{
-+	struct pinctrl_dev *pctldev = of_pinctrl_get(np);
-+
-+	of_node_put(np);
-+
-+	if (!pctldev)
-+		return 0;
-+
-+	gpiochip_add_pin_range(gc, pinctrl_dev_get_devname(pctldev), 0, 0,
-+			       gc->ngpio);
-+
-+	return 0;
-+}
-+
- static const struct gpio_chip bcm2835_gpio_chip = {
- 	.label = MODULE_NAME,
- 	.owner = THIS_MODULE,
-@@ -372,6 +388,7 @@ static const struct gpio_chip bcm2835_gpio_chip = {
- 	.base = -1,
- 	.ngpio = BCM2835_NUM_GPIOS,
- 	.can_sleep = false,
-+	.of_gpio_ranges_fallback = bcm2835_of_gpio_ranges_fallback,
- };
- 
- static const struct gpio_chip bcm2711_gpio_chip = {
-@@ -388,6 +405,7 @@ static const struct gpio_chip bcm2711_gpio_chip = {
- 	.base = -1,
- 	.ngpio = BCM2711_NUM_GPIOS,
- 	.can_sleep = false,
-+	.of_gpio_ranges_fallback = bcm2835_of_gpio_ranges_fallback,
- };
- 
- static void bcm2835_gpio_irq_handle_bank(struct bcm2835_pinctrl *pc,
 -- 
 2.25.1
 
