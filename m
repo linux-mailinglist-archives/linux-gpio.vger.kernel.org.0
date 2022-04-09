@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68BC94FAACD
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Apr 2022 22:36:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02E2F4FAAD1
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Apr 2022 22:39:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231628AbiDIUio (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 Apr 2022 16:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
+        id S231650AbiDIUl5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 Apr 2022 16:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230294AbiDIUim (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Apr 2022 16:38:42 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D63B3BBE8
-        for <linux-gpio@vger.kernel.org>; Sat,  9 Apr 2022 13:36:31 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id bv19so566935ejb.6
-        for <linux-gpio@vger.kernel.org>; Sat, 09 Apr 2022 13:36:31 -0700 (PDT)
+        with ESMTP id S229775AbiDIUl4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Apr 2022 16:41:56 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB7156217
+        for <linux-gpio@vger.kernel.org>; Sat,  9 Apr 2022 13:39:47 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id r13so23619637ejd.5
+        for <linux-gpio@vger.kernel.org>; Sat, 09 Apr 2022 13:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7D4Aaibw1apIEE8gsX+ApdqU6ylj2WHbi6A+8seUpYQ=;
-        b=ncWRxj97LJMXygmt/AKz+7Rs8ZQT38CCLIRace5PaU9qYsLHuiGJ5UKRtsr+HiUAiF
-         4j5upESyYy+4Q/Pr2ODQQu6BIUgnS0WFtb8Oiv0ah54DUrDT3QVL2mbuqx+af7ZE0EOo
-         CFVabsCZi+1Sg91a5k57mUJwX+CBbBevyFj2I0h7EBC8YwUv1b1PqsOBp9oDqVUbrYVa
-         lpf003729MbI6WLkU8f6mjIIAnDkx3t/BJdlMl9DLMlzRxWbE97jFtJ0Fc46gVHlixps
-         JieZevCNOeklDAVcY+SQuoqN1zTSHUI8tQKWZxibSlPTuk+Et4XeDP8HH0t/R6Xzj63c
-         8IPA==
+        bh=rj6n+xEBXXPl5+jHyLqq4olpc++X7yvL2JIU4TtB+nY=;
+        b=WGlSXBkiCGwBRi6oaQQk96LJaoisI66TOj4CjjqBzpVNtscsSTO6WppODq5eMAwad0
+         66qvCigJ/DmAEU9EMGTxgszKDdLNhqbZ20Vq24FKZXWdBQ73jN2DQjttysi9IVFFCIxD
+         r5E4lnNpmirBbLb6U4UlN7gZ5OKTUUe/4OzBJ5/NFbjnP3WRTTzSZbII010pShsOPjSh
+         2sxPkIwY0/DjCz8bY2ElZLTa/EMFXPr/nKKr+snpNBqiE7kJspRCxDkuYqIhTLRBAG7R
+         fc85v0kpZrYGdXMdNEods4LE9MWfGrR8RhIxYJday2V/BblHVwZ9okBLD+l4y+6HItzb
+         g7AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7D4Aaibw1apIEE8gsX+ApdqU6ylj2WHbi6A+8seUpYQ=;
-        b=1fZJOyPPbbNjIRZwaumG/WULbFxIxxkJoHlatJE78pacjvEvx2WJALBuEScXrgL7xi
-         Ega7IKSRAtTzfttdX06rAp5dtVa11s1BcwHjYagZMD0vhZU8XrpwLAi2aCwaBmaf9PWy
-         N9+YRr4UfJvUyYti/qfjwMvCUVKUK63nRehRNWcvmVmYLoBz8cW4CA8zdt7qPynglKfl
-         lbmmFuRPBmLcZTaPxzrwHRzkZz4imQM5Qa9r9z+MKi3Qon3bnGbq0jcIRnx61jcncawc
-         FRnRmtDZ2t1O1tuGUxzOOS4eMGsS2WMUR5mTWO4KIHxg63ZkHTriPd+aeQIpkRTYEXMp
-         8fBg==
-X-Gm-Message-State: AOAM530TfAuEAycAesNa/efLmIAwJ+MOd3DONkgIUXE4dL4c0Mq9X8JX
-        I/sQagfEsYlw2wEnCtqDEBJM3oqvGx9rLPO15ds59g==
-X-Google-Smtp-Source: ABdhPJzUVnJ9fCRFvnF1CecBOE2+6+3iCPQEfg90TNS1Di7u0BolMX/Mt0lRsUv0edygOyQBQyuXmNnSarbD0i5a1pg=
-X-Received: by 2002:a17:907:10ce:b0:6e7:116:10d0 with SMTP id
- rv14-20020a17090710ce00b006e7011610d0mr23523072ejb.101.1649536590019; Sat, 09
- Apr 2022 13:36:30 -0700 (PDT)
+        bh=rj6n+xEBXXPl5+jHyLqq4olpc++X7yvL2JIU4TtB+nY=;
+        b=X4Rc85JYLbgnpcNbqLeqcI1SiHm5iKR8DdbOEGJe1k+xph3iHkVRt4tskN9YuZJz0/
+         iEGSxUkjyx64Ok4HXWYcpGvPLj5XURiCtGFxouzjtKo6yjBmeN9egPJmUhgFQrCmeKW4
+         9xC9jYD/o+KaOuh+Ejr+U4ta1Ihb3hHhkM4tzJKc27AngPPzVFra8HlpgsICxEk7vkbU
+         Jgzxahf+U+Gfzre83xyUqfUS9HNxy1SZxBAqNCzoUu1HdKntVTGEdjMY8fKKYIaIa/mM
+         ZS/W38p6i2pO51AoS0o4vUbTIIWylx2yu8/geA1+YYkrQNp36RMqKjL6D2Iq3b7eJxM4
+         ozEw==
+X-Gm-Message-State: AOAM533bK61iC5EPQPS9S69js/u6r3aPs5R4HpFq8QGt2hsBN/ArbnXC
+        VvrFvslnL8Gn2t6FZgd91/sj4zJ9qDi3iYmkC4jWag==
+X-Google-Smtp-Source: ABdhPJzOTqsPsxztXtBKlpkCDcCm/R+awcp/VH6kw13YLxyZDQ/VhgVfkvsP4n2fs823IPxIWHS4fkQIOe6C5aKYkSw=
+X-Received: by 2002:a17:906:5d05:b0:6e8:40cc:1a99 with SMTP id
+ g5-20020a1709065d0500b006e840cc1a99mr12126682ejt.734.1649536786243; Sat, 09
+ Apr 2022 13:39:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220330145910.1946-1-andriy.shevchenko@linux.intel.com> <20220330145910.1946-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220330145910.1946-3-andriy.shevchenko@linux.intel.com>
+References: <20220408181854.73528-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220408181854.73528-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 9 Apr 2022 22:36:19 +0200
-Message-ID: <CAMRc=MfhHrtoKRfSAKGk14_a3L945HC3zJWhqtewruDPM6-DVg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] gpiolib: Move error message out of a spinlock
+Date:   Sat, 9 Apr 2022 22:39:35 +0200
+Message-ID: <CAMRc=Mek7kGFHh3Rgp=KY6Tu+giiAFXgBqaW2zBJv7vYw7CSfg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] gpiolib: Embed iterator variable into for_each_gpio_desc_with_flag()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -58,49 +58,23 @@ Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 4:59 PM Andy Shevchenko
+On Fri, Apr 8, 2022 at 8:19 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> An error path is a slow path, no need to block other CPUs
-> when printing error messages.
+> The iterator loop is used exclusively to get a descriptor, which in its
+> turn is what is being used by the caller. Embed the iterator variable
+> into the loop in the for_each_gpio_desc_with_flag() macro helper.
 >
+> Suggested-by: Bartosz Golaszewski <brgl@bgdev.pl>
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index f956c533f218..062d127d9a0d 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -289,7 +289,6 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
->                 }
->         }
->
-> -       dev_err(&gdev->dev, "GPIO integer space overlap, cannot add chip\n");
->         return -EBUSY;
->  }
->
-> @@ -724,6 +723,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->         ret = gpiodev_add_to_list(gdev);
->         if (ret) {
->                 spin_unlock_irqrestore(&gpio_lock, flags);
-> +               chip_err(gc, "GPIO integer space overlap, cannot add chip\n");
->                 goto err_free_label;
->         }
->
-> --
-> 2.35.1
->
 
-Applied, thanks!
+Applied, this entire series, thanks!
 
 Bart
