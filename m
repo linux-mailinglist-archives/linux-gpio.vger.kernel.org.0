@@ -2,37 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ADF84FAF1C
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 Apr 2022 18:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19A7F4FAF30
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Apr 2022 19:13:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240690AbiDJQ6Z convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Sun, 10 Apr 2022 12:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
+        id S243691AbiDJRPQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 10 Apr 2022 13:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239491AbiDJQ6Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Apr 2022 12:58:25 -0400
+        with ESMTP id S231439AbiDJRPP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Apr 2022 13:15:15 -0400
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDF53C72F;
-        Sun, 10 Apr 2022 09:56:12 -0700 (PDT)
-Received: from p508fdda7.dip0.t-ipconnect.de ([80.143.221.167] helo=phil.localnet)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E14434B80;
+        Sun, 10 Apr 2022 10:13:03 -0700 (PDT)
+Received: from p508fdda7.dip0.t-ipconnect.de ([80.143.221.167] helo=phil.fritz.box)
         by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <heiko@sntech.de>)
-        id 1ndar9-0006dP-LS; Sun, 10 Apr 2022 18:56:07 +0200
+        id 1ndb7S-0006hD-L1; Sun, 10 Apr 2022 19:12:58 +0200
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     robh+dt@kernel.org, krzk+dt@kernel.org, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: pinctrl: add rockchip,rk3036-pinctrl compatible string
-Date:   Sun, 10 Apr 2022 18:56:06 +0200
-Message-ID: <1890974.PYKUYFuaPT@phil>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
+        krzk+dt@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v1 1/2] dt-bindings: pinctrl: add rockchip, rk3036-pinctrl compatible string
+Date:   Sun, 10 Apr 2022 19:12:53 +0200
+Message-Id: <164961074165.23152.1000043865716851789.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220330133952.1949-1-jbx6244@gmail.com>
 References: <20220330133952.1949-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_NONE,
         T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
         autolearn_force=no version=3.4.6
@@ -42,37 +44,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Mittwoch, 30. März 2022, 15:39:51 CEST schrieb Johan Jonker:
+On Wed, 30 Mar 2022 15:39:51 +0200, Johan Jonker wrote:
 > Add the compatible string "rockchip,rk3036-pinctrl" in already
 > in use in rk3036.dtsi to rockchip,pinctrl.yaml.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Applied, thanks!
 
-Linus, I guess this patch should go through the pinctrl tree :-)
+[2/2] ARM: dts: rockchip: rk3036: rename pcfg_pull_default node name
+      commit: e0badfe359ef4d01ca74261093e65f742f321da8
 
-Thanks
-Heiko
-
-> ---
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> index b0eae3a67..9e90faf9b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> @@ -33,6 +33,7 @@ properties:
->      enum:
->        - rockchip,px30-pinctrl
->        - rockchip,rk2928-pinctrl
-> +      - rockchip,rk3036-pinctrl
->        - rockchip,rk3066a-pinctrl
->        - rockchip,rk3066b-pinctrl
->        - rockchip,rk3128-pinctrl
-> 
-
-
-
-
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
