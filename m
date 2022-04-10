@@ -2,65 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A145D4FAADB
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Apr 2022 22:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A003B4FAB95
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Apr 2022 04:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231680AbiDIUxy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 Apr 2022 16:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44922 "EHLO
+        id S243569AbiDJCl5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 Apr 2022 22:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbiDIUxx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Apr 2022 16:53:53 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95016CD4
-        for <linux-gpio@vger.kernel.org>; Sat,  9 Apr 2022 13:51:43 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id c7so17755190wrd.0
-        for <linux-gpio@vger.kernel.org>; Sat, 09 Apr 2022 13:51:43 -0700 (PDT)
+        with ESMTP id S243518AbiDJClt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Apr 2022 22:41:49 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EFEF18361;
+        Sat,  9 Apr 2022 19:39:21 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id bk12so8062733qkb.7;
+        Sat, 09 Apr 2022 19:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cACyB2KNmobopctUHQpdd+tFeJQNIy3DwPag/D99BI4=;
-        b=Pi5nfqmwfnoDPHUVXy4zqXah8SOmPr2bLwSkRcnrQ4qey1mMIcm26mImpnOn29rzMC
-         9nueOoyN/0DUT+5PfxvuI8p50hIXo65bsDKoypTqTcmWcPeUY1UJ05p+5arDcK9UmMsr
-         XvHq65jQVOVI8LdeOwVU/2SzVR6ooahjRcctxJP6CQ3uxEDlK7pWEDZD51G3WnN61JqG
-         G9giazd2ph1Fv9iJyF54ds8Xaf0gm3Wa7NaF/4VTKO2L8bUlI3Ba4fevMNCU8nrQlY1U
-         ogiOwPNABcZNoI7+Iu2rQ7O+jkng6A7cDBlN8ikiN6wsvh/8ihELW97FmyrNEmWqEBh/
-         8ENw==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=4k9M3A5SaOTIoKov6CrPu7jYsykoDqASGcsbW1Bxs2g=;
+        b=AHZSbnkdgSigwea2G56xzm53+YbTuhFFSPXwIgKn+Vviezo7xUX1B2Z5IYdWp+5z2b
+         4rk4NO0j6irlPJ2XebeMhDD7nfoylM58cb2TQ15TLd4FN4mKLsMFzKNaBIIswUe025y+
+         TRu3hCw5NeC4HSbbJTq20TmKkYuKk1yo5b99hpRfySbk+Szci0AHKV3qwekfuofJMyvR
+         3GQnTbRs4lVWtGKCaw+hLKJz10LPMAUBzldPxQwxI6PkeqEq90yGYJcU5MkCTO/LsMhX
+         E7xXxcI7UEq66//XhQXdxb9Zzk3xs/65tvDsOfkni4xZZvAIH9zzvDgJ3vue5cf55908
+         g8ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=cACyB2KNmobopctUHQpdd+tFeJQNIy3DwPag/D99BI4=;
-        b=Ih+OyCXWBwx+CIQLi9Z/lHX/O7myOoXxGxi5eVAxc+opuprd/+AfDwwGXn/hqFbFFf
-         dbG4IIqZc8/v19zWZ4nwcjHVaO99b9iSrcST4yfSD4Qj4heTlU7aph3DL6y2/ft+08Q8
-         C7DmBcwfXlDnbssCbLIfOR7dPi+U3FLzzZyBSlVjm9Ghnh2W9ZEZ5skG/C3gDYlRbzOz
-         7ry1RxzNR3YwDuFL1LozCP/ZENlWIXHdtUvd19eKvusPghL5gZ900sNTBx6mFD2lPbYz
-         oJsRHA0a2Eez4LFpjIAeiX2h7argLYRiWlbVEGTLFUC7WD6puH62984eU+iNstj/UlxS
-         FZRw==
-X-Gm-Message-State: AOAM53301Rr2+YNh3qizJyFAoMuBhq4FYeseBSRIP8H5UAgB4tu5u8T6
-        dAnzQK01BlWWslraR531/pa2q2F7BWen8T70
-X-Google-Smtp-Source: ABdhPJw4zQjdlK+KBXiDNyxJmxQ6RnD5VnrMcW7DsB40E2sjHmmPOSmG/b3SK8QiSq6hl+feTjkw8w==
-X-Received: by 2002:a5d:6e87:0:b0:206:452:5b87 with SMTP id k7-20020a5d6e87000000b0020604525b87mr19200557wrz.473.1649537502193;
-        Sat, 09 Apr 2022 13:51:42 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4dc6:8d6a:4095:700e])
-        by smtp.gmail.com with ESMTPSA id t4-20020adfe104000000b00205b50f04f0sm22223279wrz.86.2022.04.09.13.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Apr 2022 13:51:41 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.18-rc2
-Date:   Sat,  9 Apr 2022 22:51:34 +0200
-Message-Id: <20220409205134.13070-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.32.0
+        bh=4k9M3A5SaOTIoKov6CrPu7jYsykoDqASGcsbW1Bxs2g=;
+        b=MKIQUViXHiQ047vYQsuer38eJStqRrk46t5ggkKqJhVyjG17F42k7AZ1y6Y5w4Mn9k
+         XoEwpNBkXHOEAkSIhGxMrmBT5sBQMZKMYpwo9rML7baoBSZmYWFitzbciGXoYtrJYmne
+         mI4IbYKmDEcdx/ir+34qF8g8bR6whzZ23siIDywZgePpVfV/UlA931M6LOfCM+Gw2/CI
+         f2PHKlKfu6NtQO6b32ZW/gAL4UoGW38LRCSfAJvGwUejW2ZBRTijKq3pDkkVTtl/oBhp
+         CA8pJBF9YNY1mph68ebiRN5OZPrWMiC6BS0k+IRDVcNH6rgsrEQA7Xiahfo/syOQF3Js
+         r//w==
+X-Gm-Message-State: AOAM532P4hQ5LPU7ukWEpLXky3ruWBOcGZsL4LI9lJ2wPbB9scVflX7j
+        zsd9QmjNd/EjMzyQkk0cHRE=
+X-Google-Smtp-Source: ABdhPJwReclOWi6comV7f0t4FE3p7oaNQ35SJ8JbEQWYuT+E14luIOkj8va8kxoE4ZlzpOywqqEzKQ==
+X-Received: by 2002:a37:f508:0:b0:69b:ed2f:e56 with SMTP id l8-20020a37f508000000b0069bed2f0e56mr5681454qkk.384.1649558360126;
+        Sat, 09 Apr 2022 19:39:20 -0700 (PDT)
+Received: from [10.4.10.38] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id d3-20020a05622a15c300b002eb9af4c945sm24191439qty.3.2022.04.09.19.39.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 Apr 2022 19:39:19 -0700 (PDT)
+Message-ID: <8d6595d8-13c3-0f29-1a5e-e48e78b01f89@gmail.com>
+Date:   Sat, 9 Apr 2022 22:39:14 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH v1 00/12] Add support for the i.MXRT1170-evk
+Content-Language: en-US
+To:     linux-imx@nxp.com
+Cc:     robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, aisheng.dong@nxp.com, stefan@agner.ch,
+        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
+        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
+        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
+        cniedermaier@dh-electronics.com, clin@suse.com,
+        giulio.benetti@benettiengineering.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20220326144313.673549-1-Mr.Bossman075@gmail.com>
+From:   Jesse Taube <mr.bossman075@gmail.com>
+In-Reply-To: <20220326144313.673549-1-Mr.Bossman075@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,36 +83,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
 
-Here's a single fix for a race condition between the GPIO core and consumers of
-GPIO IRQ chips.
 
-Please pull,
-Bartosz Golaszewski
+On 3/26/22 10:43, Jesse Taube wrote:
+> This patch continues support for the imxrt series now with the imxrt1170
+> 
+> This patch contains:
+> - Update to imxrt_defconfig
+> - Devicetree
+> - Clock driver
+> - Pinctrl driver
+> - New pll
+> 
+> This patch also updates some documentation for both imxrt1170 an 1050.
+> 
+> The i.MXRT1170 has a vast array of fetures includeing two cores. 2 Ethernet, 2 USB phy, and a 2d gpu.
+> 
+> It also is fetured in a new google coral board
+> https://coral.ai/products/dev-board-micro
+> Not affiliated unfortunaly.
+> 
+> Jesse Taube (12):
+>    dt-bindings: arm: imx: Add i.MXRT compatible Documentation
+>    dt-bindings: timer: gpt: Add i.MXRT compatible Documentation
+>    dt-bindings: pinctrl: add i.MXRT1170 pinctrl Documentation
+>    dt-bindings: clock: imx: Add documentation for i.MXRT1170 clock
+>    ARM: mach-imx: Add support for i.MXRT1170
+>    ARM: clk: imx: Update pllv3 to support i.MXRT1170
+>    dt-bindings: imx: Add clock binding for i.MXRT1170
+>    clk: imx: Add initial support for i.MXRT1170 clock driver
+>    pinctrl: freescale: Add i.MXRT1170 pinctrl driver support
+>    ARM: dts: imxrt1170-pinfunc: Add pinctrl binding header
+>    ARM: dts: imx: Add i.MXRT1170-EVK support
+>    ARM: imxrt_defconfig: Add i.MXRT1170
+> 
+>   .../devicetree/bindings/arm/fsl.yaml          |   12 +
+>   .../bindings/clock/imxrt1170-clock.yaml       |   59 +
+>   .../bindings/pinctrl/fsl,imxrt1170.yaml       |   77 +
+>   .../devicetree/bindings/timer/fsl,imxgpt.yaml |    2 +
+>   arch/arm/boot/dts/Makefile                    |    3 +-
+>   arch/arm/boot/dts/imxrt1170-evk.dts           |  126 ++
+>   arch/arm/boot/dts/imxrt1170-pinfunc.h         | 1561 +++++++++++++++++
+>   arch/arm/boot/dts/imxrt1170.dtsi              |  278 +++
+>   arch/arm/configs/imxrt_defconfig              |   26 +
+>   arch/arm/mach-imx/mach-imxrt.c                |    1 +
+>   drivers/clk/imx/Kconfig                       |    7 +
+>   drivers/clk/imx/Makefile                      |    1 +
+>   drivers/clk/imx/clk-imxrt1170.c               |  391 +++++
+>   drivers/clk/imx/clk-pllv3.c                   |   57 +-
+>   drivers/clk/imx/clk.h                         |    4 +
+>   drivers/pinctrl/freescale/Kconfig             |    7 +
+>   drivers/pinctrl/freescale/Makefile            |    1 +
+>   drivers/pinctrl/freescale/pinctrl-imxrt1170.c |  349 ++++
+>   include/dt-bindings/clock/imxrt1170-clock.h   |  282 +++
+>   19 files changed, 3241 insertions(+), 3 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/clock/imxrt1170-clock.yaml
+>   create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imxrt1170.yaml
+>   create mode 100644 arch/arm/boot/dts/imxrt1170-evk.dts
+>   create mode 100644 arch/arm/boot/dts/imxrt1170-pinfunc.h
+>   create mode 100644 arch/arm/boot/dts/imxrt1170.dtsi
+>   create mode 100644 drivers/clk/imx/clk-imxrt1170.c
+>   create mode 100644 drivers/pinctrl/freescale/pinctrl-imxrt1170.c
+>   create mode 100644 include/dt-bindings/clock/imxrt1170-clock.h
+> 
+Hi Freind's,
 
-The following changes since commit 3123109284176b1532874591f7c81f3837bbdc17:
+Are there any more comments on this patch set or should V2 be sent.
+If there is something obviously wrong that I have missed an you haven't 
+I would love to know because I haven't noticed yet.
 
-  Linux 5.18-rc1 (2022-04-03 14:08:21 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.18-rc2
-
-for you to fetch changes up to 5467801f1fcbdc46bc7298a84dbf3ca1ff2a7320:
-
-  gpio: Restrict usage of GPIO chip irq members before initialization (2022-04-04 14:41:34 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.18-rc2
-
-- fix a race condition with consumers accessing the fields of GPIO IRQ chips
-  before they're fully initialized
-
-----------------------------------------------------------------
-Shreeya Patel (1):
-      gpio: Restrict usage of GPIO chip irq members before initialization
-
- drivers/gpio/gpiolib.c      | 19 +++++++++++++++++++
- include/linux/gpio/driver.h |  9 +++++++++
- 2 files changed, 28 insertions(+)
+Cheers,
+Jesse Taube
