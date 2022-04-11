@@ -2,110 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 943DB4FB691
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 10:57:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADF404FB6DF
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 11:04:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231952AbiDKI7n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Apr 2022 04:59:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40142 "EHLO
+        id S244103AbiDKJGf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Apr 2022 05:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343993AbiDKI7l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 04:59:41 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E2143ED08
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 01:57:27 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id ks6so4784753ejb.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 01:57:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3KQ5ya3EPilOhzylWj37gJPlUQ59zC3NsmUDjC1cXCE=;
-        b=cwkw6sCrtegJQ8Ptu9e9l+Bld9ygDFFXYlooGqYkxkD+5eiCirX5SY/ClQeJPleXpw
-         Qo0DhYHLwVvHLsaGu7LzVd6SyLO5URydUiNTR8ZUsEhN65vH8AjCJXPsOYksCIAWFsl2
-         QQ5sIiLdWptVyOKGJK4YUe3frd63bRJ6wvYcazdv2EgCSobfC+LLhY4wDIlgog4j2zR8
-         YmWmgPbRxlJd1HHspbGdSu3HRIRvDjCypOZXQFjYvQ11eXDGM6kyvM0bKUbr8lb//hJV
-         q++jUQ2dNrUYOn6PVwfaPEF1TBQoq8HvGyVm2aC8lNR7iHuegOxqrKHMA+1B0i5fNr5x
-         lfDg==
+        with ESMTP id S1344070AbiDKJG0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 05:06:26 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF2013D46;
+        Mon, 11 Apr 2022 02:04:13 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id t207so8685296qke.2;
+        Mon, 11 Apr 2022 02:04:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3KQ5ya3EPilOhzylWj37gJPlUQ59zC3NsmUDjC1cXCE=;
-        b=fbFubxHk4Xh7AottRWknhodTXmgzZJLCtLfFDs31BmtwOTgSL8zsYjEeNnCLyzXLKw
-         psi6ynz0fgdTIZknXj11N18PP2wjyJRxybkmMJfj0Hx8ZYakBXg5JsKXl/b2nhd5g7F5
-         9MWkkIOA9sfVdM8DFrIqWkqUvfpD+dDwGjnDplV+4zUlsXT9Tkzaumi183vBtDt5b2jP
-         j9u5yTgzFBO0rXtPTz7E+z9i03srwi5Wc7JhMncwi0SBLzZS5Qy+7EfLhFqbhe1gPwWf
-         qtlQIxuIMBvxQHiwXUDATosCSE/JybPewIdhqN978+VQk4xUXLjcVeeBhsSou7b24KqD
-         uXsg==
-X-Gm-Message-State: AOAM530p1ft4TB5jV89VE7tTPM4Gi2QTfJ5yEJ8AQwdIkWddjQ8GMNQo
-        6whGs6TzNe6VwKbWvAARrIF/98L5j9r/0PuH22e7SA==
-X-Google-Smtp-Source: ABdhPJxvlrytqGFk1MovwBdEeMpndeev4iJhooaPyEIB6iXrR88kdjVrNjv/NK8V/e4/JCA69wWfGQt181VTJyRDx1c=
-X-Received: by 2002:a17:906:5d05:b0:6e8:40cc:1a99 with SMTP id
- g5-20020a1709065d0500b006e840cc1a99mr17434265ejt.734.1649667445571; Mon, 11
- Apr 2022 01:57:25 -0700 (PDT)
+        bh=9TRi0bNPoJj9i+0TdWcYotMzzdlJV8VxAkudB/T4n5g=;
+        b=RecfqrvAO5i82vM6HhQECzvgKmhIMr/jiKkGFRhT9lnN+u742mAL7D96PXK5qS840n
+         gOOPws5XJeUcituCVCdnaa1sYxmDgQLRWNxeSXHcObl/FrMlTCtRyjhcKP5eCu3pm3Xn
+         ONBzIpw9cfeRSupT8LP/eta76PfEP8FQu7tYTxhi76AwqA9VkW10esbHhyI7gT7Gtpsi
+         KouBIAtFshLJQi+o03VZU/skEoo88+iUvfadSHiYuDG0KNOApBOG1IbvmfVRW9Hwhiks
+         tkOmCFZ35EJcgTNf+0UsoakCcA2SexVOY2JgN4i+CVCvonyl51PIlkjDT9h63j9Xkp7O
+         YhoA==
+X-Gm-Message-State: AOAM5306NEtkVWrREkdrUre3SuaY5HNsW0EfaJwEM/+M7G/DqzEMh16O
+        KWg8wsud6Yw8Aca/lVRZ9ABv6+dasLSevA==
+X-Google-Smtp-Source: ABdhPJw92TnKqmEK7ZGcPKpGIraYJ0Hs1eXfW4oHleGd3bCX1+k4rLnRv8QiUkRuNSclWNkBN3faZQ==
+X-Received: by 2002:a05:620a:2408:b0:699:d310:dbfb with SMTP id d8-20020a05620a240800b00699d310dbfbmr20973812qkn.326.1649667852207;
+        Mon, 11 Apr 2022 02:04:12 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id u11-20020a05622a14cb00b002e1fd9dce3dsm24476060qtx.60.2022.04.11.02.04.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Apr 2022 02:04:11 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-2ec04a2ebadso37504147b3.12;
+        Mon, 11 Apr 2022 02:04:11 -0700 (PDT)
+X-Received: by 2002:a0d:e743:0:b0:2eb:3106:9b32 with SMTP id
+ q64-20020a0de743000000b002eb31069b32mr25689449ywe.512.1649667851285; Mon, 11
+ Apr 2022 02:04:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1638443930.git.viresh.kumar@linaro.org> <20220411033348.khqukcu7xczytd6y@vireshk-i7>
-In-Reply-To: <20220411033348.khqukcu7xczytd6y@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Apr 2022 10:57:14 +0200
-Message-ID: <CAMRc=MdZiVwOGeUsFOpjJt+e3zPVE+oshoaRJ1a2gwo6zik9PA@mail.gmail.com>
-Subject: Re: [PATCH V2 0/4] libgpiod: Add Rust bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com> <20220401103604.8705-10-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220401103604.8705-10-andriy.shevchenko@linux.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Apr 2022 11:04:00 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX8zWA-3_=Je7sB_72G8Ky7-syqCH-RXGxNMazUipW-2g@mail.gmail.com>
+Message-ID: <CAMuHMdX8zWA-3_=Je7sB_72G8Ky7-syqCH-RXGxNMazUipW-2g@mail.gmail.com>
+Subject: Re: [PATCH v4 09/13] pinctrl: meson: Rename REG_* to MESON_REG_*
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Qianggui Song <qianggui.song@amlogic.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        openbmc@lists.ozlabs.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 5:33 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 02-12-21, 16:52, Viresh Kumar wrote:
-> > Hi Bartosz,
-> >
-> > This patch adds rust bindings for libgpiod v2.0, this is already partially
-> > tested with the virtio rust backend I am developing, which uses these to talk to
-> > the host kernel.
-> >
-> > This is based of the next/post-libgpiod-2.0 branch.
-> >
-> > I will be adding testing infrastructure later on, once other bindings are
-> > converted to use gpiosim.
->
-> Hi Bartosz,
->
-> I can see a lots of patches related to V2 version making there way
-> into libgpiod, but it is a bit hard for me to follow them currently.
->
-> Just wanted to request you, if you can ping me once the API is stable
-> enough and most of the V2 changes you planned are merged, so I can
-> rebase my stuff over those and send for review.
->
-> Thanks.
->
-> --
-> viresh
+Hi Andy,
 
-Hi Viresh!
+On Fri, Apr 1, 2022 at 12:36 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> Currently compilation test fails on x86 due to name collision. The usual
+> way to fix that is to move both conflicting parts to their own namespaces.
+>
+> Rename REG_* to MESON_REG_* as a prerequisite for enabling COMPILE_TEST.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Yes, I will! Just to give you a summary: the C API is mostly ready but
-I can't guarantee it won't change more. The C++ API needs another
-revision that should be posted today or tomorrow. The Python bindings
-are still WIP but will be ready soon. Once those three are agreed
-upon, we'll merge them into master as one (for bisectability), drop
-the next branch and work from there on new features (including Rust
-bindings). That's my plan at least.
+Thanks for your patch!
 
-Bart
+> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+> @@ -63,12 +63,12 @@ struct meson_reg_desc {
+>   * enum meson_reg_type - type of registers encoded in @meson_reg_desc
+>   */
+>  enum meson_reg_type {
+> -       REG_PULLEN,
+> -       REG_PULL,
+> -       REG_DIR,
+> -       REG_OUT,
+> -       REG_IN,
+> -       REG_DS,
+> +       MESON_REG_PULLEN,
+> +       MESON_REG_PULL,
+> +       MESON_REG_DIR,
+> +       MESON_REG_OUT,
+> +       MESON_REG_IN,
+> +       MESON_REG_DS,
+>         NUM_REG,
+
+MESON_NUM_REG?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
