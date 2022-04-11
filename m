@@ -2,93 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38A734FBD03
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 15:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36CF24FBE63
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 16:10:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232209AbiDKN2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Apr 2022 09:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37786 "EHLO
+        id S1344226AbiDKOM4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Apr 2022 10:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231480AbiDKN23 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 09:28:29 -0400
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AC63BA42;
-        Mon, 11 Apr 2022 06:26:15 -0700 (PDT)
-Received: by mail-qv1-f43.google.com with SMTP id c1so3750803qvl.3;
-        Mon, 11 Apr 2022 06:26:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NtHbCZm85sZWf1fOgb4C7izU98B/hqE6cBJHhExY5kk=;
-        b=fqT9PSxyCklfIhZaKUlKwYy2hg75aDTBGgihVnWECO+FyI0DIwWrgFotLAfat1kLp1
-         u7r3LYF+dUxTHUUbXF2a+oHahwh0DO8TdtBUeUYn5++vFnn28CjHXgOc31UWR3rc9856
-         QGq7oTQo/IAo+ND1mlCFuaGUiE7aQu0C6YYeOC0umx7kt640zPkqLULwCeWFimPLghR1
-         h5Xf1NFml9cTIjkDDZCrb3t2zo804X+4JRAAMzasT1Y135qJ8nezT4ipxmIRI84gWYKV
-         L4kAsp690iV4jKV6k8gjq+I8Eqz2N2XpgrROEd4pcyhgu03oHmK5NYK0aEDv7+z+SMaf
-         8Dsg==
-X-Gm-Message-State: AOAM5302gJ2cHDw3jW08ErAqIiezsjBJ8zOJKvUeUUDAV6BURxkChnHu
-        LJWHt2Nwu0uqNYjk823aowK7Q8Iky8qjQg==
-X-Google-Smtp-Source: ABdhPJzQc9Xam3pmGxtHHOQKYKM+HMO0qqf7ARp7eevzC+iuQpdgqSeBUqV/tORaY2abbeo4FVkH9w==
-X-Received: by 2002:a05:6214:20a1:b0:42d:6f51:46e2 with SMTP id 1-20020a05621420a100b0042d6f5146e2mr27272739qvd.67.1649683574678;
-        Mon, 11 Apr 2022 06:26:14 -0700 (PDT)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id i65-20020a379f44000000b0069a0d9eed43sm8043850qke.33.2022.04.11.06.26.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Apr 2022 06:26:14 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-2ebd70a4cf5so106256347b3.3;
-        Mon, 11 Apr 2022 06:26:14 -0700 (PDT)
-X-Received: by 2002:a81:4f0d:0:b0:2ec:1556:815 with SMTP id
- d13-20020a814f0d000000b002ec15560815mr4677453ywb.256.1649683573836; Mon, 11
- Apr 2022 06:26:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220406075318.14385-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVgxWMTXBp-3kZrHx4A74_k5N1QxGqum_7FiRUcLgnLtg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVgxWMTXBp-3kZrHx4A74_k5N1QxGqum_7FiRUcLgnLtg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 11 Apr 2022 15:26:02 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWh6meiY5v045Y92MRD92pO=zm8YJuF1=81Mz1aQLsAfg@mail.gmail.com>
-Message-ID: <CAMuHMdWh6meiY5v045Y92MRD92pO=zm8YJuF1=81Mz1aQLsAfg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: Kconfig: Select PINCTRL_RZG2L if
- ARCH_RZG2L is enabled
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        with ESMTP id S1346954AbiDKOMx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 10:12:53 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC9E20BD2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 07:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649686239; x=1681222239;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=oKV2VyjB4bleBNjYSx628qwMhcfrX/5hJVSNPJiw3dE=;
+  b=IkZTV/xerS2hXJdJeromh0khK/9VagCxl0YxJpi/wAhvpLwC/CTrMLZK
+   sV6hRh5opUqtjuf2mQ2J7fIC7/if1CeN/uAJwJ76uUoCozWuwpYKudLYO
+   yqWdXupH3/QLA3N2kvwuoK9vqtgdyXParyDxLfd5Ejf4tHZUTh6kvk5N5
+   PQf8YvhK6kekfxHircIx+IaOWDn221U7hvU1Ix0zi2PuwcxMCeXoGWA9V
+   cJDjoOm4P5Y+bCIhxuD62wEa4mEmo3aDMHHzH7PfjJ07X0msrbAiSNYXZ
+   of+TBI7l/QTyIt3h8t417zKD8NjE3sHl15U1chjOQBHMi1SqX8qhLVcbW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10314"; a="259719898"
+X-IronPort-AV: E=Sophos;i="5.90,252,1643702400"; 
+   d="scan'208";a="259719898"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 07:10:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,252,1643702400"; 
+   d="scan'208";a="660062542"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 11 Apr 2022 07:10:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 228F918E; Mon, 11 Apr 2022 17:10:06 +0300 (EEST)
+Date:   Mon, 11 Apr 2022 17:10:06 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux pin control <linux-gpio@vger.kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 5.18-2
+Message-ID: <YlQ2vsWcV8MIUZ3X@black.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 3:24 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, Apr 6, 2022 at 9:53 AM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > GPIO (PINCTRL) block is identical on Renesas RZ/G2L, RZ/G2UL and RZ/V2L
-> > SoC's, so instead of selecting PINCTRL_RZG2L config for each SoC select
-> > PINCTRL_RZG2L config option if ARCH_RZG2L is enabled. The ARCH_RZG2L
-> > config option is already selected by ARCH_R9A07G043, ARCH_R9A07G044 and
-> > ARCH_R9A07G054.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Linux pin control  maintainers,
 
-i.e. will queue in renesas-pinctrl-for-v5.19.
+Single fix for recently submitted driver. No conflicts or regression reports.
+Please, pull
 
-Gr{oetje,eeting}s,
+Thanks,
 
-                        Geert
+With Best Regards,
+Andy Shevchenko
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+The following changes since commit 3123109284176b1532874591f7c81f3837bbdc17:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  Linux 5.18-rc1 (2022-04-03 14:08:21 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.18-2
+
+for you to fetch changes up to 0be0b70df6611205ac392d0e21f7e077f3230ee6:
+
+  pinctrl: alderlake: Fix register offsets for ADL-N variant (2022-04-06 12:54:43 +0300)
+
+----------------------------------------------------------------
+intel-pinctrl for v5.18-2
+
+* Fix the register offsets for Alder Lake-N
+
+The following is an automated git shortlog grouped by driver:
+
+alderlake:
+ -  Fix register offsets for ADL-N variant
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      pinctrl: alderlake: Fix register offsets for ADL-N variant
+
+ drivers/pinctrl/intel/pinctrl-alderlake.c | 60 ++++++++++++++++++++-----------
+ 1 file changed, 40 insertions(+), 20 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
