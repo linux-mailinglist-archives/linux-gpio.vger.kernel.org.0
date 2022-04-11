@@ -2,110 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFCB74FBEF0
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 16:21:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01C8D4FBF76
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 16:46:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347275AbiDKOXU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Apr 2022 10:23:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
+        id S237140AbiDKOsc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Apr 2022 10:48:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347282AbiDKOWO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 10:22:14 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA16224F0B
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 07:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649686793; x=1681222793;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=YvzBEyoi4tiz8azXvBDVBWNfe3LZv8dvOeCt3CeVM+w=;
-  b=BkvIy9temFqeR4a1HWj/xqV9BkmWthRKPm//8KQVP/arwei3vMzyVPw8
-   B4B85iwyMy/rQy9CiDrd9S8QQ3JXYXWyN8PgN6QgLdLRbEDJ0gJyqYv9B
-   ZrGX0nyA4OirBfrqoD0PD5b2akwVSRooEcLrA9Kv4PUeOY6N9aE36uUOZ
-   R4BY7RU/10fqbW3DtxJDO7q1DrIrGlCUvIQSFP1oDCnDzRd0IWsZrYov7
-   WFPEJEusQmjolJ24bth2gGejvtFhsIc1ZxvwnAfreiCX2xDFfjVNHA6QT
-   brNPhuxYfiFQJqSQpms5uEHJkZQ7zJuw9+XWDpCjEnL1H6O7ga9h7gPiz
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10314"; a="242714437"
-X-IronPort-AV: E=Sophos;i="5.90,252,1643702400"; 
-   d="scan'208";a="242714437"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 07:19:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,252,1643702400"; 
-   d="scan'208";a="654638915"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Apr 2022 07:19:52 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B367B144; Mon, 11 Apr 2022 17:19:51 +0300 (EEST)
-Date:   Mon, 11 Apr 2022 17:19:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux GPIO <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 5.18-2
-Message-ID: <YlQ5B6+iE0o2xe0e@black.fi.intel.com>
+        with ESMTP id S229823AbiDKOsa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 10:48:30 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C49701DA44
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 07:46:15 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id h11so20439532ljb.2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 07:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=emlid.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EF/ZdlrN8nRjyRvKSDd/5K9MT4ZIu7zI75wMmScg1Y0=;
+        b=T8WpesY6zJeO/FV/hQmh529qIx7VZ75UXCbXttt7Loov9CfiOMbuuJsGwR4t2haZcT
+         GmbzJLGb2Fc8uzoX0R+4Rb30ccUoEDKzSgvfeba6nqJ2EGJrOP7ANOIkbtUrnO9vQfMP
+         2fgYl301nhSQHnJC8qVpgnHxiFXwPFfz+rJwvSFZ/iYw/qMtkbcOQ1vZK6OALQnZV9WG
+         CxnKyd8+IU5HQYPq5mZ51mvVywrachn5UmZaDbQomXyV1pKsyIXe7P1CbefKGLzNXyT1
+         C6F8ct/cF20RrD5hFvqo3lHq7SN0twbXIDDFni2puc3fLBtbwRaRNAaInLhA3v6wk5MU
+         VhcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EF/ZdlrN8nRjyRvKSDd/5K9MT4ZIu7zI75wMmScg1Y0=;
+        b=1RzvH/kRj3eHyHD7I279osDkPu6DMQgSs6Mz2qcd8vb3j7GyqlFMV2T7u721PgFQC4
+         A4zTnOAXJVSzANOubZ4lxG0EkOHaM7rWXQYNPSsD9C43rsOc7Ih3vI+chP8RnG0sPf2N
+         jRVDonaHlaWVrGPg478kjk1OeHiz+Ii1DNadPR2ePUB6CP8uXsSWjnlbLIVsPMidhmAz
+         p/R7TYyEP9KCWWoMj+WholkFhkMFWEbxiSmbcrLFPdjplzsu4fGwAzln0ckpkv7dF64d
+         7qUPDFuwAy1t6QsJ/1adHCbxQFmOw75FBYtcugye/RdmIzTLb9I29KAsak4UBeC4OfTE
+         aIPg==
+X-Gm-Message-State: AOAM530xhbfhkjriGULh+VfueUuMXRjq7nzIbvf+wBFCd1Dvv0nZI103
+        ycdWElqUUwAPiTt77clW0nQnmw==
+X-Google-Smtp-Source: ABdhPJyuNwa/ObzUgwXe219oZ5XexGEgWGjXpXNZGo57n0ucbwn1btXWx8xbgGbGNl9bszAuG4ucIQ==
+X-Received: by 2002:a2e:9041:0:b0:24a:ce83:dcb4 with SMTP id n1-20020a2e9041000000b0024ace83dcb4mr20924324ljg.291.1649688373829;
+        Mon, 11 Apr 2022 07:46:13 -0700 (PDT)
+Received: from emlid-ThinkPad-E480.localdomain ([85.143.205.202])
+        by smtp.gmail.com with ESMTPSA id q28-20020a2e751c000000b002498394f232sm3119211ljc.72.2022.04.11.07.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Apr 2022 07:46:13 -0700 (PDT)
+From:   Andrei Lalaev <andrei.lalaev@emlid.com>
+To:     andy.shevchenko@gmail.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrei Lalaev <andrei.lalaev@emlid.com>
+Subject: Re: [PATCH] gpiolib: of: fix bounds check for valid mask
+Date:   Mon, 11 Apr 2022 17:46:03 +0300
+Message-Id: <20220411144602.127262-1-andrei.lalaev@emlid.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAHp75VfyxspOScEt1qffshdrDYuQp50O5HFbr2cUV7MYsg=JdQ@mail.gmail.com>
+References: <CAHp75VfyxspOScEt1qffshdrDYuQp50O5HFbr2cUV7MYsg=JdQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux GPIO  maintainers,
+Thanks for the grammar comments.
 
-Couple of fixes related to GPIO ACPI library. Second one is not a fix per se,
-but coupled together, so we won't have other issues WRT unsignedness of the
-pin from ACPI tables. Please, pull.
+> Should it have a Fixes tag?
 
-Thanks,
+Sure, thanks, I will resend with a Fixes tag and without grammar errors.
 
-With Best Regards,
-Andy Shevchenko
+> What does documentation tell about it?
 
-The following changes since commit 3123109284176b1532874591f7c81f3837bbdc17:
+Documentation (devicetree/bindings/gpio/gpio.txt line 152) tells that
+"This property indicates the start and size of the GPIOs that can't be used."
+And the example (line 178) at the same file shows that the second element of
+a tuple is the count: "gpio-reserved-ranges = <0 4>, <12 2>;"
 
-  Linux 5.18-rc1 (2022-04-03 14:08:21 -0700)
+> Does it need to be fixed?
 
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.18-2
-
-for you to fetch changes up to 0c2cae09a765b1c1d842eb9328982976ec735926:
-
-  gpiolib: acpi: Convert type for pin to be unsigned (2022-04-08 15:13:22 +0300)
-
-----------------------------------------------------------------
-intel-gpio for v5.18-2
-
-* Couple of fixes related to handling unsigned value of the pin from ACPI
-
-The following is an automated git shortlog grouped by driver:
-
-gpiolib:
- -  acpi: Convert type for pin to be unsigned
- -  acpi: use correct format characters
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpiolib: acpi: Convert type for pin to be unsigned
-
-Linus Torvalds (1):
-      gpiolib: acpi: use correct format characters
-
- drivers/gpio/gpiolib-acpi.c   | 22 ++++++++++++----------
- include/linux/gpio/consumer.h |  8 +++++++-
- 2 files changed, 19 insertions(+), 11 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I think so, because the current implementation doesn't reserve some GPIO ranges.
+For example, we have 20 GPIOs and we want to reserve GPIOs from 14 to 19.
+In this case the "reserved-ranges" looks like "<14 6>" but the
+"of_gpiochip_init_valid_mask" drops the range and this is not expected behavior.
