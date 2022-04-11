@@ -2,121 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2108B4FBCE0
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 15:16:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F2DB4FBCFD
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 15:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346397AbiDKNTI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Apr 2022 09:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
+        id S245332AbiDKN1V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Apr 2022 09:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346389AbiDKNTG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 09:19:06 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F0B3AA6B;
-        Mon, 11 Apr 2022 06:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649683012; x=1681219012;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8NkmJflT2vjOmTzpi2Ay4zQaAbqkNIhnYYU/YH2VLeY=;
-  b=RRzMpWLeBad+QQ6BIUs6Br0jqOHgA+IZ44jv/ehdz6S+E5hGXpiMGfRS
-   oOhxJUbxGYe8xGJCzA1kflPHXwLv3Tr9XYlOgX+kmOi+15zTBJgyY+T5P
-   Frhl+HQ85SEzpNpTllB1/dZBPU6RXgdh0bX0W5kEY+dp1+i1p8B68uFad
-   nWTiE89VqQRH4j/rn3NziuinaJLCJ7GJzNGaIpP/S9rwaG9JWcrzHlqKq
-   plCn5YNLpNY5Nl+vMwNh/ieFKE2QIlSsJz6V+qT46O0OuQZxh3p9iW+zk
-   u7zXy4bHzMJw/ndpEqyRdr9uhjoShwjZzQDxtyzNPXs3a/mMBKloWH57/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10313"; a="259707518"
-X-IronPort-AV: E=Sophos;i="5.90,251,1643702400"; 
-   d="scan'208";a="259707518"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 06:16:52 -0700
-X-IronPort-AV: E=Sophos;i="5.90,251,1643702400"; 
-   d="scan'208";a="644080149"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 06:16:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ndtqp-001DRI-MC;
-        Mon, 11 Apr 2022 16:13:03 +0300
-Date:   Mon, 11 Apr 2022 16:13:03 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Qianggui Song <qianggui.song@amlogic.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marc Zyngier <maz@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 05/13] pinctrl: samsung: Switch to use
- for_each_gpiochip_node() helper
-Message-ID: <YlQpX0Gu/O9IuhyW@smile.fi.intel.com>
-References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
- <20220401103604.8705-6-andriy.shevchenko@linux.intel.com>
- <4513324d-3dba-fd21-2a7f-9f1b9ef535cc@linaro.org>
+        with ESMTP id S231480AbiDKN1U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 09:27:20 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23553B57A;
+        Mon, 11 Apr 2022 06:25:06 -0700 (PDT)
+Received: by mail-qt1-f175.google.com with SMTP id t7so16110645qta.10;
+        Mon, 11 Apr 2022 06:25:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bGC2tgeOPfry3WvGg3C5/9hE7RvSDEamHHdww/M1V3c=;
+        b=5CobRKGLE27GrLFviDTpqCa4BccpEe17KV/lD9noQU3eeIIdeFwVL0qisJpV2vTYdw
+         a5OlUXPuEixPR77R4ULy53pN/YOk5JQh8YhdwWB4yNirCR++Wwk8qhIHk9SDcnP0JyP9
+         sAQZgUtbKYDFFMoMhokZHv1hc5YV77pcZf2HdQ7iPguo+US/zDXK6rCAeLnPBJxowjzz
+         7Sd4J8wcL5S6omB9Ey43T+Z2n7HSk4qYvN7CW5KSvQ0Q7z+lEiukGqQwjhD8N3oHrMGu
+         WO8ZnUXabsjd2+0ZK+JyCMR/PpAc9CluEUYdO69Y5Q1Y1n6DpBIur+DtRHqS/SlOioac
+         QidQ==
+X-Gm-Message-State: AOAM533FpJ0VnwvkIBHQQlt/i/tFBFf5VyW0sfnlmzUAJUNhqPPR/rQo
+        eyRCK1vIWXSJlj1JaZ3kVcF3dp+VOqxBBw==
+X-Google-Smtp-Source: ABdhPJxNpZ7pMpvRsUdRVlSTYEeGO5vfJej6uHAXxlI4OBl0CTSBWMHLvBwDuXS5Y42D+vDwzn0jMg==
+X-Received: by 2002:ac8:58c5:0:b0:2e1:cca9:b3f3 with SMTP id u5-20020ac858c5000000b002e1cca9b3f3mr26030632qta.100.1649683505920;
+        Mon, 11 Apr 2022 06:25:05 -0700 (PDT)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id br13-20020a05620a460d00b00680d020b4cbsm18208629qkb.10.2022.04.11.06.25.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Apr 2022 06:25:05 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id v77so9344678ybi.12;
+        Mon, 11 Apr 2022 06:25:05 -0700 (PDT)
+X-Received: by 2002:a5b:984:0:b0:63f:8c38:676c with SMTP id
+ c4-20020a5b0984000000b0063f8c38676cmr11911366ybq.393.1649683505196; Mon, 11
+ Apr 2022 06:25:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4513324d-3dba-fd21-2a7f-9f1b9ef535cc@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220406075318.14385-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20220406075318.14385-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Apr 2022 15:24:54 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVgxWMTXBp-3kZrHx4A74_k5N1QxGqum_7FiRUcLgnLtg@mail.gmail.com>
+Message-ID: <CAMuHMdVgxWMTXBp-3kZrHx4A74_k5N1QxGqum_7FiRUcLgnLtg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: Kconfig: Select PINCTRL_RZG2L if
+ ARCH_RZG2L is enabled
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 02:21:00PM +0200, Krzysztof Kozlowski wrote:
-> On 01/04/2022 12:35, Andy Shevchenko wrote:
-> > Switch the code to use for_each_gpiochip_node() helper.
-> > 
-> > While at it, in order to avoid additional churn in the future,
-> > switch to fwnode APIs where it makes sense.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/pinctrl/samsung/pinctrl-exynos.c  |  8 +++---
-> >  drivers/pinctrl/samsung/pinctrl-s3c24xx.c |  2 +-
-> >  drivers/pinctrl/samsung/pinctrl-s3c64xx.c |  4 +--
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c | 30 +++++++++++------------
-> >  drivers/pinctrl/samsung/pinctrl-samsung.h |  2 +-
-> >  5 files changed, 22 insertions(+), 24 deletions(-)
-> 
-> Tested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Wed, Apr 6, 2022 at 9:53 AM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> GPIO (PINCTRL) block is identical on Renesas RZ/G2L, RZ/G2UL and RZ/V2L
+> SoC's, so instead of selecting PINCTRL_RZG2L config for each SoC select
+> PINCTRL_RZG2L config option if ARCH_RZG2L is enabled. The ARCH_RZG2L
+> config option is already selected by ARCH_R9A07G043, ARCH_R9A07G044 and
+> ARCH_R9A07G054.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks!
-I'm going to spread this to two patches to which I pointed out before.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Gr{oetje,eeting}s,
 
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
