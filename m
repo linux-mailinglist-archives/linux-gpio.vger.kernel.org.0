@@ -2,101 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EAFB4FB269
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 05:34:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D19D54FB3B7
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 08:25:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240392AbiDKDgE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 10 Apr 2022 23:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60788 "EHLO
+        id S244904AbiDKG14 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Apr 2022 02:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238812AbiDKDgD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 Apr 2022 23:36:03 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322322AC57
-        for <linux-gpio@vger.kernel.org>; Sun, 10 Apr 2022 20:33:51 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id c12-20020a17090a020c00b001cba1ebb20cso714256pjc.0
-        for <linux-gpio@vger.kernel.org>; Sun, 10 Apr 2022 20:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ReP3a8cEKT8nv+Y7WWH4UmOJoBGVyEgvolBr0WXkxmc=;
-        b=rjskXEqlsI0fiwe8xupYXDdBkdDmZt98SobZd8jfWI81Kv+NFeWVMk2YvdKmWuYmTB
-         pNp9Zy1+8TtnCX7wNRYnHM+kzyb12JTcLgKRCUiimiuWFGYgPcWOz8twiT1nc9w9EZOx
-         +T+cu24SiKy3qLc9SYbPUUVmARBKwK4+JNNph9RWXKF324owIcFzc49Jj1rw6FbD/AaC
-         IDZHx9V9l9ZBUzjQUjj0jq2wNZkUfSQBHYrhZxwJ4QDSvTW84+k6RtV6CXBO8fYBwhqe
-         ULiyUROXIx2xsBbqfJrK5kePkUnvVaKUyqm0lDGl9v/6xip2mrTFTzrXDykF+26uVlrb
-         HUKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ReP3a8cEKT8nv+Y7WWH4UmOJoBGVyEgvolBr0WXkxmc=;
-        b=HTc/jDY+EpdomRrzRyzc0GZjWWje9ZoUDyx0cyq46tTVLHfBTIpcxlzlGolnvh2ZrA
-         wzNlhWWh0XAE1cQvxqmavs/QzuqHsUt4xCxY0xlqc/MKVL8/U8X7wEQkVGjhDE9PA8M6
-         SAtm8pzLnYB40uGkxOgDElMCZXdYUUnCS3HqmO2d49pRcK+Tprm7l7Nhm6qL1YIoamyb
-         eA5wPVsDbltIkN1I+zF2McEWkQ325uv71Pk9QFAa3fZIHs0bQLCXcXAm2ed3COOMkoBV
-         TMX7ThrrROOFUG3hFyk9Mw3Odr9iptblInaQF+TBPorq5foR9RVC5aYp0R3wU1q8Tf1F
-         yLfg==
-X-Gm-Message-State: AOAM5307JU1pYsnZ2XlGTmIG5y3ncKINK6y/dppq9a6iq2RrY5bvo6fy
-        GRzlsG0kDNRRNT7lZgMOXl32zKttG+MzRw==
-X-Google-Smtp-Source: ABdhPJz4LXNwXg8egDX2jKsYyyTAADvKFoNZUDqvS6rDVtTGCWbaTPw9sTQl6zudRf6mluH74TR23w==
-X-Received: by 2002:a17:90a:5146:b0:1ca:75b8:7765 with SMTP id k6-20020a17090a514600b001ca75b87765mr34442339pjm.86.1649648030589;
-        Sun, 10 Apr 2022 20:33:50 -0700 (PDT)
-Received: from localhost ([223.184.83.228])
-        by smtp.gmail.com with ESMTPSA id y3-20020a17090a8b0300b001c735089cc2sm18166543pjn.54.2022.04.10.20.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Apr 2022 20:33:49 -0700 (PDT)
-Date:   Mon, 11 Apr 2022 09:03:48 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org
-Subject: Re: [PATCH V2 0/4] libgpiod: Add Rust bindings
-Message-ID: <20220411033348.khqukcu7xczytd6y@vireshk-i7>
-References: <cover.1638443930.git.viresh.kumar@linaro.org>
+        with ESMTP id S244963AbiDKG1n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 02:27:43 -0400
+Received: from mail.tkos.co.il (wiki.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E523E15A29;
+        Sun, 10 Apr 2022 23:25:28 -0700 (PDT)
+Received: from tarshish.tkos.co.il (unknown [10.0.8.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.tkos.co.il (Postfix) with ESMTPS id CB20D440B04;
+        Mon, 11 Apr 2022 09:24:54 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+        s=default; t=1649658295;
+        bh=8TsfAT2S1U8xqv6JM1/X3JBGHORa30BGGzVHgtIwLbc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=c1X5n50YlK2MGLpoodtqVZEUYNqVEK/362HbkEo1UP28uo8ZSI6bRxpEWhtBUTYgT
+         x4oobefUzWK764OBrV+R0lEpgRRgcXEc2uvd1jeRgxaLEF3Xm39dFrsvXYFvkwNTx/
+         WieABLFuHtuNahqhKpAYjIoowAB1vndwoOPy4dJ0Gys3nl5kFWdLpjyY+n55cTaQgs
+         FBnL76baWv/LW9mtSDzge0NEcZ1VHDzEFYBAv60Y2xzNzOCAe2dxm0YyOcKgqKi4qg
+         R5/+t4g7jaLtRc7xZLvOH758vP81wQ/qb16ITLeaNbi6LDH7ltVPjvJ8LIMLA3g6E+
+         EVFzyglWO9YMg==
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     Russell King <linux@armlinux.org.uk>, linux-pwm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH] gpio: mvebu: drop pwm base assignment
+Date:   Mon, 11 Apr 2022 09:23:40 +0300
+Message-Id: <145383feecbe43f3bbd3e128143f7890f0314b3b.1649658220.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1638443930.git.viresh.kumar@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02-12-21, 16:52, Viresh Kumar wrote:
-> Hi Bartosz,
-> 
-> This patch adds rust bindings for libgpiod v2.0, this is already partially
-> tested with the virtio rust backend I am developing, which uses these to talk to
-> the host kernel.
-> 
-> This is based of the next/post-libgpiod-2.0 branch.
-> 
-> I will be adding testing infrastructure later on, once other bindings are
-> converted to use gpiosim.
+pwmchip_add() unconditionally assigns the base ID dynamically. Commit
+f9a8ee8c8bcd1 ("pwm: Always allocate PWM chip base ID dynamically")
+dropped all base assignment from drivers under drivers/pwm/. It missed
+this driver. Fix that.
 
-Hi Bartosz,
+Fixes: f9a8ee8c8bcd1 ("pwm: Always allocate PWM chip base ID dynamically")
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+ drivers/gpio/gpio-mvebu.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-I can see a lots of patches related to V2 version making there way
-into libgpiod, but it is a bit hard for me to follow them currently.
-
-Just wanted to request you, if you can ping me once the API is stable
-enough and most of the V2 changes you planned are merged, so I can
-rebase my stuff over those and send for review.
-
-Thanks.
-
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 4c1f9e1091b7..a2c8dd329b31 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -871,13 +871,6 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	mvpwm->chip.dev = dev;
+ 	mvpwm->chip.ops = &mvebu_pwm_ops;
+ 	mvpwm->chip.npwm = mvchip->chip.ngpio;
+-	/*
+-	 * There may already be some PWM allocated, so we can't force
+-	 * mvpwm->chip.base to a fixed point like mvchip->chip.base.
+-	 * So, we let pwmchip_add() do the numbering and take the next free
+-	 * region.
+-	 */
+-	mvpwm->chip.base = -1;
+ 
+ 	spin_lock_init(&mvpwm->lock);
+ 
 -- 
-viresh
+2.35.1
+
