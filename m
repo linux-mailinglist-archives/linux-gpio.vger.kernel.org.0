@@ -2,54 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADF404FB6DF
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 11:04:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F5CC4FB97F
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 12:24:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244103AbiDKJGf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Apr 2022 05:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56348 "EHLO
+        id S1345570AbiDKK04 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Apr 2022 06:26:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344070AbiDKJG0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 05:06:26 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF2013D46;
-        Mon, 11 Apr 2022 02:04:13 -0700 (PDT)
-Received: by mail-qk1-f180.google.com with SMTP id t207so8685296qke.2;
-        Mon, 11 Apr 2022 02:04:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9TRi0bNPoJj9i+0TdWcYotMzzdlJV8VxAkudB/T4n5g=;
-        b=RecfqrvAO5i82vM6HhQECzvgKmhIMr/jiKkGFRhT9lnN+u742mAL7D96PXK5qS840n
-         gOOPws5XJeUcituCVCdnaa1sYxmDgQLRWNxeSXHcObl/FrMlTCtRyjhcKP5eCu3pm3Xn
-         ONBzIpw9cfeRSupT8LP/eta76PfEP8FQu7tYTxhi76AwqA9VkW10esbHhyI7gT7Gtpsi
-         KouBIAtFshLJQi+o03VZU/skEoo88+iUvfadSHiYuDG0KNOApBOG1IbvmfVRW9Hwhiks
-         tkOmCFZ35EJcgTNf+0UsoakCcA2SexVOY2JgN4i+CVCvonyl51PIlkjDT9h63j9Xkp7O
-         YhoA==
-X-Gm-Message-State: AOAM5306NEtkVWrREkdrUre3SuaY5HNsW0EfaJwEM/+M7G/DqzEMh16O
-        KWg8wsud6Yw8Aca/lVRZ9ABv6+dasLSevA==
-X-Google-Smtp-Source: ABdhPJw92TnKqmEK7ZGcPKpGIraYJ0Hs1eXfW4oHleGd3bCX1+k4rLnRv8QiUkRuNSclWNkBN3faZQ==
-X-Received: by 2002:a05:620a:2408:b0:699:d310:dbfb with SMTP id d8-20020a05620a240800b00699d310dbfbmr20973812qkn.326.1649667852207;
-        Mon, 11 Apr 2022 02:04:12 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id u11-20020a05622a14cb00b002e1fd9dce3dsm24476060qtx.60.2022.04.11.02.04.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Apr 2022 02:04:11 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-2ec04a2ebadso37504147b3.12;
-        Mon, 11 Apr 2022 02:04:11 -0700 (PDT)
-X-Received: by 2002:a0d:e743:0:b0:2eb:3106:9b32 with SMTP id
- q64-20020a0de743000000b002eb31069b32mr25689449ywe.512.1649667851285; Mon, 11
- Apr 2022 02:04:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com> <20220401103604.8705-10-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220401103604.8705-10-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 11 Apr 2022 11:04:00 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX8zWA-3_=Je7sB_72G8Ky7-syqCH-RXGxNMazUipW-2g@mail.gmail.com>
-Message-ID: <CAMuHMdX8zWA-3_=Je7sB_72G8Ky7-syqCH-RXGxNMazUipW-2g@mail.gmail.com>
-Subject: Re: [PATCH v4 09/13] pinctrl: meson: Rename REG_* to MESON_REG_*
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S1345558AbiDKK0c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 06:26:32 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135F443EC2;
+        Mon, 11 Apr 2022 03:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649672590; x=1681208590;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W9PBitEIG3h2GlCxu7zEfN69pBWFXH7+lRg/Bcxe/tU=;
+  b=f72pHBvbzdSnGiJbbZGOcVbarU12CQVURpB/E3Mor0lbiFUfSKpBKLCp
+   6pCwb/GQXoLFAL7pCrnqlokfyygyEjJ45Fe72MHYn3ALI1YlBr8qPigsw
+   /Civ/Z6elREx7yGDI56V7S3YB9vnFSxZh29aa22UaVzO2smO+mhftg3Py
+   rFT9PAS1cJeznNqYOn+eljY8ZhMDdy3uhRTUZ0OzbhG6J5JnTVEc98U9q
+   MYkTE5HH9G9YoiXAs5QYtk37GFIl/Epe+LbQviuH2GU6hi7UvjAEejRhG
+   bXxI9g44jgjylo+j+xQ4/0Y1PaPYGhxfbUWQGMjCHz4y6XKAFvo+pR2kV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10313"; a="242018883"
+X-IronPort-AV: E=Sophos;i="5.90,251,1643702400"; 
+   d="scan'208";a="242018883"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 03:23:00 -0700
+X-IronPort-AV: E=Sophos;i="5.90,251,1643702400"; 
+   d="scan'208";a="525460425"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 03:22:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ndr8Z-001B7S-AA;
+        Mon, 11 Apr 2022 13:19:11 +0300
+Date:   Mon, 11 Apr 2022 13:19:11 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Qianggui Song <qianggui.song@amlogic.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
@@ -83,59 +76,46 @@ Cc:     Qianggui Song <qianggui.song@amlogic.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Philipp Zabel <p.zabel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v4 09/13] pinctrl: meson: Rename REG_* to MESON_REG_*
+Message-ID: <YlQAn9+4kdB0F/4d@smile.fi.intel.com>
+References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
+ <20220401103604.8705-10-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdX8zWA-3_=Je7sB_72G8Ky7-syqCH-RXGxNMazUipW-2g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX8zWA-3_=Je7sB_72G8Ky7-syqCH-RXGxNMazUipW-2g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Mon, Apr 11, 2022 at 11:04:00AM +0200, Geert Uytterhoeven wrote:
+> On Fri, Apr 1, 2022 at 12:36 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > Currently compilation test fails on x86 due to name collision. The usual
+> > way to fix that is to move both conflicting parts to their own namespaces.
+> >
+> > Rename REG_* to MESON_REG_* as a prerequisite for enabling COMPILE_TEST.
 
-On Fri, Apr 1, 2022 at 12:36 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> Currently compilation test fails on x86 due to name collision. The usual
-> way to fix that is to move both conflicting parts to their own namespaces.
->
-> Rename REG_* to MESON_REG_* as a prerequisite for enabling COMPILE_TEST.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >         NUM_REG,
+> 
+> MESON_NUM_REG?
 
-Thanks for your patch!
+Hmm... Only one place where it's defined and used, but I can do it, sure.
 
-> --- a/drivers/pinctrl/meson/pinctrl-meson.h
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
-> @@ -63,12 +63,12 @@ struct meson_reg_desc {
->   * enum meson_reg_type - type of registers encoded in @meson_reg_desc
->   */
->  enum meson_reg_type {
-> -       REG_PULLEN,
-> -       REG_PULL,
-> -       REG_DIR,
-> -       REG_OUT,
-> -       REG_IN,
-> -       REG_DS,
-> +       MESON_REG_PULLEN,
-> +       MESON_REG_PULL,
-> +       MESON_REG_DIR,
-> +       MESON_REG_OUT,
-> +       MESON_REG_IN,
-> +       MESON_REG_DS,
->         NUM_REG,
+$ git grep -n -w NUM_REG
+drivers/pinctrl/meson/pinctrl-meson.h:72:       NUM_REG,
+drivers/pinctrl/meson/pinctrl-meson.h:105:      struct meson_reg_desc regs[NUM_REG];
 
-MESON_NUM_REG?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
