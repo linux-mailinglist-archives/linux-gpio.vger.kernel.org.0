@@ -2,126 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E86264FBA16
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 12:50:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C1124FBB2C
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Apr 2022 13:45:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244472AbiDKKwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Apr 2022 06:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
+        id S244526AbiDKLr7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Apr 2022 07:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239480AbiDKKwQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 06:52:16 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AFF3275F8
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 03:50:02 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id g20so17818187edw.6
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Apr 2022 03:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8qVaxxM4VrfYFiYGh5sXPnkTylpFC03GWqDVpTOp9ow=;
-        b=49GQojuqsWxcfIA5Xf3XtxJAUH1r1tazCvpUpO9/sdgWINT6royZHGd65u9VXkoD3s
-         udpKd1GEx3EACKa3JrXAMz8AACnjmU5YkYTHMEbzJ47/mpXdSJFZMVtC/59H3y4Xzhs3
-         o2P+3b05a/BZ3MGsKQLCMDmSARHER/1mGaWho1xsnDB3HlZXNIXK6gsplLcKnh/Io/us
-         cGlfA6OLtucM4eBdXuoPQ8M9SpvZrbxAEVHxaPLNYYNeZ181u5SGkneXq+nZYP5+kHaZ
-         WrXio/g+i0mqY2T/Fwet0f5QEWyUOoDg76PnPlPHim7GkO9/wvWBbR0eW8Q9m91X2m6t
-         EKDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8qVaxxM4VrfYFiYGh5sXPnkTylpFC03GWqDVpTOp9ow=;
-        b=0Bq+FWVg8pBrq3ppMhf67gnQ6RAkc0zbkaWtmU+38EMsmDWMu7k9ONt6w0a3tjOZd+
-         5B5RvuzeQy+0AW4R2xJIm6X10kQZjFAO5lU6Zd88w1zx0LrCV6LhEA3pq5rarMuhWKND
-         0rxncMS+6tsF69LL0yIrqt6E9FxlzK5N0sZKVVXvtaDLmGwA8JHipUwYRvWi2+g/9aBg
-         GelmDogYCJrnMhs412fIkg/t5ZbnDqVMBOn342TacneKNkvmOh6UXUR4Fr/LYxDvS6nN
-         RBV3mJzNQPRS+AcaWOa9AsV9EwERfJ2OzGCQO1UxgpLD3pStvtRmlOJ017fXoLxZ7CJQ
-         ejPA==
-X-Gm-Message-State: AOAM5307B4GHKHFxk8zyYnGeWdlAxraNjLRmSjWalmNeSDmODiOYA4Yd
-        T8p9C7V8evOTvy4i4OQEGHvTGCgiXOqCJ+gDJUsD1w==
-X-Google-Smtp-Source: ABdhPJzRC2Gw4YRScgWVWughlCBY3EG0KU6yr8i3BZYa6C/5LdP/ggZvfogD0qhcwbrb0BTuUOgGrr7++AvsSNvF5nk=
-X-Received: by 2002:a05:6402:22b5:b0:41d:7637:98b8 with SMTP id
- cx21-20020a05640222b500b0041d763798b8mr7522869edb.69.1649674200709; Mon, 11
- Apr 2022 03:50:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220409205134.13070-1-brgl@bgdev.pl> <CAHk-=wgQbb0cvOnX1W5_Ho_SvpYqS4GuEo=gxhbw-UCjOaEpQg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgQbb0cvOnX1W5_Ho_SvpYqS4GuEo=gxhbw-UCjOaEpQg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Apr 2022 12:49:50 +0200
-Message-ID: <CAMRc=McoUsyrpFsF6UooiTCcLeEwiKAs9aDy3z1OnqnA3peqWg@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v5.18-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S240921AbiDKLr5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Apr 2022 07:47:57 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF4F43481;
+        Mon, 11 Apr 2022 04:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649677544; x=1681213544;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r5Ar8qxrxZpK4XRu/tA3qWYavit0uwaROYPXccoJAjE=;
+  b=HKdg96oTw6HeyMFhfPjS2ZBUZOsgiEUl5qaGVH/l/OkajNRH+t3fY+Hz
+   UNjijB2yVrGE97oepAqsQ7Nk0IpUJOXGeaxp5bLWSLKtSH4taKw700uBi
+   +rMVj+nct0sOGo/Hh3BtLdqyTh06TmXqMdM5b2JaBG36GrdBm2bZht5LX
+   QQ8WzViqTz0cwgchPcF3UpQ437fB+RnzXOsePm/+R12GfpZknerrwdub1
+   7xxg546NkLYysTDhZxkENJSOB+DhBXbv+OA6/1Y1PC1gI+8roXZqyVaBL
+   BT1wa3fRq1rSs1gK6dc6qhcXdgUi+lxpqY1jK4lElRr6/vatBtdUt4QpS
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10313"; a="262274364"
+X-IronPort-AV: E=Sophos;i="5.90,251,1643702400"; 
+   d="scan'208";a="262274364"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 04:45:24 -0700
+X-IronPort-AV: E=Sophos;i="5.90,251,1643702400"; 
+   d="scan'208";a="622798226"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 04:45:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ndsQJ-001CCZ-MO;
+        Mon, 11 Apr 2022 14:41:35 +0300
+Date:   Mon, 11 Apr 2022 14:41:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Qianggui Song <qianggui.song@amlogic.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shreeya Patel <shreeya.patel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        openbmc@lists.ozlabs.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 09/13] pinctrl: meson: Rename REG_* to MESON_REG_*
+Message-ID: <YlQT7w1XSbnkNI9E@smile.fi.intel.com>
+References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
+ <20220401103604.8705-10-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdX8zWA-3_=Je7sB_72G8Ky7-syqCH-RXGxNMazUipW-2g@mail.gmail.com>
+ <YlQAn9+4kdB0F/4d@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YlQAn9+4kdB0F/4d@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 10, 2022 at 6:27 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, Apr 9, 2022 at 10:51 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > Here's a single fix for a race condition between the GPIO core and consumers of
-> > GPIO IRQ chips.
->
-> I've pulled this, but it's horribly broken.
->
-> You can't just use a compiler barrier to make sure the compiler orders
-> the data at initialization time.
->
-> That doesn't take care of CPU re-ordering, but it also doesn't take
-> care of re-ordering reads on the other side of the equation.
->
-> Every write barrier needs to pair with a read barrier.
->
-> And "barrier()" is only a barrier on that CPU, since it is only a
-> barrier for code generation, not for data.
->
-> There are multiple ways to do proper hand-off of data, but the best
-> one is likely
->
->  - on the initialization side, do
->
->         .. initialize all the data, then do ..
->         smp_store_release(&initialized, 1);
->
->  - on the reading side, do
->
->         if (!smp_load_acquire(&initialized))
->                  return -EAGAIN;
->
->         .. you can now rely on all the data having been initialized ..
->
-> But honestly, the fact that you got this race condition so wrong makes
-> me suggest you use proper locks. Because the above gives you proper
-> ordering between the two sequences, but the sequences in question
-> still have to have a *lot* of guarantees about the accesses actually
-> then being valid in a lock-free environment (the only obviously safe
-> situation is a "initialize things once, everything afterwards is only
-> a read" - otherwise y ou need to make sure all the *updates* are
-> safely done too).
->
-> With locking, all these issues go away. The lock will take care of
-> ordering, but also data consistency at updates.
->
-> Without locking, you need to do the above kinds of careful things for
-> _all_ the accesses that can race, not just that "initialized" flag.
->
->                  Linus
+On Mon, Apr 11, 2022 at 01:19:11PM +0300, Andy Shevchenko wrote:
+> On Mon, Apr 11, 2022 at 11:04:00AM +0200, Geert Uytterhoeven wrote:
+> > On Fri, Apr 1, 2022 at 12:36 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
 
-Cc'ing Shreeya
+...
 
-Thanks, we'll see about a follow-up with a better solution.
+> > >         NUM_REG,
+> > 
+> > MESON_NUM_REG?
+> 
+> Hmm... Only one place where it's defined and used, but I can do it, sure.
 
-Bart
+Updated locally.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
