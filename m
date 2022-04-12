@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B2434FDF3D
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Apr 2022 14:04:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9261B4FDF75
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Apr 2022 14:28:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351382AbiDLMG3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Apr 2022 08:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
+        id S239733AbiDLMVi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Apr 2022 08:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354015AbiDLMET (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Apr 2022 08:04:19 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B3E3F8BB;
-        Tue, 12 Apr 2022 04:06:27 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id o2so9905625lfu.13;
-        Tue, 12 Apr 2022 04:06:27 -0700 (PDT)
+        with ESMTP id S1355649AbiDLMTU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Apr 2022 08:19:20 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD716EB2B;
+        Tue, 12 Apr 2022 04:22:44 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id u19so11521649lff.4;
+        Tue, 12 Apr 2022 04:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=P00jqtd+ILMRR9Q3mnllZuR6cE+BJcMxpj1JrqSYISk=;
-        b=lVB+k306E9WmYZwtVGX776xFikOkDj8MIVvynihNeUlVqtHPKszbHgxVOvZFoyZ18+
-         D7u4Sqd2codKn+ce6UTVew9fHiR5/0EGvTgwE6US1yPS7PwvoSScfnDjAwcP5vOuc4aZ
-         YlGFHU4o2rYb9vg0B9MzkIX/K8t1JXkkFnlRm6EqJ5NgWGt7fyo1tIADEzIoANiIhEc9
-         WSbmC57CohCUfwQxQZAOX0y1PONDJ5VSgMlUSDSqBN7FcNKjdpM8a4l2vjE/IUc3ajQx
-         KUwsC6OLFImvyC69ajRlE0bQyUm+mt/a395P4TqyVaMityHzlfoUMWZlhkRZwwXTwQne
-         YbjQ==
+        bh=zjgmtbSNoF2mZGEsUPtkbHFRRKP9FVVfefhVkGjbZfQ=;
+        b=kw7VIsEmf0U7Z1+NXfv7iOK5PQ4KvemOjD1kg7x00UfHoZBB6h+D0CwqbHh/cPuD/0
+         jIzEDCOy3vOueU+zlC5BzNs0rj0zc9mi7spq2cjU+5ty2WqyiQ+j7XyVHW/SHZrHkCHx
+         dSJkq1KezLVvbrG9ftDwj9TNLduLwhGKekHcdYWyT4yPUNmw+Yf0xVDYIyy09OcdopqK
+         nF/oww7ylgFAEA8CvC0fgY4UaSm8qezYVw8PEnwv6ltNKS9jMtWVCd1W36o6vgpjjCoQ
+         /06F6sHqA/I/MnWUGKJy78L6W8bdbVwzQ19FsIqb5OZffEsH97VUrLA+9Cr5aWhre0oJ
+         vYmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=P00jqtd+ILMRR9Q3mnllZuR6cE+BJcMxpj1JrqSYISk=;
-        b=HxxO3+8QjPPjBSm+2WwJa+/0XBbHQrKHj3XngLnBQEDqdJo4MVNIII0u6uRFVZgg7p
-         rUO7eggloi7r1O0KNf+po9QITipbhZRu4hFALGnXI2g6pJA2rK9MZzGuBe1acTYcolbz
-         cIj+fAKHDxX3Kvy2Qe0nd+0f+e5u0+cnkQwxDBoTa4fjRSSv38uMBvPnsr8MCFQAub3s
-         M3LmPG5F72GyHFak/EsTrk1+f3uhoKKR2X8Yc7iBud2kSjm1zu0drTXz7HQYUp+44ze5
-         GIsjoFeypOfgoThUWLFZ8jQwhbGGYQQ/EUZijR7lDg+v2duFpFf0whP0/yPSxMw2HrLV
-         GFRw==
-X-Gm-Message-State: AOAM530+/24N/pH4Pu8Ag5tjXy8Gtv6J1rvXgMf6ArdWP9o8Y0Yg/j8/
-        nJIVvRMxZtR5X84V7Z4Mu2I=
-X-Google-Smtp-Source: ABdhPJy9aINakzkHjO+kqosgdA0fO5BWmaepRXpf61n5eIKv/mmt/i8Zy/XATZczcwChIiHU/T6/cw==
-X-Received: by 2002:a05:6512:1398:b0:445:bcef:e4fd with SMTP id p24-20020a056512139800b00445bcefe4fdmr24879325lfa.398.1649761585192;
-        Tue, 12 Apr 2022 04:06:25 -0700 (PDT)
+        bh=zjgmtbSNoF2mZGEsUPtkbHFRRKP9FVVfefhVkGjbZfQ=;
+        b=oH363yHHYJQLyRtZwl/a1DqJP94Q6OxBnyYMBEDuxOUIE6qLeC7fIHYmCS4Agpcfe3
+         mSgEXvPR8PuSsfPkhJ9aVPnIpV+UkPoIIUrxscYlRZqSPY4wYIB+z5nnd63Rrm/1yHqj
+         RmovF2bjcbpXOM0YjKyfvEdw6QCUphgKTjPqTn6Jcwguagl33Yj0d8XtcZrJNFkirEDJ
+         4t9oO7jx+qFaqjd9qkocLO8hXjVspglNDc5QQEP+kjUMSm/JBYuahGlknBcmKmEKx4ba
+         lAeYdKddoI95zYwTiI6kM2GscLBAdt/zgKtzC+LT45Bk2x9F3ABKlmyW3E6teeVcVVa3
+         kQGQ==
+X-Gm-Message-State: AOAM530h9i5hUzENRQ9O3KIoxrtfYZlkoZkYs06y5bgWApnytnDyMABx
+        +Q5KtCjiEnPosL5wQO3E4QM=
+X-Google-Smtp-Source: ABdhPJwJo/oL6k4laov0OagaQyfUqPDx2IzYl7OYrblARpn+RJ3AYqSpMjIVyTxiG67PDc5twJ17Gw==
+X-Received: by 2002:ac2:4203:0:b0:448:8053:d402 with SMTP id y3-20020ac24203000000b004488053d402mr24213683lfh.687.1649762562723;
+        Tue, 12 Apr 2022 04:22:42 -0700 (PDT)
 Received: from mobilestation ([95.79.134.149])
-        by smtp.gmail.com with ESMTPSA id z16-20020a195e50000000b0044a77156ef5sm3623829lfi.242.2022.04.12.04.06.24
+        by smtp.gmail.com with ESMTPSA id b19-20020a056512305300b0044a9638b343sm3612948lfb.303.2022.04.12.04.22.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 04:06:24 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 14:06:22 +0300
+        Tue, 12 Apr 2022 04:22:41 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 14:22:39 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Brad Larson <brad@pensando.io>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -58,14 +58,14 @@ Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
         linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/11] spi: dw: Add support for Pensando Elba SoC
-Message-ID: <20220412110622.2xsk3k63dafqxib5@mobilestation>
+Subject: Re: [PATCH 11/11] arm64: dts: Add Pensando Elba SoC support
+Message-ID: <20220412112239.cucvqqlfsdpjnzju@mobilestation>
 References: <20220406233648.21644-1-brad@pensando.io>
- <20220406233648.21644-11-brad@pensando.io>
+ <20220406233648.21644-12-brad@pensando.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220406233648.21644-11-brad@pensando.io>
+In-Reply-To: <20220406233648.21644-12-brad@pensando.io>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -76,153 +76,349 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 06, 2022 at 04:36:47PM -0700, Brad Larson wrote:
-> The Pensando Elba SoC includes a DW apb_ssi v4 controller
-> with device specific chip-select control.  The Elba SoC
-> provides four chip-selects where the native DW IP supports
-> two chip-selects.  The Elba DW_SPI instance has two native
-> CS signals that are always overridden.
+On Wed, Apr 06, 2022 at 04:36:48PM -0700, Brad Larson wrote:
+> Add Pensando common and Elba SoC specific device nodes
 > 
 > Signed-off-by: Brad Larson <brad@pensando.io>
 > ---
 > Change from V3:
-> - Use more descriptive dt property pensando,syscon-spics
+> - Changed to dual copyright (GPL-2.0+ OR MIT)
 > - Minor changes from review input
 > 
->  drivers/spi/spi-dw-mmio.c | 85 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 85 insertions(+)
+>  arch/arm64/boot/dts/Makefile                  |   1 +
+>  arch/arm64/boot/dts/pensando/Makefile         |   3 +
+>  arch/arm64/boot/dts/pensando/elba-16core.dtsi | 189 ++++++++++++++++++
+>  .../boot/dts/pensando/elba-asic-common.dtsi   |  98 +++++++++
+>  arch/arm64/boot/dts/pensando/elba-asic.dts    |  28 +++
+>  .../boot/dts/pensando/elba-flash-parts.dtsi   | 106 ++++++++++
+>  arch/arm64/boot/dts/pensando/elba.dtsi        | 189 ++++++++++++++++++
+>  7 files changed, 614 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/pensando/Makefile
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-16core.dtsi
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-asic.dts
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba-flash-parts.dtsi
+>  create mode 100644 arch/arm64/boot/dts/pensando/elba.dtsi
 > 
-> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-> index 5101c4c6017b..f4636b271818 100644
-> --- a/drivers/spi/spi-dw-mmio.c
-> +++ b/drivers/spi/spi-dw-mmio.c
-> @@ -53,6 +53,24 @@ struct dw_spi_mscc {
->  	void __iomem        *spi_mst; /* Not sparx5 */
->  };
->  
-> +struct dw_spi_elba {
-> +	struct regmap *regmap;
-> +	unsigned int reg;
+
+[...]
+
+> diff --git a/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi b/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
+> new file mode 100644
+> index 000000000000..7a89df68fdf7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/elba-asic-common.dtsi
+> @@ -0,0 +1,98 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2020-2022, Pensando Systems Inc.
+> + */
+> +
+> +&ahb_clk {
+> +	clock-frequency = <400000000>;
 > +};
 > +
+> +&emmc_clk {
+> +	clock-frequency = <200000000>;
+> +};
+> +
+> +&flash_clk {
+> +	clock-frequency = <400000000>;
+> +};
+> +
+> +&ref_clk {
+> +	clock-frequency = <156250000>;
+> +};
+> +
+> +&qspi {
+> +	status = "okay";
+> +	flash0: flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <40000000>;
+> +		spi-rx-bus-width = <2>;
+> +		m25p,fast-read;
+> +		cdns,read-delay = <0>;
+> +		cdns,tshsl-ns = <0>;
+> +		cdns,tsd2d-ns = <0>;
+> +		cdns,tchsh-ns = <0>;
+> +		cdns,tslch-ns = <0>;
+> +	};
+> +};
+> +
+> +&gpio0 {
+> +	status = "okay";
+> +};
+> +
+> +&emmc {
+> +	bus-width = <8>;
+> +	status = "okay";
+> +};
+> +
+> +&wdt0 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	clock-frequency = <100000>;
+> +	status = "okay";
+> +	rtc@51 {
+> +		compatible = "nxp,pcf85263";
+> +		reg = <0x51>;
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	num-cs = <4>;
+> +	cs-gpios = <0>, <0>, <&porta 1 GPIO_ACTIVE_LOW>,
+> +		   <&porta 7 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +	spi0_cs0@0 {
+> +		compatible = "semtech,sx1301";	/* Enable spidev */
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <0>;
+> +	};
+> +
+> +	spi0_cs1@1 {
+> +		compatible = "semtech,sx1301";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <1>;
+> +	};
+> +
+> +	spi0_cs2@2 {
+> +		compatible = "semtech,sx1301";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <2>;
+> +		interrupt-parent = <&porta>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	spi0_cs3@3 {
+> +		compatible = "semtech,sx1301";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <12000000>;
+> +		reg = <3>;
+> +	};
+> +};
+
+[...]
+
+> diff --git a/arch/arm64/boot/dts/pensando/elba.dtsi b/arch/arm64/boot/dts/pensando/elba.dtsi
+> new file mode 100644
+> index 000000000000..10e06eb8cda6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/pensando/elba.dtsi
+> @@ -0,0 +1,189 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 > +/*
-> + * Elba SoC does not use ssi, pin override is used for cs 0,1 and
-> + * gpios for cs 2,3 as defined in the device tree.
-> + *
-> + * cs:  |       1               0
-> + * bit: |---3-------2-------1-------0
-> + *      |  cs1   cs1_ovr   cs0   cs0_ovr
+> + * Copyright (c) 2020-2022, Pensando Systems Inc.
 > + */
-> +#define ELBA_SPICS_SHIFT(cs)		(2 * (cs))
-> +#define ELBA_SPICS_MASK(cs)		(0x3 << ELBA_SPICS_SHIFT(cs))
-> +#define ELBA_SPICS_SET(cs, val)	\
-> +			((((val) << 1) | 0x1) << ELBA_SPICS_SHIFT(cs))
 > +
->  /*
->   * The Designware SPI controller (referred to as master in the documentation)
->   * automatically deasserts chip select when the tx fifo is empty. The chip
-> @@ -238,6 +256,72 @@ static int dw_spi_canaan_k210_init(struct platform_device *pdev,
->  	return 0;
->  }
->  
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "dt-bindings/interrupt-controller/arm-gic.h"
+> +
+> +/ {
+> +	model = "Elba ASIC Board";
+> +	compatible = "pensando,elba";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	dma-coherent;
+> +
+> +	ahb_clk: oscillator0 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	emmc_clk: oscillator2 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	flash_clk: oscillator3 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	ref_clk: oscillator4 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,cortex-a72-pmu";
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	soc: soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		i2c0: i2c@400 {
+> +			compatible = "snps,designware-i2c";
+> +			reg = <0x0 0x400 0x0 0x100>;
+> +			clocks = <&ahb_clk>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			i2c-sda-hold-time-ns = <480>;
+> +			snps,sda-timeout-ms = <750>;
+> +			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+> +		wdt0: watchdog@1400 {
+> +			compatible = "snps,dw-wdt";
+> +			reg = <0x0 0x1400 0x0 0x100>;
+> +			clocks = <&ahb_clk>;
+> +			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+> +		qspi: spi@2400 {
+> +			compatible = "pensando,elba-qspi", "cdns,qspi-nor";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0 0x2400 0x0 0x400>,
+> +			      <0x0 0x7fff0000 0x0 0x1000>;
+> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&flash_clk>;
+> +			cdns,fifo-depth = <1024>;
+> +			cdns,fifo-width = <4>;
+> +			cdns,trigger-address = <0x7fff0000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi0: spi@2800 {
+> +			compatible = "pensando,elba-spi";
+> +			reg = <0x0 0x2800 0x0 0x100>;
 
-> +static void elba_spics_set_cs(struct dw_spi_elba *dwselba, int cs, int enable)
-> +{
-> +	regmap_update_bits(dwselba->regmap, dwselba->reg, ELBA_SPICS_MASK(cs),
-> +			   ELBA_SPICS_SET(cs, enable));
-> +}
-> +
-> +static void dw_spi_elba_set_cs(struct spi_device *spi, bool enable)
+> +			pensando,syscon-spics = <&mssoc 0x2468>;
 
-The methods naming is ambiguous. Moreover it breaks this module naming
-convention. Could you change them to something like:
-dw_spi_elba_override_cs()
-and
-dw_spi_elba_set_cs()
-?
-
-> +{
-> +	struct dw_spi *dws = spi_master_get_devdata(spi->master);
-> +	struct dw_spi_mmio *dwsmmio = container_of(dws, struct dw_spi_mmio, dws);
-> +	struct dw_spi_elba *dwselba = dwsmmio->priv;
-> +	u8 cs;
-> +
-> +	cs = spi->chip_select;
-> +	if (cs < 2) {
-> +		/* overridden native chip-select */
-> +		elba_spics_set_cs(dwselba, spi->chip_select, enable);
-> +	}
-> +
-> +	/*
-> +	 * The DW SPI controller needs a native CS bit selected to start
-> +	 * the serial engine and the platform may have fewer native CSs
-> +	 * than needed, so use CS0 always.
-> +	 */
-> +	spi->chip_select = 0;
-> +	dw_spi_set_cs(spi, enable);
-> +	spi->chip_select = cs;
-> +}
-> +
-> +static int dw_spi_elba_init(struct platform_device *pdev,
-> +			    struct dw_spi_mmio *dwsmmio)
-> +{
-> +	struct of_phandle_args args;
-> +	struct dw_spi_elba *dwselba;
-> +	struct regmap *regmap;
-> +	int rc;
-> +
-> +	rc = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-> +			"pensando,syscon-spics", 1, 0, &args);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "could not find spics\n");
-> +		return rc;
-> +	}
-> +
-> +	regmap = syscon_node_to_regmap(args.np);
-> +	if (IS_ERR(regmap))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(regmap),
-> +				     "could not map spics");
-> +
-> +	dwselba = devm_kzalloc(&pdev->dev, sizeof(*dwselba), GFP_KERNEL);
-> +	if (!dwselba)
-> +		return -ENOMEM;
-> +
-> +	dwselba->regmap = regmap;
-> +	dwselba->reg = args.args[0];
-> +
-> +	/* deassert cs */
-
-> +	elba_spics_set_cs(dwselba, 0, 1);
-> +	elba_spics_set_cs(dwselba, 1, 1);
-
-What if the CS lines are of the active-high type? In that case basically
-you get to do the opposite to what you claim in the comment here.
-
-Note the CS setting into the deactivated state is done in the spi_setup()
-method anyway, at the moment of the peripheral SPI device registration
-stage (see its calling the spi_set_cs() function). Thus what you are doing
-here is redundant.
+I am wondering do you really need to define the
+"pensando,syscon-spics" property as accepting a phandle with an
+additional argument? That would have been justified if you had at
+least two SPI controllers with different CS override registers. AFAICS
+you've got only one here. So you can simplify the bindings by defining
+the property like "pensando,syscon" (with no "spics" suffix) which
+accepts the syscon phandle alone. Respective SPICS offset can be
+locally declared in the driver as a macro with respective name.
 
 -Sergey
 
+
+> +			clocks = <&ahb_clk>;
+> +			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			num-cs = <2>;
+> +			status = "disabled";
+> +		};
 > +
-> +	dwsmmio->priv = dwselba;
-> +	dwsmmio->dws.set_cs = dw_spi_elba_set_cs;
+> +		gpio0: gpio@4000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,dw-apb-gpio";
+> +			reg = <0x0 0x4000 0x0 0x78>;
+> +			status = "disabled";
 > +
-> +	return 0;
-> +}
+> +			porta: gpio-port@0 {
+> +				compatible = "snps,dw-apb-gpio-port";
+> +				reg = <0>;
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				ngpios = <8>;
+> +				interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupt-controller;
+> +				interrupt-parent = <&gic>;
+> +				#interrupt-cells = <2>;
+> +			};
 > +
->  static int dw_spi_mmio_probe(struct platform_device *pdev)
->  {
->  	int (*init_func)(struct platform_device *pdev,
-> @@ -352,6 +436,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
->  	{ .compatible = "intel,keembay-ssi", .data = dw_spi_keembay_init},
->  	{ .compatible = "microchip,sparx5-spi", dw_spi_mscc_sparx5_init},
->  	{ .compatible = "canaan,k210-spi", dw_spi_canaan_k210_init},
-> +	{ .compatible = "pensando,elba-spi", .data = dw_spi_elba_init},
->  	{ /* end of table */}
->  };
->  MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
+> +			portb: gpio-port@1 {
+> +				compatible = "snps,dw-apb-gpio-port";
+> +				reg = <1>;
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				ngpios = <8>;
+> +			};
+> +		};
+> +
+> +		uart0: serial@4800 {
+> +			compatible = "ns16550a";
+> +			reg = <0x0 0x4800 0x0 0x100>;
+> +			clocks = <&ref_clk>;
+> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +		};
+> +
+> +		gic: interrupt-controller@800000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +			interrupt-controller;
+> +			reg = <0x0 0x800000 0x0 0x200000>,	/* GICD */
+> +			      <0x0 0xa00000 0x0 0x200000>;	/* GICR */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			/*
+> +			 * Elba specific pre-ITS is enabled using the
+> +			 * existing property socionext,synquacer-pre-its
+> +			 */
+> +			gic_its: msi-controller@820000 {
+> +				compatible = "arm,gic-v3-its";
+> +				msi-controller;
+> +				#msi-cells = <1>;
+> +				reg = <0x0 0x820000 0x0 0x10000>;
+> +				socionext,synquacer-pre-its =
+> +							<0xc00000 0x1000000>;
+> +			};
+> +		};
+> +
+> +		emmc: mmc@30440000 {
+> +			compatible = "pensando,elba-sd4hc", "cdns,sd4hc";
+> +			clocks = <&emmc_clk>;
+> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg = <0x0 0x30440000 0x0 0x10000>,
+> +			      <0x0 0x30480044 0x0 0x4>;	/* byte-lane ctrl */
+> +			cdns,phy-input-delay-sd-highspeed = <0x4>;
+> +			cdns,phy-input-delay-legacy = <0x4>;
+> +			cdns,phy-input-delay-sd-uhs-sdr50 = <0x6>;
+> +			cdns,phy-input-delay-sd-uhs-ddr50 = <0x16>;
+> +			mmc-ddr-1_8v;
+> +			status = "disabled";
+> +		};
+> +
+> +		mssoc: mssoc@307c0000 {
+> +			compatible = "syscon", "simple-mfd";
+> +			reg = <0x0 0x307c0000 0x0 0x3000>;
+> +		};
+> +	};
+> +};
 > -- 
 > 2.17.1
 > 
