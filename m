@@ -2,87 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D674FD649
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Apr 2022 12:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D08024FDCD0
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Apr 2022 13:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236988AbiDLJ5M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Apr 2022 05:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
+        id S244344AbiDLKmF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Apr 2022 06:42:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390231AbiDLJYi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Apr 2022 05:24:38 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860EB4A90E;
-        Tue, 12 Apr 2022 01:41:10 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id d10so21545945edj.0;
-        Tue, 12 Apr 2022 01:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=giFGNVwHbG/lhSPNKKA7CMnxchYVGgHfOUGNKmY5eO4=;
-        b=X3z0iTsHbWL8/nnDhCfbysobbT4YzWzR8oLACB04paf4O3s4DyH0+d2Pg0xa9kj2KV
-         DxTLYK1ijUCaz8e1U1QcCsshYzT4SIx8Qf2iFqd0SHZQ7puO6OOypqiXKSYkiuIPZjjs
-         rel7tkZ0hnoBXOOD4B91YnLRE9Toq6WtwOJF76u9+uY1+yB5sF6DTb2I5C9HkectoZWQ
-         6mle7utxxnL/EXO5V3Po2kft9ZyDMWI+H5WCURo3xD2rkvNvxDW2pQf2o1cu8XVaTIzB
-         4p7E3Dg6ftd9mpnnOUBnflCvHnvA5jOU0KsawB3SRVxVFS2K2x2+JWsxfVP6iZUYa1yg
-         tXPA==
+        with ESMTP id S1354646AbiDLKdm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Apr 2022 06:33:42 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 277C85BD03;
+        Tue, 12 Apr 2022 02:33:53 -0700 (PDT)
+Received: by mail-qk1-f171.google.com with SMTP id d71so5104722qkg.12;
+        Tue, 12 Apr 2022 02:33:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=giFGNVwHbG/lhSPNKKA7CMnxchYVGgHfOUGNKmY5eO4=;
-        b=HrE4elLf3SweWHHE7SJAP02a+pGf/05dcxYPlgY9yrFDdpZgf6IpV7/RTmUz8GJJnC
-         z0kNJtW1uFiMQ34moBSRGeWLffh+nMQK5rmahHc6p1OS/Z6Rin+zItT9ChUBn0mhvPRG
-         ilsszn/tl1G2LTuubILyGWW6nuqPKANQkp+qernpkbHeU4HQhPRyDQ3qpdhl7uwMCgZu
-         gw70fWMZX8jqG/xIWCT0Wqun53YBuKu+IvYp6YwEHTEn5snx/038hsFgoDJMBN/UcoJo
-         4ZZydkCZ80E8mEG2a0EkJbcN5VnrHZv3fyGVNb9wtG24LQUllVUigphZ786FBk8R1UjA
-         DHpA==
-X-Gm-Message-State: AOAM530KAMgD1nx0SQ/Zndnr//pFyTGQz8GOlp1Yg/pB/UlFOlaegIBa
-        K+1tjCh5DYKsNjR07aPJY5PV4COnrvOChtf5WSs=
-X-Google-Smtp-Source: ABdhPJyMYXORsRdY466ZkJuoUQ4DDUvfoW7HRoR6aCUK/Wd2ui4r2QImUVnrj4ndNscb86MC6vL9AvkUGJqaJ7f0TLo=
-X-Received: by 2002:a50:e696:0:b0:419:998d:5feb with SMTP id
- z22-20020a50e696000000b00419998d5febmr38394977edm.122.1649752868901; Tue, 12
- Apr 2022 01:41:08 -0700 (PDT)
+        bh=3nnLePtPQXcraZo9xuBzZJTepa7ubGhqT6Zw37Swgqs=;
+        b=Cnc4wr/lKqtygyZkVkW65KzNmQSNokhV+ifnFjacSOinmFqUnQWmGB9Wj8ba3MVqQB
+         cEYGnOTTsiuw99/ixOpdjo4ouPlBJ7g+GN2f7znZcFq8xYBKgTQfeb7i06gH2/8zQfDO
+         XuGuDgeYO3dQGoguWyXEecuKPlihz9grzfi4CX0GEx9RpL5MhRsj/tr90xphIT85/sL0
+         cotsvIAL+Uh3BAbJCtQGRq1XzM7rpVLtnJqns1HfHzFo8qJZH/iWSNy1VGy2+9+wSZnm
+         Jl9YqvpGOtArRxVuaMxOXzXnJtHk5UfClCUzj3SYM3Tho1NoaNI7YqS/UKs6NfmPO7An
+         WlNQ==
+X-Gm-Message-State: AOAM533sSxkvPsvucMDzY5xSyvYxLGlTspnDl31Zt66A3G1Xt+YxyGt6
+        H7hFJK/K6BXLdgLUvXljkfL2zTP6w2fkmTq3
+X-Google-Smtp-Source: ABdhPJwsQp+bUZ+kZJh9+u7xwD2SRxHnFhML+LvOxJvLF9QCdbJp0mNTBv+HZYOiSz1SqY5omQ+uPQ==
+X-Received: by 2002:a37:a554:0:b0:69b:e220:bc17 with SMTP id o81-20020a37a554000000b0069be220bc17mr2337582qke.740.1649756032053;
+        Tue, 12 Apr 2022 02:33:52 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id f15-20020a379c0f000000b0069bf3430cc4sm6794892qke.100.2022.04.12.02.33.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Apr 2022 02:33:51 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-2ec42eae76bso44828487b3.10;
+        Tue, 12 Apr 2022 02:33:51 -0700 (PDT)
+X-Received: by 2002:a0d:e743:0:b0:2eb:3106:9b32 with SMTP id
+ q64-20020a0de743000000b002eb31069b32mr30276252ywe.512.1649756031507; Tue, 12
+ Apr 2022 02:33:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220411063324.98542-1-andrei.lalaev@emlid.com>
- <CAHp75VfyxspOScEt1qffshdrDYuQp50O5HFbr2cUV7MYsg=JdQ@mail.gmail.com> <CAMRc=MfakYvQUW4NLWCrm5yVA185X4t__aB3r4-9xTh8YJaq8g@mail.gmail.com>
-In-Reply-To: <CAMRc=MfakYvQUW4NLWCrm5yVA185X4t__aB3r4-9xTh8YJaq8g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 12 Apr 2022 11:36:56 +0300
-Message-ID: <CAHp75VcWvmMMjgNEUQK2AqmUzrx3CADEQq6XieFiix+=FBgqSg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: of: fix bounds check for valid mask
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andrei Lalaev <andrei.lalaev@emlid.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <20220401180230.19950-1-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20220401180230.19950-1-biju.das.jz@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 12 Apr 2022 11:33:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXxDKKnt_L8EgruCDSZjQJvpSx30RGXysV-TMZHN94=Gw@mail.gmail.com>
+Message-ID: <CAMuHMdXxDKKnt_L8EgruCDSZjQJvpSx30RGXysV-TMZHN94=Gw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: renesas: rzg2l: Add RZ/G2UL support
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 11:28 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Mon, Apr 11, 2022 at 2:17 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Fri, Apr 1, 2022 at 8:02 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> RZ/G2UL SoC has fewer pins compared to RZ/G2L and the port pin
+> definitions are different compared to RZ/G2L.
+>
+> This patch adds a new compatible to take care of this differences
+> by adding r9a07g043_data with r9a07g043_gpio_configs and
+> rzg2l_dedicated_pins.common.
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v1->v2:
+>  * Moved QSPI_INT# pin from common to rzg2l_pins
+>  * Added Rb tag from Geert.
 
-...
+Thanks for the update! Will queue in renesas-pinctrl-for-v5.19.
 
-> > OTOH, the current implementation suggests that we have start,end
-> > rather than start,count. What does documentation tell about it? Does
-> > it need to be fixed?
+Gr{oetje,eeting}s,
 
-> Thanks Andy, I rushed this one. Backing it out.
+                        Geert
 
-With the last analysis by Andrei I think the patch is correct. I
-suggest waiting for v2 with a better commit message.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
--- 
-With Best Regards,
-Andy Shevchenko
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
