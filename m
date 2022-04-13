@@ -2,89 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BE024FFC90
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 19:24:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B19574FFDD1
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 20:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237332AbiDMR1J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Apr 2022 13:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33376 "EHLO
+        id S237698AbiDMScN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Apr 2022 14:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237337AbiDMR05 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 13:26:57 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7780E9F
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 10:24:20 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:c9b8:20d3:ee2b:1cda])
-        by albert.telenet-ops.be with bizsmtp
-        id JHQH270092t8Arn06HQHfd; Wed, 13 Apr 2022 19:24:17 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1negj3-000TtT-3O; Wed, 13 Apr 2022 19:24:17 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1negj1-00DfbZ-Rm; Wed, 13 Apr 2022 19:24:15 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 50/50] pinctrl: renesas: checker: Add reserved field checks
-Date:   Wed, 13 Apr 2022 19:24:12 +0200
-Message-Id: <f5a5159ba7b396e6f09dd3f23c864a74ed8e342d.1649865241.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1649865241.git.geert+renesas@glider.be>
-References: <cover.1649865241.git.geert+renesas@glider.be>
+        with ESMTP id S232538AbiDMScL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 14:32:11 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F9131DA4F;
+        Wed, 13 Apr 2022 11:29:50 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id q189so2954498oia.9;
+        Wed, 13 Apr 2022 11:29:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GHDZJGdlID6AtWEELApFyX5XRyr/rxJuuRGXdTraOus=;
+        b=WjCI+83Stf7KG3t/mG5uSwctEQph1vM/4D35o+hKuYDiZ2vYH3lrQ+1YRiYgsikok+
+         U/go+ArXmnDuN8Mjeiq+pSSLqvoHDY/A4Ij79b40KcGNkVV9Cow/ivFoMf/Xrykq0Yc7
+         FtGHPIDkY0Fx/lIZm0bQYh62wEcO6cANg9+eKgqH8rkdHc4kjGdD3SWKijehVnj9pl1R
+         iTK0alc1Z2Q70jhEmxrEvkgCf7Hk13ol1vBwRYHvQ7wRunB/1gezywQaByfCnl441P+B
+         8/0PKZFhjfyUE96rV9mmSmQKJz6AI88RHNwkfrnRoTDKdtFMc8hKZfOw1FWRBIuzQFjP
+         AdYQ==
+X-Gm-Message-State: AOAM531Lc9Zuxegd7dul9jKgkat8cgFDb1xP8ZT+YlzGZh90IIf8aMJl
+        UXEsBp6Ks4NODhPE6nSAoA==
+X-Google-Smtp-Source: ABdhPJx5swjtX0jDXRp1fN9wJcpuQyarkQAujy8AgxdM5qVYe6Yfq/nt39vdFenxx2uyJzcCst7mUA==
+X-Received: by 2002:a05:6808:159e:b0:2fa:6e29:9141 with SMTP id t30-20020a056808159e00b002fa6e299141mr72144oiw.142.1649874589850;
+        Wed, 13 Apr 2022 11:29:49 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id o185-20020acabec2000000b002ecf1218c53sm13893844oif.15.2022.04.13.11.29.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Apr 2022 11:29:49 -0700 (PDT)
+Received: (nullmailer pid 3603766 invoked by uid 1000);
+        Wed, 13 Apr 2022 18:29:48 -0000
+Date:   Wed, 13 Apr 2022 13:29:48 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     devicetree@vger.kernel.org, gregory.clement@bootlin.com,
+        linus.walleij@linaro.org, catalin.marinas@arm.com,
+        sebastian.hesselbarth@gmail.com, robert.marko@sartura.hr,
+        andrew@lunn.ch, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, kostap@marvell.com,
+        robh+dt@kernel.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: pinctrl: mvebu: Document bindings
+ for AC5
+Message-ID: <YlcWnPVywM19VPi5@robh.at.kernel.org>
+References: <20220406032158.1449049-1-chris.packham@alliedtelesis.co.nz>
+ <20220406032158.1449049-2-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220406032158.1449049-2-chris.packham@alliedtelesis.co.nz>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add checks for discovering registers with reserved fields that could
-benefit from being described using variable-width reserved field
-shorthands, reducing kernel size.
+On Wed, 06 Apr 2022 15:21:55 +1200, Chris Packham wrote:
+> Add JSON schema for marvell,ac5-pinctrl present on the Marvell 98DX2530
+> SoC.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>     Changes in v3:
+>     - Restore syscon and simple-mfd compatibles. These are needed by the
+>       pinctrl driver.
+>     Changes in v2:
+>     - Remove syscon and simple-mfd compatibles
+> 
+>  .../bindings/pinctrl/marvell,ac5-pinctrl.yaml | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
+> 
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/renesas/core.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
-index 356325df9c18f2ea..340835551466235f 100644
---- a/drivers/pinctrl/renesas/core.c
-+++ b/drivers/pinctrl/renesas/core.c
-@@ -878,7 +878,7 @@ static const struct sh_pfc_pin __init *sh_pfc_find_pin(
- static void __init sh_pfc_check_cfg_reg(const char *drvname,
- 					const struct pinmux_cfg_reg *cfg_reg)
- {
--	unsigned int i, n, rw;
-+	unsigned int i, n, rw, r;
- 	int fw;
- 
- 	sh_pfc_check_reg(drvname, cfg_reg->reg,
-@@ -887,6 +887,15 @@ static void __init sh_pfc_check_cfg_reg(const char *drvname,
- 	if (cfg_reg->field_width) {
- 		fw = cfg_reg->field_width;
- 		n = (cfg_reg->reg_width / fw) << fw;
-+		for (i = 0, r = 0; i < n; i += 1 << fw) {
-+			if (is0s(&cfg_reg->enum_ids[i], 1 << fw))
-+				r++;
-+		}
-+
-+		if ((r << fw) * sizeof(u16) > cfg_reg->reg_width / fw)
-+			sh_pfc_warn("reg 0x%x can be described with variable-width reserved fields\n",
-+				    cfg_reg->reg);
-+
- 		/* Skip field checks (done at build time) */
- 		goto check_enum_ids;
- 	}
--- 
-2.25.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
