@@ -2,109 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B0054FF984
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 16:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EECB44FFA0B
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 17:25:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235966AbiDMO6c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Apr 2022 10:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47486 "EHLO
+        id S234879AbiDMP14 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Apr 2022 11:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234367AbiDMO6c (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 10:58:32 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998CEE0DD;
-        Wed, 13 Apr 2022 07:56:10 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id lc2so4454796ejb.12;
-        Wed, 13 Apr 2022 07:56:10 -0700 (PDT)
+        with ESMTP id S233508AbiDMP1z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 11:27:55 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421295DA61
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 08:25:33 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id bg10so4709210ejb.4
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 08:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MXDRi2nnaXpmTvbxw2dgQTuBsMOOy1/I/di9bKsVPUE=;
-        b=aNT4a0hgVXfh34wZO4AZcl1QySQWNDk20i5GSbAIzd2DwalGkhx9rNpgQcY2d5X/Es
-         YH7KJkEKSwa8QSOIOJZ2KTBGsURATGKY+3c8Wlr4686FygRAdCrBO+/wtuUoAn6FLLzC
-         bgpnPRHuWU9oRCSpR3JE9aIgeGO/2lFWdzaNQHwy+9oxHZ3QKCsRs+Qu+7d8STG+ForU
-         VQi++3nMWQkfT4ldLBdkkWSohKGnj67yA2y1MJ5TlpY4Tk2LmuS3KVPSwCHtxcn/Moth
-         dY+FTaeqQxIGkOoJLGchWgxgjMGRT4eUN0MNF2a00uL5nMLLUrZoy7Fx7JABHMlxyJ1v
-         JWzg==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=E/KosFpseT7IWJRZQCnSiS447R6ssnKcrthoESTGiCY=;
+        b=Vh4Nsq/68C5HjeI3A+yT1TCrzlxkKT0sfz8S3WArS7wXqU2HMY1kjSoZ15QEZmFtM6
+         OFYv1iWTnr+tlMIiILChInAOK+egjDR+MtIwNLJlFgSPS0IaHvcSB/B8FcrmDr+ZyIDg
+         IiiQB3pNO94TEGvLWtXS/CjPEk0O7T7J0MsTPVtfkCt+WO4kRbnT4evsF7X3kPB8ayF4
+         5J/XJAFVO/Wopdl0EmW8QilO0Iz/XWwoNMkPhoQJPNm2KavV8w9DXemGntKKxv+uKR1E
+         Mxe3ylpT7zTGScy4KM865rbxBZMJ4K0dj47qLEXSEyh6zUTCCLXrC6xnjkDTbvcgjPHW
+         96/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MXDRi2nnaXpmTvbxw2dgQTuBsMOOy1/I/di9bKsVPUE=;
-        b=JMWgBjXu51DlrRJ5s7NnjAQWPhH6f1Bz+w3mN9IAahfJ+/iaqkaj5jte0554wM3Nd2
-         FQSQVYAK3+L6RnS/G3AZHpRJG7lZdPbc7rKt9SJhDq6r23NqkiqfaaLlbdtt7fR1K0R4
-         GdT5IUF01PYFRk083nJhY0pON9VW8Xgojm7WLvTCimDdhDFTeIaizHhqy06aY481jn+j
-         dhQPmHm8yFm+65dO9kK5rtLzob0WplICXjeN7FG9xEjdG2A5qt+ej9kILEJ3vVb1Ok2a
-         sYWhsjgCLyWdVsXlM9Ca30Cb3eJGt5K7GqctaHq8HlEjlkxRwnqy+dxqrEckNeZZYfMB
-         /1tw==
-X-Gm-Message-State: AOAM533PN0en3Ju+C8JMbDA+WwquoF2SjYBDQjM4sqkRtuPBqnu4ah8W
-        Zlw7L7oyLEqq4daH9uOZtxVfkNlnPYXuXa2cgf0=
-X-Google-Smtp-Source: ABdhPJw/adFhHAFsrTBlvFb8K2Wp4aBtafuEsINtvoCqxDo4Bqx/NK9WXjmFzlIXM+HAr6LfzmtFTxoLfgW1ulNTuj8=
-X-Received: by 2002:a17:907:e8d:b0:6e0:19e7:9549 with SMTP id
- ho13-20020a1709070e8d00b006e019e79549mr39432086ejc.44.1649861769049; Wed, 13
- Apr 2022 07:56:09 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=E/KosFpseT7IWJRZQCnSiS447R6ssnKcrthoESTGiCY=;
+        b=Px4mrsG2eTXWINJdxh8bWSjskLVkwPt0Sb3nK34mvZE8uecWBCp0Bb1eGon/tUj8rr
+         Irr8zBHu/+EOco4QrF1NYvvJO6geYKAtS3/+EFhVY2RwDbb5nwu3MkJnw/rTNtt2vqOM
+         smSx9k9i0I4D7dTbZqvDnBH7Uz7tVH8do6+3jpUSUjwqtpZJWJHjLvJryFdbcDjEJJo3
+         D2WvFu2nwBVsJ5q5YTRP9J8rUvgPzMTKKJ4i+4GFBG8DhgP9FFHixUj5ubfjgk4URbqz
+         jrY99u5QpSnsuVRtpOpIf18OKFdOiaJErZEINC3jP38YQTaQJxf3NINwT8v4jm+/MXVS
+         TWHg==
+X-Gm-Message-State: AOAM532ZI+8UXchXa4haWHtCzmhdCoXki9YrNPTww3+dLiKQV47g79CO
+        RCtJWV2ZT3fT59A5uYRDDZYhAw==
+X-Google-Smtp-Source: ABdhPJy/Caleobpyz0qcwl3NnfHCSIKGS22hcXQsHSSVLfDURXci+05UMvKVZOUGgl9LtMNCuV3Fuw==
+X-Received: by 2002:a17:907:2d27:b0:6e8:3ea6:7645 with SMTP id gs39-20020a1709072d2700b006e83ea67645mr28970048ejc.727.1649863531801;
+        Wed, 13 Apr 2022 08:25:31 -0700 (PDT)
+Received: from [192.168.0.205] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
+        by smtp.gmail.com with ESMTPSA id h7-20020a1709060f4700b006e8d0746969sm83440ejj.222.2022.04.13.08.25.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Apr 2022 08:25:30 -0700 (PDT)
+Message-ID: <ba7cd13f-d216-0ac6-97e1-6c13f1e15f38@linaro.org>
+Date:   Wed, 13 Apr 2022 17:25:08 +0200
 MIME-Version: 1.0
-References: <20220413094011.185269-1-cosmin.tanislav@analog.com> <20220413094011.185269-2-cosmin.tanislav@analog.com>
-In-Reply-To: <20220413094011.185269-2-cosmin.tanislav@analog.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 Apr 2022 17:51:57 +0300
-Message-ID: <CAHp75VexJBnAqoQ53=_nif=bso0-cNj4EsTbUwKGKxfNq_Fvyw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] iio: ABI: adc: ad4130: document filter_mode{,_available}
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH 10/14] dt-bindings: pinctrl: rt2880: fix binding name, pin
+ groups and functions
+Content-Language: en-US
+To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     erkin.bozoglu@xeront.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <20220413060729.27639-1-arinc.unal@arinc9.com>
+ <20220413060729.27639-11-arinc.unal@arinc9.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220413060729.27639-11-arinc.unal@arinc9.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 4:17 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+On 13/04/2022 08:07, Arınç ÜNAL wrote:
+> Change binding name from ralink,rt2880-pinmux to ralink,rt2880-pinctrl.
+> This is the binding for the Ralink RT2880 pinctrl subdriver.
 
-It's good you provided documentation, but I think the part "ABI:" is
-not needed in the Subject.
+What I don't see here is why you are doing this. pinmux/pinctrl have the
+same meaning, I guess?
 
-> AD4130-8 is an ultra-low power, high precision,
-> measurement solution for low bandwidth battery
-> operated applications.
->
-> The fully integrated AFE (Analog Front-End)
-> includes a multiplexer for up to 16 single-ended
-> or 8 differential inputs, PGA (Programmable Gain
-> Amplifier), 24-bit Sigma-Delta ADC, on-chip
-> reference and oscillator, selectable filter
-> options, smart sequencer, sensor biasing and
-> excitation options, diagnostics, and a FIFO
-> buffer.
+> 
+> Current pin group and function bindings are for MT7621. Put bindings for
+> RT2880 instead.
+> 
+> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> ---
+>  ...pinmux.yaml => ralink,rt2880-pinctrl.yaml} | 24 +++++++++----------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+>  rename Documentation/devicetree/bindings/pinctrl/{ralink,rt2880-pinmux.yaml => ralink,rt2880-pinctrl.yaml} (56%)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+> similarity index 56%
+> rename from Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
+> rename to Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+> index 9de8b0c075e2..c657bbf9fdda 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+> @@ -1,21 +1,23 @@
+>  # SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/pinctrl/ralink,rt2880-pinmux.yaml#
+> +$id: http://devicetree.org/schemas/pinctrl/ralink,rt2880-pinctrl.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Ralink rt2880 pinmux controller
+> +title: Ralink RT2880 Pin Controller
+>  
+>  maintainers:
+> +  - Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Indentation issue as per patch 1.
+Mention this in commit msg.
 
-...
+>    - Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>  
+>  description:
+> -  The rt2880 pinmux can only set the muxing of pin groups. Muxing indiviual pins
+> +  Ralink RT2880 pin controller for RT2880 SoC.
+> +  The pin controller can only set the muxing of pin groups. Muxing indiviual pins
+>    is not supported. There is no pinconf support.
+>  
+>  properties:
+>    compatible:
+> -    const: ralink,rt2880-pinmux
+> +    const: ralink,rt2880-pinctrl
 
-> +               Set the filter mode of the differential channel. When the filter
-> +               mode changes, the in_voltageY-voltageZ_sampling_frequency and
-> +               in_voltageY-voltageZ_sampling_frequency_available attributes
-> +               might also change to accomodate the new filter mode.
-
-accommodate
-
-> +               If the current sampling frequency is out of range for the new
-> +               filter mode, the sampling frequency will be changed to the
-> +               closest valid one.
+you need to deprecate old property and add a new one.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+>  
+>  patternProperties:
+>    '-pins$':
+> @@ -28,14 +30,12 @@ patternProperties:
+>  
+>          properties:
+>            groups:
+> -            description: Name of the pin group to use for the functions.
+> -            enum: [i2c, jtag, mdio, pcie, rgmii1, rgmii2, sdhci, spi,
+> -                   uart1, uart2, uart3, wdt]
+> +            description: The pin group to select.
+> +            enum: [i2c, spi, uartlite, jtag, mdio, sdram, pci]
+> +
+>            function:
+> -            description: The mux function to select
+> -            enum: [gpio, i2c, i2s, jtag, mdio, nand1, nand2, pcie refclk,
+> -                   pcie rst, pcm, rgmii1, rgmii2, sdhci, spdif2, spdif3,
+> -                   spi, uart1, uart2, uart3, wdt refclk, wdt rst]
+> +            description: The mux function to select.
+> +            enum: [gpio, i2c, spi, uartlite, jtag, mdio, sdram, pci]
+>  
+
+These were all incorrect for rt2880, I understand?
+
+
+Best regards,
+Krzysztof
