@@ -2,88 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDEB54FFF15
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 21:22:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7472B4FFF26
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 21:26:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235968AbiDMTYw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Apr 2022 15:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58464 "EHLO
+        id S236817AbiDMT2j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Apr 2022 15:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236581AbiDMTYv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 15:24:51 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F644993A
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 12:22:29 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id b15so3642434edn.4
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 12:22:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MilXQC1tGawrIwnXnA0XmAAAlHvsFkKNc4Mvh7VSPxs=;
-        b=09QiATtTDV+mr4QTOr2vwGHjd7VRC4YfgbltMGVapzsA8Amky0LqAA4RsmsinFLmPS
-         swPbolc6MVlkhWVFdXhsbOxdk+sAGdQPnE3seed01gYAtK3clJPeh2zDiCOqkSPC29bY
-         4RPvmXMe6umrwGwEV0B2vCH3kJZJBB5EYA4mUn0UXqIf0j/Naqy8YXh7QBDSivHofDGV
-         rKr7xK0Ui/GkfcG4bdjrkIm9mCGaqI4Pi3kaDtx5woxHggOSRc7Sn45dIlGmTprVokTq
-         cqGpnxwerhWNy5fYRv4cSwFmx92koc/ao8YBZlpdiP3y0bTtKiEGXK+cBUm1LepGazno
-         9NoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MilXQC1tGawrIwnXnA0XmAAAlHvsFkKNc4Mvh7VSPxs=;
-        b=NVmQFaIUuUTjdn2I2N/xxUCyjhfXxfHhBUKkRtgBARpHdVgCUdyC2/+jgdjeQaZk+J
-         aqHJzxRH749M3vFCjYeMNaDEuxzOzJ3HNtub7Oq73LeToE7pyBUyyZsi7bP6hJFwnQ6S
-         EEkGCP7TINrc/PPLc0sUrGyGWzIHBf4sh19t3yoOgzQo3OnNZDxKyyAYONI2Go3PZaad
-         645FxRhon5gshHbMo0qMxstJkXm6JNQfbT9iCqZNKJ0AzRgdQD+ZimudTdYIDzacy7pn
-         wRVUhE7Dh19PYT7bt2Cet2fmlaE0HY4Wr855Oca/V+cxRrHcICA0RjuO1E+LLhDm4z0x
-         7Xqw==
-X-Gm-Message-State: AOAM532nXUzkprsapQNh7+QD25xo3EOSOyMt7LbZuEIEaIwgc3ph1Y3B
-        ips9rS1jpdDW8sy03syAcHLZuQyuk9BP9FV/8tTDLQ==
-X-Google-Smtp-Source: ABdhPJz2VpnF6zTkhx84UKodxUIcVJakqQ//DRrkWxRqYl0MzzRX8OVYvCgE7NDwXbJZGYG4FrIa0W6af6z45/zZZ3g=
-X-Received: by 2002:a05:6402:22b5:b0:41d:7637:98b8 with SMTP id
- cx21-20020a05640222b500b0041d763798b8mr20229012edb.69.1649877747579; Wed, 13
- Apr 2022 12:22:27 -0700 (PDT)
+        with ESMTP id S234089AbiDMT2h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 15:28:37 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD97A72446;
+        Wed, 13 Apr 2022 12:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1649877972; x=1681413972;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9GeykygBX2XsPll3z/idRMNXQouDNfFpUOOZSeb5K00=;
+  b=FOohxZP1YIbf3u2uBX19EnnJpXHk+blV9Xo2EqITgOhVG7yESPpyb9Nv
+   G7E3aihnwGS1A5Wx/n0RTFcQRFYkAOPr7VZ/Np+qsqbDVVF0SXX8VYZVK
+   Xs/THocvqep6KV002mT+e4RnYTohcvPUPT8HFe4oysMuhS2sAhe7vdeBZ
+   R9Jeb1g9F29kIGK15ViQ7QfF2EY1tnFMox8Tl04js/E4TtX9y93g+hP8W
+   YbKcMY7BJV56UdXOEwZplxxFq42BPWlEKDC6MRdMYLjroQ6gzB/QhG8/W
+   BsA3P3IYYb72R19X4I7AXLv97dlB83zb0ZRpUlr1F+MPH0VbttmFFWfBT
+   w==;
+X-IronPort-AV: E=Sophos;i="5.90,257,1643698800"; 
+   d="scan'208";a="160448666"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Apr 2022 12:26:12 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Wed, 13 Apr 2022 12:26:11 -0700
+Received: from soft-dev3-1.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2375.17 via Frontend Transport; Wed, 13 Apr 2022 12:26:10 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <linus.walleij@linaro.org>, <kavyasree.kotagiri@microchip.com>,
+        <alexandre.belloni@bootlin.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH] pinctrl: ocelot: Fix for lan966x
+Date:   Wed, 13 Apr 2022 21:29:18 +0200
+Message-ID: <20220413192918.3777234-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-References: <20220413140132.286848-1-brgl@bgdev.pl> <YlcAEPYOBHk+NAD8@smile.fi.intel.com>
-In-Reply-To: <YlcAEPYOBHk+NAD8@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 13 Apr 2022 21:22:16 +0200
-Message-ID: <CAMRc=MfNyzeZQ87n=Ley+7f9=4xxa_PTLcEbg7c3NXo7MLkGNw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: fix setting and getting multiple lines
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 6:57 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Apr 13, 2022 at 04:01:32PM +0200, Bartosz Golaszewski wrote:
-> > We need to take mask into account in the set/get_multiple() callbacks.
-> > Use bitmap_replace() instead of bitmap_copy().
->
-> Good catch!
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
+For lan966x, the GPIO 35 has the wrong function for alternate mode 2.
+The mode is not none but is PTP sync.
 
-I've actually spent two days tracking this. I noticed that a single
-test-case in libgpiod v2 fails sometimes (about 1 in 10 runs) and
-suspected some race condition but couldn't find any. Turned out it was
-triggered by not masking the bits but would only be triggered if the
-memory which got passed to the callbacks got written over with some
-other values than zeroes.
+Fixes: 531d6ab36571c2 ("pinctrl: ocelot: Extend support for lan966x")
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ drivers/pinctrl/pinctrl-ocelot.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Bart
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index 51261f1231cc..40f76e4144e4 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -130,6 +130,7 @@ enum {
+ 	FUNC_PTP1,
+ 	FUNC_PTP2,
+ 	FUNC_PTP3,
++	FUNC_PTPSYNC_0,
+ 	FUNC_PTPSYNC_1,
+ 	FUNC_PTPSYNC_2,
+ 	FUNC_PTPSYNC_3,
+@@ -253,6 +254,7 @@ static const char *const ocelot_function_names[] = {
+ 	[FUNC_PTP1]		= "ptp1",
+ 	[FUNC_PTP2]		= "ptp2",
+ 	[FUNC_PTP3]		= "ptp3",
++	[FUNC_PTPSYNC_0]	= "ptpsync_0",
+ 	[FUNC_PTPSYNC_1]	= "ptpsync_1",
+ 	[FUNC_PTPSYNC_2]	= "ptpsync_2",
+ 	[FUNC_PTPSYNC_3]	= "ptpsync_3",
+@@ -984,7 +986,7 @@ LAN966X_P(31,   GPIO,   FC3_c,     CAN1,      NONE,   OB_TRG,   RECO_b,      NON
+ LAN966X_P(32,   GPIO,   FC3_c,     NONE,   SGPIO_a,     NONE,  MIIM_Sa,      NONE,        R);
+ LAN966X_P(33,   GPIO,   FC1_b,     NONE,   SGPIO_a,     NONE,  MIIM_Sa,    MIIM_b,        R);
+ LAN966X_P(34,   GPIO,   FC1_b,     NONE,   SGPIO_a,     NONE,  MIIM_Sa,    MIIM_b,        R);
+-LAN966X_P(35,   GPIO,   FC1_b,     NONE,   SGPIO_a,   CAN0_b,     NONE,      NONE,        R);
++LAN966X_P(35,   GPIO,   FC1_b,  PTPSYNC_0, SGPIO_a,   CAN0_b,     NONE,      NONE,        R);
+ LAN966X_P(36,   GPIO,    NONE,  PTPSYNC_1,    NONE,   CAN0_b,     NONE,      NONE,        R);
+ LAN966X_P(37,   GPIO, FC_SHRD0, PTPSYNC_2, TWI_SLC_GATE_AD, NONE, NONE,      NONE,        R);
+ LAN966X_P(38,   GPIO,    NONE,  PTPSYNC_3,    NONE,     NONE,     NONE,      NONE,        R);
+-- 
+2.33.0
+
