@@ -2,38 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 604944FE5BF
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Apr 2022 18:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01C734FEF5E
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 08:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242263AbiDLQYq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Apr 2022 12:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
+        id S232977AbiDMGLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Apr 2022 02:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231394AbiDLQYp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Apr 2022 12:24:45 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A135D194;
-        Tue, 12 Apr 2022 09:22:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1649780544; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=hWinARk0auuN9WWlUPURYRlRuA4SRTo94mELhKm+HaI=;
-        b=XFFBUPHgCUByXylWCQP58xdH6wsnsXaLYgCAx96V71Wn7btZwEge3eXN2RLGZIGAAAZZ/T
-        DKnHzB8a2HrrmxN8M1+4Oac2RHmvNWZNiNyHIZ+kY944xwnQxpBc4YR2JNb8cyivLEeF5+
-        pWGzpMXnGkADEXO1PQZAqxl6EET1Co8=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     od@opendingux.net, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2] pinctrl: ingenic: Garbage-collect code paths for SoCs disabled by config
-Date:   Tue, 12 Apr 2022 17:22:18 +0100
-Message-Id: <20220412162218.32509-1-paul@crapouillou.net>
+        with ESMTP id S232955AbiDMGLC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 02:11:02 -0400
+Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A152335DD1;
+        Tue, 12 Apr 2022 23:08:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1649830075; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Gu0uUdc3EcM/n0HpwKvQvAOp/8WfUysFN5FxNMMCbn+opt8Vh3ENekl76HPlW1kuHJBWdV0P3s8nE0r4QcctIIFLtg1i05XeZ9qT6Iw74hP/xBwDAwotFYrmS7hgbZnu23gH0pfS4IqmUuVcTSrpU65MYXwHKT8oqqajLWHo5jQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1649830075; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=1GLD2yVhpnmtg9MYSN1hVevZ7/889ED0UFX13MyyOP0=; 
+        b=E9FRlUMY9xM30pRoLXtZhpYHzQjvBhMR609PnD8jboqVFrW56zYNbJ5pFFAe8A3Nja0ng9vaky4vjkJ/Yllih9PIk3olsVtrEg9c0H4KnOF3QcZZEH91rH7s2dmm566Tmi/zmjzUDa1N7X1RUwNPMwrpq7Fvr7yDyMEmzKn6fUE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=arinc9.com;
+        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
+        dmarc=pass header.from=<arinc.unal@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1649830075;
+        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
+        h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
+        bh=1GLD2yVhpnmtg9MYSN1hVevZ7/889ED0UFX13MyyOP0=;
+        b=DC/fV5Ae6Y4c5yCfrCs096yh+1z8q4uS2Cc0uyt9UdebKAWMnS9HvsmFBCP/lF0c
+        lODU9vVn758SVw6XkOsiE+ypVcQyp6EOCTTTWm6xmXo36sXTWJM/4TXns3MGfd1LW6Z
+        3t2JPdbS3yC8nL6IAh8rIs5MKhx7i1D/9iVA9sik=
+Received: from arinc9-PC.localdomain (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
+        with SMTPS id 1649830073203273.4772973442915; Tue, 12 Apr 2022 23:07:53 -0700 (PDT)
+From:   =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     erkin.bozoglu@xeront.com,
+        =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 0/14] Refactor Ralink Pinctrl and Add Documentation
+Date:   Wed, 13 Apr 2022 09:07:15 +0300
+Message-Id: <20220413060729.27639-1-arinc.unal@arinc9.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -41,399 +66,89 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-By being a bit smarter about how the SoC version checks are performed,
-it is possible to have all the code paths that correspond to SoCs
-disabled in the kernel config automatically marked as dead code by the
-compiler, and therefore garbage-collected.
+Hey everyone.
 
-With this patch, when compiling a kernel that only targets the JZ4760
-for instance, the driver is now about 4.5 KiB smaller.
+This patch series brings complete refactoring to the Ralink pinctrl driver
+and its subdrivers.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+The mt7620 pinctrl subdriver supports MT7628 and MT7688 SoCs along with
+MT7620. These two share the same pin layout. The code used for MT7628 and
+MT7688 is renamed from MT7628/mt7628an to MT76X8.
 
-Notes:
-    v2:
-    - Remove useles cast from enum jz_version
-    - Make enabled_socs a "unsigned long" instead of u32
+Ralink pinctrl driver is called rt2880 which is the name of the Ralink
+RT2880 SoC. A subdriver for the Ralink RT2880 SoC is called rt288x. Rename
+rt2880 to ralink.
 
- drivers/pinctrl/pinctrl-ingenic.c | 118 ++++++++++++++++++------------
- 1 file changed, 71 insertions(+), 47 deletions(-)
+Rename code from pinmux to pinctrl for where the operation is not about the
+muxing of pins.
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index fa6becca1788..1ca11616db74 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -139,6 +139,30 @@ struct ingenic_gpio_chip {
- 	unsigned int irq, reg_base;
- };
- 
-+static const unsigned long enabled_socs =
-+	IS_ENABLED(CONFIG_MACH_JZ4730) << ID_JZ4730 |
-+	IS_ENABLED(CONFIG_MACH_JZ4740) << ID_JZ4740 |
-+	IS_ENABLED(CONFIG_MACH_JZ4725B) << ID_JZ4725B |
-+	IS_ENABLED(CONFIG_MACH_JZ4750) << ID_JZ4750 |
-+	IS_ENABLED(CONFIG_MACH_JZ4755) << ID_JZ4755 |
-+	IS_ENABLED(CONFIG_MACH_JZ4760) << ID_JZ4760 |
-+	IS_ENABLED(CONFIG_MACH_JZ4770) << ID_JZ4770 |
-+	IS_ENABLED(CONFIG_MACH_JZ4775) << ID_JZ4775 |
-+	IS_ENABLED(CONFIG_MACH_JZ4780) << ID_JZ4780 |
-+	IS_ENABLED(CONFIG_MACH_X1000) << ID_X1000 |
-+	IS_ENABLED(CONFIG_MACH_X1500) << ID_X1500 |
-+	IS_ENABLED(CONFIG_MACH_X1830) << ID_X1830 |
-+	IS_ENABLED(CONFIG_MACH_X2000) << ID_X2000 |
-+	IS_ENABLED(CONFIG_MACH_X2100) << ID_X2100;
-+
-+static bool
-+is_soc_or_above(const struct ingenic_pinctrl *jzpc, enum jz_version version)
-+{
-+	return (enabled_socs >> version) &&
-+		(!(enabled_socs & GENMASK(version - 1, 0))
-+		 || jzpc->info->version >= version);
-+}
-+
- static const u32 jz4730_pull_ups[4] = {
- 	0x3fa3320f, 0xf200ffff, 0xffffffff, 0xffffffff,
- };
-@@ -3242,7 +3266,7 @@ static u32 ingenic_gpio_read_reg(struct ingenic_gpio_chip *jzgc, u8 reg)
- static void ingenic_gpio_set_bit(struct ingenic_gpio_chip *jzgc,
- 		u8 reg, u8 offset, bool set)
- {
--	if (jzgc->jzpc->info->version == ID_JZ4730) {
-+	if (!is_soc_or_above(jzgc->jzpc, ID_JZ4740)) {
- 		regmap_update_bits(jzgc->jzpc->map, jzgc->reg_base + reg,
- 				BIT(offset), set ? BIT(offset) : 0);
- 		return;
-@@ -3300,9 +3324,9 @@ static inline bool ingenic_gpio_get_value(struct ingenic_gpio_chip *jzgc,
- static void ingenic_gpio_set_value(struct ingenic_gpio_chip *jzgc,
- 				   u8 offset, int value)
- {
--	if (jzgc->jzpc->info->version >= ID_JZ4770)
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
- 		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_PAT0, offset, !!value);
--	else if (jzgc->jzpc->info->version >= ID_JZ4740)
-+	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
- 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_DATA, offset, !!value);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_DATA, offset, !!value);
-@@ -3337,10 +3361,10 @@ static void irq_set_type(struct ingenic_gpio_chip *jzgc,
- 		break;
- 	}
- 
--	if (jzgc->jzpc->info->version >= ID_JZ4770) {
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770)) {
- 		reg1 = JZ4770_GPIO_PAT1;
- 		reg2 = JZ4770_GPIO_PAT0;
--	} else if (jzgc->jzpc->info->version >= ID_JZ4740) {
-+	} else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740)) {
- 		reg1 = JZ4740_GPIO_TRIG;
- 		reg2 = JZ4740_GPIO_DIR;
- 	} else {
-@@ -3350,12 +3374,12 @@ static void irq_set_type(struct ingenic_gpio_chip *jzgc,
- 		return;
- 	}
- 
--	if (jzgc->jzpc->info->version >= ID_X2000) {
-+	if (is_soc_or_above(jzgc->jzpc, ID_X2000)) {
- 		ingenic_gpio_shadow_set_bit(jzgc, reg2, offset, val1);
- 		ingenic_gpio_shadow_set_bit(jzgc, reg1, offset, val2);
- 		ingenic_gpio_shadow_set_bit_load(jzgc);
- 		ingenic_gpio_set_bit(jzgc, X2000_GPIO_EDG, offset, val3);
--	} else if (jzgc->jzpc->info->version >= ID_X1000) {
-+	} else if (is_soc_or_above(jzgc->jzpc, ID_X1000)) {
- 		ingenic_gpio_shadow_set_bit(jzgc, reg2, offset, val1);
- 		ingenic_gpio_shadow_set_bit(jzgc, reg1, offset, val2);
- 		ingenic_gpio_shadow_set_bit_load(jzgc);
-@@ -3371,7 +3395,7 @@ static void ingenic_gpio_irq_mask(struct irq_data *irqd)
- 	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
- 	int irq = irqd->hwirq;
- 
--	if (jzgc->jzpc->info->version >= ID_JZ4740)
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
- 		ingenic_gpio_set_bit(jzgc, GPIO_MSK, irq, true);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIMR, irq, true);
-@@ -3383,7 +3407,7 @@ static void ingenic_gpio_irq_unmask(struct irq_data *irqd)
- 	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
- 	int irq = irqd->hwirq;
- 
--	if (jzgc->jzpc->info->version >= ID_JZ4740)
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
- 		ingenic_gpio_set_bit(jzgc, GPIO_MSK, irq, false);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIMR, irq, false);
-@@ -3395,9 +3419,9 @@ static void ingenic_gpio_irq_enable(struct irq_data *irqd)
- 	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
- 	int irq = irqd->hwirq;
- 
--	if (jzgc->jzpc->info->version >= ID_JZ4770)
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
- 		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_INT, irq, true);
--	else if (jzgc->jzpc->info->version >= ID_JZ4740)
-+	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
- 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, true);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIER, irq, true);
-@@ -3413,9 +3437,9 @@ static void ingenic_gpio_irq_disable(struct irq_data *irqd)
- 
- 	ingenic_gpio_irq_mask(irqd);
- 
--	if (jzgc->jzpc->info->version >= ID_JZ4770)
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
- 		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_INT, irq, false);
--	else if (jzgc->jzpc->info->version >= ID_JZ4740)
-+	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
- 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIER, irq, false);
-@@ -3429,7 +3453,7 @@ static void ingenic_gpio_irq_ack(struct irq_data *irqd)
- 	bool high;
- 
- 	if ((irqd_get_trigger_type(irqd) == IRQ_TYPE_EDGE_BOTH) &&
--		(jzgc->jzpc->info->version < ID_X2000)) {
-+	    !is_soc_or_above(jzgc->jzpc, ID_X2000)) {
- 		/*
- 		 * Switch to an interrupt for the opposite edge to the one that
- 		 * triggered the interrupt being ACKed.
-@@ -3441,9 +3465,9 @@ static void ingenic_gpio_irq_ack(struct irq_data *irqd)
- 			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_HIGH);
- 	}
- 
--	if (jzgc->jzpc->info->version >= ID_JZ4770)
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
- 		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_FLAG, irq, false);
--	else if (jzgc->jzpc->info->version >= ID_JZ4740)
-+	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
- 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_DATA, irq, true);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPFR, irq, false);
-@@ -3468,7 +3492,7 @@ static int ingenic_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
- 		irq_set_handler_locked(irqd, handle_bad_irq);
- 	}
- 
--	if ((type == IRQ_TYPE_EDGE_BOTH) && (jzgc->jzpc->info->version < ID_X2000)) {
-+	if ((type == IRQ_TYPE_EDGE_BOTH) && !is_soc_or_above(jzgc->jzpc, ID_X2000)) {
- 		/*
- 		 * The hardware does not support interrupts on both edges. The
- 		 * best we can do is to set up a single-edge interrupt and then
-@@ -3500,9 +3524,9 @@ static void ingenic_gpio_irq_handler(struct irq_desc *desc)
- 
- 	chained_irq_enter(irq_chip, desc);
- 
--	if (jzgc->jzpc->info->version >= ID_JZ4770)
-+	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
- 		flag = ingenic_gpio_read_reg(jzgc, JZ4770_GPIO_FLAG);
--	else if (jzgc->jzpc->info->version >= ID_JZ4740)
-+	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
- 		flag = ingenic_gpio_read_reg(jzgc, JZ4740_GPIO_FLAG);
- 	else
- 		flag = ingenic_gpio_read_reg(jzgc, JZ4730_GPIO_GPFR);
-@@ -3547,14 +3571,14 @@ static inline void ingenic_config_pin(struct ingenic_pinctrl *jzpc,
- 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
- 
- 	if (set) {
--		if (jzpc->info->version >= ID_JZ4740)
-+		if (is_soc_or_above(jzpc, ID_JZ4740))
- 			regmap_write(jzpc->map, offt * jzpc->info->reg_offset +
- 					REG_SET(reg), BIT(idx));
- 		else
- 			regmap_set_bits(jzpc->map, offt * jzpc->info->reg_offset +
- 					reg, BIT(idx));
- 	} else {
--		if (jzpc->info->version >= ID_JZ4740)
-+		if (is_soc_or_above(jzpc, ID_JZ4740))
- 			regmap_write(jzpc->map, offt * jzpc->info->reg_offset +
- 					REG_CLEAR(reg), BIT(idx));
- 		else
-@@ -3613,12 +3637,12 @@ static int ingenic_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- 	struct ingenic_pinctrl *jzpc = jzgc->jzpc;
- 	unsigned int pin = gc->base + offset;
- 
--	if (jzpc->info->version >= ID_JZ4770) {
-+	if (is_soc_or_above(jzpc, ID_JZ4770)) {
- 		if (ingenic_get_pin_config(jzpc, pin, JZ4770_GPIO_INT) ||
- 		    ingenic_get_pin_config(jzpc, pin, JZ4770_GPIO_PAT1))
- 			return GPIO_LINE_DIRECTION_IN;
- 		return GPIO_LINE_DIRECTION_OUT;
--	} else if (jzpc->info->version == ID_JZ4730) {
-+	} else if (!is_soc_or_above(jzpc, ID_JZ4740)) {
- 		if (!ingenic_get_pin_config(jzpc, pin, JZ4730_GPIO_GPDIR))
- 			return GPIO_LINE_DIRECTION_IN;
- 		return GPIO_LINE_DIRECTION_OUT;
-@@ -3669,18 +3693,18 @@ static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
- 	dev_dbg(jzpc->dev, "set pin P%c%u to function %u\n",
- 			'A' + offt, idx, func);
- 
--	if (jzpc->info->version >= ID_X1000) {
-+	if (is_soc_or_above(jzpc, ID_X1000)) {
- 		ingenic_shadow_config_pin(jzpc, pin, JZ4770_GPIO_INT, false);
- 		ingenic_shadow_config_pin(jzpc, pin, GPIO_MSK, false);
- 		ingenic_shadow_config_pin(jzpc, pin, JZ4770_GPIO_PAT1, func & 0x2);
- 		ingenic_shadow_config_pin(jzpc, pin, JZ4770_GPIO_PAT0, func & 0x1);
- 		ingenic_shadow_config_pin_load(jzpc, pin);
--	} else if (jzpc->info->version >= ID_JZ4770) {
-+	} else if (is_soc_or_above(jzpc, ID_JZ4770)) {
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_INT, false);
- 		ingenic_config_pin(jzpc, pin, GPIO_MSK, false);
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT1, func & 0x2);
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT0, func & 0x1);
--	} else if (jzpc->info->version >= ID_JZ4740) {
-+	} else if (is_soc_or_above(jzpc, ID_JZ4740)) {
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_FUNC, true);
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_TRIG, func & 0x2);
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, func & 0x1);
-@@ -3738,16 +3762,16 @@ static int ingenic_pinmux_gpio_set_direction(struct pinctrl_dev *pctldev,
- 	dev_dbg(pctldev->dev, "set pin P%c%u to %sput\n",
- 			'A' + offt, idx, input ? "in" : "out");
- 
--	if (jzpc->info->version >= ID_X1000) {
-+	if (is_soc_or_above(jzpc, ID_X1000)) {
- 		ingenic_shadow_config_pin(jzpc, pin, JZ4770_GPIO_INT, false);
- 		ingenic_shadow_config_pin(jzpc, pin, GPIO_MSK, true);
- 		ingenic_shadow_config_pin(jzpc, pin, JZ4770_GPIO_PAT1, input);
- 		ingenic_shadow_config_pin_load(jzpc, pin);
--	} else if (jzpc->info->version >= ID_JZ4770) {
-+	} else if (is_soc_or_above(jzpc, ID_JZ4770)) {
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_INT, false);
- 		ingenic_config_pin(jzpc, pin, GPIO_MSK, true);
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT1, input);
--	} else if (jzpc->info->version >= ID_JZ4740) {
-+	} else if (is_soc_or_above(jzpc, ID_JZ4740)) {
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, false);
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_DIR, !input);
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_FUNC, false);
-@@ -3779,7 +3803,7 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- 	unsigned int bias, reg;
- 	bool pull, pullup, pulldown;
- 
--	if (jzpc->info->version >= ID_X2000) {
-+	if (is_soc_or_above(jzpc, ID_X2000)) {
- 		pullup = ingenic_get_pin_config(jzpc, pin, X2000_GPIO_PEPU) &&
- 				!ingenic_get_pin_config(jzpc, pin, X2000_GPIO_PEPD) &&
- 				(jzpc->info->pull_ups[offt] & BIT(idx));
-@@ -3787,7 +3811,7 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- 				!ingenic_get_pin_config(jzpc, pin, X2000_GPIO_PEPU) &&
- 				(jzpc->info->pull_downs[offt] & BIT(idx));
- 
--	} else if (jzpc->info->version >= ID_X1830) {
-+	} else if (is_soc_or_above(jzpc, ID_X1830)) {
- 		unsigned int half = PINS_PER_GPIO_CHIP / 2;
- 		unsigned int idxh = (pin % half) * 2;
- 
-@@ -3804,9 +3828,9 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- 		pulldown = (bias == GPIO_PULL_DOWN) && (jzpc->info->pull_downs[offt] & BIT(idx));
- 
- 	} else {
--		if (jzpc->info->version >= ID_JZ4770)
-+		if (is_soc_or_above(jzpc, ID_JZ4770))
- 			pull = !ingenic_get_pin_config(jzpc, pin, JZ4770_GPIO_PEN);
--		else if (jzpc->info->version >= ID_JZ4740)
-+		else if (is_soc_or_above(jzpc, ID_JZ4740))
- 			pull = !ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_PULL_DIS);
- 		else
- 			pull = ingenic_get_pin_config(jzpc, pin, JZ4730_GPIO_GPPUR);
-@@ -3835,9 +3859,9 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- 		break;
- 
- 	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
--		if (jzpc->info->version >= ID_X2000)
-+		if (is_soc_or_above(jzpc, ID_X2000))
- 			reg = X2000_GPIO_SMT;
--		else if (jzpc->info->version >= ID_X1830)
-+		else if (is_soc_or_above(jzpc, ID_X1830))
- 			reg = X1830_GPIO_SMT;
- 		else
- 			return -EINVAL;
-@@ -3846,9 +3870,9 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- 		break;
- 
- 	case PIN_CONFIG_SLEW_RATE:
--		if (jzpc->info->version >= ID_X2000)
-+		if (is_soc_or_above(jzpc, ID_X2000))
- 			reg = X2000_GPIO_SR;
--		else if (jzpc->info->version >= ID_X1830)
-+		else if (is_soc_or_above(jzpc, ID_X1830))
- 			reg = X1830_GPIO_SR;
- 		else
- 			return -EINVAL;
-@@ -3867,7 +3891,7 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
- 		unsigned int pin, unsigned int bias)
- {
--	if (jzpc->info->version >= ID_X2000) {
-+	if (is_soc_or_above(jzpc, ID_X2000)) {
- 		switch (bias) {
- 		case GPIO_PULL_UP:
- 			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPD, false);
-@@ -3885,7 +3909,7 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
- 			ingenic_config_pin(jzpc, pin, X2000_GPIO_PEPD, false);
- 		}
- 
--	} else if (jzpc->info->version >= ID_X1830) {
-+	} else if (is_soc_or_above(jzpc, ID_X1830)) {
- 		unsigned int idx = pin % PINS_PER_GPIO_CHIP;
- 		unsigned int half = PINS_PER_GPIO_CHIP / 2;
- 		unsigned int idxh = (pin % half) * 2;
-@@ -3903,9 +3927,9 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
- 					REG_SET(X1830_GPIO_PEH), bias << idxh);
- 		}
- 
--	} else if (jzpc->info->version >= ID_JZ4770) {
-+	} else if (is_soc_or_above(jzpc, ID_JZ4770)) {
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PEN, !bias);
--	} else if (jzpc->info->version >= ID_JZ4740) {
-+	} else if (is_soc_or_above(jzpc, ID_JZ4740)) {
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !bias);
- 	} else {
- 		ingenic_config_pin(jzpc, pin, JZ4730_GPIO_GPPUR, bias);
-@@ -3915,7 +3939,7 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
- static void ingenic_set_schmitt_trigger(struct ingenic_pinctrl *jzpc,
- 		unsigned int pin, bool enable)
- {
--	if (jzpc->info->version >= ID_X2000)
-+	if (is_soc_or_above(jzpc, ID_X2000))
- 		ingenic_config_pin(jzpc, pin, X2000_GPIO_SMT, enable);
- 	else
- 		ingenic_config_pin(jzpc, pin, X1830_GPIO_SMT, enable);
-@@ -3924,9 +3948,9 @@ static void ingenic_set_schmitt_trigger(struct ingenic_pinctrl *jzpc,
- static void ingenic_set_output_level(struct ingenic_pinctrl *jzpc,
- 				     unsigned int pin, bool high)
- {
--	if (jzpc->info->version >= ID_JZ4770)
-+	if (is_soc_or_above(jzpc, ID_JZ4770))
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT0, high);
--	else if (jzpc->info->version >= ID_JZ4740)
-+	else if (is_soc_or_above(jzpc, ID_JZ4740))
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_DATA, high);
- 	else
- 		ingenic_config_pin(jzpc, pin, JZ4730_GPIO_DATA, high);
-@@ -3935,7 +3959,7 @@ static void ingenic_set_output_level(struct ingenic_pinctrl *jzpc,
- static void ingenic_set_slew_rate(struct ingenic_pinctrl *jzpc,
- 		unsigned int pin, unsigned int slew)
- {
--	if (jzpc->info->version >= ID_X2000)
-+	if (is_soc_or_above(jzpc, ID_X2000))
- 		ingenic_config_pin(jzpc, pin, X2000_GPIO_SR, slew);
- 	else
- 		ingenic_config_pin(jzpc, pin, X1830_GPIO_SR, slew);
-@@ -3991,7 +4015,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			break;
- 
- 		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
--			if (jzpc->info->version < ID_X1830)
-+			if (!is_soc_or_above(jzpc, ID_X1830))
- 				return -EINVAL;
- 
- 			ingenic_set_schmitt_trigger(jzpc, pin, arg);
-@@ -4006,7 +4030,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			break;
- 
- 		case PIN_CONFIG_SLEW_RATE:
--			if (jzpc->info->version < ID_X1830)
-+			if (!is_soc_or_above(jzpc, ID_X1830))
- 				return -EINVAL;
- 
- 			ingenic_set_slew_rate(jzpc, pin, arg);
--- 
-2.35.1
+Rename rt288x pinctrl subdriver for the RT2880 SoC to rt2880.
+
+Variables for functions include "grp" on the Ralink MT7620 and MT7621
+subdrivers. Rename them to "func" instead as they define the functions for
+the pin groups. This is already the case for the other 3 subdrivers;
+RT2880, RT305x, RT3883.
+
+Fix Kconfig to call the subdrivers, well, subdrivers.
+
+Add new compatible strings for each subdriver and update DT binding
+accordingly.
+
+Add Ralink pinctrl driver to MAINTAINERS and add me and Sergio as the
+maintainers.
+
+Finally, fix the current rt2880 documentation and add binding for all of
+the subdrivers.
+
+I have the patches here should anyone prefer to read them there:
+https://github.com/arinc9/linux/commits/ralink-pinctrl-refactor
+
+Ralink pinctrl driver and the subdrivers were compile tested.
+MT7621 pinctrl subdriver was tested on a private mt7621 board.
+YAML bindings checked with:
+ARCH=mips CROSS_COMPILE=mips-linux-gnu- make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pinctrl/ -j$(nproc)
+
+Arınç ÜNAL (14):
+  pinctrl: ralink: rename MT7628(an) functions to MT76X8
+  pinctrl: ralink: rename pinctrl-rt2880 to pinctrl-ralink
+  pinctrl: ralink: rename pinmux functions to pinctrl
+  pinctrl: ralink: rename pinctrl-rt288x to pinctrl-rt2880
+  pinctrl: ralink: rename variable names for functions on MT7620 and MT7621
+  pinctrl: ralink: rename driver names to subdrivers
+  pinctrl: ralink: add new compatible strings for each pinctrl subdriver
+  MAINTAINERS: add Ralink pinctrl driver
+  mips: dts: ralink: mt7621: use the new compatible string for MT7621 pinctrl
+  dt-bindings: pinctrl: rt2880: fix binding name, pin groups and functions
+  dt-bindings: pinctrl: add binding for Ralink MT7620 pinctrl
+  dt-bindings: pinctrl: add binding for Ralink MT7621 pinctrl
+  dt-bindings: pinctrl: add binding for Ralink RT305X pinctrl
+  dt-bindings: pinctrl: add binding for Ralink RT3883 pinctrl
+
+ Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml   |  87 ++++++++
+ .../pinctrl/{ralink,rt2880-pinmux.yaml => ralink,mt7621-pinctrl.yaml}  |  25 ++-
+ Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml   |  68 ++++++
+ Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml   |  89 ++++++++
+ Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml   |  69 ++++++
+ MAINTAINERS                                                            |   7 +
+ arch/mips/boot/dts/ralink/mt7621.dtsi                                  |   2 +-
+ drivers/pinctrl/ralink/Kconfig                                         |  28 +--
+ drivers/pinctrl/ralink/Makefile                                        |   4 +-
+ drivers/pinctrl/ralink/pinctrl-mt7620.c                                | 302 ++++++++++++-------------
+ drivers/pinctrl/ralink/pinctrl-mt7621.c                                |  76 +++----
+ drivers/pinctrl/ralink/pinctrl-ralink.c                                | 349 +++++++++++++++++++++++++++++
+ drivers/pinctrl/ralink/{pinmux.h => pinctrl-ralink.h}                  |  16 +-
+ drivers/pinctrl/ralink/pinctrl-rt2880.c                                | 381 ++++----------------------------
+ drivers/pinctrl/ralink/pinctrl-rt288x.c                                |  60 -----
+ drivers/pinctrl/ralink/pinctrl-rt305x.c                                |  66 +++---
+ drivers/pinctrl/ralink/pinctrl-rt3883.c                                |  50 ++---
+ 17 files changed, 998 insertions(+), 681 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+ rename Documentation/devicetree/bindings/pinctrl/{ralink,rt2880-pinmux.yaml => ralink,mt7621-pinctrl.yaml} (63%)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/ralink/pinctrl-ralink.c
+ rename drivers/pinctrl/ralink/{pinmux.h => pinctrl-ralink.h} (75%)
+ delete mode 100644 drivers/pinctrl/ralink/pinctrl-rt288x.c
+
 
