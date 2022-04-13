@@ -2,185 +2,268 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7864E4FFC96
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 19:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7C114FFCB4
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 19:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237287AbiDMR1E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Apr 2022 13:27:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60954 "EHLO
+        id S237335AbiDMRcF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Apr 2022 13:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237282AbiDMR0n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 13:26:43 -0400
+        with ESMTP id S232089AbiDMRcE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 13:32:04 -0400
+X-Greylist: delayed 320 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Apr 2022 10:29:41 PDT
+Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [IPv6:2a02:1800:110:4::f00:10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D5651E48
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 10:29:40 -0700 (PDT)
 Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31B3E04
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 10:24:17 -0700 (PDT)
+        by riemann.telenet-ops.be (Postfix) with ESMTPS id 4KdqFr1ypXz4xFlb
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 19:24:16 +0200 (CEST)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:c9b8:20d3:ee2b:1cda])
         by baptiste.telenet-ops.be with bizsmtp
-        id JHQE2700Q2t8Arn01HQEWt; Wed, 13 Apr 2022 19:24:15 +0200
+        id JHQG270052t8Arn01HQGXS; Wed, 13 Apr 2022 19:24:16 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1negj0-000Tq4-B3; Wed, 13 Apr 2022 19:24:14 +0200
+        id 1negj1-000Tq5-EB; Wed, 13 Apr 2022 19:24:15 +0200
 Received: from geert by rox.of.borg with local (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1negiz-00DfRd-UL; Wed, 13 Apr 2022 19:24:13 +0200
+        id 1negiz-00DfRh-Vm; Wed, 13 Apr 2022 19:24:13 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 00/50] pinctrl: renesas: Reserved field optimizations
-Date:   Wed, 13 Apr 2022 19:23:22 +0200
-Message-Id: <cover.1649865241.git.geert+renesas@glider.be>
+Subject: [PATCH 01/50] pinctrl: renesas: r8a77470: Use fixed-width description for IPSR regs
+Date:   Wed, 13 Apr 2022 19:23:23 +0200
+Message-Id: <f6f26a0dfd16050ead83daf2b9fabeb8b26821a6.1649865241.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1649865241.git.geert+renesas@glider.be>
+References: <cover.1649865241.git.geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+All fields in the IPSR registers on RZ/G1C have the same width, but the
+driver describes them using the PINMUX_CFG_REG_VAR() macro, which
+is intended for fields with different widths.  Convert the description
+to use the PINMUX_CFG_REG() macro for fixed-width fields instead.
 
-Lots of register in pin control subdrivers for Renesas SoCs contain
-reserved or unused fields.  As the macros for describing these registers
-(PINMUX_CFG_REG() and PINMUX_CFG_REG_VAR() for registers with
-fixed-width resp. variable-width fields) require describing all fields,
-the resulting data structures contain lots of dummy (zero) values: 2^N
-values for a field of N-bits wide.  To reduce data size, reserved bit
-fields wider than 3 bits were typically split in multiple 2-bit fields.
-This patch series aims to improve this by introducing a shorthand for
-describing reserved variable-width register fields without dummy values.
+This reduces kernel size by 162 bytes.
 
-  - Patch 1 converts a few register definitions for registers with
-    fixed-width fields that accidentally used the equivalent but larger
-    description format intended for registers with variable-width
-    fields,
-  - Patch 2 introduces a shorthand for describing reserved register
-    fields,
-  - Patches 3-22 convert reserved field descriptions in the various
-    SoC-specific pin control subdrivers to the new shorthands,
-  - Patches 23-49 convert register definitions for registers with
-    reserved fixed-width fields to the equivalent definitions with
-    variable-width fields where it makes sense,
-  - Patch 50 updates the checker to flag possible conversions to
-    variable-width reserved fields.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/pinctrl/renesas/pfc-r8a77470.c | 72 +++++++-------------------
+ 1 file changed, 18 insertions(+), 54 deletions(-)
 
-The total kernel size reduction due to patches 3-49 is:
-  - 12685 bytes on ARM32 SoCs (multi-platform),
-  - 5416 bytes on ARM64 SoCs (multi-platform),
-  - 2575 bytes on SH SoCs (sum of mutually-exclusive single platforms).
-
-I've been running with these changes on R-Mobile APE6 and A1, R-Car
-M2-W, H3 ES1.x, H3 ES2.0, M3-W, M3-N, V3M, E3, D3, V3U, and S4, and
-SH-Mobile AG5 during the past six weeks, without any issues.
-
-I plan to queue these in renesas-pinctrl-for-v5.19.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (50):
-  pinctrl: renesas: r8a77470: Use fixed-width description for IPSR regs
-  pinctrl: renesas: Add shorthand for reserved register fields
-  pinctrl: renesas: rmobile: Mark unused PORTCR bits reserved
-  pinctrl: renesas: emev2: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77470: Use shorthands for reserved fields
-  pinctrl: renesas: r8a7778: Use shorthands for reserved fields
-  pinctrl: renesas: r8a7779: Use shorthands for reserved fields
-  pinctrl: renesas: r8a7790: Use shorthands for reserved fields
-  pinctrl: renesas: r8a7791: Use shorthands for reserved fields
-  pinctrl: renesas: r8a7792: Use shorthands for reserved fields
-  pinctrl: renesas: r8a7794: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77950: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77951: Use shorthands for reserved fields
-  pinctrl: renesas: r8a7796: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77965: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77970: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77980: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77990: Use shorthands for reserved fields
-  pinctrl: renesas: r8a77995: Use shorthands for reserved fields
-  pinctrl: renesas: r8a779a0: Use shorthands for reserved fields
-  pinctrl: renesas: r8a779f0: Use shorthands for reserved fields
-  pinctrl: renesas: sh7734: Use shorthands for reserved fields
-  pinctrl: renesas: r8a73a4: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a7740: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77470: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a7779: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a7792: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77950: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77951: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77965: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a7796: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77970: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77980: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77990: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a77995: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a779a0: Optimize fixed-width reserved fields
-  pinctrl: renesas: r8a779f0: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7203: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7264: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7269: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh73a0: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7720: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7722: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7723: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7724: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7734: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7757: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7785: Optimize fixed-width reserved fields
-  pinctrl: renesas: sh7786: Optimize fixed-width reserved fields
-  pinctrl: renesas: checker: Add reserved field checks
-
- drivers/pinctrl/renesas/core.c         |  43 +++--
- drivers/pinctrl/renesas/pfc-emev2.c    |  59 ++-----
- drivers/pinctrl/renesas/pfc-r8a73a4.c  |  58 ++-----
- drivers/pinctrl/renesas/pfc-r8a7740.c  |  74 ++++----
- drivers/pinctrl/renesas/pfc-r8a77470.c | 176 +++++--------------
- drivers/pinctrl/renesas/pfc-r8a7778.c  |  98 +++--------
- drivers/pinctrl/renesas/pfc-r8a7779.c  |  82 +++------
- drivers/pinctrl/renesas/pfc-r8a7790.c  | 110 ++++--------
- drivers/pinctrl/renesas/pfc-r8a7791.c  | 111 ++++--------
- drivers/pinctrl/renesas/pfc-r8a7792.c  | 231 ++++++-------------------
- drivers/pinctrl/renesas/pfc-r8a7794.c  |  97 +++--------
- drivers/pinctrl/renesas/pfc-r8a77950.c | 170 ++++--------------
- drivers/pinctrl/renesas/pfc-r8a77951.c | 169 +++++-------------
- drivers/pinctrl/renesas/pfc-r8a7796.c  | 166 +++++-------------
- drivers/pinctrl/renesas/pfc-r8a77965.c | 166 +++++-------------
- drivers/pinctrl/renesas/pfc-r8a77970.c | 136 ++++-----------
- drivers/pinctrl/renesas/pfc-r8a77980.c | 107 ++++--------
- drivers/pinctrl/renesas/pfc-r8a77990.c | 132 ++++----------
- drivers/pinctrl/renesas/pfc-r8a77995.c | 131 +++-----------
- drivers/pinctrl/renesas/pfc-r8a779a0.c | 217 ++++++++---------------
- drivers/pinctrl/renesas/pfc-r8a779f0.c | 100 ++++-------
- drivers/pinctrl/renesas/pfc-sh7203.c   |  53 +++---
- drivers/pinctrl/renesas/pfc-sh7264.c   | 104 +++++------
- drivers/pinctrl/renesas/pfc-sh7269.c   |  82 ++++-----
- drivers/pinctrl/renesas/pfc-sh73a0.c   |  87 ++++------
- drivers/pinctrl/renesas/pfc-sh7720.c   |  57 +++---
- drivers/pinctrl/renesas/pfc-sh7722.c   | 202 +++++++++------------
- drivers/pinctrl/renesas/pfc-sh7723.c   |  70 ++++----
- drivers/pinctrl/renesas/pfc-sh7724.c   |   7 +-
- drivers/pinctrl/renesas/pfc-sh7734.c   | 115 ++++--------
- drivers/pinctrl/renesas/pfc-sh7757.c   |  95 ++++------
- drivers/pinctrl/renesas/pfc-sh7785.c   |  60 +++----
- drivers/pinctrl/renesas/pfc-sh7786.c   |  21 +--
- drivers/pinctrl/renesas/sh_pfc.h       |  17 +-
- 34 files changed, 1116 insertions(+), 2487 deletions(-)
-
+diff --git a/drivers/pinctrl/renesas/pfc-r8a77470.c b/drivers/pinctrl/renesas/pfc-r8a77470.c
+index ee6e8fabab246c2b..63db71ebb7e955ec 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a77470.c
++++ b/drivers/pinctrl/renesas/pfc-r8a77470.c
+@@ -2689,9 +2689,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		GP_5_1_FN, FN_IP14_3_0,
+ 		GP_5_0_FN, FN_IP13_31_28, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR0", 0xE6060040, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR0", 0xE6060040, 32, 4, GROUP(
+ 		/* IP0_31_28 [4] */
+ 		FN_SD0_WP, FN_IRQ7, FN_CAN0_TX_A, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+@@ -2717,9 +2715,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_SD0_CLK, 0, 0, FN_SSI_SCK1_C, FN_RX3_C, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR1", 0xE6060044, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR1", 0xE6060044, 32, 4, GROUP(
+ 		/* IP1_31_28 [4] */
+ 		FN_D5, FN_HRX2, FN_SCL1_B, FN_PWM2_C, FN_TCLK2_B, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+@@ -2745,9 +2741,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_MMC0_D4, FN_SD1_CD, 0, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR2", 0xE6060048, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR2", 0xE6060048, 32, 4, GROUP(
+ 		/* IP2_31_28 [4] */
+ 		FN_D13, FN_MSIOF2_SYNC_A, 0, FN_RX4_C, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0,
+@@ -2773,9 +2767,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_D6, FN_HTX2, FN_SDA1_B, FN_PWM4_C, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR3", 0xE606004C, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR3", 0xE606004C, 32, 4, GROUP(
+ 		/* IP3_31_28 [4] */
+ 		FN_QSPI0_SSL, FN_WE1_N, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		0, 0,
+@@ -2802,9 +2794,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		0, FN_AVB_AVTP_CAPTURE_A,
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR4", 0xE6060050, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR4", 0xE6060050, 32, 4, GROUP(
+ 		/* IP4_31_28 [4] */
+ 		FN_DU0_DR6, 0, FN_RX2_C, 0, 0, 0, FN_A6, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+@@ -2830,9 +2820,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_EX_WAIT0, FN_CAN_CLK_B, FN_SCIF_CLK_A, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR5", 0xE6060054, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR5", 0xE6060054, 32, 4, GROUP(
+ 		/* IP5_31_28 [4] */
+ 		FN_DU0_DG6, 0, FN_HRX1_C, 0, 0, 0, FN_A14,  0, 0, 0,
+ 		0, 0, 0, 0, 0, 0,
+@@ -2858,9 +2846,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_DU0_DR7, 0, FN_TX2_C, 0, FN_PWM2_B, 0, FN_A7, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR6", 0xE6060058, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR6", 0xE6060058, 32, 4, GROUP(
+ 		/* IP6_31_28 [4] */
+ 		FN_DU0_DB6, 0, 0, 0, 0, 0, FN_A22, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0,
+@@ -2886,9 +2872,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_DU0_DG7, 0, FN_HTX1_C, 0,  FN_PWM6_B, 0, FN_A15,
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR7", 0xE606005C, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR7", 0xE606005C, 32, 4, GROUP(
+ 		/* IP7_31_28 [4] */
+ 		FN_DU0_DISP, 0, 0, 0, FN_CAN1_RX_C, 0, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0,
+@@ -2914,9 +2898,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_DU0_DB7, 0, 0, 0, 0, 0, FN_A23, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR8", 0xE6060060, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR8", 0xE6060060, 32, 4, GROUP(
+ 		/* IP8_31_28 [4] */
+ 		FN_VI1_DATA5, 0, 0, 0, FN_AVB_RXD4, FN_ETH_LINK, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0,
+@@ -2942,9 +2924,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_DU0_CDE, 0, 0, 0, FN_CAN1_TX_C, 0, 0, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR9", 0xE6060064, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR9", 0xE6060064, 32, 4, GROUP(
+ 		/* IP9_31_28 [4] */
+ 		FN_VI1_DATA9, 0, 0, FN_SDA2_B, FN_AVB_TXD0, 0, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0,
+@@ -2970,9 +2950,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_VI1_DATA6, 0, 0, 0, FN_AVB_RXD5, FN_ETH_TXD1, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR10", 0xE6060068, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR10", 0xE6060068, 32, 4, GROUP(
+ 		/* IP10_31_28 [4] */
+ 		FN_SCL1_A, FN_RX4_A, FN_PWM5_D, FN_DU1_DR0, 0, 0,
+ 		FN_SSI_SCK6_B, FN_VI0_G0, 0, 0, 0, 0, 0, 0, 0, 0,
+@@ -2999,9 +2977,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_VI1_DATA10, 0, 0, FN_CAN0_RX_B, FN_AVB_TXD1, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR11", 0xE606006C, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR11", 0xE606006C, 32, 4, GROUP(
+ 		/* IP11_31_28 [4] */
+ 		FN_HRX1_A, FN_SCL4_A, FN_PWM6_A, FN_DU1_DG0, FN_RX0_A, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0,
+@@ -3031,9 +3007,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_SDA1_A, FN_TX4_A, 0, FN_DU1_DR1, 0, 0, FN_SSI_WS6_B,
+ 		FN_VI0_G1, 0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR12", 0xE6060070, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR12", 0xE6060070, 32, 4, GROUP(
+ 		/* IP12_31_28 [4] */
+ 		FN_SD2_DAT2, FN_RX2_A, 0, FN_DU1_DB0, FN_SSI_SDATA2_B, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0,
+@@ -3059,9 +3033,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_HTX1_A, FN_SDA4_A, 0, FN_DU1_DG1, FN_TX0_A, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR13", 0xE6060074, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR13", 0xE6060074, 32, 4, GROUP(
+ 		/* IP13_31_28 [4] */
+ 		FN_SSI_SCK5_A, 0, 0, FN_DU1_DOTCLKOUT1, 0, 0, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0,
+@@ -3088,9 +3060,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_SD2_DAT3, FN_TX2_A, 0, FN_DU1_DB1, FN_SSI_WS9_B, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR14", 0xE6060078, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR14", 0xE6060078, 32, 4, GROUP(
+ 		/* IP14_31_28 [4] */
+ 		FN_SSI_SDATA7_A, 0, 0, FN_IRQ8, FN_AUDIO_CLKA_D, FN_CAN_CLK_D,
+ 		FN_VI0_G5, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+@@ -3116,9 +3086,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_SSI_WS5_A, 0, FN_SCL3_C, FN_DU1_DOTCLKIN, 0, 0, 0, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR15", 0xE606007C, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR15", 0xE606007C, 32, 4, GROUP(
+ 		/* IP15_31_28 [4] */
+ 		FN_SSI_WS4_A, 0, FN_AVB_PHY_INT, 0, 0, 0, FN_VI0_R5, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0,
+@@ -3144,9 +3112,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_SSI_SCK0129_A, FN_MSIOF1_RXD_A, FN_RX5_D, 0, 0, 0,
+ 		FN_VI0_G6, 0, 0, 0, 0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR16", 0xE6060080, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR16", 0xE6060080, 32, 4, GROUP(
+ 		/* IP16_31_28 [4] */
+ 		FN_SSI_SDATA2_A, FN_HRTS1_N_B, 0, 0, 0, 0,
+ 		FN_VI0_DATA4_VI0_B4, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+@@ -3173,9 +3139,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_SSI_SDATA4_A, 0, FN_AVB_CRS, 0, 0, 0, FN_VI0_R6, 0, 0, 0,
+ 		0, 0, 0, 0, 0, 0, ))
+ 	},
+-	{ PINMUX_CFG_REG_VAR("IPSR17", 0xE6060084, 32,
+-			     GROUP(4, 4, 4, 4, 4, 4, 4, 4),
+-			     GROUP(
++	{ PINMUX_CFG_REG("IPSR17", 0xE6060084, 32, 4, GROUP(
+ 		/* IP17_31_28 [4] */
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		/* IP17_27_24 [4] */
 -- 
 2.25.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
