@@ -2,105 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 251564FF853
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 16:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BAD64FF978
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Apr 2022 16:54:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235576AbiDMOEI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Apr 2022 10:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40528 "EHLO
+        id S234589AbiDMO4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Apr 2022 10:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233491AbiDMOEH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 10:04:07 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56BD847068
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 07:01:45 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id c190-20020a1c35c7000000b0038e37907b5bso4061455wma.0
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Apr 2022 07:01:45 -0700 (PDT)
+        with ESMTP id S235915AbiDMO4h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 10:56:37 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C8435853;
+        Wed, 13 Apr 2022 07:54:15 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id v4so2686088edl.7;
+        Wed, 13 Apr 2022 07:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DTI5aKv+Llz9a6eH5cPOwZke9qYbkp9XtBDCcwx/bdw=;
-        b=oS95j73fR3+vosP7yR0hB/NfaUUiMsI9CRzXH79noDkneJGFCGDr7U501avBE0sDkD
-         w5vXv+3LHyeZpWp5UpIvj325ThHw25LCeWJZncZti/wuUKpWPVsD1YzrdH4WFQi1T+6q
-         IBwN77JR7evl8svl0PemG7rOF6eNwAHU5QJHqhKBu3rK9GGHngA7ljOTvPAxidIC5EpL
-         wA/BpDkA1RopEXQyPfUPg0QMjSk3Cxo8B2PC6+0Ao1rLTdI6nLA7+qOwR2SBhN4qzrrv
-         zhSrASTig7N0m+mUeCV7s+cWYF+GcGW8iwi3wx4LTfPDjDO+zhE+u3o2SsAKMh74E2TJ
-         uRDw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MsuM3bWxLpM0X8gDoogn/CmcOLdvtiIpUqO+59cr1LA=;
+        b=cVIvzMZK3+X9w8Y8SlSIQ/kSqVSvwVRLF4mCx/phZOopUu2JsH/DrNh09pl99rMSgW
+         yF81A9Xo7Azt7dIih2sHI0iazTfboB1e4dKZ8PqTjrWvoG7xz3AJTu4p/gEVO2UJELlP
+         37rctWcVIbgJGk9rJ2hEzd36cktyy6aEjPvKGzFea9S3D0kyI3a3s2RJ3jE+KwJH7yG9
+         QbyA1Ka/IM6OKHp244AUjPHT6ZB52t/IzFGHKCIcsI1xiSU8Zok4CefKf3g76xKIV+TS
+         UKxY8GHCuDv24tRqX2ABPbbV1EDLFTBvBQ9WaspjdwmaASfOTF/rOfUKDKH1qKTqRFas
+         bH7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DTI5aKv+Llz9a6eH5cPOwZke9qYbkp9XtBDCcwx/bdw=;
-        b=5rt98y+LorGHeBZADbWkVRQAjcm8BLvOQptKMEhAfgZbu46z5QnDSoWFZ+G9M5XDJ4
-         jQRaEeEE/mvE4n8uMLhGaW8VUB+XGeDfzByM6qNrHb5RibqqEMDcVExSTwu1JryYojg8
-         gVDsxAvpfUgHrS6nRCnttjKQNE0yX3jLtHLZY87UwIVHnOFl8IQ5WQWGBot5NWQ5pLAn
-         pwPsIowIKBSXpcr5C2loMBGLou9mF+oCXZUWWYcwJ8jmyfVYkFbeErIo1dJBzNsfHDAR
-         e8RitU61t4YMK0HyLUTOTQLcgM6DWUBH3GlNfZ0BJZo7TYDfpDw+AQJQB0p5F8CYQinT
-         XUGQ==
-X-Gm-Message-State: AOAM533k+sR0DinVHw6zcfS9B2X3iGibpXQ/v6HsBK0cCowYFmgGm9hB
-        QZMkr8aiEC7UGOCEYDxF5CWIt5AqbXD1hj/W
-X-Google-Smtp-Source: ABdhPJzgc2lgi92TiqfkjIvUbTtRFT8RLl3JsThFjpis+TU/Z+jZb74O4DrydZ+C81HbiU8wLdQ69w==
-X-Received: by 2002:a05:600c:1d18:b0:38f:f19c:37ee with SMTP id l24-20020a05600c1d1800b0038ff19c37eemr60529wms.88.1649858503913;
-        Wed, 13 Apr 2022 07:01:43 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:756e:dffc:3f22:6bcd])
-        by smtp.gmail.com with ESMTPSA id v1-20020adf9e41000000b00205c3d212easm32745997wre.51.2022.04.13.07.01.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 07:01:43 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>, stable@vger.kernel.org
-Subject: [PATCH] gpio: sim: fix setting and getting multiple lines
-Date:   Wed, 13 Apr 2022 16:01:32 +0200
-Message-Id: <20220413140132.286848-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MsuM3bWxLpM0X8gDoogn/CmcOLdvtiIpUqO+59cr1LA=;
+        b=gDEF1U/leYgGmHYKyVJcY9fA12Fo0ebL1Og0EQTaDz1p0rb7z0qMcx25x8WJ5tpDM3
+         Vq5goxL4gBdcVmTevWd4e1LhDALwYO08kTRymxRburqM7aN7razZLnVLiSdneN/6K9vo
+         XP57ObOHWwS4gBZAtLwlht2ly/+tr++EGlMeIhd2N3tNCaMPFHWbNg26OSbwytNLM1Kp
+         9GXgnT5xhfAkIaGDpwtljq7fAK8Ms+sDYJDYG2i0Oumnhb2TQMHliyJ+HTfPals7dobZ
+         bFnqgX3ObApDsiysbsBZ74BXxPbCntmHLA1XZQBrOc3BklPDJSyku7vpHEUFl+eROvV2
+         og5Q==
+X-Gm-Message-State: AOAM5334fZ90+LNZJrNVGmZNvJfkiRMUrk1zrqism39bY/QyFPYXfMsf
+        uEzLwbUXvtBjL6eTFfCzBRIz7LWhUi6jSnDZL4U=
+X-Google-Smtp-Source: ABdhPJxPoCxL9183qcM2JHaUk1J7xZA0AhCa/tILcvARmu0cjoFPH48I3A5IVHobbtiSKzTzkZ/GOZzCOCjs2xAvWD4=
+X-Received: by 2002:a50:cc9e:0:b0:41d:7123:d3ba with SMTP id
+ q30-20020a50cc9e000000b0041d7123d3bamr21071739edi.296.1649861653819; Wed, 13
+ Apr 2022 07:54:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220413094011.185269-1-cosmin.tanislav@analog.com>
+In-Reply-To: <20220413094011.185269-1-cosmin.tanislav@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 Apr 2022 17:50:01 +0300
+Message-ID: <CAHp75VfjexQG_y5XkQWUd_aWwTyDBcwJ2-As+casajBH1ns6aQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] dt-bindings: iio: adc: add AD4130
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to take mask into account in the set/get_multiple() callbacks.
-Use bitmap_replace() instead of bitmap_copy().
+On Wed, Apr 13, 2022 at 2:08 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+>
+> AD4130-8 is an ultra-low power, high precision,
+> measurement solution for low bandwidth battery
+> operated applications.
+>
+> The fully integrated AFE (Analog Front-End)
+> includes a multiplexer for up to 16 single-ended
+> or 8 differential inputs, PGA (Programmable Gain
+> Amplifier), 24-bit Sigma-Delta ADC, on-chip
+> reference and oscillator, selectable filter
+> options, smart sequencer, sensor biasing and
+> excitation options, diagnostics, and a FIFO
+> buffer.
 
-Fixes: cb8c474e79be ("gpio: sim: new testing module")
-Cc: stable@vger.kernel.org
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
- drivers/gpio/gpio-sim.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Something is wrong about the indentation above. It may be reconfigured
+to fit more characters per line.
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 8e5d87984a48..41c31b10ae84 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -134,7 +134,7 @@ static int gpio_sim_get_multiple(struct gpio_chip *gc,
- 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
- 
- 	mutex_lock(&chip->lock);
--	bitmap_copy(bits, chip->value_map, gc->ngpio);
-+	bitmap_replace(bits, bits, chip->value_map, mask, gc->ngpio);
- 	mutex_unlock(&chip->lock);
- 
- 	return 0;
-@@ -146,7 +146,7 @@ static void gpio_sim_set_multiple(struct gpio_chip *gc,
- 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
- 
- 	mutex_lock(&chip->lock);
--	bitmap_copy(chip->value_map, bits, gc->ngpio);
-+	bitmap_replace(chip->value_map, chip->value_map, bits, mask, gc->ngpio);
- 	mutex_unlock(&chip->lock);
- }
- 
 -- 
-2.32.0
-
+With Best Regards,
+Andy Shevchenko
