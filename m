@@ -2,63 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8155017FD
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 18:05:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 991965017FC
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 18:05:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233230AbiDNP6l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 11:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
+        id S239548AbiDNP6s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Apr 2022 11:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359010AbiDNPmd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 11:42:33 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3963AF211A;
-        Thu, 14 Apr 2022 08:26:01 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id bg10so10752416ejb.4;
-        Thu, 14 Apr 2022 08:26:01 -0700 (PDT)
+        with ESMTP id S1359712AbiDNPrM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 11:47:12 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A379EF47FF;
+        Thu, 14 Apr 2022 08:32:26 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id r13so10780075ejd.5;
+        Thu, 14 Apr 2022 08:32:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=googlemail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0EhNSpMEIQGwegy6XwubyizxkyeN0Yst2h+T5pwc7wQ=;
-        b=XSdI9SNB3jBQqpAUl2AkG4FTRNx/rdgEV/ie4LGU/cNA+rGhpI1sdCNLipuVapA0uo
-         JRw6MqoFe3lSaO9LY7dB8t7RMDFS9yyI44MU9veZ8hi9/HgRly2OP7Ax9KVEzxwehmMW
-         42QJpXyApV/qSQDgVxunEy/DsnNErAsOTkMzIW/94gU9eQTpQgaCeZZ9HwHYeAfojxEq
-         2mxP4lSaiteo310zBUdYGqnoFjef3Dt3PglOjgNzV+ajpubTaGw6KdHieGIgtrft6pw9
-         anQwFYnG43K9KulTzEPzYvHoXtYkldZczBhtINTfNMMhY3+RpPZUzpQvCoM0AoDQtVC1
-         bMXA==
+        bh=zNo0g28tlK9vSNHNGKqqjmBjPaYSOEtIiawAODAYH3c=;
+        b=cW++jIHdTWB0e/u7vyX0744QVnVIpLHeGh5WEu4BOxVM9uRZh7gq6XNbmyhxdiX0XR
+         DnNObAKYV/atK29rtd9VDxytlGyydSI3GK7gv8UXn2s61BkOk7SirtAUukWezAkshDlq
+         S/vxhU3aqvdD4Zqx1321bK8UkTZ5MlXIcTcawWigG3NoYBFnJf5STvdVx3TUpJBfsLar
+         EQAclsSro41RYhUaHhwMeeWqdSJWbXVcjR24H6KwhSZsIWtZvTUOcbxQYsJQYQDPhirF
+         VFdLgQ3N+EYyMsyuH2QM2c0kXC8IiDC08CHcYMnXhx4rxUrl3t3+RKGADf5TY3AHrxf3
+         qKKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0EhNSpMEIQGwegy6XwubyizxkyeN0Yst2h+T5pwc7wQ=;
-        b=O9dLuhfTGVulnkb8OLtdWp8bGz0YHCYkrw2y4B4AErsNTVeld0dMmY9Jh5u0CqCy39
-         qgbo0sPcaO/AJ/EAP/xM64zQ2qV4HGERSvxQIhEQ75pyBVG9PdmnInN52UpPlNxwiI3z
-         Ram1EY3jE88wzdK74u+KnICj9kGipm5UYih2l9LTuu2MMeuQaTRGbO6pM/bIE8KDH+r/
-         Xy1KzQg9xNSLtHCUVDOnCIfv4BDqWsC0CNSNTe7ys3wYfp9R/S/Dqpbl9nwaBXuNFKQL
-         MMcp9z3Sal2JxNCQFl5wMGIvgP9ds6cX7v9vjE+hsYdIbZ+UTG21U7KHlI006mcYrDxe
-         f4dQ==
-X-Gm-Message-State: AOAM531lm4bE2WGn20VW/BdNYH77OvEmpvTc+g2ocQU4gXZ2psn8/KWQ
-        wU0If+cbQrD44luYmGW4KpCTvXcWL8wloV3F9+g=
-X-Google-Smtp-Source: ABdhPJzje0FYaro4GDs25WGq9DJiciPtbOYkFrF+6xfThZJOs30FaUMCXOrLnhtC+hG05TTiN9HH49esY1mMEsGnvdA=
-X-Received: by 2002:a17:906:1692:b0:6e8:d245:44a9 with SMTP id
- s18-20020a170906169200b006e8d24544a9mr2783204ejd.639.1649949959614; Thu, 14
- Apr 2022 08:25:59 -0700 (PDT)
+        bh=zNo0g28tlK9vSNHNGKqqjmBjPaYSOEtIiawAODAYH3c=;
+        b=x3K3tLr7937Mz1u38hefxbTOFldKb5QKIaBNWKWBEnIfHqisPljWqb/sEsmO6numWJ
+         10T7FNHVAYjremfYQy4BvvegUJ9BOhWb/ncyy1YVx+q4dDwUL1HgGLLwBE/Sj6SCFXaM
+         +bAQfxD/2jTWgyoi1tql/mRZWr5e1TB/Zu7y3kXrKHGEBMO1xWbgMw7ORiOnfQqyBlc2
+         eh/ZMGo7k8yUIcmR+y0Rn6QuPmtPi4udDJ3ZFlQL1JEoqDkIK03oPbB+xUFUSLyipkEw
+         EPqukydwfQMFoiPS5asCJEzeiVBJHj8bYRMMcW/NNp5Ans9Sy5j44JdLvZtjo91I1/HM
+         mxdw==
+X-Gm-Message-State: AOAM532RGhJwSbEiUlg97cvkMK7KQitETUNg3c+UCRA63WzGDCNL/Ghg
+        +pNSEKMtYaPO4XunducDbc3JbhBbdSMtvaVcic0VecYsbm8=
+X-Google-Smtp-Source: ABdhPJzbycImSsBidIp4JSSW5b5SF1qL/I1dfcfErig8MjQOErRGdzGC2WsE7sy1HibLlRHnfGkpr6ZwwcMbQbIMAXs=
+X-Received: by 2002:a17:907:3f03:b0:6df:b04b:8712 with SMTP id
+ hq3-20020a1709073f0300b006dfb04b8712mr2856347ejc.290.1649950345064; Thu, 14
+ Apr 2022 08:32:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220414025705.598-1-mario.limonciello@amd.com>
-In-Reply-To: <20220414025705.598-1-mario.limonciello@amd.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 14 Apr 2022 18:25:23 +0300
-Message-ID: <CAHp75Vcxw+4mqfkiaDid-n4_n=Bg49UzH8X-12H2MQwEcNXQoA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Shreeya Patel <shreeya.patel@collabora.com>,
+References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
+ <CGME20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9@eucas1p1.samsung.com>
+ <20220401103604.8705-12-andriy.shevchenko@linux.intel.com>
+ <3a24ef01-3231-1bee-7429-dce5680c5682@samsung.com> <CAHp75VfMPpfeMpawRyLo_GtLR8+gVGgm8zW-fatp6=9a9wK18A@mail.gmail.com>
+In-Reply-To: <CAHp75VfMPpfeMpawRyLo_GtLR8+gVGgm8zW-fatp6=9a9wK18A@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 14 Apr 2022 17:32:14 +0200
+Message-ID: <CAFBinCCCtZvdp+01DdEE=-f7rZ8V46O125wKDqE1muA645sdUg@mail.gmail.com>
+Subject: Re: [PATCH v4 11/13] pinctrl: meson: Replace custom code by
+ gpiochip_node_count() call
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Richard.Gong@amd.com, Stable <stable@vger.kernel.org>
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -70,72 +102,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 5:57 AM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> commit 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before
-> initialization") attempted to fix a race condition that lead to a NULL
-> pointer, but in the process caused a regression for _AEI/_EVT declared
-> GPIOs. This manifests in messages showing deferred probing while trying
-> to allocate IRQs like so:
->
-> [    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
-> [    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
-> [    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
-> [    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
-> [    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
-> [    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
-> [    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
-> [    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
-> [    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
-> [    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
->
-> The code for walking _AEI doesn't handle deferred probing and so this leads
-> to non-functional GPIO interrupts.
->
-> Fix this issue by moving the call to `acpi_gpiochip_request_interrupts` to
-> occur after gc->irc.initialized is set.
+Hi Andy,
 
-Good catch, Mario, and thanks for the prompt fix!
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Thu, Apr 14, 2022 at 3:51 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+[...]
+> > This patch landed in linux next-20220413 as commit 88834c75cae5
+> > ("pinctrl: meson: Replace custom code by gpiochip_node_count() call").
+> > Unfortunately it breaks booting of all my Amlogic-based test boards
+> > (Odroid C4, N2, Khadas VIM3, VIM3l). MMC driver is no longer probed and
+> > boards are unable to mount rootfs. Reverting this patch on top of
+> > linux-next fixes the issue.
+>
+> Thank you for letting me know, I'll withdraw it and investigate.
+If needed I can investigate further later today/tomorrow. I think the
+problem is that our node name doesn't follow the .dts recommendation.
 
-> Cc: Shreeya Patel <shreeya.patel@collabora.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before initialization")
-> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
-> Link: https://lore.kernel.org/linux-gpio/BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#u
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/gpio/gpiolib.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 085348e08986..b7694171655c 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1601,8 +1601,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->
->         gpiochip_set_irq_hooks(gc);
->
-> -       acpi_gpiochip_request_interrupts(gc);
-> -
->         /*
->          * Using barrier() here to prevent compiler from reordering
->          * gc->irq.initialized before initialization of above
-> @@ -1612,6 +1610,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->
->         gc->irq.initialized = true;
->
-> +       acpi_gpiochip_request_interrupts(gc);
-> +
->         return 0;
->  }
->
-> --
-> 2.34.1
->
+For GXL (arch/arm64/boot/dts/amlogic/meson-gxl.dtsi) the GPIO
+controller nodes are for example:
+  gpio: bank@4b0 {
+      ...
+  }
+and
+  gpio_ao: bank@14 {
+      ...
+  }
+
+See also:
+$ git grep -C6 gpio-controller arch/arm64/boot/dts/amlogic/*.dtsi
+
+Marek did not state which error he's getting but I suspect it fails
+with "no gpio node found".
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Martin
