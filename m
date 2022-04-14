@@ -2,95 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD731501121
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 16:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8152B501269
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 17:08:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232319AbiDNOfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 10:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
+        id S234861AbiDNOgd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Apr 2022 10:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348013AbiDNOCC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 10:02:02 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4792CC94;
-        Thu, 14 Apr 2022 06:57:36 -0700 (PDT)
-Received: by mail-qt1-f177.google.com with SMTP id ay4so3537636qtb.11;
-        Thu, 14 Apr 2022 06:57:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=lN0U24O7GQEePSLIhlC3MYeJd10ydIu4wu7Inmy1OV8=;
-        b=ad3jdsbyWRQuTd5b4uMZCEkC3HvbUsz19H0MbxjveBmDa8eV5oNRSF3tn26urO5BP1
-         wVUEaaO8TUyfjrqX0D2Kc59oT40iLmi5GWqnPcsk+vkus+fPjBZZds6uJqvNA1xlaJgE
-         xk0pcGw1LPDCL4QStnA18f3BUv6Z+DZcCK7OiWUdPKyhk343/nEtNCDFi2gJ3HMZez7O
-         CuRNyrQPRRIp/09Ct1cXQY/xjqc03xzuqc+v9YrE/l37whQa3B2KxNuPiBXWcZyOOQ+y
-         z/N4KjRdqrWCgpBVhE7N8PsV1WdkjvxdURG9gyIseUpIvtZw6UXTomKVoMryMRGFnuVF
-         4SQQ==
-X-Gm-Message-State: AOAM531qdh4pqf/vRTFHVRywVg1zhBCfo6SL8a3q20LeSdHJkaeyrUvO
-        usO6oavEVLhx8Lb4Rgl1HVzBsN8hMWAxUQ==
-X-Google-Smtp-Source: ABdhPJy/FtnS5VfengaK5Rx2F3b8/7cFjjxFZRvAweFw1BSuIHgIneZ/EFug4MfExOZqGOm0OWzIEQ==
-X-Received: by 2002:ac8:4501:0:b0:2ed:b5a:536 with SMTP id q1-20020ac84501000000b002ed0b5a0536mr1788784qtn.463.1649944654932;
-        Thu, 14 Apr 2022 06:57:34 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id i7-20020ac85e47000000b002e22bad4717sm1221008qtx.1.2022.04.14.06.57.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Apr 2022 06:57:34 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id m132so9567656ybm.4;
-        Thu, 14 Apr 2022 06:57:34 -0700 (PDT)
-X-Received: by 2002:a5b:24e:0:b0:63d:cba0:3d55 with SMTP id
- g14-20020a5b024e000000b0063dcba03d55mr1696393ybp.613.1649944654265; Thu, 14
- Apr 2022 06:57:34 -0700 (PDT)
+        with ESMTP id S1348024AbiDNOCD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 10:02:03 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF07E3E5C9
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Apr 2022 06:57:41 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:7915:bbfe:555b:5456])
+        by xavier.telenet-ops.be with bizsmtp
+        id Jdxe2700X4TB7ht01dxe0g; Thu, 14 Apr 2022 15:57:39 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nezyc-000bwo-Ed; Thu, 14 Apr 2022 15:57:38 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nezyb-00E8Aa-PX; Thu, 14 Apr 2022 15:57:37 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] pinctrl: renesas: checker: Rework drive and bias pin iteration
+Date:   Thu, 14 Apr 2022 15:57:36 +0200
+Message-Id: <1848e56e6496b8d5ed50fd6adc8ef2078b454ce4.1649944305.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <e44426a99b20e5f5681ede894d08e36870bcb47f.1649865163.git.geert+renesas@glider.be>
- <Yle0vODAp89idGxl@shikoro>
-In-Reply-To: <Yle0vODAp89idGxl@shikoro>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Apr 2022 15:57:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV4ch6Da0jyuAOn9T+Z8ZOAqeJ70Y5EDZw3-TOgONW6jQ@mail.gmail.com>
-Message-ID: <CAMuHMdV4ch6Da0jyuAOn9T+Z8ZOAqeJ70Y5EDZw3-TOgONW6jQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: checker: Fix for drive reg field increase
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Wolfram,
+The checker code to iterate over all drive strength and bias register
+description items is cumbersome, due to the repeated calculation of
+indices, and the use of hardcoded array sizes.  The latter was done
+under the assumption they would never need to be changed, which turned
+out to be false.
 
-On Thu, Apr 14, 2022 at 7:44 AM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > This happens because the checker still uses the old number of fields.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > To be folded into commit d5c9688095d29a6c ("pinctrl: renesas: Allow up
-> > to 10 fields for drive_regs") in renesas-pinctrl-for-v5.19.
-> >
-> > Ideally, some iterator or index helper should be introduced.
->
-> What about a #define instead of a hard-coded value until then?
+Increase readability by introducing helper macros to access drive
+strength and bias register description items.
+Increase maintainability by replacing hardcoded numbers by array sizes
+calculated at compile-time.
 
-That would be an option. But I bit the bullet, and introduced a few
-helpers in v2 instead.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+This is v2 of "pinctrl: renesas: checker: Fix for drive reg field
+increase".
 
-Gr{oetje,eeting}s,
+To be inserted into renesas-pinctrl-for-v5.19 before commit
+d5c9688095d29a6c ("pinctrl: renesas: Allow up to 10 fields for
+drive_regs").
+---
+ drivers/pinctrl/renesas/core.c | 59 ++++++++++++++++++----------------
+ 1 file changed, 31 insertions(+), 28 deletions(-)
 
-                        Geert
+diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
+index d0d4714731c14cf5..afab836c102c3826 100644
+--- a/drivers/pinctrl/renesas/core.c
++++ b/drivers/pinctrl/renesas/core.c
+@@ -1007,7 +1007,16 @@ static void __init sh_pfc_compare_groups(const char *drvname,
+ static void __init sh_pfc_check_info(const struct sh_pfc_soc_info *info)
+ {
+ 	const struct pinmux_drive_reg *drive_regs = info->drive_regs;
++#define drive_nfields	ARRAY_SIZE(drive_regs->fields)
++#define drive_reg(i)	drive_regs[(i) / drive_nfields].reg
++#define drive_bit(i)	((i) % drive_nfields)
++#define drive_field(i)	drive_regs[(i) / drive_nfields].fields[drive_bit(i)]
+ 	const struct pinmux_bias_reg *bias_regs = info->bias_regs;
++#define bias_npins	ARRAY_SIZE(bias_regs->pins)
++#define bias_puen(i)	bias_regs[(i) / bias_npins].puen
++#define bias_pud(i)	bias_regs[(i) / bias_npins].pud
++#define bias_bit(i)	((i) % bias_npins)
++#define bias_pin(i)	bias_regs[(i) / bias_npins].pins[bias_bit(i)]
+ 	const char *drvname = info->name;
+ 	unsigned int *refcnts;
+ 	unsigned int i, j, k;
+@@ -1076,17 +1085,17 @@ static void __init sh_pfc_check_info(const struct sh_pfc_soc_info *info)
+ 			if (!drive_regs) {
+ 				sh_pfc_err_once(drive, "SH_PFC_PIN_CFG_DRIVE_STRENGTH flag set but drive_regs missing\n");
+ 			} else {
+-				for (j = 0; drive_regs[j / 8].reg; j++) {
+-					if (!drive_regs[j / 8].fields[j % 8].pin &&
+-					    !drive_regs[j / 8].fields[j % 8].offset &&
+-					    !drive_regs[j / 8].fields[j % 8].size)
++				for (j = 0; drive_reg(j); j++) {
++					if (!drive_field(j).pin &&
++					    !drive_field(j).offset &&
++					    !drive_field(j).size)
+ 						continue;
+ 
+-					if (drive_regs[j / 8].fields[j % 8].pin == pin->pin)
++					if (drive_field(j).pin == pin->pin)
+ 						break;
+ 				}
+ 
+-				if (!drive_regs[j / 8].reg)
++				if (!drive_reg(j))
+ 					sh_pfc_err("pin %s: SH_PFC_PIN_CFG_DRIVE_STRENGTH flag set but not in drive_regs\n",
+ 						   pin->name);
+ 			}
+@@ -1164,20 +1173,17 @@ static void __init sh_pfc_check_info(const struct sh_pfc_soc_info *info)
+ 	for (i = 0; drive_regs && drive_regs[i].reg; i++)
+ 		sh_pfc_check_drive_reg(info, &drive_regs[i]);
+ 
+-	for (i = 0; drive_regs && drive_regs[i / 8].reg; i++) {
+-		if (!drive_regs[i / 8].fields[i % 8].pin &&
+-		    !drive_regs[i / 8].fields[i % 8].offset &&
+-		    !drive_regs[i / 8].fields[i % 8].size)
++	for (i = 0; drive_regs && drive_reg(i); i++) {
++		if (!drive_field(i).pin && !drive_field(i).offset &&
++		    !drive_field(i).size)
+ 			continue;
+ 
+ 		for (j = 0; j < i; j++) {
+-			if (drive_regs[i / 8].fields[i % 8].pin ==
+-			    drive_regs[j / 8].fields[j % 8].pin &&
+-			    drive_regs[j / 8].fields[j % 8].offset &&
+-			    drive_regs[j / 8].fields[j % 8].size) {
++			if (drive_field(i).pin == drive_field(j).pin &&
++			    drive_field(j).offset && drive_field(j).size) {
+ 				sh_pfc_err("drive_reg 0x%x:%u/0x%x:%u: pin conflict\n",
+-					   drive_regs[i / 8].reg, i % 8,
+-					   drive_regs[j / 8].reg, j % 8);
++					   drive_reg(i), drive_bit(i),
++					   drive_reg(j), drive_bit(j));
+ 			}
+ 		}
+ 	}
+@@ -1186,26 +1192,23 @@ static void __init sh_pfc_check_info(const struct sh_pfc_soc_info *info)
+ 	for (i = 0; bias_regs && (bias_regs[i].puen || bias_regs[i].pud); i++)
+ 		sh_pfc_check_bias_reg(info, &bias_regs[i]);
+ 
+-	for (i = 0; bias_regs &&
+-		    (bias_regs[i / 32].puen || bias_regs[i / 32].pud); i++) {
+-		if (bias_regs[i / 32].pins[i % 32] == SH_PFC_PIN_NONE)
++	for (i = 0; bias_regs && (bias_puen(i) || bias_pud(i)); i++) {
++		if (bias_pin(i) == SH_PFC_PIN_NONE)
+ 			continue;
+ 
+ 		for (j = 0; j < i; j++) {
+-			if (bias_regs[i / 32].pins[i % 32] !=
+-			    bias_regs[j / 32].pins[j % 32])
++			if (bias_pin(i) != bias_pin(j))
+ 				continue;
+ 
+-			if (bias_regs[i / 32].puen && bias_regs[j / 32].puen)
++			if (bias_puen(i) && bias_puen(j))
+ 				sh_pfc_err("bias_reg 0x%x:%u/0x%x:%u: pin conflict\n",
+-					   bias_regs[i / 32].puen, i % 32,
+-					   bias_regs[j / 32].puen, j % 32);
+-			if (bias_regs[i / 32].pud && bias_regs[j / 32].pud)
++					   bias_puen(i), bias_bit(i),
++					   bias_puen(j), bias_bit(j));
++			if (bias_pud(i) && bias_pud(j))
+ 				sh_pfc_err("bias_reg 0x%x:%u/0x%x:%u: pin conflict\n",
+-					   bias_regs[i / 32].pud, i % 32,
+-					   bias_regs[j / 32].pud, j % 32);
++					   bias_pud(i), bias_bit(i),
++					   bias_pud(j), bias_bit(j));
+ 		}
+-
+ 	}
+ 
+ 	/* Check ioctrl registers */
+-- 
+2.25.1
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
