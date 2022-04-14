@@ -2,237 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D93050063E
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 08:38:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E4750075D
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 09:43:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236393AbiDNGlT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 02:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
+        id S240775AbiDNHpX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Apr 2022 03:45:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234478AbiDNGlS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 02:41:18 -0400
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA2F31DFB;
-        Wed, 13 Apr 2022 23:38:52 -0700 (PDT)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20220414063850euoutp013d3a81c830570d4e44c36506643ddb5e~lr-rAXsDP0823308233euoutp01a;
-        Thu, 14 Apr 2022 06:38:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20220414063850euoutp013d3a81c830570d4e44c36506643ddb5e~lr-rAXsDP0823308233euoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1649918330;
-        bh=iZJ0s+Xj2eet3xX8TAKGb2899dU+i00esTWn1QUmUaE=;
-        h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-        b=swaPJwNZ/dok3lpu7CKnLpFvMNK66+bsViY0NWvnGzO+i3Cx4SIh+69lzQr7kPluQ
-         WkXXWLFmS4+SS65FURorJUHhid6/2/Pq0bG6fb3BkREkY6gcKzwO+HLKX0H4YpJafb
-         oJfgPJwWyNflwR107wF/yAHK00ENO85PcPDV2yZI=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220414063849eucas1p2edb867a5d82f16c3ecd193c3c5253ca1~lr-quG01i2885528855eucas1p2J;
-        Thu, 14 Apr 2022 06:38:49 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 27.72.09887.971C7526; Thu, 14
-        Apr 2022 07:38:49 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9~lr-qSAv_c3094930949eucas1p1_;
-        Thu, 14 Apr 2022 06:38:49 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20220414063849eusmtrp1feb8830483e8f0c8cc09abb606d918bc~lr-qQt94F1095910959eusmtrp1f;
-        Thu, 14 Apr 2022 06:38:49 +0000 (GMT)
-X-AuditID: cbfec7f4-45bff7000000269f-36-6257c1797257
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 19.B3.09404.971C7526; Thu, 14
-        Apr 2022 07:38:49 +0100 (BST)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20220414063847eusmtip12bd90501637cb3e6303ce2fd8295e5d3~lr-oxFH-51804918049eusmtip1m;
-        Thu, 14 Apr 2022 06:38:47 +0000 (GMT)
-Message-ID: <3a24ef01-3231-1bee-7429-dce5680c5682@samsung.com>
-Date:   Thu, 14 Apr 2022 08:38:46 +0200
+        with ESMTP id S240708AbiDNHoB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 03:44:01 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C27F5C357;
+        Thu, 14 Apr 2022 00:41:12 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id lc2so8362984ejb.12;
+        Thu, 14 Apr 2022 00:41:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=hsjfJ6kNyOdmk849dkXwmpwJx9bBByejcTJHu02YdnI=;
+        b=OOBFZscKCDVHuImiGxP4PahXd3VpmRBSqVBz0rxiuq7OgqnedoqYRC8XpPwzi4tXcf
+         cUoDpUA1jZqnPD1nBNrWjqNwVroHsRrlBgKu60+gffwg97pevSxwTUphb0qSbiYeGQKa
+         3YBOiLsr7YPWI7dv+QUgvUq20iYagdNq5n3kK+m8li9FDM9L4PpoYWuzERD4L5Nj3yz0
+         D/9jdIhTA4Il+/5bsbmj5/Q++mWJknGQXHBELqzt3v1InF+BrXRqoWXfByJhKYRGBpm/
+         SKL+eju+TOWUisO41z7uh73l2lWyZU0jcihVxK0BOnrPLb3zan7w6IJoCQIEyI+aT0fC
+         iTdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=hsjfJ6kNyOdmk849dkXwmpwJx9bBByejcTJHu02YdnI=;
+        b=p8ixT4yY6vvDBRi2InwVWBO1e7rn+nNraRVlCrAx60uN/tfj9odCki25ea9AthM5JA
+         1P0YwDfA+AbIHZfjMWvUjHwEb0b77X3LDt47/qygUV+p78jF+nMqV0k4kLE/cvhuKP2x
+         4NZjKaj5VDx5TBH1Ay9NZRzZL1ZkF53ydOLcDxs/oPuId32BjInDedfjw868+i3uiWjM
+         ofNthCjOHLVhqcT0vs0HFGWVKbtuYNUYh1Ym+H7ba+LdsTdhVZan8RcHBzkYACX8eZvp
+         qBo3KO6wf06LPRk6oN3u4NdrIv84hXbtcf9eu7ZusFDeXwBLkG1/oWgaTJb5prjhj+YJ
+         UDMg==
+X-Gm-Message-State: AOAM530TgwRt2n6l+G62EwTNabxSmV6wMWf2zUF/RU+YKKW8Qfe3VO16
+        rkbgU/H7YXLS3DOOi6Fb+GA=
+X-Google-Smtp-Source: ABdhPJyaJYKew2SO25i61AvtBgkDD8PLjatVIn+03272639bqiiIjwjiKiJpaQuYUMWnL9efVxDhTw==
+X-Received: by 2002:a17:906:7304:b0:6e0:6918:ef6f with SMTP id di4-20020a170906730400b006e06918ef6fmr1222274ejc.370.1649922070582;
+        Thu, 14 Apr 2022 00:41:10 -0700 (PDT)
+Received: from [192.168.0.182] ([188.24.22.234])
+        by smtp.gmail.com with ESMTPSA id lb4-20020a170907784400b006e0d13f65e5sm370876ejc.167.2022.04.14.00.41.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Apr 2022 00:41:10 -0700 (PDT)
+Message-ID: <0de7fcb5-0d5f-d8b3-448a-2bc14cef21ee@gmail.com>
+Date:   Thu, 14 Apr 2022 10:41:09 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
-        Gecko/20100101 Thunderbird/91.8.0
-Subject: Re: [PATCH v4 11/13] pinctrl: meson: Replace custom code by
- gpiochip_node_count() call
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v1 2/3] iio: ABI: adc: ad4130: document
+ filter_mode{,_available}
 Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20220401103604.8705-12-andriy.shevchenko@linux.intel.com>
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>
+References: <20220413094011.185269-1-cosmin.tanislav@analog.com>
+ <20220413094011.185269-2-cosmin.tanislav@analog.com>
+ <CAHp75VexJBnAqoQ53=_nif=bso0-cNj4EsTbUwKGKxfNq_Fvyw@mail.gmail.com>
+From:   Cosmin Tanislav <demonsingur@gmail.com>
+In-Reply-To: <CAHp75VexJBnAqoQ53=_nif=bso0-cNj4EsTbUwKGKxfNq_Fvyw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfVCTdRy/3/M8e56xbvrwUvykDBtpV54ggne/3hQ6iCf/iouLkg7b3HNs
-        8nqbM3ERyiEYhw5RYYw5Xsx4iUq28bLlCJCck3JFB6Ix4oqlEAScWm4n0MaDxX+f7+f7/Xy+
-        L/fl40E3yTC+POcgq8gRZ4lIAdF51XNjW35fqmR7Y0ME8kxVATRh6CSR09WPo5NF1RjyVJ/C
-        kNY2gSPrhC/xR4+GROdrKwHSN+ejmd8GcOQpNWPI6bxEobOPmjBUX/sEMv4+wkOmukcA/WzV
-        k6hj6i+fh7MHQ2Ujkzx0tdFBIIvewUOGxS95qP9UGrpefJdArvFrBLJ5fZZXZkp5aM4Tj6y9
-        xyjkNU8D1Gr1udl62wlU4v2cjItgBtq+AMzc6HGKuTDyC48xtKkZt6aDYk7/sI2x6FwUU29U
-        Me6KMxRjbP2UZMZGLpOMwZHMmD4rZJzaBsBYuu9hjGZx+9vBewWvSdks+SFWEbXrQ4FsvmuZ
-        ypt/6vBwXdhRYAsqAwF8SMfCJacNlAEBP4huBvDa5XMEF9wH8ErfAM4F9wC82ViMPZac/mZp
-        NdEE4HDXhVXJAoDOi2Okv0pI74Kdy+WUHxP0Zmi+O4dzfCB01EwSfvwkLYHne8ZX+GBaDIsm
-        ZlZ4nA6FtyfrML9pCP09AYvsxyh/gNNOEs4Pcx1IOhqWzZat4AA6CXqNOopTh8OuWf3KfJCe
-        EcCWKi3BDZ4A62YvkhwOhtN2M8XhZ+DgmXJfDd+Hc+GiNoajD8ORP9twDr8Kx254SX8JTr8I
-        v7ZGcXQ8HNLVkJxyHRydDeQmWAcrO6txjhbCEyWrt94Cdfav/uvZ9+MQXgFEujVX0a3ZXrdm
-        F93/fesB0QpCWZUyO4NV7shhP4pUirOVqpyMyP252Ubg+/3BJfv9btA0vRDZDzA+6AeQj4tC
-        hLc0qZIgoVScf4RV5O5TqLJYZT94mk+IQoX75ZfEQXSG+CCbybJ5rOJxFuMHhB3FykffKc2v
-        fPfWwORguOMhDLmzszfh7z17LUndTa3rqQQoO2dIkbRo3HBo0+5wd7q8QntWujF4Uzxb+lPK
-        cnPlBvMHjslBvalkxx55mv2tcY09/OVl12JlS7r6nxfEb2SrEjOj1d9GifriTMkD+u6tSYZD
-        cQdqAtUWSrevIeZN03cF6Ynlue89V6vfYNKeTMQjyY8pT2ceMot7xqSCSE2yUf5r1WY13+O2
-        SAseeHdmbixP6b0jWaiJ6IiZKnq++sC4tb3koWXaeCKK9r7vEu6ueEU2lXa9ME8EjhTLFh3t
-        D3i1z1bdrm2J3aLtWv86CmAlqbGuAuknsoythXVLx3NEhFImjn4JVyjF/wJe+8E9agQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDKsWRmVeSWpSXmKPExsVy+t/xu7qVB8OTDHZuYrP4+XIao8WDedvY
-        LM7fPcRs0ds0ncni5/Q+JosZex8wW+x6AJR4tq+fzWLu7EmMFnNWVFq8eXSE2eJn+xYmi/Pn
-        N7BbTPmznMliwWxui02Pr7FabJ7/h9Hi8q45bBZbX74DmnF+H5NF17UnrBbHFp1ksdg55ySr
-        xby/a1ktDvVFW5xqecFicffeCRaLvb+ARh5+085q8f6no8WuA43sFr+2vGK0WLULaNreAxtZ
-        LNp+LWNzUPY4smY1o8f7G63sHouv3Wb1mLem2uNp/1Z2j4lndT12zrrL7rFgU6nH0wmT2T02
-        repk87hzbQ+bx7yTgR6bl9R7nJ+xkNFj547PTB79fw0ChKP0bIryS0tSFTLyi0tslaINLYz0
-        DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mj5s/89e8EGs4up8qQbGvUJdjJwcEgIm
-        EhN3/2PuYuTiEBJYyihx70sHK0RCRuLktAYoW1jiz7UuNoii94wSF7qOs4EkeAXsJLb972EH
-        sVkEVCW2vHjPDBEXlDg58wkLiC0qkCTxYttzRhBbWCBRounBG7A4s4C4xK0n85lAhooInGOR
-        uHCulxXEYRa4yCYxedcKqJuaGCX2PnwFNpZNwFCi620X2GpOAXeJX5tmsUOMMpPo2trFCGHL
-        S2x/O4d5AqPQLCSXzEKycRaSlllIWhYwsqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQITHbb
-        jv3csoNx5auPeocYmTgYDzFKcDArifDe7A9PEuJNSaysSi3Kjy8qzUktPsRoCgyOicxSosn5
-        wHSbVxJvaGZgamhiZmlgamlmrCTO61nQkSgkkJ5YkpqdmlqQWgTTx8TBKdXA5HZNZmJ915EU
-        zk8a4k5mYjuWb77+1mpFYYPKuqenVt8Pdv4hMt/blndi0WtHpcZbbWqPnSZHxyV/q16pWrV5
-        bVL59uOrj1et19XQmfqO779z9arVR/f0v9asaNV5cie09O1n8cqzG+S/tFe7bNn1/djKraIV
-        5VNYw96oBZ1q4zPyZOzaXWb7bYWbjoqH65EI/mcNfAUbPzxgOfPEJjLWP/ZCyHn1/rSTjFdu
-        7eqfuN98mtBDeVblbb8Oyi9WcZgWo3NaZntotPTyttnl1zqeX53Uf27u2TTnB8Jr1h+R9KlT
-        6rP70Ld2Vm7EjHl1Fk4HGppLOT7kneFOeF+8YFXMNO1NS221OSsSNWdP4Us6qcRSnJFoqMVc
-        VJwIAKE4crP/AwAA
-X-CMS-MailID: 20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9
-References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
-        <20220401103604.8705-12-andriy.shevchenko@linux.intel.com>
-        <CGME20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9@eucas1p1.samsung.com>
-X-Spam-Status: No, score=-8.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi
 
-On 01.04.2022 12:36, Andy Shevchenko wrote:
-> Since we have generic function to count GPIO controller nodes
-> under a given device, there is no need to open code it. Replace
-> custom code by gpiochip_node_count() call.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-This patch landed in linux next-20220413 as commit 88834c75cae5 
-("pinctrl: meson: Replace custom code by gpiochip_node_count() call"). 
-Unfortunately it breaks booting of all my Amlogic-based test boards 
-(Odroid C4, N2, Khadas VIM3, VIM3l). MMC driver is no longer probed and 
-boards are unable to mount rootfs. Reverting this patch on top of 
-linux-next fixes the issue.
+On 4/13/22 17:51, Andy Shevchenko wrote:
+> On Wed, Apr 13, 2022 at 4:17 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+> 
+> It's good you provided documentation, but I think the part "ABI:" is
+> not needed in the Subject.
+> 
 
-> ---
->   drivers/pinctrl/meson/pinctrl-meson.c | 28 ++++++++++++---------------
->   1 file changed, 12 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-> index 5b46a0979db7..1b078da81523 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> @@ -49,6 +49,7 @@
->   #include <linux/pinctrl/pinctrl.h>
->   #include <linux/pinctrl/pinmux.h>
->   #include <linux/platform_device.h>
-> +#include <linux/property.h>
->   #include <linux/regmap.h>
->   #include <linux/seq_file.h>
->   
-> @@ -662,27 +663,22 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
->   	return devm_regmap_init_mmio(pc->dev, base, &meson_regmap_config);
->   }
->   
-> -static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
-> -				  struct device_node *node)
-> +static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc)
->   {
-> -	struct device_node *np, *gpio_np = NULL;
-> +	struct device_node *gpio_np;
-> +	unsigned int chips;
->   
-> -	for_each_child_of_node(node, np) {
-> -		if (!of_find_property(np, "gpio-controller", NULL))
-> -			continue;
-> -		if (gpio_np) {
-> -			dev_err(pc->dev, "multiple gpio nodes\n");
-> -			of_node_put(np);
-> -			return -EINVAL;
-> -		}
-> -		gpio_np = np;
-> -	}
-> -
-> -	if (!gpio_np) {
-> +	chips = gpiochip_node_count(pc->dev);
-> +	if (!chips) {
->   		dev_err(pc->dev, "no gpio node found\n");
->   		return -EINVAL;
->   	}
-> +	if (chips > 1) {
-> +		dev_err(pc->dev, "multiple gpio nodes\n");
-> +		return -EINVAL;
-> +	}
->   
-> +	gpio_np = to_of_node(device_get_named_child_node(pc->dev, "gpio-controller"));
->   	pc->of_node = gpio_np;
->   
->   	pc->reg_mux = meson_map_resource(pc, gpio_np, "mux");
-> @@ -751,7 +747,7 @@ int meson_pinctrl_probe(struct platform_device *pdev)
->   	pc->dev = dev;
->   	pc->data = (struct meson_pinctrl_data *) of_device_get_match_data(dev);
->   
-> -	ret = meson_pinctrl_parse_dt(pc, dev->of_node);
-> +	ret = meson_pinctrl_parse_dt(pc);
->   	if (ret)
->   		return ret;
->   
+Then I guess I could merge this patch into the driver patch?
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+>> AD4130-8 is an ultra-low power, high precision,
+>> measurement solution for low bandwidth battery
+>> operated applications.
+>>
+>> The fully integrated AFE (Analog Front-End)
+>> includes a multiplexer for up to 16 single-ended
+>> or 8 differential inputs, PGA (Programmable Gain
+>> Amplifier), 24-bit Sigma-Delta ADC, on-chip
+>> reference and oscillator, selectable filter
+>> options, smart sequencer, sensor biasing and
+>> excitation options, diagnostics, and a FIFO
+>> buffer.
+> 
+> Indentation issue as per patch 1.
+> 
+> ...
+> 
+>> +               Set the filter mode of the differential channel. When the filter
+>> +               mode changes, the in_voltageY-voltageZ_sampling_frequency and
+>> +               in_voltageY-voltageZ_sampling_frequency_available attributes
+>> +               might also change to accomodate the new filter mode.
+> 
+> accommodate
+> 
+>> +               If the current sampling frequency is out of range for the new
+>> +               filter mode, the sampling frequency will be changed to the
+>> +               closest valid one.
+> 
+> 
