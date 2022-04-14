@@ -2,67 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF44C501803
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 18:05:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA2E65018C3
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 18:35:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245264AbiDNP7q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 11:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55304 "EHLO
+        id S235558AbiDNQhr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Apr 2022 12:37:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349699AbiDNP5A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 11:57:00 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BAA1117;
-        Thu, 14 Apr 2022 08:38:35 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id bh17so10795042ejb.8;
-        Thu, 14 Apr 2022 08:38:35 -0700 (PDT)
+        with ESMTP id S232700AbiDNQhY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 12:37:24 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A79DFDE2E;
+        Thu, 14 Apr 2022 09:07:00 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id bh17so10952480ejb.8;
+        Thu, 14 Apr 2022 09:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8+m5adT567zqprh7f9s0omABbCf6PKSkE6Ew93ecezw=;
-        b=Ot4sc8uBEOGt8+xaWCm0Xn/ZpKN3HmP631Z3qflhTmHESnuTckWj/XO7eE/qldpjTC
-         hJ1gabD9scQlLSsN0y3ArbrWU5ippRVsiOjcktG9Y7hUJqJMl1G4k6gRCYIoqDfZ1/qP
-         T62EU7q6UvlPtFaUqjvxU2RHjoXdexqUEYyaJIDgDBxyEJb+V5cHaf+KIP9HYuBcy6Ff
-         L9c9r4hzUvAgkp6bhD4O5sQawv/odGs4tEWj65PoPhnMW7uiG3XyKbCZMWW3hjHbC3cs
-         ObNRnD5GZmEQ81Mg59BFAUud0NVMtEVfxs+jv4s6KZJksac2/OhQFjK2wfDOQrPg7vg1
-         T4sw==
+        bh=JZ9b/z89dch9gLvF5vASMxbmJ/Wzdwmfjy6OZsSqtqA=;
+        b=L5sP55TAgL2AI4FDkJ+eMhfVeG1Y6n+mayllGbh7HAbtrbX8Kq31bKTjMTAqXQRdL+
+         uxf5PF0+vennnKdDh1T5GXF47ae2ZFWslbFdRB1FcgBWFjZOP1tG9QRTiMQ5+OPvrUiI
+         uvKkZBe1bmA87leVgy4H4aHNqAh9Ddz8maIOFpwfFldbi/9KASDbBidQAReNFKsRndjF
+         mLrjHMWmyxtIw+DEVEBY5vPe4CNbEs7P2o7fRt23W0xo0/MlvZIRvflgp+6FVESYhKzj
+         /+fwRMHo3W2c6bb3X30RDhJQAUPQQznabpXEXbKrWgIMGkIjBbescnE/2k5wlzkTPJ5D
+         PnJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8+m5adT567zqprh7f9s0omABbCf6PKSkE6Ew93ecezw=;
-        b=uySmtZjnangnz9Z8eEGyAuq0PHbjlKeBFQckPjO/A95oEXC3UDBw1D6EGMCrbYHdfh
-         m11UaWUGYYYR4uY2GozilRd+wiK0oNBDFxkHF75pCFuGDkfp3Q92LIF/DMxUGwll91zF
-         rMs/kKzF5xQRKWyiaLwUIeJ6XIt7ITLl8CT3KCahd7m+ucZ80jsg0+ExA8/YbYnqlwoG
-         Um1gUwgEupNC2H/ZFhcBFSEcF8vYoc+ThtfMujLrtzJavauWqhcjkzZk17jAKUBBgtGw
-         G//p3/oexwOmwUoOUIA/6MqiASYfNYqgZgVtj+p9oKYyNU9gb4NyvDRlZ1YOXabXonPE
-         phtA==
-X-Gm-Message-State: AOAM531p7O+VHNGGfU7ODiKfTvxGt80V7FlGKLmT0sP4+4CC2sHwdviS
-        3TU0BjJSJ5K5JgA+1ZUDWsdtPolPjeAKRAzQUlI=
-X-Google-Smtp-Source: ABdhPJyexSq+meEI+mCST7Vrc1i8ZOw2okSBPE0svB7hPOBvbw6tRUtryZGGUcnCMy+Xx/I1IyUpm5OpuuQ5tiZ1uhw=
+        bh=JZ9b/z89dch9gLvF5vASMxbmJ/Wzdwmfjy6OZsSqtqA=;
+        b=ZuleybUwTBA2lAYh9087tXpZMu5bAv8vSW5J0fS5vKh+2cGY65D5drKyMMSZODaEcY
+         m9ip1PmLX/3v1IljsMGnrX0kribcegZYUCnfGbf46/XE+NI4tM5uOUXnUER0CR9+fsJ0
+         QJsvT/AaUYUKUBQ8ClCGfhLV+vRXmUw4lyzpLWi5rRrbdPcijJAEH16+hcMcufk6FIof
+         6rstVL/GW2MhhhFF1BtQf5z1JDQzVGEVQ0x0UkKZlnLzGNamfEPYTv9tzyoduwGXrjN7
+         pSixGR5o6BNaA1cAo3nCr3tkEFr8nPOHzLbhllyQBLe6+jU7KdXPDoB8rSLJMMuYTrWb
+         Rfig==
+X-Gm-Message-State: AOAM530D/GyabXimb4hGtd6H+ixCkmZ0v7sOFPKYTSNhC3sKh1zthBCl
+        pF828yM/PYtPJZyRiBQFTWHp0+rmJRqJaqh9xN8=
+X-Google-Smtp-Source: ABdhPJyF91NZOaGxS5Pl0tuT7o0nmwxyK0YmWaO6cyOAzEQDgBQtN5VcAICIZk16A9Jhgd3oPfGbcQ4Yyrca0dRmbw8=
 X-Received: by 2002:a17:906:1692:b0:6e8:d245:44a9 with SMTP id
- s18-20020a170906169200b006e8d24544a9mr2827768ejd.639.1649950713929; Thu, 14
- Apr 2022 08:38:33 -0700 (PDT)
+ s18-20020a170906169200b006e8d24544a9mr2933455ejd.639.1649952418435; Thu, 14
+ Apr 2022 09:06:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220413094011.185269-1-cosmin.tanislav@analog.com>
- <20220413094011.185269-3-cosmin.tanislav@analog.com> <CAHp75VfzX8u45J3634yN5p-QTeT7w0Bos27OxeWOsb3MQ2VRVw@mail.gmail.com>
- <80196942-4c33-7625-3945-86ce5b7b347f@gmail.com> <CAHp75VfAjvJz2KHYfDM+-8D+hSBtdKJm521EBY3VgCfUsAgt8Q@mail.gmail.com>
- <0823cf19-60b5-3050-0e26-04b87a7ce5c0@gmail.com>
-In-Reply-To: <0823cf19-60b5-3050-0e26-04b87a7ce5c0@gmail.com>
+References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
+ <CGME20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9@eucas1p1.samsung.com>
+ <20220401103604.8705-12-andriy.shevchenko@linux.intel.com>
+ <3a24ef01-3231-1bee-7429-dce5680c5682@samsung.com> <CAHp75VfMPpfeMpawRyLo_GtLR8+gVGgm8zW-fatp6=9a9wK18A@mail.gmail.com>
+ <CAFBinCCCtZvdp+01DdEE=-f7rZ8V46O125wKDqE1muA645sdUg@mail.gmail.com>
+In-Reply-To: <CAFBinCCCtZvdp+01DdEE=-f7rZ8V46O125wKDqE1muA645sdUg@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 14 Apr 2022 18:37:57 +0300
-Message-ID: <CAHp75VeYX_ZWZPEUwpfaSGUGCayCaMapS-5MHhgT1r17Fqqoeg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] iio: adc: ad4130: add AD4130 driver
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+Date:   Thu, 14 Apr 2022 19:06:21 +0300
+Message-ID: <CAHp75VcYaGmEruEsi2UUrLU4=k3OpBn2YV8B0LhyrhtQ=uCTXg@mail.gmail.com>
+Subject: Re: [PATCH v4 11/13] pinctrl: meson: Replace custom code by
+ gpiochip_node_count() call
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -74,158 +103,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 5:53 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
-> On 4/14/22 16:45, Andy Shevchenko wrote:
-> > On Thu, Apr 14, 2022 at 2:06 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
-> >> On 4/13/22 18:41, Andy Shevchenko wrote:
-> >>> On Wed, Apr 13, 2022 at 1:41 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
-
-...
-
-> >>>> +#define AD4130_RESET_CLK_COUNT         64
-> >>>> +#define AD4130_RESET_BUF_SIZE          (AD4130_RESET_CLK_COUNT / 8)
-> >>>
-> >>> To be more precise shouldn't the above need to have DIV_ROUND_UP() ?
-> >>
-> >> Does it look like 64 / 8 needs any rounding?
+On Thu, Apr 14, 2022 at 6:32 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+> On Thu, Apr 14, 2022 at 3:51 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> [...]
+> > > This patch landed in linux next-20220413 as commit 88834c75cae5
+> > > ("pinctrl: meson: Replace custom code by gpiochip_node_count() call").
+> > > Unfortunately it breaks booting of all my Amlogic-based test boards
+> > > (Odroid C4, N2, Khadas VIM3, VIM3l). MMC driver is no longer probed and
+> > > boards are unable to mount rootfs. Reverting this patch on top of
+> > > linux-next fixes the issue.
 > >
-> > Currently no, but if someone puts 63 there or 65, what would be the outcome?
-> > OTOH, you may add a static assert to guarantee that CLK_COUNT is multiple of 8.
-> >
+> > Thank you for letting me know, I'll withdraw it and investigate.
+> If needed I can investigate further later today/tomorrow. I think the
+> problem is that our node name doesn't follow the .dts recommendation.
 >
-> No one will. 64 is defined in the datasheet and will never change. I'm
-> not gonna do anything about it. Actually, I can do something about it.
-> Remove AD4130_RESET_CLK_COUNT and only define AD4130_RESET_BUF_SIZE as
-> 8.
-
-It would be better, indeed. And to whom it may concern you may add a
-comment explaining how 8 is derived.
-
-...
-
-> >>>> +       if (reg >= ARRAY_SIZE(ad4130_reg_size))
-> >>>> +               return -EINVAL;
-> >>>
-> >>> When this condition is true?
-> >>
-> >> When the user tries reading a register from direct_reg_access
-> >> that hasn't had its size defined.
-> >
-> > But how is it possible? Is the reg parameter taken directly from the user?
-> >
+> For GXL (arch/arm64/boot/dts/amlogic/meson-gxl.dtsi) the GPIO
+> controller nodes are for example:
+>   gpio: bank@4b0 {
+>       ...
+>   }
+> and
+>   gpio_ao: bank@14 {
+>       ...
+>   }
 >
-> Users can write whatever they want to direct_reg_access. Unless I add
-> max_register to the regmap_config, the register that the user selects
-> will just be passed to our reg_read and reg_write callbacks.
+> See also:
+> $ git grep -C6 gpio-controller arch/arm64/boot/dts/amlogic/*.dtsi
 >
-> Then it will be checked against the register size table.
+> Marek did not state which error he's getting but I suspect it fails
+> with "no gpio node found".
 
-Thanks, I got it.
+Would be interesting to know that, yeah.
 
-...
+The subtle difference between the patched and unpatched version is
+that the former uses only available nodes, it means that node is not
+available by some reason and then the error would be the one you
+guessed.
 
-> >>>> + out:
-> >>>
-> >>> out_unlock: ?
-> >>> Ditto for similar cases.
-> >>
-> >> There's a single label in the function, and there's a mutex being
-> >> taken, and, logically, the mutex must be released on the exit path.
-> >> It's clear what the label is for to me.
-> >
-> > Wasn't clear to me until I went to the end of each of them (who
-> > guarantees that's the case for all of them?).
->
-> Let's hope other people looking at that code will be able to figure out
-> what that label does then.
-
-OK. Let the maintainer decide.
-
-...
-
-> >>>> +               *val = st->bipolar ? -(1 << (chan->scan_type.realbits - 1)) : 0;
-> >>>
-> >>> Hmm... It seems like specific way to have a sign_extended, or actually
-> >>> reduced) mask.
-> >>> Can you rewrite it with the (potential)UB-free approach?
-> >>>
-> >>> (Note, that if realbits == 32, this will have a lot of fun in
-> >>> accordance with C standard.)
-> >>
-> >> Can you elaborate on this? The purpose of this statement is to shift the
-> >> results so that, when bipolar configuration is enabled, the raw value is
-> >> offset with 1 << (realbits - 1) towards negative.
-> >>
-> >> For the 24bit chips, 0x800000 becomes 0x000000.
-> >>
-> >> Maybe you misread it as left shift on a negative number? The number
-> >> is turned negative only after the shift...
-> >
-> > 1 << 31 is UB in accordance with the C standard.
-> >
-> > And the magic above seems to me the opposite to what sign_extend()
-> > does. Maybe even providing a general function for sign_comact() or so
-> > (you name it) would be also nice to have.
->
-> I'm not trying to comact (I guess you meant compact) the sign of any
-> value. Please try to understand what is written in there. It's not
-> magic. If the chip is 24bit, and it's set up as bipolar, the raw value
-> must be offset by -0x800000, to account for 0x800000 being the
-> zero-scale value. For 16 bits, it's 0x8000.
-
-Yes, you shift zero offset to some value. I see that in several
-drivers, so I think it would be nice to have a macro for that
-somewhere in math.h. But it can be done later on.
-
-...
-
-> >>>> +       ret = regmap_update_bits(st->regmap, AD4130_REG_FIFO_CONTROL,
-> >>>> +                                AD4130_WATERMARK_MASK,
-> >>>> +                                FIELD_PREP(AD4130_WATERMARK_MASK,
-> >>>> +                                           ad4130_watermark_reg_val(eff)));
-> >>>
-> >>> Temporary variable for mask?
-> >>
-> >> You mean for value?
-> >
-> >        mask = AD4130_WATERMARK_MASK;
-> >
-> >        ret = regmap_update_bits(st->regmap, AD4130_REG_FIFO_CONTROL,
-> >                                 mask, FIELD_PREP(mask,
-> > ad4130_watermark_reg_val(eff)));
->
-> Please bother reading the macro definition next-time. The mask argument
-> to FIELD_PREP must be a compile-time constant.
-
-Yes, it needs to be u32_encode_bits(), but in any case it's up to you,
-it's not anyhow a critical change.
-
-...
-
-> >>>> +       if (ret <= 0)
-> >>>
-> >>> = 0 ?! Can you elaborate, please, this case taking into account below?
-> >>>
-> >>
-> >> I guess I just did it because voltage = 0 doesn't make sense and would
-> >> make scale be 0.0.
-> >
-> > Again, what's the meaning of having it in the conjunction with
-> > dev_err_probe() call?
-> >
-> >>>> +               return dev_err_probe(dev, ret, "Cannot use reference %u\n",
-> >>>> +                                    ref_sel);
-> >
-> > It's confusing. I believe you need two different messages if you want
-> > to handle the 0 case.
->
-> Why would I? The chip can't possibly use regulators with a voltage of 0,
-> right? Or dummy regulators, since these return negative. I think it's
-> fine as it is.
-
-Confusing part is what dev_err_probe() prints here when ret == 0.
-
-
---
+-- 
 With Best Regards,
 Andy Shevchenko
