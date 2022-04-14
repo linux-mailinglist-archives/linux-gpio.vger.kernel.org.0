@@ -2,70 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 199E0501967
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 19:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53E29501A24
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 19:40:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242839AbiDNRDQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 13:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51440 "EHLO
+        id S245743AbiDNRmx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Apr 2022 13:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244405AbiDNRCg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 13:02:36 -0400
+        with ESMTP id S1343569AbiDNRmn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 13:42:43 -0400
 Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2BA4646D;
-        Thu, 14 Apr 2022 09:38:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1649954254; cv=none; 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E8FC6829;
+        Thu, 14 Apr 2022 10:40:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1649957979; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=Efq3hAgZ3JW72GIjcSqmPNhOXvfV0qLZnaUMdx5YXtI6lHY9j8oOWB71TPPFwpF05yK0MoXU18FA3hyw0Qeikt9BTCBKfOhYtY9EhkawPzO2Le9P5ebktcpAd1vdiX0LLhrTG9olKbj2bHm56lrrLTHNHq3tZNOvZF7y1VTXvZE=
+        b=VjFBGdfplW0RwARYZ29skO53UAinybUpUvoqGP39DrTGoR+Z6DhBf2UrbuAIdWPjgc0KLLcFayn4gQ2x1igDeHIeQiZrtF3UiXKyCom9sspnqF5hI8pHUQjg4YFc9WRhhRnuhjghX76mt8tgvzwhBpv+K0ZuoaPCwd3FYk/zLp0=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1649954254; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=M6x4pm1vbOy3um3QdMOsMA8jgAP9SJyU0JGvXSzrgKQ=; 
-        b=kZoXga6nOdc/2RaQbkfLKPCXZnNpumUj8B6d9pGc2EU3sA+UFU64Lar9dQW2sUkvAKzk5KnkBp8PJzL5ONxgQ6ngpK/INUMhAHl3rI2CRVmGB0a6uGc44Whj8b8YH1wa7+QLf1Aqk+8DnIWTW41FMEhT2VyBvLw3qAiLi59ZK44=
+        t=1649957979; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=6l8Xi4rdLQ5Rv6v5LQWdj/sRsB5lC1bpiknsCtq45ho=; 
+        b=m7cz0GKqm6eKi369qmxGKD0yfyuNIeLM05KC4mdhqEy9Ch/1QMS9rhkP9zo6T6VvRehBUH10jRbqe6fX18s+/MT7XeY8C3ZqNpoAXXVwt8PTkTIN4vjJKSW2nSP36JCJvWuygvgpUlhWxgojTf3FNmnEcjXUth7wfxmA4X/skaw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=arinc9.com;
         spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
         dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1649954254;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1649957979;
         s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=M6x4pm1vbOy3um3QdMOsMA8jgAP9SJyU0JGvXSzrgKQ=;
-        b=SkCb1ICmhSpTm8ptaGnPJ2s4AbmDHUPiDTmCtBRWilsQZHMDL0wMv2RjWabWCO6H
-        QPyJ+f8aOObEv84FgwlyK3oFzu6myK1zrK7RY47vf8yyQlx4yEAYIytsTo+6mJzdhy+
-        KIbGxLC1o1pf0CFHsBAwJZPzLFSltPjep3Rltn3Y=
-Received: from [10.10.10.3] (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
-        with SMTPS id 1649954252283729.6912314444173; Thu, 14 Apr 2022 09:37:32 -0700 (PDT)
-Message-ID: <87c9bf7e-f290-7d38-0844-7a7243688f5a@arinc9.com>
-Date:   Thu, 14 Apr 2022 19:37:25 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 10/14] dt-bindings: pinctrl: rt2880: fix binding name, pin
- groups and functions
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
+        bh=6l8Xi4rdLQ5Rv6v5LQWdj/sRsB5lC1bpiknsCtq45ho=;
+        b=MhHRYtIBgQo2xR3glDY1nO3t9BbgtSIKd+lywl+3+r6e4KQBSWdQvZ6BMAOGWlpE
+        DWJTMjxGwqKlzNyZTawdsIgc5W1lrGgR4AmSa2Y9iFUa/k3lzxnmiy7ucSQYdpwzrUu
+        7fdG857j7V9pVycXYvMatIUNw/trdOSI4nQE+ASY=
+Received: from arinc9-PC.localdomain (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
+        with SMTPS id 1649957978514971.8112186343374; Thu, 14 Apr 2022 10:39:38 -0700 (PDT)
+From:   =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Luiz Angelo Daros de Luca <luizluca@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        erkin.bozoglu@xeront.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Joe Perches <joe@perches.com>
+Cc:     erkin.bozoglu@xeront.com,
+        =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mips@vger.kernel.org
-References: <20220413060729.27639-1-arinc.unal@arinc9.com>
- <20220413060729.27639-11-arinc.unal@arinc9.com>
- <ba7cd13f-d216-0ac6-97e1-6c13f1e15f38@linaro.org>
- <550b20f2-098e-0f25-ad9f-3ff523879cb7@arinc9.com>
- <YlhJGerakzbsXwnv@robh.at.kernel.org>
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <YlhJGerakzbsXwnv@robh.at.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: [PATCH v2 00/14] Refactor Ralink Pinctrl and Add Documentation
+Date:   Thu, 14 Apr 2022 20:39:02 +0300
+Message-Id: <20220414173916.5552-1-arinc.unal@arinc9.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -74,87 +67,97 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/04/2022 19:17, Rob Herring wrote:
-> On Thu, Apr 14, 2022 at 11:34:31AM +0300, Arınç ÜNAL wrote:
->> On 13/04/2022 18:25, Krzysztof Kozlowski wrote:
->>> On 13/04/2022 08:07, Arınç ÜNAL wrote:
->>>> Change binding name from ralink,rt2880-pinmux to ralink,rt2880-pinctrl.
->>>> This is the binding for the Ralink RT2880 pinctrl subdriver.
->>>
->>> What I don't see here is why you are doing this. pinmux/pinctrl have the
->>> same meaning, I guess?
->>
->> What I understand is pinmux is rather a specific term for the muxing of pins
->> or pin groups. Pinctrl is what we prefer here since the term is more
->> inclusive of what the subdriver does: controlling pins. Any mediatek
->> driver/subdriver is called pinctrl so I'm not doing something uncommon.
-> 
-> The correct name is really whatever the h/w block is called, not
-> whatever we've come up with for some class of devices.
-> 
->>
->>>
->>>>
->>>> Current pin group and function bindings are for MT7621. Put bindings for
->>>> RT2880 instead.
->>>>
->>>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->>>> ---
->>>>    ...pinmux.yaml => ralink,rt2880-pinctrl.yaml} | 24 +++++++++----------
->>>>    1 file changed, 12 insertions(+), 12 deletions(-)
->>>>    rename Documentation/devicetree/bindings/pinctrl/{ralink,rt2880-pinmux.yaml => ralink,rt2880-pinctrl.yaml} (56%)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
->>>> similarity index 56%
->>>> rename from Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
->>>> rename to Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
->>>> index 9de8b0c075e2..c657bbf9fdda 100644
->>>> --- a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
->>>> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
->>>> @@ -1,21 +1,23 @@
->>>>    # SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>>>    %YAML 1.2
->>>>    ---
->>>> -$id: http://devicetree.org/schemas/pinctrl/ralink,rt2880-pinmux.yaml#
->>>> +$id: http://devicetree.org/schemas/pinctrl/ralink,rt2880-pinctrl.yaml#
->>>>    $schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> -title: Ralink rt2880 pinmux controller
->>>> +title: Ralink RT2880 Pin Controller
->>>>    maintainers:
->>>> +  - Arınç ÜNAL <arinc.unal@arinc9.com>
->>>
->>> Mention this in commit msg.
->>
->> Will do.
->>
->>>
->>>>      - Sergio Paracuellos <sergio.paracuellos@gmail.com>
->>>>    description:
->>>> -  The rt2880 pinmux can only set the muxing of pin groups. Muxing indiviual pins
->>>> +  Ralink RT2880 pin controller for RT2880 SoC.
->>>> +  The pin controller can only set the muxing of pin groups. Muxing indiviual pins
->>>>      is not supported. There is no pinconf support.
->>>>    properties:
->>>>      compatible:
->>>> -    const: ralink,rt2880-pinmux
->>>> +    const: ralink,rt2880-pinctrl
->>>
->>> you need to deprecate old property and add a new one.
->>
->> Do we really have to? That property name was inaccurate from the start. I
->> don't see a reason to keep it being referred to on the binding.
-> 
-> It's an ABI. There are exceptions, but you've got to spell out the
-> reasoning in the commit message.
+Hey everyone.
 
-Oh, I thought by deprecating, I was supposed to keep the old one on the 
-YAML binding. I'll properly explain the reason in the commit message.
+This patch series brings complete refactoring to the Ralink pinctrl driver
+and its subdrivers.
 
-> 
-> Really, who cares. It's just a unique identifier. Unless you also had a
-> h/w block called 'pinmux' in addition to a 'pinctrl' block it doesn't
-> matter. We could use just GUIDs instead.
+The mt7620 pinctrl subdriver supports MT7628 and MT7688 SoCs along with
+MT7620. These two share the same pin layout. The code used for MT7628 and
+MT7688 is renamed from MT7628/mt7628an to MT76X8.
 
-Understood, thanks Rob!
+Ralink pinctrl driver is called rt2880 which is the name of the Ralink
+RT2880 SoC. A subdriver for the Ralink RT2880 SoC is called rt288x. Rename
+rt2880 to ralink.
 
-Arınç
+Rename code from pinmux to pinctrl for where the operation is not about the
+muxing of pins.
+
+Rename rt288x pinctrl subdriver for the RT2880 SoC to rt2880.
+
+Variables for functions include "grp" on the Ralink MT7620 and MT7621
+subdrivers. Rename them to "func" instead as they define the functions for
+the pin groups. This is already the case for the other 3 subdrivers;
+RT2880, RT305x, RT3883.
+
+Fix Kconfig to call the subdrivers, well, subdrivers.
+
+Add new compatible strings for each subdriver and update DT binding
+accordingly.
+
+Add Ralink pinctrl driver to MAINTAINERS and add me and Sergio as the
+maintainers.
+
+Finally, fix the current rt2880 documentation and add binding for all of
+the subdrivers.
+
+I have the patches here should anyone prefer to read them there:
+https://github.com/arinc9/linux/commits/ralink-pinctrl-refactor
+
+Ralink pinctrl driver and the subdrivers were compile tested.
+MT7621 pinctrl subdriver was tested on a private mt7621 board.
+YAML bindings checked with:
+ARCH=mips CROSS_COMPILE=mips-linux-gnu- make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pinctrl/ -j$(nproc)
+
+v2:
+- Add Sergio’s Reviewed-by: tag to where it's given.
+- Properly explain the addition of the new compatible strings.
+- Remove asterisk on MAINTAINERS commit.
+- Properly explain the compatible string change for the rt2880 binding.
+- Mention adding myself as a maintainer to rt2880 binding.
+- Fix typo "indiviual" on YAML bindings. Limit lines to 80 characters.
+
+Arınç ÜNAL (14):
+  pinctrl: ralink: rename MT7628(an) functions to MT76X8
+  pinctrl: ralink: rename pinctrl-rt2880 to pinctrl-ralink
+  pinctrl: ralink: rename pinmux functions to pinctrl
+  pinctrl: ralink: rename pinctrl-rt288x to pinctrl-rt2880
+  pinctrl: ralink: rename variable names for functions on MT7620 and MT7621
+  pinctrl: ralink: rename driver names to subdrivers
+  pinctrl: ralink: add new compatible strings for each pinctrl subdriver
+  MAINTAINERS: add Ralink pinctrl driver
+  mips: dts: ralink: mt7621: use the new compatible string for MT7621 pinctrl
+  dt-bindings: pinctrl: rt2880: fix binding name, pin groups and functions
+  dt-bindings: pinctrl: add binding for Ralink MT7620 pinctrl
+  dt-bindings: pinctrl: add binding for Ralink MT7621 pinctrl
+  dt-bindings: pinctrl: add binding for Ralink RT305X pinctrl
+  dt-bindings: pinctrl: add binding for Ralink RT3883 pinctrl
+
+ Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml            |  91 +++++++++
+ .../bindings/pinctrl/{ralink,rt2880-pinmux.yaml => ralink,mt7621-pinctrl.yaml}  |  27 +--
+ Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml            |  68 +++++++
+ Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml            |  92 +++++++++
+ Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml            |  71 +++++++
+ MAINTAINERS                                                                     |   7 +
+ arch/mips/boot/dts/ralink/mt7621.dtsi                                           |   2 +-
+ drivers/pinctrl/ralink/Kconfig                                                  |  28 ++-
+ drivers/pinctrl/ralink/Makefile                                                 |   4 +-
+ drivers/pinctrl/ralink/pinctrl-mt7620.c                                         | 302 +++++++++++++++---------------
+ drivers/pinctrl/ralink/pinctrl-mt7621.c                                         |  76 ++++----
+ drivers/pinctrl/ralink/pinctrl-ralink.c                                         | 349 ++++++++++++++++++++++++++++++++++
+ drivers/pinctrl/ralink/{pinmux.h => pinctrl-ralink.h}                           |  16 +-
+ drivers/pinctrl/ralink/pinctrl-rt2880.c                                         | 381 +++++---------------------------------
+ drivers/pinctrl/ralink/pinctrl-rt288x.c                                         |  60 ------
+ drivers/pinctrl/ralink/pinctrl-rt305x.c                                         |  66 +++----
+ drivers/pinctrl/ralink/pinctrl-rt3883.c                                         |  50 ++---
+ 17 files changed, 1009 insertions(+), 681 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+ rename Documentation/devicetree/bindings/pinctrl/{ralink,rt2880-pinmux.yaml => ralink,mt7621-pinctrl.yaml} (63%)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/ralink/pinctrl-ralink.c
+ rename drivers/pinctrl/ralink/{pinmux.h => pinctrl-ralink.h} (75%)
+ delete mode 100644 drivers/pinctrl/ralink/pinctrl-rt288x.c
+
+
