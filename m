@@ -2,180 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74DF95003D7
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 03:53:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F317050047C
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 04:57:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239422AbiDNBzq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Apr 2022 21:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45518 "EHLO
+        id S238672AbiDNC7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Apr 2022 22:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239305AbiDNBzp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 21:55:45 -0400
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21310222AD;
-        Wed, 13 Apr 2022 18:53:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1649901172; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=bHZeQVx3jN/0wqWfKct9TVkWDEcH+rjxGHeM8N+jHNXvYp6dZCkiYT+4xsgi/M6zk2/5/F8Gbb8iGtqVcnoS7QlRKYBbCk8EcHk7iMo3k5Q/F+SNWrWf8E5Mxk9baVJYgmvz02mx2FzV4oWRYLo/bSk01LYObJsfkq3qjcRxrTg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1649901172; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=0xSGVUhPZgbHPwFpu89X2W24g/jYetTI1SnOG7J0k5Q=; 
-        b=ILB/ySvWfxHiIPL83uUkzbN8L/mTJgBOejD3WRxH3mJN3jVDzNnv/VWUdXP+HquPTa5qleBfxgX6rW7KHijHVxh/3jeddiw9NqTNhl1YrLC3KwxhINwMBflnbI8sbyCEdUwm6AjItoCOQvnxlRktb3nxmk2LKFkMwHlvpm72oc8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1649901172;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=0xSGVUhPZgbHPwFpu89X2W24g/jYetTI1SnOG7J0k5Q=;
-        b=YUrfkzFvJtEXiXaFmuqIesisz2N7XAQ47Y8mWmLX0uNtY6ey2bE5ketmWQrjAmsg
-        BS913aoLOTbtOLVY73+hsdm+aD+ihx/W3yFSch0hfxqFIfTVPKQ3yCOMzOPMBsCtivx
-        UUbfiHkTr7wtIXKp0l415ajJXf8zHBP/TxyYFa+A=
-Received: from [10.10.10.3] (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
-        with SMTPS id 1649901171025892.4263236824818; Wed, 13 Apr 2022 18:52:51 -0700 (PDT)
-Message-ID: <0dd1da16-232b-d634-3146-bf91e58c9543@arinc9.com>
-Date:   Thu, 14 Apr 2022 04:52:45 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 11/14] dt-bindings: pinctrl: add binding for Ralink MT7620
- pinctrl
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        with ESMTP id S232667AbiDNC7s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Apr 2022 22:59:48 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2041.outbound.protection.outlook.com [40.107.92.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F83B2A242;
+        Wed, 13 Apr 2022 19:57:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i2CiVu58k5HgIKUJ0Hl0WakBKTiW0ECRcXI9Ez4B9EAHlMkF57p0/rodkd6s6PsctDAoWkSlglArPFEoa/XHYVp+AonT+2Uc+TQS7EEX1N6x2ZKxZCcZgJD2C6DkdDzre2bkNvqJ6Gnq7J3Jyl92oCT2bLJe/h8jdutEjn2Kwwz0kCiFMu8aPddUuFxteLHUq6Ba4Sgflw/avXaFXO4V6uAFeIp7lxzH2VdvZrVeaOwilJzZMXgEw+VT1Cu5gdmUEBzirVgKb0heIph+XyktAS/WZnG9InS6ffnZU8zeybxywvEgEQImSw2g5DadrXl7Wbx2SuFAR/qLsPA3R+P5zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cEwzrxNRbZg+1oZEatvMAJWFGSSaIp1QNnEFmaufk+M=;
+ b=Hs1gm6FUvMsC4NvtSE7cznn0fucE1jRWd59z4GOp7a0GwmcvU4N0P5mHikmzSmV2+K/rBwkDS1tljGCMjFm9DqNS8HguRH91zwa9PkLER0x1D9b8iJANbmhfJ2GTDb6WUmEoI2dExOgmn88zPo7gxQxtNoWgn1ZepZDGX18VohCd02rgW6SMeuHQHz4OmnTmesw5XskmzQDFSSlFq4kzyO2PNK+qjfc5lChxWk/K5Ujci6D38LOOC2KWHipDtSb2OzBYu9w1ijbJ/y5CD63nGugYGRiUKmFiQe/vYYY38Z55JNEjM2t5LAjQ3AMKpiJ8OLMfUyB2MiLEl3ar8kr23Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cEwzrxNRbZg+1oZEatvMAJWFGSSaIp1QNnEFmaufk+M=;
+ b=k5Vdda/QZJBsbZ/YycAzT/D+f3pOl4oM5t87VSdcQfKgLbLN9xxWn+dt1zpnSu0GWV7rkb8F90xZ1kUa5rGO12L9R4EAAgiRQYWL7KsNB/exA7TzBZNN5Hkndr72SRuYz9avOlC40faF1EpqQswDvp1qRw9KbDKDl1tFPaQzqg0=
+Received: from BN1PR13CA0022.namprd13.prod.outlook.com (2603:10b6:408:e2::27)
+ by DM5PR12MB1225.namprd12.prod.outlook.com (2603:10b6:3:7a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.29; Thu, 14 Apr
+ 2022 02:57:22 +0000
+Received: from BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e2:cafe::10) by BN1PR13CA0022.outlook.office365.com
+ (2603:10b6:408:e2::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.6 via Frontend
+ Transport; Thu, 14 Apr 2022 02:57:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT031.mail.protection.outlook.com (10.13.177.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5164.19 via Frontend Transport; Thu, 14 Apr 2022 02:57:21 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 13 Apr
+ 2022 21:57:21 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     <mario.limonciello@amd.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     erkin.bozoglu@xeront.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-References: <20220413060729.27639-1-arinc.unal@arinc9.com>
- <20220413060729.27639-12-arinc.unal@arinc9.com>
- <41fa58ee-728b-7f0d-eea7-448c59641d85@linaro.org>
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <41fa58ee-728b-7f0d-eea7-448c59641d85@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     <Basavaraj.Natikar@amd.com>, <Richard.Gong@amd.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH] gpio: Request interrupts after IRQ is initialized
+Date:   Wed, 13 Apr 2022 21:57:05 -0500
+Message-ID: <20220414025705.598-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f9fede45-7311-4687-2a93-08da1dc27f26
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1225:EE_
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1225AD226CB1C51B58DE3A90E2EF9@DM5PR12MB1225.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XqWm4xBcq007CZkKMAewFoIR/OTYXZtBxYBTT08TIcwEE+Nb0QLqSVVUAYZ4427LvPs++qLUh9Osd/C5k484uSityPyZ7CemlmBBFNiINoR5EkcIHIlya91uUBJ1SxT66ZxjYLDOFP0Wzrtt/RXIKX/4j9zqD9Of8/g8Kp0xC3FjTZwANxWiiPuZ70o0FYjU1m8OZd/9TVzmVvfi/D89KHhCTvIu+mTuUiVAJ8Seoe6T2pBLKZVaeIbJQ4XpIFnTRtCX3UTFtdPE9toFKKGmXQXNvAo7y05ca8TYHBu8VdVBtU/oGcoFajISnnxWVG29slVN5B9+gXy9ESS8orLyilZl/V5s0eZ8Es92tvRMkrV89gWp5f5rq60cPSaecPkhWqa7OXKU6LK4syMb318O7p95vHQX0JcFIXO7R1ZJNH/A8NzLkiYZXdK9H+6++8vt/++Cn4B/WGqr55GC5J/3T+mqEGOEPdfuZunHjk30nYw5PfcfFY07Qo5zXB+zGK23tlDH8TC35/BJbILRelU5OURmcZL7DEkr8pb9ZasiX3Asv4sZ5XYPMVMBXKnkjUqGFefM1inTN5u7q1vKXU0lqqRXWYIGEHvcMRIwSqDxiWv9SUHGdUYgOM//0fDpb+874bxXtvpqm0OLQaiOVXCmkFtr3PBqeV1KxplGG45ifXKsc6Cgt+A1aKDGUQawjjon3SQIxY00sLhJ1GnPL+EiwwzTw4M1vJIWOUDgFabH8kA86FsMZO769UcVz6q5LF833kqK5nNDATEQLy5EjagVA8sPqv2M0lsfmh9CXBHX/5w=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(966005)(508600001)(2906002)(316002)(356005)(5660300002)(1076003)(4326008)(8676002)(70586007)(70206006)(26005)(186003)(16526019)(81166007)(2616005)(47076005)(36756003)(6666004)(83380400001)(86362001)(8936002)(40460700003)(82310400005)(44832011)(110136005)(7696005)(54906003)(36860700001)(426003)(336012)(45080400002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2022 02:57:21.9790
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9fede45-7311-4687-2a93-08da1dc27f26
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1225
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/04/2022 18:37, Krzysztof Kozlowski wrote:
-> On 13/04/2022 08:07, Arınç ÜNAL wrote:
->> Add binding for the Ralink MT7620 pin controller for MT7620, MT7628 and
->> MT7688 SoCs.
->>
->> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->> ---
->>   .../pinctrl/ralink,mt7620-pinctrl.yaml        | 87 +++++++++++++++++++
->>   1 file changed, 87 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
->> new file mode 100644
->> index 000000000000..01578b8aa277
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
->> @@ -0,0 +1,87 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/ralink,mt7620-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Ralink MT7620 Pin Controller
->> +
->> +maintainers:
->> +  - Arınç ÜNAL <arinc.unal@arinc9.com>
->> +  - Sergio Paracuellos <sergio.paracuellos@gmail.com>
->> +
->> +description:
->> +  Ralink MT7620 pin controller for MT7620, MT7628 and MT7688 SoCs.
->> +  The pin controller can only set the muxing of pin groups. Muxing indiviual pins
-> 
-> Run spellcheck on original bindings, don't copy same typos.
+commit 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before
+initialization") attempted to fix a race condition that lead to a NULL
+pointer, but in the process caused a regression for _AEI/_EVT declared
+GPIOs. This manifests in messages showing deferred probing while trying
+to allocate IRQs like so:
 
-Will address, thanks!
+[    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
+[    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
+[    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
+[    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
+[    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
+[    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
+[    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
+[    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
+[    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
+[    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
 
-> 
->> +  is not supported. There is no pinconf support.
->> +
->> +properties:
->> +  compatible:
->> +    const: ralink,mt7620-pinctrl
->> +
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    patternProperties:
->> +      '^(.*-)?pinmux$':
-> 
-> Why do you have two levels here? pins->pinmux->actual pin configuration?
+The code for walking _AEI doesn't handle deferred probing and so this leads
+to non-functional GPIO interrupts.
 
-Yes, pins->pinmux->pin-configuration is currently how it's done.
+Fix this issue by moving the call to `acpi_gpiochip_request_interrupts` to
+occur after gc->irc.initialized is set.
 
-> Cannot be something like brcm,bcm636x has?
+Cc: Shreeya Patel <shreeya.patel@collabora.com>
+Cc: stable@vger.kernel.org
+Fixes: 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before initialization")
+Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+Link: https://lore.kernel.org/linux-gpio/BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#u
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/gpio/gpiolib.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Dunno, I'll take a look.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 085348e08986..b7694171655c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1601,8 +1601,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+ 
+ 	gpiochip_set_irq_hooks(gc);
+ 
+-	acpi_gpiochip_request_interrupts(gc);
+-
+ 	/*
+ 	 * Using barrier() here to prevent compiler from reordering
+ 	 * gc->irq.initialized before initialization of above
+@@ -1612,6 +1610,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+ 
+ 	gc->irq.initialized = true;
+ 
++	acpi_gpiochip_request_interrupts(gc);
++
+ 	return 0;
+ }
+ 
+-- 
+2.34.1
 
-> 
->> +        type: object
->> +        description: node for pinctrl.
->> +        $ref: pinmux-node.yaml#
->> +
->> +        properties:
->> +          groups:
->> +            description: The pin group to select.
-> 
-> I wonder where do you configure particular pins because these are
-> groups... It's a bit confusing to configure "i2c" group into "i2c" -
-> looks obvious.
-
-We don't configure each pin particularly. Ralink driver only supports 
-muxing certain functions for certain pin groups as hinted on the binding 
-description.
-
-> 
->> +            enum: [
->> +              # For MT7620 SoC
->> +              ephy, i2c, mdio, nd_sd, pa, pcie, rgmii1, rgmii2, spi, spi refclk, uartf, uartlite, wdt, wled,
->> +
->> +              # For MT7628 and MT7688 SoCs
->> +              gpio, i2c, i2s, p0led_an, p0led_kn, p1led_an, p1led_kn, p2led_an, p2led_kn, p3led_an,
->> +              p3led_kn, p4led_an, p4led_kn, perst, pwm0, pwm1, refclk, sdmode, spi, spi cs1, spis, uart0,
->> +              uart1, uart2, wdt, wled_an, wled_kn,
->> +            ]
->> +
->> +          function:
->> +            description: The mux function to select.
->> +            enum: [
->> +              # For MT7620 SoC
->> +              ephy, gpio, gpio i2s, gpio uartf, i2c, i2s uartf, mdio, nand, pa, pcie refclk, pcie rst,
->> +              pcm gpio, pcm i2s, pcm uartf, refclk, rgmii1, rgmii2, sd, spi, spi refclk, uartf, uartlite,
->> +              wdt refclk, wdt rst, wled,
->> +
->> +              # For MT7628 and MT7688 SoCs
->> +              antenna, debug, gpio, i2c, i2s, jtag, p0led_an, p0led_kn, p1led_an, p1led_kn, p2led_an,
->> +              p2led_kn, p3led_an, p3led_kn, p4led_an, p4led_kn, pcie, pcm, perst, pwm, pwm0, pwm1,
->> +              pwm_uart2, refclk, rsvd, sdxc, sdxc d5 d4, sdxc d6, sdxc d7, spi, spi cs1, spis, sw_r, uart0,
->> +              uart1, uart2, utif, wdt, wled_an, wled_kn, -,
-> 
-> All these lines do not fit in 80-character limit. Linux coding style
-> still expects this in most of cases.
-
-Ok, dt_binding_check warns after 110 characters so I made it fit that. 
-I'll update to 80.
-
-Arınç
