@@ -2,158 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6972501A4F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 19:42:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F9DE501B16
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 20:28:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343915AbiDNRo0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 13:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36008 "EHLO
+        id S1343766AbiDNSbK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Apr 2022 14:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233574AbiDNRoR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 13:44:17 -0400
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F1BE886E;
-        Thu, 14 Apr 2022 10:40:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1649958037; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=joc2zAh9PnYoF6a3Fpj18fCOK4TGDnIhxildQ4C1cnbiq7AGRMfWP9qkuOdCwnImjqS7nCuC/3bz/wCrtTZd4dJiIXAskG2SNlTjtGXR6jY+02xHHwVUXxaAYVukvydl4R3uN7XS/fypsYRkVyTvu4+YPRS6zAGCNySC+Qu5jRo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1649958037; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=rffJtQeH1wfjiUy7isMajL4hWPrAoIiKaMOQgFEbJNU=; 
-        b=M/zCJuaOGJN1Vm8m1yts/WAOpd+Jq1+O0TIoD9LBNBhwW/DWVazpA8gVrYBtiMJNN/bpiJ6/Gw1MyNrDqbSrV6DclvSGp9/jwcu8Cl7VwXn/QOxK/NM+dkhe+ZZhJ3gjm1TYv+7lBT+f0ENomHyVUqRfU39XeQtdbSA1HnHGAw4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1649958037;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
-        bh=rffJtQeH1wfjiUy7isMajL4hWPrAoIiKaMOQgFEbJNU=;
-        b=caHMaWu3G8Ofzf70Fdijp0G0038JQoum2KD4GkZKn5sG1ZsvGPvdan402XdMvFsu
-        GPAt5ZC0uLV9MEZZ9X87/9rXNjER43/EhRVJ8iz7dhTdlRjy1s9FZmEV8Y8dZQy54rt
-        RveQgWTQru6PxpGuVA0PLA8aN9mYj35fbzKY8bE0=
-Received: from arinc9-PC.localdomain (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
-        with SMTPS id 1649958036757805.531660630592; Thu, 14 Apr 2022 10:40:36 -0700 (PDT)
-From:   =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        with ESMTP id S232933AbiDNSbJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 14:31:09 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40223EBBBC;
+        Thu, 14 Apr 2022 11:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649960923; x=1681496923;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ms5h4jAz7I7FYnpzjU8QQ1aLktOyBK/CNSFMTkKzozo=;
+  b=UiZS2R5PXEjNByYd6e4ZtIqd8EAKYPhrnVBfvleAXHnFf90BDr/jjM/N
+   X6wUnMpnxUZ0P5h7VaSVzcdvay0EJQis9UKm3LHZBrhXCVU7TFyIJUBYe
+   MwI6W/V6iy7iRFJZ6/qu1ryQ9xE+9Zp/TzslPNgP7Swgw/8rmXTkeqCgw
+   un//0Obm1ggOE9f+/a2cOvNihlXLlm3K/mE4ezkmZ9IvMtAppzXjLAWAf
+   LFuFt6WQRzd3c3VdhNfyWwOvZawW+nu7I1JNCcLKc2/zGeUXYapaY7voF
+   mYhBA+4VfDX7PiKnZn5kkXx/V4Gl1njdfuUxgNUM1ncDt9oKDu4sG13Ob
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="323447285"
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="323447285"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 11:28:42 -0700
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="527016674"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 11:28:34 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nf4Ck-002Rse-LK;
+        Thu, 14 Apr 2022 21:28:30 +0300
+Date:   Thu, 14 Apr 2022 21:28:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Joe Perches <joe@perches.com>
-Cc:     erkin.bozoglu@xeront.com,
-        =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH v2 14/14] dt-bindings: pinctrl: add binding for Ralink RT3883 pinctrl
-Date:   Thu, 14 Apr 2022 20:39:16 +0300
-Message-Id: <20220414173916.5552-15-arinc.unal@arinc9.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220414173916.5552-1-arinc.unal@arinc9.com>
-References: <20220414173916.5552-1-arinc.unal@arinc9.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 11/13] pinctrl: meson: Replace custom code by
+ gpiochip_node_count() call
+Message-ID: <Ylhnzg3bvbrfpoFi@smile.fi.intel.com>
+References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
+ <CGME20220414063849eucas1p126e41b53ff0d342f5c48408994b704e9@eucas1p1.samsung.com>
+ <20220401103604.8705-12-andriy.shevchenko@linux.intel.com>
+ <3a24ef01-3231-1bee-7429-dce5680c5682@samsung.com>
+ <CAHp75VfMPpfeMpawRyLo_GtLR8+gVGgm8zW-fatp6=9a9wK18A@mail.gmail.com>
+ <CAFBinCCCtZvdp+01DdEE=-f7rZ8V46O125wKDqE1muA645sdUg@mail.gmail.com>
+ <CAHp75VcYaGmEruEsi2UUrLU4=k3OpBn2YV8B0LhyrhtQ=uCTXg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcYaGmEruEsi2UUrLU4=k3OpBn2YV8B0LhyrhtQ=uCTXg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add binding for the Ralink RT3883 pin controller for RT3883 SoC.
+On Thu, Apr 14, 2022 at 07:06:21PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 14, 2022 at 6:32 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> > On Thu, Apr 14, 2022 at 3:51 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > [...]
+> > > > This patch landed in linux next-20220413 as commit 88834c75cae5
+> > > > ("pinctrl: meson: Replace custom code by gpiochip_node_count() call").
+> > > > Unfortunately it breaks booting of all my Amlogic-based test boards
+> > > > (Odroid C4, N2, Khadas VIM3, VIM3l). MMC driver is no longer probed and
+> > > > boards are unable to mount rootfs. Reverting this patch on top of
+> > > > linux-next fixes the issue.
+> > >
+> > > Thank you for letting me know, I'll withdraw it and investigate.
+> > If needed I can investigate further later today/tomorrow. I think the
+> > problem is that our node name doesn't follow the .dts recommendation.
+> >
+> > For GXL (arch/arm64/boot/dts/amlogic/meson-gxl.dtsi) the GPIO
+> > controller nodes are for example:
+> >   gpio: bank@4b0 {
+> >       ...
+> >   }
+> > and
+> >   gpio_ao: bank@14 {
+> >       ...
+> >   }
+> >
+> > See also:
+> > $ git grep -C6 gpio-controller arch/arm64/boot/dts/amlogic/*.dtsi
+> >
+> > Marek did not state which error he's getting but I suspect it fails
+> > with "no gpio node found".
+> 
+> Would be interesting to know that, yeah.
+> 
+> The subtle difference between the patched and unpatched version is
+> that the former uses only available nodes, it means that node is not
+> available by some reason and then the error would be the one you
+> guessed.
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- .../pinctrl/ralink,rt3883-pinctrl.yaml        | 71 +++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
+Looking into the difference between iterating via available nodes I have found
+nothing suspicious. Your DTSes do not have status property, so it assumes the
+node is available.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
-new file mode 100644
-index 000000000000..feb6e66dcb61
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/ralink,rt3883-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ralink RT3883 Pin Controller
-+
-+maintainers:
-+  - Arınç ÜNAL <arinc.unal@arinc9.com>
-+  - Sergio Paracuellos <sergio.paracuellos@gmail.com>
-+
-+description:
-+  Ralink RT3883 pin controller for RT3883 SoC.
-+  The pin controller can only set the muxing of pin groups. Muxing individual
-+  pins is not supported. There is no pinconf support.
-+
-+properties:
-+  compatible:
-+    const: ralink,rt3883-pinctrl
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    patternProperties:
-+      '^(.*-)?pinmux$':
-+        type: object
-+        description: node for pinctrl.
-+        $ref: pinmux-node.yaml#
-+
-+        properties:
-+          groups:
-+            description: The pin group to select.
-+            enum: [ge1, ge2, i2c, jtag, lna a, lna g, mdio, pci, spi, uartf,
-+                   uartlite]
-+
-+          function:
-+            description: The mux function to select.
-+            enum: [ge1, ge2, gpio, gpio i2s, gpio uartf, i2c, i2s uartf, jtag,
-+                   lna a, lna g, mdio, pci-dev, pci-fnc, pci-host1, pci-host2,
-+                   pcm gpio, pcm i2s, pcm uartf, spi, uartf, uartlite]
-+
-+        required:
-+          - groups
-+          - function
-+
-+        additionalProperties: false
-+
-+    additionalProperties: false
-+
-+allOf:
-+  - $ref: "pinctrl.yaml#"
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl {
-+      compatible = "ralink,rt3883-pinctrl";
-+
-+      i2c_pins: i2c0-pins {
-+        pinmux {
-+          groups = "i2c";
-+          function = "i2c";
-+        };
-+      };
-+    };
+I'm quite puzzled what's going on there. Because I can't see what the logical
+difference the patch brought in.
+
+P.S. In any case it's withdrawn now and shouldn't appear in the next Linux
+Next. But I would really appreciate more input on this.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
