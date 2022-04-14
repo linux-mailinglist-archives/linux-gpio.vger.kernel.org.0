@@ -2,199 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70CED501CA7
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 22:29:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9743501DD0
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Apr 2022 23:58:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343839AbiDNUbT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 16:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40494 "EHLO
+        id S237917AbiDNWA0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Apr 2022 18:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235229AbiDNUbS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 16:31:18 -0400
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37216394
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Apr 2022 13:28:50 -0700 (PDT)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20220414202846euoutp021ca6bf3e4ca291ac6bc52e408e94d966~l3UTTfmyf3059930599euoutp02E
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Apr 2022 20:28:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20220414202846euoutp021ca6bf3e4ca291ac6bc52e408e94d966~l3UTTfmyf3059930599euoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1649968126;
-        bh=8fopOn+BsG7tgfdIJWaWqZa9LoS6fiCnp9r6pVMlrLo=;
-        h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-        b=lGzIAFoRzGM0K8CDIloPGLBAq6QugELNKmqT3RSYX/aGzL/fp1z6I5Ix8K8QBTAkm
-         upwvR7yFhOqJM4GXdWMXRWZeFNUTiyd2BekjAW6exetaR/YdbxHlEjgo1khUcLsYiT
-         0EAPBIb673/JUUWP4QRHWIGdyVjdnEEB3Z5ZaKu4=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220414202844eucas1p2415e652f3dbef83d0ac0de25e4a1b127~l3USEfTvV0184801848eucas1p2R;
-        Thu, 14 Apr 2022 20:28:44 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B7.6E.10260.CF388526; Thu, 14
-        Apr 2022 21:28:44 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20220414202843eucas1p211113b6c9c721a3b9c3b76efe16189e5~l3UQblGKX2534925349eucas1p2c;
-        Thu, 14 Apr 2022 20:28:43 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20220414202843eusmtrp24a5806523eb0c59e4bbcb18c74edf499~l3UQa0YQG2678226782eusmtrp2A;
-        Thu, 14 Apr 2022 20:28:43 +0000 (GMT)
-X-AuditID: cbfec7f5-bf3ff70000002814-c0-625883fc22d0
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id AC.B8.09522.AF388526; Thu, 14
-        Apr 2022 21:28:42 +0100 (BST)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20220414202842eusmtip18ae7d76fd80e5de47f1e1bc9fa467bb3~l3UPpuMN31818618186eusmtip13;
-        Thu, 14 Apr 2022 20:28:42 +0000 (GMT)
-Message-ID: <2f0f0bf4-ceb7-b226-dd76-aea64ee517c4@samsung.com>
-Date:   Thu, 14 Apr 2022 22:28:41 +0200
+        with ESMTP id S235069AbiDNWAZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 18:00:25 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CE78D691
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Apr 2022 14:57:58 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-2eafabbc80aso68571557b3.11
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Apr 2022 14:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nsin3xkK44iZ/qdD21FUQJPdHT0HFQkrGw2fsGwg7ms=;
+        b=Fx+wBrg0udj7V8qsRt6sJ5Bps8Yp0dGjBLfXzuh+s3TkHChpp8vNZyGjPhDGwr1mxG
+         vSseSmOyws4GDv+9/TSdgNvGdZABBj+g6/ocQmZvUNv0gGaL8KdvORRqCi6jjmL3JTn6
+         x4rvYVgxqi5aUEsuNoB9b641YB6eNbuxz13P0qexeEDBsprPntCA/9dgHm7Z0kzCfzNn
+         BOrGk16+u3x2oB3pkoS8suYo38YWcbvA1ggduHPZqk7kztOCewBM4IoheyWtaX/QRszs
+         QUesrNs30oyy7zeGmb4h66ast3XMAuCrLcD4CYDE4Bg6gVgRuutohBBusShFgZ0e6SEu
+         rz6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nsin3xkK44iZ/qdD21FUQJPdHT0HFQkrGw2fsGwg7ms=;
+        b=RC3TT/SBuDx5zf/QiQSAGNKmmVX8iT8EfIb1YWjpkMuLE+zNMk3Bgk6wQ1yA99sIE4
+         5MOcEIWLgLrTaZPlQxfeOqnTpCKYYyPkqDCfzZoGoQwpzjh2bpB98J89m3RgeBlL9Fg2
+         aM3USzB5xjFDRhsX7Xk7NHSUDDsMWeyvpscmm74hjUEQOyY9UyoIewfxEGGON8yxzOT9
+         cM8P2Pmns8cdzdUY7bc6NBboAAiV9I9xtfzbqgyjMQbDQfZv6NFcDQHsCdttQLKe88Eb
+         +MppvROo90ApZJ5oNLrbTcnaTgka3BJG9DGHRW6ZDH0DeNuE7mW7roPSen1vrZcZhqhV
+         XrnA==
+X-Gm-Message-State: AOAM530eNYxBCOjbZnKM0cV0z9DI+HdN/+EIex6lQzv5SU838RHfDQU3
+        /QheM7AoWkAM3FRESSuXTpdywZNLmbdAoNOJSeJyTQ==
+X-Google-Smtp-Source: ABdhPJy94pMyVUWaHtuuOiozyvhJNoNPqEcPdxJjkrS/TlOaUr0bmu/ZOHdwC9+nMFw/p+X5TTa4LbPn59cNv+BwmWc=
+X-Received: by 2002:a81:5dc5:0:b0:2eb:3feb:686c with SMTP id
+ r188-20020a815dc5000000b002eb3feb686cmr3803902ywb.268.1649973478181; Thu, 14
+ Apr 2022 14:57:58 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
-        Gecko/20100101 Thunderbird/91.8.0
-Subject: Re: [PATCH v5 0/6] gpiolib: more helpers and fwnode conversion
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20220414190242.22178-1-andriy.shevchenko@linux.intel.com>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7djP87p/miOSDLY+0bc4f/cQs0Vv03Qm
-        i10PtrFZzFlRafHm0RFmi5/tW5gspvxZzmSxYDa3xabH11gtNs//w2hxedccNotji06yWBzq
-        i7Z4/9PRgc/j/Y1Wdo/F126zesxbU+2xc9Zddo+nEyaze9y5tofNY97JQI/NS+o9du74zOTx
-        eZNcAFcUl01Kak5mWWqRvl0CV0br0c/sBZ8lKpY/3MXUwHhAuIuRk0NCwETi/PcdzF2MXBxC
-        AisYJea+W8IG4XxhlPj1eCojhPOZUeLvmV/sMC1n575hhUgsZ5T403CACcL5yCjxaNFZVpAq
-        XgE7icbnH5hBbBYBVYm2J4vZIeKCEidnPmEBsUUFkiTm7rsHViMs4C7x8chCJhCbWUBc4taT
-        +WBDRQReMUqcnL2DDSLxjEnifGMsiM0mYCjR9bYLLM4J1Hz70W2oGnmJ7W/ngH0kIbCeU+Ls
-        31dAT3AAOS4S99fVQLwgLPHq+Baod2Qk/u8EWQZSki/xd4YxRLhC4trrNcwQtrXEnXO/2EBK
-        mAU0Jdbv0ocIO0rM3rAXqpNP4sZbQYgD+CQmbZvODBHmlehoE4KoVpOYdXwd3M6DFy4xT2BU
-        moUUJrOQ/D4LySuzEPYuYGRZxSieWlqcm55abJyXWq5XnJhbXJqXrpecn7uJEZjqTv87/nUH
-        44pXH/UOMTJxMB5ilOBgVhLhvdkfniTEm5JYWZValB9fVJqTWnyIUZqDRUmcNzlzQ6KQQHpi
-        SWp2ampBahFMlomDU6qBSb3hPKP9ttq6lc9v61gefPlsTcjGXeu0PFR3i+tZP87lXch13Kzo
-        6vsLl5Kfnb+QtGJuRptk6pMpjM91wzr4/RS84rkffGBKWqk8wWOSSQffYS1PuU9RCx+dXRg2
-        tSP1jM0q3aAsztNrb2t8WFy+bYvAEma2PyI34pg4s34EdUw/Lx0qx6l6xDy8ric/2P7epIf+
-        h4WWz54quG7Fhrwczzmny05qlTIe+3qM/+C6Y884Hv/bVFQucfyc0Yrfy/T+vFu/Uzdov+wt
-        zjOLWEOuVrCEf4tYpZNx/4/YziCpt/maL9o4H09it5HvVjWJmrc26nd6idysjxuPz7rnufpM
-        o6NL3MxEy8B7Bbe8viw6ckiJpTgj0VCLuag4EQCJLy1D5AMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsVy+t/xu7q/miOSDHYstbE4f/cQs0Vv03Qm
-        i10PtrFZzFlRafHm0RFmi5/tW5gspvxZzmSxYDa3xabH11gtNs//w2hxedccNotji06yWBzq
-        i7Z4/9PRgc/j/Y1Wdo/F126zesxbU+2xc9Zddo+nEyaze9y5tofNY97JQI/NS+o9du74zOTx
-        eZNcAFeUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2C
-        Xkbr0c/sBZ8lKpY/3MXUwHhAuIuRk0NCwETi7Nw3rF2MXBxCAksZJVZO2sMOkZCRODmtgRXC
-        Fpb4c62LDaLoPaPEiUVHmEESvAJ2Eo3PP4DZLAKqEm1PFrNDxAUlTs58wgJiiwokSbzY9pwR
-        xBYWcJf4eGQhE4jNLCAucevJfCaQoSICrxglLk14zA7iMAs8Y5JYsWsqE8S6WYwSW06dAWtn
-        EzCU6HoLcgcnByfQqNuPbrNBjDKT6NraxQhhy0tsfzuHeQKj0Cwkl8xCsnEWkpZZSFoWMLKs
-        YhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIzybcd+bt7BOO/VR71DjEwcjIcYJTiYlUR4b/aH
-        JwnxpiRWVqUW5ccXleakFh9iNAUGx0RmKdHkfGCaySuJNzQzMDU0MbM0MLU0M1YS5/Us6EgU
-        EkhPLEnNTk0tSC2C6WPi4JRqYDKZlnORpyx3/Yc+qYz+r8rlk3ftTkkMVGCUtnFdp8oUc+77
-        +klzOrtVrRMPpG+u3f3PZ42fceOi2ZuDiz8oayrr2t8sOmPt/V9Nel7rgf8RPtVbd7pIBITJ
-        2ap5mqdcmCuRONFs9Yy/u+auXf/FUS8hosCkcd7Ze6bm7Lo/z6Uw6T6aUTLx4DuZwirBGYel
-        k2N9bZjF/pXO8UrJbixiiOCcHProJ9O5I082lJ9QSGRR/W58+sLefZlGVyMY1NNYO6fsVa0M
-        +BX6hjmM+di0O7mZAt/45Vhf3fkQa13JIyx5ttKJ7QXXCbnDnBMsN9nuXrh4/QKWxg+ubbKL
-        3fZqbOLu6o9MmnYn4MSXyMUXlViKMxINtZiLihMBR+HmjHsDAAA=
-X-CMS-MailID: 20220414202843eucas1p211113b6c9c721a3b9c3b76efe16189e5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20220414190251eucas1p1ef520fa995057550fa533eb34a02ae63
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20220414190251eucas1p1ef520fa995057550fa533eb34a02ae63
-References: <CGME20220414190251eucas1p1ef520fa995057550fa533eb34a02ae63@eucas1p1.samsung.com>
-        <20220414190242.22178-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com>
+In-Reply-To: <BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 14 Apr 2022 23:57:46 +0200
+Message-ID: <CACRpkdbjkC6r4Npg_DJSDD9JOZ0R4aWBc5qQYnQThqYTt2KniQ@mail.gmail.com>
+Subject: Re: Broken GPIO IRQ mappings in 5.18-rc2
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Shreeya Patel <shreeya.patel@collabora.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Gong, Richard" <Richard.Gong@amd.com>,
+        "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Thu, Apr 14, 2022 at 3:21 AM Limonciello, Mario
+<Mario.Limonciello@amd.com> wrote:
 
-On 14.04.2022 21:02, Andy Shevchenko wrote:
-> This is a spin-off (*) of the previous work of switching GPIO library
-> to use fwnode instead of of_node. Here we introduce a couple of
-> a new macro helpers, which allows to switch some of the drivers
-> to use fwnode and partially fwnode APIs. As a result of this cleanup
-> a few drivers switched to use GPIO fwnode instead of of_node.
+> [Public]
 >
-> *) it's subset of it with a new (patch 1) helper.
+> Hi,
 >
-> Marek, Martin, can you give this a try?
-> This requires at least two patches for GPIO library to be applied.
+> I noticed on a variety of machines that power button wasn't working anymore starting with 5.18-rc2.
+> In digging deeper, I notice that a new error is introduced as well during bootup:
+>
+> [    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
+> [    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
+> [    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
+> [    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
+> [    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
+> [    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
+> [    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
+> [    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
+> [    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
+> [    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
+>
+> It looks like IRQs aren't getting assigned to the GPIO pins anymore and instead showing this deferred probing message in 5.18-rc2.
+> I bisected and confirmed it's caused by
+> commit 5467801f1fcbdc46bc7298a84dbf3ca1ff2a7320 ("gpio: Restrict usage of GPIO chip irq members before initialization")
+>
+> I don't see that probing ever gets a chance to run again though as it just shows the dev_err and returns AE_OK for the
+> function that walks _AEI (acpi_gpiochip_alloc_event).
+>
+> FYI - I'm CC'ing stable because this commit went to stable too.
 
-I've applied patch #1 and #6 on top of linux next-20220413 with commit 
-88834c75cae5 ("pinctrl: meson: Replace custom code by 
-gpiochip_node_count() call") reverted. All my Meson-based test boards 
-(Odroid C4, N2, Khadas VIM3/3l) work fine now. Thanks! Feel free to add:
+Paging Marc Zyngier as IRQ maintainer. He might have suggestions.
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Torvalds already pointedly complained about the semantics in this patch,
+should it simply be reverted?
 
-> Bart, Linus, I can take it thru my tree with an immutable branch if
-> it's the way you prefer, otherwise please suggest on how to proceed.
->
-> Changelog v5:
-> - dropped tested patches (this series based on them, though)
-> - introduced a new helper (thanks Marek and Martin for reporting an issue)
-> - redone Armada and Meson code using newly introduced helper
->
-> Changelog v4:
-> - fixed compilation of the Samsung pin control drivers (LKP)
-> - explained in the commit message why namespacing is good for meson defs
-> - added tag to one of meson patches (Neil)
->
-> Changelog v3:
-> - moved count initialization to the definition in patch 2 (Geert)
-> - replaced of_args by args, used %pfwP in patch 7 (Geert)
-> - fixed kernel doc warning in patch 7
-> - added tags to patches 1, 2, 6, and 7 (Geert)
-> - added tag to patch 4 (Fabien)
-> - renamed MREG to MESON_REG in patch 9 (Neil)
-> - added tag to patch 10 (Neil)
-> - used --base for cover-letter
->
-> Changelog v2:
-> - properly based, so kbuild bot may test it (LKP)
-> - fixed typo in the macro (Geert)
-> - split to two macro helpers and rename the gpiochip_count()
-> - tagged one of stm32 and one of meson patches (Fabien, Neil)
-> - unified previously standalone armada patch
-> - due to above rewrote the armada patch from v1 completely (Sergey)
-> - added a lot of a new patches
-> - compile tested all of them on x86
->
-> Andy Shevchenko (6):
->    gpiolib: Introduce a helper to get first GPIO controller node
->    pinctrl: armada-37xx: Switch to use fwnode instead of of_node
->    pinctrl: armada-37xx: Reuse GPIO fwnode in
->      armada_37xx_irqchip_register()
->    pinctrl: meson: Rename REG_* to MESON_REG_*
->    pinctrl: meson: Enable COMPILE_TEST
->    pinctrl: meson: Replace custom code by gpiochip_node_count() call
->
->   drivers/pinctrl/meson/Kconfig               |  2 +-
->   drivers/pinctrl/meson/pinctrl-meson.c       | 52 ++++++++++-----------
->   drivers/pinctrl/meson/pinctrl-meson.h       | 28 +++++------
->   drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 34 ++++----------
->   include/linux/gpio/driver.h                 | 10 ++++
->   5 files changed, 59 insertions(+), 67 deletions(-)
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Yours,
+Linus Walleij
