@@ -2,106 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A9CA501F10
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Apr 2022 01:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B14502602
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Apr 2022 09:09:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347672AbiDNXeA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Apr 2022 19:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32846 "EHLO
+        id S1350887AbiDOHMF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Apr 2022 03:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347658AbiDNXdx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Apr 2022 19:33:53 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E026AC90D
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Apr 2022 16:31:23 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id BBE672C03CF;
-        Thu, 14 Apr 2022 23:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1649979081;
-        bh=YgP1SqE7JxanVpyL/fogzYYkXKiLRl3c7aan9hD9/9M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+GL+YkIueZ2/1aLlcyOa1valuRloLGYwUZH4vm2nHKEDIEBO1w5jaCMTRbcsz3tb
-         DT0tmXUX4xeUeF5pca/y1BOjtQm0WDOJkSUCvhSTKkwNo7DLIx7+w+/1QDu4cB/oVT
-         HxDb0kBA5GXa2eKd6fsqlAIVSkcjAewaDy/+cCO4fyzWVgspCVOsKpMV8V06J0sbc/
-         uoU4pRyvFwmV3lyerEPz4552iiAiN+IZZkmZUfey2Xa5YeoOj8B94lrJgtiIV/iVbo
-         23wzMfUflZdbAYBQb1SB8S8bOjAZRqW3XeH0P2FzBeWHUQnIKmeGGJMtMM3yMDUAxa
-         xnuf9XbRr8jyQ==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B6258aec90004>; Fri, 15 Apr 2022 11:31:21 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by pat.atlnz.lc (Postfix) with ESMTP id 28C7413EE11;
-        Fri, 15 Apr 2022 11:31:21 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 7AC3F2A2679; Fri, 15 Apr 2022 11:31:16 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        kostap@marvell.com, robert.marko@sartura.hr
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v4 4/4] arm64: marvell: enable the 98DX2530 pinctrl driver
-Date:   Fri, 15 Apr 2022 11:30:55 +1200
-Message-Id: <20220414233055.586962-5-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220414233055.586962-1-chris.packham@alliedtelesis.co.nz>
-References: <20220414233055.586962-1-chris.packham@alliedtelesis.co.nz>
+        with ESMTP id S1350885AbiDOHME (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Apr 2022 03:12:04 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF5243152F
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Apr 2022 00:09:35 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id o2so12714075lfu.13
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Apr 2022 00:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=emlid.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RfcZHjamd+442t6E5O8shP98hepY6LEm0ZzcZ6v1xx4=;
+        b=It6h8GHGopP4L9JscaI/HEu6X5OhGpLq6PpBClMft2cQKDexG2Os7rPWMzGykCRyVA
+         Dcv+wwTarpQan8EMeiyvh+lJX1Wndd9DtKhXaqINz1vQt3POQdX+dvnXLPIRt/ZIgH03
+         ZZKKgzb+L2f2XvkZeRrRkkx/XKUCUgtk0Ikaa/PPyUU1hNZWn5tg81Y4sjhIGKl3qTHq
+         9d36AwNLyEE93UHqBWXcqFRzz2OU3FCwK/MggwDYEzTMBi/bLzgVrcKnOqOsKUrgAYGY
+         m7O8Z2G56YqJ69dDHLAYHi8w73S+HJXo6MhdGeCuJXyGcobw7VkWaMjGk1kuYM322f4c
+         X1RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RfcZHjamd+442t6E5O8shP98hepY6LEm0ZzcZ6v1xx4=;
+        b=op++UdpPtRQtdO0fl/HWPfse+Z1rV5wh4GX+a7sSxG04xYZbOg0xAM5f8+y6KUYbdG
+         oMn6rwCRcZ8plJvh7SgcikW7tHwlN8PRb1MnlSBaRYpjMkyW6ZhSkTBxCgEm+/DNzTst
+         FlqrRGYpuoXIhdemMsuDJ00E6HkB9sOyCxHDu6ka8iKPzsrFQoMQoUG0iMYkkaUSAI1u
+         VAExZzDEW6ndoF0/IxjXSU93E2SfduNgd0fWn7X5IwL/tLcVx2EHT7DaV+EFJ9Wmq3KJ
+         yr9VOmQ5qR6CAp87EKk6PXwXYusmjXlnPbVJLv83qR6J9Oal4sdqyAFEqsTCjcu+hZYi
+         dfOA==
+X-Gm-Message-State: AOAM531YypyST/sJKV8Yvizo9xLvffTewseQHkFFxQra+tJuRi2d2qih
+        I18s/KBMEd0nvY0H/Ni5/KWXFQ==
+X-Google-Smtp-Source: ABdhPJwBjMdYcDC+nowTdwpV4NZqVut25gjNMA9ODIlYylhpoGGkS5remuvDJREwX0oYpLvjnNM2Yw==
+X-Received: by 2002:ac2:4250:0:b0:44a:ff88:3795 with SMTP id m16-20020ac24250000000b0044aff883795mr4344708lfl.384.1650006574056;
+        Fri, 15 Apr 2022 00:09:34 -0700 (PDT)
+Received: from emlid-ThinkPad-E480.localdomain ([85.143.205.202])
+        by smtp.gmail.com with ESMTPSA id g3-20020a2e9e43000000b00244c60deb14sm205121ljk.15.2022.04.15.00.09.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Apr 2022 00:09:33 -0700 (PDT)
+From:   Andrei Lalaev <andrei.lalaev@emlid.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com, Andrei Lalaev <andrei.lalaev@emlid.com>
+Subject: [PATCH v2] gpiolib: of: fix bounds check for 'gpio-reserved-ranges'
+Date:   Fri, 15 Apr 2022 10:07:11 +0300
+Message-Id: <20220415070710.220785-1-andrei.lalaev@emlid.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=L59jvNb8 c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=z0gMJWrwH1QA:10 a=XQcNo-tEeLJW46c85tUA:9
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This commit makes sure the drivers for the 98DX2530 pin controller is
-enabled.
+Gpiolib interprets the elements of "gpio-reserved-ranges" as "start,size"
+because it clears "size" bits starting from the "start" bit in the according
+bitmap. So it has to use "greater" instead of "greater or equal" when performs
+bounds check to make sure that GPIOs are in the available range.
+Previous implementation skipped ranges that include the last GPIO in
+the range.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 726cb3ba4969 ("gpiolib: Support 'gpio-reserved-ranges' property")
+Signed-off-by: Andrei Lalaev <andrei.lalaev@emlid.com>
 ---
+I wrote the mail to the maintainers
+(https://lore.kernel.org/linux-gpio/20220412115554.159435-1-andrei.lalaev@emlid.com/T/#u)
+of the questioned DTSes (because I couldn't understand how the maintainers
+interpreted this property), but I haven't received a response.
+Since the questioned DTSes use "gpio-reserved-ranges = <0 4>"
+(i.e., the beginning of the range), this patch doesn't affect these DTSes at all.
+TBH this patch doesn't break any existing DTSes because none of them
+reserve gpios at the end of range.
+---
+ drivers/gpio/gpiolib-of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Notes:
-    Changes in v4:
-    - None
-    Changes in v3:
-    - Add review from Andrew
-    Changes in v2:
-    - None
-
- arch/arm64/Kconfig.platforms | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 21697449d762..6bbb56901794 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -183,11 +183,13 @@ config ARCH_MVEBU
- 	select PINCTRL_ARMADA_37XX
- 	select PINCTRL_ARMADA_AP806
- 	select PINCTRL_ARMADA_CP110
-+	select PINCTRL_AC5
- 	help
- 	  This enables support for Marvell EBU familly, including:
- 	   - Armada 3700 SoC Family
- 	   - Armada 7K SoC Family
- 	   - Armada 8K SoC Family
-+	   - 98DX2530 SoC Family
-=20
- config ARCH_MXC
- 	bool "ARMv8 based NXP i.MX SoC family"
---=20
-2.35.1
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index ae1ce319cd78..7e5e51d49d09 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -910,7 +910,7 @@ static void of_gpiochip_init_valid_mask(struct gpio_chip *chip)
+ 					   i, &start);
+ 		of_property_read_u32_index(np, "gpio-reserved-ranges",
+ 					   i + 1, &count);
+-		if (start >= chip->ngpio || start + count >= chip->ngpio)
++		if (start >= chip->ngpio || start + count > chip->ngpio)
+ 			continue;
+ 
+ 		bitmap_clear(chip->valid_mask, start, count);
+-- 
+2.25.1
 
