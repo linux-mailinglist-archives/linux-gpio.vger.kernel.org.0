@@ -2,106 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1B14502602
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Apr 2022 09:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1104650265E
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Apr 2022 09:48:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350887AbiDOHMF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Apr 2022 03:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57356 "EHLO
+        id S235169AbiDOHuz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Apr 2022 03:50:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350885AbiDOHME (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Apr 2022 03:12:04 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF5243152F
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Apr 2022 00:09:35 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id o2so12714075lfu.13
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Apr 2022 00:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=emlid.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RfcZHjamd+442t6E5O8shP98hepY6LEm0ZzcZ6v1xx4=;
-        b=It6h8GHGopP4L9JscaI/HEu6X5OhGpLq6PpBClMft2cQKDexG2Os7rPWMzGykCRyVA
-         Dcv+wwTarpQan8EMeiyvh+lJX1Wndd9DtKhXaqINz1vQt3POQdX+dvnXLPIRt/ZIgH03
-         ZZKKgzb+L2f2XvkZeRrRkkx/XKUCUgtk0Ikaa/PPyUU1hNZWn5tg81Y4sjhIGKl3qTHq
-         9d36AwNLyEE93UHqBWXcqFRzz2OU3FCwK/MggwDYEzTMBi/bLzgVrcKnOqOsKUrgAYGY
-         m7O8Z2G56YqJ69dDHLAYHi8w73S+HJXo6MhdGeCuJXyGcobw7VkWaMjGk1kuYM322f4c
-         X1RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RfcZHjamd+442t6E5O8shP98hepY6LEm0ZzcZ6v1xx4=;
-        b=op++UdpPtRQtdO0fl/HWPfse+Z1rV5wh4GX+a7sSxG04xYZbOg0xAM5f8+y6KUYbdG
-         oMn6rwCRcZ8plJvh7SgcikW7tHwlN8PRb1MnlSBaRYpjMkyW6ZhSkTBxCgEm+/DNzTst
-         FlqrRGYpuoXIhdemMsuDJ00E6HkB9sOyCxHDu6ka8iKPzsrFQoMQoUG0iMYkkaUSAI1u
-         VAExZzDEW6ndoF0/IxjXSU93E2SfduNgd0fWn7X5IwL/tLcVx2EHT7DaV+EFJ9Wmq3KJ
-         yr9VOmQ5qR6CAp87EKk6PXwXYusmjXlnPbVJLv83qR6J9Oal4sdqyAFEqsTCjcu+hZYi
-         dfOA==
-X-Gm-Message-State: AOAM531YypyST/sJKV8Yvizo9xLvffTewseQHkFFxQra+tJuRi2d2qih
-        I18s/KBMEd0nvY0H/Ni5/KWXFQ==
-X-Google-Smtp-Source: ABdhPJwBjMdYcDC+nowTdwpV4NZqVut25gjNMA9ODIlYylhpoGGkS5remuvDJREwX0oYpLvjnNM2Yw==
-X-Received: by 2002:ac2:4250:0:b0:44a:ff88:3795 with SMTP id m16-20020ac24250000000b0044aff883795mr4344708lfl.384.1650006574056;
-        Fri, 15 Apr 2022 00:09:34 -0700 (PDT)
-Received: from emlid-ThinkPad-E480.localdomain ([85.143.205.202])
-        by smtp.gmail.com with ESMTPSA id g3-20020a2e9e43000000b00244c60deb14sm205121ljk.15.2022.04.15.00.09.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Apr 2022 00:09:33 -0700 (PDT)
-From:   Andrei Lalaev <andrei.lalaev@emlid.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com, Andrei Lalaev <andrei.lalaev@emlid.com>
-Subject: [PATCH v2] gpiolib: of: fix bounds check for 'gpio-reserved-ranges'
-Date:   Fri, 15 Apr 2022 10:07:11 +0300
-Message-Id: <20220415070710.220785-1-andrei.lalaev@emlid.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S242674AbiDOHux (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Apr 2022 03:50:53 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F83A1443
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Apr 2022 00:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=QIfUpEx/NR3GITE4jqqRFUXMz0f8
+        bXyhKB0/xUDUdsY=; b=oWZ2rc3R371o/2fcW/gjzqiDD9+Pm/Bi/F1wDgr+d3jo
+        O7lcJ0H5bIrwzn4UAsFE6o9PP8bm1SU8h2wgiVONSYrSvFRZSYk3QIzj7Jzm4rBI
+        DUL5aM3q2HeFOjWp9cA+qSvei4gYAypgXJz2OsE0BQo9bH7ijDWTucWuBYd6+qU=
+Received: (qmail 2142296 invoked from network); 15 Apr 2022 09:48:20 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 Apr 2022 09:48:20 +0200
+X-UD-Smtp-Session: l3s3148p1@IIhZoqzciNQgAwDtxwyoAOfJPDZkSTZ/
+Date:   Fri, 15 Apr 2022 09:48:19 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: renesas: checker: Rework drive and bias pin
+ iteration
+Message-ID: <YlkjQ2+O0h8jDTqq@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <1848e56e6496b8d5ed50fd6adc8ef2078b454ce4.1649944305.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lbu41cTPydjuH3oP"
+Content-Disposition: inline
+In-Reply-To: <1848e56e6496b8d5ed50fd6adc8ef2078b454ce4.1649944305.git.geert+renesas@glider.be>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Gpiolib interprets the elements of "gpio-reserved-ranges" as "start,size"
-because it clears "size" bits starting from the "start" bit in the according
-bitmap. So it has to use "greater" instead of "greater or equal" when performs
-bounds check to make sure that GPIOs are in the available range.
-Previous implementation skipped ranges that include the last GPIO in
-the range.
 
-Fixes: 726cb3ba4969 ("gpiolib: Support 'gpio-reserved-ranges' property")
-Signed-off-by: Andrei Lalaev <andrei.lalaev@emlid.com>
----
-I wrote the mail to the maintainers
-(https://lore.kernel.org/linux-gpio/20220412115554.159435-1-andrei.lalaev@emlid.com/T/#u)
-of the questioned DTSes (because I couldn't understand how the maintainers
-interpreted this property), but I haven't received a response.
-Since the questioned DTSes use "gpio-reserved-ranges = <0 4>"
-(i.e., the beginning of the range), this patch doesn't affect these DTSes at all.
-TBH this patch doesn't break any existing DTSes because none of them
-reserve gpios at the end of range.
----
- drivers/gpio/gpiolib-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--lbu41cTPydjuH3oP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index ae1ce319cd78..7e5e51d49d09 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -910,7 +910,7 @@ static void of_gpiochip_init_valid_mask(struct gpio_chip *chip)
- 					   i, &start);
- 		of_property_read_u32_index(np, "gpio-reserved-ranges",
- 					   i + 1, &count);
--		if (start >= chip->ngpio || start + count >= chip->ngpio)
-+		if (start >= chip->ngpio || start + count > chip->ngpio)
- 			continue;
- 
- 		bitmap_clear(chip->valid_mask, start, count);
--- 
-2.25.1
+On Thu, Apr 14, 2022 at 03:57:36PM +0200, Geert Uytterhoeven wrote:
+> The checker code to iterate over all drive strength and bias register
+> description items is cumbersome, due to the repeated calculation of
+> indices, and the use of hardcoded array sizes.  The latter was done
+> under the assumption they would never need to be changed, which turned
+> out to be false.
+>=20
+> Increase readability by introducing helper macros to access drive
+> strength and bias register description items.
+> Increase maintainability by replacing hardcoded numbers by array sizes
+> calculated at compile-time.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Cool, this makes the code much more readable!
+
+In general, I am fine with it, maybe one tiny addition to make it even
+more readable?
+
+> +#define drive_nfields	ARRAY_SIZE(drive_regs->fields)
+
+Let's have here:
+
+#define drive_ofs(i) drive_regs[(i) / drive_nfields]
+
+> +#define drive_reg(i)	drive_regs[(i) / drive_nfields].reg
+
+and here
+
+#define drive_reg(i) drive_ofs(i).reg
+
+> +#define drive_bit(i)	((i) % drive_nfields)
+> +#define drive_field(i)	drive_regs[(i) / drive_nfields].fields[drive_bit(=
+i)]
+
+and here
+
+drive_field(i) drv_ofs(i).fields[drive_bit(i)]
+
+?
+
+
+--lbu41cTPydjuH3oP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmJZI0MACgkQFA3kzBSg
+KbZG0A//fcEETh+AGhpx/ij8luvlCzwCej6crI7fNHGTEHyAO5bN708GsqqojeJQ
+0DB2KxxMbadRi/Wg02/3aKaJDYUdwPfkmfkCd0rtRPDUWSSqvEw/eYB80lPbw/x+
+ZoiAHd6B15U+ZpXH8Vqh33gu+XuWXjJQu6j3BZtDGsnb5BVWgqZDPAZQ0+AO+JWw
+SlwPgpYqZD2i4UjXaV/utC80MNmfsrdwcLMjMCC7onPYSeB+o5SAlpvukYHHd8gZ
+npLuhG4He4jbfIoUhv/J9PIYCrQhRbtUUy0jsWntSOSIJxiu4LbcVgBnhL44YaTc
+3fykVgcQTU1VWSG97QYjZf3wbcCnmMyu7FcbF+YqqrvaFmVr27XtHZ8F1EiMmBm7
+u/2C8TIFXu6mysCwc8/gPZNeNpxcSzKiit9AlhMhhAwVg8Hnx31TnfraIzjOZ4j2
+t4xuGxa88yPlFZMPNZj1UbAwGyhT9kxO2wYbS2slVox1WMCXCa9BH8DR7OGmau9s
+WPnuXrFGej6ioGkV4CTUQK09yDVoemPLOmq+EOcmXmV/BLRZ+YuNYmvN9uwX+NCm
+/SaADnpWD1sVn/3RZVbHcOaUbfwGhQR0o+ZetyvwVLUPfM8YxL5UGEFJuND0Dh4p
+feSlLsILiMpb+ZrkE6APubqTsDBA20FEdol0z9d1/y747YXcDcs=
+=xos/
+-----END PGP SIGNATURE-----
+
+--lbu41cTPydjuH3oP--
