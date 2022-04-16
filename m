@@ -2,86 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F9B950339F
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Apr 2022 07:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0AD05034EF
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Apr 2022 09:52:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356658AbiDOXqi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Apr 2022 19:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57696 "EHLO
+        id S230195AbiDPHw2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Apr 2022 03:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356653AbiDOXqg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Apr 2022 19:46:36 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4FFB6D3A
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Apr 2022 16:44:06 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id y6so8176830plg.2
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Apr 2022 16:44:06 -0700 (PDT)
+        with ESMTP id S230168AbiDPHwK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Apr 2022 03:52:10 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED58AFFFB0
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Apr 2022 00:49:37 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r66so10092325pgr.3
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Apr 2022 00:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w2QrILTyqQ+Pt7TX+dc/u5nUBhPOOUFyhDJl0/uG8KA=;
-        b=WQYEUw+TfPdba4M0qoV3YoYNx0EokWXTwcm94AT/cqahCQWwwjBWEbOZD4bvmT0NFb
-         Xcx5ODn0k7YRALA13OhixgkDU8uYYogteOunDDY5goCtmJyK/qUBiMez/8Ex2AWPKxfs
-         zWYTFOtjGivIKkh9dDxV5C6NheZrsC87+NjXM=
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=bJd2DIgtyK+bZCVQpMa9XLiI7bVnFQgVFeGzbZ6bXamjrEFIUCNaIDR9YpvR5iTRQC
+         EoRjHn2hxdGgHpTmUXoJLhLdkz8kw8CpdMkf+RjOM2yxgJf0M2w5tnzpw0NiczM9cGQm
+         aTRY2J48j2+AVBVM6ZplapTERLwB7sqpQHn0KTPy+GATyEE1HlWbU25nZewZyTln9PiO
+         eb2iuPe3VcoLkYjZ6tmC44EeIcF1BzRiek/y+/+gg720T1wEvd/5m2iOgdTIUS3isI5Z
+         q2z1OdX/gYACU6OexrbNcXzEKBC+MKUq0Bm7V68HpmeyS3D5tFhEEP1iOfnkPKJo7x6w
+         XtNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w2QrILTyqQ+Pt7TX+dc/u5nUBhPOOUFyhDJl0/uG8KA=;
-        b=ho67sCQbXwdtFTNBSpM+J0E7kZH1GSEvhsC1Cx2rGDXY/Kfz7ssrUS3nZGTzlm3hsi
-         /iWe3or3N8HYmEdtILITpWz4pGeGSem5KaxxoWIXe5T/P0m9II808u7apnNtX3MVGPiO
-         4XdM0EjA4pDI1o2k5sVEvsDb2LC3zQEDwLNjJUCLdgJvtFnFLBmT0yB+jZ8IeKJKyxyH
-         xRzwwcXQg6NTQHzQtNfABHjJGGBoEuhJH6EtN1gsKEgPo6CRzvnIeS1+R7x/xG0wwdKQ
-         7rghDgY719c29jnpYDulEmeugx6BEtMwkvbxgl6CSWpAPmtWJ0p+L/me0EVsSN/1UO+D
-         qKvQ==
-X-Gm-Message-State: AOAM530HJreHKwPneu4hPrtg27ERjWQ4amQK5md6N3syN74+bHP8fMd4
-        Us6PFe0C/5UjYi55HqtOKiyPYQ==
-X-Google-Smtp-Source: ABdhPJx5DUqDtUFoTZutT3tV3A+5mldSPzpeVrsrxCdXDbVcaqBeXAPd4TrSNpEqM3FQkJq1z1ovDg==
-X-Received: by 2002:a17:90b:1b44:b0:1cd:49b8:42b8 with SMTP id nv4-20020a17090b1b4400b001cd49b842b8mr1313605pjb.102.1650066246324;
-        Fri, 15 Apr 2022 16:44:06 -0700 (PDT)
-Received: from localhost ([2620:15c:202:201:b27a:b3e7:2e3e:e4be])
-        by smtp.gmail.com with UTF8SMTPSA id k10-20020a056a00168a00b004f7e2a550ccsm3938967pfc.78.2022.04.15.16.44.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Apr 2022 16:44:05 -0700 (PDT)
-Date:   Fri, 15 Apr 2022 16:44:03 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, quic_plai@quicinc.com,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        swboyd@chromium.org, judyhsiao@chromium.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Subject: Re: [PATCH v12 7/7] pinctrl: qcom: Update clock voting as optional
-Message-ID: <YloDQ7V7JTNYkjWu@google.com>
-References: <1647447426-23425-1-git-send-email-quic_srivasam@quicinc.com>
- <1647447426-23425-8-git-send-email-quic_srivasam@quicinc.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=X4O8nN0/lKckahbCF1sHFRDDaaivKiIFglu3xLglrPaDJD2FShIwk2m0zAA8ljhfxE
+         kSFlbNnG1l4PSLeV5QEeY+BlIIwHeucHpU3Ok8OT1NzzWJ2AAZc25nf7lc9OmzCCV2Y3
+         0XfDXZTZcboJGru1DTEiCvAhGLMTk+ItufznPzdZBa4LFFryM54PZ1fsdlB69u/k/x6d
+         e7Njaaaek9pWjt7NU21Sf/ODd4JGeKCEVqGrOqH548FknmN6ealcZtF0yLcztKFd/t2X
+         gT0aU4ADDHB9HvcXzEde6niN5IwKwhgooYWKn30cSBGL/FfKWgmubj+m6T8YZWqvddtw
+         PqtQ==
+X-Gm-Message-State: AOAM531VLxcQuqqGliJYLgwaxtTpJVuC37yFPPNPr4zWMIbSzup0n7ZD
+        is+M/SxtMgZfcD5M9GbLwERgEjW6oosk6H2Zx/GDuRXFajs=
+X-Google-Smtp-Source: ABdhPJzPQ782jxaaybf4v05kBQtFRTzv0MMrux20NcZ4Q10XmGrK6dnUIabFDBNBmBOv8fFyQY5zqzYAgf4Cnc3KaCc=
+X-Received: by 2002:a92:508:0:b0:2cb:ebd8:a76b with SMTP id
+ q8-20020a920508000000b002cbebd8a76bmr1009500ile.156.1650095366830; Sat, 16
+ Apr 2022 00:49:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1647447426-23425-8-git-send-email-quic_srivasam@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Received: by 2002:a05:6638:1309:0:0:0:0 with HTTP; Sat, 16 Apr 2022 00:49:26
+ -0700 (PDT)
+Reply-To: daniel.seyba@yahoo.com
+From:   Seyba Daniel <royhalton13@gmail.com>
+Date:   Sat, 16 Apr 2022 09:49:26 +0200
+Message-ID: <CALSxb2w9zQYotuLcRSCPns53ksvT9UrEMVx-1Cp1f8RE7er3cA@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:542 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [royhalton13[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [royhalton13[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 16, 2022 at 09:47:06PM +0530, Srinivasa Rao Mandadapu wrote:
-> Update bulk clock voting to optional voting as ADSP bypass platform doesn't
-> need macro and decodec clocks, as these macro and dcodec GDSC switches are
-> maintained as power domains and operated from lpass clock drivers.
-> 
-> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+Hello,
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
+
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
+
+So please confirm interest by responding back.
+
+My dearest regards
+
+Seyba Daniel
