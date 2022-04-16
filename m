@@ -2,125 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A567503533
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Apr 2022 10:31:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67B1B5035C2
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Apr 2022 11:31:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbiDPId3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Apr 2022 04:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60358 "EHLO
+        id S231286AbiDPJ2D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Apr 2022 05:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbiDPId1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Apr 2022 04:33:27 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A29205F0;
-        Sat, 16 Apr 2022 01:30:56 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id bg10so18905296ejb.4;
-        Sat, 16 Apr 2022 01:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uyzS6PDK1A1DTcnmpNFDcTGg7251/egHXs4G78IysFI=;
-        b=DuYu5wgWxXanf8IMOINzvcdmqoSIsbaeg5/ekDFEKTVlK0GaFd587qGEp65QjXxkBH
-         CDBZkLJaf2U//onB9px3Z+5qLoZGBQOB1bkzWymsrwuoGcbM2C3ffEhlQrTIeUa87hAH
-         rOZm0UNEJsTt68sFKkq8QZv7ms78Hy/55vyiWTCAhbbtrHpnQRkT5jrA+E7rWtBH1pOV
-         TnPXF4WWCAvXywjHVanYLoUBQpQ/1XiJMulPCdA7+8mOHKTNY4NBIB1tzLrXqnbiI8ds
-         OGuY/EoOvM4RQCpzNKEJ/RrWtwNGkACWpE6VliogRFZFYmOPXuhuGEGsjFHZMXXPCekB
-         0eVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uyzS6PDK1A1DTcnmpNFDcTGg7251/egHXs4G78IysFI=;
-        b=0vFiYcnDjORjmYUsIzcEdyDhZoC81T0Ca6zjBZPWImfbRzAxhiThA5PqeztWu0f0R+
-         iuSXT/nZp6l3sNlGSjrexAJnflvIGjnZz4fzxrar4jBgX7GXNZr3MRVDw7zXnkdvBlzk
-         PCd0COcaq1quyXBxxbpGhg6FMOJ0T9SUTvend+SuO2f3MrwJugvsVKJr8w2qy0CA/O60
-         4kgljVnWO9W+f4SpL0DQxMWtvwG+jCouo/SHrP9uzCus1sdexXEwS6hpSdAuPBhu7gn8
-         D1uqrFlRhd3YH3q9dW35Cj6kPafv1hYzwVGAx4pT9kpby/UxzlRho0SIIug0aXLS1/6Q
-         YgyA==
-X-Gm-Message-State: AOAM533Xz+fCZzapnu2n3osLQMtpWsDDvDYBUbNX5x+b3dke1tvG+T9x
-        ByyIMfjEtKUUnk+rCgUmYP4TDk5+8blumd5zzuk=
-X-Google-Smtp-Source: ABdhPJyn6ybNvImMPMiNVg6dFnvufBr6BxmVI/fk3DEgG6P8XrdURkDphPh+4ghQdJxzOzvOVSNHko/c/NRYVYbrJrI=
-X-Received: by 2002:a17:907:628e:b0:6d9:c6fa:6168 with SMTP id
- nd14-20020a170907628e00b006d9c6fa6168mr2036501ejc.132.1650097855153; Sat, 16
- Apr 2022 01:30:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220415165505.30383-1-schspa@gmail.com>
-In-Reply-To: <20220415165505.30383-1-schspa@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 16 Apr 2022 11:30:19 +0300
-Message-ID: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: use raw spinlock for gpio chip shadowed data
-To:     Schspa Shi <schspa@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, opendmb@gmail.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231326AbiDPJ17 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Apr 2022 05:27:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73EEE65
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Apr 2022 02:25:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1D1D5B80ED0
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Apr 2022 09:25:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC07DC385A3;
+        Sat, 16 Apr 2022 09:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650101123;
+        bh=mUKVFgQnfP2+dMgvolMPFvUFnfQUuNFchWXotQmYL8s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GlVUg3FMz3mxyF5rOAWwiF7P+gtOSZJrKk/eTrxshOxjgVr8tianv6tLpjgQUnSEM
+         PD/FFSdRyo+tGkYq04gEXmmmmjySd4p0tucszp9kZpLek3J7e4IduqRjbLLUnJ7No9
+         pRmCNBtYYh2gyQXsBaxk3OB3Pmswwz9vi73UH3aMM+TlXaxVdfzQd59jn86c4jD6IU
+         zuwiqIKXhLL8HtLg21alALX7pHzsJbQP5Bi8ObguXUZAJG7Q3lPsG9pLbQQtAAWRcF
+         vJX3s5pKTMbJzzgMtUrWsapGikFuru9OATDbdP0rFSw/3Hox+4PH1JpXk342k+esq8
+         qEfov3dmkTx1g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nfegD-004itj-BU; Sat, 16 Apr 2022 10:25:21 +0100
+Date:   Sat, 16 Apr 2022 10:25:20 +0100
+Message-ID: <87pmlhidmn.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Marek Vasut <marex@denx.de>
+Cc:     linux-gpio@vger.kernel.org,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC][PATCH] irqchip/stm32: Retrigger hierarchy for LEVEL triggered IRQs in tasklet
+In-Reply-To: <20220415215550.498381-1-marex@denx.de>
+References: <20220415215550.498381-1-marex@denx.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: marex@denx.de, linux-gpio@vger.kernel.org, alexandre.torgue@foss.st.com, fabien.dessenne@foss.st.com, linus.walleij@linaro.org, tglx@linutronix.de, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 16, 2022 at 3:45 AM Schspa Shi <schspa@gmail.com> wrote:
+On Fri, 15 Apr 2022 22:55:50 +0100,
+Marek Vasut <marex@denx.de> wrote:
+> 
+> The current EOI handler for LEVEL triggered interrupts calls clk_enable(),
+> register IO, clk_disable(). The clock manipulation requires locking which
+> happens with IRQs disabled in clk_enable_lock(). Move the LEVEL IRQ test
+> and retrigger into dedicated tasklet and schedule the tasklet every time
+> a LEVEL IRQ triggers. This makes EOI fast for majority of IRQs on this
+> platform again, since those are edge triggered IRQs, and LEVEL triggered
+> IRQs are the exception.
 >
-> In case of PREEMPT_RT, there is a raw_spinlock -> spinlock dependency
-> as the lockdep report shows.
->
-> __irq_set_handler
->   irq_get_desc_buslock
->     __irq_get_desc_lock
->       raw_spin_lock_irqsave(&desc->lock, *flags);  // raw spinlock get here
->   __irq_do_set_handler
->     mask_ack_irq
->       dwapb_irq_ack
->         spin_lock_irqsave(&gc->bgpio_lock, flags); // sleep able spinlock
->   irq_put_desc_busunlock
->
-> Replace with a raw lock to avoid BUGs. This lock is only used to access
-> registers, and It's safe to replace with the raw lock without bad
-> influence.
+> This also fixes the following splat found when using preempt-rt:
 
-> [   15.090359][    T1] =============================
-> [   15.090365][    T1] [ BUG: Invalid wait context ]
-> [   15.090373][    T1] 5.10.59-rt52-00983-g186a6841c682-dirty #3 Not tainted
-> [   15.090386][    T1] -----------------------------
+>  ------------[ cut here ]------------
+>  WARNING: CPU: 0 PID: 0 at kernel/locking/rtmutex.c:2040 __rt_mutex_trylock+0x37/0x62
+>  Modules linked in:
+>  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.10.109-rt65-stable-standard-00068-g6a5afc4b1217 #85
+>  Hardware name: STM32 (Device Tree Support)
+>  [<c010a45d>] (unwind_backtrace) from [<c010766f>] (show_stack+0xb/0xc)
+>  [<c010766f>] (show_stack) from [<c06353ab>] (dump_stack+0x6f/0x84)
+>  [<c06353ab>] (dump_stack) from [<c01145e3>] (__warn+0x7f/0xa4)
+>  [<c01145e3>] (__warn) from [<c063386f>] (warn_slowpath_fmt+0x3b/0x74)
+>  [<c063386f>] (warn_slowpath_fmt) from [<c063b43d>] (__rt_mutex_trylock+0x37/0x62)
+>  [<c063b43d>] (__rt_mutex_trylock) from [<c063c053>] (rt_spin_trylock+0x7/0x16)
+>  [<c063c053>] (rt_spin_trylock) from [<c036a2f3>] (clk_enable_lock+0xb/0x80)
+>  [<c036a2f3>] (clk_enable_lock) from [<c036ba69>] (clk_core_enable_lock+0x9/0x18)
+>  [<c036ba69>] (clk_core_enable_lock) from [<c034e9f3>] (stm32_gpio_get+0x11/0x24)
+>  [<c034e9f3>] (stm32_gpio_get) from [<c034ef43>] (stm32_gpio_irq_trigger+0x1f/0x48)
+>  [<c034ef43>] (stm32_gpio_irq_trigger) from [<c014aa53>] (handle_fasteoi_irq+0x71/0xa8)
+>  [<c014aa53>] (handle_fasteoi_irq) from [<c0147111>] (generic_handle_irq+0x19/0x22)
+>  [<c0147111>] (generic_handle_irq) from [<c014752d>] (__handle_domain_irq+0x55/0x64)
+>  [<c014752d>] (__handle_domain_irq) from [<c0346f13>] (gic_handle_irq+0x53/0x64)
+>  [<c0346f13>] (gic_handle_irq) from [<c0100ba5>] (__irq_svc+0x65/0xc0)
+>  Exception stack(0xc0e01f18 to 0xc0e01f60)
+>  1f00:                                                       0000300c 00000000
+>  1f20: 0000300c c010ff01 00000000 00000000 c0e00000 c0e07714 00000001 c0e01f78
+>  1f40: c0e07758 00000000 ef7cd0ff c0e01f68 c010554b c0105542 40000033 ffffffff
+>  [<c0100ba5>] (__irq_svc) from [<c0105542>] (arch_cpu_idle+0xc/0x1e)
+>  [<c0105542>] (arch_cpu_idle) from [<c063be95>] (default_idle_call+0x21/0x3c)
+>  [<c063be95>] (default_idle_call) from [<c01324f7>] (do_idle+0xe3/0x1e4)
+>  [<c01324f7>] (do_idle) from [<c01327b3>] (cpu_startup_entry+0x13/0x14)
+>  [<c01327b3>] (cpu_startup_entry) from [<c0a00c13>] (start_kernel+0x397/0x3d4)
+>  [<c0a00c13>] (start_kernel) from [<00000000>] (0x0)
+>  ---[ end trace 0000000000000002 ]---
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: Fabien Dessenne <fabien.dessenne@foss.st.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> To: linux-gpio@vger.kernel.org
+> ---
+>  drivers/pinctrl/stm32/pinctrl-stm32.c | 55 +++++++++++++++++++++------
+>  1 file changed, 44 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index 242d1c37c6e4b..f4287fc18cf9a 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/gpio/driver.h>
+>  #include <linux/hwspinlock.h>
+>  #include <linux/io.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+> @@ -95,6 +96,7 @@ struct stm32_gpio_bank {
+>  	u32 bank_ioport_nr;
+>  	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
+>  	u8 irq_type[STM32_GPIO_PINS_PER_BANK];
+> +	struct tasklet_struct tasklet;
+>  };
+>  
+>  struct stm32_pinctrl {
+> @@ -307,20 +309,43 @@ static const struct gpio_chip stm32_gpio_template = {
+>  	.set_config		= gpiochip_generic_config,
+>  };
+>  
+> +static void stm32_gpio_irq_tasklet(struct tasklet_struct *t)
+> +{
+> +	struct stm32_gpio_bank *bank = from_tasklet(bank, t, tasklet);
+> +	struct irq_desc *desc;
+> +	struct irq_data *data;
+> +	int irq, pin, level;
+> +
+> +	/* Retrigger all LEVEL triggered pins which are still asserted. */
+> +	for (pin = 0; pin < STM32_GPIO_PINS_PER_BANK; pin++) {
+> +		if (!(bank->irq_type[pin] & IRQ_TYPE_LEVEL_MASK))
+> +			continue;
+> +
+> +		level = stm32_gpio_get(&bank->gpio_chip, pin);
 
-Please, reduce this very noise traceback to the point, usually it
-takes ~3-5 lines only.
+So you are looking at all the LEVEL irqs in a given bank. Given that
+your initial patch was based on the idea that accessing the GPIO bank
+is wasteful, this looks like a step backward.
 
-...
+It probably is also racy if two level interrupts are EOId on the
+different CPUs, potentially resulting in the level being regenerated
+multiple times (nice amplification effect).
 
->  drivers/gpio/gpio-amdpt.c                 | 10 +++----
->  drivers/gpio/gpio-brcmstb.c               | 12 ++++----
->  drivers/gpio/gpio-cadence.c               | 12 ++++----
->  drivers/gpio/gpio-dwapb.c                 | 36 +++++++++++------------
->  drivers/gpio/gpio-grgpio.c                | 30 +++++++++----------
->  drivers/gpio/gpio-hlwd.c                  | 18 ++++++------
->  drivers/gpio/gpio-idt3243x.c              | 12 ++++----
->  drivers/gpio/gpio-ixp4xx.c                |  4 +--
->  drivers/gpio/gpio-loongson1.c             |  8 ++---
->  drivers/gpio/gpio-menz127.c               |  8 ++---
->  drivers/gpio/gpio-mlxbf2.c                | 18 ++++++------
->  drivers/gpio/gpio-mmio.c                  | 22 +++++++-------
->  drivers/gpio/gpio-sifive.c                | 12 ++++----
->  drivers/gpio/gpio-tb10x.c                 |  4 +--
->  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c |  8 ++---
->  include/linux/gpio/driver.h               |  2 +-
+> +		if ((level == 0 && bank->irq_type[pin] == IRQ_TYPE_LEVEL_LOW) ||
+> +		    (level == 1 && bank->irq_type[pin] == IRQ_TYPE_LEVEL_HIGH)) {
+> +			irq = irq_find_mapping(bank->domain, pin);
+> +
+> +			desc = irq_to_desc(irq);
+> +			if (!desc)
+> +				continue;
 
-Looking into the code I think we can't easily (without too much
-additional churn) to split this to the series of patches. But I leave
-this up to the maintainers to decide.
+Please turn the whole irq_find_mapping()+irq_to_desc() into something
+that doesn't completely suck. like __irq_resolve_mapping(). Otherwise,
+you get the privilege of parsing both the domain and the irqdesc tree
+instead of just the former.
+
+But dealing with a single interrupt at a time would be much better,
+and would avoid all this pointless work.
+
+> +
+> +			data = irq_desc_get_irq_data(desc);
+> +			if (!data)
+> +				continue;
+> +
+> +			irq_chip_retrigger_hierarchy(data);
+
+Err... No. You don't hold the lock for this interrupt, so you can't
+blindly call into the core code like this.
+
+A way to fix this is to implement the IRQ state callbacks in the
+low-level irqchip, and call into it using the top-level API which will
+take care of the locking.
+
+	M.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Without deviation from the norm, progress is not possible.
