@@ -2,144 +2,246 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D18165047BA
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Apr 2022 14:24:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18CD950485D
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Apr 2022 18:52:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234036AbiDQM1N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Apr 2022 08:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48160 "EHLO
+        id S234422AbiDQQzI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Apr 2022 12:55:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234026AbiDQM1M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Apr 2022 08:27:12 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A681713D07;
-        Sun, 17 Apr 2022 05:24:36 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id c64so14817726edf.11;
-        Sun, 17 Apr 2022 05:24:36 -0700 (PDT)
+        with ESMTP id S234416AbiDQQzH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Apr 2022 12:55:07 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE6C13F64;
+        Sun, 17 Apr 2022 09:52:30 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id y85so2785767iof.3;
+        Sun, 17 Apr 2022 09:52:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=0hD9MkT8n+yyS1RvNUh1Aeb6lxcf/70szx3L5/Yc7mw=;
-        b=NqSMs+meV0qbtuK2CN0JXky08NlnjDT77JKXPXMg7IdXWbDmBwmmjihFmP5g+cY4uz
-         f4alPXWkhAHlmHlX6pbDQZm7k5vgBjfnUm4pKPBG+067CnYDDfRFMPtQ5/l55HiEJldo
-         Gno6TNqQeG3uwSV7PeT41sgKAKCM38qc268Cu2tE+j7/RZjrWGhed+B9K/cl2cUBExpU
-         KNjLRLK2DwOsiiI+JkXBpJ3oCMsSON1h5MlrrsH2Kx36LHvcI9oYtnOasKvwQ0xuMuwA
-         aoHdU0RFXulv+fKdUeT5NVffa8KjcNLJB3N0GVS8tq5T1h/Trs6H97KYDPN6RJjrZq3/
-         CDzA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HDfxEj2AIXBVPrxK8VdAYTkqepHnxXEHBD5DZE+il6M=;
+        b=I3bQ32MfT4w2EcoC7Q8CaI9h+g8YTFICZeDfpIOfc1kDdKQoiCdXujVGNjoCQ5axx6
+         EihRbv5ZFrEIZnmP7RjX8GlyrL78ylp2HtZCfQrBXkSHDWPJmXQaV25wWMG0eT2QGT0S
+         ICMloa5LCOAFdRyq2I4uZu3yTDJzM/ogUUjrxXJumC9C3YUH1zHJ2Al6VzqHf24WpCxD
+         OjguheJVO9jLMQZiyqcjPw+zip2EiYZTLS/boHQFANK8p7r9m5T1ydeRfFvxZ7/IgXI8
+         6em6UBqhxGsZVZsgF0iS/TyTqbzARLgZVa5SAQaQrefTwynyZvvdGYamVaqfv3yGUDPy
+         n0IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=0hD9MkT8n+yyS1RvNUh1Aeb6lxcf/70szx3L5/Yc7mw=;
-        b=kmWK7tmLfPxbfvRjhps/he6NhGVkgGQjm8k83GBCkMfoakRkNgCzYRdAvdkznBpqtN
-         MeCfwutEaoEc/OK9GLLx1OnOZPeEvNA6rBgNYwuv13JVA15XzU1ayR5EXky9/HMsKg2q
-         qs/qRXgey4/7QD0kjqlLURUid3Wu2/9+RI8GmoLDkke/NdWfzfLVMOUFRyMIt5WZwNLo
-         59ub2+y5sEb1f1HFfu3Pq2s5K6V0fXbY+bG71AKkm6a0pKBXWL4BOOiOsSVZAdeuY1Ja
-         kKX6/rd3H8To5sFR76NJTp9xRKOlhUNZJfELyVtlYUWFkFbj7GZufboy4uLrlSUJIrNo
-         +x8w==
-X-Gm-Message-State: AOAM531eujaqx3R1DqQx7f5KWo+hJbRqbL/1YUcyXj1Ubs0vVR6Boi9E
-        +dlb5WUrmZZDsxVrt98WiG4=
-X-Google-Smtp-Source: ABdhPJxG9QJK7v74CMy/iZ8ck9cA+lnnKPWyCatSPNJZ16MBfMutne7viq5sY/Cmx6Pm2Ma2unf6cA==
-X-Received: by 2002:a05:6402:5212:b0:41d:7e13:b817 with SMTP id s18-20020a056402521200b0041d7e13b817mr7729270edd.224.1650198275163;
-        Sun, 17 Apr 2022 05:24:35 -0700 (PDT)
-Received: from [192.168.1.76] (130.43.111.128.dsl.dyn.forthnet.gr. [130.43.111.128])
-        by smtp.googlemail.com with ESMTPSA id n16-20020a05640204d000b0042062f9f0e1sm5550484edw.15.2022.04.17.05.24.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HDfxEj2AIXBVPrxK8VdAYTkqepHnxXEHBD5DZE+il6M=;
+        b=WelmYscncSjVXA957bVxnE4MXUG3Fwb4oH22woA0blBiaH60Df0ebz7FAO0eUmCa7k
+         331HFJxFfexb8GxdB2s53YnYjLC5tiRh5gOgCF35ppSn4Us+pq02dNsSNAOREKeqnxTm
+         Gf274nW/v4UkcwSuwnyI6pG45KlOMOISh4h7IoIJo4O21Jb1z6Xhjw+4oCrybbsSqzFy
+         p3Zgu9frozDslbwymy6aJ1cCSW0PEIvkZarFxjybu5L7KknUATP+MiMu73xhEnIvLcQ8
+         2/s4UGNItQIIJuaxuGh23wHpYPLjHwCm+u5iGRMN6vPJzjUA+VpnMPRt0Qn1hBmjnORf
+         ixNw==
+X-Gm-Message-State: AOAM532nzyfu9hqL1E4GaGxx47EIuTpP8IJlUH2ZvyYz/vNHx6WiaSrX
+        lqpfY1gz11+4Rm3BZeFd6Bw=
+X-Google-Smtp-Source: ABdhPJwdMCn7xa04OnLDn/ZbAT53D07vO5lfJ8aVlrta4VUcy8lYjEgoHESNn1gzyvz3q9nksfVEqQ==
+X-Received: by 2002:a05:6638:134e:b0:323:65d0:99fe with SMTP id u14-20020a056638134e00b0032365d099femr3427182jad.131.1650214349865;
+        Sun, 17 Apr 2022 09:52:29 -0700 (PDT)
+Received: from localhost (ec2-13-59-0-164.us-east-2.compute.amazonaws.com. [13.59.0.164])
+        by smtp.gmail.com with UTF8SMTPSA id y8-20020a920908000000b002cc18763721sm1869720ilg.74.2022.04.17.09.52.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Apr 2022 05:24:34 -0700 (PDT)
-Message-ID: <20966c6b-9045-9f8b-ba35-bf44091ce380@gmail.com>
-Date:   Sun, 17 Apr 2022 15:24:14 +0300
+        Sun, 17 Apr 2022 09:52:29 -0700 (PDT)
+From:   Schspa Shi <schspa@gmail.com>
+To:     andy.shevchenko@gmail.com
+Cc:     brgl@bgdev.pl, f.fainelli@gmail.com, fancer.lancer@gmail.com,
+        hoan@os.amperecomputing.com, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, opendmb@gmail.com, schspa@gmail.com
+Subject: [PATCH v2 01/15] gpio: use raw spinlock for gpio chip shadowed data
+Date:   Mon, 18 Apr 2022 00:51:54 +0800
+Message-Id: <20220417165208.39754-1-schspa@gmail.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+In-Reply-To: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
+References: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
-Content-Language: en-GB-large
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Shreeya Patel <shreeya.patel@collabora.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     Basavaraj.Natikar@amd.com, Richard.Gong@amd.com,
-        stable@vger.kernel.org
-References: <20220414025705.598-1-mario.limonciello@amd.com>
-From:   firew4lker <firew4lker@gmail.com>
-In-Reply-To: <20220414025705.598-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 4/14/22 05:57, Mario Limonciello wrote:
-> commit 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before
-> initialization") attempted to fix a race condition that lead to a NULL
-> pointer, but in the process caused a regression for _AEI/_EVT declared
-> GPIOs. This manifests in messages showing deferred probing while trying
-> to allocate IRQs like so:
->
-> [    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
-> [    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
-> [    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
-> [    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
-> [    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
-> [    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
-> [    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
-> [    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
-> [    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
-> [    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
->
-> The code for walking _AEI doesn't handle deferred probing and so this leads
-> to non-functional GPIO interrupts.
->
-> Fix this issue by moving the call to `acpi_gpiochip_request_interrupts` to
-> occur after gc->irc.initialized is set.
->
-> Cc: Shreeya Patel <shreeya.patel@collabora.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before initialization")
-> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
-> Link: https://lore.kernel.org/linux-gpio/BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#u
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   drivers/gpio/gpiolib.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 085348e08986..b7694171655c 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1601,8 +1601,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->   
->   	gpiochip_set_irq_hooks(gc);
->   
-> -	acpi_gpiochip_request_interrupts(gc);
-> -
->   	/*
->   	 * Using barrier() here to prevent compiler from reordering
->   	 * gc->irq.initialized before initialization of above
-> @@ -1612,6 +1610,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->   
->   	gc->irq.initialized = true;
->   
-> +	acpi_gpiochip_request_interrupts(gc);
-> +
->   	return 0;
->   }
->   
+In case of PREEMPT_RT, there is a raw_spinlock -> spinlock dependency
+as the lockdep report shows.
 
-Tested-By:firew4lker@gmail.com
+__irq_set_handler
+  irq_get_desc_buslock
+    __irq_get_desc_lock
+      raw_spin_lock_irqsave(&desc->lock, *flags);  // raw spinlock get here
+  __irq_do_set_handler
+    mask_ack_irq
+      dwapb_irq_ack
+        spin_lock_irqsave(&gc->bgpio_lock, flags); // sleep able spinlock
+  irq_put_desc_busunlock
 
-This patch addresses the issue. Tested on a Lenovo T14 with AMD Ryzen 5 
-PRO 4650U with Radeon Graphics Graphics.
+Replace with a raw lock to avoid BUGs. This lock is only used to access
+registers, and It's safe to replace with the raw lock without bad
+influence.
 
-Without this patch the laptop is impossible to wake from S3 and S0ix.
+[   15.090359][    T1] =============================
+[   15.090365][    T1] [ BUG: Invalid wait context ]
+[   15.090373][    T1] 5.10.59-rt52-00983-g186a6841c682-dirty #3 Not tainted
+[   15.090386][    T1] -----------------------------
+[   15.090392][    T1] swapper/0/1 is trying to lock:
+[   15.090402][    T1] 70ff00018507c188 (&gc->bgpio_lock){....}-{3:3}, at: _raw_spin_lock_irqsave+0x1c/0x28
+[   15.090470][    T1] other info that might help us debug this:
+[   15.090477][    T1] context-{5:5}
+[   15.090485][    T1] 3 locks held by swapper/0/1:
+[   15.090497][    T1]  #0: c2ff0001816de1a0 (&dev->mutex){....}-{4:4}, at: __device_driver_lock+0x98/0x104
+[   15.090553][    T1]  #1: ffff90001485b4b8 (irq_domain_mutex){+.+.}-{4:4}, at: irq_domain_associate+0xbc/0x6d4
+[   15.090606][    T1]  #2: 4bff000185d7a8e0 (lock_class){....}-{2:2}, at: _raw_spin_lock_irqsave+0x1c/0x28
+[   15.090654][    T1] stack backtrace:
+[   15.090661][    T1] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.10.59-rt52-00983-g186a6841c682-dirty #3
+[   15.090682][    T1] Hardware name: Horizon Robotics Journey 5 DVB (DT)
+[   15.090692][    T1] Call trace:
+......
+[   15.090811][    T1]  _raw_spin_lock_irqsave+0x1c/0x28
+[   15.090828][    T1]  dwapb_irq_ack+0xb4/0x300
+[   15.090846][    T1]  __irq_do_set_handler+0x494/0xb2c
+[   15.090864][    T1]  __irq_set_handler+0x74/0x114
+[   15.090881][    T1]  irq_set_chip_and_handler_name+0x44/0x58
+[   15.090900][    T1]  gpiochip_irq_map+0x210/0x644
+......
+
+Changelog:
+v1 -> v2:
+        - Reduce the useless stacktrace.
+        - Split to series of patches
+
+Link: https://lore.kernel.org/all/20220415165505.30383-1-schspa@gmail.com/
+
+Signed-off-by: Schspa Shi <schspa@gmail.com>
+---
+ drivers/gpio/gpio-mmio.c    | 22 +++++++++++-----------
+ include/linux/gpio/driver.h |  2 +-
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index c335a0309ba3..d9dff3dc92ae 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -220,7 +220,7 @@ static void bgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ 	unsigned long mask = bgpio_line2mask(gc, gpio);
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&gc->bgpio_lock, flags);
++	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+ 
+ 	if (val)
+ 		gc->bgpio_data |= mask;
+@@ -229,7 +229,7 @@ static void bgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ 
+ 	gc->write_reg(gc->reg_dat, gc->bgpio_data);
+ 
+-	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
++	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ }
+ 
+ static void bgpio_set_with_clear(struct gpio_chip *gc, unsigned int gpio,
+@@ -248,7 +248,7 @@ static void bgpio_set_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ 	unsigned long mask = bgpio_line2mask(gc, gpio);
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&gc->bgpio_lock, flags);
++	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+ 
+ 	if (val)
+ 		gc->bgpio_data |= mask;
+@@ -257,7 +257,7 @@ static void bgpio_set_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ 
+ 	gc->write_reg(gc->reg_set, gc->bgpio_data);
+ 
+-	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
++	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ }
+ 
+ static void bgpio_multiple_get_masks(struct gpio_chip *gc,
+@@ -286,7 +286,7 @@ static void bgpio_set_multiple_single_reg(struct gpio_chip *gc,
+ 	unsigned long flags;
+ 	unsigned long set_mask, clear_mask;
+ 
+-	spin_lock_irqsave(&gc->bgpio_lock, flags);
++	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+ 
+ 	bgpio_multiple_get_masks(gc, mask, bits, &set_mask, &clear_mask);
+ 
+@@ -295,7 +295,7 @@ static void bgpio_set_multiple_single_reg(struct gpio_chip *gc,
+ 
+ 	gc->write_reg(reg, gc->bgpio_data);
+ 
+-	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
++	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ }
+ 
+ static void bgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+@@ -347,7 +347,7 @@ static int bgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+ {
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&gc->bgpio_lock, flags);
++	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+ 
+ 	gc->bgpio_dir &= ~bgpio_line2mask(gc, gpio);
+ 
+@@ -356,7 +356,7 @@ static int bgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+ 	if (gc->reg_dir_out)
+ 		gc->write_reg(gc->reg_dir_out, gc->bgpio_dir);
+ 
+-	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
++	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ 
+ 	return 0;
+ }
+@@ -387,7 +387,7 @@ static void bgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+ {
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&gc->bgpio_lock, flags);
++	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+ 
+ 	gc->bgpio_dir |= bgpio_line2mask(gc, gpio);
+ 
+@@ -396,7 +396,7 @@ static void bgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+ 	if (gc->reg_dir_out)
+ 		gc->write_reg(gc->reg_dir_out, gc->bgpio_dir);
+ 
+-	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
++	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ }
+ 
+ static int bgpio_dir_out_dir_first(struct gpio_chip *gc, unsigned int gpio,
+@@ -610,7 +610,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+ 	if (gc->bgpio_bits > BITS_PER_LONG)
+ 		return -EINVAL;
+ 
+-	spin_lock_init(&gc->bgpio_lock);
++	raw_spin_lock_init(&gc->bgpio_lock);
+ 	gc->parent = dev;
+ 	gc->label = dev_name(dev);
+ 	gc->base = -1;
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 874aabd270c9..ff8247a19f57 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -445,7 +445,7 @@ struct gpio_chip {
+ 	void __iomem *reg_dir_in;
+ 	bool bgpio_dir_unreadable;
+ 	int bgpio_bits;
+-	spinlock_t bgpio_lock;
++	raw_spinlock_t bgpio_lock;
+ 	unsigned long bgpio_data;
+ 	unsigned long bgpio_dir;
+ #endif /* CONFIG_GPIO_GENERIC */
+-- 
+2.24.3 (Apple Git-128)
 
