@@ -2,76 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47BD85045CE
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Apr 2022 02:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BE115045EC
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Apr 2022 03:30:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233207AbiDQAOq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Apr 2022 20:14:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
+        id S233180AbiDQBcg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Apr 2022 21:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233202AbiDQAOj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Apr 2022 20:14:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EBE56204;
-        Sat, 16 Apr 2022 17:12:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AA085B80A25;
-        Sun, 17 Apr 2022 00:12:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 557E1C385A1;
-        Sun, 17 Apr 2022 00:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650154323;
-        bh=+zOc6jWx4vu0Oby0f8z+pmqLblYr279ZaK63fLF/0BY=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=kLRY/YuozE4LREyYCupYfpevhDZX68Aeg9bQl3Z875FWSoEndDs296Lu1rDYLs+4I
-         flUeeav3Eho4PeGFxMOsKcpL+XVLW0gYzGw9eMS8DIg1UitT2T+Ow06Uu4Axv4gXQm
-         smet2LK+fKvSCXwe0eGlgdMwpI25ETiap6F6Zn6xiG/oDLcDRN1GOyPxapFlatJpXG
-         x6tnrCmB2xaGYAggl97KVkhcd1FmacLusPoAeLSOf7E4KsGElKeuS68aQNwQuTJTBt
-         jxFx90yzOJ5CeV/lh2zqm+OkOuDdYSBjZgjkgZe2BzRT2ObyQ0sf/dPJXGJmu90TdK
-         oBVhD4V+femVQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 40BC2E7399D;
-        Sun, 17 Apr 2022 00:12:03 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v5.18-rc3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220416201727.3017-1-brgl@bgdev.pl>
-References: <20220416201727.3017-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220416201727.3017-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.18-rc3
-X-PR-Tracked-Commit-Id: 0ebb4fbe31343a42370a2897ea9424fe78f3a88f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: de6e93366828925b58e4a102b6590a8f4798b7e2
-Message-Id: <165015432326.20129.3721465694539628414.pr-tracker-bot@kernel.org>
-Date:   Sun, 17 Apr 2022 00:12:03 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S233168AbiDQBcc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Apr 2022 21:32:32 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4EA13F6C
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Apr 2022 18:29:58 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id o18so8143764qtk.7
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Apr 2022 18:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=bZjpwB+wNCLwsZCSnLxqmC4sXR2mJpModolDDWKFE0Y=;
+        b=Icuk2Vd6k53Z24VEYSyEpoaAiwagDY+AVVu+JSk/zoXV95kkmaqyvV887SeWYEGbMM
+         4Zo26HVXRXPjvrBfOQhI745rcWX2ebR1vv1ifaNY4fjJ4NCh9HoXRBKIG4BhwqXM+vKU
+         gLKDwAZofe5OX4I8uM67/ybu9FR3eJyLDNYkcvOnUaic/vCxJgpN1khzcZLiT5pl//A/
+         nUMdoNF94m3Bl/U2B/z79WEJZmpVvY7bC8tJG2t+WTajynlUtHmOmY5gPK9WTCH9+Nzt
+         Hox+/T61Bn5iQVXqBvzodMuxS1LqeGsMmTgMhnIm0Et+Se44VRw7oRut6Oe1dKlmy1Lm
+         sX+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=bZjpwB+wNCLwsZCSnLxqmC4sXR2mJpModolDDWKFE0Y=;
+        b=Bcjs62U4FkqKBWbZLf0dgfk0zUpJ4zgPnjvJxCxChikmMAJg9p1R0q3akBJU3K4tk3
+         +DQz4Cjv/ti5N+agButI5E8LKtU584x/bxQ0Pv8BBo6lWgusJOWpeqZlCoaUZneqP0PG
+         eLglBsJRPtccClBu9enL4RBMIZpxdbJO3JRyN3G8rFmJaMONgZxylzLJs0g6nNF3Tg6g
+         lmsLYRg+8hlM1pb2OkT74YaJLTFwWtBW+nw32/BIgBM4F7lWUM3hPCgxzA/4j6NU0gD+
+         Rai6x9fjR7eW1BNRdWsd3Mzq7YXEZDHg7qRevAIwRMeObB5PRI18re+yBJKoJBoYAzQ6
+         w+lw==
+X-Gm-Message-State: AOAM531k2b/tg/0mfptnQhiR423Ei6FPyEFF8/Dy++vs0+dLoKkxlcJp
+        DOriIrJWXGC5UWPx5gDRhc+FgYNSvcAR3P9xchA=
+X-Google-Smtp-Source: ABdhPJyfp6p4kPtqTYhuIjfdYY0ldHRt9/gHuq0LEDAreJsCUN9NVxgVrxUtXplZe3HUtZNCI/yyKEs/LDuURP/B5LI=
+X-Received: by 2002:a05:622a:4083:b0:2ec:e9e3:1656 with SMTP id
+ cg3-20020a05622a408300b002ece9e31656mr3477260qtb.529.1650158997347; Sat, 16
+ Apr 2022 18:29:57 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:ad4:484e:0:0:0:0:0 with HTTP; Sat, 16 Apr 2022 18:29:56
+ -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Mr. Jibri loubda" <gjibriloubda@gmail.com>
+Date:   Sat, 16 Apr 2022 18:29:56 -0700
+Message-ID: <CAO=FyH+Yx=awFZKs60ssVaDWMhEibqKLqtcLEZp-S1hZHvVwnw@mail.gmail.com>
+Subject: Good Day,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=6.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,HK_NAME_FM_MR_MRS,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:829 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4896]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [gjibriloubda[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  1.1 HK_NAME_FM_MR_MRS No description available.
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sat, 16 Apr 2022 22:17:27 +0200:
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.18-rc3
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/de6e93366828925b58e4a102b6590a8f4798b7e2
-
-Thank you!
-
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Greetings,
+I'm Mr. Jibri loubda, how are you doing hope you are in good health,
+the Board irector
+try to reach you on phone several times Meanwhile, your number was not
+connecting. before he ask me to send you an email to hear from you if
+you are fine. hope to hear you are in good Health.
+
+Thanks,
+Mr. Jibri loubda.
+
+Sincerely,
+Dr. Irene Lam.
