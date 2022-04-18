@@ -2,74 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58B43504EC3
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 12:21:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DC26504ED4
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 12:24:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237703AbiDRKX6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 06:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
+        id S237668AbiDRKZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 06:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237668AbiDRKXs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 06:23:48 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94007193E8;
-        Mon, 18 Apr 2022 03:21:08 -0700 (PDT)
+        with ESMTP id S234883AbiDRKZ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 06:25:26 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2F119C16;
+        Mon, 18 Apr 2022 03:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1650277268; x=1681813268;
+  t=1650277367; x=1681813367;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=IGoDwWhZ77ne+XcfC7kMLJQlZvJ7dGIgt25OU7boqsM=;
-  b=JB+wHU6AheF+41Gh49wBEgghz77tiSiR65HZlh4Tk2rhuE2Wq6smYbpV
-   +ztkd7oT9m8jtAmqM7c0fhzSobP8g8l4SJa8NoBD2bx9EpVuszBZvU/Rd
-   rMXq3BD6bXGx3fUzMHMwb8PTbjiSz2StILEMO3mrab3LOnQzorYd7usNB
-   A=;
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 18 Apr 2022 03:21:08 -0700
+  bh=rB+m8JZE7AYNY8EyI4x/rhw3euV04Ab2K5l6+kXn58I=;
+  b=f62h/yEEz040kksji0abrTocTLjDXGbLwXQY96tdf/TCVroTYQ5Z/CuK
+   4hCVVMerp3vam7mxpWsx87qPrxul9XPeC49hNsnV+FgiS/y6SZlFcRNuM
+   bTCrfWjtM30U1TCqkdJxwsLK12+uFvSE6k3i4YN7+dM70YbHsguID8epE
+   E=;
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 18 Apr 2022 03:22:47 -0700
 X-QCInternal: smtphost
 Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2022 03:21:07 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2022 03:22:46 -0700
 Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
  nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Mon, 18 Apr 2022 03:21:06 -0700
+ 15.2.986.22; Mon, 18 Apr 2022 03:22:45 -0700
 Received: from [10.216.27.177] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 18 Apr
- 2022 03:21:00 -0700
-Message-ID: <c78a219a-c730-25f6-a91a-205f946ddd17@quicinc.com>
-Date:   Mon, 18 Apr 2022 15:50:57 +0530
+ 2022 03:22:39 -0700
+Message-ID: <24d7180f-dd97-3329-93ad-700bf2dcf0fc@quicinc.com>
+Date:   Mon, 18 Apr 2022 15:52:36 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH v12 5/7] pinctrl: qcom: Extract chip specific LPASS LPI
- code
+Subject: Re: [PATCH v12 6/7] pinctrl: qcom: Add SC7280 lpass pin configuration
 Content-Language: en-US
 To:     Matthias Kaehlcke <mka@chromium.org>
 CC:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
         <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
         <quic_plai@quicinc.com>, <bgoswami@codeaurora.org>,
         <perex@perex.cz>, <tiwai@suse.com>,
-        <srinivas.kandagatla@linaro.org>, <rohitkr@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <swboyd@chromium.org>,
+        <judyhsiao@chromium.org>, Linus Walleij <linus.walleij@linaro.org>,
         <linux-gpio@vger.kernel.org>,
-        "Venkata Prasad Potturu" <quic_potturu@quicinc.com>
+        Venkata Prasad Potturu <quic_potturu@quicinc.com>,
+        <quic_rohkumar@quicinc.com>
 References: <1647447426-23425-1-git-send-email-quic_srivasam@quicinc.com>
- <1647447426-23425-6-git-send-email-quic_srivasam@quicinc.com>
- <YlnmJz/wjxfkZFua@google.com>
+ <1647447426-23425-7-git-send-email-quic_srivasam@quicinc.com>
+ <YloAMeEdb2kGvDSY@google.com>
 From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
 Organization: Qualcomm
-In-Reply-To: <YlnmJz/wjxfkZFua@google.com>
+In-Reply-To: <YloAMeEdb2kGvDSY@google.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,32 +78,28 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On 4/16/2022 3:09 AM, Matthias Kaehlcke wrote:
-Thanks for your Time Matthias!!!
-> On Wed, Mar 16, 2022 at 09:47:04PM +0530, Srinivasa Rao Mandadapu wrote:
->> Extract the chip specific SM8250 data from the LPASS LPI pinctrl driver
->> to allow reusing the common code in the addition of subsequent
->> platforms.
+On 4/16/2022 5:00 AM, Matthias Kaehlcke wrote:
+Thanks for your time Matthias!!!
+> On Wed, Mar 16, 2022 at 09:47:05PM +0530, Srinivasa Rao Mandadapu wrote:
+>> Add pin control support for SC7280 LPASS LPI.
 >>
 >> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
 >> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
 >> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
 >> ...
 >>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
 >> new file mode 100644
->> index 0000000..8c95d0f
+>> index 0000000..d67ff25
 >> --- /dev/null
->> +++ b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
-> ...
+>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>>
+>> ...
+>> +/* sc7280 variant specific data */
+> nit: the comment is a bit redundant in a sc7280 specific driver
+Okay. will remove it.
 >
->> +
->> +/* sm8250 variant specific data */
-> nit: the comment seems a bit redundant since this is now the sm8250
-> pinctrl driver.
-Okay. Will remove it.
->
->> +static const struct pinctrl_pin_desc sm8250_lpi_pins[] = {
+>> +static const struct pinctrl_pin_desc sc7280_lpi_pins[] = {
 >> +	PINCTRL_PIN(0, "gpio0"),
 >> +	PINCTRL_PIN(1, "gpio1"),
 >> +	PINCTRL_PIN(2, "gpio2"),
@@ -119,9 +114,7 @@ Okay. Will remove it.
 >> +	PINCTRL_PIN(11, "gpio11"),
 >> +	PINCTRL_PIN(12, "gpio12"),
 >> +	PINCTRL_PIN(13, "gpio13"),
+>> +	PINCTRL_PIN(14, "gpio14"),
 >> +};
->>
->> ...
-> The nit is just a nit and otherwise this looks good to me, so:
->
+>> +
 > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
