@@ -2,94 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B97A7504F7C
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 13:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89D91504FAF
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 14:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235849AbiDRLp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 07:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
+        id S237972AbiDRMG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 08:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbiDRLpz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 07:45:55 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08D512AF6;
-        Mon, 18 Apr 2022 04:43:14 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id z99so17171399ede.5;
-        Mon, 18 Apr 2022 04:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IUai0Spi7zlbWJJauW/yyVhMilMhUGODlc/UhrPP73s=;
-        b=MLUEUAtt3AfKYiQOFi6osshzmcX/h9UaxBkiqDbRIZ2E9diYz7HqYszGdcBGDLDjr5
-         CkCzqpCmvXkDzMzQO2qdfKKJBQJIr1zYL1LI/OSkk+RarOHskqvlWDfDo4pvxjUUyV5l
-         1t9KFR2zXhTSmglAakGCE+SR5iXdwRdaX07dQwVicw5Gz7rSi+pDJzDoxoWR/jAz0QTs
-         rtrTSQL/uibOT8MB0pt2aoJPkjYMmvY7Iv1J/IRhVTwN/n/q6wDwb3JYjH+0aRWnYhmZ
-         OEFrxmBzGV9DP48VFjTuGDa15kMW++4sVmojyPPLvRh2T4UZK/bsyadojSRT79kRcr7I
-         bkJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IUai0Spi7zlbWJJauW/yyVhMilMhUGODlc/UhrPP73s=;
-        b=cYuOSnTjVOk76JB0rdE2xqcwQVVDZxG2XaOLuPTy2P5US6XnS2yBPJhn3gOk/m+2wz
-         zOs1QuUPp1MJB39cfRZgtClV6C52zvcO/gyJae7/QTzFHRbUWiCHwaaHv4ruWzIUwC9p
-         O8X+S4hBDNvYR46wNqwbIt2XJFqILnEYyeI+g9qeBi4p82fkVTTVWmH4HDb+JnWQUHBH
-         0yePwt7pJG2eRlCFdscUJgQf2nzlZBzeIaXPvRyHWx0ojulNYtz7+e7CVbYz9EkGr/SX
-         JF+EtlzsbvZpyioRIVjSS7MQYuasbAYZ2B2U1LB/SaMX6wn37wJvki4EJ6fhd47ebraI
-         gxNA==
-X-Gm-Message-State: AOAM533cAsFvFa5nKFQbOiD4dXFxO6zB0ZQEbJi1Kg5yT6quaMRjhDEK
-        hfPXoHeTBPhGCNghHFEP2zQuZTCP8ZGFtZg8ank=
-X-Google-Smtp-Source: ABdhPJx3GZXSvcnDNz3un3VYBHitDF2IaMsMedvCofVFjPjXQ7ShUZ/rNCAfd47CLlg+dpp6abttta0gJTrBSZqEsr8=
-X-Received: by 2002:a50:cc9e:0:b0:41d:7123:d3ba with SMTP id
- q30-20020a50cc9e000000b0041d7123d3bamr11800621edi.296.1650282193247; Mon, 18
- Apr 2022 04:43:13 -0700 (PDT)
+        with ESMTP id S237968AbiDRMG5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 08:06:57 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5011B15FDA;
+        Mon, 18 Apr 2022 05:04:18 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 34DB422175;
+        Mon, 18 Apr 2022 14:04:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1650283456;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OOruPXULnAoAti7zK9CIqg2Yvot+7zRgvmQ60wa4z+o=;
+        b=M8C4AIhWHlFgBT/ZWxIY6IFRlmKw7xBLhdPb0w5dc/BusXwRU1ZVXxb4Gj+J9buPd/VjEg
+        DbSwmcgcwAGOmjlASvzxAgodj/RSp7+Re4q4xX5bDsGWAwrc1rbW3Ivf1CBiIuvitgjM95
+        aZfqXyrmJ0sXVfw0TuuzGdlwXhjyJhQ=
 MIME-Version: 1.0
-References: <20220414025705.598-1-mario.limonciello@amd.com>
- <20966c6b-9045-9f8b-ba35-bf44091ce380@gmail.com> <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
-In-Reply-To: <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 Apr 2022 14:42:37 +0300
-Message-ID: <CAHp75VceVwAq68s_hnpXt8VvLBHVUMxFTJR+_Tnph_mvpxGVPw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     firew4lker <firew4lker@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Shreeya Patel <shreeya.patel@collabora.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Richard.Gong@amd.com, Stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 18 Apr 2022 14:04:16 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] dt-bindings: pinctrl: convert ocelot-pinctrl to
+ YAML format
+In-Reply-To: <de9b0114-23b5-04b4-86b3-0d393441a267@kernel.org>
+References: <20220319204628.1759635-1-michael@walle.cc>
+ <20220319204628.1759635-7-michael@walle.cc>
+ <CACRpkdbrw7Hjt9mB9pr_iNsGi71g_d8BGhpT_ih1RVgKJ5U0qQ@mail.gmail.com>
+ <e02e22920ffe23b49237c0c1379e888b@walle.cc>
+ <de9b0114-23b5-04b4-86b3-0d393441a267@kernel.org>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <735863d6476605e4ff72032d8971ac0d@walle.cc>
+X-Sender: michael@walle.cc
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 7:34 AM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
-> On 4/17/22 07:24, firew4lker wrote:
+Am 2022-04-18 13:13, schrieb Krzysztof Kozlowski:
+> On 18/04/2022 10:19, Michael Walle wrote:
+>> [resend, use Krysztof's new email address]
+>> 
+>> Am 2022-04-18 01:41, schrieb Linus Walleij:
+>>> On Sat, Mar 19, 2022 at 9:47 PM Michael Walle <michael@walle.cc> 
+>>> wrote:
+>>> 
+>>>> Convert the ocelot-pinctrl device tree binding to the new YAML 
+>>>> format.
+>>>> 
+>>>> Additionally to the original binding documentation, add interrupt
+>>>> properties which are optional and already used on several SoCs like
+>>>> SparX-5, Luton, Ocelot and LAN966x but were not documented before.
+>>>> 
+>>>> Also, on the sparx5 and the lan966x SoCs there are two items for the
+>>>> reg property.
+>>>> 
+>>>> Signed-off-by: Michael Walle <michael@walle.cc>
+>>> 
+>>> So is this single patch something I should apply to the pin control
+>>> tree?
+>> 
+>> The first five patches will fix the validation errrors once the
+>> binding is converted to the YAML format. So, do they need to go
+>> through the same tree?
+>> 
+>> Also as mentioned, there is this pending series [1] which is the
+>> reason I've converted the binding to YAML in the first place. So
+>> at least the first patch of this series will have to go through
+>> the same tree as the YAML conversion patch.
+>> 
+>> How can we move forward here? Krzysztof, maybe all of the dt
+>> bindings patches can go through your tree and I'll reposting
+>> the second patch of [1] afterwards?
+> 
+> I think you got all necessary acks for this pinctrl bindings change and
+> the dependency ("add reset property"), so both can go via Linus' tree.
+> That's preferred.
+> 
+> DTS patches goes through your SoC maintainer tree.
 
-...
+Ah, ok, I wasn't aware of that. Then yes, please go ahead and
+pick this and the first patch of [1] up, Linus.
 
-> Linus Walleij,
->
-> As this is backported to 5.15.y, 5.16.y, 5.17.y and those all had point
-> releases a bunch of people are hitting it now.  If you choose to adopt
-> this patch instead of revert the broken one, you can add to the commit
-> message too:
->
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1976
+Of course if you like you can pick the second patch of [1],
+too. But I can also repost it without the RFC tag if that is
+preferred.
 
-I prefer to explicitly tell that this is a link to a bug report, hence BugLink:.
-But this is just my 2 cents.
+-michael
 
--- 
-With Best Regards,
-Andy Shevchenko
+[1] 
+https://lore.kernel.org/linux-gpio/20220313154640.63813-1-michael@walle.cc/
