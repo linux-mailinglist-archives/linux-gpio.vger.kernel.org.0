@@ -2,126 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89D91504FAF
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 14:04:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05FC1505352
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 14:54:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237972AbiDRMG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 08:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34590 "EHLO
+        id S240388AbiDRM4e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 08:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237968AbiDRMG5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 08:06:57 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5011B15FDA;
-        Mon, 18 Apr 2022 05:04:18 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 34DB422175;
-        Mon, 18 Apr 2022 14:04:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1650283456;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OOruPXULnAoAti7zK9CIqg2Yvot+7zRgvmQ60wa4z+o=;
-        b=M8C4AIhWHlFgBT/ZWxIY6IFRlmKw7xBLhdPb0w5dc/BusXwRU1ZVXxb4Gj+J9buPd/VjEg
-        DbSwmcgcwAGOmjlASvzxAgodj/RSp7+Re4q4xX5bDsGWAwrc1rbW3Ivf1CBiIuvitgjM95
-        aZfqXyrmJ0sXVfw0TuuzGdlwXhjyJhQ=
+        with ESMTP id S240390AbiDRMzk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 08:55:40 -0400
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41E263B0;
+        Mon, 18 Apr 2022 05:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1650285456; x=1681821456;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=1x4VyMPXIHgTtdoHhJRhQIKdvxvswuRWwu2tUv+TvXk=;
+  b=LlHlBdfYmdcViajTDoLFfJvy0Ty7AuzAMndCIn3U+J/Llq5j0lKSZlya
+   jLEzcc9VGEFHlJFXdo7BC0MFau8w9ZB2vkvaALYKFzzHGf0toLd225Vf8
+   fahSg5f2NfGI4A7NzA3/n8VWuYs1qsJHN1Oni27JsR8sbvK7y7yu792PO
+   M=;
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 18 Apr 2022 05:37:35 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2022 05:37:34 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Mon, 18 Apr 2022 05:37:34 -0700
+Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Mon, 18 Apr 2022 05:37:27 -0700
+From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <quic_plai@quicinc.com>, <bgoswami@quicinc.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <srinivas.kandagatla@linaro.org>,
+        <quic_rohkumar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <swboyd@chromium.org>,
+        <judyhsiao@chromium.org>, Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Subject: [PATCH v13 0/7] Add pin control support for lpass sc7280
+Date:   Mon, 18 Apr 2022 18:07:00 +0530
+Message-ID: <1650285427-19752-1-git-send-email-quic_srivasam@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 18 Apr 2022 14:04:16 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Quentin Schulz <quentin.schulz@bootlin.com>,
-        Antoine Tenart <atenart@kernel.org>,
-        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] dt-bindings: pinctrl: convert ocelot-pinctrl to
- YAML format
-In-Reply-To: <de9b0114-23b5-04b4-86b3-0d393441a267@kernel.org>
-References: <20220319204628.1759635-1-michael@walle.cc>
- <20220319204628.1759635-7-michael@walle.cc>
- <CACRpkdbrw7Hjt9mB9pr_iNsGi71g_d8BGhpT_ih1RVgKJ5U0qQ@mail.gmail.com>
- <e02e22920ffe23b49237c0c1379e888b@walle.cc>
- <de9b0114-23b5-04b4-86b3-0d393441a267@kernel.org>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <735863d6476605e4ff72032d8971ac0d@walle.cc>
-X-Sender: michael@walle.cc
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2022-04-18 13:13, schrieb Krzysztof Kozlowski:
-> On 18/04/2022 10:19, Michael Walle wrote:
->> [resend, use Krysztof's new email address]
->> 
->> Am 2022-04-18 01:41, schrieb Linus Walleij:
->>> On Sat, Mar 19, 2022 at 9:47 PM Michael Walle <michael@walle.cc> 
->>> wrote:
->>> 
->>>> Convert the ocelot-pinctrl device tree binding to the new YAML 
->>>> format.
->>>> 
->>>> Additionally to the original binding documentation, add interrupt
->>>> properties which are optional and already used on several SoCs like
->>>> SparX-5, Luton, Ocelot and LAN966x but were not documented before.
->>>> 
->>>> Also, on the sparx5 and the lan966x SoCs there are two items for the
->>>> reg property.
->>>> 
->>>> Signed-off-by: Michael Walle <michael@walle.cc>
->>> 
->>> So is this single patch something I should apply to the pin control
->>> tree?
->> 
->> The first five patches will fix the validation errrors once the
->> binding is converted to the YAML format. So, do they need to go
->> through the same tree?
->> 
->> Also as mentioned, there is this pending series [1] which is the
->> reason I've converted the binding to YAML in the first place. So
->> at least the first patch of this series will have to go through
->> the same tree as the YAML conversion patch.
->> 
->> How can we move forward here? Krzysztof, maybe all of the dt
->> bindings patches can go through your tree and I'll reposting
->> the second patch of [1] afterwards?
-> 
-> I think you got all necessary acks for this pinctrl bindings change and
-> the dependency ("add reset property"), so both can go via Linus' tree.
-> That's preferred.
-> 
-> DTS patches goes through your SoC maintainer tree.
+This patch series is to split lpass variant common pin control
+functions and SoC specific functions and to add lpass sc7280 pincontrol support.
+It also Adds dt-bindings for lpass sc7280 lpass lpi pincontrol.
 
-Ah, ok, I wasn't aware of that. Then yes, please go ahead and
-pick this and the first patch of [1] up, Linus.
+Changes Since V12:
+    -- Remove redundant comments in sc7280 and sm8250 lpass lpi drivers.
+    -- Rebased on top of latest kernel tip.
+Changes Since V11:
+    -- Add pinctrl_generic_remove_group in lpass lpi driver.
+    -- Make proper error handling in lpass lpi driver.
+Changes Since V10:
+    -- Modify driver's custom functions with pin control framework generic functions.
+    -- Update sm8250 and sc7280 pin control depedency list in Kconfig.
+    -- Update commit description of few patches.
+Changes Since V9:
+    -- Add pinctrl groups macro to Kconfig.
+Changes Since V8:
+    -- Remove redundant headers included in v8.
+Changes Since V7:
+    -- Update optional clock voting with conditional check.
+    -- Add const to lpi_pinctrl_variant_data structure.
+    -- Update required headers and remove redundant.
+    -- Change EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+    -- Fix typo errors.
+Changes Since V6:
+    -- Update conditional clock voting to optional clock voting.
+    -- Update Kconfig depends on field with select.
+    -- Fix typo errors. 
+Changes Since V5:
+    -- Create new patch by updating macro name to lpi specific.
+    -- Create new patch by updating lpi pin group structure with core group_desc structure.
+    -- Fix typo errors.
+    -- Sort macros in the make file and configuration file.
+Changes Since V4:
+    -- Update commit message and description of the chip specific extraction patch.
+    -- Sort macros in kconfig and makefile.
+    -- Update optional clock voting to conditional clock voting.
+    -- Fix typo errors.
+    -- Move to quicinc domain email id's.
+Changes Since V3:
+    -- Update separate Kconfig fields for sm8250 and sc7280.
+    -- Update module license and description.
+    -- Move static variables to corresponding .c files from header file.
 
-Of course if you like you can pick the second patch of [1],
-too. But I can also repost it without the RFC tag if that is
-preferred.
+Changes Since V2:
+    -- Add new dt-bindings for sc7280 lpi driver.
+    -- Make clock voting change as separate patch.
+    -- Split existing pincontrol driver and make common functions 
+       as part of separate file.
+    -- Rename lpass pincontrol lpi dt-bindings to sm8250 specific dt-bindings
+		
+Changes Since V1:
+    -- Make lpi pinctrl variant data structure as constant
+    -- Add appropriate commit message
+    -- Change signedoff by sequence.
 
--michael
+Srinivasa Rao Mandadapu (7):
+  dt-bindings: pinctrl: qcom: Update lpass lpi file name to SoC specific
+  dt-bindings: pinctrl: qcom: Add sc7280 lpass lpi pinctrl bindings
+  pinctrl: qcom: Update macro name to LPI specific
+  pinctrl: qcom: Update lpi pin group custiom functions with framework
+    generic functions
+  pinctrl: qcom: Extract chip specific LPASS LPI code
+  pinctrl: qcom: Add SC7280 lpass pin configuration
+  pinctrl: qcom: Update clock voting as optional
 
-[1] 
-https://lore.kernel.org/linux-gpio/20220313154640.63813-1-michael@walle.cc/
+Tested this on SM8250 MTP with WSA and WCD codecs.
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+ .../bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml   | 133 ---------
+ .../pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml     | 115 ++++++++
+ .../pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml     | 133 +++++++++
+ drivers/pinctrl/qcom/Kconfig                       |  19 ++
+ drivers/pinctrl/qcom/Makefile                      |   2 +
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c           | 309 +++------------------
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.h           |  86 ++++++
+ drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c    | 167 +++++++++++
+ drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c    | 163 +++++++++++
+ 9 files changed, 730 insertions(+), 397 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
+
+-- 
+2.7.4
+
