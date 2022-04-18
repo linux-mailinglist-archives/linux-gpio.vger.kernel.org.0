@@ -2,59 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AD39505395
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 14:58:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D79E5505A62
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 16:56:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240598AbiDRNAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 09:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
+        id S1344713AbiDRO6x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 10:58:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241662AbiDRM64 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 08:58:56 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484092E0BB
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 05:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650285568; x=1681821568;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=v6/SFjWD/tGIO243AH/OB8SuwOiEmTo39ICigjzlJe4=;
-  b=Y/kkgGF0v0S+uf54huOjC5OSCnGqcIUJh+qgavnEfEM5nUBCjqThmVhp
-   sRhDJiU36d9fqTXJ9acRjP2/qBTZ1XMLTH1MvTvCScDqfHVBH20AfpQr2
-   PCiQLLUL/MQ8znvD53Rr375j7dP4WkNlSpt2LOwwGLsjaWHt+SmZyVNtm
-   i+IeqtFdWChCkg645coSL6ZNHUKlCFPSQyYO/XmRYB8+BjgDUEXrz5Dfd
-   feQORwX6AHfZOoqLZauhInjATdEmgXZN22clc3mPWMu8khOqw64A1ZJ1m
-   /uvKEoiQTYd8pFaKfDlV4wvY8Ys/wdR7cgRKR2HvscFiBwuvbcw+JBr6v
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10320"; a="245399226"
-X-IronPort-AV: E=Sophos;i="5.90,269,1643702400"; 
-   d="scan'208";a="245399226"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2022 05:39:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,269,1643702400"; 
-   d="scan'208";a="509725226"
-Received: from lkp-server01.sh.intel.com (HELO 3abc53900bec) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 18 Apr 2022 05:39:26 -0700
-Received: from kbuild by 3abc53900bec with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1ngQf7-0004dI-Tx;
-        Mon, 18 Apr 2022 12:39:25 +0000
-Date:   Mon, 18 Apr 2022 20:38:48 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 925fbe1f7eb6fa7077d92b591b7ced1367358563
-Message-ID: <625d5bd8.Yqmb8abhyyUMAA74%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S1345174AbiDRO6X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 10:58:23 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 480AC33A1F;
+        Mon, 18 Apr 2022 06:46:57 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1ngRiQ-00085g-0c; Mon, 18 Apr 2022 15:46:54 +0200
+Message-ID: <e0c79586-3501-050d-f279-2506770324ee@leemhuis.info>
+Date:   Mon, 18 Apr 2022 15:46:53 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
+Content-Language: en-US
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Basavaraj.Natikar@amd.com, Richard.Gong@amd.com,
+        stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+References: <20220414025705.598-1-mario.limonciello@amd.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220414025705.598-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1650289617;5c8eb2ee;
+X-HE-SMSGID: 1ngRiQ-00085g-0c
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,185 +49,76 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 925fbe1f7eb6fa7077d92b591b7ced1367358563  dt-bindings: pinctrl: aspeed-g6: add FWQSPI function/group
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-elapsed time: 731m
+Greg, this seems to be a regression that made the news
+https://www.reddit.com/r/linux/comments/u5hbk6/psa_linux_5173_on_dell_amd_laptops_might_cause/
 
-configs tested: 160
-configs skipped: 3
+That made me wonder "how can we get issues like this fixed really
+quickly in stable". Are you in cases like this maybe willing to drop the
+backport of 5467801f1fcb quickly (in this case maybe even for the new
+stable kernel versions that just were sent out as rc1) and then reapply
+it later together with below fix once that was reviewed and merged to
+mainline? Or is that too much of a hassle even for special case like this?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Ciao, Thorsten
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                 randconfig-c001-20220418
-parisc                           allyesconfig
-sh                               allmodconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-arm                           stm32_defconfig
-sh                        apsh4ad0a_defconfig
-mips                         db1xxx_defconfig
-sh                ecovec24-romimage_defconfig
-m68k                        m5272c3_defconfig
-riscv                            allmodconfig
-powerpc                           allnoconfig
-sh                          rsk7203_defconfig
-powerpc                     rainier_defconfig
-ia64                          tiger_defconfig
-h8300                            alldefconfig
-m68k                          atari_defconfig
-mips                         cobalt_defconfig
-sh                            shmin_defconfig
-sh                             espt_defconfig
-arm                          simpad_defconfig
-arm                           sunxi_defconfig
-ia64                             alldefconfig
-ia64                        generic_defconfig
-sh                           se7721_defconfig
-m68k                        mvme16x_defconfig
-powerpc                 mpc834x_itx_defconfig
-mips                     loongson1b_defconfig
-powerpc                    sam440ep_defconfig
-sh                                  defconfig
-powerpc                       holly_defconfig
-arm                        realview_defconfig
-powerpc                     mpc83xx_defconfig
-mips                  maltasmvp_eva_defconfig
-arc                        nsim_700_defconfig
-mips                             allyesconfig
-powerpc                 mpc85xx_cds_defconfig
-mips                         mpc30x_defconfig
-arm                           corgi_defconfig
-arm                        keystone_defconfig
-sh                  sh7785lcr_32bit_defconfig
-mips                         rt305x_defconfig
-m68k                       bvme6000_defconfig
-ia64                            zx1_defconfig
-mips                  decstation_64_defconfig
-mips                            ar7_defconfig
-m68k                          amiga_defconfig
-mips                    maltaup_xpa_defconfig
-arm                      integrator_defconfig
-parisc                generic-32bit_defconfig
-powerpc                     pq2fads_defconfig
-sh                            hp6xx_defconfig
-x86_64                           alldefconfig
-m68k                        m5307c3_defconfig
-sh                             sh03_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                  randconfig-c002-20220418
-x86_64               randconfig-c001-20220418
-arm                  randconfig-c002-20220417
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-csky                                defconfig
-alpha                               defconfig
-arc                                 defconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a003-20220418
-x86_64               randconfig-a004-20220418
-x86_64               randconfig-a006-20220418
-x86_64               randconfig-a001-20220418
-x86_64               randconfig-a002-20220418
-x86_64               randconfig-a005-20220418
-i386                 randconfig-a004-20220418
-i386                 randconfig-a001-20220418
-i386                 randconfig-a003-20220418
-i386                 randconfig-a005-20220418
-i386                 randconfig-a006-20220418
-i386                 randconfig-a002-20220418
-arc                  randconfig-r043-20220418
-arc                  randconfig-r043-20220417
-riscv                randconfig-r042-20220417
-s390                 randconfig-r044-20220417
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
 
-clang tested configs:
-x86_64                        randconfig-c007
-powerpc              randconfig-c003-20220417
-arm                  randconfig-c002-20220417
-i386                          randconfig-c001
-riscv                randconfig-c006-20220417
-mips                 randconfig-c004-20220417
-powerpc              randconfig-c003-20220418
-arm                  randconfig-c002-20220418
-riscv                randconfig-c006-20220418
-x86_64               randconfig-c007-20220418
-mips                 randconfig-c004-20220418
-i386                 randconfig-c001-20220418
-mips                           rs90_defconfig
-powerpc                     akebono_defconfig
-riscv                          rv32_defconfig
-arm                         shannon_defconfig
-powerpc                    mvme5100_defconfig
-arm                       versatile_defconfig
-mips                        omega2p_defconfig
-mips                     cu1830-neo_defconfig
-powerpc                     tqm8540_defconfig
-mips                            e55_defconfig
-mips                           ip28_defconfig
-arm                           spitz_defconfig
-x86_64               randconfig-a016-20220418
-x86_64               randconfig-a012-20220418
-x86_64               randconfig-a013-20220418
-x86_64               randconfig-a014-20220418
-x86_64               randconfig-a015-20220418
-x86_64               randconfig-a011-20220418
-i386                 randconfig-a011-20220418
-i386                 randconfig-a015-20220418
-i386                 randconfig-a016-20220418
-i386                 randconfig-a012-20220418
-i386                 randconfig-a013-20220418
-i386                 randconfig-a014-20220418
-riscv                randconfig-r042-20220418
-hexagon              randconfig-r041-20220417
-hexagon              randconfig-r041-20220418
-hexagon              randconfig-r045-20220417
-hexagon              randconfig-r045-20220418
-s390                 randconfig-r044-20220418
+On 14.04.22 04:57, Mario Limonciello wrote:
+> commit 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before
+> initialization") attempted to fix a race condition that lead to a NULL
+> pointer, but in the process caused a regression for _AEI/_EVT declared
+> GPIOs. This manifests in messages showing deferred probing while trying
+> to allocate IRQs like so:
+> 
+> [    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
+> [    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
+> [    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
+> [    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
+> [    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
+> [    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
+> [    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
+> [    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
+> [    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
+> [    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
+> 
+> The code for walking _AEI doesn't handle deferred probing and so this leads
+> to non-functional GPIO interrupts.
+> 
+> Fix this issue by moving the call to `acpi_gpiochip_request_interrupts` to
+> occur after gc->irc.initialized is set.
+> 
+> Cc: Shreeya Patel <shreeya.patel@collabora.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before initialization")
+> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+> Link: https://lore.kernel.org/linux-gpio/BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#u
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/gpio/gpiolib.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 085348e08986..b7694171655c 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1601,8 +1601,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+>  
+>  	gpiochip_set_irq_hooks(gc);
+>  
+> -	acpi_gpiochip_request_interrupts(gc);
+> -
+>  	/*
+>  	 * Using barrier() here to prevent compiler from reordering
+>  	 * gc->irq.initialized before initialization of above
+> @@ -1612,6 +1610,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+>  
+>  	gc->irq.initialized = true;
+>  
+> +	acpi_gpiochip_request_interrupts(gc);
+> +
+>  	return 0;
+>  }
+>  
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
