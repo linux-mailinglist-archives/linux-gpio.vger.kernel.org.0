@@ -2,87 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 097C0504A1F
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 01:43:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6DDA504AC8
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 04:02:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235404AbiDQXpf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Apr 2022 19:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
+        id S233449AbiDRCFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Apr 2022 22:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234248AbiDQXpe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Apr 2022 19:45:34 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2F813EBE
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Apr 2022 16:42:57 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id t67so23170369ybi.2
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Apr 2022 16:42:57 -0700 (PDT)
+        with ESMTP id S231196AbiDRCFW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Apr 2022 22:05:22 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F99013EA5;
+        Sun, 17 Apr 2022 19:02:45 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id a186so7617815qkc.10;
+        Sun, 17 Apr 2022 19:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Le1W4emwmC8SAm7xHcpciZnFzcfo5oYtjJ98cu6Km6I=;
-        b=DfXFYpXmszgBq535LnqMbUGOAhbJ1lybwvoIEPYj42FDvwilY5mQXELmsLtBEnX0l3
-         3rOTpuwSg8i4vX0KIicaioTF8Vq0/tey7SKCBPu+sNEhYaLfreG1Br6+0vL+7izS4YMf
-         1SoJdDHhk3VGIyBXajk2RRMM+f7OL+vBA8hEE0zOu3xU/z3xtWTKnPoeVbDvqer7xd7A
-         98V4VV0JK17y+S/Z6VLtvbGD3RpnW7a+UvMuFUXHBPbPMcDTS0NeoLUWHF+YzTbopZLC
-         FA/a/SEvcs1myAs+prKPSbvMVVFDu9EG6MbJgeyiaR2oo7r50fXe3MNnSrNuR+Q/wSDl
-         c8Wg==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8VkZAEYMLIIT6wqJ5/0I8DnFHNDmyrMwWCb2AFSlInc=;
+        b=W/yt8BKYn2vSc0FYmkTVcqRuRLiPZbv4Ac0/F5BIF8njnmn3xQmEkcxJ6vu6XEonH+
+         3wx/Vs0nS3s4tCgbJcowRqXSukBtp0eppu7frUiwR1EyzFTiSvBDGys9sO/C3iKxnnAu
+         9Q4mW58a8xupi8TudtBMgtOK4aU8P9SDqUhsW1Dsl7HqWVKxuaK+73uWD2sot52ZehGH
+         E5Y4XTtF6q3q/gw2U0CNAJCaZLWsk/ApIPapZ0jhrsOf/vpKJe0Oym9GlI7y2jIAdEP0
+         sdlCwhQyut45lc1pQrPgr4ch60ivdCs8SSd2BHOJhfjpkW3CfFaj+zUWEHvNCI8lkJFb
+         ZSrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Le1W4emwmC8SAm7xHcpciZnFzcfo5oYtjJ98cu6Km6I=;
-        b=PIryDqhlEeT661jo6Qrfc7/99obEZm26xtU/N6R2lBhcVBGsFAVCOtTj087uxvE6Su
-         Hc9jlQx30ydPPSL7kEqSyxvJNIslBz2u8C8En8jDMi7ZyVCB/eW4oD2O7x/RojpdUDkv
-         gBfeXvuOBlAincVqT5Svbc116Z5Ix80la4wgNscmdNNm5SnPz62bJJ2MiqYpJM1w8LzG
-         mLgXQX6+pl+rkzwkAVyziNXZFwuOUy1s4LWdHZZ8TS1F4RyftasNhDMnLLLk9HHgb63p
-         1ge9YD7VllwH77AakR6iUxJrghlyDza7XhqmBzFxqM9jp62RcWxiQW+RTAM+yt/+oPes
-         A3YA==
-X-Gm-Message-State: AOAM5323b48kEWB8ACgdkhZUhXFRTgSLORRPYI8tWJgP2R6m2/S8dts3
-        9zdUQLluw4OEkx63aAuzTuLar7EOc1lxFy33v+QrEw==
-X-Google-Smtp-Source: ABdhPJwtcjuDUl0/1lhkF30uD62jYzzr8ofEalJ5SS2ebSGJfVM87d/e3g3rnjrSOYRrOwPONcc3UtP80VEZPfT/QL4=
-X-Received: by 2002:a25:4e82:0:b0:633:68d7:b864 with SMTP id
- c124-20020a254e82000000b0063368d7b864mr8143618ybb.514.1650238976760; Sun, 17
- Apr 2022 16:42:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8VkZAEYMLIIT6wqJ5/0I8DnFHNDmyrMwWCb2AFSlInc=;
+        b=rOdbo5VruFfxoKAjUJjThIhGyX0ec9nhUjFzU9kGTbWlikNlimOh1b6UzNUw87zU9D
+         vmk4DMeXBrtPdrUtjyrIvqFow4CaKwlnEMeBjoVFBcaJJ+MdOqL9BYSTSgNHzfRFQ3XD
+         X0l375QgjVVrIsruzyqBvlEzCToQaN7I16G3Zm/DiKEcUcEGLNS3M5GMkrPforvqHRz0
+         3T/mFLXTYU2URytWHVQHsG0k0BVkN5z/kqbPaujR4c0rBq26+8ToeDDHFvuAOaOWyait
+         XHobP6lGSn2yH5S5B5cd/mjBc4P5Q8PP2P6Po52yUlC8Hwb2C2cX25XRg9kXvMoGwOho
+         NKRg==
+X-Gm-Message-State: AOAM53303e6SHT58bxob1Uo0tk7GheWn2WCavbg4EeaCzvAPPdNJzJry
+        Q7IonNqekusiJDcvHhv5co4=
+X-Google-Smtp-Source: ABdhPJwiTz3+00MIicg7kGu59ibe/c0yNNTkFvyg/D/+fDTAyfUC/2UbpQfHoL/kpEcVyHXISQXiaQ==
+X-Received: by 2002:a37:664f:0:b0:69c:81ae:a293 with SMTP id a76-20020a37664f000000b0069c81aea293mr5441718qkc.614.1650247364509;
+        Sun, 17 Apr 2022 19:02:44 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id h5-20020ac85845000000b002edfd4b0503sm7236920qth.88.2022.04.17.19.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Apr 2022 19:02:44 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: lv.ruyi@zte.com.cn
+To:     lakshmi.sowjanya.d@intel.com, linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lv Ruyi <lv.ruyi@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] pinctrl: Make use of the helper function devm_platform_ioremap_resource()
+Date:   Mon, 18 Apr 2022 02:02:38 +0000
+Message-Id: <20220418020238.2556989-1-lv.ruyi@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220321133318.99406-1-luca.weiss@fairphone.com> <20220321133318.99406-5-luca.weiss@fairphone.com>
-In-Reply-To: <20220321133318.99406-5-luca.weiss@fairphone.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Apr 2022 01:42:45 +0200
-Message-ID: <CACRpkdbuLVS=+1GM77nGD7Aq0haOOEbFi-0gO-u63EaJwpxg2A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] pinctrl: qcom: sm6350: fix order of UFS & SDC pins
-To:     Luca Weiss <luca.weiss@fairphone.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 21, 2022 at 2:33 PM Luca Weiss <luca.weiss@fairphone.com> wrote:
+From: Lv Ruyi <lv.ruyi@zte.com.cn>
 
-> In other places the SDC and UFS pins have been swapped but this was
-> missed in the PINCTRL_PIN definitions. Fix that.
->
-> Fixes: 7d74b55afd27 ("pinctrl: qcom: Add SM6350 pinctrl driver")
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
-> Changes in v2:
-> - nothing
+Use the devm_platform_ioremap_resource() helper instead of calling
+platform_get_resource() and devm_ioremap_resource() separately.Make the
+code simpler without functional changes.
 
-Since no changes I assume it was OK I applied v1.
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Lv Ruyi <lv.ruyi@zte.com.cn>
+---
+ drivers/pinctrl/pinctrl-thunderbay.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
+index 79d44bca039e..9328b17485cf 100644
+--- a/drivers/pinctrl/pinctrl-thunderbay.c
++++ b/drivers/pinctrl/pinctrl-thunderbay.c
+@@ -1229,7 +1229,6 @@ static int thunderbay_pinctrl_probe(struct platform_device *pdev)
+ 	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+ 	struct thunderbay_pinctrl *tpc;
+-	struct resource *iomem;
+ 	int ret;
+ 
+ 	of_id = of_match_node(thunderbay_pinctrl_match, pdev->dev.of_node);
+@@ -1243,11 +1242,7 @@ static int thunderbay_pinctrl_probe(struct platform_device *pdev)
+ 	tpc->dev = dev;
+ 	tpc->soc = of_id->data;
+ 
+-	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!iomem)
+-		return -ENXIO;
+-
+-	tpc->base0 =  devm_ioremap_resource(dev, iomem);
++	tpc->base0 = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(tpc->base0))
+ 		return PTR_ERR(tpc->base0);
+ 
+-- 
+2.25.1
+
