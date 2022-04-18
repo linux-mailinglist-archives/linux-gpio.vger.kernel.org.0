@@ -2,112 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8338505CA2
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 18:45:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E0B5505E33
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 21:01:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346412AbiDRQsH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 12:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50380 "EHLO
+        id S1347534AbiDRTEf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 15:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346417AbiDRQsG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 12:48:06 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991043298B
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 09:45:23 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id i14so1890671ljn.5
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 09:45:23 -0700 (PDT)
+        with ESMTP id S1347536AbiDRTEe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 15:04:34 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA5733123C
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:01:47 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id z99so18481504ede.5
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:01:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NQxQe8MePCv7JpX3/6cV4n5tTTqS4u+VyFsbEVonGoI=;
-        b=DlbuOhJD27lzur0Gb9gy+tIte7/kqlfWeIOc1NpKa0tK7FZubnzSS//1wmqGsjQzrY
-         aDKsu7vVoGz1bK5/TK4pw+8T6V0Z8gqQLPfLce7m7BebH/LlTJq+IkOVFTm4cXPxm1G3
-         NVNZcXNdTLOiEJafUNIF2CoHEK75cUgUExuwKZZZzV7hpsmnojpM2qPEmHafJ9ZorGjj
-         noGW3MMBE/S3ENiD2CTgsCP1SdHsLdw2g+JEGmnL9tTNHqQLLRek8GtSYRtxn87RcKyG
-         /Fqs1qGbqYcrUcMmgIQCCXtvOKCR+Phngj4vK+wsWtBrIgMv0T90N6AoNn3vH8nG+wQH
-         0HAg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WrdH+/PP42/M0QSZL++qmiMcft6Gj8Eq09jnc4vJUl8=;
+        b=BzowJgXU6WpPjzd+3rV/bg7QbP4H6K/1Ya1QKx2NzrveofRACqMCxuJJpChLwnk7kF
+         oVbHhKL4/F3RV8NqylSuyrJEcpTitvIB24NwuOOl74F5T7tzPsSIoR7X4F9WVJmdcDW/
+         Vwj9XJojw8fKAhmhD4nFwCzThWd1CM2Cu57cx/vLqRPIOjGS6SgkPuigUAa5+uLZo7/P
+         rNWes+frD8xpTlCiVS73xhu2mwsLOAhPrLzxt698qBpyIKMLAVQCkUPmrql07cjngFun
+         IR8z76irMxgXXtHjO6igDhG4TBnjqkEBORzWHTePHDStozUPm06UQXnL1e1kxYQ0Mwqj
+         CMgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NQxQe8MePCv7JpX3/6cV4n5tTTqS4u+VyFsbEVonGoI=;
-        b=ZZ6LoCloUj4ZGrQeIxiw6/FfOohMcL35jZtHkp8F5JdXAwMbY1TZXw7/lTJLkkkfqm
-         RmR2Gpu/MJYhqCkS0HEg2zmCt043OZeIruUuJc6/6OKQNq8a5wMXKLgAnhErUldteNTi
-         xQNLIWnoVlOuOkGPSceC++e5EiH02USjTNLQ/k5OnsrsuSr5BYQhnQJMUwjORkMM1qQ3
-         Jj3zQbF3cF0nDLHi/9XOfELpY7pk/zdZBPYsTFx+4RRsmHn4KBuiUO7dB8s3xiAE6t1z
-         5QYnW2fNidk2BJ82xLY7hD3CI68iS0mY32FncSaSk5uEK1Go0bG2NXfkjwuNK+vs1R1M
-         Ifgw==
-X-Gm-Message-State: AOAM530T7xFFjwajAVdKw8dwW0I+hyE2ZWHXkQVC896HtKFUsWOxjyMM
-        kRj/Xaqnk9NiPSoq174yRV9uuiJscxv06w==
-X-Google-Smtp-Source: ABdhPJyJ9K5M9J6p8Tu59HRrSSe0xUud1txDzTk1zSiw6QaiC9yncdRXQqrhNcw02vxt/LTB1doPsw==
-X-Received: by 2002:a05:651c:1783:b0:249:43a8:b6f9 with SMTP id bn3-20020a05651c178300b0024943a8b6f9mr7650235ljb.273.1650300321624;
-        Mon, 18 Apr 2022 09:45:21 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id p9-20020a2e93c9000000b0024b3c2ecc18sm1225919ljh.115.2022.04.18.09.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Apr 2022 09:45:21 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] pinctrl: nomadik: Add new MC2 config
-Date:   Mon, 18 Apr 2022 18:43:17 +0200
-Message-Id: <20220418164317.864418-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.35.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WrdH+/PP42/M0QSZL++qmiMcft6Gj8Eq09jnc4vJUl8=;
+        b=W5EnBCZ//NWOyOee6ZQg5xFVKJvy56533xznk2NRjFzGHzvbOCSeOgiol2U9fZLrdv
+         mdp7vwmrFEmNEdh5i6AS7zE2rXMbuJiG3FTnkuyYaADD4pPsIWSZMfE2wmMbQET8gaS2
+         1xYKGIifrhlJaZU0Osah3L0AAOmHY2LEf5orf/Ybruzkd8t5TR9rKjMcHvX/N3kWx1pr
+         lDGrGCZamNDkhc94U25sX9nmLVFXQRBHTg8S8ZlSCoPGA6yMYsPoQX+NKqHPZznZTto/
+         2ZmUGsWVuwmMkw29Jq1oSMc5THKDsAap4uYW3VW6s34ZmrYf36h/TNp99UNmwyYfXc1k
+         Zohw==
+X-Gm-Message-State: AOAM532HMk9rAHx+YVEAXoTG36RXWRHo978Kzf+WYE3Wn4BtSlpYOS94
+        eip2zCupcW9lchLIgYOIPGlYOJCxqF3H1ahF4mc+UA==
+X-Google-Smtp-Source: ABdhPJzPvH7c9BtlyIH/wHr8e1bXLCD0HpAlaeDf6KwbFT7SKORx246T4yiDtULUcub0icsUdJIuEr290RPP676hOOk=
+X-Received: by 2002:a05:6402:210:b0:41c:9ca7:7660 with SMTP id
+ t16-20020a056402021000b0041c9ca77660mr13765133edv.145.1650308506428; Mon, 18
+ Apr 2022 12:01:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
+ <20220417165208.39754-1-schspa@gmail.com> <CAHp75Vc8HwheQVOpcn_Lxk-bOOMLybr=m6OdO7mJ-vE9xywBLg@mail.gmail.com>
+ <CAMA88Tr6NvfEiPYnt0A60GiQKiiT6LT7X83GRku-4PDcG2EtoA@mail.gmail.com>
+ <CAHp75VfcxACmuw5pwPgSB9ud06hWtHCUrMifU1rZJ+h+dwG+bg@mail.gmail.com>
+ <CAHp75Vchpi0Cvkz5krA0LEZBj-fQTXxbEBzpKxU96mcDRGY--A@mail.gmail.com> <CAMA88TruFbCZbvq84ep5NbSdxDgi-mPX2iXWk4c2qA-etMA8QQ@mail.gmail.com>
+In-Reply-To: <CAMA88TruFbCZbvq84ep5NbSdxDgi-mPX2iXWk4c2qA-etMA8QQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 18 Apr 2022 21:01:35 +0200
+Message-ID: <CAMRc=Meo4TbdxQzynb7paDgC7J19Tc6hhKU7du4mZvgP0mynTQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: use raw spinlock for gpio chip shadowed data
+To:     Schspa Shi <schspa@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+        "hoan@os.amperecomputing.com" <hoan@os.amperecomputing.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "opendmb@gmail.com" <opendmb@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The MC2 MMC interface can be configured with the FBCLK
-(feedback clock) unconnected, leaving the pin available
-for reuse for something else. Add a group mc2_a_2 for
-this.
+On Mon, Apr 18, 2022 at 5:43 PM Schspa Shi <schspa@gmail.com> wrote:
+>
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+>
+> > On Mon, Apr 18, 2022 at 2:38 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> >> On Mon, Apr 18, 2022 at 6:07 AM Schspa Shi <schspa@gmail.com> wrote:
+> >> > Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> >>
+> >> ...
+> >>
+> >> > >   drivers/gpio/gpio-mmio.c    | 22 +++++++++++-----------
+> >> > >   include/linux/gpio/driver.h |  2 +-
+> >> > >
+> >> > > You can=E2=80=99t do it for one driver only. As I told it will req=
+uire too much of additional churn to make this to be series.
+> >> > >
+> >> >
+> >> > It seems I have misunderstood your "too much of additional churn". C=
+an
+> >> > you explain it?
+> >> > The gpio-mmio.c and driver.h here are the basics of other gpio
+> >> > drivers. In my opinion, these two files
+> >> > belong to the basic code of gpio, and functions such as bgpio_init a=
+re
+> >> > declared in
+> >> > include/linux/gpio/driver.h and implemented in
+> >> > drivers/gpio/gpio-mmio.c. So there is no churn.
+> >>
+> >> When you change the member of the data structure, you have to change
+> >> all its users. You can't change only one at a time because it will be
+> >> a (compile-time) bisectability issue.
+>
+>
+> Yes, I understand and will take for bisectability use case for the next t=
+ime.
+>
+> >
+> > Answering your question here, it will require moving to union with an
+> > additional member and corresponding core changes, convert all drivers
+> > one-by-one, and remove the old type. It's not worth doing it, but as I
+> > said let maintainers decide.
+>
+> Okay, sorry for my misunderstanding, I thought you were saying it's
+> bad to modify too many different files in one patch, so I split the
+> patch into a series of patchsets.
+>
+> So, let Linus Walleij or Bartosz Golaszewski to decide for it ?
+> I have the same options as you, it's a small change, and no need to
+> trouble everyone for it.
+>
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+I prefer a single patch in this case, we can apply it closer to the
+next merge window.
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-index 0b9b6cbfd10c..ac3d4d91266d 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-@@ -440,6 +440,10 @@ static const unsigned mc2_a_1_pins[] = { DB8500_PIN_A5, DB8500_PIN_B4,
- 	DB8500_PIN_C8, DB8500_PIN_A12, DB8500_PIN_C10, DB8500_PIN_B10,
- 	DB8500_PIN_B9, DB8500_PIN_A9, DB8500_PIN_C7, DB8500_PIN_A7,
- 	DB8500_PIN_C5 };
-+/* MC2 without the feedback clock */
-+static const unsigned mc2_a_2_pins[] = { DB8500_PIN_A5, DB8500_PIN_B4,
-+	DB8500_PIN_A12, DB8500_PIN_C10, DB8500_PIN_B10, DB8500_PIN_B9,
-+	DB8500_PIN_A9, DB8500_PIN_C7, DB8500_PIN_A7, DB8500_PIN_C5 };
- static const unsigned ssp1_a_1_pins[] = { DB8500_PIN_C9, DB8500_PIN_B11,
- 					  DB8500_PIN_C12, DB8500_PIN_C11 };
- static const unsigned ssp0_a_1_pins[] = { DB8500_PIN_D12, DB8500_PIN_B13,
-@@ -699,6 +703,7 @@ static const struct nmk_pingroup nmk_db8500_groups[] = {
- 	DB8500_PIN_GROUP(kp_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(kpskaskb_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(mc2_a_1, NMK_GPIO_ALT_A),
-+	DB8500_PIN_GROUP(mc2_a_2, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(ssp1_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(ssp0_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(i2c0_a_1, NMK_GPIO_ALT_A),
-@@ -856,7 +861,7 @@ DB8500_FUNC_GROUPS(lcd, "lcdvsi0_a_1", "lcdvsi1_a_1", "lcd_d0_d7_a_1",
- 		   "lcd_d8_d11_a_1", "lcd_d12_d15_a_1", "lcd_d12_d23_a_1", "lcd_b_1",
- 		   "lcd_d16_d23_b_1");
- DB8500_FUNC_GROUPS(kp, "kp_a_1", "kp_a_2", "kp_b_1", "kp_b_2", "kp_c_1", "kp_oc1_1");
--DB8500_FUNC_GROUPS(mc2, "mc2_a_1", "mc2rstn_c_1");
-+DB8500_FUNC_GROUPS(mc2, "mc2_a_1", "mc2_a_2", "mc2rstn_c_1");
- DB8500_FUNC_GROUPS(ssp1, "ssp1_a_1");
- DB8500_FUNC_GROUPS(ssp0, "ssp0_a_1");
- DB8500_FUNC_GROUPS(i2c0, "i2c0_a_1");
--- 
-2.35.1
+Bart
 
+> Because this structure will be used as the same instance in multiple
+> files, even if we change this variable to union first, it can be
+> compiled, but the program will still not work properly. This is
+> because bgpio_init is initialized with the type of raw_spinlock_t,
+> but is still accessed as spinlock_t in other drivers, which is a
+> serious abnormal initialization.
