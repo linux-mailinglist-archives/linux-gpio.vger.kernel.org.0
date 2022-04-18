@@ -2,123 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FBC2505BE7
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 17:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2521E505C02
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 17:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345833AbiDRPvp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 11:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
+        id S1345800AbiDRP4B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 11:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345834AbiDRPvV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 11:51:21 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A634DF9B;
-        Mon, 18 Apr 2022 08:29:40 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1ngTJp-00046e-Rp; Mon, 18 Apr 2022 17:29:37 +0200
-Message-ID: <d61f561c-cccd-6d48-cc2a-2eb83df6925a@leemhuis.info>
-Date:   Mon, 18 Apr 2022 17:29:37 +0200
+        with ESMTP id S1345820AbiDRPzw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 11:55:52 -0400
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3529133E2A;
+        Mon, 18 Apr 2022 08:43:26 -0700 (PDT)
+Received: by mail-vs1-xe35.google.com with SMTP id m14so12972325vsp.11;
+        Mon, 18 Apr 2022 08:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=L+e1IwjPtrx8G13TcQrLOhPqxxbNlCk3hLHky4qfcOw=;
+        b=EJytDbeMBURt5rxmwjAU1L64BLz3FG+Ha6vj8642LRiUF/KP6mq8RUcOfKm5CEp2Sa
+         1pil1DOrqtnuIO+KzckywwE0qbOLQ+02sZbdMJJ7+9UYKhdrLaBy0zhpVbwsAu+ikM7W
+         /MF2dbWBAEoPqaIps0oKUi5XQB41eDZobexjouej9FImFZrX7o1igHJ4aPrnR4iVAxMK
+         QMiMD3Flr3Z0CQ74o+wImQBWNUhnOrweeKlHkGVAKKUo0n+arufcBMbcXe4FGu+bTxFI
+         eI2IiS04i8PBjGsEB61FjxdrZHHL5QIsqgdKlkuf33pw/dDc4yIEZt19hIxgWSinY9LR
+         KYvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=L+e1IwjPtrx8G13TcQrLOhPqxxbNlCk3hLHky4qfcOw=;
+        b=ZIjrjrY00Exbj9pVVy4KqugU6xSfUIhgY0HxdZCIHOzxTdeeW1Bu5Ww5/MwWlbwLE+
+         a6YYrtzOE6MljkVMRUgGyjZfxAOGwvoq7E0KGu2aVwXfZc4S1qEvt6issmdEDcPv4Z7n
+         POynyqheL9UHVDQP0fR9LYlVVKYkOlNv5GsKFsorxdjzcQnpZVYCX2HqlMX/0KuaBSn7
+         CjuuMDXn//R6pkJvb/9Wdb0e0YW5LeKGfpvy/8ypmGZ4LdFUZXurhg3o8DgcC7nwa+PJ
+         6wisKpEzT534B/Q7yTLP1q7gLM57NIZTRBCxRDfwuE/9I4A7tDIC1rWQY+SO/yVZpoaf
+         vknA==
+X-Gm-Message-State: AOAM531fKdavp+1GK744bgYyTgI8HTxdoP7ey1lVjvhGnfySdeUiWiMo
+        d/uj8aVYVacdTsJOE0ArkSUZZakO/ZWigs3M4mrPODWPEpEgXigK
+X-Google-Smtp-Source: ABdhPJwMY77Df/u7eQj1RsI6svvKlcNXcbpyqqK+8V8MjEalSfH0xmmviPMBT+4PI06eb9M0VJxgUYB7OdTYrR9xPfA=
+X-Received: by 2002:a67:a44d:0:b0:320:601b:2a08 with SMTP id
+ p13-20020a67a44d000000b00320601b2a08mr3051790vsh.70.1650296605300; Mon, 18
+ Apr 2022 08:43:25 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        firew4lker <firew4lker@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Shreeya Patel <shreeya.patel@collabora.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Richard.Gong@amd.com, Stable <stable@vger.kernel.org>
-References: <20220414025705.598-1-mario.limonciello@amd.com>
- <20966c6b-9045-9f8b-ba35-bf44091ce380@gmail.com>
- <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
- <CAHp75VceVwAq68s_hnpXt8VvLBHVUMxFTJR+_Tnph_mvpxGVPw@mail.gmail.com>
- <49dceaa1-7e8a-671a-0601-2ee92a5d3818@leemhuis.info>
- <CAHp75Vd1VKeGx2EJnKnSBf-DvnPPajDNs=+kQ1f6j5JU8hNLMg@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAHp75Vd1VKeGx2EJnKnSBf-DvnPPajDNs=+kQ1f6j5JU8hNLMg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1650295780;d9270d2e;
-X-HE-SMSGID: 1ngTJp-00046e-Rp
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
+ <20220417165208.39754-1-schspa@gmail.com> <CAHp75Vc8HwheQVOpcn_Lxk-bOOMLybr=m6OdO7mJ-vE9xywBLg@mail.gmail.com>
+ <CAMA88Tr6NvfEiPYnt0A60GiQKiiT6LT7X83GRku-4PDcG2EtoA@mail.gmail.com>
+ <CAHp75VfcxACmuw5pwPgSB9ud06hWtHCUrMifU1rZJ+h+dwG+bg@mail.gmail.com> <CAHp75Vchpi0Cvkz5krA0LEZBj-fQTXxbEBzpKxU96mcDRGY--A@mail.gmail.com>
+In-Reply-To: <CAHp75Vchpi0Cvkz5krA0LEZBj-fQTXxbEBzpKxU96mcDRGY--A@mail.gmail.com>
+From:   Schspa Shi <schspa@gmail.com>
+Date:   Mon, 18 Apr 2022 23:43:14 +0800
+Message-ID: <CAMA88TruFbCZbvq84ep5NbSdxDgi-mPX2iXWk4c2qA-etMA8QQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: use raw spinlock for gpio chip shadowed data
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>
+Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+        "hoan@os.amperecomputing.com" <hoan@os.amperecomputing.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "opendmb@gmail.com" <opendmb@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 18.04.22 16:17, Andy Shevchenko wrote:
-> On Mon, Apr 18, 2022 at 4:58 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
+Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+
+> On Mon, Apr 18, 2022 at 2:38 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Mon, Apr 18, 2022 at 6:07 AM Schspa Shi <schspa@gmail.com> wrote:
+>> > Andy Shevchenko <andy.shevchenko@gmail.com> writes:
 >>
->> On 18.04.22 13:42, Andy Shevchenko wrote:
->>> On Mon, Apr 18, 2022 at 7:34 AM Mario Limonciello
->>> <mario.limonciello@amd.com> wrote:
->>>> On 4/17/22 07:24, firew4lker wrote:
->>>
->>> ...
->>>
->>>> Linus Walleij,
->>>>
->>>> As this is backported to 5.15.y, 5.16.y, 5.17.y and those all had point
->>>> releases a bunch of people are hitting it now.  If you choose to adopt
->>>> this patch instead of revert the broken one, you can add to the commit
->>>> message too:
->>>>
->>>> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1976
->>>
->>> I prefer to explicitly tell that this is a link to a bug report, hence BugLink:.
->>> But this is just my 2 cents.
+>> ...
 >>
->> Please use "Link:" as explained by the kernel's documentation in
->> Documentation/process/submitting-patches.rst
->> Documentation/process/5.Posting.rst (disclaimer: I recently made this
->> more explicit, but the concept it old). That's important, as people have
->> tools that rely on it -- I for example run one to track regressions, but
->> I might not be the only one running a tool that relies on proper tags.
-> 
-> To me it looks like a documentation confusion since Link is what is
-> added automatically by `b4` tool.
+>> > >   drivers/gpio/gpio-mmio.c    | 22 +++++++++++-----------
+>> > >   include/linux/gpio/driver.h |  2 +-
+>> > >
+>> > > You can=E2=80=99t do it for one driver only. As I told it will requi=
+re too much of additional churn to make this to be series.
+>> > >
+>> >
+>> > It seems I have misunderstood your "too much of additional churn". Can
+>> > you explain it?
+>> > The gpio-mmio.c and driver.h here are the basics of other gpio
+>> > drivers. In my opinion, these two files
+>> > belong to the basic code of gpio, and functions such as bgpio_init are
+>> > declared in
+>> > include/linux/gpio/driver.h and implemented in
+>> > drivers/gpio/gpio-mmio.c. So there is no churn.
+>>
+>> When you change the member of the data structure, you have to change
+>> all its users. You can't change only one at a time because it will be
+>> a (compile-time) bisectability issue.
 
-Since some time now, yes, but the "Link:" tags are way older and used to
- link to all sorts of places that are relevant.
 
-> Having Link from the patch thread
-> (and not always the one with the discussion) as well as link to the
-> issue will be confusing.
+Yes, I understand and will take for bisectability use case for the next tim=
+e.
 
-Yup, but that's how it is for years already (and in the muscle memory of
-some -- that's why I might make sense to teach b4 to set something else,
-but that's a different story). Linus himself does it like that. Recent
-commits showing that are for example 901c7280ca0d or 0313bc278dac. And
-for links bug trackers, too, as 80d47f5de5e3 or 14e3e989f6a5 show.
+>
+> Answering your question here, it will require moving to union with an
+> additional member and corresponding core changes, convert all drivers
+> one-by-one, and remove the old type. It's not worth doing it, but as I
+> said let maintainers decide.
 
->> And FWIW: I'm all for making this more explicit, but people already use
->> various different tags (BugLink is just one of them) for that and that
->> just results in a mess.
-> Nope, it results otherwise. The Link is Link to the thread, which you
-> may find a lot in the kernel history. Making bug report links and
-> links to the patch threads that's what results in a mess.
+Okay, sorry for my misunderstanding, I thought you were saying it's
+bad to modify too many different files in one patch, so I split the
+patch into a series of patchsets.
 
-Yeah, but we are in that mess already and people inventing different
-tags; some of the DRM people for example use(d?) "References", but there
-were others iirc.
+So, let Linus Walleij or Bartosz Golaszewski to decide for it ?
+I have the same options as you, it's a small change, and no need to
+trouble everyone for it.
 
->> I proposed consistent tags, but that didn't get
->> much feedback. Maybe I should try again. Makes me wonder: where does
->> BugLink come from? Is that something that people are used to from
->> GitLab, GitHub, or something?
-> It comes from kernel history :-)
-
-Okay, thx, had just been wondering if people are used to it from some
-platform.
-
-Ciao, Thorsten
+Because this structure will be used as the same instance in multiple
+files, even if we change this variable to union first, it can be
+compiled, but the program will still not work properly. This is
+because bgpio_init is initialized with the type of raw_spinlock_t,
+but is still accessed as spinlock_t in other drivers, which is a
+serious abnormal initialization.
