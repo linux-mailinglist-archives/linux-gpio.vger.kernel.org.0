@@ -2,149 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2862505E9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 21:38:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DCD4505E9E
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 21:39:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238012AbiDRTlJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 15:41:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59986 "EHLO
+        id S1346848AbiDRTmN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 15:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238134AbiDRTlI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 15:41:08 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3B322B1C
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:38:27 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id r13so28681535ejd.5
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:38:27 -0700 (PDT)
+        with ESMTP id S234364AbiDRTmN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 15:42:13 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506DB22B18
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:39:33 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id k23so28679046ejd.3
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0voP44fyY7XGXFGcJkasfgBTf6x1VqclP4C49VR3XuM=;
-        b=QKLUw+3071xERftQyKvPl2WNNRY6O+4SZPC6715pcJO5SigVoGnGoWm61a1ET3u+20
-         uUW1QJ5rxlmh8o5Eb4EDED1D4tQG0GF0iGxvCCpHIzWXRgO+aH0uvsAdNFVAsWAcwna6
-         yr154rP1eJ47akx9Ri1IJV76X+Zkgyc8I3MvVBj4CKWTHjpeXch9JyCtb+heoqPaw7DI
-         j754EFIMjXuDQz9QQh99f/7kc4MunCF5uGT4uSIAf7TqQcCrq8Uu2Ft+vxEhdwty2uCG
-         i7YGf+ZxGRymBPZtuwpdRDy59gjUVnN2VyTRi4YloCP7bgC5jw2L5wfjhgY39BAfo+rG
-         rFwA==
+        bh=/zDMwia6t12aSvNrfhvQf5hInNkEPR6icKxdL+34ZfE=;
+        b=3S9qV5GMKWzNRf3RL+4AwaRD9bHvCecyfie3iQOsJF7g3U/cp8VLZCDzogvK1Gy+b/
+         xbMk0fugwk33KF6Pfr5R9ifs7gIvqVB9DfFAOYTxMOfvfgGtdbX1emqEzmqMv71wjNTs
+         utAZKMxiZ7ZGielnU2zd895HzJs2GsEu9WVktMrTjIjw3FWEbr5ahIzH/Nua06/JUkfi
+         U6di2eNBzS1S2gc3Fu/KI0YiAEtQ82BpMhElyer73Foa3G7anwaRqBLytnnOnt52JOJr
+         21TC3/7D34qBDGmN/r+Ijqd0+eFT4fmETIkDC9l4oWvpVGQGSyUsQEcQjwp6+51QxVUN
+         apng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0voP44fyY7XGXFGcJkasfgBTf6x1VqclP4C49VR3XuM=;
-        b=QrdvjByC8p2jNneZXp9VKoujfGIfXoapE8wmht+N7TNUfqVvIw/0CQpfdL/vt1RIcJ
-         Nhah08JCUe5uyrzDwG2nCt7Xvm1KYyru1jXACoM4sxWDL6MTMG+s2dwce2zo/2kRhHi/
-         h8QURskTVHZV4/Dz420t+1p3acLfYVO4yF+jWxwcvCbZDJYtjA4i3RkMrd068mTSLKuU
-         TL/aPUR0ChAVOcaI8oPdT4pIAkz8CDD1Vwpaf7RohRARgQ50ZdV4p8KLo90qKCaI6tVs
-         NHrUE02WThd63MkOm5VE7aZU2l+oBMQdRV1h/jgi49mDxMxGRqDRqnaN0xDIYhb1a8z8
-         U1xg==
-X-Gm-Message-State: AOAM533FMjv4zZsddHX0UBc5SBeZCRSnmEuWm58UgK+Kw3PJUCPKFHl4
-        N4Y2vjWEWNukMNHNa2vtApLVNV1bKz7Z447oF7i4oQ==
-X-Google-Smtp-Source: ABdhPJzJFyOQr+32fWgDUc7K4tqLymuKG4FRwWqKBsFUMkY8P1sAYrl3abF8tYGoymgSkD4+g8CsO+ZJy+UfvKicuYs=
-X-Received: by 2002:a17:906:360d:b0:6e8:7f57:2d4d with SMTP id
- q13-20020a170906360d00b006e87f572d4dmr10750809ejb.736.1650310705836; Mon, 18
- Apr 2022 12:38:25 -0700 (PDT)
+        bh=/zDMwia6t12aSvNrfhvQf5hInNkEPR6icKxdL+34ZfE=;
+        b=2hAqw11EJVH0TayF47oF34wQqYRLQ4knxOMhqzFxApY58DQGYceP+lypyp/xwptS/h
+         S6pUx+b+h6Xg9klN19VPNKU2Az0J7y1R9iB0JKD7tPpX7nxZSltnr72lZaQ2LGPCHxNz
+         2WjrsHoF7eZZoyyvSucoAZ46VawGvwz5f3+ZK0gfMJGZI4xq88HXif1zZPZ7AOlZUZcf
+         Ugc5PkOIs8HzSFmi/7f+3JS3lg2UMk7sXiUJzWbm4GkjRysAI8t+TOGsKK0J80YhjTcP
+         NzKDuWZqblj8Qvw3CyOWnZj2JpMrYDVHGMFplCje6ty52yegakUYMLNI1j2fbjKfGPru
+         XROw==
+X-Gm-Message-State: AOAM533AN4CJ5DIUtSGdjyFKxqbxjCdH5aWLi75L9hyrfDYIf/59xKLz
+        W7wkLVzOPAQOw/aEZ3ERbioIrzM2s2oTM65PMR5c0w==
+X-Google-Smtp-Source: ABdhPJzdq3yfAIFv1TYfCrdjS91XNvKLw6bAh0Ndec9P+VszR1fQmiYTqS/pvVgf9w7GqyuGEOC41aYMvS2EYokFupE=
+X-Received: by 2002:a17:907:968e:b0:6db:aed5:43c8 with SMTP id
+ hd14-20020a170907968e00b006dbaed543c8mr10477168ejc.636.1650310771875; Mon, 18
+ Apr 2022 12:39:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220405135444.199295-1-maz@kernel.org>
-In-Reply-To: <20220405135444.199295-1-maz@kernel.org>
+References: <20220406205327.2332687-1-linus.walleij@linaro.org>
+In-Reply-To: <20220406205327.2332687-1-linus.walleij@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 18 Apr 2022 21:38:15 +0200
-Message-ID: <CAMRc=MfbpLPtx46pYSOt3X+EobHnwj-8aQzmyw+srVChkxbr7g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] gpiolib: Handle immutable irq_chip structures
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+Date:   Mon, 18 Apr 2022 21:39:21 +0200
+Message-ID: <CAMRc=MeG+SdvHwVBsy5mrT=3ow2xkGpu-rWeSYLZKMjZUhQ9cQ@mail.gmail.com>
+Subject: Re: [PATCH] irq/gpio: ixp4xx: Drop boardfile probe path
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+        Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 5, 2022 at 3:55 PM Marc Zyngier <maz@kernel.org> wrote:
+On Wed, Apr 6, 2022 at 10:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> This is a followup from [1].
+> The boardfiles for IXP4xx have been deleted. Delete all the
+> quirks and code dealing with that boot path and rely solely on
+> device tree boot.
 >
-> I recently realised that the gpiolib play ugly tricks on the
-> unsuspecting irq_chip structures by patching the callbacks.
+> Fix some missing static keywords that the kernel test robot
+> was complaining about while we're at it.
 >
-> Not only this breaks when an irq_chip structure is made const (which
-> really should be the default case), but it also forces this structure
-> to be copied at nauseam for each instance of the GPIO block, which is
-> a waste of memory.
->
-> My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
-> which does what it says on the tin: don't you dare writing to them.
-> Gpiolib is further updated not to install its own callbacks, and it
-> becomes the responsibility of the driver to call into the gpiolib when
-> required. This is similar to what we do for other subsystems such as
-> PCI-MSI.
->
-> 5 drivers are updated to this new model: M1, QC, Tegra, pl061 and AMD
-> (as I actively use them) keeping a single irq_chip structure, marking
-> it const, and exposing the new flag.
->
-> Nothing breaks, the volume of change is small, the memory usage goes
-> down and we have fewer callbacks that can be used as attack vectors.
-> What's not to love?
->
-> * From v1 [1]:
->   - pl061 and AMD drivers converted
->   - New helpers to keep the changes small
->   - New warning for non-converted drivers
->   - Documentation and TODO updates
->
-> [1] https://lore.kernel.org/r/20220223154405.54912-1-maz@kernel.org
->
-> Marc Zyngier (10):
->   gpio: Don't fiddle with irqchips marked as immutable
->   gpio: Expose the gpiochip_irq_re[ql]res helpers
->   gpio: Add helpers to ease the transition towards immutable irq_chip
->   gpio: tegra186: Make the irqchip immutable
->   gpio: pl061: Make the irqchip immutable
->   pinctrl: apple-gpio: Make the irqchip immutable
->   pinctrl: msmgpio: Make the irqchip immutable
->   pinctrl: amd: Make the irqchip immutable
->   gpio: Update TODO to mention immutable irq_chip structures
->   Documentation: Update the recommended pattern for GPIO irqchips
->
->  Documentation/driver-api/gpio/driver.rst | 175 ++++++++++++++++++-----
->  drivers/gpio/TODO                        |  19 +++
->  drivers/gpio/gpio-pl061.c                |  32 +++--
->  drivers/gpio/gpio-tegra186.c             |  32 +++--
->  drivers/gpio/gpiolib.c                   |  13 +-
->  drivers/pinctrl/pinctrl-amd.c            |  11 +-
->  drivers/pinctrl/pinctrl-apple-gpio.c     |  29 ++--
->  drivers/pinctrl/qcom/pinctrl-msm.c       |  53 ++++---
->  include/linux/gpio/driver.h              |  16 +++
->  include/linux/irq.h                      |   2 +
->  kernel/irq/debugfs.c                     |   1 +
->  11 files changed, 293 insertions(+), 90 deletions(-)
->
-> --
-> 2.34.1
->
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-This may be coming too late but for the GPIO part:
+Hey Linus, this doesn't apply to my for-next branch, would you mind
+checking it and possibly rebasing?
 
-Reviewed-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Bart
