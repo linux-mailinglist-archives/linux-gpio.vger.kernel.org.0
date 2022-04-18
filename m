@@ -2,109 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6DDA504AC8
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 04:02:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAACB504B2D
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 05:08:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233449AbiDRCFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Apr 2022 22:05:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
+        id S234183AbiDRDKM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Apr 2022 23:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231196AbiDRCFW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Apr 2022 22:05:22 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F99013EA5;
-        Sun, 17 Apr 2022 19:02:45 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id a186so7617815qkc.10;
-        Sun, 17 Apr 2022 19:02:45 -0700 (PDT)
+        with ESMTP id S235950AbiDRDKL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Apr 2022 23:10:11 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9411918B0D;
+        Sun, 17 Apr 2022 20:07:33 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id f7so4406038uap.4;
+        Sun, 17 Apr 2022 20:07:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8VkZAEYMLIIT6wqJ5/0I8DnFHNDmyrMwWCb2AFSlInc=;
-        b=W/yt8BKYn2vSc0FYmkTVcqRuRLiPZbv4Ac0/F5BIF8njnmn3xQmEkcxJ6vu6XEonH+
-         3wx/Vs0nS3s4tCgbJcowRqXSukBtp0eppu7frUiwR1EyzFTiSvBDGys9sO/C3iKxnnAu
-         9Q4mW58a8xupi8TudtBMgtOK4aU8P9SDqUhsW1Dsl7HqWVKxuaK+73uWD2sot52ZehGH
-         E5Y4XTtF6q3q/gw2U0CNAJCaZLWsk/ApIPapZ0jhrsOf/vpKJe0Oym9GlI7y2jIAdEP0
-         sdlCwhQyut45lc1pQrPgr4ch60ivdCs8SSd2BHOJhfjpkW3CfFaj+zUWEHvNCI8lkJFb
-         ZSrQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tNjjyGaUEQ8lUKWlzMg1jMDbdSXdCmUFakLqiNuNiG8=;
+        b=mVWSz28HnIW7UGdwHQ9Pim8IwvN/k61x7XuAbnp6HBASWmnWsgHZFnJK9SoO/3TENd
+         qFw5XS5DkZtd2I0JG6EKulOKgQl0LOsmZ2qw9lMTT8yrUzAoojuIfpD8giPfiIO7U8+E
+         rXqBnA2MOD919ZaSbv9a+HpqK3c30BFuHmLPvQ2zfcTnP0C8mMkxskzknziFzMS3Qiu0
+         A9q5GlpfUayZ9nk8ZGjJocVDuGRYc/SOWIEvOINiMP2sTPfbVv36ZxkKFHSd8EEz5awS
+         xDGvMnYJhH+s3oPQviw6HmHV6mM73l6Ipx8WAHEuUnJ6rxH3JRsoXe6lf3k/mFgGOn71
+         L2Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8VkZAEYMLIIT6wqJ5/0I8DnFHNDmyrMwWCb2AFSlInc=;
-        b=rOdbo5VruFfxoKAjUJjThIhGyX0ec9nhUjFzU9kGTbWlikNlimOh1b6UzNUw87zU9D
-         vmk4DMeXBrtPdrUtjyrIvqFow4CaKwlnEMeBjoVFBcaJJ+MdOqL9BYSTSgNHzfRFQ3XD
-         X0l375QgjVVrIsruzyqBvlEzCToQaN7I16G3Zm/DiKEcUcEGLNS3M5GMkrPforvqHRz0
-         3T/mFLXTYU2URytWHVQHsG0k0BVkN5z/kqbPaujR4c0rBq26+8ToeDDHFvuAOaOWyait
-         XHobP6lGSn2yH5S5B5cd/mjBc4P5Q8PP2P6Po52yUlC8Hwb2C2cX25XRg9kXvMoGwOho
-         NKRg==
-X-Gm-Message-State: AOAM53303e6SHT58bxob1Uo0tk7GheWn2WCavbg4EeaCzvAPPdNJzJry
-        Q7IonNqekusiJDcvHhv5co4=
-X-Google-Smtp-Source: ABdhPJwiTz3+00MIicg7kGu59ibe/c0yNNTkFvyg/D/+fDTAyfUC/2UbpQfHoL/kpEcVyHXISQXiaQ==
-X-Received: by 2002:a37:664f:0:b0:69c:81ae:a293 with SMTP id a76-20020a37664f000000b0069c81aea293mr5441718qkc.614.1650247364509;
-        Sun, 17 Apr 2022 19:02:44 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id h5-20020ac85845000000b002edfd4b0503sm7236920qth.88.2022.04.17.19.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Apr 2022 19:02:44 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: lv.ruyi@zte.com.cn
-To:     lakshmi.sowjanya.d@intel.com, linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lv Ruyi <lv.ruyi@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] pinctrl: Make use of the helper function devm_platform_ioremap_resource()
-Date:   Mon, 18 Apr 2022 02:02:38 +0000
-Message-Id: <20220418020238.2556989-1-lv.ruyi@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tNjjyGaUEQ8lUKWlzMg1jMDbdSXdCmUFakLqiNuNiG8=;
+        b=QnpAwUz7yQxvQRl8V3G7nMx/SxrX9WyZYTPmQ6Lrv+x3k3wzvzZQM1nU1fuOGu2kBt
+         vXl2e4hG370Xb5TO/9JMRLaBfcsp8FGA0wHwzFbyuftUw/VVD1GZ2ca0ZL35P0ZVHjLP
+         g6c5NbVJQRmHKj3wwdYsbPwdOSFZK7dhG/m8kSAese7zPzh7popr8T1X3xPg+p+mlnrp
+         nKUFX3qOmiIbw4QbWi0emiuGG9wNSFN21I9BOxnDe25Uq1CaMa56SG0LtDeJGY53phfs
+         E7FE5fW4KHpw7cKgkas4YSsnsu8+KMWOIkUCViXE6+UZ4KFrsF2q6L5XKdBxdg3Q1YGB
+         ZUag==
+X-Gm-Message-State: AOAM533raX4o0q2hZSDMKAkabOEm8OSBNoXsOXknsD6jSU0JSxN9b0PZ
+        iWKjHNYx+0CenmxAm6cWdxeH0JnFgbrs3jxEwPbMShpcKQvIcw==
+X-Google-Smtp-Source: ABdhPJzDlWT4b6XmkHk9RENmkRsTi5OYlhZMVY04k+uYdTNe0NBDTUr3NYQwuOaj6746OpaTNxAORnKjX0nLmE9rk7A=
+X-Received: by 2002:ab0:6f8f:0:b0:35d:5045:46c4 with SMTP id
+ f15-20020ab06f8f000000b0035d504546c4mr1856021uav.116.1650251252646; Sun, 17
+ Apr 2022 20:07:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+References: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
+ <20220417165208.39754-1-schspa@gmail.com> <CAHp75Vc8HwheQVOpcn_Lxk-bOOMLybr=m6OdO7mJ-vE9xywBLg@mail.gmail.com>
+In-Reply-To: <CAHp75Vc8HwheQVOpcn_Lxk-bOOMLybr=m6OdO7mJ-vE9xywBLg@mail.gmail.com>
+From:   Schspa Shi <schspa@gmail.com>
+Date:   Mon, 18 Apr 2022 11:07:21 +0800
+Message-ID: <CAMA88Tr6NvfEiPYnt0A60GiQKiiT6LT7X83GRku-4PDcG2EtoA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: use raw spinlock for gpio chip shadowed data
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+        "hoan@os.amperecomputing.com" <hoan@os.amperecomputing.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "opendmb@gmail.com" <opendmb@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lv Ruyi <lv.ruyi@zte.com.cn>
+Andy Shevchenko <andy.shevchenko@gmail.com> writes:
 
-Use the devm_platform_ioremap_resource() helper instead of calling
-platform_get_resource() and devm_ioremap_resource() separately.Make the
-code simpler without functional changes.
+>
+>  Changelog:
+>  v1 -> v2:
+>          - Reduce the useless stacktrace.
+>          - Split to series of patches
+>
+> Changelog usually goes after cutter =E2=80=98--- =E2=80=98 line.  Besides=
+ that you haven=E2=80=99t compiled your tree just after this patch.
+>
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Lv Ruyi <lv.ruyi@zte.com.cn>
----
- drivers/pinctrl/pinctrl-thunderbay.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Yes, thanks for reminding me, I will fix it by upload another version
+of patch if there is no other problems.
 
-diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
-index 79d44bca039e..9328b17485cf 100644
---- a/drivers/pinctrl/pinctrl-thunderbay.c
-+++ b/drivers/pinctrl/pinctrl-thunderbay.c
-@@ -1229,7 +1229,6 @@ static int thunderbay_pinctrl_probe(struct platform_device *pdev)
- 	const struct of_device_id *of_id;
- 	struct device *dev = &pdev->dev;
- 	struct thunderbay_pinctrl *tpc;
--	struct resource *iomem;
- 	int ret;
- 
- 	of_id = of_match_node(thunderbay_pinctrl_match, pdev->dev.of_node);
-@@ -1243,11 +1242,7 @@ static int thunderbay_pinctrl_probe(struct platform_device *pdev)
- 	tpc->dev = dev;
- 	tpc->soc = of_id->data;
- 
--	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!iomem)
--		return -ENXIO;
--
--	tpc->base0 =  devm_ioremap_resource(dev, iomem);
-+	tpc->base0 = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tpc->base0))
- 		return PTR_ERR(tpc->base0);
- 
--- 
-2.25.1
+>  Link: https://lore.kernel.org/all/20220415165505.30383-1-schspa@gmail.co=
+m/
+>
+>  Signed-off-by: Schspa Shi <schspa@gmail.com>
+>  ---
+>   drivers/gpio/gpio-mmio.c    | 22 +++++++++++-----------
+>   include/linux/gpio/driver.h |  2 +-
+>
+> You can=E2=80=99t do it for one driver only. As I told it will require to=
+o much of additional churn to make this to be series.
+>
 
+It seems I have misunderstood your "too much of additional churn". Can
+you explain it?
+The gpio-mmio.c and driver.h here are the basics of other gpio
+drivers. In my opinion, these two files
+belong to the basic code of gpio, and functions such as bgpio_init are
+declared in
+include/linux/gpio/driver.h and implemented in
+drivers/gpio/gpio-mmio.c. So there is no churn.
+
+
+--
+Schspa Shi
+BRs
