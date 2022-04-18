@@ -2,70 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17823504F71
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 13:40:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B97A7504F7C
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 13:43:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234797AbiDRLnN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 07:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48238 "EHLO
+        id S235849AbiDRLp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 07:45:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbiDRLnN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 07:43:13 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75414B1D7;
-        Mon, 18 Apr 2022 04:40:34 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id u18so17171856eda.3;
-        Mon, 18 Apr 2022 04:40:34 -0700 (PDT)
+        with ESMTP id S229671AbiDRLpz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 07:45:55 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08D512AF6;
+        Mon, 18 Apr 2022 04:43:14 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id z99so17171399ede.5;
+        Mon, 18 Apr 2022 04:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=K56PTbb7GjfFd5b/W1QIJxR8w2GP6yixT9oeMfbJrEQ=;
-        b=M6MjeKSYWD8ZG+Kd0x/gxcOI3riCtJTijbKNJ+sOt0kcBGenaQuWWKM2GbATxsBMWF
-         zDinVXgiz2zv9vSQM1tuU7BmxETJ0tU48Sa3iPIxpaat0Wh/hublw3Ui06jIGSM7s0h8
-         KUnkXDSJPQbOkam9etlm9MoPlxWEx209BLPlL7q5XR9eUpMvrgsyH7giv6L1RTd6IR8C
-         g6MvB+yhna/fKXjpvFr+8HtVQ8UEER8+k6CMC51LCXzXQcSunfwiLD/JxF+26NaW8kYx
-         ubHMHVmXJLilKYTM+yQFFRysqE6cjl/lbYnzZ0+K3n17DCYZAPQM2Pp6lW5/8XsCXFxx
-         7kZw==
+         :cc;
+        bh=IUai0Spi7zlbWJJauW/yyVhMilMhUGODlc/UhrPP73s=;
+        b=MLUEUAtt3AfKYiQOFi6osshzmcX/h9UaxBkiqDbRIZ2E9diYz7HqYszGdcBGDLDjr5
+         CkCzqpCmvXkDzMzQO2qdfKKJBQJIr1zYL1LI/OSkk+RarOHskqvlWDfDo4pvxjUUyV5l
+         1t9KFR2zXhTSmglAakGCE+SR5iXdwRdaX07dQwVicw5Gz7rSi+pDJzDoxoWR/jAz0QTs
+         rtrTSQL/uibOT8MB0pt2aoJPkjYMmvY7Iv1J/IRhVTwN/n/q6wDwb3JYjH+0aRWnYhmZ
+         OEFrxmBzGV9DP48VFjTuGDa15kMW++4sVmojyPPLvRh2T4UZK/bsyadojSRT79kRcr7I
+         bkJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K56PTbb7GjfFd5b/W1QIJxR8w2GP6yixT9oeMfbJrEQ=;
-        b=Z98/YmA+3SmAFmDIt4xjvjFG3FKqHzHshmMZt0aMKMVvYALscLyh3rpb1vS12g9hBA
-         XFnNzlNgScycmonNzrbgvcpsOW+lwX8l16r3+kFjnkSHBzGKJhjYhTfGat6krR07yyi7
-         9ZfYJ5kpt3VlVKGam1FwMFNeah5Jn3ywP4b/LrpjTuEAgDDtGArK3ic2f4b8/Qds0WOn
-         5gGNbCxmYSdem2SamvTw/HYiMI1+KFm1CHmxe/0d3KhtTBwE/cluHDpZpRTxvBJPTHBG
-         emZ/x9lur9wOieFlnhjYaLyzsm+JVRv+MTT7SDaiZsuftRc2RQsDPkE7k+xuBYB1nxOM
-         KWHA==
-X-Gm-Message-State: AOAM5332j5SeutrF1I83662tgeGpzA9HLWMF9wT2itd4Hd3VdAMOsdd2
-        19Uk9YDsyfHZ5SLnYdA9VlXFKkN5qtMNagaoYPU=
-X-Google-Smtp-Source: ABdhPJw1k24oYlzjOvYt33bqPIUetE7j2Rd0cPOIHU+mC8gdp4Nhzys+oouUwDELJGmPRWyYtZ5qH2rAhiei0Ptw23Y=
-X-Received: by 2002:a05:6402:54:b0:419:9b58:e305 with SMTP id
- f20-20020a056402005400b004199b58e305mr11438257edu.158.1650282032779; Mon, 18
- Apr 2022 04:40:32 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=IUai0Spi7zlbWJJauW/yyVhMilMhUGODlc/UhrPP73s=;
+        b=cYuOSnTjVOk76JB0rdE2xqcwQVVDZxG2XaOLuPTy2P5US6XnS2yBPJhn3gOk/m+2wz
+         zOs1QuUPp1MJB39cfRZgtClV6C52zvcO/gyJae7/QTzFHRbUWiCHwaaHv4ruWzIUwC9p
+         O8X+S4hBDNvYR46wNqwbIt2XJFqILnEYyeI+g9qeBi4p82fkVTTVWmH4HDb+JnWQUHBH
+         0yePwt7pJG2eRlCFdscUJgQf2nzlZBzeIaXPvRyHWx0ojulNYtz7+e7CVbYz9EkGr/SX
+         JF+EtlzsbvZpyioRIVjSS7MQYuasbAYZ2B2U1LB/SaMX6wn37wJvki4EJ6fhd47ebraI
+         gxNA==
+X-Gm-Message-State: AOAM533cAsFvFa5nKFQbOiD4dXFxO6zB0ZQEbJi1Kg5yT6quaMRjhDEK
+        hfPXoHeTBPhGCNghHFEP2zQuZTCP8ZGFtZg8ank=
+X-Google-Smtp-Source: ABdhPJx3GZXSvcnDNz3un3VYBHitDF2IaMsMedvCofVFjPjXQ7ShUZ/rNCAfd47CLlg+dpp6abttta0gJTrBSZqEsr8=
+X-Received: by 2002:a50:cc9e:0:b0:41d:7123:d3ba with SMTP id
+ q30-20020a50cc9e000000b0041d7123d3bamr11800621edi.296.1650282193247; Mon, 18
+ Apr 2022 04:43:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
- <20220417165208.39754-1-schspa@gmail.com> <CAHp75Vc8HwheQVOpcn_Lxk-bOOMLybr=m6OdO7mJ-vE9xywBLg@mail.gmail.com>
- <CAMA88Tr6NvfEiPYnt0A60GiQKiiT6LT7X83GRku-4PDcG2EtoA@mail.gmail.com> <CAHp75VfcxACmuw5pwPgSB9ud06hWtHCUrMifU1rZJ+h+dwG+bg@mail.gmail.com>
-In-Reply-To: <CAHp75VfcxACmuw5pwPgSB9ud06hWtHCUrMifU1rZJ+h+dwG+bg@mail.gmail.com>
+References: <20220414025705.598-1-mario.limonciello@amd.com>
+ <20966c6b-9045-9f8b-ba35-bf44091ce380@gmail.com> <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
+In-Reply-To: <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 Apr 2022 14:39:56 +0300
-Message-ID: <CAHp75Vchpi0Cvkz5krA0LEZBj-fQTXxbEBzpKxU96mcDRGY--A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: use raw spinlock for gpio chip shadowed data
-To:     Schspa Shi <schspa@gmail.com>
-Cc:     "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
-        "hoan@os.amperecomputing.com" <hoan@os.amperecomputing.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "opendmb@gmail.com" <opendmb@gmail.com>
+Date:   Mon, 18 Apr 2022 14:42:37 +0300
+Message-ID: <CAHp75VceVwAq68s_hnpXt8VvLBHVUMxFTJR+_Tnph_mvpxGVPw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     firew4lker <firew4lker@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Richard.Gong@amd.com, Stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -76,39 +72,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 2:38 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Apr 18, 2022 at 6:07 AM Schspa Shi <schspa@gmail.com> wrote:
-> > Andy Shevchenko <andy.shevchenko@gmail.com> writes:
->
-> ...
->
-> > >   drivers/gpio/gpio-mmio.c    | 22 +++++++++++-----------
-> > >   include/linux/gpio/driver.h |  2 +-
-> > >
-> > > You can=E2=80=99t do it for one driver only. As I told it will requir=
-e too much of additional churn to make this to be series.
-> > >
-> >
-> > It seems I have misunderstood your "too much of additional churn". Can
-> > you explain it?
-> > The gpio-mmio.c and driver.h here are the basics of other gpio
-> > drivers. In my opinion, these two files
-> > belong to the basic code of gpio, and functions such as bgpio_init are
-> > declared in
-> > include/linux/gpio/driver.h and implemented in
-> > drivers/gpio/gpio-mmio.c. So there is no churn.
->
-> When you change the member of the data structure, you have to change
-> all its users. You can't change only one at a time because it will be
-> a (compile-time) bisectability issue.
+On Mon, Apr 18, 2022 at 7:34 AM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+> On 4/17/22 07:24, firew4lker wrote:
 
-Answering your question here, it will require moving to union with an
-additional member and corresponding core changes, convert all drivers
-one-by-one, and remove the old type. It's not worth doing it, but as I
-said let maintainers decide.
+...
 
+> Linus Walleij,
+>
+> As this is backported to 5.15.y, 5.16.y, 5.17.y and those all had point
+> releases a bunch of people are hitting it now.  If you choose to adopt
+> this patch instead of revert the broken one, you can add to the commit
+> message too:
+>
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1976
 
---=20
+I prefer to explicitly tell that this is a link to a bug report, hence BugLink:.
+But this is just my 2 cents.
+
+-- 
 With Best Regards,
 Andy Shevchenko
