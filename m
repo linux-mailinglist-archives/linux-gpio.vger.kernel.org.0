@@ -2,141 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E0B5505E33
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 21:01:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B139F505E5F
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Apr 2022 21:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347534AbiDRTEf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Apr 2022 15:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
+        id S237919AbiDRTXX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Apr 2022 15:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347536AbiDRTEe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 15:04:34 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA5733123C
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:01:47 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id z99so18481504ede.5
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:01:47 -0700 (PDT)
+        with ESMTP id S1347643AbiDRTXS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Apr 2022 15:23:18 -0400
+Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39BE1CFC0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:20:37 -0700 (PDT)
+Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-d6e29fb3d7so15175179fac.7
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Apr 2022 12:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WrdH+/PP42/M0QSZL++qmiMcft6Gj8Eq09jnc4vJUl8=;
-        b=BzowJgXU6WpPjzd+3rV/bg7QbP4H6K/1Ya1QKx2NzrveofRACqMCxuJJpChLwnk7kF
-         oVbHhKL4/F3RV8NqylSuyrJEcpTitvIB24NwuOOl74F5T7tzPsSIoR7X4F9WVJmdcDW/
-         Vwj9XJojw8fKAhmhD4nFwCzThWd1CM2Cu57cx/vLqRPIOjGS6SgkPuigUAa5+uLZo7/P
-         rNWes+frD8xpTlCiVS73xhu2mwsLOAhPrLzxt698qBpyIKMLAVQCkUPmrql07cjngFun
-         IR8z76irMxgXXtHjO6igDhG4TBnjqkEBORzWHTePHDStozUPm06UQXnL1e1kxYQ0Mwqj
-         CMgw==
+        d=chromium.org; s=google;
+        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
+         :subject:to:cc;
+        bh=cV6+6Ey7LaeWZPNbriTRkorx1rxnHKeq4jFNbHhfmco=;
+        b=RfDcx726fSOkgilqjNNFdffOGia7ENNZq4jw6/IpNvYS2X96nsaU6+CizR0R0lVpip
+         8XykJfQitz8Tf+qkrUP2a8h38iE5MNquXTF+M+ZfjDZxGruX0RF3tzwfYMTFDUujup9v
+         vn+q0L54b59gb0Tdjc5oAILmSZnZrXXSh+Oi8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WrdH+/PP42/M0QSZL++qmiMcft6Gj8Eq09jnc4vJUl8=;
-        b=W5EnBCZ//NWOyOee6ZQg5xFVKJvy56533xznk2NRjFzGHzvbOCSeOgiol2U9fZLrdv
-         mdp7vwmrFEmNEdh5i6AS7zE2rXMbuJiG3FTnkuyYaADD4pPsIWSZMfE2wmMbQET8gaS2
-         1xYKGIifrhlJaZU0Osah3L0AAOmHY2LEf5orf/Ybruzkd8t5TR9rKjMcHvX/N3kWx1pr
-         lDGrGCZamNDkhc94U25sX9nmLVFXQRBHTg8S8ZlSCoPGA6yMYsPoQX+NKqHPZznZTto/
-         2ZmUGsWVuwmMkw29Jq1oSMc5THKDsAap4uYW3VW6s34ZmrYf36h/TNp99UNmwyYfXc1k
-         Zohw==
-X-Gm-Message-State: AOAM532HMk9rAHx+YVEAXoTG36RXWRHo978Kzf+WYE3Wn4BtSlpYOS94
-        eip2zCupcW9lchLIgYOIPGlYOJCxqF3H1ahF4mc+UA==
-X-Google-Smtp-Source: ABdhPJzPvH7c9BtlyIH/wHr8e1bXLCD0HpAlaeDf6KwbFT7SKORx246T4yiDtULUcub0icsUdJIuEr290RPP676hOOk=
-X-Received: by 2002:a05:6402:210:b0:41c:9ca7:7660 with SMTP id
- t16-20020a056402021000b0041c9ca77660mr13765133edv.145.1650308506428; Mon, 18
- Apr 2022 12:01:46 -0700 (PDT)
+        h=x-gm-message-state:mime-version:in-reply-to:references:from
+         :user-agent:date:message-id:subject:to:cc;
+        bh=cV6+6Ey7LaeWZPNbriTRkorx1rxnHKeq4jFNbHhfmco=;
+        b=QM+kzucBPSco4GQMB0qp2MDVtroMYU91xYNbDaz7x0nLu6Hi4Bzf8RRYfBvmE3dejt
+         Aba1vCNjUvkkWEf7laMhHplbhnU++0Uoa96HlBxKrD7XwXkPzT9Wt8xj4qX436aA9wzg
+         2vkTG2HAKkALUOfddg2yZQ9S7y7Xp8etsGQLmNIigQBONn+G2+JH4s1zDkFtxLOR43gu
+         MJijdwg4aHmCZux3+C0iyd2IyjF7gOWQD7XK2I0MmZXuA4lNlV7RYcgvRZ6ptPTzie/4
+         62n8/qpA/srFygZekGue80fmgW9qWrGBannkG5kehgohHift9hpoND9UR39JhGtSaDGH
+         HvtQ==
+X-Gm-Message-State: AOAM531eayxJUf7loDrRhnJ6s90Rlge2LyMm1K68bRgJB9WtWMA8lGDm
+        ZrspqVABpWo9CHIlWATpZxawrKJS7E4AIdokZkoU7Q==
+X-Google-Smtp-Source: ABdhPJzNf95/lk0150+WJSd18uvW1W5pdHmDXYK3zhdw8hZZpUZtdsFX7flLJWCbzkVJnlE9bwIuyJ0EGf7AjX1fhe8=
+X-Received: by 2002:a05:6870:3907:b0:e5:a6fd:4047 with SMTP id
+ b7-20020a056870390700b000e5a6fd4047mr4742504oap.193.1650309637020; Mon, 18
+ Apr 2022 12:20:37 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 18 Apr 2022 12:20:36 -0700
 MIME-Version: 1.0
-References: <CAHp75Veo30c0BWb4Fykgvd-czSnEXsyA8wyMTeKQdS49=e5-nw@mail.gmail.com>
- <20220417165208.39754-1-schspa@gmail.com> <CAHp75Vc8HwheQVOpcn_Lxk-bOOMLybr=m6OdO7mJ-vE9xywBLg@mail.gmail.com>
- <CAMA88Tr6NvfEiPYnt0A60GiQKiiT6LT7X83GRku-4PDcG2EtoA@mail.gmail.com>
- <CAHp75VfcxACmuw5pwPgSB9ud06hWtHCUrMifU1rZJ+h+dwG+bg@mail.gmail.com>
- <CAHp75Vchpi0Cvkz5krA0LEZBj-fQTXxbEBzpKxU96mcDRGY--A@mail.gmail.com> <CAMA88TruFbCZbvq84ep5NbSdxDgi-mPX2iXWk4c2qA-etMA8QQ@mail.gmail.com>
-In-Reply-To: <CAMA88TruFbCZbvq84ep5NbSdxDgi-mPX2iXWk4c2qA-etMA8QQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 18 Apr 2022 21:01:35 +0200
-Message-ID: <CAMRc=Meo4TbdxQzynb7paDgC7J19Tc6hhKU7du4mZvgP0mynTQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: use raw spinlock for gpio chip shadowed data
-To:     Schspa Shi <schspa@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
-        "hoan@os.amperecomputing.com" <hoan@os.amperecomputing.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "opendmb@gmail.com" <opendmb@gmail.com>
+In-Reply-To: <1650285427-19752-8-git-send-email-quic_srivasam@quicinc.com>
+References: <1650285427-19752-1-git-send-email-quic_srivasam@quicinc.com> <1650285427-19752-8-git-send-email-quic_srivasam@quicinc.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date:   Mon, 18 Apr 2022 12:20:36 -0700
+Message-ID: <CAE-0n523c+X__wJwy=7e7WXGY3Crimne1-yUHM3Txf81n+bBVA@mail.gmail.com>
+Subject: Re: [PATCH v13 7/7] pinctrl: qcom: Update clock voting as optional
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
+        agross@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@quicinc.com, bjorn.andersson@linaro.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        judyhsiao@chromium.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, perex@perex.cz,
+        quic_plai@quicinc.com, quic_rohkumar@quicinc.com,
+        robh+dt@kernel.org, srinivas.kandagatla@linaro.org, tiwai@suse.com
+Cc:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 5:43 PM Schspa Shi <schspa@gmail.com> wrote:
+Quoting Srinivasa Rao Mandadapu (2022-04-18 05:37:07)
+> Update bulk clock voting to optional voting as ADSP bypass platform doesn't
+> need macro and decodec clocks, as these macro and dcodec GDSC switches are
+> maintained as power domains and operated from lpass clock drivers.
 >
-> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
->
-> > On Mon, Apr 18, 2022 at 2:38 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> >> On Mon, Apr 18, 2022 at 6:07 AM Schspa Shi <schspa@gmail.com> wrote:
-> >> > Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> >>
-> >> ...
-> >>
-> >> > >   drivers/gpio/gpio-mmio.c    | 22 +++++++++++-----------
-> >> > >   include/linux/gpio/driver.h |  2 +-
-> >> > >
-> >> > > You can=E2=80=99t do it for one driver only. As I told it will req=
-uire too much of additional churn to make this to be series.
-> >> > >
-> >> >
-> >> > It seems I have misunderstood your "too much of additional churn". C=
-an
-> >> > you explain it?
-> >> > The gpio-mmio.c and driver.h here are the basics of other gpio
-> >> > drivers. In my opinion, these two files
-> >> > belong to the basic code of gpio, and functions such as bgpio_init a=
-re
-> >> > declared in
-> >> > include/linux/gpio/driver.h and implemented in
-> >> > drivers/gpio/gpio-mmio.c. So there is no churn.
-> >>
-> >> When you change the member of the data structure, you have to change
-> >> all its users. You can't change only one at a time because it will be
-> >> a (compile-time) bisectability issue.
->
->
-> Yes, I understand and will take for bisectability use case for the next t=
-ime.
->
-> >
-> > Answering your question here, it will require moving to union with an
-> > additional member and corresponding core changes, convert all drivers
-> > one-by-one, and remove the old type. It's not worth doing it, but as I
-> > said let maintainers decide.
->
-> Okay, sorry for my misunderstanding, I thought you were saying it's
-> bad to modify too many different files in one patch, so I split the
-> patch into a series of patchsets.
->
-> So, let Linus Walleij or Bartosz Golaszewski to decide for it ?
-> I have the same options as you, it's a small change, and no need to
-> trouble everyone for it.
->
+> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
 
-I prefer a single patch in this case, we can apply it closer to the
-next merge window.
-
-Bart
-
-> Because this structure will be used as the same instance in multiple
-> files, even if we change this variable to union first, it can be
-> compiled, but the program will still not work properly. This is
-> because bgpio_init is initialized with the type of raw_spinlock_t,
-> but is still accessed as spinlock_t in other drivers, which is a
-> serious abnormal initialization.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
