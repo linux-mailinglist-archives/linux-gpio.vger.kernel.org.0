@@ -2,195 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3589506B69
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Apr 2022 13:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A833C506C09
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Apr 2022 14:14:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351898AbiDSLw7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Apr 2022 07:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43592 "EHLO
+        id S242910AbiDSMQH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Apr 2022 08:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351972AbiDSLwq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 07:52:46 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2A602252C
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 04:50:03 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id v4so20891744edl.7
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 04:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=+22hDYu2wEuHGd4AY54ocAOL5u0kABhClqX/TcY/LTY=;
-        b=H3QC9C/R5KWMtDxmmpBzxTkk9M+RZW5ws2177KxkG0PkyXHubfD11/YNIFepjAaqQu
-         9+5v0HiMVHwAEvOPUvTi9UDmYHW3xR73dcLKI5bdDYfJqzl4zX/rW3LjuPOdkv/IjfuW
-         RO8C4nY2FIdSgWflqcH4AHm2ZTd0cC78GfBOPEuRQN6r6yC5UsouIiMGT/rG1KE8HLw0
-         mHRLBtBEK+MC/KnFfs6MmL8kjPtnQxJXkQDeFoEWVzYW8BlzRZJ1NR8dHAaoMki7/Xgg
-         Gng8p+TLfSD6TdDyiXnJu3BCw8+2dclVFf+tTe1WLjrGUfdAcWlBGdgPo4B3/JV26MSK
-         Vnlg==
+        with ESMTP id S1352057AbiDSMP4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 08:15:56 -0400
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D59E920BEE;
+        Tue, 19 Apr 2022 05:12:51 -0700 (PDT)
+Received: by mail-oo1-f49.google.com with SMTP id y27-20020a4a9c1b000000b0032129651bb0so2998572ooj.2;
+        Tue, 19 Apr 2022 05:12:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+22hDYu2wEuHGd4AY54ocAOL5u0kABhClqX/TcY/LTY=;
-        b=uO5MqdmhO+LvW7TI8WHJES6oTtDmJ8s5YFQrq9WGdr+tByrwU7R+u7YQKkAQKCrh52
-         8/FSC72j+DQTd+lgmnvAtnc4BBqXbEljJpCvb+H1W3xWKb3aUT33+dlthYHc9v7Br/8S
-         Xaeygeug9EcOBpkEVXVKAHEeIbfQ3t/HLiFeKamthusMLJV2xtvC5ThT4ARJ+pq273mD
-         7uOe1XY6ca8iSqfvj+gvgMb9y/mZak1FaJEucpTqBICpnI9lECRCeBwPx7dweJlaA8TO
-         vH8aULUWgy/BeCrhfDy7Dg0ulv7fia1L+IpOC3Pwg1AmVey3J5ICNNiIhwiml48+SnlQ
-         FU3w==
-X-Gm-Message-State: AOAM532US3LAfjUDa3aNmEH1cg6BKRAJFA9qdIQhjiZEDkGQsMaPezxR
-        f7MBaNqZ+vN/Q42oXolQKgKktTKIo1mguA==
-X-Google-Smtp-Source: ABdhPJyAypytXd6YzKO7SLGGgIe0gMwBMbxU3UaUCtlCeDPRJAXYOEuM+LrBoWoWZZbdZia5GX2REQ==
-X-Received: by 2002:a05:6402:430c:b0:419:4660:e261 with SMTP id m12-20020a056402430c00b004194660e261mr16895758edc.324.1650369002202;
-        Tue, 19 Apr 2022 04:50:02 -0700 (PDT)
-Received: from [192.168.0.217] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id 10-20020a170906310a00b006e834953b55sm5547719ejx.27.2022.04.19.04.50.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Apr 2022 04:50:01 -0700 (PDT)
-Message-ID: <f6ea5c51-97dd-b225-3fb7-fcea5f722c39@linaro.org>
-Date:   Tue, 19 Apr 2022 13:50:01 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH 1/2] dt-binding: Add cypress,cy8c95x0 binding
-Content-Language: en-US
-To:     Patrick Rudolph <patrick.rudolph@9elements.com>,
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=Oi2UyeV7FTiASy8kn59y+2VbputKPdQLR2c1Xa4PCvM=;
+        b=qE5pdal0NSwnzu+Eg9PTWPSmXX43O1jT27Lr5UNLyNLR+o4UWJhqQSu5NNoZOkOb0b
+         /A9SpouUuw2bvH0r2RYYIhpxXdAAqY4KL22kEzKwX0J5Bm+6TYW/ZYJjDD2gFcRIF4+n
+         nZpPRhKLSmlvvYVgVTVcfOR44zknIjVaQBgwrMrZeKUuoTl5TPgQisihFXvLJbkY62VF
+         5u3o3ZBBIywsA8ADzM+Yqgd+ZMWLHk7BPyE4Mq6xCwjSBfTL8DfRReu18XWLvVjIllq6
+         QF9rLomewLxeOuI77iKEu7EvKsQqsSFnCY7aTj0p/KPAqAe1MvyGSYzfJ8fMm/HdqqBk
+         9FyQ==
+X-Gm-Message-State: AOAM531qgiKKzM4goCSivMIKPiC6oJSBrYRuX7j257bqBC+oEphOxHGA
+        rkCQ/nm6V1hQVtsbMuo9jQ==
+X-Google-Smtp-Source: ABdhPJz03tF+Z0gbQlUo469ixMVFxZOJrb9wmBz9B2zJ2fy8b50/S3xhK9Nm11m18gcVWFfnChv6Jw==
+X-Received: by 2002:a05:6820:555:b0:324:b7c5:d7b2 with SMTP id n21-20020a056820055500b00324b7c5d7b2mr5230585ooj.1.1650370371052;
+        Tue, 19 Apr 2022 05:12:51 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id o133-20020acaf08b000000b002ef7562e07csm5027600oih.41.2022.04.19.05.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Apr 2022 05:12:50 -0700 (PDT)
+Received: (nullmailer pid 1977872 invoked by uid 1000);
+        Tue, 19 Apr 2022 12:12:43 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220419071503.1596423-1-patrick.rudolph@9elements.com>
- <20220419071503.1596423-2-patrick.rudolph@9elements.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220419071503.1596423-2-patrick.rudolph@9elements.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220419093506.135553-2-cosmin.tanislav@analog.com>
+References: <20220419093506.135553-1-cosmin.tanislav@analog.com> <20220419093506.135553-2-cosmin.tanislav@analog.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add AD4130
+Date:   Tue, 19 Apr 2022 07:12:43 -0500
+Message-Id: <1650370363.604220.1977871.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19/04/2022 09:15, Patrick Rudolph wrote:
-> Added device tree binding documentation for
-> Cypress CY8C95x0 I2C pin-controller.
+On Tue, 19 Apr 2022 12:35:05 +0300, Cosmin Tanislav wrote:
+> AD4130-8 is an ultra-low power, high precision, measurement solution for
+> low bandwidth battery operated applications.
+> 
+> The fully integrated AFE (Analog Front-End) includes a multiplexer for up
+> to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
+> Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
+> selectable filter options, smart sequencer, sensor biasing and excitation
+> options, diagnostics, and a FIFO buffer.
+> 
+> Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad4130.yaml          | 263 ++++++++++++++++++
+>  1 file changed, 263 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
 > 
 
-Thank you for your patch. There is something to discuss/improve.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-(...)
+yamllint warnings/errors:
 
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description:
-> +      The first cell is the pin number and the second cell is used
-> +      to specify optional parameters.
-> +    const: 2
-> +
-> +  gpio-reserved-ranges: true
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    description:
-> +      Specifies the pin number and flags, as defined in
-> +      include/dt-bindings/interrupt-controller/irq.h
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/iio/adc/adi,ad4130.example.dts:35.30-31 syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [scripts/Makefile.lib:364: Documentation/devicetree/bindings/iio/adc/adi,ad4130.example.dtb] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1401: dt_binding_check] Error 2
 
-Skip description, it's obvious.
+doc reference errors (make refcheckdocs):
 
-> +    const: 2
-> +
-> +  ngpios:
-> +    minimum: 1
-> +    maximum: 60
-> +
-> +  gpio-line-names:
-> +    minItems: 1
-> +    maxItems: 60
-> +
-> +  vdd-supply:
-> +    description:
-> +      Optional power supply.
-> +
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          oneOf:
+See https://patchwork.ozlabs.org/patch/
 
-Why do you need oneOf here?
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-> +            - pattern: "^gp([0-7][0-7])$"
-> +        minItems: 1
-> +        maxItems: 60
-> +
-> +      function:
-> +        enum: [ gpio, pwm ]
-> +
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-No need for blank line. In other cases you put description before the
-property constraints, so do it consistently here as well.
+pip3 install dtschema --upgrade
 
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +
-> +      bias-pull-down: true
-> +
-> +      bias-pull-up: true
-> +
-> +      bias-disable: true
-> +
-> +      output-high: true
-> +
-> +      output-low: true
-> +
-> +      drive-push-pull: true
-> +
-> +      drive-open-drain: true
-> +
-> +      drive-open-source: true
-> +
-> +    required:
-> +      - pins
-> +      - function
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
+Please check and re-submit.
 
-no allOf referencing pinctrl.yaml? Include it unless there is some
-reason not to.
-
-Best regards,
-Krzysztof
