@@ -2,71 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E53A5066DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Apr 2022 10:23:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D7CB506770
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Apr 2022 11:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349947AbiDSI0V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Apr 2022 04:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55652 "EHLO
+        id S1350303AbiDSJJx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Apr 2022 05:09:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245310AbiDSI0U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 04:26:20 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A94033354;
-        Tue, 19 Apr 2022 01:23:36 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id u15so31266498ejf.11;
-        Tue, 19 Apr 2022 01:23:36 -0700 (PDT)
+        with ESMTP id S240463AbiDSJJw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 05:09:52 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656EA1CB29
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 02:07:09 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id c190-20020a1c35c7000000b0038e37907b5bso1113108wma.0
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 02:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OAl3ELUye5QTaEQ9sJN4fiXNJrRrEIjwLn0y+ARKudI=;
-        b=L2zifKI3w7RmXkycQ4H5gvj6twdWiT9A6dscdsTTHxIRsvWaDM9fTdCJBuTeuicFaa
-         4W4LcIrKDwD6Y1+A8P0WqrJSXcOfwHO2iElPLjZGwl34sxnygBZToCQ+RCbnQ99tBLkZ
-         NBfa+goHX5wDEyRa8bNcYT1+Yd8ZPhOlYvYW572Uil9ZYstuLtBcgpK3nnzjRCrW3awk
-         bdyNvTPUmHDSIV28qkqSMUsusaYVtdOTML7ntWVlyWRywoi41Mr7BqoB/ElIu9cYb87F
-         y5mxzrG/rjYb7ahxZcWvsc7ramvxbw5sdomeCEK4PXBySRoejPbDux7WSwuQFMCmfwW7
-         BDDA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Jr5LYCuMTHuyWW7oXOYwjilKqaTnYeuD/6HBySF0F0U=;
+        b=Pin0EB9RaTqccFoimDF5PAlGqr085qaRnpu8sNDfYAO6bBHAiLkxTeJZf0dr6P9RLE
+         nAezPq9gxcigkH3ZbHjU8WrCDPGKR0mv/sjYIDVMFxjVIzdkureBjwNGhEnZR2gsKKpQ
+         3hhJqASxLyoLbxlttOLOmwfF/1aASTvjMqEnULnSQXqI6ssCrVA7ZiVmNWpdQZVerv7s
+         Gv1KSPn0rAe7Fj2TsB7KvzmmV3E9Deu2fO6dQwDB7j5Ii+ICOYz7w/FYWPsK9FnFU6Rz
+         3/q5Jy5WTY7Ul+262QLXE0Fjwe6wzAiH3pF/uiPwm6+9+wB3jfQF1zzHMov1j7S8Ti5Z
+         6KnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OAl3ELUye5QTaEQ9sJN4fiXNJrRrEIjwLn0y+ARKudI=;
-        b=w37vUmDy9iqjuufE2cdf5Kgb4zL0rtyaS8NVliKLqBeLduYIrRcbQKlPYUbRXchkib
-         1Ent7KDwo5MVtP1Wn9VCv2/ONdAJU5fmD7f1sCvwuu8uCtsaz9ptUoH9pkuC6Lly3X54
-         HJkHSfJ/LIKIdXsfDp/zm9BkXbnVg20ylQ2ZduyR3xepJ5SbyzlHZtDcYJMlJmwwnrL8
-         evzmZqumcbS3gaJnP+RCqjE6PRLAc+JZnr+UNp8zjpjDqqzo0r72qGrkeo4MhEOP87/t
-         3mqK7oLVRm5qrakH+j1W7q0elaYjewLJOUZPBTLXeZIEdttRXUQ5Hz8M1QzuD0JV4oMg
-         NmpQ==
-X-Gm-Message-State: AOAM532kXxvoKlI7vZxsL/Qvd8xEZigONWGVgiYr4rqIw5Rps8uaFkl+
-        j5PrwXTMB3UtQMHAGscQ/kO/f6KjJv6W547VbRQ=
-X-Google-Smtp-Source: ABdhPJwY+PoNDh82e6wjgwVfETAjklw8Ms/pQYPEFBb/lwXxLt3QC3DtuPVp/Aqno10l+I4tBo23X89s7b/SVZSZyFs=
-X-Received: by 2002:a17:906:3799:b0:6ec:d25:3afe with SMTP id
- n25-20020a170906379900b006ec0d253afemr12665959ejc.44.1650356614546; Tue, 19
- Apr 2022 01:23:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMRc=Meo4TbdxQzynb7paDgC7J19Tc6hhKU7du4mZvgP0mynTQ@mail.gmail.com>
- <20220419012810.88417-1-schspa@gmail.com>
-In-Reply-To: <20220419012810.88417-1-schspa@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 19 Apr 2022 11:22:58 +0300
-Message-ID: <CAHp75VdGB=uT8qB=GbzyP8vJ5mvVL_T_2PG4GPg-5MYq2OBaWA@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: use raw spinlock for gpio chip shadowed data
-To:     Schspa Shi <schspa@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Jr5LYCuMTHuyWW7oXOYwjilKqaTnYeuD/6HBySF0F0U=;
+        b=6Zuzu3G6Y6K7Hws1Nc0BIBwEeWy/EMH4JjSi9dUDG4+YXRDk2MSRVQSRlbbpptjcEs
+         CjZHXIr3BN8qZOYk0G07RQiioD9yiiCYqBbGkXdbuxbI7VqmqC+4y23m2WMsO/iDw1Ql
+         v3prRcH4bDh/ly0SJu/Vo5ucN2sofVHUDdASqJRIMV1MdtxidCXtVsFmBtOsNs9HTUBs
+         LLzkLh+cMUHniQVCW8Ut5gWbk6Goygh+vBlM2KBsG29OeuBglssg2UZ7ppKR4OnBN968
+         R4X9PUL4KOOkQ70/YC+ElNgR4aagvTMzIdEWb1S28rgYr+ljbr8pZO8RZiZtljzlDJ2G
+         X9wQ==
+X-Gm-Message-State: AOAM532oXHoj4K0KOk03dWYsvI2VhHgBJD/vPwbVWFIz+nzI6OfQBsvm
+        PEtyAb01wOdxlUETUha38KYfDQ==
+X-Google-Smtp-Source: ABdhPJwBeAsqVSn0EbEcuelkqnVFkuLfCjPXedQC6/2nIBnoFdzLk3DCvxIZ/UD1Y3LYrMhEBPB6pQ==
+X-Received: by 2002:a1c:218b:0:b0:38e:aa07:62a8 with SMTP id h133-20020a1c218b000000b0038eaa0762a8mr14938277wmh.172.1650359227815;
+        Tue, 19 Apr 2022 02:07:07 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id 9-20020a056000154900b0020a849e1c41sm8803463wry.13.2022.04.19.02.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Apr 2022 02:07:07 -0700 (PDT)
+Date:   Tue, 19 Apr 2022 10:07:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Hector Martin <marcan@marcan.st>,
+        Angela Czubak <acz@semihalf.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        opendmb@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        katie.morris@in-advantage.com
+Subject: Re: [RFC v7 net-next 10/13] mfd: ocelot: add support for the vsc7512
+ chip via spi
+Message-ID: <Yl57uP+rsl/bsI4i@google.com>
+References: <20220307021208.2406741-1-colin.foster@in-advantage.com>
+ <20220307021208.2406741-11-colin.foster@in-advantage.com>
+ <YlaKlhiQEWMxJxhU@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YlaKlhiQEWMxJxhU@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,WEIRD_QUOTING
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,1112 +95,543 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 19, 2022 at 4:28 AM Schspa Shi <schspa@gmail.com> wrote:
->
-> In case of PREEMPT_RT, there is a raw_spinlock -> spinlock dependency
-> as the lockdep report shows.
->
-> __irq_set_handler
->   irq_get_desc_buslock
->     __irq_get_desc_lock
->       raw_spin_lock_irqsave(&desc->lock, *flags);  // raw spinlock get he=
-re
->   __irq_do_set_handler
->     mask_ack_irq
->       dwapb_irq_ack
->         spin_lock_irqsave(&gc->bgpio_lock, flags); // sleep able spinlock
->   irq_put_desc_busunlock
->
-> Replace with a raw lock to avoid BUGs. This lock is only used to access
-> registers, and It's safe to replace with the raw lock without bad
-> influence.
->
-> [   15.090359][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [   15.090365][    T1] [ BUG: Invalid wait context ]
-> [   15.090373][    T1] 5.10.59-rt52-00983-g186a6841c682-dirty #3 Not tain=
-ted
-> [   15.090386][    T1] -----------------------------
-> [   15.090392][    T1] swapper/0/1 is trying to lock:
-> [   15.090402][    T1] 70ff00018507c188 (&gc->bgpio_lock){....}-{3:3}, at=
-: _raw_spin_lock_irqsave+0x1c/0x28
-> [   15.090470][    T1] other info that might help us debug this:
-> [   15.090477][    T1] context-{5:5}
-> [   15.090485][    T1] 3 locks held by swapper/0/1:
-> [   15.090497][    T1]  #0: c2ff0001816de1a0 (&dev->mutex){....}-{4:4}, a=
-t: __device_driver_lock+0x98/0x104
-> [   15.090553][    T1]  #1: ffff90001485b4b8 (irq_domain_mutex){+.+.}-{4:=
-4}, at: irq_domain_associate+0xbc/0x6d4
-> [   15.090606][    T1]  #2: 4bff000185d7a8e0 (lock_class){....}-{2:2}, at=
-: _raw_spin_lock_irqsave+0x1c/0x28
-> [   15.090654][    T1] stack backtrace:
-> [   15.090661][    T1] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.10.59-=
-rt52-00983-g186a6841c682-dirty #3
-> [   15.090682][    T1] Hardware name: Horizon Robotics Journey 5 DVB (DT)
-> [   15.090692][    T1] Call trace:
-> ......
-> [   15.090811][    T1]  _raw_spin_lock_irqsave+0x1c/0x28
-> [   15.090828][    T1]  dwapb_irq_ack+0xb4/0x300
-> [   15.090846][    T1]  __irq_do_set_handler+0x494/0xb2c
-> [   15.090864][    T1]  __irq_set_handler+0x74/0x114
-> [   15.090881][    T1]  irq_set_chip_and_handler_name+0x44/0x58
-> [   15.090900][    T1]  gpiochip_irq_map+0x210/0x644
+[Adding everyone/lists back on Cc]
 
-Looks good to me,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Thu, 14 Apr 2022, Colin Foster wrote:
 
-> Signed-off-by: Schspa Shi <schspa@gmail.com>
->
-> ---
->
-> Changelog:
-> v1 -> v2:
->         - Reduce the useless stacktrace.
->         - Split to series of patches
-> v2 -> v3:
->         - Restore to a single patch as Andy and Bartosz's suggest
->         - add cutter =E2=80=98--- =E2=80=98 line for Change log
-> ---
->  drivers/gpio/gpio-amdpt.c                 | 10 +++----
->  drivers/gpio/gpio-brcmstb.c               | 12 ++++----
->  drivers/gpio/gpio-cadence.c               | 12 ++++----
->  drivers/gpio/gpio-dwapb.c                 | 36 +++++++++++------------
->  drivers/gpio/gpio-grgpio.c                | 30 +++++++++----------
->  drivers/gpio/gpio-hlwd.c                  | 18 ++++++------
->  drivers/gpio/gpio-idt3243x.c              | 12 ++++----
->  drivers/gpio/gpio-ixp4xx.c                |  4 +--
->  drivers/gpio/gpio-loongson1.c             |  8 ++---
->  drivers/gpio/gpio-menz127.c               |  8 ++---
->  drivers/gpio/gpio-mlxbf2.c                | 18 ++++++------
->  drivers/gpio/gpio-mmio.c                  | 22 +++++++-------
->  drivers/gpio/gpio-sifive.c                | 12 ++++----
->  drivers/gpio/gpio-tb10x.c                 |  4 +--
->  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c |  8 ++---
->  include/linux/gpio/driver.h               |  2 +-
->  16 files changed, 108 insertions(+), 108 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
-> index 8cfb353c3abb..07c6d090058d 100644
-> --- a/drivers/gpio/gpio-amdpt.c
-> +++ b/drivers/gpio/gpio-amdpt.c
-> @@ -36,19 +36,19 @@ static int pt_gpio_request(struct gpio_chip *gc, unsi=
-gned offset)
->
->         dev_dbg(gc->parent, "pt_gpio_request offset=3D%x\n", offset);
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         using_pins =3D readl(pt_gpio->reg_base + PT_SYNC_REG);
->         if (using_pins & BIT(offset)) {
->                 dev_warn(gc->parent, "PT GPIO pin %x reconfigured\n",
->                          offset);
-> -               spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +               raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->                 return -EINVAL;
->         }
->
->         writel(using_pins | BIT(offset), pt_gpio->reg_base + PT_SYNC_REG)=
-;
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         return 0;
->  }
-> @@ -59,13 +59,13 @@ static void pt_gpio_free(struct gpio_chip *gc, unsign=
-ed offset)
->         unsigned long flags;
->         u32 using_pins;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         using_pins =3D readl(pt_gpio->reg_base + PT_SYNC_REG);
->         using_pins &=3D ~BIT(offset);
->         writel(using_pins, pt_gpio->reg_base + PT_SYNC_REG);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         dev_dbg(gc->parent, "pt_gpio_free offset=3D%x\n", offset);
->  }
-> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-> index 74ef89248867..6b7439b44690 100644
-> --- a/drivers/gpio/gpio-brcmstb.c
-> +++ b/drivers/gpio/gpio-brcmstb.c
-> @@ -92,9 +92,9 @@ brcmstb_gpio_get_active_irqs(struct brcmstb_gpio_bank *=
-bank)
->         unsigned long status;
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&bank->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&bank->gc.bgpio_lock, flags);
->         status =3D __brcmstb_gpio_get_active_irqs(bank);
-> -       spin_unlock_irqrestore(&bank->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&bank->gc.bgpio_lock, flags);
->
->         return status;
->  }
-> @@ -114,14 +114,14 @@ static void brcmstb_gpio_set_imask(struct brcmstb_g=
-pio_bank *bank,
->         u32 imask;
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         imask =3D gc->read_reg(priv->reg_base + GIO_MASK(bank->id));
->         if (enable)
->                 imask |=3D mask;
->         else
->                 imask &=3D ~mask;
->         gc->write_reg(priv->reg_base + GIO_MASK(bank->id), imask);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static int brcmstb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
-> @@ -204,7 +204,7 @@ static int brcmstb_gpio_irq_set_type(struct irq_data =
-*d, unsigned int type)
->                 return -EINVAL;
->         }
->
-> -       spin_lock_irqsave(&bank->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&bank->gc.bgpio_lock, flags);
->
->         iedge_config =3D bank->gc.read_reg(priv->reg_base +
->                         GIO_EC(bank->id)) & ~mask;
-> @@ -220,7 +220,7 @@ static int brcmstb_gpio_irq_set_type(struct irq_data =
-*d, unsigned int type)
->         bank->gc.write_reg(priv->reg_base + GIO_LEVEL(bank->id),
->                         ilevel | level);
->
-> -       spin_unlock_irqrestore(&bank->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&bank->gc.bgpio_lock, flags);
->         return 0;
->  }
->
-> diff --git a/drivers/gpio/gpio-cadence.c b/drivers/gpio/gpio-cadence.c
-> index 562f8f7e7d1f..137aea49ba02 100644
-> --- a/drivers/gpio/gpio-cadence.c
-> +++ b/drivers/gpio/gpio-cadence.c
-> @@ -41,12 +41,12 @@ static int cdns_gpio_request(struct gpio_chip *chip, =
-unsigned int offset)
->         struct cdns_gpio_chip *cgpio =3D gpiochip_get_data(chip);
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&chip->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&chip->bgpio_lock, flags);
->
->         iowrite32(ioread32(cgpio->regs + CDNS_GPIO_BYPASS_MODE) & ~BIT(of=
-fset),
->                   cgpio->regs + CDNS_GPIO_BYPASS_MODE);
->
-> -       spin_unlock_irqrestore(&chip->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&chip->bgpio_lock, flags);
->         return 0;
->  }
->
-> @@ -55,13 +55,13 @@ static void cdns_gpio_free(struct gpio_chip *chip, un=
-signed int offset)
->         struct cdns_gpio_chip *cgpio =3D gpiochip_get_data(chip);
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&chip->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&chip->bgpio_lock, flags);
->
->         iowrite32(ioread32(cgpio->regs + CDNS_GPIO_BYPASS_MODE) |
->                   (BIT(offset) & cgpio->bypass_orig),
->                   cgpio->regs + CDNS_GPIO_BYPASS_MODE);
->
-> -       spin_unlock_irqrestore(&chip->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&chip->bgpio_lock, flags);
->  }
->
->  static void cdns_gpio_irq_mask(struct irq_data *d)
-> @@ -90,7 +90,7 @@ static int cdns_gpio_irq_set_type(struct irq_data *d, u=
-nsigned int type)
->         u32 mask =3D BIT(d->hwirq);
->         int ret =3D 0;
->
-> -       spin_lock_irqsave(&chip->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&chip->bgpio_lock, flags);
->
->         int_value =3D ioread32(cgpio->regs + CDNS_GPIO_IRQ_VALUE) & ~mask=
-;
->         int_type =3D ioread32(cgpio->regs + CDNS_GPIO_IRQ_TYPE) & ~mask;
-> @@ -115,7 +115,7 @@ static int cdns_gpio_irq_set_type(struct irq_data *d,=
- unsigned int type)
->         iowrite32(int_type, cgpio->regs + CDNS_GPIO_IRQ_TYPE);
->
->  err_irq_type:
-> -       spin_unlock_irqrestore(&chip->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&chip->bgpio_lock, flags);
->         return ret;
->  }
->
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index b0f3aca61974..7130195da48d 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -243,9 +243,9 @@ static void dwapb_irq_ack(struct irq_data *d)
->         u32 val =3D BIT(irqd_to_hwirq(d));
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         dwapb_write(gpio, GPIO_PORTA_EOI, val);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void dwapb_irq_mask(struct irq_data *d)
-> @@ -255,10 +255,10 @@ static void dwapb_irq_mask(struct irq_data *d)
->         unsigned long flags;
->         u32 val;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         val =3D dwapb_read(gpio, GPIO_INTMASK) | BIT(irqd_to_hwirq(d));
->         dwapb_write(gpio, GPIO_INTMASK, val);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void dwapb_irq_unmask(struct irq_data *d)
-> @@ -268,10 +268,10 @@ static void dwapb_irq_unmask(struct irq_data *d)
->         unsigned long flags;
->         u32 val;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         val =3D dwapb_read(gpio, GPIO_INTMASK) & ~BIT(irqd_to_hwirq(d));
->         dwapb_write(gpio, GPIO_INTMASK, val);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void dwapb_irq_enable(struct irq_data *d)
-> @@ -281,11 +281,11 @@ static void dwapb_irq_enable(struct irq_data *d)
->         unsigned long flags;
->         u32 val;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         val =3D dwapb_read(gpio, GPIO_INTEN);
->         val |=3D BIT(irqd_to_hwirq(d));
->         dwapb_write(gpio, GPIO_INTEN, val);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void dwapb_irq_disable(struct irq_data *d)
-> @@ -295,11 +295,11 @@ static void dwapb_irq_disable(struct irq_data *d)
->         unsigned long flags;
->         u32 val;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         val =3D dwapb_read(gpio, GPIO_INTEN);
->         val &=3D ~BIT(irqd_to_hwirq(d));
->         dwapb_write(gpio, GPIO_INTEN, val);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static int dwapb_irq_set_type(struct irq_data *d, u32 type)
-> @@ -309,7 +309,7 @@ static int dwapb_irq_set_type(struct irq_data *d, u32=
- type)
->         irq_hw_number_t bit =3D irqd_to_hwirq(d);
->         unsigned long level, polarity, flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         level =3D dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
->         polarity =3D dwapb_read(gpio, GPIO_INT_POLARITY);
->
-> @@ -344,7 +344,7 @@ static int dwapb_irq_set_type(struct irq_data *d, u32=
- type)
->         dwapb_write(gpio, GPIO_INTTYPE_LEVEL, level);
->         if (type !=3D IRQ_TYPE_EDGE_BOTH)
->                 dwapb_write(gpio, GPIO_INT_POLARITY, polarity);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         return 0;
->  }
-> @@ -374,7 +374,7 @@ static int dwapb_gpio_set_debounce(struct gpio_chip *=
-gc,
->         unsigned long flags, val_deb;
->         unsigned long mask =3D BIT(offset);
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         val_deb =3D dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
->         if (debounce)
-> @@ -383,7 +383,7 @@ static int dwapb_gpio_set_debounce(struct gpio_chip *=
-gc,
->                 val_deb &=3D ~mask;
->         dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, val_deb);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         return 0;
->  }
-> @@ -738,7 +738,7 @@ static int dwapb_gpio_suspend(struct device *dev)
->         unsigned long flags;
->         int i;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         for (i =3D 0; i < gpio->nr_ports; i++) {
->                 unsigned int offset;
->                 unsigned int idx =3D gpio->ports[i].idx;
-> @@ -765,7 +765,7 @@ static int dwapb_gpio_suspend(struct device *dev)
->                         dwapb_write(gpio, GPIO_INTMASK, ~ctx->wake_en);
->                 }
->         }
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
->
-> @@ -785,7 +785,7 @@ static int dwapb_gpio_resume(struct device *dev)
->                 return err;
->         }
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         for (i =3D 0; i < gpio->nr_ports; i++) {
->                 unsigned int offset;
->                 unsigned int idx =3D gpio->ports[i].idx;
-> @@ -812,7 +812,7 @@ static int dwapb_gpio_resume(struct device *dev)
->                         dwapb_write(gpio, GPIO_PORTA_EOI, 0xffffffff);
->                 }
->         }
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         return 0;
->  }
-> diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-> index 23d447e17a67..df563616f943 100644
-> --- a/drivers/gpio/gpio-grgpio.c
-> +++ b/drivers/gpio/gpio-grgpio.c
-> @@ -145,7 +145,7 @@ static int grgpio_irq_set_type(struct irq_data *d, un=
-signed int type)
->                 return -EINVAL;
->         }
->
-> -       spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
->
->         ipol =3D priv->gc.read_reg(priv->regs + GRGPIO_IPOL) & ~mask;
->         iedge =3D priv->gc.read_reg(priv->regs + GRGPIO_IEDGE) & ~mask;
-> @@ -153,7 +153,7 @@ static int grgpio_irq_set_type(struct irq_data *d, un=
-signed int type)
->         priv->gc.write_reg(priv->regs + GRGPIO_IPOL, ipol | pol);
->         priv->gc.write_reg(priv->regs + GRGPIO_IEDGE, iedge | edge);
->
-> -       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
->
->         return 0;
->  }
-> @@ -164,11 +164,11 @@ static void grgpio_irq_mask(struct irq_data *d)
->         int offset =3D d->hwirq;
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
->
->         grgpio_set_imask(priv, offset, 0);
->
-> -       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
->  }
->
->  static void grgpio_irq_unmask(struct irq_data *d)
-> @@ -177,11 +177,11 @@ static void grgpio_irq_unmask(struct irq_data *d)
->         int offset =3D d->hwirq;
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
->
->         grgpio_set_imask(priv, offset, 1);
->
-> -       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
->  }
->
->  static struct irq_chip grgpio_irq_chip =3D {
-> @@ -199,7 +199,7 @@ static irqreturn_t grgpio_irq_handler(int irq, void *=
-dev)
->         int i;
->         int match =3D 0;
->
-> -       spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
->
+> Hi Lee,
+> 
+> Thanks for the feedback. I agree with (and have made) your suggestions.
+> Additional comments below.
+
+I'm swamped right now, so I cannot do a full re-review, but please see
+in-line for a couple of (most likely flippant i.e. not fully
+thought out comments).
+
+Please submit the changes you end up making off the back of this
+review and I'll conduct another on the next version you send.
+
+> On Wed, Apr 13, 2022 at 09:32:22AM +0100, Lee Jones wrote:
+> > On Sun, 06 Mar 2022, Colin Foster wrote:
+> > 
+> [...]
+> > > +
+> > > +int ocelot_core_init(struct ocelot_core *core)
+> > > +{
+> > > +	struct device *dev = core->dev;
+> > > +	int ret;
+> > > +
+> > > +	dev_set_drvdata(dev, core);
+> > > +
+> > > +	core->gcb_regmap = ocelot_devm_regmap_init(core, dev,
+> > > +						   &vsc7512_gcb_resource);
+> > 
+> > This just ends up calling ocelot_spi_devm_get_regmap() right?
+> > 
+> > Why not call that from inside ocelot-spi.c where 'core' was allocated?
+> 
+> core->gcb_regmap doesn't handle anything more than chip reset. This will
+> have to happen regardless of the interface.
+> 
+> The "spi" part uses the core->cpuorg_regmap, which is needed for
+> configuring the SPI bus. In the case of I2C, this cpu_org regmap
+> (likely?) wouldn't be necessary, but the gcb_regmap absolutely would.
+> That's why gcb is allocated in core and cpuorg is allocated in SPI.
+> 
+> The previous RFC had cpuorg_regmap hidden inside a private struct to
+> emphasize this separation. As you pointed out, there was a lot of
+> bouncing between "core" structs and "spi" structs that got ugly.
+> 
+> (Looking at this more now... the value of cpuorg_regmap should have been
+> in the CONFIG_MFD_OCELOT_SPI ifdef, which might have made this
+> distinction more clear)
+
+The TL;DR of my review point would be to make this as simple as
+possible.  If you can call a single function, instead of needlessly
+sending the thread of execution through three, please do.
+
+> > > +	if (IS_ERR(core->gcb_regmap))
+> > > +		return -ENOMEM;
+> > > +
+> > > +	ret = ocelot_reset(core);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to reset device: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * A chip reset will clear the SPI configuration, so it needs to be done
+> > > +	 * again before we can access any registers
+> > > +	 */
+> > > +	ret = ocelot_spi_initialize(core);
+> > 
+> > Not a fan of calling back into the file which called us.
+> > 
+> > And what happens if SPI isn't controlling us?
+> > 
+> > Doesn't the documentation above say this device can also be
+> > communicated with via I2C and PCIe?
+> 
+> During the last RFC this was done through a callback. You had requested
+> I not use callbacks.
+> 
+> From that exchange:
+> """"
+> > > > +	ret = core->config->init_bus(core->config);
+> > >
+> > > You're not writing a bus.  I doubt you need ops call-backs.
+> >
+> > In the case of SPI, the chip needs to be configured both before and
+> > after reset. It sets up the bus for endianness, padding bytes, etc. This
+> > is currently achieved by running "ocelot_spi_init_bus" once during SPI
+> > probe, and once immediately after chip reset.
+> >
+> > For other control mediums I doubt this is necessary. Perhaps "init_bus"
+> > is a misnomer in this scenario...
+> 
+> Please find a clearer way to do this without function pointers.
+> """"
+
+Yes, I remember.
+
+This is an improvement on that, but it doesn't mean it's ideal.
+
+> The idea is that we set up the SPI bus so we can read registers. The
+> protocol changes based on bus speed, so this is necessary.
+> 
+> This initial setup is done in ocelot-spi.c, before ocelot_core_init is
+> called.
+> 
+> We then reset the chip by writing some registers. This chip reset also
+> clears the SPI configuration, so we need to reconfigure the SPI bus
+> before we can read any additional registers.
+> 
+> Short of using function pointers, I imagine this will have to be
+> something akin to:
+> 
+> if (core->is_spi) {
+>     ocelot_spi_initalize();
+> }
+
+What about if, instead of calling from SPI into Core, which calls back
+into SPI again, you do this from SPI instead:
+
+[flippant - I haven't fully assessed the viability of this suggestion]
+
+foo_type spi_probe(bar_type baz)
+{
+  setup_spi();
+
+  core_init();
+
+  more_spi_stuff();
+}
+
+> I feel if the additional buses are added, they'll have to implement this
+> type of change. But as I don't (and don't plan to) have hardware to
+> build those interfaces out, right now ocelot_core assumes the bus is
+> SPI.
+
+What are the chances of someone else coming along and implementing the
+other interfaces?  You might very well be over-complicating this
+implementation for support that may never be required.
+
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to initialize SPI interface: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, vsc7512_devs,
+> > > +				   ARRAY_SIZE(vsc7512_devs), NULL, 0, NULL);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to add sub-devices: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL(ocelot_core_init);
+> > > +
+> > > +MODULE_DESCRIPTION("Externally Controlled Ocelot Chip Driver");
+> > > +MODULE_AUTHOR("Colin Foster <colin.foster@in-advantage.com>");
+> > > +MODULE_LICENSE("GPL v2");
+> > > diff --git a/drivers/mfd/ocelot-spi.c b/drivers/mfd/ocelot-spi.c
+> > > new file mode 100644
+> > > index 000000000000..c788e239c9a7
+> > > --- /dev/null
+> > > +++ b/drivers/mfd/ocelot-spi.c
+> > > @@ -0,0 +1,313 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > > +/*
+> > > + * SPI core driver for the Ocelot chip family.
+> > > + *
+> > > + * This driver will handle everything necessary to allow for communication over
+> > > + * SPI to the VSC7511, VSC7512, VSC7513 and VSC7514 chips. The main functions
+> > > + * are to prepare the chip's SPI interface for a specific bus speed, and a host
+> > > + * processor's endianness. This will create and distribute regmaps for any MFD
+> > 
+> > As above, please drop references to MFD.
+> > 
+> > > + * children.
+> > > + *
+> > > + * Copyright 2021 Innovative Advantage Inc.
+> > > + *
+> > > + * Author: Colin Foster <colin.foster@in-advantage.com>
+> > > + */
+> > > +
+> > > +#include <linux/iopoll.h>
+> > > +#include <linux/kconfig.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/spi/spi.h>
+> > > +
+> > > +#include <asm/byteorder.h>
+> > > +
+> > > +#include "ocelot.h"
+> > > +
+> > > +#define DEV_CPUORG_IF_CTRL	0x0000
+> > > +#define DEV_CPUORG_IF_CFGSTAT	0x0004
+> > > +
+> > > +#define CFGSTAT_IF_NUM_VCORE	(0 << 24)
+> > > +#define CFGSTAT_IF_NUM_VRAP	(1 << 24)
+> > > +#define CFGSTAT_IF_NUM_SI	(2 << 24)
+> > > +#define CFGSTAT_IF_NUM_MIIM	(3 << 24)
+> > > +
+> > > +
+> > > +static const struct resource vsc7512_dev_cpuorg_resource = {
+> > > +	.start	= 0x71000000,
+> > > +	.end	= 0x710002ff,
+> > 
+> > No magic numbers.  Please define these addresses.
+> 
+> I missed these. Thanks.
+> 
+> > 
+> > > +	.name	= "devcpu_org",
+> > > +};
+> > > +
+> > > +#define VSC7512_BYTE_ORDER_LE 0x00000000
+> > > +#define VSC7512_BYTE_ORDER_BE 0x81818181
+> > > +#define VSC7512_BIT_ORDER_MSB 0x00000000
+> > > +#define VSC7512_BIT_ORDER_LSB 0x42424242
+> > > +
+> > > +int ocelot_spi_initialize(struct ocelot_core *core)
+> > > +{
+> > > +	u32 val, check;
+> > > +	int err;
+> > > +
+> > > +#ifdef __LITTLE_ENDIAN
+> > > +	val = VSC7512_BYTE_ORDER_LE;
+> > > +#else
+> > > +	val = VSC7512_BYTE_ORDER_BE;
+> > > +#endif
+> > 
+> > Not a fan of ifdefery in the middle of C files.
+> > 
+> > Please create a macro or define somewhere.
+> 
+> I'll clear this up in comments and move things around. This macro
+> specifically tends to lend itself to this type of ifdef dropping:
+> 
+> https://elixir.bootlin.com/linux/v5.18-rc2/C/ident/__LITTLE_ENDIAN
+
+I see that the majority of implementations exist in header files as I
+would expect.  With respect to the others, past acceptance and what is
+acceptable in other subsystems has little bearing on what will be
+accepted here and now.
+
+> The comment I'm adding is:
 >         /*
->          * For each gpio line, call its interrupt handler if it its under=
-lying
-> @@ -215,7 +215,7 @@ static irqreturn_t grgpio_irq_handler(int irq, void *=
-dev)
->                 }
->         }
->
-> -       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
->
->         if (!match)
->                 dev_warn(priv->dev, "No gpio line matched irq %d\n", irq)=
-;
-> @@ -247,13 +247,13 @@ static int grgpio_irq_map(struct irq_domain *d, uns=
-igned int irq,
->         dev_dbg(priv->dev, "Mapping irq %d for gpio line %d\n",
->                 irq, offset);
->
-> -       spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
->
->         /* Request underlying irq if not already requested */
->         lirq->irq =3D irq;
->         uirq =3D &priv->uirqs[lirq->index];
->         if (uirq->refcnt =3D=3D 0) {
-> -               spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-> +               raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
->                 ret =3D request_irq(uirq->uirq, grgpio_irq_handler, 0,
->                                   dev_name(priv->dev), priv);
->                 if (ret) {
-> @@ -262,11 +262,11 @@ static int grgpio_irq_map(struct irq_domain *d, uns=
-igned int irq,
->                                 uirq->uirq);
->                         return ret;
->                 }
-> -               spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-> +               raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
->         }
->         uirq->refcnt++;
->
-> -       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
->
->         /* Setup irq  */
->         irq_set_chip_data(irq, priv);
-> @@ -290,7 +290,7 @@ static void grgpio_irq_unmap(struct irq_domain *d, un=
-signed int irq)
->         irq_set_chip_and_handler(irq, NULL, NULL);
->         irq_set_chip_data(irq, NULL);
->
-> -       spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
->
->         /* Free underlying irq if last user unmapped */
->         index =3D -1;
-> @@ -309,13 +309,13 @@ static void grgpio_irq_unmap(struct irq_domain *d, =
-unsigned int irq)
->                 uirq =3D &priv->uirqs[lirq->index];
->                 uirq->refcnt--;
->                 if (uirq->refcnt =3D=3D 0) {
-> -                       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flag=
-s);
-> +                       raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, =
-flags);
->                         free_irq(uirq->uirq, priv);
->                         return;
->                 }
->         }
->
-> -       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
->  }
->
->  static const struct irq_domain_ops grgpio_irq_domain_ops =3D {
-> diff --git a/drivers/gpio/gpio-hlwd.c b/drivers/gpio/gpio-hlwd.c
-> index 641719a96a1a..4e13e937f832 100644
-> --- a/drivers/gpio/gpio-hlwd.c
-> +++ b/drivers/gpio/gpio-hlwd.c
-> @@ -65,7 +65,7 @@ static void hlwd_gpio_irqhandler(struct irq_desc *desc)
->         int hwirq;
->         u32 emulated_pending;
->
-> -       spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
->         pending =3D ioread32be(hlwd->regs + HW_GPIOB_INTFLAG);
->         pending &=3D ioread32be(hlwd->regs + HW_GPIOB_INTMASK);
->
-> @@ -93,7 +93,7 @@ static void hlwd_gpio_irqhandler(struct irq_desc *desc)
->                 /* Mark emulated interrupts as pending */
->                 pending |=3D rising | falling;
->         }
-> -       spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
->
->         chained_irq_enter(chip, desc);
->
-> @@ -118,11 +118,11 @@ static void hlwd_gpio_irq_mask(struct irq_data *dat=
-a)
->         unsigned long flags;
->         u32 mask;
->
-> -       spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
->         mask =3D ioread32be(hlwd->regs + HW_GPIOB_INTMASK);
->         mask &=3D ~BIT(data->hwirq);
->         iowrite32be(mask, hlwd->regs + HW_GPIOB_INTMASK);
-> -       spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
->  }
->
->  static void hlwd_gpio_irq_unmask(struct irq_data *data)
-> @@ -132,11 +132,11 @@ static void hlwd_gpio_irq_unmask(struct irq_data *d=
-ata)
->         unsigned long flags;
->         u32 mask;
->
-> -       spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
->         mask =3D ioread32be(hlwd->regs + HW_GPIOB_INTMASK);
->         mask |=3D BIT(data->hwirq);
->         iowrite32be(mask, hlwd->regs + HW_GPIOB_INTMASK);
-> -       spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
->  }
->
->  static void hlwd_gpio_irq_enable(struct irq_data *data)
-> @@ -173,7 +173,7 @@ static int hlwd_gpio_irq_set_type(struct irq_data *da=
-ta, unsigned int flow_type)
->         unsigned long flags;
->         u32 level;
->
-> -       spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&hlwd->gpioc.bgpio_lock, flags);
->
->         hlwd->edge_emulation &=3D ~BIT(data->hwirq);
->
-> @@ -194,11 +194,11 @@ static int hlwd_gpio_irq_set_type(struct irq_data *=
-data, unsigned int flow_type)
->                 hlwd_gpio_irq_setup_emulation(hlwd, data->hwirq, flow_typ=
-e);
->                 break;
->         default:
-> -               spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
-> +               raw_spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags=
-);
->                 return -EINVAL;
->         }
->
-> -       spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&hlwd->gpioc.bgpio_lock, flags);
->         return 0;
->  }
->
-> diff --git a/drivers/gpio/gpio-idt3243x.c b/drivers/gpio/gpio-idt3243x.c
-> index 52b8b72ded77..1cafdf46f875 100644
-> --- a/drivers/gpio/gpio-idt3243x.c
-> +++ b/drivers/gpio/gpio-idt3243x.c
-> @@ -57,7 +57,7 @@ static int idt_gpio_irq_set_type(struct irq_data *d, un=
-signed int flow_type)
->         if (sense =3D=3D IRQ_TYPE_NONE || (sense & IRQ_TYPE_EDGE_BOTH))
->                 return -EINVAL;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         ilevel =3D readl(ctrl->gpio + IDT_GPIO_ILEVEL);
->         if (sense & IRQ_TYPE_LEVEL_HIGH)
-> @@ -68,7 +68,7 @@ static int idt_gpio_irq_set_type(struct irq_data *d, un=
-signed int flow_type)
->         writel(ilevel, ctrl->gpio + IDT_GPIO_ILEVEL);
->         irq_set_handler_locked(d, handle_level_irq);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->         return 0;
->  }
->
-> @@ -86,12 +86,12 @@ static void idt_gpio_mask(struct irq_data *d)
->         struct idt_gpio_ctrl *ctrl =3D gpiochip_get_data(gc);
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         ctrl->mask_cache |=3D BIT(d->hwirq);
->         writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void idt_gpio_unmask(struct irq_data *d)
-> @@ -100,12 +100,12 @@ static void idt_gpio_unmask(struct irq_data *d)
->         struct idt_gpio_ctrl *ctrl =3D gpiochip_get_data(gc);
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         ctrl->mask_cache &=3D ~BIT(d->hwirq);
->         writel(ctrl->mask_cache, ctrl->pic + IDT_PIC_IRQ_MASK);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static int idt_gpio_irq_init_hw(struct gpio_chip *gc)
-> diff --git a/drivers/gpio/gpio-ixp4xx.c b/drivers/gpio/gpio-ixp4xx.c
-> index b3b050604e0b..6b184502fa3f 100644
-> --- a/drivers/gpio/gpio-ixp4xx.c
-> +++ b/drivers/gpio/gpio-ixp4xx.c
-> @@ -128,7 +128,7 @@ static int ixp4xx_gpio_irq_set_type(struct irq_data *=
-d, unsigned int type)
->                 int_reg =3D IXP4XX_REG_GPIT1;
->         }
->
-> -       spin_lock_irqsave(&g->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&g->gc.bgpio_lock, flags);
->
->         /* Clear the style for the appropriate pin */
->         val =3D __raw_readl(g->base + int_reg);
-> @@ -147,7 +147,7 @@ static int ixp4xx_gpio_irq_set_type(struct irq_data *=
-d, unsigned int type)
->         val |=3D BIT(d->hwirq);
->         __raw_writel(val, g->base + IXP4XX_REG_GPOE);
->
-> -       spin_unlock_irqrestore(&g->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&g->gc.bgpio_lock, flags);
->
->         /* This parent only accept level high (asserted) */
->         return irq_chip_set_type_parent(d, IRQ_TYPE_LEVEL_HIGH);
-> diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loongson1.=
-c
-> index 1b1ee94eeab4..5d90b3bc5a25 100644
-> --- a/drivers/gpio/gpio-loongson1.c
-> +++ b/drivers/gpio/gpio-loongson1.c
-> @@ -25,10 +25,10 @@ static int ls1x_gpio_request(struct gpio_chip *gc, un=
-signed int offset)
->  {
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         __raw_writel(__raw_readl(gpio_reg_base + GPIO_CFG) | BIT(offset),
->                      gpio_reg_base + GPIO_CFG);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         return 0;
->  }
-> @@ -37,10 +37,10 @@ static void ls1x_gpio_free(struct gpio_chip *gc, unsi=
-gned int offset)
->  {
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         __raw_writel(__raw_readl(gpio_reg_base + GPIO_CFG) & ~BIT(offset)=
-,
->                      gpio_reg_base + GPIO_CFG);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static int ls1x_gpio_probe(struct platform_device *pdev)
-> diff --git a/drivers/gpio/gpio-menz127.c b/drivers/gpio/gpio-menz127.c
-> index 1e21c661d79d..a035a9bcb57c 100644
-> --- a/drivers/gpio/gpio-menz127.c
-> +++ b/drivers/gpio/gpio-menz127.c
-> @@ -64,7 +64,7 @@ static int men_z127_debounce(struct gpio_chip *gc, unsi=
-gned gpio,
->                 debounce /=3D 50;
->         }
->
-> -       spin_lock(&gc->bgpio_lock);
-> +       raw_spin_lock(&gc->bgpio_lock);
->
->         db_en =3D readl(priv->reg_base + MEN_Z127_DBER);
->
-> @@ -79,7 +79,7 @@ static int men_z127_debounce(struct gpio_chip *gc, unsi=
-gned gpio,
->         writel(db_en, priv->reg_base + MEN_Z127_DBER);
->         writel(db_cnt, priv->reg_base + GPIO_TO_DBCNT_REG(gpio));
->
-> -       spin_unlock(&gc->bgpio_lock);
-> +       raw_spin_unlock(&gc->bgpio_lock);
->
->         return 0;
->  }
-> @@ -91,7 +91,7 @@ static int men_z127_set_single_ended(struct gpio_chip *=
-gc,
->         struct men_z127_gpio *priv =3D gpiochip_get_data(gc);
->         u32 od_en;
->
-> -       spin_lock(&gc->bgpio_lock);
-> +       raw_spin_lock(&gc->bgpio_lock);
->         od_en =3D readl(priv->reg_base + MEN_Z127_ODER);
->
->         if (param =3D=3D PIN_CONFIG_DRIVE_OPEN_DRAIN)
-> @@ -101,7 +101,7 @@ static int men_z127_set_single_ended(struct gpio_chip=
- *gc,
->                 od_en &=3D ~BIT(offset);
->
->         writel(od_en, priv->reg_base + MEN_Z127_ODER);
-> -       spin_unlock(&gc->bgpio_lock);
-> +       raw_spin_unlock(&gc->bgpio_lock);
->
->         return 0;
->  }
-> diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-> index 3d89912a05b8..64cb060d9d75 100644
-> --- a/drivers/gpio/gpio-mlxbf2.c
-> +++ b/drivers/gpio/gpio-mlxbf2.c
-> @@ -131,7 +131,7 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpi=
-o_context *gs)
->         u32 arm_gpio_lock_val;
->
->         mutex_lock(yu_arm_gpio_lock_param.lock);
-> -       spin_lock(&gs->gc.bgpio_lock);
-> +       raw_spin_lock(&gs->gc.bgpio_lock);
->
->         arm_gpio_lock_val =3D readl(yu_arm_gpio_lock_param.io);
->
-> @@ -139,7 +139,7 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpi=
-o_context *gs)
->          * When lock active bit[31] is set, ModeX is write enabled
+>          * The SPI address must be big-endian, but we want the payload to match
+>          * our CPU. These are two bits (0 and 1) but they're repeated such that
+>          * the write from any configuration will be valid. The four
+>          * configurations are:
+>          *
+>          * 0b00: little-endian, MSB first
+>          * |            111111   | 22221111 | 33222222 |
+>          * | 76543210 | 54321098 | 32109876 | 10987654 |
+>          *
+>          * 0b01: big-endian, MSB first
+>          * | 33222222 | 22221111 | 111111   |          |
+>          * | 10987654 | 32109876 | 54321098 | 76543210 |
+>          *
+>          * 0b10: little-endian, LSB first
+>          * |              111111 | 11112222 | 22222233 |
+>          * | 01234567 | 89012345 | 67890123 | 45678901 |
+>          *
+>          * 0b11: big-endian, LSB first
+>          * | 22222233 | 11112222 |   111111 |          |
+>          * | 45678901 | 67890123 | 89012345 | 01234567 |
 >          */
->         if (YU_LOCK_ACTIVE_BIT(arm_gpio_lock_val)) {
-> -               spin_unlock(&gs->gc.bgpio_lock);
-> +               raw_spin_unlock(&gs->gc.bgpio_lock);
->                 mutex_unlock(yu_arm_gpio_lock_param.lock);
->                 return -EINVAL;
->         }
-> @@ -157,7 +157,7 @@ static void mlxbf2_gpio_lock_release(struct mlxbf2_gp=
-io_context *gs)
->         __releases(yu_arm_gpio_lock_param.lock)
->  {
->         writel(YU_ARM_GPIO_LOCK_RELEASE, yu_arm_gpio_lock_param.io);
-> -       spin_unlock(&gs->gc.bgpio_lock);
-> +       raw_spin_unlock(&gs->gc.bgpio_lock);
->         mutex_unlock(yu_arm_gpio_lock_param.lock);
->  }
->
-> @@ -237,7 +237,7 @@ static void mlxbf2_gpio_irq_enable(struct irq_data *i=
-rqd)
->         unsigned long flags;
->         u32 val;
->
-> -       spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
->         val =3D readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
->         val |=3D BIT(offset);
->         writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-> @@ -245,7 +245,7 @@ static void mlxbf2_gpio_irq_enable(struct irq_data *i=
-rqd)
->         val =3D readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
->         val |=3D BIT(offset);
->         writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> -       spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
->  }
->
->  static void mlxbf2_gpio_irq_disable(struct irq_data *irqd)
-> @@ -256,11 +256,11 @@ static void mlxbf2_gpio_irq_disable(struct irq_data=
- *irqd)
->         unsigned long flags;
->         u32 val;
->
-> -       spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
->         val =3D readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
->         val &=3D ~BIT(offset);
->         writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> -       spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
->  }
->
->  static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr)
-> @@ -307,7 +307,7 @@ mlxbf2_gpio_irq_set_type(struct irq_data *irqd, unsig=
-ned int type)
->                 return -EINVAL;
->         }
->
-> -       spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
->         if (fall) {
->                 val =3D readl(gs->gpio_io + YU_GPIO_CAUSE_FALL_EN);
->                 val |=3D BIT(offset);
-> @@ -319,7 +319,7 @@ mlxbf2_gpio_irq_set_type(struct irq_data *irqd, unsig=
-ned int type)
->                 val |=3D BIT(offset);
->                 writel(val, gs->gpio_io + YU_GPIO_CAUSE_RISE_EN);
->         }
-> -       spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
->
->         return 0;
->  }
-> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-> index c335a0309ba3..d9dff3dc92ae 100644
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -220,7 +220,7 @@ static void bgpio_set(struct gpio_chip *gc, unsigned =
-int gpio, int val)
->         unsigned long mask =3D bgpio_line2mask(gc, gpio);
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         if (val)
->                 gc->bgpio_data |=3D mask;
-> @@ -229,7 +229,7 @@ static void bgpio_set(struct gpio_chip *gc, unsigned =
-int gpio, int val)
->
->         gc->write_reg(gc->reg_dat, gc->bgpio_data);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void bgpio_set_with_clear(struct gpio_chip *gc, unsigned int gpio=
-,
-> @@ -248,7 +248,7 @@ static void bgpio_set_set(struct gpio_chip *gc, unsig=
-ned int gpio, int val)
->         unsigned long mask =3D bgpio_line2mask(gc, gpio);
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         if (val)
->                 gc->bgpio_data |=3D mask;
-> @@ -257,7 +257,7 @@ static void bgpio_set_set(struct gpio_chip *gc, unsig=
-ned int gpio, int val)
->
->         gc->write_reg(gc->reg_set, gc->bgpio_data);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void bgpio_multiple_get_masks(struct gpio_chip *gc,
-> @@ -286,7 +286,7 @@ static void bgpio_set_multiple_single_reg(struct gpio=
-_chip *gc,
->         unsigned long flags;
->         unsigned long set_mask, clear_mask;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         bgpio_multiple_get_masks(gc, mask, bits, &set_mask, &clear_mask);
->
-> @@ -295,7 +295,7 @@ static void bgpio_set_multiple_single_reg(struct gpio=
-_chip *gc,
->
->         gc->write_reg(reg, gc->bgpio_data);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void bgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask=
-,
-> @@ -347,7 +347,7 @@ static int bgpio_dir_in(struct gpio_chip *gc, unsigne=
-d int gpio)
->  {
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         gc->bgpio_dir &=3D ~bgpio_line2mask(gc, gpio);
->
-> @@ -356,7 +356,7 @@ static int bgpio_dir_in(struct gpio_chip *gc, unsigne=
-d int gpio)
->         if (gc->reg_dir_out)
->                 gc->write_reg(gc->reg_dir_out, gc->bgpio_dir);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         return 0;
->  }
-> @@ -387,7 +387,7 @@ static void bgpio_dir_out(struct gpio_chip *gc, unsig=
-ned int gpio, int val)
->  {
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         gc->bgpio_dir |=3D bgpio_line2mask(gc, gpio);
->
-> @@ -396,7 +396,7 @@ static void bgpio_dir_out(struct gpio_chip *gc, unsig=
-ned int gpio, int val)
->         if (gc->reg_dir_out)
->                 gc->write_reg(gc->reg_dir_out, gc->bgpio_dir);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static int bgpio_dir_out_dir_first(struct gpio_chip *gc, unsigned int gp=
-io,
-> @@ -610,7 +610,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *d=
-ev,
->         if (gc->bgpio_bits > BITS_PER_LONG)
->                 return -EINVAL;
->
-> -       spin_lock_init(&gc->bgpio_lock);
-> +       raw_spin_lock_init(&gc->bgpio_lock);
->         gc->parent =3D dev;
->         gc->label =3D dev_name(dev);
->         gc->base =3D -1;
-> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-> index 7d82388b4ab7..03b8c4de2e91 100644
-> --- a/drivers/gpio/gpio-sifive.c
-> +++ b/drivers/gpio/gpio-sifive.c
-> @@ -44,7 +44,7 @@ static void sifive_gpio_set_ie(struct sifive_gpio *chip=
-, unsigned int offset)
->         unsigned long flags;
->         unsigned int trigger;
->
-> -       spin_lock_irqsave(&chip->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&chip->gc.bgpio_lock, flags);
->         trigger =3D (chip->irq_state & BIT(offset)) ? chip->trigger[offse=
-t] : 0;
->         regmap_update_bits(chip->regs, SIFIVE_GPIO_RISE_IE, BIT(offset),
->                            (trigger & IRQ_TYPE_EDGE_RISING) ? BIT(offset)=
- : 0);
-> @@ -54,7 +54,7 @@ static void sifive_gpio_set_ie(struct sifive_gpio *chip=
-, unsigned int offset)
->                            (trigger & IRQ_TYPE_LEVEL_HIGH) ? BIT(offset) =
-: 0);
->         regmap_update_bits(chip->regs, SIFIVE_GPIO_LOW_IE, BIT(offset),
->                            (trigger & IRQ_TYPE_LEVEL_LOW) ? BIT(offset) :=
- 0);
-> -       spin_unlock_irqrestore(&chip->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&chip->gc.bgpio_lock, flags);
->  }
->
->  static int sifive_gpio_irq_set_type(struct irq_data *d, unsigned int tri=
-gger)
-> @@ -84,13 +84,13 @@ static void sifive_gpio_irq_enable(struct irq_data *d=
-)
->         /* Switch to input */
->         gc->direction_input(gc, offset);
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         /* Clear any sticky pending interrupts */
->         regmap_write(chip->regs, SIFIVE_GPIO_RISE_IP, bit);
->         regmap_write(chip->regs, SIFIVE_GPIO_FALL_IP, bit);
->         regmap_write(chip->regs, SIFIVE_GPIO_HIGH_IP, bit);
->         regmap_write(chip->regs, SIFIVE_GPIO_LOW_IP, bit);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         /* Enable interrupts */
->         assign_bit(offset, &chip->irq_state, 1);
-> @@ -116,13 +116,13 @@ static void sifive_gpio_irq_eoi(struct irq_data *d)
->         u32 bit =3D BIT(offset);
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->         /* Clear all pending interrupts */
->         regmap_write(chip->regs, SIFIVE_GPIO_RISE_IP, bit);
->         regmap_write(chip->regs, SIFIVE_GPIO_FALL_IP, bit);
->         regmap_write(chip->regs, SIFIVE_GPIO_HIGH_IP, bit);
->         regmap_write(chip->regs, SIFIVE_GPIO_LOW_IP, bit);
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->
->         irq_chip_eoi_parent(d);
->  }
-> diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
-> index 718a508d3b2f..de6afa3f9716 100644
-> --- a/drivers/gpio/gpio-tb10x.c
-> +++ b/drivers/gpio/gpio-tb10x.c
-> @@ -62,14 +62,14 @@ static inline void tb10x_set_bits(struct tb10x_gpio *=
-gpio, unsigned int offs,
->         u32 r;
->         unsigned long flags;
->
-> -       spin_lock_irqsave(&gpio->gc.bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gpio->gc.bgpio_lock, flags);
->
->         r =3D tb10x_reg_read(gpio, offs);
->         r =3D (r & ~mask) | (val & mask);
->
->         tb10x_reg_write(gpio, offs, r);
->
-> -       spin_unlock_irqrestore(&gpio->gc.bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gpio->gc.bgpio_lock, flags);
->  }
->
->  static int tb10x_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-> diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/=
-nuvoton/pinctrl-npcm7xx.c
-> index 9557fac5d11c..b2a0f11a658b 100644
-> --- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-> @@ -104,12 +104,12 @@ static void npcm_gpio_set(struct gpio_chip *gc, voi=
-d __iomem *reg,
->         unsigned long flags;
->         unsigned long val;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         val =3D ioread32(reg) | pinmask;
->         iowrite32(val, reg);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void npcm_gpio_clr(struct gpio_chip *gc, void __iomem *reg,
-> @@ -118,12 +118,12 @@ static void npcm_gpio_clr(struct gpio_chip *gc, voi=
-d __iomem *reg,
->         unsigned long flags;
->         unsigned long val;
->
-> -       spin_lock_irqsave(&gc->bgpio_lock, flags);
-> +       raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
->
->         val =3D ioread32(reg) & ~pinmask;
->         iowrite32(val, reg);
->
-> -       spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-> +       raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
->  static void npcmgpio_dbg_show(struct seq_file *s, struct gpio_chip *chip=
-)
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index 874aabd270c9..ff8247a19f57 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -445,7 +445,7 @@ struct gpio_chip {
->         void __iomem *reg_dir_in;
->         bool bgpio_dir_unreadable;
->         int bgpio_bits;
-> -       spinlock_t bgpio_lock;
-> +       raw_spinlock_t bgpio_lock;
->         unsigned long bgpio_data;
->         unsigned long bgpio_dir;
->  #endif /* CONFIG_GPIO_GENERIC */
-> --
-> 2.24.3 (Apple Git-128)
->
+> 
+> With this info, would you recommend:
+> 1. A file-scope static const at the top of this file
+> 2. A macro assigned to one of those sequences
+> 3. A function to "detect" which architecture we're running
 
+I do not have a strong opinion.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Just tuck the #iferry away somewhere in a header file.
+
+> > > +	err = regmap_write(core->cpuorg_regmap, DEV_CPUORG_IF_CTRL, val);
+> > > +	if (err)
+> > > +		return err;
+> > 
+> > Comment.
+> > 
+> > > +	val = core->spi_padding_bytes;
+> > > +	err = regmap_write(core->cpuorg_regmap, DEV_CPUORG_IF_CFGSTAT, val);
+> > > +	if (err)
+> > > +		return err;
+> > 
+> > Comment.
+> 
+> Adding:
+> 
+> /*
+>  * Apply the number of padding bytes between a read request and the data
+>  * payload. Some registers have access times of up to 1us, so if the
+>  * first payload bit is shifted out too quickly, the read will fail.
+>  */
+> 
+> > 
+> > > +	/*
+> > > +	 * After we write the interface configuration, read it back here. This
+> > > +	 * will verify several different things. The first is that the number of
+> > > +	 * padding bytes actually got written correctly. These are found in bits
+> > > +	 * 0:3.
+> > > +	 *
+> > > +	 * The second is that bit 16 is cleared. Bit 16 is IF_CFGSTAT:IF_STAT,
+> > > +	 * and will be set if the register access is too fast. This would be in
+> > > +	 * the condition that the number of padding bytes is insufficient for
+> > > +	 * the SPI bus frequency.
+> > > +	 *
+> > > +	 * The last check is for bits 31:24, which define the interface by which
+> > > +	 * the registers are being accessed. Since we're accessing them via the
+> > > +	 * serial interface, it must return IF_NUM_SI.
+> > > +	 */
+> > > +	check = val | CFGSTAT_IF_NUM_SI;
+> > > +
+> > > +	err = regmap_read(core->cpuorg_regmap, DEV_CPUORG_IF_CFGSTAT, &val);
+> > > +	if (err)
+> > > +		return err;
+> > > +
+> > > +	if (check != val)
+> > > +		return -ENODEV;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL(ocelot_spi_initialize);
+> > > +
+> > > +/*
+> > > + * The SPI protocol for interfacing with the ocelot chips uses 24 bits, while
+> > > + * the register locations are defined as 32-bit. The least significant two bits
+> > > + * get shifted out, as register accesses must always be word-aligned, leaving
+> > > + * bits 21:0 as the 22-bit address. It must always be big-endian, whereas the
+> > > + * payload can be optimized for bit / byte order to match whatever architecture
+> > > + * the controlling CPU has.
+> > > + */
+> > > +static unsigned int ocelot_spi_translate_address(unsigned int reg)
+> > > +{
+> > > +	return cpu_to_be32((reg & 0xffffff) >> 2);
+> > > +}
+> > > +
+> > > +struct ocelot_spi_regmap_context {
+> > > +	u32 base;
+> > > +	struct ocelot_core *core;
+> > > +};
+> > > +
+> > > +static int ocelot_spi_reg_read(void *context, unsigned int reg,
+> > > +			       unsigned int *val)
+> > > +{
+> > > +	struct ocelot_spi_regmap_context *regmap_context = context;
+> > > +	struct ocelot_core *core = regmap_context->core;
+> > > +	struct spi_transfer tx, padding, rx;
+> > > +	struct spi_message msg;
+> > 
+> > How big are all of these?
+> > 
+> > We will receive warnings if they occupy too much stack space.
+> 
+> Looking at the structs they're on the order of 10s of bytes. Maybe 70
+> bytes per instance (back of napkin calculation)
+> 
+> But it seems very common to stack-allocate spi_transfers:
+> 
+> https://elixir.bootlin.com/linux/v5.18-rc2/source/drivers/spi/spi.c#L4097
+> https://elixir.bootlin.com/linux/v5.18-rc2/source/include/linux/spi/spi.h#L1244
+> 
+> Do you have a feel for at what point that becomes a concern?
+
+That's fine.  I just want you to bear this in mind.
+
+I wish to prevent adding yet more W=1 level warnings into the kernel.
+
+> > > +	struct spi_device *spi;
+> > > +	unsigned int addr;
+> > > +	u8 *tx_buf;
+> > > +
+> > > +	spi = core->spi;
+> > > +
+> > > +	addr = ocelot_spi_translate_address(reg + regmap_context->base);
+> > > +	tx_buf = (u8 *)&addr;
+> > > +
+> > > +	spi_message_init(&msg);
+> > > +
+> > > +	memset(&tx, 0, sizeof(tx));
+> > > +
+> > > +	/* Ignore the first byte for the 24-bit address */
+> > > +	tx.tx_buf = &tx_buf[1];
+> > > +	tx.len = 3;
+> > > +
+> > > +	spi_message_add_tail(&tx, &msg);
+> > > +
+> > > +	if (core->spi_padding_bytes > 0) {
+> > > +		u8 dummy_buf[16] = {0};
+> > > +
+> > > +		memset(&padding, 0, sizeof(padding));
+> > > +
+> > > +		/* Just toggle the clock for padding bytes */
+> > > +		padding.len = core->spi_padding_bytes;
+> > > +		padding.tx_buf = dummy_buf;
+> > > +		padding.dummy_data = 1;
+> > > +
+> > > +		spi_message_add_tail(&padding, &msg);
+> > > +	}
+> > > +
+> > > +	memset(&rx, 0, sizeof(rx));
+> > > +	rx.rx_buf = val;
+> > > +	rx.len = 4;
+> > > +
+> > > +	spi_message_add_tail(&rx, &msg);
+> > > +
+> > > +	return spi_sync(spi, &msg);
+> > > +}
+> > > +
+> > > +static int ocelot_spi_reg_write(void *context, unsigned int reg,
+> > > +				unsigned int val)
+> > > +{
+> > > +	struct ocelot_spi_regmap_context *regmap_context = context;
+> > > +	struct ocelot_core *core = regmap_context->core;
+> > > +	struct spi_transfer tx[2] = {0};
+> > > +	struct spi_message msg;
+> > > +	struct spi_device *spi;
+> > > +	unsigned int addr;
+> > > +	u8 *tx_buf;
+> > > +
+> > > +	spi = core->spi;
+> > > +
+> > > +	addr = ocelot_spi_translate_address(reg + regmap_context->base);
+> > > +	tx_buf = (u8 *)&addr;
+> > > +
+> > > +	spi_message_init(&msg);
+> > > +
+> > > +	/* Ignore the first byte for the 24-bit address and set the write bit */
+> > > +	tx_buf[1] |= BIT(7);
+> > > +	tx[0].tx_buf = &tx_buf[1];
+> > > +	tx[0].len = 3;
+> > > +
+> > > +	spi_message_add_tail(&tx[0], &msg);
+> > > +
+> > > +	memset(&tx[1], 0, sizeof(struct spi_transfer));
+> > > +	tx[1].tx_buf = &val;
+> > > +	tx[1].len = 4;
+> > > +
+> > > +	spi_message_add_tail(&tx[1], &msg);
+> > > +
+> > > +	return spi_sync(spi, &msg);
+> > > +}
+> > > +
+> > > +static const struct regmap_config ocelot_spi_regmap_config = {
+> > > +	.reg_bits = 24,
+> > > +	.reg_stride = 4,
+> > > +	.val_bits = 32,
+> > > +
+> > > +	.reg_read = ocelot_spi_reg_read,
+> > > +	.reg_write = ocelot_spi_reg_write,
+> > > +
+> > > +	.max_register = 0xffffffff,
+> > > +	.use_single_write = true,
+> > > +	.use_single_read = true,
+> > > +	.can_multi_write = false,
+> > > +
+> > > +	.reg_format_endian = REGMAP_ENDIAN_BIG,
+> > > +	.val_format_endian = REGMAP_ENDIAN_NATIVE,
+> > > +};
+> > > +
+> > > +struct regmap *
+> > > +ocelot_spi_devm_get_regmap(struct ocelot_core *core, struct device *child,
+> > > +			   const struct resource *res)
+> > 
+> > This seems to always initialise a new Regmap.
+> > 
+> > To me 'get' implies that it could fetch an already existing one.
+> > 
+> > ... and *perhaps* init a new one if none exists..
+> 
+> That's exactly what my intention was when I started.
+> 
+> But it seems like *if* that is something that is required, it should be
+> done through a syscon / device tree implementation and not be snuck into
+> this regmap getter. I was trying to do too much.
+> 
+> I'm renaming to "init"
+> 
+> > 
+> > > +{
+> > > +	struct ocelot_spi_regmap_context *context;
+> > > +	struct regmap_config regmap_config;
+> > > +
+> > > +	context = devm_kzalloc(child, sizeof(*context), GFP_KERNEL);
+> > > +	if (IS_ERR(context))
+> > > +		return ERR_CAST(context);
+> > > +
+> > > +	context->base = res->start;
+> > > +	context->core = core;
+> > > +
+> > > +	memcpy(&regmap_config, &ocelot_spi_regmap_config,
+> > > +	       sizeof(ocelot_spi_regmap_config));
+> > > +
+> > > +	regmap_config.name = res->name;
+> > > +	regmap_config.max_register = res->end - res->start;
+> > > +
+> > > +	return devm_regmap_init(child, NULL, context, &regmap_config);
+> > > +}
+> > > +
+> > > +static int ocelot_spi_probe(struct spi_device *spi)
+> > > +{
+> > > +	struct device *dev = &spi->dev;
+> > > +	struct ocelot_core *core;
+> > 
+> > This would be more in keeping with current drivers if you dropped the
+> > '_core' part of the struct name and called the variable ddata.
+> 
+> There's already a "struct ocelot" defined in include/soc/mscc/ocelot.h.
+> I suppose it could be renamed to align with what it actually is: the
+> "switch" component of the ocelot chip.
+> 
+> Vladimir, Alexandre, Horaitu, others:
+> Any opinions about this becoming "struct ocelot" and the current struct
+> being "struct ocelot_switch"?
+> 
+> Or maybe a technical / philosophical question: is "ocelot" the switch
+> core that can be implemented in other hardware? Or is it the chip family
+> entirely, (pinctrl, sgpio, etc.) who's switch core was brought into
+> other products?
+> 
+> The existing struct change would hit about 30 files.
+> https://elixir.bootlin.com/linux/v5.18-rc2/C/ident/ocelot
+
+That's not ideal.
+
+Please consider using 'ocelot_ddata' for now and consider a larger
+overhaul at a later date, if it makes sense to do so.
+
+[...]
+
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
