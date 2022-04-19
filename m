@@ -2,72 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90B8A507C39
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Apr 2022 23:56:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3169B507C41
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Apr 2022 23:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354897AbiDSV7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Apr 2022 17:59:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49114 "EHLO
+        id S1345474AbiDSWAw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Apr 2022 18:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346179AbiDSV7N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 17:59:13 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2A540A28
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 14:56:29 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2ebf3746f87so187692757b3.6
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 14:56:29 -0700 (PDT)
+        with ESMTP id S240063AbiDSWAv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 18:00:51 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D07A540E46
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 14:58:07 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-2f16645872fso86739597b3.4
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 14:58:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=o5U1cn6+o5nTDbwZR88CUNrm0hxDesFUSzgqVEiUi5k=;
-        b=Rgs08pIBuoNzE/5T67y5y27kHtxOzCdiKXIXfbLP1qlmASEYTIEu/XjHcO/rDO14A6
-         GQofJtAwB0/xUZLDKRcnIEIXp2FsW1WwyL7vydwDc0dU8fbMhwh8hBmxz6STE937cn9Y
-         q2wjhmuR4iVMC9hCbZvSiEDPnjzDEO/nDjs153YTLRSBVAhoAqw65EqVZfN28Kkxyobj
-         khYzChEq1we63DZSaHCfxzxQG4wjqi+tM4F/RZDXbUcfs0nyU7WRkd+vyTJaweEv1IJT
-         35X+lqw214/+wupT0lHG8hOkDdMPQkm/VkaSnzhZ39CvUL0swNgKVlFkhcusk9FLuMlX
-         IKGQ==
+        bh=b0FdhFvoto3cfbTufYpeHPpDSicSfoYk0f7qMia8Bdg=;
+        b=zBnm4d3bVKW2b5jnvekPM/eQx3z9hsp5xqRTJPjXSKoWx8tWLqOEJh6KYbJG2wb69H
+         p4hmQrXPrxhENGRIm+ntF1+pxpZ4NKRG2Fixd6R6prRK2orJSD+9XNUKjFrlgtrRdebx
+         MgnhSvb97qdcRwKYnD3JSdQDYXIPNWyT3PuMkmXZq2eSGoECCqUdBAzywbMwK6WD7kpD
+         2iUevzz1mkSflSKQ7deupPU/mMDZ5MvOVa40AFsNnnUc0TznAVIg593TmguN3uGP2GMa
+         zzkIEa7e/ZwnUMSQDi0i8hNBkDxnDI1MWnBumLEwD3hQC9a8H7pRkM2HnrkA5lHgsn/n
+         9HIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=o5U1cn6+o5nTDbwZR88CUNrm0hxDesFUSzgqVEiUi5k=;
-        b=tg99TXyEY33J7+DGsYTQCiVCEjKwPcxglwbeAGp60C3Q+AFErLauvNN1047btqVnlJ
-         +292jUc6mS7NCzGJdomIJR/HzcTe/tdajTZRv2Xf4krMKfCBuuTQfrQrzo20/09k7qix
-         hTEra5v5PzRBXGru89UssRUaoPGx1JgscSthLsh4rNaWkGCulN7oMNAW0QD2Obg5C3Pu
-         VLdvH/o+y0nF0g0hikwALvO6tMYPTrwbm4O5k+697oO+2pLYi1WPO1aLQhwi6VgBlZF+
-         IZLAPtSCtFX8aSfGQLlJfxn79jQZLVWXAP89Hz62CdxZ1yaRLTse5XK5cOXBj0x1B6nU
-         G3Ug==
-X-Gm-Message-State: AOAM531xwzorCN9LqGZnRTWmkZPgT+03pgVA1Gf/MkEcmz70xfTfdbH1
-        1p07z7b3BK3rBUC6cEBgIdqfSGXXnyV0bx5Qcrt3Xw==
-X-Google-Smtp-Source: ABdhPJxFEHSE/pis5LX657I4YxyA6XvsGZ/n2P/4VzVlx4ahwA45KoXz1mcjGguqs6qs5VDzjUIJdwSIBd9PekozwM0=
-X-Received: by 2002:a81:b50d:0:b0:2e5:b653:7e97 with SMTP id
- t13-20020a81b50d000000b002e5b6537e97mr19299462ywh.140.1650405388892; Tue, 19
- Apr 2022 14:56:28 -0700 (PDT)
+        bh=b0FdhFvoto3cfbTufYpeHPpDSicSfoYk0f7qMia8Bdg=;
+        b=uMbwGMPKzEv2xIx4ZNvRXfVUBgSXQxB/4CnXVcO5HlGEK3voBJEeVbhSIieU78Hx//
+         ZLDahE1oMH4TnY3fH52UyvCCSegtODoKXEvYmvh2XA13W9BowQqagSsrnDqtVkrfu1XH
+         DRxGvKMlI61Qbirsfmqv78PQZaLDF1/fX/e7asBJ9fFBteKhAi6mGWPo+2xJG1+BTSOK
+         SWCLTrtIl8eQNYGkELb6KgliSptRImMenNG2CBOefhGLveV+1QuzfC6KNVyAKwDL2nfh
+         QG1Cj83+gE1MNr5kTM+9GllHbz4YS2Cy3wufre93J5AbhDddbiFERqL38UtASFfy1Fao
+         slxA==
+X-Gm-Message-State: AOAM530vYdq5kFwHhu1mKjNx61F9kCmROD9A4/7gCBH2TBX00lBjtB4Z
+        piVxcagqFqydUXGJPD5ziyxpVM+yUEC2zcYhOrm3ig==
+X-Google-Smtp-Source: ABdhPJysZSO4rZI8aihXTH5ybXBow3i3c21+5d2zQBcxSPKt0OOZz8Icvk1xE0IDvZ4kpBqlx5RLDjaI/WPO9BTm0xU=
+X-Received: by 2002:a0d:ea46:0:b0:2ed:62f4:e23c with SMTP id
+ t67-20020a0dea46000000b002ed62f4e23cmr17960656ywe.437.1650405487130; Tue, 19
+ Apr 2022 14:58:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220405135444.199295-1-maz@kernel.org>
-In-Reply-To: <20220405135444.199295-1-maz@kernel.org>
+References: <CAMRc=Meo4TbdxQzynb7paDgC7J19Tc6hhKU7du4mZvgP0mynTQ@mail.gmail.com>
+ <20220419012810.88417-1-schspa@gmail.com>
+In-Reply-To: <20220419012810.88417-1-schspa@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Apr 2022 23:56:17 +0200
-Message-ID: <CACRpkdbdo=Es8VU_td6S3LCVCsYpcWC=pW1SGDXEAe2Gp8uZcA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] gpiolib: Handle immutable irq_chip structures
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+Date:   Tue, 19 Apr 2022 23:57:56 +0200
+Message-ID: <CACRpkdYcCZ7zZkuVLMGnoqO69mJ5a-hEg2DV8PmzfwgBFzgVKQ@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: use raw spinlock for gpio chip shadowed data
+To:     Schspa Shi <schspa@gmail.com>
+Cc:     brgl@bgdev.pl, andy.shevchenko@gmail.com, f.fainelli@gmail.com,
+        fancer.lancer@gmail.com, hoan@os.amperecomputing.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, opendmb@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -79,49 +68,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 5, 2022 at 3:55 PM Marc Zyngier <maz@kernel.org> wrote:
+On Tue, Apr 19, 2022 at 3:28 AM Schspa Shi <schspa@gmail.com> wrote:
 
-> Not only this breaks when an irq_chip structure is made const (which
-> really should be the default case), but it also forces this structure
-> to be copied at nauseam for each instance of the GPIO block, which is
-> a waste of memory.
+> In case of PREEMPT_RT, there is a raw_spinlock -> spinlock dependency
+> as the lockdep report shows.
 >
-> My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
-> which does what it says on the tin: don't you dare writing to them.
-> Gpiolib is further updated not to install its own callbacks, and it
-> becomes the responsibility of the driver to call into the gpiolib when
-> required. This is similar to what we do for other subsystems such as
-> PCI-MSI.
+> __irq_set_handler
+>   irq_get_desc_buslock
+>     __irq_get_desc_lock
+>       raw_spin_lock_irqsave(&desc->lock, *flags);  // raw spinlock get here
+>   __irq_do_set_handler
+>     mask_ack_irq
+>       dwapb_irq_ack
+>         spin_lock_irqsave(&gc->bgpio_lock, flags); // sleep able spinlock
+>   irq_put_desc_busunlock
 >
-> 5 drivers are updated to this new model: M1, QC, Tegra, pl061 and AMD
-> (as I actively use them) keeping a single irq_chip structure, marking
-> it const, and exposing the new flag.
+> Replace with a raw lock to avoid BUGs. This lock is only used to access
+> registers, and It's safe to replace with the raw lock without bad
+> influence.
 >
-> Nothing breaks, the volume of change is small, the memory usage goes
-> down and we have fewer callbacks that can be used as attack vectors.
-> What's not to love?
+> [   15.090359][    T1] =============================
+> [   15.090365][    T1] [ BUG: Invalid wait context ]
+> [   15.090373][    T1] 5.10.59-rt52-00983-g186a6841c682-dirty #3 Not tainted
+> [   15.090386][    T1] -----------------------------
+> [   15.090392][    T1] swapper/0/1 is trying to lock:
+> [   15.090402][    T1] 70ff00018507c188 (&gc->bgpio_lock){....}-{3:3}, at: _raw_spin_lock_irqsave+0x1c/0x28
+> [   15.090470][    T1] other info that might help us debug this:
+> [   15.090477][    T1] context-{5:5}
+> [   15.090485][    T1] 3 locks held by swapper/0/1:
+> [   15.090497][    T1]  #0: c2ff0001816de1a0 (&dev->mutex){....}-{4:4}, at: __device_driver_lock+0x98/0x104
+> [   15.090553][    T1]  #1: ffff90001485b4b8 (irq_domain_mutex){+.+.}-{4:4}, at: irq_domain_associate+0xbc/0x6d4
+> [   15.090606][    T1]  #2: 4bff000185d7a8e0 (lock_class){....}-{2:2}, at: _raw_spin_lock_irqsave+0x1c/0x28
+> [   15.090654][    T1] stack backtrace:
+> [   15.090661][    T1] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.10.59-rt52-00983-g186a6841c682-dirty #3
+> [   15.090682][    T1] Hardware name: Horizon Robotics Journey 5 DVB (DT)
+> [   15.090692][    T1] Call trace:
+> ......
+> [   15.090811][    T1]  _raw_spin_lock_irqsave+0x1c/0x28
+> [   15.090828][    T1]  dwapb_irq_ack+0xb4/0x300
+> [   15.090846][    T1]  __irq_do_set_handler+0x494/0xb2c
+> [   15.090864][    T1]  __irq_set_handler+0x74/0x114
+> [   15.090881][    T1]  irq_set_chip_and_handler_name+0x44/0x58
+> [   15.090900][    T1]  gpiochip_irq_map+0x210/0x644
 >
-> * From v1 [1]:
->   - pl061 and AMD drivers converted
->   - New helpers to keep the changes small
->   - New warning for non-converted drivers
->   - Documentation and TODO updates
->
-> [1] https://lore.kernel.org/r/20220223154405.54912-1-maz@kernel.org
->
-> Marc Zyngier (10):
->   gpio: Don't fiddle with irqchips marked as immutable
->   gpio: Expose the gpiochip_irq_re[ql]res helpers
->   gpio: Add helpers to ease the transition towards immutable irq_chip
->   gpio: tegra186: Make the irqchip immutable
->   gpio: pl061: Make the irqchip immutable
->   pinctrl: apple-gpio: Make the irqchip immutable
->   pinctrl: msmgpio: Make the irqchip immutable
->   pinctrl: amd: Make the irqchip immutable
->   gpio: Update TODO to mention immutable irq_chip structures
->   Documentation: Update the recommended pattern for GPIO irqchips
+> Signed-off-by: Schspa Shi <schspa@gmail.com>
 
+LGTM
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Mostly hits drivers/gpio so this seems like something Bartosz
+should merge.
 
 Yours,
 Linus Walleij
