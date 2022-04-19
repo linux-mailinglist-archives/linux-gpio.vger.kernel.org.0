@@ -2,57 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3EE5507C4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 00:00:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB00F507C5B
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 00:02:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358139AbiDSWCu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Apr 2022 18:02:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51716 "EHLO
+        id S1343494AbiDSWFM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Apr 2022 18:05:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357362AbiDSWCt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 18:02:49 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029DA2253B
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 15:00:04 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id r189so13825425ybr.6
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 15:00:03 -0700 (PDT)
+        with ESMTP id S236505AbiDSWFM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Apr 2022 18:05:12 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C22640E73
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 15:02:28 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-2ef5380669cso171018577b3.9
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 15:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WaRzQ4klN9ADXoVL2/N/GdSyXHSUMyLkroRcRJGiyVo=;
-        b=dsrvHvVw5CVTuYDjOZ4qvSA0xlGQ9a7GqFzdPXMtEddMQ65wpQPzZqOX/JbXwhprLR
-         hPqkmxoXvBpkzvae2A5VxtWBiv9VY9kRWmXJ+gNgfr/J936VxV0clghSDI22NmxKt6B1
-         HK7/ftdE06eNgpBj5leo1XsK8IIFCdSEa9VpY+wehnw1M5Hh1AqCZmlTGeEQwdiqRty+
-         cW2dboQNQeR+KAybRGfQl22NikK/qMzaLhJ2IIcrKITmvBaledZvlBC39xLZDPSZ9+KJ
-         JjPkH3I8poggbgEpZNVssMvzVQGwXLljvU6Em9lqaRW44S5WXiNBK0t6/gH/HIxRaWbv
-         LmJg==
+        bh=CnSoh+ZD8DR5nKk6CV9UyrxaQEV9KgNslgMO1bDltQg=;
+        b=Yqp9wQBCWbWPglTxek38iaFNVPN4Zk+RjRomb858O7NzPfSZ+56DcTmtbbra8cwo8A
+         51LXzN/RhH4+O0qrKK90KipDzYk0rjXH0fWgauClW+t4NGUHEgy+QmXTqGliJ7ZrFAMo
+         fyyaKKW3Nkt+GpV/6fmKo89PXd1xCQz8RXD9uQJtIgvvcwQDmo9JieU4vft39lVG7Akt
+         EBG1oVJHmTxwINgk2kTxL9uYGLrCfT5FGn6QKAHpfvtDhDtE/kNyEKA6I/ESzJq6rvT7
+         3qCxECIIz8g/Hpac47uzFVgZwz15uhtU4EDCj69W7Jd/qxQac3Irst/sGaDuFPswElMM
+         FSBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WaRzQ4klN9ADXoVL2/N/GdSyXHSUMyLkroRcRJGiyVo=;
-        b=qo02QtI86tjLuEhq0L+OlZbSOGQFiowgrpEATghBzhZd8CxbJxIVv+YuvKzsKvVwTC
-         4idt0eedqhb1mllka0DQ3hoe6VylOdw0upwCvtJDcgwXZgbukZ4uueO5uA7AWDyENl8H
-         v8Lw4mY+ss6WPV7M8acb+/GbnCRpqJevn6x+L/KI6RhdaP0Dyagmea+FCcMYO+1HvVM8
-         I8hvaNa0AWs6XFbcn1mvobtZwHo57ygTfZ0IYrcm3aRJdtWTWHS8+UxKDSUQGzSJooSF
-         mhd73fNA5PxwUflbzjUKrpsmW2sf/tNeatvLLw2mBlibUSR2OqXLhU/GK0rUgPxTQrpR
-         ujUA==
-X-Gm-Message-State: AOAM530TvG4By3AnquGX/DX31MRlCcuDIEXWFbUzdcLVhIRw0Jmjej0p
-        9j7TvSnDylIEt+H+awI0OKX/d9kjiOc6MSIc374+vQ==
-X-Google-Smtp-Source: ABdhPJyCOTK/Tp48a1k8AcfN/cTDyqQzbuqieOsXlmrpfSjjG6eK1W8C3AEqhU8MKnqaFQHcd0hbJwfVrHu5J84iAjY=
-X-Received: by 2002:a25:a12a:0:b0:644:e94e:5844 with SMTP id
- z39-20020a25a12a000000b00644e94e5844mr12511065ybh.492.1650405602771; Tue, 19
- Apr 2022 15:00:02 -0700 (PDT)
+        bh=CnSoh+ZD8DR5nKk6CV9UyrxaQEV9KgNslgMO1bDltQg=;
+        b=u/kOQ/7qoVKqbQtipHQScoTtgag3gdse4uAC65qBgXUXSvCpfD/6xP5ta7WhYLQzIo
+         na0ZWV0OVae6P7okypZodQCDlcFsqW19n10/ahEekjW1sJGNVnElR71V7S86imTi6cw8
+         GPHavrcg6UrHS2PPwfCnwC5UxLw5pvw9uhKyrgFNlFu2BKd226ifXYZGA2SlJ9Tl45h6
+         dkvb/+RxPdxl/0aUl7sO6J7m3iViT7uzEeJz1fe6UP4Eizu5Qe9kHPI7BLUuXLt4ifND
+         dLKmCA0vAUh+mOXZAkTBoy3pYCcogLs3lz8NqrJRb/8qSigYoratsyru6OQS9D3xSq9z
+         P9MA==
+X-Gm-Message-State: AOAM532+4jWz+qQ3LdINj6W+9n7Zl1aO0rinmcHA82K4kc1dfYXaH0Eb
+        wsx23NkoMNJfzwutwj/5WltHyyE9ROUUXt+18LEWJg==
+X-Google-Smtp-Source: ABdhPJykrSD9spRkBNNbl3jZqUx8W2pxKdem4xATAM88TeGKzKQGRYCeHgf3K2yq3M35hvoxd/8Cjlx/QFKC/zbTbBk=
+X-Received: by 2002:a81:5dc5:0:b0:2eb:3feb:686c with SMTP id
+ r188-20020a815dc5000000b002eb3feb686cmr18267528ywb.268.1650405747502; Tue, 19
+ Apr 2022 15:02:27 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220414025705.598-1-mario.limonciello@amd.com>
-In-Reply-To: <20220414025705.598-1-mario.limonciello@amd.com>
+ <20966c6b-9045-9f8b-ba35-bf44091ce380@gmail.com> <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
+In-Reply-To: <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Apr 2022 23:59:51 +0200
-Message-ID: <CACRpkdZsv1u7Df=PLC8E_ZS5GAdW3PfEYjctfSJJuAev8mu9=w@mail.gmail.com>
+Date:   Wed, 20 Apr 2022 00:02:16 +0200
+Message-ID: <CACRpkdbvN0ZJnn+N=Vt2n_aO4CnM=E4qpe_3dmu-c8_Ufp8ZzQ@mail.gmail.com>
 Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
 To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+Cc:     firew4lker <firew4lker@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Shreeya Patel <shreeya.patel@collabora.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -70,40 +72,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 4:57 AM Mario Limonciello
+On Mon, Apr 18, 2022 at 6:34 AM Mario Limonciello
 <mario.limonciello@amd.com> wrote:
 
-> commit 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before
-> initialization") attempted to fix a race condition that lead to a NULL
-> pointer, but in the process caused a regression for _AEI/_EVT declared
-> GPIOs. This manifests in messages showing deferred probing while trying
-> to allocate IRQs like so:
+> Linus Walleij,
 >
-> [    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
-> [    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
-> [    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
-> [    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
-> [    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
-> [    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
-> [    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
-> [    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
-> [    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
-> [    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
+> As this is backported to 5.15.y, 5.16.y, 5.17.y and those all had point
+> releases a bunch of people are hitting it now.  If you choose to adopt
+> this patch instead of revert the broken one, you can add to the commit
+> message too:
 >
-> The code for walking _AEI doesn't handle deferred probing and so this leads
-> to non-functional GPIO interrupts.
->
-> Fix this issue by moving the call to `acpi_gpiochip_request_interrupts` to
-> occur after gc->irc.initialized is set.
->
-> Cc: Shreeya Patel <shreeya.patel@collabora.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before initialization")
-> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
-> Link: https://lore.kernel.org/linux-gpio/BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#u
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1976
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+I am on parental leave kind of, but Bartosz knows what to do,
+in this case, since it is ACPI-related, Andy knows best what
+to do, and I see he also replied.
 
 Yours,
 Linus Walleij
