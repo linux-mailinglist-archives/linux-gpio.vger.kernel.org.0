@@ -2,221 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42FA0508794
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 13:58:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C6675087CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 14:10:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378348AbiDTMBN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Apr 2022 08:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38378 "EHLO
+        id S1352815AbiDTMNK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Apr 2022 08:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378370AbiDTMBK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 08:01:10 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71DE403F2
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 04:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650455904; x=1681991904;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AcImVDsqb6mOq58IXng3nBdWTuW0ogKq7+6ZbogjFxI=;
-  b=nSxyzl29eSQ8BtH+DaO6D2est1ttBF/k22Q0Yq26L/ZNhWOEHLDNg6Gt
-   Y6N2Rs2WeOUvBEiNGqZzkQyUFf/ru3lMMGETZjDRZz02/FV1vU6nK62Iw
-   zpWXb02pqepcAneYdjk+mDTImrfLtSstVcQFycVh7YZhD8Dq/De7PMuW1
-   VO1dPCP0Bj0pE1ELTJ5hZHRiD8SyY16KXS57sLvsquMylcW/AK2eVd+vF
-   2z0I74BTV1KlpNnPo9DgEbbY6YAbWfoW+JMsnX98XI818QNLOvbGUd2tV
-   IEenABQ7ROKl8QxVDZFcmlZ9s+gQQIjfVSpaCNX8mHzYf77VbaEH2lO2S
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10322"; a="243939220"
-X-IronPort-AV: E=Sophos;i="5.90,275,1643702400"; 
-   d="scan'208";a="243939220"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 04:58:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,275,1643702400"; 
-   d="scan'208";a="863664891"
-Received: from lkp-server01.sh.intel.com (HELO 3abc53900bec) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Apr 2022 04:58:23 -0700
-Received: from kbuild by 3abc53900bec with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nh8yU-0006yN-F6;
-        Wed, 20 Apr 2022 11:58:22 +0000
-Date:   Wed, 20 Apr 2022 19:58:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 1d3cdf06d1ad2a2712a29668bb342584932da842
-Message-ID: <625ff558.r5j2tfhdILoLS2Kt%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S1378442AbiDTMNJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 08:13:09 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 719DD28E3A;
+        Wed, 20 Apr 2022 05:10:21 -0700 (PDT)
+Received: from mail-wr1-f46.google.com ([209.85.221.46]) by
+ mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1N9M5y-1o1nCx3k9c-015M8y; Wed, 20 Apr 2022 14:10:19 +0200
+Received: by mail-wr1-f46.google.com with SMTP id x18so2019503wrc.0;
+        Wed, 20 Apr 2022 05:10:19 -0700 (PDT)
+X-Gm-Message-State: AOAM530HBRqZVdBx6mQC9a2skGh625UftjxhGT9wSh3x8APaCuzki3ce
+        KqJGXpGYGVLe4QlzSfnlm1qnPnQ/5E3aENZVbrU=
+X-Google-Smtp-Source: ABdhPJwEzMpW3Z+El4kjnHs87k1+HrjytUR9IDBIcg8LlQbi6Kg0Yw1ngl3fa6HiSMPMMkT1ObfluHZ9iQTS11evFFo=
+X-Received: by 2002:a5d:6389:0:b0:207:a7d8:2b64 with SMTP id
+ p9-20020a5d6389000000b00207a7d82b64mr15261455wru.12.1650456619497; Wed, 20
+ Apr 2022 05:10:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220420115512.175917-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220420115512.175917-1-krzysztof.kozlowski@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 Apr 2022 14:10:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0uH5KjaobrqUmJQnvMmjkUaR1iC-7jEPjZFjZF1Z-GfQ@mail.gmail.com>
+Message-ID: <CAK8P3a0uH5KjaobrqUmJQnvMmjkUaR1iC-7jEPjZFjZF1Z-GfQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: samsung: fix missing GPIOLIB on ARM64 Exynos config
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9HTFVXbF8thm6W+pemK9kzBhMavi6QDXkUIgNwn+le/z7kbKJ92
+ ZvJUkoZ8qmqzWiQ9tXqtRDDQCZhpAvncbnXGxiXolRPXTgdbc8gXjvPzPAwj8tMu8ODKGxg
+ VZexpZbWDhsO0/saIdV1TVoXT8/B5B+/rGEK2bAgaEBo0085Rtcai4/qrH+GQUZuFwYLhiF
+ uk+bvnOm2RWyXYaBkqT3g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6eg226EKkx4=:Gzm/re6sjLggt33JpQubg3
+ dtzvmwLw1AYDrz+cNiJ52HCzMTQjNFbGdKl7O4TDQemDeK17AdISpVSMbbP9PzaGj4yvbfb2Q
+ naSiyX1RbsRgMGd75DPi8b72Nu4Zx+Lj6LHxCWMHsbjHPuLDAOAYna0ZcC3JkEOEVA5fJTHH7
+ qmjyTCdw7s1HQ1e2uEx/6GAFAH1tT0RGfh7ippdD6ly8o4Mpxc0GN+INZBRL7ZngEScEhdMvo
+ PjFTFl3PJyw8B91Ac545iyzNtDsuNMAIy46BVtUKjntLFnZ9XL6blTi2gNTvTl/B1s3yGBgBP
+ B+wdKzK2BbXOtT92QUNtinSwacTtepjf1SAS5YtzJ0XOvlEVCMZfzIoZJwIM7S8CADK6E+ULQ
+ oGp0KfjJw8clKgg4L1KgLgJkx0P+m81fKdMFl9yWexoN0/yQdGDmKjE2CO6bWyTw6/nNt0/Ub
+ Z3y7bcPnATlmmJaqB6by4Yd8NHfq3+YZ7YVuWpI0YFyvzg+herDsp0mt9RoCZp629oV/XULgA
+ Xf8D1c8A/xnNadyfwXRw+uChn33CPqD55nmPirAnbRy8tK5ppC9SzqvGbZQACPtSBg+xYh5mO
+ 2el0LCYogE/9Cf/M/zFU6Qqjst66bxDbCLrqxWPX90v8qVtE0JN3QdTz09dr0FhBJdipMhhh7
+ 7HbknufRdM1VmmfLcsmC6IY99lxD8EX6DW4tNRLNp8JdU9dZng2aVO50onghHcEff0RFcghY7
+ QWoVMBxn5MJ5smxrCNUVUgLnzAfmnLZydcSR/I4cEOIqc6cUuJdMbvhDkaILc4ARnz+hy9hHy
+ h1WUHvMlWliDAmLC+UQNK73p8o/DPoyaQKIuxC6YQ6wtU7hJv0=
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 1d3cdf06d1ad2a2712a29668bb342584932da842  pinctrl: meson: fix unused variable warning
+On Wed, Apr 20, 2022 at 1:55 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> The Samsung pinctrl drivers depend on OF_GPIO, which is part of GPIOLIB.
+> ARMv7 Exynos platform selects GPIOLIB and Samsung pinctrl drivers. ARMv8
+> Exynos selects only the latter leading to possible wrong configuration
+> on ARMv8 build:
+>
+>   WARNING: unmet direct dependencies detected for PINCTRL_EXYNOS
+>     Depends on [n]: PINCTRL [=y] && OF_GPIO [=n] && (ARCH_EXYNOS [=y] || ARCH_S5PV210 || COMPILE_TEST [=y])
+>     Selected by [y]:
+>     - ARCH_EXYNOS [=y]
+>
+> Reported-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
+> Fixes: eed6b3eb20b9 ("arm64: Split out platform options to separate Kconfig")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
 
-elapsed time: 724m
+This does not look like a correct fix:
 
-configs tested: 137
-configs skipped: 5
+> diff --git a/drivers/pinctrl/samsung/Kconfig b/drivers/pinctrl/samsung/Kconfig
+> index dfd805e76862..c852fd1dd284 100644
+> --- a/drivers/pinctrl/samsung/Kconfig
+> +++ b/drivers/pinctrl/samsung/Kconfig
+> @@ -4,13 +4,13 @@
+>  #
+>  config PINCTRL_SAMSUNG
+>         bool
+> -       depends on OF_GPIO
+> +       select GPIOLIB
+> +       select OF_GPIO
+>         select PINMUX
+>         select PINCONF
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+OF_GPIO is an automatic symbol that is always enabled when both
+GPIOLIB and OF are enabled. Selecting it from somewhere else cannot
+really work at all. I see we have a few other instances and should probably
+fix those as well.
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-mips                 randconfig-c004-20220420
-i386                          randconfig-c001
-sh                              ul2_defconfig
-arm                       aspeed_g5_defconfig
-nios2                               defconfig
-powerpc                 mpc85xx_cds_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                       imx_v6_v7_defconfig
-powerpc64                           defconfig
-arc                        nsim_700_defconfig
-ia64                             alldefconfig
-arm                            qcom_defconfig
-xtensa                    xip_kc705_defconfig
-h8300                       h8s-sim_defconfig
-powerpc                   motionpro_defconfig
-sh                 kfr2r09-romimage_defconfig
-xtensa                       common_defconfig
-arc                      axs103_smp_defconfig
-sh                             espt_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                 canyonlands_defconfig
-powerpc                      ep88xc_defconfig
-sh                           se7722_defconfig
-parisc                           alldefconfig
-powerpc                       maple_defconfig
-ia64                         bigsur_defconfig
-arm                        keystone_defconfig
-powerpc                     redwood_defconfig
-mips                     loongson1b_defconfig
-sh                           se7721_defconfig
-powerpc                 mpc8540_ads_defconfig
-m68k                        mvme16x_defconfig
-arc                            hsdk_defconfig
-mips                       bmips_be_defconfig
-arc                           tb10x_defconfig
-arm                          iop32x_defconfig
-m68k                        mvme147_defconfig
-sh                        dreamcast_defconfig
-sh                   rts7751r2dplus_defconfig
-mips                         cobalt_defconfig
-arc                     nsimosci_hs_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                     asp8347_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220420
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-arc                  randconfig-r043-20220420
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
+>  config PINCTRL_EXYNOS
+>         bool "Pinctrl common driver part for Samsung Exynos SoCs"
+> -       depends on OF_GPIO
+>         depends on ARCH_EXYNOS || ARCH_S5PV210 || COMPILE_TEST
+>         select PINCTRL_SAMSUNG
+>         select PINCTRL_EXYNOS_ARM if ARM && (ARCH_EXYNOS || ARCH_S5PV210)
 
-clang tested configs:
-riscv                randconfig-c006-20220420
-mips                 randconfig-c004-20220420
-x86_64                        randconfig-c007
-i386                          randconfig-c001
-arm                  randconfig-c002-20220420
-powerpc              randconfig-c003-20220420
-s390                 randconfig-c005-20220420
-arm                       mainstone_defconfig
-arm                    vt8500_v6_v7_defconfig
-mips                           ip22_defconfig
-arm                         shannon_defconfig
-powerpc                      katmai_defconfig
-powerpc                  mpc885_ads_defconfig
-arm                         mv78xx0_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220420
-riscv                randconfig-r042-20220420
-hexagon              randconfig-r045-20220420
-s390                 randconfig-r044-20220420
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+The problem here is that PINCTRL_EXYNOS and the others can be built for
+compile-testing without CONFIG_OF on non-arm machines.
+
+I think the correct dependency line would be
+
+      depends on ARCH_EXYNOS || ARCH_S5PV210 || (COMPILE_TEST && OF)
+
+which guarantees that OF_GPIO is also enabled.
+
+    Arnd
