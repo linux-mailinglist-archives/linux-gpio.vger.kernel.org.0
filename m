@@ -2,99 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5059050918E
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 22:45:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F206F509208
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 23:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382219AbiDTUsL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Apr 2022 16:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59970 "EHLO
+        id S1382489AbiDTV0Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Apr 2022 17:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382204AbiDTUrq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 16:47:46 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600262FF;
-        Wed, 20 Apr 2022 13:44:49 -0700 (PDT)
-Received: from mail-wm1-f47.google.com ([209.85.128.47]) by
- mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MBUuP-1ncaDQ1aAx-00Cy14; Wed, 20 Apr 2022 22:44:47 +0200
-Received: by mail-wm1-f47.google.com with SMTP id n40-20020a05600c3ba800b0038ff1939b16so2039631wms.2;
-        Wed, 20 Apr 2022 13:44:47 -0700 (PDT)
-X-Gm-Message-State: AOAM531/amy6vpVqdLyvh/km3RQ5zXWyAw3BLbtAl0Oxiolcdq+SfXB+
-        qFvGibAIq+l/vK+WwQQhvF3pwBvAUhkolAc2NKM=
-X-Google-Smtp-Source: ABdhPJwoE/46hGiARhv3tKg+p0kqAu/eocy+mBiqzPM2R0nAAwz2tdGE9MsZwAZOi3w4jDqBoyNBFzmBVn/t1jr6p8g=
-X-Received: by 2002:a05:600c:4e4a:b0:392:88e1:74a7 with SMTP id
- e10-20020a05600c4e4a00b0039288e174a7mr5387757wmq.174.1650487486994; Wed, 20
- Apr 2022 13:44:46 -0700 (PDT)
+        with ESMTP id S1350014AbiDTV0Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 17:26:25 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5860848890
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 14:23:37 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id x200so5193708ybe.13
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 14:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kNoFOy4a3bgPkQVqzY9jvHwandHXVY61/sg4Zfz5i3w=;
+        b=Seo2bThqdCMjzWqjYXZ0xLFOhHtVm9bLdX6O0DJ3+v0DymcUaqJLYUJHsrSy7ma5N/
+         JlVJ0OZTTGsMCajqR1C1ddy1D4vS+VEeKR/c9a5WUnkg0ZXm03NLiKP7YuhrHQubTSej
+         JkIQfWxFY8vFlSnuAiJlRc7WgvOZLOIRtOVTYjgNsNSRM0KoADLyAgDS9bZZpVXMOcdl
+         v7cCprLixK+YvYKgcKX5ezBFGGa9ak++pc79Hs4qO9dJpJxwzjJwxLF+RaFm62gtNZXb
+         um/uwTJpGhmkQ1Mt75SuC6yIm0m4r0uxD7tUnrYpwWE+GINkJy6pGCdzcWi2oBhV0Cx2
+         2R0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kNoFOy4a3bgPkQVqzY9jvHwandHXVY61/sg4Zfz5i3w=;
+        b=jRZl9LIan//b2aP2NGP4fC6SJD5/+qxBj8A4O39dZQETqWiueoBPLL4MtB52Nw6nyl
+         1/MHOJZE95vPqnOVkmGGCBxUkTy36OiAmUl222WIaDL7+AAIJzFfTGTHXiiTHf+U3F3f
+         JiBpf8V6RuVMwA8y1goFZ2hhurA09mr0azR7NWey11pw479730XhbsDGxEy+4fCnKOny
+         z86767hAZ1fo2lQZyOTrsanobZKMvS4BEuU1JzApvrLwYamztmqfP4Va62ZTiBl4t8Gj
+         GWg5/f1GNXXcULiPyAE5Cf0RXqL2UzEUAmGuZ5f/F+yKrrvoxdZSow4bcYsoYgev4SD+
+         z2tA==
+X-Gm-Message-State: AOAM533IU+qu9Tk4LtjvenOU91FECcVq6jPJF+XXmp5hI7tXNidYCcZh
+        Z4Git8sKe10tshZnvmRZpSenxfO+YW995268DvkHPQ==
+X-Google-Smtp-Source: ABdhPJxiHDq05p9pdRKqWJQxsx5s+4OOdYxBG0GepwCxgjP4lZMjN5+fEEckXfW9Nwt6Rn8+Qcb9CqFq5moxgaXyirU=
+X-Received: by 2002:a5b:8c8:0:b0:641:e8de:a6f4 with SMTP id
+ w8-20020a5b08c8000000b00641e8dea6f4mr21879860ybq.533.1650489816614; Wed, 20
+ Apr 2022 14:23:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220420141407.470955-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220420141407.470955-1-krzysztof.kozlowski@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 20 Apr 2022 22:44:30 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0QRgv3ebv_=UYHb61PdqprB0wC+mfQpsGHsw3KqQSo7w@mail.gmail.com>
-Message-ID: <CAK8P3a0QRgv3ebv_=UYHb61PdqprB0wC+mfQpsGHsw3KqQSo7w@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: samsung: fix missing GPIOLIB on ARM64 Exynos config
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        "# 3.4.x" <stable@vger.kernel.org>
+References: <20220329054521.14420-1-dipenp@nvidia.com> <CACRpkdbGyrRU9DDTmNDpU52rECAKY3wfi2y3jo9FMypDG=pmJQ@mail.gmail.com>
+ <YmAPBG6IknkLotJp@orome>
+In-Reply-To: <YmAPBG6IknkLotJp@orome>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 20 Apr 2022 23:23:25 +0200
+Message-ID: <CACRpkdY_R+kJr9KppVBENzav_tJ_XToubs8mvtHmvCz9HokeUA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/11] Intro to Hardware timestamping engine
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Dipen Patel <dipenp@nvidia.com>, jonathanh@nvidia.com,
+        smangipudi@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, warthog618@gmail.com,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:oIBco06TIdU9VvNTN6sHftImfHgEgvzAg6iix2VW0bJhJZH37Ar
- LxlkYVOYUTccFs4pvMqSJoAzoVu43cO6EkSMrtBjUWdtHClJMlJWHGLAIQGpLCFFkwFZVPA
- J96sPqhjHNyS/dOUJ8t+HWDMi7DsaWzn5uUKIVClXNJ7l3K1QUbKaJfPO0kB+7Rfkb9J/RT
- lhKX/tLqUT6hRPcSywrMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bBDsRkeS32o=:RsHYfojhNEFP3LuPV743Pf
- 4vFHPMS+ZTQ6s9nu/MXWgp/b/cuvCkIVVjb3hDb198r4/73KEclSZqIiHhkm/MvrfgObi+h3/
- Z9r0vmv3FKbn7bcJZegG2C7Tgq3FBcR+6Y/uzmRZopUzllCpe8Yw1/kgK2YlyFYoLTh6j5vtF
- AtkgC5+uGzVHWVLb03ApgZIiA5x4Sx9vELiPStplh9kVrkFVUq+OQyWXyYUI+cwj1yySaJJmO
- muhDPWNAzZBLXnjU4gdsEPY7TNGI1ad4gnEV60drIHeLXmys+Ems5kZReju0IdARjwI2SJ2nd
- CiQbnj6knrk3XF8PtySXnCXPchJRKyzuJ4LQI0QFLc2G/lrA+R4AqLu4msj2XCSMNP3+yT6l4
- JcFPtf9h8vfD97Thd6vn/Id3linQs/mUT5SFb/q+GwN2z1hmU0Qf4VS0rxwfvRm5L9TQfZ8ZT
- 3FEMNyceqCwe2FgiDGJzsJ6scKW10gAXeZgRsWK1ZQNmiJ2mKlmd6EkGA153B5lapd6ax1LtW
- hFjPmIz5YSfUXwV7X+1nBXFDPohBaEPZo2KNbndJpL7TThANLFdiPA+KgiQAaMOluDVbtA4P4
- QrnE/uSGS99Jq8XL53M+XyOWcugQy9mOAIIOkAAYdcQNDrNTdZiHkkeEt5PtYA2+owc3UGE1h
- 6XcoYG7qZDUqNeyFIMq8T/v9IAurQcpo/EcbUEnCPmuj3n7HQDnkLkzBvFZJFCb5U3jKthwrr
- efh0WL14uk0fJv1DF+oGuLjOYs8GD7NPj/hrMKy60LJb91uCiJLRvKrP+XfxPluo9z648MsR+
- 6qXTk5bBPZh+ozEIBNgkNUDnI6zvX6034AG/ZaTsyRL8jJhGn4=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 4:14 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Wed, Apr 20, 2022 at 3:47 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> On Wed, Apr 20, 2022 at 12:46:43AM +0200, Linus Walleij wrote:
+> > On Tue, Mar 29, 2022 at 7:45 AM Dipen Patel <dipenp@nvidia.com> wrote:
+> >
+> > > This patch series introduces new subsystem called hardware timestamping
+> > > engine (HTE). It offers functionality such as timestamping through hardware
+> > > means in realtime. The HTE subsystem centralizes HTE provider and consumers
+> > > where providers can register themselves and the consumers can request
+> > > interested entity which could be lines, GPIO, signals or buses. The
+> > > HTE subsystem provides timestamp in nano seconds, having said that the provider
+> > > need to convert the timestamp if its not in that unit. There was upstream
+> > > discussion about the HTE at
+> > > https://lore.kernel.org/lkml/4c46726d-fa35-1a95-4295-bca37c8b6fe3@nvidia.com/
+> >
+> > I like this.
+> >
+> > Can you put it in a public git and make it eligible for Stephen Rothwell to
+> > pull into linux-next and ask him to do so, as we intend to merge this for
+> > v5.19?
 >
-> The Samsung pinctrl drivers depend on OF_GPIO, which is part of GPIOLIB.
-> ARMv7 Exynos platform selects GPIOLIB and Samsung pinctrl drivers. ARMv8
-> Exynos selects only the latter leading to possible wrong configuration
-> on ARMv8 build:
->
->   WARNING: unmet direct dependencies detected for PINCTRL_EXYNOS
->     Depends on [n]: PINCTRL [=y] && OF_GPIO [=n] && (ARCH_EXYNOS [=y] || ARCH_S5PV210 || COMPILE_TEST [=y])
->     Selected by [y]:
->     - ARCH_EXYNOS [=y]
->
-> Always select the GPIOLIB from the Samsung pinctrl drivers to fix the
-> issue.  This requires removing of OF_GPIO dependency (to avoid recursive
-> dependency), so add dependency on OF for COMPILE_TEST cases.
->
-> Reported-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
-> Fixes: eed6b3eb20b9 ("arm64: Split out platform options to separate Kconfig")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Do you intend to maintain this as part of the pinctrl or GPIO trees with
+> Dipen as a sub-maintainer? Or would you prefer for this to be a separate
+> tree?
 
-Looks good to me,
+It has nothing to do with pin control but a bit to do with GPIO and IIO.
+I think it needs to be its own tree just like regulators or clocks.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Yours,
+Linus Walleij
