@@ -2,165 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BF6350817C
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 08:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26CB45082CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 09:51:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343630AbiDTGxy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Apr 2022 02:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
+        id S1376461AbiDTHyY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Apr 2022 03:54:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230365AbiDTGxx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 02:53:53 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A848193DA
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 23:51:08 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id c15so776972ljr.9
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Apr 2022 23:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O4SKvFXJAiPOxhXYYWnU3KQqUCWPtRch5VioogwyZpM=;
-        b=g9U94RWhC9OTMsD2I7phYKtiYorHapfpf21cZItO3xwStrucoK96bvTTyueEN5vQCn
-         yl2HLMIxhdTkgQZroFdt4+X1jA+yFA5zwlBATeaguAU3jQGyApcEcJcUzS1H2/sYqBA0
-         i98RmlNxKYA0NUul1rxLORw7HXGuw6BPZOr0tGo5W7Ul/WEpJT9Ybh7BAqKxCPcUa6M3
-         7oP9ZYBmijiZ/WJNldtzMHspis59K+pkPrxqzs+f1ED4l7u8oAP7aVziveKhoe5XMM93
-         F8yIypYN4spN4zf7LzsVt91DMeQ51ZIegsbgxJZBcfshuXxrBFnEAvYeii/TLEgrLycf
-         tJBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O4SKvFXJAiPOxhXYYWnU3KQqUCWPtRch5VioogwyZpM=;
-        b=0mLbgTjvXPMWW+G+AehVt7f7bwYZ2KlFhLGvOGCiAfFwRqKGGHwIJhbpxqHlWMWGP9
-         4Dkc52WIF/rgWYILeaigoZwrt4TkkkOHOjbWPfpBDudGgYSrgXYVkkzKOj3OZXVr8ABD
-         2yy49EY+C45wBa6+jy0iJyh8s932ipbSng1+HJ1pJxjJ//XFUxNd86tlhdwSNCZp/FVD
-         CRMBTNBM5nGNeDOOSQv4AC2mESjA5+QKSMWy2JEQJVdbFWtuiJ2wsYBjuGO3p+5tT7Kx
-         jZJIZcUtjstZ4Xt6J+Q7VHhZh4JurDvWsL08aLYc6mH+fWw3qvw/8m9OeOV0i2ln73H2
-         +P8A==
-X-Gm-Message-State: AOAM531M2G0L9m603SApN5GSxj8eWfg0t+ln3gNnFFdNdKqJP9DqszPT
-        a5l9zraSGSJWIYjCi5IUrZT+aw5p5wrA0OcI
-X-Google-Smtp-Source: ABdhPJzc94oeeBaJ0VD5RPAF5oCgenJ80lsjUMgpKbNSya+npnKtu1FL//5qcb6cHN7NXI+VvcjEog==
-X-Received: by 2002:a2e:9b43:0:b0:24d:b646:6e66 with SMTP id o3-20020a2e9b43000000b0024db6466e66mr10089531ljj.386.1650437465985;
-        Tue, 19 Apr 2022 23:51:05 -0700 (PDT)
-Received: from shc.milas.spb.ru ([188.243.217.78])
-        by smtp.gmail.com with ESMTPSA id s12-20020ac25fac000000b004435e2e0a08sm1732801lfe.251.2022.04.19.23.51.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Apr 2022 23:51:05 -0700 (PDT)
-From:   Alexander Shiyan <eagle.alexander923@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Alexander Shiyan <eagle.alexander923@gmail.com>
-Subject: [PATCH] gpio: syscon: Remove usage of syscon_regmap_lookup_by_compatible
-Date:   Wed, 20 Apr 2022 09:51:02 +0300
-Message-Id: <20220420065102.44083-1-eagle.alexander923@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        with ESMTP id S1376446AbiDTHxz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 03:53:55 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 20 Apr 2022 00:50:48 PDT
+Received: from mail.fixingbiz.pl (mail.fixingbiz.pl [217.61.22.139])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53CB3C490
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 00:50:48 -0700 (PDT)
+Received: by mail.fixingbiz.pl (Postfix, from userid 1001)
+        id 9FC73A2E0B; Wed, 20 Apr 2022 08:41:44 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixingbiz.pl; s=mail;
+        t=1650440575; bh=FDuFY3XQoq0gMX1b2gxgT7Py2p4Sxl0PJZYZ4NVaPho=;
+        h=Date:From:To:Subject:From;
+        b=Nl48kh4onZajJnI5zigml1MRNtySGh7nrIk5idGBc7wBujok2bj/XRQM6HZdOkr4v
+         zxgv2N94qZH8Pe7cWeAER64XoinYLbcDyqL1vSt8syWpPtVxqht1xXhHv5GKQiWdFr
+         4U5scTX/HdRAv+YvxnVWq0ofKCvglhdr5JSxDbg2AxOlspeB+PY5KqYmHXD9kPLoFm
+         mLzpP5NyvNXRtJ8hoMj1gwho3L6u2zBQKU5u2SaW/IvPO8k7Boc+5h2yTT0nuNdtyQ
+         zik1Gcg2fn7oTLQl1tdYzRSyKi2QNu4zFLbGM6Pac+8ofEQ82srGN+4jXWOAXhWBVw
+         zoFVSC3hhg/2A==
+Received: by mail.fixingbiz.pl for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 07:40:53 GMT
+Message-ID: <20220420074501-0.1.1x.6tv3.0.mjb2djhldq@fixingbiz.pl>
+Date:   Wed, 20 Apr 2022 07:40:53 GMT
+From:   =?UTF-8?Q? "Przemys=C5=82aw_Wr=C3=B3blewski" ?= 
+        <przemyslaw.wroblewski@fixingbiz.pl>
+To:     <linux-gpio@vger.kernel.org>
+Subject: Wycena paneli fotowoltaicznych
+X-Mailer: mail.fixingbiz.pl
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since version 5.13, the standard syscon bindings have been added
-to all clps711x DT nodes, so we can now use the more general
-syscon_regmap_lookup_by_phandle function to get the syscon pointer.
+Dzie=C5=84 dobry,
 
-This patch removes the usage of the syscon_regmap_lookup_by_compatible
-function as it is no longer used in the driver.
+dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
+irm=C4=85.
 
-Signed-off-by: Alexander Shiyan <eagle.alexander923@gmail.com>
----
- drivers/gpio/gpio-syscon.c | 49 +++++++++++++++-----------------------
- 1 file changed, 19 insertions(+), 30 deletions(-)
+=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
+ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index fdd3d497b535..6076937b18e7 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -38,7 +38,6 @@
-  */
- 
- struct syscon_gpio_data {
--	const char	*compatible;
- 	unsigned int	flags;
- 	unsigned int	bit_count;
- 	unsigned int	dat_bit_offset;
-@@ -125,7 +124,6 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
- 
- static const struct syscon_gpio_data clps711x_mctrl_gpio = {
- 	/* ARM CLPS711X SYSFLG1 Bits 8-10 */
--	.compatible	= "cirrus,ep7209-syscon1",
- 	.flags		= GPIO_SYSCON_FEAT_IN,
- 	.bit_count	= 3,
- 	.dat_bit_offset	= 0x40 * 8 + 8,
-@@ -182,7 +180,6 @@ static void keystone_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
- 
- static const struct syscon_gpio_data keystone_dsp_gpio = {
- 	/* ARM Keystone 2 */
--	.compatible	= NULL,
- 	.flags		= GPIO_SYSCON_FEAT_OUT,
- 	.bit_count	= 28,
- 	.dat_bit_offset	= 4,
-@@ -219,33 +216,25 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 
- 	priv->data = of_device_get_match_data(dev);
- 
--	if (priv->data->compatible) {
--		priv->syscon = syscon_regmap_lookup_by_compatible(
--					priv->data->compatible);
--		if (IS_ERR(priv->syscon))
--			return PTR_ERR(priv->syscon);
--	} else {
--		priv->syscon =
--			syscon_regmap_lookup_by_phandle(np, "gpio,syscon-dev");
--		if (IS_ERR(priv->syscon) && np->parent)
--			priv->syscon = syscon_node_to_regmap(np->parent);
--		if (IS_ERR(priv->syscon))
--			return PTR_ERR(priv->syscon);
--
--		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
--						 &priv->dreg_offset);
--		if (ret)
--			dev_err(dev, "can't read the data register offset!\n");
--
--		priv->dreg_offset <<= 3;
--
--		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
--						 &priv->dir_reg_offset);
--		if (ret)
--			dev_dbg(dev, "can't read the dir register offset!\n");
--
--		priv->dir_reg_offset <<= 3;
--	}
-+	priv->syscon = syscon_regmap_lookup_by_phandle(np, "gpio,syscon-dev");
-+	if (IS_ERR(priv->syscon) && np->parent)
-+		priv->syscon = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(priv->syscon))
-+		return PTR_ERR(priv->syscon);
-+
-+	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
-+					 &priv->dreg_offset);
-+	if (ret)
-+		dev_err(dev, "can't read the data register offset!\n");
-+
-+	priv->dreg_offset <<= 3;
-+
-+	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
-+					 &priv->dir_reg_offset);
-+	if (ret)
-+		dev_dbg(dev, "can't read the dir register offset!\n");
-+
-+	priv->dir_reg_offset <<= 3;
- 
- 	priv->chip.parent = dev;
- 	priv->chip.owner = THIS_MODULE;
--- 
-2.32.0
+Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
+ropozycji?
 
+
+Pozdrawiam,
+Przemys=C5=82aw Wr=C3=B3blewski
