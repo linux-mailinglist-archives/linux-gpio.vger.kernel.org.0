@@ -2,157 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 725245087E2
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 14:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23BFC508868
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Apr 2022 14:44:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352968AbiDTMQ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Apr 2022 08:16:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55886 "EHLO
+        id S1353557AbiDTMrM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Apr 2022 08:47:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352890AbiDTMQZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 08:16:25 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DA93DA4C
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 05:13:38 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 21so2040972edv.1
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 05:13:38 -0700 (PDT)
+        with ESMTP id S1353617AbiDTMrK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Apr 2022 08:47:10 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC8C20BD4
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 05:44:25 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id j8so1654138pll.11
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 05:44:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=t4fnkhjiK7o7zoKvIVj8krdFqshM+NAvjEpfPjIpMNE=;
-        b=oesE1IY+fZaZQAK7RVRyEFGXJv0OHXbxWD8BJTs9H6XZ5ov9VhWpB+X+ynfaWlF6KP
-         NU/z+zj6ysinrY/GiZnPNG+F6MeIlG44haXQ7l4CURDsWrl6OQgLyZwXYIebaxyBR9JT
-         kXTgf0BI7TdjuOCkzvkwNv823Wr2wKlmGkCSJOlaOStPvX8ibW20jPHwAM6nD3k2Mblc
-         Uj/bPf69I98fnN5lgO7OQDAhACAwqkxlc7quoTASh5537AAuC0fxZrv8lawDskal3qRV
-         3LXx6WuvAZ8xu7pDmOEDEU2NjPAxY02ZjMxq/sNlx1svNodffFkrhmIvBTvYhhTWfY/C
-         DxVw==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=sZJL5nrfj4uWDSfp8pFqWp/BCZ9/TcW4ZIqyYuNNsrk=;
+        b=cNiSe6H7+QoirFkEt1S5NXgHSBvxrLEtl3ZCwLfVx+Zz4HlvM5dgE7hWp+Ed1Y/LY+
+         gS0HsaBiea4I2WlMz2eyiQe7NQ4BPrchLILycjbMXmT+VozxuLndPzgBdOPNu0VWZpF+
+         IiTNp74jRPz5hC/jqZdoApf4pasapRvMaL0e+O741RlKN3yoYonR8gRjEjvJW6DLAzOs
+         /lZoejfUI5aeVzc7m6yWXgj92MGNjupQDQcLuhKGznLKMULvBvOaVK7mSnqa319vf57g
+         FCgGKO6Mo7mNFB7ivcZAnFP1HHpF+37yRFlolU4zeFsMrzrynOljnSTzL8ZGRZEiiKbi
+         bL/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=t4fnkhjiK7o7zoKvIVj8krdFqshM+NAvjEpfPjIpMNE=;
-        b=7XvfVS8Tomt5w80LBlIcnv1seHOE44nCl9lLXzE4kCzt0c/kIQv5EzGgYJ6A1QmqaX
-         84cHg3+wHFyIobQLfKMgZ6WEcgJsEEzlK2OKzfXUB7GGgK+tvuuXG7dcM3NwXTlhJgY/
-         ym8ojAQB3oiJYeugkId0McZVX8bytbOaeiNvGgQQY9Nu1MJ1SSArErTfx6MB2TZ0L9EI
-         fE3bOwE7EvTwl1g1ukWctg22qZ11D1ODyeNDr/sYeqHMtS2p7RKdW7IBfjOAoRmyQS+C
-         WyDw1nrDeayBi/6yAGDpaUQwuZ+jMvEmpNo0cn7O9sKot6Wu9QVeMSc2MamRb0ypbc3a
-         0Vew==
-X-Gm-Message-State: AOAM532kaAdrKd3ql0xr38T2kV74q6Z5gOR58lPDyG69zSTqBGVQhqLC
-        sI/Ub69rixTi1ybnXCxD5vwvwQ==
-X-Google-Smtp-Source: ABdhPJze27l1aXD+D4yIQEK0h88zbma4f2jYuOAuBnfilQml1/mAiidAIhshNW98oRXBiF5le2r20w==
-X-Received: by 2002:a05:6402:321b:b0:41d:888a:3ff0 with SMTP id g27-20020a056402321b00b0041d888a3ff0mr23117956eda.167.1650456817280;
-        Wed, 20 Apr 2022 05:13:37 -0700 (PDT)
-Received: from [192.168.0.225] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id fy11-20020a1709069f0b00b006e8b68c92d8sm6559748ejc.162.2022.04.20.05.13.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Apr 2022 05:13:36 -0700 (PDT)
-Message-ID: <0c0b53c3-294a-b1ac-487a-ca96266c4bb7@linaro.org>
-Date:   Wed, 20 Apr 2022 14:13:35 +0200
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=sZJL5nrfj4uWDSfp8pFqWp/BCZ9/TcW4ZIqyYuNNsrk=;
+        b=qR6KRXum8DCa7lbeZhX0gm4n1vJ7hXBf4kTVeb6JjWAPHIlEluPGV2Rq2Awgy7xXGo
+         yAnE9O7IDIwTXXS4xEqmUWYU6huZWy5At5nYTy38jjzGkXQmab0bly4ztKloLmFB5CnQ
+         tFrsG9rR2X7rXGxLTEoUdx0ThpXOLkUU9S8Rist4JfUn/axzok6h48Lf/ITQs+Ov7MhV
+         grJCMTxDOgPuWNgxxDGzBXpvLDaG2aGN47gOqhPdU7a1JGsuQJ0HrIRWVk+1yh1GSRQV
+         TuRL3ylHHhEuiZCuZhSE91Rm2zfsLUqpzDpJk7kf4e3pXayxgEL+t4BBiszjv5NneMB2
+         BaFw==
+X-Gm-Message-State: AOAM530ztxtAQzqZ2tdPPB1TDfa6kWQVGntC49+laVdyS75OyOAXOr7m
+        SNjDzGygWKlV6aC4/3v+//oJEyfKF2GGEK1Q59M=
+X-Google-Smtp-Source: ABdhPJyEkvJyZ9+yCOZVcZ43DjG/iz7miU09qHMy8/6Wf2OTOT9AUScD8B4Ns/RBODkqK/8XpM/vAvYuZffjz1S9J8s=
+X-Received: by 2002:a17:90a:b396:b0:1cd:44cc:15a9 with SMTP id
+ e22-20020a17090ab39600b001cd44cc15a9mr4166825pjr.77.1650458664458; Wed, 20
+ Apr 2022 05:44:24 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] pinctrl: samsung: fix missing GPIOLIB on ARM64 Exynos
- config
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        "# 3.4.x" <stable@vger.kernel.org>
-References: <20220420115512.175917-1-krzysztof.kozlowski@linaro.org>
- <CAK8P3a0uH5KjaobrqUmJQnvMmjkUaR1iC-7jEPjZFjZF1Z-GfQ@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAK8P3a0uH5KjaobrqUmJQnvMmjkUaR1iC-7jEPjZFjZF1Z-GfQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6a11:526:0:0:0:0 with HTTP; Wed, 20 Apr 2022 05:44:23
+ -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Mrs. Rose Godwin" <rosegodwin1999@gmail.com>
+Date:   Wed, 20 Apr 2022 05:44:23 -0700
+Message-ID: <CAL6LAtoaVQ5gWLPBdZT-si4rFfggDnOGVMhn-r_yuU=f+2w2hw@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:62e listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4997]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [rosegodwin1999[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [rosegodwin1999[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 20/04/2022 14:10, Arnd Bergmann wrote:
-> On Wed, Apr 20, 2022 at 1:55 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> The Samsung pinctrl drivers depend on OF_GPIO, which is part of GPIOLIB.
->> ARMv7 Exynos platform selects GPIOLIB and Samsung pinctrl drivers. ARMv8
->> Exynos selects only the latter leading to possible wrong configuration
->> on ARMv8 build:
->>
->>   WARNING: unmet direct dependencies detected for PINCTRL_EXYNOS
->>     Depends on [n]: PINCTRL [=y] && OF_GPIO [=n] && (ARCH_EXYNOS [=y] || ARCH_S5PV210 || COMPILE_TEST [=y])
->>     Selected by [y]:
->>     - ARCH_EXYNOS [=y]
->>
->> Reported-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
->> Fixes: eed6b3eb20b9 ("arm64: Split out platform options to separate Kconfig")
->> Cc: <stable@vger.kernel.org>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
-> 
-> This does not look like a correct fix:
-> 
->> diff --git a/drivers/pinctrl/samsung/Kconfig b/drivers/pinctrl/samsung/Kconfig
->> index dfd805e76862..c852fd1dd284 100644
->> --- a/drivers/pinctrl/samsung/Kconfig
->> +++ b/drivers/pinctrl/samsung/Kconfig
->> @@ -4,13 +4,13 @@
->>  #
->>  config PINCTRL_SAMSUNG
->>         bool
->> -       depends on OF_GPIO
->> +       select GPIOLIB
->> +       select OF_GPIO
->>         select PINMUX
->>         select PINCONF
-> 
-> OF_GPIO is an automatic symbol that is always enabled when both
-> GPIOLIB and OF are enabled. Selecting it from somewhere else cannot
-> really work at all. I see we have a few other instances and should probably
-> fix those as well.
+-- 
+I'm Mrs. Rose Godwin, how are you doing hope you are in good health,
+the Board director try to reach you on phone several times Meanwhile,
+your number was not connecting. before he ask me to send you an email
+to hear from you if you are fine. hoping to hear from you soonest.
 
-True, OF_GPIO I could skip here.
-
-> 
->>  config PINCTRL_EXYNOS
->>         bool "Pinctrl common driver part for Samsung Exynos SoCs"
->> -       depends on OF_GPIO
->>         depends on ARCH_EXYNOS || ARCH_S5PV210 || COMPILE_TEST
->>         select PINCTRL_SAMSUNG
->>         select PINCTRL_EXYNOS_ARM if ARM && (ARCH_EXYNOS || ARCH_S5PV210)
-> 
-> 
-> The problem here is that PINCTRL_EXYNOS and the others can be built for
-> compile-testing without CONFIG_OF on non-arm machines.
-> 
-> I think the correct dependency line would be
-> 
->       depends on ARCH_EXYNOS || ARCH_S5PV210 || (COMPILE_TEST && OF)
-> 
-> which guarantees that OF_GPIO is also enabled.
-
-I don't think OF is the problem here, because the error is in missing
-GPIOLIB. The platform selects Samsung pinctrl but it does not select
-GPIOLIB. Possible fixes are:
-1. Do not select Samsung pinctrl from the platform (but have some
-default), so on compile test build it might not work.
-2. Select GPIOLIB from the platform (ARMv7 Exynos does it).
-3. Select GPIOLIB from here - this is current proposal.
-
-
-Best regards,
-Krzysztof
+Thanks,
+Mrs. Rose Godwin.
