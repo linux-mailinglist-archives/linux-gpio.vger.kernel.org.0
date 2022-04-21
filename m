@@ -2,98 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10750509C89
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 11:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4784C509CBE
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 11:53:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382102AbiDUJpm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Apr 2022 05:45:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49162 "EHLO
+        id S1387871AbiDUJvT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Apr 2022 05:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1387772AbiDUJpj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 05:45:39 -0400
-Received: from mo-csw.securemx.jp (mo-csw1514.securemx.jp [210.130.202.153])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4156024BD0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Apr 2022 02:42:49 -0700 (PDT)
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 23L9gb8O004596; Thu, 21 Apr 2022 18:42:37 +0900
-X-Iguazu-Qid: 34trQigfsM9AOe1oBN
-X-Iguazu-QSIG: v=2; s=0; t=1650534157; q=34trQigfsM9AOe1oBN; m=Ut1SpkpRGkVEB/JCPVblskph/aglZB/76Gj0Mthtm54=
-Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
-        by relay.securemx.jp (mx-mr1512) id 23L9gaNb039362
-        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 21 Apr 2022 18:42:36 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH v2] gpio: visconti: Fix fwnode of GPIO IRQ
-Date:   Thu, 21 Apr 2022 18:42:28 +0900
-X-TSB-HOP2: ON
-Message-Id: <20220421094228.2141569-1-nobuhiro1.iwamatsu@toshiba.co.jp>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1387854AbiDUJvS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 05:51:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BC12495B;
+        Thu, 21 Apr 2022 02:48:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FD4C61862;
+        Thu, 21 Apr 2022 09:48:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD31C385A5;
+        Thu, 21 Apr 2022 09:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650534508;
+        bh=XrSuvi/kMNvYFryLGbGEihpymmK29jNalrxYVMSfVak=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cMKgodRj8swyo8xWhXe8sE+34c6gmzvqGrltAya9Ptso4f2piSprGseeBONPjOgvp
+         Lcgimt8hBa++2OGqnnHsyVJhuPcmD7bepOQHXvCy5hZ85q0AI87l2hmg83X++Voxu3
+         nWnXZ29dcDXKBuRGX9qlt6d4WpgEs4Q4xLvO6Z0hASmySk0ad/DbEx/wDMHa3RWNF5
+         kfaERV9oxTF0vd/RLeOF1KxaRL9mM5zNIHkJv3jhVmlBZ7//K7b/I5+q6Dyl85NtCx
+         cAGp+ejIzWaakzKCRg6jIXjelAZz2C7GNSidHjWjlFlGpWQL3tykvcBDJtGy2PZxst
+         JrFLBXUdmZVGw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nhTQI-005qiP-82; Thu, 21 Apr 2022 10:48:26 +0100
+Date:   Thu, 21 Apr 2022 10:48:26 +0100
+Message-ID: <87h76mahsl.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Sander Vanheule <sander@svanheule.net>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Bert Vermeulen <bert@biot.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/6] gpio: realtek-otto: Support per-cpu interrupts
+In-Reply-To: <CACRpkdbSdDAKiFAsHBosdVDpBhWW-Keoq+t8GJ5LsyWjOZwp_g@mail.gmail.com>
+References: <cover.1649533972.git.sander@svanheule.net>
+        <8d4e0848f233c2c1b98aa141741c61d95cd3843f.1649533972.git.sander@svanheule.net>
+        <CACRpkdbSdDAKiFAsHBosdVDpBhWW-Keoq+t8GJ5LsyWjOZwp_g@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, sander@svanheule.net, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, brgl@bgdev.pl, robh+dt@kernel.org, krzk+dt@kernel.org, bert@biot.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The fwnode of GPIO IRQ must be set to its own fwnode, not the fwnode of the
-parent IRQ. Therefore, this sets own fwnode instead of the parent IRQ fwnode to
-GPIO IRQ's.
+On Thu, 21 Apr 2022 00:04:16 +0100,
+Linus Walleij <linus.walleij@linaro.org> wrote:
+> 
+> On Sat, Apr 9, 2022 at 9:56 PM Sander Vanheule <sander@svanheule.net> wrote:
+> 
+> > On SoCs with multiple cores, it is possible that the GPIO interrupt
+> > controller supports assigning specific pins to one or more cores.
+> >
+> > IRQ balancing can be performed on a line-by-line basis if the parent
+> > interrupt is routed to all available cores, which is the default upon
+> > initialisation.
+> >
+> > Signed-off-by: Sander Vanheule <sander@svanheule.net>
+> 
+> That sounds complicated.
+> 
+> Sounds like something the IRQ maintainer (Marc Z) should
+> have a quick look at.
 
-Fixes: 2ad74f40dacc ("gpio: visconti: Add Toshiba Visconti GPIO support")
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
----
+This is pretty odd indeed. There seem to be a direct mapping between
+the GPIOs and the CPU it interrupts (or at least that's what the code
+seem to express). However, I don't see a direct relation between the
+CPUs and the chained interrupt. It isn't even clear if this interrupt
+itself is per-CPU.
 
- v2: Add Fixes tag.
+So this begs a few questions:
 
- drivers/gpio/gpio-visconti.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+- is the affinity actually affecting the target CPU? or is it
+  affecting the target mux?
 
-diff --git a/drivers/gpio/gpio-visconti.c b/drivers/gpio/gpio-visconti.c
-index 47455810bdb9..e6534ea1eaa7 100644
---- a/drivers/gpio/gpio-visconti.c
-+++ b/drivers/gpio/gpio-visconti.c
-@@ -130,7 +130,6 @@ static int visconti_gpio_probe(struct platform_device *pdev)
- 	struct gpio_irq_chip *girq;
- 	struct irq_domain *parent;
- 	struct device_node *irq_parent;
--	struct fwnode_handle *fwnode;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -150,14 +149,12 @@ static int visconti_gpio_probe(struct platform_device *pdev)
- 	}
- 
- 	parent = irq_find_host(irq_parent);
-+	of_node_put(irq_parent);
- 	if (!parent) {
- 		dev_err(dev, "No IRQ parent domain\n");
- 		return -ENODEV;
- 	}
- 
--	fwnode = of_node_to_fwnode(irq_parent);
--	of_node_put(irq_parent);
--
- 	ret = bgpio_init(&priv->gpio_chip, dev, 4,
- 			 priv->base + GPIO_IDATA,
- 			 priv->base + GPIO_OSET,
-@@ -180,7 +177,7 @@ static int visconti_gpio_probe(struct platform_device *pdev)
- 
- 	girq = &priv->gpio_chip.irq;
- 	girq->chip = irq_chip;
--	girq->fwnode = fwnode;
-+	girq->fwnode = of_node_to_fwnode(dev->of_node);
- 	girq->parent_domain = parent;
- 	girq->child_to_parent_hwirq = visconti_gpio_child_to_parent_hwirq;
- 	girq->populate_parent_alloc_arg = visconti_gpio_populate_parent_fwspec;
+- how is the affinity of the mux interrupt actually enforced?
+
+	M.
+
 -- 
-2.34.1
-
-
+Without deviation from the norm, progress is not possible.
