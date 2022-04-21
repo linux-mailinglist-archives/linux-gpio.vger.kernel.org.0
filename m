@@ -2,43 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91310509ADC
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 10:41:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10750509C89
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 11:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386903AbiDUInX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Apr 2022 04:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54512 "EHLO
+        id S1382102AbiDUJpm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Apr 2022 05:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1386813AbiDUImr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 04:42:47 -0400
-X-Greylist: delayed 1831 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 Apr 2022 01:39:57 PDT
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1514.securemx.jp [210.130.202.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C88BCA4
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Apr 2022 01:39:56 -0700 (PDT)
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1514) id 23L7vQrR008151; Thu, 21 Apr 2022 16:57:26 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 23L7vDtg006926; Thu, 21 Apr 2022 16:57:13 +0900
-X-Iguazu-Qid: 34trpTYxFGuwSfYizF
-X-Iguazu-QSIG: v=2; s=0; t=1650527832; q=34trpTYxFGuwSfYizF; m=wl0m7mr0NeanVsq0+bnV1eY/wx6O5k25nJ2V3BLG9MI=
+        with ESMTP id S1387772AbiDUJpj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 05:45:39 -0400
+Received: from mo-csw.securemx.jp (mo-csw1514.securemx.jp [210.130.202.153])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4156024BD0
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Apr 2022 02:42:49 -0700 (PDT)
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 23L9gb8O004596; Thu, 21 Apr 2022 18:42:37 +0900
+X-Iguazu-Qid: 34trQigfsM9AOe1oBN
+X-Iguazu-QSIG: v=2; s=0; t=1650534157; q=34trQigfsM9AOe1oBN; m=Ut1SpkpRGkVEB/JCPVblskph/aglZB/76Gj0Mthtm54=
 Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
-        by relay.securemx.jp (mx-mr1512) id 23L7vBWG027250
+        by relay.securemx.jp (mx-mr1512) id 23L9gaNb039362
         (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 21 Apr 2022 16:57:12 +0900
+        Thu, 21 Apr 2022 18:42:36 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH] gpio: visconti: Fix fwnode of GPIO IRQ
-Date:   Thu, 21 Apr 2022 16:57:07 +0900
+Subject: [PATCH v2] gpio: visconti: Fix fwnode of GPIO IRQ
+Date:   Thu, 21 Apr 2022 18:42:28 +0900
 X-TSB-HOP2: ON
-Message-Id: <20220421075707.2135242-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+Message-Id: <20220421094228.2141569-1-nobuhiro1.iwamatsu@toshiba.co.jp>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -49,8 +47,12 @@ The fwnode of GPIO IRQ must be set to its own fwnode, not the fwnode of the
 parent IRQ. Therefore, this sets own fwnode instead of the parent IRQ fwnode to
 GPIO IRQ's.
 
+Fixes: 2ad74f40dacc ("gpio: visconti: Add Toshiba Visconti GPIO support")
 Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 ---
+
+ v2: Add Fixes tag.
+
  drivers/gpio/gpio-visconti.c | 7 ++-----
  1 file changed, 2 insertions(+), 5 deletions(-)
 
