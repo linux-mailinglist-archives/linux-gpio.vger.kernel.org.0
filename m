@@ -2,121 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08C4F509713
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 08:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE3F509831
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 09:05:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384623AbiDUGAq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Apr 2022 02:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46890 "EHLO
+        id S1346021AbiDUHDT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Apr 2022 03:03:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237590AbiDUGAn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 02:00:43 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796B612ADD;
-        Wed, 20 Apr 2022 22:57:54 -0700 (PDT)
-Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KkRdG3fCrz1J9vy;
-        Thu, 21 Apr 2022 13:57:06 +0800 (CST)
-Received: from huawei.com (10.175.112.208) by dggpeml500023.china.huawei.com
- (7.185.36.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 21 Apr
- 2022 13:57:52 +0800
-From:   Peng Wu <wupeng58@huawei.com>
-To:     <j.neuschaefer@gmx.net>, <linus.walleij@linaro.org>
-CC:     <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wupeng58@huawei.com>,
-        <liwei391@huawei.com>
-Subject: [PATCH] pinctrl: nuvoton: Add missing fwnode_handle_put in wpcm450_gpio_register
-Date:   Thu, 21 Apr 2022 05:53:56 +0000
-Message-ID: <20220421055356.8163-1-wupeng58@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S1385524AbiDUHCf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 03:02:35 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8038F16590
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 23:59:40 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id z99so5257940ede.5
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Apr 2022 23:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8+/qXaP3Rn2VMBa9pP1mhLJpNqkiglYV3CYIlra+cK0=;
+        b=Se0rkq5+hT7wBGvuFUxhmgvSMymSuRPSiXodX/zQoYYw2lPnXSYsMkCJ5WgJ2kQT2Q
+         mBvjYEK3Ow+cxkuxIGujjzSVnld87ZU49iWeSr7Yf1FVLCi3OJJT/WAXZeJfYJz+6zCp
+         vKRRcMFNAN3lDmSsDWip53WZu5kKIcZdWn872gXe0bD771YNLNmQOZeUAM+wQawPIO+s
+         p48XItLdkpued2GTIHovKJLCZErf43Et0rrTPkhvFTkDKuNbYMKSYjJPHEmYi8m9RsKX
+         MI/vKP49sR6SeLAydobv4kqeI+sXkoqSJe1f0+DByPuKoA4YWorma5d0fcy4R8uIKYpG
+         bF3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8+/qXaP3Rn2VMBa9pP1mhLJpNqkiglYV3CYIlra+cK0=;
+        b=6QI2zV77T/sGsMW1FgPdyOO8tOj3XwCou+cUvYiH6aRLSk2LnPehHYmvjjk8r5m3LV
+         HGPHag2Bag55Cr/N/GJetCAHINeNFtxBJ3Gwf8JsJh5SN1Bbsyzee31JqKZm0PCuHyKy
+         W2pqULk1EE0t6RQ7SU4FZouZNeTjYY4N27T8H2paMgCLWp+xB8f/UoEq2AnfpMqIwNuK
+         PTFhfxWrMv/i8UDYQz0CFkNK9F8+pWOnxVSCXQvN0//1EWNHC2nx3p1KlMD0L3KcvZwc
+         5Ktdg1cT/0oPYOS4tfRmEfBJpTFvJN4ImpBepB/tND913Lt9clRpQZD9dXOitdFavE66
+         yhKg==
+X-Gm-Message-State: AOAM532zd5tSMMV676N5eUS12sWsvlyBqjYar5fWsE+K8TVu7fg03+cw
+        NdfIr7QFZsiGo4vyTT99ir9xFg==
+X-Google-Smtp-Source: ABdhPJz8w0fwC1ZBlr4j/TglLpPwjT/0e9rFCTTIXH0RDOXEbm6TC8FbPjjWHOSMIFB8xokk6lL7nw==
+X-Received: by 2002:a05:6402:27c6:b0:423:e599:e49e with SMTP id c6-20020a05640227c600b00423e599e49emr20683339ede.180.1650524379120;
+        Wed, 20 Apr 2022 23:59:39 -0700 (PDT)
+Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id ah13-20020a1709069acd00b006e8a0b3e071sm7544949ejc.110.2022.04.20.23.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 23:59:38 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: samsung: fix missing GPIOLIB on ARM64 Exynos config
+Date:   Thu, 21 Apr 2022 08:59:35 +0200
+Message-Id: <165052437270.10147.2588603616348039313.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220420141407.470955-1-krzysztof.kozlowski@linaro.org>
+References: <20220420141407.470955-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.112.208]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In one of the error paths of the device_for_each_child_node() loop
-in wpcm450_gpio_register, add missing call to fwnode_handle_put.
+On Wed, 20 Apr 2022 16:14:07 +0200, Krzysztof Kozlowski wrote:
+> The Samsung pinctrl drivers depend on OF_GPIO, which is part of GPIOLIB.
+> ARMv7 Exynos platform selects GPIOLIB and Samsung pinctrl drivers. ARMv8
+> Exynos selects only the latter leading to possible wrong configuration
+> on ARMv8 build:
+> 
+>   WARNING: unmet direct dependencies detected for PINCTRL_EXYNOS
+>     Depends on [n]: PINCTRL [=y] && OF_GPIO [=n] && (ARCH_EXYNOS [=y] || ARCH_S5PV210 || COMPILE_TEST [=y])
+>     Selected by [y]:
+>     - ARCH_EXYNOS [=y]
+> 
+> [...]
 
-Signed-off-by: Peng Wu <wupeng58@huawei.com>
----
- drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-index 0dbeb91f0bf2..de4388b512d7 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-@@ -1038,15 +1038,19 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
- 			continue;
- 
- 		ret = fwnode_property_read_u32(child, "reg", &reg);
--		if (ret < 0)
-+		if (ret < 0) {
-+			fwnode_handle_put(child);
- 			return ret;
-+		}
- 
- 		gpio = &pctrl->gpio_bank[reg];
- 		gpio->pctrl = pctrl;
- 
--		if (reg >= WPCM450_NUM_BANKS)
-+		if (reg >= WPCM450_NUM_BANKS) {
-+			fwnode_handle_put(child);
- 			return dev_err_probe(dev, -EINVAL,
--					     "GPIO index %d out of range!\n", reg);
-+					"GPIO index %d out of range!\n", reg);
-+		}
- 
- 		bank = &wpcm450_banks[reg];
- 		gpio->bank = bank;
-@@ -1060,8 +1064,10 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
- 		}
- 		ret = bgpio_init(&gpio->gc, dev, 4,
- 				 dat, set, NULL, dirout, NULL, flags);
--		if (ret < 0)
-+		if (ret < 0) {
-+			fwnode_handle_put(child);
- 			return dev_err_probe(dev, ret, "GPIO initialization failed\n");
-+		}
- 
- 		gpio->gc.ngpio = bank->length;
- 		gpio->gc.set_config = wpcm450_gpio_set_config;
-@@ -1074,8 +1080,11 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
- 		girq->parent_handler = wpcm450_gpio_irqhandler;
- 		girq->parents = devm_kcalloc(dev, WPCM450_NUM_GPIO_IRQS,
- 					     sizeof(*girq->parents), GFP_KERNEL);
--		if (!girq->parents)
-+		if (!girq->parents) {
-+			fwnode_handle_put(child);
- 			return -ENOMEM;
-+		}
-+
- 		girq->default_type = IRQ_TYPE_NONE;
- 		girq->handler = handle_bad_irq;
- 
-@@ -1091,8 +1100,10 @@ static int wpcm450_gpio_register(struct platform_device *pdev,
- 		}
- 
- 		ret = devm_gpiochip_add_data(dev, &gpio->gc, gpio);
--		if (ret)
-+		if (ret) {
-+			fwnode_handle_put(child);
- 			return dev_err_probe(dev, ret, "Failed to add GPIO chip\n");
-+		}
- 	}
- 
- 	return 0;
+[1/1] pinctrl: samsung: fix missing GPIOLIB on ARM64 Exynos config
+      commit: ac875df4d854ab13d9c4af682a1837a1214fecec
+
+Best regards,
 -- 
-2.17.1
-
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
