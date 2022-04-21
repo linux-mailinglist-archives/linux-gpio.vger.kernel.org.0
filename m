@@ -2,65 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDD8250A2EA
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 16:44:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56D3850A52B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Apr 2022 18:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1389565AbiDUOrE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Apr 2022 10:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52054 "EHLO
+        id S232167AbiDUQ0t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Apr 2022 12:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1389564AbiDUOrE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 10:47:04 -0400
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FD140E76;
-        Thu, 21 Apr 2022 07:44:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1650552224; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=nbdQctQ3NMB6Azygoollyi98j1+gOoW3m7kP8+kIzEJgV2tGoTDPbmS2Ivz8y7qFshxDSrpxgwFk5dgcGmgaee53NjiA8a9qEve8uyAWFYAp0dVaVaYM4xhHBpoyJCz95OKSxBM9Jj5VrWQ+FmMSMjKFGlG1AodNSubN9UMc2z8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1650552224; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=ezL7d6UT6p1AeMHEGpnZeZmFAvnmD9WI18X7MSI3d/k=; 
-        b=VH/Mi58H9v1KRSjeNyH5/jJxO+R2Pmhgf0IS1rGU8+ye0a/bG0kPsmQoiIEznVwPloJG1B626jzE9vE4hYg+7NfgF9Q07ENZZCkLD6azij+Onman5MacM6DnulqmGLv187YXghbXCu/WPAIw21QJvHOBwTvjs90U0dhPSQ28whk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1650552224;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=ezL7d6UT6p1AeMHEGpnZeZmFAvnmD9WI18X7MSI3d/k=;
-        b=AUzbWmEBG1bhlGXpDr/3Us4XJfC5rsXEH98tYb0vsCF9C8tTnA9sUo/cF5OGp4fq
-        MB+7YT28SwlppWnpZxqptnOLD8Ug3lDZ2CtaQWCcDrxus/QqBBTEG5DsOhdVCDbf/yc
-        Uo0EkzlovbchG+nUvwQGgYsJCZ2swQEdYIHZJStE=
-Received: from [10.10.10.3] (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
-        with SMTPS id 1650552221122931.4968849395214; Thu, 21 Apr 2022 07:43:41 -0700 (PDT)
-Message-ID: <26418320-64e0-3ed2-c792-7f72878b7592@arinc9.com>
-Date:   Thu, 21 Apr 2022 17:43:35 +0300
+        with ESMTP id S1390477AbiDUQKE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Apr 2022 12:10:04 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B204739D;
+        Thu, 21 Apr 2022 09:07:14 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nhZKp-0004EH-PB; Thu, 21 Apr 2022 18:07:11 +0200
+Message-ID: <de25abef-c071-9f71-36dd-8f2f0b77dc28@leemhuis.info>
+Date:   Thu, 21 Apr 2022 18:07:10 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH 0/14] Refactor Ralink Pinctrl and Add Documentation
+Subject: Re: [PATCH] gpio: Request interrupts after IRQ is initialized
 Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        erkin.bozoglu@xeront.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-References: <20220413060729.27639-1-arinc.unal@arinc9.com>
- <CACRpkdbbMFYNNjAKwhysKpu1JVh2JSB-N=Y8QMx1JvMhCPBpwg@mail.gmail.com>
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <CACRpkdbbMFYNNjAKwhysKpu1JVh2JSB-N=Y8QMx1JvMhCPBpwg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Cc:     firew4lker <firew4lker@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Basavaraj.Natikar@amd.com, Richard.Gong@amd.com,
+        stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220414025705.598-1-mario.limonciello@amd.com>
+ <20966c6b-9045-9f8b-ba35-bf44091ce380@gmail.com>
+ <67df4178-5943-69d8-0d61-f533671a1248@amd.com>
+ <CACRpkdbvN0ZJnn+N=Vt2n_aO4CnM=E4qpe_3dmu-c8_Ufp8ZzQ@mail.gmail.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CACRpkdbvN0ZJnn+N=Vt2n_aO4CnM=E4qpe_3dmu-c8_Ufp8ZzQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1650557234;1cd7b2c7;
+X-HE-SMSGID: 1nhZKp-0004EH-PB
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,31 +53,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/04/2022 17:27, Linus Walleij wrote:
-> On Wed, Apr 13, 2022 at 8:08 AM Arınç ÜNAL <arinc.unal@arinc9.com> wrote:
+On 20.04.22 00:02, Linus Walleij wrote:
+> On Mon, Apr 18, 2022 at 6:34 AM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
 > 
->> This patch series brings complete refactoring to the Ralink pinctrl driver
->> and its subdrivers.
+>> Linus Walleij,
+>>
+>> As this is backported to 5.15.y, 5.16.y, 5.17.y and those all had point
+>> releases a bunch of people are hitting it now.  If you choose to adopt
+>> this patch instead of revert the broken one, you can add to the commit
+>> message too:
+>>
+>> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1976
 > 
-> I just merged all the patches, the comments seem minor and any further
-> fixes can certainly be done on top of this. Anyone interested in ralink
-> working nicely is likely in the thread and we mostly care about that this
-> works for OpenWrt, and if it works for them we are happy.
-> 
->>    mips: dts: ralink: mt7621: use the new compatible string for MT7621 pinctrl
-> 
-> This was a bit scary since we usually take these through the respective
-> SoC tree, but I just applied it anyway, it makes logical sense in the
-> series.
-> 
-> I hope it will not lead to conflicts.
-> 
-> Good work with this series!
+> I am on parental leave kind of, but Bartosz knows what to do,
+> in this case, since it is ACPI-related, Andy knows best what
+> to do, and I see he also replied.
 
-Thanks. There is a v2 of this series which has been waiting for a week, 
-I hope that was the one you applied as you replied under v1 (I'm not 
-sure which repository you applied this so I can't check myself).
+Bartosz, Andy, what's the status here? It looks like the patch didn't
+make any progress in the past few days (or did I miss it?). I'd really
+like to see this patch or a revert of 5467801f1fcb ("gpio: Restrict
+usage of GPIO chip irq members before initialization") mainlined by rc4,
+so Greg (CCed) can fix it in the next round of stable updates, as it
+seems quite a few people are affected by the problem.
 
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=632370
+Reminder: this is one of those issue that we IMHO really should fix
+quickly, as explained by a text recently added to the documentation:
 
-Arınç
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/handling-regressions.rst#n131
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
