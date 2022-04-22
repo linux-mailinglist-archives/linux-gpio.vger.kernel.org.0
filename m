@@ -2,112 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6915850B056
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 08:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43E3450B112
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 09:05:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1444262AbiDVGRW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 02:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53264 "EHLO
+        id S1353815AbiDVHHS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 03:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442942AbiDVGRV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 02:17:21 -0400
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716B25046F;
-        Thu, 21 Apr 2022 23:14:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1650608037; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=Upc29wFEZbY9EpRHZYitREhkrRXSEoAPDtx8gDCsqYwhKkJNleVA5Fm4X91oEzQuYjB/8+Peb6ZTQLcub1fM3CiTv2KxB8Svg+igpE3DNeIc7BDu9BbhW2A0sUyRjzw/JZx26VqggDaF46jej7IGF4Y/lDzGmA/zFipRv9C5J3I=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1650608037; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=UFvld06qgXbqQi+xJzwXOyVaCMSC9MrrcLtY4RAgqNI=; 
-        b=FfqMs5rwPZedfIDvP5jj+A32qjrU7nt89H46DUvNMa/vwrzj2jMNwbsj/4WeERRRX8cID6b+2fn0+Jny5wZe383wv34fq9+YrkznEULl0mppOhVEiYSL4iwTUA/kcZYig3/stDaP4uzPeUKHw9iAtKBNmW6ZlbwDHTgjvMp0LcY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1650608037;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=UFvld06qgXbqQi+xJzwXOyVaCMSC9MrrcLtY4RAgqNI=;
-        b=WfNpEQFRk5/DPSn8YyQZnbOY1qy0b5Ub/T9xf0jbigszz5Aipcm4k81w6k/txiz2
-        xhD+WXL4Z3NLjJ8sy4UzEIjCndqiJ+gIbYrA/S81g9mgbV/M5woDGiFw6GijzyrsTHB
-        c8W44JeyWq3sT0KWGLPoMZzDn5P6Gc+B3saEqbOs=
-Received: from [10.10.10.3] (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
-        with SMTPS id 1650608035654467.1535935949838; Thu, 21 Apr 2022 23:13:55 -0700 (PDT)
-Message-ID: <6cdec3bc-4715-29c8-f4a1-df1408940a75@arinc9.com>
-Date:   Fri, 22 Apr 2022 09:13:50 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 0/14] Refactor Ralink Pinctrl and Add Documentation
-Content-Language: en-US
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        with ESMTP id S1444641AbiDVHHR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 03:07:17 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180075130E
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 00:04:23 -0700 (PDT)
+Received: from vanadium.ugent.be (vanadium.ugent.be [157.193.99.61])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id BAD6C2CB0E3;
+        Fri, 22 Apr 2022 09:04:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1650611061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wlADY8n35L2Ou7uvyeVSyLqPISR1e/igSs6VXk/afno=;
+        b=2z/g+n7+dT+FurhJHIQnLUTHRWFUTSrGyIyTGcvtHHQJMYsJvn+SC/gkpvBeRX51lAm/L4
+        yysFkL9Q+w1MRei//reAKfjwiV4SlPL+Tdjb2UleIxA1YdhYBc9MYMVRXWo6jvMIm31hnB
+        unP4QlspRwi+PNwj605uXLIZFX10cJQZteWtGZq6Zh8hrBzSLofW0LgCwD4gct6xts7vjz
+        BWtErvfLBtxcrUxhqZCQ6GxUpWPTil3neRuNDqwARyKH4GTVghSBpLJIp/RLDOq3X97jxf
+        NLGZ8bjU9oouRusSoWjz5XSCGq20aSNYf9HgIeIFJ/Y0vv1apjCpAE8+xYHtrQ==
+Message-ID: <b8b62753ad5235e065b4cb0856a7a7c33438dfbb.camel@svanheule.net>
+Subject: Re: [PATCH v1 3/6] gpio: realtek-otto: Support per-cpu interrupts
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        erkin.bozoglu@xeront.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20220413060729.27639-1-arinc.unal@arinc9.com>
- <CACRpkdbbMFYNNjAKwhysKpu1JVh2JSB-N=Y8QMx1JvMhCPBpwg@mail.gmail.com>
- <26418320-64e0-3ed2-c792-7f72878b7592@arinc9.com>
- <CAMhs-H_d8jUa4=4eVjQxo+h-XeRgiMYC1H_xYtPLb8jHDVYL2Q@mail.gmail.com>
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <CAMhs-H_d8jUa4=4eVjQxo+h-XeRgiMYC1H_xYtPLb8jHDVYL2Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Bert Vermeulen <bert@biot.com>, linux-kernel@vger.kernel.org
+Date:   Fri, 22 Apr 2022 09:04:20 +0200
+In-Reply-To: <87h76mahsl.wl-maz@kernel.org>
+References: <cover.1649533972.git.sander@svanheule.net>
+         <8d4e0848f233c2c1b98aa141741c61d95cd3843f.1649533972.git.sander@svanheule.net>
+         <CACRpkdbSdDAKiFAsHBosdVDpBhWW-Keoq+t8GJ5LsyWjOZwp_g@mail.gmail.com>
+         <87h76mahsl.wl-maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/04/2022 08:21, Sergio Paracuellos wrote:
-> Hi Arinç,
-> 
-> On Thu, Apr 21, 2022 at 4:44 PM Arınç ÜNAL <arinc.unal@arinc9.com> wrote:
->>
->> On 21/04/2022 17:27, Linus Walleij wrote:
->>> On Wed, Apr 13, 2022 at 8:08 AM Arınç ÜNAL <arinc.unal@arinc9.com> wrote:
->>>
->>>> This patch series brings complete refactoring to the Ralink pinctrl driver
->>>> and its subdrivers.
->>>
->>> I just merged all the patches, the comments seem minor and any further
->>> fixes can certainly be done on top of this. Anyone interested in ralink
->>> working nicely is likely in the thread and we mostly care about that this
->>> works for OpenWrt, and if it works for them we are happy.
->>>
->>>>     mips: dts: ralink: mt7621: use the new compatible string for MT7621 pinctrl
->>>
->>> This was a bit scary since we usually take these through the respective
->>> SoC tree, but I just applied it anyway, it makes logical sense in the
->>> series.
->>>
->>> I hope it will not lead to conflicts.
->>>
->>> Good work with this series!
->>
->> Thanks. There is a v2 of this series which has been waiting for a week,
->> I hope that was the one you applied as you replied under v1 (I'm not
->> sure which repository you applied this so I can't check myself).
-> 
-> Linus adds patches through the linux-pinctrl tree as pinctrl maintainer. Check:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+Hi Linus, Marc,
 
-Thanks Sergio. I see v1 was applied, oops. What to do?
+On Thu, 2022-04-21 at 10:48 +0100, Marc Zyngier wrote:
+> On Thu, 21 Apr 2022 00:04:16 +0100,
+> Linus Walleij <linus.walleij@linaro.org> wrote:
+> > 
+> > On Sat, Apr 9, 2022 at 9:56 PM Sander Vanheule <sander@svanheule.net> wrote:
+> > 
+> > > On SoCs with multiple cores, it is possible that the GPIO interrupt
+> > > controller supports assigning specific pins to one or more cores.
+> > > 
+> > > IRQ balancing can be performed on a line-by-line basis if the parent
+> > > interrupt is routed to all available cores, which is the default upon
+> > > initialisation.
+> > > 
+> > > Signed-off-by: Sander Vanheule <sander@svanheule.net>
+> > 
+> > That sounds complicated.
+> > 
+> > Sounds like something the IRQ maintainer (Marc Z) should
+> > have a quick look at.
+> 
+> This is pretty odd indeed. There seem to be a direct mapping between
+> the GPIOs and the CPU it interrupts (or at least that's what the code
+> seem to express). However, I don't see a direct relation between the
+> CPUs and the chained interrupt. It isn't even clear if this interrupt
+> itself is per-CPU.
+> 
+> So this begs a few questions:
+> 
+> - is the affinity actually affecting the target CPU? or is it
+>   affecting the target mux?
+> 
+> - how is the affinity of the mux interrupt actually enforced?
 
-Arınç
+There are three interrupt controllers at play here:
+   1. MIPS CPU interrupt controller: drivers/irqchip/irq-mips-cpu.c
+      One interrupt controller per VPE, so in this case there are two. Provides
+      per-CPU interrupts.
+   2. SoC interrupt controller: drivers/irqchip/irq-realtek-rtl.c
+      Also one interrupt controller per VPE. I suppose these will also be per-
+      CPU, although this isn't implemented in the driver yet, and I don't think
+      I yet fully understand how should work in the kernel.
+   3. GPIO interrupt controller: drivers/gpio/gpio-realtek-otto.c
+      One interrupt controller for the entire GPIO bank, with optional
+      configurable affinity (this patch) for the different VPEs.
+
+For the RTL839x series of SoCs, this results in the following:
+
+GPIO LINES SOC IRQ MIPS
++--------+ +-----------+ HW IRQ +--------+
+--->| GPIO | | SOC IRQ | LINES | IRQ |
+--->| BANK |-----o-->| VPE0 CTRL |=========>| VPE0 |
+. | | | +-----------+ +--------+
+. +--------+ | 
+. |
+| +-----------+ +--------+
+\-->| SOC IRQ | | IRQ |
+| VPE1 CTRL |=========>| VPE1 |
++-----------+ +--------+
+
+
+For RTL930x, where GPIO IRQ affinity is configurable:
+
+GPIO LINES SOC IRQ MIPS
++--------+ +-----------+ HW IRQ +--------+
+--->| GPIO |-------->| SOC IRQ | LINES | IRQ |
+--->| BANK | | VPE0 CTRL |=========>| VPE0 |
+. | |-----\ +-----------+ +--------+
+. +--------+ | 
+. |
+| +-----------+ +--------+
+\-->| SOC IRQ | | IRQ |
+| VPE1 CTRL |=========>| VPE1 |
++-----------+ +--------+
+
+The interrupt for the GPIO controller can be muxed to any of the MIPS HW
+interrupts on any (or all) of the VPEs, and these muxes (SoC IRQ controllers)
+can be configured independently per CPU. The SoC IRQ line index is fixed, and
+consistent for both VPEs.
+Only in the second diagram can individual GPIO interrupts be muxed to any of the
+VPEs, but there is still only one IRQ line per VPE for all selected GPIO lines.
+
+I hopes this helps to clarify the situation. We don't have any real
+documentation, so this is basically derived from registers descriptions in SDK
+headers and testing the interrupt behaviour.
+
+Best,
+Sander
