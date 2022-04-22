@@ -2,104 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9240550B1A3
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 09:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA8F050B34F
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 10:54:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1444846AbiDVHdC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 03:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
+        id S1445655AbiDVIzo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 04:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444857AbiDVHcb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 03:32:31 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12225133F
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 00:29:37 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:2928:9f72:c4af:fbd9])
-        by albert.telenet-ops.be with bizsmtp
-        id MjVa270052Ah9RF06jVaTK; Fri, 22 Apr 2022 09:29:35 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nhnjR-001acF-LX; Fri, 22 Apr 2022 09:29:33 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nhnjR-00CIuc-6m; Fri, 22 Apr 2022 09:29:33 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] pinctrl: renesas: r8a779f0: Fix GPIO function on I2C-capable pins
-Date:   Fri, 22 Apr 2022 09:29:31 +0200
-Message-Id: <c12c60ec1058140a37f03650043ab73f730f104f.1650610471.git.geert+renesas@glider.be>
+        with ESMTP id S233564AbiDVIzn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 04:55:43 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F4BDF8D;
+        Fri, 22 Apr 2022 01:52:51 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id dw17so5550365qvb.9;
+        Fri, 22 Apr 2022 01:52:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FgfsY8zghdIG3MG6NzB7iJnFEqL6mHjUuEcnrb0A+gk=;
+        b=ZMpEuRGUztjIkzmlf7oB+UK9QofUKnNk+tXjW6udoH3EEZFEQxLbvaF6nVTUrTT4Zm
+         zKx+NWpJfvGOdwaVUs17OIQUargX7cxwGAfl/K0SYtvSQCbLHRHWdM5Z2LA8z/P+xvoL
+         En9tumKOVEWP7hU8sgSdfLglZ8Lq0OpFwA6kKc88Gilwk2yX/hHgAL2b6nyoUqa27dY9
+         /fcnwNrC5N3icEG+T2FeDpZKlej4sR7M4mol/zOzDHUECosW5Pq5GVGZ4RMj2igf8YcT
+         9krOoqK6msBcbfyatQSG/pFrcda3YSOPokjJY8ggOW5eTZEhTIkQYW1ZAN/Xw7WHoKkw
+         hnCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FgfsY8zghdIG3MG6NzB7iJnFEqL6mHjUuEcnrb0A+gk=;
+        b=IAnGI+sAUvC/evDHd9w92+IJf7zWPxCOL2pwGFC6ff8u5WsMWjMrY1YdU/fu6oeBfc
+         HHGy+9+J1Bu1w7Vf3dF4MGRzxLKIbt7GH++9qzS8i4D6/FaWoWthdM9i1bTm8IAUGZBq
+         uWIIQGnMM/Vu7bHGCovF1SH45GND8knxpcJ0oeZPXBXG3odJ5d7EO+LYk//UmIIJ+kvz
+         Lvgs/3fiobj/Jy6alNi8kCrk/O6gNDcDGDOQCgkMABllDKrKb69tpRzWUTkarv6wOn0h
+         MQpQh2GL5J61GSkTP6n7qFrQ/iinvOFT6M05FRrsl8PRjZ1NfskLH8NUOOcmid0TC3zN
+         XzhQ==
+X-Gm-Message-State: AOAM533+odBCOcRYy7EVUuc92Z7/nm4pxQgFz+RSFAhJb2UrkF23+g7G
+        xpAUypnTGGyraaCspSgaxcc=
+X-Google-Smtp-Source: ABdhPJzOgS3R+dSdsTo0h6O0xrZ6YNYOUA5+cd+v7WRcuC2/opB0Uf1StsM4PMQPU1cnX9lBx7FTdw==
+X-Received: by 2002:a05:6214:62c:b0:452:c77b:a242 with SMTP id a12-20020a056214062c00b00452c77ba242mr801280qvx.77.1650617570538;
+        Fri, 22 Apr 2022 01:52:50 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id n11-20020a05622a11cb00b002f344f11849sm878762qtk.71.2022.04.22.01.52.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Apr 2022 01:52:50 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: lv.ruyi@zte.com.cn
+To:     linus.walleij@linaro.org, govindraj.raja@imgtec.com
+Cc:     Damien.Horsley@imgtec.com, abrestic@chromium.org,
+        ezequiel.garcia@imgtec.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lv Ruyi <lv.ruyi@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] pinctrl: fix error check return value of irq_of_parse_and_map()
+Date:   Fri, 22 Apr 2022 08:52:40 +0000
+Message-Id: <20220422085240.2776527-1-lv.ruyi@zte.com.cn>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1650610471.git.geert+renesas@glider.be>
-References: <cover.1650610471.git.geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Unlike on R-Car Gen3 SoCs, setting a bit to zero in a GPIO / Peripheral
-Function Select Register (GPSRn) on R-Car S4-8 is not always sufficient
-to configure a pin for GPIO.  For I2C-capable pins, the I2C function
-must also be explicitly disabled in the corresponding Module Select
-Register (MODSELn).
+From: Lv Ruyi <lv.ruyi@zte.com.cn>
 
-Add the missing FN_SEL_I2Ci_0 function enums to the pinmux_data[] array
-by temporarily overriding the GP_2_j_FN function enum to expand to two
-enums: the original GP_2_j_FN enum to configure the GPSR register bits,
-and the missing FN_SEL_I2Ci_0 enum to configure the MODSEL register
-bits.
+The irq_of_parse_and_map() function returns 0 on failure, and does not
+return an negative value.
 
-Fixes: 030ac6d7eeff81e3 ("pinctrl: renesas: Initial R8A779F0 PFC support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 	cefc03e5995e ("pinctrl: Add Pistachio SoC pin control driver")
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Lv Ruyi <lv.ruyi@zte.com.cn>
 ---
- drivers/pinctrl/renesas/pfc-r8a779f0.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/pinctrl/pinctrl-pistachio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779f0.c b/drivers/pinctrl/renesas/pfc-r8a779f0.c
-index 69f3abca1e22b2b5..23676e509bba4fba 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779f0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779f0.c
-@@ -254,7 +254,28 @@ enum {
- };
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index 8d271c6b0ca4..ff34f9755368 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1374,7 +1374,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		}
  
- static const u16 pinmux_data[] = {
-+/* Using GP_1_[9-0] requires disabling I2C in MOD_SEL1 */
-+#define GP_1_0_FN	GP_1_0_FN,	FN_SEL_I2C0_0
-+#define GP_1_1_FN	GP_1_1_FN,	FN_SEL_I2C0_0
-+#define GP_1_2_FN	GP_1_2_FN,	FN_SEL_I2C1_0
-+#define GP_1_3_FN	GP_1_3_FN,	FN_SEL_I2C1_0
-+#define GP_1_4_FN	GP_1_4_FN,	FN_SEL_I2C2_0
-+#define GP_1_5_FN	GP_1_5_FN,	FN_SEL_I2C2_0
-+#define GP_1_6_FN	GP_1_6_FN,	FN_SEL_I2C3_0
-+#define GP_1_7_FN	GP_1_7_FN,	FN_SEL_I2C3_0
-+#define GP_1_8_FN	GP_1_8_FN,	FN_SEL_I2C4_0
-+#define GP_1_9_FN	GP_1_9_FN,	FN_SEL_I2C4_0
- 	PINMUX_DATA_GP_ALL(),
-+#undef GP_1_0_FN
-+#undef GP_1_1_FN
-+#undef GP_1_2_FN
-+#undef GP_1_3_FN
-+#undef GP_1_4_FN
-+#undef GP_1_5_FN
-+#undef GP_1_6_FN
-+#undef GP_1_7_FN
-+#undef GP_1_8_FN
-+#undef GP_1_9_FN
- 
- 	PINMUX_SINGLE(SD_WP),
- 	PINMUX_SINGLE(SD_CD),
+ 		irq = irq_of_parse_and_map(child, 0);
+-		if (irq < 0) {
++		if (!irq) {
+ 			dev_err(pctl->dev, "No IRQ for bank %u: %d\n", i, irq);
+ 			of_node_put(child);
+ 			ret = irq;
 -- 
 2.25.1
 
