@@ -2,187 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C8F450BCC5
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 18:20:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3852350BCF3
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 18:26:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381008AbiDVQWv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 12:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
+        id S1385794AbiDVQ3i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 12:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384500AbiDVQWq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 12:22:46 -0400
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00FC85D5E0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 09:19:50 -0700 (PDT)
-Received: from tr.lan (ip-86-49-12-201.net.upcbroadband.cz [86.49.12.201])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        with ESMTP id S1384500AbiDVQ3b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 12:29:31 -0400
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355E15EBEF;
+        Fri, 22 Apr 2022 09:26:35 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 7E9D5802EF;
-        Fri, 22 Apr 2022 18:19:47 +0200 (CEST)
+        by phobos.denx.de (Postfix) with ESMTPSA id 0279383D4B;
+        Fri, 22 Apr 2022 18:26:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1650644388;
-        bh=GFpSax6oJkXkQUF4YyXYzVLb0KWd9sTKTx6bfguVh1I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WD78eUEJMxC1zLhiF9r1Z6Bj6YUmlMxvwcnmB33HViYGxND8hDrsPFyDCbDmhbIFQ
-         tft3WQJ8qd6IBjpLJwXDZ1UxheQmXrT4EI0kL5TfNlAVad4I1H1l5FPFXyTNKE9/BP
-         BNNzpljdOmyBJgLtnyuNDgZn7tlY7zDhnGnMeXcwT4eSTNrIKHU+M+39lgtfEFi+Z1
-         WMJc2h7bLjgIyPBFGmldMZzOQEBS8Te4ybcS39i0EzVEhdPuAPkxrTf+PTnrfK7sp6
-         JOj6qZrcWy09+8wYtdvn/T0HCDdITvZNsy+NhVIeyOYU1N2vx8+Zs1cf0iQ+PykdIc
-         hIE4AyKbAZ2bQ==
-From:   Marek Vasut <marex@denx.de>
-To:     linux-gpio@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested
-Date:   Fri, 22 Apr 2022 18:19:33 +0200
-Message-Id: <20220422161933.163347-1-marex@denx.de>
-X-Mailer: git-send-email 2.35.1
+        s=phobos-20191101; t=1650644793;
+        bh=DEvATQUcmAUvQtZt+xl0HhiXkCZH3A3i2rSRnjRahGM=;
+        h=Date:Subject:To:References:From:In-Reply-To:From;
+        b=jKUSyRNQXt+3uKyhT+4qpG0zhfDqsIKb0MBe+7dwBIJclr3+0t+w6Ln8rjXZrzxCD
+         xsSvW7US62e0SpaA9TMWJPC/safVtElF5FYHE31gz3JgklEPwIW9KFUtR2QQQ0ozQN
+         agRKE947CU4MdHKxst1LEtQIiMauosoyl//jME5tgChBF4S59bKxydkKbWQ1hCTNQI
+         JTdmBiIdnsHz97Xy8ptppSto0l0m1qwnBrJGkJR11U8+PG0tFYrjduXU8kNVhEy1nD
+         XwbQTh5F+jyvWjb+fXvvK5mPi9WgegzMnHLZthTR+AxdlgVquuEcHBvVzeomwheuCb
+         ASx+DqSWM6ORw==
+Message-ID: <c48500cd-50be-1d70-2f2c-02c2dcede1eb@denx.de>
+Date:   Fri, 22 Apr 2022 18:26:32 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] pinctrl: stm32: improve bank clocks management
+Content-Language: en-US
+To:     Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20220422143608.226580-1-fabien.dessenne@foss.st.com>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <20220422143608.226580-1-fabien.dessenne@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Virus-Scanned: clamav-milter 0.103.5 at phobos.denx.de
 X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The current EOI handler for LEVEL triggered interrupts calls clk_enable(),
-register IO, clk_disable(). The clock manipulation requires locking which
-happens with IRQs disabled in clk_enable_lock(). Instead of turning the
-clock on and off all the time, enable the clock in case LEVEL interrupt is
-requested and keep the clock enabled until all LEVEL interrupts are freed.
-The LEVEL interrupts are an exception on this platform and seldom used, so
-this does not affect the common case.
+On 4/22/22 16:36, Fabien Dessenne wrote:
+> Instead of enabling/disabling the clock at each IO configuration update,
+> just keep the clock enabled from the probe.
+> This makes things simpler and more efficient (e.g. the time required to
+> toggle an output IO is drastically decreased) without significantly
+> increasing the power consumption.
 
-This simplifies the LEVEL interrupt handling considerably and also fixes
-the following splat found when using preempt-rt:
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 0 at kernel/locking/rtmutex.c:2040 __rt_mutex_trylock+0x37/0x62
- Modules linked in:
- CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.10.109-rt65-stable-standard-00068-g6a5afc4b1217 #85
- Hardware name: STM32 (Device Tree Support)
- [<c010a45d>] (unwind_backtrace) from [<c010766f>] (show_stack+0xb/0xc)
- [<c010766f>] (show_stack) from [<c06353ab>] (dump_stack+0x6f/0x84)
- [<c06353ab>] (dump_stack) from [<c01145e3>] (__warn+0x7f/0xa4)
- [<c01145e3>] (__warn) from [<c063386f>] (warn_slowpath_fmt+0x3b/0x74)
- [<c063386f>] (warn_slowpath_fmt) from [<c063b43d>] (__rt_mutex_trylock+0x37/0x62)
- [<c063b43d>] (__rt_mutex_trylock) from [<c063c053>] (rt_spin_trylock+0x7/0x16)
- [<c063c053>] (rt_spin_trylock) from [<c036a2f3>] (clk_enable_lock+0xb/0x80)
- [<c036a2f3>] (clk_enable_lock) from [<c036ba69>] (clk_core_enable_lock+0x9/0x18)
- [<c036ba69>] (clk_core_enable_lock) from [<c034e9f3>] (stm32_gpio_get+0x11/0x24)
- [<c034e9f3>] (stm32_gpio_get) from [<c034ef43>] (stm32_gpio_irq_trigger+0x1f/0x48)
- [<c034ef43>] (stm32_gpio_irq_trigger) from [<c014aa53>] (handle_fasteoi_irq+0x71/0xa8)
- [<c014aa53>] (handle_fasteoi_irq) from [<c0147111>] (generic_handle_irq+0x19/0x22)
- [<c0147111>] (generic_handle_irq) from [<c014752d>] (__handle_domain_irq+0x55/0x64)
- [<c014752d>] (__handle_domain_irq) from [<c0346f13>] (gic_handle_irq+0x53/0x64)
- [<c0346f13>] (gic_handle_irq) from [<c0100ba5>] (__irq_svc+0x65/0xc0)
- Exception stack(0xc0e01f18 to 0xc0e01f60)
- 1f00:                                                       0000300c 00000000
- 1f20: 0000300c c010ff01 00000000 00000000 c0e00000 c0e07714 00000001 c0e01f78
- 1f40: c0e07758 00000000 ef7cd0ff c0e01f68 c010554b c0105542 40000033 ffffffff
- [<c0100ba5>] (__irq_svc) from [<c0105542>] (arch_cpu_idle+0xc/0x1e)
- [<c0105542>] (arch_cpu_idle) from [<c063be95>] (default_idle_call+0x21/0x3c)
- [<c063be95>] (default_idle_call) from [<c01324f7>] (do_idle+0xe3/0x1e4)
- [<c01324f7>] (do_idle) from [<c01327b3>] (cpu_startup_entry+0x13/0x14)
- [<c01327b3>] (cpu_startup_entry) from [<c0a00c13>] (start_kernel+0x397/0x3d4)
- [<c0a00c13>] (start_kernel) from [<00000000>] (0x0)
- ---[ end trace 0000000000000002 ]---
+[...]
 
-Power consumption measured on STM32MP157C DHCOM SoM is not increased or
-is below noise threshold.
+>   static struct irq_domain *stm32_pctrl_get_irq_domain(struct device_node *np)
+> @@ -1575,6 +1537,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>   			ret = stm32_gpiolib_register_bank(pctl, child);
+>   			if (ret) {
+>   				of_node_put(child);
+> +
+> +				for (i = 0; i < pctl->nbanks; i++)
+> +					clk_disable_unprepare(pctl->banks[i].clk);
+> +
 
-Reviewed-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
-Fixes: 47beed513a85b ("pinctrl: stm32: Add level interrupt support to gpio irq chip")
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Fabien Dessenne <fabien.dessenne@foss.st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-To: linux-gpio@vger.kernel.org
----
-V2: - Use pinctrl: stm32: tags
-    - Add RB from Fabien
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+There are clk_bulk_*() functions, maybe you can use those to get rid of 
+these loops ?
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 242d1c37c6e4..7aecd0efde07 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -226,6 +226,13 @@ static void stm32_gpio_free(struct gpio_chip *chip, unsigned offset)
- 	pinctrl_gpio_free(chip->base + offset);
- }
- 
-+static int stm32_gpio_get_noclk(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
-+
-+	return !!(readl_relaxed(bank->base + STM32_GPIO_IDR) & BIT(offset));
-+}
-+
- static int stm32_gpio_get(struct gpio_chip *chip, unsigned offset)
- {
- 	struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
-@@ -233,7 +240,7 @@ static int stm32_gpio_get(struct gpio_chip *chip, unsigned offset)
- 
- 	clk_enable(bank->clk);
- 
--	ret = !!(readl_relaxed(bank->base + STM32_GPIO_IDR) & BIT(offset));
-+	ret = stm32_gpio_get_noclk(chip, offset);
- 
- 	clk_disable(bank->clk);
- 
-@@ -317,7 +324,7 @@ static void stm32_gpio_irq_trigger(struct irq_data *d)
- 		return;
- 
- 	/* If level interrupt type then retrig */
--	level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
-+	level = stm32_gpio_get_noclk(&bank->gpio_chip, d->hwirq);
- 	if ((level == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
- 	    (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
- 		irq_chip_retrigger_hierarchy(d);
-@@ -359,6 +366,7 @@ static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
- {
- 	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(bank->gpio_chip.parent);
-+	unsigned long flags;
- 	int ret;
- 
- 	ret = stm32_gpio_direction_input(&bank->gpio_chip, irq_data->hwirq);
-@@ -372,6 +380,10 @@ static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
- 		return ret;
- 	}
- 
-+	flags = irqd_get_trigger_type(irq_data);
-+	if (flags & IRQ_TYPE_LEVEL_MASK)
-+		clk_enable(bank->clk);
-+
- 	return 0;
- }
- 
-@@ -379,6 +391,9 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
- {
- 	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
- 
-+	if (bank->irq_type[irq_data->hwirq] & IRQ_TYPE_LEVEL_MASK)
-+		clk_disable(bank->clk);
-+
- 	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
- }
- 
--- 
-2.35.1
-
+The rest looks good to me.
