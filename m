@@ -2,152 +2,339 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E3450B112
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 09:05:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A302550B18F
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 09:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353815AbiDVHHS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 03:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
+        id S1352010AbiDVHdA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 03:33:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444641AbiDVHHR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 03:07:17 -0400
-Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180075130E
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 00:04:23 -0700 (PDT)
-Received: from vanadium.ugent.be (vanadium.ugent.be [157.193.99.61])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: sander@svanheule.net)
-        by polaris.svanheule.net (Postfix) with ESMTPSA id BAD6C2CB0E3;
-        Fri, 22 Apr 2022 09:04:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-        s=mail1707; t=1650611061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wlADY8n35L2Ou7uvyeVSyLqPISR1e/igSs6VXk/afno=;
-        b=2z/g+n7+dT+FurhJHIQnLUTHRWFUTSrGyIyTGcvtHHQJMYsJvn+SC/gkpvBeRX51lAm/L4
-        yysFkL9Q+w1MRei//reAKfjwiV4SlPL+Tdjb2UleIxA1YdhYBc9MYMVRXWo6jvMIm31hnB
-        unP4QlspRwi+PNwj605uXLIZFX10cJQZteWtGZq6Zh8hrBzSLofW0LgCwD4gct6xts7vjz
-        BWtErvfLBtxcrUxhqZCQ6GxUpWPTil3neRuNDqwARyKH4GTVghSBpLJIp/RLDOq3X97jxf
-        NLGZ8bjU9oouRusSoWjz5XSCGq20aSNYf9HgIeIFJ/Y0vv1apjCpAE8+xYHtrQ==
-Message-ID: <b8b62753ad5235e065b4cb0856a7a7c33438dfbb.camel@svanheule.net>
-Subject: Re: [PATCH v1 3/6] gpio: realtek-otto: Support per-cpu interrupts
-From:   Sander Vanheule <sander@svanheule.net>
-To:     Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Bert Vermeulen <bert@biot.com>, linux-kernel@vger.kernel.org
-Date:   Fri, 22 Apr 2022 09:04:20 +0200
-In-Reply-To: <87h76mahsl.wl-maz@kernel.org>
-References: <cover.1649533972.git.sander@svanheule.net>
-         <8d4e0848f233c2c1b98aa141741c61d95cd3843f.1649533972.git.sander@svanheule.net>
-         <CACRpkdbSdDAKiFAsHBosdVDpBhWW-Keoq+t8GJ5LsyWjOZwp_g@mail.gmail.com>
-         <87h76mahsl.wl-maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        with ESMTP id S1444863AbiDVHcc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 03:32:32 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E14205158B
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 00:29:37 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:2928:9f72:c4af:fbd9])
+        by laurent.telenet-ops.be with bizsmtp
+        id MjVa270072Ah9RF01jVafY; Fri, 22 Apr 2022 09:29:34 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nhnjR-001acD-Mg; Fri, 22 Apr 2022 09:29:33 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nhnjR-00CIuS-4i; Fri, 22 Apr 2022 09:29:33 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] pinctrl: renesas: rcar-gen4: Fix GPIO function on I2C-capable pins
+Date:   Fri, 22 Apr 2022 09:29:29 +0200
+Message-Id: <cover.1650610471.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus, Marc,
+	Hi all,
 
-On Thu, 2022-04-21 at 10:48 +0100, Marc Zyngier wrote:
-> On Thu, 21 Apr 2022 00:04:16 +0100,
-> Linus Walleij <linus.walleij@linaro.org> wrote:
-> > 
-> > On Sat, Apr 9, 2022 at 9:56 PM Sander Vanheule <sander@svanheule.net> wrote:
-> > 
-> > > On SoCs with multiple cores, it is possible that the GPIO interrupt
-> > > controller supports assigning specific pins to one or more cores.
-> > > 
-> > > IRQ balancing can be performed on a line-by-line basis if the parent
-> > > interrupt is routed to all available cores, which is the default upon
-> > > initialisation.
-> > > 
-> > > Signed-off-by: Sander Vanheule <sander@svanheule.net>
-> > 
-> > That sounds complicated.
-> > 
-> > Sounds like something the IRQ maintainer (Marc Z) should
-> > have a quick look at.
-> 
-> This is pretty odd indeed. There seem to be a direct mapping between
-> the GPIOs and the CPU it interrupts (or at least that's what the code
-> seem to express). However, I don't see a direct relation between the
-> CPUs and the chained interrupt. It isn't even clear if this interrupt
-> itself is per-CPU.
-> 
-> So this begs a few questions:
-> 
-> - is the affinity actually affecting the target CPU? or is it
->   affecting the target mux?
-> 
-> - how is the affinity of the mux interrupt actually enforced?
+Configuring I2C-capable pins for GPIO may not work on R-Car V3U and
+S4-8, as R-Car Gen4 SoCs need additional configuration in a Module
+Select Register (MODSELn) register, which is currently missing from the
+pin control subdrivers.
 
-There are three interrupt controllers at play here:
-   1. MIPS CPU interrupt controller: drivers/irqchip/irq-mips-cpu.c
-      One interrupt controller per VPE, so in this case there are two. Provides
-      per-CPU interrupts.
-   2. SoC interrupt controller: drivers/irqchip/irq-realtek-rtl.c
-      Also one interrupt controller per VPE. I suppose these will also be per-
-      CPU, although this isn't implemented in the driver yet, and I don't think
-      I yet fully understand how should work in the kernel.
-   3. GPIO interrupt controller: drivers/gpio/gpio-realtek-otto.c
-      One interrupt controller for the entire GPIO bank, with optional
-      configurable affinity (this patch) for the different VPEs.
+Hence when using i2c-gpio instead of i2c-rcar using the commented-out
+patch below, I2C
+  - fails on the Spider development board (with R-Car S4-8), as the
+    firmware/bootloader has configured the corresponding MODSEL bits for
+    I2C,
+  - still works on the Falcon development board (with R-Car V3U), as the
+    firmware/bootloader has configured the corresponding MODSEL bits for
+    GPIO.
+    It can be made to fail by changing the MODSEL bits from U-Boot,
+    before booting Linux:
+      1. Write ffff0000 to e6050800 (unlock PMMR using inverted value),
+      2. Write 0000ffff to e6050900 (enable I2C functions in MODSEL).
 
-For the RTL839x series of SoCs, this results in the following:
+This patch series adds the missing configuration, by temporarily
+overriding the GP_*_FN function enums to expand to two enums: the
+original GP_*_FN enum to configure the GSPR register bits, and the
+missing FN_SEL_I2Cn_0 enum to configure the MODSEL register bits.
 
-GPIO LINES SOC IRQ MIPS
-+--------+ +-----------+ HW IRQ +--------+
---->| GPIO | | SOC IRQ | LINES | IRQ |
---->| BANK |-----o-->| VPE0 CTRL |=========>| VPE0 |
-. | | | +-----------+ +--------+
-. +--------+ | 
-. |
-| +-----------+ +--------+
-\-->| SOC IRQ | | IRQ |
-| VPE1 CTRL |=========>| VPE1 |
-+-----------+ +--------+
+I picked this solution as it is simpler than the alternative, which
+would be:
+  1. Add a copy of the CPU_ALL_GP() macro to describe all GPIO pins that
+     are not I2C-capable,
+  2. Add a copy of the PINMUX_DATA_GP_ALL() macro to emit mark/function
+     enums in pinmux_data[] for GPIO pins that are not I2C-capable,
+  3. Add a copy of the _GP_DATA() macro to emit mark/function 
+     enums in pinmux_data[] for an I2C-capable GPIO pin,
+  4. Invoke the macro above for all I2C-capable GPIO pins.
 
+I intend to queue this in renesas-pinctrl-for-v5.19.
 
-For RTL930x, where GPIO IRQ affinity is configurable:
+Thanks for your comments!
 
-GPIO LINES SOC IRQ MIPS
-+--------+ +-----------+ HW IRQ +--------+
---->| GPIO |-------->| SOC IRQ | LINES | IRQ |
---->| BANK | | VPE0 CTRL |=========>| VPE0 |
-. | |-----\ +-----------+ +--------+
-. +--------+ | 
-. |
-| +-----------+ +--------+
-\-->| SOC IRQ | | IRQ |
-| VPE1 CTRL |=========>| VPE1 |
-+-----------+ +--------+
+Geert Uytterhoeven (2):
+  pinctrl: renesas: r8a779a0: Fix GPIO function on I2C-capable pins
+  pinctrl: renesas: r8a779f0: Fix GPIO function on I2C-capable pins
 
-The interrupt for the GPIO controller can be muxed to any of the MIPS HW
-interrupts on any (or all) of the VPEs, and these muxes (SoC IRQ controllers)
-can be configured independently per CPU. The SoC IRQ line index is fixed, and
-consistent for both VPEs.
-Only in the second diagram can individual GPIO interrupts be muxed to any of the
-VPEs, but there is still only one IRQ line per VPE for all selected GPIO lines.
+ drivers/pinctrl/renesas/pfc-r8a779a0.c | 29 ++++++++++++++++++++++++++
+ drivers/pinctrl/renesas/pfc-r8a779f0.c | 21 +++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-I hopes this helps to clarify the situation. We don't have any real
-documentation, so this is basically derived from registers descriptions in SDK
-headers and testing the interrupt behaviour.
+-- 
+2.25.1
 
-Best,
-Sander
+# diff --git a/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi b/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi
+# index ee81c715eb865d0e..d4fb3f122b709d2f 100644
+# --- a/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi
+# +++ b/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi
+# @@ -170,8 +170,10 @@ &extalr_clk {
+#  };
+#  
+#  &i2c0 {
+# +#ifndef I2C_GPIO
+#  	pinctrl-0 = <&i2c0_pins>;
+#  	pinctrl-names = "default";
+# +#endif
+#  
+#  	status = "okay";
+#  	clock-frequency = <400000>;
+# @@ -185,8 +187,10 @@ eeprom@50 {
+#  };
+#  
+#  &i2c1 {
+# +#ifndef I2C_GPIO
+#  	pinctrl-0 = <&i2c1_pins>;
+#  	pinctrl-names = "default";
+# +#endif
+#  
+#  	status = "okay";
+#  	clock-frequency = <400000>;
+# @@ -231,8 +235,10 @@ sn65dsi86_out: endpoint {
+#  };
+#  
+#  &i2c6 {
+# +#ifndef I2C_GPIO
+#  	pinctrl-0 = <&i2c6_pins>;
+#  	pinctrl-names = "default";
+# +#endif
+#  
+#  	status = "okay";
+#  	clock-frequency = <400000>;
+# diff --git a/arch/arm64/boot/dts/renesas/r8a779a0-falcon.dts b/arch/arm64/boot/dts/renesas/r8a779a0-falcon.dts
+# index fb10bb3626694227..12b433c2f30dd60d 100644
+# --- a/arch/arm64/boot/dts/renesas/r8a779a0-falcon.dts
+# +++ b/arch/arm64/boot/dts/renesas/r8a779a0-falcon.dts
+# @@ -5,6 +5,7 @@
+#   * Copyright (C) 2020 Renesas Electronics Corp.
+#   */
+#  
+# +#define I2C_GPIO
+#  /dts-v1/;
+#  #include "r8a779a0-falcon-cpu.dtsi"
+#  #include "r8a779a0-falcon-csi-dsi.dtsi"
+# diff --git a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+# index c251fdca18ab808b..dc2bbe2aa82878a4 100644
+# --- a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+# +++ b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+# @@ -8,6 +8,7 @@
+#  #include <dt-bindings/clock/r8a779a0-cpg-mssr.h>
+#  #include <dt-bindings/interrupt-controller/arm-gic.h>
+#  #include <dt-bindings/power/r8a779a0-sysc.h>
+# +#include <dt-bindings/gpio/gpio.h>
+#  
+#  / {
+#  	compatible = "renesas,r8a779a0";
+# @@ -438,6 +439,25 @@ tmu4: timer@ffc00000 {
+#  			status = "disabled";
+#  		};
+#  
+# +#ifdef I2C_GPIO
+# +		i2c0: i2c0 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio2 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio2 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +
+# +		i2c1: i2c1 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio2 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio2 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +#else
+#  		i2c0: i2c@e6500000 {
+#  			compatible = "renesas,i2c-r8a779a0",
+#  				     "renesas,rcar-gen4-i2c";
+# @@ -469,6 +489,7 @@ i2c1: i2c@e6508000 {
+#  			#size-cells = <0>;
+#  			status = "disabled";
+#  		};
+# +#endif
+#  
+#  		i2c2: i2c@e6510000 {
+#  			compatible = "renesas,i2c-r8a779a0",
+# @@ -534,6 +555,17 @@ i2c5: i2c@e66e0000 {
+#  			status = "disabled";
+#  		};
+#  
+# +#ifdef I2C_GPIO
+# +		i2c6: i2c6 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio2 14 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio2 15 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +
+# +#else
+#  		i2c6: i2c@e66e8000 {
+#  			compatible = "renesas,i2c-r8a779a0",
+#  				     "renesas,rcar-gen4-i2c";
+# @@ -549,6 +581,7 @@ i2c6: i2c@e66e8000 {
+#  			#size-cells = <0>;
+#  			status = "disabled";
+#  		};
+# +#endif
+#  
+#  		hscif0: serial@e6540000 {
+#  			compatible = "renesas,hscif-r8a779a0",
+# diff --git a/arch/arm64/boot/dts/renesas/r8a779f0-spider-cpu.dtsi b/arch/arm64/boot/dts/renesas/r8a779f0-spider-cpu.dtsi
+# index 999c823719bc0bf5..18b8da87f2b2d251 100644
+# --- a/arch/arm64/boot/dts/renesas/r8a779f0-spider-cpu.dtsi
+# +++ b/arch/arm64/boot/dts/renesas/r8a779f0-spider-cpu.dtsi
+# @@ -32,8 +32,10 @@ &extalr_clk {
+#  };
+#  
+#  &i2c4 {
+# +#ifndef I2C_GPIO
+#  	pinctrl-0 = <&i2c4_pins>;
+#  	pinctrl-names = "default";
+# +#endif
+#  
+#  	status = "okay";
+#  	clock-frequency = <400000>;
+# diff --git a/arch/arm64/boot/dts/renesas/r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/r8a779f0-spider.dts
+# index 2e3b719cc749492d..c12045cc8b106f6b 100644
+# --- a/arch/arm64/boot/dts/renesas/r8a779f0-spider.dts
+# +++ b/arch/arm64/boot/dts/renesas/r8a779f0-spider.dts
+# @@ -5,6 +5,7 @@
+#   * Copyright (C) 2021 Renesas Electronics Corp.
+#   */
+#  
+# +#define I2C_GPIO
+#  /dts-v1/;
+#  #include "r8a779f0-spider-cpu.dtsi"
+#  #include "r8a779f0-spider-ethernet.dtsi"
+# diff --git a/arch/arm64/boot/dts/renesas/r8a779f0.dtsi b/arch/arm64/boot/dts/renesas/r8a779f0.dtsi
+# index 155a7ee8dae43454..d56e17f714f353b1 100644
+# --- a/arch/arm64/boot/dts/renesas/r8a779f0.dtsi
+# +++ b/arch/arm64/boot/dts/renesas/r8a779f0.dtsi
+# @@ -8,6 +8,7 @@
+#  #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
+#  #include <dt-bindings/interrupt-controller/arm-gic.h>
+#  #include <dt-bindings/power/r8a779f0-sysc.h>
+# +#include <dt-bindings/gpio/gpio.h>
+#  
+#  / {
+#  	compatible = "renesas,r8a779f0";
+# @@ -164,6 +165,61 @@ sysc: system-controller@e6180000 {
+#  			#power-domain-cells = <1>;
+#  		};
+#  
+# +#ifdef I2C_GPIO
+# +		i2c0: i2c0 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio1 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio1 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +
+# +		i2c1: i2c1 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio1 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio1 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +
+# +		i2c2: i2c2 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio1 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +
+# +		i2c3: i2c3 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio1 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +
+# +		i2c4: i2c4 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio1 8 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio1 9 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +
+# +		i2c5: i2c5 {
+# +			#address-cells = <1>;
+# +			#size-cells = <0>;
+# +			compatible = "i2c-gpio";
+# +			scl-gpios = <&gpio1 10 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			sda-gpios = <&gpio1 11 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+# +			i2c-gpio,delay-us = <5>;
+# +		};
+# +#else
+#  		i2c0: i2c@e6500000 {
+#  			compatible = "renesas,i2c-r8a779f0",
+#  				     "renesas,rcar-gen4-i2c";
+# @@ -265,6 +321,7 @@ i2c5: i2c@e66e0000 {
+#  			#size-cells = <0>;
+#  			status = "disabled";
+#  		};
+# +#endif
+#  
+#  		ufs: ufs@e6860000 {
+#  			compatible = "renesas,r8a779f0-ufs";
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
