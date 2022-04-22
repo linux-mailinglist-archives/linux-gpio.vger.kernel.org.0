@@ -2,59 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 187D450C3C1
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 01:11:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A954A50C2C2
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 01:09:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232883AbiDVW2n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 18:28:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
+        id S233305AbiDVWtP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 18:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233365AbiDVW1n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 18:27:43 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E50353420C4
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 14:58:19 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2eba37104a2so99414647b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 14:58:19 -0700 (PDT)
+        with ESMTP id S234663AbiDVWsV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 18:48:21 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD2738B2DA
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 15:08:02 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-2ef5380669cso99088957b3.9
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 15:08:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NNQJP7ntF8soE81iHLRX4D3rG4OVRx16kjDK5B0hv+E=;
-        b=pWfQKYNkMMZJG9PgkJeJ10O0wcxeCiz9fbN53VOitR3Jgn6iD6bHOE0TaZa6BoDjMG
-         /0y4+UcKW3gaHILLuTRNBUEikivRNDHV6EhM+wkH4JsIAcxZpEUeS+jqi4yRhcqbgBGH
-         LJa2Zlj22o8pt1vbAV/M0CA9z3p3+0UwqWaSgfQ6lwaeoiOE2YsAfmYV6oR668MMsCjd
-         WPQwsweyVem8CCU/2FazMcS46azD5MomO3E2Ome+pa2BqkhgiFtRdq49gyKcagra7/T5
-         tuShQiWL1DnAq7DyRYnVQn89PtwxxHp2DRoMLHDp8QbMp40VTeFoAHWr4lT5zDeyA5Iz
-         PrKQ==
+         :cc:content-transfer-encoding;
+        bh=rKAG+J5Q8lcvvd/biftxVJOIEqMrFvSTtBVDRerigCk=;
+        b=gW2ZtWypeVc/O6j08D9/hby6Pss2xm53tySxwlkDAbxboHmNQ4lXaAVg6r7Pvyy9+J
+         dZuggtnxZWNDRqiE5rHib9T8JFdYx6xMSzE7e13VM7rWGhOw8wsnDtBFKEoe7/GbSMRE
+         dagY2aApKLUl2NfmqDv3lE7vzROus4LEohYSeX/dDKiKk1VW5LUzkWjlTfBB8azMNGpF
+         0jid58yJIinT+wdN3WOcvT8UO9NYeq10Vf6JMU/q1RxVqa1kFUa0/zE5gFPl69uyaUJA
+         P1kAw2HwyDZ3ZmY5SOZnFklOXUX/u02XXQcurPb7jq5isIZP/slUEvgRwFRN8I0r+rBO
+         GHvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NNQJP7ntF8soE81iHLRX4D3rG4OVRx16kjDK5B0hv+E=;
-        b=ys67n3gAj6b0fUQTI4W5pvGkQjHlFnYSuHbOZHMiBqeRaz1MT6DGiV5xqQHDH7LkiT
-         4WD/cCYqOX4xLexYBS0MhIiZJDsJhRuSn6Nb2Rl0lF929+DdXoZFwIDAp/irhkcoKN9X
-         H2jc2HTno4mQ5HO1EnRtcPTpC7hq+SGVcVIym7Xu+2aN8xwvnoeqTUEknzLgvML6uUF6
-         QUb26JzcE7rJTxR4WJnJLx2TV5sA3KXuyLQRsBBxtkXk9yr566zCINsdNoEu4gv6lTFw
-         0MjEdAlIAvchX3RdVh2U1JecLSQEngaPHlQ4FbbYqWDW4yTEJ+EjujH/4f6/vToEQwZ4
-         7MTA==
-X-Gm-Message-State: AOAM533SIZHd+rQuSbzGUT2ozPTT1e4E7efRPqHIw/khj13kNqrLVnem
-        BJ6Fk1islIkJpfA9VyLqcI68XQf/3wRyZKeqMGRLDCAEfk4=
-X-Google-Smtp-Source: ABdhPJwiYz27q9al29EVKwaUieTIJ7vxG56fmMN5dBUaNlUXP7voSN0iSDPygWM4Z2MQ1vTu71BmS8xz8YZ3T+3KZMo=
-X-Received: by 2002:a81:2154:0:b0:2f4:d79e:35dc with SMTP id
- h81-20020a812154000000b002f4d79e35dcmr7091549ywh.126.1650664699156; Fri, 22
- Apr 2022 14:58:19 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rKAG+J5Q8lcvvd/biftxVJOIEqMrFvSTtBVDRerigCk=;
+        b=YzcqDwhYcFVpiZx0sm0Rt+SEHbzMTCvZHpDrSKRMHb03ZoduRIcJe83FCC6+3fJIAr
+         qBjntnqJhyoshqNsRazr1+FYyg3V80+GQIipI+Wvf4+XJoK54mzlh862J3xrFQtml8iZ
+         LdC6lB2yVbfw0UqHaE9lKHrLRthnZG6QySkCtiypeSaiI7JCCGqavz6pkRT5d1HMyKJn
+         pGQId3PNh8URnbj1/GdKlGBLogIG9xl9fyR9j4X3PuevMGPN0k50cA4tYgOSA9aub6GB
+         EOQ/VSZEpCQjN7upWogcbYsDziLNq9CKqOJcE7W2grjpozRbf+rjETrLp8dvWJLhIEQJ
+         2ZfQ==
+X-Gm-Message-State: AOAM533LSN2UiIJ7sdMexuTlEEq1hqHZvD9zhhD+t0bB5+Rx18vL10DO
+        NLWeGPqQEUnaRmPK7cQVhOx8Z4Or8CwWvfQ0j+emkA==
+X-Google-Smtp-Source: ABdhPJyi/ikQ9hdlwSSUnoOGQLb3feHoaGPFFTBFoKKCXX8WPkAGeGuqi/XkQMXnVdVgTorUtasyV/+Uykb/P4sdCpg=
+X-Received: by 2002:a81:5dc5:0:b0:2eb:3feb:686c with SMTP id
+ r188-20020a815dc5000000b002eb3feb686cmr7290345ywb.268.1650665254777; Fri, 22
+ Apr 2022 15:07:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220421094228.2141569-1-nobuhiro1.iwamatsu@toshiba.co.jp>
-In-Reply-To: <20220421094228.2141569-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+References: <20220413060729.27639-1-arinc.unal@arinc9.com> <CACRpkdbbMFYNNjAKwhysKpu1JVh2JSB-N=Y8QMx1JvMhCPBpwg@mail.gmail.com>
+ <26418320-64e0-3ed2-c792-7f72878b7592@arinc9.com> <CAMhs-H_d8jUa4=4eVjQxo+h-XeRgiMYC1H_xYtPLb8jHDVYL2Q@mail.gmail.com>
+ <6cdec3bc-4715-29c8-f4a1-df1408940a75@arinc9.com>
+In-Reply-To: <6cdec3bc-4715-29c8-f4a1-df1408940a75@arinc9.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Apr 2022 23:58:08 +0200
-Message-ID: <CACRpkdZizkeBsRhk7-VqcJ5u3+6ksRv++znnpYhnX9-7UN=x9A@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: visconti: Fix fwnode of GPIO IRQ
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Sat, 23 Apr 2022 00:07:23 +0200
+Message-ID: <CACRpkdbebE3RiviZ3NiVL4W2S1HN7Q21jSma6abup_nEVjX6+w@mail.gmail.com>
+Subject: Re: [PATCH 0/14] Refactor Ralink Pinctrl and Add Documentation
+To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        erkin.bozoglu@xeront.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,17 +79,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 11:42 AM Nobuhiro Iwamatsu
-<nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+On Fri, Apr 22, 2022 at 8:14 AM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc=
+9.com> wrote:
 
-> The fwnode of GPIO IRQ must be set to its own fwnode, not the fwnode of the
-> parent IRQ. Therefore, this sets own fwnode instead of the parent IRQ fwnode to
-> GPIO IRQ's.
+> >> Thanks. There is a v2 of this series which has been waiting for a week=
+,
+> >> I hope that was the one you applied as you replied under v1 (I'm not
+> >> sure which repository you applied this so I can't check myself).
+> >
+> > Linus adds patches through the linux-pinctrl tree as pinctrl maintainer=
+. Check:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.gi=
+t/log/?h=3Ddevel
 >
-> Fixes: 2ad74f40dacc ("gpio: visconti: Add Toshiba Visconti GPIO support")
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> Thanks Sergio. I see v1 was applied, oops. What to do?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+No problem, I backed it out (had to back out some stuff pulled on top too..=
+.)
+then re-pulled the stuff I pulled on top, then applied v2 on top.
+Let's see how much I screwed up :D
 
 Yours,
 Linus Walleij
