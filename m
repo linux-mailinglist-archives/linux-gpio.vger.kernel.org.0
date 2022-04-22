@@ -2,386 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A6B350BF87
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 20:28:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E08EA50C0BE
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 22:45:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229998AbiDVS2x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 14:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44532 "EHLO
+        id S229503AbiDVUng (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 16:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230054AbiDVS2l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 14:28:41 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2FAEA8167D;
-        Fri, 22 Apr 2022 11:25:46 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CE041FB;
-        Fri, 22 Apr 2022 11:16:23 -0700 (PDT)
-Received: from [10.57.80.98] (unknown [10.57.80.98])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 362863F73B;
-        Fri, 22 Apr 2022 11:16:19 -0700 (PDT)
-Message-ID: <36551341-60f5-8b61-59d1-176ece8204d6@arm.com>
-Date:   Fri, 22 Apr 2022 19:16:13 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCHv1 18/19] arm64: dts: rockchip: Add base DT for rk3588 SoC
-Content-Language: en-GB
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        with ESMTP id S229504AbiDVUnf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 16:43:35 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03B72F2B0B;
+        Fri, 22 Apr 2022 12:41:06 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id j2so16339667ybu.0;
+        Fri, 22 Apr 2022 12:41:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IOuZ8W1MJjibB6swPo2RkQCIeQZ1wridYdEDKveCnMw=;
+        b=75QeTDGw2CXuOQiRqR4x9mCo2fipdSQ2FnVmTTDAsV+ycc63HyxQgInkyz1UOUkcFO
+         TJNwp65NQMLbcUjWH9YGwdMzcc1UEvalFVCxlU9cqy4F18erT1Js5XhTM56JeCuwn0S3
+         40Ji+mVAmOQWRkQodiZc4Nf4z1FW9AzIsZ9UTwUV8tv70cHa652xQ1OAkeeGSA4qESsL
+         YqY5TUhEgXRUNLe1A0Z50wildXvhsuLWUinzz+qnDKe+cdRnwE5NdJkn0Jla24PwTgN+
+         y7xbMjDQcY0MhAoi//1J1Co0u5S3Q1UAZR9b6SD8YNnVL88f+bHtE9P7FA3j3bZ7Gb96
+         XaIA==
+X-Gm-Message-State: AOAM533NHaXEw+e1rmg8vLSJ9Q45NoCaXcNFd7lMbeVBS7It79fHpSFQ
+        lpYOZkHyZlme+NvaqQV4LDmLOqXsNA==
+X-Google-Smtp-Source: ABdhPJwYLw7ezcsEnAXRaBNaeuhKHOPAF+WazY3gcKcmVgQTsP9d3MdUusPnK8wJQL/5J1SzRjWOlw==
+X-Received: by 2002:a9d:3624:0:b0:5e9:5778:d0c6 with SMTP id w33-20020a9d3624000000b005e95778d0c6mr2399677otb.367.1650655308747;
+        Fri, 22 Apr 2022 12:21:48 -0700 (PDT)
+Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.googlemail.com with ESMTPSA id x24-20020a056870a79800b000e2e53716fbsm1044094oao.31.2022.04.22.12.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Apr 2022 12:21:48 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Andrew Jeffery <andrew@aj.id.au>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
-        Kever Yang <kever.yang@rock-chips.com>, kernel@collabora.com,
-        Yifeng Zhao <yifeng.zhao@rock-chips.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>
-References: <20220422170920.401914-1-sebastian.reichel@collabora.com>
- <20220422170920.401914-19-sebastian.reichel@collabora.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220422170920.401914-19-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Joel Stanley <joel@jms.id.au>
+Cc:     linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: aspeed: Drop referenced nodes in examples
+Date:   Fri, 22 Apr 2022 14:21:38 -0500
+Message-Id: <20220422192139.2592632-1-robh@kernel.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-04-22 18:09, Sebastian Reichel wrote:
-> From: Kever Yang <kever.yang@rock-chips.com>
-> 
-> This initial version supports (single core) CPU, dma, interrupts, timers,
-> UART and SDHCI. In short - everything necessary to boot Linux on this
-> system on chip.
-> 
-> The DT is split into rk3588 and rk3588s, which is a reduced version
-> (i.e. with less peripherals) of the former.
-> 
-> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> [rebase, squash and reword commit message]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->   arch/arm64/boot/dts/rockchip/rk3588.dtsi  |   6 +
->   arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 501 ++++++++++++++++++++++
->   include/dt-bindings/clock/rk3588-cru.h    |   1 +
->   3 files changed, 508 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/rockchip/rk3588.dtsi
->   create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> new file mode 100644
-> index 000000000000..ddb3ccff1299
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> @@ -0,0 +1,6 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2021 Rockchip Electronics Co., Ltd.
-> + */
-> +
-> +#include "rk3588s.dtsi"
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> new file mode 100644
-> index 000000000000..f7d3ad4384b3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> @@ -0,0 +1,501 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2021 Rockchip Electronics Co., Ltd.
-> + */
-> +
-> +#include <dt-bindings/clock/rk3588-cru.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	compatible = "rockchip,rk3588";
-> +
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +		serial3 = &uart3;
-> +		serial4 = &uart4;
-> +		serial5 = &uart5;
-> +		serial6 = &uart6;
-> +		serial7 = &uart7;
-> +		serial8 = &uart8;
-> +		serial9 = &uart9;
-> +	};
-> +
-> +	clocks {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
+The additional nodes in the example referenced from the pinctrl node
+'aspeed,external-nodes' properties are either incorrect (aspeed,ast2500-lpc)
+or not documented with a schema (aspeed,ast2500-gfx). There's no need to
+show these nodes as part of the pinctrl example, so just remove them.
 
-I'm pretty sure that doing clocks as fake buses fell out of favour long ago.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../pinctrl/aspeed,ast2500-pinctrl.yaml       | 81 ++++---------------
+ 1 file changed, 16 insertions(+), 65 deletions(-)
 
-> +
-> +		spll: spll {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <702000000>;
-> +			clock-output-names = "spll";
-> +		};
-> +
-> +		xin24m: xin24m {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <24000000>;
-> +			clock-output-names = "xin24m";
-> +		};
-> +
-> +		xin32k: xin32k {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <32768>;
-> +			clock-output-names = "xin32k";
-> +		};
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+index 7c25c8d51116..9db904a528ee 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+@@ -76,73 +76,24 @@ additionalProperties: false
+ examples:
+   - |
+     #include <dt-bindings/clock/aspeed-clock.h>
+-    apb {
+-        compatible = "simple-bus";
+-        #address-cells = <1>;
+-        #size-cells = <1>;
+-        ranges;
+-
+-        syscon: scu@1e6e2000 {
+-            compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
+-            reg = <0x1e6e2000 0x1a8>;
+-            #clock-cells = <1>;
+-            #reset-cells = <1>;
+-
+-            pinctrl: pinctrl {
+-                compatible = "aspeed,ast2500-pinctrl";
+-                aspeed,external-nodes = <&gfx>, <&lhc>;
+-
+-                pinctrl_i2c3_default: i2c3_default {
+-                    function = "I2C3";
+-                    groups = "I2C3";
+-                };
+-
+-                pinctrl_gpioh0_unbiased_default: gpioh0 {
+-                    pins = "A18";
+-                    bias-disable;
+-                };
++    scu@1e6e2000 {
++        compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
++        reg = <0x1e6e2000 0x1a8>;
++        #clock-cells = <1>;
++        #reset-cells = <1>;
++
++        pinctrl: pinctrl {
++            compatible = "aspeed,ast2500-pinctrl";
++            aspeed,external-nodes = <&gfx>, <&lhc>;
++
++            pinctrl_i2c3_default: i2c3_default {
++                function = "I2C3";
++                groups = "I2C3";
+             };
+-        };
+-
+-        gfx: display@1e6e6000 {
+-            compatible = "aspeed,ast2500-gfx", "syscon";
+-            reg = <0x1e6e6000 0x1000>;
+-            reg-io-width = <4>;
+-            clocks = <&syscon ASPEED_CLK_GATE_D1CLK>;
+-            resets = <&syscon ASPEED_RESET_CRT1>;
+-            interrupts = <0x19>;
+-            syscon = <&syscon>;
+-            memory-region = <&gfx_memory>;
+-        };
+-    };
+-
+-    lpc: lpc@1e789000 {
+-        compatible = "aspeed,ast2500-lpc", "simple-mfd";
+-        reg = <0x1e789000 0x1000>;
+-
+-        #address-cells = <1>;
+-        #size-cells = <1>;
+-        ranges = <0x0 0x1e789000 0x1000>;
+-
+-        lpc_host: lpc-host@80 {
+-            compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
+-            reg = <0x80 0x1e0>;
+-            reg-io-width = <4>;
+ 
+-            #address-cells = <1>;
+-            #size-cells = <1>;
+-            ranges = <0x0 0x80 0x1e0>;
+-
+-            lhc: lhc@20 {
+-                   compatible = "aspeed,ast2500-lhc";
+-                   reg = <0x20 0x24>, <0x48 0x8>;
++            pinctrl_gpioh0_unbiased_default: gpioh0 {
++                pins = "A18";
++                bias-disable;
+             };
+         };
+     };
+-
+-    gfx_memory: framebuffer {
+-        size = <0x01000000>;
+-        alignment = <0x01000000>;
+-        compatible = "shared-dma-pool";
+-        reusable;
+-    };
+-- 
+2.32.0
 
-Do those two really belong in the SoC DTSI? On previous SoCs they're 
-typically external inputs, and while the 24MHz is usually a crystal 
-which can be largely taken for granted, the 32KHz is often provided by 
-an RTC chip or similar which might need proper modelling.
-
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu_l0>;
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu_l0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			capacity-dmips-mhz = <530>;
-> +			clocks = <&scmi_clk SCMI_CLK_CPUL>;
-> +			i-cache-size = <32768>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <128>;
-> +			d-cache-size = <32768>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2_cache_l0>;
-> +			#cooling-cells = <2>;
-> +			dynamic-power-coefficient = <228>;
-> +		};
-
-Is there any particular reason for not including more of the CPUs?
-
-> +
-> +		l2_cache_l0: l2-cache-l0 {
-> +			compatible = "cache";
-> +			cache-size = <131072>;
-> +			cache-line-size = <64>;
-> +			cache-sets = <512>;
-> +			next-level-cache = <&l3_cache>;
-> +		};
-> +
-> +		l3_cache: l3-cache {
-> +			compatible = "cache";
-> +			cache-size = <3145728>;
-> +			cache-line-size = <64>;
-> +			cache-sets = <4096>;
-> +		};
-> +	};
-> +
-> +	arm-pmu {
-> +		compatible = "arm,armv8-pmuv3";
-
-Please use the correct Cortex-A55 compatible.
-
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu_l0>;
-
-Is affinity meaningful for a single CPU? If this is going to need to be 
-a partitioned PPI once the Cortex-A76 PMU shows up as well, start as you 
-mean to go on.
-
-> +	};
-> +
-> +	firmware {
-> +		optee: optee {
-> +			compatible = "linaro,optee-tz";
-> +			method = "smc";
-> +		};
-> +
-> +		scmi: scmi {
-> +			compatible = "arm,scmi-smc";
-> +			shmem = <&scmi_shmem>;
-> +			arm,smc-id = <0x82000010>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			scmi_clk: protocol@14 {
-> +				reg = <0x14>;
-> +				#clock-cells = <1>;
-> +
-> +				assigned-clocks = <&scmi_clk SCMI_SPLL>;
-> +				assigned-clock-rates = <700000000>;
-> +			};
-> +
-> +			scmi_reset: protocol@16 {
-> +				reg = <0x16>;
-> +				#reset-cells = <1>;
-> +			};
-> +		};
-> +
-> +		sdei: sdei {
-> +			compatible = "arm,sdei-1.0";
-> +			method = "smc";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-
-A mask representing all 4 of one (of 8) CPUs, for a GICv2 which we don't 
-have? I doubt it ;)
-
-> +	};
-> +
-> +	sram@10f000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x0 0x0010f000 0x0 0x100>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x0 0x0010f000 0x100>;
-> +
-> +		scmi_shmem: sram@0 {
-> +			compatible = "arm,scmi-shmem";
-> +			reg = <0x0 0x100>;
-> +		};
-> +	};
-> +
-> +	php_grf: syscon@fd5b0000 {
-> +		compatible = "rockchip,rk3588-php-grf", "syscon";
-> +		reg = <0x0 0xfd5b0000 0x0 0x1000>;
-> +	};
-> +
-> +	ioc: syscon@fd5f0000 {
-> +		compatible = "rockchip,rk3588-ioc", "syscon";
-> +		reg = <0x0 0xfd5f0000 0x0 0x10000>;
-> +	};
-> +
-> +	syssram: sram@fd600000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x0 0xfd600000 0x0 0x100000>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0xfd600000 0x100000>;
-> +	};
-> +
-> +	cru: clock-controller@fd7c0000 {
-> +		compatible = "rockchip,rk3588-cru";
-> +		rockchip,grf = <&php_grf>;
-> +		reg = <0x0 0xfd7c0000 0x0 0x5c000>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +
-> +		assigned-clocks =
-> +			<&cru PLL_PPLL>, <&cru PLL_AUPLL>,
-> +			<&cru PLL_NPLL>, <&cru PLL_GPLL>,
-> +			<&cru ACLK_CENTER_ROOT>,
-> +			<&cru HCLK_CENTER_ROOT>, <&cru ACLK_CENTER_LOW_ROOT>,
-> +			<&cru ACLK_TOP_ROOT>, <&cru PCLK_TOP_ROOT>,
-> +			<&cru ACLK_LOW_TOP_ROOT>, <&cru PCLK_PMU0_ROOT>,
-> +			<&cru HCLK_PMU_CM0_ROOT>, <&cru ACLK_VOP>,
-> +			<&cru ACLK_BUS_ROOT>, <&cru CLK_150M_SRC>,
-> +			<&cru CLK_GPU>;
-> +		assigned-clock-rates =
-> +			<100000000>, <786432000>,
-> +			<850000000>, <1188000000>,
-> +			<702000000>,
-> +			<400000000>, <500000000>,
-> +			<800000000>, <100000000>,
-> +			<400000000>, <100000000>,
-> +			<200000000>, <500000000>,
-> +			<375000000>, <150000000>,
-> +			<200000000>;
-> +	};
-> +
-> +	sdhci: mmc@fe2e0000 {
-> +		compatible = "rockchip,rk3588-dwcmshc", "snps,dwcmshc-sdhci";
-> +		reg = <0x0 0xfe2e0000 0x0 0x10000>;
-> +		interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
-> +		assigned-clocks = <&cru BCLK_EMMC>, <&cru TMCLK_EMMC>, <&cru CCLK_EMMC>;
-> +		assigned-clock-rates = <200000000>, <24000000>, <200000000>;
-> +		clocks = <&cru CCLK_EMMC>, <&cru HCLK_EMMC>,
-> +			 <&cru ACLK_EMMC>, <&cru BCLK_EMMC>,
-> +			 <&cru TMCLK_EMMC>;
-> +		clock-names = "core", "bus", "axi", "block", "timer";
-> +		resets = <&cru SRST_C_EMMC>, <&cru SRST_H_EMMC>,
-> +			 <&cru SRST_A_EMMC>, <&cru SRST_B_EMMC>,
-> +			 <&cru SRST_T_EMMC>;
-> +		reset-names = "core", "bus", "axi", "block", "timer";
-> +		max-frequency = <200000000>;
-> +		status = "disabled";
-> +	};
-> +
-> +	gic: interrupt-controller@fe600000 {
-> +		compatible = "arm,gic-v3";
-> +		reg = <0x0 0xfe600000 0 0x10000>, /* GICD */
-> +		      <0x0 0xfe680000 0 0x100000>; /* GICR */
-> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		its: interrupt-controller@fe640000 {
-> +			compatible = "arm,gic-v3-its";
-> +			msi-controller;
-> +			#msi-cells = <1>;
-> +			reg = <0x0 0xfe640000 0x0 0x20000>;
-> +		};
-> +	};
-
-Does the ITS (and other bits related to GIC memory accesses) actually 
-work, or will we have more of the same issues as RK356x?
-
-Thanks,
-Robin.
