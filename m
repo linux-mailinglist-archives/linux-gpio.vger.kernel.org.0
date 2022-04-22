@@ -2,425 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C74950BA33
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 16:36:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9305550BA54
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 16:39:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1448503AbiDVOjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 10:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54166 "EHLO
+        id S1391200AbiDVOlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 10:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245041AbiDVOjV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 10:39:21 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280605BD1D;
-        Fri, 22 Apr 2022 07:36:27 -0700 (PDT)
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23MEYp7Q004664;
-        Fri, 22 Apr 2022 16:36:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=3E2c39yb1aGbUTxvLFXeT2bxlC2OY8EbvTcWhBmFb/Q=;
- b=ONG31MPr6xmPIGOCiwmLsIgdEPkWMIX170wNkG5tkbD0or2f4L1fb0zHGznnjkPK7dYy
- zuYR8qXrCbQ/IjgY5UpvlxeVzfLCF+MtdGQKvegqGtHx0mmO6VSp2EWzc5lIqR3vb7is
- qdKNwXxirmw2zTwcbIvY6Zj9/KXC0g0FNHc8ilO1ye9FoMGnPGYoxuFapoGZZ2/upxDg
- pPWcyHie2iE/pIwsACjwSbg7Cq2y9sB3kdyWbdmM5Qlgo6DIOZxS9wXyPecmu/a8a6qB
- CjbbMTjHYHtSNVMmk85dVgIOeDMh0w9Y1BS0ot3Ix3ujgcauAhtkLIhxLg/BkCCDmf93 xA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ffpqe9qkt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 16:36:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2C3DC10002A;
-        Fri, 22 Apr 2022 16:36:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2309E22D172;
-        Fri, 22 Apr 2022 16:36:18 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG2NODE2.st.com (10.75.127.5)
- with Microsoft SMTP Server (TLS) id 15.0.1497.26; Fri, 22 Apr 2022 16:36:17
- +0200
-From:   Fabien Dessenne <fabien.dessenne@foss.st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>
-CC:     Fabien Dessenne <fabien.dessenne@foss.st.com>
-Subject: [PATCH] pinctrl: stm32: improve bank clocks management
-Date:   Fri, 22 Apr 2022 16:36:08 +0200
-Message-ID: <20220422143608.226580-1-fabien.dessenne@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
+        with ESMTP id S1448757AbiDVOlO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 10:41:14 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2062.outbound.protection.outlook.com [40.107.243.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66A35BD3A;
+        Fri, 22 Apr 2022 07:38:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cBh2S0A97qoUAvSAPfC3LD044kpdL9REqE+aCuVWM+8xygZwCcKQ8mFehJSPNghLMARuvCjdYAXw4a7RCvMyPLMQeC5lJBhtJUHEyk3CbPP3ClBZVbui0pLLzqM0uf2us7Lvzlv+JYw6FOvf4mz77gC45dWTxsbEDoyTRoFGAqgv9KhcCheWxJDH5UjPl5vXaUnKG5DwWnWx+rMU8JTbRlyS4tlE6kp/rEHUm2XbRGuL6iYOkCek/KzfxDCckZVATJB/COwt+EAMjdZV9EYBPc1COD5+enAc0wQwH2pmcEYwAZNQnitti5hTrz+3ARZbVXXT/kIo9evZro7MpwuIGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6ldpWoQ2FMaC6Bx8KapOF0Fb1x+Raqocg+nqTG6yIzw=;
+ b=BdP5TBYBe4vFObx2+f15peMtcubv1ZV2fUq34qsyL9vjHXEDWzjee/EoHBafyf8/80gSNGbn1h+ZpOXDsNMy674Bm2MyE8L6AzxyWSPNrXl7ahcNkom0Lj5YT4vVN036F9TM8iQm75aw+rvkIrODCCiT0dum83CwfGSmhUkN//CkSV28g7CpDlCBbJ5CdQRofCUhofxtlEXwXtXKwCAz+SfE3y/ExRQAD2TfvK7veBL8DNl5CuYFGyG72efp1OsObqcb22MdjffaLwxASPK5aOM6N+PrSM8KxNYywtoUn4k8Ns80TMuB0CSxoUP0ygLy0U3eW9RDf0rhp3HDpszIwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6ldpWoQ2FMaC6Bx8KapOF0Fb1x+Raqocg+nqTG6yIzw=;
+ b=zyhQEK9kT1lw5AJ96hVyoDreuvVuHvr7oI/pOfuPag5Hw9LD+mIXh6wrp/9PqanrQ46gvkXJHP1dWNDBRWUbu2UEE9KEdMsAti/GKgwOLswjMkgzv+Al9dAjUN2pbhIfZDSD74ycmvmA8syt98dlSECU8DOFg+emveQPdH11m2g=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
+ by BYAPR12MB3447.namprd12.prod.outlook.com (2603:10b6:a03:a9::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.13; Fri, 22 Apr
+ 2022 14:38:17 +0000
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::3157:3164:59df:b603]) by BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::3157:3164:59df:b603%8]) with mapi id 15.20.5186.015; Fri, 22 Apr 2022
+ 14:38:17 +0000
+Message-ID: <65720c2c-2d26-23e0-95f8-22c297270cb6@amd.com>
+Date:   Fri, 22 Apr 2022 09:38:09 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2 1/1] gpio: Request interrupts after IRQ is initialized
+Content-Language: en-US
+To:     torvalds@linux-foundation.org
+Cc:     Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
+        Gong Richard <Richard.Gong@amd.com>,
+        regressions@lists.linux.dev,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Samuel_=c4=8cavoj?= <samuel@cavoj.net>,
+        lukeluk498@gmail.com, tiwai@suse.de
+References: <20220422131452.20757-1-mario.limonciello@amd.com>
+ <20220422131452.20757-2-mario.limonciello@amd.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <20220422131452.20757-2-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-22_04,2022-04-22_01,2022-02-23_01
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-ClientProxiedBy: BL1P223CA0006.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c4::11) To BL1PR12MB5157.namprd12.prod.outlook.com
+ (2603:10b6:208:308::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9cd7c277-e58b-4c62-9553-08da246dbd5e
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3447:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR12MB3447A5EED6D0DC81F2F5538FE2F79@BYAPR12MB3447.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EihdSwIyGnbdT5tK0Nhyn9AdNUdj2eJ5vk8l/4YMktTdL4Opu9p8enN/Y/qkNfUo4KJV6l8g8UHG52WaxGyhnH4B4ZDERiQfFDEcAl+s+ioY0Fn8XyVt6THnvxnxf53rBQfG3jrdGWtVHM362XhwqBBg1u6cAmvFf9h11oCuowmJcET/9+MP9vVbrfreg1QKv3Kj3YCWP3uastS76jfG/KCETrTWoYvnX95yCd7/0sneH2pTZJuTsqjl5eyhfony8roIwengUAULZs7deaRpCkTtWvRdUoLfXErLsS3ctS9fQwDHZZ0EDwKWF5kS3Ncum5uVrjEdOZwhK669EdFjA+FJT7RXraDpWCF80BxwUMOwChNsTzO5Jnas9fD6JkiUCLmmZ92b73J2tD72Mi//pxeMWEGtCOPfHhMvQYKJ/gjkem7RoJrtWFYyYhQbECCq7Yu62dfW22HdFbgN2e2EGJDULTZ5t418UR3eNs+WUbUGxeR09JBHdSKsRtARgnRfZa9iq/PjU0ctalVYiGRvMHC3DdgQyXOEvO5Bb00vVmK5Gf5Xowjgy++dhRk3dJ/NHMHx4Ckfz+6LbcpJkLSl6z4hlNF5n2kIKsy5yP5yz9105kM1iVtgNYakhYIVX/5k3GFYlWJMWwkOxD8XEdN8O28rlT2/GpoWOIRowC9mbgsKQWgJQKe+uzbLanNusKFBHaBrJNC956w5XTdrkV4NoqwuwfW8+iIdptFGU+eFy9y2ZUhKYM1dhAmANrzRhWJ1Xiwwqw88TbYNXXXvFyS/yI0WMni5NlUOkj3GxT5ANaWObkGHr1tIvHLfERrVIt13uArr+7PLb+69NC5fd9FTPGIINAxcuL8AH7SxmyHzMd8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4326008)(8676002)(66946007)(66574015)(316002)(38100700002)(186003)(86362001)(31696002)(2616005)(5660300002)(36756003)(54906003)(83380400001)(6916009)(26005)(31686004)(508600001)(66556008)(6486002)(45080400002)(8936002)(6506007)(2906002)(6512007)(966005)(66476007)(53546011)(7416002)(6666004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZWJTM0RidzhXb3dtYXN0VkZhbGdxTjJTMFpKUVl3VVJBWXRjYThrQTExaVRi?=
+ =?utf-8?B?Qk9EZXQwdCtYWFVBcXk0aU9UU29WZlFHQnNPa01QbmpLSGhLb08wcG5qYkRE?=
+ =?utf-8?B?NlpBMjFtYWozcUVPWDJLMm5xS21ydlBlSUsxcXpSUHkvRmplZWUyeSt5dERB?=
+ =?utf-8?B?OGJZbTJWRUNtSFRtQWtHTkNsMlFNcUJnK2R5aG1NSk8vOHhuTmd2aUwxOFFs?=
+ =?utf-8?B?RjFyc1kzVW9VQWx0RmUzYkpsRkN0bGY5MzJsUDQvZmIwMzl1aGZtQ0F4d3dB?=
+ =?utf-8?B?S2p5YUplUEFpbFdFZzhNL3d5aEhUWTBjeFdBMFBnbXhQZk0wWGx6cVVEYUhR?=
+ =?utf-8?B?dkFRQlZQUk5FSjNiUnFKcUk2QjZ1L0Q0ZjFhMVgwTnBaRXhpY2lQMnZsTUdG?=
+ =?utf-8?B?Ums5QmltN3Z2ZWxnZVEvaDR0UjUyRjRFdGZkMnZpMUV5SkU1SHJpTlREbDdy?=
+ =?utf-8?B?TGhNakQ4Q3lpdDJtV2RweGdyRDRjV1dLVWwyZGdxRFJydXpwVEVGbm5QWWk0?=
+ =?utf-8?B?ZHgwa0c1SFZrbS93dVV5S2NKNW5wWFI2c05rL3ovaVE1SDJSeXFzZlVmTmZm?=
+ =?utf-8?B?NGdxN1hHdXJJWHZPNnlsdVNiM1BDSXNPWGErU0pFOE1Jc1QzSjdPM3hUNUxT?=
+ =?utf-8?B?bmNja0p4R3lUZk5oUlRocUhoMWNtQzFXNForT01sZzJJRVZGVUtKekhNaHdK?=
+ =?utf-8?B?ZERjVzMzL1pldENocVZqYzFNZHNwdUp2RGl4V3phOGlhSkljMUd6K0l4L3Bh?=
+ =?utf-8?B?NUtIOWJyaTNncG5DbG80d2REaGFZL09BeWFESmpLbDZCTDA2eGp1MVNXeWtL?=
+ =?utf-8?B?c0ZWcTN4dkdIT0p0MWI5RlZnNE1tOER3Wk5GVnROTUs3ZGVDYmoxYnBNdkh5?=
+ =?utf-8?B?UDdlSHhicWdIWmc2VklXMGV6MDNkODF5Z2ZmdFdHMWhPZEFkV2F5SFMxVVh1?=
+ =?utf-8?B?WVQzMjVIWXo2ZjF6YUtSclNGVlNhMEk4TGVkNkpZZWVwbWFUZUdMa2xmME5U?=
+ =?utf-8?B?OGdRRlJaU0RmMThoMVhyVkpsOFJRdk0xVVQ4OWhySWoyUDRabEs2ZFNFSnZw?=
+ =?utf-8?B?cHMxMDhYa2k2NldUSlRKVUYvSWpkWEtiZHJseDRvQnZMTWJrQ2ZhS29qWGhP?=
+ =?utf-8?B?WUowaTBxbUUwdytvcjhyVUx1czE1U3VLTXRwZGNoNFRZVXhob003T29KR0pq?=
+ =?utf-8?B?bFVKTzV3ODJ2UkJBRlFsUUlaa0ZNcVU2ZVE2MVlJTGNuYlFNQVl6UkJCa1dU?=
+ =?utf-8?B?MW1CUk9mWFF1U240Tjk0SVNHV3NzcjNvOHRMNnArWGZiN0NvQ0lmV3UzUkpz?=
+ =?utf-8?B?MHZXc25ocFhXRzdST3pha3B1OXZkcTJjenZhY2hJWk9BU2ZBUk9KRG5tNXVG?=
+ =?utf-8?B?SW9MMXZRVUhDRDFtbHR0THlEMzU4WVBmaWt5NjlYTSthdFRyUkdXYXZkb3I5?=
+ =?utf-8?B?S0N4UTNicjNYNkx4Y2s5VnFDR0NQSUhPYXhjOWpoSVg5S3UzYnNwZ3NVY1VJ?=
+ =?utf-8?B?T1dXM0xZaWlSOVpVK1lQaU9TL1RndDlPTUt4c0RsTTBJSXRIdlVPSUhzMTZz?=
+ =?utf-8?B?UjhFRXF0alhvT01PQTFDZGp3YTJrTllRQldTcHN2dkZOck9YZnlHWWJ5SnBi?=
+ =?utf-8?B?UjgxRjZaNVVQdlpTTTg3eFVuT2lKME9rWi9qazNLV09nbU5GbDJpVlpnRXU3?=
+ =?utf-8?B?U041QzVGc3JxcUF5RFpWd3Jxczd6aXozUytnMmdkYU5jNHJoeWV4WFdGSVdB?=
+ =?utf-8?B?ak8xVkg4azlpcFNickw3TTVMSzBvZmNRblZYYjhsRUl3N3BFOWZGK3A3dkx0?=
+ =?utf-8?B?RlZUd2ljS3l3OVEzUWZEUlorTStiUERMeFY3MGxxT0FCV24wVzVhZS9sVVFR?=
+ =?utf-8?B?TDJTM0QvS0hGSTVyZWFHbVAzV0dnVEJKRDh3TUlGUVJtV2c1T3ArWS9jWWY0?=
+ =?utf-8?B?VkhaaHFjQUk2SkU5c3FkZEhsdEtEWlE4NkVicnlBRGt3eTJVR1pRSWN3bkN3?=
+ =?utf-8?B?MEYrK0JycklkQjZka2RHZ1dhdlVSRGYxNE1vYjdZcEhBOXVRUGk4ZWtmVWZH?=
+ =?utf-8?B?emVDN1ZHQm52VldEdE56V1oxYk1nUFF2ZWNNUHNOY3ZOK0tJVldWLzFWTE0r?=
+ =?utf-8?B?My9lL0lFVDhOMGU1QS9nRitlNWd5Tm05NWU2RFJPNWVSM0NUQ2xueW9qY3V0?=
+ =?utf-8?B?YlJ2WXRldi9jNDZkajB6MzNBcU5xRkp5UTlTUk11RCtSejdoYk83MWpaZHpH?=
+ =?utf-8?B?Vk1idkdrQ2FQTnZIK293cFRwSFY1UEV0NmtZL3dIMkpaQWV6Y0t2K053YWtO?=
+ =?utf-8?B?ekdOTWJDWTFvdDFmZzRKckdCUE9TSlc0K3dCMVVjb1NrejNsSXJmQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cd7c277-e58b-4c62-9553-08da246dbd5e
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2022 14:38:17.5192
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: blqVURABGbIyAWfMCZVgq9fEPYm2dNhk51xQaFAQLPNtI/Zl0wjvnJ86VYvDxgd6eyu7jXZPoTaHtFffJl5YIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3447
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Instead of enabling/disabling the clock at each IO configuration update,
-just keep the clock enabled from the probe.
-This makes things simpler and more efficient (e.g. the time required to
-toggle an output IO is drastically decreased) without significantly
-increasing the power consumption.
+On 4/22/2022 08:14, Mario Limonciello wrote:
+> commit 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before
+> initialization") attempted to fix a race condition that lead to a NULL
+> pointer, but in the process caused a regression for _AEI/_EVT declared
+> GPIOs. This manifests in messages showing deferred probing while trying
+> to allocate IRQs like so:
+> 
+> [    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
+> [    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
+> [    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
+> [    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
+> [    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
+> [    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
+> [    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
+> [    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
+> [    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
+> [    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
+> 
+> The code for walking _AEI doesn't handle deferred probing and so this leads
+> to non-functional GPIO interrupts.
+> 
+> Fix this issue by moving the call to `acpi_gpiochip_request_interrupts` to
+> occur after gc->irc.initialized is set.
+> 
+> Cc: Shreeya Patel <shreeya.patel@collabora.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before initialization")
+> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+> Link: https://lore.kernel.org/linux-gpio/BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#u
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Reviewed-by: Shreeya Patel <shreeya.patel@collabora.com>
+> Tested-By: Samuel Čavoj <samuel@cavoj.net>
+> Tested-By: lukeluk498@gmail.com Link:
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1979
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215850
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1976
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
----
- drivers/pinctrl/stm32/pinctrl-stm32.c      | 82 ++++++++--------------
- drivers/pinctrl/stm32/pinctrl-stm32.h      |  1 +
- drivers/pinctrl/stm32/pinctrl-stm32mp135.c |  2 +-
- drivers/pinctrl/stm32/pinctrl-stm32mp157.c |  2 +-
- 4 files changed, 34 insertions(+), 53 deletions(-)
+Takashi hit this as well recently and provided a few more tags.
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index f7c9459f6628..b308e7bb7487 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -197,11 +197,7 @@ static inline void __stm32_gpio_set(struct stm32_gpio_bank *bank,
- 	if (!value)
- 		offset += STM32_GPIO_PINS_PER_BANK;
- 
--	clk_enable(bank->clk);
--
- 	writel_relaxed(BIT(offset), bank->base + STM32_GPIO_BSRR);
--
--	clk_disable(bank->clk);
- }
- 
- static int stm32_gpio_request(struct gpio_chip *chip, unsigned offset)
-@@ -225,25 +221,11 @@ static void stm32_gpio_free(struct gpio_chip *chip, unsigned offset)
- 	pinctrl_gpio_free(chip->base + offset);
- }
- 
--static int stm32_gpio_get_noclk(struct gpio_chip *chip, unsigned int offset)
--{
--	struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
--
--	return !!(readl_relaxed(bank->base + STM32_GPIO_IDR) & BIT(offset));
--}
--
- static int stm32_gpio_get(struct gpio_chip *chip, unsigned offset)
- {
- 	struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
--	int ret;
- 
--	clk_enable(bank->clk);
--
--	ret = stm32_gpio_get_noclk(chip, offset);
--
--	clk_disable(bank->clk);
--
--	return ret;
-+	return !!(readl_relaxed(bank->base + STM32_GPIO_IDR) & BIT(offset));
- }
- 
- static void stm32_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-@@ -323,7 +305,7 @@ static void stm32_gpio_irq_trigger(struct irq_data *d)
- 		return;
- 
- 	/* If level interrupt type then retrig */
--	level = stm32_gpio_get_noclk(&bank->gpio_chip, d->hwirq);
-+	level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
- 	if ((level == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
- 	    (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
- 		irq_chip_retrigger_hierarchy(d);
-@@ -365,7 +347,6 @@ static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
- {
- 	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(bank->gpio_chip.parent);
--	unsigned long flags;
- 	int ret;
- 
- 	ret = stm32_gpio_direction_input(&bank->gpio_chip, irq_data->hwirq);
-@@ -379,10 +360,6 @@ static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
- 		return ret;
- 	}
- 
--	flags = irqd_get_trigger_type(irq_data);
--	if (flags & IRQ_TYPE_LEVEL_MASK)
--		clk_enable(bank->clk);
--
- 	return 0;
- }
- 
-@@ -390,9 +367,6 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
- {
- 	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
- 
--	if (bank->irq_type[irq_data->hwirq] & IRQ_TYPE_LEVEL_MASK)
--		clk_disable(bank->clk);
--
- 	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
- }
- 
-@@ -769,7 +743,6 @@ static int stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 	unsigned long flags;
- 	int err = 0;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	if (pctl->hwlock) {
-@@ -798,7 +771,6 @@ static int stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 
- unlock:
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return err;
- }
-@@ -811,7 +783,6 @@ void stm32_pmx_get_mode(struct stm32_gpio_bank *bank, int pin, u32 *mode,
- 	int alt_offset = STM32_GPIO_AFRL + (pin / 8) * 4;
- 	unsigned long flags;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	val = readl_relaxed(bank->base + alt_offset);
-@@ -823,7 +794,6 @@ void stm32_pmx_get_mode(struct stm32_gpio_bank *bank, int pin, u32 *mode,
- 	*mode = val >> (pin * 2);
- 
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- }
- 
- static int stm32_pmx_set_mux(struct pinctrl_dev *pctldev,
-@@ -886,7 +856,6 @@ static int stm32_pconf_set_driving(struct stm32_gpio_bank *bank,
- 	u32 val;
- 	int err = 0;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	if (pctl->hwlock) {
-@@ -910,7 +879,6 @@ static int stm32_pconf_set_driving(struct stm32_gpio_bank *bank,
- 
- unlock:
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return err;
- }
-@@ -921,14 +889,12 @@ static u32 stm32_pconf_get_driving(struct stm32_gpio_bank *bank,
- 	unsigned long flags;
- 	u32 val;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_TYPER);
- 	val &= BIT(offset);
- 
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return (val >> offset);
- }
-@@ -941,7 +907,6 @@ static int stm32_pconf_set_speed(struct stm32_gpio_bank *bank,
- 	u32 val;
- 	int err = 0;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	if (pctl->hwlock) {
-@@ -965,7 +930,6 @@ static int stm32_pconf_set_speed(struct stm32_gpio_bank *bank,
- 
- unlock:
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return err;
- }
-@@ -976,14 +940,12 @@ static u32 stm32_pconf_get_speed(struct stm32_gpio_bank *bank,
- 	unsigned long flags;
- 	u32 val;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_SPEEDR);
- 	val &= GENMASK(offset * 2 + 1, offset * 2);
- 
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return (val >> (offset * 2));
- }
-@@ -996,7 +958,6 @@ static int stm32_pconf_set_bias(struct stm32_gpio_bank *bank,
- 	u32 val;
- 	int err = 0;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	if (pctl->hwlock) {
-@@ -1020,7 +981,6 @@ static int stm32_pconf_set_bias(struct stm32_gpio_bank *bank,
- 
- unlock:
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return err;
- }
-@@ -1031,14 +991,12 @@ static u32 stm32_pconf_get_bias(struct stm32_gpio_bank *bank,
- 	unsigned long flags;
- 	u32 val;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_PUPDR);
- 	val &= GENMASK(offset * 2 + 1, offset * 2);
- 
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return (val >> (offset * 2));
- }
-@@ -1049,7 +1007,6 @@ static bool stm32_pconf_get(struct stm32_gpio_bank *bank,
- 	unsigned long flags;
- 	u32 val;
- 
--	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
- 	if (dir)
-@@ -1060,7 +1017,6 @@ static bool stm32_pconf_get(struct stm32_gpio_bank *bank,
- 			 BIT(offset));
- 
- 	spin_unlock_irqrestore(&bank->lock, flags);
--	clk_disable(bank->clk);
- 
- 	return val;
- }
-@@ -1256,9 +1212,9 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
- 	if (IS_ERR(bank->base))
- 		return PTR_ERR(bank->base);
- 
--	err = clk_prepare(bank->clk);
-+	err = clk_prepare_enable(bank->clk);
- 	if (err) {
--		dev_err(dev, "failed to prepare clk (%d)\n", err);
-+		dev_err(dev, "failed to prepare_enable clk (%d)\n", err);
- 		return err;
- 	}
- 
-@@ -1306,17 +1262,23 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
- 					STM32_GPIO_IRQ_LINE, bank->fwnode,
- 					&stm32_gpio_domain_ops, bank);
- 
--	if (!bank->domain)
--		return -ENODEV;
-+	if (!bank->domain) {
-+		err = -ENODEV;
-+		goto err_clk;
-+	}
- 
- 	err = gpiochip_add_data(&bank->gpio_chip, bank);
- 	if (err) {
- 		dev_err(dev, "Failed to add gpiochip(%d)!\n", bank_nr);
--		return err;
-+		goto err_clk;
- 	}
- 
- 	dev_info(dev, "%s bank added\n", bank->gpio_chip.label);
- 	return 0;
-+
-+err_clk:
-+	clk_disable_unprepare(bank->clk);
-+	return err;
- }
- 
- static struct irq_domain *stm32_pctrl_get_irq_domain(struct device_node *np)
-@@ -1575,6 +1537,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 			ret = stm32_gpiolib_register_bank(pctl, child);
- 			if (ret) {
- 				of_node_put(child);
-+
-+				for (i = 0; i < pctl->nbanks; i++)
-+					clk_disable_unprepare(pctl->banks[i].clk);
-+
- 				return ret;
- 			}
- 
-@@ -1647,12 +1613,26 @@ static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
- 	return 0;
- }
- 
-+int __maybe_unused stm32_pinctrl_suspend(struct device *dev)
-+{
-+	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
-+	int i;
-+
-+	for (i = 0; i < pctl->nbanks; i++)
-+		clk_disable(pctl->banks[i].clk);
-+
-+	return 0;
-+}
-+
- int __maybe_unused stm32_pinctrl_resume(struct device *dev)
- {
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
- 	struct stm32_pinctrl_group *g = pctl->groups;
- 	int i;
- 
-+	for (i = 0; i < pctl->nbanks; i++)
-+		clk_enable(pctl->banks[i].clk);
-+
- 	for (i = 0; i < pctl->ngroups; i++, g++)
- 		stm32_pinctrl_restore_gpio_regs(pctl, g->pin);
- 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
-index b0882d120765..b9584039cdf5 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.h
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
-@@ -65,6 +65,7 @@ struct stm32_gpio_bank;
- int stm32_pctl_probe(struct platform_device *pdev);
- void stm32_pmx_get_mode(struct stm32_gpio_bank *bank,
- 			int pin, u32 *mode, u32 *alt);
-+int stm32_pinctrl_suspend(struct device *dev);
- int stm32_pinctrl_resume(struct device *dev);
- 
- #endif /* __PINCTRL_STM32_H */
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32mp135.c b/drivers/pinctrl/stm32/pinctrl-stm32mp135.c
-index 4ab03520c407..f98717fe23ed 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32mp135.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32mp135.c
-@@ -1660,7 +1660,7 @@ static const struct of_device_id stm32mp135_pctrl_match[] = {
- };
- 
- static const struct dev_pm_ops stm32_pinctrl_dev_pm_ops = {
--	 SET_LATE_SYSTEM_SLEEP_PM_OPS(NULL, stm32_pinctrl_resume)
-+	 SET_LATE_SYSTEM_SLEEP_PM_OPS(stm32_pinctrl_suspend, stm32_pinctrl_resume)
- };
- 
- static struct platform_driver stm32mp135_pinctrl_driver = {
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32mp157.c b/drivers/pinctrl/stm32/pinctrl-stm32mp157.c
-index 2ccb99d64df8..91b2fc8ddbdb 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32mp157.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32mp157.c
-@@ -2343,7 +2343,7 @@ static const struct of_device_id stm32mp157_pctrl_match[] = {
- };
- 
- static const struct dev_pm_ops stm32_pinctrl_dev_pm_ops = {
--	 SET_LATE_SYSTEM_SLEEP_PM_OPS(NULL, stm32_pinctrl_resume)
-+	 SET_LATE_SYSTEM_SLEEP_PM_OPS(stm32_pinctrl_suspend, stm32_pinctrl_resume)
- };
- 
- static struct platform_driver stm32mp157_pinctrl_driver = {
--- 
-2.25.1
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1198697
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Tested-by: Takashi Iwai <tiwai@suse.de>
+
+
+> ---
+> v1->v2:
+>   * Pick up acked-by/reviewed-by/link/tested-by
+> 
+>   drivers/gpio/gpiolib.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 085348e08986..b7694171655c 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1601,8 +1601,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+>   
+>   	gpiochip_set_irq_hooks(gc);
+>   
+> -	acpi_gpiochip_request_interrupts(gc);
+> -
+>   	/*
+>   	 * Using barrier() here to prevent compiler from reordering
+>   	 * gc->irq.initialized before initialization of above
+> @@ -1612,6 +1610,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+>   
+>   	gc->irq.initialized = true;
+>   
+> +	acpi_gpiochip_request_interrupts(gc);
+> +
+>   	return 0;
+>   }
+>   
+
 
