@@ -2,168 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E08EA50C0BE
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Apr 2022 22:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3763F50C16F
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 00:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbiDVUng (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Apr 2022 16:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57996 "EHLO
+        id S231311AbiDVWBn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Apr 2022 18:01:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiDVUnf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 16:43:35 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03B72F2B0B;
-        Fri, 22 Apr 2022 12:41:06 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id j2so16339667ybu.0;
-        Fri, 22 Apr 2022 12:41:06 -0700 (PDT)
+        with ESMTP id S231367AbiDVWBl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Apr 2022 18:01:41 -0400
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78FE31DB5C0
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 13:44:29 -0700 (PDT)
+Received: by mail-ot1-x32e.google.com with SMTP id c11-20020a9d684b000000b00603307cef05so6298207oto.3
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Apr 2022 13:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0JRCh/BqOi4YkLGUiJfecYURU86aNbte4r9osUN03Ek=;
+        b=CBGTb4d3eS7HJsTVlLbQoizdcgj00FRfmsbMjOINCCIgO/lh/nw8HFb5PtXjHizyAi
+         BYZ+XVlLA6yn5KwojjjMps9Uw9kqcWQDjdEkeaNPwRettOULYGjgSkpIY7XNeOVgjp4A
+         FIE3gEgnj+PkohreuAOunK9gW7Al2WCCKjSjTUSlVHG/1U5fxBJSxNvMJGAczW6PjXoh
+         y4AV9yCqVYPPG6eAHwjn1K7OVRJaWNnRZmQ5k+B+yQJzKfxtyAomy7dOiJ4j6TfHe3jQ
+         knLd0SPuH892Kmh/jfFnbYPiifqBIPHRECqY5lA5x4ux6cXe213gkYziWEoSlo2BOORF
+         LlXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IOuZ8W1MJjibB6swPo2RkQCIeQZ1wridYdEDKveCnMw=;
-        b=75QeTDGw2CXuOQiRqR4x9mCo2fipdSQ2FnVmTTDAsV+ycc63HyxQgInkyz1UOUkcFO
-         TJNwp65NQMLbcUjWH9YGwdMzcc1UEvalFVCxlU9cqy4F18erT1Js5XhTM56JeCuwn0S3
-         40Ji+mVAmOQWRkQodiZc4Nf4z1FW9AzIsZ9UTwUV8tv70cHa652xQ1OAkeeGSA4qESsL
-         YqY5TUhEgXRUNLe1A0Z50wildXvhsuLWUinzz+qnDKe+cdRnwE5NdJkn0Jla24PwTgN+
-         y7xbMjDQcY0MhAoi//1J1Co0u5S3Q1UAZR9b6SD8YNnVL88f+bHtE9P7FA3j3bZ7Gb96
-         XaIA==
-X-Gm-Message-State: AOAM533NHaXEw+e1rmg8vLSJ9Q45NoCaXcNFd7lMbeVBS7It79fHpSFQ
-        lpYOZkHyZlme+NvaqQV4LDmLOqXsNA==
-X-Google-Smtp-Source: ABdhPJwYLw7ezcsEnAXRaBNaeuhKHOPAF+WazY3gcKcmVgQTsP9d3MdUusPnK8wJQL/5J1SzRjWOlw==
-X-Received: by 2002:a9d:3624:0:b0:5e9:5778:d0c6 with SMTP id w33-20020a9d3624000000b005e95778d0c6mr2399677otb.367.1650655308747;
-        Fri, 22 Apr 2022 12:21:48 -0700 (PDT)
-Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.googlemail.com with ESMTPSA id x24-20020a056870a79800b000e2e53716fbsm1044094oao.31.2022.04.22.12.21.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 12:21:48 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Joel Stanley <joel@jms.id.au>
-Cc:     linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: aspeed: Drop referenced nodes in examples
-Date:   Fri, 22 Apr 2022 14:21:38 -0500
-Message-Id: <20220422192139.2592632-1-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0JRCh/BqOi4YkLGUiJfecYURU86aNbte4r9osUN03Ek=;
+        b=Ky5dbBOth2JW87i5+NhwsrPKc2IYFybsOXjzn1eabuG52H5YNrUiw7kmZAuHn+yUcc
+         DZurDlamZoG4uAdc18yG4dgwJdJFR/d7dE1WBTWqFVuk8no6vLaCKf2S2HcGlMhYQQE8
+         0cAxvPX75GN+hjPIsRy6eOPWrjtXmoCyZoNUfhcNEaHusDLJ2gKninzHPFkoQ9KnUgUd
+         PvROpeu+DsmEjsNjddYBUWFfac0ABYxfH0uydcifonzvcXSATp96erm9/edlBM16yLx3
+         5tQ5zgUUvlOGc3IV1StF8uMacC8WwJ9TbBTEs7hLFi1oh2lLCCFsjzJxZ0RFmAvVQBxJ
+         PJ5g==
+X-Gm-Message-State: AOAM532i/BGcvjnSdXTobEDUW6U8UYnTeBPNPmCwlTD1yYHdFsMIpTzB
+        9jjg1JQOn5kE21Xc/eRfISJLfBsZTTyes/Zvh0sBPdKeIoc=
+X-Google-Smtp-Source: ABdhPJw9gNNFIjL44oXwYR0XZt26gSCXKZ91nXCIwqis42lHTyFg4ODQiziVUiiGspHnYemb6VnQASFqhnYF8zKxMxw=
+X-Received: by 2002:a0d:f0c3:0:b0:2f4:d291:9dde with SMTP id
+ z186-20020a0df0c3000000b002f4d2919ddemr6790754ywe.437.1650659758236; Fri, 22
+ Apr 2022 13:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20220422170920.401914-1-sebastian.reichel@collabora.com> <20220422170920.401914-15-sebastian.reichel@collabora.com>
+In-Reply-To: <20220422170920.401914-15-sebastian.reichel@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Apr 2022 22:35:47 +0200
+Message-ID: <CACRpkda-yLgH7mC6GkMgh5e3+c+4cBrRc9Ryist+zYJh2z9_Sw@mail.gmail.com>
+Subject: Re: [PATCHv1 14/19] gpio: rockchip: add support for rk3588
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
+        Jianqun Xu <jay.xu@rock-chips.com>, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The additional nodes in the example referenced from the pinctrl node
-'aspeed,external-nodes' properties are either incorrect (aspeed,ast2500-lpc)
-or not documented with a schema (aspeed,ast2500-gfx). There's no need to
-show these nodes as part of the pinctrl example, so just remove them.
+On Fri, Apr 22, 2022 at 7:09 PM Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../pinctrl/aspeed,ast2500-pinctrl.yaml       | 81 ++++---------------
- 1 file changed, 16 insertions(+), 65 deletions(-)
+> From: Jianqun Xu <jay.xu@rock-chips.com>
+>
+> Add V2.1 rockchip gpio controller type, which is part of the
+> RK3588 SoC.
+>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-index 7c25c8d51116..9db904a528ee 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-@@ -76,73 +76,24 @@ additionalProperties: false
- examples:
-   - |
-     #include <dt-bindings/clock/aspeed-clock.h>
--    apb {
--        compatible = "simple-bus";
--        #address-cells = <1>;
--        #size-cells = <1>;
--        ranges;
--
--        syscon: scu@1e6e2000 {
--            compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
--            reg = <0x1e6e2000 0x1a8>;
--            #clock-cells = <1>;
--            #reset-cells = <1>;
--
--            pinctrl: pinctrl {
--                compatible = "aspeed,ast2500-pinctrl";
--                aspeed,external-nodes = <&gfx>, <&lhc>;
--
--                pinctrl_i2c3_default: i2c3_default {
--                    function = "I2C3";
--                    groups = "I2C3";
--                };
--
--                pinctrl_gpioh0_unbiased_default: gpioh0 {
--                    pins = "A18";
--                    bias-disable;
--                };
-+    scu@1e6e2000 {
-+        compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
-+        reg = <0x1e6e2000 0x1a8>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+
-+        pinctrl: pinctrl {
-+            compatible = "aspeed,ast2500-pinctrl";
-+            aspeed,external-nodes = <&gfx>, <&lhc>;
-+
-+            pinctrl_i2c3_default: i2c3_default {
-+                function = "I2C3";
-+                groups = "I2C3";
-             };
--        };
--
--        gfx: display@1e6e6000 {
--            compatible = "aspeed,ast2500-gfx", "syscon";
--            reg = <0x1e6e6000 0x1000>;
--            reg-io-width = <4>;
--            clocks = <&syscon ASPEED_CLK_GATE_D1CLK>;
--            resets = <&syscon ASPEED_RESET_CRT1>;
--            interrupts = <0x19>;
--            syscon = <&syscon>;
--            memory-region = <&gfx_memory>;
--        };
--    };
--
--    lpc: lpc@1e789000 {
--        compatible = "aspeed,ast2500-lpc", "simple-mfd";
--        reg = <0x1e789000 0x1000>;
--
--        #address-cells = <1>;
--        #size-cells = <1>;
--        ranges = <0x0 0x1e789000 0x1000>;
--
--        lpc_host: lpc-host@80 {
--            compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
--            reg = <0x80 0x1e0>;
--            reg-io-width = <4>;
- 
--            #address-cells = <1>;
--            #size-cells = <1>;
--            ranges = <0x0 0x80 0x1e0>;
--
--            lhc: lhc@20 {
--                   compatible = "aspeed,ast2500-lhc";
--                   reg = <0x20 0x24>, <0x48 0x8>;
-+            pinctrl_gpioh0_unbiased_default: gpioh0 {
-+                pins = "A18";
-+                bias-disable;
-             };
-         };
-     };
--
--    gfx_memory: framebuffer {
--        size = <0x01000000>;
--        alignment = <0x01000000>;
--        compatible = "shared-dma-pool";
--        reusable;
--    };
--- 
-2.32.0
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+This looks like something that can just be merged to Bartosz
+tree as there are no dependencies on the other patches.
+
+Yours,
+Linus Walleij
