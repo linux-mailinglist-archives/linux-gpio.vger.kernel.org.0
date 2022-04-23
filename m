@@ -2,75 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B83FB50C8C3
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 11:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D8D50C8F0
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 12:06:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234567AbiDWJoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Apr 2022 05:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38730 "EHLO
+        id S234734AbiDWKEU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Apr 2022 06:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234556AbiDWJop (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 05:44:45 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3F38119A
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 02:41:49 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id g20so13124697edw.6
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 02:41:48 -0700 (PDT)
+        with ESMTP id S234735AbiDWKET (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 06:04:19 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F960165EF7
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 03:01:18 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id k23so20731491ejd.3
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 03:01:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sK7viN9i4JPJxxDkjaX4q/MfNzJTh2SbB8y6IKJ+NA8=;
-        b=JVeDryIHYCcT9M56JgZSY/aCTKMph4y/FS8U42oGwCUEh3tgOiMcg9eTnLb/FAWorJ
-         bx2OXT3EHxoOHt7Ih8hsM6/IMsED5VqJOEoIGDWhTLFTFI0BcbNu8EHQrT9KmE2TKib9
-         m7q+EMVMYTiM1ZsmnTwyGMG+YTlkfinfnrBu7PGUKJgIgmSUlKL6B959UPm1GInA3iY8
-         izITflS7m46K/vTYp9DZt/mGLXm9gjeur23r4HrGVBnhgG8uR+8QdgUkIPfG00ZBtAv9
-         oDiyhY/1BH0JbLqoUKZrY+8qfGveJ3fKoc6Att8AIpcYrYwSTi6AVAVb2sUNEv+PWB5p
-         9rFg==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=yMGG+zyUqngKlUh1IoJ7uZEj7Hkk7vR8Bqm6uTHC9YY=;
+        b=VdkCVDZAvN4RNtsDNBvJD/u8yxTwvhngmT9LXS+yNnFusdRs16u4cjFr5irHyvFgHq
+         L87iry65Vj5kDYAKmCA4+vXu2x/ay6/vVainiECGOlcKz9yxcgB5wOt1kjp6RJxVQzSS
+         SSJL0/pP6MefV2saz6nmmICtwBRiuiUm/ekZvTOZdMVVFv7R/0FbSM7pK1VHGZu4nVYr
+         x6Xajdhm478/6h5MzyjfAsM2wPjrZ3iDjqortIKw39EUo2EK/CUZvcb0jqUXfB4Lyh/4
+         N6gelxgv+CoNoOfcH8ILrAgc4408xOOgrL6sE/44IPl6qa1/NxdBsxUhS75l8PrHYF67
+         po7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sK7viN9i4JPJxxDkjaX4q/MfNzJTh2SbB8y6IKJ+NA8=;
-        b=wxHU4NCWX+MExP2ETxnbraEtwjP0Tu4lMZjZ5xS1flXZ6oUir+sVv52savEPpH5Hs8
-         LH63bZvhwIK7emJ/7KXtl4jiM7zpYA5ES2O3bITuo0dApBvcuufA8O/lq6wZBPZk4UkB
-         x6p+cgq72XAE2Y+msPWHhCweHSeIhHMRiLSyPsStuLLDdtpfOc9zkMSbIajft9gLTdTX
-         0WoyqNu1co0ZzBE6e4bfXMrAc5Tfjg+hrcnsz8aF+zb5O/DEa5V+rojRe2j/MemubfgE
-         rf827N3xf40Cf2tVlwC0uNkp/TO+sLpFQQY2jswXWdrlxg4rGEBLjBXncO853dYMdthq
-         3ANQ==
-X-Gm-Message-State: AOAM5312QoDITtVpONtJLW7/pMCi/3sRCHhrdPK/e2fooqfR8ds3//Vb
-        m1hyzcp+xDQvaPGlF4o1nI/i+g==
-X-Google-Smtp-Source: ABdhPJwCfMFt6+BgEzOcYsahEfprSVl7EeW4ENwCe2bhADBkOkjvnR4alfE2hwR4svmCgkB32YexjA==
-X-Received: by 2002:a05:6402:3324:b0:41c:c4e6:2988 with SMTP id e36-20020a056402332400b0041cc4e62988mr9401481eda.157.1650706907574;
-        Sat, 23 Apr 2022 02:41:47 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id 22-20020a508e16000000b00425c9d1704bsm975910edw.4.2022.04.23.02.41.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Apr 2022 02:41:47 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 2/2] pinctrl: nuvoton: Fix irq_of_parse_and_map() return value
-Date:   Sat, 23 Apr 2022 11:41:42 +0200
-Message-Id: <20220423094142.33013-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
-References: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=yMGG+zyUqngKlUh1IoJ7uZEj7Hkk7vR8Bqm6uTHC9YY=;
+        b=26pO/JLf74j39V6VPEWGf0juBh9ecGDAg/m85YznDQGYMGtiyqzikSBJ+/3KQicMwp
+         rfM0Aot2ju7sWkQP2Q2t5Hv6Kp6QG9hiL0ohXlTPjLKiIngtQY2DEznkZPnJ+PAw6RNC
+         6pVHQz3jWT92175JmpbkIvTz3zu6OzhVx7mSGWMtKMsRppEZ1wCqciT9mClL7DXf7FR+
+         UnuKCmTD3fh4Aqzu4zwiDPAkmyRrFtJX6p5Zxv+z13hEtJYuNMTg8nU4XR1KhX7vYSso
+         8mfxj9+lqah94xj8jBeYwJQ+vOoKhWZ7k1+sgwUNLR3ffaRUs9Y59qnr9J5QLPDW+Jrf
+         tyPw==
+X-Gm-Message-State: AOAM5316FUqyS1OJahHfhGRb0pIZgLG/A3K3qanjByRbjV8GrRGWCCoh
+        vBMSNgtRFwL/ZaxLidL2e4v99A==
+X-Google-Smtp-Source: ABdhPJzHcV7ul2x/Jmn2zCbAwdMzU3MG3+f/janVAUgWm+zXoVg8O3JiRyXSQtQT+AfHfvQ05S+tOA==
+X-Received: by 2002:a17:907:7ea6:b0:6ef:f384:15b4 with SMTP id qb38-20020a1709077ea600b006eff38415b4mr8091838ejc.91.1650708076601;
+        Sat, 23 Apr 2022 03:01:16 -0700 (PDT)
+Received: from [192.168.0.234] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id n16-20020a05640204d000b0042062f9f0e1sm1963756edw.15.2022.04.23.03.01.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Apr 2022 03:01:16 -0700 (PDT)
+Message-ID: <67a03d14-7d83-2aec-ee60-82b142450512@linaro.org>
+Date:   Sat, 23 Apr 2022 12:01:14 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCHv1 01/19] dt-binding: clock: Document rockchip,rk3588-cru
+ bindings
+Content-Language: en-US
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
+        Elaine Zhang <zhangqing@rock-chips.com>, kernel@collabora.com
+References: <20220422170920.401914-1-sebastian.reichel@collabora.com>
+ <20220422170920.401914-2-sebastian.reichel@collabora.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220422170920.401914-2-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,35 +88,101 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The irq_of_parse_and_map() returns 0 on failure, not a negative ERRNO.
+On 22/04/2022 19:09, Sebastian Reichel wrote:
+> From: Elaine Zhang <zhangqing@rock-chips.com>
+> 
+> Document the device tree bindings of the rockchip Rk3588 SoC
+> clock driver.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/clock/rockchip,rk3588-cru.yaml   | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3588-cru.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3588-cru.yaml b/Documentation/devicetree/bindings/clock/rockchip,rk3588-cru.yaml
+> new file mode 100644
+> index 000000000000..dec2ae8c7970
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3588-cru.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/rockchip,rk3588-cru.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ROCKCHIP rk3588 Family Clock Control Module Binding
 
-Fixes: 3b588e43ee5c ("pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+s/ROCKCHIP/Rockchip/
+(that's the most common name used here and also on company website)
 
----
+s/Binding//
 
-Changes since v1:
-1. Correct the return value passed further.
----
- drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +
+> +maintainers:
+> +  - Elaine Zhang <zhangqing@rock-chips.com>
+> +  - Heiko Stuebner <heiko@sntech.de>
+> +
+> +description: |
+> +  The RK3588 clock controller generates the clock and also implements a
+> +  reset controller for SoC peripherals.
+> +  (examples: provide SCLK_UART2\PCLK_UART2 and SRST_P_UART2\SRST_S_UART2 for UART module)
+> +  Each clock is assigned an identifier and client nodes can use this identifier
+> +  to specify the clock which they consume. All available clocks are defined as
+> +  preprocessor macros in the dt-bindings/clock/rk3588-cru.h headers and can be
+> +  used in device tree sources.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - rockchip,rk3588-cru
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  "#reset-cells":
+> +    const: 1
+> +
+> +  clocks: true
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-index 3cf0f8a43c37..cc085ba2d7e4 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-@@ -1898,9 +1898,9 @@ static int npcm7xx_gpio_of(struct npcm7xx_pinctrl *pctrl)
- 		}
- 
- 		ret = irq_of_parse_and_map(np, 0);
--		if (ret < 0) {
-+		if (!ret) {
- 			dev_err(dev, "No IRQ for GPIO bank %u\n", id);
--			return ret;
-+			return -EINVAL;
- 		}
- 		pctrl->gpio_bank[id].irq = ret;
- 		pctrl->gpio_bank[id].irq_chip = npcmgpio_irqchip;
--- 
-2.32.0
+Need to define how many and what clocks are coming here.
 
+> +
+> +  assigned-clocks:
+> +    minItems: 1
+> +
+> +  assigned-clock-parents:
+> +    minItems: 1
+> +
+> +  assigned-clock-rates:
+> +    minItems: 1
+
+You normally don't need these in the bindings, they come from the schema.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#clock-cells"
+> +  - "#reset-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # Clock Control Module node:
+> +  - |
+> +    cru: clock-controller@fd7c0000 {
+> +      compatible = "rockchip,rk3588-cru";
+> +      reg = <0xfd7c0000 0x5c000>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +    };
+
+
+Best regards,
+Krzysztof
