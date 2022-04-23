@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7051050C8C2
+	by mail.lfdr.de (Postfix) with ESMTP id B83FB50C8C3
 	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 11:45:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233414AbiDWJoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Apr 2022 05:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38704 "EHLO
+        id S234567AbiDWJoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Apr 2022 05:44:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234560AbiDWJoo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 05:44:44 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD76C81197
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 02:41:47 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id g13so20676404ejb.4
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 02:41:47 -0700 (PDT)
+        with ESMTP id S234556AbiDWJop (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 05:44:45 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3F38119A
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 02:41:49 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id g20so13124697edw.6
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 02:41:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J8b5hHd3ZE3FnDrXjojFeKTkNnb5II0lx5j41yJu2D4=;
-        b=EKe5ShPRw7fZLZ6AFGwQlwGxyW41/UhYFAYrqo+HZI74rMdiSh83jGNz8R9n+ZU6F3
-         hHIYIKWf8HtkUsV+dKRC7uOfkq1ryLosNyeL9UcJd1+HNoFyYwTHuqODjtwerAJfpa8e
-         2wJ9Cp62IbrsXhiWdUpzOaRxTCIeMOkIBbb2hAy9qVftqdA9fNzL+0ZIqCqKEbnvVQgM
-         AEcy+L5rjYYLY99JVqKCqXW0toemXwG6Lg4Ctvy11ESCZ+3U7JWv9UX0spDu5TzgQS0r
-         WTQwTQBVQUGNvPTMUhhCxAufcNU4XCGELOHq8G8IXjf8rdEyJPYLElgJ6/WryQzuNxIU
-         Ff5Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sK7viN9i4JPJxxDkjaX4q/MfNzJTh2SbB8y6IKJ+NA8=;
+        b=JVeDryIHYCcT9M56JgZSY/aCTKMph4y/FS8U42oGwCUEh3tgOiMcg9eTnLb/FAWorJ
+         bx2OXT3EHxoOHt7Ih8hsM6/IMsED5VqJOEoIGDWhTLFTFI0BcbNu8EHQrT9KmE2TKib9
+         m7q+EMVMYTiM1ZsmnTwyGMG+YTlkfinfnrBu7PGUKJgIgmSUlKL6B959UPm1GInA3iY8
+         izITflS7m46K/vTYp9DZt/mGLXm9gjeur23r4HrGVBnhgG8uR+8QdgUkIPfG00ZBtAv9
+         oDiyhY/1BH0JbLqoUKZrY+8qfGveJ3fKoc6Att8AIpcYrYwSTi6AVAVb2sUNEv+PWB5p
+         9rFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J8b5hHd3ZE3FnDrXjojFeKTkNnb5II0lx5j41yJu2D4=;
-        b=4eimbQgDc3bBLeLY65vHAlaipXBkWVZMmiy4BxcIODKdx5xUnXKQ5aV+Ef9W9QaxBc
-         jkmZnfyMt6vwRsIfWcX0kEsk6qW5LlqpJ6a2/9lQaGjRb3m+CvOnaxWhRcglc5Nw/baB
-         iqyO2a2BVzEzVbI3lKXwAc8r8k1mAsMP8LZUDLu5miwE+wAjp1asGLE8L6HQitlZIX8K
-         Piifa2CtqQ4WUBERKgt/4nxQKZAYAYotMNKYZhrc++fHoRgPowl9N5wxsOlyHm2IpCbY
-         AmNJQpSNDilLyvRfOTlGufxkDaBQbnkJgJU2ZTEK7P2JLhVB7KIFTbLasiGhrmDq2bvH
-         KNaA==
-X-Gm-Message-State: AOAM530d1EotKMitIwmegDqJYqRlJoKwW324JwFSKhwLWmcME7iTf5vt
-        Dxp6J6wkCXC4QaGM4fpE6Q1n/w==
-X-Google-Smtp-Source: ABdhPJz5g26SwBjbBClehKHJMS4wxlXlvnlGg5xTV8ATk3J7H+AteEMkJtNki1MW7iOhNoZI2XgOiw==
-X-Received: by 2002:a17:906:c14a:b0:6e8:76d0:e0eb with SMTP id dp10-20020a170906c14a00b006e876d0e0ebmr7567035ejc.412.1650706906337;
-        Sat, 23 Apr 2022 02:41:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sK7viN9i4JPJxxDkjaX4q/MfNzJTh2SbB8y6IKJ+NA8=;
+        b=wxHU4NCWX+MExP2ETxnbraEtwjP0Tu4lMZjZ5xS1flXZ6oUir+sVv52savEPpH5Hs8
+         LH63bZvhwIK7emJ/7KXtl4jiM7zpYA5ES2O3bITuo0dApBvcuufA8O/lq6wZBPZk4UkB
+         x6p+cgq72XAE2Y+msPWHhCweHSeIhHMRiLSyPsStuLLDdtpfOc9zkMSbIajft9gLTdTX
+         0WoyqNu1co0ZzBE6e4bfXMrAc5Tfjg+hrcnsz8aF+zb5O/DEa5V+rojRe2j/MemubfgE
+         rf827N3xf40Cf2tVlwC0uNkp/TO+sLpFQQY2jswXWdrlxg4rGEBLjBXncO853dYMdthq
+         3ANQ==
+X-Gm-Message-State: AOAM5312QoDITtVpONtJLW7/pMCi/3sRCHhrdPK/e2fooqfR8ds3//Vb
+        m1hyzcp+xDQvaPGlF4o1nI/i+g==
+X-Google-Smtp-Source: ABdhPJwCfMFt6+BgEzOcYsahEfprSVl7EeW4ENwCe2bhADBkOkjvnR4alfE2hwR4svmCgkB32YexjA==
+X-Received: by 2002:a05:6402:3324:b0:41c:c4e6:2988 with SMTP id e36-20020a056402332400b0041cc4e62988mr9401481eda.157.1650706907574;
+        Sat, 23 Apr 2022 02:41:47 -0700 (PDT)
 Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id 22-20020a508e16000000b00425c9d1704bsm975910edw.4.2022.04.23.02.41.44
+        by smtp.gmail.com with ESMTPSA id 22-20020a508e16000000b00425c9d1704bsm975910edw.4.2022.04.23.02.41.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Apr 2022 02:41:45 -0700 (PDT)
+        Sat, 23 Apr 2022 02:41:47 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
@@ -61,10 +61,12 @@ To:     Andrew Lunn <andrew@lunn.ch>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 1/2] pinctrl: mvebu: Fix irq_of_parse_and_map() return value
-Date:   Sat, 23 Apr 2022 11:41:41 +0200
-Message-Id: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 2/2] pinctrl: nuvoton: Fix irq_of_parse_and_map() return value
+Date:   Sat, 23 Apr 2022 11:41:42 +0200
+Message-Id: <20220423094142.33013-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
+References: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -79,30 +81,33 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 The irq_of_parse_and_map() returns 0 on failure, not a negative ERRNO.
 
-Fixes: 2f227605394b ("pinctrl: armada-37xx: Add irqchip support")
+Fixes: 3b588e43ee5c ("pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver")
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 ---
 
 Changes since v1:
-1. None.
+1. Correct the return value passed further.
 ---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index ef4118e49f16..a140b6bfbfaa 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -764,7 +764,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
- 	for (i = 0; i < nr_irq_parent; i++) {
- 		int irq = irq_of_parse_and_map(np, i);
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+index 3cf0f8a43c37..cc085ba2d7e4 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+@@ -1898,9 +1898,9 @@ static int npcm7xx_gpio_of(struct npcm7xx_pinctrl *pctrl)
+ 		}
  
--		if (irq < 0)
-+		if (!irq)
- 			continue;
- 		girq->parents[i] = irq;
- 	}
+ 		ret = irq_of_parse_and_map(np, 0);
+-		if (ret < 0) {
++		if (!ret) {
+ 			dev_err(dev, "No IRQ for GPIO bank %u\n", id);
+-			return ret;
++			return -EINVAL;
+ 		}
+ 		pctrl->gpio_bank[id].irq = ret;
+ 		pctrl->gpio_bank[id].irq_chip = npcmgpio_irqchip;
 -- 
 2.32.0
 
