@@ -2,203 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF77B50C98A
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 13:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 368AE50CC3A
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 18:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231488AbiDWLU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Apr 2022 07:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
+        id S236351AbiDWQO0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Apr 2022 12:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232280AbiDWLUZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 07:20:25 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25BF71A2A
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 04:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650712648; x=1682248648;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mTO49vnluYwuIRK/X84PsQByXfJndCuIz7ThrKEcVic=;
-  b=nYyFSIYA9zqTJASMHu5TmNTGFbOkL9gUZfXG+IVW5o6TLk4HxFdY7jMT
-   SdWG5ySQmhTs91OWWzNBdeNU0nWHGFNSl5WAyby2gd1m7gBU/qI9DAM6T
-   euN7fecpw/4mJn+LbNYBwe8PfTbm6O+IJ6XVaprQjO2w1g4T/VsnqNnTM
-   0EnVlUNABDakQf7n/DzZhE96LbuLbwOeHW3vmVOdnnUVZHSG0kA4lKI2L
-   N4nP3YVsJXx3qudeefjcebll2E/zeJG0r68nH3xSZr9C3J5kLIDsoM93S
-   EDTm56K+YsobsxioLd0KGnO04fP8+GiGwDikQABsf5xSlnSqEtLOxN+UP
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="262478463"
-X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
-   d="scan'208";a="262478463"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 04:17:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
-   d="scan'208";a="563402918"
-Received: from lkp-server01.sh.intel.com (HELO dd58949a6e39) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Apr 2022 04:17:18 -0700
-Received: from kbuild by dd58949a6e39 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1niDlN-0000CI-K9;
-        Sat, 23 Apr 2022 11:17:17 +0000
-Date:   Sat, 23 Apr 2022 19:16:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 05d8af449d93e04547b4c6b328e39c890bc803f4
-Message-ID: <6263e021.lxuCODU7an0wmFKV%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S235036AbiDWQOZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 12:14:25 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCB935254;
+        Sat, 23 Apr 2022 09:11:28 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id j9so7985232qkg.1;
+        Sat, 23 Apr 2022 09:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=lQVbIb2JtzfXlFMXF5sUujmihmQB1ITOpgM0dRlM/bE=;
+        b=ad8l34Oy3g2XPQbKV5BOfbYnWHL9BOhdVLt8MCnK6mVOd/h1q9YEE3evE+OIlHSuwn
+         CBUXm5m0Dtn6SYBy9VqsDnR816pbRFPcaDZKm30baLR96P80nZX5xyx8IJ36I/IxFO7s
+         YDuwaQyZi+6VnxE/QcF3+tqIFx/UWV0QntEDQxYGdkwJfAPjnulsvber14U5RK46Uio9
+         kepo/Id4gojp/BwtMAOqZpUXaYG+utfJVHyHwiOivbnEnLJqXNSNgxUgiO3uDMycnfPV
+         8mMXhvikabVraP3RqpOS+e9PVKZx+G1Zp0zerh1E+q2CWz05Xaqn7UKS+7conFkou/1Y
+         nrGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=lQVbIb2JtzfXlFMXF5sUujmihmQB1ITOpgM0dRlM/bE=;
+        b=jiJR8wqhnnRzsBDdG+FguHUH0Vkpe8uJdWNNR7ifvX7c6oYDzdvrE9IbZPg8Xrce7z
+         LJlVItsIOO4p1psMXuu+bylq1QiJB4mWvMgllkuzn3L88nT0YSvodbW7ipT6t4f771So
+         i4Vkb8KBa1Yn4GJcm4tD3zHwMGnr1v7xQBbN1RtzP478N1n/x0WF2vQuOHKh1S8GiRDi
+         QujnLvTkvCNR7Tdhbjv48iw/j5gtiMGSGR9qUoMPEJgftaboF9JqGPiG4zwsg7Y8cwq1
+         eT/GzBf4hLxVPOW/LXTOn2gRF/Z8X8m7plc9W5RXzUwp/IgHxRJ7nUE5+/SMMub0ZhQE
+         3GjA==
+X-Gm-Message-State: AOAM533H7EvUiRNYZJ0MqjxeehFws4y8IM5F4xzoermAkVVQAkyV2STY
+        yWfOw8Q0EWhitNIbTms6CRY=
+X-Google-Smtp-Source: ABdhPJyEa8wserA/9fHwGUzW4LPvUsGSMRtuwkuiUXVL6tdG873QFklMkWNFcP5Zzqyv413p0LJh+g==
+X-Received: by 2002:a05:620a:bc6:b0:67d:1870:8b35 with SMTP id s6-20020a05620a0bc600b0067d18708b35mr5751141qki.85.1650730287404;
+        Sat, 23 Apr 2022 09:11:27 -0700 (PDT)
+Received: from [10.4.10.60] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id x20-20020ac85f14000000b002e1ee1c56c3sm3047852qta.76.2022.04.23.09.11.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Apr 2022 09:11:26 -0700 (PDT)
+Message-ID: <b02942e9-20ba-4407-4505-adaeea887d9c@gmail.com>
+Date:   Sat, 23 Apr 2022 12:11:24 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH v1 08/12] clk: imx: Add initial support for i.MXRT1170
+ clock driver
+Content-Language: en-US
+To:     Stephen Boyd <sboyd@kernel.org>, linux-imx@nxp.com
+Cc:     robh+dt@kernel.org, mturquette@baylibre.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        aisheng.dong@nxp.com, stefan@agner.ch, linus.walleij@linaro.org,
+        daniel.lezcano@linaro.org, tglx@linutronix.de, arnd@arndb.de,
+        olof@lixom.net, soc@kernel.org, linux@armlinux.org.uk,
+        abel.vesa@nxp.com, dev@lynxeye.de, marcel.ziswiler@toradex.com,
+        tharvey@gateworks.com, leoyang.li@nxp.com,
+        sebastian.reichel@collabora.com, cniedermaier@dh-electronics.com,
+        clin@suse.com, giulio.benetti@benettiengineering.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+References: <20220326144313.673549-1-Mr.Bossman075@gmail.com>
+ <20220326144313.673549-9-Mr.Bossman075@gmail.com>
+ <20220423030331.0E85CC385A0@smtp.kernel.org>
+From:   Jesse Taube <mr.bossman075@gmail.com>
+In-Reply-To: <20220423030331.0E85CC385A0@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 05d8af449d93e04547b4c6b328e39c890bc803f4  pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested
 
-elapsed time: 727m
 
-configs tested: 118
-configs skipped: 4
+On 4/22/22 23:03, Stephen Boyd wrote:
+> Quoting Jesse Taube (2022-03-26 07:43:09)
+>> diff --git a/drivers/clk/imx/clk-imxrt1170.c b/drivers/clk/imx/clk-imxrt1170.c
+>> new file mode 100644
+>> index 000000000000..041aea3d4b02
+>> --- /dev/null
+>> +++ b/drivers/clk/imx/clk-imxrt1170.c
+>> @@ -0,0 +1,391 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>> +/*
+>> + * Copyright (C) 2022
+>> + * Author(s):
+>> + * Jesse Taube <Mr.Bossman075@gmail.com>
+>> + */
+>> +#include <linux/clk.h>
+>> +#include <linux/of_address.h>
+> 
+> Is this include used?
+> 
+>> +#include <linux/of_irq.h>
+> 
+> Is this include used?
+> 
+>> +#include <linux/platform_device.h>
+> 
+> Need to include clk-provider.h
+> 
+>> +#include <dt-bindings/clock/imxrt1170-clock.h>
+>> +
+>> +#include "clk.h"
+>> +
+>> +#define CLOCK_MUX_DEFAULT "rcosc48M_div2", "osc", "rcosc400M", "rcosc16M"
+>> +
+>> +#define LPCG_GATE(gate) (0x6000 + (gate * 0x20))
+>> +
+>> +#define DEF_CLOCK(flags, macro, name) \
+>> +do { \
+>> +       hws[macro##_SEL] = imx_clk_hw_mux(#name"_sel", ccm_base + (name * 0x80), \
+>> +               8, 3, root_clocks[name], 8); \
+>> +       hws[macro##_GATE] = imx_clk_hw_gate_dis_flags(#name"_gate", #name"_sel", \
+>> +               ccm_base + (name * 0x80), 24, flags); \
+>> +       hws[macro] = imx_clk_hw_divider(#name, #name"_gate", ccm_base + (name * 0x80), 0, 8); \
+>> +} while (0)
+>> +
+>> +enum root_clock_names {
+>> +       m7,             /* root clock m7. */
+> 
+> Is the comment adding any value? It has the enum name after "root clock"
+> and the enum is "root_clock_names" so it looks very obvious.
+> 
+>> +       m4,             /* root clock m4. */
+>> +       bus,            /* root clock bus. */
+>> +       bus_lpsr,       /* root clock bus lpsr. */
+> [...]
+>> +       end,            /* root clock end. */
+>> +};
+>> +
+>> +static const char * const root_clocks[79][8] = {
+>> +       {CLOCK_MUX_DEFAULT, "pll_arm", "pll1_sys", "pll3_sys", "pll_video"},
+> 
+> Space after { and before }
+> 
+>> +       {CLOCK_MUX_DEFAULT, "pll3_pfd3", "pll3_sys", "pll2_sys", "pll1_div5"},
+>> +       {CLOCK_MUX_DEFAULT, "pll3_sys", "pll1_div5", "pll2_sys", "pll2_pfd3"},
+> [...]
+>> +       {CLOCK_MUX_DEFAULT, "pll2_pfd3", "rcosc48M", "pll3_pfd1", "pll_audio"}
+>> +};
+>> +
+>> +static const char * const pll_arm_mux[] = {"pll_arm_pre", "osc"};
+>> +static const char * const pll3_mux[] = {"pll3_pre", "osc"};
+>> +static const char * const pll2_mux[] = {"pll2_pre", "osc"};
+>> +
+>> +static const struct clk_div_table post_div_table[] = {
+>> +       { .val = 3, .div = 1, },
+>> +       { .val = 2, .div = 8, },
+>> +       { .val = 1, .div = 4, },
+>> +       { .val = 0, .div = 2, },
+>> +       { }
+>> +};
+>> +
+>> +static struct clk_hw **hws;
+>> +static struct clk_hw_onecell_data *clk_hw_data;
+> 
+> Do either of these need to be static global variables? They could be
+> local function pointers allocated on the heap (like they already are).
+> 
+>> +
+>> +static int imxrt1170_clocks_probe(struct platform_device *pdev)
+>> +{
+> [...]
+>> +       hws[IMXRT1170_CLK_PLL2_PFD3] = imx_clk_hw_pfd("pll2_pfd3", "pll2_sys", pll_base + 0x270, 3);
+>> +
+>> +       /* CCM clocks */
+>> +       ccm_base = devm_platform_ioremap_resource(pdev, 0);
+>> +       if (WARN_ON(IS_ERR(ccm_base)))
+>> +               return PTR_ERR(ccm_base);
+>> +
+>> +       DEF_CLOCK(CLK_IS_CRITICAL, IMXRT1170_CLK_M7, m7);
+> 
+> Don't have macros do things to variables that are in global scope. It
+> makes things very non-obvious. Instead, pass hw to the macro, or better
+> yet make a static inline function and let the compiler decide to inline
+> it or not.
+Ah I use the enum name as the string clk name so inline unfortunately 
+wont work. Thanks I will fix `ccm_base` and `hws`.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks for the reply!!!!
+> 
+>> +       DEF_CLOCK(CLK_IS_CRITICAL, IMXRT1170_CLK_M4, m4);
+> [...]
+>> +       DEF_CLOCK(0, IMXRT1170_CLK_CSI2_UI, csi2_ui);
+>> +       DEF_CLOCK(0, IMXRT1170_CLK_CSI, csi);
+>> +       DEF_CLOCK(0, IMXRT1170_CLK_CKO1, cko1);
+>> +       DEF_CLOCK(0, IMXRT1170_CLK_CKO2, cko2);
+>> +
+>> +       hws[IMXRT1170_CLK_USB] = imx_clk_hw_gate("usb", "bus", ccm_base + LPCG_GATE(115), 0);
+>> +
+>> +       clk_set_rate(hws[IMXRT1170_CLK_PLL_ARM]->clk, 90000000);
+> 
+> Use assigned-clock-rates?
+Sry left from testing.
+> 
+>> +
+>> +       imx_check_clk_hws(hws, IMXRT1170_CLK_END);
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-powerpc                       ppc64_defconfig
-powerpc                        cell_defconfig
-powerpc                    sam440ep_defconfig
-openrisc                 simple_smp_defconfig
-sh                               alldefconfig
-arm                        shmobile_defconfig
-powerpc                       holly_defconfig
-powerpc                      ppc40x_defconfig
-sh                        edosk7760_defconfig
-arc                          axs103_defconfig
-sh                              ul2_defconfig
-ia64                             allyesconfig
-mips                     loongson1b_defconfig
-arc                         haps_hs_defconfig
-m68k                         apollo_defconfig
-m68k                        m5407c3_defconfig
-arm                           sunxi_defconfig
-arm                           h3600_defconfig
-ia64                      gensparse_defconfig
-powerpc                      cm5200_defconfig
-h8300                    h8300h-sim_defconfig
-sh                           se7722_defconfig
-arm                            xcep_defconfig
-sh                           se7619_defconfig
-m68k                       m5475evb_defconfig
-powerpc                   currituck_defconfig
-powerpc                 canyonlands_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220422
-ia64                             allmodconfig
-ia64                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
-
-clang tested configs:
-riscv                randconfig-c006-20220422
-mips                 randconfig-c004-20220422
-x86_64                        randconfig-c007
-i386                          randconfig-c001
-arm                  randconfig-c002-20220422
-powerpc              randconfig-c003-20220422
-arm                  colibri_pxa300_defconfig
-mips                      malta_kvm_defconfig
-arm                      tct_hammer_defconfig
-riscv                    nommu_virt_defconfig
-x86_64                           allyesconfig
-powerpc                 mpc832x_rdb_defconfig
-powerpc                      ppc64e_defconfig
-powerpc                  mpc885_ads_defconfig
-arm                         socfpga_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20220422
-riscv                randconfig-r042-20220422
-hexagon              randconfig-r045-20220422
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Thanks,
+Jesse Taube
