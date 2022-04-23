@@ -2,180 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 194D050C91B
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 12:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFB1150C94B
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 12:31:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234579AbiDWKOa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Apr 2022 06:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47022 "EHLO
+        id S235004AbiDWKd1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Apr 2022 06:33:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234888AbiDWKMb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 06:12:31 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C19061CF702
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 03:09:24 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id s18so20820070ejr.0
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 03:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=DCeonWjVpVvFaDIUwzVDrsiqJjzTalP0OPLls+NZnWc=;
-        b=Ti6mIMHpl+KN1/VH2J/2Cm2mTkZux/aaoLWdUgSJvMYK24cdjcpn/xrC3BuGDo4kU5
-         zVPpBVbSqxfJsJOqUtG0AvsE5eno6MEaDIdYS5A5JMJ6H7ahribCTyyba0KYpA2nqLPJ
-         BI8saKICCz7P89BZceexn4b0+G5zn3YM2hhIsdizMzQ0GYAcp2NhaS7unERZLNvZRkhV
-         jyPbeGU5IJWhC21moe7MTkHHFwGGiJ9PXB0TzaGiZCsw3s83TzXTJOobl7nE8d5lHyzz
-         nYMOCOeD9ctRMRRf9Rw8MYeHrcD2stIQr6yYnMX9fqRJQO1Oh7KtVK5a4d3dwe0wQOB1
-         BhQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=DCeonWjVpVvFaDIUwzVDrsiqJjzTalP0OPLls+NZnWc=;
-        b=LcfwMPlqeJ5UHxURX9jVDIYspJc40xBik6UJLKL0piyCFtG/MLyDHXGnUEscnFgSa5
-         F+lRzisBIAHgV0SRnSDkOmvbSNMVnHUDF3U5nQRRz+syQMTVjVGLi1hhONnN4M4FKNVt
-         PZ+19yh/SToAVd1RMRD+ed7jZsEWLXxVmV8aWXLWK4VK0lXhEWcqyygjXnk6un7reHGR
-         5y7obj06K5oPWv+YHuWPk++JD+asn0xZADeRofb8PXIdq+VYlsr1pAl+2xTk532M2rPt
-         Ep+erVNWj8BQE0iqrSZGAcmvshljYNDdzNVr5MuX4W8FaQ8qPAuZ2SkA9NulQpilDeUj
-         6TlA==
-X-Gm-Message-State: AOAM533fdyYP2FutRyNYm0rBJvq+3J/VnKmCLWs7muqSre0W0L+rZwbt
-        F3yFWRAQJjOqJ3Nf/XIaaZvahw==
-X-Google-Smtp-Source: ABdhPJxH7lyOrG5mIRwnK45I7YIT1NaYQjc31HVx1K3KqPyODzSMcETNAdiuJaWQhGMZt5D/Z2kNzQ==
-X-Received: by 2002:a17:906:8301:b0:6e4:896d:59b1 with SMTP id j1-20020a170906830100b006e4896d59b1mr7624358ejx.396.1650708563296;
-        Sat, 23 Apr 2022 03:09:23 -0700 (PDT)
-Received: from [192.168.0.234] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id p12-20020a50c94c000000b00425c48132bfsm1362892edh.55.2022.04.23.03.09.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Apr 2022 03:09:22 -0700 (PDT)
-Message-ID: <46e72600-b96a-03a9-134d-28a0cb4bc078@linaro.org>
-Date:   Sat, 23 Apr 2022 12:09:21 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCHv1 19/19] arm64: dts: rockchip: Add rk3588-evb1 board
-Content-Language: en-US
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        with ESMTP id S232670AbiDWKdZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 06:33:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5211EACF;
+        Sat, 23 Apr 2022 03:30:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0117E60F72;
+        Sat, 23 Apr 2022 10:30:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51ABFC385A5;
+        Sat, 23 Apr 2022 10:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650709828;
+        bh=ff4v014/iePNUz+icT/yCsh2zIx6F6nb3gqJB1eZ8UE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IXbxE35IvogCm4AZ8zf3jDibpQvSyM0C/W7X9aOUpsRCzXOI07cfGdkWgEbDXWuCr
+         kHSslvl42YFufuJLUjxH+6Rlemh4k5ehoJ0U76XnWwo/D64jT3So83tqkAFjCS9+H6
+         9XGZjuNh5XDyj1VT2QzlODsbPR56lIo8wzJ2/IPR+6qUMek4L2BCV/t5x64hN25Q8y
+         Xr9LLlVN3fF+XBKV03hhLSY0wx9o5lEU7yd8whJ6OEG30xUTbuEa5djU8KMh+2QwPC
+         oAsEmKmW3z1C/HA7pmQSaW9nJigb1Pte7SU3itFZmqvPUSBZDBhkZgGwGurE72xs+j
+         1h8z5Y+LbCwCQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=billy-the-mountain.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1niD21-006Mq2-Qb; Sat, 23 Apr 2022 11:30:25 +0100
+Date:   Sat, 23 Apr 2022 11:30:25 +0100
+Message-ID: <874k2kccse.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
-        Kever Yang <kever.yang@rock-chips.com>, kernel@collabora.com
-References: <20220422170920.401914-1-sebastian.reichel@collabora.com>
- <20220422170920.401914-20-sebastian.reichel@collabora.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220422170920.401914-20-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v3 00/10] gpiolib: Handle immutable irq_chip structures
+In-Reply-To: <CACRpkda3L_itpqcnPq6xDoJtNHt8NuvE1MZk1bCNR+u2KKUpBA@mail.gmail.com>
+References: <20220419141846.598305-1-maz@kernel.org>
+        <CACRpkda3L_itpqcnPq6xDoJtNHt8NuvE1MZk1bCNR+u2KKUpBA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, brgl@bgdev.pl, thierry.reding@gmail.com, joey.gouly@arm.com, jonathanh@nvidia.com, marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io, bjorn.andersson@linaro.org, agross@kernel.org, jeffrey.l.hugo@gmail.com, tglx@linutronix.de, Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com, andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/04/2022 19:09, Sebastian Reichel wrote:
-> From: Kever Yang <kever.yang@rock-chips.com>
+On Fri, 22 Apr 2022 22:24:22 +0100,
+Linus Walleij <linus.walleij@linaro.org> wrote:
 > 
-> Add board file for the RK3588 evaluation board. While the hardware
-> offers plenty of peripherals and connectivity this basic implementation
-> just handles things required to successfully boot Linux from eMMC
-> and connect via UART.
+> On Tue, Apr 19, 2022 at 4:19 PM Marc Zyngier <maz@kernel.org> wrote:
 > 
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> [rebase, update commit message, use EVB1 for SoC bringup]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../devicetree/bindings/arm/rockchip.yaml     |  5 +++
->  arch/arm64/boot/dts/rockchip/Makefile         |  1 +
->  .../boot/dts/rockchip/rk3588-evb1-v10.dts     | 34 +++++++++++++++++++
->  3 files changed, 40 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+> > This is a followup from [2].
+> >
+> > I recently realised that the gpiolib play ugly tricks on the
+> > unsuspecting irq_chip structures by patching the callbacks.
+> >
+> > Not only this breaks when an irq_chip structure is made const (which
+> > really should be the default case), but it also forces this structure
+> > to be copied at nauseam for each instance of the GPIO block, which is
+> > a waste of memory.
+> >
+> > My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
+> > which does what it says on the tin: don't you dare writing to them.
+> > Gpiolib is further updated not to install its own callbacks, and it
+> > becomes the responsibility of the driver to call into the gpiolib when
+> > required. This is similar to what we do for other subsystems such as
+> > PCI-MSI.
+> >
+> > 5 drivers are updated to this new model: M1, QC, Tegra, pl061 and AMD
+> > (as I actively use them) keeping a single irq_chip structure, marking
+> > it const, and exposing the new flag.
+> >
+> > Nothing breaks, the volume of change is small, the memory usage goes
+> > down and we have fewer callbacks that can be used as attack vectors.
+> > What's not to love?
+> >
+> > Since there wasn't any objection in the previous round of review, I'm
+> > going to take this series into -next to see if anything breaks at
+> > scale.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index eece92f83a2d..b14d0c84c69b 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -664,6 +664,11 @@ properties:
->            - const: rockchip,rk3568-bpi-r2pro
->            - const: rockchip,rk3568
->  
-> +      - description: Rockchip RK3588 Evaluation board
-> +        items:
-> +          - const: rockchip,rk3588-evb1-v10
-> +          - const: rockchip,rk3588
-> +
->  additionalProperties: true
->  
->  ...
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index 4ae9f35434b8..8a53ab6d37a1 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -61,3 +61,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-pinenote-v1.2.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-quartz64-a.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-evb1-v10.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-bpi-r2-pro.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-evb1-v10.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-> new file mode 100644
-> index 000000000000..68b19acb1550
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2021 Rockchip Electronics Co., Ltd.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "rk3588.dtsi"
-> +
-> +/ {
-> +	model = "Rockchip RK3588 EVB1 V10 Board";
-> +	compatible = "rockchip,rk3588-evb1-v10", "rockchip,rk3588";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +};
-> +
-> +&sdhci {
-> +	bus-width = <8>;
-> +	no-sdio;
-> +	no-sd;
-> +	non-removable;
-> +	max-frequency = <200000000>;
-> +	mmc-hs400-1_8v;
-> +	mmc-hs400-enhanced-strobe;
-> +	status = "ok";
-> +};
-> +
-> +&uart2 {
-> +	status = "ok";
+> The series:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Bartosz: if you're happy with this can you apply it to an immutable branch
+> from v5.18-rc1 and merge that into the GPIO for-next and then I can also
+> pull that into pinctrl?
 
-Usually status goes at the end of properties and rockchip sources use
-"okay" instead of "ok".
+For what it is worth, I've pushed this branch into irqchip-next.
 
-It's a nit, so in any case:
+You can pick it up from:
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/gpio-immutable
 
+but I can also drop it from the irqchip tree.
 
-Best regards,
-Krzysztof
+Just let me know.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
