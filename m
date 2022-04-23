@@ -2,85 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 724E150C951
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 12:40:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF77B50C98A
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Apr 2022 13:17:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235035AbiDWKfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Apr 2022 06:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38598 "EHLO
+        id S231488AbiDWLU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Apr 2022 07:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234903AbiDWKfg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 06:35:36 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5793F22BF6;
-        Sat, 23 Apr 2022 03:32:39 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id bf11so12378996ljb.7;
-        Sat, 23 Apr 2022 03:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=FjHVIpwQVF2j9Z1J3pzN5aGfezd4ZG1gp/yXo52Doyk=;
-        b=XFmDGucF/OcegOVH0xx/d8n/IGwkExBInzgnH2Lm7dLvoea6vEpiarJprM8axfZYn6
-         xdqdozexD2dH6IbHU5LMU7IS9U+oioxj5yy6DIUWl2cXiOWkfXf0jBRUlbUac9HTVnqB
-         RiOklvCNDaZGnqGSqOn6qqrJh+pq6gQJAqGVe8G1NMAPMjHTihC998Aaq06Jmcc+fcT+
-         iz/U5Gi7FQk1R1FbfVjnYWzi8EXNYk8F+GlASybLnp/xB8AV28jXILYawb2+8Cn5XGAL
-         kLLkAgfNwnWBTuxawnfafuToG52yusZv5V839takuTzRzaFeEZiTEDGv/G0oXano+ONU
-         j+Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=FjHVIpwQVF2j9Z1J3pzN5aGfezd4ZG1gp/yXo52Doyk=;
-        b=KCTlJkNynU29CGY0k2iS81iCNCEOGuOpqK1owtrkqjYtW9EO5paYyQlyV3HRpxptj3
-         ZVyoXEIQommDlftZ+YPgYDLeFY0CpLlTvzcYcGPWOXHOK75L2YOsC83huyF0KS/JNBwZ
-         S+0Nxbtj+ALrihwndKCtJtqjkuhI8ldU6JPeQNUeKoBGNmKLizoGzs7fd0tRVzVkLMms
-         vprBWwpDFtuWjHRdVNBdjb7vkB1Fo1GczA8POVV0ejg3DxnTBXI4h4t61A2YsJFmQFnN
-         XIvV+sTjewtA9H3Gw87gS8B4WHyVdw7Tr3ZeuAMcjMM2Ddt685/0G4L2+/5oJd664yOu
-         Djpg==
-X-Gm-Message-State: AOAM531xjJ8tckkekqujWsIJ+QxIpoaJncC2WDbCNDQRoPNiV75YtuHu
-        xvnF+LzMYql2RVymtFwA/rQ=
-X-Google-Smtp-Source: ABdhPJypw+C0OHw2I6BBqFjoROXfn7uqBt7/o3BKuV0y5z0fzD6WCOzfmSwCSW856LNxwR99k8GuRg==
-X-Received: by 2002:a05:651c:1781:b0:247:daa7:4358 with SMTP id bn1-20020a05651c178100b00247daa74358mr5186355ljb.477.1650709957430;
-        Sat, 23 Apr 2022 03:32:37 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-138-167.dynamic.spd-mgts.ru. [109.252.138.167])
-        by smtp.googlemail.com with ESMTPSA id m1-20020a2e7101000000b0024f081cb0absm73107ljc.83.2022.04.23.03.32.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Apr 2022 03:32:36 -0700 (PDT)
-Message-ID: <0ac35b47-720e-ae99-45d2-3f8d63868a1e@gmail.com>
-Date:   Sat, 23 Apr 2022 13:32:35 +0300
+        with ESMTP id S232280AbiDWLUZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Apr 2022 07:20:25 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25BF71A2A
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Apr 2022 04:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650712648; x=1682248648;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mTO49vnluYwuIRK/X84PsQByXfJndCuIz7ThrKEcVic=;
+  b=nYyFSIYA9zqTJASMHu5TmNTGFbOkL9gUZfXG+IVW5o6TLk4HxFdY7jMT
+   SdWG5ySQmhTs91OWWzNBdeNU0nWHGFNSl5WAyby2gd1m7gBU/qI9DAM6T
+   euN7fecpw/4mJn+LbNYBwe8PfTbm6O+IJ6XVaprQjO2w1g4T/VsnqNnTM
+   0EnVlUNABDakQf7n/DzZhE96LbuLbwOeHW3vmVOdnnUVZHSG0kA4lKI2L
+   N4nP3YVsJXx3qudeefjcebll2E/zeJG0r68nH3xSZr9C3J5kLIDsoM93S
+   EDTm56K+YsobsxioLd0KGnO04fP8+GiGwDikQABsf5xSlnSqEtLOxN+UP
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="262478463"
+X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
+   d="scan'208";a="262478463"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 04:17:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
+   d="scan'208";a="563402918"
+Received: from lkp-server01.sh.intel.com (HELO dd58949a6e39) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Apr 2022 04:17:18 -0700
+Received: from kbuild by dd58949a6e39 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1niDlN-0000CI-K9;
+        Sat, 23 Apr 2022 11:17:17 +0000
+Date:   Sat, 23 Apr 2022 19:16:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ 05d8af449d93e04547b4c6b328e39c890bc803f4
+Message-ID: <6263e021.lxuCODU7an0wmFKV%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCHv1 08/19] mmc: sdhci-of-dwcmshc: add reset call back for
- rockchip Socs
-Content-Language: en-US
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
-        Yifeng Zhao <yifeng.zhao@rock-chips.com>, kernel@collabora.com
-References: <20220422170920.401914-1-sebastian.reichel@collabora.com>
- <20220422170920.401914-9-sebastian.reichel@collabora.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-In-Reply-To: <20220422170920.401914-9-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,94 +62,143 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-22.04.2022 20:09, Sebastian Reichel пишет:
-> From: Yifeng Zhao <yifeng.zhao@rock-chips.com>
-> 
-> The reset function build in the SDHCI will not reset the logic
-> circuit related to the tuning function, which may cause data
-> reading errors. Resetting the complete SDHCI controller through
-> the reset controller fixes the issue.
-> 
-> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
-> [rebase]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  drivers/mmc/host/sdhci-of-dwcmshc.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> index bac874ab0b33..d95ae6ca1256 100644
-> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/reset.h>
->  #include <linux/sizes.h>
->  
->  #include "sdhci-pltfm.h"
-> @@ -63,6 +64,7 @@
->  struct rk3568_priv {
->  	/* Rockchip specified optional clocks */
->  	struct clk_bulk_data rockchip_clks[RK3568_MAX_CLKS];
-> +	struct reset_control *reset;
->  	u8 txclk_tapnum;
->  };
->  
-> @@ -255,6 +257,23 @@ static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock
->  	sdhci_writel(host, extra, DWCMSHC_EMMC_DLL_STRBIN);
->  }
->  
-> +static void rk35xx_sdhci_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct dwcmshc_priv *dwc_priv = sdhci_pltfm_priv(pltfm_host);
-> +	struct rk35xx_priv *priv = dwc_priv->priv;
-> +
-> +	if (mask & SDHCI_RESET_ALL) {
-> +		if (!IS_ERR_OR_NULL(priv->reset)) {
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 05d8af449d93e04547b4c6b328e39c890bc803f4  pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested
 
-priv->reset can't be a error ptr since probe fails on error.
+elapsed time: 727m
 
-> +			reset_control_assert(priv->reset);
-> +			udelay(1);
-> +			reset_control_deassert(priv->reset);
-> +		}
-> +	}
-> +
-> +	sdhci_reset(host, mask);
-> +}
-> +
->  static const struct sdhci_ops sdhci_dwcmshc_ops = {
->  	.set_clock		= sdhci_set_clock,
->  	.set_bus_width		= sdhci_set_bus_width,
-> @@ -269,7 +288,7 @@ static const struct sdhci_ops sdhci_dwcmshc_rk3568_ops = {
->  	.set_bus_width		= sdhci_set_bus_width,
->  	.set_uhs_signaling	= dwcmshc_set_uhs_signaling,
->  	.get_max_clock		= sdhci_pltfm_clk_get_max_clock,
-> -	.reset			= sdhci_reset,
-> +	.reset			= rk35xx_sdhci_reset,
->  	.adma_write_desc	= dwcmshc_adma_write_desc,
->  };
->  
-> @@ -292,6 +311,13 @@ static int dwcmshc_rk3568_init(struct sdhci_host *host, struct dwcmshc_priv *dwc
->  	int err;
->  	struct rk3568_priv *priv = dwc_priv->priv;
->  
-> +	priv->reset = devm_reset_control_array_get_exclusive(mmc_dev(host->mmc));
+configs tested: 118
+configs skipped: 4
 
-The devm_reset_control_array_get_exclusive() never returns NULL.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The devm_reset_control_array_get_optional_exclusive(() may return NULL
-if reset is missing in DT, perhaps that's what you actually want?
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+powerpc                       ppc64_defconfig
+powerpc                        cell_defconfig
+powerpc                    sam440ep_defconfig
+openrisc                 simple_smp_defconfig
+sh                               alldefconfig
+arm                        shmobile_defconfig
+powerpc                       holly_defconfig
+powerpc                      ppc40x_defconfig
+sh                        edosk7760_defconfig
+arc                          axs103_defconfig
+sh                              ul2_defconfig
+ia64                             allyesconfig
+mips                     loongson1b_defconfig
+arc                         haps_hs_defconfig
+m68k                         apollo_defconfig
+m68k                        m5407c3_defconfig
+arm                           sunxi_defconfig
+arm                           h3600_defconfig
+ia64                      gensparse_defconfig
+powerpc                      cm5200_defconfig
+h8300                    h8300h-sim_defconfig
+sh                           se7722_defconfig
+arm                            xcep_defconfig
+sh                           se7619_defconfig
+m68k                       m5475evb_defconfig
+powerpc                   currituck_defconfig
+powerpc                 canyonlands_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220422
+ia64                             allmodconfig
+ia64                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
 
-> +	if (IS_ERR_OR_NULL(priv->reset)) {
-> +		err = PTR_ERR(priv->reset);
+clang tested configs:
+riscv                randconfig-c006-20220422
+mips                 randconfig-c004-20220422
+x86_64                        randconfig-c007
+i386                          randconfig-c001
+arm                  randconfig-c002-20220422
+powerpc              randconfig-c003-20220422
+arm                  colibri_pxa300_defconfig
+mips                      malta_kvm_defconfig
+arm                      tct_hammer_defconfig
+riscv                    nommu_virt_defconfig
+x86_64                           allyesconfig
+powerpc                 mpc832x_rdb_defconfig
+powerpc                      ppc64e_defconfig
+powerpc                  mpc885_ads_defconfig
+arm                         socfpga_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+hexagon              randconfig-r041-20220422
+riscv                randconfig-r042-20220422
+hexagon              randconfig-r045-20220422
 
-NULL isn't a error
-
-> +		dev_err(mmc_dev(host->mmc), "failed to get reset control %d\n", err);
-
-dev_err_probe()?
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
