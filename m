@@ -2,123 +2,283 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FCDA50DCA7
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Apr 2022 11:29:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9C2C50DD12
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Apr 2022 11:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230344AbiDYJbx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Apr 2022 05:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51172 "EHLO
+        id S235434AbiDYJsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Apr 2022 05:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241107AbiDYJbY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 05:31:24 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D9C24BD2;
-        Mon, 25 Apr 2022 02:28:19 -0700 (PDT)
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23P5rMlb025856;
-        Mon, 25 Apr 2022 11:28:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=xzfdAwXhD1J621ynPxY+pBpZRTwVQStxyQW8pm3u5eM=;
- b=PepbvLH3wmLSWRGwLGslXk/MZ0p4yUv0dUI4zB2YCjev5UScVwahoCeOYffB+bDoycs/
- 9mkfo7DVLPtJ8j8o84Uwv9W5A+L4bnyUOI0yfQMtYM9PFyjlEPqE8uXSMJltB+Q6kPo+
- 8c3qOyABQnmZl/zdPOUpcteayd+R8NdZRJMMarz3w8RQM0rwb1QcVDXlNwVSRx+pDwAh
- LQt2tvbGrcGrWBEjBoRoZWS/j+oJUpXTZg27RvuFWhSwVlFx4k5W+BLc22pAHVUQyx1c
- T9kg4aiivBmEAWwJz2CEpCzMhQs6jG7BNFESWz0ha4VKwhUWzFsgrI+P0ZGJW4h2Us51 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3fm8t1fwq6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 Apr 2022 11:28:05 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 09B4D100038;
-        Mon, 25 Apr 2022 11:28:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 351682171C1;
-        Mon, 25 Apr 2022 11:28:04 +0200 (CEST)
-Received: from [10.48.1.150] (10.75.127.49) by SFHDAG2NODE2.st.com
- (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1497.26; Mon, 25 Apr
- 2022 11:28:03 +0200
-Message-ID: <442677d2-7e9f-14f0-4b5a-1f98a8f40c8a@foss.st.com>
-Date:   Mon, 25 Apr 2022 11:27:45 +0200
+        with ESMTP id S236239AbiDYJra (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 05:47:30 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4743C344ED
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Apr 2022 02:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650879866; x=1682415866;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hlqRJJ3OnukM44+KMZjid5VpkEE3prDEyO2a5ZnwN78=;
+  b=bazzQuiVZQyclGY1tPemua4kUALzUVwMOrjvb+htKwheebjCk1edk9nH
+   XYLBooyTUa5Syg+S1K9wb9XkaS85Tszuk0fVcbvtbMkpC6oSvAXvMGQo9
+   6nlyZvU9kEDcwJFD/cMR4jMG0xaRU7Kpy5nv3hl5ihTYNiwlWt5WyDoTf
+   VM3PMECmXCvN81nux8aKa+2wTGYSTUJBYQ3Gv6fxsgzBgmMtvbV0/QA+w
+   +oIYT3ULJVWnhahxTzrchblAGBebLiAOASh/UmvOqpwDdlrHTo7LTmsHr
+   5MuxppTI4DbD7SKhWI6tW1dYAMUgIH+AJujTHF/c70V+DLrrTAIhF27f5
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10327"; a="351646621"
+X-IronPort-AV: E=Sophos;i="5.90,287,1643702400"; 
+   d="scan'208";a="351646621"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2022 02:44:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,287,1643702400"; 
+   d="scan'208";a="616443386"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Apr 2022 02:44:13 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nivGO-0002Ih-Hl;
+        Mon, 25 Apr 2022 09:44:12 +0000
+Date:   Mon, 25 Apr 2022 17:43:20 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ 0c9843a74a85224a89daa81fa66891dae2f930e1
+Message-ID: <62666d38.t+cKvFIQ+6eFI+ZL%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] pinctrl: stm32: improve bank clocks management
-Content-Language: en-US
-To:     Marek Vasut <marex@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20220422143608.226580-1-fabien.dessenne@foss.st.com>
- <c48500cd-50be-1d70-2f2c-02c2dcede1eb@denx.de>
-From:   Fabien DESSENNE <fabien.dessenne@foss.st.com>
-In-Reply-To: <c48500cd-50be-1d70-2f2c-02c2dcede1eb@denx.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-25_05,2022-04-22_01,2022-02-23_01
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marek
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 0c9843a74a85224a89daa81fa66891dae2f930e1  pinctrl: pistachio: fix use of irq_of_parse_and_map()
 
+elapsed time: 1102m
 
-On 22/04/2022 18:26, Marek Vasut wrote:
-> On 4/22/22 16:36, Fabien Dessenne wrote:
->> Instead of enabling/disabling the clock at each IO configuration update,
->> just keep the clock enabled from the probe.
->> This makes things simpler and more efficient (e.g. the time required to
->> toggle an output IO is drastically decreased) without significantly
->> increasing the power consumption.
-> 
-> [...]
-> 
->>   static struct irq_domain *stm32_pctrl_get_irq_domain(struct 
->> device_node *np)
->> @@ -1575,6 +1537,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
->>               ret = stm32_gpiolib_register_bank(pctl, child);
->>               if (ret) {
->>                   of_node_put(child);
->> +
->> +                for (i = 0; i < pctl->nbanks; i++)
->> +                    clk_disable_unprepare(pctl->banks[i].clk);
->> +
-> 
-> There are clk_bulk_*() functions, maybe you can use those to get rid of 
-> these loops ?
+configs tested: 197
+configs skipped: 4
 
-This sounds goods, but checking more in details I see that moving to the 
-'bulk' implementation would require to move the clk information from the 
-"struct stm32_gpio_bank *banks" member to its parent "struct stm32_pinctrl".
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This would make the clk device information stored in a different 
-structure from the other device-related information (base address, reset 
-control, ...). It's better to keep all those information together in the 
-same struct.
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+i386                 randconfig-c001-20220425
+sh                          r7785rp_defconfig
+powerpc                     tqm8548_defconfig
+powerpc                      pasemi_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                   sh7724_generic_defconfig
+sh                           se7751_defconfig
+arc                         haps_hs_defconfig
+mips                  decstation_64_defconfig
+powerpc                      tqm8xx_defconfig
+arm                      jornada720_defconfig
+nios2                            allyesconfig
+sh                            migor_defconfig
+arc                      axs103_smp_defconfig
+arm                     eseries_pxa_defconfig
+sh                           sh2007_defconfig
+um                             i386_defconfig
+arc                     nsimosci_hs_defconfig
+powerpc                    amigaone_defconfig
+sh                        apsh4ad0a_defconfig
+m68k                        mvme147_defconfig
+arm                          exynos_defconfig
+x86_64                           alldefconfig
+arm                           u8500_defconfig
+powerpc                  iss476-smp_defconfig
+xtensa                          iss_defconfig
+arm                       omap2plus_defconfig
+ia64                             alldefconfig
+powerpc                      arches_defconfig
+powerpc                     rainier_defconfig
+arm                            lart_defconfig
+arm                            zeus_defconfig
+arm                       aspeed_g5_defconfig
+sh                           se7780_defconfig
+powerpc                     pq2fads_defconfig
+h8300                            alldefconfig
+arm                        cerfcube_defconfig
+m68k                          multi_defconfig
+powerpc                 mpc85xx_cds_defconfig
+sh                          sdk7780_defconfig
+sh                         apsh4a3a_defconfig
+sh                           se7206_defconfig
+m68k                         amcore_defconfig
+arm                           h5000_defconfig
+mips                      loongson3_defconfig
+arc                          axs101_defconfig
+m68k                        m5407c3_defconfig
+riscv                               defconfig
+arm                        realview_defconfig
+mips                       capcella_defconfig
+sparc                       sparc32_defconfig
+mips                           gcw0_defconfig
+xtensa                    xip_kc705_defconfig
+mips                    maltaup_xpa_defconfig
+sh                             sh03_defconfig
+m68k                       m5249evb_defconfig
+sh                          polaris_defconfig
+mips                          rb532_defconfig
+openrisc                    or1ksim_defconfig
+arm                             pxa_defconfig
+mips                         bigsur_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                           se7343_defconfig
+mips                 decstation_r4k_defconfig
+arm                  randconfig-c002-20220424
+x86_64                        randconfig-c001
+x86_64               randconfig-c001-20220425
+arm                  randconfig-c002-20220425
+ia64                             allmodconfig
+ia64                             allyesconfig
+ia64                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64               randconfig-a015-20220425
+x86_64               randconfig-a014-20220425
+x86_64               randconfig-a011-20220425
+x86_64               randconfig-a013-20220425
+x86_64               randconfig-a012-20220425
+x86_64               randconfig-a016-20220425
+i386                 randconfig-a014-20220425
+i386                 randconfig-a012-20220425
+i386                 randconfig-a011-20220425
+i386                 randconfig-a015-20220425
+i386                 randconfig-a013-20220425
+i386                 randconfig-a016-20220425
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+arc                  randconfig-r043-20220425
+s390                 randconfig-r044-20220425
+riscv                randconfig-r042-20220425
+arc                  randconfig-r043-20220424
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
 
-As another drawback we would loose access to 'clk' from any function 
-that have 'bank' (or 'struct gpio_chip *chip') as input parameter (e.g. 
-stm32_gpio_get() called from gpiolib).
+clang tested configs:
+riscv                randconfig-c006-20220424
+mips                 randconfig-c004-20220424
+x86_64                        randconfig-c007
+i386                          randconfig-c001
+arm                  randconfig-c002-20220424
+powerpc              randconfig-c003-20220424
+riscv                randconfig-c006-20220425
+mips                 randconfig-c004-20220425
+x86_64               randconfig-c007-20220425
+arm                  randconfig-c002-20220425
+i386                 randconfig-c001-20220425
+powerpc              randconfig-c003-20220425
+powerpc                  mpc885_ads_defconfig
+powerpc                     ksi8560_defconfig
+mips                      maltaaprp_defconfig
+arm                         hackkit_defconfig
+mips                       rbtx49xx_defconfig
+arm                              alldefconfig
+arm                        spear3xx_defconfig
+x86_64                           allyesconfig
+powerpc               mpc834x_itxgp_defconfig
+hexagon                          alldefconfig
+mips                          ath25_defconfig
+powerpc                 xes_mpc85xx_defconfig
+arm                       aspeed_g4_defconfig
+arm                       mainstone_defconfig
+arm                          moxart_defconfig
+powerpc                 mpc8315_rdb_defconfig
+arm                          collie_defconfig
+i386                 randconfig-a006-20220425
+i386                 randconfig-a002-20220425
+i386                 randconfig-a005-20220425
+i386                 randconfig-a003-20220425
+i386                 randconfig-a001-20220425
+i386                 randconfig-a004-20220425
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64               randconfig-a002-20220425
+x86_64               randconfig-a004-20220425
+x86_64               randconfig-a003-20220425
+x86_64               randconfig-a001-20220425
+x86_64               randconfig-a005-20220425
+x86_64               randconfig-a006-20220425
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                          randconfig-a011
+hexagon              randconfig-r041-20220424
+hexagon              randconfig-r045-20220424
+riscv                randconfig-r042-20220424
+s390                 randconfig-r044-20220424
 
-So I really prefer to keep the current implementation.
-
-BR
-Fabien
-
-> 
-> The rest looks good to me.
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
