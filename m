@@ -2,144 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D37750E7DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Apr 2022 20:14:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71F6050E870
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Apr 2022 20:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239452AbiDYSRR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Apr 2022 14:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
+        id S244491AbiDYSog (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Apr 2022 14:44:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234471AbiDYSRQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 14:17:16 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884EC111C9D;
-        Mon, 25 Apr 2022 11:14:11 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 6AD461F434BE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1650910449;
-        bh=+vu9o/CZqfUNibXQvmDVF1hJUAxnBrwgimcD4Mba0jg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZP6K7KzwXEVNKX2HyZ4QUjuyvzf5FJtDVgmPzM59lSh9nWsbRBHoQRFzmZhJomtvL
-         3vzoqEUiOJN2OneraErip2kP0JuEJOAumCMXzhtSeJqgF+OLAWrnnJ3H5MD7otLS05
-         gwAxQx+7LLLz311DagC1dLTqdllw1/mdv7PN96fkMaNJt8MyN9V8VESrXH61uMCVz7
-         Ag0Cm514lQ8yY2GxR7+2+/YDQL3TvoDZ3unHc1AyWnXJ6D/Ny0KO6KB5BJInKtQWjZ
-         DP/15us/pwd7bVI0bs+P1SROGYTG8hbrXLjibw5xymsy5HB5K1/ozkXIgPKdMdfSzy
-         Hi0PDIMXyQ3ag==
-Received: by mercury (Postfix, from userid 1000)
-        id 5A3741060431; Mon, 25 Apr 2022 20:14:07 +0200 (CEST)
-Date:   Mon, 25 Apr 2022 20:14:07 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
-        Kever Yang <kever.yang@rock-chips.com>, kernel@collabora.com,
-        Yifeng Zhao <yifeng.zhao@rock-chips.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: Re: [PATCHv1 18/19] arm64: dts: rockchip: Add base DT for rk3588 SoC
-Message-ID: <20220425181407.lknemxqooz7yidcz@mercury.elektranox.org>
-References: <20220422170920.401914-1-sebastian.reichel@collabora.com>
- <20220422170920.401914-19-sebastian.reichel@collabora.com>
- <36551341-60f5-8b61-59d1-176ece8204d6@arm.com>
+        with ESMTP id S244485AbiDYSod (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 14:44:33 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F772316C
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Apr 2022 11:41:26 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id y3so10992733ejo.12
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Apr 2022 11:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mya3nkIwUh+TIu4djYFcQK6BbUW1zaOYt4akasWqvFg=;
+        b=B9KKXsLTpzuVV8sBlKnNNvWObeafflqmJvR/smeZgdhpHe7uFZ496oEr1jZfzXMymA
+         pVVpZlQzDspkhMyYyU2BEn3cLLzy+4K1AJIP8KNuHHK2F4+OXzHT0Lx4MAnyADwSC2fz
+         C3xXlkkJaCxNbA2z0qwrIsYi0VRxXQVfQNb4GKBP2wWkiow6GzhhujMirqo82yf2GMd/
+         sS9eWHmKe84vW/wgDaguhMBHbRRg6rKcnOyzyk/LMSi+TOaBqwwqq8KAdCli/3p2a2Tp
+         LEvpc51OZYXOjxQlQEjLMcq9Lpjbv+8TlCYiyAzWWCKDPD+dZI8GzuCtdxJwpd8joV6j
+         Wcaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mya3nkIwUh+TIu4djYFcQK6BbUW1zaOYt4akasWqvFg=;
+        b=649tt29L9F6E5PtWOVK8dsOGB05I8fEoKLhauTyHcTQ0DwcW/0QddN8uA7o19wsMMp
+         kf0k3OHeqcHRdestOP7F8oLjCMmL8gN4GLfyaD1O4YVCOyVg2lsz3vn7AE1UUmTEPRx5
+         fvMBUtvNLfQEtP+CWKBZUZhsy2oKuhGuf17iU3I7ThtstULxdK6tbcBBP0Tr/7gtukKV
+         HkRvXaoAXTMcf141x6B+H95KD62BsiSBNRJx/rGzHj3etCKF1FDZ4b9893neYodb6kAq
+         EUET/zkC/EZbaf2FYUHiysXNn4Aj46MGHt3wmhBEQ0MACfhAHL7cCZ1VqBXEfRwYHy2H
+         2+tw==
+X-Gm-Message-State: AOAM532k04TRlSGl4lzzv4WISsJhMWG55p4t36TFJrgpcyKudP9zVq4o
+        K9OpRQmRsAj3OiyDmBrX40p4YD2tWzlVuSkl12VJCQ==
+X-Google-Smtp-Source: ABdhPJxxi69r7JPs9NcrUSZVx/mya0DVWjV7GHPAed3DI2n08j+lZIdXYcnh6dMilSxNEph0K4PXbEgKFunxQP6p+cs=
+X-Received: by 2002:a17:907:6d94:b0:6e8:c309:9923 with SMTP id
+ sb20-20020a1709076d9400b006e8c3099923mr17335243ejc.101.1650912084719; Mon, 25
+ Apr 2022 11:41:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mh7nzemffealimob"
-Content-Disposition: inline
-In-Reply-To: <36551341-60f5-8b61-59d1-176ece8204d6@arm.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.6
+References: <20220422131452.20757-1-mario.limonciello@amd.com>
+In-Reply-To: <20220422131452.20757-1-mario.limonciello@amd.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 25 Apr 2022 20:41:14 +0200
+Message-ID: <CAMRc=Mf7FVN4QeAEdap_JzKmTy6i0A=BbcCZtCCQhzocg4PDfg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] Fix regression in 5.18 for GPIO
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
+        Gong Richard <Richard.Gong@amd.com>,
+        regressions@lists.linux.dev,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        stable <stable@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Apr 22, 2022 at 3:15 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> Linus,
+>
+> This patch is being sent directly to you because there has been
+> a regression in 5.18 that I identified and sent a fix up that has been
+> reviewed/tested/acked for nearly a week but the current subsystem
+> maintainer (Bartosz) hasn't picked it up to send to you.
+>
 
---mh7nzemffealimob
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Mario!
 
-Hi,
+I don't have any previous submission in my inbox. Are you sure to have
+used my current address (brgl@bgdev.pl)?
 
-Thanks for having a look.
+Bart
 
-On Fri, Apr 22, 2022 at 07:16:13PM +0100, Robin Murphy wrote:
-> On 2022-04-22 18:09, Sebastian Reichel wrote:
-> > ...
-> > +		cpu_l0: cpu@0 {
-> > +			device_type =3D "cpu";
-> > +			compatible =3D "arm,cortex-a55";
-> > +			reg =3D <0x0>;
-> > +			enable-method =3D "psci";
-> > +			capacity-dmips-mhz =3D <530>;
-> > +			clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
-> > +			i-cache-size =3D <32768>;
-> > +			i-cache-line-size =3D <64>;
-> > +			i-cache-sets =3D <128>;
-> > +			d-cache-size =3D <32768>;
-> > +			d-cache-line-size =3D <64>;
-> > +			d-cache-sets =3D <128>;
-> > +			next-level-cache =3D <&l2_cache_l0>;
-> > +			#cooling-cells =3D <2>;
-> > +			dynamic-power-coefficient =3D <228>;
-> > +		};
->=20
-> Is there any particular reason for not including more of the CPUs?
-
-Yes, see below.
-
-> > +		its: interrupt-controller@fe640000 {
-> > +			compatible =3D "arm,gic-v3-its";
-> > +			msi-controller;
-> > +			#msi-cells =3D <1>;
-> > +			reg =3D <0x0 0xfe640000 0x0 0x20000>;
-> > +		};
-> > +	};
->=20
-> Does the ITS (and other bits related to GIC memory accesses) actually wor=
-k,
-> or will we have more of the same issues as RK356x?
-
-The GIC in RK3588 is has the same shareability limitation as the RK356x,
-but fixed the 32bit limitation. That's why I just added the boot cpu core
-for now; adding any other cpu core breaks the boot without the downstream
-shareability patch and I'm still investigating.
-
--- Sebastian
-
---mh7nzemffealimob
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmJm5OcACgkQ2O7X88g7
-+pomsA//UD8f1YBkOw4gRGQyVzSSA2PqMAMOONSb31R90fNo5c78tg87EkNoxwvg
-2iPkn4dnvOSE5zpTt4U579b1wyrlxU3msJBN+pwcyWTAQW8XNLt/Le/9zU3Laafa
-4KyT4xJd9rrU4GMEvW+6RrmWJE3tcUYEw59a2BN40LYoQIayi864EwGIgD3z1XG7
-MAqdI1on6d4XFD6mGu7uJSvfodEnCqjRIbv1tk/+2UCw9IhyWrhveJsagLEBn8GY
-6SRfLMkMU9Ja6oqnDHmoj6WfrTaihFhbx3xS0gm9gErdrfaqxbcG6jsgFTT6nDQ1
-xRSenEAPlxMK7EOiejVfE5Fs5Se8Tse/HLseVGSvkJv01wVj1yMO+ex2XUk5cGjW
-UecLNiZfWL039S0F2Jaiqw9FrCmGbgpWB7yvg9mczuO2ewG3NORzh//fhSokCjXs
-Yl247K8Q9jtsqYJRFBTh0A0mO8EG3PY9lYjzc96FeIWoza5beKSW/t8KU1LXWwb+
-fSroO0KBa2oeajwhLvYi/cmZnKaPWr05H18Rsgudq+DmKHi82yWX6YslxXk2JVuN
-F2ihbx0Yst3xUD4UIgiD06H2xPo1ufk3ZqdsENgIiVpn284n8VV7lYZyToczMJF2
-OzPacQ4N7iJy+KxEcH26FyUhylu29QIf2L8kwKW/xnzYKmidA9A=
-=vp9R
------END PGP SIGNATURE-----
-
---mh7nzemffealimob--
+> It's a severe problem; anyone who hits it:
+> 1) Power button doesn't work anymore
+> 2) Can't resume their laptop from S3 or s2idle
+>
+> Because the original patch was cc stable@, it landed in stable releases
+> and has been breaking people left and right as distros track the stable
+> channels.  The patch is well tested. Would you please consider to pick
+> this up directly to fix that regression?
+>
+> Thanks,
+>
+> Mario Limonciello (1):
+>   gpio: Request interrupts after IRQ is initialized
+>
+>  drivers/gpio/gpiolib.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> --
+> 2.34.1
+>
