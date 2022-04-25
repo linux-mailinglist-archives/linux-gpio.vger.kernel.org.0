@@ -2,177 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CDC950E89E
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Apr 2022 20:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BB0450E8C7
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Apr 2022 20:52:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244556AbiDYStl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Apr 2022 14:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46146 "EHLO
+        id S244618AbiDYSzy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Apr 2022 14:55:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237946AbiDYStl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 14:49:41 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FAC6EB01
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Apr 2022 11:46:35 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id w16so10128447ejb.13
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Apr 2022 11:46:35 -0700 (PDT)
+        with ESMTP id S243683AbiDYSzx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 14:55:53 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64CABB7C52
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Apr 2022 11:52:48 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id d6so14480658ede.8
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Apr 2022 11:52:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zNf6LLD8HrhjGUR4iM02IxWSyL3elzsMKZrfz7gR6SU=;
-        b=dgSGukzZsx9sWgYuXCFyBlckve/tmCUxWQp3gHngo3DlrgGFcC1Y9g9gkwe+8zlJcT
-         ZKBCbKkwRxc/odoMgXwdAcrpVixQcUAt/00qUqfxCYeo2PGlk4oOgpfXfcpQ4gy8eNka
-         zEaYOxLuenTdNcLwjjxiklHPwcFk9N5PAUayZL7blEr2eEexmZyGPEuMxv6r7LjoxXPi
-         9sDmG9GbuDXX8sV7mAJ5eD4I413aL9kNVi0h0D9j2VNdbzeD98bgj+hPprlUT40LDsLb
-         XBNz7nDbKgFKL51dHTDnu3yKXkC7d2rY9pIdOvP/YgG9aDs2pDd3GbhTSQCxv0TlJ/ft
-         nqnA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rK5Am2eyJZrP+TjI3mcdQmDmAbLxDAY93LxF4pkcc04=;
+        b=wyIvNVCmjicmGVHNvEJ4sioRquKVXwPojktRypTwVjhsr5BzpZOC5ZTWMOte7j8NPt
+         WqSCBs7AJuVeB0dA9oW3R5fECmYMDFYnqUdF5P7jm9OQBdMcgw5REROXS5cXf5qsUTB9
+         dBRLLYur+w8P33MBKbLh/TDtqyvxYt1ZXYtf1vLaz5XUZIGNtjphodcWsrC8vk3jsNaC
+         BFRCFQDme4/e/i4Lvef0eEkVVROZ9pGSC6y+qly37NWE1fV6ZGyRsSmcw1RR5z9X8ScW
+         MAQi1kZc4VhVWbfmsgp8reqAy3FhenP/ZiAh8Ef+2DLlib6P7vj1t9xCmNJ9tg39sG5c
+         WwWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zNf6LLD8HrhjGUR4iM02IxWSyL3elzsMKZrfz7gR6SU=;
-        b=QgdmVaVSzfSwfTjdclUQd55h5HYbo8uJ86noP0N5J/BcFo901uN1HD92sQWYqvrPTY
-         /858dKHq/Ix1b2A3YGU4zL5HtHRlUvWz+DkPvjeCqso12JJLBwX+ipDz0YAKWWzk0IC2
-         zo69tUPvRn1leF16tq7NZvODwAz8igTd8uhzuFXYOHttYauiiGj14xRbxQCw1eeUEHlB
-         AWUSga+l1G8PGgNCtajTEtwZGbsna2ZRLwM/EZEqRshquQlp2CXpkQi7meeGPNFuwR1C
-         EkmsRutniz8jxj5Bx2OY/dtkQ2nBq7UrPz+6sko50nAb9k9bKk/CaK2PF2jMpKPRj4Qw
-         nxZA==
-X-Gm-Message-State: AOAM530YNJX7OaFav/cLiPBDQUMfosSBmIe5TqegcCXnt7gPmw/tOuiK
-        jGOQvoAv9KYD/K3qsTTXgW0erw==
-X-Google-Smtp-Source: ABdhPJzD2rFARJCrwO/EzVDwgRmycF8YVobvFL+OL+UL+4dKpJ0NRJbXyqDD2BJbFIFg+GuzisxD+A==
-X-Received: by 2002:a17:906:38d9:b0:6e8:3f85:4da3 with SMTP id r25-20020a17090638d900b006e83f854da3mr18459489ejd.196.1650912393799;
-        Mon, 25 Apr 2022 11:46:33 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id v7-20020a50d087000000b00424269f1c75sm5181080edd.96.2022.04.25.11.46.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Apr 2022 11:46:33 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [RESENT PATCH v3] dt-bindings: gpio: add common consumer GPIO lines
-Date:   Mon, 25 Apr 2022 20:46:31 +0200
-Message-Id: <20220425184631.684906-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rK5Am2eyJZrP+TjI3mcdQmDmAbLxDAY93LxF4pkcc04=;
+        b=YDfqlMN108WWjz3A1DcR3OJjWM4DFHrNIO1r39i5pxskXHSRg99IV3XhQArS+GmWsk
+         no2kOTSd9FRi76svLu5x5pqsI7oEzYNQjXILtF+CA2nayElwh+MznLRz2PBwj1saEBrC
+         FA49Sg1SIpyJp5FD9SQ4hhM5XPGPRaf3NGDXHSvO2dIToasoSdu0+Lzap07eNs/XsEEx
+         oOTxRXaUG7s5tpAQc5Ueg/iR12Hz8nLGwBvxDRIfH6FilCbO1JXP4fTnsacz0NKlhlN1
+         wk/pUNb0K/f0sU8wP4u6Y2bCzMGzv7mzik2hrdLkWYh+I7S4bPWGAURyH0WXJAoy/9pl
+         q9ZQ==
+X-Gm-Message-State: AOAM531Cpe/m9n1E93raIuciTKhEpZtLTBdkh4Z4CKHCqXTcD6p0r56L
+        Ksvvfw1VET+/ZTiO9pUllOmaHvd7k9Gu3fJyFbOoTQ==
+X-Google-Smtp-Source: ABdhPJxc2e2Bg6/ErXa64ThnSjhabj49f/QSVMoWjqtgIyxc9MS1i/xehN1lPRQK2TXMBTtowv/7qeghfDfrfQtJ30g=
+X-Received: by 2002:a05:6402:2932:b0:425:d7b3:e0d1 with SMTP id
+ ee50-20020a056402293200b00425d7b3e0d1mr11534459edb.141.1650912766933; Mon, 25
+ Apr 2022 11:52:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220414190242.22178-1-andriy.shevchenko@linux.intel.com> <20220414190242.22178-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220414190242.22178-2-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 25 Apr 2022 20:52:36 +0200
+Message-ID: <CAMRc=MfE0othcfwETf13_K3sOLKmUGwCnjapzVjLMk1cD+ihVQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] gpiolib: Introduce a helper to get first GPIO
+ controller node
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Typical GPIO lines like enable, powerdown, reset or wakeup are not
-documented as common, which leads to new variations of these (e.g.
-pwdn-gpios).  Add a common schema which serves also as a documentation
-for preferred naming.
+On Thu, Apr 14, 2022 at 9:02 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Introduce a helper to get first GPIO controller node which drivers
+> may want to use.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/gpio/driver.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index 12de0b22b4ef..83e2d72e51bb 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -766,4 +766,14 @@ static inline unsigned int gpiochip_node_count(struct device *dev)
+>         return count;
+>  }
+>
+> +static inline struct fwnode_handle *gpiochip_node_get_first(struct device *dev)
+> +{
+> +       struct fwnode_handle *fwnode;
+> +
+> +       for_each_gpiochip_node(dev, fwnode)
+> +               return fwnode;
+> +
+> +       return NULL;
+> +}
+> +
+>  #endif /* __LINUX_GPIO_DRIVER_H */
+> --
+> 2.35.1
+>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Any chance you could name it get_first_gpiochip_node()? It's static so
+we don't have to worry about the prefix and it would make the purpose
+more clear.
 
----
-
-Reason for resend:
-==================
-Previously patch was on hold because richtek,rt4801 bindings were using
-two GPIOs in "enable-gpios", so this schema would complain.  This was
-resolved here:
-https://lore.kernel.org/all/165089886500.211842.728549769223794277.b4-ty@kernel.org/
-
-Changes since v2:
-==================
-1. Correct my email address.
-2. Add Rob's review.
-
-Changes since v1:
-==================
-1. Select-true, add maxItems and description for each entry (Rob).
-2. Mention ACTIVE_LOW in bindings description (Linus).
-3. Add allOf for pwrseq reset-gpios case.
----
- .../bindings/gpio/gpio-consumer-common.yaml   | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-new file mode 100644
-index 000000000000..40d0be31e200
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-consumer-common.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common GPIO lines
-+
-+maintainers:
-+  - Bartosz Golaszewski <brgl@bgdev.pl>
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description:
-+  Pay attention to using proper GPIO flag (e.g. GPIO_ACTIVE_LOW) for the GPIOs
-+  using inverted signal (e.g. RESETN).
-+
-+select: true
-+
-+properties:
-+  enable-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO connected to the enable control pin.
-+
-+  reset-gpios:
-+    description:
-+      GPIO (or GPIOs for power sequence) connected to the device reset pin
-+      (e.g. RESET or RESETN).
-+
-+  powerdown-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO connected to the power down pin (hardware power down or power cut,
-+      e.g. PD or PWDN).
-+
-+  pwdn-gpios:
-+    maxItems: 1
-+    description: Use powerdown-gpios
-+    deprecated: true
-+
-+  wakeup-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO connected to the pin waking up the device from suspend or other
-+      power-saving modes.
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mmc-pwrseq-simple
-+    then:
-+      properties:
-+        reset-gpios:
-+          minItems: 1
-+          maxItems: 32
-+    else:
-+      properties:
-+        reset-gpios:
-+          maxItems: 1
-+
-+additionalProperties: true
--- 
-2.32.0
-
+Bart
