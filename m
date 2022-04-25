@@ -2,287 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FDDF50EBDB
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 00:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3976750EBD7
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 00:22:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237993AbiDYWZM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Apr 2022 18:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49506 "EHLO
+        id S237953AbiDYWZL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Apr 2022 18:25:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343638AbiDYV5r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 17:57:47 -0400
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9448A4738E;
-        Mon, 25 Apr 2022 14:54:42 -0700 (PDT)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-e2fa360f6dso17553895fac.2;
-        Mon, 25 Apr 2022 14:54:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A7tE+6zDw7UBglMyaIog0/W20yMhf3kXY1mK8DU9uDc=;
-        b=fM86YvYouOKAIni8+bkcJLxro5/BnN4cSm/N0VI8UBgch3I3JTZenM63BTkXwtBMbf
-         zrbs+Y/qPCrZlo1X22wiLUlCwbhdeQzAnNZ4MSLwiE7hspMX3SV/EQRREqqzjo31PREp
-         L4vqjjEyTrAV0KMKsvzKVQYLY8uJEMGMKYkoGbukTZj99mkLnfgtxRtBmSuei4suEBiR
-         EWRl5TFaSieFgJjzrF1lWJ80yLyKin6Ejo3FU8kkdo/XbRpmh2ZjUL5FBr+CAL+0ScQa
-         U6cBiFz+LEqBpF83uMYnfFoTNM2tao5r7DajyRkLf4Mmn4D+6ThZFJyKadUhNRS5xNiU
-         sZVQ==
-X-Gm-Message-State: AOAM5327KvwUYrdBod2xQClaNs697Q+Dg78ItI91y7p/80b95f8Y7MqJ
-        zENd7Le+P9XWrFxa2aZ2hFd91kqOaA==
-X-Google-Smtp-Source: ABdhPJxaQxuDPuVlJ8cXUfiS3N7M3QjLUu7/aUq3l5G0iHlHGa5j3ys7oioMHqUuF7DaFWc+AU+kiA==
-X-Received: by 2002:a05:6870:b50a:b0:e9:2534:1c0a with SMTP id v10-20020a056870b50a00b000e925341c0amr4125963oap.48.1650923681742;
-        Mon, 25 Apr 2022 14:54:41 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id v5-20020a056870954500b000e686d13877sm156130oal.17.2022.04.25.14.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Apr 2022 14:54:41 -0700 (PDT)
-Received: (nullmailer pid 360051 invoked by uid 1000);
-        Mon, 25 Apr 2022 21:54:40 -0000
-Date:   Mon, 25 Apr 2022 16:54:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        smangipudi@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        warthog618@gmail.com, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 04/10] dt-bindings: Add HTE bindings
-Message-ID: <YmcYoPg1ucPUpgmM@robh.at.kernel.org>
-References: <20220422205221.952-1-dipenp@nvidia.com>
- <20220422205221.952-5-dipenp@nvidia.com>
+        with ESMTP id S1343681AbiDYWKZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Apr 2022 18:10:25 -0400
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8181D33F;
+        Mon, 25 Apr 2022 15:07:16 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id 6C6E6806B7;
+        Tue, 26 Apr 2022 00:07:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1650924434;
+        bh=3xdUpz0rxOpaFXzw5F0nSyIQaIXNBm7+paVzz99k0qk=;
+        h=Date:Subject:To:References:From:In-Reply-To:From;
+        b=QH0u//pMrhzlghzFLFFQUSLoTUPjS9kwA5AOm14Y6mj84GUj+/pSvTa6HAUNWMH3i
+         E6OyUUUl0+Jx7TdyYh9IKkBf9OUbzYQhewlQ9zikp5CZqQq+JivK4CkZfk4F/THr9b
+         jgLdExXdNzLJvAQM4tGKstaAklhCJdUtZHn2IAkyAjo4qvnM0rFYVCyqkwk0V6qw21
+         dQc6ITPuRK/dWI+cT2jIVWVQNXV8UY6DpNxKartwFKkJnxVLopj/Zl1OvlKcQfhKId
+         hc2pW/tTqN7EmA2FL8zIdUS/2s3+2hsEk6W/HtsQSgumfP2drMM/INNDvp6UiMgNkS
+         aqMqT/0qvR4Hw==
+Message-ID: <580a2c04-67ca-17f3-54ec-5b07ca46c254@denx.de>
+Date:   Tue, 26 Apr 2022 00:07:13 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220422205221.952-5-dipenp@nvidia.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] pinctrl: stm32: improve bank clocks management
+Content-Language: en-US
+To:     Fabien DESSENNE <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20220422143608.226580-1-fabien.dessenne@foss.st.com>
+ <c48500cd-50be-1d70-2f2c-02c2dcede1eb@denx.de>
+ <442677d2-7e9f-14f0-4b5a-1f98a8f40c8a@foss.st.com>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <442677d2-7e9f-14f0-4b5a-1f98a8f40c8a@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.5 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 01:52:15PM -0700, Dipen Patel wrote:
-> Introduces HTE devicetree binding details for the HTE subsystem. It
-> includes examples for the consumers, binding details for the providers
-> and specific binding details for the Tegra194 based HTE providers.
+On 4/25/22 11:27, Fabien DESSENNE wrote:
+> Hi Marek
 > 
-> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes in v2:
-> - Replace hte with hardware-timestamp for property names
-> - Renamed file
-> - Removed example from the common dt binding file.
 > 
-> Changes in v3:
-> - Addressed grammatical errors.
-> - Removed double plural from the respective properties.
-> - Added dual license.
-> - Prefixed "nvidia" in nvidia specific properties.
+> On 22/04/2022 18:26, Marek Vasut wrote:
+>> On 4/22/22 16:36, Fabien Dessenne wrote:
+>>> Instead of enabling/disabling the clock at each IO configuration update,
+>>> just keep the clock enabled from the probe.
+>>> This makes things simpler and more efficient (e.g. the time required to
+>>> toggle an output IO is drastically decreased) without significantly
+>>> increasing the power consumption.
+>>
+>> [...]
+>>
+>>>   static struct irq_domain *stm32_pctrl_get_irq_domain(struct 
+>>> device_node *np)
+>>> @@ -1575,6 +1537,10 @@ int stm32_pctl_probe(struct platform_device 
+>>> *pdev)
+>>>               ret = stm32_gpiolib_register_bank(pctl, child);
+>>>               if (ret) {
+>>>                   of_node_put(child);
+>>> +
+>>> +                for (i = 0; i < pctl->nbanks; i++)
+>>> +                    clk_disable_unprepare(pctl->banks[i].clk);
+>>> +
+>>
+>> There are clk_bulk_*() functions, maybe you can use those to get rid 
+>> of these loops ?
 > 
-> Changes in v4:
-> - Corrected make dt_binding_check error.
+> This sounds goods, but checking more in details I see that moving to the 
+> 'bulk' implementation would require to move the clk information from the 
+> "struct stm32_gpio_bank *banks" member to its parent "struct 
+> stm32_pinctrl".
 > 
-> Changes in v5:
-> - Addressed review comments.
+> This would make the clk device information stored in a different 
+> structure from the other device-related information (base address, reset 
+> control, ...). It's better to keep all those information together in the 
+> same struct.
 > 
-> Changes in v6:
-> - Removed hardware prefix from the property as per review comments.
+> As another drawback we would loose access to 'clk' from any function 
+> that have 'bank' (or 'struct gpio_chip *chip') as input parameter (e.g. 
+> stm32_gpio_get() called from gpiolib).
 > 
->  .../hte/hardware-timestamps-common.yaml       | 29 ++++++
->  .../devicetree/bindings/hte/hte-consumer.yaml | 39 ++++++++
->  .../bindings/hte/nvidia,tegra194-hte.yaml     | 88 +++++++++++++++++++
->  3 files changed, 156 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
->  create mode 100644 Documentation/devicetree/bindings/hte/hte-consumer.yaml
->  create mode 100644 Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+> So I really prefer to keep the current implementation.
 
-'hte' is not obvious what it is, so 'timestamp' for the directory name.
+All right, I agree.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
-> new file mode 100644
-> index 000000000000..3e26de605f08
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
-> @@ -0,0 +1,29 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hte/hardware-timestamps-common.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Hardware timestamp providers
-> +
-> +maintainers:
-> +  - Dipen Patel <dipenp@nvidia.com>
-> +
-> +description:
-> +  Some devices/SoCs have hardware time stamping engines which can use hardware
-> +  means to timestamp entity in realtime. The entity could be anything from
-> +  GPIOs, IRQs, Bus and so on. The hardware timestamp engine (HTE) present
+>> The rest looks good to me.
 
-Define HTE at the 1st use, not the 2nd.
-
-> +  itself as a provider with the bindings described in this document.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^timestamp(@.*|-[0-9a-f])?$"
-> +
-> +  "#timestamp-cells":
-> +    description:
-> +      Number of cells in a HTE specifier.
-> +
-> +required:
-> +  - "#timestamp-cells"
-> +
-> +additionalProperties: true
-> diff --git a/Documentation/devicetree/bindings/hte/hte-consumer.yaml b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
-> new file mode 100644
-> index 000000000000..68d764ac040a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hte/hte-consumer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HTE Consumer Device Tree Bindings
-> +
-> +maintainers:
-> +  - Dipen Patel <dipenp@nvidia.com>
-> +
-> +select: true
-> +
-> +properties:
-> +  timestamps:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      The list of HTE provider phandle. The first cell must represent the
-> +      provider phandle followed by the line identifiers. The meaning of the
-> +      line identifier and exact number of arguments must be specified in the
-> +      HTE provider device tree binding document.
-> +
-> +  timestamp-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description:
-> +      An optional string property to label each line specifier present in the
-> +      timestamp property.
-> +
-> +dependencies:
-> +  timestamp-names: [ timestamps ]
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +    hte_tegra_consumer {
-> +              timestamps = <&tegra_hte_aon 0x9>, <&tegra_hte_lic 0x19>;
-> +              timestamp-names = "hte-gpio", "hte-i2c";
-> +    };
-> diff --git a/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
-> new file mode 100644
-> index 000000000000..69e8402d95e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hte/nvidia,tegra194-hte.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tegra194 on chip generic hardware timestamping engine (HTE)
-> +
-> +maintainers:
-> +  - Dipen Patel <dipenp@nvidia.com>
-> +
-> +description:
-> +  Tegra SoC has two instances of generic hardware timestamping engines (GTE)
-> +  known as GTE GPIO and GTE IRQ, which can monitor subset of GPIO and on chip
-> +  IRQ lines for the state change respectively, upon detection it will record
-> +  timestamp (taken from system counter) in its internal hardware FIFO. It has
-> +  a bitmap array arranged in 32bit slices where each bit represent signal/line
-> +  to enable or disable for the hardware timestamping. The GTE GPIO monitors
-> +  GPIO lines from the AON (always on) GPIO controller.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nvidia,tegra194-gte-aon
-> +      - nvidia,tegra194-gte-lic
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  nvidia,int-threshold:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      HTE device generates its interrupt based on this u32 FIFO threshold
-> +      value. The recommended value is 1.
-> +    minimum: 1
-> +    maximum: 256
-> +
-> +  nvidia,slices:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      HTE lines are arranged in 32 bit slice where each bit represents different
-> +      line/signal that it can enable/configure for the timestamp. It is u32
-> +      property and depends on the HTE instance in the chip. The value 3 is for
-> +      GPIO GTE and 11 for IRQ GTE.
-> +    enum: [3, 11]
-> +
-> +  '#timestamp-cells':
-> +    description:
-> +      This represents number of line id arguments as specified by the
-> +      consumers. For the GTE IRQ, this is IRQ number as mentioned in the
-> +      SoC technical reference manual. For the GTE GPIO, its value is same as
-> +      mentioned in the nvidia GPIO device tree binding document.
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - nvidia,slices
-> +  - "#timestamp-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    tegra_hte_aon: timestamp@c1e0000 {
-> +              compatible = "nvidia,tegra194-gte-aon";
-> +              reg = <0xc1e0000 0x10000>;
-> +              interrupts = <0 13 0x4>;
-> +              nvidia,int-threshold = <1>;
-> +              nvidia,slices = <3>;
-> +              #timestamp-cells = <1>;
-> +    };
-> +
-> +  - |
-> +    tegra_hte_lic: timestamp@3aa0000 {
-> +              compatible = "nvidia,tegra194-gte-lic";
-> +              reg = <0x3aa0000 0x10000>;
-> +              interrupts = <0 11 0x4>;
-> +              nvidia,int-threshold = <1>;
-> +              nvidia,slices = <11>;
-> +              #timestamp-cells = <1>;
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
-> 
+Reviewed-by: Marek Vasut <marex@denx.de>
