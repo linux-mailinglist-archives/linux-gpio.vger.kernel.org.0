@@ -2,104 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EB0150F0E7
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 08:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B4B50FB12
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 12:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241145AbiDZG13 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Apr 2022 02:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49406 "EHLO
+        id S1349203AbiDZKky (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Apr 2022 06:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233942AbiDZG12 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Apr 2022 02:27:28 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD531229E3;
-        Mon, 25 Apr 2022 23:24:21 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id DD89B5C01C4;
-        Tue, 26 Apr 2022 02:24:18 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 26 Apr 2022 02:24:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=living180.net;
-         h=cc:cc:content-transfer-encoding:content-type:date:date:from
-        :from:in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1650954258; x=
-        1651040658; bh=IbpOZ4LIDvEw4dX8hUlPl0oGzp/Zn8DhVhCgS0FVOGw=; b=C
-        ciJEymzha16iPzvrr3rfGvi5jwKWaF+PpUaYBGS8GV+dWsJ8hP6PCwAcfWnAtN8h
-        OpOSDuNhtX/w3JnyIHQzIL70By2rwgQ81GIsuNP+HtMaNWAqe7vHmvNclKeHM6nJ
-        hkw6eCKQoQ8Y2OZyWuZrYRZYDPPwv1hnq6EQujQTF3DzEzAlxMJ2L9wFCGpu9Py7
-        p4wkVpCQ/O1yPhlacZivMbbrFpi+6z7WKR8KpY3G8NOr0z6N9cdXOnbWDM+4c8Yc
-        jYo8bkKvdk0smyd8fM+fnbEQahEdKB9Lgzx25RZeMenSjOmH1zSt0adM+w/4/NsP
-        Dg3HDPc89IONGdITbNbEg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1650954258; x=1651040658; bh=IbpOZ4LIDvEw4
-        dX8hUlPl0oGzp/Zn8DhVhCgS0FVOGw=; b=UCu10gk1CnyG/y2dOPp3a7GXqTtEu
-        NKBPj5QjBhjFpYf1vq0U0G7/eva8Hn+xQqUFf1Cm1fRVTcfNvELB3zOm7eMCl2Vr
-        Mrnm/vDFn2QFPTAxA1pD3s5UcF+S/GUx6WDrtvgyHWdQkDVP8jq2PVSdHLGCIMFl
-        E+dEQbTC+VujEdt7kwCrxQnvTaBxgmv+RjIYyGv/wwdGJ3OQ+WyEprZl4twJZ59g
-        UF3ojAvnolsm0HwA6uaUyR8/Jv/rkZFNBLJnNyCevvtZywov+5KwpbyzDgkc03Z7
-        hpnrtEqod5J1bL8+tDS7MkKxcekRYRKbX1mMwJf6WWdFXWlaDHUlmjkfQ==
-X-ME-Sender: <xms:EpBnYlCi6qrnQNvBOW9Dg-vqosSzTupUamTRg2nYezOVW2n5GrLNZA>
-    <xme:EpBnYjgYcd1w0Oypa1b_lUogWNwMgWtvXRrV97ooziDxFK5KzRVfdXwudDpyQPaKf
-    mHHtBSWorlV3g>
-X-ME-Received: <xmr:EpBnYgn46b_TbqsRgGHMNbodIl2bZ8tvNcn_lPU2kgYZXlNcYfpftn_WgWB0xA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddvgddutdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtfeejnecuhfhrohhmpeffrghn
-    ihgvlhcujfgrrhguihhnghcuoeguhhgrrhguihhngheslhhivhhinhhgudektddrnhgvth
-    eqnecuggftrfgrthhtvghrnheplefhtdejtdehhfdtveelfedtkeethefgudeftdevheej
-    hfevtdfhkeevheefjeetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeguhhgrrhguihhnghes
-    lhhivhhinhhgudektddrnhgvth
-X-ME-Proxy: <xmx:EpBnYvwdpqb8-4ovkGC-qbESxwWLcfpDe8V9DCsC0pSbGLpIoUNziA>
-    <xmx:EpBnYqTwPpw4iM7irybCm45TgLjm4my2BYlsK2MYz0tqgBG7UBKUKQ>
-    <xmx:EpBnYiZqFqNWa_ecxVOdTU4ZO7FDI-Gk7qUpjHQMAslMQL7SfQAfDQ>
-    <xmx:EpBnYgM5SufEujTOUbjTJIuTE3qMZAl0j-4sZNLEEx2LougoAHi69A>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 26 Apr 2022 02:24:16 -0400 (EDT)
-Message-ID: <975801fd-9c5b-6d09-f7cb-ee7af2fbbf65@living180.net>
-Date:   Tue, 26 Apr 2022 09:24:14 +0300
+        with ESMTP id S1349365AbiDZKiv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Apr 2022 06:38:51 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC49E63;
+        Tue, 26 Apr 2022 03:25:12 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id dk23so11775161ejb.8;
+        Tue, 26 Apr 2022 03:25:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E3GiU4VgA4X0FVG9Q0HUFWR78xcN+9K+AQZgrStd20Q=;
+        b=CqFomzrJcPjoOLCpk2zbMHsv8s4gpt3ktEOcbqKM6d/FBoOtD162g1SitcHKd5PByk
+         suRxgZLOxEcLtTnne2ZL5e33i5js7iU4Usk44bOXl9eMekMOjP4BBExt+1l94b+4ZW1x
+         3KbOzjNgjZHgZk9PIe8VNP4PcKpVxPsMiCv9L7rNy9JCscKBN7X7YgF3t4VDA4abwdTH
+         wJMBKu5z5Swresr5lB1ZQTWORt1kt5ewc+QqNpXpMnEuZ5OY2BWsL2UfeB9h/oHySeAe
+         9VM8P6oOc/aSpYDNuFbu5UHHt0oFmrU6l5Rpe+LsVYVIAgKMvTxlt9BzjZ4G2j66QbCA
+         8now==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E3GiU4VgA4X0FVG9Q0HUFWR78xcN+9K+AQZgrStd20Q=;
+        b=HlIwJNlqNsjAOvbvQw9L/jYZIAiu8MGiN9cYvvHm8tgouiiLq9DPB/pyMLmBHNQtkJ
+         F2dvtrQ7aYypFxgv/aCJCyx2R46yhqoKG93wMY93gi2fovbvJEz4oGkpYMRFTTJU2BlW
+         mvNjD4H6BKh4JBoqAYGJOyTKXrLwvZL317mxKMFk5Qav1ggWeBWU8SX01dCRF/on6uBM
+         fdbP4LpzP3J1o4QJt9QBxNIApaEwgzsqH6na1RyjBE6MOikOkqzzpflfiZPYD1HfeOzh
+         zUbGiDc3pnD7h1aRr7kLWjt7WPwVrRQ5oPV3+6/9PEum7F8enNvCUU30GCWwwOJqcoND
+         HjYQ==
+X-Gm-Message-State: AOAM530ZhnhU28zeGXHYQDoi5N85MnWw6/3OxQE/ggf++og7yo84f5m6
+        jDMJb7C6vP0C1BeUQ16/z9CxRvEoWrFawtE9p2g=
+X-Google-Smtp-Source: ABdhPJz8BmGLAmH9fEGi0KuLOTUtQRadgcrFFvw87vyemx36ybgw9064Ch2gGNh59MOiJlvtRR/goPKKu8WsaV94ZpM=
+X-Received: by 2002:a17:907:7d8c:b0:6f2:476d:fde4 with SMTP id
+ oz12-20020a1709077d8c00b006f2476dfde4mr19555140ejc.497.1650968710844; Tue, 26
+ Apr 2022 03:25:10 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: Regression in 5467801f1fcbd
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     brgl@bgdev.pl, shreeya.patel@collabora.com,
-        linux-gpio@vger.kernel.org, stable@vger.kernel.org,
-        andy.shevchenko@gmail.com
-References: <34212129-bb2e-46d4-4536-28f11b1c61ca@living180.net>
- <CACRpkdbw1E3qOc=+PXyO3tQSXpa0yHd5YTbXMe97dPq9vCcTVg@mail.gmail.com>
-From:   Daniel Harding <dharding@living180.net>
-In-Reply-To: <CACRpkdbw1E3qOc=+PXyO3tQSXpa0yHd5YTbXMe97dPq9vCcTVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220419141846.598305-1-maz@kernel.org> <CACRpkda3L_itpqcnPq6xDoJtNHt8NuvE1MZk1bCNR+u2KKUpBA@mail.gmail.com>
+ <874k2kccse.wl-maz@kernel.org>
+In-Reply-To: <874k2kccse.wl-maz@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 26 Apr 2022 12:24:31 +0200
+Message-ID: <CAHp75VcKNurETpNtrZM7SN2XEtLM6ZYFrS-gKr6r55Lc37gKQQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] gpiolib: Handle immutable irq_chip structures
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 4/25/22 23:09, Linus Walleij wrote:
-> Hi Daniel,
+On Sat, Apr 23, 2022 at 12:30 PM Marc Zyngier <maz@kernel.org> wrote:
 >
-> On Mon, Apr 25, 2022 at 9:00 PM Daniel Harding <dharding@living180.net> wrote:
+> On Fri, 22 Apr 2022 22:24:22 +0100,
+> Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > On Tue, Apr 19, 2022 at 4:19 PM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > > This is a followup from [2].
+> > >
+> > > I recently realised that the gpiolib play ugly tricks on the
+> > > unsuspecting irq_chip structures by patching the callbacks.
+> > >
+> > > Not only this breaks when an irq_chip structure is made const (which
+> > > really should be the default case), but it also forces this structure
+> > > to be copied at nauseam for each instance of the GPIO block, which is
+> > > a waste of memory.
+> > >
+> > > My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
+> > > which does what it says on the tin: don't you dare writing to them.
+> > > Gpiolib is further updated not to install its own callbacks, and it
+> > > becomes the responsibility of the driver to call into the gpiolib when
+> > > required. This is similar to what we do for other subsystems such as
+> > > PCI-MSI.
+> > >
+> > > 5 drivers are updated to this new model: M1, QC, Tegra, pl061 and AMD
+> > > (as I actively use them) keeping a single irq_chip structure, marking
+> > > it const, and exposing the new flag.
+> > >
+> > > Nothing breaks, the volume of change is small, the memory usage goes
+> > > down and we have fewer callbacks that can be used as attack vectors.
+> > > What's not to love?
+> > >
+> > > Since there wasn't any objection in the previous round of review, I'm
+> > > going to take this series into -next to see if anything breaks at
+> > > scale.
+> >
+> > The series:
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Bartosz: if you're happy with this can you apply it to an immutable branch
+> > from v5.18-rc1 and merge that into the GPIO for-next and then I can also
+> > pull that into pinctrl?
 >
->> The commit "Restrict usage of GPIO chip irq members before initialization" breaks suspend on a
->>   Dell Inspiron 5515 laptop in a very severe way.
-> Does this commit, which is already upstream in Torvald's tree, solve the issue?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio?id=06fb4ecfeac7e00d6704fa5ed19299f2fefb3cc9
+> For what it is worth, I've pushed this branch into irqchip-next.
+>
+> You can pick it up from:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/gpio-immutable
+>
+> but I can also drop it from the irqchip tree.
+>
+> Just let me know.
 
-Yes, cherry-picking that commit on top of 5467801f1fcbd fixes the issue 
-for me.  Thank so much for the quick response from you and Shreeya!
+I would prefer it if it goes as is now and every stakeholder can just
+pull it. As far as my drivers are concerned I also want to convert
+them sooner than later, meaning I want to pull this into my little
+tree as well. Bart, Linus, would it be also preferable for you?
 
-Regards,
 
-Daniel Harding
+-- 
+With Best Regards,
+Andy Shevchenko
