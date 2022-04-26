@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B26A50FD93
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 14:51:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5010C50FD98
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 14:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346979AbiDZMyH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Apr 2022 08:54:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45106 "EHLO
+        id S1348939AbiDZMyI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Apr 2022 08:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350251AbiDZMyE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Apr 2022 08:54:04 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE2F3B2B1
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 05:50:53 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id j15so12078996wrb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 05:50:53 -0700 (PDT)
+        with ESMTP id S1350255AbiDZMyF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Apr 2022 08:54:05 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AFF3B2B3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 05:50:54 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id w4so25277059wrg.12
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 05:50:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/BG8lNbYQC/QgF1mQwefe/Mh67DTFKYO6a0e0w+vZ38=;
-        b=SND5LcoKtQ7KQCGfJJd0MJKOx+t8lImP/jetLsEK1cCs7VefgRx6T/bWuSitecFkuw
-         p/tZ3hKi1XYMr/HOsWlBehmhfuSszF0pki/4YzNZKGXcWcj/oCOe4Oy+A8nkwk9QM+C3
-         GAoHOECjzBIwf1DIklc1g7ByLe4WzXFa41k71A2SUKnAM4WE0XBjCvyDUQECBy6vsGDP
-         RtFiWXNvBTUp9tZQ1DrxszSLZtlYPHTiVFieNpBfZ01UR4DcehRZrDlZUOFsTp7T6ksU
-         b8LETna+dqpGmU48s36Magkj7uiTDMHsPOSWUOnuoCV9BGk+XeXZ+dGniUoaBFxU57ab
-         /JFQ==
+        bh=NFvOQH4B5Cd/Zv8HS0lvlBfYoqpR4yOoBOxheFJr04E=;
+        b=PqQQnnyALMoPQU+BqW6b5D/+BzUu+yppnbS0w1xZbXE4S4sq+4oXexTEj3/5NUZsWr
+         x0S7LXVbnUSvo+AgHS93DrcJuegHSPcvEHQFGNNgGPoVUdiNEbrM9LrrgvEwDFdIiQ2t
+         fq9xyyN/3CLP0RyCb06+WcOqTiYwRhUlB4BOrGmCcRhesyLcqr+sSEjk8J52/NAxdL3E
+         efidx8sIoU54DDXMdkp5NpmGf2OLsPn4UY0/BBNwW2QkfSZIkyBr6cUyHC9SAB3XVwe9
+         P5alQAvv/wttRKKVXmS8JhfLJosuNL5Wqz2IltyjZy/9uD73PH515CxPZeUQhER+PSat
+         /0cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/BG8lNbYQC/QgF1mQwefe/Mh67DTFKYO6a0e0w+vZ38=;
-        b=KHhr4e4x3+dPpWeuo32eN+/0CrGHSQYQfrsWPHUl7BFUJ+oUHwC/XtnD6esjs0SNbB
-         Af8zmR57GRzY42CpEM8rbhdXVCdOulZv5PHJjKGQFgqsx3aETBUQTBF7/GeBQYoi03BL
-         v9IujxnJS15e+vZi7QhO+uVIHj4pzNSVhBM6ybF5LSxW3jxgNVXVnUXXeXVywqW/ybIY
-         DwzBKOQ/9ClOpjSHWb0eXdZfDtGnJpC5F9HtKoadzIwhng/WvpwDJZNxhOx6urX4WduR
-         GNf6G1QVqJbZGfQGyqNL6XLmULQOJbXtm6e0QsmpAEOEG7UaIKt492TTs40VJGYWQfnH
-         IglQ==
-X-Gm-Message-State: AOAM533FrHUFuCoFiYwH1/xGadmDI/ZhNxK0XFt9NEgjlM/IA6dq/6Zv
-        dJXKjGBoNsJnon5dB3CNvF5keA==
-X-Google-Smtp-Source: ABdhPJwWJElEWFEM0sM4wI9JaHxB3Fmwq804RZu7cwYojQQvEk8pXy1P0Yx8M6RaT+cSP9aacwa1Gg==
-X-Received: by 2002:a5d:4148:0:b0:20a:d2de:d960 with SMTP id c8-20020a5d4148000000b0020ad2ded960mr13163141wrq.61.1650977450618;
-        Tue, 26 Apr 2022 05:50:50 -0700 (PDT)
+        bh=NFvOQH4B5Cd/Zv8HS0lvlBfYoqpR4yOoBOxheFJr04E=;
+        b=kut7tgva+6kRjiUpw6eH/TjMZEu9M/iW4H7Q1No75CtxYS1rgB2Mr++9r/Z28BSYpB
+         dwnD6GijjAeVa/Oja5ADMKUxIVGENA0ncH77V5LhKBT84F7SKa5MNazAccVUhHqQ51ep
+         Syo+MAqvIoolh6c6LAr311yaSI+mE1mNV0dBnImMpsPWE0MW1n1L+6T+Mdgbgc3RkSov
+         p/qrkuyMi5veC6wwAbO6Dd4rkxiWTBNZShD0WeE3s1vpaOY+C9HR0j7QnjQNbWE9Pizn
+         Gm6lM0FVdaJVeiPxu+4SjHX3oRN0nwSg5mzJGJ1rInfnXL2zt69+xIjnrvkarGmjHmyt
+         0XHg==
+X-Gm-Message-State: AOAM530aHHxQzAIJr0/OEBGD0SR6H20GWm3RfbiG2+JBifhWDBIX6c24
+        qENGnACXNVDbSsaUlxYrNf5m9g==
+X-Google-Smtp-Source: ABdhPJzaIkdih+S3YyVG2yK3+jTEOQtNNsc6L5lhLlKF6oLX7yBmxWD0wFHYE/zCmFHoPZnMRCO2JA==
+X-Received: by 2002:a05:6000:188b:b0:20a:a7f4:2f8 with SMTP id a11-20020a056000188b00b0020aa7f402f8mr17728272wri.424.1650977451474;
+        Tue, 26 Apr 2022 05:50:51 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:faf0:6ae0:9a53:ee37])
-        by smtp.gmail.com with ESMTPSA id n20-20020a05600c3b9400b00393ea849663sm6128600wms.30.2022.04.26.05.50.49
+        by smtp.gmail.com with ESMTPSA id n20-20020a05600c3b9400b00393ea849663sm6128600wms.30.2022.04.26.05.50.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Apr 2022 05:50:50 -0700 (PDT)
+        Tue, 26 Apr 2022 05:50:51 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -58,9 +58,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Jack Winch <sunt.un.morcov@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod v2][PATCH v6 1/5] bindings: cxx: remove old code
-Date:   Tue, 26 Apr 2022 14:50:19 +0200
-Message-Id: <20220426125023.2664623-2-brgl@bgdev.pl>
+Subject: [libgpiod v2][PATCH v6 2/5] bindings: cxx: add v2 headers
+Date:   Tue, 26 Apr 2022 14:50:20 +0200
+Message-Id: <20220426125023.2664623-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220426125023.2664623-1-brgl@bgdev.pl>
 References: <20220426125023.2664623-1-brgl@bgdev.pl>
@@ -75,3689 +75,2566 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For easier review, let's first remove the entire sub-tree containing the
-old C++ bindings.
+This adds the headers for the v2 C++ bindings.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- bindings/cxx/Makefile.am                   |  28 -
- bindings/cxx/chip.cpp                      | 157 ----
- bindings/cxx/examples/.gitignore           |   9 -
- bindings/cxx/examples/Makefile.am          |  26 -
- bindings/cxx/examples/gpiodetectcxx.cpp    |  30 -
- bindings/cxx/examples/gpiofindcxx.cpp      |  32 -
- bindings/cxx/examples/gpiogetcxx.cpp       |  39 -
- bindings/cxx/examples/gpioinfocxx.cpp      |  51 --
- bindings/cxx/examples/gpiomoncxx.cpp       |  65 --
- bindings/cxx/examples/gpiosetcxx.cpp       |  48 --
- bindings/cxx/gpiod.hpp                     | 940 ---------------------
- bindings/cxx/internal.hpp                  |   9 -
- bindings/cxx/iter.cpp                      |  60 --
- bindings/cxx/libgpiodcxx.pc.in             |  14 -
- bindings/cxx/line.cpp                      | 321 -------
- bindings/cxx/line_bulk.cpp                 | 366 --------
- bindings/cxx/tests/.gitignore              |   4 -
- bindings/cxx/tests/Makefile.am             |  21 -
- bindings/cxx/tests/gpio-mockup.cpp         | 153 ----
- bindings/cxx/tests/gpio-mockup.hpp         |  94 ---
- bindings/cxx/tests/gpiod-cxx-test-main.cpp |   5 -
- bindings/cxx/tests/gpiod-cxx-test.cpp      |  55 --
- bindings/cxx/tests/tests-chip.cpp          | 173 ----
- bindings/cxx/tests/tests-event.cpp         | 280 ------
- bindings/cxx/tests/tests-iter.cpp          |  21 -
- bindings/cxx/tests/tests-line.cpp          | 467 ----------
- 26 files changed, 3468 deletions(-)
- delete mode 100644 bindings/cxx/Makefile.am
- delete mode 100644 bindings/cxx/chip.cpp
- delete mode 100644 bindings/cxx/examples/.gitignore
- delete mode 100644 bindings/cxx/examples/Makefile.am
- delete mode 100644 bindings/cxx/examples/gpiodetectcxx.cpp
- delete mode 100644 bindings/cxx/examples/gpiofindcxx.cpp
- delete mode 100644 bindings/cxx/examples/gpiogetcxx.cpp
- delete mode 100644 bindings/cxx/examples/gpioinfocxx.cpp
- delete mode 100644 bindings/cxx/examples/gpiomoncxx.cpp
- delete mode 100644 bindings/cxx/examples/gpiosetcxx.cpp
- delete mode 100644 bindings/cxx/gpiod.hpp
- delete mode 100644 bindings/cxx/internal.hpp
- delete mode 100644 bindings/cxx/iter.cpp
- delete mode 100644 bindings/cxx/libgpiodcxx.pc.in
- delete mode 100644 bindings/cxx/line.cpp
- delete mode 100644 bindings/cxx/line_bulk.cpp
- delete mode 100644 bindings/cxx/tests/.gitignore
- delete mode 100644 bindings/cxx/tests/Makefile.am
- delete mode 100644 bindings/cxx/tests/gpio-mockup.cpp
- delete mode 100644 bindings/cxx/tests/gpio-mockup.hpp
- delete mode 100644 bindings/cxx/tests/gpiod-cxx-test-main.cpp
- delete mode 100644 bindings/cxx/tests/gpiod-cxx-test.cpp
- delete mode 100644 bindings/cxx/tests/tests-chip.cpp
- delete mode 100644 bindings/cxx/tests/tests-event.cpp
- delete mode 100644 bindings/cxx/tests/tests-iter.cpp
- delete mode 100644 bindings/cxx/tests/tests-line.cpp
+ Doxyfile.in                                 |   4 +-
+ bindings/cxx/gpiodcxx/Makefile.am           |  18 +
+ bindings/cxx/gpiodcxx/chip-info.hpp         | 105 ++++
+ bindings/cxx/gpiodcxx/chip.hpp              | 179 +++++++
+ bindings/cxx/gpiodcxx/edge-event-buffer.hpp | 129 +++++
+ bindings/cxx/gpiodcxx/edge-event.hpp        | 137 +++++
+ bindings/cxx/gpiodcxx/exception.hpp         | 158 ++++++
+ bindings/cxx/gpiodcxx/info-event.hpp        | 123 +++++
+ bindings/cxx/gpiodcxx/line-config.hpp       | 564 ++++++++++++++++++++
+ bindings/cxx/gpiodcxx/line-info.hpp         | 176 ++++++
+ bindings/cxx/gpiodcxx/line-request.hpp      | 221 ++++++++
+ bindings/cxx/gpiodcxx/line.hpp              | 274 ++++++++++
+ bindings/cxx/gpiodcxx/misc.hpp              |  44 ++
+ bindings/cxx/gpiodcxx/request-config.hpp    | 163 ++++++
+ bindings/cxx/gpiodcxx/timestamp.hpp         | 122 +++++
+ configure.ac                                |   1 +
+ 16 files changed, 2417 insertions(+), 1 deletion(-)
+ create mode 100644 bindings/cxx/gpiodcxx/Makefile.am
+ create mode 100644 bindings/cxx/gpiodcxx/chip-info.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/chip.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/edge-event-buffer.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/edge-event.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/exception.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/info-event.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line-config.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line-info.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line-request.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/misc.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/request-config.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/timestamp.hpp
 
-diff --git a/bindings/cxx/Makefile.am b/bindings/cxx/Makefile.am
-deleted file mode 100644
-index d9fa577..0000000
---- a/bindings/cxx/Makefile.am
-+++ /dev/null
-@@ -1,28 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
--# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--lib_LTLIBRARIES = libgpiodcxx.la
--libgpiodcxx_la_SOURCES = chip.cpp internal.h iter.cpp line.cpp line_bulk.cpp
--libgpiodcxx_la_CPPFLAGS = -Wall -Wextra -g -std=gnu++11
--libgpiodcxx_la_CPPFLAGS += -fvisibility=hidden -I$(top_srcdir)/include/
--libgpiodcxx_la_LDFLAGS = -version-info $(subst .,:,$(ABI_CXX_VERSION))
--libgpiodcxx_la_LDFLAGS += -lgpiod -L$(top_builddir)/lib
--
--include_HEADERS = gpiod.hpp
--
--pkgconfigdir = $(libdir)/pkgconfig
--pkgconfig_DATA = libgpiodcxx.pc
--
--SUBDIRS = .
--
--if WITH_TESTS
--
--SUBDIRS += tests
--
--endif
--
--if WITH_EXAMPLES
--
--SUBDIRS += examples
--
--endif
-diff --git a/bindings/cxx/chip.cpp b/bindings/cxx/chip.cpp
-deleted file mode 100644
-index ee6ab6f..0000000
---- a/bindings/cxx/chip.cpp
-+++ /dev/null
-@@ -1,157 +0,0 @@
--// SPDX-License-Identifier: LGPL-3.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <functional>
--#include <gpiod.hpp>
--#include <map>
--#include <system_error>
--#include <utility>
--
--#include "internal.hpp"
--
--namespace gpiod {
--
--namespace {
--
--GPIOD_CXX_API void chip_deleter(::gpiod_chip* chip)
--{
--	::gpiod_chip_unref(chip);
--}
--
--} /* namespace */
--
--GPIOD_CXX_API bool is_gpiochip_device(const ::std::string& path)
--{
--	return ::gpiod_is_gpiochip_device(path.c_str());
--}
--
--GPIOD_CXX_API chip::chip(const ::std::string& path)
--	: _m_chip()
--{
--	this->open(path);
--}
--
--GPIOD_CXX_API chip::chip(::gpiod_chip* chip)
--	: _m_chip(chip, chip_deleter)
--{
--
--}
--
--GPIOD_CXX_API chip::chip(const ::std::weak_ptr<::gpiod_chip>& chip_ptr)
--	: _m_chip(chip_ptr)
--{
--
--}
--
--GPIOD_CXX_API void chip::open(const ::std::string& path)
--{
--	::gpiod_chip *chip = ::gpiod_chip_open(path.c_str());
--	if (!chip)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "cannot open GPIO device " + path);
--
--	this->_m_chip.reset(chip, chip_deleter);
--}
--
--GPIOD_CXX_API void chip::reset(void) noexcept
--{
--	this->_m_chip.reset();
--}
--
--GPIOD_CXX_API ::std::string chip::name(void) const
--{
--	this->throw_if_noref();
--
--	return ::std::string(::gpiod_chip_get_name(this->_m_chip.get()));
--}
--
--GPIOD_CXX_API ::std::string chip::label(void) const
--{
--	this->throw_if_noref();
--
--	return ::std::string(::gpiod_chip_get_label(this->_m_chip.get()));
--}
--
--GPIOD_CXX_API unsigned int chip::num_lines(void) const
--{
--	this->throw_if_noref();
--
--	return ::gpiod_chip_get_num_lines(this->_m_chip.get());
--}
--
--GPIOD_CXX_API line chip::get_line(unsigned int offset) const
--{
--	this->throw_if_noref();
--
--	if (offset >= this->num_lines())
--		throw ::std::out_of_range("line offset greater than the number of lines");
--
--	::gpiod_line* line_handle = ::gpiod_chip_get_line(this->_m_chip.get(), offset);
--	if (!line_handle)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error getting GPIO line from chip");
--
--	return line(line_handle, *this);
--}
--
--GPIOD_CXX_API int chip::find_line(const ::std::string& name) const
--{
--	this->throw_if_noref();
--
--	for (unsigned int offset = 0; offset < this->num_lines(); offset++) {
--		auto line = this->get_line(offset);
--
--		if (line.name() == name)
--			return offset;
--	}
--
--	return -1;
--}
--
--GPIOD_CXX_API line_bulk chip::get_lines(const ::std::vector<unsigned int>& offsets) const
--{
--	line_bulk lines;
--
--	for (auto& it: offsets)
--		lines.append(this->get_line(it));
--
--	return lines;
--}
--
--GPIOD_CXX_API line_bulk chip::get_all_lines(void) const
--{
--	line_bulk lines;
--
--	for (unsigned int i = 0; i < this->num_lines(); i++)
--		lines.append(this->get_line(i));
--
--	return lines;
--}
--
--GPIOD_CXX_API bool chip::operator==(const chip& rhs) const noexcept
--{
--	return this->_m_chip.get() == rhs._m_chip.get();
--}
--
--GPIOD_CXX_API bool chip::operator!=(const chip& rhs) const noexcept
--{
--	return this->_m_chip.get() != rhs._m_chip.get();
--}
--
--GPIOD_CXX_API chip::operator bool(void) const noexcept
--{
--	return this->_m_chip.get() != nullptr;
--}
--
--GPIOD_CXX_API bool chip::operator!(void) const noexcept
--{
--	return this->_m_chip.get() == nullptr;
--}
--
--GPIOD_CXX_API void chip::throw_if_noref(void) const
--{
--	if (!this->_m_chip.get())
--		throw ::std::logic_error("object not associated with an open GPIO chip");
--}
--
--} /* namespace gpiod */
-diff --git a/bindings/cxx/examples/.gitignore b/bindings/cxx/examples/.gitignore
-deleted file mode 100644
-index 54bda46..0000000
---- a/bindings/cxx/examples/.gitignore
-+++ /dev/null
-@@ -1,9 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
--# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--gpiodetectcxx
--gpiofindcxx
--gpiogetcxx
--gpioinfocxx
--gpiomoncxx
--gpiosetcxx
-diff --git a/bindings/cxx/examples/Makefile.am b/bindings/cxx/examples/Makefile.am
-deleted file mode 100644
-index 748b581..0000000
---- a/bindings/cxx/examples/Makefile.am
-+++ /dev/null
-@@ -1,26 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
--# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--AM_CPPFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
--AM_CPPFLAGS += -Wall -Wextra -g -std=gnu++17
--AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/ -lstdc++fs
--
--noinst_PROGRAMS =				\
--		gpiodetectcxx			\
--		gpiofindcxx			\
--		gpiogetcxx			\
--		gpioinfocxx			\
--		gpiomoncxx			\
--		gpiosetcxx
--
--gpiodetectcxx_SOURCES = gpiodetectcxx.cpp
--
--gpiofindcxx_SOURCES = gpiofindcxx.cpp
--
--gpiogetcxx_SOURCES = gpiogetcxx.cpp
--
--gpioinfocxx_SOURCES = gpioinfocxx.cpp
--
--gpiomoncxx_SOURCES = gpiomoncxx.cpp
--
--gpiosetcxx_SOURCES = gpiosetcxx.cpp
-diff --git a/bindings/cxx/examples/gpiodetectcxx.cpp b/bindings/cxx/examples/gpiodetectcxx.cpp
-deleted file mode 100644
-index 872cd96..0000000
---- a/bindings/cxx/examples/gpiodetectcxx.cpp
-+++ /dev/null
-@@ -1,30 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--/* C++ reimplementation of the gpiodetect tool. */
--
--#include <gpiod.hpp>
--
--#include <cstdlib>
--#include <filesystem>
--#include <iostream>
--
--int main(int argc, char **argv)
--{
--	if (argc != 1) {
--		::std::cerr << "usage: " << argv[0] << ::std::endl;
--		return EXIT_FAILURE;
--	}
--
--	for (const auto& entry: ::std::filesystem::directory_iterator("/dev/")) {
--		if (::gpiod::is_gpiochip_device(entry.path())) {
--			::gpiod::chip chip(entry.path());
--
--			::std::cout << chip.name() << " ["
--				    << chip.label() << "] ("
--				    << chip.num_lines() << " lines)" << ::std::endl;
--		}
--	}
--
--	return EXIT_SUCCESS;
--}
-diff --git a/bindings/cxx/examples/gpiofindcxx.cpp b/bindings/cxx/examples/gpiofindcxx.cpp
-deleted file mode 100644
-index ec4d79b..0000000
---- a/bindings/cxx/examples/gpiofindcxx.cpp
-+++ /dev/null
-@@ -1,32 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--/* C++ reimplementation of the gpiofind tool. */
--
--#include <gpiod.hpp>
--
--#include <cstdlib>
--#include <filesystem>
--#include <iostream>
--
--int main(int argc, char **argv)
--{
--	if (argc != 2) {
--		::std::cerr << "usage: " << argv[0] << " <line name>" << ::std::endl;
--		return EXIT_FAILURE;
--	}
--
--	for (const auto& entry: ::std::filesystem::directory_iterator("/dev/")) {
--		if (::gpiod::is_gpiochip_device(entry.path())) {
--			::gpiod::chip chip(entry.path());
--
--			auto offset = chip.find_line(argv[1]);
--			if (offset >= 0) {
--				::std::cout << chip.name() << " " << offset << ::std::endl;
--				return EXIT_SUCCESS;
--			}
--		}
--	}
--
--	return EXIT_FAILURE;
--}
-diff --git a/bindings/cxx/examples/gpiogetcxx.cpp b/bindings/cxx/examples/gpiogetcxx.cpp
-deleted file mode 100644
-index 94b3dac..0000000
---- a/bindings/cxx/examples/gpiogetcxx.cpp
-+++ /dev/null
-@@ -1,39 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--/* Simplified C++ reimplementation of the gpioget tool. */
--
--#include <gpiod.hpp>
--
--#include <cstdlib>
--#include <iostream>
--
--int main(int argc, char **argv)
--{
--	if (argc < 3) {
--		::std::cerr << "usage: " << argv[0] << " <chip> <line_offset0> ..." << ::std::endl;
--		return EXIT_FAILURE;
--	}
--
--	::std::vector<unsigned int> offsets;
--
--	for (int i = 2; i < argc; i++)
--		offsets.push_back(::std::stoul(argv[i]));
--
--	::gpiod::chip chip(argv[1]);
--	auto lines = chip.get_lines(offsets);
--
--	lines.request({
--		argv[0],
--		::gpiod::line_request::DIRECTION_INPUT,
--		0
--	});
--
--	auto vals = lines.get_values();
--
--	for (auto& it: vals)
--		::std::cout << it << ' ';
--	::std::cout << ::std::endl;
--
--	return EXIT_SUCCESS;
--}
-diff --git a/bindings/cxx/examples/gpioinfocxx.cpp b/bindings/cxx/examples/gpioinfocxx.cpp
-deleted file mode 100644
-index 2175adc..0000000
---- a/bindings/cxx/examples/gpioinfocxx.cpp
-+++ /dev/null
-@@ -1,51 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--/* Simplified C++ reimplementation of the gpioinfo tool. */
--
--#include <gpiod.hpp>
--
--#include <cstdlib>
--#include <filesystem>
--#include <iostream>
--
--int main(int argc, char **argv)
--{
--	if (argc != 1) {
--		::std::cerr << "usage: " << argv[0] << ::std::endl;
--		return EXIT_FAILURE;
--	}
--
--	for (const auto& entry: ::std::filesystem::directory_iterator("/dev/")) {
--		if (::gpiod::is_gpiochip_device(entry.path())) {
--			::gpiod::chip chip(entry.path());
--
--			::std::cout << chip.name() << " - " << chip.num_lines() << " lines:" << ::std::endl;
--
--			for (auto& lit: ::gpiod::line_iter(chip)) {
--				::std::cout << "\tline ";
--				::std::cout.width(3);
--				::std::cout << lit.offset() << ": ";
--
--				::std::cout.width(12);
--				::std::cout << (lit.name().empty() ? "unnamed" : lit.name());
--				::std::cout << " ";
--
--				::std::cout.width(12);
--				::std::cout << (lit.consumer().empty() ? "unused" : lit.consumer());
--				::std::cout << " ";
--
--				::std::cout.width(8);
--				::std::cout << (lit.direction() == ::gpiod::line::DIRECTION_INPUT ? "input" : "output");
--				::std::cout << " ";
--
--				::std::cout.width(10);
--				::std::cout << (lit.is_active_low() ? "active-low" : "active-high");
--
--				::std::cout << ::std::endl;
--			}
--		}
--	}
--
--	return EXIT_SUCCESS;
--}
-diff --git a/bindings/cxx/examples/gpiomoncxx.cpp b/bindings/cxx/examples/gpiomoncxx.cpp
-deleted file mode 100644
-index 4d6ac6e..0000000
---- a/bindings/cxx/examples/gpiomoncxx.cpp
-+++ /dev/null
-@@ -1,65 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--/* Simplified C++ reimplementation of the gpiomon tool. */
--
--#include <gpiod.hpp>
--
--#include <cstdlib>
--#include <iostream>
--
--namespace {
--
--void print_event(const ::gpiod::line_event& event)
--{
--	if (event.event_type == ::gpiod::line_event::RISING_EDGE)
--		::std::cout << " RISING EDGE";
--	else if (event.event_type == ::gpiod::line_event::FALLING_EDGE)
--		::std::cout << "FALLING EDGE";
--	else
--		throw ::std::logic_error("invalid event type");
--
--	::std::cout << " ";
--
--	::std::cout << ::std::chrono::duration_cast<::std::chrono::seconds>(event.timestamp).count();
--	::std::cout << ".";
--	::std::cout << event.timestamp.count() % 1000000000;
--
--	::std::cout << " line: " << event.source.offset();
--
--	::std::cout << ::std::endl;
--}
--
--} /* namespace */
--
--int main(int argc, char **argv)
--{
--	if (argc < 3) {
--		::std::cout << "usage: " << argv[0] << " <chip> <offset0> ..." << ::std::endl;
--		return EXIT_FAILURE;
--	}
--
--	::std::vector<unsigned int> offsets;
--	offsets.reserve(argc);
--	for (int i = 2; i < argc; i++)
--		offsets.push_back(::std::stoul(argv[i]));
--
--	::gpiod::chip chip(argv[1]);
--	auto lines = chip.get_lines(offsets);
--
--	lines.request({
--		argv[0],
--		::gpiod::line_request::EVENT_BOTH_EDGES,
--		0,
--	});
--
--	for (;;) {
--		auto events = lines.event_wait(::std::chrono::seconds(1));
--		if (events) {
--			for (auto& it: events)
--				print_event(it.event_read());
--		}
--	}
--
--	return EXIT_SUCCESS;
--}
-diff --git a/bindings/cxx/examples/gpiosetcxx.cpp b/bindings/cxx/examples/gpiosetcxx.cpp
-deleted file mode 100644
-index 71b27a9..0000000
---- a/bindings/cxx/examples/gpiosetcxx.cpp
-+++ /dev/null
-@@ -1,48 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--/* Simplified C++ reimplementation of the gpioset tool. */
--
--#include <gpiod.hpp>
--
--#include <cstdlib>
--#include <iostream>
--
--int main(int argc, char **argv)
--{
--	if (argc < 3) {
--		::std::cerr << "usage: " << argv[0] << " <chip> <line_offset0>=<value0> ..." << ::std::endl;
--		return EXIT_FAILURE;
--	}
--
--	::std::vector<unsigned int> offsets;
--	::std::vector<int> values;
--
--	for (int i = 2; i < argc; i++) {
--		::std::string arg(argv[i]);
--
--		size_t pos = arg.find('=');
--
--		::std::string offset(arg.substr(0, pos));
--		::std::string value(arg.substr(pos + 1, ::std::string::npos));
--
--		if (offset.empty() || value.empty())
--			throw ::std::invalid_argument("invalid argument: " + ::std::string(argv[i]));
--
--		offsets.push_back(::std::stoul(offset));
--		values.push_back(::std::stoul(value));
--	}
--
--	::gpiod::chip chip(argv[1]);
--	auto lines = chip.get_lines(offsets);
--
--	lines.request({
--		argv[0],
--		::gpiod::line_request::DIRECTION_OUTPUT,
--		0
--	}, values);
--
--	::std::cin.get();
--
--	return EXIT_SUCCESS;
--}
-diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-deleted file mode 100644
-index e3ce2fc..0000000
---- a/bindings/cxx/gpiod.hpp
-+++ /dev/null
-@@ -1,940 +0,0 @@
--/* SPDX-License-Identifier: LGPL-3.0-or-later */
--/* SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com> */
--
--#ifndef __LIBGPIOD_GPIOD_CXX_HPP__
--#define __LIBGPIOD_GPIOD_CXX_HPP__
--
--#include <bitset>
--#include <chrono>
--#include <gpiod.h>
--#include <memory>
--#include <string>
--#include <vector>
--
--namespace gpiod {
--
--class line;
--class line_bulk;
--class line_iter;
--class chip_iter;
--struct line_event;
--
--/**
-- * @file gpiod.hpp
-- */
--
--/**
-- * @defgroup gpiod_cxx C++ bindings
-- * @{
-- */
--
--/**
-- * @brief Check if the file pointed to by path is a GPIO chip character device.
-- * @param path Path to check.
-- * @return True if the file exists and is a GPIO chip character device or a
-- *         symbolic link to it.
-- */
--bool is_gpiochip_device(const ::std::string& path);
--
--/**
-- * @brief Represents a GPIO chip.
-- *
-- * Internally this class holds a smart pointer to an open GPIO chip descriptor.
-- * Multiple objects of this class can reference the same chip. The chip is
-- * closed and all resources freed when the last reference is dropped.
-- */
--class chip
--{
--public:
--
--	/**
--	 * @brief Default constructor. Creates an empty GPIO chip object.
--	 */
--	chip(void) = default;
--
--	/**
--	 * @brief Constructor. Opens the chip using chip::open.
--	 * @param path Path to the GPIO chip device.
--	 */
--	chip(const ::std::string& path);
--
--	/**
--	 * @brief Copy constructor. References the object held by other.
--	 * @param other Other chip object.
--	 */
--	chip(const chip& other) = default;
--
--	/**
--	 * @brief Move constructor. References the object held by other.
--	 * @param other Other chip object.
--	 */
--	chip(chip&& other) = default;
--
--	/**
--	 * @brief Assignment operator. References the object held by other.
--	 * @param other Other chip object.
--	 * @return Reference to this object.
--	 */
--	chip& operator=(const chip& other) = default;
--
--	/**
--	 * @brief Move assignment operator. References the object held by other.
--	 * @param other Other chip object.
--	 * @return Reference to this object.
--	 */
--	chip& operator=(chip&& other) = default;
--
--	/**
--	 * @brief Destructor. Unreferences the internal chip object.
--	 */
--	~chip(void) = default;
--
--	/**
--	 * @brief Open a GPIO chip.
--	 * @param path Path to the GPIO chip device.
--	 *
--	 * If the object already holds a reference to an open chip, it will be
--	 * closed and the reference reset.
--	 */
--	void open(const ::std::string &path);
--
--	/**
--	 * @brief Reset the internal smart pointer owned by this object.
--	 */
--	void reset(void) noexcept;
--
--	/**
--	 * @brief Return the name of the chip held by this object.
--	 * @return Name of the GPIO chip.
--	 */
--	::std::string name(void) const;
--
--	/**
--	 * @brief Return the label of the chip held by this object.
--	 * @return Label of the GPIO chip.
--	 */
--	::std::string label(void) const;
--
--	/**
--	 * @brief Return the number of lines exposed by this chip.
--	 * @return Number of lines.
--	 */
--	unsigned int num_lines(void) const;
--
--	/**
--	 * @brief Get the line exposed by this chip at given offset.
--	 * @param offset Offset of the line.
--	 * @return Line object.
--	 */
--	line get_line(unsigned int offset) const;
--
--	/**
--	 * @brief Map a GPIO line's name to its offset within the chip.
--	 * @param name Name of the GPIO line to map.
--	 * @return Offset of the line within the chip or -1 if a line with
--	 *         given name is not exposed by the chip.
--	 */
--	int find_line(const ::std::string& name) const;
--
--	/**
--	 * @brief Get a set of lines exposed by this chip at given offsets.
--	 * @param offsets Vector of line offsets.
--	 * @return Set of lines held by a line_bulk object.
--	 */
--	line_bulk get_lines(const ::std::vector<unsigned int>& offsets) const;
--
--	/**
--	 * @brief Get all lines exposed by this chip.
--	 * @return All lines exposed by this chip held by a line_bulk object.
--	 */
--	line_bulk get_all_lines(void) const;
--
--	/**
--	 * @brief Equality operator.
--	 * @param rhs Right-hand side of the equation.
--	 * @return True if rhs references the same chip. False otherwise.
--	 */
--	bool operator==(const chip& rhs) const noexcept;
--
--	/**
--	 * @brief Inequality operator.
--	 * @param rhs Right-hand side of the equation.
--	 * @return False if rhs references the same chip. True otherwise.
--	 */
--	bool operator!=(const chip& rhs) const noexcept;
--
--	/**
--	 * @brief Check if this object holds a reference to a GPIO chip.
--	 * @return True if this object references a GPIO chip, false otherwise.
--	 */
--	explicit operator bool(void) const noexcept;
--
--	/**
--	 * @brief Check if this object doesn't hold a reference to a GPIO chip.
--	 * @return False if this object references a GPIO chip, true otherwise.
--	 */
--	bool operator!(void) const noexcept;
--
--private:
--
--	chip(::gpiod_chip* chip);
--	chip(const ::std::weak_ptr<::gpiod_chip>& chip_ptr);
--
--	void throw_if_noref(void) const;
--
--	::std::shared_ptr<::gpiod_chip> _m_chip;
--
--	friend line;
--	friend chip_iter;
--	friend line_iter;
--};
--
--/**
-- * @brief Stores the configuration for line requests.
-- */
--struct line_request
--{
--	/**
--	 * @brief Request types.
--	 */
--	enum : int {
--		DIRECTION_AS_IS = 1,
--		/**< Request for values, don't change the direction. */
--		DIRECTION_INPUT,
--		/**< Request for reading line values. */
--		DIRECTION_OUTPUT,
--		/**< Request for driving the GPIO lines. */
--		EVENT_FALLING_EDGE,
--		/**< Listen for falling edge events. */
--		EVENT_RISING_EDGE,
--		/**< Listen for rising edge events. */
--		EVENT_BOTH_EDGES,
--		/**< Listen for all types of events. */
--	};
--
--	static const ::std::bitset<32> FLAG_ACTIVE_LOW;
--	/**< Set the active state to 'low' (high is the default). */
--	static const ::std::bitset<32> FLAG_OPEN_SOURCE;
--	/**< The line is an open-source port. */
--	static const ::std::bitset<32> FLAG_OPEN_DRAIN;
--	/**< The line is an open-drain port. */
--	static const ::std::bitset<32> FLAG_BIAS_DISABLED;
--	/**< The line has neither pull-up nor pull-down resistor enabled. */
--	static const ::std::bitset<32> FLAG_BIAS_PULL_DOWN;
--	/**< The line has a configurable pull-down resistor enabled. */
--	static const ::std::bitset<32> FLAG_BIAS_PULL_UP;
--	/**< The line has a configurable pull-up resistor enabled. */
--
--	::std::string consumer;
--	/**< Consumer name to pass to the request. */
--	int request_type;
--	/**< Type of the request. */
--	::std::bitset<32> flags;
--	/**< Additional request flags. */
--};
--
--/**
-- * @brief Represents a single GPIO line.
-- *
-- * Internally this class holds a raw pointer to a GPIO line descriptor and a
-- * reference to the parent chip. All line resources are freed when the last
-- * reference to the parent chip is dropped.
-- */
--class line
--{
--public:
--
--	/**
--	 * @brief Default constructor. Creates an empty line object.
--	 */
--	line(void);
--
--	/**
--	 * @brief Copy constructor.
--	 * @param other Other line object.
--	 */
--	line(const line& other) = default;
--
--	/**
--	 * @brief Move constructor.
--	 * @param other Other line object.
--	 */
--	line(line&& other) = default;
--
--	/**
--	 * @brief Assignment operator.
--	 * @param other Other line object.
--	 * @return Reference to this object.
--	 */
--	line& operator=(const line& other) = default;
--
--	/**
--	 * @brief Move assignment operator.
--	 * @param other Other line object.
--	 * @return Reference to this object.
--	 */
--	line& operator=(line&& other) = default;
--
--	/**
--	 * @brief Destructor.
--	 */
--	~line(void) = default;
--
--	/**
--	 * @brief Get the offset of this line.
--	 * @return Offet of this line.
--	 */
--	unsigned int offset(void) const;
--
--	/**
--	 * @brief Get the name of this line (if any).
--	 * @return Name of this line or an empty string if it is unnamed.
--	 */
--	::std::string name(void) const;
--
--	/**
--	 * @brief Get the consumer of this line (if any).
--	 * @return Name of the consumer of this line or an empty string if it
--	 *         is unused.
--	 */
--	::std::string consumer(void) const;
--
--	/**
--	 * @brief Get current direction of this line.
--	 * @return Current direction setting.
--	 */
--	int direction(void) const;
--
--	/**
--	 * @brief Check if this line's signal is inverted.
--	 * @return True if this line is "active-low", false otherwise.
--	 */
--	bool is_active_low(void) const;
--
--	/**
--	 * @brief Get current bias of this line.
--	 * @return Current bias setting.
--	 */
--	int bias(void) const;
--
--	/**
--	 * @brief Check if this line is used by the kernel or other user space
--	 *        process.
--	 * @return True if this line is in use, false otherwise.
--	 */
--	bool is_used(void) const;
--
--	/**
--	 * @brief Get current drive setting of this line.
--	 * @return Current drive setting.
--	 */
--	int drive(void) const;
--
--	/**
--	 * @brief Request this line.
--	 * @param config Request config (see gpiod::line_request).
--	 * @param default_val Default value - only matters for OUTPUT direction.
--	 */
--	void request(const line_request& config, int default_val = 0) const;
--
--	/**
--	 * @brief Release the line if it was previously requested.
--	 */
--	void release(void) const;
--
--	/**
--	 * @brief Read the line value.
--	 * @return Current value (0 or 1).
--	 */
--	int get_value(void) const;
--
--	/**
--	 * @brief Set the value of this line.
--	 * @param val New value (0 or 1).
--	 */
--	void set_value(int val) const;
--
--	/**
--	 * @brief Set configuration of this line.
--	 * @param direction New direction.
--	 * @param flags Replacement flags.
--	 * @param value New value (0 or 1) - only matters for OUTPUT direction.
--	 */
--	void set_config(int direction, ::std::bitset<32> flags, int value = 0) const;
--
--	/**
--	 * @brief Set configuration flags of this line.
--	 * @param flags Replacement flags.
--	 */
--	void set_flags(::std::bitset<32> flags) const;
--
--	/**
--	 * @brief Change the direction this line to input.
--	 */
--	void set_direction_input() const;
--
--	/**
--	 * @brief Change the direction this lines to output.
--	 * @param value New value (0 or 1).
--	 */
--	void set_direction_output(int value = 0) const;
--
--	/**
--	 * @brief Wait for an event on this line.
--	 * @param timeout Time to wait before returning if no event occurred.
--	 * @return True if an event occurred and can be read, false if the wait
--	 *         timed out.
--	 */
--	bool event_wait(const ::std::chrono::nanoseconds& timeout) const;
--
--	/**
--	 * @brief Read a line event.
--	 * @return Line event object.
--	 */
--	line_event event_read(void) const;
--
--	/**
--	 * @brief Read multiple line events.
--	 * @return Vector of line event objects.
--	 */
--	::std::vector<line_event> event_read_multiple(void) const;
--
--	/**
--	 * @brief Get the event file descriptor associated with this line.
--	 * @return File descriptor number.
--	 */
--	int event_get_fd(void) const;
--
--	/**
--	 * @brief Get the parent chip.
--	 * @return Parent chip of this line.
--	 */
--	const chip get_chip(void) const;
--
--	/**
--	 * @brief Reset the state of this object.
--	 *
--	 * This is useful when the user needs to e.g. keep the line_event object
--	 * but wants to drop the reference to the GPIO chip indirectly held by
--	 * the line being the source of the event.
--	 */
--	void reset(void);
--
--	/**
--	 * @brief Check if two line objects reference the same GPIO line.
--	 * @param rhs Right-hand side of the equation.
--	 * @return True if both objects reference the same line, fale otherwise.
--	 */
--	bool operator==(const line& rhs) const noexcept;
--
--	/**
--	 * @brief Check if two line objects reference different GPIO lines.
--	 * @param rhs Right-hand side of the equation.
--	 * @return False if both objects reference the same line, true otherwise.
--	 */
--	bool operator!=(const line& rhs) const noexcept;
--
--	/**
--	 * @brief Check if this object holds a reference to any GPIO line.
--	 * @return True if this object references a GPIO line, false otherwise.
--	 */
--	explicit operator bool(void) const noexcept;
--
--	/**
--	 * @brief Check if this object doesn't reference any GPIO line.
--	 * @return True if this object doesn't reference any GPIO line, true
--	 *         otherwise.
--	 */
--	bool operator!(void) const noexcept;
--
--	/**
--	 * @brief Possible direction settings.
--	 */
--	enum : int {
--		DIRECTION_INPUT = 1,
--		/**< Line's direction setting is input. */
--		DIRECTION_OUTPUT,
--		/**< Line's direction setting is output. */
--	};
--
--	/**
--	 * @brief Possible drive settings.
--	 */
--	enum : int {
--		DRIVE_PUSH_PULL = 1,
--		/**< Drive setting is unknown. */
--		DRIVE_OPEN_DRAIN,
--		/**< Line output is open-drain. */
--		DRIVE_OPEN_SOURCE,
--		/**< Line output is open-source. */
--	};
--
--	/**
--	 * @brief Possible bias settings.
--	 */
--	enum : int {
--		BIAS_UNKNOWN = 1,
--		/**< Line's bias state is unknown. */
--		BIAS_DISABLED,
--		/**< Line's internal bias is disabled. */
--		BIAS_PULL_UP,
--		/**< Line's internal pull-up bias is enabled. */
--		BIAS_PULL_DOWN,
--		/**< Line's internal pull-down bias is enabled. */
--	};
--
--private:
--
--	line(::gpiod_line* line, const chip& owner);
--
--	void throw_if_null(void) const;
--	line_event make_line_event(const ::gpiod_line_event& event) const noexcept;
--
--	::gpiod_line* _m_line;
--	::std::weak_ptr<::gpiod_chip> _m_owner;
--
--	class chip_guard
--	{
--	public:
--		chip_guard(const line& line);
--		~chip_guard(void) = default;
--
--		chip_guard(const chip_guard& other) = delete;
--		chip_guard(chip_guard&& other) = delete;
--		chip_guard& operator=(const chip_guard&& other) = delete;
--		chip_guard& operator=(chip_guard&& other) = delete;
--
--	private:
--		::std::shared_ptr<::gpiod_chip> _m_chip;
--	};
--
--	friend chip;
--	friend line_bulk;
--	friend line_iter;
--};
--
--/**
-- * @brief Describes a single GPIO line event.
-- */
--struct line_event
--{
--	/**
--	 * @brief Possible event types.
--	 */
--	enum : int {
--		RISING_EDGE = 1,
--		/**< Rising edge event. */
--		FALLING_EDGE,
--		/**< Falling edge event. */
--	};
--
--	::std::chrono::nanoseconds timestamp;
--	/**< Best estimate of time of event occurrence in nanoseconds. */
--	int event_type;
--	/**< Type of the event that occurred. */
--	line source;
--	/**< Line object referencing the GPIO line on which the event occurred. */
--};
--
--/**
-- * @brief Represents a set of GPIO lines.
-- *
-- * Internally an object of this class stores an array of line objects
-- * owned by a single chip.
-- */
--class line_bulk
--{
--public:
--
--	/**
--	 * @brief Default constructor. Creates an empty line_bulk object.
--	 */
--	line_bulk(void) = default;
--
--	/**
--	 * @brief Construct a line_bulk from a vector of lines.
--	 * @param lines Vector of gpiod::line objects.
--	 * @note All lines must be owned by the same GPIO chip.
--	 */
--	line_bulk(const ::std::vector<line>& lines);
--
--	/**
--	 * @brief Copy constructor.
--	 * @param other Other line_bulk object.
--	 */
--	line_bulk(const line_bulk& other) = default;
--
--	/**
--	 * @brief Move constructor.
--	 * @param other Other line_bulk object.
--	 */
--	line_bulk(line_bulk&& other) = default;
--
--	/**
--	 * @brief Assignment operator.
--	 * @param other Other line_bulk object.
--	 * @return Reference to this object.
--	 */
--	line_bulk& operator=(const line_bulk& other) = default;
--
--	/**
--	 * @brief Move assignment operator.
--	 * @param other Other line_bulk object.
--	 * @return Reference to this object.
--	 */
--	line_bulk& operator=(line_bulk&& other) = default;
--
--	/**
--	 * @brief Destructor.
--	 */
--	~line_bulk(void) = default;
--
--	/**
--	 * @brief Add a line to this line_bulk object.
--	 * @param new_line Line to add.
--	 * @note The new line must be owned by the same chip as all the other
--	 *       lines already held by this line_bulk object.
--	 */
--	void append(const line& new_line);
--
--	/**
--	 * @brief Get the line at given offset.
--	 * @param index Index of the line to get.
--	 * @return Reference to the line object.
--	 * @note This method will throw if index is equal or greater than the
--	 *       number of lines currently held by this bulk.
--	 */
--	line& get(unsigned int index);
--
--	/**
--	 * @brief Get the line at given offset without bounds checking.
--	 * @param index Offset of the line to get.
--	 * @return Reference to the line object.
--	 * @note No bounds checking is performed.
--	 */
--	line& operator[](unsigned int index);
--
--	/**
--	 * @brief Get the number of lines currently held by this object.
--	 * @return Number of elements in this line_bulk.
--	 */
--	unsigned int size(void) const noexcept;
--
--	/**
--	 * @brief Check if this line_bulk doesn't hold any lines.
--	 * @return True if this object is empty, false otherwise.
--	 */
--	bool empty(void) const noexcept;
--
--	/**
--	 * @brief Remove all lines from this object.
--	 */
--	void clear(void);
--
--	/**
--	 * @brief Request all lines held by this object.
--	 * @param config Request config (see gpiod::line_request).
--	 * @param default_vals Vector of default values. Only relevant for
--	 *                     output direction requests.
--	 */
--	void request(const line_request& config,
--		     const ::std::vector<int> default_vals = ::std::vector<int>()) const;
--
--	/**
--	 * @brief Release all lines held by this object.
--	 */
--	void release(void) const;
--
--	/**
--	 * @brief Read values from all lines held by this object.
--	 * @return Vector containing line values the order of which corresponds
--	 *         with the order of lines in the internal array.
--	 */
--	::std::vector<int> get_values(void) const;
--
--	/**
--	 * @brief Set values of all lines held by this object.
--	 * @param values Vector of values to set. Must be the same size as the
--	 *               number of lines held by this line_bulk.
--	 */
--	void set_values(const ::std::vector<int>& values) const;
--
--	/**
--	 * @brief Set configuration of all lines held by this object.
--	 * @param direction New direction.
--	 * @param flags Replacement flags.
--	 * @param values Vector of values to set. Must be the same size as the
--	 *               number of lines held by this line_bulk.
--	 *               Only relevant for output direction requests.
--	 */
--	void set_config(int direction, ::std::bitset<32> flags,
--			const ::std::vector<int> values = ::std::vector<int>()) const;
--
--	/**
--	 * @brief Set configuration flags of all lines held by this object.
--	 * @param flags Replacement flags.
--	 */
--	void set_flags(::std::bitset<32> flags) const;
--
--	/**
--	 * @brief Change the direction all lines held by this object to input.
--	 */
--	void set_direction_input() const;
--
--	/**
--	 * @brief Change the direction all lines held by this object to output.
--	 * @param values Vector of values to set. Must be the same size as the
--	 *               number of lines held by this line_bulk.
--	 */
--	void set_direction_output(const ::std::vector<int>& values) const;
--
--	/**
--	 * @brief Poll the set of lines for line events.
--	 * @param timeout Number of nanoseconds to wait before returning an
--	 *                empty line_bulk.
--	 * @return Returns a line_bulk object containing lines on which events
--	 *         occurred.
--	 */
--	line_bulk event_wait(const ::std::chrono::nanoseconds& timeout) const;
--
--	/**
--	 * @brief Check if this object holds any lines.
--	 * @return True if this line_bulk holds at least one line, false otherwise.
--	 */
--	explicit operator bool(void) const noexcept;
--
--	/**
--	 * @brief Check if this object doesn't hold any lines.
--	 * @return True if this line_bulk is empty, false otherwise.
--	 */
--	bool operator!(void) const noexcept;
--
--	/**
--	 * @brief Max number of lines that this object can hold.
--	 */
--	static const unsigned int MAX_LINES;
--
--	/**
--	 * @brief Iterator for iterating over lines held by line_bulk.
--	 */
--	class iterator
--	{
--	public:
--
--		/**
--		 * @brief Default constructor. Builds an empty iterator object.
--		 */
--		iterator(void) = default;
--
--		/**
--		 * @brief Copy constructor.
--		 * @param other Other line_bulk iterator.
--		 */
--		iterator(const iterator& other) = default;
--
--		/**
--		 * @brief Move constructor.
--		 * @param other Other line_bulk iterator.
--		 */
--		iterator(iterator&& other) = default;
--
--		/**
--		 * @brief Assignment operator.
--		 * @param other Other line_bulk iterator.
--		 * @return Reference to this iterator.
--		 */
--		iterator& operator=(const iterator& other) = default;
--
--		/**
--		 * @brief Move assignment operator.
--		 * @param other Other line_bulk iterator.
--		 * @return Reference to this iterator.
--		 */
--		iterator& operator=(iterator&& other) = default;
--
--		/**
--		 * @brief Destructor.
--		 */
--		~iterator(void) = default;
--
--		/**
--		 * @brief Advance the iterator by one element.
--		 * @return Reference to this iterator.
--		 */
--		iterator& operator++(void);
--
--		/**
--		 * @brief Dereference current element.
--		 * @return Current GPIO line by reference.
--		 */
--		const line& operator*(void) const;
--
--		/**
--		 * @brief Member access operator.
--		 * @return Current GPIO line by pointer.
--		 */
--		const line* operator->(void) const;
--
--		/**
--		 * @brief Check if this operator points to the same element.
--		 * @param rhs Right-hand side of the equation.
--		 * @return True if this iterator points to the same GPIO line,
--		 *         false otherwise.
--		 */
--		bool operator==(const iterator& rhs) const noexcept;
--
--		/**
--		 * @brief Check if this operator doesn't point to the same element.
--		 * @param rhs Right-hand side of the equation.
--		 * @return True if this iterator doesn't point to the same GPIO
--		 *         line, false otherwise.
--		 */
--		bool operator!=(const iterator& rhs) const noexcept;
--
--	private:
--
--		iterator(const ::std::vector<line>::iterator& it);
--
--		::std::vector<line>::iterator _m_iter;
--
--		friend line_bulk;
--	};
--
--	/**
--	 * @brief Returns an iterator to the first line.
--	 * @return A line_bulk iterator.
--	 */
--	iterator begin(void) noexcept;
--
--	/**
--	 * @brief Returns an iterator to the element following the last line.
--	 * @return A line_bulk iterator.
--	 */
--	iterator end(void) noexcept;
--
--private:
--
--	struct line_bulk_deleter
--	{
--		void operator()(::gpiod_line_bulk *bulk);
--	};
--
--	void throw_if_empty(void) const;
--
--	using line_bulk_ptr = ::std::unique_ptr<::gpiod_line_bulk, line_bulk_deleter>;
--
--	line_bulk_ptr make_line_bulk_ptr(void) const;
--	line_bulk_ptr to_line_bulk(void) const;
--
--	::std::vector<line> _m_bulk;
--};
--
--/**
-- * @brief Support for range-based loops for line iterators.
-- * @param iter A line iterator.
-- * @return Iterator unchanged.
-- */
--line_iter begin(line_iter iter) noexcept;
--
--/**
-- * @brief Support for range-based loops for line iterators.
-- * @param iter A line iterator.
-- * @return New end iterator.
-- */
--line_iter end(const line_iter& iter) noexcept;
--
--/**
-- * @brief Allows to iterate over all lines owned by a GPIO chip.
-- */
--class line_iter
--{
--public:
--
--	/**
--	 * @brief Default constructor. Creates the end iterator.
--	 */
--	line_iter(void) = default;
--
--	/**
--	 * @brief Constructor. Creates the begin iterator.
--	 * @param owner Chip owning the GPIO lines over which we want to iterate.
--	 */
--	line_iter(const chip& owner);
--
--	/**
--	 * @brief Copy constructor.
--	 * @param other Other line iterator.
--	 */
--	line_iter(const line_iter& other) = default;
--
--	/**
--	 * @brief Move constructor.
--	 * @param other Other line iterator.
--	 */
--	line_iter(line_iter&& other) = default;
--
--	/**
--	 * @brief Assignment operator.
--	 * @param other Other line iterator.
--	 * @return Reference to this line_iter.
--	 */
--	line_iter& operator=(const line_iter& other) = default;
--
--	/**
--	 * @brief Move assignment operator.
--	 * @param other Other line iterator.
--	 * @return Reference to this line_iter.
--	 */
--	line_iter& operator=(line_iter&& other) = default;
--
--	/**
--	 * @brief Destructor.
--	 */
--	~line_iter(void) = default;
--
--	/**
--	 * @brief Advance the iterator by one element.
--	 * @return Reference to this iterator.
--	 */
--	line_iter& operator++(void);
--
--	/**
--	 * @brief Dereference current element.
--	 * @return Current GPIO line by reference.
--	 */
--	const line& operator*(void) const;
--
--	/**
--	 * @brief Member access operator.
--	 * @return Current GPIO line by pointer.
--	 */
--	const line* operator->(void) const;
--
--	/**
--	 * @brief Check if this operator points to the same element.
--	 * @param rhs Right-hand side of the equation.
--	 * @return True if this iterator points to the same line_iter,
--	 *         false otherwise.
--	 */
--	bool operator==(const line_iter& rhs) const noexcept;
--
--	/**
--	 * @brief Check if this operator doesn't point to the same element.
--	 * @param rhs Right-hand side of the equation.
--	 * @return True if this iterator doesn't point to the same line_iter,
--	 *         false otherwise.
--	 */
--	bool operator!=(const line_iter& rhs) const noexcept;
--
--private:
--
--	line _m_current;
--};
--
--/**
-- * @}
-- */
--
--} /* namespace gpiod */
--
--#endif /* __LIBGPIOD_GPIOD_CXX_HPP__ */
-diff --git a/bindings/cxx/internal.hpp b/bindings/cxx/internal.hpp
-deleted file mode 100644
-index 9406d30..0000000
---- a/bindings/cxx/internal.hpp
-+++ /dev/null
-@@ -1,9 +0,0 @@
--/* SPDX-License-Identifier: LGPL-3.0-or-later */
--/* SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <bgolaszewski@baylibre.com> */
--
--#ifndef __LIBGPIOD_GPIOD_CXX_INTERNAL_HPP__
--#define __LIBGPIOD_GPIOD_CXX_INTERNAL_HPP__
--
--#define GPIOD_CXX_API __attribute__((visibility("default")))
--
--#endif /* __LIBGPIOD_GPIOD_CXX_INTERNAL_HPP__ */
-diff --git a/bindings/cxx/iter.cpp b/bindings/cxx/iter.cpp
-deleted file mode 100644
-index 09d46f3..0000000
---- a/bindings/cxx/iter.cpp
-+++ /dev/null
-@@ -1,60 +0,0 @@
--// SPDX-License-Identifier: LGPL-3.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <gpiod.hpp>
--#include <system_error>
--
--#include "internal.hpp"
--
--namespace gpiod {
--
--GPIOD_CXX_API line_iter begin(line_iter iter) noexcept
--{
--	return iter;
--}
--
--GPIOD_CXX_API line_iter end(const line_iter&) noexcept
--{
--	return line_iter();
--}
--
--GPIOD_CXX_API line_iter::line_iter(const chip& owner)
--	: _m_current(owner.get_line(0))
--{
--
--}
--
--GPIOD_CXX_API line_iter& line_iter::operator++(void)
--{
--	unsigned int offset = this->_m_current.offset() + 1;
--	chip owner = this->_m_current.get_chip();
--
--	if (offset == owner.num_lines())
--		this->_m_current = line(); /* Last element */
--	else
--		this->_m_current = owner.get_line(offset);
--
--	return *this;
--}
--
--GPIOD_CXX_API const line& line_iter::operator*(void) const
--{
--	return this->_m_current;
--}
--
--GPIOD_CXX_API const line* line_iter::operator->(void) const
--{
--	return ::std::addressof(this->_m_current);
--}
--
--GPIOD_CXX_API bool line_iter::operator==(const line_iter& rhs) const noexcept
--{
--	return this->_m_current._m_line == rhs._m_current._m_line;
--}
--
--GPIOD_CXX_API bool line_iter::operator!=(const line_iter& rhs) const noexcept
--{
--	return this->_m_current._m_line != rhs._m_current._m_line;
--}
--
--} /* namespace gpiod */
-diff --git a/bindings/cxx/libgpiodcxx.pc.in b/bindings/cxx/libgpiodcxx.pc.in
-deleted file mode 100644
-index 731227c..0000000
---- a/bindings/cxx/libgpiodcxx.pc.in
-+++ /dev/null
-@@ -1,14 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
--# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--prefix=@prefix@
--exec_prefix=@exec_prefix@
--libdir=@libdir@
--includedir=@includedir@
--
--Name: libgpiodcxx
--Description: C++ bindings for libgpiod
--URL: @PACKAGE_URL@
--Version: @PACKAGE_VERSION@
--Libs: -L${libdir} -lgpiodcxx
--Cflags: -I${includedir}
-diff --git a/bindings/cxx/line.cpp b/bindings/cxx/line.cpp
-deleted file mode 100644
-index cfcf2fb..0000000
---- a/bindings/cxx/line.cpp
-+++ /dev/null
-@@ -1,321 +0,0 @@
--// SPDX-License-Identifier: LGPL-3.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <gpiod.hpp>
--#include <array>
--#include <map>
--#include <system_error>
--
--#include "internal.hpp"
--
--namespace gpiod {
--
--namespace {
--
--const ::std::map<int, int> drive_mapping = {
--	{ GPIOD_LINE_DRIVE_PUSH_PULL,	line::DRIVE_PUSH_PULL, },
--	{ GPIOD_LINE_DRIVE_OPEN_DRAIN,	line::DRIVE_OPEN_DRAIN, },
--	{ GPIOD_LINE_DRIVE_OPEN_SOURCE,	line::DRIVE_OPEN_SOURCE, },
--};
--
--const ::std::map<int, int> bias_mapping = {
--	{ GPIOD_LINE_BIAS_UNKNOWN,	line::BIAS_UNKNOWN, },
--	{ GPIOD_LINE_BIAS_DISABLED,	line::BIAS_DISABLED, },
--	{ GPIOD_LINE_BIAS_PULL_UP,	line::BIAS_PULL_UP, },
--	{ GPIOD_LINE_BIAS_PULL_DOWN,	line::BIAS_PULL_DOWN, },
--};
--
--} /* namespace */
--
--GPIOD_CXX_API line::line(void)
--	: _m_line(nullptr),
--	  _m_owner()
--{
--
--}
--
--GPIOD_CXX_API line::line(::gpiod_line* line, const chip& owner)
--	: _m_line(line),
--	  _m_owner(owner._m_chip)
--{
--
--}
--
--GPIOD_CXX_API unsigned int line::offset(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	return ::gpiod_line_offset(this->_m_line);
--}
--
--GPIOD_CXX_API ::std::string line::name(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	const char* name = ::gpiod_line_name(this->_m_line);
--
--	return name ? ::std::string(name) : ::std::string();
--}
--
--GPIOD_CXX_API ::std::string line::consumer(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	const char* consumer = ::gpiod_line_consumer(this->_m_line);
--
--	return consumer ? ::std::string(consumer) : ::std::string();
--}
--
--GPIOD_CXX_API int line::direction(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	int dir = ::gpiod_line_direction(this->_m_line);
--
--	return dir == GPIOD_LINE_DIRECTION_INPUT ? DIRECTION_INPUT : DIRECTION_OUTPUT;
--}
--
--GPIOD_CXX_API bool line::is_active_low(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	return ::gpiod_line_is_active_low(this->_m_line);
--}
--
--GPIOD_CXX_API int line::bias(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	return bias_mapping.at(::gpiod_line_bias(this->_m_line));
--}
--
--GPIOD_CXX_API bool line::is_used(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	return ::gpiod_line_is_used(this->_m_line);
--}
--
--GPIOD_CXX_API int line::drive(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	return drive_mapping.at(::gpiod_line_drive(this->_m_line));
--}
--
--GPIOD_CXX_API void line::request(const line_request& config, int default_val) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	bulk.request(config, { default_val });
--}
--
--GPIOD_CXX_API void line::release(void) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	bulk.release();
--}
--
--/*
-- * REVISIT: Check the performance of get/set_value & event_wait compared to
-- * the C API. Creating a line_bulk object involves a memory allocation every
-- * time this method if called. If the performance is significantly lower,
-- * switch to calling the C functions for setting/getting line values and
-- * polling for events on single lines directly.
-- */
--
--GPIOD_CXX_API int line::get_value(void) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	return bulk.get_values()[0];
--}
--
--GPIOD_CXX_API void line::set_value(int val) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	bulk.set_values({ val });
--}
--
--GPIOD_CXX_API void line::set_config(int direction, ::std::bitset<32> flags,
--				    int value) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	bulk.set_config(direction, flags, { value });
--}
--
--GPIOD_CXX_API void line::set_flags(::std::bitset<32> flags) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	bulk.set_flags(flags);
--}
--
--GPIOD_CXX_API void line::set_direction_input() const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	bulk.set_direction_input();
--}
--
--GPIOD_CXX_API void line::set_direction_output(int value) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	bulk.set_direction_output({ value });
--}
--
--GPIOD_CXX_API bool line::event_wait(const ::std::chrono::nanoseconds& timeout) const
--{
--	this->throw_if_null();
--
--	line_bulk bulk({ *this });
--
--	line_bulk event_bulk = bulk.event_wait(timeout);
--
--	return !!event_bulk;
--}
--
--GPIOD_CXX_API line_event line::make_line_event(const ::gpiod_line_event& event) const noexcept
--{
--	line_event ret;
--
--	if (event.event_type == GPIOD_LINE_EVENT_RISING_EDGE)
--		ret.event_type = line_event::RISING_EDGE;
--	else if (event.event_type == GPIOD_LINE_EVENT_FALLING_EDGE)
--		ret.event_type = line_event::FALLING_EDGE;
--
--	ret.timestamp = ::std::chrono::duration_cast<::std::chrono::nanoseconds>(
--				::std::chrono::seconds(event.ts.tv_sec)) +
--				::std::chrono::nanoseconds(event.ts.tv_nsec);
--
--	ret.source = *this;
--
--	return ret;
--}
--
--GPIOD_CXX_API line_event line::event_read(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	::gpiod_line_event event_buf;
--	line_event event;
--	int rv;
--
--	rv = ::gpiod_line_event_read(this->_m_line, ::std::addressof(event_buf));
--	if (rv < 0)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error reading line event");
--
--	return this->make_line_event(event_buf);
--}
--
--GPIOD_CXX_API ::std::vector<line_event> line::event_read_multiple(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	/* 16 is the maximum number of events stored in the kernel FIFO. */
--	::std::array<::gpiod_line_event, 16> event_buf;
--	::std::vector<line_event> events;
--	int rv;
--
--	rv = ::gpiod_line_event_read_multiple(this->_m_line,
--					      event_buf.data(), event_buf.size());
--	if (rv < 0)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error reading multiple line events");
--
--	events.reserve(rv);
--	for (int i = 0; i < rv; i++)
--		events.push_back(this->make_line_event(event_buf[i]));
--
--	return events;
--}
--
--GPIOD_CXX_API int line::event_get_fd(void) const
--{
--	this->throw_if_null();
--	line::chip_guard lock_chip(*this);
--
--	int ret = ::gpiod_line_event_get_fd(this->_m_line);
--
--	if (ret < 0)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to get the line event file descriptor");
--
--	return ret;
--}
--
--GPIOD_CXX_API const chip line::get_chip(void) const
--{
--	return chip(this->_m_owner);
--}
--
--GPIOD_CXX_API void line::reset(void)
--{
--	this->_m_line = nullptr;
--	this->_m_owner.reset();
--}
--
--GPIOD_CXX_API bool line::operator==(const line& rhs) const noexcept
--{
--	return this->_m_line == rhs._m_line;
--}
--
--GPIOD_CXX_API bool line::operator!=(const line& rhs) const noexcept
--{
--	return this->_m_line != rhs._m_line;
--}
--
--GPIOD_CXX_API line::operator bool(void) const noexcept
--{
--	return this->_m_line != nullptr;
--}
--
--GPIOD_CXX_API bool line::operator!(void) const noexcept
--{
--	return this->_m_line == nullptr;
--}
--
--GPIOD_CXX_API void line::throw_if_null(void) const
--{
--	if (!this->_m_line)
--		throw ::std::logic_error("object not holding a GPIO line handle");
--}
--
--GPIOD_CXX_API line::chip_guard::chip_guard(const line& line)
--	: _m_chip(line._m_owner)
--{
--
--}
--
--} /* namespace gpiod */
-diff --git a/bindings/cxx/line_bulk.cpp b/bindings/cxx/line_bulk.cpp
-deleted file mode 100644
-index a9261c0..0000000
---- a/bindings/cxx/line_bulk.cpp
-+++ /dev/null
-@@ -1,366 +0,0 @@
--// SPDX-License-Identifier: LGPL-3.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <gpiod.hpp>
--#include <map>
--#include <system_error>
--
--#include "internal.hpp"
--
--namespace gpiod {
--
--GPIOD_CXX_API const ::std::bitset<32> line_request::FLAG_ACTIVE_LOW(GPIOD_BIT(0));
--GPIOD_CXX_API const ::std::bitset<32> line_request::FLAG_OPEN_SOURCE(GPIOD_BIT(1));
--GPIOD_CXX_API const ::std::bitset<32> line_request::FLAG_OPEN_DRAIN(GPIOD_BIT(2));
--GPIOD_CXX_API const ::std::bitset<32> line_request::FLAG_BIAS_DISABLED(GPIOD_BIT(3));
--GPIOD_CXX_API const ::std::bitset<32> line_request::FLAG_BIAS_PULL_DOWN(GPIOD_BIT(4));
--GPIOD_CXX_API const ::std::bitset<32> line_request::FLAG_BIAS_PULL_UP(GPIOD_BIT(5));
--
--namespace {
--
--const ::std::map<int, int> reqtype_mapping = {
--	{ line_request::DIRECTION_AS_IS,	GPIOD_LINE_REQUEST_DIRECTION_AS_IS, },
--	{ line_request::DIRECTION_INPUT,	GPIOD_LINE_REQUEST_DIRECTION_INPUT, },
--	{ line_request::DIRECTION_OUTPUT,	GPIOD_LINE_REQUEST_DIRECTION_OUTPUT, },
--	{ line_request::EVENT_FALLING_EDGE,	GPIOD_LINE_REQUEST_EVENT_FALLING_EDGE, },
--	{ line_request::EVENT_RISING_EDGE,	GPIOD_LINE_REQUEST_EVENT_RISING_EDGE, },
--	{ line_request::EVENT_BOTH_EDGES,	GPIOD_LINE_REQUEST_EVENT_BOTH_EDGES, },
--};
--
--struct bitset_cmp
--{
--	bool operator()(const ::std::bitset<32>& lhs, const ::std::bitset<32>& rhs) const
--	{
--		return lhs.to_ulong() < rhs.to_ulong();
--	}
--};
--
--const ::std::map<::std::bitset<32>, int, bitset_cmp> reqflag_mapping = {
--	{ line_request::FLAG_ACTIVE_LOW,	GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW, },
--	{ line_request::FLAG_OPEN_DRAIN,	GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN, },
--	{ line_request::FLAG_OPEN_SOURCE,	GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE, },
--	{ line_request::FLAG_BIAS_DISABLED,	GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLED, },
--	{ line_request::FLAG_BIAS_PULL_DOWN,	GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN, },
--	{ line_request::FLAG_BIAS_PULL_UP,	GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP, },
--};
--
--} /* namespace */
--
--GPIOD_CXX_API const unsigned int line_bulk::MAX_LINES = 64;
--
--GPIOD_CXX_API line_bulk::line_bulk(const ::std::vector<line>& lines)
--	: _m_bulk()
--{
--	this->_m_bulk.reserve(lines.size());
--
--	for (auto& it: lines)
--		this->append(it);
--}
--
--GPIOD_CXX_API void line_bulk::append(const line& new_line)
--{
--	if (!new_line)
--		throw ::std::logic_error("line_bulk cannot hold empty line objects");
--
--	if (this->_m_bulk.size() >= MAX_LINES)
--		throw ::std::logic_error("maximum number of lines reached");
--
--	if (this->_m_bulk.size() >= 1 && this->_m_bulk.begin()->get_chip() != new_line.get_chip())
--		throw ::std::logic_error("line_bulk cannot hold GPIO lines from different chips");
--
--	this->_m_bulk.push_back(new_line);
--}
--
--GPIOD_CXX_API line& line_bulk::get(unsigned int index)
--{
--	return this->_m_bulk.at(index);
--}
--
--GPIOD_CXX_API line& line_bulk::operator[](unsigned int index)
--{
--	return this->_m_bulk[index];
--}
--
--GPIOD_CXX_API unsigned int line_bulk::size(void) const noexcept
--{
--	return this->_m_bulk.size();
--}
--
--GPIOD_CXX_API bool line_bulk::empty(void) const noexcept
--{
--	return this->_m_bulk.empty();
--}
--
--GPIOD_CXX_API void line_bulk::clear(void)
--{
--	this->_m_bulk.clear();
--}
--
--GPIOD_CXX_API void line_bulk::request(const line_request& config, const ::std::vector<int> default_vals) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	if (!default_vals.empty() && this->size() != default_vals.size())
--		throw ::std::invalid_argument("the number of default values must correspond with the number of lines");
--
--	::gpiod_line_request_config conf;
--	auto bulk = this->to_line_bulk();
--	int rv;
--
--	conf.consumer = config.consumer.c_str();
--	conf.request_type = reqtype_mapping.at(config.request_type);
--	conf.flags = 0;
--
--	for (auto& it: reqflag_mapping) {
--		if ((it.first & config.flags).to_ulong())
--			conf.flags |= it.second;
--	}
--
--	rv = ::gpiod_line_request_bulk(bulk.get(),
--				       ::std::addressof(conf),
--				       default_vals.empty() ? NULL : default_vals.data());
--	if (rv)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error requesting GPIO lines");
--}
--
--GPIOD_CXX_API void line_bulk::release(void) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	auto bulk = this->to_line_bulk();
--
--	::gpiod_line_release_bulk(bulk.get());
--}
--
--GPIOD_CXX_API ::std::vector<int> line_bulk::get_values(void) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	auto bulk = this->to_line_bulk();
--	::std::vector<int> values;
--	int rv;
--
--	values.resize(this->_m_bulk.size());
--
--	rv = ::gpiod_line_get_value_bulk(bulk.get(), values.data());
--	if (rv)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error reading GPIO line values");
--
--	return values;
--}
--
--GPIOD_CXX_API void line_bulk::set_values(const ::std::vector<int>& values) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	if (values.size() != this->_m_bulk.size())
--		throw ::std::invalid_argument("the size of values array must correspond with the number of lines");
--
--	auto bulk = this->to_line_bulk();
--	int rv;
--
--	rv = ::gpiod_line_set_value_bulk(bulk.get(), values.data());
--	if (rv)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error setting GPIO line values");
--}
--
--GPIOD_CXX_API void line_bulk::set_config(int direction, ::std::bitset<32> flags,
--					 const ::std::vector<int> values) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	if (!values.empty() && this->_m_bulk.size() != values.size())
--		throw ::std::invalid_argument("the number of default values must correspond with the number of lines");
--
--	auto bulk = this->to_line_bulk();
--	int rv, gflags;
--
--	gflags = 0;
--
--	for (auto& it: reqflag_mapping) {
--		if ((it.first & flags).to_ulong())
--			gflags |= it.second;
--	}
--
--	rv = ::gpiod_line_set_config_bulk(bulk.get(), direction,
--					  gflags, values.data());
--	if (rv)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error setting GPIO line config");
--}
--
--GPIOD_CXX_API void line_bulk::set_flags(::std::bitset<32> flags) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	auto bulk = this->to_line_bulk();
--	int rv, gflags;
--
--	gflags = 0;
--
--	for (auto& it: reqflag_mapping) {
--		if ((it.first & flags).to_ulong())
--			gflags |= it.second;
--	}
--
--	rv = ::gpiod_line_set_flags_bulk(bulk.get(), gflags);
--	if (rv)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error setting GPIO line flags");
--}
--
--GPIOD_CXX_API void line_bulk::set_direction_input() const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	auto bulk = this->to_line_bulk();
--	int rv;
--
--	rv = ::gpiod_line_set_direction_input_bulk(bulk.get());
--	if (rv)
--		throw ::std::system_error(errno, ::std::system_category(),
--			"error setting GPIO line direction to input");
--}
--
--GPIOD_CXX_API void line_bulk::set_direction_output(const ::std::vector<int>& values) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	if (values.size() != this->_m_bulk.size())
--		throw ::std::invalid_argument("the size of values array must correspond with the number of lines");
--
--	auto bulk = this->to_line_bulk();
--	int rv;
--
--	rv = ::gpiod_line_set_direction_output_bulk(bulk.get(), values.data());
--	if (rv)
--		throw ::std::system_error(errno, ::std::system_category(),
--			"error setting GPIO line direction to output");
--}
--
--GPIOD_CXX_API line_bulk line_bulk::event_wait(const ::std::chrono::nanoseconds& timeout) const
--{
--	this->throw_if_empty();
--	line::chip_guard lock_chip(this->_m_bulk.front());
--
--	auto ev_bulk = this->make_line_bulk_ptr();
--	auto bulk = this->to_line_bulk();
--	::timespec ts;
--	line_bulk ret;
--	int rv;
--
--	ts.tv_sec = timeout.count() / 1000000000ULL;
--	ts.tv_nsec = timeout.count() % 1000000000ULL;
--
--	rv = ::gpiod_line_event_wait_bulk(bulk.get(), ::std::addressof(ts), ev_bulk.get());
--	if (rv < 0) {
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error polling for events");
--	} else if (rv > 0) {
--		auto chip = this->_m_bulk[0].get_chip();
--		auto num_lines = ::gpiod_line_bulk_num_lines(ev_bulk.get());
--
--		for (unsigned int i = 0; i < num_lines; i++)
--			ret.append(line(::gpiod_line_bulk_get_line(ev_bulk.get(), i), chip));
--	}
--
--	return ret;
--}
--
--GPIOD_CXX_API line_bulk::operator bool(void) const noexcept
--{
--	return !this->_m_bulk.empty();
--}
--
--GPIOD_CXX_API bool line_bulk::operator!(void) const noexcept
--{
--	return this->_m_bulk.empty();
--}
--
--GPIOD_CXX_API line_bulk::iterator::iterator(const ::std::vector<line>::iterator& it)
--	: _m_iter(it)
--{
--
--}
--
--GPIOD_CXX_API line_bulk::iterator& line_bulk::iterator::operator++(void)
--{
--	this->_m_iter++;
--
--	return *this;
--}
--
--GPIOD_CXX_API const line& line_bulk::iterator::operator*(void) const
--{
--	return *this->_m_iter;
--}
--
--GPIOD_CXX_API const line* line_bulk::iterator::operator->(void) const
--{
--	return this->_m_iter.operator->();
--}
--
--GPIOD_CXX_API bool line_bulk::iterator::operator==(const iterator& rhs) const noexcept
--{
--	return this->_m_iter == rhs._m_iter;
--}
--
--GPIOD_CXX_API bool line_bulk::iterator::operator!=(const iterator& rhs) const noexcept
--{
--	return this->_m_iter != rhs._m_iter;
--}
--
--GPIOD_CXX_API line_bulk::iterator line_bulk::begin(void) noexcept
--{
--	return line_bulk::iterator(this->_m_bulk.begin());
--}
--
--GPIOD_CXX_API line_bulk::iterator line_bulk::end(void) noexcept
--{
--	return line_bulk::iterator(this->_m_bulk.end());
--}
--
--GPIOD_CXX_API void line_bulk::throw_if_empty(void) const
--{
--	if (this->_m_bulk.empty())
--		throw ::std::logic_error("line_bulk not holding any GPIO lines");
--}
--
--GPIOD_CXX_API line_bulk::line_bulk_ptr line_bulk::make_line_bulk_ptr(void) const
--{
--	line_bulk_ptr bulk(::gpiod_line_bulk_new(this->size()));
--
--	if (!bulk)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to allocate new bulk object");
--
--	return bulk;
--}
--
--GPIOD_CXX_API line_bulk::line_bulk_ptr line_bulk::to_line_bulk(void) const
--{
--	line_bulk_ptr bulk = this->make_line_bulk_ptr();
--
--	for (auto& it: this->_m_bulk)
--		::gpiod_line_bulk_add_line(bulk.get(), it._m_line);
--
--	return bulk;
--}
--
--GPIOD_CXX_API void line_bulk::line_bulk_deleter::operator()(::gpiod_line_bulk *bulk)
--{
--	::gpiod_line_bulk_free(bulk);
--}
--
--} /* namespace gpiod */
-diff --git a/bindings/cxx/tests/.gitignore b/bindings/cxx/tests/.gitignore
-deleted file mode 100644
-index 7990193..0000000
---- a/bindings/cxx/tests/.gitignore
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
--# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--gpiod-cxx-test
-diff --git a/bindings/cxx/tests/Makefile.am b/bindings/cxx/tests/Makefile.am
-deleted file mode 100644
-index cbdecdc..0000000
---- a/bindings/cxx/tests/Makefile.am
-+++ /dev/null
-@@ -1,21 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
--# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--AM_CPPFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
--AM_CPPFLAGS += -I$(top_srcdir)/tests/mockup/
--AM_CPPFLAGS += -Wall -Wextra -g -std=gnu++11 $(CATCH2_CFLAGS)
--AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
--AM_LDFLAGS += -lgpiomockup -L$(top_builddir)/tests/mockup/
--AM_LDFLAGS += -pthread
--
--bin_PROGRAMS = gpiod-cxx-test
--
--gpiod_cxx_test_SOURCES =			\
--		gpiod-cxx-test-main.cpp		\
--		gpiod-cxx-test.cpp		\
--		gpio-mockup.cpp			\
--		gpio-mockup.hpp			\
--		tests-chip.cpp			\
--		tests-event.cpp			\
--		tests-iter.cpp			\
--		tests-line.cpp
-diff --git a/bindings/cxx/tests/gpio-mockup.cpp b/bindings/cxx/tests/gpio-mockup.cpp
-deleted file mode 100644
-index 2e99dd4..0000000
---- a/bindings/cxx/tests/gpio-mockup.cpp
-+++ /dev/null
-@@ -1,153 +0,0 @@
--// SPDX-License-Identifier: LGPL-3.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <system_error>
--
--#include "gpio-mockup.hpp"
--
--namespace gpiod {
--namespace test {
--
--const ::std::bitset<32> mockup::FLAG_NAMED_LINES("1");
--
--mockup& mockup::instance(void)
--{
--	static mockup mockup;
--
--	return mockup;
--}
--
--mockup::mockup(void) : _m_mockup(::gpio_mockup_new())
--{
--	if (!this->_m_mockup)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to create the gpio-mockup context");
--}
--
--mockup::~mockup(void)
--{
--	::gpio_mockup_unref(this->_m_mockup);
--}
--
--void mockup::probe(const ::std::vector<unsigned int>& chip_sizes,
--		   const ::std::bitset<32>& flags)
--{
--	int ret, probe_flags = 0;
--
--	if (flags.to_ulong() & FLAG_NAMED_LINES.to_ulong())
--		probe_flags |= GPIO_MOCKUP_FLAG_NAMED_LINES;
--
--	ret = ::gpio_mockup_probe(this->_m_mockup, chip_sizes.size(),
--				  chip_sizes.data(), probe_flags);
--	if (ret)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to probe gpio-mockup module");
--}
--
--void mockup::remove(void)
--{
--	int ret = ::gpio_mockup_remove(this->_m_mockup);
--	if (ret)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to remove gpio-mockup module");
--}
--
--::std::string mockup::chip_name(unsigned int idx) const
--{
--	const char *name = ::gpio_mockup_chip_name(this->_m_mockup, idx);
--	if (!name)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to retrieve the chip name");
--
--	return ::std::string(name);
--}
--
--::std::string mockup::chip_path(unsigned int idx) const
--{
--	const char *path = ::gpio_mockup_chip_path(this->_m_mockup, idx);
--	if (!path)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to retrieve the chip path");
--
--	return ::std::string(path);
--}
--
--unsigned int mockup::chip_num(unsigned int idx) const
--{
--	int num = ::gpio_mockup_chip_num(this->_m_mockup, idx);
--	if (num < 0)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "unable to retrieve the chip number");
--
--	return num;
--}
--
--int mockup::chip_get_value(unsigned int chip_idx, unsigned int line_offset)
--{
--	int val = ::gpio_mockup_get_value(this->_m_mockup, chip_idx, line_offset);
--	if (val < 0)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error reading the line value");
--
--	return val;
--}
--
--void mockup::chip_set_pull(unsigned int chip_idx, unsigned int line_offset, int pull)
--{
--	int ret = ::gpio_mockup_set_pull(this->_m_mockup, chip_idx, line_offset, pull);
--	if (ret)
--		throw ::std::system_error(errno, ::std::system_category(),
--					  "error setting line pull");
--}
--
--mockup::probe_guard::probe_guard(const ::std::vector<unsigned int>& chip_sizes,
--				 const ::std::bitset<32>& flags)
--{
--	mockup::instance().probe(chip_sizes, flags);
--}
--
--mockup::probe_guard::~probe_guard(void)
--{
--	mockup::instance().remove();
--}
--
--mockup::event_thread::event_thread(unsigned int chip_index,
--				   unsigned int line_offset, unsigned int period_ms)
--	: _m_chip_index(chip_index),
--	  _m_line_offset(line_offset),
--	  _m_period_ms(period_ms),
--	  _m_stop(false),
--	  _m_mutex(),
--	  _m_cond(),
--	  _m_thread(&event_thread::event_worker, this)
--{
--
--}
--
--mockup::event_thread::~event_thread(void)
--{
--	::std::unique_lock<::std::mutex> lock(this->_m_mutex);
--	this->_m_stop = true;
--	this->_m_cond.notify_all();
--	lock.unlock();
--	this->_m_thread.join();
--}
--
--void mockup::event_thread::event_worker(void)
--{
--	for (unsigned int i = 0;; i++) {
--		::std::unique_lock<::std::mutex> lock(this->_m_mutex);
--
--		if (this->_m_stop)
--			break;
--
--		::std::cv_status status = this->_m_cond.wait_for(lock,
--						std::chrono::milliseconds(this->_m_period_ms));
--		if (status == ::std::cv_status::timeout)
--			mockup::instance().chip_set_pull(this->_m_chip_index,
--							 this->_m_line_offset, i % 2);
--	}
--}
--
--} /* namespace test */
--} /* namespace gpiod */
-diff --git a/bindings/cxx/tests/gpio-mockup.hpp b/bindings/cxx/tests/gpio-mockup.hpp
-deleted file mode 100644
-index 9ca27bd..0000000
---- a/bindings/cxx/tests/gpio-mockup.hpp
-+++ /dev/null
-@@ -1,94 +0,0 @@
--/* SPDX-License-Identifier: LGPL-3.0-or-later */
--/* SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com> */
--
--#ifndef __GPIOD_CXX_TEST_HPP__
--#define __GPIOD_CXX_TEST_HPP__
--
--#include <bitset>
--#include <condition_variable>
--#include <gpio-mockup.h>
--#include <mutex>
--#include <string>
--#include <vector>
--#include <thread>
--
--namespace gpiod {
--namespace test {
--
--class mockup
--{
--public:
--
--	static mockup& instance(void);
--
--	mockup(const mockup& other) = delete;
--	mockup(mockup&& other) = delete;
--	mockup& operator=(const mockup& other) = delete;
--	mockup& operator=(mockup&& other) = delete;
--
--	void probe(const ::std::vector<unsigned int>& chip_sizes,
--		   const ::std::bitset<32>& flags = 0);
--	void remove(void);
--
--	std::string chip_name(unsigned int idx) const;
--	std::string chip_path(unsigned int idx) const;
--	unsigned int chip_num(unsigned int idx) const;
--
--	int chip_get_value(unsigned int chip_idx, unsigned int line_offset);
--	void chip_set_pull(unsigned int chip_idx, unsigned int line_offset, int pull);
--
--	static const ::std::bitset<32> FLAG_NAMED_LINES;
--
--	class probe_guard
--	{
--	public:
--
--		probe_guard(const ::std::vector<unsigned int>& chip_sizes,
--			    const ::std::bitset<32>& flags = 0);
--		~probe_guard(void);
--
--		probe_guard(const probe_guard& other) = delete;
--		probe_guard(probe_guard&& other) = delete;
--		probe_guard& operator=(const probe_guard& other) = delete;
--		probe_guard& operator=(probe_guard&& other) = delete;
--	};
--
--	class event_thread
--	{
--	public:
--
--		event_thread(unsigned int chip_index, unsigned int line_offset, unsigned int period_ms);
--		~event_thread(void);
--
--		event_thread(const event_thread& other) = delete;
--		event_thread(event_thread&& other) = delete;
--		event_thread& operator=(const event_thread& other) = delete;
--		event_thread& operator=(event_thread&& other) = delete;
--
--	private:
--
--		void event_worker(void);
--
--		unsigned int _m_chip_index;
--		unsigned int _m_line_offset;
--		unsigned int _m_period_ms;
--
--		bool _m_stop;
--
--		::std::mutex _m_mutex;
--		::std::condition_variable _m_cond;
--		::std::thread _m_thread;
--	};
--
--private:
--
--	mockup(void);
--	~mockup(void);
--
--	::gpio_mockup *_m_mockup;
--};
--
--} /* namespace test */
--} /* namespace gpiod */
--
--#endif /* __GPIOD_CXX_TEST_HPP__ */
-diff --git a/bindings/cxx/tests/gpiod-cxx-test-main.cpp b/bindings/cxx/tests/gpiod-cxx-test-main.cpp
-deleted file mode 100644
-index 11bf8e5..0000000
---- a/bindings/cxx/tests/gpiod-cxx-test-main.cpp
-+++ /dev/null
-@@ -1,5 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#define CATCH_CONFIG_MAIN
--#include <catch2/catch.hpp>
-diff --git a/bindings/cxx/tests/gpiod-cxx-test.cpp b/bindings/cxx/tests/gpiod-cxx-test.cpp
-deleted file mode 100644
-index 834f372..0000000
---- a/bindings/cxx/tests/gpiod-cxx-test.cpp
-+++ /dev/null
-@@ -1,55 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <linux/version.h>
--#include <sys/utsname.h>
--#include <system_error>
--#include <sstream>
--
--namespace {
--
--class kernel_checker
--{
--public:
--
--	kernel_checker(unsigned int major, unsigned int minor, unsigned int release)
--	{
--		unsigned long curr_major, curr_minor, curr_release, curr_ver, req_ver;
--		::std::string major_str, minor_str, release_str;
--		::utsname un;
--		int ret;
--
--		ret = ::uname(::std::addressof(un));
--		if (ret)
--			throw ::std::system_error(errno, ::std::system_category(),
--						  "unable to read the kernel version");
--
--		::std::stringstream ver_stream(::std::string(un.release));
--		::std::getline(ver_stream, major_str, '.');
--		::std::getline(ver_stream, minor_str, '.');
--		::std::getline(ver_stream, release_str, '.');
--
--		curr_major = ::std::stoul(major_str, nullptr, 0);
--		curr_minor = ::std::stoul(minor_str, nullptr, 0);
--		curr_release = ::std::stoul(release_str, nullptr, 0);
--
--		curr_ver = KERNEL_VERSION(curr_major, curr_minor, curr_release);
--		req_ver = KERNEL_VERSION(major, minor, release);
--
--		if (curr_ver < req_ver)
--			throw ::std::system_error(EOPNOTSUPP, ::std::system_category(),
--						  "kernel release must be at least: " +
--						  ::std::to_string(major) + "." +
--						  ::std::to_string(minor) + "." +
--						  ::std::to_string(release));
--	}
--
--	kernel_checker(const kernel_checker& other) = delete;
--	kernel_checker(kernel_checker&& other) = delete;
--	kernel_checker& operator=(const kernel_checker& other) = delete;
--	kernel_checker& operator=(kernel_checker&& other) = delete;
--};
--
--kernel_checker require_kernel(5, 10, 0);
--
--} /* namespace */
-diff --git a/bindings/cxx/tests/tests-chip.cpp b/bindings/cxx/tests/tests-chip.cpp
-deleted file mode 100644
-index aea00fa..0000000
---- a/bindings/cxx/tests/tests-chip.cpp
-+++ /dev/null
-@@ -1,173 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <catch2/catch.hpp>
--#include <gpiod.hpp>
--
--#include "gpio-mockup.hpp"
--
--using ::gpiod::test::mockup;
--
--TEST_CASE("GPIO chip device can be verified with is_gpiochip_device()", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--
--	SECTION("good chip")
--	{
--		REQUIRE(::gpiod::is_gpiochip_device(mockup::instance().chip_path(0)));
--	}
--
--	SECTION("not a chip")
--	{
--		REQUIRE_FALSE(::gpiod::is_gpiochip_device("/dev/null"));
--	}
--
--	SECTION("nonexistent file")
--	{
--		REQUIRE_FALSE(::gpiod::is_gpiochip_device("/dev/nonexistent_device"));
--	}
--}
--
--TEST_CASE("GPIO chip device can be opened", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 8, 8, 8 });
--
--	SECTION("open from constructor")
--	{
--		REQUIRE_NOTHROW(::gpiod::chip(mockup::instance().chip_path(1)));
--	}
--
--	SECTION("open from open() method")
--	{
--		::gpiod::chip chip;
--
--		REQUIRE_FALSE(!!chip);
--
--		REQUIRE_NOTHROW(chip.open(mockup::instance().chip_path(1)));
--	}
--}
--
--TEST_CASE("Uninitialized GPIO chip behaves correctly", "[chip]")
--{
--	::gpiod::chip chip;
--
--	SECTION("uninitialized chip is 'false'")
--	{
--		REQUIRE_FALSE(!!chip);
--	}
--
--	SECTION("using uninitialized chip throws logic_error")
--	{
--		REQUIRE_THROWS_AS(chip.name(), ::std::logic_error);
--	}
--}
--
--TEST_CASE("Trying to open a nonexistent chip throws system_error", "[chip]")
--{
--	REQUIRE_THROWS_AS(::gpiod::chip("nonexistent-chip"), ::std::system_error);
--}
--
--TEST_CASE("Chip object can be reset", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	REQUIRE(chip);
--	chip.reset();
--	REQUIRE_FALSE(!!chip);
--}
--
--TEST_CASE("Chip info can be correctly retrieved", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 8, 16, 8 });
--
--	::gpiod::chip chip(mockup::instance().chip_path(1));
--	REQUIRE(chip.name() == mockup::instance().chip_name(1));
--	REQUIRE(chip.label() == "gpio-mockup-B");
--	REQUIRE(chip.num_lines() == 16);
--}
--
--TEST_CASE("Chip object can be copied and compared", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 8, 8 });
--
--	::gpiod::chip chip1(mockup::instance().chip_path(0));
--	auto chip2 = chip1;
--	REQUIRE(chip1 == chip2);
--	REQUIRE_FALSE(chip1 != chip2);
--	::gpiod::chip chip3(mockup::instance().chip_path(1));
--	REQUIRE(chip1 != chip3);
--	REQUIRE_FALSE(chip2 == chip3);
--}
--
--TEST_CASE("Lines can be retrieved from chip objects", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 8, 8, 8 }, mockup::FLAG_NAMED_LINES);
--	::gpiod::chip chip(mockup::instance().chip_path(1));
--
--	SECTION("get single line by offset")
--	{
--		auto line = chip.get_line(3);
--		REQUIRE(line.name() == "gpio-mockup-B-3");
--	}
--
--	SECTION("find single line by name")
--	{
--		auto offset = chip.find_line("gpio-mockup-B-3");
--		REQUIRE(offset == 3);
--	}
--
--	SECTION("get multiple lines by offsets")
--	{
--		auto lines = chip.get_lines({ 1, 3, 4, 7});
--		REQUIRE(lines.size() == 4);
--		REQUIRE(lines.get(0).name() == "gpio-mockup-B-1");
--		REQUIRE(lines.get(1).name() == "gpio-mockup-B-3");
--		REQUIRE(lines.get(2).name() == "gpio-mockup-B-4");
--		REQUIRE(lines.get(3).name() == "gpio-mockup-B-7");
--	}
--
--	SECTION("get multiple lines by offsets in mixed order")
--	{
--		auto lines = chip.get_lines({ 5, 1, 3, 2});
--		REQUIRE(lines.size() == 4);
--		REQUIRE(lines.get(0).name() == "gpio-mockup-B-5");
--		REQUIRE(lines.get(1).name() == "gpio-mockup-B-1");
--		REQUIRE(lines.get(2).name() == "gpio-mockup-B-3");
--		REQUIRE(lines.get(3).name() == "gpio-mockup-B-2");
--	}
--}
--
--TEST_CASE("All lines can be retrieved from a chip at once", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 4 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--
--	auto lines = chip.get_all_lines();
--	REQUIRE(lines.size() == 4);
--	REQUIRE(lines.get(0).offset() == 0);
--	REQUIRE(lines.get(1).offset() == 1);
--	REQUIRE(lines.get(2).offset() == 2);
--	REQUIRE(lines.get(3).offset() == 3);
--}
--
--TEST_CASE("Errors occurring when retrieving lines are correctly reported", "[chip]")
--{
--	mockup::probe_guard mockup_chips({ 8 }, mockup::FLAG_NAMED_LINES);
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--
--	SECTION("invalid offset (single line)")
--	{
--		REQUIRE_THROWS_AS(chip.get_line(9), ::std::out_of_range);
--	}
--
--	SECTION("invalid offset (multiple lines)")
--	{
--		REQUIRE_THROWS_AS(chip.get_lines({ 1, 19, 4, 7 }), ::std::out_of_range);
--	}
--
--	SECTION("line not found by name")
--	{
--		REQUIRE(chip.find_line("nonexistent-line") == -1);
--	}
--}
-diff --git a/bindings/cxx/tests/tests-event.cpp b/bindings/cxx/tests/tests-event.cpp
-deleted file mode 100644
-index aeb50dd..0000000
---- a/bindings/cxx/tests/tests-event.cpp
-+++ /dev/null
-@@ -1,280 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <catch2/catch.hpp>
--#include <gpiod.hpp>
--#include <poll.h>
--#include <thread>
--
--#include "gpio-mockup.hpp"
--
--using ::gpiod::test::mockup;
--
--namespace {
--
--const ::std::string consumer = "event-test";
--
--} /* namespace */
--
--TEST_CASE("Line events can be detected", "[event][line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	mockup::event_thread events(0, 4, 200);
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line = chip.get_line(4);
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--
--	SECTION("rising edge")
--	{
--		config.request_type = ::gpiod::line_request::EVENT_RISING_EDGE;
--		line.request(config);
--
--		auto got_event = line.event_wait(::std::chrono::seconds(1));
--		REQUIRE(got_event);
--
--		auto event = line.event_read();
--		REQUIRE(event.source == line);
--		REQUIRE(event.event_type == ::gpiod::line_event::RISING_EDGE);
--	}
--
--	SECTION("falling edge")
--	{
--		config.request_type = ::gpiod::line_request::EVENT_FALLING_EDGE;
--
--		line.request(config);
--
--		auto got_event = line.event_wait(::std::chrono::seconds(1));
--		REQUIRE(got_event);
--
--		auto event = line.event_read();
--		REQUIRE(event.source == line);
--		REQUIRE(event.event_type == ::gpiod::line_event::FALLING_EDGE);
--	}
--
--	SECTION("both edges")
--	{
--		config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--
--		line.request(config);
--
--		auto got_event = line.event_wait(::std::chrono::seconds(1));
--		REQUIRE(got_event);
--
--		auto event = line.event_read();
--		REQUIRE(event.source == line);
--		REQUIRE(event.event_type == ::gpiod::line_event::RISING_EDGE);
--
--		got_event = line.event_wait(::std::chrono::seconds(1));
--		REQUIRE(got_event);
--
--		event = line.event_read();
--		REQUIRE(event.source == line);
--		REQUIRE(event.event_type == ::gpiod::line_event::FALLING_EDGE);
--	}
--
--	SECTION("active-low")
--	{
--		config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--		config.flags = ::gpiod::line_request::FLAG_ACTIVE_LOW;
--
--		line.request(config);
--
--		auto got_event = line.event_wait(::std::chrono::seconds(1));
--		REQUIRE(got_event);
--
--		auto event = line.event_read();
--		REQUIRE(event.source == line);
--		REQUIRE(event.event_type == ::gpiod::line_event::FALLING_EDGE);
--
--		got_event = line.event_wait(::std::chrono::seconds(1));
--		REQUIRE(got_event);
--
--		event = line.event_read();
--		REQUIRE(event.source == line);
--		REQUIRE(event.event_type == ::gpiod::line_event::RISING_EDGE);
--	}
--}
--
--TEST_CASE("Watching line_bulk objects for events works", "[event][bulk]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	mockup::event_thread events(0, 2, 200);
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto lines = chip.get_lines({ 0, 1, 2, 3 });
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--	config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--	lines.request(config);
--
--	auto event_lines = lines.event_wait(::std::chrono::seconds(1));
--	REQUIRE(event_lines);
--	REQUIRE(event_lines.size() == 1);
--
--	auto event = event_lines.get(0).event_read();
--	REQUIRE(event.source == event_lines.get(0));
--	REQUIRE(event.event_type == ::gpiod::line_event::RISING_EDGE);
--
--	event_lines = lines.event_wait(::std::chrono::seconds(1));
--	REQUIRE(event_lines);
--	REQUIRE(event_lines.size() == 1);
--
--	event = event_lines.get(0).event_read();
--	REQUIRE(event.source == event_lines.get(0));
--	REQUIRE(event.event_type == ::gpiod::line_event::FALLING_EDGE);
--}
--
--TEST_CASE("It's possible to retrieve the event file descriptor", "[event][line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line = chip.get_line(4);
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--
--	SECTION("get the fd")
--	{
--		config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--
--		line.request(config);
--		REQUIRE(line.event_get_fd() >= 0);
--	}
--
--	SECTION("error if not requested")
--	{
--		REQUIRE_THROWS_AS(line.event_get_fd(), ::std::system_error);
--	}
--
--	SECTION("error if requested for values")
--	{
--		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--
--		line.request(config);
--		REQUIRE_THROWS_AS(line.event_get_fd(), ::std::system_error);
--	}
--}
--
--TEST_CASE("Event file descriptors can be used for polling", "[event]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	mockup::event_thread events(0, 3, 200);
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto lines = chip.get_lines({ 0, 1, 2, 3, 4, 5 });
--
--	::gpiod::line_request config;
--	config.consumer = consumer.c_str();
--	config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--
--	lines.request(config);
--
--	::std::vector<::pollfd> fds(3);
--	fds[0].fd = lines[1].event_get_fd();
--	fds[1].fd = lines[3].event_get_fd();
--	fds[2].fd = lines[5].event_get_fd();
--
--	fds[0].events = fds[1].events = fds[2].events = POLLIN | POLLPRI;
--
--	int ret = ::poll(fds.data(), 3, 1000);
--	REQUIRE(ret == 1);
--
--	for (int i = 0; i < 3; i++) {
--		if (fds[i].revents) {
--			auto event = lines[3].event_read();
--			REQUIRE(event.source == lines[3]);
--			REQUIRE(event.event_type == ::gpiod::line_event::RISING_EDGE);
--		}
--	}
--}
--
--TEST_CASE("It's possible to read a value from a line requested for events", "[event][line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line = chip.get_line(4);
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--	config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--
--	mockup::instance().chip_set_pull(0, 4, 1);
--
--	SECTION("active-high (default)")
--	{
--		line.request(config);
--		REQUIRE(line.get_value() == 1);
--	}
--
--	SECTION("active-low")
--	{
--		config.flags = ::gpiod::line_request::FLAG_ACTIVE_LOW;
--		line.request(config);
--		REQUIRE(line.get_value() == 0);
--	}
--}
--
--TEST_CASE("It's possible to read values from lines requested for events", "[event][bulk]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto lines = chip.get_lines({ 0, 1, 2, 3, 4 });
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--	config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--
--	mockup::instance().chip_set_pull(0, 5, 1);
--
--	SECTION("active-high (default)")
--	{
--		lines.request(config);
--		REQUIRE(lines.get_values() == ::std::vector<int>({ 0, 0, 0, 0, 0 }));
--		mockup::instance().chip_set_pull(0, 1, 1);
--		mockup::instance().chip_set_pull(0, 3, 1);
--		mockup::instance().chip_set_pull(0, 4, 1);
--		REQUIRE(lines.get_values() == ::std::vector<int>({ 0, 1, 0, 1, 1 }));
--	}
--
--	SECTION("active-low")
--	{
--		config.flags = ::gpiod::line_request::FLAG_ACTIVE_LOW;
--		lines.request(config);
--		REQUIRE(lines.get_values() == ::std::vector<int>({ 1, 1, 1, 1, 1 }));
--		mockup::instance().chip_set_pull(0, 1, 1);
--		mockup::instance().chip_set_pull(0, 3, 1);
--		mockup::instance().chip_set_pull(0, 4, 1);
--		REQUIRE(lines.get_values() == ::std::vector<int>({ 1, 0, 1, 0, 0 }));
--	}
--}
--
--TEST_CASE("It's possible to read more than one line event", "[event][line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line = chip.get_line(4);
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--	config.request_type = ::gpiod::line_request::EVENT_BOTH_EDGES;
--
--	line.request(config);
--
--	mockup::instance().chip_set_pull(0, 4, 1);
--	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
--	mockup::instance().chip_set_pull(0, 4, 0);
--	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
--	mockup::instance().chip_set_pull(0, 4, 1);
--	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
--
--	auto events = line.event_read_multiple();
--
--	REQUIRE(events.size() == 3);
--	REQUIRE(events.at(0).event_type == ::gpiod::line_event::RISING_EDGE);
--	REQUIRE(events.at(1).event_type == ::gpiod::line_event::FALLING_EDGE);
--	REQUIRE(events.at(2).event_type == ::gpiod::line_event::RISING_EDGE);
--	REQUIRE(events.at(0).source == line);
--	REQUIRE(events.at(1).source == line);
--	REQUIRE(events.at(2).source == line);
--}
-diff --git a/bindings/cxx/tests/tests-iter.cpp b/bindings/cxx/tests/tests-iter.cpp
-deleted file mode 100644
-index 848889b..0000000
---- a/bindings/cxx/tests/tests-iter.cpp
-+++ /dev/null
-@@ -1,21 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <catch2/catch.hpp>
--#include <gpiod.hpp>
--
--#include "gpio-mockup.hpp"
--
--using ::gpiod::test::mockup;
--
--TEST_CASE("Line iterator works", "[iter][line]")
--{
--	mockup::probe_guard mockup_chips({ 4 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	unsigned int count = 0;
--
--	for (auto& it: ::gpiod::line_iter(chip))
--		REQUIRE(it.offset() == count++);
--
--	REQUIRE(count == chip.num_lines());
--}
-diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
-deleted file mode 100644
-index ababf8b..0000000
---- a/bindings/cxx/tests/tests-line.cpp
-+++ /dev/null
-@@ -1,467 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
--
--#include <catch2/catch.hpp>
--#include <gpiod.hpp>
--
--#include "gpio-mockup.hpp"
--
--using ::gpiod::test::mockup;
--
--namespace {
--
--const ::std::string consumer = "line-test";
--
--} /* namespace */
--
--TEST_CASE("Line information can be correctly retrieved", "[line]")
--{
--	mockup::probe_guard mockup_chips({ 8 }, mockup::FLAG_NAMED_LINES);
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line = chip.get_line(4);
--
--	SECTION("unexported line")
--	{
--		REQUIRE(line.offset() == 4);
--		REQUIRE(line.name() == "gpio-mockup-A-4");
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
--		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.consumer().empty());
--		REQUIRE_FALSE(line.is_used());
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
--	}
--
--	SECTION("exported line")
--	{
--		::gpiod::line_request config;
--
--		config.consumer = consumer.c_str();
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		line.request(config);
--
--		REQUIRE(line.offset() == 4);
--		REQUIRE(line.name() == "gpio-mockup-A-4");
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_used());
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
--	}
--
--	SECTION("exported line with flags")
--	{
--		::gpiod::line_request config;
--
--		config.consumer = consumer.c_str();
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = ::gpiod::line_request::FLAG_ACTIVE_LOW |
--			       ::gpiod::line_request::FLAG_OPEN_DRAIN;
--		line.request(config);
--
--		REQUIRE(line.offset() == 4);
--		REQUIRE(line.name() == "gpio-mockup-A-4");
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.is_active_low());
--		REQUIRE(line.is_used());
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_DRAIN);
--		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
--	}
--
--	SECTION("exported open source line")
--	{
--		::gpiod::line_request config;
--
--		config.consumer = consumer.c_str();
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = ::gpiod::line_request::FLAG_OPEN_SOURCE;
--		line.request(config);
--
--		REQUIRE(line.offset() == 4);
--		REQUIRE(line.name() == "gpio-mockup-A-4");
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_used());
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_SOURCE);
--		REQUIRE(line.bias() == ::gpiod::line::BIAS_UNKNOWN);
--	}
--
--	SECTION("exported bias disable line")
--	{
--		::gpiod::line_request config;
--
--		config.consumer = consumer.c_str();
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = ::gpiod::line_request::FLAG_BIAS_DISABLED;
--		line.request(config);
--
--		REQUIRE(line.offset() == 4);
--		REQUIRE(line.name() == "gpio-mockup-A-4");
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_used());
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--		REQUIRE(line.bias() == ::gpiod::line::BIAS_DISABLED);
--	}
--
--	SECTION("exported pull-down line")
--	{
--		::gpiod::line_request config;
--
--		config.consumer = consumer.c_str();
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = ::gpiod::line_request::FLAG_BIAS_PULL_DOWN;
--		line.request(config);
--
--		REQUIRE(line.offset() == 4);
--		REQUIRE(line.name() == "gpio-mockup-A-4");
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE_FALSE(line.is_active_low());;
--		REQUIRE(line.is_used());
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--		REQUIRE(line.bias() == ::gpiod::line::BIAS_PULL_DOWN);
--	}
--
--	SECTION("exported pull-up line")
--	{
--		::gpiod::line_request config;
--
--		config.consumer = consumer.c_str();
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = ::gpiod::line_request::FLAG_BIAS_PULL_UP;
--		line.request(config);
--
--		REQUIRE(line.offset() == 4);
--		REQUIRE(line.name() == "gpio-mockup-A-4");
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(line.is_used());
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--		REQUIRE(line.bias() == ::gpiod::line::BIAS_PULL_UP);
--	}
--}
--
--TEST_CASE("Line values can be set and read", "[line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--
--	SECTION("get value (single line)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--		line.request(config);
--		REQUIRE(line.get_value() == 0);
--		mockup::instance().chip_set_pull(0, 3, 1);
--		REQUIRE(line.get_value() == 1);
--	}
--
--	SECTION("set value (single line)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		line.request(config);
--		line.set_value(1);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--		line.set_value(0);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
--	}
--
--	SECTION("set value with default value parameter")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		line.request(config, 1);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--	}
--
--	SECTION("get multiple values at once")
--	{
--		auto lines = chip.get_lines({ 0, 1, 2, 3, 4 });
--		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--		lines.request(config);
--		REQUIRE(lines.get_values() == ::std::vector<int>({ 0, 0, 0, 0, 0 }));
--		mockup::instance().chip_set_pull(0, 1, 1);
--		mockup::instance().chip_set_pull(0, 3, 1);
--		mockup::instance().chip_set_pull(0, 4, 1);
--		REQUIRE(lines.get_values() == ::std::vector<int>({ 0, 1, 0, 1, 1 }));
--	}
--
--	SECTION("set multiple values at once")
--	{
--		auto lines = chip.get_lines({ 0, 1, 2, 6, 7 });
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		lines.request(config);
--		lines.set_values({ 1, 1, 0, 1, 0 });
--		REQUIRE(mockup::instance().chip_get_value(0, 0) == 1);
--		REQUIRE(mockup::instance().chip_get_value(0, 1) == 1);
--		REQUIRE(mockup::instance().chip_get_value(0, 2) == 0);
--		REQUIRE(mockup::instance().chip_get_value(0, 6) == 1);
--		REQUIRE(mockup::instance().chip_get_value(0, 7) == 0);
--	}
--
--	SECTION("set multiple values with default values parameter")
--	{
--		auto lines = chip.get_lines({ 1, 2, 4, 6, 7 });
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		lines.request(config, { 1, 1, 0, 1, 0 });
--		REQUIRE(mockup::instance().chip_get_value(0, 1) == 1);
--		REQUIRE(mockup::instance().chip_get_value(0, 2) == 1);
--		REQUIRE(mockup::instance().chip_get_value(0, 4) == 0);
--		REQUIRE(mockup::instance().chip_get_value(0, 6) == 1);
--		REQUIRE(mockup::instance().chip_get_value(0, 7) == 0);
--	}
--
--	SECTION("get value (single line, active-low")
--	{
--		auto line = chip.get_line(4);
--		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--		config.flags = ::gpiod::line_request::FLAG_ACTIVE_LOW;
--		line.request(config);
--		REQUIRE(line.get_value() == 1);
--		mockup::instance().chip_set_pull(0, 4, 1);
--		REQUIRE(line.get_value() == 0);
--	}
--
--	SECTION("set value (single line, active-low)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = ::gpiod::line_request::FLAG_ACTIVE_LOW;
--		line.request(config);
--		line.set_value(1);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
--		line.set_value(0);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--	}
--}
--
--TEST_CASE("Line can be reconfigured", "[line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--
--	SECTION("set config (single line, active-state)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--		config.flags = 0;
--		line.request(config);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
--		REQUIRE_FALSE(line.is_active_low());
--
--		line.set_config(::gpiod::line_request::DIRECTION_OUTPUT,
--			::gpiod::line_request::FLAG_ACTIVE_LOW,1);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.is_active_low());
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
--		line.set_value(0);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--
--		line.set_config(::gpiod::line_request::DIRECTION_OUTPUT, 0);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
--		line.set_value(1);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--	}
--
--	SECTION("set flags (single line, active-state)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = 0;
--		line.request(config,1);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--
--		line.set_flags(::gpiod::line_request::FLAG_ACTIVE_LOW);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.is_active_low());
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 0);
--
--		line.set_flags(0);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE_FALSE(line.is_active_low());
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--	}
--
--	SECTION("set flags (single line, drive)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = 0;
--		line.request(config);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--
--		line.set_flags(::gpiod::line_request::FLAG_OPEN_DRAIN);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_DRAIN);
--
--		line.set_flags(::gpiod::line_request::FLAG_OPEN_SOURCE);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_SOURCE);
--
--		line.set_flags(0);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--	}
--
--	SECTION("set flags (single line, bias)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = 0;
--		line.request(config);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--
--		line.set_flags(::gpiod::line_request::FLAG_OPEN_DRAIN);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_DRAIN);
--
--		line.set_flags(::gpiod::line_request::FLAG_OPEN_SOURCE);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_OPEN_SOURCE);
--
--		line.set_flags(0);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(line.drive() == ::gpiod::line::DRIVE_PUSH_PULL);
--	}
--
--	SECTION("set direction input (single line)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_OUTPUT;
--		config.flags = 0;
--		line.request(config);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		line.set_direction_input();
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
--	}
--
--	SECTION("set direction output (single line)")
--	{
--		auto line = chip.get_line(3);
--		config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--		config.flags = 0;
--		line.request(config);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_INPUT);
--		line.set_direction_output(1);
--		REQUIRE(line.direction() == ::gpiod::line::DIRECTION_OUTPUT);
--		REQUIRE(mockup::instance().chip_get_value(0, 3) == 1);
--	}
--}
--
--TEST_CASE("Exported line can be released", "[line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line = chip.get_line(4);
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--	config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--
--	line.request(config);
--
--	REQUIRE(line.get_value() == 0);
--
--	line.release();
--
--	REQUIRE_THROWS_AS(line.get_value(), ::std::system_error);
--}
--
--TEST_CASE("Uninitialized GPIO line behaves correctly", "[line]")
--{
--	::gpiod::line line;
--
--	SECTION("uninitialized line is 'false'")
--	{
--		REQUIRE_FALSE(line);
--	}
--
--	SECTION("using uninitialized line throws logic_error")
--	{
--		REQUIRE_THROWS_AS(line.name(), ::std::logic_error);
--	}
--}
--
--TEST_CASE("Uninitialized GPIO line_bulk behaves correctly", "[line][bulk]")
--{
--	::gpiod::line_bulk bulk;
--
--	SECTION("uninitialized line_bulk is 'false'")
--	{
--		REQUIRE_FALSE(bulk);
--	}
--
--	SECTION("using uninitialized line_bulk throws logic_error")
--	{
--		REQUIRE_THROWS_AS(bulk.get(0), ::std::logic_error);
--	}
--}
--
--TEST_CASE("Cannot request the same line twice", "[line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	::gpiod::line_request config;
--
--	config.consumer = consumer.c_str();
--	config.request_type = ::gpiod::line_request::DIRECTION_INPUT;
--
--	SECTION("two separate calls to request()")
--	{
--		auto line = chip.get_line(3);
--
--		REQUIRE_NOTHROW(line.request(config));
--		REQUIRE_THROWS_AS(line.request(config), ::std::system_error);
--	}
--
--	SECTION("request the same line twice in line_bulk")
--	{
--		/*
--		 * While a line_bulk object can hold two or more line objects
--		 * representing the same line - requesting it will fail.
--		 */
--		auto lines = chip.get_lines({ 2, 3, 4, 4 });
--
--		REQUIRE_THROWS_AS(lines.request(config), ::std::system_error);
--	}
--}
--
--TEST_CASE("Cannot get/set values of unrequested lines", "[line]")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line = chip.get_line(3);
--
--	SECTION("get value")
--	{
--		REQUIRE_THROWS_AS(line.get_value(), ::std::system_error);
--	}
--
--	SECTION("set value")
--	{
--		REQUIRE_THROWS_AS(line.set_value(1), ::std::system_error);
--	}
--}
--
--TEST_CASE("Line objects can be compared")
--{
--	mockup::probe_guard mockup_chips({ 8 });
--	::gpiod::chip chip(mockup::instance().chip_path(0));
--	auto line1 = chip.get_line(3);
--	auto line2 = chip.get_line(3);
--	auto line3 = chip.get_line(4);
--
--	REQUIRE(line1 == line2);
--	REQUIRE(line2 != line3);
--}
+diff --git a/Doxyfile.in b/Doxyfile.in
+index 0ff735d..9c85e21 100644
+--- a/Doxyfile.in
++++ b/Doxyfile.in
+@@ -44,7 +44,9 @@ WARNINGS               = YES
+ WARN_IF_UNDOCUMENTED   = YES
+ WARN_FORMAT            =
+ WARN_LOGFILE           =
+-INPUT                  = @top_srcdir@/include/gpiod.h @top_srcdir@/bindings/cxx/gpiod.hpp
++INPUT                  = @top_srcdir@/include/gpiod.h \
++                         @top_srcdir@/bindings/cxx/gpiod.hpp \
++                         @top_srcdir@/bindings/cxx/gpiodcxx/
+ SOURCE_BROWSER         = YES
+ INLINE_SOURCES         = NO
+ REFERENCED_BY_RELATION = YES
+diff --git a/bindings/cxx/gpiodcxx/Makefile.am b/bindings/cxx/gpiodcxx/Makefile.am
+new file mode 100644
+index 0000000..71532e6
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/Makefile.am
+@@ -0,0 +1,18 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl>
++
++otherincludedir = $(includedir)/gpiodcxx
++otherinclude_HEADERS = \
++	chip.hpp \
++	chip-info.hpp \
++	edge-event-buffer.hpp \
++	edge-event.hpp \
++	exception.hpp \
++	info-event.hpp \
++	line.hpp \
++	line-config.hpp \
++	line-info.hpp \
++	line-request.hpp \
++	misc.hpp \
++	request-config.hpp \
++	timestamp.hpp
+diff --git a/bindings/cxx/gpiodcxx/chip-info.hpp b/bindings/cxx/gpiodcxx/chip-info.hpp
+new file mode 100644
+index 0000000..9313e88
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/chip-info.hpp
+@@ -0,0 +1,105 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file chip-info.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_CHIP_INFO_HPP__
++#define __LIBGPIOD_CXX_CHIP_INFO_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <memory>
++#include <ostream>
++
++namespace gpiod {
++
++class chip;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Represents an immutable snapshot of GPIO chip information.
++ */
++class chip_info
++{
++public:
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy.
++	 */
++	chip_info(const chip_info& other);
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	chip_info(chip_info&& other) noexcept;
++
++	~chip_info(void);
++
++	/**
++	 * @brief Assignment operator.
++	 * @param other Object to copy.
++	 * @return Reference to self.
++	 */
++	chip_info& operator=(const chip_info& other);
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	chip_info& operator=(chip_info&& other) noexcept;
++
++	/**
++	 * @brief Get the name of this GPIO chip.
++	 * @return String containing the chip name.
++	 */
++	::std::string name(void) const noexcept;
++
++	/**
++	 * @brief Get the label of this GPIO chip.
++	 * @return String containing the chip name.
++	 */
++	::std::string label(void) const noexcept;
++
++	/**
++	 * @brief Return the number of lines exposed by this chip.
++	 * @return Number of lines.
++	 */
++	::std::size_t num_lines(void) const noexcept;
++
++private:
++
++	chip_info(void);
++
++	struct impl;
++
++	::std::shared_ptr<impl> _m_priv;
++
++	friend chip;
++};
++
++/**
++ * @brief Stream insertion operator for GPIO chip objects.
++ * @param out Output stream to write to.
++ * @param chip GPIO chip to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const chip_info& chip);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_CHIP_INFO_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/chip.hpp b/bindings/cxx/gpiodcxx/chip.hpp
+new file mode 100644
+index 0000000..eae7ed6
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/chip.hpp
+@@ -0,0 +1,179 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file chip.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_CHIP_HPP__
++#define __LIBGPIOD_CXX_CHIP_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <chrono>
++#include <cstddef>
++#include <iostream>
++#include <filesystem>
++#include <memory>
++
++#include "line.hpp"
++
++namespace gpiod {
++
++class chip_info;
++class info_event;
++class line_config;
++class line_info;
++class line_request;
++class request_config;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Represents a GPIO chip.
++ */
++class chip
++{
++public:
++
++	/**
++	 * @brief Instantiates a new chip object by opening the device file
++	 *        indicated by the path argument.
++	 * @param path Path to the device file to open.
++	 */
++	explicit chip(const ::std::filesystem::path& path);
++
++	chip(const chip& other) = delete;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	chip(chip&& other) noexcept;
++
++	~chip(void);
++
++	chip& operator=(const chip& other) = delete;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	chip& operator=(chip&& other) noexcept;
++
++	/**
++	 * @brief Check if this object is valid.
++	 * @return True if this object's methods can be used, false otherwise.
++	 *         False usually means the chip was closed. If the user calls
++	 *         any of the methods of this class on an object for which this
++	 *         operator returned false, a logic_error will be thrown.
++	 */
++	explicit operator bool(void) const noexcept;
++
++	/**
++	 * @brief Close the GPIO chip device file and free associated resources.
++	 * @note The chip object can live after calling this method but any of
++	 *       the chip's mutators will throw a logic_error exception.
++	 */
++	void close(void);
++
++	/**
++	 * @brief Get the filesystem path that was used to open this GPIO chip.
++	 * @return Path to the underlying character device file.
++	 */
++	::std::filesystem::path path(void) const;
++
++	/**
++	 * @brief Get information about the chip.
++	 * @return New chip_info object.
++	 */
++	chip_info get_info(void) const;
++
++	/**
++	 * @brief Retrieve the current snapshot of line information for a
++	 *        single line.
++	 * @param offset Offset of the line to get the info for.
++	 * @return New ::gpiod::line_info object.
++	 */
++	line_info get_line_info(line::offset offset) const;
++
++	/**
++	 * @brief Wrapper around ::gpiod::chip::get_line_info that retrieves
++	 *        the line info and starts watching the line for changes.
++	 * @param offset Offset of the line to get the info for.
++	 * @return New ::gpiod::line_info object.
++	 */
++	line_info watch_line_info(line::offset offset) const;
++
++	/**
++	 * @brief Stop watching the line at given offset for info events.
++	 * @param offset Offset of the line to get the info for.
++	 */
++	void unwatch_line_info(line::offset offset) const;
++
++	/**
++	 * @brief Get the file descriptor associated with this chip.
++	 * @return File descriptor number.
++	 */
++	int fd(void) const;
++
++	/**
++	 * @brief Wait for line status events on any of the watched lines
++	 *        exposed by this chip.
++	 * @param timeout Wait time limit in nanoseconds.
++	 * @return True if at least one event is ready to be read. False if the
++	 *         wait timed out.
++	 */
++	bool wait_info_event(const ::std::chrono::nanoseconds& timeout) const;
++
++	/**
++	 * @brief Read a single line status change event from this chip.
++	 * @return New info_event object.
++	 */
++	info_event read_info_event(void) const;
++
++	/**
++	 * @brief Map a GPIO line's name to its offset within the chip.
++	 * @param name Name of the GPIO line to map.
++	 * @return Offset of the line within the chip or -1 if the line with
++	 *         given name is not exposed by this chip.
++	 */
++	int get_line_offset_from_name(const ::std::string& name) const;
++
++	/**
++	 * @brief Request a set of lines for exclusive usage.
++	 * @param req_cfg Request config object.
++	 * @param line_cfg Line config object.
++	 * @return New line_request object.
++	 */
++	line_request request_lines(const request_config& req_cfg,
++				   const line_config& line_cfg);
++
++private:
++
++	struct impl;
++
++	::std::unique_ptr<impl> _m_priv;
++};
++
++/**
++ * @brief Stream insertion operator for GPIO chip objects.
++ * @param out Output stream to write to.
++ * @param chip GPIO chip to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const chip& chip);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_CHIP_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/edge-event-buffer.hpp b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
+new file mode 100644
+index 0000000..37ac4f5
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
+@@ -0,0 +1,129 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file edge-event-buffer.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_EDGE_EVENT_BUFFER_HPP__
++#define __LIBGPIOD_CXX_EDGE_EVENT_BUFFER_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <cstddef>
++#include <iostream>
++#include <memory>
++#include <vector>
++
++namespace gpiod {
++
++class edge_event;
++class line_request;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Object into which edge events are read for better performance.
++ *
++ * The edge_event_buffer allows reading edge_event objects into an existing
++ * buffer which improves the performance by avoiding needless memory
++ * allocations.
++ */
++class edge_event_buffer
++{
++public:
++
++	/**
++	 * @brief Constant iterator for iterating over edge events stored in
++	 *        the buffer.
++	 */
++	using const_iterator = ::std::vector<edge_event>::const_iterator;
++
++	/**
++	 * @brief Constructor. Creates a new edge event buffer with given
++	 *        capacity.
++	 * @param capacity Capacity of the new buffer.
++	 */
++	explicit edge_event_buffer(::std::size_t capacity = 64);
++
++	edge_event_buffer(const edge_event_buffer& other) = delete;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	edge_event_buffer(edge_event_buffer&& other) noexcept;
++
++	~edge_event_buffer(void);
++
++	edge_event_buffer& operator=(const edge_event_buffer& other) = delete;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	edge_event_buffer& operator=(edge_event_buffer&& other) noexcept;
++
++	/**
++	 * @brief Get the constant reference to the edge event at given index.
++	 * @param index Index of the event in the buffer.
++	 * @return Constant reference to the edge event.
++	 */
++	const edge_event& get_event(unsigned int index) const;
++
++	/**
++	 * @brief Get the number of edge events currently stored in the buffer.
++	 * @return Number of edge events in the buffer.
++	 */
++	::std::size_t num_events(void) const;
++
++	/**
++	 * @brief Maximum capacity of the buffer.
++	 * @return Buffer capacity.
++	 */
++	::std::size_t capacity(void) const noexcept;
++
++	/**
++	 * @brief Get a constant iterator to the first edge event currently
++	 *        stored in the buffer.
++	 * @return Constant iterator to the first element.
++	 */
++	const_iterator begin(void) const noexcept;
++
++	/**
++	 * @brief Get a constant iterator to the element after the last edge
++	 *        event in the buffer.
++	 * @return Constant iterator to the element after the last edge event.
++	 */
++	const_iterator end(void) const noexcept;
++
++private:
++
++	struct impl;
++
++	::std::unique_ptr<impl> _m_priv;
++
++	friend line_request;
++};
++
++/**
++ * @brief Stream insertion operator for GPIO edge event buffer objects.
++ * @param out Output stream to write to.
++ * @param buf GPIO edge event buffer object to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const edge_event_buffer& buf);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_EDGE_EVENT_BUFFER_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/edge-event.hpp b/bindings/cxx/gpiodcxx/edge-event.hpp
+new file mode 100644
+index 0000000..0623880
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/edge-event.hpp
+@@ -0,0 +1,137 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file edge-event.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_EDGE_EVENT_HPP__
++#define __LIBGPIOD_CXX_EDGE_EVENT_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <cstdint>
++#include <iostream>
++#include <memory>
++
++#include "timestamp.hpp"
++
++namespace gpiod {
++
++class edge_event_buffer;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Immutable object containing data about a single edge event.
++ */
++class edge_event
++{
++public:
++
++	/**
++	 * @brief Edge event types.
++	 */
++	enum class event_type
++	{
++		RISING_EDGE = 1,
++		/**< This is a rising edge event. */
++		FALLING_EDGE
++		/**< This is falling edge event. */
++	};
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy.
++	 */
++	edge_event(const edge_event& other);
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	edge_event(edge_event&& other) noexcept;
++
++	~edge_event(void);
++
++	/**
++	 * @brief Copy assignment operator.
++	 * @param other Object to copy.
++	 * @return Reference to self.
++	 */
++	edge_event& operator=(const edge_event& other);
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	edge_event& operator=(edge_event&& other) noexcept;
++
++	/**
++	 * @brief Retrieve the event type.
++	 * @return Event type (rising or falling edge).
++	 */
++	event_type type(void) const;
++
++	/**
++	 * @brief Retrieve the event time-stamp.
++	 * @return Time-stamp in nanoseconds as registered by the kernel using
++	 *         the configured edge event clock.
++	 */
++	timestamp timestamp_ns(void) const noexcept;
++
++	/**
++	 * @brief Read the offset of the line on which this event was
++	 *        registered.
++	 * @return Line offset.
++	 */
++	line::offset line_offset(void) const noexcept;
++
++	/**
++	 * @brief Get the global sequence number of this event.
++	 * @return Sequence number of the event relative to all lines in the
++	 *         associated line request.
++	 */
++	unsigned long global_seqno(void) const noexcept;
++
++	/**
++	 * @brief Get the event sequence number specific to the concerned line.
++	 * @return Sequence number of the event relative to this line within
++	 *         the lifetime of the associated line request.
++	 */
++	unsigned long line_seqno(void) const noexcept;
++
++private:
++
++	edge_event(void);
++
++	struct impl;
++	struct impl_managed;
++	struct impl_external;
++
++	::std::shared_ptr<impl> _m_priv;
++
++	friend edge_event_buffer;
++};
++
++/**
++ * @brief Stream insertion operator for edge events.
++ * @param out Output stream to write to.
++ * @param event Edge event to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const edge_event& event);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_EDGE_EVENT_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/exception.hpp b/bindings/cxx/gpiodcxx/exception.hpp
+new file mode 100644
+index 0000000..f4d525b
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/exception.hpp
+@@ -0,0 +1,158 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file exception.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_EXCEPTION_HPP__
++#define __LIBGPIOD_CXX_EXCEPTION_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <stdexcept>
++#include <string>
++
++namespace gpiod {
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Exception thrown when an already closed chip is used.
++ */
++class GPIOD_CXX_API chip_closed : public ::std::logic_error
++{
++public:
++
++	/**
++	 * @brief Constructor.
++	 * @param what Human readable reason for error.
++	 */
++	explicit chip_closed(const ::std::string& what);
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy from.
++	 */
++	chip_closed(const chip_closed& other) noexcept;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	chip_closed(chip_closed&& other) noexcept;
++
++	/**
++	 * @brief Assignment operator.
++	 * @param other Object to copy from.
++	 * @return Reference to self.
++	 */
++	chip_closed& operator=(const chip_closed& other) noexcept;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	chip_closed& operator=(chip_closed&& other) noexcept;
++
++	virtual ~chip_closed(void);
++};
++
++/**
++ * @brief Exception thrown when an already released line request is used.
++ */
++class GPIOD_CXX_API request_released : public ::std::logic_error
++{
++public:
++
++	/**
++	 * @brief Constructor.
++	 * @param what Human readable reason for error.
++	 */
++	explicit request_released(const ::std::string& what);
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy from.
++	 */
++	request_released(const request_released& other) noexcept;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	request_released(request_released&& other) noexcept;
++
++	/**
++	 * @brief Assignment operator.
++	 * @param other Object to copy from.
++	 * @return Reference to self.
++	 */
++	request_released& operator=(const request_released& other) noexcept;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	request_released& operator=(request_released&& other) noexcept;
++
++	virtual ~request_released(void);
++};
++
++/**
++ * @brief Exception thrown when the core C library returns an invalid value
++ *        for any of the line_info properties.
++ */
++class GPIOD_CXX_API bad_mapping : public ::std::runtime_error
++{
++public:
++
++	/**
++	 * @brief Constructor.
++	 * @param what Human readable reason for error.
++	 */
++	explicit bad_mapping(const ::std::string& what);
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy from.
++	 */
++	bad_mapping(const bad_mapping& other) noexcept;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	bad_mapping(bad_mapping&& other) noexcept;
++
++	/**
++	 * @brief Assignment operator.
++	 * @param other Object to copy from.
++	 * @return Reference to self.
++	 */
++	bad_mapping& operator=(const bad_mapping& other) noexcept;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	bad_mapping& operator=(bad_mapping&& other) noexcept;
++
++	virtual ~bad_mapping(void);
++};
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_EXCEPTION_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/info-event.hpp b/bindings/cxx/gpiodcxx/info-event.hpp
+new file mode 100644
+index 0000000..107ca57
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/info-event.hpp
+@@ -0,0 +1,123 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file gpiod.h
++ */
++
++#ifndef __LIBGPIOD_CXX_INFO_EVENT_HPP__
++#define __LIBGPIOD_CXX_INFO_EVENT_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <cstdint>
++#include <iostream>
++#include <memory>
++
++#include "timestamp.hpp"
++
++namespace gpiod {
++
++class chip;
++class line_info;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Immutable object containing data about a single line info event.
++ */
++class info_event
++{
++public:
++
++	/**
++	 * @brief Types of info events.
++	 */
++	enum class event_type
++	{
++		LINE_REQUESTED = 1,
++		/**< Line has been requested. */
++		LINE_RELEASED,
++		/**< Previously requested line has been released. */
++		LINE_CONFIG_CHANGED
++		/**< Line configuration has changed. */
++	};
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy.
++	 */
++	info_event(const info_event& other);
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	info_event(info_event&& other) noexcept;
++
++	~info_event(void);
++
++	/**
++	 * @brief Copy assignment operator.
++	 * @param other Object to copy.
++	 * @return Reference to self.
++	 */
++	info_event& operator=(const info_event& other);
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	info_event& operator=(info_event&& other) noexcept;
++
++	/**
++	 * @brief Type of this event.
++	 * @return Event type.
++	 */
++	event_type type(void) const;
++
++	/**
++	 * @brief Timestamp of the event as returned by the kernel.
++	 * @return Timestamp as a 64-bit unsigned integer.
++	 */
++	::std::uint64_t timestamp_ns(void) const noexcept;
++
++	/**
++	 * @brief Get the new line information.
++	 * @return Constant reference to the line info object containing the
++	 *         line data as read at the time of the info event.
++	 */
++	const line_info& get_line_info(void) const noexcept;
++
++private:
++
++	info_event(void);
++
++	struct impl;
++
++	::std::shared_ptr<impl> _m_priv;
++
++	friend chip;
++};
++
++/**
++ * @brief Stream insertion operator for info events.
++ * @param out Output stream to write to.
++ * @param event GPIO line info event to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const info_event& event);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_INFO_EVENT_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line-config.hpp b/bindings/cxx/gpiodcxx/line-config.hpp
+new file mode 100644
+index 0000000..6d808bd
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/line-config.hpp
+@@ -0,0 +1,564 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file line-config.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_LINE_CONFIG_HPP__
++#define __LIBGPIOD_CXX_LINE_CONFIG_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <any>
++#include <chrono>
++#include <cstddef>
++#include <iostream>
++#include <map>
++#include <memory>
++#include <utility>
++
++namespace gpiod {
++
++class chip;
++class line_request;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Contains a set of line config options used in line requests and
++ *        reconfiguration.
++ */
++class line_config
++{
++public:
++
++	/**
++	 * @brief List of available configuration properties. Used in the
++	 *        constructor, :line_config::set_property_default and
++	 *        :line_config::set_property_override.
++	 */
++	enum class property {
++		DIRECTION = 1,
++		/**< Line direction. */
++		EDGE,
++		/**< Edge detection. */
++		BIAS,
++		/**< Bias. */
++		DRIVE,
++		/**< Drive. */
++		ACTIVE_LOW,
++		/**< Active-low setting. */
++		DEBOUNCE_PERIOD,
++		/**< Debounce period. */
++		EVENT_CLOCK,
++		/**< Event clock. */
++		OUTPUT_VALUE,
++		/**< Output value. */
++		OUTPUT_VALUES,
++		/**< Set of offset-to-value mappings. Only used in the constructor. */
++	};
++
++	/**
++	 * @brief List of configuration properties passed to the constructor.
++	 *        The first member is the property indicator, the second is
++	 *        the value stored as `std::any` that is interpreted by the
++	 *        relevant methods depending on the property value.
++	 */
++	using properties = ::std::map<property, ::std::any>;
++
++	/**
++	 * @brief Stored information about a single configuration override. The
++	 *        first member is the overridden line offset, the second is
++	 *        the property being overridden.
++	 */
++	using override = ::std::pair<line::offset, property>;
++
++	/**
++	 * @brief List of line configuration overrides.
++	 */
++	using override_list = ::std::vector<override>;
++
++	/**
++	 * @brief Constructor.
++	 * @param props List of configuration properties. See
++	 *              :set_property_default for details. Additionally the
++	 *              constructor takes another property type as argument:
++	 *              :property::OUTPUT_VALUES which takes
++	 *              :line::value_mappings as property value. This
++	 *              effectively sets the overrides for output values for
++	 *              the mapped offsets.
++	 */
++	explicit line_config(const properties& props = properties());
++
++	line_config(const line_config& other) = delete;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	line_config(line_config&& other) noexcept;
++
++	~line_config(void);
++
++	line_config& operator=(const line_config& other) = delete;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	line_config& operator=(line_config&& other) noexcept;
++
++	/**
++	 * @brief Reset the line config object.
++	 */
++	void reset(void) noexcept;
++
++	/**
++	 * @brief Set the default value of a single configuration property.
++	 * @param prop Property to set.
++	 * @param val Property value. The type must correspond with the
++	 *            property being set: :line::direction for
++	 *            :property::DIRECTION, :line::edge for :property::EDGE,
++	 *            :line::bias for :property::BIAS, :line::drive for
++	 *            :property::DRIVE, `bool` for :property::ACTIVE_LOW,
++	 *            `std::chrono:microseconds` for
++	 *            :property::DEBOUNCE_PERIOD, :line::clock for
++	 *            :property::EVENT_CLOCK and :line::value
++	 *            for :property::OUTPUT_VALUE.
++	 *
++	 */
++	void set_property_default(property prop, const ::std::any& val);
++
++	/**
++	 * @brief Set the override value of a single configuration property.
++	 * @param prop Property to set.
++	 * @param offset Line offset to override.
++	 * @param val Property value. See :set_property_default for details.
++	 */
++	void set_property_offset(property prop, line::offset offset, const ::std::any& val);
++
++	/**
++	 * @brief Set the default direction setting.
++	 * @param direction New direction.
++	 */
++	void set_direction_default(line::direction direction);
++
++	/**
++	 * @brief Set the direction for a single line at given offset.
++	 * @param direction New direction.
++	 * @param offset Offset of the line for which to set the direction.
++	 */
++	void set_direction_override(line::direction direction, line::offset offset);
++
++	/**
++	 * @brief Get the default direction setting.
++	 * @return Direction setting that would have been used for any offset
++	 * 	   not assigned its own direction value.
++	 */
++	line::direction direction_default(void) const;
++
++	/**
++	 * @brief Get the direction setting for a given offset.
++	 * @param offset Line offset for which to read the direction setting.
++	 * @return Direction setting that would have been used for given offset
++	 *         if the config object was used in a request at the time of
++	 *         the call.
++	 */
++	line::direction direction_offset(line::offset offset) const;
++
++	/**
++	 * @brief Clear the direction override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_direction_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the direction setting is overridden at given offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if direction is overridden at this offset, false
++	 *         otherwise.
++	 */
++	bool direction_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Set the default edge event detection.
++	 * @param edge Type of edge events to detect.
++	 */
++	void set_edge_detection_default(line::edge edge);
++
++	/**
++	 * @brief Set the edge event detection for a single line at given
++	 *        offset.
++	 * @param edge Type of edge events to detect.
++	 * @param offset Offset of the line for which to set the direction.
++	 */
++	void set_edge_detection_override(line::edge edge, line::offset offset);
++
++	/**
++	 * @brief Get the default edge detection setting.
++	 * @return Edge detection setting that would have been used for any
++	 *         offset not assigned its own direction value.
++	 */
++	line::edge edge_detection_default(void) const;
++
++	/**
++	 * @brief Get the edge event detection setting for a given offset.
++	 * @param offset Line offset for which to read the edge detection
++	 *               setting.
++	 * @return Edge event detection setting that would have been used for
++	 * 	   given offset if the config object was used in a request at
++	 * 	   the time of the call.
++	 */
++	line::edge edge_detection_offset(line::offset offset) const;
++
++	/**
++	 * @brief Clear the edge detection override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_edge_detection_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the edge detection setting is overridden at given
++	 *        offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if edge detection is overridden at this offset, false
++	 *         otherwise.
++	 */
++	bool edge_detection_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Set the default bias setting.
++	 * @param bias New bias.
++	 */
++	void set_bias_default(line::bias bias);
++
++	/**
++	 * @brief Set the bias for a single line at given offset.
++	 * @param bias New bias.
++	 * @param offset Offset of the line for which to set the bias.
++	 */
++	void set_bias_override(line::bias bias, line::offset offset);
++
++	/**
++	 * @brief Get the default bias setting.
++	 * @return Bias setting that would have been used for any offset not
++	 *         assigned its own direction value.
++	 */
++	line::bias bias_default(void) const;
++
++	/**
++	 * @brief Get the bias setting for a given offset.
++	 * @param offset Line offset for which to read the bias setting.
++	 * @return Bias setting that would have been used for given offset if
++	 *         the config object was used in a request at the time of the
++	 *         call.
++	 */
++	line::bias bias_offset(line::offset offset) const;
++
++	/**
++	 * @brief Clear the bias override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_bias_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the bias setting is overridden at given offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if bias is overridden at this offset, false otherwise.
++	 */
++	bool bias_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Set the default drive setting.
++	 * @param drive New drive.
++	 */
++	void set_drive_default(line::drive drive);
++
++	/**
++	 * @brief Set the drive for a single line at given offset.
++	 * @param drive New drive.
++	 * @param offset Offset of the line for which to set the drive.
++	 */
++	void set_drive_override(line::drive drive, line::offset offset);
++
++	/**
++	 * @brief Set the drive for a subset of offsets.
++	 * @param drive New drive.
++	 * @param offsets Vector of line offsets for which to set the drive.
++	 */
++	void set_drive(line::drive drive, const line::offsets& offsets);
++
++	/**
++	 * @brief Get the default drive setting.
++	 * @return Drive setting that would have been used for any offset not
++	 *         assigned its own direction value.
++	 */
++	line::drive drive_default(void) const;
++
++	/**
++	 * @brief Get the drive setting for a given offset.
++	 * @param offset Line offset for which to read the drive setting.
++	 * @return Drive setting that would have been used for given offset if
++	 *         the config object was used in a request at the time of the
++	 *         call.
++	 */
++	line::drive drive_offset(line::offset offset) const;
++
++	/**
++	 * @brief Clear the drive override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_drive_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the drive setting is overridden at given offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if drive is overridden at this offset, false otherwise.
++	 */
++	bool drive_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Set lines to active-low by default.
++	 * @param active_low New active-low setting.
++	 */
++	void set_active_low_default(bool active_low) noexcept;
++
++	/**
++	 * @brief Set a single line as active-low.
++	 * @param active_low New active-low setting.
++	 * @param offset Offset of the line for which to set the active setting.
++	 */
++	void set_active_low_override(bool active_low, line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if active-low is the default setting.
++	 * @return Active-low setting that would have been used for any offset
++         *         not assigned its own value.
++	 */
++	bool active_low_default(void) const noexcept;
++
++	/**
++	 * @brief Check if the line at given offset was configured as
++	 *        active-low.
++	 * @param offset Line offset for which to read the active-low setting.
++	 * @return Active-low setting that would have been used for given
++	 *         offset if the config object was used in a request at the
++	 *         time of the call.
++	 */
++	bool active_low_offset(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Clear the active-low override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_active_low_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the active-low setting is overridden at given offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if active-low is overridden at this offset, false
++	 *         otherwise.
++	 */
++	bool active_low_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Set the default debounce period.
++	 * @param period New debounce period. Disables debouncing if 0.
++	 */
++	void set_debounce_period_default(const ::std::chrono::microseconds& period) noexcept;
++
++	/**
++	 * @brief Set the debounce period for a single line at given offset.
++	 * @param period New debounce period. Disables debouncing if 0.
++	 * @param offset Offset of the line for which to set the debounce
++	 *               period.
++	 */
++	void set_debounce_period_override(const ::std::chrono::microseconds& period,
++					     line::offset offset) noexcept;
++
++	/**
++	 * @brief Get the default debounce period.
++	 * @return Debounce period that would have been used for any offset not
++	 *         assigned its own debounce period. 0 if not debouncing is
++	 *         disabled.
++	 */
++	::std::chrono::microseconds debounce_period_default(void) const noexcept;
++
++	/**
++	 * @brief Get the debounce period for a given offset.
++	 * @param offset Line offset for which to read the debounce period.
++	 * @return Debounce period that would have been used for given offset
++	 *         if the config object was used in a request at the time of
++	 *         the call. 0 if debouncing is disabled.
++	 */
++	::std::chrono::microseconds debounce_period_offset(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Clear the debounce period override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_debounce_period_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the debounce period setting is overridden at given offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if debounce period is overridden at this offset, false
++	 *         otherwise.
++	 */
++	bool debounce_period_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Set the default event timestamp clock.
++	 * @param clock New clock to use.
++	 */
++	void set_event_clock_default(line::clock clock);
++
++	/**
++	 * @brief Set the event clock for a single line at given offset.
++	 * @param clock New clock to use.
++	 * @param offset Offset of the line for which to set the event clock
++	 *               type.
++	 */
++	void set_event_clock_override(line::clock clock, line::offset offset);
++
++	/**
++	 * @brief Get the default event clock setting.
++	 * @return Event clock setting that would have been used for any offset
++	 *         not assigned its own direction value.
++	 */
++	line::clock event_clock_default(void) const;
++
++	/**
++	 * @brief Get the event clock setting for a given offset.
++	 * @param offset Line offset for which to read the event clock setting.
++	 * @return Event clock setting that would have been used for given
++	 *         offset if the config object was used in a request at the
++	 *         time of the call.
++	 */
++	line::clock event_clock_offset(line::offset offset) const;
++
++	/**
++	 * @brief Clear the event clock override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_event_clock_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the event clock setting is overridden at given
++	 *        offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if event clock is overridden at this offset, false
++	 *         otherwise.
++	 */
++	bool event_clock_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Set the default output value.
++	 * @param value New value.
++	 */
++	void set_output_value_default(line::value value) noexcept;
++
++	/**
++	 * @brief Set the output value for a single offset.
++	 * @param offset Line offset to associate the value with.
++	 * @param value New value.
++	 */
++	void set_output_value_override(line::value value, line::offset offset) noexcept;
++
++	/**
++	 * @brief Set the output values for a set of line offsets.
++	 * @param values Vector of offset->value mappings.
++	 */
++	void set_output_values(const line::value_mappings& values);
++
++	/**
++	 * @brief Set the output values for a set of line offsets.
++	 * @param offsets Vector of line offsets for which to set output values.
++	 * @param values Vector of new line values with indexes of values
++	 *               corresponding to the indexes of offsets.
++	 */
++	void set_output_values(const line::offsets& offsets, const line::values& values);
++
++	/**
++	 * @brief Get the default output value.
++	 * @return Output value that would have been used for any offset not
++	 *         assigned its own output value.
++	 */
++	line::value output_value_default(void) const noexcept;
++
++	/**
++	 * @brief Get the output value configured for a given line.
++	 * @param offset Line offset for which to read the value.
++	 * @return Output value that would have been used for given offset if
++	 *         the config object was used in a request at the time of the
++	 *         call.
++	 */
++	line::value output_value_offset(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Clear the output value override at given offset.
++	 * @param offset Offset of the line for which to clear the override.
++	 * @note Does nothing if no override is set for this line.
++	 */
++	void clear_output_value_override(line::offset offset) noexcept;
++
++	/**
++	 * @brief Check if the output value setting is overridden at given
++	 *        offset.
++	 * @param offset Offset of the line for which to check the override.
++	 * @return True if output value is overridden at this offset, false
++	 *         otherwise.
++	 */
++	bool output_value_is_overridden(line::offset offset) const noexcept;
++
++	/**
++	 * @brief Get the number of configuration overrides.
++	 * @return Number of overrides held by this object.
++	 */
++	::std::size_t num_overrides(void) const noexcept;
++
++	/**
++	 * @brief Get the list of property overrides.
++	 * @return List of configuration property overrides held by this object.
++	 */
++	override_list overrides(void) const;
++
++private:
++
++	struct impl;
++
++	::std::unique_ptr<impl> _m_priv;
++
++	friend chip;
++	friend line_request;
++};
++
++/**
++ * @brief Stream insertion operator for GPIO line config objects.
++ * @param out Output stream to write to.
++ * @param config Line config object to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const line_config& config);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_LINE_CONFIG_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line-info.hpp b/bindings/cxx/gpiodcxx/line-info.hpp
+new file mode 100644
+index 0000000..e9883ab
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/line-info.hpp
+@@ -0,0 +1,176 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file line-info.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_LINE_INFO_HPP__
++#define __LIBGPIOD_CXX_LINE_INFO_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <chrono>
++#include <iostream>
++#include <memory>
++#include <string>
++
++namespace gpiod {
++
++class chip;
++class info_event;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Contains an immutable snapshot of the line's state at the
++ *        time when the object of this class was instantiated.
++ */
++class line_info
++{
++public:
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy.
++	 */
++	line_info(const line_info& other) noexcept;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	line_info(line_info&& other) noexcept;
++
++	~line_info(void);
++
++	/**
++	 * @brief Copy assignment operator.
++	 * @param other Object to copy.
++	 * @return Reference to self.
++	 */
++	line_info& operator=(const line_info& other) noexcept;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	line_info& operator=(line_info&& other) noexcept;
++
++	/**
++	 * @brief Get the hardware offset of the line.
++	 * @return Offset of the line within the parent chip.
++	 */
++	line::offset offset(void) const noexcept;
++
++	/**
++	 * @brief Get the GPIO line name.
++	 * @return Name of the GPIO line as it is represented in the kernel.
++	 *         This routine returns an empty string if the line is unnamed.
++	 */
++	::std::string name(void) const noexcept;
++
++	/**
++	 * @brief Check if the line is currently in use.
++	 * @return True if the line is in use, false otherwise.
++	 *
++	 * The user space can't know exactly why a line is busy. It may have
++	 * been requested by another process or hogged by the kernel. It only
++	 * matters that the line is used and we can't request it.
++	 */
++	bool used(void) const noexcept;
++
++	/**
++	 * @brief Read the GPIO line consumer name.
++	 * @return Name of the GPIO consumer name as it is represented in the
++	 *         kernel. This routine returns an empty string if the line is
++	 *         not used.
++	 */
++	::std::string consumer(void) const noexcept;
++
++	/**
++	 * @brief Read the GPIO line direction setting.
++	 * @return Returns DIRECTION_INPUT or DIRECTION_OUTPUT.
++	 */
++	line::direction direction(void) const;
++
++	/**
++	 * @brief Read the current edge detection setting of this line.
++	 * @return Returns EDGE_NONE, EDGE_RISING, EDGE_FALLING or EDGE_BOTH.
++	 */
++	line::edge edge_detection(void) const;
++
++	/**
++	 * @brief Read the GPIO line bias setting.
++	 * @return Returns BIAS_PULL_UP, BIAS_PULL_DOWN, BIAS_DISABLE or
++	 *         BIAS_UNKNOWN.
++	 */
++	line::bias bias(void) const;
++
++	/**
++	 * @brief Read the GPIO line drive setting.
++	 * @return Returns DRIVE_PUSH_PULL, DRIVE_OPEN_DRAIN or
++	 *         DRIVE_OPEN_SOURCE.
++	 */
++	line::drive drive(void) const;
++
++	/**
++	 * @brief Check if the signal of this line is inverted.
++	 * @return True if this line is "active-low", false otherwise.
++	 */
++	bool active_low(void) const noexcept;
++
++	/**
++	 * @brief Check if this line is debounced (either by hardware or by the
++	 *        kernel software debouncer).
++	 * @return True if the line is debounced, false otherwise.
++	 */
++	bool debounced(void) const noexcept;
++
++	/**
++	 * @brief Read the current debounce period in microseconds.
++	 * @return Current debounce period in microseconds, 0 if the line is
++	 *         not debounced.
++	 */
++	::std::chrono::microseconds debounce_period(void) const noexcept;
++
++	/**
++	 * @brief Read the current event clock setting used for edge event
++	 *        timestamps.
++	 * @return Returns MONOTONIC or REALTIME.
++	 */
++	line::clock event_clock(void) const;
++
++private:
++
++	line_info(void);
++
++	struct impl;
++
++	::std::shared_ptr<impl> _m_priv;
++
++	friend chip;
++	friend info_event;
++};
++
++/**
++ * @brief Stream insertion operator for GPIO line info objects.
++ * @param out Output stream to write to.
++ * @param info GPIO line info object to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const line_info& info);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_LINE_INFO_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line-request.hpp b/bindings/cxx/gpiodcxx/line-request.hpp
+new file mode 100644
+index 0000000..28ab6e1
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/line-request.hpp
+@@ -0,0 +1,221 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file line-request.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_LINE_REQUEST_HPP__
++#define __LIBGPIOD_CXX_LINE_REQUEST_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <chrono>
++#include <cstddef>
++#include <iostream>
++#include <memory>
++
++#include "misc.hpp"
++
++namespace gpiod {
++
++class chip;
++class edge_event;
++class edge_event_buffer;
++class line_config;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Stores the context of a set of requested GPIO lines.
++ */
++class line_request
++{
++public:
++
++	line_request(const line_request& other) = delete;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	line_request(line_request&& other) noexcept;
++
++	~line_request(void);
++
++	line_request& operator=(const line_request& other) = delete;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 */
++	line_request& operator=(line_request&& other) noexcept;
++
++	/**
++	 * @brief Check if this object is valid.
++	 * @return True if this object's methods can be used, false otherwise.
++	 *         False usually means the request was released. If the user
++	 *         calls any of the methods of this class on an object for
++	 *         which this operator returned false, a logic_error will be
++	 *         thrown.
++	 */
++	explicit operator bool(void) const noexcept;
++
++	/**
++	 * @brief Release the GPIO chip and free all associated resources.
++	 * @note The object can still be used after this method is called but
++	 *       using any of the mutators will result in throwing
++	 *       a logic_error exception.
++	 */
++	void release(void);
++
++	/**
++	 * @brief Get the number of requested lines.
++	 * @return Number of lines in this request.
++	 */
++	::std::size_t num_lines(void) const;
++
++	/**
++	 * @brief Get the list of offsets of requested lines.
++	 * @return List of hardware offsets of the lines in this request.
++	 */
++	line::offsets offsets(void) const;
++
++	/**
++	 * @brief Get the value of a single requested line.
++	 * @param offset Offset of the line to read within the chip.
++	 * @return Current line value.
++	 */
++	line::value get_value(line::offset offset);
++
++	/**
++	 * @brief Get the values of a subset of requested lines.
++	 * @param offsets Vector of line offsets
++	 * @return Vector of lines values with indexes of values corresponding
++	 *         to those of the offsets.
++	 */
++	line::values get_values(const line::offsets& offsets);
++
++	/**
++	 * @brief Get the values of all requested lines.
++	 * @return List of read values.
++	 */
++	line::values get_values(void);
++
++	/**
++	 * @brief Get the values of a subset of requested lines into a vector
++	 *        supplied by the caller.
++	 * @param offsets Vector of line offsets.
++	 * @param values Vector for storing the values. Its size must be at
++	 *               least that of the offsets vector. The indexes of read
++	 *               values will correspond with those in the offsets
++	 *               vector.
++	 */
++	void get_values(const line::offsets& offsets, line::values& values);
++
++	/**
++	 * @brief Get the values of all requested lines.
++	 * @param values Array in which the values will be stored. Must hold
++	 *               at least the number of elements returned by
++	 *               line_request::num_lines.
++	 */
++	void get_values(line::values& values);
++
++	/**
++	 * @brief Set the value of a single requested line.
++	 * @param offset Offset of the line to set within the chip.
++	 * @param value New line value.
++	 */
++	void set_value(line::offset offset, line::value value);
++
++	/**
++	 * @brief Set the values of a subset of requested lines.
++	 * @param values Vector containing a set of offset->value mappings.
++	 */
++	void set_values(const line::value_mappings& values);
++
++	/**
++	 * @brief Set the values of a subset of requested lines.
++	 * @param offsets Vector containing the offsets of lines to set.
++	 * @param values Vector containing new values with indexes
++	 *               corresponding with those in the offsets vector.
++	 */
++	void set_values(const line::offsets& offsets, const line::values& values);
++
++	/**
++	 * @brief Set the values of all requested lines.
++	 * @param values Array of new line values. The size must be equal to
++	 *               the value returned by line_request::num_lines.
++	 */
++	void set_values(const line::values& values);
++
++	/**
++	 * @brief Apply new config options to requested lines.
++	 * @param config New configuration.
++	 */
++	void reconfigure_lines(const line_config& config);
++
++	/**
++	 * @brief Get the file descriptor number associated with this line
++	 *        request.
++	 * @return File descriptor number.
++	 */
++	int fd(void) const;
++
++	/**
++	 * @brief Wait for edge events on any of the lines requested with edge
++	 *        detection enabled.
++	 * @param timeout Wait time limit in nanoseconds.
++	 * @return True if at least one event is ready to be read. False if the
++	 *         wait timed out.
++	 */
++	bool wait_edge_event(const ::std::chrono::nanoseconds& timeout) const;
++
++	/**
++	 * @brief Read a number of edge events from this request up to the
++	 *        maximum capacity of the buffer.
++	 * @param buffer Edge event buffer to read events into.
++	 * @return Number of events read.
++	 */
++	::std::size_t read_edge_event(edge_event_buffer& buffer);
++
++	/**
++	 * @brief Read a number of edge events from this request.
++	 * @param buffer Edge event buffer to read events into.
++	 * @param max_events Maximum number of events to read. Limited by the
++	 *                   capacity of the buffer.
++	 * @return Number of events read.
++	 */
++	::std::size_t read_edge_event(edge_event_buffer& buffer, ::std::size_t max_events);
++
++private:
++
++	line_request(void);
++
++	struct impl;
++
++	::std::unique_ptr<impl> _m_priv;
++
++	friend chip;
++};
++
++/**
++ * @brief Stream insertion operator for line requests.
++ * @param out Output stream to write to.
++ * @param request Line request object to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const line_request& request);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_LINE_REQUEST_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line.hpp b/bindings/cxx/gpiodcxx/line.hpp
+new file mode 100644
+index 0000000..8e8a984
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/line.hpp
+@@ -0,0 +1,274 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file line.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_LINE_HPP__
++#define __LIBGPIOD_CXX_LINE_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <ostream>
++#include <utility>
++#include <vector>
++
++namespace gpiod {
++
++/**
++ * @brief Namespace containing various type definitions for GPIO lines.
++ */
++namespace line {
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Wrapper around unsigned int for representing line offsets.
++ */
++class offset
++{
++public:
++	/**
++	 * @brief Constructor with implicit conversion from unsigned int.
++	 * @param off Line offset.
++	 */
++	offset(unsigned int off = 0) : _m_offset(off) {	}
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy.
++	 */
++	offset(const offset& other) = default;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	offset(offset&& other) = default;
++
++	~offset(void) = default;
++
++	/**
++	 * @brief Assignment operator.
++	 * @param other Object to copy.
++	 * @return Reference to self.
++	 */
++	offset& operator=(const offset& other) = default;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	offset& operator=(offset&& other) noexcept = default;
++
++	/**
++	 * @brief Conversion operator to `unsigned int`.
++	 */
++	operator unsigned int(void) const noexcept
++	{
++		return this->_m_offset;
++	}
++
++private:
++	unsigned int _m_offset;
++};
++
++/**
++ * @brief Logical line states.
++ */
++enum class value
++{
++	INACTIVE = 0,
++	/**< Line is inactive. */
++	ACTIVE = 1,
++	/**< Line is active. */
++};
++
++/**
++ * @brief Direction settings.
++ */
++enum class direction
++{
++	AS_IS = 1,
++	/**< Request the line(s), but don't change current direction. */
++	INPUT,
++	/**< Direction is input - we're reading the state of a GPIO line. */
++	OUTPUT
++	/**< Direction is output - we're driving the GPIO line. */
++};
++
++/**
++ * @brief Edge detection settings.
++ */
++enum class edge
++{
++	NONE = 1,
++	/**< Line edge detection is disabled. */
++	RISING,
++	/**< Line detects rising edge events. */
++	FALLING,
++	/**< Line detect falling edge events. */
++	BOTH
++	/**< Line detects both rising and falling edge events. */
++};
++
++/**
++ * @brief Internal bias settings.
++ */
++enum class bias
++{
++	AS_IS = 1,
++	/**< Don't change the bias setting when applying line config. */
++	UNKNOWN,
++	/**< The internal bias state is unknown. */
++	DISABLED,
++	/**< The internal bias is disabled. */
++	PULL_UP,
++	/**< The internal pull-up bias is enabled. */
++	PULL_DOWN
++	/**< The internal pull-down bias is enabled. */
++};
++
++/**
++ * @brief Drive settings.
++ */
++enum class drive
++{
++	PUSH_PULL = 1,
++	/**< Drive setting is push-pull. */
++	OPEN_DRAIN,
++	/**< Line output is open-drain. */
++	OPEN_SOURCE
++	/**< Line output is open-source. */
++};
++
++/**
++ * @brief Event clock settings.
++ */
++enum class clock
++{
++	MONOTONIC = 1,
++	/**< Line uses the monotonic clock for edge event timestamps. */
++	REALTIME
++	/**< Line uses the realtime clock for edge event timestamps. */
++};
++
++/**
++ * @brief Vector of line offsets.
++ */
++using offsets = ::std::vector<offset>;
++
++/**
++ * @brief Vector of line values.
++ */
++using values = ::std::vector<value>;
++
++/**
++ * @brief Represents a mapping of a line offset to line logical state.
++ */
++using value_mapping = ::std::pair<offset, value>;
++
++/**
++ * @brief Vector of offset->value mappings. Each mapping is defined as a pair
++ *        of an unsigned and signed integers.
++ */
++using value_mappings = ::std::vector<value_mapping>;
++
++/**
++ * @brief Stream insertion operator for logical line values.
++ * @param out Output stream.
++ * @param val Value to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, value val);
++
++/**
++ * @brief Stream insertion operator for direction values.
++ * @param out Output stream.
++ * @param dir Value to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, direction dir);
++
++/**
++ * @brief Stream insertion operator for edge detection values.
++ * @param out Output stream.
++ * @param edge Value to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, edge edge);
++
++/**
++ * @brief Stream insertion operator for bias values.
++ * @param out Output stream.
++ * @param bias Value to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, bias bias);
++
++/**
++ * @brief Stream insertion operator for drive values.
++ * @param out Output stream.
++ * @param drive Value to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, drive drive);
++
++/**
++ * @brief Stream insertion operator for event clock values.
++ * @param out Output stream.
++ * @param clock Value to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, clock clock);
++
++/**
++ * @brief Stream insertion operator for the list of output values.
++ * @param out Output stream.
++ * @param vals Object to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const values& vals);
++
++/**
++ * @brief Stream insertion operator for the list of line offsets.
++ * @param out Output stream.
++ * @param offs Object to insert into the output stream in a human-readable form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const offsets& offs);
++
++/**
++ * @brief Stream insertion operator for the offset-to-value mapping.
++ * @param out Output stream.
++ * @param mapping Value to insert into the output stream in a human-readable
++ *        form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const value_mapping& mapping);
++
++/**
++ * @brief Stream insertion operator for the list of offset-to-value mappings.
++ * @param out Output stream.
++ * @param mappings Object to insert into the output stream in a human-readable
++ *        form.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const value_mappings& mappings);
++
++/**
++ * @}
++ */
++
++} /* namespace line */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_LINE_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/misc.hpp b/bindings/cxx/gpiodcxx/misc.hpp
+new file mode 100644
+index 0000000..6e0084b
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/misc.hpp
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file misc.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_MISC_HPP__
++#define __LIBGPIOD_CXX_MISC_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <string>
++
++namespace gpiod {
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Check if the file pointed to by path is a GPIO chip character device.
++ * @param path Path to check.
++ * @return True if the file exists and is a GPIO chip character device or a
++ *         symbolic link to it.
++ */
++bool is_gpiochip_device(const ::std::filesystem::path& path);
++
++/**
++ * @brief Get the human readable version string for libgpiod API
++ * @return String containing the library version.
++ */
++const ::std::string& version_string(void);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_MISC_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/request-config.hpp b/bindings/cxx/gpiodcxx/request-config.hpp
+new file mode 100644
+index 0000000..52444c9
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/request-config.hpp
+@@ -0,0 +1,163 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file request-config.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_REQUEST_CONFIG_HPP__
++#define __LIBGPIOD_CXX_REQUEST_CONFIG_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <any>
++#include <cstddef>
++#include <iostream>
++#include <map>
++#include <memory>
++#include <string>
++
++#include "line.hpp"
++
++namespace gpiod {
++
++class chip;
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Stores a set of options passed to the kernel when making a line
++ *        request.
++ */
++class request_config
++{
++public:
++
++	/**
++	 * @brief List of available configuration settings. Used in the
++	 *        constructor and :request_config::set_property.
++	 */
++	enum class property {
++		OFFSETS = 1,
++		/**< List of line offsets to request. */
++		CONSUMER,
++		/**< Consumer string. */
++		EVENT_BUFFER_SIZE,
++		/**< Suggested size of the edge event buffer. */
++	};
++
++	/**
++	 * @brief Map of mappings between property types and property values.
++	 */
++	using properties = ::std::map<property, ::std::any>;
++
++	/**
++	 * @brief Constructor.
++	 * @param props List of config properties. See
++	 *              :request_config::set_property.
++	 */
++	explicit request_config(const properties& props = properties());
++
++	request_config(const request_config& other) = delete;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	request_config(request_config&& other) noexcept;
++
++	~request_config(void);
++
++	request_config& operator=(const request_config& other) = delete;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	request_config& operator=(request_config&& other) noexcept;
++
++	/**
++	 * @brief Set the value of a single config property.
++	 * @param prop Property to set.
++	 * @param val Property value. The type must correspond to the property
++	 *            being set: `std::string` or `const char*` for
++	 *            :property::CONSUMER, `:line::offsets` for
++	 *            :property::OFFSETS and `unsigned long` for
++	 *            :property::EVENT_BUFFER_SIZE.
++	 */
++	void set_property(property prop, const ::std::any& val);
++
++	/**
++	 * @brief Set line offsets for this request.
++	 * @param offsets Vector of line offsets to request.
++	 */
++	void set_offsets(const line::offsets& offsets) noexcept;
++
++	/**
++	 * @brief Get the number of offsets configured in this request config.
++	 * @return Number of line offsets in this request config.
++	 */
++	::std::size_t num_offsets(void) const noexcept;
++
++	/**
++	 * @brief Set the consumer name.
++	 * @param consumer New consumer name.
++	 */
++	void set_consumer(const ::std::string& consumer) noexcept;
++
++	/**
++	 * @brief Get the consumer name.
++	 * @return Currently configured consumer name. May be an empty string.
++	 */
++	::std::string consumer(void) const noexcept;
++
++	/**
++	 * @brief Get the hardware offsets of lines in this request config.
++	 * @return List of line offsets.
++	 */
++	line::offsets offsets(void) const;
++
++	/**
++	 * @brief Set the size of the kernel event buffer.
++	 * @param event_buffer_size New event buffer size.
++	 * @note The kernel may adjust the value if it's too high. If set to 0,
++	 *       the default value will be used.
++	 */
++	void set_event_buffer_size(::std::size_t event_buffer_size) noexcept;
++
++	/**
++	 * @brief Get the edge event buffer size from this request config.
++	 * @return Current edge event buffer size setting.
++	 */
++	::std::size_t event_buffer_size(void) const noexcept;
++
++private:
++
++	struct impl;
++
++	::std::unique_ptr<impl> _m_priv;
++
++	friend chip;
++};
++
++/**
++ * @brief Stream insertion operator for request_config objects.
++ * @param out Output stream to write to.
++ * @param config request_config to insert into the output stream.
++ * @return Reference to out.
++ */
++::std::ostream& operator<<(::std::ostream& out, const request_config& config);
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_REQUEST_CONFIG_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/timestamp.hpp b/bindings/cxx/gpiodcxx/timestamp.hpp
+new file mode 100644
+index 0000000..d707fee
+--- /dev/null
++++ b/bindings/cxx/gpiodcxx/timestamp.hpp
+@@ -0,0 +1,122 @@
++/* SPDX-License-Identifier: LGPL-3.0-or-later */
++/* SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++/**
++ * @file timestamp.hpp
++ */
++
++#ifndef __LIBGPIOD_CXX_TIMESTAMP_HPP__
++#define __LIBGPIOD_CXX_TIMESTAMP_HPP__
++
++#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
++#error "Only gpiod.hpp can be included directly."
++#endif
++
++#include <chrono>
++#include <cstdint>
++
++namespace gpiod {
++
++/**
++ * @ingroup gpiod_cxx
++ * @{
++ */
++
++/**
++ * @brief Stores the edge and info event timestamps as returned by the kernel
++ *        and allows to convert them to std::chrono::time_point.
++ */
++class timestamp
++{
++public:
++
++	/**
++	 * @brief Monotonic time_point.
++	 */
++	using time_point_monotonic = ::std::chrono::time_point<::std::chrono::steady_clock>;
++
++	/**
++	 * @brief Real-time time_point.
++	 */
++	using time_point_realtime = ::std::chrono::time_point<::std::chrono::system_clock>;
++
++	/**
++	 * @brief Constructor with implicit  conversion from `uint64_t`.
++	 * @param ns Timestamp in nanoseconds.
++	 */
++	timestamp(::std::uint64_t ns) : _m_ns(ns) { }
++
++	/**
++	 * @brief Copy constructor.
++	 * @param other Object to copy.
++	 */
++	timestamp(const timestamp& other) noexcept = default;
++
++	/**
++	 * @brief Move constructor.
++	 * @param other Object to move.
++	 */
++	timestamp(timestamp&& other) noexcept = default;
++
++	/**
++	 * @brief Assignment operator.
++	 * @param other Object to copy.
++	 * @return Reference to self.
++	 */
++	timestamp& operator=(const timestamp& other) noexcept = default;
++
++	/**
++	 * @brief Move assignment operator.
++	 * @param other Object to move.
++	 * @return Reference to self.
++	 */
++	timestamp& operator=(timestamp&& other) noexcept = default;
++
++	~timestamp(void) = default;
++
++	/**
++	 * @brief Conversion operator to `std::uint64_t`.
++	 */
++	operator ::std::uint64_t(void) noexcept
++	{
++		return this->ns();
++	}
++
++	/**
++	 * @brief Get the timestamp in nanoseconds.
++	 * @return Timestamp in nanoseconds.
++	 */
++	::std::uint64_t ns(void) const noexcept
++	{
++		return this->_m_ns;
++	}
++
++	/**
++	 * @brief Convert the timestamp to a monotonic time_point.
++	 * @return time_point associated with the steady clock.
++	 */
++	time_point_monotonic to_time_point_monotonic(void) const
++	{
++		return time_point_monotonic(::std::chrono::nanoseconds(this->ns()));
++	}
++
++	/**
++	 * @brief Convert the timestamp to a real-time time_point.
++	 * @return time_point associated with the system clock.
++	 */
++	time_point_realtime to_time_point_realtime(void) const
++	{
++		return time_point_realtime(::std::chrono::nanoseconds(this->ns()));
++	}
++
++private:
++	::std::uint64_t _m_ns;
++};
++
++/**
++ * @}
++ */
++
++} /* namespace gpiod */
++
++#endif /* __LIBGPIOD_CXX_TIMESTAMP_HPP__ */
+diff --git a/configure.ac b/configure.ac
+index f8d34ed..ab03673 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -239,6 +239,7 @@ AC_CONFIG_FILES([Makefile
+ 		 bindings/cxx/libgpiodcxx.pc
+ 		 bindings/Makefile
+ 		 bindings/cxx/Makefile
++		 bindings/cxx/gpiodcxx/Makefile
+ 		 bindings/cxx/examples/Makefile
+ 		 bindings/cxx/tests/Makefile
+ 		 bindings/python/Makefile
 -- 
 2.32.0
 
