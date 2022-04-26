@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5010C50FD98
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 14:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C909650FD94
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Apr 2022 14:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348939AbiDZMyI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Apr 2022 08:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        id S1348793AbiDZMyH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Apr 2022 08:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350255AbiDZMyF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Apr 2022 08:54:05 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AFF3B2B3
+        with ESMTP id S1350253AbiDZMyE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Apr 2022 08:54:04 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4726047057
         for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 05:50:54 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id w4so25277059wrg.12
+Received: by mail-wr1-x42a.google.com with SMTP id e24so5449994wrc.9
         for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 05:50:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NFvOQH4B5Cd/Zv8HS0lvlBfYoqpR4yOoBOxheFJr04E=;
-        b=PqQQnnyALMoPQU+BqW6b5D/+BzUu+yppnbS0w1xZbXE4S4sq+4oXexTEj3/5NUZsWr
-         x0S7LXVbnUSvo+AgHS93DrcJuegHSPcvEHQFGNNgGPoVUdiNEbrM9LrrgvEwDFdIiQ2t
-         fq9xyyN/3CLP0RyCb06+WcOqTiYwRhUlB4BOrGmCcRhesyLcqr+sSEjk8J52/NAxdL3E
-         efidx8sIoU54DDXMdkp5NpmGf2OLsPn4UY0/BBNwW2QkfSZIkyBr6cUyHC9SAB3XVwe9
-         P5alQAvv/wttRKKVXmS8JhfLJosuNL5Wqz2IltyjZy/9uD73PH515CxPZeUQhER+PSat
-         /0cA==
+        bh=Rg333NoevqtNXQI9s204bwnkJivIV1lxMW9pljjB68o=;
+        b=r9o+0fC/YM4D/Os4gBjYuTR5XrljkphppyJThwGDCprgeKaJe6DeVPRCyu1FrtWrHq
+         eqNZxlatyP8oaRWQmun+qfYPZS+B8p95siH+bT2ZQjSY1HcEg6N+IP3FAgAwFT/BZGwu
+         MYooHiJ5rxHWQBdDNAy8YcwItcNDIIHhh3JrZiv6LIGb5TjWRa2gvg2yLr4iuLulyliW
+         Yt33adFpwIAxvNq1Bewhrvq00yQEkBUCdYsTKW38zrU2n4JtK1zrVWr3gcl8Xr+uNi4l
+         yndwyH50pzwVarC3jZ7baRNGSSmpYASW4aCpFBcM/a9W3kRtuP0sn0A5E++QX3rpcO0F
+         Kf/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NFvOQH4B5Cd/Zv8HS0lvlBfYoqpR4yOoBOxheFJr04E=;
-        b=kut7tgva+6kRjiUpw6eH/TjMZEu9M/iW4H7Q1No75CtxYS1rgB2Mr++9r/Z28BSYpB
-         dwnD6GijjAeVa/Oja5ADMKUxIVGENA0ncH77V5LhKBT84F7SKa5MNazAccVUhHqQ51ep
-         Syo+MAqvIoolh6c6LAr311yaSI+mE1mNV0dBnImMpsPWE0MW1n1L+6T+Mdgbgc3RkSov
-         p/qrkuyMi5veC6wwAbO6Dd4rkxiWTBNZShD0WeE3s1vpaOY+C9HR0j7QnjQNbWE9Pizn
-         Gm6lM0FVdaJVeiPxu+4SjHX3oRN0nwSg5mzJGJ1rInfnXL2zt69+xIjnrvkarGmjHmyt
-         0XHg==
-X-Gm-Message-State: AOAM530aHHxQzAIJr0/OEBGD0SR6H20GWm3RfbiG2+JBifhWDBIX6c24
-        qENGnACXNVDbSsaUlxYrNf5m9g==
-X-Google-Smtp-Source: ABdhPJzaIkdih+S3YyVG2yK3+jTEOQtNNsc6L5lhLlKF6oLX7yBmxWD0wFHYE/zCmFHoPZnMRCO2JA==
-X-Received: by 2002:a05:6000:188b:b0:20a:a7f4:2f8 with SMTP id a11-20020a056000188b00b0020aa7f402f8mr17728272wri.424.1650977451474;
-        Tue, 26 Apr 2022 05:50:51 -0700 (PDT)
+        bh=Rg333NoevqtNXQI9s204bwnkJivIV1lxMW9pljjB68o=;
+        b=lDjU12NXUMCHj5MYjp1U86YaSRpTvoJb0LkW5y6Uq1Hv8zE5pcE/iPdFZZhSG7zcK8
+         DudwJNGXsBngft3Pls484sMCYtT9ML5L0nxqVkvn7f9Blz5uTamG+mLgwPMmbiQ99tm9
+         BbFD2vopVoukQyBtTV8RtjmN+1zQCLHlGuPqDnZdA214q4ZuWqdLzPOyFLQhEPncCDZO
+         atYWCoQxPGib08N3G40lkyUpDg9x1fCjm5hpbwsEmKsGsDlDtpe3hoMspBuBK/WHYTVe
+         q/VS+xe0Y82oB65jJjo6grFTEy0Y6xJjaFInjb24eA4sfzdrdwuj+C17VqK6LUfT/F8q
+         5jhg==
+X-Gm-Message-State: AOAM530KzKVoh8ITnmHqAlZIiqC4rFAaCubTb72oUmE7MEKAYxdD6vTI
+        qyZep+KCJfWjndTX+RpgFMzFAQ==
+X-Google-Smtp-Source: ABdhPJwNvqKb9SIm/P8wuCMSaEPekS1GOC13aBPLJkgBEbCFpkZoIWHIdmrEgiU6CuHHtCBR58/puA==
+X-Received: by 2002:adf:f710:0:b0:20a:e189:9983 with SMTP id r16-20020adff710000000b0020ae1899983mr4340512wrp.24.1650977452337;
+        Tue, 26 Apr 2022 05:50:52 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:faf0:6ae0:9a53:ee37])
-        by smtp.gmail.com with ESMTPSA id n20-20020a05600c3b9400b00393ea849663sm6128600wms.30.2022.04.26.05.50.50
+        by smtp.gmail.com with ESMTPSA id n20-20020a05600c3b9400b00393ea849663sm6128600wms.30.2022.04.26.05.50.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 26 Apr 2022 05:50:51 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
@@ -58,9 +58,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Jack Winch <sunt.un.morcov@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod v2][PATCH v6 2/5] bindings: cxx: add v2 headers
-Date:   Tue, 26 Apr 2022 14:50:20 +0200
-Message-Id: <20220426125023.2664623-3-brgl@bgdev.pl>
+Subject: [libgpiod v2][PATCH v6 3/5] bindings: cxx: add v2 tests
+Date:   Tue, 26 Apr 2022 14:50:21 +0200
+Message-Id: <20220426125023.2664623-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220426125023.2664623-1-brgl@bgdev.pl>
 References: <20220426125023.2664623-1-brgl@bgdev.pl>
@@ -75,354 +75,488 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds the headers for the v2 C++ bindings.
+This adds the tests for the v2 C++ bindings.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- Doxyfile.in                                 |   4 +-
- bindings/cxx/gpiodcxx/Makefile.am           |  18 +
- bindings/cxx/gpiodcxx/chip-info.hpp         | 105 ++++
- bindings/cxx/gpiodcxx/chip.hpp              | 179 +++++++
- bindings/cxx/gpiodcxx/edge-event-buffer.hpp | 129 +++++
- bindings/cxx/gpiodcxx/edge-event.hpp        | 137 +++++
- bindings/cxx/gpiodcxx/exception.hpp         | 158 ++++++
- bindings/cxx/gpiodcxx/info-event.hpp        | 123 +++++
- bindings/cxx/gpiodcxx/line-config.hpp       | 564 ++++++++++++++++++++
- bindings/cxx/gpiodcxx/line-info.hpp         | 176 ++++++
- bindings/cxx/gpiodcxx/line-request.hpp      | 221 ++++++++
- bindings/cxx/gpiodcxx/line.hpp              | 274 ++++++++++
- bindings/cxx/gpiodcxx/misc.hpp              |  44 ++
- bindings/cxx/gpiodcxx/request-config.hpp    | 163 ++++++
- bindings/cxx/gpiodcxx/timestamp.hpp         | 122 +++++
- configure.ac                                |   1 +
- 16 files changed, 2417 insertions(+), 1 deletion(-)
- create mode 100644 bindings/cxx/gpiodcxx/Makefile.am
- create mode 100644 bindings/cxx/gpiodcxx/chip-info.hpp
- create mode 100644 bindings/cxx/gpiodcxx/chip.hpp
- create mode 100644 bindings/cxx/gpiodcxx/edge-event-buffer.hpp
- create mode 100644 bindings/cxx/gpiodcxx/edge-event.hpp
- create mode 100644 bindings/cxx/gpiodcxx/exception.hpp
- create mode 100644 bindings/cxx/gpiodcxx/info-event.hpp
- create mode 100644 bindings/cxx/gpiodcxx/line-config.hpp
- create mode 100644 bindings/cxx/gpiodcxx/line-info.hpp
- create mode 100644 bindings/cxx/gpiodcxx/line-request.hpp
- create mode 100644 bindings/cxx/gpiodcxx/line.hpp
- create mode 100644 bindings/cxx/gpiodcxx/misc.hpp
- create mode 100644 bindings/cxx/gpiodcxx/request-config.hpp
- create mode 100644 bindings/cxx/gpiodcxx/timestamp.hpp
+ bindings/cxx/tests/.gitignore               |   4 +
+ bindings/cxx/tests/Makefile.am              |  31 ++
+ bindings/cxx/tests/check-kernel.cpp         |  48 ++
+ bindings/cxx/tests/gpiod-cxx-test-main.cpp  |   5 +
+ bindings/cxx/tests/gpiosim.cpp              | 258 +++++++++++
+ bindings/cxx/tests/gpiosim.hpp              |  69 +++
+ bindings/cxx/tests/helpers.cpp              |  37 ++
+ bindings/cxx/tests/helpers.hpp              |  62 +++
+ bindings/cxx/tests/tests-chip-info.cpp      | 109 +++++
+ bindings/cxx/tests/tests-chip.cpp           | 171 +++++++
+ bindings/cxx/tests/tests-edge-event.cpp     | 417 +++++++++++++++++
+ bindings/cxx/tests/tests-info-event.cpp     | 198 ++++++++
+ bindings/cxx/tests/tests-line-config.cpp    | 270 +++++++++++
+ bindings/cxx/tests/tests-line-info.cpp      | 156 +++++++
+ bindings/cxx/tests/tests-line-request.cpp   | 490 ++++++++++++++++++++
+ bindings/cxx/tests/tests-line.cpp           | 137 ++++++
+ bindings/cxx/tests/tests-misc.cpp           |  78 ++++
+ bindings/cxx/tests/tests-request-config.cpp | 155 +++++++
+ 18 files changed, 2695 insertions(+)
+ create mode 100644 bindings/cxx/tests/.gitignore
+ create mode 100644 bindings/cxx/tests/Makefile.am
+ create mode 100644 bindings/cxx/tests/check-kernel.cpp
+ create mode 100644 bindings/cxx/tests/gpiod-cxx-test-main.cpp
+ create mode 100644 bindings/cxx/tests/gpiosim.cpp
+ create mode 100644 bindings/cxx/tests/gpiosim.hpp
+ create mode 100644 bindings/cxx/tests/helpers.cpp
+ create mode 100644 bindings/cxx/tests/helpers.hpp
+ create mode 100644 bindings/cxx/tests/tests-chip-info.cpp
+ create mode 100644 bindings/cxx/tests/tests-chip.cpp
+ create mode 100644 bindings/cxx/tests/tests-edge-event.cpp
+ create mode 100644 bindings/cxx/tests/tests-info-event.cpp
+ create mode 100644 bindings/cxx/tests/tests-line-config.cpp
+ create mode 100644 bindings/cxx/tests/tests-line-info.cpp
+ create mode 100644 bindings/cxx/tests/tests-line-request.cpp
+ create mode 100644 bindings/cxx/tests/tests-line.cpp
+ create mode 100644 bindings/cxx/tests/tests-misc.cpp
+ create mode 100644 bindings/cxx/tests/tests-request-config.cpp
 
-diff --git a/Doxyfile.in b/Doxyfile.in
-index 0ff735d..9c85e21 100644
---- a/Doxyfile.in
-+++ b/Doxyfile.in
-@@ -44,7 +44,9 @@ WARNINGS               = YES
- WARN_IF_UNDOCUMENTED   = YES
- WARN_FORMAT            =
- WARN_LOGFILE           =
--INPUT                  = @top_srcdir@/include/gpiod.h @top_srcdir@/bindings/cxx/gpiod.hpp
-+INPUT                  = @top_srcdir@/include/gpiod.h \
-+                         @top_srcdir@/bindings/cxx/gpiod.hpp \
-+                         @top_srcdir@/bindings/cxx/gpiodcxx/
- SOURCE_BROWSER         = YES
- INLINE_SOURCES         = NO
- REFERENCED_BY_RELATION = YES
-diff --git a/bindings/cxx/gpiodcxx/Makefile.am b/bindings/cxx/gpiodcxx/Makefile.am
+diff --git a/bindings/cxx/tests/.gitignore b/bindings/cxx/tests/.gitignore
 new file mode 100644
-index 0000000..71532e6
+index 0000000..7990193
 --- /dev/null
-+++ b/bindings/cxx/gpiodcxx/Makefile.am
-@@ -0,0 +1,18 @@
++++ b/bindings/cxx/tests/.gitignore
+@@ -0,0 +1,4 @@
 +# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl>
++# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
 +
-+otherincludedir = $(includedir)/gpiodcxx
-+otherinclude_HEADERS = \
-+	chip.hpp \
-+	chip-info.hpp \
-+	edge-event-buffer.hpp \
-+	edge-event.hpp \
-+	exception.hpp \
-+	info-event.hpp \
-+	line.hpp \
-+	line-config.hpp \
-+	line-info.hpp \
-+	line-request.hpp \
-+	misc.hpp \
-+	request-config.hpp \
-+	timestamp.hpp
-diff --git a/bindings/cxx/gpiodcxx/chip-info.hpp b/bindings/cxx/gpiodcxx/chip-info.hpp
++gpiod-cxx-test
+diff --git a/bindings/cxx/tests/Makefile.am b/bindings/cxx/tests/Makefile.am
 new file mode 100644
-index 0000000..9313e88
+index 0000000..1314103
 --- /dev/null
-+++ b/bindings/cxx/gpiodcxx/chip-info.hpp
-@@ -0,0 +1,105 @@
++++ b/bindings/cxx/tests/Makefile.am
+@@ -0,0 +1,31 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
++
++AM_CPPFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
++AM_CPPFLAGS += -I$(top_srcdir)/tests/gpiosim/
++AM_CPPFLAGS += -Wall -Wextra -g -std=gnu++17 $(CATCH2_CFLAGS)
++AM_CPPFLAGS += $(PROFILING_CFLAGS)
++AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
++AM_LDFLAGS += -lgpiosim -L$(top_builddir)/tests/gpiosim/
++AM_LDFLAGS += $(PROFILING_LDFLAGS)
++AM_LDFLAGS += -pthread
++
++bin_PROGRAMS = gpiod-cxx-test
++
++gpiod_cxx_test_SOURCES =			\
++		check-kernel.cpp		\
++		gpiod-cxx-test-main.cpp		\
++		gpiosim.cpp			\
++		gpiosim.hpp			\
++		helpers.cpp			\
++		helpers.hpp			\
++		tests-chip.cpp			\
++		tests-chip-info.cpp		\
++		tests-edge-event.cpp		\
++		tests-line.cpp			\
++		tests-line-config.cpp		\
++		tests-line-info.cpp		\
++		tests-line-request.cpp		\
++		tests-info-event.cpp		\
++		tests-misc.cpp			\
++		tests-request-config.cpp
+diff --git a/bindings/cxx/tests/check-kernel.cpp b/bindings/cxx/tests/check-kernel.cpp
+new file mode 100644
+index 0000000..9bdd1e6
+--- /dev/null
++++ b/bindings/cxx/tests/check-kernel.cpp
+@@ -0,0 +1,48 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <linux/version.h>
++#include <sys/utsname.h>
++#include <system_error>
++#include <sstream>
++
++namespace {
++
++class kernel_checker
++{
++public:
++	kernel_checker(int major, int minor, int release)
++	{
++		int curr_major, curr_minor, curr_release, curr_ver, req_ver;
++		::std::string major_str, minor_str, release_str;
++		::utsname un;
++		int ret;
++
++		ret = ::uname(::std::addressof(un));
++		if (ret)
++			throw ::std::system_error(errno, ::std::system_category(),
++						  "unable to read the kernel version");
++
++		::std::stringstream ver_stream(::std::string(un.release));
++		::std::getline(ver_stream, major_str, '.');
++		::std::getline(ver_stream, minor_str, '.');
++		::std::getline(ver_stream, release_str, '-');
++
++		curr_major = ::std::stoi(major_str, nullptr, 0);
++		curr_minor = ::std::stoi(minor_str, nullptr, 0);
++		curr_release = ::std::stoi(release_str, nullptr, 0);
++
++		curr_ver = KERNEL_VERSION(curr_major, curr_minor, curr_release);
++		req_ver = KERNEL_VERSION(major, minor, release);
++
++		if (curr_ver < req_ver)
++			throw ::std::runtime_error("kernel release must be at least: " +
++						   ::std::to_string(major) + "." +
++						   ::std::to_string(minor) + "." +
++						   ::std::to_string(release));
++	}
++};
++
++kernel_checker require_kernel(5, 17, 0);
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/gpiod-cxx-test-main.cpp b/bindings/cxx/tests/gpiod-cxx-test-main.cpp
+new file mode 100644
+index 0000000..11bf8e5
+--- /dev/null
++++ b/bindings/cxx/tests/gpiod-cxx-test-main.cpp
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
++
++#define CATCH_CONFIG_MAIN
++#include <catch2/catch.hpp>
+diff --git a/bindings/cxx/tests/gpiosim.cpp b/bindings/cxx/tests/gpiosim.cpp
+new file mode 100644
+index 0000000..408ad81
+--- /dev/null
++++ b/bindings/cxx/tests/gpiosim.cpp
+@@ -0,0 +1,258 @@
 +/* SPDX-License-Identifier: LGPL-3.0-or-later */
 +/* SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl> */
 +
-+/**
-+ * @file chip-info.hpp
-+ */
++#include <functional>
++#include <map>
++#include <system_error>
 +
-+#ifndef __LIBGPIOD_CXX_CHIP_INFO_HPP__
-+#define __LIBGPIOD_CXX_CHIP_INFO_HPP__
++#include "gpiosim.h"
++#include "gpiosim.hpp"
 +
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
++#define NORETURN __attribute__((noreturn))
 +
-+#include <memory>
-+#include <ostream>
++namespace gpiosim {
 +
-+namespace gpiod {
++namespace {
 +
-+class chip;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Represents an immutable snapshot of GPIO chip information.
-+ */
-+class chip_info
-+{
-+public:
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy.
-+	 */
-+	chip_info(const chip_info& other);
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	chip_info(chip_info&& other) noexcept;
-+
-+	~chip_info(void);
-+
-+	/**
-+	 * @brief Assignment operator.
-+	 * @param other Object to copy.
-+	 * @return Reference to self.
-+	 */
-+	chip_info& operator=(const chip_info& other);
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	chip_info& operator=(chip_info&& other) noexcept;
-+
-+	/**
-+	 * @brief Get the name of this GPIO chip.
-+	 * @return String containing the chip name.
-+	 */
-+	::std::string name(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the label of this GPIO chip.
-+	 * @return String containing the chip name.
-+	 */
-+	::std::string label(void) const noexcept;
-+
-+	/**
-+	 * @brief Return the number of lines exposed by this chip.
-+	 * @return Number of lines.
-+	 */
-+	::std::size_t num_lines(void) const noexcept;
-+
-+private:
-+
-+	chip_info(void);
-+
-+	struct impl;
-+
-+	::std::shared_ptr<impl> _m_priv;
-+
-+	friend chip;
++const ::std::map<chip::pull, int> pull_mapping = {
++	{ chip::pull::PULL_UP,		GPIOSIM_PULL_UP },
++	{ chip::pull::PULL_DOWN,	GPIOSIM_PULL_DOWN }
 +};
 +
-+/**
-+ * @brief Stream insertion operator for GPIO chip objects.
-+ * @param out Output stream to write to.
-+ * @param chip GPIO chip to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const chip_info& chip);
++const ::std::map<chip::hog_direction, int> hog_dir_mapping = {
++	{ chip::hog_direction::INPUT,		GPIOSIM_HOG_DIR_INPUT },
++	{ chip::hog_direction::OUTPUT_HIGH,	GPIOSIM_HOG_DIR_OUTPUT_HIGH },
++	{ chip::hog_direction::OUTPUT_LOW,	GPIOSIM_HOG_DIR_OUTPUT_LOW }
++};
 +
-+/**
-+ * @}
-+ */
++const ::std::map<int, chip::value> value_mapping = {
++	{ GPIOSIM_VALUE_INACTIVE,	chip::value::INACTIVE },
++	{ GPIOSIM_VALUE_ACTIVE,		chip::value::ACTIVE }
++};
 +
-+} /* namespace gpiod */
++template<class gpiosim_type, void free_func(gpiosim_type*)> struct deleter
++{
++	void operator()(gpiosim_type* ptr)
++	{
++		free_func(ptr);
++	}
++};
 +
-+#endif /* __LIBGPIOD_CXX_CHIP_INFO_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/chip.hpp b/bindings/cxx/gpiodcxx/chip.hpp
++using ctx_deleter = deleter<::gpiosim_ctx, ::gpiosim_ctx_unref>;
++using dev_deleter = deleter<::gpiosim_dev, ::gpiosim_dev_unref>;
++using bank_deleter = deleter<::gpiosim_bank, ::gpiosim_bank_unref>;
++
++using ctx_ptr = ::std::unique_ptr<::gpiosim_ctx, ctx_deleter>;
++using dev_ptr = ::std::unique_ptr<::gpiosim_dev, dev_deleter>;
++using bank_ptr = ::std::unique_ptr<::gpiosim_bank, bank_deleter>;
++
++ctx_ptr sim_ctx;
++
++class sim_ctx_initializer
++{
++public:
++	sim_ctx_initializer(void)
++	{
++		sim_ctx.reset(gpiosim_ctx_new());
++		if (!sim_ctx)
++			throw ::std::system_error(errno, ::std::system_category(),
++						  "unable to create the GPIO simulator context");
++	}
++};
++
++dev_ptr make_sim_dev(void)
++{
++	static sim_ctx_initializer ctx_initializer;
++
++	dev_ptr dev(::gpiosim_dev_new(sim_ctx.get()));
++	if (!dev)
++		throw ::std::system_error(errno, ::std::system_category(),
++					  "failed to create a new GPIO simulator device");
++
++	return dev;
++}
++
++bank_ptr make_sim_bank(const dev_ptr& dev)
++{
++	bank_ptr bank(::gpiosim_bank_new(dev.get()));
++	if (!bank)
++		throw ::std::system_error(errno, ::std::system_category(),
++					  "failed to create a new GPIO simulator bank");
++
++	return bank;
++}
++
++NORETURN void throw_invalid_type(void)
++{
++	throw ::std::logic_error("invalid type for property");
++}
++
++unsigned any_to_unsigned_int(const ::std::any& val)
++{
++	if (val.type() == typeid(int)) {
++		auto num_lines = ::std::any_cast<int>(val);
++		if (num_lines < 0)
++			throw ::std::invalid_argument("negative value not accepted");
++
++		   return static_cast<unsigned int>(num_lines);
++	} else if (val.type() == typeid(unsigned int)) {
++		return ::std::any_cast<unsigned int>(val);
++	}
++
++	throw_invalid_type();
++}
++
++::std::string any_to_string(const ::std::any& val)
++{
++	if (val.type() == typeid(::std::string))
++		return ::std::any_cast<::std::string>(val);
++	else if (val.type() == typeid(const char*))
++		return ::std::any_cast<const char*>(val);
++
++	throw_invalid_type();
++}
++
++} /* namespace */
++
++struct chip::impl
++{
++	impl(void)
++		: dev(make_sim_dev()),
++		  bank(make_sim_bank(this->dev)),
++		  has_num_lines(false),
++		  has_label(false)
++	{
++
++	}
++
++	impl(const impl& other) = delete;
++	impl(impl&& other) = delete;
++	~impl(void) = default;
++	impl& operator=(const impl& other) = delete;
++	impl& operator=(impl&& other) = delete;
++
++	static const ::std::map<chip::property,
++				::std::function<void (impl&,
++						      const ::std::any&)>> setter_mapping;
++
++	void set_property(chip::property prop, const ::std::any& val)
++	{
++		setter_mapping.at(prop)(*this, val);
++	}
++
++	void set_num_lines(const ::std::any& val)
++	{
++		if (this->has_num_lines)
++			throw ::std::logic_error("number of lines can be set at most once");
++
++		int ret = ::gpiosim_bank_set_num_lines(this->bank.get(), any_to_unsigned_int(val));
++		if (ret)
++			throw ::std::system_error(errno, ::std::system_category(),
++						  "failed to set the number of lines");
++
++		this->has_num_lines = true;
++	}
++
++	void set_label(const ::std::any& val)
++	{
++		if (this->has_label)
++			throw ::std::logic_error("label can be set at most once");
++
++		int ret = ::gpiosim_bank_set_label(this->bank.get(),
++						   any_to_string(val).c_str());
++		if (ret)
++			throw ::std::system_error(errno, ::std::system_category(),
++						  "failed to set the chip label");
++
++		this->has_label = true;
++	}
++
++	void set_line_name(const ::std::any& val)
++	{
++		auto name = ::std::any_cast<line_name>(val);
++
++		int ret = ::gpiosim_bank_set_line_name(this->bank.get(),
++						       ::std::get<0>(name),
++						       ::std::get<1>(name).c_str());
++		if (ret)
++			throw ::std::system_error(errno, ::std::system_category(),
++						  "failed to set simulated line name");
++	}
++
++	void set_line_hog(const ::std::any& val)
++	{
++		auto hog = ::std::any_cast<line_hog>(val);
++
++		int ret = ::gpiosim_bank_hog_line(this->bank.get(),
++						  ::std::get<0>(hog),
++						  ::std::get<1>(hog).c_str(),
++						  hog_dir_mapping.at(::std::get<2>(hog)));
++		if (ret)
++			throw ::std::system_error(errno, ::std::system_category(),
++						  "failed to hog a simulated line");
++	}
++
++	dev_ptr dev;
++	bank_ptr bank;
++	bool has_num_lines;
++	bool has_label;
++};
++
++const ::std::map<chip::property,
++		 ::std::function<void (chip::impl&,
++				       const ::std::any&)>> chip::impl::setter_mapping = {
++	{ chip::property::NUM_LINES,	&chip::impl::set_num_lines },
++	{ chip::property::LABEL,	&chip::impl::set_label },
++	{ chip::property::LINE_NAME,	&chip::impl::set_line_name },
++	{ chip::property::HOG,		&chip::impl::set_line_hog }
++};
++
++chip::chip(const properties& args)
++	: _m_priv(new impl)
++{
++	int ret;
++
++	for (const auto& arg: args)
++		this->_m_priv.get()->set_property(arg.first, arg.second);
++
++	ret = ::gpiosim_dev_enable(this->_m_priv->dev.get());
++	if (ret)
++		throw ::std::system_error(errno, ::std::system_category(),
++					  "failed to enable the simulated GPIO chip");
++}
++
++chip::~chip(void)
++{
++	this->_m_priv.reset(nullptr);
++}
++
++::std::filesystem::path chip::dev_path(void) const
++{
++	return ::gpiosim_bank_get_dev_path(this->_m_priv->bank.get());
++}
++
++::std::string chip::name(void) const
++{
++	return ::gpiosim_bank_get_chip_name(this->_m_priv->bank.get());
++}
++
++chip::value chip::get_value(unsigned int offset)
++{
++	int val = ::gpiosim_bank_get_value(this->_m_priv->bank.get(), offset);
++	if (val < 0)
++		throw ::std::system_error(errno, ::std::system_category(),
++					  "failed to read the simulated GPIO line value");
++
++	return value_mapping.at(val);
++}
++
++void chip::set_pull(unsigned int offset, pull pull)
++{
++	int ret = ::gpiosim_bank_set_pull(this->_m_priv->bank.get(),
++					  offset, pull_mapping.at(pull));
++	if (ret)
++		throw ::std::system_error(errno, ::std::system_category(),
++					  "failed to set the pull of simulated GPIO line");
++}
++
++} /* namespace gpiosim */
+diff --git a/bindings/cxx/tests/gpiosim.hpp b/bindings/cxx/tests/gpiosim.hpp
 new file mode 100644
-index 0000000..eae7ed6
+index 0000000..53870c1
 --- /dev/null
-+++ b/bindings/cxx/gpiodcxx/chip.hpp
-@@ -0,0 +1,179 @@
++++ b/bindings/cxx/tests/gpiosim.hpp
+@@ -0,0 +1,69 @@
 +/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++/* SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl> */
 +
-+/**
-+ * @file chip.hpp
-+ */
++#ifndef __GPIOD_CXX_GPIOSIM_HPP__
++#define __GPIOD_CXX_GPIOSIM_HPP__
 +
-+#ifndef __LIBGPIOD_CXX_CHIP_HPP__
-+#define __LIBGPIOD_CXX_CHIP_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <chrono>
-+#include <cstddef>
-+#include <iostream>
++#include <any>
 +#include <filesystem>
 +#include <memory>
++#include <tuple>
++#include <utility>
++#include <vector>
 +
-+#include "line.hpp"
++namespace gpiosim {
 +
-+namespace gpiod {
-+
-+class chip_info;
-+class info_event;
-+class line_config;
-+class line_info;
-+class line_request;
-+class request_config;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Represents a GPIO chip.
-+ */
 +class chip
 +{
 +public:
++	enum class property {
++		NUM_LINES = 1,
++		LABEL,
++		LINE_NAME,
++		HOG
++	};
 +
-+	/**
-+	 * @brief Instantiates a new chip object by opening the device file
-+	 *        indicated by the path argument.
-+	 * @param path Path to the device file to open.
-+	 */
-+	explicit chip(const ::std::filesystem::path& path);
++	enum class pull {
++		PULL_UP = 1,
++		PULL_DOWN
++	};
 +
++	enum class hog_direction {
++		INPUT = 1,
++		OUTPUT_HIGH,
++		OUTPUT_LOW
++	};
++
++	enum class value {
++		INACTIVE = 0,
++		ACTIVE = 1
++	};
++
++	using line_name = ::std::tuple<unsigned int, ::std::string>;
++	using line_hog = ::std::tuple<unsigned int, ::std::string, hog_direction>;
++	using properties = ::std::vector<::std::pair<property, ::std::any>>;
++
++	explicit chip(const properties& args = properties());
 +	chip(const chip& other) = delete;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	chip(chip&& other) noexcept;
-+
++	chip(chip&& other) = delete;
 +	~chip(void);
 +
 +	chip& operator=(const chip& other) = delete;
++	chip& operator=(chip&& other) = delete;
 +
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	chip& operator=(chip&& other) noexcept;
++	::std::filesystem::path dev_path(void) const;
++	::std::string name(void) const;
 +
-+	/**
-+	 * @brief Check if this object is valid.
-+	 * @return True if this object's methods can be used, false otherwise.
-+	 *         False usually means the chip was closed. If the user calls
-+	 *         any of the methods of this class on an object for which this
-+	 *         operator returned false, a logic_error will be thrown.
-+	 */
-+	explicit operator bool(void) const noexcept;
-+
-+	/**
-+	 * @brief Close the GPIO chip device file and free associated resources.
-+	 * @note The chip object can live after calling this method but any of
-+	 *       the chip's mutators will throw a logic_error exception.
-+	 */
-+	void close(void);
-+
-+	/**
-+	 * @brief Get the filesystem path that was used to open this GPIO chip.
-+	 * @return Path to the underlying character device file.
-+	 */
-+	::std::filesystem::path path(void) const;
-+
-+	/**
-+	 * @brief Get information about the chip.
-+	 * @return New chip_info object.
-+	 */
-+	chip_info get_info(void) const;
-+
-+	/**
-+	 * @brief Retrieve the current snapshot of line information for a
-+	 *        single line.
-+	 * @param offset Offset of the line to get the info for.
-+	 * @return New ::gpiod::line_info object.
-+	 */
-+	line_info get_line_info(line::offset offset) const;
-+
-+	/**
-+	 * @brief Wrapper around ::gpiod::chip::get_line_info that retrieves
-+	 *        the line info and starts watching the line for changes.
-+	 * @param offset Offset of the line to get the info for.
-+	 * @return New ::gpiod::line_info object.
-+	 */
-+	line_info watch_line_info(line::offset offset) const;
-+
-+	/**
-+	 * @brief Stop watching the line at given offset for info events.
-+	 * @param offset Offset of the line to get the info for.
-+	 */
-+	void unwatch_line_info(line::offset offset) const;
-+
-+	/**
-+	 * @brief Get the file descriptor associated with this chip.
-+	 * @return File descriptor number.
-+	 */
-+	int fd(void) const;
-+
-+	/**
-+	 * @brief Wait for line status events on any of the watched lines
-+	 *        exposed by this chip.
-+	 * @param timeout Wait time limit in nanoseconds.
-+	 * @return True if at least one event is ready to be read. False if the
-+	 *         wait timed out.
-+	 */
-+	bool wait_info_event(const ::std::chrono::nanoseconds& timeout) const;
-+
-+	/**
-+	 * @brief Read a single line status change event from this chip.
-+	 * @return New info_event object.
-+	 */
-+	info_event read_info_event(void) const;
-+
-+	/**
-+	 * @brief Map a GPIO line's name to its offset within the chip.
-+	 * @param name Name of the GPIO line to map.
-+	 * @return Offset of the line within the chip or -1 if the line with
-+	 *         given name is not exposed by this chip.
-+	 */
-+	int get_line_offset_from_name(const ::std::string& name) const;
-+
-+	/**
-+	 * @brief Request a set of lines for exclusive usage.
-+	 * @param req_cfg Request config object.
-+	 * @param line_cfg Line config object.
-+	 * @return New line_request object.
-+	 */
-+	line_request request_lines(const request_config& req_cfg,
-+				   const line_config& line_cfg);
++	value get_value(unsigned int offset);
++	void set_pull(unsigned int offset, pull pull);
 +
 +private:
 +
@@ -431,2210 +565,2361 @@ index 0000000..eae7ed6
 +	::std::unique_ptr<impl> _m_priv;
 +};
 +
-+/**
-+ * @brief Stream insertion operator for GPIO chip objects.
-+ * @param out Output stream to write to.
-+ * @param chip GPIO chip to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const chip& chip);
++} /* namespace gpiosim */
 +
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_CHIP_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/edge-event-buffer.hpp b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
++#endif /* __GPIOD_CXX_GPIOSIM_HPP__ */
+diff --git a/bindings/cxx/tests/helpers.cpp b/bindings/cxx/tests/helpers.cpp
 new file mode 100644
-index 0000000..37ac4f5
+index 0000000..b82d03b
 --- /dev/null
-+++ b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
-@@ -0,0 +1,129 @@
++++ b/bindings/cxx/tests/helpers.cpp
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include "helpers.hpp"
++
++system_error_matcher::system_error_matcher(int expected_errno)
++	: _m_cond(::std::system_category().default_error_condition(expected_errno))
++{
++
++}
++
++::std::string system_error_matcher::describe(void) const
++{
++	return "matches: errno " + ::std::to_string(this->_m_cond.value());
++}
++
++bool system_error_matcher::match(const ::std::system_error& error) const
++{
++	return error.code().value() == this->_m_cond.value();
++}
++
++regex_matcher::regex_matcher(const ::std::string& pattern)
++	: _m_pattern(pattern),
++	  _m_repr("matches: regex \"" + pattern + "\"")
++{
++
++}
++
++::std::string regex_matcher::describe(void) const
++{
++	return this->_m_repr;
++}
++
++bool regex_matcher::match(const ::std::string& str) const
++{
++	return ::std::regex_match(str, this->_m_pattern);
++}
+diff --git a/bindings/cxx/tests/helpers.hpp b/bindings/cxx/tests/helpers.hpp
+new file mode 100644
+index 0000000..fca7a1d
+--- /dev/null
++++ b/bindings/cxx/tests/helpers.hpp
+@@ -0,0 +1,62 @@
 +/* SPDX-License-Identifier: LGPL-3.0-or-later */
 +/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
 +
-+/**
-+ * @file edge-event-buffer.hpp
-+ */
++#ifndef __GPIOD_CXX_TEST_HELPERS_HPP__
++#define __GPIOD_CXX_TEST_HELPERS_HPP__
 +
-+#ifndef __LIBGPIOD_CXX_EDGE_EVENT_BUFFER_HPP__
-+#define __LIBGPIOD_CXX_EDGE_EVENT_BUFFER_HPP__
++#include <catch2/catch.hpp>
++#include <regex>
++#include <string>
++#include <sstream>
++#include <system_error>
 +
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <cstddef>
-+#include <iostream>
-+#include <memory>
-+#include <vector>
-+
-+namespace gpiod {
-+
-+class edge_event;
-+class line_request;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Object into which edge events are read for better performance.
-+ *
-+ * The edge_event_buffer allows reading edge_event objects into an existing
-+ * buffer which improves the performance by avoiding needless memory
-+ * allocations.
-+ */
-+class edge_event_buffer
++class system_error_matcher : public Catch::MatcherBase<::std::system_error>
 +{
 +public:
-+
-+	/**
-+	 * @brief Constant iterator for iterating over edge events stored in
-+	 *        the buffer.
-+	 */
-+	using const_iterator = ::std::vector<edge_event>::const_iterator;
-+
-+	/**
-+	 * @brief Constructor. Creates a new edge event buffer with given
-+	 *        capacity.
-+	 * @param capacity Capacity of the new buffer.
-+	 */
-+	explicit edge_event_buffer(::std::size_t capacity = 64);
-+
-+	edge_event_buffer(const edge_event_buffer& other) = delete;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	edge_event_buffer(edge_event_buffer&& other) noexcept;
-+
-+	~edge_event_buffer(void);
-+
-+	edge_event_buffer& operator=(const edge_event_buffer& other) = delete;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	edge_event_buffer& operator=(edge_event_buffer&& other) noexcept;
-+
-+	/**
-+	 * @brief Get the constant reference to the edge event at given index.
-+	 * @param index Index of the event in the buffer.
-+	 * @return Constant reference to the edge event.
-+	 */
-+	const edge_event& get_event(unsigned int index) const;
-+
-+	/**
-+	 * @brief Get the number of edge events currently stored in the buffer.
-+	 * @return Number of edge events in the buffer.
-+	 */
-+	::std::size_t num_events(void) const;
-+
-+	/**
-+	 * @brief Maximum capacity of the buffer.
-+	 * @return Buffer capacity.
-+	 */
-+	::std::size_t capacity(void) const noexcept;
-+
-+	/**
-+	 * @brief Get a constant iterator to the first edge event currently
-+	 *        stored in the buffer.
-+	 * @return Constant iterator to the first element.
-+	 */
-+	const_iterator begin(void) const noexcept;
-+
-+	/**
-+	 * @brief Get a constant iterator to the element after the last edge
-+	 *        event in the buffer.
-+	 * @return Constant iterator to the element after the last edge event.
-+	 */
-+	const_iterator end(void) const noexcept;
++	explicit system_error_matcher(int expected_errno);
++	::std::string describe(void) const override;
++	bool match(const ::std::system_error& error) const override;
 +
 +private:
-+
-+	struct impl;
-+
-+	::std::unique_ptr<impl> _m_priv;
-+
-+	friend line_request;
++	::std::error_condition _m_cond;
 +};
 +
-+/**
-+ * @brief Stream insertion operator for GPIO edge event buffer objects.
-+ * @param out Output stream to write to.
-+ * @param buf GPIO edge event buffer object to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const edge_event_buffer& buf);
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_EDGE_EVENT_BUFFER_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/edge-event.hpp b/bindings/cxx/gpiodcxx/edge-event.hpp
-new file mode 100644
-index 0000000..0623880
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/edge-event.hpp
-@@ -0,0 +1,137 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
-+
-+/**
-+ * @file edge-event.hpp
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_EDGE_EVENT_HPP__
-+#define __LIBGPIOD_CXX_EDGE_EVENT_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <cstdint>
-+#include <iostream>
-+#include <memory>
-+
-+#include "timestamp.hpp"
-+
-+namespace gpiod {
-+
-+class edge_event_buffer;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Immutable object containing data about a single edge event.
-+ */
-+class edge_event
++class regex_matcher : public Catch::MatcherBase<::std::string>
 +{
 +public:
++	explicit regex_matcher(const ::std::string& pattern);
++	::std::string describe(void) const override;
++	bool match(const ::std::string& str) const override;
 +
-+	/**
-+	 * @brief Edge event types.
-+	 */
-+	enum class event_type
++private:
++	::std::regex _m_pattern;
++	::std::string _m_repr;
++};
++
++template<class T> class stringify_matcher : public Catch::MatcherBase<T>
++{
++public:
++	explicit stringify_matcher(const ::std::string& expected) : _m_expected(expected)
 +	{
-+		RISING_EDGE = 1,
-+		/**< This is a rising edge event. */
-+		FALLING_EDGE
-+		/**< This is falling edge event. */
-+	};
 +
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy.
-+	 */
-+	edge_event(const edge_event& other);
++	}
 +
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	edge_event(edge_event&& other) noexcept;
++	::std::string describe(void) const override
++	{
++		return "equals " + this->_m_expected;
++	}
 +
-+	~edge_event(void);
++	bool match(const T& obj) const override
++	{
++		::std::stringstream buf;
 +
-+	/**
-+	 * @brief Copy assignment operator.
-+	 * @param other Object to copy.
-+	 * @return Reference to self.
-+	 */
-+	edge_event& operator=(const edge_event& other);
++		buf << obj;
 +
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	edge_event& operator=(edge_event&& other) noexcept;
-+
-+	/**
-+	 * @brief Retrieve the event type.
-+	 * @return Event type (rising or falling edge).
-+	 */
-+	event_type type(void) const;
-+
-+	/**
-+	 * @brief Retrieve the event time-stamp.
-+	 * @return Time-stamp in nanoseconds as registered by the kernel using
-+	 *         the configured edge event clock.
-+	 */
-+	timestamp timestamp_ns(void) const noexcept;
-+
-+	/**
-+	 * @brief Read the offset of the line on which this event was
-+	 *        registered.
-+	 * @return Line offset.
-+	 */
-+	line::offset line_offset(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the global sequence number of this event.
-+	 * @return Sequence number of the event relative to all lines in the
-+	 *         associated line request.
-+	 */
-+	unsigned long global_seqno(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the event sequence number specific to the concerned line.
-+	 * @return Sequence number of the event relative to this line within
-+	 *         the lifetime of the associated line request.
-+	 */
-+	unsigned long line_seqno(void) const noexcept;
++		return buf.str() == this->_m_expected;
++	}
 +
 +private:
-+
-+	edge_event(void);
-+
-+	struct impl;
-+	struct impl_managed;
-+	struct impl_external;
-+
-+	::std::shared_ptr<impl> _m_priv;
-+
-+	friend edge_event_buffer;
++	::std::string _m_expected;
 +};
 +
-+/**
-+ * @brief Stream insertion operator for edge events.
-+ * @param out Output stream to write to.
-+ * @param event Edge event to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const edge_event& event);
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_EDGE_EVENT_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/exception.hpp b/bindings/cxx/gpiodcxx/exception.hpp
++#endif /* __GPIOD_CXX_TEST_HELPERS_HPP__ */
+diff --git a/bindings/cxx/tests/tests-chip-info.cpp b/bindings/cxx/tests/tests-chip-info.cpp
 new file mode 100644
-index 0000000..f4d525b
+index 0000000..a6bb123
 --- /dev/null
-+++ b/bindings/cxx/gpiodcxx/exception.hpp
-@@ -0,0 +1,158 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++++ b/bindings/cxx/tests/tests-chip-info.cpp
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+/**
-+ * @file exception.hpp
-+ */
++#include <catch2/catch.hpp>
++#include <gpiod.hpp>
++#include <sstream>
 +
-+#ifndef __LIBGPIOD_CXX_EXCEPTION_HPP__
-+#define __LIBGPIOD_CXX_EXCEPTION_HPP__
++#include "gpiosim.hpp"
++#include "helpers.hpp"
 +
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
++using property = ::gpiosim::chip::property;
 +
++namespace {
++
++TEST_CASE("chip_info properties can be read", "[chip-info][chip]")
++{
++	::gpiosim::chip sim({{ property::NUM_LINES, 8 }, { property::LABEL, "foobar" }});
++	::gpiod::chip chip(sim.dev_path());
++	auto info = chip.get_info();
++
++	SECTION("get chip name")
++	{
++		REQUIRE_THAT(info.name(), Catch::Equals(sim.name()));
++	}
++
++	SECTION("get chip label")
++	{
++		REQUIRE_THAT(info.label(), Catch::Equals("foobar"));
++	}
++
++	SECTION("get num_lines")
++	{
++		REQUIRE(info.num_lines() == 8);
++	}
++}
++
++TEST_CASE("chip_info can be copied and moved", "[chip-info]")
++{
++	::gpiosim::chip sim({{ property::NUM_LINES, 4 }, { property::LABEL, "foobar" }});
++	::gpiod::chip chip(sim.dev_path());
++	auto info = chip.get_info();
++
++	SECTION("copy constructor works")
++	{
++		auto copy(info);
++
++		REQUIRE_THAT(copy.name(), Catch::Equals(sim.name()));
++		REQUIRE_THAT(copy.label(), Catch::Equals("foobar"));
++		REQUIRE(copy.num_lines() == 4);
++
++		REQUIRE_THAT(info.name(), Catch::Equals(sim.name()));
++		REQUIRE_THAT(info.label(), Catch::Equals("foobar"));
++		REQUIRE(info.num_lines() == 4);
++	}
++
++	SECTION("assignment operator works")
++	{
++		auto copy = chip.get_info();
++
++		copy = info;
++
++		REQUIRE_THAT(copy.name(), Catch::Equals(sim.name()));
++		REQUIRE_THAT(copy.label(), Catch::Equals("foobar"));
++		REQUIRE(copy.num_lines() == 4);
++
++		REQUIRE_THAT(info.name(), Catch::Equals(sim.name()));
++		REQUIRE_THAT(info.label(), Catch::Equals("foobar"));
++		REQUIRE(info.num_lines() == 4);
++	}
++
++	SECTION("move constructor works")
++	{
++		auto moved(std::move(info));
++
++		REQUIRE_THAT(moved.name(), Catch::Equals(sim.name()));
++		REQUIRE_THAT(moved.label(), Catch::Equals("foobar"));
++		REQUIRE(moved.num_lines() == 4);
++	}
++
++	SECTION("move assignment operator works")
++	{
++		auto moved = chip.get_info();
++
++		moved = ::std::move(info);
++
++		REQUIRE_THAT(moved.name(), Catch::Equals(sim.name()));
++		REQUIRE_THAT(moved.label(), Catch::Equals("foobar"));
++		REQUIRE(moved.num_lines() == 4);
++	}
++}
++
++TEST_CASE("stream insertion operator works for chip_info", "[chip-info]")
++{
++	::gpiosim::chip sim({
++		{ property::NUM_LINES, 4 },
++		{ property::LABEL, "foobar" }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++	auto info = chip.get_info();
++	::std::stringstream expected;
++
++	expected << "gpiod::chip_info(name=\"" << sim.name() <<
++		    "\", label=\"foobar\", num_lines=4)";
++
++	REQUIRE_THAT(info, stringify_matcher<::gpiod::chip_info>(expected.str()));
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-chip.cpp b/bindings/cxx/tests/tests-chip.cpp
+new file mode 100644
+index 0000000..f7841dd
+--- /dev/null
++++ b/bindings/cxx/tests/tests-chip.cpp
+@@ -0,0 +1,171 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <catch2/catch.hpp>
++#include <gpiod.hpp>
++#include <sstream>
++#include <system_error>
++#include <utility>
++
++#include "gpiosim.hpp"
++#include "helpers.hpp"
++
++using property = ::gpiosim::chip::property;
++using line_name = ::gpiosim::chip::line_name;
++
++namespace {
++
++TEST_CASE("chip constructor works", "[chip]")
++{
++	SECTION("open an existing GPIO chip")
++	{
++		::gpiosim::chip sim;
++
++		REQUIRE_NOTHROW(::gpiod::chip(sim.dev_path()));
++	}
++
++	SECTION("opening a nonexistent file fails with ENOENT")
++	{
++		REQUIRE_THROWS_MATCHES(::gpiod::chip("/dev/nonexistent"),
++				       ::std::system_error, system_error_matcher(ENOENT));
++	}
++
++	SECTION("opening a file that is not a device fails with ENOTTY")
++	{
++		REQUIRE_THROWS_MATCHES(::gpiod::chip("/tmp"),
++				       ::std::system_error, system_error_matcher(ENOTTY));
++	}
++
++	SECTION("opening a non-GPIO character device fails with ENODEV")
++	{
++		REQUIRE_THROWS_MATCHES(::gpiod::chip("/dev/null"),
++				       ::std::system_error, system_error_matcher(ENODEV));
++	}
++
++	SECTION("move constructor")
++	{
++		::gpiosim::chip sim({{ property::LABEL, "foobar" }});
++
++		::gpiod::chip first(sim.dev_path());
++		REQUIRE_THAT(first.get_info().label(), Catch::Equals("foobar"));
++		::gpiod::chip second(::std::move(first));
++		REQUIRE_THAT(second.get_info().label(), Catch::Equals("foobar"));
++	}
++}
++
++TEST_CASE("chip operators work", "[chip]")
++{
++	::gpiosim::chip sim({{ property::LABEL, "foobar" }});
++	::gpiod::chip chip(sim.dev_path());
++
++	SECTION("assignment operator")
++	{
++		::gpiosim::chip moved_sim({{ property::LABEL, "moved" }});
++		::gpiod::chip moved_chip(moved_sim.dev_path());
++
++		REQUIRE_THAT(chip.get_info().label(), Catch::Equals("foobar"));
++		chip = ::std::move(moved_chip);
++		REQUIRE_THAT(chip.get_info().label(), Catch::Equals("moved"));
++	}
++
++	SECTION("boolean operator")
++	{
++		REQUIRE(chip);
++		chip.close();
++		REQUIRE_FALSE(chip);
++	}
++}
++
++TEST_CASE("chip properties can be read", "[chip]")
++{
++	::gpiosim::chip sim({{ property::NUM_LINES, 8 }, { property::LABEL, "foobar" }});
++	::gpiod::chip chip(sim.dev_path());
++
++	SECTION("get device path")
++	{
++		REQUIRE_THAT(chip.path(), Catch::Equals(sim.dev_path()));
++	}
++
++	SECTION("get file descriptor")
++	{
++		REQUIRE(chip.fd() >= 0);
++	}
++}
++
++TEST_CASE("line lookup by name works", "[chip]")
++{
++	::gpiosim::chip sim({
++		{ property::NUM_LINES, 8 },
++		{ property::LINE_NAME, line_name(0, "foo") },
++		{ property::LINE_NAME, line_name(2, "bar") },
++		{ property::LINE_NAME, line_name(3, "baz") },
++		{ property::LINE_NAME, line_name(5, "xyz") }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++
++	SECTION("lookup successful")
++	{
++		REQUIRE(chip.get_line_offset_from_name("baz") == 3);
++	}
++
++	SECTION("lookup failed")
++	{
++		REQUIRE(chip.get_line_offset_from_name("nonexistent") < 0);
++	}
++}
++
++TEST_CASE("line lookup: behavior for duplicate names", "[chip]")
++{
++	::gpiosim::chip sim({
++		{ property::NUM_LINES, 8 },
++		{ property::LINE_NAME, line_name(0, "foo") },
++		{ property::LINE_NAME, line_name(2, "bar") },
++		{ property::LINE_NAME, line_name(3, "baz") },
++		{ property::LINE_NAME, line_name(5, "bar") }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++
++	REQUIRE(chip.get_line_offset_from_name("bar") == 2);
++}
++
++TEST_CASE("closed chip can no longer be used", "[chip]")
++{
++	::gpiosim::chip sim;
++
++	::gpiod::chip chip(sim.dev_path());
++	chip.close();
++	REQUIRE_THROWS_AS(chip.path(), ::gpiod::chip_closed);
++}
++
++TEST_CASE("stream insertion operator works for chip", "[chip]")
++{
++	::gpiosim::chip sim({
++		{ property::NUM_LINES, 4 },
++		{ property::LABEL, "foobar" }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++	::std::stringstream buf;
++
++	SECTION("open chip")
++	{
++		::std::stringstream expected;
++
++		expected << "gpiod::chip(path=" << sim.dev_path() <<
++			    ", info=gpiod::chip_info(name=\"" << sim.name() <<
++			    "\", label=\"foobar\", num_lines=4))";
++
++		buf << chip;
++		REQUIRE_THAT(buf.str(), Catch::Equals(expected.str()));
++	}
++
++	SECTION("closed chip")
++	{
++		chip.close();
++		REQUIRE_THAT(chip, stringify_matcher<::gpiod::chip>("gpiod::chip(closed)"));
++	}
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-edge-event.cpp b/bindings/cxx/tests/tests-edge-event.cpp
+new file mode 100644
+index 0000000..d634e20
+--- /dev/null
++++ b/bindings/cxx/tests/tests-edge-event.cpp
+@@ -0,0 +1,417 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <catch2/catch.hpp>
++#include <chrono>
++#include <gpiod.hpp>
++#include <sstream>
++#include <thread>
++#include <utility>
++
++#include "gpiosim.hpp"
++#include "helpers.hpp"
++
++using simprop = ::gpiosim::chip::property;
++using reqprop = ::gpiod::request_config::property;
++using lineprop = ::gpiod::line_config::property;
++using direction = ::gpiod::line::direction;
++using edge = ::gpiod::line::edge;
++using offsets = ::gpiod::line::offsets;
++using pull = ::gpiosim::chip::pull;
++using event_type = ::gpiod::edge_event::event_type;
++
++namespace {
++
++TEST_CASE("edge_event_buffer capacity settings work", "[edge-event]")
++{
++	SECTION("default capacity")
++	{
++		REQUIRE(::gpiod::edge_event_buffer().capacity() == 64);
++	}
++
++	SECTION("user-defined capacity")
++	{
++		REQUIRE(::gpiod::edge_event_buffer(123).capacity() == 123);
++	}
++
++	SECTION("max capacity")
++	{
++		REQUIRE(::gpiod::edge_event_buffer(16 * 64 * 2).capacity() == 1024);
++	}
++}
++
++TEST_CASE("edge_event wait timeout", "[edge-event]")
++{
++	::gpiosim::chip sim;
++	::gpiod::chip chip(sim.dev_path());
++
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 0 })}
++		}),
++		::gpiod::line_config({
++			{ lineprop::EDGE, edge::BOTH }
++		})
++	);
++
++	REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
++}
++
++TEST_CASE("output mode and edge detection don't work together", "[edge-event]")
++{
++	::gpiosim::chip sim;
++	::gpiod::chip chip(sim.dev_path());
++
++	REQUIRE_THROWS_AS(
++		chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 0 })}
++			}),
++			::gpiod::line_config({
++				{ lineprop::DIRECTION, direction::OUTPUT },
++				{ lineprop::EDGE, edge::BOTH }
++			})
++		),
++		::std::invalid_argument
++	);
++}
++
++void trigger_falling_and_rising_edge(::gpiosim::chip& sim, unsigned int offset)
++{
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(30));
++	sim.set_pull(offset, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(30));
++	sim.set_pull(offset, pull::PULL_DOWN);
++}
++
++void trigger_rising_edge_events_on_two_offsets(::gpiosim::chip& sim,
++					       unsigned int off0, unsigned int off1)
++{
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(30));
++	sim.set_pull(off0, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(30));
++	sim.set_pull(off1, pull::PULL_UP);
++}
++
++TEST_CASE("waiting for and reading edge events works", "[edge-event]")
++{
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	::gpiod::chip chip(sim.dev_path());
++	::gpiod::edge_event_buffer buffer;
++
++	SECTION("both edge events")
++	{
++		auto request = chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 2 })}
++			}),
++			::gpiod::line_config({
++				{ lineprop::EDGE, edge::BOTH }
++			})
++		);
++
++		::std::uint64_t ts_rising, ts_falling;
++
++		::std::thread thread(trigger_falling_and_rising_edge, ::std::ref(sim), 2);
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer, 1) == 1);
++		REQUIRE(buffer.num_events() == 1);
++		auto event = buffer.get_event(0);
++		REQUIRE(event.type() == event_type::RISING_EDGE);
++		REQUIRE(event.line_offset() == 2);
++		ts_rising = event.timestamp_ns();
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer, 1) == 1);
++		REQUIRE(buffer.num_events() == 1);
++		event = buffer.get_event(0);
++		REQUIRE(event.type() == event_type::FALLING_EDGE);
++		REQUIRE(event.line_offset() == 2);
++		ts_falling = event.timestamp_ns();
++
++		REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
++
++		thread.join();
++
++		REQUIRE(ts_falling > ts_rising);
++	}
++
++	SECTION("rising edge event")
++	{
++		auto request = chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 6 })}
++			}),
++			::gpiod::line_config({
++				{ lineprop::EDGE, edge::RISING }
++			})
++		);
++
++		::std::thread thread(trigger_falling_and_rising_edge, ::std::ref(sim), 6);
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer, 1) == 1);
++		REQUIRE(buffer.num_events() == 1);
++		auto event = buffer.get_event(0);
++		REQUIRE(event.type() == event_type::RISING_EDGE);
++		REQUIRE(event.line_offset() == 6);
++
++		REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
++
++		thread.join();
++	}
++
++	SECTION("falling edge event")
++	{
++		auto request = chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 7 })}
++			}),
++			::gpiod::line_config({
++				{ lineprop::EDGE, edge::FALLING }
++			})
++		);
++
++		::std::thread thread(trigger_falling_and_rising_edge, ::std::ref(sim), 7);
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer, 1) == 1);
++		REQUIRE(buffer.num_events() == 1);
++		auto event = buffer.get_event(0);
++		REQUIRE(event.type() == event_type::FALLING_EDGE);
++		REQUIRE(event.line_offset() == 7);
++
++		REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
++
++		thread.join();
++	}
++
++	SECTION("sequence numbers")
++	{
++		auto request = chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 0, 1 })}
++			}),
++			::gpiod::line_config({
++				{ lineprop::EDGE, edge::BOTH }
++			})
++		);
++
++		::std::thread thread(trigger_rising_edge_events_on_two_offsets, ::std::ref(sim), 0, 1);
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer, 1) == 1);
++		REQUIRE(buffer.num_events() == 1);
++		auto event = buffer.get_event(0);
++		REQUIRE(event.type() == event_type::RISING_EDGE);
++		REQUIRE(event.line_offset() == 0);
++		REQUIRE(event.global_seqno() == 1);
++		REQUIRE(event.line_seqno() == 1);
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer, 1) == 1);
++		REQUIRE(buffer.num_events() == 1);
++		event = buffer.get_event(0);
++		REQUIRE(event.type() == event_type::RISING_EDGE);
++		REQUIRE(event.line_offset() == 1);
++		REQUIRE(event.global_seqno() == 2);
++		REQUIRE(event.line_seqno() == 1);
++
++		thread.join();
++	}
++}
++
++TEST_CASE("reading multiple events", "[edge-event]")
++{
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	::gpiod::chip chip(sim.dev_path());
++
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 1 })}
++		}),
++		::gpiod::line_config({
++			{ lineprop::EDGE, edge::BOTH }
++		})
++	);
++
++	unsigned long line_seqno = 1, global_seqno = 1;
++
++	sim.set_pull(1, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++	sim.set_pull(1, pull::PULL_DOWN);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++	sim.set_pull(1, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++
++	SECTION("read multiple events")
++	{
++		::gpiod::edge_event_buffer buffer;
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer) == 3);
++		REQUIRE(buffer.num_events() == 3);
++
++		for (const auto& event: buffer) {
++			REQUIRE(event.line_offset() == 1);
++			REQUIRE(event.line_seqno() == line_seqno++);
++			REQUIRE(event.global_seqno() == global_seqno++);
++		}
++	}
++
++	SECTION("read over capacity")
++	{
++		::gpiod::edge_event_buffer buffer(2);
++
++		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++		REQUIRE(request.read_edge_event(buffer) == 2);
++		REQUIRE(buffer.num_events() == 2);
++	}
++}
++
++TEST_CASE("edge_event_buffer can be moved", "[edge-event]")
++{
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 2 }});
++	::gpiod::chip chip(sim.dev_path());
++	::gpiod::edge_event_buffer buffer(13);
++
++	/* Get some events into the buffer. */
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 1 })}
++		}),
++		::gpiod::line_config({
++			{ lineprop::EDGE, edge::BOTH }
++		})
++	);
++
++	sim.set_pull(1, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++	sim.set_pull(1, pull::PULL_DOWN);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++	sim.set_pull(1, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(500));
++
++	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++	REQUIRE(request.read_edge_event(buffer) == 3);
++
++	SECTION("move constructor works")
++	{
++		auto moved(::std::move(buffer));
++		REQUIRE(moved.capacity() == 13);
++		REQUIRE(moved.num_events() == 3);
++	}
++
++	SECTION("move assignment operator works")
++	{
++		::gpiod::edge_event_buffer moved;
++
++		moved = ::std::move(buffer);
++		REQUIRE(moved.capacity() == 13);
++		REQUIRE(moved.num_events() == 3);
++	}
++}
++
++TEST_CASE("edge_event can be copied and moved", "[edge-event]")
++{
++	::gpiosim::chip sim;
++	::gpiod::chip chip(sim.dev_path());
++	::gpiod::edge_event_buffer buffer;
++
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 0 })}
++		}),
++		::gpiod::line_config({
++			{ lineprop::EDGE, edge::BOTH }
++		})
++	);
++
++	sim.set_pull(0, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++	REQUIRE(request.read_edge_event(buffer) == 1);
++	auto event = buffer.get_event(0);
++
++	sim.set_pull(0, pull::PULL_DOWN);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++	REQUIRE(request.read_edge_event(buffer) == 1);
++	auto copy = buffer.get_event(0);
++
++	SECTION("copy constructor works")
++	{
++		auto copy(event);
++		REQUIRE(copy.line_offset() == 0);
++		REQUIRE(copy.type() == event_type::RISING_EDGE);
++		REQUIRE(event.line_offset() == 0);
++		REQUIRE(event.type() == event_type::RISING_EDGE);
++	}
++
++	SECTION("move constructor works")
++	{
++		auto copy(::std::move(event));
++		REQUIRE(copy.line_offset() == 0);
++		REQUIRE(copy.type() == event_type::RISING_EDGE);
++	}
++
++	SECTION("assignment operator works")
++	{
++		copy = event;
++		REQUIRE(copy.line_offset() == 0);
++		REQUIRE(copy.type() == event_type::RISING_EDGE);
++		REQUIRE(event.line_offset() == 0);
++		REQUIRE(event.type() == event_type::RISING_EDGE);
++	}
++
++	SECTION("move assignment operator works")
++	{
++		copy = ::std::move(event);
++		REQUIRE(copy.line_offset() == 0);
++		REQUIRE(copy.type() == event_type::RISING_EDGE);
++	}
++}
++
++TEST_CASE("stream insertion operators work for edge_event and edge_event_buffer", "[edge-event]")
++{
++	/*
++	 * This tests the stream insertion operators for both edge_event and
++	 * edge_event_buffer classes.
++	 */
++
++	::gpiosim::chip sim;
++	::gpiod::chip chip(sim.dev_path());
++	::gpiod::edge_event_buffer buffer;
++	::std::stringstream sbuf, expected;
++
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 0 })}
++		}),
++		::gpiod::line_config({
++			{ lineprop::EDGE, edge::BOTH }
++		})
++	);
++
++	sim.set_pull(0, pull::PULL_UP);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(30));
++	sim.set_pull(0, pull::PULL_DOWN);
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(30));
++
++	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
++	REQUIRE(request.read_edge_event(buffer) == 2);
++
++	sbuf << buffer;
++
++	expected << "gpiod::edge_event_buffer\\(num_events=2, capacity=64, events=\\[gpiod::edge_event\\" <<
++		    "(type='RISING_EDGE', timestamp=[1-9][0-9]+, line_offset=0, global_seqno=1, " <<
++		    "line_seqno=1\\), gpiod::edge_event\\(type='FALLING_EDGE', timestamp=[1-9][0-9]+, " <<
++		    "line_offset=0, global_seqno=2, line_seqno=2\\)\\]\\)";
++
++	REQUIRE_THAT(sbuf.str(), regex_matcher(expected.str()));
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-info-event.cpp b/bindings/cxx/tests/tests-info-event.cpp
+new file mode 100644
+index 0000000..b838d5c
+--- /dev/null
++++ b/bindings/cxx/tests/tests-info-event.cpp
+@@ -0,0 +1,198 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <catch2/catch.hpp>
++#include <chrono>
++#include <gpiod.hpp>
++#include <sstream>
++#include <thread>
++#include <utility>
++
++#include "gpiosim.hpp"
++#include "helpers.hpp"
++
++using simprop = ::gpiosim::chip::property;
++using reqprop = ::gpiod::request_config::property;
++using lineprop = ::gpiod::line_config::property;
++using direction = ::gpiod::line::direction;
++using event_type = ::gpiod::info_event::event_type;
++
++namespace {
++
++void request_reconfigure_release_line(::gpiod::chip& chip)
++{
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, ::gpiod::line::offsets({ 7 }) }
++		}),
++		::gpiod::line_config()
++	);
++
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++
++	request.reconfigure_lines(
++		::gpiod::line_config({
++			{ lineprop::DIRECTION, direction::OUTPUT }
++		})
++	);
++
++	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
++
++	request.release();
++}
++
++TEST_CASE("Lines can be watched", "[info-event][chip]")
++{
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	::gpiod::chip chip(sim.dev_path());
++
++	SECTION("watch_line_info() returns line info")
++	{
++		auto info = chip.watch_line_info(7);
++		REQUIRE(info.offset() == 7);
++	}
++
++	SECTION("watch_line_info() fails for offset out of range")
++	{
++		REQUIRE_THROWS_AS(chip.watch_line_info(8), ::std::invalid_argument);
++	}
++
++	SECTION("waiting for event timeout")
++	{
++		chip.watch_line_info(3);
++		REQUIRE_FALSE(chip.wait_info_event(::std::chrono::milliseconds(100)));
++	}
++
++	SECTION("request-reconfigure-release events")
++	{
++		auto info = chip.watch_line_info(7);
++		::std::uint64_t ts_req, ts_rec, ts_rel;
++
++		REQUIRE(info.direction() == direction::INPUT);
++
++		::std::thread thread(request_reconfigure_release_line, ::std::ref(chip));
++
++		REQUIRE(chip.wait_info_event(::std::chrono::seconds(1)));
++		auto event = chip.read_info_event();
++		REQUIRE(event.type() == event_type::LINE_REQUESTED);
++		REQUIRE(event.get_line_info().direction() == direction::INPUT);
++		ts_req = event.timestamp_ns();
++
++		REQUIRE(chip.wait_info_event(::std::chrono::seconds(1)));
++		event = chip.read_info_event();
++		REQUIRE(event.type() == event_type::LINE_CONFIG_CHANGED);
++		REQUIRE(event.get_line_info().direction() == direction::OUTPUT);
++		ts_rec = event.timestamp_ns();
++
++		REQUIRE(chip.wait_info_event(::std::chrono::seconds(1)));
++		event = chip.read_info_event();
++		REQUIRE(event.type() == event_type::LINE_RELEASED);
++		ts_rel = event.timestamp_ns();
++
++		/* No more events. */
++		REQUIRE_FALSE(chip.wait_info_event(::std::chrono::milliseconds(100)));
++		thread.join();
++
++		/* Check timestamps are really monotonic. */
++		REQUIRE(ts_rel > ts_rec);
++		REQUIRE(ts_rec > ts_req);
++	}
++}
++
++TEST_CASE("info_event can be copied and moved", "[info-event]")
++{
++	::gpiosim::chip sim;
++	::gpiod::chip chip(sim.dev_path());
++	::std::stringstream buf, expected;
++
++	chip.watch_line_info(0);
++
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, ::gpiod::line::offsets({ 0 }) }
++		}),
++		::gpiod::line_config()
++	);
++
++	REQUIRE(chip.wait_info_event(::std::chrono::seconds(1)));
++	auto event = chip.read_info_event();
++
++	request.release();
++
++	REQUIRE(chip.wait_info_event(::std::chrono::seconds(1)));
++	auto copy = chip.read_info_event();
++
++	SECTION("copy constructor works")
++	{
++		auto copy(event);
++
++		REQUIRE(copy.type() == event_type::LINE_REQUESTED);
++		REQUIRE(copy.get_line_info().offset() == 0);
++
++		REQUIRE(event.type() == event_type::LINE_REQUESTED);
++		REQUIRE(event.get_line_info().offset() == 0);
++	}
++
++	SECTION("assignment operator works")
++	{
++		copy = event;
++
++		REQUIRE(copy.type() == event_type::LINE_REQUESTED);
++		REQUIRE(copy.get_line_info().offset() == 0);
++
++		REQUIRE(event.type() == event_type::LINE_REQUESTED);
++		REQUIRE(event.get_line_info().offset() == 0);
++	}
++
++	SECTION("move constructor works")
++	{
++		auto copy(::std::move(event));
++
++		REQUIRE(copy.type() == event_type::LINE_REQUESTED);
++		REQUIRE(copy.get_line_info().offset() == 0);
++	}
++
++	SECTION("move assignment operator works")
++	{
++		copy = ::std::move(event);
++
++		REQUIRE(copy.type() == event_type::LINE_REQUESTED);
++		REQUIRE(copy.get_line_info().offset() == 0);
++	}
++}
++
++TEST_CASE("info_event stream insertion operator works", "[info-event][line-info]")
++{
++	/*
++	 * This tests the stream insertion operator for both the info_event
++	 * and line_info classes.
++	 */
++
++	::gpiosim::chip sim;
++	::gpiod::chip chip(sim.dev_path());
++	::std::stringstream buf, expected;
++
++	chip.watch_line_info(0);
++
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, ::gpiod::line::offsets({ 0 }) }
++		}),
++		::gpiod::line_config()
++	);
++
++	auto event = chip.read_info_event();
++
++	buf << event;
++
++	expected << "gpiod::info_event\\(event_type='LINE_REQUESTED', timestamp=[1-9][0-9]+, " <<
++		    "line_info=gpiod::line_info\\(offset=0, name=unnamed, used=true, consumer='', " <<
++		    "direction=INPUT, active_low=false, bias=UNKNOWN, drive=PUSH_PULL, " <<
++		    "edge_detection=NONE, event_clock=MONOTONIC, debounced=false\\)\\)";
++
++	REQUIRE_THAT(buf.str(), regex_matcher(expected.str()));
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-line-config.cpp b/bindings/cxx/tests/tests-line-config.cpp
+new file mode 100644
+index 0000000..e76ec8a
+--- /dev/null
++++ b/bindings/cxx/tests/tests-line-config.cpp
+@@ -0,0 +1,270 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <catch2/catch.hpp>
++#include <gpiod.hpp>
++#include <sstream>
++
++#include "helpers.hpp"
++
++using lineprop = ::gpiod::line_config::property;
++using value = ::gpiod::line::value;
++using direction = ::gpiod::line::direction;
++using edge = ::gpiod::line::edge;
++using bias = ::gpiod::line::bias;
++using drive = ::gpiod::line::drive;
++using clock_type = ::gpiod::line::clock;
++using mappings = ::gpiod::line::value_mappings;
++using offsets = ::gpiod::line::offsets;
++
++using namespace ::std::chrono_literals;
++
++namespace {
++
++TEST_CASE("line_config constructor works", "[line-config]")
++{
++	SECTION("no arguments - default values")
++	{
++		::gpiod::line_config cfg;
++
++		REQUIRE_NOTHROW(cfg.direction_default() == direction::INPUT);
++		REQUIRE(cfg.edge_detection_default() == edge::NONE);
++		REQUIRE(cfg.bias_default() == bias::AS_IS);
++		REQUIRE(cfg.drive_default() == drive::PUSH_PULL);
++		REQUIRE_FALSE(cfg.active_low_default());
++		REQUIRE(cfg.debounce_period_default() == 0us);
++		REQUIRE(cfg.event_clock_default() == clock_type::MONOTONIC);
++		REQUIRE(cfg.output_value_default() == value::INACTIVE);
++		REQUIRE(cfg.num_overrides() == 0);
++		REQUIRE(cfg.overrides().empty());
++	}
++
++	SECTION("default values set from constructor")
++	{
++		/*
++		 * These are wrong and the request would fail but we're just
++		 * testing the object's behavior.
++		 */
++		::gpiod::line_config cfg({
++			{ lineprop::DIRECTION, direction::OUTPUT },
++			{ lineprop::EDGE, edge::FALLING },
++			{ lineprop::BIAS, bias::DISABLED },
++			{ lineprop::DRIVE, drive::OPEN_DRAIN },
++			{ lineprop::ACTIVE_LOW, true },
++			{ lineprop::DEBOUNCE_PERIOD, 3000us },
++			{ lineprop::EVENT_CLOCK, clock_type::REALTIME },
++			{ lineprop::OUTPUT_VALUE, value::ACTIVE }
++		});
++
++		REQUIRE_NOTHROW(cfg.direction_default() == direction::OUTPUT);
++		REQUIRE(cfg.edge_detection_default() == edge::FALLING);
++		REQUIRE(cfg.bias_default() == bias::DISABLED);
++		REQUIRE(cfg.drive_default() == drive::OPEN_DRAIN);
++		REQUIRE(cfg.active_low_default());
++		/* Test implicit conversion between duration types. */
++		REQUIRE(cfg.debounce_period_default() == 3ms);
++		REQUIRE(cfg.event_clock_default() == clock_type::REALTIME);
++		REQUIRE(cfg.output_value_default() == value::ACTIVE);
++		REQUIRE(cfg.num_overrides() == 0);
++		REQUIRE(cfg.overrides().empty());
++	}
++
++	SECTION("output value overrides can be set from constructor")
++	{
++		::gpiod::line_config cfg({
++			{
++				lineprop::OUTPUT_VALUES, mappings({
++					{ 0, value::ACTIVE },
++					{ 3, value::INACTIVE },
++					{ 1, value::ACTIVE }
++				})
++			}
++		});
++
++		REQUIRE(cfg.num_overrides() == 3);
++		auto overrides = cfg.overrides();
++		REQUIRE(overrides[0].first == 0);
++		REQUIRE(overrides[0].second == lineprop::OUTPUT_VALUE);
++		REQUIRE(overrides[1].first == 3);
++		REQUIRE(overrides[1].second == lineprop::OUTPUT_VALUE);
++		REQUIRE(overrides[2].first == 1);
++		REQUIRE(overrides[2].second == lineprop::OUTPUT_VALUE);
++	}
++}
++
++TEST_CASE("line_config overrides work")
++{
++	::gpiod::line_config cfg;
++
++	SECTION("direction")
++	{
++		cfg.set_direction_default(direction::AS_IS);
++		cfg.set_direction_override(direction::INPUT, 3);
++
++		REQUIRE(cfg.direction_is_overridden(3));
++		REQUIRE(cfg.direction_offset(3) == direction::INPUT);
++		cfg.clear_direction_override(3);
++		REQUIRE_FALSE(cfg.direction_is_overridden(3));
++		REQUIRE(cfg.direction_offset(3) == direction::AS_IS);
++	}
++
++	SECTION("edge detection")
++	{
++		cfg.set_edge_detection_default(edge::NONE);
++		cfg.set_edge_detection_override(edge::BOTH, 0);
++
++		REQUIRE(cfg.edge_detection_is_overridden(0));
++		REQUIRE(cfg.edge_detection_offset(0) == edge::BOTH);
++		cfg.clear_edge_detection_override(0);
++		REQUIRE_FALSE(cfg.edge_detection_is_overridden(0));
++		REQUIRE(cfg.edge_detection_offset(0) == edge::NONE);
++	}
++
++	SECTION("bias")
++	{
++		cfg.set_bias_default(bias::AS_IS);
++		cfg.set_bias_override(bias::PULL_DOWN, 3);
++
++		REQUIRE(cfg.bias_is_overridden(3));
++		REQUIRE(cfg.bias_offset(3) == bias::PULL_DOWN);
++		cfg.clear_bias_override(3);
++		REQUIRE_FALSE(cfg.bias_is_overridden(3));
++		REQUIRE(cfg.bias_offset(3) == bias::AS_IS);
++	}
++
++	SECTION("drive")
++	{
++		cfg.set_drive_default(drive::PUSH_PULL);
++		cfg.set_drive_override(drive::OPEN_DRAIN, 4);
++
++		REQUIRE(cfg.drive_is_overridden(4));
++		REQUIRE(cfg.drive_offset(4) == drive::OPEN_DRAIN);
++		cfg.clear_drive_override(4);
++		REQUIRE_FALSE(cfg.drive_is_overridden(4));
++		REQUIRE(cfg.drive_offset(4) == drive::PUSH_PULL);
++	}
++
++	SECTION("active-low")
++	{
++		cfg.set_active_low_default(false);
++		cfg.set_active_low_override(true, 16);
++
++		REQUIRE(cfg.active_low_is_overridden(16));
++		REQUIRE(cfg.active_low_offset(16));
++		cfg.clear_active_low_override(16);
++		REQUIRE_FALSE(cfg.active_low_is_overridden(16));
++		REQUIRE_FALSE(cfg.active_low_offset(16));
++	}
++
++	SECTION("debounce period")
++	{
++		/*
++		 * Test the chrono literals and implicit duration conversions
++		 * too.
++		 */
++
++		cfg.set_debounce_period_default(5000us);
++		cfg.set_debounce_period_override(3ms, 1);
++
++		REQUIRE(cfg.debounce_period_is_overridden(1));
++		REQUIRE(cfg.debounce_period_offset(1) == 3ms);
++		cfg.clear_debounce_period_override(1);
++		REQUIRE_FALSE(cfg.debounce_period_is_overridden(1));
++		REQUIRE(cfg.debounce_period_offset(1) == 5ms);
++	}
++
++	SECTION("event clock")
++	{
++		cfg.set_event_clock_default(clock_type::MONOTONIC);
++		cfg.set_event_clock_override(clock_type::REALTIME, 4);
++
++		REQUIRE(cfg.event_clock_is_overridden(4));
++		REQUIRE(cfg.event_clock_offset(4) == clock_type::REALTIME);
++		cfg.clear_event_clock_override(4);
++		REQUIRE_FALSE(cfg.event_clock_is_overridden(4));
++		REQUIRE(cfg.event_clock_offset(4) == clock_type::MONOTONIC);
++	}
++
++	SECTION("output value")
++	{
++		cfg.set_output_value_default(value::INACTIVE);
++		cfg.set_output_value_override(value::ACTIVE, 0);
++		cfg.set_output_values({ 1, 2, 8 }, { value::ACTIVE, value::ACTIVE, value::ACTIVE });
++		cfg.set_output_values({ { 17, value::ACTIVE }, { 21, value::ACTIVE } });
++
++		for (const auto& off: offsets({ 0, 1, 2, 8, 17, 21 })) {
++			REQUIRE(cfg.output_value_is_overridden(off));
++			REQUIRE(cfg.output_value_offset(off) == value::ACTIVE);
++			cfg.clear_output_value_override(off);
++			REQUIRE_FALSE(cfg.output_value_is_overridden(off));
++			REQUIRE(cfg.output_value_offset(off) == value::INACTIVE);
++		}
++	}
++}
++
++TEST_CASE("line_config can be moved", "[line-config]")
++{
++	::gpiod::line_config cfg({
++		{ lineprop::DIRECTION, direction::INPUT },
++		{ lineprop::EDGE, edge::BOTH },
++		{ lineprop::DEBOUNCE_PERIOD, 3000us },
++		{ lineprop::EVENT_CLOCK, clock_type::REALTIME },
++	});
++
++	cfg.set_direction_override(direction::OUTPUT, 2);
++	cfg.set_edge_detection_override(edge::NONE, 2);
++
++	SECTION("move constructor works")
++	{
++		auto moved(::std::move(cfg));
++
++		REQUIRE(moved.direction_default() == direction::INPUT);
++		REQUIRE(moved.edge_detection_default() == edge::BOTH);
++		REQUIRE(moved.debounce_period_default() == 3000us);
++		REQUIRE(moved.event_clock_default() == clock_type::REALTIME);
++		REQUIRE(moved.direction_offset(2) == direction::OUTPUT);
++		REQUIRE(moved.edge_detection_offset(2) == edge::NONE);
++	}
++
++	SECTION("move constructor works")
++	{
++		::gpiod::line_config moved;
++
++		moved = ::std::move(cfg);
++
++		REQUIRE(moved.direction_default() == direction::INPUT);
++		REQUIRE(moved.edge_detection_default() == edge::BOTH);
++		REQUIRE(moved.debounce_period_default() == 3000us);
++		REQUIRE(moved.event_clock_default() == clock_type::REALTIME);
++		REQUIRE(moved.direction_offset(2) == direction::OUTPUT);
++		REQUIRE(moved.edge_detection_offset(2) == edge::NONE);
++	}
++}
++
++TEST_CASE("line_config stream insertion operator works", "[line-config]")
++{
++	::gpiod::line_config cfg({
++		{ lineprop::DIRECTION, direction::INPUT },
++		{ lineprop::EDGE, edge::BOTH },
++		{ lineprop::DEBOUNCE_PERIOD, 3000us },
++		{ lineprop::EVENT_CLOCK, clock_type::REALTIME },
++	});
++
++	cfg.set_direction_override(direction::OUTPUT, 2);
++	cfg.set_edge_detection_override(edge::NONE, 2);
++
++	::std::stringstream buf;
++
++	buf << cfg;
++
++	::std::string expected(
++		"gpiod::line_config(defaults=(direction=INPUT, edge_detection=BOTH_EDGES, bias="
++		"AS_IS, drive=PUSH_PULL, active-high, debounce_period=3000us, event_clock="
++		"REALTIME, default_output_value=INACTIVE), overrides=[(offset=2 -> direction="
++		"OUTPUT), (offset=2 -> edge_detection=NONE)])"
++	);
++
++	REQUIRE_THAT(buf.str(), Catch::Equals(expected));
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-line-info.cpp b/bindings/cxx/tests/tests-line-info.cpp
+new file mode 100644
+index 0000000..e7136f0
+--- /dev/null
++++ b/bindings/cxx/tests/tests-line-info.cpp
+@@ -0,0 +1,156 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <catch2/catch.hpp>
++#include <gpiod.hpp>
++#include <string>
++
++#include "helpers.hpp"
++#include "gpiosim.hpp"
++
++using property = ::gpiosim::chip::property;
++using line_name = ::gpiosim::chip::line_name;
++using line_hog = ::gpiosim::chip::line_hog;
++using hog_dir = ::gpiosim::chip::hog_direction;
++using direction = ::gpiod::line::direction;
++using edge = ::gpiod::line::edge;
++using bias = ::gpiod::line::bias;
++using drive = ::gpiod::line::drive;
++using event_clock = ::gpiod::line::clock;
++
++using namespace ::std::chrono_literals;
++
++namespace {
++
++TEST_CASE("get_line_info() works", "[chip][line-info]")
++{
++	::gpiosim::chip sim({
++		{ property::NUM_LINES, 8 },
++		{ property::LINE_NAME, line_name(0, "foobar") },
++		{ property::HOG, line_hog(0, "hog", hog_dir::OUTPUT_HIGH ) }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++
++	SECTION("line_info can be retrieved from chip")
++	{
++		auto info = chip.get_line_info(0);
++
++		REQUIRE(info.offset() == 0);
++		REQUIRE_THAT(info.name(), Catch::Equals("foobar"));
++		REQUIRE(info.used());
++		REQUIRE_THAT(info.consumer(), Catch::Equals("hog"));
++		REQUIRE(info.direction() == ::gpiod::line::direction::OUTPUT);
++		REQUIRE_FALSE(info.active_low());
++		REQUIRE(info.bias() == ::gpiod::line::bias::UNKNOWN);
++		REQUIRE(info.drive() == ::gpiod::line::drive::PUSH_PULL);
++		REQUIRE(info.edge_detection() == ::gpiod::line::edge::NONE);
++		REQUIRE(info.event_clock() == ::gpiod::line::clock::MONOTONIC);
++		REQUIRE_FALSE(info.debounced());
++		REQUIRE(info.debounce_period() == 0us);
++	}
++
++	SECTION("offset out of range")
++	{
++		REQUIRE_THROWS_AS(chip.get_line_info(8), ::std::invalid_argument);
++	}
++}
++
++TEST_CASE("line properties can be retrieved", "[line-info]")
++{
++	::gpiosim::chip sim({
++		{ property::NUM_LINES, 8 },
++		{ property::LINE_NAME, line_name(1, "foo") },
++		{ property::LINE_NAME, line_name(2, "bar") },
++		{ property::LINE_NAME, line_name(4, "baz") },
++		{ property::LINE_NAME, line_name(5, "xyz") },
++		{ property::HOG, line_hog(3, "hog3", hog_dir::OUTPUT_HIGH) },
++		{ property::HOG, line_hog(4, "hog4", hog_dir::OUTPUT_LOW) }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++
++	SECTION("basic properties")
++	{
++		auto info4 = chip.get_line_info(4);
++		auto info6 = chip.get_line_info(6);
++
++		REQUIRE(info4.offset() == 4);
++		REQUIRE_THAT(info4.name(), Catch::Equals("baz"));
++		REQUIRE(info4.used());
++		REQUIRE_THAT(info4.consumer(), Catch::Equals("hog4"));
++		REQUIRE(info4.direction() == direction::OUTPUT);
++		REQUIRE(info4.edge_detection() == edge::NONE);
++		REQUIRE_FALSE(info4.active_low());
++		REQUIRE(info4.bias() == bias::UNKNOWN);
++		REQUIRE(info4.drive() == drive::PUSH_PULL);
++		REQUIRE(info4.event_clock() == event_clock::MONOTONIC);
++		REQUIRE_FALSE(info4.debounced());
++		REQUIRE(info4.debounce_period() == 0us);
++	}
++}
++
++TEST_CASE("line_info can be copied and moved")
++{
++	::gpiosim::chip sim({
++		{ property::NUM_LINES, 4 },
++		{ property::LINE_NAME, line_name(2, "foobar") }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++	auto info = chip.get_line_info(2);
++
++	SECTION("copy constructor works")
++	{
++		auto copy(info);
++		REQUIRE(copy.offset() == 2);
++		REQUIRE_THAT(copy.name(), Catch::Equals("foobar"));
++		/* info can still be used */
++		REQUIRE(info.offset() == 2);
++		REQUIRE_THAT(info.name(), Catch::Equals("foobar"));
++	}
++
++	SECTION("assignment operator works")
++	{
++		auto copy = chip.get_line_info(0);
++		copy = info;
++		REQUIRE(copy.offset() == 2);
++		REQUIRE_THAT(copy.name(), Catch::Equals("foobar"));
++		/* info can still be used */
++		REQUIRE(info.offset() == 2);
++		REQUIRE_THAT(info.name(), Catch::Equals("foobar"));
++	}
++
++	SECTION("move constructor works")
++	{
++		auto copy(::std::move(info));
++		REQUIRE(copy.offset() == 2);
++		REQUIRE_THAT(copy.name(), Catch::Equals("foobar"));
++	}
++
++	SECTION("move assignment operator works")
++	{
++		auto copy = chip.get_line_info(0);
++		copy = ::std::move(info);
++		REQUIRE(copy.offset() == 2);
++		REQUIRE_THAT(copy.name(), Catch::Equals("foobar"));
++	}
++}
++
++TEST_CASE("line_info stream insertion operator works")
++{
++	::gpiosim::chip sim({
++		{ property::LINE_NAME, line_name(0, "foo") },
++		{ property::HOG, line_hog(0, "hogger", hog_dir::OUTPUT_HIGH) }
++	});
++
++	::gpiod::chip chip(sim.dev_path());
++
++	auto info = chip.get_line_info(0);
++
++	REQUIRE_THAT(info, stringify_matcher<::gpiod::line_info>(
++		"gpiod::line_info(offset=0, name='foo', used=true, consumer='foo', direction=OUTPUT, "
++		"active_low=false, bias=UNKNOWN, drive=PUSH_PULL, edge_detection=NONE, event_clock=MONOTONIC, debounced=false)"));
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-line-request.cpp b/bindings/cxx/tests/tests-line-request.cpp
+new file mode 100644
+index 0000000..624a4e9
+--- /dev/null
++++ b/bindings/cxx/tests/tests-line-request.cpp
+@@ -0,0 +1,490 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <catch2/catch.hpp>
++#include <gpiod.hpp>
++#include <sstream>
 +#include <stdexcept>
-+#include <string>
-+
-+namespace gpiod {
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Exception thrown when an already closed chip is used.
-+ */
-+class GPIOD_CXX_API chip_closed : public ::std::logic_error
-+{
-+public:
-+
-+	/**
-+	 * @brief Constructor.
-+	 * @param what Human readable reason for error.
-+	 */
-+	explicit chip_closed(const ::std::string& what);
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy from.
-+	 */
-+	chip_closed(const chip_closed& other) noexcept;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	chip_closed(chip_closed&& other) noexcept;
-+
-+	/**
-+	 * @brief Assignment operator.
-+	 * @param other Object to copy from.
-+	 * @return Reference to self.
-+	 */
-+	chip_closed& operator=(const chip_closed& other) noexcept;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	chip_closed& operator=(chip_closed&& other) noexcept;
-+
-+	virtual ~chip_closed(void);
-+};
-+
-+/**
-+ * @brief Exception thrown when an already released line request is used.
-+ */
-+class GPIOD_CXX_API request_released : public ::std::logic_error
-+{
-+public:
-+
-+	/**
-+	 * @brief Constructor.
-+	 * @param what Human readable reason for error.
-+	 */
-+	explicit request_released(const ::std::string& what);
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy from.
-+	 */
-+	request_released(const request_released& other) noexcept;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	request_released(request_released&& other) noexcept;
-+
-+	/**
-+	 * @brief Assignment operator.
-+	 * @param other Object to copy from.
-+	 * @return Reference to self.
-+	 */
-+	request_released& operator=(const request_released& other) noexcept;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	request_released& operator=(request_released&& other) noexcept;
-+
-+	virtual ~request_released(void);
-+};
-+
-+/**
-+ * @brief Exception thrown when the core C library returns an invalid value
-+ *        for any of the line_info properties.
-+ */
-+class GPIOD_CXX_API bad_mapping : public ::std::runtime_error
-+{
-+public:
-+
-+	/**
-+	 * @brief Constructor.
-+	 * @param what Human readable reason for error.
-+	 */
-+	explicit bad_mapping(const ::std::string& what);
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy from.
-+	 */
-+	bad_mapping(const bad_mapping& other) noexcept;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	bad_mapping(bad_mapping&& other) noexcept;
-+
-+	/**
-+	 * @brief Assignment operator.
-+	 * @param other Object to copy from.
-+	 * @return Reference to self.
-+	 */
-+	bad_mapping& operator=(const bad_mapping& other) noexcept;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	bad_mapping& operator=(bad_mapping&& other) noexcept;
-+
-+	virtual ~bad_mapping(void);
-+};
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_EXCEPTION_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/info-event.hpp b/bindings/cxx/gpiodcxx/info-event.hpp
-new file mode 100644
-index 0000000..107ca57
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/info-event.hpp
-@@ -0,0 +1,123 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
-+
-+/**
-+ * @file gpiod.h
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_INFO_EVENT_HPP__
-+#define __LIBGPIOD_CXX_INFO_EVENT_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <cstdint>
-+#include <iostream>
-+#include <memory>
-+
-+#include "timestamp.hpp"
-+
-+namespace gpiod {
-+
-+class chip;
-+class line_info;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Immutable object containing data about a single line info event.
-+ */
-+class info_event
-+{
-+public:
-+
-+	/**
-+	 * @brief Types of info events.
-+	 */
-+	enum class event_type
-+	{
-+		LINE_REQUESTED = 1,
-+		/**< Line has been requested. */
-+		LINE_RELEASED,
-+		/**< Previously requested line has been released. */
-+		LINE_CONFIG_CHANGED
-+		/**< Line configuration has changed. */
-+	};
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy.
-+	 */
-+	info_event(const info_event& other);
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	info_event(info_event&& other) noexcept;
-+
-+	~info_event(void);
-+
-+	/**
-+	 * @brief Copy assignment operator.
-+	 * @param other Object to copy.
-+	 * @return Reference to self.
-+	 */
-+	info_event& operator=(const info_event& other);
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	info_event& operator=(info_event&& other) noexcept;
-+
-+	/**
-+	 * @brief Type of this event.
-+	 * @return Event type.
-+	 */
-+	event_type type(void) const;
-+
-+	/**
-+	 * @brief Timestamp of the event as returned by the kernel.
-+	 * @return Timestamp as a 64-bit unsigned integer.
-+	 */
-+	::std::uint64_t timestamp_ns(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the new line information.
-+	 * @return Constant reference to the line info object containing the
-+	 *         line data as read at the time of the info event.
-+	 */
-+	const line_info& get_line_info(void) const noexcept;
-+
-+private:
-+
-+	info_event(void);
-+
-+	struct impl;
-+
-+	::std::shared_ptr<impl> _m_priv;
-+
-+	friend chip;
-+};
-+
-+/**
-+ * @brief Stream insertion operator for info events.
-+ * @param out Output stream to write to.
-+ * @param event GPIO line info event to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const info_event& event);
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_INFO_EVENT_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/line-config.hpp b/bindings/cxx/gpiodcxx/line-config.hpp
-new file mode 100644
-index 0000000..6d808bd
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/line-config.hpp
-@@ -0,0 +1,564 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
-+
-+/**
-+ * @file line-config.hpp
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_LINE_CONFIG_HPP__
-+#define __LIBGPIOD_CXX_LINE_CONFIG_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <any>
-+#include <chrono>
-+#include <cstddef>
-+#include <iostream>
-+#include <map>
-+#include <memory>
-+#include <utility>
-+
-+namespace gpiod {
-+
-+class chip;
-+class line_request;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Contains a set of line config options used in line requests and
-+ *        reconfiguration.
-+ */
-+class line_config
-+{
-+public:
-+
-+	/**
-+	 * @brief List of available configuration properties. Used in the
-+	 *        constructor, :line_config::set_property_default and
-+	 *        :line_config::set_property_override.
-+	 */
-+	enum class property {
-+		DIRECTION = 1,
-+		/**< Line direction. */
-+		EDGE,
-+		/**< Edge detection. */
-+		BIAS,
-+		/**< Bias. */
-+		DRIVE,
-+		/**< Drive. */
-+		ACTIVE_LOW,
-+		/**< Active-low setting. */
-+		DEBOUNCE_PERIOD,
-+		/**< Debounce period. */
-+		EVENT_CLOCK,
-+		/**< Event clock. */
-+		OUTPUT_VALUE,
-+		/**< Output value. */
-+		OUTPUT_VALUES,
-+		/**< Set of offset-to-value mappings. Only used in the constructor. */
-+	};
-+
-+	/**
-+	 * @brief List of configuration properties passed to the constructor.
-+	 *        The first member is the property indicator, the second is
-+	 *        the value stored as `std::any` that is interpreted by the
-+	 *        relevant methods depending on the property value.
-+	 */
-+	using properties = ::std::map<property, ::std::any>;
-+
-+	/**
-+	 * @brief Stored information about a single configuration override. The
-+	 *        first member is the overridden line offset, the second is
-+	 *        the property being overridden.
-+	 */
-+	using override = ::std::pair<line::offset, property>;
-+
-+	/**
-+	 * @brief List of line configuration overrides.
-+	 */
-+	using override_list = ::std::vector<override>;
-+
-+	/**
-+	 * @brief Constructor.
-+	 * @param props List of configuration properties. See
-+	 *              :set_property_default for details. Additionally the
-+	 *              constructor takes another property type as argument:
-+	 *              :property::OUTPUT_VALUES which takes
-+	 *              :line::value_mappings as property value. This
-+	 *              effectively sets the overrides for output values for
-+	 *              the mapped offsets.
-+	 */
-+	explicit line_config(const properties& props = properties());
-+
-+	line_config(const line_config& other) = delete;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	line_config(line_config&& other) noexcept;
-+
-+	~line_config(void);
-+
-+	line_config& operator=(const line_config& other) = delete;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	line_config& operator=(line_config&& other) noexcept;
-+
-+	/**
-+	 * @brief Reset the line config object.
-+	 */
-+	void reset(void) noexcept;
-+
-+	/**
-+	 * @brief Set the default value of a single configuration property.
-+	 * @param prop Property to set.
-+	 * @param val Property value. The type must correspond with the
-+	 *            property being set: :line::direction for
-+	 *            :property::DIRECTION, :line::edge for :property::EDGE,
-+	 *            :line::bias for :property::BIAS, :line::drive for
-+	 *            :property::DRIVE, `bool` for :property::ACTIVE_LOW,
-+	 *            `std::chrono:microseconds` for
-+	 *            :property::DEBOUNCE_PERIOD, :line::clock for
-+	 *            :property::EVENT_CLOCK and :line::value
-+	 *            for :property::OUTPUT_VALUE.
-+	 *
-+	 */
-+	void set_property_default(property prop, const ::std::any& val);
-+
-+	/**
-+	 * @brief Set the override value of a single configuration property.
-+	 * @param prop Property to set.
-+	 * @param offset Line offset to override.
-+	 * @param val Property value. See :set_property_default for details.
-+	 */
-+	void set_property_offset(property prop, line::offset offset, const ::std::any& val);
-+
-+	/**
-+	 * @brief Set the default direction setting.
-+	 * @param direction New direction.
-+	 */
-+	void set_direction_default(line::direction direction);
-+
-+	/**
-+	 * @brief Set the direction for a single line at given offset.
-+	 * @param direction New direction.
-+	 * @param offset Offset of the line for which to set the direction.
-+	 */
-+	void set_direction_override(line::direction direction, line::offset offset);
-+
-+	/**
-+	 * @brief Get the default direction setting.
-+	 * @return Direction setting that would have been used for any offset
-+	 * 	   not assigned its own direction value.
-+	 */
-+	line::direction direction_default(void) const;
-+
-+	/**
-+	 * @brief Get the direction setting for a given offset.
-+	 * @param offset Line offset for which to read the direction setting.
-+	 * @return Direction setting that would have been used for given offset
-+	 *         if the config object was used in a request at the time of
-+	 *         the call.
-+	 */
-+	line::direction direction_offset(line::offset offset) const;
-+
-+	/**
-+	 * @brief Clear the direction override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_direction_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the direction setting is overridden at given offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if direction is overridden at this offset, false
-+	 *         otherwise.
-+	 */
-+	bool direction_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Set the default edge event detection.
-+	 * @param edge Type of edge events to detect.
-+	 */
-+	void set_edge_detection_default(line::edge edge);
-+
-+	/**
-+	 * @brief Set the edge event detection for a single line at given
-+	 *        offset.
-+	 * @param edge Type of edge events to detect.
-+	 * @param offset Offset of the line for which to set the direction.
-+	 */
-+	void set_edge_detection_override(line::edge edge, line::offset offset);
-+
-+	/**
-+	 * @brief Get the default edge detection setting.
-+	 * @return Edge detection setting that would have been used for any
-+	 *         offset not assigned its own direction value.
-+	 */
-+	line::edge edge_detection_default(void) const;
-+
-+	/**
-+	 * @brief Get the edge event detection setting for a given offset.
-+	 * @param offset Line offset for which to read the edge detection
-+	 *               setting.
-+	 * @return Edge event detection setting that would have been used for
-+	 * 	   given offset if the config object was used in a request at
-+	 * 	   the time of the call.
-+	 */
-+	line::edge edge_detection_offset(line::offset offset) const;
-+
-+	/**
-+	 * @brief Clear the edge detection override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_edge_detection_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the edge detection setting is overridden at given
-+	 *        offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if edge detection is overridden at this offset, false
-+	 *         otherwise.
-+	 */
-+	bool edge_detection_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Set the default bias setting.
-+	 * @param bias New bias.
-+	 */
-+	void set_bias_default(line::bias bias);
-+
-+	/**
-+	 * @brief Set the bias for a single line at given offset.
-+	 * @param bias New bias.
-+	 * @param offset Offset of the line for which to set the bias.
-+	 */
-+	void set_bias_override(line::bias bias, line::offset offset);
-+
-+	/**
-+	 * @brief Get the default bias setting.
-+	 * @return Bias setting that would have been used for any offset not
-+	 *         assigned its own direction value.
-+	 */
-+	line::bias bias_default(void) const;
-+
-+	/**
-+	 * @brief Get the bias setting for a given offset.
-+	 * @param offset Line offset for which to read the bias setting.
-+	 * @return Bias setting that would have been used for given offset if
-+	 *         the config object was used in a request at the time of the
-+	 *         call.
-+	 */
-+	line::bias bias_offset(line::offset offset) const;
-+
-+	/**
-+	 * @brief Clear the bias override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_bias_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the bias setting is overridden at given offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if bias is overridden at this offset, false otherwise.
-+	 */
-+	bool bias_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Set the default drive setting.
-+	 * @param drive New drive.
-+	 */
-+	void set_drive_default(line::drive drive);
-+
-+	/**
-+	 * @brief Set the drive for a single line at given offset.
-+	 * @param drive New drive.
-+	 * @param offset Offset of the line for which to set the drive.
-+	 */
-+	void set_drive_override(line::drive drive, line::offset offset);
-+
-+	/**
-+	 * @brief Set the drive for a subset of offsets.
-+	 * @param drive New drive.
-+	 * @param offsets Vector of line offsets for which to set the drive.
-+	 */
-+	void set_drive(line::drive drive, const line::offsets& offsets);
-+
-+	/**
-+	 * @brief Get the default drive setting.
-+	 * @return Drive setting that would have been used for any offset not
-+	 *         assigned its own direction value.
-+	 */
-+	line::drive drive_default(void) const;
-+
-+	/**
-+	 * @brief Get the drive setting for a given offset.
-+	 * @param offset Line offset for which to read the drive setting.
-+	 * @return Drive setting that would have been used for given offset if
-+	 *         the config object was used in a request at the time of the
-+	 *         call.
-+	 */
-+	line::drive drive_offset(line::offset offset) const;
-+
-+	/**
-+	 * @brief Clear the drive override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_drive_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the drive setting is overridden at given offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if drive is overridden at this offset, false otherwise.
-+	 */
-+	bool drive_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Set lines to active-low by default.
-+	 * @param active_low New active-low setting.
-+	 */
-+	void set_active_low_default(bool active_low) noexcept;
-+
-+	/**
-+	 * @brief Set a single line as active-low.
-+	 * @param active_low New active-low setting.
-+	 * @param offset Offset of the line for which to set the active setting.
-+	 */
-+	void set_active_low_override(bool active_low, line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if active-low is the default setting.
-+	 * @return Active-low setting that would have been used for any offset
-+         *         not assigned its own value.
-+	 */
-+	bool active_low_default(void) const noexcept;
-+
-+	/**
-+	 * @brief Check if the line at given offset was configured as
-+	 *        active-low.
-+	 * @param offset Line offset for which to read the active-low setting.
-+	 * @return Active-low setting that would have been used for given
-+	 *         offset if the config object was used in a request at the
-+	 *         time of the call.
-+	 */
-+	bool active_low_offset(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Clear the active-low override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_active_low_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the active-low setting is overridden at given offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if active-low is overridden at this offset, false
-+	 *         otherwise.
-+	 */
-+	bool active_low_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Set the default debounce period.
-+	 * @param period New debounce period. Disables debouncing if 0.
-+	 */
-+	void set_debounce_period_default(const ::std::chrono::microseconds& period) noexcept;
-+
-+	/**
-+	 * @brief Set the debounce period for a single line at given offset.
-+	 * @param period New debounce period. Disables debouncing if 0.
-+	 * @param offset Offset of the line for which to set the debounce
-+	 *               period.
-+	 */
-+	void set_debounce_period_override(const ::std::chrono::microseconds& period,
-+					     line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Get the default debounce period.
-+	 * @return Debounce period that would have been used for any offset not
-+	 *         assigned its own debounce period. 0 if not debouncing is
-+	 *         disabled.
-+	 */
-+	::std::chrono::microseconds debounce_period_default(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the debounce period for a given offset.
-+	 * @param offset Line offset for which to read the debounce period.
-+	 * @return Debounce period that would have been used for given offset
-+	 *         if the config object was used in a request at the time of
-+	 *         the call. 0 if debouncing is disabled.
-+	 */
-+	::std::chrono::microseconds debounce_period_offset(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Clear the debounce period override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_debounce_period_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the debounce period setting is overridden at given offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if debounce period is overridden at this offset, false
-+	 *         otherwise.
-+	 */
-+	bool debounce_period_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Set the default event timestamp clock.
-+	 * @param clock New clock to use.
-+	 */
-+	void set_event_clock_default(line::clock clock);
-+
-+	/**
-+	 * @brief Set the event clock for a single line at given offset.
-+	 * @param clock New clock to use.
-+	 * @param offset Offset of the line for which to set the event clock
-+	 *               type.
-+	 */
-+	void set_event_clock_override(line::clock clock, line::offset offset);
-+
-+	/**
-+	 * @brief Get the default event clock setting.
-+	 * @return Event clock setting that would have been used for any offset
-+	 *         not assigned its own direction value.
-+	 */
-+	line::clock event_clock_default(void) const;
-+
-+	/**
-+	 * @brief Get the event clock setting for a given offset.
-+	 * @param offset Line offset for which to read the event clock setting.
-+	 * @return Event clock setting that would have been used for given
-+	 *         offset if the config object was used in a request at the
-+	 *         time of the call.
-+	 */
-+	line::clock event_clock_offset(line::offset offset) const;
-+
-+	/**
-+	 * @brief Clear the event clock override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_event_clock_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the event clock setting is overridden at given
-+	 *        offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if event clock is overridden at this offset, false
-+	 *         otherwise.
-+	 */
-+	bool event_clock_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Set the default output value.
-+	 * @param value New value.
-+	 */
-+	void set_output_value_default(line::value value) noexcept;
-+
-+	/**
-+	 * @brief Set the output value for a single offset.
-+	 * @param offset Line offset to associate the value with.
-+	 * @param value New value.
-+	 */
-+	void set_output_value_override(line::value value, line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Set the output values for a set of line offsets.
-+	 * @param values Vector of offset->value mappings.
-+	 */
-+	void set_output_values(const line::value_mappings& values);
-+
-+	/**
-+	 * @brief Set the output values for a set of line offsets.
-+	 * @param offsets Vector of line offsets for which to set output values.
-+	 * @param values Vector of new line values with indexes of values
-+	 *               corresponding to the indexes of offsets.
-+	 */
-+	void set_output_values(const line::offsets& offsets, const line::values& values);
-+
-+	/**
-+	 * @brief Get the default output value.
-+	 * @return Output value that would have been used for any offset not
-+	 *         assigned its own output value.
-+	 */
-+	line::value output_value_default(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the output value configured for a given line.
-+	 * @param offset Line offset for which to read the value.
-+	 * @return Output value that would have been used for given offset if
-+	 *         the config object was used in a request at the time of the
-+	 *         call.
-+	 */
-+	line::value output_value_offset(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Clear the output value override at given offset.
-+	 * @param offset Offset of the line for which to clear the override.
-+	 * @note Does nothing if no override is set for this line.
-+	 */
-+	void clear_output_value_override(line::offset offset) noexcept;
-+
-+	/**
-+	 * @brief Check if the output value setting is overridden at given
-+	 *        offset.
-+	 * @param offset Offset of the line for which to check the override.
-+	 * @return True if output value is overridden at this offset, false
-+	 *         otherwise.
-+	 */
-+	bool output_value_is_overridden(line::offset offset) const noexcept;
-+
-+	/**
-+	 * @brief Get the number of configuration overrides.
-+	 * @return Number of overrides held by this object.
-+	 */
-+	::std::size_t num_overrides(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the list of property overrides.
-+	 * @return List of configuration property overrides held by this object.
-+	 */
-+	override_list overrides(void) const;
-+
-+private:
-+
-+	struct impl;
-+
-+	::std::unique_ptr<impl> _m_priv;
-+
-+	friend chip;
-+	friend line_request;
-+};
-+
-+/**
-+ * @brief Stream insertion operator for GPIO line config objects.
-+ * @param out Output stream to write to.
-+ * @param config Line config object to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const line_config& config);
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_LINE_CONFIG_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/line-info.hpp b/bindings/cxx/gpiodcxx/line-info.hpp
-new file mode 100644
-index 0000000..e9883ab
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/line-info.hpp
-@@ -0,0 +1,176 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
-+
-+/**
-+ * @file line-info.hpp
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_LINE_INFO_HPP__
-+#define __LIBGPIOD_CXX_LINE_INFO_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <chrono>
-+#include <iostream>
-+#include <memory>
-+#include <string>
-+
-+namespace gpiod {
-+
-+class chip;
-+class info_event;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Contains an immutable snapshot of the line's state at the
-+ *        time when the object of this class was instantiated.
-+ */
-+class line_info
-+{
-+public:
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy.
-+	 */
-+	line_info(const line_info& other) noexcept;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	line_info(line_info&& other) noexcept;
-+
-+	~line_info(void);
-+
-+	/**
-+	 * @brief Copy assignment operator.
-+	 * @param other Object to copy.
-+	 * @return Reference to self.
-+	 */
-+	line_info& operator=(const line_info& other) noexcept;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	line_info& operator=(line_info&& other) noexcept;
-+
-+	/**
-+	 * @brief Get the hardware offset of the line.
-+	 * @return Offset of the line within the parent chip.
-+	 */
-+	line::offset offset(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the GPIO line name.
-+	 * @return Name of the GPIO line as it is represented in the kernel.
-+	 *         This routine returns an empty string if the line is unnamed.
-+	 */
-+	::std::string name(void) const noexcept;
-+
-+	/**
-+	 * @brief Check if the line is currently in use.
-+	 * @return True if the line is in use, false otherwise.
-+	 *
-+	 * The user space can't know exactly why a line is busy. It may have
-+	 * been requested by another process or hogged by the kernel. It only
-+	 * matters that the line is used and we can't request it.
-+	 */
-+	bool used(void) const noexcept;
-+
-+	/**
-+	 * @brief Read the GPIO line consumer name.
-+	 * @return Name of the GPIO consumer name as it is represented in the
-+	 *         kernel. This routine returns an empty string if the line is
-+	 *         not used.
-+	 */
-+	::std::string consumer(void) const noexcept;
-+
-+	/**
-+	 * @brief Read the GPIO line direction setting.
-+	 * @return Returns DIRECTION_INPUT or DIRECTION_OUTPUT.
-+	 */
-+	line::direction direction(void) const;
-+
-+	/**
-+	 * @brief Read the current edge detection setting of this line.
-+	 * @return Returns EDGE_NONE, EDGE_RISING, EDGE_FALLING or EDGE_BOTH.
-+	 */
-+	line::edge edge_detection(void) const;
-+
-+	/**
-+	 * @brief Read the GPIO line bias setting.
-+	 * @return Returns BIAS_PULL_UP, BIAS_PULL_DOWN, BIAS_DISABLE or
-+	 *         BIAS_UNKNOWN.
-+	 */
-+	line::bias bias(void) const;
-+
-+	/**
-+	 * @brief Read the GPIO line drive setting.
-+	 * @return Returns DRIVE_PUSH_PULL, DRIVE_OPEN_DRAIN or
-+	 *         DRIVE_OPEN_SOURCE.
-+	 */
-+	line::drive drive(void) const;
-+
-+	/**
-+	 * @brief Check if the signal of this line is inverted.
-+	 * @return True if this line is "active-low", false otherwise.
-+	 */
-+	bool active_low(void) const noexcept;
-+
-+	/**
-+	 * @brief Check if this line is debounced (either by hardware or by the
-+	 *        kernel software debouncer).
-+	 * @return True if the line is debounced, false otherwise.
-+	 */
-+	bool debounced(void) const noexcept;
-+
-+	/**
-+	 * @brief Read the current debounce period in microseconds.
-+	 * @return Current debounce period in microseconds, 0 if the line is
-+	 *         not debounced.
-+	 */
-+	::std::chrono::microseconds debounce_period(void) const noexcept;
-+
-+	/**
-+	 * @brief Read the current event clock setting used for edge event
-+	 *        timestamps.
-+	 * @return Returns MONOTONIC or REALTIME.
-+	 */
-+	line::clock event_clock(void) const;
-+
-+private:
-+
-+	line_info(void);
-+
-+	struct impl;
-+
-+	::std::shared_ptr<impl> _m_priv;
-+
-+	friend chip;
-+	friend info_event;
-+};
-+
-+/**
-+ * @brief Stream insertion operator for GPIO line info objects.
-+ * @param out Output stream to write to.
-+ * @param info GPIO line info object to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const line_info& info);
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_LINE_INFO_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/line-request.hpp b/bindings/cxx/gpiodcxx/line-request.hpp
-new file mode 100644
-index 0000000..28ab6e1
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/line-request.hpp
-@@ -0,0 +1,221 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
-+
-+/**
-+ * @file line-request.hpp
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_LINE_REQUEST_HPP__
-+#define __LIBGPIOD_CXX_LINE_REQUEST_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <chrono>
-+#include <cstddef>
-+#include <iostream>
-+#include <memory>
-+
-+#include "misc.hpp"
-+
-+namespace gpiod {
-+
-+class chip;
-+class edge_event;
-+class edge_event_buffer;
-+class line_config;
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Stores the context of a set of requested GPIO lines.
-+ */
-+class line_request
-+{
-+public:
-+
-+	line_request(const line_request& other) = delete;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	line_request(line_request&& other) noexcept;
-+
-+	~line_request(void);
-+
-+	line_request& operator=(const line_request& other) = delete;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 */
-+	line_request& operator=(line_request&& other) noexcept;
-+
-+	/**
-+	 * @brief Check if this object is valid.
-+	 * @return True if this object's methods can be used, false otherwise.
-+	 *         False usually means the request was released. If the user
-+	 *         calls any of the methods of this class on an object for
-+	 *         which this operator returned false, a logic_error will be
-+	 *         thrown.
-+	 */
-+	explicit operator bool(void) const noexcept;
-+
-+	/**
-+	 * @brief Release the GPIO chip and free all associated resources.
-+	 * @note The object can still be used after this method is called but
-+	 *       using any of the mutators will result in throwing
-+	 *       a logic_error exception.
-+	 */
-+	void release(void);
-+
-+	/**
-+	 * @brief Get the number of requested lines.
-+	 * @return Number of lines in this request.
-+	 */
-+	::std::size_t num_lines(void) const;
-+
-+	/**
-+	 * @brief Get the list of offsets of requested lines.
-+	 * @return List of hardware offsets of the lines in this request.
-+	 */
-+	line::offsets offsets(void) const;
-+
-+	/**
-+	 * @brief Get the value of a single requested line.
-+	 * @param offset Offset of the line to read within the chip.
-+	 * @return Current line value.
-+	 */
-+	line::value get_value(line::offset offset);
-+
-+	/**
-+	 * @brief Get the values of a subset of requested lines.
-+	 * @param offsets Vector of line offsets
-+	 * @return Vector of lines values with indexes of values corresponding
-+	 *         to those of the offsets.
-+	 */
-+	line::values get_values(const line::offsets& offsets);
-+
-+	/**
-+	 * @brief Get the values of all requested lines.
-+	 * @return List of read values.
-+	 */
-+	line::values get_values(void);
-+
-+	/**
-+	 * @brief Get the values of a subset of requested lines into a vector
-+	 *        supplied by the caller.
-+	 * @param offsets Vector of line offsets.
-+	 * @param values Vector for storing the values. Its size must be at
-+	 *               least that of the offsets vector. The indexes of read
-+	 *               values will correspond with those in the offsets
-+	 *               vector.
-+	 */
-+	void get_values(const line::offsets& offsets, line::values& values);
-+
-+	/**
-+	 * @brief Get the values of all requested lines.
-+	 * @param values Array in which the values will be stored. Must hold
-+	 *               at least the number of elements returned by
-+	 *               line_request::num_lines.
-+	 */
-+	void get_values(line::values& values);
-+
-+	/**
-+	 * @brief Set the value of a single requested line.
-+	 * @param offset Offset of the line to set within the chip.
-+	 * @param value New line value.
-+	 */
-+	void set_value(line::offset offset, line::value value);
-+
-+	/**
-+	 * @brief Set the values of a subset of requested lines.
-+	 * @param values Vector containing a set of offset->value mappings.
-+	 */
-+	void set_values(const line::value_mappings& values);
-+
-+	/**
-+	 * @brief Set the values of a subset of requested lines.
-+	 * @param offsets Vector containing the offsets of lines to set.
-+	 * @param values Vector containing new values with indexes
-+	 *               corresponding with those in the offsets vector.
-+	 */
-+	void set_values(const line::offsets& offsets, const line::values& values);
-+
-+	/**
-+	 * @brief Set the values of all requested lines.
-+	 * @param values Array of new line values. The size must be equal to
-+	 *               the value returned by line_request::num_lines.
-+	 */
-+	void set_values(const line::values& values);
-+
-+	/**
-+	 * @brief Apply new config options to requested lines.
-+	 * @param config New configuration.
-+	 */
-+	void reconfigure_lines(const line_config& config);
-+
-+	/**
-+	 * @brief Get the file descriptor number associated with this line
-+	 *        request.
-+	 * @return File descriptor number.
-+	 */
-+	int fd(void) const;
-+
-+	/**
-+	 * @brief Wait for edge events on any of the lines requested with edge
-+	 *        detection enabled.
-+	 * @param timeout Wait time limit in nanoseconds.
-+	 * @return True if at least one event is ready to be read. False if the
-+	 *         wait timed out.
-+	 */
-+	bool wait_edge_event(const ::std::chrono::nanoseconds& timeout) const;
-+
-+	/**
-+	 * @brief Read a number of edge events from this request up to the
-+	 *        maximum capacity of the buffer.
-+	 * @param buffer Edge event buffer to read events into.
-+	 * @return Number of events read.
-+	 */
-+	::std::size_t read_edge_event(edge_event_buffer& buffer);
-+
-+	/**
-+	 * @brief Read a number of edge events from this request.
-+	 * @param buffer Edge event buffer to read events into.
-+	 * @param max_events Maximum number of events to read. Limited by the
-+	 *                   capacity of the buffer.
-+	 * @return Number of events read.
-+	 */
-+	::std::size_t read_edge_event(edge_event_buffer& buffer, ::std::size_t max_events);
-+
-+private:
-+
-+	line_request(void);
-+
-+	struct impl;
-+
-+	::std::unique_ptr<impl> _m_priv;
-+
-+	friend chip;
-+};
-+
-+/**
-+ * @brief Stream insertion operator for line requests.
-+ * @param out Output stream to write to.
-+ * @param request Line request object to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const line_request& request);
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_LINE_REQUEST_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/line.hpp b/bindings/cxx/gpiodcxx/line.hpp
-new file mode 100644
-index 0000000..8e8a984
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/line.hpp
-@@ -0,0 +1,274 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl> */
-+
-+/**
-+ * @file line.hpp
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_LINE_HPP__
-+#define __LIBGPIOD_CXX_LINE_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <ostream>
-+#include <utility>
 +#include <vector>
 +
-+namespace gpiod {
++#include "gpiosim.hpp"
++#include "helpers.hpp"
 +
-+/**
-+ * @brief Namespace containing various type definitions for GPIO lines.
-+ */
-+namespace line {
++using simprop = ::gpiosim::chip::property;
++using reqprop = ::gpiod::request_config::property;
++using lineprop = ::gpiod::line_config::property;
++using offsets = ::gpiod::line::offsets;
++using values = ::gpiod::line::values;
++using direction = ::gpiod::line::direction;
++using value = ::gpiod::line::value;
++using simval = ::gpiosim::chip::value;
++using pull = ::gpiosim::chip::pull;
 +
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
++namespace {
 +
-+/**
-+ * @brief Wrapper around unsigned int for representing line offsets.
-+ */
-+class offset
++class value_matcher : public Catch::MatcherBase<value>
 +{
 +public:
-+	/**
-+	 * @brief Constructor with implicit conversion from unsigned int.
-+	 * @param off Line offset.
-+	 */
-+	offset(unsigned int off = 0) : _m_offset(off) {	}
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy.
-+	 */
-+	offset(const offset& other) = default;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	offset(offset&& other) = default;
-+
-+	~offset(void) = default;
-+
-+	/**
-+	 * @brief Assignment operator.
-+	 * @param other Object to copy.
-+	 * @return Reference to self.
-+	 */
-+	offset& operator=(const offset& other) = default;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	offset& operator=(offset&& other) noexcept = default;
-+
-+	/**
-+	 * @brief Conversion operator to `unsigned int`.
-+	 */
-+	operator unsigned int(void) const noexcept
++	value_matcher(pull pull, bool active_low = false)
++		: _m_pull(pull),
++		  _m_active_low(active_low)
 +	{
-+		return this->_m_offset;
++
++	}
++
++	::std::string describe(void) const override
++	{
++		::std::string repr(this->_m_pull == pull::PULL_UP ? "PULL_UP" : "PULL_DOWN");
++		::std::string active_low = this->_m_active_low ? "(active-low) " : "";
++
++		return active_low + "corresponds with " + repr;
++	}
++
++	bool match(const value& val) const override
++	{
++		if (this->_m_active_low) {
++			if ((val == value::ACTIVE && this->_m_pull == pull::PULL_DOWN) ||
++			    (val == value::INACTIVE && this->_m_pull == pull::PULL_UP))
++				return true;
++		} else {
++			if ((val == value::ACTIVE && this->_m_pull == pull::PULL_UP) ||
++			    (val == value::INACTIVE && this->_m_pull == pull::PULL_DOWN))
++				return true;
++		}
++
++		return false;
 +	}
 +
 +private:
-+	unsigned int _m_offset;
++	pull _m_pull;
++	bool _m_active_low;
 +};
 +
-+/**
-+ * @brief Logical line states.
-+ */
-+enum class value
++TEST_CASE("requesting lines fails with invalid arguments", "[line-request][chip]")
 +{
-+	INACTIVE = 0,
-+	/**< Line is inactive. */
-+	ACTIVE = 1,
-+	/**< Line is active. */
-+};
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	::gpiod::chip chip(sim.dev_path());
 +
-+/**
-+ * @brief Direction settings.
-+ */
-+enum class direction
++	SECTION("no offsets")
++	{
++		REQUIRE_THROWS_AS(chip.request_lines(::gpiod::request_config(),
++						     ::gpiod::line_config()),
++				  ::std::invalid_argument);
++	}
++
++	SECTION("duplicate offsets")
++	{
++		REQUIRE_THROWS_MATCHES(chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 2, 0, 0, 4 }) }
++			}),
++			::gpiod::line_config()),
++			::std::system_error,
++			 system_error_matcher(EBUSY)
++		);
++	}
++
++	SECTION("offset out of bounds")
++	{
++		REQUIRE_THROWS_AS(chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 2, 0, 8, 4 }) }
++			}),
++			::gpiod::line_config()),
++			::std::invalid_argument
++		);
++	}
++}
++
++TEST_CASE("consumer string is set correctly", "[line-request]")
 +{
-+	AS_IS = 1,
-+	/**< Request the line(s), but don't change current direction. */
-+	INPUT,
-+	/**< Direction is input - we're reading the state of a GPIO line. */
-+	OUTPUT
-+	/**< Direction is output - we're driving the GPIO line. */
-+};
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 4 }});
++	::gpiod::chip chip(sim.dev_path());
++	offsets offs({ 3, 0, 2 });
 +
-+/**
-+ * @brief Edge detection settings.
-+ */
-+enum class edge
++	SECTION("set custom consumer")
++	{
++		auto request = chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 2 }) },
++				{ reqprop::CONSUMER, "foobar" }
++			}),
++			::gpiod::line_config()
++		);
++
++		auto info = chip.get_line_info(2);
++
++		REQUIRE(info.used());
++		REQUIRE_THAT(info.consumer(), Catch::Equals("foobar"));
++	}
++
++	SECTION("empty consumer")
++	{
++		auto request = chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 2 }) },
++			}),
++			::gpiod::line_config()
++		);
++
++		auto info = chip.get_line_info(2);
++
++		REQUIRE(info.used());
++		REQUIRE_THAT(info.consumer(), Catch::Equals("?"));
++	}
++}
++
++TEST_CASE("values can be read", "[line-request]")
 +{
-+	NONE = 1,
-+	/**< Line edge detection is disabled. */
-+	RISING,
-+	/**< Line detects rising edge events. */
-+	FALLING,
-+	/**< Line detect falling edge events. */
-+	BOTH
-+	/**< Line detects both rising and falling edge events. */
-+};
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	const offsets offs({ 7, 1, 0, 6, 2 });
 +
-+/**
-+ * @brief Internal bias settings.
-+ */
-+enum class bias
++	const ::std::vector<pull> pulls({
++		pull::PULL_UP,
++		pull::PULL_UP,
++		pull::PULL_DOWN,
++		pull::PULL_UP,
++		pull::PULL_DOWN
++	});
++
++	for (unsigned int i = 0; i < offs.size(); i++)
++		sim.set_pull(offs[i], pulls[i]);
++
++	auto request = ::gpiod::chip(sim.dev_path()).request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offs }
++		}),
++		::gpiod::line_config({
++			{ lineprop::DIRECTION, direction::INPUT }
++		})
++	);
++
++	SECTION("get all values (returning variant)")
++	{
++		auto vals = request.get_values();
++
++		REQUIRE_THAT(vals[0], value_matcher(pull::PULL_UP));
++		REQUIRE_THAT(vals[1], value_matcher(pull::PULL_UP));
++		REQUIRE_THAT(vals[2], value_matcher(pull::PULL_DOWN));
++		REQUIRE_THAT(vals[3], value_matcher(pull::PULL_UP));
++		REQUIRE_THAT(vals[4], value_matcher(pull::PULL_DOWN));
++	}
++
++	SECTION("get all values (passed buffer variant)")
++	{
++		values vals(5);
++
++		request.get_values(vals);
++
++		REQUIRE_THAT(vals[0], value_matcher(pull::PULL_UP));
++		REQUIRE_THAT(vals[1], value_matcher(pull::PULL_UP));
++		REQUIRE_THAT(vals[2], value_matcher(pull::PULL_DOWN));
++		REQUIRE_THAT(vals[3], value_matcher(pull::PULL_UP));
++		REQUIRE_THAT(vals[4], value_matcher(pull::PULL_DOWN));
++	}
++
++	SECTION("get_values(buffer) throws for invalid buffer size")
++	{
++		values vals(4);
++		REQUIRE_THROWS_AS(request.get_values(vals), ::std::invalid_argument);
++		vals.resize(6);
++		REQUIRE_THROWS_AS(request.get_values(vals), ::std::invalid_argument);
++	}
++
++	SECTION("get a single value")
++	{
++		auto val = request.get_value(7);
++
++		REQUIRE_THAT(val, value_matcher(pull::PULL_UP));
++	}
++
++	SECTION("get a single value (active-low)")
++	{
++		request.reconfigure_lines(
++			::gpiod::line_config({
++				{ lineprop::ACTIVE_LOW, true }
++			})
++		);
++
++		auto val = request.get_value(7);
++
++		REQUIRE_THAT(val, value_matcher(pull::PULL_UP, true));
++	}
++
++	SECTION("get a subset of values (returning variant)")
++	{
++		auto vals = request.get_values(offsets({ 2, 0, 6 }));
++
++		REQUIRE_THAT(vals[0], value_matcher(pull::PULL_DOWN));
++		REQUIRE_THAT(vals[1], value_matcher(pull::PULL_DOWN));
++		REQUIRE_THAT(vals[2], value_matcher(pull::PULL_UP));
++	}
++
++	SECTION("get a subset of values (passed buffer variant)")
++	{
++		values vals(3);
++
++		request.get_values(offsets({ 2, 0, 6 }), vals);
++
++		REQUIRE_THAT(vals[0], value_matcher(pull::PULL_DOWN));
++		REQUIRE_THAT(vals[1], value_matcher(pull::PULL_DOWN));
++		REQUIRE_THAT(vals[2], value_matcher(pull::PULL_UP));
++	}
++}
++
++TEST_CASE("output values can be set at request time", "[line-request]")
 +{
-+	AS_IS = 1,
-+	/**< Don't change the bias setting when applying line config. */
-+	UNKNOWN,
-+	/**< The internal bias state is unknown. */
-+	DISABLED,
-+	/**< The internal bias is disabled. */
-+	PULL_UP,
-+	/**< The internal pull-up bias is enabled. */
-+	PULL_DOWN
-+	/**< The internal pull-down bias is enabled. */
-+};
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	::gpiod::chip chip(sim.dev_path());
++	const offsets offs({ 0, 1, 3, 4 });
 +
-+/**
-+ * @brief Drive settings.
-+ */
-+enum class drive
++	::gpiod::request_config req_cfg({
++		{ reqprop::OFFSETS, offs }
++	});
++
++	::gpiod::line_config line_cfg({
++		{ lineprop::DIRECTION, direction::OUTPUT },
++		{ lineprop::OUTPUT_VALUE, value::ACTIVE }
++	});
++
++	SECTION("default output value")
++	{
++		auto request = chip.request_lines(req_cfg, line_cfg);
++
++		for (const auto& off: offs)
++			REQUIRE(sim.get_value(off) == simval::ACTIVE);
++
++		REQUIRE(sim.get_value(2) == simval::INACTIVE);
++	}
++
++	SECTION("overridden output value")
++	{
++		line_cfg.set_output_value_override(value::INACTIVE, 1);
++
++		auto request = chip.request_lines(req_cfg, line_cfg);
++
++		REQUIRE(sim.get_value(0) == simval::ACTIVE);
++		REQUIRE(sim.get_value(1) == simval::INACTIVE);
++		REQUIRE(sim.get_value(2) == simval::INACTIVE);
++		REQUIRE(sim.get_value(3) == simval::ACTIVE);
++		REQUIRE(sim.get_value(4) == simval::ACTIVE);
++	}
++}
++
++TEST_CASE("values can be set after requesting lines", "[line-request]")
 +{
-+	PUSH_PULL = 1,
-+	/**< Drive setting is push-pull. */
-+	OPEN_DRAIN,
-+	/**< Line output is open-drain. */
-+	OPEN_SOURCE
-+	/**< Line output is open-source. */
-+};
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	const offsets offs({ 0, 1, 3, 4 });
 +
-+/**
-+ * @brief Event clock settings.
-+ */
-+enum class clock
++	::gpiod::request_config req_cfg({
++		{ reqprop::OFFSETS, offs }
++	});
++
++	::gpiod::line_config line_cfg({
++		{ lineprop::DIRECTION, direction::OUTPUT },
++		{ lineprop::OUTPUT_VALUE, value::INACTIVE }
++	});
++
++	auto request = ::gpiod::chip(sim.dev_path()).request_lines(req_cfg, line_cfg);
++
++	SECTION("set single value")
++	{
++		request.set_value(1, value::ACTIVE);
++
++		REQUIRE(sim.get_value(0) == simval::INACTIVE);
++		REQUIRE(sim.get_value(1) == simval::ACTIVE);
++		REQUIRE(sim.get_value(3) == simval::INACTIVE);
++		REQUIRE(sim.get_value(4) == simval::INACTIVE);
++	}
++
++	SECTION("set all values")
++	{
++		request.set_values({
++			value::ACTIVE,
++			value::INACTIVE,
++			value::ACTIVE,
++			value::INACTIVE
++		});
++
++		REQUIRE(sim.get_value(0) == simval::ACTIVE);
++		REQUIRE(sim.get_value(1) == simval::INACTIVE);
++		REQUIRE(sim.get_value(3) == simval::ACTIVE);
++		REQUIRE(sim.get_value(4) == simval::INACTIVE);
++	}
++
++	SECTION("set a subset of values")
++	{
++		request.set_values({ 4, 3 }, { value::ACTIVE, value::INACTIVE });
++
++		REQUIRE(sim.get_value(0) == simval::INACTIVE);
++		REQUIRE(sim.get_value(1) == simval::INACTIVE);
++		REQUIRE(sim.get_value(3) == simval::INACTIVE);
++		REQUIRE(sim.get_value(4) == simval::ACTIVE);
++	}
++
++	SECTION("set a subset of values with mappings")
++	{
++		request.set_values({
++			{ 0, value::ACTIVE },
++			{ 4, value::INACTIVE },
++			{ 1, value::ACTIVE}
++		});
++
++		REQUIRE(sim.get_value(0) == simval::ACTIVE);
++		REQUIRE(sim.get_value(1) == simval::ACTIVE);
++		REQUIRE(sim.get_value(3) == simval::INACTIVE);
++		REQUIRE(sim.get_value(4) == simval::INACTIVE);
++	}
++}
++
++TEST_CASE("line_request can be moved", "[line-request]")
 +{
-+	MONOTONIC = 1,
-+	/**< Line uses the monotonic clock for edge event timestamps. */
-+	REALTIME
-+	/**< Line uses the realtime clock for edge event timestamps. */
-+};
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 8 }});
++	::gpiod::chip chip(sim.dev_path());
++	const offsets offs({ 3, 1, 0, 2 });
 +
-+/**
-+ * @brief Vector of line offsets.
-+ */
-+using offsets = ::std::vector<offset>;
++	auto request = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offs }
++		}),
++		::gpiod::line_config()
++	);
 +
-+/**
-+ * @brief Vector of line values.
-+ */
-+using values = ::std::vector<value>;
++	auto fd = request.fd();
 +
-+/**
-+ * @brief Represents a mapping of a line offset to line logical state.
-+ */
-+using value_mapping = ::std::pair<offset, value>;
++	auto another = chip.request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 6 }) }
++		}),
++		::gpiod::line_config()
++	);
 +
-+/**
-+ * @brief Vector of offset->value mappings. Each mapping is defined as a pair
-+ *        of an unsigned and signed integers.
-+ */
-+using value_mappings = ::std::vector<value_mapping>;
++	SECTION("move constructor works")
++	{
++		auto moved(::std::move(request));
 +
-+/**
-+ * @brief Stream insertion operator for logical line values.
-+ * @param out Output stream.
-+ * @param val Value to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, value val);
++		REQUIRE(moved.fd() == fd);
++		REQUIRE_THAT(moved.offsets(), Catch::Equals(offs));
++	}
 +
-+/**
-+ * @brief Stream insertion operator for direction values.
-+ * @param out Output stream.
-+ * @param dir Value to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, direction dir);
++	SECTION("move assignment operator works")
++	{
++		another = ::std::move(request);
 +
-+/**
-+ * @brief Stream insertion operator for edge detection values.
-+ * @param out Output stream.
-+ * @param edge Value to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, edge edge);
++		REQUIRE(another.fd() == fd);
++		REQUIRE_THAT(another.offsets(), Catch::Equals(offs));
++	}
++}
 +
-+/**
-+ * @brief Stream insertion operator for bias values.
-+ * @param out Output stream.
-+ * @param bias Value to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, bias bias);
++TEST_CASE("released request can no longer be used", "[line-request]")
++{
++	::gpiosim::chip sim;
 +
-+/**
-+ * @brief Stream insertion operator for drive values.
-+ * @param out Output stream.
-+ * @param drive Value to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, drive drive);
++	auto request = ::gpiod::chip(sim.dev_path()).request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 0 }) }
++		}),
++		::gpiod::line_config()
++	);
 +
-+/**
-+ * @brief Stream insertion operator for event clock values.
-+ * @param out Output stream.
-+ * @param clock Value to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, clock clock);
++	request.release();
 +
-+/**
-+ * @brief Stream insertion operator for the list of output values.
-+ * @param out Output stream.
-+ * @param vals Object to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const values& vals);
++	REQUIRE_THROWS_AS(request.offsets(), ::gpiod::request_released);
++}
 +
-+/**
-+ * @brief Stream insertion operator for the list of line offsets.
-+ * @param out Output stream.
-+ * @param offs Object to insert into the output stream in a human-readable form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const offsets& offs);
++TEST_CASE("line_request survives parent chip", "[line-request][chip]")
++{
++	::gpiosim::chip sim;
 +
-+/**
-+ * @brief Stream insertion operator for the offset-to-value mapping.
-+ * @param out Output stream.
-+ * @param mapping Value to insert into the output stream in a human-readable
-+ *        form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const value_mapping& mapping);
++	sim.set_pull(0, pull::PULL_UP);
 +
-+/**
-+ * @brief Stream insertion operator for the list of offset-to-value mappings.
-+ * @param out Output stream.
-+ * @param mappings Object to insert into the output stream in a human-readable
-+ *        form.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const value_mappings& mappings);
++	SECTION("chip is released")
++	{
++		::gpiod::chip chip(sim.dev_path());
 +
-+/**
-+ * @}
-+ */
++		auto request = chip.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 0 }) }
++			}),
++			::gpiod::line_config({
++				{ lineprop::DIRECTION, direction::INPUT }
++			})
++		);
 +
-+} /* namespace line */
++		REQUIRE_THAT(request.get_value(0), value_matcher(pull::PULL_UP));
 +
-+} /* namespace gpiod */
++		chip.close();
 +
-+#endif /* __LIBGPIOD_CXX_LINE_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/misc.hpp b/bindings/cxx/gpiodcxx/misc.hpp
++		REQUIRE_THAT(request.get_value(0), value_matcher(pull::PULL_UP));
++	}
++
++	SECTION("chip goes out of scope")
++	{
++		/* Need to get the request object somehow. */
++		::gpiod::chip dummy(sim.dev_path());
++
++		auto request = dummy.request_lines(
++			::gpiod::request_config({
++				{ reqprop::OFFSETS, offsets({ 0 }) }
++			}),
++			::gpiod::line_config({
++				{ lineprop::DIRECTION, direction::INPUT }
++			})
++		);
++
++		request.release();
++		dummy.close();
++
++		{
++			::gpiod::chip chip(sim.dev_path());
++
++			request = chip.request_lines(
++				::gpiod::request_config({
++					{ reqprop::OFFSETS, offsets({ 0 }) }
++				}),
++				::gpiod::line_config({
++					{ lineprop::DIRECTION, direction::INPUT }
++				})
++			);
++
++			REQUIRE_THAT(request.get_value(0), value_matcher(pull::PULL_UP));
++		}
++
++		REQUIRE_THAT(request.get_value(0), value_matcher(pull::PULL_UP));
++	}
++}
++
++TEST_CASE("line_request stream insertion operator works", "[line-request]")
++{
++	::gpiosim::chip sim({{ simprop::NUM_LINES, 4 }});
++
++	auto request = ::gpiod::chip(sim.dev_path()).request_lines(
++		::gpiod::request_config({
++			{ reqprop::OFFSETS, offsets({ 3, 1, 0, 2 }) }
++		}),
++		::gpiod::line_config()
++	);
++
++	::std::stringstream buf, expected;
++
++	expected << "gpiod::line_request(num_lines=4, line_offsets=gpiod::offsets(3, 1, 0, 2), fd=" <<
++		    request.fd() << ")";
++
++	SECTION("active request")
++	{
++		buf << request;
++
++		REQUIRE_THAT(buf.str(), Catch::Equals(expected.str()));
++	}
++
++	SECTION("request released")
++	{
++		request.release();
++
++		buf << request;
++
++		REQUIRE_THAT(buf.str(), Catch::Equals("gpiod::line_request(released)"));
++	}
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
 new file mode 100644
-index 0000000..6e0084b
+index 0000000..c17122c
 --- /dev/null
-+++ b/bindings/cxx/gpiodcxx/misc.hpp
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl> */
++++ b/bindings/cxx/tests/tests-line.cpp
+@@ -0,0 +1,137 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+/**
-+ * @file misc.hpp
-+ */
++#include <catch2/catch.hpp>
++#include <gpiod.hpp>
 +
-+#ifndef __LIBGPIOD_CXX_MISC_HPP__
-+#define __LIBGPIOD_CXX_MISC_HPP__
++#include "helpers.hpp"
 +
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
++using offset = ::gpiod::line::offset;
++using value = ::gpiod::line::value;
++using direction = ::gpiod::line::direction;
++using edge = ::gpiod::line::edge;
++using bias = ::gpiod::line::bias;
++using drive = ::gpiod::line::drive;
++using clock_type = ::gpiod::line::clock;
++using offsets = ::gpiod::line::offsets;
++using values = ::gpiod::line::values;
++using value_mapping = ::gpiod::line::value_mapping;
++using value_mappings = ::gpiod::line::value_mappings;
 +
++namespace {
++
++TEST_CASE("stream insertion operators for types in gpiod::line work", "[line]")
++{
++	SECTION("offset")
++	{
++		offset off = 4;
++
++		REQUIRE_THAT(off, stringify_matcher<offset>("4"));
++	}
++
++	SECTION("value")
++	{
++		auto active = value::ACTIVE;
++		auto inactive = value::INACTIVE;
++
++		REQUIRE_THAT(active, stringify_matcher<value>("ACTIVE"));
++		REQUIRE_THAT(inactive, stringify_matcher<value>("INACTIVE"));
++	}
++
++	SECTION("direction")
++	{
++		auto input = direction::INPUT;
++		auto output = direction::OUTPUT;
++		auto as_is = direction::AS_IS;
++
++		REQUIRE_THAT(input, stringify_matcher<direction>("INPUT"));
++		REQUIRE_THAT(output, stringify_matcher<direction>("OUTPUT"));
++		REQUIRE_THAT(as_is, stringify_matcher<direction>("AS_IS"));
++	}
++
++	SECTION("edge")
++	{
++		auto rising = edge::RISING;
++		auto falling = edge::FALLING;
++		auto both = edge::BOTH;
++		auto none = edge::NONE;
++
++		REQUIRE_THAT(rising, stringify_matcher<edge>("RISING_EDGE"));
++		REQUIRE_THAT(falling, stringify_matcher<edge>("FALLING_EDGE"));
++		REQUIRE_THAT(both, stringify_matcher<edge>("BOTH_EDGES"));
++		REQUIRE_THAT(none, stringify_matcher<edge>("NONE"));
++	}
++
++	SECTION("bias")
++	{
++		auto pull_up = bias::PULL_UP;
++		auto pull_down = bias::PULL_DOWN;
++		auto disabled = bias::DISABLED;
++		auto as_is = bias::AS_IS;
++		auto unknown = bias::UNKNOWN;
++
++		REQUIRE_THAT(pull_up, stringify_matcher<bias>("PULL_UP"));
++		REQUIRE_THAT(pull_down, stringify_matcher<bias>("PULL_DOWN"));
++		REQUIRE_THAT(disabled, stringify_matcher<bias>("DISABLED"));
++		REQUIRE_THAT(as_is, stringify_matcher<bias>("AS_IS"));
++		REQUIRE_THAT(unknown, stringify_matcher<bias>("UNKNOWN"));
++	}
++
++	SECTION("drive")
++	{
++		auto push_pull = drive::PUSH_PULL;
++		auto open_drain = drive::OPEN_DRAIN;
++		auto open_source = drive::OPEN_SOURCE;
++
++		REQUIRE_THAT(push_pull, stringify_matcher<drive>("PUSH_PULL"));
++		REQUIRE_THAT(open_drain, stringify_matcher<drive>("OPEN_DRAIN"));
++		REQUIRE_THAT(open_source, stringify_matcher<drive>("OPEN_SOURCE"));
++	}
++
++	SECTION("clock")
++	{
++		auto monotonic = clock_type::MONOTONIC;
++		auto realtime = clock_type::REALTIME;
++
++		REQUIRE_THAT(monotonic, stringify_matcher<clock_type>("MONOTONIC"));
++		REQUIRE_THAT(realtime, stringify_matcher<clock_type>("REALTIME"));
++	}
++
++	SECTION("offsets")
++	{
++		offsets offs = { 2, 5, 3, 9, 8, 7 };
++
++		REQUIRE_THAT(offs, stringify_matcher<offsets>("gpiod::offsets(2, 5, 3, 9, 8, 7)"));
++	}
++
++	SECTION("values")
++	{
++		values vals = {
++			value::ACTIVE,
++			value::INACTIVE,
++			value::ACTIVE,
++			value::ACTIVE,
++			value::INACTIVE
++		};
++
++		REQUIRE_THAT(vals,
++			     stringify_matcher<values>("gpiod::values(ACTIVE, INACTIVE, ACTIVE, ACTIVE, INACTIVE)"));
++	}
++
++	SECTION("value_mapping")
++	{
++		value_mapping val = { 4, value::ACTIVE };
++
++		REQUIRE_THAT(val, stringify_matcher<value_mapping>("gpiod::value_mapping(4: ACTIVE)"));
++	}
++
++	SECTION("value_mappings")
++	{
++		value_mappings vals = { { 0, value::ACTIVE }, { 4, value::INACTIVE }, { 8, value::ACTIVE } };
++
++		REQUIRE_THAT(vals, stringify_matcher<value_mappings>(
++			"gpiod::value_mappings(gpiod::value_mapping(0: ACTIVE), gpiod::value_mapping(4: INACTIVE), gpiod::value_mapping(8: ACTIVE))"));
++	}
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-misc.cpp b/bindings/cxx/tests/tests-misc.cpp
+new file mode 100644
+index 0000000..ba4920f
+--- /dev/null
++++ b/bindings/cxx/tests/tests-misc.cpp
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <catch2/catch.hpp>
++#include <filesystem>
++#include <gpiod.hpp>
 +#include <string>
++#include <regex>
++#include <unistd.h>
 +
-+namespace gpiod {
++#include "gpiosim.hpp"
++#include "helpers.hpp"
 +
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
++using property = ::gpiosim::chip::property;
 +
-+/**
-+ * @brief Check if the file pointed to by path is a GPIO chip character device.
-+ * @param path Path to check.
-+ * @return True if the file exists and is a GPIO chip character device or a
-+ *         symbolic link to it.
-+ */
-+bool is_gpiochip_device(const ::std::filesystem::path& path);
++namespace {
 +
-+/**
-+ * @brief Get the human readable version string for libgpiod API
-+ * @return String containing the library version.
-+ */
-+const ::std::string& version_string(void);
++class symlink_guard
++{
++public:
++	symlink_guard(const ::std::filesystem::path& target,
++		      const ::std::filesystem::path& link)
++		: _m_link(link)
++	{
++		::std::filesystem::create_symlink(target, this->_m_link);
++	}
 +
-+/**
-+ * @}
-+ */
++	~symlink_guard(void)
++	{
++		::std::filesystem::remove(this->_m_link);
++	}
 +
-+} /* namespace gpiod */
++private:
++	::std::filesystem::path _m_link;
++};
 +
-+#endif /* __LIBGPIOD_CXX_MISC_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/request-config.hpp b/bindings/cxx/gpiodcxx/request-config.hpp
++TEST_CASE("is_gpiochip_device() works", "[misc][chip]")
++{
++	SECTION("is_gpiochip_device() returns false for /dev/null")
++	{
++		REQUIRE_FALSE(::gpiod::is_gpiochip_device("/dev/null"));
++	}
++
++	SECTION("is_gpiochip_device() returns false for nonexistent file")
++	{
++		REQUIRE_FALSE(::gpiod::is_gpiochip_device("/dev/nonexistent"));
++	}
++
++	SECTION("is_gpiochip_device() returns true for a GPIO chip")
++	{
++		::gpiosim::chip sim;
++
++		REQUIRE(::gpiod::is_gpiochip_device(sim.dev_path()));
++	}
++
++	SECTION("is_gpiochip_device() can resolve a symlink")
++	{
++		::gpiosim::chip sim;
++		::std::string link("/tmp/gpiod-cxx-tmp-link.");
++
++		link += ::std::to_string(::getpid());
++
++		symlink_guard link_guard(sim.dev_path(), link);
++
++		REQUIRE(::gpiod::is_gpiochip_device(link));
++	}
++}
++
++TEST_CASE("version_string() returns a valid API version", "[misc]")
++{
++	SECTION("check version_string() format")
++	{
++		REQUIRE_THAT(::gpiod::version_string(),
++			     regex_matcher("^[0-9][1-9]?\\.[0-9][1-9]?([\\.0-9]?|\\-devel)$"));
++	}
++}
++
++} /* namespace */
+diff --git a/bindings/cxx/tests/tests-request-config.cpp b/bindings/cxx/tests/tests-request-config.cpp
 new file mode 100644
-index 0000000..52444c9
+index 0000000..ddec724
 --- /dev/null
-+++ b/bindings/cxx/gpiodcxx/request-config.hpp
-@@ -0,0 +1,163 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl> */
++++ b/bindings/cxx/tests/tests-request-config.cpp
+@@ -0,0 +1,155 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+/**
-+ * @file request-config.hpp
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_REQUEST_CONFIG_HPP__
-+#define __LIBGPIOD_CXX_REQUEST_CONFIG_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <any>
++#include <catch2/catch.hpp>
 +#include <cstddef>
-+#include <iostream>
-+#include <map>
-+#include <memory>
++#include <gpiod.hpp>
 +#include <string>
++#include <sstream>
 +
-+#include "line.hpp"
++#include "helpers.hpp"
 +
-+namespace gpiod {
++using property = ::gpiod::request_config::property;
++using offsets = ::gpiod::line::offsets;
 +
-+class chip;
++namespace {
 +
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Stores a set of options passed to the kernel when making a line
-+ *        request.
-+ */
-+class request_config
++TEST_CASE("request_config constructor works", "[request-config]")
 +{
-+public:
++	SECTION("no arguments")
++	{
++		::gpiod::request_config cfg;
 +
-+	/**
-+	 * @brief List of available configuration settings. Used in the
-+	 *        constructor and :request_config::set_property.
-+	 */
-+	enum class property {
-+		OFFSETS = 1,
-+		/**< List of line offsets to request. */
-+		CONSUMER,
-+		/**< Consumer string. */
-+		EVENT_BUFFER_SIZE,
-+		/**< Suggested size of the edge event buffer. */
-+	};
++		REQUIRE(cfg.consumer().empty());
++		REQUIRE(cfg.offsets().empty());
++		REQUIRE(cfg.event_buffer_size() == 0);
++	}
 +
-+	/**
-+	 * @brief Map of mappings between property types and property values.
-+	 */
-+	using properties = ::std::map<property, ::std::any>;
++	SECTION("constructor with default settings")
++	{
++		offsets offsets({ 0, 1, 2, 3 });
 +
-+	/**
-+	 * @brief Constructor.
-+	 * @param props List of config properties. See
-+	 *              :request_config::set_property.
-+	 */
-+	explicit request_config(const properties& props = properties());
++		::gpiod::request_config cfg({
++			{ property::CONSUMER, "foobar" },
++			{ property::OFFSETS, offsets},
++			{ property::EVENT_BUFFER_SIZE, 64 }
++		});
 +
-+	request_config(const request_config& other) = delete;
++		REQUIRE_THAT(cfg.consumer(), Catch::Equals("foobar"));
++		REQUIRE_THAT(cfg.offsets(), Catch::Equals(offsets));
++		REQUIRE(cfg.event_buffer_size() == 64);
++	}
 +
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	request_config(request_config&& other) noexcept;
++	SECTION("invalid default value types passed to constructor")
++	{
++		REQUIRE_THROWS_AS(::gpiod::request_config({
++			{ property::CONSUMER, 42 }
++		}), ::std::invalid_argument);
 +
-+	~request_config(void);
++		REQUIRE_THROWS_AS(::gpiod::request_config({
++			{ property::OFFSETS, 42 }
++		}), ::std::invalid_argument);
 +
-+	request_config& operator=(const request_config& other) = delete;
++		REQUIRE_THROWS_AS(::gpiod::request_config({
++			{ property::EVENT_BUFFER_SIZE, "foobar" }
++		}), ::std::invalid_argument);
++	}
++}
 +
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	request_config& operator=(request_config&& other) noexcept;
-+
-+	/**
-+	 * @brief Set the value of a single config property.
-+	 * @param prop Property to set.
-+	 * @param val Property value. The type must correspond to the property
-+	 *            being set: `std::string` or `const char*` for
-+	 *            :property::CONSUMER, `:line::offsets` for
-+	 *            :property::OFFSETS and `unsigned long` for
-+	 *            :property::EVENT_BUFFER_SIZE.
-+	 */
-+	void set_property(property prop, const ::std::any& val);
-+
-+	/**
-+	 * @brief Set line offsets for this request.
-+	 * @param offsets Vector of line offsets to request.
-+	 */
-+	void set_offsets(const line::offsets& offsets) noexcept;
-+
-+	/**
-+	 * @brief Get the number of offsets configured in this request config.
-+	 * @return Number of line offsets in this request config.
-+	 */
-+	::std::size_t num_offsets(void) const noexcept;
-+
-+	/**
-+	 * @brief Set the consumer name.
-+	 * @param consumer New consumer name.
-+	 */
-+	void set_consumer(const ::std::string& consumer) noexcept;
-+
-+	/**
-+	 * @brief Get the consumer name.
-+	 * @return Currently configured consumer name. May be an empty string.
-+	 */
-+	::std::string consumer(void) const noexcept;
-+
-+	/**
-+	 * @brief Get the hardware offsets of lines in this request config.
-+	 * @return List of line offsets.
-+	 */
-+	line::offsets offsets(void) const;
-+
-+	/**
-+	 * @brief Set the size of the kernel event buffer.
-+	 * @param event_buffer_size New event buffer size.
-+	 * @note The kernel may adjust the value if it's too high. If set to 0,
-+	 *       the default value will be used.
-+	 */
-+	void set_event_buffer_size(::std::size_t event_buffer_size) noexcept;
-+
-+	/**
-+	 * @brief Get the edge event buffer size from this request config.
-+	 * @return Current edge event buffer size setting.
-+	 */
-+	::std::size_t event_buffer_size(void) const noexcept;
-+
-+private:
-+
-+	struct impl;
-+
-+	::std::unique_ptr<impl> _m_priv;
-+
-+	friend chip;
-+};
-+
-+/**
-+ * @brief Stream insertion operator for request_config objects.
-+ * @param out Output stream to write to.
-+ * @param config request_config to insert into the output stream.
-+ * @return Reference to out.
-+ */
-+::std::ostream& operator<<(::std::ostream& out, const request_config& config);
-+
-+/**
-+ * @}
-+ */
-+
-+} /* namespace gpiod */
-+
-+#endif /* __LIBGPIOD_CXX_REQUEST_CONFIG_HPP__ */
-diff --git a/bindings/cxx/gpiodcxx/timestamp.hpp b/bindings/cxx/gpiodcxx/timestamp.hpp
-new file mode 100644
-index 0000000..d707fee
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/timestamp.hpp
-@@ -0,0 +1,122 @@
-+/* SPDX-License-Identifier: LGPL-3.0-or-later */
-+/* SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl> */
-+
-+/**
-+ * @file timestamp.hpp
-+ */
-+
-+#ifndef __LIBGPIOD_CXX_TIMESTAMP_HPP__
-+#define __LIBGPIOD_CXX_TIMESTAMP_HPP__
-+
-+#if !defined(__LIBGPIOD_GPIOD_CXX_INSIDE__)
-+#error "Only gpiod.hpp can be included directly."
-+#endif
-+
-+#include <chrono>
-+#include <cstdint>
-+
-+namespace gpiod {
-+
-+/**
-+ * @ingroup gpiod_cxx
-+ * @{
-+ */
-+
-+/**
-+ * @brief Stores the edge and info event timestamps as returned by the kernel
-+ *        and allows to convert them to std::chrono::time_point.
-+ */
-+class timestamp
++TEST_CASE("request_config can be moved", "[request-config]")
 +{
-+public:
++	offsets offsets({ 0, 1, 2, 3 });
 +
-+	/**
-+	 * @brief Monotonic time_point.
-+	 */
-+	using time_point_monotonic = ::std::chrono::time_point<::std::chrono::steady_clock>;
++	::gpiod::request_config cfg({
++		{ property::CONSUMER, "foobar" },
++		{ property::OFFSETS, offsets },
++		{ property::EVENT_BUFFER_SIZE, 64 }
++	});
 +
-+	/**
-+	 * @brief Real-time time_point.
-+	 */
-+	using time_point_realtime = ::std::chrono::time_point<::std::chrono::system_clock>;
-+
-+	/**
-+	 * @brief Constructor with implicit  conversion from `uint64_t`.
-+	 * @param ns Timestamp in nanoseconds.
-+	 */
-+	timestamp(::std::uint64_t ns) : _m_ns(ns) { }
-+
-+	/**
-+	 * @brief Copy constructor.
-+	 * @param other Object to copy.
-+	 */
-+	timestamp(const timestamp& other) noexcept = default;
-+
-+	/**
-+	 * @brief Move constructor.
-+	 * @param other Object to move.
-+	 */
-+	timestamp(timestamp&& other) noexcept = default;
-+
-+	/**
-+	 * @brief Assignment operator.
-+	 * @param other Object to copy.
-+	 * @return Reference to self.
-+	 */
-+	timestamp& operator=(const timestamp& other) noexcept = default;
-+
-+	/**
-+	 * @brief Move assignment operator.
-+	 * @param other Object to move.
-+	 * @return Reference to self.
-+	 */
-+	timestamp& operator=(timestamp&& other) noexcept = default;
-+
-+	~timestamp(void) = default;
-+
-+	/**
-+	 * @brief Conversion operator to `std::uint64_t`.
-+	 */
-+	operator ::std::uint64_t(void) noexcept
++	SECTION("move constructor works")
 +	{
-+		return this->ns();
++		auto moved(::std::move(cfg));
++		REQUIRE_THAT(moved.consumer(), Catch::Equals("foobar"));
++		REQUIRE_THAT(moved.offsets(), Catch::Equals(offsets));
++		REQUIRE(moved.event_buffer_size() == 64);
 +	}
 +
-+	/**
-+	 * @brief Get the timestamp in nanoseconds.
-+	 * @return Timestamp in nanoseconds.
-+	 */
-+	::std::uint64_t ns(void) const noexcept
++	SECTION("move assignment operator works")
 +	{
-+		return this->_m_ns;
++		::gpiod::request_config moved;
++
++		moved = ::std::move(cfg);
++
++		REQUIRE_THAT(moved.consumer(), Catch::Equals("foobar"));
++		REQUIRE_THAT(moved.offsets(), Catch::Equals(offsets));
++		REQUIRE(moved.event_buffer_size() == 64);
++	}
++}
++
++TEST_CASE("request_config mutators work", "[request-config]")
++{
++	::gpiod::request_config cfg;
++
++	SECTION("set consumer")
++	{
++		cfg.set_consumer("foobar");
++		REQUIRE_THAT(cfg.consumer(), Catch::Equals("foobar"));
 +	}
 +
-+	/**
-+	 * @brief Convert the timestamp to a monotonic time_point.
-+	 * @return time_point associated with the steady clock.
-+	 */
-+	time_point_monotonic to_time_point_monotonic(void) const
++	SECTION("set offsets")
 +	{
-+		return time_point_monotonic(::std::chrono::nanoseconds(this->ns()));
++		offsets offsets({ 3, 1, 2, 7, 5 });
++		cfg.set_offsets(offsets);
++		REQUIRE_THAT(cfg.offsets(), Catch::Equals(offsets));
 +	}
 +
-+	/**
-+	 * @brief Convert the timestamp to a real-time time_point.
-+	 * @return time_point associated with the system clock.
-+	 */
-+	time_point_realtime to_time_point_realtime(void) const
++	SECTION("set event_buffer_size")
 +	{
-+		return time_point_realtime(::std::chrono::nanoseconds(this->ns()));
++		cfg.set_event_buffer_size(128);
++		REQUIRE(cfg.event_buffer_size() == 128);
++	}
++}
++
++TEST_CASE("request_config generic property setting works", "[request-config]")
++{
++	::gpiod::request_config cfg;
++
++	SECTION("set consumer")
++	{
++		cfg.set_property(property::CONSUMER, "foobar");
++		REQUIRE_THAT(cfg.consumer(), Catch::Equals("foobar"));
 +	}
 +
-+private:
-+	::std::uint64_t _m_ns;
-+};
++	SECTION("set offsets")
++	{
++		offsets offsets({ 3, 1, 2, 7, 5 });
++		cfg.set_property(property::OFFSETS, offsets);
++		REQUIRE_THAT(cfg.offsets(), Catch::Equals(offsets));
++	}
 +
-+/**
-+ * @}
-+ */
++	SECTION("set event_buffer_size")
++	{
++		cfg.set_property(property::EVENT_BUFFER_SIZE, 128);
++		REQUIRE(cfg.event_buffer_size() == 128);
++	}
++}
 +
-+} /* namespace gpiod */
++TEST_CASE("request_config stream insertion operator works", "[request-config]")
++{
++	::gpiod::request_config cfg({
++		{ property::CONSUMER, "foobar" },
++		{ property::OFFSETS, offsets({ 0, 1, 2, 3 })},
++		{ property::EVENT_BUFFER_SIZE, 32 }
++	});
 +
-+#endif /* __LIBGPIOD_CXX_TIMESTAMP_HPP__ */
-diff --git a/configure.ac b/configure.ac
-index f8d34ed..ab03673 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -239,6 +239,7 @@ AC_CONFIG_FILES([Makefile
- 		 bindings/cxx/libgpiodcxx.pc
- 		 bindings/Makefile
- 		 bindings/cxx/Makefile
-+		 bindings/cxx/gpiodcxx/Makefile
- 		 bindings/cxx/examples/Makefile
- 		 bindings/cxx/tests/Makefile
- 		 bindings/python/Makefile
++	::std::stringstream buf;
++
++	buf << cfg;
++
++	::std::string expected("gpiod::request_config(consumer='foobar', num_offsets=4, "
++			       "offsets=(gpiod::offsets(0, 1, 2, 3)), event_buffer_size=32)");
++
++	REQUIRE_THAT(buf.str(), Catch::Equals(expected));
++}
++
++} /* namespace */
 -- 
 2.32.0
 
