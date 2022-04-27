@@ -2,74 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D1A05110D1
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Apr 2022 08:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B75825112DA
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Apr 2022 09:51:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357961AbiD0GFL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Apr 2022 02:05:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
+        id S1359066AbiD0HyI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Apr 2022 03:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357954AbiD0GFK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 02:05:10 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF33B49241
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 23:02:00 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id z16so744334pfh.3
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 23:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2ZBLLBDcoBpFhEDXMHyyfBKFIV0DGVf1q7v5SuK7PuA=;
-        b=gFvu7sNrvdKr8wNwb6yuLU7MZ9K9YO5sbZGT0SZp3V+0V7LsN+apwCTP79T45r13fU
-         KiKF6S5Xl7YYyv+kspyb9Qnnbv7vY9y6n4sfOJpYUN5R4e5Atc2tIwo6YY8Mz+q1vr0q
-         5QA5mOL+5B0VO4JI+DAKcazHoIkL8lp7muZbAbdfTuhDQ4kKZvBC8pbpPvvICKiwZ0xV
-         dyJn5VjwITFWbieEn9vio6nlPBqonv5LPL26fWHx9ez3jopDBbhLVxNoMU6ef5/FhNnZ
-         +9Dgo2cY+GVA5fmGssWg8AxD8/e5haeKBbfjgxj+Kr6G19CjZ+pcA1vqcYbdW2hGzYRj
-         pENQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2ZBLLBDcoBpFhEDXMHyyfBKFIV0DGVf1q7v5SuK7PuA=;
-        b=C7XH+Ol8L4X6iswDKJzSdH7y6ORePooQ1biPZoUZT8KAznMXHV/JI3JK8HxUohyGD/
-         RCXLNYycI3gL5XjcmOQOndKfkK375kFhkFoH+eusg/dwNJDWpFhO+agf+NTbdDYniGAB
-         5PrxmUc3k3pcChcDxE1Vwl1umUAq9qc+DSq+RuJwZ3tglxJy0tgzUr767jpwSK09RLkt
-         kW901X8cwID7d9GoY19PI+QkGcxIZxDDPuQ3iaK0VoLpjS5lCuZTeXFLGFP5iDDJp6Fj
-         Vtd72cMpERYSrT3WJR9/Qmw9p5MSl6Z+Cjrof5c2GsRlH5Tjy9lI0YtnOJ2/x1coG3H/
-         hLWw==
-X-Gm-Message-State: AOAM532inNyhNs9uRo57PA1MzxZPEzu38BHjFzOo7fIxEoiJ4gwJhORm
-        qYuziIouX+AnSjklrzfH4SE=
-X-Google-Smtp-Source: ABdhPJw2gFGoleKn0K1LewGpex7PYgFj+twm+dlhruPCzUygQnPpsJEhK4tbqky2myKRkif5UwOOmw==
-X-Received: by 2002:a63:e51:0:b0:3a4:9d22:1fd5 with SMTP id 17-20020a630e51000000b003a49d221fd5mr22792182pgo.586.1651039320081;
-        Tue, 26 Apr 2022 23:02:00 -0700 (PDT)
-Received: from sol ([118.209.204.33])
-        by smtp.gmail.com with ESMTPSA id d16-20020a056a00245000b004f771b48736sm18766618pfj.194.2022.04.26.23.01.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Apr 2022 23:01:59 -0700 (PDT)
-Date:   Wed, 27 Apr 2022 14:01:53 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexander Stein <alexander.stein@mailbox.org>,
-        David Kozub <zub@linux.fjfi.cvut.cz>,
-        Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>,
-        Michael Beach <michaelb@ieee.org>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v6 5/5] bindings: cxx: add implementation
-Message-ID: <20220427060153.GB118500@sol>
-References: <20220426125023.2664623-1-brgl@bgdev.pl>
- <20220426125023.2664623-6-brgl@bgdev.pl>
+        with ESMTP id S1359127AbiD0HyA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 03:54:00 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D95FF5;
+        Wed, 27 Apr 2022 00:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651045850; x=1682581850;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GGOTDAFzwuzwMxFsrqdMQraFAoaOmt/NogVcz01weJU=;
+  b=Hq2luEC6FzAJfmmb8KeV0qpMUmxZ3iC+fHyujRl9bEulJ2FbMI20l9Tw
+   JEn1mnBTO+HIpRNZEyfQIIlLygMTG4uA5+s+JfYly65iOkxIKYyUks9TY
+   k1kdw9le9KQzBAUM7CS6e2aMjJ5BjnechniqactZYOc2vRLfGDUyKzQtd
+   GgX39RTNpnxdJy0AoL291ZGhXeBpP/ksxqbPKvNOjWEBDdb4ITStKa74D
+   OssAriThuJXFoBe3EVDqwpGPE8g4LD8ToCwm4IiAsjbvR7ZuZzhLSnYLR
+   VbwYt4iORUCw4i4dFvjkhMoQojDf0JltJp9US/upjF4Wigs4gUiHehGo0
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10329"; a="246415634"
+X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
+   d="scan'208";a="246415634"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 00:50:50 -0700
+X-IronPort-AV: E=Sophos;i="5.90,292,1643702400"; 
+   d="scan'208";a="580450624"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.122])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 00:50:44 -0700
+Message-ID: <65b64001-0b85-8524-64c4-67eafed54697@intel.com>
+Date:   Wed, 27 Apr 2022 10:50:39 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220426125023.2664623-6-brgl@bgdev.pl>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.7.0
+Subject: Re: [PATCHv1 08/19] mmc: sdhci-of-dwcmshc: add reset call back for
+ rockchip Socs
+Content-Language: en-US
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>, kernel@collabora.com
+References: <20220422170920.401914-1-sebastian.reichel@collabora.com>
+ <20220422170920.401914-9-sebastian.reichel@collabora.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220422170920.401914-9-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,61 +77,89 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 26, 2022 at 02:50:23PM +0200, Bartosz Golaszewski wrote:
-> This contains the actual implementation of the v2 C++ bindings.
+On 22/04/22 20:09, Sebastian Reichel wrote:
+> From: Yifeng Zhao <yifeng.zhao@rock-chips.com>
 > 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> The reset function build in the SDHCI will not reset the logic
+> circuit related to the tuning function, which may cause data
+> reading errors. Resetting the complete SDHCI controller through
+> the reset controller fixes the issue.
+> 
+> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+> [rebase]
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[snip]
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> +
-> +GPIOD_CXX_API ::std::size_t line_request::num_lines(void) const
+> ---
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index bac874ab0b33..d95ae6ca1256 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/reset.h>
+>  #include <linux/sizes.h>
+>  
+>  #include "sdhci-pltfm.h"
+> @@ -63,6 +64,7 @@
+>  struct rk3568_priv {
+>  	/* Rockchip specified optional clocks */
+>  	struct clk_bulk_data rockchip_clks[RK3568_MAX_CLKS];
+> +	struct reset_control *reset;
+>  	u8 txclk_tapnum;
+>  };
+>  
+> @@ -255,6 +257,23 @@ static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock
+>  	sdhci_writel(host, extra, DWCMSHC_EMMC_DLL_STRBIN);
+>  }
+>  
+> +static void rk35xx_sdhci_reset(struct sdhci_host *host, u8 mask)
 > +{
-> +	this->_m_priv->throw_if_released();
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct dwcmshc_priv *dwc_priv = sdhci_pltfm_priv(pltfm_host);
+> +	struct rk35xx_priv *priv = dwc_priv->priv;
 > +
-> +	return ::gpiod_line_request_get_num_lines(this->_m_priv->request.get());
+> +	if (mask & SDHCI_RESET_ALL) {
+> +		if (!IS_ERR_OR_NULL(priv->reset)) {
+> +			reset_control_assert(priv->reset);
+> +			udelay(1);
+> +			reset_control_deassert(priv->reset);
+> +		}
+> +	}
+> +
+> +	sdhci_reset(host, mask);
 > +}
 > +
-> +GPIOD_CXX_API line::offsets line_request::offsets(void) const
-> +{
-> +	this->_m_priv->throw_if_released();
+>  static const struct sdhci_ops sdhci_dwcmshc_ops = {
+>  	.set_clock		= sdhci_set_clock,
+>  	.set_bus_width		= sdhci_set_bus_width,
+> @@ -269,7 +288,7 @@ static const struct sdhci_ops sdhci_dwcmshc_rk3568_ops = {
+>  	.set_bus_width		= sdhci_set_bus_width,
+>  	.set_uhs_signaling	= dwcmshc_set_uhs_signaling,
+>  	.get_max_clock		= sdhci_pltfm_clk_get_max_clock,
+> -	.reset			= sdhci_reset,
+> +	.reset			= rk35xx_sdhci_reset,
+>  	.adma_write_desc	= dwcmshc_adma_write_desc,
+>  };
+>  
+> @@ -292,6 +311,13 @@ static int dwcmshc_rk3568_init(struct sdhci_host *host, struct dwcmshc_priv *dwc
+>  	int err;
+>  	struct rk3568_priv *priv = dwc_priv->priv;
+>  
+> +	priv->reset = devm_reset_control_array_get_exclusive(mmc_dev(host->mmc));
+> +	if (IS_ERR_OR_NULL(priv->reset)) {
+> +		err = PTR_ERR(priv->reset);
+> +		dev_err(mmc_dev(host->mmc), "failed to get reset control %d\n", err);
+> +		return err;
+> +	}
 > +
-> +	::std::vector<unsigned int> buf(this->num_lines());
-> +	line::offsets offsets(this->num_lines());
-> +
-> +	::gpiod_line_request_get_offsets(this->_m_priv->request.get(), buf.data());
-> +
-> +	auto num_lines = this->num_lines();
-> +	for (unsigned int i = 0; i < num_lines; i++)
-> +		offsets[i] = buf[i];
-> +
-> +	return offsets;
-> +}
-> +
+>  	priv->rockchip_clks[0].id = "axi";
+>  	priv->rockchip_clks[1].id = "block";
+>  	priv->rockchip_clks[2].id = "timer";
 
-My previous comment was "Cache num_lines locally rather than calling
-num_lines() several times."
-
-You cached it in the wrong place - it should be first thing in the
-function, so you only call it once, not three times.
-
-And the throw_if_released() is still "redundant as this->num_lines()
-also does it", and it is the first thing called here - after the
-throw_if_released().
-
-And I would've made this patch 3/5, not 5/5.
-
-But I'm fine with this set going in either way - in fact give its size
-I'd rather see minor tweaks applied later than go through another round
-of review.
-
-For the series:
-
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
-
-I really would also like to see some feedback from C++ developers that
-will actually be using it, as they have a bigger stake in it than I do.
-But that is up to them.
-
-Cheers,
-Kent.
