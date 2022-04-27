@@ -2,95 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DC005119F8
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Apr 2022 16:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCAB8511D8E
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Apr 2022 20:35:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238616AbiD0Our (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Apr 2022 10:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47352 "EHLO
+        id S242667AbiD0QUa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Apr 2022 12:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238536AbiD0Oup (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 10:50:45 -0400
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8C63BA59;
-        Wed, 27 Apr 2022 07:47:34 -0700 (PDT)
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 23R8jpda029645;
-        Wed, 27 Apr 2022 07:47:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0220;
- bh=gsxpG4RiXnCTCF6V9lo/7D//jaoYpWLGlyTjAD+8/qk=;
- b=koGcsTh8SpOBk2r6NfOSKOAo4RsmzmAnH5jn03a2QcYMlA9fxXDUpspTfDNk8qjBIS1T
- MnUSAw/JBmQWKSt9j/0gBs09AIQxjWb96zVW+YqZczWukuwwLY7EmJA8J4uvHBrlbKU1
- yiYozr/5xmBdZP2JIrSTF1oxhDNcv3omS+fTrBctxjZpn0GoaH0Bt8gS5ECuBxeIalwm
- UUkvtKWoBi3gpI0AZYaYTJTvodESnxQcwDJ+sselMYF24CPxQALfX+96SSGP2MNikLJj
- yuxML5Wep0pyJ5Ls4TpBxbUBWJbJBteqUYorrdM8rmKFx3yCg3cqCS3WNL2Ny4fqSZG2 XQ== 
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-        by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3fprsqu7ca-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 27 Apr 2022 07:47:31 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 27 Apr
- 2022 07:47:30 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Wed, 27 Apr 2022 07:47:30 -0700
-Received: from localhost.localdomain (unknown [10.110.150.250])
-        by maili.marvell.com (Postfix) with ESMTP id ADFAF3F7063;
-        Wed, 27 Apr 2022 07:47:29 -0700 (PDT)
-From:   Piyush Malgujar <pmalgujar@marvell.com>
-To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <rric@kernel.org>,
-        <cchavva@marvell.com>, <wsadowski@marvell.com>,
-        Piyush Malgujar <pmalgujar@marvell.com>
-Subject: [PATCH 5/5] gpio: thunderx: change handler for level interrupt
-Date:   Wed, 27 Apr 2022 07:46:20 -0700
-Message-ID: <20220427144620.9105-6-pmalgujar@marvell.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220427144620.9105-1-pmalgujar@marvell.com>
-References: <20220427144620.9105-1-pmalgujar@marvell.com>
+        with ESMTP id S243300AbiD0QTR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 12:19:17 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732F2888FA
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Apr 2022 09:15:58 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id i24so1986187pfa.7
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Apr 2022 09:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=LIYkXsh8NuZ+kWZJQV6Z3UgDflGRM7baotKUMbx/XVo=;
+        b=qo1nsWBAXe85/hzUfFFJOA1q7UumPlcXwqkrBJ6IbTxtPnr5hSay0pApLr0/l9SnhL
+         /8DHbXm9KPxIg5hhM/lZRWBRZolLSwpQRuHzX0YP+OB73UdoTFx9sfGs3QIV11yJpP+t
+         XjREo+KOdlxtAojCJyPlkt4RuJkfqQzNPoJ6eYuxx6vWBtlxCl3qA6qgAXyM7L5sEqr2
+         9cpwGGWSTFzjhSTxjsT2O4oKynICChcO+Mm0y//ZOajEi0MQvAFr1gDbxgNJuPkm6F6A
+         G+L+nN4yfK82BpIlq/q3HAPOEXD6zHB6t9UuUchAEOOA7JEFWjh3DUkge0qXknd64qZf
+         l/nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=LIYkXsh8NuZ+kWZJQV6Z3UgDflGRM7baotKUMbx/XVo=;
+        b=j5D6z6zGFZjU9AVdls+VzMTAwA6mpL2tAa+jdZwzsvCUkhiBZfC+jZ4hVnNLA54Er+
+         vITDnrQhUsF/S/oZcymQkmxhUh9bsd8HvtymW+s9yBvnra2dCawwFDVX1/coX2Hd5wdH
+         6Gr4P1vOc03bgN6He2OfDW4eqIsF1I2gTgsKf1Q+CzjCDKMutfhVbcxB1nIdLOnz3Yar
+         MC7og3DDvozV2KQeKueUF+dyAXwVs8bvKKmQB1f6XnaRycKeQ+AxxJn4G3gY86WAoCrw
+         VKzuz3YVKCPd6faKIQdYUG7Q39Rl6hYue4lgHASIM7agMjbWoM4aUYalWiNIN64qjX+g
+         G84w==
+X-Gm-Message-State: AOAM5321h3IAdbPgGhbZ2YQWQl+DavKOLk/SkmghjGs6SWRcYfN8WB+l
+        Ans58p60P6WmOUe1H/mLyR8zYBV8ztCIu0wBA0g=
+X-Google-Smtp-Source: ABdhPJzq7a9CBhwphTt1GdLkp0Vh1DaCipJx0hHBj1ibn2u8+LPC1Vocgyw7NEC5pu04SngDHlCbpcuBRJPD1A5wqH0=
+X-Received: by 2002:a05:6a00:ad0:b0:4e1:2d96:2ab0 with SMTP id
+ c16-20020a056a000ad000b004e12d962ab0mr30757259pfl.3.1651076134317; Wed, 27
+ Apr 2022 09:15:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 0uaggkiGNeQvQqwE58ua4JEIRGRBqzNm
-X-Proofpoint-GUID: 0uaggkiGNeQvQqwE58ua4JEIRGRBqzNm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-27_04,2022-04-27_01,2022-02-23_01
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7300:534b:b0:59:868b:c470 with HTTP; Wed, 27 Apr 2022
+ 09:15:33 -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Mr. KAbore Aouessian" <kiboraouessian@gmail.com>
+Date:   Wed, 27 Apr 2022 09:15:33 -0700
+Message-ID: <CALGXYcShy=9dZu-CP3dOHX57dG7MAnfxZ99N9e8wsrm9bOHEMw@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_HK_NAME_FM_MR_MRS,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:435 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4881]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [kiboraouessian[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The current level interrupt handler is masking the GPIO interrupt
-and not unmasking it, to resolve that, handle_level_irq is used.
-
-Signed-off-by: Witold Sadowski <wsadowski@marvell.com>
-Signed-off-by: Piyush Malgujar <pmalgujar@marvell.com>
----
- drivers/gpio/gpio-thunderx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 87ab1ad7e652347a67b7747ea497b944498a8b41..b1063e53ceb8edf26ca1a6ecab8035aad62128a1 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -343,7 +343,7 @@ static int thunderx_gpio_irq_set_type(struct irq_data *d,
- 		irq_set_handler_locked(d, handle_fasteoi_ack_irq);
- 		bit_cfg |= GPIO_BIT_CFG_INT_TYPE;
- 	} else {
--		irq_set_handler_locked(d, handle_fasteoi_mask_irq);
-+		irq_set_handler_locked(d, handle_level_irq);
- 	}
- 
- 	raw_spin_lock_irqsave(&txgpio->lock, flags);
 -- 
-2.17.1
+Greetings,
+I'm Mr. KAbore Aouessian, how are you doing hope you are in good
+health, the Board irector try to reach you on phone several times
+Meanwhile, your number was not connecting. before he ask me to send
+you an email to hear from you if you are fine. hope to hear you are in
+good Health.
 
+Thanks,
+Mr. KAbore Aouessian.
