@@ -2,65 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F33E05110C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Apr 2022 08:01:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1A05110D1
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Apr 2022 08:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242834AbiD0GEl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Apr 2022 02:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
+        id S1357961AbiD0GFL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Apr 2022 02:05:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357949AbiD0GEk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 02:04:40 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA9344130D
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 23:01:29 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id h1so712018pfv.12
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 23:01:29 -0700 (PDT)
+        with ESMTP id S1357954AbiD0GFK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 02:05:10 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF33B49241
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 23:02:00 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id z16so744334pfh.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Apr 2022 23:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=qnEoNGKDBv71wdpZOqPnvJSJzKrnL+pYhPKhc9nrjpI=;
-        b=bH0c5G1K19mIVcyh/c5lLo1dOxUG5afhdIFIQeIpItMaP78s9k1O9CmCbjZIUtRxW6
-         YgHKb3/FpA5lvwHa1qKMr6ZcIg1Z1ujzsxwI3n5fgo17TwDf44pMU3uKe30mMctdWMFN
-         Yw3kR+gI7epEOYvJduOgNnL2YzhOxoUJZ5icm22lZJAQxp1S/F/RswuM8o8oqfFHSceo
-         SdSjPKR4YYbEitxidNqMEBZuEqhI9Eo8lvieZ4MD3+tYqLNi3jtTHeyEhWMDkOrkb1Cq
-         acC/7/s2vd31WS2E/cpRGssJDRhfa1Sw7cXXUGrpm2s1tSmDK5WPNIoFHAHDG/OVP5ZW
-         wsdw==
+        bh=2ZBLLBDcoBpFhEDXMHyyfBKFIV0DGVf1q7v5SuK7PuA=;
+        b=gFvu7sNrvdKr8wNwb6yuLU7MZ9K9YO5sbZGT0SZp3V+0V7LsN+apwCTP79T45r13fU
+         KiKF6S5Xl7YYyv+kspyb9Qnnbv7vY9y6n4sfOJpYUN5R4e5Atc2tIwo6YY8Mz+q1vr0q
+         5QA5mOL+5B0VO4JI+DAKcazHoIkL8lp7muZbAbdfTuhDQ4kKZvBC8pbpPvvICKiwZ0xV
+         dyJn5VjwITFWbieEn9vio6nlPBqonv5LPL26fWHx9ez3jopDBbhLVxNoMU6ef5/FhNnZ
+         +9Dgo2cY+GVA5fmGssWg8AxD8/e5haeKBbfjgxj+Kr6G19CjZ+pcA1vqcYbdW2hGzYRj
+         pENQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qnEoNGKDBv71wdpZOqPnvJSJzKrnL+pYhPKhc9nrjpI=;
-        b=sSj2f8G+STr+/8NLfnBIXznAWA61ZUj2xa/3BtAOedbR6R/LAkItphOPmmtTRsyndR
-         Ej/0OmNbJGoIdmYOj/SgzVBFLh83IwxTBGWd3TlWlppWD8UG5okfSsjfoND0XezksBwX
-         Jf7Ipvn0EbMZRmIZbp0d8T1BmUgMvvnhvIF1WznjjKQNfPuulZOYgBqu6UQSodYfUqz6
-         5fSwyO6O3QdOLGxDB3D6Y6ibeRLHXmbfJ5BFom5/CSiZNgiclq3H/eDHscB33uteF91C
-         p/JIkkK5mKrJgtgI6RSRMSLFdGMVK/TPvhhoQMLUgEfL9tI5x88cwbdCTfg1vxA7jNAz
-         vWfw==
-X-Gm-Message-State: AOAM5330D6+G/SEu5681QhyjHBK+01AJ/T47/R7qE/S4eKiglt+wvXcR
-        3gSTSQju7OpC+Sq82MBGMSCsqkNqqhi1mg==
-X-Google-Smtp-Source: ABdhPJxC6zt8p2Bck6OnRDYV4JngsyyuTSj6cgfHafHTvnnsVqsbhY2NKaI+SzzxgsXdhYd1+ifCYA==
-X-Received: by 2002:a63:1907:0:b0:39d:4f3:6dd8 with SMTP id z7-20020a631907000000b0039d04f36dd8mr22636263pgl.447.1651039289234;
-        Tue, 26 Apr 2022 23:01:29 -0700 (PDT)
+        bh=2ZBLLBDcoBpFhEDXMHyyfBKFIV0DGVf1q7v5SuK7PuA=;
+        b=C7XH+Ol8L4X6iswDKJzSdH7y6ORePooQ1biPZoUZT8KAznMXHV/JI3JK8HxUohyGD/
+         RCXLNYycI3gL5XjcmOQOndKfkK375kFhkFoH+eusg/dwNJDWpFhO+agf+NTbdDYniGAB
+         5PrxmUc3k3pcChcDxE1Vwl1umUAq9qc+DSq+RuJwZ3tglxJy0tgzUr767jpwSK09RLkt
+         kW901X8cwID7d9GoY19PI+QkGcxIZxDDPuQ3iaK0VoLpjS5lCuZTeXFLGFP5iDDJp6Fj
+         Vtd72cMpERYSrT3WJR9/Qmw9p5MSl6Z+Cjrof5c2GsRlH5Tjy9lI0YtnOJ2/x1coG3H/
+         hLWw==
+X-Gm-Message-State: AOAM532inNyhNs9uRo57PA1MzxZPEzu38BHjFzOo7fIxEoiJ4gwJhORm
+        qYuziIouX+AnSjklrzfH4SE=
+X-Google-Smtp-Source: ABdhPJw2gFGoleKn0K1LewGpex7PYgFj+twm+dlhruPCzUygQnPpsJEhK4tbqky2myKRkif5UwOOmw==
+X-Received: by 2002:a63:e51:0:b0:3a4:9d22:1fd5 with SMTP id 17-20020a630e51000000b003a49d221fd5mr22792182pgo.586.1651039320081;
+        Tue, 26 Apr 2022 23:02:00 -0700 (PDT)
 Received: from sol ([118.209.204.33])
-        by smtp.gmail.com with ESMTPSA id h124-20020a62de82000000b0050d3020bda0sm12027693pfg.195.2022.04.26.23.01.26
+        by smtp.gmail.com with ESMTPSA id d16-20020a056a00245000b004f771b48736sm18766618pfj.194.2022.04.26.23.01.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Apr 2022 23:01:28 -0700 (PDT)
-Date:   Wed, 27 Apr 2022 14:01:23 +0800
+        Tue, 26 Apr 2022 23:01:59 -0700 (PDT)
+Date:   Wed, 27 Apr 2022 14:01:53 +0800
 From:   Kent Gibson <warthog618@gmail.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexander Stein <alexander.stein@mailbox.org>,
+        David Kozub <zub@linux.fjfi.cvut.cz>,
+        Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>,
+        Michael Beach <michaelb@ieee.org>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH] chip: don't set the request's file
- descriptor to non-blocking
-Message-ID: <20220427060123.GA118500@sol>
-References: <20220426114850.2593123-1-brgl@bgdev.pl>
+Subject: Re: [libgpiod v2][PATCH v6 5/5] bindings: cxx: add implementation
+Message-ID: <20220427060153.GB118500@sol>
+References: <20220426125023.2664623-1-brgl@bgdev.pl>
+ <20220426125023.2664623-6-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220426114850.2593123-1-brgl@bgdev.pl>
+In-Reply-To: <20220426125023.2664623-6-brgl@bgdev.pl>
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -71,219 +77,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 26, 2022 at 01:48:50PM +0200, Bartosz Golaszewski wrote:
-> Make the behavior consistent with the documentation and don't set the
-> line request's fd to non-blocking. Add two more test-cases that make
-> sure the library behaves correctly.
+On Tue, Apr 26, 2022 at 02:50:23PM +0200, Bartosz Golaszewski wrote:
+> This contains the actual implementation of the v2 C++ bindings.
 > 
 > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
->  lib/chip.c               |  23 --------
->  tests/tests-edge-event.c | 119 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 119 insertions(+), 23 deletions(-)
-> 
-> diff --git a/lib/chip.c b/lib/chip.c
-> index eef3be2..fc3dda2 100644
-> --- a/lib/chip.c
-> +++ b/lib/chip.c
-> @@ -181,23 +181,6 @@ GPIOD_API int gpiod_chip_get_line_offset_from_name(struct gpiod_chip *chip,
->  	return -1;
->  }
->  
-> -static int set_fd_noblock(int fd)
-> -{
-> -	int ret, flags;
-> -
-> -	flags = fcntl(fd, F_GETFL, 0);
-> -	if (flags < 0)
-> -		return -1;
-> -
-> -	flags |= O_NONBLOCK;
-> -
-> -	ret = fcntl(fd, F_SETFL, flags);
-> -	if (ret < 0)
-> -		return -1;
-> -
-> -	return 0;
-> -}
-> -
->  GPIOD_API struct gpiod_line_request *
->  gpiod_chip_request_lines(struct gpiod_chip *chip,
->  			 struct gpiod_request_config *req_cfg,
-> @@ -222,12 +205,6 @@ gpiod_chip_request_lines(struct gpiod_chip *chip,
->  	if (ret < 0)
->  		return NULL;
->  
-> -	ret = set_fd_noblock(uapi_req.fd);
-> -	if (ret) {
-> -		close(uapi_req.fd);
-> -		return NULL;
-> -	}
-> -
->  	request = gpiod_line_request_from_uapi(&uapi_req);
->  	if (!request) {
->  		close(uapi_req.fd);
-> diff --git a/tests/tests-edge-event.c b/tests/tests-edge-event.c
-> index 306383f..987155f 100644
-> --- a/tests/tests-edge-event.c
-> +++ b/tests/tests-edge-event.c
-> @@ -357,6 +357,75 @@ GPIOD_TEST_CASE(read_rising_edge_event_polled)
->  	g_thread_join(thread);
->  }
->  
-> +GPIOD_TEST_CASE(read_both_events_blocking)
+
+[snip]
+
+> +
+> +GPIOD_CXX_API ::std::size_t line_request::num_lines(void) const
 > +{
-> +	/*
-> +	 * This time without polling so that the read gets a chance to block
-> +	 * and we can make sure it doesn't immediately return an error.
-> +	 */
+> +	this->_m_priv->throw_if_released();
 > +
-> +	static const guint offset = 2;
-> +
-> +	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
-> +	g_autoptr(struct_gpiod_chip) chip = NULL;
-> +	g_autoptr(struct_gpiod_request_config) req_cfg = NULL;
-> +	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
-> +	g_autoptr(struct_gpiod_line_request) request = NULL;
-> +	g_autoptr(GThread) thread = NULL;
-> +	g_autoptr(struct_gpiod_edge_event_buffer) buffer = NULL;
-> +	struct gpiod_edge_event *event;
-> +	gint ret;
-> +
-> +	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
-> +	req_cfg = gpiod_test_create_request_config_or_fail();
-> +	line_cfg = gpiod_test_create_line_config_or_fail();
-> +	buffer = gpiod_test_create_edge_event_buffer_or_fail(64);
-> +
-> +	gpiod_request_config_set_offsets(req_cfg, 1, &offset);
-> +	gpiod_line_config_set_direction_default(line_cfg,
-> +						GPIOD_LINE_DIRECTION_INPUT);
-> +	gpiod_line_config_set_edge_detection_default(line_cfg,
-> +						     GPIOD_LINE_EDGE_BOTH);
-> +
-> +	request = gpiod_test_request_lines_or_fail(chip, req_cfg, line_cfg);
-> +
-> +	thread = g_thread_new("request-release",
-> +			      falling_and_rising_edge_events, sim);
-> +	g_thread_ref(thread);
-> +
-
-Not a fan of using usleep in the tests (not shown here but in
-falling_and_rising_edge_events()) to get the background thread to
-generate events after the main thread is waiting - would prefer to flip
-that around so that the background thread blocks, and can be shown to be
-blocked, and the main thread generates the events and checks that the
-background thread got them, so the handshaking doesn't involve sleeps.
-
-> +	/* First event. */
-> +
-> +	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-> +	g_assert_cmpint(ret, ==, 1);
-> +	gpiod_test_join_thread_and_return_if_failed(thread);
-> +
-> +	g_assert_cmpuint(gpiod_edge_event_buffer_get_num_events(buffer), ==, 1);
-> +	event = gpiod_edge_event_buffer_get_event(buffer, 0);
-> +	g_assert_nonnull(event);
-> +	gpiod_test_join_thread_and_return_if_failed(thread);
-> +
-> +	g_assert_cmpint(gpiod_edge_event_get_event_type(event),
-> +			==, GPIOD_EDGE_EVENT_RISING_EDGE);
-> +	g_assert_cmpuint(gpiod_edge_event_get_line_offset(event), ==, 2);
-> +
-> +	/* Second event. */
-> +
-> +	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-> +	g_assert_cmpint(ret, ==, 1);
-> +	gpiod_test_join_thread_and_return_if_failed(thread);
-> +
-> +	g_assert_cmpuint(gpiod_edge_event_buffer_get_num_events(buffer), ==, 1);
-> +	event = gpiod_edge_event_buffer_get_event(buffer, 0);
-> +	g_assert_nonnull(event);
-> +	gpiod_test_join_thread_and_return_if_failed(thread);
-> +
-> +	g_assert_cmpint(gpiod_edge_event_get_event_type(event),
-> +			==, GPIOD_EDGE_EVENT_FALLING_EDGE);
-> +	g_assert_cmpuint(gpiod_edge_event_get_line_offset(event), ==, 2);
-> +
-> +	g_thread_join(thread);
+> +	return ::gpiod_line_request_get_num_lines(this->_m_priv->request.get());
 > +}
 > +
->  static gpointer rising_edge_events_on_two_offsets(gpointer data)
->  {
->  	GPIOSimChip *sim = data;
-> @@ -488,3 +557,53 @@ GPIOD_TEST_CASE(event_copy)
->  	g_assert_nonnull(copy);
->  	g_assert_true(copy != event);
->  }
-> +
-> +GPIOD_TEST_CASE(reading_more_events_than_the_queue_contains_doesnt_block)
+> +GPIOD_CXX_API line::offsets line_request::offsets(void) const
 > +{
-> +	static const guint offset = 2;
+> +	this->_m_priv->throw_if_released();
 > +
-> +	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
-> +	g_autoptr(struct_gpiod_chip) chip = NULL;
-> +	g_autoptr(struct_gpiod_request_config) req_cfg = NULL;
-> +	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
-> +	g_autoptr(struct_gpiod_line_request) request = NULL;
-> +	g_autoptr(GThread) thread = NULL;
-> +	g_autoptr(struct_gpiod_edge_event_buffer) buffer = NULL;
-> +	gint ret;
+> +	::std::vector<unsigned int> buf(this->num_lines());
+> +	line::offsets offsets(this->num_lines());
 > +
-> +	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
-> +	req_cfg = gpiod_test_create_request_config_or_fail();
-> +	line_cfg = gpiod_test_create_line_config_or_fail();
-> +	buffer = gpiod_test_create_edge_event_buffer_or_fail(64);
+> +	::gpiod_line_request_get_offsets(this->_m_priv->request.get(), buf.data());
 > +
-> +	gpiod_request_config_set_offsets(req_cfg, 1, &offset);
-> +	gpiod_line_config_set_direction_default(line_cfg,
-> +						GPIOD_LINE_DIRECTION_INPUT);
-> +	gpiod_line_config_set_edge_detection_default(line_cfg,
-> +						     GPIOD_LINE_EDGE_BOTH);
+> +	auto num_lines = this->num_lines();
+> +	for (unsigned int i = 0; i < num_lines; i++)
+> +		offsets[i] = buf[i];
 > +
-> +	request = gpiod_test_request_lines_or_fail(chip, req_cfg, line_cfg);
-> +
-> +	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_UP);
-> +	g_usleep(500);
-> +	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_DOWN);
-> +	g_usleep(500);
-> +	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_UP);
-> +	g_usleep(500);
-> +	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_DOWN);
-> +	g_usleep(500);
-> +	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_UP);
-> +	g_usleep(500);
-> +	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_DOWN);
-> +	g_usleep(500);
-> +	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_UP);
-> +	g_usleep(500);
-> +
-
-What is the sleep waiting for?
-Why 500?
-Is 1 sufficient?
-Is there a critical threshold?
-Perhaps that should be incorporated into g_gpiosim_chip_set_pull()?
-
-> +	ret = gpiod_line_request_read_edge_event(request, buffer, 12);
-> +	g_assert_cmpint(ret, ==, 7);
-> +	gpiod_test_return_if_failed();
-> +
-> +	ret = gpiod_line_request_wait_edge_event(request, 1000);
-> +	g_assert_cmpint(ret, ==, 0);
-> +	gpiod_test_return_if_failed();
+> +	return offsets;
 > +}
-> -- 
-> 2.32.0
-> 
+> +
 
-I'm fine with the code change.
+My previous comment was "Cache num_lines locally rather than calling
+num_lines() several times."
 
-As written the tests are probably ok, but to be more robust I would rework
-them - arbitrary sleeps in tests are a red flag for me.
-That is probably outside the scope of this patch though, and getting the
-code change applied is far more important, so...
+You cached it in the wrong place - it should be first thing in the
+function, so you only call it once, not three times.
+
+And the throw_if_released() is still "redundant as this->num_lines()
+also does it", and it is the first thing called here - after the
+throw_if_released().
+
+And I would've made this patch 3/5, not 5/5.
+
+But I'm fine with this set going in either way - in fact give its size
+I'd rather see minor tweaks applied later than go through another round
+of review.
+
+For the series:
 
 Reviewed-by: Kent Gibson <warthog618@gmail.com>
+
+I really would also like to see some feedback from C++ developers that
+will actually be using it, as they have a bigger stake in it than I do.
+But that is up to them.
 
 Cheers,
 Kent.
