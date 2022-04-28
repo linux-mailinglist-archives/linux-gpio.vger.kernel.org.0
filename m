@@ -2,112 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40B1751323D
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Apr 2022 13:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8884B513282
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Apr 2022 13:33:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345228AbiD1LTr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Apr 2022 07:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46166 "EHLO
+        id S1345572AbiD1Lff (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Apr 2022 07:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344833AbiD1LTp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 07:19:45 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3764F9FD;
-        Thu, 28 Apr 2022 04:16:30 -0700 (PDT)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C8FFF22238;
-        Thu, 28 Apr 2022 13:16:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1651144588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=JJo0GZRuGCtC68xA23LJ+wNLn42ignYVUjux2v0GG6Y=;
-        b=S2UnDOdTw/i8J6PL6OhZwY2nKe78AgaqGftt/FbNASYMOz9XRKyjOhxhquh3O9WcX85ZWT
-        mPPgU24Ig1a5wQTJvxSORcZvkfeBdbw2j7fX8vt2Bq3/fwchrjbYz/S5wL3GiDlwkOAX4j
-        HRmhZtdgqdEzuQ4VIGbAd7F1TmbgbVs=
-From:   Michael Walle <michael@walle.cc>
-To:     Marc Zyngier <maz@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] pinctrl: microchip-sgpio: make irq_chip immutable
-Date:   Thu, 28 Apr 2022 13:16:22 +0200
-Message-Id: <20220428111622.1395831-1-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S1345573AbiD1Lfe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 07:35:34 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4B94B1FC
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 04:32:19 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id z18so5730485iob.5
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 04:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=UXiI1Ou+hgS6xUOBleoXBZ0P1W6h3cfa19FRe+lKcNc=;
+        b=qdRXWsH4VboVZqMp+U+9xgTkruA8gP1PnMemdrmmg0YO6COokK/UN2OFrTer0rQTAT
+         L/Gk1tYZKKFPFqo7JdutorIHaZilUNgMXSNSOCNevKkAHmcBVMElQGq6HpkYC/lBhR+z
+         cGdhDa6PfwxJvXH1rpfTD2kgzo8ZHUp1se8gwJDs9ievPavEXtbkGq5W5APCsSBEjbhG
+         b6RpLTbmn4cGsMi3ZP7Vc/UnPeVn3UhTzAwx9cOph6YMcAfGfSlA3NE/eQL+O/fC+ky6
+         WCEFGtzo/pZQofGZq0COcl2SR3VgReM6aVbjBeulJfsOg1nbD9JO0lCeZ9TTXm3ROS5F
+         lBgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=UXiI1Ou+hgS6xUOBleoXBZ0P1W6h3cfa19FRe+lKcNc=;
+        b=IKoPJClTVTtOY9DTngBDtzXHXLWm/7eVZ0BbnQISOcPhFmbp53hhOooOZAVlsjY/oC
+         mthgTcaUWWudsrstc4qfdbZU223veJPDmUr3fKJXothAxi4vnQ/pq27qvXBTfJ8YAmIp
+         ySCurM1t63kaIzBK3DRwePvECAwP6WZHYQAKtzqClHXPzORRTSHx2MswhQOOZOWR+V1G
+         xyH0oU2kvIVmHdHmus+n8LZO5dkNDaMUYxKo3ZV76DhFM0DO6lGw8O5+kRS09hDAPQCE
+         fRtvtNWHxkcBFfFYqEkxQtsrdOtYzdaGk9N0yfAtHYoxnLDGPD+VH+3bfrlJs0cgPvbE
+         ERvw==
+X-Gm-Message-State: AOAM5318emCgqMqRB6NdvT6WZjpuC9nN9lz/97bRPrmAgkkKhcbARjE5
+        qxXBnX/hyI3RBlWtzMapuIDgC5n3osxyt4QV2EI=
+X-Google-Smtp-Source: ABdhPJy//UOmnScX3U+9HAMHSaslp0Zg2kKG2rsRF1VyHdz+6Vg1gTuTmghrLA5VXddaXujrR+D0UZta7z+mQH+DG2g=
+X-Received: by 2002:a6b:680c:0:b0:657:aecd:c666 with SMTP id
+ d12-20020a6b680c000000b00657aecdc666mr4431049ioc.218.1651145538572; Thu, 28
+ Apr 2022 04:32:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6e02:20e7:0:0:0:0 with HTTP; Thu, 28 Apr 2022 04:32:18
+ -0700 (PDT)
+Reply-To: barristerbenwaidhoferb@gmail.com
+From:   "Barrister. Ben Waidhofer" <gogalonasiru@gmail.com>
+Date:   Thu, 28 Apr 2022 04:32:18 -0700
+Message-ID: <CAPs4PmpVKkFuMtUTtqYzDMEM1tkHd6mExwR5ngFD_ZF_qd_qtg@mail.gmail.com>
+Subject: Investment Offer
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=6.4 required=5.0 tests=BAYES_80,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:d42 listed in]
+        [list.dnswl.org]
+        *  2.0 BAYES_80 BODY: Bayes spam probability is 80 to 95%
+        *      [score: 0.9246]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [gogalonasiru[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since recently, the kernel is nagging about mutable irq_chips:
+Good day,
 
-[    4.967050] gpio gpiochip1: (e2004190.gpio-input): not an immutable chip, please consider fixing it!
+I am Barrister. Ben Waidhofer from the stated law firm in London. I act
+for Mr. Andrew Walker, a former loyalist and a personal Friend to the
+President of Russia Vladimir Putin presently in London; he flew into
+the UK months ago before the invasion of Ukraine by Russian government.
+The sum of $3.5b was deposited in a Private bank in Switzerland for
+the procurement of MIC war equipment from North Korea to fight the
+war, but he has decided to back out of the initial plan to divert part
+of the fund for investment in a viable venture.
 
-Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-helper functions and call the appropriate gpiolib functions.
+There is a need for a matured and trusted individual or corporate
+organization to receive part of the fund. All the needed documentation
+will be perfected here in London.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+You are at liberty to respond for more detail.
 
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 80a8939ad0c0..6dbe37d3d558 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -688,11 +688,17 @@ static void microchip_sgpio_irq_setreg(struct irq_data *data,
- 
- static void microchip_sgpio_irq_mask(struct irq_data *data)
- {
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+
- 	microchip_sgpio_irq_setreg(data, REG_INT_ENABLE, true);
-+	gpiochip_disable_irq(chip, data->hwirq);
- }
- 
- static void microchip_sgpio_irq_unmask(struct irq_data *data)
- {
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+
-+	gpiochip_enable_irq(chip, data->hwirq);
- 	microchip_sgpio_irq_setreg(data, REG_INT_ENABLE, false);
- }
- 
-@@ -746,6 +752,8 @@ static const struct irq_chip microchip_sgpio_irqchip = {
- 	.irq_ack	= microchip_sgpio_irq_ack,
- 	.irq_unmask	= microchip_sgpio_irq_unmask,
- 	.irq_set_type	= microchip_sgpio_irq_set_type,
-+	.flags		= IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static void sgpio_irq_handler(struct irq_desc *desc)
-@@ -861,11 +869,7 @@ static int microchip_sgpio_register_bank(struct device *dev,
- 		if (irq) {
- 			struct gpio_irq_chip *girq = &gc->irq;
- 
--			girq->chip = devm_kmemdup(dev, &microchip_sgpio_irqchip,
--						  sizeof(microchip_sgpio_irqchip),
--						  GFP_KERNEL);
--			if (!girq->chip)
--				return -ENOMEM;
-+			gpio_irq_chip_set_chip(girq, &microchip_sgpio_irqchip);
- 			girq->parent_handler = sgpio_irq_handler;
- 			girq->num_parents = 1;
- 			girq->parents = devm_kcalloc(dev, 1,
--- 
-2.30.2
-
+Thanks.
+Regards,
+Barrister. Ben Waidhofer
