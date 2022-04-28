@@ -2,61 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98DEE513E92
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 00:35:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DB0B513E97
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 00:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236003AbiD1WiD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Apr 2022 18:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48698 "EHLO
+        id S1352924AbiD1WlY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Apr 2022 18:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351604AbiD1WiC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 18:38:02 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125DEC12E4
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:34:46 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-2f7bb893309so68109767b3.12
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:34:46 -0700 (PDT)
+        with ESMTP id S1351604AbiD1WlX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 18:41:23 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30D2C12EA
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:38:07 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id g28so11529353ybj.10
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:38:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0feeoMrcWszYCfSrxHSgx4H/3IveYcwWC4Cl4lgiGH4=;
-        b=ixUNmBFVgYwgdLVwJIRe4IdaB6TGEHx+HLHPTiwTPLr31WNdRttL2C/OZf+7ep2n0+
-         xl7MZ+kjlYuatydCbkMYlC4+wHU22lq919Bsie6bgrXCm3IG3dKJMWE+j/2TbnPshb46
-         EvbhV0mNdoyWW5GeFCMQpIoVM3ZAFEt/RM2xfLlXhGEC6X9NT5W0Bx6U+NJIEom2VSTZ
-         gu8ZrgVK4jtoOWRC+ZNthBvnpwUv9Dutk5AkoncraxV/DXT+IV813VWCa8IfcGDSLwLJ
-         Y+5LxbsY2CE49BKq+mz9LwBggwJgd8CEMvU5yluJrn/b8APR/E+AlqVHhXQuO5NV/0tH
-         5IHw==
+        bh=lzpqH+bPwCQ3BZ5vkfL3WpFI3/PgCR+LoqqokgB1e5M=;
+        b=fBo6YWXiEjfkMWVKJ3lK3W+5MQA+hV9i+52b8YLW2xMOSX0nHdeqPPE2oHVtNBHSd1
+         vDbxs8aP2Wu+AiTYbSdzZ7x21Q9stQiBDwjN4T8dB1HLNn0jpIOy6F8GVl2cxG6HWJ1e
+         FRIG2ulO8dTjSV7k8ATsr9XT5q+TBIcBsLfcJhDoKNsPBcPtCAbBZ/1mFRr4EgnyvFFS
+         itrYouRvBu4TISJLnyW6oKOqAX3b3dWmplVWGo6KcpZTSgpFFPdGcJ4xuJJzoXcL1Ltf
+         UHp7+M+0mzNjm+rXGo33MxQvfiBSGf0HHotM+uQMPbYnKY9H1/LtQ7oKLC/HQm3AeqNB
+         nTlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0feeoMrcWszYCfSrxHSgx4H/3IveYcwWC4Cl4lgiGH4=;
-        b=sTQt6GkJzmlN40d7FiSrkpvE0RB+3gpzwtdmohG9/Bbl6cOappg57fgo49c9DPGjrG
-         9nN/eWFEneCH0sjjv6CRucO3q1bhfE29gDhK/gpZhxtmMTz+oNse/0FxytUOP8owtpRb
-         3pXf+mQklkRczFKRnlEotO5+28S/+tj7NvFPr71Ix+05gFyP65qWAI8cZPqSBsoJcEBW
-         5Zye6OicPo+RXS4ZZwL2xjeXQqtFKhz94HtLF6ofdMOGAFTLekwwcinaWqq+7pjhUoge
-         5erWyNYCN6BzwT0nD+LxnrszPNYqv7jBxwnSVBpREBY5KcfxYf2siGQbGeykUe+hSDgy
-         S7xA==
-X-Gm-Message-State: AOAM5310UsX3neLzpYDeCwA3SnTj5Wn+RFS63TEshgX21jYdYK8sypMv
-        Eoru7XJgqqsAGOdqVS84Hd7nNvBoTNNFKyI9EoRTYQ==
-X-Google-Smtp-Source: ABdhPJwymsnQ4Q7gEKcXPpD/MbjbiQgK5FOvY/AhPhloOsoz4XMxyhZejE9yU1YUIvUX/6kvgt3ECRLKcKg0x91b3B8=
-X-Received: by 2002:a0d:f0c3:0:b0:2f4:d291:9dde with SMTP id
- z186-20020a0df0c3000000b002f4d2919ddemr35531921ywe.437.1651185285368; Thu, 28
- Apr 2022 15:34:45 -0700 (PDT)
+        bh=lzpqH+bPwCQ3BZ5vkfL3WpFI3/PgCR+LoqqokgB1e5M=;
+        b=4hMB+7ys2f56VS7SNdJrvh3yPbZuKd4VGLdAn0uwlFDogeZ9oqTiFuNnJ9l10Yk5PH
+         pOAr3PXwB9t2xXaaGQK2aYgwYKER4QE9OT9qXXy/o4M+39XJ2IQyvh0nFdeAK4Kva9SR
+         bglZ31AJBOMkSss8R8QK9Ony1ZpDSBM6e48v+2s4aF9eoG844Io3uS/6ZGxHus8Voysl
+         wQXI/P/ugj6EAvYhA9+jOm4I0YUOjDkotIMw0xOIVWwNmBRAWwb8Qz3oI0zGf5S94G8d
+         OAY1iS1Bj65RhNdsUIZFO3DR8TC/ol2m6rYTcy2qj75MQFYrmvnswx1N0NEg1qHSESlR
+         Si/Q==
+X-Gm-Message-State: AOAM532Fm1Agtk8uanGPHAlyT2PKVb3sKOoJBrdOiTq2TeqXj9IhqwKO
+        lDYV6PqEn945s1aalvDAcxxDfyWwRIFXYxNenoXWrA==
+X-Google-Smtp-Source: ABdhPJyo66PN+0fuXvbreCg1vnWd1EXrYXd+dOkelV6EbGP6i6kxlBCFEHvzfOCS9YOQc9d912EmjH1/6QuGSn+Za/0=
+X-Received: by 2002:a25:a12a:0:b0:644:e94e:5844 with SMTP id
+ z39-20020a25a12a000000b00644e94e5844mr32512542ybh.492.1651185487108; Thu, 28
+ Apr 2022 15:38:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220428111622.1395831-1-michael@walle.cc>
-In-Reply-To: <20220428111622.1395831-1-michael@walle.cc>
+References: <20220419230324.3221779-1-michael@walle.cc>
+In-Reply-To: <20220419230324.3221779-1-michael@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Apr 2022 00:34:34 +0200
-Message-ID: <CACRpkdZfTh9NeNtGHLavOz6HXjYqLwOcgi87E6k2rj9RjTZLfw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: microchip-sgpio: make irq_chip immutable
+Date:   Fri, 29 Apr 2022 00:37:56 +0200
+Message-ID: <CACRpkdbbYv06KJ05Gi5ThSSE-qpNaFUsErjBL8WWfMAOKoDikw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: ocelot: add shared reset
 To:     Michael Walle <michael@walle.cc>
-Cc:     Marc Zyngier <maz@kernel.org>,
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Horatiu Vultur <horatiu.vultur@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -67,20 +70,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 1:16 PM Michael Walle <michael@walle.cc> wrote:
+On Wed, Apr 20, 2022 at 1:03 AM Michael Walle <michael@walle.cc> wrote:
 
-> Since recently, the kernel is nagging about mutable irq_chips:
+> On LAN966x SoCs, there is an internal reset which is used to reset the
+> switch core. But this will also reset the GPIO and the SGPIO. Thus add
+> support for this shared reset line.
 >
-> [    4.967050] gpio gpiochip1: (e2004190.gpio-input): not an immutable chip, please consider fixing it!
->
-> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-> helper functions and call the appropriate gpiolib functions.
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> changes since v1:
+>  - rebased onto linus' devel tree, former patch was still based on
+>    v1 of the YAML conversion patch
 
-I'm still waiting to see if Bartosz pulls in the prerequisites
-to the GPIO tree, when/if he does I will pull it in too and
-apply this on top.
+Patches applied!
 
 Yours,
 Linus Walleij
