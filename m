@@ -2,152 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CCE65139F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Apr 2022 18:37:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 751A6513CAF
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Apr 2022 22:33:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350114AbiD1QkR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Apr 2022 12:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41820 "EHLO
+        id S1351841AbiD1Uge (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Apr 2022 16:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350108AbiD1QkO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 12:40:14 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on2070.outbound.protection.outlook.com [40.107.101.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D9CB1A8A;
-        Thu, 28 Apr 2022 09:37:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k5CRVYVJuu6Q3ImLDWKdnc304k/N6cfbPGzyIf+9AzGWBZbDWHA67HPZfO/RXkTdWZapFHJCbgBxXnLVM7YBotL6wlgIgKJR03ViCglALeTgvNaPJIixxstljC8tLPaSNAQcOyWDCthoquHsOCuKZ2/YOEYQh0nIL2v1pyRt0R8Qlw0+OwoYBuxVfG7RSNHwAE99w25hiuXa2kCN9qvc7knvItGyEvOy3iGbfe+SerMeS9RX2BMJfKztpc98qIKse358VZm21GImhOyB/JtZLvOs0BtJQxQP9YGPZzMeuEOiw2/h6YvbArLItBuZ8okH8ERRsp5rf+wPgjzFO/bCgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PQBHqytcmqj0KrnGwazj8MmtPhTGGTqgbOeevzgfWiQ=;
- b=QhRgWxaxQvJFXNK7OXnAok+xheh9pLfNxIwDouhKVUH0jqjCF3Ew/iGJHG2mGAVm6f1SK+LDOXq5H7Opnnw78mGSRC7Uq9PC6JGHnHL+/vv5L9wTqibQXsN3ucdg854izrB0gjshFjHpXc8PSTYiinNUta08GaRDoe20OXf6xYgKe+NiYYyesS//njyRk7yK/p73Zo5IqL6hdv5lIjIE+JSwd/jkdhu16NdhyHh6b2xVzsxWTiVHomJf0xndG842DmEdJOJAC8owqTthrZEMr/dFvKRVbrIkhsIzR7seRymTHhGvYDwqgUviCmc6KTvnOaYIQEJQSNl7HBTJzhf4ZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=bgdev.pl smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PQBHqytcmqj0KrnGwazj8MmtPhTGGTqgbOeevzgfWiQ=;
- b=DxQQt8/7X8+D8AHnhDAtgnwSwPuYmkVv7YtLUJFL3KGAoTgRbht4oGnF354M3weyOqyZQtHgiANsOO93oHOL6Mn61qBwLNnJ1U+qDl1ukbhdOwjYYc5O2HYKrn/DfM5OHOQkMqxFqbFBpwdsmi10O3L14mzq785NZKOqyYH6HUA=
-Received: from SN4PR0501CA0129.namprd05.prod.outlook.com
- (2603:10b6:803:42::46) by BYAPR02MB4373.namprd02.prod.outlook.com
- (2603:10b6:a03:12::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.20; Thu, 28 Apr
- 2022 16:36:57 +0000
-Received: from SN1NAM02FT0015.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:42:cafe::1) by SN4PR0501CA0129.outlook.office365.com
- (2603:10b6:803:42::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.6 via Frontend
- Transport; Thu, 28 Apr 2022 16:36:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
-Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0015.mail.protection.outlook.com (10.97.5.180) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5206.12 via Frontend Transport; Thu, 28 Apr 2022 16:36:57 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Thu, 28 Apr 2022 09:36:41 -0700
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Thu, 28 Apr 2022 09:36:41 -0700
-Envelope-to: git@xilinx.com,
- brgl@bgdev.pl,
- robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org,
- linus.walleij@linaro.org,
- devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Received: from [172.23.64.6] (port=50319 helo=xhdvnc106.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1nk78D-000CCM-Hk; Thu, 28 Apr 2022 09:36:41 -0700
-Received: by xhdvnc106.xilinx.com (Postfix, from userid 13245)
-        id BD5726052A; Thu, 28 Apr 2022 22:06:40 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     <shubhrajyoti.datta@xilinx.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <git@xilinx.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH] dt-bindings: gpio: zynq: Add all the supported compatibles
-Date:   Thu, 28 Apr 2022 22:06:38 +0530
-Message-ID: <1651163798-15123-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f62ceb3c-81b6-47de-c30f-08da29354ff3
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4373:EE_
-X-Microsoft-Antispam-PRVS: <BYAPR02MB437396785DB863B4E717F6E3C7FD9@BYAPR02MB4373.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B3pRiqO/tGhseZvdArhrpSPfNORpZ4OjGH+qxKTkCIxxCx9YNmZaLI5bNgY+j75+CG/Gi+B4CVVEtthNqLs4OR5insUpNMD7jqZRMdkFdpvtXHFHMqadLg7+MXE0B4Eh3S9SS1vRGBj7QPuwWG7TGVSbRXH/tZwR4UUSrBoluRddBGzYcWy8Ven86Zdj0m84mrth6VpTdqN9MN/JPQtZOqE0tbIjpDdyTopmKOm5vmh45B7maT6Z996Wme+7swPBZ4f8wvfseotvhdcqTVjVdRNS5bi15IWyQJzt7JyNz1mpXMAjQHriguahBD4bzqwN0jGhKQHV9Kok9/CmHq0L7NeVkjn62iPitn/V6o2Yibt4Tx+/T/SzBY7q0GBqN0i3Si4TCTABMaHpc4Jn9fsskRLm43pHoo35R+rQJXkgn+6/84C4sZZ7/cI3DTcemaA/dfiEbyAsfUneW4HpqHsWtVytKZUaocY7CauUD6ImSpH+e/kKqyD98nvIVaFMjpTb3fX2psjInbw+KFnU9S3S8LpzeVicBpgUJ6ikoJTLOrbyWmASvbVyKCBdiEHdYPNqPPh5tInJ8/7ZDmtlb3sXixU5DM6ApRZHuPZb2d4sGmppU+el5IJ3arCUrPS0Q/zLZeCWLowDjARUvMfm7RGszCDhFmNolF+0oDgDCbBfWA4m+8TmXcMQ6Xw5L4x0HVDMGrz1e86snD36YlbdTz/tMx+NgGSkyaLlJt1egzD1EP/syfb38sIzxQPYt8yqcpegguFqZEibLX1lg58w+hgx1MrYA/AFg9cmG7qgKa5J8dw=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(8936002)(2906002)(40460700003)(36860700001)(54906003)(110136005)(107886003)(2616005)(7636003)(8676002)(4326008)(70586007)(70206006)(356005)(186003)(316002)(42186006)(82310400005)(26005)(5660300002)(508600001)(83380400001)(6266002)(966005)(336012)(36756003)(47076005)(426003)(102446001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2022 16:36:57.6946
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f62ceb3c-81b6-47de-c30f-08da29354ff3
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0015.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4373
-X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
-        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+        with ESMTP id S1351834AbiD1Ugd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 16:36:33 -0400
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A889C0E42;
+        Thu, 28 Apr 2022 13:33:17 -0700 (PDT)
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-e67799d278so6270760fac.11;
+        Thu, 28 Apr 2022 13:33:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=J3cE7MiG6hZTV7t9gy7Edw0SJtbuoMz271VEnExHnD0=;
+        b=U4dFi7C3iyteroEe/7stMm3G5K1uMZazAmwUJje2D33ZH7rGiS+WJw1mM12JsuLWAm
+         y+0SaPoP5Hse/EgkFAmw7rsn3pe8s+nKnLOZF1UQ4kA0pbWSHG6p97F/M/1GifZyu3Pv
+         W8ofFMGFm6hFMuQhS5+n6tC2ldK8MWvethTcIfxL7kWwq228I8y8LALs1g5d+RaIyriC
+         8dwvlobJ12ain1tnIoi6BOjWqd7ChuUpqIXg0jhp2bCEBBwy1T67YXQOGzMBI/y8446s
+         vxQhYmUt3jqh5VXub6Plxb9KBHjdk+seTlZwn6iRm2NLYgQA5f06NaZ7RJxXokWHDvU8
+         CKSQ==
+X-Gm-Message-State: AOAM5336jpRk41VmCs84zAFKN6/MIsf0tX3a6wOHEH3Gxrt7Q1Swa675
+        RIX8gtxAMLpAA4f5qDEAig==
+X-Google-Smtp-Source: ABdhPJyIKCSFE8HADOvXCq4XSg7Q4QHv4eXtCiwjB/aZX//rs5FVokO0n3huOkyorbSQ8hAuq+erfA==
+X-Received: by 2002:a05:6870:558e:b0:e1:db7c:26aa with SMTP id n14-20020a056870558e00b000e1db7c26aamr5244oao.63.1651177996283;
+        Thu, 28 Apr 2022 13:33:16 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id q22-20020a056870e89600b000e686d13895sm2214899oan.47.2022.04.28.13.33.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Apr 2022 13:33:15 -0700 (PDT)
+Received: (nullmailer pid 220468 invoked by uid 1000);
+        Thu, 28 Apr 2022 20:33:13 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        git@xilinx.com, brgl@bgdev.pl, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shubhrajyoti.datta@xilinx.com
+In-Reply-To: <1651163798-15123-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+References: <1651163798-15123-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+Subject: Re: [PATCH] dt-bindings: gpio: zynq: Add all the supported compatibles
+Date:   Thu, 28 Apr 2022 15:33:13 -0500
+Message-Id: <1651177993.343093.220467.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Thu, 28 Apr 2022 22:06:38 +0530, Radhey Shyam Pandey wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> 
+> Add the compatibles for zynqmp, versal and platform management controller
+> nodes.
+> 
+> Fixes: 45ca16072b70 ("dt-bindings: gpio: zynq: convert bindings to YAML")
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> ---
+> NOTE- There is 'gpio@e000a000: interrupts: [[0], [20], [4]] is too long'
+> warning coming with upstream yaml. I am checking it on devicetree mailing
+> list. https://www.spinics.net/lists/devicetree/msg493762.html
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-zynq.yaml | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
 
-Add the compatibles for zynqmp, versal and platform management controller
-nodes.
+Running 'make dtbs_check' with the schema in this patch gives the
+following warnings. Consider if they are expected or the schema is
+incorrect. These may not be new warnings.
 
-Fixes: 45ca16072b70 ("dt-bindings: gpio: zynq: convert bindings to YAML")
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
----
-NOTE- There is 'gpio@e000a000: interrupts: [[0], [20], [4]] is too long'
-warning coming with upstream yaml. I am checking it on devicetree mailing
-list. https://www.spinics.net/lists/devicetree/msg493762.html
----
- Documentation/devicetree/bindings/gpio/gpio-zynq.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+This will change in the future.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-index 378da2649e66..980f92ad9eba 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-@@ -11,7 +11,11 @@ maintainers:
- 
- properties:
-   compatible:
--    const: xlnx,zynq-gpio-1.0
-+    enum:
-+      - xlnx,zynq-gpio-1.0
-+      - xlnx,zynqmp-gpio-1.0
-+      - xlnx,versal-gpio-1.0
-+      - xlnx,pmc-gpio-1.0
- 
-   reg:
-     maxItems: 1
--- 
-2.1.1
+Full log is available here: https://patchwork.ozlabs.org/patch/
+
+
+gpio@ff0a0000: '#address-cells', 'gpio-line-names', 'power-domains' do not match any of the regexes: 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-sm-k26-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-smk-k26-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dtb
+
+gpio@ff0a0000: '#address-cells', 'power-domains' do not match any of the regexes: 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1232-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm018-dc4.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.1.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revC.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dtb
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dtb
 
