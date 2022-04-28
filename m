@@ -2,136 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F9C45124A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Apr 2022 23:41:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1305051293C
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Apr 2022 04:01:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbiD0Vo6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Apr 2022 17:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47360 "EHLO
+        id S241143AbiD1CEE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Apr 2022 22:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229959AbiD0Voz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 17:44:55 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B1890CF0;
-        Wed, 27 Apr 2022 14:41:42 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id c17-20020a056830349100b00605ca7d1deeso1964163otu.3;
-        Wed, 27 Apr 2022 14:41:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8TsqhMlD8DfHQiAjIFiLwWUPyhOj7fzWY9COQimF+14=;
-        b=6jZ6XbI+6nwmx6SspDdu/bYHCBWF1Wtb+s8+h7fCXFICSZVNdRqMKQ3RtD2Xxe0fVV
-         iL6gxeZ+/bCJ2ZeMibxdxCcdiYgC7QasL9mLBEs/zVkbauzpikJ5wN5LKo+RrCQs5Ln9
-         ld12BSgyk3n4ELdQAzKDJy1PgTZsxwdvwl7/30q3I6eg2iHZ3lKRDpEWcZLif92cmo5i
-         i51LIRbK1iuPcp7fjtvG6F/RoMh7CLceE4bSAMF1SEVJtfTbHzTZfOkIu25r14u3WxlU
-         QCRKOtC2oCbUI2b6+64S4uvS9efs9lkWn5mHnAG0hTPH6TR3OZkRJNe5BQ/HkLkKEENy
-         m6dg==
-X-Gm-Message-State: AOAM533Z5DnoxzCEc/A+2O6STBz6uXwQHfolhIqm6ykLvQU20WwA+6cv
-        Mem8xy3OKPXJ9acEzFWa2A==
-X-Google-Smtp-Source: ABdhPJyVaHjPlZa/IDYPuEiUrxwWWb/m5vuMEGbEknV79DmMykxEBvRbLgnIRLda89Vu+m0aXDUg7Q==
-X-Received: by 2002:a9d:5f15:0:b0:5af:5928:d5a1 with SMTP id f21-20020a9d5f15000000b005af5928d5a1mr10750692oti.343.1651095701638;
-        Wed, 27 Apr 2022 14:41:41 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id c9-20020a4a8ec9000000b0032438ba79b0sm7137555ool.0.2022.04.27.14.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 14:41:41 -0700 (PDT)
-Received: (nullmailer pid 712339 invoked by uid 1000);
-        Wed, 27 Apr 2022 21:41:40 -0000
-Date:   Wed, 27 Apr 2022 16:41:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: add AD4130
-Message-ID: <Ymm4lJxumCPQKIhB@robh.at.kernel.org>
-References: <20220419150828.191933-1-cosmin.tanislav@analog.com>
- <20220419150828.191933-2-cosmin.tanislav@analog.com>
- <Ymc+urR3N8eLLKxl@robh.at.kernel.org>
- <a4ba3f7e-6d03-36c7-e98a-3bed7db69fc6@gmail.com>
+        with ESMTP id S241174AbiD1CD6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Apr 2022 22:03:58 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F3160D92;
+        Wed, 27 Apr 2022 19:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651111242; x=1682647242;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CO5cvb+z/yjB+nM8Ln/vy0hVuoUGRL4PMtaR135Sw/E=;
+  b=GZghvFKnVnjDY+SIYN4UEGAecGqHGFzeauDkhy+vNK46HSBvHJ3zPrYd
+   gI8J62cYaE4PnULr833mKrmiF1r6ixUhpmEtc2XIMvqBe6X0CYHP5pdYW
+   yJVUe+1YXnwmYimXFuAVZpXyHWJ00PROMG3Q4RJMVXLHYHbvC/zF5dF1L
+   jvEa9l9STe/ro4gs4BbWCWpoNQ9f46olZOqlU3LaYVXMIpe814PdDHdoN
+   svLgKrjQyJgnUXpvwvOc2bE9aJjIzydMeKXcjsO35p1r1xGxVXUnTlltU
+   CA3s2IQMxU9VWezMyAycE2MhOB5NiYsfjeaiwuJVJsYJ9RwJuR9B2zprl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="263717029"
+X-IronPort-AV: E=Sophos;i="5.90,294,1643702400"; 
+   d="scan'208";a="263717029"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 19:00:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,294,1643702400"; 
+   d="scan'208";a="580964147"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 27 Apr 2022 19:00:24 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1njtSB-0004y1-PB;
+        Thu, 28 Apr 2022 02:00:23 +0000
+Date:   Thu, 28 Apr 2022 09:59:54 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Piyush Malgujar <pmalgujar@marvell.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, linus.walleij@linaro.org, brgl@bgdev.pl,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        rric@kernel.org, cchavva@marvell.com, wsadowski@marvell.com,
+        Piyush Malgujar <pmalgujar@marvell.com>
+Subject: Re: [PATCH 3/5] gpio: thunderx: Configure GPIO pins at probe
+Message-ID: <202204280405.DMzMLx60-lkp@intel.com>
+References: <20220427144620.9105-4-pmalgujar@marvell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a4ba3f7e-6d03-36c7-e98a-3bed7db69fc6@gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220427144620.9105-4-pmalgujar@marvell.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 03:47:13PM +0300, Cosmin Tanislav wrote:
-> 
-> 
-> On 4/26/22 03:37, Rob Herring wrote:
-> > On Tue, Apr 19, 2022 at 06:08:27PM +0300, Cosmin Tanislav wrote:
-> > > AD4130-8 is an ultra-low power, high precision, measurement solution for
-> > > low bandwidth battery operated applications.
-> > > 
-> > > The fully integrated AFE (Analog Front-End) includes a multiplexer for up
-> > > to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
-> > > Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
-> > > selectable filter options, smart sequencer, sensor biasing and excitation
-> > > options, diagnostics, and a FIFO buffer.
-> > > 
-> > > Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
-> > > ---
-> > >   .../bindings/iio/adc/adi,ad4130.yaml          | 264 ++++++++++++++++++
-> > >   1 file changed, 264 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
-> > > new file mode 100644
-> > > index 000000000000..32996b62cd20
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
-> > > @@ -0,0 +1,264 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +# Copyright 2022 Analog Devices Inc.
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/adc/adi,ad4130.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Analog Devices AD4130 ADC device driver
-> > > +
-> > > +maintainers:
-> > > +  - Cosmin Tanislav <cosmin.tanislav@analog.com>
-> > > +
-> > > +description: |
-> > > +  Bindings for the Analog Devices AD4130 ADC. Datasheet can be found here:
-> > > +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4130-8.pdf
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - adi,ad4130-8-16-lfcsp
-> > > +      - adi,ad4130-8-16-wlcsp
-> > > +      - adi,ad4130-8-24-lfcsp
-> > > +      - adi,ad4130-8-24-wlcsp
-> > 
-> > What is lfcsp? wlcsp seems to be the package type which generally
-> > shouldn't be part of the compatible.
-> 
-> lfcsp is a different package type. Sadly, lfcsp provides less interrupt
-> options. On lfcsp, dout-int inside interrupt-names actually only means
-> DOUT, while on wlcsp, it means INT. This is why we need to distinguish
-> between the different package types. I can't think of any way around it,
-> see my reply to Nathan for V1.
-> 
-> dout support is not implemented in the driver right now because when the
-> interrupt pin is configured as dout, FIFO interrupts are unsupported, so
-> the entire buffered part of the driver is useless, and extra logic is
-> needed for IRQ detection then.
+Hi Piyush,
 
-Please capture all this in the binding. At least enough I don't ask the 
-same question again when I've forgotten about this.
+Thank you for the patch! Yet something to improve:
 
-Rob
+[auto build test ERROR on linus/master]
+[also build test ERROR on linusw-gpio/for-next linux/master v5.18-rc4 next-20220427]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Piyush-Malgujar/gpio-thunderx-Marvell-GPIO-changes/20220427-225001
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 46cf2c613f4b10eb12f749207b0fd2c1bfae3088
+config: alpha-randconfig-r005-20220427 (https://download.01.org/0day-ci/archive/20220428/202204280405.DMzMLx60-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/31a85ad65112e3ed61aa418772670eb96a881a4f
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Piyush-Malgujar/gpio-thunderx-Marvell-GPIO-changes/20220427-225001
+        git checkout 31a85ad65112e3ed61aa418772670eb96a881a4f
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=alpha SHELL=/bin/bash drivers/gpio/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   drivers/gpio/gpio-thunderx.c: In function 'thunderx_gpio_pinsel':
+>> drivers/gpio/gpio-thunderx.c:448:23: error: implicit declaration of function 'of_read_number' [-Werror=implicit-function-declaration]
+     448 |                 pin = of_read_number(pinsel++, 1);
+         |                       ^~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/of_read_number +448 drivers/gpio/gpio-thunderx.c
+
+   428	
+   429	static void thunderx_gpio_pinsel(struct device *dev,
+   430					 struct thunderx_gpio *txgpio)
+   431	{
+   432		struct device_node *node;
+   433		const __be32 *pinsel;
+   434		int npins, rlen, i;
+   435		u32 pin, sel;
+   436	
+   437		node = dev_of_node(dev);
+   438		if (!node)
+   439			return;
+   440	
+   441		pinsel = of_get_property(node, "pin-cfg", &rlen);
+   442		if (!pinsel || rlen % 2)
+   443			return;
+   444	
+   445		npins = rlen / sizeof(__be32) / 2;
+   446	
+   447		for (i = 0; i < npins; i++) {
+ > 448			pin = of_read_number(pinsel++, 1);
+   449			sel = of_read_number(pinsel++, 1);
+   450			dev_dbg(dev, "Set GPIO pin %d CFG register to %x\n", pin, sel);
+   451			writeq(sel, txgpio->register_base + bit_cfg_reg(pin));
+   452		}
+   453	}
+   454	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
