@@ -2,64 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC6BA513E9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 00:39:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B6DE513EAD
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 00:47:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352934AbiD1Wmq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Apr 2022 18:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
+        id S1353026AbiD1Wuu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Apr 2022 18:50:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352917AbiD1Wmq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 18:42:46 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43724C12ED
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:39:30 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-2f7ca2ce255so68378167b3.7
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:39:30 -0700 (PDT)
+        with ESMTP id S1353014AbiD1Wus (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 18:50:48 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47480C1C87
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:47:31 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id y2so11575701ybi.7
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 15:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=E+3J8Tg1YKkO3lpTvYwXtrtSHWXSrNo91D9D4uubgfM=;
-        b=V4XCWq+mmBEcJp2rd+FHj5x6PNMIWT8HPTMQAxnaI7951ksolZFoZlQx5xw2qhxxun
-         3wrv9A+A1/uDRZxkAklPtdGFsTmIJzUm66fE+az8c8Gax6q/hs23FY+pEZC8O4aZUO3S
-         uMmSpr23BPt1V4z9OSeskzAu1ySy4g+zOkCcm8hX+D27zAqd/vyzE4h5gddupLogEuyd
-         fOXUvcQ+fFMJq3BV5SnS4BOv6O3Tsmh5FSjAtNXr7gltT+iSAkQTfLrR+hjxX9tQYq04
-         aoWOUJlz7SPODt6wkBWOR5Bnac01p/Mbc2IGhBY1iD5s8ZkU7PSPCjH1Qn27aI3Yncv5
-         oKuA==
+        bh=rNIaKSd9HIOo++vQl55ronwO6gWeoBJTBYDBf9qgIGc=;
+        b=xDEiqUW0WSk4+uzwF0xl2Of3qEC5D1FWLYE5HSp6i6QWdKwKWokbTmpRaSJEmFkQeA
+         rr1smsrUCQokqpRT1zKrUjWADVBVnxFg6L7QhmQV8Zu7tgFSIUx3FxdPzNpFEPk+Ti2B
+         v/Q/t5AwR86jyOqaWihswIPNkAkKFZA4yqgwm3qCv0ROPVz24RdHdvG7PYJi++D8Zbba
+         0R9dXFBQmxW+2Im+ACPlloNLaLfHR2d1N/MY2HEEHn1cDf7LbKRXKWf9Wu+dtvdgvGG9
+         VbkhbKrfVxve/AN3KksU/BPi7ZPHAh1hGFAaNJ8M/7hFZUBRavohA6D+do98WsK9sxkC
+         TzCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E+3J8Tg1YKkO3lpTvYwXtrtSHWXSrNo91D9D4uubgfM=;
-        b=fiqPEa6qHmlYfkkuKhHRReytk5v42ACQ5CZqIOSMc5PATQzI1Y35vA3UMHAnYS65e1
-         fQUFMNkGKbOSOOkv8ALJ0fD6CESpDpUdFZAt9kY+nP1ltqSRjhEf7iYlVjqgLG8NoknC
-         I1MTQAymBgSx0wkveRQl0v1msbsr1+ohrV5iP9E4my6e86dB/COj0BMJkuhqjTfDbwZO
-         kmNLGwKcrlnHJ816dXPbKLMqzdQfxkXZWMLLp1yjD9XJASF73aOuRNsdCmGbf4KKW+13
-         nZAOo6XN8rDZQjNzTcfaYp4ruJ7Z78hO7Sde+tDKN5/94e35WoJ2ut8HwaZfVeun8hpF
-         TiDg==
-X-Gm-Message-State: AOAM533rkP8A+rFfH1GNFNpG5R8QznYYO4mwKyV3RGzUykWVIVMrt5sG
-        uYHEcSgdJlBWkx4xbxYT0xN4J6NR3Y63QQv8BPeZDA==
-X-Google-Smtp-Source: ABdhPJxvhml9HFXPCwUVI0CwtNK5IaJmoBNDiEfCirpoYCazdVjbv6nJ3rx/3iOjPRgLySfwlGlZlM+lkxFFFgGvH8U=
-X-Received: by 2002:a81:1d48:0:b0:2f1:8ebf:25f3 with SMTP id
- d69-20020a811d48000000b002f18ebf25f3mr34374108ywd.118.1651185569522; Thu, 28
- Apr 2022 15:39:29 -0700 (PDT)
+        bh=rNIaKSd9HIOo++vQl55ronwO6gWeoBJTBYDBf9qgIGc=;
+        b=VjSk2jS+zJ+N+WU1cCQpU6UmvjkkCSZwx9stQYNh3+gVUD3QiKcmY4AtrJo1uKWSjR
+         Ya1BmgxJKhDhz6CbR5On81EEo0Nw3ggy/4BMxOGxQ3gImv/ldZDZNhnj+OYSJxF+fryZ
+         p2b9hiADdRRP5N2y+7hh0bSXRF221IpIuU0tm4Va6+bQFQqoL3aPPXYCDaE89lYwds1E
+         T7iHl3XRx5LgW6BZi7F8qU9yAf0zr9uqDmUq2P8m8HnyYw9z07zTW24nVSx+A9CsTZrp
+         tWU7p0/SjbO7E5Yum1eHHVhx9WjHr+jC2tzchNIWEClb14+iZQiOwkBxhkiG41kP10Dx
+         AS7w==
+X-Gm-Message-State: AOAM530aXrbawn7HnRLMzqeL2kaZIbLaFElaXC7SNyd4PXSlY79qIeYx
+        su9lBZ3LNVtnOUVIF8rqqBJkwf+0un6KXYXJu75hCZ1xIsk=
+X-Google-Smtp-Source: ABdhPJyq3RnHxpIs1eT7rZa7x+L1tgpqQQaWbIkCGc6vz4lOgunasyHNBZt/HD3SsyvhMQZY25MrO/JWCpjUd8WpaCE=
+X-Received: by 2002:a25:a12a:0:b0:644:e94e:5844 with SMTP id
+ z39-20020a25a12a000000b00644e94e5844mr32540771ybh.492.1651186050515; Thu, 28
+ Apr 2022 15:47:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220420191926.3411830-1-michael@walle.cc>
-In-Reply-To: <20220420191926.3411830-1-michael@walle.cc>
+References: <20220413192918.3777234-1-horatiu.vultur@microchip.com>
+In-Reply-To: <20220413192918.3777234-1-horatiu.vultur@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Apr 2022 00:39:18 +0200
-Message-ID: <CACRpkdb2zuXpTkiXNtC6KKRO55Ks-yep-TBq9YD_x9yegZ-iyA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] pinctrl: ocelot: add shared reset
-To:     Michael Walle <michael@walle.cc>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
+Date:   Fri, 29 Apr 2022 00:47:19 +0200
+Message-ID: <CACRpkdbMxK=w4DDsPUrdzkJcjHRhZfuY585gUR8j0HP88m19dQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ocelot: Fix for lan966x
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kavyasree.kotagiri@microchip.com, alexandre.belloni@bootlin.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -70,17 +64,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 9:19 PM Michael Walle <michael@walle.cc> wrote:
+On Wed, Apr 13, 2022 at 9:26 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
 
-> On LAN966x SoCs, there is an internal reset which is used to reset the
-> switch core. But this will also reset the GPIO and the SGPIO. Thus add
-> support for this shared reset line.
+> For lan966x, the GPIO 35 has the wrong function for alternate mode 2.
+> The mode is not none but is PTP sync.
 >
-> changes since v2:
->  - use dev_err_probe(), thanks Horatiu
+> Fixes: 531d6ab36571c2 ("pinctrl: ocelot: Extend support for lan966x")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-Picked this v3 version rather than v2.
+Patch applied for fixes.
 
-Thanks!
 Yours,
 Linus Walleij
