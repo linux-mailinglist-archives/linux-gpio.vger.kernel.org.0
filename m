@@ -2,66 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8849512E9C
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Apr 2022 10:36:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40B1751323D
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Apr 2022 13:16:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235097AbiD1IjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Apr 2022 04:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
+        id S1345228AbiD1LTr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Apr 2022 07:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344608AbiD1IjD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 04:39:03 -0400
-X-Greylist: delayed 775 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 28 Apr 2022 01:31:18 PDT
-Received: from mail.profitbizdesign.com.pl (mail.profitbizdesign.com.pl [94.177.252.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62BEAAE0C
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 01:31:17 -0700 (PDT)
-Received: by mail.profitbizdesign.com.pl (Postfix, from userid 1001)
-        id 59157AA718; Thu, 28 Apr 2022 09:12:18 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=profitbizdesign.com.pl; s=mail; t=1651133574;
-        bh=Rfzvu4C+yJ1wyuJ4V+t/udh6cgYEQVnY6S5ltO4wdNg=;
-        h=Date:From:To:Subject:From;
-        b=jcGxI7C+qXOiKbn4mPG/8hxJn4CZEPtJG0bGGp71GLagKkzZbxVF1OzB8gaJumu8b
-         IX0Un2zcls+84oyUv5JZU9z5aF9/dJH10sIaVbzRLhH4P0wGTX+8MhBZiltZpUetOm
-         NQ5JPOsqJUZccc+VsS5b0tR9d85jwHQbNNGZ7LGrjf9J9SLuU1uIN6O5H/hFSAe0Io
-         uakVUu6gGwf9rn8R9sSjGitHvLSpNw+62ZeFQTR0m/Br+trB1i5QXIkloUZ3pt6qR6
-         8tnuueWuUi+q2+11BsxkY8g8Y5rOU3RIy0HgLv5YY82IVSt71+e6g02ctDiO5uGkEF
-         SCGQbsTEEscSQ==
-Received: by mail.profitbizdesign.com.pl for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 08:10:19 GMT
-Message-ID: <20220428074503-0.1.1z.601y.0.r86cnrfm7a@profitbizdesign.com.pl>
-Date:   Thu, 28 Apr 2022 08:10:19 GMT
-From:   =?UTF-8?Q? "Arkadiusz_Soko=C5=82owski" ?= 
-        <arkadiusz.sokolowski@profitbizdesign.com.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Koszty instalacji fotowoltaicznej
-X-Mailer: mail.profitbizdesign.com.pl
+        with ESMTP id S1344833AbiD1LTp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 07:19:45 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3764F9FD;
+        Thu, 28 Apr 2022 04:16:30 -0700 (PDT)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C8FFF22238;
+        Thu, 28 Apr 2022 13:16:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1651144588;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JJo0GZRuGCtC68xA23LJ+wNLn42ignYVUjux2v0GG6Y=;
+        b=S2UnDOdTw/i8J6PL6OhZwY2nKe78AgaqGftt/FbNASYMOz9XRKyjOhxhquh3O9WcX85ZWT
+        mPPgU24Ig1a5wQTJvxSORcZvkfeBdbw2j7fX8vt2Bq3/fwchrjbYz/S5wL3GiDlwkOAX4j
+        HRmhZtdgqdEzuQ4VIGbAd7F1TmbgbVs=
+From:   Michael Walle <michael@walle.cc>
+To:     Marc Zyngier <maz@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] pinctrl: microchip-sgpio: make irq_chip immutable
+Date:   Thu, 28 Apr 2022 13:16:22 +0200
+Message-Id: <20220428111622.1395831-1-michael@walle.cc>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Since recently, the kernel is nagging about mutable irq_chips:
 
-stworzyli=C5=9Bmy specjaln=C4=85 ofert=C4=99 dla firm, na kompleksow=C4=85=
- obs=C5=82ug=C4=99 inwestycji w fotowoltaik=C4=99. =20
+[    4.967050] gpio gpiochip1: (e2004190.gpio-input): not an immutable chip, please consider fixing it!
 
-Specjalizujemy si=C4=99 w zakresie doboru, monta=C5=BCu i serwisie instal=
-acji fotowoltaicznych, dysponujemy najnowocze=C5=9Bniejszymi rozwi=C4=85z=
-ania, kt=C3=B3re zapewni=C4=85 Pa=C5=84stwu oczekiwane rezultaty.
+Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+helper functions and call the appropriate gpiolib functions.
 
-Mo=C5=BCemy przygotowa=C4=87 dla Pa=C5=84stwa wst=C4=99pn=C4=85 kalkulacj=
-=C4=99 i przeanalizowa=C4=87 efekty mo=C5=BCliwe do osi=C4=85gni=C4=99cia=
-=2E
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/pinctrl/pinctrl-microchip-sgpio.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
-temacie?
+diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+index 80a8939ad0c0..6dbe37d3d558 100644
+--- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
++++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+@@ -688,11 +688,17 @@ static void microchip_sgpio_irq_setreg(struct irq_data *data,
+ 
+ static void microchip_sgpio_irq_mask(struct irq_data *data)
+ {
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++
+ 	microchip_sgpio_irq_setreg(data, REG_INT_ENABLE, true);
++	gpiochip_disable_irq(chip, data->hwirq);
+ }
+ 
+ static void microchip_sgpio_irq_unmask(struct irq_data *data)
+ {
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++
++	gpiochip_enable_irq(chip, data->hwirq);
+ 	microchip_sgpio_irq_setreg(data, REG_INT_ENABLE, false);
+ }
+ 
+@@ -746,6 +752,8 @@ static const struct irq_chip microchip_sgpio_irqchip = {
+ 	.irq_ack	= microchip_sgpio_irq_ack,
+ 	.irq_unmask	= microchip_sgpio_irq_unmask,
+ 	.irq_set_type	= microchip_sgpio_irq_set_type,
++	.flags		= IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static void sgpio_irq_handler(struct irq_desc *desc)
+@@ -861,11 +869,7 @@ static int microchip_sgpio_register_bank(struct device *dev,
+ 		if (irq) {
+ 			struct gpio_irq_chip *girq = &gc->irq;
+ 
+-			girq->chip = devm_kmemdup(dev, &microchip_sgpio_irqchip,
+-						  sizeof(microchip_sgpio_irqchip),
+-						  GFP_KERNEL);
+-			if (!girq->chip)
+-				return -ENOMEM;
++			gpio_irq_chip_set_chip(girq, &microchip_sgpio_irqchip);
+ 			girq->parent_handler = sgpio_irq_handler;
+ 			girq->num_parents = 1;
+ 			girq->parents = devm_kcalloc(dev, 1,
+-- 
+2.30.2
 
-Pozdrawiam
-Arkadiusz Soko=C5=82owski
