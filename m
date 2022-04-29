@@ -2,90 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDA7C5143CE
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 10:16:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF55C5149F2
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 14:52:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355497AbiD2ITB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Apr 2022 04:19:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
+        id S1359580AbiD2Mzh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Apr 2022 08:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355551AbiD2ISX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 04:18:23 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B9DC3E0E;
-        Fri, 29 Apr 2022 01:14:55 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KqQHS6JzgzfbJv;
-        Fri, 29 Apr 2022 16:13:56 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 16:14:50 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Apr
- 2022 16:14:49 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-CC:     <linus.walleij@linaro.org>, <geert+renesas@glider.be>
-Subject: [PATCH 2/2] pinctrl: renesas: rzn1: fix possible null-ptr-deref in sh_pfc_map_resources()
-Date:   Fri, 29 Apr 2022 16:26:37 +0800
-Message-ID: <20220429082637.1308182-2-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220429082637.1308182-1-yangyingliang@huawei.com>
-References: <20220429082637.1308182-1-yangyingliang@huawei.com>
+        with ESMTP id S1359589AbiD2Mzf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 08:55:35 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0465CAB99;
+        Fri, 29 Apr 2022 05:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651236737; x=1682772737;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UpTl+EI4OxATNhRZbN10QD6jlbsYNUk1LadQPcxzoLY=;
+  b=RXcr6uLjesZG//Qr/oLKTJBOa+JmA30eSCeeSs5FuYcSdypFBaQ7dMER
+   ABbarL1uT5FSA8PvI0B3wB1SwK7woS94OuRIJvK5vOEc01qegX8kPb+Vw
+   huBvnXIayXBpQZ12NP/zt+vLlrBH5oV61JIWEaD/6x3RwyDTqQ9L1XLP8
+   sWmfg0A7UBQQuiurwbPu+6U40cj+OPjCCOjtK148+vkKPyk7zdc3OJQOD
+   3fCzOyPhLAKOur/UmNNuGDDIcyZ08GpbaiWFNS2B5bds58EsoRiQUxNHg
+   nMafyHwVUV+h0gHFDH1ZoUv9xjcTqGfJKhJKYsBMeQB5qLUH6hXKNwSqv
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="329577821"
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="329577821"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 05:52:16 -0700
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="542495249"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 05:52:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nkQ6T-009iHu-By;
+        Fri, 29 Apr 2022 15:52:09 +0300
+Date:   Fri, 29 Apr 2022 15:52:09 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v2 2/2] pinctrl: nuvoton: Fix irq_of_parse_and_map()
+ return value
+Message-ID: <Ymvfeea1QXqSoq76@smile.fi.intel.com>
+References: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
+ <20220423094142.33013-2-krzysztof.kozlowski@linaro.org>
+ <CACRpkdY8LJ5xMW0eDsL-ycrqV8io2zXJrT6RfZj=KxaE9rvcvA@mail.gmail.com>
+ <064f5758-a3ae-d116-fe72-9f52b4cbea78@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <064f5758-a3ae-d116-fe72-9f52b4cbea78@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It will cause null-ptr-deref when using 'res', if platform_get_resource()
-returns NULL, so move using 'res' after devm_ioremap_resource() that
-will check it to avoid null-ptr-deref.
-And use devm_platform_get_and_ioremap_resource() to simplify code.
+On Fri, Apr 29, 2022 at 08:03:19AM +0200, Krzysztof Kozlowski wrote:
+> On 29/04/2022 00:52, Linus Walleij wrote:
+> > On Sat, Apr 23, 2022 at 11:41 AM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> > 
+> >> The irq_of_parse_and_map() returns 0 on failure, not a negative ERRNO.
+> >>
+> >> Fixes: 3b588e43ee5c ("pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver")
+> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> Changes since v1:
+> >> 1. Correct the return value passed further.
+> > 
+> > This doesn't apply to my tree neither for fixes or devel, can you rebase it?
+> > I'd like to queue it on devel for non-urgent fixes.
+> 
+> Sure, I will rebase. The issue was because of Andy's commit
+> https://lore.kernel.org/all/20220401103604.8705-9-andriy.shevchenko@linux.intel.com/
+> which was in next but not in your tree.
+> 
+> Including such development branches in next, bypassing maintainer, makes
+> it difficult for everyone else to develop patches... :(
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- drivers/pinctrl/renesas/pinctrl-rzn1.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+I'm about to send PR with my stuff to Linus and Bart, but I have difficulties
+right now with the signing tag. I hope I figure out sooner than later.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzn1.c b/drivers/pinctrl/renesas/pinctrl-rzn1.c
-index ef5fb25b6016..cddb7804e9e0 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzn1.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzn1.c
-@@ -865,17 +865,15 @@ static int rzn1_pinctrl_probe(struct platform_device *pdev)
- 	ipctl->mdio_func[0] = -1;
- 	ipctl->mdio_func[1] = -1;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ipctl->lev1_protect_phys = (u32)res->start + 0x400;
--	ipctl->lev1 = devm_ioremap_resource(&pdev->dev, res);
-+	ipctl->lev1 = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(ipctl->lev1))
- 		return PTR_ERR(ipctl->lev1);
-+	ipctl->lev1_protect_phys = (u32)res->start + 0x400;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	ipctl->lev2_protect_phys = (u32)res->start + 0x400;
--	ipctl->lev2 = devm_ioremap_resource(&pdev->dev, res);
-+	ipctl->lev2 = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(ipctl->lev2))
- 		return PTR_ERR(ipctl->lev2);
-+	ipctl->lev2_protect_phys = (u32)res->start + 0x400;
- 
- 	ipctl->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(ipctl->clk))
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
