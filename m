@@ -2,107 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF55C5149F2
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 14:52:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7AD1514B34
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 15:52:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359580AbiD2Mzh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Apr 2022 08:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55934 "EHLO
+        id S1376520AbiD2NzQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Apr 2022 09:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359589AbiD2Mzf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 08:55:35 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0465CAB99;
-        Fri, 29 Apr 2022 05:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651236737; x=1682772737;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UpTl+EI4OxATNhRZbN10QD6jlbsYNUk1LadQPcxzoLY=;
-  b=RXcr6uLjesZG//Qr/oLKTJBOa+JmA30eSCeeSs5FuYcSdypFBaQ7dMER
-   ABbarL1uT5FSA8PvI0B3wB1SwK7woS94OuRIJvK5vOEc01qegX8kPb+Vw
-   huBvnXIayXBpQZ12NP/zt+vLlrBH5oV61JIWEaD/6x3RwyDTqQ9L1XLP8
-   sWmfg0A7UBQQuiurwbPu+6U40cj+OPjCCOjtK148+vkKPyk7zdc3OJQOD
-   3fCzOyPhLAKOur/UmNNuGDDIcyZ08GpbaiWFNS2B5bds58EsoRiQUxNHg
-   nMafyHwVUV+h0gHFDH1ZoUv9xjcTqGfJKhJKYsBMeQB5qLUH6hXKNwSqv
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="329577821"
-X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
-   d="scan'208";a="329577821"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 05:52:16 -0700
-X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
-   d="scan'208";a="542495249"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 05:52:12 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nkQ6T-009iHu-By;
-        Fri, 29 Apr 2022 15:52:09 +0300
-Date:   Fri, 29 Apr 2022 15:52:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v2 2/2] pinctrl: nuvoton: Fix irq_of_parse_and_map()
- return value
-Message-ID: <Ymvfeea1QXqSoq76@smile.fi.intel.com>
-References: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
- <20220423094142.33013-2-krzysztof.kozlowski@linaro.org>
- <CACRpkdY8LJ5xMW0eDsL-ycrqV8io2zXJrT6RfZj=KxaE9rvcvA@mail.gmail.com>
- <064f5758-a3ae-d116-fe72-9f52b4cbea78@linaro.org>
+        with ESMTP id S1376460AbiD2Ny4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 09:54:56 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997435B3CC;
+        Fri, 29 Apr 2022 06:51:29 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23TCc56j017079;
+        Fri, 29 Apr 2022 13:51:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=0+S8qtMANA6Uq9v0wWXh+GVEjW/55WFXI95TKQ4JxRg=;
+ b=UWtWVIqCMKFRjoAlv1saXJSlEeO00cL7hcxOHTEnK0+i09adMDVRc3qvaXO7ys/ky21V
+ 3W1IQH2jIpT0WUcTj+XMp46uV8KYDw0xoUagiQMViogDWpTJ8lldYrHjWAvXfDwhwj6M
+ /tf4J37428HretxQlnx1u/WIhAhj2fi5Z9iYCJzNAJ/kIDcVe7cqMIsDuV4/HMdgPYX3
+ iWrjRnZg5+Gg8AK/+moM8Fj8g+BGMv36QBGXftLZP/hHTHCU2PxUTSzYW/uxUEe3Cwo6
+ ZbO68ilV9vFNIOOQFsvbUD6eqkDgtlRfyCkGhYD6rOYIqyBawyzhAD95FCKoXjIEYSc8 Yw== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqqtnsugb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Apr 2022 13:51:24 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23TDQvPS014336;
+        Fri, 29 Apr 2022 13:51:22 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 3fm93916w7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Apr 2022 13:51:22 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23TDpK6o51904798
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Apr 2022 13:51:20 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DEB94C04A;
+        Fri, 29 Apr 2022 13:51:20 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28A754C046;
+        Fri, 29 Apr 2022 13:51:20 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 29 Apr 2022 13:51:20 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM)
+Subject: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
+Date:   Fri, 29 Apr 2022 15:50:16 +0200
+Message-Id: <20220429135108.2781579-19-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <064f5758-a3ae-d116-fe72-9f52b4cbea78@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: c7yz-T-CMrSxtCZ2r_DBBa6kDgNSP7tm
+X-Proofpoint-GUID: c7yz-T-CMrSxtCZ2r_DBBa6kDgNSP7tm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-29_06,2022-04-28_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0
+ priorityscore=1501 spamscore=0 clxscore=1011 mlxlogscore=710
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204290078
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 08:03:19AM +0200, Krzysztof Kozlowski wrote:
-> On 29/04/2022 00:52, Linus Walleij wrote:
-> > On Sat, Apr 23, 2022 at 11:41 AM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> > 
-> >> The irq_of_parse_and_map() returns 0 on failure, not a negative ERRNO.
-> >>
-> >> Fixes: 3b588e43ee5c ("pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver")
-> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >> Changes since v1:
-> >> 1. Correct the return value passed further.
-> > 
-> > This doesn't apply to my tree neither for fixes or devel, can you rebase it?
-> > I'd like to queue it on devel for non-urgent fixes.
-> 
-> Sure, I will rebase. The issue was because of Andy's commit
-> https://lore.kernel.org/all/20220401103604.8705-9-andriy.shevchenko@linux.intel.com/
-> which was in next but not in your tree.
-> 
-> Including such development branches in next, bypassing maintainer, makes
-> it difficult for everyone else to develop patches... :(
+In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+not being declared. We thus need to add HAS_IOPORT as dependency for
+those drivers using them.
 
-I'm about to send PR with my stuff to Linus and Bart, but I have difficulties
-right now with the signing tag. I hope I figure out sooner than later.
+Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+---
+ drivers/gpio/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 45764ec3b2eb..14e5998ee95c 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -697,7 +697,7 @@ config GPIO_VR41XX
+ 
+ config GPIO_VX855
+ 	tristate "VIA VX855/VX875 GPIO"
+-	depends on (X86 || COMPILE_TEST) && PCI
++	depends on (X86 || COMPILE_TEST) && PCI && HAS_IOPORT
+ 	select MFD_CORE
+ 	select MFD_VX855
+ 	help
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.32.0
 
