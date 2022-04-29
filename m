@@ -2,123 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3933751406B
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 03:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA2B6514223
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 08:03:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354070AbiD2CAI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Apr 2022 22:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60406 "EHLO
+        id S1354372AbiD2GGk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Apr 2022 02:06:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231824AbiD2CAI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Apr 2022 22:00:08 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BE08723F;
-        Thu, 28 Apr 2022 18:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651197411; x=1682733411;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CPEvDJ3ytBpYATJRkPLi382z+ezVo1awVW8z44TiQNE=;
-  b=SlqPVfjXvnihFrxSnATIn6wus84NmFGNq3FDJRtBjZI1GD60kSfY/sWE
-   ju5iuj2wvFQssqh8mG8y2NQU958Gq2gOkfPDooz4jusXe4cVNPLWdT29m
-   qcz7N78qJv6dxrO3H2LK9CBfTYPNVO7o2nAOVPDqjdlJgU6dwl9gCX7zb
-   h7h7MF0iDtsmfkowlMXSgJCHfrvr6mtVnb0yVnszcBW8aNmO45M/towgj
-   CeHU8SpkMPWFpccZ7SpWsGem1ETVVTgUi7hzPwZ48MsXxYQkVC22Dr3yv
-   brFANqYtbmFuDflmFuCNoqk5+40KW23IaF/z56o9zZO0d4fC6wZHBYwgU
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="266652286"
-X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="266652286"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 18:56:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="565900073"
-Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Apr 2022 18:56:46 -0700
-Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nkFsD-0005rp-RA;
-        Fri, 29 Apr 2022 01:56:45 +0000
-Date:   Fri, 29 Apr 2022 09:56:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     kbuild-all@lists.01.org, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
-        Elaine Zhang <zhangqing@rock-chips.com>, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCHv1 03/19] clk: rockchip: add pll type for RK3588
-Message-ID: <202204290947.GtdwE4Zq-lkp@intel.com>
-References: <20220422170920.401914-4-sebastian.reichel@collabora.com>
+        with ESMTP id S1354351AbiD2GGj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 02:06:39 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18EF1B82EE
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 23:03:22 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id i27so13451124ejd.9
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Apr 2022 23:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=2UVF1UzLTvXwjMuXjHk4vSsZBF8/xezWpjHU9KjaHyI=;
+        b=r4vPB+6VJeu8RIvrpfY3kIQQQjSlQs/o0234SVjt6pPhaCqx793Kmv1nmXZui80rWZ
+         Hg9w6CPZYYvkm0wlSZGRc9VZpOJYZU9CPuHml5XVyH3bP0giIoyYv+B0pEqYYnR7hrhP
+         Hb3YvlURM4kmTr6LCPbYSbVV16PG7a4ZuLsw39Rh81MV9rEOYlTrHK9yDMzg+CNO8hRX
+         XW992Ey9bFAZmHMC0+dgHuqAz4AVk9LLHU/BjBTf5/dIEF8ERi48fUEfVA26rfjRuA4R
+         D/vDS+5uy/V5qGtCC84SzqifWrFWDdDLSeApuMBzpu5Lr6Oyf1cwHzL8MI0kV17sg7Oc
+         eTsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=2UVF1UzLTvXwjMuXjHk4vSsZBF8/xezWpjHU9KjaHyI=;
+        b=JepKVyv6665nFnjEpeCORWPECBSDFjPhtP4p1CO2m98+DKRhWTLrKyzPJlvdk3cJZT
+         2ahs3Cm5YmIE1vDqWJUvm+UUGiVaDZVOJw/dK3XnTwcVBOd8soR47E4gVtgPNnN05UcV
+         FgcxCIp+w6rSFO0EvJ0zfgIrb3CZtxrGJ3F3kk4z/ylOeg3tGn0+7mi/IUoPvfR7dMXA
+         q9wKK0/0X9jJ6dno4G2TRHujueZU/8UntBj2nAKjWriUEm+0LqBAz1vnCJkaa4fHRmal
+         0sTNv1Hn+3bdN+nLbHOpxG3r6zBzXJK4KVY4dnlcfCInyTzy1CdXBtnR042kFLh9QMRn
+         Nskg==
+X-Gm-Message-State: AOAM533cxM5NLso0q54Eq+sPu5/FT/cVoJj/4DOmNu9z6+aDGpqGokFM
+        CUEAfrxWaxMGM2bNcYLtDIv+Fg==
+X-Google-Smtp-Source: ABdhPJzibkdFBoDF+cIhDOCqeeWmKmks/LjPu/SUPeRXPpTGCICXJ32FXdpt2PTlJmb2ApJRyQ4AYQ==
+X-Received: by 2002:a17:906:9c82:b0:6e1:1d6c:914c with SMTP id fj2-20020a1709069c8200b006e11d6c914cmr33826027ejc.769.1651212200588;
+        Thu, 28 Apr 2022 23:03:20 -0700 (PDT)
+Received: from [192.168.0.167] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id ra48-20020a17090769b000b006f3ef214e69sm318162ejc.207.2022.04.28.23.03.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Apr 2022 23:03:20 -0700 (PDT)
+Message-ID: <064f5758-a3ae-d116-fe72-9f52b4cbea78@linaro.org>
+Date:   Fri, 29 Apr 2022 08:03:19 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220422170920.401914-4-sebastian.reichel@collabora.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2 2/2] pinctrl: nuvoton: Fix irq_of_parse_and_map()
+ return value
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20220423094142.33013-1-krzysztof.kozlowski@linaro.org>
+ <20220423094142.33013-2-krzysztof.kozlowski@linaro.org>
+ <CACRpkdY8LJ5xMW0eDsL-ycrqV8io2zXJrT6RfZj=KxaE9rvcvA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CACRpkdY8LJ5xMW0eDsL-ycrqV8io2zXJrT6RfZj=KxaE9rvcvA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sebastian,
+On 29/04/2022 00:52, Linus Walleij wrote:
+> On Sat, Apr 23, 2022 at 11:41 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> 
+>> The irq_of_parse_and_map() returns 0 on failure, not a negative ERRNO.
+>>
+>> Fixes: 3b588e43ee5c ("pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver")
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Changes since v1:
+>> 1. Correct the return value passed further.
+> 
+> This doesn't apply to my tree neither for fixes or devel, can you rebase it?
+> I'd like to queue it on devel for non-urgent fixes.
 
-Thank you for the patch! Perhaps something to improve:
+Sure, I will rebase. The issue was because of Andy's commit
+https://lore.kernel.org/all/20220401103604.8705-9-andriy.shevchenko@linux.intel.com/
+which was in next but not in your tree.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linusw-pinctrl/devel linus/master v5.18-rc4 next-20220428]
-[cannot apply to rockchip/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sebastian-Reichel/Basic-RK3588-Support/20220423-013425
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20220429/202204290947.GtdwE4Zq-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/28c7fd4a10867094894809b60b86688817f70744
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Sebastian-Reichel/Basic-RK3588-Support/20220423-013425
-        git checkout 28c7fd4a10867094894809b60b86688817f70744
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/clk/rockchip/ drivers/media/platform/qcom/venus/
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/clk/rockchip/clk-pll.c:916: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
-    * PLL used in RK3588
+Including such development branches in next, bypassing maintainer, makes
+it difficult for everyone else to develop patches... :(
 
 
-vim +916 drivers/clk/rockchip/clk-pll.c
-
-   914	
-   915	/**
- > 916	 * PLL used in RK3588
-   917	 */
-   918	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Best regards,
+Krzysztof
