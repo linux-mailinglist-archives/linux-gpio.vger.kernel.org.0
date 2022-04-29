@@ -2,110 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC70F5154E2
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 21:52:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9814451552C
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 22:07:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380417AbiD2Tz5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Apr 2022 15:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52340 "EHLO
+        id S1380439AbiD2UKE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Apr 2022 16:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239376AbiD2Tz4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 15:55:56 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20EBD89331;
-        Fri, 29 Apr 2022 12:52:37 -0700 (PDT)
-Received: by mail-ot1-f48.google.com with SMTP id x8-20020a056830114800b00605fa3c9e90so1149873otq.2;
-        Fri, 29 Apr 2022 12:52:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=H9Vjs85xufky4aYHkz/e+mx0EVbxLmlUBWCH/SDU9N0=;
-        b=SQHEch20euMKuTSXy3R69ZKlNlOm1LSsUJROmmJTBSaEYGAu0Sz+SvfMdgNqcS2iqI
-         bfAWUenKtw2bsNck/7hYNRTaeLecKKlcFAV+m8KxmZ/PqIu8X/B/TvNIvyG1Jiy3U/SR
-         BuhyoL0artH6wETt/riyQB2i2DoR8O0ZzN3m023J2nUcpOJrCBmGanxcXB+I9jY1/zHP
-         RV9b0QTAOpJrEcRJzWvpA+4D8BlF2KNH20TLySic9G4rWJWXjIMW+SkJ2z8LahHkpx0e
-         a0j8i+YsL5dSaFyOU9lJ1f+CuboPQuwurmy0PExflG9kNw3QjcmyrfrGiaYKz/TDVEuV
-         VvNg==
-X-Gm-Message-State: AOAM533v5MIjPXRF7G5GGix9WucFrjOaIrhDaNm2+6vSgf3Mk6wXT5Wh
-        jQGNrHDtHgmuZrzy5PbLRg==
-X-Google-Smtp-Source: ABdhPJzn35H2MS02cc8yGaHGcxHK11y6uZhf2K7MMyY/rbTIg05isBDCaeiyEjVzOMpsxaGopmMCjw==
-X-Received: by 2002:a9d:6ac2:0:b0:605:d9b6:b150 with SMTP id m2-20020a9d6ac2000000b00605d9b6b150mr385127otq.50.1651261956341;
-        Fri, 29 Apr 2022 12:52:36 -0700 (PDT)
-Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.googlemail.com with ESMTPSA id f11-20020a4ae60b000000b0035eb4e5a6bdsm831129oot.19.2022.04.29.12.52.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Apr 2022 12:52:35 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: Allow values for drive-push-pull and drive-open-drain
-Date:   Fri, 29 Apr 2022 14:46:11 -0500
-Message-Id: <20220429194610.2741437-1-robh@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S1351462AbiD2UKD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 16:10:03 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 347D32E089;
+        Fri, 29 Apr 2022 13:06:44 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: nfraprado)
+        with ESMTPSA id CC2F51F469D0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1651262803;
+        bh=JRAg129iDB2/5CSYNVbbLVuyBCrEuyoaGLVzHKyj2fQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RapoQLJhI54F0hG0vEaHBbuBphCdk16JCXEz99skfhaqxplQKqZ1A13z8r+P5xcWf
+         vxSi8LrandGByTy8WQnwInxs7mYzXrHMGb2dwQjh7SvCm8EhpXG/xMOhhb37a+XVit
+         Wbpk1Q6+KCz534aszmtjngOfSuE1KOLvYtd37kuYJTw7r8d08XkGAdzQlgkeIwl2Fa
+         YREqh+nPIsskVk1lwHdOfnMJp8KeTWzCyBPmSJywfPhhjT3tftBlm5y42imQxavwRF
+         wAQ1sHqC/Z8XF5Ql805WrNduQnFdOJX71pSBQQdzkXX6pHRgn8LD0UNgUgoyYXN5iZ
+         Vlo8xTCE8aKew==
+From:   =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= 
+        <nfraprado@collabora.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     kernel@collabora.com,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= 
+        <nfraprado@collabora.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: [PATCH] dt-bindings: pinctrl: mt8192: Add mediatek,pull-down-adv property
+Date:   Fri, 29 Apr 2022 16:06:37 -0400
+Message-Id: <20220429200637.2204937-1-nfraprado@collabora.com>
+X-Mailer: git-send-email 2.36.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A few platforms, at91 and tegra, use drive-push-pull and
-drive-open-drain with a 0 or 1 value. There's not really a need for values
-as '1' should be equivalent to no value (it wasn't treated that way) and
-drive-push-pull disabled is equivalent to drive-open-drain. So dropping the
-value can't be done without breaking existing OSs. As we don't want new
-cases, mark the case with values as deprecated.
+Add the mediatek,pull-down-adv property to the pinctrl-mt8192 dt-binding
+to allow configuring pull-down resistors on the pins of MT8192. It is
+the same as in mt8183-pinctrl.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+
 ---
- .../devicetree/bindings/pinctrl/pincfg-node.yaml     | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-index 4b22a9e3a447..f5a121311f61 100644
---- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-@@ -52,11 +52,19 @@ properties:
-       hardware supporting it the pull strength in Ohm.
+ .../devicetree/bindings/pinctrl/pinctrl-mt8192.yaml   | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+index c90a132fbc79..e462f49eae6f 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+@@ -117,6 +117,17 @@ patternProperties:
+             $ref: /schemas/types.yaml#/definitions/uint32
+             enum: [0, 1, 2, 3]
  
-   drive-push-pull:
--    type: boolean
-+    oneOf:
-+      - type: boolean
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 0, 1 ]
-+        deprecated: true
-     description: drive actively high and low
++          mediatek,pull-down-adv:
++            description: |
++              Pull down settings for 2 pull resistors, R0 and R1. User can
++              configure those special pins. Valid arguments are described as below:
++              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
++              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
++              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
++              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2, 3]
++
+           bias-pull-down: true
  
-   drive-open-drain:
--    type: boolean
-+    oneOf:
-+      - type: boolean
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+        const: 1    # No known cases of 0
-+        deprecated: true
-     description: drive with open drain
- 
-   drive-open-source:
+           bias-pull-up: true
 -- 
-2.34.1
+2.36.0
 
