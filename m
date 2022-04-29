@@ -2,58 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E100A514E0B
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 16:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E328B514FAA
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Apr 2022 17:37:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377828AbiD2Otj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Apr 2022 10:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
+        id S1378576AbiD2Pkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Apr 2022 11:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377963AbiD2Ot3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 10:49:29 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DDC84EF4;
-        Fri, 29 Apr 2022 07:46:11 -0700 (PDT)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23TEUbfq019124;
-        Fri, 29 Apr 2022 14:46:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=+e0OS0jdwM0ste0CCTZic6/ixhDPnmAaqxN6Co5MrLM=;
- b=oH96y0DFo5ryBziODc8t13MjfzAcy8bISyG+R3DIfm1nTyqsgHGkN8dLoVCo0a76TqZV
- rNmmP3QIKtEd9Sx3598ujmp9RLfxeR5Ti2RZrDAKTAFHIwohFSlP1/wTFte57X9PbFjy
- mexOZRTCacr7Dyb7kag1VXci6h+mQKDUVws6nMryCi3+yN8isFETvH/qZTWd/uVjlU8Z
- Oi9NPnkruc4y7SNRbst/WUmLpHVH6RxESuG5wJVJkr8Q2w6HedzemstuKRO0g+SsNYiz
- wDJezV1e36vo2i4qxNwiY+v2/2q9MYx4UmwUhzCdn/xjKXOv2uhbmGGENBKipClKOb8i Pg== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fr27h2eva-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 Apr 2022 14:46:06 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23TEhmCC030518;
-        Fri, 29 Apr 2022 14:46:04 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 3fm938yc6t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 Apr 2022 14:46:04 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23TEk13O42336612
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Apr 2022 14:46:01 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9542AE053;
-        Fri, 29 Apr 2022 14:46:01 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28965AE04D;
-        Fri, 29 Apr 2022 14:46:01 +0000 (GMT)
-Received: from sig-9-145-61-57.uk.ibm.com (unknown [9.145.61.57])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 29 Apr 2022 14:46:00 +0000 (GMT)
-Message-ID: <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
-Subject: Re: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
+        with ESMTP id S1378566AbiD2Pkl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Apr 2022 11:40:41 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC5DD5EB2
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Apr 2022 08:37:22 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id j9so6193625qkg.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Apr 2022 08:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bZXp9UdtwQUhq4ByWWPM2fGxW46dWdEnK/AAX/Cv5Mk=;
+        b=K7k1NR2iw9kVdnCUnxPN/AGmdqZLJYlSXYLXaJhLiudcd1Mtfwu8JpG1ZiL21PbPDl
+         cZKLE89rhE2vHHzVazDpdjx/0YSML1XahKPVknxXXd3hsT2Oz+bwVvWGWPMtv3uucyup
+         IrWcjmwiZ4ehml0LcXKVLkAuFRzWVjst1EZEsV/Ag4yMMWb8ZQn9Is5yrcfTKQSKO32C
+         v39WiD/8BkGWUU0aCAosD6uGHsWt8/WCfg1025NmSs6w3Qzp7mwsQZ2PXyD+5M28iOlZ
+         S/C4saM3TAbiCrvaCL8cBRRByxhaJdVo87fa/f6cpD6YSIrtgXx7MAZ4o6kS9t+CxrbX
+         jsGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bZXp9UdtwQUhq4ByWWPM2fGxW46dWdEnK/AAX/Cv5Mk=;
+        b=peLisKWsJH0HGJ0jDbp+4uNSBRcf2UY1APVaFzD5ALs8PsmodPP7hen2S+bZidsZeo
+         z1UqqD3FAHPaTRAGBHzqGMzJFBRtxApJEL+kOo3NVbwJrzaBxBlQncKJ4XLmUjS/nYyG
+         6ce/lZWfuF0GN6Obbr+ubBCQUsADXo37+/yV/Xe+HuEU1UA9P9PbWO6iyqZTgoElMTvG
+         yPCgPzyIWqVlDGyDSSN+irkGHB+fGncPt1kVK5q3yd1o/MeJLOmFPrG05a5crTP+ZpPA
+         p8L/rOl+6w81ZWyhbeH9gxNVumQg9cWEnipkkHWjpsRYx/dDXC8EyDO9IBCXe57z3dwg
+         iXvw==
+X-Gm-Message-State: AOAM530nGd8NR9x8C2k4O9lg1YQn/yT7+33WBCcnsMDJBO4LgSngIKmT
+        gT0KMMxCNOZXYKLAWml8yU+/PQNzKgUSeL9g
+X-Google-Smtp-Source: ABdhPJw2cY0R0MGKHsfQdnqbWfaWvp4skgSgNWcuhYrHEFDV9lMBXC/qRnYVkHx3ENkOwGHbC2LFiw==
+X-Received: by 2002:a05:620a:1906:b0:67b:3ac1:8f72 with SMTP id bj6-20020a05620a190600b0067b3ac18f72mr22573943qkb.478.1651246641508;
+        Fri, 29 Apr 2022 08:37:21 -0700 (PDT)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id r9-20020ac85c89000000b002f378738ed4sm1906774qta.7.2022.04.29.08.37.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Apr 2022 08:37:20 -0700 (PDT)
+Date:   Fri, 29 Apr 2022 11:37:18 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
@@ -61,72 +57,90 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Date:   Fri, 29 Apr 2022 16:46:00 +0200
-In-Reply-To: <Ymv3DnS1vPMY8QIg@fedora>
+Subject: Re: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
+Message-ID: <YmwGLrh4U+pVJo0m@fedora>
 References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
-         <20220429135108.2781579-19-schnelle@linux.ibm.com>
-         <Ymv3DnS1vPMY8QIg@fedora>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4tyF1YQXcKzZEbdTsAgzd5uvwySxGP6J
-X-Proofpoint-GUID: 4tyF1YQXcKzZEbdTsAgzd5uvwySxGP6J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-29_07,2022-04-28_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- clxscore=1011 adultscore=0 priorityscore=1501 mlxlogscore=512
- suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204290080
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+ <20220429135108.2781579-19-schnelle@linux.ibm.com>
+ <Ymv3DnS1vPMY8QIg@fedora>
+ <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UN0ca/LPGGPy0rfH"
+Content-Disposition: inline
+In-Reply-To: <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 2022-04-29 at 10:32 -0400, William Breathitt Gray wrote:
-> On Fri, Apr 29, 2022 at 03:50:16PM +0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> > not being declared. We thus need to add HAS_IOPORT as dependency for
-> > those drivers using them.
-> > 
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > ---
-> >  drivers/gpio/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index 45764ec3b2eb..14e5998ee95c 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -697,7 +697,7 @@ config GPIO_VR41XX
-> >  
-> >  config GPIO_VX855
-> >  	tristate "VIA VX855/VX875 GPIO"
-> > -	depends on (X86 || COMPILE_TEST) && PCI
-> > +	depends on (X86 || COMPILE_TEST) && PCI && HAS_IOPORT
-> >  	select MFD_CORE
-> >  	select MFD_VX855
-> >  	help
-> > -- 
-> > 2.32.0
-> 
-> I noticed a number of other GPIO drivers make use of inb()/outb() -- for
-> example the PC104 drivers -- should the respective Kconfigs for those
-> drivers also be adjusted here?
-> 
-> William Breathitt Gray
 
-Good question. As far as I can see most (all?) of these have "select
-ISA_BUS_API" which is "def_bool ISA". Now "config ISA" seems to
-currently be repeated in architectures and doesn't have an explicit
-HAS_IOPORT dependency (it maybe should have one). But it does only make
-sense on architectures with HAS_IOPORT set.
+--UN0ca/LPGGPy0rfH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 29, 2022 at 04:46:00PM +0200, Niklas Schnelle wrote:
+> On Fri, 2022-04-29 at 10:32 -0400, William Breathitt Gray wrote:
+> > On Fri, Apr 29, 2022 at 03:50:16PM +0200, Niklas Schnelle wrote:
+> > > In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and frie=
+nds
+> > > not being declared. We thus need to add HAS_IOPORT as dependency for
+> > > those drivers using them.
+> > >=20
+> > > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > > ---
+> > >  drivers/gpio/Kconfig | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> > > index 45764ec3b2eb..14e5998ee95c 100644
+> > > --- a/drivers/gpio/Kconfig
+> > > +++ b/drivers/gpio/Kconfig
+> > > @@ -697,7 +697,7 @@ config GPIO_VR41XX
+> > > =20
+> > >  config GPIO_VX855
+> > >  	tristate "VIA VX855/VX875 GPIO"
+> > > -	depends on (X86 || COMPILE_TEST) && PCI
+> > > +	depends on (X86 || COMPILE_TEST) && PCI && HAS_IOPORT
+> > >  	select MFD_CORE
+> > >  	select MFD_VX855
+> > >  	help
+> > > --=20
+> > > 2.32.0
+> >=20
+> > I noticed a number of other GPIO drivers make use of inb()/outb() -- for
+> > example the PC104 drivers -- should the respective Kconfigs for those
+> > drivers also be adjusted here?
+> >=20
+> > William Breathitt Gray
+>=20
+> Good question. As far as I can see most (all?) of these have "select
+> ISA_BUS_API" which is "def_bool ISA". Now "config ISA" seems to
+> currently be repeated in architectures and doesn't have an explicit
+> HAS_IOPORT dependency (it maybe should have one). But it does only make
+> sense on architectures with HAS_IOPORT set.
+
+There is such a thing as ISA DMA, but you'll still need to initialize
+the device via the IO Port bus first, so perhaps setting HAS_IOPORT for
+"config ISA" is the right thing to do: all ISA devices are expected to
+communicate in some way via ioport.
+
+William Breathitt Gray
+
+--UN0ca/LPGGPy0rfH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCYmwGKgAKCRC1SFbKvhIj
+K8KEAP0TKKesiZ/wUezoJg8+48qr5yK22ZRd1gc3a6/67xLQNgEAvu4pev2XF5/q
+8PHoF5Bmkx2ZgF9O5X8qFa9zGNUxqAk=
+=PRGE
+-----END PGP SIGNATURE-----
+
+--UN0ca/LPGGPy0rfH--
