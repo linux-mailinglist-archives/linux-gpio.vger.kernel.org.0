@@ -2,104 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C32A51610C
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 May 2022 02:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E83CE516366
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 May 2022 11:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234633AbiEAACY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 Apr 2022 20:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        id S230225AbiEAJZn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 1 May 2022 05:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231283AbiEAACX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Apr 2022 20:02:23 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F085C3878A
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Apr 2022 16:58:59 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id bl31so3290614vsb.12
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Apr 2022 16:58:59 -0700 (PDT)
+        with ESMTP id S229527AbiEAJZm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 May 2022 05:25:42 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0BF2BDC;
+        Sun,  1 May 2022 02:22:17 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id z5-20020a17090a468500b001d2bc2743c4so10676082pjf.0;
+        Sun, 01 May 2022 02:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Cv3gl7MEYJWEadacC8fV/gZvbOujcUVg8iqWdplRPCU=;
-        b=ZDtblmLrNCHoLpn2SouDhitE6OQw2a/MmViyIt/SPlVnmyZChf7F1xdTRk6FrBxMAb
-         f2yV6QpabkDRvPwfZ25FNWrOBiYrmHUWS6UUAXQPwuaSkQLRJvhvCuk5vkQvmXa0a+cq
-         EmzHTRWlPww7j9Y8pmQz3CRrXh4EKGiETfJbcIu8Uws53Ax7/J2NupWhaRi2aNgaWsU6
-         xpW9fJo2c8OKRJIJxEpeQRWsAts+wIOgc1B7mkdwrC1IQlgLeREE+Vdew35kQwD7eqpB
-         8M/CQDKSr2SkG52k6A/C4gwcOr9l9nHpq2YAciQPL3ugtqtmt+UAE6lFtmATiKszC3nP
-         v4jw==
+        h=from:to:cc:subject:date:message-id;
+        bh=HCQ44eZH+/9QUa02232FBEw4EN7psbkVPSA396nRkSc=;
+        b=a0Kh8u+k7rPN2i1vNYvbBTWNyGNGoQdHsmgHyCb7LtDPlzbguUPbB8p2x+xRGktba2
+         EmoFMREwWj4bplyVm5uMdt+m2Ckihl2H9zh8wyHYBWta+/j4EjNO/QAZfjMmOHn+V+dv
+         IcDpAs/fdxDYUcLzzAMQli9w/pu+qcwWs4CCzKsHUJHHRs+2OHwj68eWbO8wA9+XXRg6
+         q5hgqYrEthUemxjndp+ogSSdBMJ2v8znmDswI4oDZAB5hEcC370L+xlXzp6SRZoEXFJE
+         yqZZ8Bq1zqc5sXQfZIhUKZNguPt++iutgYRmj61DNq9Uf8jeS28ipQabKDTaDtO1AIRq
+         MXBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Cv3gl7MEYJWEadacC8fV/gZvbOujcUVg8iqWdplRPCU=;
-        b=VDh0311PA3RzW0GxmunIDOd5OCDn1gY8I6kba4Pm4rTVpoVgxN9VsiXbGZvVjtFAC3
-         zJGXlQekcNcSGbfzY0Z91EWwxQ5b4cMVa6avJigAtobIw3ArBt6z9YveTnN09dJpUWsV
-         OpTTZMKw4re3RIt2uF64/4PPaHUCGAKSfozes5Qa+w8xSXEn1j1A29mKE6tS8B4DhLjz
-         kwUGAXQIEpGJ4yAakrC31+A3XmfMm2vy4D8N1FF1I808FUdkf9ULxWan7Pppcyc0Yy+M
-         ibqN7/+cwgPavNP6LjXEpM71utJIk21Bsj/KGlgHujqih3CPFibAoW6CoZTA0yW9E0bk
-         7D5w==
-X-Gm-Message-State: AOAM5314dskOatSPPLWvs9osLNQF+XujH6MDZ45KDSILcVdt8HznFHIb
-        mE0XEiW0EjnjRSPaaOn/sSf1y9OGp3S76nu4Cng=
-X-Google-Smtp-Source: ABdhPJz/yd9K6iuDdy6v7f8HFueGGFr/xp/3d1hwEeYCT2t6334hKrnYktv34uHSPfbTSzqGi+aZrB2G2eyF36dhFz0=
-X-Received: by 2002:a67:1a87:0:b0:325:3e01:45a7 with SMTP id
- a129-20020a671a87000000b003253e0145a7mr1717832vsa.41.1651363138927; Sat, 30
- Apr 2022 16:58:58 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:ab0:3c46:0:0:0:0:0 with HTTP; Sat, 30 Apr 2022 16:58:58
- -0700 (PDT)
-Reply-To: wijh555@gmail.com
-From:   "Mrs. Mimi Aminu" <mimiaminu319@gmail.com>
-Date:   Sat, 30 Apr 2022 16:58:58 -0700
-Message-ID: <CAD-C4f4aRtNcjpntf8Ejap5gUjH3kNvxQCHSuw-jrm6D0Suj=g@mail.gmail.com>
-Subject: Good Day,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mimiaminu319[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [mimiaminu319[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [wijh555[at]gmail.com]
-        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:e2c listed in]
-        [list.dnswl.org]
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HCQ44eZH+/9QUa02232FBEw4EN7psbkVPSA396nRkSc=;
+        b=5ak3rwrRi86b7Tr1EpQaxArRbiAJcBEeMbD97U6gPSLOelL8e4YQdFN8Phgs55nHz7
+         vee551e2uBZFUR3DP95CyjpeY1tN935akcrzUwXx/Cgw7cSfuMqe1k4hi+MgZNKGdhxr
+         LGp7L4yu1dMv2yVckmZo/4hOuRUyxUboCd05HvbKWOBKSG5PI4Qm6tFjiX7ySahcaUuS
+         pYxtfHC17fYHjIST+BimBsTPqGSFwvqUGG5wNZfvQVk2HJs3ddAOS4NqMMMaTOc4zB2Y
+         kSGkpSaWgQwwH9lIy3iqXs3nFz9Mqv2bqcfCtv0Zxs/wvoYsz128XKs9dsNiBtX8t/2H
+         jMOQ==
+X-Gm-Message-State: AOAM532Y9C4WbmupjduhjhdYO5ndgKatjNWUbMVO5ZCjoBlkt9k8Fxu6
+        RyclnqraslIfEwBSvK8y96k=
+X-Google-Smtp-Source: ABdhPJxA8rCdQ6saLansGk+2Yyyjk4o4/2JYvbyO7Asa7rmssc7nJIGrlyazBr77ea2QgSSG1w2OlQ==
+X-Received: by 2002:a17:90a:bc8a:b0:1db:382d:6fb5 with SMTP id x10-20020a17090abc8a00b001db382d6fb5mr12550754pjr.100.1651396937432;
+        Sun, 01 May 2022 02:22:17 -0700 (PDT)
+Received: from localhost.localdomain ([183.14.29.224])
+        by smtp.gmail.com with ESMTPSA id 16-20020aa79110000000b0050dc762817asm2575279pfh.84.2022.05.01.02.22.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 May 2022 02:22:16 -0700 (PDT)
+From:   Puyou Lu <puyou.lu@gmail.com>
+Cc:     puyou.lu@gmail.com, Puyou Lu <lupuyou@aifrutech.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: pca953x: update irq_stat even when irq is not enabled (irq_mask not set).
+Date:   Sun,  1 May 2022 17:22:01 +0800
+Message-Id: <20220501092201.16411-1-puyou.lu@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-Greetings,
-I'm Mrs. Mimi Aminu, how are you doing hope you are in good health,
-the Board director
-try to reach you on phone several times Meanwhile, your number was not
-connecting. before he ask me to send you an email to hear from you if
-you are fine. hope to hear you are in good Health.
+From: Puyou Lu <lupuyou@aifrutech.com>
 
-Thanks,
-Mrs. Mimi Aminu.
+When one port's input state get inverted (eg. from low to hight) after
+pca953x_irq_setup but before setting irq_mask (by some other driver such as
+"gpio-keys"), the next inversion of this port (eg. from hight to low) will not
+triggered any more (because irq_stat is not updated at the first time). Issue
+should be fixed after this commit.
+
+Signed-off-by: Puyou Lu <puyou.lu@gmail.com>
+---
+ drivers/gpio/gpio-pca953x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d2fe76f3f34f..8726921a1129 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -762,11 +762,11 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
+ 	bitmap_xor(cur_stat, new_stat, old_stat, gc->ngpio);
+ 	bitmap_and(trigger, cur_stat, chip->irq_mask, gc->ngpio);
+ 
++	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
++
+ 	if (bitmap_empty(trigger, gc->ngpio))
+ 		return false;
+ 
+-	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
+-
+ 	bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
+ 	bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
+ 	bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
+-- 
+2.17.1
+
