@@ -2,54 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1A3516511
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 May 2022 18:01:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15470516800
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 May 2022 23:27:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348735AbiEAQFE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 1 May 2022 12:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51184 "EHLO
+        id S237000AbiEAVai (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 1 May 2022 17:30:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238026AbiEAQFD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 May 2022 12:05:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCFB13EF30;
-        Sun,  1 May 2022 09:01:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 763B4B80E3D;
-        Sun,  1 May 2022 16:01:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA12C385AA;
-        Sun,  1 May 2022 16:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651420893;
-        bh=VLJEHa16TVc+vX5edi/ofAzdG45hQazjw0LxPffBsaM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NCqDKpOX8UCo8nQpJo3HVwc0eJ8YRt6NMMKqBSnvYfM04a4stpMftg/X9VHLtrkEJ
-         4hhNReWJdNwxcHVRJsM4XbTVM76GJlMM0EdfB+a+Xk78eZwLqx0otD2y6++9hsiwfC
-         LshhvUBmGFUnslt7d+dnaj43gPzYIsPYepK39y7EWu6usca2ZLJcWAg3CnSJnC0WrI
-         FpI5WLSf5gszr8dedufo7B+es2RfLwnekCcS2p0dtX/WBKtFpGJ12LlqSFO0xCP+75
-         Glwa5OGZEYLQ7SITKRA/+W+gmcRxoi35BB3QpgytuGYEigBf/jLAepckx3Q/SRdtWQ
-         R7Be8MLh3HP+A==
-Date:   Sun, 1 May 2022 17:09:48 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: add AD4130
-Message-ID: <20220501170906.02281a82@jic23-huawei>
-In-Reply-To: <20220419150828.191933-2-cosmin.tanislav@analog.com>
-References: <20220419150828.191933-1-cosmin.tanislav@analog.com>
-        <20220419150828.191933-2-cosmin.tanislav@analog.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S233783AbiEAVah (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 May 2022 17:30:37 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3934830F51
+        for <linux-gpio@vger.kernel.org>; Sun,  1 May 2022 14:27:11 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id w187so23296841ybe.2
+        for <linux-gpio@vger.kernel.org>; Sun, 01 May 2022 14:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xAskLmoBXOcHx2RtzTF77xCmBBRnwL5PyD4a1eKKNdI=;
+        b=hYV/EhhA2DcuXyipnbt78bMz1dzGRCn5wcMaI6OoOVP96sHoLhcaPCJ0RGRIOGrJAm
+         akN8ym/xEl5RrJsPUfiMKwLpUrl0diGOu41mklHmoaSjLl8YtN0M+zkRZ4ap9kQ2hZh1
+         iQq36tofaypj/mKFC2FKc0yP07ar7Qd0mLhPdltqDfCnFf3eRe/r5DWLpGiT5y8qvDTt
+         GL7z9tExa6U/BM9Wf6zM4+YFtP9EAuI7gVIMlNQghw/8L8ztHTS7Vb4Z4rp2PkDnUETx
+         ktBtv1I24NFPbSdl1tEVkgUvlxpfkbZLG+7vLp8cTR9Vps6SwdjRRtgQfvvLtyUUviAu
+         5biQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xAskLmoBXOcHx2RtzTF77xCmBBRnwL5PyD4a1eKKNdI=;
+        b=Muo/dRjdy56DGcNumYJ9hYtCDVYd7WwCf7I7TpKERxJjrIcR9YKX8Qi/2ZL0HMdiJg
+         LeIPl4ODdHjwp13qwl58Jiruy6dtvaHmggA3ce0/UrpC/j3qKr/Y4+vvkJX0+CgZYjFK
+         yKOBwhV6zpaUiXL57cFO4CkxiTs+GA1hCyPDFvfcP8ADmJ9HVj1xHDtOcTCqhkIJH1Sv
+         1ThC5OXSOZ9SPQtpc4Ex+cpQmjg0/VWrcL9uJp8KtA8K6WDLFfE/za8TTZ/KU82w3nsT
+         Svv67dd29/FdWEk3E9fKCVachuhU2GcMwP0m4CHjGNt5JCehHrXRz4WI19oQozK1LegX
+         MSUQ==
+X-Gm-Message-State: AOAM532H454Y4YluJ9BZsAoTkhWda5md7mcSMV84O4WoeyWSTBvWn0kv
+        8klteP80PXmLYapKPaiz+4uO5jN1EAAO95tISwsW/Q==
+X-Google-Smtp-Source: ABdhPJzeWejiiOdnxeA3dlJ1w/j6G5MpyiddMmyPKuipFWFSTECeY1MzdZqDUgfy0gPnbsIomcUkhrBhs/zBRuYqvdU=
+X-Received: by 2002:a25:e684:0:b0:645:d429:78e9 with SMTP id
+ d126-20020a25e684000000b00645d42978e9mr8625979ybh.369.1651440430413; Sun, 01
+ May 2022 14:27:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <20220422143608.226580-1-fabien.dessenne@foss.st.com>
+In-Reply-To: <20220422143608.226580-1-fabien.dessenne@foss.st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 1 May 2022 23:26:59 +0200
+Message-ID: <CACRpkdbbUu+hKByGkVh2eR2MfMdgDuVYLFQ-VK+JyK_tRNsxZg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: stm32: improve bank clocks management
+To:     Fabien Dessenne <fabien.dessenne@foss.st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Marek Vasut <marex@denx.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,323 +69,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 19 Apr 2022 18:08:27 +0300
-Cosmin Tanislav <demonsingur@gmail.com> wrote:
+On Fri, Apr 22, 2022 at 4:36 PM Fabien Dessenne
+<fabien.dessenne@foss.st.com> wrote:
 
-> AD4130-8 is an ultra-low power, high precision, measurement solution for
-> low bandwidth battery operated applications.
->=20
-> The fully integrated AFE (Analog Front-End) includes a multiplexer for up
-> to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
-> Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
-> selectable filter options, smart sequencer, sensor biasing and excitation
-> options, diagnostics, and a FIFO buffer.
->=20
-> Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
-Hi Cosmin,
+> Instead of enabling/disabling the clock at each IO configuration update,
+> just keep the clock enabled from the probe.
+> This makes things simpler and more efficient (e.g. the time required to
+> toggle an output IO is drastically decreased) without significantly
+> increasing the power consumption.
+>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
 
-A few things inline to add to fixing the lack of detail Rob highlighted.
+Patch applied after merging in v5.18-rc5 as a prerequisite.
 
-Thanks,
-
-Jonathan
-
-> ---
->  .../bindings/iio/adc/adi,ad4130.yaml          | 264 ++++++++++++++++++
->  1 file changed, 264 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4130.=
-yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
-> new file mode 100644
-> index 000000000000..32996b62cd20
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
-> @@ -0,0 +1,264 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2022 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4130.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD4130 ADC device driver
-> +
-> +maintainers:
-> +  - Cosmin Tanislav <cosmin.tanislav@analog.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices AD4130 ADC. Datasheet can be found her=
-e:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-AD4130-8.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4130-8-16-lfcsp
-> +      - adi,ad4130-8-16-wlcsp
-> +      - adi,ad4130-8-24-lfcsp
-> +      - adi,ad4130-8-24-wlcsp
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: phandle to the master clock (mclk)
-> +
-> +  clock-names:
-> +    items:
-> +      - const: mclk
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    description: |
-> +      Specify which interrupt pin should be configured as Data Ready / F=
-IFO
-> +      interrupt.
-> +      Default if not supplied is dout-int.
-> +    enum:
-> +      - dout-int
-> +      - clk
-> +      - p2
-> +      - dout
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  refin1-supply:
-> +    description: refin1 supply. Can be used as reference for conversion.
-> +
-> +  refin2-supply:
-> +    description: refin2 supply. Can be used as reference for conversion.
-> +
-> +  avdd-supply:
-> +    description: AVDD voltage supply. Can be used as reference for conve=
-rsion.
-> +
-> +  iovdd-supply:
-> +    description: IOVDD voltage supply. Used for the chip interface.
-> +
-> +  spi-max-frequency:
-> +    maximum: 5000000
-> +
-> +  adi,int-clk-out:
-> +    description: Specify if the internal clock should be exposed on the =
-CLK pin.
-> +    type: boolean
-> +
-> +  adi,ext-clk-freq:
-> +    description: Specify the frequency of the external clock.
-
-Units?  Even better if we can map this to one of the standard unit types and
-include the unit in the name.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [76800, 153600]
-> +    default: 76800
-> +
-> +  adi,bipolar:
-> +    description: Specify if the device should be used in bipolar mode.
-> +    type: boolean
-> +
-> +  adi,vbias-pins:
-> +    description: Analog inputs to apply a voltage bias of (AVDD =E2=88=
-=92 AVSS) / 2 to.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    maxItems: 16
-> +    items:
-> +      minimum: 0
-> +      maximum: 15
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +patternProperties:
-> +  "^channel@([0-9]|1[0-5])$":
-> +    type: object
-> +    $ref: adc.yaml
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          The channel number.
-
-This isn't used explicitly in the driver. I'm wondering
-if perhaps it should be rather than using the order in which the
-child nodes are found...
-
-The driver would then need to cope with potential holes however
-(or just reject a binding where they occur?).=20
-
-> +        items:
-> +          minimum: 0
-> +          maximum: 15
-> +
-> +      diff-channels:
-> +        description: |
-> +          Besides the analog inputs available, internal inputs can be us=
-ed.
-> +          16: Internal temperature sensor.
-> +          17: AVSS
-> +          18: Internal reference
-> +          19: DGND
-> +          20: (AVDD =E2=88=92 AVSS)/6+
-> +          21: (AVDD =E2=88=92 AVSS)/6-
-> +          22: (IOVDD =E2=88=92 DGND)/6+
-> +          23: (IOVDD =E2=88=92 DGND)/6-
-> +          24: (ALDO =E2=88=92 AVSS)/6+
-> +          25: (ALDO =E2=88=92 AVSS)/6-
-> +          26: (DLDO =E2=88=92 DGND)/6+
-> +          27: (DLDO =E2=88=92 DGND)/6-
-> +          28: V_MV_P
-> +          29: V_MV_M
-> +        items:
-> +          minimum: 0
-> +          maximum: 29
-> +
-> +      adi,reference-select:
-> +        description: |
-> +          Select the reference source to use when converting on the
-> +          specific channel. Valid values are:
-> +          0: REFIN1(+)/REFIN1(=E2=88=92)
-> +          1: REFIN2(+)/REFIN2(=E2=88=92)
-> +          2: REFOUT/AVSS (Internal reference)
-> +          3: AVDD/AVSS
-> +          If not specified, REFIN1 is used.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 1, 2, 3]
-> +        default: 0
-> +
-> +      adi,excitation-pin-0:
-> +        description: |
-> +          Analog input to apply excitation current to while the channel
-> +          is active.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 15
-> +        default: 0
-> +
-> +      adi,excitation-pin-1:
-> +        description: |
-> +          Analog input to apply excitation current to while this channel
-> +          is active.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 15
-> +        default: 0
-> +
-> +      adi,excitation-current-0-nanoamps:
-> +        description: |
-> +          Excitation current in nanoamps to be applied to pin specified =
-in
-> +          adi,excitation-pin-0 while this channel is active.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 100, 10000, 20000, 50000, 100000, 150000, 200000]
-> +        default: 0
-> +
-> +      adi,excitation-current-1-nanoamps:
-> +        description: |
-> +          Excitation current in nanoamps to be applied to pin specified =
-in
-> +          adi,excitation-pin-1 while this channel is active.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 100, 10000, 20000, 50000, 100000, 150000, 200000]
-> +        default: 0
-> +
-> +      adi,burnout-current-nanoamps:
-> +        description: |
-> +          Burnout current in nanoamps to be applied for this channel.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 500, 2000, 4000]
-> +        default: 0
-> +
-> +      adi,buffered-positive:
-> +        description: Enable buffered mode for positive input.
-> +        type: boolean
-> +
-> +      adi,buffered-negative:
-> +        description: Enable buffered mode for negative input.
-> +        type: boolean
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    spi {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      adc@0 {
-> +        compatible =3D "adi,ad4130-8-24-wlcsp";
-> +        reg =3D <0>;
-> +
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        spi-max-frequency =3D <5000000>;
-> +        interrupts =3D <27 IRQ_TYPE_EDGE_FALLING>;
-> +        interrupt-parent =3D <&gpio>;
-> +
-> +        channel@0 {
-> +          reg =3D <0>;
-> +
-> +          adi,reference-select =3D <2>;
-> +
-> +          /* AIN8, AIN9 */
-> +          diff-channels =3D <8 9>;
-> +        };
-> +
-> +        channel@1 {
-> +          reg =3D <1>;
-> +
-> +          adi,reference-select =3D <2>;
-> +
-> +          /* AIN10, AIN11 */
-> +          diff-channels =3D <10 11>;
-> +        };
-> +
-> +        channel@2 {
-> +          reg =3D <2>;
-> +
-> +          adi,reference-select =3D <2>;
-> +
-> +          /* Temperature Sensor, DGND */
-> +          diff-channels =3D <16 19>;
-> +        };
-> +
-> +        channel@3 {
-> +          reg =3D <3>;
-> +
-> +          adi,reference-select =3D <2>;
-> +
-> +          /* Internal reference, DGND */
-> +          diff-channels =3D <18 19>;
-> +        };
-> +
-> +        channel@4 {
-> +          reg =3D <4>;
-> +
-> +          adi,reference-select =3D <2>;
-> +
-> +          /* DGND, DGND */
-> +          diff-channels =3D <19 19>;
-> +        };
-> +      };
-> +    };
-
+Yours,
+Linus Walleij
