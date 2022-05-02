@@ -2,78 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94041517105
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 15:54:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA4B951727E
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 17:25:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236475AbiEBN5w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 May 2022 09:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
+        id S1385728AbiEBP3U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 May 2022 11:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236323AbiEBN5s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 09:57:48 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF0F13DC2
-        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 06:54:20 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id l11-20020a17090a49cb00b001d923a9ca99so12791986pjm.1
-        for <linux-gpio@vger.kernel.org>; Mon, 02 May 2022 06:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=KMLjelAQm14zk1bEIcVvty9Y+q7DpUAdjSmBIzqgGok=;
-        b=JCtGEf41fwkLSaqkVxkF/txe0cxHWuapOkj4Is/ioydnRKv2Dayall3S9NYK78NeAW
-         q8kA4m2ogU+BkBj7VWYo2hp7g2e4EBz/kUNyq8QZiZMJl8Ih1Au1Xk2Lg1dID57sQd8v
-         MyDfIKDTDUQSt0xz5FM0yvMo8GjTR5tWgfYRPARmW9KVCtpaxSiDVCtY4q8sEzoQGJ6O
-         ZRS2OlrJBJErLSg6H4hHrqAqiu9+g25mHJXI8yxdurhNJ1D80cVnd1xwKSgTrmZFEXfL
-         mfZDtTVjQki3Nf5vU9AMZHKC0yB0bsZK472ao15Qvn7p3I2q7sx/9Akgt8Pw/FocL2IF
-         MFmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KMLjelAQm14zk1bEIcVvty9Y+q7DpUAdjSmBIzqgGok=;
-        b=e214umQs/69Q0byLlqE9kkPkkl4nAKRxFI7b/w410K9Onic+saapSoBQ7LTBEC+Ilp
-         c3FCTvQ1Gk06H50P/DUhfqtAX/9RpbaSvPz7XEYtFoUdQTcNGeCVAJHEWA9ZnSyvqH4E
-         nY6wu6pmjvPaTVXTYy5fSwQFc3/u3okJIGNcX9VAVO4J+/irr3m+389Te2zGKHjcK8s0
-         T3zdaFiMZzQb/47ryJpDJJ0+Uo5TXTCrAuphaLEckwCnMRVj3Yxb9Wt+mZICYxPpt4vp
-         xaDEEu5IXBps1LhykRvTbBo4+ZKokiSM1rsySNrh+LajjRa3chDUtjqCEUakNO46V9Yg
-         RYLA==
-X-Gm-Message-State: AOAM533ilDleJPYMC61X+Oy66KnMwHobtOP6cBkz0Wx9v0ClBOy2YhfQ
-        ksD/Q4bol57NekR5zZ9kH18=
-X-Google-Smtp-Source: ABdhPJzKTsDy5iE7MYQQPBAjNxAilXosYBcz1Q6PjDHmT6rkYGVe5IOsi/dbpeUnywyup3Jtt7MLvQ==
-X-Received: by 2002:a17:902:e546:b0:15e:b129:7d8 with SMTP id n6-20020a170902e54600b0015eb12907d8mr1283606plf.138.1651499659571;
-        Mon, 02 May 2022 06:54:19 -0700 (PDT)
-Received: from sol ([118.209.204.33])
-        by smtp.gmail.com with ESMTPSA id z21-20020aa791d5000000b0050dc76281ddsm4715613pfa.183.2022.05.02.06.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 May 2022 06:54:18 -0700 (PDT)
-Date:   Mon, 2 May 2022 21:54:12 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexander Stein <alexander.stein@mailbox.org>,
-        David Kozub <zub@linux.fjfi.cvut.cz>,
-        Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>,
-        Michael Beach <michaelb@ieee.org>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH v6 5/5] bindings: cxx: add implementation
-Message-ID: <20220502135412.GA16365@sol>
-References: <20220426125023.2664623-1-brgl@bgdev.pl>
- <20220426125023.2664623-6-brgl@bgdev.pl>
- <20220427060153.GB118500@sol>
- <CAMRc=McZirBT_sdWxrhVomUoODTb-tz-og86Zf6KY4BBMXOw7Q@mail.gmail.com>
+        with ESMTP id S1385726AbiEBP3T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 11:29:19 -0400
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C271913DCD;
+        Mon,  2 May 2022 08:25:48 -0700 (PDT)
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 242EGuP1023012;
+        Mon, 2 May 2022 17:25:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=selector1;
+ bh=0JY2d4G0/9ojnnPUTXCbTsscUCh+1Ur6T7M/thuZ+6k=;
+ b=Xg9f9f+bGTNx/dlF8d4WCPoiyDN8IXWJ4fRqDWhTx+dgo0nWDFuCpBjgBZrX/qTQJD9P
+ eGJsnJHI8bWH6xjHWeoyIC3Cssk22kgxTKF1c14L52F2I8bp5hN6UciG6gbRfUzWN3qZ
+ dbWHkSajCWnOXCuMtkx2FR+/WC4ybyH/HhBcsxbq8Oh37uW68PBGzUDuiV4RaX2usPYY
+ 3A9gCPEqNN56oQpVwefy7nTta7lfMUS1Kv2vXK1fZMxycgAWEU/EjIPeWW6vnUB5lV23
+ 4Ywfkl+LPkl4p+Vk4OT5NMMIqJ4O0L4d7aJ0ubvEEmHxgUH0rcMYIYvZDq4xyBNyrHN4 3w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3frthjhc5y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 May 2022 17:25:32 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B321610002A;
+        Mon,  2 May 2022 17:25:31 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A9ECD22AFFD;
+        Mon,  2 May 2022 17:25:31 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG2NODE2.st.com (10.75.127.5)
+ with Microsoft SMTP Server (TLS) id 15.0.1497.26; Mon, 2 May 2022 17:25:31
+ +0200
+From:   Fabien Dessenne <fabien.dessenne@foss.st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@foss.st.com>
+Subject: [PATCH] pinctrl: stm32: improve debugfs information of pinconf-pins entry
+Date:   Mon, 2 May 2022 17:25:24 +0200
+Message-ID: <20220502152524.283374-1-fabien.dessenne@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McZirBT_sdWxrhVomUoODTb-tz-og86Zf6KY4BBMXOw7Q@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG2NODE2.st.com
+ (10.75.127.5)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-02_04,2022-05-02_03,2022-02-23_01
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,92 +70,136 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 02, 2022 at 02:34:34PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Apr 27, 2022 at 8:02 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Apr 26, 2022 at 02:50:23PM +0200, Bartosz Golaszewski wrote:
-> > > This contains the actual implementation of the v2 C++ bindings.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> >
-> > [snip]
-> >
-> > > +
-> > > +GPIOD_CXX_API ::std::size_t line_request::num_lines(void) const
-> > > +{
-> > > +     this->_m_priv->throw_if_released();
-> > > +
-> > > +     return ::gpiod_line_request_get_num_lines(this->_m_priv->request.get());
-> > > +}
-> > > +
-> > > +GPIOD_CXX_API line::offsets line_request::offsets(void) const
-> > > +{
-> > > +     this->_m_priv->throw_if_released();
-> > > +
-> > > +     ::std::vector<unsigned int> buf(this->num_lines());
-> > > +     line::offsets offsets(this->num_lines());
-> > > +
-> > > +     ::gpiod_line_request_get_offsets(this->_m_priv->request.get(), buf.data());
-> > > +
-> > > +     auto num_lines = this->num_lines();
-> > > +     for (unsigned int i = 0; i < num_lines; i++)
-> > > +             offsets[i] = buf[i];
-> > > +
-> > > +     return offsets;
-> > > +}
-> > > +
-> >
-> > My previous comment was "Cache num_lines locally rather than calling
-> > num_lines() several times."
-> >
-> > You cached it in the wrong place - it should be first thing in the
-> > function, so you only call it once, not three times.
-> >
-> 
-> I fixed it when applying.
-> 
-> > And the throw_if_released() is still "redundant as this->num_lines()
-> > also does it", and it is the first thing called here - after the
-> > throw_if_released().
-> >
-> 
-> I think it's still worth having it here because at least the code
-> makes it clear, we need to have a valid request here. It's not like
-> it's a hot path where this additional function call would matter IMO.
-> 
+Print the name of the selected alternate function in addition to its
+number. Ex:
+   "pin 135 (PI7): alternate 10 (SAI2_FS_A) - ..."
 
-So add a comment?
-Pointless work is pointless work, hot path or not.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
+---
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 31 +++++++++++++++++++++++----
+ drivers/pinctrl/stm32/pinctrl-stm32.h | 13 +++++------
+ 2 files changed, 34 insertions(+), 10 deletions(-)
 
-> > And I would've made this patch 3/5, not 5/5.
-> >
-> > But I'm fine with this set going in either way - in fact give its size
-> > I'd rather see minor tweaks applied later than go through another round
-> > of review.
-> >
-> > For the series:
-> >
-> > Reviewed-by: Kent Gibson <warthog618@gmail.com>
-> 
-> Thanks I applied it for now as it is, let's get it into master with
-> the Python bindings and then polish it some more there.
-> 
-> >
-> > I really would also like to see some feedback from C++ developers that
-> > will actually be using it, as they have a bigger stake in it than I do.
-> > But that is up to them.
-> >
-> 
-> Indeed, any idea where to post that to get some free code reviews from
-> C++ devs? :)
-> 
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index b308e7bb7487..2e8421600db5 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -507,7 +507,7 @@ stm32_pctrl_find_group_by_pin(struct stm32_pinctrl *pctl, u32 pin)
+ static bool stm32_pctrl_is_function_valid(struct stm32_pinctrl *pctl,
+ 		u32 pin_num, u32 fnum)
+ {
+-	int i;
++	int i, k;
+ 
+ 	for (i = 0; i < pctl->npins; i++) {
+ 		const struct stm32_desc_pin *pin = pctl->pins + i;
+@@ -516,7 +516,7 @@ static bool stm32_pctrl_is_function_valid(struct stm32_pinctrl *pctl,
+ 		if (pin->pin.number != pin_num)
+ 			continue;
+ 
+-		while (func && func->name) {
++		for (k = 0; k < STM32_CONFIG_NUM; k++) {
+ 			if (func->num == fnum)
+ 				return true;
+ 			func++;
+@@ -1118,10 +1118,27 @@ static int stm32_pconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	return 0;
+ }
+ 
++static struct stm32_desc_pin *
++stm32_pconf_get_pin_desc_by_pin_number(struct stm32_pinctrl *pctl,
++				       unsigned int pin_number)
++{
++	struct stm32_desc_pin *pins = pctl->pins;
++	int i;
++
++	for (i = 0; i < pctl->npins; i++) {
++		if (pins->pin.number == pin_number)
++			return pins;
++		pins++;
++	}
++	return NULL;
++}
++
+ static void stm32_pconf_dbg_show(struct pinctrl_dev *pctldev,
+ 				 struct seq_file *s,
+ 				 unsigned int pin)
+ {
++	struct stm32_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	const struct stm32_desc_pin *pin_desc;
+ 	struct pinctrl_gpio_range *range;
+ 	struct stm32_gpio_bank *bank;
+ 	int offset;
+@@ -1171,7 +1188,12 @@ static void stm32_pconf_dbg_show(struct pinctrl_dev *pctldev,
+ 	case 2:
+ 		drive = stm32_pconf_get_driving(bank, offset);
+ 		speed = stm32_pconf_get_speed(bank, offset);
+-		seq_printf(s, "%d - %s - %s - %s %s", alt,
++		pin_desc = stm32_pconf_get_pin_desc_by_pin_number(pctl, pin);
++		if (!pin_desc)
++			return;
++
++		seq_printf(s, "%d (%s) - %s - %s - %s %s", alt,
++			   pin_desc->functions[alt + 1].name,
+ 			   drive ? "open drain" : "push pull",
+ 			   biasing[bias],
+ 			   speeds[speed], "speed");
+@@ -1386,7 +1408,8 @@ static int stm32_pctrl_create_pins_tab(struct stm32_pinctrl *pctl,
+ 		if (pctl->pkg && !(pctl->pkg & p->pkg))
+ 			continue;
+ 		pins->pin = p->pin;
+-		pins->functions = p->functions;
++		memcpy((struct stm32_desc_pin *)pins->functions, p->functions,
++		       STM32_CONFIG_NUM * sizeof(struct stm32_desc_function));
+ 		pins++;
+ 		nb_pins_available++;
+ 	}
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
+index b9584039cdf5..2ac2db41a498 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.h
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
+@@ -17,6 +17,7 @@
+ #define STM32_PIN_GPIO		0
+ #define STM32_PIN_AF(x)		((x) + 1)
+ #define STM32_PIN_ANALOG	(STM32_PIN_AF(15) + 1)
++#define STM32_CONFIG_NUM	(STM32_PIN_ANALOG + 1)
+ 
+ /*  package information */
+ #define STM32MP_PKG_AA		BIT(0)
+@@ -31,26 +32,26 @@ struct stm32_desc_function {
+ 
+ struct stm32_desc_pin {
+ 	struct pinctrl_pin_desc pin;
+-	const struct stm32_desc_function *functions;
++	const struct stm32_desc_function functions[STM32_CONFIG_NUM];
+ 	const unsigned int pkg;
+ };
+ 
+ #define STM32_PIN(_pin, ...)					\
+ 	{							\
+ 		.pin = _pin,					\
+-		.functions = (struct stm32_desc_function[]){	\
+-			__VA_ARGS__, { } },			\
++		.functions = {	\
++			__VA_ARGS__},			\
+ 	}
+ 
+ #define STM32_PIN_PKG(_pin, _pkg, ...)					\
+ 	{							\
+ 		.pin = _pin,					\
+ 		.pkg  = _pkg,				\
+-		.functions = (struct stm32_desc_function[]){	\
+-			__VA_ARGS__, { } },			\
++		.functions = {	\
++			__VA_ARGS__},			\
+ 	}
+ #define STM32_FUNCTION(_num, _name)		\
+-	{							\
++	[_num] = {						\
+ 		.num = _num,					\
+ 		.name = _name,					\
+ 	}
+-- 
+2.25.1
 
-That does raise the issue of whether libgpiod should have a forum other
-than this mailing list.
-
-I was hoping to at least nudge the others on the CC list ¯\_(ツ)_/¯.
-If no one is sufficiently interested to bother reviewing, or even acking,
-the C++ bindings, perhaps deprecate them instead ;-)?
-
-Cheers,
-Kent.
