@@ -2,60 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FAD5516E78
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 13:01:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9233516EC2
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 13:19:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384686AbiEBLEs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 May 2022 07:04:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32886 "EHLO
+        id S231397AbiEBLWb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 May 2022 07:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376723AbiEBLEg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 07:04:36 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A51DCD
-        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 04:00:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651489258; x=1683025258;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mzdK7ecc8Zu2bNvo5ux0Jj+SvazieoQXeBrJipks1Ik=;
-  b=F/5ZIkWuxDf+KG3IpM06CzotsNSUNNf4TdD1RBXttwstMXQ59VKyPODR
-   LLVzwV/NXuXsWY7eav4I1kNeP2XxMdIPr6mozRMh9ldaPufUknPBgXqsU
-   a9esILm5G4IJYn4wBpNtw0IYJxE6G0YoGeZFCy0nXDN6tpTisPVFze95u
-   vq9TA/o3t3+k2xN9DhtNzvW/G0G63Tv6Reja+l1qZbnUx9Wyxfa1yIA3V
-   WoExJ+xOSU7FGtDCps9DgsZxzp75Tt5FbC6xJYt/SuUczfoxW3sLxuso4
-   KoUSS6cHmeljuJY0qyrJFmRqSfot0coNJc5/H428nwxLXsryXsUjLeM4Z
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10334"; a="327721136"
-X-IronPort-AV: E=Sophos;i="5.91,190,1647327600"; 
-   d="scan'208";a="327721136"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 04:00:57 -0700
-X-IronPort-AV: E=Sophos;i="5.91,190,1647327600"; 
-   d="scan'208";a="690076739"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 04:00:56 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nlTnR-00B1DN-Pv;
-        Mon, 02 May 2022 14:00:53 +0300
-Date:   Mon, 2 May 2022 14:00:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH] MAINTAINERS: update the GPIO git tree entry
-Message-ID: <Ym+55dJDxUKBeG5y@smile.fi.intel.com>
-References: <20220502093416.22744-1-brgl@bgdev.pl>
+        with ESMTP id S243190AbiEBLWa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 07:22:30 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A069DF63
+        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 04:19:01 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id p4so16313202edx.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 May 2022 04:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HkHb9zDzaQCh7icuTIrBW1dLzBtZj3gG9lMpTgSrSE4=;
+        b=yqitAepL/r7UgctBxOUq2kCCbQqEQvIwdOiY8s3pSmTs6ORlW41oYP2FWA7dfxvzb+
+         jL/viL3ecqJ26Fuc6oLYfD8+WhGMwM/ABX2edufGwRlrUfG2cQUWxUrsRwzcvzzVXcDk
+         sIw9Sv9yjknXSHSnPYnAgnzoI6OuKqGCCkb0hzYI7P+VMZH5o0GvJcJ0lPOhJx6Hz3GA
+         Aw+KSSOe917yRmBHbzDjfhYkFueOBCZhqYxLZwvtnUu0V05e2ZxqULfphKrbYjChXjU3
+         W3NOqmCKvb/iGzBOOBfag2KPQ/9p95eMAogvsIJhL5WfaAmou9TRL5ZfaCaZowDMvODr
+         tHXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HkHb9zDzaQCh7icuTIrBW1dLzBtZj3gG9lMpTgSrSE4=;
+        b=qd5uXEdIIWfGMyRp4eCpgYjdm3e1Rtd+IjADGjIwYIHciSHaANigjQQt7GhIcGQuPM
+         TdtoQ3IrolJe1FepPlhXvzRxELbK0yHxZliJESh9CBZ0T6TwL6nH83l2maokjuAz0FLu
+         U8NoW6MpTnrZtRtrat4CAheO+HnEljmdjbM5UqPJ7SS2dqdJ6Ig6Nw7Zv8xmMp6BHmqe
+         4EVPyUMLHTnLCHioFztvC5lO013C+ek+1A7ColBtdzl4qiUu5XG99UwXrd5r2tAQHILY
+         X+jcOjiwS5hbmaSqagbZsBtYSP2NQ/4rSn7l1u+nxfgraWkQH2m6D74GfYMrg/bt6fJv
+         CZcQ==
+X-Gm-Message-State: AOAM533nVR7fI7vVcTDCu1mX1DyMv7+M+P/GenunIM3FDF7+SmO/T4ii
+        e5GjU102R7+2e2O7vw4BtP98R8v/6sou/n8FPJ/jkQ==
+X-Google-Smtp-Source: ABdhPJwBrdywMt5x3Ze2ZxcFXXgrCbDZxAOQm3OTuht5rGWTVnQ9/gIhZUySEPXpta7fcDmFxIYbg84nCTDMxM6xgCk=
+X-Received: by 2002:aa7:c49a:0:b0:425:d526:98ad with SMTP id
+ m26-20020aa7c49a000000b00425d52698admr12673123edq.352.1651490339736; Mon, 02
+ May 2022 04:18:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220502093416.22744-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+References: <20220427144620.9105-1-pmalgujar@marvell.com> <20220427144620.9105-2-pmalgujar@marvell.com>
+In-Reply-To: <20220427144620.9105-2-pmalgujar@marvell.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 2 May 2022 13:18:49 +0200
+Message-ID: <CAMRc=Mf91eMF7D6CRtA8-HQ7pdtP343WUGhLG4qti_9zJF4ELQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpio: thunderx: avoid potential deadlock
+To:     Piyush Malgujar <pmalgujar@marvell.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Robert Richter <rric@kernel.org>, cchavva@marvell.com,
+        wsadowski@marvell.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,38 +71,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 02, 2022 at 11:34:16AM +0200, Bartosz Golaszewski wrote:
-> My git tree has become the de facto main GPIO tree. Update the
-> MAINTAINERS file to reflect that.
+On Wed, Apr 27, 2022 at 4:46 PM Piyush Malgujar <pmalgujar@marvell.com> wrote:
+>
+> Using irqsave/irqrestore locking variants to avoid any deadlock.
+>
 
-Indeed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I see you'll be resending this anyway so would you mind providing an
+example of a deadlock that is possible with no-irqsave variants?
+Thanks.
 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> Reported-by: Baruch Siach <baruch@tkos.co.il>
+Bart
+
+> Signed-off-by: Piyush Malgujar <pmalgujar@marvell.com>
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index edc96cdb85e8..9d47c5e7c6ae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8385,7 +8385,7 @@ M:	Linus Walleij <linus.walleij@linaro.org>
->  M:	Bartosz Golaszewski <brgl@bgdev.pl>
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
->  F:	Documentation/ABI/obsolete/sysfs-gpio
->  F:	Documentation/ABI/testing/gpio-cdev
->  F:	Documentation/admin-guide/gpio/
-> -- 
-> 2.34.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
