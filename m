@@ -2,65 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AA29516D66
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 11:31:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B9B4516D70
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 11:34:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384315AbiEBJe6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 May 2022 05:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49792 "EHLO
+        id S1380873AbiEBJh7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 May 2022 05:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384337AbiEBJet (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 05:34:49 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966A01834B
-        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 02:31:10 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id gh6so26782637ejb.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 May 2022 02:31:10 -0700 (PDT)
+        with ESMTP id S1349713AbiEBJh6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 05:37:58 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CC442EE5
+        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 02:34:26 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 125-20020a1c1983000000b003941f354c62so4359401wmz.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 May 2022 02:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CuZuLvdtXsTMMZQUAbDPqb/0pC+19gYcn3vELZlj3YY=;
-        b=A6MegasgaijMoinERJiBZdVFBLJsYvo4+gsnWe+1dXv3PJsub6/T8aH0BGZbvUDUWI
-         6kZkO2AoO+SFBNdeSMVk3GWWhGjq3arKjB570bDNbdt7wmlkfLatoNyas1rBM2gRlVNn
-         G6uNUx2inpu4qAwapcFaMsRGtm7gAX4f+wkkJq/8/JV15NWc+bavEWjKb9GHiQYznAs1
-         mTS1fLEz/nhFHtHd4WDNE4TudneWL6qsjo6lNO2UskrzSmKbKQ+AXQoWPaFgV/5BLusT
-         aW+0vny9NPo/XEWc3Ll+dB61/z0AYLLzjssZ6jmV2nA/Yxg25sl8BXWiteD+Oang6D5u
-         f2zA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=chO9wtDC2MyZWlxrwBhtVKtyweTI246LrXKDxS7qvic=;
+        b=VzjqvTwPweWsoRC2NVEUqtVEUUGjy4JZkIOg0NDE2xIHxqY/gYT2gV9xGH91VRWGgS
+         VdBTjNW3c8yukhXx6xjKOBF3ibZEQQ6pPwpANEAyy7jV7VIoF70t8yO25XeLvle2w49E
+         EP7OxGralCg7isao62EgOiaOl2dOgffklL8+DLdAnqWr3gWYMJfR6l928xR0Ma4i5aLC
+         x+JC6i0zqfrZjDeCxfILDi18hPRUg9/i6M5fVFWJ4Igyret7J40DeaNRfeYEAUvFsOtO
+         kIJytLp4u6lcqZ4RhEbcjZcYrh7gi8twkmVB/dpRLzfzGfk/zs7tlerJ2PxGi2ZELWwT
+         8w2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CuZuLvdtXsTMMZQUAbDPqb/0pC+19gYcn3vELZlj3YY=;
-        b=JqDPmMbrBu0mFbRyYqgarKVeJFI/+1yJ0c/n7csFF3xS/2sW5K2NNZlYkSM9at/3Q6
-         G4pW8vUNwlJCGJ+xFq2I+w0NOeonYC61GU+ycNZZSu8CKM97gYb4oryuy4KAKIAM+vRX
-         LOp8zq+DCkOwRBoHY+wyjO2x4O1JVl6jOVI2PNXQQkSmPJDIVVnrvCUh0FCS2xPmKoGD
-         4V0JDWSOUmJKQHv0h59ZzTm0g0UmnOgB+oqdXzo3ZN3+f2awOiO1O/cc0bEcJXHG15DW
-         7IZEa4R/RPsgB9wBRgUGgL/BgjgrT0d54QPailOeGbxJhTye2s3xZwTjIj+Qi5pXR46t
-         0uUQ==
-X-Gm-Message-State: AOAM531FB/w/mOLFSl5ak2nmH7dc5tHL18TDgO6t1fDS5ONZhA4u86Jn
-        AhpgZat4cJ4TWxpfFhR39mgWtORODU8HlM5ey/08dA==
-X-Google-Smtp-Source: ABdhPJw8PWfvgMoClO8VIo1Xm7UiZd7z4qS5dlpuHz2yxjXzcwHbTu/kPrgHASBwXsSI4iiprFJ3L6Gyx9323HBwPSE=
-X-Received: by 2002:a17:907:3e28:b0:6f4:3900:78f8 with SMTP id
- hp40-20020a1709073e2800b006f4390078f8mr5844440ejc.736.1651483869159; Mon, 02
- May 2022 02:31:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <145383feecbe43f3bbd3e128143f7890f0314b3b.1649658220.git.baruch@tkos.co.il>
- <CAMRc=Mei_ZWPzSMHpC1Ao8nU487_SUq7qQGEDkxwdRb0jmx7cQ@mail.gmail.com> <87ee1cxpmb.fsf@tarshish>
-In-Reply-To: <87ee1cxpmb.fsf@tarshish>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=chO9wtDC2MyZWlxrwBhtVKtyweTI246LrXKDxS7qvic=;
+        b=IKwa10WFvuCLNxX3bGhrSslp6BlSovH03Sxglc7CZNkeh+nyrfvZumhOEm/BYlPdSh
+         cU7+kobktiexXGSZ9nzEzp/HluQfLuPY4jQhcRDuJVMDYQ4PRpRqA7flYHIfFiHFgKww
+         bQpTHwAGhoNo7W4oRCNhLU81aOF4/UnlP/mOgNh/NLybiBUu7kbiN/wTR3eDb6CdyIyO
+         Lju94Re82VLLZIvspPfOw6SaLWnDnsnz9SygyrRtnXUzjojExkj22lgrqbrHDCjTwVs/
+         Oirq9Yy+a76ugEXEphFUv/NCcVM90MruEuThAUGXRlr7o2vlYvsnGss4oX5PWI4lxCy5
+         /UyQ==
+X-Gm-Message-State: AOAM530sSTBiAVmohWSEZbLEuQWuioUnIwM5359gfHHMOX8linnvN8FC
+        MUh4MlpGXQKNxw6YwQPtttEJBQ==
+X-Google-Smtp-Source: ABdhPJy+9wZm9GuGGT6hgKcKpuHXTo24bKjjElVAft4J/U6lBSQkQRbqfpGVR3AGcaIaP3AIxbV+Rg==
+X-Received: by 2002:a05:600c:4f50:b0:393:f258:46ed with SMTP id m16-20020a05600c4f5000b00393f25846edmr10287147wmq.35.1651484065162;
+        Mon, 02 May 2022 02:34:25 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:b643:d945:6c79:d4f6])
+        by smtp.gmail.com with ESMTPSA id p25-20020adfa219000000b0020c5253d918sm6747732wra.100.2022.05.02.02.34.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 May 2022 02:34:24 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 2 May 2022 11:30:58 +0200
-Message-ID: <CAMRc=MdfaTE_9ptYSV6ZcO3BNg8UVuppkkmb_ahQJtAYAGioZQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: drop pwm base assignment
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH] MAINTAINERS: update the GPIO git tree entry
+Date:   Mon,  2 May 2022 11:34:16 +0200
+Message-Id: <20220502093416.22744-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -70,31 +67,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 2, 2022 at 11:14 AM Baruch Siach <baruch@tkos.co.il> wrote:
->
-> Hi Bartosz,
->
-> On Mon, May 02 2022, Bartosz Golaszewski wrote:
-> > On Mon, Apr 11, 2022 at 8:25 AM Baruch Siach <baruch@tkos.co.il> wrote:
-> >>
-> >> pwmchip_add() unconditionally assigns the base ID dynamically. Commit
-> >> f9a8ee8c8bcd1 ("pwm: Always allocate PWM chip base ID dynamically")
-> >> dropped all base assignment from drivers under drivers/pwm/. It missed
-> >> this driver. Fix that.
-> >>
-> >> Fixes: f9a8ee8c8bcd1 ("pwm: Always allocate PWM chip base ID dynamically")
-> >> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
->
-> [...]
->
-> > Queued for fixes, thanks!
->
-> Thanks. I see it's in your tree (brgl/linux). Is that the main GPIO
-> development tree now? The MAINTAINERS entry for GPIO SUBSYSTEM currently
-> lists linusw/linux-gpio.
->
-> baruch
+My git tree has become the de facto main GPIO tree. Update the
+MAINTAINERS file to reflect that.
 
-Thanks for spotting that! Yes, that's the main tree, I will send a fix.
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Reported-by: Baruch Siach <baruch@tkos.co.il>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bart
+diff --git a/MAINTAINERS b/MAINTAINERS
+index edc96cdb85e8..9d47c5e7c6ae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8385,7 +8385,7 @@ M:	Linus Walleij <linus.walleij@linaro.org>
+ M:	Bartosz Golaszewski <brgl@bgdev.pl>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+ F:	Documentation/ABI/obsolete/sysfs-gpio
+ F:	Documentation/ABI/testing/gpio-cdev
+ F:	Documentation/admin-guide/gpio/
+-- 
+2.34.1
+
