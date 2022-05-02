@@ -2,62 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B9B4516D70
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 11:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73B4E516DAE
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 11:48:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380873AbiEBJh7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 May 2022 05:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
+        id S1384353AbiEBJvW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 May 2022 05:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349713AbiEBJh6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 05:37:58 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CC442EE5
-        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 02:34:26 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 125-20020a1c1983000000b003941f354c62so4359401wmz.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 May 2022 02:34:26 -0700 (PDT)
+        with ESMTP id S1384432AbiEBJvM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 05:51:12 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD07C186EB
+        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 02:47:39 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id k23so26786037ejd.3
+        for <linux-gpio@vger.kernel.org>; Mon, 02 May 2022 02:47:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=chO9wtDC2MyZWlxrwBhtVKtyweTI246LrXKDxS7qvic=;
-        b=VzjqvTwPweWsoRC2NVEUqtVEUUGjy4JZkIOg0NDE2xIHxqY/gYT2gV9xGH91VRWGgS
-         VdBTjNW3c8yukhXx6xjKOBF3ibZEQQ6pPwpANEAyy7jV7VIoF70t8yO25XeLvle2w49E
-         EP7OxGralCg7isao62EgOiaOl2dOgffklL8+DLdAnqWr3gWYMJfR6l928xR0Ma4i5aLC
-         x+JC6i0zqfrZjDeCxfILDi18hPRUg9/i6M5fVFWJ4Igyret7J40DeaNRfeYEAUvFsOtO
-         kIJytLp4u6lcqZ4RhEbcjZcYrh7gi8twkmVB/dpRLzfzGfk/zs7tlerJ2PxGi2ZELWwT
-         8w2Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GYCNul8cm8jd0FZKsO1ogduF16MMw2ed/rY6UMAW45w=;
+        b=xyk9ASH5NDjKUNtzg25Ax6q2zbLei2pGvw+10kPKB7AabRknXwtMJa0UlK0Rrbv3j5
+         CNJm/eW2/WPVJGOPdYspRczZT7Jsq87WpysEnd3bh/kjjKrAaeRL+nXm8Dd4yyvQsF7w
+         9+ZN/iI1KJTfQAwz+RxHrXjUhfgzavfAVU+h/4SE08vzEjdqr/d7E6PlqN/77ulkq/DI
+         g74AEKkdGgKkhOvjpyVLUtKxFHWwVEFIxe6cyS6cwWqw3u9Yyf5vr5QdOQ/ajXffS8Ht
+         HTt/CQnDkqQqLLQ0ezvsHRO07i0iz4sT0YUEubBy5C+9zWua4mIcEhdd7Kml1cDVkdkW
+         V7/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=chO9wtDC2MyZWlxrwBhtVKtyweTI246LrXKDxS7qvic=;
-        b=IKwa10WFvuCLNxX3bGhrSslp6BlSovH03Sxglc7CZNkeh+nyrfvZumhOEm/BYlPdSh
-         cU7+kobktiexXGSZ9nzEzp/HluQfLuPY4jQhcRDuJVMDYQ4PRpRqA7flYHIfFiHFgKww
-         bQpTHwAGhoNo7W4oRCNhLU81aOF4/UnlP/mOgNh/NLybiBUu7kbiN/wTR3eDb6CdyIyO
-         Lju94Re82VLLZIvspPfOw6SaLWnDnsnz9SygyrRtnXUzjojExkj22lgrqbrHDCjTwVs/
-         Oirq9Yy+a76ugEXEphFUv/NCcVM90MruEuThAUGXRlr7o2vlYvsnGss4oX5PWI4lxCy5
-         /UyQ==
-X-Gm-Message-State: AOAM530sSTBiAVmohWSEZbLEuQWuioUnIwM5359gfHHMOX8linnvN8FC
-        MUh4MlpGXQKNxw6YwQPtttEJBQ==
-X-Google-Smtp-Source: ABdhPJy+9wZm9GuGGT6hgKcKpuHXTo24bKjjElVAft4J/U6lBSQkQRbqfpGVR3AGcaIaP3AIxbV+Rg==
-X-Received: by 2002:a05:600c:4f50:b0:393:f258:46ed with SMTP id m16-20020a05600c4f5000b00393f25846edmr10287147wmq.35.1651484065162;
-        Mon, 02 May 2022 02:34:25 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:b643:d945:6c79:d4f6])
-        by smtp.gmail.com with ESMTPSA id p25-20020adfa219000000b0020c5253d918sm6747732wra.100.2022.05.02.02.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 May 2022 02:34:24 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH] MAINTAINERS: update the GPIO git tree entry
-Date:   Mon,  2 May 2022 11:34:16 +0200
-Message-Id: <20220502093416.22744-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GYCNul8cm8jd0FZKsO1ogduF16MMw2ed/rY6UMAW45w=;
+        b=YpXsPn0PnIE8wSw+1moI72CXHA+orEUH5NY6Lgh2jwb50k4ERHuKyBjSZJaa9YKUYS
+         QBGI5z2goDD+rvJcLdAUmnswfaDPN5oTtZzZHg4uuvOjK3PAzJaZUvr9+/viMh+/6+wO
+         /AJKMpMWoj8aY47xdr5zpzMORT+VveliANrMydMQ1iXNlciRWsk/Qe+ANFEzuCyGbSzu
+         AlBmBVlXXESU3r1J2yROnpGC4a7yJHOb5mZNSH+w1FqZ5xIci0I2fOOfxr6btSbpp9JX
+         9Xe9hl0trx/wEzESFiEF5EJYNpJhpTUmW64U1g9giIqwGPYWE2p/QbRrKaK73IQw4BQr
+         Wfyw==
+X-Gm-Message-State: AOAM532oSo5eJe18JUmPICYkkk4CTBTro/XqcD4aPJ19SsCV/vbKREbB
+        ae4hVe2sDkruxdWwwdon8xUD1Ctc/P9/M/21vgVRjS4UsNfrXw==
+X-Google-Smtp-Source: ABdhPJyyV/fa25tU2u+owFmjOP5PPEnCp6avlC2YWULA5kcGY7K5xqFFovfXkR5KxbuljG72m+RSkG+EKHd0dowC2jw=
+X-Received: by 2002:a17:907:c28:b0:6f4:2a80:f355 with SMTP id
+ ga40-20020a1709070c2800b006f42a80f355mr7583490ejc.101.1651484858350; Mon, 02
+ May 2022 02:47:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <YmwuK60FMGR2Kn0R@smile.fi.intel.com>
+In-Reply-To: <YmwuK60FMGR2Kn0R@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 2 May 2022 11:47:27 +0200
+Message-ID: <CAMRc=MdYDjA3PRfQmVtO1fPOgtX9b6WF_4zVoKM2F9kKgntzkg@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.19-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -67,28 +64,96 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-My git tree has become the de facto main GPIO tree. Update the
-MAINTAINERS file to reflect that.
+On Fri, Apr 29, 2022 at 8:28 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Hi Linux GPIO  maintainers,
+>
+> Supposed to be an immutable tag to be included in GPIO and pin control subsystems.
+> Have been in Linux Next for a while w.o. any issues reported. Please, pull.
+>
+> Thanks,
+>
+> With Best Regards,
+> Andy Shevchenko
+>
+> The following changes since commit 0c2cae09a765b1c1d842eb9328982976ec735926:
+>
+>   gpiolib: acpi: Convert type for pin to be unsigned (2022-04-08 15:13:22 +0300)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.19-1
+>
+> for you to fetch changes up to edc5601db66411a8c9c6b08b3aacf7e154a34c6d:
+>
+>   pinctrl: meson: Replace custom code by gpiochip_node_count() call (2022-04-18 16:18:52 +0300)
+>
+> ----------------------------------------------------------------
+> intel-gpio for v5.19-1
+>
+> * Introduce helpers to iterate over GPIO chip nodes and covert some drivers
+>
+> The following is an automated git shortlog grouped by driver:
+>
+> gpiolib:
+>  -  Introduce a helper to get first GPIO controller node
+>  -  Introduce gpiochip_node_count() helper
+>  -  Introduce for_each_gpiochip_node() loop helper
+>
+> pinctrl:
+>  -  meson: Replace custom code by gpiochip_node_count() call
+>  -  meson: Enable COMPILE_TEST
+>  -  meson: Rename REG_* to MESON_REG_*
+>  -  armada-37xx: Reuse GPIO fwnode in armada_37xx_irqchip_register()
+>  -  armada-37xx: Switch to use fwnode instead of of_node
+>  -  samsung: Switch to use for_each_gpiochip_node() helper
+>  -  samsung: Drop redundant node parameter in samsung_banks_of_node_get()
+>  -  npcm7xx: Switch to use for_each_gpiochip_node() helper
+>  -  renesas: rza1: Switch to use for_each_gpiochip_node() helper
+>  -  renesas: rza1: Replace custom code by gpiochip_node_count() call
+>  -  stm32: Switch to use for_each_gpiochip_node() helper
+>  -  stm32: Replace custom code by gpiochip_node_count() call
+>
+> ----------------------------------------------------------------
+> Andy Shevchenko (15):
+>       gpiolib: Introduce for_each_gpiochip_node() loop helper
+>       gpiolib: Introduce gpiochip_node_count() helper
+>       pinctrl: stm32: Replace custom code by gpiochip_node_count() call
+>       pinctrl: stm32: Switch to use for_each_gpiochip_node() helper
+>       pinctrl: renesas: rza1: Replace custom code by gpiochip_node_count() call
+>       pinctrl: renesas: rza1: Switch to use for_each_gpiochip_node() helper
+>       pinctrl: npcm7xx: Switch to use for_each_gpiochip_node() helper
+>       pinctrl: samsung: Drop redundant node parameter in samsung_banks_of_node_get()
+>       pinctrl: samsung: Switch to use for_each_gpiochip_node() helper
+>       gpiolib: Introduce a helper to get first GPIO controller node
+>       pinctrl: armada-37xx: Switch to use fwnode instead of of_node
+>       pinctrl: armada-37xx: Reuse GPIO fwnode in armada_37xx_irqchip_register()
+>       pinctrl: meson: Rename REG_* to MESON_REG_*
+>       pinctrl: meson: Enable COMPILE_TEST
+>       pinctrl: meson: Replace custom code by gpiochip_node_count() call
+>
+>  drivers/pinctrl/meson/Kconfig               |   2 +-
+>  drivers/pinctrl/meson/pinctrl-meson.c       |  52 +++++-----
+>  drivers/pinctrl/meson/pinctrl-meson.h       |  28 +++---
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |  34 ++-----
+>  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c   | 142 ++++++++++++----------------
+>  drivers/pinctrl/renesas/pinctrl-rza1.c      |  47 +++------
+>  drivers/pinctrl/samsung/pinctrl-exynos.c    |   8 +-
+>  drivers/pinctrl/samsung/pinctrl-s3c24xx.c   |   2 +-
+>  drivers/pinctrl/samsung/pinctrl-s3c64xx.c   |   4 +-
+>  drivers/pinctrl/samsung/pinctrl-samsung.c   |  30 +++---
+>  drivers/pinctrl/samsung/pinctrl-samsung.h   |   2 +-
+>  drivers/pinctrl/stm32/pinctrl-stm32.c       |  80 +++++++---------
+>  include/linux/gpio/driver.h                 |  28 +++++-
+>  13 files changed, 210 insertions(+), 249 deletions(-)
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Reported-by: Baruch Siach <baruch@tkos.co.il>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Pulled, thanks!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index edc96cdb85e8..9d47c5e7c6ae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8385,7 +8385,7 @@ M:	Linus Walleij <linus.walleij@linaro.org>
- M:	Bartosz Golaszewski <brgl@bgdev.pl>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
--T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
- F:	Documentation/ABI/obsolete/sysfs-gpio
- F:	Documentation/ABI/testing/gpio-cdev
- F:	Documentation/admin-guide/gpio/
--- 
-2.34.1
-
+Bart
