@@ -2,73 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB34F51702C
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 15:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3330951706C
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 May 2022 15:35:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235272AbiEBNYi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 May 2022 09:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
+        id S1385367AbiEBNjB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 May 2022 09:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235673AbiEBNYh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 09:24:37 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12575645B;
-        Mon,  2 May 2022 06:21:07 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 54E9C92009C; Mon,  2 May 2022 15:21:06 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 50E1992009B;
-        Mon,  2 May 2022 14:21:06 +0100 (BST)
-Date:   Mon, 2 May 2022 14:21:06 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     William Breathitt Gray <william.gray@linaro.org>
-cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        with ESMTP id S1385365AbiEBNiw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 May 2022 09:38:52 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F9A767D
+        for <linux-gpio@vger.kernel.org>; Mon,  2 May 2022 06:35:20 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:194e:5782:c420:7f87])
+        by albert.telenet-ops.be with bizsmtp
+        id Rpb52700A28fWK506pb5V9; Mon, 02 May 2022 15:35:18 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nlWCe-002mrd-PI; Mon, 02 May 2022 15:35:04 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nlWCd-002vA0-Ss; Mon, 02 May 2022 15:35:03 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-In-Reply-To: <YmwGLrh4U+pVJo0m@fedora>
-Message-ID: <alpine.DEB.2.21.2205021406080.64520@angie.orcam.me.uk>
-References: <20220429135108.2781579-1-schnelle@linux.ibm.com> <20220429135108.2781579-19-schnelle@linux.ibm.com> <Ymv3DnS1vPMY8QIg@fedora> <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com> <YmwGLrh4U+pVJo0m@fedora>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/7] dt-bindings: renesas: R-Car V3U is R-Car Gen4
+Date:   Mon,  2 May 2022 15:34:52 +0200
+Message-Id: <cover.1651497024.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 29 Apr 2022, William Breathitt Gray wrote:
+	Hi all,
 
-> > Good question. As far as I can see most (all?) of these have "select
-> > ISA_BUS_API" which is "def_bool ISA". Now "config ISA" seems to
-> > currently be repeated in architectures and doesn't have an explicit
-> > HAS_IOPORT dependency (it maybe should have one). But it does only make
-> > sense on architectures with HAS_IOPORT set.
-> 
-> There is such a thing as ISA DMA, but you'll still need to initialize
-> the device via the IO Port bus first, so perhaps setting HAS_IOPORT for
-> "config ISA" is the right thing to do: all ISA devices are expected to
-> communicate in some way via ioport.
+Despite the name, R-Car V3U is the first member of the R-Car Gen4
+family[1].
 
- Strictly speaking you can make an ISA device that only does MMIO (and I 
-believe in the early PC days there used to be ISA memory expansion cards 
-along with the EMS standard) which is also why the host memory area in the 
-15-16MiB range, the top 1MiB addressable on 16-bit ISA, can be excluded 
-from decoding to DRAM and accesses made there forwarded to ISA in I 
-believe all chipsets that provide actual ISA bus circuitry (rather than 
-just a degenerate form like LPC).  That's an exception rather than the 
-rule though, nearly all ISA devices do decode in the port I/O space.  
-After all I/O is what the port I/O address space has been invented for.
+Hence this patch series updates various DT binding documents to move
+compatible values for R-Car V3U devices to R-Car Gen4 sections, in
+bindings where the latter already exist.  Other DT binding documents
+will be updated progressively, after adding support for more SoCs in the
+R-Car Gen4 family.
 
- FWIW,
+These patches are intended to be taken by DT or subsystem maintainers.
+Separate patches to update the DTS file[2] and SoC identication code[3]
+are in-flight.
 
-  Maciej
+Thanks for your comments!
+
+[1] https://www.renesas.com/eu/en/products/automotive-products/automotive-system-chips-socs/r-car-v3u-best-class-r-car-v3u-asil-d-system-chip-automated-driving
+[2] [PATCH] arm64: dts: renesas: r8a779a0: Update to R-Car Gen4 compatible values
+    https://lore.kernel.org/73cea9d5e1a6639422c67e4df4285042e31c9fd5.1651497071.git.geert+renesas@glider.be
+[3] [PATCH] soc: renesas: R-Car V3U is R-Car Gen4
+    https://lore.kernel.org/2bbecad7b6c24c0d5c1797b3f7f0733d5ba33842.1651497066.git.geert+renesas@glider.be
+
+Geert Uytterhoeven (7):
+  dt-bindings: gpio: renesas,rcar-gpio: R-Car V3U is R-Car Gen4
+  dt-bindings: i2c: renesas,rcar-i2c: R-Car V3U is R-Car Gen4
+  dt-bindings: iommu: renesas,ipmmu-vmsa: R-Car V3U is R-Car Gen4
+  dt-bindings: renesas,rcar-dmac: R-Car V3U is R-Car Gen4
+  dt-bindings: serial: renesas,hscif: R-Car V3U is R-Car Gen4
+  dt-bindings: serial: renesas,scif: R-Car V3U is R-Car Gen4
+  dt-bindings: watchdog: renesas,wdt: R-Car V3U is R-Car Gen4
+
+ .../devicetree/bindings/dma/renesas,rcar-dmac.yaml     | 10 ++++------
+ .../devicetree/bindings/gpio/renesas,rcar-gpio.yaml    |  4 +---
+ .../devicetree/bindings/i2c/renesas,rcar-i2c.yaml      |  2 +-
+ .../devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml  |  4 ++--
+ .../devicetree/bindings/serial/renesas,hscif.yaml      |  2 +-
+ .../devicetree/bindings/serial/renesas,scif.yaml       |  2 +-
+ .../devicetree/bindings/watchdog/renesas,wdt.yaml      |  2 +-
+ 7 files changed, 11 insertions(+), 15 deletions(-)
+
+-- 
+2.25.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
