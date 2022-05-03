@@ -2,89 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A64A518819
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 May 2022 17:15:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A86DB519062
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 May 2022 23:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230330AbiECPT2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 May 2022 11:19:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
+        id S235319AbiECVqf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 May 2022 17:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238090AbiECPS7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 May 2022 11:18:59 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6675D1FCEA;
-        Tue,  3 May 2022 08:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651590926; x=1683126926;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SAvtnj8H2V8n6qwqUBlvJTEgN+vKWN6fJ/OR2VQoynY=;
-  b=QREXGvjHfPMvML/M5vaSawgOjLL9/hJ655OYL9eU9gBqR+SDu62Cytiv
-   /fz9lzzCO0ivciMiTnyOpQTTVU2ZOKE68z4tuXGIBbVtST9HHZGUbewHc
-   49BJK5f9ZlJOss6O9KsRsBeKnv7I+z54hUJ7btIsru3JXzadbTfU0IYED
-   LilBhcvNkISRUMCpxZKtVV/M3O33zrD0vEiXH06Kkp6iqxIpfyH/yba26
-   E9PRe3rHRJdgzwlNZsj+OFoIZ2zJk1fcEjGMIhfGNFiC9HvEsPA8rKif+
-   q2r86FwUX33vk1SogE8vmCMrKdlo0fzP3/5FqxhkZk0nfHhTLFHP870K+
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="328042678"
-X-IronPort-AV: E=Sophos;i="5.91,195,1647327600"; 
-   d="scan'208";a="328042678"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 08:15:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,195,1647327600"; 
-   d="scan'208";a="567677331"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 03 May 2022 08:15:18 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id DDB46179; Tue,  3 May 2022 18:15:19 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] pinctrl: microchip-sgpio: Switch to use fwnode instead of of_node
-Date:   Tue,  3 May 2022 18:15:17 +0300
-Message-Id: <20220503151517.59115-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S230079AbiECVqe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 May 2022 17:46:34 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C4F24968;
+        Tue,  3 May 2022 14:43:01 -0700 (PDT)
+Received: by mail-ot1-f45.google.com with SMTP id y14-20020a9d460e000000b00605ee347da1so9960425ote.8;
+        Tue, 03 May 2022 14:43:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7Hu0gsr8Y6PWp2FP45L7+RGtOMCVNeN3hbCuvJ2usXo=;
+        b=S1uvi1+HzU2UxJgwdW039AXe8ZKhsF1uBkThEaKk+N+xLyda4IwzUiGo2jDapYR4V/
+         Z9sChaH3+fyFGeqt+ajhSFiGxsdzcWwRvO4Tfk16f16gDoz3+LjqJ1dBstECk7O5RnEZ
+         NL81ZmWih+fRj6GM7ZjC/BVhmCqIizljduaUZ2Leky7H4XiEDbP+gpBLXfCN085Zj3S6
+         rWcZ77tEC7XYYJDDPWRp07bfBUickLoT2WtGmKyKWoueFo3GN7gOywuPA7Vw5m0kv4fQ
+         24FNRUyqSlVet9J2hu4n55jmFn66KNYV3sRUuQVnuQmZ23oxY6nCBxK7P9SIXgr9i9sq
+         M6zg==
+X-Gm-Message-State: AOAM532W01jeXoUGHVNNjH7/cUljsvdwYCVool03vUWrBv1o7oXwweb3
+        eeQtKJqDO0m9aB8JTPPSvQ==
+X-Google-Smtp-Source: ABdhPJz4N4R764kPo+v++/Y+BmcZqqzXF0v6pZHNpMo6V//OxOtU550cg4XA4nzAnBjeZQ2Nv/molw==
+X-Received: by 2002:a9d:1714:0:b0:606:eaf:fa95 with SMTP id i20-20020a9d1714000000b006060eaffa95mr5217807ota.180.1651614180748;
+        Tue, 03 May 2022 14:43:00 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id bg1-20020a056808178100b00326414c1bb7sm686470oib.35.2022.05.03.14.42.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 May 2022 14:43:00 -0700 (PDT)
+Received: (nullmailer pid 82356 invoked by uid 1000);
+        Tue, 03 May 2022 21:42:58 -0000
+Date:   Tue, 3 May 2022 16:42:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     sboyd@kernel.org, linux-clk@vger.kernel.org,
+        daniel.lezcano@linaro.org, leoyang.li@nxp.com,
+        giulio.benetti@benettiengineering.com, festevam@gmail.com,
+        clin@suse.com, s.hauer@pengutronix.de, linux-imx@nxp.com,
+        stefan@agner.ch, tharvey@gateworks.com,
+        linux-arm-kernel@lists.infradead.org, aisheng.dong@nxp.com,
+        robh+dt@kernel.org, tglx@linutronix.de, abel.vesa@nxp.com,
+        sebastian.reichel@collabora.com, dev@lynxeye.de,
+        Mr.Bossman075@gmail.com, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, olof@lixom.net, mturquette@baylibre.com,
+        linux@armlinux.org.uk, linus.walleij@linaro.org,
+        cniedermaier@dh-electronics.com, soc@kernel.org,
+        linux-gpio@vger.kernel.org, shawnguo@kernel.org,
+        marcel.ziswiler@toradex.com, arnd@arndb.de,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 03/15] dt-bindings: gpio: fsl-imx-gpio: Add i.MXRT
+ compatibles
+Message-ID: <YnGh4oZOm9eHO9z2@robh.at.kernel.org>
+References: <20220428214838.1040278-1-Mr.Bossman075@gmail.com>
+ <20220428214838.1040278-4-Mr.Bossman075@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220428214838.1040278-4-Mr.Bossman075@gmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO library now accepts fwnode as a firmware node, so
-switch the driver to use it.
+On Thu, 28 Apr 2022 17:48:26 -0400, Jesse Taube wrote:
+> Both the i.MXRT1170 and 1050 have the same gpio controller as
+> "fsl,imx35-gpio". Add i.MXRT to the compatible list.
+> 
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> ---
+> V1 -> V2:
+>  - New commit to fix dtbs_check
+> ---
+>  Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 80a8939ad0c0..71367ed04082 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -840,7 +840,7 @@ static int microchip_sgpio_register_bank(struct device *dev,
- 	gc			= &bank->gpio;
- 	gc->label		= pctl_desc->name;
- 	gc->parent		= dev;
--	gc->of_node		= to_of_node(fwnode);
-+	gc->fwnode		= fwnode;
- 	gc->owner		= THIS_MODULE;
- 	gc->get_direction	= microchip_sgpio_get_direction;
- 	gc->direction_input	= microchip_sgpio_direction_input;
--- 
-2.35.1
-
+Acked-by: Rob Herring <robh@kernel.org>
