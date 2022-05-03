@@ -2,100 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69206519168
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 00:28:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A51CD519179
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 00:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243641AbiECWZa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 May 2022 18:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39136 "EHLO
+        id S238959AbiECWh1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 May 2022 18:37:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243635AbiECWZ3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 May 2022 18:25:29 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B3640A26;
-        Tue,  3 May 2022 15:21:55 -0700 (PDT)
-Received: by mail-oi1-f178.google.com with SMTP id m25so5735699oih.2;
-        Tue, 03 May 2022 15:21:55 -0700 (PDT)
+        with ESMTP id S230240AbiECWh1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 May 2022 18:37:27 -0400
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35D44132F
+        for <linux-gpio@vger.kernel.org>; Tue,  3 May 2022 15:33:53 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-2f7bb893309so195216697b3.12
+        for <linux-gpio@vger.kernel.org>; Tue, 03 May 2022 15:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uHut9YTrq2rx909OxaomvrduIodDXBJREhUsJ7gIxo4=;
+        b=hXw0mh/H9RVgiFFjARa0v1GhKnq+y7KOBH+SMzmD+jJHJPxqFbmAjLw44EUnWTlexo
+         OT0DBYILHRuOVkVDqeGe3VdpPn1pnFCZZQ6Ht8ImVXmtDuEdIuvAQuWdMOhdTN98buxo
+         eMej7ebiqNGbdgamtw1uwq0DkWsau3CkiMBCdBQMhY/C3RM/i8cKJ1BghPze4rsbw+j5
+         7e3ur99s8qxtCKbawZFWmTnl/6qaRhINIhdEIFDjdEDfZVOhAATvpMaxN6UJpO9UCNeS
+         5SZvxe9GIjqMnTLbI26TBJWnmfNuWbpWLEjRZGM6wxD4Rg0fiBwKPNyxqmgNWXFo6e9Q
+         r+Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=AYzqDCKsTIUNQSFUA88IsjM5tVXZRYkNm2IzoI0SdEc=;
-        b=IucN/UOZSpOm2ygS0mq5PjnbWocrETUqkgf7AAsw0VrRt6Odo0mH5NOTe7EX44mo5G
-         uImRt1r6/t2L/bvc+XV/2vxKhvgXsrDju30r+RQKUMzKCUAVfx7K+3r3tko619HJunQw
-         7jhebPK1WsZkdno3UJOZhcOYeoVouukv8D1D49YzNUeDvUlHapnYCusFlTDUEPQv/aZg
-         WE2+UQB8qXICVyWakr3DVff6N2rC2pZ0vc/5VyvPUdRoEL5fEhRZYsMJpxAgbClhwmpJ
-         itT44f/ZkqT7KgQWWpEghxS1it9OdRJTfR5xZowpYjcK9sOq3FyLeWIuCMRkpTUDZgto
-         6Zgw==
-X-Gm-Message-State: AOAM532A+h6NVcP/yYoJrIJoDzZUhHH9H25TWFPvw+jr7+6APwBbt/S9
-        QVcyh1lHPnefYjaTEdkFBA==
-X-Google-Smtp-Source: ABdhPJzn/rfeIWO5DHbfNPeuF8m9ikdAA2XqhXdqzdxa0Z5LXZ/l9fkqrmw7YUHe4HECh0PvVs466Q==
-X-Received: by 2002:a05:6808:d4c:b0:322:e7de:fffe with SMTP id w12-20020a0568080d4c00b00322e7defffemr2726225oik.107.1651616515316;
-        Tue, 03 May 2022 15:21:55 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id n7-20020a9d64c7000000b006060322125csm4564785otl.44.2022.05.03.15.21.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 15:21:54 -0700 (PDT)
-Received: (nullmailer pid 139788 invoked by uid 1000);
-        Tue, 03 May 2022 22:21:51 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        kernel@collabora.com, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, sean.wang@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        nfraprado@collabora.com, matthias.bgg@gmail.com,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-In-Reply-To: <20220503142537.152499-2-angelogioacchino.delregno@collabora.com>
-References: <20220503142537.152499-1-angelogioacchino.delregno@collabora.com> <20220503142537.152499-2-angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: Add MediaTek MT6795 pinctrl bindings
-Date:   Tue, 03 May 2022 17:21:51 -0500
-Message-Id: <1651616511.157901.139787.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uHut9YTrq2rx909OxaomvrduIodDXBJREhUsJ7gIxo4=;
+        b=3WCGf3xDA6OrH85riUWeHwC4Gd56Msf4yP2l8Q6yBthmBIbj6pInFer3bmrEjogxjU
+         RB5aN08+VRpptABlv80VoXoSbHvXvjRAbK8W2EkwZCWQIsdZEGc59GFQhwpHAT/La1xs
+         7nf3hqlYpnI/+uoXV8oNb4pdfQ4A04z1lXrxZGu0QKxxEcx1n3HPcDOTAzGYqbMRR/y5
+         5IJ4IjXgHIdDjJ7WDZKzTJNlTlrUYV3HoyiDcOMw8RGAXepRkFuKwcs1/1ftHs3MWGhT
+         rLIKC6zdPcfmrHeTXQ0XJtJFkTKtnMjzLT6NbFTkWA9S368nQMfNy9Z3nMkXzeaibRmg
+         J+JQ==
+X-Gm-Message-State: AOAM530uJ18FoYuX9f+6Q69nkjEtDrVt1SQ33UE8LSd3GJUv+0rmJqKX
+        IjCzNC1MlnumSVAjD2e2p1yYhhnAmIelVGQL5WHIWQ42oII=
+X-Google-Smtp-Source: ABdhPJyPQ6HtBXvpmbbSdXZpDlXtIN1SEd1fXA/kBCV99YaE4V11y/NlUXgYCYwKO+9J1ENVq38VzprhArgyobg937M=
+X-Received: by 2002:a0d:e612:0:b0:2fb:103f:4067 with SMTP id
+ p18-20020a0de612000000b002fb103f4067mr39820ywe.151.1651617232916; Tue, 03 May
+ 2022 15:33:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220502093416.22744-1-brgl@bgdev.pl>
+In-Reply-To: <20220502093416.22744-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 4 May 2022 00:33:41 +0200
+Message-ID: <CACRpkdaPyPcQFF8JDUmGNi0ERN569d2Z79F0JR4de7SJfR9GJA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: update the GPIO git tree entry
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 03 May 2022 16:25:36 +0200, AngeloGioacchino Del Regno wrote:
-> Add devicetree and pinfunc bindings for MediaTek Helio X10 MT6795.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../pinctrl/mediatek,pinctrl-mt6795.yaml      | 224 +++++
->  include/dt-bindings/pinctrl/mt6795-pinfunc.h  | 908 ++++++++++++++++++
->  2 files changed, 1132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
->  create mode 100644 include/dt-bindings/pinctrl/mt6795-pinfunc.h
-> 
+On Mon, May 2, 2022 at 11:34 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> My git tree has become the de facto main GPIO tree. Update the
+> MAINTAINERS file to reflect that.
+>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> Reported-by: Baruch Siach <baruch@tkos.co.il>
 
-yamllint warnings/errors:
+Thanks for taking it over!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-dtschema/dtc warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/pinctrl/mediatek,pinctrl-mt6795.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Yours,
+Linus Walleij
