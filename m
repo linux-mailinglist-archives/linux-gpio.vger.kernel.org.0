@@ -2,80 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E203B51875F
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 May 2022 16:55:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F20D51880D
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 May 2022 17:13:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237505AbiECO7R convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 3 May 2022 10:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52818 "EHLO
+        id S238046AbiECPQw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 May 2022 11:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237546AbiECO7A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 May 2022 10:59:00 -0400
-X-Greylist: delayed 380 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 03 May 2022 07:55:27 PDT
-Received: from mail.megasoftsol.com (mail.megasoftsol.com [43.231.250.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6311EC71
-        for <linux-gpio@vger.kernel.org>; Tue,  3 May 2022 07:55:27 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.megasoftsol.com (Postfix) with ESMTP id 5D07E90E9F1
-        for <linux-gpio@vger.kernel.org>; Tue,  3 May 2022 20:16:35 +0530 (IST)
-Received: from mail.megasoftsol.com ([127.0.0.1])
-        by localhost (mail.megasoftsol.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gYzH08XXgGri for <linux-gpio@vger.kernel.org>;
-        Tue,  3 May 2022 20:16:34 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.megasoftsol.com (Postfix) with ESMTP id DD0B390E9DB
-        for <linux-gpio@vger.kernel.org>; Tue,  3 May 2022 20:16:34 +0530 (IST)
-X-Virus-Scanned: amavisd-new at megasoftsol.com
-Received: from mail.megasoftsol.com ([127.0.0.1])
-        by localhost (mail.megasoftsol.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id laPEsdPum_pK for <linux-gpio@vger.kernel.org>;
-        Tue,  3 May 2022 20:16:34 +0530 (IST)
-Received: from asda.co.uk (unknown [20.97.211.134])
-        (Authenticated sender: admin)
-        by mail.megasoftsol.com (Postfix) with ESMTPSA id 123EA90E9E8
-        for <linux-gpio@vger.kernel.org>; Tue,  3 May 2022 20:16:33 +0530 (IST)
-Reply-To: sales@asdaa.uk
-From:   ASDA Stores Limited <Hanes.Thomas23877@asda.co.uk>
-To:     linux-gpio@vger.kernel.org
-Subject: 2nd Quater puchase request
-Date:   03 May 2022 14:49:02 +0000
-Message-ID: <20220503092157.5B6CCEC5AE224DFB@asda.co.uk>
+        with ESMTP id S238024AbiECPQv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 May 2022 11:16:51 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C9CF3AA5F;
+        Tue,  3 May 2022 08:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651590799; x=1683126799;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MpF02Moa29ovwMRzU1hSc6F61wABuzxKFQ0rKgnNZVo=;
+  b=lmfNwNGHceU6Jl1uFSQgRzSUBDUb8k7CrW+604mzi0oLBzyD3AUdduX8
+   HsKcPvCPUKW8jqAqqP5om3RBXS7tLwyL8Zb/vqJDDjW5mamed1Wf1v6Z8
+   CnOGGqnVP9sxX6JgkpDE86VH/ZK1btSUxI98sD/liSr8HePzk5YlXMivP
+   qwsbBHtUuD+IOIP1AUwCRT67mNeyOoXaTGc2rAbMwUUUZgQUoVcqyvQeN
+   4oB6JxcK8QbKuJLQU5B4mWc9+iW+v13BzLFG20BzE6EMCzjUU9sHr7h+n
+   szoVlf71P2PU9kMq6SJg5lmz21pGAYRcwOIlLHTwtCOTWszoKYl8N/HTC
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="330487929"
+X-IronPort-AV: E=Sophos;i="5.91,195,1647327600"; 
+   d="scan'208";a="330487929"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 08:13:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,195,1647327600"; 
+   d="scan'208";a="653296374"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 May 2022 08:13:13 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 7352D179; Tue,  3 May 2022 18:13:14 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: nomadik: Setup parent device and get rid of unnecessary of_node assignment
+Date:   Tue,  3 May 2022 18:13:10 +0300
+Message-Id: <20220503151310.58762-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=2.1 required=5.0 tests=BAYES_50,
-        RCVD_IN_BL_SPAMCOP_NET,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear linux-gpio
+Some of the drivers do not set parent device. This may lead to obstacles
+during debugging or understanding the device relations from the Linux
+point of view. Assign parent device for GPIO chips created by these
+drivers.
 
-We are interested in having some of your hot selling product in 
-our stores and outlets spread all over United Kingdom, Northern 
-Island and Africa. ASDA Stores Limited is one of the highest-
-ranking Wholesale & Retail outlets in the United Kingdom. 
-  
-We shall furnish our detailed company profile in our next 
-correspondent. However, it would be appreciated if you can send 
-us your catalog through email to learn more about your company's 
-products and wholesale quote. It is hopeful that we can start a 
-viable long-lasting business relationship (partnership) with you.  
-  
-  
-Your prompt response would be delightfully appreciated. 
-  
-Best Wishes 
-  
-  
-Hanes S. Thomas 
-Procurement Office. 
-ASDA Stores Limited 
-Tel:  + 44 - 7451271650 
-WhatsApp: + 44 – 7441440360 
-Website: www.asda.co.uk
+While at it, let GPIO library to assign of_node from the parent device.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+index 4757bf964d3c..640e50d94f27 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -1113,6 +1113,7 @@ static int nmk_gpio_probe(struct platform_device *dev)
+ 	spin_lock_init(&nmk_chip->lock);
+ 
+ 	chip = &nmk_chip->chip;
++	chip->parent = &dev->dev;
+ 	chip->request = gpiochip_generic_request;
+ 	chip->free = gpiochip_generic_free;
+ 	chip->get_direction = nmk_gpio_get_dir;
+@@ -1154,7 +1155,6 @@ static int nmk_gpio_probe(struct platform_device *dev)
+ 	clk_enable(nmk_chip->clk);
+ 	nmk_chip->lowemi = readl_relaxed(nmk_chip->addr + NMK_GPIO_LOWEMI);
+ 	clk_disable(nmk_chip->clk);
+-	chip->of_node = np;
+ 
+ 	ret = gpiochip_add_data(chip, nmk_chip);
+ 	if (ret)
+-- 
+2.35.1
+
