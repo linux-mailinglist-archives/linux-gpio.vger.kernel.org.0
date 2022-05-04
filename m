@@ -2,70 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 857ED51B135
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 23:38:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C40C551B141
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 23:41:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378777AbiEDVm1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 17:42:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58642 "EHLO
+        id S1358595AbiEDVoz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 17:44:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377445AbiEDVmZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 17:42:25 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CED448E6F
-        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 14:38:48 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2f7b815ac06so30257147b3.3
-        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 14:38:48 -0700 (PDT)
+        with ESMTP id S239888AbiEDVox (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 17:44:53 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E183527C1
+        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 14:41:16 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id y2so4630174ybi.7
+        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 14:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VX0Y5lK0oKhUNvSgMz9EtXzVemCwMapBfZK+KjIwWaY=;
-        b=QFpWrEBIrRnFFsbRzuQnDhJe4BaSIkFjtC3A5cZVG9hy/hcMauWrIqr2be5/KwrfGo
-         NCGCurP8cU79+UY+pB9TmqKhq7oXZZ7qPI7uQbAillCKF63H5X/zuGVkc+JsGOKGae5G
-         f+iwI+Dj4ePQuDCx/1Fct2nRPtAuc4Hty7oz//xsfve/iIL9k6svN3NMMvhiwINJ4xTM
-         9sMncJOw7LjeeB//tUJa4IoTpI6DRjLlfyj3NRTd/sq9i3txOLixbGmLfCTI0VPt6z/K
-         HRTwjUNbVnucCOGaOR4QEyXpnInRsolXUV5HOuBia87QkC+0dAuzdKHwcHKfLed2iZ+D
-         Bhzw==
+         :cc:content-transfer-encoding;
+        bh=0oiHzbsJqFX9OhI8V4cH2L2tOo6dNPXB6PDhxSDo53Q=;
+        b=S/bjx5OcVouafwAfy0YKuRvxqmD69ijjZevEiYqdXHP+hEJ7OwavFW3Ov+lkelgXgA
+         oZaitNbBLT8LJprr3zjadOUPDaeljx2mJgrJSOub4MZyW7ZddooUbNhoEu0ZBO4Hc90l
+         hYlAen4k5/vwfECAfiUbf2ZZnoyufko52bOLrHWFyFIcY17y5gD3SteI17kVgVwmTQU7
+         SRPFuSvVLpZuDdVYRuAeixhTmVJnF8UU3aVymGkJj2Rskx8v9UTI667gS4l1ANux6bKy
+         xqhllm1BYrtJhsEzXdNwttDfhn7lPWRSX79ycLvvJelOPRMgk9vV8NzUIR6ujbBDEstE
+         Khdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VX0Y5lK0oKhUNvSgMz9EtXzVemCwMapBfZK+KjIwWaY=;
-        b=5PbnW4NCx+8k4joY0EMz4kJbv+wiSLJysMtT9wcAxHIC4Swo4vav3FvUfoMcFj8JBC
-         GbUIvna5PqBI60Qhtx8cad2k2vr9zoAHjmRIvhC/L4rDl+UvfX9lyHNjO3xAByogIoaT
-         O4rJNTNLmVdP4hGiIZJSSydPdYYw6TpxvUjhFyuaMp8YoF2vDFSRYoSuaVmeHEexuMhl
-         sIbbQH5gBQZ0NCc0pO0W/ZwodWVrVt3l/xI3Uo4yLKt5k982JQMIoBmaAIDluo5dcOav
-         cr2j0ihw6/ukW2+Tukei6c7bPZFyWVYJlTObdBBFX3KfvS/nw7rBY+TFub7SKE1WsZZg
-         h+Dg==
-X-Gm-Message-State: AOAM533vGO6powNEkTET8AA0wbsS2XNR4RcbeRKnELPjfIisKZdEkgpr
-        noeflYAfDdRdwmtoxNhcx9365O6CfmmjaOs3ajykHQ==
-X-Google-Smtp-Source: ABdhPJyWaynNr+CEKkTESmGLzWOB0NJ+k01UPdgmFyQnRX5drt8jZsToCyQBLbeZMlkNdUUCDjlKhWmRzv0FXiKAhqI=
-X-Received: by 2002:a0d:ddc6:0:b0:2f8:a506:a5c0 with SMTP id
- g189-20020a0dddc6000000b002f8a506a5c0mr22520729ywe.140.1651700327788; Wed, 04
- May 2022 14:38:47 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0oiHzbsJqFX9OhI8V4cH2L2tOo6dNPXB6PDhxSDo53Q=;
+        b=1nr+3XjJLInv76mMAYV9s+7uxbW6liqJa2oB9+JhUSbe/hJye5UlQVndC4NwnH8Q8l
+         DO3L7hY5eUwoc/Ql5jKkOVbxjSrdU3f7xrbnyQJiPgSIsr15e92Bm8+SoDGcZdEOHkAR
+         eloCuKmqRhPFIY7XKiJQLC3N4/I+/d+eKAlSHUZo3dQUgH/FsDDzoGXD4VITV7jqnGjY
+         MQSYI7bfIo59B5ttAg5ZPmUg+EKEq1Lvh+V8VqHgixMJ+zqwJFm7x7kbOviPpeuCggLA
+         0e3+fagD6Hz54lN7v5wZ228Scb8l+DZykalcEadMXuuzea7QG70yfhxXD1kKm+5r18If
+         14wQ==
+X-Gm-Message-State: AOAM530o9wQW1qI2yklTAujswIoFwncmHmFQHdsSF/m/zu5N8Q7VNXns
+        ROGMN4PKE5FZDXz3YcfASk4RA6Z+QcMfzdV+6GQmEg==
+X-Google-Smtp-Source: ABdhPJyVIOngs+4hYpT+KP01cmUaWQ5B6063XyuvBo8CxmgOqn1Lr06r42GRR4e+pPfqvbzhEmlOo1AvI2lbJsukHuU=
+X-Received: by 2002:a25:aa92:0:b0:649:6b56:5597 with SMTP id
+ t18-20020a25aa92000000b006496b565597mr14164323ybi.295.1651700475736; Wed, 04
+ May 2022 14:41:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220428214838.1040278-1-Mr.Bossman075@gmail.com> <20220428214838.1040278-13-Mr.Bossman075@gmail.com>
-In-Reply-To: <20220428214838.1040278-13-Mr.Bossman075@gmail.com>
+References: <20220429061332.25135-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220429061332.25135-1-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 4 May 2022 23:38:36 +0200
-Message-ID: <CACRpkdY2MNkAKhVOQ_Eyq0AwOtEW-seSrxgsJ2D8E78u636A8A@mail.gmail.com>
-Subject: Re: [PATCH v2 12/15] pinctrl: freescale: Add i.MXRT1170 pinctrl
- driver support
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     linux-imx@nxp.com, robh+dt@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
-        stefan@agner.ch, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        arnd@arndb.de, olof@lixom.net, soc@kernel.org,
-        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
-        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
-        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
-        cniedermaier@dh-electronics.com, clin@suse.com,
-        giulio.benetti@benettiengineering.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Date:   Wed, 4 May 2022 23:41:04 +0200
+Message-ID: <CACRpkda_0feE4074c66m-gYRY7xzW87HHmsNLA2YyQRP6h4_WA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: tegra: tegra194: drop unused pin groups
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -76,18 +69,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 11:49 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
+On Fri, Apr 29, 2022 at 8:13 AM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-> Add the pinctrl driver support for i.MXRT1170.
+> The sdmmc1_hv_trim_pins, sdmmc3_hv_trim_pins and sys_reset_n_pins are
+> not defined as pin groups:
 >
-> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
-> ---
-> V1 -> V2:
->  - Nothing done
+>   drivers/pinctrl/tegra/pinctrl-tegra194.c:1119:27: error: =E2=80=98sdmmc=
+3_hv_trim_pins=E2=80=99 defined but not used [-Werror=3Dunused-const-variab=
+le=3D]
+>    1119 | static const unsigned int sdmmc3_hv_trim_pins[] =3D {
+>
+> Proper fix would be to define them, but this requires knowledge from
+> datasheet.  Removal should not cause any harm and at least it silences
+> the warnings.
+>
+> Fixes: 613c0826081b ("pinctrl: tegra: Add pinmux support for Tegra194")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-If I get a review from a Freescale maintainer on this driver and the bindings
-I can merge it separately, correct?
+Patch applied. These can certainly be added back easily when they
+have a practical use.
 
 Yours,
 Linus Walleij
