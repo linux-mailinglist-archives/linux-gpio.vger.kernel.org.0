@@ -2,215 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C430519FC8
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 14:42:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1090A519FD7
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 14:46:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349867AbiEDMqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 08:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
+        id S1349942AbiEDMtn convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 May 2022 08:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349701AbiEDMqS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 08:46:18 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EB717E11;
-        Wed,  4 May 2022 05:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651668163; x=1683204163;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ITyYbB0V0Xb84R4YEw2hscxYMz0UNXJjyae1C700oaE=;
-  b=O7XZp0pslgtvRpBfV5gdhDRi+SYQHlEBvPo7F/4Ao2N9tfn/JhFbY394
-   catkVzg6OJc14Rn/eaOPGpHu5qobv6sncHcLnH3VHTOYO/kC2yY+ULSm6
-   Az7cxVcII626O4Z33Pgokn4PoENyuqyRcvt8zQe3E83Q04XI0+HQSWLcE
-   Vey0gwPeD0fQZHVvgukGujWZs6SAnFBqLrrzJF+heX9MnZHZtSbIlRbrW
-   7hwbzkU1amDZU0U+cpOPtGwrix1VpoW6JhnbnRQfLTmgJzwnxTL+raW1C
-   foK9qqWy4N+gUs/OJRyAUNVXaLzjpiJy9lJsLP/QYv6Xl0nKT2W5+4mv8
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="266597886"
-X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
-   d="scan'208";a="266597886"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 05:42:42 -0700
-X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
-   d="scan'208";a="631946059"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 05:42:37 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nmEKr-00BshX-SU;
-        Wed, 04 May 2022 15:42:29 +0300
-Date:   Wed, 4 May 2022 15:42:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v4 0/8] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YnJ0tdGTzTRYEISn@smile.fi.intel.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220308205016.2c0112ad@md1za8fc.ad001.siemens.net>
+        with ESMTP id S1349938AbiEDMtm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 08:49:42 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8378635DF8
+        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 05:46:02 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-321-6Zv0gshzMsK-8vWOOuH8bg-1; Wed, 04 May 2022 13:45:59 +0100
+X-MC-Unique: 6Zv0gshzMsK-8vWOOuH8bg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.32; Wed, 4 May 2022 13:45:58 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.033; Wed, 4 May 2022 13:45:58 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Maciej W. Rozycki'" <macro@orcam.me.uk>
+CC:     'Linus Walleij' <linus.walleij@linaro.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: RE: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
+Thread-Topic: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
+Thread-Index: AQHYXaY4HSGVKKYe1UmuRZfv/6NY/a0NHk4QgAFu34CAABvB8A==
+Date:   Wed, 4 May 2022 12:45:58 +0000
+Message-ID: <7bb4d0286f44462581d96320cfe105d6@AcuMS.aculab.com>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+ <20220429135108.2781579-19-schnelle@linux.ibm.com> <Ymv3DnS1vPMY8QIg@fedora>
+ <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
+ <YmwGLrh4U+pVJo0m@fedora>
+ <CACRpkdaha37y-ZNSqYSbf=TvsJNcvbH1Y=N0JkVCewB-Lvf81Q@mail.gmail.com>
+ <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
+ <alpine.DEB.2.21.2205041226160.64942@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2205041226160.64942@angie.orcam.me.uk>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220308205016.2c0112ad@md1za8fc.ad001.siemens.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 08:50:16PM +0100, Henning Schild wrote:
-> Am Mon, 31 Jan 2022 17:13:38 +0200
-> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+From: Maciej W. Rozycki
+> Sent: 04 May 2022 12:47
 > 
-> > There are a few users and at least one more is coming (*) that would
-> > like to utilize P2SB mechanism of hiding and unhiding a device from
-> > the PCI configuration space.
-> > 
-> > Here is the series to consolidate p2sb handling code for existing
-> > users and provide a generic way for new comer(s).
-> > 
-> > It also includes a patch to enable GPIO controllers on Apollo Lake
-> > when it's used with ABL bootloader w/o ACPI support.
-> > 
-> > The patch that bring the helper ("platform/x86/intel: Add Primary
-> > to Sideband (P2SB) bridge support") has a commit message that
-> > sheds a light on what the P2SB is and why this is needed.
-> > 
-> > The changes made in v2 do not change the main idea and the
-> > functionality in a big scale. What we need is probably one more
-> > (RE-)test done by Henning. I hope to have it merged to v5.18-rc1 that
-> > Siemens can develop their changes based on this series.
+> On Tue, 3 May 2022, David Laight wrote:
 > 
-> I did test this series and it works as expected. Only problem is that
-> the leds driver will not work together with the pinctrl. Because two
-> "in tree drivers" will try to reserve the same memory region when both
-> are enabled. Who wins is a matter of probing order ...
-
-Can we have your formal Tested-by tag?
-
-> If you can take my changes into your series we will not have a problem.
-
-Yes, that's the plan, but your patches needs a bit of work I believe.
-
-> Otherwise we might need to create sort of a conflict which my series
-> would revert when switching apl lake to gpio.
+> > > > There is such a thing as ISA DMA, but you'll still need to initialize
+> > > > the device via the IO Port bus first, so perhaps setting HAS_IOPORT for
+> > > > "config ISA" is the right thing to do: all ISA devices are expected to
+> > > > communicate in some way via ioport.
+> > >
+> > > Adding that dependency seems like the right solution to me.
+> >
+> > I think it all depends on what HAS_IOPORT is meant to mean and
+> > how portable kernel binaries need to be.
+> >
+> > x86 is (probably) the only architecture that actually has 'in'
+> > and 'out' instructions - but that doesn't mean that some other
+> > cpu (and I mean cpu+pcb not architecture) have the ability to
+> > generate 'IO' bus cycles on a specific physical bus.
 > 
-> I would not know the process, let us see what the reviews bring and how
-> to continue here.
-
-I'm about to comment on the patches.
-
-> Thanks so much for taking care, especially the pinctrl coming up
-> without ACPI really improves the simatic leds on the apl lake.
-
-You are welcome!
-
-> In fact i will have to double check if i really need the p2sb for the
-> 427E wdt ... but until i have an answer, p2sb works just fine.
-
-Thanks!
-
-> > I have tested this on Apollo Lake platform (I'm able to see SPI NOR
-> > and since we have an ACPI device for GPIO I do not see any attempts
-> > to recreate one).
-> > 
-> > *) One in this series, and one is a due after merge in the Simatic
-> > IPC drivers
-> > 
-> > The series may be routed either via MFD (and I guess Lee would prefer
-> > that) or via PDx86, whichever seems better for you, folks. As of
-> > today patches are ACKed by the respective maintainers, but I2C one
-> > and one of the MFD.
-> > 
-> > Wolfram, can you ACK the patch against i2c-i801 driver, if you have no
-> > objections?
-> > 
-> > Changes in v4:
-> > - added tag to the entire series (Hans)
-> > - added tag to pin control patch (Mika)
-> > - dropped PCI core changes (PCI core doesn't want modifications to be
-> > made)
-> > - as a consequence of the above merged necessary bits into p2sb.c
-> > - added a check that p2sb is really hidden (Hans)
-> > - added EDAC patches (reviewed by maintainer internally)
-> > 
-> > Changes in v3:
-> > - resent with cover letter
-> > 
-> > Changes in v2:
-> > - added parentheses around bus in macros (Joe)
-> > - added tag (Jean)
-> > - fixed indentation and wrapping in the header (Christoph)
-> > - moved out of PCI realm to PDx86 as the best common denominator
-> > (Bjorn)
-> > - added a verbose commit message to explain P2SB thingy (Bjorn)
-> > - converted first parameter from pci_dev to pci_bus
-> > - made first two parameters (bus and devfn) optional (Henning, Lee)
-> > - added Intel pin control patch to the series (Henning, Mika)
-> > - fixed English style in the commit message of one of MFD patch (Lee)
-> > - added tags to my MFD LPC ICH patches (Lee)
-> > - used consistently (c) (Lee)
-> > - made indexing for MFD cell and resource arrays (Lee)
-> > - fixed the resource size in i801 (Jean)
-> > 
-> > Andy Shevchenko (6):
-> >   pinctrl: intel: Check against matching data instead of ACPI
-> > companion mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
-> >   mfd: lpc_ich: Switch to generic p2sb_bar()
-> >   i2c: i801: convert to use common P2SB accessor
-> >   EDAC, pnd2: Use proper I/O accessors and address space annotation
-> >   EDAC, pnd2: convert to use common P2SB accessor
-> > 
-> > Jonathan Yong (1):
-> >   platform/x86/intel: Add Primary to Sideband (P2SB) bridge support
-> > 
-> > Tan Jui Nee (1):
-> >   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
-> > 
-> >  drivers/edac/Kconfig                   |   1 +
-> >  drivers/edac/pnd2_edac.c               |  62 ++---
-> >  drivers/i2c/busses/Kconfig             |   1 +
-> >  drivers/i2c/busses/i2c-i801.c          |  39 +---
-> >  drivers/mfd/Kconfig                    |   1 +
-> >  drivers/mfd/lpc_ich.c                  | 136 +++++++++--
-> >  drivers/pinctrl/intel/pinctrl-intel.c  |  14 +-
-> >  drivers/platform/x86/intel/Kconfig     |  12 +
-> >  drivers/platform/x86/intel/Makefile    |   1 +
-> >  drivers/platform/x86/intel/p2sb.c      | 305
-> > +++++++++++++++++++++++++ include/linux/platform_data/x86/p2sb.h |
-> > 27 +++ 11 files changed, 500 insertions(+), 99 deletions(-)
-> >  create mode 100644 drivers/platform/x86/intel/p2sb.c
-> >  create mode 100644 include/linux/platform_data/x86/p2sb.h
-> > 
+>  I am fairly sure IA-64 has some form of IN/OUT machine instructions too.
 > 
+> > While the obvious case is a physical address window that generates
+> > PCI(e) IO cycles from normal memory cycles it isn't the only one.
+> >
+> > I've used sparc cpu systems that have pcmcia card slots.
+> > These are pretty much ISA and the drivers might expect to
+> > access port 0x300 (etc) - certainly that would be right on x86.
+> >
+> > In this case is isn't so much that the ISA_BUS depends on support
+> > for in/out but that presence of the ISA bus provides the required
+> > in/out support.
+> 
+>  Well, one can implement a pluggable PCI/e expansion card with a PCI-ISA
+> bridge on it and a backplane to plug ISA cards into.  Without support for
+> issuing I/O cycles to PCI from the host however you won't be able to make
+> use of the ISA backplane except maybe for some ancient ISA memory cards.
+> So logically I think CONFIG_ISA should depend on CONFIG_HAS_IOPORT and
+> CONFIG_HAS_IOPORT ought to be selected by platform configurations.
 
--- 
-With Best Regards,
-Andy Shevchenko
+But generating a PCI(e) I/O cycle doesn't need the cpu to be able to
+generate an I/O cycle on its local bus interface.
+All that required is for the PCI(e) host bridge to determine that it
+needs to relevant kind of cycle on the target bus.
+This can easily be based on the physical address.
 
+Many years ago I used a system with the strongarm SA1100/1101 pair.
+(Not running Linux, but I think that it could have - slowly.)
+Two (adjacent?) areas of the physical address map generated memory
+and I/O cycles to a pair of pcmcia slots.
+What you end up with is definitely ISA, but ARM definitely doesn't
+have in/out instructions.
+
+Now, while this is rather hypothetical, a 'generic' arm kernel running
+on that hardware would be able to support drivers that expect an ISA bus.
+But on different hardware the same generic kernel would have nowhere
+to 'attach' the same drivers - but they could still be part of the kernel
+(maybe as modules).
+
+What you should probably be doing is (outside of 'platform' code)
+change the drivers to use ioread8() instead of inb().
+Then adding in the required calls to get the correct 'token' to
+pass to ioread8() to perform an I/O cycle on the correct target bus.
+
+It is really the attachment of the driver that can't succeed, not the
+compilation.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
