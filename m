@@ -2,58 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCA71519B33
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 11:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9D5C519D10
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 12:37:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346911AbiEDJMp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 05:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50958 "EHLO
+        id S1348184AbiEDKl0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 06:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346934AbiEDJMj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 05:12:39 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D8C1A827;
-        Wed,  4 May 2022 02:09:03 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: kholk11)
-        with ESMTPSA id 164771F43CB0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1651655341;
-        bh=cyGLJPmNem2nlpr6KMEZ/v4BP/CfNFyUllyY7Ug96Hg=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=UZhuaJrSn2xRicCSrJYO47i5VM4OegSSaMbWQq+ZrU+iu9zHVw6ryx62slWbpRJAO
-         xUdwDXLQqwxa+mfkww15wpfxKRg+/Zf5RQ8ZAsnjcK7Wg5zp7Xx9ietLi65BgtBIU6
-         myqeqy/0bS7Zxg1kr2SxV4Y+005On1iZ6S+WZ5RFREV6kUFaNOoCxHFVfE1FGBCYAx
-         V5J9gscBOPaKv1gzs1HqHqPhewtJYcug9iUaJBQKfvsz/+n34Yu3wU9/g5eia53eJw
-         uyMaDhbxsTSpjyMtTqxO31tV8HLd7gaJ9oZu7WeB+vaLdLXcQMRp1Ge+JxjyOPHSdS
-         E9cfBTzAPkheA==
-Message-ID: <8c9bc4cc-09f1-71db-6386-b486e67d6a2a@collabora.com>
-Date:   Wed, 4 May 2022 11:08:58 +0200
+        with ESMTP id S1348177AbiEDKlY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 06:41:24 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5130286FB
+        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 03:37:47 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id g16so1130069lja.3
+        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 03:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vb0NSe8ARzC5SmuUEMfvtdIbDeahcHfl+QMHR8M0UQk=;
+        b=GZhSotbCyj7bjcQg3PRN5d5i3LNDLOHkeiEebj/4ACqHtK1YLDFsRK/0IrTHnfceOy
+         UluKNPmhbjw9UWDe43i9hxj2A4wVNksLYrr0zgBRav0mWNt+O2TKGxOn39dduRc7hww+
+         5IU4ZhRYef0ywjjxFhBviwDj1IhQ/Nlc9V0YgCTRVNC2ObNe9YAxdNsieXO9KNQ3Xn8b
+         VrPx1e1Zk7/x4vnxDXFSvWv9wjxu51vfy8OhkXN4uzac4E34FHOJKbE4GhWrNkMTmO/t
+         mGyVZzFppdwPpbLeK03k3r0Eai14LTxLKjON1JLWRun+EEVT4Uc4/FB7XksuWfvM/MEH
+         5vKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vb0NSe8ARzC5SmuUEMfvtdIbDeahcHfl+QMHR8M0UQk=;
+        b=LIcfvtLTyLHT7I9MRNoW7S8Jz/e5cbKmQzXaKeG2YrmsYJV6N7xiQeeyCT8idMOtXc
+         SNR/3rhbNszWbyDV1ntC0MCONOgXK9SiJuwNxLhu3S57AlTvMxSDYMKRYYi9L1yl2i+c
+         0xeNNuqscLAAD0wZpzymJ2tVzSoKsbGDwe7WEIoCPNr0Gz8KLQY8unUKFRqOBHpGtZUg
+         Qmp49vmbpfgcw28fF+P2UZ/2nSOwnlyvjxM+8nMrL8V3KmzoZScCgBCHBBrr3lvMSAGg
+         mmURWseVyR58OUQ8M638dPdWWuTlHiFk57YQYi7NinfZcNT9FddmLe5Xzf3VHipb98Wp
+         ERqg==
+X-Gm-Message-State: AOAM532YSKYWMD/mrpYVQdt5gVdP7zbawcUztibWL8hO6i72DNJGS+yF
+        UVFJU5GoA+omSUC8zQkXjOiiIUkBHo/EEsNhbVDx3g==
+X-Google-Smtp-Source: ABdhPJy3RP8ApTLWFeuOxSaDmP+bk9p4uPaAGqlNoJA31itRj3U0AHz4xNk4wOpq4ed3AV5juy2VAtEjHIHTWQOiNls=
+X-Received: by 2002:a05:651c:1783:b0:249:43a8:b6f9 with SMTP id
+ bn3-20020a05651c178300b0024943a8b6f9mr11878078ljb.273.1651660666042; Wed, 04
+ May 2022 03:37:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: Add MediaTek MT6795 pinctrl
- bindings
-Content-Language: en-US
-To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@collabora.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, matthias.bgg@gmail.com,
-        sean.wang@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+References: <20220422170920.401914-1-sebastian.reichel@collabora.com> <20220422170920.401914-8-sebastian.reichel@collabora.com>
+In-Reply-To: <20220422170920.401914-8-sebastian.reichel@collabora.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 4 May 2022 12:37:09 +0200
+Message-ID: <CAPDyKFpCa6xqQfpBj9e8E92_WyK_tEESgSMuRm9_CNRuMgFbQw@mail.gmail.com>
+Subject: Re: [PATCHv1 07/19] dt-bindings: mmc: sdhci-of-dwcmhsc: Add rk3588
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
         kernel@collabora.com
-References: <20220503142537.152499-1-angelogioacchino.delregno@collabora.com>
- <20220503142537.152499-2-angelogioacchino.delregno@collabora.com>
- <20220504003340.224exvr33qevi3sj@notapiano>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220504003340.224exvr33qevi3sj@notapiano>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,169 +76,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 04/05/22 02:33, Nícolas F. R. A. Prado ha scritto:
-> Hi Angelo,
-> 
-> On Tue, May 03, 2022 at 04:25:36PM +0200, AngeloGioacchino Del Regno wrote:
->> Add devicetree and pinfunc bindings for MediaTek Helio X10 MT6795.
->>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> ---
->>   .../pinctrl/mediatek,pinctrl-mt6795.yaml      | 224 +++++
->>   include/dt-bindings/pinctrl/mt6795-pinfunc.h  | 908 ++++++++++++++++++
->>   2 files changed, 1132 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
->>   create mode 100644 include/dt-bindings/pinctrl/mt6795-pinfunc.h
->>
-> 
-> ...
-> 
->> +
->> +          bias-pull-down:
->> +            oneOf:
->> +              - type: boolean
->> +              - enum: [100, 101, 102, 103]
->> +                description: mt6795 pull down PUPD/R0/R1 type define value.
->> +            description: |
->> +               For normal pull down type, it is not necessary to specify R1R0
->> +               values; When pull down type is PUPD/R0/R1, adding R1R0 defines
->> +               will set different resistance values.
->> +
->> +          bias-pull-up:
->> +            oneOf:
->> +              - type: boolean
->> +              - enum: [100, 101, 102, 103]
->> +                description: mt6795 pull up PUPD/R0/R1 type define value.
->> +            description: |
->> +               For normal pull up type, it is not necessary to specify R1R0
->> +               values; When pull up type is PUPD/R0/R1, adding R1R0 defines
->> +               will set different resistance values.
->> +
->> +          bias-disable: true
->> +
->> +          output-high: true
->> +
->> +          output-low: true
->> +
->> +          input-enable: true
->> +
->> +          input-disable: true
->> +
->> +          input-schmitt-enable: true
->> +
->> +          input-schmitt-disable: true
->> +
->> +          mediatek,pull-up-adv:
->> +            description: |
->> +              Pull up setings for 2 pull resistors, R0 and R1. User can
->> +              configure those special pins. Valid arguments are described as below:
->> +              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
->> +              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
->> +              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
->> +              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
->> +            $ref: /schemas/types.yaml#/definitions/uint32
->> +            enum: [0, 1, 2, 3]
->> +
->> +          mediatek,pull-down-adv:
->> +            description: |
->> +              Pull down settings for 2 pull resistors, R0 and R1. User can
->> +              configure those special pins. Valid arguments are described as below:
->> +              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
->> +              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
->> +              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
->> +              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
->> +            $ref: /schemas/types.yaml#/definitions/uint32
->> +            enum: [0, 1, 2, 3]
-> 
-> I'm actually myself trying to figure out why there are two ways of setting
-> R0/R1 in the dt-binding (and which should preferred for mt8192 and others):
-> 1. passing 0-3 to mediatek,pull-{up,down}-adv
-> 2. passing one of the MTK_PUPD_SET_R1R0_** flags to bias-pull-{up,down}
-> 
-> When the pin is of type MTK_PULL_PUPD_R1R0_TYPE (which should be the only case
-> in which it makes sense to consider mediatek,pull-{up,down}-adv AFAIU), they end
-> up doing the same thing, it's:
-> 
-> mtk_pinconf_bias_set_combo() -> mtk_pinconf_bias_set_pupd_r1_r0()
-> vs
-> mtk_pinconf_adv_pull_set()
-> 
-> ... and they write to the same registers.
-> 
-> Unless I'm missing something here.
-> 
-> Thanks,
-> Nícolas
+On Fri, 22 Apr 2022 at 19:09, Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
+>
+> Add compatible value for the Rockchip rk3588 dwcmshc controller.
+>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Hey!
+Applied for next, thanks!
 
-Yes you're missing something important :-P
+Note that, I am expecting a new version of the other mmc patches that
+is a part of the series.
 
-First of all, the flow all depends on the pinctrl driver "type": we have
-the common (v1), moore and paris.
-I will leave this research to you, or this reply will become a wall of text,
-so let's go on with the latter details, which are relative to the paris one.
-
-You should check pinctrl/mediatek/pinctrl-mt(model).c: here, you declare a
-struct mtk_pin_soc containing pointers to pins data and function callbacks,
-such as bias_{get,set}_combo() and adv_pull_{set,get}().
+Kind regards
+Uffe
 
 
-Now to the real deal, examples below:
-
-- Declaring property "mediatek,pull-up-adv" means that you get through
-   MTK_PIN_CONFIG_PU_ADV case, which calls the adv_pull_set() callback;
-- Declaring property "bias-pull-up", however, means that you get through
-   PIN_CONFIG_BIAS_PULL_UP, which calls bias_set_combo().
-
-For adv_pull_set() callback being mtk_pinconf_adv_pull_set() the following happens:
-- Write to registers PIN_REG_R0, PIN_REG_R1 (set resistor 0,1 en/disabled);
-- Write to registers PIN_REG_PUPD (pull up, or down)
-- If below writes fail (because no r0r1/pupd declared in your driver's table),
-   the code will call the bias_set() callback as a fallback.
-
-For bias_set_combo() cb being mtk_pinconf_bias_set_combo() the following happens:
-- Check pull_type mask, it may be one or a combination (OR) of:
-   - MTK_PULL_RSEL_TYPE
-   - MTK_PULL_PU_PD_TYPE
-   - MTK_PULL_PULLSEL_TYPE
-   - MTK_PULL_PUPD_R1R0_TYPE
-- Call function(s!) mtk_pinconf_bias_set_{rsel,pu_pd,pullsel_pullen,pupd_r1_r0},
-   depending on the bits set in the pull_type mask.
-
-All of the aforementioned functions will perform a different register write for
-different pullup/pulldown settings..
-
-bias-pull-up:
-One of the cases in which you want to use the combo is when you need to set a
-combination of, let's say, PULLSEL and R1R0 (enabling a default pull, adding a
-series resistance of parallel R1R0 resistors to the default value), which is
-similar to RSEL_TYPE, but for SoCs that don't have the RSEL_TYPE register layout.
-
-mediatek,pull-up-adv:
-One of the cases in which you want to use the adv_pull_set is when you want to
-set *only* R1R0+PUPD or *only* PULLSEL (when r1r0/pupd not supported), but also
-*never* modify PU_PD or RSEL registers.
-
-
-It's a bit tricky to understand, but this stuff is really on a per-SoC basis, as
-not all of them will behave like the other... so if you check only pinctrl-paris,
-or only pinctrl-mtk-common-v2, you will inevitably go offroad with your research.
-The MediaTek pinctrl mutates behavior in a combination of the aforementioned two
-*and* the SoC-specific pinctrl data (pinctrl-mt6795.c).
-
-Though, maybe-and-I-say-maybe (because I haven't performed a *full* research on
-that topic), it *may be* possible to refactor the mtk pinctrl framework to get
-rid of the mediatek,pull-up-adv property and do it all from the standard pinconf
-bias-pull-up property instead with some driver magic... but.. in any case, that's
-for another time - definitely not now (for me, at least - but if anyone wants to
-explore this territory and produce more cleanups, you're encouraged to).
-
-
-Please note that I tried to simplify the explanation as much as possible and
-something inside may have to be "interpreted the right way", when looking for
-details that are way more advanced compared to the basics that are explained
-here... but you see, it's already a big wall of text... :-) :-)
-
-Cheers,
-Angelo
+> ---
+>  Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> index f300ced4cdf3..71f8e726d641 100644
+> --- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> @@ -17,6 +17,7 @@ properties:
+>    compatible:
+>      enum:
+>        - rockchip,rk3568-dwcmshc
+> +      - rockchip,rk3588-dwcmshc
+>        - snps,dwcmshc-sdhci
+>
+>    reg:
+> --
+> 2.35.1
+>
