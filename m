@@ -2,119 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C8E651AE5C
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 21:51:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 775E851B03B
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 23:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377702AbiEDTzU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 15:55:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
+        id S1357423AbiEDVU6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 17:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357721AbiEDTzT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 15:55:19 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 366074DF7D
-        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 12:51:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=roOe+AeBY7DP+Q6uo/3NlHB6bacD
-        iF8cZtCOKwDNtfY=; b=AVvmqY7D3UH/BWMnn7wIorUCqnrJ/+VLUtw394q8E+Om
-        FcZj38Meag68aRXJMZqBMV/ykDiAbYkJb7JobePTVSDwsJScwk5GU/y4NLU/d2X/
-        TtjYV05OBt+x37dH92tXFElqcjQbmeUxdL9XANm472CsC+dHuhk7AahZPz9ANQE=
-Received: (qmail 1533983 invoked from network); 4 May 2022 21:51:39 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 May 2022 21:51:39 +0200
-X-UD-Smtp-Session: l3s3148p1@aBgC9DTeXJwgAwDtxwyXAP9dq+3qRUcy
-Date:   Wed, 4 May 2022 21:51:36 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 2/7] dt-bindings: i2c: renesas,rcar-i2c: R-Car V3U is
- R-Car Gen4
-Message-ID: <YnLZSNJh7rdH77Lp@kunai>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <cover.1651497024.git.geert+renesas@glider.be>
- <a0402ff46027196953fe9c13f60576d40c5aea4c.1651497024.git.geert+renesas@glider.be>
+        with ESMTP id S1357448AbiEDVU5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 17:20:57 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740814C7BE
+        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 14:17:20 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id w187so4576719ybe.2
+        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 14:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cubx0T4b84/s4qGZu+cq3otZVlJ+cjcrzVHI5T7uJoU=;
+        b=r68CgTY+ckJqWEVDSWW2VJiHoQPXGhNjpSNc5921/Er4HMVt+duADEAxSRXYLpK9h4
+         1bBZk/5YlofBR9bVtPGvZnozpPf8L63FT33SQV97e9pIgx0CB7h+gSW6t1A1UbJGQ2MN
+         T/rXRmqmcGA9FbC1E6h/yf5iABYTiSS5khUGhF68cVKBsNWQ7PNLUGVO/s9OYQ0WsFl2
+         1ZpyHsCewhDVjYemkPAP9RI1FNJ9BBO4Uo9SU9ELYBkwlpfefUmNJvrIyJuS3YEY6F2w
+         OOQ+W9TmRjakDJnee9ZbkEsjs1QIcN8L8bAmmADaJPCxnqqOsu32IXuBVRO2ttru5XVN
+         AKlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cubx0T4b84/s4qGZu+cq3otZVlJ+cjcrzVHI5T7uJoU=;
+        b=S6HjpDjXzpS8L/0gk4CE/5wRB5iEGUfK28ZQmoeDfDJR/jbmux+hm2nB/S1BRwAw60
+         kioJ1M28uTwTueuOA50HIMMoX6c5pKolt+Cqgf5adYo+MK808uolgAxLsSViNLb8jByI
+         BRCy27B7MhrwS5QNvK2B+UZVegdN/ZAgEO+VpdHbpfLbx8CgM2I7WXzC1Kgi003/K20+
+         uIrrmfDF9Mkbu1ak2nRafNtAaY+R/ZL2QNNFbvunUl0Q6Yp56LaRHL1D247brqK+3heL
+         DBwnWBiEjEeeBtjdJWZKzj5BXEAaiVeh0Xp5QScgGsmKSk/AkB+e0PFfg+1eK9AMv2FX
+         fBKA==
+X-Gm-Message-State: AOAM531D5H9eBm2s182/f0WylzNAxXpzKt3dK/PssYZaS/u4mH31jUTT
+        ZDtEPcNEvC4tSssu4MiNlJa2tcVOZBpVtVxw/32eAwqkW6k=
+X-Google-Smtp-Source: ABdhPJwWCrMiKTBi/o3yi0ZclSRjozzu3LMmeNOsrH8z19d94B3HWAgzO1cAvf+W8ImK05RH8gWKXROmgLbsRr1sQwg=
+X-Received: by 2002:a25:e684:0:b0:645:d429:78e9 with SMTP id
+ d126-20020a25e684000000b00645d42978e9mr19846905ybh.369.1651699039696; Wed, 04
+ May 2022 14:17:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j/bfMYaLl7xWqyb8"
-Content-Disposition: inline
-In-Reply-To: <a0402ff46027196953fe9c13f60576d40c5aea4c.1651497024.git.geert+renesas@glider.be>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+References: <YmwuK60FMGR2Kn0R@smile.fi.intel.com>
+In-Reply-To: <YmwuK60FMGR2Kn0R@smile.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 4 May 2022 23:17:08 +0200
+Message-ID: <CACRpkdYB3NSNuzh9JTBjWQDHoTn=v9WBBS-rfrOMH8RPL8NRLA@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.19-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Apr 29, 2022 at 8:28 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
---j/bfMYaLl7xWqyb8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Supposed to be an immutable tag to be included in GPIO and pin control subsystems.
+> Have been in Linux Next for a while w.o. any issues reported. Please, pull.
 
-On Mon, May 02, 2022 at 03:34:54PM +0200, Geert Uytterhoeven wrote:
-> Despite the name, R-Car V3U is the first member of the R-Car Gen4
-> family.  I2C on R-Car V3U also supports some extra features (e.g. Slave
-> Clock Stretch Select), which are supported by other R-Car Gen4 SoCs, but
-> not by any other R-Car Gen3 SoC.
->=20
-> Hence move its compatible value to the R-Car Gen4 section.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Pulled into pinctrl as well, resolved the conflict by selecting your
+version of the code in the stm32 driver. Please check the result!
 
-Applied to for-next, thanks!
-
-
---j/bfMYaLl7xWqyb8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmJy2UgACgkQFA3kzBSg
-KbbbBQ//bHWIRu7MnsRqfYi9eFC5lxec3M3uiwvykedIMxXDdWQCC2qXlAn6efuH
-qv9GS22D0TLykN9cUMh/mwkF8j4CpK1hxncdTz7//FyzfDcEhuABgks83Z1Z1Vib
-X8oYEjRjx5kRJD+TC6OXer3OVwKfFX8V+6FpRruFVW/LWVEZa/LTKFqlSLw1sO3A
-fy4Mw5pcBbKlDiXWmyTiAjk+Rv+apo2VXaO9nV7UxAJSICixTe0GmOPZzXHCem/z
-GvqpFKcaXWXtQ1FHt1zwxuscEhTf8YD4XDB3S1iCvkh1BXwN7xK0BW5vLQYtwxKJ
-c/F9Zwwg7dz5VHAy8Sf+AFIi3Q5Iv9gBJ7kjt6G4hpYG4itHOpCopBjmfxQu0YcD
-J5bOb/F1jKOVjPHfnE2IFzyH4Alsy+z7hAMk3R90WM/AumDfVB1d1msG/1V3rnFe
-IRRaP3yu9mmcPkG7rRWs3oi/HH3SWzeDCywaqJgIMwJWE0oFHuw5LA8KzKvk5rbD
-lVm+yJTMx0GyyhqV/dl+fyPdLTHj+5O1grgopDg6xjKDiN+2EmbstKJdGKtocA6N
-tHNzcp80bFOHV6eO3j89GhutyTdL0ma8z892LN/+Lk7dQDpyoTKLmC51fvE7BHBK
-+yqozekqkqbqe/qUVYEV0UCB/VkIEgSIoJJP39lRITx/rY2F404=
-=hJCI
------END PGP SIGNATURE-----
-
---j/bfMYaLl7xWqyb8--
+Yours,
+Linus Walleij
