@@ -2,47 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FE70519E71
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 13:48:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7012519EBD
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 13:59:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232667AbiEDLuV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 07:50:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58212 "EHLO
+        id S1349205AbiEDMDW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 08:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237744AbiEDLuT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 07:50:19 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 136131F623;
-        Wed,  4 May 2022 04:46:43 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id A4B0A92009C; Wed,  4 May 2022 13:46:41 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 9DFED92009B;
-        Wed,  4 May 2022 12:46:41 +0100 (BST)
-Date:   Wed, 4 May 2022 12:46:41 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     David Laight <David.Laight@ACULAB.COM>
-cc:     'Linus Walleij' <linus.walleij@linaro.org>,
-        William Breathitt Gray <william.gray@linaro.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: RE: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-In-Reply-To: <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
-Message-ID: <alpine.DEB.2.21.2205041226160.64942@angie.orcam.me.uk>
-References: <20220429135108.2781579-1-schnelle@linux.ibm.com> <20220429135108.2781579-19-schnelle@linux.ibm.com> <Ymv3DnS1vPMY8QIg@fedora> <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com> <YmwGLrh4U+pVJo0m@fedora>
- <CACRpkdaha37y-ZNSqYSbf=TvsJNcvbH1Y=N0JkVCewB-Lvf81Q@mail.gmail.com> <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S1349203AbiEDMDU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 08:03:20 -0400
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FD31D0D6;
+        Wed,  4 May 2022 04:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+        s=s201512; t=1651665576;
+        bh=qGHD1viJbziYFStGKq39fNCCso+OQcti79hBaKlzEuc=;
+        h=From:To:Cc:Subject:Date;
+        b=AbahLkADFXJ1IKNHg9WdGxcadGrmd/Kew5XuNrTKQe2+IPDwGzoMbDOxECdBP/4GO
+         J1f+qDMdsTcL1Gtzxro88VbU+wDfetAlxbbPiF66rcykiHHgM2MtLCVQHuaeF9SiIL
+         dOmfjUH/K4WBrd0ytniNQbAC4zoJIGJ/NlIP4SmY=
+Received: from huazheng-ThinkPad-X230 ([123.118.173.243])
+        by newxmesmtplogicsvrsza8.qq.com (NewEsmtp) with SMTP
+        id EE221EC3; Wed, 04 May 2022 19:59:34 +0800
+X-QQ-mid: xmsmtpt1651665574tr0gbru5w
+Message-ID: <tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com>
+X-QQ-XMAILINFO: NnA3IMNPwBd+IxCjkbKaQkuHTVOHIcl4UXLtypL6wLupqxkQn/xCCUJTFpojHt
+         +ufGNVQJsNA7nuS6+2mdk141ConobYSWk3Kj9jgsOPkw8C450NnG45Kz4fc40vTFaZL4zH91fMxF
+         eCKJpiL88i8X7uTz0J+qFiuEdxI6L2aDmttqeMARhWd3vkWWO5z6H/oIX7O0kyc2R84bL+LTjCyZ
+         pf9vP1SJjI1qA+1v54r0yjK2pPf9UvhDpa3JZ4lbseor47qT7iUx52hG6TqFhvQVWPXK5AV9XFTu
+         sa7c16xQAs3BrtamykTsw9et6g/Le64bE05hdTNCN4pjWkXI5CvZvSCoi9IpnA/l7oj70R3s5sI8
+         YTdW6/b8beGrpLFnYsjYE9ALrXGP5H1A7IALzt4/VgpXBYacNSOgHiX5EoG5VCsxgeiqkBP9haj9
+         Cn+XNYKQZe4amdBBmjfVxfRpNhI+qSLp+s6H+rJJSQBEDJYt0Yaj20yJtnLy4ZG9g0Pa1OhddWgs
+         KRLbqolshIqWc0+BV0va6pLdDBBQxtFnZ/BKQO4O2P6vMTTgJmyUh7Hsb+0N2gMfUwS9ympfvE1S
+         A7yalFc97kpnGeSq0OkgbZiOQL1eTa1cwl4WdvQ7lVN6jPXtCBse5VvjIlFmC4mU97eQyXkk3rt8
+         oHj6ENeKG+x90rsimXzWeHdqkeJDrmC9nK3PLlvlXto1NcjRGC/3J9GjRmxW2BufZeCDbqiZi75K
+         j8/Jd7uQUk2UHKpExiT2thmXBkfanGawjZe7hwMBkMIGTxnvnNk169jg6jS2Cg1rlDE0gZ8eFN9E
+         8qd/rv9fdazyDmNlkdmAy+LqDvlQGMY6YPR/3Eup1K3MWAhX6h9ZAmnHfLQ/yHRNsVgbsTkLd1SF
+         wYgShtP7fibkTwPKtpajmEMnzE1ATY0tc/ri5aXhhyPpgHblJk8mLkLFEjD6O6yf0diIIeA6fB27
+         84Fr2i6FvRSkgMbh85XNAezEvFfokMfGzIJFuM7XfOb4ppJaVftbzhUiVryEXl
+From:   IotaHydrae <writeforever@foxmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc:     IotaHydrae <writeforever@foxmail.com>
+Subject: [PATCH] arm: sunxi: fix f1c100s pinctrl function.
+Date:   Wed,  4 May 2022 19:59:04 +0800
+X-OQ-MSGID: <20220504115904.2553938-1-writeforever@foxmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_NONE,RDNS_DYNAMIC,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,55 +65,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 3 May 2022, David Laight wrote:
+1. change suniv f1c100s pinctrl,PD14 multiplexing function lvds1 to uart2
 
-> > > There is such a thing as ISA DMA, but you'll still need to initialize
-> > > the device via the IO Port bus first, so perhaps setting HAS_IOPORT for
-> > > "config ISA" is the right thing to do: all ISA devices are expected to
-> > > communicate in some way via ioport.
-> > 
-> > Adding that dependency seems like the right solution to me.
-> 
-> I think it all depends on what HAS_IOPORT is meant to mean and
-> how portable kernel binaries need to be.
-> 
-> x86 is (probably) the only architecture that actually has 'in'
-> and 'out' instructions - but that doesn't mean that some other
-> cpu (and I mean cpu+pcb not architecture) have the ability to
-> generate 'IO' bus cycles on a specific physical bus.
+When the pin PD13 and PD14 is setting up to uart2 function in dts,
+there's an error occurred:
+1c20800.pinctrl: unsupported function uart2 on pin PD14
 
- I am fairly sure IA-64 has some form of IN/OUT machine instructions too.
+Because 'uart2' is not any one multiplexing option of PD14,
+and pinctrl don't know how to configure it.
 
-> While the obvious case is a physical address window that generates
-> PCI(e) IO cycles from normal memory cycles it isn't the only one.
-> 
-> I've used sparc cpu systems that have pcmcia card slots.
-> These are pretty much ISA and the drivers might expect to
-> access port 0x300 (etc) - certainly that would be right on x86.
-> 
-> In this case is isn't so much that the ISA_BUS depends on support
-> for in/out but that presence of the ISA bus provides the required
-> in/out support.
+So change the pin PD14 lvds1 function to uart2.
 
- Well, one can implement a pluggable PCI/e expansion card with a PCI-ISA 
-bridge on it and a backplane to plug ISA cards into.  Without support for 
-issuing I/O cycles to PCI from the host however you won't be able to make 
-use of the ISA backplane except maybe for some ancient ISA memory cards.  
-So logically I think CONFIG_ISA should depend on CONFIG_HAS_IOPORT and 
-CONFIG_HAS_IOPORT ought to be selected by platform configurations.
+Signed-off-by: IotaHydrae <writeforever@foxmail.com>
+---
+ drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- ISTR there was a company that manufactured a USB-ISA option (providing an 
-external ISA backplane).  We never supported it, but in principle if we 
-wanted to, then it would be the USB-ISA device's driver config option that 
-CONFIG_ISA would additionally depend on as an alternative.  That wouldn't 
-enable CONFIG_HAS_IOPORT though because the presence of this particular 
-USB-ISA device would not itself permit the use of I/O cycles with any 
-PCI/e buses a machine might independently have, so devices for PCI/e 
-options that require port I/O shouldn't be made available at the same 
-time.
+diff --git a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
+index 2801ca706273..68a5b627fb9b 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
++++ b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
+@@ -204,7 +204,7 @@ static const struct sunxi_desc_pin suniv_f1c100s_pins[] = {
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "lcd"),		/* D20 */
+-		  SUNXI_FUNCTION(0x3, "lvds1"),		/* RX */
++		  SUNXI_FUNCTION(0x3, "uart2"),		/* RX */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 14)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 15),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+-- 
+2.32.0
 
- I think that company might have actually manufactured a similar PCI-ISA 
-option as well, but that I suppose did rely on support for I/O cycles on 
-PCI.  Early 2000s BTW.
-
-  Maciej
