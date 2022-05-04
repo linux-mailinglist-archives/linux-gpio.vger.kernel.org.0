@@ -2,61 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 865DF51B196
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 00:04:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5EB951B19C
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 00:08:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233669AbiEDWIQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 18:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59704 "EHLO
+        id S239494AbiEDWMS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 18:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236807AbiEDWIP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 18:08:15 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2536650E17
-        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 15:04:38 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-2f7b815ac06so30821877b3.3
-        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 15:04:38 -0700 (PDT)
+        with ESMTP id S1352569AbiEDWMR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 18:12:17 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF6419C15
+        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 15:08:40 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id e12so4715274ybc.11
+        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 15:08:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zqlpLuQfBXsLF0pGTV7F8Lqm0D+MDLdu0OmDcVtwIY4=;
-        b=uOk/SO4PYBMT+8q1dA1TD5ptS5xd/kbbzQLYE6iespzhwRZycMKu5S3Qhyiz6F+i+1
-         3cOJMgPCVoECy5RD3/Qtqqi0Dgd8cNVtxDpH7cyysA9bWJtaBzWNzqAT35Kh8PpgeUp0
-         LEwxjERbI/QnoiGBnKxyEE3BpPH5Cdrf+zKObdobq0SKBeWIaWkut6AZ2IU6fQ/sYQ6c
-         nTwHHjF0AO+2SNGg7wY3qPOsZREgDpQwjEuQq+eL8Uzo9fApS54erILmrbEOxlBVyUSs
-         NovjMz5MjUjUdq+1l8a+JM44tWm5RCCtn/vOHA36VSTza1cRyofX77vYLvS1C7rEPbK8
-         lHJQ==
+        bh=KR2DheuJjcUkIOIUvQUUeNZAD0Do/Uz4XuptHOySxt8=;
+        b=EEdHY2WYXdlpU2yBjkiemZxWwkp3ZpOMz4fiag41piTszem+RnzSdsfhLwno+JWoOo
+         ec8LLnd6k1z9Dhx+Kk/rSvF2DS8wRH0xt/IZed8l/fVIfrEEM8RCTt+HuCambNCMkHsj
+         Pi58haaM6QMnPRETblZo1RBEu2eSbG/sHcAWwzNETIO15yOOFrJTE+J4FzEeyq6a+e+/
+         exwk5FTzyZJ1EqcnOm+M2MXvVTYiDP/nqUyhz8bCklhjmlL277XoYVFHqD/rAmEmCOiQ
+         oqfxkT1QXj8q5NSXzbiiejSjtBMnIOQ6s4C29Tu+y9Ky+PLFJH3AvcNCTYf0ev15JvjS
+         G6Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zqlpLuQfBXsLF0pGTV7F8Lqm0D+MDLdu0OmDcVtwIY4=;
-        b=O7gkOw61EAPeueHzDKryGgJ8YFbrhYB/SCFrkqzyiDKbYKK/zusPUE4YDfE5jOErk8
-         oM7xXDZR2BZREajBvS8y+5nCCBa8ceVNAZUrGGeqUcvuIoScGfG9gTuUG7iSMKCIh6yd
-         ixjc6DVDJEDe2c5cfp/RSd6vqXQ1Nroe41xfaequGC+3YfmO9nwRtAp+oO9jqUDRkG4S
-         mWb8D8GaoCCa+ZWp7XCc2qmKjcJfsOHLrfg0qz15nZgj9vSvdc8f0fNKHlajx+9Rv1CX
-         eVSq4OR6l1B57kEDeXaUgHzUDqgoexGrzLeNla+ZHNSo0xGu8CtmqDiYXJIzT8YfCWk8
-         v+Iw==
-X-Gm-Message-State: AOAM532I3JNBFrc4CnbtSFLSm8xBRSuME80Ebw15V6pZbSmp/UbpIrYq
-        5IwUp8dScFR0bU9ivbdXLgNyd/H3GrYedwKkz42roARQvK8=
-X-Google-Smtp-Source: ABdhPJwa3Zp+INs9eIYA3vmkO66opZgtx8fKINwCtGXZ3pcba1YTMqSjlpx5Z4gASQOH6KsNIBd0fjydcV+hsZ93qI4=
-X-Received: by 2002:a0d:ddc6:0:b0:2f8:a506:a5c0 with SMTP id
- g189-20020a0dddc6000000b002f8a506a5c0mr22606554ywe.140.1651701877405; Wed, 04
- May 2022 15:04:37 -0700 (PDT)
+        bh=KR2DheuJjcUkIOIUvQUUeNZAD0Do/Uz4XuptHOySxt8=;
+        b=JaaNtFBO040EImlGhP5JMTi1T6WCox6NeKAVLU0ow9ut+Yv3+pPKW3O+qs/mnbkWtA
+         LJwnad309LWXy6rrKeUq+AVA3Yq+UkXNa0b9ZeqZS2G03NZnZMs+CAPHTXLkx9loEx3b
+         0glJ5N8TjewV5AcF3sv0GUdFt5cb9uWr/QrnqXuBvolWu768F/3z0k+uXTenfDAFOwLS
+         lMMyiuXVBbPnUOunmaVW6lgG5jFEK5lOwxJPtjLr/qEMGtdeeiCQ9x6OTcOJwLR/Spvb
+         J04vWWvRUzML0mj5Uv0at9y5wer8Ku5W4HyocMVYvIFvOal+ktMYvvWUv5Vu7fIiMGhy
+         t45Q==
+X-Gm-Message-State: AOAM5337O/dFRu4zAmhgM+G6EF1yO/2D634YQyFvmcm/+igdNEDj/fNW
+        2jCX8WdGlAukT7KZqZMUaS92ucwJ6RoaCgdcL/BPUZ+Sr5A=
+X-Google-Smtp-Source: ABdhPJyTdhH2kmQaQQumXDHs0GjRnjkcH7xMYZb2ZH+uxT3QLuUwFLJJJF0FYLyU4UL2YqI+Ks3c8frqNy2YXLv4iJM=
+X-Received: by 2002:a25:aa92:0:b0:649:6b56:5597 with SMTP id
+ t18-20020a25aa92000000b006496b565597mr14236454ybi.295.1651702119896; Wed, 04
+ May 2022 15:08:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220502153114.283618-1-fabien.dessenne@foss.st.com>
-In-Reply-To: <20220502153114.283618-1-fabien.dessenne@foss.st.com>
+References: <20220503151310.58762-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220503151310.58762-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 May 2022 00:04:26 +0200
-Message-ID: <CACRpkdZNS4N9q5whUT3fHh6M1xzuWYWGfr_EvRuDePpNP4QPzg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: stm32: prevent the use of the secure protected pins
-To:     Fabien Dessenne <fabien.dessenne@foss.st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Thu, 5 May 2022 00:08:28 +0200
+Message-ID: <CACRpkdZLTys2PjLHZZ+Jy-L+8=Td5MWRbX+KB2_ePM5k0_FYGQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: nomadik: Setup parent device and get rid
+ of unnecessary of_node assignment
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -68,17 +66,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 2, 2022 at 5:31 PM Fabien Dessenne
-<fabien.dessenne@foss.st.com> wrote:
+On Tue, May 3, 2022 at 5:13 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> The hardware denies any access from the Linux non-secure world to the
-> secure-protected pins. Hence, prevent any driver to request such a pin.
+> Some of the drivers do not set parent device. This may lead to obstacles
+> during debugging or understanding the device relations from the Linux
+> point of view. Assign parent device for GPIO chips created by these
+> drivers.
 >
-> Mark the secure-protected GPIO lines as invalid (.init_valid_mask) and
-> prevent the pinmux request / pinconf setting operations.
-> Identify the secure pins with "NO ACCESS" in the pinconf sysfs.
+> While at it, let GPIO library to assign of_node from the parent device.
 >
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 Patch applied!
 
