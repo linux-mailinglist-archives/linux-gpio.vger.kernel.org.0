@@ -2,74 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD1151B05E
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 23:22:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AB4251B07B
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 23:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235370AbiEDVZl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 17:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39218 "EHLO
+        id S239206AbiEDV3T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 17:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234443AbiEDVZk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 17:25:40 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 785794D627
-        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 14:22:03 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2ebf4b91212so29698507b3.8
-        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 14:22:03 -0700 (PDT)
+        with ESMTP id S1378561AbiEDV2z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 17:28:55 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5582712
+        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 14:25:17 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id s30so4578167ybi.8
+        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 14:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Tx3mYhVLEABySlfxpbH37Ic7LnqQbPKrBTTlaZOMkPc=;
-        b=G1OpEkn1BESEXlXxdMXC13Qnm60u5Uwth9X0JfnzP05QCviFzpL2dEIAwOPhBFTBGu
-         QzH9jtW1H4xyIwtfrt+wLLOsaDg3pqvDmwwpBD99h4VYqO91HS+yYY1UJl2A7zV6QAxE
-         D3RHXAsBqChJHeyJEcmKERWZDs7UemA1RqJnt0Hvs49iPa2sQlMXNOPI2Ws0UAemENIC
-         pFyCE20wljRiW1UBlpYCXcuN3qV3BK9EQjwtHVC+rko2X42WfBhbDbIlt5OwYZyf7sIG
-         t5Nf16FEFI+Vgwr50JZFUFOFib15101a2sfcCF4oqpseiej3c3Ty5DzIUbdGgRWRBwWX
-         QUlA==
+        bh=T3d2fYGVCQPH3oUWunAB6fdSYnujJZ2I8+XkzxVQ4R8=;
+        b=ZUiMw8FZnaeQCj4tHgZ+yh927ALKIjlzaflimJl0MTREy3wMDwFDlUqyiKh+Q0oQmI
+         SulmOktwG9BAk7EUbjJV74hALMN8j/QFaOpkyOxpr+KkK2hAX0GJ6t0wnfUO2F/ZG58w
+         WaxiEaxuEOvx82Ufe2v9mdjNMxQC78ish/ZyII2Ls5x881GTkMySDBdhxdL6oQy/aWoG
+         unoZII6R+E4YAj9G19q9N8ia7HohjBVASfVrHPO/W0JJQaPBVUCNuuejVmS4TCTXy2vq
+         fILs3pAeMXJYYbJfkUpD5n/b25B5ffXdA8ulNVYS2I+61x0aJNVMoGewhaYqbgLLKfOa
+         G2dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Tx3mYhVLEABySlfxpbH37Ic7LnqQbPKrBTTlaZOMkPc=;
-        b=TKjCgvoq28vPr/zi/+AEYEBKlLacwDd0/Dv/zMtFTqKcsEw9ZcVZjoiC1n+p6GWcfD
-         jVahSLBkfXB4plDbGAKo1zhSzzrT6zYvDkqrGq1L1daC2MwmwZqJXqaD+HJQlq8z3LMU
-         pqzpbLTFVf8974NTuZjPyo+iQnL4ANgFi4j+LG2GQgUJGiv9sSUW64Tf9M1unpMN2MU+
-         ehdBJ1ZwLWxTmcHlYt+qUAHuq9kvQBg13ft8oxb0Ho9a59tsZ+0JHN7Gp2AbOen7MeTk
-         3sD+Zd5p1FyUwnd6o277EMm+ZrpudYi4LXP2/oXcwE5M5SeRmrgHC2pW50p02I6WrHhS
-         5BCA==
-X-Gm-Message-State: AOAM530WWHam9/i2OewELccorBJUuKCJD5bALxqJsF4uwGwN/QUHgdly
-        Yn3OYBwqfFT+Dq2nR/70gN2tiBMrAHku1k1wy3e08Q==
-X-Google-Smtp-Source: ABdhPJy9GQmBn09i2jD7Kpuz51ZHerGYLe0ZaUG6+YCgtLjqcq581mHgtYfCJS9Ait9lKNH808GM1rsVRxkBaX0KK/U=
-X-Received: by 2002:a0d:e5c6:0:b0:2f8:c866:7af9 with SMTP id
- o189-20020a0de5c6000000b002f8c8667af9mr21645142ywe.268.1651699322764; Wed, 04
- May 2022 14:22:02 -0700 (PDT)
+        bh=T3d2fYGVCQPH3oUWunAB6fdSYnujJZ2I8+XkzxVQ4R8=;
+        b=fX35Zb85UOzrUh1L9h4hQ6hx+hqbGcMZlUFC+NE06+yCRXhkk+WSwS0i6Tsvlyv1lD
+         mO3LYmFU1LWi4XdBMGLfMmMTHi8LI8PUw7QpH9Dpqx9yMNsNcleEe+VFt9nTCUG85skn
+         5cGs0wRcy33tj3iB7x94/ExrEPHOwq6kmCAaZLqW8FjXPD5y+MI0UML34oMfGYlUnvJM
+         qe27ZxSz4YZNYM4yNPNbsV7GRtvb63je5fajPfUtZzddM5ErmQD2pODOLVWbd9/e1A9m
+         hh9LDEaWvC2qzxKXsDaWjIkNYzIk+rBRNFsvDW/sZ00Gy3jv/6FDHquGSKvtfoTK6RoX
+         hkhA==
+X-Gm-Message-State: AOAM5327TI8UhkSDRJD9hpoHtbugeVKWKV00BqXibarsmPTwETqLegpK
+        pK9A3kfrHtcLNURsIkE4ixuC3J4A1e4xuL0SHMon1Q==
+X-Google-Smtp-Source: ABdhPJzqvODOYmcQ9TZYyXXRfyQPmMMljGJNRG/LrEqbFLH0+9/ixLSThQOOvYy9Zui0cZ7P+TuQBezYxz3hocfbs3M=
+X-Received: by 2002:a25:2905:0:b0:649:7a2b:ca72 with SMTP id
+ p5-20020a252905000000b006497a2bca72mr13176917ybp.492.1651699516824; Wed, 04
+ May 2022 14:25:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220419141846.598305-1-maz@kernel.org> <CACRpkda3L_itpqcnPq6xDoJtNHt8NuvE1MZk1bCNR+u2KKUpBA@mail.gmail.com>
- <874k2kccse.wl-maz@kernel.org>
-In-Reply-To: <874k2kccse.wl-maz@kernel.org>
+References: <20220422192139.2592632-1-robh@kernel.org>
+In-Reply-To: <20220422192139.2592632-1-robh@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 4 May 2022 23:21:51 +0200
-Message-ID: <CACRpkdb32NuJ8jdsk6ox7ViVjK=9WWWavS=aYcoWTCbaO3WkTg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] gpiolib: Handle immutable irq_chip structures
-To:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+Date:   Wed, 4 May 2022 23:25:05 +0200
+Message-ID: <CACRpkdZcVwvBHrDy-wxPURhJ4OWRMA9TQ1e2vmcXnhEG2HaMDA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: aspeed: Drop referenced nodes in examples
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -81,22 +69,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 12:30 PM Marc Zyngier <maz@kernel.org> wrote:
+On Fri, Apr 22, 2022 at 9:21 PM Rob Herring <robh@kernel.org> wrote:
 
-> > Bartosz: if you're happy with this can you apply it to an immutable branch
-> > from v5.18-rc1 and merge that into the GPIO for-next and then I can also
-> > pull that into pinctrl?
+> The additional nodes in the example referenced from the pinctrl node
+> 'aspeed,external-nodes' properties are either incorrect (aspeed,ast2500-lpc)
+> or not documented with a schema (aspeed,ast2500-gfx). There's no need to
+> show these nodes as part of the pinctrl example, so just remove them.
 >
-> For what it is worth, I've pushed this branch into irqchip-next.
->
-> You can pick it up from:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/gpio-immutable
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Bartosz are you pulling this? Most of the changes are in GPIO.
-Patches have started to arrive that go on top of these changes
-so would be nice to have it in both GPIO and pin control as a
-baseline.
+Patch applied. Concerns about lost examples can be solved
+with incremental patches on top adding more schema.
 
 Yours,
 Linus Walleij
