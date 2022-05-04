@@ -2,152 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4074551B3A7
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 01:42:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62DCD51B42B
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 02:09:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344915AbiEDXoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 19:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55564 "EHLO
+        id S234226AbiEEAGI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 20:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381194AbiEDXQV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 19:16:21 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E395419E;
-        Wed,  4 May 2022 16:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651705772; x=1683241772;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=viWWezEGudsdbLy/fRq7EwiMWwIaZsmyJG8Q+HHJWzE=;
-  b=hMH9DmkEI3OmceNvFXU5LlSEeHnpbp43jUjfXniTp0BbO5FVjmxbxdJK
-   FU2EPHFhq6raFbSPfVdwVF4CCBRP933vVOqD/Fkia5WEP+sJc8XjaFzxq
-   UMluuI5sEcCoUiP7BxKP11gkFyBhNgrhgRPxeae9RjImbdlYCmzFPzQ6A
-   KbOkpwY9L/PrXoCQedorAkHk9lt88B3RT+KJw4Dd3w6B0xR3IAq/acYUX
-   8V2rvR0wny2GxaYX2CjrzXuqyKICzDBQPV7UsYwlJdnAM09oN+LyjhIf6
-   fHZ++5f5b0+Pea+mm8To1FgmEqDFnWW8gnqFgDCLZZg7JC5ITBsthdStQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10337"; a="293121901"
-X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
-   d="scan'208";a="293121901"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 16:09:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
-   d="scan'208";a="599749810"
-Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 04 May 2022 16:09:16 -0700
-Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nmO7Q-000Bsd-1h;
-        Wed, 04 May 2022 23:09:16 +0000
-Date:   Thu, 5 May 2022 07:09:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Justin Chen <justinpopo6@gmail.com>, linus.walleij@linaro.org,
-        brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        f.fainelli@gmail.com, Justin Chen <justinpopo6@gmail.com>
-Subject: Re: [PATCH 1/2] gpio: pca953xx: Add support for pca6408
-Message-ID: <202205050612.1bwSZpER-lkp@intel.com>
-References: <1651685100-44687-2-git-send-email-justinpopo6@gmail.com>
+        with ESMTP id S1354647AbiEDX5m (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 19:57:42 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A8E506DB
+        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 16:54:00 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id h10-20020a056830400a00b00605e92cc450so1928239ots.11
+        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 16:54:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=Dn1MT8x7p4Rbn+pctwVkt7IgIdUxT0LRLjox/JaF9ttsZ2N8sUUglHFRxQa3sl75aK
+         h1U1JpCoOjPff8rV+LL0edQuBh+YvYlTbZ4zx127Qa80qMcS49J0d2nS2s7mVVadwp/M
+         vGp6wV8qQhR9tMRiQjyWHIJslgvG4HigF7p24aLxixJ1l99K68kLikab9Y0HgtSpkDYW
+         0+riuhXlj9dAnGs04evyYz4sFXKtm0FlJKiBI2Dtbo7ebvKr6E7XJkxgxzCXhReMwL1D
+         yv9OUeo9KjH+/RIlVXefhsYivAQRdlwo604eWoXrrvRFVxcSgXwgPis+UtVhyLpBWx3z
+         WyWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=n3WG5qxO/ky+K3i0we2jJ5q/ZRDGkqkjnlLdj8+AxCSraoIy4ZlGTjNbVjgZJeSGAJ
+         wHfBmpyFicnbZ1+hQxy7KOuG+NJkK/jM5KZpVf3rR8GxTTTNehQmnEd0Eoq0SKsxh9JS
+         LZZPN6jpdImcKRylAS+7FGPNnSS6/X0WVQ3Ld98UgTZiQWPCIIXamAAg2MLRa6wXNu97
+         R/D/vDXmXgtMwFoTyWbVMULw2cwyFjxl2r1H8cZrQNkvqjlf1rTV1Q/w7e2E84+WfWir
+         UtPhS0xiWTKLT/uXSc0t/E9EN8gdlABYTtnqv3xf9/YT4+AoEtzIMC/CusiEWOMk1DK2
+         7suw==
+X-Gm-Message-State: AOAM531v03qKFgiaHE15eH9KNo2GhBpX/0mq9ITh79bAKS7Io3Iv4WXM
+        nt0e6IqbE46aNyNCq5PUCZZT1n4V2Big7zKPh8Y=
+X-Google-Smtp-Source: ABdhPJyXbFHNtxfp8+qt+M9kuv/iG7XfFeFFPd7I4/fmpdxuycMtmf6dIJw5ghtZAT2CwgvAVE/kUl0HxsirxLIU8v0=
+X-Received: by 2002:a9d:6b16:0:b0:605:e0eb:d3d6 with SMTP id
+ g22-20020a9d6b16000000b00605e0ebd3d6mr8263208otp.213.1651708440302; Wed, 04
+ May 2022 16:54:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1651685100-44687-2-git-send-email-justinpopo6@gmail.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6802:1a9:0:0:0:0 with HTTP; Wed, 4 May 2022 16:53:59
+ -0700 (PDT)
+Reply-To: ortegainvestmmentforrealinvest@gmail.com
+From:   Info <joybhector64@gmail.com>
+Date:   Thu, 5 May 2022 05:23:59 +0530
+Message-ID: <CAP7KLYgH9LcKHS-KgR0zObHAgC6Fr3D+dOJSbDKurTc_12+iFw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:343 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [joybhector64[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [joybhector64[at]gmail.com]
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Justin,
-
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on v5.18-rc5]
-[also build test ERROR on next-20220504]
-[cannot apply to linusw-gpio/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Justin-Chen/Add-support-for-NXP-PCA6408/20220505-020844
-base:    672c0c5173427e6b3e2a9bbb7be51ceeec78093a
-config: microblaze-randconfig-r031-20220501 (https://download.01.org/0day-ci/archive/20220505/202205050612.1bwSZpER-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/d45d7c84e1613b51cb1eb90ef6d92f4112a45925
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Justin-Chen/Add-support-for-NXP-PCA6408/20220505-020844
-        git checkout d45d7c84e1613b51cb1eb90ef6d92f4112a45925
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=microblaze SHELL=/bin/bash drivers/gpio/
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
->> drivers/gpio/gpio-pca953x.c:74:27: error: 'PCA953x_TYPE' undeclared here (not in a function); did you mean 'PCA953X_TYPE'?
-      74 |         { "pca6408", 8  | PCA953x_TYPE | PCA_INT, },
-         |                           ^~~~~~~~~~~~
-         |                           PCA953X_TYPE
-
-
-vim +74 drivers/gpio/gpio-pca953x.c
-
-    72	
-    73	static const struct i2c_device_id pca953x_id[] = {
-  > 74		{ "pca6408", 8  | PCA953x_TYPE | PCA_INT, },
-    75		{ "pca6416", 16 | PCA953X_TYPE | PCA_INT, },
-    76		{ "pca9505", 40 | PCA953X_TYPE | PCA_INT, },
-    77		{ "pca9506", 40 | PCA953X_TYPE | PCA_INT, },
-    78		{ "pca9534", 8  | PCA953X_TYPE | PCA_INT, },
-    79		{ "pca9535", 16 | PCA953X_TYPE | PCA_INT, },
-    80		{ "pca9536", 4  | PCA953X_TYPE, },
-    81		{ "pca9537", 4  | PCA953X_TYPE | PCA_INT, },
-    82		{ "pca9538", 8  | PCA953X_TYPE | PCA_INT, },
-    83		{ "pca9539", 16 | PCA953X_TYPE | PCA_INT, },
-    84		{ "pca9554", 8  | PCA953X_TYPE | PCA_INT, },
-    85		{ "pca9555", 16 | PCA953X_TYPE | PCA_INT, },
-    86		{ "pca9556", 8  | PCA953X_TYPE, },
-    87		{ "pca9557", 8  | PCA953X_TYPE, },
-    88		{ "pca9574", 8  | PCA957X_TYPE | PCA_INT, },
-    89		{ "pca9575", 16 | PCA957X_TYPE | PCA_INT, },
-    90		{ "pca9698", 40 | PCA953X_TYPE, },
-    91	
-    92		{ "pcal6416", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
-    93		{ "pcal6524", 24 | PCA953X_TYPE | PCA_LATCH_INT, },
-    94		{ "pcal9535", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
-    95		{ "pcal9554b", 8  | PCA953X_TYPE | PCA_LATCH_INT, },
-    96		{ "pcal9555a", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
-    97	
-    98		{ "max7310", 8  | PCA953X_TYPE, },
-    99		{ "max7312", 16 | PCA953X_TYPE | PCA_INT, },
-   100		{ "max7313", 16 | PCA953X_TYPE | PCA_INT, },
-   101		{ "max7315", 8  | PCA953X_TYPE | PCA_INT, },
-   102		{ "max7318", 16 | PCA953X_TYPE | PCA_INT, },
-   103		{ "pca6107", 8  | PCA953X_TYPE | PCA_INT, },
-   104		{ "tca6408", 8  | PCA953X_TYPE | PCA_INT, },
-   105		{ "tca6416", 16 | PCA953X_TYPE | PCA_INT, },
-   106		{ "tca6424", 24 | PCA953X_TYPE | PCA_INT, },
-   107		{ "tca9539", 16 | PCA953X_TYPE | PCA_INT, },
-   108		{ "tca9554", 8  | PCA953X_TYPE | PCA_INT, },
-   109		{ "xra1202", 8  | PCA953X_TYPE },
-   110		{ }
-   111	};
-   112	MODULE_DEVICE_TABLE(i2c, pca953x_id);
-   113	
-
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+I am an investor. I came from the USA and I have many investments all
+over the world.
+
+I want you to partner with me to invest in your country I am into many
+investment such as real Estate or buying of properties i can also
+invest money in any of existing business with equity royalty or by %
+percentage so on,
+Warm regards
