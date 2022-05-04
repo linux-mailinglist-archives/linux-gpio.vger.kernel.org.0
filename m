@@ -2,99 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A0551A011
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 14:55:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A571B51A022
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 15:02:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245668AbiEDM7Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 08:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43484 "EHLO
+        id S1350128AbiEDNGG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 09:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350103AbiEDM65 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 08:58:57 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5FE23192A3;
-        Wed,  4 May 2022 05:55:21 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 301B31042;
-        Wed,  4 May 2022 05:55:21 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E705A3FA49;
-        Wed,  4 May 2022 05:55:19 -0700 (PDT)
-Date:   Wed, 4 May 2022 13:55:16 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     IotaHydrae <writeforever@foxmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm: sunxi: fix f1c100s pinctrl function.
-Message-ID: <20220504135516.36072ece@donnerap.cambridge.arm.com>
-In-Reply-To: <tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com>
-References: <tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        with ESMTP id S241199AbiEDNGF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 09:06:05 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2837235DE7;
+        Wed,  4 May 2022 06:02:29 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 3B7EF92009C; Wed,  4 May 2022 15:02:28 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 3198792009B;
+        Wed,  4 May 2022 14:02:28 +0100 (BST)
+Date:   Wed, 4 May 2022 14:02:28 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     David Laight <David.Laight@ACULAB.COM>
+cc:     'Linus Walleij' <linus.walleij@linaro.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: RE: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
+In-Reply-To: <7bb4d0286f44462581d96320cfe105d6@AcuMS.aculab.com>
+Message-ID: <alpine.DEB.2.21.2205041352520.9548@angie.orcam.me.uk>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com> <20220429135108.2781579-19-schnelle@linux.ibm.com> <Ymv3DnS1vPMY8QIg@fedora> <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com> <YmwGLrh4U+pVJo0m@fedora>
+ <CACRpkdaha37y-ZNSqYSbf=TvsJNcvbH1Y=N0JkVCewB-Lvf81Q@mail.gmail.com> <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com> <alpine.DEB.2.21.2205041226160.64942@angie.orcam.me.uk> <7bb4d0286f44462581d96320cfe105d6@AcuMS.aculab.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed,  4 May 2022 19:59:04 +0800
-IotaHydrae <writeforever@foxmail.com> wrote:
+On Wed, 4 May 2022, David Laight wrote:
 
-Hi,
-
-thanks for the patch!
-
-I think the subject should start with: "pinctrl: sunxi:", also please
-mention the UART in there.
-
-> 1. change suniv f1c100s pinctrl,PD14 multiplexing function lvds1 to uart2
+> >  Well, one can implement a pluggable PCI/e expansion card with a PCI-ISA
+> > bridge on it and a backplane to plug ISA cards into.  Without support for
+> > issuing I/O cycles to PCI from the host however you won't be able to make
+> > use of the ISA backplane except maybe for some ancient ISA memory cards.
+> > So logically I think CONFIG_ISA should depend on CONFIG_HAS_IOPORT and
+> > CONFIG_HAS_IOPORT ought to be selected by platform configurations.
 > 
-> When the pin PD13 and PD14 is setting up to uart2 function in dts,
-> there's an error occurred:
-> 1c20800.pinctrl: unsupported function uart2 on pin PD14
-> 
-> Because 'uart2' is not any one multiplexing option of PD14,
-> and pinctrl don't know how to configure it.
-> 
-> So change the pin PD14 lvds1 function to uart2.
-> 
-> Signed-off-by: IotaHydrae <writeforever@foxmail.com>
+> But generating a PCI(e) I/O cycle doesn't need the cpu to be able to
+> generate an I/O cycle on its local bus interface.
+> All that required is for the PCI(e) host bridge to determine that it
+> needs to relevant kind of cycle on the target bus.
+> This can easily be based on the physical address.
 
-Compared against the manual, looks correct:
+ Sure, you can encode address spaces however you like (there are no 
+special machine instructions either for PCI/e configuration space access 
+that I would know of in any CPU architecture), but the host bridge must be 
+willing to issue those PCI/e I/O cycles in the first place (see my other 
+message on POWER9 in this thread).
 
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+> What you should probably be doing is (outside of 'platform' code)
+> change the drivers to use ioread8() instead of inb().
+> Then adding in the required calls to get the correct 'token' to
+> pass to ioread8() to perform an I/O cycle on the correct target bus.
 
-Cheers,
-Andre
+ Yes, probably.
 
-P.S. I used to opportunity to check all other functions as well, apart
-from one error in the comments they were correct. Will send a patch.
+> It is really the attachment of the driver that can't succeed, not the
+> compilation.
 
-> ---
->  drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
-> index 2801ca706273..68a5b627fb9b 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
-> @@ -204,7 +204,7 @@ static const struct sunxi_desc_pin suniv_f1c100s_pins[] = {
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "lcd"),		/* D20 */
-> -		  SUNXI_FUNCTION(0x3, "lvds1"),		/* RX */
-> +		  SUNXI_FUNCTION(0x3, "uart2"),		/* RX */
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 14)),
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 15),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ Except it makes no sense to offer those drivers for platforms known not 
+to provide for port I/O on PCI/e.
 
+  Maciej
