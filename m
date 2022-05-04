@@ -2,66 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AB4251B07B
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 23:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CDA451B0BB
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 23:33:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239206AbiEDV3T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 17:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41308 "EHLO
+        id S1351167AbiEDVgj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 17:36:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378561AbiEDV2z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 17:28:55 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5582712
-        for <linux-gpio@vger.kernel.org>; Wed,  4 May 2022 14:25:17 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id s30so4578167ybi.8
-        for <linux-gpio@vger.kernel.org>; Wed, 04 May 2022 14:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T3d2fYGVCQPH3oUWunAB6fdSYnujJZ2I8+XkzxVQ4R8=;
-        b=ZUiMw8FZnaeQCj4tHgZ+yh927ALKIjlzaflimJl0MTREy3wMDwFDlUqyiKh+Q0oQmI
-         SulmOktwG9BAk7EUbjJV74hALMN8j/QFaOpkyOxpr+KkK2hAX0GJ6t0wnfUO2F/ZG58w
-         WaxiEaxuEOvx82Ufe2v9mdjNMxQC78ish/ZyII2Ls5x881GTkMySDBdhxdL6oQy/aWoG
-         unoZII6R+E4YAj9G19q9N8ia7HohjBVASfVrHPO/W0JJQaPBVUCNuuejVmS4TCTXy2vq
-         fILs3pAeMXJYYbJfkUpD5n/b25B5ffXdA8ulNVYS2I+61x0aJNVMoGewhaYqbgLLKfOa
-         G2dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T3d2fYGVCQPH3oUWunAB6fdSYnujJZ2I8+XkzxVQ4R8=;
-        b=fX35Zb85UOzrUh1L9h4hQ6hx+hqbGcMZlUFC+NE06+yCRXhkk+WSwS0i6Tsvlyv1lD
-         mO3LYmFU1LWi4XdBMGLfMmMTHi8LI8PUw7QpH9Dpqx9yMNsNcleEe+VFt9nTCUG85skn
-         5cGs0wRcy33tj3iB7x94/ExrEPHOwq6kmCAaZLqW8FjXPD5y+MI0UML34oMfGYlUnvJM
-         qe27ZxSz4YZNYM4yNPNbsV7GRtvb63je5fajPfUtZzddM5ErmQD2pODOLVWbd9/e1A9m
-         hh9LDEaWvC2qzxKXsDaWjIkNYzIk+rBRNFsvDW/sZ00Gy3jv/6FDHquGSKvtfoTK6RoX
-         hkhA==
-X-Gm-Message-State: AOAM5327TI8UhkSDRJD9hpoHtbugeVKWKV00BqXibarsmPTwETqLegpK
-        pK9A3kfrHtcLNURsIkE4ixuC3J4A1e4xuL0SHMon1Q==
-X-Google-Smtp-Source: ABdhPJzqvODOYmcQ9TZYyXXRfyQPmMMljGJNRG/LrEqbFLH0+9/ixLSThQOOvYy9Zui0cZ7P+TuQBezYxz3hocfbs3M=
-X-Received: by 2002:a25:2905:0:b0:649:7a2b:ca72 with SMTP id
- p5-20020a252905000000b006497a2bca72mr13176917ybp.492.1651699516824; Wed, 04
- May 2022 14:25:16 -0700 (PDT)
+        with ESMTP id S1378607AbiEDVgg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 17:36:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 041A051E59;
+        Wed,  4 May 2022 14:32:57 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 16C3D1F44B22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1651699976;
+        bh=Z5GCLSdrkY/+3VJcCY9bv+EixKNHWPKoBT0IYZaa2WA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Wqcoau1kTsKQhWlZG00ObhGlFahIy8cKoWhMWsU3qVWs0YesIQYN9UYhHjWTueXp3
+         UCt3+9tDM59z07G2wE6rZVT5sAwqDgCMCre2TNo6LmA2+0Q9qusnGWEwyOJoEFH4lR
+         1cGzwPw/Rd6vEJlWTbiukQnerq10GRmcG85BwvvFNyzsIWI3/bmdRLlDxzHix2r7Z+
+         W0k0qoQ2YlK1XTCoGxqKeRDE5wxnhvn7aUow5oRU2OMyRITBVCvsaQuQ9OUY0V2fOj
+         y8UTLkRePo63njnJFafEAB1J3DmS3Jhe9hhw1SL+pWl/fYb8qDfhZI6CGGfJ9uLok1
+         a/RUlcfJPfjmQ==
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 2E14448146B; Wed,  4 May 2022 23:32:53 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        kernel@collabora.com
+Subject: [PATCHv2 00/21] Basic RK3588 Support
+Date:   Wed,  4 May 2022 23:32:30 +0200
+Message-Id: <20220504213251.264819-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220422192139.2592632-1-robh@kernel.org>
-In-Reply-To: <20220422192139.2592632-1-robh@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 4 May 2022 23:25:05 +0200
-Message-ID: <CACRpkdZcVwvBHrDy-wxPURhJ4OWRMA9TQ1e2vmcXnhEG2HaMDA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: aspeed: Drop referenced nodes in examples
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,17 +63,122 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 9:21 PM Rob Herring <robh@kernel.org> wrote:
+Hi,
 
-> The additional nodes in the example referenced from the pinctrl node
-> 'aspeed,external-nodes' properties are either incorrect (aspeed,ast2500-lpc)
-> or not documented with a schema (aspeed,ast2500-gfx). There's no need to
-> show these nodes as part of the pinctrl example, so just remove them.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
+This patchset adds initial rudimentary support for the rk3588 SoC using
+Rockchip's evaluation board for platform bringup. With this patchset it
+is possible to boot into stock Debian, if it has been previously installed
+on the eMMC in some way (e.g. pre-installed vendor OS) using the Debug UART
+as interface. Apart from the eMMC, the CPUs and the UART nothing works and
+will be added separately on top step-by-step.
 
-Patch applied. Concerns about lost examples can be solved
-with incremental patches on top adding more schema.
+The patch series is based on v5.18-rc1.
 
-Yours,
-Linus Walleij
+This has been sent as a series, since all bits are required for testing
+on real HW. It should be fine to merge the mmc, gpio and pinctrl bits
+via their own trees. Both, the DT and the clock driver require the shared
+include/dt-bindings/clock/rk3588-cru.h, so that requires some coordination.
+
+Changelog since PATCHv1:
+ * https://lore.kernel.org/all/20220422170920.401914-1-sebastian.reichel@collabora.com/
+ * Fix cover letter to correctly reference 5.18-rc1 last one had a typo
+   mentioning 4.18-rc1 (Emil Velikov)
+ * Fix title in CRU binding (Krzysztof Kozlowski)
+ * Replace status "ok" with "okay" (Krzysztof Kozlowski)
+ * Remove simple-bus for clocks and rename clock nodes (Krzysztof Kozlowski)
+ * Remove ITS from GIC controller, since the current mainline GIC kernel
+   driver cannot handle the rockchip shareability quirk. Instead use MBI
+   like the rk356x platform does at the moment. (Robin Murphy)
+ * With the previous change it is possible to describe the full CPU cluster;
+   for now without operating-point support, which requires additional cpufreq
+   changes / rockchip specific driver (Robin Murphy)
+ * Remove GIC_CPU_MASK_SIMPLE(4) from armv8-timer (Robin Murphy)
+ * Add pmu node for A76
+ * Move interrupt-affinity configuration into gic, which has only one
+   cluster configured for all CPU cores
+ * Fix sdhci-of-dwcmshc reset code to make reset control optional, since
+   old rk356x DT does not describe it (Dmitry Osipenko)
+ * Modify sdhci-of-dwcmshc, so that dwcmshc_rk35xx_postinit is called between
+   sdhci_setup_host() and __sdhci_add_host() (Adrian Hunter)
+ * Checked if 'allOf:if:then:' needs changes for rk3588 and none
+   are required yet. RK3588 has more syscon nodes and they will need
+   changes once support for them is added (Krzysztof Kozlowski)
+ * Move SCMI_HCLK_SD definition into correct patch (Rob Herring)
+ * Fix warnings found by kernel test robot
+ * Add patch to document gpio-ranges in the rockchip gpio-bank to fix
+   warnings from dtbs_check
+ * Update PLL in the CRU, so that it fully relies on lookup tables instead
+   of calculating required PLL parameters for arbitrary frequencies
+   (Nicolas Dufresne & Heiko Stübner)
+ * Collected Acks
+ * Dropped pinctrl and mmc binding patch (applied)
+
+-- Sebastian
+
+Elaine Zhang (6):
+  dt-binding: clock: Document rockchip,rk3588-cru bindings
+  clk: rockchip: add register offset of the cores select parent
+  clk: rockchip: add pll type for RK3588
+  clk: rockchip: clk-cpu: add mux setting for cpu change frequency
+  clk: rockchip: add dt-binding header for rk3588
+  clk: rockchip: Add clock controller for the RK3588
+
+Jianqun Xu (3):
+  pinctrl/rockchip: add rk3588 support
+  gpio: rockchip: add support for rk3588
+  arm64: dts: rockchip: Add rk3588s pinctrl data
+
+Kever Yang (2):
+  arm64: dts: rockchip: Add base DT for rk3588 SoC
+  arm64: dts: rockchip: Add rk3588-evb1 board
+
+Sebastian Reichel (8):
+  dt-bindings: pinctrl: rockchip: add rk3588
+  dt-bindings: mmc: sdhci-of-dwcmhsc: Add rk3588
+  mmc: sdhci-of-dwcmshc: rename rk3568 to rk35xx
+  pinctrl/rockchip: add error handling for pull/drive register getters
+  dt-bindings: serial: snps-dw-apb-uart: Add Rockchip RK3588
+  dt-bindings: soc: rockchip: add initial rk3588 syscon compatibles
+  dt-bindings: gpio: rockchip: add gpio-ranges
+  dt-bindings: pinctrl: rockchip: increase max amount of device
+    functions
+
+Yifeng Zhao (2):
+  mmc: sdhci-of-dwcmshc: add reset call back for rockchip Socs
+  mmc: sdhci-of-dwcmshc: add support for rk3588
+
+ .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+ .../bindings/clock/rockchip,rk3588-cru.yaml   |   63 +
+ .../bindings/gpio/rockchip,gpio-bank.yaml     |    2 +
+ .../bindings/mmc/snps,dwcmshc-sdhci.yaml      |    1 +
+ .../bindings/pinctrl/rockchip,pinctrl.yaml    |    3 +-
+ .../bindings/serial/snps-dw-apb-uart.yaml     |    1 +
+ .../devicetree/bindings/soc/rockchip/grf.yaml |    2 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ .../boot/dts/rockchip/rk3588-evb1-v10.dts     |   34 +
+ arch/arm64/boot/dts/rockchip/rk3588.dtsi      |    6 +
+ .../boot/dts/rockchip/rk3588s-pinctrl.dtsi    | 3403 +++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi     |  719 ++++
+ drivers/clk/rockchip/Kconfig                  |    7 +
+ drivers/clk/rockchip/Makefile                 |    1 +
+ drivers/clk/rockchip/clk-cpu.c                |   69 +-
+ drivers/clk/rockchip/clk-pll.c                |  218 +-
+ drivers/clk/rockchip/clk-rk3588.c             | 2497 ++++++++++++
+ drivers/clk/rockchip/clk.h                    |   65 +
+ drivers/gpio/gpio-rockchip.c                  |    3 +-
+ drivers/mmc/host/sdhci-of-dwcmshc.c           |  193 +-
+ drivers/pinctrl/pinctrl-rockchip.c            |  468 ++-
+ drivers/pinctrl/pinctrl-rockchip.h            |  170 +-
+ include/dt-bindings/clock/rk3588-cru.h        | 1492 ++++++++
+ 23 files changed, 9306 insertions(+), 117 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3588-cru.yaml
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+ create mode 100644 drivers/clk/rockchip/clk-rk3588.c
+ create mode 100644 include/dt-bindings/clock/rk3588-cru.h
+
+-- 
+2.35.1
+
