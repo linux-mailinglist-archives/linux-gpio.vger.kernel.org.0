@@ -2,135 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFFD751A00B
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 14:53:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73A0551A011
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 May 2022 14:55:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350035AbiEDM4h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 May 2022 08:56:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41596 "EHLO
+        id S245668AbiEDM7Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 May 2022 08:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236375AbiEDM4f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 08:56:35 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D9DF2AE12;
-        Wed,  4 May 2022 05:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651668779; x=1683204779;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TAR0OSTmgPalp1GT6kqlq85T8vW4wKavBhWP3MJ2K2A=;
-  b=dHgtXRnpPjjVlbRuYsjwUesITQQlcyEAnpWwSqK8E3QnR3mvzJAk3x94
-   Hu9ol/3/ksX4ORH3dx2tVizgJRR0+gz8k9VyzFP6adFTdT1874uzhCCgL
-   53vkHKHmzs182tA6TySkrYpLdZubHRjf2xAKlqVuHhKUfiznQLBI0p3bL
-   JDOPsS/V9HQqtff/dd6WG2GAYw7LUiTRlIsMTZkesDf5ELsNhunkvacAQ
-   ECQ32eEAIs892VDOTYhsDJ6WQ3GEzNERyp1SuQgTXHuaBZveF0/YDEiil
-   IJWEZ0ENBVozZ3mkQphKUS0r8IIOwTRbrwRo64fW2SnagoJs9alYZNg/a
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="292946346"
-X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
-   d="scan'208";a="292946346"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 05:52:58 -0700
-X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
-   d="scan'208";a="734387769"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 05:52:52 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nmEUq-00Bssm-FU;
-        Wed, 04 May 2022 15:52:48 +0300
-Date:   Wed, 4 May 2022 15:52:48 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v4 5/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
- system
-Message-ID: <YnJ3IJoJtqjvFmBB@smile.fi.intel.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220131151346.45792-6-andriy.shevchenko@linux.intel.com>
- <YgvaqBB8fNVWp1lN@google.com>
- <YgveyspHVXCp2ul+@smile.fi.intel.com>
- <YgvjDy1R06IC8FE5@google.com>
+        with ESMTP id S1350103AbiEDM65 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 May 2022 08:58:57 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5FE23192A3;
+        Wed,  4 May 2022 05:55:21 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 301B31042;
+        Wed,  4 May 2022 05:55:21 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E705A3FA49;
+        Wed,  4 May 2022 05:55:19 -0700 (PDT)
+Date:   Wed, 4 May 2022 13:55:16 +0100
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     IotaHydrae <writeforever@foxmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm: sunxi: fix f1c100s pinctrl function.
+Message-ID: <20220504135516.36072ece@donnerap.cambridge.arm.com>
+In-Reply-To: <tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com>
+References: <tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YgvjDy1R06IC8FE5@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 05:29:51PM +0000, Lee Jones wrote:
-> On Tue, 15 Feb 2022, Andy Shevchenko wrote:
-> > On Tue, Feb 15, 2022 at 04:54:00PM +0000, Lee Jones wrote:
-> > > On Mon, 31 Jan 2022, Andy Shevchenko wrote:
+On Wed,  4 May 2022 19:59:04 +0800
+IotaHydrae <writeforever@foxmail.com> wrote:
 
-> > Thank you for the review, my answers below.
+Hi,
 
-...
+thanks for the patch!
 
-> > > > +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
-> > > > +	[APL_GPIO_NORTH] = {
-> > > > +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET, 0x1000),
-> > > 
-> > > Are these 0x1000's being over-written in lpc_ich_init_pinctrl()?
-> > > 
-> > > If so, why pre-initialise?
-> > 
-> > You mean to pre-initialize the offsets, but leave the length to be added
-> > in the function? It can be done, but it feels inconsistent, since we would
-> > have offsets and lengths in different places for the same thingy. That said,
-> > I prefer current way for the sake of consistency.
+I think the subject should start with: "pinctrl: sunxi:", also please
+mention the UART in there.
+
+> 1. change suniv f1c100s pinctrl,PD14 multiplexing function lvds1 to uart2
 > 
-> Don't you over-write this entry entirely?
+> When the pin PD13 and PD14 is setting up to uart2 function in dts,
+> there's an error occurred:
+> 1c20800.pinctrl: unsupported function uart2 on pin PD14
 > 
->   for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
->         struct resource *mem = &apl_gpio_resources[i][0];
+> Because 'uart2' is not any one multiplexing option of PD14,
+> and pinctrl don't know how to configure it.
 > 
->         /* Fill MEM resource */
->         mem->start += base.start;
->         mem->end += base.start;
->         mem->flags = base.flags;
->   }
+> So change the pin PD14 lvds1 function to uart2.
 > 
-> Oh wait, you're just adding the base value to the offsets.
+> Signed-off-by: IotaHydrae <writeforever@foxmail.com>
+
+Compared against the manual, looks correct:
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
+P.S. I used to opportunity to check all other functions as well, apart
+from one error in the comments they were correct. Will send a patch.
+
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> In which case that comment is also confusing!
-
-I have realised that in current form it has a bug (*), so I re-do a bit the way
-that comment stays and the actual actions will be to *fill* the resource.
-
-*) unbinding and binding back will bring us to the completely wrong resources.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
+> index 2801ca706273..68a5b627fb9b 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
+> @@ -204,7 +204,7 @@ static const struct sunxi_desc_pin suniv_f1c100s_pins[] = {
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "lcd"),		/* D20 */
+> -		  SUNXI_FUNCTION(0x3, "lvds1"),		/* RX */
+> +		  SUNXI_FUNCTION(0x3, "uart2"),		/* RX */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 14)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 15),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
 
