@@ -2,79 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61F4D51C6B6
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 20:05:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 955AA51C6C0
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 20:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382981AbiEESJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 May 2022 14:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56258 "EHLO
+        id S241847AbiEESMb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 May 2022 14:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382969AbiEESJI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 14:09:08 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60688B1D2;
-        Thu,  5 May 2022 11:05:27 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id y3so10160287ejo.12;
-        Thu, 05 May 2022 11:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D+x+x3eAAMOz9rwCXOWTN+T+FLs3SH78JsjnNCjceHg=;
-        b=dKPvdDTCIOmho8E5CtGPTl883Ano3OsaIZ1m5vk0So2yVo1c4sTtHQeZkzFOuxbdOM
-         qJj/hlHINiqTciZpLb+xKs6BmHqi3MQR3KQBBlcvi8oXJxFj783VWrvp1cqMjDMnOmDt
-         +lCbRAvNTBvQBJZBG8eMCFI92IK8t9/DXVKVJ/KjC+RufRkd2boaKLsFkblfULhvIvP9
-         IFj9W0jxnKT72EQiTusP0jpGY6PuigIr6CXKUI9im3qeE/4q0ZsnawDiVIl7zyNOBqYG
-         hYc0/fdbTA4o11N00n9ba54k84/keY9hVmJDHzkuMng81xyGH9yCY66N1dwaWQSKLnwx
-         k0cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D+x+x3eAAMOz9rwCXOWTN+T+FLs3SH78JsjnNCjceHg=;
-        b=KqrnNt9MhxOteGsO0krSKW9A8ZBLkzUrem8sh3P27nTJLEHd97iVUDF0+VqvfEeBIW
-         2ctdCkczeTmC8yUJgNJxGOT19lLiLdXApEA/l2K5HeJYIhnvXL+ql1U1RCSkcd5AEipW
-         aSBxXsJO9F6sJXaQovckktja0HbEOVIRlkragk1G5QcBBXvghIOgjT8l1dRrrmw1ZfQt
-         3uOoctzLLncCaODMKfuAiL5qsW2VkkRKZYgoV7V/YL6SsUkDMIue8EP2BP03R5b9P6A3
-         pQ1BH7N7V54VnNkzJvwk4XdVcozrHMEDvadBf0ZuqLTzAXZy5a1T5D7PFC/00pYFwl7d
-         hUuA==
-X-Gm-Message-State: AOAM530oGIkDsw4eD0ec+Dq9/fqj0NWoLy86+aRA+kYeZHcnB3DJeIIK
-        cFSnP3n85Bj7brfrMrqjEpXm8Q1fwmMZ5aXueFY=
-X-Google-Smtp-Source: ABdhPJyKdDa/q3PsQDSw9AkVM5GWaz3C7ThxzZrEe9r69mdfIsv629BvvwkOvjwfxn5DQiT4c4IU5CHjwYxUonqMjn0=
-X-Received: by 2002:a17:906:c10d:b0:6f4:a770:846e with SMTP id
- do13-20020a170906c10d00b006f4a770846emr13186959ejc.497.1651773925823; Thu, 05
- May 2022 11:05:25 -0700 (PDT)
+        with ESMTP id S229815AbiEESMb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 14:12:31 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D4656404
+        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 11:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651774130; x=1683310130;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=L6vm4f9YX6al8JaaSmAgPS8weDlrSEoTZBShsix+KvU=;
+  b=bFrGN07wp+O6TfsSBOihvEsIRRlW3/muWw218s33bxjzWQd+0/EMvEF/
+   NWAtgF+liLE9CQVtpIFfXfGFYhbdWrJc4luYxWhYmUMaa4girCg8Qc2+g
+   dkokid85r0ZIhXVOO3GcqJDVRIgimK5FClEv3HhjA/aJGzARwJeAsHil6
+   YwVfTY5H/hxCPLhjOILW3bq+jQ2JZ2O5++iw6gToNOCPpBGT51BLHKVmZ
+   muTcjkgbB/Gp8SVnP0BHaghgoipURwsShwWGAV6vMLvp1ZcFkgiFbDYiA
+   ergXHZ1lZMQqjnnkbdUqjOz/c7RFyGhP6L6pp5aE8JDOUqjNUxdqpWjQj
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="255681468"
+X-IronPort-AV: E=Sophos;i="5.91,202,1647327600"; 
+   d="scan'208";a="255681468"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 11:08:49 -0700
+X-IronPort-AV: E=Sophos;i="5.91,202,1647327600"; 
+   d="scan'208";a="811791637"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 11:08:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nmfu8-00CN8B-RT;
+        Thu, 05 May 2022 21:08:44 +0300
+Date:   Thu, 5 May 2022 21:08:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>
+Subject: Re: [PATCH] pinctrl: stm32: Fix up errorpath after merge
+Message-ID: <YnQSrDfdjFRnMz+k@smile.fi.intel.com>
+References: <20220505142837.165499-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-References: <20220418141416.27529-1-asmaa@nvidia.com> <CH2PR12MB3895A1FB2977B725ED92AB57D7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdY1uK=73zpEM5zUyXacm5xaUUFYkuKMxi_q6vwmOPy6tw@mail.gmail.com> <CH2PR12MB389560A1873030472A7A371DD7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB389560A1873030472A7A371DD7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 May 2022 20:04:49 +0200
-Message-ID: <CAHp75Vc_-rF+i7U0DAd1Uk4Q+8xwzKidPxYv_Q4Shk__HGUGTg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO controller
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220505142837.165499-1-linus.walleij@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 5, 2022 at 7:01 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
->
+On Thu, May 05, 2022 at 04:28:37PM +0200, Linus Walleij wrote:
+> When merging the for_each_gpiochip_node() changes, I made
+> some mistakes by not disabling the clocks on the errorpath,
+> fix it up.
 
-Your email is broken.  Please, fix the client or other parts that make
-your email unreadable.
+At least this is what I found,
 
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+but I might have missed something, it would be nice if ST guys can look into
+this as well.
+
+> Fixes: a0912083086d ("Merge tag 'intel-gpio-v5.19-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into devel")
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Fabien Dessenne <fabien.dessenne@foss.st.com>
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/pinctrl/stm32/pinctrl-stm32.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index 0f7d608151ff..88da8ac0b252 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -1614,6 +1614,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>  		ret = stm32_gpiolib_register_bank(pctl, child);
+>  		if (ret) {
+>  			fwnode_handle_put(child);
+> +
+> +			for (i = 0; i < pctl->nbanks; i++)
+> +				clk_disable_unprepare(pctl->banks[i].clk);
+> +
+>  			return ret;
+>  		}
+>  
+> -- 
+> 2.35.1
+> 
 
 -- 
 With Best Regards,
 Andy Shevchenko
+
+
