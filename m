@@ -2,62 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DA2251C223
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 16:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91DD151C29C
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 16:31:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379766AbiEEOTk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 May 2022 10:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45452 "EHLO
+        id S1380698AbiEEOe2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 May 2022 10:34:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237840AbiEEOTk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 10:19:40 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F085453B7A;
-        Thu,  5 May 2022 07:16:00 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id C8CE51F457A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1651760159;
-        bh=W4SZhjT6xZkzhOrReGV1YPJvbxvwLaVfN3yGmI/6XVw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=btmxl3G8sDIAPPdG1+hUMFjECMvX+iri8m431iaZXu9AYDVoOa5I+oLD04/2xDKhU
-         YsITj8AwxTR14nLRzZWb1WxTFHHqatH58vjU55vtj/3YLoTXnrgyxwHt1G8/CsrrwC
-         /PMrgmjDsWrHXMKmPbkH+UlzqBuXSmKsHdyhebLhHeNP6kKxzlkpLsQrwWhmLD0i0T
-         9p3T48DW3IlxM6C9DHD7qD8dc0I0+tFcbbWETIaN/XArqfSS3PMD4UcjFg18T6+uGA
-         E60GT9kG09E6EXQu9XDKy9+zBR3hVTO2O2VW/AB0QqFUStuoJ4JVTlAAHndBRtMJAa
-         lG1LvrzgN7f2Q==
-Received: by mercury (Postfix, from userid 1000)
-        id 234601060437; Thu,  5 May 2022 16:15:57 +0200 (CEST)
-Date:   Thu, 5 May 2022 16:15:57 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCHv2 02/21] dt-bindings: mmc: sdhci-of-dwcmhsc: Add rk3588
-Message-ID: <20220505141557.txgr4ngcxhwr57oe@mercury.elektranox.org>
-References: <20220504213251.264819-1-sebastian.reichel@collabora.com>
- <20220504213251.264819-3-sebastian.reichel@collabora.com>
+        with ESMTP id S1380681AbiEEOeV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 10:34:21 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA9F5715D
+        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 07:30:41 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id i10so7763842lfg.13
+        for <linux-gpio@vger.kernel.org>; Thu, 05 May 2022 07:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DWZhZt9P/AT5Z6hJLZmRKixZgWkk4/it9JPnRy975aY=;
+        b=zmZYu5J/K7BmNjRd2fO546TTGVdZRmUZuDnEzf5sGkAoTRJHfzo20CTAtVtHNps2OJ
+         ecjD3ytfbmGjMswULTb9Dgip53AvXqF9vLfruQE5kw8A/gSrS4MvX9senxPc+EzQV5tT
+         vQ13/R2kiR1fA9oZ4unlOcgAhJgYEpHt6Gm/IViu1Vvj5kS0EQyUm0aFIcCkpeGxGOsF
+         6BhxoKPW94lvp+FYa7ZwSzVgEmTQRvN2NzPe/mOEkeImfV/4J/RH+/XzzTqwx2kjII9H
+         VPLmsaargMoONPSzloXmnUSIcRWGpTV3LmN6bu6bHfPaCQmpUPbmZvshBtH8c9nS1YJN
+         px6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DWZhZt9P/AT5Z6hJLZmRKixZgWkk4/it9JPnRy975aY=;
+        b=yB1eB3bU1wuPxsUFbA/77qRQcMe2siwdoykRleB07y//t9MyQUEZQEGKfRpikKp9BP
+         lnMrc2EOf3WxYydzRR+ptZz7GzSyrjeLnI9RuitcfyteSFpXgY57NN1rrK54BSkTeRGQ
+         sbhC6LlY/ogqPYuiaNd2ktqxqH8y3OBG4SrQywNjOlo4NGRYMfiHVvBU+O5zh4rccCnV
+         c3epXxHKmwjWzuKAeQ/ApuTRlIHgLEH7eCQm9QtyR/IWjzfiGdq80U7TT3UglRiW7rlR
+         NoeldqlNtSBBNjI5+JAW8ixvRpOsXnveboXivNiHSL42KzyECpDjO0stSCsrbVBRDrok
+         NJ1g==
+X-Gm-Message-State: AOAM530M4eUkN1pvuw4/Jmj0lQXp3AsZ7vMXHaKOa3mm/gUGksIKhksu
+        NnPnyO3xHk2XGvz5Vr09aOZZgvXL0kSfhw==
+X-Google-Smtp-Source: ABdhPJyX6coYDHssd1zfMNxhVsOGRPauwtLSEF0sCOOcKalTL6R+UavzeXODJJMNiNfJFo+v5Q885A==
+X-Received: by 2002:a05:6512:553:b0:472:205b:97ba with SMTP id h19-20020a056512055300b00472205b97bamr18080288lfl.314.1651761039773;
+        Thu, 05 May 2022 07:30:39 -0700 (PDT)
+Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
+        by smtp.gmail.com with ESMTPSA id u8-20020a2e8448000000b0024f3d1daea5sm223555ljh.45.2022.05.05.07.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 07:30:39 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH] pinctrl: stm32: Fix up errorpath after merge
+Date:   Thu,  5 May 2022 16:28:37 +0200
+Message-Id: <20220505142837.165499-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikswav6d3jtgfdq4"
-Content-Disposition: inline
-In-Reply-To: <20220504213251.264819-3-sebastian.reichel@collabora.com>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,64 +69,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+When merging the for_each_gpiochip_node() changes, I made
+some mistakes by not disabling the clocks on the errorpath,
+fix it up.
 
---ikswav6d3jtgfdq4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: a0912083086d ("Merge tag 'intel-gpio-v5.19-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into devel")
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Fabien Dessenne <fabien.dessenne@foss.st.com>
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Hi,
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index 0f7d608151ff..88da8ac0b252 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -1614,6 +1614,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+ 		ret = stm32_gpiolib_register_bank(pctl, child);
+ 		if (ret) {
+ 			fwnode_handle_put(child);
++
++			for (i = 0; i < pctl->nbanks; i++)
++				clk_disable_unprepare(pctl->banks[i].clk);
++
+ 			return ret;
+ 		}
+ 
+-- 
+2.35.1
 
-On Wed, May 04, 2022 at 11:32:32PM +0200, Sebastian Reichel wrote:
-> Add compatible value for the Rockchip rk3588 dwcmshc controller.
->=20
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
-
-This patch has already been applied, but I accidently resend it.
-Please ignore it.
-
--- Sebastian
-
->  Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yam=
-l b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-> index f300ced4cdf3..71f8e726d641 100644
-> --- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
-> @@ -17,6 +17,7 @@ properties:
->    compatible:
->      enum:
->        - rockchip,rk3568-dwcmshc
-> +      - rockchip,rk3588-dwcmshc
->        - snps,dwcmshc-sdhci
-> =20
->    reg:
-> --=20
-> 2.35.1
->=20
-
---ikswav6d3jtgfdq4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmJz3BwACgkQ2O7X88g7
-+przfg/9FbMnqzN7qvpUMSuTIRwd9SJSrzxF+gH4JtICrgZvUPmXt1N+Pk/gebXg
-jeG5x0ldbj/HLRJ+EqMkER8QGhB1aKHtDSLIT02XAh1kZEYEwUeNcIpdfLggfi41
-vqvMPtM7u5skv/Pbdq4VbRAgEeKuWHMHlvqETZQzykbsfbUH71zNTQspLAubtTy2
-AFev02lYfb/njlYgqdudSbHJwHORR0JP1Mmuy2M7Iuihbf0cBa22aHe0kXwgvY7m
-EXWopIIKJmWSSFFCt+ubRpwG4K7NY1LWMgHFEE9Mfaxt8YlnZht832Gn5FJTYyG4
-tDfw/cNNhl32b+W3qxFqdFsm1Wn29VZjOk/pO404Jexyu6PO2nlKgK3r2W5yDAhC
-Kc00Z+8pLMTlhwZktCx6Bs3vzFttkqRYxUMRgu5hmVFzNMidxBssYys+Ni+namvk
-588Wm2STU0kVg2yBTqUlJxlrfArbmC8hIOZ95N/oHkrWR9P2kO1wH6rhwAvUpJVV
-eTDDddmcLKXIrbV1EtcjF2OnwpQR/uLLP1cIGVccagmahiWrzjePFShYfQ0wPEnq
-CUQDIFfgtNUwKk2F8Ya/7Ytj/mHtQdahkR7FVhlCs9YwNB0OdoLSYQHKw0vvi3BD
-b2Rl3V2/IAF5AmWcHynuIZjbKf8dXo9X5o0R2DA6+7SOjcKO3mI=
-=MsHG
------END PGP SIGNATURE-----
-
---ikswav6d3jtgfdq4--
