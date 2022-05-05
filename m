@@ -2,88 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC6051BFB1
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 14:44:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 675CF51BFEC
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 14:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244098AbiEEMsc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 May 2022 08:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52554 "EHLO
+        id S234154AbiEEMzJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 May 2022 08:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241946AbiEEMsb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 08:48:31 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C8355230
-        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 05:44:52 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id g6so8514059ejw.1
-        for <linux-gpio@vger.kernel.org>; Thu, 05 May 2022 05:44:52 -0700 (PDT)
+        with ESMTP id S1378368AbiEEMzE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 08:55:04 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E6356773
+        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 05:51:14 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id ks9so2114735ejb.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 May 2022 05:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tt/2XElp5bH1PatsTKvstJRnZDewwtgGXqmWXlb6P24=;
-        b=RhobBcW0n6MeZAMIsT5FE/C/yMcyyyuSA9s379VuFzO/yHIFfc5RNyOxAwVek2Eewr
-         jYu3Kn1U7iXwItPtItxm5I8nwrTW5/rV7Glb9sI0lf2Grp7kOUO1coiQnrsKggl6PmKp
-         R1FbxEBMP5hdF/L+5AuE49kMMBbU5q2BOiAwmHjTF9WjNV772T64NqH6UnXsJgeu2QBr
-         OTuz09tovlWyx6a370gM+Tro3OTYig6FfK4oZErb/RFj6bDtQsS3vyYu+j7eufVKuvHw
-         QdMOvEtoas5ZaR3kV+SJ9tEITqeAcJeq99GaPEsT+VZG2hC5oNW0RtKDR/eTuSvFPYux
-         HR+A==
+         :cc;
+        bh=cf6b5pV3UMfQkVtF+8ODWsaGpTKDEhUIkLvFUHa+azk=;
+        b=EFOY1e7wzmMiTo5aHq2giskd/Cr8TikeLQWNah+7OetLEo9t9nmt6zA5y8wJ2X0xVd
+         uBVsPhYk8QcWGlFpAxjcjUle4RFIucf62JKuB2mrlAge/LRD/ndaR0krkj7yZR2gKT1h
+         F6LGY2RSR4n1dQx9214UASDZz6rmSlKGsEGUERkfATLVKVWYKKT906gcOI+/htsNczXO
+         sxJapXGUAiyXxpyamb3uo9ruBybLuNvGK+seZKXg3Qg73z7LjLKw0vRvQ0Bl62ZhZCW5
+         zDfBCAiFrRExJKSAbp3QGudXEADTO/e1RFlqNNJl9wzzQo83dMv6dMG/JcGcW2GPwzdQ
+         TAoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tt/2XElp5bH1PatsTKvstJRnZDewwtgGXqmWXlb6P24=;
-        b=TMPaDlqA22/oopxt1iCb4IPC6yLCQuQa4n4mUe9qNF33F938EZvfbF9v1rweMO4WGO
-         d2DiPeLppkdsM/5DJPpvcaPadAI36CfDwbBifDx4aieFJ5v+C/BchxTgjnGd75JRwtFg
-         hN2Ks9hJkINbwXIRIYPDoNTl7KGnGLowI3m0yRDFyUjVOvbkqVvZ9bQeMo5WUOYf6B0I
-         VuE06NhTNQXPeoK9QUGOGGwSo2fQvqlRPBliXQfrc26akdaGuO4eP+UuKM3AsUjXjlrd
-         NVCjdJn/KPRjrAKqLxonH926RWce/Y+lwBrlOokvu9yIi8Dg4/huTkaizwSSQlv6roKw
-         CaAQ==
-X-Gm-Message-State: AOAM533Zf3WtEaOAiLXxomEKrbT3z1eegcEccSQHbf+oNOwtmVC9EldI
-        umGgmWu6kSZRupsXXIGVyRLcUTpiu177/FkvmS30Aw==
-X-Google-Smtp-Source: ABdhPJxq8vYRf0G9cPFbYqLhOvTdqklGIFfOLzgc7+7EQxxnTbmrxtqPC1eR0tM4n2VtRNfsE/caOCBDYb+jjVDsc9s=
+         :message-id:subject:to:cc;
+        bh=cf6b5pV3UMfQkVtF+8ODWsaGpTKDEhUIkLvFUHa+azk=;
+        b=7jKgf3fUObsqfft/iPFF1Tz37DXyx3oRj1BoeiO8wA29hphwBx5Ity3DHgN6DQoDzT
+         Sy11lW6Zq+pAip3iMgBtm0R/EgQAAEXi+HcQRlfY6gDqpc3vvZYsRWB8MMW2DTdpkITo
+         BHFupfXfo+aD84jBBirsoAs1ay9VfawBZqOoQNegi7y/JTSVn/jPS3VZXX5cWQPdB5eT
+         6Pr8dNHSFyR05pAqL9dq7TI58Z7IJrTxMCG0Qzl6oIKxWXoh+jLdrhvTtz3zN0HH0DtU
+         okXW5Ruv05QB61B53g8TdmZIZ0ii9ZcR/8pqStSpLpkUYfm7MeWToemqNJOSMk6dE1fq
+         vIYw==
+X-Gm-Message-State: AOAM530eR77jEYApaavMynwLPV60Ydwcx3v+skdUJPOgAUCV7mUGbZW1
+        S0V+6qYbfJ3OKU7ACk7inDH29bsxozsSc3BdUHokwg==
+X-Google-Smtp-Source: ABdhPJyccBQs438IbcOWBLBqEuGKyFzi6RMdb5FH5tYCWKodJL15SEZRUoMNKuuROIqE1Nk9mqA3wiIEhyZQi7aicNo=
 X-Received: by 2002:a17:907:7e92:b0:6f4:c553:c734 with SMTP id
- qb18-20020a1709077e9200b006f4c553c734mr8079045ejc.286.1651754691228; Thu, 05
- May 2022 05:44:51 -0700 (PDT)
+ qb18-20020a1709077e9200b006f4c553c734mr8113090ejc.286.1651755072981; Thu, 05
+ May 2022 05:51:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220502170555.51183-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20220502170555.51183-1-u.kleine-koenig@pengutronix.de>
+References: <20220501092201.16411-1-puyou.lu@gmail.com>
+In-Reply-To: <20220501092201.16411-1-puyou.lu@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 May 2022 14:44:40 +0200
-Message-ID: <CAMRc=McHZWjdFywntMwfg19U2H4Jh99SBa8Zz+0N79W4EQJ9gg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Make platform teardown callback return void
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sekhar Nori <nsekhar@ti.com>,
+Date:   Thu, 5 May 2022 14:51:02 +0200
+Message-ID: <CAMRc=MegD1gwe_FNc04K8-f7PxVauY4L00958oZ5PXaTmL7+_Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: update irq_stat even when irq is not
+ enabled (irq_mask not set).
+To:     Puyou Lu <puyou.lu@gmail.com>
+Cc:     Puyou Lu <lupuyou@aifrutech.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 2, 2022 at 7:06 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Sun, May 1, 2022 at 11:22 AM Puyou Lu <puyou.lu@gmail.com> wrote:
 >
-> All platforms that provide a teardown callback return 0. New users are
-> supposed to not make use of platform support, so there is no
-> functionality lost.
+> From: Puyou Lu <lupuyou@aifrutech.com>
 >
-> This patch is a preparation for making i2c remove callbacks return void.
+> When one port's input state get inverted (eg. from low to hight) after
+> pca953x_irq_setup but before setting irq_mask (by some other driver such as
+> "gpio-keys"), the next inversion of this port (eg. from hight to low) will not
+> triggered any more (because irq_stat is not updated at the first time). Issue
+> should be fixed after this commit.
 >
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Puyou Lu <puyou.lu@gmail.com>
 > ---
+>  drivers/gpio/gpio-pca953x.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index d2fe76f3f34f..8726921a1129 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -762,11 +762,11 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
+>         bitmap_xor(cur_stat, new_stat, old_stat, gc->ngpio);
+>         bitmap_and(trigger, cur_stat, chip->irq_mask, gc->ngpio);
+>
+> +       bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
+> +
+>         if (bitmap_empty(trigger, gc->ngpio))
+>                 return false;
+>
+> -       bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
+> -
+>         bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
+>         bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
+>         bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
+> --
+> 2.17.1
+>
 
-Looks good to me.
-
-Sekhar: please leave your Ack if you're fine with me taking this
-through the GPIO tree.
+This needs to Cc stable and a fixes tag.
 
 Bart
