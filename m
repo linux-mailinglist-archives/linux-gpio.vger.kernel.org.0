@@ -2,106 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6491251BF1F
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 14:19:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E90351BF3B
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 14:25:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355567AbiEEMWl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 May 2022 08:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56110 "EHLO
+        id S235012AbiEEM2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 May 2022 08:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347262AbiEEMWk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 08:22:40 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7E94579F
-        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 05:19:01 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id g20so4976632edw.6
-        for <linux-gpio@vger.kernel.org>; Thu, 05 May 2022 05:19:01 -0700 (PDT)
+        with ESMTP id S240218AbiEEM2h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 08:28:37 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1EB55228;
+        Thu,  5 May 2022 05:24:58 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id c9so3534384plh.2;
+        Thu, 05 May 2022 05:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rDk3qs/Q4Xe8wlL/UcZMtYsp2NSwhtSMKNXSB48HRlA=;
-        b=7y/YvlHScipYanP00lb1LV7E2AOk6re7HN1ndCWAVJSLqR28Xi83kG+pQu7/UEtsUh
-         FvBJfCJiffmk85MzcLJeWGYfHc4Bcz0J1BFhnHP4lz38NglS75/OC0sCksV9s4USD2US
-         YvhkMS8UmpeanIAMp2MlaxJsbi7a+//HVBT+BHe+CyPfejaJu200/vxanoZERxjaLxjo
-         JRclq1WSTmnRJTYj4VgDERRQQp92MYm1Kerpf4hV0AiZ2clDZqIMfTHwDTFirgNZr43x
-         cXEVmhexEKEBA6kMCMv2xoaQHnvXdhieEDZJmVka9cQ2IPHU4EzTmRCs4opTzj9qeNYn
-         jHLQ==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aqYca05I1CobNL11/ZSAuzkYP3pUA9+44TaUIjQq30E=;
+        b=HlU4f2mdgIGU44zymXGfRAKrheE60x7GHocboHNZBnucHDvCi30LYg8qdMKXH+VE1S
+         9TqYxAC81WJbZAn/9sW3DGUP/tOSj+ABuQhvOj7ipczBHPMF9x1Xifw9u72TT2nB6/8x
+         6u4uF5DnbzvfJtFkvZ0R8Kbpz27c3xoAPVfehY3D8fk/N9GKpTAzPniDb32fZl0j91tU
+         qZqwhlKZp05SdRnt2rKR6l2bwOqxD8C9ChT8sOttFeAxNO83LD0/QXo3cNJ/o9guHw6A
+         py3MvonaowbfyTdnEUS+CzbwJVSv9hfKLStfAdD5JOVNIYyYqrFIGIvC5d59eqtaMDWq
+         qkGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rDk3qs/Q4Xe8wlL/UcZMtYsp2NSwhtSMKNXSB48HRlA=;
-        b=Axn21EAfCp5Q9N3P2MsfluWUYQcurYuA3aKuvsEAc6unyW6Cd1ROWI/pKxSNnxdfZV
-         yAfEqBUOntaAAJDrJ2lKzXEWPywZVGREMPafF3WF9ex7TFaZn6usrwMmTSe64DPfd9pQ
-         erY2qzHhRQ0PCBkuSZdmBD4t+BZRy7HJA8OLoKoiLyS+kLoV5BXY5dbsLlKEroromRT8
-         pN+QB3Z8NUTLE8IB7G623+dwb2uKwLlyakFJTvy8ORuB2zT50zLuUxmOqLxt4mRkGD/5
-         Y3cVb3c1nW/w2KL0nvXkCRdwCDHOOl4mOwq6YRAe9fGXVgC7UNi63XbsjOf+uq+WDLnk
-         iOQA==
-X-Gm-Message-State: AOAM531BCD+lERmszhhx2xZS4j2AZEJGsuwpiK+H1LZdKyxlW5rHt1d8
-        ZGxYUNcnEE2O1fYSzODALgyZ4dUKKXj8zsCgozxZX9V701yijw==
-X-Google-Smtp-Source: ABdhPJzNj4hoyQIi5bToIm8IJx9uJV1XrbVuw7EmRPlboKIHjiKMwU+E7zq+NuwRHGZGpR3PQrqlT8CW8qRS1Bqrhfw=
-X-Received: by 2002:a05:6402:d4c:b0:410:a415:fd95 with SMTP id
- ec12-20020a0564020d4c00b00410a415fd95mr29189322edb.288.1651753139972; Thu, 05
- May 2022 05:18:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220505115011.3435-1-hanyihao@vivo.com>
-In-Reply-To: <20220505115011.3435-1-hanyihao@vivo.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 May 2022 14:18:48 +0200
-Message-ID: <CAMRc=MdkbZVW_vFxyJbKh9oDo3mdud2omfS=cW5=Gn=nMrM37A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: fix stream_open.cocci warnings
-To:     Kent Gibson <warthog618@gmail.com>, Yihao Han <hanyihao@vivo.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aqYca05I1CobNL11/ZSAuzkYP3pUA9+44TaUIjQq30E=;
+        b=MuYgrHT+RZi7EKlFE5r03lgUui5YleREVUyG1kUfAtcB9eyIS1zqZw/srMxA0FCod+
+         YYtyif+UUCNuBxYlEEg9ShHByqxM6BmGoFnsC2UdzJ5BOySvgnp/Jf/rOIE+nQpDIfA7
+         Ui0ZFjAO/BUzSOdk1lv+9aexiXEvCcV9sqqckTc6xpahffSQimDRcnVWjZ4vS88ENyWr
+         jLM1aicwGD3YkFLQzvPAIwtr3Xq24TvQQuwHRWLHiubigIianqECCpDg5j2216Iwg3DI
+         AVuEOW6yAUp0aDnfCk7X5X8elTPaM2USYgQTdExoif9NM4WvzYu3vKsqbEoB7gKh4J8B
+         u7XA==
+X-Gm-Message-State: AOAM532BsCGXY2SDvaahNwMsDn3KOxVUEHdTNbutgGM0EwqWmoWeAkh5
+        UzEauMF+k0LV6mCSjKulbs4jVfZ4jhk2Rg==
+X-Google-Smtp-Source: ABdhPJxBCkQ1cAkRLOXaQKmquOvLrvigW73ZlxaRyHHUoVzYwqfQEHbFvnHA6iO/7W/8X+DY6gwJ2g==
+X-Received: by 2002:a17:902:f70b:b0:14d:643d:9c99 with SMTP id h11-20020a170902f70b00b0014d643d9c99mr27704828plo.18.1651753498148;
+        Thu, 05 May 2022 05:24:58 -0700 (PDT)
+Received: from sol ([118.209.204.33])
+        by smtp.gmail.com with ESMTPSA id 6-20020a17090a000600b001cd4989ff44sm1412787pja.11.2022.05.05.05.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 05:24:56 -0700 (PDT)
+Date:   Thu, 5 May 2022 20:24:50 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yihao Han <hanyihao@vivo.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] gpiolib: cdev: fix stream_open.cocci warnings
+Message-ID: <20220505122450.GA23659@sol>
+References: <20220505115011.3435-1-hanyihao@vivo.com>
+ <CAMRc=MdkbZVW_vFxyJbKh9oDo3mdud2omfS=cW5=Gn=nMrM37A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdkbZVW_vFxyJbKh9oDo3mdud2omfS=cW5=Gn=nMrM37A@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 5, 2022 at 1:50 PM Yihao Han <hanyihao@vivo.com> wrote:
->
-> ./drivers/gpio/gpiolib-cdev.c:2498:7-23: WARNING:
-> gpio_fileops: .read() has stream semantic;
-> safe to change nonseekable_open -> stream_open.
->
-> Generated by: scripts/coccinelle/api/stream_open.cocci
->
-> Signed-off-by: Yihao Han <hanyihao@vivo.com>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index f5aa5f93342a..d03c8e012c8c 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -2495,7 +2495,7 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
->         get_device(&gdev->dev);
->         file->private_data = cdev;
->
-> -       ret = nonseekable_open(inode, file);
-> +       ret = stream_open(inode, file);
->         if (ret)
->                 goto out_unregister_notifier;
->
-> --
-> 2.17.1
->
+On Thu, May 05, 2022 at 02:18:48PM +0200, Bartosz Golaszewski wrote:
+> On Thu, May 5, 2022 at 1:50 PM Yihao Han <hanyihao@vivo.com> wrote:
+> >
+> > ./drivers/gpio/gpiolib-cdev.c:2498:7-23: WARNING:
+> > gpio_fileops: .read() has stream semantic;
+> > safe to change nonseekable_open -> stream_open.
+> >
+> > Generated by: scripts/coccinelle/api/stream_open.cocci
+> >
+> > Signed-off-by: Yihao Han <hanyihao@vivo.com>
+> > ---
+> >  drivers/gpio/gpiolib-cdev.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > index f5aa5f93342a..d03c8e012c8c 100644
+> > --- a/drivers/gpio/gpiolib-cdev.c
+> > +++ b/drivers/gpio/gpiolib-cdev.c
+> > @@ -2495,7 +2495,7 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+> >         get_device(&gdev->dev);
+> >         file->private_data = cdev;
+> >
+> > -       ret = nonseekable_open(inode, file);
+> > +       ret = stream_open(inode, file);
+> >         if (ret)
+> >                 goto out_unregister_notifier;
+> >
+> > --
+> > 2.17.1
+> >
+> 
+> Cc'ing Kent.
+> 
+> This patch doesn't seem to target current master or rc1.
+> 
+> It also can't be right - we specifically mark all filesystem objects
+> exposed by the GPIO character device as non-seekable.
+> 
 
-Cc'ing Kent.
+Agreed.  I took the coccinelle warning as being a false positive.
+If I recall correctly I had a quick look to see if it could be disabled,
+but didn't find anything, and so just ignored it.
 
-This patch doesn't seem to target current master or rc1.
-
-It also can't be right - we specifically mark all filesystem objects
-exposed by the GPIO character device as non-seekable.
-
-Bart
+Cheers,
+Kent.
