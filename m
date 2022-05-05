@@ -2,75 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB7CA51C036
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 15:07:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E5D351C038
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 15:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378897AbiEENJq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 May 2022 09:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51344 "EHLO
+        id S1378773AbiEENJr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 May 2022 09:09:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378789AbiEENIr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 09:08:47 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3857C56746
-        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 06:05:07 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id ks9so2193473ejb.2
-        for <linux-gpio@vger.kernel.org>; Thu, 05 May 2022 06:05:07 -0700 (PDT)
+        with ESMTP id S1378874AbiEENJo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 09:09:44 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09ADF56425
+        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 06:06:05 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id t5so5112160edw.11
+        for <linux-gpio@vger.kernel.org>; Thu, 05 May 2022 06:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sxVJoGvxoT/BfORhwUe0lF83tKeGUQ56jY7vzgfAHU4=;
-        b=Y0K2T7eDDIErEPqMy8O6G47SIMuNV/FV2iBabtCwdZYCRksLJj+E+c7fbrSt9ZBBXD
-         DaXJNvwCp8O95B7G3qBBBXd/ZY5LglYP8OcOlRsRkLkFbnOz5YGjf1+Kq+Cej6sf1PKz
-         8jox3zcMMsB69mnVMtXKZEg+/RyB0rS4FojXfONdqL7k9Dw/I4yA/G/3RFFnSgWC8agR
-         bsZsTNdQJo4ur+mN0mOVzXqc/pW10pVTqbvQpkdO4R2oawKCjQrPZ/LhQquGSb8INoG5
-         zUIcx6Usp3yJ11Kt8LC8bG4AgtPbYUl5xx+MqNZTXX94AuUxIh18hRHgvcWzdek9DC0O
-         2i3w==
+        bh=mL7w0UMKorZQ2g0L1DfCw6LR3UMP76ttTU+pAi6oLp8=;
+        b=thkq/Oe9nJNhuWKKyXJioTRuksejdS4P/kXbCrE43AhgzOgACtL3WlfvieNBmQqQ+G
+         MffenwvYyEE/lyM6o5nlmL6cqoqXf2JLlV9Pqf59ZwhnlRsg0EEZAaaBRwGtqynW9/3D
+         7nIMP/GeOSzcRkEGfmLrPzxr2OcLJtnZshwKErO0/B8ah6A/IhRVB6dZWKeScY8dMPNX
+         1zRNKzTFQ3NxyxG0Zh62W3IcJeUkNoLDAuqfKXM0K2J815M+nocKNHapidlHY7FPLyw5
+         7z83NA03x9UBBjVvstLDBu+6qQ3ESO9XqXHwoTHF7FFaDJCJY/e8q6BySCbLEWHt85VA
+         eiBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sxVJoGvxoT/BfORhwUe0lF83tKeGUQ56jY7vzgfAHU4=;
-        b=TiND4RlnoKEJWmcw9bW/5JNF0FM7BMsfdK7Ufq8rRCxhFdcdovv4rDoV3Ynx2mYvYd
-         8/H0G4uzJhC4x1jKV13NdQdqST+xzkQBQ3ptBuEKSdfMxr4lBglp9Zn2d0K1XuW4l/V+
-         8pNWXUWiJi7ImYPD7Eg5YMnLpbiA8Z0pQRqnGYbNoZK4mtJVM9sjg7aJkXeeU9dJb6Mk
-         Giuy/WhabCWrfu0etcv58JAAfBp9i/MOJjL0UVSlSjHyW4t7wJxj+2nUtN2YaPwWVPbL
-         rUTX5aJ0grYGks962k/oJUwW1yCx68cX8FPRgWCJKIUSGtRz426Tj4TtjUcpUWX8IJ0L
-         3QgA==
-X-Gm-Message-State: AOAM531//DtiDdE4cPJzZfOSrOalJ20uZO9VfsdC704c6JKOhizMjZ+p
-        AXI3lrSVU4PmGEgLseoXgvDyyMMGgfTgrHhofT8S9Q==
-X-Google-Smtp-Source: ABdhPJxyNkSLwouP3OR63NyFLRxUlmDS+dFIZZqJlV9mcUABNttg9TsG8+o4n8l4yoY3YgwsQa8BiV83N6jWTpdMxkc=
-X-Received: by 2002:a17:907:3e28:b0:6f4:3900:78f8 with SMTP id
- hp40-20020a1709073e2800b006f4390078f8mr21714935ejc.736.1651755905797; Thu, 05
- May 2022 06:05:05 -0700 (PDT)
+        bh=mL7w0UMKorZQ2g0L1DfCw6LR3UMP76ttTU+pAi6oLp8=;
+        b=lKK4UDm8xpFZiL4XTFzgHCDIohNX7yN2n8gYI3CLSoFBPpSLmRPbkHwphAznhYdAgt
+         64scBMhq/sKX4tLgNmDax7Y4srtgbhndrB9w/BL5ExqTz+dns2lP+neCfS1KWkJt6099
+         jjJhAtmid61u29lnNh7gD2s9tMhb2Kqi+6Q0roXLlsfTG4hSNtgG/J3Nx5igZjZ6m78H
+         e324dDd+tMim+0PqAsrORYLNyHuyuZevDXMBevcKd+S2Bi1q8XcPMHyw7jjqBtNq1Rww
+         4MvLlM9hZ1oNxgTz1uEx0BPf1UTYsj6vS4Xqn5Nh+i/jGtmwC6Z1aY3iQ3bCPyUZTnDQ
+         f6Vw==
+X-Gm-Message-State: AOAM530w3pTACvqyFwbZafsZU8neaoFm2O+aqDJB0kiPfsoiw3hZzyaL
+        2Qe4EkCadJZB8jGMkcPYWAaz+NgzKlFYqOgg7BcEuw==
+X-Google-Smtp-Source: ABdhPJxr7BHz9MN/SywvgtY21Ie07p3CIeurjYtmb7zi7rCM463OgbWz+0yWrSPh0S+WrcPNGwAj+sr6dUi1BvovgpY=
+X-Received: by 2002:a05:6402:5286:b0:425:f0fb:5d23 with SMTP id
+ en6-20020a056402528600b00425f0fb5d23mr29314171edb.243.1651755963620; Thu, 05
+ May 2022 06:06:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1651497024.git.geert+renesas@glider.be> <5628a862688bd9d3b4f6c66cb338671211058641.1651497024.git.geert+renesas@glider.be>
-In-Reply-To: <5628a862688bd9d3b4f6c66cb338671211058641.1651497024.git.geert+renesas@glider.be>
+References: <20220414190242.22178-1-andriy.shevchenko@linux.intel.com>
+ <20220414190242.22178-2-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MfE0othcfwETf13_K3sOLKmUGwCnjapzVjLMk1cD+ihVQ@mail.gmail.com> <CAHp75VcpZPB12Y4FVN4h9RdkvYQfELtbRnd08FfPpG1cJG-99g@mail.gmail.com>
+In-Reply-To: <CAHp75VcpZPB12Y4FVN4h9RdkvYQfELtbRnd08FfPpG1cJG-99g@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 May 2022 15:04:55 +0200
-Message-ID: <CAMRc=MeQZ_T_AoHUO3qx7oW68UMC6HH9CaC041vYr7wQisqjHA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] dt-bindings: gpio: renesas,rcar-gpio: R-Car V3U is
- R-Car Gen4
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine@vger.kernel.org,
+Date:   Thu, 5 May 2022 15:05:52 +0200
+Message-ID: <CAMRc=Mef77ejvzx2Pg1P_xzozxb1VjxGtArfvFdS=Cgq-8Mbwg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] gpiolib: Introduce a helper to get first GPIO
+ controller node
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-serial@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -82,36 +80,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 2, 2022 at 3:35 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Tue, Apr 26, 2022 at 12:29 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Despite the name, R-Car V3U is the first member of the R-Car Gen4
-> family.  Hence move its compatible value to the R-Car Gen4 section.
+> On Tue, Apr 26, 2022 at 12:27 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > On Thu, Apr 14, 2022 at 9:02 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > Introduce a helper to get first GPIO controller node which drivers
+> > > may want to use.
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> > > +static inline struct fwnode_handle *gpiochip_node_get_first(struct device *dev)
+> > > +{
+> > > +       struct fwnode_handle *fwnode;
+> > > +
+> > > +       for_each_gpiochip_node(dev, fwnode)
+> > > +               return fwnode;
+> > > +
+> > > +       return NULL;
+> > > +}
+> > > +
+> > >  #endif /* __LINUX_GPIO_DRIVER_H */
+> > > --
+> > > 2.35.1
+> > >
+> >
+> > Any chance you could name it get_first_gpiochip_node()? It's static so
+> > we don't have to worry about the prefix and it would make the purpose
+> > more clear.
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-> index 0681a4790cd62e23..75e5da6a7cc04bbd 100644
-> --- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-> @@ -48,11 +48,9 @@ properties:
->                - renesas,gpio-r8a77995     # R-Car D3
->            - const: renesas,rcar-gen3-gpio # R-Car Gen3 or RZ/G2
+> There are two things why I prefer it as is:
+> 1) it's static inline, so it's part of (internal) but still exported API;
+> 2) it's already in my for-next branch which I would like not to
+> rebase, until it's a really serious issue.
 >
-> -      - items:
-> -          - const: renesas,gpio-r8a779a0  # R-Car V3U
-> -
->        - items:
->            - enum:
-> +              - renesas,gpio-r8a779a0     # R-Car V3U
->                - renesas,gpio-r8a779f0     # R-Car S4-8
->            - const: renesas,rcar-gen4-gpio # R-Car Gen4
->
-> --
-> 2.25.1
->
+> That said, if you still insist I can rename it.
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+No that's fine and I also pulled that into my tree.
+
+Bart
