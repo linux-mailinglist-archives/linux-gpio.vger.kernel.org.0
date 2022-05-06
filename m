@@ -2,149 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A2E051CFC7
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 May 2022 05:39:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8790451D2CC
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 May 2022 10:06:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234539AbiEFDmk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 May 2022 23:42:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44658 "EHLO
+        id S230008AbiEFIKZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 May 2022 04:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1388762AbiEFDmg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 23:42:36 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EA1B3C;
-        Thu,  5 May 2022 20:38:55 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id iq2-20020a17090afb4200b001d93cf33ae9so9711570pjb.5;
-        Thu, 05 May 2022 20:38:55 -0700 (PDT)
+        with ESMTP id S239540AbiEFIKX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 May 2022 04:10:23 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D433445514;
+        Fri,  6 May 2022 01:06:41 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id cx11-20020a17090afd8b00b001d9fe5965b3so10181398pjb.3;
+        Fri, 06 May 2022 01:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Thh8y0B9U/Ip36Z1pHukPlR3kRPTnswuR34K+vKB1hc=;
-        b=jsSM5j5/VLW8HThEJQ93pP3WnLRDj8yZPD+jNB+uxemWTHylJixdD/TP2lI1S55jZy
-         KyB5sUKuBuNGn+2pyep9IjJX7VbnCLCVyR7UaUWiS+zKLAoms9MX+fECPaMmuANKm3Jo
-         rUkXmDyDBPG7addk/1Jd38sw3uKMAXnu2x3kTCFpunj8Nm92etBwD7TmsZhPp4R535oL
-         koYWD3EHcMX6efoKpmiZleep8nO5AWFeWCpkTesK07bW5CIecpNf8RfqmnThB+eXT1su
-         lfIIx4/ljqVoozDaIwYSA8QFGWqrI1wf25CJQLP6s9hIslttbGdAYDL5Tnub6v7jVYXW
-         fz6A==
+        h=from:to:cc:subject:date:message-id;
+        bh=GIOdOXa5ZfB2uJVmQgtKIxqW4ntVqgfvN4zvijAfGks=;
+        b=kGUYQbBLRaqUISAsbY0V1LU9b5rYzU5I7SHYjf+y58iMDfVDZWLHDpQetNYI3NV7Wo
+         lBLDwcmTnnyedxRlgjB7/xN3pgITFXN+y/k/Y4cZ2QAWgPKsMsxzVuBGQzThcdMYvfU1
+         1PpygFd9jq6zN/FphPU7bVtedgtpIrt98g5obSpWLPntFct+taZjH3sqO3q81x/ir6UI
+         gaLV4oIaakhlbFmn8Vq8KTlHY1MMBd8OWNY/94HmYl8wkOImaNK1ZV5eVgK365KjbAGY
+         tZJel8eqiapMDji9xBTTcWcuWzu7PmcLon+oGUESxUy9N1QmiW+f82N5SZ57873VkRfW
+         6TlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Thh8y0B9U/Ip36Z1pHukPlR3kRPTnswuR34K+vKB1hc=;
-        b=23NJWDVc4IygW6mQZXrPbrj8zq16Ppo1zJacVXTh8nM6hHQDBansInFCpb2AUjF8AP
-         VcP2xta5nZm235e0blTb02/FzfUXZ1cc6rrrG67Stykl2vO/sIJu0ikKbQKWmWTp2iNF
-         V+IGV2gHNfebeEt0pqk1NRy5AiOm8FWmNl1kG7V0RLH31mgtcpK9diUBo7R23bhpNr9l
-         jQ6eSkSKMyeGA0LsILqXpCaMpCg5QvmrLwrJv8P/N+IYNSDMenEqhap+A0zuFNKiJPZ/
-         kPtFLzyXLOmlHeCrtMdM2CJgqZNBtwDqlfyW/CscO3STnaUnLX2SSHH9NRU8nyGa/k2r
-         C9zQ==
-X-Gm-Message-State: AOAM531KcksQzF7wt0DcJszmveLMok/0bPCZo1A6TXSC7Uv7gOGUeza4
-        BrHdntbctytFsnxnTnxCfoA=
-X-Google-Smtp-Source: ABdhPJxD8Oz0oOTM/oDFE5euDEomfuAH3/F7pvBij12hDEABwIFX21X+VhyiYg8cC1T2dVdGBBo7qQ==
-X-Received: by 2002:a17:902:f684:b0:15e:8c4a:c54b with SMTP id l4-20020a170902f68400b0015e8c4ac54bmr1433588plg.21.1651808334809;
-        Thu, 05 May 2022 20:38:54 -0700 (PDT)
-Received: from sol ([118.209.204.33])
-        by smtp.gmail.com with ESMTPSA id t7-20020a170902e84700b0015e8d4eb242sm412700plg.140.2022.05.05.20.38.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GIOdOXa5ZfB2uJVmQgtKIxqW4ntVqgfvN4zvijAfGks=;
+        b=eT9Q2mt8xOAnGhWQuvI+V2Vf6vgty6YMa4nYeddf7GhZ/aPNO5VFNk9ZaAWc4M1v6r
+         hpTjSSqPemEjKsIFfBW+dA7ZLKo8slgtyedn2UOa6vQUB7acZVfuxKknUzneCko2JB88
+         8LoaeoHW9P4ro3/6e2/y3FcOpesSD67o+nEBVgkdR3Ov6ZO1QxJkw1CaeiqNCd58DlB5
+         iA5z7mBzD+3FQzO0B3piq+/keyhkokuXzhLzW9fWDzbGfiBR4gu7tI7MHMFYyXJp0Twj
+         th9IIIkTz8UenSxm07lIQOsx9dq9yVdFLjv5mDCvCa9Mn4tDkWxoxJCgMe+NqBoxfNa9
+         2elw==
+X-Gm-Message-State: AOAM532TblaK3hLrAtEZs3c4L1+LYasXkbvQxKH5uoA1vjyI+29dvJnr
+        ESKy4lcr1a/CSxIwOwECkWAYUhEr/ABPltpGq/E=
+X-Google-Smtp-Source: ABdhPJwQoGMIxKM9HPOGJlGXafi++kl5wzVAl94nSX0DpLZzoLMpQKUbe9fLNcDe+oqfyOaL0GVcug==
+X-Received: by 2002:a17:902:70c1:b0:154:667f:e361 with SMTP id l1-20020a17090270c100b00154667fe361mr2410029plt.148.1651824401004;
+        Fri, 06 May 2022 01:06:41 -0700 (PDT)
+Received: from localhost.localdomain ([183.14.31.73])
+        by smtp.gmail.com with ESMTPSA id r9-20020a056a00216900b0050dc7628195sm2712436pff.111.2022.05.06.01.06.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 20:38:54 -0700 (PDT)
-Date:   Fri, 6 May 2022 11:38:49 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yihao Han <hanyihao@vivo.com>,
+        Fri, 06 May 2022 01:06:40 -0700 (PDT)
+From:   Puyou Lu <puyou.lu@gmail.com>
+Cc:     stable@vger.kernel.org, Puyou Lu <puyou.lu@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpiolib: cdev: fix stream_open.cocci warnings
-Message-ID: <20220506033849.GA12555@sol>
-References: <20220505115011.3435-1-hanyihao@vivo.com>
- <CAMRc=MdkbZVW_vFxyJbKh9oDo3mdud2omfS=cW5=Gn=nMrM37A@mail.gmail.com>
- <20220505122450.GA23659@sol>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220505122450.GA23659@sol>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marc Zyngier <maz@misterjones.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] gpio: pca953x: fix irq_stat not updated when irq is disabled (irq_mask not set)
+Date:   Fri,  6 May 2022 16:06:30 +0800
+Message-Id: <20220506080630.4151-1-puyou.lu@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 05, 2022 at 08:24:50PM +0800, Kent Gibson wrote:
-> On Thu, May 05, 2022 at 02:18:48PM +0200, Bartosz Golaszewski wrote:
-> > On Thu, May 5, 2022 at 1:50 PM Yihao Han <hanyihao@vivo.com> wrote:
-> > >
-> > > ./drivers/gpio/gpiolib-cdev.c:2498:7-23: WARNING:
-> > > gpio_fileops: .read() has stream semantic;
-> > > safe to change nonseekable_open -> stream_open.
-> > >
-> > > Generated by: scripts/coccinelle/api/stream_open.cocci
-> > >
-> > > Signed-off-by: Yihao Han <hanyihao@vivo.com>
-> > > ---
-> > >  drivers/gpio/gpiolib-cdev.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > > index f5aa5f93342a..d03c8e012c8c 100644
-> > > --- a/drivers/gpio/gpiolib-cdev.c
-> > > +++ b/drivers/gpio/gpiolib-cdev.c
-> > > @@ -2495,7 +2495,7 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
-> > >         get_device(&gdev->dev);
-> > >         file->private_data = cdev;
-> > >
-> > > -       ret = nonseekable_open(inode, file);
-> > > +       ret = stream_open(inode, file);
-> > >         if (ret)
-> > >                 goto out_unregister_notifier;
-> > >
-> > > --
-> > > 2.17.1
-> > >
-> > 
-> > Cc'ing Kent.
-> > 
-> > This patch doesn't seem to target current master or rc1.
-> > 
-> > It also can't be right - we specifically mark all filesystem objects
-> > exposed by the GPIO character device as non-seekable.
-> > 
-> 
-> Agreed.  I took the coccinelle warning as being a false positive.
-> If I recall correctly I had a quick look to see if it could be disabled,
-> but didn't find anything, and so just ignored it.
-> 
+When one port's input state get inverted (eg. from low to hight) after
+pca953x_irq_setup but before setting irq_mask (by some other driver such as
+"gpio-keys"), the next inversion of this port (eg. from hight to low) will not
+be triggered any more (because irq_stat is not updated at the first time). Issue
+should be fixed after this commit.
 
-Further to this...
+Fixes: 89ea8bbe9c3e ("gpio: pca953x.c: add interrupt handling capability")
+Signed-off-by: Puyou Lu <puyou.lu@gmail.com>
 
-The coccinelle warning says:
+---
 
-// Search for stream-like files that are using nonseekable_open and convert
-// them to stream_open. A stream-like file is a file that does not use ppos in
-// its read and write. Rationale for the conversion is to avoid deadlock in
-// between read and write.
+Change since v1:
+add fixes tag and commit message https://lore.kernel.org/lkml/20220501092201.16411-1-puyou.lu@gmail.com/
 
-The rationale is not applicable here, as all cdev files are non-writeable,
-as well as being non-seekable.
-But switching to stream_open(), as coccinelle suggests, is probably fine.
+---
+ drivers/gpio/gpio-pca953x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The doco for stream_open() says:
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d2fe76f3f34f..8726921a1129 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -762,11 +762,11 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
+ 	bitmap_xor(cur_stat, new_stat, old_stat, gc->ngpio);
+ 	bitmap_and(trigger, cur_stat, chip->irq_mask, gc->ngpio);
+ 
++	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
++
+ 	if (bitmap_empty(trigger, gc->ngpio))
+ 		return false;
+ 
+-	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
+-
+ 	bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
+ 	bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
+ 	bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
+-- 
+2.17.1
 
- * stream_open is used by subsystems that want stream-like file descriptors.
- * Such file descriptors are not seekable and don't have notion of position
- * (file.f_pos is always 0 and ppos passed to .read()/.write() is always NULL).
- * Contrary to file descriptors of other regular files, .read() and .write()
- * can run simultaneously.
-
-so it would also produce nonseekable files.
-Comparing nonseekable_open() with stream_open(), the latter clears
-FMODE_ATOMIC_POS and sets FMODE_STREAM, neither of which are relevant for
-the cdev use cases, so that should be ok.
-So I would be ok with the patch if it were updated to apply to the
-current gpiolib-cdev.c.
-
-Cheers,
-Kent.
