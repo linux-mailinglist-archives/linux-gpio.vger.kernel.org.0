@@ -2,61 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 955AA51C6C0
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 May 2022 20:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A2E051CFC7
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 May 2022 05:39:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241847AbiEESMb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 May 2022 14:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58076 "EHLO
+        id S234539AbiEFDmk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 May 2022 23:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbiEESMb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 14:12:31 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D4656404
-        for <linux-gpio@vger.kernel.org>; Thu,  5 May 2022 11:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651774130; x=1683310130;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L6vm4f9YX6al8JaaSmAgPS8weDlrSEoTZBShsix+KvU=;
-  b=bFrGN07wp+O6TfsSBOihvEsIRRlW3/muWw218s33bxjzWQd+0/EMvEF/
-   NWAtgF+liLE9CQVtpIFfXfGFYhbdWrJc4luYxWhYmUMaa4girCg8Qc2+g
-   dkokid85r0ZIhXVOO3GcqJDVRIgimK5FClEv3HhjA/aJGzARwJeAsHil6
-   YwVfTY5H/hxCPLhjOILW3bq+jQ2JZ2O5++iw6gToNOCPpBGT51BLHKVmZ
-   muTcjkgbB/Gp8SVnP0BHaghgoipURwsShwWGAV6vMLvp1ZcFkgiFbDYiA
-   ergXHZ1lZMQqjnnkbdUqjOz/c7RFyGhP6L6pp5aE8JDOUqjNUxdqpWjQj
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="255681468"
-X-IronPort-AV: E=Sophos;i="5.91,202,1647327600"; 
-   d="scan'208";a="255681468"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 11:08:49 -0700
-X-IronPort-AV: E=Sophos;i="5.91,202,1647327600"; 
-   d="scan'208";a="811791637"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 11:08:47 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nmfu8-00CN8B-RT;
-        Thu, 05 May 2022 21:08:44 +0300
-Date:   Thu, 5 May 2022 21:08:44 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>
-Subject: Re: [PATCH] pinctrl: stm32: Fix up errorpath after merge
-Message-ID: <YnQSrDfdjFRnMz+k@smile.fi.intel.com>
-References: <20220505142837.165499-1-linus.walleij@linaro.org>
+        with ESMTP id S1388762AbiEFDmg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 May 2022 23:42:36 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EA1B3C;
+        Thu,  5 May 2022 20:38:55 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id iq2-20020a17090afb4200b001d93cf33ae9so9711570pjb.5;
+        Thu, 05 May 2022 20:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Thh8y0B9U/Ip36Z1pHukPlR3kRPTnswuR34K+vKB1hc=;
+        b=jsSM5j5/VLW8HThEJQ93pP3WnLRDj8yZPD+jNB+uxemWTHylJixdD/TP2lI1S55jZy
+         KyB5sUKuBuNGn+2pyep9IjJX7VbnCLCVyR7UaUWiS+zKLAoms9MX+fECPaMmuANKm3Jo
+         rUkXmDyDBPG7addk/1Jd38sw3uKMAXnu2x3kTCFpunj8Nm92etBwD7TmsZhPp4R535oL
+         koYWD3EHcMX6efoKpmiZleep8nO5AWFeWCpkTesK07bW5CIecpNf8RfqmnThB+eXT1su
+         lfIIx4/ljqVoozDaIwYSA8QFGWqrI1wf25CJQLP6s9hIslttbGdAYDL5Tnub6v7jVYXW
+         fz6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Thh8y0B9U/Ip36Z1pHukPlR3kRPTnswuR34K+vKB1hc=;
+        b=23NJWDVc4IygW6mQZXrPbrj8zq16Ppo1zJacVXTh8nM6hHQDBansInFCpb2AUjF8AP
+         VcP2xta5nZm235e0blTb02/FzfUXZ1cc6rrrG67Stykl2vO/sIJu0ikKbQKWmWTp2iNF
+         V+IGV2gHNfebeEt0pqk1NRy5AiOm8FWmNl1kG7V0RLH31mgtcpK9diUBo7R23bhpNr9l
+         jQ6eSkSKMyeGA0LsILqXpCaMpCg5QvmrLwrJv8P/N+IYNSDMenEqhap+A0zuFNKiJPZ/
+         kPtFLzyXLOmlHeCrtMdM2CJgqZNBtwDqlfyW/CscO3STnaUnLX2SSHH9NRU8nyGa/k2r
+         C9zQ==
+X-Gm-Message-State: AOAM531KcksQzF7wt0DcJszmveLMok/0bPCZo1A6TXSC7Uv7gOGUeza4
+        BrHdntbctytFsnxnTnxCfoA=
+X-Google-Smtp-Source: ABdhPJxD8Oz0oOTM/oDFE5euDEomfuAH3/F7pvBij12hDEABwIFX21X+VhyiYg8cC1T2dVdGBBo7qQ==
+X-Received: by 2002:a17:902:f684:b0:15e:8c4a:c54b with SMTP id l4-20020a170902f68400b0015e8c4ac54bmr1433588plg.21.1651808334809;
+        Thu, 05 May 2022 20:38:54 -0700 (PDT)
+Received: from sol ([118.209.204.33])
+        by smtp.gmail.com with ESMTPSA id t7-20020a170902e84700b0015e8d4eb242sm412700plg.140.2022.05.05.20.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 20:38:54 -0700 (PDT)
+Date:   Fri, 6 May 2022 11:38:49 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yihao Han <hanyihao@vivo.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpiolib: cdev: fix stream_open.cocci warnings
+Message-ID: <20220506033849.GA12555@sol>
+References: <20220505115011.3435-1-hanyihao@vivo.com>
+ <CAMRc=MdkbZVW_vFxyJbKh9oDo3mdud2omfS=cW5=Gn=nMrM37A@mail.gmail.com>
+ <20220505122450.GA23659@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220505142837.165499-1-linus.walleij@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+In-Reply-To: <20220505122450.GA23659@sol>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,48 +73,78 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 05, 2022 at 04:28:37PM +0200, Linus Walleij wrote:
-> When merging the for_each_gpiochip_node() changes, I made
-> some mistakes by not disabling the clocks on the errorpath,
-> fix it up.
-
-At least this is what I found,
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-but I might have missed something, it would be nice if ST guys can look into
-this as well.
-
-> Fixes: a0912083086d ("Merge tag 'intel-gpio-v5.19-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into devel")
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Fabien Dessenne <fabien.dessenne@foss.st.com>
-> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/stm32/pinctrl-stm32.c | 4 ++++
->  1 file changed, 4 insertions(+)
+On Thu, May 05, 2022 at 08:24:50PM +0800, Kent Gibson wrote:
+> On Thu, May 05, 2022 at 02:18:48PM +0200, Bartosz Golaszewski wrote:
+> > On Thu, May 5, 2022 at 1:50 PM Yihao Han <hanyihao@vivo.com> wrote:
+> > >
+> > > ./drivers/gpio/gpiolib-cdev.c:2498:7-23: WARNING:
+> > > gpio_fileops: .read() has stream semantic;
+> > > safe to change nonseekable_open -> stream_open.
+> > >
+> > > Generated by: scripts/coccinelle/api/stream_open.cocci
+> > >
+> > > Signed-off-by: Yihao Han <hanyihao@vivo.com>
+> > > ---
+> > >  drivers/gpio/gpiolib-cdev.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > > index f5aa5f93342a..d03c8e012c8c 100644
+> > > --- a/drivers/gpio/gpiolib-cdev.c
+> > > +++ b/drivers/gpio/gpiolib-cdev.c
+> > > @@ -2495,7 +2495,7 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+> > >         get_device(&gdev->dev);
+> > >         file->private_data = cdev;
+> > >
+> > > -       ret = nonseekable_open(inode, file);
+> > > +       ret = stream_open(inode, file);
+> > >         if (ret)
+> > >                 goto out_unregister_notifier;
+> > >
+> > > --
+> > > 2.17.1
+> > >
+> > 
+> > Cc'ing Kent.
+> > 
+> > This patch doesn't seem to target current master or rc1.
+> > 
+> > It also can't be right - we specifically mark all filesystem objects
+> > exposed by the GPIO character device as non-seekable.
+> > 
 > 
-> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> index 0f7d608151ff..88da8ac0b252 100644
-> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> @@ -1614,6 +1614,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
->  		ret = stm32_gpiolib_register_bank(pctl, child);
->  		if (ret) {
->  			fwnode_handle_put(child);
-> +
-> +			for (i = 0; i < pctl->nbanks; i++)
-> +				clk_disable_unprepare(pctl->banks[i].clk);
-> +
->  			return ret;
->  		}
->  
-> -- 
-> 2.35.1
+> Agreed.  I took the coccinelle warning as being a false positive.
+> If I recall correctly I had a quick look to see if it could be disabled,
+> but didn't find anything, and so just ignored it.
 > 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Further to this...
 
+The coccinelle warning says:
 
+// Search for stream-like files that are using nonseekable_open and convert
+// them to stream_open. A stream-like file is a file that does not use ppos in
+// its read and write. Rationale for the conversion is to avoid deadlock in
+// between read and write.
+
+The rationale is not applicable here, as all cdev files are non-writeable,
+as well as being non-seekable.
+But switching to stream_open(), as coccinelle suggests, is probably fine.
+
+The doco for stream_open() says:
+
+ * stream_open is used by subsystems that want stream-like file descriptors.
+ * Such file descriptors are not seekable and don't have notion of position
+ * (file.f_pos is always 0 and ppos passed to .read()/.write() is always NULL).
+ * Contrary to file descriptors of other regular files, .read() and .write()
+ * can run simultaneously.
+
+so it would also produce nonseekable files.
+Comparing nonseekable_open() with stream_open(), the latter clears
+FMODE_ATOMIC_POS and sets FMODE_STREAM, neither of which are relevant for
+the cdev use cases, so that should be ok.
+So I would be ok with the patch if it were updated to apply to the
+current gpiolib-cdev.c.
+
+Cheers,
+Kent.
