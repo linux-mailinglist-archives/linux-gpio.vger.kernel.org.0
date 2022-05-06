@@ -2,207 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 307B451D420
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 May 2022 11:18:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AE6251D4B8
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 May 2022 11:34:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1390394AbiEFJW0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 May 2022 05:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35502 "EHLO
+        id S1355385AbiEFJhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 May 2022 05:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239497AbiEFJWY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 May 2022 05:22:24 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08DD563502;
-        Fri,  6 May 2022 02:18:41 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 8DAA31F4608C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1651828719;
-        bh=LagxlbknCNKZ/XfP0so1ZIDtnMrlAsXXeHWaGvHTB4Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cM39Y7h+YdmaL5+yQdLEp+AHGdUEQriZx4EHdV2GwT//rXc7oQCQL3lcs+g8cdL39
-         hK882V/9z4a67vzdMiSeYx9uDsMCiTQgG409tJAEhWWFMJw9NhB3noO08myQXsJtsy
-         BsYPT5MNWPG0R7vjPwUDn/cPhZiytcZw39GZaoZkJsaY7RjKXjvHNh39B2G1ThifMv
-         Kw8Ud/gBiaJnCjHR4v0TOurkPw8ICP6lAIoGV8iA3esDMgEdUslAcabn1vupUfC7ow
-         TQzEjuF7haew1hme03M4bAqfbqajucOj6mCPqWMkCsz5E/PJKS6nhRybyDKxwe9omI
-         H64n/RkSM7ELA==
-Received: by mercury (Postfix, from userid 1000)
-        id 0DAAE1060437; Fri,  6 May 2022 11:18:37 +0200 (CEST)
-Date:   Fri, 6 May 2022 11:18:37 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Yifeng Zhao <yifeng.zhao@rock-chips.com>, kernel@collabora.com
-Subject: Re: [PATCHv2 09/21] mmc: sdhci-of-dwcmshc: add reset call back for
- rockchip Socs
-Message-ID: <20220506091837.bbwupigb4f3hwgp4@mercury.elektranox.org>
-References: <20220504213251.264819-1-sebastian.reichel@collabora.com>
- <20220504213251.264819-10-sebastian.reichel@collabora.com>
- <CAPDyKFqLn4LfPRbhoWw_9BF26Lgmzq_1j=RB31NDGn9YvMnB5w@mail.gmail.com>
+        with ESMTP id S1390662AbiEFJhC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 May 2022 05:37:02 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2192654
+        for <linux-gpio@vger.kernel.org>; Fri,  6 May 2022 02:32:40 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:287c:a0f:7d45:dc7b])
+        by michel.telenet-ops.be with bizsmtp
+        id TMYg2700f1UVucw06MYgqh; Fri, 06 May 2022 11:32:40 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nmuKG-0038YQ-7O; Fri, 06 May 2022 11:32:40 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nmuKF-00AenP-HH; Fri, 06 May 2022 11:32:39 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v5.19 (take two)
+Date:   Fri,  6 May 2022 11:32:38 +0200
+Message-Id: <cover.1651829249.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xt2hfq4oogyrqves"
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqLn4LfPRbhoWw_9BF26Lgmzq_1j=RB31NDGn9YvMnB5w@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+	Hi Linus,
 
---xt2hfq4oogyrqves
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit f7bc5f52d2354b41d5a111942be7ee01e5560c78:
 
-Hi,
+  pinctrl: renesas: rzg2l: Restore pin config order (2022-04-20 11:53:47 +0200)
 
-On Fri, May 06, 2022 at 10:52:42AM +0200, Ulf Hansson wrote:
-> On Wed, 4 May 2022 at 23:33, Sebastian Reichel
-> <sebastian.reichel@collabora.com> wrote:
-> >
-> > From: Yifeng Zhao <yifeng.zhao@rock-chips.com>
-> >
-> > The reset function build in the SDHCI will not reset the logic
-> > circuit related to the tuning function, which may cause data
-> > reading errors. Resetting the complete SDHCI controller through
-> > the reset controller fixes the issue.
-> >
-> > Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
-> > [rebase, use optional variant of reset getter]
-> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->=20
-> I think this needs a corresponding update of the DT docs. Otherwise
-> this looks good to me.
+are available in the Git repository at:
 
-I do have 'resets' and 'reset-names' properties in the rk3588s.dtsi
-for the sdhci interface and 'make dtbs_check' did not complain about
-anything but missing 'arm,sdei-1.0' compatible for the rk3588 EVB
-(sdei binding has not yet been converted to yaml). Thus I assume the
-resets property is inferred from somewhere?
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.19-tag2
 
--- Sebastian
+for you to fetch changes up to fc883ed5a43e5f94894216896d74190ecf1356ff:
 
->=20
-> Kind regards
-> Uffe
->=20
-> > ---
-> >  drivers/mmc/host/sdhci-of-dwcmshc.c | 26 +++++++++++++++++++++++++-
-> >  1 file changed, 25 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdh=
-ci-of-dwcmshc.c
-> > index bac874ab0b33..3a1b5ba36405 100644
-> > --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/reset.h>
-> >  #include <linux/sizes.h>
-> >
-> >  #include "sdhci-pltfm.h"
-> > @@ -63,6 +64,7 @@
-> >  struct rk3568_priv {
-> >         /* Rockchip specified optional clocks */
-> >         struct clk_bulk_data rockchip_clks[RK3568_MAX_CLKS];
-> > +       struct reset_control *reset;
-> >         u8 txclk_tapnum;
-> >  };
-> >
-> > @@ -255,6 +257,21 @@ static void dwcmshc_rk3568_set_clock(struct sdhci_=
-host *host, unsigned int clock
-> >         sdhci_writel(host, extra, DWCMSHC_EMMC_DLL_STRBIN);
-> >  }
-> >
-> > +static void rk35xx_sdhci_reset(struct sdhci_host *host, u8 mask)
-> > +{
-> > +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> > +       struct dwcmshc_priv *dwc_priv =3D sdhci_pltfm_priv(pltfm_host);
-> > +       struct rk35xx_priv *priv =3D dwc_priv->priv;
-> > +
-> > +       if (mask & SDHCI_RESET_ALL && priv->reset) {
-> > +               reset_control_assert(priv->reset);
-> > +               udelay(1);
-> > +               reset_control_deassert(priv->reset);
-> > +       }
-> > +
-> > +       sdhci_reset(host, mask);
-> > +}
-> > +
-> >  static const struct sdhci_ops sdhci_dwcmshc_ops =3D {
-> >         .set_clock              =3D sdhci_set_clock,
-> >         .set_bus_width          =3D sdhci_set_bus_width,
-> > @@ -269,7 +286,7 @@ static const struct sdhci_ops sdhci_dwcmshc_rk3568_=
-ops =3D {
-> >         .set_bus_width          =3D sdhci_set_bus_width,
-> >         .set_uhs_signaling      =3D dwcmshc_set_uhs_signaling,
-> >         .get_max_clock          =3D sdhci_pltfm_clk_get_max_clock,
-> > -       .reset                  =3D sdhci_reset,
-> > +       .reset                  =3D rk35xx_sdhci_reset,
-> >         .adma_write_desc        =3D dwcmshc_adma_write_desc,
-> >  };
-> >
-> > @@ -292,6 +309,13 @@ static int dwcmshc_rk3568_init(struct sdhci_host *=
-host, struct dwcmshc_priv *dwc
-> >         int err;
-> >         struct rk3568_priv *priv =3D dwc_priv->priv;
-> >
-> > +       priv->reset =3D devm_reset_control_array_get_optional_exclusive=
-(mmc_dev(host->mmc));
-> > +       if (IS_ERR(priv->reset)) {
-> > +               err =3D PTR_ERR(priv->reset);
-> > +               dev_err(mmc_dev(host->mmc), "failed to get reset contro=
-l %d\n", err);
-> > +               return err;
-> > +       }
-> > +
-> >         priv->rockchip_clks[0].id =3D "axi";
-> >         priv->rockchip_clks[1].id =3D "block";
-> >         priv->rockchip_clks[2].id =3D "timer";
-> > --
-> > 2.35.1
-> >
+  pinctrl: renesas: checker: Add reserved field checks (2022-05-05 12:02:28 +0200)
 
---xt2hfq4oogyrqves
-Content-Type: application/pgp-signature; name="signature.asc"
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.19 (take two)
 
------BEGIN PGP SIGNATURE-----
+  - Reserved field optimizations,
+  - Miscellaneous fixes and improvements.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmJ059oACgkQ2O7X88g7
-+pp5Cw/9G072+IU/K2eJWP6MsQoWNwQMA5mqxId7SEACncdb+5ywvkilvq4UOtHM
-s2MHQxKpMxWKQFQEYFXh48Dn6OeVElkrO7kIGRSR0M8KuXXKQ4eQm0Q5a0jbryFl
-YqwRShmGpd4urXNhsCRjRjL/u/jTvhYKIzz2AiwFKgiHTZFB6fifmy67KIzAe8lx
-F8v57BW994hmYpABPnybuvMk1VGOJqw9xXrC/mTiGd1HyDBjot1KrIVvWpT9Q3ZL
-nwTP3EzJGIsrCQi9/YOuPCifjxJI2CppJZhy5Hd3aG8H9cZog9yEUalsd7x2sVih
-/eeVopGR+fhM/qwVV4Swya7QL/4/0ZjXCGP5HApLqzewQc6UGkAHkcZTfJ+78Yfc
-upAIXzL4CSJItDkZ2IT1O4hgwEW+933ol4z7gOA3yhvGQ7drLtnrXt65qTrw5k5P
-xt1ouOL76Ru8D9Xm8fMBzcHXOz+9xwLgtDnHHBzIr535biqqhTtRlu6CTbDxEGEn
-UZxNxg2punmcQ82ODHw0cvmGmiCkqPPUYEFxS/5a1P4hyUZE6PSXve+V6Hp21mNL
-jC1TXbbjVeroh11HGuz9yqC/wMvV5U3+951r79DODpIS6rXMIFzVFtTHyHs1kUSw
-WtfO28lxaTfaq7jwpyAvxAs1mIJl7POoaXODSCna+T3lf21nDaM=
-=UBWn
------END PGP SIGNATURE-----
+Thanks for pulling!
+----------------------------------------------------------------
+Geert Uytterhoeven (52):
+      pinctrl: renesas: r8a779a0: Fix GPIO function on I2C-capable pins
+      pinctrl: renesas: r8a779f0: Fix GPIO function on I2C-capable pins
+      pinctrl: renesas: r8a77470: Use fixed-width description for IPSR regs
+      pinctrl: renesas: Add shorthand for reserved register fields
+      pinctrl: renesas: rmobile: Mark unused PORTCR bits reserved
+      pinctrl: renesas: emev2: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77470: Use shorthands for reserved fields
+      pinctrl: renesas: r8a7778: Use shorthands for reserved fields
+      pinctrl: renesas: r8a7779: Use shorthands for reserved fields
+      pinctrl: renesas: r8a7790: Use shorthands for reserved fields
+      pinctrl: renesas: r8a7791: Use shorthands for reserved fields
+      pinctrl: renesas: r8a7792: Use shorthands for reserved fields
+      pinctrl: renesas: r8a7794: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77950: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77951: Use shorthands for reserved fields
+      pinctrl: renesas: r8a7796: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77965: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77970: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77980: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77990: Use shorthands for reserved fields
+      pinctrl: renesas: r8a77995: Use shorthands for reserved fields
+      pinctrl: renesas: r8a779a0: Use shorthands for reserved fields
+      pinctrl: renesas: r8a779f0: Use shorthands for reserved fields
+      pinctrl: renesas: sh7734: Use shorthands for reserved fields
+      pinctrl: renesas: r8a73a4: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a7740: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77470: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a7779: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a7792: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77950: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77951: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77965: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a7796: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77970: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77980: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77990: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a77995: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a779a0: Optimize fixed-width reserved fields
+      pinctrl: renesas: r8a779f0: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7203: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7264: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7269: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh73a0: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7720: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7722: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7723: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7724: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7734: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7757: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7785: Optimize fixed-width reserved fields
+      pinctrl: renesas: sh7786: Optimize fixed-width reserved fields
+      pinctrl: renesas: checker: Add reserved field checks
 
---xt2hfq4oogyrqves--
+Yang Yingliang (2):
+      pinctrl: renesas: core: Fix possible null-ptr-deref in sh_pfc_map_resources()
+      pinctrl: renesas: rzn1: Fix possible null-ptr-deref in sh_pfc_map_resources()
+
+ drivers/pinctrl/renesas/core.c         |  50 ++++---
+ drivers/pinctrl/renesas/pfc-emev2.c    |  59 ++------
+ drivers/pinctrl/renesas/pfc-r8a73a4.c  |  58 +++-----
+ drivers/pinctrl/renesas/pfc-r8a7740.c  |  74 +++++-----
+ drivers/pinctrl/renesas/pfc-r8a77470.c | 176 ++++++-----------------
+ drivers/pinctrl/renesas/pfc-r8a7778.c  |  98 ++++---------
+ drivers/pinctrl/renesas/pfc-r8a7779.c  |  82 ++++-------
+ drivers/pinctrl/renesas/pfc-r8a7790.c  | 110 +++++----------
+ drivers/pinctrl/renesas/pfc-r8a7791.c  | 111 +++++----------
+ drivers/pinctrl/renesas/pfc-r8a7792.c  | 231 +++++++------------------------
+ drivers/pinctrl/renesas/pfc-r8a7794.c  |  97 +++----------
+ drivers/pinctrl/renesas/pfc-r8a77950.c | 170 +++++------------------
+ drivers/pinctrl/renesas/pfc-r8a77951.c | 169 ++++++----------------
+ drivers/pinctrl/renesas/pfc-r8a7796.c  | 166 ++++++----------------
+ drivers/pinctrl/renesas/pfc-r8a77965.c | 166 ++++++----------------
+ drivers/pinctrl/renesas/pfc-r8a77970.c | 136 +++++-------------
+ drivers/pinctrl/renesas/pfc-r8a77980.c | 107 +++++---------
+ drivers/pinctrl/renesas/pfc-r8a77990.c | 132 +++++-------------
+ drivers/pinctrl/renesas/pfc-r8a77995.c | 131 ++++--------------
+ drivers/pinctrl/renesas/pfc-r8a779a0.c | 246 ++++++++++++++-------------------
+ drivers/pinctrl/renesas/pfc-r8a779f0.c | 121 +++++++---------
+ drivers/pinctrl/renesas/pfc-sh7203.c   |  53 +++----
+ drivers/pinctrl/renesas/pfc-sh7264.c   | 104 +++++++-------
+ drivers/pinctrl/renesas/pfc-sh7269.c   |  82 +++++------
+ drivers/pinctrl/renesas/pfc-sh73a0.c   |  87 ++++--------
+ drivers/pinctrl/renesas/pfc-sh7720.c   |  57 ++++----
+ drivers/pinctrl/renesas/pfc-sh7722.c   | 202 +++++++++++----------------
+ drivers/pinctrl/renesas/pfc-sh7723.c   |  70 +++++-----
+ drivers/pinctrl/renesas/pfc-sh7724.c   |   7 +-
+ drivers/pinctrl/renesas/pfc-sh7734.c   | 115 +++++----------
+ drivers/pinctrl/renesas/pfc-sh7757.c   |  95 +++++--------
+ drivers/pinctrl/renesas/pfc-sh7785.c   |  60 ++++----
+ drivers/pinctrl/renesas/pfc-sh7786.c   |  21 ++-
+ drivers/pinctrl/renesas/pinctrl-rzn1.c |  10 +-
+ drivers/pinctrl/renesas/sh_pfc.h       |  17 ++-
+ 35 files changed, 1173 insertions(+), 2497 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
