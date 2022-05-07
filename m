@@ -2,173 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A8AA51E611
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 May 2022 11:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 951E151E66B
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 May 2022 12:23:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1446160AbiEGJdE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 May 2022 05:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38002 "EHLO
+        id S1384130AbiEGK07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 May 2022 06:26:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446161AbiEGJdD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 May 2022 05:33:03 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548E45623E
-        for <linux-gpio@vger.kernel.org>; Sat,  7 May 2022 02:29:16 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id i5so13010502wrc.13
-        for <linux-gpio@vger.kernel.org>; Sat, 07 May 2022 02:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O46NG4I/Ehd11dycpk2RjsN/cJ86swAD+6NyN8Wu3oM=;
-        b=pEJT+rz+VfSx+i3BXIXcXBka/5Yg7AcIDPJqzI64zSkN1WUpTztaU5kum35UgrsfF9
-         DzOjJPlOXIfoUzWT5jSe26grmDrcE5y4YRZ4YR+l+KCgM4xNILwg4UsizkKWsczzl+De
-         nX6pK3uT0jQrV4KFZSgHFgFeD2qqS/Q51S4GZiQOJ4lfG8T7AE63PEcYjY2oxMoY9aqJ
-         KPWdvUwiryRluS9vjmaRgu1H83GjAAQS1C7TsJMRlMrMgQMCmzL3mmrDMbW3OJyOj5Y9
-         EQP9LAp0ElcPFJCYbA8qRiTa5YvhVwVsbiztmAuOvi5ZjZGIAm5UQjWZ/T6CG7ioVXxa
-         fe5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O46NG4I/Ehd11dycpk2RjsN/cJ86swAD+6NyN8Wu3oM=;
-        b=iF0ExIOsCbjmKj2aF67oJa10N7y1oJa42sm0ncD1IW/jQTVHnmJhu3a3iVjN0xknBX
-         noG3qZ/1EprhaAkWluopA9ZVVnVWsprOhLgJPn07C4h3N9dg9C+KSiWxQD+SZgcUKBFH
-         GS5piPqMKyuzn9SsbceDKQwSKsyti2ox5kiN331PfOvINJZ/s1RrGy5ic3jE/9ZIBPbm
-         fpegxp4dOCDcvP9A8r+vUMm/hh37NIi3PvjthQs0D71gka+Um1RDA9pCNAIijYAxDJbK
-         ojZ0eY78g8aNARWPa555yh9RV0HkA7D53m2S2GyXNF6R2mq78FUNtvGaAco9MVBgfr6o
-         sWIA==
-X-Gm-Message-State: AOAM532L2Bw3gngC7R/AmaksOXXlXOcG8eU2sVn8kXCoXfDT1XdQtWr2
-        S7zw7Rqb+DdQ33YdCt/JgLhLYRMZa3m/23Q+DfbBSA==
-X-Google-Smtp-Source: ABdhPJwmX5iwSt0ucutb+u1FHWUawG0af5FN3nvZMbahKeV3F7Ce0O0VSgqTSlIoIeUQl+Jhb3u7MOWpzqebYk3FohA=
-X-Received: by 2002:a5d:4307:0:b0:207:9f82:e238 with SMTP id
- h7-20020a5d4307000000b002079f82e238mr6283084wrq.430.1651915754752; Sat, 07
- May 2022 02:29:14 -0700 (PDT)
+        with ESMTP id S243948AbiEGK06 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 May 2022 06:26:58 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF60517E1;
+        Sat,  7 May 2022 03:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651918991; x=1683454991;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZFgriWo4QmnK8I4aKqpEp72LmAajKhhg7MNjxcrFCVE=;
+  b=RU5MJT1697SA4yC2jYorgLiHFOAt5IR4OD8j3Y5ds8DkA0ynzClg+5jF
+   scl+NC0EeHhEELKtP8e/6vcJ2m7jLZTtYUac5s66jFN9IS4zg5fGlgTZH
+   SKRe6C0HL8Tmf2ZcRuSBCM6W2fY2SkKw9KUiCylgZ6b84mv8h1d0y3xke
+   fMesqV0VQXx9AnTEBa0FWgc6+UqeXFNAIDZvIOaHNB34Gm+vgyVMPgOlD
+   6mkjFlt9N0LIn1r6HToJqUVdNjjKl2ngBQu+sYvBssQhR/Cl31DN/iIR9
+   1GfIHwGWO2MYfk9p5OaB1wNfkxi/Wbzy07loMObIuhmV5dc4sMoLDCpL5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10339"; a="355123994"
+X-IronPort-AV: E=Sophos;i="5.91,206,1647327600"; 
+   d="scan'208";a="355123994"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2022 03:23:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,206,1647327600"; 
+   d="scan'208";a="695561328"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 07 May 2022 03:23:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 039B3155; Sat,  7 May 2022 13:23:09 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v1 1/1] pinctrl: stm32: Unshadow np variable in stm32_pctl_probe()
+Date:   Sat,  7 May 2022 13:22:57 +0300
+Message-Id: <20220507102257.26414-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220507052451.12890-1-ojeda@kernel.org>
-In-Reply-To: <20220507052451.12890-1-ojeda@kernel.org>
-From:   David Gow <davidgow@google.com>
-Date:   Sat, 7 May 2022 17:29:03 +0800
-Message-ID: <CABVgOSm5S2=QYnHJ+B0JbYtFYKBDRZiOhE5YMKKUKZU56d17HQ@mail.gmail.com>
-Subject: Re: [PATCH v6 00/23] Rust support
-To:     Miguel Ojeda <ojeda@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rust-for-linux@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 7, 2022 at 1:25 PM Miguel Ojeda <ojeda@kernel.org> wrote:
->
-> Rust support
->
+The np variable is used globally for stm32_pctl_probe() and in one of
+its code branches. cppcheck is not happy with that:
 
-<...>
+  pinctrl-stm32.c:1530:23: warning: Local variable 'np' shadows outer variable [shadowVariable]
 
->   - Support running documentation tests in-kernel, based on KUnit.
->
->     Rust documentation tests are typically examples of usage of any
->     item (e.g. function, struct, module...). They are very convenient
->     because they are just written alongside the documentation, e.g.:
->
->         /// Sums two numbers.
->         ///
->         /// # Examples
->         ///
->         /// ```
->         /// assert_eq!(mymod::f(10, 20), 30);
->         /// ```
->         pub fn f(a: i32, b: i32) -> i32 {
->             a + b
->         }
->
->     So far, we were compiling and running them in the host as any
->     other Rust documentation test. However, that meant we could not
->     run tests that used kernel APIs (though we were compile-testing
->     them, which was already useful to keep the documentation in sync
->     with the code).
->
->     Now, the documentation tests for the `kernel` crate are
->     transformed into a KUnit test suite during compilation and run
->     within the kernel at boot time, if enabled. This means now we can
->     run the tests that use kernel APIs.
->
->     They look like this (their name is generated by `rustdoc`, based
->     on the file and line):
->
->         [    0.581961] TAP version 14
->         [    0.582092] 1..1
->         [    0.582267]     # Subtest: rust_kernel_doctests
->         [    0.582358]     1..70
->         [    0.583626]     ok 1 - rust_kernel_doctest_build_assert_rs_12_0
->         [    0.584579]     ok 2 - rust_kernel_doctest_build_assert_rs_55_0
->         [    0.587357]     ok 3 - rust_kernel_doctest_device_rs_361_0
->         [    0.588037]     ok 4 - rust_kernel_doctest_device_rs_386_0
->
->         ...
->
->         [    0.659249]     ok 69 - rust_kernel_doctest_types_rs_445_0
->         [    0.660451]     ok 70 - rust_kernel_doctest_types_rs_509_0
->         [    0.660680] # rust_kernel_doctests: pass:70 fail:0 skip:0 total:70
->         [    0.660894] # Totals: pass:70 fail:0 skip:0 total:70
->         [    0.661135] ok 1 - rust_kernel_doctests
->
->     There are other benefits from this, such as being able to remove
->     unneeded wrapper functions (that were used to avoid running
->     some tests) as well as ensuring test code would actually compile
->     within the kernel (e.g. `alloc` used different `cfg`s).
+Instead of simply renaming one of the variables convert some code to
+use a device pointer directly.
 
-It's great to see some KUnit support here!
+Fixes: bb949ed9b16b ("pinctrl: stm32: Switch to use for_each_gpiochip_node() helper")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-It's also possible to run these tests using the KUnit wrapper tool with:
-$ ./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_RUST=y
---make_options LLVM=1 --arch x86_64 'rust_kernel_doctests'
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index e73f2d24611f..5d1d067b2247 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -1364,8 +1364,9 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
+ 	return err;
+ }
+ 
+-static struct irq_domain *stm32_pctrl_get_irq_domain(struct device_node *np)
++static struct irq_domain *stm32_pctrl_get_irq_domain(struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	struct device_node *parent;
+ 	struct irq_domain *domain;
+ 
+@@ -1482,23 +1483,19 @@ static int stm32_pctrl_create_pins_tab(struct stm32_pinctrl *pctl,
+ 
+ int stm32_pctl_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
++	const struct stm32_pinctrl_match_data *match_data;
+ 	struct fwnode_handle *child;
+-	const struct of_device_id *match;
+ 	struct device *dev = &pdev->dev;
+ 	struct stm32_pinctrl *pctl;
+ 	struct pinctrl_pin_desc *pins;
+ 	int i, ret, hwlock_id;
+ 	unsigned int banks;
+ 
+-	if (!np)
+-		return -EINVAL;
+-
+-	match = of_match_device(dev->driver->of_match_table, dev);
+-	if (!match || !match->data)
++	match_data = device_get_match_data(dev);
++	if (!match_data)
+ 		return -EINVAL;
+ 
+-	if (!of_find_property(np, "pins-are-numbered", NULL)) {
++	if (!device_property_present(dev, "pins-are-numbered")) {
+ 		dev_err(dev, "only support pins-are-numbered format\n");
+ 		return -EINVAL;
+ 	}
+@@ -1510,7 +1507,7 @@ int stm32_pctl_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pctl);
+ 
+ 	/* check for IRQ controller (may require deferred probe) */
+-	pctl->domain = stm32_pctrl_get_irq_domain(np);
++	pctl->domain = stm32_pctrl_get_irq_domain(pdev);
+ 	if (IS_ERR(pctl->domain))
+ 		return PTR_ERR(pctl->domain);
+ 
+@@ -1526,10 +1523,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+ 	spin_lock_init(&pctl->irqmux_lock);
+ 
+ 	pctl->dev = dev;
+-	pctl->match_data = match->data;
++	pctl->match_data = match_data;
+ 
+ 	/*  get optional package information */
+-	if (!of_property_read_u32(np, "st,package", &pctl->pkg))
++	if (!device_property_read_u32(dev, "st,package", &pctl->pkg))
+ 		dev_dbg(pctl->dev, "package detected: %x\n", pctl->pkg);
+ 
+ 	pctl->pins = devm_kcalloc(pctl->dev, pctl->match_data->npins,
+-- 
+2.35.1
 
-That also nicely formats the results.
-
-(It obviously doesn't run under UML yet, though I did get it to work
-after indiscriminately hacking out everything that wasn't supported.
-Assuming we can hide the irq and iomem stuff behind the appropriate
-config options, and rework some of the architecture detection to
-either support SUBARCH or check for X86_64 instead of X86, it should
-be pretty easy to get going.)
-
-That all being said, I can't say I'm thrilled with the test names
-here: none of them are particularly descriptive, and they'll probably
-not be static (which would make it difficult to track results /
-regressions / etc between kernel versions). Neither of those are
-necessarily deal breakers, though it might make sense to hide them
-behind a kernel option (like all other KUnit tests) so that they can
-easily be excluded where they would otherwise clutter up results. (And
-if there's a way to properly name them, or maybe even split them into
-per-file or per-module suites, that would make them a bit easier to
-deal.) Additionally, there are some plans to taint the kernel[1] when
-KUnit tests run, so having a way to turn them off would be very
-useful.
-
-Regardless, this is very neat, and I'm looking forward to taking a
-closer look at it.
-
-Cheers,
--- David
-
-[1]: https://lore.kernel.org/linux-kselftest/20220429043913.626647-1-davidgow@google.com/
