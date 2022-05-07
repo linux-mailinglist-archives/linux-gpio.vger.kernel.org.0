@@ -2,59 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B4B051E916
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 May 2022 20:11:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70EA451E994
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 May 2022 21:49:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386776AbiEGSPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 May 2022 14:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49018 "EHLO
+        id S1387144AbiEGTxM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 May 2022 15:53:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446772AbiEGSPm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 May 2022 14:15:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F082ED57;
-        Sat,  7 May 2022 11:11:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0C8B5B80B56;
-        Sat,  7 May 2022 18:11:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4A09C385A5;
-        Sat,  7 May 2022 18:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651947112;
-        bh=6kgtpEG1o2R8CEPQPu2CCt0G/PJtsDlVmVYI37Cj0yc=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=SJm2PnwYbcsGJALXIL2MXWQNfsyZMdnrHq3MDa8Z/gp3tW3O6PFj/QYIOeF71p/ek
-         CzTWWJuVDlsuTbYlbGFiPkJJi30LhRyq88fceFP7vj4rdE3HfkO55+nnfwfeqgzqrT
-         5VHdl8am9h1HLEMpAVWWEBqQ7ti4WJAQJcG9PnrEIPbvjb4cNKWiscYjQGC4LAXtch
-         BTxsYBIFi/K/D/SFmS2awx5PYmUrnI3/tceHIC4kmyT5GZHHbBCEbTlf8LSPLq8DbJ
-         z9Azs+ODRW+kSvH3c0jw6eDPeKDEuwy+LvT16yrfllMO9SOe3V9q7g57HPL5lDiXD1
-         Cz+O5aM9ormZw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AE9B7E5D087;
-        Sat,  7 May 2022 18:11:52 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v5.18-rc6
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220507135247.17566-1-brgl@bgdev.pl>
-References: <20220507135247.17566-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220507135247.17566-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.18-rc6
-X-PR-Tracked-Commit-Id: dba785798526a3282cc4d0f0ea751883715dbbb4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 30c8e80f79329617012f07b09b70114592092ea4
-Message-Id: <165194711270.12019.11776612242162042611.pr-tracker-bot@kernel.org>
-Date:   Sat, 07 May 2022 18:11:52 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S235918AbiEGTxL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 May 2022 15:53:11 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A58167F8
+        for <linux-gpio@vger.kernel.org>; Sat,  7 May 2022 12:49:21 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id k126-20020a1ca184000000b003943fd07180so6200157wme.3
+        for <linux-gpio@vger.kernel.org>; Sat, 07 May 2022 12:49:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mSvloqTW+LAcBVfdkk4tL0r4VTIkRhMmaRGKt/79Bfg=;
+        b=o1QPOGp8HwQeIdRobedB1A9KVLtQfmzlT5DUrnJJHxPwYz0jKn+v2IVywg8Jmfggqw
+         6IADOqj5ILtxFJhChtgQ+s7YOrxoxRdI55K4RvB0DyekZFGRMpJTNfQ2OuiR6+Rb2+EF
+         g6BJU1fo9f8k/tH995TpYM9LuVEfGHNB8zUnk0xKXNOkw1NQNCxQuUfe6dOhSunR2gE2
+         UlSgwTueXaYXIsvS656PYL1QeU7j5/8tkbREIAx1YzXsfv+fD8YRKBY5fmUX0fU2V5CR
+         VAxezDkXbEfyrCMW+4Cl5Uld/LWBBMZ46ifpifTWpWqAgpzHruarponcAk4G4nv0V3RL
+         BYZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mSvloqTW+LAcBVfdkk4tL0r4VTIkRhMmaRGKt/79Bfg=;
+        b=uc6huYkb0S9B/vKMlTn4kunS9FXyNhDVflzyxepBfwTNZYsSOlTdlrkPnzpccHkadC
+         cYw9RKsm12iZWhI8VEah6IBNWWIcM+e1aglzsPcoHLgqaXcNEy1PF1cyh0LmEfMmIzdh
+         AGQXcQjKW6BMc+Vuh5GtnJfYanez63zm/rzwzKoQS2P6ElomR3ri/r/Al6b5OnMXN0MO
+         f957/IPvvBvA/3KaRdmo8Rd3Jm9i9JWfmcLi3bZhTQJHU8w1QQYd7mt6bx8/rUSeWyOY
+         EwqtlxMsA6Qey70sTP8659ElqKcm5ZNNg8qZFZOiYOQh+x/qkJOxx51Re8EDdHyBlYSd
+         v14w==
+X-Gm-Message-State: AOAM532kF5DpBg5h8KZPLFqpgMq43fYOKss0Mv8DGq00vgUSp+2biNXw
+        rI4nzGpfhjrchbvh0Pv/adA5Mw==
+X-Google-Smtp-Source: ABdhPJzm5xHbzQNLV8z0TAAjIaAiMtzS2wj9w7qvI3CwAsYLF1l5cCiSLlz/wRnEIDHTuq7WUtK1/A==
+X-Received: by 2002:a1c:5410:0:b0:394:1976:76e4 with SMTP id i16-20020a1c5410000000b00394197676e4mr15381238wmb.11.1651952959713;
+        Sat, 07 May 2022 12:49:19 -0700 (PDT)
+Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id j6-20020a05600c1c0600b003942a244ec4sm8535027wms.9.2022.05.07.12.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 May 2022 12:49:19 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Luca Weiss <luca@z3ntu.xyz>, David Heidelberg <david@ixit.cz>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 00/11] dt-bindings/pinctrl/arm: qcom: minor cleanups of QCOM PMIC pinctrl
+Date:   Sat,  7 May 2022 21:49:02 +0200
+Message-Id: <20220507194913.261121-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -63,15 +76,80 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sat,  7 May 2022 15:52:47 +0200:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.18-rc6
+The patches are independent, so they can be picked up as is.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/30c8e80f79329617012f07b09b70114592092ea4
+Not really tested on hardware (except SDM845).
 
-Thank you!
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (11):
+  dt-bindings: pinctrl: qcom,pmic-gpio: document PM8150L and PMM8155AU
+  dt-bindings: pinctrl: qcom,pmic-gpio: fix matching pin config
+  dt-bindings: pinctrl: qcom,pmic-gpio: describe gpio-line-names
+  dt-bindings: pinctrl: qcom,pmic-gpio: add 'input-disable'
+  arm64: dts: qcom: align PMIC GPIO pin configuration with DT schema
+  arm64: dts: qcom: add fallback compatible to PMIC GPIOs
+  arm64: dts: qcom: apq8096-db820c: add PM8994 pin function
+  arm64: dts: qcom: msm8994-msft-lumia-octagon: add PM8994 pin
+    properties
+  ARM: dts: qcom: align PMIC GPIO pin configuration with DT schema
+  ARM: dts: qcom: mdm9615: add missing PMIC GPIO reg
+  ARM: dts: qcom: pmx65: add fallback compatible to PMIC GPIO
+
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 230 +++++++++++++++++-
+ .../arm/boot/dts/qcom-apq8060-dragonboard.dts |  20 +-
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts   |   4 +-
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts    |   8 +-
+ .../qcom-apq8064-sony-xperia-lagan-yuga.dts   |   2 +-
+ arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi    |   2 +-
+ arch/arm/boot/dts/qcom-mdm9615.dtsi           |   1 +
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    |   8 +-
+ .../dts/qcom-msm8974-sony-xperia-rhine.dtsi   |   2 +-
+ .../dts/qcom-msm8974pro-fairphone-fp2.dts     |   2 +-
+ .../boot/dts/qcom-msm8974pro-samsung-klte.dts |  14 +-
+ ...-msm8974pro-sony-xperia-shinano-castor.dts |  10 +-
+ arch/arm/boot/dts/qcom-pm8941.dtsi            |   2 +-
+ arch/arm/boot/dts/qcom-pmx65.dtsi             |   2 +-
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dts      |  10 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts   |  17 +-
+ .../qcom/msm8916-samsung-a2015-common.dtsi    |   2 +-
+ .../dts/qcom/msm8994-msft-lumia-octagon.dtsi  |  19 +-
+ .../dts/qcom/msm8996-sony-xperia-tone.dtsi    |  70 +++---
+ .../boot/dts/qcom/msm8996-xiaomi-common.dtsi  |   8 +-
+ .../boot/dts/qcom/msm8996-xiaomi-gemini.dts   |   2 +-
+ .../boot/dts/qcom/msm8998-fxtec-pro1.dts      |   6 +-
+ .../dts/qcom/msm8998-oneplus-cheeseburger.dts |   2 +-
+ .../boot/dts/qcom/msm8998-oneplus-common.dtsi |   2 +-
+ .../msm8998-sony-xperia-yoshino-maple.dts     |   2 +-
+ .../dts/qcom/msm8998-sony-xperia-yoshino.dtsi |  12 +-
+ arch/arm64/boot/dts/qcom/pm6350.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm660.dtsi           |   2 +-
+ arch/arm64/boot/dts/qcom/pm8009.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8150.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pm8350.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8350b.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pm8916.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi     |   2 +-
+ arch/arm64/boot/dts/qcom/pmm8155au_2.dtsi     |   2 +-
+ arch/arm64/boot/dts/qcom/pmr735b.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pms405.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |   4 +-
+ arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      |   2 +-
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts       |   2 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi    |   4 +-
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |   6 +-
+ .../boot/dts/qcom/sdm845-oneplus-common.dtsi  |   4 +-
+ .../boot/dts/qcom/sdm845-shift-axolotl.dts    |   2 +-
+ .../boot/dts/qcom/sdm845-xiaomi-beryllium.dts |   2 +-
+ .../boot/dts/qcom/sm7225-fairphone-fp4.dts    |   2 +-
+ 49 files changed, 373 insertions(+), 142 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.32.0
+
