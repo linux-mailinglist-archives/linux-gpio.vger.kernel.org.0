@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C8F151EDE0
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 May 2022 15:59:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF31551EDE2
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 May 2022 15:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233689AbiEHODc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 8 May 2022 10:03:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39816 "EHLO
+        id S233621AbiEHODd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 8 May 2022 10:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233601AbiEHODa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 May 2022 10:03:30 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E189DFAD
-        for <linux-gpio@vger.kernel.org>; Sun,  8 May 2022 06:59:40 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id bv19so22322249ejb.6
-        for <linux-gpio@vger.kernel.org>; Sun, 08 May 2022 06:59:40 -0700 (PDT)
+        with ESMTP id S233675AbiEHODc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 May 2022 10:03:32 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB85BDFB7
+        for <linux-gpio@vger.kernel.org>; Sun,  8 May 2022 06:59:41 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id p4so13549570edx.0
+        for <linux-gpio@vger.kernel.org>; Sun, 08 May 2022 06:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sh7T6F8m5om+p6d8xDQ68KLPKaPzB5rPja3dngsuXmo=;
-        b=NtKDSzlUP2fvL4JyA23q0b8vi1oDivxvbChK+OsldSbCZz8JePXwaNmjBj4zCnJ+aS
-         Fcns5kNZp1u/yIsWy8/8tziBKBjKvCWTRs/l/GcGfhfS9AjOFMpYPhPiEj1vBA9gzKgs
-         fgix0vkkGXtrvcyeQj9gAjBS+kRlG4UbyJNUvTjleDoDKlU8sSVa4h72ulk/88TdamvV
-         ExWOcAUjERKbhlslI0m5V4quLpEPMaw9D4xAMvuRNLi6i022UGeJX8liLDsqy6/7wLmV
-         QlQWgbBPyyqQ6hvnK4Otog0am9qhwq3uNH5FE+PvJ+aK60r+3BOhuUSWmPrG5Vnl82Jg
-         YWHA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cGkttDqvYsUUsrUXY9BC2Fg/b2UvTJ5Tzg5qvRI7Pfg=;
+        b=R9RyiZXiRXv6vcGsngJu755jCUvGkw6ljd7grwWqoZNb/ssw/4hYNB5vB9lRa55bZ+
+         taUSkVPQIZbHizX2MevwOf9pxOeWARKNOcvLsL3wASS5hSf8+GEUa+n6Bl6AKf3y3wcc
+         rEEKdlRNJca0M3bR3PHM1Zp0TcWxL2JpDLZMwCbxIfDrhw9eAAYfFjEUy1zzxTXJOZrX
+         3zaQ/dQ9jVXAeXhJl+SL9anhqZ0++VX63p5al1ryHuAblo5bRr160degilyoxjjxmGQJ
+         3XI3s5/6YDoHJiN57u8g+89+TYMme/PCTMy17UpzOjSNKTVbrUWMqc4doydRxVY3pGns
+         qjeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sh7T6F8m5om+p6d8xDQ68KLPKaPzB5rPja3dngsuXmo=;
-        b=A0oNpD+pTOycBwXgWdFgbq0KQwasNbq3YrzqAqO4pE1qe29p2bI7FbG42xN1iHPfmf
-         ADXaoqvbsPnl1Vv8ZGle0zh3An2wpnb4eaNkKP+SLJfmyPZqObi/0xzeLPzbzsaWi8h3
-         uODDh84mtQ0ch1ahpkrT9Ax//B8f8bYoqRewkX2Exyfw3Emv6PzOyy9WKLByskf8qXyY
-         6TP1Wzh8lLCJjEUFUSSnenTYxPdERW/UMTMNtfi5OGgsiLfUR8mmYby1PQOiIEKp2mag
-         9es0C4T8uB/UiAIPjbcTXRZapmuGzCtJMzXeeqRrb36jEMqWSA4gDwsngN2F4zL3Lvi3
-         VHjQ==
-X-Gm-Message-State: AOAM533tarEKGiMaARji2MwXW/0R/hZXk/hnkLs2RYZ823RF/971R2cR
-        qLjX4j9r9Zt4jJtt/Hz0gywAqw==
-X-Google-Smtp-Source: ABdhPJziBkI6CEh1DKheB02szTsJ1avc2cVCCYlcGZVNox06EFkjvLBwYKB9i35qQ73eNqjUnkdEFQ==
-X-Received: by 2002:a17:907:8a0a:b0:6f4:2467:75ff with SMTP id sc10-20020a1709078a0a00b006f4246775ffmr10720043ejc.356.1652018378980;
-        Sun, 08 May 2022 06:59:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cGkttDqvYsUUsrUXY9BC2Fg/b2UvTJ5Tzg5qvRI7Pfg=;
+        b=055K9ARNvaZcn+LMjL2/rjsaM8ek9AdgKsvX92SDDTOnA/BC+RVjFwiw4+ONelgqle
+         rSBWZW4QAixoV1LTdG2VifBVAy7NInIn4bxyjRnsyJx6qPh2A2Fsvp4nnAs5K1SBY9C1
+         XFKjpRvhTcZ7u97xI7zGoSb8BoxZ84+dHx7uVllaZeDrVjWlz2AA/zGQnE8q4zRc/l2/
+         zOSCYBI79iMHEsZ5jVxwDSj7Xd2Q/yJixtOW8Oj5B6SW3nDTte7g612Ue4+nI4poAMm0
+         vaDYuxauA/pI+H+QY4Z8bO0LTeGl04cxWj/Icvq2zh+wwgHv3XVrerxzIZvRVIwSCTBs
+         joPg==
+X-Gm-Message-State: AOAM5327p/aGGmkJe1SqGMAZx/ODjo+o9Q1C9fPvks/7kWH5UkAtpCSs
+        KCBS5HdMkPUDubfI+2ql/9VwcA==
+X-Google-Smtp-Source: ABdhPJyyEyxl9FMGJJ4ozYTfSy5BfZGk1porbFMbi0rxnxZtLnTydeSDWYl5p3+oGop5WsR4vS68JA==
+X-Received: by 2002:a50:ce19:0:b0:425:d85c:90e3 with SMTP id y25-20020a50ce19000000b00425d85c90e3mr12866432edi.350.1652018380092;
+        Sun, 08 May 2022 06:59:40 -0700 (PDT)
 Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id qz24-20020a170907681800b006f3ef214dc6sm4075524ejc.44.2022.05.08.06.59.37
+        by smtp.gmail.com with ESMTPSA id qz24-20020a170907681800b006f3ef214dc6sm4075524ejc.44.2022.05.08.06.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 May 2022 06:59:38 -0700 (PDT)
+        Sun, 08 May 2022 06:59:39 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -58,15 +58,17 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     Luca Weiss <luca@z3ntu.xyz>, David Heidelberg <david@ixit.cz>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 0/4] dt-bindings/pinctrl/arm: qcom: second round of minor cleanups of QCOM PMIC pinctrl
-Date:   Sun,  8 May 2022 15:59:28 +0200
-Message-Id: <20220508135932.132378-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/4] dt-bindings: pinctrl: qcom,pmic-gpio: add 'gpio-reserved-ranges'
+Date:   Sun,  8 May 2022 15:59:29 +0200
+Message-Id: <20220508135932.132378-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220508135932.132378-1-krzysztof.kozlowski@linaro.org>
+References: <20220508135932.132378-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,40 +76,192 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+'gpio-reserved-ranges' property is already used and supported by common pinctrl
+bindings, so add it also here to fix warnings like:
 
-Dependencies
-============
-This is on top of:
-dt-bindings/pinctrl/arm: qcom: minor cleanups of QCOM PMIC pinctrl
-https://lore.kernel.org/linux-arm-msm/20220507194913.261121-1-krzysztof.kozlowski@linaro.org/T/#t
+  qrb5165-rb5.dtb: gpio@c000: 'gpio-reserved-ranges' does not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
 
-Not really tested on hardware (except SDM845).
-
-Best regards,
-Krzysztof
-
-Krzysztof Kozlowski (4):
-  dt-bindings: pinctrl: qcom,pmic-gpio: add 'gpio-reserved-ranges'
-  arm64: dts: qcom: add missing gpio-ranges in PMIC GPIOs
-  arm64: dts: qcom: correct interrupt controller on PM8916 and PMS405
-  ARM: dts: qcom: add missing gpio-ranges in PMIC GPIOs
-
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
  .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 53 +++++++++++++++++++
- arch/arm/boot/dts/qcom-pmx55.dtsi             |  1 +
- arch/arm/boot/dts/qcom-pmx65.dtsi             |  1 +
- arch/arm64/boot/dts/qcom/pm6350.dtsi          |  1 +
- arch/arm64/boot/dts/qcom/pm8009.dtsi          |  1 +
- arch/arm64/boot/dts/qcom/pm8150.dtsi          |  1 +
- arch/arm64/boot/dts/qcom/pm8150b.dtsi         |  1 +
- arch/arm64/boot/dts/qcom/pm8150l.dtsi         |  1 +
- arch/arm64/boot/dts/qcom/pm8350.dtsi          |  1 +
- arch/arm64/boot/dts/qcom/pm8350b.dtsi         |  1 +
- arch/arm64/boot/dts/qcom/pm8916.dtsi          |  7 ++-
- arch/arm64/boot/dts/qcom/pmr735b.dtsi         |  1 +
- arch/arm64/boot/dts/qcom/pms405.dtsi          | 15 ++----
- 13 files changed, 69 insertions(+), 16 deletions(-)
+ 1 file changed, 53 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+index 7e74a87ccc39..69195660ee2a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+@@ -78,6 +78,12 @@ properties:
+     minItems: 2
+     maxItems: 44
+ 
++  gpio-reserved-ranges:
++    minItems: 1
++    # maxItems as half of total number of GPIOs, as there has to be at
++    # least one usable GPIO between each reserved range.
++    maxItems: 22
++
+   '#gpio-cells':
+     const: 2
+     description:
+@@ -107,6 +113,8 @@ allOf:
+         gpio-line-names:
+           minItems: 2
+           maxItems: 2
++        gpio-reserved-ranges:
++          maxItems: 1
+ 
+   - if:
+       properties:
+@@ -124,6 +132,9 @@ allOf:
+         gpio-line-names:
+           minItems: 4
+           maxItems: 4
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 2
+ 
+   - if:
+       properties:
+@@ -137,6 +148,9 @@ allOf:
+         gpio-line-names:
+           minItems: 6
+           maxItems: 6
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 3
+ 
+   - if:
+       properties:
+@@ -150,6 +164,9 @@ allOf:
+         gpio-line-names:
+           minItems: 8
+           maxItems: 8
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 4
+ 
+   - if:
+       properties:
+@@ -163,6 +180,9 @@ allOf:
+         gpio-line-names:
+           minItems: 9
+           maxItems: 9
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 5
+ 
+   - if:
+       properties:
+@@ -182,6 +202,9 @@ allOf:
+         gpio-line-names:
+           minItems: 10
+           maxItems: 10
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 5
+ 
+   - if:
+       properties:
+@@ -194,6 +217,9 @@ allOf:
+         gpio-line-names:
+           minItems: 11
+           maxItems: 11
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 6
+ 
+   - if:
+       properties:
+@@ -212,6 +238,9 @@ allOf:
+         gpio-line-names:
+           minItems: 12
+           maxItems: 12
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 6
+ 
+   - if:
+       properties:
+@@ -224,6 +253,9 @@ allOf:
+         gpio-line-names:
+           minItems: 13
+           maxItems: 13
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 7
+ 
+   - if:
+       properties:
+@@ -236,6 +268,9 @@ allOf:
+         gpio-line-names:
+           minItems: 14
+           maxItems: 14
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 7
+ 
+   - if:
+       properties:
+@@ -248,6 +283,9 @@ allOf:
+         gpio-line-names:
+           minItems: 16
+           maxItems: 16
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 8
+ 
+   - if:
+       properties:
+@@ -261,6 +299,9 @@ allOf:
+         gpio-line-names:
+           minItems: 22
+           maxItems: 22
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 11
+ 
+   - if:
+       properties:
+@@ -273,6 +314,9 @@ allOf:
+         gpio-line-names:
+           minItems: 26
+           maxItems: 26
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 13
+ 
+   - if:
+       properties:
+@@ -285,6 +329,9 @@ allOf:
+         gpio-line-names:
+           minItems: 36
+           maxItems: 36
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 18
+ 
+   - if:
+       properties:
+@@ -297,6 +344,9 @@ allOf:
+         gpio-line-names:
+           minItems: 38
+           maxItems: 38
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 19
+ 
+   - if:
+       properties:
+@@ -310,6 +360,9 @@ allOf:
+         gpio-line-names:
+           minItems: 44
+           maxItems: 44
++        gpio-reserved-ranges:
++          minItems: 1
++          maxItems: 22
+ 
+ patternProperties:
+   '-state$':
 -- 
 2.32.0
 
