@@ -2,150 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB80D51EA37
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 May 2022 22:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C3EA51EADC
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 May 2022 04:15:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233641AbiEGVCr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 May 2022 17:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53076 "EHLO
+        id S237228AbiEHCTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 May 2022 22:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231203AbiEGVCq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 May 2022 17:02:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3FCD140CD
-        for <linux-gpio@vger.kernel.org>; Sat,  7 May 2022 13:58:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9478760F1A
-        for <linux-gpio@vger.kernel.org>; Sat,  7 May 2022 20:58:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB83C385B6
-        for <linux-gpio@vger.kernel.org>; Sat,  7 May 2022 20:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651957138;
-        bh=OIAhVsfnQx3H9cO0oMrogbZg8WQKBlD+rk30Tvq6DtU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aceJ+DjU26Z1nY1NjxZOyBnaS+dkt95M0ULfQOn83HAdBq/ZyTiHv2bRCtHZQvCkG
-         Jr/HdvGycMa1R8sT26AvddfGzR7rRLHaPXLeiUhu9vPB9EzbnNs1s02RMEMnE25Izd
-         GlrYaCY+UbEK+3dHqbE1EQTwAZGVW4t+KKCg+oFyDt0+RhbdaUvEn+6kCCwNfJtdzW
-         Kfrdarg0rpyaI80SXktKSndsGhLwkIEgP9sw1HpIi8bcnegnVVzZdjWPIHPSnLdzwz
-         XxdQWIhCHNzJPeQR/iJuJkZ4Y4Qcgh4bnIATMjNGTL3Ytt+I1VwezeoQpiKrt/aEIn
-         34C7R7BQ1srYw==
-Received: by mail-yb1-f179.google.com with SMTP id s30so18508237ybi.8
-        for <linux-gpio@vger.kernel.org>; Sat, 07 May 2022 13:58:57 -0700 (PDT)
-X-Gm-Message-State: AOAM530TQzvDumidJ4mme/3DGbFQBw9CTm7KJG4wcJXcK6prcpD2Iy9Z
-        n/lSqhqo2QYbIXeNgdoD09hHinDEdtZ/S5x8mlQ=
-X-Google-Smtp-Source: ABdhPJxQ7Z25cBx3UupwXCv6CKHu0Z3TeFjS5eBaYSLglxeTHoiHwySaUO7a/+MBQBg4NN5WA8EjF5DbLOCKh2xg0m4=
-X-Received: by 2002:a25:c604:0:b0:645:d969:97a7 with SMTP id
- k4-20020a25c604000000b00645d96997a7mr6932703ybf.134.1651957136873; Sat, 07
- May 2022 13:58:56 -0700 (PDT)
+        with ESMTP id S239854AbiEHCTD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 May 2022 22:19:03 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC63D11155
+        for <linux-gpio@vger.kernel.org>; Sat,  7 May 2022 19:15:13 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id d6so12591511ede.8
+        for <linux-gpio@vger.kernel.org>; Sat, 07 May 2022 19:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Cr4jqiwCZqgvtQ1mPAG6hA/aEXX0FhXJr8HGvR+MOF4=;
+        b=hIE5zwv2rTKn+CswdyopQHf0jMYKWFxRBF6odjeCxWBM/WRdVHzPYHl78NQfbEd29K
+         9enqxTUB9ZAvVAoyjF8AWhpC+f5IVcnJoMj+unQol6NBiW/KIRN+RPaYSq7RoP62yjw1
+         2X5NuVc9b98bRcPhXJz7ydAIkaPKYIMfoxEKnd5fu9ZsX03fmWcqseP8+bykpooAanlU
+         h5RINDqd4mWKTcsWni5bShtEPJLQkkRYT8dOneNqwF1lDvdzymwuLYp+4P1W1ToIwe8o
+         DNyWfhk7sajXrmDQAaFVYyGNgCHChouTJ3BZcW21ISZxH2nUIlO4cSJ32UEeiIotkomt
+         QV/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Cr4jqiwCZqgvtQ1mPAG6hA/aEXX0FhXJr8HGvR+MOF4=;
+        b=hwfq1wnvfVJXCOINCh/P05ECCwma8oMHfO9sp6g+sQE/HWNnpKx7QZjWWbM/caVORm
+         DtWyhz7EBWkjJZblfrJuoPuosotw6K1IQfc8BUP5tx2eyGpXKxSontE6+N4NdGyyypte
+         BzJaxcXi6Lkxm16tZkLVp8baknlSz+XVE41cnIrfpKebHan8dq4a09zECAzVsC3NFpqP
+         SsP+u5z650T/YjZWwo++yklW1uIFRyykOxK5UXhQNtMAkHzWC0nMkX9P3ahE98LTnfnh
+         IoQP2pDZ7xnN33Dmhy6WF2PnmFLWFLlbBEK5AT//s5XPgd7OYSFe+5Gk72rBLAbTlr4w
+         BW8A==
+X-Gm-Message-State: AOAM533rAQ2/ZgJzTc90DXH4vP5YtUFQhXqRC7Y7ObfWbtp2W4H9ENl0
+        qwQNLklLb6Q4jdfnvWQ67y1yBwo566+On+4D8kM=
+X-Google-Smtp-Source: ABdhPJzTI/QqRCdwIAmphqF9OzyyYNq5Vx7Ax17gRaKdquRTzXBKHWHIi7p9/pNhdRsw+jE0joTHzv2TJm/aPiu3TUo=
+X-Received: by 2002:a50:ed0e:0:b0:425:e476:f4ed with SMTP id
+ j14-20020a50ed0e000000b00425e476f4edmr10770566eds.32.1651976112082; Sat, 07
+ May 2022 19:15:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220507123331.170516-1-linus.walleij@linaro.org>
-In-Reply-To: <20220507123331.170516-1-linus.walleij@linaro.org>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Sat, 7 May 2022 22:58:40 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0yF-QzaYpWOqHVXvkbh06yWKub+7wwF2ENnRCktuVqXw@mail.gmail.com>
-Message-ID: <CAK8P3a0yF-QzaYpWOqHVXvkbh06yWKub+7wwF2ENnRCktuVqXw@mail.gmail.com>
-Subject: Re: [PATCH v3] ARM/pxa/mfd/power/sound: Switch Tosa to GPIO descriptors
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
-        Dirk Opfer <dirk@opfer-online.de>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
+Received: by 2002:a50:3554:0:0:0:0:0 with HTTP; Sat, 7 May 2022 19:15:11 -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Mr. David Kabore" <dkabore16@gmail.com>
+Date:   Sat, 7 May 2022 19:15:11 -0700
+Message-ID: <CANLKR0vzXK+xff8dc1NLRToAvTmMja99WOdUionm413PVRoNow@mail.gmail.com>
+Subject: Good Day,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: Yes, score=5.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        HK_NAME_FM_MR_MRS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:52b listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4997]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [dkabore16[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [dkabore16[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 HK_NAME_FM_MR_MRS No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 7, 2022 at 2:33 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> The Tosa device (Sharp SL-6000) has a mishmash driver set-up
-> for the Toshiba TC6393xb MFD that includes a battery charger
-> and touchscreen and has some kind of relationship to the SoC
-> sound driver for the AC97 codec. Other devices define a chip
-> like this but seem only half-implemented, not really handling
-> battery charging etc.
->
-> This patch switches the Toshiba MFD device to provide GPIO
-> descriptors to the battery charger and SoC codec. As a result
-> some descriptors need to be moved out of the Tosa boardfile
-> and new one added: all SoC GPIO resources to these drivers
-> now comes from the main boardfile, while the MFD provide
-> GPIOs for its portions.
->
-> As a result we can request one GPIO from our own GPIO chip
-> and drop two hairy callbacks into the board file.
->
-> This platform badly needs to have its drivers split up and
-> converted to device tree probing to handle this quite complex
-> relationship in an orderly manner. I just do my best in solving
-> the GPIO descriptor part of the puzzle. Please don't ask me
-> to fix everything that is wrong with these driver to todays
-> standards, I am just trying to fix one aspect. I do try to
-> use modern devres resource management and handle deferred
-> probe using new functions where appropriate.
->
-> Cc: Arnd Bergmann <arnd@kernel.org>
-> Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-> Cc: Dirk Opfer <dirk@opfer-online.de>
-> Cc: Robert Jarzmik <robert.jarzmik@free.fr>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Reviewed-by: Dmitry Baryshkov <dbaryshkov@gmail.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+-- 
+Hello,
+I'm Mr. David Kabore, how are you doing hope you are in good health,
+the Board irector try to reach you on phone several times Meanwhile,
+your number was not connecting. before he ask me to send you an email
+to hear from you if you are fine. hope to hear you are in good Health.
 
-I've inserted into the right place in my series now, after making sure
-that your patch does everything that mine had. This included
-the simple fixup for an uninitialized variable use you left behind, and
-removing two unneeded headers that would otherwise break later.
-
-         Arnd
-
-index 272d3ee44769..73d4aca4c386 100644
---- a/drivers/power/supply/tosa_battery.c
-+++ b/drivers/power/supply/tosa_battery.c
-@@ -15,7 +15,6 @@
- #include <linux/gpio/consumer.h>
-
- #include <asm/mach-types.h>
--#include <mach/tosa.h>
-
- static DEFINE_MUTEX(bat_lock); /* protects gpio pins */
- static struct work_struct bat_work;
-diff --git a/sound/soc/pxa/tosa.c b/sound/soc/pxa/tosa.c
-index c2b05896e284..098fffd69161 100644
---- a/sound/soc/pxa/tosa.c
-+++ b/sound/soc/pxa/tosa.c
-@@ -23,7 +23,6 @@
- #include <sound/soc.h>
-
- #include <asm/mach-types.h>
--#include <mach/tosa.h>
- #include <mach/audio.h>
-
- #define TOSA_HP        0
-@@ -228,8 +227,6 @@ static int tosa_probe(struct platform_device *pdev)
-                return dev_err_probe(&pdev->dev, PTR_ERR(tosa_mute),
-                                     "failed to get L_MUTE GPIO\n");
-        gpiod_set_consumer_name(tosa_mute, "Headphone Jack");
--       if (ret)
--               return ret;
-
-        card->dev = &pdev->dev;
+Thanks,
+Mr. David Kabore.
