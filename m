@@ -2,55 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE3ED52049F
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 May 2022 20:37:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD13520546
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 May 2022 21:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240204AbiEISiq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 May 2022 14:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
+        id S240563AbiEIT2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 May 2022 15:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240185AbiEISio (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 14:38:44 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133E46A017;
-        Mon,  9 May 2022 11:34:50 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id h29so25357931lfj.2;
-        Mon, 09 May 2022 11:34:49 -0700 (PDT)
+        with ESMTP id S240567AbiEIT2r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 15:28:47 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD1513C344;
+        Mon,  9 May 2022 12:24:52 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id r11so26762857ybg.6;
+        Mon, 09 May 2022 12:24:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=udQyw+DhWCn+rKR8KsicvB5NUKY/PggLFMaO+ooAS+E=;
-        b=LkkY77gEBT77IYxp9bRLSLV3T+LCjFGAtTs8aU6JncwwAGh5tNM1r0duXSnSkx5JOC
-         wIlw81feNeZB2TcLX7n3jbx57S+2xtilSHVdX8P0fwA7AGdNa8dPqJGCrb7ygCsz5hOD
-         ySJyVtfqspC+nCaWdMPC8MmObsCrLn4Eky9tIpkxKB+VpcmaebYEXO5iG3blL/Af8RAN
-         xc+LUluyUWi5Xlsqoc0Dns/ziPhuUbooMa61M9Wd1dsICWCRx1zxu1CFAxVM2k+tWvUM
-         J0HJiTDTJ6+PopEzHlwCFHKrU7qM6gQM5+9V105fPf8GqkzIxyx5TsalNuqSC4dBdFS+
-         GxvQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6eYHL3htjuqUuc5ZQAjLpv+iz8OHLUbS2twjBjqyVGo=;
+        b=SwjaZh6vcE92Xn0LoEo7La82fpVvifhHHOOOtoSaO0qtVMWhhQO7NFtCA+W7ueMH+M
+         UNhOVFDlLv4V+R3GmEyvXHkBFVuPvW+X06/re+MJg4Jzi9jf0O2kDTWkFeViJFH4FlXd
+         l3d9fiLGN4RqHklQBYYJ8gy3+b63lX1mY0Uq0CyZRu+4NlSIr52I3wKuo9yunabgJGlC
+         xEAONdLCFfFeeVFvXQUqItnPfucuaZO1Q/SjFbFwHYrdJQPNJP/CYKUrWpEqjG5lFYo1
+         KCIgQKapovTiYYADVfhtSbdjzqR932TDqMOOXUWpZ+QN9lZXtKBOzL/VFQHrp0ErJXIy
+         Rzlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=udQyw+DhWCn+rKR8KsicvB5NUKY/PggLFMaO+ooAS+E=;
-        b=NBEbDceLm4BEENKR3O5mEfbDeWdX4WlpMaoXqEjo/5uLoXRayC5mZEcNkQ8IQb6sJ7
-         HViwSFVfpNXGFPJZITyMVCoD4YEwsoVeawPMzBg767svqOp73lkLAcPvkEfDSZxJ5+ul
-         bBrIqKf9mks0sHdgXCangNTq47Nl2ArHemcYHRZdRCD4muLUiLe16oCgoazqy2bq5F5y
-         Zc40zOBU2hLpU/n3tsk3OX9B9VXEWz9zy1yvhGkpPS9S60hsmIgodUN1V7Kyf32Dys0U
-         OMqUvp0tcRPnzfJHrp1T+vnlAh52Eplj043QiycBwLbxS4lhXq4ykBTw2thOpqozlqt+
-         y7mQ==
-X-Gm-Message-State: AOAM533uUMXXSGNfqh/MPJtQ8jZVIfguyIkfPpQtQzfaEYAzZyyESffA
-        uIhp4DSx9hH6oNDgT2KjGSI=
-X-Google-Smtp-Source: ABdhPJzbP4BJRcGFlfs9fuWO/TIfRn/IPBGJNw6wigGxQ2vRVKCffAuRVtUnsXnIIb61VYQxe/qeng==
-X-Received: by 2002:a05:6512:b1c:b0:474:193a:755c with SMTP id w28-20020a0565120b1c00b00474193a755cmr8301046lfu.340.1652121288278;
-        Mon, 09 May 2022 11:34:48 -0700 (PDT)
-Received: from [192.168.1.103] ([178.176.75.57])
-        by smtp.gmail.com with ESMTPSA id c2-20020a05651200c200b0047255d211ebsm2007062lfp.282.2022.05.09.11.34.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 May 2022 11:34:47 -0700 (PDT)
-Subject: Re: [PATCH v2 3/5] gpio: gpiolib: Allow free() callback to be
- overridden
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6eYHL3htjuqUuc5ZQAjLpv+iz8OHLUbS2twjBjqyVGo=;
+        b=WQCf3t6o9i3HfBr+ATGjJW2sfpLFpSIwZcP81PqMiHxrkGZTd+GKM7ESWl4ecofGMC
+         7ogXnbdUWmwQEMnJfnQTtNqCvgz0pdBc99KYjHTD22svV2OxL4MJTuFo1AmdXuSAbPz7
+         U9U3yMVBlfM9ZjvNsSjLwTqMFkpPvyhXLZ2aBbJtqo9sgEgqpOPEN33LdKTR7JjXmIII
+         Nu+MjnNBIPSJ2BRtcZWoe+8R/dzycYKzvP1JYRl+vvK0PXv/Lt7ULheXrf0DFopU3zR5
+         ySmIT1DotCc5Q6Q7zY6W4XUtwt657xc8cpwZ2eGgb1KfwR1KOo3TAoPv3d69G7s7fe1A
+         Jf9w==
+X-Gm-Message-State: AOAM5322LAhOA5LgCCBOLeFMEULmE51ioknf76guTq3f8xmPFI6uYBJ0
+        OX+uYGX1s5c6w3DCyXxHI4mliK1NnCpXq/v2gpiW+aT5bu3C5w==
+X-Google-Smtp-Source: ABdhPJxbmv4gl3f8BwWDkVhsiQ2Vn2r1krelgX6Sd+Ncpn/ySOC77iTTCE/WHZiKyq2Epq7UMwxIZ7X0KGZlyCNt8Ng=
+X-Received: by 2002:a25:83d1:0:b0:648:725c:6a05 with SMTP id
+ v17-20020a2583d1000000b00648725c6a05mr14335902ybm.218.1652124292128; Mon, 09
+ May 2022 12:24:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220509050953.11005-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220509050953.11005-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <OS0PR01MB5922B58BB70B92813041745786C69@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CAMuHMdVuLq1Q2KB7gFQ5MsQmyUTv4yuu-GUBVn_xGwKhUwYQZg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVuLq1Q2KB7gFQ5MsQmyUTv4yuu-GUBVn_xGwKhUwYQZg@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 9 May 2022 20:24:25 +0100
+Message-ID: <CA+V-a8uG8qzzWj+=6EhzSd5j8NC3bpf=9tU9jgxzK8Cg75BTtw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -59,25 +65,14 @@ To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-References: <20220509050953.11005-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220509050953.11005-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <6eeaf18c-ac3d-1c1d-eb79-92bc508ce03c@gmail.com>
-Date:   Mon, 9 May 2022 21:34:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
-MIME-Version: 1.0
-In-Reply-To: <20220509050953.11005-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -86,44 +81,119 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello!
+Hi Geert,
 
-On 5/9/22 8:09 AM, Lad Prabhakar wrote:
+Thank you for the review.
 
-> Allow free() callback to be overridden from irq_domain_ops for
-> hierarchical chips.
-> 
-> This allows drivers to free any resources which are allocated during
-> populate_parent_alloc_arg().
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/gpio/gpiolib.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index b7694171655c..7be01c70ee4e 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1187,15 +1187,18 @@ static void gpiochip_hierarchy_setup_domain_ops(struct irq_domain_ops *ops)
->  	ops->activate = gpiochip_irq_domain_activate;
->  	ops->deactivate = gpiochip_irq_domain_deactivate;
->  	ops->alloc = gpiochip_hierarchy_irq_domain_alloc;
-> -	ops->free = irq_domain_free_irqs_common;
->  
->  	/*
-> -	 * We only allow overriding the translate() function for
-> +	 * We only allow overriding the translate() and free() function for
+On Mon, May 9, 2022 at 10:10 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> On Mon, May 9, 2022 at 9:22 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > > Subject: [PATCH v2 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller
+> > > driver
+> > >
+> > > Add a driver for the Renesas RZ/G2L Interrupt Controller.
+> > >
+> > > This supports external pins being used as interrupts. It supports one line
+> > > for NMI, 8 external pins and 32 GPIO pins (out of 123) to be used as IRQ
+> > > lines.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> > > --- /dev/null
+> > > +++ b/drivers/irqchip/irq-renesas-rzg2l.c
+>
+> > > +static void rzg2l_irqc_irq_disable(struct irq_data *d) {
+> > > +     unsigned int hw_irq = irqd_to_hwirq(d);
+> > > +
+> > > +     if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT) {
+> > > +             struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> > > +             u32 offset = hw_irq - IRQC_TINT_START;
+> > > +             u32 tssr_offset = TSSR_OFFSET(offset);
+> > > +             u8 tssr_index = TSSR_INDEX(offset);
+> > > +             u32 reg;
+> > > +
+> > > +             raw_spin_lock(&priv->lock);
+> > > +             reg = readl_relaxed(priv->base + TSSR(tssr_index));
+> > > +             reg &= ~(TSSEL_MASK << tssr_offset);
+> > > +             writel_relaxed(reg, priv->base + TSSR(tssr_index));
+> > > +             raw_spin_unlock(&priv->lock);
+> > > +     }
+> > > +     irq_chip_disable_parent(d);
+> > > +}
+>
+> > > +static int rzg2l_tint_set_edge(struct irq_data *d, unsigned int type) {
+> > > +     struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> > > +     unsigned int hwirq = irqd_to_hwirq(d);
+> > > +     u32 titseln = hwirq - IRQC_TINT_START;
+> > > +     u32 offset;
+> > > +     u8 sense;
+> > > +     u32 reg;
+> > > +
+> > > +     switch (type & IRQ_TYPE_SENSE_MASK) {
+> > > +     case IRQ_TYPE_EDGE_RISING:
+> > > +             sense = TITSR_TITSEL_EDGE_RISING;
+> > > +             break;
+> > > +
+> > > +     case IRQ_TYPE_EDGE_FALLING:
+> > > +             sense = TITSR_TITSEL_EDGE_FALLING;
+> > > +             break;
+> > > +
+> > > +     default:
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> >
+> > > +     if (titseln < TITSR0_MAX_INT) {
+> > > +             offset = TITSR0;
+> > > +     } else {
+> > > +             titseln /= TITSEL_WIDTH;
+> > > +             offset  = TITSR1;
+> > > +     }
+> >
+> > as TITSR0 (0x24) and TITSR1(0x28) are contiguous address location
+> >
+> > May be like others, above declare it as
+> > u32 offset = TITSR0; ??
+> >
+> > and here
+> >  if ((titseln >= TITSR0_MAX_INT) {
+> >         titseln /= TITSEL_WIDTH;
+> >         offset  += 4;
+> >  }
+>
+> Why "titseln /= TITSEL_WIDTH"?
+> Shouldn't that be "titseln -= TITSR0_MAX_INT"?
 
-   Functions now?
+Ouch, that should be "titseln -= TITSR0_MAX_INT".
 
->  	 * hierarchical chips, and this should only be done if the user
-> -	 * really need something other than 1:1 translation.
-> +	 * really need something other than 1:1 translation for translate()
-> +	 * callback and free if user wants to free up any resources which
-> +	 * were allocated during callbacks for example populate_parent_alloc_arg.
-                                          ^ need comma here?
+> Do I need more coffee?
+>
+> Can't you define TITSR_{OFFSET,INDEX}() helper macros, like for
+> TSSR above?
+>
+you mean a macro to get the TITSELx offset?
 
-[...]
+Cheers,
+Prabhakar
 
-MBR, Sergey
+> > > +
+> > > +     raw_spin_lock(&priv->lock);
+> > > +     reg = readl_relaxed(priv->base + offset);
+> > > +     reg &= ~(IRQ_MASK << (titseln * TITSEL_WIDTH));
+> > > +     reg |= sense << (titseln * TITSEL_WIDTH);
+> > > +     writel_relaxed(reg, priv->base + offset);
+> > > +     raw_spin_unlock(&priv->lock);
+> > > +
+> > > +     return 0;
+> > > +}
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
