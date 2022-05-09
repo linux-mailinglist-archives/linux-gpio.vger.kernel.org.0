@@ -2,127 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A0EA51F7C4
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 May 2022 11:13:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5DDA51F7C2
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 May 2022 11:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236322AbiEIJQP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 May 2022 05:16:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49790 "EHLO
+        id S236140AbiEIJQM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 May 2022 05:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236510AbiEIItU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 04:49:20 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85871F0DC5;
-        Mon,  9 May 2022 01:45:26 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id g20so15409680edw.6;
-        Mon, 09 May 2022 01:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pACjuUWFJ5GZIbniWMSNPk/IN6wOmnS55W0CKNtZNbk=;
-        b=Ifmf8JI3lGr7NqR25+3ysog33HBpALcK432GUQBzkzQ0BDuRT6oUV6cIXRXot5s1nn
-         D/nobqvlRNRbiCCE7wwNyV+2kAxj1RLdPffHBT4QbVbukqt+Uj9zxt3EG4zEXvFO3PtV
-         4GW75c5lRqwc4bqouS+jO4egMbalASyYHgqEuBuqJYoHnenTe6VRtfneSo/9RYOQRuBz
-         7V+/rspE/7RbYF4N0iVwQRGgJzNo3e9V2jFXgFQyuEA8WVsJ4u+olbEiwy0HHFJUf+ez
-         v83Qcq9QC1UIRd3F++wYpm9zy9+VxV9sjBu0yXQXh7B7KeiWRbh5UBXAY7NIVTo/KcOP
-         cjkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pACjuUWFJ5GZIbniWMSNPk/IN6wOmnS55W0CKNtZNbk=;
-        b=mr61ygtuW0q8moYahNlYr2qQkdZZVZ6k0PlGLkqNIUseG6uQq4/sBmcKdhr9+XURCJ
-         5xCwvA0Cnpseljj/rp3e1BuHYYMtNTX2rUE0p3W/V/N8qPt31zReqOkGkgVbvNy7eJvu
-         Ijj7ReJiDuqx0FavDaxro7mk/qydYX4cCpjp8wASIXxyvl0o2rsOew9SwOl1WH32wBju
-         cQiGSzyxtX6etk4kF/xJX369Xoe/m0mtU20AxDYX67dd0OAvwid9yb8BOcZ8RY2MNhi7
-         9tNwf5MVHyNb9eFIvOm68npoPtfssslhBGdyMvK2rJanZr8jOw5PzBqXOKYp6+BBvkWe
-         AtMw==
-X-Gm-Message-State: AOAM531ucla1wRCeFXCMx4fvFqpYCTcUWA3bnJDu5ua2H6Lb3NpCZFoX
-        9mqlDpfZ2UcnGxhKRNM8UoF2+uXoautFLUJPtk0=
-X-Google-Smtp-Source: ABdhPJxAyMOf+0tdFqa4L6QCJYoi99Yp4xMOthZru/m//p1OZVJgjJvBaoTjUcXNoTY2kPSYCsp+IKPQuEpnlaAOK1Y=
-X-Received: by 2002:a50:e696:0:b0:419:998d:5feb with SMTP id
- z22-20020a50e696000000b00419998d5febmr16548918edm.122.1652085917945; Mon, 09
- May 2022 01:45:17 -0700 (PDT)
+        with ESMTP id S237359AbiEII60 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 04:58:26 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 386951FB2CC;
+        Mon,  9 May 2022 01:54:33 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF85F1042;
+        Mon,  9 May 2022 01:54:32 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.3.22])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 203253F66F;
+        Mon,  9 May 2022 01:54:28 -0700 (PDT)
+Date:   Mon, 9 May 2022 09:54:21 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     maz@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org,
+        Octavian Purdila <octavian.purdila@nxp.com>,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        catalin.marinas@arm.com, deanbo422@gmail.com, green.hu@gmail.com,
+        guoren@kernel.org, jonas@southpole.se, kernelfans@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk,
+        nickhu@andestech.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
+        shorne@gmail.com, stefan.kristiansson@saunalahti.fi,
+        tglx@linutronix.de, tsbogend@alpha.franken.de, vgupta@kernel.org,
+        vladimir.murzin@arm.com, will@kernel.org
+Subject: Re: [PATCH v2 17/17] irq: remove handle_domain_{irq,nmi}()
+Message-ID: <YnjWvbzn8ox+f2Y2@FVFF77S0Q05N>
+References: <20211026092504.27071-1-mark.rutland@arm.com>
+ <20211026092504.27071-18-mark.rutland@arm.com>
+ <20220506203242.GA1855@wunner.de>
 MIME-Version: 1.0
-References: <20220508185313.2222956-1-colin.foster@in-advantage.com> <20220508185313.2222956-7-colin.foster@in-advantage.com>
-In-Reply-To: <20220508185313.2222956-7-colin.foster@in-advantage.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 9 May 2022 10:44:42 +0200
-Message-ID: <CAHp75VcWWDvakG_OLkTgZYbNeoDH5Bw5U0t-NqmzcYyd44uU_g@mail.gmail.com>
-Subject: Re: [RFC v8 net-next 06/16] pinctrl: microchip-sgpio: add ability to
- be used in a non-mmio configuration
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, Terry Bowman <terry.bowman@amd.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220506203242.GA1855@wunner.de>
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 8, 2022 at 8:53 PM Colin Foster
-<colin.foster@in-advantage.com> wrote:
->
-> There are a few Ocelot chips that can contain SGPIO logic, but can be
-> controlled externally. Specifically the VSC7511, 7512, 7513, and 7514. In
-> the externally controlled configurations these registers are not
-> memory-mapped.
->
-> Add support for these non-memory-mapped configurations.
+On Fri, May 06, 2022 at 10:32:42PM +0200, Lukas Wunner wrote:
+> On Tue, Oct 26, 2021 at 10:25:04AM +0100, Mark Rutland wrote:
+> > Now that entry code handles IRQ entry (including setting the IRQ regs)
+> > before calling irqchip code, irqchip code can safely call
+> > generic_handle_domain_irq(), and there's no functional reason for it to
+> > call handle_domain_irq().
+> > 
+> > Let's cement this split of responsibility and remove handle_domain_irq()
+> > entirely, updating irqchip drivers to call generic_handle_domain_irq().
+> > 
+> > For consistency, handle_domain_nmi() is similarly removed and replaced
+> > with a generic_handle_domain_nmi() function which also does not perform
+> > any entry logic.
+> > 
+> > Previously handle_domain_{irq,nmi}() had a WARN_ON() which would fire
+> > when they were called in an inappropriate context. So that we can
+> > identify similar issues going forward, similar WARN_ON_ONCE() logic is
+> > added to the generic_handle_*() functions, and comments are updated for
+> > clarity and consistency.
+> [...]
+> >  int generic_handle_domain_irq(struct irq_domain *domain, unsigned int hwirq)
+> >  {
+> > +	WARN_ON_ONCE(!in_irq());
+> >  	return handle_irq_desc(irq_resolve_mapping(domain, hwirq));
+> >  }
+> >  EXPORT_SYMBOL_GPL(generic_handle_domain_irq);
+> 
+> Why isn't the WARN_ON_ONCE() conditional on handle_enforce_irqctx()?
+> (See handle_irq_desc() and c16816acd086.)
 
-...
+I did this for consistency with the in_nmi() check in
+generic_handle_domain_nmi(); I was unaware of commit c16816acd086 and
+IRQD_HANDLE_ENFORCE_IRQCTX.
 
-> -       regs = devm_platform_ioremap_resource(pdev, 0);
-> -       if (IS_ERR(regs))
-> -               return PTR_ERR(regs);
-> +       regs = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-> +       if (IS_ERR(regs)) {
-> +               /*
-> +                * Fall back to using IORESOURCE_REG, which is possible in an
-> +                * MFD configuration
-> +                */
-> +               res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> +               if (!res) {
-> +                       dev_err(dev, "Failed to get resource\n");
-> +                       return -ENODEV;
-> +               }
-> +
-> +               priv->regs = ocelot_init_regmap_from_resource(dev, res);
-> +       } else {
-> +               priv->regs = devm_regmap_init_mmio(dev, regs, &regmap_config);
-> +       }
->
-> -       priv->regs = devm_regmap_init_mmio(dev, regs, &regmap_config);
->         if (IS_ERR(priv->regs))
->                 return PTR_ERR(priv->regs);
+I'll have ot leave it to Marc and Thomas as to what we should do there.
 
-This looks like repetition of something you have done in a few
-previous patches. Can you avoid code duplication by introducing a
-corresponding helper function?
+> I believe the above change causes a regression in drivers/gpio/gpio-dln2.c
+> such that a gratuitous WARN splat is now emitted.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Do you mean you beleive that from inspection, or are you actually seeing this
+go wrong in practice?
+
+If it's the latter, are you able to give a copy of the dmesg splat?
+
+Thanks,
+Mark.
