@@ -2,134 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C94951F7C3
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 May 2022 11:13:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BB7151F7C5
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 May 2022 11:13:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236401AbiEIJQR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 May 2022 05:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35032 "EHLO
+        id S236744AbiEIJQS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 May 2022 05:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238238AbiEIJNd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 05:13:33 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84141201EA8;
-        Mon,  9 May 2022 02:09:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B9285B810A6;
-        Mon,  9 May 2022 09:09:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72612C385AB;
-        Mon,  9 May 2022 09:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652087369;
-        bh=rYlTPSQ6FXF7zF9p7LDZTYP/JQglCROOG1/iNS2upeo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fkuJHZv3/usYj/OGKMcXT2qWre9/pHK4qg5n16+A6fFX+IDvUi8SI9RV5GRCWCshT
-         WOZKLk1Y13ZwwbjkGw0qlEfxoSM7yG4L6cvqL0tz5pUhXKX/eXT6GUAvuQxyTtJJne
-         Bx5AuXTil4kjjnugWv8OQJaYJD9DC8tAGIAzbXxipGExl9NWlQGFd7favllpB/NRpN
-         j01O7gs2TjlJiWP9SzMDRzDHYLBR7SKB3NJ8uAkyoTCoH3OhqHlbm35U6YcaUbZKsc
-         /9HtUeroHAVvTdVK4auEZnSnF9hT2mZbP9jd573dccqjDg+HEETQQ0ssMe3zqRjvVW
-         C2n0H3hWWU4RA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nnzOQ-009uuU-VM; Mon, 09 May 2022 10:09:27 +0100
-Date:   Mon, 09 May 2022 10:09:26 +0100
-Message-ID: <87h75z6pix.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Lukas Wunner <lukas@wunner.de>,
+        with ESMTP id S238319AbiEIJOR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 05:14:17 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9321572B;
+        Mon,  9 May 2022 02:10:24 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id z126so10288762qkb.2;
+        Mon, 09 May 2022 02:10:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CgQLbQVdIN14SPt3YzwHXDrfh8JRKAmJocLk5KwR+yk=;
+        b=CoM3Jn0gY4RTQLUh5mul6q4k1LbmPG7Xf2bLFJAhTx7kGLie8eWTqnko4hlHCMDCiy
+         0zo+vLGC3IALXPbB5lWNjV3SXDjJmoMuFUt9daucrQQ5028/LA4qxs8velATTuGiH3W0
+         65x38TBN5dfliT4mPQRDZXLsEub292mzuYA8xCaho8SOVyK2FGBHNpWCe9Rg87HVl9lC
+         rbNiTm728F5F+SoqirChKn5S7qRR7lMBWcP2C0uEtjGGUUrTpBQHPulSakNWA5YwX9Az
+         whINVSLUA9B9AB0o/gMRHKpPzrdUa+U/bHb/JqCxpt2OjrE3Zuiz+eYckHhtqpPa8+c2
+         GUXA==
+X-Gm-Message-State: AOAM530xVfcw4GbNgMdzlaTn6SBby29Vra/bJZCYfNIpoIXr23XESmQb
+        hnS2MJgz3ivBXS1+Y/cWZQB0a/WNVKAnzw==
+X-Google-Smtp-Source: ABdhPJxdc3uoOtr8jzAZ5g6dgVL6PCn7gBiAhbUBMVoPz6Umt8CKVTgCfE51/93MENuFL2EYnUzhog==
+X-Received: by 2002:a05:620a:444e:b0:6a0:68da:2105 with SMTP id w14-20020a05620a444e00b006a068da2105mr5045212qkp.366.1652087423153;
+        Mon, 09 May 2022 02:10:23 -0700 (PDT)
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
+        by smtp.gmail.com with ESMTPSA id d5-20020ae9ef05000000b0069fc13ce1ebsm6504891qkg.28.2022.05.09.02.10.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 02:10:22 -0700 (PDT)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2f7b815ac06so136900937b3.3;
+        Mon, 09 May 2022 02:10:22 -0700 (PDT)
+X-Received: by 2002:a81:547:0:b0:2f8:6e8:19d7 with SMTP id 68-20020a810547000000b002f806e819d7mr13589711ywf.383.1652087422113;
+ Mon, 09 May 2022 02:10:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220509050953.11005-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220509050953.11005-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <OS0PR01MB5922B58BB70B92813041745786C69@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB5922B58BB70B92813041745786C69@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 May 2022 11:10:10 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVuLq1Q2KB7gFQ5MsQmyUTv4yuu-GUBVn_xGwKhUwYQZg@mail.gmail.com>
+Message-ID: <CAMuHMdVuLq1Q2KB7gFQ5MsQmyUTv4yuu-GUBVn_xGwKhUwYQZg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org,
-        Octavian Purdila <octavian.purdila@nxp.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        catalin.marinas@arm.com, deanbo422@gmail.com, green.hu@gmail.com,
-        guoren@kernel.org, jonas@southpole.se, kernelfans@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk,
-        nickhu@andestech.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
-        shorne@gmail.com, stefan.kristiansson@saunalahti.fi,
-        tglx@linutronix.de, tsbogend@alpha.franken.de, vgupta@kernel.org,
-        vladimir.murzin@arm.com, will@kernel.org
-Subject: Re: [PATCH v2 17/17] irq: remove handle_domain_{irq,nmi}()
-In-Reply-To: <YnjWvbzn8ox+f2Y2@FVFF77S0Q05N>
-References: <20211026092504.27071-1-mark.rutland@arm.com>
-        <20211026092504.27071-18-mark.rutland@arm.com>
-        <20220506203242.GA1855@wunner.de>
-        <YnjWvbzn8ox+f2Y2@FVFF77S0Q05N>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: mark.rutland@arm.com, lukas@wunner.de, linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, octavian.purdila@nxp.com, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, catalin.marinas@arm.com, deanbo422@gmail.com, green.hu@gmail.com, guoren@kernel.org, jonas@southpole.se, kernelfans@gmail.com, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, nickhu@andestech.com, palmer@dabbelt.com, paul.walmsley@sifive.com, shorne@gmail.com, stefan.kristiansson@saunalahti.fi, tglx@linutronix.de, tsbogend@alpha.franken.de, vgupta@kernel.org, vladimir.murzin@arm.com, will@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 09 May 2022 09:54:21 +0100,
-Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> On Fri, May 06, 2022 at 10:32:42PM +0200, Lukas Wunner wrote:
-> > On Tue, Oct 26, 2021 at 10:25:04AM +0100, Mark Rutland wrote:
-> > > Now that entry code handles IRQ entry (including setting the IRQ regs)
-> > > before calling irqchip code, irqchip code can safely call
-> > > generic_handle_domain_irq(), and there's no functional reason for it to
-> > > call handle_domain_irq().
-> > > 
-> > > Let's cement this split of responsibility and remove handle_domain_irq()
-> > > entirely, updating irqchip drivers to call generic_handle_domain_irq().
-> > > 
-> > > For consistency, handle_domain_nmi() is similarly removed and replaced
-> > > with a generic_handle_domain_nmi() function which also does not perform
-> > > any entry logic.
-> > > 
-> > > Previously handle_domain_{irq,nmi}() had a WARN_ON() which would fire
-> > > when they were called in an inappropriate context. So that we can
-> > > identify similar issues going forward, similar WARN_ON_ONCE() logic is
-> > > added to the generic_handle_*() functions, and comments are updated for
-> > > clarity and consistency.
-> > [...]
-> > >  int generic_handle_domain_irq(struct irq_domain *domain, unsigned int hwirq)
-> > >  {
-> > > +	WARN_ON_ONCE(!in_irq());
-> > >  	return handle_irq_desc(irq_resolve_mapping(domain, hwirq));
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(generic_handle_domain_irq);
-> > 
-> > Why isn't the WARN_ON_ONCE() conditional on handle_enforce_irqctx()?
-> > (See handle_irq_desc() and c16816acd086.)
-> 
-> I did this for consistency with the in_nmi() check in
-> generic_handle_domain_nmi(); I was unaware of commit c16816acd086 and
-> IRQD_HANDLE_ENFORCE_IRQCTX.
-> 
-> I'll have ot leave it to Marc and Thomas as to what we should do there.
+On Mon, May 9, 2022 at 9:22 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > Subject: [PATCH v2 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller
+> > driver
+> >
+> > Add a driver for the Renesas RZ/G2L Interrupt Controller.
+> >
+> > This supports external pins being used as interrupts. It supports one line
+> > for NMI, 8 external pins and 32 GPIO pins (out of 123) to be used as IRQ
+> > lines.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-My preference would be to not introduce things that result in
-different behaviours for drivers, specially for things that are
-evidently cross-architecture such as USB drivers (which seems to be
-the case here).
+> > --- /dev/null
+> > +++ b/drivers/irqchip/irq-renesas-rzg2l.c
 
-I'd rather do something that allows these to be handled in the right
-context such as a self-IPI. This would certainly work for the GIC. No
-idea whether this is valid for x86, which is the other user.
+> > +static void rzg2l_irqc_irq_disable(struct irq_data *d) {
+> > +     unsigned int hw_irq = irqd_to_hwirq(d);
+> > +
+> > +     if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT) {
+> > +             struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> > +             u32 offset = hw_irq - IRQC_TINT_START;
+> > +             u32 tssr_offset = TSSR_OFFSET(offset);
+> > +             u8 tssr_index = TSSR_INDEX(offset);
+> > +             u32 reg;
+> > +
+> > +             raw_spin_lock(&priv->lock);
+> > +             reg = readl_relaxed(priv->base + TSSR(tssr_index));
+> > +             reg &= ~(TSSEL_MASK << tssr_offset);
+> > +             writel_relaxed(reg, priv->base + TSSR(tssr_index));
+> > +             raw_spin_unlock(&priv->lock);
+> > +     }
+> > +     irq_chip_disable_parent(d);
+> > +}
 
-Thanks,
+> > +static int rzg2l_tint_set_edge(struct irq_data *d, unsigned int type) {
+> > +     struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> > +     unsigned int hwirq = irqd_to_hwirq(d);
+> > +     u32 titseln = hwirq - IRQC_TINT_START;
+> > +     u32 offset;
+> > +     u8 sense;
+> > +     u32 reg;
+> > +
+> > +     switch (type & IRQ_TYPE_SENSE_MASK) {
+> > +     case IRQ_TYPE_EDGE_RISING:
+> > +             sense = TITSR_TITSEL_EDGE_RISING;
+> > +             break;
+> > +
+> > +     case IRQ_TYPE_EDGE_FALLING:
+> > +             sense = TITSR_TITSEL_EDGE_FALLING;
+> > +             break;
+> > +
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+>
+> > +     if (titseln < TITSR0_MAX_INT) {
+> > +             offset = TITSR0;
+> > +     } else {
+> > +             titseln /= TITSEL_WIDTH;
+> > +             offset  = TITSR1;
+> > +     }
+>
+> as TITSR0 (0x24) and TITSR1(0x28) are contiguous address location
+>
+> May be like others, above declare it as
+> u32 offset = TITSR0; ??
+>
+> and here
+>  if ((titseln >= TITSR0_MAX_INT) {
+>         titseln /= TITSEL_WIDTH;
+>         offset  += 4;
+>  }
 
-	M.
+Why "titseln /= TITSEL_WIDTH"?
+Shouldn't that be "titseln -= TITSR0_MAX_INT"?
+Do I need more coffee?
 
+Can't you define TITSR_{OFFSET,INDEX}() helper macros, like for
+TSSR above?
 
--- 
-Without deviation from the norm, progress is not possible.
+> > +
+> > +     raw_spin_lock(&priv->lock);
+> > +     reg = readl_relaxed(priv->base + offset);
+> > +     reg &= ~(IRQ_MASK << (titseln * TITSEL_WIDTH));
+> > +     reg |= sense << (titseln * TITSEL_WIDTH);
+> > +     writel_relaxed(reg, priv->base + offset);
+> > +     raw_spin_unlock(&priv->lock);
+> > +
+> > +     return 0;
+> > +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
