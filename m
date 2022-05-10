@@ -2,154 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 000D652248F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 21:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928D35225F1
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 22:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231388AbiEJTP7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 May 2022 15:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50672 "EHLO
+        id S233303AbiEJUzY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 May 2022 16:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbiEJTP7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 15:15:59 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C025A5A8;
-        Tue, 10 May 2022 12:15:57 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id q23so3464wra.1;
-        Tue, 10 May 2022 12:15:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ICALjRuls1YJWj64GMq9mPFxN7+vbqjUy39n5o5tGc=;
-        b=OrqzS6TNg8//lIUxE0r0DVe0hHdXi7HQFETI/GLvn1XA8S4MBD6qQq5VK/YwGv+rdp
-         ELOlnp1tPyrbmzORWNqTutolK50Je2TXQ4XcU4yeS5LozVzdjOWKfgDfevsTzF23lxno
-         TomNdGdifXQyFtVe38apK700eFtEDz32l4u54BR3QYSvzPI+pGdS4anjbdeY2GBVJio0
-         3jAT5AY2n/FWHXErnL0TXAKt4jhp0sCcFUIQMt5sHtoa8Us5aKlojwSWw+mvChxQuDVG
-         03tOmHVU+0cMSDSsUItVAWH5VOjGISPkRk+rIXZkwNJ7Ly9wemAeGH+d7nPIxK3y4v8M
-         okFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ICALjRuls1YJWj64GMq9mPFxN7+vbqjUy39n5o5tGc=;
-        b=IfYK5zDn2Cg9EhKRzUJug7DdjX4YO0OsyUMr3vuD1Z1tVGKXVn6w+ws/o8rhLWTMJT
-         2goJ/9M3KTuhKdP93B963C4tOqHasr99TlEFTwmmSzBLkq3/JtAiwjU8qLCNneikY0mN
-         gazZHDqumtDN/yuPbb35qJ/+zApYmZTGL1cIdA09o0yecWBOkzFJBARBjorBExE19Pik
-         ZVrvmEdPPnYEgJsXr48hpo33zKX55cCOV7xfzXT+XGPydyEFOJym7wBHeqbzl0AaIDY6
-         W7DexcVT7o3wWGjgCXIIXv6jJC/nZO6Ie9g6vECzRNd/XUrnHROdiJH1BgnR4/lJsRYn
-         eSCw==
-X-Gm-Message-State: AOAM530KjOvwJZY+WFpukdD5SsoY/Lv9vADRYbZ/Fd5aVbKK7w8Abzf1
-        LtpdFq73BsHl2qsi7wGItt8=
-X-Google-Smtp-Source: ABdhPJyo6pgt1kPLanz24n85hX79oTHKCx+Tykgx8nAdERBeN1v9VIBkW+RLqaKn1D8P2ea9Nnm4HQ==
-X-Received: by 2002:a5d:584a:0:b0:20c:5a8b:cee7 with SMTP id i10-20020a5d584a000000b0020c5a8bcee7mr19596063wrf.111.1652210156293;
-        Tue, 10 May 2022 12:15:56 -0700 (PDT)
-Received: from localhost.localdomain ([141.72.243.13])
-        by smtp.gmail.com with ESMTPSA id l9-20020a7bc349000000b003942a244ee9sm7212wmj.46.2022.05.10.12.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 12:15:55 -0700 (PDT)
-From:   Moses Christopher Bollavarapu <mosescb.dev@gmail.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Moses Christopher Bollavarapu <mosescb.dev@gmail.com>
-Subject: [PATCH] drivers: gpio: zevio: drop of_gpio.h header
-Date:   Tue, 10 May 2022 21:15:49 +0200
-Message-Id: <20220510191549.76105-1-mosescb.dev@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S231748AbiEJUzY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 16:55:24 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E8425A78A
+        for <linux-gpio@vger.kernel.org>; Tue, 10 May 2022 13:55:21 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6C5612C046F;
+        Tue, 10 May 2022 20:55:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1652216120;
+        bh=2Qpn3cSeJ6Ckg5/0EBd3448KCkcv1vPXpuk35DFY0vE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=hZcqeHu8yxSmp3Dd4WKaH4zA45aLtSHwpyWsVitZ/Nm0UwJKO89p3xvmoxMj6+7Ni
+         ZlnjMaSeffjXs5ghDWSFa7DINx6w5nC3E+AXY9hV1KNMs/ob5yojaEkwMr63wn47Ci
+         J24BmeBLenrlGWgePRaKTmUMMvIud2jpuO2n3z0OlWdQO7HWVisiS1ThhQ96hLTpTs
+         gvgDiRo36nua29+lAisZjnywxTBopeZ3D38Qjvq8TnxNP3el9pWKtix3G12Wv9x7GK
+         LWnzlqpnaEqn3VrmxAUpp512NWr3fGOdUXFS30tbxZ/iArh2NLNj3zxQ/VvH2oyVEQ
+         TruHpskndlLEw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[2001:df5:b000:bc8::77]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B627ad1380001>; Wed, 11 May 2022 08:55:20 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.32; Wed, 11 May 2022 08:55:20 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.033; Wed, 11 May 2022 08:55:20 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-mvebu: convert txt binding to
+ YAML
+Thread-Topic: [PATCH] dt-bindings: gpio: gpio-mvebu: convert txt binding to
+ YAML
+Thread-Index: AQHYZFKD08/UItmbQ0e7wNBkJKoFaK0XVTaAgAB5foA=
+Date:   Tue, 10 May 2022 20:55:19 +0000
+Message-ID: <eaea4c27-05b3-d26f-d091-99e07d14aae6@alliedtelesis.co.nz>
+References: <20220510094404.1020307-1-chris.packham@alliedtelesis.co.nz>
+ <6db35313-5dcd-c9f2-724c-d157a835c9fc@linaro.org>
+In-Reply-To: <6db35313-5dcd-c9f2-724c-d157a835c9fc@linaro.org>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8C3504451A9D124DBB16C208C60E7748@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=C7GXNjH+ c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=oKJsc7D3gJEA:10 a=IkcTkHD0fZMA:10 a=oZkIemNP1mAA:10 a=JPAAYGfGNIWfKY3b7Z0A:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-remove of_gpio.h header file, replace of_* functions and structs
-with appropriate alternatives
-
-Signed-off-by: Moses Christopher Bollavarapu <mosescb.dev@gmail.com>
----
- drivers/gpio/gpio-zevio.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpio-zevio.c b/drivers/gpio/gpio-zevio.c
-index f6f8a541348f..ec774fefb0ff 100644
---- a/drivers/gpio/gpio-zevio.c
-+++ b/drivers/gpio/gpio-zevio.c
-@@ -11,7 +11,6 @@
- #include <linux/bitops.h>
- #include <linux/io.h>
- #include <linux/of_device.h>
--#include <linux/of_gpio.h>
- #include <linux/slab.h>
- #include <linux/gpio/driver.h>
- 
-@@ -54,21 +53,22 @@
- 
- struct zevio_gpio {
- 	spinlock_t		lock;
--	struct of_mm_gpio_chip	chip;
-+	struct gpio_chip	chip;
-+	void __iomem		*regs;
- };
- 
- static inline u32 zevio_gpio_port_get(struct zevio_gpio *c, unsigned pin,
- 					unsigned port_offset)
- {
- 	unsigned section_offset = ((pin >> 3) & 3)*ZEVIO_GPIO_SECTION_SIZE;
--	return readl(IOMEM(c->chip.regs + section_offset + port_offset));
-+	return readl(IOMEM(c->regs + section_offset + port_offset));
- }
- 
- static inline void zevio_gpio_port_set(struct zevio_gpio *c, unsigned pin,
- 					unsigned port_offset, u32 val)
- {
- 	unsigned section_offset = ((pin >> 3) & 3)*ZEVIO_GPIO_SECTION_SIZE;
--	writel(val, IOMEM(c->chip.regs + section_offset + port_offset));
-+	writel(val, IOMEM(c->regs + section_offset + port_offset));
- }
- 
- /* Functions for struct gpio_chip */
-@@ -178,12 +178,18 @@ static int zevio_gpio_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, controller);
- 
- 	/* Copy our reference */
--	controller->chip.gc = zevio_gpio_chip;
--	controller->chip.gc.parent = &pdev->dev;
-+	controller->chip = zevio_gpio_chip;
-+	controller->chip.parent = &pdev->dev;
- 
--	status = of_mm_gpiochip_add_data(pdev->dev.of_node,
--					 &(controller->chip),
--					 controller);
-+	controller->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(controller->regs)) {
-+		dev_err(&pdev->dev, "failed to ioremap memory resource\n");
-+		return PTR_ERR(controller->regs);
-+	}
-+
-+	status = devm_gpiochip_add_data(&pdev->dev,
-+					&(controller->chip),
-+					controller);
- 	if (status) {
- 		dev_err(&pdev->dev, "failed to add gpiochip: %d\n", status);
- 		return status;
-@@ -192,10 +198,10 @@ static int zevio_gpio_probe(struct platform_device *pdev)
- 	spin_lock_init(&controller->lock);
- 
- 	/* Disable interrupts, they only cause errors */
--	for (i = 0; i < controller->chip.gc.ngpio; i += 8)
-+	for (i = 0; i < controller->chip.ngpio; i += 8)
- 		zevio_gpio_port_set(controller, i, ZEVIO_GPIO_INT_MASK, 0xFF);
- 
--	dev_dbg(controller->chip.gc.parent, "ZEVIO GPIO controller set up!\n");
-+	dev_dbg(controller->chip.parent, "ZEVIO GPIO controller set up!\n");
- 
- 	return 0;
- }
--- 
-2.30.2
-
+KHNpZ2ggcmVzZW5kLCBUaHVuZGVyYmlyZCBkZWNpZGVkIHRoYXQgdGhpcyBuZWVkZWQgaHRtbCkN
+Cg0KT24gMTEvMDUvMjIgMDE6NDAsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+PiArICBt
+YXJ2ZWxsLHB3bS1vZmZzZXQ6DQo+PiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2Rl
+ZmluaXRpb25zL3VpbnQzMg0KPj4gKyAgICBkZXNjcmlwdGlvbjogT2Zmc2V0IGluIHRoZSByZWdp
+c3RlciBtYXAgZm9yIHRoZSBwd20gcmVnaXN0ZXJzIChpbiBieXRlcykNCj4gSXQncyB0aGUgc2Ft
+ZSBhcyBvZmZzZXQuIFdoeSBhbGxvd2luZyBib3RoPyBJc24ndCBvbmUgZGVwcmVjYXRlZD8NCj4N
+ClRoaXMgb25lIGlzIGluIGFkZGl0aW9uIHRvIG9mZnNldC4gVGhlICJvZmZzZXQiIGlzIGZvciB0
+aGUgZ3BpbyANCnJlZ2lzdGVycyAibWFydmVsbCxwd20tb2Zmc2V0IiBpcyBmb3IgYSBzZXBhcmF0
+ZSBwd20gcmVsYXRlZCByZWdpc3RlciANCnRoYXQgaXMgbm90IGluIHRoZSBzYW1lIGNvbnRpZ3Vv
+dXMgYmxvY2su
