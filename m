@@ -2,200 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C70F521E86
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 17:26:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D52A521EE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 17:34:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245122AbiEJPaM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 May 2022 11:30:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36060 "EHLO
+        id S1345845AbiEJPh6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 May 2022 11:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345765AbiEJP3E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 11:29:04 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E1E5005E;
-        Tue, 10 May 2022 08:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652195976; x=1683731976;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1omZw5dmtXzXRoaAGkEEyclQDmdsq5BTpI3E6oMJveY=;
-  b=AS7C+Syq3WxVnNl3Nq13k4gqqEJSi9m7poPr+15V/wEARiDtLzTs99S0
-   GfJiUzKshs7HV2nv4jM5a9tSzvWdDX2z4VMkfrfs40N1/nwtQ36W8rkFK
-   MZKTEzxc3OJh89Kuno84rnHsgSD7J5mfHswd0L8GhUuZDbBDlnHJJTy5X
-   Co+DKk2KPY9qEP9a+l7pp8wIUqEYAIDNkTNyoa5r2CUEqiTCPgfkfk/a/
-   tnmehNevPJRwEGCRPUAqpFALtZYNZgCNZ38itJvadlfVAEAfAnCmiZ48c
-   xs9Evw9t/FB/AFgof5SSXpdTUmsP32eIRucA0+vwCt9APjaFLm8R0scav
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10342"; a="330001640"
-X-IronPort-AV: E=Sophos;i="5.91,214,1647327600"; 
-   d="scan'208";a="330001640"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 08:17:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,214,1647327600"; 
-   d="scan'208";a="894912638"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 10 May 2022 08:17:38 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id CFC10646; Tue, 10 May 2022 18:15:16 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tony Luck <tony.luck@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?q?=C5=81ukasz=20Bartosik?= <lb@semihalf.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        with ESMTP id S1346223AbiEJPg2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 11:36:28 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF8C63C4
+        for <linux-gpio@vger.kernel.org>; Tue, 10 May 2022 08:32:30 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id u3so24357601wrg.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 May 2022 08:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ibDKLmqXZAEEFTExzRdfpLVElcsKcx9KbemDnOPns+k=;
+        b=figfC27hBQ7YIl202+8UV+l1HErOFJIF9/fpjPlCPer5g3I7PjAtzfad9fQkyRxLjr
+         2Rn89ZkXFnj/ZtK9VRdPLP2LkZM3RIZHLXiPF7jTPH2sjLvKyJyyZhA8IU8nvYI6dAq8
+         eWWDHyE0BiwMx0ztz4HjHBdxVDNMORyJ3lEV0cf+voR+rNEqAWWKymQdZiy6Bu0isRA0
+         sx/2yAsnZP4Up/rDDDUE9k3t+Ayuee8qbQu+lddnI/2qPWWDITuddK7AaNrlWrBvSbHh
+         +GKPURa/WCWQELR5zsHNR3B0osJYPBBuowvHljLEI/p32ixzYEuxagZ/9me25B5QZUhV
+         zZYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ibDKLmqXZAEEFTExzRdfpLVElcsKcx9KbemDnOPns+k=;
+        b=OTlJfQoJWh3uEIrIZPpwjhBVVcXGClZn8A0zfYXq6iNwiOJ8hjB3thMJ7CTMBEmePa
+         651zq5ZuGlWDnXNj91tbrvhDfiqXyFsOFvgsh7kwZvMYUZuqzW1dF1xFJl5GxlLrILKt
+         VzDIZLTub3aTzRPpNxvLzVqOqHuVOgxgjU5hkO6EmDNoXBHQ2uOBtDZOgsv/UEwNAUAz
+         rbev8u1fQxTLGenX22sMnrsNd2r5h6okLaI62k4WUfAzr3d6qFSXUY9LJyVK8M65LdT/
+         djPam1UTuTbcgLfGbE2MX3M8G0gq8+7TbX55Id88J4yEsHPVbg3TAw3c4VOGNS0h9tCx
+         yq+w==
+X-Gm-Message-State: AOAM530AN+8O15ADIQ6GO71DzVUJt0UpU7gszA/ir2N+9foNovAeGbFp
+        WG19rTFTbzBsWfahlnohxsS+Kw==
+X-Google-Smtp-Source: ABdhPJxhbL0kXjtF40z+/oU1QTJ/WF63V5u/yXTZ1XONjVrTuv3E338FNMTKvYPqbqjTgY9CE4ly0A==
+X-Received: by 2002:a5d:4205:0:b0:20a:e23c:a7f4 with SMTP id n5-20020a5d4205000000b0020ae23ca7f4mr19616144wrq.576.1652196749233;
+        Tue, 10 May 2022 08:32:29 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id x18-20020adfdd92000000b0020c5253d915sm13895707wrl.97.2022.05.10.08.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 May 2022 08:32:28 -0700 (PDT)
+Date:   Tue, 10 May 2022 16:32:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc:     Colin Foster <colin.foster@in-advantage.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH v5 8/8] EDAC, pnd2: convert to use common P2SB accessor
-Date:   Tue, 10 May 2022 18:14:51 +0300
-Message-Id: <20220510151451.85561-9-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
-References: <20220510151451.85561-1-andriy.shevchenko@linux.intel.com>
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: Re: [RFC v8 net-next 08/16] mfd: ocelot: add support for the vsc7512
+ chip via spi
+Message-ID: <YnqFijExn8Nn+xhs@google.com>
+References: <20220508185313.2222956-1-colin.foster@in-advantage.com>
+ <20220508185313.2222956-9-colin.foster@in-advantage.com>
+ <20220509105239.wriaryaclzsq5ia3@skbuf>
+ <20220509234922.GC895@COLIN-DESKTOP1.localdomain>
+ <20220509172028.qcxzexnabovrdatq@skbuf>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220509172028.qcxzexnabovrdatq@skbuf>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since we have a common P2SB accessor in tree we may use it instead of
-open coded variants.
+On Mon, 09 May 2022, Vladimir Oltean wrote:
 
-Replace custom code by p2sb_bar() call.
+> On Mon, May 09, 2022 at 04:49:22PM -0700, Colin Foster wrote:
+> > > > +struct regmap *ocelot_init_regmap_from_resource(struct device *child,
+> > > > +						const struct resource *res)
+> > > > +{
+> > > > +	struct device *dev = child->parent;
+> > > > +
+> > > > +	return ocelot_spi_devm_init_regmap(dev, child, res);
+> > > 
+> > > So much for being bus-agnostic :-/
+> > > Maybe get the struct ocelot_ddata and call ocelot_spi_devm_init_regmap()
+> > > via a function pointer which is populated by ocelot-spi.c? If you do
+> > > that don't forget to clean up drivers/mfd/ocelot.h of SPI specific stuff.
+> > 
+> > That was my initial design. "core" was calling into "spi" exclusively
+> > via function pointers.
+> > 
+> > The request was "Please find a clearer way to do this without function
+> > pointers"
+> > 
+> > https://lore.kernel.org/netdev/Ydwju35sN9QJqJ%2FP@google.com/
+> 
+> Yeah, I'm not sure what Lee was looking for, either. In any case I agree
+> with the comment that you aren't configuring a bus. In this context it
+> seems more appropriate to call this function pointer "init_regmap", with
+> different implementations per transport.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Henning Schild <henning.schild@siemens.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
- drivers/edac/Kconfig     |  1 +
- drivers/edac/pnd2_edac.c | 55 ++++++++++++----------------------------
- 2 files changed, 17 insertions(+), 39 deletions(-)
+FWIW, I'm still against using function pointers for this.
 
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index d3e2477948c8..17562cf1fe97 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -263,6 +263,7 @@ config EDAC_I10NM
- config EDAC_PND2
- 	tristate "Intel Pondicherry2"
- 	depends on PCI && X86_64 && X86_MCE_INTEL
-+	select P2SB if X86
- 	help
- 	  Support for error detection and correction on the Intel
- 	  Pondicherry2 Integrated Memory Controller. This SoC IP is
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index 7d1df120e24c..a20b299f1202 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -28,6 +28,8 @@
- #include <linux/bitmap.h>
- #include <linux/math64.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/platform_data/x86/p2sb.h>
-+
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include <asm/processor.h>
-@@ -232,42 +234,14 @@ static u64 get_mem_ctrl_hub_base_addr(void)
- 	return U64_LSHIFT(hi.base, 32) | U64_LSHIFT(lo.base, 15);
- }
- 
--static u64 get_sideband_reg_base_addr(void)
--{
--	struct pci_dev *pdev;
--	u32 hi, lo;
--	u8 hidden;
--
--	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x19dd, NULL);
--	if (pdev) {
--		/* Unhide the P2SB device, if it's hidden */
--		pci_read_config_byte(pdev, 0xe1, &hidden);
--		if (hidden)
--			pci_write_config_byte(pdev, 0xe1, 0);
--
--		pci_read_config_dword(pdev, 0x10, &lo);
--		pci_read_config_dword(pdev, 0x14, &hi);
--		lo &= 0xfffffff0;
--
--		/* Hide the P2SB device, if it was hidden before */
--		if (hidden)
--			pci_write_config_byte(pdev, 0xe1, hidden);
--
--		pci_dev_put(pdev);
--		return (U64_LSHIFT(hi, 32) | U64_LSHIFT(lo, 0));
--	} else {
--		return 0xfd000000;
--	}
--}
--
- #define DNV_MCHBAR_SIZE  0x8000
- #define DNV_SB_PORT_SIZE 0x10000
- static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *name)
- {
- 	struct pci_dev *pdev;
- 	void __iomem *base;
--	u64 addr;
--	unsigned long size;
-+	struct resource r;
-+	int ret;
- 
- 	if (op == 4) {
- 		pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x1980, NULL);
-@@ -279,20 +253,23 @@ static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *na
- 	} else {
- 		/* MMIO via memory controller hub base address */
- 		if (op == 0 && port == 0x4c) {
--			addr = get_mem_ctrl_hub_base_addr();
--			if (!addr)
-+			memset(&r, 0, sizeof(r));
-+
-+			r.start = get_mem_ctrl_hub_base_addr();
-+			if (!r.start)
- 				return -ENODEV;
--			size = DNV_MCHBAR_SIZE;
-+			r.end = r.start + DNV_MCHBAR_SIZE - 1;
- 		} else {
- 			/* MMIO via sideband register base address */
--			addr = get_sideband_reg_base_addr();
--			if (!addr)
--				return -ENODEV;
--			addr += (port << 16);
--			size = DNV_SB_PORT_SIZE;
-+			ret = p2sb_bar(NULL, 0, &r);
-+			if (ret)
-+				return ret;
-+
-+			r.start += (port << 16);
-+			r.end = r.start + DNV_SB_PORT_SIZE - 1;
- 		}
- 
--		base = ioremap((resource_size_t)addr, size);
-+		base = ioremap(r.start, resource_size(&r));
- 		if (!base)
- 			return -ENODEV;
- 
+What about making ocelot_init_regmap_from_resource() an inline
+function and pushing it into one of the header files?
+
+[As an aside, you don't need to pass both dev (parent) and child]
+
+In there you could simply do:
+
+inline struct regmap *ocelot_init_regmap_from_resource(struct device *dev,
+						       const struct resource *res)
+{
+	if (dev_get_drvdata(dev->parent)->spi)
+		return ocelot_spi_devm_init_regmap(dev, res);
+
+	return NULL;
+}
+
+Also, do you really need devm in the title?
+
+> Or alternatively you could leave the "core"/"spi" pseudo-separation up
+> to the next person who needs to add support for some other register I/O
+> method.
+
+Or this.  Your call.
+
 -- 
-2.35.1
-
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
