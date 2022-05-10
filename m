@@ -2,369 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93B37521141
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 11:44:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 418FF5213EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 13:36:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239092AbiEJJsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 May 2022 05:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33470 "EHLO
+        id S241091AbiEJLk3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 May 2022 07:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231309AbiEJJsR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 05:48:17 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE3B29B810
-        for <linux-gpio@vger.kernel.org>; Tue, 10 May 2022 02:44:18 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7C6BA2C0230;
-        Tue, 10 May 2022 09:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1652175855;
-        bh=CV+nnOcVdQpKcQgRV0xaZ1gbK67yRvqbHUPMIFx963c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JoFE27gO/Ez8LMOL1AkLzWX4Qkfe7EEJNX2E3ihIR9mvzEzvN1tx8Ox6kSlfMZs8r
-         T9kCoK2rxlnd2y9BHaC1dgVHC2PgjR0lwd102U1UswBkGgDz1FY8Qlnw+xg7ZTs6zR
-         zKQEZxKbKy+lcgE+qfDsCWPR6hJe/f0kkdIKyVFzUqDYNXQpvH5HdW+vwrcxXUjAyD
-         FiBf5gw0egfG6y185RpHzNNWsxb/1n6B4NeXjqDP8QGHHzAYAFfOz+FxEOeobuyTna
-         vslC3W3GM0ypTLfOzEWYigsljbGZFWxcicUK3Lw52Zpz8T888PfK18XdPOQglch3jF
-         hLpONa6On0Bgg==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B627a33ee0000>; Tue, 10 May 2022 21:44:14 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by pat.atlnz.lc (Postfix) with ESMTP id 6F1CC13ECEC;
-        Tue, 10 May 2022 21:44:14 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 69B952A00D3; Tue, 10 May 2022 21:44:14 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] dt-bindings: gpio: gpio-mvebu: convert txt binding to YAML
-Date:   Tue, 10 May 2022 21:44:04 +1200
-Message-Id: <20220510094404.1020307-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.36.0
+        with ESMTP id S241105AbiEJLkY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 07:40:24 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D63B18995A;
+        Tue, 10 May 2022 04:36:23 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id m6so18178837iob.4;
+        Tue, 10 May 2022 04:36:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4EZpR3qbj2OiB8Rs7HNB/ykkYoIogT5opUzlrLNV8YI=;
+        b=VoJKpqMfxxTPHvVta4VrHB92nXtrqsdoFMCKO72GGQiiTNlssKn+AXRFv2R0zA/qJl
+         ctxf5yvCTzchX0hBX89nV/pbn8AMQXcZyobufzGfOBQSZx6nhMaYwA+R8ZttLsdM8Xl+
+         rpydufKYD/6bVeUkxjjhLcjOQR0qGg0c2UaMnbMITS+RV4LBbE8poluGb/ji6ozV4ggX
+         2ZOwstsWV1YYyBdttQncwLva3BWyKTcGbQP+6PrGtjhkepSKztq/WSV1uGa3OR1zPmHp
+         fWEbAq+8c6Bu4dtUV2ivF9jPrKCiNZQT0HzmRt0DR1EBUHs6Rmtmvgahn+B8mMcFvjaB
+         CbRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4EZpR3qbj2OiB8Rs7HNB/ykkYoIogT5opUzlrLNV8YI=;
+        b=xAaRcOLEjXYF8ZIctQZuKRNbZn8skkklilc3NYRN/mlxAeVWmKan3DI33EaAwHnzLp
+         xfdWt8V1rO9cWRd6926JmVlmwkA/rm7H8oT+dYF0v/L5xyB+ucbFBsLFTcQhphWKmNqF
+         fCLm8vDKWmAw7bqIcqXlM9WhJ1NKtDz7Tc3PB8i2t2t1+pAmjSpKoXLPoDVXaSwRKvDe
+         0Y0EUSy47rpAzk+Oyup8Q8yE4oJp2xAdwbM9xeFPyY+01Kw/qQwy7uj/kK8SxOSnXvEz
+         6nfcYkgdOoo5YfSvi0qaYOFfjfcSqANtJcjaGRsk0lUf5YQ6wrXwoAuGquN1/r0MO921
+         GysQ==
+X-Gm-Message-State: AOAM531tgx6cHsW8QamPo789rckrvnVJ/9lCJkC8JO4wGImhriSqwyGR
+        S3WeMC5/YmkPtQ+9hgFu2+kR5Vn+TGHi29FKI+s=
+X-Google-Smtp-Source: ABdhPJxse48OZESZFthVDv8nUynrMkvM0JCiuRjG7/tN4zNaiseDCEGjt9o4QzkyV4Z20WHbORCpQublLG3V37jZ2Dg=
+X-Received: by 2002:a02:8624:0:b0:32b:397d:eeb1 with SMTP id
+ e33-20020a028624000000b0032b397deeb1mr9940559jai.264.1652182582955; Tue, 10
+ May 2022 04:36:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=C7GXNjH+ c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=oZkIemNP1mAA:10 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=voM4FWlXAAAA:8 a=yZ6uvJJHfemicqfEXc0A:9 a=sptkURWiP4Gy88Gu7hUp:22 a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22 a=IC2XNlieTeVoXbcui8wp:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+References: <20220507052451.12890-1-ojeda@kernel.org> <CABVgOSm5S2=QYnHJ+B0JbYtFYKBDRZiOhE5YMKKUKZU56d17HQ@mail.gmail.com>
+ <CANiq72=0ft6+QLbdwWD6cLm4FhWfv53GSg6HKEwxQ-q2N-UkOw@mail.gmail.com> <CABVgOSkrvfvA7Ay4GC5wg64S1gibvm5_U5VGBog3sw4_UFo8Cg@mail.gmail.com>
+In-Reply-To: <CABVgOSkrvfvA7Ay4GC5wg64S1gibvm5_U5VGBog3sw4_UFo8Cg@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 10 May 2022 13:36:11 +0200
+Message-ID: <CANiq72mcvKDW6qO=1PzYR_U0tAwVLyCWFZjFVLL81znWDSYq7A@mail.gmail.com>
+Subject: Re: [PATCH v6 00/23] Rust support
+To:     David Gow <davidgow@google.com>
+Cc:     Miguel Ojeda <ojeda@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rust-for-linux <rust-for-linux@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        live-patching@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the existing device tree binding to YAML format.
+Hi David,
 
-The old binding listed the interrupt-controller and related properties
-as required but there are sufficiently many existing usages without it
-that the YAML binding does not make the interrupt properties required.
+On Tue, May 10, 2022 at 6:45 AM David Gow <davidgow@google.com> wrote:
+>
+> I've just sent out a pull request to get this working under UML as
+> well, which would simplify running these further:
+> https://github.com/Rust-for-Linux/linux/pull/766
 
-The offset and marvell,pwm-offset properties weren't in the old binding
-and are added to the YAML binding. The offset property is required when
-the marvell,armada-8k-gpio compatible is used.
+Thanks a lot!
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- .../devicetree/bindings/gpio/gpio-mvebu.txt   |  93 -----------
- .../devicetree/bindings/gpio/gpio-mvebu.yaml  | 147 ++++++++++++++++++
- MAINTAINERS                                   |   2 +-
- 3 files changed, 148 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.yam=
-l
+> Yeah, these are all fair points: particularly for small doctests.
+>
+> Maybe having an optional name, which more significant tests could use
+> to override the file:line names? That could be useful for a few of the
+> larger, more often referenced tests.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
-mentation/devicetree/bindings/gpio/gpio-mvebu.txt
-deleted file mode 100644
-index 0fc6700ed800..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-+++ /dev/null
-@@ -1,93 +0,0 @@
--* Marvell EBU GPIO controller
--
--Required properties:
--
--- compatible : Should be "marvell,orion-gpio", "marvell,mv78200-gpio",
--  "marvell,armadaxp-gpio" or "marvell,armada-8k-gpio".
--
--    "marvell,orion-gpio" should be used for Orion, Kirkwood, Dove,
--    Discovery (except MV78200) and Armada 370. "marvell,mv78200-gpio"
--    should be used for the Discovery MV78200.
--
--    "marvel,armadaxp-gpio" should be used for all Armada XP SoCs
--    (MV78230, MV78260, MV78460).
--
--    "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
--    SoCs (either from AP or CP), see
--    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controlle=
-r.txt
--    for specific details about the offset property.
--
--- reg: Address and length of the register set for the device. Only one
--  entry is expected, except for the "marvell,armadaxp-gpio" variant
--  for which two entries are expected: one for the general registers,
--  one for the per-cpu registers. Not used for marvell,armada-8k-gpio.
--
--- interrupts: The list of interrupts that are used for all the pins
--  managed by this GPIO bank. There can be more than one interrupt
--  (example: 1 interrupt per 8 pins on Armada XP, which means 4
--  interrupts per bank of 32 GPIOs).
--
--- interrupt-controller: identifies the node as an interrupt controller
--
--- #interrupt-cells: specifies the number of cells needed to encode an
--  interrupt source. Should be two.
--  The first cell is the GPIO number.
--  The second cell is used to specify flags:
--    bits[3:0] trigger type and level flags:
--      1 =3D low-to-high edge triggered.
--      2 =3D high-to-low edge triggered.
--      4 =3D active high level-sensitive.
--      8 =3D active low level-sensitive.
--
--- gpio-controller: marks the device node as a gpio controller
--
--- ngpios: number of GPIOs this controller has
--
--- #gpio-cells: Should be two. The first cell is the pin number. The
--  second cell is reserved for flags, unused at the moment.
--
--Optional properties:
--
--In order to use the GPIO lines in PWM mode, some additional optional
--properties are required.
--
--- compatible: Must contain "marvell,armada-370-gpio"
--
--- reg: an additional register set is needed, for the GPIO Blink
--  Counter on/off registers.
--
--- reg-names: Must contain an entry "pwm" corresponding to the
--  additional register range needed for PWM operation.
--
--- #pwm-cells: Should be two. The first cell is the GPIO line number. The
--  second cell is the period in nanoseconds.
--
--- clocks: Must be a phandle to the clock for the GPIO controller.
--
--Example:
--
--		gpio0: gpio@d0018100 {
--			compatible =3D "marvell,armadaxp-gpio";
--			reg =3D <0xd0018100 0x40>,
--			    <0xd0018800 0x30>;
--			ngpios =3D <32>;
--			gpio-controller;
--			#gpio-cells =3D <2>;
--			interrupt-controller;
--			#interrupt-cells =3D <2>;
--			interrupts =3D <16>, <17>, <18>, <19>;
--		};
--
--		gpio1: gpio@18140 {
--			compatible =3D "marvell,armada-370-gpio";
--			reg =3D <0x18140 0x40>, <0x181c8 0x08>;
--			reg-names =3D "gpio", "pwm";
--			ngpios =3D <17>;
--			gpio-controller;
--			#gpio-cells =3D <2>;
--			#pwm-cells =3D <2>;
--			interrupt-controller;
--			#interrupt-cells =3D <2>;
--			interrupts =3D <87>, <88>, <89>;
--			clocks =3D <&coreclk 0>;
--		};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Doc=
-umentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-new file mode 100644
-index 000000000000..84b72e506526
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-@@ -0,0 +1,147 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell EBU GPIO controller
-+
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Lee Jones <lee.jones@linaro.org>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - marvell,orion-gpio
-+          - marvell,mv78200-gpio
-+          - marvell,armada-370-gpio
-+          - marvell,armadaxp-gpio
-+          - marvell,armada-8k-gpio
-+      - items:
-+          - const: marvell,armada-370-gpio
-+          - const: marvell,orion-gpio
-+
-+    description: |
-+      "marvell,orion-gpio" should be used for Orion, Kirkwood, Dove, Dis=
-covery
-+      (except MV78200) and Armada 370. "marvell,mv78200-gpio" should be =
-used
-+      for the Discovery MV78200.
-+
-+      "marvel,armadaxp-gpio" should be used for all Armada XP SoCs (MV78=
-230,
-+      MV78260, MV78460).
-+
-+      "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K S=
-oCs
-+      (either from AP or CP), see
-+      Documentation/devicetree/bindings/arm/marvell/ap80x-system-control=
-ler.txt
-+      for specific details about the offset property.
-+
-+  reg:
-+    description: |
-+      Address and length of the register set for the device. Only one en=
-try
-+      is expected, except for the "marvell,armadaxp-gpio" variant for wh=
-ich
-+      two entries are expected: one for the general registers, one for t=
-he
-+      per-cpu registers. Not used for marvell,armada-8k-gpio.
-+
-+      An additional register set is needed, for the GPIO Blink
-+      Counter on/off registers.
-+    minItems: 1
-+    maxItems: 2
-+
-+  reg-names:
-+    description:
-+      Must contain an entry "pwm" corresponding to the
-+      additional register range needed for PWM operation.
-+    minItems: 1
-+    maxItems: 2
-+
-+  offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the gpio registers (in b=
-ytes)
-+
-+  interrupts:
-+    description: |
-+      The list of interrupts that are used for all the pins managed by t=
-his
-+      GPIO bank. There can be more than one interrupt (example: 1 interr=
-upt
-+      per 8 pins on Armada XP, which means 4 interrupts per bank of 32
-+      GPIOs).
-+    minItems: 1
-+    maxItems: 4
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  ngpios:
-+    description:
-+      number of GPIOs this controller has
-+    minimum: 1
-+    maximum: 32
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  marvell,pwm-offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the pwm registers (in by=
-tes)
-+
-+  "#pwm-cells":
-+    description:
-+      The first cell is the GPIO line number. The second cell is the per=
-iod
-+      in nanoseconds.
-+    const: 2
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - gpio-controller
-+  - ngpios
-+  - "#gpio-cells"
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: marvell,armada-8k-gpio
-+then:
-+  required:
-+    - offset
-+else:
-+  required:
-+    - reg
-+
-+unevaluatedProperties: true
-+
-+examples:
-+  - |
-+      gpio@d0018100 {
-+        compatible =3D "marvell,armadaxp-gpio";
-+        reg =3D <0xd0018100 0x40>, <0xd0018800 0x30>;
-+        ngpios =3D <32>;
-+        gpio-controller;
-+        #gpio-cells =3D <2>;
-+        interrupt-controller;
-+        #interrupt-cells =3D <2>;
-+        interrupts =3D <16>, <17>, <18>, <19>;
-+      };
-+
-+  - |
-+      gpio@18140 {
-+        compatible =3D "marvell,armada-370-gpio";
-+        reg =3D <0x18140 0x40>, <0x181c8 0x08>;
-+        reg-names =3D "gpio", "pwm";
-+        ngpios =3D <17>;
-+        gpio-controller;
-+        #gpio-cells =3D <2>;
-+        #pwm-cells =3D <2>;
-+        interrupt-controller;
-+        #interrupt-cells =3D <2>;
-+        interrupts =3D <87>, <88>, <89>;
-+        clocks =3D <&coreclk 0>;
-+      };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e8c52d0192a6..6b1c80fd7611 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16019,7 +16019,7 @@ L:	linux-pwm@vger.kernel.org
- S:	Maintained
- Q:	https://patchwork.ozlabs.org/project/linux-pwm/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linu=
-x-pwm.git
--F:	Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-+F:	Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
- F:	Documentation/devicetree/bindings/pwm/
- F:	Documentation/driver-api/pwm.rst
- F:	drivers/gpio/gpio-mvebu.c
---=20
-2.36.0
+Sounds reasonable. I can add support for that.
 
+> Ugh: it's a bit ugly either way. I suspect that file:line is still
+> probably better, if only because we need some way of looking up the
+> test in the code if it fails. I'd hate for people to be randomly
+> hashing bits of just to find out what test is failing.
+
+One redeeming quality is that the assertion prints the line/file
+number in the generated file, so it would still be possible to check
+where it came from:
+
+    [13:13:43] # rust_kernel_doctest_str_rs_somehash: ASSERTION FAILED
+at rust/doctests_kernel_generated.rs:2209
+    [13:13:43] Expected 2 > 3 to be true, but is false
+    [13:13:43] not ok 43 - rust_kernel_doctest_str_rs_somehash
+    [13:13:43] [FAILED] rust_kernel_doctest_str_rs_somehash
+
+Another alternative is to keep the file:line information around
+without embedding it into the test name, e.g. in a TAP comment or a
+mapping file (which `kunit.py` could read).
+
+But, yeah, before doing hashes or things like that, I would just go
+for simplicity and keep things as they are unless some use case really
+needs doctests to be stable.
+
+> Oops: I missed that (one of the issues with testing this on a
+> different machine which had a rust toolchain). Looks good to me.
+>
+> Ah: I didn't realise the plan was always to have crate-specific
+> suites, and possibly to split things up.
+>
+> The KTAP output specification does actually support arbitrary nesting
+> (though KUnit itself doesn't at the moment), which would potentially
+> be an option if (e.g.) providing the complete module nesting made
+> sense. I'm not convinced that'd make things easier to read, though.
+
+That is useful to know in case we need it, thanks!
+
+Cheers,
+Miguel
