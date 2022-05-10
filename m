@@ -2,45 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ACCE5204B2
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 May 2022 20:47:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BEEB520B94
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 04:58:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240314AbiEISrq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 May 2022 14:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
+        id S234364AbiEJDB4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 May 2022 23:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240291AbiEISrp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 14:47:45 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2134.outbound.protection.outlook.com [40.107.94.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D48A18995A;
-        Mon,  9 May 2022 11:43:49 -0700 (PDT)
+        with ESMTP id S232464AbiEJDBz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 May 2022 23:01:55 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2133.outbound.protection.outlook.com [40.107.243.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910491C12EA;
+        Mon,  9 May 2022 19:57:57 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ake5Z55zKZbGC9jkakyDY0SVMFzkX6KkvrrH6iReUzZHjGpQQXLZAnawYNPYHKp5EzRcaieZuVrNt4ht5SLU0Jhmfmc4ArBjGTyWXGgvy9BhPJGNgLSdhd0ngHaCl35MzR05MJ3TH1NKQhV97CL5VdeJz0daytm+sDEKr5N/skqv2vk6/Xmqmm0hifBQubsu0hVoiIbndQcrpu8UcTW7J6qVEqMmYPsyX0fuwzU7c7YAgpzW+tu+wkV0sx6dDJtZTocSA5jxDBaCOAORNWhvbpQYh1eOFNdkfqHB0wEBHOk6giLPzSTH/2U92gIeihFEuc4jk9XWD4CxUoAm/KEnSg==
+ b=f9qoID4lqW0g3vwVEoJd5kIB7JEzJckWGec7yDmdPPm3vEJrjZ9Er+9+45sRx9TAeILdOFjnQDMtwl2tP+1s57n6J2lGBY6paIjERblr7bSPzPfGQ1DmbiqaMuMRwiqQhEnhsRorw6aZCqzYShLBWWR9s5mj795Ivq9GGVQTZXnTSg+3JGz+MQu0NFXzaarSTIa32Iogfa3VoPalotWGvEAPiD/301+OS7XKGmYhw2f4uhXoF70fx/gw8ozgY6DbTbkIQ95vERi8+R7I7opGqHI67yz3O6mL2+OMR277jvcuHAnbxOXq+SnqzSYPY2MJOtfBoeji6ShldSOZ/ZLJDA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pPWXwZEFEF1tBnKXajc80zx2yFE8J8tQUW2HrwpJXwM=;
- b=hSrSKl4QNFYE/r3myfRO+DkqDP184sL9p+fuHBEM5dkkmXHr/8b5nFzfwIH9DMt6S+xfeWcL3ttnfru5fXz8rfs48vU/XIgL3jaNxpx9OcCGGx6HRB435iF5fLx9vxiC+S0hYGDuK+CT3l21uYatuBawdvMg2jUgqfWPONgBuQkE94TfAyEVG+j8DmaPtWf/ukZ1J48JYzihbiIqQwkqRmRAEslExER0qHJ5AhCcecSt5E67F2Bh43O77sfLH07qMzSoJiM6Q/c2Zv71NRxZbh0waTDypAxXv56r3idLPJ69Jh2r5fPuT7R53/qT3/BFXg9d8sWNfxr/tmKGkWIA6A==
+ bh=UenfZOUxYn04bROii2WAw2KsCl/K9Ll/HH031XBre9c=;
+ b=YSM18+FBbawLwl9CdogH1wb9seO9c97eFkddg/naHE5l/WOrYh9zRU5/0MB8Oo4/LVLF8bID2JJH0ovYPo8cQNrat1z1KnWyn+nrsP9eaPTY0Ri3UVnk5mUPKQb5oh76Kzt4ySoO8QlyULCLs4+5Ep1eylAhGKn9nJ+eoruzJ5JtbS9tE9eoqvzEtsvHmWJxtgLvtxB33xZ2hyMrPIE1D4DqUyBebevmtHw5InfW5bL5/csaI3bduMFptTlUPi0q5VNzT1Kpy9GPtlAPPOKQv1AFnS0gid/g8titJlavwDA6cLHOyWpWS674ytljaq25TzbGokjb8dT+Q+MsulE5og==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=in-advantage.com; dmarc=pass action=none
  header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pPWXwZEFEF1tBnKXajc80zx2yFE8J8tQUW2HrwpJXwM=;
- b=rwLI8RKqTRUZ1G+Z7KjsrK3N07ZScjGBu0RUPcih8hDbMmuIrEoEYB6V7OZu5pPmrP9Oyqhutd/nCSAR/GKeVvL/+kcFFwseJjE7/ahSHejFWSmFcDKKx8R7nPzmqyoGN04Sr1OEBPP+ZuU+Z2Js8XBKFXZBZHAHy6GFDSi4+o8=
+ bh=UenfZOUxYn04bROii2WAw2KsCl/K9Ll/HH031XBre9c=;
+ b=j52OOHfcniH5p2lrtOLZ7rLP6iRH3W2hdqUjJ5gw1jtXb3UjDtVUFtl9EfHhKfYB27JYSt2AiDVSVk3JrRpSUyiW8b24l+I/+cNqt+cZ+Rs5zJYnKdl8RlXB+fUz+WPs7ExJUBzH0FjXVKdRoL7E1/XeJSlYVBPR6ilaYyAx3Jc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=in-advantage.com;
 Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by CY4PR10MB2037.namprd10.prod.outlook.com
- (2603:10b6:903:125::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.21; Mon, 9 May
- 2022 18:43:46 +0000
+ (2603:10b6:301:35::37) by BN6PR10MB1396.namprd10.prod.outlook.com
+ (2603:10b6:404:44::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.21; Tue, 10 May
+ 2022 02:57:55 +0000
 Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
  ([fe80::4581:787c:1a7a:873e]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::4581:787c:1a7a:873e%3]) with mapi id 15.20.5227.020; Mon, 9 May 2022
- 18:43:46 +0000
-Date:   Mon, 9 May 2022 18:43:50 -0700
+ ([fe80::4581:787c:1a7a:873e%3]) with mapi id 15.20.5227.020; Tue, 10 May 2022
+ 02:57:55 +0000
+Date:   Mon, 9 May 2022 19:57:48 -0700
 From:   Colin Foster <colin.foster@in-advantage.com>
 To:     Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc:     "linux-arm-kernel@lists.infradead.org" 
@@ -67,71 +67,71 @@ Cc:     "linux-arm-kernel@lists.infradead.org"
         Claudiu Manoil <claudiu.manoil@nxp.com>,
         Lee Jones <lee.jones@linaro.org>
 Subject: Re: [RFC v8 net-next 00/16] add support for VSC7512 control over SPI
-Message-ID: <20220510014350.GI895@COLIN-DESKTOP1.localdomain>
+Message-ID: <20220510025748.GA2316428@euler>
 References: <20220508185313.2222956-1-colin.foster@in-advantage.com>
  <20220509171304.hfh5rbynt4qtr6m4@skbuf>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20220509171304.hfh5rbynt4qtr6m4@skbuf>
-X-ClientProxiedBy: MW4PR03CA0263.namprd03.prod.outlook.com
- (2603:10b6:303:b4::28) To MWHPR1001MB2351.namprd10.prod.outlook.com
+X-ClientProxiedBy: BYAPR08CA0007.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::20) To MWHPR1001MB2351.namprd10.prod.outlook.com
  (2603:10b6:301:35::37)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2b32658d-dd47-41fd-52c8-08da31ebd980
-X-MS-TrafficTypeDiagnostic: CY4PR10MB2037:EE_
-X-Microsoft-Antispam-PRVS: <CY4PR10MB203797915E7022250E03F708A4C69@CY4PR10MB2037.namprd10.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 5d0fe5ad-fd1b-4af2-747b-08da3230e15b
+X-MS-TrafficTypeDiagnostic: BN6PR10MB1396:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR10MB1396BE32969A310DA6E21777A4C99@BN6PR10MB1396.namprd10.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /UwWre8g3jPknYJAFhM47VHalCu0J1ZNoJUuQ5s8Q37jSHB8y9uQ/Xv5GKpD6jcRbGwYPHbWodzL5BA3NZHIIFjEZt1jOLNCCviW9Z980dO94naISFVoX/+36eomaIw4xwyZCQoRc/kVrMUzdgSlcf8ebWwJ4Bi95m2yfDleQ5ItprrGBdzYYTP2Xel/uFNfjcaaWK/tJkGSBLs4Ek1SggexAcrYjCI4+TVUZMJ/1Kho6m+TAHBUOe07d6a8jgsQGPxeZpaKNDkfwI80p0ykSxubyPpBlbNCInzVM17/fhTVj34hJdRJuMsGKuJKmxTAoHMXnwBFDcdDZL0zopillxf0aXaKy4OMgCXQhSyTYG7Q3RFZP64TJFcGW/NBIMgnDDUXMcDnIeWIq+ErZVEfEJ9JRDPiMrOwQwChcvX6m/I8YKO7w8EtatmPqNIRDP+fRpgIk+wHH+nN+L3ZqOk1B+yLJr7e/BRETYcu1zxk2vrzNiFPGlJXdwQ9mpE4X3IwujAYcPrmwe8dbg8vkqFYSjMfYn/sKaQdsehgphm/1vv5cYfjfVlv9Q2BJQ+pW8WtTkBGFafKWcq0SDeYXdK2+BOI9C5VrkM/E1pyMpwvRNUwW2g7ZKhVMX+S0lozWX78IvHKfPqVNfU6Ou9RnccFWGl0bhuq6dPt40+xlvX9li80X3wPBHhPRREUWecyFhkNrAh2Ysc54Eh7BLX+H3wC+w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(376002)(396003)(136003)(39830400003)(366004)(346002)(33656002)(66556008)(66476007)(66946007)(8676002)(1076003)(508600001)(4326008)(83380400001)(186003)(7416002)(6512007)(26005)(9686003)(86362001)(6666004)(6486002)(316002)(54906003)(6916009)(6506007)(52116002)(8936002)(2906002)(44832011)(30864003)(5660300002)(38350700002)(38100700002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 33qoI8UR3ybqIdHS0LdYPaxtSq9wGFkfO6M55ZISJ0UNU+CCvUbJtB6zX8BOelxsh8MXnHEfPyfrXDvnc/dnN+pH32OlJY1tOBkA5Ljandct5XlnnCiNx/6LJwfqAC7Kx4vPvF6WSfCoGTceQMkRGvkA6kwWeVJUfrCIbJEIEs3Fv9ga0FIll2S/nlLb8fS068U4nZteTslUnl5qMKsrnf4YPldFmJvpWx2voxSAzDKGkqadwC3ydJKeYp5+Y6P2X2Vx6Dh+MfF0tYvOSwCo0GDaYzlglJfHJFBsUwqqD+BKafuIesbMJBpIRvd4P69dl7mqkxHD1A+/3+WyVN9QhVt0X3354mlAccND9U6cp/eyjAERDrf7LGuIvaouy8miE4Qn/5+OwGuBfRZ+v2oi5zJ5aIt5cKIwMRi1uUZsQb0RiCYk3LRsD+eBZjfX6tvtwshEPhc6Y3rDz05GqeRA0qWec2X9jRrl/rjT9W+Sy4T0hDyCMPx1wVOeQNZPi30ieOeDx71m2wHR/G/+Zx4py12bj7pClK1K6DIuw5ochkVXe0MlQSpzjIF2BjqCtMgM+6EjKWEYwnTIm6qZ6zgyOOXoVm1wicTGCybYLAOhYtuzcd3MHn1VhkRdhBw1aAgUCQk9MQARgouxVgE9mbdUka3ukyL7dc6f2RgiA8ZgEuPCnJ6NUwaCXgCyh+QbNPXgsFMRpGDoPZvwgJSzf//oPA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(396003)(136003)(39830400003)(346002)(366004)(376002)(8676002)(83380400001)(33716001)(4326008)(8936002)(9686003)(33656002)(186003)(6512007)(7416002)(66476007)(66556008)(1076003)(66946007)(5660300002)(26005)(44832011)(6916009)(6506007)(52116002)(508600001)(54906003)(2906002)(38350700002)(38100700002)(316002)(6666004)(6486002)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rbQpBFTrx15+nn3DhjkUsiogjfLS+fLZEpytr27rkByXdUsIR6flDGpPS6hh?=
- =?us-ascii?Q?Z1ai5fCYhzOVQfutq9C8sfUBL8qnuXVP/J0JjbrlMzDVVz3JZ6toOXL6huW/?=
- =?us-ascii?Q?Q5RMX5O811L+iLia+n/hSbvnv6cwqiKZ2It06gVv+OHdNe+q2WeCdXIUbAor?=
- =?us-ascii?Q?n9dZNm1UUGp7xWZiaxRVsB2eFXURwlyZPgqfx3S3GCfSVVgqzcd2DLfjoWy0?=
- =?us-ascii?Q?VRn76R5h5Ixj7KoVK1dMFdOYnRp3PV2Luhluc31GtyPRwPAf7XY7W0g0jcM7?=
- =?us-ascii?Q?ePeWxn5+MUOliNs0d/FoNyBWDhX5/Di35vXv0g6unmloSzPELnW3zozbnepv?=
- =?us-ascii?Q?U7Yxa8HgZxgri3Kz+3MvpSkSn/+jJ55Gly1ipKhhSYytB0dXZbzpoaX89hVc?=
- =?us-ascii?Q?PQGWFjunPrFHdPxI6DfZ4um1hyPjltGukKpE8ifGFcCYoKKdeUnCzGaHnDHP?=
- =?us-ascii?Q?whaNpGlUwnSbu4ishA7ntLTKCOCnmMHrYuWTtnGsDnuok0TZdsrXTMK5m9lu?=
- =?us-ascii?Q?zvXzJ1pfziCUG7jIU8wAo0A2lCy8Sv0PkTE8BkqFpYUaWDCZwqxF1s/bZ/tD?=
- =?us-ascii?Q?jF4bBwXUKT33p7I4skzxU7N2C0ICwhwUm42EBbMZiVGpMH9V6kOACNOoSmPe?=
- =?us-ascii?Q?gYbXXOTmliBFoNP7Zi8MkaqHmuBGYdx9plSZUJrbPtSHiZwG4XQn5EVLYGh7?=
- =?us-ascii?Q?CcplRLhbC6Uvmfd5Tpx1jw4SANPfEaogk7azP8uAdHQwxe1Dp52dc7BpH8bx?=
- =?us-ascii?Q?0y+XeTHlUGoczfj8VTnFJni9KlifDwJLqv6aaGoR+7z1f9PSsjGaEctZSrCi?=
- =?us-ascii?Q?4mAtgY3Qq52MmGzkwNdXOiX+sz0DiEaNa7xv/p6Ya3rmOzSPGZtt9TdmSvDe?=
- =?us-ascii?Q?HZIHvjeiOYBBTfOjMRGxvFmZUrBPUMEHlI3WwtjIXj6uqxKcJmGL9xY40PZ2?=
- =?us-ascii?Q?b++cSnHfSSDqU5m0whef+PEIOwN3R6miyf1S2m6LDwOhCYmD7701zsQPNCXX?=
- =?us-ascii?Q?unDWbLl9OtacIp6ZwYkVKAK5fw82GFO1GVQTGkD9wZYdJuqo1XM+0yvdcKd3?=
- =?us-ascii?Q?SQcaUJV4b/3rqzpa04ek0Go5+WksHi5fZs74wFcAgI2hoJRUJmL81AX59j/R?=
- =?us-ascii?Q?JbzPRNPqjIkn17AJLN9qRfsNsTFDRjmMQp+A2eACzz2u9LL1bL3Ua9lVmCwn?=
- =?us-ascii?Q?gZ8LfOrhfGBhtt1H7ZETOS1LuOttWaY+nugVnSgQjq0pK9IAknq3S1CYxzVv?=
- =?us-ascii?Q?OVeN9Vy/67ynhahrDAvEXNMRckQrrdPsy59wKPFks6DjDoNwgHV8LW1rWT2k?=
- =?us-ascii?Q?ZyUzXd3Wyf4yswu52hBeiMEXzMdjQ7iGYF29VlQXUAdc8Vy08mz2zK/HyKPG?=
- =?us-ascii?Q?fE2vOx6QVxKtt3oMpY0cYxG/meVVBMrQ2A2K4Lrer/1kBc/N2EPkTuolSNlV?=
- =?us-ascii?Q?MrSCWpfIqEtLjdS6ht0xtk5/NiTw95OwjP0PxXunSIEzxPtVAF1laKVWec6W?=
- =?us-ascii?Q?FxEEA5qgp3Fsch7smzPQWI2mzSeq3bDhdzm5+amuntZWQO+Hc4VUwtACh6/h?=
- =?us-ascii?Q?3V9dB2FZ8uoTELqdkquZXj4q3gbdc/ulStN4zqim83B2JD0OJa8AvI76wpW2?=
- =?us-ascii?Q?u3rfyF/9oxYHyQOUoUEfD+6ZNAqPslTPtkRpw2ZxFWEskUQxPw8QVdaK2kEN?=
- =?us-ascii?Q?3dWOXEOFnhmkSqUtO+UE5NwKoFODkL8pThwN/MHkL1zSTLACEDtzu+LhRAl2?=
- =?us-ascii?Q?gF69X0PZa2GEpI9OHfBlotzKFsXfE+uhvVIywRCKw3CkegHj6Qqi?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xnYaX+0TxtNODZnOTg6EChk8TyPWIgAC0wdXAk8ZB/PGYv6WjwXb6ODAndjD?=
+ =?us-ascii?Q?4N88AJXf/eGrhdhNQMMIiOX9QOuAaGbyk3sFr/SoYu5ZJF1kal28EQpyxg2h?=
+ =?us-ascii?Q?Tqs9FNqDoq7FaYPL5L60r9vEGWvdiQqgfCQweJHOZoGBP8dpOgfEM3O9V7S1?=
+ =?us-ascii?Q?JG8Ffou/MNDY2X881PPFvRbIC9ZHrxvEq5wPr+YOJ054l/eMeMawfr5H1KG+?=
+ =?us-ascii?Q?souHYJMrGvepZ3HrAUUEHwkxUcVDAeXSF4n5TaQZx4bYszX89DE7tmK5JZGP?=
+ =?us-ascii?Q?I0Mkt6VMQwp12z+ccTI6G4lXbpxMFKq31FpAivvGHN9AQqKgd7fpAykNy5sa?=
+ =?us-ascii?Q?5jpV4h4hMlIp6V1U4uus11AGeuVmGIbO9cxF5Qp7wNYQ1jq1nI/tdKWaVV5l?=
+ =?us-ascii?Q?dr/OmnbO5Z6sPwHJ4yFxj/J68BVZIEdkgC8JVzaVWWMk7jt9RmfMBJh0esmB?=
+ =?us-ascii?Q?BU39xRUf37He/rynF2JXXXPegsvI5pizoFA7W6h+TzKltzqKCRVrW0RVCo3m?=
+ =?us-ascii?Q?aeinqfnVFr9NJAq+RlrtEgf1Wv/DbpJEVAdGS2iPdqs7oKIXrGiZURa44dsY?=
+ =?us-ascii?Q?dEqyRccf8sykMfHYoSmMdPpMZ6/qrU1opyuY8aPU93ljT9Nzyw/IxQvuOkZG?=
+ =?us-ascii?Q?IswpzCv/ao3JQ2dNCMAuafeQrPjobPHhb3WfnqNO2lwOLZqrNST6aDoKGgKA?=
+ =?us-ascii?Q?q8LhO97KZZpL4TUWk7znnMwRg66N+8kRKWCU7n4hJ4fSSBWVdSftI7f8C9Pn?=
+ =?us-ascii?Q?ZrFgkQiyqZKRZx/udtU4ntRG3cuO9rR5ihvhe3CNiwJjo5VXB5rqu3m+eT2m?=
+ =?us-ascii?Q?4QkLL14igPGi2TpOe+cnBBSazJNvuCy0gVXkjv1gQgUaK4qSycfnFUgHjXCP?=
+ =?us-ascii?Q?VX9wHIRCL/+oG3T3/KYmZInJ/lyge6MdLY124hBxJa1t5pebfid9fKG3gn09?=
+ =?us-ascii?Q?ocZfRzlir/IxrEPBuXuZp+jLrWH0lPZVqGRVxSIUj2Knk5TNKOCVyIwt5umM?=
+ =?us-ascii?Q?SQfrljzJZUsOfzIKBnBQxU88CeJNkV9atK2GntLXQtRX1BwZuX0iIfiQ5aZG?=
+ =?us-ascii?Q?6aSHBS5W2IW0ptY8/v3/lZ3xPVaHdpnae28saY2XfTmXPvw2idjSL3jwPP64?=
+ =?us-ascii?Q?tarsY+WkRUgDFFRcJAEEhpWlEyr9TcPB+gmsi2YMgaAoxMuqgcEGOAbu3ew7?=
+ =?us-ascii?Q?9ZsoAQydanfOXQ2O39VEy3HjNv0Yhc0L95NIe3h3Ccr1AW7QnC7rBoSkTrra?=
+ =?us-ascii?Q?o/Evd4DmEKUwSawB2Eoi+MWiBSVfrOs10ElSM8waqguF3EE8pLxDGyzYvDcy?=
+ =?us-ascii?Q?yfgYwLLUa/+/P8R7n2DxJXALliGA6XnOjGwfT6YyvxJjPPC7MmCVAljnxcbJ?=
+ =?us-ascii?Q?unuh5IksfNw2haZicvjfa7Asj1DrnZz3s+6JDmRReQ+e/pgc+Z3uWQ24JaVb?=
+ =?us-ascii?Q?bWs3UXpzDr8s5x3SKIT8Xs0sYr+H+W0zQ8+40LXfumI97HNPEteKyTLs8QUN?=
+ =?us-ascii?Q?Rc9lLuZEALolbnHkJncJHbyBX03oFJJIgmQh7g2M1ULzvSl5k07+hFjN4M2w?=
+ =?us-ascii?Q?PJkEzMplTtgme0h84zOdBbwfAJDyqq+y7ExYSX/auA1ezye8clAB8UgEnFME?=
+ =?us-ascii?Q?qmM3VrWJZEth+ObsEj9Tabl0M7wpGEwQI4e7tkzl8bpBcfKr1ZGc9+Bw0qc/?=
+ =?us-ascii?Q?0Z54+BB8MgEzD6DN3n28JJJMKAYSXh5wPF3WGGi1IVqdm1WygH6ZX7mERK3J?=
+ =?us-ascii?Q?D+d30xxg1WhT1W17Y+MdDLyQU+ALK2JPhwYm7EDrwgqEyeMYhx9b?=
 X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b32658d-dd47-41fd-52c8-08da31ebd980
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d0fe5ad-fd1b-4af2-747b-08da3230e15b
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2022 18:43:46.4987
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2022 02:57:54.9532
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pH4bsp0MfKXPBy96nipZygZIzTJC4Z3nXIbCLW7AsdXLqCEoN9QfpRm/UFh1GDUlQv59oRu83O7uvPidl0EcBcnbgqPK6omYOf8jIvqSiNo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR10MB2037
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: +3egBC7svIkRJF/nTM0w09YKrdueP3aoHtbgW5XE9tJLwNxaFsN8trwUuXDC2q8ku4+OSweFQ7LEVVcpZ7vT8uw3oJmjz9wUA2OT/GvVO9Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR10MB1396
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -142,274 +142,11 @@ On Mon, May 09, 2022 at 05:13:05PM +0000, Vladimir Oltean wrote:
 > Hi Colin,
 > 
 > On Sun, May 08, 2022 at 11:52:57AM -0700, Colin Foster wrote:
-> > The patch set in general is to add support for the VSC7512, and
-> > eventually the VSC7511, VSC7513 and VSC7514 devices controlled over
-> > SPI. The driver is believed to be fully functional for the internal
-> > phy ports (0-3)  on the VSC7512. It is not yet functional for SGMII,
-> > QSGMII, and SerDes ports.
-> > 
-> > I have mentioned previously:
-> > The hardware setup I'm using for development is a beaglebone black, with
-> > jumpers from SPI0 to the microchip VSC7512 dev board. The microchip dev
-> > board has been modified to not boot from flash, but wait for SPI. An
-> > ethernet cable is connected from the beaglebone ethernet to port 0 of
-> > the dev board.
-> > 
-> > The relevant sections of the device tree I'm using for the VSC7512 is
-> > below. Notably the SGPIO LEDs follow link status and speed from network
-> > triggers.
-> > 
-> > In order to make this work, I have modified the cpsw driver, and now the
-> > cpsw_new driver, to allow for frames over 1500 bytes. Otherwise the
-> > tagging protocol will not work between the beaglebone and the VSC7512. I
-> > plan to eventually try to get those changes in mainline, but I don't
-> > want to get distracted from my initial goal. I also had to change
-> > bonecommon.dtsi to avoid using VLAN 0.
-> 
-> This ti,dual-emac-pvid thing is a really odd thing to put in the device
-> tree. But what's the problem with VLAN 0 anyway?
-
-Ahh, I see that was an exchange between me and Grygorii Strashko that
-wasn't public. Looking now, it might be VLAN 1...
-
-I'd see "failed to initialize vlan filtering" when I ran "ip link set
-dev swp1 master br0" because the default bridge vlan conflicted with
-slave_data->dual_emac_res_vlan = port_id;
-(drivers/net/ethernet/ti/cpsw_new.c, around line 1325)
-
-My initial attempt was to just change cpsw_port1
-ti,dual-emac-pvid=<12>; but that didn't change the behavior. Maybe if I
-went back to it again, seeing as I'm much older and wiser than I was
-before, I could find the correct device tree solution... Ideally I think
-I should have the ability to not enable cpsw_port1 and be good.
-
-But I think the magic was really just to set
-slave_data->dual_emac_res_vlan = 10 + port_id; to avoid conflicts.
-
-
-This became an issue at 5.15, when cpsw_new was rolled in to the .dtsis
-I've been using.
-
-> 
-> > 
-> > I believe much of the MFD sections are very near feature-complete,
-> > whereas the switch section will require ongoing work to enable
-> > additional ports / features. This could lead to a couple potential
-> > scenarios:
-> > 
-> > The first being patches 1-8 being split into a separate patch set, while
-> > patches 9-16 remain in the RFC state. This would offer the pinctrl /
-> > sgpio / mdio controller functionality, but no switch control until it is
-> > ready.
-> > 
-> > The second would assume the current state of the switch driver is
-> > acceptable (or at least very near so) and the current patch set gets an
-> > official PATCH set (with minor changes as necessary - e.g. squashing
-> > patch 16 into 14). That might be ambitious.
-> > 
-> > The third would be to keep this patch set in RFC until switch
-> > functionality is more complete. I'd understand if this was the desired
-> > path... but it would mean me having to bug more reviewers.
-> 
-> Considering that the merge window is approaching, I'd say get the
-> non-DSA stuff accepted until then, then repost the DSA stuff in ~3 weeks
-> from now as non-RFC, once v5.18 is cut and the development for v5.20
-> (or whatever the number will be) begins.
-
-That's the approach I'd prefer as well.
-
-> 
-> > / {
-> > 	vscleds {
-> > 		compatible = "gpio-leds";
-> > 		vscled@0 {
-> > 			label = "port0led";
-> > 			gpios = <&sgpio_out1 0 0 GPIO_ACTIVE_LOW>;
-> > 			default-state = "off";
-> > 			linux,default-trigger = "ocelot-miim0.2.auto-mii:00:link";
-> > 		};
-> > 		vscled@1 {
-> > 			label = "port0led1";
-> > 			gpios = <&sgpio_out1 0 1 GPIO_ACTIVE_LOW>;
-> > 			default-state = "off";
-> > 			linux,default-trigger = "ocelot-miim0.2.auto-mii:00:1Gbps";
-> > 		};
-> > [ ... ]
-> > 	};
-> > };
-> > 
-> > &spi0 {
-> > 	#address-cells = <1>;
-> > 	#size-cells = <0>;
-> > 	status = "okay";
-> > 
-> > 	ocelot-chip@0 {
-> > 		compatible = "mscc,vsc7512_mfd_spi";
-> 
-> Can you use hyphens instead of underscores in this compatible string?
-> 
-> > 		spi-max-frequency = <2500000>;
-> > 		reg = <0>;
-> > 
-> > 		ethernet-switch@0 {
-> 
-> I don't think the switch node should have any address?
-> 
-> > 			compatible = "mscc,vsc7512-ext-switch";
-> > 			ports {
-> > 				#address-cells = <1>;
-> > 				#size-cells = <0>;
-> > 
-> > 				port@0 {
-> > 					reg = <0>;
-> > 					label = "cpu";
-> > 					status = "okay";
-> > 					ethernet = <&mac_sw>;
-> > 					phy-handle = <&sw_phy0>;
-> > 					phy-mode = "internal";
-> > 				};
-> > 
-> > 				port@1 {
-> > 					reg = <1>;
-> > 					label = "swp1";
-> > 					status = "okay";
-> > 					phy-handle = <&sw_phy1>;
-> > 					phy-mode = "internal";
-> > 				};
-> > 			};
-> > 		};
-> > 
-> > 		mdio0: mdio0@0 {
-> 
-> This is going to be interesting. Some drivers with multiple MDIO buses
-> create an "mdios" container with #address-cells = <1> and put the MDIO
-> bus nodes under that. Others create an "mdio" node and an "mdio0" node
-> (and no address for either of them).
-> 
-> The problem with the latter approach is that
-> Documentation/devicetree/bindings/net/mdio.yaml does not accept the
-> "mdio0"/"mdio1" node name for an MDIO bus.
-
-Hmm... That'll be interesting indeed. The 7514
-(arch/mips/boot/dts/mscc/ocelot.dtsi) is where I undoubtedly started.
-Is there an issue with the 7514, or is it just an issue with my
-implementation, which should be:
-
-mdio0: mdio@0 {
-
-instead of mdio0@0?
-
-> 
-> > 			compatible = "mscc,ocelot-miim";
-> > 			#address-cells = <1>;
-> > 			#size-cells = <0>;
-> > 
-> > 			sw_phy0: ethernet-phy@0 {
-> > 				reg = <0x0>;
-> > 			};
-> > 
-> > 			sw_phy1: ethernet-phy@1 {
-> > 				reg = <0x1>;
-> > 			};
-> > 
-> > 			sw_phy2: ethernet-phy@2 {
-> > 				reg = <0x2>;
-> > 			};
-> > 
-> > 			sw_phy3: ethernet-phy@3 {
-> > 				reg = <0x3>;
-> > 			};
-> > 		};
-> > 
-> > 		mdio1: mdio1@1 {
-> > 			compatible = "mscc,ocelot-miim";
-> > 			pinctrl-names = "default";
-> > 			pinctrl-0 = <&miim1>;
-> > 			#address-cells = <1>;
-> > 			#size-cells = <0>;
-> > 
-> > 			sw_phy4: ethernet-phy@4 {
-> > 				reg = <0x4>;
-> > 			};
-> > 
-> > 			sw_phy5: ethernet-phy@5 {
-> > 				reg = <0x5>;
-> > 			};
-> > 
-> > 			sw_phy6: ethernet-phy@6 {
-> > 				reg = <0x6>;
-> > 			};
-> > 
-> > 			sw_phy7: ethernet-phy@7 {
-> > 				reg = <0x7>;
-> > 			};
-> > 		};
-> > 
-> > 		gpio: pinctrl@0 {
-> 
-> Similar thing with the address. All these @0 addresses actually conflict
-> with each other.
-> 
-> > 			compatible = "mscc,ocelot-pinctrl";
-> > 			gpio-controller;
-> > 			#gpio_cells = <2>;
-> > 			gpio-ranges = <&gpio 0 0 22>;
-> > 
-> > 			led_shift_reg_pins: led-shift-reg-pins {
-> > 				pins = "GPIO_0", "GPIO_1", "GPIO_2", "GPIO_3";
-> > 				function = "sg0";
-> > 			};
-> > 
-> > 			miim1: miim1 {
-> > 				pins = "GPIO_14", "GPIO_15";
-> > 				function = "miim";
-> > 			};
-> > 		};
-> > 
-> > 		sgpio: sgpio {
-> 
-> And mixing nodes with addresses with nodes without addresses is broken too.
-> 
-> > 			compatible = "mscc,ocelot-sgpio";
-> > 			#address-cells = <1>;
-> > 			#size-cells = <0>;
-> > 			bus-frequency=<12500000>;
-> > 			clocks = <&ocelot_clock>;
-> > 			microchip,sgpio-port-ranges = <0 15>;
-> > 			pinctrl-names = "default";
-> > 			pinctrl-0 = <&led_shift_reg_pins>;
-> > 
-> > 			sgpio_in0: sgpio@0 {
-> > 				compatible = "microchip,sparx5-sgpio-bank";
-> > 				reg = <0>;
-> > 				gpio-controller;
-> > 				#gpio-cells = <3>;
-> > 				ngpios = <64>;
-> > 			};
-> > 
-> > 			sgpio_out1: sgpio@1 {
-> > 				compatible = "microchip,sparx5-sgpio-bank";
-> > 				reg = <1>;
-> > 				gpio-controller;
-> > 				#gpio-cells = <3>;
-> > 				ngpios = <64>;
-> > 			};
-> > 		};
-> > 	};
-> > };
-> > 
-> > And I'll include the relevant dmesg prints - I don't love the "invalid
-> > resource" prints, as they seem to be misleading. They're a byproduct of
-> > looking for IO resources before falling back to REG.
-> > 
-> > [    0.000000] Booting Linux on physical CPU 0x0
-> > [    0.000000] Linux version 5.18.0-rc5-01295-g47053e327c52 (X@X) (arm-linux-gnueabi-gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #630 SMP PREEMPT Sun May 8 10:56:51 PDT 2022
-> > ...
-> > [    2.829319] pinctrl-ocelot ocelot-pinctrl.0.auto: DMA mask not set
 > 
 > Why does this get printed, if you put a dump_stack() in of_dma_configure_id()?
 
-I'll run that tonight.
+Below. I'm one of the only users of IORESOURCE_REG, from what I can
+tell... Not sure if that's any consolation.
 
 > 
 > > [    2.835718] pinctrl-ocelot ocelot-pinctrl.0.auto: invalid resource
@@ -427,166 +164,123 @@ I'll run that tonight.
 > > [    2.873244] gpio_stub_drv gpiochip6: (ocelot-sgpio.1.auto-output): added GPIO chardev (254:6)
 > > [    2.873354] gpio_stub_drv gpiochip6: registered GPIOs 1898 to 1961 on ocelot-sgpio.1.auto-output
 > > [    2.881148] mscc-miim ocelot-miim0.2.auto: DMA mask not set
-> > [    2.886929] mscc-miim ocelot-miim0.2.auto: invalid resource
-> > [    2.893738] mdio_bus ocelot-miim0.2.auto-mii: GPIO lookup for consumer reset
-> > [    2.893769] mdio_bus ocelot-miim0.2.auto-mii: using device tree for GPIO lookup
-> > [    2.893802] of_get_named_gpiod_flags: can't parse 'reset-gpios' property of node '/ocp/interconnect@48000000/segment@0/target-module@30000/spi@0/ocelot-chip@0/mdio0[0]'
-> > [    2.893898] of_get_named_gpiod_flags: can't parse 'reset-gpio' property of node '/ocp/interconnect@48000000/segment@0/target-module@30000/spi@0/ocelot-chip@0/mdio0[0]'
-> > [    2.893996] mdio_bus ocelot-miim0.2.auto-mii: using lookup tables for GPIO lookup
-> > [    2.894012] mdio_bus ocelot-miim0.2.auto-mii: No GPIO consumer reset found
-> > [    3.395738] mdio_bus ocelot-miim0.2.auto-mii:00: GPIO lookup for consumer reset
-> > [    3.395777] mdio_bus ocelot-miim0.2.auto-mii:00: using device tree for GPIO lookup
-> > [    3.395840] of_get_named_gpiod_flags: can't parse 'reset-gpios' property of node '/ocp/interconnect@48000000/segment@0/target-module@30000/spi@0/ocelot-chip@0/mdio0/ethernet-phy@0[0]'
-> > [    3.395959] of_get_named_gpiod_flags: can't parse 'reset-gpio' property of node '/ocp/interconnect@48000000/segment@0/target-module@30000/spi@0/ocelot-chip@0/mdio0/ethernet-phy@0[0]'
-> > [    3.396069] mdio_bus ocelot-miim0.2.auto-mii:00: using lookup tables for GPIO lookup
-> > [    3.396086] mdio_bus ocelot-miim0.2.auto-mii:00: No GPIO consumer reset found
-> > ...
-> > [    3.449187] ocelot-ext-switch ocelot-ext-switch.4.auto: DMA mask not set
-> > [    5.336880] ocelot-ext-switch ocelot-ext-switch.4.auto: PHY [ocelot-miim0.2.auto-mii:00] driver [Generic PHY] (irq=POLL)
-> > [    5.349087] ocelot-ext-switch ocelot-ext-switch.4.auto: configuring for phy/internal link mode
-> > [    5.363619] ocelot-ext-switch ocelot-ext-switch.4.auto swp1 (uninitialized): PHY [ocelot-miim0.2.auto-mii:01] driver [Generic PHY] (irq=POLL)
-> > [    5.381396] ocelot-ext-switch ocelot-ext-switch.4.auto swp2 (uninitialized): PHY [ocelot-miim0.2.auto-mii:02] driver [Generic PHY] (irq=POLL)
-> > [    5.398525] ocelot-ext-switch ocelot-ext-switch.4.auto swp3 (uninitialized): PHY [ocelot-miim0.2.auto-mii:03] driver [Generic PHY] (irq=POLL)
-> 
-> Do the PHYs not have a specific driver?
 
-When I have the other four ports defined, those correctly find the
-vsc85xx driver, perform serdes calibration, etc. (assuming I have that
-phy support compiled in) The internal phys I believe have always just
-been using a generic driver.
+[   16.699517] CPU: 0 PID: 7 Comm: kworker/u2:0 Not tainted 5.18.0-rc5-01315-g0a0ea78e3a79-dirty #632
+[   16.708574] Hardware name: Generic AM33XX (Flattened Device Tree)
+[   16.714704] Workqueue: events_unbound deferred_probe_work_func
+[   16.720608] Backtrace: 
+[   16.723071]  dump_backtrace from show_stack+0x20/0x24
+[   16.728179]  r7:c31bcc10 r6:00000000 r5:c1647b38 r4:a0000013
+[   16.733863]  show_stack from dump_stack_lvl+0x60/0x78
+[   16.738954]  dump_stack_lvl from dump_stack+0x18/0x1c
+[   16.744040]  r7:c31bcc10 r6:c31bcc10 r5:c31bcc10 r4:00000000
+[   16.749724]  dump_stack from of_dma_configure_id+0x48/0x314
+[   16.755335]  of_dma_configure_id from platform_dma_configure+0x2c/0x38
+[   16.761911]  r10:df9bf424 r9:df9bf424 r8:00000069 r7:c31bcc10 r6:c1bbac5c r5:c31bcc10
+[   16.769777]  r4:00000000
+[   16.772320]  platform_dma_configure from really_probe+0x78/0x298
 
-> 
-> > [    5.422048] device eth0 entered promiscuous mode
-> > [    5.426785] DSA: tree 0 setup
-> > ...
-> > [    7.450067] ocelot-ext-switch ocelot-ext-switch.4.auto: Link is Up - 100Mbps/Full - flow control off
-> > [   21.556395] cpsw-switch 4a100000.switch: starting ndev. mode: dual_mac
-> > [   21.648564] SMSC LAN8710/LAN8720 4a101000.mdio:00: attached PHY driver (mii_bus:phy_addr=4a101000.mdio:00, irq=POLL)
-> > [   21.667970] 8021q: adding VLAN 0 to HW filter on device eth0
-> > [   21.705360] ocelot-ext-switch ocelot-ext-switch.4.auto swp1: configuring for phy/internal link mode
-> > [   22.018230] ocelot-ext-switch ocelot-ext-switch.4.auto: Link is Down
-> > [   23.771740] cpsw-switch 4a100000.switch eth0: Link is Up - 100Mbps/Full - flow control off
-> > [   24.090929] ocelot-ext-switch ocelot-ext-switch.4.auto: Link is Up - 100Mbps/Full - flow control off
-> > [   25.853021] ocelot-ext-switch ocelot-ext-switch.4.auto swp1: Link is Up - 1Gbps/Full - flow control rx/tx
-> > 
-> > 
-> > RFC history:
-> > v1 (accidentally named vN)
-> > 	* Initial architecture. Not functional
-> > 	* General concepts laid out
-> > 
-> > v2
-> > 	* Near functional. No CPU port communication, but control over all
-> > 	external ports
-> > 	* Cleaned up regmap implementation from v1
-> > 
-> > v3
-> > 	* Functional
-> > 	* Shared MDIO transactions routed through mdio-mscc-miim
-> > 	* CPU / NPI port enabled by way of vsc7512_enable_npi_port /
-> > 	felix->info->enable_npi_port
-> > 	* NPI port tagging functional - Requires a CPU port driver that supports
-> > 	frames of 1520 bytes. Verified with a patch to the cpsw driver
-> > 
-> > v4
-> >     * Functional
-> >     * Device tree fixes
-> >     * Add hooks for pinctrl-ocelot - some functionality by way of sysfs
-> >     * Add hooks for pinctrl-microsemi-sgpio - not yet fully functional
-> >     * Remove lynx_pcs interface for a generic phylink_pcs. The goal here
-> >     is to have an ocelot_pcs that will work for each configuration of
-> >     every port.
-> > 
-> > v5
-> >     * Restructured to MFD
-> >     * Several commits were split out, submitted, and accepted
-> >     * pinctrl-ocelot believed to be fully functional (requires commits
-> >     from the linux-pinctrl tree)
-> >     * External MDIO bus believed to be fully functional
-> > 
-> > v6
-> >     * Applied several suggestions from the last RFC from Lee Jones. I
-> >       hope I didn't miss anything.
-> >     * Clean up MFD core - SPI interaction. They no longer use callbacks.
-> >     * regmaps get registered to the child device, and don't attempt to
-> >       get shared. It seems if a regmap is to be shared, that should be
-> >       solved with syscon, not dev or mfd.
-> > 
-> > v7
-> >     * Applied as much as I could from Lee and Vladimir's suggestions. As
-> >       always, the feedback is greatly appreciated!
-> >     * Remove "ocelot_spi" container complication
-> >     * Move internal MDIO bus from ocelot_ext to MFD, with a devicetree
-> >       change to match
-> >     * Add initial HSIO support
-> >     * Switch to IORESOURCE_REG for resource definitions
-> > 
-> > v8
-> >     * Applied another round of suggestions from Lee and Vladimir
-> >     * Utilize regmap bus reads, which speeds bulk transfers up by an
-> 
-> bus -> bulk?
+platform_dma_configure gets called because...
 
-Either is probably valid. Here I'm referencing struct regmap_bus, 
-so _regmap_bus_read allows the utilization of bulk transfers for stats.
+[   16.778360]  really_probe from __driver_probe_device+0x94/0xf4
+[   16.784230]  r7:c31bcc10 r6:c31bcc10 r5:c1bbac5c r4:c31bcc10
+[   16.789913]  __driver_probe_device from driver_probe_device+0x44/0xe0
+[   16.796391]  r5:c1c51f28 r4:c1c51f24
+[   16.799980]  driver_probe_device from __device_attach_driver+0x9c/0xc4
+[   16.806548]  r9:df9bf424 r8:c1b9c728 r7:c1c51ef8 r6:c31bcc10 r5:e002191c r4:c1bbac5c
+[   16.814326]  __device_attach_driver from bus_for_each_drv+0x94/0xe4
+[   16.820635]  r7:c1c51ef8 r6:c0a012e4 r5:e002191c r4:00000000
+[   16.826319]  bus_for_each_drv from __device_attach+0x104/0x170
+[   16.832190]  r6:00000001 r5:c31bcc54 r4:c31bcc10
+[   16.836827]  __device_attach from device_initial_probe+0x1c/0x20
+[   16.842871]  r6:c31bcc10 r5:c1b9ccd0 r4:c31bcc10
+[   16.847507]  device_initial_probe from bus_probe_device+0x94/0x9c
+[   16.853637]  bus_probe_device from device_add+0x3ec/0x8b4
+[   16.859073]  r7:c1c51ef8 r6:c31b9c00 r5:00000000 r4:c31bcc10
+[   16.864756]  device_add from platform_device_add+0x100/0x210
+[   16.870455]  r10:c1a21744 r9:c1a21724 r8:c31bcc10 r7:00000002 r6:c31bcc00 r5:c3201aa0
+[   16.878320]  r4:00000002
+[   16.880864]  platform_device_add from mfd_add_devices+0x308/0x62c
 
-> 
-> >       order of magnitude
-> >     * Add two additional patches to utilize phylink_generic_validate
-> >     * Changed GPL V2 to GPL in licenses where applicable (checkpatch)
-> >     * Remove initial hsio/serdes changes from the RFC
-> > 
-> > 
-> > Colin Foster (16):
-> >   pinctrl: ocelot: allow pinctrl-ocelot to be loaded as a module
-> >   pinctrl: microchip-sgpio: allow sgpio driver to be used as a module
-> >   net: ocelot: add interface to get regmaps when exernally controlled
-> >   net: mdio: mscc-miim: add ability to be used in a non-mmio
-> >     configuration
-> >   pinctrl: ocelot: add ability to be used in a non-mmio configuration
-> >   pinctrl: microchip-sgpio: add ability to be used in a non-mmio
-> >     configuration
-> >   resource: add define macro for register address resources
-> >   mfd: ocelot: add support for the vsc7512 chip via spi
-> >   net: mscc: ocelot: expose ocelot wm functions
-> >   net: dsa: felix: add configurable device quirks
-> >   net: mscc: ocelot: expose regfield definition to be used by other
-> >     drivers
-> >   net: mscc: ocelot: expose stats layout definition to be used by other
-> >     drivers
-> >   net: mscc: ocelot: expose vcap_props structure
-> >   net: dsa: ocelot: add external ocelot switch control
-> >   net: dsa: felix: add phylink_get_caps capability
-> >   net: dsa: ocelot: utilize phylink_generic_validate
-> > 
-> >  drivers/mfd/Kconfig                        |  18 +
-> >  drivers/mfd/Makefile                       |   2 +
-> >  drivers/mfd/ocelot-core.c                  | 138 ++++++++
-> >  drivers/mfd/ocelot-spi.c                   | 311 +++++++++++++++++
-> >  drivers/mfd/ocelot.h                       |  34 ++
-> >  drivers/net/dsa/ocelot/Kconfig             |  14 +
-> >  drivers/net/dsa/ocelot/Makefile            |   5 +
-> >  drivers/net/dsa/ocelot/felix.c             |  29 +-
-> >  drivers/net/dsa/ocelot/felix.h             |   3 +
-> >  drivers/net/dsa/ocelot/felix_vsc9959.c     |   1 +
-> >  drivers/net/dsa/ocelot/ocelot_ext.c        | 366 +++++++++++++++++++++
-> >  drivers/net/dsa/ocelot/seville_vsc9953.c   |   1 +
-> >  drivers/net/ethernet/mscc/ocelot_devlink.c |  31 ++
-> >  drivers/net/ethernet/mscc/ocelot_vsc7514.c | 230 +------------
-> >  drivers/net/ethernet/mscc/vsc7514_regs.c   | 200 +++++++++++
-> >  drivers/net/mdio/mdio-mscc-miim.c          |  31 +-
-> >  drivers/pinctrl/Kconfig                    |   4 +-
-> >  drivers/pinctrl/pinctrl-microchip-sgpio.c  |  26 +-
-> >  drivers/pinctrl/pinctrl-ocelot.c           |  35 +-
-> >  include/linux/ioport.h                     |   5 +
-> >  include/soc/mscc/ocelot.h                  |  19 ++
-> >  include/soc/mscc/vsc7514_regs.h            |   6 +
-> >  22 files changed, 1251 insertions(+), 258 deletions(-)
-> >  create mode 100644 drivers/mfd/ocelot-core.c
-> >  create mode 100644 drivers/mfd/ocelot-spi.c
-> >  create mode 100644 drivers/mfd/ocelot.h
-> >  create mode 100644 drivers/net/dsa/ocelot/ocelot_ext.c
-> > 
-> > -- 
-> > 2.25.1
-> >
+platform_device_add sets up pdev->bus = &platform_bus_type;
+
+That assignment looks to date back to the before times... Now you have
+me curious. And a little scared :-)
+
+[   16.887008]  r10:00000000 r9:00000000 r8:00000000 r7:00000002 r6:c31bcc00 r5:c3201a40
+[   16.894875]  r4:c12be398 r3:00000000
+[   16.898465]  mfd_add_devices from devm_mfd_add_devices+0x80/0xc0
+[   16.904514]  r10:df9be9bc r9:df9be9bc r8:00000005 r7:c12be2e8 r6:fffffffe r5:c31b9c00
+[   16.912381]  r4:c31ecc40
+[   16.914924]  devm_mfd_add_devices from ocelot_core_init+0x40/0x6c
+[   16.921058]  r8:00000065 r7:c31b9c00 r6:c31ec9c0 r5:00000000 r4:c31b9c00
+[   16.927790]  ocelot_core_init from ocelot_spi_probe+0xf4/0x188
+[   16.933662]  r5:00000000 r4:c31b9c00
+[   16.937251]  ocelot_spi_probe from spi_probe+0x94/0xb8
+[   16.942434]  r7:c31b9c00 r6:c1b9fc60 r5:c31b9c00 r4:00000000
+[   16.948118]  spi_probe from really_probe+0x110/0x298
+[   16.953116]  r7:c31b9c00 r6:c1b9fc70 r5:c31b9c00 r4:00000000
+[   16.958800]  really_probe from __driver_probe_device+0x94/0xf4
+[   16.964669]  r7:c31b9c00 r6:c31b9c00 r5:c1b9fc70 r4:c31b9c00
+[   16.970354]  __driver_probe_device from driver_probe_device+0x44/0xe0
+[   16.976832]  r5:c1c51f28 r4:c1c51f24
+[   16.980422]  driver_probe_device from __device_attach_driver+0x9c/0xc4
+[   16.986991]  r9:df9be9bc r8:c1b9c728 r7:c1c51ef8 r6:c31b9c00 r5:e0021bc4 r4:c1b9fc70
+[   16.994768]  __device_attach_driver from bus_for_each_drv+0x94/0xe4
+[   17.001077]  r7:c1c51ef8 r6:c0a012e4 r5:e0021bc4 r4:00000000
+[   17.006762]  bus_for_each_drv from __device_attach+0x104/0x170
+[   17.012632]  r6:00000001 r5:c31b9c44 r4:c31b9c00
+[   17.017269]  __device_attach from device_initial_probe+0x1c/0x20
+[   17.023311]  r6:c31b9c00 r5:c1bb0a50 r4:c31b9c00
+[   17.027948]  device_initial_probe from bus_probe_device+0x94/0x9c
+[   17.034077]  bus_probe_device from device_add+0x3ec/0x8b4
+[   17.039513]  r7:c1c51ef8 r6:c31b9800 r5:00000000 r4:c31b9c00
+[   17.045197]  device_add from __spi_add_device+0x7c/0x10c
+[   17.050550]  r10:c1c53844 r9:c30ec810 r8:00000001 r7:c30ec810 r6:c31b9800 r5:c31b9c00
+[   17.058415]  r4:00000000
+[   17.060959]  __spi_add_device from spi_add_device+0x48/0x78
+[   17.066568]  r7:00000000 r6:c31b9800 r5:c31b9c00 r4:c31b9a1c
+[   17.072252]  spi_add_device from of_register_spi_device+0x258/0x390
+[   17.078556]  r5:df9be9a0 r4:c31b9c00
+[   17.082147]  of_register_spi_device from spi_register_controller+0x26c/0x6d8
+[   17.089239]  r8:c17105c0 r7:df9bea04 r6:df9be9a0 r5:00000000 r4:c31b9800
+[   17.095970]  spi_register_controller from devm_spi_register_controller+0x24/0x60
+[   17.103412]  r10:c1c53844 r9:c31e9584 r8:c31b9800 r7:c31b9800 r6:c30ec810 r5:c31b9800
+[   17.111278]  r4:c31b9bc0
+[   17.113822]  devm_spi_register_controller from omap2_mcspi_probe+0x4c8/0x574
+[   17.120924]  r7:c31b9800 r6:00000000 r5:c30ec940 r4:c31b9bc0
+[   17.126608]  omap2_mcspi_probe from platform_probe+0x6c/0xc8
+[   17.132308]  r10:c1bf0f80 r9:c202f00d r8:00000065 r7:c30ec810 r6:c1bb1d00 r5:c30ec810
+[   17.140174]  r4:00000000
+[   17.142717]  platform_probe from really_probe+0x110/0x298
+[   17.148151]  r7:c30ec810 r6:c1bb1d00 r5:c30ec810 r4:00000000
+[   17.153835]  really_probe from __driver_probe_device+0x94/0xf4
+[   17.159704]  r7:c30ec810 r6:c30ec810 r5:c1bb1d00 r4:c30ec810
+[   17.165387]  __driver_probe_device from driver_probe_device+0x44/0xe0
+[   17.171865]  r5:c1c51f28 r4:c1c51f24
+[   17.175455]  driver_probe_device from __device_attach_driver+0x9c/0xc4
+[   17.182023]  r9:c202f00d r8:c1b9ca1c r7:00000000 r6:c30ec810 r5:e0021e84 r4:c1bb1d00
+[   17.189800]  __device_attach_driver from bus_for_each_drv+0x94/0xe4
+[   17.196108]  r7:00000000 r6:c0a012e4 r5:e0021e84 r4:00000000
+[   17.201792]  bus_for_each_drv from __device_attach+0x104/0x170
+[   17.207661]  r6:00000001 r5:c30ec854 r4:c30ec810
+[   17.212299]  __device_attach from device_initial_probe+0x1c/0x20
+[   17.218342]  r6:c30ec810 r5:c1b9ccd0 r4:c30ec810
+[   17.222979]  device_initial_probe from bus_probe_device+0x94/0x9c
+[   17.229109]  bus_probe_device from deferred_probe_work_func+0x8c/0xb8
+[   17.235594]  r7:00000000 r6:c1b9ca30 r5:c1b9ca1c r4:c30ec810
+[   17.241277]  deferred_probe_work_func from process_one_work+0x1e0/0x53c
+[   17.247950]  r9:c202f00d r8:00000000 r7:c202f000 r6:c2020a00 r5:c2156500 r4:c1b9ca5c
+[   17.255728]  process_one_work from worker_thread+0x238/0x4fc
+[   17.261428]  r10:c2020a00 r9:00000088 r8:c1a03d00 r7:c2020a1c r6:c2156518 r5:c2020a00
+[   17.269293]  r4:c2156500
+[   17.271836]  worker_thread from kthread+0x108/0x138
+[   17.276757]  r10:00000000 r9:e0009e4c r8:c2160cc0 r7:c21a6a80 r6:c2156500 r5:c036aac8
+[   17.284624]  r4:c2160900
+[   17.287168]  kthread from ret_from_fork+0x14/0x2c
+[   17.291904] Exception stack(0xe0021fb0 to 0xe0021ff8)
+[   17.296982] 1fa0:                                     00000000 00000000 00000000 00000000
+[   17.305202] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   17.313420] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   17.320069]  r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c037341c r4:c2160900
+[   17.328184] mscc-miim ocelot-miim0.2.auto: DMA mask not set
