@@ -2,203 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1D6C520D13
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 06:45:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 341B3520F34
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 May 2022 09:56:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236511AbiEJEtH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 May 2022 00:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59204 "EHLO
+        id S233126AbiEJIAW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 May 2022 04:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbiEJEtH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 00:49:07 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9710F293B61
-        for <linux-gpio@vger.kernel.org>; Mon,  9 May 2022 21:45:10 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id k2so22036262wrd.5
-        for <linux-gpio@vger.kernel.org>; Mon, 09 May 2022 21:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9s1dagxJlyBeoN8vXdOpsPpdS8AD1RWVJWE0n8ehmas=;
-        b=OrctmfTVDCxyYdwcxCtO+PuFgHBDMDC7Bjk3TGUWyuOKGBhKLCCiUkxtYUOPWSujka
-         /OoqstAYhrGXcYieyOQKBFbwQ9tdHrrlfAgfjS6rNqvPEA5JdQz3D4E5NS7VzL5WOf+E
-         ppcl6vbGTOThxdSbDLD0FF3VNmQjZYs0YaRKW2LrfcKbI7iiYsOvdodP6Nf3qoZXPgQF
-         Um1ef/9fJDTkVoHV63EAahHnEkdwxgxf/Hc8y1wACrWcQPfhb2xVBIshPVinpye5CGSN
-         DoHok7Lf+NgFTiQMqtYLLj/aSoKi0RaOM3+EWbBDgDeG8Kjhw/dRvI6d3AEZbIIqfLAr
-         UHxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9s1dagxJlyBeoN8vXdOpsPpdS8AD1RWVJWE0n8ehmas=;
-        b=tNIxDSgDA4qph+01SKgsku2N+E3uT2Z5EC0YS95nkOVWUY+ilhbVD2QCwos2U1sVZ+
-         JOLy2aVcKSMfJEETtvd/v7dPsNbPOOz4xVIy/TPaCr6gaASRlQ6NpGDgNRjO84Zx6hWV
-         z5FRJH9N8k0/glSaLzH4F/PqOy2A6YreRlXPwzOEkMQIB2CHJCD+4JAU/mtWrdOfXyhp
-         w5pbZTyZ45kB09Ct4raQgyUVL2weT0H9gr5ixi0WDSJm+oFLNnyviRAvTp9O7ZN7VSu6
-         FHdO1HKzXSJCK/F6IefAsCcyfn/7MXRwbUg+mDv2QLngfkfeJvDOLxbG/7EqA5KQ8yOA
-         ysgA==
-X-Gm-Message-State: AOAM5332dcSN3DrKaOrt949oiCD7bbbqUXzTYfPC/6YGE9LIJqt1Z48I
-        18OOG7HluU1iOTDvdvwmUWWxveSTyM5ePiU2FqikNg==
-X-Google-Smtp-Source: ABdhPJzfNwaPy5xjCTvC86K51nEH3yemeJZ1erUUa4xvtvCZqXN7MOjD5hnH0ntxxTlSOXapkot4g5ZMqXe6px9AH2Q=
-X-Received: by 2002:a5d:4806:0:b0:20a:da03:711b with SMTP id
- l6-20020a5d4806000000b0020ada03711bmr16582569wrq.395.1652157908998; Mon, 09
- May 2022 21:45:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220507052451.12890-1-ojeda@kernel.org> <CABVgOSm5S2=QYnHJ+B0JbYtFYKBDRZiOhE5YMKKUKZU56d17HQ@mail.gmail.com>
- <CANiq72=0ft6+QLbdwWD6cLm4FhWfv53GSg6HKEwxQ-q2N-UkOw@mail.gmail.com>
-In-Reply-To: <CANiq72=0ft6+QLbdwWD6cLm4FhWfv53GSg6HKEwxQ-q2N-UkOw@mail.gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Tue, 10 May 2022 12:44:57 +0800
-Message-ID: <CABVgOSkrvfvA7Ay4GC5wg64S1gibvm5_U5VGBog3sw4_UFo8Cg@mail.gmail.com>
-Subject: Re: [PATCH v6 00/23] Rust support
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231442AbiEJIAU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 May 2022 04:00:20 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6ED91D8109;
+        Tue, 10 May 2022 00:56:21 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6CA86300069FE;
+        Tue, 10 May 2022 09:56:19 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 608802E6C12; Tue, 10 May 2022 09:56:19 +0200 (CEST)
+Message-Id: <c3caf60bfa78e5fdbdf483096b7174da65d1813a.1652168866.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Tue, 10 May 2022 09:56:05 +0200
+Subject: [PATCH] genirq: Deduplicate WARN_ON_ONCE() in
+ generic_handle_domain_irq()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org,
+        Octavian Purdila <octavian.purdila@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 7, 2022 at 11:03 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Hi David,
->
-> On Sat, May 7, 2022 at 11:29 AM David Gow <davidgow@google.com> wrote:
-> >
-> > It's great to see some KUnit support here!
->
-> Thanks!
->
-> > It's also possible to run these tests using the KUnit wrapper tool with:
-> > $ ./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_RUST=y
-> > --make_options LLVM=1 --arch x86_64 'rust_kernel_doctests'
-> >
-> > That also nicely formats the results.
->
-> Indeed!
->
->     [16:55:52] ============ rust_kernel_doctests (70 subtests) ============
->     [16:55:52] [PASSED] rust_kernel_doctest_build_assert_rs_12_0
->     [16:55:52] [PASSED] rust_kernel_doctest_build_assert_rs_55_0
->     ...
->     [16:55:52] [PASSED] rust_kernel_doctest_types_rs_445_0
->     [16:55:52] [PASSED] rust_kernel_doctest_types_rs_509_0
->     [16:55:52] ============== [PASSED] rust_kernel_doctests ===============
->     [16:55:52] ============================================================
->     [16:55:52] Testing complete. Passed: 70, Failed: 0, Crashed: 0,
->     Skipped: 0, Errors: 0
->
+Since commit 0953fb263714 ("irq: remove handle_domain_{irq,nmi}()"),
+generic_handle_domain_irq() warns if called outside hardirq context,
+even though the function calls down to handle_irq_desc(), which warns
+about the same.
 
-I've just sent out a pull request to get this working under UML as
-well, which would simplify running these further:
-https://github.com/Rust-for-Linux/linux/pull/766
+Moreover the newly added warning is false positive if the interrupt
+originates from any other irqchip than x86 APIC or arm GIC/GICv3.
+Those are the only ones for which handle_enforce_irqctx() returns true.
+Per commit c16816acd086 ("genirq: Add protection against unsafe usage of
+generic_handle_irq()"):
 
-> > That all being said, I can't say I'm thrilled with the test names
-> > here: none of them are particularly descriptive, and they'll probably
-> > not be static (which would make it difficult to track results /
-> > regressions / etc between kernel versions). Neither of those are
->
-> Yeah, the names are not great and would change from time to time
-> across kernel versions.
->
-> We could ask example writers to give each example a name, but that
-> would make them fairly less convenient. For instance, sometimes they
-> may be very small snippets interleaved with docs' prose (where giving
-> a name may feel a bit of a burden, and people may end writing
-> `foo_example1`, `foo_example2` etc. for each small "step" of an
-> explanation). In other cases they may be very long, testing a wide API
-> surface (e.g. when describing a module or type), where it is also hard
-> to give non-generic names like `rbtree_doctest`. In those kind of
-> cases, I think we would end up with not much better names than
-> automatically generated ones.
->
-> The other aspect is that, given they are part of the documentation,
-> the prose or how things are explained/split may change, thus the
-> doctests as well. For instance, one may need to split a very long
-> `rbtree_doctest` in pieces, and then the name would need to change
-> anyway.
->
-> So I think we should avoid asking documentation writers to add a
-> manual name, even if that means a bit ugly test names. Also this way
-> they are consistently named. What do you think?
+ "In general calling generic_handle_irq() with interrupts disabled from
+  non interrupt context is harmless.  [But for] interrupt controllers
+  like the x86 trainwrecks this is outright dangerous as it might
+  corrupt state if an interrupt affinity change is pending."
 
-Yeah, these are all fair points: particularly for small doctests.
+An example for irqchips where the warning is false positive are
+USB-attached GPIO controllers such as drivers/gpio/gpio-dln2.c:
+USB gadgets are incapable of directly signaling an interrupt because
+they cannot initiate a bus transaction by themselves.  All communication
+on the bus is initiated by the host controller, which polls a gadget's
+Interrupt Endpoint in regular intervals.  If an interrupt is pending,
+that information is passed up the stack in softirq context, from which
+a hardirq is synthesized via generic_handle_domain_irq().
 
-Maybe having an optional name, which more significant tests could use
-to override the file:line names? That could be useful for a few of the
-larger, more often referenced tests.
+Deduplicate the warning to eliminate false positives and speed up IRQ
+handling.
 
-> One idea could be giving them a name based on the hash of the content
-> and avoiding the line number, so that there is a higher chance for the
-> name to stay the same even when the file gets modified for other
-> reasons.
+Fixes: 0953fb263714 ("irq: remove handle_domain_{irq,nmi}()")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v5.16+
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ kernel/irq/irqdesc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Ugh: it's a bit ugly either way. I suspect that file:line is still
-probably better, if only because we need some way of looking up the
-test in the code if it fails. I'd hate for people to be randomly
-hashing bits of just to find out what test is failing.
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 939d21c..da3e495 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -699,7 +699,6 @@ int generic_handle_irq_safe(unsigned int irq)
+  */
+ int generic_handle_domain_irq(struct irq_domain *domain, unsigned int hwirq)
+ {
+-	WARN_ON_ONCE(!in_hardirq());
+ 	return handle_irq_desc(irq_resolve_mapping(domain, hwirq));
+ }
+ EXPORT_SYMBOL_GPL(generic_handle_domain_irq);
+-- 
+2.35.2
 
-> > necessarily deal breakers, though it might make sense to hide them
-> > behind a kernel option (like all other KUnit tests) so that they can
-> > easily be excluded where they would otherwise clutter up results. (And
->
-> Currently they are under `CONFIG_RUST_KERNEL_KUNIT_TEST` -- or do you
-> mean something else?
->
-
-Oops: I missed that (one of the issues with testing this on a
-different machine which had a rust toolchain). Looks good to me.
-
-> > if there's a way to properly name them, or maybe even split them into
-> > per-file or per-module suites, that would make them a bit easier to
-> > deal.) Additionally, there are some plans to taint the kernel[1] when
->
-> Yeah, splitting them further is definitely possible. We are also
-> likely splitting the `kernel` crate into several, which would also
-> make the suites smaller etc. so perhaps further splits may not be
-> needed.
-
-Ah: I didn't realise the plan was always to have crate-specific
-suites, and possibly to split things up.
-
-The KTAP output specification does actually support arbitrary nesting
-(though KUnit itself doesn't at the moment), which would potentially
-be an option if (e.g.) providing the complete module nesting made
-sense. I'm not convinced that'd make things easier to read, though.
-
-> > Regardless, this is very neat, and I'm looking forward to taking a
-> > closer look at it.
->
-> Thanks again for taking a look and playing with it, I am glad you
-> liked it! (even if it is just a first approximation, and only supports
-> the `kernel` crate, etc.).
->
-> Cheers,
-> Miguel
-
-Thanks,
--- David
