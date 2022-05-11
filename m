@@ -2,125 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EAB5522FF7
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 May 2022 11:54:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 913815230A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 May 2022 12:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237345AbiEKJyI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 May 2022 05:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
+        id S230392AbiEKK0W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 May 2022 06:26:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbiEKJyA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 May 2022 05:54:00 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2133.outbound.protection.outlook.com [40.107.114.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C09010275B;
-        Wed, 11 May 2022 02:53:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WY1Oyjon2RrfIONAL/pIfZW1KNWrur/md0eGTFE7DydcdHz/VG839a2n+gV9+unzLG1IbTTMoUUiWP3aOZ8efxeMiwmGFzhdyS5RXH48U+bHc7Sc1U7DcmLI6cfJkEgkWRgNuN1sJMvK98CgByrrePsvo8yeuIbJKZ48E4I+fVBg/1juhYTZ9RT2hoOnCIr3/dZiqmV+5NAia7pxzPNynMbu1o5tmbTyy38FZymP4ftyqhtVY/xTq/YWalCS8hIcpv3hRFSSQZpyU7vQQETdIt9OA9YrDAmQje9oyVUcmExXsXH2E0YagwzhRf/Vmd+8uLtJKVdlyqckf6Y8HHDBWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y8y9YP2w7BePWcH3s/f0f8TTUw0gEr3sFACqAzHo8to=;
- b=AUPXVAg8sjcwOYuVHVz74ZL4tYJ0tNkn0QXdJlqiACM8qOyzywtZK2QOBzgACW5lV4wFBnute5HDGWFUtrH3iOwLJFXFs4jvHAZPUWGZhzLlYprjRbJvI76sqyCOP//f1WTanJfBE6S+pql40hoe6ds8t1cKuPjZpEDU0PTJBAly3p8CFe5P7j8o1ZIr1fYvQiV9ne63j/5QJX6hjf0ai4v4lqHiFeCWByuYhU/E9y/Bm9o0z4Kf5LgApZP62StTNP0/DIMbrCX6Gy0TTpwzhcOYlBV1a3J+wHyCmFWvvzks6g4ke3U1ekYAevW5lLL2ZzVElykIRJITyFjPISmS0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y8y9YP2w7BePWcH3s/f0f8TTUw0gEr3sFACqAzHo8to=;
- b=kgdrR3K9bPJwI8rgzfk0ElUvEwER/QN9hZjQD8fjVLnki4tJCDfCXHI9mAf2PN6CY8iWlCWnH5G5E0XTWC+4W3WzO8yn1mH/15XEtliUoEeNm/heZlVwECwXlmN7+EH+udi7+2TNSXlWxqd60e6Hrei6n+1tvpWjsbsh8eCSLto=
-Received: from TYYPR01MB7086.jpnprd01.prod.outlook.com (2603:1096:400:de::11)
- by OS3PR01MB6501.jpnprd01.prod.outlook.com (2603:1096:604:e1::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.21; Wed, 11 May
- 2022 09:53:49 +0000
-Received: from TYYPR01MB7086.jpnprd01.prod.outlook.com
- ([fe80::e180:5c8b:8ddf:7244]) by TYYPR01MB7086.jpnprd01.prod.outlook.com
- ([fe80::e180:5c8b:8ddf:7244%7]) with mapi id 15.20.5227.023; Wed, 11 May 2022
- 09:53:49 +0000
-From:   Phil Edworthy <phil.edworthy@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH] pinctrl: renesas: pinctrl-rzg2l: Return -EINVAL for pins
- which have input disabled
-Thread-Topic: [PATCH] pinctrl: renesas: pinctrl-rzg2l: Return -EINVAL for pins
- which have input disabled
-Thread-Index: AQHYZRs+TNNDYMcliUW9ygiW370dxK0Zb0qw
-Date:   Wed, 11 May 2022 09:53:48 +0000
-Message-ID: <TYYPR01MB708627DC4E80CA2D30679936F5C89@TYYPR01MB7086.jpnprd01.prod.outlook.com>
-References: <20220511094057.3151-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220511094057.3151-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 18119851-2aae-487d-b237-08da333425b3
-x-ms-traffictypediagnostic: OS3PR01MB6501:EE_
-x-microsoft-antispam-prvs: <OS3PR01MB6501F48AD64571EDF8063903F5C89@OS3PR01MB6501.jpnprd01.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RG76xy4CxYcDSWKn4gtZVxfaybyaRFzdNoiCa41YYkJ5PgppubrpX3sH+qfmmyqFInGoJRSemIBR34w85dGm8F3DU9g2thJ/i6212x206ahAnLZ7z20zuQWmj6B94KLRpqqYTQdZVwQ5JIE+r8AeCqcKm3SVrvpEpYSVtO22aSpaxwpW597Ha6xEI5b3zoSh4oRVr4t8cMJD+YV7HKod35KufddqCud6WpbfzE8uHc5ew4M2p4HcYfS3mTPIk7bT9yM90PTG+xR92krSKsX7oD2siIhCdiZGH+PCJaXeaR2xOKGSfgzFoFoinMAkRQ2Rza5O/XJTWVFdkigXF/wosvrrk0HUIM4jaaBTs9Al+sfsdbVN7hAhk7WrgoWMelU3zlxr3QNats3t9k5TByjixkm/XDawANSWv2/qvX7XtckSasQCdNae1HsdDnZt/O7XI6Qi5NYwRA/s75tMHm497YcL22VoPwLi0swq5gIduzPB8biiJm76EZbUSUUriKcWWMxAasERzofFLSnJd9E7JnVzAW7FGp3vnRJghRyQYvv/zkeQ9heuBkKy0fh+nzNlRLU9jkBjHwqpRIq866hloGAvkUyer7iq9WrY5mO89APMSCn26dku2UsbhBsG+2ax+M78ON73p8GvP6dwfK5FWiIWhA4A3x1Mb+CJ5oXLeY8Q2b4v/zFtIYIow9KSURjhNS+cPs8c1fPVwktFjz3ZoA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYYPR01MB7086.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8936002)(52536014)(71200400001)(6506007)(7696005)(86362001)(53546011)(38100700002)(38070700005)(64756008)(66476007)(66946007)(76116006)(66556008)(54906003)(316002)(110136005)(66446008)(8676002)(4326008)(107886003)(5660300002)(122000001)(2906002)(83380400001)(508600001)(44832011)(55016003)(9686003)(33656002)(26005)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xSKq3cCdaSjJ14C0ynZq430aAnTZxJIfMHnsKI1ALMrIbABJi7paCsNCycXY?=
- =?us-ascii?Q?N+PvdqpnZimhJ2DwP88JpBshath79y3jMKFaJk+Qo88qAXpMbnfpkwtSG7tg?=
- =?us-ascii?Q?Ae8oizUC9PetA1dAA6Y/S2CM1qtV9kgbuIqeJBYFGaqT2OQe10rfEh4DWDPt?=
- =?us-ascii?Q?nLyGJ6XdyOJtAADbJi95RAL6iPiv8ZvGaGVbRFB0r3KW5yrxIeJgjhI1sINe?=
- =?us-ascii?Q?cplZ1brn9lE4FxYpQyjCEffQL6JFqBt+Rqc/8Rhp/70AVlz6XASqib0vD42i?=
- =?us-ascii?Q?YN5pfv1Zk6mSm6z7qaZqzPxgBRQYCV/mqvYluWDFEqFbVOr+g1svwveUu8ep?=
- =?us-ascii?Q?O1dQ94IeZKMZSJCleMWvdV/f4Ca+sbmKMH8tyMU24QEBFcWGSuszJfqAuvtq?=
- =?us-ascii?Q?X1Rj7mudYgskIU2Gmkmcij/txc8uA4dzRS5YCurr78aL1jIGBtPWiKgqA2Lu?=
- =?us-ascii?Q?fOpA1tZ5kf2g1aPY9kKs5Z9yOzhRRtjkmRV0Cq2Fn4FjHgPV8NFz9v2qTGWR?=
- =?us-ascii?Q?zzT2+XCMeQ3+f/H50X3bsuNmfBQP4NYpPvCSK1o/f5eIT9KtLOjkAzFht5ps?=
- =?us-ascii?Q?uMiyICblisWDL1pPVq8DVUY8m+mOtdsu08sA0Pj8PYs4f31bELr3DN3BHcjH?=
- =?us-ascii?Q?LPiUbUZ+aPk8vB2bdajeXoEI/KzABwAUC42pgsZkcfnKG4MU8UOXDbUfLRRG?=
- =?us-ascii?Q?QIBADeoJwM+0Nt4H1RYug+kdCKSF2Aqu/r4Q3dL9mScYscmVK1YzpyuYVAkz?=
- =?us-ascii?Q?Bcu+dNczw3t9XGIeT6u0cAPlwNnhHnPPfOzQNXTKavu5AVGVb3BrRTscV+0j?=
- =?us-ascii?Q?bLSK92iSgAJ3U5YoLR0fbinYXf0gZ1tjCq9jt7pYH3upoxa8d+j54AsHx8uH?=
- =?us-ascii?Q?9g3bcgKe/Mm5dRquI4sDq+UMAV19DIlXNUZlRygaqTYH1nLpqClp08A9thpk?=
- =?us-ascii?Q?BS1Pe7uSeFirxWmThbJptwmPk4VGUpRtVqxMctu5beQXv451imohXs3k/epB?=
- =?us-ascii?Q?MDz/FZzEFXyP2vOnK0QL3z//dqNL7LBNKGQgafFd8vk92VYO671pwhPgLmdE?=
- =?us-ascii?Q?o1M2zC7qXmg4HfIrQm7y1DMfsUZC2Z/7yWgLEOublx+YVGCuYy4AQlxO7wJP?=
- =?us-ascii?Q?JsqxeYU2X3EW7zF81t7HBn2wGY62t6d1xn1BSM/ifPhS8J8vEFm+Pz227dzH?=
- =?us-ascii?Q?jzM5YZtzgeIRNNvotX2AbHY7GME6Dv5KY74dnGzn3KUiluhBRwKHnKo595UJ?=
- =?us-ascii?Q?UqQINeoE8SGKQtbhzarJCulYxN/wj0dhCzL1AGEx2PV5Ig0GU35EYcC2Wq1t?=
- =?us-ascii?Q?mfjoYYRpRLMr8dSmlIlpjs7JLPT1YYstQ9anOte82DUZZ3qrmCV9VanzmMDt?=
- =?us-ascii?Q?euJga/DKJpxghJdsrOygDYiz6c0vuMYvGoVKYO+PrTzjVrPS/PBMufpfjAiB?=
- =?us-ascii?Q?Mo+UwlFZsEB/sCA4EFXobZo4q1o0/aODLVmLguHrlbugVcGolXJaVB5VToQo?=
- =?us-ascii?Q?UbbHYPJVdqFS6PzZgXktDrLWx0uleB1/OE3SRDGhoMusK8SvoMlPn2pY3oIi?=
- =?us-ascii?Q?y24P5OcUi3CpppcKqgroBYi6gp1ZKagtnlmF5vzCufcs5yfoHedzMmUWxyS7?=
- =?us-ascii?Q?mRMZQngZegGVIoFuTpt7wW5Fs0A6m2/EZd0j4gJ6R47nMolJml8/eTbig44c?=
- =?us-ascii?Q?tHnyYXPM0Iqj77INfXe5/jSOQ/f054obpRbG7PKZfOc963KTy1lSBmz6U0De?=
- =?us-ascii?Q?9X5IAL1WESj+MgJ26a4xOpNQwELhY70=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S242098AbiEKK0L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 May 2022 06:26:11 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C2E23160
+        for <linux-gpio@vger.kernel.org>; Wed, 11 May 2022 03:26:09 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id i19so3046945eja.11
+        for <linux-gpio@vger.kernel.org>; Wed, 11 May 2022 03:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FYugU7S9X/8H3usW2crV/tMlQne9bZCdkG0vtH/tzWc=;
+        b=N7sXz7D/O3Eu2QR52vC4Stf0V501TehzUvB/p3h6e0FKTje7bVC/wybu+3K1ifyny7
+         qsczQd6fRFHTufLWz07iOYYvO8bsSMBMn7EU0KA103+9Hq+Tk5ST6pJTc4GKmgfJT4LT
+         Y8Lp0C8cw+zts5L5gqCn0JyytA5l2j75ZCNWARLDEvTeUD+/VbGH9GCUd7wStI4Wd3kM
+         ByV9mtidI8rnHg8y2tI0AtcfRLsxp9fGBcU7gRN37lIFLnQjeMrcDfzaKfSOyqM5bWmT
+         U+5jAkZPCmEmOSS1Q+s6rzMnbkbsfZWw+QsvVW3TNzOwhO0NgyWPZheCjj9Mts+VD5bx
+         3UQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FYugU7S9X/8H3usW2crV/tMlQne9bZCdkG0vtH/tzWc=;
+        b=XerQSYMrhPGXPMQnM1DDj0MSZxWtxd1tLTGEslAkao2JoaXGBqtoqfzSknlVwGiPR8
+         ufix9hZAvfvmU8mhAkTaL491qL+G6zyjkg86MPA5Hmlihj8Us53ugKf+QbJse4Ygjnbg
+         irVSpbxqYAlZOitft806IjmyP6lNhkWt8jQ5DjyADJgpTNy8Kt6H0pRkyCzeHZgYLVgc
+         Iqk1u956pjIk1iy9TxLT95J7FKt1TN8qJi0KXH7FLTgMrk3aOq4En8IYFG3rqQoxFM7K
+         VotkKSXdUEd4JFDAn7oL4w53WnxnbO1NFO83YmvKvTk9tukb3Y/1WVI1hoQtB4p+dv5X
+         eFNA==
+X-Gm-Message-State: AOAM531rSEdFsjoSSvFmZvL00mcmQ0j6qgx3pnHZSYT8xAMtvJhRZOju
+        wx8u3qxMGtdFLHwai5y7HtoYvIrI55qGruuydts=
+X-Google-Smtp-Source: ABdhPJwPy2FZHyG0Cwe2/r/Ngx61wcoxoPAHyRl+86/zOn+IvPOW50OHLAqJDvA3mo0WNX5PmDgHS872nivEit6VjL4=
+X-Received: by 2002:a17:907:868e:b0:6fa:2fe2:92d6 with SMTP id
+ qa14-20020a170907868e00b006fa2fe292d6mr14376724ejc.639.1652264768368; Wed, 11
+ May 2022 03:26:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB7086.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18119851-2aae-487d-b237-08da333425b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2022 09:53:49.0039
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kr7/pDFlDa8gJirmlT1/cNfVgoOEs1OIoMvOTBk1D+XiRltx8rm/GTOb1fY0ndbDDqjWId3Qpwn9h8QZ/Q8UpwvBNaugpk0jrqKdRCRLfnI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB6501
+References: <0498c761-1a80-a37a-264d-a6665d8873e5@tibbo.com>
+In-Reply-To: <0498c761-1a80-a37a-264d-a6665d8873e5@tibbo.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 May 2022 12:25:31 +0200
+Message-ID: <CAHp75VcX2pha17QbwT++abRm4GRaPW2Jefzj+5JaYJm5046exg@mail.gmail.com>
+Subject: Re: gpio ->to_irq
+To:     Dvorkin Dmitry <dvorkin@tibbo.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -128,42 +65,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
+On Wed, May 11, 2022 at 12:03 PM Dvorkin Dmitry <dvorkin@tibbo.com> wrote:
+>
+> Hello!
+>
+> I have a question about gpiochip ->to_irq().
+>
+> Kernel call gpio_to_irq() requests IRQ for the pin, previously taken by
+> *gpio_request().
+>
+> But for sysfs when user does echo "pin#" > /sys/class/gpio/export
+> gpio_to_irq() is also called at the time of export there:
+>
+> https://elixir.bootlin.com/linux/v5.4.100/source/drivers/gpio/gpiolib-sysfs.c#L171
+>
+> and there
+>
+> https://elixir.bootlin.com/linux/v5.4.100/source/drivers/gpio/gpiolib-sysfs.c#L378
+>
+> It is a problem for my driver.
 
-On 11 May 2022 10:41 Lad Prabhakar wrote:
-> Pin status reported by pinconf-pins file always reported pin status as
-> "input enabled" even for pins which had input disabled. Fix this by
-> returning -EINVAL for the pins which have input disabled.
->=20
-> Fixes: c4c4637eb57f2 ("pinctrl: renesas: Add RZ/G2L pin and gpio
-> controller driver")
-> Reported-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+It's much easier to answer if you may share the source code of your
+driver. Ideally if there is a publicly available datasheet on the
+hardware in question.
 
-Reviewed-by: Phil Edworthy <phil.edworthy@renesas.com>
+> I have 120 pins and only 7 dynamically
+> muxed GPIO irqs.
+>
+> So when somebody requests gpio_to_irq() I am creating the mux to the
+> first free gpio IRQ. But When user just exports GPIO pin using "old"
+> sysfs kernel interface in the filesystem, it should not be done.
+>
+> How can I see if gpio_to_irq() has been called by sysfs to prevent
+> unnecessary dynamic muxing? Or there another way to get rid of this
+> wrong behavior in my driver?
 
-> ---
->  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> index af2c739cdbaa..a63535ea47f5 100644
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -527,6 +527,8 @@ static int rzg2l_pinctrl_pinconf_get(struct
-> pinctrl_dev *pctldev,
->  		if (!(cfg & PIN_CFG_IEN))
->  			return -EINVAL;
->  		arg =3D rzg2l_read_pin_config(pctrl, IEN(port_offset), bit,
-> IEN_MASK);
-> +		if (!arg)
-> +			return -EINVAL;
->  		break;
->=20
->  	case PIN_CONFIG_POWER_SOURCE: {
-> --
-> 2.25.1
+Generally speaking nobody should call gpio_to_irq() in the new code.
+This is a legacy interface that mustn't be used.
 
-Thanks
-Phil
+-- 
+With Best Regards,
+Andy Shevchenko
