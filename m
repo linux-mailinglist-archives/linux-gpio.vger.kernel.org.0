@@ -2,121 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 798F552345B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 May 2022 15:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D078D5236AE
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 May 2022 17:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237627AbiEKNhB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 May 2022 09:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52748 "EHLO
+        id S231538AbiEKPG7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 May 2022 11:06:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230257AbiEKNhA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 May 2022 09:37:00 -0400
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1219663FB;
-        Wed, 11 May 2022 06:36:57 -0700 (PDT)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-e656032735so2891523fac.0;
-        Wed, 11 May 2022 06:36:57 -0700 (PDT)
+        with ESMTP id S237091AbiEKPG5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 May 2022 11:06:57 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E4D4553B
+        for <linux-gpio@vger.kernel.org>; Wed, 11 May 2022 08:06:57 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d17so2199502plg.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 May 2022 08:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=zLAXOt0+g+Gz9bXUVZthS9o5V8JSghOXkCMObSfdPds=;
+        b=beFeNUR+AKUPmFv9TXGrH6RwVBCZ3cvbUtryI2lyqN3mfxUnV5nzBi+Y7af+5C0tCM
+         e6kf6doomI9sCmGPL54dpz9k09q9+Du5az3lfZokjRZbngdSIau4zxLX5auTmK/1bsNy
+         aSM5xbTJOzRgp+TrbtsE511nglYAL1pVFGc74/HmjSaeUrxi78FqY0WbOQUQ8+SMwHwe
+         uvDn2vI/vq8lwncP/hnrkKyjgt3eyyMmSAoxNT1LoBvcdU9NdpZYWPM30HCwuhlycl35
+         v1cyX2Msi2usuBGvxGBuOTbTmNWY99Qia62ZxrjIGIAwQTJNsS83Lz5znBkJ3OPt36+B
+         YsDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=BESNWVMVzlpAR343foZqZ3D2dxIXgbt3nrEPEet5hPU=;
-        b=FnJ2dSrNizbwhV3xWRDuX8PXBOvkXMrcHh16XM5dBv1Y5lK4s+dn+RXP+LssiXUHSQ
-         IKBAhi8zcLMeMRViLLrJS+W69mZlrilS69EBR3RIf/2/PzMhJQxUJnRKuE0E7feQLXcT
-         gYw5CSdVFl+Ekf7E51LiNuEuD7ZzRZkFW058EFj+eu0+Bb/QQQTXDks0BZ42CGUufNPt
-         nxdv+4JQfSqZm9h0OvWR9E2bbFxRP6W3Q4FsNq1FoUSZcdJs7Ds6JfVgBOdkYfYzLUW8
-         Yitz6cciDat0YSRDRlhrHUDvuWjSvnMRVYCyCWNv32ngRccL9892950VnosJ5Wubv1LF
-         LToQ==
-X-Gm-Message-State: AOAM531zmTXPsew9N7HVXxj5kGkvXvK1OiClZsPSIzU1i8x2V92KpQBR
-        k0YSZ562E5x1vzvjvajrTssUi15vbA==
-X-Google-Smtp-Source: ABdhPJypjFI4l+Lms9fP4E6yGMirxQU8rgih54mxtA/iH+7Km5JEKremvPW8Rkvj9kndQb/uXX7XQQ==
-X-Received: by 2002:a05:6870:8985:b0:da:b3f:3253 with SMTP id f5-20020a056870898500b000da0b3f3253mr2684208oaq.259.1652276217077;
-        Wed, 11 May 2022 06:36:57 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id t142-20020acaaa94000000b0032647f4e437sm734905oie.45.2022.05.11.06.36.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 06:36:56 -0700 (PDT)
-Received: (nullmailer pid 182487 invoked by uid 1000);
-        Wed, 11 May 2022 13:36:55 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        krzysztof.kozlowski+dt@linaro.org, brgl@bgdev.pl,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
-        linux-gpio@vger.kernel.org
-In-Reply-To: <20220511013737.1194344-1-chris.packham@alliedtelesis.co.nz>
-References: <20220511013737.1194344-1-chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2] dt-bindings: gpio: gpio-mvebu: convert txt binding to YAML
-Date:   Wed, 11 May 2022 08:36:55 -0500
-Message-Id: <1652276215.699297.182486.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=zLAXOt0+g+Gz9bXUVZthS9o5V8JSghOXkCMObSfdPds=;
+        b=AsiAwPwfgUysRIMVo2/C5jO+4rFGLMqsKw7IZy9JoJf8DAGZDperEW/z8QhHCRlR2T
+         shLyZRTKwMZWuJjmnzgNmJp+KwNFohCi/VLPWtw+jLxDv4eGkDzJaFekffgsf5ILi+Wr
+         6bqjB1a04EVEGy+7KwRYkY1mWbGRZ1GPDFbvJMYxHNtGq9BH41Wif/Y/XKuTyHJj51SK
+         dadKQMNQrjGbznda10+l2sNjLmPHFNjrBvsiw+5VX1m+V7OO8UP4GtfVB+d+Cmrifh5/
+         g30ff+T3Xj7IllfxUEzEpj7zoDjF5zlxMzUnnvV+ocrMpo/eMWtQKYqCYe+mtlpMgD/Z
+         aVdw==
+X-Gm-Message-State: AOAM5315yHCSH0ZWvsqWyjv4jFdRX0760lxYKatQA+J0ygS1loBgEKEb
+        7VTGyRGMl6YztHZg/M+wqvjtvwjtX5ySvtXh2PQ=
+X-Google-Smtp-Source: ABdhPJyUPvYKxsFEA/7qCeLOZP3XNPyvs2quFLQHYk0N4C1Td9+EBBzBm1W0jF3ecwwm5lOf/aCPLBnumPB+2tJtEDc=
+X-Received: by 2002:a17:902:ec88:b0:15e:c17d:b092 with SMTP id
+ x8-20020a170902ec8800b0015ec17db092mr26001101plg.88.1652281616242; Wed, 11
+ May 2022 08:06:56 -0700 (PDT)
+MIME-Version: 1.0
+Sender: joycem001m@gmail.com
+Received: by 2002:a05:6a10:1008:0:0:0:0 with HTTP; Wed, 11 May 2022 08:06:55
+ -0700 (PDT)
+From:   Ahil Lia <mrsliaahil070@gmail.com>
+Date:   Wed, 11 May 2022 15:06:55 +0000
+X-Google-Sender-Auth: 262EHWgVJMV_ptq4XrKD1FQXNro
+Message-ID: <CAN+-AFNRRAeHwEB9UZxnDi8yY0kZfKANwoKkhpKfWA+DJVLPsg@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 11 May 2022 13:37:37 +1200, Chris Packham wrote:
-> Convert the existing device tree binding to YAML format.
-> 
-> The old binding listed the interrupt-controller and related properties
-> as required but there are sufficiently many existing usages without it
-> that the YAML binding does not make the interrupt properties required.
-> 
-> The offset and marvell,pwm-offset properties weren't in the old binding
-> and are added to the YAML binding. The offset property is required when
-> the marvell,armada-8k-gpio compatible is used.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> 
-> Notes:
->     Changes in v2:
->     - Collect review from Andrew
->     - Remove unnecessary/obvious property descriptions
->     - Clarify reg property requirements for armadaxp vs the rest. Enforce
->       these with a variant specific constraint.
->     - Update compatible property requirements. marvell,orion-gpio and
->       marvell,armada-8k-gpio can be used on their own. Everything else needs
->       marvell,orion-gpio as a fallback.
->     - Correct example to include marvell,orion-gpio fallback
-> 
->  .../devicetree/bindings/gpio/gpio-mvebu.txt   |  93 -----------
->  .../devicetree/bindings/gpio/gpio-mvebu.yaml  | 151 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 152 insertions(+), 94 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> 
-
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt: Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt: Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Hello, I need your assistance in this very matter
