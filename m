@@ -2,58 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A9E45246DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 09:26:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A17DD5246FF
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 09:30:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350949AbiELH0r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 03:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38312 "EHLO
+        id S1351030AbiELH3z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 03:29:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237001AbiELH0r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 03:26:47 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 527FA126EA0;
-        Thu, 12 May 2022 00:26:46 -0700 (PDT)
-Received: by mail-qk1-f169.google.com with SMTP id k8so4012590qki.8;
-        Thu, 12 May 2022 00:26:46 -0700 (PDT)
+        with ESMTP id S1351041AbiELH3y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 03:29:54 -0400
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E670E13C4F2;
+        Thu, 12 May 2022 00:29:49 -0700 (PDT)
+Received: by mail-qv1-f45.google.com with SMTP id h13so3814182qvh.0;
+        Thu, 12 May 2022 00:29:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0hXa5ZyCL0c1LJOSj3SaJudX8UU4KaAqyCdW1DHNsjs=;
-        b=V4hWpc1M/4xwJCRS2vCe/WUf3PGO1zcTP3zFpN6LvGIbjem+KyMkOZrqjpI1VIyPKW
-         YDz8s9UdD2pIP73AmnFPJj4FkkFdzXtzWVLuqRvdy7FU3Ot1YfscsWyKxWH7/G8nYxGw
-         3sn9fRqN8n0X6RiWal+f95gWvrdEfA1IAE0snZODd5hZ9SOhYFvnnqRHLNHGYgIiFI1j
-         M6sq25JioAhJNiH1h9Je/JjezsXvezi/cCTYpP3E1taxQtBIytaiyAU3bVyg0tGnmz64
-         Gf1erSg0jFa7oPBUpz2FHJFgMUBcUnJp74zGTmmA/8ggI9waPAnxjXGT06tuWX9DMA7Y
-         Yy9g==
-X-Gm-Message-State: AOAM530t5VNWzl36lvoyQ+sot9CFJ6iwXye8oaYFxcbrbDqsG8i3T+dN
-        +orv4rthIOv5rmORWa+IX0Zo2BR8EcWF2A==
-X-Google-Smtp-Source: ABdhPJyyMnmwQcTDPU7SLDyH+JhA0k7qhJ0V+KILMo7UEVz3ZUqPKl7yQfqbw5fyU5vWgjj9rMR4Bg==
-X-Received: by 2002:a37:5d8:0:b0:6a0:91ec:fc64 with SMTP id 207-20020a3705d8000000b006a091ecfc64mr13612549qkf.133.1652340405362;
-        Thu, 12 May 2022 00:26:45 -0700 (PDT)
+        bh=r2Mjon8tDago0stqZjye2DqrZ9qBLDemw/CYSCXDVYo=;
+        b=GYbntmWUfjRS87Kpx8ZINI0JaZ9LaDt/5pJoG51qAllglwCFhtVkTOYpyNdUdJVl01
+         rlXeJHWP7olORRdWItj5hzsMrlJJQ1ioyBiy0AHpwnsxZdvnqT1GKJ3tZd1980jm9Olo
+         5yd2Y0o+o0Vii7mRWfGH/7QU7zMhyrWgtfPWCexU0+Wxx1GLIDR6T3PbXbjumfeLCsCd
+         o5joPSM0fY0/4epieB9ywGYud/ITtONVs01So0mSGjWEZ7sJaLkaf7ibUFau2YRdn9Gv
+         4NDmcfWjGbNv9FOAiQdtqCpaqwbGtKQj5IIwG64wwBqjm97Q5FVeNPkm+eWCjIktTzXc
+         v1Fw==
+X-Gm-Message-State: AOAM5332LrA3Cce7UOqDexd8urbCw8rrY5Rhshc+pQvPrPuaBWEwjShw
+        y1fsE4bfxD5m+FOLnqfm+FfpQO+pWz24ug==
+X-Google-Smtp-Source: ABdhPJxD4fdBBnAmA/pKo7J1uN7PFs0kfOKBHyUOMhXwi8gOV35ue7L1wCDtbj7mw4zO7vB6g6ajaw==
+X-Received: by 2002:a0c:aad7:0:b0:45a:9960:6097 with SMTP id g23-20020a0caad7000000b0045a99606097mr26345268qvb.55.1652340588840;
+        Thu, 12 May 2022 00:29:48 -0700 (PDT)
 Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id h197-20020a379ece000000b0069fc13ce227sm2566732qke.88.2022.05.12.00.26.44
+        by smtp.gmail.com with ESMTPSA id e2-20020ac84e42000000b002f39b99f6c6sm2876638qtw.96.2022.05.12.00.29.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 May 2022 00:26:44 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id m190so8184105ybf.4;
-        Thu, 12 May 2022 00:26:44 -0700 (PDT)
-X-Received: by 2002:a25:4506:0:b0:648:cfc2:301d with SMTP id
- s6-20020a254506000000b00648cfc2301dmr26715754yba.380.1652340403876; Thu, 12
- May 2022 00:26:43 -0700 (PDT)
+        Thu, 12 May 2022 00:29:47 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id s30so8158880ybi.8;
+        Thu, 12 May 2022 00:29:46 -0700 (PDT)
+X-Received: by 2002:a25:448:0:b0:64a:94d6:e420 with SMTP id
+ 69-20020a250448000000b0064a94d6e420mr22441804ybe.89.1652340586589; Thu, 12
+ May 2022 00:29:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220511183210.5248-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <87zgjnmcxt.wl-maz@kernel.org>
-In-Reply-To: <87zgjnmcxt.wl-maz@kernel.org>
+References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220511183210.5248-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20220511183210.5248-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 May 2022 09:26:31 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXb0H010_kr_-rMosynKv8HxU+Q45jR88wCYepkWpxB_Q@mail.gmail.com>
-Message-ID: <CAMuHMdXb0H010_kr_-rMosynKv8HxU+Q45jR88wCYepkWpxB_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Thu, 12 May 2022 09:29:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUiq3svPa+OMmG70HP-3h4gKV6puoT8QUm3WgPw+e4i=A@mail.gmail.com>
+Message-ID: <CAMuHMdUiq3svPa+OMmG70HP-3h4gKV6puoT8QUm3WgPw+e4i=A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -69,48 +68,95 @@ Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
+Hi Prabhakar,
 
-On Thu, May 12, 2022 at 9:23 AM Marc Zyngier <maz@kernel.org> wrote:
-> On Wed, 11 May 2022 19:32:07 +0100,
-> Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Add a driver for the Renesas RZ/G2L Interrupt Controller.
-> >
-> > This supports external pins being used as interrupts. It supports
-> > one line for NMI, 8 external pins and 32 GPIO pins (out of 123)
-> > to be used as IRQ lines.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-> > +static int rzg2l_irqc_init(struct device_node *node, struct device_node *parent)
-> > +{
-> > +     struct irq_domain *irq_domain, *parent_domain;
-> > +     struct reset_control *resetn;
-> > +     struct rzg2l_irqc_priv *priv;
-> > +     struct clk *clk;
-> > +     struct clk *pclk;
-> > +     int ret;
-> > +
-> > +     priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
+On Wed, May 11, 2022 at 8:32 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Supported GPIO IRQs by the chip is not always equal to the number of GPIO
+> pins. For example on Renesas RZ/G2L SoC where it has GPIO0-122 pins but at
+> a give point a maximum of only 32 GPIO pins can be used as IRQ lines in
+> the IRQC domain.
 >
-> Since you are implementing this as a platform driver, consider
-> converting this to the devm_* helpers (you can obtain the device
-> structure via of_find_device_by_node()).
+> This patch adds ngirq member to struct gpio_irq_chip and passes this as a
+> size to irq_domain_create_hierarchy()/irq_domain_create_simple() if it is
+> being set in the driver otherwise fallbacks to using ngpio.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-So that's the missing piece.
-Still, it would be more efficient to just pass the pointer, as
-platform_irqchip_probe() already has the pointer.
+Thanks for your patch!
+
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1221,7 +1221,7 @@ static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
+>         gc->irq.domain = irq_domain_create_hierarchy(
+>                 gc->irq.parent_domain,
+>                 0,
+> -               gc->ngpio,
+> +               gc->irq.ngirq ?: gc->ngpio,
+>                 gc->irq.fwnode,
+>                 &gc->irq.child_irq_domain_ops,
+>                 gc);
+> @@ -1574,7 +1574,7 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+>         } else {
+>                 /* Some drivers provide custom irqdomain ops */
+>                 gc->irq.domain = irq_domain_create_simple(fwnode,
+> -                       gc->ngpio,
+> +                       gc->irq.ngirq ?: gc->ngpio,
+>                         gc->irq.first,
+>                         gc->irq.domain_ops ?: &gpiochip_domain_ops,
+>                         gc);
+
+OK.
+
+gpiochip_irqchip_remove() does:
+
+        /* Remove all IRQ mappings and delete the domain */
+        if (gc->irq.domain) {
+                unsigned int irq;
+
+                for (offset = 0; offset < gc->ngpio; offset++) {
+                       if (!gpiochip_irqchip_irq_valid(gc, offset))
+
+Hence it relies on gc->irq.valid_mask, which I think is OK in general.
+
+                                continue;
+
+                        irq = irq_find_mapping(gc->irq.domain, offset);
+                        irq_dispose_mapping(irq);
+                }
+
+                irq_domain_remove(gc->irq.domain);
+
+        }
+
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -51,6 +51,14 @@ struct gpio_irq_chip {
+>          */
+>         const struct irq_domain_ops *domain_ops;
+>
+> +       /**
+> +        * @ngirq:
+> +        *
+> +        * The number of GPIO IRQ's handled by this IRQ domain; usually is
+> +        * equal to ngpio.
+
+"If not set, ngpio will be used."
+
+> +        */
+> +       u16 ngirq;
+> +
+>  #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+>         /**
+>          * @fwnode:
 
 Gr{oetje,eeting}s,
 
