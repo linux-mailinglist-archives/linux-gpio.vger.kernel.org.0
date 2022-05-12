@@ -2,181 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8FFA5253DE
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 19:40:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4030A5253F4
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 19:44:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356983AbiELRkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 13:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
+        id S1357025AbiELRoI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 13:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357140AbiELRkO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 13:40:14 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029EA26C4C5;
-        Thu, 12 May 2022 10:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652377214; x=1683913214;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lfHOk3NbKnCzKqrFFON5C5D8NThthEjbjuQAmQX0Sco=;
-  b=iNYtBVvUHVu/lm8x6WVos/NsUubUpvWOj80OmAzEyLs26iD56KOJq+rv
-   4NNkpWIzMrzLSOIeKcUSSeMznfY7Y3hBH72ujY8tgbu3vZkbqg49GuxkV
-   s3DswyUo9QpHJa1cTxxWt+s3ZiQejO3G6Kh3TNh4ySfFhv0qOti75rb3o
-   QFyc/xkliO0IT9p5UA8qBZZvSf7n0rcxeuELxTSlzBXxGr4UlUTM/k725
-   soj/hCgV+y/0mZ+B2POK5qraJgwSH+Vd7moCW/mvLOULGwM5+P+/pfUSW
-   Iqa1tbm9B4COc7nWxok5DUuXlzuIi0P2WD1979hqY9RsLV2TjvjUOXvvG
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="257634327"
-X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="257634327"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:39:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="542883705"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 12 May 2022 10:39:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6698C103; Thu, 12 May 2022 20:39:33 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 5/5] pinctrl: lynxpoint: make irq_chip immutable
-Date:   Thu, 12 May 2022 20:39:21 +0300
-Message-Id: <20220512173921.8210-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220512173921.8210-1-andriy.shevchenko@linux.intel.com>
-References: <20220512173921.8210-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S1353035AbiELRoF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 13:44:05 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09FF06E8DD;
+        Thu, 12 May 2022 10:44:05 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id y76so11170553ybe.1;
+        Thu, 12 May 2022 10:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8dV6HUB7SxpjK+7mBEuOiLof9qR8uoa5I2hxfC6B+U0=;
+        b=V0BWORNUjzvdj7VCoVnOtF+BzEUkQT/FPg3TIY4oQR/ngKTsDne6/7cO1iY7svOI/c
+         J3vw05flqg8wbznzwHXi8paRcDRGowDTt0vkoicwau9AWyFe1p4je/pJyOW8gaDDyl7B
+         nbHkFN25tMl0xIij0PQsyFekN/u4+4n4oer8I+2t6TeWF8OGPT8FcV2D7JpQg1iPdC3a
+         ihAM/FPGEUlJ6N3Zrl3QGIsOCAfqy2l7ZBIzYAtrOZjf1ZswvQZ/iiRL27rC0XkRP3l1
+         6JwoGxlp+ZZ3VwxLdH0PXb05IvXvlRYQCLdJ7vaZvFDKRGjN5rgumo/TqjW1WR2cWAOw
+         nAAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8dV6HUB7SxpjK+7mBEuOiLof9qR8uoa5I2hxfC6B+U0=;
+        b=VQ9834yQ3jglJPEpdosW9Xok+O+gRNHz8OBVRHZatB2fiRpanOBh3p8yROWJL8Ui5V
+         Bhf1VBxXQGl+ru/oq8SDbyP4HRyXsWA8+IOV5HysADH0OduCTZMHxbYkzG+LASZn178F
+         4auwaaJH4wLBHtYtm1JdvEKPd9NIkUyYXmtRYCMgpV39TqXz3Y7Vl3BWyrVDkrVg+M5y
+         39jFab5wyiCwEcpKkQPSEuFGQEBoaOYr/G+2nSigKRe7VViEV+KeMw9EI0SHGDD8vKLM
+         SH1mRAWw6JP2Z2aWLEghcML8Nyq1SolWyBNSX0y2xHT7GtOFiA3uy2pXOZlS+T8o+SVM
+         y6Xg==
+X-Gm-Message-State: AOAM533MulTvnb/BPoTJdFfb4OmnhapnL+G2CKcWHUxwZOr/Ln714aLs
+        rxzvaQ4YV1T9QIZXGREAJaUw5ny8m9yrB+f1J2I=
+X-Google-Smtp-Source: ABdhPJy1WwkC5EbZMV5JPFIASaM/e60AvOA4texGRaJe7EsXmlzHKWzVwopGa+RtsniYx0rlTvcvSI8zzJwoVRF4llo=
+X-Received: by 2002:a25:bfce:0:b0:648:963b:1ccb with SMTP id
+ q14-20020a25bfce000000b00648963b1ccbmr951675ybm.417.1652377444242; Thu, 12
+ May 2022 10:44:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220511183210.5248-6-prabhakar.mahadev-lad.rj@bp.renesas.com> <OS0PR01MB59221ADFC86483FE2C8765C486CB9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB59221ADFC86483FE2C8765C486CB9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 12 May 2022 18:43:37 +0100
+Message-ID: <CA+V-a8s4RfNSXCHG5xo4LhkHw09aj2wFnH0iCDos_ysunV1+5g@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to
+ handle GPIO interrupt
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since recently, the kernel is nagging about mutable irq_chips:
+Hi Biju,
 
-   "not an immutable chip, please consider fixing it!"
+Thank you for the review.
 
-Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-helper functions and call the appropriate gpiolib functions.
+On Thu, May 12, 2022 at 6:35 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+>
+> Hi Prabhakar,
+>
+> Thanks for the patch.
+>
+> > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Subject: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to
+> > handle GPIO interrupt
+> >
+> > Add IRQ domian to RZ/G2L pinctrl driver to handle GPIO interrupt.
+> >
+> > GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can be used as
+> > IRQ lines at given time. Selection of pins as IRQ lines is handled by IA55
+> > (which is the IRQC block) which sits in between the GPIO and GIC.
+>
+> Do we need to update bindings with interrupt-cells on [1] like [2] as it act as parent for GPIO interrupts?
+>
+Yes interrupt-controller and interrupt-parent needs to be added. I'm
+wondering if "interrupt-cells" is not required. If the pin is an
+interrupt it will be passed as an GPIO.
 
-While at it, switch hwirq variable to use the correct type for
-the sake of consistency.
+@Geert - your thoughts ?
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-lynxpoint.c | 26 ++++++++++++++---------
- 1 file changed, 16 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-lynxpoint.c b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-index 561fa322b0b4..4fb39eb30902 100644
---- a/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-+++ b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-@@ -663,7 +663,7 @@ static void lp_irq_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct intel_pinctrl *lg = gpiochip_get_data(gc);
--	u32 hwirq = irqd_to_hwirq(d);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_STAT);
- 	unsigned long flags;
- 
-@@ -684,10 +684,12 @@ static void lp_irq_enable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct intel_pinctrl *lg = gpiochip_get_data(gc);
--	u32 hwirq = irqd_to_hwirq(d);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_ENABLE);
- 	unsigned long flags;
- 
-+	gpiochip_enable_irq(gc, hwirq);
-+
- 	raw_spin_lock_irqsave(&lg->lock, flags);
- 	iowrite32(ioread32(reg) | BIT(hwirq % 32), reg);
- 	raw_spin_unlock_irqrestore(&lg->lock, flags);
-@@ -697,30 +699,33 @@ static void lp_irq_disable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct intel_pinctrl *lg = gpiochip_get_data(gc);
--	u32 hwirq = irqd_to_hwirq(d);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_ENABLE);
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&lg->lock, flags);
- 	iowrite32(ioread32(reg) & ~BIT(hwirq % 32), reg);
- 	raw_spin_unlock_irqrestore(&lg->lock, flags);
-+
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static int lp_irq_set_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct intel_pinctrl *lg = gpiochip_get_data(gc);
--	u32 hwirq = irqd_to_hwirq(d);
--	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_CONFIG1);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 	unsigned long flags;
-+	void __iomem *reg;
- 	u32 value;
- 
--	if (hwirq >= lg->chip.ngpio)
-+	reg = lp_gpio_reg(&lg->chip, hwirq, LP_CONFIG1);
-+	if (!reg)
- 		return -EINVAL;
- 
- 	/* Fail if BIOS reserved pin for ACPI use */
- 	if (lp_gpio_acpi_use(lg, hwirq)) {
--		dev_err(lg->dev, "pin %u can't be used as IRQ\n", hwirq);
-+		dev_err(lg->dev, "pin %lu can't be used as IRQ\n", hwirq);
- 		return -EBUSY;
- 	}
- 
-@@ -755,7 +760,7 @@ static int lp_irq_set_type(struct irq_data *d, unsigned int type)
- 	return 0;
- }
- 
--static struct irq_chip lp_irqchip = {
-+static const struct irq_chip lp_irqchip = {
- 	.name = "LP-GPIO",
- 	.irq_ack = lp_irq_ack,
- 	.irq_mask = lp_irq_mask,
-@@ -763,7 +768,8 @@ static struct irq_chip lp_irqchip = {
- 	.irq_enable = lp_irq_enable,
- 	.irq_disable = lp_irq_disable,
- 	.irq_set_type = lp_irq_set_type,
--	.flags = IRQCHIP_SKIP_SET_WAKE,
-+	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static int lp_gpio_irq_init_hw(struct gpio_chip *chip)
-@@ -884,7 +890,7 @@ static int lp_gpio_probe(struct platform_device *pdev)
- 		struct gpio_irq_chip *girq;
- 
- 		girq = &gc->irq;
--		girq->chip = &lp_irqchip;
-+		gpio_irq_chip_set_chip(girq, &lp_irqchip);
- 		girq->init_hw = lp_gpio_irq_init_hw;
- 		girq->parent_handler = lp_gpio_irq_handler;
- 		girq->num_parents = 1;
--- 
-2.35.1
-
+Cheers,
+Prabhakar
