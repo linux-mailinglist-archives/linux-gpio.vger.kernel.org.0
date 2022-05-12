@@ -2,54 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8453252460C
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 08:43:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50DFA524670
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 09:06:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243671AbiELGnY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 02:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
+        id S1350690AbiELHG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 03:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240920AbiELGnX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 02:43:23 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729251B7939;
-        Wed, 11 May 2022 23:43:21 -0700 (PDT)
-Received: by mail-qt1-f176.google.com with SMTP id x9so3659174qts.6;
-        Wed, 11 May 2022 23:43:21 -0700 (PDT)
+        with ESMTP id S1350774AbiELHGI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 03:06:08 -0400
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDD5CD3;
+        Thu, 12 May 2022 00:06:06 -0700 (PDT)
+Received: by mail-qk1-f179.google.com with SMTP id a22so3997804qkl.5;
+        Thu, 12 May 2022 00:06:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OFP7hJ6KzfffhBpGLIJzVwzD4tIyuujgKC17ziO4XoU=;
-        b=avCH17pglDxmMCfl7OkvHBzImsz656JoTuS/IJLq9lWbGYQaHojSjiPcQiG+FX2VnF
-         RZv6kqjrOf645WExuTWKoUnHH/IzxekgDxFBHl4tOg69Lf5Fbeq+ZWW+JDdyGrcfMfpt
-         AEcaAqDAiak1yxHoJhgvaHdgGAR0U/h3uFTGFl3WXd6dCO6OxhIJIA9OnPXY3wrnLDvO
-         RQ+yOuk12CH+1NoMtmKiyyXyFad5glzXDaHJS71C+QFoDM1JTdgQ+b+uY8/Ey9nrm54h
-         4az3xiCxfX+yqKfVq4xbx49xa34GoSuf2DOJq8Ezjht9k1lmAexH8NJ0Xfrf7AxfyzWK
-         NLlg==
-X-Gm-Message-State: AOAM5316ajdwnoLi80+7K1LxaEiAzKj1yDenlI3xOuB2GpBJlbXvql7H
-        WIimQXNIAWK/YCPGfQ5a+aLJF3qNjex+Ng==
-X-Google-Smtp-Source: ABdhPJw2bcXzPmoifc4THsehp38cXvXYfniJ7FLd6SN3l45Ep7p7ZWAAPjnwgIaj1qo0zSiJHyCIIQ==
-X-Received: by 2002:a05:622a:591:b0:2f3:d8fc:1967 with SMTP id c17-20020a05622a059100b002f3d8fc1967mr17660497qtb.353.1652337800334;
-        Wed, 11 May 2022 23:43:20 -0700 (PDT)
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
-        by smtp.gmail.com with ESMTPSA id y30-20020a05620a0e1e00b0069fd9de088esm2345779qkm.93.2022.05.11.23.43.18
+        bh=uZq5KQ7PbYNEAlZ3QkxMc8y4Xac8EM18MZB7pmG8rGs=;
+        b=RFH58T1tiKFNLyf3PNjwmqmRMNNDbE29N9RsKv+FdUpQ8FI3FrnOpL54mLNufp3RnL
+         2LtQGFk3TxfNngX+6HdQgvK48s4Jc7+cIywUFsWjQ3us/31C5rPAckmGAoRBXzq4EPj8
+         hZjPnWHZtxxVwOALDBWZCpSweyWOc9BM8N/j+M10hmzFPBaEv87xkNojrQY+JEf4pGK/
+         nrJ0PFFw3e8hxsIEx0eJSODsp/L7LHmEmClUdZHSfran9APtfFP0srEnrF67AVc3FBwQ
+         9yJSuyWdND/pICOafB3x5/rCSR9tIUzmgfgkz4PvjTPbIJZxbIOV3dQiBusQZTK7l0MG
+         F80w==
+X-Gm-Message-State: AOAM530SrcF7JDabLi4P4mOuFGi6VSiQPTF9tfUMh9KACWqRmB8bKRz4
+        DA3VEmaC+WP5eXIQ7oyaWYC/ghsrkinSCA==
+X-Google-Smtp-Source: ABdhPJxHdA9T+GeoSG62uIbqlG++dUzTUGAvmmXXRTValPzVDa67XHHYCGDnhfNw9L6rUMkY/5Chkw==
+X-Received: by 2002:a37:bbc4:0:b0:69b:db2c:c962 with SMTP id l187-20020a37bbc4000000b0069bdb2cc962mr21881103qkf.565.1652339165226;
+        Thu, 12 May 2022 00:06:05 -0700 (PDT)
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
+        by smtp.gmail.com with ESMTPSA id x4-20020a05620a0b4400b0069fcebf9c0asm2453284qkg.37.2022.05.12.00.06.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 May 2022 23:43:19 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-2f16645872fso45269287b3.4;
-        Wed, 11 May 2022 23:43:18 -0700 (PDT)
-X-Received: by 2002:a81:6588:0:b0:2f8:b75e:1e1a with SMTP id
- z130-20020a816588000000b002f8b75e1e1amr29899309ywb.358.1652337798506; Wed, 11
- May 2022 23:43:18 -0700 (PDT)
+        Thu, 12 May 2022 00:06:04 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-2f7bb893309so45452707b3.12;
+        Thu, 12 May 2022 00:06:03 -0700 (PDT)
+X-Received: by 2002:a81:2143:0:b0:2fb:1274:247e with SMTP id
+ h64-20020a812143000000b002fb1274247emr29285779ywh.384.1652339163593; Thu, 12
+ May 2022 00:06:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220511183210.5248-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220511183210.5248-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220511183210.5248-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20220511183210.5248-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 May 2022 08:43:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU6-cfgYE0DLyWSxzDmQ3Z67qTJAKzi75qNt8p=PMuEnA@mail.gmail.com>
-Message-ID: <CAMuHMdU6-cfgYE0DLyWSxzDmQ3Z67qTJAKzi75qNt8p=PMuEnA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/G2L Interrupt Controller
+Date:   Thu, 12 May 2022 09:05:51 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW9kfhr3d=yG8yfAuX+yBTR5vQr8XRi5ymbRyEVfWAjDg@mail.gmail.com>
+Message-ID: <CAMuHMdW9kfhr3d=yG8yfAuX+yBTR5vQr8XRi5ymbRyEVfWAjDg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -81,62 +80,136 @@ Hi Prabhakar,
 
 On Wed, May 11, 2022 at 8:32 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add DT bindings for the Renesas RZ/G2L Interrupt Controller.
+> Add a driver for the Renesas RZ/G2L Interrupt Controller.
+>
+> This supports external pins being used as interrupts. It supports
+> one line for NMI, 8 external pins and 32 GPIO pins (out of 123)
+> to be used as IRQ lines.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks for the update!
+LGTM ("I'm no irqchip expert"), so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+One suggestion for improvement below, which needs changes to the
+irqchip core code, though.
 
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> @@ -0,0 +1,134 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/renesas,rzg2l-irqc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/G2L (and alike SoC's) Interrupt Controller (IA55)
-> +
-> +maintainers:
-> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +
-> +description: |
-> +  IA55 performs various interrupt controls including synchronization for the external
-> +  interrupts of NMI, IRQ, and GPIOINT and the interrupts of the built-in peripheral
-> +  interrupts output by each IP. And it notifies the interrupt to the GIC
-> +    - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
-> +    - GPIO pins used as external interrupt input pins, mapped to 32 GIC SPI interrupts
-> +    - NMI edge select (NMI is not treated as NMI exception and supports fall edge and
-> +      stand-up edge detection interrupts)
-> +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,r9a07g044-irqc    # RZ/G2L
-> +      - const: renesas,rzg2l-irqc
-> +
-> +  '#interrupt-cells':
-> +    description: The first cell should contain interrupt number and the second cell
-> +                 is used to specify the flag.
+> +++ b/drivers/irqchip/irq-renesas-rzg2l.c
 
-The important part is still missing: which interrupt number (the general
-description mentions 3 types)?
-I believe the answer is "external interrupt number".
-
-> +    const: 2
+> +static int rzg2l_irqc_init(struct device_node *node, struct device_node *parent)
+> +{
+> +       struct irq_domain *irq_domain, *parent_domain;
+> +       struct reset_control *resetn;
+> +       struct rzg2l_irqc_priv *priv;
+> +       struct clk *clk;
+> +       struct clk *pclk;
+> +       int ret;
 > +
+> +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
 > +
+> +       priv->base = of_iomap(node, 0);
+> +       if (!priv->base) {
+> +               ret = -ENXIO;
+> +               goto free_priv;
+> +       }
+> +
+> +       clk = of_clk_get_by_name(node, "clk");
+> +       if (IS_ERR(clk)) {
+> +               ret = IS_ERR(clk);
+> +               goto iounmap_base;
+> +       }
+> +
+> +       pclk = of_clk_get_by_name(node, "pclk");
+> +       if (IS_ERR(pclk)) {
+> +               ret = IS_ERR(pclk);
+> +               goto iounmap_base;
+> +       }
+> +
+> +       resetn = of_reset_control_get_exclusive_by_index(node, 0);
+> +       if (IS_ERR(resetn)) {
+> +               ret = IS_ERR(resetn);
+> +               goto iounmap_base;
+> +       }
+> +
+> +       parent_domain = irq_find_host(parent);
+> +       if (!parent_domain) {
+> +               pr_err("%pOF: cannot find parent domain\n", node);
+> +               ret = -ENODEV;
+> +               goto iounmap_base;
+> +       }
+> +
+> +       ret = rzg2l_irqc_parse_map(priv, node);
+> +       if (ret) {
+> +               pr_err("%pOF: cannot parse interrupts: %d\n", node, ret);
+> +               goto iounmap_base;
+> +       }
+> +
+> +       ret = reset_control_deassert(resetn);
+> +       if (ret) {
+> +               pr_err("%pOF: failed to deassert resetn pin, %d\n", node, ret);
+> +               goto iounmap_base;
+> +       }
+> +
+> +       raw_spin_lock_init(&priv->lock);
+> +
+> +       ret = clk_prepare_enable(clk);
+> +       if (ret)
+> +               goto assert_reset;
+> +
+> +       ret = clk_prepare_enable(pclk);
+> +       if (ret)
+> +               goto disable_clk;
 
-Double blank line.
+As the driver doesn't care about the properties of the clock, but
+just needs to enable them, I think it would be worthwhile to replace
+the explicit clock handling by Runtime PM.
+But that needs access to the struct device pointer.
+Of course that can be done later (see below).
 
-> +  '#address-cells':
-> +    const: 0
+> +
+> +       irq_domain = irq_domain_add_hierarchy(parent_domain, 0, IRQC_NUM_IRQ,
+> +                                             node, &rzg2l_irqc_domain_ops,
+> +                                             priv);
+> +       if (!irq_domain) {
+> +               pr_err("%pOF: cannot initialize irq domain\n", node);
+> +               ret = -ENOMEM;
+> +               goto fail_irq_domain;
+> +       }
+> +
+> +       return 0;
+> +
+> +fail_irq_domain:
+> +       clk_disable_unprepare(pclk);
+> +disable_clk:
+> +       clk_disable_unprepare(clk);
+> +assert_reset:
+> +       reset_control_assert(resetn);
+> +iounmap_base:
+> +       iounmap(priv->base);
+> +free_priv:
+> +       kfree(priv);
+> +       return ret;
+> +}
+> +
+> +IRQCHIP_PLATFORM_DRIVER_BEGIN(rzg2l_irqc)
+> +IRQCHIP_MATCH("renesas,rzg2l-irqc", rzg2l_irqc_init)
+> +IRQCHIP_PLATFORM_DRIVER_END(rzg2l_irqc)
+
+While platform_irqchip_probe() has access to the platform_device,
+it does not pass that to the driver's initialization function, so
+that function does not have access to the device framework.
+Hence it can not be used for interrupt controllers that are part of a
+Power Domain, as, unlike clocks, Power Domains can only be controlled
+from Runtime PM, and thus require access to a struct device pointer.
+I think it would be good to fix this sooner rather than later; there
+are only a handful of users of this interface yet.
+
+> +MODULE_AUTHOR("Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>");
+> +MODULE_DESCRIPTION("Renesas RZ/G2L IRQC Driver");
+> +MODULE_LICENSE("GPL");
 
 Gr{oetje,eeting}s,
 
