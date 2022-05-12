@@ -2,114 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78C0D524947
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 11:41:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA1D524963
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 11:49:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352189AbiELJlf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 05:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48066 "EHLO
+        id S1349867AbiELJtq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 05:49:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344441AbiELJle (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 05:41:34 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9404E6A00C
-        for <linux-gpio@vger.kernel.org>; Thu, 12 May 2022 02:41:32 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7DB4C2C0719;
-        Thu, 12 May 2022 09:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1652348489;
-        bh=CCea1k7mwJq3WEXEcbjXo1IM6THw8sWAL42OOl5qT/U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vEcEskj7ddPr0p5sbPQTfSQCvbw9vD2jNmdcb17n8EQQQJRNZv9UykGNV74723pr0
-         o9d5sxzUR+cSoHuCIFnKhs5v1XBN4OQHDfq/MZXNoeNIvwO5pexfOnM0DJQrUNvn8L
-         96PtSj0Sb1m4JWfyfjzURl4ZeSJhj8OUTemZA/BgdCMkujflQ044uS40QeTimfv48c
-         0g8/de4AUf6nsD9g1ocXpxxsWAI4AfVRGXarm0pqmp84Q5+Qv3i8DiZNwPw/uMAMp0
-         YrZLJnLY6niGuBKQS/GVbL1Rmb8Kn4DUmbtV5dLSh7mpzm/38VNUygDwo3qT68uJQ6
-         gA/2qlP5luz8w==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B627cd6490001>; Thu, 12 May 2022 21:41:29 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by pat.atlnz.lc (Postfix) with ESMTP id 4225F13EE41;
-        Thu, 12 May 2022 21:41:29 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 3F3562A00D3; Thu, 12 May 2022 21:41:29 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        andrew@lunn.ch
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3 2/2] dt-bindings: gpio: gpio-mvebu: document offset and marvell,pwm-offset
-Date:   Thu, 12 May 2022 21:41:25 +1200
-Message-Id: <20220512094125.3748197-2-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.36.0
-In-Reply-To: <20220512094125.3748197-1-chris.packham@alliedtelesis.co.nz>
-References: <20220512094125.3748197-1-chris.packham@alliedtelesis.co.nz>
+        with ESMTP id S232049AbiELJtp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 05:49:45 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A603F304
+        for <linux-gpio@vger.kernel.org>; Thu, 12 May 2022 02:49:43 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id q23so6471240wra.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 May 2022 02:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=m+GHfrW6fEuHc5Bs8OGRGQGWigIu1swhxgOxVtKpNhk=;
+        b=dwGIQ0BkCa1E3CJvLrusI8PupUWwR7p+1hFOBj/+L8AjeAwkXB0MDERMHgBJdhDGzT
+         nJlqSVX2eesukTMTMDhXG13WsiALG4nTQnhPW0lqClxlD/Pt2CZ6HcwTVPpq8htGKkVs
+         Wj8OonXKuY/XIQhNxBpqwTd+E1x4rH1AFARunTtpBT9n+FpJH3Lt1Ehz3smX9gJqC7iU
+         D+peMsK+SCpRCnwRpCAeQwqNsJxnqzcIFKut5MhQOnRb34TDVV0O7ed/m9Ta5OYFcfkv
+         XxQDekIaWAJRf7O5gp2Ps6WKd+0HggV9t3i6jnt5xZTJ+aYAVIta6srR6nN67Oay4tUn
+         if2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=m+GHfrW6fEuHc5Bs8OGRGQGWigIu1swhxgOxVtKpNhk=;
+        b=LQOBqIr1ksFjfvpBhkc3KDCmgVMmFM2ya50Ikj3Acv9NiJTcGwF5nkIE8aqceiU85i
+         waWulba7zsGg9yONDRPMCtjhTieYhuPIdRDCses1i+RsvvCnIQv5OfimqDMwPKBf8Pnn
+         TpnRogqs4ZYC1/NjOuGzTndw1dveHf2KFfpTnixwJKOXWJ95LWrY1YSIKrnZD6C/C153
+         osn6KynEqUkUGHGtd55YKgSIzAEJyGC1ftv4kyK2qdlU7N5Z9cCg6YrvxIqzJbr+gZv3
+         kcBv0G3oAzyaxw6GnN1nsuO3khaG5DqXp+orGxhSk9+mVaYRHPzybYIrnVnnXSYfdsgU
+         mucQ==
+X-Gm-Message-State: AOAM533CKiBUwLcf2iyzmJ5Vu6gBaknckkSMPKLtld5cT8oKRkBkGqUC
+        61dMHowg7wYoiks6V0CXuEsjcw==
+X-Google-Smtp-Source: ABdhPJzJ8xq2tAa6Ub50g1TH/DdizJOEPl87cht3iCrjgVaclsdPRT2WWsCqIHuuIx0bKY2DJYFaBA==
+X-Received: by 2002:a5d:64c8:0:b0:20c:6970:fb22 with SMTP id f8-20020a5d64c8000000b0020c6970fb22mr25695147wri.424.1652348982423;
+        Thu, 12 May 2022 02:49:42 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id d2-20020a056000114200b0020c6a524fe0sm3635878wrx.98.2022.05.12.02.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 02:49:41 -0700 (PDT)
+Date:   Thu, 12 May 2022 10:49:39 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: Re: [RFC v8 net-next 08/16] mfd: ocelot: add support for the vsc7512
+ chip via spi
+Message-ID: <YnzYM1kOJ9hcaaQ6@google.com>
+References: <20220508185313.2222956-1-colin.foster@in-advantage.com>
+ <20220508185313.2222956-9-colin.foster@in-advantage.com>
+ <20220509105239.wriaryaclzsq5ia3@skbuf>
+ <20220509234922.GC895@COLIN-DESKTOP1.localdomain>
+ <20220509172028.qcxzexnabovrdatq@skbuf>
+ <YnqFijExn8Nn+xhs@google.com>
+ <20220510161319.GA872@COLIN-DESKTOP1.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=U+Hs8tju c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=oZkIemNP1mAA:10 a=9OvEkFhTLsvuW6oDEM0A:9
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220510161319.GA872@COLIN-DESKTOP1.localdomain>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The offset and marvell,pwm-offset properties weren't in the old binding.
-Add them based on the existing usage when the marvell,armada-8k-gpio
-compatible is used.
+On Tue, 10 May 2022, Colin Foster wrote:
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+> On Tue, May 10, 2022 at 04:32:26PM +0100, Lee Jones wrote:
+> > On Mon, 09 May 2022, Vladimir Oltean wrote:
+> > 
+> > > On Mon, May 09, 2022 at 04:49:22PM -0700, Colin Foster wrote:
+> > > > > > +struct regmap *ocelot_init_regmap_from_resource(struct device *child,
+> > > > > > +						const struct resource *res)
+> > > > > > +{
+> > > > > > +	struct device *dev = child->parent;
+> > > > > > +
+> > > > > > +	return ocelot_spi_devm_init_regmap(dev, child, res);
+> > > > > 
+> > > > > So much for being bus-agnostic :-/
+> > > > > Maybe get the struct ocelot_ddata and call ocelot_spi_devm_init_regmap()
+> > > > > via a function pointer which is populated by ocelot-spi.c? If you do
+> > > > > that don't forget to clean up drivers/mfd/ocelot.h of SPI specific stuff.
+> > > > 
+> > > > That was my initial design. "core" was calling into "spi" exclusively
+> > > > via function pointers.
+> > > > 
+> > > > The request was "Please find a clearer way to do this without function
+> > > > pointers"
+> > > > 
+> > > > https://lore.kernel.org/netdev/Ydwju35sN9QJqJ%2FP@google.com/
+> > > 
+> > > Yeah, I'm not sure what Lee was looking for, either. In any case I agree
+> > > with the comment that you aren't configuring a bus. In this context it
+> > > seems more appropriate to call this function pointer "init_regmap", with
+> > > different implementations per transport.
+> > 
+> > FWIW, I'm still against using function pointers for this.
+> > 
+> > What about making ocelot_init_regmap_from_resource() an inline
+> > function and pushing it into one of the header files?
+> > 
+> > [As an aside, you don't need to pass both dev (parent) and child]
+> 
+> I see your point. This wasn't always the case, since ocelot-core prior
+> to v8 would call ocelot_spi_devm_init_regmap. Since this was changed,
+> the "dev, dev" part can all be handled internally. That's nice.
+> 
+> > 
+> > In there you could simply do:
+> > 
+> > inline struct regmap *ocelot_init_regmap_from_resource(struct device *dev,
+> > 						       const struct resource *res)
+> > {
+> > 	if (dev_get_drvdata(dev->parent)->spi)
+> > 		return ocelot_spi_devm_init_regmap(dev, res);
+> > 
+> > 	return NULL;
+> > }
+> 
+> If I do this, won't I have to declare ocelot_spi_devm_init_regmap in a
+> larger scope (include/soc/mscc/ocelot.h)? I like the idea of keeping it
+> more hidden inside drivers/mfd/ocelot.h, assuming I can't keep it
+> enclosed in drivers/mfd/ocelot-spi.c entirely.
 
-Notes:
-    Changes in v3:
-    - Split off from 1:1 conversion patch
+Yes, it will have the same scope as ocelot_init_regmap_from_resource().
 
- Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Have you considered include/linux/mfd?
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Doc=
-umentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-index 2d95ef707f53..790a17af7c59 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-@@ -41,6 +41,10 @@ properties:
-       - const: pwm
-     minItems: 1
-=20
-+  offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the gpio registers (in b=
-ytes)
-+
-   interrupts:
-     description: |
-       The list of interrupts that are used for all the pins managed by t=
-his
-@@ -64,6 +68,10 @@ properties:
-   "#gpio-cells":
-     const: 2
-=20
-+  marvell,pwm-offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the pwm registers (in by=
-tes)
-+
-   "#pwm-cells":
-     description:
-       The first cell is the GPIO line number. The second cell is the per=
-iod
---=20
-2.36.0
-
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
