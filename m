@@ -2,57 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBE41525405
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 19:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5981C525439
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 19:56:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357246AbiELRrD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 13:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35150 "EHLO
+        id S1357158AbiELR4L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 13:56:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357291AbiELRq6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 13:46:58 -0400
+        with ESMTP id S1357411AbiELR4I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 13:56:08 -0400
 Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F5821E17;
-        Thu, 12 May 2022 10:46:53 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id e12so11073632ybc.11;
-        Thu, 12 May 2022 10:46:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8088C1FCEF;
+        Thu, 12 May 2022 10:56:05 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id i38so11123254ybj.13;
+        Thu, 12 May 2022 10:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dnO5zoeApQtDLUuf1P1LiIraL73Pn9VEk14VVtCpS4w=;
-        b=AVNsvFTeadDDh8QCxbg5gJupT1hA8hmRn4sYaGGnjMgyDr7cncMPMt9GKp6n8kvxK8
-         vMUKLNTrBEYJxdE1N8QF5Bu4pk5P8N0NfshPoO3CojImQtVl9O4Rkrwtwsn5EQ6DQYCl
-         /pNlNcfG/HEMr+UHmf0NAEnYf43zih68oxYGe4a5S2GV7kipCoNN4TzfvO/XmgGzLpjw
-         qYTdxOO2REnQ77YVILMGne2B/u5NnGN0JDgr973CdgKEPdoiVlAQsYFluNCcLuzYePBS
-         H5WiyrFke/5Yl+i30xQQGmgayDCDE0RKEl8uDfv2/TGY/tgeVbYie0c5xGJK+IGzTHr5
-         091Q==
+        bh=cDf56ztQPBCcZZJ7QUrd+Gca39+mdnDOAe1uKcepMDQ=;
+        b=pegICUYUytx85orAdIVv5XS7x83nbZWGrPKozBcGu7LZ2N31Zlzr2ABeWgeo9ZesfS
+         Q46RwOAW6yxxghjbVmkXVxsEg/BryIOfQ3mfkdzsG8xzoLv8Yilx09aPJnBldN7Z/7b7
+         iWbBrfZzxJ5KURGwvm+G0EXuSnjYDntNzjI4Y8N6XeAbE2n6NPky7JIYWCzPTXm7tEjO
+         RsQJG3xgvgfKSCGD5z9I4Wa01etuxs70zkPy+/6p9ciwhp/rka2A4cY3LzTHsA7VUbua
+         gcHS/yDdnG5Blol+61ocBmo3OujeKdGWgOWV9TuPkxDYgchtGYmz8quKf2sqmrERJHar
+         NlOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dnO5zoeApQtDLUuf1P1LiIraL73Pn9VEk14VVtCpS4w=;
-        b=WjffCSoqXdbOsXuH20av6igccp3QgAPmWME9HBR3Ih4l2oVVSw4ms7gZE5qUJoBHfp
-         Ggs1Q2ynUMQ9AnlPPfCFa7RA0ql1IummKuKvBmiffhph9Md1UQ8Qj8/tCOp+ZuApMlFR
-         f9Vmzuag5hccIVG+c2fTgXV23lN1DJYbQ6KQRbii0Q8IbLU/wjSAYsBLyVfJiPQi8qg3
-         6H6nn1df7g6g8r2qtMVTRs97t6Z1H1X7mfzJmhhBK9dqcpPcXe15DFb4+hh4fePLA8vr
-         CVelC+Hr2rIyP+Z/zmcnai997hQg28pOm0ucWL3klBRAzf0MY6C+HcJJ4kRxEkyiNaZQ
-         DlNg==
-X-Gm-Message-State: AOAM533cfMy0DDF+APJYgS+mijbV6QJHktlD0zZ2p1xUen51gLA3A4e+
-        j79iYndKPld1BE35RVOrXcVfAWmJD7/idONGL+c=
-X-Google-Smtp-Source: ABdhPJzCC/UodlPkjMsYk5vm5qdySUgEeb5RJMivCyorLBcALRhqfaGiUtM82swE6Mgtm53STRbYPpEBPKfpxSh6r/A=
-X-Received: by 2002:a25:42cd:0:b0:645:d805:4fcb with SMTP id
- p196-20020a2542cd000000b00645d8054fcbmr1033590yba.182.1652377612505; Thu, 12
- May 2022 10:46:52 -0700 (PDT)
+        bh=cDf56ztQPBCcZZJ7QUrd+Gca39+mdnDOAe1uKcepMDQ=;
+        b=HiIiN6zAIOZyX+k166tTg0/1qu5zpcM55F3EvKgGy31+zwb/kWi0nkDiJh8CNNB5pS
+         337hwwTvuuE1ZbieZWn6bAxCddDC9ESB8BRDpdqE2Uagx/E3pRR020kh0/A6tfBAOeJp
+         RuOds7RBNpDPmLc7Pr2ZR/DU5Yw3V9gncaXGjM5J3tBUhBLE0/x6Nsa9pgqcJLtyres1
+         SbXBTgd0lQo3F5+p26bRp/cFx0fbCYAgazxxBhrKO7XGmq9/CLMLwkrlm9ZlQy8Z9bta
+         xcbLIlHOu9a5jdboMaKDodOKjBjHjyUKXbh5IWhizfzXj7MtAhW8mCpe0ZE8Rf9/ytLR
+         uH2w==
+X-Gm-Message-State: AOAM5329dxDl45P9i7/FoDcOtUcsDKrmF3+XPzsEpPCx/TEBSTGY46pj
+        65keujk+5AIkdnNn6wApyK1CEFsHLGA7JltFF2w=
+X-Google-Smtp-Source: ABdhPJzRigrzfrx530jGCbcMBGmMrZu0k8SbHFBXZASDGaDsogoQOvX4dBSvDcRlR4lzsuShPUKGDXwO2ueGPNrihJw=
+X-Received: by 2002:a5b:246:0:b0:619:5651:3907 with SMTP id
+ g6-20020a5b0246000000b0061956513907mr1061247ybp.190.1652378164781; Thu, 12
+ May 2022 10:56:04 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220511183210.5248-6-prabhakar.mahadev-lad.rj@bp.renesas.com> <87zgjn57eb.wl-maz@kernel.org>
-In-Reply-To: <87zgjn57eb.wl-maz@kernel.org>
+ <20220511183210.5248-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <87y1z75770.wl-maz@kernel.org> <CA+V-a8tf1RmT-cX5y807rTAPES2NXLJHp=u1WUG11fLrtt-5Mg@mail.gmail.com>
+ <87wneq6fz3.wl-maz@kernel.org> <CA+V-a8v9WodNNK7AL4XemDnSrrWc9wG+qDKZb7SmbWixs5Q3Nw@mail.gmail.com>
+ <87v8ua67kt.wl-maz@kernel.org>
+In-Reply-To: <87v8ua67kt.wl-maz@kernel.org>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 12 May 2022 18:46:25 +0100
-Message-ID: <CA+V-a8shYmRXvxV76NZenuLKDAGBYRVwbt7HofcdnPoMjgx=ZA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to
- handle GPIO interrupt
+Date:   Thu, 12 May 2022 18:55:38 +0100
+Message-ID: <CA+V-a8sMvjYK5NfkqpD3ertfUOy1zbauXW9gLzG+GLzZtvUygg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] gpio: gpiolib: Allow free() callback to be overridden
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -82,329 +84,89 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Marc,
 
-Thank you for the review.
+On Thu, May 12, 2022 at 5:26 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Thu, 12 May 2022 14:50:05 +0100,
+> "Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
+> >
+> > Hi Marc,
+> >
+> > On Thu, May 12, 2022 at 2:24 PM Marc Zyngier <maz@kernel.org> wrote:
+> > >
+> > > On Thu, 12 May 2022 13:48:53 +0100,
+> > > "Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
+> > > >
+> > > > Hi Marc,
+> > > >
+> > > > Thank you for the review.
+> > > >
+> > > > On Thu, May 12, 2022 at 12:19 PM Marc Zyngier <maz@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, 11 May 2022 19:32:08 +0100,
+> > > > > Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > > > >
+> > > > > > Allow free() callback to be overridden from irq_domain_ops for
+> > > > > > hierarchical chips.
+> > > > > >
+> > > > > > This allows drivers to free any resources which are allocated during
+> > > > > > populate_parent_alloc_arg().
+> > > > >
+> > > > > Do you mean more than the fwspec? I don't see this being used.
+> > > > >
+> > > > The free callback is used in patch 5/5 where free is overridden by
+> > > > rzg2l_gpio_irq_domain_free. I just gave an example there as an
+> > > > populate_parent_alloc_arg()  In actual in the child_to_parent_hwirq
+> > > > callback I am using a bitmap [0] to get a free tint slot, this bitmap
+> > > > needs freeing up when the GPIO interrupt is released from the driver
+> > > > that as when overridden free callback frees the allocated tint slot so
+> > > > that its available for re-use.
+> > >
+> > > Right, so that's actually a different life-cycle, and the whole
+> > > populate_parent_alloc_arg() is a red herring. What you want is to free
+> > > resources that have been allocated via some other paths. It'd be good
+> > Is there any other path which I have missed where I can free up resources?
+>
+> No, that's the only one. It is just that usually, the alloc()
+> callback is where you are supposed to perform... allocations.
+>
+OK.
 
-On Thu, May 12, 2022 at 12:15 PM Marc Zyngier <maz@kernel.org> wrote:
+> It'd be good if you could move your allocation there, as I would
+> expect calls to child_to_parent_hwirq() to be idempotent.
 >
-> On Wed, 11 May 2022 19:32:10 +0100,
-> Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+For now I'll go with the current implementation, as currently a an
+array is maintained which is tied with the tint slot and child (which
+is obtained from child_to_parent_hwirq)
+
 > >
-> > Add IRQ domian to RZ/G2L pinctrl driver to handle GPIO interrupt.
+> > > if your commit message actually reflected this instead of using an
+> > > example that doesn't actually exist.
+> > >
+> > My bad, I will update the commit message.
 > >
-> > GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can be
-> > used as IRQ lines at given time. Selection of pins as IRQ lines
-> > is handled by IA55 (which is the IRQC block) which sits in between the
-> > GPIO and GIC.
+> > > >
+> > > > > There is also the question of why we need to have dynamic allocation
+> > > > > for the fwspec itself. Why isn't that a simple stack allocation in the
+> > > > > context of gpiochip_hierarchy_irq_domain_alloc()?
+> > > > >
+> > > > you mean gpio core itself should handle the fwspec
+> > > > allocation/freeing?
+> > >
+> > > Yes. The only reason we resort to dynamic allocation is because
+> > > ThunderX is using MSI-based GPIOs, and thus doesn't use a fwspec (no
+> > > firmware is involved here).
+> > >
+> > I see..
 > >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 202 ++++++++++++++++++++++++
-> >  1 file changed, 202 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > index a48cac55152c..af2c739cdbaa 100644
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -9,8 +9,10 @@
-> >  #include <linux/clk.h>
-> >  #include <linux/gpio/driver.h>
-> >  #include <linux/io.h>
-> > +#include <linux/interrupt.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> >  #include <linux/pinctrl/pinconf-generic.h>
-> >  #include <linux/pinctrl/pinconf.h>
-> >  #include <linux/pinctrl/pinctrl.h>
-> > @@ -89,6 +91,7 @@
-> >  #define PIN(n)                       (0x0800 + 0x10 + (n))
-> >  #define IOLH(n)                      (0x1000 + (n) * 8)
-> >  #define IEN(n)                       (0x1800 + (n) * 8)
-> > +#define ISEL(n)                      (0x2c80 + (n) * 8)
-> >  #define PWPR                 (0x3014)
-> >  #define SD_CH(n)             (0x3000 + (n) * 4)
-> >  #define QSPI                 (0x3008)
-> > @@ -112,6 +115,10 @@
-> >  #define RZG2L_PIN_ID_TO_PORT_OFFSET(id)      (RZG2L_PIN_ID_TO_PORT(id) + 0x10)
-> >  #define RZG2L_PIN_ID_TO_PIN(id)              ((id) % RZG2L_PINS_PER_PORT)
-> >
-> > +#define RZG2L_TINT_MAX_INTERRUPT     32
-> > +#define RZG2L_TINT_IRQ_START_INDEX   9
-> > +#define RZG2L_PACK_HWIRQ(t, i)               (((t) << 16) | (i))
-> > +
-> >  struct rzg2l_dedicated_configs {
-> >       const char *name;
-> >       u32 config;
-> > @@ -137,6 +144,9 @@ struct rzg2l_pinctrl {
-> >
-> >       struct gpio_chip                gpio_chip;
-> >       struct pinctrl_gpio_range       gpio_range;
-> > +     DECLARE_BITMAP(tint_slot, RZG2L_TINT_MAX_INTERRUPT);
-> > +     spinlock_t                      bitmap_lock;
-> > +     unsigned int                    hwirq[RZG2L_TINT_MAX_INTERRUPT];
-> >
-> >       spinlock_t                      lock;
-> >  };
-> > @@ -883,6 +893,8 @@ static int rzg2l_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> >
-> >  static void rzg2l_gpio_free(struct gpio_chip *chip, unsigned int offset)
-> >  {
-> > +     unsigned int virq;
-> > +
-> >       pinctrl_gpio_free(chip->base + offset);
-> >
-> >       /*
-> > @@ -890,6 +902,10 @@ static void rzg2l_gpio_free(struct gpio_chip *chip, unsigned int offset)
-> >        * drive the GPIO pin as an output.
-> >        */
-> >       rzg2l_gpio_direction_input(chip, offset);
-> > +
-> > +     virq = irq_find_mapping(chip->irq.domain, offset);
-> > +     if (virq)
-> > +             irq_dispose_mapping(virq);
-> >  }
-> >
-> >  static const char * const rzg2l_gpio_names[] = {
-> > @@ -1104,14 +1120,190 @@ static struct {
-> >       }
-> >  };
-> >
-> > +static int rzg2l_gpio_get_gpioint(unsigned int virq)
-> > +{
-> > +     unsigned int gpioint;
-> > +     unsigned int i;
-> > +     u32 port, bit;
-> > +
-> > +     port = virq / 8;
-> > +     bit = virq % 8;
-> > +
-> > +     if (port >= ARRAY_SIZE(rzg2l_gpio_configs) ||
-> > +         bit >= RZG2L_GPIO_PORT_GET_PINCNT(rzg2l_gpio_configs[port]))
-> > +             return -EINVAL;
-> > +
-> > +     gpioint = bit;
-> > +     for (i = 0; i < port; i++)
-> > +             gpioint += RZG2L_GPIO_PORT_GET_PINCNT(rzg2l_gpio_configs[i]);
-> > +
-> > +     return gpioint;
-> > +}
-> > +
-> > +static void rzg2l_gpio_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-> > +                                    unsigned int nr_irqs)
-> > +{
-> > +     struct irq_data *d;
-> > +
-> > +     d = irq_domain_get_irq_data(domain, virq);
-> > +     if (d) {
-> > +             struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +             struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-> > +             irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > +             unsigned long flags;
-> > +             unsigned int i;
-> > +
-> > +             for (i = 0; i < RZG2L_TINT_MAX_INTERRUPT; i++) {
-> > +                     if (pctrl->hwirq[i] == hwirq) {
-> > +                             spin_lock_irqsave(&pctrl->bitmap_lock, flags);
-> > +                             bitmap_release_region(pctrl->tint_slot, i, get_order(1));
-> > +                             spin_unlock_irqrestore(&pctrl->bitmap_lock, flags);
-> > +                             pctrl->hwirq[i] = 0;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +     }
-> > +     irq_domain_free_irqs_common(domain, virq, nr_irqs);
-> > +}
-> > +
-> > +static void rzg2l_gpio_irq_disable(struct irq_data *d)
-> > +{
-> > +     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +     struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-> > +     unsigned int hwirq = irqd_to_hwirq(d);
-> > +     unsigned long flags;
-> > +     void __iomem *addr;
-> > +     u32 port;
-> > +     u8 bit;
-> > +
-> > +     port = RZG2L_PIN_ID_TO_PORT(hwirq);
-> > +     bit = RZG2L_PIN_ID_TO_PIN(hwirq);
-> > +
-> > +     addr = pctrl->base + ISEL(port);
-> > +     if (bit >= 4) {
-> > +             bit -= 4;
-> > +             addr += 4;
-> > +     }
-> > +
-> > +     spin_lock_irqsave(&pctrl->lock, flags);
-> > +     writel(readl(addr) & ~BIT(bit * 8), addr);
-> > +     spin_unlock_irqrestore(&pctrl->lock, flags);
-> > +
-> > +     irq_chip_disable_parent(d);
-> > +}
-> > +
-> > +static void rzg2l_gpio_irq_enable(struct irq_data *d)
-> > +{
-> > +     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +     struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-> > +     unsigned int hwirq = irqd_to_hwirq(d);
-> > +     unsigned long flags;
-> > +     void __iomem *addr;
-> > +     u32 port;
-> > +     u8 bit;
-> > +
-> > +     port = RZG2L_PIN_ID_TO_PORT(hwirq);
-> > +     bit = RZG2L_PIN_ID_TO_PIN(hwirq);
-> > +
-> > +     addr = pctrl->base + ISEL(port);
-> > +     if (bit >= 4) {
-> > +             bit -= 4;
-> > +             addr += 4;
-> > +     }
-> > +
-> > +     spin_lock_irqsave(&pctrl->lock, flags);
-> > +     writel(readl(addr) | BIT(bit * 8), addr);
-> > +     spin_unlock_irqrestore(&pctrl->lock, flags);
-> > +
-> > +     irq_chip_enable_parent(d);
-> > +}
-> > +
-> > +static int rzg2l_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> > +{
-> > +     return irq_chip_set_type_parent(d, type);
-> > +}
-> > +
-> > +static void rzg2l_gpio_irqc_eoi(struct irq_data *d)
-> > +{
-> > +     irq_chip_eoi_parent(d);
-> > +}
-> > +
-> > +static struct irq_chip rzg2l_gpio_irqchip = {
-> > +     .name = "rzg2l-gpio",
-> > +     .irq_disable = rzg2l_gpio_irq_disable,
-> > +     .irq_enable = rzg2l_gpio_irq_enable,
-> > +     .irq_mask = irq_chip_mask_parent,
-> > +     .irq_unmask = irq_chip_unmask_parent,
-> > +     .irq_set_type = rzg2l_gpio_irq_set_type,
-> > +     .irq_eoi = rzg2l_gpio_irqc_eoi,
+> > > If we had a union of the two types, we could just have a stack
+> > > variable, and pass that along, completely sidestepping the whole
+> > > dynamic allocation/freeing business.
+> > >
+> > Right agreed.
 >
-> Please see the changes[1] that are queued in -next around immutable
-> GPIO irqchips. This needs to be made const, the enable/disable methods
-> have the right callbacks added, the resource management methods
-> plumbed, and the correct flag exposed.
+> FWIW, I've just posted a PoC patch[1].
 >
-Thank you for the pointer, I'll rebase my patches on top of it and
-implement an immutable GPIO irqchip.
+I guess I'll have to rebase my changes on top of it now ;)
 
 Cheers,
 Prabhakar
-
-> > +};
-> > +
-> > +static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
-> > +                                         unsigned int child,
-> > +                                         unsigned int child_type,
-> > +                                         unsigned int *parent,
-> > +                                         unsigned int *parent_type)
-> > +{
-> > +     struct rzg2l_pinctrl *pctrl = gpiochip_get_data(gc);
-> > +     unsigned long flags;
-> > +     int gpioint, irq;
-> > +
-> > +     gpioint = rzg2l_gpio_get_gpioint(child);
-> > +     if (gpioint < 0)
-> > +             return gpioint;
-> > +
-> > +     spin_lock_irqsave(&pctrl->bitmap_lock, flags);
-> > +     irq = bitmap_find_free_region(pctrl->tint_slot, RZG2L_TINT_MAX_INTERRUPT, get_order(1));
-> > +     spin_unlock_irqrestore(&pctrl->bitmap_lock, flags);
-> > +     if (irq < 0)
-> > +             return -ENOSPC;
-> > +     pctrl->hwirq[irq] = child;
-> > +     irq += RZG2L_TINT_IRQ_START_INDEX;
-> > +
-> > +     /* All these interrupts are level high in the CPU */
-> > +     *parent_type = IRQ_TYPE_LEVEL_HIGH;
-> > +     *parent = RZG2L_PACK_HWIRQ(gpioint, irq);
-> > +     return 0;
-> > +}
-> > +
-> > +static void *rzg2l_gpio_populate_parent_fwspec(struct gpio_chip *chip,
-> > +                                            unsigned int parent_hwirq,
-> > +                                            unsigned int parent_type)
-> > +{
-> > +     struct irq_fwspec *fwspec;
-> > +
-> > +     fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
-> > +     if (!fwspec)
-> > +             return NULL;
-> > +
-> > +     fwspec->fwnode = chip->irq.parent_domain->fwnode;
-> > +     fwspec->param_count = 2;
-> > +     fwspec->param[0] = parent_hwirq;
-> > +     fwspec->param[1] = parent_type;
-> > +
-> > +     return fwspec;
-> > +}
-> > +
-> >  static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
-> >  {
-> >       struct device_node *np = pctrl->dev->of_node;
-> >       struct gpio_chip *chip = &pctrl->gpio_chip;
-> >       const char *name = dev_name(pctrl->dev);
-> > +     struct irq_domain *parent_domain;
-> >       struct of_phandle_args of_args;
-> > +     struct device_node *parent_np;
-> > +     struct gpio_irq_chip *girq;
-> >       int ret;
-> >
-> > +     parent_np = of_irq_find_parent(np);
-> > +     if (!parent_np)
-> > +             return -ENXIO;
-> > +
-> > +     parent_domain = irq_find_host(parent_np);
-> > +     of_node_put(parent_np);
-> > +     if (!parent_domain)
-> > +             return -EPROBE_DEFER;
-> > +
-> >       ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &of_args);
-> >       if (ret) {
-> >               dev_err(pctrl->dev, "Unable to parse gpio-ranges\n");
-> > @@ -1138,6 +1330,15 @@ static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
-> >       chip->base = -1;
-> >       chip->ngpio = of_args.args[2];
-> >
-> > +     girq = &chip->irq;
->
-> Same thing, this needs to use the appropriate setter.
->
-> > +     girq->chip = &rzg2l_gpio_irqchip;
-> > +     girq->fwnode = of_node_to_fwnode(np);
-> > +     girq->parent_domain = parent_domain;
-> > +     girq->child_to_parent_hwirq = rzg2l_gpio_child_to_parent_hwirq;
-> > +     girq->populate_parent_alloc_arg = rzg2l_gpio_populate_parent_fwspec;
-> > +     girq->child_irq_domain_ops.free = rzg2l_gpio_irq_domain_free;
-> > +     girq->ngirq = RZG2L_TINT_MAX_INTERRUPT;
-> > +
-> >       pctrl->gpio_range.id = 0;
-> >       pctrl->gpio_range.pin_base = 0;
-> >       pctrl->gpio_range.base = 0;
-> > @@ -1253,6 +1454,7 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
-> >       }
-> >
-> >       spin_lock_init(&pctrl->lock);
-> > +     spin_lock_init(&pctrl->bitmap_lock);
-> >
-> >       platform_set_drvdata(pdev, pctrl);
-> >
-> > --
-> > 2.25.1
-> >
-> >
->
-> Thanks,
->
->         M.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/gpio-immutable
->
-> --
-> Without deviation from the norm, progress is not possible.
