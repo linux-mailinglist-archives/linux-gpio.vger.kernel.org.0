@@ -2,157 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AFF4524D72
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 14:50:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A992F524D88
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 14:51:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353979AbiELMti (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 08:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38760 "EHLO
+        id S1351992AbiELMvM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 08:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353969AbiELMta (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 08:49:30 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D098C24D5BA;
-        Thu, 12 May 2022 05:49:20 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2fb9a85a124so51744587b3.13;
-        Thu, 12 May 2022 05:49:20 -0700 (PDT)
+        with ESMTP id S1354173AbiELMvB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 08:51:01 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D442FFD6;
+        Thu, 12 May 2022 05:51:00 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id n8so4784701plh.1;
+        Thu, 12 May 2022 05:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7DrF5cwoQrpy+nOj+sSKtS5rKw6qKbXX4wWCz3z6jZ8=;
-        b=XEEm8XV4zWeN1/m4PMvtMtMAdviw5CxhEOzn1ytnh1IM04riYkcoUjE0kvHzeKNeEs
-         8Xt+pL1APjslWuydnUY4U00cJgH1WEdhUZriBcwvhgSE+q5IoOq/rfDHoHcaRu8OwsDW
-         nmYBTUhIALP0AvZwAfxxqQj7k6aociLx4m2wxBUe7TV7Dn7B4zmpMLgCszXTonyqU0S+
-         1EQG5fBNblIoO1soU34JR8jDfLLXUfYyIPWhk6/L6ASUTGRMfoBXGOkIBDB1aNjKLnmc
-         XXkDSv3xyjji4R3NkmYZhxQYJ89OVA/ey9SaXgWiPIz94pbBTtqgaqq7xneJPPbsabNs
-         eICw==
+        bh=27EwMlbk53oJO3mj5MrkPCMTBgjzsri0OLoJeRdN+Xk=;
+        b=hwrCWIKn1lNQ5iP8cTprtxDiQdgsMreSVVUAyf+2m6lva9mk0B0WJgcFR1btdyKcAF
+         r5U9AETUU9dZQ+8otEPYCoyqsMDop7ywLHzo1YvBPwEdKZ/zDp8iJr6wRl6YPfsmBdUC
+         Tg25iaD2FO8Kil7UA+XBjE7bHdfOpyNwJStR2ZvBB4grxA0bRtC0/BQ69JxQlUB4ppCK
+         W5tMj2DMn5bbxGq7SbLEorDVyvLZ/+ezEShhhMqAj+63M+A33wTtbcVYXaLd8X3ds+bR
+         LLNM7GpiBk8YyYQYlHnQEGXpXbtTzLht72W359j/qNant5OaJfCnuZaAFpmGERFMpLPq
+         p8sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7DrF5cwoQrpy+nOj+sSKtS5rKw6qKbXX4wWCz3z6jZ8=;
-        b=ClQqZ20X47PDhjW9klsIJKEiM5NCxv9wz14mXy8wfXctZoETCEeIxrwmfl7Ovw0uNv
-         L2PxcXpJNYzDKai4HcLTTETc9CSBFQ2Pi+lSB0YniJkXuSbTwwRKacgeDZGYy/Fw0540
-         luEn68GwZBGbgi7QR8iXyC3+Ha/CB984yLeLhLNR/LgqbPMIqmtVeYXAjV96AlkjI4WQ
-         MgQJzGc4/iEF3ByUpQBfzX4c7dDHw51HLhswGcH8Msi8D0z/XBvAqR56/Y7xFYcwf71+
-         CfqqpVuv5GVGZVU5bZ+v9XLr5gGjqahd+JqZnUZ94JDgrlIW6YnKz1WsETVNsHxMDkeT
-         d+LA==
-X-Gm-Message-State: AOAM531e6haQlZRK5njDE1oofzQv3MSstoqAx+ij/SCbobLWC8Z25dPf
-        bpS1iyPmlRm+MVbe3V5bsSgO1sDMVsUP4tXeGlQ=
-X-Google-Smtp-Source: ABdhPJzSgMI5UURmQJlSkLt97lQZJ7s/A3CPFHlQP8eFxEnwrx5uT1fvSWZ4F2cWet2S4Rs+ffet0qTWPLH7sFVHGT0=
-X-Received: by 2002:a0d:d491:0:b0:2ef:5485:fca with SMTP id
- w139-20020a0dd491000000b002ef54850fcamr30261598ywd.16.1652359759761; Thu, 12
- May 2022 05:49:19 -0700 (PDT)
+        bh=27EwMlbk53oJO3mj5MrkPCMTBgjzsri0OLoJeRdN+Xk=;
+        b=3/5j2eGM5weaqer8NWU5kX1++O98vjMYTLbHkGRrQFbHEb7OK6tE6DcSucjg6w7KA+
+         WacC3pWOVZqyAHjMRblYAxI75fqif/3NGNjifky+gA6TPXb7zzK2PZLokDaBsSKVfcSO
+         G0fv+YTMoBDJ3PgeWMWU1YFnJYIYe1XAGekoEWsv3emBO3Ari/EAh7j+YZLb0M0nAquy
+         sImJiDqmmjMD5pjdyuMK2m47uvO+MOJ0RWetBvVWlfzvHViJQOk5mg6mHIJdtYGHmGDq
+         BcKdKk8jraqMDMGtbIyVIiPFqKXFnGcPMLk6uxlm/5qpPw5xcTwSmaI+VcbGdVx6F27J
+         uukA==
+X-Gm-Message-State: AOAM532b9A6zCTctmvx3g7//yHwUZZ5yMqoza9cwUVhRXJpsMcV29JQU
+        yMBg+bxOWEWDDGMQsgCNtMGjx1hza4AbRqbGWw==
+X-Google-Smtp-Source: ABdhPJxnxpgAp4wv1yi22WGwb29rdhwZR+gxdFpDHWtsY7kBvNH4oytzIcA1sPJ4IFbevGo+nmHRtWbths9+TvSAhPk=
+X-Received: by 2002:a17:90a:db45:b0:1d9:29d0:4c6e with SMTP id
+ u5-20020a17090adb4500b001d929d04c6emr10742419pjx.46.1652359859746; Thu, 12
+ May 2022 05:50:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220511183210.5248-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <87y1z75770.wl-maz@kernel.org>
-In-Reply-To: <87y1z75770.wl-maz@kernel.org>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 12 May 2022 13:48:53 +0100
-Message-ID: <CA+V-a8tf1RmT-cX5y807rTAPES2NXLJHp=u1WUG11fLrtt-5Mg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] gpio: gpiolib: Allow free() callback to be overridden
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+References: <20220512112106.2356120-1-zheyuma97@gmail.com> <CAHp75Vfz-Qq3qo3Re7tsL0mfXNVYZYspGDFCDXhtZxwac7bEiw@mail.gmail.com>
+In-Reply-To: <CAHp75Vfz-Qq3qo3Re7tsL0mfXNVYZYspGDFCDXhtZxwac7bEiw@mail.gmail.com>
+From:   Zheyu Ma <zheyuma97@gmail.com>
+Date:   Thu, 12 May 2022 20:50:48 +0800
+Message-ID: <CAMhUBjkbLkA-aw4rUwFAsxZpGrOefUA515RnhXY0EjECi3hdLA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ml-ioh: Add devm_free_irq() call to remove flow
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
-
-Thank you for the review.
-
-On Thu, May 12, 2022 at 12:19 PM Marc Zyngier <maz@kernel.org> wrote:
+On Thu, May 12, 2022 at 8:03 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Wed, 11 May 2022 19:32:08 +0100,
-> Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> On Thu, May 12, 2022 at 1:21 PM Zheyu Ma <zheyuma97@gmail.com> wrote:
 > >
-> > Allow free() callback to be overridden from irq_domain_ops for
-> > hierarchical chips.
-> >
-> > This allows drivers to free any resources which are allocated during
-> > populate_parent_alloc_arg().
+> > When removing the module, we will get the following flaw:
 >
-> Do you mean more than the fwspec? I don't see this being used.
+> Thanks for the report and patch! My comments below.
 >
-The free callback is used in patch 5/5 where free is overridden by
-rzg2l_gpio_irq_domain_free. I just gave an example there as an
-populate_parent_alloc_arg()  In actual in the child_to_parent_hwirq
-callback I am using a bitmap [0] to get a free tint slot, this bitmap
-needs freeing up when the GPIO interrupt is released from the driver
-that as when overridden free callback frees the allocated tint slot so
-that its available for re-use.
+> > [   14.204955] remove_proc_entry: removing non-empty directory 'irq/21', leaking at least 'gpio_ml_ioh'
+> > [   14.205827] WARNING: CPU: 0 PID: 305 at fs/proc/generic.c:717 remove_proc_entry+0x389/0x3f0
+> > [   14.209994] RIP: 0010:remove_proc_entry+0x389/0x3f0
+> > [   14.217820] Call Trace:
+> > [   14.218057]  <TASK>
+> > [   14.218264]  unregister_irq_proc+0x14c/0x170
+> > [   14.218674]  irq_free_descs+0x94/0xe0
+> > [   14.219019]  mp_unmap_irq+0xb6/0x100
+> > [   14.219357]  acpi_unregister_gsi_ioapic+0x27/0x40
+> > [   14.219796]  acpi_pci_irq_disable+0x1d3/0x320
+> > [   14.220206]  pci_disable_device+0x1ad/0x380
+> > [   14.220613]  ioh_gpio_remove+0xc5/0xe0 [gpio_ml_ioh]
+> > [   14.221075]  pci_device_remove+0x92/0x240
+>
+> Can we remove not so important lines from the above? I guess ~3-4
+> selected ones would be enough.
+>
+> > Fix this bug by adding devm_free_irq() call to remove flow.
+>
+> Fixes tag?
+>
+> > Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
+>
+> The code looks okay on the first glance.
+>
+> P.S. Do you have such hardware?
 
-> There is also the question of why we need to have dynamic allocation
-> for the fwspec itself. Why isn't that a simple stack allocation in the
-> context of gpiochip_hierarchy_irq_domain_alloc()?
->
-you mean gpio core itself should handle the fwspec allocation/freeing?
+Thanks for your comments, I've resend the patch.
+Actually, I do not have the hardware. I test the driver with a virtual
+device instead.
 
-[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20220511183210.5248-6-prabhakar.mahadev-lad.rj@bp.renesas.com/
-
-Cheers,
-Prabhakar
-
->         M.
->
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/gpio/gpiolib.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index b7694171655c..d36c4a965efc 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -1187,15 +1187,18 @@ static void gpiochip_hierarchy_setup_domain_ops(struct irq_domain_ops *ops)
-> >       ops->activate = gpiochip_irq_domain_activate;
-> >       ops->deactivate = gpiochip_irq_domain_deactivate;
-> >       ops->alloc = gpiochip_hierarchy_irq_domain_alloc;
-> > -     ops->free = irq_domain_free_irqs_common;
-> >
-> >       /*
-> > -      * We only allow overriding the translate() function for
-> > +      * We only allow overriding the translate() and free() functions for
-> >        * hierarchical chips, and this should only be done if the user
-> > -      * really need something other than 1:1 translation.
-> > +      * really need something other than 1:1 translation for translate()
-> > +      * callback and free if user wants to free up any resources which
-> > +      * were allocated during callbacks, for example populate_parent_alloc_arg.
-> >        */
-> >       if (!ops->translate)
-> >               ops->translate = gpiochip_hierarchy_irq_domain_translate;
-> > +     if (!ops->free)
-> > +             ops->free = irq_domain_free_irqs_common;
-> >  }
-> >
-> >  static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
-> > --
-> > 2.25.1
-> >
-> >
->
-> --
-> Without deviation from the norm, progress is not possible.
+Zheyu Ma
