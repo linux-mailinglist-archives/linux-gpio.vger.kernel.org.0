@@ -2,165 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61020525279
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 18:26:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BFFE52534E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 19:12:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344637AbiELQ0h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 12:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42334 "EHLO
+        id S1356891AbiELRLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 13:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356473AbiELQ0P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 12:26:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688951D0C4;
-        Thu, 12 May 2022 09:26:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F2D2261F38;
-        Thu, 12 May 2022 16:26:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 513FCC34117;
-        Thu, 12 May 2022 16:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652372773;
-        bh=VwS1IMdx40foTuyZRyqzdlwtdVrEe4ScwvbrYNkBDzM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=E7cD59b6uJMxohBzVdnByQtXEmY0oS0T+j4/7WzT96YUwGZYXR/BMex9Wr8n45c2k
-         X0GgsDM7dDRAbxGEEU+7OfQyjCOQOBmajODJo7jApm6Nn/eoylx52v2qnX86M7ksJr
-         I0EkxjUwrt3w+D+bzyK4+YLIrwbOEIgDrGP2G2rRak5r/O5B2c9tVacni+pzm+mK7k
-         EQSq5o79f9N34MH+/BBiUXYNVG3j9ICCz/WlvoQna+nrDlXczDvJeyqD5qzyTCFkCO
-         +axOrOrQ1I2yUlVTnXyiSWQTO+ED6K8vfiIKkSG24aoBzsYI11iTlGEKMzlmU0RuJo
-         aVB81tiVSd6GQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1npBdi-00Avri-QG; Thu, 12 May 2022 17:26:10 +0100
-Date:   Thu, 12 May 2022 17:26:10 +0100
-Message-ID: <87v8ua67kt.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        with ESMTP id S1356931AbiELRLB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 13:11:01 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F061327CD6;
+        Thu, 12 May 2022 10:10:54 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="252120842"
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="252120842"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:08:38 -0700
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="658684239"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:08:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1npCIe-00FHkY-Cq;
+        Thu, 12 May 2022 20:08:28 +0300
+Date:   Thu, 12 May 2022 20:08:28 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 3/5] gpio: gpiolib: Allow free() callback to be overridden
-In-Reply-To: <CA+V-a8v9WodNNK7AL4XemDnSrrWc9wG+qDKZb7SmbWixs5Q3Nw@mail.gmail.com>
-References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <20220511183210.5248-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <87y1z75770.wl-maz@kernel.org>
-        <CA+V-a8tf1RmT-cX5y807rTAPES2NXLJHp=u1WUG11fLrtt-5Mg@mail.gmail.com>
-        <87wneq6fz3.wl-maz@kernel.org>
-        <CA+V-a8v9WodNNK7AL4XemDnSrrWc9wG+qDKZb7SmbWixs5Q3Nw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: prabhakar.csengg@gmail.com, prabhakar.mahadev-lad.rj@bp.renesas.com, geert+renesas@glider.be, linus.walleij@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, brgl@bgdev.pl, p.zabel@pengutronix.de, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, phil.edworthy@renesas.com, biju.das.jz@bp.renesas.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v3 00/10] gpiolib: Handle immutable irq_chip structures
+Message-ID: <Yn0/DIl3+i/heRH6@smile.fi.intel.com>
+References: <20220419141846.598305-1-maz@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220419141846.598305-1-maz@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 12 May 2022 14:50:05 +0100,
-"Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
+On Tue, Apr 19, 2022 at 03:18:36PM +0100, Marc Zyngier wrote:
+> This is a followup from [2].
 > 
-> Hi Marc,
+> I recently realised that the gpiolib play ugly tricks on the
+> unsuspecting irq_chip structures by patching the callbacks.
 > 
-> On Thu, May 12, 2022 at 2:24 PM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On Thu, 12 May 2022 13:48:53 +0100,
-> > "Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
-> > >
-> > > Hi Marc,
-> > >
-> > > Thank you for the review.
-> > >
-> > > On Thu, May 12, 2022 at 12:19 PM Marc Zyngier <maz@kernel.org> wrote:
-> > > >
-> > > > On Wed, 11 May 2022 19:32:08 +0100,
-> > > > Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > >
-> > > > > Allow free() callback to be overridden from irq_domain_ops for
-> > > > > hierarchical chips.
-> > > > >
-> > > > > This allows drivers to free any resources which are allocated during
-> > > > > populate_parent_alloc_arg().
-> > > >
-> > > > Do you mean more than the fwspec? I don't see this being used.
-> > > >
-> > > The free callback is used in patch 5/5 where free is overridden by
-> > > rzg2l_gpio_irq_domain_free. I just gave an example there as an
-> > > populate_parent_alloc_arg()  In actual in the child_to_parent_hwirq
-> > > callback I am using a bitmap [0] to get a free tint slot, this bitmap
-> > > needs freeing up when the GPIO interrupt is released from the driver
-> > > that as when overridden free callback frees the allocated tint slot so
-> > > that its available for re-use.
-> >
-> > Right, so that's actually a different life-cycle, and the whole
-> > populate_parent_alloc_arg() is a red herring. What you want is to free
-> > resources that have been allocated via some other paths. It'd be good
-> Is there any other path which I have missed where I can free up resources?
+> Not only this breaks when an irq_chip structure is made const (which
+> really should be the default case), but it also forces this structure
+> to be copied at nauseam for each instance of the GPIO block, which is
+> a waste of memory.
 
-No, that's the only one. It is just that usually, the alloc()
-callback is where you are supposed to perform... allocations.
+Is this brings us to the issue with IRQ chip name?
 
-It'd be good if you could move your allocation there, as I would
-expect calls to child_to_parent_hwirq() to be idempotent.
+The use case in my mind is the following:
+1) we have two or more GPIO chips that supports IRQ;
+2) the user registers two IRQs of the same (by number) pin on different chips;
+3) cat /proc/interrupt will show 'my_gpio_chip XX', where XX is the number.
 
->
-> > if your commit message actually reflected this instead of using an
-> > example that doesn't actually exist.
-> >
-> My bad, I will update the commit message.
+So, do I understand correct current state of affairs?
+
+If so, we have to fix this to have any kind of ID added to the chip name that
+we can map /proc/interrupts output correctly.
+
+> My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
+> which does what it says on the tin: don't you dare writing to them.
+> Gpiolib is further updated not to install its own callbacks, and it
+> becomes the responsibility of the driver to call into the gpiolib when
+> required. This is similar to what we do for other subsystems such as
+> PCI-MSI.
 > 
-> > >
-> > > > There is also the question of why we need to have dynamic allocation
-> > > > for the fwspec itself. Why isn't that a simple stack allocation in the
-> > > > context of gpiochip_hierarchy_irq_domain_alloc()?
-> > > >
-> > > you mean gpio core itself should handle the fwspec
-> > > allocation/freeing?
-> >
-> > Yes. The only reason we resort to dynamic allocation is because
-> > ThunderX is using MSI-based GPIOs, and thus doesn't use a fwspec (no
-> > firmware is involved here).
-> >
-> I see..
+> 5 drivers are updated to this new model: M1, QC, Tegra, pl061 and AMD
+> (as I actively use them) keeping a single irq_chip structure, marking
+> it const, and exposing the new flag.
 > 
-> > If we had a union of the two types, we could just have a stack
-> > variable, and pass that along, completely sidestepping the whole
-> > dynamic allocation/freeing business.
-> >
-> Right agreed.
+> Nothing breaks, the volume of change is small, the memory usage goes
+> down and we have fewer callbacks that can be used as attack vectors.
+> What's not to love?
+> 
+> Since there wasn't any objection in the previous round of review, I'm
+> going to take this series into -next to see if anything breaks at
+> scale.
 
-FWIW, I've just posted a PoC patch[1].
-
-Thanks,
-
-	M.
-
-[1] https://lore.kernel.org/r/20220512162320.2213488-1-maz@kernel.org
 
 -- 
-Without deviation from the norm, progress is not possible.
+With Best Regards,
+Andy Shevchenko
+
+
