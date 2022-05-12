@@ -2,105 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A56B524C53
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 14:03:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CC9B524D5C
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 14:48:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353513AbiELMDG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 08:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
+        id S1352242AbiELMsa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 08:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353525AbiELMDG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 08:03:06 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D265B24641F;
-        Thu, 12 May 2022 05:03:03 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id dk23so9754104ejb.8;
-        Thu, 12 May 2022 05:03:03 -0700 (PDT)
+        with ESMTP id S1353937AbiELMs0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 08:48:26 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4459324D609;
+        Thu, 12 May 2022 05:48:23 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id 204so4711956pfx.3;
+        Thu, 12 May 2022 05:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P8DztgiE9mGfQ9+syuvCxSlmidaYWBeDuE+eqHZI9lA=;
-        b=HNZvzGlvSX2igikUFuv/1QDtRHTZ57NYU+kNwE/eD+XkmJSeji+sxMOp69qq0s884y
-         EZfx0+oC6/iAVlvONYXChFp6C74oF9WPt5zoYq/c/8qQfAGn9+0tcO+8BbRXxLQkexO2
-         B4bgiXafIWkstwOXpEStjspqCxOBbLGVrhL1yPn2MSvSxQ/TobXbxgKIFYfe04aiQeKd
-         2A8H4Ey23E2p+g0qx75OxIw2OBIwtFL8aQKTxYs0elcezdv4WPDn3wN0EGRhGOE/ok2N
-         +cr56Aa+XxzCxQRVk+pygSTh4HXgAb85njr+8hCQCrJ2RaXS0dL0pb8RvY9xewU5CYId
-         1rFA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hejKbvafgIWM4+Tz9llDB32X+Fj+04OcDt3du1TfHhs=;
+        b=Dsp8UHbqj+7LnuCGME5/kif33ZIAXqzO9+0iQt/c6EeECcF7LZcsDN2dZGAP8mkGVV
+         5iRh8TN87Er7tfdujPOXQb0hanqPbhhqlVM7VltblbXj4oefo0BQo1PJvGrcNanjFfIe
+         UUyamT+ALOkLvyc7sUifYXnkC+dE3JI6Jq9g+zWPFsttvBgTOoVN/Ul128uumHiOf+yQ
+         5f1jKYrJ3qp/e1aP7yJQZsf4f5J2cncoaEDt1N8K3/1E8arO8Mdd4MrpcqPITQxAAfta
+         0ZnCd+mMYtkXoh8vIE8ulorKEWdJUXV5nmm6TAuI6BVLTdQUMJWJfbG2nHQYx4sFMiPI
+         QtBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P8DztgiE9mGfQ9+syuvCxSlmidaYWBeDuE+eqHZI9lA=;
-        b=R3hxZWVhXw7Yhm0uDA0bkK/B/HXbMPoAVM+o/YYe6sSOb2FaRbTXUXxIiIJhK5CCEH
-         RgVL+LEo2sqSmM1anI2nKI5uWnPuRsykFsGrt2Jqvq1tvk60TA7x9gsn21vjp0q+AHX8
-         ActEUr+jMlym6EUR523rH5i58LzAzeWAhazKEeQk3KgCA4QZCUrO2lXhgYuTTYejYM1K
-         BZhYSPPulKNLwIywBwHKrZuT9e9WOM2k/GTBjYH0g/gwRR3VD9dM4gkNyyA1AM6Vos6M
-         hXx3sasxyeI0I+SOwJNZsjTkwCOtDdRvdmZMIwyf1yfioRXtGNnUSa8zTuNR6YAhm4M4
-         qDbg==
-X-Gm-Message-State: AOAM532wiVz3OdjawgyXMZvOlzcS6/zGPiF7mQ+9lQo8ZK5oOYGZZUVo
-        JLmhKj0cXikXKS5h97vOse5OpdDtTNaHSmJ+lEc=
-X-Google-Smtp-Source: ABdhPJxi0li8Rp85YKbP4hlNqLqT33IF1kfJdmoXMOeGWis0z1a7KLfAAh/HXJh1CYP/i//1EhTuWgZWrqVCMLYaYj8=
-X-Received: by 2002:a17:906:c10d:b0:6f4:a770:846e with SMTP id
- do13-20020a170906c10d00b006f4a770846emr30333355ejc.497.1652356982129; Thu, 12
- May 2022 05:03:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hejKbvafgIWM4+Tz9llDB32X+Fj+04OcDt3du1TfHhs=;
+        b=xnH6LGOwehUYckwwWL314r2pRPsi+VA6uj+r7yfMYPgna1Sa68GysBQkGoQ97dJcex
+         nyxFhWQNIIloRXQcq+hs52ieF6ZTbHWyd+0CNRTZQI3O4FHiGI12X/TSzC8HQHEk8pNY
+         px+NXDWgbIiytCr1EAAmRGn4YjwV1viZgRxSl2DfoS5ojcVt0JH1cwUBeX6hNpVYNM+w
+         4F4ncYwGYt4YdKUHc669JeR15vm9UqSN6/VMUkw4lcrDvtpB5Zy8gAd6B38U8TUdhVfK
+         W0K/KXKn899ogDLDlC4kF4X6UtDG2UEuFb/lRY0c4H4Qm11sqOl1tIzlzjQBUGb4mMD1
+         HiIA==
+X-Gm-Message-State: AOAM532fvcPlM/ZbiSXrIXRPNzFPNUGPhEZ6dyQV+YcMlkc54vKqenA7
+        YtDqgiNeHBczb02glibxJw==
+X-Google-Smtp-Source: ABdhPJzqGHVIBtqtlTHSL6+V5ZTCLy3+Ra3zvKE+1i4M4kajE8A7vF41uQ+o29dw+LTpn5FbJ6wL8Q==
+X-Received: by 2002:a63:84c7:0:b0:3da:ec43:1b with SMTP id k190-20020a6384c7000000b003daec43001bmr10618967pgd.443.1652359702715;
+        Thu, 12 May 2022 05:48:22 -0700 (PDT)
+Received: from localhost.localdomain ([144.202.91.207])
+        by smtp.gmail.com with ESMTPSA id f15-20020a170902ce8f00b0015e8d4eb1c0sm4016796plg.10.2022.05.12.05.48.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 05:48:22 -0700 (PDT)
+From:   Zheyu Ma <zheyuma97@gmail.com>
+To:     andy@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zheyu Ma <zheyuma97@gmail.com>
+Subject: [PATCH v2] gpio: ml-ioh: Add devm_free_irq() call to remove flow
+Date:   Thu, 12 May 2022 20:47:55 +0800
+Message-Id: <20220512124755.2360648-1-zheyuma97@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAHp75Vfz-Qq3qo3Re7tsL0mfXNVYZYspGDFCDXhtZxwac7bEiw@mail.gmail.com>
+References: <CAHp75Vfz-Qq3qo3Re7tsL0mfXNVYZYspGDFCDXhtZxwac7bEiw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220512112106.2356120-1-zheyuma97@gmail.com>
-In-Reply-To: <20220512112106.2356120-1-zheyuma97@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 May 2022 14:02:25 +0200
-Message-ID: <CAHp75Vfz-Qq3qo3Re7tsL0mfXNVYZYspGDFCDXhtZxwac7bEiw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: ml-ioh: Add devm_free_irq() call to remove flow
-To:     Zheyu Ma <zheyuma97@gmail.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 12, 2022 at 1:21 PM Zheyu Ma <zheyuma97@gmail.com> wrote:
->
-> When removing the module, we will get the following flaw:
+When removing the module, we will get the following flaw:
 
-Thanks for the report and patch! My comments below.
+[   14.204955] remove_proc_entry: removing non-empty directory 'irq/21', leaking at least 'gpio_ml_ioh'
+[   14.205827] WARNING: CPU: 0 PID: 305 at fs/proc/generic.c:717 remove_proc_entry+0x389/0x3f0
+[   14.209994] RIP: 0010:remove_proc_entry+0x389/0x3f0
+[   14.217820] Call Trace:
+[   14.218264]  unregister_irq_proc+0x14c/0x170
+[   14.220206]  pci_disable_device+0x1ad/0x380
+[   14.220613]  ioh_gpio_remove+0xc5/0xe0 [gpio_ml_ioh]
 
-> [   14.204955] remove_proc_entry: removing non-empty directory 'irq/21', leaking at least 'gpio_ml_ioh'
-> [   14.205827] WARNING: CPU: 0 PID: 305 at fs/proc/generic.c:717 remove_proc_entry+0x389/0x3f0
-> [   14.209994] RIP: 0010:remove_proc_entry+0x389/0x3f0
-> [   14.217820] Call Trace:
-> [   14.218057]  <TASK>
-> [   14.218264]  unregister_irq_proc+0x14c/0x170
-> [   14.218674]  irq_free_descs+0x94/0xe0
-> [   14.219019]  mp_unmap_irq+0xb6/0x100
-> [   14.219357]  acpi_unregister_gsi_ioapic+0x27/0x40
-> [   14.219796]  acpi_pci_irq_disable+0x1d3/0x320
-> [   14.220206]  pci_disable_device+0x1ad/0x380
-> [   14.220613]  ioh_gpio_remove+0xc5/0xe0 [gpio_ml_ioh]
-> [   14.221075]  pci_device_remove+0x92/0x240
+Fix this bug by adding devm_free_irq() call to remove flow.
 
-Can we remove not so important lines from the above? I guess ~3-4
-selected ones would be enough.
+Fixes: e971ac9a564a ("gpio: ml-ioh: use resource management for irqs")
+Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
+---
+Changes in v2:
+    - Remove unimportant lines from the call trace.
+    - Add the fixes tag.
+---
+ drivers/gpio/gpio-ml-ioh.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Fix this bug by adding devm_free_irq() call to remove flow.
-
-Fixes tag?
-
-> Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
-
-The code looks okay on the first glance.
-
-P.S. Do you have such hardware?
-
+diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
+index b060c4773698..09bf317876b0 100644
+--- a/drivers/gpio/gpio-ml-ioh.c
++++ b/drivers/gpio/gpio-ml-ioh.c
+@@ -508,6 +508,8 @@ static void ioh_gpio_remove(struct pci_dev *pdev)
+ 	struct ioh_gpio *chip = pci_get_drvdata(pdev);
+ 	void *chip_save;
+ 
++	devm_free_irq(&pdev->dev, pdev->irq, chip);
++
+ 	chip_save = chip;
+ 
+ 	for (i = 0; i < 8; i++, chip++)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
