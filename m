@@ -2,72 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D83C6525459
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 20:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6466525475
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 20:09:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357445AbiELSBl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 14:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38162 "EHLO
+        id S243594AbiELSJP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 14:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357468AbiELSBj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 14:01:39 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861C7326DE;
-        Thu, 12 May 2022 11:01:34 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id y76so11255359ybe.1;
-        Thu, 12 May 2022 11:01:34 -0700 (PDT)
+        with ESMTP id S1357388AbiELSJO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 14:09:14 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86EC2689C6;
+        Thu, 12 May 2022 11:09:11 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-2f7ca2ce255so65827237b3.7;
+        Thu, 12 May 2022 11:09:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=P2Z7C4AYnqmN1fJ4A3LOaxRz+0uCusfSuGUkn36he00=;
-        b=XNfV1ATX15rJxMuZXB3ybE75+i4OnBI7kfdeDBcuIyhcJY1h9qsUi0LX2q3cm5JL83
-         D0i72oJpPe5zrbb1d+VS0GOFOtQSRT/ESIFiAicUi5dS3JG1i/Ul1x6ubjUv1Hj+2VUd
-         SMFQlORik55Rnxs7YQBKMVqIJAJhuWIWJ3SB1kO5Gzb/H9ovmGonnVIhb58tHCX4uJT5
-         z3ntBaV8Kc/jvd/TEftaDu8xWAVzlYZJLGCMMThIvuBHY/DzYs0EuOiLzOCz5PrMlEyo
-         150qSJNmycU+48P4Ehm8CM6IVxWoAGUx2kKN2jqmfUuyyI+irzhMoQtxln7WzgdSfB/5
-         3OCw==
+        bh=utw+wRrLLHkWNiU0y2u6oIEPePEoYxLkOdswowmRTMM=;
+        b=l8/Frn8UN0Vf8Hecf6ajk1Nd5xbOFiBXDirjvj9dZmmPNdK/EGG3eebyd7U35CGbmP
+         n4DJKgL47FWFXB4UfpDDV7CPR+y7tBOuhyz9ALFABmqS/6Dbgd6KDbqMYilfMn4PtwOj
+         ZykWXbnLrhXCAccePg8FmCSNDWmo6UoDvb9aKx6PADLbmZvNmX8//j6Mu+Sb/RuKI1Il
+         jKHGZuq2NaaDY1WcFhGogJhcItK34YK0js+Wg68SRoP35egR9x2rUJIzUXrQONzWjpLt
+         Bo9vqZHFEfH4/P8ayqoAWekmmzghifIENr9P9x2JpZkGal8S9LPx+HLaC6Mv7QvPmuJF
+         M3OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=P2Z7C4AYnqmN1fJ4A3LOaxRz+0uCusfSuGUkn36he00=;
-        b=GJa0/iUOp5UpI9YFcRxkS/HcreZFbGMtzhZiMF+90xsl3mknwyR8xpvHMzdJY4/Rei
-         HTeMMAkWaeda41bV3dmItdAP1s+qxP3ZSagSk3B93YykUqL3bNFqCSClgfVJ7fnQ+DzQ
-         UDWUyvBXVB7fSVlo9iFtUSgpsh7ub1teBezp15ZmFg7hkntSD12x70TqGZns9H5lMP4G
-         2U3AcGIsOE/eUlpA1awzTCybPOR2W3GB4wwUF7bOkSOKW3HGd2Bkl33zIKw4Qc5fweXC
-         vAwgZEOtkcJ0IM+VQPMLOaUUmtUYvEhfQbkD/2WEIDP4DoCQOfcSxZbRL7DpW2Kx9LLd
-         v9xg==
-X-Gm-Message-State: AOAM531RtNJjsCFClrzf0L8/4ILDzEHqW38wkHupSe1LrEjCMeeqTPlW
-        hMKP4Gkvc/F2KMg/QWe49oD9V7EPZFDpyk4mm9A=
-X-Google-Smtp-Source: ABdhPJwhNf2PpfuRuLgI2qKabNA/bdljUFEQv7+eDKrRotBSjX3OtEN/+j6LuLfxGVV4bmh8xiSvQvBOjGbNzTUH4js=
-X-Received: by 2002:a25:83d1:0:b0:648:725c:6a05 with SMTP id
- v17-20020a2583d1000000b00648725c6a05mr1012525ybm.218.1652378493736; Thu, 12
- May 2022 11:01:33 -0700 (PDT)
+        bh=utw+wRrLLHkWNiU0y2u6oIEPePEoYxLkOdswowmRTMM=;
+        b=vfpzN0ljiglKANxi2iWYqfgaiRmGsXLqS2YHPnWDkVbfe+UuGX3CffeL+x/sBeuUpo
+         loJe+OnssMscCvbVCP/3OOP+RoylBuSvWcpmn54JUS2xifHtHwiN7m+TWG/fIMsJ6NYZ
+         SlndgVmkb1IjROn5IwfGPInQ/bC7ytBNPY2W9+6kEMTG0rqtlVenKisVSnIP2gDdtSku
+         VUMl7H2sMU2ntXiJaQ4pu4gzZboEKY7w+/SypDTU7tDMMXRcPWFLAdj6nIS2tswvvn4A
+         8dL6Zqq45k3L4z0wRQcy+wfLgncXRNgVlgGxlK3+XOPlyVDHFdRNzn3v1J+U8Iyfy7+W
+         P+Xw==
+X-Gm-Message-State: AOAM5302xgzRGsZ9M8E7ktAl+CC+FzeqHifRnxBEUV6ZRgdDmTU5ctSc
+        Ru3cz0IcqOKpcfn2ekNvLPfSbcO9+UGUAH2w+Tn507/kpeTx3g==
+X-Google-Smtp-Source: ABdhPJzPf8p2lHx1BG4/2h0PNbTz0EjRohFJoX6J3fsplEwYfBDAjoUxZ9PDBtZXO4MRHvFZ0TAk/+O1o17AufNtdcY=
+X-Received: by 2002:a0d:d491:0:b0:2ef:5485:fca with SMTP id
+ w139-20020a0dd491000000b002ef54850fcamr1473203ywd.16.1652378950724; Thu, 12
+ May 2022 11:09:10 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220511183210.5248-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <OS0PR01MB5922AC4FB9D5A04180F46C2A86C89@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-In-Reply-To: <OS0PR01MB5922AC4FB9D5A04180F46C2A86C89@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <20220511183210.5248-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <87zgjnmcxt.wl-maz@kernel.org>
+In-Reply-To: <87zgjnmcxt.wl-maz@kernel.org>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 12 May 2022 19:01:06 +0100
-Message-ID: <CA+V-a8uCFoje_LRkCOXtA+04sEhGDzae=RrxPcn9n3TE=h9k2w@mail.gmail.com>
+Date:   Thu, 12 May 2022 19:08:44 +0100
+Message-ID: <CA+V-a8v_M40zuduO9+-w98AYhRA0-Fs9vaHrwu2aYSL=xk0qZg@mail.gmail.com>
 Subject: Re: [PATCH v3 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -79,22 +79,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Biju,
+Hi Marc,
 
 Thank you for the review.
 
-On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+On Thu, May 12, 2022 at 8:23 AM Marc Zyngier <maz@kernel.org> wrote:
 >
-> Hi Prabhakar,
->
-> > Subject: [PATCH v3 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller
-> > driver
+> On Wed, 11 May 2022 19:32:07 +0100,
+> Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 > >
 > > Add a driver for the Renesas RZ/G2L Interrupt Controller.
 > >
-> > This supports external pins being used as interrupts. It supports one line
-> > for NMI, 8 external pins and 32 GPIO pins (out of 123) to be used as IRQ
-> > lines.
+> > This supports external pins being used as interrupts. It supports
+> > one line for NMI, 8 external pins and 32 GPIO pins (out of 123)
+> > to be used as IRQ lines.
 > >
 > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > > ---
@@ -104,13 +102,12 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > >  3 files changed, 453 insertions(+)
 > >  create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
 > >
-> > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig index
-> > 15edb9a6fcae..f3d071422f3b 100644
+> > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> > index 15edb9a6fcae..f3d071422f3b 100644
 > > --- a/drivers/irqchip/Kconfig
 > > +++ b/drivers/irqchip/Kconfig
 > > @@ -242,6 +242,14 @@ config RENESAS_RZA1_IRQC
-> >         Enable support for the Renesas RZ/A1 Interrupt Controller, to use
-> > up
+> >         Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
 > >         to 8 external interrupts with configurable sense select.
 > >
 > > +config RENESAS_RZG2L_IRQC
@@ -118,15 +115,14 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     select GENERIC_IRQ_CHIP
 > > +     select IRQ_DOMAIN_HIERARCHY
 > > +     help
-> > +       Enable support for the Renesas RZ/G2L (and alike SoC) Interrupt
-> > Controller
+> > +       Enable support for the Renesas RZ/G2L (and alike SoC) Interrupt Controller
 > > +       for external devices.
 > > +
 > >  config SL28CPLD_INTC
 > >       bool "Kontron sl28cpld IRQ controller"
-> >       depends on MFD_SL28CPLD=y || COMPILE_TEST diff --git
-> > a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile index
-> > 160a1d8ceaa9..eaa56eec2b23 100644
+> >       depends on MFD_SL28CPLD=y || COMPILE_TEST
+> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > index 160a1d8ceaa9..eaa56eec2b23 100644
 > > --- a/drivers/irqchip/Makefile
 > > +++ b/drivers/irqchip/Makefile
 > > @@ -51,6 +51,7 @@ obj-$(CONFIG_RDA_INTC)                      += irq-rda-intc.o
@@ -137,8 +133,7 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > >  obj-$(CONFIG_VERSATILE_FPGA_IRQ)     += irq-versatile-fpga.o
 > >  obj-$(CONFIG_ARCH_NSPIRE)            += irq-zevio.o
 > >  obj-$(CONFIG_ARCH_VT8500)            += irq-vt8500.o
-> > diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-
-> > renesas-rzg2l.c
+> > diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
 > > new file mode 100644
 > > index 000000000000..61435d8dbe1a
 > > --- /dev/null
@@ -197,7 +192,22 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +#define IITSR_IITSEL_MASK(n)         IITSR_IITSEL((n), 3)
 > > +
 > > +#define TINT_EXTRACT_HWIRQ(x)                ((x) & ~GENMASK(31, 16))
+>
+> This is really backward. You want to keep the lower bits, so just do
+> that instead of masking out the top bits. This will also work if (x)
+> suddenly becomes a 64bit quantity. Something like:
+>
+> #define TINT_EXTRACT_HWIRQ(x)           FIELD_GET(GENMASK(15, 0), (x))
+>
+>
 > > +#define TINT_EXTRACT_GPIOINT(x)              ((x) >> 16)
+>
+> Same thing. Please write it as:
+>
+> #define TINT_EXTRACT_GPIOINT(x)         FIELD_GET(GENMASK(31, 16), (x))
+>
+Thanks for the pointer I hadn't come across the FIELD_GET macro.
+
 > > +
 > > +struct rzg2l_irqc_priv {
 > > +     void __iomem *base;
@@ -214,7 +224,8 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     return data->domain->host_data;
 > > +}
 > > +
-> > +static void rzg2l_irq_eoi(struct irq_data *d) {
+> > +static void rzg2l_irq_eoi(struct irq_data *d)
+> > +{
 > > +     unsigned int hw_irq = irqd_to_hwirq(d) - IRQC_IRQ_START;
 > > +     struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
 > > +     u32 bit = BIT(hw_irq);
@@ -222,9 +233,11 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +
 > > +     reg = readl_relaxed(priv->base + ISCR);
 > > +     if (reg & bit)
-> > +             writel_relaxed(reg & ~bit, priv->base + ISCR); }
+> > +             writel_relaxed(reg & ~bit, priv->base + ISCR);
+> > +}
 > > +
-> > +static void rzg2l_tint_eoi(struct irq_data *d) {
+> > +static void rzg2l_tint_eoi(struct irq_data *d)
+> > +{
 > > +     unsigned int hw_irq = irqd_to_hwirq(d) - IRQC_TINT_START;
 > > +     struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
 > > +     u32 bit = BIT(hw_irq);
@@ -232,9 +245,11 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +
 > > +     reg = readl_relaxed(priv->base + TSCR);
 > > +     if (reg & bit)
-> > +             writel_relaxed(reg & ~bit, priv->base + TSCR); }
+> > +             writel_relaxed(reg & ~bit, priv->base + TSCR);
+> > +}
 > > +
-> > +static void rzg2l_irqc_eoi(struct irq_data *d) {
+> > +static void rzg2l_irqc_eoi(struct irq_data *d)
+> > +{
 > > +     struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
 > > +     unsigned int hw_irq = irqd_to_hwirq(d);
 > > +
@@ -247,7 +262,8 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     irq_chip_eoi_parent(d);
 > > +}
 > > +
-> > +static void rzg2l_irqc_irq_disable(struct irq_data *d) {
+> > +static void rzg2l_irqc_irq_disable(struct irq_data *d)
+> > +{
 > > +     unsigned int hw_irq = irqd_to_hwirq(d);
 > > +
 > > +     if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT) {
@@ -266,7 +282,8 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     irq_chip_disable_parent(d);
 > > +}
 > > +
-> > +static void rzg2l_irqc_irq_enable(struct irq_data *d) {
+> > +static void rzg2l_irqc_irq_enable(struct irq_data *d)
+> > +{
 > > +     unsigned int hw_irq = irqd_to_hwirq(d);
 > > +
 > > +     if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT) {
@@ -286,7 +303,8 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     irq_chip_enable_parent(d);
 > > +}
 > > +
-> > +static int rzg2l_irq_set_type(struct irq_data *d, unsigned int type) {
+> > +static int rzg2l_irq_set_type(struct irq_data *d, unsigned int type)
+> > +{
 > > +     unsigned int hw_irq = irqd_to_hwirq(d) - IRQC_IRQ_START;
 > > +     struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
 > > +     u16 sense, tmp;
@@ -322,7 +340,8 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     return 0;
 > > +}
 > > +
-> > +static int rzg2l_tint_set_edge(struct irq_data *d, unsigned int type) {
+> > +static int rzg2l_tint_set_edge(struct irq_data *d, unsigned int type)
+> > +{
 > > +     struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
 > > +     unsigned int hwirq = irqd_to_hwirq(d);
 > > +     u32 titseln = hwirq - IRQC_TINT_START;
@@ -359,7 +378,8 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     return 0;
 > > +}
 > > +
-> > +static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type) {
+> > +static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type)
+> > +{
 > > +     unsigned int hw_irq = irqd_to_hwirq(d);
 > > +     int ret = -EINVAL;
 > > +
@@ -370,9 +390,15 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +     if (ret)
 > > +             return ret;
 > > +
-> > +     return irq_chip_set_type_parent(d, IRQ_TYPE_LEVEL_HIGH); }
+> > +     return irq_chip_set_type_parent(d, IRQ_TYPE_LEVEL_HIGH);
+> > +}
 > > +
 > > +static struct irq_chip irqc_chip = {
+>
+> You should now be able to make this struct const.
+>
+Agreed.
+
 > > +     .name                   = "rzg2l-irqc",
 > > +     .irq_eoi                = rzg2l_irqc_eoi,
 > > +     .irq_mask               = irq_chip_mask_parent,
@@ -389,7 +415,8 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +};
 > > +
 > > +static int rzg2l_irqc_alloc(struct irq_domain *domain, unsigned int virq,
-> > +                         unsigned int nr_irqs, void *arg) {
+> > +                         unsigned int nr_irqs, void *arg)
+> > +{
 > > +     struct rzg2l_irqc_priv *priv = domain->host_data;
 > > +     struct rzg2l_irqc_chip_data *chip_data = NULL;
 > > +     struct irq_fwspec spec;
@@ -404,11 +431,120 @@ On Wed, May 11, 2022 at 8:25 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 > > +             return ret;
 > > +
 > > +     /*
-> > +      * For TINIT interrupts ie where pinctrl driver is child of irqc
+> > +      * For TINIT interrupts ie where pinctrl driver is child of irqc domain
+> > +      * the hwirq and TINT are encoded in fwspec->param[0].
+> > +      * hwirq for TINIT range from 9-40, hwirq is embedded 0-15 bits and TINT
+> > +      * from 16-31 bits. TINIT from the pinctrl driver needs to be programmed
+> > +      * in IRQC registers to enable a given gpio pin as interrupt.
+> > +      */
+> > +     if (hwirq > IRQC_IRQ_COUNT) {
+> > +             tint = TINT_EXTRACT_GPIOINT(hwirq);
+> > +             hwirq = TINT_EXTRACT_HWIRQ(hwirq);
+> > +
+> > +             if (hwirq < IRQC_TINT_START)
+> > +                     return -EINVAL;
+> > +     }
+> > +
+> > +     if (hwirq > (IRQC_NUM_IRQ - 1))
+> > +             return -EINVAL;
+> > +
+> > +     chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> > +     if (!chip_data)
+> > +             return -ENOMEM;
+> > +     chip_data->tint = tint;
 >
-> Minor pick. Typo TINIT->TINT?? Similarly, 2 other places below.
+> An allocation for something that would readily fit in the pointer?
+> Just the metadata costs you more than the data you are storing... I'd
+> rather you cast the data back and forth, which simplifies everything.
+> And you can make it an unsigned long, which is guaranteed to have the
+> same size as a pointer.
 >
-Oops will fix that.
+Ok, I will make it as an unsigned long pointer.
+
+> > +
+> > +     ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &irqc_chip,
+> > +                                         chip_data);
+> > +     if (ret) {
+> > +             kfree(chip_data);
+> > +             return ret;
+> > +     }
+> > +
+> > +     spec.fwnode = domain->parent->fwnode;
+> > +     spec.param_count = priv->map[hwirq].args_count;
+> > +     for (i = 0; i < spec.param_count; i++)
+> > +             spec.param[i] = priv->map[hwirq].args[i];
+> > +
+> > +     ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &spec);
+> > +     if (ret)
+> > +             kfree(chip_data);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static void rzg2l_irqc_domain_free(struct irq_domain *domain, unsigned int virq,
+> > +                                unsigned int nr_irqs)
+> > +{
+> > +     struct irq_data *d;
+> > +
+> > +     d = irq_domain_get_irq_data(domain, virq);
+> > +     if (d) {
+> > +             struct rzg2l_irqc_chip_data *chip_data = d->chip_data;
+> > +
+> > +             kfree(chip_data);
+>
+> Why the intermediate variable?
+>
+will drop that.
+
+> > +     }
+> > +     irq_domain_free_irqs_common(domain, virq, nr_irqs);
+>
+> Is there any case where you would need this when d is NULL?
+>
+d == NULL may not happen unless something is really screwed up. But
+will move this inside if block.
+
+> > +}
+> > +
+> > +static const struct irq_domain_ops rzg2l_irqc_domain_ops = {
+> > +     .alloc = rzg2l_irqc_alloc,
+> > +     .free = rzg2l_irqc_domain_free,
+> > +     .translate = irq_domain_translate_twocell,
+> > +};
+> > +
+> > +static int rzg2l_irqc_parse_map(struct rzg2l_irqc_priv *priv,
+> > +                             struct device_node *np)
+> > +{
+> > +     unsigned int i;
+> > +     int ret;
+> > +
+> > +     for (i = 0; i < IRQC_NUM_IRQ; i++) {
+> > +             ret = of_irq_parse_one(np, i, &priv->map[i]);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int rzg2l_irqc_init(struct device_node *node, struct device_node *parent)
+> > +{
+> > +     struct irq_domain *irq_domain, *parent_domain;
+> > +     struct reset_control *resetn;
+> > +     struct rzg2l_irqc_priv *priv;
+> > +     struct clk *clk;
+> > +     struct clk *pclk;
+> > +     int ret;
+> > +
+> > +     priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> > +     if (!priv)
+> > +             return -ENOMEM;
+>
+> Since you are implementing this as a platform driver, consider
+> converting this to the devm_* helpers (you can obtain the device
+> structure via of_find_device_by_node()).
+>
+Thanks for of_find_device_by_node() pointer, I'll switch to devm* helpers.
 
 Cheers,
 Prabhakar
