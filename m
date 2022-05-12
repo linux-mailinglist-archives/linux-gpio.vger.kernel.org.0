@@ -2,168 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA1D524963
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 11:49:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0FD652497A
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 11:53:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349867AbiELJtq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 05:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48564 "EHLO
+        id S1352293AbiELJxv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 05:53:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232049AbiELJtp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 05:49:45 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A603F304
-        for <linux-gpio@vger.kernel.org>; Thu, 12 May 2022 02:49:43 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id q23so6471240wra.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 May 2022 02:49:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m+GHfrW6fEuHc5Bs8OGRGQGWigIu1swhxgOxVtKpNhk=;
-        b=dwGIQ0BkCa1E3CJvLrusI8PupUWwR7p+1hFOBj/+L8AjeAwkXB0MDERMHgBJdhDGzT
-         nJlqSVX2eesukTMTMDhXG13WsiALG4nTQnhPW0lqClxlD/Pt2CZ6HcwTVPpq8htGKkVs
-         Wj8OonXKuY/XIQhNxBpqwTd+E1x4rH1AFARunTtpBT9n+FpJH3Lt1Ehz3smX9gJqC7iU
-         D+peMsK+SCpRCnwRpCAeQwqNsJxnqzcIFKut5MhQOnRb34TDVV0O7ed/m9Ta5OYFcfkv
-         XxQDekIaWAJRf7O5gp2Ps6WKd+0HggV9t3i6jnt5xZTJ+aYAVIta6srR6nN67Oay4tUn
-         if2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m+GHfrW6fEuHc5Bs8OGRGQGWigIu1swhxgOxVtKpNhk=;
-        b=LQOBqIr1ksFjfvpBhkc3KDCmgVMmFM2ya50Ikj3Acv9NiJTcGwF5nkIE8aqceiU85i
-         waWulba7zsGg9yONDRPMCtjhTieYhuPIdRDCses1i+RsvvCnIQv5OfimqDMwPKBf8Pnn
-         TpnRogqs4ZYC1/NjOuGzTndw1dveHf2KFfpTnixwJKOXWJ95LWrY1YSIKrnZD6C/C153
-         osn6KynEqUkUGHGtd55YKgSIzAEJyGC1ftv4kyK2qdlU7N5Z9cCg6YrvxIqzJbr+gZv3
-         kcBv0G3oAzyaxw6GnN1nsuO3khaG5DqXp+orGxhSk9+mVaYRHPzybYIrnVnnXSYfdsgU
-         mucQ==
-X-Gm-Message-State: AOAM533CKiBUwLcf2iyzmJ5Vu6gBaknckkSMPKLtld5cT8oKRkBkGqUC
-        61dMHowg7wYoiks6V0CXuEsjcw==
-X-Google-Smtp-Source: ABdhPJzJ8xq2tAa6Ub50g1TH/DdizJOEPl87cht3iCrjgVaclsdPRT2WWsCqIHuuIx0bKY2DJYFaBA==
-X-Received: by 2002:a5d:64c8:0:b0:20c:6970:fb22 with SMTP id f8-20020a5d64c8000000b0020c6970fb22mr25695147wri.424.1652348982423;
-        Thu, 12 May 2022 02:49:42 -0700 (PDT)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id d2-20020a056000114200b0020c6a524fe0sm3635878wrx.98.2022.05.12.02.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 02:49:41 -0700 (PDT)
-Date:   Thu, 12 May 2022 10:49:39 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: Re: [RFC v8 net-next 08/16] mfd: ocelot: add support for the vsc7512
- chip via spi
-Message-ID: <YnzYM1kOJ9hcaaQ6@google.com>
-References: <20220508185313.2222956-1-colin.foster@in-advantage.com>
- <20220508185313.2222956-9-colin.foster@in-advantage.com>
- <20220509105239.wriaryaclzsq5ia3@skbuf>
- <20220509234922.GC895@COLIN-DESKTOP1.localdomain>
- <20220509172028.qcxzexnabovrdatq@skbuf>
- <YnqFijExn8Nn+xhs@google.com>
- <20220510161319.GA872@COLIN-DESKTOP1.localdomain>
+        with ESMTP id S1352347AbiELJxp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 05:53:45 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 515BA41F8E;
+        Thu, 12 May 2022 02:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652349219; x=1683885219;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y4TYar24BS8z9BAEdBn2NWcy025EmsZ82r5lezSySu8=;
+  b=gOhDad7JLC8IR+xec1QWxVlbnWv7InnjEcmEX67BwimGj6JT3o2+gwje
+   yoVnuaVuHAvHFDvorHdz3L0dvTf+b6E0vZyI1xv7GTGnDkkfYJDpmt96q
+   U+x+gtywUv6QvTLo/bqm01qTQQiqdQAYmkGR7Yi9lI9MYi8JOXHeCSCQ9
+   U8BKgn4exzFcMxvzmmwHbzqjTDhWGSYuHaG+jP/OtcPucsWK6C4DbmIu/
+   dS+AZJGO+lIyxfO8PNifROJjLvi4BQLIDUaOpKUV7gGQozsanru1hE/7A
+   aF8LRP3lcjs3M2FEce4O4reuINlHR1RvpTnYtNSCWL8kjFDwi65/Qau/8
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="267538153"
+X-IronPort-AV: E=Sophos;i="5.91,219,1647327600"; 
+   d="scan'208";a="267538153"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 02:53:39 -0700
+X-IronPort-AV: E=Sophos;i="5.91,219,1647327600"; 
+   d="scan'208";a="739621649"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 02:53:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1np5Vm-00F9k1-2I;
+        Thu, 12 May 2022 12:53:34 +0300
+Date:   Thu, 12 May 2022 12:53:33 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] pinctrl: broxton: Add module alias for Intel
+ Apollo Lake
+Message-ID: <YnzZHTNEOglqkiCh@smile.fi.intel.com>
+References: <20220511123421.88439-1-andriy.shevchenko@linux.intel.com>
+ <Ynu3sbnWwQgOUK4H@lahna>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220510161319.GA872@COLIN-DESKTOP1.localdomain>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <Ynu3sbnWwQgOUK4H@lahna>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 10 May 2022, Colin Foster wrote:
-
-> On Tue, May 10, 2022 at 04:32:26PM +0100, Lee Jones wrote:
-> > On Mon, 09 May 2022, Vladimir Oltean wrote:
+On Wed, May 11, 2022 at 04:18:41PM +0300, Mika Westerberg wrote:
+> On Wed, May 11, 2022 at 03:34:21PM +0300, Andy Shevchenko wrote:
+> > We have platform device IDs for Broxton and Apollo Lake, but
+> > module alias is provided only for the former. Make it consistent
+> > by providing an alias for Apollo Lake.
 > > 
-> > > On Mon, May 09, 2022 at 04:49:22PM -0700, Colin Foster wrote:
-> > > > > > +struct regmap *ocelot_init_regmap_from_resource(struct device *child,
-> > > > > > +						const struct resource *res)
-> > > > > > +{
-> > > > > > +	struct device *dev = child->parent;
-> > > > > > +
-> > > > > > +	return ocelot_spi_devm_init_regmap(dev, child, res);
-> > > > > 
-> > > > > So much for being bus-agnostic :-/
-> > > > > Maybe get the struct ocelot_ddata and call ocelot_spi_devm_init_regmap()
-> > > > > via a function pointer which is populated by ocelot-spi.c? If you do
-> > > > > that don't forget to clean up drivers/mfd/ocelot.h of SPI specific stuff.
-> > > > 
-> > > > That was my initial design. "core" was calling into "spi" exclusively
-> > > > via function pointers.
-> > > > 
-> > > > The request was "Please find a clearer way to do this without function
-> > > > pointers"
-> > > > 
-> > > > https://lore.kernel.org/netdev/Ydwju35sN9QJqJ%2FP@google.com/
-> > > 
-> > > Yeah, I'm not sure what Lee was looking for, either. In any case I agree
-> > > with the comment that you aren't configuring a bus. In this context it
-> > > seems more appropriate to call this function pointer "init_regmap", with
-> > > different implementations per transport.
-> > 
-> > FWIW, I'm still against using function pointers for this.
-> > 
-> > What about making ocelot_init_regmap_from_resource() an inline
-> > function and pushing it into one of the header files?
-> > 
-> > [As an aside, you don't need to pass both dev (parent) and child]
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> I see your point. This wasn't always the case, since ocelot-core prior
-> to v8 would call ocelot_spi_devm_init_regmap. Since this was changed,
-> the "dev, dev" part can all be handled internally. That's nice.
-> 
-> > 
-> > In there you could simply do:
-> > 
-> > inline struct regmap *ocelot_init_regmap_from_resource(struct device *dev,
-> > 						       const struct resource *res)
-> > {
-> > 	if (dev_get_drvdata(dev->parent)->spi)
-> > 		return ocelot_spi_devm_init_regmap(dev, res);
-> > 
-> > 	return NULL;
-> > }
-> 
-> If I do this, won't I have to declare ocelot_spi_devm_init_regmap in a
-> larger scope (include/soc/mscc/ocelot.h)? I like the idea of keeping it
-> more hidden inside drivers/mfd/ocelot.h, assuming I can't keep it
-> enclosed in drivers/mfd/ocelot-spi.c entirely.
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Yes, it will have the same scope as ocelot_init_regmap_from_resource().
+Pushed to my review and testing queue, thanks!
 
-Have you considered include/linux/mfd?
 
 -- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
