@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BFFE52534E
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 19:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50D7352542A
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 19:52:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356891AbiELRLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 13:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
+        id S1357348AbiELRvp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 13:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356931AbiELRLB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 13:11:01 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F061327CD6;
-        Thu, 12 May 2022 10:10:54 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="252120842"
+        with ESMTP id S1357346AbiELRve (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 13:51:34 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6BC93630F;
+        Thu, 12 May 2022 10:51:26 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="295343453"
 X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="252120842"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:08:38 -0700
+   d="scan'208";a="295343453"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:36:06 -0700
 X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="658684239"
+   d="scan'208";a="566808809"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:08:32 -0700
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:36:00 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andy.shevchenko@gmail.com>)
-        id 1npCIe-00FHkY-Cq;
-        Thu, 12 May 2022 20:08:28 +0300
-Date:   Thu, 12 May 2022 20:08:28 +0300
+        id 1npCjE-00FIF6-8R;
+        Thu, 12 May 2022 20:35:56 +0300
+Date:   Thu, 12 May 2022 20:35:55 +0300
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -49,65 +49,50 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, kernel-team@android.com
 Subject: Re: [PATCH v3 00/10] gpiolib: Handle immutable irq_chip structures
-Message-ID: <Yn0/DIl3+i/heRH6@smile.fi.intel.com>
+Message-ID: <Yn1Fe4WPp3ZaUERj@smile.fi.intel.com>
 References: <20220419141846.598305-1-maz@kernel.org>
+ <Yn0/DIl3+i/heRH6@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220419141846.598305-1-maz@kernel.org>
+In-Reply-To: <Yn0/DIl3+i/heRH6@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 19, 2022 at 03:18:36PM +0100, Marc Zyngier wrote:
-> This is a followup from [2].
+On Thu, May 12, 2022 at 08:08:28PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 19, 2022 at 03:18:36PM +0100, Marc Zyngier wrote:
+> > This is a followup from [2].
+> > 
+> > I recently realised that the gpiolib play ugly tricks on the
+> > unsuspecting irq_chip structures by patching the callbacks.
+> > 
+> > Not only this breaks when an irq_chip structure is made const (which
+> > really should be the default case), but it also forces this structure
+> > to be copied at nauseam for each instance of the GPIO block, which is
+> > a waste of memory.
 > 
-> I recently realised that the gpiolib play ugly tricks on the
-> unsuspecting irq_chip structures by patching the callbacks.
+> Is this brings us to the issue with IRQ chip name?
 > 
-> Not only this breaks when an irq_chip structure is made const (which
-> really should be the default case), but it also forces this structure
-> to be copied at nauseam for each instance of the GPIO block, which is
-> a waste of memory.
-
-Is this brings us to the issue with IRQ chip name?
-
-The use case in my mind is the following:
-1) we have two or more GPIO chips that supports IRQ;
-2) the user registers two IRQs of the same (by number) pin on different chips;
-3) cat /proc/interrupt will show 'my_gpio_chip XX', where XX is the number.
-
-So, do I understand correct current state of affairs?
-
-If so, we have to fix this to have any kind of ID added to the chip name that
-we can map /proc/interrupts output correctly.
-
-> My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
-> which does what it says on the tin: don't you dare writing to them.
-> Gpiolib is further updated not to install its own callbacks, and it
-> becomes the responsibility of the driver to call into the gpiolib when
-> required. This is similar to what we do for other subsystems such as
-> PCI-MSI.
+> The use case in my mind is the following:
+> 1) we have two or more GPIO chips that supports IRQ;
+> 2) the user registers two IRQs of the same (by number) pin on different chips;
+> 3) cat /proc/interrupt will show 'my_gpio_chip XX', where XX is the number.
 > 
-> 5 drivers are updated to this new model: M1, QC, Tegra, pl061 and AMD
-> (as I actively use them) keeping a single irq_chip structure, marking
-> it const, and exposing the new flag.
+> So, do I understand correct current state of affairs?
 > 
-> Nothing breaks, the volume of change is small, the memory usage goes
-> down and we have fewer callbacks that can be used as attack vectors.
-> What's not to love?
-> 
-> Since there wasn't any objection in the previous round of review, I'm
-> going to take this series into -next to see if anything breaks at
-> scale.
+> If so, we have to fix this to have any kind of ID added to the chip name that
+> we can map /proc/interrupts output correctly.
 
+Hmm... Some drivers are using static names, some -- dynamically prepared (one
+way or another). Either way I think the ID is good to have if we still miss it.
 
 -- 
 With Best Regards,
