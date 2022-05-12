@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A17DD5246FF
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 09:30:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3159952471C
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 May 2022 09:39:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351030AbiELH3z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 May 2022 03:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50440 "EHLO
+        id S1351085AbiELHji (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 May 2022 03:39:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351041AbiELH3y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 03:29:54 -0400
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E670E13C4F2;
-        Thu, 12 May 2022 00:29:49 -0700 (PDT)
-Received: by mail-qv1-f45.google.com with SMTP id h13so3814182qvh.0;
-        Thu, 12 May 2022 00:29:49 -0700 (PDT)
+        with ESMTP id S1351138AbiELHja (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 May 2022 03:39:30 -0400
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 862676C540;
+        Thu, 12 May 2022 00:39:27 -0700 (PDT)
+Received: by mail-qv1-f48.google.com with SMTP id h13so3825682qvh.0;
+        Thu, 12 May 2022 00:39:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=r2Mjon8tDago0stqZjye2DqrZ9qBLDemw/CYSCXDVYo=;
-        b=GYbntmWUfjRS87Kpx8ZINI0JaZ9LaDt/5pJoG51qAllglwCFhtVkTOYpyNdUdJVl01
-         rlXeJHWP7olORRdWItj5hzsMrlJJQ1ioyBiy0AHpwnsxZdvnqT1GKJ3tZd1980jm9Olo
-         5yd2Y0o+o0Vii7mRWfGH/7QU7zMhyrWgtfPWCexU0+Wxx1GLIDR6T3PbXbjumfeLCsCd
-         o5joPSM0fY0/4epieB9ywGYud/ITtONVs01So0mSGjWEZ7sJaLkaf7ibUFau2YRdn9Gv
-         4NDmcfWjGbNv9FOAiQdtqCpaqwbGtKQj5IIwG64wwBqjm97Q5FVeNPkm+eWCjIktTzXc
-         v1Fw==
-X-Gm-Message-State: AOAM5332LrA3Cce7UOqDexd8urbCw8rrY5Rhshc+pQvPrPuaBWEwjShw
-        y1fsE4bfxD5m+FOLnqfm+FfpQO+pWz24ug==
-X-Google-Smtp-Source: ABdhPJxD4fdBBnAmA/pKo7J1uN7PFs0kfOKBHyUOMhXwi8gOV35ue7L1wCDtbj7mw4zO7vB6g6ajaw==
-X-Received: by 2002:a0c:aad7:0:b0:45a:9960:6097 with SMTP id g23-20020a0caad7000000b0045a99606097mr26345268qvb.55.1652340588840;
-        Thu, 12 May 2022 00:29:48 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id e2-20020ac84e42000000b002f39b99f6c6sm2876638qtw.96.2022.05.12.00.29.46
+        bh=/a3zW+rITF/ZbovcnHnUbynM+/qA3KOenciLxfbKnzs=;
+        b=GKIqn7SQw6d1D5m11jx/dbrrLtn4f8iXZ+CLzC5o6ZNluXK2CtwaL+G20eNF29VrMo
+         aAHWWt8ZsNJ1hu7oI2l0MYpYReZ+L9N/4QTrvrytXRaHuBmhM/kTLhenuhuAdiacO1Tm
+         VoxPW3iBCMlKoj8Esl6Rix+hzIPWn6zSpoSkx8NgHQXGl6inir4rnYmKhT5Og43cZn39
+         yWzCrC0CGfLYQ4PB+2kSYJ7CZEUe2ZF5tyPdvQDpyyRWyfgorO2vNSi8JhYCnVo6u2+P
+         ku2M/1zP/gBwMXCwVA4rLrfr42pz6fxSureCKLWiriIlgABSxELIMR7YITTCttPsLgFw
+         70kw==
+X-Gm-Message-State: AOAM533YoPVmRv3OP0k5zsgM9MoLFEjWrsH4druBgN8T+ab7vXhq6aKV
+        j3VmvXTc8RCsPKXSaJnuteLJjmECIfqt7A==
+X-Google-Smtp-Source: ABdhPJx7NhwG7fp1uq4BhsLTdCiTiv2BXcSaC8Bj9RXlYlgLN8ErXWGnbBxGfBFvoO3bjN/KiGHnfg==
+X-Received: by 2002:a05:6214:1c83:b0:443:6749:51f8 with SMTP id ib3-20020a0562141c8300b00443674951f8mr25538581qvb.74.1652341166428;
+        Thu, 12 May 2022 00:39:26 -0700 (PDT)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id h124-20020a376c82000000b0069fc13ce203sm2553104qkc.52.2022.05.12.00.39.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 May 2022 00:29:47 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id s30so8158880ybi.8;
-        Thu, 12 May 2022 00:29:46 -0700 (PDT)
-X-Received: by 2002:a25:448:0:b0:64a:94d6:e420 with SMTP id
- 69-20020a250448000000b0064a94d6e420mr22441804ybe.89.1652340586589; Thu, 12
- May 2022 00:29:46 -0700 (PDT)
+        Thu, 12 May 2022 00:39:25 -0700 (PDT)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-2f7b815ac06so46657427b3.3;
+        Thu, 12 May 2022 00:39:25 -0700 (PDT)
+X-Received: by 2002:a81:6588:0:b0:2f8:b75e:1e1a with SMTP id
+ z130-20020a816588000000b002f8b75e1e1amr30053583ywb.358.1652341165120; Thu, 12
+ May 2022 00:39:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220511183210.5248-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220511183210.5248-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220511183210.5248-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20220511183210.5248-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 May 2022 09:29:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUiq3svPa+OMmG70HP-3h4gKV6puoT8QUm3WgPw+e4i=A@mail.gmail.com>
-Message-ID: <CAMuHMdUiq3svPa+OMmG70HP-3h4gKV6puoT8QUm3WgPw+e4i=A@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+Date:   Thu, 12 May 2022 09:39:13 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXDQ+eECWwvAGOb-MaN16H17qm_v_1baZ7PdT8qx9McSw@mail.gmail.com>
+Message-ID: <CAMuHMdXDQ+eECWwvAGOb-MaN16H17qm_v_1baZ7PdT8qx9McSw@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to
+ handle GPIO interrupt
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -68,8 +69,8 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -80,83 +81,74 @@ Hi Prabhakar,
 
 On Wed, May 11, 2022 at 8:32 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Supported GPIO IRQs by the chip is not always equal to the number of GPIO
-> pins. For example on Renesas RZ/G2L SoC where it has GPIO0-122 pins but at
-> a give point a maximum of only 32 GPIO pins can be used as IRQ lines in
-> the IRQC domain.
->
-> This patch adds ngirq member to struct gpio_irq_chip and passes this as a
-> size to irq_domain_create_hierarchy()/irq_domain_create_simple() if it is
-> being set in the driver otherwise fallbacks to using ngpio.
+> Add IRQ domian to RZ/G2L pinctrl driver to handle GPIO interrupt.
+
+domain
+
+> GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can be
+> used as IRQ lines at given time. Selection of pins as IRQ lines
+
+at a given time
+
+> is handled by IA55 (which is the IRQC block) which sits in between the
+> GPIO and GIC.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
 Thanks for your patch!
 
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1221,7 +1221,7 @@ static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
->         gc->irq.domain = irq_domain_create_hierarchy(
->                 gc->irq.parent_domain,
->                 0,
-> -               gc->ngpio,
-> +               gc->irq.ngirq ?: gc->ngpio,
->                 gc->irq.fwnode,
->                 &gc->irq.child_irq_domain_ops,
->                 gc);
-> @@ -1574,7 +1574,7 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->         } else {
->                 /* Some drivers provide custom irqdomain ops */
->                 gc->irq.domain = irq_domain_create_simple(fwnode,
-> -                       gc->ngpio,
-> +                       gc->irq.ngirq ?: gc->ngpio,
->                         gc->irq.first,
->                         gc->irq.domain_ops ?: &gpiochip_domain_ops,
->                         gc);
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 
-OK.
-
-gpiochip_irqchip_remove() does:
-
-        /* Remove all IRQ mappings and delete the domain */
-        if (gc->irq.domain) {
-                unsigned int irq;
-
-                for (offset = 0; offset < gc->ngpio; offset++) {
-                       if (!gpiochip_irqchip_irq_valid(gc, offset))
-
-Hence it relies on gc->irq.valid_mask, which I think is OK in general.
-
-                                continue;
-
-                        irq = irq_find_mapping(gc->irq.domain, offset);
-                        irq_dispose_mapping(irq);
-                }
-
-                irq_domain_remove(gc->irq.domain);
-
-        }
-
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -51,6 +51,14 @@ struct gpio_irq_chip {
->          */
->         const struct irq_domain_ops *domain_ops;
+>  static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
+>  {
+>         struct device_node *np = pctrl->dev->of_node;
+>         struct gpio_chip *chip = &pctrl->gpio_chip;
+>         const char *name = dev_name(pctrl->dev);
+> +       struct irq_domain *parent_domain;
+>         struct of_phandle_args of_args;
+> +       struct device_node *parent_np;
+> +       struct gpio_irq_chip *girq;
+>         int ret;
 >
-> +       /**
-> +        * @ngirq:
-> +        *
-> +        * The number of GPIO IRQ's handled by this IRQ domain; usually is
-> +        * equal to ngpio.
-
-"If not set, ngpio will be used."
-
-> +        */
-> +       u16 ngirq;
+> +       parent_np = of_irq_find_parent(np);
+> +       if (!parent_np)
+> +               return -ENXIO;
 > +
->  #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
->         /**
->          * @fwnode:
+> +       parent_domain = irq_find_host(parent_np);
+> +       of_node_put(parent_np);
+> +       if (!parent_domain)
+> +               return -EPROBE_DEFER;
+> +
+>         ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &of_args);
+>         if (ret) {
+>                 dev_err(pctrl->dev, "Unable to parse gpio-ranges\n");
+> @@ -1138,6 +1330,15 @@ static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
+>         chip->base = -1;
+>         chip->ngpio = of_args.args[2];
+>
+> +       girq = &chip->irq;
+> +       girq->chip = &rzg2l_gpio_irqchip;
+> +       girq->fwnode = of_node_to_fwnode(np);
+> +       girq->parent_domain = parent_domain;
+> +       girq->child_to_parent_hwirq = rzg2l_gpio_child_to_parent_hwirq;
+> +       girq->populate_parent_alloc_arg = rzg2l_gpio_populate_parent_fwspec;
+> +       girq->child_irq_domain_ops.free = rzg2l_gpio_irq_domain_free;
+> +       girq->ngirq = RZG2L_TINT_MAX_INTERRUPT;
+> +
+
+I think you need to provide a .init_valid_mask() callback, as
+gpiochip_irqchip_remove() relies on that for destroying interrupts.
+However, the mask will need to be dynamic, as GPIO interrupts can be
+mapped and unmapped to one of the 32 available interrupts dynamically,
+right?
+I'm not sure if that can be done easily: if gpiochip_irqchip_irq_valid()
+is ever called too early, before the mapping is done, it would fail.
+
+>         pctrl->gpio_range.id = 0;
+>         pctrl->gpio_range.pin_base = 0;
+>         pctrl->gpio_range.base = 0;
+
 
 Gr{oetje,eeting}s,
 
