@@ -2,61 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F79526D52
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 01:06:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49B11526D57
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 01:08:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236231AbiEMXGT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 May 2022 19:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59526 "EHLO
+        id S229614AbiEMXIE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 May 2022 19:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238181AbiEMXGH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 19:06:07 -0400
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB4225F782
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:05:51 -0700 (PDT)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-2ef5380669cso104457137b3.9
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:05:51 -0700 (PDT)
+        with ESMTP id S230377AbiEMXID (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 19:08:03 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC72D23DEEA
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:07:54 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2ebf4b91212so104542987b3.8
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=20vdP+atjEjZhs5yJgS5YKDTDHHJ9Ifpl/sT0aKWLY4=;
-        b=m+j5i6KqT3vzPFbJFYRsLAjZL1f88dlKxieE3PyBGCRC5fENmJJq5KL2nwLE+r4Usw
-         KFU7MTr/YV0/GCVcSi6w+xvuXb4gnpZ6SXGuf1Ppm5u5OJlH4kX9wKcf6IAB3YynBhim
-         7OuzeTVgvAzbEH9fewdjbBloKzSJ4LgUH4CBq6p3wmNP5GBm7Vt8rmfgdME13K0FXdv/
-         oYbDGxVyEdZB4BhihJn3sDaggnAt6GJrbMySkcjanP2zYDs/y5+SAoTWiq2lwZZI8RzF
-         YQXvOQi8vTjCWZiERQclgs63hI+tBqKjlZQ1xnnIyIe53ADFoMbIielktYi+PZjOPOn4
-         9ZEA==
+        bh=F7uNyZJ7+TaNFG3LYzAbirMUD+cjGo4bEKu9OQaTJA8=;
+        b=msCzsb/XZaRHLnQR6GjwcKV7ZJ3DYbEc7CYntbliyw6VjYYY7ixw7AiFHlZc+Izklx
+         pNNAMlyE+5PV13PbB7jKYFvxB9r8kxvMWHC7IoQkThlDpqFVfk+LPgrWw0FBBkM/t99C
+         KU7eNn1q9NSsBiTOHDn3f9dxpcfd3Ri3OjeQuWvRrfUGvWjCUxq7X7rA7vZfF1S2XcO1
+         bllctmzwXS+eXeeFXfvmj3iAb98agIlf6kdbiudB+qDcRPYXk+eVZPM92yi/KzDdhNUz
+         sZ5w3ACTEtFfU85v08p7uXQEJTm63XmgwBP+zuQqOLqQmO2fVssF3A088F299XI4Y3Ob
+         jlqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=20vdP+atjEjZhs5yJgS5YKDTDHHJ9Ifpl/sT0aKWLY4=;
-        b=VDLoLvx64efEggjPSygfy66IcUGUN3OuDGXN3cX/8KXKhhLcA9o8VLkRgV25xsgRjP
-         Da0llWZUgpKGHtC2SPGATl0UoQqUBuIl1HQUzVt/fqovSfVg+lgufMFoOhHn06v2LUol
-         ltACpoiZv017SoawsI9ot+ack+xlMmYbCCbsS1F4RPCeOqiH8b9GS675DtqQ7ivHC4fw
-         XOBxMExg0lA1Y2dFcEMJ4T7h+ADOQFuqJlD2uImISnhfEw8zfhT1WiUXJE9z97c5AZeL
-         Ld+wiM1RoxNlYblI0zLphb+B3P/B9pxYDbdpGtVzQl9vNrKuspGfIhJcJ2C04zC1NPIx
-         hvZA==
-X-Gm-Message-State: AOAM53024bDsfWAx7/3w5DdNeD7fSAUnMDpU1Wf2lmWqlATI3IQvegOs
-        21Dqhv9M882bB3GSFzOxF6AZDDjON9aBewkUFRp2JaFEzUE=
-X-Google-Smtp-Source: ABdhPJwg1gn4vyXSCAsXn7nzUnuz1q4FEzRjyuG4DMDgINbyOAJx6cpdY0REFXSha0pTwtIuBOdhvRVhGfAgD/v8v0k=
-X-Received: by 2002:a0d:e612:0:b0:2fb:103f:4067 with SMTP id
- p18-20020a0de612000000b002fb103f4067mr8515792ywe.151.1652483150531; Fri, 13
- May 2022 16:05:50 -0700 (PDT)
+        bh=F7uNyZJ7+TaNFG3LYzAbirMUD+cjGo4bEKu9OQaTJA8=;
+        b=Nvpw6OZ0bA+wqwMA8Au1CozsH1QcNDWUxdICH0GDBRyEV0g13f6B9D7z7Jx1tE0slJ
+         tXl2E++QrUDzmNZeWbC/R3zS7wlSV89KeOYmVuX3XYfSfzOILUnC7dpvQZl88uQpB/y5
+         t+a6+KUZc12b7c5ugoaMH1gjtDUlqHGcvfofymbqqbESelNqTDoQ9eYzxdgeqpGiK4JW
+         r3uQTe2Id3NHEkghnUkCNftOwNhefxJPG40NCnJv1bhLqp/4j68+6IAaxMWti/PqfxRy
+         QJtHUk1kTaoZEMdVLvtrtsaVNVxiwV6YgHKV7WG7IUm+v+BqCWtXZK3hKkYN3NSIqRh1
+         m6yw==
+X-Gm-Message-State: AOAM532kkS5Ool58xkH+MOLEEQci31aN9bU1v+s7bD4TN33XUBOLSSCE
+        nw3Sx0BUT5DrVk4mfzQhUtBPWcMXbJLQnpvleAUgtA==
+X-Google-Smtp-Source: ABdhPJzJXhLBhVXucPYDWCcm2l1jbUwOBPd9BYGwOe67dxsApMiUe8q6RhiHgCi8xsJpw1EECBr0rLgKTXHMAPnkv0s=
+X-Received: by 2002:a81:2154:0:b0:2f4:d79e:35dc with SMTP id
+ h81-20020a812154000000b002f4d79e35dcmr8773559ywh.126.1652483273949; Fri, 13
+ May 2022 16:07:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com>
-In-Reply-To: <tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com>
+References: <20220504170736.2669595-1-andre.przywara@arm.com>
+In-Reply-To: <20220504170736.2669595-1-andre.przywara@arm.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 14 May 2022 01:05:39 +0200
-Message-ID: <CACRpkda2AEVf__6neYPOddnjL1=Www=HoHvyNzcBvjua7GeVQg@mail.gmail.com>
-Subject: Re: [PATCH] arm: sunxi: fix f1c100s pinctrl function.
-To:     IotaHydrae <writeforever@foxmail.com>
+Date:   Sat, 14 May 2022 01:07:42 +0200
+Message-ID: <CACRpkdZiJqGK5NRCSWMuFBFRHOrCWyqGmuBQZ9jyvxbcsjZsgA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sunxi: f1c100s: Fix signal name comment for PA2
+ SPI pin
+To:     Andre Przywara <andre.przywara@arm.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
+        Samuel Holland <samuel@sholland.org>, writeforever@foxmail.com,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+        linux-sunxi@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -68,23 +69,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 4, 2022 at 1:59 PM IotaHydrae <writeforever@foxmail.com> wrote:
+On Wed, May 4, 2022 at 7:07 PM Andre Przywara <andre.przywara@arm.com> wrote:
 
-> 1. change suniv f1c100s pinctrl,PD14 multiplexing function lvds1 to uart2
+> The manual describes function 0x6 of pin PA2 as "SPI1_CLK", so change
+> the comment to reflect that.
 >
-> When the pin PD13 and PD14 is setting up to uart2 function in dts,
-> there's an error occurred:
-> 1c20800.pinctrl: unsupported function uart2 on pin PD14
->
-> Because 'uart2' is not any one multiplexing option of PD14,
-> and pinctrl don't know how to configure it.
->
-> So change the pin PD14 lvds1 function to uart2.
->
-> Signed-off-by: IotaHydrae <writeforever@foxmail.com>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
-Thanks, fixed up the subject as indicated by Andre
-and applied.
+Patch applied, thanks Andre!
 
 Yours,
 Linus Walleij
