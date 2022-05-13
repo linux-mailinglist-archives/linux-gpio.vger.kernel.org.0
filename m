@@ -2,85 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3E9525EEE
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 12:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79CF15260CD
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 13:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353671AbiEMJhY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 May 2022 05:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
+        id S1379867AbiEMLO7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 May 2022 07:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379203AbiEMJhQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 05:37:16 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88AEA28C9C9
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 02:37:14 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id u3so10671863wrg.3
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 02:37:14 -0700 (PDT)
+        with ESMTP id S1379828AbiEMLOq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 07:14:46 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DA72A8077
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 04:14:44 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id i20so6511247qti.11
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 04:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=LPeFc4kVcTNm4urAkRDIpRauCxNaO73GMMKzZ0JovMs=;
-        b=im5D1li6iayjNq5cJbXexWNAdwbevtRT0YNi61YD5Dlb7O+v4d+zj1Uq9SpmE0WpsF
-         zDtgfhR5K4BTl47cxta7rzqmnvmp6bDDI49DV/fmr/PQlV00wYyGEwyt78RGRfLFIKEf
-         tpPiDTrQnqoo6WEuezuxWi6XWtBCDypmq/23Cbso3DdfxfXbijZ8KpRaAVt0n+NXPxvx
-         PAACqWfJA0Djcoze1ircxojt62AINFqj6kyxIWhI5u+ndn33F/1mL2eKAP8GatwVdl9P
-         /GvTgbRwH85LINuDvCYS+4V15Vu2Bfh+l0FrrIFukTKyi+Mab9I5tXcmVkTCdQEAOI0/
-         66Sg==
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SBDxVj1nmh6VS/RoV7L/XKPJo0ILCXguhigrIdGmn5Y=;
+        b=ReHu/FYiQyhCdCYpDITJ2vI12co9Ze9xTJ8Y6j7h1wRL4O8jCdd2fk0ap0lr4Km73u
+         x36a84TaLEqQH+IqYFAlkjO0bWmIPlcjQUgpA9S8C/0kBCKR7tnUZ/43A2TYdQNf6U1l
+         itduEnqhN/tf0aEL7nzJl7dHutmcykroGXgqY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=LPeFc4kVcTNm4urAkRDIpRauCxNaO73GMMKzZ0JovMs=;
-        b=NXZVG/MuHnqFBf8uTgIgbtVWqlamNnCzG1iwzh4jy0rR6Tu04Da/fBjs9wZfYxawY4
-         Jbw1WG7U2LOvdc2iMNG0hQSxitjHekm3X8VPeHW1LHpBkzlRZkFRMsEQKNu8pQSqr2XC
-         Cf1JTU+E1lBIDbw4ydTWBL+qa0ES0ZXpI4F8J2vNRqLq70XfcCBk6YynXdEaRiqekBBv
-         TAKZeE5shFEMYvIacD/fCnQGNMFuOFIiA3GpqFjsmNooNBLq4BkL9NJ7Ko+ZtvBg8c8K
-         wqtrsosjVAWhl2fKKGFbaeeR3o7giA8dc7kIbBShCF311A+Cg+FT5EcYM8Ptsu5v2ilg
-         mGtw==
-X-Gm-Message-State: AOAM531Q+1hqX0Y0KIljX6TsMmVb9WyQmltZLR8Cquu0z2VTeKiHfuFk
-        AqzWgPnl5HNapP0drLc4zqMnAg==
-X-Google-Smtp-Source: ABdhPJwW3cU+uyE+Io9UlgPZ79ftGJYHlU0vLFfIIytqKHzkojl5dsNGL+ZhUq/QdL1OwweAvqQPzw==
-X-Received: by 2002:a5d:6088:0:b0:20a:e81e:c76a with SMTP id w8-20020a5d6088000000b0020ae81ec76amr3138108wrt.182.1652434632703;
-        Fri, 13 May 2022 02:37:12 -0700 (PDT)
-Received: from [192.168.0.171] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id g2-20020adfa482000000b0020c5253d8dfsm1728148wrb.43.2022.05.13.02.37.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 May 2022 02:37:12 -0700 (PDT)
-Message-ID: <5cce491d-c673-d2a6-3aae-79b2e5902a01@linaro.org>
-Date:   Fri, 13 May 2022 11:37:11 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SBDxVj1nmh6VS/RoV7L/XKPJo0ILCXguhigrIdGmn5Y=;
+        b=wQW/QUZSyR/JHpZnC2YHmRWYcowRMUxXL76jPMZ7y/Ho6ypM5bcGm3NfXRt3CJXg7y
+         fOm1IEbkqOKVgZm3vxdk7LSrwn+hloCChG4mt3E3KQKEsOYMD72rUdM1gYbJXCPnzguX
+         WncTQC7Xktslfe5AUL07Ry0isN7p9JJ8F0E/M4vZV3nGUpgv7dv4w2HyZCIhO0Z5Nqzj
+         jQBpK1OEgoOu80RRNb/qxmYEyKoYkxG0cxklyijuQEzA1yMX39g76LOnhy8EXvkW7N8D
+         tYoP9Hk7AX5ZFsU5bmVeILPMoNN8TFH7Dxy3hko1RFO+rgfBIhpfCfVnDOB7heot7P1D
+         dduA==
+X-Gm-Message-State: AOAM530jfpvRN+XFebEw5V5mqiRs0dO/pp3rEUq5k3z8T39/KuJ5WMDR
+        XlzG17NqDNSdPHjJ+a1T5KBA4/JSve4un/7uHhv0zg==
+X-Google-Smtp-Source: ABdhPJwxVPEVNydnGVwXBgBU30xlh2RgrKVjgnTyhbuMIC9o6thUsWItM63n+TIVfXCyNgrZRKLSTLJqKzFK9pcAaoU=
+X-Received: by 2002:a05:622a:18a7:b0:2f3:c715:caf1 with SMTP id
+ v39-20020a05622a18a700b002f3c715caf1mr3904348qtc.226.1652440482977; Fri, 13
+ May 2022 04:14:42 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm6125
- compatible
-Content-Language: en-US
-To:     Marijn Suijten <marijn.suijten@somainline.org>,
-        phone-devel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Martin Botka <martin.botka@somainline.org>,
-        Jami Kettunen <jami.kettunen@somainline.org>,
-        Andy Gross <agross@kernel.org>,
+References: <20220512162320.2213488-1-maz@kernel.org>
+In-Reply-To: <20220512162320.2213488-1-maz@kernel.org>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Fri, 13 May 2022 20:14:32 +0900
+Message-ID: <CAFr9PXnDqbgd4AebPQepWe5RF2utPcp2PJGoVhVNwX3ZZzsc-g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Remove dynamic allocation from populate_parent_alloc_arg()
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        kernel-team@android.com, Daniel Palmer <daniel@thingy.jp>,
+        Romain Perier <romain.perier@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220511220613.1015472-1-marijn.suijten@somainline.org>
- <20220511220613.1015472-3-marijn.suijten@somainline.org>
- <d2507298-00a6-a1cc-0302-f96597fb4127@linaro.org>
- <20220513091734.hivkkbpc6inyb4la@SoMainline.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220513091734.hivkkbpc6inyb4la@SoMainline.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Robert Richter <rric@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -89,57 +74,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/05/2022 11:17, Marijn Suijten wrote:
-> On 2022-05-13 10:19:56, Krzysztof Kozlowski wrote:
->> On 12/05/2022 00:06, Marijn Suijten wrote:
->>> The pm6125 comes with 9 GPIOs, without holes.
->>>
->>> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
->>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
->>
->> It's the first version, how did the tag appear here?
-> 
-> We are friends and review each-others patches offline before spamming
-> the mailing list with them, to save readers and maintainers here from
-> pointing out glaring mistakes.  I hope this is standard practice in
-> companies too, or do you recommend aganst us doing this?
+Hi March,
 
-I personally recommend against it because I prefer public discussions.
-Especially that such practice in some companies mean that tag is added
-automatically, without actual review. There are some folks, from other
-subsystems and architectures, which never publicly replied to anything
-(so we don't know if they actually exist, what's their credibility,
-knowledge, experience etc) but they appear on hundreds of reviews.
+On Fri, 13 May 2022 at 01:23, Marc Zyngier <maz@kernel.org> wrote:
+> diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
+> index b2c90bdd39d0..52d7b8d99170 100644
+> --- a/drivers/gpio/gpio-msc313.c
+> +++ b/drivers/gpio/gpio-msc313.c
+> @@ -550,15 +550,12 @@ static struct irq_chip msc313_gpio_irqchip = {
+>   * so we need to provide the fwspec. Essentially gpiochip_populate_parent_fwspec_twocell
+>   * that puts GIC_SPI into the first cell.
+>   */
+> -static void *msc313_gpio_populate_parent_fwspec(struct gpio_chip *gc,
+> -                                            unsigned int parent_hwirq,
+> -                                            unsigned int parent_type)
+> +static int msc313_gpio_populate_parent_fwspec(struct gpio_chip *gc,
+> +                                             union gpio_irq_fwspec *gfwspec,
+> +                                             unsigned int parent_hwirq,
+> +                                             unsigned int parent_type)
+>  {
+> -       struct irq_fwspec *fwspec;
+> -
+> -       fwspec = kmalloc(sizeof(*fwspec), GFP_KERNEL);
+> -       if (!fwspec)
+> -               return NULL;
+> +       struct irq_fwspec *fwspec = &gfwspec->fwspec;
+>
+>         fwspec->fwnode = gc->irq.parent_domain->fwnode;
+>         fwspec->param_count = 3;
+> @@ -566,7 +563,7 @@ static void *msc313_gpio_populate_parent_fwspec(struct gpio_chip *gc,
+>         fwspec->param[1] = parent_hwirq;
+>         fwspec->param[2] = parent_type;
+>
+> -       return fwspec;
+> +       return 0;
+>  }
+>
+>  static int msc313e_gpio_child_to_parent_hwirq(struct gpio_chip *chip,
 
-Other people don't mind this practice.
+This bit looks fine to me. I will test it over the weekend.
 
-Anyway, it's not a stopper from anything, I was wondering.
+Cheers,
 
-> 
->>> ---
->>>  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 2 ++
->>>  1 file changed, 2 insertions(+)
->>
->>
->> This will need fixups or rebasing on my sets of PMIC gpio schema cleanup:
-> 
-> Ack.
-> 
->> https://lore.kernel.org/all/20220507194913.261121-1-krzysztof.kozlowski@linaro.org/
->> https://lore.kernel.org/all/20220508135932.132378-2-krzysztof.kozlowski@linaro.org/
->>
->> Bjorn,
->> let us know preferred order (who should rebase on who).
-> 
-> I prefer yours to be applied first, so that I can retest this
-> patchseries with stricter / more correct dt-bindings introduced by it.
-> My series can also be resent with the notice that it has already been
-> rebased on top of your series, after collecting more reviews.  Where
-> necessary, I can review your series too if that helps getting it in
-> sooner.
-
-Sounds good. It's in Bjorn's hands now. :)
-
-
-Best regards,
-Krzysztof
+Daniel
