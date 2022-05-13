@@ -2,62 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3027C526B1C
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 22:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68610526BC2
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 22:47:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384097AbiEMUVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 May 2022 16:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41596 "EHLO
+        id S1384267AbiEMUrT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 May 2022 16:47:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384046AbiEMUVf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 16:21:35 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0F86AA4A
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 13:21:32 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2fb9a85a124so98380727b3.13
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 13:21:32 -0700 (PDT)
+        with ESMTP id S236581AbiEMUrR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 16:47:17 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBEE525B046
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 13:47:15 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id i38so17194998ybj.13
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 13:47:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rygsWmKSy8v7SEtOWG4PJRDSZuRNzXpM81fgoaPK2JM=;
-        b=BnkYjLDAcO5Pqlbmze4sAm0WCYWmd+hL9sP7BPo4UgwEVwwWi3S3HI3bpjrHe5hP+f
-         97DVPKUp3QauiCKBkgEC0NUV5wZRSwnne9lEk5/zIC760sa6HT9gLBFdJbzHE5FVKMxx
-         TjgDtHWP55q5goQNKT7PgdHIYFvvBcVbHxMjntD/Mym/aRPKxUCx8PrlnhaAXVL4VNbP
-         A20eYLQFBauNs7WnCZb1XO5Akwr0aYWSTEVvq6YzMJX5GS+fOKK6GI9hJyJy25vcZO/p
-         xTAX5hYECYsGT5/ju+RN0dP/V7JnhvD/aWe0ghfNeeWu+CtU7U5O1MwMjy0M3RgVj9Z0
-         uT+w==
+        bh=2r8LlMY/L/pVT9GNoIX6W6UvcdRsNWQcsMHoYfGNY60=;
+        b=vFEdtZy/OcImmh0aLEoSN3eO0UzqIV3jtOiDPVIkJxdmXPcXeuQuh8REuqrhs6dCvo
+         ZuVfSZl1qfGip70Vnoc+yWC5WRFyQWK+m50z4wox1sl4k9ExUn5Y0tAlWePJo+CgnyJl
+         L+aZbjHq/NfJTXizYWwINpTjTXaOXy8zVAYgonfnChD3FAwIs9jepIiqX63YEOV9GJNb
+         Rmwru2kgDh1oN86M5MnWF1fPclRz+cU+d+kiLuTUC4+acjTedG7VjzRQVtuWm5QffOXM
+         ZPryuuwHnNj/dki+OMoD+haau/V+Yjpb6UJPuG2PlKSr4jeLFFRt9f4t+3/GUlrwWCm+
+         7+Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rygsWmKSy8v7SEtOWG4PJRDSZuRNzXpM81fgoaPK2JM=;
-        b=HJqLv4wHULsdZQYR/cpb2D1vat1X4Yw6dVJQRWAn6WqhnQkQVc/HZAh6sWREWTFDEM
-         j+nnW8jM6UNL+fXYcWk5qmtCXGQWOnqYG8lQaH85Ya7EjcXS0BqzCRzilIFKP6lkIVZY
-         tKvscTQuwcCcsU7FL450ZoITC2gRjbBV/owwq+Cpw1zvleBZx6e+wNCugGL00PxYNlRx
-         gFfIemqne8GM1PXyGY+jOcD6vbMV6A9sQ9PzWFcCr9I5DfG5bDGL2bqeb34kD+u6SHwH
-         rkY3VuiAfw1VPJ5C7gKONgmodiQnFbbfVcKTmIPER+zrukrzTBjesnl0k6CEQClRBSnx
-         zkug==
-X-Gm-Message-State: AOAM530ebl1ihaoj2617ibtNqsb+Kw7q0tcSGMTCYGERS/VS578o/COH
-        DyeUrdAhbnkDTUjZJjEvrssK48TndbUCO2LzAXymig==
-X-Google-Smtp-Source: ABdhPJzl9Z5mG3VyfgLa795+ift0OsfF+5pqe2FKsOHgiI/5CJmP/gnDwwLCrySn55AqpNT4y0qQWjxPDFE89r73of0=
-X-Received: by 2002:a0d:c4c2:0:b0:2f1:6c00:9eb4 with SMTP id
- g185-20020a0dc4c2000000b002f16c009eb4mr8133277ywd.448.1652473291809; Fri, 13
- May 2022 13:21:31 -0700 (PDT)
+        bh=2r8LlMY/L/pVT9GNoIX6W6UvcdRsNWQcsMHoYfGNY60=;
+        b=RTJcXV+2N1Rh+h6rmTKf6JL7SleaUy6COR3qKYwa6wtga4BJdUr6Z5QzPr5HS58DLT
+         1ajoZk6L7+N9ajyNvTTtkyd3BzgJyp80CJcHhbVyIPqo9Kvl6/rA0HyC5kiQIBBQyKMM
+         Zq2dJOSpgYf72DFXAuldflgeJWWM1atfkGvPShvuFMXzTl+2sgDLX3yvBYTQhE08sk+o
+         +y59osZJMTzvLKRGoLhDtDOrgVdfe55S7hxkEgQeMfsCBEXAL3AdH60FQdGbLZOWH1b8
+         bK+dn7fEmTXGabI++kQ1otgwn6kzKeSvE/PLqbO68IZjlVoSThlnJEWX+isvofUZ1bUr
+         AhYA==
+X-Gm-Message-State: AOAM532tFCxtXc4qDtqOC+0TcNbWhYk8nVndG8PcpKxWYlJest0cvLQJ
+        uIPubWYkeMTMlbzxe7s73wt91qh6ltq5F7Ddb3D9sw==
+X-Google-Smtp-Source: ABdhPJxYxnyE/ScIaueIcgyhWUucikQN+NYKGInyGJOHC9bQqhJHm/W0dHIKofGVzfnpUAaIF6GDIiRzCGtwro93RSk=
+X-Received: by 2002:a25:e684:0:b0:645:d429:78e9 with SMTP id
+ d126-20020a25e684000000b00645d42978e9mr6944743ybh.369.1652474835095; Fri, 13
+ May 2022 13:47:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1652201921.git.william.gray@linaro.org>
-In-Reply-To: <cover.1652201921.git.william.gray@linaro.org>
+References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220511183210.5248-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20220511183210.5248-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 13 May 2022 22:21:20 +0200
-Message-ID: <CACRpkdZjNt8fbAXF6_+RhDHGJKOmMBD9E7fVZPQFwCbNi918Qg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] Utilize iomap interface for PC104 and friends
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, schnelle@linux.ibm.com,
-        David.Laight@aculab.com, macro@orcam.me.uk,
+Date:   Fri, 13 May 2022 22:47:04 +0200
+Message-ID: <CACRpkdYQAsam_v0XHm-A_trbyifj1pBQq5N+zc9KVw1vXVTYUw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -69,23 +75,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 10, 2022 at 7:31 PM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Wed, May 11, 2022 at 8:32 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 
-> PC104 cards and similar devices do not need to access I/O ports directly
-> via inb()/outb() and can instead use the more typical I/O memory
-> ioread8()/iowrite8() accessor calls by first calling ioport_map(). This
-> patchset converts the relevant PC104/ISA card drivers to do such. With
-> these drivers now utilizing I/O memory accessor calls, work can be done
-> to consolidate some similar devices (e.g. 104-idio-16, pci-idio-16,
-> etc.) into a unified driver in a future patchset.
+> Supported GPIO IRQs by the chip is not always equal to the number of GPIO
+> pins. For example on Renesas RZ/G2L SoC where it has GPIO0-122 pins but at
+> a give point a maximum of only 32 GPIO pins can be used as IRQ lines in
+> the IRQC domain.
 >
-> This patchset spawned from a suggestion made in another thread titled
-> "gpio: add HAS_IOPORT dependencies":
-> https://lore.kernel.org/all/c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com/
+> This patch adds ngirq member to struct gpio_irq_chip and passes this as a
+> size to irq_domain_create_hierarchy()/irq_domain_create_simple() if it is
+> being set in the driver otherwise fallbacks to using ngpio.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+As Geert says, I think you can just use .valid_mask for this,
+what do you say?
 
 Yours,
 Linus Walleij
