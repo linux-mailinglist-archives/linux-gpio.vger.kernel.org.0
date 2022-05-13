@@ -2,79 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 485CF525D39
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 10:24:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B08B525DBB
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 10:39:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378061AbiEMIUn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 May 2022 04:20:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
+        id S1350699AbiEMIjD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 May 2022 04:39:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378165AbiEMIUL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 04:20:11 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AE625AF8C
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 01:19:59 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id i19so14704536eja.11
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 01:19:59 -0700 (PDT)
+        with ESMTP id S241051AbiEMIjC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 04:39:02 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD762631FC
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 01:39:01 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id z19so9107157edx.9
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 01:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=TXXtxk4/zRV/azu90zaoknCSwg8YNFPSO9Vmn6Wx84Q=;
-        b=MNGRWTPIXS3qQdhzKLJqftqcmNJb3YAhzFu0XK9shDr0nVZW2KqLNz58KFpFr4nnSR
-         xCWwaq9eJrxFuBDYw/9ctILoH9T29QogEmyhKhxU2v2pbKtphq8ZS0PvubxQBtyDoRWM
-         iA65BP7n4WDjsTuxanI5NnVp5KGaNzh3A/PCrcTLFwO3uij1ITELlNx+3ja2gHSYqBSs
-         +V3XaRmoZpJNZ9vSakl3Krp1q8o83lOp9e3hRaPrtefzfDpUNt/O8MfcpyA4d1vOy0ui
-         HSVAR6GcKVVq8FEt0+WHrDmIqZhJ03tmNf7d3Be0nkugchg8AzjzgL5JiZOBHzSaRBGj
-         qdWA==
+        bh=5eGnaTrZ5QL37vftbdKCPQxPP9FiPYVF4w7vRXHzsMM=;
+        b=LG1nKsPb416GGdMtYA81IjhMhD/KCV58tHHZskrSiRF15YyXN+VUzIYUALgby/QHon
+         u2xJFOKT5lYsGSdFD05dRm4immZir8XX/Zy+cktKtuCVh4yloZuqff//IsM1QzUOR8kt
+         5Q3MJ2A7NXkZcQHV1f6djfKYOD+HdnbNGRgVkM4Lymq/QRUUa1rs5jXMuuyZhxgiCB3Y
+         dxw7pFt8FzAeB+W5JCOIwLs/6btd+Cdgy3XjgyyhnrWolcYAj8p0AReh/hqCYN3Y+SKL
+         VZPadeqs4afvv8f39xumhbXS0ZG+VrPn6/0A0BdsSWQlH/69yV3/tdMxT8EJU1pNZVH9
+         8SFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=TXXtxk4/zRV/azu90zaoknCSwg8YNFPSO9Vmn6Wx84Q=;
-        b=Ydz3Byt34PW6n19URBE3uFGKJwwrYYYHOjd7RS4zTqdpEMnru012RMpSR0E4yH9S1o
-         AcE8SR4GjHC7kWwcWhlOLwJ0MZdSPZDBl1mUIWab/1ahPD22eNYo+raEVpJk32Mqg/aW
-         yW8AQ02caqp7fHm7YMPjuY27EeEpDueuHP4+q3GG0XZ50R5Emq8/gcaveHtruiZcz78T
-         jCHJqFIJw5BKWTsnXOLfV4jCyjiBimwQ79D79rZFXkt2ZnjmE3V1/gIlk8spfGB5OSHQ
-         Al+XRcnol1GIh0KZx5SZJAvFXpTt/2n9IFrUyle3ZC4xSI003bXDID6qw5/2mJgf1BHZ
-         yfqg==
-X-Gm-Message-State: AOAM5309h4+3DFsrtXy+IGywlkeSbHp3aeE9qfJlZmzf2vjVnD7ubpgk
-        3TfmnePiXYRPLPGvLgVUdyP+8w==
-X-Google-Smtp-Source: ABdhPJxklCsXB9SJsl5gdraUIi2jz7rJ4AWpTj7K5UOqWzYgbXMjqn5QqncQCk3SD3iUdKyMUSM1UQ==
-X-Received: by 2002:a17:907:1b10:b0:6e4:bac5:f080 with SMTP id mp16-20020a1709071b1000b006e4bac5f080mr3267436ejc.24.1652429998225;
-        Fri, 13 May 2022 01:19:58 -0700 (PDT)
-Received: from [192.168.0.168] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id y24-20020aa7ccd8000000b0042617ba6397sm655801edt.33.2022.05.13.01.19.56
+        bh=5eGnaTrZ5QL37vftbdKCPQxPP9FiPYVF4w7vRXHzsMM=;
+        b=o6lfZ4L2623J6qbzwPFivhz7glASLYAVEJ+4kbBzhhW1tYfJ+8mKt+k8TkIiSFslK9
+         1rXrm0VHQrzTcvhxnM6VYveDd+pXbnNIDOI5BITaJH1G7gSGp3g5H5hne401N0JvB12M
+         egcCfKT2u1BE3yo1S8Rs0z2NfH31IjUDlnzymHNTHODuuEy3tqzJvqHEgKqUOxgXUKxQ
+         nNBA/aiN4D1gG3sOpcpDiKhyQt4ie2s6jIxyDBisddQXTOFyCSQbzi1UbBHIe13aryT2
+         ET5d3x6zOPguMUXcQq8O9nsLLwy8GrYwgt0yOXHin4Qt8YkIdYGeQRESb7SnYlhhZrdT
+         T7Yw==
+X-Gm-Message-State: AOAM533REPkyfkdLp040E7godPDSizPP3SU4SknAn49zkozOzizhvOw8
+        gA6cy5/wT4fwyg7YnW+M2x/0Tg==
+X-Google-Smtp-Source: ABdhPJx1ZUddn9oRkISOeRqNayJCSyiC/ExqIWCAeF8ygLNluQ/SklXUZsGOXJUeCR3R7X8C8EPu3A==
+X-Received: by 2002:a05:6402:5190:b0:427:df4a:19d9 with SMTP id q16-20020a056402519000b00427df4a19d9mr39905569edd.384.1652431139697;
+        Fri, 13 May 2022 01:38:59 -0700 (PDT)
+Received: from [192.168.0.169] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id yl15-20020a17090693ef00b006f3ef214de7sm540660ejb.77.2022.05.13.01.38.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 May 2022 01:19:57 -0700 (PDT)
-Message-ID: <d2507298-00a6-a1cc-0302-f96597fb4127@linaro.org>
-Date:   Fri, 13 May 2022 10:19:56 +0200
+        Fri, 13 May 2022 01:38:59 -0700 (PDT)
+Message-ID: <32aab734-5890-99b2-09c9-8ec7418c7649@linaro.org>
+Date:   Fri, 13 May 2022 10:38:58 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.1
-Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm6125
- compatible
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: gpio-mvebu: convert txt binding
+ to YAML
 Content-Language: en-US
-To:     Marijn Suijten <marijn.suijten@somainline.org>,
-        phone-devel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Martin Botka <martin.botka@somainline.org>,
-        Jami Kettunen <jami.kettunen@somainline.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220511220613.1015472-1-marijn.suijten@somainline.org>
- <20220511220613.1015472-3-marijn.suijten@somainline.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        andrew@lunn.ch
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20220512094125.3748197-1-chris.packham@alliedtelesis.co.nz>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220511220613.1015472-3-marijn.suijten@somainline.org>
+In-Reply-To: <20220512094125.3748197-1-chris.packham@alliedtelesis.co.nz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -87,26 +78,159 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/05/2022 00:06, Marijn Suijten wrote:
-> The pm6125 comes with 9 GPIOs, without holes.
+On 12/05/2022 11:41, Chris Packham wrote:
+> Convert the existing device tree binding to YAML format.
 > 
-> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-
-It's the first version, how did the tag appear here?
-
+> The old binding listed the interrupt-controller and related properties
+> as required but there are sufficiently many existing usages without it
+> that the YAML binding does not make the interrupt properties required.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 > ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> 
+> Notes:
+>     Changes in v3:
+>     - Correct indent in example
+>     - Move offset and marvell,pwm-offset to separate patch
+>     - Correct some documentation cross references
 
+Thank you for your patch. There is something to discuss/improve.
 
-This will need fixups or rebasing on my sets of PMIC gpio schema cleanup:
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
+> new file mode 100644
+> index 000000000000..2d95ef707f53
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell EBU GPIO controller
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Lee Jones <lee.jones@linaro.org>
 
-https://lore.kernel.org/all/20220507194913.261121-1-krzysztof.kozlowski@linaro.org/
-https://lore.kernel.org/all/20220508135932.132378-2-krzysztof.kozlowski@linaro.org/
+These should be rather platform or driver maintainers, not subsystem
+folks. Unless it happens that Thierry and Lee are for platform?
 
-Bjorn,
-let us know preferred order (who should rebase on who).
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +          - marvell,armada-8k-gpio
+> +          - marvell,orion-gpio
+> +
+> +      - items:
+> +          - enum:
+> +              - marvell,mv78200-gpio
+> +              - marvell,armada-370-gpio
+> +              - marvell,armadaxp-gpio
+> +          - const: marvell,orion-gpio
+> +
+> +  reg:
+> +    description: |
+> +      Address and length of the register set for the device. Not used for
+> +      marvell,armada-8k-gpio.
+> +
+> +      For the "marvell,armadaxp-gpio" variant a second entry is expected for
+> +      the per-cpu registers. For other variants second entry can be provided,
+> +      for the PWM function using the GPIO Blink Counter on/off registers.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +    items:
+> +      - const: gpio
+> +      - const: pwm
+> +    minItems: 1
+> +
+> +  interrupts:
+> +    description: |
+> +      The list of interrupts that are used for all the pins managed by this
+> +      GPIO bank. There can be more than one interrupt (example: 1 interrupt
+> +      per 8 pins on Armada XP, which means 4 interrupts per bank of 32
+> +      GPIOs).
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  ngpios:
+> +    minimum: 1
+> +    maximum: 32
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  "#pwm-cells":
+> +    description:
+> +      The first cell is the GPIO line number. The second cell is the period
+> +      in nanoseconds.
+> +    const: 2
+> +
+> +  clocks:
+> +    description:
+> +      Clock(s) used for PWM function.
+> +    items:
+> +      - description: Core clock
+> +      - description: AXI bus clock
+> +    minItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: axi
+> +    minItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - gpio-controller
+> +  - ngpios
+> +  - "#gpio-cells"
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: marvell,armada-8k-gpio
+> +    then:
+> +      required:
+> +        - offset
+> +    else:
+> +      required:
+> +        - reg
+
+one blank line please
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: marvell,armadaxp-gpio
+
+Original bindings are saying that second reg is optional for
+marvell,armada-370-gpio. What about other cases, e.g. mv78200-gpio? Is
+it also allowed (and optional) there?
+
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+
+Then you also should require two reg-names.
+
 
 Best regards,
 Krzysztof
