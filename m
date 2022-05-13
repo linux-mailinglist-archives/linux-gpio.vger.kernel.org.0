@@ -2,107 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32ED1526247
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 14:49:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B082C526338
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 May 2022 15:52:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380393AbiEMMtF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 May 2022 08:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
+        id S1344974AbiEMNua (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 May 2022 09:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359455AbiEMMtC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 08:49:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4593A703;
-        Fri, 13 May 2022 05:49:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E2F161F8C;
-        Fri, 13 May 2022 12:49:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66AD9C34100;
-        Fri, 13 May 2022 12:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652446139;
-        bh=N6Gs27VquaPY/jfyx7p+uW0mYzfGY1yrIjK7gsqoh7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aElnBzI2wZCSK/U/Wnscmm/Sf1R+M1wGzU0SZHNmsLcyeDhrq6q7+ygyC0z9PfHR5
-         N/ajNj3N6eZZfZ+EylMuobL3/Y77JbKMylxyKVAO5DnQMabg8vlXq614hAoTU0zLlP
-         OwxUFo7FINvs9ZH8/v/9RcNsiTStBmfaPbsDNWYzSFyQqCJ8+C/75GEEudBLaGfq4J
-         bnunuVr6Fks8yOQ82W/lBrSSdtVf3jiVDNx4x+cTtr61rJzRf4F5t1QVXaCdkXm3XX
-         ZH1pPSQmTMHTphNJscauUHBAScWkKa5e5mlFYP/mp6JtlmMiYdidrd9ND6ZcmCSi7H
-         WxgHFkTrgee9g==
-Date:   Fri, 13 May 2022 13:48:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver
- registration
-Message-ID: <Yn5Ts1+56rBip8Mc@sirena.org.uk>
-References: <20220429220933.1350374-1-saravanak@google.com>
+        with ESMTP id S1382017AbiEMNmc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 09:42:32 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 349EBBE0B;
+        Fri, 13 May 2022 06:42:31 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id s30so15350946ybi.8;
+        Fri, 13 May 2022 06:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WVSV/AblZY396bQwg7Kf9zjiyu4vW5yj0nxgxQP4FHE=;
+        b=eAdM95f+OmqPUQiS4QQN+Xrm6uqyU1Z3OIS2MK/LX6cVyRMbr7bsGedHauH1S1CHtA
+         amKUX8lK3zm71J7xJ5V27aX25u+fMqI2ui1e4XthznVQ/0KsZ5HwFjNIgDhR6WH9vR0q
+         XtwC4kQhxlpf+5EekYSNi7qfxb1+BJoM3UGeny7PZtKWMURz6F5DObL+v+GB63ulswYs
+         8sYPRWUjmzSlwaGifmUbngFzSfeQzpSO+ij2FpxEtEzJ273jALWUzQwrPz+zeM0fJ0VI
+         Vb2XzTu6nMUuz+YUVcAzi+AFyWmVnXOFFY6MxVPZ4V7YG8WcLU3Vh65ayPVgQrQl01ig
+         bolw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WVSV/AblZY396bQwg7Kf9zjiyu4vW5yj0nxgxQP4FHE=;
+        b=4RKfXyptSO3ZjTBlMYWWhkcwfEo/x24C+ng7/FfOtBcMTHklzUny13UMAjmHlZkFAS
+         Ojo/XceoWFYiXUzhkiZNJi80sOlkNUXyhKdd3a4IWyF1KhX1dWkXrdSphS/UGfWee+8K
+         oQ1WwGxywCSRKhSbzm+gaTyBqwHG2wtoLa17UuRmyeeajolQi8cfKDqUROcu7pJO/Rdi
+         hzXY1q4p5NIsClNrmMMu/fpqJkw14v0DbM6z1W9WsRKeCrlWKk22HCQNj4/2VxemJ2DC
+         VGQSN4M9wCBqceH0uG9iMoa5IAVSqhb3zA3nD4sC1PBKJgHP96ctbQwIsqipOvzNn8Hq
+         UW+w==
+X-Gm-Message-State: AOAM530hoSpRl1nAqRswPvVtpk7VP5ORIKsWLFB6GpzCwS99Cx2AO0uY
+        OTBZnEB8SnCIxf7uBXp6aq83v6mqlDcDyXTk8PQ=
+X-Google-Smtp-Source: ABdhPJz9dj+JwKYsFAih6d907sBseviSqnt8EC9F4FjmdyzAh6mhMRBcIMwP0v+xpQXJyfnVUGbmrfPqChBBEsQYZYM=
+X-Received: by 2002:a25:bfce:0:b0:648:963b:1ccb with SMTP id
+ q14-20020a25bfce000000b00648963b1ccbmr5025903ybm.417.1652449350423; Fri, 13
+ May 2022 06:42:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZVbyQANSq1izx04U"
-Content-Disposition: inline
-In-Reply-To: <20220429220933.1350374-1-saravanak@google.com>
-X-Cookie: You have taken yourself too seriously.
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220511183210.5248-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <OS0PR01MB59221ADFC86483FE2C8765C486CB9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CA+V-a8s4RfNSXCHG5xo4LhkHw09aj2wFnH0iCDos_ysunV1+5g@mail.gmail.com>
+ <OS0PR01MB5922D4C79DE916F5715B610E86CB9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <OS0PR01MB59222A7E4DF42FB7557F757886CA9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB59222A7E4DF42FB7557F757886CA9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 13 May 2022 14:42:04 +0100
+Message-ID: <CA+V-a8vVSnBb66AbAeg4+U-aSaj5BugGQ0FBTZJNdUnb=C641g@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to
+ handle GPIO interrupt
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, May 13, 2022 at 7:12 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Biju Das
+> > Sent: 12 May 2022 18:59
+> > To: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> > Cc: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>; Geert
+> > Uytterhoeven <geert+renesas@glider.be>; Linus Walleij
+> > <linus.walleij@linaro.org>; Thomas Gleixner <tglx@linutronix.de>; Marc
+> > Zyngier <maz@kernel.org>; Rob Herring <robh+dt@kernel.org>; Krzysztof
+> > Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Bartosz Golaszewski
+> > <brgl@bgdev.pl>; Philipp Zabel <p.zabel@pengutronix.de>; linux-
+> > gpio@vger.kernel.org; linux-kernel@vger.kernel.org; linux-renesas-
+> > soc@vger.kernel.org; devicetree@vger.kernel.org; Phil Edworthy
+> > <phil.edworthy@renesas.com>
+> > Subject: RE: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain
+> > to handle GPIO interrupt
+> >
+> > Hi Prabhakar,
+> >
+> > > Subject: Re: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ
+> > > domain to handle GPIO interrupt
+> > >
+> > > Hi Biju,
+> > >
+> > > Thank you for the review.
+> > >
+> > > On Thu, May 12, 2022 at 6:35 AM Biju Das <biju.das.jz@bp.renesas.com>
+> > > wrote:
+> > > >
+> > > > Hi Prabhakar,
+> > > >
+> > > > Thanks for the patch.
+> > > >
+> > > > > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > Subject: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ
+> > > > > domain to handle GPIO interrupt
+> > > > >
+> > > > > Add IRQ domian to RZ/G2L pinctrl driver to handle GPIO interrupt.
+> > > > >
+> > > > > GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can
+> > > > > be used as IRQ lines at given time. Selection of pins as IRQ lines
+> > > > > is handled by IA55 (which is the IRQC block) which sits in between
+> > > > > the
+> > > GPIO and GIC.
+> > > >
+> > > > Do we need to update bindings with interrupt-cells on [1] like [2]
+> > > > as it
+> > > act as parent for GPIO interrupts?
+> > > >
+> > > Yes interrupt-controller and interrupt-parent needs to be added. I'm
+> > > wondering if "interrupt-cells" is not required. If the pin is an
+> > > interrupt it will be passed as an GPIO.
+> >
+> > It is same as external interrupt case right?
+> >
+> > For eg:- Ethernet PHY case,
+> >
+> >      interrupt-parent = <&irqc>;
+> >      interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> >
+> > if you use GPIO, it will be like this right?
+> >
+> >      interrupt-parent = <&pinctrl>;
+> >      interrupts = <RZG2L_GPIO(1, 0) IRQ_TYPE_LEVEL_LOW>;
+>
+> FYI,
+>
+> Previously, I have tested ADV HPD interrupt with below changes while investigating [1]
+>
+> interrupt-parent = <&pinctrl>;
+> interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_FALLING>;
+>
+Right, #interrupt-cells=<2> , where the first cell is the GPIO pin and
+the second cell is the flag.
 
---ZVbyQANSq1izx04U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Apr 29, 2022 at 03:09:32PM -0700, Saravana Kannan wrote:
-> The deferred probe timer that's used for this currently starts at
-> late_initcall and runs for driver_deferred_probe_timeout seconds. The
-> assumption being that all available drivers would be loaded and
-> registered before the timer expires. This means, the
-> driver_deferred_probe_timeout has to be pretty large for it to cover the
-> worst case. But if we set the default value for it to cover the worst
-> case, it would significantly slow down the average case. For this
-> reason, the default value is set to 0.
-
-This makes sense to me.
-
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---ZVbyQANSq1izx04U
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmJ+U7MACgkQJNaLcl1U
-h9AJrQf+O34uAf+WJTRmMJA0R5+muU/Q3+PYEKAnTQ3EJ1R3EpYCuFYr1FlCDe3g
-OIg2rZyCYxhlgQ/k1CRFZbdK+R94KNZ5rv47uV1Kt8aC1uY7Rizh+e04jjgYSIOc
-TVn7quNTCXOPaNwuz95cURa8W7X4GFXDkdppjmpcYeMaaNsOU4z3Pw9drORQTArc
-Vb8M63Rn2/hazrGdt7xRTUU+/UvyOu3R63NeqkBcvvVo+tLXgOFaRsciYs+xMI6t
-Lg347Izlc1kBmpHhg5e/tAl5zEj3cZgc6a6gTg69f7i90AnxZw64vwFiv9grHK5S
-HLh2BNII8I1elceOYfqYDh3c1Apcww==
-=vDHz
------END PGP SIGNATURE-----
-
---ZVbyQANSq1izx04U--
+Cheers,
+Prabhakar
