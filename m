@@ -2,63 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06C08526D63
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 01:14:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D97C3526D6B
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 01:20:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232959AbiEMXOh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 May 2022 19:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51776 "EHLO
+        id S230010AbiEMXUP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 May 2022 19:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbiEMXOg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 19:14:36 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC9BD3211D0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:14:22 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id v59so17701687ybi.12
-        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:14:22 -0700 (PDT)
+        with ESMTP id S229699AbiEMXUO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 May 2022 19:20:14 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857AFBC6D0
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:18:42 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id j84so6915400ybc.3
+        for <linux-gpio@vger.kernel.org>; Fri, 13 May 2022 16:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uJjCKmIV0+PUlw1yN8LzGGtdpY7JQRJT83F9A+chaFQ=;
-        b=THiP8XlKeuATd+sFBtOcYrkM4vfQtgO4vnzZ0czrpsdPkpjchMTT4P/obyYS2u/Ph0
-         +d4NGAg/jxClzjL8HVJs1YAUDTNGgJWRecVdDws5TTDi+gv0iwTmpz+MkqCaUpeAV5AA
-         yF3lhT3KSxCLDQJ9FmJNtviqrwf/aWE8xllwdNkP73HSFcu2JxZfzQwraA3ZMJaktL2/
-         OkzTNpuZEQcIWaejl7sk/YJRrshWH/IN8sd7qW08KjeWOtRqJdYH5DbIBGNlQDidczW+
-         6kEBBpSeOhUtIg4JxlmhyKAglB0MmRs+oQnBntEgiBPniHirdlTfg443BTKKz6xnZr/V
-         JO8Q==
+        bh=peFPtL0ZhzsJZHNucBDtSwt3F1izphFO+BREPiZmQjc=;
+        b=neoc4bliNIEuwITc3td2ZW08qZUSbSxEOpHqeR4p8ZRBmPCnGFYguhLglAwZ+Zg7GD
+         IHiTKfAwBSBXj7zRbP+cFmi6g6NOO26eqWMaoEdHKOEqxwwVH7Sas76I3p9g5NJHnV3j
+         UTZnJJHhKUxrjf/+krI5Du+FGuy3MSr/HUPLfnZYZCf4sLJsQUT6O/jh9YTkbrBQBBP6
+         6ukMi/1/AukIUqqMlEqPnDoE25XZyk57RvDoJOxucC5Qln8wTzBuHoUXMac9Pc7evjuq
+         ou0AQn4ZteR4wxH0ZzwnY4OpDeFAx58uf/pZ59dN0BdDBLIQayLelu0NaoS8mxsQKyZp
+         /WMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uJjCKmIV0+PUlw1yN8LzGGtdpY7JQRJT83F9A+chaFQ=;
-        b=yl0NVDoD/0ao3D1l2vVZPtebalZB/m6YHMxC86LJkathYR1I1vBpsfiNecrnI05gDC
-         OVkWVXAbvo8+ppRGm1mjoGRIjkP4PX+X050VIFKpihx1zNphGtmq84RyuazsBKOmY698
-         s+oy88yDmuPXHSXRtRTChgw+uaBLV9Z7I9XM45yg9lkS18Hg2G4cBfkKhKzJvKVyQcW9
-         lyMipMo10g+BDvvFFEag3KId7bmD/ytoeRliV05THl8cZYfgmgreOS9hQaWK326lHArk
-         g0L4yRHGAZH6PdKlrZYa/s42sC9bPKze2y2hjjzhBkllEunwYiwcvXl+B5kGXrXCXuJe
-         hHYw==
-X-Gm-Message-State: AOAM533J5l4KRi4I/5t5paPHZQtefmhKwUKLJ7O6y1cA9po4EaUznCm3
-        NELVxcVtxWHSOiBqYmoJ00K/fb7DJPJxe5wATkNqwg==
-X-Google-Smtp-Source: ABdhPJyqJOHYby5B4zPz7I69RNcSghbBdax44/7CJOKXFMx9IaAQOi+fUTHLPntFEHAMZ9z/gSOi5OooYyzthLTILkw=
-X-Received: by 2002:a25:aa94:0:b0:648:62f2:ef4e with SMTP id
- t20-20020a25aa94000000b0064862f2ef4emr6931589ybi.626.1652483661584; Fri, 13
- May 2022 16:14:21 -0700 (PDT)
+        bh=peFPtL0ZhzsJZHNucBDtSwt3F1izphFO+BREPiZmQjc=;
+        b=Rp9klUcMXCVa9RLhIw9EwWNK85gZzZe1bwqEeg9H5FGUB4Y9YrsbbVnIHD63PXAD+o
+         9l5MYctyt1L8cSfr64bG485XNbc7qevuPP83L8UcO84c3OCyHe73fyts+U2Q7LAdaOYt
+         mGTwhZiG9ZDSsj0No2L2VAAfz+P8Tm3asWqPvtWeSzg/sEjT4fiJYrLJqdmUkrTlfPyE
+         lFcn0sIhClqg3RNv87wnDF/PbeJB4JvuUNbyjE9zZl53Ffse7wFC+NU7vm7ddtBC0KhD
+         ZV4Kc52I3FcnFKJCPjFIAQeXfcNV9HtGiNOESazk8Fv1LybRuDT2hLQ4OOIs4R/1CgcP
+         TOpw==
+X-Gm-Message-State: AOAM533ieiq6+RbFpP75DMAdNknWpdOqx+M0RyXJx4BRNl1cbxdC27Xs
+        KJfD4E6J4BVDMOPfcy5r7rYgnw+AXW276RZJUGv8cA==
+X-Google-Smtp-Source: ABdhPJzq/anb8INHniF8SiNul15kIbegKtWUZLQxaVHXqzCkz8MczW1Rtjm+OV0/55vE2qrtnxfGrJFNvmZgkA2MHhQ=
+X-Received: by 2002:a25:bcc3:0:b0:648:7360:8e75 with SMTP id
+ l3-20020a25bcc3000000b0064873608e75mr7252850ybm.533.1652483921333; Fri, 13
+ May 2022 16:18:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220507102257.26414-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220507102257.26414-1-andriy.shevchenko@linux.intel.com>
+References: <20220508135932.132378-1-krzysztof.kozlowski@linaro.org> <20220508135932.132378-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220508135932.132378-2-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 14 May 2022 01:14:10 +0200
-Message-ID: <CACRpkdYjmAKPb9sHvC+Y0goDBmGXDthJDmgbG2CZ6VO_Y1zEmQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: stm32: Unshadow np variable in stm32_pctl_probe()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        kernel test robot <lkp@intel.com>
+Date:   Sat, 14 May 2022 01:18:30 +0200
+Message-ID: <CACRpkdZLsw7rU113x88MKxTUEPgueLHf+7Pu4FevCAQLP2jBqg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: pinctrl: qcom,pmic-gpio: add 'gpio-reserved-ranges'
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luca Weiss <luca@z3ntu.xyz>, David Heidelberg <david@ixit.cz>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -70,22 +71,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 7, 2022 at 12:23 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Sun, May 8, 2022 at 3:59 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-> The np variable is used globally for stm32_pctl_probe() and in one of
-> its code branches. cppcheck is not happy with that:
+> 'gpio-reserved-ranges' property is already used and supported by common pinctrl
+> bindings, so add it also here to fix warnings like:
 >
->   pinctrl-stm32.c:1530:23: warning: Local variable 'np' shadows outer variable [shadowVariable]
+>   qrb5165-rb5.dtb: gpio@c000: 'gpio-reserved-ranges' does not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
 >
-> Instead of simply renaming one of the variables convert some code to
-> use a device pointer directly.
->
-> Fixes: bb949ed9b16b ("pinctrl: stm32: Switch to use for_each_gpiochip_node() helper")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Patch applied!
+This does not apply on top of pinctrl's devel branch, am I doing
+something wrong?
 
 Yours,
 Linus Walleij
