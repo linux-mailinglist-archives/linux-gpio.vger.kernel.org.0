@@ -2,74 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34EBD5273CA
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 21:43:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0CDC5273D2
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 21:47:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234972AbiENTnE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 May 2022 15:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60050 "EHLO
+        id S235014AbiENTrr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 14 May 2022 15:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234882AbiENTnC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 May 2022 15:43:02 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E7351CB3D
-        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 12:43:01 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id b18so19725217lfv.9
-        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 12:43:01 -0700 (PDT)
+        with ESMTP id S235006AbiENTrq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 May 2022 15:47:46 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5F261FCF0
+        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 12:47:43 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id b18so19734256lfv.9
+        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 12:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=YRR6yhBfuheeT6DyI955DtiAlr7j0ElPFuCgNZYtHe8=;
-        b=cKNIPFv+kmdiZtoUh+ilefEdVpogdHAJmcT8j48WcUZ4vegvYOZtd81BetdPhY+ZTT
-         m44El5SxsdbLJA3LzxXu4+DV1KZI/OD0vWWgYx6H2FKUdnFwK8MF3NdBh3XgHBG/+Vyx
-         zltpjtOPjYgJ4vHqa6mtZ88jhhhWYVqUSc7Duns8w5dB/WWUxvCHpq8ksWTiNPXt8QNd
-         95Y0vDTJCAB3M/QgOR3ZYfGxBDQxLbmT7N8HYdJqJCHFUVoXKpFclXpGNUpxJJBzWec3
-         oXPNBOqZzERKyLh5uTbamDg4MWl8LnuADSg8vHTRjWwvxRle7wCtAMj1bWtvuJriNSwq
-         FwIQ==
+        bh=7S+G4FYAdKpveK/bCmr9kuwFdE+5AmrPUFrgJUvGcmw=;
+        b=ANk5B1sxQqM2aO3vtNFxJVAs4kc/zEx+dSujyBRANHAKOqAetHSGGKLwaswqWVrpRj
+         igL/HkOkChIycS9asjwvFxCxD3oFlxH4On0b0OHYrc7GDdpY6pGahyfLWTXGLH34vAgl
+         Vd5d0qRWKbdvyZAo1T6EZ1PY0y2002GVi+XPwMEoIHi1jhSt+cdjbUmwWyd5qgm509R3
+         1AgiCCYfAuShNG61T48xc/Ot3QT0Hta++sKGssyeEwWYOu2/oK4Mc/LMK5vfrrZhWqmf
+         82mVQu1IL8pdgqYw6rKXd1DQU1C3/MFLPMT8kVrMG2rZL+3JqAzAhoJL3BvCeyQpKQ0j
+         08vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=YRR6yhBfuheeT6DyI955DtiAlr7j0ElPFuCgNZYtHe8=;
-        b=I9YX9EbfrBweSHnRlbOYs8Q1asrsFW2I0LfX/Q0fXYwV//1r4C2FRUcgEqYbYDlz7H
-         tI8l7Rh587OHb+fNsmTV/krBQNx5a0JDqCyoWtICECof8hG78cKFSz8gw5xT+Dz+oSm1
-         fcRLO/E7ap8ZjlwGzwcWXYzDhCkC2M5b9FKgXM/Kf8YOLa4Azc13hpnZBt+IoL4htUBi
-         WTtUPOeWMkemlOSA8GF6doqloWm8X7c3b9n3hcls4z4WWYob6RHe4cfJyq4mDpQyM9YH
-         DV2Av4iHfn/Z4kfS1te0uzktZYY9Ol9GF/ZeHSneO7rEm+c5vOJXVUJYOYBfcWOWXgfL
-         TRFA==
-X-Gm-Message-State: AOAM532AwcD5Jm5ES077IJpQNSdB/oZX6NNyq2LGDv823Irn+R2oa7N6
-        38jHz/W6ghzpPwKNSOXw8b1VTg==
-X-Google-Smtp-Source: ABdhPJzPDjic1LB5uI2Zj+l6OnpED29tQ//hzw+X+Be1bnNDtHxlH98OblI1rxfODJrXGXJJhJ8K9w==
-X-Received: by 2002:a05:6512:1693:b0:474:35c:8c11 with SMTP id bu19-20020a056512169300b00474035c8c11mr7472603lfb.19.1652557379515;
-        Sat, 14 May 2022 12:42:59 -0700 (PDT)
+        bh=7S+G4FYAdKpveK/bCmr9kuwFdE+5AmrPUFrgJUvGcmw=;
+        b=lzU9j8v6FPrx93n+GI4+AhHiqQ59h9ewVytH0ToJBGGl3DkbNsA+DQsYT0Qzh9e06k
+         kz/perNDodNTZafyyV+59POvs0J+j9XaiXfNRD/7SOVoXZzpujEMDR88eVLbYg/4IgzY
+         DPVc5HULEKyNMhYHKileR76m7FART9F9YLjrUP1H4QKw7TKC7MXkmjOs81V0anOCN8TS
+         SSuwFNv6bXwlOjIrwgRM4swDYfDeVClQO5w2+ZWQa+ZWqLklCxtYJp6fwrzxLVIGwAsK
+         HMZJd0bSV1tB5+FEr9D0BAsXMZse+yZ8B6rmTu4mg22i3puwJQdk8VGOw5b5k7DeLS/i
+         Swnw==
+X-Gm-Message-State: AOAM530hZzbUKmRlRLXPG2iAftJrDTfHgH3xlFOMBtkC5Z0y+fsaQwWC
+        iZKEqKFw9h03RFfTGbTmU6RpzQ==
+X-Google-Smtp-Source: ABdhPJyJfap7agj1HyLvqRJynfyFTCCOZ8RyKcoEWWXmxoDJsZYKV+tgR7ZwB+iOfyM/B3IieL5PTw==
+X-Received: by 2002:a05:6512:e84:b0:474:12f3:cb53 with SMTP id bi4-20020a0565120e8400b0047412f3cb53mr7492604lfb.254.1652557662126;
+        Sat, 14 May 2022 12:47:42 -0700 (PDT)
 Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id p2-20020a2ea4c2000000b0024f3d1daebbsm904127ljm.67.2022.05.14.12.42.58
+        by smtp.gmail.com with ESMTPSA id q30-20020ac2515e000000b0047255d2117fsm795121lfd.174.2022.05.14.12.47.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 May 2022 12:42:59 -0700 (PDT)
-Message-ID: <00059695-44a5-8842-0fbd-e89221f28d03@linaro.org>
-Date:   Sat, 14 May 2022 21:42:58 +0200
+        Sat, 14 May 2022 12:47:41 -0700 (PDT)
+Message-ID: <e7cfff16-ee2e-f204-a427-a25aa337d392@linaro.org>
+Date:   Sat, 14 May 2022 21:47:40 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.1
-Subject: Re: [PATCH 1/4] dt-bindings: pinctrl: qcom,pmic-gpio: add
- 'gpio-reserved-ranges'
+Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm6125
+ compatible
 Content-Language: en-US
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        phone-devel@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Martin Botka <martin.botka@somainline.org>,
+        Jami Kettunen <jami.kettunen@somainline.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luca Weiss <luca@z3ntu.xyz>, David Heidelberg <david@ixit.cz>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>
-References: <20220508135932.132378-1-krzysztof.kozlowski@linaro.org>
- <20220508135932.132378-2-krzysztof.kozlowski@linaro.org>
- <CACRpkdZLsw7rU113x88MKxTUEPgueLHf+7Pu4FevCAQLP2jBqg@mail.gmail.com>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220511220613.1015472-1-marijn.suijten@somainline.org>
+ <20220511220613.1015472-3-marijn.suijten@somainline.org>
+ <d2507298-00a6-a1cc-0302-f96597fb4127@linaro.org>
+ <20220513091734.hivkkbpc6inyb4la@SoMainline.org>
+ <5cce491d-c673-d2a6-3aae-79b2e5902a01@linaro.org>
+ <CACRpkdbyVScvnn-99XQ526B=64fQp34PKjot1CJ2Wfm0PKmZgg@mail.gmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CACRpkdZLsw7rU113x88MKxTUEPgueLHf+7Pu4FevCAQLP2jBqg@mail.gmail.com>
+In-Reply-To: <CACRpkdbyVScvnn-99XQ526B=64fQp34PKjot1CJ2Wfm0PKmZgg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -82,24 +91,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/05/2022 01:18, Linus Walleij wrote:
-> On Sun, May 8, 2022 at 3:59 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
-> 
->> 'gpio-reserved-ranges' property is already used and supported by common pinctrl
->> bindings, so add it also here to fix warnings like:
+On 13/05/2022 23:09, Linus Walleij wrote:
+>>> I prefer yours to be applied first, so that I can retest this
+>>> patchseries with stricter / more correct dt-bindings introduced by it.
+>>> My series can also be resent with the notice that it has already been
+>>> rebased on top of your series, after collecting more reviews.  Where
+>>> necessary, I can review your series too if that helps getting it in
+>>> sooner.
 >>
->>   qrb5165-rb5.dtb: gpio@c000: 'gpio-reserved-ranges' does not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Sounds good. It's in Bjorn's hands now. :)
 > 
-> This does not apply on top of pinctrl's devel branch, am I doing
-> something wrong?
+> Ugh can I get that with a pull request? Maybe Krzysztof can provide?
 
-Hi Linus,
+Ah, I completely forgot that this is actually pinctrl, so it's not Bjorn
+but you. :) Of course then it can go via Pinctrl tree, in any order you
+prefer and anyway it's not my call. :)
 
-Sorry for any confusion. This is on top of my previous patchset:
-https://lore.kernel.org/all/20220508135932.132378-1-krzysztof.kozlowski@linaro.org/
+> 
+> BTW I have high confidence in you Krzysztof after all your work on the
+> Samsung pin controllers, can you and Bjorn
+> discuss maybe adding you as comaintainer for Qualcomm pin controllers,
+> it's not like Bjorn has too little to do.
+
+Sure, I am happy to help here. I'll talk with Bjorn.
 
 Best regards,
 Krzysztof
