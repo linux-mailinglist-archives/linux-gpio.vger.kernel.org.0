@@ -2,118 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 936EA5271C3
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 16:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 246F3527194
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 16:10:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233000AbiENOPk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 May 2022 10:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52608 "EHLO
+        id S232905AbiENOK2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 14 May 2022 10:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbiENOPk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 May 2022 10:15:40 -0400
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E7E140F3;
-        Sat, 14 May 2022 07:15:38 -0700 (PDT)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-edf9ddb312so13977046fac.8;
-        Sat, 14 May 2022 07:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V0UWMw+8IC5/blrDj2MNiuz1nnIEdolub0ud2xnX3wc=;
-        b=dkxvJMEFx6NNgw1tH/UOFEVkB83/cvgCoN2PlMfOTAvFF3YrqCpWz24cv5z8xQwuP7
-         BcwvEsuFTuyE8yjru1Pi9Q9cgXnx/x9R5X1crekVv9DRnAcrnELwo3xV1+gyUaEzYXqH
-         2VUhW79PlCNlREYwLWgPacsLZpLg/SR1rbTxCrHKruvIDmJ15NRQ1aWlUpvb1oblcA6c
-         U16dqcZxJxDVmmhhEtOaqJlvLnZm618xa4XDWfp31YWmyoDpO6YqqvqeDNcXATzvnLdr
-         AjTjqn6W2vguXwB/Unl/2mEHV4UkX8F6g+4VT6wc7OouhdHE7n3go4ycJIu1c2LG90Js
-         AvrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=V0UWMw+8IC5/blrDj2MNiuz1nnIEdolub0ud2xnX3wc=;
-        b=hGphlE7Rgn1gf5CsnBJig/mnyhXZ3VW4J+zm+gomQpfQRi6dfJJIhO81cky131Xe16
-         Q0ccY/oF6P6SneoN6d8kYZmjMu0aSsQqcJzgzQ9xowirQmW8lB2dj4XLcNTF07/Ckg5T
-         6qyvJberBhE1UsxjC/a8LPhAH7An8kYjvVOtXShlVX3yanziM6roiB1Bk/w3FxMDTjqs
-         S+uQ9LxErrTm33yMzUFUYAezdUkn0Im1wIUnq7LFGAGw7/DEJ8jEpxlVN+30XD7JBUFh
-         7I3yGPcyouCoiBzlQSlJKkLy8CB93k03tigstXnTtUTHsx4nRYZ6GSvbAdkBsoNWoKgI
-         Zclw==
-X-Gm-Message-State: AOAM532ZeNNmWIhinyChocr2Ti4cd40IOguG2fOha8JmcXtKXUcGBWJM
-        gDKA9QJvTRyIMUV9mAX/ur3Q9lOarnQm6w==
-X-Google-Smtp-Source: ABdhPJxIh4A6RDGJLkqD3wI+SAa3lP6jsUbrzhaqHnQbP/kqqs6hM/AP18eGNJmYYJxAgVXlsnJ15A==
-X-Received: by 2002:a05:6871:70c:b0:ed:e6c2:e599 with SMTP id f12-20020a056871070c00b000ede6c2e599mr5088966oap.70.1652537737907;
-        Sat, 14 May 2022 07:15:37 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n39-20020a05687055a700b000e686d1389dsm2401199oao.55.2022.05.14.07.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 May 2022 07:15:37 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Sat, 14 May 2022 07:15:36 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S231211AbiENOK0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 May 2022 10:10:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0DB412AAB;
+        Sat, 14 May 2022 07:10:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B87660EDA;
+        Sat, 14 May 2022 14:10:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92CA2C340EE;
+        Sat, 14 May 2022 14:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652537424;
+        bh=b4Yqu2wA3dN7+oULR9UAd9cblXScNS6iqAVMaDg7EZE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LLwLyTCUREjf9+Z+WNGHiSAxcNJocRVUeO5DWnio4BFZPQrrEJ6MOIEfcMI7OKIh+
+         XYntVv8ore/SgqMGkY9jFvD3lWDhLjjOf8XOlfGSiohPUocmHu5L5rr102cwaJwJvS
+         mHKXAs4pFU3/vuO0AxHrb15rGc0zSHwG2bYYd2PvVe+iA3B94WPO1rhFya0yPY7Oak
+         9MmfivXBU79Np45ScUmdDwtWXtQM+3LgLMpofJHAyU7MhK1h9NqHx1Doyjik84eNj0
+         ovChgZ3nN3Goior9c69A90zSerh/BxXuGPOIepf882iro2kQGAzuph5L9y0bVJXi0U
+         yq3G+OLeMILwg==
+Date:   Sat, 14 May 2022 15:18:59 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     William Breathitt Gray <william.gray@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 7/7] dt-bindings: watchdog: renesas,wdt: R-Car V3U is
- R-Car Gen4
-Message-ID: <20220514141536.GA1319284@roeck-us.net>
-References: <cover.1651497024.git.geert+renesas@glider.be>
- <2882a6de3905a57ae62d91060d27521af43c4068.1651497024.git.geert+renesas@glider.be>
+        schnelle@linux.ibm.com, David Laight <David.Laight@aculab.com>,
+        macro@orcam.me.uk, Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 0/8] Utilize iomap interface for PC104 and friends
+Message-ID: <20220514151859.692928dc@jic23-huawei>
+In-Reply-To: <CAMRc=McAe28ZwcGknzrju-PQTEZ7x2XAfoRyfLFMWpgGB8DVLw@mail.gmail.com>
+References: <cover.1652201921.git.william.gray@linaro.org>
+        <CAMRc=McAe28ZwcGknzrju-PQTEZ7x2XAfoRyfLFMWpgGB8DVLw@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2882a6de3905a57ae62d91060d27521af43c4068.1651497024.git.geert+renesas@glider.be>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 02, 2022 at 03:34:59PM +0200, Geert Uytterhoeven wrote:
-> Despite the name, R-Car V3U is the first member of the R-Car Gen4
-> family.  Hence move its compatible value to the R-Car Gen4 section.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Sat, 14 May 2022 14:57:49 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, May 10, 2022 at 7:31 PM William Breathitt Gray
+> <william.gray@linaro.org> wrote:
+> >
+> > PC104 cards and similar devices do not need to access I/O ports directly
+> > via inb()/outb() and can instead use the more typical I/O memory
+> > ioread8()/iowrite8() accessor calls by first calling ioport_map(). This
+> > patchset converts the relevant PC104/ISA card drivers to do such. With
+> > these drivers now utilizing I/O memory accessor calls, work can be done
+> > to consolidate some similar devices (e.g. 104-idio-16, pci-idio-16,
+> > etc.) into a unified driver in a future patchset.
+> >
+> > This patchset spawned from a suggestion made in another thread titled
+> > "gpio: add HAS_IOPORT dependencies":
+> > https://lore.kernel.org/all/c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com/
+> >
+> > William Breathitt Gray (8):
+> >   counter: 104-quad-8: Utilize iomap interface
+> >   gpio: 104-dio-48e: Utilize iomap interface
+> >   gpio: 104-idi-48: Utilize iomap interface
+> >   gpio: 104-idio-16: Utilize iomap interface
+> >   gpio: gpio-mm: Utilize iomap interface
+> >   gpio: ws16c48: Utilize iomap interface
+> >   iio: adc: stx104: Utilize iomap interface
+> >   iio: dac: cio-dac: Utilize iomap interface
+> >
+> >  drivers/counter/104-quad-8.c    | 169 +++++++++++++++++---------------
+> >  drivers/gpio/gpio-104-dio-48e.c |  63 ++++++------
+> >  drivers/gpio/gpio-104-idi-48.c  |  27 ++---
+> >  drivers/gpio/gpio-104-idio-16.c |  33 ++++---
+> >  drivers/gpio/gpio-gpio-mm.c     |  43 ++++----
+> >  drivers/gpio/gpio-ws16c48.c     |  65 ++++++------
+> >  drivers/iio/adc/stx104.c        |  56 ++++++-----
+> >  drivers/iio/dac/cio-dac.c       |  14 +--
+> >  8 files changed, 248 insertions(+), 222 deletions(-)
+> >
+> >
+> > base-commit: ce522ba9ef7e2d9fb22a39eb3371c0c64e2a433e
+> > --
+> > 2.35.3
+> >  
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> index 77ee7c4b8067f506..1fa243052327bffe 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> @@ -59,11 +59,11 @@ properties:
->                - renesas,r8a77980-wdt     # R-Car V3H
->                - renesas,r8a77990-wdt     # R-Car E3
->                - renesas,r8a77995-wdt     # R-Car D3
-> -              - renesas,r8a779a0-wdt     # R-Car V3U
->            - const: renesas,rcar-gen3-wdt # R-Car Gen3 and RZ/G2
->  
->        - items:
->            - enum:
-> +              - renesas,r8a779a0-wdt     # R-Car V3U
->                - renesas,r8a779f0-wdt     # R-Car S4-8
->            - const: renesas,rcar-gen4-wdt # R-Car Gen4
->  
+> I don't see any dependencies so applied the GPIO part.
+Likewise, I've applied the IIO ones. Initially pushed out as testing
+to see if 0-day finds any issues. Given timing, we may well be looking
+at next merge window now though.
+
+Thanks,
+
+Jonathan
+
+> 
+> Bart
+
