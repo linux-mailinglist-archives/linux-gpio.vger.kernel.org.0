@@ -2,83 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0CDC5273D2
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 21:47:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9018E5273F4
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 May 2022 22:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235014AbiENTrr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 May 2022 15:47:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
+        id S235097AbiENU2S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 14 May 2022 16:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235006AbiENTrq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 May 2022 15:47:46 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5F261FCF0
-        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 12:47:43 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id b18so19734256lfv.9
-        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 12:47:43 -0700 (PDT)
+        with ESMTP id S235086AbiENU2R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 May 2022 16:28:17 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 784F72871C
+        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 13:28:15 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id h29so19880454lfj.2
+        for <linux-gpio@vger.kernel.org>; Sat, 14 May 2022 13:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=7S+G4FYAdKpveK/bCmr9kuwFdE+5AmrPUFrgJUvGcmw=;
-        b=ANk5B1sxQqM2aO3vtNFxJVAs4kc/zEx+dSujyBRANHAKOqAetHSGGKLwaswqWVrpRj
-         igL/HkOkChIycS9asjwvFxCxD3oFlxH4On0b0OHYrc7GDdpY6pGahyfLWTXGLH34vAgl
-         Vd5d0qRWKbdvyZAo1T6EZ1PY0y2002GVi+XPwMEoIHi1jhSt+cdjbUmwWyd5qgm509R3
-         1AgiCCYfAuShNG61T48xc/Ot3QT0Hta++sKGssyeEwWYOu2/oK4Mc/LMK5vfrrZhWqmf
-         82mVQu1IL8pdgqYw6rKXd1DQU1C3/MFLPMT8kVrMG2rZL+3JqAzAhoJL3BvCeyQpKQ0j
-         08vw==
+        bh=oU8cEi9RGKI5PeHOuabBwBx8PODfLAO6JbRmPjOYsQc=;
+        b=UE5bV8SixnycPe242NT4unpuYuLs0IT3V/Lvwh7LTJhOmbejnDYbrPIsKrgTWgGAlW
+         9BLRS6VcSfONQ6/rP4mfhrEkpk3M11Nzl4YlCHiqI9cP1IglVd6S6Vfjo7pX45msSqrV
+         S3Ww5hQZYqN4ES4N6A9n3aHSoKDPdaFfygzW14Q1yqmqPoVXqt/CgEhctUEdRGOCNwY2
+         +ceKeyMdqX8RECrqnCcKBgMYKBYSjppskrTD6M2+AZDhAG6iEPF9L3d3HZDnOWnVRvBc
+         yjg64VPwRi5vYGloOWg7EAN1RW4JFkrYN5KrB097+QCrK/PQTD7HyDTz+futzCkZXbin
+         reng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=7S+G4FYAdKpveK/bCmr9kuwFdE+5AmrPUFrgJUvGcmw=;
-        b=lzU9j8v6FPrx93n+GI4+AhHiqQ59h9ewVytH0ToJBGGl3DkbNsA+DQsYT0Qzh9e06k
-         kz/perNDodNTZafyyV+59POvs0J+j9XaiXfNRD/7SOVoXZzpujEMDR88eVLbYg/4IgzY
-         DPVc5HULEKyNMhYHKileR76m7FART9F9YLjrUP1H4QKw7TKC7MXkmjOs81V0anOCN8TS
-         SSuwFNv6bXwlOjIrwgRM4swDYfDeVClQO5w2+ZWQa+ZWqLklCxtYJp6fwrzxLVIGwAsK
-         HMZJd0bSV1tB5+FEr9D0BAsXMZse+yZ8B6rmTu4mg22i3puwJQdk8VGOw5b5k7DeLS/i
-         Swnw==
-X-Gm-Message-State: AOAM530hZzbUKmRlRLXPG2iAftJrDTfHgH3xlFOMBtkC5Z0y+fsaQwWC
-        iZKEqKFw9h03RFfTGbTmU6RpzQ==
-X-Google-Smtp-Source: ABdhPJyJfap7agj1HyLvqRJynfyFTCCOZ8RyKcoEWWXmxoDJsZYKV+tgR7ZwB+iOfyM/B3IieL5PTw==
-X-Received: by 2002:a05:6512:e84:b0:474:12f3:cb53 with SMTP id bi4-20020a0565120e8400b0047412f3cb53mr7492604lfb.254.1652557662126;
-        Sat, 14 May 2022 12:47:42 -0700 (PDT)
+        bh=oU8cEi9RGKI5PeHOuabBwBx8PODfLAO6JbRmPjOYsQc=;
+        b=qekkZmC0gCJQgXompJogbgdwO1/YXNTpXIo7stdKtGy72cg6evxFfYMdqnSGiQ8eme
+         BG79ukbGWtwQf75GLFiUR8KVa4RlBVUPJo7IwPHdr3hredfa28pedG0dJN0qZicQ0TaJ
+         SND+zRyDiLYl0PuJwXbigmtVXr0pDM8sD+1i9hMLuFvQD9hc3EeI9ETwKKJEfWEWtnXO
+         eytRjznZAtmfEqaiTlFTbNGcqrZXVtrE7FsiAPEMzu122UQ5MGRMa5fnsSMrMLPmmkAY
+         Gl7LO5PBn7nYCNPKCVvuUUuhTiQkDNG7B4yY2sCTxMsgBL4vxVvBUSya/R7xc421VzgB
+         bDJA==
+X-Gm-Message-State: AOAM532T/AAVSPTAL/Dp6IZGgR2pYJuDF4qL7uL5x8hwSALGsi7RHQJV
+        1mGn1bOZh4XxLigAts9MuIUc+w==
+X-Google-Smtp-Source: ABdhPJx00h31Y+JHjm9zszBh0Ce/1DU3I4eUQBWnozuMVemJIxolb+XGt/gBmwRvE9PJp3/pDzhWpQ==
+X-Received: by 2002:a05:6512:3a84:b0:472:6384:4de0 with SMTP id q4-20020a0565123a8400b0047263844de0mr7685091lfu.456.1652560093711;
+        Sat, 14 May 2022 13:28:13 -0700 (PDT)
 Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id q30-20020ac2515e000000b0047255d2117fsm795121lfd.174.2022.05.14.12.47.40
+        by smtp.gmail.com with ESMTPSA id f19-20020a19ae13000000b0047255d211b4sm799894lfc.227.2022.05.14.13.28.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 May 2022 12:47:41 -0700 (PDT)
-Message-ID: <e7cfff16-ee2e-f204-a427-a25aa337d392@linaro.org>
-Date:   Sat, 14 May 2022 21:47:40 +0200
+        Sat, 14 May 2022 13:28:13 -0700 (PDT)
+Message-ID: <4714c388-47ec-776a-7a50-362b258ffc25@linaro.org>
+Date:   Sat, 14 May 2022 22:28:12 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.1
-Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm6125
- compatible
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: gpio-mvebu: convert txt binding
+ to YAML
 Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
-        phone-devel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Martin Botka <martin.botka@somainline.org>,
-        Jami Kettunen <jami.kettunen@somainline.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220511220613.1015472-1-marijn.suijten@somainline.org>
- <20220511220613.1015472-3-marijn.suijten@somainline.org>
- <d2507298-00a6-a1cc-0302-f96597fb4127@linaro.org>
- <20220513091734.hivkkbpc6inyb4la@SoMainline.org>
- <5cce491d-c673-d2a6-3aae-79b2e5902a01@linaro.org>
- <CACRpkdbyVScvnn-99XQ526B=64fQp34PKjot1CJ2Wfm0PKmZgg@mail.gmail.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
+        "enachman@marvell.com" <enachman@marvell.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+References: <20220512094125.3748197-1-chris.packham@alliedtelesis.co.nz>
+ <32aab734-5890-99b2-09c9-8ec7418c7649@linaro.org>
+ <e87482cb-20b1-fe09-7233-d56786d5eda6@alliedtelesis.co.nz>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CACRpkdbyVScvnn-99XQ526B=64fQp34PKjot1CJ2Wfm0PKmZgg@mail.gmail.com>
+In-Reply-To: <e87482cb-20b1-fe09-7233-d56786d5eda6@alliedtelesis.co.nz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -91,29 +89,62 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/05/2022 23:09, Linus Walleij wrote:
->>> I prefer yours to be applied first, so that I can retest this
->>> patchseries with stricter / more correct dt-bindings introduced by it.
->>> My series can also be resent with the notice that it has already been
->>> rebased on top of your series, after collecting more reviews.  Where
->>> necessary, I can review your series too if that helps getting it in
->>> sooner.
+On 14/05/2022 04:20, Chris Packham wrote:
+> 
+>>> +
+>>> +allOf:
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: marvell,armada-8k-gpio
+>>> +    then:
+>>> +      required:
+>>> +        - offset
+>>> +    else:
+>>> +      required:
+>>> +        - reg
+>> one blank line please
 >>
->> Sounds good. It's in Bjorn's hands now. :)
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: marvell,armadaxp-gpio
+>> Original bindings are saying that second reg is optional for
+>> marvell,armada-370-gpio. What about other cases, e.g. mv78200-gpio? Is
+>> it also allowed (and optional) there?
+> This is where things get interesting. The armadaxp (and only the 
+> armadaxp) requires a second register value for some per-cpu registers. 
+> All of the other SoCs can have an optional 2nd register value if they 
+> want to use the PWM function. I guess that implies that the armadaxp 
+> can't do PWM.
+>>> +    then:
+>>> +      properties:
+>>> +        reg:
+>>> +          minItems: 2
+>> Then you also should require two reg-names.
 > 
-> Ugh can I get that with a pull request? Maybe Krzysztof can provide?
+> Simple enough to add. But currently we've said that the reg-names are 
+> "gpio" and "pwm" but on the armadaxp the 2nd one is not "pwm" but 
+> something else ("per-cpu" perhaps?)
 
-Ah, I completely forgot that this is actually pinctrl, so it's not Bjorn
-but you. :) Of course then it can go via Pinctrl tree, in any order you
-prefer and anyway it's not my call. :)
+In such case they would be failing with current bindings, because they
+expect "pwm" as second name, right?
 
 > 
-> BTW I have high confidence in you Krzysztof after all your work on the
-> Samsung pin controllers, can you and Bjorn
-> discuss maybe adding you as comaintainer for Qualcomm pin controllers,
-> it's not like Bjorn has too little to do.
+> On the other hand this is all completely moot because the 
+> armada-xp-mv78*.dtsi actually use the "marvell,armada-370-gpio" 
+> compatible so this appears to be documenting something that is no longer 
+> used. Indeed it appears that the armadaxp specific usage was remove in 
+> 5f79c651e81e ("arm: mvebu: use global interrupts for GPIOs on Armada XP").
+> 
+> So perhaps the best course of action is to drop marvell,armadaxp-gpio 
+> from the new binding (noting that we've done so in the commit message).
 
-Sure, I am happy to help here. I'll talk with Bjorn.
+
+That's fine, maybe in a separate patch (2nd one)?
+
 
 Best regards,
 Krzysztof
