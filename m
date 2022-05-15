@@ -2,225 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D68A52790A
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 May 2022 20:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF0B4527A5B
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 May 2022 23:20:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237135AbiEOSOV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 15 May 2022 14:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41556 "EHLO
+        id S235410AbiEOVUq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 15 May 2022 17:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231473AbiEOSOR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 15 May 2022 14:14:17 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4112AE0D
-        for <linux-gpio@vger.kernel.org>; Sun, 15 May 2022 11:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652638456; x=1684174456;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pB4F+CkH+ZBsA4HqjJhGFcTcrwlF1czJCc1XGLavHz0=;
-  b=YATms41rTo2Hy3Rn4mVZHMXyyvTOHoymchAqjCZSE3jzF6yq0FvIFIMz
-   I+PZOo07AujgLxMnHQ571QElmoSnld9Ge/U1zVHBdqwijOHV38PmYdk3n
-   zpOrHg20rL4k8Dyi+NUg6yhMcyQ8KfLlDu1AZhtFWaSGkeKCtcR9GixO1
-   eQnW71zDIRKzcZwKWp7Z68AGMfIpSlz/0MNXcF/m73kLunghcFV93ityo
-   iGxCizAZ27PzaQiOIWHr1fhYnSgCYKzE7CtdiHr8Sbu1CmYUQAYfaO/GE
-   FMXT40/lY4XJW0ll+oOZTrRQ3kxFIE1GwNUOug3edf+HP9cAuEIRZRBen
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10348"; a="251173401"
-X-IronPort-AV: E=Sophos;i="5.91,228,1647327600"; 
-   d="scan'208";a="251173401"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2022 11:14:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,228,1647327600"; 
-   d="scan'208";a="573690672"
-Received: from lkp-server01.sh.intel.com (HELO d1462bc4b09b) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 15 May 2022 11:14:15 -0700
-Received: from kbuild by d1462bc4b09b with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nqIkw-0001sr-LL;
-        Sun, 15 May 2022 18:14:14 +0000
-Date:   Mon, 16 May 2022 02:13:33 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- e199975b775a37750903025915f7bc0ccda829e5
-Message-ID: <628142cd.9Zrq51AQEGVD7+8C%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234101AbiEOVUp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 15 May 2022 17:20:45 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B861EB48F
+        for <linux-gpio@vger.kernel.org>; Sun, 15 May 2022 14:20:42 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EA3152C0108;
+        Sun, 15 May 2022 21:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1652649639;
+        bh=EUAR0cBghWxl7G4fZXuKFlVs4KGWvAXvCy6CY2T13oA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=jZUGwEdxkvH9ATC99IXtjinP6GakA5afvZ9z4z8YyY/OSKn37XEB6GmkMAkrLLvH0
+         KOwHaCcHEJ1C3gXsGDcw/6W7ZtmSZLSSWtZ7FDoTmdTps8CVliRzDz24dLDLW/BrAl
+         K5+9SrDZXJk/WYW1jRv0yFgKrly1mfASf9JwGvopJP+omTmBCCl6MkMCw3r+JQqwnL
+         1zAA/PFhCLDES3GjmZzCSpX1YT0WU617Tk0Lfay9hffPwXd/XrO/32yzoBr5cA9DBv
+         ODKvfXlRKngiQUsSzf+JXjz+6YvhKMy7b03XmayBqz/suuOkXr+BVqRCd8NXxays7T
+         YNCxUsYs5ytjw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[2001:df5:b000:bc8::77]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B62816ea70001>; Mon, 16 May 2022 09:20:39 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.36; Mon, 16 May 2022 09:20:39 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.036; Mon, 16 May 2022 09:20:39 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
+        "enachman@marvell.com" <enachman@marvell.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: gpio-mvebu: convert txt binding
+ to YAML
+Thread-Topic: [PATCH v3 1/2] dt-bindings: gpio: gpio-mvebu: convert txt
+ binding to YAML
+Thread-Index: AQHYZeR1GWszU87KukS0xyAOLq6As60btNMAgAEor4CAAS/OAIABoPyA
+Date:   Sun, 15 May 2022 21:20:39 +0000
+Message-ID: <f2dbaf38-d010-502c-99a7-29f6e0bedafa@alliedtelesis.co.nz>
+References: <20220512094125.3748197-1-chris.packham@alliedtelesis.co.nz>
+ <32aab734-5890-99b2-09c9-8ec7418c7649@linaro.org>
+ <e87482cb-20b1-fe09-7233-d56786d5eda6@alliedtelesis.co.nz>
+ <4714c388-47ec-776a-7a50-362b258ffc25@linaro.org>
+In-Reply-To: <4714c388-47ec-776a-7a50-362b258ffc25@linaro.org>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <924797B2F4A66949A981D1BB8370CE9C@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=U+Hs8tju c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=oKJsc7D3gJEA:10 a=IkcTkHD0fZMA:10 a=oZkIemNP1mAA:10 a=XNdhXRyAvgjCRblY88YA:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: e199975b775a37750903025915f7bc0ccda829e5  pinctrl: sunxi: f1c100s: Fix signal name comment for PA2 SPI pin
-
-elapsed time: 2502m
-
-configs tested: 140
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-arm                           stm32_defconfig
-csky                                defconfig
-riscv             nommu_k210_sdcard_defconfig
-powerpc                     tqm8555_defconfig
-arm                          simpad_defconfig
-arm                        cerfcube_defconfig
-sh                          r7785rp_defconfig
-sh                          urquell_defconfig
-h8300                     edosk2674_defconfig
-arm                            hisi_defconfig
-mips                        bcm47xx_defconfig
-sh                              ul2_defconfig
-sh                      rts7751r2d1_defconfig
-sh                           se7712_defconfig
-sh                   secureedge5410_defconfig
-arc                                 defconfig
-mips                             allmodconfig
-arm                        trizeps4_defconfig
-mips                         tb0226_defconfig
-powerpc                      makalu_defconfig
-arm                         axm55xx_defconfig
-nios2                         3c120_defconfig
-m68k                       bvme6000_defconfig
-powerpc                     taishan_defconfig
-sparc                       sparc32_defconfig
-arm                             ezx_defconfig
-sh                          lboxre2_defconfig
-sh                        sh7763rdp_defconfig
-powerpc                           allnoconfig
-powerpc                 mpc837x_mds_defconfig
-powerpc                  iss476-smp_defconfig
-mips                       capcella_defconfig
-arm                     eseries_pxa_defconfig
-parisc                generic-64bit_defconfig
-mips                           gcw0_defconfig
-sh                  sh7785lcr_32bit_defconfig
-mips                             allyesconfig
-xtensa                  nommu_kc705_defconfig
-mips                 decstation_r4k_defconfig
-openrisc                  or1klitex_defconfig
-powerpc                    amigaone_defconfig
-sh                          landisk_defconfig
-arm                         s3c6400_defconfig
-sh                   rts7751r2dplus_defconfig
-mips                         mpc30x_defconfig
-sh                         ecovec24_defconfig
-sh                          rsk7264_defconfig
-sh                           se7751_defconfig
-parisc                generic-32bit_defconfig
-sh                            hp6xx_defconfig
-powerpc                     stx_gp3_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220512
-ia64                                defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-s390                 randconfig-r044-20220512
-riscv                randconfig-r042-20220512
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
-
-clang tested configs:
-powerpc              randconfig-c003-20220512
-x86_64                        randconfig-c007
-riscv                randconfig-c006-20220512
-mips                 randconfig-c004-20220512
-i386                          randconfig-c001
-arm                  randconfig-c002-20220512
-powerpc                     tqm5200_defconfig
-powerpc                      ppc64e_defconfig
-x86_64                           allyesconfig
-arm                         orion5x_defconfig
-arm                      pxa255-idp_defconfig
-arm                  colibri_pxa270_defconfig
-arm                        magician_defconfig
-mips                  cavium_octeon_defconfig
-powerpc                     tqm8540_defconfig
-riscv                             allnoconfig
-mips                           rs90_defconfig
-arm                        mvebu_v5_defconfig
-powerpc                 mpc8315_rdb_defconfig
-arm                          moxart_defconfig
-powerpc                   lite5200b_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-hexagon              randconfig-r045-20220512
-hexagon              randconfig-r041-20220512
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+DQpPbiAxNS8wNS8yMiAwODoyOCwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToNCj4gT24gMTQv
+MDUvMjAyMiAwNDoyMCwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+Pj4gKw0KPj4+PiArYWxsT2Y6
+DQo+Pj4+ICsgIC0gaWY6DQo+Pj4+ICsgICAgICBwcm9wZXJ0aWVzOg0KPj4+PiArICAgICAgICBj
+b21wYXRpYmxlOg0KPj4+PiArICAgICAgICAgIGNvbnRhaW5zOg0KPj4+PiArICAgICAgICAgICAg
+Y29uc3Q6IG1hcnZlbGwsYXJtYWRhLThrLWdwaW8NCj4+Pj4gKyAgICB0aGVuOg0KPj4+PiArICAg
+ICAgcmVxdWlyZWQ6DQo+Pj4+ICsgICAgICAgIC0gb2Zmc2V0DQo+Pj4+ICsgICAgZWxzZToNCj4+
+Pj4gKyAgICAgIHJlcXVpcmVkOg0KPj4+PiArICAgICAgICAtIHJlZw0KPj4+IG9uZSBibGFuayBs
+aW5lIHBsZWFzZQ0KPj4+DQo+Pj4+ICsgIC0gaWY6DQo+Pj4+ICsgICAgICBwcm9wZXJ0aWVzOg0K
+Pj4+PiArICAgICAgICBjb21wYXRpYmxlOg0KPj4+PiArICAgICAgICAgIGNvbnRhaW5zOg0KPj4+
+PiArICAgICAgICAgICAgY29uc3Q6IG1hcnZlbGwsYXJtYWRheHAtZ3Bpbw0KPj4+IE9yaWdpbmFs
+IGJpbmRpbmdzIGFyZSBzYXlpbmcgdGhhdCBzZWNvbmQgcmVnIGlzIG9wdGlvbmFsIGZvcg0KPj4+
+IG1hcnZlbGwsYXJtYWRhLTM3MC1ncGlvLiBXaGF0IGFib3V0IG90aGVyIGNhc2VzLCBlLmcuIG12
+NzgyMDAtZ3Bpbz8gSXMNCj4+PiBpdCBhbHNvIGFsbG93ZWQgKGFuZCBvcHRpb25hbCkgdGhlcmU/
+DQo+PiBUaGlzIGlzIHdoZXJlIHRoaW5ncyBnZXQgaW50ZXJlc3RpbmcuIFRoZSBhcm1hZGF4cCAo
+YW5kIG9ubHkgdGhlDQo+PiBhcm1hZGF4cCkgcmVxdWlyZXMgYSBzZWNvbmQgcmVnaXN0ZXIgdmFs
+dWUgZm9yIHNvbWUgcGVyLWNwdSByZWdpc3RlcnMuDQo+PiBBbGwgb2YgdGhlIG90aGVyIFNvQ3Mg
+Y2FuIGhhdmUgYW4gb3B0aW9uYWwgMm5kIHJlZ2lzdGVyIHZhbHVlIGlmIHRoZXkNCj4+IHdhbnQg
+dG8gdXNlIHRoZSBQV00gZnVuY3Rpb24uIEkgZ3Vlc3MgdGhhdCBpbXBsaWVzIHRoYXQgdGhlIGFy
+bWFkYXhwDQo+PiBjYW4ndCBkbyBQV00uDQo+Pj4+ICsgICAgdGhlbjoNCj4+Pj4gKyAgICAgIHBy
+b3BlcnRpZXM6DQo+Pj4+ICsgICAgICAgIHJlZzoNCj4+Pj4gKyAgICAgICAgICBtaW5JdGVtczog
+Mg0KPj4+IFRoZW4geW91IGFsc28gc2hvdWxkIHJlcXVpcmUgdHdvIHJlZy1uYW1lcy4NCj4+IFNp
+bXBsZSBlbm91Z2ggdG8gYWRkLiBCdXQgY3VycmVudGx5IHdlJ3ZlIHNhaWQgdGhhdCB0aGUgcmVn
+LW5hbWVzIGFyZQ0KPj4gImdwaW8iIGFuZCAicHdtIiBidXQgb24gdGhlIGFybWFkYXhwIHRoZSAy
+bmQgb25lIGlzIG5vdCAicHdtIiBidXQNCj4+IHNvbWV0aGluZyBlbHNlICgicGVyLWNwdSIgcGVy
+aGFwcz8pDQo+IEluIHN1Y2ggY2FzZSB0aGV5IHdvdWxkIGJlIGZhaWxpbmcgd2l0aCBjdXJyZW50
+IGJpbmRpbmdzLCBiZWNhdXNlIHRoZXkNCj4gZXhwZWN0ICJwd20iIGFzIHNlY29uZCBuYW1lLCBy
+aWdodD8NCg0KVGhlIGRyaXZlciBpcyBhbHJpZ2h0IGJlY2F1c2UgaXQgY2hlY2tzIGZvciB0aGUg
+DQoibWFydmVsbCxhcm1hZGEtMzcwLWdwaW8iIGNvbXBhdGlibGUgYmVmb3JlIHVzaW5nIA0KcGxh
+dGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZSgicHdtIikuIFRoZSB1bnVzZWQgKGF0IGxlYXN0IGlu
+IHRoZW9yeSkgDQphcm1hZGF4cCBjb2RlIGp1c3QgY2FsbHMgZGV2bV9wbGF0Zm9ybV9pb3JlbWFw
+X3Jlc291cmNlKHBkZXYsIDEpIHNvIGl0IA0KZG9lc24ndCBjYXJlIGFib3V0IHRoZSBuYW1lLg0K
+DQpJJ20gdGVtcHRlZCB0byBsZWF2ZSB0aGUgcmVnTmFtZTogbWluSXRlbXM6IDIgb3V0IGJlY2F1
+c2UgdGhlIGFybWFkYXhwIA0KY29kZSBkb2Vzbid0IGNhcmUgYWJvdXQgdGhlbSBhbmQgc2V0dGlu
+ZyB0aGUgMm5kIHJlZ25hbWUgdG8gInB3bSIgd2hlbiANCnRoZSBjb21wYXRpYmxlIGlzIGFybWFk
+YXhwIHdvdWxkIGJlIG1pc2xlYWRpbmcuDQoNCj4+IE9uIHRoZSBvdGhlciBoYW5kIHRoaXMgaXMg
+YWxsIGNvbXBsZXRlbHkgbW9vdCBiZWNhdXNlIHRoZQ0KPj4gYXJtYWRhLXhwLW12NzgqLmR0c2kg
+YWN0dWFsbHkgdXNlIHRoZSAibWFydmVsbCxhcm1hZGEtMzcwLWdwaW8iDQo+PiBjb21wYXRpYmxl
+IHNvIHRoaXMgYXBwZWFycyB0byBiZSBkb2N1bWVudGluZyBzb21ldGhpbmcgdGhhdCBpcyBubyBs
+b25nZXINCj4+IHVzZWQuIEluZGVlZCBpdCBhcHBlYXJzIHRoYXQgdGhlIGFybWFkYXhwIHNwZWNp
+ZmljIHVzYWdlIHdhcyByZW1vdmUgaW4NCj4+IDVmNzljNjUxZTgxZSAoImFybTogbXZlYnU6IHVz
+ZSBnbG9iYWwgaW50ZXJydXB0cyBmb3IgR1BJT3Mgb24gQXJtYWRhIFhQIikuDQo+Pg0KPj4gU28g
+cGVyaGFwcyB0aGUgYmVzdCBjb3Vyc2Ugb2YgYWN0aW9uIGlzIHRvIGRyb3AgbWFydmVsbCxhcm1h
+ZGF4cC1ncGlvDQo+PiBmcm9tIHRoZSBuZXcgYmluZGluZyAobm90aW5nIHRoYXQgd2UndmUgZG9u
+ZSBzbyBpbiB0aGUgY29tbWl0IG1lc3NhZ2UpLg0KPg0KPiBUaGF0J3MgZmluZSwgbWF5YmUgaW4g
+YSBzZXBhcmF0ZSBwYXRjaCAoMm5kIG9uZSk/DQpJJ2xsIGFkZCBhbm90aGVyIHBhdGNoIG9uIHRv
+cCB0aGF0IG1hcmtzIHRoZSBjb21wYXRpYmxlIGFzIGRlcHJlY2F0ZWQgDQppbmNsdWRpbmcgc29t
+ZSBvZiB0aGUgYWJvdmUgaW5mbyBpbiB0aGUgY29tbWl0IG1lc3NhZ2UuDQo+DQo+IEJlc3QgcmVn
+YXJkcywNCj4gS3J6eXN6dG9m
