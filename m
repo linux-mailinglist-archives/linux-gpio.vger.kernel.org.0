@@ -2,251 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B535C527FBD
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 10:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CF5E528014
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 10:50:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232310AbiEPIdK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 May 2022 04:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55440 "EHLO
+        id S236023AbiEPIuO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 May 2022 04:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232158AbiEPIdJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 04:33:09 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2138.outbound.protection.outlook.com [40.107.113.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8985E09C;
-        Mon, 16 May 2022 01:33:06 -0700 (PDT)
+        with ESMTP id S239384AbiEPIuM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 04:50:12 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2092.outbound.protection.outlook.com [40.107.215.92])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65FCE12A96;
+        Mon, 16 May 2022 01:50:11 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QilfbesBVmy+UnARDKGdDaZDYdKkXkcwWvYS33UJ6Wm1prYXxLBTN8IrkfJzEOTvjS5EAFZhmPNxzQ7UCSNBd++WZb2HCWhleT26j/zlr+CsxpZsywV8+/QOx+6IM/ZsMGtibPYB3LHJCX31Tde7UkoGh2289bc9ySwhkGmcakSMckeDDuvUKpyTuR8w9LQnuEV9tS8V3RcfIvA5phK6PskzcyoYLXCcexlfJD2gw9sdzUt7CMDGZPblZ4VU9iJaZWRK34RI3fvkbJHrnxvbNBT1V6BtTocFK3ejfdV+mhtd0y2gmw/6Ojg7QfvwEcmNJIlTImVVgdSWEAs8eQxflg==
+ b=ODEygzhUyu/jDrxxoX9u5oSmW8ir5QfClmyr6MncFfsJ2Q4PINbviR2ECwHFVpFO/HnrSGnAbm7blNlXaZTo+NWr4H+Ef0VXFgOsMvSkeopZKv8mu9QwU+uM2y4hCgIxglTIT3wROwGCFewQegFC78RRe1FK/g3GyR9lQ+YobH+Sx8D9uBdlVQHKw8vTBUuKV5zGPY3DuBYCAmCL0b/kVBz9jzKi7SRBPrnffBT0qXF4LB+7AkSs1AG79BO2axoQ1B7RVomqj+QSVX9LzuHQtPm6868YyDjTyp2s5wu71HVBZirPmyTsR7MXVrtQayCIa3ULee9knHbDl+4Uzkw0fw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LTRtrwsewfNRrysdDKCxv1MXkrltvowX3VtBX+LjIJw=;
- b=mqwqQZQbOhJq7lgU9bMyyH5gOmCc3Gw1mFTP8jkZ6p2VcEsxoGLRw6bsjqM9vhDkbTPwy1IYUQCR/SA6cdo/P7MLeMGyYI8FGjK8AOkqA/f0OzjhdcNVmHUZJu8kbG0sJZwcu0OavjEKP2iN/fUjk3gLwOYyXGTF7IU1iKSPCdZGzwpkkRIj/RIKFuH9JRSEZ1XHt2ySdZWy6PIz9TNkBGYde+PqzKwtKdjsWAFSqFP0zYuP23x2087EcgdlIF5H03KYflzl2DmC7gEDPFm8sPceesZ/6qgkdz7A2DNAtYGA4IywkbR5RryJgDcH8A+uYZqQP1ChUmR5fKBECqSUCg==
+ bh=vZoJzoLL29L/yWw73l0oO8lQJGy0l/bIbvEwWsTxeLw=;
+ b=YeW0La4f/vlSehXGibmlEkZ1GLkEEBSr1CViIhRXER5EBYW8KceE7ySXPKzmEhhbhfytxvbh8NxfySCgxlhZWNsdyOn5tjEbJ8s1UXcmManOrS9PcrJXvF5Y/o9CP7oWz6EQbqWRYylfkXyOzj7HFJc0QZo+aEDeWVHrvP3cJt3ZIZBO5xJR97ZCd6NFJRCra31Z3kRxEGRtFJC8GLDfu4k/U3ItTmrKU0nESl2Af3OUepy4K9RtjT9JvbJaEoM1BWhdG86mccKaOEzXsjRTAZ/2kNli1MigYFiHIwff8uASGB82IXvDQRXshUCjKDGe9oSPQzMkFxpiB/OYF1/jAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
+ s=selector2-vivo0-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LTRtrwsewfNRrysdDKCxv1MXkrltvowX3VtBX+LjIJw=;
- b=CB0O+OCju6T/EdR+7tP9240OgDAHmHpUgZSYOQy97pC+w5SKKcwe8Sv7iKX5W6ev1NWkBNKePfHopkM+geUFObORmDRvcb3nPcoHts4nJUYRrfoT9VwJ4GYy/EpIMfu16tAsdfrIzUPnO62F9ASS5AmDwfqk+Ej5594LTYQoU3Q=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by OSAPR01MB4001.jpnprd01.prod.outlook.com (2603:1096:604:5f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.13; Mon, 16 May
- 2022 08:33:03 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::3e:970b:c238:f57]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::3e:970b:c238:f57%9]) with mapi id 15.20.5250.018; Mon, 16 May 2022
- 08:33:03 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ bh=vZoJzoLL29L/yWw73l0oO8lQJGy0l/bIbvEwWsTxeLw=;
+ b=EmX1Qx2JEckLRWcyoNZG2z1OTedhS2tjeiBpHk+GzDTpNknJSeAI9yQV1qOPL6SyQZpgMTdMiv10gULX2V0Y2dWZuH/QIsf2SDbfGKgWDdH0iIBG33ikI59pBTOQW9yTBRpCvyxXPquOTgs+6fj5E/+rfKm9hzroijwpC74Ma2U=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com (2603:1096:4:78::19) by
+ HK0PR06MB2433.apcprd06.prod.outlook.com (2603:1096:203:60::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5250.14; Mon, 16 May 2022 08:50:08 +0000
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::ccb7:f612:80b2:64d5]) by SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::ccb7:f612:80b2:64d5%4]) with mapi id 15.20.5250.018; Mon, 16 May 2022
+ 08:50:08 +0000
+From:   Wan Jiabing <wanjiabing@vivo.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to
- handle GPIO interrupt
-Thread-Topic: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain
- to handle GPIO interrupt
-Thread-Index: AQHYZWWEBd/euhXmSkarEpD10nkci60a2/SAgACm0QCAAN7IAIAAdeAAgAAJi4CAAD6IgIACRgWAgAB/rgCAASkA8IAAIc+AgAAAN7A=
-Date:   Mon, 16 May 2022 08:33:03 +0000
-Message-ID: <OS0PR01MB5922F84DA086D2C7F69BB6B386CF9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <20220511183210.5248-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <CAMuHMdXDQ+eECWwvAGOb-MaN16H17qm_v_1baZ7PdT8qx9McSw@mail.gmail.com>
-        <CA+V-a8tNrJQtAQYoUKVwH9w4QOyA9JUWNjiYDPUPsj6UuJ4vaA@mail.gmail.com>
-        <CAMuHMdVazy9y_U6Nva+B-3vuX1Ersq+QirXDDgSh28pj8s=EJA@mail.gmail.com>
-        <CA+V-a8s2Gf22MPLoZMJS_5uDwzOboJ2i8rZ3KdRFy7a7wv8pGg@mail.gmail.com>
-        <CAMuHMdXHJ385isGd-x8u4sFm1w=rxOC89SUryYbSd34bijkb0g@mail.gmail.com>
-        <CA+V-a8uXakF45TLvpsfeAY_EZKDGHr-wfgqLR_LTz1ZAo8FYmg@mail.gmail.com>
-        <OS0PR01MB5922C5DD97F922396CFDA6BD86CC9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-        <87pmkfm0v3.wl-maz@kernel.org>
-        <OS0PR01MB5922C5E362A582509A814C1586CF9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <87pmkd6gda.wl-maz@kernel.org>
-In-Reply-To: <87pmkd6gda.wl-maz@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: aacd214f-c183-424c-54a3-08da3716b1af
-x-ms-traffictypediagnostic: OSAPR01MB4001:EE_
-x-microsoft-antispam-prvs: <OSAPR01MB400114C961DFCFC94684D3AD86CF9@OSAPR01MB4001.jpnprd01.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8IXPbQvmI6MSZTznGeQDrtQ/uJ86aPQZ2CQ9NykWz2QMqrKo0TaOvd9xTwb2hbe/OPaye42X87voNEBrJIj4RGme2914505CNDssgmj0BnC+dpGm15bsS9iHo99vNarEe7ALzjbB4gZid8W01iunIe8paNf3xFOdqsCaDlM/jjstKmAsghjkPhu+Nq+UcQcGsWuhvBcWO63N+h5+CuSuo8kFO8hmwWOvQIIt7AVOgIFB2TmTnAsyYC6oDwemigt+DVFqi3yPL4T8anDUSBAFevNFb0JjEv/M3vY+HhzYl9nl3Q7yBEqzzHTpgqAyNtQwTZ732NyBmWWNaQvPl/2qVX6mpzfKbbwFsFTb5vhnfVGUHhwRSL3fLmGxK8yiqpuC5nge3YaKJTMS6RFYpNci71igHVI0JQ5gYdBXSxGTYSy5jhORYmtvRda8CPXR9DTw9CeEaJ8N6J59ArqyOZWGQDlCyuLCTdoU3oDxJk9M7iu3UOsCKIR3Ez3K3OUvC1Q2DWMnFuV2L6N8GmVmyZd/UAVzX4trk72Kb7uu9tCRx+eHk5dJR9vaqsbREbA+pKdoavOGy42yRMPaud9sqIyRtWXcXWEdCRKOwouRnskAL8PNcQPEvkekiFmA5m+hzAi7R0G1dUbmsyIpS+DyV82kluihY415n9GKt+NCeFm4lI1+1pyJMCxlh/vBGO6HMFyjFFI974+pC/9piy1ZZdsMif7Lh0Xms/HYkwHwliAIrjI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6916009)(54906003)(107886003)(66556008)(76116006)(66946007)(9686003)(26005)(64756008)(66446008)(66476007)(83380400001)(8676002)(6506007)(4326008)(55016003)(316002)(7416002)(71200400001)(38070700005)(86362001)(5660300002)(508600001)(52536014)(8936002)(33656002)(2906002)(122000001)(38100700002)(186003)(7696005)(21314003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?17pmn2BEiw0FS6lTHeorTsrZjfz41O6c6T7aaju9WU6wdOP6z9HVUpkfwgFb?=
- =?us-ascii?Q?sYuganTAWv1r6RfHxM7vlUsSoZgBVjpKeMlRrRy4EM39XrvFw+yyGrSR0w/b?=
- =?us-ascii?Q?QaO73WXHAtEr2R+Rp4lAP0zoK7LtIrs3giEKUaPEZopwENgY+ZaoDGNugto7?=
- =?us-ascii?Q?SYIkUA97S9AnV+C8zkTFEqbiPPGitwDTkF4FFW4rsYGLwumE7iXcYgNfcUns?=
- =?us-ascii?Q?sg1WsU7b39qG5pSBjsGUZcQEEt9sm+EuvqSnACBLZsNC5oEjM3aaNZFfvNJH?=
- =?us-ascii?Q?2IO6LLVAan0lmvDDuuIDfAPnjheGioQXG+TaDVY/7Pf07nULB4mvly7DVqS/?=
- =?us-ascii?Q?nJpCVkbM2ETYW6vWDeLp4SnjBl/+mpB2LKQt8Ztixr2KVISwjaYrf93VOfs4?=
- =?us-ascii?Q?RKWuSu3uqDnRMxi2hTeCyiVn8OlA+ClhuAjh/41B7Gk2JhE6WhZ9Nutkq16H?=
- =?us-ascii?Q?eLefjSF9xRbMMiS55oMbNHJrR9QVu2Vn6t5RyEovQQvqmAWGAJ2ZL754Gio0?=
- =?us-ascii?Q?JZn+S5qqQPenvHwzLKDFhg8xgAfnAmRxZDG8gCnTsly3KYVwoAGDwYYVAIbQ?=
- =?us-ascii?Q?QbL7btUkVf0jIdzi8tg4/FLrp8oqVKX3QT58JXqfOmzXzDVb21q9vl2WBC32?=
- =?us-ascii?Q?b/ueeAfOYBpsPzVn6ZzznATvEvQaHO0X43zq5ofK1oj27lOesfMcoqScMC/R?=
- =?us-ascii?Q?dSxM6/vtGib1r5EVZptevcvEX8ZPCrNz1QvyFIyoLugiZyZQXvYgYbS9bJQj?=
- =?us-ascii?Q?a11GHrq600v1lbJ0pmPNrzMBGdQ4tHMPRtlYKdquBLyHtcMzgglB1hJb7ePW?=
- =?us-ascii?Q?XRqo8gL6KiK9kqjCcR/iwh7Y/wJ4NiYbL2czHXd/zh3ctDPA4DrXAF3of9XJ?=
- =?us-ascii?Q?irHd9RpO11TbrKPT+nflP3jb22n+LATjHgSL3scz1eeHdD2SOHx79f4C1zIX?=
- =?us-ascii?Q?aEgwrZHC0EMt0tNjn/Mz4yHGaFvlqRRgiHWW+VrMmpq6O/LbU2glnuNJ+ISM?=
- =?us-ascii?Q?LZJzHfM1KOM4nmXJAuScO/meAdJSbeFyy/TUI11znm/BgZQQS+/q8RicfEdm?=
- =?us-ascii?Q?gtxYTmZMDggKh2/l/FSBkM6rzNflubHphJdI/HIQAx3909wvGb3GynSaDQC6?=
- =?us-ascii?Q?2qImCylH94FCijmAg0GLid2ZO+BrQjEG2eZ6Q4Sq4WEQYx/XL9/OJ8nppBda?=
- =?us-ascii?Q?jkaDXvg37Y5tRKEyO0ZLikYJKe+IJCDtSYs33enXMErBxIuPiKi2lYe+48vZ?=
- =?us-ascii?Q?k7SNM3QBn5WJEABdXwyQA5+kVARtKebMIRH/yaX2LImzDtTmjsRgPamkpX5i?=
- =?us-ascii?Q?JriL2iyA9yL2U8aO9cKmoemnjdDs5cR5Fj2UiFwXk6ypFSlsa5oaQwHkSGfF?=
- =?us-ascii?Q?hqCvxwXr6nUQtdPqlH9vQP060ZY/J4Z6uzOrOZX33fzoyYmMeFO8NbKG/tgZ?=
- =?us-ascii?Q?o093waSQMSZh92I7QVmo7I/RPCUWJ/D3zt3ybLwQ7iWypwB7v04yYlGuEQSd?=
- =?us-ascii?Q?JbaiIh++PTjYlZnzKZvyTpVtyc+U0+8T5q3laOJ2myYDxNN9/9FNhdBbXIs6?=
- =?us-ascii?Q?U8ma5sIz5SKilXLS/W+umq971GCSBAD4kxNpK+IvtSKggi3gAzW4symEh14Z?=
- =?us-ascii?Q?BIWszsQDaw/xcSk71i2acZAHOYc5BnVWiZlwNIELWIMbfUoZSyg0JAFXoJtd?=
- =?us-ascii?Q?zV/hfmDyqfvB0jxvgLjepj0ck5bI/XLUkBcNPsFQQ2wAFWbkl84sEWjKn+NB?=
- =?us-ascii?Q?dy2xv/LD6Y5NvZHyZIGs9c0fYAWx+HI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Wan Jiabing <wanjiabing@vivo.com>
+Subject: [PATCH] gpio: ftgpio: Remove unneeded ERROR check before clk_disable_unprepare
+Date:   Mon, 16 May 2022 16:50:00 +0800
+Message-Id: <20220516085000.9861-1-wanjiabing@vivo.com>
+X-Mailer: git-send-email 2.36.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0197.apcprd02.prod.outlook.com
+ (2603:1096:201:21::33) To SG2PR06MB3367.apcprd06.prod.outlook.com
+ (2603:1096:4:78::19)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c1e2f99d-8bde-410b-f707-08da3719149d
+X-MS-TrafficTypeDiagnostic: HK0PR06MB2433:EE_
+X-Microsoft-Antispam-PRVS: <HK0PR06MB24333BFF3F41B0853EA22921ABCF9@HK0PR06MB2433.apcprd06.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oAnnNM/MQmQ96sdKSqqA3Qs20nXGAuhCqZIl5fx1b+OAI1foRgMIS4htGqldeHzl2rEHSSSMKTpUrwmnvqQxGRtBZbGGxkgKuazImg4NuzAygW4odSFTYdOqxLicqDvzeZmklKv3Go+XMCyclW8prLklI/FLel7kPZitUvjYfOAZYaW5fb6yMbpFRnz9dhboM4wPiLoF9bU9qYXYlMit5qIgaFDyE0aRzZCwaes7q+kuVPMqDBCbjZwg/vmfWBzR/DSDyeNSrg3exAMNmqY/0JDDFiiKH+yjvfGIdv9pH95LheA/agBkkAM1oXtcdu9rJvt6Hm5hwR2H/D2EH8QO72CTJLLz2Ro8uFKMK8uIY7zVWZE/BFfvp9VrfVsYhSExmADl/H7fw51eyaavz2Kk7OBCgggIOjueLaK8m+cS0dkTlEbG2rdM/FnPif8m+1IF0cw/zVeQA0K/Ixkz6j2KU46Wpy2PtM6H1umCY7GI0XLZK1e9Y4Q2E0EO/PrsJPQ9gwjNTBzCmaki7cNG5B8obZb7Cbrk85TTEEn3ZsQjBycEaz/dNmtVrUrFpAziMXsdjbMW163pcPJXaXqrr2bmjwk03iDmz/0PNMDDGq5I/Fw9FH2zy/VoO/OOqKk6Au8ZRWRJRfqil9F0N8wIRUKVLUM2RTi/ocOx3VdFJyz1hJd4fqehfmUhCCX9AiXsH/nQGByG294M2Pnij43m/OBQBg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3367.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(5660300002)(66556008)(86362001)(2616005)(8936002)(38350700002)(38100700002)(2906002)(6666004)(66946007)(52116002)(4744005)(66476007)(26005)(6512007)(6506007)(4326008)(8676002)(110136005)(36756003)(316002)(6486002)(508600001)(1076003)(107886003)(186003)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vpuScBugjw2eZxJzLJM0lnm0+6kDxn0gIFmDflo85EvGW3pFDXXBToHfXFJB?=
+ =?us-ascii?Q?yGEHnShXqXCUMg5o7wbTCbrsmxfzSY4iHhoLIPEg208yCce2Ow4S/YC4VVD8?=
+ =?us-ascii?Q?Ezyz42n4FQQDlU9sRTgraD6wrcbBlR6vxdIePiQL71mn//1zubF3mhAUHZ32?=
+ =?us-ascii?Q?S6SyvIWTSno2L1d+j3nZ0Xil2s5jV0MUpu/QI8c7kq1eqkX9rs5xJ91NtrAb?=
+ =?us-ascii?Q?bgmkVxjsIBj5OaDtZhnpbrPD/w1bU0ogudL1T+AOxv/N2f/Vf1xbF5y2DjkV?=
+ =?us-ascii?Q?BBOdyXlEBbnvqfsyiZKrijyfroB5bqwMQ0/fqqmnibm6BbHUf/i9Zsp7FxJC?=
+ =?us-ascii?Q?4bzDQ1/HgVlFLOeytSql1t4waodxkpnK+oSwN1w0cQth84uw4okfhiqaUkTu?=
+ =?us-ascii?Q?G1WxTiislww1f0SmEykuk0PerSOWZrPj2k+hLOvvZBSypI04NCZ3XHQgEz9c?=
+ =?us-ascii?Q?ZLPyBrnCrstxExzBa4lHVqitMopE8o0EfxIUA5waZRWcgoUHmIF/R4jxfrmB?=
+ =?us-ascii?Q?21T2RsA7NLRNg7ZRfpLwi8PV0cf/fcOBwuNU5H+EdZScS3OZ9Ah1MnjlqC7y?=
+ =?us-ascii?Q?46YwfX+yZ7DrdxOgnFtzV35JW6fsP+LPOTD7pCnTCWov06U6417KrCzODSg5?=
+ =?us-ascii?Q?0hzpR5A3+Rof3B95CCXkCsfDM8lwQo/r1aSmz9/gSZGdMyqbcpVDuQnL4jtI?=
+ =?us-ascii?Q?EIer8ie61V+Zoqy83NhBI/UUjoPwahWKVWDfJ8c5S6ktaNF7UxO6/CPc/yTx?=
+ =?us-ascii?Q?9vKreJmUKm9j11cy4djGU/F4OX4rx7Dt0hfB9lCeDLc15inRJ+98rgK2sdFu?=
+ =?us-ascii?Q?OsFmR/DQF/ODqpVdzqv8KuwbOrY178LL7jzQuJbdWSYWAtdvcxBcZ+ZUNuQs?=
+ =?us-ascii?Q?EyVDePKrn3eJUDT11XObLw2Fs8U39EjDT8VPOhCWTuJK1pRtmxGRiOnbHoYa?=
+ =?us-ascii?Q?cNmUhVbWtLNpODYMm+63hiiMJVtpxucSnBkuSrCseFPAgZKM3Eba03FzpfBO?=
+ =?us-ascii?Q?JDIbz54DCImyCLnjqWYMQ53PsOUuT1X9dyK+h20kvQv1YMpkq8Ep1TyxfR1Y?=
+ =?us-ascii?Q?bQH+KUxcybpdVPMlu4EJblYiWbvSicMygsdxgTOZGbM8OyT9Jd0/90Va8haE?=
+ =?us-ascii?Q?vrCdCZi7DdmS1IynIEZgEDS93Ovukfe/QrI2hCwJOX/IMQRkiHfaHFrHLO5I?=
+ =?us-ascii?Q?gw1Bj7fN5NSUuIo2yhw7CtgHEiYnSzyIWE5aPpCvUKWWjLVuTfKXZ24/xdzW?=
+ =?us-ascii?Q?Tkhi29YxdE2iAZxyg8726p92h8r74rqHEAXo9NFvTYOHytmQvDJ+SJ5GPcMM?=
+ =?us-ascii?Q?SLb4np9ISjKKotVw995qeDdVVm86eNdVNN2Us0Mnw1SipftU8K1Cm4AFXmGa?=
+ =?us-ascii?Q?sjbh+w+cQ9lHFCF2dnI0rAuQ6Yx0Lfnyns1/UHdStgQRJ5fpXbV5PFdpnspg?=
+ =?us-ascii?Q?LrkWeHOCHHiUDOJ602XH37R6oik9fn9RfOBzy34D2EQMhHSzmL0iOK4ayxjh?=
+ =?us-ascii?Q?Vyef2zkU+xnNbtu3xULvjGxUsf0cSLPi2T9yfdIIVf7E4dKqGS8Pqz/Wnqn0?=
+ =?us-ascii?Q?LHUEn7TC0YIydjdIKAT1o0CMNN88ptF5eOLr7HUeolVSg2IUO76pBwt+H6Fo?=
+ =?us-ascii?Q?JrqjR76gxXcg+Sdobm9Qy9BdcRG8aKULfstmMEjWEVUiU1dC6WQ0ACglRJIM?=
+ =?us-ascii?Q?YWlcgmwC4II7xyiRSzBTsCgG5CnhiWNUwux9AULrNMBy05dhv6XlKHxPchte?=
+ =?us-ascii?Q?7/0L36gnkg=3D=3D?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1e2f99d-8bde-410b-f707-08da3719149d
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3367.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aacd214f-c183-424c-54a3-08da3716b1af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2022 08:33:03.5743
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2022 08:50:08.8296
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: W4zB3AnOnEorFl0Fo13Q+60x8AbnrghMlWRaTugXV99WpLj522cRDUXGUo99YRRp29TnKyBrNvKGUFSHeORbNM0fqHv0wRpxYt4ribb03yc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB4001
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fQ4YWBGG7S14MkOPrEUaQFSYHtF6+OG9R8fdXh11dHbgwjGvNukLpd1vM8QeHR/ZXHSfog86rANnRZXqb6E7bA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR06MB2433
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
+clk_disable_unprepare() already checks ERROR by using IS_ERR_OR_NULL.
+Remove unneeded ERROR check for g->clk.
 
-.org>; Phil Edworthy
-> <phil.edworthy@renesas.com>
-> Subject: Re: [PATCH v3 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ
-> domain to handle GPIO interrupt
->=20
-> On Mon, 16 May 2022 08:20:47 +0100,
-> Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> >
-> > > >
-> > > > I believe from interrupt statistics point of view, cat
-> > > > /proc/interrupts should report actual gpioint number (0->122)
-> > > > corresponding to pin index for SW1, SW2 and SW3 ??
-> > >
-> > > No. There is no need for such userspace-visible behaviour. Userspace
-> > > has no business tracking those. The required information is in
-> > > debugfs, and that more than enough.
-> >
-> > Ok, So far I used cat /proc/interrupts for debugging, since I don't
-> > need to enable DEBUG config for Enabling Debugfs for irq. This Debugfs
-> > irq is new info to me.
-> >
-> > Our hardware manual has below info for usb-phy irq
-> > 2H0_OBINT	126(InterruptID)	SPI 94	IRQ 94	Level
-> >
-> > cat /proc/interrupts matches with GICV3 Interrupt ID/ type in the HW
-> manual
-> > 113:          0          0     GICv3 126 Level     11c50200.usb-phy
-> >
-> > Debugfs is also showing similar info like hwirq and interrupt type.
-> > But I don't know which field corresponds to number of interrupts?
-> >
-> > root@smarc-rzg2l:~# cat /sys/kernel/debug/irq/irqs/113
-> > handler:  handle_fasteoi_irq
-> > device:   (null)
-> > status:   0x00000104
-> > istate:   0x00000000
-> > ddepth:   0
-> > wdepth:   0
-> > dstate:   0x13402204
-> >             IRQ_TYPE_LEVEL_HIGH
-> >             IRQD_LEVEL
-> >             IRQD_ACTIVATED
-> >             IRQD_IRQ_STARTED
-> >             IRQD_SINGLE_TARGET
-> >             IRQD_DEFAULT_TRIGGER_SET
-> >             IRQD_HANDLE_ENFORCE_IRQCTX
-> > node:     0
-> > affinity: 0-1
-> > effectiv: 0
-> > domain:  :soc:interrupt-controller@11900000-1
-> >  hwirq:   0x7e
->=20
-> 0x7e =3D 126 =3D 94 - 32 -> SPI94.
->=20
-> What else do you need?
+Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+---
+ drivers/gpio/gpio-ftgpio010.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-OK, similar to GIC, I thought for gpio interrupts,
-
-The  hwirq should match with gpiointN  mentioned in hwmanual. That is all.
-Any way it is minor thing, it may be not at all needed. Please ignore this.
-
-Eg:-for gpioint0, it should be
-
-root@smarc-rzg2l:~# cat /proc/interrupts | grep SW
- 82:          0          0 11030000.pinctrl 0 Edge      XXX
-
-Not like
-
-root@smarc-rzg2l:~# cat /proc/interrupts | grep SW
- 82:          0          0 11030000.pinctrl 120 Edge      XXX
-
-Cheers,
-Biju
-
->=20
-> >  chip:    GICv3
-> >   flags:   0x15
-> >              IRQCHIP_SET_TYPE_MASKED
-> >              IRQCHIP_MASK_ON_SUSPEND
-> >              IRQCHIP_SKIP_SET_WAKE
-> >
-> > Now coming to current case,
-> >
-> > Currently GPIO INT 0-122(123 interrupts) corresponding to
-> > 120-511(291 interrupts) with same invalid lines.
-> >
-> > From a debugging point, If user has put same irq name for gpioints(cat
-> > /proc/interrupts case), then how do we distinguish these interrupts??
-> > (using hwirq??)
->=20
-> Yes.
->=20
-> >
-> > For using Debugfs, Do we need to first execute cat /proc/interrupts to
-> > get virq and from there we need to use virq to get statistics, right?
->=20
-> It depends what you want to do. /sys/kernel/debug/irq/irqs/ has the exact
-> same information. The only thing /proc/interrupts has that debugfs doesn'=
-t
-> is the per-CPU accounting of delivered interrupts.
-
-
+diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
+index b90a45c939a4..f422c3e129a0 100644
+--- a/drivers/gpio/gpio-ftgpio010.c
++++ b/drivers/gpio/gpio-ftgpio010.c
+@@ -315,8 +315,8 @@ static int ftgpio_gpio_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ dis_clk:
+-	if (!IS_ERR(g->clk))
+-		clk_disable_unprepare(g->clk);
++	clk_disable_unprepare(g->clk);
++
+ 	return ret;
+ }
+ 
+@@ -324,8 +324,8 @@ static int ftgpio_gpio_remove(struct platform_device *pdev)
+ {
+ 	struct ftgpio_gpio *g = platform_get_drvdata(pdev);
+ 
+-	if (!IS_ERR(g->clk))
+-		clk_disable_unprepare(g->clk);
++	clk_disable_unprepare(g->clk);
++
+ 	return 0;
+ }
+ 
+-- 
+2.36.1
 
