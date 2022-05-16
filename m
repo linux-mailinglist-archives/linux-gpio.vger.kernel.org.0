@@ -2,60 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95904528777
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 16:49:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B91B52879F
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 16:53:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232753AbiEPOtX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 May 2022 10:49:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
+        id S236733AbiEPOxI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 May 2022 10:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244690AbiEPOtW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 10:49:22 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5473A37A2D
-        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:49:17 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id r30so3159266wra.13
-        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:49:17 -0700 (PDT)
+        with ESMTP id S233556AbiEPOxH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 10:53:07 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE3432EDC
+        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:53:06 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id k30so8192588wrd.5
+        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:53:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=RKsGvNFA2armYhQ1TT2f4Esy5HeTthcwZCKQd7cnxcQ=;
-        b=zdSm7SK71AbVXfd5KB4ucnRBnDAzDFZcXmlvvpTjVOKOBWRfu2qFfAGUHgoSiAutFI
-         aQrwDxBfgC/n07ppsGMDCgq33Qk/av2ka/2li/6AGgI3oLRc1Hd1uVMMijIxnJ38dTKS
-         kNNkpWrm++HfKKe/ZaQKAGTdgMC0fD+5krlsItJ22xh40VXVIiyziLAyZZNHBHtbCE5q
-         Uq4w76G+PmWJzMQv6uBQfH48zZwrawHflPLEiNgTIcwDdmygKtvAQAQDcPlw0oHNI2ux
-         Rtxj/AF68ogLnxHoW/pEsmo8ohg2EGacgjA+8VTCVgsJAJVCvBs8/lBfoQ0LBYB062b7
-         0Y2A==
+        bh=F/0hxZ3FdeGCwd9gwk7c1gJBeXuAJpYrwcp/nOSul0s=;
+        b=LAKUAusdr95I4Vg37q15yh+zxPz/mCMHcqIG3FGhYvOJJr80PI/jPAJTLRDLOVAwEV
+         PV4XzPXvu+Is+eVchVPMYv1upVAXGgJQ2AA9Sei3S+FZaAJMQ2ek/2DrmVa6sZhDm3CI
+         BkPoc2DhJ8JoISCODmyFcF7q/Z0BtJb9thUvTSNmJGYKvpiymOjoVrdVMY9TMSNnIrIB
+         fcU62gKkBcwmEo5SxIuhZCdt/H4IXjjf/DPHv/hT7qxCi1bSA2Qn+XjqgRqhW2EjAWQw
+         NSBN3Q5ettLX7uUS8YVChOJrEUbA/9XOwOOTGDhBOap9wNxl8qv2tsghZfwGs+AEC3di
+         SrYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RKsGvNFA2armYhQ1TT2f4Esy5HeTthcwZCKQd7cnxcQ=;
-        b=tP0WIyoaioPJC/83FKnrPRlXKriVNS+HXvNWDGwvEsAogcRmzrB47D6UA7OkAgTQ3t
-         T7JaH1VdGohjQHelagN24ItEmWXJxJ3woAxl63wL4nZPXwnSokMpIsSJ5JCxvFUvFUDl
-         YM12hhCSdQ0HW/ia1C4Vu/DhegDXOcmoa2y1vBiC6vnTTbOEc2Sm1wPyQ0XCRoMU7Ro7
-         O88/6stYlks0JHpBBk7l6jGsMFLEnYXWF8JmM+v3KBiD+hANVRUuhsoIekZso8H2gow9
-         60KjL1UT3hc4EBQPbFLXBcTMg1fXqjeXKpRcOzXoXaS8gxaxl9klJxmoYbuKKWcpAQwA
-         MPPQ==
-X-Gm-Message-State: AOAM530YluJD84cWF9N82MwhpPEBszPgCG5w0igj6QL+3dyXC4BtN6yf
-        hY8qXOJRpgh1M5w7ns34h2zvZXET+z85n848y3bniw==
-X-Google-Smtp-Source: ABdhPJxC+K2naQi2DGX/i3KZbfX6I8NNh+s+VoQewl4Q/1OR88cxBmM4LvcZMiiESkdDM0YoM0y/lwBv/04jAYEkQSY=
-X-Received: by 2002:a5d:64a6:0:b0:20c:64ef:c9cc with SMTP id
- m6-20020a5d64a6000000b0020c64efc9ccmr15445043wrp.190.1652712555819; Mon, 16
- May 2022 07:49:15 -0700 (PDT)
+        bh=F/0hxZ3FdeGCwd9gwk7c1gJBeXuAJpYrwcp/nOSul0s=;
+        b=Rl96fcjK9kagA+gE647sNS6Yb9NYlaAdKVGDnXqM1EXKnfdFqnQiivw8e2+RZYAbmO
+         efAI+2N2MRrhjZOTQn/YuzOamA5MAKOE3o5FyfCcagHFaFx9LMH3QXM8iR3pKA2BUpYo
+         1P98tMIlo/1rRZN35+/dWESCsBFNosbW2qUZLLWMXmcLDHTrpFFXDwjNOTM/4tq4wpP6
+         bXb9kXAwRVNzhD0FGsiNakuuwnDvsKC2wFAhTqgtzLcTl1yrCyGoH3oWlfNYnE5pOwfF
+         ScNeL2tn8xB9IHSu+mhrJojomaCQjFYWe1WVzz21Nkk0B8LFHFXlsBH4gt3pxwcUr7cG
+         jTDA==
+X-Gm-Message-State: AOAM530HbBwhcLZVLgY6J5yVDqwypcbT3gUQJOnp+4o7LtYnfDyezN/o
+        grf2tXfPUZU3vLY88ZG8EyJzUnANtsHbK8bf09trZw==
+X-Google-Smtp-Source: ABdhPJzElNcloeF64fOP/Kb2aO6HlOLZaVTJaip5RDigdZ9nvc7rW9rIU7lDL2m19Kia0+gDSzkJpANVRfrB4n3EisQ=
+X-Received: by 2002:adf:d1cf:0:b0:20c:6030:d6f0 with SMTP id
+ b15-20020adfd1cf000000b0020c6030d6f0mr14866687wrd.298.1652712784587; Mon, 16
+ May 2022 07:53:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <72c973da5670b5ae81d050c582948894ee4174f8.1634206453.git.michal.simek@xilinx.com>
-In-Reply-To: <72c973da5670b5ae81d050c582948894ee4174f8.1634206453.git.michal.simek@xilinx.com>
+References: <4b9db94cdd8ca106feee53f76fab2a23721f7d2a.1634290039.git.michal.simek@xilinx.com>
+In-Reply-To: <4b9db94cdd8ca106feee53f76fab2a23721f7d2a.1634290039.git.michal.simek@xilinx.com>
 From:   Michal Simek <monstr@monstr.eu>
-Date:   Mon, 16 May 2022 16:49:04 +0200
-Message-ID: <CAHTX3dKRRvN+3eAa1Yz5WZJfByGPhLFOA7padA7bZp41-3magA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: zynq: Add missing compatible strings
+Date:   Mon, 16 May 2022 16:52:53 +0200
+Message-ID: <CAHTX3dLAwT7BFZPg1zinhDnvsZmadpsdSHQZHpsTg5=06MMgnw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: zynq: Describe gpio-line-names
 To:     LKML <linux-kernel@vger.kernel.org>,
         Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
         Rob Herring <robh+dt@kernel.org>,
         Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
         Srinivas Neeli <srinivas.neeli@xilinx.com>,
@@ -66,45 +65,95 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C4=8Dt 14. 10. 2021 v 12:14 odes=C3=ADlatel Michal Simek
+p=C3=A1 15. 10. 2021 v 11:27 odes=C3=ADlatel Michal Simek
 <michal.simek@xilinx.com> napsal:
 >
-> "xlnx,zynqmp-gpio-1.0", "xlnx,versal-gpio-1.0" and "xlnx,pmc-gpio-1.0"
-> compatible strings were not moved to yaml format. But they were in origin
-> text file.
+> Number of lines depends on compatible string from 58 to 174.
+> That's why it is checked based on it.
 >
-> Fixes: 45ca16072b70 ("dt-bindings: gpio: zynq: convert bindings to YAML")
 > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
 >
->  Documentation/devicetree/bindings/gpio/gpio-zynq.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/gpio/gpio-zynq.yaml   | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
 >
 > diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml b/Docu=
 mentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> index 378da2649e66..980f92ad9eba 100644
+> index da95b951c23e..29c27eadbac8 100644
 > --- a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
 > +++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> @@ -11,7 +11,11 @@ maintainers:
+> @@ -28,6 +28,11 @@ properties:
 >
->  properties:
->    compatible:
-> -    const: xlnx,zynq-gpio-1.0
-> +    enum:
-> +      - xlnx,zynq-gpio-1.0
-> +      - xlnx,zynqmp-gpio-1.0
-> +      - xlnx,versal-gpio-1.0
-> +      - xlnx,pmc-gpio-1.0
+>    gpio-controller: true
 >
->    reg:
+> +  gpio-line-names:
+> +    description: strings describing the names of each gpio line
+> +    minItems: 58
+> +    maxItems: 174
+> +
+>    interrupt-controller: true
+>
+>    "#interrupt-cells":
+> @@ -39,6 +44,51 @@ properties:
+>    power-domains:
 >      maxItems: 1
+>
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - xlnx,zynqmp-gpio-1.0
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 174
+> +          maxItems: 174
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - xlnx,zynq-gpio-1.0
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 118
+> +          maxItems: 118
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - xlnx,versal-gpio-1.0
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 58
+> +          maxItems: 58
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - xlnx,pmc-gpio-1.0
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 116
+> +          maxItems: 116
+> +
+>  required:
+>    - compatible
+>    - reg
 > --
 > 2.33.1
 >
