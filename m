@@ -2,60 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDD06528D88
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 20:56:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 266975291B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 22:49:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345196AbiEPS4c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 May 2022 14:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54688 "EHLO
+        id S1343537AbiEPUcy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 May 2022 16:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345184AbiEPS42 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 14:56:28 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F3165F1;
-        Mon, 16 May 2022 11:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652727387; x=1684263387;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BfbVbL6Hld/E/O04WsrHSldx5ETHMb9X0kAR36zcyzA=;
-  b=iQmqRle8JSL02JSXoiIJB1iUDZHBEfGi0giTSmkwC8YSJn8rdIcmwlFP
-   V82aeirR7HkA4zgdLdjda2Zs1Lw/+AjgHjGRXWJK479Krzn3RcMppnH57
-   frqR2Kw0gWHHSca3crsWmlsaEWPinV6zYI+bfnjP7BQnmjJkJS6Lmne6t
-   UmDp3NhlPCYABOHchlUDv00gcz0fA4tnah/worynr+ifVkhEdWiHjdFtY
-   zuMbeFu0DvEWGrBviQNuVyFtVUN5OlMUIaNIixcVMqHMcb95BffTBw2pS
-   Ra59kvec0yXgbxwY0nx+/GC3gKgWPXqX7+4tXXhM7dPsHpRa28D1vvp7/
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10349"; a="258494611"
-X-IronPort-AV: E=Sophos;i="5.91,230,1647327600"; 
-   d="scan'208";a="258494611"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 11:56:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,230,1647327600"; 
-   d="scan'208";a="660250203"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 May 2022 11:56:21 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0B3F1CE; Mon, 16 May 2022 21:56:20 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 2/2] pinctrl: intel: Drop unsued irqchip member in struct intel_pinctrl
-Date:   Mon, 16 May 2022 21:56:18 +0300
-Message-Id: <20220516185618.32448-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220516185618.32448-1-andriy.shevchenko@linux.intel.com>
-References: <20220516185618.32448-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S1349454AbiEPUcZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 16:32:25 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A33AF4133B
+        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 13:17:07 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id ch13so30715897ejb.12
+        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 13:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hxd7eLnFBnZ/Rq34pqmtOhmXz09WYv3YBBHEc2lj9Cc=;
+        b=JMAEbqpjk2GQB8cxV89W/ZM7dJMlTCtwY6E8HYMyIGRyYIL01pLt3i7so9JkSPyzaI
+         EfSAJ/toEX9h4fKY/xLsm2rFoFdurG4NBR8f0+FBa698CG60POD/yrpjoyKN8sy6AAOp
+         c5TL8c++fd+dYS7I3gIMTb0xaaogtLh/EtL7hEKgAlvuWx8LTqGI46Y2vdePIkvXyWAp
+         LOCy+yeSIUf7QK3bm7JSoDfwupR5+MSzSJXnNGDfZbI48Vb38Ac0HybcmpGss8U67w95
+         DvAgQwd2Vlmlv9opRGgvhTGtlSUgvE2kSp9ajlyo7p36FCl+CQf7c4TPZQDVOpsg36mg
+         Xj0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hxd7eLnFBnZ/Rq34pqmtOhmXz09WYv3YBBHEc2lj9Cc=;
+        b=Q02MfDB/h3KBhH/kEk7z9nk+wPV7OjM99z01emFsiyltNqOMtI8j2O67txiaBgV7+z
+         K7JdWI1Vy5VemB6v8KdnJ3r24MLEItMibY0bR73gDKRxaZq7Shc8UUTgH1Er4bGE7ZzX
+         cvIF9H4A7IL5dZMKKUwYJoAvAsa5iknBYnBYGNyNTVfI/2RZJpFKQFovwbLMRYpgP2bM
+         6AqS6j7I37soH2xoJ2kIiVtU4GF/AjBAL/e3wgBNRLuZ7XQ12Ug3uHyfarRQpbxo9xeJ
+         BtcgXHkQKiVqe3+5C5zK4GiQoVACJ8TSaE2H4Wy2b/13mqxxzbvHeYYxODTXEMn7m/Do
+         NfDA==
+X-Gm-Message-State: AOAM532qJ9w2tJW8Co518FNGlCuJ3xudkLwFYtFpkMnAUpRT2RET7RI/
+        Am4TPq+7UqcUIO9POp8C5bsl32LRLzRcvcgsd/Rfgg==
+X-Google-Smtp-Source: ABdhPJzP5ce030z+5h5VghXXiAdcgk0nyBWSumzV3QjWG71lZk5KvuFJWcG18hpwsCUWBG/uZ8NZQaPTEL/fET8ndDI=
+X-Received: by 2002:a17:907:3e28:b0:6f4:3900:78f8 with SMTP id
+ hp40-20020a1709073e2800b006f4390078f8mr17439106ejc.736.1652732223724; Mon, 16
+ May 2022 13:17:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+References: <20220516085000.9861-1-wanjiabing@vivo.com>
+In-Reply-To: <20220516085000.9861-1-wanjiabing@vivo.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 16 May 2022 22:16:53 +0200
+Message-ID: <CAMRc=McM4X5--dUFUmGricbC_DYubpVk+CMD3odQLCkjxwFzWg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ftgpio: Remove unneeded ERROR check before clk_disable_unprepare
+To:     Wan Jiabing <wanjiabing@vivo.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,33 +65,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is no users of irqchip member in struct intel_pinctrl. Drop it.
+On Mon, May 16, 2022 at 10:50 AM Wan Jiabing <wanjiabing@vivo.com> wrote:
+>
+> clk_disable_unprepare() already checks ERROR by using IS_ERR_OR_NULL.
+> Remove unneeded ERROR check for g->clk.
+>
+> Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+> ---
+>  drivers/gpio/gpio-ftgpio010.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
+> index b90a45c939a4..f422c3e129a0 100644
+> --- a/drivers/gpio/gpio-ftgpio010.c
+> +++ b/drivers/gpio/gpio-ftgpio010.c
+> @@ -315,8 +315,8 @@ static int ftgpio_gpio_probe(struct platform_device *pdev)
+>         return 0;
+>
+>  dis_clk:
+> -       if (!IS_ERR(g->clk))
+> -               clk_disable_unprepare(g->clk);
+> +       clk_disable_unprepare(g->clk);
+> +
+>         return ret;
+>  }
+>
+> @@ -324,8 +324,8 @@ static int ftgpio_gpio_remove(struct platform_device *pdev)
+>  {
+>         struct ftgpio_gpio *g = platform_get_drvdata(pdev);
+>
+> -       if (!IS_ERR(g->clk))
+> -               clk_disable_unprepare(g->clk);
+> +       clk_disable_unprepare(g->clk);
+> +
+>         return 0;
+>  }
+>
+> --
+> 2.36.1
+>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.h | 2 --
- 1 file changed, 2 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
-index c4fef03b663f..710341bb67cc 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.h
-+++ b/drivers/pinctrl/intel/pinctrl-intel.h
-@@ -223,7 +223,6 @@ struct intel_pinctrl_context {
-  * @pctldesc: Pin controller description
-  * @pctldev: Pointer to the pin controller device
-  * @chip: GPIO chip in this pin controller
-- * @irqchip: IRQ chip in this pin controller
-  * @soc: SoC/PCH specific pin configuration data
-  * @communities: All communities in this pin controller
-  * @ncommunities: Number of communities in this pin controller
-@@ -236,7 +235,6 @@ struct intel_pinctrl {
- 	struct pinctrl_desc pctldesc;
- 	struct pinctrl_dev *pctldev;
- 	struct gpio_chip chip;
--	struct irq_chip irqchip;
- 	const struct intel_pinctrl_soc_data *soc;
- 	struct intel_community *communities;
- 	size_t ncommunities;
--- 
-2.35.1
-
+Bart
