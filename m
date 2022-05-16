@@ -2,168 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B91B52879F
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 16:53:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DBDA5287C1
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 16:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236733AbiEPOxI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 May 2022 10:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50114 "EHLO
+        id S232814AbiEPO6O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 May 2022 10:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233556AbiEPOxH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 10:53:07 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE3432EDC
-        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:53:06 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id k30so8192588wrd.5
-        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:53:05 -0700 (PDT)
+        with ESMTP id S244820AbiEPO6I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 10:58:08 -0400
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A1D38DB2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:58:05 -0700 (PDT)
+Received: by mail-ot1-x32e.google.com with SMTP id 31-20020a9d0822000000b00605f1807664so10205140oty.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 May 2022 07:58:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=F/0hxZ3FdeGCwd9gwk7c1gJBeXuAJpYrwcp/nOSul0s=;
-        b=LAKUAusdr95I4Vg37q15yh+zxPz/mCMHcqIG3FGhYvOJJr80PI/jPAJTLRDLOVAwEV
-         PV4XzPXvu+Is+eVchVPMYv1upVAXGgJQ2AA9Sei3S+FZaAJMQ2ek/2DrmVa6sZhDm3CI
-         BkPoc2DhJ8JoISCODmyFcF7q/Z0BtJb9thUvTSNmJGYKvpiymOjoVrdVMY9TMSNnIrIB
-         fcU62gKkBcwmEo5SxIuhZCdt/H4IXjjf/DPHv/hT7qxCi1bSA2Qn+XjqgRqhW2EjAWQw
-         NSBN3Q5ettLX7uUS8YVChOJrEUbA/9XOwOOTGDhBOap9wNxl8qv2tsghZfwGs+AEC3di
-         SrYQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=K+Y70coh+Lp+roExSs0REYyqTm2S4dimkeJMPuEY3ro=;
+        b=a2LKmOSvf8pekx9Ba50+WsLfSfczKYD5qYZ0CvNasNSqyAbqFoydfY2gx89tJxtr2y
+         c6V12q8E0n4xIF1oGIXmZ6+uBA97B7Z1UJqB4t17GUOyxAf2pXUwws57sW7wLjvNQUoE
+         i+oAg1OCuAOCthZ7bVwuYfhu7ZAyX6AKyOZXHNSTYB+gW8Ieci6qyQlxHQwO9CPGJ2Dx
+         YqlGNlTQlwKE0obNLvF1sweC4Qz3/TKbLPBkYfFqxFVfCyxNfoxNTobOqtotw1w3qVio
+         J4LpXmPH+pDm9LPti4oTg2sL+AMWAByuxCkYC9tODNdF+XhZJb9HlqKHWPK5tQQHqQJh
+         SNEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=F/0hxZ3FdeGCwd9gwk7c1gJBeXuAJpYrwcp/nOSul0s=;
-        b=Rl96fcjK9kagA+gE647sNS6Yb9NYlaAdKVGDnXqM1EXKnfdFqnQiivw8e2+RZYAbmO
-         efAI+2N2MRrhjZOTQn/YuzOamA5MAKOE3o5FyfCcagHFaFx9LMH3QXM8iR3pKA2BUpYo
-         1P98tMIlo/1rRZN35+/dWESCsBFNosbW2qUZLLWMXmcLDHTrpFFXDwjNOTM/4tq4wpP6
-         bXb9kXAwRVNzhD0FGsiNakuuwnDvsKC2wFAhTqgtzLcTl1yrCyGoH3oWlfNYnE5pOwfF
-         ScNeL2tn8xB9IHSu+mhrJojomaCQjFYWe1WVzz21Nkk0B8LFHFXlsBH4gt3pxwcUr7cG
-         jTDA==
-X-Gm-Message-State: AOAM530HbBwhcLZVLgY6J5yVDqwypcbT3gUQJOnp+4o7LtYnfDyezN/o
-        grf2tXfPUZU3vLY88ZG8EyJzUnANtsHbK8bf09trZw==
-X-Google-Smtp-Source: ABdhPJzElNcloeF64fOP/Kb2aO6HlOLZaVTJaip5RDigdZ9nvc7rW9rIU7lDL2m19Kia0+gDSzkJpANVRfrB4n3EisQ=
-X-Received: by 2002:adf:d1cf:0:b0:20c:6030:d6f0 with SMTP id
- b15-20020adfd1cf000000b0020c6030d6f0mr14866687wrd.298.1652712784587; Mon, 16
- May 2022 07:53:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <4b9db94cdd8ca106feee53f76fab2a23721f7d2a.1634290039.git.michal.simek@xilinx.com>
-In-Reply-To: <4b9db94cdd8ca106feee53f76fab2a23721f7d2a.1634290039.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Date:   Mon, 16 May 2022 16:52:53 +0200
-Message-ID: <CAHTX3dLAwT7BFZPg1zinhDnvsZmadpsdSHQZHpsTg5=06MMgnw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: zynq: Describe gpio-line-names
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K+Y70coh+Lp+roExSs0REYyqTm2S4dimkeJMPuEY3ro=;
+        b=n6rkx5hg4ysKU41f4mzhVssWs2CZHtyUpBrx/47XHwsiXFVv6mFBfAei0CRQRR2f/F
+         e8DgIwR1fqbH3Hg056XgGJM/pawRpNRI0sV4REt391VMOZtH+BPa0vJXxlzX1I2Ddyx8
+         90i2M90Q/5CUbjqMqLgGBsjUcc9l8sRlHtgHOsvgqWPzxSuqIQdEAWY1zzSKDz/0LDRA
+         aKNF/5aw05lG6QvKQqM98Qhf4aqE4OHe1xu7prcCGFT4Aa9l16a3uKNb6/FFNdP1ZkyM
+         A5oR/wBMkM1O7ikheRoJewnQ493NjR7cSD7YLZbHWI4yRYJc7zf/MXHP/ZsEDFxiuSep
+         KooA==
+X-Gm-Message-State: AOAM530/lJ6ww+y0FKvkp4iuVWLZ9x9wSxVW1fpWR+5xCrl6RHZ/vhmK
+        YIA3VzyOiHUoXqu0vQK1JYLtew==
+X-Google-Smtp-Source: ABdhPJw4N5aCDpS5ff2CufYGmp786lJ7RNGJHCtFjbTmuAq8MExGgtUzZ2Sa7rZJBeZwP5bNxHqKXQ==
+X-Received: by 2002:a9d:4b14:0:b0:605:d4b1:a0a0 with SMTP id q20-20020a9d4b14000000b00605d4b1a0a0mr6401833otf.134.1652713084987;
+        Mon, 16 May 2022 07:58:04 -0700 (PDT)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id w15-20020a056830144f00b00606a6c09a0csm3953648otp.12.2022.05.16.07.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 May 2022 07:58:04 -0700 (PDT)
+Date:   Mon, 16 May 2022 08:00:28 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Marijn Suijten <marijn.suijten@somainline.org>
+Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Martin Botka <martin.botka@somainline.org>,
+        Jami Kettunen <jami.kettunen@somainline.org>,
+        Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm6125
+ compatible
+Message-ID: <YoJnDGI3gVyIITe4@ripper>
+References: <20220511220613.1015472-1-marijn.suijten@somainline.org>
+ <20220511220613.1015472-3-marijn.suijten@somainline.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220511220613.1015472-3-marijn.suijten@somainline.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-p=C3=A1 15. 10. 2021 v 11:27 odes=C3=ADlatel Michal Simek
-<michal.simek@xilinx.com> napsal:
->
-> Number of lines depends on compatible string from 58 to 174.
-> That's why it is checked based on it.
->
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+On Wed 11 May 15:06 PDT 2022, Marijn Suijten wrote:
+
+> The pm6125 comes with 9 GPIOs, without holes.
+> 
+> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
 > ---
->
->  .../devicetree/bindings/gpio/gpio-zynq.yaml   | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml b/Docu=
-mentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> index da95b951c23e..29c27eadbac8 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> @@ -28,6 +28,11 @@ properties:
->
->    gpio-controller: true
->
-> +  gpio-line-names:
-> +    description: strings describing the names of each gpio line
-> +    minItems: 58
-> +    maxItems: 174
-> +
->    interrupt-controller: true
->
->    "#interrupt-cells":
-> @@ -39,6 +44,51 @@ properties:
->    power-domains:
->      maxItems: 1
->
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - xlnx,zynqmp-gpio-1.0
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 174
-> +          maxItems: 174
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - xlnx,zynq-gpio-1.0
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 118
-> +          maxItems: 118
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - xlnx,versal-gpio-1.0
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 58
-> +          maxItems: 58
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - xlnx,pmc-gpio-1.0
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 116
-> +          maxItems: 116
-> +
->  required:
->    - compatible
->    - reg
-> --
-> 2.33.1
->
-
-Applied.
-M
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+>  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> index 22dbcba752d0..ef7a4a9450a4 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> @@ -20,6 +20,7 @@ properties:
+>            - qcom,pm2250-gpio
+>            - qcom,pm660-gpio
+>            - qcom,pm660l-gpio
+> +          - qcom,pm6125-gpio
+>            - qcom,pm6150-gpio
+>            - qcom,pm6150l-gpio
+>            - qcom,pm6350-gpio
+> @@ -107,6 +108,7 @@ $defs:
+>          description:
+>            List of gpio pins affected by the properties specified in
+>            this subnode.  Valid pins are
+> +                 - gpio1-gpio9 for pm6125
+>                   - gpio1-gpio10 for pm6150
+>                   - gpio1-gpio12 for pm6150l
+>                   - gpio1-gpio9 for pm6350
+> -- 
+> 2.36.1
+> 
