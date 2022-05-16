@@ -2,111 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C2CC52831E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 13:24:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD871528341
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 May 2022 13:31:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230470AbiEPLXx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 May 2022 07:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
+        id S243155AbiEPLba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 May 2022 07:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243099AbiEPLXw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 07:23:52 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DBF387A2;
-        Mon, 16 May 2022 04:23:49 -0700 (PDT)
-Date:   Mon, 16 May 2022 13:23:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1652700228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=S5NxAJPVWcMi6gSub2SnJmtVeydspv2dOKKX4Sgbo2E=;
-        b=lJ/ua/xT36CFkqAG2YmuUJzsMegjfmmNTNqFT+fjWUS0gy0CFATLEgN6pymWdJzZRXx+c2
-        +2tnuSQnhzScgw8CD400ykPzDIZ34DTelPol+ky2h5ZdINhBstvnNH2N6Xwral/bK94Srw
-        GcE97KmJQRokY9lLjkxkE0MajKpJCpKkpsFmmNGZLC0M4eGr2JrDlIkWq+IUovdVExg15j
-        ngczzWRkxsTGvHYwzULb4NfvLr1Zvc1S1egZzwo3HBfWnvIZhMwtnLjGw44Udvu5b7unJQ
-        2rRFDnGD6COThS/URwcxwBvcZchfuCohtpzk9klqe6WeAdWfuiCwwSPp0C+O9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1652700228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=S5NxAJPVWcMi6gSub2SnJmtVeydspv2dOKKX4Sgbo2E=;
-        b=54/Hu5OcF7w+aG2PdqmJIRu09tvXTti1VbEvmiab9M9zPRjw3PZQbf8xF5NEXBPzJfk2jw
-        5Mtg5wpN0Ua/JmBg==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        with ESMTP id S243193AbiEPLbK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 May 2022 07:31:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B88270E;
+        Mon, 16 May 2022 04:31:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9AB2660FEB;
+        Mon, 16 May 2022 11:31:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD1DC385B8;
+        Mon, 16 May 2022 11:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652700668;
+        bh=ZUEmliErSd51RiMCP41XFunKKxEzgbyR6TU1VDmqeFg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OwHwwzsfSzLP0Uce40JHWVOXb60biukmdN90zMYRkS5G9tzrnmYjYUW7T9kRkPIAI
+         vE2lIUrrlFNJBG4JrjnEs55gi5D5ycBEEl7YRix30Qqlkn23RtPftT0VwGey/IeNfm
+         6eF2mgsVxQNwdNmLgkUGQiqhOVJHKmuLiX5pOE39dh3A6GVdOluffWB8cQ4ouVoRvu
+         AEOtc5EOeJMvYJRv1hts3L6KpcRf8bvFSkhQSMRN2Qyb12RUUmQyB1YXEd1UpULbe6
+         XV4wn3zHRRFRRhw4WaNrUhlB5Z4NhDLcL4mQe4tCWp2TCLvbS8IXNVfOsws8kkTZis
+         L66BD/UsAC+jw==
+Date:   Mon, 16 May 2022 17:01:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>, Michael Buesch <m@bues.ch>,
-        Rafa?? Mi??ecki <zajec5@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-gpio@vger.kernel.org, linux-wireless@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [RFC PATCH] genirq: Provide generic_handle_domain_irq_safe().
-Message-ID: <YoI0QiM4ntJP/9fQ@linutronix.de>
-References: <YnkfWFzvusFFktSt@linutronix.de>
- <20220516101814.GA18490@wunner.de>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: renesas,rcar-dmac: R-Car V3U is R-Car
+ Gen4
+Message-ID: <YoI1+HDb9Sr4mWmB@matsya>
+References: <cover.1651497024.git.geert+renesas@glider.be>
+ <e6e4cf701f3a43b061b9c3f7f0adc4d6addd4722.1651497024.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220516101814.GA18490@wunner.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <e6e4cf701f3a43b061b9c3f7f0adc4d6addd4722.1651497024.git.geert+renesas@glider.be>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-05-16 12:18:14 [+0200], Lukas Wunner wrote:
-> On Mon, May 09, 2022 at 04:04:08PM +0200, Sebastian Andrzej Siewior wrote:
-> > The problem with generic_handle_domain_irq() is that with `threadirqs'
-> > it will trigger "WARN_ON_ONCE(!in_hardirq())".
-> 
-> Now silenced by:
-> https://git.kernel.org/linus/792ea6a074ae
-> 
-> 
-> > +int generic_handle_domain_irq_safe(struct irq_domain *domain, unsigned int hwirq)
-> > +{
-> > +	unsigned long flags;
-> > +	int ret;
-> > +
-> > +	local_irq_save(flags);
-> > +	ret = handle_irq_desc(irq_resolve_mapping(domain, hwirq));
-> > +	local_irq_restore(flags);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(generic_handle_domain_irq_safe);
-> 
-> AFAICS you don't need to disable hardirqs at least for the "threadirqs"
-> case because irq_forced_thread_fn() already does that.
+On 02-05-22, 15:34, Geert Uytterhoeven wrote:
+> Despite the name, R-Car V3U is the first member of the R-Car Gen4
+> family.  Hence move its compatible value to the R-Car Gen4 section.
 
-PREEMPT_RT does not disable interrupts. Also completions in softirq
-won't disable interrupts.
+Applied, thanks
 
-> 
-> >  drivers/bcma/driver_gpio.c                 |  2 +-
-> >  drivers/gpio/gpio-mlxbf2.c                 |  6 ++----
-> >  drivers/pinctrl/pinctrl-amd.c              |  2 +-
-> >  drivers/platform/x86/intel/int0002_vgpio.c |  3 +--
-> >  drivers/ssb/driver_gpio.c                  |  6 ++++--
-> 
-> From a quick look, the proper solution for all of those drivers is
-> probably to just add IRQF_NO_THREAD and be done with it.
-
-I think I mentioned that part in the commit description: IRQF_NO_THREAD
-must be specified by all handlers of a shared interrupt. It is an option
-for the handler that owns an interrupt exclusive.
-
-> Thanks,
-> 
-> Lukas
-
-Sebastian
+-- 
+~Vinod
