@@ -2,76 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6DCA529EE6
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 12:12:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A74BD52A1BE
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 14:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343575AbiEQKLt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 May 2022 06:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47286 "EHLO
+        id S1346192AbiEQMlV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 May 2022 08:41:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344059AbiEQKLL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 06:11:11 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F244C41B;
-        Tue, 17 May 2022 03:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652782199; x=1684318199;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o0rfa2LgldSLeyeg6O3xFJ5xH9GUQLhGfm/buC6Zf/Q=;
-  b=ja58K5Odw1f9B6WjkZSQJ+2Sd7NgfggZ8M6PwrS6Rt5QWUHjTXN7A4EX
-   Se7UhVOh9NvaAOB/NOrVAF2VZ8ubbI6St9i95ZJJAThLN7GHaaIcDpCU+
-   SxWdsJMMLnlP7vSQKt8RjMIN6GTceQNWuODVf03tl0WoK1ju6yTTg2ctR
-   kX6tZe+l2DgClv9e2UoOmprNHlQ8USAmihnX30IlAbZasBJO3W0c4F2cI
-   3NyPzN8mvQ+F5R9kWmo38u5UYc8d+MI3xmvgwKrefwugpWZrBUzvKIQcz
-   sftnLa2iKjHmh7TuAc7pW2JnO0el0XMfpUCyZ+0tfQY1MxNudxfEsxits
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10349"; a="357544196"
-X-IronPort-AV: E=Sophos;i="5.91,232,1647327600"; 
-   d="scan'208";a="357544196"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 03:09:58 -0700
-X-IronPort-AV: E=Sophos;i="5.91,232,1647327600"; 
-   d="scan'208";a="816831982"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 03:09:55 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 17 May 2022 13:09:53 +0300
-Date:   Tue, 17 May 2022 13:09:53 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/2] pinctrl: intel: make irq_chip immutable
-Message-ID: <YoN0cdUdYQotyod9@lahna>
-References: <20220516185618.32448-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220516185618.32448-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1346225AbiEQMlF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 08:41:05 -0400
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B94D15A3E;
+        Tue, 17 May 2022 05:41:04 -0700 (PDT)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-edf9ddb312so23978532fac.8;
+        Tue, 17 May 2022 05:41:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=dmRe+wb3qB33LoKWee22zj7uRY4UjJW/ZlvarK0xJ4I=;
+        b=McgQOwCtPchEgymXSFKwAV+buRxA7hrizEVgq99sHU0MUzjZfvPrbVhsSkPOkFuGqn
+         WDKVmIIR5a03YtJkbasWg43FGPjQVn8iN+E5oy1UYqBhwc8p4cV2d8Xz4b9kOsx/0vLh
+         8+BCGzaCEuDA/Gdlu8uzgGosbGUfUeLzcIiqO02UhIbFhzWUl8ZFMvIPKU1cjDiyK0PI
+         LE0+74KgApMILpa3X/wVja7idNtxfrssmp46fMTNi65vL5kYxmqQ8yiFDfCC6L5FFB6l
+         /amjU48L0wwBZjrcpunRbOvGXa2L+uzMAh7QsjA5hjVBsCCBPW/bYbLtlg/zHcGOkixS
+         v5Hw==
+X-Gm-Message-State: AOAM531beHJUgsZloqMx2zyvprNiVGragzsq1lndQSfx6EqHqeU3Crc9
+        BzdGh342PztJhA89LLYjaFE0McLWQQ==
+X-Google-Smtp-Source: ABdhPJwnnXeDtNIrD9oMGMg+yVK7oZSnR6U4Y5GhHjmScQw8t3Gp/MJckdluI0FDFeWymxO+NodkOw==
+X-Received: by 2002:a05:6870:b61d:b0:f1:9674:f095 with SMTP id cm29-20020a056870b61d00b000f19674f095mr5886409oab.187.1652791263511;
+        Tue, 17 May 2022 05:41:03 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id d6-20020a056870d28600b000f1ca01a7besm265451oae.24.2022.05.17.05.41.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 May 2022 05:41:02 -0700 (PDT)
+Received: (nullmailer pid 785396 invoked by uid 1000);
+        Tue, 17 May 2022 12:40:59 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     daniel.lezcano@linaro.org, clin@suse.com,
+        linux-kernel@vger.kernel.org,
+        giulio.benetti@benettiengineering.com, linux-imx@nxp.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        cniedermaier@dh-electronics.com, dev@lynxeye.de,
+        mturquette@baylibre.com, arnd@arndb.de, s.hauer@pengutronix.de,
+        Mr.Bossman075@gmail.com, festevam@gmail.com, olof@lixom.net,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        marcel.ziswiler@toradex.com, aisheng.dong@nxp.com,
+        tglx@linutronix.de, kernel@pengutronix.de, linux@armlinux.org.uk,
+        stefan@agner.ch, abel.vesa@nxp.com,
+        sebastian.reichel@collabora.com, soc@kernel.org,
+        shawnguo@kernel.org, leoyang.li@nxp.com, sboyd@kernel.org,
+        linux-gpio@vger.kernel.org, tharvey@gateworks.com
+In-Reply-To: <20220517032802.451743-6-Mr.Bossman075@gmail.com>
+References: <20220517032802.451743-1-Mr.Bossman075@gmail.com> <20220517032802.451743-6-Mr.Bossman075@gmail.com>
+Subject: Re: [PATCH v3 07/15] dt-bindings: clock: imx: Add documentation for i.MXRT1170 clock
+Date:   Tue, 17 May 2022 07:40:59 -0500
+Message-Id: <1652791259.484121.785395.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 16, 2022 at 09:56:17PM +0300, Andy Shevchenko wrote:
-> Since recently, the kernel is nagging about mutable irq_chips:
+On Mon, 16 May 2022 23:27:54 -0400, Jesse Taube wrote:
+> Add DT binding documentation for i.MXRT1170 clock driver.
 > 
->    "not an immutable chip, please consider fixing it!"
+> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> ---
+> V1 -> V2:
+>  - Change title to Clock Controller
+>  - Rename to add fsl
+> V2 -> V3:
+>  - Remove unused include causing error
+> ---
+>  .../bindings/clock/fsl,imxrt1170-clock.yaml   | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/fsl,imxrt1170-clock.yaml
 > 
-> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-> helper functions and call the appropriate gpiolib functions.
-> 
-> While at it, align IRQ chip callback names with member names for
-> the sake of consistency.
 
-Or for the sake of inconsistency? ;-)  All the other structs are not
-using this kind of alignment and I would like to keep this one matching
-the rest too. Also I prefer the format currently used in the driver.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/clock/fsl,imxrt1170-clock.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/clock/fsl,imxrt1170-clock.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
