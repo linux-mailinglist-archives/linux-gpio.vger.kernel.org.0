@@ -2,121 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A33D52A503
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 16:36:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0217852A5C1
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 17:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349110AbiEQOgb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 May 2022 10:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37918 "EHLO
+        id S1347868AbiEQPMe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 May 2022 11:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349142AbiEQOg3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 10:36:29 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB262E9;
-        Tue, 17 May 2022 07:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1652798187; x=1684334187;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HVPfHtlxBRDzWgbJQqS6BesX8jQgiqWFkyA4yeFc3gI=;
-  b=UVieVEOp96d/tbqg2jPSnMJ5juY6icIiJ6QBzceAq03BjcbCFnv1PFkO
-   iS/WVghUsvU+5g+JYPzISHSNuhsn2fraaxuy7orlB1JOguZTJD55jWghY
-   /7nrNkiQ1wEnPa5dBX4lPi2rW7o/9MLtk/h0qrfUX9mTOIPvzlGK1GxDr
-   2RMKy92Qp4JkGvwnpH33OlD3N4Tg7gp+9cP8uGBOJNjGCKaOT0ef1k7M0
-   hebBUIwdG/MkmkMDSOC7KAPtINe9dCOV/ip/PTsYJ2/DerIFlOZ9hP1QJ
-   KmZ/fLsLG3DUS3kLZ90HdsOTjb3i4+TLAtBo3ysqGsMtzNr6KTOtUv4aM
-   A==;
-X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
-   d="scan'208";a="173758629"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 May 2022 07:36:25 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Tue, 17 May 2022 07:36:25 -0700
-Received: from [10.159.245.112] (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Tue, 17 May 2022 07:36:20 -0700
-Message-ID: <21a16074-9179-f57b-a667-cccddcab6e24@microchip.com>
-Date:   Tue, 17 May 2022 16:36:17 +0200
+        with ESMTP id S1346572AbiEQPMb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 11:12:31 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7749C3BFB0;
+        Tue, 17 May 2022 08:12:29 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id i66so22584899oia.11;
+        Tue, 17 May 2022 08:12:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/dfPBNJl0BkkDm6rR5f4i06anC7912qzGjQ5goLE40g=;
+        b=2n/fzMUTSwTKyejr6B4dtfNN8S4TK6C8wkKV/s5VUwqDf8yE0IrKq2+Wxvf2BLJJKM
+         DFrxFNljJC8nTGADlY6YiJ8zIp+ZBJ/nULXKP7zRbrzQ5bjlhj93GVEvhrAeQjjyDoIN
+         XNr+k8obA0FIxDANq7j5EwIOv36CnfahXEDcQ54zUtH+CiKIFtA/Uxi9s6JLutI2ygv9
+         8qre4UgnheUQI21RQ02VdD1hxqnZW6m6rAQGGpYaXtvl/H4UdMsat3ZOtFhfEHFQ71yo
+         Tk8Bymi0r6isPuc84+x00M+4n6HE5oEkBgfdFT8kBrsAvFW2MWvYZ7wb5ELwwnj9fbEc
+         zTig==
+X-Gm-Message-State: AOAM531MQtYBsDKRh70EBjVQho7zDsTzIP5/gxJdu7Rl8vMcLm021GGJ
+        +hPiFrGQ8TNmNxM9CLE4rQ==
+X-Google-Smtp-Source: ABdhPJzFfTUvwCWIB29bpybZvUCdBP4mQtaARfqBdm4hexGTPcJAiUL22/ZT2iuFmMl1WRl2Y3/ivQ==
+X-Received: by 2002:a05:6808:ec2:b0:2f7:34db:691e with SMTP id q2-20020a0568080ec200b002f734db691emr16118754oiv.252.1652800348779;
+        Tue, 17 May 2022 08:12:28 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id t15-20020a056830224f00b0060603221235sm3331otd.5.2022.05.17.08.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 May 2022 08:12:28 -0700 (PDT)
+Received: (nullmailer pid 1045233 invoked by uid 1000);
+        Tue, 17 May 2022 15:12:26 -0000
+Date:   Tue, 17 May 2022 10:12:26 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     sboyd@kernel.org, tglx@linutronix.de, aisheng.dong@nxp.com,
+        linux@armlinux.org.uk, olof@lixom.net, kernel@pengutronix.de,
+        festevam@gmail.com, leoyang.li@nxp.com, dev@lynxeye.de,
+        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        tharvey@gateworks.com, cniedermaier@dh-electronics.com,
+        linux-gpio@vger.kernel.org, stefan@agner.ch, arnd@arndb.de,
+        linux-clk@vger.kernel.org, s.hauer@pengutronix.de,
+        linux-imx@nxp.com, Mr.Bossman075@gmail.com,
+        giulio.benetti@benettiengineering.com, soc@kernel.org,
+        abel.vesa@nxp.com, linux-kernel@vger.kernel.org, clin@suse.com,
+        marcel.ziswiler@toradex.com, mturquette@baylibre.com,
+        devicetree@vger.kernel.org, sebastian.reichel@collabora.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v3 04/15] dt-bindings: mmc: fsl-imx-esdhc: add i.MXRT1170
+ compatible
+Message-ID: <20220517151226.GA1045177-robh@kernel.org>
+References: <20220517032802.451743-1-Mr.Bossman075@gmail.com>
+ <20220517032802.451743-3-Mr.Bossman075@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v3 5/6] ARM: dts: lan966x: rename pinctrl nodes
-Content-Language: en-US
-To:     Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski@canonical.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Paul Burton <paulburton@kernel.org>,
-        "Quentin Schulz" <quentin.schulz@bootlin.com>,
-        Antoine Tenart <atenart@kernel.org>,
-        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        <UNGLinuxDriver@microchip.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mips@vger.kernel.org>
-References: <20220319204628.1759635-1-michael@walle.cc>
- <20220319204628.1759635-6-michael@walle.cc>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <20220319204628.1759635-6-michael@walle.cc>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220517032802.451743-3-Mr.Bossman075@gmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19/03/2022 at 21:46, Michael Walle wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+On Mon, 16 May 2022 23:27:51 -0400, Jesse Taube wrote:
+> Add i.MXRT1170 compatible string to Documentation.
 > 
-> The pinctrl device tree binding will be converted to YAML format. Rename
-> the pin nodes so they end with "-pins" to match the schema.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-
-For the record:
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-
-This patch was taken by Claudiu and sent in the PR targeting 5.19 
-arm-soc tree via the at91-dt branch. It's currently in linux-next.
-
-Best regards,
-   Nicolas
-
+> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
 > ---
->   arch/arm/boot/dts/lan966x-pcb8291.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/lan966x-pcb8291.dts b/arch/arm/boot/dts/lan966x-pcb8291.dts
-> index 3281af90ac6d..3c7e3a7d6f14 100644
-> --- a/arch/arm/boot/dts/lan966x-pcb8291.dts
-> +++ b/arch/arm/boot/dts/lan966x-pcb8291.dts
-> @@ -35,7 +35,7 @@ fc3_b_pins: fcb3-spi-pins {
->                  function = "fc3_b";
->          };
-> 
-> -       can0_b_pins:  can0_b_pins {
-> +       can0_b_pins:  can0-b-pins {
->                  /* RX, TX */
->                  pins = "GPIO_35", "GPIO_36";
->                  function = "can0_b";
-> --
-> 2.30.2
+> V1 -> V2:
+>  - New commit to fix dtbs_check
+> V2 -> V3:
+>  - Fix typo
+>  - Remove unused const
+> ---
+>  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
-
--- 
-Nicolas Ferre
+Acked-by: Rob Herring <robh@kernel.org>
