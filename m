@@ -2,93 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0217852A5C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 17:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BE1252A74B
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 17:46:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347868AbiEQPMe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 May 2022 11:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
+        id S242519AbiEQPq0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 May 2022 11:46:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346572AbiEQPMb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 11:12:31 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7749C3BFB0;
-        Tue, 17 May 2022 08:12:29 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id i66so22584899oia.11;
-        Tue, 17 May 2022 08:12:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/dfPBNJl0BkkDm6rR5f4i06anC7912qzGjQ5goLE40g=;
-        b=2n/fzMUTSwTKyejr6B4dtfNN8S4TK6C8wkKV/s5VUwqDf8yE0IrKq2+Wxvf2BLJJKM
-         DFrxFNljJC8nTGADlY6YiJ8zIp+ZBJ/nULXKP7zRbrzQ5bjlhj93GVEvhrAeQjjyDoIN
-         XNr+k8obA0FIxDANq7j5EwIOv36CnfahXEDcQ54zUtH+CiKIFtA/Uxi9s6JLutI2ygv9
-         8qre4UgnheUQI21RQ02VdD1hxqnZW6m6rAQGGpYaXtvl/H4UdMsat3ZOtFhfEHFQ71yo
-         Tk8Bymi0r6isPuc84+x00M+4n6HE5oEkBgfdFT8kBrsAvFW2MWvYZ7wb5ELwwnj9fbEc
-         zTig==
-X-Gm-Message-State: AOAM531MQtYBsDKRh70EBjVQho7zDsTzIP5/gxJdu7Rl8vMcLm021GGJ
-        +hPiFrGQ8TNmNxM9CLE4rQ==
-X-Google-Smtp-Source: ABdhPJzFfTUvwCWIB29bpybZvUCdBP4mQtaARfqBdm4hexGTPcJAiUL22/ZT2iuFmMl1WRl2Y3/ivQ==
-X-Received: by 2002:a05:6808:ec2:b0:2f7:34db:691e with SMTP id q2-20020a0568080ec200b002f734db691emr16118754oiv.252.1652800348779;
-        Tue, 17 May 2022 08:12:28 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id t15-20020a056830224f00b0060603221235sm3331otd.5.2022.05.17.08.12.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 08:12:28 -0700 (PDT)
-Received: (nullmailer pid 1045233 invoked by uid 1000);
-        Tue, 17 May 2022 15:12:26 -0000
-Date:   Tue, 17 May 2022 10:12:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     sboyd@kernel.org, tglx@linutronix.de, aisheng.dong@nxp.com,
-        linux@armlinux.org.uk, olof@lixom.net, kernel@pengutronix.de,
-        festevam@gmail.com, leoyang.li@nxp.com, dev@lynxeye.de,
-        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        tharvey@gateworks.com, cniedermaier@dh-electronics.com,
-        linux-gpio@vger.kernel.org, stefan@agner.ch, arnd@arndb.de,
-        linux-clk@vger.kernel.org, s.hauer@pengutronix.de,
-        linux-imx@nxp.com, Mr.Bossman075@gmail.com,
-        giulio.benetti@benettiengineering.com, soc@kernel.org,
-        abel.vesa@nxp.com, linux-kernel@vger.kernel.org, clin@suse.com,
-        marcel.ziswiler@toradex.com, mturquette@baylibre.com,
-        devicetree@vger.kernel.org, sebastian.reichel@collabora.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v3 04/15] dt-bindings: mmc: fsl-imx-esdhc: add i.MXRT1170
- compatible
-Message-ID: <20220517151226.GA1045177-robh@kernel.org>
-References: <20220517032802.451743-1-Mr.Bossman075@gmail.com>
- <20220517032802.451743-3-Mr.Bossman075@gmail.com>
+        with ESMTP id S1350948AbiEQPqR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 11:46:17 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AA650B1D
+        for <linux-gpio@vger.kernel.org>; Tue, 17 May 2022 08:45:17 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:c0f6:7ccf:c217:5f21])
+        by laurent.telenet-ops.be with bizsmtp
+        id XrlF2700H0nFbBY01rlFiK; Tue, 17 May 2022 17:45:16 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nqzNr-000jGZ-CH; Tue, 17 May 2022 17:45:15 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nqzNq-004Pdf-QY; Tue, 17 May 2022 17:45:14 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpio: rcar: Make the irqchip immutable
+Date:   Tue, 17 May 2022 17:45:13 +0200
+Message-Id: <29398fc1c9a16e5ea9c678be2c44c488a94ddce3.1652802220.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220517032802.451743-3-Mr.Bossman075@gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 16 May 2022 23:27:51 -0400, Jesse Taube wrote:
-> Add i.MXRT1170 compatible string to Documentation.
-> 
-> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
-> ---
-> V1 -> V2:
->  - New commit to fix dtbs_check
-> V2 -> V3:
->  - Fix typo
->  - Remove unused const
-> ---
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+immutable") added a warning to indicate if the gpiolib is altering the
+internals of irqchips.  Following this change the following warning is
+now observed for the gpio-rcar driver:
 
-Acked-by: Rob Herring <robh@kernel.org>
+    gpio gpiochip0: (e6050000.gpio): not an immutable chip, please consider fixing it!
+
+Fix this by making the irqchip in the gpio-rcar driver immutable.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Against linux-next.
+Tested on the koelsch development board (R-Car M2-W).
+
+On Tue, Apr 5, 2022 at 4:07 PM Marc Zyngier <maz@kernel.org> wrote:
+> Nothing breaks, the volume of change is small, the memory usage goes
+> down and we have fewer callbacks that can be used as attack vectors.
+> What's not to love?
+
+Does it?
+
+    arm32$ size drivers/gpio/gpio-rcar.o{.orig,}
+       text	   data	    bss	    dec	    hex	filename
+       4543	    112	     24	   4679	   1247	drivers/gpio/gpio-rcar.o.orig
+       4647	    112	     24	   4783	   12af	drivers/gpio/gpio-rcar.o
+
+    arm64$ size drivers/gpio/gpio-rcar.o{.orig,}
+       text	   data	    bss	    dec	    hex	filename
+       4919	    216	     48	   5183	   143f	drivers/gpio/gpio-rcar.o.orig
+       5159	    216	     48	   5423	   152f	drivers/gpio/gpio-rcar.o
+---
+ drivers/gpio/gpio-rcar.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 9a1e0c37c04baa58..6d1b105a4ae81f75 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -44,7 +44,6 @@ struct gpio_rcar_priv {
+ 	spinlock_t lock;
+ 	struct device *dev;
+ 	struct gpio_chip gpio_chip;
+-	struct irq_chip irq_chip;
+ 	unsigned int irq_parent;
+ 	atomic_t wakeup_path;
+ 	struct gpio_rcar_info info;
+@@ -98,6 +97,7 @@ static void gpio_rcar_irq_disable(struct irq_data *d)
+ 	struct gpio_rcar_priv *p = gpiochip_get_data(gc);
+ 
+ 	gpio_rcar_write(p, INTMSK, ~BIT(irqd_to_hwirq(d)));
++	gpiochip_disable_irq(gc, d->hwirq);
+ }
+ 
+ static void gpio_rcar_irq_enable(struct irq_data *d)
+@@ -105,6 +105,7 @@ static void gpio_rcar_irq_enable(struct irq_data *d)
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct gpio_rcar_priv *p = gpiochip_get_data(gc);
+ 
++	gpiochip_enable_irq(gc, d->hwirq);
+ 	gpio_rcar_write(p, MSKCLR, BIT(irqd_to_hwirq(d)));
+ }
+ 
+@@ -203,6 +204,17 @@ static int gpio_rcar_irq_set_wake(struct irq_data *d, unsigned int on)
+ 	return 0;
+ }
+ 
++static const struct irq_chip gpio_rcar_irq_chip = {
++	.name		= "gpio-rcar",
++	.irq_mask	= gpio_rcar_irq_disable,
++	.irq_unmask	= gpio_rcar_irq_enable,
++	.irq_set_type	= gpio_rcar_irq_set_type,
++	.irq_set_wake	= gpio_rcar_irq_set_wake,
++	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_SET_TYPE_MASKED |
++			  IRQCHIP_MASK_ON_SUSPEND,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
+ static irqreturn_t gpio_rcar_irq_handler(int irq, void *dev_id)
+ {
+ 	struct gpio_rcar_priv *p = dev_id;
+@@ -531,7 +543,6 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_rcar_priv *p;
+ 	struct gpio_chip *gpio_chip;
+-	struct irq_chip *irq_chip;
+ 	struct gpio_irq_chip *girq;
+ 	struct device *dev = &pdev->dev;
+ 	const char *name = dev_name(dev);
+@@ -581,16 +592,8 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ 	gpio_chip->base = -1;
+ 	gpio_chip->ngpio = npins;
+ 
+-	irq_chip = &p->irq_chip;
+-	irq_chip->name = "gpio-rcar";
+-	irq_chip->irq_mask = gpio_rcar_irq_disable;
+-	irq_chip->irq_unmask = gpio_rcar_irq_enable;
+-	irq_chip->irq_set_type = gpio_rcar_irq_set_type;
+-	irq_chip->irq_set_wake = gpio_rcar_irq_set_wake;
+-	irq_chip->flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
+-
+ 	girq = &gpio_chip->irq;
+-	girq->chip = irq_chip;
++	gpio_irq_chip_set_chip(girq, &gpio_rcar_irq_chip);
+ 	/* This will let us handle the parent IRQ in the driver */
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
+-- 
+2.25.1
+
