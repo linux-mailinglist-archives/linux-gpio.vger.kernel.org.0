@@ -2,58 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E4952A7FA
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 18:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5740E52A801
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 18:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350918AbiEQQdK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 May 2022 12:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
+        id S1350942AbiEQQet (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 May 2022 12:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350912AbiEQQdJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 12:33:09 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F2633358;
-        Tue, 17 May 2022 09:33:08 -0700 (PDT)
+        with ESMTP id S1347238AbiEQQeq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 12:34:46 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168BB4ECFB;
+        Tue, 17 May 2022 09:34:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652805188; x=1684341188;
+  t=1652805286; x=1684341286;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=KCbhEy6vdSkzBqE0YJ9VgoWS4GbK8olfcLls77Yab2Q=;
-  b=cpDmOzFtqKk7oRfQ2tqaAkO1LIkRkrIac9TfCpTkoHQNfIxFk/hT1b0H
-   rDwmM6+9d2PtoL+0vbhuPi1PSkHL13jzcRkZETIigkktcaSIeqfwC8eeA
-   t4NWha63RbqF0PXaEggb+XNtlaRyb4+BZAq8bVYsJrBUwm7+UO8cSqCOz
-   9VjAmv50HruX+ihzPLTope8nRysrqkkUUuHO3ZWgFOzBHjmhZRb4Kaitx
-   LgbTjmjHJJBmcvR34GfNgMwW9YCsegE+2ILvUu8jKxgA1gY/BjwZ/wSBD
-   9Tm2VCgs5CAUjUkzu0QBtpTYaGerY0drTsLq9oKr+vmAAF1EEt0uL8Lny
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="334286604"
+  bh=pXKemmWg0zSWkgtz6B7q39wTF2OVnZlv0Mo1h+/mPWY=;
+  b=as9/b+/SC4irfepoGIfgNDBJIi60cVLGqsUUCCjZXCGFkPARqQ7LuUW4
+   3wOAG7xy84NEra6v5cxVhryrcXVnWeYemzMHQ1o22Rd6JBjjHjH8z1hFJ
+   YzH0wifG7CMjGUzxe5mOMxbOYUSf0fEBgJ/Xcv0TVKICyhbr0jvT0hymS
+   GMKZbXADbS6Aa1UajVEVLj4t6E7sbL43CMb/BQ4fgcJ7Gkv0TWDpFw19V
+   szBhuqVA0IhqcRhj9M2NneVqRJs14Z4xJeKJE7sajaj2gGoFS+7VyrCNt
+   AD8lZ0ef6bUavN93gN4DYlBebrjGAKdNvImAk7UM3iprmWV0VtmcN0OFJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="251754276"
 X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
-   d="scan'208";a="334286604"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 09:33:08 -0700
+   d="scan'208";a="251754276"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 09:34:45 -0700
 X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
-   d="scan'208";a="523036457"
+   d="scan'208";a="626563924"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 09:33:06 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 09:34:44 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nr086-0008CP-M7;
-        Tue, 17 May 2022 19:33:02 +0300
-Date:   Tue, 17 May 2022 19:33:02 +0300
+        id 1nr09h-0008CZ-Ni;
+        Tue, 17 May 2022 19:34:41 +0300
+Date:   Tue, 17 May 2022 19:34:41 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/2] pinctrl: intel: make irq_chip immutable
-Message-ID: <YoPOPsmBj8LEZ2uD@smile.fi.intel.com>
-References: <20220516185618.32448-1-andriy.shevchenko@linux.intel.com>
- <YoN0cdUdYQotyod9@lahna>
+Subject: Re: [PATCH v1 1/1] pinctrl: cherryview: Use GPIO chip pointer in
+ chv_gpio_irq_mask_unmask()
+Message-ID: <YoPOof6cckysGT3g@smile.fi.intel.com>
+References: <20220516185500.32304-1-andriy.shevchenko@linux.intel.com>
+ <YoNz34dfCIrKYn6n@lahna>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YoN0cdUdYQotyod9@lahna>
+In-Reply-To: <YoNz34dfCIrKYn6n@lahna>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -65,23 +66,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 17, 2022 at 01:09:53PM +0300, Mika Westerberg wrote:
-> On Mon, May 16, 2022 at 09:56:17PM +0300, Andy Shevchenko wrote:
-> > Since recently, the kernel is nagging about mutable irq_chips:
+On Tue, May 17, 2022 at 01:07:27PM +0300, Mika Westerberg wrote:
+> On Mon, May 16, 2022 at 09:55:00PM +0300, Andy Shevchenko wrote:
+> > The callers already have dereferenced pointer to GPIO chip, no need to
+> > do it again in chv_gpio_irq_mask_unmask(). Hence, replace IRQ data pointer
+> > by GPIO chip pointer.
 > > 
-> >    "not an immutable chip, please consider fixing it!"
-> > 
-> > Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-> > helper functions and call the appropriate gpiolib functions.
-> > 
-> > While at it, align IRQ chip callback names with member names for
-> > the sake of consistency.
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Or for the sake of inconsistency? ;-)  All the other structs are not
-> using this kind of alignment and I would like to keep this one matching
-> the rest too. Also I prefer the format currently used in the driver.
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-I got your point. I will drop that part from v2.
+Pushed to my review and testing queue, thanks!
 
 -- 
 With Best Regards,
