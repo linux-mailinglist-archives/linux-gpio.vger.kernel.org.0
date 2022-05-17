@@ -2,97 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 085B4529B5E
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 09:48:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB89529C93
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 May 2022 10:34:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239758AbiEQHsW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 May 2022 03:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41842 "EHLO
+        id S236442AbiEQIeM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 May 2022 04:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239678AbiEQHsV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 03:48:21 -0400
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40434477A;
-        Tue, 17 May 2022 00:48:20 -0700 (PDT)
-Received: by mail-qv1-f49.google.com with SMTP id eq14so13854155qvb.4;
-        Tue, 17 May 2022 00:48:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0/BndUcyTw55Mcn304/1HhrFAvm3GtAMoXqIn6Pxinc=;
-        b=q7gMa3oqgkcHxQpzh7ikn+HbRlLo2zzPHahNbLV+X5MDZOx2hAY+6CV6MIx50aOh9S
-         FofWuL6LGA/Tw759xzInkCc/+pFDuajWBLlEGUCDEb3C/6tJnY9pxvNVKOwG+4XZXqOU
-         Zzc6RKGtQdVo6wK4B53IY18VUVWvKQhq89hStxD9KopGndauW/BiHv+7ZUT2xzuN7EkQ
-         c+8b8ylchgiOBF+5v9x2sbY8a8golww1hSr6qYtyebYnNvRQsJixJWYI9bwaHMA3XFyb
-         IvpLE0F/wq3m9Lxhuy7XzRaL6J13cc1L9U4xYuvpq0gxjgP+M52ytIcTIApwzl5bhnTt
-         pWgA==
-X-Gm-Message-State: AOAM531fQOod5z9KAtCoaSAiOY3O/tL6qWgkUlXHkZ3Ic24UIEFRkk70
-        xszJ3kJB1Iztg24atXXAKNSiNZuJZ51dDA==
-X-Google-Smtp-Source: ABdhPJygvIxBcGeCCvK9RkbWE23WgW4JmZJy4wjCBfyef5bQFvCpF1KCgoqxAPRmjfNBzvOSt2TZHw==
-X-Received: by 2002:a05:6214:32b:b0:461:d8e3:1bcf with SMTP id j11-20020a056214032b00b00461d8e31bcfmr3541369qvu.29.1652773699530;
-        Tue, 17 May 2022 00:48:19 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id t7-20020ac87387000000b002f39b99f6b1sm7163875qtp.75.2022.05.17.00.48.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 May 2022 00:48:19 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id p139so10136644ybc.11;
-        Tue, 17 May 2022 00:48:19 -0700 (PDT)
-X-Received: by 2002:a25:4289:0:b0:64d:746f:5311 with SMTP id
- p131-20020a254289000000b0064d746f5311mr12151686yba.89.1652773698802; Tue, 17
- May 2022 00:48:18 -0700 (PDT)
+        with ESMTP id S236144AbiEQIeL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 May 2022 04:34:11 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F25E44339A;
+        Tue, 17 May 2022 01:34:09 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: kholk11)
+        with ESMTPSA id 2B88F1F41ECB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1652776448;
+        bh=LCe72gf7Q6QuyRU8/hNAkV44/40CUOPrEMqg9amSQ6k=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=mWuOx6AFAnuY4LuC4el83eJaIr8+U3BZJlHbPUYkQtJljV6YtNFTt7BsfuUSe0+Be
+         Kkt1sSbONVTRTrxKUd3jMN1iqIOJ7woU8CjO16EYzUO4NPpj5Sq9lW2srgPc27jPUM
+         D+jR1YYzKTzx8Zz4tr+OuxurKqpxGJdEhi4gzziD+eKoRCMRHXJxK2rvyUx1hAxThA
+         pJlf75oPSboAcQlnABY1MKvccRmjm2CogQqQW9bqiUmw2HwzHWltElzn17Pf9oh5hD
+         KCJ1+roGMSkFEiwkxb87NuoGWHbfsaMMKlrs3CCswLO9CealVlEVy1DMqNeAJbCb3R
+         Pi/bAk0pq/VYA==
+Message-ID: <ca40156f-5bc1-ef3a-517e-6ad61e9bf3df@collabora.com>
+Date:   Tue, 17 May 2022 10:34:05 +0200
 MIME-Version: 1.0
-References: <20220511094057.3151-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220511094057.3151-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 May 2022 09:48:07 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV=vWrXYtdt-OsNYpRm_dgbtieKKu1Cyzr8Hwbbsomgyw@mail.gmail.com>
-Message-ID: <CAMuHMdV=vWrXYtdt-OsNYpRm_dgbtieKKu1Cyzr8Hwbbsomgyw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: pinctrl-rzg2l: Return -EINVAL for pins
- which have input disabled
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: Add MediaTek MT6795 pinctrl
+ bindings
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+        matthias.bgg@gmail.com, sean.wang@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, nfraprado@collabora.com
+References: <20220505083757.11288-1-angelogioacchino.delregno@collabora.com>
+ <20220505083757.11288-2-angelogioacchino.delregno@collabora.com>
+ <20220517000657.GA3609297-robh@kernel.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20220517000657.GA3609297-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 11, 2022 at 11:41 AM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Pin status reported by pinconf-pins file always reported pin status as
-> "input enabled" even for pins which had input disabled. Fix this by
-> returning -EINVAL for the pins which have input disabled.
->
-> Fixes: c4c4637eb57f2 ("pinctrl: renesas: Add RZ/G2L pin and gpio controller driver")
-> Reported-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Il 17/05/22 02:06, Rob Herring ha scritto:
+> On Thu, May 05, 2022 at 10:37:56AM +0200, AngeloGioacchino Del Regno wrote:
+>> Add devicetree and pinfunc bindings for MediaTek Helio X10 MT6795.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../pinctrl/mediatek,pinctrl-mt6795.yaml      | 224 +++++
+>>   include/dt-bindings/pinctrl/mt6795-pinfunc.h  | 908 ++++++++++++++++++
+>>   2 files changed, 1132 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+>>   create mode 100644 include/dt-bindings/pinctrl/mt6795-pinfunc.h
+>>
 
-Nice catch!
+..snip..
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl-for-v5.20.
+>> diff --git a/include/dt-bindings/pinctrl/mt6795-pinfunc.h b/include/dt-bindings/pinctrl/mt6795-pinfunc.h
+>> new file mode 100644
+>> index 000000000000..4888bb7fb9cf
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/mt6795-pinfunc.h
+>> @@ -0,0 +1,908 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+> 
+> Dual license please.
+> 
 
-BTW, several other (non-Renesas) drivers seem to get this wrong, too.
+Whoooops!
 
-Gr{oetje,eeting}s,
+Sorry, my intention was to indeed put (GPL-2.0-only OR BSD-3-Clause) here,
+like I've done for the others.
+I'm sending a v4 with the right license right away.
 
-                        Geert
+Thanks for making me notice this unintentional mistake.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
+Angelo
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
