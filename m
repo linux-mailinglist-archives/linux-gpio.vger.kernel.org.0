@@ -2,64 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87CC652BDF3
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 May 2022 17:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 963FB52BE89
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 May 2022 17:26:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238978AbiERPBQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 May 2022 11:01:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41970 "EHLO
+        id S239056AbiERPDw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 May 2022 11:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239160AbiERPBF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 May 2022 11:01:05 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FD1B2CDCA
-        for <linux-gpio@vger.kernel.org>; Wed, 18 May 2022 08:01:04 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id en5so3417173edb.1
-        for <linux-gpio@vger.kernel.org>; Wed, 18 May 2022 08:01:04 -0700 (PDT)
+        with ESMTP id S239043AbiERPDv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 May 2022 11:03:51 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4410C1DE556;
+        Wed, 18 May 2022 08:03:50 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id y7so2902248ejr.13;
+        Wed, 18 May 2022 08:03:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QMOlyN/qTFm2XsoAL3zOzGQtzc1v4ZBdV7QAODxVM04=;
-        b=S0/LlJPilupWVBxbepDWd4ALkj1jqFqOGpfsYt4oZz1IbJPM2jChXarVWCnPFrIQy9
-         hu+uwPwW+dDlDg40DIBipE6hUIF+wt9Go2ORD00La3rPSt5ZM4A7EA+HWaxRqKql3jBg
-         PM5Z4S/a3eM9dT8FMxAWQjOUqRtNfmTPxZlmzlCrpcT9qLLizJLUhLxpkxpj1SXuGHi+
-         fLtlM7OvbfQQQhfiimB6ceSJKoRTW5RkRzk+nw2SkhaqBHDUvzffTR6ZIj+tx/L5IyMl
-         aZkm37p4XFtuIYaoXm4tPfoiMUacEeEXWpqPzpnl5kmFA+0CGb1S6fXTYHw1ROypza5V
-         2pKw==
+        bh=DIU6nbXTAiAMQ/3SVzqxTbsO2euyVD3quCdWwb6E3nA=;
+        b=hgY1QL+wrUYK+LW+M54xhYQFTwEP4IRsM0Mco4O9DObO2rtCLqAlHBidMaXWSbpmMi
+         3Oa87JQXe0SqLcqDByMzvK+a0Tyse1PppKxDLAl4FYsygwkP6Kbwxyd4ie1nVYlbvdGX
+         IhhiYPD+Jgysiu/kkjSRm8Oe/qWjf7lJYtKAD2Z6icwz8j3fe4s9xpmPJ2YekV9JExgG
+         l1Qj5Lt2KTyAoSWdBr9vdPnGTG62z6faKRLWxttT0nsjnxUIJtQIvWey4WreqNri999G
+         rMkJm3q30orS5dkGdXZLCNttmr6EPm/BY3LsknjeTOXd8oK6oykweUVgPNUa+WH+uB8A
+         5Iyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QMOlyN/qTFm2XsoAL3zOzGQtzc1v4ZBdV7QAODxVM04=;
-        b=l+C/WoG/vdWSJqvy5mp1kqh0SF8xHfGYTFJcJvgQZ+k9OXeaUO008F2iDEPc6JOh+k
-         CdkbfpTM1fmrhEIUUvaOKzg0DHah81NlYmtogz0cCR4UmvZG3uHeksCSwTHjaEIWproM
-         3CeZZVURJNrXs3Jy59SaSeOVFU1CnhMIlbMTCFCv0jPsCCubeENQP6x5UGe6hphc/nLt
-         6YWNPUwHJR4cWGZwjpM8qs/5qIPm+nI1WprbDCZJ59rR8W4YNClEKIYJJ3Y4HefMyY20
-         BNE2ncavVsPPa89uCuokHreWYAroOKvrmxkHqmWq40YBQG3Q/6BHKwHyQsvGmfvnwAf4
-         2njw==
-X-Gm-Message-State: AOAM5309ehITAuGfk+z5qXIgfvegdLaw346MhetfQ3dtL7aRO48x1YH0
-        EdT30VloggPP0LZinfkvWKUbWMU7BM7hKx5VQXY=
-X-Google-Smtp-Source: ABdhPJx8zUUBtXzXZ1/JGjDJmNbcSqyN0kVGya8Y12DFmgeWY/u12Mwo4rQLwdEYIPgK87Ktme506w5enXxDiPAOj64=
-X-Received: by 2002:aa7:d911:0:b0:42a:af69:e167 with SMTP id
- a17-20020aa7d911000000b0042aaf69e167mr189743edr.54.1652886063021; Wed, 18 May
- 2022 08:01:03 -0700 (PDT)
+        bh=DIU6nbXTAiAMQ/3SVzqxTbsO2euyVD3quCdWwb6E3nA=;
+        b=4PvuAV+Z2S6EpZSEJme/2NP/DLe2rH7/I9TzOmaUgbCirIDJIgRmh+Q6Jd3xSIJgKT
+         hGHIulskPgDxWqCZ+e8cNxx+o5obiEs4tPJrZw3VzsvEOGqBLrX3EUREGXXs6zdGSFJi
+         4TovsRQHIcVDIUOMjrZm35abe5pgt5lg0eeucTKYCkJl92tFNBWHmn1NVrKy2nVyQtW3
+         qMYHKH1OJ36GvPG7e/gLJ8frN3zO0oRsdJevrffbeu7zgsPPHWPcRbFu31cv7MublW66
+         sC77OMrDlOkhH7t+E/o7jC1nXxaaqVlloDIcai7nhrZfw/62vb1JdNZYog8JQkPPl0vu
+         xAHA==
+X-Gm-Message-State: AOAM532gRytwbgLowojC+oC0vbMdOfUUtCXXeXlDmVbZwtVSQxO0eKwt
+        /VwH2rqL9XTkvJpf/JZhPfW/7QXj7XTkQ9NjFVs=
+X-Google-Smtp-Source: ABdhPJxpb/ukSW3BtDrH/mQU2isMxd4g390WY6v6LQsg3UqFwHJueUlapMsF+ouMRujJ/pebfVVWjFa6dw09jDekpJU=
+X-Received: by 2002:a17:907:6d8a:b0:6fe:1b36:dfcc with SMTP id
+ sb10-20020a1709076d8a00b006fe1b36dfccmr19071735ejc.579.1652886228719; Wed, 18
+ May 2022 08:03:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <e6380b316db23ee03a9adbf0a7d1ad83538f9961.1652884676.git.geert+renesas@glider.be>
-In-Reply-To: <e6380b316db23ee03a9adbf0a7d1ad83538f9961.1652884676.git.geert+renesas@glider.be>
+References: <20220509050953.11005-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220509050953.11005-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CACRpkdafrkyQjmyoa4CAJXJ8JdT3owapq10=yBQLyPp0EwO6AQ@mail.gmail.com>
+In-Reply-To: <CACRpkdafrkyQjmyoa4CAJXJ8JdT3owapq10=yBQLyPp0EwO6AQ@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 18 May 2022 17:00:26 +0200
-Message-ID: <CAHp75VcWuYM=STsNW5mP19UBTkNmnhP_Ed+pUxoAhTU3JiWXtQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: dwapb: Make the irqchip immutable
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
+Date:   Wed, 18 May 2022 17:03:07 +0200
+Message-ID: <CAHp75VdFuV_vSvJMjuOn9+CewXXJjfxOYw6gVhmX_gwSC2R6mg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -71,19 +78,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 18, 2022 at 4:40 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Sat, May 14, 2022 at 4:14 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> immutable") added a warning to indicate if the gpiolib is altering the
-> internals of irqchips.  Following this change the following warning is
-> now observed for the dwapb driver:
+> On Mon, May 9, 2022 at 7:10 AM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 >
->     gpio gpiochip0: (50200000.gpio): not an immutable chip, please consider fixing it!
->
-> Fix this by making the irqchip in the dwapb driver immutable.
+> > Supported GPIO IRQs by the chip is not always equal to the number of GPIO
+> > pins. For example on Renesas RZ/G2L SoC where it has GPIO0-122 pins but at
+> > a give point a maximum of only 32 GPIO pins can be used as IRQ lines in
+> > the IRQC domain.
+> >
+> > This patch adds ngirq member to struct gpio_irq_chip and passes this as a
+> > size to irq_domain_create_hierarchy()/irq_domain_create_simple() if it is
+> > being set in the driver otherwise fallbacks to using ngpio.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Same comments as per PCA953x driver.
+> As mentioned in some other patch, try to use .valid_mask for this instead.
+
+I have not been Cc'ed, but briefly reading I agree with Linus.
 
 -- 
 With Best Regards,
