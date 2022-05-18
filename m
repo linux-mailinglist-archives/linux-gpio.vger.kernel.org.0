@@ -2,116 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 735A052BE7D
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 May 2022 17:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8C1452BE47
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 May 2022 17:26:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238703AbiEROlr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 May 2022 10:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46204 "EHLO
+        id S238962AbiERO7o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 May 2022 10:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238718AbiEROlq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 May 2022 10:41:46 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899DD18AAA7
-        for <linux-gpio@vger.kernel.org>; Wed, 18 May 2022 07:41:44 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:1425:89ca:2e9e:5fc1])
-        by andre.telenet-ops.be with bizsmtp
-        id YEhk2700110zdRX01EhkZc; Wed, 18 May 2022 16:41:44 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nrKrv-000qwT-Gh; Wed, 18 May 2022 16:41:43 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nrKrv-00BtLm-3X; Wed, 18 May 2022 16:41:43 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Emil Renner Berthing <kernel@esmil.dk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: starfive: Make the irqchip immutable
-Date:   Wed, 18 May 2022 16:41:42 +0200
-Message-Id: <5eb66be34356afd5eb0ea9027329e0939d03d3a0.1652884852.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S238888AbiERO7k (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 May 2022 10:59:40 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09D1A19FB3A;
+        Wed, 18 May 2022 07:59:39 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id n10so4378840ejk.5;
+        Wed, 18 May 2022 07:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6ghJb9MXOvPjVbNP2O+VvilLUlkkCEx3WunS6BB5Uc4=;
+        b=XB1PCP63p5IcPuRby4NOXLPeQmPAAJR/xJ32cC19iUtkhwaH25uzpPFyNyxYM6+XZD
+         lWullQw1lRNhWje4m6l2MRtHI8axUnC2D7NmtYBqJlrrZjhP0Q7UP1TkwmPWICZsxsJ2
+         HrqhOotv2Ii7WFFSWAag0MZumtWlvz07eg+f6wt0YpDEVkwRJsW65UMpMYixTVKn4Ntu
+         wlkUvPcRlEsTk308h123bQ/NEmTOR1nPP/a9A2HKDsfcsN2TS+kr2DgKR8OB2Bnar7xN
+         QOETZjEwc+qPIByBOVWovJmyidy5MMBwyMLnUr/HlBJznDh6oF2K3n/gw+Kc05cRuOya
+         i+nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6ghJb9MXOvPjVbNP2O+VvilLUlkkCEx3WunS6BB5Uc4=;
+        b=kTHllVGGFfjmOlNqjWJw4w87wD+fCMuC3q/hPDUdUcVJcyWxbkqnBKy3a1vSew+HTh
+         coe25l27+Wm9o2YteIoJfIrH+zKeVa6ueiJOOhUW8kAMIM6iNSRQ37BJ+nltsEohtJ+L
+         5ykamR1ldt/cOGvxwVdmjrli+dJ6ciHa/oy/F1dq+skc50dNK1eipiWSIeBm8CATKV46
+         zueHBTXj3VYu6OGp33sgqgnGQwyxS5lGKSoIf27MYAwtbwTmJBQGxpJUK9AsY+mXYj74
+         gyDtyvMqWJFgSrfdYAULvzEkTlOa13cyZH5/Q7dbBldM6iL//KktqPMfPKuqCffQ5IAF
+         aSRg==
+X-Gm-Message-State: AOAM532t82MnFFUaX7mUTB/PtNkRftcXUQWk9bO2rnpl/Yy2mnWrVd0K
+        z7dvC8OO5OoPeQGSIS+3lczSYxKYQ2HmVo5iTOTy9cOtBUp/Gg==
+X-Google-Smtp-Source: ABdhPJxh9Dl/E85FkZ/QleUoSSfmHcZ+WPUZf4Hmz9IBTvfJF0iRVB3rdAjQu7bZCo3MCTYA15vyGZpm0auz11BdxoQ=
+X-Received: by 2002:a17:907:6d8a:b0:6fe:1b36:dfcc with SMTP id
+ sb10-20020a1709076d8a00b006fe1b36dfccmr19051240ejc.579.1652885977469; Wed, 18
+ May 2022 07:59:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <6dc8b18570f63d9841c11441c8d203ee655007c7.1652879174.git.geert+renesas@glider.be>
+In-Reply-To: <6dc8b18570f63d9841c11441c8d203ee655007c7.1652879174.git.geert+renesas@glider.be>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 18 May 2022 16:59:00 +0200
+Message-ID: <CAHp75Vf4i7SMzfNhszCxpbbGo-ffDTnHeLatDDAdB33LxTKkHg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Make the irqchip immutable
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marc Zyngier <maz@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-immutable") added a warning to indicate if the gpiolib is altering the
-internals of irqchips.  Following this change the following warning is
-now observed for the starfive driver:
+On Wed, May 18, 2022 at 3:08 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-    gpio gpiochip0: (11910000.pinctrl): not an immutable chip, please consider fixing it!
+Thanks for your patches!
 
-Fix this by making the irqchip in the starfive driver immutable.
+> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+> immutable") added a warning to indicate if the gpiolib is altering the
+> internals of irqchips.  Following this change the following warning is
+> now observed for the pca953x driver:
+>
+>     gpio gpiochip7: (0-0020): not an immutable chip, please consider fixing it!
+>
+> Fix this by making the irqchip in the pca953x driver immutable.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Against linux-next.
-Boot-tested on BeagleV Starlight Beta.
----
- drivers/pinctrl/pinctrl-starfive.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+I have two fixes against documentation [1] and here is exactly the
+point to do it better.
+Please, update all your patches accordingly.
 
-diff --git a/drivers/pinctrl/pinctrl-starfive.c b/drivers/pinctrl/pinctrl-starfive.c
-index f2b7d002ccb17900..f82a72f8016f59cc 100644
---- a/drivers/pinctrl/pinctrl-starfive.c
-+++ b/drivers/pinctrl/pinctrl-starfive.c
-@@ -1078,6 +1078,8 @@ static void starfive_irq_mask(struct irq_data *d)
- 	value = readl_relaxed(ie) & ~mask;
- 	writel_relaxed(value, ie);
- 	raw_spin_unlock_irqrestore(&sfp->lock, flags);
-+
-+	gpiochip_disable_irq(&sfp->gc, d->hwirq);
- }
- 
- static void starfive_irq_mask_ack(struct irq_data *d)
-@@ -1106,6 +1108,8 @@ static void starfive_irq_unmask(struct irq_data *d)
- 	unsigned long flags;
- 	u32 value;
- 
-+	gpiochip_enable_irq(&sfp->gc, d->hwirq);
-+
- 	raw_spin_lock_irqsave(&sfp->lock, flags);
- 	value = readl_relaxed(ie) | mask;
- 	writel_relaxed(value, ie);
-@@ -1167,14 +1171,15 @@ static int starfive_irq_set_type(struct irq_data *d, unsigned int trigger)
- 	return 0;
- }
- 
--static struct irq_chip starfive_irq_chip = {
-+static const struct irq_chip starfive_irq_chip = {
- 	.name = "StarFive GPIO",
- 	.irq_ack = starfive_irq_ack,
- 	.irq_mask = starfive_irq_mask,
- 	.irq_mask_ack = starfive_irq_mask_ack,
- 	.irq_unmask = starfive_irq_unmask,
- 	.irq_set_type = starfive_irq_set_type,
--	.flags = IRQCHIP_SET_TYPE_MASKED,
-+	.flags = IRQCHIP_IMMUTABLE | IRQCHIP_SET_TYPE_MASKED,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static void starfive_gpio_irq_handler(struct irq_desc *desc)
-@@ -1374,7 +1379,7 @@ static int starfive_probe(struct platform_device *pdev)
- 	sfp->gc.base = -1;
- 	sfp->gc.ngpio = NR_GPIOS;
- 
--	sfp->gc.irq.chip = &starfive_irq_chip;
-+	gpio_irq_chip_set_chip(&sfp->gc.irq, &starfive_irq_chip);
- 	sfp->gc.irq.parent_handler = starfive_gpio_irq_handler;
- 	sfp->gc.irq.num_parents = 1;
- 	sfp->gc.irq.parents = devm_kcalloc(dev, sfp->gc.irq.num_parents,
+[1]: In one of the recent Linux Nexts:
+e9fdcc2d8376 Documentation: gpio: Advertise irqd_to_hwirq() helper in
+the examples
+bdb6528ec550 Documentation: gpio: Fix IRQ mask and unmask examples
+
+...
+
+>         irq_hw_number_t hwirq = irqd_to_hwirq(d);
+>
+> +       gpiochip_enable_irq(gc, d->hwirq);
+
+We have already hwirq.
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
