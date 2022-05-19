@@ -2,114 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4B0F52DF13
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 23:20:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEC852DF46
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 23:27:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242476AbiESVUK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 May 2022 17:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
+        id S229883AbiESV12 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 May 2022 17:27:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231966AbiESVUI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 17:20:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF53ED726;
-        Thu, 19 May 2022 14:20:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 52B84B8250B;
-        Thu, 19 May 2022 21:20:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C6FC385AA;
-        Thu, 19 May 2022 21:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652995205;
-        bh=SvQDWvHaw/Ro4+sDEA3LzYO4ioj59uSH1d5BBRvD684=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lZPvgxQ/0GEOJbdI/RsIgFr7yLZfcUJvpqzkwIfYr6DnYL+2Rhom2zrrp9ZJYTqpF
-         2BbR9KFYoHbcXxtwZrm5jEIxoonOr6uHesOrfW2SzdnjGAFe7wRyLtBeOLomEHF142
-         GyhjeqDrl/+/XblALv6RzMdFZz//uCum30g8tGHTm+Jh2eHBkWU+fpxNxNOYIVKpdO
-         Yz+zapxuT0saXPNbmmikHL5VGRFl3k5i/okcNGRFGOcWY43CajAV5gIwlk5K91/tPl
-         FY3nh2Cq1LMWd9FJmk7x7tKje3C8gCWlhNIHrrazJdMY61SXsJMc302TGt3KV0Bc7z
-         VYeES8NTlFwKw==
-Date:   Thu, 19 May 2022 22:19:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Rosin <peda@axentia.se>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Fix properties without any type
-Message-ID: <Yoa0egr9vhTHcxjp@sirena.org.uk>
-References: <20220519211411.2200720-1-robh@kernel.org>
+        with ESMTP id S229663AbiESV11 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 17:27:27 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E9B6D951;
+        Thu, 19 May 2022 14:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652995646; x=1684531646;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YEslGaRlWEVd8rQfrjVOyqh7W4xppAWF9ITI8yuaqmA=;
+  b=Aqw4cS3/t65JPN7NP6Q2HbatSjTOFy0XXPOVBZSMNbtn+OPcbTyF7wni
+   kHWf/I5mfRAHzY70+6M7+obrWMlGSvcDqTvqm/qjfRTCr1d2SoRn/eoG/
+   Rdusb4b8RB3/I1yjB6+vYpMDXIDmj9IDMqMuDknlpZsRdygQZS6l4XCDC
+   8rX5mJsjYQ/xMHSqzL9i/D06sVvO2XvEZlS9vdGeLCqv1DGFLETA5dRHF
+   cuqPZl57d5oFqxi7w8FoNNA3UHEh1pYRBqUTeCuAw1497715DOXbhul3W
+   Q5qqJOvRsceYUonMZ3Bufld9ptyXUZNU68TyxiBUOQc/in2ESphD7+C4p
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10352"; a="271208129"
+X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
+   d="scan'208";a="271208129"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 14:27:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
+   d="scan'208";a="524296741"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 19 May 2022 14:26:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 42026109; Fri, 20 May 2022 00:26:46 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: intel: Fix kernel doc format, i.e. add return sections
+Date:   Fri, 20 May 2022 00:26:45 +0300
+Message-Id: <20220519212645.47177-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eXFy+XxgE7404o6q"
-Content-Disposition: inline
-In-Reply-To: <20220519211411.2200720-1-robh@kernel.org>
-X-Cookie: Some restrictions may apply.
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Kernel doc validator is not happy:
 
---eXFy+XxgE7404o6q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  pinctrl-intel.c:865: warning: No description found for return value of 'intel_gpio_to_pin'
+  pinctrl-intel.c:904: warning: No description found for return value of 'intel_pin_to_gpio'
+  2 warnings
 
-On Thu, May 19, 2022 at 04:14:11PM -0500, Rob Herring wrote:
-> Now that the schema tools can extract type information for all
-> properties (in order to decode dtb files), finding properties missing
-> any type definition is fairly trivial though not yet automated.
->=20
-> Fix the various property schemas which are missing a type. Most of these
-> tend to be device specific properties which don't have a vendor prefix.
-> A vendor prefix is how we normally ensure a type is defined.
+Add return sections to the kernel documentation of the above mentioned
+functions.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---eXFy+XxgE7404o6q
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index f882a31375ee..ffc045f7bf00 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -858,6 +858,9 @@ static const struct pinctrl_desc intel_pinctrl_desc = {
+  * When coming through gpiolib irqchip, the GPIO offset is not
+  * automatically translated to pinctrl pin number. This function can be
+  * used to find out the corresponding pinctrl pin.
++ *
++ * Return: a pin number and pointers to the community and pad group, which
++ * the pin belongs to, or negative error code if translation can't be done.
+  */
+ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+ 			     const struct intel_community **community,
+@@ -899,6 +902,8 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+  * @pin: pin number
+  *
+  * Translate the pin number of pinctrl to GPIO offset
++ *
++ * Return: a GPIO offset, or negative error code if translation can't be done.
+  */
+ static __maybe_unused int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
+ {
+-- 
+2.35.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmKGtHkACgkQJNaLcl1U
-h9CTcgf/YrxaonL9unlOXD9rVNzVh2gBFZV2wTefQuNDSwkIM40MNQLcoafgcXo5
-gFwpnXnCULN4HW9E4gsxeDnj3lcvR/bPgnNtrHetwyPKH/I99KJSgtm6605GyKWF
-4d5cVzASF5iCk9z6tn51f2x6jCCLVkVoAOOohCc3nYr1YbXRtQSnKKS8vYaNyqVq
-/sELkTEEdwMdl9AML+9S0amyFoPS92ZdcFlFWZIjjzPmidXQxZuL7tGvs9O56vj+
-QUESokWc4u2ziIcTQT9X0XXb9dDJjhXWaFiHNc38F7o+ad3kBXAhgzzBzMC/6fLI
-/352XipOMFDBOV9MMA03nK4kEtXQBA==
-=MbOe
------END PGP SIGNATURE-----
-
---eXFy+XxgE7404o6q--
