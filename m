@@ -2,59 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FAB152D3BD
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 15:17:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CBFC52D3CF
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 15:21:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234080AbiESNRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 May 2022 09:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51322 "EHLO
+        id S238703AbiESNV0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 May 2022 09:21:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230395AbiESNRJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 09:17:09 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC33C3D28
-        for <linux-gpio@vger.kernel.org>; Thu, 19 May 2022 06:17:07 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id d137so8926783ybc.13
-        for <linux-gpio@vger.kernel.org>; Thu, 19 May 2022 06:17:07 -0700 (PDT)
+        with ESMTP id S237524AbiESNVY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 09:21:24 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F2C13D15
+        for <linux-gpio@vger.kernel.org>; Thu, 19 May 2022 06:21:22 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id i11so8997237ybq.9
+        for <linux-gpio@vger.kernel.org>; Thu, 19 May 2022 06:21:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3sUY19GyIG12NZLSdAkjxx301GK+rduuDLAdw32x6M4=;
-        b=K7PUUlvSIZwD7tSfFGGgz2BGsQsPghltwxCtZVaDs3tOPU0gwjnHP+E+50K4ou7MXs
-         WwtxalC/RYiop7fAAFCcpppSo8VUnenJUxeA4UXuWo5vmNalmFzfufVFaL9WercZMYmI
-         bbylwdFU9hk9cejG8jkwFMspPUSTHHpJuFEoRMcXP+MzQ+80mxW9NI+8VNjb5/3SaqI/
-         2zdr7ceYpeM0ABpR5hfvDDyqfhPx7RO7FXilF7HwCaroxTV7tbQxrMXLUk83iKVDyvGm
-         E/U01edrPY8sHxm1XYwhPGf4IFK/F+C3RINdNVLWdLaZ40Rd/XTUWKx/PgaaqS+cLr6C
-         ukkw==
+        bh=/8rkuhaZCQOmIIWlvL2cVDQe2QMeTYPgrGWngEZIrx4=;
+        b=qAA8lOXG8uIzKLnoeK5xsx2x0vRWX6tIuU9hSyCXncTSHBvHstrpTc1JZ2HDD3F2i3
+         ZiJShiWWKUvTsCocOYW3LlqNcwSZxAw1B17JguGYGXm9o4c/Ek35ZgLsaqrPYMeRxM3h
+         dtkxIKXN0cMeYzdq/p9LKfP1XzkcvsZkNkh5eLdQdw15AK5kP9rFQL/BOHi36WsAHR1I
+         Iny/GWuPfSty3YalC4ZbKxm6kNV/C24UCgpxKW011EinRM7XCCpE0vvdoumFNoGNp39K
+         MMqaKtM4GWk9RaCv87OsZr0ywEpbFiQ2OEArEnn88yAjH2sJtRabYx/32nWpvP/haUdB
+         3vDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3sUY19GyIG12NZLSdAkjxx301GK+rduuDLAdw32x6M4=;
-        b=SHRwifCpz+q/+ehvz9lEq8jikSzYBEpzJOqJ3o5KI0VYHfQAhtYhB9A/f7fsvc3b7Y
-         axsFtHATBRoo4C5bICScbEY8pWGFTfMniEQlIMlcFh8nim+LRSuo91bulCTJUXx4+UYJ
-         C2ZXa6QX5DvYJA1nJy0UBzgSTaPBiXAS4j9eioiM3SnMuVGEjLEqV8BxpSqPXVHUueNh
-         JF45sJfF7KkUlaTxySr74EFtR/xqhVUxuB1kwUZ95n+DTKrvy/NngaHPGRF8Kmwzpk6J
-         oB/8CV+8kb5U2th3iPT3CAy8HhkqDuywAYEiHp1cjJ6h0zuK+hwzh1pF4UCNOw0EvMjT
-         3pfw==
-X-Gm-Message-State: AOAM532BJxezZBCZfqZlN8zCFJQnkWbzJymR8XK8+SX6qtRxGCO6IEd2
-        qqd+CAnpAl8ULn7xfrnlnwKPcl1eZGUIcAcIrmYBXQ==
-X-Google-Smtp-Source: ABdhPJzisHzH95Hrh5acSvOJw3P+Lcc8zZsq8YBW6sPvP9iJzJjmv806G156YRLRSxDx/2NX8NJLkXVg1hJoFcLXnbo=
-X-Received: by 2002:a25:2c82:0:b0:64d:62a1:850b with SMTP id
- s124-20020a252c82000000b0064d62a1850bmr4519321ybs.291.1652966226763; Thu, 19
- May 2022 06:17:06 -0700 (PDT)
+        bh=/8rkuhaZCQOmIIWlvL2cVDQe2QMeTYPgrGWngEZIrx4=;
+        b=KvYL8CZNLXG2HWvLKEsDVk3JVCgAeKIWbTorebPfL/KemEUPrAKhaJUOgfxnOoa6ij
+         xGVLc5gcTdZXnu32K8SOuEA1mB1WydAke1x8euABS/WpoSpi3UMDpoEW/8xXuhA86Jq1
+         BGr+7HGB1iB3s0S8PFhQm+8/EQKcWX4FaqHHiZCCStmA5oDAyduOniCrQ8JYxKkvMQwA
+         3vVIviLk7CLJ0JQzcSJvkPkwDmLLbeGrQRIgLcSmEHQjT7sxcJkjnFUAC4tlUunNgdI9
+         qNiyGQPrTWJPupZ9roGmXDvkhHMyjwjyau49Tlxsx4yLYttBh1cDGvk2o2mY1np5L+YQ
+         17Yw==
+X-Gm-Message-State: AOAM532qsCmT2UInIo2NVdY7WGF8/Dsr2wNz1BmGRMK2Gpxu3VHx+UcT
+        NPNCNOOEvUR7Jw4RIkGAxgE87FLl7TlKdEhAu1mDYw==
+X-Google-Smtp-Source: ABdhPJzT0GGkpIhtRDpezEb7oVDQoA8RCO+/1yU04m2HB9xz8AvRn7VrjVu0qhzkauTfGr4IKwQcrnIptuIlhYb5Yek=
+X-Received: by 2002:a05:6902:526:b0:64d:b6ab:f91d with SMTP id
+ y6-20020a056902052600b0064db6abf91dmr4494072ybs.295.1652966482209; Thu, 19
+ May 2022 06:21:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <5eb66be34356afd5eb0ea9027329e0939d03d3a0.1652884852.git.geert+renesas@glider.be>
-In-Reply-To: <5eb66be34356afd5eb0ea9027329e0939d03d3a0.1652884852.git.geert+renesas@glider.be>
+References: <20220511183210.5248-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220511183210.5248-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CACRpkdYQAsam_v0XHm-A_trbyifj1pBQq5N+zc9KVw1vXVTYUw@mail.gmail.com> <CA+V-a8v_bCtoipKXyYoHsSku0-AbABi6Wj0RsHrj7_Sk4MUJyg@mail.gmail.com>
+In-Reply-To: <CA+V-a8v_bCtoipKXyYoHsSku0-AbABi6Wj0RsHrj7_Sk4MUJyg@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 May 2022 15:16:55 +0200
-Message-ID: <CACRpkdbW7iSPGkWjV3hWOPv=rJ9VL1Ct2if34nVVhhOB+WQLog@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: starfive: Make the irqchip immutable
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Emil Renner Berthing <kernel@esmil.dk>,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-riscv@lists.infradead.org
+Date:   Thu, 19 May 2022 15:21:10 +0200
+Message-ID: <CACRpkda9xiPMa6BBXUNsoJ7SQ9N6t=K422bh0Dh4HUBnotVYxg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -66,24 +80,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 18, 2022 at 4:41 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Wed, May 18, 2022 at 8:36 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 
-> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> immutable") added a warning to indicate if the gpiolib is altering the
-> internals of irqchips.  Following this change the following warning is
-> now observed for the starfive driver:
->
->     gpio gpiochip0: (11910000.pinctrl): not an immutable chip, please consider fixing it!
->
-> Fix this by making the irqchip in the starfive driver immutable.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Against linux-next.
-> Boot-tested on BeagleV Starlight Beta.
+> > As Geert says, I think you can just use .valid_mask for this,
+> > what do you say?
+> >
+> I don't think Geert is suggesting that. The .valid_mask option is one
+> time setting but what I need is something dynamic i.e. out of 392 GPIO
+> pins any 32 can be used as an interrupt pin.
 
-Patch applied!
+So why can't this just be determined from the compatible?
+This does not sound like a configuration option at all but something
+related to the IP block per se, and then you know that if it has
+a certain compatible then it has this property.
 
 Yours,
 Linus Walleij
