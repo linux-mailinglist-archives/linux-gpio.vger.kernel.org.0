@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4403752CAAF
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 06:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF97D52CAC1
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 06:11:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233511AbiESEH3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 May 2022 00:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        id S231657AbiESELu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 May 2022 00:11:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233483AbiESEH1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 00:07:27 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58240B2240;
-        Wed, 18 May 2022 21:07:26 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-2ec42eae76bso44575147b3.10;
-        Wed, 18 May 2022 21:07:26 -0700 (PDT)
+        with ESMTP id S229766AbiESELu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 00:11:50 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70E22ED6B;
+        Wed, 18 May 2022 21:11:47 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id d137so6918663ybc.13;
+        Wed, 18 May 2022 21:11:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VXXEFVAWdcfsrBLBj8ao5DIb64QepPVvyxaMhKzXSz4=;
-        b=bw96tcbU3b3bKXOLcOF/AgAkk7wRQZDJDDAW9NCIvo1kFnjx0ziKDZV5+njUSSrKHL
-         nMUcqVxWv4O/HOLGLqgSw2tPsLor49noYVmEC2cUOF7sUum+XgVsz/chJvloyE/7Mhpp
-         A6/xy8c41g993gjpNoXpRTxlGrLpRWFlUFjmWQ/JZbOFm8WhFX/m46d+SR19VSr+JqvJ
-         2gGXdgRBUxXf900CZ22iErlthvQIHmWwQtfGwYTgpRVVoPoCmoQKsNiRDAvsHwMfbDZ5
-         EoxNS1V6DGWwOCk4Ip9ckDnlX1RFHZG/PDmPKGA7jHOP/7l/cifjH05BjVLlyJ63oqnW
-         aSCg==
+        bh=bFhlKzSaR6ttt7NqrtERyj3kXNktY+qnVphxc8I2l0o=;
+        b=BLfRsxcxlMi1Y5o++ywuASu81Qy2RkoVzIqFvd9q60/wi4GOhQkpVF9uKahxFeTwRZ
+         czRMCieOd03+oLJ/WHdZVi4UIHixQ+f8v0pdmfqeuJtRnCF6OAGYOoymq9ip2NSuLXez
+         EBTgyk/roqURkeCZA+YCJ6BMpQj9vwFjcoj8y9Gs1rvnN4GhisBv5mvEvJ4xo0lf+2S9
+         6xr118IQC4uWY5gRORMlzH4peJ5j3S8oxVnaRDGrqFgQOkcmwH9gplr6h/MXz/WlbXMz
+         oPuSlvVBi6OxZV5JOjBxAYWNP0P5CmPNZwMecvmd+x4BhnONptjdLGXWQrBqB1MoNd/+
+         ZG0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VXXEFVAWdcfsrBLBj8ao5DIb64QepPVvyxaMhKzXSz4=;
-        b=DsxFlMOwjrmXNzsr1NbiDgEN+ZZMbCvSGttOVcx4bIZSJmqmvn9pkfKZfiiCNGUwG/
-         SuINhQU+hEFSjPL5LuuL+hS9qR0SCzrW9FL+R5sF2aV78Gwpf7LCZOEgdOuDA2647jcZ
-         XNtqBaIoidh8UcVOjoMJaxANYSsyYUi8hyZxmiGmU/oYFEFytCzU//fIlqwRVkLg24w2
-         vnkRnjpZf2kPYxPC/DRQyVj50EGQPTWWqQ2WUqb2MoSRqBtLWQfP2QL9GGcT5djm5PGE
-         zt7qE4mpBSyb/LrHqPcakokvCodOv2HGRFi6NpeedgLfvZ8OFHo4zFODb3VONQZX05EQ
-         H0dA==
-X-Gm-Message-State: AOAM530RqoQzXbdVT/VVfbBzVBqQUhVhTONWl1eqam94l3KG+ptpoKwB
-        HVCrIZrayn6iJZANpPFMfOifT4M3muGHzPkis4Y=
-X-Google-Smtp-Source: ABdhPJxbJGkHPtjXLEwwOw4PHTO9ghyGHE/Mv303/T+yUZFJOG3isNuJYeet9Pv4Y+XInrhWvxXsWOCPupkmjHSn/Oo=
-X-Received: by 2002:a0d:c101:0:b0:2ff:5824:e8a8 with SMTP id
- c1-20020a0dc101000000b002ff5824e8a8mr2562737ywd.413.1652933245601; Wed, 18
- May 2022 21:07:25 -0700 (PDT)
+        bh=bFhlKzSaR6ttt7NqrtERyj3kXNktY+qnVphxc8I2l0o=;
+        b=ZU35FBwTd9LP9B66dLmogxm6f0e2Cq5/SMX8ADDOqs3p4rTnfhjlvibTwqwZ7Ldj8k
+         qeEp5ITckQLtbmdI7q+59qJS+yadVD7az8wz27BSAbuchQ+GMe74x2pmBHpLE9QNqKYY
+         2f+PI30Zck/FQ6vyqfssIvg7CBXl6MOcC134Flqwozqig5/T1pR6Yi/42V5mcIMnXbIT
+         v8EAKG/LSaLJrMTs1qr8cKCLKN/k/bdcgEkWLb57At4WB6+g+o/S1W4YJiKQJBw3GWZ0
+         jE5B22Nhz5O0OQecukY4vB/L5NcWaV/J3ZAtct4xrX9SFJVDsDVoMeO1Gr9kbx1TTdEQ
+         6Uvg==
+X-Gm-Message-State: AOAM531g9JRtb+dK8Zdoj1wLJVtNV/96ziZJ3l/2SqcudE7vljP+UHSi
+        y1pG6j0I9eJGjAOAnWLrhg5JJ518VFK/B+P5RC8=
+X-Google-Smtp-Source: ABdhPJxrPNHuFfLZdogkAdNbyNhC5Zol80t3bYRV9oHaQG2OfwbsEqx86Ha17cwk8YkMoFGq+CnFUJJwK1lceIbxSZQ=
+X-Received: by 2002:a25:2488:0:b0:64e:a74d:fc7e with SMTP id
+ k130-20020a252488000000b0064ea74dfc7emr2557167ybk.563.1652933507213; Wed, 18
+ May 2022 21:11:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220518192924.20948-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAHp75VeyU4Ox76wz9VfT8qEKHsE1eAo2iw27Lro1tmjJB0npMg@mail.gmail.com>
-In-Reply-To: <CAHp75VeyU4Ox76wz9VfT8qEKHsE1eAo2iw27Lro1tmjJB0npMg@mail.gmail.com>
+References: <20220518192924.20948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220518192924.20948-6-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAHp75VfbcYCH5XgnP9VB0hX0W3_jdvSBmXSB1ANMiT66yLQvOA@mail.gmail.com>
+In-Reply-To: <CAHp75VfbcYCH5XgnP9VB0hX0W3_jdvSBmXSB1ANMiT66yLQvOA@mail.gmail.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 19 May 2022 05:07:00 +0100
-Message-ID: <CA+V-a8tp0T=ojr3hB-QacOvV5sCZ29YXspPzKSSpGHUA8_1XDA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Renesas RZ/G2L IRQC support
+Date:   Thu, 19 May 2022 05:11:22 +0100
+Message-ID: <CA+V-a8vBxtHeRqo9a9w7wWyAF28stZqoUt-cE1iYKNE4BDNc0w@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] gpio: gpiolib: Add a check to validate GPIO hwirq
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Marc Zyngier <maz@kernel.org>,
@@ -84,51 +85,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 18, 2022 at 10:10 PM Andy Shevchenko
+Hi Andy,
+
+Thank you for the review.
+
+On Wed, May 18, 2022 at 10:08 PM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
 >
-> On Wed, May 18, 2022 at 9:29 PM Lad Prabhakar
+> On Wed, May 18, 2022 at 9:30 PM Lad Prabhakar
 > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 > >
-> > Hi All,
-> >
-> > The RZ/G2L Interrupt Controller is a front-end for the GIC found on
-> > Renesas RZ/G2L SoC's with below pins:
-> > - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI
-> >   interrupts
-> > - GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
-> >   maximum of only 32 can be mapped to 32 GIC SPI interrupts,
-> > - NMI edge select.
-> >
-> >                                                              _____________
-> >                                                              |    GIC     |
-> >                                                              |  ________  |
-> >                                       ____________           | |        | |
-> > NMI --------------------------------->|          |  SPI0-479 | | GIC-600| |
-> >              _______                  |          |------------>|        | |
-> >              |      |                 |          |  PPI16-31 | |        | |
-> >              |      | IRQ0-IRQ7       |   IRQC   |------------>|        | |
-> > P0_P48_4 --->| GPIO |---------------->|          |           | |________| |
-> >              |      |GPIOINT0-122     |          |           |            |
-> >              |      |---------------->| TINT0-31 |           |            |
-> >              |______|                 |__________|           |____________|
-> >
-> > The proposed patches add hierarchical IRQ domain, one in IRQC driver and
-> > another in pinctrl driver. Upon interrupt requests map the interrupt to
-> > GIC. Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is
-> > handled by the pinctrl and IRQC driver.
+> > Add a check to validate GPIO hwirq is always within the range of hwirq_max
+> > set in the GPIO irq domain.
 >
-> Where is the explanation on why valid_mask can't be used instead?
+> ...
 >
-The .valid_mask option is one time setting but what I need is
-something dynamic i.e. out of 392 GPIO pins any 32 can be used as an
-interrupt pin. Also with this patch we also save on memory here [0].
+> > +                       if (WARN(hwirq >= domain->hwirq_max,
+> > +                                "error: hwirq 0x%x is too large for %s\n",
+> > +                                (int)hwirq, domain->name))
+>
+> Using castings in the printf() often points to possible mistakes or
+> missed custom specifiers.
+>
+Right, I picked up the printf() just a few lines above where it did
+the same exact thing. I will update it in the next version.
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/kernel/irq/irqdomain.c?h=next-20220518#n153
+> ...
+>
+> > +               if (WARN(hwirq >= domain->hwirq_max,
+> > +                        "error: hwirq 0x%x is too large for %s\n", (int)hwirq, domain->name))
+>
+> Ditto.
+>
+Will drop castings.
 
 Cheers,
 Prabhakar
->
-> --
-> With Best Regards,
-> Andy Shevchenko
