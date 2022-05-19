@@ -2,92 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4909952C6DB
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 00:57:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F144252C925
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 03:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231207AbiERW5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 May 2022 18:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45056 "EHLO
+        id S231608AbiESBMz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 May 2022 21:12:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231183AbiERW47 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 May 2022 18:56:59 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B378EBF
-        for <linux-gpio@vger.kernel.org>; Wed, 18 May 2022 15:56:55 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id i11so6128637ybq.9
-        for <linux-gpio@vger.kernel.org>; Wed, 18 May 2022 15:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
-        b=ovbcf3BPb/ZrA/FpQ+ZjErGDIEZ9sF3fYOxqsE4Z0xdiTlYY9UY36hS3ty6MLllddq
-         FdZzNc2PcFHW5cwKZ0FlQqx6F8uTY06Ab/cmT+eL89dkm6I4fHT5v6DDGzwY+fqIjM8b
-         RjeYQt93Ckr4p0lPVWY342OwWKznH6xDl4nV36uj7bwrBPcHFh3ePzF5GNEmu/mQBhIV
-         GwWDekgJIDWSV60014hyLdzt2NtjUStY8MI6SiwBWMH8LEBnRGkE0W6Db0zUE9IYWmDQ
-         Ifd6nbhkESdcIbQrjo3sdEfmdPtb1VAIHCw/LAZv1DOtvQwqLYnhML4dVDmuoYeMmVFn
-         q7TQ==
+        with ESMTP id S229603AbiESBMz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 May 2022 21:12:55 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5A712D24;
+        Wed, 18 May 2022 18:12:54 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-f1eafa567cso1538219fac.8;
+        Wed, 18 May 2022 18:12:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
-        b=3iBt1s9mSjY49GpkGI+iEuLdbYcyK0xrsXJuxGcOysmdshqCEFZoSREv6cUS0oENx6
-         s04jm23ntTp4sd/0gUrYpZgyhgYigvm+mv4tUfRfT4HRI9gF0p4bsCGV9Q5a69gP/v7V
-         RYQDK9ol7CZWffYu0KBVWN8izVaqUbrJD3bx2/CJMcLp7LeTtBa8llKGMwHbvJoLh32R
-         fHbwZMVXBHC45PY4yFfmjhvDL5vrurwjkfWokFBnzZ/Up3baeEmzHT0RaVrO9eit31xH
-         gghdMVj69LFNNo/Is3mV0OULb9f1lTkC2ekIRUwmbRRFbBqrVxi7hueYK9PYuDq6/iCb
-         ERfw==
-X-Gm-Message-State: AOAM530eYbSDZaYo4ZNyPN9FcT/iMkvPqc0AJkTRE4bKljvHoSUDZyPB
-        mdFfz3KL7cNz4FMdp/IQ2qGb6jJhOi/BFT+d7V8=
-X-Google-Smtp-Source: ABdhPJyyLDAg+sVdsLTxwEXiZ5avjedwK/uWMP/Y3UWcChEjwDE+iXuY4kOycHY8vIqM/rcV0hLTcVdg0IN0RAQYgBc=
-X-Received: by 2002:a5b:f87:0:b0:64a:9aa6:e181 with SMTP id
- q7-20020a5b0f87000000b0064a9aa6e181mr1852277ybh.157.1652914614913; Wed, 18
- May 2022 15:56:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dm0pT+M2kdQ8FRbmsyDYG7h2MbeTEk0HslEwcbyXupE=;
+        b=q25MpA4lXiKaQDLn1qOYZNCg+hOpy6IN/gxtZRxNriV5ElMfh8TAagapewGD3LrjQg
+         hjhYSbInlxWkL0iRn058Jh5n14sBPuMfq3NtpBlVkfQ5afsAPPzr/YFHR5eQLnlUdoQA
+         UbhMx+d4268Zgq6Gugg2P1uZeLS2KOUhC7ajdgGtrFAE+KtHfhRxW9PobBCMB57C+Bqr
+         RpprA7SMZo9Cwps2GEadqpb3AzT8846UzX+nt1B8UqfIujyWPRpjNTn6g6Eqg+nyhOje
+         bOpJb4uW/LV3P8L1Npr2dajbvmG0AR+eRfLWFPmnmLBdeteh4KHwS2u9wZXydXRdAX7P
+         kh/w==
+X-Gm-Message-State: AOAM5333oTvhT+l7u/TZuYXKZzJMAGsYBzGHN/hdXQFcxH9pSIIvljm9
+        u4A0OrlDbv87KHxmzPV6HA==
+X-Google-Smtp-Source: ABdhPJxXxRG+njkKSFVY0tFBAwJuHh8x0LsBP7KO+7VZ1paiRDMleNdakKkuryEsLEYYJVNZZr8WLQ==
+X-Received: by 2002:a05:6870:61cd:b0:e9:8de7:9c51 with SMTP id b13-20020a05687061cd00b000e98de79c51mr1330385oah.50.1652922773248;
+        Wed, 18 May 2022 18:12:53 -0700 (PDT)
+Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.googlemail.com with ESMTPSA id l13-20020a056870f14d00b000f169cbbb32sm1566263oac.43.2022.05.18.18.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 May 2022 18:12:52 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: qcom: Drop 'maxItems' on 'wakeup-parent'
+Date:   Wed, 18 May 2022 20:12:09 -0500
+Message-Id: <20220519011210.170022-1-robh@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Received: by 2002:a05:7000:7143:0:0:0:0 with HTTP; Wed, 18 May 2022 15:56:53
- -0700 (PDT)
-Reply-To: tonywenn@asia.com
-From:   Tony Wen <weboutloock4@gmail.com>
-Date:   Thu, 19 May 2022 06:56:53 +0800
-Message-ID: <CAE2_YrD=5bo8j9+ah-xptEBBV-HEC4=Gb0SRHf996phiopc3WQ@mail.gmail.com>
-Subject: engage
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b2f listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4933]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [weboutloock4[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [weboutloock4[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.4 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Can I engage your services?
+'wakeup-parent' is a single phandle and not an array, so 'maxItems' is
+wrong. Drop it.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,qcm2290-pinctrl.yaml      | 3 +--
+ .../devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml       | 3 +--
+ .../devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml       | 3 +--
+ .../devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml       | 3 +--
+ .../devicetree/bindings/pinctrl/qcom,tlmm-common.yaml          | 1 -
+ 5 files changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qcm2290-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,qcm2290-pinctrl.yaml
+index 206f4f238736..3f4f1c0360b5 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,qcm2290-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,qcm2290-pinctrl.yaml
+@@ -42,8 +42,7 @@ properties:
+   gpio-ranges:
+     maxItems: 1
+ 
+-  wakeup-parent:
+-    maxItems: 1
++  wakeup-parent: true
+ 
+ #PIN CONFIGURATION NODES
+ patternProperties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
+index 6c7c3f6a140e..2d228164357c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
+@@ -42,8 +42,7 @@ properties:
+   gpio-ranges:
+     maxItems: 1
+ 
+-  wakeup-parent:
+-    maxItems: 1
++  wakeup-parent: true
+ 
+ #PIN CONFIGURATION NODES
+ patternProperties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
+index cfcde405d30a..a7a2bb8bff46 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
+@@ -49,8 +49,7 @@ properties:
+   gpio-ranges:
+     maxItems: 1
+ 
+-  wakeup-parent:
+-    maxItems: 1
++  wakeup-parent: true
+ 
+ #PIN CONFIGURATION NODES
+ patternProperties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+index cfa2c50fdb93..15bb1018cf21 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+@@ -49,8 +49,7 @@ properties:
+   gpio-ranges:
+     maxItems: 1
+ 
+-  wakeup-parent:
+-    maxItems: 1
++  wakeup-parent: true
+ 
+ #PIN CONFIGURATION NODES
+ patternProperties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
+index 780f15bb5e40..c88c8dcb69d9 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
+@@ -42,7 +42,6 @@ properties:
+     description:
+       Specifying the interrupt-controller used to wake up the system when the
+       TLMM block has been powered down.
+-    maxItems: 1
+ 
+   gpio-reserved-ranges:
+     description:
+-- 
+2.34.1
+
