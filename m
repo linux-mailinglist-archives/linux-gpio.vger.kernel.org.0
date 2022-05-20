@@ -2,147 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E032752E86E
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 11:12:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A222F52E9C3
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 12:19:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235987AbiETJMP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 05:12:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58930 "EHLO
+        id S1348087AbiETKTF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 06:19:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235950AbiETJMO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 05:12:14 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CD15C350;
-        Fri, 20 May 2022 02:12:11 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1nryg4-0005aV-3Z; Fri, 20 May 2022 11:12:08 +0200
-Message-ID: <a0ce4372-df94-a19c-063d-274e65da7c38@leemhuis.info>
-Date:   Fri, 20 May 2022 11:12:06 +0200
+        with ESMTP id S241099AbiETKTE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 06:19:04 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D088106563
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 03:19:01 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:cdaa:735b:3efc:39fe])
+        by baptiste.telenet-ops.be with bizsmtp
+        id YyJy2700P38adXi01yJywi; Fri, 20 May 2022 12:18:59 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nrzik-000ztt-CY; Fri, 20 May 2022 12:18:58 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nrzij-003v6M-S6; Fri, 20 May 2022 12:18:57 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] gpio: rcar: Make the irqchip immutable
+Date:   Fri, 20 May 2022 12:18:56 +0200
+Message-Id: <7b57347151a452286cc88358bfc839de30937089.1653041878.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
-        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
- <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
- <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
- <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
- <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
- <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-In-Reply-To: <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653037931;c259e5ef;
-X-HE-SMSGID: 1nryg4-0005aV-3Z
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16.02.22 15:40, Bartosz Golaszewski wrote:
-> On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>
->> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
->> <marcelo.jimenez@gmail.com> wrote:
->>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>
->>>> I am curious about the usecases and how deeply you have built
->>>> yourselves into this.
->>>
->>> I don't know if I understand what you mean, sorry.
->>
->> Why does the user need the sysfs ABI? What is it used for?
->>
->> I.e what is the actual use case?
->>
->>>>> In any case, the upstream file should be enough to test the issue reported here.
->>>>
->>>> The thing is that upstream isn't super happy that you have been
->>>> making yourselves dependent on features that we are actively
->>>> discouraging and then demanding that we support these features.
->>>
->>> Hum, demanding seems to be a strong word for what I am doing here.
->>>
->>> Deprecated should not mean broken. My point is: the API seems to be
->>> currently broken. User space apps got broken, that's a fact. I even
->>> took the time to bisect the kernel and show you which commit broke it.
->>> So, no, I am not demanding. More like reporting and providing a
->>> temporary solution to those with a similar problem.
->>>
->>> Maybe it is time to remove the API, but this is up to "upstream".
->>> Leaving the API broken seems pointless and unproductive.
->>>
->>> Sorry for the "not super happiness of upstream", but maybe upstream
->>> got me wrong.
->>>
->>> We are not "making ourselves dependent on features ...". The API was
->>> there. We used it. Now it is deprecated, ok, we should move on. I got
->>> the message.
->>
->> Ouch I deserved some slamming for this.
->>
->> I'm sorry if I came across as harsh :(
->>
->> I just don't know how to properly push for this.
->>
->> I have even pushed the option of the deprecated sysfs ABI
->> behind the CONFIG_EXPERT option, which should mean that
->> the kernel config has been made by someone who has checked
->> the option "yes I am an expert I know what I am doing"
->> yet failed to observe that this ABI is obsoleted since 5 years
->> and hence failed to be an expert.
->>
->> Of course the ABI (not API really) needs to be fixed if we can find the
->> problem. It's frustrating that fixing it seems to fix broken other
->> features which are not deprecated, hence the annoyance on my
->> part.
->>
-> 
-> I'm afraid we'll earn ourselves a good old LinusRant if we keep
-> pushing the character device as a solution to the problem here.
-> Marcelo is right after all: he used an existing user interface, the
-> interface broke, it must be fixed.
-> 
-> I would prefer to find a solution that fixes Marcelo's issue while
-> keeping the offending patches in tree but it seems like the issue is
-> more complicated and will require some rework of the sysfs interface.
-> 
-> In which case unless there are objections I lean towards reverting the
-> relevant commits.
+Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+immutable") added a warning to indicate if the gpiolib is altering the
+internals of irqchips.  Following this change the following warning is
+now observed for the gpio-rcar driver:
 
-Reviving and old thread, hence a quick reminder: The patch at the start
-of this thread was applied and then reverted in 56e337f2cf13 with this text:
+    gpio gpiochip0: (e6050000.gpio): not an immutable chip, please consider fixing it!
 
-```
-This commit - while attempting to fix a regression - has caused a number
-of other problems. As the fallout from it is more significant than the
-initial problem itself, revert it for now before we find a correct
-solution.
-```
+Fix this by making the irqchip in the gpio-rcar driver immutable.
 
-I still have this on my list of open regressions and that made me
-wonder: is anyone working on a "correct solution" (or was one even
-applied and I missed it)? Or is the situation so tricky that we better
-leave everything as it is? Marcelo, do you still care?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Against gpio/for-next.
+Tested on the koelsch development board (R-Car M2-W).
 
-Ciao, Thorsten
+v2:
+  - Factor out hwirq using preferred helper.
+---
+ drivers/gpio/gpio-rcar.c | 31 ++++++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 356aac4de17cf142..5b117f3bd322b5a7 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -44,7 +44,6 @@ struct gpio_rcar_priv {
+ 	spinlock_t lock;
+ 	struct device *dev;
+ 	struct gpio_chip gpio_chip;
+-	struct irq_chip irq_chip;
+ 	unsigned int irq_parent;
+ 	atomic_t wakeup_path;
+ 	struct gpio_rcar_info info;
+@@ -96,16 +95,20 @@ static void gpio_rcar_irq_disable(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct gpio_rcar_priv *p = gpiochip_get_data(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ 
+-	gpio_rcar_write(p, INTMSK, ~BIT(irqd_to_hwirq(d)));
++	gpio_rcar_write(p, INTMSK, ~BIT(hwirq));
++	gpiochip_disable_irq(gc, hwirq);
+ }
+ 
+ static void gpio_rcar_irq_enable(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct gpio_rcar_priv *p = gpiochip_get_data(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ 
+-	gpio_rcar_write(p, MSKCLR, BIT(irqd_to_hwirq(d)));
++	gpiochip_enable_irq(gc, hwirq);
++	gpio_rcar_write(p, MSKCLR, BIT(hwirq));
+ }
+ 
+ static void gpio_rcar_config_interrupt_input_mode(struct gpio_rcar_priv *p,
+@@ -203,6 +206,17 @@ static int gpio_rcar_irq_set_wake(struct irq_data *d, unsigned int on)
+ 	return 0;
+ }
+ 
++static const struct irq_chip gpio_rcar_irq_chip = {
++	.name		= "gpio-rcar",
++	.irq_mask	= gpio_rcar_irq_disable,
++	.irq_unmask	= gpio_rcar_irq_enable,
++	.irq_set_type	= gpio_rcar_irq_set_type,
++	.irq_set_wake	= gpio_rcar_irq_set_wake,
++	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_SET_TYPE_MASKED |
++			  IRQCHIP_MASK_ON_SUSPEND,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
+ static irqreturn_t gpio_rcar_irq_handler(int irq, void *dev_id)
+ {
+ 	struct gpio_rcar_priv *p = dev_id;
+@@ -481,7 +495,6 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_rcar_priv *p;
+ 	struct gpio_chip *gpio_chip;
+-	struct irq_chip *irq_chip;
+ 	struct gpio_irq_chip *girq;
+ 	struct device *dev = &pdev->dev;
+ 	const char *name = dev_name(dev);
+@@ -531,16 +544,8 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ 	gpio_chip->base = -1;
+ 	gpio_chip->ngpio = npins;
+ 
+-	irq_chip = &p->irq_chip;
+-	irq_chip->name = "gpio-rcar";
+-	irq_chip->irq_mask = gpio_rcar_irq_disable;
+-	irq_chip->irq_unmask = gpio_rcar_irq_enable;
+-	irq_chip->irq_set_type = gpio_rcar_irq_set_type;
+-	irq_chip->irq_set_wake = gpio_rcar_irq_set_wake;
+-	irq_chip->flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
+-
+ 	girq = &gpio_chip->irq;
+-	girq->chip = irq_chip;
++	gpio_irq_chip_set_chip(girq, &gpio_rcar_irq_chip);
+ 	/* This will let us handle the parent IRQ in the driver */
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
+-- 
+2.25.1
+
