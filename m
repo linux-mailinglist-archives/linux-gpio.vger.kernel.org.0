@@ -2,89 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84BBC52EAD2
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 13:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1373452EAE0
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 13:34:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241444AbiETLb4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 07:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46552 "EHLO
+        id S1343708AbiETLd6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 07:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348541AbiETLbz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 07:31:55 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A8032ED3
-        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 04:31:50 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id kq17so15077799ejb.4
-        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 04:31:50 -0700 (PDT)
+        with ESMTP id S242092AbiETLd5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 07:33:57 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451FA644EA
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 04:33:55 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id kq17so15087751ejb.4
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 04:33:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0NvptFqrj7j0InVdvvMmgqzBzN84J9LRB794rQxkFdY=;
-        b=re4Sm8tWAvFHp6bKgAYMf09Z79Kgi3OEdhOIiBZ7/Rn2QXbgu5Ly14y4/nQN7Y/aTo
-         VlgbB9yG7Rlr2cuoabCyBxc2bGDLVKK0lXBLnASl6zsHCcOeA+1KzIBeqFsR+y75i5XZ
-         XvFFiPa9GJ2QyyaAdSmJuFi5RyYukwsFD78F77Gu/KxBhoXO8QeL/xhxXqgh8n2pVQ16
-         5uSsdoWXuRrwj+2ip8smJzRExeR9DRqgQ7nZOdTto/19ei6AXbORk/Mx4Jr1TH0FheIZ
-         Rjk53cTk2OReyJUGfCv97XHsZ5d+q5q5c0jA2xxlOnKUomCD8mRuslxc9zsWStq2ZrCv
-         ptCw==
+        bh=2Ff5tto3mG2moHDMZagyk1l4RGcRKVIn9NkwB+MYSFs=;
+        b=U7Hq/1yUUCJZVXfuVeGXfp42guR6XkALOJuCS98MJXa4mUPB101zO1rp84DeQDs8ig
+         4NQ6xwIcFxhYCCYOmVA1ovS/lkZMTttERIi9bT3wcTIviG1V2O0bAalzmtLr4kYKVWop
+         8xKaDqYiM8aYtgMeryqeg3Ec52+K3u3ktj9UiiJpoVmk70yDX/uGV4TowDHGRPVY/5d8
+         6vN7jTfonOu9cBvJBtC6EVqhE1fyUINoovNFNTtzfe/57ds3o/xIXACzDp6JPiBMk9QP
+         rbVf4mdGnNBKUTTGRAlZnrLo1Utg4TT7Yju0A1HRi3HhMiblXTUXCd4ssq9kWBuu88DM
+         9KGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0NvptFqrj7j0InVdvvMmgqzBzN84J9LRB794rQxkFdY=;
-        b=zapI8Y6dSzmjkU0FVYHARyyoWMr3qXS7XLyLAg7274WUKTYBmaimXVriNXp183enZG
-         qeaS4QjqZJT8Y6pfeeanrNJwl0gPEO8SXF2JQaPB0pZ5BI5viRuUkD/nrzgnbRVoB1Du
-         czaumAQJltstjHFI5kvClNXRMWe6v9Cbubb/RSe6wwLPA/byAS9wTIfIbMIFY0//xdOe
-         gTN7CD+Ap4/IE6rhudVxSWC37Pjg/A67qHGdPVuegMlER4jgCEu5TMrib4dPongf6laz
-         m6O9qRBYzXrco9Cawm9K/qX5ldZ3kIwG4FuYEWTeSlJRuA4uB1XzNiqKxkKR2mGm0bqO
-         UhPw==
-X-Gm-Message-State: AOAM532kp52Fl/Uld4f8LUiwjTnq7yJTC6Eny0ckrIxNOy8Y4mMlAhKA
-        bdVRylI8R6yilUNnKmWCSACswauCaJ7W5ExLTssjqw==
-X-Google-Smtp-Source: ABdhPJyAADo7d4aXCmDNCVnTVXprJXf99iw8JPsCwtJN6tP2yH5Av5Yx22hVAD/QFIma8grUrwXZC/mCf6Av3T8PJbw=
-X-Received: by 2002:a17:907:6eab:b0:6fe:b5e2:7b0e with SMTP id
- sh43-20020a1709076eab00b006feb5e27b0emr1053811ejc.736.1653046309443; Fri, 20
- May 2022 04:31:49 -0700 (PDT)
+        bh=2Ff5tto3mG2moHDMZagyk1l4RGcRKVIn9NkwB+MYSFs=;
+        b=Q/JT2YPGmsiQnr+ItWY3ltaQ6vWKKUB3DgAQVJQGfrQdgvOi2CxSTnHbq5vMX26YTn
+         YJjh24vfqfvJDjeYYZB+YbWER/M/Z68CxWwQx/s9dANjena7b5dw5VeuVujhMtD4FgL9
+         lIXiwxFcoGQXvGTsYVl5YT9yLfMjyyUROS3lOpkkY6WuP4v+n8AFhKC3Y+5pEyCUZz91
+         64Nl49k3NTRWGPhBmues5No6pIYB8w7FzOZmBNt788hTcooCVOOGL6BBX5+jlr063/dQ
+         Pecq6LsbODzUNLJypeMHScs37+sPA8uKmWwNinjolBfNc8NrADDud1CqvsdTvc1PsLCQ
+         twsA==
+X-Gm-Message-State: AOAM530N7MgqXWPeNOmi3Q80Zt+qZmKBDfW6otv8iVe485zjsHSWpPcr
+        WBPFDGITLqQ9pEQWKRVqNm3AqtpM7nB7fSoiGiMqi3jmBdE=
+X-Google-Smtp-Source: ABdhPJxWOe0zDSPIJekNjBgD1lDZe2XG7cWximV0loSY7pxt3y6QF+zM9JUWooKidrZRLdvXWARpFnfhUN2ca5sFsSI=
+X-Received: by 2002:a17:907:6d8b:b0:6fe:874:25bf with SMTP id
+ sb11-20020a1709076d8b00b006fe087425bfmr8658117ejc.734.1653046433749; Fri, 20
+ May 2022 04:33:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220519211411.2200720-1-robh@kernel.org>
-In-Reply-To: <20220519211411.2200720-1-robh@kernel.org>
+References: <20220520025624.3803776-1-zheyuma97@gmail.com>
+In-Reply-To: <20220520025624.3803776-1-zheyuma97@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 20 May 2022 13:31:38 +0200
-Message-ID: <CAMRc=McjvTE27BMbN-_W+Fdd7CJcswZQYsB-4N8cj=WfAQ9QOQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Fix properties without any type
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+Date:   Fri, 20 May 2022 13:33:43 +0200
+Message-ID: <CAMRc=MfeEjJ0bGaDgkYOxYA1pi+8376zis=V1Hyvy5K3AKCAxA@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: ml-ioh: Convert to use managed functions pcim*
+ and devm_*
+To:     Zheyu Ma <zheyuma97@gmail.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Rosin <peda@axentia.se>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        chrome-platform@lists.linux.dev,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-serial@vger.kernel.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -95,46 +67,173 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 19, 2022 at 11:14 PM Rob Herring <robh@kernel.org> wrote:
+On Fri, May 20, 2022 at 4:56 AM Zheyu Ma <zheyuma97@gmail.com> wrote:
 >
-> Now that the schema tools can extract type information for all
-> properties (in order to decode dtb files), finding properties missing
-> any type definition is fairly trivial though not yet automated.
+>  When removing the module, we will get the following flaw:
 >
-> Fix the various property schemas which are missing a type. Most of these
-> tend to be device specific properties which don't have a vendor prefix.
-> A vendor prefix is how we normally ensure a type is defined.
+> [   14.204955] remove_proc_entry: removing non-empty directory 'irq/21', leaking at least 'gpio_ml_ioh'
+> [   14.205827] WARNING: CPU: 0 PID: 305 at fs/proc/generic.c:717 remove_proc_entry+0x389/0x3f0
+> ...
+> [   14.220613]  ioh_gpio_remove+0xc5/0xe0 [gpio_ml_ioh]
+> [   14.221075]  pci_device_remove+0x92/0x240
 >
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Fix this by using managed functions, this makes the error handling more
+> simpler.
+>
+> Fixes: e971ac9a564a ("gpio: ml-ioh: use resource management for irqs")
+> Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
 > ---
->  .../arm/hisilicon/controller/hip04-bootwrapper.yaml       | 5 +++--
->  .../bindings/display/bridge/toshiba,tc358768.yaml         | 1 +
->  .../devicetree/bindings/display/panel/panel-timing.yaml   | 5 +++++
->  .../bindings/display/panel/raydium,rm67191.yaml           | 1 +
->  .../bindings/display/panel/samsung,s6e8aa0.yaml           | 1 +
->  .../devicetree/bindings/gpio/fairchild,74hc595.yaml       | 1 +
->  .../devicetree/bindings/input/google,cros-ec-keyb.yaml    | 1 +
->  .../devicetree/bindings/input/matrix-keymap.yaml          | 4 ++++
->  Documentation/devicetree/bindings/media/i2c/adv7604.yaml  | 3 ++-
->  Documentation/devicetree/bindings/mux/reg-mux.yaml        | 8 ++++++--
->  Documentation/devicetree/bindings/net/cdns,macb.yaml      | 1 +
->  Documentation/devicetree/bindings/net/ingenic,mac.yaml    | 1 +
->  .../devicetree/bindings/net/ti,davinci-mdio.yaml          | 1 +
->  .../devicetree/bindings/net/wireless/ti,wlcore.yaml       | 2 ++
->  .../devicetree/bindings/pci/snps,dw-pcie-ep.yaml          | 6 ++++--
->  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml   | 2 ++
->  .../devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml    | 2 ++
->  Documentation/devicetree/bindings/power/avs/qcom,cpr.yaml | 1 +
->  .../devicetree/bindings/power/supply/battery.yaml         | 7 ++++++-
->  .../devicetree/bindings/power/supply/charger-manager.yaml | 1 +
->  Documentation/devicetree/bindings/rng/st,stm32-rng.yaml   | 1 +
->  Documentation/devicetree/bindings/serial/8250.yaml        | 1 +
->  .../devicetree/bindings/sound/audio-graph-card2.yaml      | 3 +++
->  .../devicetree/bindings/sound/imx-audio-hdmi.yaml         | 3 +++
->  Documentation/devicetree/bindings/usb/smsc,usb3503.yaml   | 1 +
->  25 files changed, 55 insertions(+), 8 deletions(-)
+>  drivers/gpio/gpio-ml-ioh.c | 76 ++++++++------------------------------
+>  1 file changed, 16 insertions(+), 60 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
+> index b060c4773698..48e3768a830e 100644
+> --- a/drivers/gpio/gpio-ml-ioh.c
+> +++ b/drivers/gpio/gpio-ml-ioh.c
+> @@ -409,29 +409,27 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+>         void *chip_save;
+>         int irq_base;
+>
+> -       ret = pci_enable_device(pdev);
+> +       ret = pcim_enable_device(pdev);
+>         if (ret) {
+> -               dev_err(dev, "%s : pci_enable_device failed", __func__);
+> -               goto err_pci_enable;
+> +               dev_err(dev, "%s : pcim_enable_device failed", __func__);
+> +               return ret;
+>         }
+>
+> -       ret = pci_request_regions(pdev, KBUILD_MODNAME);
+> +       ret = pcim_iomap_regions(pdev, BIT(1), KBUILD_MODNAME);
+>         if (ret) {
+> -               dev_err(dev, "pci_request_regions failed-%d", ret);
+> -               goto err_request_regions;
+> +               dev_err(dev, "pcim_iomap_regions failed-%d", ret);
+> +               return ret;
+>         }
+>
+> -       base = pci_iomap(pdev, 1, 0);
+> +       base = pcim_iomap_table(pdev)[1];
+>         if (!base) {
+> -               dev_err(dev, "%s : pci_iomap failed", __func__);
+> -               ret = -ENOMEM;
+> -               goto err_iomap;
+> +               dev_err(dev, "%s : pcim_iomap_table failed", __func__);
+> +               return -ENOMEM;
+>         }
+>
+> -       chip_save = kcalloc(8, sizeof(*chip), GFP_KERNEL);
+> +       chip_save = devm_kcalloc(dev, 8, sizeof(*chip), GFP_KERNEL);
+>         if (chip_save == NULL) {
+> -               ret = -ENOMEM;
+> -               goto err_kzalloc;
+> +               return -ENOMEM;
+>         }
+>
+>         chip = chip_save;
+> @@ -442,10 +440,10 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+>                 chip->ch = i;
+>                 spin_lock_init(&chip->spinlock);
+>                 ioh_gpio_setup(chip, num_ports[i]);
+> -               ret = gpiochip_add_data(&chip->gpio, chip);
+> +               ret = devm_gpiochip_add_data(dev, &chip->gpio, chip);
+>                 if (ret) {
+>                         dev_err(dev, "IOH gpio: Failed to register GPIO\n");
+> -                       goto err_gpiochip_add;
+> +                       return ret;
+>                 }
+>         }
+>
+> @@ -456,15 +454,14 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+>                 if (irq_base < 0) {
+>                         dev_warn(dev,
+>                                 "ml_ioh_gpio: Failed to get IRQ base num\n");
+> -                       ret = irq_base;
+> -                       goto err_gpiochip_add;
+> +                       return irq_base;
+>                 }
+>                 chip->irq_base = irq_base;
+>
+>                 ret = ioh_gpio_alloc_generic_chip(chip,
+>                                                   irq_base, num_ports[j]);
+>                 if (ret)
+> -                       goto err_gpiochip_add;
+> +                       return ret;
+>         }
+>
+>         chip = chip_save;
+> @@ -472,52 +469,12 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+>                                IRQF_SHARED, KBUILD_MODNAME, chip);
+>         if (ret != 0) {
+>                 dev_err(dev, "%s request_irq failed\n", __func__);
+> -               goto err_gpiochip_add;
+> +               return ret;
+>         }
+>
+>         pci_set_drvdata(pdev, chip);
+>
+>         return 0;
+> -
+> -err_gpiochip_add:
+> -       chip = chip_save;
+> -       while (--i >= 0) {
+> -               gpiochip_remove(&chip->gpio);
+> -               chip++;
+> -       }
+> -       kfree(chip_save);
+> -
+> -err_kzalloc:
+> -       pci_iounmap(pdev, base);
+> -
+> -err_iomap:
+> -       pci_release_regions(pdev);
+> -
+> -err_request_regions:
+> -       pci_disable_device(pdev);
+> -
+> -err_pci_enable:
+> -
+> -       dev_err(dev, "%s Failed returns %d\n", __func__, ret);
+> -       return ret;
+> -}
+> -
+> -static void ioh_gpio_remove(struct pci_dev *pdev)
+> -{
+> -       int i;
+> -       struct ioh_gpio *chip = pci_get_drvdata(pdev);
+> -       void *chip_save;
+> -
+> -       chip_save = chip;
+> -
+> -       for (i = 0; i < 8; i++, chip++)
+> -               gpiochip_remove(&chip->gpio);
+> -
+> -       chip = chip_save;
+> -       pci_iounmap(pdev, chip->base);
+> -       pci_release_regions(pdev);
+> -       pci_disable_device(pdev);
+> -       kfree(chip);
+>  }
+>
+>  static int __maybe_unused ioh_gpio_suspend(struct device *dev)
+> @@ -558,7 +515,6 @@ static struct pci_driver ioh_gpio_driver = {
+>         .name = "ml_ioh_gpio",
+>         .id_table = ioh_gpio_pcidev_id,
+>         .probe = ioh_gpio_probe,
+> -       .remove = ioh_gpio_remove,
+>         .driver = {
+>                 .pm = &ioh_gpio_pm_ops,
+>         },
+> --
+> 2.36.1
 >
 
-For GPIO:
+Looks so much better now, gotta love devres. :)
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+If Andy takes it through his tree:
+
+Reviewed-by: Bartosz Golaszewski <brgl@bgdev.pl>
+
+Otherwise let me know, I can pick it up myself too.
+
+Bart
