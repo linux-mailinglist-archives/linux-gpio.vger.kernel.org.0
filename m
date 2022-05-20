@@ -2,108 +2,199 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71ED252F17A
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 19:22:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BF1952F1A3
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 19:29:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237176AbiETRWI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 13:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57862 "EHLO
+        id S245297AbiETR2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 13:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345306AbiETRWH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 13:22:07 -0400
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAE762135;
-        Fri, 20 May 2022 10:22:06 -0700 (PDT)
-Received: by mail-oi1-f172.google.com with SMTP id q8so10653596oif.13;
-        Fri, 20 May 2022 10:22:06 -0700 (PDT)
+        with ESMTP id S1352213AbiETR2q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 13:28:46 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D1C186299;
+        Fri, 20 May 2022 10:28:45 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id i66so10685673oia.11;
+        Fri, 20 May 2022 10:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PJV//q4C+9A8+JynDsrPULdS+3PNMfOCw/IssIKP16o=;
+        b=lqjsrr+pfYAGghM/3IYxhgJS8jGQ+XlKdPGeBOVSMF01xv7MVSJBIWIgmKQ6u5H7EC
+         CdSU2X+8spRMfr/k2ncLLnRgJOynr4Rbfbfxf0uOpUB/GKnWC/piU6pn55pjzSHHqkno
+         LBPTO1Wk9FjWIRVEDx07/rh27z0ICXZH3kNsk5YojYTf7oQ19p2FgBYBPN5McGtLJK1o
+         un4x0Lujsrq45IXG9A07ApSb3+7xPX4vOixg5sAF96aaAPT9mIRrgKCrblDQezb8NTIW
+         N+64rUiOYTKY1Fy2mvV484io7ygZF8Sp9G7z8OrX7FoVzpJLTUEz9xBrNME/ng24Hz02
+         Jx8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=wHAiN9i9ZSX1pTumLQ9nH/ZihmBygWS3kQh2yk6VlzY=;
-        b=kCQHvQ5LfMKLY88JBjaxxxrZPVl4Icso5Kxjz7Fx4RyhxOF2f1gRqd5b2PsKp+BSYf
-         eP/VPxW7eqxJY1IDJRCBkcTdQFbacdkocfletHIrX79klb/70styPXWWruNDjAf5NU+z
-         h445ru3ahObh3AN4ZExjLNVBxQdKXJGW1r1TH7ljhhKjbUplveHqLgc3SjP8C5UA9RlK
-         m4AK7yt+w5cCLKIoEMZwP99IU60rE4qrdbkmV54U88LnFGsUP24pcT7HsMUfuCtwImt/
-         ARDlEGr6t+RY+avlcljtONGS/XgsK75cecZcBGdjT11xsnLrSgq4XD4au3HIfTLK775E
-         LXQw==
-X-Gm-Message-State: AOAM533ViA4ANxbskPj5GHQNsbXyQWCg3lmBzCIPwrxUy+KtF93NKqDF
-        3TEfHPGdIXZJr6QBVvAJLnp2l+O0iQ==
-X-Google-Smtp-Source: ABdhPJxi7NP17DTt/0hvJT2/+9CPnZvqnnY2qr5s/IkVaF5XjOz+5oZYsts6/rxEmhHjqmwJMp/Tbg==
-X-Received: by 2002:aca:4385:0:b0:326:bf61:67ee with SMTP id q127-20020aca4385000000b00326bf6167eemr6301503oia.55.1653067325770;
-        Fri, 20 May 2022 10:22:05 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id k23-20020a544717000000b00325cda1ff87sm1269136oik.6.2022.05.20.10.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 May 2022 10:22:05 -0700 (PDT)
-Received: (nullmailer pid 4085110 invoked by uid 1000);
-        Fri, 20 May 2022 17:22:04 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Phil Edworthy <phil.edworthy@renesas.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PJV//q4C+9A8+JynDsrPULdS+3PNMfOCw/IssIKP16o=;
+        b=LMdeXwcxhlJF+sqRZjMEdDJqalnxGW8oZu9uZgZq8O7KpgnkUCE+9IiG1iImNfFPgN
+         6z7vaSQ4n+o6nJsFLKEla7LJ7ivh5EEucF0lkhUiomWb6F9WOfm9D/C1zarqeJWvFhvy
+         Axs1E9eZ0APfBVi8AIZC0t5Yn6KE3dy/d7SjBLKq1bnoeba3Pp5l/sBsjFudc5A3B9hm
+         u3rRVMfBbvr32L3NCp23FdE0qcz2/AZa85d6c3pP64/RUiupw3/AD6lLLcOenQfN6pBO
+         eRRPJqGPkBMfNnUnAYb45zzTK63IXIhHAeMfBLbhG1yq6NJvvkJaBUuKlGY/JYhiDmv5
+         Nxiw==
+X-Gm-Message-State: AOAM533O7YCkr28QEeMo7p/21/LDRIYN4i9LIuZpimAt1+jSc1xhZTog
+        ZUFByvIBs7SPsgmxpcuBWM0JfuLH8Tut2j9kTL8=
+X-Google-Smtp-Source: ABdhPJzve0DTjiYQrp8wbZsMGhQApnnSSk2ujTqRgV6cbl0vEP2x0jeqLmCnKUADThYGL+hlxOE+qrXR/HQzdowXe3o=
+X-Received: by 2002:a05:6808:302b:b0:2f9:eeef:f03 with SMTP id
+ ay43-20020a056808302b00b002f9eeef0f03mr6312601oib.128.1653067725056; Fri, 20
+ May 2022 10:28:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+ <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+ <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+ <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+ <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com> <a0ce4372-df94-a19c-063d-274e65da7c38@leemhuis.info>
+In-Reply-To: <a0ce4372-df94-a19c-063d-274e65da7c38@leemhuis.info>
+From:   Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri, 20 May 2022 14:28:19 -0300
+Message-ID: <CACjc_5oRRHdCjbSEeMMY2DeJRyFDcbQ2Vk7vaFC9h+kas8zC9g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Thorsten Leemhuis <regressions@leemhuis.info>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-gpio@vger.kernel.org
-In-Reply-To: <20220520154051.29088-2-phil.edworthy@renesas.com>
-References: <20220520154051.29088-1-phil.edworthy@renesas.com> <20220520154051.29088-2-phil.edworthy@renesas.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add DT bindings for RZ/V2M pinctrl
-Date:   Fri, 20 May 2022 12:22:04 -0500
-Message-Id: <1653067324.196006.4085109.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Edmond Chung <edmondchung@google.com>,
+        Andrew Chant <achant@google.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 20 May 2022 16:40:50 +0100, Phil Edworthy wrote:
-> Add device tree binding documentation and header file for Renesas
-> RZ/V2M pinctrl.
-> 
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../pinctrl/renesas,rzv2m-pinctrl.yaml        | 174 ++++++++++++++++++
->  include/dt-bindings/pinctrl/rzv2m-pinctrl.h   |  23 +++
->  2 files changed, 197 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
->  create mode 100644 include/dt-bindings/pinctrl/rzv2m-pinctrl.h
-> 
+Hi Thorsten,
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+On Fri, May 20, 2022 at 6:12 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> On 16.02.22 15:40, Bartosz Golaszewski wrote:
+> > On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >>
+> >> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+> >> <marcelo.jimenez@gmail.com> wrote:
+> >>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >>
+> >>>> I am curious about the usecases and how deeply you have built
+> >>>> yourselves into this.
+> >>>
+> >>> I don't know if I understand what you mean, sorry.
+> >>
+> >> Why does the user need the sysfs ABI? What is it used for?
+> >>
+> >> I.e what is the actual use case?
+> >>
+> >>>>> In any case, the upstream file should be enough to test the issue reported here.
+> >>>>
+> >>>> The thing is that upstream isn't super happy that you have been
+> >>>> making yourselves dependent on features that we are actively
+> >>>> discouraging and then demanding that we support these features.
+> >>>
+> >>> Hum, demanding seems to be a strong word for what I am doing here.
+> >>>
+> >>> Deprecated should not mean broken. My point is: the API seems to be
+> >>> currently broken. User space apps got broken, that's a fact. I even
+> >>> took the time to bisect the kernel and show you which commit broke it.
+> >>> So, no, I am not demanding. More like reporting and providing a
+> >>> temporary solution to those with a similar problem.
+> >>>
+> >>> Maybe it is time to remove the API, but this is up to "upstream".
+> >>> Leaving the API broken seems pointless and unproductive.
+> >>>
+> >>> Sorry for the "not super happiness of upstream", but maybe upstream
+> >>> got me wrong.
+> >>>
+> >>> We are not "making ourselves dependent on features ...". The API was
+> >>> there. We used it. Now it is deprecated, ok, we should move on. I got
+> >>> the message.
+> >>
+> >> Ouch I deserved some slamming for this.
+> >>
+> >> I'm sorry if I came across as harsh :(
+> >>
+> >> I just don't know how to properly push for this.
+> >>
+> >> I have even pushed the option of the deprecated sysfs ABI
+> >> behind the CONFIG_EXPERT option, which should mean that
+> >> the kernel config has been made by someone who has checked
+> >> the option "yes I am an expert I know what I am doing"
+> >> yet failed to observe that this ABI is obsoleted since 5 years
+> >> and hence failed to be an expert.
+> >>
+> >> Of course the ABI (not API really) needs to be fixed if we can find the
+> >> problem. It's frustrating that fixing it seems to fix broken other
+> >> features which are not deprecated, hence the annoyance on my
+> >> part.
+> >>
+> >
+> > I'm afraid we'll earn ourselves a good old LinusRant if we keep
+> > pushing the character device as a solution to the problem here.
+> > Marcelo is right after all: he used an existing user interface, the
+> > interface broke, it must be fixed.
+> >
+> > I would prefer to find a solution that fixes Marcelo's issue while
+> > keeping the offending patches in tree but it seems like the issue is
+> > more complicated and will require some rework of the sysfs interface.
+> >
+> > In which case unless there are objections I lean towards reverting the
+> > relevant commits.
+>
+> Reviving and old thread, hence a quick reminder: The patch at the start
+> of this thread was applied and then reverted in 56e337f2cf13 with this text:
+>
+> ```
+> This commit - while attempting to fix a regression - has caused a number
+> of other problems. As the fallout from it is more significant than the
+> initial problem itself, revert it for now before we find a correct
+> solution.
+> ```
+>
+> I still have this on my list of open regressions and that made me
+> wonder: is anyone working on a "correct solution" (or was one even
+> applied and I missed it)? Or is the situation so tricky that we better
+> leave everything as it is? Marcelo, do you still care?
 
-yamllint warnings/errors:
+The purpose of my patch was to revert the patch that was causing the
+hardware I work with to fail. But reverting that patch had bad
+consequences in other hardware, so I really do not think that my patch
+should go in.
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.example.dts:22:18: fatal error: dt-bindings/clock/r9a09g011-cpg.h: No such file or directory
-   22 |         #include <dt-bindings/clock/r9a09g011-cpg.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.lib:364: Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.example.dtb] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1401: dt_binding_check] Error 2
+Following Linus Walleij's advice, we are stopping using sysfs for
+gpio, so in the near future that patch will be irrelevant for me. On
+the other hand, a few people using recent kernels have tried my patch
+successfully, so it can be used as a temporary transition hack.
 
-doc reference errors (make refcheckdocs):
+Also, the patch exposes a serious problem with the sysfs gpio, which
+is currently broken. Maybe we should consider removing the interface
+in a near future release, as it has been advocated several times
+before, since it has long been deprecated, has a much better
+substitute API and, the worse part, it is broken and no one seems to
+have a high priority in fixing it.
 
-See https://patchwork.ozlabs.org/patch/
+IIRC, the last time I read, the kernel documentation said that the API
+would be removed in 2020, so we are a bit late :). I know that
+removing an API has lots of implications, so the consequences must be
+carefully balanced.
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+> Ciao, Thorsten
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Best regards,
+Marcelo.
