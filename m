@@ -2,102 +2,226 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CEC852DF46
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 May 2022 23:27:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C3BE52E2C0
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 04:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229883AbiESV12 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 May 2022 17:27:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
+        id S1344880AbiETC4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 May 2022 22:56:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbiESV11 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 17:27:27 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E9B6D951;
-        Thu, 19 May 2022 14:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652995646; x=1684531646;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YEslGaRlWEVd8rQfrjVOyqh7W4xppAWF9ITI8yuaqmA=;
-  b=Aqw4cS3/t65JPN7NP6Q2HbatSjTOFy0XXPOVBZSMNbtn+OPcbTyF7wni
-   kHWf/I5mfRAHzY70+6M7+obrWMlGSvcDqTvqm/qjfRTCr1d2SoRn/eoG/
-   Rdusb4b8RB3/I1yjB6+vYpMDXIDmj9IDMqMuDknlpZsRdygQZS6l4XCDC
-   8rX5mJsjYQ/xMHSqzL9i/D06sVvO2XvEZlS9vdGeLCqv1DGFLETA5dRHF
-   cuqPZl57d5oFqxi7w8FoNNA3UHEh1pYRBqUTeCuAw1497715DOXbhul3W
-   Q5qqJOvRsceYUonMZ3Bufld9ptyXUZNU68TyxiBUOQc/in2ESphD7+C4p
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10352"; a="271208129"
-X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
-   d="scan'208";a="271208129"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 14:27:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
-   d="scan'208";a="524296741"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 19 May 2022 14:26:47 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 42026109; Fri, 20 May 2022 00:26:46 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 1/1] pinctrl: intel: Fix kernel doc format, i.e. add return sections
-Date:   Fri, 20 May 2022 00:26:45 +0300
-Message-Id: <20220519212645.47177-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S1344910AbiETC4g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 May 2022 22:56:36 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65CC606C9;
+        Thu, 19 May 2022 19:56:35 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id m1so6311975plx.3;
+        Thu, 19 May 2022 19:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qJb4ROMmqmKfjFw0cK9zc2HCnw8bdTldzzuHAWqviPg=;
+        b=ldKwD0kyeenr2xn13JtRRmYYaxFPOmOCx8m60E1/VDCzs16Z9HlDo7N8U7A1aJs4va
+         aBkorL20LetfJRSy8bWOP4WzLtm6JYZ/m23MZDSdHQTL7h55mNys6KtZvFHf67KnVVAm
+         l0dtCD8Mgc3wRFIKSxbIvJn2juYwUOokjr0fcEUVkyTFNUajQ+39iChdymLmQHJUBzun
+         U1QFsllV4V52xbneLA95qkXNyx9Y2xQDPj40N1p6zkMrzoY2jy8kv7KLBuDRTFJBmju+
+         BFCffycP7Z/0pRFHl/7XNprsvCBY44RhAnxRPAWbbyzlSE6tu4050RDAsKaem3tp/TP1
+         tRHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qJb4ROMmqmKfjFw0cK9zc2HCnw8bdTldzzuHAWqviPg=;
+        b=lH08cY2l9COURy0QI+h+WFFW1rnsqK6R6jr9BDYnz06NQaWYPyZwuzEKkU7Ua4RFoU
+         4Ymnwku58NNe2ztgDy0AZhvWQUY8gCtxiTHFGbhFpir9Bm7L71BCpQl+/rPK55eOgCMA
+         1M00y1nR2g+ztOw8qzF5bVOM+jnFrqk7cpx8NXOS6i4gRM5+btm5HVPmhSvfp5Tv+DuP
+         Mt8fgsiLWqFNuPAh+oOKXVnfaPTQ0Mq050s8jw/OcGL66GObPAJ+Jf6wlILlFdog3V3o
+         2zhmxbRJRVEJ8jHr+Iqo+J9evld+/jl4PqzBa3d58LdUyvb+LYG4LZIy5/CzRb5/HOvd
+         lwIw==
+X-Gm-Message-State: AOAM531bk1PRLS7QHSXGznQK6kzokAIbxsb/egfMRzJDqTR74iAnxF8L
+        mDMqXxMhIa5YFHJCZJMHK9uB2KFz8ti+aJE=
+X-Google-Smtp-Source: ABdhPJzvrveNw41bfaZMuN6O+FPmAul8PH1TnK3z4QpkhItBaSIQ8vftCGgwVksSUdgxE8JHgoWsFA==
+X-Received: by 2002:a17:902:e808:b0:161:946c:d266 with SMTP id u8-20020a170902e80800b00161946cd266mr7742135plg.144.1653015395236;
+        Thu, 19 May 2022 19:56:35 -0700 (PDT)
+Received: from localhost.localdomain ([144.202.91.207])
+        by smtp.gmail.com with ESMTPSA id y9-20020a62b509000000b0050dc76281aasm413563pfe.132.2022.05.19.19.56.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 May 2022 19:56:34 -0700 (PDT)
+From:   Zheyu Ma <zheyuma97@gmail.com>
+To:     andy@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zheyu Ma <zheyuma97@gmail.com>
+Subject: [PATCH v3]  gpio: ml-ioh: Convert to use managed functions pcim* and devm_*
+Date:   Fri, 20 May 2022 10:56:24 +0800
+Message-Id: <20220520025624.3803776-1-zheyuma97@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Kernel doc validator is not happy:
+ When removing the module, we will get the following flaw:
 
-  pinctrl-intel.c:865: warning: No description found for return value of 'intel_gpio_to_pin'
-  pinctrl-intel.c:904: warning: No description found for return value of 'intel_pin_to_gpio'
-  2 warnings
+[   14.204955] remove_proc_entry: removing non-empty directory 'irq/21', leaking at least 'gpio_ml_ioh'
+[   14.205827] WARNING: CPU: 0 PID: 305 at fs/proc/generic.c:717 remove_proc_entry+0x389/0x3f0
+...
+[   14.220613]  ioh_gpio_remove+0xc5/0xe0 [gpio_ml_ioh]
+[   14.221075]  pci_device_remove+0x92/0x240
 
-Add return sections to the kernel documentation of the above mentioned
-functions.
+Fix this by using managed functions, this makes the error handling more
+simpler.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: e971ac9a564a ("gpio: ml-ioh: use resource management for irqs")
+Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpio/gpio-ml-ioh.c | 76 ++++++++------------------------------
+ 1 file changed, 16 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index f882a31375ee..ffc045f7bf00 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -858,6 +858,9 @@ static const struct pinctrl_desc intel_pinctrl_desc = {
-  * When coming through gpiolib irqchip, the GPIO offset is not
-  * automatically translated to pinctrl pin number. This function can be
-  * used to find out the corresponding pinctrl pin.
-+ *
-+ * Return: a pin number and pointers to the community and pad group, which
-+ * the pin belongs to, or negative error code if translation can't be done.
-  */
- static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
- 			     const struct intel_community **community,
-@@ -899,6 +902,8 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
-  * @pin: pin number
-  *
-  * Translate the pin number of pinctrl to GPIO offset
-+ *
-+ * Return: a GPIO offset, or negative error code if translation can't be done.
-  */
- static __maybe_unused int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
- {
+diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
+index b060c4773698..48e3768a830e 100644
+--- a/drivers/gpio/gpio-ml-ioh.c
++++ b/drivers/gpio/gpio-ml-ioh.c
+@@ -409,29 +409,27 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+ 	void *chip_save;
+ 	int irq_base;
+ 
+-	ret = pci_enable_device(pdev);
++	ret = pcim_enable_device(pdev);
+ 	if (ret) {
+-		dev_err(dev, "%s : pci_enable_device failed", __func__);
+-		goto err_pci_enable;
++		dev_err(dev, "%s : pcim_enable_device failed", __func__);
++		return ret;
+ 	}
+ 
+-	ret = pci_request_regions(pdev, KBUILD_MODNAME);
++	ret = pcim_iomap_regions(pdev, BIT(1), KBUILD_MODNAME);
+ 	if (ret) {
+-		dev_err(dev, "pci_request_regions failed-%d", ret);
+-		goto err_request_regions;
++		dev_err(dev, "pcim_iomap_regions failed-%d", ret);
++		return ret;
+ 	}
+ 
+-	base = pci_iomap(pdev, 1, 0);
++	base = pcim_iomap_table(pdev)[1];
+ 	if (!base) {
+-		dev_err(dev, "%s : pci_iomap failed", __func__);
+-		ret = -ENOMEM;
+-		goto err_iomap;
++		dev_err(dev, "%s : pcim_iomap_table failed", __func__);
++		return -ENOMEM;
+ 	}
+ 
+-	chip_save = kcalloc(8, sizeof(*chip), GFP_KERNEL);
++	chip_save = devm_kcalloc(dev, 8, sizeof(*chip), GFP_KERNEL);
+ 	if (chip_save == NULL) {
+-		ret = -ENOMEM;
+-		goto err_kzalloc;
++		return -ENOMEM;
+ 	}
+ 
+ 	chip = chip_save;
+@@ -442,10 +440,10 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+ 		chip->ch = i;
+ 		spin_lock_init(&chip->spinlock);
+ 		ioh_gpio_setup(chip, num_ports[i]);
+-		ret = gpiochip_add_data(&chip->gpio, chip);
++		ret = devm_gpiochip_add_data(dev, &chip->gpio, chip);
+ 		if (ret) {
+ 			dev_err(dev, "IOH gpio: Failed to register GPIO\n");
+-			goto err_gpiochip_add;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -456,15 +454,14 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+ 		if (irq_base < 0) {
+ 			dev_warn(dev,
+ 				"ml_ioh_gpio: Failed to get IRQ base num\n");
+-			ret = irq_base;
+-			goto err_gpiochip_add;
++			return irq_base;
+ 		}
+ 		chip->irq_base = irq_base;
+ 
+ 		ret = ioh_gpio_alloc_generic_chip(chip,
+ 						  irq_base, num_ports[j]);
+ 		if (ret)
+-			goto err_gpiochip_add;
++			return ret;
+ 	}
+ 
+ 	chip = chip_save;
+@@ -472,52 +469,12 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+ 			       IRQF_SHARED, KBUILD_MODNAME, chip);
+ 	if (ret != 0) {
+ 		dev_err(dev, "%s request_irq failed\n", __func__);
+-		goto err_gpiochip_add;
++		return ret;
+ 	}
+ 
+ 	pci_set_drvdata(pdev, chip);
+ 
+ 	return 0;
+-
+-err_gpiochip_add:
+-	chip = chip_save;
+-	while (--i >= 0) {
+-		gpiochip_remove(&chip->gpio);
+-		chip++;
+-	}
+-	kfree(chip_save);
+-
+-err_kzalloc:
+-	pci_iounmap(pdev, base);
+-
+-err_iomap:
+-	pci_release_regions(pdev);
+-
+-err_request_regions:
+-	pci_disable_device(pdev);
+-
+-err_pci_enable:
+-
+-	dev_err(dev, "%s Failed returns %d\n", __func__, ret);
+-	return ret;
+-}
+-
+-static void ioh_gpio_remove(struct pci_dev *pdev)
+-{
+-	int i;
+-	struct ioh_gpio *chip = pci_get_drvdata(pdev);
+-	void *chip_save;
+-
+-	chip_save = chip;
+-
+-	for (i = 0; i < 8; i++, chip++)
+-		gpiochip_remove(&chip->gpio);
+-
+-	chip = chip_save;
+-	pci_iounmap(pdev, chip->base);
+-	pci_release_regions(pdev);
+-	pci_disable_device(pdev);
+-	kfree(chip);
+ }
+ 
+ static int __maybe_unused ioh_gpio_suspend(struct device *dev)
+@@ -558,7 +515,6 @@ static struct pci_driver ioh_gpio_driver = {
+ 	.name = "ml_ioh_gpio",
+ 	.id_table = ioh_gpio_pcidev_id,
+ 	.probe = ioh_gpio_probe,
+-	.remove = ioh_gpio_remove,
+ 	.driver = {
+ 		.pm = &ioh_gpio_pm_ops,
+ 	},
 -- 
-2.35.1
+2.36.1
 
