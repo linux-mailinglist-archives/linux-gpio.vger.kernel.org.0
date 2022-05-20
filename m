@@ -2,97 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 887E152EF42
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 17:31:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F0DE52EF6A
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 17:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350886AbiETPbf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 11:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48168 "EHLO
+        id S1351012AbiETPlU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 11:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350843AbiETPb3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 11:31:29 -0400
-X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 20 May 2022 08:31:25 PDT
-Received: from mailrelay2-1.pub.mailoutpod1-cph3.one.com (mailrelay2-1.pub.mailoutpod1-cph3.one.com [46.30.210.183])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A2257999
-        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 08:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ravnborg.org; s=rsa1;
-        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-         from:date:from;
-        bh=kwToCduxEHKRlf6xTfLStwKuhJjU+lyECx++Tp7rwBg=;
-        b=dKidBF+iQ7d11gWNT/UoyXW+3Hs3JRy8MCTHjV+5ua+Tg8M5cogj66cbemiXXWJkpK0zsojA7lQyE
-         +WqVoFZWQ6MJXXhEGgSw5lyAml+bPL2Bob4FIJw5qswzhyuzPAS6nncjClEcmRp8/q5uuFnaXkNE2d
-         CPuaLrtvtWobbmHB9tsxsDLdpABvzpEFwrP2Hjj7G7q9P4zXpqd59UkkCfAXbqYiZX0JhO/0Al924K
-         wFSjZf6TdiexU83WgAFrBKHbEHcVNpQIMy29BaLvT2CXdB5WMu+1QWT1QpW5jqN1dCLHfvlGz7DBJM
-         XMgEyhF4mJWi5tS9mXMNT9APf2Wijnw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-        d=ravnborg.org; s=ed1;
-        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-         from:date:from;
-        bh=kwToCduxEHKRlf6xTfLStwKuhJjU+lyECx++Tp7rwBg=;
-        b=n6agCsCBqaR8eTktbf5YnuH91+U1tOyO7hFP5kGyWriJEdb5PGp+30pFXfAEW1f4wny+jHMBg9N+G
-         uHm+DFOBg==
-X-HalOne-Cookie: 6d6a2faa20e68cf1e8fd7d3b59daf8d1323c09c1
-X-HalOne-ID: c1025af6-d851-11ec-a909-d0431ea8a290
-Received: from mailproxy2.cst.dirpod4-cph3.one.com (80-162-45-141-cable.dk.customer.tdc.net [80.162.45.141])
-        by mailrelay2.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
-        id c1025af6-d851-11ec-a909-d0431ea8a290;
-        Fri, 20 May 2022 15:30:19 +0000 (UTC)
-Date:   Fri, 20 May 2022 17:30:17 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S1350987AbiETPlH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 11:41:07 -0400
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 52FE842ED5;
+        Fri, 20 May 2022 08:41:01 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.91,239,1647270000"; 
+   d="scan'208";a="121664216"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 21 May 2022 00:41:00 +0900
+Received: from localhost.localdomain (unknown [10.226.93.97])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C4A0440121CF;
+        Sat, 21 May 2022 00:40:57 +0900 (JST)
+From:   Phil Edworthy <phil.edworthy@renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Rosin <peda@axentia.se>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        chrome-platform@lists.linux.dev, alsa-devel@alsa-project.org,
-        linux-pm@vger.kernel.org, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-pci@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Fix properties without any type
-Message-ID: <Yoe0CRhygXOIrYJc@ravnborg.org>
-References: <20220519211411.2200720-1-robh@kernel.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Phil Edworthy <phil.edworthy@renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/2] pinctrl: Add RZ/V2M pin and gpio driver
+Date:   Fri, 20 May 2022 16:40:49 +0100
+Message-Id: <20220520154051.29088-1-phil.edworthy@renesas.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220519211411.2200720-1-robh@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 19, 2022 at 04:14:11PM -0500, Rob Herring wrote:
-> Now that the schema tools can extract type information for all
-> properties (in order to decode dtb files), finding properties missing
-> any type definition is fairly trivial though not yet automated.
-> 
-> Fix the various property schemas which are missing a type. Most of these
-> tend to be device specific properties which don't have a vendor prefix.
-> A vendor prefix is how we normally ensure a type is defined.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org> # for everything in .../bindings/display/
+Hi All,
+
+RZ/V2M has a simple pin and GPIO controller combined similar to RZ/G2L.
+However, the differences are enough that I don't think it makes sense
+to try to add support for RZ/V2M into the existing RZ/G2L driver.
+GPIO interrupt support has been omitted from this driver, to be added
+at a later date.
+
+Phil Edworthy (2):
+  dt-bindings: pinctrl: renesas: Add DT bindings for RZ/V2M pinctrl
+  pinctrl: renesas: Add RZ/V2M pin and gpio controller driver
+
+ .../pinctrl/renesas,rzv2m-pinctrl.yaml        |  174 +++
+ drivers/pinctrl/renesas/Kconfig               |   13 +
+ drivers/pinctrl/renesas/Makefile              |    1 +
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c       | 1149 +++++++++++++++++
+ include/dt-bindings/pinctrl/rzv2m-pinctrl.h   |   23 +
+ 5 files changed, 1360 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/renesas/pinctrl-rzv2m.c
+ create mode 100644 include/dt-bindings/pinctrl/rzv2m-pinctrl.h
+
+-- 
+2.34.1
+
