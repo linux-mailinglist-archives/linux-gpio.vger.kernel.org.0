@@ -2,189 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E830652F64E
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 01:42:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82F3552F661
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 01:50:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239933AbiETXmT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 19:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
+        id S240464AbiETXu2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 19:50:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230462AbiETXmS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 19:42:18 -0400
-Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A93D19FF7F
-        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 16:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1653090137; x=1684626137;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cbxuNpr/zCC3fo3EPXew8NY8Z0HqAPgONnWiV+/hf/c=;
-  b=B5EWxpCnEF8DlmOAvy36DvFuzE0KpfRW73zXWOj2+m1mk352LDSu/6Ak
-   4SWXYfwZ3DVbl4NUeXS138FkOvezdP5LtahxhNL7PhPRHaMIupdOOTDyC
-   I2QInRkQlDFoeCilh6DvateTwr75X1qPtDFSAVM8TstHrQkmXO4LEHNus
-   YLM1JEoabz3toxeQ8jlDPaQId/KH+V5P++pr03B5cP2S8zZGyAHCW8yPU
-   neMEAPfrkLRw3rfbXZwa3+5CQvdWppY2PEnqKK+WOI19gmFtdcKVo7+jy
-   NI1QkK3+UrrU0KwD0zLq1d0Qeu7HBmE4D4ZIiNWHPNrcDJzXbgrbSJi8F
-   g==;
-X-IronPort-AV: E=Sophos;i="5.91,240,1647273600"; 
-   d="scan'208";a="199760345"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 May 2022 07:42:17 +0800
-IronPort-SDR: xmGyYbmp4iVlxXDkYHaNnI6Gc1esDfYMNzso1EFuKxOboQ0Sl2jgYroQzrXzLWv6DMHiZNDLxO
- qjbXPAxml0wCqByc80psIcxVvh2A4IThD4UqtbP6Sml0hcfTrIG1YU0MMaEZuPy/H0z2UZD2Ut
- kmjrGvod+BYOfhEcELSLQr4T8nBbMh6j2Oj+qtSYcAYBNug3kpiP60rQ48/lj4mdXoRgSpGn12
- fekLLRN+kyMujotgyn6DZH9YqJOvH0jnogIRT6ztZRXqXWITRvCSeQOzqxVfWDzXQFPj0suBVH
- 1CI58aIwftSOVhp1aYTQE1O4
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 May 2022 16:07:38 -0700
-IronPort-SDR: 7y7LePYqHpgRjnkVZattSlBnfnT9nw7sCgU5f9aOrkwbpH+LYrs4+UcNSUVGZc/yxCX8gHwYSw
- YPr0kQyiIxUNiTaxCgA7hGS3rxtHdr3NWnHRAe1zYNIYBxyAb7TUtUwMW2AXXaWTEOEq2Q22pc
- jxjqYwA9dqERFkA3IN/sO8mzI3w4iemZI1ZmDrQ/KvRWHIY+NUZfav1DNB0CT4fkUxZ+RwT2oi
- dZrhCZgVm37pvAk/Tt8hdj8X1QYS2/yFw7EeN7GwNJNYXgImOsBdvRXJlXfKrz9a9lAxyj+4O8
- FYI=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 May 2022 16:42:17 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4L4jtw3zFCz1SVp0
-        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 16:42:16 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1653090135; x=1655682136; bh=cbxuNpr/zCC3fo3EPXew8NY8Z0HqAPgONnW
-        iV+/hf/c=; b=hhU532P0mw79hDtuG/IXya1FxRnUWF3nulx+yr48s+IZCMrZpbe
-        mAHA5aMH8CfCcja+OpNPK2zikLvf33jRnFrmQ9zL+dkR7N3v8q7ift1GuhIp0pn5
-        BsBZce1jLuLMqIp/38pso6xa3oQj/BGZPv1HGlXw1freyFBm2QNaftMowLznUEPU
-        H98dXiyt6Ne12DsH6nbTcgXUqt32c+DTuveN8NmT5af77Y/QppjZgx5Vd9zG2h+c
-        WWLxIqEOgCfDSPUUQHAWu/cLqnI2LNMsdeVxt11Kx3W9lVi6uHb8nGoEH8DrPEKs
-        YPSHHpDaOxlX0Z6JcvBm3z8h5C3yODLZUrg==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ETKfVs2bn8ZO for <linux-gpio@vger.kernel.org>;
-        Fri, 20 May 2022 16:42:15 -0700 (PDT)
-Received: from [10.225.163.51] (unknown [10.225.163.51])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4L4jtt3qJFz1Rvlc;
-        Fri, 20 May 2022 16:42:14 -0700 (PDT)
-Message-ID: <8e516ec1-fb85-7878-3c68-61798de9fa6a@opensource.wdc.com>
-Date:   Sat, 21 May 2022 08:42:13 +0900
+        with ESMTP id S244618AbiETXu1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 19:50:27 -0400
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2C4185C83
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 16:50:26 -0700 (PDT)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-2ec42eae76bso101422087b3.10
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 16:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p0Le7Rq4fTu505Kt4mjcZ5QrRzFD1sSCiaVoQbTgwnE=;
+        b=I9SJex6ygJZ1pp76zWJBCVjNvHpiageorAIK0z4YKhKCvrOTdK4IMBrzUt6oCQLw+C
+         CwMGSbD4YC0AcJJcvp5ATb59Pkrj5uczJYfjvnrKgkqgKJ2ukvnkjeqpeF75eq2Zbj4o
+         OeZjIhAzLBBKuK1S+q+MLn6eOvJho6gsxd66qsCJgVQbleEVxeYgNeZ/gdt9xbwdzxki
+         kWELtGQ0JIQYA+W6lPYQeoZpy3Gn1mSlk03I3TyWOz85bSL7oCNsvPFKA5NhY/ckrPHv
+         snJfUtNpBkBM4BTNte3FB4yUk0hf0kZFX6WjUnTvzlIWQg8w1a6Gh3bHomyeWm4kFfku
+         JnXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p0Le7Rq4fTu505Kt4mjcZ5QrRzFD1sSCiaVoQbTgwnE=;
+        b=vGA82jNBUy9KnWJh+didznRh3WfYgKeLNNxMwUovoRaZiEBsCdTZRsz5j8l2mmmj4U
+         /lKf442+azpa8MS123THl8mOxKz+O+3280+1V/JPFiEHPcjJTj8lB3gOUPvHzsssoOq5
+         JUrqww05Ee8iSkj8FEvo/gcBiQW639ojnA0q0Dpmf0v/N5yxXDEIVLofb0kAqn9aWfao
+         FfhP1TLvz5JRXhdmNKaoTqLheP48KrdE9Svyk5Ct4PfnRf9EpPpMn/Qgd+9sFVHQTOWr
+         PMjVRRBUiSF+LLTFfwuRQbGfO0QNHiS7W7njqgDVhdZxqolrMkokUgRQlQ4ocJaG/R+a
+         MMJg==
+X-Gm-Message-State: AOAM53344+LnL1WwWNH+O+qvaItFtbwZgyaI0od7HzcLqUZI1FMympN1
+        wV3Fz+srE+ZZzF3ilbHpAtIa8xr8O1ypOyJvDciw0A==
+X-Google-Smtp-Source: ABdhPJy7RRRfvjlN4OrvzSSQJiCcbKTTbZ4L6dC/tqEEDIC/UreYL/mP4r6UwgGxmDbNNIr6P2AXtuTleBjO7QN02cw=
+X-Received: by 2002:a81:2154:0:b0:2f4:d79e:35dc with SMTP id
+ h81-20020a812154000000b002f4d79e35dcmr13128670ywh.126.1653090625081; Fri, 20
+ May 2022 16:50:25 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v2] gpio: sifive: Make the irqchip immutable
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+References: <20220429220933.1350374-1-saravanak@google.com> <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X>
+In-Reply-To: <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 20 May 2022 16:49:48 -0700
+Message-ID: <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver registration
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <26519be2a2fdd4c6741658144e3a8d78cf4d000b.1653042202.git.geert+renesas@glider.be>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <26519be2a2fdd4c6741658144e3a8d78cf4d000b.1653042202.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Will Deacon <will@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 5/20/22 19:24, Geert Uytterhoeven wrote:
-> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> immutable") added a warning to indicate if the gpiolib is altering the
-> internals of irqchips.  Following this change the following warning is
-> now observed for the sifive driver:
-> 
->     gpio gpiochip1: (38001000.gpio-controller): not an immutable chip, please consider fixing it!
-> 
-> Fix this by making the irqchip in the sifive driver immutable.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Against gpio/for-next.
-> Boot-tested on SiPEED MAiXBiT (Canaan K210).
-> 
-> v2:
->   - Factor out hwirq using preferred helper.
-> ---
->  drivers/gpio/gpio-sifive.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-> index 03b8c4de2e91e3c4..238f3210970cfa0e 100644
-> --- a/drivers/gpio/gpio-sifive.c
-> +++ b/drivers/gpio/gpio-sifive.c
-> @@ -75,10 +75,12 @@ static void sifive_gpio_irq_enable(struct irq_data *d)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->  	struct sifive_gpio *chip = gpiochip_get_data(gc);
-> -	int offset = irqd_to_hwirq(d) % SIFIVE_GPIO_MAX;
-> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> +	int offset = hwirq % SIFIVE_GPIO_MAX;
->  	u32 bit = BIT(offset);
->  	unsigned long flags;
->  
-> +	gpiochip_enable_irq(gc, hwirq);
->  	irq_chip_enable_parent(d);
->  
->  	/* Switch to input */
-> @@ -101,11 +103,13 @@ static void sifive_gpio_irq_disable(struct irq_data *d)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->  	struct sifive_gpio *chip = gpiochip_get_data(gc);
-> -	int offset = irqd_to_hwirq(d) % SIFIVE_GPIO_MAX;
-> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> +	int offset = hwirq % SIFIVE_GPIO_MAX;
->  
->  	assign_bit(offset, &chip->irq_state, 0);
->  	sifive_gpio_set_ie(chip, offset);
->  	irq_chip_disable_parent(d);
-> +	gpiochip_disable_irq(gc, hwirq);
->  }
->  
->  static void sifive_gpio_irq_eoi(struct irq_data *d)
-> @@ -137,7 +141,7 @@ static int sifive_gpio_irq_set_affinity(struct irq_data *data,
->  	return -EINVAL;
->  }
->  
-> -static struct irq_chip sifive_gpio_irqchip = {
-> +static const struct irq_chip sifive_gpio_irqchip = {
->  	.name		= "sifive-gpio",
->  	.irq_set_type	= sifive_gpio_irq_set_type,
->  	.irq_mask	= irq_chip_mask_parent,
-> @@ -146,6 +150,8 @@ static struct irq_chip sifive_gpio_irqchip = {
->  	.irq_disable	= sifive_gpio_irq_disable,
->  	.irq_eoi	= sifive_gpio_irq_eoi,
->  	.irq_set_affinity = sifive_gpio_irq_set_affinity,
-> +	.flags		= IRQCHIP_IMMUTABLE,
-> +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->  
->  static int sifive_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
-> @@ -242,7 +248,7 @@ static int sifive_gpio_probe(struct platform_device *pdev)
->  	chip->gc.parent = dev;
->  	chip->gc.owner = THIS_MODULE;
->  	girq = &chip->gc.irq;
-> -	girq->chip = &sifive_gpio_irqchip;
-> +	gpio_irq_chip_set_chip(girq, &sifive_gpio_irqchip);
->  	girq->fwnode = of_node_to_fwnode(node);
->  	girq->parent_domain = parent;
->  	girq->child_to_parent_hwirq = sifive_gpio_child_to_parent_hwirq;
+On Fri, May 20, 2022 at 4:30 PM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> Hi Saravana,
+>
+> On Fri, Apr 29, 2022 at 03:09:32PM -0700, Saravana Kannan wrote:
+> > The deferred probe timer that's used for this currently starts at
+> > late_initcall and runs for driver_deferred_probe_timeout seconds. The
+> > assumption being that all available drivers would be loaded and
+> > registered before the timer expires. This means, the
+> > driver_deferred_probe_timeout has to be pretty large for it to cover the
+> > worst case. But if we set the default value for it to cover the worst
+> > case, it would significantly slow down the average case. For this
+> > reason, the default value is set to 0.
+> >
+> > Also, with CONFIG_MODULES=y and the current default values of
+> > driver_deferred_probe_timeout=0 and fw_devlink=on, devices with missing
+> > drivers will cause their consumer devices to always defer their probes.
+> > This is because device links created by fw_devlink defer the probe even
+> > before the consumer driver's probe() is called.
+> >
+> > Instead of a fixed timeout, if we extend an unexpired deferred probe
+> > timer on every successful driver registration, with the expectation more
+> > modules would be loaded in the near future, then the default value of
+> > driver_deferred_probe_timeout only needs to be as long as the worst case
+> > time difference between two consecutive module loads.
+> >
+> > So let's implement that and set the default value to 10 seconds when
+> > CONFIG_MODULES=y.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Cc: Kevin Hilman <khilman@kernel.org>
+> > Cc: Thierry Reding <treding@nvidia.com>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > Cc: linux-gpio@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: iommu@lists.linux-foundation.org
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+>
+> I bisected a boot hang with ARCH=s390 defconfig in QEMU down to this
+> change as commit 2b28a1a84a0e ("driver core: Extend deferred probe
+> timeout on driver registration") in next-20220520 (bisect log below).
+>
+> $ make -skj"$(nproc)" ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- defconfig bzImage
+>
+> $ timeout --foreground 15m stdbuf -oL -eL \
+> qemu-system-s390x \
+> -initrd ... \
+> -M s390-ccw-virtio \
+> -display none \
+> -kernel arch/s390/boot/bzImage \
+> -m 512m \
+> -nodefaults \
+> -serial mon:stdio
+> ...
+> [    2.077303] In-situ OAM (IOAM) with IPv6
+> [    2.077639] NET: Registered PF_PACKET protocol family
+> [    2.078063] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+> [    2.078795] Key type dns_resolver registered
+> [    2.079317] cio: Channel measurement facility initialized using format extended (mode autodetected)
+> [    2.081494] Discipline DIAG cannot be used without z/VM
+> [  260.626363] random: crng init done
+> qemu-system-s390x: terminating on signal 15 from pid 3815762 (timeout)
+>
+> We have a simple rootfs available if necessary:
+>
+> https://github.com/ClangBuiltLinux/boot-utils/raw/bc0d17785eb67f1edd0ee0a134970a807895f741/images/s390/rootfs.cpio.zst
+>
+> If there is any other information I can provide, please let me know!
 
-Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Hmm... strange. Can you please try the following command line options
+and tell me which of these has the issue and which don't?
+1) deferred_probe_timeout=0
+2) deferred_probe_timeout=1
+3) deferred_probe_timeout=300
 
--- 
-Damien Le Moal
-Western Digital Research
+That should help me narrow down where the error might be.
+
+Thanks,
+Saravana
+
+>
+> Cheers,
+> Nathan
+>
+> # bad: [18ecd30af1a8402c162cca1bd58771c0e5be7815] Add linux-next specific files for 20220520
+> # good: [b015dcd62b86d298829990f8261d5d154b8d7af5] Merge tag 'for-5.18/parisc-4' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux
+> git bisect start '18ecd30af1a8402c162cca1bd58771c0e5be7815' 'b015dcd62b86d298829990f8261d5d154b8d7af5'
+> # good: [f9b63740b666dd9887eb0282d21b5f65bb0cadd0] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+> git bisect good f9b63740b666dd9887eb0282d21b5f65bb0cadd0
+> # good: [1f5eb3e76303572f0318e8c50da51c516580aa03] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+> git bisect good 1f5eb3e76303572f0318e8c50da51c516580aa03
+> # bad: [4c1d9cc0363691893ef94fa0d798faca013e27d3] Merge branch 'staging-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+> git bisect bad 4c1d9cc0363691893ef94fa0d798faca013e27d3
+> # bad: [dcb68304485c0ba5f84f1a54687c751b68263d93] Merge branch 'usb-next' of git://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git
+> git bisect bad dcb68304485c0ba5f84f1a54687c751b68263d93
+> # good: [61271996dc46aecb40fd26f89a4ec0a6bd8f3a8f] Merge branch 'next' of git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+> git bisect good 61271996dc46aecb40fd26f89a4ec0a6bd8f3a8f
+> # good: [d4db45a71f56032b552e161968bb0e5fdd2767f8] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git
+> git bisect good d4db45a71f56032b552e161968bb0e5fdd2767f8
+> # good: [d090c7a2ab84663185e4abda21d7d83880937c8a] USB / dwc3: Fix a checkpatch warning in core.c
+> git bisect good d090c7a2ab84663185e4abda21d7d83880937c8a
+> # bad: [b232b02bf3c205b13a26dcec08e53baddd8e59ed] driver core: fix deadlock in __device_attach
+> git bisect bad b232b02bf3c205b13a26dcec08e53baddd8e59ed
+> # good: [4c32174a24759d5ac6dc42b508fcec2afb8b9602] Documentation: dd: Use ReST lists for return values of driver_deferred_probe_check_state()
+> git bisect good 4c32174a24759d5ac6dc42b508fcec2afb8b9602
+> # good: [38ea74eb8fc1b82b39e13a6527095a0036539117] rpmsg: use local 'dev' variable
+> git bisect good 38ea74eb8fc1b82b39e13a6527095a0036539117
+> # good: [1f7ff11ca68f464b6a9a71b8fbe9e5219e7cac57] driver core: location: Add "back" as a possible output for panel
+> git bisect good 1f7ff11ca68f464b6a9a71b8fbe9e5219e7cac57
+> # good: [6ee60e9c9f2f83ad218159af6a175c57a395ae69] MAINTAINERS: add Russ Weight as a firmware loader maintainer
+> git bisect good 6ee60e9c9f2f83ad218159af6a175c57a395ae69
+> # bad: [15f214f9bdb7c1f560b4bf863c5a72ff53b442a4] topology: Remove unused cpu_cluster_mask()
+> git bisect bad 15f214f9bdb7c1f560b4bf863c5a72ff53b442a4
+> # bad: [2b28a1a84a0eb3412bad1a2d5cce2bb4addec626] driver core: Extend deferred probe timeout on driver registration
+> git bisect bad 2b28a1a84a0eb3412bad1a2d5cce2bb4addec626
+> # first bad commit: [2b28a1a84a0eb3412bad1a2d5cce2bb4addec626] driver core: Extend deferred probe timeout on driver registration
