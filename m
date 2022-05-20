@@ -2,62 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 066A552ED7B
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 15:49:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A06852ED8C
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 15:53:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234399AbiETNtd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 09:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48374 "EHLO
+        id S232409AbiETNwv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 09:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236525AbiETNtb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 09:49:31 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8346216D4A5;
-        Fri, 20 May 2022 06:49:30 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id rs12so4009563ejb.13;
-        Fri, 20 May 2022 06:49:30 -0700 (PDT)
+        with ESMTP id S1350034AbiETNwu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 09:52:50 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B73C6005C
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 06:52:46 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id h11so9738894eda.8
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 06:52:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vLu6prHE7CXUmpUtYCqU/VlBGj2MznfppHbEU5NVX48=;
-        b=N9cHE+cMf4gYMXLgkqEgNtyHL9BZ9o5tzR31xFjwHF0V8HddVlxGGzjTqvFC6mF6tS
-         Bqdoxw0pmdtsvorcrIoS8vrO1IdnqYUmHBxeP0R9hLjgYsIg25edbuUm3vttaywz88AR
-         uMN+14dZXH/xTZ2zNclfm5auurIPGsRZy15KKUZnK/KfxqeCM0F+Tg+ViPTzL2YIVnk3
-         hIr1ln2/8tukjEe63snmQBwFoeXSbLdcTtyEsBuH12cHfHT5ovkbworONslL5dtliDjH
-         NOCTyevP45qqR9tOuKlVXlF2zmgfpldPJNG2m37oFBsyOodHB0LWBflLGCs4BerxwJO0
-         JexQ==
+        bh=9aNkLnnL/x+dQzLtim+hUdjclNpx0H+tWmMwjRMln9c=;
+        b=QiW0ijt+YdcplToEY0ROq8+2ihiAQRTOlOeoVXnuIsHOSl8cfk6RIofVLXpFME/DDA
+         nbKxN0ZgTzYkwxTWSb+djgOpbopWZmSUTaaxFvTG2Cuf3PDqCm7L7T9gWCNj96/74MkL
+         mgyenc6CIDpY13f48c/aic9GCLQu0dhNTd44Kpr50qh6+5Z8dOOERzKNoP94H7IYvIO6
+         1+LxAZrX1fmg/k/GJfMprG0kldMFIVhBjI7M9sktNZVjko64lzqawvxdemzdobqnIkSn
+         dNSKFyIqtpuy1ux4UQFDZCR67rA0e0r/49SepDTvBXssS6pn/XOf6f4CvtZfqLBWKV2m
+         twXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vLu6prHE7CXUmpUtYCqU/VlBGj2MznfppHbEU5NVX48=;
-        b=eVcKz770JTSwlPz0eIn5TLpPw2J2F6YMgedo7wd7E/1rnKnNW1bO9raUwehj4XzqYx
-         W3mmyocLByJzRr6oHB1NeDy/bH4ZhGrY9Z1sUe1Ina2jnY8i/KqCwtRjKyaZAAVv5ECX
-         ftZb55U6/NQMMkqmbsxck4vmJOtgAWMM4AcztjAhXrL0vHlBP4FcMGcFNc4iGElyHC9c
-         A37jhGqmAwZ/Sl8hbXgWdwkuCPYz8z0zIeMR3MiXPGMPbTbMFhl5mRpQ5GD1Lc234uIi
-         ViE5rEVZZW9bOOSnRpP98XxiYrqvY99SAbaFDCywFdhsDl9R8uDfd+oLjXAegZfLLynV
-         eVsg==
-X-Gm-Message-State: AOAM530tfuBFzECCf47jUmxfCzVqHOhsOjF8jinJ7H23uy/nWzytDUg4
-        JSzL80TEF6wxk/bs/QONWQ0A/H0W+v76A5fmypc=
-X-Google-Smtp-Source: ABdhPJyufemWfCAAyN03k8cJt2zC0fl4W3n9O0xqGHX18dypGPM+f/0G/4mda4EIBQy9huNnu8/fb9Maq9joHhxdHUU=
-X-Received: by 2002:a17:907:a088:b0:6f4:f661:f77a with SMTP id
- hu8-20020a170907a08800b006f4f661f77amr8866778ejc.77.1653054569000; Fri, 20
- May 2022 06:49:29 -0700 (PDT)
+        bh=9aNkLnnL/x+dQzLtim+hUdjclNpx0H+tWmMwjRMln9c=;
+        b=13yd4WuHZqFZFuoUjwxmxAWKNfjxFB/4Kxku3z2VDefDrw4OKdowbyfFnrByEJBm+p
+         hTDWFJmYICXYr/qRjoUa+LV+QrPWJGDcPQxuMKj8lEqWsg/0u3eiXrtGWsoz5bXcTe3R
+         kFQfj8wccqBx2UK4oqaPQs69i1TVYmTXG46iZn7L/aa3wOHAMGJBZ8g1EliQiO1g79da
+         zOXgbMcvNVSc0RvmeAnN3h/H91jq8nK6m7OA5u2KN2ZkIND6eRABn8mhVPJIwxRDPEf4
+         QD6lODhYEyQuijyFt4OpuCg7Wpn88nJweOnVqmxJM/bD4JiU2GYPvqkw4hqQloUYLeyK
+         ppHA==
+X-Gm-Message-State: AOAM53379hfTI1aK//tILTIPbK4hEKwhD7EJda7Rrj8ScRswYLz3vdW8
+        i3e3C4E/mLVcWe+nZfgP0R4PAMqO7Z/6Gp0rP3w=
+X-Google-Smtp-Source: ABdhPJyhvhF4dqov7iKJtY3WkAyQlMJhCxTFh0sgtDhcPSLc8B5hyh24XJIf3F86UWCnbZDTxmaATO7BuxB6rpb/ekk=
+X-Received: by 2002:a05:6402:294e:b0:425:f016:24e7 with SMTP id
+ ed14-20020a056402294e00b00425f01624e7mr10856937edb.111.1653054764895; Fri, 20
+ May 2022 06:52:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220520025624.3803776-1-zheyuma97@gmail.com>
-In-Reply-To: <20220520025624.3803776-1-zheyuma97@gmail.com>
+References: <26519be2a2fdd4c6741658144e3a8d78cf4d000b.1653042202.git.geert+renesas@glider.be>
+In-Reply-To: <26519be2a2fdd4c6741658144e3a8d78cf4d000b.1653042202.git.geert+renesas@glider.be>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 May 2022 15:48:52 +0200
-Message-ID: <CAHp75Vc5MERshhsqfiG5XXREJYkWO03V0a=6v4TUKG-fPdy+sw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: ml-ioh: Convert to use managed functions pcim*
- and devm_*
-To:     Zheyu Ma <zheyuma97@gmail.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Fri, 20 May 2022 15:52:08 +0200
+Message-ID: <CAHp75VeHV+YNCgEUE2jvie92BOpmc3X9R_AnHi7EHRRKoiYpzA@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: sifive: Make the irqchip immutable
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Marc Zyngier <maz@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-riscv <linux-riscv@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -69,109 +71,95 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 20, 2022 at 4:56 AM Zheyu Ma <zheyuma97@gmail.com> wrote:
+On Fri, May 20, 2022 at 12:34 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 >
->  When removing the module, we will get the following flaw:
+> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+> immutable") added a warning to indicate if the gpiolib is altering the
+> internals of irqchips.  Following this change the following warning is
+> now observed for the sifive driver:
 >
-> [   14.204955] remove_proc_entry: removing non-empty directory 'irq/21', leaking at least 'gpio_ml_ioh'
-> [   14.205827] WARNING: CPU: 0 PID: 305 at fs/proc/generic.c:717 remove_proc_entry+0x389/0x3f0
-> ...
-> [   14.220613]  ioh_gpio_remove+0xc5/0xe0 [gpio_ml_ioh]
-> [   14.221075]  pci_device_remove+0x92/0x240
+>     gpio gpiochip1: (38001000.gpio-controller): not an immutable chip, please consider fixing it!
 >
-> Fix this by using managed functions, this makes the error handling more
-> simpler.
+> Fix this by making the irqchip in the sifive driver immutable.
 
-Thanks!
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-I have a few comments, but they are not critical, so either a followup
-or new version depends on Bart's preferences.
-
-...
-
-> -       ret = pci_enable_device(pdev);
-> +       ret = pcim_enable_device(pdev);
->         if (ret) {
-> -               dev_err(dev, "%s : pci_enable_device failed", __func__);
-> -               goto err_pci_enable;
-> +               dev_err(dev, "%s : pcim_enable_device failed", __func__);
-> +               return ret;
-
-Since you touch them both, we may convert to `return
-dev_err_probe(...);` pattern here and elsewhere. But it might be
-better to have in the followup as logically different change.
-
->         }
-
-...
-
-> -       base = pci_iomap(pdev, 1, 0);
-> +       base = pcim_iomap_table(pdev)[1];
-
->         if (!base) {
-> -               dev_err(dev, "%s : pci_iomap failed", __func__);
-> -               ret = -ENOMEM;
-> -               goto err_iomap;
-> +               dev_err(dev, "%s : pcim_iomap_table failed", __func__);
-> +               return -ENOMEM;
->         }
-
-These lines are dead code since you already checked
-pcim_ioremap_regions(). If it doesn't fail, this one never fails.
-
-...
-
-> -       chip_save = kcalloc(8, sizeof(*chip), GFP_KERNEL);
-> +       chip_save = devm_kcalloc(dev, 8, sizeof(*chip), GFP_KERNEL);
-
->         if (chip_save == NULL) {
-> -               ret = -ENOMEM;
-> -               goto err_kzalloc;
-> +               return -ENOMEM;
->         }
-
-The {} are redundant now and the ' == NULL' part can be replaced by '!'.
-
-...
-
->                 if (irq_base < 0) {
-
->                         dev_warn(dev,
->                                 "ml_ioh_gpio: Failed to get IRQ base num\n");
-
-This should be dev_err(), but you may convert it altogether to `return
-dev_err_probe(...);` in the respective patch.
-
-> -                       ret = irq_base;
-> -                       goto err_gpiochip_add;
-> +                       return irq_base;
->                 }
->                 chip->irq_base = irq_base;
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Against gpio/for-next.
+> Boot-tested on SiPEED MAiXBiT (Canaan K210).
 >
->                 ret = ioh_gpio_alloc_generic_chip(chip,
->                                                   irq_base, num_ports[j]);
->                 if (ret)
-> -                       goto err_gpiochip_add;
-> +                       return ret;
->         }
+> v2:
+>   - Factor out hwirq using preferred helper.
+> ---
+>  drivers/gpio/gpio-sifive.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+> index 03b8c4de2e91e3c4..238f3210970cfa0e 100644
+> --- a/drivers/gpio/gpio-sifive.c
+> +++ b/drivers/gpio/gpio-sifive.c
+> @@ -75,10 +75,12 @@ static void sifive_gpio_irq_enable(struct irq_data *d)
+>  {
+>         struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>         struct sifive_gpio *chip = gpiochip_get_data(gc);
+> -       int offset = irqd_to_hwirq(d) % SIFIVE_GPIO_MAX;
+> +       irq_hw_number_t hwirq = irqd_to_hwirq(d);
+> +       int offset = hwirq % SIFIVE_GPIO_MAX;
+>         u32 bit = BIT(offset);
+>         unsigned long flags;
+>
+> +       gpiochip_enable_irq(gc, hwirq);
+>         irq_chip_enable_parent(d);
+>
+>         /* Switch to input */
+> @@ -101,11 +103,13 @@ static void sifive_gpio_irq_disable(struct irq_data *d)
+>  {
+>         struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>         struct sifive_gpio *chip = gpiochip_get_data(gc);
+> -       int offset = irqd_to_hwirq(d) % SIFIVE_GPIO_MAX;
+> +       irq_hw_number_t hwirq = irqd_to_hwirq(d);
+> +       int offset = hwirq % SIFIVE_GPIO_MAX;
+>
+>         assign_bit(offset, &chip->irq_state, 0);
+>         sifive_gpio_set_ie(chip, offset);
+>         irq_chip_disable_parent(d);
+> +       gpiochip_disable_irq(gc, hwirq);
+>  }
+>
+>  static void sifive_gpio_irq_eoi(struct irq_data *d)
+> @@ -137,7 +141,7 @@ static int sifive_gpio_irq_set_affinity(struct irq_data *data,
+>         return -EINVAL;
+>  }
+>
+> -static struct irq_chip sifive_gpio_irqchip = {
+> +static const struct irq_chip sifive_gpio_irqchip = {
+>         .name           = "sifive-gpio",
+>         .irq_set_type   = sifive_gpio_irq_set_type,
+>         .irq_mask       = irq_chip_mask_parent,
+> @@ -146,6 +150,8 @@ static struct irq_chip sifive_gpio_irqchip = {
+>         .irq_disable    = sifive_gpio_irq_disable,
+>         .irq_eoi        = sifive_gpio_irq_eoi,
+>         .irq_set_affinity = sifive_gpio_irq_set_affinity,
+> +       .flags          = IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
+>
+>  static int sifive_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+> @@ -242,7 +248,7 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+>         chip->gc.parent = dev;
+>         chip->gc.owner = THIS_MODULE;
+>         girq = &chip->gc.irq;
+> -       girq->chip = &sifive_gpio_irqchip;
+> +       gpio_irq_chip_set_chip(girq, &sifive_gpio_irqchip);
+>         girq->fwnode = of_node_to_fwnode(node);
+>         girq->parent_domain = parent;
+>         girq->child_to_parent_hwirq = sifive_gpio_child_to_parent_hwirq;
+> --
+> 2.25.1
+>
 
-...
-
->         if (ret != 0) {
-
-Also in a separate patch you may replace all this kind of lines;
-
-if (chip == NULL) ==> if (!chip)
-if (ret != 0) ==> if (ret)
-
->                 dev_err(dev, "%s request_irq failed\n", __func__);
-> -               goto err_gpiochip_add;
-> +               return ret;
-
-return dev_err_probe(...);
-But here it's definitely in a separate patch.
-
->         }
 
 -- 
 With Best Regards,
