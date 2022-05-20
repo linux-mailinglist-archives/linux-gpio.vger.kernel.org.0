@@ -2,39 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8461752E9CF
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 12:22:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C614552E9D5
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 12:23:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348108AbiETKWC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 06:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40476 "EHLO
+        id S1346589AbiETKX1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 06:23:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346498AbiETKWB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 06:22:01 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF995931B
-        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 03:21:58 -0700 (PDT)
+        with ESMTP id S1346302AbiETKXY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 06:23:24 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FD9E2776
+        for <linux-gpio@vger.kernel.org>; Fri, 20 May 2022 03:23:22 -0700 (PDT)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:cdaa:735b:3efc:39fe])
-        by andre.telenet-ops.be with bizsmtp
-        id YyMx2700238adXi01yMxDm; Fri, 20 May 2022 12:21:57 +0200
+        by baptiste.telenet-ops.be with bizsmtp
+        id YyPL2700E38adXi01yPL1G; Fri, 20 May 2022 12:23:21 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1nrzlc-000zus-Ky; Fri, 20 May 2022 12:21:56 +0200
+        id 1nrzmx-000zvD-Su; Fri, 20 May 2022 12:23:19 +0200
 Received: from geert by rox.of.borg with local (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1nrzlc-003vG3-0o; Fri, 20 May 2022 12:21:56 +0200
+        id 1nrzmx-003vIE-Bo; Fri, 20 May 2022 12:23:19 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
         Marc Zyngier <maz@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] gpio: pca953x: Make the irqchip immutable
-Date:   Fri, 20 May 2022 12:21:54 +0200
-Message-Id: <658f37ac17921a4770853635153fd6173dc4ef69.1653042074.git.geert+renesas@glider.be>
+Subject: [PATCH v2] gpio: dwapb: Make the irqchip immutable
+Date:   Fri, 20 May 2022 12:23:18 +0200
+Message-Id: <01f7a990654697ca7ec8b2d0025f41403462c8d9.1653042121.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -50,105 +52,118 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
 immutable") added a warning to indicate if the gpiolib is altering the
 internals of irqchips.  Following this change the following warning is
-now observed for the pca953x driver:
+now observed for the dwapb driver:
 
-    gpio gpiochip7: (0-0020): not an immutable chip, please consider fixing it!
+    gpio gpiochip0: (50200000.gpio): not an immutable chip, please consider fixing it!
 
-Fix this by making the irqchip in the pca953x driver immutable.
+Fix this by making the irqchip in the dwapb driver immutable.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 Against gpio/for-next.
-Boot-tested with pca9654 on the r8a77990/ebisu development board.
+Boot-tested on SiPEED MAiXBiT (Canaan K210).
 
 v2:
-  - Use existing hwirq variable.
+  - Factor out hwirq using preferred helper.
 ---
- drivers/gpio/gpio-pca953x.c | 35 +++++++++++++++++++++++------------
- 1 file changed, 23 insertions(+), 12 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 38 ++++++++++++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index ba36de7a384527de..b444c6ab958bfd06 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -201,7 +201,6 @@ struct pca953x_chip {
- 	DECLARE_BITMAP(irq_stat, MAX_LINE);
- 	DECLARE_BITMAP(irq_trig_raise, MAX_LINE);
- 	DECLARE_BITMAP(irq_trig_fall, MAX_LINE);
--	struct irq_chip irq_chip;
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 7130195da48d75dd..04afe728e18748df 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -95,7 +95,6 @@ struct dwapb_context {
  #endif
- 	atomic_t wakeup_path;
  
-@@ -629,6 +628,7 @@ static void pca953x_irq_mask(struct irq_data *d)
- 	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ struct dwapb_gpio_port_irqchip {
+-	struct irq_chip		irqchip;
+ 	unsigned int		nr_irqs;
+ 	unsigned int		irq[DWAPB_MAX_GPIOS];
+ };
+@@ -252,24 +251,30 @@ static void dwapb_irq_mask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ 	unsigned long flags;
+ 	u32 val;
  
- 	clear_bit(hwirq, chip->irq_mask);
+ 	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+-	val = dwapb_read(gpio, GPIO_INTMASK) | BIT(irqd_to_hwirq(d));
++	val = dwapb_read(gpio, GPIO_INTMASK) | BIT(hwirq);
+ 	dwapb_write(gpio, GPIO_INTMASK, val);
+ 	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
++
 +	gpiochip_disable_irq(gc, hwirq);
  }
  
- static void pca953x_irq_unmask(struct irq_data *d)
-@@ -637,6 +637,7 @@ static void pca953x_irq_unmask(struct irq_data *d)
- 	struct pca953x_chip *chip = gpiochip_get_data(gc);
- 	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ static void dwapb_irq_unmask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ 	unsigned long flags;
+ 	u32 val;
  
 +	gpiochip_enable_irq(gc, hwirq);
- 	set_bit(hwirq, chip->irq_mask);
- }
- 
-@@ -721,6 +722,26 @@ static void pca953x_irq_shutdown(struct irq_data *d)
- 	clear_bit(hwirq, chip->irq_trig_fall);
- }
- 
-+static void pca953x_irq_print_chip(struct irq_data *data, struct seq_file *p)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
 +
-+	seq_printf(p, dev_name(gc->parent));
-+}
-+
-+static const struct irq_chip pca953x_irq_chip = {
-+	.irq_mask		= pca953x_irq_mask,
-+	.irq_unmask		= pca953x_irq_unmask,
-+	.irq_set_wake		= pca953x_irq_set_wake,
-+	.irq_bus_lock		= pca953x_irq_bus_lock,
-+	.irq_bus_sync_unlock	= pca953x_irq_bus_sync_unlock,
-+	.irq_set_type		= pca953x_irq_set_type,
-+	.irq_shutdown		= pca953x_irq_shutdown,
-+	.irq_print_chip		= pca953x_irq_print_chip,
-+	.flags			= IRQCHIP_IMMUTABLE,
+ 	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+-	val = dwapb_read(gpio, GPIO_INTMASK) & ~BIT(irqd_to_hwirq(d));
++	val = dwapb_read(gpio, GPIO_INTMASK) & ~BIT(hwirq);
+ 	dwapb_write(gpio, GPIO_INTMASK, val);
+ 	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ }
+@@ -364,8 +369,23 @@ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 
+ 	return 0;
+ }
++#else
++#define dwapb_irq_set_wake	NULL
+ #endif
+ 
++static const struct irq_chip dwapb_irq_chip = {
++	.name		= DWAPB_DRIVER_NAME,
++	.irq_ack	= dwapb_irq_ack,
++	.irq_mask	= dwapb_irq_mask,
++	.irq_unmask	= dwapb_irq_unmask,
++	.irq_set_type	= dwapb_irq_set_type,
++	.irq_enable	= dwapb_irq_enable,
++	.irq_disable	= dwapb_irq_disable,
++	.irq_set_wake	= dwapb_irq_set_wake,
++	.flags		= IRQCHIP_IMMUTABLE,
 +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 +};
 +
- static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pending)
+ static int dwapb_gpio_set_debounce(struct gpio_chip *gc,
+ 				   unsigned offset, unsigned debounce)
  {
- 	struct gpio_chip *gc = &chip->gpio_chip;
-@@ -812,7 +833,6 @@ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
- static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
- {
- 	struct i2c_client *client = chip->client;
--	struct irq_chip *irq_chip = &chip->irq_chip;
- 	DECLARE_BITMAP(reg_direction, MAX_LINE);
- 	DECLARE_BITMAP(irq_stat, MAX_LINE);
- 	struct gpio_irq_chip *girq;
-@@ -846,17 +866,8 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
- 	bitmap_and(chip->irq_stat, irq_stat, reg_direction, chip->gpio_chip.ngpio);
- 	mutex_init(&chip->irq_lock);
+@@ -439,16 +459,6 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 	girq->default_type = IRQ_TYPE_NONE;
  
--	irq_chip->name = dev_name(&client->dev);
--	irq_chip->irq_mask = pca953x_irq_mask;
--	irq_chip->irq_unmask = pca953x_irq_unmask;
--	irq_chip->irq_set_wake = pca953x_irq_set_wake;
--	irq_chip->irq_bus_lock = pca953x_irq_bus_lock;
--	irq_chip->irq_bus_sync_unlock = pca953x_irq_bus_sync_unlock;
--	irq_chip->irq_set_type = pca953x_irq_set_type;
--	irq_chip->irq_shutdown = pca953x_irq_shutdown;
--
- 	girq = &chip->gpio_chip.irq;
--	girq->chip = irq_chip;
-+	gpio_irq_chip_set_chip(girq, &pca953x_irq_chip);
- 	/* This will let us handle the parent IRQ in the driver */
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
+ 	port->pirq = pirq;
+-	pirq->irqchip.name = DWAPB_DRIVER_NAME;
+-	pirq->irqchip.irq_ack = dwapb_irq_ack;
+-	pirq->irqchip.irq_mask = dwapb_irq_mask;
+-	pirq->irqchip.irq_unmask = dwapb_irq_unmask;
+-	pirq->irqchip.irq_set_type = dwapb_irq_set_type;
+-	pirq->irqchip.irq_enable = dwapb_irq_enable;
+-	pirq->irqchip.irq_disable = dwapb_irq_disable;
+-#ifdef CONFIG_PM_SLEEP
+-	pirq->irqchip.irq_set_wake = dwapb_irq_set_wake;
+-#endif
+ 
+ 	/*
+ 	 * Intel ACPI-based platforms mostly have the DesignWare APB GPIO
+@@ -475,7 +485,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		girq->parent_handler = dwapb_irq_handler;
+ 	}
+ 
+-	girq->chip = &pirq->irqchip;
++	gpio_irq_chip_set_chip(girq, &dwapb_irq_chip);
+ 
+ 	return;
+ 
 -- 
 2.25.1
 
