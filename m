@@ -2,76 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10BD152E825
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 10:57:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E032752E86E
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 May 2022 11:12:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347105AbiETI54 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 May 2022 04:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
+        id S235987AbiETJMP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 May 2022 05:12:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243203AbiETI5z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 04:57:55 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FE3CFE22;
-        Fri, 20 May 2022 01:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653037074; x=1684573074;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8lE+zJzXvHqHdJFxq81VPdrKUjVeJsxy41x0hry8jGo=;
-  b=GlRWmw38RfUpD6Gq3r1osYaaSG45S2ebDNp4BCW/MzQtLAL3iqvV82Qi
-   Ru9jnMFfmKlcDHTONoo8XvlezFC+uj9oM2YZdOzrfo4/pqfVzOdeq6u3A
-   aNInjTFMSMqtwkcXfgky7p3SB4/ya2D2oVZ3QcbXjTy8zXTqvA6rCtUBl
-   IldJBUOExMON6a3a2E17lbuRG3FviIQ7erb9G4Coj914JQ+CH5melxz1O
-   Rvc8+DlL0sN2ji20Z6zXNrfafHbLl1xiOdfyPBWexyOb3mpfuME0o7C4x
-   37Dd/4lNPQb+l49kwPRGTIGwpGqq789sN6GVfcM30Ak8aY5qiJQ5FTFFJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10352"; a="272249727"
-X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
-   d="scan'208";a="272249727"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2022 01:57:49 -0700
-X-IronPort-AV: E=Sophos;i="5.91,238,1647327600"; 
-   d="scan'208";a="546588001"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2022 01:57:47 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 20 May 2022 11:57:44 +0300
-Date:   Fri, 20 May 2022 11:57:44 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: Fix kernel doc format, i.e. add
- return sections
-Message-ID: <YodYCMgqI9GznHeo@lahna>
-References: <20220519212645.47177-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S235950AbiETJMO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 May 2022 05:12:14 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CD15C350;
+        Fri, 20 May 2022 02:12:11 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nryg4-0005aV-3Z; Fri, 20 May 2022 11:12:08 +0200
+Message-ID: <a0ce4372-df94-a19c-063d-274e65da7c38@leemhuis.info>
+Date:   Fri, 20 May 2022 11:12:06 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220519212645.47177-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Content-Language: en-US
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Edmond Chung <edmondchung@google.com>,
+        Andrew Chant <achant@google.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+ <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+ <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+ <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+ <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+In-Reply-To: <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653037931;c259e5ef;
+X-HE-SMSGID: 1nryg4-0005aV-3Z
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 20, 2022 at 12:26:45AM +0300, Andy Shevchenko wrote:
-> Kernel doc validator is not happy:
+On 16.02.22 15:40, Bartosz Golaszewski wrote:
+> On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+>> <marcelo.jimenez@gmail.com> wrote:
+>>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>>>> I am curious about the usecases and how deeply you have built
+>>>> yourselves into this.
+>>>
+>>> I don't know if I understand what you mean, sorry.
+>>
+>> Why does the user need the sysfs ABI? What is it used for?
+>>
+>> I.e what is the actual use case?
+>>
+>>>>> In any case, the upstream file should be enough to test the issue reported here.
+>>>>
+>>>> The thing is that upstream isn't super happy that you have been
+>>>> making yourselves dependent on features that we are actively
+>>>> discouraging and then demanding that we support these features.
+>>>
+>>> Hum, demanding seems to be a strong word for what I am doing here.
+>>>
+>>> Deprecated should not mean broken. My point is: the API seems to be
+>>> currently broken. User space apps got broken, that's a fact. I even
+>>> took the time to bisect the kernel and show you which commit broke it.
+>>> So, no, I am not demanding. More like reporting and providing a
+>>> temporary solution to those with a similar problem.
+>>>
+>>> Maybe it is time to remove the API, but this is up to "upstream".
+>>> Leaving the API broken seems pointless and unproductive.
+>>>
+>>> Sorry for the "not super happiness of upstream", but maybe upstream
+>>> got me wrong.
+>>>
+>>> We are not "making ourselves dependent on features ...". The API was
+>>> there. We used it. Now it is deprecated, ok, we should move on. I got
+>>> the message.
+>>
+>> Ouch I deserved some slamming for this.
+>>
+>> I'm sorry if I came across as harsh :(
+>>
+>> I just don't know how to properly push for this.
+>>
+>> I have even pushed the option of the deprecated sysfs ABI
+>> behind the CONFIG_EXPERT option, which should mean that
+>> the kernel config has been made by someone who has checked
+>> the option "yes I am an expert I know what I am doing"
+>> yet failed to observe that this ABI is obsoleted since 5 years
+>> and hence failed to be an expert.
+>>
+>> Of course the ABI (not API really) needs to be fixed if we can find the
+>> problem. It's frustrating that fixing it seems to fix broken other
+>> features which are not deprecated, hence the annoyance on my
+>> part.
+>>
 > 
->   pinctrl-intel.c:865: warning: No description found for return value of 'intel_gpio_to_pin'
->   pinctrl-intel.c:904: warning: No description found for return value of 'intel_pin_to_gpio'
->   2 warnings
+> I'm afraid we'll earn ourselves a good old LinusRant if we keep
+> pushing the character device as a solution to the problem here.
+> Marcelo is right after all: he used an existing user interface, the
+> interface broke, it must be fixed.
 > 
-> Add return sections to the kernel documentation of the above mentioned
-> functions.
+> I would prefer to find a solution that fixes Marcelo's issue while
+> keeping the offending patches in tree but it seems like the issue is
+> more complicated and will require some rework of the sysfs interface.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> In which case unless there are objections I lean towards reverting the
+> relevant commits.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviving and old thread, hence a quick reminder: The patch at the start
+of this thread was applied and then reverted in 56e337f2cf13 with this text:
+
+```
+This commit - while attempting to fix a regression - has caused a number
+of other problems. As the fallout from it is more significant than the
+initial problem itself, revert it for now before we find a correct
+solution.
+```
+
+I still have this on my list of open regressions and that made me
+wonder: is anyone working on a "correct solution" (or was one even
+applied and I missed it)? Or is the situation so tricky that we better
+leave everything as it is? Marcelo, do you still care?
+
+Ciao, Thorsten
