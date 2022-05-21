@@ -2,234 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3615652FCE9
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 15:35:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED20A52FD68
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 16:41:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239472AbiEUNfp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 21 May 2022 09:35:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
+        id S234259AbiEUOlq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 May 2022 10:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231151AbiEUNfo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 09:35:44 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791BD6A067
-        for <linux-gpio@vger.kernel.org>; Sat, 21 May 2022 06:35:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653140143; x=1684676143;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=g97E3iVNJWwqSLUUeuUsW85ktdKL8I2RdEplGxYvgSA=;
-  b=GuuqE6eKMAgvAi+SDBsvxBq9qy0NvI4ko6LnORFP3OiL1Gi6oCUDEC+v
-   Y440PSQmV5GYlbiIKpOS/yRO6IlWg3l/RAu4OBwo35j+GdCsrtDTWSS7v
-   6Ncsug+4aFT8g4sWE0OoSh1PICyM9ooQzDeXtosJmHcjZyBnHdFeTX+Sg
-   HdYXuPL0+gHg+qAIDfLmxWuJQD6s9dMieJVzOEpC0OO394PRgbu3PpMFh
-   kiWTIiehRZCJFMEMGNOVZyhC7eBLG1HDfOUmYm/7KFfHOTGRYjb4gaggP
-   UpcaoudA2AVITHmR/QsozmUVyETZjwFYHR26cUnSBTQwK/mcBD+hBX9FZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10354"; a="335906870"
-X-IronPort-AV: E=Sophos;i="5.91,242,1647327600"; 
-   d="scan'208";a="335906870"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 06:35:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,242,1647327600"; 
-   d="scan'208";a="547130010"
-Received: from lkp-server02.sh.intel.com (HELO 242b25809ac7) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 21 May 2022 06:35:41 -0700
-Received: from kbuild by 242b25809ac7 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nsPGe-0006Ks-IX;
-        Sat, 21 May 2022 13:35:40 +0000
-Date:   Sat, 21 May 2022 21:35:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 933adebbbd2f3160451b55f915133cd4d1c4d8fd
-Message-ID: <6288ea88./L1uBJGh3qApF7sI%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S1355291AbiEUOlp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 10:41:45 -0400
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DEF205E5
+        for <linux-gpio@vger.kernel.org>; Sat, 21 May 2022 07:41:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1653143152; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=KzRBCy6nuN+o2hvX7VXDJYETFntHoCoojNrRM9VSaWwbLoJ9MXDEdlf8JHmEXhDDbxR4NEbm+rfp9B42SUpwXHGFQZkLxuLbtFwdVgEfdmuSuCPQa+DXNHlDFkEHzRDbsuV3MrlpWhSVOfHHR2N9G0aIwz8ibqEb84nLnkJb8Oc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1653143152; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=0o0p0h8Ax2NeemybyRFKBFg4kvyShrFo2MI2nwUZclc=; 
+        b=Re3TrzM22+rPOUwA+O9juEp/XlETyA3TKyqOn/YZLPKPAhl1zFUXLTNiizMsVbDrCCkwyVv3bbxvEGxi3GaK59c6PsVn208gOpSIpi6VgpvX8PVaieeO7d86HYRU1Oqsagcgye+D2+2Fhxe9B5vdu2CnfHKKVbzZgIodGwd3I4s=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zohomail.com;
+        spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
+        dmarc=pass header.from=<lchen.firstlove@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1653143152;
+        s=zm2022; d=zohomail.com; i=lchen.firstlove@zohomail.com;
+        h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
+        bh=0o0p0h8Ax2NeemybyRFKBFg4kvyShrFo2MI2nwUZclc=;
+        b=FdrzD73CjWTFt+Hm6uB92L3xR+23nGpXxmDcny9Bndgv3qZdnMfCtJJQjhpKy2jI
+        8rfjSjMR6bNcNl3+BlMnB3ERdEzUZkkK3koWlNJUricaT74b1ZuwbB5O+k1VV6Y7fmE
+        fdw/lv4jNHtD20YoNce1xh8g9DlSDhCKXlhN5Qj4=
+Received: from mail.zoho.com by mx.zohomail.com
+        with SMTP id 1653143150983181.57000929052094; Sat, 21 May 2022 07:25:50 -0700 (PDT)
+Received: from  [45.12.140.94] by mail.zoho.com
+        with HTTP;Sat, 21 May 2022 07:25:50 -0700 (PDT)
+Date:   Sat, 21 May 2022 07:25:50 -0700
+From:   Li Chen <lchen.firstlove@zohomail.com>
+To:     "Mark Brown" <broonie@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-gpio" <linux-gpio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
+        "Patrice Chotard" <patrice.chotard@foss.st.com>,
+        "linux-sunxi" <linux-sunxi@lists.linux.dev>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>, "Chen-Yu Tsai" <wens@csie.org>,
+        "Jernej Skrabec" <jernej.skrabec@gmail.com>,
+        "Samuel Holland" <samuel@sholland.org>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>
+Message-ID: <180e702a15f.e737e37e45859.3135149506136486394@zohomail.com>
+In-Reply-To: 
+Subject: [PATCH 0/4] Add regmap_field helpers for simple bit operations
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr08011226a0c92b0a8773c6508a06de8b0000498615caf2de6adef463dc6ad000c21eec5ddab3dbd9b221:zu08011227b19d2d40d37a8becfd63841c000034b6705f54b48ba1b5a2a1cf7cf960982e0544e860dd55949e:rf0801122c239725de1f0a6682d775822a000055882629dd4d26703f9f0ac12d296c5a81d1c3193b491674a3fa194ae69f:ZohoMail
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 933adebbbd2f3160451b55f915133cd4d1c4d8fd  dt-bindings: pinctrl: qcom: Drop 'maxItems' on 'wakeup-parent'
+From: Li Chen <lchen@ambarella.com>
 
-elapsed time: 2868m
+This series proposes to add simple bit operations for setting, clearing
+and testing specific bits with regmap_field.
 
-configs tested: 151
-configs skipped: 4
+Li Chen (4):
+  regmap: provide regmap_field helpers for simple bit operations
+  ASoC: sunxi: Use {regmap/regmap_field}_{set/clear}_bits helpers
+  pinctrl: bcm: Use regmap_field_{set/clear}_bits helpers
+  pinctrl: st: Switch to use regmap_field_test_bits
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-i386                             allyesconfig
-ia64                             allmodconfig
-x86_64                           allyesconfig
-ia64                             allyesconfig
-x86_64                    rhel-8.3-kselftests
-mips                             allyesconfig
-riscv                            allyesconfig
-um                           x86_64_defconfig
-riscv                            allmodconfig
-um                             i386_defconfig
-mips                             allmodconfig
-m68k                             allyesconfig
-s390                             allmodconfig
-m68k                             allmodconfig
-powerpc                          allmodconfig
-s390                             allyesconfig
-powerpc                          allyesconfig
-sparc                            allyesconfig
-parisc                           allyesconfig
-sh                               allmodconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-arm                      footbridge_defconfig
-s390                          debug_defconfig
-xtensa                    xip_kc705_defconfig
-sh                               j2_defconfig
-mips                           ci20_defconfig
-xtensa                          iss_defconfig
-powerpc                      pcm030_defconfig
-sh                   sh7770_generic_defconfig
-h8300                    h8300h-sim_defconfig
-sh                        sh7763rdp_defconfig
-sh                         microdev_defconfig
-arm                      jornada720_defconfig
-powerpc                     sequoia_defconfig
-um                                  defconfig
-powerpc                        cell_defconfig
-sh                                  defconfig
-powerpc                    klondike_defconfig
-powerpc64                           defconfig
-powerpc                        warp_defconfig
-mips                       capcella_defconfig
-powerpc                 linkstation_defconfig
-xtensa                  audio_kc705_defconfig
-arm                           h3600_defconfig
-parisc                generic-64bit_defconfig
-sh                           se7619_defconfig
-sh                          landisk_defconfig
-sh                           se7343_defconfig
-sh                            migor_defconfig
-nios2                            alldefconfig
-powerpc                      ep88xc_defconfig
-h8300                       h8s-sim_defconfig
-powerpc                     mpc83xx_defconfig
-powerpc                 mpc834x_mds_defconfig
-m68k                       m5208evb_defconfig
-mips                  decstation_64_defconfig
-m68k                       bvme6000_defconfig
-sh                          sdk7786_defconfig
-mips                 decstation_r4k_defconfig
-m68k                          hp300_defconfig
-mips                         mpc30x_defconfig
-powerpc                     rainier_defconfig
-sh                   secureedge5410_defconfig
-arm                        realview_defconfig
-sh                   rts7751r2dplus_defconfig
-sh                          urquell_defconfig
-sh                        sh7757lcr_defconfig
-m68k                          sun3x_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220519
-ia64                                defconfig
-riscv                             allnoconfig
-m68k                                defconfig
-nios2                               defconfig
-csky                                defconfig
-alpha                               defconfig
-arc                                 defconfig
-s390                                defconfig
-parisc                              defconfig
-parisc64                            defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                                defconfig
-sparc                               defconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220519
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-
-clang tested configs:
-powerpc              randconfig-c003-20220519
-x86_64                        randconfig-c007
-riscv                randconfig-c006-20220519
-mips                 randconfig-c004-20220519
-i386                          randconfig-c001
-arm                  randconfig-c002-20220519
-powerpc                          g5_defconfig
-hexagon                             defconfig
-mips                     loongson2k_defconfig
-powerpc                      pmac32_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc                     tqm8540_defconfig
-arm                         palmz72_defconfig
-mips                            e55_defconfig
-arm                  colibri_pxa300_defconfig
-arm                        mvebu_v5_defconfig
-arm                              alldefconfig
-powerpc                  mpc885_ads_defconfig
-powerpc                    gamecube_defconfig
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220519
-riscv                randconfig-r042-20220519
-hexagon              randconfig-r041-20220519
-s390                 randconfig-r044-20220519
+ drivers/base/regmap/regmap.c          | 22 ++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm6358.c |  2 +-
+ drivers/pinctrl/pinctrl-st.c          | 23 ++++----
+ include/linux/regmap.h                | 37 +++++++++++++
+ sound/soc/sunxi/sun4i-codec.c         | 78 +++++++++++----------------
+ 5 files changed, 99 insertions(+), 63 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.36.1
+
+
