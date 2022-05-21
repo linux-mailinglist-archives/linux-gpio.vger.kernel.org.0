@@ -2,231 +2,234 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14B5052FC44
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 14:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3615652FCE9
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 15:35:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231675AbiEUMDx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 21 May 2022 08:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36300 "EHLO
+        id S239472AbiEUNfp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 May 2022 09:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239289AbiEUMDt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 08:03:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA53E393C2;
-        Sat, 21 May 2022 05:03:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F42060B10;
-        Sat, 21 May 2022 12:03:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C82EAC385A9;
-        Sat, 21 May 2022 12:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653134624;
-        bh=YM5DKeCTB5HQbOoCwtl03Mo0hTo1psvio2W2JuRy1VY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r+Z5Qbvnzdqx4iyIsyprDVrcn3TLFQm5AjFHbOe4AzH0vufySiSygpAZNEPHlBNrG
-         /YnjEE3Yuo472HoH7x2IAnaVZVGS66bnDIYxpnAEfjGZxVDyIgbFL2CJgsieATCzo7
-         Cj/Y71S+96cERy5vmrYdtprwVaOAxAkXSRwiJxc23ohApnbrytAA6PFgfMz1oObtBy
-         ClWMkU8uok4u/WbsNkDksK8ztPdNBK/pGiWLM1I/ghecYGmLNQmdBUsQNmK2EKf2Mc
-         FnocTTnbEiGKxp6xdmqHC4/4qo83I5VmTPQaywqEBsysN3Edifhz/JUdJIU9Ytf1GP
-         /P9vG6Urn812g==
-Date:   Sat, 21 May 2022 14:03:40 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     frank zago <frank@zago.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] i2c: ch341: add I2C MFD cell driver for the CH341
-Message-ID: <YojVHBofkBOFVYap@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        frank zago <frank@zago.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-References: <20220401023306.79532-1-frank@zago.net>
- <20220401023306.79532-4-frank@zago.net>
+        with ESMTP id S231151AbiEUNfo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 09:35:44 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791BD6A067
+        for <linux-gpio@vger.kernel.org>; Sat, 21 May 2022 06:35:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653140143; x=1684676143;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=g97E3iVNJWwqSLUUeuUsW85ktdKL8I2RdEplGxYvgSA=;
+  b=GuuqE6eKMAgvAi+SDBsvxBq9qy0NvI4ko6LnORFP3OiL1Gi6oCUDEC+v
+   Y440PSQmV5GYlbiIKpOS/yRO6IlWg3l/RAu4OBwo35j+GdCsrtDTWSS7v
+   6Ncsug+4aFT8g4sWE0OoSh1PICyM9ooQzDeXtosJmHcjZyBnHdFeTX+Sg
+   HdYXuPL0+gHg+qAIDfLmxWuJQD6s9dMieJVzOEpC0OO394PRgbu3PpMFh
+   kiWTIiehRZCJFMEMGNOVZyhC7eBLG1HDfOUmYm/7KFfHOTGRYjb4gaggP
+   UpcaoudA2AVITHmR/QsozmUVyETZjwFYHR26cUnSBTQwK/mcBD+hBX9FZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10354"; a="335906870"
+X-IronPort-AV: E=Sophos;i="5.91,242,1647327600"; 
+   d="scan'208";a="335906870"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 06:35:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,242,1647327600"; 
+   d="scan'208";a="547130010"
+Received: from lkp-server02.sh.intel.com (HELO 242b25809ac7) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 21 May 2022 06:35:41 -0700
+Received: from kbuild by 242b25809ac7 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nsPGe-0006Ks-IX;
+        Sat, 21 May 2022 13:35:40 +0000
+Date:   Sat, 21 May 2022 21:35:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 933adebbbd2f3160451b55f915133cd4d1c4d8fd
+Message-ID: <6288ea88./L1uBJGh3qApF7sI%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H4Fcr/HIYyvCKkRR"
-Content-Disposition: inline
-In-Reply-To: <20220401023306.79532-4-frank@zago.net>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 933adebbbd2f3160451b55f915133cd4d1c4d8fd  dt-bindings: pinctrl: qcom: Drop 'maxItems' on 'wakeup-parent'
 
---H4Fcr/HIYyvCKkRR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 2868m
 
-Hi Frank,
+configs tested: 151
+configs skipped: 4
 
-I am not super familiar with USB drivers, so mostly some high level
-review questions first:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-On Thu, Mar 31, 2022 at 09:33:06PM -0500, frank zago wrote:
-> The I2C interface can run at 4 different speeds. This driver currently
-> only offer 100MHz. Tested with a variety of I2C sensors, and the IIO
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+i386                             allyesconfig
+ia64                             allmodconfig
+x86_64                           allyesconfig
+ia64                             allyesconfig
+x86_64                    rhel-8.3-kselftests
+mips                             allyesconfig
+riscv                            allyesconfig
+um                           x86_64_defconfig
+riscv                            allmodconfig
+um                             i386_defconfig
+mips                             allmodconfig
+m68k                             allyesconfig
+s390                             allmodconfig
+m68k                             allmodconfig
+powerpc                          allmodconfig
+s390                             allyesconfig
+powerpc                          allyesconfig
+sparc                            allyesconfig
+parisc                           allyesconfig
+sh                               allmodconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+arm                      footbridge_defconfig
+s390                          debug_defconfig
+xtensa                    xip_kc705_defconfig
+sh                               j2_defconfig
+mips                           ci20_defconfig
+xtensa                          iss_defconfig
+powerpc                      pcm030_defconfig
+sh                   sh7770_generic_defconfig
+h8300                    h8300h-sim_defconfig
+sh                        sh7763rdp_defconfig
+sh                         microdev_defconfig
+arm                      jornada720_defconfig
+powerpc                     sequoia_defconfig
+um                                  defconfig
+powerpc                        cell_defconfig
+sh                                  defconfig
+powerpc                    klondike_defconfig
+powerpc64                           defconfig
+powerpc                        warp_defconfig
+mips                       capcella_defconfig
+powerpc                 linkstation_defconfig
+xtensa                  audio_kc705_defconfig
+arm                           h3600_defconfig
+parisc                generic-64bit_defconfig
+sh                           se7619_defconfig
+sh                          landisk_defconfig
+sh                           se7343_defconfig
+sh                            migor_defconfig
+nios2                            alldefconfig
+powerpc                      ep88xc_defconfig
+h8300                       h8s-sim_defconfig
+powerpc                     mpc83xx_defconfig
+powerpc                 mpc834x_mds_defconfig
+m68k                       m5208evb_defconfig
+mips                  decstation_64_defconfig
+m68k                       bvme6000_defconfig
+sh                          sdk7786_defconfig
+mips                 decstation_r4k_defconfig
+m68k                          hp300_defconfig
+mips                         mpc30x_defconfig
+powerpc                     rainier_defconfig
+sh                   secureedge5410_defconfig
+arm                        realview_defconfig
+sh                   rts7751r2dplus_defconfig
+sh                          urquell_defconfig
+sh                        sh7757lcr_defconfig
+m68k                          sun3x_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220519
+ia64                                defconfig
+riscv                             allnoconfig
+m68k                                defconfig
+nios2                               defconfig
+csky                                defconfig
+alpha                               defconfig
+arc                                 defconfig
+s390                                defconfig
+parisc                              defconfig
+parisc64                            defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                                defconfig
+sparc                               defconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a002
+x86_64                        randconfig-a004
+x86_64                        randconfig-a006
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220519
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-100kHz.
+clang tested configs:
+powerpc              randconfig-c003-20220519
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220519
+mips                 randconfig-c004-20220519
+i386                          randconfig-c001
+arm                  randconfig-c002-20220519
+powerpc                          g5_defconfig
+hexagon                             defconfig
+mips                     loongson2k_defconfig
+powerpc                      pmac32_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc                     tqm8540_defconfig
+arm                         palmz72_defconfig
+mips                            e55_defconfig
+arm                  colibri_pxa300_defconfig
+arm                        mvebu_v5_defconfig
+arm                              alldefconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                    gamecube_defconfig
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220519
+riscv                randconfig-r042-20220519
+hexagon              randconfig-r041-20220519
+s390                 randconfig-r044-20220519
 
-> subsystem.
->=20
-> Signed-off-by: frank zago <frank@zago.net>
-
-=2E..
-
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index a1bae59208e3..db9797345ad5 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -1199,6 +1199,16 @@ config I2C_RCAR
-> =20
->  comment "External I2C/SMBus adapter drivers"
-> =20
-> +config I2C_CH341
-> +	tristate "CH341 USB to I2C support"
-> +	select MFD_CH341
-
-Hmm, it selects a symbol which depends on USB. Not good AFAIK. I think
-this driver should depend on MFD_CH341.
-
-> +	help
-> +	  If you say yes to this option, I2C support will be included for the
-> +	  WCH CH341, a USB to I2C/SPI/GPIO interface.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called i2c-ch341.
-> +
->  config I2C_DIOLAN_U2C
->  	tristate "Diolan U2C-12 USB adapter"
->  	depends on USB
-
-=2E..
-
-> diff --git a/drivers/i2c/busses/i2c-ch341.c b/drivers/i2c/busses/i2c-ch34=
-1.c
-> new file mode 100644
-> index 000000000000..3da11e358976
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-ch341.c
-> @@ -0,0 +1,331 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * I2C cell driver for the CH341A, CH341B and CH341T.
-> + *
-> + * Copyright 2022, Frank Zago
-> + * Copyright (c) 2016 Tse Lun Bien
-> + * Copyright (c) 2014 Marco Gittler
-> + * Copyright (C) 2006-2007 Till Harbaum (Till@Harbaum.org)
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/types.h>
-> +#include <linux/usb.h>
-> +
-> +#include <linux/i2c.h>
-> +
-> +#include <linux/mfd/ch341.h>
-
-Please sort the includes. No need for emtpy lines.
-
-> +
-> +/* I2C bus speed. Speed selection is not implemented. */
-> +#define CH341_I2C_20KHZ  0
-> +#define CH341_I2C_100KHZ 1
-> +#define CH341_I2C_400KHZ 2
-> +#define CH341_I2C_750KHZ 3
-> +
-> +/* I2C chip commands */
-> +#define CH341_CMD_I2C_STREAM 0xAA
-> +#define CH341_CMD_I2C_STM_END 0x00
-> +
-> +#define CH341_CMD_I2C_STM_STA 0x74
-> +#define CH341_CMD_I2C_STM_STO 0x75
-> +#define CH341_CMD_I2C_STM_OUT 0x80
-> +#define CH341_CMD_I2C_STM_IN 0xC0
-> +#define CH341_CMD_I2C_STM_SET 0x60
-> +
-> +/*
-> + * The maximum request size is 4096 bytes, both for reading and
-> + * writing, split in up to 128 32-byte segments. The I2C stream must
-> + * start and stop in each 32-byte segment. Reading must also be split,
-> + * with up to 32-byte per segment.
-> + */
-> +#define SEG_COUNT 128
-
-You mean between every 32 bytes, there is a START and STOP condition on
-the bus? Then, the maximum message size is 32 byte only, sadly. Or did I
-misunderstand?
-
-Can the driver send an arbitrary number of messages within one transfer?
-E.g. write, read, read, write, read? All connected with a REPEATED START
-and not with STOP and START?
-
-=2E..
-
-> +static u32 ch341_i2c_func(struct i2c_adapter *adap)
-> +{
-> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-> +}
-
-Have you also tested zero length messages AKA SMBus Quick commands?
-
-=2E..
-
-> +
-> +MODULE_AUTHOR("Various");
-
-Please name the relevant authors. Only the ones which directly worked
-on this driver.
-
-> +MODULE_DESCRIPTION("CH341 USB to I2C");
-> +MODULE_LICENSE("GPL");
-
-SPDX header says "GPL v2".
-
-So much for now, thanks for your submission!
-
-   Wolfram
-
-
---H4Fcr/HIYyvCKkRR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmKI1RcACgkQFA3kzBSg
-KbZK9g/+Mu+GYUFTtwq+Qc6zzfGI+m6UN29ptl8vCL2v59XpLItqJdhtjzMIxq+O
-nWEy1W9THhJVHRSQXeMUE9QLh2k1sdf4LuFgd4JOERxkJkuMZoMpr1y+0U5zJnL1
-laZSWLOi6uDrG3gvn2Oz48w02Fd3wIeQBIiV/Ts1t0xRQ6dh2gGUw5Pyl/jIFIj3
-alpQ6yrr06XA8MGnnBDn6IkoQoTZRwyDovQFYiqANCtSAWTnimqNXn9rqq3VP49Q
-bAs96eKvedC67D07tfS0PR1BzSyse+b5ZY+0wupYwRxn0RcK9qSP9Ik3U2CHxdks
-WKCRjUMh1+RGPX62lAgj+vzTO+JkchabQj4WgiEqo4T7ib5wpnTPDfdcG6ier0fr
-Jt7NvA+KsvolkOFOfosnHMELePD7+6GXl96DL/AAeXcp1qX+PmLNCBnRXX4IelYA
-ZxpkEzDbB5bPFhNcZq7ueiu8Ld0RfKwwbqaDa6yymIFBU2jTonnRVtdxfpJsWT98
-eb8qRh9l719RGNE6V+zfyxtEScr+tTs8M11uxd+241xy03DvANoLK7fFP9o5eLQk
-ZNStkV8n4OL8FPTm8553qz049CZK6tNYp8JfZfGvA51RtHiSeqtPe5JNFK4lRcuU
-0PyIHjTeb/eMe7sU5ySIJ4uEoawPEotsbEM2EM7MKqZW8m3Ka6A=
-=Cgps
------END PGP SIGNATURE-----
-
---H4Fcr/HIYyvCKkRR--
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
