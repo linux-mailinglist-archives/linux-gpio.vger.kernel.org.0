@@ -2,42 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6FF552FD45
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 16:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A36A052FD47
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 16:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236875AbiEUO1w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 21 May 2022 10:27:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47522 "EHLO
+        id S241868AbiEUO2v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 May 2022 10:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244440AbiEUO1v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 10:27:51 -0400
-X-Greylist: delayed 70 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 21 May 2022 07:27:49 PDT
+        with ESMTP id S235561AbiEUO2v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 10:28:51 -0400
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BA13AA5E;
-        Sat, 21 May 2022 07:27:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1653143214; cv=none; 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7BA79808C;
+        Sat, 21 May 2022 07:28:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1653143254; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=kE8zz6hAswUKjScOIdc/L6cdfge6ywC8/K021psACIT8bfnsWDNX12TOXGaF24o+fRy5mh3fFe1IqLjD5t24jEh3mpzrl9jLCFxxMRISAX7jJRCsGUw2Rh9n/1QA2q/iAIm14re9C7l4q1DdHSs9FU4LCdKEeeMVto0g2rdtVMc=
+        b=c+/tGylXTkKCH8VmgCs2I+V4lFhNnQvTv+s0puxSnmKb8I0Ie0Lu7BS20WXmM4OLfw/jyY8qDdWMaa/2O/0KG5RbLGW5QYl1t9iydBquq4yRTLa/Z/IvkN7/4LEMpc8hxdh3W1oU3P2Pf5iK3pEEXKiG6XD5oesREt0eRfZWCvY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1653143214; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=z6wL0P2oxKZ7jyZvUo3skmKeJ3yn8l7j8WvpmJJ9y2A=; 
-        b=M8rCYV6GiB59j3m+BgOX1X4lnAKime4OmrWk8WgcgzE3L4n0EqlaYFmFFET02HOZ0RQGxPbehPi7/AfYDVuSaRn7FOMi/QEHvhMOei2frLkeCFXrk1s9hvwwrdxvWqZvLDbUePylsElF9rLtB67M9nSZ8FDIQIUeDthH5PXMSI8=
+        t=1653143254; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=UlXrovz8Wqe8HXRNPOZSPGTS1/sjZPQNfVVq1dmIgNU=; 
+        b=hywHRY+OcPizi/P3VuQ26m7YTkCFDSAayDnichehMwX0TXi85TJFPTiiINruza+aS6TE5DabCJ7OyYeyoMF50Mb2Ga018bTXLq9bMo6/TeWy+y8+m0eGcl+ml/CFW58xYjoLCdZMdDtg4EeyVkZtZirE0WPgiuIwN/7sRuaN6Zw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=zohomail.com;
         spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
         dmarc=pass header.from=<lchen.firstlove@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1653143214;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1653143254;
         s=zm2022; d=zohomail.com; i=lchen.firstlove@zohomail.com;
         h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
-        bh=z6wL0P2oxKZ7jyZvUo3skmKeJ3yn8l7j8WvpmJJ9y2A=;
-        b=B2GhqhSMa94on9wZCUJvL7RXvAzQ165f/25zNzDNlaJjcJ8bKuNXAIqT2P67Cm74
-        YzWHw3CGZs0WPXde/u8zheC4xHWyn0Aq4Qo4cSt3ztkMW1iOVoIAcFxOEFB8Aq7t8xs
-        Ndgoy8YjgbvEcGwl13opJp6lcWYq83UbjRh2G1dw=
+        bh=UlXrovz8Wqe8HXRNPOZSPGTS1/sjZPQNfVVq1dmIgNU=;
+        b=TNzibeeNfWwu4kEGBZkBMhbIIhE10jBHBeErdLKWxKqpq9wvBjhyAQ/qAX4nNzGR
+        fmCpFMv0fXjNLx+ZvXyWCYu62KjzL4OKl5l7CYBodtC43+l+Q6ad5z6/6+E1kX4SWdX
+        8uU9Ikm8TNgYO+Iifh5J8l8MD+RlryRTG1QmQ9Ak=
 Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1653143213058600.2769632124064; Sat, 21 May 2022 07:26:53 -0700 (PDT)
+        with SMTP id 1653143253499869.7381347385351; Sat, 21 May 2022 07:27:33 -0700 (PDT)
 Received: from  [45.12.140.94] by mail.zoho.com
-        with HTTP;Sat, 21 May 2022 07:26:53 -0700 (PDT)
-Date:   Sat, 21 May 2022 07:26:53 -0700
+        with HTTP;Sat, 21 May 2022 07:27:33 -0700 (PDT)
+Date:   Sat, 21 May 2022 07:27:33 -0700
 From:   Li Chen <lchen.firstlove@zohomail.com>
 To:     "Mark Brown" <broonie@kernel.org>,
         "linux-kernel" <linux-kernel@vger.kernel.org>,
@@ -54,18 +53,18 @@ To:     "Mark Brown" <broonie@kernel.org>,
         "Jernej Skrabec" <jernej.skrabec@gmail.com>,
         "Samuel Holland" <samuel@sholland.org>,
         "Philipp Zabel" <p.zabel@pengutronix.de>
-Message-ID: <180e70393e7.bea7333745868.3931016213640307954@zohomail.com>
+Message-ID: <180e70431e2.e6d0d6a445873.707989504680364975@zohomail.com>
 In-Reply-To: <180e702a15f.e737e37e45859.3135149506136486394@zohomail.com>
 References: <180e702a15f.e737e37e45859.3135149506136486394@zohomail.com>
-Subject: [PATCH 1/4] regmap: provide regmap_field helpers for simple bit
-  operations
+Subject: [PATCH 2/4] ASoC: sunxi: Use {regmap/regmap_field}_{set/clear}_bits
+  helpers
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Importance: Medium
 User-Agent: Zoho Mail
 X-Mailer: Zoho Mail
-Feedback-ID: rr080112268bd82f7cfed3b19c5a185cb40000b440e50754e5654c60ed718200cd49c10dbbf299318737c7:zu08011227f8a703c654550416f81083160000e1fe84f8aac27165abd10358815b6ccdaee61e816e1c2fe8c1:rf0801122c62eaae334301465ae91f312300004b5111d98db5b56dfa50c31137c058746397e6037af2420ba3632588fae1:ZohoMail
+Feedback-ID: rr08011226fc4fb690dd5c15119599758d00000190ae69003a295b80119919281cb46f4b5244f61666e528:zu080112272922073d411fb8225a27fea900001e32b3b788a60cd605a8a30418c81f31b39b25aaaa67ef454f:rf0801122cf6f8dfec8995b3a466518fdc00009d1ce4269968f953bd45db03d0b1c28e264caa264f36f2c01711c30a2b54:ZohoMail
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -78,110 +77,183 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Li Chen <lchen@ambarella.com>
 
-We have set/clear/test oerations for regmap, but not for regmap_field yet.
-So let's intoroduce regmap_field helpers too.
-
-In many instances regmap_field_update_bits() is used for simple bit setting
-and clearing. In these cases the last argument is redundant and we can
-hide it with a static inline function.
-
-This adds three new helpers for simple bit operations: set_bits,
-clear_bits and test_bits (the last one defined as a regular function).
+Appropriately change calls to {regmap/regmap_field}_update_bits()
+with {regmap/regmap_field}_set_bits()
+and {regmap/regmap_field}_clear_bits() for improved readability.
 
 Signed-off-by: Li Chen <lchen@ambarella.com>
 ---
- drivers/base/regmap/regmap.c | 22 +++++++++++++++++++++
- include/linux/regmap.h       | 37 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
+ sound/soc/sunxi/sun4i-codec.c | 78 ++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 5e12f7cb5147..a37d6041b7bd 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -2208,6 +2208,28 @@ int regmap_field_update_bits_base(struct regmap_field *field,
- }
- EXPORT_SYMBOL_GPL(regmap_field_update_bits_base);
- 
-+/**
-+ * regmap_field_test_bits() - Check if all specified bits are set in a
-+ *                            register field.
-+ *
-+ * @field: Register field to operate on
-+ * @bits: Bits to test
-+ *
-+ * Returns -1 if the underlying regmap_field_read() fails, 0 if at least one of the
-+ * tested bits is not set and 1 if all tested bits are set.
-+ */
-+int regmap_field_test_bits(struct regmap_field *field, unsigned int bits)
-+{
-+	unsigned int val, ret;
-+
-+	ret = regmap_field_read(field, &val);
-+	if (ret)
-+		return ret;
-+
-+	return (val & bits) == bits;
-+}
-+EXPORT_SYMBOL_GPL(regmap_field_test_bits);
-+
- /**
-  * regmap_fields_update_bits_base() - Perform a read/modify/write cycle a
-  *                                    register field with port ID
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index de81a94d7b30..10b410734d9e 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -1324,6 +1324,22 @@ static inline int regmap_field_update_bits(struct regmap_field *field,
- 					     NULL, false, false);
- }
- 
-+static inline int regmap_field_set_bits(struct regmap_field *field,
-+					unsigned int bits)
-+{
-+	return regmap_field_update_bits_base(field, bits, 0, NULL, false,
-+					     false);
-+}
-+
-+static inline int regmap_field_clear_bits(struct regmap_field *field,
-+					  unsigned int bits)
-+{
-+	return regmap_field_update_bits_base(field, bits, bits, NULL, false,
-+					     false);
-+}
-+
-+int regmap_field_test_bits(struct regmap_field *field, unsigned int bits);
-+
- static inline int
- regmap_field_force_update_bits(struct regmap_field *field,
- 			       unsigned int mask, unsigned int val)
-@@ -1757,6 +1773,27 @@ regmap_field_force_update_bits(struct regmap_field *field,
- 	return -EINVAL;
- }
- 
-+static inline int regmap_field_set_bits(struct regmap_field *field,
-+					unsigned int bits)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_field_clear_bits(struct regmap_field *field,
-+					  unsigned int bits)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_field_test_bits(struct regmap_field *field,
-+					 unsigned int bits)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
- static inline int regmap_fields_write(struct regmap_field *field,
- 				      unsigned int id, unsigned int val)
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index 60712f24ade5..53e3f43816cc 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -250,37 +250,33 @@ struct sun4i_codec {
+ static void sun4i_codec_start_playback(struct sun4i_codec *scodec)
  {
+ 	/* Flush TX FIFO */
+-	regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-			   BIT(SUN4I_CODEC_DAC_FIFOC_FIFO_FLUSH),
+-			   BIT(SUN4I_CODEC_DAC_FIFOC_FIFO_FLUSH));
++	regmap_set_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
++			BIT(SUN4I_CODEC_DAC_FIFOC_FIFO_FLUSH));
+ 
+ 	/* Enable DAC DRQ */
+-	regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-			   BIT(SUN4I_CODEC_DAC_FIFOC_DAC_DRQ_EN),
+-			   BIT(SUN4I_CODEC_DAC_FIFOC_DAC_DRQ_EN));
++	regmap_set_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
++			BIT(SUN4I_CODEC_DAC_FIFOC_DAC_DRQ_EN));
+ }
+ 
+ static void sun4i_codec_stop_playback(struct sun4i_codec *scodec)
+ {
+ 	/* Disable DAC DRQ */
+-	regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-			   BIT(SUN4I_CODEC_DAC_FIFOC_DAC_DRQ_EN),
+-			   0);
++	regmap_clear_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
++			  BIT(SUN4I_CODEC_DAC_FIFOC_DAC_DRQ_EN));
+ }
+ 
+ static void sun4i_codec_start_capture(struct sun4i_codec *scodec)
+ {
+ 	/* Enable ADC DRQ */
+-	regmap_field_update_bits(scodec->reg_adc_fifoc,
+-				 BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN),
+-				 BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN));
++	regmap_field_set_bits(scodec->reg_adc_fifoc,
++			      BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN));
+ }
+ 
+ static void sun4i_codec_stop_capture(struct sun4i_codec *scodec)
+ {
+ 	/* Disable ADC DRQ */
+-	regmap_field_update_bits(scodec->reg_adc_fifoc,
+-				 BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN), 0);
++	regmap_field_clear_bits(scodec->reg_adc_fifoc,
++				 BIT(SUN4I_CODEC_ADC_FIFOC_ADC_DRQ_EN));
+ }
+ 
+ static int sun4i_codec_trigger(struct snd_pcm_substream *substream, int cmd,
+@@ -323,8 +319,7 @@ static int sun4i_codec_prepare_capture(struct snd_pcm_substream *substream,
+ 
+ 
+ 	/* Flush RX FIFO */
+-	regmap_field_update_bits(scodec->reg_adc_fifoc,
+-				 BIT(SUN4I_CODEC_ADC_FIFOC_FIFO_FLUSH),
++	regmap_field_set_bits(scodec->reg_adc_fifoc,
+ 				 BIT(SUN4I_CODEC_ADC_FIFOC_FIFO_FLUSH));
+ 
+ 
+@@ -365,8 +360,7 @@ static int sun4i_codec_prepare_playback(struct snd_pcm_substream *substream,
+ 	u32 val;
+ 
+ 	/* Flush the TX FIFO */
+-	regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-			   BIT(SUN4I_CODEC_DAC_FIFOC_FIFO_FLUSH),
++	regmap_set_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+ 			   BIT(SUN4I_CODEC_DAC_FIFOC_FIFO_FLUSH));
+ 
+ 	/* Set TX FIFO Empty Trigger Level */
+@@ -386,9 +380,8 @@ static int sun4i_codec_prepare_playback(struct snd_pcm_substream *substream,
+ 			   val);
+ 
+ 	/* Send zeros when we have an underrun */
+-	regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-			   BIT(SUN4I_CODEC_DAC_FIFOC_SEND_LASAT),
+-			   0);
++	regmap_clear_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
++			   BIT(SUN4I_CODEC_DAC_FIFOC_SEND_LASAT));
+ 
+ 	return 0;
+ };
+@@ -485,33 +478,27 @@ static int sun4i_codec_hw_params_capture(struct sun4i_codec *scodec,
+ 
+ 	/* Set the number of channels we want to use */
+ 	if (params_channels(params) == 1)
+-		regmap_field_update_bits(scodec->reg_adc_fifoc,
+-					 BIT(SUN4I_CODEC_ADC_FIFOC_MONO_EN),
++		regmap_field_set_bits(scodec->reg_adc_fifoc,
+ 					 BIT(SUN4I_CODEC_ADC_FIFOC_MONO_EN));
+ 	else
+-		regmap_field_update_bits(scodec->reg_adc_fifoc,
+-					 BIT(SUN4I_CODEC_ADC_FIFOC_MONO_EN),
+-					 0);
++		regmap_field_clear_bits(scodec->reg_adc_fifoc,
++					 BIT(SUN4I_CODEC_ADC_FIFOC_MONO_EN));
+ 
+ 	/* Set the number of sample bits to either 16 or 24 bits */
+ 	if (hw_param_interval(params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS)->min == 32) {
+-		regmap_field_update_bits(scodec->reg_adc_fifoc,
+-				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_SAMPLE_BITS),
++		regmap_field_set_bits(scodec->reg_adc_fifoc,
+ 				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_SAMPLE_BITS));
+ 
+-		regmap_field_update_bits(scodec->reg_adc_fifoc,
+-				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_FIFO_MODE),
+-				   0);
++		regmap_field_clear_bits(scodec->reg_adc_fifoc,
++				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_FIFO_MODE));
+ 
+ 		scodec->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	} else {
+-		regmap_field_update_bits(scodec->reg_adc_fifoc,
+-				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_SAMPLE_BITS),
+-				   0);
++		regmap_field_clear_bits(scodec->reg_adc_fifoc,
++				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_SAMPLE_BITS));
+ 
+ 		/* Fill most significant bits with valid data MSB */
+-		regmap_field_update_bits(scodec->reg_adc_fifoc,
+-				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_FIFO_MODE),
++		regmap_field_set_bits(scodec->reg_adc_fifoc,
+ 				   BIT(SUN4I_CODEC_ADC_FIFOC_RX_FIFO_MODE));
+ 
+ 		scodec->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+@@ -543,24 +530,20 @@ static int sun4i_codec_hw_params_playback(struct sun4i_codec *scodec,
+ 
+ 	/* Set the number of sample bits to either 16 or 24 bits */
+ 	if (hw_param_interval(params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS)->min == 32) {
+-		regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_SAMPLE_BITS),
++		regmap_set_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+ 				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_SAMPLE_BITS));
+ 
+ 		/* Set TX FIFO mode to padding the LSBs with 0 */
+-		regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_FIFO_MODE),
+-				   0);
++		regmap_clear_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
++				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_FIFO_MODE));
+ 
+ 		scodec->playback_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	} else {
+-		regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_SAMPLE_BITS),
+-				   0);
++		regmap_clear_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
++				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_SAMPLE_BITS));
+ 
+ 		/* Set TX FIFO mode to repeat the MSB */
+-		regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_FIFO_MODE),
++		regmap_set_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+ 				   BIT(SUN4I_CODEC_DAC_FIFOC_TX_FIFO_MODE));
+ 
+ 		scodec->playback_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+@@ -624,8 +607,7 @@ static int sun4i_codec_startup(struct snd_pcm_substream *substream,
+ 	 * Stop issuing DRQ when we have room for less than 16 samples
+ 	 * in our TX FIFO
+ 	 */
+-	regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+-			   3 << SUN4I_CODEC_DAC_FIFOC_DRQ_CLR_CNT,
++	regmap_set_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
+ 			   3 << SUN4I_CODEC_DAC_FIFOC_DRQ_CLR_CNT);
+ 
+ 	return clk_prepare_enable(scodec->clk_module);
 -- 
 2.36.1
 
