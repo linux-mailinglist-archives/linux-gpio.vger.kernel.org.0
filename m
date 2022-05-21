@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD29452FE91
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 19:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F342B52FE92
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 May 2022 19:30:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237083AbiEUR3t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 21 May 2022 13:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
+        id S240147AbiEURaP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 May 2022 13:30:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236589AbiEUR3t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 13:29:49 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEE642A22
-        for <linux-gpio@vger.kernel.org>; Sat, 21 May 2022 10:29:47 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id c12so14131568eds.10
-        for <linux-gpio@vger.kernel.org>; Sat, 21 May 2022 10:29:47 -0700 (PDT)
+        with ESMTP id S236589AbiEURaP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 May 2022 13:30:15 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4752346142
+        for <linux-gpio@vger.kernel.org>; Sat, 21 May 2022 10:30:13 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id fd25so14179250edb.3
+        for <linux-gpio@vger.kernel.org>; Sat, 21 May 2022 10:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yyt58Bbb4TJz2iKeRefj+uX1+zTItw+dgWZZ3Lksl3s=;
-        b=YvkuyGbFHbaQIL1JJDUqXWD3G0/VeV1+VVIHJBm5eZv73zo2Qhfi9DY8fwEWxdrL6w
-         19RnODTHh0A7IXvma1poSilGXW5QMo0Upnk6BTxd4F6awuEjlOYqSVUloz6ao8Cxwq6w
-         z2ibiqwaIAkhlnUCiAtHK6GxZW7F8OeAYuYg0naYVUorbaD+JzXgH5zBT//xhJTTKADR
-         rhHLTqoUAG672HhhBJ/Te1l9aZLqFYzwd8sOX/2CB+I3hedE9Ndcg9cO09P4HmUitAcW
-         SDP367somfQAGyoc0tRCkrqq2FgEWpU4pxmWV1/yWY0Jv+kPSxM41DQCVoquGV3MSntj
-         Q1FQ==
+        bh=lw9l9XhgzFDdMitofhKDVOWV8jETC2jKAq3fO5XGw4Q=;
+        b=kUuJ5wWHWjKWsDRBPoww4zM44k5uSMhzxtKnwG41X/2+S1wzWIb5S83lZJ1kiPrjXs
+         Lk+NFw1og0RGJ2FZV4SGY9U6WsmKvXlbprV1kM4jyTP6yfoIiOPAD25+r+b91hnktKUO
+         /38fOGLKOgHroeg9lq21U4us+rD7+LHx3EE/cawLJvxzBToW+43NLpTGeDjIYFYQoqmV
+         Hh9SfBSoPUunJTLGMfhmy2mB6/v+D3dYo5mOGaV895YA/mjvm9sPiqxNl7StHb4J51/J
+         VpUX1oSNUtOhmh8OOpYJz+qq+JwlD2/aQcQt/4lvAEmPlE16/wim7y8uHWP+4CxfVYsE
+         jq6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yyt58Bbb4TJz2iKeRefj+uX1+zTItw+dgWZZ3Lksl3s=;
-        b=4rJ5pzmefuL2HdJTSN5SQHfZUQpo/m8s2PQR+UpEK66ogY78toIG+aoVmpLhf9RXEj
-         n/04avXogR2xWjie9sctybUhPI581NmrN/UWk6MNZMiDe7CSBr0la3kgxb6//53JFzMR
-         hMdRfUSJ+Dsn9qYao74CF9ah/rPRXFcLCEgW5LPg8Cdnj/gcoqOjTiGqRhH4gLlNFx2Y
-         TSF3YX6Sw/hR2iJQHMsMUbyO8WJvTQStRhwSSwWjA/QDDJq8S/64xWnjPyr9gn31+Csf
-         0a0/WbwvUrpjddenmKIvh8ioEcIes3ZfyBS5CuxL7HnYhF1YeDQ3LNlUchsXSOz+IAJG
-         TnTw==
-X-Gm-Message-State: AOAM532JF4zM0/9DTEVZP5sb68aRYjp93z7q3Uw2n4pca4eQ79jSeDMQ
-        OAIx54UfQpMqr2jpHSt0w5xzzuh2oWt+CEHjUZA=
-X-Google-Smtp-Source: ABdhPJzvvUZAXLPk6eetUOLJGlimOZPu1t2mvFHm12dvSncjmvWXtPUP8ooRC0BptgJv3jz5+naTyLHKqxAXAHKKk3Y=
-X-Received: by 2002:a05:6402:4394:b0:42a:e84c:2cfb with SMTP id
- o20-20020a056402439400b0042ae84c2cfbmr16826711edc.97.1653154185457; Sat, 21
- May 2022 10:29:45 -0700 (PDT)
+        bh=lw9l9XhgzFDdMitofhKDVOWV8jETC2jKAq3fO5XGw4Q=;
+        b=Nh1y8eYZ0FDtO33fimmv3giDOp8gKLd5TF4l2oSKq+pszA0El1+08pE4x4WA720Y2Y
+         +P+VhuiH4WNfmdD+8ELa/Wik1vyrCSaIwU4ofdy4a9z89yg5TyqOn7Cg84bs5h3T/0X7
+         79ZGy2dgbxvToPqaduZdeTq1A3aU6dr86uyY4GKCk/1c03ifWptiTZoK5L5M5+XlLPm0
+         ZF7TeVzhSNpbliQnFBzQQ7t8+PcD8M65hWLfSLmy93HT+Nu/lJotXqdOKZ0buZHYgj6X
+         vouQS6ct/ikIW/TH+oCC2M2YEFfeyIzT4I/Cu0QEAOFsamQIdSiyNHikNTYYH+jY8oAR
+         mUgg==
+X-Gm-Message-State: AOAM533q4MB2RPwqwHNN3c4iaFXemOrjhau+F8bET+PXkEOo70dJoISo
+        q195dCcoQML7M10Y3TfDv4YA6D2w8wCSRrRaR8w=
+X-Google-Smtp-Source: ABdhPJy2TxNKIqC1Yor5yBxq81Ci/hFucbJyBw1Ta8YDyXt5ZlMzDNyvbdM1ltWmaT9oXAXgatUajWgTI249NJsuUBw=
+X-Received: by 2002:aa7:df86:0:b0:42a:ba05:3ee7 with SMTP id
+ b6-20020aa7df86000000b0042aba053ee7mr16311032edy.141.1653154211758; Sat, 21
+ May 2022 10:30:11 -0700 (PDT)
 MIME-Version: 1.0
 References: <01f7a990654697ca7ec8b2d0025f41403462c8d9.1653042121.git.geert+renesas@glider.be>
 In-Reply-To: <01f7a990654697ca7ec8b2d0025f41403462c8d9.1653042121.git.geert+renesas@glider.be>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 21 May 2022 19:29:09 +0200
-Message-ID: <CAHp75VfVR9z=nT_F7Uw1+OaZn_tag42UPR7_KWjL74wK5Oq-yw@mail.gmail.com>
+Date:   Sat, 21 May 2022 19:29:35 +0200
+Message-ID: <CAHp75Vc-z=K5GPBeXd8JvG=JgjG4Y2U9pBz0hFwjmJ-zP39kZw@mail.gmail.com>
 Subject: Re: [PATCH v2] gpio: dwapb: Make the irqchip immutable
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
@@ -83,6 +83,7 @@ On Sat, May 21, 2022 at 1:24 PM Geert Uytterhoeven
 >
 > Fix this by making the irqchip in the dwapb driver immutable.
 
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
