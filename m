@@ -2,107 +2,224 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C049531894
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 22:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FC64531C3F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 22:57:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbiEWTV3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 May 2022 15:21:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48462 "EHLO
+        id S232081AbiEWUEn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 May 2022 16:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbiEWTVG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 15:21:06 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A7642A0D
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 11:56:40 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id ck4so26471888ejb.8
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 11:56:40 -0700 (PDT)
+        with ESMTP id S232060AbiEWUEl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 16:04:41 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ECC9F13
+        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 13:04:40 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id d137so27311992ybc.13
+        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 13:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8tifE5bLnfHULjuXzdKXlmgh+yYdYzL6ft6zuAUxHcg=;
-        b=BbaCu16gsjt26dSAL88WDw2c2uoZsyZk863ptFfWyzXJ5b5CFHDeaY9s26kf41Lq8O
-         EhF5L3KPdXX9aFAP1GmTWwwuEmWXLiRH87BY7Ip1+fqM+7ATMOl9nJD2O1CJYhQRgqWk
-         OlE9JbosTY98LFAk3zexxQ/Xo0d6513GLb0MUVV8KCAev0jjJg9jD78MEfK4+Mmbo0B7
-         TBXMJBYJDxBzV8DAoGhA3V2NSoxBCtdWGshSDpreFTEGqwDvkFsHAGTSC9NhUdc69BLi
-         G/PfJruUboOrZ2uZotTPjyRNj8E2EwoZZtDuW3jvxUIpN60NXuKHTf50xc6XRlR8C3Om
-         Dyeg==
+        bh=u1AipD1OfrmQcB3YUOaC7P4EIOVqCxquxh0+AE+xuhM=;
+        b=bQzOkbeNz00bM35Ce99+u6O7FvwcbMq3CbiwHzibWAm6u6rINPbk7M+Gwf+K9Rpfqf
+         Bf403twpWA0WD0G/TeiGjK7xOqCHIbbjcEyaY7BokFUQ+zKuBOPZ4uuNji6TV8e8F0C1
+         OiSHL6d1UFbmnZn05rjy7t5aWkkhI9KCK9PlriUExXYqGdsnCTQfyAuJZt5YfiCD5x4p
+         PKKVhF6lcNgu2psiwb4uusrHWD7/H5PDQpYT3YIO6SB5vgxXpWhixe5z1M+Sg7r5WGTG
+         kStV8jBQu/gFdCpVP2vrKt9lgnlvuXrGHW8QBgL9FPZgCDY30zwKLwvPAhDhx3FPGx8x
+         PsTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8tifE5bLnfHULjuXzdKXlmgh+yYdYzL6ft6zuAUxHcg=;
-        b=wHPkdwzZydx/IC47txPOXs7en4tX35qaNBXsa8Iz/Dn8Cw7jH4sy6PhdPH3gePvZdL
-         oXPgll/eCwazLvMs9lU6oPPOBRDnlHgEeB3pIP4LqD0a2l25b4ibjFNGeY+pNYffPskE
-         u/7RTON7qeojn4pHOFeR3KpG8UvLiRq6YwgTjkEeajoWMhmBr1hvsh/34NJIzYbfFX0+
-         LsY1b4WQ0TxJpOAsdJB7YfXiAZ6Lj1lU2UyE3fM+OsuvHsN5NhmvRNBgEFpj3G+A3jQa
-         PY7vVan2YlcLYnAklrJE4zpmgMLVgHPofsQKyO62NP72ZWjuEm1nPOv5r0HgIlSSNPTp
-         38kA==
-X-Gm-Message-State: AOAM533LbvhqJgjQh/5KIJkfgoqvvfJIlPFxcBsu+6XRQq3hGjQ8yK5H
-        imfA+wzF+Yi97tFw6ooamiZiUMN0cIxs+iW7/GE50Q==
-X-Google-Smtp-Source: ABdhPJwEKQpKbBK2FLsmHHKUY1mYHfr68FuqP8Z2vt9DwnDi5qqzNZIfQfCdriAzhT3uxbP6JRx5flatG3DhTad3ChM=
-X-Received: by 2002:a17:907:c28:b0:6f4:2a80:f355 with SMTP id
- ga40-20020a1709070c2800b006f42a80f355mr20485108ejc.101.1653332199212; Mon, 23
- May 2022 11:56:39 -0700 (PDT)
+        bh=u1AipD1OfrmQcB3YUOaC7P4EIOVqCxquxh0+AE+xuhM=;
+        b=LktEnwIEeIfM1MhuE0PPNtvRM9/3p375A9krsJ0Jczk4MN2Jv0kEKiFW+8Z9vsQoxa
+         3XerfEBISV3HQrQR6ubARqD37D2YfNxQ7qTVVn72MgctAeH7g98AZmwBp1SaxYalgYWJ
+         5Qzx34lhYtFtiaMk1KJM5uAYNp0Th5kndaNcxw0oENR+zCMwb/hL14BEKoTEdWzZ2W1N
+         Md+Ct2xOz4PZae1W1vBUWovEdXr0c8Sp8+YdK3FIZnH1N49OIRvg0pswOeaLwEacBGw8
+         PWIw6/e0+TyjOkzZjYfv2Gd+AeXxx95ZQ7KUg/7tafFS9I3M0r3o3UZR48KbBqAN9oAL
+         M/sA==
+X-Gm-Message-State: AOAM53063oLX03hW1H2u3jRPhj00X9OoDwDSYp88LHmlh5H78jVjc/Ev
+        t01sGPe0We9HgO67meoh8R5tZTB8PxONRZt60beK6g==
+X-Google-Smtp-Source: ABdhPJzqi3uJx736pHwpoReDWxmaiJiRfwvNOrYnqDbU07+DT5iV9p+v8KIvHm54c3ZBoXT3vDZcWATWAm//Q1iK/LY=
+X-Received: by 2002:a05:6902:70e:b0:64f:2e28:d64a with SMTP id
+ k14-20020a056902070e00b0064f2e28d64amr23757981ybt.80.1653336279141; Mon, 23
+ May 2022 13:04:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <01f7a990654697ca7ec8b2d0025f41403462c8d9.1653042121.git.geert+renesas@glider.be>
- <CAMRc=Mdf_PHyC3doO4KfzeTJz+WT2VZE6pxADOxz3_Sy9jPGqA@mail.gmail.com> <CAMuHMdXe2v8Tamyz6-xhFfoc7X-x9iDk8Rey-PBsdEe9+2-Bgw@mail.gmail.com>
-In-Reply-To: <CAMuHMdXe2v8Tamyz6-xhFfoc7X-x9iDk8Rey-PBsdEe9+2-Bgw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 23 May 2022 20:56:28 +0200
-Message-ID: <CAMRc=MfVahrfyaJUwbJZP8XeQYFz9jas5ASaqp3iXCo3NW4bxA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: dwapb: Make the irqchip immutable
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
+References: <20220429220933.1350374-1-saravanak@google.com>
+ <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X> <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
+ <YogsiMCDupNUhMgL@dev-fedora.thelio-3990X> <CAGETcx-JyWwoGA3o8eep7E29Cm4DcVT6D1JFJh72jLcqm_mjCQ@mail.gmail.com>
+ <Youleo3Ganxbc1sq@dev-arch.thelio-3990X>
+In-Reply-To: <Youleo3Ganxbc1sq@dev-arch.thelio-3990X>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 23 May 2022 13:04:03 -0700
+Message-ID: <CAGETcx-sL08h2toEyxY6ztc6xNuJiPok6iDEeuJ1mOA3nvE+vA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver registration
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+        Will Deacon <will@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 23, 2022 at 9:25 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Mon, May 23, 2022 at 8:17 AM Nathan Chancellor <nathan@kernel.org> wrote:
 >
-> Hi Bartosz,
->
-> On Sun, May 22, 2022 at 10:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Fri, May 20, 2022 at 12:23 PM Geert Uytterhoeven
-> > <geert+renesas@glider.be> wrote:
-> > > Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> > > immutable") added a warning to indicate if the gpiolib is altering the
-> > > internals of irqchips.  Following this change the following warning is
-> > > now observed for the dwapb driver:
+> On Fri, May 20, 2022 at 05:15:55PM -0700, Saravana Kannan wrote:
+> > On Fri, May 20, 2022 at 5:04 PM Nathan Chancellor <nathan@kernel.org> wrote:
 > > >
-> > >     gpio gpiochip0: (50200000.gpio): not an immutable chip, please consider fixing it!
+> > > On Fri, May 20, 2022 at 04:49:48PM -0700, Saravana Kannan wrote:
+> > > > On Fri, May 20, 2022 at 4:30 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> > > > >
+> > > > > Hi Saravana,
+> > > > >
+> > > > > On Fri, Apr 29, 2022 at 03:09:32PM -0700, Saravana Kannan wrote:
+> > > > > > The deferred probe timer that's used for this currently starts at
+> > > > > > late_initcall and runs for driver_deferred_probe_timeout seconds. The
+> > > > > > assumption being that all available drivers would be loaded and
+> > > > > > registered before the timer expires. This means, the
+> > > > > > driver_deferred_probe_timeout has to be pretty large for it to cover the
+> > > > > > worst case. But if we set the default value for it to cover the worst
+> > > > > > case, it would significantly slow down the average case. For this
+> > > > > > reason, the default value is set to 0.
+> > > > > >
+> > > > > > Also, with CONFIG_MODULES=y and the current default values of
+> > > > > > driver_deferred_probe_timeout=0 and fw_devlink=on, devices with missing
+> > > > > > drivers will cause their consumer devices to always defer their probes.
+> > > > > > This is because device links created by fw_devlink defer the probe even
+> > > > > > before the consumer driver's probe() is called.
+> > > > > >
+> > > > > > Instead of a fixed timeout, if we extend an unexpired deferred probe
+> > > > > > timer on every successful driver registration, with the expectation more
+> > > > > > modules would be loaded in the near future, then the default value of
+> > > > > > driver_deferred_probe_timeout only needs to be as long as the worst case
+> > > > > > time difference between two consecutive module loads.
+> > > > > >
+> > > > > > So let's implement that and set the default value to 10 seconds when
+> > > > > > CONFIG_MODULES=y.
+> > > > > >
+> > > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > > > > Cc: Rob Herring <robh@kernel.org>
+> > > > > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > > > > Cc: Will Deacon <will@kernel.org>
+> > > > > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > > > > > Cc: Kevin Hilman <khilman@kernel.org>
+> > > > > > Cc: Thierry Reding <treding@nvidia.com>
+> > > > > > Cc: Mark Brown <broonie@kernel.org>
+> > > > > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > > > > Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > > Cc: linux-gpio@vger.kernel.org
+> > > > > > Cc: linux-pm@vger.kernel.org
+> > > > > > Cc: iommu@lists.linux-foundation.org
+> > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > >
+> > > > > I bisected a boot hang with ARCH=s390 defconfig in QEMU down to this
+> > > > > change as commit 2b28a1a84a0e ("driver core: Extend deferred probe
+> > > > > timeout on driver registration") in next-20220520 (bisect log below).
+> > > > >
+> > > > > $ make -skj"$(nproc)" ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- defconfig bzImage
+> > > > >
+> > > > > $ timeout --foreground 15m stdbuf -oL -eL \
+> > > > > qemu-system-s390x \
+> > > > > -initrd ... \
+> > > > > -M s390-ccw-virtio \
+> > > > > -display none \
+> > > > > -kernel arch/s390/boot/bzImage \
+> > > > > -m 512m \
+> > > > > -nodefaults \
+> > > > > -serial mon:stdio
+> > > > > ...
+> > > > > [    2.077303] In-situ OAM (IOAM) with IPv6
+> > > > > [    2.077639] NET: Registered PF_PACKET protocol family
+> > > > > [    2.078063] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+> > > > > [    2.078795] Key type dns_resolver registered
+> > > > > [    2.079317] cio: Channel measurement facility initialized using format extended (mode autodetected)
+> > > > > [    2.081494] Discipline DIAG cannot be used without z/VM
+> > > > > [  260.626363] random: crng init done
+> > > > > qemu-system-s390x: terminating on signal 15 from pid 3815762 (timeout)
+> > > > >
+> > > > > We have a simple rootfs available if necessary:
+> > > > >
+> > > > > https://github.com/ClangBuiltLinux/boot-utils/raw/bc0d17785eb67f1edd0ee0a134970a807895f741/images/s390/rootfs.cpio.zst
+> > > > >
+> > > > > If there is any other information I can provide, please let me know!
+> > > >
+> > > > Hmm... strange. Can you please try the following command line options
+> > > > and tell me which of these has the issue and which don't?
 > > >
-> > > Fix this by making the irqchip in the dwapb driver immutable.
+> > > Sure thing!
 > > >
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > ---
-> > > Against gpio/for-next.
-> > > Boot-tested on SiPEED MAiXBiT (Canaan K210).
+> > > > 1) deferred_probe_timeout=0
 > > >
-> > > v2:
-> > >   - Factor out hwirq using preferred helper.
+> > > No issue.
+> > >
+> > > > 2) deferred_probe_timeout=1
+> > > > 3) deferred_probe_timeout=300
+> > >
+> > > Both of these appear to hang in the same way, I let each sit for five
+> > > minutes.
+> >
+> > Strange that a sufficiently large timeout isn't helping. Is it trying
+> > to boot off a network mount? I'll continue looking into this next
+> > week.
 >
-> > I'll pick those patches up for the next cycle to let them spend some
-> > time in next.
+> I don't think so, it seems like doing that requires some extra flags
+> that we do not have:
 >
-> "next cycle" = later PR for v5.19, I hope?
-> If the new warning will make it into v5.19-rc1 (commit 6c846d026d490b23
-> is in gpio/for-next), I think you should collect all fixes and make
-> sure they end up in v5.19, too.
+> https://wiki.qemu.org/Features/S390xNetworkBoot
 >
+> If you need any additional information or want something tested, please
+> let me know!
 
-Ah you're right, sorry, yeah I will pick those up now.
+I'll try to get qemu going on my end, but I'm not too confident I'll
+be able to get to it in a timely fashion. So if you can help figure
+out where this boot process is hanging, that'd be very much
+appreciated.
 
-Bart
+Couple of suggestions for debugging:
+
+Can you add a log to "wait_for_device_probe()" and see if that's
+getting called right before the boot process hangs? If it does, can
+you get a stacktrace (I just add a WARN_ON(1) when I need a stack
+trace)? It's unlikely this is the case because
+deferred_probe_timeout=1 still causes an issue for you, but I'd be
+good to rule out.
+
+Let's try to rule out if deferred_probe_extend_timeout() is causing
+some issues. So, without my patch, what happens if you set:
+deferred_probe_timeout=1
+deferred_probe_timeout=300
+
+If deferred_probe_timeout=1 causes an issue even without my patch,
+then in addition, can you try commenting out the call to
+fw_devlink_drivers_done() inside deferred_probe_timeout_work_func()
+and try again?
+
+Thanks a lot for reporting and helping debug this issue.
+
+-Saravana
