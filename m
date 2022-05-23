@@ -2,70 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76995530DC4
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 12:42:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79AF1530F95
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 15:18:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233957AbiEWKMw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 May 2022 06:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33152 "EHLO
+        id S234273AbiEWKsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 May 2022 06:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233934AbiEWKMv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 06:12:51 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D34A190
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 03:12:47 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id fd25so18461500edb.3
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 03:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uc-cl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=z+uM7vIRKv3KK6/ogXLySxrVBPRCNjdMKIe5V0kgmw8=;
-        b=JXDGBBA7JGqlxXHyvQpaU9r1OfIG4UChBlTRgcZiFqNDPkMn2lUkVmzq7G3QvVoimG
-         QjUarawautbENaTcxz4YxjPg4mysypVybiMPe+hDyI1E7HLqTZHKPb9TrAF9eEZuABWl
-         aGyr/1wpO+qcIz9w/F0yrngVWxFR+/rnWAS61Ad3plMjgV+rkUTmEQ7e0hZbppPwg4L/
-         eMuV0I0nKMlhXrhOInmf4d/DA7m9hnpx+/gTaqLEhsmerxCwSud3Ym8rvVmV+/HMtcdv
-         AeK+kvohkv4VET64mJP720/GCURh9eqCf97bUUYPeFIkWTJI/56C4pUu739J7seVc2kG
-         d1Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=z+uM7vIRKv3KK6/ogXLySxrVBPRCNjdMKIe5V0kgmw8=;
-        b=LvJDHWtgZwOS4l6RTBvE395+dn+rMbdn8ZGD+NnfThsEep1dJEj/9Vl4QDLiFCu+BE
-         ERbuxzhdhAKGuxLeIBkR+FMQ5SQlVl0JJohlx54NafJGN8rZXarnzSJl4tajN+u3L5I3
-         bZWXT4djkmXYbVR2CsLzCMxUylVp2YGPDq/+hRw32g+laajQSGvjSRrYeIJYugkCV1Kj
-         65rRKoOnDH0o3VNdSXN7Jv9RY40mI6IdW6BivEqLAOhmOaVE4+Mej+kVN2SddL55JHJM
-         Clkp6QVBd5Vi8wh2m3IaOwWjc6FGxfGuNj2HjqM2IXmINv6jdM+r47/O6PVKr6kRXh8c
-         xDfg==
-X-Gm-Message-State: AOAM5339lwuv4QRfBm5roIMUQ6lFv5KoYj8rMqciPYvXNoOWZW1Ogzwf
-        qRTMZSfYpZEfl2qeau9lzNlQIMYKbDQYE83x/Ex/HQ==
-X-Google-Smtp-Source: ABdhPJwaFh7ZG1oXVDdnC5mLW0Wxa/KXRkx9vch7z0UZRums9K3SwJojO6qJ3O7IvZv5hafotBx3MIaUMqojTPrsVog=
-X-Received: by 2002:a05:6402:2752:b0:41c:b898:19a6 with SMTP id
- z18-20020a056402275200b0041cb89819a6mr23381311edd.30.1653300765781; Mon, 23
- May 2022 03:12:45 -0700 (PDT)
+        with ESMTP id S234389AbiEWKsE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 06:48:04 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 474D54CD5A
+        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 03:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653302878; x=1684838878;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fJgg66b9jm9+gczMENkigikNQIHgxVB0H4V9HOUnnaI=;
+  b=lp7f56DnaDwrQhLXWXTNfoq3oo5kINT/g9zSXNV887heVu21i63gfpIA
+   Do/Pb59fRdW6D5jEXUsy3EtJvsaffKoP91tLCA9VO7Cvt2lcL0V/A97K1
+   2Az1i/O0/5DKrfJILPHmpxobvowEWMUaIt0Xces4UBl8tOJDPXB6Iy24+
+   cMRTVIuas+uKbFLpPiIpYHxnpA54I5W8IcfOO+HzBBmsk9DuUCy0259t+
+   RN50QhlXAskMh5jONzZeW6Gg5iM7dwNqm1OC7WI2Nu7vm1Z8KgWxa18dy
+   KQbTYiLbMm1Oay3ci7sTE8kcbHwpPPppirzTOMCguN5KN6ZL4fmohN6i4
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10355"; a="253057781"
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="253057781"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 03:47:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="525864454"
+Received: from lkp-server01.sh.intel.com (HELO db63a1be7222) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 23 May 2022 03:47:55 -0700
+Received: from kbuild by db63a1be7222 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nt5bO-00015s-Ez;
+        Mon, 23 May 2022 10:47:54 +0000
+Date:   Mon, 23 May 2022 18:47:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 374e72d721d1b0c545d98d8767a346b9007278ef
+Message-ID: <628b6633.2KyJDrEpyJ5+vj6O%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Received: by 2002:a05:640c:2cc5:b0:153:d95a:3c5d with HTTP; Mon, 23 May 2022
- 03:12:23 -0700 (PDT)
-Reply-To: stevebrucefss@gmail.com
-From:   Steve Bruce Financial Service <camila.toledo@uc.cl>
-Date:   Mon, 23 May 2022 13:12:23 +0300
-Message-ID: <CALeUmqNxzsFDTScjrKzqa+eamJo4TPbP3_nW7FuQHONsToSrwg@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,FREEMAIL_FORGED_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 374e72d721d1b0c545d98d8767a346b9007278ef  Merge tag 'intel-pinctrl-v5.19-2' of gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into devel
+
+elapsed time: 720m
+
+configs tested: 96
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                              allmodconfig
+arm                                 defconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+mips                             allyesconfig
+um                           x86_64_defconfig
+riscv                            allmodconfig
+um                             i386_defconfig
+mips                             allmodconfig
+riscv                            allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+s390                             allmodconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+s390                             allyesconfig
+sparc                            allyesconfig
+parisc                           allyesconfig
+sh                               allmodconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+arm                         lpc18xx_defconfig
+mips                        bcm47xx_defconfig
+m68k                        mvme16x_defconfig
+powerpc                     asp8347_defconfig
+powerpc                         ps3_defconfig
+arm                           corgi_defconfig
+mips                         tb0226_defconfig
+arm                        clps711x_defconfig
+arm                          pxa3xx_defconfig
+mips                           jazz_defconfig
+arm                        mvebu_v7_defconfig
+sh                     magicpanelr2_defconfig
+arm                          pxa910_defconfig
+openrisc                         alldefconfig
+mips                     decstation_defconfig
+arm                           sunxi_defconfig
+m68k                                defconfig
+arm                            zeus_defconfig
+arm                            qcom_defconfig
+ia64                                defconfig
+csky                                defconfig
+alpha                               defconfig
+arc                                 defconfig
+s390                                defconfig
+parisc                              defconfig
+parisc64                            defconfig
+nios2                               defconfig
+sparc                               defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+powerpc                           allnoconfig
+i386                 randconfig-a001-20220523
+i386                 randconfig-a006-20220523
+i386                 randconfig-a002-20220523
+i386                 randconfig-a005-20220523
+i386                 randconfig-a003-20220523
+i386                 randconfig-a004-20220523
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+powerpc                          allyesconfig
+powerpc                     mpc512x_defconfig
+powerpc                      ppc44x_defconfig
+arm                           omap1_defconfig
+arm                            mmp2_defconfig
+mips                     cu1830-neo_defconfig
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                 randconfig-a014-20220523
+i386                 randconfig-a011-20220523
+i386                 randconfig-a013-20220523
+i386                 randconfig-a016-20220523
+i386                 randconfig-a012-20220523
+i386                 randconfig-a015-20220523
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+hexagon              randconfig-r045-20220522
+hexagon              randconfig-r041-20220522
+
 -- 
-Steve Bruce Financial Service is giving out stress-free loans to new
-applicants at a low interest rate of 2%. If interested, kindly apply
-in person via stevebrucefss@gmail.com or call +1 (815) 771-5090.
-Thanks
+0-DAY CI Kernel Test Service
+https://01.org/lkp
