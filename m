@@ -2,88 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DFC0530AD0
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 10:01:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07D58530B86
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 11:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231423AbiEWH44 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 May 2022 03:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60006 "EHLO
+        id S231864AbiEWIkK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 May 2022 04:40:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231360AbiEWH4z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 03:56:55 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3719D63D6;
-        Mon, 23 May 2022 00:56:50 -0700 (PDT)
-Received: from mail-yw1-f179.google.com ([209.85.128.179]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MNwXA-1oCt6f109o-00OF7f; Mon, 23 May 2022 09:56:49 +0200
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-2ff90e0937aso63921027b3.4;
-        Mon, 23 May 2022 00:56:48 -0700 (PDT)
-X-Gm-Message-State: AOAM533Y62GrmqaiDndOYhBi01Hclk8LmXDmzwBvebKeknX+mb0RprIn
-        PSahQrxOqjnW8SaOMfg/W7UGMF7rRbKxLI5eQHU=
-X-Google-Smtp-Source: ABdhPJw2LHiHqq0/Y/VzFvweK5WuNCUQUczMcSAr5ygjJFwwWwAtTaZ+A1Uu9aWWOiGiwQN+ltRnCtbf6WnrGsZfDuY=
-X-Received: by 2002:a0d:e64b:0:b0:2ff:8745:8a75 with SMTP id
- p72-20020a0de64b000000b002ff87458a75mr14867694ywe.495.1653292607699; Mon, 23
- May 2022 00:56:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220517032710.451537-1-Mr.Bossman075@gmail.com>
-In-Reply-To: <20220517032710.451537-1-Mr.Bossman075@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 23 May 2022 09:56:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0OKQYq-LPxjtRCNoD+coEcEcJD0eL_SV3aQ01BpyQVKA@mail.gmail.com>
-Message-ID: <CAK8P3a0OKQYq-LPxjtRCNoD+coEcEcJD0eL_SV3aQ01BpyQVKA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/15] Add support for the i.MXRT1170-evk
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
+        with ESMTP id S231986AbiEWIkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 04:40:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59BA323BC7
+        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 01:40:03 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nt3bc-00063c-1D; Mon, 23 May 2022 10:40:00 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nt3bb-0042tQ-P5; Mon, 23 May 2022 10:39:58 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nt3bZ-00BZ7q-PL; Mon, 23 May 2022 10:39:57 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Michael Hennerich <michael.hennerich@analog.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        SoC Team <soc@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Abel Vesa <abel.vesa@nxp.com>, dev@lynxeye.de,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Tim Harvey <tharvey@gateworks.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
-        clin@suse.com,
-        Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/3lm2tyMCrqyIBUbjN1ELnaTuqSU2rlf93Z2B9sKQ8qXUNHw14I
- 9mlt94OMk/N8pmuvdnAr0xCnSfd/HQm8HWbczKlRG+wur8EAc5nO3cPCuZcE4vxo2u8DU7t
- 1Vmc1HIXEqmN7X14/bwWm5Z+IG5q5b2ycww7kBvXpuXiKIDI22I4qD3V1rrx7Z2NM3sDkY1
- mk8pI6cWCn0F7PA5VLMFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TgmQeTMQ71s=:5meSiiP1er72SQ+7NxR7Hb
- 9PyBQspNrPit0h334iUaGgdkp7c0Nbzlytyd+wKITSWopE07r5MjbyZvgfxTsjl4OgFlYJqM/
- fVYIBLRSicVJefdRkbN7Wr0HyxE7mQens/xGTp181L4T8GDBcg+wMxMXBbnW6DyNbxI0gPuV4
- dxHdGeCS1+lSIv5x56IpBsmQCAwY5/6ehv45CR269GQkUY81beYsP3ugPRyeR8DH7Bi2+YH+E
- uxUg1rDCwalAGVva9SffAP0D8yJvHwsJcLnOxMlyGjdV5Rh/sw0jxzNO2n+9zTByXGDPRReTw
- TJhl5HwAEGr5zwTzJGmMpA8CNoImNKVd0CwyiUryYCPlNSY+QSGFhP1xGpaL3fMQ67Gz28wwy
- mL77ufHDF3K59TRy/B8N/mU6wHhBw4tbGCedWZEl8fKxaPmyjBDQ5lt8b9j13r30PF7UE8P5K
- k83IS6e3xUzNenPadPYDaxrAoSuu8702aNbO0cMCCE5Ph2L4kEzDlIUuDtc23vB6ohlgKZCEU
- 0rynYZctG0ffU28cn4HDLtPAuhrfWhYzSw5glBHc9VI6yI7lKk05mDIXcBrVhGm/MWbNVDBxt
- i4N9b62WqM3jKx5aU2kfFhtAXZ9lEk96V/4ypxg389GlMKXmt4XQIz/G7dOWdG+hvHLujOvXS
- C5UYdarOVHNnt72pUHJYpbs3rAqhNTK9zCUWVKi38nnEd6TLYemsVA2P6ZovbJxSbL4OCe+gC
- rOChFYox60U/6t7uV3C9t+DF1ur8i0Tw4ZNaAYei2NA9OucM9B1UvFU5JfbOBRhPT3pjO203R
- GxunHtowWJ9XB/LWaHszkiWQW2zJPG15oltnVxbLCMUhHhsVHgyLzbJvRXzBy1Rxf9EG2au/i
- +HG0PcLLU1lfdEpt/mAg==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] gpio: adp5588: Remove support for platform setup and teardown callbacks
+Date:   Mon, 23 May 2022 10:39:47 +0200
+Message-Id: <20220523083947.840708-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2410; h=from:subject; bh=TKOAhKfOfoyr/WYLdTkjwj21WcTF3HPrFNvJMn2w/Cc=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBii0hPEf1oAHXMEjUOAdkqUcVBQiqGM/isg6wghPyL NsqWEgGJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYotITwAKCRDB/BR4rcrsCWcaCA CDC74vvB54Cr9Qbj6MueBItfx0Fa5Gtq+r7/z8WJajY5EiwqIus18eynjABXjB+zbmzYDjOCL1zLLn kzmypFBXHmGVtMCLOtfb1A1Qu5uFRerSNZMxTpIhVpetUeUUevhQt8dmBEBniG0v/8EY9jO0WPC8Kd DABDiYLt1fu4f7cllawW0yhrzuFJ4DbTKkOazjvLsplkNrb4e6HlB6d17MfZKx0oro+EkL3tLDgpxU KdqWnQgkxqSndYc6H5BT5p7yCPBYUeJB98uaMy8VvpDjnB6NPUT67QlqWrKFq9dTDGC+li8BDdRo7i kqRqYinpPhqPYvLoBGuQx5idzWaO4t
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,38 +54,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 17, 2022 at 5:26 AM Jesse Taube <mr.bossman075@gmail.com> wrote:
->
-> This patch continues support for the imxrt series now with the imxrt1170
->
-> This patch contains:
-> - Update to imxrt_defconfig
-> - Devicetree
-> - Clock driver
-> - Pinctrl driver
-> - New pll
->
-> This patch also updates some documentation for both imxrt1170 an 1050.
->
-> The i.MXRT1170 has a vast array of features including two cores. 2 Ethernet, 2 USB phy, and a 2d gpu.
->
-> It also is featured in a new google coral board
-> https://coral.ai/products/dev-board-micro
-> Not affiliated unfortunately.
+If the teardown callback failed in the gpio driver, it fails to free the
+irq (if there is one). The device is removed anyhow. If later on the irq
+triggers, all sorts of unpleasant things might happen (e.g. accessing
+the struct adp5588_gpio which is already freed in the meantime or starting
+i2c bus transfers for an unregistered device). Even before irq support was
+added to this driver, exiting early was wrong; back then it failed to
+unregister the gpiochip.
 
-Hi Jesse,
+Fortunately these callbacks aren't used any more since at least blackfin
+was removed in 2018. So just drop them.
 
-As you have added soc@kernel.org to Cc in this series, it made it into our
-patchwork instance at https://patchwork.kernel.org/project/linux-soc/list/
-and I'll at least reply.
+Note that they are not removed from struct adp5588_gpio_platform_data
+because the keyboard driver adp5588-keys.c also makes use of them.
+(I didn't check if the callbacks might have been called twice, maybe there
+is another reason hidden to better not call these functions.)
 
-I expect the i.MX maintainers to pick up the patches into the individual
-branches in the future, and not keep them as a single branch for your
-platform, with the pinctrl and clock patches going through the respective
-subsystem trees.
+This patch is a preparation for making i2c remove callbacks return void.
 
-I have marked the patches as "Not applicable" in patchwork because
-I don't plan to apply them, but they otherwise seem fine. Please drop
-the Cc:soc@kernel.org in the future.
+Fixes: 80884094e344 ("gpio: adp5588-gpio: new driver for ADP5588 GPIO expanders")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/gpio/gpio-adp5588.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-      Arnd
+diff --git a/drivers/gpio/gpio-adp5588.c b/drivers/gpio/gpio-adp5588.c
+index f1e4ac90e7d3..e388e75103f4 100644
+--- a/drivers/gpio/gpio-adp5588.c
++++ b/drivers/gpio/gpio-adp5588.c
+@@ -406,12 +406,6 @@ static int adp5588_gpio_probe(struct i2c_client *client)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (pdata && pdata->setup) {
+-		ret = pdata->setup(client, gc->base, gc->ngpio, pdata->context);
+-		if (ret < 0)
+-			dev_warn(&client->dev, "setup failed, %d\n", ret);
+-	}
+-
+ 	i2c_set_clientdata(client, dev);
+ 
+ 	return 0;
+@@ -419,20 +413,7 @@ static int adp5588_gpio_probe(struct i2c_client *client)
+ 
+ static int adp5588_gpio_remove(struct i2c_client *client)
+ {
+-	struct adp5588_gpio_platform_data *pdata =
+-			dev_get_platdata(&client->dev);
+ 	struct adp5588_gpio *dev = i2c_get_clientdata(client);
+-	int ret;
+-
+-	if (pdata && pdata->teardown) {
+-		ret = pdata->teardown(client,
+-				      dev->gpio_chip.base, dev->gpio_chip.ngpio,
+-				      pdata->context);
+-		if (ret < 0) {
+-			dev_err(&client->dev, "teardown failed %d\n", ret);
+-			return ret;
+-		}
+-	}
+ 
+ 	if (dev->client->irq)
+ 		free_irq(dev->client->irq, dev);
+
+base-commit: 4b0986a3613c92f4ec1bdc7f60ec66fea135991f
+-- 
+2.35.1
+
