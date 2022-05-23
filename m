@@ -2,178 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79AF1530F95
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 15:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 811B5530EFB
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 15:18:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234273AbiEWKsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 May 2022 06:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
+        id S234534AbiEWLKp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 May 2022 07:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234389AbiEWKsE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 06:48:04 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 474D54CD5A
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 03:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653302878; x=1684838878;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fJgg66b9jm9+gczMENkigikNQIHgxVB0H4V9HOUnnaI=;
-  b=lp7f56DnaDwrQhLXWXTNfoq3oo5kINT/g9zSXNV887heVu21i63gfpIA
-   Do/Pb59fRdW6D5jEXUsy3EtJvsaffKoP91tLCA9VO7Cvt2lcL0V/A97K1
-   2Az1i/O0/5DKrfJILPHmpxobvowEWMUaIt0Xces4UBl8tOJDPXB6Iy24+
-   cMRTVIuas+uKbFLpPiIpYHxnpA54I5W8IcfOO+HzBBmsk9DuUCy0259t+
-   RN50QhlXAskMh5jONzZeW6Gg5iM7dwNqm1OC7WI2Nu7vm1Z8KgWxa18dy
-   KQbTYiLbMm1Oay3ci7sTE8kcbHwpPPppirzTOMCguN5KN6ZL4fmohN6i4
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10355"; a="253057781"
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="253057781"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 03:47:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="525864454"
-Received: from lkp-server01.sh.intel.com (HELO db63a1be7222) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 23 May 2022 03:47:55 -0700
-Received: from kbuild by db63a1be7222 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nt5bO-00015s-Ez;
-        Mon, 23 May 2022 10:47:54 +0000
-Date:   Mon, 23 May 2022 18:47:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 374e72d721d1b0c545d98d8767a346b9007278ef
-Message-ID: <628b6633.2KyJDrEpyJ5+vj6O%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234522AbiEWLKn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 07:10:43 -0400
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0423FBD3
+        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 04:10:43 -0700 (PDT)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-2ef5380669cso143491697b3.9
+        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 04:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=xsm74HFURP+a75T0tJdP3F9J+dr2fS6rGzX/2UxjMro=;
+        b=DTlAiCW7OPR1wBHviTw1/OEzMMsIBxVR2AuuPhpwnUOfcVoCKkPbaXzdkkiyEeGp8a
+         k9BVy4CIkru5aIaITek+YqZQpMBMCVnBYBK3i2fX1PamFoSmrXjKjSZITEA+jcnqNmjq
+         lEi7bq+5EHkq2ygZOE6bpqbUgBC6laWrrqwAPvGbFcPfQ+IRq7VhJZ0lM63EfWiZ4ZVW
+         BQ2l0T+n7trS2MFAk24udFh68c6c8fBfVmC7weorb+UHLafrdEBqfUdfjExwLz4sH78J
+         m+8nOvTLrVm//dbZljdwy1EpyFXg4cMsxmV30/NE4548d61xbDyy2lIGEbCanw9/UwV4
+         sgkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=xsm74HFURP+a75T0tJdP3F9J+dr2fS6rGzX/2UxjMro=;
+        b=77OFsWsWUyaL84s34p0hxTHxy2tOo+y0ii4MHa/6ISSDjcjwfTyWoe1NUtZ2tCws4q
+         nuzA12IEdjxxH0CVPrg6cpaxTJmwN6QrmzKMhI4vpgu+uZoWuzqUwv70tt8/tbctiOjX
+         miI7DbvCXLILy/Dj9vZ6fVOh4PseBsmJogCwruDD0J0NKkVJs+1vjmDxH66r34mFtwYk
+         9R1bkpF6PjGC2//z3HEBaF5MpUIg6hPHohAWfQAdxMw7qaDau0tdDKYim1pxF7zE8jbK
+         KxnoMxB47VPwVUQwTJI2UxIopbsfBzeXxruao5d7XlXkbYpdaffw+88Jotwt5BkQvOWJ
+         oYXQ==
+X-Gm-Message-State: AOAM5318laoi9fGfG5LhXQZDHuQqbW0Eey3/Ve+6urUNFlJt0K7Blhuh
+        w9NGlHIgOU8wwTOxQ480mKhyOB1IBIDAH8O1aCA=
+X-Google-Smtp-Source: ABdhPJyemd7j34MUw82v7bRM5ea5ldDubx5aUc1fLxjWxvi7Nsm+LxgaA8OT9QH2nWeDkkgXhxlcQHuBLljRqZvq1Wc=
+X-Received: by 2002:a0d:df0b:0:b0:2ff:1ed2:fb48 with SMTP id
+ i11-20020a0ddf0b000000b002ff1ed2fb48mr22726233ywe.216.1653304242629; Mon, 23
+ May 2022 04:10:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:7110:5491:b0:17b:3065:aa1e with HTTP; Mon, 23 May 2022
+ 04:10:42 -0700 (PDT)
+Reply-To: fofoj6432@gmail.com
+From:   john fofo <tracyadams043@gmail.com>
+Date:   Mon, 23 May 2022 04:10:42 -0700
+Message-ID: <CALA2XKnex+cyZ0_DssO8Q5XDQsmrndiYgVh360FrVJYqoF0uvg@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1130 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4988]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [fofoj6432[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [tracyadams043[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [tracyadams043[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 374e72d721d1b0c545d98d8767a346b9007278ef  Merge tag 'intel-pinctrl-v5.19-2' of gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into devel
-
-elapsed time: 720m
-
-configs tested: 96
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                              allmodconfig
-arm                                 defconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-mips                             allyesconfig
-um                           x86_64_defconfig
-riscv                            allmodconfig
-um                             i386_defconfig
-mips                             allmodconfig
-riscv                            allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-s390                             allmodconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-s390                             allyesconfig
-sparc                            allyesconfig
-parisc                           allyesconfig
-sh                               allmodconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-arm                         lpc18xx_defconfig
-mips                        bcm47xx_defconfig
-m68k                        mvme16x_defconfig
-powerpc                     asp8347_defconfig
-powerpc                         ps3_defconfig
-arm                           corgi_defconfig
-mips                         tb0226_defconfig
-arm                        clps711x_defconfig
-arm                          pxa3xx_defconfig
-mips                           jazz_defconfig
-arm                        mvebu_v7_defconfig
-sh                     magicpanelr2_defconfig
-arm                          pxa910_defconfig
-openrisc                         alldefconfig
-mips                     decstation_defconfig
-arm                           sunxi_defconfig
-m68k                                defconfig
-arm                            zeus_defconfig
-arm                            qcom_defconfig
-ia64                                defconfig
-csky                                defconfig
-alpha                               defconfig
-arc                                 defconfig
-s390                                defconfig
-parisc                              defconfig
-parisc64                            defconfig
-nios2                               defconfig
-sparc                               defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-powerpc                           allnoconfig
-i386                 randconfig-a001-20220523
-i386                 randconfig-a006-20220523
-i386                 randconfig-a002-20220523
-i386                 randconfig-a005-20220523
-i386                 randconfig-a003-20220523
-i386                 randconfig-a004-20220523
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-
-clang tested configs:
-powerpc                          allyesconfig
-powerpc                     mpc512x_defconfig
-powerpc                      ppc44x_defconfig
-arm                           omap1_defconfig
-arm                            mmp2_defconfig
-mips                     cu1830-neo_defconfig
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                 randconfig-a014-20220523
-i386                 randconfig-a011-20220523
-i386                 randconfig-a013-20220523
-i386                 randconfig-a016-20220523
-i386                 randconfig-a012-20220523
-i386                 randconfig-a015-20220523
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-hexagon              randconfig-r045-20220522
-hexagon              randconfig-r041-20220522
-
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Good Afternoon,
+
+How are you? I guess you're well, i sent you a message last week, did
+you read my previous email? get back to me upon the receipt of this
+mail.
+
+Thank You,
+Mr.John Fofo
