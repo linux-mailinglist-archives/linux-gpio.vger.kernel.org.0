@@ -2,113 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD1F9530AAB
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 10:01:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFC0530AD0
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 10:01:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230465AbiEWH2w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 May 2022 03:28:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51260 "EHLO
+        id S231423AbiEWH44 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 May 2022 03:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231225AbiEWH14 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 03:27:56 -0400
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38FCF1D
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 00:25:20 -0700 (PDT)
-Received: by mail-qv1-f46.google.com with SMTP id s5so11524174qvo.12
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 00:25:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d2SMhNXRj0IsWiPhgFiLLDsimj0twoU0280Om0C+Jv0=;
-        b=UPU6P+2DOsQod+7gjUdJxUKz9wTfCTZgvRtROi0cXWHEujXTQpXQA+MDkPAffa04Hf
-         QcFbrwD8YSppfJ+B9LLgEa93CNNpK+okj9JX5rVnzmZLPNx7gKgdRjBC8tBiZlahLgE8
-         Yt/zUibR5lyrWk/t8a5E87fOGtYOmZKpZPvkh+L1v4eXhFsd8q2wOPzJZlh53I7Zwv9B
-         MIol0bFG45QbFNIMqn7d0PO9OaEZli5S4tYhsmTJZc3WbYNl5dhrJgUa8GsYvuHP10oy
-         3zENw7kM8C0tAk3HOkkaeoIRldGxR/ifV1z+/CsTWKVjlpUXaKucM8YHEP/0obdmxlm9
-         lJoQ==
-X-Gm-Message-State: AOAM533oTUup77Qe8NMug1L23OqDvT8cQMvOO8aYTPCfvyB/b4SEVu4o
-        EAiFcVdAJXtuhdvwQsnb0CDZJFd5d/TYbw==
-X-Google-Smtp-Source: ABdhPJzfzLnoR/VFezcr8B4OB+LhE79VB0Jcd6sQzoBRi1ZkolIrZHYm/xoJHICE6MiQNNRSB9aQlQ==
-X-Received: by 2002:a05:6214:d81:b0:45a:e07e:6bcb with SMTP id e1-20020a0562140d8100b0045ae07e6bcbmr15517459qve.29.1653290719021;
-        Mon, 23 May 2022 00:25:19 -0700 (PDT)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id l7-20020ac80787000000b002f39b99f670sm3887710qth.10.2022.05.23.00.25.18
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 May 2022 00:25:18 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id i187so21609303ybg.6
-        for <linux-gpio@vger.kernel.org>; Mon, 23 May 2022 00:25:18 -0700 (PDT)
-X-Received: by 2002:a05:6902:905:b0:64a:2089:f487 with SMTP id
- bu5-20020a056902090500b0064a2089f487mr20858877ybb.202.1653290718267; Mon, 23
- May 2022 00:25:18 -0700 (PDT)
+        with ESMTP id S231360AbiEWH4z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 03:56:55 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3719D63D6;
+        Mon, 23 May 2022 00:56:50 -0700 (PDT)
+Received: from mail-yw1-f179.google.com ([209.85.128.179]) by
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MNwXA-1oCt6f109o-00OF7f; Mon, 23 May 2022 09:56:49 +0200
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-2ff90e0937aso63921027b3.4;
+        Mon, 23 May 2022 00:56:48 -0700 (PDT)
+X-Gm-Message-State: AOAM533Y62GrmqaiDndOYhBi01Hclk8LmXDmzwBvebKeknX+mb0RprIn
+        PSahQrxOqjnW8SaOMfg/W7UGMF7rRbKxLI5eQHU=
+X-Google-Smtp-Source: ABdhPJw2LHiHqq0/Y/VzFvweK5WuNCUQUczMcSAr5ygjJFwwWwAtTaZ+A1Uu9aWWOiGiwQN+ltRnCtbf6WnrGsZfDuY=
+X-Received: by 2002:a0d:e64b:0:b0:2ff:8745:8a75 with SMTP id
+ p72-20020a0de64b000000b002ff87458a75mr14867694ywe.495.1653292607699; Mon, 23
+ May 2022 00:56:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <01f7a990654697ca7ec8b2d0025f41403462c8d9.1653042121.git.geert+renesas@glider.be>
- <CAMRc=Mdf_PHyC3doO4KfzeTJz+WT2VZE6pxADOxz3_Sy9jPGqA@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdf_PHyC3doO4KfzeTJz+WT2VZE6pxADOxz3_Sy9jPGqA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 23 May 2022 09:25:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXe2v8Tamyz6-xhFfoc7X-x9iDk8Rey-PBsdEe9+2-Bgw@mail.gmail.com>
-Message-ID: <CAMuHMdXe2v8Tamyz6-xhFfoc7X-x9iDk8Rey-PBsdEe9+2-Bgw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: dwapb: Make the irqchip immutable
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
+References: <20220517032710.451537-1-Mr.Bossman075@gmail.com>
+In-Reply-To: <20220517032710.451537-1-Mr.Bossman075@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 23 May 2022 09:56:31 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0OKQYq-LPxjtRCNoD+coEcEcJD0eL_SV3aQ01BpyQVKA@mail.gmail.com>
+Message-ID: <CAK8P3a0OKQYq-LPxjtRCNoD+coEcEcJD0eL_SV3aQ01BpyQVKA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/15] Add support for the i.MXRT1170-evk
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        SoC Team <soc@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>, dev@lynxeye.de,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Tim Harvey <tharvey@gateworks.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+        clin@suse.com,
+        Giulio Benetti <giulio.benetti@benettiengineering.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Provags-ID: V03:K1:/3lm2tyMCrqyIBUbjN1ELnaTuqSU2rlf93Z2B9sKQ8qXUNHw14I
+ 9mlt94OMk/N8pmuvdnAr0xCnSfd/HQm8HWbczKlRG+wur8EAc5nO3cPCuZcE4vxo2u8DU7t
+ 1Vmc1HIXEqmN7X14/bwWm5Z+IG5q5b2ycww7kBvXpuXiKIDI22I4qD3V1rrx7Z2NM3sDkY1
+ mk8pI6cWCn0F7PA5VLMFw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TgmQeTMQ71s=:5meSiiP1er72SQ+7NxR7Hb
+ 9PyBQspNrPit0h334iUaGgdkp7c0Nbzlytyd+wKITSWopE07r5MjbyZvgfxTsjl4OgFlYJqM/
+ fVYIBLRSicVJefdRkbN7Wr0HyxE7mQens/xGTp181L4T8GDBcg+wMxMXBbnW6DyNbxI0gPuV4
+ dxHdGeCS1+lSIv5x56IpBsmQCAwY5/6ehv45CR269GQkUY81beYsP3ugPRyeR8DH7Bi2+YH+E
+ uxUg1rDCwalAGVva9SffAP0D8yJvHwsJcLnOxMlyGjdV5Rh/sw0jxzNO2n+9zTByXGDPRReTw
+ TJhl5HwAEGr5zwTzJGmMpA8CNoImNKVd0CwyiUryYCPlNSY+QSGFhP1xGpaL3fMQ67Gz28wwy
+ mL77ufHDF3K59TRy/B8N/mU6wHhBw4tbGCedWZEl8fKxaPmyjBDQ5lt8b9j13r30PF7UE8P5K
+ k83IS6e3xUzNenPadPYDaxrAoSuu8702aNbO0cMCCE5Ph2L4kEzDlIUuDtc23vB6ohlgKZCEU
+ 0rynYZctG0ffU28cn4HDLtPAuhrfWhYzSw5glBHc9VI6yI7lKk05mDIXcBrVhGm/MWbNVDBxt
+ i4N9b62WqM3jKx5aU2kfFhtAXZ9lEk96V/4ypxg389GlMKXmt4XQIz/G7dOWdG+hvHLujOvXS
+ C5UYdarOVHNnt72pUHJYpbs3rAqhNTK9zCUWVKi38nnEd6TLYemsVA2P6ZovbJxSbL4OCe+gC
+ rOChFYox60U/6t7uV3C9t+DF1ur8i0Tw4ZNaAYei2NA9OucM9B1UvFU5JfbOBRhPT3pjO203R
+ GxunHtowWJ9XB/LWaHszkiWQW2zJPG15oltnVxbLCMUhHhsVHgyLzbJvRXzBy1Rxf9EG2au/i
+ +HG0PcLLU1lfdEpt/mAg==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+On Tue, May 17, 2022 at 5:26 AM Jesse Taube <mr.bossman075@gmail.com> wrote:
+>
+> This patch continues support for the imxrt series now with the imxrt1170
+>
+> This patch contains:
+> - Update to imxrt_defconfig
+> - Devicetree
+> - Clock driver
+> - Pinctrl driver
+> - New pll
+>
+> This patch also updates some documentation for both imxrt1170 an 1050.
+>
+> The i.MXRT1170 has a vast array of features including two cores. 2 Ethernet, 2 USB phy, and a 2d gpu.
+>
+> It also is featured in a new google coral board
+> https://coral.ai/products/dev-board-micro
+> Not affiliated unfortunately.
 
-On Sun, May 22, 2022 at 10:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Fri, May 20, 2022 at 12:23 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> > immutable") added a warning to indicate if the gpiolib is altering the
-> > internals of irqchips.  Following this change the following warning is
-> > now observed for the dwapb driver:
-> >
-> >     gpio gpiochip0: (50200000.gpio): not an immutable chip, please consider fixing it!
-> >
-> > Fix this by making the irqchip in the dwapb driver immutable.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Against gpio/for-next.
-> > Boot-tested on SiPEED MAiXBiT (Canaan K210).
-> >
-> > v2:
-> >   - Factor out hwirq using preferred helper.
+Hi Jesse,
 
-> I'll pick those patches up for the next cycle to let them spend some
-> time in next.
+As you have added soc@kernel.org to Cc in this series, it made it into our
+patchwork instance at https://patchwork.kernel.org/project/linux-soc/list/
+and I'll at least reply.
 
-"next cycle" = later PR for v5.19, I hope?
-If the new warning will make it into v5.19-rc1 (commit 6c846d026d490b23
-is in gpio/for-next), I think you should collect all fixes and make
-sure they end up in v5.19, too.
+I expect the i.MX maintainers to pick up the patches into the individual
+branches in the future, and not keep them as a single branch for your
+platform, with the pinctrl and clock patches going through the respective
+subsystem trees.
 
-Thanks!
+I have marked the patches as "Not applicable" in patchwork because
+I don't plan to apply them, but they otherwise seem fine. Please drop
+the Cc:soc@kernel.org in the future.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+      Arnd
