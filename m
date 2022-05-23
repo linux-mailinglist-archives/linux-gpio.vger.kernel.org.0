@@ -2,105 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A325D531897
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 22:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5C065316A1
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 22:52:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239644AbiEWRMq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 May 2022 13:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35454 "EHLO
+        id S241207AbiEWRd6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 May 2022 13:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240343AbiEWRL6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 13:11:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33F62F007;
-        Mon, 23 May 2022 10:11:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 69294614DA;
-        Mon, 23 May 2022 17:09:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F42DC34119;
-        Mon, 23 May 2022 17:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653325779;
-        bh=49TG0H75Ya9Io/9Ra/lmXTl1jm17VfmzpHpMWj3rv+E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b6xEBdre8qQxI4OPS0gvtMDU6OupCLO/qTN0Vdp+kRmb/+GNJjBaHIyrlHP14WTRN
-         2lN++TK4jQREtckUKH2NUto/WNrjF3u22KWjdyG5QZ3ptVF85LQqQcWR8HJyavvj9y
-         jYdoQxoRXO1X2PkTLqTbuvxNVwJALvnBfwOpjXTCUtffsQYXN8Qm/cflYXjBDXkVY2
-         P9FTgBolGOA95VyUeWovObgqdvfUhtAT4FD6eNdwCaUHf71zffDAih/Go/Bf6oXSvp
-         hnX5DoGCEvOugX/b6oXjNfeW8ZhOGscpvroLH2D6AMZIlZYDpNPdvknFAoxPn+TH0w
-         RTZdx64qsf5kg==
-Date:   Mon, 23 May 2022 19:09:31 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     frank zago <frank@zago.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] i2c: ch341: add I2C MFD cell driver for the CH341
-Message-ID: <You/y4Go+7ZvXgTz@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Johan Hovold <johan@kernel.org>, frank zago <frank@zago.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-References: <20220401023306.79532-1-frank@zago.net>
- <20220401023306.79532-4-frank@zago.net>
- <YojVHBofkBOFVYap@shikoro>
- <Youtgr7a3dw58KT0@hovoldconsulting.com>
+        with ESMTP id S241189AbiEWRcr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 May 2022 13:32:47 -0400
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4427982A;
+        Mon, 23 May 2022 10:27:28 -0700 (PDT)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-30007f11f88so24447917b3.7;
+        Mon, 23 May 2022 10:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sTAZGlEUmX/o2HerHezmpZJYpBk/Tk//TO+SFL1h0zA=;
+        b=pN4ceqx3jRqPDNbZxMO8S9NplGCGhu5NZGlEejwVpgTIpU/7Eyj86+mcv240DqoKIB
+         TPReO8r/4SM21FZvUgntCTTdurUlJ5mLo9g7bqG2ocJDosfEmIwHXyrGOCjbU6wDOs83
+         fG+rkIVl2t+Wktu9X0gBXqVOb6OuX/sxcB1Tg84f8HyAyOknb8mjSP/YMihayC/Qx7NP
+         fuFYzJxMzGEv7uzFInqftcmOkkT9vmmRLaOns7cghOZG5ZeJcBheQyROBJE9eWAN0EMF
+         +DsJDJdA3qPlMOz334GBPaxozXAt7G7i852jHnf7qWw6v0Rv3Ozp3qB31ZCsWZ22wW2M
+         B/CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sTAZGlEUmX/o2HerHezmpZJYpBk/Tk//TO+SFL1h0zA=;
+        b=fM4WvityEK09LtVeUHKX7MRRqGhtDxoXenIoCogx6bicGf5m511pZfKIx4oe+8HUyz
+         bJKgsKUPaxsOvxh4zUGE3Yk/gzzO+YRuc6FPkmSXrjo7lmZpTIIQfv65yf/Khof2r6Ue
+         3h1kIh8qXwVKWCleBFZPrbwmMs/1dVuMWqFl9lD6eQGXmcKhyI1iy+7HyDqDpNLXG3Cf
+         +3aUHR+H3WZhsYQvTcDUgo55p7IGI84/GN9DlJXmjwpQv7NvAfJNFkq6qpnxTpQJJxOf
+         MyfKzwdejX+xdlsg+eSngjUTu0BZReI/YJM0FKo/JJNv5DxxVQ0zkrR/qdZUMPocNAPr
+         TSag==
+X-Gm-Message-State: AOAM530RLopEba7IH4Wh/08EUH9tfM/RCXnPugXdUft0Iz8UFOPknU/J
+        T5nJz69PrMBW6K4uI6zxZpZGQM/SqLtdFqMXiOeMeIlvjt4=
+X-Google-Smtp-Source: ABdhPJyfb8N3rzOUX/Kjr0IcB2wzgmkTx8SdieSrc6hUMHn9O6f7sUVSBxw6MHCLQeIkZi6lnS9ZRTgE+qAWFNZBBrU=
+X-Received: by 2002:a0d:e2ca:0:b0:2ff:369c:a3ee with SMTP id
+ l193-20020a0de2ca000000b002ff369ca3eemr25119387ywe.292.1653326847797; Mon, 23
+ May 2022 10:27:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qOyTUoqo6Ka2qIM3"
-Content-Disposition: inline
-In-Reply-To: <Youtgr7a3dw58KT0@hovoldconsulting.com>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220518192924.20948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220518192924.20948-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CACRpkda1pfL8tk0S_0bHvj4kWYrLTTeOz3b_A9qK5DJwHWeTXw@mail.gmail.com>
+In-Reply-To: <CACRpkda1pfL8tk0S_0bHvj4kWYrLTTeOz3b_A9qK5DJwHWeTXw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 23 May 2022 18:27:01 +0100
+Message-ID: <CA+V-a8uR6EHr9ZqbBkLLKwLTPO4asthYaWTYE8c4NGFUt9Gmcg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Linus,
 
---qOyTUoqo6Ka2qIM3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the review.
 
+On Thu, May 19, 2022 at 2:26 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Wed, May 18, 2022 at 9:30 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> > Supported GPIO IRQs by the chip is not always equal to the number of GPIO
+> > pins. For example on Renesas RZ/G2L SoC where it has GPIO0-122 pins but at
+> > a given point a maximum of only 32 GPIO pins can be used as IRQ lines in
+> > the IRQC domain.
+> >
+> > This patch adds ngirq member to struct gpio_irq_chip and passes this as a
+> > size to irq_domain_create_hierarchy()/irq_domain_create_simple() if it is
+> > being set in the driver otherwise fallbacks to using ngpio.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> NAK
+>
+> As pointed out this is a property of the hardware and thus you should
+> derive this property of the hardware from the compatible string.
+>
+> For example by passing per-variant .data in struct of_device_id.
+>
+> Unique hardware properties means unique hardware means it should
+> have a unique compatible string. Otherwise something is wrong
+> with the compatibles.
+>
+Agreed, I will drop this.
 
-> There's no (longer) any difference. See bf7fbeeae6db ("module: Cure the
-> MODULE_LICENSE "GPL" vs. "GPL v2" bogosity").
-
-Wow, cool. Thanks for the heads up! Sidenote: just from the title of
-this commit I guessed the author correctly ;)
-
-
---qOyTUoqo6Ka2qIM3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmKLv8cACgkQFA3kzBSg
-KbY4RQ/+Ieko2JdoUgZRAjmlX7cy2lxd8StL9yenYst/u9weA/o82dLUA//dpudn
-ym8yTzgPIA0my2AL3k4tC+WkSaWBiUTThJvOxwtaD5HrlvhAaP/zwnjWJQUnY1zu
-aOWscNepDIN1yXPda3osYeuTO/jq0pfKzO7k/4A8Kn4aFWlkozx4TiPhj6s72Puu
-IJGoDbwNbGcmLcoyMFCUalOYUI5mbVbR3Mle2w1uMFIuCR16wP+5TnOlW6GVqm4R
-7KBHa7efxQ09DgYzk11JmO5ztGbQ96taI5TSbUjdAaEUOrU4MDCISrLo9poniAB1
-ZgW4c1aWFKZvBl/MZ5IxcFK52DpwZWfk+WVNM281javS6gUvDh0tzAZmGzw1kOek
-pwnNDV9IzWvfGhlcawbtKjqV0yoYFAtzK1cQzpauS8TLj35piYkdJVnuCmj/6+yc
-qJYhXSM5Et8PGXPiWgxd1Umtt+YFwLgyxtas6dV2LUCDtBxRbxhdIg8L4MYBxd9n
-zVWZNIpELd3rD8E1HKDDtOaiF5N0wYH8rOzFxQXq9ObgCvxHeElXrSoROg7VQMId
-c8+21NWHYFJ0I024N/usdhrsPGxNpobgZhvhD15gF90R3hDQ80ySR7Y3MYRyCpWG
-BdvDMl8A4rC5JEaxLYESS/9Hy2kWH+83BkIjC6PZVJSvAZGaVAQ=
-=KYIA
------END PGP SIGNATURE-----
-
---qOyTUoqo6Ka2qIM3--
+Cheers,
+Prabhakar
