@@ -2,43 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2F30530816
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 05:32:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 628CD530818
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 05:33:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346847AbiEWDc2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 22 May 2022 23:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47226 "EHLO
+        id S1351227AbiEWDdx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 22 May 2022 23:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351227AbiEWDcX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 May 2022 23:32:23 -0400
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B696B31379;
-        Sun, 22 May 2022 20:32:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1653276566; cv=none; 
+        with ESMTP id S1355508AbiEWDdv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 May 2022 23:33:51 -0400
+Received: from sender4-pp-o93.zoho.com (sender4-pp-o93.zoho.com [136.143.188.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD55326DF;
+        Sun, 22 May 2022 20:33:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1653276660; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=fNNN4gVmX7g6l5sOV/P9Q23pxSFhqaZZfi5VJiiRtZufKZJoxf8WdvSyxbWIFFMPwveLnvDQ/1xYxfTlrGzEBLyMetQxhzNS6AvNoUa55v+2NZeubo/113VgWJYVyg0b/mkK8YCYj/QUpTZHiagMXn23nr5tgOjoLNp3ZFP2QE4=
+        b=HRgHsyoEU1dReyNbZfWn4dnfvxjJ03506oh9r3NNQWusOAnmj+9fS+o6qSH4Op+gTlKbF1gTI9rotxzV1bRUy6ks7lbNnM58TP813qlGvgouFrnQ07XnEO7LKisl1HptAc0bPi6dgAlzO7Ip7zS5EJLXQ3Efi6SzNvhfBfh36Ks=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1653276566; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=6Y3a2rgqTa+y/A+6b7ejIUWPHMPluHbYkwTV2tC9EVY=; 
-        b=ZYr/jPoGzgtRWn00lq6uVruYbB0HwK6b0lzOVgkoDzVLXzwL2iht0ZEz2+5N08sZX7ICcnjvRs9U+eJEJ27wOfcuHModktOW2aEzcfEbKHyoHL8CMDI2LdjknypPd9GDJq/BX+KWK/8aXufNYNPgAyhQR7vkCujG2YSdY0N5BH8=
+        t=1653276660; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=iOuKNttKba44VCrdDFasYVWLGm+FaDpWr1wgK72EB+U=; 
+        b=WgciRNzQUpL2LcCSADQCDGUK/azAe0PW+hTg+C+kuGGJr6RnI7O3OX/9rwBhegC4OqxATYIkY2bcaTPnnlDO7T+fC0YG95KYXcU/Nyo6xhmfAGqBys2/FvP3/WLYF4wTMbk/fV4mRY+C48j0hP77xnydMGIas/AcGqgnolgUFD4=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=zohomail.com;
         spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
         dmarc=pass header.from=<lchen.firstlove@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1653276566;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1653276660;
         s=zm2022; d=zohomail.com; i=lchen.firstlove@zohomail.com;
-        h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
-        bh=6Y3a2rgqTa+y/A+6b7ejIUWPHMPluHbYkwTV2tC9EVY=;
-        b=dJYOf229ttvDIQTleCtbfOB85CpuaxVkezkuOMMBEvSFe9TWxWUWUij3zXM3Q1WS
-        SaWOQ2PLs63hN4PJ7bYRR2uMDc2/QzfGYfZxBxW3yKn1DIe+zb17T4fkylwH2EBZiGi
-        l6qyYzOIN6dsEnGP+z6oK0IA5JJgs1IURiy2SVds=
+        h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+        bh=iOuKNttKba44VCrdDFasYVWLGm+FaDpWr1wgK72EB+U=;
+        b=XJEvJgyLQPDSfzdGxxalNe7XEZON9Qer5QLFjMJo/r6YQKgkgF3ifESjYbw7OK7S
+        5ezVHobQ1QNmDUcVZyGQwBAir5toyvygS5zHJ+VXn471A72zavlw7nA+3zHGoRiykh/
+        087fwRtFK1RuiH5mwrZ8kywP8mGwxwGadHVpUTHY=
 Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1653276565914920.2020919127932; Sun, 22 May 2022 20:29:25 -0700 (PDT)
+        with SMTP id 1653276659933600.0289800555119; Sun, 22 May 2022 20:30:59 -0700 (PDT)
 Received: from  [45.12.140.94] by mail.zoho.com
-        with HTTP;Sun, 22 May 2022 20:29:25 -0700 (PDT)
-Date:   Sun, 22 May 2022 20:29:25 -0700
+        with HTTP;Sun, 22 May 2022 20:30:59 -0700 (PDT)
+Date:   Sun, 22 May 2022 20:30:59 -0700
 From:   Li Chen <lchen.firstlove@zohomail.com>
-To:     "Mark Brown" <broonie@kernel.org>,
+To:     "Samuel Holland" <samuel@sholland.org>
+Cc:     "Mark Brown" <broonie@kernel.org>,
         "linux-kernel" <linux-kernel@vger.kernel.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -51,19 +52,21 @@ To:     "Mark Brown" <broonie@kernel.org>,
         "Jaroslav Kysela" <perex@perex.cz>,
         "Takashi Iwai" <tiwai@suse.com>, "Chen-Yu Tsai" <wens@csie.org>,
         "Jernej Skrabec" <jernej.skrabec@gmail.com>,
-        "Samuel Holland" <samuel@sholland.org>,
         "Philipp Zabel" <p.zabel@pengutronix.de>
-Message-ID: <180eef6617d.e8980cca60760.7125525107711306420@zohomail.com>
-In-Reply-To: <180eef39205.122d47c8260721.2430302798386025245@zohomail.com>
-References: <180e702a15f.e737e37e45859.3135149506136486394@zohomail.com> <180eef39205.122d47c8260721.2430302798386025245@zohomail.com>
-Subject: [PATCH v3 4/4] pinctrl: st: Switch to use regmap_field_test_bits
+Message-ID: <180eef7d0c4.d42849e060770.1995440542302495013@zohomail.com>
+In-Reply-To: <e96cb553-1ac7-dbd7-3086-b623511471c5@sholland.org>
+References: <180e702a15f.e737e37e45859.3135149506136486394@zohomail.com>
+ <180eeb93909.12110e2de60158.391061173597432851@zohomail.com>
+ <180eeba3811.f7218bc260169.7323954027713751119@zohomail.com> <e96cb553-1ac7-dbd7-3086-b623511471c5@sholland.org>
+Subject: Re: [PATCH v2 1/4] regmap: provide regmap_field helpers for simple
+ bit operations
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Importance: Medium
 User-Agent: Zoho Mail
 X-Mailer: Zoho Mail
-Feedback-ID: rr0801122656e5cd6958fd4c7ab94adfc500001fdd7fdaf26b00c40900fee6fcc267d0f5cc243561ae8014:zu08011227be15db908130756bfd6197d7000079ca5556e9ca4072f705e96ed88ba82c548fa4e0655aa79a18:rf0801122c6b0c60d1fae0235f510c60b60000e5ab222c1e075c932ea2810b9b23169e1ecd448bf137269266dd888fceb0:ZohoMail
+Feedback-ID: rr08011226236ae7c8a4d2e2d0f61154fe0000e83e5c4313bebdb6f116261b31963974c76f6d1e80eb8fd5:zu0801122778073d0592069c92442816d300004d472a322eed3fe9ffedac5a34ff8964dbe612d4572482e1f2:rf0801122b498d8bc789dff53c5fb4fe7e0000e449ecb1215f453ef4f9820d6d5fdf3a24ab25c96ebd6ead125832aa76:ZohoMail
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -74,78 +77,130 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Li Chen <lchen@ambarella.com>
+Hi Samuel,
 
-Appropriately change calls to regmap_field_read() with
-regmap_field_test_bits() for improved readability.
+ ---- On Sun, 22 May 2022 20:09:55 -0700 Samuel Holland <samuel@sholland.org> wrote ----
+ > Hi,
+ > 
+ > On 5/22/22 9:23 PM, Li Chen wrote:
+ > > From: Li Chen <lchen@ambarella.com>
+ > > 
+ > > We have set/clear/test operations for regmap, but not for regmap_field yet.
+ > > So let's introduce regmap_field helpers too.
+ > > 
+ > > In many instances regmap_field_update_bits() is used for simple bit setting
+ > > and clearing. In these cases the last argument is redundant and we can
+ > > hide it with a static inline function.
+ > > 
+ > > This adds three new helpers for simple bit operations: set_bits,
+ > > clear_bits and test_bits (the last one defined as a regular function).
+ > > 
+ > > Signed-off-by: Li Chen <lchen@ambarella.com>
+ > > ---
+ > >  drivers/base/regmap/regmap.c | 22 +++++++++++++++++++++
+ > >  include/linux/regmap.h       | 37 ++++++++++++++++++++++++++++++++++++
+ > >  2 files changed, 59 insertions(+)
+ > > 
+ > > diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+ > > index 5e12f7cb5147..a37d6041b7bd 100644
+ > > --- a/drivers/base/regmap/regmap.c
+ > > +++ b/drivers/base/regmap/regmap.c
+ > > @@ -2208,6 +2208,28 @@ int regmap_field_update_bits_base(struct regmap_field *field,
+ > >  }
+ > >  EXPORT_SYMBOL_GPL(regmap_field_update_bits_base);
+ > >  
+ > > +/**
+ > > + * regmap_field_test_bits() - Check if all specified bits are set in a
+ > > + *                            register field.
+ > > + *
+ > > + * @field: Register field to operate on
+ > > + * @bits: Bits to test
+ > > + *
+ > > + * Returns -1 if the underlying regmap_field_read() fails, 0 if at least one of the
+ > > + * tested bits is not set and 1 if all tested bits are set.
+ > > + */
+ > > +int regmap_field_test_bits(struct regmap_field *field, unsigned int bits)
+ > > +{
+ > > +    unsigned int val, ret;
+ > > +
+ > > +    ret = regmap_field_read(field, &val);
+ > > +    if (ret)
+ > > +        return ret;
+ > > +
+ > > +    return (val & bits) == bits;
+ > > +}
+ > > +EXPORT_SYMBOL_GPL(regmap_field_test_bits);
+ > > +
+ > >  /**
+ > >   * regmap_fields_update_bits_base() - Perform a read/modify/write cycle a
+ > >   *                                    register field with port ID
+ > > diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+ > > index de81a94d7b30..10b410734d9e 100644
+ > > --- a/include/linux/regmap.h
+ > > +++ b/include/linux/regmap.h
+ > > @@ -1324,6 +1324,22 @@ static inline int regmap_field_update_bits(struct regmap_field *field,
+ > >                           NULL, false, false);
+ > >  }
+ > >  
+ > > +static inline int regmap_field_set_bits(struct regmap_field *field,
+ > > +                    unsigned int bits)
+ > > +{
+ > > +    return regmap_field_update_bits_base(field, bits, 0, NULL, false,
+ > > +                         false);
+ > > +}
+ > > +
+ > > +static inline int regmap_field_clear_bits(struct regmap_field *field,
+ > > +                      unsigned int bits)
+ > > +{
+ > > +    return regmap_field_update_bits_base(field, bits, bits, NULL, false,
+ > > +                         false);
+ > 
+ > The contents of these two functions are swapped when compared to their names.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Li Chen <lchen@ambarella.com>
----
- drivers/pinctrl/pinctrl-st.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+Thanks for spotting this out!
+Fixed in v3.
 
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index 0fea71fd9a00..198b4a9d263b 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -573,23 +573,18 @@ static void st_pinconf_set_retime_dedicated(struct st_pinctrl *info,
- static void st_pinconf_get_direction(struct st_pio_control *pc,
- 	int pin, unsigned long *config)
- {
--	unsigned int oe_value, pu_value, od_value;
--
- 	if (pc->oe) {
--		regmap_field_read(pc->oe, &oe_value);
--		if (oe_value & BIT(pin))
-+		if (regmap_field_test_bits(pc->oe, BIT(pin)))
- 			ST_PINCONF_PACK_OE(*config);
- 	}
- 
- 	if (pc->pu) {
--		regmap_field_read(pc->pu, &pu_value);
--		if (pu_value & BIT(pin))
-+		if (regmap_field_test_bits(pc->pu, BIT(pin)))
- 			ST_PINCONF_PACK_PU(*config);
- 	}
- 
- 	if (pc->od) {
--		regmap_field_read(pc->od, &od_value);
--		if (od_value & BIT(pin))
-+		if (regmap_field_test_bits(pc->od, BIT(pin)))
- 			ST_PINCONF_PACK_OD(*config);
- 	}
- }
-@@ -599,22 +594,22 @@ static int st_pinconf_get_retime_packed(struct st_pinctrl *info,
- {
- 	const struct st_pctl_data *data = info->data;
- 	struct st_retime_packed *rt_p = &pc->rt.rt_p;
--	unsigned int delay_bits, delay, delay0, delay1, val;
-+	unsigned int delay_bits, delay, delay0, delay1;
- 	int output = ST_PINCONF_UNPACK_OE(*config);
- 
--	if (!regmap_field_read(rt_p->retime, &val) && (val & BIT(pin)))
-+	if (!regmap_field_test_bits(rt_p->retime, BIT(pin)))
- 		ST_PINCONF_PACK_RT(*config);
- 
--	if (!regmap_field_read(rt_p->clk1notclk0, &val) && (val & BIT(pin)))
-+	if (!regmap_field_test_bits(rt_p->clk1notclk0, BIT(pin)))
- 		ST_PINCONF_PACK_RT_CLK(*config, 1);
- 
--	if (!regmap_field_read(rt_p->clknotdata, &val) && (val & BIT(pin)))
-+	if (!regmap_field_test_bits(rt_p->clknotdata, BIT(pin)))
- 		ST_PINCONF_PACK_RT_CLKNOTDATA(*config);
- 
--	if (!regmap_field_read(rt_p->double_edge, &val) && (val & BIT(pin)))
-+	if (!regmap_field_test_bits(rt_p->double_edge, BIT(pin)))
- 		ST_PINCONF_PACK_RT_DOUBLE_EDGE(*config);
- 
--	if (!regmap_field_read(rt_p->invertclk, &val) && (val & BIT(pin)))
-+	if (!regmap_field_test_bits(rt_p->invertclk, BIT(pin)))
- 		ST_PINCONF_PACK_RT_INVERTCLK(*config);
- 
- 	regmap_field_read(rt_p->delay_0, &delay0);
--- 
-2.36.1
-
-
+Regards,
+Li
+ > 
+ > Regards,
+ > Samuel
+ > 
+ > > +}
+ > > +
+ > > +int regmap_field_test_bits(struct regmap_field *field, unsigned int bits);
+ > > +
+ > >  static inline int
+ > >  regmap_field_force_update_bits(struct regmap_field *field,
+ > >                     unsigned int mask, unsigned int val)
+ > > @@ -1757,6 +1773,27 @@ regmap_field_force_update_bits(struct regmap_field *field,
+ > >      return -EINVAL;
+ > >  }
+ > >  
+ > > +static inline int regmap_field_set_bits(struct regmap_field *field,
+ > > +                    unsigned int bits)
+ > > +{
+ > > +    WARN_ONCE(1, "regmap API is disabled");
+ > > +    return -EINVAL;
+ > > +}
+ > > +
+ > > +static inline int regmap_field_clear_bits(struct regmap_field *field,
+ > > +                      unsigned int bits)
+ > > +{
+ > > +    WARN_ONCE(1, "regmap API is disabled");
+ > > +    return -EINVAL;
+ > > +}
+ > > +
+ > > +static inline int regmap_field_test_bits(struct regmap_field *field,
+ > > +                     unsigned int bits)
+ > > +{
+ > > +    WARN_ONCE(1, "regmap API is disabled");
+ > > +    return -EINVAL;
+ > > +}
+ > > +
+ > >  static inline int regmap_fields_write(struct regmap_field *field,
+ > >                        unsigned int id, unsigned int val)
+ > >  {
+ > > 
+ > 
+ > 
