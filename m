@@ -2,53 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1C25530786
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 04:07:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CFB953079B
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 May 2022 04:23:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352441AbiEWCGf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 22 May 2022 22:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        id S230191AbiEWCXe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 22 May 2022 22:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352747AbiEWCFT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 May 2022 22:05:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AB93AA52;
-        Sun, 22 May 2022 19:04:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 98645B80E91;
-        Mon, 23 May 2022 02:04:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F92C34113;
-        Mon, 23 May 2022 02:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653271494;
-        bh=Dl7vb3MilvTiwLd3lJm+1EX8DNBV+Tisqtx2al63TnI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sJRHN4GnFpmzbQqrmnxRoDl9+Qb2krpO131H3pkbHTpfVXP7VYGokTqu9BYsntRdn
-         zQmJMk6gQRPTcQ4cnEwBjqecrSx0Wku2FrtQS92Y35G5O04uBB5oBTO3D7o7Pc2DJF
-         r6S+eXREGClesmwZNzV0FnbY88zuVWZlGnzSS+JG3DO6309pDiHJa0lOVH4eLifEpP
-         lvYnzoQBn0l7Kdbux14mAAC7GVz0b4j1fEsP9896wXibhVF0kqTgOTHI8urVb07xTp
-         Tf5ATs3mXXdlWW0CgDtUyC+cWE4ElhMHA8xExDDdqUXwMS6p9j7+OzEfoGkjIc4OLR
-         a9K9xe+kqL19w==
-From:   Miguel Ojeda <ojeda@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: [PATCH v7 24/25] [RFC] drivers: gpio: PrimeCell PL061 in Rust
-Date:   Mon, 23 May 2022 04:01:37 +0200
-Message-Id: <20220523020209.11810-25-ojeda@kernel.org>
-In-Reply-To: <20220523020209.11810-1-ojeda@kernel.org>
-References: <20220523020209.11810-1-ojeda@kernel.org>
+        with ESMTP id S229725AbiEWCXa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 May 2022 22:23:30 -0400
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBEF236333;
+        Sun, 22 May 2022 19:23:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1653272559; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=iZSGIfnqE+bHAhHjujSRSO64D3YMEopKfjoLrPBx/j+pVorx4d891upzoNcpEnu/3xBxC2HtyoaFckMKe4pRLyb4Vh4ksnB3NfZBEGazgaFB3jH8bOscdV2ZeJlPm7kVlt86+Tpbt3By3rpoyr9fofm/t7ZJ9l9WG1JV6SMIja8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1653272559; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=/bikDoNadTZ6sMn+hHaOJW6uJ31maMd/Si31cdfcYis=; 
+        b=mtNsFq2m9oASdzOCE4xAc8wVe9hzu6Dah2I8GNSooPeT6r89fI4FAmsLZseQzCWgbG15ICJc8bcH1ZGhjgAtMg4brjlngWGV8W2Lgbta5Ifmkz/USBHqa385FpSi+9SoN1blvMH1jqSdp1HYFy/zpMqxffCRxmU8yeOsBrxiQ1s=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zohomail.com;
+        spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
+        dmarc=pass header.from=<lchen.firstlove@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1653272559;
+        s=zm2022; d=zohomail.com; i=lchen.firstlove@zohomail.com;
+        h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
+        bh=/bikDoNadTZ6sMn+hHaOJW6uJ31maMd/Si31cdfcYis=;
+        b=E6xmZ+EqL0V0hv93+SPFeB7j+QXdg23pFjfOgdtgg0shs5+TPxhUQhzx/BMocvLb
+        N/wJBwinggrtDGcO2RjphCYE/nUb1AR7qG+iXBiO/yZvKEW2CTTLvn/wlg7cWYo20UZ
+        mL4j+AjMDOkQzmvvnBpr9l9/KJkk9mOvf1kmCSyA=
+Received: from mail.zoho.com by mx.zohomail.com
+        with SMTP id 1653272557856227.86815470753436; Sun, 22 May 2022 19:22:37 -0700 (PDT)
+Received: from  [45.12.140.94] by mail.zoho.com
+        with HTTP;Sun, 22 May 2022 19:22:37 -0700 (PDT)
+Date:   Sun, 22 May 2022 19:22:37 -0700
+From:   Li Chen <lchen.firstlove@zohomail.com>
+To:     "Mark Brown" <broonie@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-gpio" <linux-gpio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
+        "Patrice Chotard" <patrice.chotard@foss.st.com>,
+        "linux-sunxi" <linux-sunxi@lists.linux.dev>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>, "Chen-Yu Tsai" <wens@csie.org>,
+        "Jernej Skrabec" <jernej.skrabec@gmail.com>,
+        "Samuel Holland" <samuel@sholland.org>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>
+Message-ID: <180eeb93909.12110e2de60158.391061173597432851@zohomail.com>
+In-Reply-To: <180e702a15f.e737e37e45859.3135149506136486394@zohomail.com>
+References: <180e702a15f.e737e37e45859.3135149506136486394@zohomail.com>
+Subject: [PATCH v2 0/4] Add regmap_field helpers for simple bit operations
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr0801122679ddfae04c50b5b33a6dca3600004477de8be21dc9306b7d1a0f2b80457038f61e60c8282682:zu08011227d64192b8e6f9589b71d11c610000c79bf4f25f6fa4ca04288fd5a467da0b9525b5b9612b2ba4de:rf0801122c8ab4b92b865059789a955cd900009791a4b0c70d2d1d6a9c8ab15d12e8f8f7024cd3f1bb54c7d5c6c55947f8:ZohoMail
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,432 +74,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Wedson Almeida Filho <wedsonaf@google.com>
+From: Li Chen <lchen@ambarella.com>
 
-A port to Rust of the PrimeCell PL061 GPIO driver.
+This series proposes to add simple bit operations for setting, clearing
+and testing specific bits with regmap_field.
 
-This module is a work in progress and will be sent for review later
-on, as well as separately from the Rust support.
+Li Chen (4):
+  regmap: provide regmap_field helpers for simple bit operations
+  ASoC: sunxi: Use {regmap/regmap_field}_{set/clear}_bits helpers
+  pinctrl: bcm: Use regmap_field_{set/clear}_bits helpers
+  pinctrl: st: Switch to use regmap_field_test_bits
 
-However, it is included to show how an actual working module
-written in Rust may look like.
+Changelogs:
+v2: fix regmap_field_test_bits compile error in drivers/pinctrl/pinctrl-st.c
 
-Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- drivers/gpio/Kconfig            |   8 +
- drivers/gpio/Makefile           |   1 +
- drivers/gpio/gpio_pl061_rust.rs | 370 ++++++++++++++++++++++++++++++++
- 3 files changed, 379 insertions(+)
- create mode 100644 drivers/gpio/gpio_pl061_rust.rs
+ drivers/base/regmap/regmap.c          | 22 ++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm6358.c |  2 +-
+ drivers/pinctrl/pinctrl-st.c          | 23 ++++----
+ include/linux/regmap.h                | 37 +++++++++++++
+ sound/soc/sunxi/sun4i-codec.c         | 78 +++++++++++----------------
+ 5 files changed, 99 insertions(+), 63 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 45764ec3b2eb..ad99b96f6d79 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -481,6 +481,14 @@ config GPIO_PL061
- 	help
- 	  Say yes here to support the PrimeCell PL061 GPIO device.
- 
-+config GPIO_PL061_RUST
-+	tristate "PrimeCell PL061 GPIO support written in Rust"
-+	depends on ARM_AMBA && RUST
-+	select IRQ_DOMAIN
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say yes here to support the PrimeCell PL061 GPIO device
-+
- config GPIO_PMIC_EIC_SPRD
- 	tristate "Spreadtrum PMIC EIC support"
- 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 14352f6dfe8e..30141fec12be 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -118,6 +118,7 @@ obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
- obj-$(CONFIG_GPIO_PCI_IDIO_16)		+= gpio-pci-idio-16.o
- obj-$(CONFIG_GPIO_PISOSR)		+= gpio-pisosr.o
- obj-$(CONFIG_GPIO_PL061)		+= gpio-pl061.o
-+obj-$(CONFIG_GPIO_PL061_RUST)		+= gpio_pl061_rust.o
- obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+= gpio-pmic-eic-sprd.o
- obj-$(CONFIG_GPIO_PXA)			+= gpio-pxa.o
- obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
-diff --git a/drivers/gpio/gpio_pl061_rust.rs b/drivers/gpio/gpio_pl061_rust.rs
-new file mode 100644
-index 000000000000..908914080442
---- /dev/null
-+++ b/drivers/gpio/gpio_pl061_rust.rs
-@@ -0,0 +1,370 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Driver for the ARM PrimeCell(tm) General Purpose Input/Output (PL061).
-+//!
-+//! Based on the C driver written by Baruch Siach <baruch@tkos.co.il>.
-+
-+use kernel::{
-+    amba, bit, bits_iter, define_amba_id_table, device, gpio,
-+    io_mem::IoMem,
-+    irq::{self, ExtraResult, IrqData, LockedIrqData},
-+    power,
-+    prelude::*,
-+    sync::{RawSpinLock, Ref, RefBorrow},
-+};
-+
-+const GPIODIR: usize = 0x400;
-+const GPIOIS: usize = 0x404;
-+const GPIOIBE: usize = 0x408;
-+const GPIOIEV: usize = 0x40C;
-+const GPIOIE: usize = 0x410;
-+const GPIOMIS: usize = 0x418;
-+const GPIOIC: usize = 0x41C;
-+const GPIO_SIZE: usize = 0x1000;
-+
-+const PL061_GPIO_NR: u16 = 8;
-+
-+#[derive(Default)]
-+struct ContextSaveRegs {
-+    gpio_data: u8,
-+    gpio_dir: u8,
-+    gpio_is: u8,
-+    gpio_ibe: u8,
-+    gpio_iev: u8,
-+    gpio_ie: u8,
-+}
-+
-+#[derive(Default)]
-+struct PL061DataInner {
-+    csave_regs: ContextSaveRegs,
-+}
-+
-+struct PL061Data {
-+    dev: device::Device,
-+    inner: RawSpinLock<PL061DataInner>,
-+}
-+
-+struct PL061Resources {
-+    base: IoMem<GPIO_SIZE>,
-+    parent_irq: u32,
-+}
-+
-+type PL061Registrations = gpio::RegistrationWithIrqChip<PL061Device>;
-+
-+type DeviceData = device::Data<PL061Registrations, PL061Resources, PL061Data>;
-+
-+struct PL061Device;
-+
-+impl gpio::Chip for PL061Device {
-+    type Data = Ref<DeviceData>;
-+
-+    kernel::declare_gpio_chip_operations!(
-+        get_direction,
-+        direction_input,
-+        direction_output,
-+        get,
-+        set
-+    );
-+
-+    fn get_direction(data: RefBorrow<'_, DeviceData>, offset: u32) -> Result<gpio::LineDirection> {
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+        Ok(if pl061.base.readb(GPIODIR) & bit(offset) != 0 {
-+            gpio::LineDirection::Out
-+        } else {
-+            gpio::LineDirection::In
-+        })
-+    }
-+
-+    fn direction_input(data: RefBorrow<'_, DeviceData>, offset: u32) -> Result {
-+        let _guard = data.inner.lock_irqdisable();
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+        let mut gpiodir = pl061.base.readb(GPIODIR);
-+        gpiodir &= !bit(offset);
-+        pl061.base.writeb(gpiodir, GPIODIR);
-+        Ok(())
-+    }
-+
-+    fn direction_output(data: RefBorrow<'_, DeviceData>, offset: u32, value: bool) -> Result {
-+        let woffset = bit(offset + 2).into();
-+        let _guard = data.inner.lock_irqdisable();
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+        pl061.base.try_writeb((value as u8) << offset, woffset)?;
-+        let mut gpiodir = pl061.base.readb(GPIODIR);
-+        gpiodir |= bit(offset);
-+        pl061.base.writeb(gpiodir, GPIODIR);
-+
-+        // gpio value is set again, because pl061 doesn't allow to set value of a gpio pin before
-+        // configuring it in OUT mode.
-+        pl061.base.try_writeb((value as u8) << offset, woffset)?;
-+        Ok(())
-+    }
-+
-+    fn get(data: RefBorrow<'_, DeviceData>, offset: u32) -> Result<bool> {
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+        Ok(pl061.base.try_readb(bit(offset + 2).into())? != 0)
-+    }
-+
-+    fn set(data: RefBorrow<'_, DeviceData>, offset: u32, value: bool) {
-+        if let Some(pl061) = data.resources() {
-+            let woffset = bit(offset + 2).into();
-+            let _ = pl061.base.try_writeb((value as u8) << offset, woffset);
-+        }
-+    }
-+}
-+
-+impl gpio::ChipWithIrqChip for PL061Device {
-+    fn handle_irq_flow(
-+        data: RefBorrow<'_, DeviceData>,
-+        desc: &irq::Descriptor,
-+        domain: &irq::Domain,
-+    ) {
-+        let chained = desc.enter_chained();
-+
-+        if let Some(pl061) = data.resources() {
-+            let pending = pl061.base.readb(GPIOMIS);
-+            for offset in bits_iter(pending) {
-+                domain.generic_handle_chained(offset, &chained);
-+            }
-+        }
-+    }
-+}
-+
-+impl irq::Chip for PL061Device {
-+    type Data = Ref<DeviceData>;
-+
-+    kernel::declare_irq_chip_operations!(set_type, set_wake);
-+
-+    fn set_type(
-+        data: RefBorrow<'_, DeviceData>,
-+        irq_data: &mut LockedIrqData,
-+        trigger: u32,
-+    ) -> Result<ExtraResult> {
-+        let offset = irq_data.hwirq();
-+        let bit = bit(offset);
-+
-+        if offset >= PL061_GPIO_NR.into() {
-+            return Err(EINVAL);
-+        }
-+
-+        if trigger & (irq::Type::LEVEL_HIGH | irq::Type::LEVEL_LOW) != 0
-+            && trigger & (irq::Type::EDGE_RISING | irq::Type::EDGE_FALLING) != 0
-+        {
-+            dev_err!(
-+                data.dev,
-+                "trying to configure line {} for both level and edge detection, choose one!\n",
-+                offset
-+            );
-+            return Err(EINVAL);
-+        }
-+
-+        let _guard = data.inner.lock_irqdisable();
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+
-+        let mut gpioiev = pl061.base.readb(GPIOIEV);
-+        let mut gpiois = pl061.base.readb(GPIOIS);
-+        let mut gpioibe = pl061.base.readb(GPIOIBE);
-+
-+        if trigger & (irq::Type::LEVEL_HIGH | irq::Type::LEVEL_LOW) != 0 {
-+            let polarity = trigger & irq::Type::LEVEL_HIGH != 0;
-+
-+            // Disable edge detection.
-+            gpioibe &= !bit;
-+            // Enable level detection.
-+            gpiois |= bit;
-+            // Select polarity.
-+            if polarity {
-+                gpioiev |= bit;
-+            } else {
-+                gpioiev &= !bit;
-+            }
-+            irq_data.set_level_handler();
-+            dev_dbg!(
-+                data.dev,
-+                "line {}: IRQ on {} level\n",
-+                offset,
-+                if polarity { "HIGH" } else { "LOW" }
-+            );
-+        } else if (trigger & irq::Type::EDGE_BOTH) == irq::Type::EDGE_BOTH {
-+            // Disable level detection.
-+            gpiois &= !bit;
-+            // Select both edges, settings this makes GPIOEV be ignored.
-+            gpioibe |= bit;
-+            irq_data.set_edge_handler();
-+            dev_dbg!(data.dev, "line {}: IRQ on both edges\n", offset);
-+        } else if trigger & (irq::Type::EDGE_RISING | irq::Type::EDGE_FALLING) != 0 {
-+            let rising = trigger & irq::Type::EDGE_RISING != 0;
-+
-+            // Disable level detection.
-+            gpiois &= !bit;
-+            // Clear detection on both edges.
-+            gpioibe &= !bit;
-+            // Select edge.
-+            if rising {
-+                gpioiev |= bit;
-+            } else {
-+                gpioiev &= !bit;
-+            }
-+            irq_data.set_edge_handler();
-+            dev_dbg!(
-+                data.dev,
-+                "line {}: IRQ on {} edge\n",
-+                offset,
-+                if rising { "RISING" } else { "FALLING}" }
-+            );
-+        } else {
-+            // No trigger: disable everything.
-+            gpiois &= !bit;
-+            gpioibe &= !bit;
-+            gpioiev &= !bit;
-+            irq_data.set_bad_handler();
-+            dev_warn!(data.dev, "no trigger selected for line {}\n", offset);
-+        }
-+
-+        pl061.base.writeb(gpiois, GPIOIS);
-+        pl061.base.writeb(gpioibe, GPIOIBE);
-+        pl061.base.writeb(gpioiev, GPIOIEV);
-+
-+        Ok(ExtraResult::None)
-+    }
-+
-+    fn mask(data: RefBorrow<'_, DeviceData>, irq_data: &IrqData) {
-+        let mask = bit(irq_data.hwirq() % irq::HwNumber::from(PL061_GPIO_NR));
-+        let _guard = data.inner.lock();
-+        if let Some(pl061) = data.resources() {
-+            let gpioie = pl061.base.readb(GPIOIE) & !mask;
-+            pl061.base.writeb(gpioie, GPIOIE);
-+        }
-+    }
-+
-+    fn unmask(data: RefBorrow<'_, DeviceData>, irq_data: &IrqData) {
-+        let mask = bit(irq_data.hwirq() % irq::HwNumber::from(PL061_GPIO_NR));
-+        let _guard = data.inner.lock();
-+        if let Some(pl061) = data.resources() {
-+            let gpioie = pl061.base.readb(GPIOIE) | mask;
-+            pl061.base.writeb(gpioie, GPIOIE);
-+        }
-+    }
-+
-+    // This gets called from the edge IRQ handler to ACK the edge IRQ in the GPIOIC
-+    // (interrupt-clear) register. For level IRQs this is not needed: these go away when the level
-+    // signal goes away.
-+    fn ack(data: RefBorrow<'_, DeviceData>, irq_data: &IrqData) {
-+        let mask = bit(irq_data.hwirq() % irq::HwNumber::from(PL061_GPIO_NR));
-+        let _guard = data.inner.lock();
-+        if let Some(pl061) = data.resources() {
-+            pl061.base.writeb(mask.into(), GPIOIC);
-+        }
-+    }
-+
-+    fn set_wake(data: RefBorrow<'_, DeviceData>, _irq_data: &IrqData, on: bool) -> Result {
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+        irq::set_wake(pl061.parent_irq, on)
-+    }
-+}
-+
-+impl amba::Driver for PL061Device {
-+    type Data = Ref<DeviceData>;
-+    type PowerOps = Self;
-+
-+    define_amba_id_table! {(), [
-+        ({id: 0x00041061, mask: 0x000fffff}, None),
-+    ]}
-+
-+    fn probe(dev: &mut amba::Device, _data: Option<&Self::IdInfo>) -> Result<Ref<DeviceData>> {
-+        let res = dev.take_resource().ok_or(ENXIO)?;
-+        let irq = dev.irq(0).ok_or(ENXIO)?;
-+
-+        let mut data = kernel::new_device_data!(
-+            gpio::RegistrationWithIrqChip::new(),
-+            PL061Resources {
-+                // SAFETY: This device doesn't support DMA.
-+                base: unsafe { IoMem::try_new(res)? },
-+                parent_irq: irq,
-+            },
-+            PL061Data {
-+                dev: device::Device::from_dev(dev),
-+                // SAFETY: We call `rawspinlock_init` below.
-+                inner: unsafe { RawSpinLock::new(PL061DataInner::default()) },
-+            },
-+            "PL061::Registrations"
-+        )?;
-+
-+        // SAFETY: General part of the data is pinned when `data` is.
-+        let gen_inner = unsafe { data.as_mut().map_unchecked_mut(|d| &mut (**d).inner) };
-+        kernel::rawspinlock_init!(gen_inner, "PL061Data::inner");
-+
-+        let data = Ref::<DeviceData>::from(data);
-+
-+        data.resources().ok_or(ENXIO)?.base.writeb(0, GPIOIE); // disable irqs
-+
-+        data.registrations()
-+            .ok_or(ENXIO)?
-+            .as_pinned_mut()
-+            .register::<Self>(PL061_GPIO_NR, None, dev, data.clone(), irq)?;
-+
-+        dev_info!(data.dev, "PL061 GPIO chip registered\n");
-+
-+        Ok(data)
-+    }
-+}
-+
-+impl power::Operations for PL061Device {
-+    type Data = Ref<DeviceData>;
-+
-+    fn suspend(data: RefBorrow<'_, DeviceData>) -> Result {
-+        let mut inner = data.inner.lock();
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+        inner.csave_regs.gpio_data = 0;
-+        inner.csave_regs.gpio_dir = pl061.base.readb(GPIODIR);
-+        inner.csave_regs.gpio_is = pl061.base.readb(GPIOIS);
-+        inner.csave_regs.gpio_ibe = pl061.base.readb(GPIOIBE);
-+        inner.csave_regs.gpio_iev = pl061.base.readb(GPIOIEV);
-+        inner.csave_regs.gpio_ie = pl061.base.readb(GPIOIE);
-+
-+        for offset in 0..PL061_GPIO_NR {
-+            if inner.csave_regs.gpio_dir & bit(offset) != 0 {
-+                if let Ok(v) = <Self as gpio::Chip>::get(data, offset.into()) {
-+                    inner.csave_regs.gpio_data |= (v as u8) << offset;
-+                }
-+            }
-+        }
-+
-+        Ok(())
-+    }
-+
-+    fn resume(data: RefBorrow<'_, DeviceData>) -> Result {
-+        let inner = data.inner.lock();
-+        let pl061 = data.resources().ok_or(ENXIO)?;
-+
-+        for offset in 0..PL061_GPIO_NR {
-+            if inner.csave_regs.gpio_dir & bit(offset) != 0 {
-+                let value = inner.csave_regs.gpio_data & bit(offset) != 0;
-+                let _ = <Self as gpio::Chip>::direction_output(data, offset.into(), value);
-+            } else {
-+                let _ = <Self as gpio::Chip>::direction_input(data, offset.into());
-+            }
-+        }
-+
-+        pl061.base.writeb(inner.csave_regs.gpio_is, GPIOIS);
-+        pl061.base.writeb(inner.csave_regs.gpio_ibe, GPIOIBE);
-+        pl061.base.writeb(inner.csave_regs.gpio_iev, GPIOIEV);
-+        pl061.base.writeb(inner.csave_regs.gpio_ie, GPIOIE);
-+
-+        Ok(())
-+    }
-+
-+    fn freeze(data: RefBorrow<'_, DeviceData>) -> Result {
-+        Self::suspend(data)
-+    }
-+
-+    fn restore(data: RefBorrow<'_, DeviceData>) -> Result {
-+        Self::resume(data)
-+    }
-+}
-+
-+module_amba_driver! {
-+    type: PL061Device,
-+    name: b"pl061_gpio",
-+    author: b"Wedson Almeida Filho",
-+    license: b"GPL",
-+}
 -- 
 2.36.1
+
 
