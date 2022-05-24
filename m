@@ -2,144 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E2EF532622
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 11:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1D54532723
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 12:14:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234909AbiEXJHP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 May 2022 05:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56218 "EHLO
+        id S233977AbiEXKN5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 May 2022 06:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234754AbiEXJHO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 05:07:14 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D7767D05;
-        Tue, 24 May 2022 02:07:12 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id p190so2851945ybg.4;
-        Tue, 24 May 2022 02:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Tx1BWROKP0/4lNYHpybGvkaMQyge6iiz9PNPvD4+qY=;
-        b=aQwUz6+ffoqY1v3jszLqvLwqJB7nzfjWfj+InzeqhN8GQDyYS/b88yLLRogzI3NS01
-         lH6OUz7zukDBCM5O4GlPa2gpHESJc2pU7dJExaOE0VxauQQtzCXHrHxvRzn71j/Y/qR4
-         tdv19sKBPmX5AJPpFh2A7SWjZkiUcWBHd0iEIB0iVZcGEfWXVyp0di3fmvAKZubV8ToU
-         KU6XTCXHpxLEubIapRDOEhbO0/ShqLms1N/zrNDomIRyvjy3iBfOqofJFqmn+KPH2Bde
-         utKp4yORLjuLScNdH0OPOWxD1uJSynt0kElv3Z3NyYpfxu7kjYgtf4Toih2xyLKk6b1n
-         F1hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Tx1BWROKP0/4lNYHpybGvkaMQyge6iiz9PNPvD4+qY=;
-        b=nKlrVyy0IXzVkaOjJFt1fHxLIULxhm4ZDdsxqKWYqMInTCgyC4/F8f+yVVCYlX28f3
-         7o7qdRDbOlF3UHNZ4rO5XgJfIyRRaYpnAGUaJXkB378W8GUb1xWJvIl4DtuA+3aV+mJI
-         GYsWt+oZwhtfXmBDsJ+UQRPPbu7sW3oPztCEHUHq6uPMdhYh31J85jN/57KKYzQjOrXP
-         F+1qLSY7WD3140CVNDFhCPmBpnkFw/kVaValpJox8YC8zuhV4X3mr83nqKxWXCm4LjN1
-         j9BuA0QQ76MMN7Sm2vyOCzPDLaXVhcj3qT6Kwd1w0IEdOkvcUWLB6MQI4P8PlgkjkS6P
-         3CMw==
-X-Gm-Message-State: AOAM530b9EUunIHdMb7T5aYabFFJKdtrOYQybUZINECzt8sQwdhDRgSV
-        fHFbaDFC/3VH3mfumJZCk6dr8vmpjtSDY3dgWIM=
-X-Google-Smtp-Source: ABdhPJzM4ZpMtr20WZp/sxrmVJUSKAmBdig4nKMcgZaRdipxdlpEOiglvaxJZe+JMhHfONlZuQBKYRWKkWTKFJNLv9E=
-X-Received: by 2002:a5b:888:0:b0:651:ac74:d084 with SMTP id
- e8-20020a5b0888000000b00651ac74d084mr2445569ybq.218.1653383231923; Tue, 24
- May 2022 02:07:11 -0700 (PDT)
+        with ESMTP id S231207AbiEXKN4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 06:13:56 -0400
+X-Greylist: delayed 2118 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 24 May 2022 03:13:56 PDT
+Received: from box.indicandustries.com (hwsrv-970840.hostwindsdns.com [104.168.149.109])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B497CDDC
+        for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 03:13:56 -0700 (PDT)
+Received: from authenticated-user (box.indicandustries.com [104.168.149.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by box.indicandustries.com (Postfix) with ESMTPSA id 59400108741
+        for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 03:25:26 -0600 (MDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=box.indicandustries.com; s=mail; t=1653384326;
+        bh=V6VCn7WEbqHjVVQ20/+SYu6rwS1WmTHcxX88g+j430s=;
+        h=Reply-To:From:To:Subject:Date:From;
+        b=kBb65yHY7G+zw/TYo6KttUwZ/ThM3b2EMMQcnKuA/0jolPc0owjxUocEWC/859gGq
+         6O7xry9bdeTWWgRSR4Jef9d35gRIGzIbopDSc4znMhntlRISxG4xtSzMA4hdMPCS18
+         S8PSHPfEA/dy5YEIA8lwp2QMewo35XWEEQQ3xR0V5L9DLfllE09AoprJz4EaI+Um8p
+         X82Ja9qcVypTy4N2IbZkVPoDNYutFNYKm7YMbuEjaxDGAmiBdwJuh/0GuEnS5X1Cxj
+         89n8TNL4D/pmqKz9/r5IiQkUdWqeHno0DmikJ13pkiJx+8LqjhKfntgHWiftxjWYOq
+         bW//DObwxou+w==
+Reply-To: amjalia90@gmail.com
+From:   amjad.ali@box.indicandustries.com
+To:     linux-gpio@vger.kernel.org
+Subject: Hello Sir, I seek your urgent consideration.
+Date:   24 May 2022 11:25:25 +0200
+Message-ID: <20220524112525.739075A41EEEF5D1@box.indicandustries.com>
 MIME-Version: 1.0
-References: <20220523174238.28942-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220523174238.28942-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CACRpkdYaWmD9PTcGgeP5MTe9bXMgmf=tUSDBQ-4VxSfL4qkoeQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYaWmD9PTcGgeP5MTe9bXMgmf=tUSDBQ-4VxSfL4qkoeQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 24 May 2022 10:06:46 +0100
-Message-ID: <CA+V-a8s+dWMwL6zQnWwFAa15sMgPGYrW+GZ=WhSW1tPxgpLOqA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] gpio: gpiolib: Allow free() callback to be overridden
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=3.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hello,
 
-Thank you for the feedback.
+Greetings? I am Amjad. I work with a leading Bio Firm.  Due to=20
+the setbacks of the pandemic, my company has opened a bid in=20
+search of new suppliers for basic raw materials needed in=20
+production.
 
-On Tue, May 24, 2022 at 9:54 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, May 23, 2022 at 7:43 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> > Allow free() callback to be overridden from irq_domain_ops for
-> > hierarchical chips.
-> >
-> > This allows drivers to free up resources which are allocated during
-> > child_to_parent_hwirq()/populate_parent_alloc_arg() callbacks.
-> >
-> > On Renesas RZ/G2L platform a bitmap is maintained for TINT slots, a slot
-> > is allocated in child_to_parent_hwirq() callback which is freed up in free
-> > callback hence this override.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> So that function today looks like this:
->
-> static void gpiochip_hierarchy_setup_domain_ops(struct irq_domain_ops *ops)
-> {
->         ops->activate = gpiochip_irq_domain_activate;
->         ops->deactivate = gpiochip_irq_domain_deactivate;
->         ops->alloc = gpiochip_hierarchy_irq_domain_alloc;
->         ops->free = irq_domain_free_irqs_common;
->
->         /*
->          * We only allow overriding the translate() function for
->          * hierarchical chips, and this should only be done if the user
->          * really need something other than 1:1 translation.
->          */
->         if (!ops->translate)
->                 ops->translate = gpiochip_hierarchy_irq_domain_translate;
-> }
->
-> (...)
-> -       ops->free = irq_domain_free_irqs_common;
-> (...)
-> > +       if (!ops->free)
-> > +               ops->free = irq_domain_free_irqs_common;
->
-> Marc Z is working on cleaning up the way that gpiolib is (ab)using
-> irqchips. We definitely need his ACK if we do things like this.
-> This doesn't look like one of the big offenders to me, but I want
-> to make sure we don't create new problems while Marc is trying
-> to solve the old ones.
->
-Agreed, I had a discussion with Marc on v3 series [0].
+I am seeking a representative=C2=A0as I am a staff, I can not be=20
+involved directly. It may not be your area of work but the=20
+profits are great and I will guide you through. I have already=20
+sourced a local supplier for this. I only need a reliable=20
+representative.
 
-[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20220511183210.5248-4-prabhakar.mahadev-lad.rj@bp.renesas.com/
+Please get back to me so I can explain this in full.
 
-Cheers,
-Prabhakar
+Amjad
