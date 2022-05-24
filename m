@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F09532E2E
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 18:02:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2717F532E59
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 18:03:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239424AbiEXQBo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 May 2022 12:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46408 "EHLO
+        id S239560AbiEXQCn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 May 2022 12:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239546AbiEXQBC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 12:01:02 -0400
+        with ESMTP id S239490AbiEXQCE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 12:02:04 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2A20A76F3;
-        Tue, 24 May 2022 09:00:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94D825D3;
+        Tue, 24 May 2022 09:01:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B556461777;
-        Tue, 24 May 2022 16:00:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B219BC34115;
-        Tue, 24 May 2022 16:00:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 996156175C;
+        Tue, 24 May 2022 16:01:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCED8C34116;
+        Tue, 24 May 2022 16:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653408039;
+        s=k20201202; t=1653408065;
         bh=+8/rSL0dktqyZfvWABToCYxgk0Wct5z+yxpZFfy6gak=;
         h=From:To:Cc:Subject:Date:From;
-        b=BqxUHNAoWYAoRxC/+FRm9UBwYUD7R3Si3XKKQ41sh06M4L3Tu7VqDupaSrf1ttt0h
-         FZawlEUUjezWAzLay50Ee9g03U083hNJVT41oLwAE234zmScUc0etmElV2ieUg/pwD
-         9G1i6SpTlKZGKJSdKn7Xr8c4uvsiZDc7FT58XrT+Rwg0ZlZ4bSQpKd3gAlrsQTmSlN
-         w7g7Ae7zTt3fABNcnLp/V+oTu9VQbdEZk46dPp8NCZmUj70Z88RhLJbgti+KPKf3Je
-         gGPyLqVp4uLYIj7SzKxPbyviJIu7bUc3lmNPD1Lvw9t2//BwV6WT8K/HZ1uGyy5+0b
-         YQ4XjApqkIvXA==
+        b=QgDQbHQ/wXB1z7xvhmrgK5avhksMYuyJUyR8c/YolT+M56Jl2BQzU2tcZRQHaEbi8
+         IjLOFmtfqQ+GBYG9fWoABoSy0wlJhb6OPJ1E9ZpejLxeHdhlyATfbpwy1yTGbqZ4GE
+         lk+zyS8UfcQ4a13yGU/P31pq0JgSc3czURT4GCwTdRqKk/KoZTaZLgCZfu3myTxL7I
+         9SjBou4MtiqgsX+nciToaO2BsJontW4FP8fz6blQ8Q92f6+CvKEGrm132tjxm+kEr1
+         6x1Ni0BejF/VlzC3oQjp658eRsdAvUDzx+r3QtiXiMD1iBbwYU8Ub6u7TWl0qboHkO
+         LTWNW+E176MEw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     IotaHydrae <writeforever@foxmail.com>,
@@ -40,9 +40,9 @@ Cc:     IotaHydrae <writeforever@foxmail.com>,
         jernej.skrabec@gmail.com, samuel@sholland.org,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.10 1/8] pinctrl: sunxi: fix f1c100s uart2 function
-Date:   Tue, 24 May 2022 12:00:28 -0400
-Message-Id: <20220524160035.827109-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 1/5] pinctrl: sunxi: fix f1c100s uart2 function
+Date:   Tue, 24 May 2022 12:00:57 -0400
+Message-Id: <20220524160102.827227-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 X-stable: review
