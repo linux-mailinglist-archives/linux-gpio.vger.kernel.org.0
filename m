@@ -2,42 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F09CE532443
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 09:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC6F4532444
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 09:40:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234031AbiEXHko (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 May 2022 03:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
+        id S231756AbiEXHkq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 May 2022 03:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231756AbiEXHkn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 03:40:43 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2075.outbound.protection.outlook.com [40.107.237.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093FA7354E
+        with ESMTP id S234280AbiEXHko (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 03:40:44 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2067.outbound.protection.outlook.com [40.107.93.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2168895A29
         for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 00:40:42 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gn2snXWNP9OEJrwms4xFHL2yGP+3tTAvR5n6KwhY5h3LOWIkyKrd6/r2L4Hfla8EXeODbDxNrgSgcgywo2OYxMrQfq9Trfvl7bXdEWdcS/wKr30DyWsZsA1M0eE3K7MdikE/CutgeqJx2p+jxa25L0pxb2ZOrIouMXEzGZqT0bXu9hNRYubS8LQNMkff4bSTOPWPhZSUwt5FiuUrO1bPjOkxgxHtqupz8vKD/YsbOLa0FwinX++b/zgWa0yh86xunV0OpTwC36t2E5GrjsP0faDV4DS98s3uDqIWL9CIG3iUMYfE98wKvckAqXWxDlaLRsxvYOWTAaYmwNzIexmItA==
+ b=ZdhMSIt+xjB2+ei+ANz64C7gbDHblg+4CrYu4H7b6SgzEfsytQ9FcXj5QQgLtum01DgCc27wQ1pG/8Kcga9kmOnLHxu9Xbq1iZaSV4dB2wL7ReZvM5pQKkb+zbIohhzRK5VB0PDHXLOp9Wc3tugCYM2oaKgrXlKz6D/YWgrP0X4hA6taFhpLIJaIuCNCQA88q8uhox1aYUjqANzByIvPaMW2wy0z3nrFeHXZEXLu/NYe4LgUNALe9XtZP2lcp7jcb+GOtc+w2TQ6EfuZHu6dwbHnpH2+RRB8HNIbYJwHVwBtjB+q2xoDgXIz85oosLKhorfYPppYepjBwINiu9Yibw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IWxDuNKP5WSg36/pM+6DIVx7RPTpxiMykrn21I6wkLE=;
- b=UWU5jBDQvCE+NyvwCITQohhCvWHWAzo1ZsNuoOUyYLxoeGaEligvOqyfB9fVVN3T9Tlos4EJWXR0nK7rb+CvFgutgSzYMvZec+I/DWZ60eGo6pbrblxWJzscCrlEHuSEamaYOtGgpPb3c63GnnkR1V4rrYN63OnRSjh8N8NOrF9OybfjUQ61PXlTyBBegdNrCGUYyTURdFwrOwy92YjmulBAlOFphAz7pyIKS5mQMJ6mGQOIiV9nd6OQNRFHsRhxAt703Dn+om3BLiij1Qfj9JmP3jtkz5UHQsx6VkiYskBBNQlN1yrs+RXmnYPxzWodqRF+2Q5alyMzC6YDXgqggw==
+ bh=qW/GaJlLEfur3LPu52uk6nPY43075KEAGPMwkEnOMME=;
+ b=hnSdeY2/ICTf1ZohQLxxaAebIYkKxkWyZph46xH6RyV88qK0ttlNEb6IXELqJNUIhGpryaEXrkJOfniTYDy0wxrrdj1E34baoHOiATXhGJe3yYWldxwYxhn+b6j+h4wL2asK3a8Dc6AyTxELzkL8Rh93i9LEngoyf5m4MvZGKvWNVJ2hdJ4Ny1D6K08gZzgREBaifrmdjDQQ8B9+VRdl3RCPbdyKvOwPc1KJrMeXfT4I67l6NiSGs6BPB7MXRnpdoGKtt0beRp8LdTZwZ8IKhnZ8vVFCXkSvNmYjaum9Ey/AWghYI4uobuMC/tat8JyzMfqQ9m0XR1eaHQZVOy33qw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IWxDuNKP5WSg36/pM+6DIVx7RPTpxiMykrn21I6wkLE=;
- b=dhCEJOzz0jh2Q+JBq0/wgMZFvl57a1KJMNpyBF+8NKB9+qG87y6i4yWNp+vjzJxYwiwWZXG1nADHGZFmriw1VRk7oYoVX0Hv4bq7bQV8cpWGompe3/6db1NAH1tQA5290IKSQcKaPrdz4zKTsFuG00wHqPgi+q1O3LQhFe7AYc0=
-Received: from MWHPR04CA0055.namprd04.prod.outlook.com (2603:10b6:300:6c::17)
- by CY5PR12MB6621.namprd12.prod.outlook.com (2603:10b6:930:43::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.23; Tue, 24 May
+ bh=qW/GaJlLEfur3LPu52uk6nPY43075KEAGPMwkEnOMME=;
+ b=YcQIElY78/mOXZty3Y+EFqsbWvxGEbNeRVQJkzYo/Y40jD9PNPgKcRVb9xuXZDox6lC59BvV7q8K2yA9FDQRkeSypJH0XLiaXGYBJwpalt0vUczZ4hWal6+yPd4qYeyBOYjtCeY1xG++761Hk8vT0LLmaEhIHwI7uKR2OftR2iU=
+Received: from MWHPR1201CA0010.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::20) by DM6PR12MB4433.namprd12.prod.outlook.com
+ (2603:10b6:5:2a1::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.14; Tue, 24 May
  2022 07:40:39 +0000
-Received: from CO1NAM11FT066.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:6c:cafe::7) by MWHPR04CA0055.outlook.office365.com
- (2603:10b6:300:6c::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.21 via Frontend
+Received: from CO1NAM11FT023.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:301:4a:cafe::22) by MWHPR1201CA0010.outlook.office365.com
+ (2603:10b6:301:4a::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.20 via Frontend
  Transport; Tue, 24 May 2022 07:40:39 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
@@ -46,20 +46,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT066.mail.protection.outlook.com (10.13.175.18) with Microsoft SMTP
+ CO1NAM11FT023.mail.protection.outlook.com (10.13.175.35) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5273.14 via Frontend Transport; Tue, 24 May 2022 07:40:38 +0000
+ 15.20.5273.14 via Frontend Transport; Tue, 24 May 2022 07:40:39 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 24 May
- 2022 02:40:34 -0500
+ 2022 02:40:36 -0500
 From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 To:     <Shyam-sundar.S-k@amd.com>, <linus.walleij@linaro.org>,
         <linux-gpio@vger.kernel.org>
 CC:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH v2 2/3] pinctrl: amd: Get and update IOMUX details
-Date:   Tue, 24 May 2022 13:10:06 +0530
-Message-ID: <20220524074007.2792445-3-Basavaraj.Natikar@amd.com>
+Subject: [PATCH v2 3/3] pinctrl: amd: Implement pinmux functionality
+Date:   Tue, 24 May 2022 13:10:07 +0530
+Message-ID: <20220524074007.2792445-4-Basavaraj.Natikar@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220524074007.2792445-1-Basavaraj.Natikar@amd.com>
 References: <20220524074007.2792445-1-Basavaraj.Natikar@amd.com>
@@ -71,146 +71,1217 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d96fa79d-3e9e-4a34-a89d-08da3d58b2af
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6621:EE_
-X-Microsoft-Antispam-PRVS: <CY5PR12MB66214D1C71C0BBEF001A1727E6D79@CY5PR12MB6621.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 244754ac-d4c5-497a-62cf-08da3d58b2fa
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4433:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR12MB443323502AC030D319BF9584E6D79@DM6PR12MB4433.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zAOJfmpVinTvsg4VL7bPvSZVs8wAfROe6cIdY3nuat3opswFXyza+2xrwSvr4+yBIhYk6aOyrdcpdLbE6bC3ybrctnEyxWySyrZS5yROw+wBU8k+91kVNeHaIXioJCUlZMmHehR+nZZNSmhTCHAzsUNkHjjtN8N9M2/55Pol0CJSF0m7rsI1gEoXd+KMJEcRBxttkbPe+5RMmAr/F8MX6IVDYT/zuQ91bRUPV8dC4xVfTYkaXi2YeV4cIFJ1SieSYiD2ArnK9Dl6pXsCU7FCqAeI0LtlUoTSUYFHvM9YkfDSJLfw1+dn5LAHSnUtj71clxYc9k1XVbdfW/qBMwkeDBfuRL9yBqj0VmnhTICF3TotBtdK16/QGsqLrYBhHbgyjK9jlpAESxNHYXMx89+v4iKiuc79u9Y+iQ7lVbRkLOT1Ca6I30pHM3v2Uv3naA8Jjy/rXzq2jDlEtGuaqOr+dhEDJ5KDEylTS5KVvIg1OWpA6RHp/r6jFN2heKCtr/GY1ALe5OVyadaGowpM7AgetMelv5U71ye8nDL3HzOUi9ax4E4xWGCKLt76R6K7mj5GQUDRup89sh5maUJ7V2vmRgwKId187ZtSJ+PILaZS0IAQ4wF34JkKrzw2iVl4X6QhrvQjp4tPaFZsC8VnQ4WJhB7D1dHz69FEvM8Jf8XG3bexqPUf7Iqc6xbgRfk8BaZLtka7g6z/jml8aqq2+LcqOvNG3aBhl2iuiqubVG4I26I=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(186003)(16526019)(83380400001)(336012)(82310400005)(47076005)(81166007)(356005)(36860700001)(426003)(86362001)(40460700003)(1076003)(7696005)(6666004)(508600001)(110136005)(316002)(70206006)(70586007)(2906002)(2616005)(26005)(4326008)(8676002)(5660300002)(8936002)(36756003)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: UAotKBSqlSsYB6XfUFa9EcLtZnOw9dePUKtI/YIxI45/hPJmqKuOUDw5Y4A1+/CiWq3koZQmsmJ+FUIUyoQwc4uPpBTqyisEnl4e6x0GcHUA6+RV0zgna2DGRP98uLbJSUhmbE+7gOLnpKnKo66nbil/lxM80N3ncv7PQSMizmi2wy456tzhd7m9pRDDOeEvlfSSo3VHpDLTHH6Z00ZBg7TsioBtZ6OkdYfkaYVh/iqadMkuRZai0EUAAbu4BM+J5TrTYujisod9Mbtbjw3rDgYX0GrBTot7KwxaOPX4rwwimP7QX8g3TaT6+F+oCez+q5/Np7Ru/tIZltD573Fav/Ky9NxFi37KvRtlNsHhgwRLzTsrhBUV/oldhE9jS5QGe0lpq1CZMV240AlXgGq43oA7Cbb5X7gguSX3zbwkSBFoXAD8VRplEfdn+ynUeNgZ+1flG3WsGKjdGhrmsGfnR4StS3BFu/4v2ekEmZrvw7dMeLXIOx8uOqXnrE4IqO8S50zC5/3+AfwbFlf+v3Lw1vYrWRkh893Qq4HuTseA8sQfJGz7rutfpEGutNOLJIYSVQcTTBXmWc/iQRuN6eBjs1RSuTwVaRr7BEwTEdDgpfuyFhJVMTUEZEDOGbVWD2qpesfGSMC/NIxpGoG3Ul1HJARI0fZXOnUFpIojd9o3IUcaFEqRlqR1bxXXUlzmQ8xULhW4HzPZc6hcIy0dNWMEvS5hwDMaog9sIvPIGlunvSI=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(316002)(40460700003)(36756003)(110136005)(8676002)(4326008)(83380400001)(1076003)(82310400005)(356005)(47076005)(36860700001)(16526019)(70206006)(70586007)(186003)(86362001)(2616005)(5660300002)(336012)(508600001)(26005)(30864003)(426003)(81166007)(6666004)(8936002)(7696005)(2906002)(36900700001)(2101003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2022 07:40:38.8744
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2022 07:40:39.3641
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d96fa79d-3e9e-4a34-a89d-08da3d58b2af
+X-MS-Exchange-CrossTenant-Network-Message-Id: 244754ac-d4c5-497a-62cf-08da3d58b2fa
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT066.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT023.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6621
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4433
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Presently there is no way to change pinmux configuration runtime.
-Hence add IOMUX details which can be used to configure IOMUX
-gpio pins runtime to different functionalities.
+Provide pinmux functionality by implementing pinmux_ops.
 
 Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 ---
- drivers/pinctrl/pinctrl-amd.c | 65 +++++++++++++++++++++++++++++++++++
- drivers/pinctrl/pinctrl-amd.h |  1 +
- 2 files changed, 66 insertions(+)
+ drivers/pinctrl/pinctrl-amd.c |   79 +++
+ drivers/pinctrl/pinctrl-amd.h | 1039 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 1117 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 1a7d686494ff..3058b6d35e47 100644
+index 3058b6d35e47..28698a8b2263 100644
 --- a/drivers/pinctrl/pinctrl-amd.c
 +++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -32,6 +32,8 @@
+@@ -31,6 +31,7 @@
+ #include <linux/bitops.h>
  #include <linux/pinctrl/pinconf.h>
  #include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinmux.h>
  
-+#include "../acpi/acpica/accommon.h"
+ #include "../acpi/acpica/accommon.h"
+ 
+@@ -952,10 +953,88 @@ static const struct dev_pm_ops amd_gpio_pm_ops = {
+ };
+ #endif
+ 
++static int amd_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(pmx_functions);
++}
 +
- #include "core.h"
- #include "pinctrl-utils.h"
- #include "pinctrl-amd.h"
-@@ -958,6 +960,68 @@ static struct pinctrl_desc amd_pinctrl_desc = {
++static const char *amd_get_fname(struct pinctrl_dev *pctrldev, unsigned int selector)
++{
++	return pmx_functions[selector].name;
++}
++
++static int amd_get_groups(struct pinctrl_dev *pctrldev, unsigned int selector,
++			  const char * const **groups,
++			  unsigned int * const num_groups)
++{
++	struct amd_gpio *gpio_dev = pinctrl_dev_get_drvdata(pctrldev);
++
++	if (!gpio_dev->iomux_base) {
++		dev_warn(&gpio_dev->pdev->dev, "iomux function %d group not supported\n", selector);
++		return -EINVAL;
++	}
++
++	*groups = pmx_functions[selector].groups;
++	*num_groups = pmx_functions[selector].ngroups;
++	return 0;
++}
++
++static int amd_set_mux(struct pinctrl_dev *pctrldev, unsigned int function, unsigned int group)
++{
++	struct amd_gpio *gpio_dev = pinctrl_dev_get_drvdata(pctrldev);
++	struct pin_desc *pd;
++	int ind, index;
++
++	if (!gpio_dev->iomux_base)
++		return -EINVAL;
++
++	for (index = 0; index < NSELECTS; index++) {
++		if (strcmp(gpio_dev->groups[group].name,  pmx_functions[function].groups[index]))
++			continue;
++
++		if (readb(gpio_dev->iomux_base + pmx_functions[function].index) ==
++				FUNCTION_INVALID) {
++			dev_warn(&gpio_dev->pdev->dev,
++				 "IOMUX_GPIO 0x%x not present or supported\n",
++				 pmx_functions[function].index);
++			return -EINVAL;
++		}
++
++		writeb(index, gpio_dev->iomux_base + pmx_functions[function].index);
++
++		if (index != (readb(gpio_dev->iomux_base + pmx_functions[function].index) &
++					FUNCTION_MASK)) {
++			dev_warn(&gpio_dev->pdev->dev,
++				 "IOMUX_GPIO 0x%x not present or supported\n",
++				 pmx_functions[function].index);
++			return -EINVAL;
++		}
++
++		for (ind = 0; ind < gpio_dev->groups[group].npins; ind++) {
++			if (strncmp(gpio_dev->groups[group].name, "IMX_F", strlen("IMX_F")))
++				continue;
++
++			pd = pin_desc_get(gpio_dev->pctrl, gpio_dev->groups[group].pins[ind]);
++			pd->mux_owner = gpio_dev->groups[group].name;
++		}
++		break;
++	}
++
++	return 0;
++}
++
++static const struct pinmux_ops amd_pmxops = {
++	.get_functions_count = amd_get_functions_count,
++	.get_function_name = amd_get_fname,
++	.get_function_groups = amd_get_groups,
++	.set_mux = amd_set_mux,
++};
++
+ static struct pinctrl_desc amd_pinctrl_desc = {
+ 	.pins	= kerncz_pins,
+ 	.npins = ARRAY_SIZE(kerncz_pins),
+ 	.pctlops = &amd_pinctrl_ops,
++	.pmxops = &amd_pmxops,
+ 	.confops = &amd_pinconf_ops,
  	.owner = THIS_MODULE,
  };
- 
-+static acpi_status acpi_get_iomux_region(acpi_handle handle, u32 level,
-+					 void *ctx, void **return_value)
-+{
-+	struct acpi_namespace_node *node = handle;
-+	union acpi_operand_object *region_obj;
-+	struct amd_gpio *gpio_dev = ctx;
-+
-+	/* Already mapped the IOMUX base */
-+	if (gpio_dev->iomux_base)
-+		return AE_OK;
-+
-+	/* Valid object */
-+	if (!node || !node->object)
-+		return AE_OK;
-+
-+	/* Valid operand or namespace node*/
-+	if ((ACPI_GET_DESCRIPTOR_TYPE(node->object) != ACPI_DESC_TYPE_OPERAND) &&
-+	    (ACPI_GET_DESCRIPTOR_TYPE(node->object) != ACPI_DESC_TYPE_NAMED))
-+		return AE_OK;
-+
-+	/* Valid object type*/
-+	if (node->object->common.type == ACPI_TYPE_LOCAL_DATA)
-+		return AE_OK;
-+
-+	region_obj = node->object;
-+	if (!region_obj->region.handler)
-+		return AE_OK;
-+
-+	if (region_obj->region.space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
-+		return AE_OK;
-+
-+	if (strncmp("IOMX", region_obj->region.node->name.ascii, strlen("IOMX")))
-+		return AE_OK;
-+
-+	gpio_dev->iomux_base = devm_ioremap(&gpio_dev->pdev->dev,
-+					    region_obj->region.address,
-+					    region_obj->region.length);
-+	if (!gpio_dev->iomux_base)
-+		dev_err(&gpio_dev->pdev->dev, "failed to devm_ioremap() iomux_base\n");
-+
-+	return AE_OK;
-+}
-+
-+static void amd_update_iomux_info(struct amd_gpio *gpio_dev)
-+{
-+	acpi_handle sys_bus_handle;
-+	int status = acpi_get_handle(NULL, "\\_SB", &sys_bus_handle);
-+
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&gpio_dev->pdev->dev, "Failed to get SB handle\n");
-+		return;
-+	}
-+
-+	status = acpi_walk_namespace(ACPI_TYPE_REGION, sys_bus_handle, ACPI_UINT32_MAX,
-+				     acpi_get_iomux_region, NULL, gpio_dev, NULL);
-+
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&gpio_dev->pdev->dev, "Failed to get acpi_get_iomux_region\n");
-+		return;
-+	}
-+}
-+
- static int amd_gpio_probe(struct platform_device *pdev)
- {
- 	int ret = 0;
-@@ -1052,6 +1116,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, gpio_dev);
- 	acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
-+	amd_update_iomux_info(gpio_dev);
- 
- 	dev_dbg(&pdev->dev, "amd gpio driver loaded\n");
- 	return ret;
 diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index de2bc9dddc9c..8296426f4c81 100644
+index 8296426f4c81..5de11eefbfbe 100644
 --- a/drivers/pinctrl/pinctrl-amd.h
 +++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -89,6 +89,7 @@ struct amd_function {
- struct amd_gpio {
- 	raw_spinlock_t          lock;
- 	void __iomem            *base;
-+	void __iomem            *iomux_base;
+@@ -74,6 +74,11 @@
  
- 	const struct amd_pingroup *groups;
- 	u32 ngroups;
+ #define CLR_INTR_STAT	0x1UL
+ 
++#define NSELECTS	0x4
++
++#define FUNCTION_MASK		GENMASK(1, 0)
++#define FUNCTION_INVALID	GENMASK(7, 0)
++
+ struct amd_pingroup {
+ 	const char *name;
+ 	const unsigned *pins;
+@@ -82,8 +87,9 @@ struct amd_pingroup {
+ 
+ struct amd_function {
+ 	const char *name;
+-	const char * const *groups;
++	const char * const groups[NSELECTS];
+ 	unsigned ngroups;
++	int index;
+ };
+ 
+ struct amd_gpio {
+@@ -297,10 +303,887 @@ static const unsigned i2c3_pins[] = {19, 20};
+ static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
+ static const unsigned uart1_pins[] = {140, 141, 142, 143, 144};
+ 
++#define DEFINE_GPIO(_number) static const unsigned int gpio##_number[] = {_number}
++
++DEFINE_GPIO(0);
++DEFINE_GPIO(1);
++DEFINE_GPIO(2);
++DEFINE_GPIO(3);
++DEFINE_GPIO(4);
++DEFINE_GPIO(5);
++DEFINE_GPIO(6);
++DEFINE_GPIO(7);
++DEFINE_GPIO(8);
++DEFINE_GPIO(9);
++DEFINE_GPIO(10);
++DEFINE_GPIO(11);
++DEFINE_GPIO(12);
++DEFINE_GPIO(13);
++DEFINE_GPIO(14);
++DEFINE_GPIO(15);
++DEFINE_GPIO(16);
++DEFINE_GPIO(17);
++DEFINE_GPIO(18);
++DEFINE_GPIO(19);
++DEFINE_GPIO(20);
++DEFINE_GPIO(21);
++DEFINE_GPIO(22);
++DEFINE_GPIO(23);
++DEFINE_GPIO(24);
++DEFINE_GPIO(25);
++DEFINE_GPIO(26);
++DEFINE_GPIO(27);
++DEFINE_GPIO(28);
++DEFINE_GPIO(29);
++DEFINE_GPIO(30);
++DEFINE_GPIO(31);
++DEFINE_GPIO(32);
++DEFINE_GPIO(33);
++DEFINE_GPIO(34);
++DEFINE_GPIO(35);
++DEFINE_GPIO(36);
++DEFINE_GPIO(37);
++DEFINE_GPIO(38);
++DEFINE_GPIO(39);
++DEFINE_GPIO(40);
++DEFINE_GPIO(41);
++DEFINE_GPIO(42);
++DEFINE_GPIO(43);
++DEFINE_GPIO(44);
++DEFINE_GPIO(45);
++DEFINE_GPIO(46);
++DEFINE_GPIO(47);
++DEFINE_GPIO(48);
++DEFINE_GPIO(49);
++DEFINE_GPIO(50);
++DEFINE_GPIO(51);
++DEFINE_GPIO(52);
++DEFINE_GPIO(53);
++DEFINE_GPIO(54);
++DEFINE_GPIO(55);
++DEFINE_GPIO(56);
++DEFINE_GPIO(57);
++DEFINE_GPIO(58);
++DEFINE_GPIO(59);
++DEFINE_GPIO(60);
++DEFINE_GPIO(61);
++DEFINE_GPIO(62);
++DEFINE_GPIO(64);
++DEFINE_GPIO(65);
++DEFINE_GPIO(66);
++DEFINE_GPIO(67);
++DEFINE_GPIO(68);
++DEFINE_GPIO(69);
++DEFINE_GPIO(70);
++DEFINE_GPIO(71);
++DEFINE_GPIO(72);
++DEFINE_GPIO(73);
++DEFINE_GPIO(74);
++DEFINE_GPIO(75);
++DEFINE_GPIO(76);
++DEFINE_GPIO(77);
++DEFINE_GPIO(78);
++DEFINE_GPIO(79);
++DEFINE_GPIO(80);
++DEFINE_GPIO(81);
++DEFINE_GPIO(82);
++DEFINE_GPIO(83);
++DEFINE_GPIO(84);
++DEFINE_GPIO(85);
++DEFINE_GPIO(86);
++DEFINE_GPIO(87);
++DEFINE_GPIO(88);
++DEFINE_GPIO(89);
++DEFINE_GPIO(90);
++DEFINE_GPIO(91);
++DEFINE_GPIO(92);
++DEFINE_GPIO(93);
++DEFINE_GPIO(94);
++DEFINE_GPIO(95);
++DEFINE_GPIO(96);
++DEFINE_GPIO(97);
++DEFINE_GPIO(98);
++DEFINE_GPIO(99);
++DEFINE_GPIO(100);
++DEFINE_GPIO(101);
++DEFINE_GPIO(102);
++DEFINE_GPIO(103);
++DEFINE_GPIO(104);
++DEFINE_GPIO(105);
++DEFINE_GPIO(106);
++DEFINE_GPIO(107);
++DEFINE_GPIO(108);
++DEFINE_GPIO(109);
++DEFINE_GPIO(110);
++DEFINE_GPIO(111);
++DEFINE_GPIO(112);
++DEFINE_GPIO(113);
++DEFINE_GPIO(114);
++DEFINE_GPIO(115);
++DEFINE_GPIO(116);
++DEFINE_GPIO(117);
++DEFINE_GPIO(118);
++DEFINE_GPIO(119);
++DEFINE_GPIO(120);
++DEFINE_GPIO(121);
++DEFINE_GPIO(122);
++DEFINE_GPIO(123);
++DEFINE_GPIO(124);
++DEFINE_GPIO(125);
++DEFINE_GPIO(126);
++DEFINE_GPIO(127);
++DEFINE_GPIO(128);
++DEFINE_GPIO(129);
++DEFINE_GPIO(130);
++DEFINE_GPIO(131);
++DEFINE_GPIO(132);
++DEFINE_GPIO(133);
++DEFINE_GPIO(134);
++DEFINE_GPIO(135);
++DEFINE_GPIO(136);
++DEFINE_GPIO(137);
++DEFINE_GPIO(138);
++DEFINE_GPIO(139);
++DEFINE_GPIO(140);
++DEFINE_GPIO(141);
++DEFINE_GPIO(142);
++DEFINE_GPIO(143);
++DEFINE_GPIO(144);
++
+ #define PINCTRL_GRP(_name, _pins, _npins) \
+ 	{ .name = _name, .pins = _pins, .npins = _npins}
+ 
++enum amd_functions {
++	IMX_F0_GPIO0,
++	IMX_F1_GPIO0,
++	IMX_F2_GPIO0,
++	IMX_F3_GPIO0,
++	IMX_F0_GPIO1,
++	IMX_F1_GPIO1,
++	IMX_F2_GPIO1,
++	IMX_F3_GPIO1,
++	IMX_F0_GPIO2,
++	IMX_F1_GPIO2,
++	IMX_F2_GPIO2,
++	IMX_F3_GPIO2,
++	IMX_F0_GPIO3,
++	IMX_F1_GPIO3,
++	IMX_F2_GPIO3,
++	IMX_F3_GPIO3,
++	IMX_F0_GPIO4,
++	IMX_F1_GPIO4,
++	IMX_F2_GPIO4,
++	IMX_F3_GPIO4,
++	IMX_F0_GPIO5,
++	IMX_F1_GPIO5,
++	IMX_F2_GPIO5,
++	IMX_F3_GPIO5,
++	IMX_F0_GPIO6,
++	IMX_F1_GPIO6,
++	IMX_F2_GPIO6,
++	IMX_F3_GPIO6,
++	IMX_F0_GPIO7,
++	IMX_F1_GPIO7,
++	IMX_F2_GPIO7,
++	IMX_F3_GPIO7,
++	IMX_F0_GPIO8,
++	IMX_F1_GPIO8,
++	IMX_F2_GPIO8,
++	IMX_F3_GPIO8,
++	IMX_F0_GPIO9,
++	IMX_F1_GPIO9,
++	IMX_F2_GPIO9,
++	IMX_F3_GPIO9,
++	IMX_F0_GPIO10,
++	IMX_F1_GPIO10,
++	IMX_F2_GPIO10,
++	IMX_F3_GPIO10,
++	IMX_F0_GPIO11,
++	IMX_F1_GPIO11,
++	IMX_F2_GPIO11,
++	IMX_F3_GPIO11,
++	IMX_F0_GPIO12,
++	IMX_F1_GPIO12,
++	IMX_F2_GPIO12,
++	IMX_F3_GPIO12,
++	IMX_F0_GPIO13,
++	IMX_F1_GPIO13,
++	IMX_F2_GPIO13,
++	IMX_F3_GPIO13,
++	IMX_F0_GPIO14,
++	IMX_F1_GPIO14,
++	IMX_F2_GPIO14,
++	IMX_F3_GPIO14,
++	IMX_F0_GPIO15,
++	IMX_F1_GPIO15,
++	IMX_F2_GPIO15,
++	IMX_F3_GPIO15,
++	IMX_F0_GPIO16,
++	IMX_F1_GPIO16,
++	IMX_F2_GPIO16,
++	IMX_F3_GPIO16,
++	IMX_F0_GPIO17,
++	IMX_F1_GPIO17,
++	IMX_F2_GPIO17,
++	IMX_F3_GPIO17,
++	IMX_F0_GPIO18,
++	IMX_F1_GPIO18,
++	IMX_F2_GPIO18,
++	IMX_F3_GPIO18,
++	IMX_F0_GPIO19,
++	IMX_F1_GPIO19,
++	IMX_F2_GPIO19,
++	IMX_F3_GPIO19,
++	IMX_F0_GPIO20,
++	IMX_F1_GPIO20,
++	IMX_F2_GPIO20,
++	IMX_F3_GPIO20,
++	IMX_F0_GPIO21,
++	IMX_F1_GPIO21,
++	IMX_F2_GPIO21,
++	IMX_F3_GPIO21,
++	IMX_F0_GPIO22,
++	IMX_F1_GPIO22,
++	IMX_F2_GPIO22,
++	IMX_F3_GPIO22,
++	IMX_F0_GPIO23,
++	IMX_F1_GPIO23,
++	IMX_F2_GPIO23,
++	IMX_F3_GPIO23,
++	IMX_F0_GPIO24,
++	IMX_F1_GPIO24,
++	IMX_F2_GPIO24,
++	IMX_F3_GPIO24,
++	IMX_F0_GPIO25,
++	IMX_F1_GPIO25,
++	IMX_F2_GPIO25,
++	IMX_F3_GPIO25,
++	IMX_F0_GPIO26,
++	IMX_F1_GPIO26,
++	IMX_F2_GPIO26,
++	IMX_F3_GPIO26,
++	IMX_F0_GPIO27,
++	IMX_F1_GPIO27,
++	IMX_F2_GPIO27,
++	IMX_F3_GPIO27,
++	IMX_F0_GPIO28,
++	IMX_F1_GPIO28,
++	IMX_F2_GPIO28,
++	IMX_F3_GPIO28,
++	IMX_F0_GPIO29,
++	IMX_F1_GPIO29,
++	IMX_F2_GPIO29,
++	IMX_F3_GPIO29,
++	IMX_F0_GPIO30,
++	IMX_F1_GPIO30,
++	IMX_F2_GPIO30,
++	IMX_F3_GPIO30,
++	IMX_F0_GPIO31,
++	IMX_F1_GPIO31,
++	IMX_F2_GPIO31,
++	IMX_F3_GPIO31,
++	IMX_F0_GPIO32,
++	IMX_F1_GPIO32,
++	IMX_F2_GPIO32,
++	IMX_F3_GPIO32,
++	IMX_F0_GPIO33,
++	IMX_F1_GPIO33,
++	IMX_F2_GPIO33,
++	IMX_F3_GPIO33,
++	IMX_F0_GPIO34,
++	IMX_F1_GPIO34,
++	IMX_F2_GPIO34,
++	IMX_F3_GPIO34,
++	IMX_F0_GPIO35,
++	IMX_F1_GPIO35,
++	IMX_F2_GPIO35,
++	IMX_F3_GPIO35,
++	IMX_F0_GPIO36,
++	IMX_F1_GPIO36,
++	IMX_F2_GPIO36,
++	IMX_F3_GPIO36,
++	IMX_F0_GPIO37,
++	IMX_F1_GPIO37,
++	IMX_F2_GPIO37,
++	IMX_F3_GPIO37,
++	IMX_F0_GPIO38,
++	IMX_F1_GPIO38,
++	IMX_F2_GPIO38,
++	IMX_F3_GPIO38,
++	IMX_F0_GPIO39,
++	IMX_F1_GPIO39,
++	IMX_F2_GPIO39,
++	IMX_F3_GPIO39,
++	IMX_F0_GPIO40,
++	IMX_F1_GPIO40,
++	IMX_F2_GPIO40,
++	IMX_F3_GPIO40,
++	IMX_F0_GPIO41,
++	IMX_F1_GPIO41,
++	IMX_F2_GPIO41,
++	IMX_F3_GPIO41,
++	IMX_F0_GPIO42,
++	IMX_F1_GPIO42,
++	IMX_F2_GPIO42,
++	IMX_F3_GPIO42,
++	IMX_F0_GPIO43,
++	IMX_F1_GPIO43,
++	IMX_F2_GPIO43,
++	IMX_F3_GPIO43,
++	IMX_F0_GPIO44,
++	IMX_F1_GPIO44,
++	IMX_F2_GPIO44,
++	IMX_F3_GPIO44,
++	IMX_F0_GPIO45,
++	IMX_F1_GPIO45,
++	IMX_F2_GPIO45,
++	IMX_F3_GPIO45,
++	IMX_F0_GPIO46,
++	IMX_F1_GPIO46,
++	IMX_F2_GPIO46,
++	IMX_F3_GPIO46,
++	IMX_F0_GPIO47,
++	IMX_F1_GPIO47,
++	IMX_F2_GPIO47,
++	IMX_F3_GPIO47,
++	IMX_F0_GPIO48,
++	IMX_F1_GPIO48,
++	IMX_F2_GPIO48,
++	IMX_F3_GPIO48,
++	IMX_F0_GPIO49,
++	IMX_F1_GPIO49,
++	IMX_F2_GPIO49,
++	IMX_F3_GPIO49,
++	IMX_F0_GPIO50,
++	IMX_F1_GPIO50,
++	IMX_F2_GPIO50,
++	IMX_F3_GPIO50,
++	IMX_F0_GPIO51,
++	IMX_F1_GPIO51,
++	IMX_F2_GPIO51,
++	IMX_F3_GPIO51,
++	IMX_F0_GPIO52,
++	IMX_F1_GPIO52,
++	IMX_F2_GPIO52,
++	IMX_F3_GPIO52,
++	IMX_F0_GPIO53,
++	IMX_F1_GPIO53,
++	IMX_F2_GPIO53,
++	IMX_F3_GPIO53,
++	IMX_F0_GPIO54,
++	IMX_F1_GPIO54,
++	IMX_F2_GPIO54,
++	IMX_F3_GPIO54,
++	IMX_F0_GPIO55,
++	IMX_F1_GPIO55,
++	IMX_F2_GPIO55,
++	IMX_F3_GPIO55,
++	IMX_F0_GPIO56,
++	IMX_F1_GPIO56,
++	IMX_F2_GPIO56,
++	IMX_F3_GPIO56,
++	IMX_F0_GPIO57,
++	IMX_F1_GPIO57,
++	IMX_F2_GPIO57,
++	IMX_F3_GPIO57,
++	IMX_F0_GPIO58,
++	IMX_F1_GPIO58,
++	IMX_F2_GPIO58,
++	IMX_F3_GPIO58,
++	IMX_F0_GPIO59,
++	IMX_F1_GPIO59,
++	IMX_F2_GPIO59,
++	IMX_F3_GPIO59,
++	IMX_F0_GPIO60,
++	IMX_F1_GPIO60,
++	IMX_F2_GPIO60,
++	IMX_F3_GPIO60,
++	IMX_F0_GPIO61,
++	IMX_F1_GPIO61,
++	IMX_F2_GPIO61,
++	IMX_F3_GPIO61,
++	IMX_F0_GPIO62,
++	IMX_F1_GPIO62,
++	IMX_F2_GPIO62,
++	IMX_F3_GPIO62,
++	IMX_F0_GPIO64,
++	IMX_F1_GPIO64,
++	IMX_F2_GPIO64,
++	IMX_F3_GPIO64,
++	IMX_F0_GPIO65,
++	IMX_F1_GPIO65,
++	IMX_F2_GPIO65,
++	IMX_F3_GPIO65,
++	IMX_F0_GPIO66,
++	IMX_F1_GPIO66,
++	IMX_F2_GPIO66,
++	IMX_F3_GPIO66,
++	IMX_F0_GPIO67,
++	IMX_F1_GPIO67,
++	IMX_F2_GPIO67,
++	IMX_F3_GPIO67,
++	IMX_F0_GPIO68,
++	IMX_F1_GPIO68,
++	IMX_F2_GPIO68,
++	IMX_F3_GPIO68,
++	IMX_F0_GPIO69,
++	IMX_F1_GPIO69,
++	IMX_F2_GPIO69,
++	IMX_F3_GPIO69,
++	IMX_F0_GPIO70,
++	IMX_F1_GPIO70,
++	IMX_F2_GPIO70,
++	IMX_F3_GPIO70,
++	IMX_F0_GPIO71,
++	IMX_F1_GPIO71,
++	IMX_F2_GPIO71,
++	IMX_F3_GPIO71,
++	IMX_F0_GPIO72,
++	IMX_F1_GPIO72,
++	IMX_F2_GPIO72,
++	IMX_F3_GPIO72,
++	IMX_F0_GPIO73,
++	IMX_F1_GPIO73,
++	IMX_F2_GPIO73,
++	IMX_F3_GPIO73,
++	IMX_F0_GPIO74,
++	IMX_F1_GPIO74,
++	IMX_F2_GPIO74,
++	IMX_F3_GPIO74,
++	IMX_F0_GPIO75,
++	IMX_F1_GPIO75,
++	IMX_F2_GPIO75,
++	IMX_F3_GPIO75,
++	IMX_F0_GPIO76,
++	IMX_F1_GPIO76,
++	IMX_F2_GPIO76,
++	IMX_F3_GPIO76,
++	IMX_F0_GPIO77,
++	IMX_F1_GPIO77,
++	IMX_F2_GPIO77,
++	IMX_F3_GPIO77,
++	IMX_F0_GPIO78,
++	IMX_F1_GPIO78,
++	IMX_F2_GPIO78,
++	IMX_F3_GPIO78,
++	IMX_F0_GPIO79,
++	IMX_F1_GPIO79,
++	IMX_F2_GPIO79,
++	IMX_F3_GPIO79,
++	IMX_F0_GPIO80,
++	IMX_F1_GPIO80,
++	IMX_F2_GPIO80,
++	IMX_F3_GPIO80,
++	IMX_F0_GPIO81,
++	IMX_F1_GPIO81,
++	IMX_F2_GPIO81,
++	IMX_F3_GPIO81,
++	IMX_F0_GPIO82,
++	IMX_F1_GPIO82,
++	IMX_F2_GPIO82,
++	IMX_F3_GPIO82,
++	IMX_F0_GPIO83,
++	IMX_F1_GPIO83,
++	IMX_F2_GPIO83,
++	IMX_F3_GPIO83,
++	IMX_F0_GPIO84,
++	IMX_F1_GPIO84,
++	IMX_F2_GPIO84,
++	IMX_F3_GPIO84,
++	IMX_F0_GPIO85,
++	IMX_F1_GPIO85,
++	IMX_F2_GPIO85,
++	IMX_F3_GPIO85,
++	IMX_F0_GPIO86,
++	IMX_F1_GPIO86,
++	IMX_F2_GPIO86,
++	IMX_F3_GPIO86,
++	IMX_F0_GPIO87,
++	IMX_F1_GPIO87,
++	IMX_F2_GPIO87,
++	IMX_F3_GPIO87,
++	IMX_F0_GPIO88,
++	IMX_F1_GPIO88,
++	IMX_F2_GPIO88,
++	IMX_F3_GPIO88,
++	IMX_F0_GPIO89,
++	IMX_F1_GPIO89,
++	IMX_F2_GPIO89,
++	IMX_F3_GPIO89,
++	IMX_F0_GPIO90,
++	IMX_F1_GPIO90,
++	IMX_F2_GPIO90,
++	IMX_F3_GPIO90,
++	IMX_F0_GPIO91,
++	IMX_F1_GPIO91,
++	IMX_F2_GPIO91,
++	IMX_F3_GPIO91,
++	IMX_F0_GPIO92,
++	IMX_F1_GPIO92,
++	IMX_F2_GPIO92,
++	IMX_F3_GPIO92,
++	IMX_F0_GPIO93,
++	IMX_F1_GPIO93,
++	IMX_F2_GPIO93,
++	IMX_F3_GPIO93,
++	IMX_F0_GPIO94,
++	IMX_F1_GPIO94,
++	IMX_F2_GPIO94,
++	IMX_F3_GPIO94,
++	IMX_F0_GPIO95,
++	IMX_F1_GPIO95,
++	IMX_F2_GPIO95,
++	IMX_F3_GPIO95,
++	IMX_F0_GPIO96,
++	IMX_F1_GPIO96,
++	IMX_F2_GPIO96,
++	IMX_F3_GPIO96,
++	IMX_F0_GPIO97,
++	IMX_F1_GPIO97,
++	IMX_F2_GPIO97,
++	IMX_F3_GPIO97,
++	IMX_F0_GPIO98,
++	IMX_F1_GPIO98,
++	IMX_F2_GPIO98,
++	IMX_F3_GPIO98,
++	IMX_F0_GPIO99,
++	IMX_F1_GPIO99,
++	IMX_F2_GPIO99,
++	IMX_F3_GPIO99,
++	IMX_F0_GPIO100,
++	IMX_F1_GPIO100,
++	IMX_F2_GPIO100,
++	IMX_F3_GPIO100,
++	IMX_F0_GPIO101,
++	IMX_F1_GPIO101,
++	IMX_F2_GPIO101,
++	IMX_F3_GPIO101,
++	IMX_F0_GPIO102,
++	IMX_F1_GPIO102,
++	IMX_F2_GPIO102,
++	IMX_F3_GPIO102,
++	IMX_F0_GPIO103,
++	IMX_F1_GPIO103,
++	IMX_F2_GPIO103,
++	IMX_F3_GPIO103,
++	IMX_F0_GPIO104,
++	IMX_F1_GPIO104,
++	IMX_F2_GPIO104,
++	IMX_F3_GPIO104,
++	IMX_F0_GPIO105,
++	IMX_F1_GPIO105,
++	IMX_F2_GPIO105,
++	IMX_F3_GPIO105,
++	IMX_F0_GPIO106,
++	IMX_F1_GPIO106,
++	IMX_F2_GPIO106,
++	IMX_F3_GPIO106,
++	IMX_F0_GPIO107,
++	IMX_F1_GPIO107,
++	IMX_F2_GPIO107,
++	IMX_F3_GPIO107,
++	IMX_F0_GPIO108,
++	IMX_F1_GPIO108,
++	IMX_F2_GPIO108,
++	IMX_F3_GPIO108,
++	IMX_F0_GPIO109,
++	IMX_F1_GPIO109,
++	IMX_F2_GPIO109,
++	IMX_F3_GPIO109,
++	IMX_F0_GPIO110,
++	IMX_F1_GPIO110,
++	IMX_F2_GPIO110,
++	IMX_F3_GPIO110,
++	IMX_F0_GPIO111,
++	IMX_F1_GPIO111,
++	IMX_F2_GPIO111,
++	IMX_F3_GPIO111,
++	IMX_F0_GPIO112,
++	IMX_F1_GPIO112,
++	IMX_F2_GPIO112,
++	IMX_F3_GPIO112,
++	IMX_F0_GPIO113,
++	IMX_F1_GPIO113,
++	IMX_F2_GPIO113,
++	IMX_F3_GPIO113,
++	IMX_F0_GPIO114,
++	IMX_F1_GPIO114,
++	IMX_F2_GPIO114,
++	IMX_F3_GPIO114,
++	IMX_F0_GPIO115,
++	IMX_F1_GPIO115,
++	IMX_F2_GPIO115,
++	IMX_F3_GPIO115,
++	IMX_F0_GPIO116,
++	IMX_F1_GPIO116,
++	IMX_F2_GPIO116,
++	IMX_F3_GPIO116,
++	IMX_F0_GPIO117,
++	IMX_F1_GPIO117,
++	IMX_F2_GPIO117,
++	IMX_F3_GPIO117,
++	IMX_F0_GPIO118,
++	IMX_F1_GPIO118,
++	IMX_F2_GPIO118,
++	IMX_F3_GPIO118,
++	IMX_F0_GPIO119,
++	IMX_F1_GPIO119,
++	IMX_F2_GPIO119,
++	IMX_F3_GPIO119,
++	IMX_F0_GPIO120,
++	IMX_F1_GPIO120,
++	IMX_F2_GPIO120,
++	IMX_F3_GPIO120,
++	IMX_F0_GPIO121,
++	IMX_F1_GPIO121,
++	IMX_F2_GPIO121,
++	IMX_F3_GPIO121,
++	IMX_F0_GPIO122,
++	IMX_F1_GPIO122,
++	IMX_F2_GPIO122,
++	IMX_F3_GPIO122,
++	IMX_F0_GPIO123,
++	IMX_F1_GPIO123,
++	IMX_F2_GPIO123,
++	IMX_F3_GPIO123,
++	IMX_F0_GPIO124,
++	IMX_F1_GPIO124,
++	IMX_F2_GPIO124,
++	IMX_F3_GPIO124,
++	IMX_F0_GPIO125,
++	IMX_F1_GPIO125,
++	IMX_F2_GPIO125,
++	IMX_F3_GPIO125,
++	IMX_F0_GPIO126,
++	IMX_F1_GPIO126,
++	IMX_F2_GPIO126,
++	IMX_F3_GPIO126,
++	IMX_F0_GPIO127,
++	IMX_F1_GPIO127,
++	IMX_F2_GPIO127,
++	IMX_F3_GPIO127,
++	IMX_F0_GPIO128,
++	IMX_F1_GPIO128,
++	IMX_F2_GPIO128,
++	IMX_F3_GPIO128,
++	IMX_F0_GPIO129,
++	IMX_F1_GPIO129,
++	IMX_F2_GPIO129,
++	IMX_F3_GPIO129,
++	IMX_F0_GPIO130,
++	IMX_F1_GPIO130,
++	IMX_F2_GPIO130,
++	IMX_F3_GPIO130,
++	IMX_F0_GPIO131,
++	IMX_F1_GPIO131,
++	IMX_F2_GPIO131,
++	IMX_F3_GPIO131,
++	IMX_F0_GPIO132,
++	IMX_F1_GPIO132,
++	IMX_F2_GPIO132,
++	IMX_F3_GPIO132,
++	IMX_F0_GPIO133,
++	IMX_F1_GPIO133,
++	IMX_F2_GPIO133,
++	IMX_F3_GPIO133,
++	IMX_F0_GPIO134,
++	IMX_F1_GPIO134,
++	IMX_F2_GPIO134,
++	IMX_F3_GPIO134,
++	IMX_F0_GPIO135,
++	IMX_F1_GPIO135,
++	IMX_F2_GPIO135,
++	IMX_F3_GPIO135,
++	IMX_F0_GPIO136,
++	IMX_F1_GPIO136,
++	IMX_F2_GPIO136,
++	IMX_F3_GPIO136,
++	IMX_F0_GPIO137,
++	IMX_F1_GPIO137,
++	IMX_F2_GPIO137,
++	IMX_F3_GPIO137,
++	IMX_F0_GPIO138,
++	IMX_F1_GPIO138,
++	IMX_F2_GPIO138,
++	IMX_F3_GPIO138,
++	IMX_F0_GPIO139,
++	IMX_F1_GPIO139,
++	IMX_F2_GPIO139,
++	IMX_F3_GPIO139,
++	IMX_F0_GPIO140,
++	IMX_F1_GPIO140,
++	IMX_F2_GPIO140,
++	IMX_F3_GPIO140,
++	IMX_F0_GPIO141,
++	IMX_F1_GPIO141,
++	IMX_F2_GPIO141,
++	IMX_F3_GPIO141,
++	IMX_F0_GPIO142,
++	IMX_F1_GPIO142,
++	IMX_F2_GPIO142,
++	IMX_F3_GPIO142,
++	IMX_F0_GPIO143,
++	IMX_F1_GPIO143,
++	IMX_F2_GPIO143,
++	IMX_F3_GPIO143,
++	IMX_F0_GPIO144,
++	IMX_F1_GPIO144,
++	IMX_F2_GPIO144,
++	IMX_F3_GPIO144,
++};
++
++#define PINCTRL_FUNC_GRP(_number) \
++	[IMX_F0_GPIO##_number] = PINCTRL_GRP("IMX_F0_GPIO"#_number, gpio##_number, 1),\
++	[IMX_F1_GPIO##_number] = PINCTRL_GRP("IMX_F1_GPIO"#_number, gpio##_number, 1),\
++	[IMX_F2_GPIO##_number] = PINCTRL_GRP("IMX_F2_GPIO"#_number, gpio##_number, 1),\
++	[IMX_F3_GPIO##_number] = PINCTRL_GRP("IMX_F3_GPIO"#_number, gpio##_number, 1)
++
+ static const struct amd_pingroup kerncz_groups[] = {
++	PINCTRL_FUNC_GRP(0),
++	PINCTRL_FUNC_GRP(1),
++	PINCTRL_FUNC_GRP(2),
++	PINCTRL_FUNC_GRP(3),
++	PINCTRL_FUNC_GRP(4),
++	PINCTRL_FUNC_GRP(5),
++	PINCTRL_FUNC_GRP(6),
++	PINCTRL_FUNC_GRP(7),
++	PINCTRL_FUNC_GRP(8),
++	PINCTRL_FUNC_GRP(9),
++	PINCTRL_FUNC_GRP(10),
++	PINCTRL_FUNC_GRP(11),
++	PINCTRL_FUNC_GRP(12),
++	PINCTRL_FUNC_GRP(13),
++	PINCTRL_FUNC_GRP(14),
++	PINCTRL_FUNC_GRP(15),
++	PINCTRL_FUNC_GRP(16),
++	PINCTRL_FUNC_GRP(17),
++	PINCTRL_FUNC_GRP(18),
++	PINCTRL_FUNC_GRP(19),
++	PINCTRL_FUNC_GRP(20),
++	PINCTRL_FUNC_GRP(21),
++	PINCTRL_FUNC_GRP(22),
++	PINCTRL_FUNC_GRP(23),
++	PINCTRL_FUNC_GRP(24),
++	PINCTRL_FUNC_GRP(25),
++	PINCTRL_FUNC_GRP(26),
++	PINCTRL_FUNC_GRP(27),
++	PINCTRL_FUNC_GRP(28),
++	PINCTRL_FUNC_GRP(29),
++	PINCTRL_FUNC_GRP(30),
++	PINCTRL_FUNC_GRP(31),
++	PINCTRL_FUNC_GRP(32),
++	PINCTRL_FUNC_GRP(33),
++	PINCTRL_FUNC_GRP(34),
++	PINCTRL_FUNC_GRP(35),
++	PINCTRL_FUNC_GRP(36),
++	PINCTRL_FUNC_GRP(37),
++	PINCTRL_FUNC_GRP(38),
++	PINCTRL_FUNC_GRP(39),
++	PINCTRL_FUNC_GRP(40),
++	PINCTRL_FUNC_GRP(41),
++	PINCTRL_FUNC_GRP(42),
++	PINCTRL_FUNC_GRP(43),
++	PINCTRL_FUNC_GRP(44),
++	PINCTRL_FUNC_GRP(45),
++	PINCTRL_FUNC_GRP(46),
++	PINCTRL_FUNC_GRP(47),
++	PINCTRL_FUNC_GRP(48),
++	PINCTRL_FUNC_GRP(49),
++	PINCTRL_FUNC_GRP(50),
++	PINCTRL_FUNC_GRP(51),
++	PINCTRL_FUNC_GRP(52),
++	PINCTRL_FUNC_GRP(53),
++	PINCTRL_FUNC_GRP(54),
++	PINCTRL_FUNC_GRP(55),
++	PINCTRL_FUNC_GRP(56),
++	PINCTRL_FUNC_GRP(57),
++	PINCTRL_FUNC_GRP(58),
++	PINCTRL_FUNC_GRP(59),
++	PINCTRL_FUNC_GRP(60),
++	PINCTRL_FUNC_GRP(61),
++	PINCTRL_FUNC_GRP(62),
++	PINCTRL_FUNC_GRP(64),
++	PINCTRL_FUNC_GRP(65),
++	PINCTRL_FUNC_GRP(66),
++	PINCTRL_FUNC_GRP(67),
++	PINCTRL_FUNC_GRP(68),
++	PINCTRL_FUNC_GRP(69),
++	PINCTRL_FUNC_GRP(70),
++	PINCTRL_FUNC_GRP(71),
++	PINCTRL_FUNC_GRP(72),
++	PINCTRL_FUNC_GRP(73),
++	PINCTRL_FUNC_GRP(74),
++	PINCTRL_FUNC_GRP(75),
++	PINCTRL_FUNC_GRP(76),
++	PINCTRL_FUNC_GRP(77),
++	PINCTRL_FUNC_GRP(78),
++	PINCTRL_FUNC_GRP(79),
++	PINCTRL_FUNC_GRP(80),
++	PINCTRL_FUNC_GRP(81),
++	PINCTRL_FUNC_GRP(82),
++	PINCTRL_FUNC_GRP(83),
++	PINCTRL_FUNC_GRP(84),
++	PINCTRL_FUNC_GRP(85),
++	PINCTRL_FUNC_GRP(86),
++	PINCTRL_FUNC_GRP(87),
++	PINCTRL_FUNC_GRP(88),
++	PINCTRL_FUNC_GRP(89),
++	PINCTRL_FUNC_GRP(90),
++	PINCTRL_FUNC_GRP(91),
++	PINCTRL_FUNC_GRP(92),
++	PINCTRL_FUNC_GRP(93),
++	PINCTRL_FUNC_GRP(94),
++	PINCTRL_FUNC_GRP(95),
++	PINCTRL_FUNC_GRP(96),
++	PINCTRL_FUNC_GRP(97),
++	PINCTRL_FUNC_GRP(98),
++	PINCTRL_FUNC_GRP(99),
++	PINCTRL_FUNC_GRP(100),
++	PINCTRL_FUNC_GRP(101),
++	PINCTRL_FUNC_GRP(102),
++	PINCTRL_FUNC_GRP(103),
++	PINCTRL_FUNC_GRP(104),
++	PINCTRL_FUNC_GRP(105),
++	PINCTRL_FUNC_GRP(106),
++	PINCTRL_FUNC_GRP(107),
++	PINCTRL_FUNC_GRP(108),
++	PINCTRL_FUNC_GRP(109),
++	PINCTRL_FUNC_GRP(110),
++	PINCTRL_FUNC_GRP(111),
++	PINCTRL_FUNC_GRP(112),
++	PINCTRL_FUNC_GRP(113),
++	PINCTRL_FUNC_GRP(114),
++	PINCTRL_FUNC_GRP(115),
++	PINCTRL_FUNC_GRP(116),
++	PINCTRL_FUNC_GRP(117),
++	PINCTRL_FUNC_GRP(118),
++	PINCTRL_FUNC_GRP(119),
++	PINCTRL_FUNC_GRP(120),
++	PINCTRL_FUNC_GRP(121),
++	PINCTRL_FUNC_GRP(122),
++	PINCTRL_FUNC_GRP(123),
++	PINCTRL_FUNC_GRP(124),
++	PINCTRL_FUNC_GRP(125),
++	PINCTRL_FUNC_GRP(126),
++	PINCTRL_FUNC_GRP(127),
++	PINCTRL_FUNC_GRP(128),
++	PINCTRL_FUNC_GRP(129),
++	PINCTRL_FUNC_GRP(130),
++	PINCTRL_FUNC_GRP(131),
++	PINCTRL_FUNC_GRP(132),
++	PINCTRL_FUNC_GRP(133),
++	PINCTRL_FUNC_GRP(134),
++	PINCTRL_FUNC_GRP(135),
++	PINCTRL_FUNC_GRP(136),
++	PINCTRL_FUNC_GRP(137),
++	PINCTRL_FUNC_GRP(138),
++	PINCTRL_FUNC_GRP(139),
++	PINCTRL_FUNC_GRP(140),
++	PINCTRL_FUNC_GRP(141),
++	PINCTRL_FUNC_GRP(142),
++	PINCTRL_FUNC_GRP(143),
++	PINCTRL_FUNC_GRP(144),
++
+ 	PINCTRL_GRP("i2c0", i2c0_pins, 2),
+ 	PINCTRL_GRP("i2c1", i2c1_pins, 2),
+ 	PINCTRL_GRP("i2c2", i2c2_pins, 2),
+@@ -309,4 +1192,158 @@ static const struct amd_pingroup kerncz_groups[] = {
+ 	PINCTRL_GRP("uart1", uart1_pins, 5),
+ };
+ 
++#define PMUX_FUNC(_number, _gname1, _gname2, _gname3, _gname4) {\
++		.name = "iomux_gpio_"#_number,\
++		.groups = {"IMX_F0_GPIO"#_number, "IMX_F1_GPIO"#_number,\
++			   "IMX_F2_GPIO"#_number, "IMX_F3_GPIO"#_number},\
++		.index = _number,\
++		.ngroups = NSELECTS }
++
++static const struct amd_function pmx_functions[] = {
++	PMUX_FUNC(0, IMX_F0_GPIO0, IMX_F1_GPIO0, IMX_F2_GPIO0, IMX_F3_GPIO0),
++	PMUX_FUNC(1, IMX_F0_GPIO1, IMX_F1_GPIO1, IMX_F2_GPIO1, IMX_F3_GPIO1),
++	PMUX_FUNC(2, IMX_F0_GPIO2, IMX_F1_GPIO2, IMX_F2_GPIO2, IMX_F3_GPIO2),
++	PMUX_FUNC(3, IMX_F0_GPIO3, IMX_F1_GPIO3, IMX_F2_GPIO3, IMX_F3_GPIO3),
++	PMUX_FUNC(4, IMX_F0_GPIO4, IMX_F1_GPIO4, IMX_F2_GPIO4, IMX_F3_GPIO4),
++	PMUX_FUNC(5, IMX_F0_GPIO5, IMX_F1_GPIO5, IMX_F2_GPIO5, IMX_F3_GPIO5),
++	PMUX_FUNC(6, IMX_F0_GPIO6, IMX_F1_GPIO6, IMX_F2_GPIO6, IMX_F3_GPIO6),
++	PMUX_FUNC(7, IMX_F0_GPIO7, IMX_F1_GPIO7, IMX_F2_GPIO7, IMX_F3_GPIO7),
++	PMUX_FUNC(8, IMX_F0_GPIO8, IMX_F1_GPIO8, IMX_F2_GPIO8, IMX_F3_GPIO8),
++	PMUX_FUNC(9, IMX_F0_GPIO9, IMX_F1_GPIO9, IMX_F2_GPIO9, IMX_F3_GPIO9),
++	PMUX_FUNC(10, IMX_F0_GPIO10, IMX_F1_GPIO10, IMX_F2_GPIO10, IMX_F3_GPIO10),
++	PMUX_FUNC(11, IMX_F0_GPIO11, IMX_F1_GPIO11, IMX_F2_GPIO11, IMX_F3_GPIO11),
++	PMUX_FUNC(12, IMX_F0_GPIO12, IMX_F1_GPIO12, IMX_F2_GPIO12, IMX_F3_GPIO12),
++	PMUX_FUNC(13, IMX_F0_GPIO13, IMX_F1_GPIO13, IMX_F2_GPIO13, IMX_F3_GPIO13),
++	PMUX_FUNC(14, IMX_F0_GPIO14, IMX_F1_GPIO14, IMX_F2_GPIO14, IMX_F3_GPIO14),
++	PMUX_FUNC(15, IMX_F0_GPIO15, IMX_F1_GPIO15, IMX_F2_GPIO15, IMX_F3_GPIO15),
++	PMUX_FUNC(16, IMX_F0_GPIO16, IMX_F1_GPIO16, IMX_F2_GPIO16, IMX_F3_GPIO16),
++	PMUX_FUNC(17, IMX_F0_GPIO17, IMX_F1_GPIO17, IMX_F2_GPIO17, IMX_F3_GPIO17),
++	PMUX_FUNC(18, IMX_F0_GPIO18, IMX_F1_GPIO18, IMX_F2_GPIO18, IMX_F3_GPIO18),
++	PMUX_FUNC(19, IMX_F0_GPIO19, IMX_F1_GPIO19, IMX_F2_GPIO19, IMX_F3_GPIO19),
++	PMUX_FUNC(20, IMX_F0_GPIO20, IMX_F1_GPIO20, IMX_F2_GPIO20, IMX_F3_GPIO20),
++	PMUX_FUNC(21, IMX_F0_GPIO21, IMX_F1_GPIO21, IMX_F2_GPIO21, IMX_F3_GPIO21),
++	PMUX_FUNC(22, IMX_F0_GPIO22, IMX_F1_GPIO22, IMX_F2_GPIO22, IMX_F3_GPIO22),
++	PMUX_FUNC(23, IMX_F0_GPIO23, IMX_F1_GPIO23, IMX_F2_GPIO23, IMX_F3_GPIO23),
++	PMUX_FUNC(24, IMX_F0_GPIO24, IMX_F1_GPIO24, IMX_F2_GPIO24, IMX_F3_GPIO24),
++	PMUX_FUNC(25, IMX_F0_GPIO25, IMX_F1_GPIO25, IMX_F2_GPIO25, IMX_F3_GPIO25),
++	PMUX_FUNC(26, IMX_F0_GPIO26, IMX_F1_GPIO26, IMX_F2_GPIO26, IMX_F3_GPIO26),
++	PMUX_FUNC(27, IMX_F0_GPIO27, IMX_F1_GPIO27, IMX_F2_GPIO27, IMX_F3_GPIO27),
++	PMUX_FUNC(28, IMX_F0_GPIO28, IMX_F1_GPIO28, IMX_F2_GPIO28, IMX_F3_GPIO28),
++	PMUX_FUNC(29, IMX_F0_GPIO29, IMX_F1_GPIO29, IMX_F2_GPIO29, IMX_F3_GPIO29),
++	PMUX_FUNC(30, IMX_F0_GPIO30, IMX_F1_GPIO30, IMX_F2_GPIO30, IMX_F3_GPIO30),
++	PMUX_FUNC(31, IMX_F0_GPIO31, IMX_F1_GPIO31, IMX_F2_GPIO31, IMX_F3_GPIO31),
++	PMUX_FUNC(32, IMX_F0_GPIO32, IMX_F1_GPIO32, IMX_F2_GPIO32, IMX_F3_GPIO32),
++	PMUX_FUNC(33, IMX_F0_GPIO33, IMX_F1_GPIO33, IMX_F2_GPIO33, IMX_F3_GPIO33),
++	PMUX_FUNC(34, IMX_F0_GPIO34, IMX_F1_GPIO34, IMX_F2_GPIO34, IMX_F3_GPIO34),
++	PMUX_FUNC(35, IMX_F0_GPIO35, IMX_F1_GPIO35, IMX_F2_GPIO35, IMX_F3_GPIO35),
++	PMUX_FUNC(36, IMX_F0_GPIO36, IMX_F1_GPIO36, IMX_F2_GPIO36, IMX_F3_GPIO36),
++	PMUX_FUNC(37, IMX_F0_GPIO37, IMX_F1_GPIO37, IMX_F2_GPIO37, IMX_F3_GPIO37),
++	PMUX_FUNC(38, IMX_F0_GPIO38, IMX_F1_GPIO38, IMX_F2_GPIO38, IMX_F3_GPIO38),
++	PMUX_FUNC(39, IMX_F0_GPIO39, IMX_F1_GPIO39, IMX_F2_GPIO39, IMX_F3_GPIO39),
++	PMUX_FUNC(40, IMX_F0_GPIO40, IMX_F1_GPIO40, IMX_F2_GPIO40, IMX_F3_GPIO40),
++	PMUX_FUNC(41, IMX_F0_GPIO41, IMX_F1_GPIO41, IMX_F2_GPIO41, IMX_F3_GPIO41),
++	PMUX_FUNC(42, IMX_F0_GPIO42, IMX_F1_GPIO42, IMX_F2_GPIO42, IMX_F3_GPIO42),
++	PMUX_FUNC(43, IMX_F0_GPIO43, IMX_F1_GPIO43, IMX_F2_GPIO43, IMX_F3_GPIO43),
++	PMUX_FUNC(44, IMX_F0_GPIO44, IMX_F1_GPIO44, IMX_F2_GPIO44, IMX_F3_GPIO44),
++	PMUX_FUNC(45, IMX_F0_GPIO45, IMX_F1_GPIO45, IMX_F2_GPIO45, IMX_F3_GPIO45),
++	PMUX_FUNC(46, IMX_F0_GPIO46, IMX_F1_GPIO46, IMX_F2_GPIO46, IMX_F3_GPIO46),
++	PMUX_FUNC(47, IMX_F0_GPIO47, IMX_F1_GPIO47, IMX_F2_GPIO47, IMX_F3_GPIO47),
++	PMUX_FUNC(48, IMX_F0_GPIO48, IMX_F1_GPIO48, IMX_F2_GPIO48, IMX_F3_GPIO48),
++	PMUX_FUNC(49, IMX_F0_GPIO49, IMX_F1_GPIO49, IMX_F2_GPIO49, IMX_F3_GPIO49),
++	PMUX_FUNC(50, IMX_F0_GPIO50, IMX_F1_GPIO50, IMX_F2_GPIO50, IMX_F3_GPIO50),
++	PMUX_FUNC(51, IMX_F0_GPIO51, IMX_F1_GPIO51, IMX_F2_GPIO51, IMX_F3_GPIO41),
++	PMUX_FUNC(52, IMX_F0_GPIO52, IMX_F1_GPIO52, IMX_F2_GPIO52, IMX_F3_GPIO52),
++	PMUX_FUNC(53, IMX_F0_GPIO53, IMX_F1_GPIO53, IMX_F2_GPIO53, IMX_F3_GPIO53),
++	PMUX_FUNC(54, IMX_F0_GPIO54, IMX_F1_GPIO54, IMX_F2_GPIO54, IMX_F3_GPIO54),
++	PMUX_FUNC(55, IMX_F0_GPIO55, IMX_F1_GPIO55, IMX_F2_GPIO55, IMX_F3_GPIO55),
++	PMUX_FUNC(56, IMX_F0_GPIO56, IMX_F1_GPIO56, IMX_F2_GPIO56, IMX_F3_GPIO56),
++	PMUX_FUNC(57, IMX_F0_GPIO57, IMX_F1_GPIO57, IMX_F2_GPIO57, IMX_F3_GPIO57),
++	PMUX_FUNC(58, IMX_F0_GPIO58, IMX_F1_GPIO58, IMX_F2_GPIO58, IMX_F3_GPIO58),
++	PMUX_FUNC(59, IMX_F0_GPIO59, IMX_F1_GPIO59, IMX_F2_GPIO59, IMX_F3_GPIO59),
++	PMUX_FUNC(60, IMX_F0_GPIO60, IMX_F1_GPIO60, IMX_F2_GPIO60, IMX_F3_GPIO60),
++	PMUX_FUNC(61, IMX_F0_GPIO61, IMX_F1_GPIO61, IMX_F2_GPIO61, IMX_F3_GPIO61),
++	PMUX_FUNC(62, IMX_F0_GPIO62, IMX_F1_GPIO62, IMX_F2_GPIO62, IMX_F3_GPIO62),
++	PMUX_FUNC(64, IMX_F0_GPIO64, IMX_F1_GPIO64, IMX_F2_GPIO64, IMX_F3_GPIO64),
++	PMUX_FUNC(65, IMX_F0_GPIO65, IMX_F1_GPIO65, IMX_F2_GPIO65, IMX_F3_GPIO65),
++	PMUX_FUNC(66, IMX_F0_GPIO66, IMX_F1_GPIO66, IMX_F2_GPIO66, IMX_F3_GPIO66),
++	PMUX_FUNC(67, IMX_F0_GPIO67, IMX_F1_GPIO67, IMX_F2_GPIO67, IMX_F3_GPIO67),
++	PMUX_FUNC(68, IMX_F0_GPIO68, IMX_F1_GPIO68, IMX_F2_GPIO68, IMX_F3_GPIO68),
++	PMUX_FUNC(69, IMX_F0_GPIO69, IMX_F1_GPIO69, IMX_F2_GPIO69, IMX_F3_GPIO69),
++	PMUX_FUNC(70, IMX_F0_GPIO70, IMX_F1_GPIO70, IMX_F2_GPIO70, IMX_F3_GPIO70),
++	PMUX_FUNC(71, IMX_F0_GPIO71, IMX_F1_GPIO71, IMX_F2_GPIO71, IMX_F3_GPIO71),
++	PMUX_FUNC(72, IMX_F0_GPIO72, IMX_F1_GPIO72, IMX_F2_GPIO72, IMX_F3_GPIO72),
++	PMUX_FUNC(73, IMX_F0_GPIO73, IMX_F1_GPIO73, IMX_F2_GPIO73, IMX_F3_GPIO73),
++	PMUX_FUNC(74, IMX_F0_GPIO74, IMX_F1_GPIO74, IMX_F2_GPIO74, IMX_F3_GPIO74),
++	PMUX_FUNC(75, IMX_F0_GPIO75, IMX_F1_GPIO75, IMX_F2_GPIO75, IMX_F3_GPIO75),
++	PMUX_FUNC(76, IMX_F0_GPIO76, IMX_F1_GPIO76, IMX_F2_GPIO76, IMX_F3_GPIO76),
++	PMUX_FUNC(77, IMX_F0_GPIO77, IMX_F1_GPIO77, IMX_F2_GPIO77, IMX_F3_GPIO77),
++	PMUX_FUNC(78, IMX_F0_GPIO78, IMX_F1_GPIO78, IMX_F2_GPIO78, IMX_F3_GPIO78),
++	PMUX_FUNC(79, IMX_F0_GPIO79, IMX_F1_GPIO79, IMX_F2_GPIO79, IMX_F3_GPIO79),
++	PMUX_FUNC(80, IMX_F0_GPIO80, IMX_F1_GPIO80, IMX_F2_GPIO80, IMX_F3_GPIO80),
++	PMUX_FUNC(81, IMX_F0_GPIO81, IMX_F1_GPIO81, IMX_F2_GPIO81, IMX_F3_GPIO81),
++	PMUX_FUNC(82, IMX_F0_GPIO82, IMX_F1_GPIO82, IMX_F2_GPIO82, IMX_F3_GPIO82),
++	PMUX_FUNC(83, IMX_F0_GPIO83, IMX_F1_GPIO83, IMX_F2_GPIO83, IMX_F3_GPIO83),
++	PMUX_FUNC(84, IMX_F0_GPIO84, IMX_F1_GPIO84, IMX_F2_GPIO84, IMX_F3_GPIO84),
++	PMUX_FUNC(85, IMX_F0_GPIO85, IMX_F1_GPIO85, IMX_F2_GPIO85, IMX_F3_GPIO85),
++	PMUX_FUNC(86, IMX_F0_GPIO86, IMX_F1_GPIO86, IMX_F2_GPIO86, IMX_F3_GPIO86),
++	PMUX_FUNC(87, IMX_F0_GPIO87, IMX_F1_GPIO87, IMX_F2_GPIO87, IMX_F3_GPIO87),
++	PMUX_FUNC(88, IMX_F0_GPIO88, IMX_F1_GPIO88, IMX_F2_GPIO88, IMX_F3_GPIO88),
++	PMUX_FUNC(89, IMX_F0_GPIO89, IMX_F1_GPIO89, IMX_F2_GPIO89, IMX_F3_GPIO89),
++	PMUX_FUNC(90, IMX_F0_GPIO90, IMX_F1_GPIO90, IMX_F2_GPIO90, IMX_F3_GPIO90),
++	PMUX_FUNC(91, IMX_F0_GPIO91, IMX_F1_GPIO91, IMX_F2_GPIO91, IMX_F3_GPIO91),
++	PMUX_FUNC(92, IMX_F0_GPIO92, IMX_F1_GPIO92, IMX_F2_GPIO92, IMX_F3_GPIO92),
++	PMUX_FUNC(93, IMX_F0_GPIO93, IMX_F1_GPIO93, IMX_F2_GPIO93, IMX_F3_GPIO93),
++	PMUX_FUNC(94, IMX_F0_GPIO94, IMX_F1_GPIO94, IMX_F2_GPIO94, IMX_F3_GPIO94),
++	PMUX_FUNC(95, IMX_F0_GPIO95, IMX_F1_GPIO95, IMX_F2_GPIO95, IMX_F3_GPIO95),
++	PMUX_FUNC(96, IMX_F0_GPIO96, IMX_F1_GPIO96, IMX_F2_GPIO96, IMX_F3_GPIO96),
++	PMUX_FUNC(97, IMX_F0_GPIO97, IMX_F1_GPIO97, IMX_F2_GPIO97, IMX_F3_GPIO97),
++	PMUX_FUNC(98, IMX_F0_GPIO98, IMX_F1_GPIO98, IMX_F2_GPIO98, IMX_F3_GPIO98),
++	PMUX_FUNC(99, IMX_F0_GPIO99, IMX_F1_GPIO99, IMX_F2_GPIO99, IMX_F3_GPIO99),
++	PMUX_FUNC(100, IMX_F0_GPIO100, IMX_F1_GPIO100, IMX_F2_GPIO100, IMX_F3_GPIO100),
++	PMUX_FUNC(101, IMX_F0_GPIO101, IMX_F1_GPIO101, IMX_F2_GPIO101, IMX_F3_GPIO101),
++	PMUX_FUNC(102, IMX_F0_GPIO102, IMX_F1_GPIO102, IMX_F2_GPIO102, IMX_F3_GPIO102),
++	PMUX_FUNC(103, IMX_F0_GPIO103, IMX_F1_GPIO103, IMX_F2_GPIO103, IMX_F3_GPIO103),
++	PMUX_FUNC(104, IMX_F0_GPIO104, IMX_F1_GPIO104, IMX_F2_GPIO104, IMX_F3_GPIO104),
++	PMUX_FUNC(105, IMX_F0_GPIO105, IMX_F1_GPIO105, IMX_F2_GPIO105, IMX_F3_GPIO105),
++	PMUX_FUNC(106, IMX_F0_GPIO106, IMX_F1_GPIO106, IMX_F2_GPIO106, IMX_F3_GPIO106),
++	PMUX_FUNC(107, IMX_F0_GPIO107, IMX_F1_GPIO107, IMX_F2_GPIO107, IMX_F3_GPIO107),
++	PMUX_FUNC(108, IMX_F0_GPIO108, IMX_F1_GPIO108, IMX_F2_GPIO108, IMX_F3_GPIO108),
++	PMUX_FUNC(109, IMX_F0_GPIO109, IMX_F1_GPIO109, IMX_F2_GPIO109, IMX_F3_GPIO109),
++	PMUX_FUNC(110, IMX_F0_GPIO110, IMX_F1_GPIO110, IMX_F2_GPIO110, IMX_F3_GPIO110),
++	PMUX_FUNC(111, IMX_F0_GPIO111, IMX_F1_GPIO111, IMX_F2_GPIO111, IMX_F3_GPIO111),
++	PMUX_FUNC(112, IMX_F0_GPIO112, IMX_F1_GPIO112, IMX_F2_GPIO112, IMX_F3_GPIO112),
++	PMUX_FUNC(113, IMX_F0_GPIO113, IMX_F1_GPIO113, IMX_F2_GPIO113, IMX_F3_GPIO113),
++	PMUX_FUNC(114, IMX_F0_GPIO114, IMX_F1_GPIO114, IMX_F2_GPIO114, IMX_F3_GPIO114),
++	PMUX_FUNC(115, IMX_F0_GPIO115, IMX_F1_GPIO115, IMX_F2_GPIO115, IMX_F3_GPIO115),
++	PMUX_FUNC(116, IMX_F0_GPIO116, IMX_F1_GPIO116, IMX_F2_GPIO116, IMX_F3_GPIO116),
++	PMUX_FUNC(117, IMX_F0_GPIO117, IMX_F1_GPIO117, IMX_F2_GPIO117, IMX_F3_GPIO117),
++	PMUX_FUNC(118, IMX_F0_GPIO118, IMX_F1_GPIO118, IMX_F2_GPIO118, IMX_F3_GPIO118),
++	PMUX_FUNC(119, IMX_F0_GPIO119, IMX_F1_GPIO119, IMX_F2_GPIO119, IMX_F3_GPIO119),
++	PMUX_FUNC(120, IMX_F0_GPIO120, IMX_F1_GPIO120, IMX_F2_GPIO120, IMX_F3_GPIO120),
++	PMUX_FUNC(121, IMX_F0_GPIO121, IMX_F1_GPIO121, IMX_F2_GPIO121, IMX_F3_GPIO121),
++	PMUX_FUNC(122, IMX_F0_GPIO122, IMX_F1_GPIO122, IMX_F2_GPIO122, IMX_F3_GPIO122),
++	PMUX_FUNC(123, IMX_F0_GPIO123, IMX_F1_GPIO123, IMX_F2_GPIO123, IMX_F3_GPIO123),
++	PMUX_FUNC(124, IMX_F0_GPIO124, IMX_F1_GPIO124, IMX_F2_GPIO124, IMX_F3_GPIO124),
++	PMUX_FUNC(125, IMX_F0_GPIO125, IMX_F1_GPIO125, IMX_F2_GPIO125, IMX_F3_GPIO125),
++	PMUX_FUNC(126, IMX_F0_GPIO126, IMX_F1_GPIO126, IMX_F2_GPIO126, IMX_F3_GPIO126),
++	PMUX_FUNC(127, IMX_F0_GPIO127, IMX_F1_GPIO127, IMX_F2_GPIO127, IMX_F3_GPIO127),
++	PMUX_FUNC(128, IMX_F0_GPIO128, IMX_F1_GPIO128, IMX_F2_GPIO128, IMX_F3_GPIO128),
++	PMUX_FUNC(129, IMX_F0_GPIO129, IMX_F1_GPIO129, IMX_F2_GPIO129, IMX_F3_GPIO129),
++	PMUX_FUNC(130, IMX_F0_GPIO130, IMX_F1_GPIO130, IMX_F2_GPIO130, IMX_F3_GPIO130),
++	PMUX_FUNC(131, IMX_F0_GPIO131, IMX_F1_GPIO131, IMX_F2_GPIO131, IMX_F3_GPIO131),
++	PMUX_FUNC(132, IMX_F0_GPIO132, IMX_F1_GPIO132, IMX_F2_GPIO132, IMX_F3_GPIO132),
++	PMUX_FUNC(133, IMX_F0_GPIO133, IMX_F1_GPIO133, IMX_F2_GPIO133, IMX_F3_GPIO133),
++	PMUX_FUNC(134, IMX_F0_GPIO134, IMX_F1_GPIO134, IMX_F2_GPIO134, IMX_F3_GPIO134),
++	PMUX_FUNC(135, IMX_F0_GPIO135, IMX_F1_GPIO135, IMX_F2_GPIO135, IMX_F3_GPIO135),
++	PMUX_FUNC(136, IMX_F0_GPIO136, IMX_F1_GPIO136, IMX_F2_GPIO136, IMX_F3_GPIO136),
++	PMUX_FUNC(137, IMX_F0_GPIO137, IMX_F1_GPIO137, IMX_F2_GPIO137, IMX_F3_GPIO137),
++	PMUX_FUNC(138, IMX_F0_GPIO138, IMX_F1_GPIO138, IMX_F2_GPIO138, IMX_F3_GPIO138),
++	PMUX_FUNC(139, IMX_F0_GPIO139, IMX_F1_GPIO139, IMX_F2_GPIO139, IMX_F3_GPIO139),
++	PMUX_FUNC(140, IMX_F0_GPIO140, IMX_F1_GPIO140, IMX_F2_GPIO140, IMX_F3_GPIO140),
++	PMUX_FUNC(141, IMX_F0_GPIO141, IMX_F1_GPIO141, IMX_F2_GPIO141, IMX_F3_GPIO141),
++	PMUX_FUNC(142, IMX_F0_GPIO142, IMX_F1_GPIO142, IMX_F2_GPIO142, IMX_F3_GPIO142),
++	PMUX_FUNC(143, IMX_F0_GPIO143, IMX_F1_GPIO143, IMX_F2_GPIO143, IMX_F3_GPIO143),
++	PMUX_FUNC(144, IMX_F0_GPIO144, IMX_F1_GPIO144, IMX_F2_GPIO144, IMX_F3_GPIO144),
++};
++
+ #endif
 -- 
 2.25.1
 
