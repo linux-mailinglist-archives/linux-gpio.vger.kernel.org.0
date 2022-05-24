@@ -2,166 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A26E8532F19
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 18:39:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E491532F20
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 18:41:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236421AbiEXQji (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 May 2022 12:39:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41532 "EHLO
+        id S238981AbiEXQl4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 May 2022 12:41:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233418AbiEXQjh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 12:39:37 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3885EE023
-        for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 09:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653410376; x=1684946376;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z8JQ890saiCJwg0n22svYm3opD2eTDf6NCHNsEjahX8=;
-  b=cZ1XUwLeI7tl1PLaibyCWYiXfQB+82vESUu+aFfdIlE3wLqfwARtIiyV
-   aa7cEgNqJy5/sHFWUnw99SUgMtsIX+7Gsy8yCps4peZdEagW+YW4v/dmD
-   sU+YTab2V1OcPfDMGWeTvClulTRM67Km6NGeQj1B3rKvLvdSvjICp6EoL
-   f6ztMoYJYx6j/HedG8T2dHEjmyEbhePGIt4VV6/IwVIHgGrfkr0WsiVtK
-   7kcZlNyFVhCs4PDAIQQXn4//ottRzC3sBSDPfioEdWysuGZA7jYe/86Ei
-   3kGe0At7PtWPlEZGlYC7qDy1kpIGbtNjeTIFN9q5NhDGPuPDleOOioXKe
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10357"; a="273306760"
-X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
-   d="scan'208";a="273306760"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2022 09:39:21 -0700
-X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
-   d="scan'208";a="601388069"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2022 09:39:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ntXYz-000KEw-Gb;
-        Tue, 24 May 2022 19:39:17 +0300
-Date:   Tue, 24 May 2022 19:39:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Basavaraj Natikar <bnatikar@amd.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Shyam-sundar.S-k@amd.com, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] pinctrl: amd: Get and update IOMUX details
-Message-ID: <Yo0KNY55M7d+eli2@smile.fi.intel.com>
-References: <20220524074007.2792445-1-Basavaraj.Natikar@amd.com>
- <20220524074007.2792445-3-Basavaraj.Natikar@amd.com>
- <CACRpkdZ267_CjNoro4A+eBASjz=qCL4ixLnbsac5U+gCsBSGwg@mail.gmail.com>
- <e35efb44-6e74-690c-91b6-c8270f624894@amd.com>
- <YozDbugZc8vXPHU2@lahna>
- <8ba8857d-c3ab-8959-5bc3-a4e225459f61@amd.com>
- <YozKd+Zehnlg1s1p@lahna>
- <c79fc5ce-469d-a547-5485-aa00210db79b@amd.com>
- <YozQxvHzoiISqjob@lahna>
- <d14a0bae-c43b-f365-2fc9-873ca03eb87d@amd.com>
+        with ESMTP id S239552AbiEXQlx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 12:41:53 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56629369E3;
+        Tue, 24 May 2022 09:41:51 -0700 (PDT)
+Date:   Tue, 24 May 2022 18:41:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1653410507;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YK2eEOx7qW4qJHtFCm6AqFTk2cYYBK5VN6M5h7/LPJY=;
+        b=RpxUjmeXaoO/cBMYYtR+W0dgahHZXn+pWhavM1CLX7ZfQbTpfWIlyVxXP2YkVVmh2rwFni
+        oLUkOWEklbTTdrrQ7EBqMg9VljxqAkk2RMpDM3IceQGLMwRX/iWplU9ypzMYYcF6rIsNq5
+        gEQ4o1/jjw0KCo+cUaPASqE1n/pDEduI0UjFZDyXV0oSZG/MAsghi4jn0Q2Rgd5KSWzxGx
+        bQvfZfriHlwfgaQV7kIhJvTA4aJo6Sat/396ZLjHmqW288KyLlFNIavuowjRfXYfA7qDR7
+        byhLkWlIiN/whQv1P/8pn5vO4+sDy2ImQNzEoKhEtwkvfwviQyVSr29nT72Agg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1653410507;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YK2eEOx7qW4qJHtFCm6AqFTk2cYYBK5VN6M5h7/LPJY=;
+        b=/mpKm9K+KmM77y1Sv2U9sqow5FiO6MRm6Pw38G0V5vb80cMf3MtUbFzjWo6JzMqnXUz52M
+        Ak5KSCUA8QKj4tCw==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, John Stultz <jstultz@google.com>
+Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver
+ registration
+Message-ID: <Yo0KyWx+3oX3cMCS@linutronix.de>
+References: <20220429220933.1350374-1-saravanak@google.com>
+ <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X>
+ <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
+ <YogsiMCDupNUhMgL@dev-fedora.thelio-3990X>
+ <CAGETcx-JyWwoGA3o8eep7E29Cm4DcVT6D1JFJh72jLcqm_mjCQ@mail.gmail.com>
+ <Youleo3Ganxbc1sq@dev-arch.thelio-3990X>
+ <CAGETcx-sL08h2toEyxY6ztc6xNuJiPok6iDEeuJ1mOA3nvE+vA@mail.gmail.com>
+ <YowHNo4sBjr9ijZr@dev-arch.thelio-3990X>
+ <CAGETcx91_WgpmwEA7mBSvUdyJV0a8ymfaNKTmXq=mAJYAjzq1A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d14a0bae-c43b-f365-2fc9-873ca03eb87d@amd.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAGETcx91_WgpmwEA7mBSvUdyJV0a8ymfaNKTmXq=mAJYAjzq1A@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 24, 2022 at 07:20:34PM +0530, Basavaraj Natikar wrote:
-> On 5/24/2022 6:04 PM, Mika Westerberg wrote:
-> > On Tue, May 24, 2022 at 05:54:47PM +0530, Basavaraj Natikar wrote:
-> >> There is no CRS method defined for IOMX/0xFED80D00 in ACPI namespace // IOMX Address Base 
-> >> Hence I added additional code to get IOMX memory region.
-> >>
-> >> since _CRS method is used to get GPIO pin base for AMDI0030 in
-> >> pinctrl-amd as below, same is not available for IOMX
-> >>  
-> >>   Device (GPIO)
-> >>         {
-> >>             Name (_HID, "AMDI0030")  // _HID: Hardware ID
-> >>             Name (_CID, "AMDI0030")  // _CID: Compatible ID
-> >>             Name (_UID, Zero)  // _UID: Unique ID
-> >>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-> >>             {
-> >>                 Name (RBUF, ResourceTemplate ()
-> >>                 {
-> >>                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
-> >>                     {
-> >>                         0x00000007,
-> >>                     }
-> >>                     Memory32Fixed (ReadWrite,
-> >>                         0xFED81500,         // Address Base
-> >>                         0x00000400,         // Address Length
-> >>                         )
-> > Is there something preventing you to add it here like below?
-> >
-> >                      Memory32Fixed (ReadWrite, 0xFED80D00 0x00000400)
-> 
-> yes few system has different entries already defined like below      
->   Device (GPIO)
->         {
->             Name (_HID, "AMDI0030")  // _HID: Hardware ID
->             Name (_CID, "AMDI0030")  // _CID: Compatible ID
->             Name (_UID, Zero)  // _UID: Unique ID
->             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->             {
->                 Name (RBUF, ResourceTemplate ()
->                 {
->                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
->                     {
->                         0x00000007,
->                     }
->                     Memory32Fixed (ReadWrite,
->                         0xFED81500,         // Address Base
->                         0x00000400,         // Address Length
->                         )
->                 })
->                 Return (RBUF) /* \_SB_.GPIO._CRS.RBUF */
->             }
-> 
-> 
->         Device (GPIO)
->         {
->             Name (_HID, "AMDI0030")  // _HID: Hardware ID
->             Name (_CID, "AMDI0030")  // _CID: Compatible ID
->             Name (_UID, Zero)  // _UID: Unique ID
->             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->             {
->                 Name (RBUF, ResourceTemplate ()
->                 {
->                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
->                     {
->                         0x00000007,
->                     }
->                     Memory32Fixed (ReadWrite,
->                         0xFED81500,         // Address Base
->                         0x00000400,         // Address Length
->                         )
->                     Memory32Fixed (ReadWrite,
->                         0xFED81200,         // Address Base
->                         0x00000100,         // Address Length
->                         )
->                 })
->                 Return (RBUF) /* \_SB_.GPIO._CRS.RBUF */
->             }
-> 
-> if we add or in future some entries added. 
-> is there way to map particular entry for IOMUX? 
+On 2022-05-23 20:43:06 [-0700], Saravana Kannan wrote:
+=E2=80=A6
+> Thanks for all the help. I think I know what's going on.
 
-Straightforward way is to add it always to the end and add _DSD boolean
-property ("amd,pinctrl-iomux-present") and act accordingly. More flexible and
-less error prone is to name all resources with DSD property and find resource
-by name: "amd,pinctrl-resource-names" = "bank0", "bank1", "iomux".
+I, too got here because my boot recently was extended by 10 seconds and
+bisected to that commit in question.
 
+> If you revert the following commit, then you'll see that your device
+> no longer hangs with my changes.
+> 35a672363ab3 driver core: Ensure wait_for_device_probe() waits until
+> the deferred_probe_timeout fires
 
--- 
-With Best Regards,
-Andy Shevchenko
+Removing probe_timeout_waitqueue (as suggested) or setting the timeout
+to 0 avoids the delay.
 
+> -Saravana
 
+Sebastian
