@@ -2,99 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B6CD532C5A
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 16:39:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C093D532E01
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 May 2022 18:00:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237273AbiEXOjO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 May 2022 10:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44124 "EHLO
+        id S239187AbiEXP7s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 May 2022 11:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235060AbiEXOjN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 10:39:13 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40D88FF8E
-        for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 07:39:08 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id n10so35782973ejk.5
-        for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 07:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BHIrU1h8o3PeeWtEXAqmXklmD9PPjR9mX00xsQz9MDU=;
-        b=GQp/I3roQikMivJnfms/VckCrxa6PcjgSV+wapm2zOjBujUpM++eN6dLiRIn6nafsW
-         G8UnLlnmv1P0k83DWBZM7zGe07EjZWXUwimx8cYVxO6EPmzoJPQLlpqVryvwQ03vuRyx
-         8apLelmjEUzVADPAAo1LErYnKF6ynWx74RFcQgSbEuF3LFPxO+/NYXR2pQPr2CURQrjb
-         t/q6bwN5PSNIHjuZkfEBH5BJc5l/TjQJW3tBmjl4ex6ZcEuGoySEiyF6fNl1+ZdUsmXZ
-         6ziHMtW2n2ToH28mdIPg4I56b/OmoMojhc4Ch5ELBaI8rXO0fAMkat49MTqnHXRB0NWG
-         8YSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BHIrU1h8o3PeeWtEXAqmXklmD9PPjR9mX00xsQz9MDU=;
-        b=ifSonWf+/0w/zj0SZ1Rg3iJ2wtz3vtMcMFXh9QABfrFOivb+19KxWxGjgjuuJCZ0hC
-         3nlR/GR+CA2VVmdedIAS6RbybNZ8QMH/j4aDyVvJlnCaW2lZNzTGcBrXPDg7kBNTzoiF
-         XsfnH0XgL0X2YzdtT1zDbJmN6toKLNHDCp7k3RJntIvOXixEmLDQZhqUdq5i/AMUk6g4
-         sleo73SQ0r9xLsFdsJYJMRgj+Zu1sWFkANu9hB9yfz+1vg3vN2FoLg2MPf3RxWHhRAVo
-         q4+8XrYCadpEgL25CqHLLZbOu/eimEQzmE6k7XAPhHa/dudhJFd1c8+zV0bhlXcBlZee
-         M3zA==
-X-Gm-Message-State: AOAM532dSCf/AUzSGCwfRFVuvXJvQqR/RNgoXyTk0ewAGeg9TjXHaYDw
-        kdLalZQRp8bDceN0JznOZVzKo4GVcyoQ/FXb/TQuwYRDvGQ=
-X-Google-Smtp-Source: ABdhPJzQTKp4+CTlp05mzJhXaW2mMUL3EiLh2HNU+72NM0eSDta+baa0lu219sROu/Y3YnnI2LGCxpqEAsHv/4m7tWA=
-X-Received: by 2002:a17:907:868e:b0:6fa:2fe2:92d6 with SMTP id
- qa14-20020a170907868e00b006fa2fe292d6mr24360856ejc.639.1653403147551; Tue, 24
- May 2022 07:39:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220524074007.2792445-1-Basavaraj.Natikar@amd.com> <20220524074007.2792445-2-Basavaraj.Natikar@amd.com>
-In-Reply-To: <20220524074007.2792445-2-Basavaraj.Natikar@amd.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 May 2022 16:38:31 +0200
-Message-ID: <CAHp75VfQgzMF7gZ+_NHpE5jb3EF8mOEjCr6DrghN2xyrTwKK7w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] pinctrl: amd: Define and use PINCTRL_GRP
-To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        with ESMTP id S239191AbiEXP7r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 May 2022 11:59:47 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1079B1BF;
+        Tue, 24 May 2022 08:59:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8F02AB81A50;
+        Tue, 24 May 2022 15:59:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5BB6C34119;
+        Tue, 24 May 2022 15:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653407983;
+        bh=+8/rSL0dktqyZfvWABToCYxgk0Wct5z+yxpZFfy6gak=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JV6Y+kYzlxA50DwabvFq0xTfWb0dmxTYBk0BS1gmdBWXT1R6IA6xIY4UgPX7YzvtV
+         rTrk8DYPY7TZNIQrKKzX3K5Qy3QOeKcA9eyPMMRQyVmq8Sd1UTrshRDHNZ5g8tqPaT
+         vq0i9FRyQhVKE4itrgQQ9j8eBkFHRYNVQfqitxFqOLTuOdEW+TDsTgrC7HkFT2lxjk
+         kp4TOCodAt4vwWb0p1zzBNtYFvAqWq/w/plED49/YYD2LN3yY1xsbpn9tSrfLtqQvJ
+         LHHKtobHptxhfXwCP50xujCoCjWKvNKrHsu2OtEerFiAILGHlLG/PXVYiK6bDyZg9g
+         z6mDhkt+l4d5g==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     IotaHydrae <writeforever@foxmail.com>,
+        Andre Przywara <andre.przywara@arm.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Sasha Levin <sashal@kernel.org>, wens@csie.org,
+        jernej.skrabec@gmail.com, samuel@sholland.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.17 04/12] pinctrl: sunxi: fix f1c100s uart2 function
+Date:   Tue, 24 May 2022 11:59:18 -0400
+Message-Id: <20220524155929.826793-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220524155929.826793-1-sashal@kernel.org>
+References: <20220524155929.826793-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 24, 2022 at 10:13 AM Basavaraj Natikar
-<Basavaraj.Natikar@amd.com> wrote:
->
-> AMD pingroup can be extended to support multi-function pins.
-> Hence define and use PINCTRL_GRP to manage and represent
-> larger number of pingroups inline.
+From: IotaHydrae <writeforever@foxmail.com>
 
-This is good idea, but please make it available for all pin control
-drivers, since the data structure like
+[ Upstream commit fa8785e5931367e2b43f2c507f26bcf3e281c0ca ]
 
-  pingroup {
-    *name;
-    *pins;
-    npins;
-  }
+Change suniv f1c100s pinctrl,PD14 multiplexing function lvds1 to uart2
 
-is used in many drivers.
+When the pin PD13 and PD14 is setting up to uart2 function in dts,
+there's an error occurred:
+1c20800.pinctrl: unsupported function uart2 on pin PD14
 
-That said, I think the AMD_ prefix will be misleading in this case.
+Because 'uart2' is not any one multiplexing option of PD14,
+and pinctrl don't know how to configure it.
 
-...
+So change the pin PD14 lvds1 function to uart2.
 
-> +#define PINCTRL_GRP(_name, _pins, _npins) \
-> +       { .name = _name, .pins = _pins, .npins = _npins}
+Signed-off-by: IotaHydrae <writeforever@foxmail.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Link: https://lore.kernel.org/r/tencent_70C1308DDA794C81CAEF389049055BACEC09@qq.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please, don't forget spaces and commas, also it would be better to
-1) split {} on the separate lines;
-2) make it compound literal, so one can use it in the code.
-
+diff --git a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
+index 2801ca706273..68a5b627fb9b 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
++++ b/drivers/pinctrl/sunxi/pinctrl-suniv-f1c100s.c
+@@ -204,7 +204,7 @@ static const struct sunxi_desc_pin suniv_f1c100s_pins[] = {
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "lcd"),		/* D20 */
+-		  SUNXI_FUNCTION(0x3, "lvds1"),		/* RX */
++		  SUNXI_FUNCTION(0x3, "uart2"),		/* RX */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 14)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 15),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
 -- 
-With Best Regards,
-Andy Shevchenko
+2.35.1
+
