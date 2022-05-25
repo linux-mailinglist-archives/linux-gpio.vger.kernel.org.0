@@ -2,116 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE622533725
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 09:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4753A533783
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 09:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244268AbiEYHM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 03:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54450 "EHLO
+        id S239165AbiEYHjI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 03:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238372AbiEYHMF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 03:12:05 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCBA95FDB;
-        Wed, 25 May 2022 00:12:03 -0700 (PDT)
-Date:   Wed, 25 May 2022 09:11:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1653462718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+orsWNjWtAwiggB87niLJ7T2vo66GNbCnC4aWo769UQ=;
-        b=tXIaQWvesmewK1SQvqwWgjKsyAyyIrLjEanwcNAy2h/P5FMGq/kJgWZClGgDeKmANuYAkW
-        6I7SL146oVeYMmgPOm/K/5ULiZwNsVMQKo5zuy5USu5ms+bQvLeomBnv/Y7RF7ep6r43Fg
-        yrE+GteNpeB84vc7KB5yHCiGDGSLxpJF9n26BehK7VVK2KwTS1qiOtnBNXBBg3s07zq9LZ
-        QuC90oOJFyjhHJqpIG4b7pe7LqIsPAYDmbR2tbrm4G6CKN84jA5eTlcpkoSp3W47VVgETh
-        utsXLbJ9WiKBewsE1+4q4+5PmLVYRznaktasLTJPtcPFwgqlSj1UxEdIbhT9hg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1653462718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+orsWNjWtAwiggB87niLJ7T2vo66GNbCnC4aWo769UQ=;
-        b=1vNUO3Dakuo2lI9Z/n9vsWIZ8Loex9gUHN2zaefzYBYblmfryFJ25az2ZrOSX+XZBIv9t6
-        eUlvctYCzDyGwvCQ==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, John Stultz <jstultz@google.com>
-Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver
- registration
-Message-ID: <Yo3WvGnNk3LvLb7R@linutronix.de>
-References: <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X>
- <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
- <YogsiMCDupNUhMgL@dev-fedora.thelio-3990X>
- <CAGETcx-JyWwoGA3o8eep7E29Cm4DcVT6D1JFJh72jLcqm_mjCQ@mail.gmail.com>
- <Youleo3Ganxbc1sq@dev-arch.thelio-3990X>
- <CAGETcx-sL08h2toEyxY6ztc6xNuJiPok6iDEeuJ1mOA3nvE+vA@mail.gmail.com>
- <YowHNo4sBjr9ijZr@dev-arch.thelio-3990X>
- <CAGETcx91_WgpmwEA7mBSvUdyJV0a8ymfaNKTmXq=mAJYAjzq1A@mail.gmail.com>
- <Yo0KyWx+3oX3cMCS@linutronix.de>
- <CAGETcx_qTLwbjzMruLThLYV+MZD5W2Ox-QwLFQeW=eQgxzq-Hw@mail.gmail.com>
+        with ESMTP id S243911AbiEYHjF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 03:39:05 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7ED471A38
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 00:39:04 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id l13so27989613lfp.11
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 00:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OhxVZ2LgCynbOv8tKdPmgIQ5QMN9FYlxj9ofmtk1cEQ=;
+        b=BusphhT/woejAOYPCsjC+kFvsur8tfYlVNmICYZFvWjI2nRwkSo8dt8ksra7q0NOd2
+         F2XoPdCK71Sh63oMTdXJbgH0vex0srZ8GZooJbuL4QE6F6H686ITPspK63oA7f41An96
+         aJNXt5laS0Q3uVRyflNR3xDFnkazok0tLDnIuXiPdemGsB9ZgFi2AQ60awsp910pXJKa
+         cG5zDUXTf0gS3fCH1iO7nQb9tyTJTiwWUcWT16xS8L9KFEq6eiQ0xYe50/QVxQKKEvpD
+         jgrzabue50suQigiUrKmOJIKGi3kqjLTR0kQb8biOfhSE895j9dFOwB6vwqNoUxgOPN2
+         +3IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OhxVZ2LgCynbOv8tKdPmgIQ5QMN9FYlxj9ofmtk1cEQ=;
+        b=krQGLSiJUQJ8S9q18rJeDaA2Q0zQ9hBsOhZ9tGplvB7iwWoFGl7fDY9c8K1SQO+qY1
+         9LG28aL97fDtTtzE4hhERUj9QUadyRlArGFje/F4cA7TpOqTslfDl7PSNkh+0xOweSip
+         1SesuOqhF0Vf4P+ZJE1wOvYkaSjI5SWwjkTfERoFE7pcOCQmSTDOUZMX94UNfsZhsrva
+         vy06dR+cMW117J6XaAhPmt/WTty8TIR4ks4/bjsxeXW5MT6bLwKKUpPUB8ie8Z+zrex/
+         bvqC1TEbeSNOqGHkQ+hHL/JcSQQ2ENDGrLPj3q8tWUlqND6NxXodpK26qPfYxAwn25II
+         /Tog==
+X-Gm-Message-State: AOAM5314oPujG/Y1Fexm6g8SlEVV8+46liarbrT0lBpYcBHoK3Z0zz/s
+        6F5BHCShfijxuXttRFf3KTt0I2Z6zYgqh6iq2/CI9Q==
+X-Google-Smtp-Source: ABdhPJz23Uln5bDGjeo+lBSYUJgYAKBLIPMwtjZvY1/UtzgpzGOOdu8QqyJN2S4UocIDBPV/zlcKmA5xIoUCnqJsaUo=
+X-Received: by 2002:a05:6512:16aa:b0:443:bf59:5a4d with SMTP id
+ bu42-20020a05651216aa00b00443bf595a4dmr22852562lfb.622.1653464343312; Wed, 25
+ May 2022 00:39:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAGETcx_qTLwbjzMruLThLYV+MZD5W2Ox-QwLFQeW=eQgxzq-Hw@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220524142206.18833-1-marcan@marcan.st>
+In-Reply-To: <20220524142206.18833-1-marcan@marcan.st>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 25 May 2022 09:38:51 +0200
+Message-ID: <CACRpkdZX19VaEy64-64UNWafM-wF_=h9w8Qiq4xFFhsa6sahaQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: apple: Use a raw spinlock for the regmap
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, asahi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-05-24 10:46:49 [-0700], Saravana Kannan wrote:
-> > Removing probe_timeout_waitqueue (as suggested) or setting the timeout
-> > to 0 avoids the delay.
->=20
-> In your case, I think it might be working as intended? Curious, what
-> was the call stack in your case where it was blocked?
+On Tue, May 24, 2022 at 4:22 PM Hector Martin <marcan@marcan.st> wrote:
 
-Why is then there 10sec delay during boot? The backtrace is
-|------------[ cut here ]------------
-|WARNING: CPU: 4 PID: 1 at drivers/base/dd.c:742 wait_for_device_probe+0x30=
-/0x110
-|Modules linked in:
-|CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.18.0-rc5+ #154
-|RIP: 0010:wait_for_device_probe+0x30/0x110
-|Call Trace:
-| <TASK>
-| prepare_namespace+0x2b/0x160
-| kernel_init_freeable+0x2b3/0x2dd
-| kernel_init+0x11/0x110
-| ret_from_fork+0x22/0x30
-| </TASK>
+> The irqchip ops are called with a raw spinlock held, so the subsequent
+> regmap usage cannot use a plain spinlock.
+>
+> spi-hid-apple-of spi0.0: spihid_apple_of_probe:74
+>
+> =============================
+> [ BUG: Invalid wait context ]
+> 5.18.0-asahi-00176-g0fa3ab03bdea #1337 Not tainted
+> -----------------------------
+> kworker/u20:3/86 is trying to lock:
+> ffff8000166b5018 (pinctrl_apple_gpio:462:(&regmap_config)->lock){....}-{3:3}, at: regmap_lock_spinlock+0x18/0x30
+> other info that might help us debug this:
+> context-{5:5}
+> 7 locks held by kworker/u20:3/86:
+>  #0: ffff800017725d48 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1c8/0x670
+>  #1: ffff80001e33bdd0 (deferred_probe_work){+.+.}-{0:0}, at: process_one_work+0x1c8/0x670
+>  #2: ffff800017d629a0 (&dev->mutex){....}-{4:4}, at: __device_attach+0x30/0x17c
+>  #3: ffff80002414e618 (&ctlr->add_lock){+.+.}-{4:4}, at: spi_add_device+0x40/0x80
+>  #4: ffff800024116990 (&dev->mutex){....}-{4:4}, at: __device_attach+0x30/0x17c
+>  #5: ffff800022d4be58 (request_class){+.+.}-{4:4}, at: __setup_irq+0xa8/0x720
+>  #6: ffff800022d4bcc8 (lock_class){....}-{2:2}, at: __setup_irq+0xcc/0x720
+>
+> Fixes: a0f160ffcb83 ("pinctrl: add pinctrl/GPIO driver for Apple SoCs")
+> Signed-off-by: Hector Martin <marcan@marcan.st>
 
-Looking closer, it can't access init. This in particular box boots
-directly the kernel without an initramfs so the kernel later mounts
-/dev/sda1 and everything is good.  So that seems to be the reason=E2=80=A6
-My other machine with an initramfs does not show this problem.
+Patch applied!
 
-> -Saravana
-
-Sebastian
+Yours,
+Linus Walleij
