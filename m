@@ -2,162 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E11165344C7
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 22:19:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25858534541
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 22:48:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234954AbiEYUTT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 16:19:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48878 "EHLO
+        id S241058AbiEYUsc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 16:48:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232984AbiEYUTS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 16:19:18 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B86D1180C
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 13:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653509957; x=1685045957;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9LVvEHUYA+3huG3uMHo0hJqmmgqDRf1EjHEenC0OJqc=;
-  b=cPjHTREmlo0JqoGtVJFyP6o1Fu9lq3yrwb0cVfK8E4NysiOsjSamDJAz
-   SrPI7MZtNjYIz/4WRsdFHHcluM12CRBsAT6V3KBr4QXfZEpE1r5x+oktz
-   HMsA1RimFeoZUrvs9+KjVcOsP5l3ytQQzjWMVVjf+IBoGRDeKfT3CHY3i
-   z1IL+iML48/vyy1EOb3msBfjQQLPi6a0RujjTOkI8hp9hsHRhjQWGwte2
-   DhLUPef5zYXwNlZ/Ft8dRrwBeTr/9CMyxXHh5gJfwCRn0zWbzlUs8rpgQ
-   7+qOf6/cCOiKrMspSS5wALrN2jSYTMvjS3jYTVbaDGVUU4/99hgtlaz8L
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10358"; a="273929683"
-X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
-   d="scan'208";a="273929683"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2022 13:19:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
-   d="scan'208";a="704164522"
-Received: from lkp-server01.sh.intel.com (HELO db63a1be7222) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 25 May 2022 13:19:15 -0700
-Received: from kbuild by db63a1be7222 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1ntxTP-0003IE-4e;
-        Wed, 25 May 2022 20:19:15 +0000
-Date:   Thu, 26 May 2022 04:18:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 83969805cc716a7dc6b296c3fb1bc7e5cd7ca321
-Message-ID: <628e8f12.N4Kf/JaqQb9ticTE%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S236178AbiEYUsY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 16:48:24 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA09B0D15
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 13:48:22 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id v26so9979081ybd.2
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 13:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
+        b=MIznAoP29XHGMZwK2XaORcuFYY4KHU3SiD37YZr3IksbwEszYFwRGI6NMOaIsgw3Rc
+         MNWUak9e2Pk5zm0JPp6szTBpWptBOFEsDKaXw1mzZOTFcRGcvyjOwqdtF8UB9EvyuuJZ
+         fMICjT1+KZ7bxeE9NTTU8LESXRGeqFThSri55TjzyU4r+qSYB8KRkbeHsWYNf08X2bEy
+         pryupL2ykuBV+sygnkk+fqajrVN1/45XJT6UIDBI/J4JIiO7GZW4kaISjbo9xtOnIbu3
+         /lAT2wlHOnLDqj2MsvwscUqPgxRkbuhwflLse0VSR01xDxZYapbGb527uMRlqnyfWWDn
+         3l8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
+        b=1cJbeJ4wqAbCL4bLW5/pYRuPg4Mhfx1L5xV+uWFVfquGfabb48abR2IfkuuM82Mg+1
+         tBWWOYDDgvvs+45U0QGU9rpnRuLghBeZsqoKLfl2uD2LYR+rZq48KpsfmveewkKlIVbv
+         uqphfnSszJlbJ5Z8FJzpxsGQOpOUbaNco41BprZtwzMtqUI0DD5f2tAnoQGkpY0NGKqu
+         VBB8f/CvIixNoFvDLlvtD4+/uIM8+2jEGr9BEHnflndtu2jze+EHR2RyEzZ1b6alTNwL
+         POgYChDD2YboyxZTuGloQlPPnVxpEpjO6dKtL68/o2rT7u7lJ3tWURXgg/0N4+jQd7eT
+         4FmQ==
+X-Gm-Message-State: AOAM532Vzl5XNPp7N1EiY9001ecB3AOtPUoJJ/qxs2aa029yxM+q69TS
+        /eEqav/CgN3f4XooIV81FcWcm2yx8uLzRNGs1ro=
+X-Google-Smtp-Source: ABdhPJygDnPWuNyLLxTk2B3Kv8LEKih1+m2wVtTUpsrNi1Bs8nM6GPylqvWzkD99kDlHZJJaie6GrPKCBIwCtXokpK8=
+X-Received: by 2002:a05:6902:1023:b0:64f:39e7:ef05 with SMTP id
+ x3-20020a056902102300b0064f39e7ef05mr31533397ybt.126.1653511701867; Wed, 25
+ May 2022 13:48:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:7110:3682:b0:17b:2b7b:c035 with HTTP; Wed, 25 May 2022
+ 13:48:21 -0700 (PDT)
+From:   Colina Fernando <colinafernando724@gmail.com>
+Date:   Wed, 25 May 2022 22:48:21 +0200
+Message-ID: <CAP7Hh1-EL6tqrQsO0De_QJ1avJao_roXNeVStyzCoPtO9q14fg@mail.gmail.com>
+Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
+To:     contact@firstdiamondbk.com
+Cc:     info@firstdiamondbk.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 83969805cc716a7dc6b296c3fb1bc7e5cd7ca321  pinctrl: apple: Use a raw spinlock for the regmap
+Guten Tag,
 
-elapsed time: 725m
+Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
 
-configs tested: 81
-configs skipped: 3
+haben ?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Ich habe versucht, Sie per E-Mail zu erreichen.
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-mips                             allyesconfig
-riscv                            allmodconfig
-um                             i386_defconfig
-mips                             allmodconfig
-um                           x86_64_defconfig
-riscv                            allyesconfig
-sparc                            allyesconfig
-ia64                                defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-i386                                defconfig
-sparc                               defconfig
-i386                             allyesconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220524
-s390                 randconfig-r044-20220524
-riscv                randconfig-r042-20220524
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
+Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
 
-clang tested configs:
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-hexagon              randconfig-r045-20220524
-hexagon              randconfig-r041-20220524
+Danke
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Fernando Colina
+
+colinafernando724@gmail.com
+
+
+
+
+----------------------------------
+
+
+
+
+Good Afternoon,
+
+I was just wondering if you got my Previous E-mail
+have ?
+
+I tried to reach you by E-mail.
+
+Please come back to me quickly, it is very Important.
+
+Thanks
+
+Fernando Colina
+
+colinafernando724@gmail.com
