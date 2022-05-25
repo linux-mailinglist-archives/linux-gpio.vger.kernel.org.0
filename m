@@ -2,122 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D42533637
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 06:39:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCE4A5336A4
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 08:06:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237465AbiEYEje (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 00:39:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37728 "EHLO
+        id S231764AbiEYGGK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 02:06:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbiEYEjd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 00:39:33 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76853712CC;
-        Tue, 24 May 2022 21:39:32 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j6so18192176pfe.13;
-        Tue, 24 May 2022 21:39:32 -0700 (PDT)
+        with ESMTP id S242413AbiEYGGK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 02:06:10 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7542DE6
+        for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 23:06:08 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id j10so10857332lfe.12
+        for <linux-gpio@vger.kernel.org>; Tue, 24 May 2022 23:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vXVsgwKtUaw0V1Fq8RPakUDJoY8CKRW6exHiFO/kwrw=;
-        b=b8ZoSoY0cFYBBNVV/ipucUF8jBRRVwoPbyIqsvpc0aK+WODaTZ/3T69ykEbQ/QLfkA
-         VDhtES8tX5h0Wv6wwItTOaCSjslpygebN5KtW5ER6VZEUpgxaAZ7hGW241ehVRRT45Kb
-         2nCUwVjoDObAbnfLDARe3/FvdV92joWc4/CbXs5uIoMXgZDzOcI6tLAWWeeHqn2Bco7T
-         zxl49fRXknez25IgXFQW0A5Mp6+fSTRIOHGjJnZ45QPezU/8RS+6qPvvUwhOcAdrQk0X
-         8Ogir3ZDNyovdIbENR6xyD3TkAXZGxDFb7ejnLIqzRM/fGNNyTXevA4ckzDgwpwnG1Jh
-         HJNA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s8dbXTgieoRzOZDO+kJL70xnS8IdT/yv0bOjo90ikJM=;
+        b=rHwbvdxqjkZCMYBjfJmE8ybI4IjIs//RAi5/+ffGE+kuBXG9e0w7w8BWOaO+vYmQ17
+         SK4FKl8PTYsf4sT/luSl5S7oEcPjZjS16rudp3wPrWYwCskg6tMdIVbuMTgbG9s5jTKH
+         D9qkdxL+/mubXQai47tgWsJYv+ooHpw0VKj1pRT/xRHBHQSYsPo8AZeF/D03rL67GgFJ
+         D5hJdJuAMgDxXsdP5kf1Pwwgm51+cMK2vWSKFmRc6Kic7FB6hVVlan6btYa9PZWYIx7V
+         cZcg8mbx9spG8PTjw9NU9Mk3I/XaYH7JoyqXBLlPTB1ahtNOR7xDk3Zo+zXZdImrReqr
+         1eKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vXVsgwKtUaw0V1Fq8RPakUDJoY8CKRW6exHiFO/kwrw=;
-        b=hR6OGxRG0h7+EnoAJ3cwvVDqT9R8iVCYEPiIiZMMZFGOVyXSDscM7Rs9IRmVQaY1DB
-         dv5PvRlHB8Eq6T3AdarUaCP4/b4aZ8XK5s23FxAQErYGWsKju/ICL9uT7pcc4oEcVtyS
-         PW8b3QFCvuX43laMgObVFLFm/oUrE562nxu3F3R/XDzAqbcXcXHvMLrvuloJYYLG7YCb
-         LaOKuWFDV/UTMuCS3FIvXZzLWU7xVnEhgumsLP01uoonS5XQfGkP0yIpSu7EvjtlCbkN
-         ZN6VQxep7CUzRnEacTgyvuwZzLOd6NSqU+L1DAaychaK0DC7gnlyiP5z58a+XpMmsOUO
-         rBMA==
-X-Gm-Message-State: AOAM5311buuLQqnF0fy3vp35zhp2HV9IDNfoKOj7y0+3iw++RvKj63qk
-        ylQT3BBlgXQgKGWV4RkWA6E=
-X-Google-Smtp-Source: ABdhPJx8lwQ9uN/LNAY2iJ1MkCggmIDKWQLR9CEv1QEfh8C/kwTWZfvTX43dAzCJ2a9dNEVOfvVL2Q==
-X-Received: by 2002:a05:6a00:174d:b0:518:3f5d:eecc with SMTP id j13-20020a056a00174d00b005183f5deeccmr30048410pfc.22.1653453571801;
-        Tue, 24 May 2022 21:39:31 -0700 (PDT)
-Received: from localhost.localdomain ([103.167.134.51])
-        by smtp.gmail.com with ESMTPSA id i18-20020a170902c95200b0015e8d4eb287sm8158701pla.209.2022.05.24.21.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 May 2022 21:39:31 -0700 (PDT)
-From:   Genjian Zhang <zhanggenjian123@gmail.com>
-X-Google-Original-From: Genjian Zhang <zhanggenjian@kylinos.cn>
-To:     tsbogend@alpha.franken.de, linus.walleij@linaro.org, brgl@bgdev.pl,
-        f.fainelli@gmail.com
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, huhai@kylinos.cn,
-        zhanggenjian123@gmail.com, k2ci <kernel-bot@kylinos.cn>
-Subject: [PATCH v3] MIPS: Remove repetitive increase irq_err_count
-Date:   Wed, 25 May 2022 12:39:16 +0800
-Message-Id: <20220525043916.584850-1-zhanggenjian@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s8dbXTgieoRzOZDO+kJL70xnS8IdT/yv0bOjo90ikJM=;
+        b=GKeGXAiFSgTxQuI0Zycs3xWlyVROnDhlPczSSVHLF7M9CD9/3X+eE+7UXmzp0RXrpA
+         ldvRhS30Cp+umqC0eOvqa5oXfGIpEVv+NLXwLMc/UzTUbyCKtR4u0PvNjedpxoomO+/k
+         ePu4mOeIuVsPi6NBBSY0eHsENeCSXBcBACTtk75Fg4XdnAElEbhI/L9ijHJzlnXP/Nxr
+         lSD+E+4lpWiSr42Lf4T2d97xTfczk53K8u80rSzeHHEKsCbstZifIUDgC5LAjPMS6fDR
+         aeeAlKLUnBLLZF4BtIOFRB4sjzpRZa68X0P0N5EF+CLE+ZyBNTvOVgXotPimHoY/L8bQ
+         cCBQ==
+X-Gm-Message-State: AOAM5315e2rnsu3sS1A+ZVlRdRRABcj4nzMqayzOM4R7y1daXfkz26cQ
+        gPGG5pSnt2sTootqnwdLUoFewCYQ69INbgS+YP+hag==
+X-Google-Smtp-Source: ABdhPJy3/3+G6gA1ap7knUbDT/XfZVQOf1iuHzChHAuk/PtwbeKGxdarxOP0gZi6BQ2NoZs4JoyHAwsINPIZ0J5dP7o=
+X-Received: by 2002:a05:6512:104c:b0:478:6b83:f75a with SMTP id
+ c12-20020a056512104c00b004786b83f75amr11312112lfb.563.1653458766992; Tue, 24
+ May 2022 23:06:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220524074007.2792445-1-Basavaraj.Natikar@amd.com>
+ <20220524074007.2792445-2-Basavaraj.Natikar@amd.com> <CAHp75VfQgzMF7gZ+_NHpE5jb3EF8mOEjCr6DrghN2xyrTwKK7w@mail.gmail.com>
+In-Reply-To: <CAHp75VfQgzMF7gZ+_NHpE5jb3EF8mOEjCr6DrghN2xyrTwKK7w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 25 May 2022 08:05:54 +0200
+Message-ID: <CACRpkdYQ1++WQEFa7tUAX3_B=-fb43UEU6AXyYgHZJhH73DQWw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] pinctrl: amd: Define and use PINCTRL_GRP
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: huhai <huhai@kylinos.cn>
+On Tue, May 24, 2022 at 4:39 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, May 24, 2022 at 10:13 AM Basavaraj Natikar
+> <Basavaraj.Natikar@amd.com> wrote:
+> >
+> > AMD pingroup can be extended to support multi-function pins.
+> > Hence define and use PINCTRL_GRP to manage and represent
+> > larger number of pingroups inline.
+>
+> This is good idea, but please make it available for all pin control
+> drivers, since the data structure like
+>
+>   pingroup {
+>     *name;
+>     *pins;
+>     npins;
+>   }
+>
+> is used in many drivers.
+>
+> That said, I think the AMD_ prefix will be misleading in this case.
 
-commit 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx") added
-a function irq_dispatch, and it'll increase irq_err_count when the get_irq
-callback returns a negative value, but increase irq_err_count in get_irq
-was not removed.
+Aha you mean like a utility macro? That's useful, don't know where to put it
+though, include/linux/pinctrl/pinmux.h?
 
-And also, modpost complains once gpio-vr41xx drivers become modules.
-  ERROR: modpost: "irq_err_count" [drivers/gpio/gpio-vr41xx.ko] undefined!
-
-So it would be a good idea to remove repetitive increase irq_err_count in
-get_irq callback.
-
-Fixes: 27fdd325dace ("MIPS: Update VR41xx GPIO driver to use gpiolib")
-Fixes: 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx")
-Reported-by: k2ci <kernel-bot@kylinos.cn>
-Signed-off-by: huhai <huhai@kylinos.cn>
----
- arch/mips/vr41xx/common/icu.c | 2 --
- drivers/gpio/gpio-vr41xx.c    | 2 --
- 2 files changed, 4 deletions(-)
-
-diff --git a/arch/mips/vr41xx/common/icu.c b/arch/mips/vr41xx/common/icu.c
-index 7b7f25b4b057..9240bcdbe74e 100644
---- a/arch/mips/vr41xx/common/icu.c
-+++ b/arch/mips/vr41xx/common/icu.c
-@@ -640,8 +640,6 @@ static int icu_get_irq(unsigned int irq)
- 
- 	printk(KERN_ERR "spurious ICU interrupt: %04x,%04x\n", pend1, pend2);
- 
--	atomic_inc(&irq_err_count);
--
- 	return -1;
- }
- 
-diff --git a/drivers/gpio/gpio-vr41xx.c b/drivers/gpio/gpio-vr41xx.c
-index 98cd715ccc33..8d09b619c166 100644
---- a/drivers/gpio/gpio-vr41xx.c
-+++ b/drivers/gpio/gpio-vr41xx.c
-@@ -217,8 +217,6 @@ static int giu_get_irq(unsigned int irq)
- 	printk(KERN_ERR "spurious GIU interrupt: %04x(%04x),%04x(%04x)\n",
- 	       maskl, pendl, maskh, pendh);
- 
--	atomic_inc(&irq_err_count);
--
- 	return -EINVAL;
- }
- 
--- 
-2.27.0
-
+Yours,
+Linus Walleij
