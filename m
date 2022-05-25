@@ -2,125 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB0355340D6
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 17:58:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC7EC534114
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 18:11:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231952AbiEYP5a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 11:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37152 "EHLO
+        id S234180AbiEYQLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 12:11:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244898AbiEYP53 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 11:57:29 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DDB60A94;
-        Wed, 25 May 2022 08:57:27 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nfraprado)
-        with ESMTPSA id 1E13E1F45163
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1653494245;
-        bh=0eLyTpn4l8dOBzhVfjQH2gNs2dijb43NxkXswcaDsJA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tjkjg18vHS4ohx+g+hOuNKv79erg5X02zmejSMweTsn73dIMwgobW5HRNY/U45jzu
-         +SJUb+bbRY4wtn+nh0480bPCuyTEVGlDIe+olpd0pyKzxFIHRmMU/vPaGHhvrqkQU6
-         nUNiF/K6j3R2p7diQC+sySOZwIO3CDWOn6nr838jxNAtQzU5+eW4eBSEjZRRjxdDv/
-         iklaadfGFqRcBZixOZazlYFJA8Wo7SHAF8/SMp0/NG4KVyMvPcmch72pdGVzLdvjdH
-         2za80sJPraDfvHKHSlk1bmiPWcHZ0Tj8zLT0a24FqRFTkJCmN47OzI1HYd7C+PIqVh
-         aJ0R1Aj3ERh7g==
-From:   =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= 
-        <nfraprado@collabora.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     kernel@collabora.com,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= 
-        <nfraprado@collabora.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: [PATCH v1 2/2] dt-bindings: pinctrl: mt8192: Use generic bias instead of pull-*-adv
-Date:   Wed, 25 May 2022 11:57:14 -0400
-Message-Id: <20220525155714.1837360-3-nfraprado@collabora.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220525155714.1837360-1-nfraprado@collabora.com>
-References: <20220525155714.1837360-1-nfraprado@collabora.com>
+        with ESMTP id S234285AbiEYQLK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 12:11:10 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278F4B41EE
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 09:11:05 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id t13so11604219wrg.9
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 09:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7CPLQ14WaiCX+ILz1Hrgp1Qbb/fI6CZrPndnwjE4cb0=;
+        b=bjg0YEnXgGSPysZv/QsYyuc6SlwU0HsbcG+2lJ5biIG8XUTtXJ0IXRooICluaTFiZW
+         x/71ssLox5GE5C/gYtX7JF+/RAI1gXUQZcbiWYoiX7XPUpEHQ0sMkLug5EA1s1kKTfw2
+         i5e8L5FPS6gqKufi+55OhSiYsUZ7FmsPvniCP8tIr7XAgRFWXc8WFXY9tFnH0EIMo/Cs
+         QHgcL9TGiij1Y1zK9tGsBql9Y5Ng4cmMrDJMzD+xLcSsG5KEL4ihtvtyLPWiXDtFoMuq
+         vEifY77fl88ZfD27gYLuc3vVulnB2AaWjw2MPlkVaAWdUEtXHk0H5UBf75+ExeCEDjvf
+         x6jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7CPLQ14WaiCX+ILz1Hrgp1Qbb/fI6CZrPndnwjE4cb0=;
+        b=lE7HAy8zmVi8rPMXZk5ZH6AUyfu1GsC1bQwgPAj9Ibcdlh/r/hw1f1qd9UdTSOJrbq
+         lPv8v1AApCj8sic6dYCSoN86F1XnEgb0akNJVyL1O4I+6kihxovMZECcP/SUGafVnNi+
+         TfDoK3oqqXl5cKYmc2o6qbV4FKl/uZoWWJLmortklVbVDIQ87iAP8QnANi9sx0A0YLx3
+         cQNMQAKDLpeOqJKJvpzit9mg+yvZdU7yoXjpAUFOUfuxOKWvEDX9B895RjBwmKUssGHh
+         tpTlkMwzI7rQh2X4IZTPtnF0ZlLPgQCd1mIHjrtf0NTY7c8BguBEVCfqstOP6xZDO9/8
+         kQmw==
+X-Gm-Message-State: AOAM530+5yBdcoeYlSFWigsPV8f4u/unMnTwJcnkRHy35SJKifzNXfg+
+        Lx6Tv1E1NbR1dhTxpBUo+kXkf8ZwkkmmQsE/00oLEw==
+X-Google-Smtp-Source: ABdhPJya9POSR16TPN0e/q8mW1cFMbbUYlTzpoiumLvvphZabXWlEbHKhIWt0nAFBXWP7vgbnXf7hUJ4jmzGIiL3yGc=
+X-Received: by 2002:a5d:5954:0:b0:20c:4d55:1388 with SMTP id
+ e20-20020a5d5954000000b0020c4d551388mr27861460wri.90.1653495063669; Wed, 25
+ May 2022 09:11:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220406233648.21644-1-brad@pensando.io> <20220406233648.21644-10-brad@pensando.io>
+ <CAK8P3a1RdHTngDVqg4KnVA3N8EjDfbpQ=cEcz_CK8NmG2EgYLQ@mail.gmail.com>
+ <3c8e94e1-fb8e-0d8f-4e79-b8313a1da5cb@intel.com> <CAK9rFnwsMd1+oQ8cg8Biw7HM=R6aOudfK7Ja+E+iGVgfrvC9Gg@mail.gmail.com>
+ <CAK8P3a28ef+DgcKrMG03b5Og-W+afieoqF1zvNkXdG22qA8i7g@mail.gmail.com>
+In-Reply-To: <CAK8P3a28ef+DgcKrMG03b5Og-W+afieoqF1zvNkXdG22qA8i7g@mail.gmail.com>
+From:   Brad Larson <brad@pensando.io>
+Date:   Wed, 25 May 2022 09:10:52 -0700
+Message-ID: <CAK9rFnzBDgBCFN+UJJnpkEPFGwbjkwAcjGjM2E_yF43iMDs+2Q@mail.gmail.com>
+Subject: Re: [PATCH 09/11] mmc: sdhci-cadence: Add Pensando Elba SoC support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        David Clear <dac2@pensando.io>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit cafe19db7751 ("pinctrl: mediatek: Backward compatible to previous
-Mediatek's bias-pull usage") allowed the bias-pull-up and bias-pull-down
-properties to be used for setting PUPD/R1/R0 type bias on mtk-paris
-based SoC's, which was previously only supported by the custom
-mediatek,pull-up-adv and mediatek,pull-down-adv properties.
+Hi Arnd,
 
-Since the bias-pull-{up,down} properties already have defines associated
-thus being more descriptive and is more universal on MediaTek platforms,
-and given that there are no mediatek,pull-{up,down}-adv users on mt8192
-yet, remove the custom adv properties in favor of the generic ones.
+On Thu, Apr 7, 2022 at 1:38 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Apr 7, 2022 at 7:06 PM Brad Larson <brad@pensando.io> wrote:
+> > On Thu, Apr 7, 2022 at 12:13 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> > >
+> > > What is the relationship between cadence and pensando elba?
+> >
+> > Pensando licensed the cadence controller, its 100% cadence IP.  The
+> > integration issue we ran into was with the accessors where we have the
+> > workaround.  The initial patch added a separate Elba driver file but
+> > the feedback was the Elba support didn't justify doing that and to add
+> > to sdhci-cacence.c.
+>
+> I looked back at the earlier reviews now, I think the main problem with
+> versions 1 and 2 was that it had the abstraction the wrong way around,
+> so you added the complexity of having multiple files, without the benefits.
+>
+> I still think that the cleanest approach would be to have it the way I
+> suggested in my reply to v1, with an elba specific platform driver
+> that calls into the generic cadence code, but the generic code knowing
+> nothing about the front-end.
+>
+> Then again, it sounds like there was already an agreement about
+> the approach you took here, so let's stay with that and hope we don't
+> get any other chips with the same IP block in the future.
 
-Note that only mediatek,pull-up-adv was merged in the binding, but not
-its down counterpart.
+Thanks for looking this over.  I won't change for now in the patch
+update in process.  This will likely get another look as I've added a
+node to the device tree to enable an added reset driver which can
+hardware reset the emmc.  The current cadence sdhci driver does not
+include this and I've currently added filling out
+mmc_host_ops.card_hw_reset like below, yet one more thing different
+for our platforms not in the common driver.
 
-Fixes: edbacb36ea50 ("dt-bindings: pinctrl: mt8192: Add mediatek,pull-up-adv property")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
+@@ -404,6 +550,17 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+        if (ret)
+                goto free;
 
- .../bindings/pinctrl/pinctrl-mt8192.yaml      | 29 ++++++++++---------
- 1 file changed, 15 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-index 8ede8b750237..e39f5893bf16 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-@@ -83,20 +83,21 @@ patternProperties:
-           drive-strength-microamp:
-             enum: [125, 250, 500, 1000]
- 
--          mediatek,pull-up-adv:
--            description: |
--              Pull up settings for 2 pull resistors, R0 and R1. User can
--              configure those special pins. Valid arguments are described as below:
--              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
--              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
--              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
--              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
--            $ref: /schemas/types.yaml#/definitions/uint32
--            enum: [0, 1, 2, 3]
--
--          bias-pull-down: true
--
--          bias-pull-up: true
-+          bias-pull-down:
-+            oneOf:
-+              - type: boolean
-+                description: normal pull down.
-+              - enum: [100, 101, 102, 103]
-+                description: PUPD/R1/R0 pull down type. See MTK_PUPD_SET_R1R0_
-+                  defines in dt-bindings/pinctrl/mt65xx.h.
++       if (host->mmc->caps & MMC_CAP_HW_RESET) {
++               priv->rst_hw =
+devm_reset_control_get_optional_exclusive(dev, "hw");
++               if (IS_ERR(priv->rst_hw)) {
++                       ret = PTR_ERR(priv->rst_hw);
++                       if (ret == -ENOENT)
++                               priv->rst_hw = NULL;
++               } else {
++                       host->mmc_host_ops.card_hw_reset = sdhci_mmc_hw_reset;
++               }
++       }
 +
-+          bias-pull-up:
-+            oneOf:
-+              - type: boolean
-+                description: normal pull up.
-+              - enum: [100, 101, 102, 103]
-+                description: PUPD/R1/R0 pull up type. See MTK_PUPD_SET_R1R0_
-+                  defines in dt-bindings/pinctrl/mt65xx.h.
- 
-           bias-disable: true
- 
--- 
-2.36.1
+        ret = sdhci_add_host(host);
 
+Regards,
+Brad
