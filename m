@@ -2,142 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB680534489
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 21:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24E785344AC
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 22:07:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240503AbiEYTtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 15:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47376 "EHLO
+        id S236583AbiEYUGt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 16:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344759AbiEYTtl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 15:49:41 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54D966F81
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 12:49:38 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-300628e76f3so18822397b3.12
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 12:49:38 -0700 (PDT)
+        with ESMTP id S1344563AbiEYUGh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 16:06:37 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993845FAD
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 13:06:35 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id c5-20020a1c3505000000b0038e37907b5bso1757005wma.0
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 13:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=pensando.io; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lcsU1M3aHmWM93+N/Pq2k69CNkfyIQUCxczoLH0OLPk=;
-        b=hGvqDCPINlCno6IGVx/RQ4/atSQ+dW08eMaP/4u4J2Rx0AU21Orr25m5AgNUJgVoBC
-         3FFOnaz5xSM9a3RRyGWmmLYgiZVdvKzEmj7vsHFg6Sh7EwGqNKrvH43xPCnlETqRbyTJ
-         rUgPCSCAGnF+I3fcFxMltq5wx33LgoLK4ERO4IR4Sot/Uaxxldi6tkX+WdLxAvCCiEtI
-         QP4xUPzpC2rlJZR8sd1n3W8vuHEHoaO4LC9YRcKisj9Uq+DszGcvpWkcK75IpZtbpf64
-         JIxJLJ+6BngIh5kjOcaFiUEdbJbMoovEHpIlAtRm4xeoQYYTe1wf9PGaYkAV8y48Abi0
-         +6Hg==
+         :cc;
+        bh=5MlRh8v/O/wHhNLDVqNAGwAJO3u/nvYhL6suQln4qMM=;
+        b=aOtG+77g4SUVZr8bbvfMI4s7jJQI5gdHfJc7aakPzg+lNkGNOOQVJV9iG4Yu/jIe3/
+         QbmCPdfeXzcf5y/4GD8DI74dKjylTbj6yE5dszfna3WO92tO3psktxusV3598aleUFYq
+         6H1cCeAlBOFu3Va+kmZhuRKXO39pTz4MvBX3soqViH7SE3lZthU3f7oHiFWMBQ0Mc3k+
+         nSwL7XWWbT3FArlMgP4a3hyS7DfL6PQZDPlYYkm+NsWMmmjAr3cXFnn9+kjPnlIb1n6d
+         qwgLFiy3/gBjTWnjPyLyJOmMCNivCq0vgmMJcwttRd3X2eybN1mqziJcEI/6rKIvaeeh
+         7K2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lcsU1M3aHmWM93+N/Pq2k69CNkfyIQUCxczoLH0OLPk=;
-        b=AiMSsrECxqh19xh2vVN4fWMgJjBDohOxcBMwDJdVuweAGZnXdwu80lcr4iaBhJioE/
-         l9xpcLD2LM6pcH7yPWybPQJOlPqbc9AD2XmRFffa7GVVb4liQV9D4jPspI8yg5PJXJaq
-         EuXpICHEZxOGKbqGB01jvMrV58r2gnE+cHmdPs2hkLy8agMDSEvIX0X0+ePrA0AYi5xy
-         4+u8SwPWFUWjwrRCFcNaCR1edFRjMFETbvWIrUCr8XX01Szo3rQdcp7RVyOnngEKg0Wv
-         9CfjTKBow6+R5MO38kMjZdymhhouPgy4sXlLqT9/h6p+M3X+mKnTDcqKTeGWqi6E1+v2
-         2GaQ==
-X-Gm-Message-State: AOAM531Ew7KWKKCQsTG5hdFUtefaStGihRRJbZvesUVuFz1xXsOsCYVL
-        w4scFtnz7mLEd5BFiW/IVZW4s7cUL8SVQqxG7eKX2w==
-X-Google-Smtp-Source: ABdhPJye/LYmXdbx2DRGvhYd77idEIGqJLpVK4M7sUVcSaytWZ/KajOi10nwmyuJy9EQw0Od4wYghiCxgCclb01GpVs=
-X-Received: by 2002:a81:72c5:0:b0:300:7d0:a642 with SMTP id
- n188-20020a8172c5000000b0030007d0a642mr14402533ywc.80.1653508177547; Wed, 25
- May 2022 12:49:37 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=5MlRh8v/O/wHhNLDVqNAGwAJO3u/nvYhL6suQln4qMM=;
+        b=xe/Myi226ye01lOn5duYi6naLdXMM9vOrZuqaDnjxyzi77lnZqcTwSjYOH1qSpv3ei
+         TheA4trRqgiXQnbx8eVGUl2Q4xdskNejnqmI67s9Ds6mOvwpNO6PNlranGdzyi+IXvf8
+         uaLLYf5D/YmoGPI/PgG+8T4EfOUZHhYJz8FfwGhED462zpalABYXChG08+XqMrs1XTHz
+         Zg8FZiw1j1W6X4PsVeHIXEojp8o2DEiJ9haJ41HisLDah4m9gn/KPL0QrpVJkloPcyjN
+         fOEONrOL1hc3pjvSSYEPszTaA4ow26fCnF7ks44c6i1drtaOH1fgPGGnau7AGBZa2xtX
+         G+kA==
+X-Gm-Message-State: AOAM532OQqrCsjtKZWejbEjIiUNY/vp+M9tz4rPNyzUxLEg437zHekBb
+        jpypGAGSAB2MZaDcxUe7MLFDetoNU/vGvh9Cqr28Lg==
+X-Google-Smtp-Source: ABdhPJzwmm4iFgAvq41IWkRIMaeSW61oQACieHYUK5Pp+Z5/usjraflqW/p2zQWTbtlA0quoR70s8kdRGnwXUQJemek=
+X-Received: by 2002:a05:600c:3515:b0:394:8c7e:fbde with SMTP id
+ h21-20020a05600c351500b003948c7efbdemr9559357wmq.165.1653509194127; Wed, 25
+ May 2022 13:06:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X> <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
- <YogsiMCDupNUhMgL@dev-fedora.thelio-3990X> <CAGETcx-JyWwoGA3o8eep7E29Cm4DcVT6D1JFJh72jLcqm_mjCQ@mail.gmail.com>
- <Youleo3Ganxbc1sq@dev-arch.thelio-3990X> <CAGETcx-sL08h2toEyxY6ztc6xNuJiPok6iDEeuJ1mOA3nvE+vA@mail.gmail.com>
- <YowHNo4sBjr9ijZr@dev-arch.thelio-3990X> <CAGETcx91_WgpmwEA7mBSvUdyJV0a8ymfaNKTmXq=mAJYAjzq1A@mail.gmail.com>
- <Yo0KyWx+3oX3cMCS@linutronix.de> <CAGETcx_qTLwbjzMruLThLYV+MZD5W2Ox-QwLFQeW=eQgxzq-Hw@mail.gmail.com>
- <Yo3WvGnNk3LvLb7R@linutronix.de>
-In-Reply-To: <Yo3WvGnNk3LvLb7R@linutronix.de>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 25 May 2022 12:49:00 -0700
-Message-ID: <CAGETcx84ja_w_=vXKDOZnM8EVEcuAg1tX9Kqy57PTkDb1=H4FA@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver registration
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
+References: <20220406233648.21644-1-brad@pensando.io> <20220406233648.21644-12-brad@pensando.io>
+ <20220412112239.cucvqqlfsdpjnzju@mobilestation>
+In-Reply-To: <20220412112239.cucvqqlfsdpjnzju@mobilestation>
+From:   Brad Larson <brad@pensando.io>
+Date:   Wed, 25 May 2022 13:06:23 -0700
+Message-ID: <CAK9rFnz9a_21Bc9yyUqqmQET_o6g5XK6=mfZVv9jUp4dNxCx4w@mail.gmail.com>
+Subject: Re: [PATCH 11/11] arm64: dts: Add Pensando Elba SoC support
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, John Stultz <jstultz@google.com>
+        Olof Johansson <olof@lixom.net>,
+        David Clear <dac2@pensando.io>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 25, 2022 at 12:12 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
+Hi Sergey,
+
+On Tue, Apr 12, 2022 at 4:22 AM Serge Semin <fancer.lancer@gmail.com> wrote:
 >
-> On 2022-05-24 10:46:49 [-0700], Saravana Kannan wrote:
-> > > Removing probe_timeout_waitqueue (as suggested) or setting the timeou=
-t
-> > > to 0 avoids the delay.
-> >
-> > In your case, I think it might be working as intended? Curious, what
-> > was the call stack in your case where it was blocked?
+> On Wed, Apr 06, 2022 at 04:36:48PM -0700, Brad Larson wrote:
+
+> > +             spi0: spi@2800 {
+> > +                     compatible = "pensando,elba-spi";
+> > +                     reg = <0x0 0x2800 0x0 0x100>;
 >
-> Why is then there 10sec delay during boot? The backtrace is
-> |------------[ cut here ]------------
-> |WARNING: CPU: 4 PID: 1 at drivers/base/dd.c:742 wait_for_device_probe+0x=
-30/0x110
-> |Modules linked in:
-> |CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.18.0-rc5+ #154
-> |RIP: 0010:wait_for_device_probe+0x30/0x110
-> |Call Trace:
-> | <TASK>
-> | prepare_namespace+0x2b/0x160
-> | kernel_init_freeable+0x2b3/0x2dd
-> | kernel_init+0x11/0x110
-> | ret_from_fork+0x22/0x30
-> | </TASK>
+> > +                     pensando,syscon-spics = <&mssoc 0x2468>;
 >
-> Looking closer, it can't access init. This in particular box boots
-> directly the kernel without an initramfs so the kernel later mounts
-> /dev/sda1 and everything is good.  So that seems to be the reason=E2=80=
-=A6
+> I am wondering do you really need to define the
+> "pensando,syscon-spics" property as accepting a phandle with an
+> additional argument? That would have been justified if you had at
+> least two SPI controllers with different CS override registers. AFAICS
+> you've got only one here. So you can simplify the bindings by defining
+> the property like "pensando,syscon" (with no "spics" suffix) which
+> accepts the syscon phandle alone. Respective SPICS offset can be
+> locally declared in the driver as a macro with respective name.
 
-Hmmm... that part shouldn't matter. As long as you are hitting the
-same code path. My guess is one of them has CONFIG_MODULES enabled and
-the other doesn't.
+Yes this can be simplified and doing that in updated patchset.  Only this
+API call is needed in dw_spi_elba_init().
 
-In either case, I think the patch needs to be reverted (I'll send out
-one soon), but that'll also mean I need to revert part of my patch
-(sets the timeout back to 0) or I need to fix this case:
-https://lore.kernel.org/lkml/TYAPR01MB45443DF63B9EF29054F7C41FD8C60@TYAPR01=
-MB4544.jpnprd01.prod.outlook.com/
+syscon_regmap_lookup_by_phandle(np, "pensando,syscon");
 
-I'll try to do the latter if I can get something reasonable soon.
-Otherwise, I'll just do the revert + partial revert.
-
--Saravana
-
-
-> My other machine with an initramfs does not show this problem.
->
-> > -Saravana
->
-> Sebastian
+Regards,
+Brad
