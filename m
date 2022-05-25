@@ -2,109 +2,203 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A5F5534188
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 18:31:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E015D5341A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 18:45:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245462AbiEYQbX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 12:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44226 "EHLO
+        id S234192AbiEYQpa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 12:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245342AbiEYQbX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 12:31:23 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899EA4ECD3
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 09:31:17 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id f23-20020a7bcc17000000b003972dda143eso1415804wmh.3
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 09:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v8FV5JUaluu69LdsoN1T9bi2vXC2/Pwgc7627w+7IE0=;
-        b=iiwDTfeN13tL6fGE8/O/41RxuguehByAsXlBv9b9A01c7ZAdTpYS5aHEDpDso1Bu8i
-         kgxKRcKgKhgdGd2vhyTjOKPHBaEWdj2HpQSVJQGGYQQtqyCZteYEFylu+SAto+2sZGmQ
-         TIMe4hYZkvCtphweI93uLlhDGw2X/mIXtW4rcrWnuB26scIT9PZTO9a/7nUydvxGGl/n
-         Tg5m2jtF3h9nn+t8Z0Wj5O1upTZIQcgwL8hln0PFBx5MIgtzPoADsg5J67ysbfmAfhkQ
-         nNjKl5AeJaAYUFQYiyK14bxuDtMDYvnrSSSZuzQIfiShrsucyeJYAgf1Of9gVi3ahuMf
-         hgVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v8FV5JUaluu69LdsoN1T9bi2vXC2/Pwgc7627w+7IE0=;
-        b=SPC5N85Sn/i6j5pXta+AHiFN6QYpc8lmP+ByRJcGg4/jeNyrLwh8fgcg4qUu2IWmXr
-         oJ34hrYa6KqiNxiwJfVEKuJFZun5IEkiZ6xDXVaFr6Zf0rs14LuAr6Qagd11AGrpSyBB
-         P+S0dULpTQfTj6DOLaG4dba06nMs5q1pFp43qMtcLfZJInYtCHrI9s+sQ+mPhUPQGVds
-         L489PSBbTKbDDU82pa4PVuZVTFJLCwpnsAMa7QiNPnFFFYHABCOhvowvYWfvaCjLojTW
-         4vUd1S0gc+tBN2Kl/ycjHW6NeeFlIu8WikXaRjEQ5Haa6S2+FXITo5NCDQoofULdUqMi
-         L07Q==
-X-Gm-Message-State: AOAM531n0XJolDOuNgfuzz1nQH9f5RJLoMyF9Q+m7K3Bgia/X31nqEL/
-        VBFgD8ZKYWc/wGXuJO6Q68lgCiuWt0SirDq4VNauGg==
-X-Google-Smtp-Source: ABdhPJwz1YBHr2nIviBFJqClOiHWUWpdPAd4Ni20+aGv2NLGkrG68huw8L/+YWlQH8LdBrC5DevZ27OB4Uat2ZkcfBM=
-X-Received: by 2002:a1c:acc4:0:b0:392:9dd4:fbcc with SMTP id
- v187-20020a1cacc4000000b003929dd4fbccmr8895701wme.78.1653496276038; Wed, 25
- May 2022 09:31:16 -0700 (PDT)
+        with ESMTP id S239271AbiEYQp3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 12:45:29 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5CB101F1
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 09:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653497127; x=1685033127;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0VnW7fqaivxCuppJ/e3+KFUKEmJr8KEast74dpgPL84=;
+  b=Rx5g4IMyWBdbB8qzNsCs4eeepGhT+zA3c2CtxldqSyKcM76BF3c8qBy/
+   N4p7QEGr3QNxhHzDkK9BNMzw0vsC9+tHSGgGF+s93GWExULxKKHeSXPwz
+   NBJDqOemkym5WKfl2o48VeR+k+a1sMNgbUiMrJDMXnrDDXgP50aYeqs7V
+   7/CB0k++VvIGXdyitqviFYKmBs295LH9KxM1CsaulhQvxchNzOcIGwPy3
+   2hWbmbgsAKGG3tIWfUKCIzQeHrePfltBRJ8blOOmTjH5YOjWtn+Vc0X2z
+   aLqG+SH2C4FfPTRDVSfsh0ANReRp8Q69+BEi8KONoZCG5UUa0GBvdyIGg
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10358"; a="273590294"
+X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
+   d="scan'208";a="273590294"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2022 09:45:26 -0700
+X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
+   d="scan'208";a="704072630"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2022 09:45:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ntu8Q-000L3L-Ez;
+        Wed, 25 May 2022 19:45:22 +0300
+Date:   Wed, 25 May 2022 19:45:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Basavaraj Natikar <bnatikar@amd.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Shyam-sundar.S-k@amd.com, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/3] pinctrl: amd: Get and update IOMUX details
+Message-ID: <Yo5dIqADnv/puBrb@smile.fi.intel.com>
+References: <CACRpkdZ267_CjNoro4A+eBASjz=qCL4ixLnbsac5U+gCsBSGwg@mail.gmail.com>
+ <e35efb44-6e74-690c-91b6-c8270f624894@amd.com>
+ <YozDbugZc8vXPHU2@lahna>
+ <8ba8857d-c3ab-8959-5bc3-a4e225459f61@amd.com>
+ <YozKd+Zehnlg1s1p@lahna>
+ <c79fc5ce-469d-a547-5485-aa00210db79b@amd.com>
+ <YozQxvHzoiISqjob@lahna>
+ <d14a0bae-c43b-f365-2fc9-873ca03eb87d@amd.com>
+ <Yo0KNY55M7d+eli2@smile.fi.intel.com>
+ <800030c9-8a74-9186-b329-8a3edff273ff@amd.com>
 MIME-Version: 1.0
-References: <20220406233648.21644-1-brad@pensando.io> <20220406233648.21644-2-brad@pensando.io>
- <05febd3f-bfdb-13c2-8cce-b9dc422c5eae@linaro.org> <CAK9rFnyRrS_LvoZ_j66cKDHgecqcqzJN5krSxdCquBanViKyHg@mail.gmail.com>
- <49c1d200-8c07-b306-a400-86ee6a637bb4@linaro.org>
-In-Reply-To: <49c1d200-8c07-b306-a400-86ee6a637bb4@linaro.org>
-From:   Brad Larson <brad@pensando.io>
-Date:   Wed, 25 May 2022 09:31:05 -0700
-Message-ID: <CAK9rFnw9+seK_j3gcMrDOqCWcj7C4-eKVGziFF5_J=TnxWx06Q@mail.gmail.com>
-Subject: Re: [PATCH 01/11] dt-bindings: arm: add Pensando boards
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        David Clear <dac2@pensando.io>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <800030c9-8a74-9186-b329-8a3edff273ff@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof,
-
-On Sat, Apr 9, 2022 at 3:40 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 09/04/2022 04:19, Brad Larson wrote:
-> > On Thu, Apr 7, 2022 at 11:45 AM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>> Change from V3:
-> >>> - Add description and board compatible
+On Wed, May 25, 2022 at 03:12:05PM +0530, Basavaraj Natikar wrote:
+> On 5/24/2022 10:09 PM, Andy Shevchenko wrote:
+> > On Tue, May 24, 2022 at 07:20:34PM +0530, Basavaraj Natikar wrote:
+> >> On 5/24/2022 6:04 PM, Mika Westerberg wrote:
+> >>> On Tue, May 24, 2022 at 05:54:47PM +0530, Basavaraj Natikar wrote:
+> >>>> There is no CRS method defined for IOMX/0xFED80D00 in ACPI namespace // IOMX Address Base 
+> >>>> Hence I added additional code to get IOMX memory region.
+> >>>>
+> >>>> since _CRS method is used to get GPIO pin base for AMDI0030 in
+> >>>> pinctrl-amd as below, same is not available for IOMX
+> >>>>  
+> >>>>   Device (GPIO)
+> >>>>         {
+> >>>>             Name (_HID, "AMDI0030")  // _HID: Hardware ID
+> >>>>             Name (_CID, "AMDI0030")  // _CID: Compatible ID
+> >>>>             Name (_UID, Zero)  // _UID: Unique ID
+> >>>>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+> >>>>             {
+> >>>>                 Name (RBUF, ResourceTemplate ()
+> >>>>                 {
+> >>>>                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+> >>>>                     {
+> >>>>                         0x00000007,
+> >>>>                     }
+> >>>>                     Memory32Fixed (ReadWrite,
+> >>>>                         0xFED81500,         // Address Base
+> >>>>                         0x00000400,         // Address Length
+> >>>>                         )
+> >>> Is there something preventing you to add it here like below?
+> >>>
+> >>>                      Memory32Fixed (ReadWrite, 0xFED80D00 0x00000400)
+> >> yes few system has different entries already defined like below      
+> >>   Device (GPIO)
+> >>         {
+> >>             Name (_HID, "AMDI0030")  // _HID: Hardware ID
+> >>             Name (_CID, "AMDI0030")  // _CID: Compatible ID
+> >>             Name (_UID, Zero)  // _UID: Unique ID
+> >>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+> >>             {
+> >>                 Name (RBUF, ResourceTemplate ()
+> >>                 {
+> >>                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+> >>                     {
+> >>                         0x00000007,
+> >>                     }
+> >>                     Memory32Fixed (ReadWrite,
+> >>                         0xFED81500,         // Address Base
+> >>                         0x00000400,         // Address Length
+> >>                         )
+> >>                 })
+> >>                 Return (RBUF) /* \_SB_.GPIO._CRS.RBUF */
+> >>             }
 > >>
-> >> That's a bit confusing... the subject is for v1.
+> >>
+> >>         Device (GPIO)
+> >>         {
+> >>             Name (_HID, "AMDI0030")  // _HID: Hardware ID
+> >>             Name (_CID, "AMDI0030")  // _CID: Compatible ID
+> >>             Name (_UID, Zero)  // _UID: Unique ID
+> >>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+> >>             {
+> >>                 Name (RBUF, ResourceTemplate ()
+> >>                 {
+> >>                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+> >>                     {
+> >>                         0x00000007,
+> >>                     }
+> >>                     Memory32Fixed (ReadWrite,
+> >>                         0xFED81500,         // Address Base
+> >>                         0x00000400,         // Address Length
+> >>                         )
+> >>                     Memory32Fixed (ReadWrite,
+> >>                         0xFED81200,         // Address Base
+> >>                         0x00000100,         // Address Length
+> >>                         )
+> >>                 })
+> >>                 Return (RBUF) /* \_SB_.GPIO._CRS.RBUF */
+> >>             }
+> >>
+> >> if we add or in future some entries added. 
+> >> is there way to map particular entry for IOMUX? 
+> > Straightforward way is to add it always to the end and add _DSD boolean
+> > property ("amd,pinctrl-iomux-present") and act accordingly. More flexible and
+> > less error prone is to name all resources with DSD property and find resource
+> > by name: "amd,pinctrl-resource-names" = "bank0", "bank1", "iomux".
 > >
-> > Goal was to identify in the cover letter patch the key changes from
-> > the V3 patchset to this V4 patchset.  Then in each patch that had a
-> > material change highlight that in the patch itself.  Will try and make
-> > it more clear.
->
-> This is fine, I am talking about the subject - it is marked as a v1, so
-> it's confusing to see a changelog.
->
-> One way to achieve this is: "git format-patch -v4 -11 ..."
+> Idea of adding _DSD property looks good, we can add easily _DSD
+> "pinctrl-iomux-present" u8 property to return index or instance
+> value directly. 
 
-That was the problem, thanks!  Missed including -v4 in last use of
-format-patch.  Sorry for the confusion.
+Better to name them all, it will be more consistent and robust.
 
-Regards,
-Brad
+> But systems already in use or old platforms needs BIOS update to avail 
+> this feature and it may also impact existing windows OS functionality.
+
+I don't believe it will anyhow alter Windows, except the new part not being
+tested in Windows.
+
+> one more flexible way is to directly use _DSD property to get memory
+> region as below also works, 
+
+Strongly no. We do not allow to repeat in _DSD the existing ACPI concepts.
+
+...
+
+> How about adding generic new function in drivers/acpi/utils.h to avoid
+> using "../acpi/acpica/accommon.h" in pinctrl-amd.c like below.
+> 
+> acpi_status acpi_get_sys_mem_region(acpi_handle handle, 
+>                            const char *nname, struct acpi_mem_space_context *res); 
+> 
+> can be used directly in acpi_get_iomux_region by calling like 
+> acpi_get_sys_mem_region(handle, "IOMX", &res)
+> This can be generically used to get details like below Operation regions 
+> which is already present in dsdt table.
+> OperationRegion (IOMX, SystemMemory, 0xFED80D00, 0x0100)
+
+It seems you missed the point of OpRegions in ACPI. We have a standart way of
+subscribing to the OpRegion:s, if somebody in ACPI touches it, you will handle
+writes and reads in the driver.
+
+Using OpRegion in replace of _CRS is a huge abuse of ACPI. Fix your firmware,
+because it sounds like it must be fixed.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
