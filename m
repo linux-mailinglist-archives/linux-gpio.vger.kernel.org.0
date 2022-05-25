@@ -2,96 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D3405343F6
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 21:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB680534489
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 21:49:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238463AbiEYTKe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 15:10:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51982 "EHLO
+        id S240503AbiEYTtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 15:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344399AbiEYTJ6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 15:09:58 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA5B14001
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 12:08:07 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id br17so25177945lfb.2
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 12:08:07 -0700 (PDT)
+        with ESMTP id S1344759AbiEYTtl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 15:49:41 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54D966F81
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 12:49:38 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-300628e76f3so18822397b3.12
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 12:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KU9+qwhHB1Ar5tyxTZPIqMZrcyxNkwuy0eiQFgt4/6o=;
-        b=bAluZQ2GRhXKyS4fhjaoe9noG35MJw0O7C1jBNwDmVpe7bwhwvhHAtH9e108qV3tXp
-         YoH4v/NOwfj7GpdBpOhqQmYlHY2le4VIAT2P1A/+iRelQRvtb5Z0LpVty4SNAoW5mDam
-         9IS9MBHN2jiy6Dlyh6jPNrscTMUk/H0S+xbQnAfLwV908dm4VFJJBnbkgLhDEW1tYc3Q
-         dohxBDXqj7xXlrlVg1a+e/aQVX9wZcE7IBcJbOdF7GycEbj55TNy1srlwtauEzQ/GWqO
-         rDycNreKCKmj98UUwnS6IjdT5HBf/kIEeSlqboVWsWMDQWdKimhAdL31wi8CtKmCVSz0
-         9dyQ==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lcsU1M3aHmWM93+N/Pq2k69CNkfyIQUCxczoLH0OLPk=;
+        b=hGvqDCPINlCno6IGVx/RQ4/atSQ+dW08eMaP/4u4J2Rx0AU21Orr25m5AgNUJgVoBC
+         3FFOnaz5xSM9a3RRyGWmmLYgiZVdvKzEmj7vsHFg6Sh7EwGqNKrvH43xPCnlETqRbyTJ
+         rUgPCSCAGnF+I3fcFxMltq5wx33LgoLK4ERO4IR4Sot/Uaxxldi6tkX+WdLxAvCCiEtI
+         QP4xUPzpC2rlJZR8sd1n3W8vuHEHoaO4LC9YRcKisj9Uq+DszGcvpWkcK75IpZtbpf64
+         JIxJLJ+6BngIh5kjOcaFiUEdbJbMoovEHpIlAtRm4xeoQYYTe1wf9PGaYkAV8y48Abi0
+         +6Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KU9+qwhHB1Ar5tyxTZPIqMZrcyxNkwuy0eiQFgt4/6o=;
-        b=12Gfk9ulOJ/n5bC5Vo2mDQQ3Tjnz+bXI5Nflp49kafCrcHUTSuidyJ02InPxz/lC/T
-         XGkThJOyrso3PfEhaybh78D/kNtUicu8C4CmPLRBRGOyja4lQsOHu8Et3M+hHPq0Kc/k
-         qgrMrUjhXD4hNyKG+mrxpckiyWDDwGNfCMD0vOCmYcW/yb+wT2ZKwkf4jVgRaBNEYYSS
-         Dz7yEPKHhIhJuvwctjp9b3i+utSr3c+qbqZBbuKtCNw5CvmMSE7nTDhNHtLTyOwbvhFU
-         n12nBtv9XxQgvBzuZ14sh3fQwUDynYvAfjHm7sBLx7wxbPMysulaD1wpFrHDqDLnneIr
-         oeMQ==
-X-Gm-Message-State: AOAM53109oCJrY99zIZDYl8EJY2kdH0QyE8yc1IuTPhSxIaOJ60/WI2Q
-        vaAWpJ3zGRuSl9JUxB9/Ec4=
-X-Google-Smtp-Source: ABdhPJw6EjIkKOzP9HxhzTYGrvznFY1KvX5eYDo6K7ZL7L2sldypEM757VkkM+G3pOcsSphhpx9nVw==
-X-Received: by 2002:a05:6512:b07:b0:473:c26a:7095 with SMTP id w7-20020a0565120b0700b00473c26a7095mr24299905lfu.603.1653505683994;
-        Wed, 25 May 2022 12:08:03 -0700 (PDT)
-Received: from localhost.localdomain (ppp78-37-196-203.pppoe.avangarddsl.ru. [78.37.196.203])
-        by smtp.gmail.com with ESMTPSA id t26-20020ac243ba000000b0047255d211a0sm3248144lfl.207.2022.05.25.12.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 May 2022 12:08:03 -0700 (PDT)
-From:   Andrei Lalaev <andrey.lalaev@gmail.com>
-To:     linus.walleij@linaro.org, wens@csie.org, jernej.skrabec@gmail.com,
-        samuel@sholland.org, linux-gpio@vger.kernel.org
-Cc:     linux-sunxi@lists.linux.dev,
-        Andrei Lalaev <andrey.lalaev@gmail.com>
-Subject: [PATCH] pinctrl: sunxi: sunxi_pconf_set: use correct offset
-Date:   Wed, 25 May 2022 22:04:25 +0300
-Message-Id: <20220525190423.410609-1-andrey.lalaev@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lcsU1M3aHmWM93+N/Pq2k69CNkfyIQUCxczoLH0OLPk=;
+        b=AiMSsrECxqh19xh2vVN4fWMgJjBDohOxcBMwDJdVuweAGZnXdwu80lcr4iaBhJioE/
+         l9xpcLD2LM6pcH7yPWybPQJOlPqbc9AD2XmRFffa7GVVb4liQV9D4jPspI8yg5PJXJaq
+         EuXpICHEZxOGKbqGB01jvMrV58r2gnE+cHmdPs2hkLy8agMDSEvIX0X0+ePrA0AYi5xy
+         4+u8SwPWFUWjwrRCFcNaCR1edFRjMFETbvWIrUCr8XX01Szo3rQdcp7RVyOnngEKg0Wv
+         9CfjTKBow6+R5MO38kMjZdymhhouPgy4sXlLqT9/h6p+M3X+mKnTDcqKTeGWqi6E1+v2
+         2GaQ==
+X-Gm-Message-State: AOAM531Ew7KWKKCQsTG5hdFUtefaStGihRRJbZvesUVuFz1xXsOsCYVL
+        w4scFtnz7mLEd5BFiW/IVZW4s7cUL8SVQqxG7eKX2w==
+X-Google-Smtp-Source: ABdhPJye/LYmXdbx2DRGvhYd77idEIGqJLpVK4M7sUVcSaytWZ/KajOi10nwmyuJy9EQw0Od4wYghiCxgCclb01GpVs=
+X-Received: by 2002:a81:72c5:0:b0:300:7d0:a642 with SMTP id
+ n188-20020a8172c5000000b0030007d0a642mr14402533ywc.80.1653508177547; Wed, 25
+ May 2022 12:49:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X> <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
+ <YogsiMCDupNUhMgL@dev-fedora.thelio-3990X> <CAGETcx-JyWwoGA3o8eep7E29Cm4DcVT6D1JFJh72jLcqm_mjCQ@mail.gmail.com>
+ <Youleo3Ganxbc1sq@dev-arch.thelio-3990X> <CAGETcx-sL08h2toEyxY6ztc6xNuJiPok6iDEeuJ1mOA3nvE+vA@mail.gmail.com>
+ <YowHNo4sBjr9ijZr@dev-arch.thelio-3990X> <CAGETcx91_WgpmwEA7mBSvUdyJV0a8ymfaNKTmXq=mAJYAjzq1A@mail.gmail.com>
+ <Yo0KyWx+3oX3cMCS@linutronix.de> <CAGETcx_qTLwbjzMruLThLYV+MZD5W2Ox-QwLFQeW=eQgxzq-Hw@mail.gmail.com>
+ <Yo3WvGnNk3LvLb7R@linutronix.de>
+In-Reply-To: <Yo3WvGnNk3LvLb7R@linutronix.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 25 May 2022 12:49:00 -0700
+Message-ID: <CAGETcx84ja_w_=vXKDOZnM8EVEcuAg1tX9Kqy57PTkDb1=H4FA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver registration
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, John Stultz <jstultz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some Allwinner SoCs have 2 pinctrls (PIO and R_PIO).
-Previous implementation used absolute pin numbering and it was incorrect
-for R_PIO pinctrl.
-It's necessary to take into account the base pin number.
+On Wed, May 25, 2022 at 12:12 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2022-05-24 10:46:49 [-0700], Saravana Kannan wrote:
+> > > Removing probe_timeout_waitqueue (as suggested) or setting the timeou=
+t
+> > > to 0 avoids the delay.
+> >
+> > In your case, I think it might be working as intended? Curious, what
+> > was the call stack in your case where it was blocked?
+>
+> Why is then there 10sec delay during boot? The backtrace is
+> |------------[ cut here ]------------
+> |WARNING: CPU: 4 PID: 1 at drivers/base/dd.c:742 wait_for_device_probe+0x=
+30/0x110
+> |Modules linked in:
+> |CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.18.0-rc5+ #154
+> |RIP: 0010:wait_for_device_probe+0x30/0x110
+> |Call Trace:
+> | <TASK>
+> | prepare_namespace+0x2b/0x160
+> | kernel_init_freeable+0x2b3/0x2dd
+> | kernel_init+0x11/0x110
+> | ret_from_fork+0x22/0x30
+> | </TASK>
+>
+> Looking closer, it can't access init. This in particular box boots
+> directly the kernel without an initramfs so the kernel later mounts
+> /dev/sda1 and everything is good.  So that seems to be the reason=E2=80=
+=A6
 
-Fixes: 90be64e27621 ("pinctrl: sunxi: implement pin_config_set")
-Signed-off-by: Andrei Lalaev <andrey.lalaev@gmail.com>
----
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hmmm... that part shouldn't matter. As long as you are hitting the
+same code path. My guess is one of them has CONFIG_MODULES enabled and
+the other doesn't.
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index d9327d7d56ee..dd928402af99 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -544,6 +544,8 @@ static int sunxi_pconf_set(struct pinctrl_dev *pctldev, unsigned pin,
- 	struct sunxi_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
- 	int i;
- 
-+	pin -= pctl->desc->pin_base;
-+
- 	for (i = 0; i < num_configs; i++) {
- 		enum pin_config_param param;
- 		unsigned long flags;
--- 
-2.25.1
+In either case, I think the patch needs to be reverted (I'll send out
+one soon), but that'll also mean I need to revert part of my patch
+(sets the timeout back to 0) or I need to fix this case:
+https://lore.kernel.org/lkml/TYAPR01MB45443DF63B9EF29054F7C41FD8C60@TYAPR01=
+MB4544.jpnprd01.prod.outlook.com/
 
+I'll try to do the latter if I can get something reasonable soon.
+Otherwise, I'll just do the revert + partial revert.
+
+-Saravana
+
+
+> My other machine with an initramfs does not show this problem.
+>
+> > -Saravana
+>
+> Sebastian
