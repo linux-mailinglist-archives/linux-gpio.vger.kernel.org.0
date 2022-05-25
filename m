@@ -2,49 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 230AE533FE8
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 17:08:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42B4053409F
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 May 2022 17:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239376AbiEYPHz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 11:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45224 "EHLO
+        id S245292AbiEYPqd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 11:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237417AbiEYPHy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 11:07:54 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06628AE26D
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 08:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=BJEwSF0VFzzm4SSlTnqkx43Dx9ql
-        RDdWcTyYt9+rs48=; b=SZb0r3wH7T3mcvIZbw+oFa9ylQ/zQI6xKloH8Z9oc2Sx
-        JPSKIe5ZwFaoQyQKqR45jwHs0P7DYdfl9cyiNANSe9VuZWdtv/8obzMTBKxke17L
-        fCmkGI1YN0WGIuH+jfqjZH00Z5R3beGiyI0KEHj27djoM72fSuY/NkiuIK/UMZs=
-Received: (qmail 1642742 invoked from network); 25 May 2022 17:07:47 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 May 2022 17:07:47 +0200
-X-UD-Smtp-Session: l3s3148p1@3K89b9ffqjtZD++C
-Date:   Wed, 25 May 2022 17:07:39 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v8 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <Yo5GO5RkBC3PQLTg@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20220329091126.4730-1-wsa+renesas@sang-engineering.com>
- <20220329091126.4730-2-wsa+renesas@sang-engineering.com>
- <YkRuXtTzd11R9IrY@smile.fi.intel.com>
+        with ESMTP id S245258AbiEYPqa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 11:46:30 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC8D7AF31F
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 08:46:27 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id p5-20020a1c2905000000b003970dd5404dso3610590wmp.0
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 08:46:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UrTCiIB5+imBAeHHe5Yk2P2e1nFNoP+klKZAhqbPDdA=;
+        b=MqPIurhFVqpa+pBM1vNQS6bUBZWcTHP2YxERwDnH+bQfrSJK2/72G3Xj7gT+UEioGy
+         thWYm7nOuZQUFNxIv2huTTw/x+VekSpTufiYFUFRGkawxOrxefVaDTY1BSz5YzKXNb3N
+         N68WwPk1+UqgTIjKN5dveLZ8D1OuV7Beewa2kxUojacU7Bp2iSArTdwBToEwZEZGd4Vj
+         mNe2f/owRoeJLfYJRHYnmYyxZRT+hFbQiGMJHYcMVz4o5iqcWa+fTys9HDmTxnnRF79m
+         YZdblvApQE3X8Sz+8/wuOXm/kqKvRy3tyjhXPvV2Tr51KqrC0DPWM7HLycywFd//eT++
+         8jkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UrTCiIB5+imBAeHHe5Yk2P2e1nFNoP+klKZAhqbPDdA=;
+        b=diPmBZowykfAsN4M1yAw4qGV/58DeuTB1fd/LR7SBV4Z/3UlUEblbwPKP+zQRyKVpy
+         7StK3QW74ErSKQC4z+jLJAOSezkuhdO6yEeBCCqJPXuACeBeXNFbvXIdyn/fu21SDG5f
+         4NsRgv0Ld2xjto+Rdh2rX8PC61rKr6F7ZKogzjXMopEyjKrPK4V/66gqLF7J5azG+Iv3
+         XDN9RWN8MW7pgoTHqRUbqBvSsAuAwXjc8nMlMDssgg1V93qz3C8DTBx9wsAwKnn+OntQ
+         wEcjk+b6EBxiWXy+v1Isg/yJL2DIqftnVVQ9JExJiXEKCTsx9UcGhKsNLZb3ZZ6lGzf0
+         WvcA==
+X-Gm-Message-State: AOAM531MqCHr/ehD+9CDnOins10i0CClMphQ/OFt60HvpiXza0+FYESx
+        5N/OwRu5YcvYB0/pO4vsq5Er8eP/CUhJeVzQMf/jfA==
+X-Google-Smtp-Source: ABdhPJwMCeE2M2oBeMoCYDG8p7UZtY8gBrM+hDCF+s5vsXn/s+B7NoTCVj2dK00lSgGxLjxe2HR3aykRV/KV+QWzz/s=
+X-Received: by 2002:a1c:e903:0:b0:397:36b8:795a with SMTP id
+ q3-20020a1ce903000000b0039736b8795amr9116951wmc.98.1653493586128; Wed, 25 May
+ 2022 08:46:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jFJpOaCzFEltHHpH"
-Content-Disposition: inline
-In-Reply-To: <YkRuXtTzd11R9IrY@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+References: <20220406233648.21644-1-brad@pensando.io> <20220406233648.21644-4-brad@pensando.io>
+ <CAK8P3a2wZwza=tUzxpHTHTnahf-bUS2-e80rW-wzN3aWodD1vQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2wZwza=tUzxpHTHTnahf-bUS2-e80rW-wzN3aWodD1vQ@mail.gmail.com>
+From:   Brad Larson <brad@pensando.io>
+Date:   Wed, 25 May 2022 08:46:15 -0700
+Message-ID: <CAK9rFnwjeaGALTaDx-0k2OEktSv_UmJK9+uGuy=OFP8dnhNeOQ@mail.gmail.com>
+Subject: Re: [PATCH 03/11] dt-bindings: mmc: Add Pensando Elba SoC binding
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        David Clear <dac2@pensando.io>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,53 +77,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Arnd,
 
---jFJpOaCzFEltHHpH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 6, 2022 at 11:31 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Apr 7, 2022 at 1:36 AM Brad Larson <brad@pensando.io> wrote:
+> >
+> > --- a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> > +++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> > @@ -19,10 +19,12 @@ properties:
+> >        - enum:
+> >            - microchip,mpfs-sd4hc
+> >            - socionext,uniphier-sd4hc
+> > +          - pensando,elba-sd4hc
+> >        - const: cdns,sd4hc
+> >
+> >    reg:
+> > -    maxItems: 1
+> > +    minItems: 1
+> > +    maxItems: 2
+> >
+>
+> Shouldn't the binding describe what the register areas are? If there
+> is only one of them, it is fairly clear, but when you have the choice
+> between one and two, it gets ambiguous, and there is a risk that
+> another SoC might have a different register area in the second entry,
+> making it incompatible.
 
-On Wed, Mar 30, 2022 at 05:51:10PM +0300, Andy Shevchenko wrote:
-> On Tue, Mar 29, 2022 at 11:11:26AM +0200, Wolfram Sang wrote:
-> > This is a sloppy logic analyzer using GPIOs. It comes with a script to
-> > isolate a CPU for polling. While this is definitely not a production
-> > level analyzer, it can be a helpful first view when remote debugging.
-> > Read the documentation for details.
->=20
-> Good enough I think,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks for the review.  Changing this to allOf:if:then in updated
+patchset.  The second item is particular to Elba SoC.
 
-Thanks, Andy!
-
-To GPIO maintainers: can we apply the "new-driver-rule" and still have
-it in 5.19? There can't be any regression and it has all comments
-addressed. Also, I am talking about this project at Kernel Recipes late
-next week and it would be great to say that it is finally merged :)
-
-All the best,
-
-
-   Wolfram
-
-
---jFJpOaCzFEltHHpH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmKORjcACgkQFA3kzBSg
-KbbzCg//beP7i2WnbH6i79F9nAkbYBPQG5FfgUWlX6KcFnSYmS7TMDuycfwGlOvQ
-xG4PBt4Jq6Agj4t0tV2KXeQMkZx02aQPXJwmF4t/UK00UsaJicg6pLb1uwqKvWAw
-5T5bZT91PTfZHeZP1Di0wV2rdJJNCDbFd4OLI+I+zI+wW34p76IXLRE4/8BOdSDu
-AMgRosikUFLo+UnqLf9u3V9WsSlBUBemLlWdMFLf3i9Ze8XBRa0KtmHulpbVd4XD
-YdrJQiq3sIpR+wNL4FxeuF6KetNanc0VmD5GawL4W05Jad/4u55OXbvMg01vF5SX
-S4AIlkkZ5naP5s9Pzq0DlOrJty81A3zSldSxc/4qxlNyC66j5oIYu0SHm+8YL9T+
-ohUrH90PrfDS/iqzT6oR6jxHkIh++h6rpP5igxTwQTEVgaPAmpcUfT3U6VEGgMEz
-RUqGAohGoLNennpOqSc2rfoS4nPQHcamG3C3nuAeWCldGdFa4Zhfyjf9zHeqMnrj
-LdsYhYaTfJV8zOf+ShxPfWhiWg0uLsX9nWbpTBg6374yrAVLydjZm1nu7f9dPjgq
-4hbjIm6B3bjMpPFa3xA1uP33kf7+bl4P5v8LAQNByT5ZLgPWWl5czXhwBPeMxQpT
-fi7m2BPp+Xo1yD7xfU6KHsHWvITFVAvu1tlGRvNmt3MGujQB0Yw=
-=yfzu
------END PGP SIGNATURE-----
-
---jFJpOaCzFEltHHpH--
+Regards,
+Brad
