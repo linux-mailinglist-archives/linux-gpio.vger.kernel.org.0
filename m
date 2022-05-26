@@ -2,128 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6915D534A88
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 08:54:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D139534B47
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 10:15:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346279AbiEZGyA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 May 2022 02:54:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
+        id S239967AbiEZIP4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 May 2022 04:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346270AbiEZGx7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 02:53:59 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDEF72E21
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 23:53:57 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id f21so1168906ejh.11
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 23:53:57 -0700 (PDT)
+        with ESMTP id S234814AbiEZIP4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 04:15:56 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32BB4A919
+        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 01:15:54 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id n191-20020a2540c8000000b0064f89b186f5so1051985yba.1
+        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 01:15:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=+OlWFNuXubaG+wIbcU6S2PD/trjlRQ/H0QdDAVlC7L8=;
-        b=HTSbKdqa3Nz+rgnORHSDlCCrWGmPxq/uTvVIJ1mdxP93fxi23p4/iaudQGQ0yvJ9qD
-         sVCbrRfo4bBZ9mQRMOESsrCFhgNGIGplr+gRzybCAWSTUbTrkEc8qWTZ4+OL34B9gBo5
-         dOF8MFYMdEGZrlkLcq9wisY90Wjy5NOu5xRch0PKTnXgXXXoQiEdUGSOr8epjCyfTbVS
-         Dr28G81aHk81OulVCikCIbagbO+Y4eDk0jAdcfnyEEMK2ynz5Uduj5WXS6eh/HElm7AY
-         yhKdPVZCKYG7q/YHZlKZoSErjnkxy2vKC9OXBJfkrBc3mnIe3F9Jp3DD8FlhwnTPS8Hy
-         kCZA==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=7ovu32HwfTXJZkxeBDrxZ8ZPAGcSmwTvZEaaoxjr5Ec=;
+        b=A5IYs6L7vf+F2QJ35kvDWANbcirKT5v6KM8ClXGKhMKZlBtap4tK4FtzcxDnuCZUM2
+         1MdoAe53oMAaYvVh0NBFN9zWi/1tedJ/pn3STJRgI5TEod6qqS5bjJ3jgTMLlV99IZhw
+         bl3dncSWym4j3vdDRkPBP/r8/LapBYRpkuhgixrNPw8jT1gSt1jGIUlXIVWE+skTmA3c
+         UiVFS3E4a6ZW/wMqG/NYeMaiXjyckaYyfNFSNiQXSwHzsKYDmuhGTQK/QI9HHSYBlqd6
+         JMuIjD5Suc2/VSV47X/GXl0XsU/o8j5RWYmL6mQ93nQKXWtTvW2fr+ez+gfWLJc3fFan
+         uYmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+OlWFNuXubaG+wIbcU6S2PD/trjlRQ/H0QdDAVlC7L8=;
-        b=IdsXn3OMcjmvFQvNQHWfb4nxbMQfW8DFScQxgv0vOcGqv2UCaCkE3Ib4gO9q/atbUr
-         0dSK8LMriGH7MaR8loEqytX7Dmr501lJ6rGPwq7brOVMyErnnjMMHUNoXwfQu2cBqzbR
-         Xi3Sjh7KxvjWdvydYN+aUCPW1DM4sF59dUaBK92B/XQ/fnpPNuNcKq4Pm5/y7x3o35go
-         XCk37VOdBOfIFgll/hMS9o9xEK/1BCFNKzVB9+MC+YYtp6ngHIV2JtZ9bNw8bGVYMmJ/
-         Qxc34UgUFWuEuStwbjz5e+msPD6eRwEuCy2/x8gqaqq/9nit+FoAgETb+3NvI5pLvEwA
-         8oPA==
-X-Gm-Message-State: AOAM531hiQsRWaAWZ+fjw9EsgTgnuwUTxjKQJ4ILAQM3HNQ715BEKU1O
-        Js2Iz/lrObpOVMGKZaAl9uuO/w==
-X-Google-Smtp-Source: ABdhPJxK0GdBqnqhHeFKnB17hFODfbqtX8jNbVhbmw+n/G8WMqDopEGaBisjwS7Dq3PBf+ZqYanNVA==
-X-Received: by 2002:a17:906:9b90:b0:6ff:a02:1f9 with SMTP id dd16-20020a1709069b9000b006ff0a0201f9mr9350097ejc.672.1653548036203;
-        Wed, 25 May 2022 23:53:56 -0700 (PDT)
-Received: from [192.168.0.177] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id x65-20020a50bac7000000b0042617ba63absm389060ede.53.2022.05.25.23.53.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 May 2022 23:53:55 -0700 (PDT)
-Message-ID: <8d2c9375-63d7-6d36-8a0b-6c5d117cc213@linaro.org>
-Date:   Thu, 26 May 2022 08:53:54 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 11/11] arm64: dts: Add Pensando Elba SoC support
-Content-Language: en-US
-To:     Brad Larson <brad@pensando.io>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=7ovu32HwfTXJZkxeBDrxZ8ZPAGcSmwTvZEaaoxjr5Ec=;
+        b=QS7hFyuKoysYknxT6JwyEkrtPjSGCg7+3N9zr+CFTmpJlWdXxD0h3dU/XtrkyAyIzD
+         ca5Dvp3Hv2Svhb+1lO4fxsJAOxWpXaeF4/Eyfx47mJqe04ovWx1kgNSkqTF8SJX2ngk0
+         B0PxeLKq5QxQVmq9GUa5SNIxxMX8S7V7R30JNMz7C2Y/17HNcAeCNN79+ZYBJ5e+HRkO
+         pMb/QHTCmMmgIXLisexesZUEvot+w8hPLbeYTJSL8iHrBxIuzRZE+8zHJdqPwLoiPye4
+         hHpGx5ZNrbOlliznRfBm1uJl6ecblV/+sxDBPZMl3Bz1rFv5efYduxhPZFCL1JSkkX9F
+         //xA==
+X-Gm-Message-State: AOAM533VAzikswO6DLdgP+lFC7ArM8RyYYNd3+OFZXU0iMJfgkXOXqII
+        tKV/L1Q2hJNoevXmBaRtjossPCy6ugDjLIw=
+X-Google-Smtp-Source: ABdhPJwgygNcXLfgS/GhNtXfKLT0ANRPU/9nFzxb/3BLRPqGqHSVhLefDjnDtbT8PzPoRD3rLYHQCxeGMGeZcX4=
+X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:ff1f:a3b7:b6de:d30f])
+ (user=saravanak job=sendgmr) by 2002:a25:ab4a:0:b0:64f:b782:f941 with SMTP id
+ u68-20020a25ab4a000000b0064fb782f941mr20119540ybi.408.1653552953895; Thu, 26
+ May 2022 01:15:53 -0700 (PDT)
+Date:   Thu, 26 May 2022 01:15:39 -0700
+Message-Id: <20220526081550.1089805-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
+Subject: [RFC PATCH v1 0/9] deferred_probe_timeout logic clean up
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        David Clear <dac2@pensando.io>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20220406233648.21644-1-brad@pensando.io>
- <20220406233648.21644-12-brad@pensando.io>
- <eed2f337-3d5a-3440-d19e-c5ff032409ab@linaro.org>
- <CAK9rFnzPEq1_zOnHYzTDyOOU9xRsuP-KBEFnc84cRoyfAve+Jg@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAK9rFnzPEq1_zOnHYzTDyOOU9xRsuP-KBEFnc84cRoyfAve+Jg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        John Stultz <jstultz@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 26/05/2022 02:19, Brad Larson wrote:
-> Hi Krzysztof,
-> 
-> On Thu, Apr 7, 2022 at 12:06 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 07/04/2022 01:36, Brad Larson wrote:
->>> Add Pensando common and Elba SoC specific device nodes
->>>
->>> +&spi0 {
->>> +     num-cs = <4>;
->>> +     cs-gpios = <0>, <0>, <&porta 1 GPIO_ACTIVE_LOW>,
->>> +                <&porta 7 GPIO_ACTIVE_LOW>;
->>> +     status = "okay";
->>> +     spi0_cs0@0 {
->>
->> Generic node name needed matching the class of a devicxe.
-> 
-> The device on this spi bus is a FPGA with 4 functions and looking at
-> other projects I've changed it to a resource-controller node name.  On
-> cs0 there is a sub-device reset-controller added in the upcoming
-> patchset to enable hardware reset of the eMMC device.
-> 
->>> +             compatible = "semtech,sx1301";  /* Enable spidev */
->>
->> This comment is a bit odd... did you just use random compatible from
->> spidev instead of defining proper compatible?
-> 
-> Yes, because adding a compatible was nacked.  We have a driver added
-> (two actually, mfd and reset driver) for the next patch update.
+This series is based on linux-next + these 2 small patches applies on top:
+https://lore.kernel.org/lkml/20220526034609.480766-1-saravanak@google.com/
 
-Yeah, but using some other one is also not correct.
+A lot of the deferred_probe_timeout logic is redundant with
+fw_devlink=on.  Also, enabling deferred_probe_timeout by default breaks
+a few cases.
 
+This series tries to delete the redundant logic, simplify the frameworks
+that use driver_deferred_probe_check_state(), enable
+deferred_probe_timeout=10 by default, and fixes the nfsroot failure
+case.
 
+Patches 1 to 3 are fairly straightforward and can probably be applied
+right away.
 
-Best regards,
-Krzysztof
+Patches 4 to 9 are related and are the complicated bits of this series.
+
+Patch 8 is where someone with more knowledge of the IP auto config code
+can help rewrite the patch to limit the scope of the workaround by
+running the work around only if IP auto config fails the first time
+around. But it's also something that can be optimized in the future
+because it's already limited to the case where IP auto config is enabled
+using the kernel commandline.
+
+Yoshihiro/Geert,
+
+If you can test this patch series and confirm that the NFS root case
+works, I'd really appreciate that.
+
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: John Stultz <jstultz@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+Saravana Kannan (9):
+  PM: domains: Delete usage of driver_deferred_probe_check_state()
+  pinctrl: devicetree: Delete usage of driver_deferred_probe_check_state()
+  net: mdio: Delete usage of driver_deferred_probe_check_state()
+  Revert "driver core: Set default deferred_probe_timeout back to 0."
+  driver core: Set fw_devlink.strict=1 by default
+  iommu/of: Delete usage of driver_deferred_probe_check_state()
+  driver core: Add fw_devlink_unblock_may_probe() helper function
+  net: ipconfig: Force fw_devlink to unblock any devices that might probe
+  driver core: Delete driver_deferred_probe_check_state()
+
+ drivers/base/base.h            |  1 +
+ drivers/base/core.c            | 60 +++++++++++++++++++++++++++++++++-
+ drivers/base/dd.c              | 37 ++++-----------------
+ drivers/base/power/domain.c    |  2 +-
+ drivers/iommu/of_iommu.c       |  2 +-
+ drivers/net/mdio/fwnode_mdio.c |  4 +--
+ drivers/pinctrl/devicetree.c   |  2 +-
+ include/linux/device/driver.h  |  1 -
+ include/linux/fwnode.h         |  2 ++
+ net/ipv4/ipconfig.c            |  2 ++
+ 10 files changed, 74 insertions(+), 39 deletions(-)
+
+-- 
+2.36.1.124.g0e6072fb45-goog
+
