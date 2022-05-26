@@ -2,126 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F4139534A5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 08:27:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 457EA534A62
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 08:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237562AbiEZG1Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 May 2022 02:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
+        id S239969AbiEZGa7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 May 2022 02:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231466AbiEZG1X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 02:27:23 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F25BA9B1
-        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 23:27:21 -0700 (PDT)
+        with ESMTP id S231466AbiEZGa6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 02:30:58 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2082.outbound.protection.outlook.com [40.107.236.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F31BDA37
+        for <linux-gpio@vger.kernel.org>; Wed, 25 May 2022 23:30:57 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MWrmeJOBk/c9ms+D9D71EN9uAtAtk1TXuYdGK8wyqijCxO2PF87lgR5qe9kEGsN6NxL/hXMRPidNa2Bk5PTICavGzZtZWB+jNUjLan8Q8MLzQ6T+/FKBuXpMCPkqXJYS1nvml/tu0rOQH/DW9DLASCT0k8EjSrKkybS+7MnR4aJdLYE3xb4yeskNq640/W6EpKGrYQZiyq5XImePNcX1NXUgby2G/3kcJoT+9st/q0rbIeJ84XZG2AVyNFHJFXH2HgB0GAKaFjJ3G1bXWhM+wHyrLAmccSmMoqKSGzSHws0NNojTxZhWpWtMseRTJEUm3fAaDCadBn5qBkYG7iQUHA==
+ b=HWjE/otwojoiwZgEjfZcHoNm5GOnlWiYd6uVnikzR6hjBcyfTZJXuH6DBecqX1rG/IBkLoVrAKuv9IFSg0dU+tNPBltVbHl1wQ2zPniIpTqrh3YdrymBaf8T8u6ttoC4/34kZYSfFIXruS4dJDhSBp2H9pK392q7tq0NeTEiubGhJTMSwKjTfMyHsREc2+WSBaZwyTalDq3MlTl8KZ/9WWTW6jTzTcNMV0/+8W1Y4JlmJtQcImvQ1ws83UqMagklDl45Y8l0qYtT1dT8Bjpv6O0r+Ixm32DAe4lWjaLOWJjUDxN+NDMZ1ZukKrITY97U0mMK2i8zzdrszZqHBM+YIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hKpgguqjBQ8rxaJqzpkXt6GmXw+pEosMEx82fqFYbL8=;
- b=iigcOb3HbPKf4yuMkJCJ6Mb9do5uXv3hdr/7ltYelrD669Mbu0Ha7bFySkJyW+wO+YgfSUpnWmv4Hvq5DSY5IesRYr1m5skRpY5lsIa+YdkdOFFufvZmlHyE7uvt4jArtLGIDGNMzG+MspUUkfNYiWvb1fjXPqbL2lVzmu8IKeFOk44pZaIZrqZODM6fyMWiFGSz0SIGarScaKb74AC/XaazYtwR34WHa+zsutsdHUDmeCUmyNnwgGL0fTpBPGVg/d+60oYqlPONo/5JI3PygyUJgXfvMIKmSe22dTJ3R+9zLdySaYA7Nb4Z3FYQYZYGIgl0IooSIOFhVZTxLTy3Gw==
+ bh=38LltYXZH7xz8Cy65n0CuklhMxS5H2cueZ7VvyQYpfY=;
+ b=kPVCtr7yKYbMEf41JWd+hNHg+qXyO+5FVnHZBtQonAeUFUhHcdr017u5URfaKtgYXOa73R1RcqQuw+c01qi2PPTTndvpR4C8aDpmbPKvgGP9+YAnFq+M3o4rW5SBYXzEKWDLt4T1QzBwR9vZY+KWOHFq40JooCcm/Yi9vJl+OjYvYOBMZSsFf54hZzMmLAupBHOJlFSmi3Or6mT36ujr7hbuA6iK+W+UVw4Hs6iCACO1aIUAQmYUG77Xbhyvbgx10knNerJqZkICpn/hntrIeheSBYcZrjuWReiyL0HW3pLRFnkoY+EjwuFLgsMa1QnGEMaA0AQkNV18xlKU92jZSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hKpgguqjBQ8rxaJqzpkXt6GmXw+pEosMEx82fqFYbL8=;
- b=LlWiI8r9W2u3E0ERrQxVnWvVvrvaOw9OfJy1zGdo6uNdLZHPJVD9n4ue9imbqzu3GKaIZQrH1xErkqltqmKZ34pcGKqiT7Xwnvt4XcC0Fhmx5/8fzQGBbQPym7MR3Cr42khkp2wN7jE2rLMmQOdkeihMs27Qh8KREv3XPNc1Mvg=
+ bh=38LltYXZH7xz8Cy65n0CuklhMxS5H2cueZ7VvyQYpfY=;
+ b=DWOnxsa8mUAe9cxFskBA6zy3orOUqBnZFKRRW5nVGL3HVpcH32J7/4/XuMlBuPPcjSjOAbALYZuGZvu7RLRYEwnTvJyw/qep3quP6AIsS/OLhpLaPZH31B3o0Qf4zsjcYxKqUfI5JaIPCaikWO/mF0O90U4vz9UmNuu78ktI4wM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
- by PH7PR12MB5926.namprd12.prod.outlook.com (2603:10b6:510:1d9::8) with
+ by BYAPR12MB3381.namprd12.prod.outlook.com (2603:10b6:a03:df::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13; Thu, 26 May
- 2022 06:27:19 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.16; Thu, 26 May
+ 2022 06:30:53 +0000
 Received: from DM4PR12MB5040.namprd12.prod.outlook.com
  ([fe80::b3:bdef:2db6:d64e]) by DM4PR12MB5040.namprd12.prod.outlook.com
  ([fe80::b3:bdef:2db6:d64e%8]) with mapi id 15.20.5293.013; Thu, 26 May 2022
- 06:27:19 +0000
-Message-ID: <2f1df198-36e8-36f4-4474-618013db73ca@amd.com>
-Date:   Thu, 26 May 2022 11:57:09 +0530
+ 06:30:53 +0000
+Message-ID: <cf722a7c-2144-c53a-a186-8ed5d5c83e9d@amd.com>
+Date:   Thu, 26 May 2022 12:00:43 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: [PATCH v2 1/3] pinctrl: amd: Define and use PINCTRL_GRP
+Subject: Re: [PATCH v2 2/3] pinctrl: amd: Get and update IOMUX details
 Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20220524074007.2792445-1-Basavaraj.Natikar@amd.com>
- <20220524074007.2792445-2-Basavaraj.Natikar@amd.com>
- <CAHp75VfQgzMF7gZ+_NHpE5jb3EF8mOEjCr6DrghN2xyrTwKK7w@mail.gmail.com>
- <CACRpkdYQ1++WQEFa7tUAX3_B=-fb43UEU6AXyYgHZJhH73DQWw@mail.gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Shyam-sundar.S-k@amd.com, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <CACRpkdZ267_CjNoro4A+eBASjz=qCL4ixLnbsac5U+gCsBSGwg@mail.gmail.com>
+ <e35efb44-6e74-690c-91b6-c8270f624894@amd.com> <YozDbugZc8vXPHU2@lahna>
+ <8ba8857d-c3ab-8959-5bc3-a4e225459f61@amd.com> <YozKd+Zehnlg1s1p@lahna>
+ <c79fc5ce-469d-a547-5485-aa00210db79b@amd.com> <YozQxvHzoiISqjob@lahna>
+ <d14a0bae-c43b-f365-2fc9-873ca03eb87d@amd.com>
+ <Yo0KNY55M7d+eli2@smile.fi.intel.com>
+ <800030c9-8a74-9186-b329-8a3edff273ff@amd.com>
+ <Yo5dIqADnv/puBrb@smile.fi.intel.com>
 From:   Basavaraj Natikar <bnatikar@amd.com>
-In-Reply-To: <CACRpkdYQ1++WQEFa7tUAX3_B=-fb43UEU6AXyYgHZJhH73DQWw@mail.gmail.com>
+In-Reply-To: <Yo5dIqADnv/puBrb@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN0PR01CA0026.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:4e::20) To DM4PR12MB5040.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN3PR01CA0055.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::10) To DM4PR12MB5040.namprd12.prod.outlook.com
  (2603:10b6:5:38b::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 36d2f25a-30a5-40a7-434e-08da3ee0c8e7
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5926:EE_
-X-Microsoft-Antispam-PRVS: <PH7PR12MB59264A10D3739AF45209993AE6D99@PH7PR12MB5926.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 0e4b84d7-98a1-4e51-ed96-08da3ee1483e
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3381:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR12MB3381F285D39B1176A66AC081E6D99@BYAPR12MB3381.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QI8TWvomCR2aOQfIsBJDIVhuoJhzzel1na9aMpWT5oeMFsZSrpf4Yrwz6PlZ15DbE1wUMz8lRS/x4q/ULPEy+GeUdQ99jwPd1sz4BPq0BhBZWQRndL7GtWuRmS7kbHZVdaRK8me/dkrrDCtEp7HaASj08I9glDagpFbaNt5a8hVjsU+Ca3u9EF5HPbgshQc2fKSwFpq0JhZSQVW1yEdVG3KCpy8f4VD2BwUSJdKLqIiptrQ1//KuF9fl6GcXaxEaHXc4lDrnWjDCdW9WUs6UHj4FkIEdjxJBqZbvQdn8fsuq5TEK70LWDjyMoYYNgVlN1m4GCH3M6oGm88q+M2r1l8XOw5l9rjnphPxdVDSRhBoOjZiyOvI56n3djSjXJeDUD6S60AuacoqheCLl9lIFr3C8q4aEokkneWYz2ZroF8QgtaDOqgfncRaZFc5hPJd6eNYRjnvaCdvHnNvWhCoW0nTKN4Dzsy2RbI+9rqIXVyi/Nox1sNiIK+n2Mvx3VSMT7rxrCTqoU/y1IKWVF/5qUzEnadu1XLNsXn3PctFmYH+H5htiq8FvPq3gKvd606H30+Js87ofOFdLbPOKK61wQRAchEmJjnKWM2RkL9FqKoi3EgvG7y+qj5MeAg76VCi+uU2Y+zTi2SX/CIcaaYclwRgOfL1HlS11dA5uCY0v68rz4cwyLY1tkDC+Z7uNOe8cZ7B8amv/uZRMVkcZEvAxl8IhxFfw1KUN2RiaG9A38+N2CgiVx5T1n7j8oqcbdB8r
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2616005)(8676002)(66556008)(66946007)(26005)(31686004)(110136005)(54906003)(2906002)(66476007)(316002)(4744005)(4326008)(186003)(8936002)(6486002)(6506007)(38100700002)(6666004)(508600001)(6512007)(53546011)(5660300002)(31696002)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: s3rYQuXvxyXrp2MWXtdQShdoNFfNXUIl5EdUNkHaYEEBHsFuoglR9jv71lUEydNroUFW+8CNxlkyDgrh8dywKoQW3MbMMwyGZzjj/tIKKGiMNnIKEcvwo5qt/xnW37yu212/j/aedf3CYqSf8dzwNKFCaNvP6C+qcAvql7oS56a1uqzzfbNG5O0uFkuOqHa8T73xSBZZ0Dg+YeJNlFourN0wF7sGq5cuJsk8GM0JrMuhwaQkEu+cRJjY5gp9p1URqCzDHFJ+iIxDWaUGjuYlCD0qWFrMkfVV77P36Dzkiswgzq7WYAE9R4OWMjd1IfHay/8QsmVVL9WsSETtVJWUKDGkg8D/FJsvXr0i1HljBSAplBw/O9J4tXgJLR0YpSa0rOD6Q1O8EXaOQbxzSmFTFH5vexniX0oF4Zh4mG07lDRTmkbkb3gGFhNJuFpWp7Sd6IyWNwpP5bakGXSdBpUxGr5qn2SMk7ez66sZ+cAVp6aHKBnzqVegSH5+RhlP6aXwmgisIWQgLTmjnT9rVUYXnR0qFv4p3qbCjKrwbz3aJZHvhD8+O+D43iwSK8nJR3fvhThTdTLsFAgdMCLh1dS4LYt3C/OAOs1xod0BwZ6/FhA2M64bu2tYOeQbvMo7AHDCewKG8ZBwmkU02AOBV8q6qOsIplKMAu+iOS2J/QxBcNx0UaVbNzKUIkVJ6H7hbnJYGwdeWiu6YQQ/pJVKjAaaS2tVPiw4mRgVx8MEVyoSw2BymTs+EbnvGnP+DlivIdr1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(316002)(6666004)(15650500001)(31696002)(508600001)(6916009)(54906003)(38100700002)(8936002)(66946007)(31686004)(2616005)(6486002)(4326008)(53546011)(36756003)(186003)(8676002)(6512007)(26005)(66556008)(6506007)(83380400001)(66476007)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UGxKczY5aHJPS3AraGptaDF6NFFWRWtSKzBuSjBzd0o3ay9Hb1NHWitwODRj?=
- =?utf-8?B?SFVncjA0L2VSZ0ZrcGR1Mk1BdnFTa25vTVNFem5WbDI0UkpvdGlTVWFyS3RN?=
- =?utf-8?B?OFU4K1J1ZlhIL2dIczd2Mit4dWUyeHBLTE1OMUJwZEh0M1NaVG42eVYybDFT?=
- =?utf-8?B?Sll3am1zekpzU2xRNno2TXF2K09yRXh6L1hrTmxRTk9SdDI3WklOMGxuQlIy?=
- =?utf-8?B?cytRZUdvcjBtT2UyUWxQK0hUVTRWRkJlMEN4SXh2dXJRdlZNZVplYUxUMDRD?=
- =?utf-8?B?bnUxcDMydnZLMnVpQ1BNdjQ0bjdVTDY3S2NMUEp6eitRNjg3OW5HSTRyUGJM?=
- =?utf-8?B?cXBGcEZZZUFDNC9XdjJvRzV4MkZpbDU3K01STVlsbFBMenZsNnNTMWtzRnRS?=
- =?utf-8?B?azl3M0FWT2VXZ0RseHY3SXRESUszTlhvOE9Jd0pBRUdkeEQ2SnZacy80UTd1?=
- =?utf-8?B?UkZjVkQ0cGdoUW80elY3b0JMbnQ3bzZJczBRMmRKZVkxUEROSzJEckR6Tk9L?=
- =?utf-8?B?S1JwR1B5M0NENGk5MlhGR3p4RVc4VzRjemNRUTBTbHh0ekVtVFJ6dEZUTjUy?=
- =?utf-8?B?SElSQXBnMm1MWVRvWXlIWUpsWmFGS3F1NElmOUVTR3pJak1aNGFjL0xGcTNN?=
- =?utf-8?B?U0dEWU1KNHl3bEU0NzV2SXBYQmlraHFiYU04ZzV2VnlSbEFGZ0laWEYrQ2dw?=
- =?utf-8?B?ZVpSMzIrQWhVRWptYTZPZUFibys3ZEM2SWtJSFVQUDYwS2hpSFQ0NmNSdFdT?=
- =?utf-8?B?cjNzaUlNZSt3QVhteDMxd1h6N1plaGMwaWJuQTg1WlcvZHZ3d0lmai9OOHRh?=
- =?utf-8?B?ZzQ1T1NZc0xIc2Nydmt0MnAxQ0Q0KzNRdUs2RGp0NEx5VHN3K1lBVHd6SzM0?=
- =?utf-8?B?cDZLOENreGxRVVhkVFNGVFBqQ3Z1c2ovVzVaWnA4VVNSaFF0aXFRWFp6dk4z?=
- =?utf-8?B?ZzNHTlZxa0lKb0xWQUcrTUpoV0trOG1OUml0OUtGMnAyNzBXU2Vyb2hBT2Z5?=
- =?utf-8?B?RHNxYkJYeThDNlZlWU9XdUNkdTIrTmhONjhYYUI2SVZIUlZjb3JvclB1ZFAy?=
- =?utf-8?B?cnhad0NnR2tQUU05RXF2MVFrUTFOdGNTRExoRmt3Y1NTRitteHBrRXZxKzk1?=
- =?utf-8?B?OG1GUm5IWktDbW0yaUlYTkVISzhQelo2MmczRG8zRE50ZHVmbGdhU3lVV1l4?=
- =?utf-8?B?dlZFdC8wQnZ6S2c1cXlQMFJxRSs3TE42MW42aE5pbFZVSEpqQkpYZ1JuRjJ1?=
- =?utf-8?B?N0tEbWV2RHFoc1hiTHpLbVdCa0IzY3N1eWlmaUtPMWc4Z0trMHVrdk9iSU9R?=
- =?utf-8?B?anRFWk1wOVlMTk1iUlNFWGVUK0dlbkZkRlZ3a3pRZUxDU0NpbDBJV05TQjMw?=
- =?utf-8?B?YkdOUEMwaHhYbHAvUVREY1FsYzVsNnlseFc2VHF6eThqQVdneUM1TTZZMFRT?=
- =?utf-8?B?ZkJyUEZxT0Rrc2xBbE4zNHNmVHZRL0h5T0tGRW81NndVVmM3Wi9aaUEzdkQw?=
- =?utf-8?B?RFRwck10NENKZlFmM0JYY2Z2amZ4VjJ4OFFtV2VvSStiaHlVMi80K05ZemlG?=
- =?utf-8?B?TXhjVUNaeWx4c2Z0S2lwMFJYeHdaZHdLUkc1ZWtUdElyUWpVNVdrVlc0ZXdY?=
- =?utf-8?B?T3p1ZkVtay9WQkhINHNFbU9sU2JRaWZwU3dFZWZ6eFpkZ1EyaDJ6eVJMNC9T?=
- =?utf-8?B?aE1sK2FSdFlvbE9GWVRiRkF0WmtUQ0M5T2RjT2IvRmhEYVNTWDVnd0ZoNk9C?=
- =?utf-8?B?cXZrUXUrYTlJeVhjdUxnV1JvSnVidm9xOVJhRW9GSFlENlQzT2lnT1RVZmg1?=
- =?utf-8?B?OEtlUnpQS1ZObktYN2tqL3RWNVYrU3YvNGJkNWdXbXRLTVdkT3lOOW93MkVP?=
- =?utf-8?B?NEVaYytSNTlyQVlSaHFRNUl4dzg0ei85Q01RQ2plZ1EyREV6V0hic2pnRjV1?=
- =?utf-8?B?eWIydzFWWUJaL2VLWjNxUGpDTnFjdThlSkhmTXJGYmtNVmFoa1lqa0M4aVMx?=
- =?utf-8?B?blFPUm95RU9nOGlNa3p2ckRCa29xMVFlaTBXVCtOdTMxdHB3M3R5OTduN2JQ?=
- =?utf-8?B?N0ZzNVR3alVtT2x0U1NtbkEybDdNdXo1emVGaVV0aG9aS3RuSURualVBdVFW?=
- =?utf-8?B?RXFuSEwxWmErd0hCYnNnMDdlVjlRZUhsL2drbkhGb05CeFkrUEc3M1J0K3RV?=
- =?utf-8?B?NXNqazNqUnRxV2lTaWNwSHFyQ1lRc25RczA3OGZKTGlzWDA4bTVGYWlJSGV1?=
- =?utf-8?B?UUNYK0Rkblp2dHJscHROYXlHck56K3NrQ2kyaVR5cUlPM1h0dUNDeDhsL0R1?=
- =?utf-8?B?dEpoeC9rRktwM211MjY1anM4VkJZZ0NGZDlFUnY3cEgxT2pweG45UT09?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Wm01b1NqWW95MXppUzlKUXNRbWhrbm53QkFuY1h5WGNOYzNNT3pYZm0vZlc3?=
+ =?utf-8?B?QWVnYTh6bXdCSzJxbS95RUR3RWk1SzBnYy9tbnlXTFU4cllCMjR6andiZEdP?=
+ =?utf-8?B?akZpUWlPNXRuc0hzaHMzS0ZlNVJJUWh3d3pBK09MVkNmQ1YySkZDTDRJWHV0?=
+ =?utf-8?B?S21Ea00vM0drMndRZCtxSHdlbUFLeDRVMnQ1Qk95OWZDK1RyNVRZWDNlRzFx?=
+ =?utf-8?B?bFV6dmxkUkhVRVhDd0NKcXV0dEtRa3JDVHVOOTJmaDBKcHlUYTJXUXY5dGQ1?=
+ =?utf-8?B?MmdFU0h3cUdFY0dIV1d5RGc3RVBHY3pqQ3F1RGZtdDVxQlVMUkwrc0o3ZU82?=
+ =?utf-8?B?S0dKQnRKcFZSUVpacC9BdWk0ZFlsMnNVQi9wd2NYU29UWUJpV1VKMGZiaERj?=
+ =?utf-8?B?M1ptK3RMMHN2dzU4emhTQkU5L1hLc1kxSTJkQ2RTUVh2M0dhdmU1NDI1dnZs?=
+ =?utf-8?B?YXRQbDduU1hQTWlGRGVIL3duc0NEUGZhRHBibGliWWFPN3E2c2NyYkR6YlR3?=
+ =?utf-8?B?azJBcS82SmNNL0VIZVZPbElpRDFzTWQyMlZGdEs2UmJ6aXV4anllOGJDVzZT?=
+ =?utf-8?B?dU9SV3VKWWdiVEx4cXh1cno0QVNPZ2h3WjJRTXlZZ1RUOGNXb2ZWaEFiaGU5?=
+ =?utf-8?B?SUQ2bUZRamh3WnArb3BIcFFBL0l1VnZCTFJDeXB3MFRGdzVKb1hYZ0x0Z001?=
+ =?utf-8?B?d2RTNTNmcHZ5TjJBa0RXZjg4SlBkTGNoNWJ6MHE1V2lMSFppV0hiY0JXR29n?=
+ =?utf-8?B?cENHQThwTEJaQVpaSHhheGtNaEVuald5eThLVTBETTkvSUhsQnkwYXlRVktp?=
+ =?utf-8?B?a0tLeGQ4b0hGMjQrOHlPSklJNlE2N1JTUHg4TEdLSWZUcVF6UzBtZ2p2STla?=
+ =?utf-8?B?dHVEbkU5WnBmMjVDU0lBNWorQlljMmdSdW55NnlOTStDL3JldXFIMTZEMDdl?=
+ =?utf-8?B?bk5td3FsU2NzZzI2Rkw2L1l0amlha3J5eG9ldkduVVVnSHBjWjVURE5hMEhP?=
+ =?utf-8?B?bFhEdXZQd05vd1ZnMEk2RG9LWFV2UEk5STNhN0dBb0xqdlZSZjhFMk5iM0NS?=
+ =?utf-8?B?N3NZTWFxWTlWbkpSRll4ZStXd0hGZ2I2UFhqaG9VZytqSXpUd3Z5dERtWFlj?=
+ =?utf-8?B?K2RSSkJ0d3djNHhUVmhYMnRGUmVwYjRyNGlrQkkrZzFLcUtMWE1XVEFGOVBJ?=
+ =?utf-8?B?ZnNnYll0UExTS3E4bEVLVWlYUkpjaWo3T3d6SG9tNmJIaXpqd29tb3FaWTJC?=
+ =?utf-8?B?c25wVEVhQmxaaU9lSHBGMGc0SFFteDJiR1ZoekwvS2cvU2pLQTNSVXYxTDFu?=
+ =?utf-8?B?enNiMUhtSnUrOTdhZUxkUkRKR2ZYcXh5NzdPbmpPa0ZMTnRHcWtEODVQSDNX?=
+ =?utf-8?B?TWtZOUt5d2xCYjgvOTlQTlJXNURMb1I3MHBEV2dkU3JBaWpYWEdWeC9oZU8r?=
+ =?utf-8?B?UUxOMFFnMmsxZ3AwUnVpTnEvVENtaUEyYlB1VHpTRmw3WkpGb1RjeW83NHA5?=
+ =?utf-8?B?YUdndEZPeTVyNE1yM0RFR3pUTGoyVGplNCtKSTFncGxiWnI0OUNOUzM4L1Bi?=
+ =?utf-8?B?SUFrN2VKa0tSYW56MlBYamZ1MUtDOHBTQndEbDhmb1Z3a2JqeFZxaFZudXRz?=
+ =?utf-8?B?eWErbXFPWTNtdmlpMjRVYnc5Z0IxaEZOYnBrMGY2NGI3eVNrek1KcU9VQkRt?=
+ =?utf-8?B?Z1BnRE4zQjloM0UwZHpWNldhMHhMbkZYSEh5VlJya0VDWTlpOUNJT29FUFYv?=
+ =?utf-8?B?d3VEZU1rdjFtYUplQVM5dzN1RlRPV2VUMG80TFpJeDRRUGNKMjNoUExpS3Bp?=
+ =?utf-8?B?Q25FL3ZySjR0dURoZWFaVElEOERUQ0lyR2Z3dnRUQVRxL1ZqWllETWt5UjZD?=
+ =?utf-8?B?Q2ZmZ0VDWTFURHQ0aGVNYkZrQzVPSUJEMkZaLzRkT3pVRldEQndGcU5lT2tY?=
+ =?utf-8?B?bitBbVBrZFc1cVJHaWNsSWxZN2xNbHBBc0FhZDhTTG9YZU1sZ2F6T1dWd2Zq?=
+ =?utf-8?B?QkFRTUZxUVN4NGp2S1Q0ekQwdHFvUDM0dGg2SU40bWswR1ZIZWg1VVlpdEhH?=
+ =?utf-8?B?QlJ6bW5tc09KeFBpb0E4WjB6QmhWM0VrWTBkSC9mekFiWXRRNmg1aVBWamlr?=
+ =?utf-8?B?R3N3RnVjbDlCZGFIbkpKeTdQZGNEWHZNVVFTTjdDKzJTdXRLWUFSMDJ3aDdP?=
+ =?utf-8?B?ekx3YytYNjlPNEJ3QmxJY045VUdYekorbFNHMFlXWDlZVENueGJTU09vMy9Q?=
+ =?utf-8?B?WlFiOWVhY3BWQXNxK1RYN3VMam1TVm1NRUo5Q1FkUElYaXdPbE05Y2plU25a?=
+ =?utf-8?B?djRVNHd0QzdPSklaNGVkZys2V0IzeEN2Rjl2V2hkOXdETTBBZFRUdz09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36d2f25a-30a5-40a7-434e-08da3ee0c8e7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e4b84d7-98a1-4e51-ed96-08da3ee1483e
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2022 06:27:19.3822
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2022 06:30:53.0118
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zAM4s05fAaO2jhiAw7Njyej12SqTkzKhvgu8PAkc125W6wZhmdkB3BqTeTaRLeKlgS09dmQt+X7hzw8/Co8toQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5926
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4146H+PE0EUHoKyrhFQVxOTH0jD228pyJzKJL9pAR1QhpTUyZM31yuf4MjV0HVQy+Yt750v0gVzrwKsHTy7CKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3381
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -133,33 +136,102 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On 5/25/2022 11:35 AM, Linus Walleij wrote:
+On 5/25/2022 10:15 PM, Andy Shevchenko wrote:
 
-> On Tue, May 24, 2022 at 4:39 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Tue, May 24, 2022 at 10:13 AM Basavaraj Natikar
->> <Basavaraj.Natikar@amd.com> wrote:
->>> AMD pingroup can be extended to support multi-function pins.
->>> Hence define and use PINCTRL_GRP to manage and represent
->>> larger number of pingroups inline.
->> This is good idea, but please make it available for all pin control
->> drivers, since the data structure like
->>
->>   pingroup {
->>     *name;
->>     *pins;
->>     npins;
->>   }
->>
->> is used in many drivers.
->>
->> That said, I think the AMD_ prefix will be misleading in this case.
-> Aha you mean like a utility macro? That's useful, don't know where to put it
-> though, include/linux/pinctrl/pinmux.h?
+> On Wed, May 25, 2022 at 03:12:05PM +0530, Basavaraj Natikar wrote:
+>> On 5/24/2022 10:09 PM, Andy Shevchenko wrote:
+>>> On Tue, May 24, 2022 at 07:20:34PM +0530, Basavaraj Natikar wrote:
+>>>> On 5/24/2022 6:04 PM, Mika Westerberg wrote:
+>>>>> On Tue, May 24, 2022 at 05:54:47PM +0530, Basavaraj Natikar wrote:
+>>>>>> There is no CRS method defined for IOMX/0xFED80D00 in ACPI namespace // IOMX Address Base 
+>>>>>> Hence I added additional code to get IOMX memory region.
+>>>>>>
+>>>>>> since _CRS method is used to get GPIO pin base for AMDI0030 in
+>>>>>> pinctrl-amd as below, same is not available for IOMX
+>>>>>>  
+>>>>>>   Device (GPIO)
+>>>>>>         {
+>>>>>>             Name (_HID, "AMDI0030")  // _HID: Hardware ID
+>>>>>>             Name (_CID, "AMDI0030")  // _CID: Compatible ID
+>>>>>>             Name (_UID, Zero)  // _UID: Unique ID
+>>>>>>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>>>>>>             {
+>>>>>>                 Name (RBUF, ResourceTemplate ()
+>>>>>>                 {
+>>>>>>                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+>>>>>>                     {
+>>>>>>                         0x00000007,
+>>>>>>                     }
+>>>>>>                     Memory32Fixed (ReadWrite,
+>>>>>>                         0xFED81500,         // Address Base
+>>>>>>                         0x00000400,         // Address Length
+>>>>>>                         )
+>>>>> Is there something preventing you to add it here like below?
+>>>>>
+>>>>>                      Memory32Fixed (ReadWrite, 0xFED80D00 0x00000400)
+>>>> yes few system has different entries already defined like below      
+>>>>   Device (GPIO)
+>>>>         {
+>>>>             Name (_HID, "AMDI0030")  // _HID: Hardware ID
+>>>>             Name (_CID, "AMDI0030")  // _CID: Compatible ID
+>>>>             Name (_UID, Zero)  // _UID: Unique ID
+>>>>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>>>>             {
+>>>>                 Name (RBUF, ResourceTemplate ()
+>>>>                 {
+>>>>                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+>>>>                     {
+>>>>                         0x00000007,
+>>>>                     }
+>>>>                     Memory32Fixed (ReadWrite,
+>>>>                         0xFED81500,         // Address Base
+>>>>                         0x00000400,         // Address Length
+>>>>                         )
+>>>>                 })
+>>>>                 Return (RBUF) /* \_SB_.GPIO._CRS.RBUF */
+>>>>             }
+>>>>
+>>>>
+>>>>         Device (GPIO)
+>>>>         {
+>>>>             Name (_HID, "AMDI0030")  // _HID: Hardware ID
+>>>>             Name (_CID, "AMDI0030")  // _CID: Compatible ID
+>>>>             Name (_UID, Zero)  // _UID: Unique ID
+>>>>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>>>>             {
+>>>>                 Name (RBUF, ResourceTemplate ()
+>>>>                 {
+>>>>                     Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,, )
+>>>>                     {
+>>>>                         0x00000007,
+>>>>                     }
+>>>>                     Memory32Fixed (ReadWrite,
+>>>>                         0xFED81500,         // Address Base
+>>>>                         0x00000400,         // Address Length
+>>>>                         )
+>>>>                     Memory32Fixed (ReadWrite,
+>>>>                         0xFED81200,         // Address Base
+>>>>                         0x00000100,         // Address Length
+>>>>                         )
+>>>>                 })
+>>>>                 Return (RBUF) /* \_SB_.GPIO._CRS.RBUF */
+>>>>             }
+>>>>
+>>>> if we add or in future some entries added. 
+>>>> is there way to map particular entry for IOMUX? 
+>>> Straightforward way is to add it always to the end and add _DSD boolean
+>>> property ("amd,pinctrl-iomux-present") and act accordingly. More flexible and
+>>> less error prone is to name all resources with DSD property and find resource
+>>> by name: "amd,pinctrl-resource-names" = "bank0", "bank1", "iomux".
+>>>
+>> Idea of adding _DSD property looks good, we can add easily _DSD
+>> "pinctrl-iomux-present" u8 property to return index or instance
+>> value directly. 
+> Better to name them all, it will be more consistent and robust.
 
-For me looks like we need to put this in include/linux/pinctrl/pinctrl.h for 
-a generic usage. is this fine?
+Thanks. Sounds good, will make this change.
 
-> Yours,
-> Linus Walleij
+Thanks,
+Basavaraj
+
 
