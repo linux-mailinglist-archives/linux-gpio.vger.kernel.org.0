@@ -2,166 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 565E2534B74
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 10:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9368D534F10
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 14:26:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346785AbiEZIQv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 May 2022 04:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39770 "EHLO
+        id S234384AbiEZM0l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 May 2022 08:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346698AbiEZIQl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 04:16:41 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48794EA31
-        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 01:16:20 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id i9-20020a632209000000b003facc62e253so544353pgi.11
-        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 01:16:20 -0700 (PDT)
+        with ESMTP id S242644AbiEZM0k (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 08:26:40 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E575FB1
+        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 05:26:38 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id y13so2749159eje.2
+        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 05:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=2cafqgyvMaG8pnmb2DwUPLH+NwqexHFaoGplVLqjY6c=;
-        b=Qhvec8EM5waM3couwB4Dum8OsNReKnA1EIAEV8LpsepiAu+NTnpIDd6zPzvaScyoHi
-         joLxHL0NnhEkyS300O8xI9N1fgEmoiNW+tHhgRg+C3VgA1m7nuIAVZgpAAN0SCoZaXb3
-         HEB/SDIh21LxIk12AKALJ8PaTt3HoxW0TucqgFk8I+2nWe8sV+SOqE/1qyqqfeteZr3g
-         EufhH6H9hKX80HxUrjS4SaCSZY+0yU4qfhVpbOF9hKztCUUvRR36MTpKRlzF3fXGT8kL
-         xXPgN+vDeTbaZIcJj1bpAuXYJV78EUX8wvpAl/KOGx8ob/jDmnzqVjFH+adTvCIPzWq4
-         hKpQ==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Y0e4snQi7n2SjF6Ck76whvuOc/klo+1JHia0LyM1puE=;
+        b=zxkEQl7RT17wo8Rs9kNSf6bo13XpGU4njx7LZLYlIraBIzs4x0eo/TEiIP2RBvi3tx
+         X+1MZmvi7e2MKKQ8X9Yg/9qZpCrmwWAWzpK3YxeVTzhEI1iCSWNlpJbpojKQM1nkDH6f
+         36t3mIXT2fDIUysG9c/G/z+QQFu9aiCQU2GbbwVbpGlbOG9ClLaCXNQ2/oXMva0KfuWn
+         W1zzZWW04ZdA00XVOZMlRzIxc4lCksumb8WSV7DCfF3v/X2/wT9PznH+c9FtMDsUxjzq
+         AucK2rtkIIBE4oCZYkB4dKf0sh5OxLcOBaMZ2iyO0B+ZgfRpKXO/IuoGpGIUunEUmMym
+         jJTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=2cafqgyvMaG8pnmb2DwUPLH+NwqexHFaoGplVLqjY6c=;
-        b=W7YzixIfDGBUtdOGap4DeKns7ZacYkcm0CntkLn5jCSiYt+HsCCX+Dh0ycTVN3JEi4
-         QoQ64R1ThGtBuf+9yfcRlO68hVAdxkEQTldhpKMTF7PIDnt5TU16HRTCu+qKToD1XP36
-         Lr5tl8YurSH0eoeStsUO2rkx5E7TBM+tTAJp2LprdKlqKWMnEIZpH9rOnIfy9SlW9u1x
-         LjMUfnTMHuJj/NCNDaECp3lEyX+MuVcKqYGNPV/c/EBsHXrY7kyk0brMudOSlTMAqa3l
-         6fGMJ5xTe9Iric4AH0A9xeKZCEyuzOINze4G9Io6PrBXk/etRnrneIlDrhqmvuivKfLf
-         ePog==
-X-Gm-Message-State: AOAM532nfLnG8SHSpOrDCnz6lIMLkpfHcahXvi5qjet8CUJOqgoXgJ71
-        6Q5ca61+qYohAbb7za3zWGEuLyHw3L/qudA=
-X-Google-Smtp-Source: ABdhPJyinReesiUqDbMmyw2id5J+MedifDe6OonBttcETpmdQGcuAvMkhqslxCFm255z4G73O9ROU101o9oWZy4=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:ff1f:a3b7:b6de:d30f])
- (user=saravanak job=sendgmr) by 2002:a17:902:7004:b0:161:f216:4f3f with SMTP
- id y4-20020a170902700400b00161f2164f3fmr30173525plk.98.1653552980455; Thu, 26
- May 2022 01:16:20 -0700 (PDT)
-Date:   Thu, 26 May 2022 01:15:48 -0700
-In-Reply-To: <20220526081550.1089805-1-saravanak@google.com>
-Message-Id: <20220526081550.1089805-10-saravanak@google.com>
-Mime-Version: 1.0
-References: <20220526081550.1089805-1-saravanak@google.com>
-X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
-Subject: [RFC PATCH v1 9/9] driver core: Delete driver_deferred_probe_check_state()
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <jstultz@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Y0e4snQi7n2SjF6Ck76whvuOc/klo+1JHia0LyM1puE=;
+        b=7wWV/euUt5pjyUyr0lXUoCAFVxzUiHnbj3qudsNYtfvX5n0RnQ+FqE1isIwRsnQgOQ
+         XxoWqx7RTs45XT3Et123VPFq3RJaSpojdbYYcBv3PXGTxVc0Ht0B2SsmdJz2rb2MpH3v
+         DU4P6JbtY+amXcJ4vYRvLIeb4SW4/H3IgO50qbawrazQhnHTN/eQrIRd+ily0gRyyWyO
+         mZdcE7QBkuSHxB6pPJt1SOMaSzrc1n3Fw55Iym8aNMZdXAaxo9QDZeUCRwbdcorftnqp
+         jAuFqYacoiBKPXD99I5uWoyNShdJReFGguCfAfvQBjXFHa/mQld+/NqSh7M4pTzXpN1W
+         uw8Q==
+X-Gm-Message-State: AOAM533ZpM5oO7DWJynfsBrVtkwCe7/RTEkNjqGS9elglPpPON1nfn5H
+        2GQFbdo+F54wSq8xNOEXYehnDg==
+X-Google-Smtp-Source: ABdhPJzWPJFuN9BjNjbPb5S4iPgNkMLre4lu+a45KZO8S/trrHBCe/pMNabMhSA1PN6VPwaNr+4czQ==
+X-Received: by 2002:a17:907:3faa:b0:6fe:d013:b22a with SMTP id hr42-20020a1709073faa00b006fed013b22amr20091822ejc.425.1653567996822;
+        Thu, 26 May 2022 05:26:36 -0700 (PDT)
+Received: from [192.168.0.177] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id c2-20020a170906154200b006fed5247df9sm462398ejd.196.2022.05.26.05.26.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 May 2022 05:26:36 -0700 (PDT)
+Message-ID: <d816796e-4b2d-77af-afbd-7d54eb18858a@linaro.org>
+Date:   Thu, 26 May 2022 14:26:35 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v4 1/3] dt-bindings: gpio: gpio-mvebu: convert txt binding
+ to DT schema format
+Content-Language: en-US
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        andrew@lunn.ch, thomas.petazzoni@free-electrons.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20220526012946.3862776-1-chris.packham@alliedtelesis.co.nz>
+ <20220526012946.3862776-2-chris.packham@alliedtelesis.co.nz>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220526012946.3862776-2-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The function is no longer used. So delete it.
+On 26/05/2022 03:29, Chris Packham wrote:
+> Convert the existing device tree binding to DT schema format.
+> 
+> The old binding listed the interrupt-controller and related properties
+> as required but there are sufficiently many existing usages without it
+> that the YAML binding does not make the interrupt properties required.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/base/dd.c             | 30 ------------------------------
- include/linux/device/driver.h |  1 -
- 2 files changed, 31 deletions(-)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index af8138d44e6c..789b0871dc45 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -274,42 +274,12 @@ static int __init deferred_probe_timeout_setup(char *str)
- }
- __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
- 
--/**
-- * driver_deferred_probe_check_state() - Check deferred probe state
-- * @dev: device to check
-- *
-- * Return:
-- * * -ENODEV if initcalls have completed and modules are disabled.
-- * * -ETIMEDOUT if the deferred probe timeout was set and has expired
-- *   and modules are enabled.
-- * * -EPROBE_DEFER in other cases.
-- *
-- * Drivers or subsystems can opt-in to calling this function instead of directly
-- * returning -EPROBE_DEFER.
-- */
--int driver_deferred_probe_check_state(struct device *dev)
--{
--	if (!IS_ENABLED(CONFIG_MODULES) && initcalls_done) {
--		dev_warn(dev, "ignoring dependency for device, assuming no driver\n");
--		return -ENODEV;
--	}
--
--	if (!driver_deferred_probe_timeout && initcalls_done) {
--		dev_warn(dev, "deferred probe timeout, ignoring dependency\n");
--		return -ETIMEDOUT;
--	}
--
--	return -EPROBE_DEFER;
--}
--EXPORT_SYMBOL_GPL(driver_deferred_probe_check_state);
--
- static void deferred_probe_timeout_work_func(struct work_struct *work)
- {
- 	struct device_private *p;
- 
- 	fw_devlink_drivers_done();
- 
--	driver_deferred_probe_timeout = 0;
- 	driver_deferred_probe_trigger();
- 	flush_work(&deferred_probe_work);
- 
-diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-index 700453017e1c..7c245d269feb 100644
---- a/include/linux/device/driver.h
-+++ b/include/linux/device/driver.h
-@@ -241,7 +241,6 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
- 
- extern int driver_deferred_probe_timeout;
- void driver_deferred_probe_add(struct device *dev);
--int driver_deferred_probe_check_state(struct device *dev);
- void driver_init(void);
- 
- /**
--- 
-2.36.1.124.g0e6072fb45-goog
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+
+Best regards,
+Krzysztof
