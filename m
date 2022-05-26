@@ -2,99 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88075534882
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 03:59:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86991534906
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 May 2022 04:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345876AbiEZB7B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 May 2022 21:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
+        id S239641AbiEZCuN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 May 2022 22:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345897AbiEZB6y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 21:58:54 -0400
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B766BCE91;
-        Wed, 25 May 2022 18:58:50 -0700 (PDT)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-f1d5464c48so678973fac.6;
-        Wed, 25 May 2022 18:58:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=u1k8n/bnMYLdf6Ge4xddMp84AvG888eR8uyJpk19AXI=;
-        b=zy2FUOExz4TusGKVBn4/T4GZ9APONZf4lrp+bXvQ9oHs4OBT22jZvKA4ztFmfVGTaY
-         WAcUYgFvjlFE3iM9heH9oz1H9yVXO9iK8T/MyTBwHbb5PxTKE4TIY3gtALyon9lihwVH
-         3jnFLAuZRv9qb7eja9vAJylwReZYmLwddsCarUt0XCuo/PTmfV4HkcNILHfi76/cr7MZ
-         fb1ZovQCEXv6WyBh6rXOl32Q7sVk/GlJHOwAGICLvkuYR3e0dIvyPZ3H3ZlOhfJuhcJ3
-         l4+9nFWHxql3tcuxb5Yqrpl07HAUpYH3E4qT4hQT4EEg6RoxJbNR9cwZamYZG07Jpy5A
-         N9Ug==
-X-Gm-Message-State: AOAM530BOdL3W1cA8378+9Bv+BtQj//QWMbAO1zduiHf2N8RZKvmSo9+
-        lY4BzUvj8n1JN8pv/0ER2Q==
-X-Google-Smtp-Source: ABdhPJwm0i+e0VsW1YFMx88HUodQOXevLnzV1/8atr9allVCR9Q5IuKOcmK9q2gmX2vgMB5I2FGcjw==
-X-Received: by 2002:a05:6870:ea8d:b0:e6:135c:1a2e with SMTP id s13-20020a056870ea8d00b000e6135c1a2emr25954oap.9.1653530329601;
-        Wed, 25 May 2022 18:58:49 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id 25-20020a544199000000b0032aea9c2c23sm193918oiy.40.2022.05.25.18.58.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 May 2022 18:58:49 -0700 (PDT)
-Received: (nullmailer pid 2898004 invoked by uid 1000);
-        Thu, 26 May 2022 01:58:48 -0000
-Date:   Wed, 25 May 2022 20:58:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado 
-        <nfraprado@collabora.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v1 2/2] dt-bindings: pinctrl: mt8192: Use generic bias
- instead of pull-*-adv
-Message-ID: <20220526015848.GA2897970-robh@kernel.org>
-References: <20220525155714.1837360-1-nfraprado@collabora.com>
- <20220525155714.1837360-3-nfraprado@collabora.com>
+        with ESMTP id S238727AbiEZCuE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 May 2022 22:50:04 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33695A5010;
+        Wed, 25 May 2022 19:50:02 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 142A15C01B1;
+        Wed, 25 May 2022 22:49:59 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 25 May 2022 22:49:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm2; t=1653533399; x=1653619799; bh=5VTPfSq+6dr6vtXo0jyg38don
+        JGkVsKzqsztDQHGzjw=; b=Mrr/SFuQZ1XxWgnPo9PO7kyvhM1r1PzO7m93WoOxo
+        b/2PDwPMf75B4DDEgRfdb1NSo5A1B24XTyK3/Am2cTj/tNwdTw/2Drf1hGLWiO5l
+        THRrQaEgIfDDdeDbLmYKzKb5D/55uHd1Q6o0SEOav6WaHj6dA+PpEUcMJlmSRTfg
+        hzkT6pptor/KlqJZ+LH+Nnmqe5XHxxpw/PjMfxnaX5Gzvs+hy/L1RthQ8+66K31z
+        GI4Dst3B4Snqa00UIFa82rkmjNuPNcvqtT5g+WjvjKnfrRv1ZOyzeDtVYUSwDfVV
+        gaxhKhq2NYCJlcQLmHdZOSFxlkqLt6weM1kKJRXqN/Gmg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1653533399; x=1653619799; bh=5VTPfSq+6dr6vtXo0jyg38donJGkVsKzqsz
+        tDQHGzjw=; b=Ps3CyIlDFtDkw37yt1d3zk/LMy4u53bbvg+wstLu2pTumVSAEs3
+        0HerXNLmGXAIMmKaAvrPHQ1F31DgyKDrBQuMc0hSY496VuMPAG114cKq8sHrDzge
+        UIzIknqdKDpIcICs2TgDR2VKAXvA9vHGAYrrc+vQhbJHi5iKT1VFCD7T+oN/PaCB
+        ia5+OvXdJ8/8TRK4xGey5ZYvKSudbw2YU/w7tAXfL0n4svrr5MbAowCYivp3sw48
+        FaWHXyANDe76nqvrosdxp5vHyI8Kkd3wESO+vs1FfBqpaA28yPHfaCSnND+xfLQo
+        y/uVjRi7hj7Dwuo80o5o4zJTgA6auuiEzwg==
+X-ME-Sender: <xms:1uqOYhexe3opPnjvgeZR6cFjAH0B06BSPlZaKThCm9PR-ErvmmhzGA>
+    <xme:1uqOYvMs78L3hwf1wkjcphpOeUO3b78aWNEHgf3rB0LXNEnVXcyyg6mfq4WsoTeV9
+    4maBxJaMCZFZosAog>
+X-ME-Received: <xmr:1uqOYqjNnAOwhdAaWT4P-WGvoA1hcYj1z-SCLoVY_8OLMZq0TrD_-l8OOGH_OS5NLT7kKq_zDpV0z4_6nDqHTLadSNgUmbkd5o4vzN7pfy3YluqFDtZybbs3mR7kvXVld7n6qw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrjeeigdeifecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
+    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtffrrg
+    htthgvrhhnpeekveelhfejueelleetvdejvdeffeetgeelheeujeffhefgffefkeehhffh
+    keekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:1uqOYq_sS_beVBUrf94di_0cdKoia-JUeCXzQOqO79uPleNtjqfKAA>
+    <xmx:1uqOYtvEkETeyvM4u-iInCFZUAqq5-b_0HWOrmJP9U_VtjTLXb_VFg>
+    <xmx:1uqOYpEvSyd6vdJwJIubcML12grvRusN22oNHQgZqSy3y3sFKnIgsw>
+    <xmx:1-qOYjBwOowl52MuTwVUpTbH4ePZWLpg6kBs1kKV902zBSFB4mWkNg>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 May 2022 22:49:57 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vishnu Patekar <vishnupatekar0510@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: [PATCH] pinctrl: sunxi: a83t: Fix NAND function name for some pins
+Date:   Wed, 25 May 2022 21:49:56 -0500
+Message-Id: <20220526024956.49500-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220525155714.1837360-3-nfraprado@collabora.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 25 May 2022 11:57:14 -0400, Nícolas F. R. A. Prado wrote:
-> Commit cafe19db7751 ("pinctrl: mediatek: Backward compatible to previous
-> Mediatek's bias-pull usage") allowed the bias-pull-up and bias-pull-down
-> properties to be used for setting PUPD/R1/R0 type bias on mtk-paris
-> based SoC's, which was previously only supported by the custom
-> mediatek,pull-up-adv and mediatek,pull-down-adv properties.
-> 
-> Since the bias-pull-{up,down} properties already have defines associated
-> thus being more descriptive and is more universal on MediaTek platforms,
-> and given that there are no mediatek,pull-{up,down}-adv users on mt8192
-> yet, remove the custom adv properties in favor of the generic ones.
-> 
-> Note that only mediatek,pull-up-adv was merged in the binding, but not
-> its down counterpart.
-> 
-> Fixes: edbacb36ea50 ("dt-bindings: pinctrl: mt8192: Add mediatek,pull-up-adv property")
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
-> 
->  .../bindings/pinctrl/pinctrl-mt8192.yaml      | 29 ++++++++++---------
->  1 file changed, 15 insertions(+), 14 deletions(-)
-> 
+The other NAND pins on Port C use the "nand0" function name.
+"nand0" also matches all of the other Allwinner SoCs.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fixes: 4730f33f0d82 ("pinctrl: sunxi: add allwinner A83T PIO controller support")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+
+ drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c
+index 4ada80317a3b..b5c1a8f363f3 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c
+@@ -158,26 +158,26 @@ static const struct sunxi_desc_pin sun8i_a83t_pins[] = {
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 14),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+-		  SUNXI_FUNCTION(0x2, "nand"),		/* DQ6 */
++		  SUNXI_FUNCTION(0x2, "nand0"),		/* DQ6 */
+ 		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D6 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 15),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+-		  SUNXI_FUNCTION(0x2, "nand"),		/* DQ7 */
++		  SUNXI_FUNCTION(0x2, "nand0"),		/* DQ7 */
+ 		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D7 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 16),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+-		  SUNXI_FUNCTION(0x2, "nand"),		/* DQS */
++		  SUNXI_FUNCTION(0x2, "nand0"),		/* DQS */
+ 		  SUNXI_FUNCTION(0x3, "mmc2")),		/* RST */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 17),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+-		  SUNXI_FUNCTION(0x2, "nand")),		/* CE2 */
++		  SUNXI_FUNCTION(0x2, "nand0")),	/* CE2 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 18),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+-		  SUNXI_FUNCTION(0x2, "nand")),		/* CE3 */
++		  SUNXI_FUNCTION(0x2, "nand0")),	/* CE3 */
+ 	/* Hole */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 2),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+-- 
+2.35.1
+
