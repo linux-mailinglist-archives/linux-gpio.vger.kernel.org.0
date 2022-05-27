@@ -2,124 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94374535871
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 May 2022 06:27:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 314125359FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 May 2022 09:13:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231624AbiE0E1J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 May 2022 00:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34070 "EHLO
+        id S236909AbiE0HMt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 May 2022 03:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234603AbiE0E1H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 May 2022 00:27:07 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59A5EBE90
-        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 21:27:04 -0700 (PDT)
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20220527042703epoutp02a01a8d2ec458d47ec6d8d31b0ab9f5cb~y2742g1bu0309703097epoutp02g
-        for <linux-gpio@vger.kernel.org>; Fri, 27 May 2022 04:27:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20220527042703epoutp02a01a8d2ec458d47ec6d8d31b0ab9f5cb~y2742g1bu0309703097epoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1653625623;
-        bh=zXVW3TEfJ1KXlcxGA24ZaWjHWMC7E3yB1TAgrFFv2QY=;
-        h=From:To:In-Reply-To:Subject:Date:References:From;
-        b=ZEXJfzDkpHR6LIyKdosqTtX6gSW5g1ZG34ZjbC7zZBsf3pK8sVELHzj9UVvRdhXK6
-         6RIzoIPKTNRa5IW/KX1cs3gweHbSubbpN7XdVM9j1kBlxQXYE6WdIrDnNHSZnFRrVf
-         j3UjYVSUDtHsV5no5WH15USWOOmZh5oYczUxkkLs=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20220527042702epcas2p2067ecdbf4976ee47411ab07a0798c2e9~y274SB-mh2907629076epcas2p2L;
-        Fri, 27 May 2022 04:27:02 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.69]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4L8Wwh0q4Nz4x9Pp; Fri, 27 May
-        2022 04:27:00 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2E.B5.09764.21350926; Fri, 27 May 2022 13:26:58 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20220527042657epcas2p2e29aaa3a107c4e062a74e4453fe997ed~y27z-jP602907629076epcas2p26;
-        Fri, 27 May 2022 04:26:57 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20220527042657epsmtrp2e51a9dcad12b50a0b37031026f1338f2~y27z_qL481017710177epsmtrp27;
-        Fri, 27 May 2022 04:26:57 +0000 (GMT)
-X-AuditID: b6c32a46-79619a8000002624-9c-629053126a80
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D3.00.11276.11350926; Fri, 27 May 2022 13:26:57 +0900 (KST)
-Received: from KORCO082417 (unknown [10.229.8.121]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20220527042657epsmtip109a721015f1b930989c69d03e4d2c8d6~y27zy_z4L0134601346epsmtip1C;
-        Fri, 27 May 2022 04:26:57 +0000 (GMT)
-From:   "Chanho Park" <chanho61.park@samsung.com>
-To:     "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Krzysztof Kozlowski'" <krzysztof.kozlowski+dt@linaro.org>,
-        "'Alim Akhtar'" <alim.akhtar@samsung.com>,
-        "'Tomasz Figa'" <tomasz.figa@gmail.com>,
-        "'Sylwester Nawrocki'" <s.nawrocki@samsung.com>,
-        "'Linus Walleij'" <linus.walleij@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-In-Reply-To: <20220526143707.767490-3-krzysztof.kozlowski@linaro.org>
-Subject: RE: [PATCH 2/7] ARM: dts: s3c64xx: use local header for pinctrl
- register values
-Date:   Fri, 27 May 2022 13:26:57 +0900
-Message-ID: <012e01d87182$00af8660$020e9320$@samsung.com>
+        with ESMTP id S1345723AbiE0HMP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 May 2022 03:12:15 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A58387
+        for <linux-gpio@vger.kernel.org>; Fri, 27 May 2022 00:12:05 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nuU8h-0007sv-7t; Fri, 27 May 2022 09:12:03 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nuU8h-004pHz-2T; Fri, 27 May 2022 09:12:01 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nuU8f-00CQ4W-1v; Fri, 27 May 2022 09:12:01 +0200
+Date:   Fri, 27 May 2022 09:11:36 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] gpio: pca953x: Make platform teardown callback return
+ void
+Message-ID: <20220527071136.zlyjp4s7stnhby6w@pengutronix.de>
+References: <20220502170555.51183-1-u.kleine-koenig@pengutronix.de>
+ <CAMRc=McHZWjdFywntMwfg19U2H4Jh99SBa8Zz+0N79W4EQJ9gg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: ko
-Thread-Index: AQJyxhdZ1KlViaDZ4SOc3qllW0JPVwJJa2ERAg2BLVKr2r9O0A==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIJsWRmVeSWpSXmKPExsWy7bCmua5Q8IQkg/alihYP5m1js5h/5Byr
-        Rd+Lh8wWe19vZbeY8mc5k8Wmx9dYLTbP/8NocXnXHDaLGef3MVm07j3CbnH4TTurxapdfxgd
-        eDx2zrrL7rFpVSebx51re9g8Ni+p9+jbsorR4/MmuQC2qGybjNTElNQihdS85PyUzLx0WyXv
-        4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKAblRTKEnNKgUIBicXFSvp2NkX5pSWpChn5
-        xSW2SqkFKTkF5gV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGQ9nH2Ip+M1Uce7UFZYGxl1MXYwc
-        HBICJhKvFqp1MXJxCAnsYJTYceocC4TziVFi9fe7zBDON0aJ26e7WLsYOcE6XjzpZYVI7GWU
-        eP90FVTLC0aJ3dffM4NUsQnoS7zs2AbWISLQySLxq98FxOYUcJVo3nQCrEZYIEri7JXZbCA2
-        i4CqxPXDDSwgNq+ApcSX9/1QtqDEyZlPwGxmAXmJ7W/nMENcoSDx8+kyVoi4iMTszjZmkH9E
-        BJwk1vXpgdwjIbCWQ+LFc5BLQf50kfi4KRKiVVji1fEt7BC2lMTnd3vZIOxiiaWzPjFB9DYw
-        Slze9gsqYSwx61k7I8gcZgFNifW79CFGKkscuQV1GZ9Ex+G/7BBhXomONiGIRnWJA9uns0DY
-        shLdcz5DHeMh0TQ7YwKj4iwkL85C8uIsJG/NQli7gJFlFaNYakFxbnpqsVGBETymk/NzNzGC
-        066W2w7GKW8/6B1iZOJgPMQowcGsJMJ74WlvkhBvSmJlVWpRfnxRaU5q8SFGU2CgT2SWEk3O
-        Byb+vJJ4QxNLAxMzM0NzI1MDcyVxXq+UDYlCAumJJanZqakFqUUwfUwcnFINTJmZPD2xmywj
-        b8f/rVbIeO4zb+LSQ2c0YhQ0L2vG8bnsCsxX6Zy4QmLp7TwexyQLV+YMn5zjabNu13q33L/c
-        k6WeqzR/3YRSBR8Zs6Idpda66Us4BQrKmZgzVm2YrnvyZGBvrkxvZYbf343vTnMwSW3kf/b1
-        TG3VU/UK7qm1SQ4HmKbwvvspuVNO8YT69I/GDBVlfCufMyTVO/z6rSCcPdVR5UKdqkCFM9Px
-        eYfVdnj+1159Pu10jJat6YLq+0dMqqd4m70wY7zvYCqxpPNX4omFK2J6raTNK54v1w9J6X6R
-        8yEjMD3r8PruV5vfaSaoLO44NlV8U+CjlT7fRWZuC+/arfy83tE5MuFWjrcSS3FGoqEWc1Fx
-        IgClAVo8RAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsWy7bCSnK5g8IQkg9X7zS0ezNvGZjH/yDlW
-        i74XD5kt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7Jo3XuE3eLwm3ZWi1W7/jA6
-        8HjsnHWX3WPTqk42jzvX9rB5bF5S79G3ZRWjx+dNcgFsUVw2Kak5mWWpRfp2CVwZD2cfYin4
-        zVRx7tQVlgbGXUxdjJwcEgImEi+e9LJ2MXJxCAnsZpRon97JCpGQlXj2bgc7hC0scb/lCFTR
-        M0aJjg8TWUASbAL6Ei87toE1iAhMZJG4uiIRoug8o8SDu9PAEpwCrhLNm04wg9jCAhES65r7
-        2UBsFgFVieuHG8AG8QpYSnx53w9lC0qcnPkEzGYW0JNYv34OI4QtL7H97RxmiIsUJH4+XcYK
-        EReRmN3ZBhTnADrCSWJdn94ERqFZSCbNQjJpFpJJs5B0L2BkWcUomVpQnJueW2xYYJiXWq5X
-        nJhbXJqXrpecn7uJERxxWpo7GLev+qB3iJGJg/EQowQHs5II74WnvUlCvCmJlVWpRfnxRaU5
-        qcWHGKU5WJTEeS90nYwXEkhPLEnNTk0tSC2CyTJxcEo1MC3eHW3z6cWLPM8cvz5fzS8ZWTtb
-        /qxSNcpW3HMoOTLorDg7Ezfb/jXfXkrJvJOZFXD7mG/TdEffJ8oJbxMdyppe7fw3zTJg33Wl
-        Fz2T9B5U/1VUnMzqvnj2+6kF8r0fl3iyrSoQ1eo68WBxrE2Anaf6X6m07Ol6a9IFGOXPNPbG
-        Rl3b071hxfuDKuWX+liZuSZs7Uqp9J8wp2ZlX1vm/Tv5DidiV2u1hl68eejLb+Gp86Uv56r+
-        j/j4P8Tb76tQpfPxxPm/TfNleFyrzwZe1oq3YXz7X21jUyH/Sr0up4wfPrs+77Xo9byoLTVR
-        ZMKRxltvkwo/fl35tGviguVJp7J3hKxP2sjve35uuk7wGyWW4oxEQy3mouJEAGW1KDQnAwAA
-X-CMS-MailID: 20220527042657epcas2p2e29aaa3a107c4e062a74e4453fe997ed
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220526143737epcas2p37a5854cd0ee466428b36b92378b7d830
-References: <20220526143707.767490-1-krzysztof.kozlowski@linaro.org>
-        <CGME20220526143737epcas2p37a5854cd0ee466428b36b92378b7d830@epcas2p3.samsung.com>
-        <20220526143707.767490-3-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="woz3cgfj4rs4xa6r"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McHZWjdFywntMwfg19U2H4Jh99SBa8Zz+0N79W4EQJ9gg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -127,19 +56,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> diff --git a/arch/arm/boot/dts/s3c64xx-pinctrl.h
-> b/arch/arm/boot/dts/s3c64xx-pinctrl.h
-> new file mode 100644
-> index 000000000000..c2c88ff96881
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/s3c64xx-pinctrl.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Samsung's Exynos pinctrl bindings
 
-Exynos -> s3c64xx
+--woz3cgfj4rs4xa6r
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best Regards,
-Chanho Park
+Hello,
 
+On Thu, May 05, 2022 at 02:44:40PM +0200, Bartosz Golaszewski wrote:
+> On Mon, May 2, 2022 at 7:06 PM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > All platforms that provide a teardown callback return 0. New users are
+> > supposed to not make use of platform support, so there is no
+> > functionality lost.
+> >
+> > This patch is a preparation for making i2c remove callbacks return void.
+> >
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+>=20
+> Looks good to me.
+>=20
+> Sekhar: please leave your Ack if you're fine with me taking this
+> through the GPIO tree.
+
+Sekhar: Did this patch fell through the cracks? Would be great to get
+this in during the next merge window (i.e. depending on Linus Torvald's
+counting abilities maybe the one for 5.20)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--woz3cgfj4rs4xa6r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKQeaUACgkQwfwUeK3K
+7AkKfQf8DckvwlEwqNnkuwb2l0G7Q47BcU3IIqkrg+CqsQ4PbQfqEKBtronLbcTZ
+LiSwRbGakcD+q4RGw62cWVj39fsOM0NMgQXrSJ9tk7gWKMD/pUUtbiSskAEvaUEe
+0ICbb44LCONNciUJaNM83htJkUBKPckIrjf1bxxDlWqkM+HhwXztqyjKCFWFheLw
+2U5oOQHBlFpIn2xT/FPkhGIbVg2W4qyBOKAEB6GTQApRov4yt/3I3Qy4hjZAqbnu
+DHX/7vEAWsW/MUmEv25HJ7q5je7YAaYQACBs6H6M51ywzE0OXfEp0Un5UN/XkNyI
+i4zLTv6b7E7FnPVs2IDa4IEV1rVLCA==
+=opnX
+-----END PGP SIGNATURE-----
+
+--woz3cgfj4rs4xa6r--
