@@ -2,76 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91E6F5355F2
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 May 2022 00:05:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A27E0535810
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 May 2022 05:35:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349398AbiEZWFA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 May 2022 18:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
+        id S238697AbiE0DfG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 May 2022 23:35:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349993AbiEZWE4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 18:04:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD875DA3A;
-        Thu, 26 May 2022 15:04:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DDCC361BEF;
-        Thu, 26 May 2022 22:04:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 36858C36AE5;
-        Thu, 26 May 2022 22:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653602694;
-        bh=qk7AP8/K8hdhmOzogrVLOPSXEqmDbE7fQptkkwVNruo=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=R+Dv2mekf+s5LXivu0yAZ3/ItLdo0a81lnEy5wVitHnaXByjSIlZF/lu4mA9EGcoL
-         aJN0ouAT4axV5Wa95hSycL/W14p+rPhjexEMVR5xjzKuqGzR+18RKt5oKnAK8xGTRm
-         JNwbY7vkY/da/5Xm3JMwWRzaVw0Nm/ISrV1bb3P3hwFcOpmVyb0opYaXgsRwrnH0fX
-         S2pQG6lsDgJiYsBb6rE3WA0l9ntnBluzsM5XgjFYPIK9oeEK5RJ/YeOA1GDUfg0KNB
-         C7kWeY/UYUyvYUWVvgxnf56tKNDvocpDbl7jLzbjPa84wmOpvgaqiOKaTsduW7nJlZ
-         MvnaWQio8lvgA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 23C5DF03942;
-        Thu, 26 May 2022 22:04:54 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: updates for v5.19
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220525161220.151201-1-brgl@bgdev.pl>
-References: <20220525161220.151201-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220525161220.151201-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.19
-X-PR-Tracked-Commit-Id: 5a7cb9f3978d1fe8cfba798b4c9c054ce226e8fd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7182e897695d5b70fb772736f1f08639ca0fff78
-Message-Id: <165360269414.24340.324746412142816756.pr-tracker-bot@kernel.org>
-Date:   Thu, 26 May 2022 22:04:54 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233702AbiE0DfE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 May 2022 23:35:04 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A688BEBE8E
+        for <linux-gpio@vger.kernel.org>; Thu, 26 May 2022 20:35:01 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220527033458epoutp016ec1d11340c0ecfc8199fc59ea3a70e3~y2OaWXd0w1404414044epoutp01y
+        for <linux-gpio@vger.kernel.org>; Fri, 27 May 2022 03:34:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220527033458epoutp016ec1d11340c0ecfc8199fc59ea3a70e3~y2OaWXd0w1404414044epoutp01y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1653622498;
+        bh=C56Kmrrcot59L72Jh6NNgirPvZtuEzfeiL7AUW9Vf3k=;
+        h=From:To:In-Reply-To:Subject:Date:References:From;
+        b=qSXLkrKOI//98tOonMwsg2I3AEXouNkEYf0agnxhwt6o5rRNATwBVDEyR93RITgJW
+         xlH2EgmGMg8MWRgHaO5MKNrEpqf9qS6JRDryLpTYGp3jH5arMBGS4dDJYPqqqxgr8c
+         IB8Zhn4uC78Y2G5ubfw8wUuKZ1AqyEYM40RIpMo4=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20220527033457epcas2p370bdfcd2843830dd13147ef6a03f1d81~y2OZhoLWB2053320533epcas2p3o;
+        Fri, 27 May 2022 03:34:57 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.68]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4L8Vmb65Vbz4x9Py; Fri, 27 May
+        2022 03:34:55 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1D.9E.10069.FD640926; Fri, 27 May 2022 12:34:55 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20220527033454epcas2p144713ba96c36ad13d423c5520005f4a1~y2OXbnJaK2828928289epcas2p12;
+        Fri, 27 May 2022 03:34:54 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20220527033454epsmtrp17092120e83fe7d4a21f8e7374908d909~y2OXav2X90251702517epsmtrp1d;
+        Fri, 27 May 2022 03:34:54 +0000 (GMT)
+X-AuditID: b6c32a45-a8fff70000002755-5a-629046dfd6a8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B0.AA.11276.ED640926; Fri, 27 May 2022 12:34:54 +0900 (KST)
+Received: from KORCO082417 (unknown [10.229.8.121]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20220527033454epsmtip2f29dd3c0e9d438a74d90db98b89bb132~y2OXNY_3-1735817358epsmtip2K;
+        Fri, 27 May 2022 03:34:54 +0000 (GMT)
+From:   "Chanho Park" <chanho61.park@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Krzysztof Kozlowski'" <krzysztof.kozlowski+dt@linaro.org>,
+        "'Alim Akhtar'" <alim.akhtar@samsung.com>,
+        "'Tomasz Figa'" <tomasz.figa@gmail.com>,
+        "'Sylwester Nawrocki'" <s.nawrocki@samsung.com>,
+        "'Linus Walleij'" <linus.walleij@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+In-Reply-To: <20220526143707.767490-6-krzysztof.kozlowski@linaro.org>
+Subject: RE: [PATCH 5/7] arm64: dts: exynos: use local header for pinctrl
+ register values
+Date:   Fri, 27 May 2022 12:34:54 +0900
+Message-ID: <011c01d8717a$bb2f2ed0$318d8c70$@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: ko
+Thread-Index: AQJyxhdZ1KlViaDZ4SOc3qllW0JPVwGGcubRAfWMyjWr4YgFYA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEJsWRmVeSWpSXmKPExsWy7bCmqe59twlJBnefaVs8mLeNzWL+kXOs
+        Fn0vHjJb7H29ld1iyp/lTBabHl9jtdg8/w+jxeVdc9gsZpzfx2TRuvcIu8XhN+2sFqt2/WF0
+        4PHYOesuu8emVZ1sHneu7WHz2Lyk3qNvyypGj8+b5ALYorJtMlITU1KLFFLzkvNTMvPSbZW8
+        g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4BuVFIoS8wpBQoFJBYXK+nb2RTll5akKmTk
+        F5fYKqUWpOQUmBfoFSfmFpfmpevlpZZYGRoYGJkCFSZkZ8zff4OlYD1bxd1ZZQ2MPaxdjJwc
+        EgImEs8vrgayuTiEBHYwSqxb8pQZwvnEKLH90nEo5xujxM+1IA4HWEvHiRyI+F5GiRPv17BA
+        OC8YJR48v8kEMpdNQF/iZcc2sB0iAp0sEr/6XUBsTgFXiX+XDzOD2MIC0RITtzQxgtgsAqoS
+        z85sB7N5BSwlHvUsgrIFJU7OfMICYjMLyEtsfzuHGeJuBYmfT5exQsRFJGZ3tjFD7HKSONLw
+        mg3kIAmBLRwSGx52M0E0uEhsm/QJ6mlhiVfHt7BD2FISL/vboOxiiaWzPjFBNDcwSlze9osN
+        ImEsMetZOyPI+8wCmhLrd+lDQkJZ4sgtqNv4JDoO/2WHCPNKdLQJQTSqSxzYPp0FwpaV6J7z
+        mRWixENi+Ru5CYyKs5A8OQvJk7OQPDYLYe0CRpZVjGKpBcW56anFRgWG8KhOzs/dxAhOvFqu
+        Oxgnv/2gd4iRiYPxEKMEB7OSCO+Fp71JQrwpiZVVqUX58UWlOanFhxhNgcE+kVlKNDkfmPrz
+        SuINTSwNTMzMDM2NTA3MlcR5vVI2JAoJpCeWpGanphakFsH0MXFwSjUw+YioX3u7SqZxdci8
+        ivkWLB/fTTy4Ma/k7jrlhZPXBScbV0RZOu+a9vLs2Wln7s18Jl7Cc+n2w7m1TRG1EkKzTVUm
+        z9/uKivHwVDtp3pLIbuqaNWibWUHju5eq/f7QF6GgeQDt1amO+3alyYZ+O4R/LeMy2xS7tpp
+        kWeKLJhd4x8XGiy6UPFsz+7AczVaVw+uX3V6FZfS+x15ZQnVKw9r2xS/8q0Vm5n0t45P9vrL
+        rcuydhluqOi/P9FaN9tg6uSddlZVe78Gtq54VMOjEnfq/t3E+hRxB9ejrseXO4XvTLyrMrXl
+        o+Ur85AHHgcUz9rECDdFHCyNCpleeN1Zf7r6XjcBzhPG+YejTDcf5klNV2Ipzkg01GIuKk4E
+        AFAymQJFBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWy7bCSvO49twlJBt/3G1k8mLeNzWL+kXOs
+        Fn0vHjJb7H29ld1iyp/lTBabHl9jtdg8/w+jxeVdc9gsZpzfx2TRuvcIu8XhN+2sFqt2/WF0
+        4PHYOesuu8emVZ1sHneu7WHz2Lyk3qNvyypGj8+b5ALYorhsUlJzMstSi/TtErgy5u+/wVKw
+        nq3i7qyyBsYe1i5GDg4JAROJjhM5XYycHEICuxklWl5qgdgSArISz97tYIewhSXutxwBKucC
+        qnnGKHFt2x0mkASbgL7Ey45trCC2iMBEFomrKxIhis4zSvxZ9xusm1PAVeLf5cPMILawQKTE
+        h+Nb2EBsFgFViWdntjOC2LwClhKPehZB2YISJ2c+YQGxmQX0JNavn8MIYctLbH87hxniIgWJ
+        n0+XsULERSRmd7YxQxzhJHGk4TXbBEahWUhGzUIyahaSUbOQtC9gZFnFKJlaUJybnltsWGCY
+        l1quV5yYW1yal66XnJ+7iREcbVqaOxi3r/qgd4iRiYPxEKMEB7OSCO+Fp71JQrwpiZVVqUX5
+        8UWlOanFhxilOViUxHkvdJ2MFxJITyxJzU5NLUgtgskycXBKNTCt4LnmzHO5LOTIVFauMqPV
+        Ef4nXmTzvtflF5mrVdFw4rCFiW9ZsooQY0PMhfdTiuQbn/6ZN0HT8fnXskebTMMck8pWbg+v
+        rY1amPzc3fXsIS3jr5HnyjaV9m3/EHxz4em/fLtTtn9uXxr8TZlX7+K5l9yHmfbIvTOPj/v1
+        656bW3vIvRVHliRc7D4gKm9YcPmdj3bW1QMeDMuDP3mu3bL2gdeF3Yu8vFWP/ckTbv/g7Ce7
+        Y3faNt26hpfTD7bZhsht19ZezjDrkL2ulQCnek3v2V3qhcz8kf4qjwpqHAO1uTprF4n2qn2e
+        bV9i0fr5HYtb6GT3rjP/qkQSG1O7+4QPfRDOnjLnQqVw5HHeI0osxRmJhlrMRcWJAKDJXkMl
+        AwAA
+X-CMS-MailID: 20220527033454epcas2p144713ba96c36ad13d423c5520005f4a1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220526143747epcas2p207eb53176b26848e39065cf5c56a9798
+References: <20220526143707.767490-1-krzysztof.kozlowski@linaro.org>
+        <CGME20220526143747epcas2p207eb53176b26848e39065cf5c56a9798@epcas2p2.samsung.com>
+        <20220526143707.767490-6-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Wed, 25 May 2022 18:12:20 +0200:
+> Subject: [PATCH 5/7] arm64: dts: exynos: use local header for pinctrl
+> register values
+> 
+> The DTS uses hardware register values directly in pin controller pin
+> configuration.  These are not some IDs or other abstraction layer but raw
+> numbers used in the registers.
+> 
+> These numbers were previously put in the bindings header to avoid code
+> duplication and to provide some context meaning (name), but they do not
+> fit the purpose of bindings.
+> 
+> Store the constants in a header next to DTS and use them instead of
+> bindings.
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.19
+I also verified before & after using dtx_diff tool and booting & pinctrl
+value dump on my exynosautov9-sadk board.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7182e897695d5b70fb772736f1f08639ca0fff78
+Reviewed-by: Chanho Park <chanho61.park@samsung.com>
+Tested-by: Chanho Park <chanho61.park@samsung.com>
 
-Thank you!
+Best Regards,
+Chanho Park
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
