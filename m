@@ -2,37 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07AB45376CA
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 May 2022 10:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD745376BC
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 May 2022 10:50:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233171AbiE3Ie0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 May 2022 04:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        id S233342AbiE3Ig4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 May 2022 04:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231302AbiE3IeZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 May 2022 04:34:25 -0400
+        with ESMTP id S232267AbiE3Igz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 May 2022 04:36:55 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0781A66CAC;
-        Mon, 30 May 2022 01:34:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C2F63EA;
+        Mon, 30 May 2022 01:36:54 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: kholk11)
-        with ESMTPSA id B78A41F42694
+        with ESMTPSA id 868C41F4268D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1653899662;
-        bh=qUCGQiwcmmxHUZWpHYZduseXroEBbLWvH0gOBqAZRus=;
+        s=mail; t=1653899813;
+        bh=Y/KtP99ehw9i7ZwsNuEGtXoz1oqAmizCXVVyI5AAj9Y=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=OegG5mkCCC00NQZCKbWpWKo/eyoZEns6uPwDCnhGm7pcarfTCq/jkMWxjMvPVBKvA
-         TrOUXwCPnkWP5PtrHHJO/2MRxVMWbhUA2wAqy34QewdTSuhv0o48C/+JBJBNFb6fJh
-         kFzJwwRaQDt6p/C9Tip+aJ5zPMfs7yOuas8lRHaUTeQNu+waJ1EMHeNuRUGCtmxDum
-         4Xs3pkjATcmTNICMZReOTqhAPi4eSG54/WfHM+G4N4AwE1VSpCXbkbJT6/YCs0xogC
-         +SqFChfGfaWZscKKXbY0UmcLBzhQTDRwxAJh261kwsstOLUvPhP+61x6ghWe4V3l5l
-         1FSrHDNDPuE7g==
-Message-ID: <74a6159b-40d0-bbc3-5b4a-ebf6ed98bac7@collabora.com>
-Date:   Mon, 30 May 2022 10:34:19 +0200
+        b=Y1zqd2ujFrL3awd9MbIdWvCY47uoQi3Cf8I/Gd+ZxqgM1DoSmpjFPqjlRFth+dcE+
+         Vdhtz1b765+cFXX/WbkMNGrRdpsosEPRpaoqa37XNx5DL9jLy3E9/QuHs06pZE8wRY
+         YOt+iWAFTw0Wp/lPmXRYfI10A2PkE1faj0fsuSMsXqcD9xpqfYdcqnWk6+0gjEfmVp
+         26ZJZ5iVkpCA4fbBymeP+510wy0E45gfGXBDcQjPhq7LrzsXu+DFU38I9r/vS1dyRg
+         Cgx2+97WXYGj9gxuuUuhhUrN0JEpxZLjb0OqD+q83ebINTpErHfZpi858NdDGPjwUP
+         VEZM5AIw1zJRA==
+Message-ID: <5f312705-f09c-763f-7f29-5461cf08ced7@collabora.com>
+Date:   Mon, 30 May 2022 10:36:50 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH v1 0/2] MT8192 pinctrl properties adjustments
+Subject: Re: [PATCH v1 1/2] dt-bindings: pinctrl: mt8192: Add
+ drive-strength-microamp
 Content-Language: en-US
 To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
         <nfraprado@collabora.com>, Linus Walleij <linus.walleij@linaro.org>
@@ -44,9 +45,10 @@ Cc:     kernel@collabora.com,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 References: <20220525155714.1837360-1-nfraprado@collabora.com>
+ <20220525155714.1837360-2-nfraprado@collabora.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220525155714.1837360-1-nfraprado@collabora.com>
+In-Reply-To: <20220525155714.1837360-2-nfraprado@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -60,26 +62,17 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Il 25/05/22 17:57, Nícolas F. R. A. Prado ha scritto:
+> Commit e5fabbe43f3f ("pinctrl: mediatek: paris: Support generic
+> PIN_CONFIG_DRIVE_STRENGTH_UA") added support for using
+> drive-strength-microamp instead of mediatek,drive-strength-adv.
 > 
-> The two patches in this series substitute properties in the mt8192
-> pinctrl dt-binding for ones which have a clearer meaning and are more
-> standardized. At this point there's no DT using the mt8192 pinctrl
-> binding, so if such changes are to be made, they need to happen now.
+> Since there aren't any users of mediatek,drive-strength-adv on mt8192
+> yet, remove this property and add drive-strength-microamp in its place,
+> which has a clearer meaning.
 > 
-> 
-> Nícolas F. R. A. Prado (2):
->    dt-bindings: pinctrl: mt8192: Add drive-strength-microamp
->    dt-bindings: pinctrl: mt8192: Use generic bias instead of pull-*-adv
-> 
->   .../bindings/pinctrl/pinctrl-mt8192.yaml      | 58 ++++++-------------
->   1 file changed, 18 insertions(+), 40 deletions(-)
+> Fixes: 4ac68333ff6d ("dt-bindings: pinctrl: mt8192: Add mediatek,drive-strength-adv property")
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 > 
 
-Hey Nic,
+Reviewed-by: AngeloGioacchino Del Regno <angelogiocchino.delregno@collabora.com>
 
-As you know, I definitely agree with these changes, but they don't deserve
-to get any Fixes tag: backporting should be useless in this case... and you
-anyway aren't fixing a faulty binding.
-
-Cheers!
-Angelo
