@@ -2,70 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9BFF537B24
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 May 2022 15:14:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F1955384A5
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 May 2022 17:21:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236414AbiE3NNu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 May 2022 09:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
+        id S238438AbiE3PSz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 May 2022 11:18:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236435AbiE3NNr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 May 2022 09:13:47 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F69354688;
-        Mon, 30 May 2022 06:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653916426; x=1685452426;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZKd3SVXOKrULud4iJfh9S6YT30WQ3/NPAZyPwoh/9tU=;
-  b=ZtnsFO0fxTPnQEHZ6udoUrYL1YIDcjfkihVkZNiQbDane7XykAqUSADZ
-   l+DB437ypGQWbqTDp2koMR8f27BGb6ahEjcW/BBgcqJ5tJXMVnf2v6I1/
-   HLpqVyPUFlM46F8357zHcdyyN2myHEgYxSlonqUuPkN9B7iDo2A6QsVRG
-   UNudQHRe8zRGFi3OzTGw5RPnE0BQBAfAcMqnqFBzyXCftS/RPkYJGGWYU
-   dFvpb6nUjJWrgkYI4GLsbTLymVm1g0MpQUasvKcu44VKlDNTn/8a+RURz
-   +AA9oV+mAwzZT2KyfR4iWIg9WNlPdQVKtBX/qFwaOZrZ+sqPqbxUhiUe4
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10362"; a="338035853"
-X-IronPort-AV: E=Sophos;i="5.91,263,1647327600"; 
-   d="scan'208";a="338035853"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2022 06:13:46 -0700
-X-IronPort-AV: E=Sophos;i="5.91,263,1647327600"; 
-   d="scan'208";a="751168567"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2022 06:13:43 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 30 May 2022 16:13:40 +0300
-Date:   Mon, 30 May 2022 16:13:40 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        dave.hansen@linux.intel.com
-Subject: Re: [PATCH v1 1/1] MAINTAINERS: Update Intel pin control to Supported
-Message-ID: <YpTDBAyBhr/z9z4X@lahna>
-References: <20220530115750.70470-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S239196AbiE3PQj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 May 2022 11:16:39 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864B733351
+        for <linux-gpio@vger.kernel.org>; Mon, 30 May 2022 07:18:38 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id n145so11464789iod.3
+        for <linux-gpio@vger.kernel.org>; Mon, 30 May 2022 07:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
+        b=HREOTrwnxx97fV/H2azA/hMtuoyhFO5S89eRc3VRsyRJ8NT8sztmP2W5frbWOVgqA0
+         b7TMQNgSAWK+aQObIWx5S0IHh7b2G5V3YwhwGNhZ68V1Tc2Xfnmn6lF/qhw0AUq1ZcEb
+         sVKWzfKCMPqec6K5tIh+YEbocUV/Ta0YxadQ+fGklpZpN1X9FdSt4ZS+wOze9WhPieWR
+         VOmzK/oS+5Tzr0hDbmD3MfYfuRoP+FT43R/3aXbhdlpEZpqUBc/oN/BluJjTH5B0PjOl
+         7TzG+PxXteF6h6dCVHPHPQRqkrvpdgDQA8DC2iSHy5H3nW4G0j08DPiOnTTPWU2JzYaA
+         5gew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
+        b=rsQJhvPCKPNZuMnUwQbOOzI9DUJCLZp4YfwlmChZxxYGq/W4Z5s/vle0ASRQVGQo4y
+         /PP/55NCwaZVSLgRvNRuEfYvDkEZyoJvyRZa8bfSaEiivxlLxSk6zy0DD+JpL9UsqW6y
+         B7VjVAGy3A8L+O+Mz7Xf6wGiIHIlwUKM+yUstfRp8AW04GJDU0M3bW/Yx/1uB5GWzdAV
+         4K/aiaSYZZi6hmQchlZm/VTm5tBLWLvq/YSsm9MZ+XJWbrVIoyXXa3R4DnPWRGLIwqgO
+         ih/goCYzO3L0wGnzqw3HzbrJvJ8yq2mgtBvax9TY9xEWAxq8GpopLgmnNVmmVY1I2y7z
+         FrLA==
+X-Gm-Message-State: AOAM5308DoLdhZTERKzpPfsL0pR/Q6hnhconza2IoRJHE6f/WwYodleI
+        zhYsLdtWRVoWYfwn8u7qaVUktra5F5awEZOHzzA=
+X-Google-Smtp-Source: ABdhPJwNK8cbHHLIrYSuUNqVt2WY92p6m1tN6ZqMqFzeQRNwAmr+sgzt0n/G4LTGe1FUGpENSQIQ+TeIQHeLKsXmvM0=
+X-Received: by 2002:a05:6638:13cd:b0:330:bc2b:d8f0 with SMTP id
+ i13-20020a05663813cd00b00330bc2bd8f0mr11875708jaj.41.1653920317895; Mon, 30
+ May 2022 07:18:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220530115750.70470-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Received: by 2002:a05:6622:f06:0:0:0:0 with HTTP; Mon, 30 May 2022 07:18:37
+ -0700 (PDT)
+Reply-To: barristerbenjamin221@gmail.com
+From:   Attorney Amadou <koadaidrissa1@gmail.com>
+Date:   Mon, 30 May 2022 07:18:37 -0700
+Message-ID: <CAOh7+P8g+Uq9Qnz03A+R166JoEycN3bfpT34U23WdNvqkqmB=g@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: Yes, score=7.7 required=5.0 tests=BAYES_99,BAYES_999,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:d42 listed in]
+        [list.dnswl.org]
+        *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
+        *      [score: 1.0000]
+        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
+        *      [score: 1.0000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [koadaidrissa1[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [barristerbenjamin221[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [koadaidrissa1[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 30, 2022 at 02:57:50PM +0300, Andy Shevchenko wrote:
-> The actual status of the code is Supported.
-> 
-> Reported-by: dave.hansen@linux.intel.com
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+SGVsbG8gZGVhciBmcmllbmQuDQoNClBsZWFzZSBJIHdpbGwgbG92ZSB0byBkaXNjdXNzIHNvbWV0
+aGluZyB2ZXJ5IGltcG9ydGFudCB3aXRoIHlvdSwgSQ0Kd2lsbCBhcHByZWNpYXRlIGl0IGlmIHlv
+dSBncmFudCBtZSBhdWRpZW5jZS4NCg0KU2luY2VyZWx5Lg0KQmFycmlzdGVyIEFtYWRvdSBCZW5q
+YW1pbiBFc3EuDQouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCuimquaEm+OB
+quOCi+WPi+S6uuOAgeOBk+OCk+OBq+OBoeOBr+OAgg0KDQrnp4Hjga/jgYLjgarjgZ/jgajpnZ7l
+uLjjgavph43opoHjgarjgZPjgajjgavjgaTjgYTjgaboqbHjgZflkIjjgYbjga7jgYzlpKflpb3j
+gY3jgafjgZnjgIHjgYLjgarjgZ/jgYznp4HjgavogbTooYbjgpLkuI7jgYjjgabjgY/jgozjgozj
+gbDnp4Hjga/jgZ3jgozjgpLmhJ/orJ3jgZfjgb7jgZnjgIINCg0K5b+D44GL44KJ44CCDQrjg5Dj
+g6rjgrnjgr/jg7zjgqLjg57jg4njgqXjg5njg7Pjgrjjg6Pjg5/jg7NFc3HjgIINCg==
