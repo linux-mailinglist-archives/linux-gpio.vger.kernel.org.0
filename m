@@ -2,42 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49229538D13
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 May 2022 10:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2180538D14
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 May 2022 10:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232246AbiEaInv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 May 2022 04:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
+        id S240926AbiEaInw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 May 2022 04:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238352AbiEaInt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 May 2022 04:43:49 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2079.outbound.protection.outlook.com [40.107.220.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 784C86004E
-        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 01:43:48 -0700 (PDT)
+        with ESMTP id S238352AbiEaInw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 May 2022 04:43:52 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2058.outbound.protection.outlook.com [40.107.94.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F7A6004E
+        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 01:43:51 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kNxIREBfjVB9DqILmkQMaKxpEOrf3GFYz4t8tj6qLoBxWw7ISn1CCLjhj2aKEHUvK/gEfccRTAEgsf8hzU7Dou5KSGi4Q2XlaVl3uQHNqJZbkl9MUYV3mg3jkcqI8x8sTV1qQwfxu+OOiU4WJgKR+9VtxPkbeVZP6rvoULU+u5k+TuuG9WJYTNmI2wYG6AAmm8D7RUljBgbWJfJgKtanyjUh0KkEmdzqKVBdi34q9l7p0RNRsCIJudJoQuFj4pzO/5gHkqi7pSIbuoPLeT7Cy/jtR0LOUA9/8zS6M+xohiEACtjDSVs16dHfnH39Q98EXc0pzU3F8cP6tkq58W4XZg==
+ b=kYMrUclpBQ24XqTl5h7TlEO7wHFPSplVjh2THZAPpwU1mttG0WG5Cj/CzA+FIDA1mZgGpUX7JvUxZVsQsLDSpzqAtaMbhpHhCCbjUkITOC5Q0gxLOincjutV9zUbAfmst1mIPIK2WA5ryUyKeKlCUSYDGdaebrE2sUOhe9QQJUGe/5uTLIY0tKTHf+82ZP15mV/onN/waMH9f4+fZzhbn35bokQAthFkX/k2H4Kuneww68KqWoy+3zlvxTJl7Lol8xYn22ama2pDkzJQIig2cZHwIaCYpfgINkMotfOKZyOglAC4mttgxwaW+CBdaSur7mqEjjQDwNcm6vL9D8ljAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=clvNKWhc/7/DKdhgShgJcD+VERIvkM39xH9vINI0xW0=;
- b=ic8pu0Mk2Lh6y1P0kvdNdoBxjjancA914dvKXz/Ve4NYfdaVvX45jV3BeOF2wbesQh0HXj5GEWgyrVwsgZj/tKCX9WVmoFdcZNNnL/4eD3qofQ/ithLJDa1rYWte7UAxcfbXs0gW+ntG5hDQtzSEaCduN+CuUk7gbPRMRJPAjfvgwRrUehQDgY96KN/JYiJ7XEaT2BnlDTD8CKxLn1tisYrRAf7VSNJ+dZRkSFnhLC2tL5j/Le1yIXBzFERIO+3WKdQar/Lp69kUE1gRVs1xL0XLijAT3Ibc5T+ATzj7NYUKOJwHsWaOJYZZWFxvNpN6rWi3AFT2hus0lsLXNyHLHg==
+ bh=ciO4Spc0ofNx6zLEKBxlB3tXo7LUdlCTup49e5BLbaY=;
+ b=PrVejiy1CiRJAH3CqaP3Cup9peIjGtjibnO21UcaEfD2MR8YTK9KV0ZgVOKbuGXQN6bXPvfqs2MkCeDN1H3AtMftm/Bze7BEA4BNEMR2mVAB3bKG3dPl7Uc5UUQyvZu3pi/91we78nvPVqKWAVmUJVMgfX6QZAZUOc3/UNsY7Nwcr1mxEaugvrroDBftYz0KpZFWyweoko8AzNniuAJmObd2pwQb6T5rdsEMrbC/xVeXMwZO5VNDf2pFEV1E3bFY5wU6Ib6Y0670HqaSf295p14IBd5PaJ1s1aewTlzhjCETJPFoeRP1f4evAluLaD9yjnkdXFJK8BUP8tmEPNVelQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=clvNKWhc/7/DKdhgShgJcD+VERIvkM39xH9vINI0xW0=;
- b=jblu5kKfe0ygYwgbPvSNc2sEbA3zGHpI0mWnhIX7mh1lw7/wlMt9sl5SAAeJ/BlMc96jP2mKrzu7XOuHhL4pU3z7dnPqgzNZdeetQOT78QdrD5rsLRIo5i8/rEftkGNIC0zjj6du9E4mxxqp51uGD/HIDg8MgXCUtUgP7L8PNb8=
-Received: from DM5PR06CA0090.namprd06.prod.outlook.com (2603:10b6:3:4::28) by
- BN6PR12MB1828.namprd12.prod.outlook.com (2603:10b6:404:108::9) with Microsoft
+ bh=ciO4Spc0ofNx6zLEKBxlB3tXo7LUdlCTup49e5BLbaY=;
+ b=YVdK1PduQOgQRsd5dqpr7SPAu+W5QTgA/BOZblwm78tmo9rpVqasqOjifzuifL4Lbof5IGyCNJ/YlDqu/7o9Sdccyn0SZPtQTqkxuPJHV2T5yYlGhYP0JluulpUB3+kbGQbVoGFrAzyxG5V1piU5s7x9WSkK0cOH9/VSwN1N78o=
+Received: from DM5PR06CA0073.namprd06.prod.outlook.com (2603:10b6:3:4::11) by
+ DM6PR12MB2649.namprd12.prod.outlook.com (2603:10b6:5:49::33) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5293.13; Tue, 31 May 2022 08:43:46 +0000
+ 15.20.5293.13; Tue, 31 May 2022 08:43:49 +0000
 Received: from DM6NAM11FT055.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:4:cafe::af) by DM5PR06CA0090.outlook.office365.com
- (2603:10b6:3:4::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.12 via Frontend
- Transport; Tue, 31 May 2022 08:43:46 +0000
+ (2603:10b6:3:4:cafe::ff) by DM5PR06CA0073.outlook.office365.com
+ (2603:10b6:3:4::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13 via Frontend
+ Transport; Tue, 31 May 2022 08:43:49 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,20 +47,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  DM6NAM11FT055.mail.protection.outlook.com (10.13.173.103) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5293.13 via Frontend Transport; Tue, 31 May 2022 08:43:46 +0000
+ 15.20.5293.13 via Frontend Transport; Tue, 31 May 2022 08:43:49 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 31 May
- 2022 03:43:40 -0500
+ 2022 03:43:43 -0500
 From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 To:     <Shyam-sundar.S-k@amd.com>, <linus.walleij@linaro.org>,
         <linux-gpio@vger.kernel.org>, <mika.westerberg@linux.intel.com>,
         <andriy.shevchenko@linux.intel.com>
 CC:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH v3 0/6] Enhancements to AMD pinctrl and implementation of AMD pinmux
-Date:   Tue, 31 May 2022 14:13:16 +0530
-Message-ID: <20220531084322.1310250-1-Basavaraj.Natikar@amd.com>
+Subject: [PATCH v3 1/6] pinctrl: Add pingroup and define PINCTRL_GRP
+Date:   Tue, 31 May 2022 14:13:17 +0530
+Message-ID: <20220531084322.1310250-2-Basavaraj.Natikar@amd.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220531084322.1310250-1-Basavaraj.Natikar@amd.com>
+References: <20220531084322.1310250-1-Basavaraj.Natikar@amd.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -69,24 +71,24 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b6bd204c-d71a-44a2-b973-08da42e1ace1
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1828:EE_
-X-Microsoft-Antispam-PRVS: <BN6PR12MB1828BD84A1873B7F241801B4E6DC9@BN6PR12MB1828.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: deec5ecb-3255-41c6-d545-08da42e1aecc
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2649:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR12MB26492044614EF9AEF4FB6B24E6DC9@DM6PR12MB2649.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SNv6URMWFEWvJ4EV3/NUGwUym6UtENWaVpzdkNeBdUqkdc2TaZYSVi6S8CXZbMJfuSvhgup15AHwxlDBegnSO67ISrZOe+jlSt1kPeMVRSvTuGsWRoNShYC0JmY8BB8YbPDIvriyHTZmypCKahUDd3P/9TPurhHb3UIq+NARpW5aJMLpS+2WS6mlJaffAUyqscKievhTm/jiINMSmINe4vikcWwIy42kq45tPp2sypObi8Yt1Nlt0ua5S/eYno4z2GhM/mglYG5I1wvCqlOHM17EwZwybMKjsqb53muNArM7BxEpnln4u7/5cN0B8nhRhHhMvOXiFa6KxYclFLdIiL4d0RuNVX+BrXT/B2Z3Tqi//V/4g4qlfd02lw9A7nFoK7vJHJI3nMQMIwDkEroqrCassCdqI7JPLy+96fimEMOiKuZJ0JQytIjuCn5BmfWT5bslOH9E34CaqELfv4y74f8gtiQMeNiaJnO6FLNusDMpIgNHUwTavZe3K9LJlWamN3MBVMRUnml4zTrcau7AyPGlt9NXg9FgMSitXzShK0n1EorIbqhuVdodMdMErrKGOKDm0Y79UXOELaPI5WdFgEMAMBVwjq557BDkXuR+T4P9ISDyO0xGww1tfR3tc/VVI8XJfurcIojUbt5pgVSRVpJ4Rf7o+ZcPjegu9XjO315n0yJHUlyxPZav3RUKYLd7BxMueyvkj6GVy13wKR1k9k59tRmnVQtChvljzmzG7M4TSar/l1j0+Ad9wp4VcDpCf04D6Op7VIIPlsteI66BT9axI360RR1xBUI12VHiKA5T1/jIqiV/R5IQ/0aNM0Av
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(356005)(186003)(16526019)(86362001)(81166007)(966005)(26005)(1076003)(7696005)(4744005)(316002)(47076005)(8936002)(336012)(82310400005)(426003)(40460700003)(110136005)(508600001)(36756003)(4326008)(8676002)(36860700001)(2906002)(70206006)(83380400001)(5660300002)(6666004)(70586007)(2616005)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: LqAhfBbFXENWbBOrnoijfars0QIHw7nSIGmFDjLpCQ7waRgFwcj7RY+RxG+03tYb09XoMgfdeTUzakGBFspsGZfT7ewVHbxOePpUhn2fTXwPNfis6h8iPXeke15jwZv8XK30gjOi99fVKvtYqYBOAwyg3Q1MEyC7ek/i1+Y9A6RmB6tzsRi3LQfomg4I7w5zqro+V0vWKSgWFEEkQ69nI3+iIeb0b/CTyhYiET/mvxBXhpeCibLPVk45Pj7fC1lUmGhcReA7CFlEg6vvNYrIr2gd6oE21HwUHafFlnnu5Rn+pINZHX3IlIGuDMl10cpQ+AZRA+tl6NU/KYoBQytZ4xGUhl2OkzxikVAjBRAt753Zx0rvhEoi6r4EhY25TmcnhHBjnbh2Jqu0P0DsULAaZBAkJe4S6wkBLKu/ONB7oaLEMazlvkZLpQ6Weuzys0fiZQyozREKAUN5qtaBapPFCrMu9MnFguJQVMvIJDmuDjwPRfYvBaC352HhTx70DY9Gst8/PbiqzG4gQDkz+A06R8H5qK4mI6Cz82PtEeLtPXf1IetHPj0KiqT8axROrw6EYSdWLzgRA/7buMqUVO2LTmfbynfKPaoK4BzsaOPfxiCbHZqpNyCRBKMIRbXdR3MHufH/xApciC02aX8hVtqQx2NEqnAkNAJaB++mMBHGauz3KnLhTpxtfT/whmq/Eq+aGnqrfs0ZJ21raWtf3JX6GyfzOqra+DjLtDzGs932HW4=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(47076005)(426003)(336012)(86362001)(7696005)(16526019)(186003)(40460700003)(1076003)(36756003)(82310400005)(356005)(81166007)(110136005)(6666004)(2906002)(2616005)(8936002)(26005)(36860700001)(316002)(8676002)(70206006)(4326008)(70586007)(5660300002)(508600001)(36900700001)(2101003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2022 08:43:46.0801
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2022 08:43:49.2987
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6bd204c-d71a-44a2-b973-08da42e1ace1
+X-MS-Exchange-CrossTenant-Network-Message-Id: deec5ecb-3255-41c6-d545-08da42e1aecc
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT055.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1828
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2649
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -97,34 +99,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Changes include enhancements to pinctrl-amd and implementing
-AMD pinmux functionalities.
+Add 'struct pingroup' to represent pingroup and 'PINCTRL_GRP' macro for
+inline use. Both are used to manage and represent larger number
+of pingroups.
 
-v3:
-        - change amd_pingroup to pingroup and moved to pinctrl.h.
-        - Add prefix AMD_ at appropriate places.
-        - use _DSD property to get iomux resource.
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+---
+ include/linux/pinctrl/pinctrl.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-v2:
-        - Fix for initializer element is not a compile-time constant
-          on riscv architecture reported by kernel test robot
-          <lkp@intel.com>.
-
-Link: https://lore.kernel.org/all/202205240107.bryIFhOh-lkp@intel.com/
-
-Basavaraj Natikar (6):
-  pinctrl: Add pingroup and define PINCTRL_GRP
-  pinctrl: amd: Remove amd_pingroup and use pingroup
-  pinctrl: amd: Use PINCTRL_GRP to manage pingroups
-  pinctrl: amd: Define and use AMD_PINS macro
-  pinctrl: amd: Add amd_get_iomux_res function
-  pinctrl: amd: Implement pinmux functionality
-
- drivers/pinctrl/pinctrl-amd.c   |  112 +++
- drivers/pinctrl/pinctrl-amd.h   | 1374 ++++++++++++++++++++++++++++++-
- include/linux/pinctrl/pinctrl.h |   20 +
- 3 files changed, 1462 insertions(+), 44 deletions(-)
-
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index 70b45d28e7a9..1bdffac6e7aa 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -26,6 +26,26 @@ struct pin_config_item;
+ struct gpio_chip;
+ struct device_node;
+ 
++/**
++ * struct pingroups - provides information on pingroup
++ * @name: a name for pingroup
++ * @pins: an array of pins in the pingroup
++ * @npins: number of pins in the pingroup
++ */
++struct pingroup {
++	const char *name;
++	const unsigned int *pins;
++	unsigned int npins;
++};
++
++/* Convenience macro to define a single named or anonymous pingroup */
++#define PINCTRL_GRP(_name, _pins, _npins)	\
++((struct pingroup) {				\
++	.name = _name,				\
++	.pins = _pins,				\
++	.npins = _npins,			\
++})
++
+ /**
+  * struct pinctrl_pin_desc - boards/machines provide information on their
+  * pins, pads or other muxable units in this struct
 -- 
 2.25.1
 
