@@ -2,69 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 576E5539575
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 May 2022 19:30:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59969539689
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 May 2022 20:48:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346560AbiEaRaV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 May 2022 13:30:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
+        id S230064AbiEaSsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 May 2022 14:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346551AbiEaRaU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 May 2022 13:30:20 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2239399D
-        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 10:30:18 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id wh22so28072178ejb.7
-        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 10:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZJ1Dv/ORClSlD+t4yWurULyU8Rzqx47jCXHy+bRYEDE=;
-        b=s4SFXEhIZO0VXaghT5MstJ3pOKhlcr6UMVHN6702O+K4zb4HghdAQ8ECXuhr5e3cwa
-         1tn6ZRRajJe94KKFptIBpCnK3mbwFFuLTEx/3W4v7zOn6xBBXd1Pmrdu1VoTmzqhztY2
-         NrHukB0XSDydD1LWnNSwgH9eSXZJO+j4JCGIgg1eV/E7+ciDUtFLDsmQ7hEDjxV3xpL3
-         dVg4f+mifOcN7CBo9rgfLB3IdEL8+gnUWSSrAWXeVAtRh5lq7S3aiEQtDBfAefsQ87iC
-         3AMxOmxb5BhxG08XHEmQnRxN0cXK1lq9cGTHNzRsl0sZwOagACD5DfxA4Cp1WGYxLP+1
-         oQ8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZJ1Dv/ORClSlD+t4yWurULyU8Rzqx47jCXHy+bRYEDE=;
-        b=YUYnX9tFFZIEIJm0qKTVr0r5F9cKDbRsUTCwWI3RnRRL7tAR4/zXigh9zs9R17h1Vq
-         RVbwoo6PatqyS8fDR4TxIwWUV1F6qnQkcTTePzJiAc+OFWBZ+Xr3e0o6cYCgnqomPzyL
-         q5yIOdvTYucrlNHjBhLWBy7fEkabRO5ILKEQdLs6usQkUCIA3gB6KsBMJmwYfqbImNnW
-         fOSlhMGB5ROb/cJtwTtFyr8Q2d6Rn6dSylidyWDlMQB6ARPNeMp1djrWziDv8d7fGmMq
-         HKF1tSEWWUqc8+6vU5B2oFaF4801SigjkYazlyH35bJMdy95L2c6tfiAMdLX9a2iC1lt
-         Yukg==
-X-Gm-Message-State: AOAM531/tc+0bZarazKljFl/LLIyCkH+EmzkpF3Gb+mfTGEii6s5+nHm
-        4MPU/o8k1gsQD80fJ9DntAhTnvTOiUvXX/USfImWHQ==
-X-Google-Smtp-Source: ABdhPJxI+z0snHnBf/Eaz2ZZc3jiRyd33cbbpdKNUYxpFQhigJqknYAUGo56NcUOO8dLH+cZ0kBsp+5vp5BwrNLulUw=
-X-Received: by 2002:a17:907:6eab:b0:6fe:b5e2:7b0e with SMTP id
- sh43-20020a1709076eab00b006feb5e27b0emr48517985ejc.736.1654018217174; Tue, 31
- May 2022 10:30:17 -0700 (PDT)
+        with ESMTP id S237805AbiEaSsG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 May 2022 14:48:06 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AB217589
+        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 11:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654022885; x=1685558885;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NTccyh+04npEC4jX/MfId+lJ0YnNBwHohJm+9+Tkyeo=;
+  b=KXyWc7eE9eQ5Zy497dT9Exmu/6Ua/gKmTGkowkzOompN4Dplrb8YlJgr
+   MvSbngP+xKrObeNGK0l+Rmnub6mb5jHYH9qnGpptqXBAVjmHtlvNuHPdG
+   5y7G6LXGnoLTIqhuZvv2F6MfapcMlQXEbA8dgVR9ho9KewHzEixgJta+a
+   cftpoLuvIIdRP0k43nTZnzufyBVwJ5aRbTVWKDmqWmO8hErtaH4hE0aGl
+   7b1cDsbt9yhpvD1hhvReBHrTDipHXgvdH1y/ujzCvuuE5DSr/TYv+rGQN
+   HrT1vkulU4z1M1ybyDJn0DtZc0Yk4Mtxk22kngIUtYMZGKRN74OMCBdWA
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="274157641"
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="274157641"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 11:48:05 -0700
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="755188303"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 11:48:02 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nw6uN-000Q1B-RD;
+        Tue, 31 May 2022 21:47:59 +0300
+Date:   Tue, 31 May 2022 21:47:59 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Basavaraj Natikar <bnatikar@amd.com>
+Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam-sundar.S-k@amd.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com
+Subject: Re: [PATCH v3 1/6] pinctrl: Add pingroup and define PINCTRL_GRP
+Message-ID: <YpZi39Mj2/Z4RgNv@smile.fi.intel.com>
+References: <20220531084322.1310250-1-Basavaraj.Natikar@amd.com>
+ <20220531084322.1310250-2-Basavaraj.Natikar@amd.com>
+ <YpXdooVIYNQGoQMt@smile.fi.intel.com>
+ <9f7d1107-a4a8-86f7-e3a1-a92ff206b90d@amd.com>
 MIME-Version: 1.0
-References: <20220427144620.9105-1-pmalgujar@marvell.com> <20220427144620.9105-2-pmalgujar@marvell.com>
- <CAMRc=Mf91eMF7D6CRtA8-HQ7pdtP343WUGhLG4qti_9zJF4ELQ@mail.gmail.com> <20220525131738.GA10532@Dell2s-9>
-In-Reply-To: <20220525131738.GA10532@Dell2s-9>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 31 May 2022 19:30:06 +0200
-Message-ID: <CAMRc=Mds_cKkdDJUV5h7prfPg-rBms33uFad_S-zzPaws=qfLg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: thunderx: avoid potential deadlock
-To:     Piyush Malgujar <pmalgujar@marvell.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Robert Richter <rric@kernel.org>, cchavva@marvell.com,
-        wsadowski@marvell.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f7d1107-a4a8-86f7-e3a1-a92ff206b90d@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,63 +67,71 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 25, 2022 at 3:17 PM Piyush Malgujar <pmalgujar@marvell.com> wrote:
->
-> On Mon, May 02, 2022 at 01:18:49PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Apr 27, 2022 at 4:46 PM Piyush Malgujar <pmalgujar@marvell.com> wrote:
-> > >
-> > > Using irqsave/irqrestore locking variants to avoid any deadlock.
-> > >
-> >
-> > I see you'll be resending this anyway so would you mind providing an
-> > example of a deadlock that is possible with no-irqsave variants?
-> > Thanks.
-> >
-> > Bart
-> >
-> Hi Bartosz,
->
-> Thanks for the review.
->
-> Please find below the issue scenario:
-> In the case when HARDIRQ-safe -> HARDIRQ-unsafe lock order is detected
-> and interrupt occurs, deadlock could occur.
->
-> ========================================================
-> WARNING: possible irq lock inversion dependency detected
-> 5.18.0-rc6 #4 Not tainted
-> --------------------------------------------------------
-> swapper/3/0 just changed the state of lock:
-> ffff000110904cd8 (lock_class){-...}-{2:2}, at: handle_fasteoi_ack_irq+0x2c/0x1b0
-> but this lock took another, HARDIRQ-unsafe lock in the past:
->  (&txgpio->lock){+.+.}-{2:2}
->
->
-> and interrupts could create inverse lock ordering between them.
->
->
-> other info that might help us debug this:
->  Possible interrupt unsafe locking scenario:
->
->        CPU0                    CPU1
->        ----                    ----
->   lock(&txgpio->lock);
->                                local_irq_disable();
->                                lock(lock_class);
->                                lock(&txgpio->lock);
->   <Interrupt>
->     lock(lock_class);
->
->  *** DEADLOCK ***
->
-> ==========================================================
->
-> Thanks,
-> Piyush
-> > > Signed-off-by: Piyush Malgujar <pmalgujar@marvell.com>
-> > > ---
+On Tue, May 31, 2022 at 07:35:44PM +0530, Basavaraj Natikar wrote:
+> On 5/31/2022 2:49 PM, Andy Shevchenko wrote:
+> > On Tue, May 31, 2022 at 02:13:17PM +0530, Basavaraj Natikar wrote:
 
-Thanks. What I meant exactly was: resend it with that info in the
-commit message.
+...
 
-Bart
+> >> +/**
+> >> + * struct pingroups - provides information on pingroup
+> > Try `make W=1` against each of your patches from the series. Here is the kernel
+> > doc issue.
+> 
+> shall address your comments in my next revision, I tried 'make W=1' could not hit the 
+> kernel doc issue. Can you please elaborate a bit.
+
+Hmm...
+
+$ scripts/kernel-doc -none -v include/linux/pinctrl/pinctrl.h
+...
+include/linux/pinctrl/pinctrl.h:39: warning: expecting prototype for struct pingroups. Prototype was for struct pingroup instead
+
+> >> + * @name: a name for pingroup
+> >> + * @pins: an array of pins in the pingroup
+> >> + * @npins: number of pins in the pingroup
+> >> + */
+> >> +struct pingroup {
+> >> +	const char *name;
+> >> +	const unsigned int *pins;
+> >> +	unsigned int npins;
+> > size_t probably would be better.
+> >
+> >> +};
+
+...
+
+> >> +/* Convenience macro to define a single named or anonymous pingroup */
+> >> +#define PINCTRL_GRP(_name, _pins, _npins)	\
+> > I think PINCTRL_PINGROUP would be more precise.
+> >
+> >> +((struct pingroup) {				\
+> > No need to have space before { and compound literal means that it's not a GCC
+> > expression, i.e. drop outer parentheses ().
+> >
+> >> +	.name = _name,				\
+> >> +	.pins = _pins,				\
+> >> +	.npins = _npins,			\
+> >> +})
+> 
+> 
+> yes, or else I will hit the checkpatch error as below
+
+Does it compile? Does it work? If so, fix checkpatch.
+
+> ERROR: Macros with complex values should be enclosed in parentheses
+> 
+> #36: FILE: include/linux/pinctrl/pinctrl.h:42:
+> 
+> +#define PINCTRL_GRP(_name, _pins, _npins)      \
+> +(struct pingroup){                             \
+> +       .name = _name,                          \
+> +       .pins = _pins,                          \
+> +       .npins = _npins,                        \
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
