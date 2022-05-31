@@ -2,160 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AA36538F17
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 May 2022 12:34:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F0835391DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 May 2022 15:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239573AbiEaKch (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 May 2022 06:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
+        id S1344775AbiEaNjI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 May 2022 09:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343513AbiEaKcf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 May 2022 06:32:35 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750BB95A12
-        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 03:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653993153; x=1685529153;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oNsKhAAzvElHv8ppxPArchCpw+Bis50zP2db0e6ff1o=;
-  b=f5wqsxbLZuz7LwxU66ib2KRi0Cu+5jx67qg5tHel81Nb2L2jDaQcvJTA
-   VvI1YupvjCTz1p3hAqAgIOTdZCIT+mLv3WdG66RVFEg1QA2OOkM9RVDs/
-   sGen31F40tIEWckKmmQywP4442uvWym6cV/eNqmDlXTx8V6Lp7zTDLufJ
-   X96/e3ZJ79lBNfAIw9rWCTTTZ9+Xm2n6yPqapLmNBxGRBxIQ0ySch4j2j
-   wd4xEuhXba1i3F9zkAeowvm8fXJ5P+cv5a7aZFSVQnMYHQ8OX0WI7cdgm
-   FJgqqdcHqLLR8UNl9VG+4MNFPBvUDPX+NaMfXqKATYFdvxpHO0VSfgcJ3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10363"; a="275218418"
-X-IronPort-AV: E=Sophos;i="5.91,264,1647327600"; 
-   d="scan'208";a="275218418"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 03:32:33 -0700
-X-IronPort-AV: E=Sophos;i="5.91,264,1647327600"; 
-   d="scan'208";a="632981368"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 03:32:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nvzAq-000Phi-Ug;
-        Tue, 31 May 2022 13:32:28 +0300
-Date:   Tue, 31 May 2022 13:32:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc:     Shyam-sundar.S-k@amd.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com
-Subject: Re: [PATCH v3 6/6] pinctrl: amd: Implement pinmux functionality
-Message-ID: <YpXuvG04euX/rZr7@smile.fi.intel.com>
-References: <20220531084322.1310250-1-Basavaraj.Natikar@amd.com>
- <20220531084322.1310250-7-Basavaraj.Natikar@amd.com>
+        with ESMTP id S229939AbiEaNjH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 May 2022 09:39:07 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F8F40A12
+        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 06:39:03 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id v9so14671521lja.12
+        for <linux-gpio@vger.kernel.org>; Tue, 31 May 2022 06:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rV+IwUnjJeMeaLuOoAuodxAXJv2e1zA8eKGCdKHN510=;
+        b=aK6SduPUBnymJsbjYP8iiifXthYMYLwOHK6Ld3DlMMKNkWarDDunHmUfEq5sqmy8GV
+         nRX7yuMXnhH6fyDaiQlcWx++J08xJYRPCWgVH9NQJyKN68AwWt9S14BKBk+vDtcVnAUA
+         ifwgXmWp5PajZLOGS4wIIe1C6saBSt6MonJ5T+AqjBzLximu8th6TDF+hVjKTOaiQCnv
+         pdGXti2Y5aLfwIYoByqBs4dVZYL+AkwdQnxB2vF0akc+16h5AViT2N4idnJJn61tvF3I
+         bz9AMs6+bqVfPmC/CyBlHRKzW4/vUaM2sboP8m1ymnAuOUurizkzERbk/YAOUMz4rf3b
+         xvLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rV+IwUnjJeMeaLuOoAuodxAXJv2e1zA8eKGCdKHN510=;
+        b=wmaDe5nAweWkz0ntwy5mfQeGJkKh5dea5rIKuoBKosWZHGyi0733uOBgz7/Tb/6+OU
+         0dhwUiRW00LXuWQsGwkkXTC/VTPBJnzOUCqFod/bJTnmqytB2PrKW8LHvncs15WmuVZb
+         YQ2ynmadzb6khJsR1e9v9wd+NEkZqO1+QGqaU7OcGYixCCyM4k5tVnXiSMz6VNb0FW96
+         XahTTj3/UiD/vTwHyiperjNZeHMOHzbMsms3zWNjBVSG3iEMvzLSh0P0Cr7Ck+YjgWHR
+         cxdEV3yxwqnnBuj+MGmqvzR/n89aVbJwFWefr/uxfc9ApRNH3pLi1l1M0SMRRvPmThnk
+         Y7GA==
+X-Gm-Message-State: AOAM530aqvzzz/cPMoiXV8fpreS4JHo+Oj+wUxEqO8tpQRf5p/NUMpUf
+        Zrg7DyFnXmDG3lsk43rURAqFlRkMG0PBHr7aPZ2S4A==
+X-Google-Smtp-Source: ABdhPJxxSN08j36y9Nsvv/qbdQgjo0d1IK1+kmolxk6AXhFtn4SjzokuR/8mLpb+7H1Msqpw1zPPrGlDxcrRZV9GXWw=
+X-Received: by 2002:a2e:954c:0:b0:253:d9bf:9f55 with SMTP id
+ t12-20020a2e954c000000b00253d9bf9f55mr33323645ljh.300.1654004341321; Tue, 31
+ May 2022 06:39:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220531084322.1310250-7-Basavaraj.Natikar@amd.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220504213251.264819-1-sebastian.reichel@collabora.com> <20220504213251.264819-10-sebastian.reichel@collabora.com>
+In-Reply-To: <20220504213251.264819-10-sebastian.reichel@collabora.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 31 May 2022 15:38:24 +0200
+Message-ID: <CAPDyKFoRmpX5Pwmu370=tzg6ZAEPNm3LLAooXVLs35z94JsycQ@mail.gmail.com>
+Subject: Re: [PATCHv2 09/21] mmc: sdhci-of-dwcmshc: add reset call back for
+ rockchip Socs
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 31, 2022 at 02:13:22PM +0530, Basavaraj Natikar wrote:
-> Provide pinmux functionality by implementing pinmux_ops.
+On Wed, 4 May 2022 at 23:33, Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
+>
+> From: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+>
+> The reset function build in the SDHCI will not reset the logic
+> circuit related to the tuning function, which may cause data
+> reading errors. Resetting the complete SDHCI controller through
+> the reset controller fixes the issue.
+>
+> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+> [rebase, use optional variant of reset getter]
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-...
+Queued for v5.20 on the devel branch, thanks!
 
-> +static int amd_set_mux(struct pinctrl_dev *pctrldev, unsigned int function, unsigned int group)
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index bac874ab0b33..3a1b5ba36405 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/reset.h>
+>  #include <linux/sizes.h>
+>
+>  #include "sdhci-pltfm.h"
+> @@ -63,6 +64,7 @@
+>  struct rk3568_priv {
+>         /* Rockchip specified optional clocks */
+>         struct clk_bulk_data rockchip_clks[RK3568_MAX_CLKS];
+> +       struct reset_control *reset;
+>         u8 txclk_tapnum;
+>  };
+>
+> @@ -255,6 +257,21 @@ static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock
+>         sdhci_writel(host, extra, DWCMSHC_EMMC_DLL_STRBIN);
+>  }
+>
+> +static void rk35xx_sdhci_reset(struct sdhci_host *host, u8 mask)
 > +{
-> +	struct amd_gpio *gpio_dev = pinctrl_dev_get_drvdata(pctrldev);
-
-Consider to use
-
-	struct device *dev = ...;
-
-and make code few lines shorter.
-
-> +	struct pin_desc *pd;
-> +	int ind, index;
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct dwcmshc_priv *dwc_priv = sdhci_pltfm_priv(pltfm_host);
+> +       struct rk35xx_priv *priv = dwc_priv->priv;
 > +
-> +	if (!gpio_dev->iomux_base)
-> +		return -EINVAL;
+> +       if (mask & SDHCI_RESET_ALL && priv->reset) {
+> +               reset_control_assert(priv->reset);
+> +               udelay(1);
+> +               reset_control_deassert(priv->reset);
+> +       }
 > +
-> +	for (index = 0; index < NSELECTS; index++) {
-> +		if (strcmp(gpio_dev->groups[group].name,  pmx_functions[function].groups[index]))
-> +			continue;
-> +
-> +		if (readb(gpio_dev->iomux_base + pmx_functions[function].index) ==
-> +				FUNCTION_INVALID) {
-> +			dev_warn(&gpio_dev->pdev->dev,
-> +				 "IOMUX_GPIO 0x%x not present or supported\n",
-> +				 pmx_functions[function].index);
-> +			return -EINVAL;
-> +		}
-> +
-> +		writeb(index, gpio_dev->iomux_base + pmx_functions[function].index);
-> +
-> +		if (index != (readb(gpio_dev->iomux_base + pmx_functions[function].index) &
-> +					FUNCTION_MASK)) {
-> +			dev_warn(&gpio_dev->pdev->dev,
-> +				 "IOMUX_GPIO 0x%x not present or supported\n",
-> +				 pmx_functions[function].index);
-> +			return -EINVAL;
-> +		}
-> +
-> +		for (ind = 0; ind < gpio_dev->groups[group].npins; ind++) {
-> +			if (strncmp(gpio_dev->groups[group].name, "IMX_F", strlen("IMX_F")))
-> +				continue;
-> +
-> +			pd = pin_desc_get(gpio_dev->pctrl, gpio_dev->groups[group].pins[ind]);
-> +			pd->mux_owner = gpio_dev->groups[group].name;
-> +		}
-> +		break;
-> +	}
-> +
-> +	return 0;
+> +       sdhci_reset(host, mask);
 > +}
-
-...
-
-> +#define AMD_PINCTRL_FUNC_GRP(_number, _func)						\
-> +	[IMX_F##_func##_GPIO##_number] = PINCTRL_GRP("IMX_F"#_func "_GPIO"#_number,	\
-> +						     AMD_PINS(_number), 1)
-
-Slightly better:
-
-#define AMD_PINCTRL_FUNC_GRP(_number, _func)					\
-	[IMX_F##_func##_GPIO##_number] =					\
-		PINCTRL_GRP("IMX_F"#_func "_GPIO"#_number, AMD_PINS(_number), 1)
-
-...
-
-> +#define AMD_PMUX_FUNC(_number) {						\
-> +	.name = "iomux_gpio_"#_number,						\
-> +	.groups = { "IMX_F0_GPIO"#_number, "IMX_F1_GPIO"#_number,		\
-> +		    "IMX_F2_GPIO"#_number, "IMX_F3_GPIO"#_number },		\
-> +	.index = _number,							\
-> +	.ngroups = NSELECTS,							\
-> +}
-
-Slightly better (indentation, comma):
-
-#define AMD_PMUX_FUNC(_number) {				\
-	.name = "iomux_gpio_"#_number,				\
-	.groups = {						\
-		"IMX_F0_GPIO"#_number, "IMX_F1_GPIO"#_number,	\
-		"IMX_F2_GPIO"#_number, "IMX_F3_GPIO"#_number,	\
-	},							\
-	.index = _number,					\
-	.ngroups = NSELECTS,					\
-}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +
+>  static const struct sdhci_ops sdhci_dwcmshc_ops = {
+>         .set_clock              = sdhci_set_clock,
+>         .set_bus_width          = sdhci_set_bus_width,
+> @@ -269,7 +286,7 @@ static const struct sdhci_ops sdhci_dwcmshc_rk3568_ops = {
+>         .set_bus_width          = sdhci_set_bus_width,
+>         .set_uhs_signaling      = dwcmshc_set_uhs_signaling,
+>         .get_max_clock          = sdhci_pltfm_clk_get_max_clock,
+> -       .reset                  = sdhci_reset,
+> +       .reset                  = rk35xx_sdhci_reset,
+>         .adma_write_desc        = dwcmshc_adma_write_desc,
+>  };
+>
+> @@ -292,6 +309,13 @@ static int dwcmshc_rk3568_init(struct sdhci_host *host, struct dwcmshc_priv *dwc
+>         int err;
+>         struct rk3568_priv *priv = dwc_priv->priv;
+>
+> +       priv->reset = devm_reset_control_array_get_optional_exclusive(mmc_dev(host->mmc));
+> +       if (IS_ERR(priv->reset)) {
+> +               err = PTR_ERR(priv->reset);
+> +               dev_err(mmc_dev(host->mmc), "failed to get reset control %d\n", err);
+> +               return err;
+> +       }
+> +
+>         priv->rockchip_clks[0].id = "axi";
+>         priv->rockchip_clks[1].id = "block";
+>         priv->rockchip_clks[2].id = "timer";
+> --
+> 2.35.1
+>
