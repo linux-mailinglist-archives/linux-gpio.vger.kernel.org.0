@@ -2,207 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6461853AA0F
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 17:29:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 316E053AA19
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 17:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355650AbiFAP2X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 11:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46964 "EHLO
+        id S236679AbiFAP3g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 11:29:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355570AbiFAP2L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 11:28:11 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B6765D24
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 08:28:00 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id q21so4549526ejm.1
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Jun 2022 08:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZymzKblkmQHOv6Wxpn4eFQND8kz+YPWJS+8NHwPPhcM=;
-        b=KYv7vGpIKqJ65WGv+O0vCumjNnnjO6B/XDXdXHOF6xg470mVs5ya1FWe3u/5WthlB2
-         cWVQIVM3UKgI1b2EYBLe8H5YgE60TegCVeG6cxHgtnIfvG4SMpR6I/eY23Z0XmFYK0lp
-         rgBbPlQy5h2O9Ytnp8LnipI+t1lKRLHMX1hZXAthnWbi2mGY22N0YPxtoKFAsIzRyAVz
-         +thKkPMaxLnyoWsTu7IuRDAcvkPgv/BehKSyfAiR16gEnRWH3CtLJHU0OkWmEKva2DxU
-         X2W81ldpMykreuCCNOO3xEqzC6FgukDwZJpjWOUPwlKORr2nUuJLnQ+54Cs9ANmsXcQW
-         TaVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZymzKblkmQHOv6Wxpn4eFQND8kz+YPWJS+8NHwPPhcM=;
-        b=Uc8xFhlPDlCFhCGCYHMdR5KCYFrMui4lqvnLjwvD+mk7KcsBLgdvLi/tPEHQ1MzN3Y
-         nL0kVnz+4CDwusvFQLWRCigwbKVivFa+bw4C1HnmHjrDrlWhyAfyieMJRrVF87ewC3UB
-         eHUeq74lnPUlsZcyB65e4LA21p1ja6TjY2Y4VUZ62s+WVyK5OFR28EqbYZU6jPVkzlp8
-         TACBOpXVnGHorIiVeIF2Fm4Mm32Kv9GLalVnPW7jTpfoggy88okdF/SY4dJVjvTg4cT0
-         g9dlYTZcMCrkjbYbB0G34k2JhWDm/IYai2aIE6/5MYi/cehGvY0bFlHkp0TRFSTDeKQI
-         lx/w==
-X-Gm-Message-State: AOAM531Rsc+4GbEEUUW9cXUVZKDbFD2+L7FytMIwkbzg9qJr9f5MhpkY
-        GFS9ajy2/coOmsJzhyHQqjaqNA==
-X-Google-Smtp-Source: ABdhPJxXMsBFBclXiIXMml78Dys6pdyCJsOQJJhXxyG6J2hB5NMzBue2ItVsZfCIHwmBsQ6H0UBa5Q==
-X-Received: by 2002:a17:907:7ea0:b0:6fe:f024:d006 with SMTP id qb32-20020a1709077ea000b006fef024d006mr80478ejc.248.1654097279137;
-        Wed, 01 Jun 2022 08:27:59 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id e13-20020a170906248d00b006fee7b5dff2sm845870ejb.143.2022.06.01.08.27.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jun 2022 08:27:58 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 7/7] dt-bindings: pinctrl: deprecate header with register constants
-Date:   Wed,  1 Jun 2022 17:27:20 +0200
-Message-Id: <20220601152720.232383-8-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220601152720.232383-1-krzysztof.kozlowski@linaro.org>
-References: <20220601152720.232383-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S1348790AbiFAP3f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 11:29:35 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2071.outbound.protection.outlook.com [40.107.95.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B694739F
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 08:29:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LJlOW/7QMrsRGLPLjwSWHc5Gt537FkMBHs0rCaU2BfBOuo/gxNK9JfluEfw4Kcm55gzUT4/tGonjMc6iFbSTY0ApAgbT5TBIp+KI/leNqG4Xavm0QYqHFmsj9Iooso0kNyvIzz7CdOMAKNotqsGDojmamVxhDnHjcH0B9ksAzS0GOlSgTVy3coOnOxIeis6p7S95zjyaJjDFTQtcwZAFAuxsHwgYxjd4JBMh7ISHbWn2zZJ6h33DzlM3+uIByza51+hKwHtkv7QBF0th/ixc7U9irsafStqD3mkUZOC3YRQN5yHfYv1otPe0U+/OSXPMk8djLjXymLtW+2QnNRd7Rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1lpmNW21h37CvraXx/MMEJ0TkD8VYUiwE+1ItBwi0Fk=;
+ b=juqT+ZmFx0Tw6sJUZ7a+l+e+wWHSF5MkeKnbhsWLg1tqgYvakc6SowfWHW7dEOrrLhvUzfJRlih3aGbH0NACclV0ejDr87FEvJV4VY76IIl9EllTh+fNrpgGZxtozWn6T+PoESdcIGqQux379mlTMHs2XJgzrlwc7TWMQScs+nED7dUnaV7dFf6PJJsmkbf44Bor/UpUCNrlONqRo1S/eK+FojFUIGLZC57Bse8gWygKU/4mMQUuv2PT3azbPb3KjYDWFVpfmQX5HtN+Za6mEmR9SvFtXYM5i/phUImoCGcFRS7c1YpGEoaqB5VmuFFK3BVDBTclgyBGGG3Zhz0fzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1lpmNW21h37CvraXx/MMEJ0TkD8VYUiwE+1ItBwi0Fk=;
+ b=5fEOlQU0BWatA2mWSIz76QdSEpHGj9jMps8rQwy0/+SZnaV9turR3/PMkPjTVD/N/egs2FBhsaZB7hdoUcO2PxnfNPsEwajyBwceNxVLKGVHN8TsgGu7AqL8vbUY9AJjxoDUX861jCvsBsbpwZHqT32hUZ9kM7ISrgHEkaLS4s8=
+Received: from MW4PR04CA0090.namprd04.prod.outlook.com (2603:10b6:303:6b::35)
+ by DM5PR1201MB0203.namprd12.prod.outlook.com (2603:10b6:4:56::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.17; Wed, 1 Jun
+ 2022 15:29:31 +0000
+Received: from CO1NAM11FT015.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:6b:cafe::17) by MW4PR04CA0090.outlook.office365.com
+ (2603:10b6:303:6b::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13 via Frontend
+ Transport; Wed, 1 Jun 2022 15:29:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT015.mail.protection.outlook.com (10.13.175.130) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5314.12 via Frontend Transport; Wed, 1 Jun 2022 15:29:30 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 1 Jun
+ 2022 10:29:28 -0500
+From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+To:     <Shyam-sundar.S-k@amd.com>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <mika.westerberg@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>
+CC:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: [PATCH v6 0/6] Enhancements to AMD pinctrl and implementation of AMD pinmux
+Date:   Wed, 1 Jun 2022 20:58:54 +0530
+Message-ID: <20220601152900.1012813-1-Basavaraj.Natikar@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e7fe4274-a558-4c1c-c7de-08da43e385b6
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0203:EE_
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB020321FA615C7950424639DAE6DF9@DM5PR1201MB0203.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bIzfoTFYhciY7AJov4ZQa0lFZZaq5DYjqelj9a/jn21sfQ9WZVpew5qxraQzwzcbvYF5irrf/aOTKxxZEWn4+Uu9ycia8V2Eoyj90wpH2CIxE3pFIDuvBG8+DlpGjxt43nUlTR2l/NGDyN08lGZclMyyyRMmYhQ7ghCZf0VYRBfSBJT0qYDC0yXaUcKgQ2rvcreQlTWQSQBZB5V11ONsNanrkeij1SZUMnRiL1P4rOnIBW/5GbarFz13uEtP3YapsnyCj3Vbn8KbRzqVNggvkK963WPneIZ1nyK9IY6hM5f4ORCD+M9BKW00HEVAu7xMAkB8mlDOLGc2MqWar18gvyVF4sr+ZVo7ALVQakTkleuZh5fWWRDjrgznR9/PkoUd6qK6GQXBzQXCsup4yS76gre5iOaI1ET/Nk9aY+qPwy39OO7keygJC9VDfFqnnavM+vwKttRjq9YlxRTc5uq3jSZfWR/RecEXbZkQJJdNVDA309K5PJXEc/6nsa+NgwFqe4UUytzApr5y0T909Ph8T7js2QnZhSdqDs44ZfQPgGsRipYRUdH/lr6zlVopjhMDbtQ8WhKDKaEnmKc088fkyih5vKV8VDoFuLIWsxXZVXq4GA9cs7iCQUSpUPBheMs52vJCQuTLHPz9pE5mteONjB2SZQumnancferULHqHLw57Db8UPI4U85qAoKx6kCe6n9uH5/um1jdvgQifzYuqopUAGKbjB5+Y9v5Js0ceEquZWC26Q3LRgtBnkJYWOXBzy21sQW6qKH/aUc4xdpTFQ9LZgmopN8vTKHuEd44PYXO0uCet0Vw5CU/zE/mMVL/m
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(2906002)(36860700001)(1076003)(426003)(83380400001)(47076005)(186003)(336012)(16526019)(26005)(5660300002)(82310400005)(8936002)(110136005)(70586007)(8676002)(2616005)(81166007)(6666004)(4326008)(40460700003)(7696005)(356005)(508600001)(966005)(36756003)(316002)(86362001)(70206006)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2022 15:29:30.4457
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7fe4274-a558-4c1c-c7de-08da43e385b6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT015.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0203
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For convenience (less code duplication, some meaning added to raw
-number), the pin controller pin configuration register values
-were defined in the bindings header.  These are not some IDs or other
-abstraction layer but raw numbers used in the registers
+Changes include enhancements to pinctrl-amd and implementing
+AMD pinmux functionalities.
 
-These constants do not fit the purpose of bindings.  They do not provide
-any abstraction, any hardware and driver independent ID.  With minor
-exceptions, the Linux drivers actually do not use the bindings header at
-all.
+v6:
+	- avoid nested conditionals.
 
-All of the constants were moved already to headers local to DTS
-(residing in DTS directory), so remove any references to the bindings
-header and add a warning tha tit is deprecated.
+v5:
+        - removed parentheses around compound literals.
+        - change platform_get_resource and devm_ioremap to
+          devm_platform_ioremap_resource.
+        - change dev_warn to dev_err wherever returns invalid or error.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/samsung/pinctrl-exynos.c  | 6 ++----
- drivers/pinctrl/samsung/pinctrl-exynos.h  | 3 +++
- drivers/pinctrl/samsung/pinctrl-samsung.c | 4 +---
- drivers/pinctrl/samsung/pinctrl-samsung.h | 8 ++++++++
- include/dt-bindings/pinctrl/samsung.h     | 7 +++++++
- 5 files changed, 21 insertions(+), 7 deletions(-)
+v4:
+        - Fix kernel doc issue
+        - change PINCTRL_GRP to PINCTRL_PINGROUP
+        - change fwnode_property_match_string to
+          device_property_match_string.
+        - make slightly better indentation and code few lines shorter.
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 6d7ca1758292..a8212fc126bf 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -27,8 +27,6 @@
- #include <linux/soc/samsung/exynos-pmu.h>
- #include <linux/soc/samsung/exynos-regs-pmu.h>
- 
--#include <dt-bindings/pinctrl/samsung.h>
--
- #include "pinctrl-samsung.h"
- #include "pinctrl-exynos.h"
- 
-@@ -173,7 +171,7 @@ static int exynos_irq_request_resources(struct irq_data *irqd)
- 
- 	con = readl(bank->pctl_base + reg_con);
- 	con &= ~(mask << shift);
--	con |= EXYNOS_PIN_FUNC_EINT << shift;
-+	con |= EXYNOS_PIN_CON_FUNC_EINT << shift;
- 	writel(con, bank->pctl_base + reg_con);
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
-@@ -196,7 +194,7 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
- 
- 	con = readl(bank->pctl_base + reg_con);
- 	con &= ~(mask << shift);
--	con |= EXYNOS_PIN_FUNC_INPUT << shift;
-+	con |= PIN_CON_FUNC_INPUT << shift;
- 	writel(con, bank->pctl_base + reg_con);
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
-index bfad1ced8017..7bd6d82c9f36 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-@@ -16,6 +16,9 @@
- #ifndef __PINCTRL_SAMSUNG_EXYNOS_H
- #define __PINCTRL_SAMSUNG_EXYNOS_H
- 
-+/* Values for the pin CON register */
-+#define EXYNOS_PIN_CON_FUNC_EINT	0xf
-+
- /* External GPIO and wakeup interrupt related definitions */
- #define EXYNOS_GPIO_ECON_OFFSET		0x700
- #define EXYNOS_GPIO_EFLTCON_OFFSET	0x800
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index 26d309d2516d..4837bceb767b 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -26,8 +26,6 @@
- #include <linux/of_device.h>
- #include <linux/spinlock.h>
- 
--#include <dt-bindings/pinctrl/samsung.h>
--
- #include "../core.h"
- #include "pinctrl-samsung.h"
- 
-@@ -614,7 +612,7 @@ static int samsung_gpio_set_direction(struct gpio_chip *gc,
- 	data = readl(reg);
- 	data &= ~(mask << shift);
- 	if (!input)
--		data |= EXYNOS_PIN_FUNC_OUTPUT << shift;
-+		data |= PIN_CON_FUNC_OUTPUT << shift;
- 	writel(data, reg);
- 
- 	return 0;
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index fc6f5199c548..9af93e3d8d9f 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -53,6 +53,14 @@ enum pincfg_type {
- #define PINCFG_UNPACK_TYPE(cfg)		((cfg) & PINCFG_TYPE_MASK)
- #define PINCFG_UNPACK_VALUE(cfg)	(((cfg) & PINCFG_VALUE_MASK) >> \
- 						PINCFG_VALUE_SHIFT)
-+/*
-+ * Values for the pin CON register, choosing pin function.
-+ * The basic set (input and output) are same between: S3C24xx, S3C64xx, S5PV210,
-+ * Exynos ARMv7, Exynos ARMv8, Tesla FSD.
-+ */
-+#define PIN_CON_FUNC_INPUT		0x0
-+#define PIN_CON_FUNC_OUTPUT		0x1
-+
- /**
-  * enum eint_type - possible external interrupt types.
-  * @EINT_TYPE_NONE: bank does not support external interrupts
-diff --git a/include/dt-bindings/pinctrl/samsung.h b/include/dt-bindings/pinctrl/samsung.h
-index 950970634dfe..d1da5ff68d0c 100644
---- a/include/dt-bindings/pinctrl/samsung.h
-+++ b/include/dt-bindings/pinctrl/samsung.h
-@@ -10,6 +10,13 @@
- #ifndef __DT_BINDINGS_PINCTRL_SAMSUNG_H__
- #define __DT_BINDINGS_PINCTRL_SAMSUNG_H__
- 
-+/*
-+ * These bindings are deprecated, because they do not match the actual
-+ * concept of bindings but rather contain pure register values.
-+ * Instead include the header in the DTS source directory.
-+ */
-+#warning "These bindings are deprecated. Instead use the header in the DTS source directory."
-+
- #define EXYNOS_PIN_PULL_NONE		0
- #define EXYNOS_PIN_PULL_DOWN		1
- #define EXYNOS_PIN_PULL_UP		3
+v3:
+        - change amd_pingroup to pingroup and moved to pinctrl.h.
+        - Add prefix AMD_ at appropriate places.
+        - use _DSD property to get iomux resource.
+
+v2:
+        - Fix for initializer element is not a compile-time constant
+          on riscv architecture reported by kernel test robot
+          <lkp@intel.com>.
+
+Link: https://lore.kernel.org/all/202205240107.bryIFhOh-lkp@intel.com/
+
+Basavaraj Natikar (6):
+  pinctrl: Add pingroup and define PINCTRL_PINGROUP
+  pinctrl: amd: Remove amd_pingroup and use pingroup
+  pinctrl: amd: Use PINCTRL_PINGROUP to manage pingroups
+  pinctrl: amd: Define and use AMD_PINS macro
+  pinctrl: amd: Add amd_get_iomux_res function
+  pinctrl: amd: Implement pinmux functionality
+
+ drivers/pinctrl/pinctrl-amd.c   |  103 +++
+ drivers/pinctrl/pinctrl-amd.h   | 1376 ++++++++++++++++++++++++++++++-
+ include/linux/pinctrl/pinctrl.h |   20 +
+ 3 files changed, 1455 insertions(+), 44 deletions(-)
+
 -- 
-2.34.1
+2.25.1
 
