@@ -2,108 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64E4453ABA9
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 19:17:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C64CD53ABB4
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 19:19:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356278AbiFARRx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 13:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
+        id S236293AbiFARTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 13:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356286AbiFARRw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 13:17:52 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9F54F470
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 10:17:49 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id fu3so3643625ejc.7
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Jun 2022 10:17:49 -0700 (PDT)
+        with ESMTP id S1355397AbiFARTf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 13:19:35 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880C56C565
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 10:19:34 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id x62so3103293ede.10
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Jun 2022 10:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1rvEstZ8YIWy78PUgcDfFLHa+ABtELWwpbgGgu43O2s=;
-        b=0s5XHGMOGGOKEUUjfkhN8iNwsRZ9mx+PaA0J85ChtBmXUl217uNzow9HFCG5MMfhhQ
-         VRo3xZr+2cycrvtlJA5CbUzo9qz5bjqfNjX/eYXky7KH4MNgjpJBGNn1RT2Fkde5gmYY
-         j3i55w4v6o0Xjqzh4bXEAje33gmws+vTXhVRntr19QU1B7h2v7FFtXyBXiBR4rnsUIs0
-         BDi4wlVfLxoHMc/VnUqx6o+mc9Lyx3y6SopcIKnq9Txm3KeG1mVokNICOVwH43ITvLTY
-         GErBqo/g9QulgMm+hKlOJxT6Lff1Zw9L8AiS/pBUm3NLVEYC1tPi316b/9QmeVPDcPQ+
-         5C5A==
+        bh=5xU2wpYqlOM5GuIXjr+avT+nhNT3Jx23FahP+Ju1xWY=;
+        b=tfuKJcezjUx3Ws0txBom/rmXQop/X0zS2hBpJrtxJ8GcUAqXuh7s6qqLYNBYHkEryp
+         4MldMMxESSIjppnttIZeg/EdtBHIMmJBrs3FNAfMkh1RU0US/F2l96Y86uCIzTQgAbBD
+         OZWTTUUjzzVmVBBs3hvpJFm34hiOS0j9BEcne0HTm7DW5gdGRJPjRv0NdQVLM3v6+Q+C
+         qByYtbJH9hANjsi+9hglP8+P3dykXjml8Hq7wjw2vivlcJxa2xT6hNeD0F1lxryOaxjc
+         1hVDYEEWJinVv+5hBa+sFHerGdGavQIYhXPlrNZ4sgKP9uux1BbQPLMsEFuTaqAEbq3K
+         ODgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1rvEstZ8YIWy78PUgcDfFLHa+ABtELWwpbgGgu43O2s=;
-        b=a2KZ4VGEUuI+SL44NEVdGCE58ilfbqG6TftQvC5Wniy+rMn33OxvD9xz7jMSHqlsQE
-         NkH9m8v34yyEajmCtdaoR2/lZq121wW9rAupIUb5TaIUIw7hv7fnGXGcuprcw33aACU9
-         dGapwLgfHklyK+qJ1e8DcLwn+UMP0HeosoFPy//Keh938c4KVVbHhpNRYV8cPIFmzMBH
-         CUDzWqO8w90lS0Kh9dNNQjuEnSL0CTIAeSGGB0wKGs3v6Och4KLNRRXiRfLYXOE/EHJT
-         eKrJt6g2XwzXxs92v8fGHTPj1aI75hxd+RNZjocZBlmRT0Cs7Sjk3Ao5Gqtn2JYqQzey
-         hVyg==
-X-Gm-Message-State: AOAM533Y79kBteg3/DAhQmRBxAvd1yk297uBkIS76rzVOpUYapj7SmFJ
-        /meOhsXe7DimWBYFdP8UFt5X1wOuT4MFfPvY1Jb7Ng==
-X-Google-Smtp-Source: ABdhPJwvWvNzrOaDpwtNWrwMno130EiItXv/RMx+3bTrm3LIuoqoWd/cQM9cJ2cmBHHlpvFEs6k8eSbGOrYFixXNTc4=
-X-Received: by 2002:a17:907:868e:b0:6ff:39e0:2653 with SMTP id
- qa14-20020a170907868e00b006ff39e02653mr532425ejc.734.1654103868101; Wed, 01
- Jun 2022 10:17:48 -0700 (PDT)
+        bh=5xU2wpYqlOM5GuIXjr+avT+nhNT3Jx23FahP+Ju1xWY=;
+        b=KyIeGORObiP3I4mnJpkdLNv9Xpo6Rh5izX20OxxgqcPm+Z4Luf8pMLI0JYl0H0brWb
+         ejGRthLUXy4FrONWcmCsDMu7CPNteGWHmADtI9Aullu4GBVLQKg/qLI5TtdRwO/gT4cG
+         5+9iVVnJbwUPf8PV9d/jsdPLBv2TTLN8fSBht4VijQ5Ks+C5lNyXhbqE63asNHXTVdaj
+         4E4xFZvqgG1YV7SsFAfSLcr4ZB2HZN6XCbPdWuYAMwUM27Bu0aqul0EjDpW0/5dSeGZ+
+         jZIj9HLwqh1qPB6EFU3O4cixAp40aNN+ZTZLXdrxlm3KfrSTWsbEwmTaWugP5xQVSEC8
+         3wvQ==
+X-Gm-Message-State: AOAM533vmkopkTWHWLDftojPmOZpltMO5aWlPcyuP6bJf3sbVhcMfig1
+        dKOFRkHgebcPk7SeBLwknnDYlE5OCPh8LjMFOfysRg==
+X-Google-Smtp-Source: ABdhPJyTWs+Sv41WQ+qLf59C4KC3/91jojpSVlTzGdphOf6UUtKQ973ykP5ac7nJTNS0jI2xf+JEvBnPdA3AX7YczF8=
+X-Received: by 2002:a05:6402:1449:b0:42d:d250:e504 with SMTP id
+ d9-20020a056402144900b0042dd250e504mr811588edx.213.1654103973056; Wed, 01 Jun
+ 2022 10:19:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220530115903.70509-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220530115903.70509-1-andriy.shevchenko@linux.intel.com>
+References: <20220601153656.76454-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220601153656.76454-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 1 Jun 2022 19:17:37 +0200
-Message-ID: <CAMRc=Md9GQVg5jMH5ghOVamt8fqVoGcH=JZ0dXRDKP9_T7X6bw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] MAINTAINERS: Update Intel GPIO (PMIC and PCH) to Supported
+Date:   Wed, 1 Jun 2022 19:19:22 +0200
+Message-ID: <CAMRc=McgEzFcmgcWMb3L3Drjcyzhs0kb4JfBHMi7AoAU04txLw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: sch: make irq_chip immutable
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dave.hansen@linux.intel.com
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 30, 2022 at 1:59 PM Andy Shevchenko
+On Wed, Jun 1, 2022 at 5:37 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> The actual status of the code is Supported.
+> Since recently, the kernel is nagging about mutable irq_chips:
 >
-> Reported-by: dave.hansen@linux.intel.com
+>    "not an immutable chip, please consider fixing it!"
+>
+> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+> helper functions and call the appropriate gpiolib functions.
+>
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  MAINTAINERS | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/gpio/gpio-sch.c | 35 ++++++++++++++++++++++-------------
+>  1 file changed, 22 insertions(+), 13 deletions(-)
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 629ddf493555..bacb41953679 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9810,7 +9810,7 @@ F:        drivers/video/fbdev/intelfb/
->  INTEL GPIO DRIVERS
->  M:     Andy Shevchenko <andy@kernel.org>
->  L:     linux-gpio@vger.kernel.org
-> -S:     Maintained
-> +S:     Supported
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
->  F:     drivers/gpio/gpio-ich.c
->  F:     drivers/gpio/gpio-merrifield.c
-> @@ -10022,7 +10022,7 @@ F:      drivers/platform/x86/intel/pmc/
+> diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
+> index acda4c5052d3..8a83f7bf4382 100644
+> --- a/drivers/gpio/gpio-sch.c
+> +++ b/drivers/gpio/gpio-sch.c
+> @@ -38,7 +38,6 @@
 >
->  INTEL PMIC GPIO DRIVERS
->  M:     Andy Shevchenko <andy@kernel.org>
-> -S:     Maintained
-> +S:     Supported
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
->  F:     drivers/gpio/gpio-*cove.c
+>  struct sch_gpio {
+>         struct gpio_chip chip;
+> -       struct irq_chip irqchip;
+>         spinlock_t lock;
+>         unsigned short iobase;
+>         unsigned short resume_base;
+> @@ -218,11 +217,9 @@ static void sch_irq_ack(struct irq_data *d)
+>         spin_unlock_irqrestore(&sch->lock, flags);
+>  }
 >
+> -static void sch_irq_mask_unmask(struct irq_data *d, int val)
+> +static void sch_irq_mask_unmask(struct gpio_chip *gc, irq_hw_number_t gpio_num, int val)
+>  {
+> -       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>         struct sch_gpio *sch = gpiochip_get_data(gc);
+> -       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+>         unsigned long flags;
+>
+>         spin_lock_irqsave(&sch->lock, flags);
+> @@ -232,14 +229,32 @@ static void sch_irq_mask_unmask(struct irq_data *d, int val)
+>
+>  static void sch_irq_mask(struct irq_data *d)
+>  {
+> -       sch_irq_mask_unmask(d, 0);
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+> +
+> +       sch_irq_mask_unmask(gc, gpio_num, 0);
+> +       gpiochip_disable_irq(gc, gpio_num);
+>  }
+>
+>  static void sch_irq_unmask(struct irq_data *d)
+>  {
+> -       sch_irq_mask_unmask(d, 1);
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+> +
+> +       gpiochip_enable_irq(gc, gpio_num);
+> +       sch_irq_mask_unmask(gc, gpio_num, 1);
+>  }
+>
+> +static const struct irq_chip sch_irqchip = {
+> +       .name = "sch_gpio",
+> +       .irq_ack = sch_irq_ack,
+> +       .irq_mask = sch_irq_mask,
+> +       .irq_unmask = sch_irq_unmask,
+> +       .irq_set_type = sch_irq_type,
+> +       .flags = IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+> +
+>  static u32 sch_gpio_gpe_handler(acpi_handle gpe_device, u32 gpe, void *context)
+>  {
+>         struct sch_gpio *sch = context;
+> @@ -367,14 +382,8 @@ static int sch_gpio_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, sch);
+>
+> -       sch->irqchip.name = "sch_gpio";
+> -       sch->irqchip.irq_ack = sch_irq_ack;
+> -       sch->irqchip.irq_mask = sch_irq_mask;
+> -       sch->irqchip.irq_unmask = sch_irq_unmask;
+> -       sch->irqchip.irq_set_type = sch_irq_type;
+> -
+>         girq = &sch->chip.irq;
+> -       girq->chip = &sch->irqchip;
+> +       gpio_irq_chip_set_chip(girq, &sch_irqchip);
+>         girq->num_parents = 0;
+>         girq->parents = NULL;
+>         girq->parent_handler = NULL;
 > --
 > 2.35.1
 >
 
-Applied, thanks!
-
-Bart
+Reviewed-by: Bartosz Golaszewski <brgl@bgdev.pl>
