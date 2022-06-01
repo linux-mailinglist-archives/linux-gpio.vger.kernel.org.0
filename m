@@ -2,67 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77FB2539EDE
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 10:00:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D40353A15B
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 11:57:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350467AbiFAIAT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 04:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
+        id S242592AbiFAJ5A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 05:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245619AbiFAIAT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 04:00:19 -0400
-X-Greylist: delayed 453 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Jun 2022 01:00:18 PDT
-Received: from mail.forindustry.pl (mail.forindustry.pl [37.187.225.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142698B089
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 01:00:18 -0700 (PDT)
-Received: by mail.forindustry.pl (Postfix, from userid 1002)
-        id 474C8A3ABF; Wed,  1 Jun 2022 07:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=forindustry.pl;
-        s=mail; t=1654069709;
-        bh=Vw5jk5D1DE7WK/GNf/MxRQNyAyPYcC0rMJLibxKTj58=;
-        h=Date:From:To:Subject:From;
-        b=fPYCbm+pM1Tp2FMxC5lszfD46bZLJmRzwTMqT4krULOpnv2YdQI7Qaao5a2buIx65
-         /YYVjahg+1ymk/ugRv37PoCbNackBBZ2a45aQcRAkmZHQDMD6FazjbHwyDI/6CKJmF
-         ztfFq3H+/cQPw5M/di5SU98UqVJeqgnr4Bpo4mX923clv+CxQPVfvjI1FoeGuo8l21
-         Y2ENdjngzi31ZD6Qqk1kL5tlZu9WoHTV0LaKPqlTbFU2/75oL3VVicNRk7QOdTW7YP
-         /2mvV9TRhsG2yuYLq9ch9B4Rac4PBl22O5wYkH5d1LtBUAreyIfbRxXTJHTGBz7iLU
-         7FPF08n0Jo/ow==
-Received: by mail.forindustry.pl for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 07:45:30 GMT
-Message-ID: <20220601064501-0.1.3k.lmii.0.mrug7zvrh6@forindustry.pl>
-Date:   Wed,  1 Jun 2022 07:45:30 GMT
-From:   =?UTF-8?Q? "Arkadiusz_Soko=C5=82owski" ?= 
-        <arkadiusz.sokolowski@forindustry.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Koszty instalacji fotowoltaicznej
-X-Mailer: mail.forindustry.pl
+        with ESMTP id S230171AbiFAJ47 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 05:56:59 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA88BE0B;
+        Wed,  1 Jun 2022 02:56:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1654077415; x=1685613415;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Rezegc47oD04NrEL7IdrsnJsfPKKiLWJ9Y6Vzv7ZuDI=;
+  b=lg/pJvuTvvu0o4nBmh0Jt2ZsV5D0Z12SfmJCEkXxXKD7igDlgASaT4p1
+   myCsSQ+iwFGqbnzomp3PUe3W7LvgVLCTmM8TwYuJawJ1vHQYMoL3zEsY5
+   VXdP2l1MkkwV3yoslvh2CAklpVW2inY9Q3t5saKXdv5Bu9RqwukvkNsab
+   E=;
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 01 Jun 2022 02:56:55 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 02:56:53 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Wed, 1 Jun 2022 02:56:53 -0700
+Received: from [10.216.6.145] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 1 Jun 2022
+ 02:56:47 -0700
+Message-ID: <26bfd089-46d6-d08d-efac-71ffc04f674c@quicinc.com>
+Date:   Wed, 1 Jun 2022 15:26:44 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH 2/2] pinctrl: qcom: sc7280: Add lpi pinctrl variant data
+ structure for adsp based targets
+Content-Language: en-US
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <agross@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <robh+dt@kernel.org>, <quic_plai@quicinc.com>,
+        <bgoswami@quicinc.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <srinivas.kandagatla@linaro.org>, <quic_rohkumar@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>,
+        Venkata Prasad Potturu <quic_potturu@quicinc.com>
+References: <1651672580-18952-1-git-send-email-quic_srivasam@quicinc.com>
+ <1651672580-18952-3-git-send-email-quic_srivasam@quicinc.com>
+ <YoJrGGg0RviVn2Xj@ripper>
+From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Organization: Qualcomm
+In-Reply-To: <YoJrGGg0RviVn2Xj@ripper>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
 
-stworzyli=C5=9Bmy specjaln=C4=85 ofert=C4=99 dla firm, na kompleksow=C4=85=
- obs=C5=82ug=C4=99 inwestycji w fotowoltaik=C4=99.
-
-Specjalizujemy si=C4=99 w zakresie doboru, monta=C5=BCu i serwisie instal=
-acji fotowoltaicznych, dysponujemy najnowocze=C5=9Bniejszymi rozwi=C4=85z=
-ania, kt=C3=B3re zapewni=C4=85 Pa=C5=84stwu oczekiwane rezultaty.
-
-Mo=C5=BCemy przygotowa=C4=87 dla Pa=C5=84stwa wst=C4=99pn=C4=85 kalkulacj=
-=C4=99 i przeanalizowa=C4=87 efekty mo=C5=BCliwe do osi=C4=85gni=C4=99cia=
-=2E
-
-Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
-temacie?
-
-Pozdrawiam,
-Arkadiusz Soko=C5=82owski
+On 5/16/2022 8:47 PM, Bjorn Andersson wrote:
+Thanks for Your time Bjorn!!!
+> On Wed 04 May 06:56 PDT 2022, Srinivasa Rao Mandadapu wrote:
+>
+>> Add compatible string and lpi pinctrl variant data structure for adsp enabled
+>> sc7280 platforms.
+> This says what the change does, but gives no clue to what this
+> compatible represents and why the clock is not optional.
+>
+> Could you please describe here what scenario this compatible is to be
+> used for etc, so that when someone else adds support for the next
+> platform they can use the git history to understand which case to
+> follow.
+>
+> Thanks,
+> Bjorn
+Okay. Will update the commit message.
+>
+>> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+>> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> index 2add9a4..c9e85d9 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> @@ -134,6 +134,16 @@ static const struct lpi_function sc7280_functions[] = {
+>>   	LPI_FUNCTION(wsa_swr_data),
+>>   };
+>>   
+>> +static const struct lpi_pinctrl_variant_data sc7280_adsp_lpi_data = {
+>> +	.pins = sc7280_lpi_pins,
+>> +	.npins = ARRAY_SIZE(sc7280_lpi_pins),
+>> +	.groups = sc7280_groups,
+>> +	.ngroups = ARRAY_SIZE(sc7280_groups),
+>> +	.functions = sc7280_functions,
+>> +	.nfunctions = ARRAY_SIZE(sc7280_functions),
+>> +	.is_clk_optional = false,
+>> +};
+>> +
+>>   static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
+>>   	.pins = sc7280_lpi_pins,
+>>   	.npins = ARRAY_SIZE(sc7280_lpi_pins),
+>> @@ -149,6 +159,10 @@ static const struct of_device_id lpi_pinctrl_of_match[] = {
+>>   	       .compatible = "qcom,sc7280-lpass-lpi-pinctrl",
+>>   	       .data = &sc7280_lpi_data,
+>>   	},
+>> +	{
+>> +		.compatible = "qcom,sc7280-lpass-adsp-lpi-pinctrl",
+>> +		.data = &sc7280_adsp_lpi_data,
+>> +	},
+>>   	{ }
+>>   };
+>>   MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
+>> -- 
+>> 2.7.4
+>>
