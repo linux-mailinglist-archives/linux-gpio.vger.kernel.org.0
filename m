@@ -2,125 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DFAA53A28F
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 12:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C920153A2B2
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 12:35:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352052AbiFAKaw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 06:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42902 "EHLO
+        id S1352051AbiFAKf3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 06:35:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352066AbiFAKav (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 06:30:51 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295076D955;
-        Wed,  1 Jun 2022 03:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654079450; x=1685615450;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=D4VzYeTQSxFKm53xNd8/dH14WzhvKPozknfVBsu/t0E=;
-  b=s7DnZD4Xi2VjWRdivofHR4sz/wk1JQUdLN28h3FsVZeiqxxVtgjyp7xl
-   Xgh4VbodLNSYGqWzlUoNWohYjIi6SeuNsLoST76dsurgUQQVBn2nlzBbj
-   y99CGztVOYGgKKgbaAaiObBUsQ/n88QVP90ITZsrOfv6ApMc5l9ofq5IW
-   0=;
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 01 Jun 2022 03:30:49 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 03:30:48 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 1 Jun 2022 03:30:48 -0700
-Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 1 Jun 2022 03:30:41 -0700
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <quic_plai@quicinc.com>, <bgoswami@quicinc.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <srinivas.kandagatla@linaro.org>,
-        <quic_rohkumar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <swboyd@chromium.org>,
-        <judyhsiao@chromium.org>, Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        "Venkata Prasad Potturu" <quic_potturu@quicinc.com>
-Subject: [PATCH v2 2/2] pinctrl: qcom: sc7280: Add lpi pinctrl variant data for adsp based targets
-Date:   Wed, 1 Jun 2022 16:00:15 +0530
-Message-ID: <1654079415-26217-3-git-send-email-quic_srivasam@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1654079415-26217-1-git-send-email-quic_srivasam@quicinc.com>
-References: <1654079415-26217-1-git-send-email-quic_srivasam@quicinc.com>
+        with ESMTP id S1352141AbiFAKfP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 06:35:15 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 465D57CB25
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 03:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654079715; x=1685615715;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DfoXfRxY7ZYQMC+BZqD+Knh7+D35qpKCB37ORxgtEmA=;
+  b=Rs9FyYdSnloJTnI6Pn+ONuJ60JARJikYvdpMhptqEM/R4fCfRa5kMChf
+   dWD1Jt4ashhBrfo9fJvJtBQzej+aWAC5YHsw3K2GC86orbCXEP6SYwKS4
+   7OQSjXv6dJM/Do3lv48GyrGQjXzzzfD7oChkRnQNMtdFXAcbvc2r/Ac90
+   P950J0eLe5aRt+J/0xUCmHY3DkUcATH8qRI0UcJV/6to0ND3s4yTWMQty
+   8axvfRnHCxKa11bsMRxKJgHn18G0L2lvKLEJ31FKbPy0dyaljoZMQu39l
+   k0lXozOlKrcsiB+HzpJ/IxCWguHJOoq1HT/Jxcmc2ES+lqDqYmZnIPbpt
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="275266978"
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="275266978"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 03:35:14 -0700
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="530004976"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 03:35:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nwLh0-000QYc-Gc;
+        Wed, 01 Jun 2022 13:35:10 +0300
+Date:   Wed, 1 Jun 2022 13:35:10 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc:     Shyam-sundar.S-k@amd.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com
+Subject: Re: [PATCH v4 1/6] pinctrl: Add pingroup and define PINCTRL_PINGROUP
+Message-ID: <YpdA3inpzl6jsSVf@smile.fi.intel.com>
+References: <20220601100214.828595-1-Basavaraj.Natikar@amd.com>
+ <20220601100214.828595-2-Basavaraj.Natikar@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220601100214.828595-2-Basavaraj.Natikar@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add compatible string and lpi pinctrl variant data structure for adsp
-enabled sc7280 platforms.
-This variant data structure rnd compatible name required for
-distingushing ADSP based platforms and ADSP bypass platforms.
-In case of ADSP enabled platforms, where audio is routed through ADSP
-macro and decodec GDSC Switches are triggered as clocks by pinctrl
-driver and ADSP firmware controls them. So It's mandatory to enable
-them in ADSP based solutions.
-In case of ADSP bypass platforms clock voting is optional as these macro
-and dcodec GDSC switches are maintained as power domains and operated from
-lpass clock drivers.
+On Wed, Jun 01, 2022 at 03:32:09PM +0530, Basavaraj Natikar wrote:
+> Add 'struct pingroup' to represent pingroup and 'PINCTRL_PINGROUP'
+> macro for inline use. Both are used to manage and represent
+> larger number of pingroups.
 
-Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+...
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-index 2add9a4..c9e85d9 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-@@ -134,6 +134,16 @@ static const struct lpi_function sc7280_functions[] = {
- 	LPI_FUNCTION(wsa_swr_data),
- };
- 
-+static const struct lpi_pinctrl_variant_data sc7280_adsp_lpi_data = {
-+	.pins = sc7280_lpi_pins,
-+	.npins = ARRAY_SIZE(sc7280_lpi_pins),
-+	.groups = sc7280_groups,
-+	.ngroups = ARRAY_SIZE(sc7280_groups),
-+	.functions = sc7280_functions,
-+	.nfunctions = ARRAY_SIZE(sc7280_functions),
-+	.is_clk_optional = false,
-+};
-+
- static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
- 	.pins = sc7280_lpi_pins,
- 	.npins = ARRAY_SIZE(sc7280_lpi_pins),
-@@ -149,6 +159,10 @@ static const struct of_device_id lpi_pinctrl_of_match[] = {
- 	       .compatible = "qcom,sc7280-lpass-lpi-pinctrl",
- 	       .data = &sc7280_lpi_data,
- 	},
-+	{
-+		.compatible = "qcom,sc7280-lpass-adsp-lpi-pinctrl",
-+		.data = &sc7280_adsp_lpi_data,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
+> +/* Convenience macro to define a single named or anonymous pingroup */
+> +#define PINCTRL_PINGROUP(_name, _pins, _npins)	\
+> +((struct pingroup){				\
+> +	.name = _name,				\
+> +	.pins = _pins,				\
+> +	.npins = _npins,			\
+> +})
+
+Still the same Q: Why do you need GCC expression (besides the checkpatch,
+likely false positive, warning)?
+
+Note, we have many compound literals in the kernel: first comes to my mind
+is property.h.
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
