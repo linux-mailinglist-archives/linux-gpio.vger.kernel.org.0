@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68FA753A722
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 15:58:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A23C53A79A
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 16:02:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353717AbiFAN6a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 09:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33262 "EHLO
+        id S1348173AbiFAOCR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 10:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353997AbiFAN6K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 09:58:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6428D6B5;
-        Wed,  1 Jun 2022 06:55:14 -0700 (PDT)
+        with ESMTP id S1355218AbiFAOBY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 10:01:24 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87499A5A92;
+        Wed,  1 Jun 2022 06:58:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D842615C7;
-        Wed,  1 Jun 2022 13:55:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CEEC3411D;
-        Wed,  1 Jun 2022 13:55:13 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 767E0CE1C34;
+        Wed,  1 Jun 2022 13:57:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08720C36AE2;
+        Wed,  1 Jun 2022 13:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654091714;
+        s=k20201202; t=1654091823;
         bh=MzavRj9nrP27S+bq6CPB0yuwsmyvhj3CJKBoxHtwgwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J3nplUO8UlARphvSGW6+OHmMXzgrLfPQ/SdQU5qK7tOYQWtyr3iTKIbV7al4b6/cn
-         WQynQ8Xi+OUOplxQJJ7O7R5VkNubqNYZnfcf/0jLcZ1vJEd6tVConW6WLxjFBdxK5/
-         iUqD4IFyEXJ7xryd4dFPk7vD5Cla7UJy/FXs2MAlOif12shLh28hMzvEHgdmC0madM
-         q7NBDBlFscg/QkenAJy6L2XvDo+nUIgDn9yk18Eu4WElQ93erq3nh6FOnqrr4QJfvq
-         ImUdqS+xTJ0dKnZtBFFglom+soCvaRjOLAxTHpi5ywdwu4Cmlfm0bdw/43ej01InPU
-         qwyQ3Nz5kZiwA==
+        b=C/F6aAWir/sS6Qdn/oFyv2cg77Ctt28Xhtr1QcrhlHTgYM4kOjwCS9NtBH+vRx6JM
+         JyXfYj+RYd/4b/uCkioZR4gPMFn2tj8xJLD75HjDDXblLkIGegf558ohE3aOHrI+WU
+         gyFhUglwDtAI+JukflMOhp58l0jN+IpiB+dDFzZd764fK2dngilikqRjsdYb6HtHod
+         XMfPCSSPzjGEuWC6XViV99myv0zrgiXr7oRC+qIt5j+zIfgXA9tnnXXqi7AeFOwzHN
+         G0aceN2m2gW0jcNe21keVhez09vz3mVRig/jzUSbKJCkbdrJb63gkSZKAra3xZlY37
+         DjykfZRdf31tw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yang Yingliang <yangyingliang@huawei.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>, linus.walleij@linaro.org,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 22/48] pinctrl: renesas: rzn1: Fix possible null-ptr-deref in sh_pfc_map_resources()
-Date:   Wed,  1 Jun 2022 09:53:55 -0400
-Message-Id: <20220601135421.2003328-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 19/37] pinctrl: renesas: rzn1: Fix possible null-ptr-deref in sh_pfc_map_resources()
+Date:   Wed,  1 Jun 2022 09:56:04 -0400
+Message-Id: <20220601135622.2003939-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220601135421.2003328-1-sashal@kernel.org>
-References: <20220601135421.2003328-1-sashal@kernel.org>
+In-Reply-To: <20220601135622.2003939-1-sashal@kernel.org>
+References: <20220601135622.2003939-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
