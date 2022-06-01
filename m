@@ -2,69 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06FD353A9E4
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 17:24:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54BFD53A9F2
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 17:27:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355346AbiFAPYZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 11:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39276 "EHLO
+        id S1355403AbiFAP1K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 11:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355341AbiFAPYY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 11:24:24 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B2D95A04;
-        Wed,  1 Jun 2022 08:24:22 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id z7so2642461edm.13;
-        Wed, 01 Jun 2022 08:24:22 -0700 (PDT)
+        with ESMTP id S1355408AbiFAP1J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 11:27:09 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B1B266D;
+        Wed,  1 Jun 2022 08:27:07 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id n28so2675414edb.9;
+        Wed, 01 Jun 2022 08:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S2s/uj8WC49ahrReqiF2/cgFexx1dmbjwYjSSVDIU/o=;
-        b=DjueV5cqkCLDw2hnrUIX33XWBicHukWnlU8JpsVLUQV/zDlLzVQKBgbMNSS3+8xeOM
-         T+iTK4xdP+7tuFtcpK6DOA67QPRsliVi5mURa/cM1Hzm4EdzPGQ/bFWGRfqJyE5NBLNW
-         cnIHg9s1YehEYz2oiwdr3U9LAsy0aA+QM3y+opUMH3mwWpDIsDnPDNPv63yg4/zJx5qz
-         T7TfUJ4OWBvAyJqWw0nG36keZ+u12AGDfSpAFYmozpdEDdlFSO93QFOvIe68iBNibIe3
-         YexlIZ5Z3gBC8iLu1+RwCX+/0c2G4GLXnpsTy6ipBevt7rGKrvvGoeL1dPo5uZWBEmzj
-         PvRQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EL417cTm0c/3LvzBZMQF8QXVZcM9AZ2saBEadjHJh1c=;
+        b=OClPeNNiHILAN/kba/wRU9fcAzcq61UzRxTdmqUBukIIOsd3DawrjjR9uIOQaSb7ll
+         b1IM6+XVS8Qn05lGJ+Ht0Y+gqp/EwGpmVgb2CoDRbMpb+5cl4mub3QlLVwLbGS4SJCp2
+         pcaIX3KesnTlIADPhIBA7wb9MWrCdI3rUJxnuf4gpsucsdU1h/Dqdf0W+TnGc1c2Lwlc
+         JBF8kxYrnecRSeFhAn585qYTUwIUbdBBcbxnTZr7KjYnYEEpIVwHej1ZGIJ0X6G83tJq
+         rHf5ADB20wCj/QbxWruCeWsuIGkNWv2zjmOVTDXdYt++GYcoV0BpDYCGFk49LpQfc1q5
+         5ibQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S2s/uj8WC49ahrReqiF2/cgFexx1dmbjwYjSSVDIU/o=;
-        b=Wf5R+prjFvp/lFbc0RgeiI+XvXS3Jn9GmPtMIy9ffc86nDVV2CE48Jwboe5Pmfdw4K
-         Dyj/Mfxlop4OnPbJ14xFv9aqo8tu6B2/928J9ECemFPayeoBaP9H7rRY1r5p2MpDr3bH
-         MYuOH8eXd9JL21GwhXKCZgh9Ivaw1GJ3EG2q/YgI4mbdV9npbutMCNMiwNxzEgObWW0q
-         1E4sfwCm8C7/Dvd+CwXZ/dlByEcKGTarnGSP/1WVUnItBwXrhfMr+rLGYgqNrMv1xPw8
-         ns7dWrGMVF4AATRRj84cX7XvPwD2+S/ASlks2p0rNwxmxhN2MPoITkBaZuBqY6u/ENYE
-         I4ew==
-X-Gm-Message-State: AOAM533WPOuNGCyLpQ6zbQBO6T+zCzD73VfjqsMK5lzwQN154wQ//7Re
-        CMrx7P3s0jxASVL7g7WJvfk=
-X-Google-Smtp-Source: ABdhPJwDn4fYWychN9HWMd5ASr5v4eS7KmbuP60hlN+FSZkXniYTiTP0CoX3vAPP5IkPA4FBXuQgrg==
-X-Received: by 2002:a05:6402:2548:b0:42d:dd95:5bfe with SMTP id l8-20020a056402254800b0042ddd955bfemr205534edb.285.1654097060744;
-        Wed, 01 Jun 2022 08:24:20 -0700 (PDT)
-Received: from kista.localnet (213-161-3-76.dynamic.telemach.net. [213.161.3.76])
-        by smtp.gmail.com with ESMTPSA id bv15-20020a170906b1cf00b006f4c4330c49sm846072ejb.57.2022.06.01.08.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jun 2022 08:24:20 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
-Subject: Re: Re: [PATCH 0/3] pinctrl: sunxi: Remove non-existent reset line references
-Date:   Wed, 01 Jun 2022 17:24:08 +0200
-Message-ID: <2828716.e9J7NaK4W3@kista>
-In-Reply-To: <48570ec3-8159-11ae-8069-7f001081fd56@sholland.org>
-References: <20220531053623.43851-1-samuel@sholland.org> <4400164.LvFx2qVVIh@kista> <48570ec3-8159-11ae-8069-7f001081fd56@sholland.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EL417cTm0c/3LvzBZMQF8QXVZcM9AZ2saBEadjHJh1c=;
+        b=xi2M4XAIZjSsDsZbV5logChLddU6THHAIwmEcqshNdWA7kQgzclUI+adgRWH1ZiLW0
+         8O9JVb6kCM3c3fNF7I8OxYVdHYl5bqtjhzeETV5ASq4rhC9A9eBSaYoI40SdlOqBtV46
+         k6mFZVAYDdi6l/0iYvXl69J06pkoOff2QfbktpbzVol/9ne7engVSjJw/vOx5X42/Ncu
+         xyqRwfZ4NfQBKs1hw3gjJI5kYHIKiwMDK2f0z2fOF2wfNEN1Y+dMDenDYzC8DAsH/xoS
+         +3vXY4rfsbRjgXcPW6GSed8+EqVLmnWbrPhy5G9obJv/0W9ak+kMpiJ3+q5D2gT0Hu12
+         czRw==
+X-Gm-Message-State: AOAM531Hgr8nUOUyCpcZoLgluSL0zq095E1oEIbo/pJeIV9HfrOwTeOk
+        sl65Dbl07nJahemP1Wob7ZDPoj6yE0dtGJav/g0=
+X-Google-Smtp-Source: ABdhPJyHE8SKqKTms0IMlkl93/WJiZp+ecoqzUAwGHjNTUU2ljewX3CxWL10MK+FvugIRNCspLleTIOp0Q4q9T2kLo0=
+X-Received: by 2002:aa7:c396:0:b0:42d:8b86:a8dc with SMTP id
+ k22-20020aa7c396000000b0042d8b86a8dcmr285755edq.54.1654097225973; Wed, 01 Jun
+ 2022 08:27:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20220530082552.46113-1-sander@svanheule.net>
+In-Reply-To: <20220530082552.46113-1-sander@svanheule.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Jun 2022 17:26:29 +0200
+Message-ID: <CAHp75Vd_Z9MrqTzGKL+U1dCus3U09P3AeTBGx0J3LY56jHTDjQ@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio: realtek-otto: always honor empty CPU masks
+To:     Sander Vanheule <sander@svanheule.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        INAGAKI Hiroshi <musashino.open@gmail.com>,
+        Robert Marko <robimarko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -76,42 +69,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dne sreda, 01. junij 2022 ob 06:42:34 CEST je Samuel Holland napisal(a):
-> Hi Jernej,
->=20
-> On 5/31/22 10:22 AM, Jernej =C5=A0krabec wrote:
-> > Dne torek, 31. maj 2022 ob 07:36:20 CEST je Samuel Holland napisal(a):
-> >> I assume these properties came from a lack of documentation, and the
-> >> very reasonable assumption that where there's a clock gate bit in the
-> >> CCU, there's a reset bit. But the pin controllers are special and don't
-> >> have a module reset line. The only way to reset the pin controller is =
-to
-> >> reset the whole VDD_SYS power domain.
-> >>
-> >> This series is preparation for converting the PRCM MFD and legacy clock
-> >> drivers to a CCU clock/reset driver like all of the other Allwinner
-> >> SoCs. I don't plan to add reset lines that don't actually exist to the
-> >> new CCU driver. So we might as well get rid of the references now.
-> >> Technically this breaks devicetree compatibility, since the old drivers
-> >> expect the reset. But the CCU conversion will be a compatibility break
-> >> anyway, so it's a bit of a moot point.
-> >=20
-> > If I understand correclty, this would cause only DT forward compatibili=
-ty=20
-> > issue, which happens now and then anyway. Kernel would still be compati=
-ble=20
-> > with older DTs, it would just ignore that reset, right?
->=20
-> Right, this only prevents older kernels from working with newer devicetre=
-es.=20
-I
-> brought it up because I'm generally trying to minimize how much we do tha=
-t.
+On Mon, May 30, 2022 at 3:57 PM Sander Vanheule <sander@svanheule.net> wrote:
+>
+> On uniprocessor builds, for_each_cpu(cpu, mask) will assume 'mask'
+> always contains exactly one CPU, and ignore the actual mask contents.
+> This causes the loop to run, even when it shouldn't on an empty mask,
+> and tries to access an uninitialised pointer.
 
-All good then, this series is:
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+It's too noisy traceback, I believe you may squeeze it out and leave
+something like ~5-6 lines only.
 
-Best regards,
-Jernej
+...
 
+> This patch is more of a work-around than a real fix, and ensures the
+> driver runs properly on uniprocessor builds. My tests were done using an
+> SMP-enabled build on a single-core system, which is why is missed this
+> erroneous behaviour.
+>
+> The real fix would be a modification of include/linux/cpumask.h, which
+> may take longer to finalise, but I would rather have the issue in this
+> driver fixed in the 5.19 release.
 
+Hmm... I dunno that cpumask fix should be hard or easy, but I think
+you may try it simultaneously, so we will win one way or the other.
+
+-- 
+With Best Regards,
+Andy Shevchenko
