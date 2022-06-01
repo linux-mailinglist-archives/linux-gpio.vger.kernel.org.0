@@ -2,168 +2,1533 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF44E53A5FC
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 15:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 413E353A627
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 15:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353251AbiFANfs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 09:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35340 "EHLO
+        id S1352588AbiFANuM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 09:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232808AbiFANfs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 09:35:48 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB0770363
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 06:35:47 -0700 (PDT)
+        with ESMTP id S1348518AbiFANuL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 09:50:11 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6D06EC6E
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Jun 2022 06:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654090547; x=1685626547;
+  t=1654091409; x=1685627409;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=+KHpuO1JLvtPC4epEWj8OaSWLJJKWmcCFZKEmte5rUY=;
-  b=OEAZCfzijoPIP1uPNfNIYG3v84Ot370pmBnZLdMhW3HTL/MWZ9a3eG41
-   qdjy1HcAXSBtaVoUeGQ8piBixYrwPaZn+xQZ7R3nX1tNKmP03rwywnRg1
-   VTDvTi+/6uAYyQcDGJqtEjaB0FcARAWd2IEbkZE32EbNg57JRtzcnVy2X
-   bEz5tqLIV9ozPhAR3araF1E4vyBckDXvoTsVhoqOI6Br3ywJS/K6YnHXi
-   jSTicvg/Yj5cyVqyJlnPQGRvH1TLVgLiHA09OrJRCQml/416E7GDObDE5
-   cVNWzZ7akf0/5XsdCoTMccadzQUV8qmIdlU1dnvxZrsG3dBzEXEyU97ie
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="257658929"
+  bh=EGWeLjutzb/TaAAkWHW95ciprSK6ykGCtPy0ABPDUhg=;
+  b=Mo2BYx7OE5aBWPjDIiGKvw3rq0RW/CYxGwFK1rdzKsyxbJcVXUfIxKuw
+   11fB7jkvdls2CY5Y9gQ/auC7McnK/eiuwF+YhtSQEqUQrslQRPXcpNeNT
+   SiSWNfHgYGJ8as84lJs7HG1ZAntdB0/X3AgibuaC97d6xM4tZl7BUUfcy
+   1GTIVMY4kHTWT4N3liFFqzTAiLS3u4YJUt23nwC1ESdEmks+s3VrKOQw0
+   1BZ8+KYpHkyt4ZtUz0m5CW65zsRJYKycrzIZXr5Bj7kuIYM2BCBD449ql
+   5ZUS5FOeCzvD3/iurP1miUOpdfZ7+0RawkfOa/eq5n9ZYFWHRPSoPFzOB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="300946762"
 X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="257658929"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 06:35:47 -0700
+   d="scan'208";a="300946762"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 06:50:08 -0700
 X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="707061150"
+   d="scan'208";a="612327386"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 06:35:43 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 06:50:06 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nwOVg-000QgB-RQ;
-        Wed, 01 Jun 2022 16:35:40 +0300
-Date:   Wed, 1 Jun 2022 16:35:40 +0300
+        id 1nwOjb-000QgY-ER;
+        Wed, 01 Jun 2022 16:50:03 +0300
+Date:   Wed, 1 Jun 2022 16:50:03 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 Cc:     Shyam-sundar.S-k@amd.com, linus.walleij@linaro.org,
         linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com
-Subject: Re: [PATCH v5 5/6] pinctrl: amd: Add amd_get_iomux_res function
-Message-ID: <YpdrLOToG4jB6oQH@smile.fi.intel.com>
+Subject: Re: [PATCH v5 6/6] pinctrl: amd: Implement pinmux functionality
+Message-ID: <Ypdui9R44n0CIVhB@smile.fi.intel.com>
 References: <20220601121438.999369-1-Basavaraj.Natikar@amd.com>
- <20220601121438.999369-6-Basavaraj.Natikar@amd.com>
+ <20220601121438.999369-7-Basavaraj.Natikar@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220601121438.999369-6-Basavaraj.Natikar@amd.com>
+In-Reply-To: <20220601121438.999369-7-Basavaraj.Natikar@amd.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75 autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 05:44:37PM +0530, Basavaraj Natikar wrote:
-> Presently there is no way to change pinmux configuration run time.
-> Hence add a function to get IOMUX resource which can be used to
-> configure IOMUX GPIO pins run time.
+On Wed, Jun 01, 2022 at 05:44:38PM +0530, Basavaraj Natikar wrote:
+> Provide pinmux functionality by implementing pinmux_ops.
 
-With below comment addressed,
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 > Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 > ---
->  drivers/pinctrl/pinctrl-amd.c | 20 ++++++++++++++++++++
->  drivers/pinctrl/pinctrl-amd.h |  1 +
->  2 files changed, 21 insertions(+)
+>  drivers/pinctrl/pinctrl-amd.c |   78 ++
+>  drivers/pinctrl/pinctrl-amd.h | 1326 ++++++++++++++++++++++++++++++++-
+>  2 files changed, 1403 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-> index 0645c2c24f50..6bd85660287d 100644
+> index 6bd85660287d..f7b55c59f8cc 100644
 > --- a/drivers/pinctrl/pinctrl-amd.c
 > +++ b/drivers/pinctrl/pinctrl-amd.c
-> @@ -963,6 +963,25 @@ static struct pinctrl_desc amd_pinctrl_desc = {
->  	.owner = THIS_MODULE,
->  };
+> @@ -31,6 +31,7 @@
+>  #include <linux/bitops.h>
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinmux.h>
 >  
-> +static void amd_get_iomux_res(struct amd_gpio *gpio_dev)
+>  #include "core.h"
+>  #include "pinctrl-utils.h"
+> @@ -955,10 +956,87 @@ static const struct dev_pm_ops amd_gpio_pm_ops = {
+>  };
+>  #endif
+>  
+> +static int amd_get_functions_count(struct pinctrl_dev *pctldev)
 > +{
-> +	struct pinctrl_desc *desc = &amd_pinctrl_desc;
-> +	struct device *dev = &gpio_dev->pdev->dev;
-> +	int index;
-> +
-> +	index = device_property_match_string(dev, "pinctrl-resource-names",  "iomux");
-> +	if (index >= 0) {
-> +		gpio_dev->iomux_base = devm_platform_ioremap_resource(gpio_dev->pdev, index);
-> +		if (IS_ERR(gpio_dev->iomux_base)) {
-> +			desc->pmxops = NULL;
-> +			dev_warn(dev, "Failed to get iomux %d io resource\n", index);
-> +		}
-> +	} else {
-> +		desc->pmxops = NULL;
-> +		dev_warn(dev, "failed to get iomux index\n");
-> +	}
-
-So, now it's much cleaner, but we may do even better (no nested conditionals):
-
-	index = device_property_match_string(dev, "pinctrl-resource-names",  "iomux");
-	if (index < 0) {
-		desc->pmxops = NULL;
-		dev_warn(dev, "failed to get iomux index\n");
-		return;
-	}
-
-	gpio_dev->iomux_base = devm_platform_ioremap_resource(gpio_dev->pdev, index);
-	if (IS_ERR(gpio_dev->iomux_base)) {
-		desc->pmxops = NULL;
-		dev_warn(dev, "Failed to get iomux %d io resource\n", index);
-	}
-
-Alternatively (error path consolidated):
-
-	index = device_property_match_string(dev, "pinctrl-resource-names",  "iomux");
-	if (index < 0) {
-		dev_warn(dev, "failed to get iomux index\n");
-		goto out_no_pinmux;
-	}
-
-	gpio_dev->iomux_base = devm_platform_ioremap_resource(gpio_dev->pdev, index);
-	if (IS_ERR(gpio_dev->iomux_base)) {
-		dev_warn(dev, "Failed to get iomux %d io resource\n", index);
-		goto out_no_pinmux;
-	}
-
-	return;
-
-out_no_pinmux:
-	desc->pmxops = NULL;
-
-(Personally I prefer the latter, but okay with the former)
-
+> +	return ARRAY_SIZE(pmx_functions);
 > +}
 > +
->  static int amd_gpio_probe(struct platform_device *pdev)
->  {
->  	int ret = 0;
-> @@ -1020,6 +1039,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
->  	gpio_dev->ngroups = ARRAY_SIZE(kerncz_groups);
->  
->  	amd_pinctrl_desc.name = dev_name(&pdev->dev);
-> +	amd_get_iomux_res(gpio_dev);
->  	gpio_dev->pctrl = devm_pinctrl_register(&pdev->dev, &amd_pinctrl_desc,
->  						gpio_dev);
->  	if (IS_ERR(gpio_dev->pctrl)) {
+> +static const char *amd_get_fname(struct pinctrl_dev *pctrldev, unsigned int selector)
+> +{
+> +	return pmx_functions[selector].name;
+> +}
+> +
+> +static int amd_get_groups(struct pinctrl_dev *pctrldev, unsigned int selector,
+> +			  const char * const **groups,
+> +			  unsigned int * const num_groups)
+> +{
+> +	struct amd_gpio *gpio_dev = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	if (!gpio_dev->iomux_base) {
+> +		dev_err(&gpio_dev->pdev->dev, "iomux function %d group not supported\n", selector);
+> +		return -EINVAL;
+> +	}
+> +
+> +	*groups = pmx_functions[selector].groups;
+> +	*num_groups = pmx_functions[selector].ngroups;
+> +	return 0;
+> +}
+> +
+> +static int amd_set_mux(struct pinctrl_dev *pctrldev, unsigned int function, unsigned int group)
+> +{
+> +	struct amd_gpio *gpio_dev = pinctrl_dev_get_drvdata(pctrldev);
+> +	struct device *dev = &gpio_dev->pdev->dev;
+> +	struct pin_desc *pd;
+> +	int ind, index;
+> +
+> +	if (!gpio_dev->iomux_base)
+> +		return -EINVAL;
+> +
+> +	for (index = 0; index < NSELECTS; index++) {
+> +		if (strcmp(gpio_dev->groups[group].name,  pmx_functions[function].groups[index]))
+> +			continue;
+> +
+> +		if (readb(gpio_dev->iomux_base + pmx_functions[function].index) ==
+> +				FUNCTION_INVALID) {
+> +			dev_err(dev, "IOMUX_GPIO 0x%x not present or supported\n",
+> +				pmx_functions[function].index);
+> +			return -EINVAL;
+> +		}
+> +
+> +		writeb(index, gpio_dev->iomux_base + pmx_functions[function].index);
+> +
+> +		if (index != (readb(gpio_dev->iomux_base + pmx_functions[function].index) &
+> +					FUNCTION_MASK)) {
+> +			dev_err(dev, "IOMUX_GPIO 0x%x not present or supported\n",
+> +				pmx_functions[function].index);
+> +			return -EINVAL;
+> +		}
+> +
+> +		for (ind = 0; ind < gpio_dev->groups[group].npins; ind++) {
+> +			if (strncmp(gpio_dev->groups[group].name, "IMX_F", strlen("IMX_F")))
+> +				continue;
+> +
+> +			pd = pin_desc_get(gpio_dev->pctrl, gpio_dev->groups[group].pins[ind]);
+> +			pd->mux_owner = gpio_dev->groups[group].name;
+> +		}
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pinmux_ops amd_pmxops = {
+> +	.get_functions_count = amd_get_functions_count,
+> +	.get_function_name = amd_get_fname,
+> +	.get_function_groups = amd_get_groups,
+> +	.set_mux = amd_set_mux,
+> +};
+> +
+>  static struct pinctrl_desc amd_pinctrl_desc = {
+>  	.pins	= kerncz_pins,
+>  	.npins = ARRAY_SIZE(kerncz_pins),
+>  	.pctlops = &amd_pinctrl_ops,
+> +	.pmxops = &amd_pmxops,
+>  	.confops = &amd_pinconf_ops,
+>  	.owner = THIS_MODULE,
+>  };
 > diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-> index e2523738fe51..76538792ac78 100644
+> index 76538792ac78..c8635998465d 100644
 > --- a/drivers/pinctrl/pinctrl-amd.h
 > +++ b/drivers/pinctrl/pinctrl-amd.h
-> @@ -83,6 +83,7 @@ struct amd_function {
->  struct amd_gpio {
->  	raw_spinlock_t          lock;
->  	void __iomem            *base;
-> +	void __iomem            *iomux_base;
+> @@ -74,10 +74,16 @@
 >  
->  	const struct pingroup *groups;
->  	u32 ngroups;
+>  #define CLR_INTR_STAT	0x1UL
+>  
+> +#define NSELECTS	0x4
+> +
+> +#define FUNCTION_MASK		GENMASK(1, 0)
+> +#define FUNCTION_INVALID	GENMASK(7, 0)
+> +
+>  struct amd_function {
+>  	const char *name;
+> -	const char * const *groups;
+> +	const char * const groups[NSELECTS];
+>  	unsigned ngroups;
+> +	int index;
+>  };
+>  
+>  struct amd_gpio {
+> @@ -284,7 +290,1168 @@ static const struct pinctrl_pin_desc kerncz_pins[] = {
+>  };
+>  
+>  #define AMD_PINS(...) (const unsigned int []){__VA_ARGS__}
+> +
+> +enum amd_functions {
+> +	IMX_F0_GPIO0,
+> +	IMX_F1_GPIO0,
+> +	IMX_F2_GPIO0,
+> +	IMX_F3_GPIO0,
+> +	IMX_F0_GPIO1,
+> +	IMX_F1_GPIO1,
+> +	IMX_F2_GPIO1,
+> +	IMX_F3_GPIO1,
+> +	IMX_F0_GPIO2,
+> +	IMX_F1_GPIO2,
+> +	IMX_F2_GPIO2,
+> +	IMX_F3_GPIO2,
+> +	IMX_F0_GPIO3,
+> +	IMX_F1_GPIO3,
+> +	IMX_F2_GPIO3,
+> +	IMX_F3_GPIO3,
+> +	IMX_F0_GPIO4,
+> +	IMX_F1_GPIO4,
+> +	IMX_F2_GPIO4,
+> +	IMX_F3_GPIO4,
+> +	IMX_F0_GPIO5,
+> +	IMX_F1_GPIO5,
+> +	IMX_F2_GPIO5,
+> +	IMX_F3_GPIO5,
+> +	IMX_F0_GPIO6,
+> +	IMX_F1_GPIO6,
+> +	IMX_F2_GPIO6,
+> +	IMX_F3_GPIO6,
+> +	IMX_F0_GPIO7,
+> +	IMX_F1_GPIO7,
+> +	IMX_F2_GPIO7,
+> +	IMX_F3_GPIO7,
+> +	IMX_F0_GPIO8,
+> +	IMX_F1_GPIO8,
+> +	IMX_F2_GPIO8,
+> +	IMX_F3_GPIO8,
+> +	IMX_F0_GPIO9,
+> +	IMX_F1_GPIO9,
+> +	IMX_F2_GPIO9,
+> +	IMX_F3_GPIO9,
+> +	IMX_F0_GPIO10,
+> +	IMX_F1_GPIO10,
+> +	IMX_F2_GPIO10,
+> +	IMX_F3_GPIO10,
+> +	IMX_F0_GPIO11,
+> +	IMX_F1_GPIO11,
+> +	IMX_F2_GPIO11,
+> +	IMX_F3_GPIO11,
+> +	IMX_F0_GPIO12,
+> +	IMX_F1_GPIO12,
+> +	IMX_F2_GPIO12,
+> +	IMX_F3_GPIO12,
+> +	IMX_F0_GPIO13,
+> +	IMX_F1_GPIO13,
+> +	IMX_F2_GPIO13,
+> +	IMX_F3_GPIO13,
+> +	IMX_F0_GPIO14,
+> +	IMX_F1_GPIO14,
+> +	IMX_F2_GPIO14,
+> +	IMX_F3_GPIO14,
+> +	IMX_F0_GPIO15,
+> +	IMX_F1_GPIO15,
+> +	IMX_F2_GPIO15,
+> +	IMX_F3_GPIO15,
+> +	IMX_F0_GPIO16,
+> +	IMX_F1_GPIO16,
+> +	IMX_F2_GPIO16,
+> +	IMX_F3_GPIO16,
+> +	IMX_F0_GPIO17,
+> +	IMX_F1_GPIO17,
+> +	IMX_F2_GPIO17,
+> +	IMX_F3_GPIO17,
+> +	IMX_F0_GPIO18,
+> +	IMX_F1_GPIO18,
+> +	IMX_F2_GPIO18,
+> +	IMX_F3_GPIO18,
+> +	IMX_F0_GPIO19,
+> +	IMX_F1_GPIO19,
+> +	IMX_F2_GPIO19,
+> +	IMX_F3_GPIO19,
+> +	IMX_F0_GPIO20,
+> +	IMX_F1_GPIO20,
+> +	IMX_F2_GPIO20,
+> +	IMX_F3_GPIO20,
+> +	IMX_F0_GPIO21,
+> +	IMX_F1_GPIO21,
+> +	IMX_F2_GPIO21,
+> +	IMX_F3_GPIO21,
+> +	IMX_F0_GPIO22,
+> +	IMX_F1_GPIO22,
+> +	IMX_F2_GPIO22,
+> +	IMX_F3_GPIO22,
+> +	IMX_F0_GPIO23,
+> +	IMX_F1_GPIO23,
+> +	IMX_F2_GPIO23,
+> +	IMX_F3_GPIO23,
+> +	IMX_F0_GPIO24,
+> +	IMX_F1_GPIO24,
+> +	IMX_F2_GPIO24,
+> +	IMX_F3_GPIO24,
+> +	IMX_F0_GPIO25,
+> +	IMX_F1_GPIO25,
+> +	IMX_F2_GPIO25,
+> +	IMX_F3_GPIO25,
+> +	IMX_F0_GPIO26,
+> +	IMX_F1_GPIO26,
+> +	IMX_F2_GPIO26,
+> +	IMX_F3_GPIO26,
+> +	IMX_F0_GPIO27,
+> +	IMX_F1_GPIO27,
+> +	IMX_F2_GPIO27,
+> +	IMX_F3_GPIO27,
+> +	IMX_F0_GPIO28,
+> +	IMX_F1_GPIO28,
+> +	IMX_F2_GPIO28,
+> +	IMX_F3_GPIO28,
+> +	IMX_F0_GPIO29,
+> +	IMX_F1_GPIO29,
+> +	IMX_F2_GPIO29,
+> +	IMX_F3_GPIO29,
+> +	IMX_F0_GPIO30,
+> +	IMX_F1_GPIO30,
+> +	IMX_F2_GPIO30,
+> +	IMX_F3_GPIO30,
+> +	IMX_F0_GPIO31,
+> +	IMX_F1_GPIO31,
+> +	IMX_F2_GPIO31,
+> +	IMX_F3_GPIO31,
+> +	IMX_F0_GPIO32,
+> +	IMX_F1_GPIO32,
+> +	IMX_F2_GPIO32,
+> +	IMX_F3_GPIO32,
+> +	IMX_F0_GPIO33,
+> +	IMX_F1_GPIO33,
+> +	IMX_F2_GPIO33,
+> +	IMX_F3_GPIO33,
+> +	IMX_F0_GPIO34,
+> +	IMX_F1_GPIO34,
+> +	IMX_F2_GPIO34,
+> +	IMX_F3_GPIO34,
+> +	IMX_F0_GPIO35,
+> +	IMX_F1_GPIO35,
+> +	IMX_F2_GPIO35,
+> +	IMX_F3_GPIO35,
+> +	IMX_F0_GPIO36,
+> +	IMX_F1_GPIO36,
+> +	IMX_F2_GPIO36,
+> +	IMX_F3_GPIO36,
+> +	IMX_F0_GPIO37,
+> +	IMX_F1_GPIO37,
+> +	IMX_F2_GPIO37,
+> +	IMX_F3_GPIO37,
+> +	IMX_F0_GPIO38,
+> +	IMX_F1_GPIO38,
+> +	IMX_F2_GPIO38,
+> +	IMX_F3_GPIO38,
+> +	IMX_F0_GPIO39,
+> +	IMX_F1_GPIO39,
+> +	IMX_F2_GPIO39,
+> +	IMX_F3_GPIO39,
+> +	IMX_F0_GPIO40,
+> +	IMX_F1_GPIO40,
+> +	IMX_F2_GPIO40,
+> +	IMX_F3_GPIO40,
+> +	IMX_F0_GPIO41,
+> +	IMX_F1_GPIO41,
+> +	IMX_F2_GPIO41,
+> +	IMX_F3_GPIO41,
+> +	IMX_F0_GPIO42,
+> +	IMX_F1_GPIO42,
+> +	IMX_F2_GPIO42,
+> +	IMX_F3_GPIO42,
+> +	IMX_F0_GPIO43,
+> +	IMX_F1_GPIO43,
+> +	IMX_F2_GPIO43,
+> +	IMX_F3_GPIO43,
+> +	IMX_F0_GPIO44,
+> +	IMX_F1_GPIO44,
+> +	IMX_F2_GPIO44,
+> +	IMX_F3_GPIO44,
+> +	IMX_F0_GPIO45,
+> +	IMX_F1_GPIO45,
+> +	IMX_F2_GPIO45,
+> +	IMX_F3_GPIO45,
+> +	IMX_F0_GPIO46,
+> +	IMX_F1_GPIO46,
+> +	IMX_F2_GPIO46,
+> +	IMX_F3_GPIO46,
+> +	IMX_F0_GPIO47,
+> +	IMX_F1_GPIO47,
+> +	IMX_F2_GPIO47,
+> +	IMX_F3_GPIO47,
+> +	IMX_F0_GPIO48,
+> +	IMX_F1_GPIO48,
+> +	IMX_F2_GPIO48,
+> +	IMX_F3_GPIO48,
+> +	IMX_F0_GPIO49,
+> +	IMX_F1_GPIO49,
+> +	IMX_F2_GPIO49,
+> +	IMX_F3_GPIO49,
+> +	IMX_F0_GPIO50,
+> +	IMX_F1_GPIO50,
+> +	IMX_F2_GPIO50,
+> +	IMX_F3_GPIO50,
+> +	IMX_F0_GPIO51,
+> +	IMX_F1_GPIO51,
+> +	IMX_F2_GPIO51,
+> +	IMX_F3_GPIO51,
+> +	IMX_F0_GPIO52,
+> +	IMX_F1_GPIO52,
+> +	IMX_F2_GPIO52,
+> +	IMX_F3_GPIO52,
+> +	IMX_F0_GPIO53,
+> +	IMX_F1_GPIO53,
+> +	IMX_F2_GPIO53,
+> +	IMX_F3_GPIO53,
+> +	IMX_F0_GPIO54,
+> +	IMX_F1_GPIO54,
+> +	IMX_F2_GPIO54,
+> +	IMX_F3_GPIO54,
+> +	IMX_F0_GPIO55,
+> +	IMX_F1_GPIO55,
+> +	IMX_F2_GPIO55,
+> +	IMX_F3_GPIO55,
+> +	IMX_F0_GPIO56,
+> +	IMX_F1_GPIO56,
+> +	IMX_F2_GPIO56,
+> +	IMX_F3_GPIO56,
+> +	IMX_F0_GPIO57,
+> +	IMX_F1_GPIO57,
+> +	IMX_F2_GPIO57,
+> +	IMX_F3_GPIO57,
+> +	IMX_F0_GPIO58,
+> +	IMX_F1_GPIO58,
+> +	IMX_F2_GPIO58,
+> +	IMX_F3_GPIO58,
+> +	IMX_F0_GPIO59,
+> +	IMX_F1_GPIO59,
+> +	IMX_F2_GPIO59,
+> +	IMX_F3_GPIO59,
+> +	IMX_F0_GPIO60,
+> +	IMX_F1_GPIO60,
+> +	IMX_F2_GPIO60,
+> +	IMX_F3_GPIO60,
+> +	IMX_F0_GPIO61,
+> +	IMX_F1_GPIO61,
+> +	IMX_F2_GPIO61,
+> +	IMX_F3_GPIO61,
+> +	IMX_F0_GPIO62,
+> +	IMX_F1_GPIO62,
+> +	IMX_F2_GPIO62,
+> +	IMX_F3_GPIO62,
+> +	IMX_F0_GPIO64,
+> +	IMX_F1_GPIO64,
+> +	IMX_F2_GPIO64,
+> +	IMX_F3_GPIO64,
+> +	IMX_F0_GPIO65,
+> +	IMX_F1_GPIO65,
+> +	IMX_F2_GPIO65,
+> +	IMX_F3_GPIO65,
+> +	IMX_F0_GPIO66,
+> +	IMX_F1_GPIO66,
+> +	IMX_F2_GPIO66,
+> +	IMX_F3_GPIO66,
+> +	IMX_F0_GPIO67,
+> +	IMX_F1_GPIO67,
+> +	IMX_F2_GPIO67,
+> +	IMX_F3_GPIO67,
+> +	IMX_F0_GPIO68,
+> +	IMX_F1_GPIO68,
+> +	IMX_F2_GPIO68,
+> +	IMX_F3_GPIO68,
+> +	IMX_F0_GPIO69,
+> +	IMX_F1_GPIO69,
+> +	IMX_F2_GPIO69,
+> +	IMX_F3_GPIO69,
+> +	IMX_F0_GPIO70,
+> +	IMX_F1_GPIO70,
+> +	IMX_F2_GPIO70,
+> +	IMX_F3_GPIO70,
+> +	IMX_F0_GPIO71,
+> +	IMX_F1_GPIO71,
+> +	IMX_F2_GPIO71,
+> +	IMX_F3_GPIO71,
+> +	IMX_F0_GPIO72,
+> +	IMX_F1_GPIO72,
+> +	IMX_F2_GPIO72,
+> +	IMX_F3_GPIO72,
+> +	IMX_F0_GPIO73,
+> +	IMX_F1_GPIO73,
+> +	IMX_F2_GPIO73,
+> +	IMX_F3_GPIO73,
+> +	IMX_F0_GPIO74,
+> +	IMX_F1_GPIO74,
+> +	IMX_F2_GPIO74,
+> +	IMX_F3_GPIO74,
+> +	IMX_F0_GPIO75,
+> +	IMX_F1_GPIO75,
+> +	IMX_F2_GPIO75,
+> +	IMX_F3_GPIO75,
+> +	IMX_F0_GPIO76,
+> +	IMX_F1_GPIO76,
+> +	IMX_F2_GPIO76,
+> +	IMX_F3_GPIO76,
+> +	IMX_F0_GPIO77,
+> +	IMX_F1_GPIO77,
+> +	IMX_F2_GPIO77,
+> +	IMX_F3_GPIO77,
+> +	IMX_F0_GPIO78,
+> +	IMX_F1_GPIO78,
+> +	IMX_F2_GPIO78,
+> +	IMX_F3_GPIO78,
+> +	IMX_F0_GPIO79,
+> +	IMX_F1_GPIO79,
+> +	IMX_F2_GPIO79,
+> +	IMX_F3_GPIO79,
+> +	IMX_F0_GPIO80,
+> +	IMX_F1_GPIO80,
+> +	IMX_F2_GPIO80,
+> +	IMX_F3_GPIO80,
+> +	IMX_F0_GPIO81,
+> +	IMX_F1_GPIO81,
+> +	IMX_F2_GPIO81,
+> +	IMX_F3_GPIO81,
+> +	IMX_F0_GPIO82,
+> +	IMX_F1_GPIO82,
+> +	IMX_F2_GPIO82,
+> +	IMX_F3_GPIO82,
+> +	IMX_F0_GPIO83,
+> +	IMX_F1_GPIO83,
+> +	IMX_F2_GPIO83,
+> +	IMX_F3_GPIO83,
+> +	IMX_F0_GPIO84,
+> +	IMX_F1_GPIO84,
+> +	IMX_F2_GPIO84,
+> +	IMX_F3_GPIO84,
+> +	IMX_F0_GPIO85,
+> +	IMX_F1_GPIO85,
+> +	IMX_F2_GPIO85,
+> +	IMX_F3_GPIO85,
+> +	IMX_F0_GPIO86,
+> +	IMX_F1_GPIO86,
+> +	IMX_F2_GPIO86,
+> +	IMX_F3_GPIO86,
+> +	IMX_F0_GPIO87,
+> +	IMX_F1_GPIO87,
+> +	IMX_F2_GPIO87,
+> +	IMX_F3_GPIO87,
+> +	IMX_F0_GPIO88,
+> +	IMX_F1_GPIO88,
+> +	IMX_F2_GPIO88,
+> +	IMX_F3_GPIO88,
+> +	IMX_F0_GPIO89,
+> +	IMX_F1_GPIO89,
+> +	IMX_F2_GPIO89,
+> +	IMX_F3_GPIO89,
+> +	IMX_F0_GPIO90,
+> +	IMX_F1_GPIO90,
+> +	IMX_F2_GPIO90,
+> +	IMX_F3_GPIO90,
+> +	IMX_F0_GPIO91,
+> +	IMX_F1_GPIO91,
+> +	IMX_F2_GPIO91,
+> +	IMX_F3_GPIO91,
+> +	IMX_F0_GPIO92,
+> +	IMX_F1_GPIO92,
+> +	IMX_F2_GPIO92,
+> +	IMX_F3_GPIO92,
+> +	IMX_F0_GPIO93,
+> +	IMX_F1_GPIO93,
+> +	IMX_F2_GPIO93,
+> +	IMX_F3_GPIO93,
+> +	IMX_F0_GPIO94,
+> +	IMX_F1_GPIO94,
+> +	IMX_F2_GPIO94,
+> +	IMX_F3_GPIO94,
+> +	IMX_F0_GPIO95,
+> +	IMX_F1_GPIO95,
+> +	IMX_F2_GPIO95,
+> +	IMX_F3_GPIO95,
+> +	IMX_F0_GPIO96,
+> +	IMX_F1_GPIO96,
+> +	IMX_F2_GPIO96,
+> +	IMX_F3_GPIO96,
+> +	IMX_F0_GPIO97,
+> +	IMX_F1_GPIO97,
+> +	IMX_F2_GPIO97,
+> +	IMX_F3_GPIO97,
+> +	IMX_F0_GPIO98,
+> +	IMX_F1_GPIO98,
+> +	IMX_F2_GPIO98,
+> +	IMX_F3_GPIO98,
+> +	IMX_F0_GPIO99,
+> +	IMX_F1_GPIO99,
+> +	IMX_F2_GPIO99,
+> +	IMX_F3_GPIO99,
+> +	IMX_F0_GPIO100,
+> +	IMX_F1_GPIO100,
+> +	IMX_F2_GPIO100,
+> +	IMX_F3_GPIO100,
+> +	IMX_F0_GPIO101,
+> +	IMX_F1_GPIO101,
+> +	IMX_F2_GPIO101,
+> +	IMX_F3_GPIO101,
+> +	IMX_F0_GPIO102,
+> +	IMX_F1_GPIO102,
+> +	IMX_F2_GPIO102,
+> +	IMX_F3_GPIO102,
+> +	IMX_F0_GPIO103,
+> +	IMX_F1_GPIO103,
+> +	IMX_F2_GPIO103,
+> +	IMX_F3_GPIO103,
+> +	IMX_F0_GPIO104,
+> +	IMX_F1_GPIO104,
+> +	IMX_F2_GPIO104,
+> +	IMX_F3_GPIO104,
+> +	IMX_F0_GPIO105,
+> +	IMX_F1_GPIO105,
+> +	IMX_F2_GPIO105,
+> +	IMX_F3_GPIO105,
+> +	IMX_F0_GPIO106,
+> +	IMX_F1_GPIO106,
+> +	IMX_F2_GPIO106,
+> +	IMX_F3_GPIO106,
+> +	IMX_F0_GPIO107,
+> +	IMX_F1_GPIO107,
+> +	IMX_F2_GPIO107,
+> +	IMX_F3_GPIO107,
+> +	IMX_F0_GPIO108,
+> +	IMX_F1_GPIO108,
+> +	IMX_F2_GPIO108,
+> +	IMX_F3_GPIO108,
+> +	IMX_F0_GPIO109,
+> +	IMX_F1_GPIO109,
+> +	IMX_F2_GPIO109,
+> +	IMX_F3_GPIO109,
+> +	IMX_F0_GPIO110,
+> +	IMX_F1_GPIO110,
+> +	IMX_F2_GPIO110,
+> +	IMX_F3_GPIO110,
+> +	IMX_F0_GPIO111,
+> +	IMX_F1_GPIO111,
+> +	IMX_F2_GPIO111,
+> +	IMX_F3_GPIO111,
+> +	IMX_F0_GPIO112,
+> +	IMX_F1_GPIO112,
+> +	IMX_F2_GPIO112,
+> +	IMX_F3_GPIO112,
+> +	IMX_F0_GPIO113,
+> +	IMX_F1_GPIO113,
+> +	IMX_F2_GPIO113,
+> +	IMX_F3_GPIO113,
+> +	IMX_F0_GPIO114,
+> +	IMX_F1_GPIO114,
+> +	IMX_F2_GPIO114,
+> +	IMX_F3_GPIO114,
+> +	IMX_F0_GPIO115,
+> +	IMX_F1_GPIO115,
+> +	IMX_F2_GPIO115,
+> +	IMX_F3_GPIO115,
+> +	IMX_F0_GPIO116,
+> +	IMX_F1_GPIO116,
+> +	IMX_F2_GPIO116,
+> +	IMX_F3_GPIO116,
+> +	IMX_F0_GPIO117,
+> +	IMX_F1_GPIO117,
+> +	IMX_F2_GPIO117,
+> +	IMX_F3_GPIO117,
+> +	IMX_F0_GPIO118,
+> +	IMX_F1_GPIO118,
+> +	IMX_F2_GPIO118,
+> +	IMX_F3_GPIO118,
+> +	IMX_F0_GPIO119,
+> +	IMX_F1_GPIO119,
+> +	IMX_F2_GPIO119,
+> +	IMX_F3_GPIO119,
+> +	IMX_F0_GPIO120,
+> +	IMX_F1_GPIO120,
+> +	IMX_F2_GPIO120,
+> +	IMX_F3_GPIO120,
+> +	IMX_F0_GPIO121,
+> +	IMX_F1_GPIO121,
+> +	IMX_F2_GPIO121,
+> +	IMX_F3_GPIO121,
+> +	IMX_F0_GPIO122,
+> +	IMX_F1_GPIO122,
+> +	IMX_F2_GPIO122,
+> +	IMX_F3_GPIO122,
+> +	IMX_F0_GPIO123,
+> +	IMX_F1_GPIO123,
+> +	IMX_F2_GPIO123,
+> +	IMX_F3_GPIO123,
+> +	IMX_F0_GPIO124,
+> +	IMX_F1_GPIO124,
+> +	IMX_F2_GPIO124,
+> +	IMX_F3_GPIO124,
+> +	IMX_F0_GPIO125,
+> +	IMX_F1_GPIO125,
+> +	IMX_F2_GPIO125,
+> +	IMX_F3_GPIO125,
+> +	IMX_F0_GPIO126,
+> +	IMX_F1_GPIO126,
+> +	IMX_F2_GPIO126,
+> +	IMX_F3_GPIO126,
+> +	IMX_F0_GPIO127,
+> +	IMX_F1_GPIO127,
+> +	IMX_F2_GPIO127,
+> +	IMX_F3_GPIO127,
+> +	IMX_F0_GPIO128,
+> +	IMX_F1_GPIO128,
+> +	IMX_F2_GPIO128,
+> +	IMX_F3_GPIO128,
+> +	IMX_F0_GPIO129,
+> +	IMX_F1_GPIO129,
+> +	IMX_F2_GPIO129,
+> +	IMX_F3_GPIO129,
+> +	IMX_F0_GPIO130,
+> +	IMX_F1_GPIO130,
+> +	IMX_F2_GPIO130,
+> +	IMX_F3_GPIO130,
+> +	IMX_F0_GPIO131,
+> +	IMX_F1_GPIO131,
+> +	IMX_F2_GPIO131,
+> +	IMX_F3_GPIO131,
+> +	IMX_F0_GPIO132,
+> +	IMX_F1_GPIO132,
+> +	IMX_F2_GPIO132,
+> +	IMX_F3_GPIO132,
+> +	IMX_F0_GPIO133,
+> +	IMX_F1_GPIO133,
+> +	IMX_F2_GPIO133,
+> +	IMX_F3_GPIO133,
+> +	IMX_F0_GPIO134,
+> +	IMX_F1_GPIO134,
+> +	IMX_F2_GPIO134,
+> +	IMX_F3_GPIO134,
+> +	IMX_F0_GPIO135,
+> +	IMX_F1_GPIO135,
+> +	IMX_F2_GPIO135,
+> +	IMX_F3_GPIO135,
+> +	IMX_F0_GPIO136,
+> +	IMX_F1_GPIO136,
+> +	IMX_F2_GPIO136,
+> +	IMX_F3_GPIO136,
+> +	IMX_F0_GPIO137,
+> +	IMX_F1_GPIO137,
+> +	IMX_F2_GPIO137,
+> +	IMX_F3_GPIO137,
+> +	IMX_F0_GPIO138,
+> +	IMX_F1_GPIO138,
+> +	IMX_F2_GPIO138,
+> +	IMX_F3_GPIO138,
+> +	IMX_F0_GPIO139,
+> +	IMX_F1_GPIO139,
+> +	IMX_F2_GPIO139,
+> +	IMX_F3_GPIO139,
+> +	IMX_F0_GPIO140,
+> +	IMX_F1_GPIO140,
+> +	IMX_F2_GPIO140,
+> +	IMX_F3_GPIO140,
+> +	IMX_F0_GPIO141,
+> +	IMX_F1_GPIO141,
+> +	IMX_F2_GPIO141,
+> +	IMX_F3_GPIO141,
+> +	IMX_F0_GPIO142,
+> +	IMX_F1_GPIO142,
+> +	IMX_F2_GPIO142,
+> +	IMX_F3_GPIO142,
+> +	IMX_F0_GPIO143,
+> +	IMX_F1_GPIO143,
+> +	IMX_F2_GPIO143,
+> +	IMX_F3_GPIO143,
+> +	IMX_F0_GPIO144,
+> +	IMX_F1_GPIO144,
+> +	IMX_F2_GPIO144,
+> +	IMX_F3_GPIO144,
+> +};
+> +
+> +#define AMD_PINCTRL_FUNC_GRP(_number, _func)						\
+> +	[IMX_F##_func##_GPIO##_number] =						\
+> +		PINCTRL_PINGROUP("IMX_F"#_func "_GPIO"#_number,	AMD_PINS(_number), 1)
+> +
+>  static const struct pingroup kerncz_groups[] = {
+> +	AMD_PINCTRL_FUNC_GRP(0, 0),
+> +	AMD_PINCTRL_FUNC_GRP(0, 1),
+> +	AMD_PINCTRL_FUNC_GRP(0, 2),
+> +	AMD_PINCTRL_FUNC_GRP(0, 3),
+> +	AMD_PINCTRL_FUNC_GRP(1, 0),
+> +	AMD_PINCTRL_FUNC_GRP(1, 1),
+> +	AMD_PINCTRL_FUNC_GRP(1, 2),
+> +	AMD_PINCTRL_FUNC_GRP(1, 3),
+> +	AMD_PINCTRL_FUNC_GRP(2, 0),
+> +	AMD_PINCTRL_FUNC_GRP(2, 1),
+> +	AMD_PINCTRL_FUNC_GRP(2, 2),
+> +	AMD_PINCTRL_FUNC_GRP(2, 3),
+> +	AMD_PINCTRL_FUNC_GRP(3, 0),
+> +	AMD_PINCTRL_FUNC_GRP(3, 1),
+> +	AMD_PINCTRL_FUNC_GRP(3, 2),
+> +	AMD_PINCTRL_FUNC_GRP(3, 3),
+> +	AMD_PINCTRL_FUNC_GRP(4, 0),
+> +	AMD_PINCTRL_FUNC_GRP(4, 1),
+> +	AMD_PINCTRL_FUNC_GRP(4, 2),
+> +	AMD_PINCTRL_FUNC_GRP(4, 3),
+> +	AMD_PINCTRL_FUNC_GRP(5, 0),
+> +	AMD_PINCTRL_FUNC_GRP(5, 1),
+> +	AMD_PINCTRL_FUNC_GRP(5, 2),
+> +	AMD_PINCTRL_FUNC_GRP(5, 3),
+> +	AMD_PINCTRL_FUNC_GRP(6, 0),
+> +	AMD_PINCTRL_FUNC_GRP(6, 1),
+> +	AMD_PINCTRL_FUNC_GRP(6, 2),
+> +	AMD_PINCTRL_FUNC_GRP(6, 3),
+> +	AMD_PINCTRL_FUNC_GRP(7, 0),
+> +	AMD_PINCTRL_FUNC_GRP(7, 1),
+> +	AMD_PINCTRL_FUNC_GRP(7, 2),
+> +	AMD_PINCTRL_FUNC_GRP(7, 3),
+> +	AMD_PINCTRL_FUNC_GRP(8, 0),
+> +	AMD_PINCTRL_FUNC_GRP(8, 1),
+> +	AMD_PINCTRL_FUNC_GRP(8, 2),
+> +	AMD_PINCTRL_FUNC_GRP(8, 3),
+> +	AMD_PINCTRL_FUNC_GRP(9, 0),
+> +	AMD_PINCTRL_FUNC_GRP(9, 1),
+> +	AMD_PINCTRL_FUNC_GRP(9, 2),
+> +	AMD_PINCTRL_FUNC_GRP(9, 3),
+> +	AMD_PINCTRL_FUNC_GRP(10, 0),
+> +	AMD_PINCTRL_FUNC_GRP(10, 1),
+> +	AMD_PINCTRL_FUNC_GRP(10, 2),
+> +	AMD_PINCTRL_FUNC_GRP(10, 3),
+> +	AMD_PINCTRL_FUNC_GRP(11, 0),
+> +	AMD_PINCTRL_FUNC_GRP(11, 1),
+> +	AMD_PINCTRL_FUNC_GRP(11, 2),
+> +	AMD_PINCTRL_FUNC_GRP(11, 3),
+> +	AMD_PINCTRL_FUNC_GRP(12, 0),
+> +	AMD_PINCTRL_FUNC_GRP(12, 1),
+> +	AMD_PINCTRL_FUNC_GRP(12, 2),
+> +	AMD_PINCTRL_FUNC_GRP(12, 3),
+> +	AMD_PINCTRL_FUNC_GRP(13, 0),
+> +	AMD_PINCTRL_FUNC_GRP(13, 1),
+> +	AMD_PINCTRL_FUNC_GRP(13, 2),
+> +	AMD_PINCTRL_FUNC_GRP(13, 3),
+> +	AMD_PINCTRL_FUNC_GRP(14, 0),
+> +	AMD_PINCTRL_FUNC_GRP(14, 1),
+> +	AMD_PINCTRL_FUNC_GRP(14, 2),
+> +	AMD_PINCTRL_FUNC_GRP(14, 3),
+> +	AMD_PINCTRL_FUNC_GRP(15, 0),
+> +	AMD_PINCTRL_FUNC_GRP(15, 1),
+> +	AMD_PINCTRL_FUNC_GRP(15, 2),
+> +	AMD_PINCTRL_FUNC_GRP(15, 3),
+> +	AMD_PINCTRL_FUNC_GRP(16, 0),
+> +	AMD_PINCTRL_FUNC_GRP(16, 1),
+> +	AMD_PINCTRL_FUNC_GRP(16, 2),
+> +	AMD_PINCTRL_FUNC_GRP(16, 3),
+> +	AMD_PINCTRL_FUNC_GRP(17, 0),
+> +	AMD_PINCTRL_FUNC_GRP(17, 1),
+> +	AMD_PINCTRL_FUNC_GRP(17, 2),
+> +	AMD_PINCTRL_FUNC_GRP(17, 3),
+> +	AMD_PINCTRL_FUNC_GRP(18, 0),
+> +	AMD_PINCTRL_FUNC_GRP(18, 1),
+> +	AMD_PINCTRL_FUNC_GRP(18, 2),
+> +	AMD_PINCTRL_FUNC_GRP(18, 3),
+> +	AMD_PINCTRL_FUNC_GRP(19, 0),
+> +	AMD_PINCTRL_FUNC_GRP(19, 1),
+> +	AMD_PINCTRL_FUNC_GRP(19, 2),
+> +	AMD_PINCTRL_FUNC_GRP(19, 3),
+> +	AMD_PINCTRL_FUNC_GRP(20, 0),
+> +	AMD_PINCTRL_FUNC_GRP(20, 1),
+> +	AMD_PINCTRL_FUNC_GRP(20, 2),
+> +	AMD_PINCTRL_FUNC_GRP(20, 3),
+> +	AMD_PINCTRL_FUNC_GRP(21, 0),
+> +	AMD_PINCTRL_FUNC_GRP(21, 1),
+> +	AMD_PINCTRL_FUNC_GRP(21, 2),
+> +	AMD_PINCTRL_FUNC_GRP(21, 3),
+> +	AMD_PINCTRL_FUNC_GRP(22, 0),
+> +	AMD_PINCTRL_FUNC_GRP(22, 1),
+> +	AMD_PINCTRL_FUNC_GRP(22, 2),
+> +	AMD_PINCTRL_FUNC_GRP(22, 3),
+> +	AMD_PINCTRL_FUNC_GRP(23, 0),
+> +	AMD_PINCTRL_FUNC_GRP(23, 1),
+> +	AMD_PINCTRL_FUNC_GRP(23, 2),
+> +	AMD_PINCTRL_FUNC_GRP(23, 3),
+> +	AMD_PINCTRL_FUNC_GRP(24, 0),
+> +	AMD_PINCTRL_FUNC_GRP(24, 1),
+> +	AMD_PINCTRL_FUNC_GRP(24, 2),
+> +	AMD_PINCTRL_FUNC_GRP(24, 3),
+> +	AMD_PINCTRL_FUNC_GRP(25, 0),
+> +	AMD_PINCTRL_FUNC_GRP(25, 1),
+> +	AMD_PINCTRL_FUNC_GRP(25, 2),
+> +	AMD_PINCTRL_FUNC_GRP(25, 3),
+> +	AMD_PINCTRL_FUNC_GRP(26, 0),
+> +	AMD_PINCTRL_FUNC_GRP(26, 1),
+> +	AMD_PINCTRL_FUNC_GRP(26, 2),
+> +	AMD_PINCTRL_FUNC_GRP(26, 3),
+> +	AMD_PINCTRL_FUNC_GRP(27, 0),
+> +	AMD_PINCTRL_FUNC_GRP(27, 1),
+> +	AMD_PINCTRL_FUNC_GRP(27, 2),
+> +	AMD_PINCTRL_FUNC_GRP(27, 3),
+> +	AMD_PINCTRL_FUNC_GRP(28, 0),
+> +	AMD_PINCTRL_FUNC_GRP(28, 1),
+> +	AMD_PINCTRL_FUNC_GRP(28, 2),
+> +	AMD_PINCTRL_FUNC_GRP(28, 3),
+> +	AMD_PINCTRL_FUNC_GRP(29, 0),
+> +	AMD_PINCTRL_FUNC_GRP(29, 1),
+> +	AMD_PINCTRL_FUNC_GRP(29, 2),
+> +	AMD_PINCTRL_FUNC_GRP(29, 3),
+> +	AMD_PINCTRL_FUNC_GRP(30, 0),
+> +	AMD_PINCTRL_FUNC_GRP(30, 1),
+> +	AMD_PINCTRL_FUNC_GRP(30, 2),
+> +	AMD_PINCTRL_FUNC_GRP(30, 3),
+> +	AMD_PINCTRL_FUNC_GRP(31, 0),
+> +	AMD_PINCTRL_FUNC_GRP(31, 1),
+> +	AMD_PINCTRL_FUNC_GRP(31, 2),
+> +	AMD_PINCTRL_FUNC_GRP(31, 3),
+> +	AMD_PINCTRL_FUNC_GRP(32, 0),
+> +	AMD_PINCTRL_FUNC_GRP(32, 1),
+> +	AMD_PINCTRL_FUNC_GRP(32, 2),
+> +	AMD_PINCTRL_FUNC_GRP(32, 3),
+> +	AMD_PINCTRL_FUNC_GRP(33, 0),
+> +	AMD_PINCTRL_FUNC_GRP(33, 1),
+> +	AMD_PINCTRL_FUNC_GRP(33, 2),
+> +	AMD_PINCTRL_FUNC_GRP(33, 3),
+> +	AMD_PINCTRL_FUNC_GRP(34, 0),
+> +	AMD_PINCTRL_FUNC_GRP(34, 1),
+> +	AMD_PINCTRL_FUNC_GRP(34, 2),
+> +	AMD_PINCTRL_FUNC_GRP(34, 3),
+> +	AMD_PINCTRL_FUNC_GRP(35, 0),
+> +	AMD_PINCTRL_FUNC_GRP(35, 1),
+> +	AMD_PINCTRL_FUNC_GRP(35, 2),
+> +	AMD_PINCTRL_FUNC_GRP(35, 3),
+> +	AMD_PINCTRL_FUNC_GRP(36, 0),
+> +	AMD_PINCTRL_FUNC_GRP(36, 1),
+> +	AMD_PINCTRL_FUNC_GRP(36, 2),
+> +	AMD_PINCTRL_FUNC_GRP(36, 3),
+> +	AMD_PINCTRL_FUNC_GRP(37, 0),
+> +	AMD_PINCTRL_FUNC_GRP(37, 1),
+> +	AMD_PINCTRL_FUNC_GRP(37, 2),
+> +	AMD_PINCTRL_FUNC_GRP(37, 3),
+> +	AMD_PINCTRL_FUNC_GRP(38, 0),
+> +	AMD_PINCTRL_FUNC_GRP(38, 1),
+> +	AMD_PINCTRL_FUNC_GRP(38, 2),
+> +	AMD_PINCTRL_FUNC_GRP(38, 3),
+> +	AMD_PINCTRL_FUNC_GRP(39, 0),
+> +	AMD_PINCTRL_FUNC_GRP(39, 1),
+> +	AMD_PINCTRL_FUNC_GRP(39, 2),
+> +	AMD_PINCTRL_FUNC_GRP(39, 3),
+> +	AMD_PINCTRL_FUNC_GRP(40, 0),
+> +	AMD_PINCTRL_FUNC_GRP(40, 1),
+> +	AMD_PINCTRL_FUNC_GRP(40, 2),
+> +	AMD_PINCTRL_FUNC_GRP(40, 3),
+> +	AMD_PINCTRL_FUNC_GRP(41, 0),
+> +	AMD_PINCTRL_FUNC_GRP(41, 1),
+> +	AMD_PINCTRL_FUNC_GRP(41, 2),
+> +	AMD_PINCTRL_FUNC_GRP(41, 3),
+> +	AMD_PINCTRL_FUNC_GRP(42, 0),
+> +	AMD_PINCTRL_FUNC_GRP(42, 1),
+> +	AMD_PINCTRL_FUNC_GRP(42, 2),
+> +	AMD_PINCTRL_FUNC_GRP(42, 3),
+> +	AMD_PINCTRL_FUNC_GRP(43, 0),
+> +	AMD_PINCTRL_FUNC_GRP(43, 1),
+> +	AMD_PINCTRL_FUNC_GRP(43, 2),
+> +	AMD_PINCTRL_FUNC_GRP(43, 3),
+> +	AMD_PINCTRL_FUNC_GRP(44, 0),
+> +	AMD_PINCTRL_FUNC_GRP(44, 1),
+> +	AMD_PINCTRL_FUNC_GRP(44, 2),
+> +	AMD_PINCTRL_FUNC_GRP(44, 3),
+> +	AMD_PINCTRL_FUNC_GRP(45, 0),
+> +	AMD_PINCTRL_FUNC_GRP(45, 1),
+> +	AMD_PINCTRL_FUNC_GRP(45, 2),
+> +	AMD_PINCTRL_FUNC_GRP(45, 3),
+> +	AMD_PINCTRL_FUNC_GRP(46, 0),
+> +	AMD_PINCTRL_FUNC_GRP(46, 1),
+> +	AMD_PINCTRL_FUNC_GRP(46, 2),
+> +	AMD_PINCTRL_FUNC_GRP(46, 3),
+> +	AMD_PINCTRL_FUNC_GRP(47, 0),
+> +	AMD_PINCTRL_FUNC_GRP(47, 1),
+> +	AMD_PINCTRL_FUNC_GRP(47, 2),
+> +	AMD_PINCTRL_FUNC_GRP(47, 3),
+> +	AMD_PINCTRL_FUNC_GRP(48, 0),
+> +	AMD_PINCTRL_FUNC_GRP(48, 1),
+> +	AMD_PINCTRL_FUNC_GRP(48, 2),
+> +	AMD_PINCTRL_FUNC_GRP(48, 3),
+> +	AMD_PINCTRL_FUNC_GRP(49, 0),
+> +	AMD_PINCTRL_FUNC_GRP(49, 1),
+> +	AMD_PINCTRL_FUNC_GRP(49, 2),
+> +	AMD_PINCTRL_FUNC_GRP(49, 3),
+> +	AMD_PINCTRL_FUNC_GRP(50, 0),
+> +	AMD_PINCTRL_FUNC_GRP(50, 1),
+> +	AMD_PINCTRL_FUNC_GRP(50, 2),
+> +	AMD_PINCTRL_FUNC_GRP(50, 3),
+> +	AMD_PINCTRL_FUNC_GRP(51, 0),
+> +	AMD_PINCTRL_FUNC_GRP(51, 1),
+> +	AMD_PINCTRL_FUNC_GRP(51, 2),
+> +	AMD_PINCTRL_FUNC_GRP(51, 3),
+> +	AMD_PINCTRL_FUNC_GRP(52, 0),
+> +	AMD_PINCTRL_FUNC_GRP(52, 1),
+> +	AMD_PINCTRL_FUNC_GRP(52, 2),
+> +	AMD_PINCTRL_FUNC_GRP(52, 3),
+> +	AMD_PINCTRL_FUNC_GRP(53, 0),
+> +	AMD_PINCTRL_FUNC_GRP(53, 1),
+> +	AMD_PINCTRL_FUNC_GRP(53, 2),
+> +	AMD_PINCTRL_FUNC_GRP(53, 3),
+> +	AMD_PINCTRL_FUNC_GRP(54, 0),
+> +	AMD_PINCTRL_FUNC_GRP(54, 1),
+> +	AMD_PINCTRL_FUNC_GRP(54, 2),
+> +	AMD_PINCTRL_FUNC_GRP(54, 3),
+> +	AMD_PINCTRL_FUNC_GRP(55, 0),
+> +	AMD_PINCTRL_FUNC_GRP(55, 1),
+> +	AMD_PINCTRL_FUNC_GRP(55, 2),
+> +	AMD_PINCTRL_FUNC_GRP(55, 3),
+> +	AMD_PINCTRL_FUNC_GRP(56, 0),
+> +	AMD_PINCTRL_FUNC_GRP(56, 1),
+> +	AMD_PINCTRL_FUNC_GRP(56, 2),
+> +	AMD_PINCTRL_FUNC_GRP(56, 3),
+> +	AMD_PINCTRL_FUNC_GRP(57, 0),
+> +	AMD_PINCTRL_FUNC_GRP(57, 1),
+> +	AMD_PINCTRL_FUNC_GRP(57, 2),
+> +	AMD_PINCTRL_FUNC_GRP(57, 3),
+> +	AMD_PINCTRL_FUNC_GRP(58, 0),
+> +	AMD_PINCTRL_FUNC_GRP(58, 1),
+> +	AMD_PINCTRL_FUNC_GRP(58, 2),
+> +	AMD_PINCTRL_FUNC_GRP(58, 3),
+> +	AMD_PINCTRL_FUNC_GRP(59, 0),
+> +	AMD_PINCTRL_FUNC_GRP(59, 1),
+> +	AMD_PINCTRL_FUNC_GRP(59, 2),
+> +	AMD_PINCTRL_FUNC_GRP(59, 3),
+> +	AMD_PINCTRL_FUNC_GRP(60, 0),
+> +	AMD_PINCTRL_FUNC_GRP(60, 1),
+> +	AMD_PINCTRL_FUNC_GRP(60, 2),
+> +	AMD_PINCTRL_FUNC_GRP(60, 3),
+> +	AMD_PINCTRL_FUNC_GRP(61, 0),
+> +	AMD_PINCTRL_FUNC_GRP(61, 1),
+> +	AMD_PINCTRL_FUNC_GRP(61, 2),
+> +	AMD_PINCTRL_FUNC_GRP(61, 3),
+> +	AMD_PINCTRL_FUNC_GRP(62, 0),
+> +	AMD_PINCTRL_FUNC_GRP(62, 1),
+> +	AMD_PINCTRL_FUNC_GRP(62, 2),
+> +	AMD_PINCTRL_FUNC_GRP(62, 3),
+> +	AMD_PINCTRL_FUNC_GRP(64, 0),
+> +	AMD_PINCTRL_FUNC_GRP(64, 1),
+> +	AMD_PINCTRL_FUNC_GRP(64, 2),
+> +	AMD_PINCTRL_FUNC_GRP(64, 3),
+> +	AMD_PINCTRL_FUNC_GRP(65, 0),
+> +	AMD_PINCTRL_FUNC_GRP(65, 1),
+> +	AMD_PINCTRL_FUNC_GRP(65, 2),
+> +	AMD_PINCTRL_FUNC_GRP(65, 3),
+> +	AMD_PINCTRL_FUNC_GRP(66, 0),
+> +	AMD_PINCTRL_FUNC_GRP(66, 1),
+> +	AMD_PINCTRL_FUNC_GRP(66, 2),
+> +	AMD_PINCTRL_FUNC_GRP(66, 3),
+> +	AMD_PINCTRL_FUNC_GRP(67, 0),
+> +	AMD_PINCTRL_FUNC_GRP(67, 1),
+> +	AMD_PINCTRL_FUNC_GRP(67, 2),
+> +	AMD_PINCTRL_FUNC_GRP(67, 3),
+> +	AMD_PINCTRL_FUNC_GRP(68, 0),
+> +	AMD_PINCTRL_FUNC_GRP(68, 1),
+> +	AMD_PINCTRL_FUNC_GRP(68, 2),
+> +	AMD_PINCTRL_FUNC_GRP(68, 3),
+> +	AMD_PINCTRL_FUNC_GRP(69, 0),
+> +	AMD_PINCTRL_FUNC_GRP(69, 1),
+> +	AMD_PINCTRL_FUNC_GRP(69, 2),
+> +	AMD_PINCTRL_FUNC_GRP(69, 3),
+> +	AMD_PINCTRL_FUNC_GRP(70, 0),
+> +	AMD_PINCTRL_FUNC_GRP(70, 1),
+> +	AMD_PINCTRL_FUNC_GRP(70, 2),
+> +	AMD_PINCTRL_FUNC_GRP(70, 3),
+> +	AMD_PINCTRL_FUNC_GRP(71, 0),
+> +	AMD_PINCTRL_FUNC_GRP(71, 1),
+> +	AMD_PINCTRL_FUNC_GRP(71, 2),
+> +	AMD_PINCTRL_FUNC_GRP(71, 3),
+> +	AMD_PINCTRL_FUNC_GRP(72, 0),
+> +	AMD_PINCTRL_FUNC_GRP(72, 1),
+> +	AMD_PINCTRL_FUNC_GRP(72, 2),
+> +	AMD_PINCTRL_FUNC_GRP(72, 3),
+> +	AMD_PINCTRL_FUNC_GRP(73, 0),
+> +	AMD_PINCTRL_FUNC_GRP(73, 1),
+> +	AMD_PINCTRL_FUNC_GRP(73, 2),
+> +	AMD_PINCTRL_FUNC_GRP(73, 3),
+> +	AMD_PINCTRL_FUNC_GRP(74, 0),
+> +	AMD_PINCTRL_FUNC_GRP(74, 1),
+> +	AMD_PINCTRL_FUNC_GRP(74, 2),
+> +	AMD_PINCTRL_FUNC_GRP(74, 3),
+> +	AMD_PINCTRL_FUNC_GRP(75, 0),
+> +	AMD_PINCTRL_FUNC_GRP(75, 1),
+> +	AMD_PINCTRL_FUNC_GRP(75, 2),
+> +	AMD_PINCTRL_FUNC_GRP(75, 3),
+> +	AMD_PINCTRL_FUNC_GRP(76, 0),
+> +	AMD_PINCTRL_FUNC_GRP(76, 1),
+> +	AMD_PINCTRL_FUNC_GRP(76, 2),
+> +	AMD_PINCTRL_FUNC_GRP(76, 3),
+> +	AMD_PINCTRL_FUNC_GRP(77, 0),
+> +	AMD_PINCTRL_FUNC_GRP(77, 1),
+> +	AMD_PINCTRL_FUNC_GRP(77, 2),
+> +	AMD_PINCTRL_FUNC_GRP(77, 3),
+> +	AMD_PINCTRL_FUNC_GRP(78, 0),
+> +	AMD_PINCTRL_FUNC_GRP(78, 1),
+> +	AMD_PINCTRL_FUNC_GRP(78, 2),
+> +	AMD_PINCTRL_FUNC_GRP(78, 3),
+> +	AMD_PINCTRL_FUNC_GRP(79, 0),
+> +	AMD_PINCTRL_FUNC_GRP(79, 1),
+> +	AMD_PINCTRL_FUNC_GRP(79, 2),
+> +	AMD_PINCTRL_FUNC_GRP(79, 3),
+> +	AMD_PINCTRL_FUNC_GRP(80, 0),
+> +	AMD_PINCTRL_FUNC_GRP(80, 1),
+> +	AMD_PINCTRL_FUNC_GRP(80, 2),
+> +	AMD_PINCTRL_FUNC_GRP(80, 3),
+> +	AMD_PINCTRL_FUNC_GRP(81, 0),
+> +	AMD_PINCTRL_FUNC_GRP(81, 1),
+> +	AMD_PINCTRL_FUNC_GRP(81, 2),
+> +	AMD_PINCTRL_FUNC_GRP(81, 3),
+> +	AMD_PINCTRL_FUNC_GRP(82, 0),
+> +	AMD_PINCTRL_FUNC_GRP(82, 1),
+> +	AMD_PINCTRL_FUNC_GRP(82, 2),
+> +	AMD_PINCTRL_FUNC_GRP(82, 3),
+> +	AMD_PINCTRL_FUNC_GRP(83, 0),
+> +	AMD_PINCTRL_FUNC_GRP(83, 1),
+> +	AMD_PINCTRL_FUNC_GRP(83, 2),
+> +	AMD_PINCTRL_FUNC_GRP(83, 3),
+> +	AMD_PINCTRL_FUNC_GRP(84, 0),
+> +	AMD_PINCTRL_FUNC_GRP(84, 1),
+> +	AMD_PINCTRL_FUNC_GRP(84, 2),
+> +	AMD_PINCTRL_FUNC_GRP(84, 3),
+> +	AMD_PINCTRL_FUNC_GRP(85, 0),
+> +	AMD_PINCTRL_FUNC_GRP(85, 1),
+> +	AMD_PINCTRL_FUNC_GRP(85, 2),
+> +	AMD_PINCTRL_FUNC_GRP(85, 3),
+> +	AMD_PINCTRL_FUNC_GRP(86, 0),
+> +	AMD_PINCTRL_FUNC_GRP(86, 1),
+> +	AMD_PINCTRL_FUNC_GRP(86, 2),
+> +	AMD_PINCTRL_FUNC_GRP(86, 3),
+> +	AMD_PINCTRL_FUNC_GRP(87, 0),
+> +	AMD_PINCTRL_FUNC_GRP(87, 1),
+> +	AMD_PINCTRL_FUNC_GRP(87, 2),
+> +	AMD_PINCTRL_FUNC_GRP(87, 3),
+> +	AMD_PINCTRL_FUNC_GRP(88, 0),
+> +	AMD_PINCTRL_FUNC_GRP(88, 1),
+> +	AMD_PINCTRL_FUNC_GRP(88, 2),
+> +	AMD_PINCTRL_FUNC_GRP(88, 3),
+> +	AMD_PINCTRL_FUNC_GRP(89, 0),
+> +	AMD_PINCTRL_FUNC_GRP(89, 1),
+> +	AMD_PINCTRL_FUNC_GRP(89, 2),
+> +	AMD_PINCTRL_FUNC_GRP(89, 3),
+> +	AMD_PINCTRL_FUNC_GRP(90, 0),
+> +	AMD_PINCTRL_FUNC_GRP(90, 1),
+> +	AMD_PINCTRL_FUNC_GRP(90, 2),
+> +	AMD_PINCTRL_FUNC_GRP(90, 3),
+> +	AMD_PINCTRL_FUNC_GRP(91, 0),
+> +	AMD_PINCTRL_FUNC_GRP(91, 1),
+> +	AMD_PINCTRL_FUNC_GRP(91, 2),
+> +	AMD_PINCTRL_FUNC_GRP(91, 3),
+> +	AMD_PINCTRL_FUNC_GRP(92, 0),
+> +	AMD_PINCTRL_FUNC_GRP(92, 1),
+> +	AMD_PINCTRL_FUNC_GRP(92, 2),
+> +	AMD_PINCTRL_FUNC_GRP(92, 3),
+> +	AMD_PINCTRL_FUNC_GRP(93, 0),
+> +	AMD_PINCTRL_FUNC_GRP(93, 1),
+> +	AMD_PINCTRL_FUNC_GRP(93, 2),
+> +	AMD_PINCTRL_FUNC_GRP(93, 3),
+> +	AMD_PINCTRL_FUNC_GRP(94, 0),
+> +	AMD_PINCTRL_FUNC_GRP(94, 1),
+> +	AMD_PINCTRL_FUNC_GRP(94, 2),
+> +	AMD_PINCTRL_FUNC_GRP(94, 3),
+> +	AMD_PINCTRL_FUNC_GRP(95, 0),
+> +	AMD_PINCTRL_FUNC_GRP(95, 1),
+> +	AMD_PINCTRL_FUNC_GRP(95, 2),
+> +	AMD_PINCTRL_FUNC_GRP(95, 3),
+> +	AMD_PINCTRL_FUNC_GRP(96, 0),
+> +	AMD_PINCTRL_FUNC_GRP(96, 1),
+> +	AMD_PINCTRL_FUNC_GRP(96, 2),
+> +	AMD_PINCTRL_FUNC_GRP(96, 3),
+> +	AMD_PINCTRL_FUNC_GRP(97, 0),
+> +	AMD_PINCTRL_FUNC_GRP(97, 1),
+> +	AMD_PINCTRL_FUNC_GRP(97, 2),
+> +	AMD_PINCTRL_FUNC_GRP(97, 3),
+> +	AMD_PINCTRL_FUNC_GRP(98, 0),
+> +	AMD_PINCTRL_FUNC_GRP(98, 1),
+> +	AMD_PINCTRL_FUNC_GRP(98, 2),
+> +	AMD_PINCTRL_FUNC_GRP(98, 3),
+> +	AMD_PINCTRL_FUNC_GRP(99, 0),
+> +	AMD_PINCTRL_FUNC_GRP(99, 1),
+> +	AMD_PINCTRL_FUNC_GRP(99, 2),
+> +	AMD_PINCTRL_FUNC_GRP(99, 3),
+> +	AMD_PINCTRL_FUNC_GRP(100, 0),
+> +	AMD_PINCTRL_FUNC_GRP(100, 1),
+> +	AMD_PINCTRL_FUNC_GRP(100, 2),
+> +	AMD_PINCTRL_FUNC_GRP(100, 3),
+> +	AMD_PINCTRL_FUNC_GRP(101, 0),
+> +	AMD_PINCTRL_FUNC_GRP(101, 1),
+> +	AMD_PINCTRL_FUNC_GRP(101, 2),
+> +	AMD_PINCTRL_FUNC_GRP(101, 3),
+> +	AMD_PINCTRL_FUNC_GRP(102, 0),
+> +	AMD_PINCTRL_FUNC_GRP(102, 1),
+> +	AMD_PINCTRL_FUNC_GRP(102, 2),
+> +	AMD_PINCTRL_FUNC_GRP(102, 3),
+> +	AMD_PINCTRL_FUNC_GRP(103, 0),
+> +	AMD_PINCTRL_FUNC_GRP(103, 1),
+> +	AMD_PINCTRL_FUNC_GRP(103, 2),
+> +	AMD_PINCTRL_FUNC_GRP(103, 3),
+> +	AMD_PINCTRL_FUNC_GRP(104, 0),
+> +	AMD_PINCTRL_FUNC_GRP(104, 1),
+> +	AMD_PINCTRL_FUNC_GRP(104, 2),
+> +	AMD_PINCTRL_FUNC_GRP(104, 3),
+> +	AMD_PINCTRL_FUNC_GRP(105, 0),
+> +	AMD_PINCTRL_FUNC_GRP(105, 1),
+> +	AMD_PINCTRL_FUNC_GRP(105, 2),
+> +	AMD_PINCTRL_FUNC_GRP(105, 3),
+> +	AMD_PINCTRL_FUNC_GRP(106, 0),
+> +	AMD_PINCTRL_FUNC_GRP(106, 1),
+> +	AMD_PINCTRL_FUNC_GRP(106, 2),
+> +	AMD_PINCTRL_FUNC_GRP(106, 3),
+> +	AMD_PINCTRL_FUNC_GRP(107, 0),
+> +	AMD_PINCTRL_FUNC_GRP(107, 1),
+> +	AMD_PINCTRL_FUNC_GRP(107, 2),
+> +	AMD_PINCTRL_FUNC_GRP(107, 3),
+> +	AMD_PINCTRL_FUNC_GRP(108, 0),
+> +	AMD_PINCTRL_FUNC_GRP(108, 1),
+> +	AMD_PINCTRL_FUNC_GRP(108, 2),
+> +	AMD_PINCTRL_FUNC_GRP(108, 3),
+> +	AMD_PINCTRL_FUNC_GRP(109, 0),
+> +	AMD_PINCTRL_FUNC_GRP(109, 1),
+> +	AMD_PINCTRL_FUNC_GRP(109, 2),
+> +	AMD_PINCTRL_FUNC_GRP(109, 3),
+> +	AMD_PINCTRL_FUNC_GRP(110, 0),
+> +	AMD_PINCTRL_FUNC_GRP(110, 1),
+> +	AMD_PINCTRL_FUNC_GRP(110, 2),
+> +	AMD_PINCTRL_FUNC_GRP(110, 3),
+> +	AMD_PINCTRL_FUNC_GRP(111, 0),
+> +	AMD_PINCTRL_FUNC_GRP(111, 1),
+> +	AMD_PINCTRL_FUNC_GRP(111, 2),
+> +	AMD_PINCTRL_FUNC_GRP(111, 3),
+> +	AMD_PINCTRL_FUNC_GRP(112, 0),
+> +	AMD_PINCTRL_FUNC_GRP(112, 1),
+> +	AMD_PINCTRL_FUNC_GRP(112, 2),
+> +	AMD_PINCTRL_FUNC_GRP(112, 3),
+> +	AMD_PINCTRL_FUNC_GRP(113, 0),
+> +	AMD_PINCTRL_FUNC_GRP(113, 1),
+> +	AMD_PINCTRL_FUNC_GRP(113, 2),
+> +	AMD_PINCTRL_FUNC_GRP(113, 3),
+> +	AMD_PINCTRL_FUNC_GRP(114, 0),
+> +	AMD_PINCTRL_FUNC_GRP(114, 1),
+> +	AMD_PINCTRL_FUNC_GRP(114, 2),
+> +	AMD_PINCTRL_FUNC_GRP(114, 3),
+> +	AMD_PINCTRL_FUNC_GRP(115, 0),
+> +	AMD_PINCTRL_FUNC_GRP(115, 1),
+> +	AMD_PINCTRL_FUNC_GRP(115, 2),
+> +	AMD_PINCTRL_FUNC_GRP(115, 3),
+> +	AMD_PINCTRL_FUNC_GRP(116, 0),
+> +	AMD_PINCTRL_FUNC_GRP(116, 1),
+> +	AMD_PINCTRL_FUNC_GRP(116, 2),
+> +	AMD_PINCTRL_FUNC_GRP(116, 3),
+> +	AMD_PINCTRL_FUNC_GRP(117, 0),
+> +	AMD_PINCTRL_FUNC_GRP(117, 1),
+> +	AMD_PINCTRL_FUNC_GRP(117, 2),
+> +	AMD_PINCTRL_FUNC_GRP(117, 3),
+> +	AMD_PINCTRL_FUNC_GRP(118, 0),
+> +	AMD_PINCTRL_FUNC_GRP(118, 1),
+> +	AMD_PINCTRL_FUNC_GRP(118, 2),
+> +	AMD_PINCTRL_FUNC_GRP(118, 3),
+> +	AMD_PINCTRL_FUNC_GRP(119, 0),
+> +	AMD_PINCTRL_FUNC_GRP(119, 1),
+> +	AMD_PINCTRL_FUNC_GRP(119, 2),
+> +	AMD_PINCTRL_FUNC_GRP(119, 3),
+> +	AMD_PINCTRL_FUNC_GRP(120, 0),
+> +	AMD_PINCTRL_FUNC_GRP(120, 1),
+> +	AMD_PINCTRL_FUNC_GRP(120, 2),
+> +	AMD_PINCTRL_FUNC_GRP(120, 3),
+> +	AMD_PINCTRL_FUNC_GRP(121, 0),
+> +	AMD_PINCTRL_FUNC_GRP(121, 1),
+> +	AMD_PINCTRL_FUNC_GRP(121, 2),
+> +	AMD_PINCTRL_FUNC_GRP(121, 3),
+> +	AMD_PINCTRL_FUNC_GRP(122, 0),
+> +	AMD_PINCTRL_FUNC_GRP(122, 1),
+> +	AMD_PINCTRL_FUNC_GRP(122, 2),
+> +	AMD_PINCTRL_FUNC_GRP(122, 3),
+> +	AMD_PINCTRL_FUNC_GRP(123, 0),
+> +	AMD_PINCTRL_FUNC_GRP(123, 1),
+> +	AMD_PINCTRL_FUNC_GRP(123, 2),
+> +	AMD_PINCTRL_FUNC_GRP(123, 3),
+> +	AMD_PINCTRL_FUNC_GRP(124, 0),
+> +	AMD_PINCTRL_FUNC_GRP(124, 1),
+> +	AMD_PINCTRL_FUNC_GRP(124, 2),
+> +	AMD_PINCTRL_FUNC_GRP(124, 3),
+> +	AMD_PINCTRL_FUNC_GRP(125, 0),
+> +	AMD_PINCTRL_FUNC_GRP(125, 1),
+> +	AMD_PINCTRL_FUNC_GRP(125, 2),
+> +	AMD_PINCTRL_FUNC_GRP(125, 3),
+> +	AMD_PINCTRL_FUNC_GRP(126, 0),
+> +	AMD_PINCTRL_FUNC_GRP(126, 1),
+> +	AMD_PINCTRL_FUNC_GRP(126, 2),
+> +	AMD_PINCTRL_FUNC_GRP(126, 3),
+> +	AMD_PINCTRL_FUNC_GRP(127, 0),
+> +	AMD_PINCTRL_FUNC_GRP(127, 1),
+> +	AMD_PINCTRL_FUNC_GRP(127, 2),
+> +	AMD_PINCTRL_FUNC_GRP(127, 3),
+> +	AMD_PINCTRL_FUNC_GRP(128, 0),
+> +	AMD_PINCTRL_FUNC_GRP(128, 1),
+> +	AMD_PINCTRL_FUNC_GRP(128, 2),
+> +	AMD_PINCTRL_FUNC_GRP(128, 3),
+> +	AMD_PINCTRL_FUNC_GRP(129, 0),
+> +	AMD_PINCTRL_FUNC_GRP(129, 1),
+> +	AMD_PINCTRL_FUNC_GRP(129, 2),
+> +	AMD_PINCTRL_FUNC_GRP(129, 3),
+> +	AMD_PINCTRL_FUNC_GRP(130, 0),
+> +	AMD_PINCTRL_FUNC_GRP(130, 1),
+> +	AMD_PINCTRL_FUNC_GRP(130, 2),
+> +	AMD_PINCTRL_FUNC_GRP(130, 3),
+> +	AMD_PINCTRL_FUNC_GRP(131, 0),
+> +	AMD_PINCTRL_FUNC_GRP(131, 1),
+> +	AMD_PINCTRL_FUNC_GRP(131, 2),
+> +	AMD_PINCTRL_FUNC_GRP(131, 3),
+> +	AMD_PINCTRL_FUNC_GRP(132, 0),
+> +	AMD_PINCTRL_FUNC_GRP(132, 1),
+> +	AMD_PINCTRL_FUNC_GRP(132, 2),
+> +	AMD_PINCTRL_FUNC_GRP(132, 3),
+> +	AMD_PINCTRL_FUNC_GRP(133, 0),
+> +	AMD_PINCTRL_FUNC_GRP(133, 1),
+> +	AMD_PINCTRL_FUNC_GRP(133, 2),
+> +	AMD_PINCTRL_FUNC_GRP(133, 3),
+> +	AMD_PINCTRL_FUNC_GRP(134, 0),
+> +	AMD_PINCTRL_FUNC_GRP(134, 1),
+> +	AMD_PINCTRL_FUNC_GRP(134, 2),
+> +	AMD_PINCTRL_FUNC_GRP(134, 3),
+> +	AMD_PINCTRL_FUNC_GRP(135, 0),
+> +	AMD_PINCTRL_FUNC_GRP(135, 1),
+> +	AMD_PINCTRL_FUNC_GRP(135, 2),
+> +	AMD_PINCTRL_FUNC_GRP(135, 3),
+> +	AMD_PINCTRL_FUNC_GRP(136, 0),
+> +	AMD_PINCTRL_FUNC_GRP(136, 1),
+> +	AMD_PINCTRL_FUNC_GRP(136, 2),
+> +	AMD_PINCTRL_FUNC_GRP(136, 3),
+> +	AMD_PINCTRL_FUNC_GRP(137, 0),
+> +	AMD_PINCTRL_FUNC_GRP(137, 1),
+> +	AMD_PINCTRL_FUNC_GRP(137, 2),
+> +	AMD_PINCTRL_FUNC_GRP(137, 3),
+> +	AMD_PINCTRL_FUNC_GRP(138, 0),
+> +	AMD_PINCTRL_FUNC_GRP(138, 1),
+> +	AMD_PINCTRL_FUNC_GRP(138, 2),
+> +	AMD_PINCTRL_FUNC_GRP(138, 3),
+> +	AMD_PINCTRL_FUNC_GRP(139, 0),
+> +	AMD_PINCTRL_FUNC_GRP(139, 1),
+> +	AMD_PINCTRL_FUNC_GRP(139, 2),
+> +	AMD_PINCTRL_FUNC_GRP(139, 3),
+> +	AMD_PINCTRL_FUNC_GRP(140, 0),
+> +	AMD_PINCTRL_FUNC_GRP(140, 1),
+> +	AMD_PINCTRL_FUNC_GRP(140, 2),
+> +	AMD_PINCTRL_FUNC_GRP(140, 3),
+> +	AMD_PINCTRL_FUNC_GRP(141, 0),
+> +	AMD_PINCTRL_FUNC_GRP(141, 1),
+> +	AMD_PINCTRL_FUNC_GRP(141, 2),
+> +	AMD_PINCTRL_FUNC_GRP(141, 3),
+> +	AMD_PINCTRL_FUNC_GRP(142, 0),
+> +	AMD_PINCTRL_FUNC_GRP(142, 1),
+> +	AMD_PINCTRL_FUNC_GRP(142, 2),
+> +	AMD_PINCTRL_FUNC_GRP(142, 3),
+> +	AMD_PINCTRL_FUNC_GRP(143, 0),
+> +	AMD_PINCTRL_FUNC_GRP(143, 1),
+> +	AMD_PINCTRL_FUNC_GRP(143, 2),
+> +	AMD_PINCTRL_FUNC_GRP(143, 3),
+> +	AMD_PINCTRL_FUNC_GRP(144, 0),
+> +	AMD_PINCTRL_FUNC_GRP(144, 1),
+> +	AMD_PINCTRL_FUNC_GRP(144, 2),
+> +	AMD_PINCTRL_FUNC_GRP(144, 3),
+> +
+>  	PINCTRL_PINGROUP("i2c0", AMD_PINS(145, 146), 2),
+>  	PINCTRL_PINGROUP("i2c1", AMD_PINS(147, 148), 2),
+>  	PINCTRL_PINGROUP("i2c2", AMD_PINS(113, 114), 2),
+> @@ -293,4 +1460,161 @@ static const struct pingroup kerncz_groups[] = {
+>  	PINCTRL_PINGROUP("uart1", AMD_PINS(140, 141, 142, 143, 144), 5),
+>  };
+>  
+> +#define AMD_PMUX_FUNC(_number) {						\
+> +	.name = "iomux_gpio_"#_number,						\
+> +	.groups = {								\
+> +		"IMX_F0_GPIO"#_number, "IMX_F1_GPIO"#_number,			\
+> +		"IMX_F2_GPIO"#_number, "IMX_F3_GPIO"#_number,			\
+> +	},									\
+> +	.index = _number,							\
+> +	.ngroups = NSELECTS,							\
+> +}
+> +
+> +static const struct amd_function pmx_functions[] = {
+> +	AMD_PMUX_FUNC(0),
+> +	AMD_PMUX_FUNC(1),
+> +	AMD_PMUX_FUNC(2),
+> +	AMD_PMUX_FUNC(3),
+> +	AMD_PMUX_FUNC(4),
+> +	AMD_PMUX_FUNC(5),
+> +	AMD_PMUX_FUNC(6),
+> +	AMD_PMUX_FUNC(7),
+> +	AMD_PMUX_FUNC(8),
+> +	AMD_PMUX_FUNC(9),
+> +	AMD_PMUX_FUNC(10),
+> +	AMD_PMUX_FUNC(11),
+> +	AMD_PMUX_FUNC(12),
+> +	AMD_PMUX_FUNC(13),
+> +	AMD_PMUX_FUNC(14),
+> +	AMD_PMUX_FUNC(15),
+> +	AMD_PMUX_FUNC(16),
+> +	AMD_PMUX_FUNC(17),
+> +	AMD_PMUX_FUNC(18),
+> +	AMD_PMUX_FUNC(19),
+> +	AMD_PMUX_FUNC(20),
+> +	AMD_PMUX_FUNC(21),
+> +	AMD_PMUX_FUNC(22),
+> +	AMD_PMUX_FUNC(23),
+> +	AMD_PMUX_FUNC(24),
+> +	AMD_PMUX_FUNC(25),
+> +	AMD_PMUX_FUNC(26),
+> +	AMD_PMUX_FUNC(27),
+> +	AMD_PMUX_FUNC(28),
+> +	AMD_PMUX_FUNC(29),
+> +	AMD_PMUX_FUNC(30),
+> +	AMD_PMUX_FUNC(31),
+> +	AMD_PMUX_FUNC(32),
+> +	AMD_PMUX_FUNC(33),
+> +	AMD_PMUX_FUNC(34),
+> +	AMD_PMUX_FUNC(35),
+> +	AMD_PMUX_FUNC(36),
+> +	AMD_PMUX_FUNC(37),
+> +	AMD_PMUX_FUNC(38),
+> +	AMD_PMUX_FUNC(39),
+> +	AMD_PMUX_FUNC(40),
+> +	AMD_PMUX_FUNC(41),
+> +	AMD_PMUX_FUNC(42),
+> +	AMD_PMUX_FUNC(43),
+> +	AMD_PMUX_FUNC(44),
+> +	AMD_PMUX_FUNC(45),
+> +	AMD_PMUX_FUNC(46),
+> +	AMD_PMUX_FUNC(47),
+> +	AMD_PMUX_FUNC(48),
+> +	AMD_PMUX_FUNC(49),
+> +	AMD_PMUX_FUNC(50),
+> +	AMD_PMUX_FUNC(51),
+> +	AMD_PMUX_FUNC(52),
+> +	AMD_PMUX_FUNC(53),
+> +	AMD_PMUX_FUNC(54),
+> +	AMD_PMUX_FUNC(55),
+> +	AMD_PMUX_FUNC(56),
+> +	AMD_PMUX_FUNC(57),
+> +	AMD_PMUX_FUNC(58),
+> +	AMD_PMUX_FUNC(59),
+> +	AMD_PMUX_FUNC(60),
+> +	AMD_PMUX_FUNC(61),
+> +	AMD_PMUX_FUNC(62),
+> +	AMD_PMUX_FUNC(64),
+> +	AMD_PMUX_FUNC(65),
+> +	AMD_PMUX_FUNC(66),
+> +	AMD_PMUX_FUNC(67),
+> +	AMD_PMUX_FUNC(68),
+> +	AMD_PMUX_FUNC(69),
+> +	AMD_PMUX_FUNC(70),
+> +	AMD_PMUX_FUNC(71),
+> +	AMD_PMUX_FUNC(72),
+> +	AMD_PMUX_FUNC(73),
+> +	AMD_PMUX_FUNC(74),
+> +	AMD_PMUX_FUNC(75),
+> +	AMD_PMUX_FUNC(76),
+> +	AMD_PMUX_FUNC(77),
+> +	AMD_PMUX_FUNC(78),
+> +	AMD_PMUX_FUNC(79),
+> +	AMD_PMUX_FUNC(80),
+> +	AMD_PMUX_FUNC(81),
+> +	AMD_PMUX_FUNC(82),
+> +	AMD_PMUX_FUNC(83),
+> +	AMD_PMUX_FUNC(84),
+> +	AMD_PMUX_FUNC(85),
+> +	AMD_PMUX_FUNC(86),
+> +	AMD_PMUX_FUNC(87),
+> +	AMD_PMUX_FUNC(88),
+> +	AMD_PMUX_FUNC(89),
+> +	AMD_PMUX_FUNC(90),
+> +	AMD_PMUX_FUNC(91),
+> +	AMD_PMUX_FUNC(92),
+> +	AMD_PMUX_FUNC(93),
+> +	AMD_PMUX_FUNC(94),
+> +	AMD_PMUX_FUNC(95),
+> +	AMD_PMUX_FUNC(96),
+> +	AMD_PMUX_FUNC(97),
+> +	AMD_PMUX_FUNC(98),
+> +	AMD_PMUX_FUNC(99),
+> +	AMD_PMUX_FUNC(100),
+> +	AMD_PMUX_FUNC(101),
+> +	AMD_PMUX_FUNC(102),
+> +	AMD_PMUX_FUNC(103),
+> +	AMD_PMUX_FUNC(104),
+> +	AMD_PMUX_FUNC(105),
+> +	AMD_PMUX_FUNC(106),
+> +	AMD_PMUX_FUNC(107),
+> +	AMD_PMUX_FUNC(108),
+> +	AMD_PMUX_FUNC(109),
+> +	AMD_PMUX_FUNC(110),
+> +	AMD_PMUX_FUNC(111),
+> +	AMD_PMUX_FUNC(112),
+> +	AMD_PMUX_FUNC(113),
+> +	AMD_PMUX_FUNC(114),
+> +	AMD_PMUX_FUNC(115),
+> +	AMD_PMUX_FUNC(116),
+> +	AMD_PMUX_FUNC(117),
+> +	AMD_PMUX_FUNC(118),
+> +	AMD_PMUX_FUNC(119),
+> +	AMD_PMUX_FUNC(120),
+> +	AMD_PMUX_FUNC(121),
+> +	AMD_PMUX_FUNC(122),
+> +	AMD_PMUX_FUNC(123),
+> +	AMD_PMUX_FUNC(124),
+> +	AMD_PMUX_FUNC(125),
+> +	AMD_PMUX_FUNC(126),
+> +	AMD_PMUX_FUNC(127),
+> +	AMD_PMUX_FUNC(128),
+> +	AMD_PMUX_FUNC(129),
+> +	AMD_PMUX_FUNC(130),
+> +	AMD_PMUX_FUNC(131),
+> +	AMD_PMUX_FUNC(132),
+> +	AMD_PMUX_FUNC(133),
+> +	AMD_PMUX_FUNC(134),
+> +	AMD_PMUX_FUNC(135),
+> +	AMD_PMUX_FUNC(136),
+> +	AMD_PMUX_FUNC(137),
+> +	AMD_PMUX_FUNC(138),
+> +	AMD_PMUX_FUNC(139),
+> +	AMD_PMUX_FUNC(140),
+> +	AMD_PMUX_FUNC(141),
+> +	AMD_PMUX_FUNC(142),
+> +	AMD_PMUX_FUNC(143),
+> +	AMD_PMUX_FUNC(144),
+> +};
+> +
+>  #endif
 > -- 
 > 2.25.1
 > 
