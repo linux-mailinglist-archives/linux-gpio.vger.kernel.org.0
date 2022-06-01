@@ -2,55 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E0C853A9A5
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 17:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFC8F53A9D6
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jun 2022 17:17:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354813AbiFAPHB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jun 2022 11:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50198 "EHLO
+        id S1354999AbiFAPRJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jun 2022 11:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354984AbiFAPFA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 11:05:00 -0400
+        with ESMTP id S1352340AbiFAPRJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jun 2022 11:17:09 -0400
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372026D1B6;
-        Wed,  1 Jun 2022 08:04:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF74996A4;
+        Wed,  1 Jun 2022 08:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654095898; x=1685631898;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T6XEJZohHf7H/NKgnDJ4SbAbnK0kXUfU/PCHbeir4ak=;
-  b=RERM6KCYKGBNMJOOkImg+kg3F74jL27ZwfVuYIZuQohrirH9c+AQXHnS
-   ngjvxalKTy9a2W9MWheyIPXH4rUyqzCxGa/NXiQIcmhmhILmPyPbYv6w9
-   52hgUvUqhPNZM4SE2laXliZFIKcNfbTjFp49ZEcdvYEMUgFjMlFnPxiAC
-   +OjSwmD/DSJNskaRgb9+JXZTREE9+Qx3ViHFzA+WchYqCJqtJnmC5/Vfy
-   +wvge3JtlcyXnZ/nNibNgwsGsurKZtvnTmLRl7g9CxPMHsFzM+mkIaJn6
-   mTzj3xSM5GV5kT0VBRToPB121kUiM0a1Z1BERblSRpfb10leOOotfe8kA
+  t=1654096628; x=1685632628;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZxuQEmdkKs/HEZX6cDHYykMxogzdF5y087a9G86axjU=;
+  b=EOgXfalKaZvsW1C/iZG99z2hSZFv4dILN1WUzsZFli44KiFlomXWQlbD
+   bUj5UvAWI6nII5wA7YkJ84Gn/C3P0UqEfZo8UXpHT3OMmx5+6hXhBvZi8
+   Sm5VC/0CYG0n32jQUVW5JSCrhyhcJQJClDmGf1DW7xrfgvuVIhUxyAAoc
+   esFkNkT18E5DjVImnvtib0FFZdnQGzr2XN89rNpM9rQp1kTjQnmoGzOQn
+   o258CsZy5rZHFOLyM2Pqj1IENjPy7K8b6eVzjlIgXUv26VyV8aIZo9Myj
+   k2+s/Yc2dAYFdRE59udLn59U66NnEw0ObvHr5xnKo3/F/nhTNPLBVQ+eU
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="263255304"
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="263259923"
 X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="263255304"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 08:04:49 -0700
+   d="scan'208";a="263259923"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 08:17:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="680138631"
+   d="scan'208";a="720826784"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2022 08:04:46 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 01 Jun 2022 08:17:05 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0670A9A9; Wed,  1 Jun 2022 18:04:48 +0300 (EEST)
+        id CF962F8; Wed,  1 Jun 2022 18:17:07 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 3/3] gpio: crystalcove: Join function declarations and long lines
-Date:   Wed,  1 Jun 2022 18:04:46 +0300
-Message-Id: <20220601150446.25866-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] gpio: merrifield: make irq_chip immutable
+Date:   Wed,  1 Jun 2022 18:17:07 +0300
+Message-Id: <20220601151707.46493-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220601150446.25866-1-andriy.shevchenko@linux.intel.com>
-References: <20220601150446.25866-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -63,87 +61,83 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is no more hard limit of 80 characters for long lines, so
-join a few of them for better readability.
+Since recently, the kernel is nagging about mutable irq_chips:
+
+   "not an immutable chip, please consider fixing it!"
+
+Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+helper functions and call the appropriate gpiolib functions.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpio-crystalcove.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-merrifield.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
-index d4d01e734e22..e21badc10ab4 100644
---- a/drivers/gpio/gpio-crystalcove.c
-+++ b/drivers/gpio/gpio-crystalcove.c
-@@ -111,8 +111,7 @@ static inline int to_reg(int gpio, enum ctrl_register reg_type)
- 	return reg + gpio % 8;
+diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifield.c
+index f3d1baeacbe9..72ac09a59702 100644
+--- a/drivers/gpio/gpio-merrifield.c
++++ b/drivers/gpio/gpio-merrifield.c
+@@ -220,10 +220,8 @@ static void mrfld_irq_ack(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&priv->lock, flags);
  }
  
--static void crystalcove_update_irq_mask(struct crystalcove_gpio *cg,
--					int gpio)
-+static void crystalcove_update_irq_mask(struct crystalcove_gpio *cg, int gpio)
+-static void mrfld_irq_unmask_mask(struct irq_data *d, bool unmask)
++static void mrfld_irq_unmask_mask(struct mrfld_gpio *priv, u32 gpio, bool unmask)
  {
- 	u8 mirqs0 = gpio < 8 ? MGPIO0IRQS0 : MGPIO1IRQS0;
- 	int mask = BIT(gpio % 8);
-@@ -141,8 +140,7 @@ static int crystalcove_gpio_dir_in(struct gpio_chip *chip, unsigned int gpio)
- 	return regmap_write(cg->regmap, reg, CTLO_INPUT_SET);
+-	struct mrfld_gpio *priv = irq_data_get_irq_chip_data(d);
+-	u32 gpio = irqd_to_hwirq(d);
+ 	void __iomem *gimr = gpio_reg(&priv->chip, gpio, GIMR);
+ 	unsigned long flags;
+ 	u32 value;
+@@ -241,12 +239,20 @@ static void mrfld_irq_unmask_mask(struct irq_data *d, bool unmask)
+ 
+ static void mrfld_irq_mask(struct irq_data *d)
+ {
+-	mrfld_irq_unmask_mask(d, false);
++	struct mrfld_gpio *priv = irq_data_get_irq_chip_data(d);
++	u32 gpio = irqd_to_hwirq(d);
++
++	mrfld_irq_unmask_mask(priv, gpio, false);
++	gpiochip_disable_irq(&priv->chip, gpio);
  }
  
--static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned int gpio,
--				    int value)
-+static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned int gpio, int value)
+ static void mrfld_irq_unmask(struct irq_data *d)
  {
- 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
- 	int reg = to_reg(gpio, CTRL_OUT);
-@@ -169,8 +167,7 @@ static int crystalcove_gpio_get(struct gpio_chip *chip, unsigned int gpio)
- 	return val & 0x1;
+-	mrfld_irq_unmask_mask(d, true);
++	struct mrfld_gpio *priv = irq_data_get_irq_chip_data(d);
++	u32 gpio = irqd_to_hwirq(d);
++
++	gpiochip_enable_irq(&priv->chip, gpio);
++	mrfld_irq_unmask_mask(priv, gpio, true);
  }
  
--static void crystalcove_gpio_set(struct gpio_chip *chip,
--				 unsigned int gpio, int value)
-+static void crystalcove_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
- {
- 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
- 	int reg = to_reg(gpio, CTRL_OUT);
-@@ -186,8 +183,7 @@ static void crystalcove_gpio_set(struct gpio_chip *chip,
- 
- static int crystalcove_irq_type(struct irq_data *data, unsigned int type)
- {
--	struct crystalcove_gpio *cg =
--		gpiochip_get_data(irq_data_get_irq_chip_data(data));
-+	struct crystalcove_gpio *cg = gpiochip_get_data(irq_data_get_irq_chip_data(data));
- 	irq_hw_number_t hwirq = irqd_to_hwirq(data);
- 
- 	if (hwirq >= CRYSTALCOVE_GPIO_NUM)
-@@ -217,16 +213,14 @@ static int crystalcove_irq_type(struct irq_data *data, unsigned int type)
- 
- static void crystalcove_bus_lock(struct irq_data *data)
- {
--	struct crystalcove_gpio *cg =
--		gpiochip_get_data(irq_data_get_irq_chip_data(data));
-+	struct crystalcove_gpio *cg = gpiochip_get_data(irq_data_get_irq_chip_data(data));
- 
- 	mutex_lock(&cg->buslock);
+ static int mrfld_irq_set_type(struct irq_data *d, unsigned int type)
+@@ -329,13 +335,15 @@ static int mrfld_irq_set_wake(struct irq_data *d, unsigned int on)
+ 	return 0;
  }
  
- static void crystalcove_bus_sync_unlock(struct irq_data *data)
- {
--	struct crystalcove_gpio *cg =
--		gpiochip_get_data(irq_data_get_irq_chip_data(data));
-+	struct crystalcove_gpio *cg = gpiochip_get_data(irq_data_get_irq_chip_data(data));
- 	irq_hw_number_t hwirq = irqd_to_hwirq(data);
+-static struct irq_chip mrfld_irqchip = {
++static const struct irq_chip mrfld_irqchip = {
+ 	.name		= "gpio-merrifield",
+ 	.irq_ack	= mrfld_irq_ack,
+ 	.irq_mask	= mrfld_irq_mask,
+ 	.irq_unmask	= mrfld_irq_unmask,
+ 	.irq_set_type	= mrfld_irq_set_type,
+ 	.irq_set_wake	= mrfld_irq_set_wake,
++	.flags		= IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
  
- 	if (cg->update & UPDATE_IRQ_TYPE)
-@@ -302,8 +296,7 @@ static irqreturn_t crystalcove_gpio_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
+ static void mrfld_irq_handler(struct irq_desc *desc)
+@@ -482,7 +490,7 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 		return retval;
  
--static void crystalcove_gpio_dbg_show(struct seq_file *s,
--				      struct gpio_chip *chip)
-+static void crystalcove_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- {
- 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
- 	int gpio, offset;
+ 	girq = &priv->chip.irq;
+-	girq->chip = &mrfld_irqchip;
++	gpio_irq_chip_set_chip(girq, &mrfld_irqchip);
+ 	girq->init_hw = mrfld_irq_init_hw;
+ 	girq->parent_handler = mrfld_irq_handler;
+ 	girq->num_parents = 1;
 -- 
 2.35.1
 
