@@ -2,45 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E514853B45A
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jun 2022 09:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF50953B7B8
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jun 2022 13:26:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231760AbiFBHb6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Jun 2022 03:31:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57040 "EHLO
+        id S234125AbiFBL0L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Jun 2022 07:26:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231339AbiFBHb5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Jun 2022 03:31:57 -0400
-Received: from m12-12.163.com (m12-12.163.com [220.181.12.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2873910BC
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Jun 2022 00:31:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=Tv54K64KAS47W0fZu8
-        ABJ1rNTevhTFrE+FBMX/8VZkQ=; b=O5mmA9LF4+4+hUkTIF84QIiW6FpRZ0ExaI
-        8pxubX6mXmNS1cZjcEeARMNmrjNsOhRXQuXhW2sE8Q61vRkD/2Rmoit4GKi4zzv1
-        OgWr2Y6kWTzVivMApOuDKoJ5ZwjM1sORKvVniMaykMBZmOORGS9Hn9Ac7DjKDVrj
-        K4WxrSXS8=
-Received: from localhost.localdomain (unknown [202.112.113.212])
-        by smtp8 (Coremail) with SMTP id DMCowAA3th4bZ5hijKu5Fg--.52368S4;
-        Thu, 02 Jun 2022 15:30:46 +0800 (CST)
-From:   Yuanjun Gong <ruc_gongyuanjun@163.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Yuanjun Gong <ruc_gongyuanjun@163.com>
-Subject: [PATCH 1/1] pinctrl/ar91: fix a memleak in at91_dt_node_to_map
-Date:   Thu,  2 Jun 2022 15:30:33 +0800
-Message-Id: <20220602073033.8385-1-ruc_gongyuanjun@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: DMCowAA3th4bZ5hijKu5Fg--.52368S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw45CF4fXr1xXFWUWr1ftFb_yoW8GFWUpa
-        n3GF13AF48GrsxWF9rKayqqFy3Ga1xJ3yUWayjg3s3XF15JF1kXF1UGFWUtFZ0kFZ3JF1S
-        93yqyFy7u3yUGFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUjjgcUUUUU=
-X-Originating-IP: [202.112.113.212]
-X-CM-SenderInfo: 5uxfsw5rqj53pdqm30i6rwjhhfrp/xtbB0AUU5WEsqyef-gABsF
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        with ESMTP id S231266AbiFBL0K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Jun 2022 07:26:10 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D1F26D368;
+        Thu,  2 Jun 2022 04:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654169169; x=1685705169;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/wJRKIbC3EFh/krWyBfZNPgJelfCQhMivFD9CA8TVK8=;
+  b=SjxWjmCj51Xvouzun2sMhgwOFB3BAry2QrnmDJYdOkVLc0Cztx8HEaa6
+   HDXVdRCEilWku3W+/TRGMNBNAakPuq0oTZwktc+gL5qZrl7CUQPDjSGpO
+   Zp6sDdNlNxVoF/d0hH4JCLUNr3gb7Ph8nalbPivrenHjuYYH1Pd2peot8
+   m2l3lZ885ftSi1K4CHoeWqjnAh/4VIU6QbzpqTIOJSAMGRZlFpyKYe9e5
+   Wgqxn0ZKtW/mRl2NK5Opqz5gBXSFm9I/OM+rWCOdyV1yfE6XTaCkqhbp6
+   sQtdVK/F29gXjpO2giQnk+r3S666ruxTC37eWOGsfTYbEc3k31/BcyVC0
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="255784724"
+X-IronPort-AV: E=Sophos;i="5.91,271,1647327600"; 
+   d="scan'208";a="255784724"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2022 04:26:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,271,1647327600"; 
+   d="scan'208";a="904944059"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Jun 2022 04:26:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1B202F8; Thu,  2 Jun 2022 14:26:09 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 1/3] gpio: crystalcove: make irq_chip immutable
+Date:   Thu,  2 Jun 2022 14:25:59 +0300
+Message-Id: <20220602112601.12010-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,48 +61,98 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A new_map is allocated in at91_dt_node_to_map but it is not
-freed in at91_dt_free_map, causing a memory leak.
+Since recently, the kernel is nagging about mutable irq_chips:
 
-Fix it by using kcalloc to allocate new_map and free it in
-at91_dt_free_map
+   "not an immutable chip, please consider fixing it!"
 
-Signed-off-by: Yuanjun Gong <ruc_gongyuanjun@163.com>
+Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+helper functions and call the appropriate gpiolib functions.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/pinctrl-at91.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+v2: called GPIO helpers only for real GPIOs in IRQ callbacks
+ drivers/gpio/gpio-crystalcove.c | 40 ++++++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index d91a010e65f5..32ab983a77fe 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -291,8 +291,7 @@ static int at91_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	}
+diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
+index b55c74a5e064..cf33041533aa 100644
+--- a/drivers/gpio/gpio-crystalcove.c
++++ b/drivers/gpio/gpio-crystalcove.c
+@@ -15,6 +15,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/seq_file.h>
++#include <linux/types.h>
  
- 	map_num += grp->npins;
--	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
--			       GFP_KERNEL);
-+	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
- 	if (!new_map)
- 		return -ENOMEM;
+ #define CRYSTALCOVE_GPIO_NUM	16
+ #define CRYSTALCOVE_VGPIO_NUM	95
+@@ -238,34 +239,43 @@ static void crystalcove_bus_sync_unlock(struct irq_data *data)
  
-@@ -302,7 +301,7 @@ static int at91_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	/* create mux map */
- 	parent = of_get_parent(np);
- 	if (!parent) {
--		devm_kfree(pctldev->dev, new_map);
-+		kfree(new_map);
- 		return -EINVAL;
- 	}
- 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
-@@ -329,6 +328,7 @@ static int at91_dt_node_to_map(struct pinctrl_dev *pctldev,
- static void at91_dt_free_map(struct pinctrl_dev *pctldev,
- 				struct pinctrl_map *map, unsigned num_maps)
+ static void crystalcove_irq_unmask(struct irq_data *data)
  {
-+	kfree(map);
+-	struct crystalcove_gpio *cg =
+-		gpiochip_get_data(irq_data_get_irq_chip_data(data));
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
++	struct crystalcove_gpio *cg = gpiochip_get_data(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
+ 
+-	if (data->hwirq < CRYSTALCOVE_GPIO_NUM) {
+-		cg->set_irq_mask = false;
+-		cg->update |= UPDATE_IRQ_MASK;
+-	}
++	if (hwirq >= CRYSTALCOVE_GPIO_NUM)
++		return;
++
++	gpiochip_enable_irq(gc, hwirq);
++
++	cg->set_irq_mask = false;
++	cg->update |= UPDATE_IRQ_MASK;
  }
  
- static const struct pinctrl_ops at91_pctrl_ops = {
+ static void crystalcove_irq_mask(struct irq_data *data)
+ {
+-	struct crystalcove_gpio *cg =
+-		gpiochip_get_data(irq_data_get_irq_chip_data(data));
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
++	struct crystalcove_gpio *cg = gpiochip_get_data(gc);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
+ 
+-	if (data->hwirq < CRYSTALCOVE_GPIO_NUM) {
+-		cg->set_irq_mask = true;
+-		cg->update |= UPDATE_IRQ_MASK;
+-	}
++	if (hwirq >= CRYSTALCOVE_GPIO_NUM)
++		return;
++
++	cg->set_irq_mask = true;
++	cg->update |= UPDATE_IRQ_MASK;
++
++	gpiochip_disable_irq(gc, hwirq);
+ }
+ 
+-static struct irq_chip crystalcove_irqchip = {
++static const struct irq_chip crystalcove_irqchip = {
+ 	.name			= "Crystal Cove",
+ 	.irq_mask		= crystalcove_irq_mask,
+ 	.irq_unmask		= crystalcove_irq_unmask,
+ 	.irq_set_type		= crystalcove_irq_type,
+ 	.irq_bus_lock		= crystalcove_bus_lock,
+ 	.irq_bus_sync_unlock	= crystalcove_bus_sync_unlock,
+-	.flags			= IRQCHIP_SKIP_SET_WAKE,
++	.flags			= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static irqreturn_t crystalcove_gpio_irq_handler(int irq, void *data)
+@@ -353,7 +363,7 @@ static int crystalcove_gpio_probe(struct platform_device *pdev)
+ 	cg->regmap = pmic->regmap;
+ 
+ 	girq = &cg->chip.irq;
+-	girq->chip = &crystalcove_irqchip;
++	gpio_irq_chip_set_chip(girq, &crystalcove_irqchip);
+ 	/* This will let us handle the parent IRQ in the driver */
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
 -- 
-2.17.1
+2.35.1
 
