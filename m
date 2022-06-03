@@ -2,147 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A00F53C3CB
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 06:34:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC1D453C3EC
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 07:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238589AbiFCEeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jun 2022 00:34:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44888 "EHLO
+        id S239529AbiFCFEL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jun 2022 01:04:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234392AbiFCEeF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 00:34:05 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57AEC36178
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Jun 2022 21:34:00 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20220603043356epoutp0304f51d0315586cc1692c5feb6774cf29~1Ai5XqZ1G2182221822epoutp03L
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Jun 2022 04:33:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20220603043356epoutp0304f51d0315586cc1692c5feb6774cf29~1Ai5XqZ1G2182221822epoutp03L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1654230836;
-        bh=Bjg9nXj462IMIr5qb5SJpdPuDBVXCpWmWsSmQSOdq70=;
-        h=From:To:In-Reply-To:Subject:Date:References:From;
-        b=ZlCwI8QR8LIsWncCtfqYu2hRK49pkxuMt5mjfEBNtDgATaRdn+qrEd2m8PDOZdv+b
-         kk8pJDhN/VVYMXcH3rl2HUvvvdfF/ceEXj5IMsLxBGLsNPhxmB60/XxygAhG+TTZ9i
-         G6iModzcfL+E8mhEnKMcSPWEl1cp9s793R8kbh2Y=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20220603043355epcas2p43b7ddaf46104a6f70d3c5491e5165971~1Ai4qq_en0894908949epcas2p4T;
-        Fri,  3 Jun 2022 04:33:55 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.36.90]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4LDqlQ3myNz4x9Pt; Fri,  3 Jun
-        2022 04:33:54 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FE.CE.10028.23F89926; Fri,  3 Jun 2022 13:33:54 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20220603043353epcas2p383b491b9e919f77376b029410a6413c8~1Ai2wa_9D2320823208epcas2p3l;
-        Fri,  3 Jun 2022 04:33:53 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20220603043353epsmtrp1e940120083defcd3461af79e2a692608~1Ai2vhMYV0429804298epsmtrp1B;
-        Fri,  3 Jun 2022 04:33:53 +0000 (GMT)
-X-AuditID: b6c32a47-589ff7000000272c-c9-62998f321968
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D6.F1.11276.13F89926; Fri,  3 Jun 2022 13:33:53 +0900 (KST)
-Received: from KORCO082417 (unknown [10.229.8.121]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20220603043353epsmtip2a7f902cfd44ff37a1147ccc4c107d60c~1Ai2fAyxR2191321913epsmtip2V;
-        Fri,  3 Jun 2022 04:33:53 +0000 (GMT)
-From:   "Chanho Park" <chanho61.park@samsung.com>
-To:     "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Krzysztof Kozlowski'" <krzysztof.kozlowski+dt@linaro.org>,
-        "'Alim Akhtar'" <alim.akhtar@samsung.com>,
-        "'Tomasz Figa'" <tomasz.figa@gmail.com>,
-        "'Sylwester Nawrocki'" <s.nawrocki@samsung.com>,
-        "'Linus Walleij'" <linus.walleij@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-In-Reply-To: <20220601152720.232383-1-krzysztof.kozlowski@linaro.org>
-Subject: RE: [PATCH v2 0/7] pinctrl/arm: dt-bindings: deprecate header with
- register constants
-Date:   Fri, 3 Jun 2022 13:33:53 +0900
-Message-ID: <000501d87703$211ff7a0$635fe6e0$@samsung.com>
+        with ESMTP id S236793AbiFCFEK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 01:04:10 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2117.outbound.protection.outlook.com [40.107.114.117])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 428AE32EEC;
+        Thu,  2 Jun 2022 22:04:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PROLwHskAT6hU0RUJWg6mhKikWZy5BIObOWYzGd8/VX3poAmUlepLhBl7PUoVAj8Arsf9GDwn4OuJULFzzPhgXNWSyAR6qz4b8f6Af2bYMHDH4oG5Ju7pZujkGd78+G8/IzApcCN4N5BDxhQZUD5oB6y912Xy4VGPMN6/kwoRktUW8bl0oYbEAMkcuOdmSxtdNsPjVEx0DQaivf2HFxOcJb2Oeidxj58zMPao+uPNq7l1csoHR1ymSPS9tWIEn01Cli2hrN3MxEwLfYdDd3pz/05XkYPDBk4JEUhrkNrrWVfcB08GVihNkIJWJfEO1bkr3K8v3pZ4KYH0IBpOzaLXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IW4slktJcMZi3Sv+opY54C/fLvEPsKTMp2Bvv4KOfrg=;
+ b=WmWfXByEDoTAbFRTSTs+HZyueB7n25MqFDw41RsJl1f2uDnPVDeDInhexuafBWfNg/iZ5ldqGXdWVxQ3wj64uRhd3s9dUSSyjfDKCq/xGg6P5E9yOrIHUQWDGVBNqebT2oaUVRRQ/28PIr1ySNH23UH/zfFD9GFNMYgfzk9DdWIVP0zmtjAgswi2ka3v4i6Qs8wYAQGQiAWmvAFwAyr5/kehMPAOMrRlqGi96OHS7SlfxADJjiQoXB6NTtrrgdRokiQDaPziHniH0JHxRFo3jxvxMsoTlnFNfy28RK6VoHAsHMLyA4BbGtin1RN8f/bsRqcDCIFSzlyK4pfCMGeTcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IW4slktJcMZi3Sv+opY54C/fLvEPsKTMp2Bvv4KOfrg=;
+ b=ENSJjswedJZM4Hb6DRlVAjs4Mi0VqozYLYQUb6j02gpPAUwqL4kwVxorZt0C4hszH7gn60iefo7ZmLS76ETo8Bk70s/hFN5Ws33pDURLP6d6OPnXqwsvX624xQ1dpAJorDDVCMeIU5i4MT2xprZ2ElhLj3rO3RSTyLJwzDFePAI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
+ by TYXPR01MB1758.jpnprd01.prod.outlook.com (2603:1096:403:e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.14; Fri, 3 Jun
+ 2022 05:04:05 +0000
+Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com
+ ([fe80::f4d9:ee3d:e07b:171a]) by OS3PR01MB8426.jpnprd01.prod.outlook.com
+ ([fe80::f4d9:ee3d:e07b:171a%9]) with mapi id 15.20.5314.012; Fri, 3 Jun 2022
+ 05:04:05 +0000
+Message-ID: <87mteu49tm.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH 0/3] pinctrl: renesas: r8a779g0: Add pins, groups and functions
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Date:   Fri, 3 Jun 2022 05:04:05 +0000
+X-ClientProxiedBy: TYAPR01CA0237.jpnprd01.prod.outlook.com
+ (2603:1096:404:11e::33) To OS3PR01MB8426.jpnprd01.prod.outlook.com
+ (2603:1096:604:194::10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIWHmU798Y7haEPVJB1jko1Mvp8lAHBvrEtrLO6ubA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCJsWRmVeSWpSXmKPExsWy7bCmua5R/8wkgz3vZCwezNvGZjH/yDlW
-        i74XD5kt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7Jo3XuE3eLwm3ZWi1W7/jA6
-        8HjsnHWX3WPTqk42jzvX9rB5bF5S79G3ZRWjx+dNcgFsUdk2GamJKalFCql5yfkpmXnptkre
-        wfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUA3KimUJeaUAoUCEouLlfTtbIryS0tSFTLy
-        i0tslVILUnIKzAv0ihNzi0vz0vXyUkusDA0MjEyBChOyM/pmrGAvOM1a8XjqJ+YGxr0sXYyc
-        HBICJhLXdq5i62Lk4hAS2MEocejOBUYI5xOjxOS136Ay3xglep/dYoVpubBgJTNEYi9Q1bEX
-        LBDOC0aJn2uXMYFUsQnoS7zs2AbWISLQySLxq98FxOYUcJW4e3g3O4gtLJAgsfHiSrB6FgEV
-        iQNXNzOC2LwClhKTzxxhh7AFJU7OfAJ2LLOAvMT2t3OYIa5QkPj5dBnUfCuJ7gtbmSFqRCRm
-        d7aBXSchsIND4vL0s0BFHECOi8SWHbUQvcISr45vYYewpSRe9rdB2cUSS2d9YoLobWCUuLzt
-        FxtEwlhi1rN2RpA5zAKaEut36UOMVJY4cgvqND6JjsN/2SHCvBIdbUIQjeoSB7ZPhwa1rET3
-        nM/QMPSQeHHvPPMERsVZSJ6cheTJWUiemYWwdwEjyypGsdSC4tz01GKjAmN4ZCfn525iBCdf
-        LfcdjDPeftA7xMjEwXiIUYKDWUmEt2TX1CQh3pTEyqrUovz4otKc1OJDjKbAYJ/ILCWanA9M
-        /3kl8YYmlgYmZmaG5kamBuZK4rxeKRsShQTSE0tSs1NTC1KLYPqYODilGpjK/rK4n7xnf0e4
-        5fZz9XM6Hcc4G+7fFJNKTeExXXJjtez/Facbq8NPpTyZ8u3LiRMfPZuOa+qceXZVSpGNJ8zU
-        WLJzqv9Z+asTeW82zuY2cBS3nuZa3tJ4sOz9C+spTP8t55w+w+Aj2h4VFln8R/Hc17d/zOfF
-        XPqtVhc5L5xvqmHCCYnuVX+K9DYmXeBgXWB7cE3NLKfyqrwfvza1WNdEq6y6G9bLl2H//XFE
-        /EVphxsOj87I7xac+fJCnuumJTOzSvZPPRDFl/Buntwam5ylBhbZ80JqM7fdtT33v+ax4+N7
-        vv12VS3rHwjXJ1bejd78sEP0z4uaxfzMr08EVtfLL7gqUNhxsi1R9EWx3zwlluKMREMt5qLi
-        RAB4195pRwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWy7bCSvK5h/8wkg+kNfBYP5m1js5h/5Byr
-        Rd+Lh8wWe19vZbeY8mc5k8Wmx9dYLTbP/8NocXnXHDaLGef3MVm07j3CbnH4TTurxapdfxgd
-        eDx2zrrL7rFpVSebx51re9g8Ni+p9+jbsorR4/MmuQC2KC6blNSczLLUIn27BK6Mvhkr2AtO
-        s1Y8nvqJuYFxL0sXIyeHhICJxIUFK5lBbCGB3YwSLzZFQsRlJZ6928EOYQtL3G85wtrFyAVU
-        84xR4uTRmUwgCTYBfYmXHdtYQWwRgYksEldXJEIUTWOUWPDpFVgRp4CrxN3Du8EmCQvESZyY
-        dpQNxGYRUJE4cHUzI4jNK2ApMfnMEXYIW1Di5MwnQNdxcDAL6Em0bQQrYRaQl9j+dg4zxEEK
-        Ej+fLoPaayXRfWErM0SNiMTszjbmCYxCs5BMmoUwaRaSSbOQdCxgZFnFKJlaUJybnltsWGCY
-        l1quV5yYW1yal66XnJ+7iREcbVqaOxi3r/qgd4iRiYPxEKMEB7OSCG/JrqlJQrwpiZVVqUX5
-        8UWlOanFhxilOViUxHkvdJ2MFxJITyxJzU5NLUgtgskycXBKNTDNsy7ctSyU5ei60/Wm2scn
-        21bVWO79rnYtTmrTWh97LRkr5xhmMf7J3pc7/89ra3gn4XPU9uaOV2EBLNpTte0/8rLeEVXz
-        vHKQXcRYL/jUlPK7Gz4lX02b8k7629rwcybMHnwbjn2Mv3PhcuAUv1fp/GIsbs3pstmyXpvr
-        le5uXh8rPl3O8stpOSfDAmG1A1a6x2QDMiWeJlZyHdhzqvSu9b+X70/sUU7XFN4lWfS958gS
-        nVlhaTt2/Xi5STEtNvTq6+hPe9ZOzrv3/k2V5Vzp3Sq7FZTvzs9o01wsd89upcRLH5uTm/o3
-        rj0UU3Cr4ZZim3HGXqXVO1X++rNWMPa4tnUn7o5dzjWBwWDW5TolluKMREMt5qLiRAAA2Qa6
-        JQMAAA==
-X-CMS-MailID: 20220603043353epcas2p383b491b9e919f77376b029410a6413c8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220601152757epcas2p30927b9924e9371cdfa79986c6efb6eaf
-References: <CGME20220601152757epcas2p30927b9924e9371cdfa79986c6efb6eaf@epcas2p3.samsung.com>
-        <20220601152720.232383-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ccadcc72-01e0-45c6-ecc2-08da451e7bdf
+X-MS-TrafficTypeDiagnostic: TYXPR01MB1758:EE_
+X-Microsoft-Antispam-PRVS: <TYXPR01MB175816554439CC5648FEA61CD4A19@TYXPR01MB1758.jpnprd01.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: u8Wd9MUl2VbxkKlaZe+g3RSRCpJhVPd9leJhp3KB8x9KUQrt82lgtCezg3hpDyfC5M71zBqZxtOXEfWuOnYAPy6+LMbQaO4LOqi/bdF/Pyn1r3aQvWCJc4RDywZx+JWIupiUax8zacAfjerZ2g5Asv5bNA1sQR1pxkB8nQcrJFMHrYCgXMiXfNmj9APtexKKW4lKOqhpqW0ckImiCByx6pksUxpa6zwBT+Ay3ZVrzV4+YIh+tcWgMoqEeyR3Rr7k7pMe4Zi1aBB45UYetN0205/eG/2jHUqDkUUbg9NB5vG/0HDMHqdaFVweQgM+XdK2i2i2tTT1Z+F584/UznBdu0W+I2cM5sovmIusflVGqkS3Rn4Q+nfRnzoXpcO/zc9uvbcTPfrNZZ82lABVYwqPtwbVuHLhUpjdF/VVKfgC2GlDX7RrfMGkHFfl2ie+rPTEgLd2YchVg9jywIRUengf2vpk1hlUjRA6j27TZ/bOCdxId/SXidZsTGwtERyt1kbWT5lM8TWmq5loIVWoDlXiHJsgmkWEpDwacNOpUWAu+uH3YjOcLrUiYJXHjSOc+46RBWVIx5pN6vCE/HLLWHIvM+uowsUOQZAOqgKfGeeXTuOaRU0NL6xXHAAe9yJAVj+7e5Lbt40ygUL2X7P2VqfVEZpP6x9jNf9gzppU7wskl7yGIK8Gd4WwS9nXcf4kIu4hGESUx9gYyqSI3loy8w2OgA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(52116002)(6506007)(26005)(2906002)(4744005)(6512007)(8936002)(2616005)(86362001)(186003)(6486002)(5660300002)(36756003)(508600001)(316002)(38350700002)(38100700002)(66946007)(66476007)(66556008)(4326008)(8676002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?v7bYfZ++GI3fKKY3Rv7v1O7IKHhKpFzgq/ScOczewnegloSeyl7aMaKMwWRV?=
+ =?us-ascii?Q?b4AqfauOQmikQu8GRcYELuwgTDJvqN/LYa5/WeoUHbJv5aGIsyfv7IusZjsT?=
+ =?us-ascii?Q?UV4fdgEMYYr9AycOOQoVUvKy8tK1TY2pZJk0RZJXG+jQQ7S5f9uOHyRQ4G7D?=
+ =?us-ascii?Q?wWerqXGV/FfAZjthvJ2LgklJbk48uUEhPVvKqZE9rFVUb4MrNEUKn1ECSUUB?=
+ =?us-ascii?Q?fTbZwL+Sb99TV8y5wCIqhyH1XM/gcKjgw3JUH3RZ0J9ekOmrsyJa0uUpuo36?=
+ =?us-ascii?Q?hTs+3h7X/oYFFj4w1CywRKMzxU/fSkMZ9IWUEasmpiwGxrd7b0FiAAXXI2cU?=
+ =?us-ascii?Q?uORuTgbqJzFrVng57qXPjEhATszCY8POc8xqWc02JjVYoJSGDxz/h10DIFUt?=
+ =?us-ascii?Q?kldqnrvsyR29oz2hXxBTKOT86ND9Kb7tTh/1GDWzBOuifw6rxwlMmZU2xnV9?=
+ =?us-ascii?Q?GDJej4pEN+tow3N9Fek2Z0LacbKwtI91CkKKgucugasFhCBXgrFunAqinTAe?=
+ =?us-ascii?Q?thVQ2d5LbUk66Xszmc1S1X09XD0YpkqOkxAClX1Pb9DDnMPNhG7xtPgW+ep8?=
+ =?us-ascii?Q?jSr7SJlIaFJY7JJrpntkb80H6TsPIlJDhA2JEZ1fmkCdddqWqojcf3akN50e?=
+ =?us-ascii?Q?opyu/I2h89BPkL4Riaa9yQmsbRjP03AOMT6t9xr34V4MPa5VGQx6T8c3ZI1r?=
+ =?us-ascii?Q?930KNdfyaPJabVOaafkM3ZuI1WFMPJeKkouZ7HobYOy7PQ8faaz/jyLKZWIO?=
+ =?us-ascii?Q?3RAFFz6ygTKZw833EFxlRAPDfznK9kyD4VQdhj3Z+SjCbqtrRovMlW+MBjLg?=
+ =?us-ascii?Q?61zOO7wlJ3hOtnCkHkqqystH+L29TQz3N46HoRU5BOqX3wJGxu+fzDX7sUED?=
+ =?us-ascii?Q?2gzsmDqP2nYvxwJVBFTeMziZAcWIlJEaQjYqfGiGGProp9yCUcBqCcUcMBsM?=
+ =?us-ascii?Q?HX7V2SMZIcEZCMPDu1IzdbdscIdfNAKgIVEMbQj7CHylEgZgqQodllMsQ8ie?=
+ =?us-ascii?Q?HsV6Mw4CHLCC6faB5AfmeeQEq7CjPRRN88E8MJKEXW3uVy91JeshYv3b0V8q?=
+ =?us-ascii?Q?NxL1W9gmITvZrTDOkmydHXZ5WMB8XrBzNT4EkRffHzADFsoVJN5/hyV4WPyy?=
+ =?us-ascii?Q?paSL9GoGho8FbgS+pLSV1J0eUN6XDQ3KgILJwzqUpbPxeB5tpvfdPALV2GWJ?=
+ =?us-ascii?Q?yUqRvp1sx6BgwU2ruEXKMWAzENiI8UH7ln0iZCYZ+Q2p2EAyW7xXPQXe9GOj?=
+ =?us-ascii?Q?pQEy8kxF51UgRl704MRWWjVcoDy8HvZnhqBPRieAqYFX4zgDxLWf8P+Cz6pw?=
+ =?us-ascii?Q?zvnlDS/KzBCeFf8pRGHOrkstR/nwmnV4Yy61y302tvtNzJedNWmVIG/bazBL?=
+ =?us-ascii?Q?IVcKSMsIfA+Vu7PDwgIXXOGwJ7TZqBy6Aq+36Td6OCdEEG/oX7hZHLjjjfXc?=
+ =?us-ascii?Q?v8us+OjTP3ll9I35OOX+erOeJ/WAAbpJ3ZwWh5UJlVbqaA1EcljxJU2wtCvf?=
+ =?us-ascii?Q?u9UTkPiNrEf0CuMi2qIuAMRkUuBnMQnSQfQW2AVuZ5YXySfJn5F5BYULiY73?=
+ =?us-ascii?Q?lhpsp7tX4lccyUmGLPzuEGTPwRnY2MlrWhJcJNT/+OyHL5w8uZKfoMfGeRq0?=
+ =?us-ascii?Q?Pb7B5jM3bHPpBq+SmVMNrW+7H/XfZ4IxrLeH3aqzCe30hPt+CuICJeOR97ld?=
+ =?us-ascii?Q?xt9HZ3eMspWFfGWYnfhJKm1zd5HqSamtsrSNVx5rlx6UpI4b6jiIa4KS9DoA?=
+ =?us-ascii?Q?3NiZuihdC8eOfi6LdsKdEwCtVPZ68R17pYfCb+lNaCFIKSHG2t4u?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccadcc72-01e0-45c6-ecc2-08da451e7bdf
+X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8426.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2022 05:04:05.7048
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jxatrg4DN97bpPnF4afMMiEzaovH/dIDnB3nRAvg/dBWVDJPhCnG/XbvNMdHoKMDmw3VAy3zWw6KSIx3wD1CJRa9PkB0fVyVdAZMI/4CbWLH6MiUlKvcMpHFdSZONgC+
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1758
+X-Spam-Status: No, score=0.9 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> Krzysztof Kozlowski (7):
->   ARM: dts: s3c2410: use local header for pinctrl register values
->   ARM: dts: s3c64xx: use local header for pinctrl register values
->   ARM: dts: s5pv210: use local header for pinctrl register values
->   ARM: dts: exynos: use local header for pinctrl register values
->   arm64: dts: exynos: use local header for pinctrl register values
->   arm64: dts: fsd: use local header for pinctrl register values
->   dt-bindings: pinctrl: deprecate header with register constants
 
-nit: Put the comment closure to the next line.
+Hi Geert
 
-+ * Author: Krzysztof Kozlowski <krzk@kernel.org>  */
+These are for V4H (r8a779g0) pinctrl patches.
 
-Otherwise,
-Reviewed-by: Chanho Park <chanho61.park@samsung.com>
+I have separate new macro definition from original patch [1/3].
+I have cleanuped original initial patch, and merged its fixup patch [2/3].
+I have merged original many device settings patches into one [3/3].
 
-Best Regards,
-Chanho Park
+  [1/3] pinctrl: renesas: Add PORT_GP_CFG_13 macros
+  [2/3] pinctrl: renesas: Initial R8A779G0 (V4H) PFC support
+  [3/3] pinctrl: renesas: r8a779g0: Add pins, groups and functions
+
+ drivers/pinctrl/renesas/Kconfig        |    5 +
+ drivers/pinctrl/renesas/Makefile       |    1 +
+ drivers/pinctrl/renesas/core.c         |    6 +
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 4232 ++++++++++++++++++++++++
+ drivers/pinctrl/renesas/sh_pfc.h       |    6 +
+ 5 files changed, 4250 insertions(+)
+ create mode 100644 drivers/pinctrl/renesas/pfc-r8a779g0.c
+
+-- 
+2.25.1
 
