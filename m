@@ -2,184 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE5153C046
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jun 2022 23:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A00F53C3CB
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 06:34:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239393AbiFBVGz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Jun 2022 17:06:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
+        id S238589AbiFCEeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jun 2022 00:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239390AbiFBVGx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Jun 2022 17:06:53 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B604812768
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Jun 2022 14:06:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654204012; x=1685740012;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IcMlWbLRXzCLBhtZe3Aihjwo0jvGjU6y9UE/6lKd9mU=;
-  b=Y0gZCi482brXAjH9DyIZ8CtT2ewP908hJDyJqyE54fKbtnuh6Y8Bpl2h
-   MH7MP1cJqeTcqV87FbrJ3s/32ZJxN6h+wepAnf2E8nG1dfDK0zentvh0Y
-   bWGswkVUGD7d0mZjts6m67zfRlsQoLGbH0WyB4DTMBITJlboXH0+1suKQ
-   h1/BdLRXhlgG7L1MiUM5evvNUxDnAJqY9qH8Gulm0j47HIB4sB9AFQadC
-   aUj/YXEaH3XQKM0yaNI21hkii5AQ1Jl4eTGbfemPEgqC0ibMx0zzAtDnk
-   iOmmWd46uWWw3/suTYgbkxtAyKHeVChwBc6CpqXE7reY+M0ZJLDtYdUOS
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10366"; a="255945313"
-X-IronPort-AV: E=Sophos;i="5.91,272,1647327600"; 
-   d="scan'208";a="255945313"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2022 14:06:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,272,1647327600"; 
-   d="scan'208";a="530744376"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jun 2022 14:06:50 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nws1p-0005Rh-W5;
-        Thu, 02 Jun 2022 21:06:50 +0000
-Date:   Fri, 03 Jun 2022 05:06:07 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 7bb8a0cf49d5fede1104afdcb43bd2f8a1df3253
-Message-ID: <6299263f.gfFXM0+H+QDHj1oM%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234392AbiFCEeF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 00:34:05 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57AEC36178
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Jun 2022 21:34:00 -0700 (PDT)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20220603043356epoutp0304f51d0315586cc1692c5feb6774cf29~1Ai5XqZ1G2182221822epoutp03L
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Jun 2022 04:33:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20220603043356epoutp0304f51d0315586cc1692c5feb6774cf29~1Ai5XqZ1G2182221822epoutp03L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1654230836;
+        bh=Bjg9nXj462IMIr5qb5SJpdPuDBVXCpWmWsSmQSOdq70=;
+        h=From:To:In-Reply-To:Subject:Date:References:From;
+        b=ZlCwI8QR8LIsWncCtfqYu2hRK49pkxuMt5mjfEBNtDgATaRdn+qrEd2m8PDOZdv+b
+         kk8pJDhN/VVYMXcH3rl2HUvvvdfF/ceEXj5IMsLxBGLsNPhxmB60/XxygAhG+TTZ9i
+         G6iModzcfL+E8mhEnKMcSPWEl1cp9s793R8kbh2Y=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20220603043355epcas2p43b7ddaf46104a6f70d3c5491e5165971~1Ai4qq_en0894908949epcas2p4T;
+        Fri,  3 Jun 2022 04:33:55 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.90]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4LDqlQ3myNz4x9Pt; Fri,  3 Jun
+        2022 04:33:54 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FE.CE.10028.23F89926; Fri,  3 Jun 2022 13:33:54 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20220603043353epcas2p383b491b9e919f77376b029410a6413c8~1Ai2wa_9D2320823208epcas2p3l;
+        Fri,  3 Jun 2022 04:33:53 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20220603043353epsmtrp1e940120083defcd3461af79e2a692608~1Ai2vhMYV0429804298epsmtrp1B;
+        Fri,  3 Jun 2022 04:33:53 +0000 (GMT)
+X-AuditID: b6c32a47-589ff7000000272c-c9-62998f321968
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D6.F1.11276.13F89926; Fri,  3 Jun 2022 13:33:53 +0900 (KST)
+Received: from KORCO082417 (unknown [10.229.8.121]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20220603043353epsmtip2a7f902cfd44ff37a1147ccc4c107d60c~1Ai2fAyxR2191321913epsmtip2V;
+        Fri,  3 Jun 2022 04:33:53 +0000 (GMT)
+From:   "Chanho Park" <chanho61.park@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Krzysztof Kozlowski'" <krzysztof.kozlowski+dt@linaro.org>,
+        "'Alim Akhtar'" <alim.akhtar@samsung.com>,
+        "'Tomasz Figa'" <tomasz.figa@gmail.com>,
+        "'Sylwester Nawrocki'" <s.nawrocki@samsung.com>,
+        "'Linus Walleij'" <linus.walleij@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+In-Reply-To: <20220601152720.232383-1-krzysztof.kozlowski@linaro.org>
+Subject: RE: [PATCH v2 0/7] pinctrl/arm: dt-bindings: deprecate header with
+ register constants
+Date:   Fri, 3 Jun 2022 13:33:53 +0900
+Message-ID: <000501d87703$211ff7a0$635fe6e0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIWHmU798Y7haEPVJB1jko1Mvp8lAHBvrEtrLO6ubA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCJsWRmVeSWpSXmKPExsWy7bCmua5R/8wkgz3vZCwezNvGZjH/yDlW
+        i74XD5kt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7Jo3XuE3eLwm3ZWi1W7/jA6
+        8HjsnHWX3WPTqk42jzvX9rB5bF5S79G3ZRWjx+dNcgFsUdk2GamJKalFCql5yfkpmXnptkre
+        wfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUA3KimUJeaUAoUCEouLlfTtbIryS0tSFTLy
+        i0tslVILUnIKzAv0ihNzi0vz0vXyUkusDA0MjEyBChOyM/pmrGAvOM1a8XjqJ+YGxr0sXYyc
+        HBICJhLXdq5i62Lk4hAS2MEocejOBUYI5xOjxOS136Ay3xglep/dYoVpubBgJTNEYi9Q1bEX
+        LBDOC0aJn2uXMYFUsQnoS7zs2AbWISLQySLxq98FxOYUcJW4e3g3O4gtLJAgsfHiSrB6FgEV
+        iQNXNzOC2LwClhKTzxxhh7AFJU7OfAJ2LLOAvMT2t3OYIa5QkPj5dBnUfCuJ7gtbmSFqRCRm
+        d7aBXSchsIND4vL0s0BFHECOi8SWHbUQvcISr45vYYewpSRe9rdB2cUSS2d9YoLobWCUuLzt
+        FxtEwlhi1rN2RpA5zAKaEut36UOMVJY4cgvqND6JjsN/2SHCvBIdbUIQjeoSB7ZPhwa1rET3
+        nM/QMPSQeHHvPPMERsVZSJ6cheTJWUiemYWwdwEjyypGsdSC4tz01GKjAmN4ZCfn525iBCdf
+        LfcdjDPeftA7xMjEwXiIUYKDWUmEt2TX1CQh3pTEyqrUovz4otKc1OJDjKbAYJ/ILCWanA9M
+        /3kl8YYmlgYmZmaG5kamBuZK4rxeKRsShQTSE0tSs1NTC1KLYPqYODilGpjK/rK4n7xnf0e4
+        5fZz9XM6Hcc4G+7fFJNKTeExXXJjtez/Facbq8NPpTyZ8u3LiRMfPZuOa+qceXZVSpGNJ8zU
+        WLJzqv9Z+asTeW82zuY2cBS3nuZa3tJ4sOz9C+spTP8t55w+w+Aj2h4VFln8R/Hc17d/zOfF
+        XPqtVhc5L5xvqmHCCYnuVX+K9DYmXeBgXWB7cE3NLKfyqrwfvza1WNdEq6y6G9bLl2H//XFE
+        /EVphxsOj87I7xac+fJCnuumJTOzSvZPPRDFl/Buntwam5ylBhbZ80JqM7fdtT33v+ax4+N7
+        vv12VS3rHwjXJ1bejd78sEP0z4uaxfzMr08EVtfLL7gqUNhxsi1R9EWx3zwlluKMREMt5qLi
+        RAB4195pRwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWy7bCSvK5h/8wkg+kNfBYP5m1js5h/5Byr
+        Rd+Lh8wWe19vZbeY8mc5k8Wmx9dYLTbP/8NocXnXHDaLGef3MVm07j3CbnH4TTurxapdfxgd
+        eDx2zrrL7rFpVSebx51re9g8Ni+p9+jbsorR4/MmuQC2KC6blNSczLLUIn27BK6Mvhkr2AtO
+        s1Y8nvqJuYFxL0sXIyeHhICJxIUFK5lBbCGB3YwSLzZFQsRlJZ6928EOYQtL3G85wtrFyAVU
+        84xR4uTRmUwgCTYBfYmXHdtYQWwRgYksEldXJEIUTWOUWPDpFVgRp4CrxN3Du8EmCQvESZyY
+        dpQNxGYRUJE4cHUzI4jNK2ApMfnMEXYIW1Di5MwnQNdxcDAL6Em0bQQrYRaQl9j+dg4zxEEK
+        Ej+fLoPaayXRfWErM0SNiMTszjbmCYxCs5BMmoUwaRaSSbOQdCxgZFnFKJlaUJybnltsWGCY
+        l1quV5yYW1yal66XnJ+7iREcbVqaOxi3r/qgd4iRiYPxEKMEB7OSCG/JrqlJQrwpiZVVqUX5
+        8UWlOanFhxilOViUxHkvdJ2MFxJITyxJzU5NLUgtgskycXBKNTDNsy7ctSyU5ei60/Wm2scn
+        21bVWO79rnYtTmrTWh97LRkr5xhmMf7J3pc7/89ra3gn4XPU9uaOV2EBLNpTte0/8rLeEVXz
+        vHKQXcRYL/jUlPK7Gz4lX02b8k7629rwcybMHnwbjn2Mv3PhcuAUv1fp/GIsbs3pstmyXpvr
+        le5uXh8rPl3O8stpOSfDAmG1A1a6x2QDMiWeJlZyHdhzqvSu9b+X70/sUU7XFN4lWfS958gS
+        nVlhaTt2/Xi5STEtNvTq6+hPe9ZOzrv3/k2V5Vzp3Sq7FZTvzs9o01wsd89upcRLH5uTm/o3
+        rj0UU3Cr4ZZim3HGXqXVO1X++rNWMPa4tnUn7o5dzjWBwWDW5TolluKMREMt5qLiRAAA2Qa6
+        JQMAAA==
+X-CMS-MailID: 20220603043353epcas2p383b491b9e919f77376b029410a6413c8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220601152757epcas2p30927b9924e9371cdfa79986c6efb6eaf
+References: <CGME20220601152757epcas2p30927b9924e9371cdfa79986c6efb6eaf@epcas2p3.samsung.com>
+        <20220601152720.232383-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 7bb8a0cf49d5fede1104afdcb43bd2f8a1df3253  gpio: adp5588: Remove support for platform setup and teardown callbacks
+> Krzysztof Kozlowski (7):
+>   ARM: dts: s3c2410: use local header for pinctrl register values
+>   ARM: dts: s3c64xx: use local header for pinctrl register values
+>   ARM: dts: s5pv210: use local header for pinctrl register values
+>   ARM: dts: exynos: use local header for pinctrl register values
+>   arm64: dts: exynos: use local header for pinctrl register values
+>   arm64: dts: fsd: use local header for pinctrl register values
+>   dt-bindings: pinctrl: deprecate header with register constants
 
-elapsed time: 775m
+nit: Put the comment closure to the next line.
 
-configs tested: 101
-configs skipped: 3
++ * Author: Krzysztof Kozlowski <krzk@kernel.org>  */
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Otherwise,
+Reviewed-by: Chanho Park <chanho61.park@samsung.com>
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-s390                       zfcpdump_defconfig
-sh                          r7785rp_defconfig
-sh                          rsk7201_defconfig
-arm                       omap2plus_defconfig
-arm                      footbridge_defconfig
-ia64                        generic_defconfig
-mips                          rb532_defconfig
-ia64                             alldefconfig
-arm                         lpc18xx_defconfig
-arc                 nsimosci_hs_smp_defconfig
-arm                             rpc_defconfig
-arm                        mini2440_defconfig
-sh                           se7343_defconfig
-x86_64                        randconfig-c001
-i386                          randconfig-c001
-arm                  randconfig-c002-20220531
-riscv                             allnoconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220531
-s390                 randconfig-r044-20220531
-riscv                randconfig-r042-20220531
-arc                  randconfig-r043-20220601
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
+Best Regards,
+Chanho Park
 
-clang tested configs:
-mips                 randconfig-c004-20220531
-x86_64                        randconfig-c007
-i386                          randconfig-c001
-s390                 randconfig-c005-20220531
-arm                  randconfig-c002-20220531
-powerpc              randconfig-c003-20220531
-riscv                randconfig-c006-20220531
-powerpc                   lite5200b_defconfig
-powerpc                      acadia_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20220601
-hexagon              randconfig-r045-20220601
-riscv                randconfig-r042-20220601
-s390                 randconfig-r044-20220601
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
