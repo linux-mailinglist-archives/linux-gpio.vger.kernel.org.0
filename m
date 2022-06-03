@@ -2,112 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE02353C735
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 11:00:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACB7153C73D
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 11:06:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242930AbiFCJAi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jun 2022 05:00:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40008 "EHLO
+        id S242949AbiFCJGd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jun 2022 05:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242922AbiFCJAh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 05:00:37 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC2C381B1;
-        Fri,  3 Jun 2022 02:00:34 -0700 (PDT)
-Received: by mail-qk1-f178.google.com with SMTP id r84so5440683qke.10;
-        Fri, 03 Jun 2022 02:00:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=evQf7fXXpISPp2ggAxWDAZXBQqODqEmBPeOIMkPKIo4=;
-        b=ZRBpeTA6IkYHq9+GoxxhU3KWk7ixn5AlIKoZ4YdDdTkSBmc8aw8X91H3/mZlze1hBi
-         uS5UFQT2AyfwUuJEumXhRd69jCxuc4Fp0zdxePw/n0iF6d2y3Dho1iyB7sLlGLCt620l
-         NQGNjH+CGySx3Rslr62mBNxikd4HmVjbH6dwy7Ov0/3WCz3/eVLypSF/mufRtrXJNXME
-         PdfgydsbwCaBd8wM7MXBHlC8ZSwL0B2eSclJhJui3bZGox6x+UNVJoKg3V8eqGWCz4oo
-         B3SkcZx+OdQtzwEpHbeYiReuFqhwAvTXlv+HXYIOHKIm0+DFJY4Lgn9PhG0x6Ua3/VqK
-         qu5w==
-X-Gm-Message-State: AOAM5316dOcex5YasO8vrw26zF9RCNsVeTOuymSsQWdEftRzUDFQcWUh
-        jvfxltGmCYldiyYyYWPmgYMI4nuAUm0Bfg==
-X-Google-Smtp-Source: ABdhPJyT+7ggPCDetOukTuguybfFa4EnGWbJKrIxSUsDrwoCETWo5s4MWhNImBDBwHWkO5x2GMuuLg==
-X-Received: by 2002:a05:620a:1997:b0:69e:9541:d226 with SMTP id bm23-20020a05620a199700b0069e9541d226mr5759973qkb.782.1654246833405;
-        Fri, 03 Jun 2022 02:00:33 -0700 (PDT)
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
-        by smtp.gmail.com with ESMTPSA id v186-20020a3793c3000000b0069fc13ce1f3sm4655349qkd.36.2022.06.03.02.00.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jun 2022 02:00:33 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id g4so12595788ybf.12;
-        Fri, 03 Jun 2022 02:00:33 -0700 (PDT)
-X-Received: by 2002:a25:cc53:0:b0:65c:b19c:fac1 with SMTP id
- l80-20020a25cc53000000b0065cb19cfac1mr9447276ybf.89.1654246832705; Fri, 03
- Jun 2022 02:00:32 -0700 (PDT)
+        with ESMTP id S229761AbiFCJGc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 05:06:32 -0400
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EF0381BA;
+        Fri,  3 Jun 2022 02:06:31 -0700 (PDT)
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2533qU8Q006126;
+        Fri, 3 Jun 2022 02:06:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pfpt0220; bh=Zjta6WAMAVbUUOCc2zQ58NhveVqPhuWBMIk3Oto4ocU=;
+ b=P1KV6GV8lsesL0dslyYTMbnUVyZKwChC93OEvAPifGaRqjxScMrQoE86eCx6Ji5DwaSS
+ qmbrHsOOKp5eNqMQM4W5OZBWTJ9+9q2tN9l2YWq3XKKDQ8V8/20L1jeMKRtVUcvHZOjk
+ jQz2P03XwzEMluFwQWSEgP/G/EaAhorFsU8tWgrWqj+26weYspg6SjwLxsluEAMKYHpx
+ 5w2SXdKckrldwHtlFsAfJNU+/eZA4UoKyoPQfSD7pS3+5tBttaP/l/q3dUb9PIOWeKnI
+ XhR3Lhn0au9uZhV03wypO1VSuX8pkMlvpaEvouuzAbCi31Fb0CmXDdh/yee6rgEGLGjO hw== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+        by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3geupucjjr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jun 2022 02:06:22 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 3 Jun
+ 2022 02:06:20 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Fri, 3 Jun 2022 02:06:20 -0700
+Received: from Dell2s-9 (unknown [10.110.150.250])
+        by maili.marvell.com (Postfix) with ESMTP id 1AC523F7097;
+        Fri,  3 Jun 2022 02:06:19 -0700 (PDT)
+Date:   Fri, 3 Jun 2022 02:06:18 -0700
+From:   Piyush Malgujar <pmalgujar@marvell.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <brgl@bgdev.pl>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <rric@kernel.org>, <cchavva@marvell.com>, <wsadowski@marvell.com>
+Subject: Re: [PATCH 2/5] dt-bindings: gpio: gpio-thunderx: Describe pin-cfg
+ option
+Message-ID: <20220603090618.GA27121@Dell2s-9>
+References: <20220427144620.9105-1-pmalgujar@marvell.com>
+ <20220427144620.9105-3-pmalgujar@marvell.com>
+ <CACRpkdaqeTs-jHPBmtdiz+LdMM0pz0zqt4diX=e+YpgaGr0Jbw@mail.gmail.com>
 MIME-Version: 1.0
-References: <87mteu49tm.wl-kuninori.morimoto.gx@renesas.com> <87leue49sv.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87leue49sv.wl-kuninori.morimoto.gx@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 3 Jun 2022 11:00:21 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVZ-vg6kddpteYBRrCS1LBygwsfttDCGfs=QmD68_ZHNg@mail.gmail.com>
-Message-ID: <CAMuHMdVZ-vg6kddpteYBRrCS1LBygwsfttDCGfs=QmD68_ZHNg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: renesas: Add PORT_GP_CFG_13 macros
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaqeTs-jHPBmtdiz+LdMM0pz0zqt4diX=e+YpgaGr0Jbw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-GUID: gCXpW5evpxy7rs0xJH5A1GfdPXzso7p9
+X-Proofpoint-ORIG-GUID: gCXpW5evpxy7rs0xJH5A1GfdPXzso7p9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-03_02,2022-06-02_01,2022-02-23_01
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Morimoto-san,
+Hi Linus,
 
-On Fri, Jun 3, 2022 at 7:04 AM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->
-> Add PORT_GP_CFG_13() and PORT_GP_13() helper macros,
-> to be used by the r8a779g0 subdriver.
->
-> Based on a larger patch in the BSP by LUU HOAI.
->
-> Signed-off-by: LUU HOAI <hoai.luu.ub@renesas.com>
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Thanks for reviewing.
 
-Thanks for your patch!
+On Mon, May 02, 2022 at 12:15:34AM +0200, Linus Walleij wrote:
+> On Wed, Apr 27, 2022 at 4:47 PM Piyush Malgujar <pmalgujar@marvell.com> wrote:
+> 
+> > Add support for pin-cfg to configure GPIO Pins
+> >
+> > Signed-off-by: Piyush Malgujar <pmalgujar@marvell.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/gpio-thunderx.txt | 4 ++++
+> 
+> Would be nice to rewrite this binding in YAML
+> 
 
-> --- a/drivers/pinctrl/renesas/sh_pfc.h
-> +++ b/drivers/pinctrl/renesas/sh_pfc.h
-> @@ -492,6 +492,11 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
->         PORT_GP_CFG_1(bank, 11, fn, sfx, cfg)
->  #define PORT_GP_12(bank, fn, sfx)      PORT_GP_CFG_12(bank, fn, sfx, 0)
->
-> +#define PORT_GP_CFG_13(bank, fn, sfx, cfg)                             \
-> +       PORT_GP_CFG_12(bank, fn, sfx, cfg),                             \
-> +       PORT_GP_CFG_1(bank, 12, fn, sfx, cfg)
-> +#define PORT_GP_13(bank, fn, sfx)      PORT_GP_CFG_13(bank, fn, sfx, 0)
+Sure, will take care in V2.
 
-LGTM.
+> >    - First cell is the GPIO pin number relative to the controller.
+> >    - Second cell is triggering flags as defined in interrupts.txt.
+> > +- pin-cfg: Configuration of pin's function, filters, XOR and output mode.
+> > +  - First cell is the GPIO pin number
+> > +  - Second cell is a value written to GPIO_BIT_CFG register at driver probe.
+> 
+> Just poking magic hex values into some random register as
+> part of a binding is not a good idea.
+> 
+> This looks like trying to reinvent the pin config subsystem.
+> 
+> GPIO is using the standard pin configurations in the second cell of
+> the handle, use them in this driver as well and add new ones if we
+> need.
+> 
+> You find the existing flags here:
+> include/dt-bindings/gpio/gpio.h
+> 
+> If you need something more sophisticated than a simple flag, I think
+> you need to implement proper pin config.
+> 
+> Yours,
+> Linus Walleij
 
-> +
->  #define PORT_GP_CFG_14(bank, fn, sfx, cfg)                             \
->         PORT_GP_CFG_12(bank, fn, sfx, cfg),                             \
+The purpose of this pin-cfg entry is different than the standard GPIO pin config usage.
+It is to write a value to GPIO_BIT_CFG register which is used to configure fields like
+pin function, selecting which signal is reported to GPIO output or which signal GPIO
+input need to connect, filters, XOR and output mode.
+We will define new entry specific to thunderx GPIO usage, instead of pin-cfg.
 
-Please update PORT_GP_CFG_14() to use the new PORT_GP_CFG_13() macro.
-
->         PORT_GP_CFG_1(bank, 12, fn, sfx, cfg),                          \
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Piyush
