@@ -2,122 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F7E553C4BA
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 08:09:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE02353C735
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 11:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbiFCGJo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jun 2022 02:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
+        id S242930AbiFCJAi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jun 2022 05:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbiFCGJn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 02:09:43 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F59C2AC71;
-        Thu,  2 Jun 2022 23:09:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654236583; x=1685772583;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kFDsYAwwyQEIROHoFgr6UXEiUnfVjD1ybd+VrPy8+F0=;
-  b=ab1B78qKl75oHYVhyEmNEi+CZsRKGBBW1nHJaPCbjawGLgP6h51YvPcW
-   6qsIUFYCGZHUOwvBw1inIpVbTcbnryvGozVSHXTbP5kxvW+3TmAbZRac8
-   hleRGotrHacukhinROUX84Elr9aBY82mhXNCMy4uvH8sxJbfecYFD2G22
-   I=;
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 02 Jun 2022 23:09:42 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2022 23:09:35 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Thu, 2 Jun 2022 23:09:33 -0700
-Received: from [10.216.32.198] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Thu, 2 Jun 2022
- 23:09:27 -0700
-Message-ID: <6250a441-6bcd-4ca8-782b-b7a8d9239e46@quicinc.com>
-Date:   Fri, 3 Jun 2022 11:39:24 +0530
+        with ESMTP id S242922AbiFCJAh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 05:00:37 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC2C381B1;
+        Fri,  3 Jun 2022 02:00:34 -0700 (PDT)
+Received: by mail-qk1-f178.google.com with SMTP id r84so5440683qke.10;
+        Fri, 03 Jun 2022 02:00:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=evQf7fXXpISPp2ggAxWDAZXBQqODqEmBPeOIMkPKIo4=;
+        b=ZRBpeTA6IkYHq9+GoxxhU3KWk7ixn5AlIKoZ4YdDdTkSBmc8aw8X91H3/mZlze1hBi
+         uS5UFQT2AyfwUuJEumXhRd69jCxuc4Fp0zdxePw/n0iF6d2y3Dho1iyB7sLlGLCt620l
+         NQGNjH+CGySx3Rslr62mBNxikd4HmVjbH6dwy7Ov0/3WCz3/eVLypSF/mufRtrXJNXME
+         PdfgydsbwCaBd8wM7MXBHlC8ZSwL0B2eSclJhJui3bZGox6x+UNVJoKg3V8eqGWCz4oo
+         B3SkcZx+OdQtzwEpHbeYiReuFqhwAvTXlv+HXYIOHKIm0+DFJY4Lgn9PhG0x6Ua3/VqK
+         qu5w==
+X-Gm-Message-State: AOAM5316dOcex5YasO8vrw26zF9RCNsVeTOuymSsQWdEftRzUDFQcWUh
+        jvfxltGmCYldiyYyYWPmgYMI4nuAUm0Bfg==
+X-Google-Smtp-Source: ABdhPJyT+7ggPCDetOukTuguybfFa4EnGWbJKrIxSUsDrwoCETWo5s4MWhNImBDBwHWkO5x2GMuuLg==
+X-Received: by 2002:a05:620a:1997:b0:69e:9541:d226 with SMTP id bm23-20020a05620a199700b0069e9541d226mr5759973qkb.782.1654246833405;
+        Fri, 03 Jun 2022 02:00:33 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id v186-20020a3793c3000000b0069fc13ce1f3sm4655349qkd.36.2022.06.03.02.00.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jun 2022 02:00:33 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id g4so12595788ybf.12;
+        Fri, 03 Jun 2022 02:00:33 -0700 (PDT)
+X-Received: by 2002:a25:cc53:0:b0:65c:b19c:fac1 with SMTP id
+ l80-20020a25cc53000000b0065cb19cfac1mr9447276ybf.89.1654246832705; Fri, 03
+ Jun 2022 02:00:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: sc7280: Add compatible
- string for adsp based platforms
-Content-Language: en-US
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>, <agross@kernel.org>,
-        <alsa-devel@alsa-project.org>, <bgoswami@quicinc.com>,
-        <bjorn.andersson@linaro.org>, <broonie@kernel.org>,
-        <devicetree@vger.kernel.org>, <judyhsiao@chromium.org>,
-        <lgirdwood@gmail.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <perex@perex.cz>, <quic_plai@quicinc.com>,
-        <quic_rohkumar@quicinc.com>, <robh+dt@kernel.org>,
-        <srinivas.kandagatla@linaro.org>, <tiwai@suse.com>
-CC:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
-References: <1654079415-26217-1-git-send-email-quic_srivasam@quicinc.com>
- <1654079415-26217-2-git-send-email-quic_srivasam@quicinc.com>
- <CAE-0n50nfwZPdSS7Vw9FiV+Shfn9-bX44hfLq5ey9DBsAy0y4g@mail.gmail.com>
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Organization: Qualcomm
-In-Reply-To: <CAE-0n50nfwZPdSS7Vw9FiV+Shfn9-bX44hfLq5ey9DBsAy0y4g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <87mteu49tm.wl-kuninori.morimoto.gx@renesas.com> <87leue49sv.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87leue49sv.wl-kuninori.morimoto.gx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 3 Jun 2022 11:00:21 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVZ-vg6kddpteYBRrCS1LBygwsfttDCGfs=QmD68_ZHNg@mail.gmail.com>
+Message-ID: <CAMuHMdVZ-vg6kddpteYBRrCS1LBygwsfttDCGfs=QmD68_ZHNg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: renesas: Add PORT_GP_CFG_13 macros
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Morimoto-san,
 
-On 6/2/2022 6:43 AM, Stephen Boyd wrote:
-> Quoting Srinivasa Rao Mandadapu (2022-06-01 03:30:14)
->> Add compatible string to support adsp enabled sc7280 platforms.
->>
->> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
->> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
->>   .../devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml    | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
->> index d32ee32..53c2c59 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
->> @@ -17,7 +17,9 @@ description: |
->>
->>   properties:
->>     compatible:
->> -    const: qcom,sc7280-lpass-lpi-pinctrl
->> +    enum:
->> +      - qcom,sc7280-lpass-lpi-pinctrl
->> +      - qcom,sc7280-lpass-adsp-lpi-pinctrl
-> Can you confirm that this is the same hardware (i.e. same reg property)
-> but just a different compatible string used to convey that the device is
-> using "adsp" mode or not? If so, this looks to be a common pattern for
-> the audio hardware here, where we have two "views" of the hardware, one
-> for adsp mode and one for not adsp mode. I guess the not adsp mode is
-> called "adsp bypass"?
-
-Yes Your understanding is correct. The same hardware in scenario not using ADSP,
-
-and in another enabling DSP.
+On Fri, Jun 3, 2022 at 7:04 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> Is that right? Why are we conveying this information via the compatible
-> string?
+> Add PORT_GP_CFG_13() and PORT_GP_13() helper macros,
+> to be used by the r8a779g0 subdriver.
+>
+> Based on a larger patch in the BSP by LUU HOAI.
+>
+> Signed-off-by: LUU HOAI <hoai.luu.ub@renesas.com>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Could you please suggest better way!.  As pin control driver is the 
-first one to probe, I am not getting better approach.
+Thanks for your patch!
 
-While up-streaming these drivers, concluded to use this approach.
+> --- a/drivers/pinctrl/renesas/sh_pfc.h
+> +++ b/drivers/pinctrl/renesas/sh_pfc.h
+> @@ -492,6 +492,11 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+>         PORT_GP_CFG_1(bank, 11, fn, sfx, cfg)
+>  #define PORT_GP_12(bank, fn, sfx)      PORT_GP_CFG_12(bank, fn, sfx, 0)
+>
+> +#define PORT_GP_CFG_13(bank, fn, sfx, cfg)                             \
+> +       PORT_GP_CFG_12(bank, fn, sfx, cfg),                             \
+> +       PORT_GP_CFG_1(bank, 12, fn, sfx, cfg)
+> +#define PORT_GP_13(bank, fn, sfx)      PORT_GP_CFG_13(bank, fn, sfx, 0)
 
+LGTM.
+
+> +
+>  #define PORT_GP_CFG_14(bank, fn, sfx, cfg)                             \
+>         PORT_GP_CFG_12(bank, fn, sfx, cfg),                             \
+
+Please update PORT_GP_CFG_14() to use the new PORT_GP_CFG_13() macro.
+
+>         PORT_GP_CFG_1(bank, 12, fn, sfx, cfg),                          \
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
