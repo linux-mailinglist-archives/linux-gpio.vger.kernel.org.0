@@ -2,70 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A073F53C8A4
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 12:29:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A224253C8CF
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 12:36:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243629AbiFCK3D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jun 2022 06:29:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40482 "EHLO
+        id S243760AbiFCKgL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jun 2022 06:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234520AbiFCK26 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 06:28:58 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA17366A3
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Jun 2022 03:28:57 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-2ff7b90e635so77693517b3.5
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jun 2022 03:28:57 -0700 (PDT)
+        with ESMTP id S241533AbiFCKgK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 06:36:10 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C7B93BBF0
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Jun 2022 03:36:09 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id v22so12996544ybd.5
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Jun 2022 03:36:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dC0gx01b2aNajXfhT3RxUnH0OHK3FMPo/gpngxGlMwo=;
-        b=oG7zOFP1DbQh6Bo8e9Qpq/xhX0tcm0Z686SDBT7H504JhHxqE3dnOrHBJ6SB/2HSK4
-         twuSJO1lPcK5rLD3Hh+gKG0l3jtSoA8EYExYCLiyANJoCWRY1XSu31iiJqtN8JeP4jR5
-         KeCcRWNG8k0cKAwK+B8C+LiKyAUIyY35Rc2HDoJNL490sEJzAybFKJGosi2vB+5kM2fb
-         CkFMly+sSSmDyfTmzvsm3PvJr8kwCzkRW05trOUye05ZR8AscObGzjpJwvBL/YOzAVbN
-         0mw8bc8FHPkItci37uxaWwIcZPeZfUqrdb+ftP4a7ZovA0miQgbeVm9d2jAyuRTdKt0d
-         Do2g==
+        bh=Zcr1s3ugeaE9p3nhhIdLCJU637n5hOiY3Yql49RPVHo=;
+        b=ye/c5xFuBegN//8byZFYsM0JGxi8XQHnnDnHJeYnWzmaLAMnLWaHpwPsEEIQyArNM/
+         ZX0sQvd/mDqx6tD04xoDIhL56ZDeSUb2IFYUHoOKgSELMqm2r9pcYwtrD3iUOHJnr0G9
+         n7qDswsdpTzoEu/flnrb3i0fVFDffGF6DTu9+LUv7SP9ubaFb4IYPEnzKzFje6oKe5kn
+         7pKtw7w5bSV9NRkDXhCt/VTPix+fKXvec1UvSegzCDQM04VpaaI9Lu4vyHjUMpKSVHUP
+         p6IVaoHnf6gbbSgmeUFdbgdJVQdZ+ry3Lm+TZYMtdFL9N6iimJj9Exv5nuWXa6uzvfir
+         1f8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dC0gx01b2aNajXfhT3RxUnH0OHK3FMPo/gpngxGlMwo=;
-        b=mLn+uBdJX9xju+8xoHXVy/EgxK+I2qHVMZJ4FEW0GvYhaIiYHZZNhFAb0mzR47LOtQ
-         tXXgQ+HpQWRA1zpMXsEK+OtIh4JPhlltKQYc7kYb6Hfw/Pz84VTwviO2unGvbrndwPw5
-         FYfZM8PL66Pk+4SLB0Q+TRi21pgG+1btlj212i7YRtz8H3BvbcsH7fa03D7tJf64RCLw
-         feJuO/EHx9cvRkpyCe+k6Y8+0s9NU8t01TTEarbvbTWyeLpGW0ThCB+BBUxjIE67mmHO
-         pEiP22BZ00XFzffMVYSZrRQ+cutIhO479SzxTFuOsokZhY+V62w/ZVPwY2XvszJK2psO
-         Sw4g==
-X-Gm-Message-State: AOAM532I48lGhLWUxO9m7Pshn5Gq2B3wW5EqVr8D5mOK08Fx6G7QSSK1
-        gn2J5dhoiM1r53sDTWYR/lvwwiSI97cr6rDqbMLFQA==
-X-Google-Smtp-Source: ABdhPJxdb0406KtQA0ekY0TlTv81qQUxI5O/FyeeUoVHX8/Ot2ByU9RnuJwh7E4wA3eNsSCbGkhyW44rUkeitrBqRsM=
-X-Received: by 2002:a0d:e246:0:b0:30c:5e77:7104 with SMTP id
- l67-20020a0de246000000b0030c5e777104mr10997642ywe.448.1654252136425; Fri, 03
- Jun 2022 03:28:56 -0700 (PDT)
+        bh=Zcr1s3ugeaE9p3nhhIdLCJU637n5hOiY3Yql49RPVHo=;
+        b=CjcIQzdrA+qwsHjMvvfkOZgzkLOc5lt2bSTehxs0d1SXVaWpo5EDieRjmNkfQWqvwF
+         KFgBt4prQjYJBEc/7aQnoWQKzhI5rF/p6H3PZ5LnNP9LzZVaBfzmywEKeCs5hSOZT+BB
+         QZNEeXiTzj86Jd5yHGcBlJo+3n7zapGFDUEb8T8hQrKqt4UxHQsZfAUwMu+9wJjfIl0C
+         bMnDiibFH4NplDF6hVK4X72lCvr0lhm7iMdnp3y46fPBrsh0QkYT6KVuXyMbp2v3kGw3
+         ss6NerWeTEBlXG1zPHwYV14f0oYj9HxnkYwXMcy6ZTyMoKH5LwN+6tdC2jccf6W7ns/8
+         x+AA==
+X-Gm-Message-State: AOAM530OkCAydUKGEYXNc50QpgxurLYhLDlbazACxqxrXY5rju13Ss8w
+        R4s39leFeEaikkV41n1f76tNmA6w3E9nWx4fdE0Pyg==
+X-Google-Smtp-Source: ABdhPJxl+08Zn/lYdSINCrN0AMJJoC21Ex/5MKiRcxgoQhyNTV2ssDVGcuudIFlulouWleLEtWVvAyJyT1x9WmwmgUk=
+X-Received: by 2002:a25:df50:0:b0:65c:e053:3449 with SMTP id
+ w77-20020a25df50000000b0065ce0533449mr10779582ybg.291.1654252568890; Fri, 03
+ Jun 2022 03:36:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <1654079415-26217-1-git-send-email-quic_srivasam@quicinc.com> <1654079415-26217-3-git-send-email-quic_srivasam@quicinc.com>
-In-Reply-To: <1654079415-26217-3-git-send-email-quic_srivasam@quicinc.com>
+References: <20220427144620.9105-1-pmalgujar@marvell.com> <20220427144620.9105-3-pmalgujar@marvell.com>
+ <CACRpkdaqeTs-jHPBmtdiz+LdMM0pz0zqt4diX=e+YpgaGr0Jbw@mail.gmail.com> <20220603090618.GA27121@Dell2s-9>
+In-Reply-To: <20220603090618.GA27121@Dell2s-9>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 3 Jun 2022 12:28:45 +0200
-Message-ID: <CACRpkdYQW7WByaGoSFKT91OwRao_jJdCAbL0pUuj3vdS6TdkQg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sc7280: Add lpi pinctrl variant
- data for adsp based targets
-To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, quic_plai@quicinc.com,
-        bgoswami@quicinc.com, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, quic_rohkumar@quicinc.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        swboyd@chromium.org, judyhsiao@chromium.org,
-        linux-gpio@vger.kernel.org,
-        Venkata Prasad Potturu <quic_potturu@quicinc.com>
+Date:   Fri, 3 Jun 2022 12:35:57 +0200
+Message-ID: <CACRpkdaOd0-k_mt0ZrKT-DbVc3f0b5uXXmXpBNH=hq3BGCB+vQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] dt-bindings: gpio: gpio-thunderx: Describe pin-cfg option
+To:     Piyush Malgujar <pmalgujar@marvell.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, rric@kernel.org,
+        cchavva@marvell.com, wsadowski@marvell.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,71 +68,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 1, 2022 at 12:30 PM Srinivasa Rao Mandadapu
-<quic_srivasam@quicinc.com> wrote:
+On Fri, Jun 3, 2022 at 11:06 AM Piyush Malgujar <pmalgujar@marvell.com> wrote:
 
-So one way to just use a propert and avoid more compatible strings:
+> The purpose of this pin-cfg entry is different than the standard GPIO pin config usage.
+> It is to write a value to GPIO_BIT_CFG register which is used to configure fields like
+> pin function, selecting which signal is reported to GPIO output or which signal GPIO
+> input need to connect, filters, XOR and output mode.
 
-> Add compatible string and lpi pinctrl variant data structure for adsp
-> enabled sc7280 platforms.
-> This variant data structure rnd compatible name required for
-> distingushing ADSP based platforms and ADSP bypass platforms.
-> In case of ADSP enabled platforms, where audio is routed through ADSP
-> macro and decodec GDSC Switches are triggered as clocks by pinctrl
-> driver and ADSP firmware controls them. So It's mandatory to enable
-> them in ADSP based solutions.
-> In case of ADSP bypass platforms clock voting is optional as these macro
-> and dcodec GDSC switches are maintained as power domains and operated from
-> lpass clock drivers.
->
-> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-> ---
->  drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> index 2add9a4..c9e85d9 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> @@ -134,6 +134,16 @@ static const struct lpi_function sc7280_functions[] = {
->         LPI_FUNCTION(wsa_swr_data),
->  };
->
-> +static const struct lpi_pinctrl_variant_data sc7280_adsp_lpi_data = {
+Then implement pin control for this driver instead of inventing a custom hack?
+https://docs.kernel.org/driver-api/pin-control.html
 
-Remove static and export this struct in drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+Several drivers implement pin control with a GPIO front-end, for example:
+drivers/gpio/gpio-pl061.c is used as a front end with
+drivers/pinctrl/pinctrl-single.c
 
-> +       .pins = sc7280_lpi_pins,
-> +       .npins = ARRAY_SIZE(sc7280_lpi_pins),
-> +       .groups = sc7280_groups,
-> +       .ngroups = ARRAY_SIZE(sc7280_groups),
-> +       .functions = sc7280_functions,
-> +       .nfunctions = ARRAY_SIZE(sc7280_functions),
-> +       .is_clk_optional = false,
-> +};
-
-
->  static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
->         .pins = sc7280_lpi_pins,
->         .npins = ARRAY_SIZE(sc7280_lpi_pins),
-> @@ -149,6 +159,10 @@ static const struct of_device_id lpi_pinctrl_of_match[] = {
->                .compatible = "qcom,sc7280-lpass-lpi-pinctrl",
->                .data = &sc7280_lpi_data,
->         },
-> +       {
-> +               .compatible = "qcom,sc7280-lpass-adsp-lpi-pinctrl",
-> +               .data = &sc7280_adsp_lpi_data,
-> +       },
-
-Drop this and instead add some code in the probe()
-in drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-lines:
-
-if (of_device_is_compatible(np, "qcom,sc7280-lpass-lpi-pinctrl") &&
-of_property_read_bool(np, "qcom,adsp-mode))
-     data = &sc7280_adsp_lpi_data;
+There are also composite drivers in drivers/pinctrl that implement both
+pincontrol (incl muxing) and GPIO, such as drivers/pinctrl/pinctrl-sx150x.c
 
 Yours,
 Linus Walleij
