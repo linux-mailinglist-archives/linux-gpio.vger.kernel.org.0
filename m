@@ -2,158 +2,387 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D700B53C905
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 13:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E202A53CA24
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 14:46:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243877AbiFCLD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jun 2022 07:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46742 "EHLO
+        id S235346AbiFCMqK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jun 2022 08:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237380AbiFCLD0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 07:03:26 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4CA2F016;
-        Fri,  3 Jun 2022 04:03:23 -0700 (PDT)
+        with ESMTP id S229634AbiFCMqK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 08:46:10 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE993A5EB
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Jun 2022 05:46:07 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id n18so6773083plg.5
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Jun 2022 05:46:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654254203; x=1685790203;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KBAKvX9/GNCNqNjkKFmolG/8gDtP8L5C5SntjrMrokk=;
-  b=i9I+iSIeAGz4hn6PBEqLa2v0hEm4WFbZz7e94472vMSVkS2KmEZDEf73
-   jJvHa3ZBH3C2BM21znnrcBtorvblxJMv5ubAhSFEK/95C/FZteDnKn+J6
-   KFFw4A7QOAmCfnsJdAnbW0Odj8HtaiFUQL2JOzxUHZM3ntELXIcQ6Uc3r
-   Q=;
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 03 Jun 2022 04:03:23 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2022 04:03:22 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Fri, 3 Jun 2022 04:03:21 -0700
-Received: from [10.216.32.198] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Fri, 3 Jun 2022
- 04:03:15 -0700
-Message-ID: <a2b7de25-55a4-7d31-2787-be6d0ccf9500@quicinc.com>
-Date:   Fri, 3 Jun 2022 16:33:12 +0530
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jqJ8cC09b+sii7sfklEUTjB/Jn895aIDN/G7OCn4xg8=;
+        b=SFQgW6oQAn2XupoUsqY70l0Ynu3VH/asKfaO4ifG1ZQZDbaupH5lQxKsFcjI6YFAXf
+         JfnJSMwZyWSODjVQZbXTcIlc1tcO3LbpxP4OZEv4Wkc4KRGhdX62dLI+z28GCOX4Q4bP
+         MDiJS20ECrRarWuvEz3TPQaF4RnPUu6LZKQwoFGgE12A/BdL+S0L6dNXJ8YfTTVdjCwx
+         MOgxlPH4NOBLYzuibtRudyUPBLy83vEqHz8js3N2iqpQoqlDfNFa6FNsy+NRIq5/hJQ3
+         EOaqyMBpBXLq/MnWb+9cvmKomZgTmhk6+ueNptOL8cv19fvRvxgPte57ytnrhhcilyLa
+         Dt6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jqJ8cC09b+sii7sfklEUTjB/Jn895aIDN/G7OCn4xg8=;
+        b=0mBx4W54LUHhgLgo/hxtGbi017RT2W13fSeVgju1UIMKqaBDzGu4Zya8jbSsk2ZiO6
+         eJj0/wPkFmCXpwjXpw+gPHlGCgh4+VYxyACNLhTc2IsgDdDrkDC8CGz9SoS3aZ99jyK2
+         9CRZwtNsF67P369ez4b+t2mpy3x8Hat9ws3Ll0Drb4XzHSGJ+4++J9unHT/xQwGdFyyi
+         m8HX2aoaEyyfg0pYjT4G8fwzljpAZ1v1kGkDmDQjEF4frXcpx3yaFZLMQKDsijvPIicG
+         tI7LQb6WDqtxXfc31kC28KEcz38cRpNMxw7VqGMI9uDLbdZJzR5NkGeWnTT+et63Gl6p
+         Q8Kg==
+X-Gm-Message-State: AOAM530SqBu6a/QbWKb7yj9rN029k6yYE1f2uJATKlBmnqygCQZccWIA
+        IYt+iYRuMDWsdJ+hmjqb25o=
+X-Google-Smtp-Source: ABdhPJy1s+pKWuWm/Moaqwh/q4GbgEI4iyvb+ipA0DJVxgP1V9Rci0TU0plu/xsJctKe7J3vL2KTng==
+X-Received: by 2002:a17:902:d4d1:b0:163:82c7:24 with SMTP id o17-20020a170902d4d100b0016382c70024mr9988270plg.5.1654260366587;
+        Fri, 03 Jun 2022 05:46:06 -0700 (PDT)
+Received: from sol ([203.221.89.174])
+        by smtp.gmail.com with ESMTPSA id a8-20020aa795a8000000b0051810d460adsm5476287pfk.114.2022.06.03.05.46.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jun 2022 05:46:05 -0700 (PDT)
+Date:   Fri, 3 Jun 2022 20:46:00 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2
+ API
+Message-ID: <20220603124600.GA35695@sol>
+References: <20220525140704.94983-1-brgl@bgdev.pl>
+ <20220525140704.94983-4-brgl@bgdev.pl>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sc7280: Add lpi pinctrl variant
- data for adsp based targets
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <quic_plai@quicinc.com>, <bgoswami@quicinc.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <srinivas.kandagatla@linaro.org>,
-        <quic_rohkumar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <swboyd@chromium.org>,
-        <judyhsiao@chromium.org>, <linux-gpio@vger.kernel.org>,
-        Venkata Prasad Potturu <quic_potturu@quicinc.com>
-References: <1654079415-26217-1-git-send-email-quic_srivasam@quicinc.com>
- <1654079415-26217-3-git-send-email-quic_srivasam@quicinc.com>
- <CACRpkdYQW7WByaGoSFKT91OwRao_jJdCAbL0pUuj3vdS6TdkQg@mail.gmail.com>
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Organization: Qualcomm
-In-Reply-To: <CACRpkdYQW7WByaGoSFKT91OwRao_jJdCAbL0pUuj3vdS6TdkQg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220525140704.94983-4-brgl@bgdev.pl>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, May 25, 2022 at 04:07:02PM +0200, Bartosz Golaszewski wrote:
+> This adds the usual set of reimplementations of gpio-tools using the new
+> python module.
+> 
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+>  bindings/python/examples/Makefile.am   | 10 ++++++++
+>  bindings/python/examples/gpiodetect.py | 17 +++++++++++++
+>  bindings/python/examples/gpiofind.py   | 20 +++++++++++++++
+>  bindings/python/examples/gpioget.py    | 31 +++++++++++++++++++++++
+>  bindings/python/examples/gpioinfo.py   | 35 ++++++++++++++++++++++++++
+>  bindings/python/examples/gpiomon.py    | 31 +++++++++++++++++++++++
+>  bindings/python/examples/gpioset.py    | 35 ++++++++++++++++++++++++++
+>  7 files changed, 179 insertions(+)
+>  create mode 100644 bindings/python/examples/Makefile.am
+>  create mode 100755 bindings/python/examples/gpiodetect.py
+>  create mode 100755 bindings/python/examples/gpiofind.py
+>  create mode 100755 bindings/python/examples/gpioget.py
+>  create mode 100755 bindings/python/examples/gpioinfo.py
+>  create mode 100755 bindings/python/examples/gpiomon.py
+>  create mode 100755 bindings/python/examples/gpioset.py
+> 
+> diff --git a/bindings/python/examples/Makefile.am b/bindings/python/examples/Makefile.am
+> new file mode 100644
+> index 0000000..4169469
+> --- /dev/null
+> +++ b/bindings/python/examples/Makefile.am
+> @@ -0,0 +1,10 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> +
+> +EXTRA_DIST =				\
+> +		gpiodetect.py		\
+> +		gpiofind.py		\
+> +		gpioget.py		\
+> +		gpioinfo.py		\
+> +		gpiomon.py		\
+> +		gpioset.py
+> diff --git a/bindings/python/examples/gpiodetect.py b/bindings/python/examples/gpiodetect.py
+> new file mode 100755
+> index 0000000..08e586b
+> --- /dev/null
+> +++ b/bindings/python/examples/gpiodetect.py
+> @@ -0,0 +1,17 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> +
+> +"""Reimplementation of the gpiodetect tool in Python."""
+> +
+> +import gpiod
+> +import os
+> +
+> +if __name__ == "__main__":
+> +    for entry in os.scandir("/dev/"):
+> +        if gpiod.is_gpiochip_device(entry.path):
+> +            with gpiod.Chip(entry.path) as chip:
+> +                info = chip.get_info()
+> +                print(
+> +                    "{} [{}] ({} lines)".format(info.name, info.label, info.num_lines)
+> +                )
+> diff --git a/bindings/python/examples/gpiofind.py b/bindings/python/examples/gpiofind.py
+> new file mode 100755
+> index 0000000..e488a49
+> --- /dev/null
+> +++ b/bindings/python/examples/gpiofind.py
+> @@ -0,0 +1,20 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> +
+> +"""Reimplementation of the gpiofind tool in Python."""
+> +
+> +import gpiod
+> +import os
+> +import sys
+> +
+> +if __name__ == "__main__":
+> +    for entry in os.scandir("/dev/"):
+> +        if gpiod.is_gpiochip_device(entry.path):
+> +            with gpiod.Chip(entry.path) as chip:
+> +                offset = chip.get_line_offset_from_name(sys.argv[1])
+> +                if offset is not None:
+> +                    print("{} {}".format(chip.get_info().name, offset))
+> +                    sys.exit(0)
+> +
+> +    sys.exit(1)
+> diff --git a/bindings/python/examples/gpioget.py b/bindings/python/examples/gpioget.py
+> new file mode 100755
+> index 0000000..c509f38
+> --- /dev/null
+> +++ b/bindings/python/examples/gpioget.py
+> @@ -0,0 +1,31 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> +
+> +"""Simplified reimplementation of the gpioget tool in Python."""
+> +
+> +import gpiod
+> +import sys
+> +
+> +Direction = gpiod.Line.Direction
+> +Value = gpiod.Line.Value
+> +
+> +if __name__ == "__main__":
+> +    if len(sys.argv) < 3:
+> +        raise TypeError("usage: gpioget.py <gpiochip> <offset1> <offset2> ...")
+> +
+> +    path = sys.argv[1]
+> +    offsets = []
+> +    for off in sys.argv[2:]:
+> +        offsets.append(int(off))
+> +
+> +    with gpiod.request_lines(
+> +        path,
+> +        gpiod.RequestConfig(offsets=offsets, consumer="gpioget.py"),
+> +        gpiod.LineConfig(direction=Direction.INPUT),
+> +    ) as request:
 
-On 6/3/2022 3:58 PM, Linus Walleij wrote:
-Thanks for Your time and valuable inputs Linus!!!
-> On Wed, Jun 1, 2022 at 12:30 PM Srinivasa Rao Mandadapu
-> <quic_srivasam@quicinc.com> wrote:
->
-> So one way to just use a propert and avoid more compatible strings:
->
->> Add compatible string and lpi pinctrl variant data structure for adsp
->> enabled sc7280 platforms.
->> This variant data structure rnd compatible name required for
->> distingushing ADSP based platforms and ADSP bypass platforms.
->> In case of ADSP enabled platforms, where audio is routed through ADSP
->> macro and decodec GDSC Switches are triggered as clocks by pinctrl
->> driver and ADSP firmware controls them. So It's mandatory to enable
->> them in ADSP based solutions.
->> In case of ADSP bypass platforms clock voting is optional as these macro
->> and dcodec GDSC switches are maintained as power domains and operated from
->> lpass clock drivers.
->>
->> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
->> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> ---
->>   drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->> index 2add9a4..c9e85d9 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->> @@ -134,6 +134,16 @@ static const struct lpi_function sc7280_functions[] = {
->>          LPI_FUNCTION(wsa_swr_data),
->>   };
->>
->> +static const struct lpi_pinctrl_variant_data sc7280_adsp_lpi_data = {
-> Remove static and export this struct in drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-We can remove entire data structure if my below approach is okay.
->
->> +       .pins = sc7280_lpi_pins,
->> +       .npins = ARRAY_SIZE(sc7280_lpi_pins),
->> +       .groups = sc7280_groups,
->> +       .ngroups = ARRAY_SIZE(sc7280_groups),
->> +       .functions = sc7280_functions,
->> +       .nfunctions = ARRAY_SIZE(sc7280_functions),
->> +       .is_clk_optional = false,
->> +};
->>
->>
->>   static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
->>          .pins = sc7280_lpi_pins,
->>          .npins = ARRAY_SIZE(sc7280_lpi_pins),
->> @@ -149,6 +159,10 @@ static const struct of_device_id lpi_pinctrl_of_match[] = {
->>                 .compatible = "qcom,sc7280-lpass-lpi-pinctrl",
->>                 .data = &sc7280_lpi_data,
->>          },
->> +       {
->> +               .compatible = "qcom,sc7280-lpass-adsp-lpi-pinctrl",
->> +               .data = &sc7280_adsp_lpi_data,
->> +       },
-> Drop this and instead add some code in the probe()
-> in drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-> lines:
->
-> if (of_device_is_compatible(np, "qcom,sc7280-lpass-lpi-pinctrl") &&
-> of_property_read_bool(np, "qcom,adsp-mode))
->       data = &sc7280_adsp_lpi_data;
+With request_lines() being the primary entry point to the gpiod module,
+consider extending it to allow the RequestConfig and LineConfig kwargs to
+be passed directly to request_lines(), and for those transient objects to
+be constructed within request_lines().
+That way the average user does not need to concern themselves with those
+objects and the code is easier to read.
+i.e.
+    with gpiod.request_lines(
+        path,
+        offsets=offsets,
+        consumer="gpioget.py",
+        direction=Direction.INPUT,
+    ) as request:
 
-Here, only diff between ADSP and ADSP bypass variant dats is 
-"is_clk_optional" field.
+You can still support passing in complete RequestConfig and LineConfig
+as kwargs for cases where the user requires complex configuration.
+i.e.
+    with gpiod.request_lines(
+        path,
+        req_cfg=gpiod.RequestConfig(offsets=offsets, consumer="gpioget.py"),
+        line_cfg=gpiod.LineConfig(direction=Direction.INPUT),
+    ) as request:
 
-So we can keep something like this. Kindly suggest, if it's not making 
-sense.
+Or for those use cases the user could use the Chip.request_lines() (which
+wouldn't have the kwarg sugar) instead.
 
-if (of_device_is_compatible(np, "qcom,sc7280-lpass-lpi-pinctrl") &&
-of_property_read_bool(np, "qcom,adsp-mode))
-      data->is_clk_optional = false;
+Would be good to have some examples with complex configuration as well,
+not just the tool reimplementations.
 
->
-> Yours,
-> Linus Walleij
+> +        vals = request.get_values()
+> +
+> +        for val in vals:
+> +            print("0" if val == Value.INACTIVE else "1", end=" ")
+> +        print()
+> diff --git a/bindings/python/examples/gpioinfo.py b/bindings/python/examples/gpioinfo.py
+> new file mode 100755
+> index 0000000..3097d10
+> --- /dev/null
+> +++ b/bindings/python/examples/gpioinfo.py
+> @@ -0,0 +1,35 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> +
+> +"""Simplified reimplementation of the gpioinfo tool in Python."""
+> +
+> +import gpiod
+> +import os
+> +
+> +if __name__ == "__main__":
+> +    for entry in os.scandir("/dev/"):
+> +        if gpiod.is_gpiochip_device(entry.path):
+> +            with gpiod.Chip(entry.path) as chip:
+> +                cinfo = chip.get_info()
+> +                print("{} - {} lines:".format(cinfo.name, cinfo.num_lines))
+> +
+> +                for offset in range(0, cinfo.num_lines):
+> +                    linfo = chip.get_line_info(offset)
+> +                    offset = linfo.offset
+> +                    name = linfo.name
+> +                    consumer = linfo.consumer
+> +                    direction = linfo.direction
+> +                    active_low = linfo.active_low
+> +
+> +                    print(
+> +                        "\tline {:>3}: {:>18} {:>12} {:>8} {:>10}".format(
+> +                            offset,
+> +                            "unnamed" if name is None else name,
+> +                            "unused" if consumer is None else consumer,
+> +                            "input"
+> +                            if direction == gpiod.Line.Direction.INPUT
+> +                            else "output",
+> +                            "active-low" if active_low else "active-high",
+> +                        )
+> +                    )
+> diff --git a/bindings/python/examples/gpiomon.py b/bindings/python/examples/gpiomon.py
+> new file mode 100755
+> index 0000000..b0f4b88
+> --- /dev/null
+> +++ b/bindings/python/examples/gpiomon.py
+> @@ -0,0 +1,31 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> +
+> +"""Simplified reimplementation of the gpiomon tool in Python."""
+> +
+> +import gpiod
+> +import sys
+> +
+> +Edge = gpiod.Line.Edge
+> +
+> +if __name__ == "__main__":
+> +    if len(sys.argv) < 3:
+> +        raise TypeError("usage: gpiomon.py <gpiochip> <offset1> <offset2> ...")
+> +
+> +    path = sys.argv[1]
+> +    offsets = []
+> +    for off in sys.argv[2:]:
+> +        offsets.append(int(off))
+> +
+> +    buf = gpiod.EdgeEventBuffer()
+> +
+> +    with gpiod.request_lines(
+> +        path,
+> +        gpiod.RequestConfig(offsets=offsets, consumer="gpiomon.py"),
+> +        gpiod.LineConfig(edge_detection=Edge.BOTH),
+> +    ) as request:
+> +        while True:
+> +            request.read_edge_event(buf)
+> +            for event in buf:
+> +                print(event)
+
+Can you hide the buffer here to simplify the common case?
+How about having the request manage the buffer, and add a generator
+method that returns the next event, say edge_events()?
+
+For the uncommon case, add kwargs to allow the user to provide the buffer,
+or to specify the buffer size.  If neither provided then the request
+constructs a default sized buffer.
+
+Then the code becomes:
+
+    with gpiod.request_lines(
+        path,
+        offsets=offsets,
+        consumer="gpiomon.py",
+        edge_detection=Edge.BOTH,
+    ) as request:
+        for event in request.edge_events():
+            print(event)
+
+> diff --git a/bindings/python/examples/gpioset.py b/bindings/python/examples/gpioset.py
+> new file mode 100755
+> index 0000000..3a8f8cc
+> --- /dev/null
+> +++ b/bindings/python/examples/gpioset.py
+> @@ -0,0 +1,35 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> +
+> +"""Simplified reimplementation of the gpioset tool in Python."""
+> +
+> +import gpiod
+> +import sys
+> +
+> +Value = gpiod.Line.Value
+> +
+> +if __name__ == "__main__":
+> +    if len(sys.argv) < 3:
+> +        raise TypeError("usage: gpioset.py <gpiochip> <offset1>=<value1> ...")
+> +
+> +    path = sys.argv[1]
+> +    values = dict()
+> +    for arg in sys.argv[2:]:
+> +        arg = arg.split("=")
+> +        key = int(arg[0])
+> +        val = int(arg[1])
+> +
+> +        if val == 1:
+> +            values[key] = Value.ACTIVE
+> +        elif val == 0:
+> +            values[key] = Value.INACTIVE
+> +        else:
+> +            raise ValueError("{} is an invalid value for GPIO lines".format(val))
+> +
+> +    with gpiod.request_lines(
+> +        path,
+> +        gpiod.RequestConfig(offsets=values.keys(), consumer="gpioset.py"),
+> +        gpiod.LineConfig(direction=gpiod.Line.Direction.OUTPUT, output_values=values),
+> +    ) as request:
+> +        input()
+> -- 
+> 2.34.1
+> 
+
+The focus of my comments above is to simplify the API for the most common
+case, and to make it a little more Pythonic rather than mirroring the C
+API, in both cases by hiding implementation details that the casual user
+doesn't need to know about.
+
+I'm pretty sure other minor things that I'm not 100% comfortable with are
+the same as with the C++ bindings, and the Python is in keeping with that,
+so I wont recover the same ground.
+
+I'm ok with the series overall.  As per my C++ comments, it would be
+great to get some feedback from Python developers.
+
+Cheers,
+Kent.
