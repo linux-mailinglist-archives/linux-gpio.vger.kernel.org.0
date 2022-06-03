@@ -2,111 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1FB653CB7D
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 16:28:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E16253CD22
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jun 2022 18:25:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244631AbiFCO2T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jun 2022 10:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
+        id S1343888AbiFCQZJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jun 2022 12:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240513AbiFCO2S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 10:28:18 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782A122BC1
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Jun 2022 07:28:17 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id q15so2580847wrc.11
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jun 2022 07:28:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xEYT24Mw/3xwhggZ/dpbmQG99woOPJwgkQGW8eylJQs=;
-        b=zvsMZh6sLDlicrdTGeylEAw0Q1YIMm9o7fadQF8XPiqdYFOu82UeM3gyvT0tNKQx0V
-         QtfnOhpaMS6/olRJQJmIvNAF+XTbT5GKyjnYQmo49/MGEcLXAkdZ/IOPVjfItNW8YvyM
-         oSfbsGy//J3DR4BaK449AbnXMGbVdzTaVeuSa7QCrwjt0RD3O3K1WOVnYtu2KNaVJloT
-         dxLrm9R8JCzmhSm9XZFWrlTa0lmihGYrNPh6D/N/FZl2FcDcW8YlGafJmEs6WMJ1POVk
-         BxqxOxLX16zCsZTbQjPT1K6ehsWp/z4wxwKIWq1X7iozSFWh0+rrQJAD8hIW0QLQRb4p
-         XN2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xEYT24Mw/3xwhggZ/dpbmQG99woOPJwgkQGW8eylJQs=;
-        b=cIRWM0lOQQthKITf+KL6p/7WT2+Mjb6jsdWvZ0ZdOMjfsw1H6j2YYWiIrr/KvP8m7p
-         OqyaLazEdMlt6jzXzNPmQJJBoGPAQLVdDvFGEt9CP/RierfJbyRmiou8K4XPlsrVzFdA
-         bKMiwf9SVHcGvpnj/x/zqh7Cfwwtk0xr+0gOje6YMqMFFBeGK9U8pqFeSZGSv1kq3QKi
-         IQS1mPFCT34F2c/03lsHvwe/v26rdcIsJlxw3vPpEU379w/la34jVZBAkDveTPfvrCZk
-         UMN60u/3jT0WB+27s6reRCQEPpV3r8Q9tGhYzTzkp7xFuIrHcKcrQWbEF/f2V/9esK+W
-         xyzw==
-X-Gm-Message-State: AOAM533w1PGG5v0vMghHbznsI7aK6QNUYtJtO0Sh+N7hnKEiShCID1fw
-        9W/jIZde/SRxEnHEXcksEyHeTw==
-X-Google-Smtp-Source: ABdhPJyovDLQyMgqK1CVt47Mttdzalhw7oxXByv7wtrOyjSW+woe/77ysnzSCDi+GJOQwyyhg3vJrg==
-X-Received: by 2002:a05:6000:1568:b0:20f:d416:e5ac with SMTP id 8-20020a056000156800b0020fd416e5acmr8608338wrz.190.1654266495652;
-        Fri, 03 Jun 2022 07:28:15 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:327a:d111:d547:a6d2])
-        by smtp.gmail.com with ESMTPSA id a21-20020a05600c349500b003958af7d0c8sm8616581wmq.45.2022.06.03.07.28.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 07:28:15 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: updates for v5.19-rc1
-Date:   Fri,  3 Jun 2022 16:28:12 +0200
-Message-Id: <20220603142812.66869-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S237632AbiFCQZI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jun 2022 12:25:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FBD5131C;
+        Fri,  3 Jun 2022 09:25:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AB0896195F;
+        Fri,  3 Jun 2022 16:25:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A239C385A9;
+        Fri,  3 Jun 2022 16:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654273507;
+        bh=4rw9dnXElz7aaMM5oeE5jfIs71mLFoPFuBfRRckUmRk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jUrPgyXf8lp+ALxVFmsd5m8fqg6DzUeCDsk1uHrHqSxQ6Pfr951Vtu6O7upSVw845
+         eRckR2c2q9tIwqsCPGmzUtDZ7EiJN7KkabGeLhDeRKZI8a/N4oiMOcgoW+ui+lkrPR
+         wVyqnq3xUwMT3X9uVr3ST3n3jQfBa1/BiXw9pZ1iokMS2pLgJ5qH9vsTLdVyuP0Mmp
+         E2gpPUi73jEDopcSXLhOYPWj6uQaWMbCFQ+hyEjHmta/WtCMT72BxRpmGzMKvgK1/L
+         18ufwHNbk2pBaeJ9f7UCJRddmDreMuSJZOhppEeqL7DTbXTyZRJ88qbtMy0y97GWEh
+         sflnWPW9nqrqg==
+Date:   Fri, 3 Jun 2022 17:34:04 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, wens@csie.org,
+        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
+        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
+        rafael@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/10] dt-bindings: iio: adc: axp209: Add AXP192
+ compatible
+Message-ID: <20220603173404.4cb83647@jic23-huawei>
+In-Reply-To: <20220603135714.12007-4-aidanmacdonald.0x0@gmail.com>
+References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
+        <20220603135714.12007-4-aidanmacdonald.0x0@gmail.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+On Fri,  3 Jun 2022 14:57:07 +0100
+Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
 
-Please pull the following set of fixes for the upcoming rc.
+> The AXP192 is identical to the AXP20x, except for two additional
+> GPIO ADC channels.
+> 
+> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
 
-Best regards,
-Bartosz Golaszewski
+There is an argument that could be made here to say this should
+have a fallback compatible to a suitable existing part as the driver
+would work, we'd just be missing a couple of channels.
 
-The following changes since commit 4b0986a3613c92f4ec1bdc7f60ec66fea135991f:
+I don't feel strongly either way, but thought I'd raise the possibility.
 
-  Linux 5.18 (2022-05-22 09:52:31 -1000)
+I guess it's irrelevant if an updated kernel is needed anyway to have
+it functional because of support needed for some other part of the chip
+though.
 
-are available in the Git repository at:
+Jonathan
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc1
+> ---
+>  .../bindings/iio/adc/x-powers,axp209-adc.yaml  | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/x-powers,axp209-adc.yaml b/Documentation/devicetree/bindings/iio/adc/x-powers,axp209-adc.yaml
+> index d6d3d8590171..1a68e650ac7d 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/x-powers,axp209-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/x-powers,axp209-adc.yaml
+> @@ -14,6 +14,23 @@ description: |
+>    Device is a child of an axp209 multifunction device
+>    ADC channels and their indexes per variant:
+>  
+> +  AXP192
+> +  ------
+> +   0 | acin_v
+> +   1 | acin_i
+> +   2 | vbus_v
+> +   3 | vbus_i
+> +   4 | pmic_temp
+> +   5 | gpio0_v
+> +   6 | gpio1_v
+> +   7 | gpio2_v
+> +   8 | gpio3_v
+> +   9 | ipsout_v
+> +  10 | batt_v
+> +  11 | batt_chrg_i
+> +  12 | batt_dischrg_i
+> +  13 | ts_v
+> +
+>    AXP209
+>    ------
+>     0 | acin_v
+> @@ -50,6 +67,7 @@ description: |
+>  properties:
+>    compatible:
+>      oneOf:
+> +      - const: x-powers,axp192-adc
+>        - const: x-powers,axp209-adc
+>        - const: x-powers,axp221-adc
+>        - const: x-powers,axp813-adc
 
-for you to fetch changes up to 7bb8a0cf49d5fede1104afdcb43bd2f8a1df3253:
-
-  gpio: adp5588: Remove support for platform setup and teardown callbacks (2022-06-02 09:17:38 +0200)
-
-----------------------------------------------------------------
-gpio updates for v5.19-rc1
-
-- use the correct register for regcache sync in gpio-pca953x
-- remove unused and potentially harmful code from gpio-adp5588
-- MAINTAINERS update
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      MAINTAINERS: Update GPIO ACPI library to Supported
-      MAINTAINERS: Update Intel GPIO (PMIC and PCH) to Supported
-
-Haibo Chen (1):
-      gpio: pca953x: use the correct register address to do regcache sync
-
-Uwe Kleine-König (1):
-      gpio: adp5588: Remove support for platform setup and teardown callbacks
-
- MAINTAINERS                 |  6 +++---
- drivers/gpio/gpio-adp5588.c | 19 -------------------
- drivers/gpio/gpio-pca953x.c | 19 +++++++++++--------
- 3 files changed, 14 insertions(+), 30 deletions(-)
