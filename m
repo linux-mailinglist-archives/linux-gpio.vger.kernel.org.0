@@ -2,52 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 911D353D731
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jun 2022 16:18:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01AF853D76D
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jun 2022 17:16:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235810AbiFDOSQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Jun 2022 10:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45256 "EHLO
+        id S233777AbiFDPQe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Jun 2022 11:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234230AbiFDOSP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Jun 2022 10:18:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158F033E17;
-        Sat,  4 Jun 2022 07:18:14 -0700 (PDT)
+        with ESMTP id S232805AbiFDPQd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Jun 2022 11:16:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8A52BC5;
+        Sat,  4 Jun 2022 08:16:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A463B60C13;
-        Sat,  4 Jun 2022 14:18:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2766C385B8;
-        Sat,  4 Jun 2022 14:18:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E9F2360DF2;
+        Sat,  4 Jun 2022 15:16:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8045FC385B8;
+        Sat,  4 Jun 2022 15:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654352293;
-        bh=D5lPavrfLD0VtXRKigqWh1Y8dtn2cjHrLnqBDqhJYKI=;
+        s=k20201202; t=1654355791;
+        bh=sMVrMeuN+iV/XtWw2AufvrZZOEq7TIiPqjXY1rL4f9g=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Oqm1DwhVrj7q+/MRS+WDQcIZOv2UlfMvrBl2Spr+LUxPOIANvk7DKbAac3MtLhVnZ
-         zK/34jzloOLVKKRouJlZCKSAut3ri875PGFGu311RMoBa4JapYgvBUp+LlMa5JlLmT
-         5mdESMe17XP7KK7fLJw8DRDy4hexNthV+QmQgYza6zdTZ0gy0G5vP5Upp2rl87nQLE
-         xAsrr6G2qoY10BSbM9zpVS5HG7cqz0aWDQnIM/FjaaTowe9jUh/PmvJ4+VSgizKdf3
-         yf/0cc9dlZDv92FUhZO52uBiUkSCvNJhY8SWmAyuGTi63t5/I9az1H3CLFOy4JfVaC
-         0RSSc7Ttemnjg==
-Date:   Sat, 4 Jun 2022 15:27:11 +0100
+        b=Dpi95ZpkKxrLsmYgT2URHRj5uELvFeqz8H2wlFStZFuYv6dGW1G5k10G29ejzXlpX
+         LOqJgMy1s/AMzWICKHl/Wc0Mm0aShXLuQ9IZPS+8gZT/Z5WiQo5gLN9phpqZqq4IWu
+         rnoA4StXDeC5K6lurx01fPg8zXC9hl8Deca/WHXS/+N9naaZRys/QHyE3hgf2rjjSo
+         7PXMOtWELwJwLfWCM+7fhn6tQqzXw1EXriD6L8gx3/sQ9rDQeiZ9T8D3LtZw078B3c
+         qw3xwZy820FNE+hEbN+QWezuVb3JJ7yCOUwsmndzXSeZjYdJ9te2ORgdqCiEIUggJH
+         dRUS1Xa9Ml8LQ==
+Date:   Sat, 4 Jun 2022 16:25:32 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, lars@metafoo.de
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, wens@csie.org,
-        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, lgirdwood@gmail.com, rafael@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] iio: adc: axp20x_adc: Add support for AXP192
-Message-ID: <20220604152711.22268711@jic23-huawei>
-In-Reply-To: <e9ABtmBNzztlyRcJD5f36OmAYZW4i7KH@localhost>
-References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
-        <20220603135714.12007-9-aidanmacdonald.0x0@gmail.com>
-        <20220603174744.642157d8@jic23-huawei>
-        <e9ABtmBNzztlyRcJD5f36OmAYZW4i7KH@localhost>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Cosmin Tanislav <demonsingur@gmail.com>,
+        cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] iio: addac: ad74413r: for_each_set_bit_from ->
+ for_each_set_bit
+Message-ID: <20220604162532.65e4ea0e@jic23-huawei>
+In-Reply-To: <20220130142558.7601722c@jic23-huawei>
+References: <20220111074703.3677392-1-cosmin.tanislav@analog.com>
+        <20220111074703.3677392-3-cosmin.tanislav@analog.com>
+        <CAHp75VeVRwbMhQp-oBYM7yVzL_ma0jRu3ESEjz19zLQDFWyzkA@mail.gmail.com>
+        <20220115185948.56f227df@jic23-huawei>
+        <20220130142558.7601722c@jic23-huawei>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,61 +67,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 04 Jun 2022 12:47:38 +0100
-Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
+On Sun, 30 Jan 2022 14:25:58 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-> Jonathan Cameron <jic23@kernel.org> writes:
+> On Sat, 15 Jan 2022 18:59:48 +0000
+> Jonathan Cameron <jic23@kernel.org> wrote:
 > 
-> > On Fri,  3 Jun 2022 14:57:12 +0100
-> > Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
-> >  
-> >> The AXP192 is identical to the AXP20x, except for the addition of
-> >> two more GPIO ADC channels.
-> >> 
-> >> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>  
-> > Hi Aidan,
-> >
-> > A few minor questions and comments inline.
-> >
-> > Thanks,
-> >
-> > Jonathan
-> >
-> > Unless I missed a previous patch adding labels to the other devices supported,
-> > this is the first driver to use these.  Why do they make sense here but not
-> > to add to existing supported devices?
-> >
-> > I don't particularly mind this addition, just looking for an explanation.
-> >  
+> > On Tue, 11 Jan 2022 11:22:23 +0200
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >   
+> > > On Tue, Jan 11, 2022 at 9:47 AM Cosmin Tanislav <demonsingur@gmail.com> wrote:    
+> > > >
+> > > > The starting bit is always zero, it doesn't make much sense to
+> > > > use for_each_set_bit_from. Replace it with for_each_set_bit
+> > > > which doesn't start from a particular bit.      
+> > > 
+> > > We refer to the function() like this.
+> > > But no need to resend, I hope Jonathan may amend this when applying.
+> > >     
+> > 
+> > I'll need to wait for rc1 to have the relevant code in my fixes-togreg
+> > branch to pick these up.
+> > 
+> > They look fine to me and hopefully I'll remember to cleanup the above ;)
+> >   
+> First 2 applied to the fixes-togreg branch of iio.git.
 > 
-> That'd be because 1d4ef9b39ebecca8 ("iio: core: Add optional symbolic
-> label to a device channel") added read_label in 2020, while the AXP
-> driver was introduced in 2017. I could add read_label for the other
-> chips while I'm here, for consistency.
+> This 3rd one isn't a fix so will have to wait for those to end up in
+> my togreg branch.  Give me a shout if I seem to have lost this once that
+> is true.
 
-Thanks, I don't really mind either way on adding support for additional parts.
+Oops.  Even with patchwork I occasionally lose patches as too many things
+stick there for a long time for complex reasons.
 
-> 
-> One question I have is why read_label exists when the kernel already has
-> unique names for IIO channels. Why not just expose the datasheet_name to
-> userspace from the IIO core instead of making drivers do it?
+Anyhow, now applied to the togreg branch of iio.git
 
-In general, datasheet_name refers to the name of the pin on a datasheet for this
-device, whereas label can refer to how it is used.
-There are dt bindings to allow a per channel label letting a driver (where it
-makes sense) provide them for each individual ADC channel.
-(e.g. the ad7768-1 driver does this).
-
-On other devices they come from entirely different sources such as the hardcoded
-choices in hid-sensor-custom-intel-hinge.
-
-I vaguely recall that we've talked in the past about exposing datasheet name directly
-but for many devices it's not that useful (the user doesn't care if a channel is
-aux channel 1 or 7, but rather what it is wired up to).
-
-At the moment this driver just exposes all channels rather than having
-per channel bindings, so we don't have the option to use labeling in the device
-tree to assign the names.   If it's particularly useful to you to have labels
-that are datasheet names that's fine.
+Sorry for the delay
 
 Jonathan
+
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > Thanks,
+> > 
+> > Jonathan  
+> 
+
