@@ -2,117 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01AF853D76D
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jun 2022 17:16:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AFC653D95B
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jun 2022 05:19:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233777AbiFDPQe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Jun 2022 11:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40522 "EHLO
+        id S238988AbiFEDTI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Jun 2022 23:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232805AbiFDPQd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Jun 2022 11:16:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8A52BC5;
-        Sat,  4 Jun 2022 08:16:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E9F2360DF2;
-        Sat,  4 Jun 2022 15:16:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8045FC385B8;
-        Sat,  4 Jun 2022 15:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654355791;
-        bh=sMVrMeuN+iV/XtWw2AufvrZZOEq7TIiPqjXY1rL4f9g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Dpi95ZpkKxrLsmYgT2URHRj5uELvFeqz8H2wlFStZFuYv6dGW1G5k10G29ejzXlpX
-         LOqJgMy1s/AMzWICKHl/Wc0Mm0aShXLuQ9IZPS+8gZT/Z5WiQo5gLN9phpqZqq4IWu
-         rnoA4StXDeC5K6lurx01fPg8zXC9hl8Deca/WHXS/+N9naaZRys/QHyE3hgf2rjjSo
-         7PXMOtWELwJwLfWCM+7fhn6tQqzXw1EXriD6L8gx3/sQ9rDQeiZ9T8D3LtZw078B3c
-         qw3xwZy820FNE+hEbN+QWezuVb3JJ7yCOUwsmndzXSeZjYdJ9te2ORgdqCiEIUggJH
-         dRUS1Xa9Ml8LQ==
-Date:   Sat, 4 Jun 2022 16:25:32 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Cosmin Tanislav <demonsingur@gmail.com>,
-        cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] iio: addac: ad74413r: for_each_set_bit_from ->
- for_each_set_bit
-Message-ID: <20220604162532.65e4ea0e@jic23-huawei>
-In-Reply-To: <20220130142558.7601722c@jic23-huawei>
-References: <20220111074703.3677392-1-cosmin.tanislav@analog.com>
-        <20220111074703.3677392-3-cosmin.tanislav@analog.com>
-        <CAHp75VeVRwbMhQp-oBYM7yVzL_ma0jRu3ESEjz19zLQDFWyzkA@mail.gmail.com>
-        <20220115185948.56f227df@jic23-huawei>
-        <20220130142558.7601722c@jic23-huawei>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+        with ESMTP id S243589AbiFEDTH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Jun 2022 23:19:07 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB81A46F
+        for <linux-gpio@vger.kernel.org>; Sat,  4 Jun 2022 20:19:05 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id a64so20156236ybg.11
+        for <linux-gpio@vger.kernel.org>; Sat, 04 Jun 2022 20:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UfT4MT7hJVtHg40L/hP1ZN+BqXhrFP6Eg8QB85TqDmI=;
+        b=i4t+Zbfv9mgXoHmCp9WTiqZCYX0GPYXzZmsD7L8UxzBPLZkybag0506qJXluqZw/9W
+         8o266yL6KiXkLkyDgqNuLuhJo8T+pJg8OYLe27e7FK62LjwxkXtDSdOJhS0pc3IxzEK5
+         3GD2dGw+8hVLPviz3mfNjR5XGZaOpWX4m78WG0B6uXq+MhadcayD4wPCAe+mCs0Zvy8S
+         4EEQcXrvjcBI9t8m7eTvR3JmMquehZ3UV7MeQzmcQjE83SWx2Ppbi+Lsf1ZuzNYM2zqv
+         qlnyYJUZ1wh9prgSQgcuZ9+WXsoJ3byzi+kzLzwt6CuS+LIitH8zkGQSOkK3pLyH86Er
+         Eghg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UfT4MT7hJVtHg40L/hP1ZN+BqXhrFP6Eg8QB85TqDmI=;
+        b=VjLHYNGr2JaU8L3cdBtGn8omJeIugMYDilA67lmSxsoeTy2sBuqsyCESbMXqAGXGO6
+         mOh0vLxfNA1dEnMtfk0RbfNQFA9vIgLNC6rM72TbRtZKWj6X6Z0mDqLqvCl9kkIHgIgG
+         C/qUNSC2sW4m0BYqrmSP2Ogoe4fmOzBRwawBwREx1ttBt+H9f8x/aTqxmjJRLjxUEixb
+         GyImmVPvkEZtW00gJaZrv5XuhGb4yMwDKCD/nmy1twOIxNU1BGoLTfuraSr423r+vZGk
+         VYmXlhuLlRCZ0E0UsEXGdpb8EFKNsxp05ObMI5grt3+aI3Q5iEik8jwgX+eMcouWGUG2
+         5MFw==
+X-Gm-Message-State: AOAM532V2223jhoXYp6RCx4N8uIP3NcPMLdVR/NdzDYh1STMYhiBbiT+
+        qGGw2cMjGJPy7Kyg/NggUebWCaHmSM/cLcUbJ6/50A==
+X-Google-Smtp-Source: ABdhPJxrTqtLCQjIW3xp8nX5d6NuEspl0eOAd6/G2L9YHazcgkJ4hRf6Qyt8EmRCHMgQo+I/rvstQNfNmIYyfaK+Hd4=
+X-Received: by 2002:a25:d803:0:b0:663:3da5:9813 with SMTP id
+ p3-20020a25d803000000b006633da59813mr5189333ybg.530.1654399144708; Sat, 04
+ Jun 2022 20:19:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220526081550.1089805-1-saravanak@google.com>
+ <20220526081550.1089805-5-saravanak@google.com> <CAMuHMdXcHcuAn8UVS6RPsfenuCny4BgWNJFod41CFjdOF+w0sg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXcHcuAn8UVS6RPsfenuCny4BgWNJFod41CFjdOF+w0sg@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Sat, 4 Jun 2022 20:18:28 -0700
+Message-ID: <CAGETcx_uXXw_OtHO+_2DmZnHA3WCT5CeKbb_RWNqZtZSU1OB2g@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 4/9] Revert "driver core: Set default
+ deferred_probe_timeout back to 0."
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        John Stultz <jstultz@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 30 Jan 2022 14:25:58 +0000
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Mon, May 30, 2022 at 2:13 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Saravana,
+>
+> On Thu, May 26, 2022 at 10:16 AM Saravana Kannan <saravanak@google.com> wrote:
+> > This reverts commit 11f7e7ef553b6b93ac1aa74a3c2011b9cc8aeb61.
+>
+> scripts/chdeckpatch.pl says:
+>
+>     WARNING: Unknown commit id
+> '11f7e7ef553b6b93ac1aa74a3c2011b9cc8aeb61', maybe rebased or not
+> pulled?
+>
+> I assume this is your local copy of
+> https://lore.kernel.org/r/20220526034609.480766-3-saravanak@google.com?
 
-> On Sat, 15 Jan 2022 18:59:48 +0000
-> Jonathan Cameron <jic23@kernel.org> wrote:
-> 
-> > On Tue, 11 Jan 2022 11:22:23 +0200
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> >   
-> > > On Tue, Jan 11, 2022 at 9:47 AM Cosmin Tanislav <demonsingur@gmail.com> wrote:    
-> > > >
-> > > > The starting bit is always zero, it doesn't make much sense to
-> > > > use for_each_set_bit_from. Replace it with for_each_set_bit
-> > > > which doesn't start from a particular bit.      
-> > > 
-> > > We refer to the function() like this.
-> > > But no need to resend, I hope Jonathan may amend this when applying.
-> > >     
-> > 
-> > I'll need to wait for rc1 to have the relevant code in my fixes-togreg
-> > branch to pick these up.
-> > 
-> > They look fine to me and hopefully I'll remember to cleanup the above ;)
-> >   
-> First 2 applied to the fixes-togreg branch of iio.git.
-> 
-> This 3rd one isn't a fix so will have to wait for those to end up in
-> my togreg branch.  Give me a shout if I seem to have lost this once that
-> is true.
+I somehow missed all your replies and noticed it just now.
 
-Oops.  Even with patchwork I occasionally lose patches as too many things
-stick there for a long time for complex reasons.
+That commit should be based on driver-core-next.
 
-Anyhow, now applied to the togreg branch of iio.git
+-Saravana
 
-Sorry for the delay
-
-Jonathan
-
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > Thanks,
-> > 
-> > Jonathan  
-> 
-
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
