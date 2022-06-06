@@ -2,162 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C518853E5D4
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jun 2022 19:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A90D253EC6C
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jun 2022 19:10:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233689AbiFFKTw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Jun 2022 06:19:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54522 "EHLO
+        id S239815AbiFFOgT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jun 2022 10:36:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233619AbiFFKTv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jun 2022 06:19:51 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC7E1760CE;
-        Mon,  6 Jun 2022 03:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654510789; x=1686046789;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XkXW18DsxASgWy3W6vVrSfD8C2RLZ7Hhaeol5XaMazA=;
-  b=WBTOrMNmN1vs8gNXRaRzgWQ6jzWK4S2vJSIuh5wyZ1UMoeKqg6U0IrZt
-   OXJS1NBUZvkaOCB0grovQG8H8KuU/oUenEd04cmtyEyMkay2gGLR2aNNI
-   VgLX12SmpjJ14YAY6dKZiKTxlU0EK0aFkoKzz0JhW5Gwn5I06vQ/i0IYK
-   X74V59BQ3g1fXX/zE5RwatLw0LhbOeUuvihpXHtpcqBjcTx6vsGDytGKQ
-   Dudocxg+x3OC9nrGPI+D6QIfxFAc1IWDLIZShut/2gp4sVZz4DI4pmd5X
-   16YgKuatvQXHtN8XCXdeE6xaBT4uAlzd/fD9S10xpduaKGsPv1aUj1Bp7
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10369"; a="276593154"
-X-IronPort-AV: E=Sophos;i="5.91,280,1647327600"; 
-   d="scan'208";a="276593154"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2022 03:19:48 -0700
-X-IronPort-AV: E=Sophos;i="5.91,280,1647327600"; 
-   d="scan'208";a="647476480"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2022 03:19:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ny9nZ-000UYV-54;
-        Mon, 06 Jun 2022 13:17:25 +0300
-Date:   Mon, 6 Jun 2022 13:17:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <jstultz@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [RFC PATCH v1 2/9] pinctrl: devicetree: Delete usage of
- driver_deferred_probe_check_state()
-Message-ID: <Yp3UNAW5Zv+RjabA@smile.fi.intel.com>
-References: <20220526081550.1089805-1-saravanak@google.com>
- <20220526081550.1089805-3-saravanak@google.com>
- <CAMuHMdV4Uzfg8aBY=tKnRcig=Npebd158J7UK3zg5_DtHwAR5w@mail.gmail.com>
- <CAGETcx-=kAJp282OvG4yd830fhQowN7-yXifERqiHRi2w0bGFw@mail.gmail.com>
+        with ESMTP id S239814AbiFFOgM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jun 2022 10:36:12 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBBB11A389
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Jun 2022 07:36:09 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id g13-20020a9d6b0d000000b0060b13026e0dso10886385otp.8
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Jun 2022 07:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=414Q+sddG1YR3KgC07ld9bq5c8kfHuuN7fWJhAprjG4=;
+        b=WeZ7FVCxuYf5Lj6RSSLppFKvRuxmy4+3OJKXYynkNkXt4mTGaDJyOWQMjCA6mzyQu8
+         ljaGWAZEC4em8VzNWUsJiy5z/eNy0zMLP39WwPuSBRNksPvlfpEBEm3HbEQubc5dNP1q
+         3fJ2+uEuCsb1MTWs/j5Wxk7ib9rhVUjtyijkIbjIo/fYy9c2A7dF+8q67RALSRFVFH8H
+         pczMR64UgDszNvNRTQzYRGRpMQiAmOyQNzGcAiCWb8fUABvfu17oXkGJL04Cnml1D6Gu
+         5y3OSbzrWMaP6LXUZHDW9z6JwKqZy+Hv1ZiWgMJX0jBljB80AkN5b6mFP+NdNDZqZcPr
+         7naQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=414Q+sddG1YR3KgC07ld9bq5c8kfHuuN7fWJhAprjG4=;
+        b=f54hQrHQuxCkl2t5irWldexhcMaL+jKH6wWPZEsHnvChovrOOemQZtlRr9+lqHCfIN
+         +NKjzxcwOFcW94m8ssMPdrnkbwinCGGl6xJ1Ghy+Glm4Zg1rUtiFTU3e3lDyK86CaYvQ
+         DJumhQL2QHdHc8R8/MoIkYK1uMIOlqRr83fMfNcT1tGl6tOJrsILM1R2T+pZaUV7qAFE
+         8H0p8hu0bXim57CuZMAjH/O5h0TL9tk5YP8X+/+VYP5qi3iyGGWRuZbwxcgPvDtDATOd
+         2pywkQN0LyFEgp4V+3Fb4L9TOHTM9+phDuHMH8eiL0XTxim7J6deqoFp7/nn/GdydxRK
+         2OEg==
+X-Gm-Message-State: AOAM532nTOjdEghWGlk1kqDQcmBpBpT8OrxB3AkYNtptTrpqJyKzyikT
+        gLHvqRHrJu6V4B6nrQWHQvAFqjMzpJh3UQ==
+X-Google-Smtp-Source: ABdhPJyY1pXBGwdS6vY88e/XFCOW/YWfD0n6EgJjbnWbbhelZ7P8O6d2RQHc3ype2mY+oTNeGM8Afg==
+X-Received: by 2002:a9d:648b:0:b0:60b:c4c6:7dfd with SMTP id g11-20020a9d648b000000b0060bc4c67dfdmr8919077otl.105.1654526169079;
+        Mon, 06 Jun 2022 07:36:09 -0700 (PDT)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id u13-20020a056871008d00b000f5d4e5b9a0sm6942791oaa.2.2022.06.06.07.36.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jun 2022 07:36:08 -0700 (PDT)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>
+Subject: [PATCH 0/5] gpio: Implement and utilize register structures for ISA drivers
+Date:   Mon,  6 Jun 2022 10:33:15 -0400
+Message-Id: <cover.1654525394.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-=kAJp282OvG4yd830fhQowN7-yXifERqiHRi2w0bGFw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 04, 2022 at 08:41:01PM -0700, Saravana Kannan wrote:
-> On Mon, May 30, 2022 at 2:22 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, May 26, 2022 at 10:16 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > Now that fw_devlink=on by default and fw_devlink supports
-> > > "pinctrl-[0-8]" property, the execution will never get to the point
-> >
-> > 0-9?
-> >
-> > oh, it's really 0-8:
-> >
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl0, "pinctrl-0", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl1, "pinctrl-1", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl2, "pinctrl-2", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl3, "pinctrl-3", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl4, "pinctrl-4", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl5, "pinctrl-5", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl6, "pinctrl-6", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
-> >     drivers/of/property.c:DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
-> >
-> > Looks fragile, especially since we now have:
-> >
-> >     arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi:
-> > pinctrl-9 = <&i2cmux_9>;
-> >     arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi: pinctrl-10
-> > = <&i2cmux_10>;
-> >     arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi: pinctrl-11
-> > = <&i2cmux_11>;
-> >     arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi: pinctrl-12
-> > = <&i2cmux_pins_i>;
-> 
-> Checking for pinctrl-* and then verifying if * matches %d would be
-> more complicated and probably more expensive compared to listing
-> pinctrl-[0-8]. Especially because more than 50% of pinctrl-*
-> properties in DT files are NOT pinctrl-%d. So back when we merged
-> this, Rob and I agreed [0-8] was good enough for now and we can add
-> more if we needed to. Also, when I checked back then, all the
-> pinctrl-5+ properties ended up pointing to the same suppliers as the
-> lower numbered ones. So it didn't make a difference.
-> 
-> Ok, I just checked linux-next all the pinctrl-9+ instances and it's
-> still true that they all point to the same supplier pointed to by
-> pinctrl-[0-8].
-> 
-> So yeah, it looks fragile, 
+The PC104/ISA drivers were updated to use I/O memory accessor calls such
+as ioread8()/iowrite8() in a previous patch series [1]. This
+patchset is a continuation of the effort to improve the code readability
+and reduce magic numbers by implementing and utilizing named register
+data structures.
 
-And feels fragile, adds into confusion, etc.
-Please, consider redesigning this to be more robust.
+One of the benefits is that we can now observe more easily similarities
+in devices that share similar interfaces; such as the i8255 interfaces
+used by the 104-DIO-48E, 104-IDI-48, and GPIO-MM drivers -- as well as
+the similar interface used by the 104-IDIO-16 and PCI-IDIO-16 drivers. I
+hope to consolidate some of these code blocks in future patchsets.
 
->	but is not broken and it's more efficient
-> than looking for pinctrl-%d or adding more pinctrl-xx entries. So,
-> let's fix it if it actually breaks? Not going to oppose a patch if
-> anyone wants to make it more complete.
-> 
-> > > where driver_deferred_probe_check_state() is called before the supplier
-> > > has probed successfully or before deferred probe timeout has expired.
-> > >
-> > > So, delete the call and replace it with -ENODEV.
+[1] https://lore.kernel.org/all/cover.1652201921.git.william.gray@linaro.org/
 
+William Breathitt Gray (5):
+  gpio: 104-dio-48e: Implement and utilize register structures
+  gpio: 104-idi-48: Implement and utilize register structures
+  gpio: 104-idio-16: Implement and utilize register structures
+  gpio: gpio-mm: Implement and utilize register structures
+  gpio: ws16c48: Implement and utilize register structures
+
+ drivers/gpio/gpio-104-dio-48e.c | 157 +++++++++++++++++++++-----------
+ drivers/gpio/gpio-104-idi-48.c  | 128 +++++++++++++-------------
+ drivers/gpio/gpio-104-idio-16.c |  58 ++++++++----
+ drivers/gpio/gpio-gpio-mm.c     | 116 ++++++++++++++---------
+ drivers/gpio/gpio-ws16c48.c     | 119 +++++++++++++++++-------
+ 5 files changed, 366 insertions(+), 212 deletions(-)
+
+
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.36.1
 
