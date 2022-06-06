@@ -2,132 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F290553E20B
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jun 2022 10:53:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC33E53E770
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jun 2022 19:07:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231441AbiFFHuN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Jun 2022 03:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42366 "EHLO
+        id S232566AbiFFJRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jun 2022 05:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231494AbiFFHuL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jun 2022 03:50:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180A52ED7E;
-        Mon,  6 Jun 2022 00:50:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A7D4B611B8;
-        Mon,  6 Jun 2022 07:50:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F406C3411C;
-        Mon,  6 Jun 2022 07:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654501809;
-        bh=+PxN/7lvs+ASkg1d8jxQyQDR3Lobei2q0DKdDD97ktw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pwhUPAgaA9QhCiYGxDCk9eaj+IbeH14pxMoRfl/UTuwE4GXzoYOBl4rA6IAUn3UFj
-         Lwqs+cP1bZszz57GB4GEvJ0hK3haysGkh1X7amUqlumPRQGwOC8DCOiDVNJa3ll4sy
-         IRy0KfTytHS1YUq5kNx42jRzpmuSgsGn3/1mua3vv2pwYM/6XmbMBc1VOYjMc2EYPw
-         LQhRzq4eChFBoN8NeV37mnWAWY8evcKp2k9uEzD3+AIKugyzMS8gm4KxRxhbQVPnFQ
-         ASj/eKEU1SvqU9NfY6FNot0pOndtpCe2iN7Dz/J/Wv8ojapA5qChLQo92lcvhwP+/G
-         YzmIL0X/RVLOw==
-Date:   Mon, 6 Jun 2022 08:50:02 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org
-Subject: Re: [PATCH] gpio: Fix kernel-doc comments to nested union
-Message-ID: <20220606085002.714b7e98@sal.lan>
-In-Reply-To: <27612e81-d843-d161-ecd2-c653c7d5bae9@gmail.com>
-References: <27612e81-d843-d161-ecd2-c653c7d5bae9@gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
+        with ESMTP id S232695AbiFFJRW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jun 2022 05:17:22 -0400
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8743C12A96;
+        Mon,  6 Jun 2022 02:17:21 -0700 (PDT)
+Received: by mail-qv1-f54.google.com with SMTP id l1so9861425qvh.1;
+        Mon, 06 Jun 2022 02:17:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dJHWxHnDKgIhX0rwBiuI6695ZQef+BlZS52k2wJ8PRc=;
+        b=3fWxgnkGOqJulCp7CzPBdFMH0s6PacR7vf3eZakKC3hl/v6ZJ3YbcI0FbSyvalIcU7
+         +K1E5FEWBsrrLJFbRengucfdidRcLt4Dw0S6m802X/TVmSSSGaO76T1DE7Jw5p+1w9ST
+         ym/Mvcmwx+7q18AtUnMq6ERY2sxqORlSaEoIix5jXPVmuOLs2dO3A+MQr4lSek7UZ8m4
+         RXuKb6tw6SpfqXUGbiLbBftbupSmjJr04EqPBnLN+YUmXoMiB3Koo6TBegznJwp2cwlg
+         rz+JXYOOMjiGzZZ36lGUGgYYjXT6oU7Yg5d4LnjfkFG+HntlC3a43qv94tXIWA34qnw/
+         Le8Q==
+X-Gm-Message-State: AOAM530sljvE8tk394DtfQk7YHoLpwmJbx74fzud9rdqtxEDUnv44jtJ
+        s1IQjIPiYfSgOI8loLS6Jos6qEAsNXWyeQ==
+X-Google-Smtp-Source: ABdhPJwsa91OH/UYLgn9JnWHVt2t2WYxK7TnZ9+B4NXfMluEpyqA3297pMgjTOR8ShS9r1+6BLS/gg==
+X-Received: by 2002:ad4:4ae9:0:b0:46a:5726:58c2 with SMTP id cp9-20020ad44ae9000000b0046a572658c2mr8369235qvb.36.1654507040145;
+        Mon, 06 Jun 2022 02:17:20 -0700 (PDT)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
+        by smtp.gmail.com with ESMTPSA id l22-20020a05620a28d600b006a5bc8e956esm11721519qkp.133.2022.06.06.02.17.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jun 2022 02:17:19 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-30c2f288f13so136695097b3.7;
+        Mon, 06 Jun 2022 02:17:19 -0700 (PDT)
+X-Received: by 2002:a81:1dd2:0:b0:30f:a4fc:315e with SMTP id
+ d201-20020a811dd2000000b0030fa4fc315emr26233628ywd.383.1654507039397; Mon, 06
+ Jun 2022 02:17:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <87mteu49tm.wl-kuninori.morimoto.gx@renesas.com>
+ <CAMuHMdUWCjFRnjVDzrjDh4ODDyh5hV5zdM9o4i20c4mLXhNpHg@mail.gmail.com>
+ <87r1423co4.wl-kuninori.morimoto.gx@renesas.com> <87leua38nb.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87leua38nb.wl-kuninori.morimoto.gx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Jun 2022 11:17:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVmX9-zfN5gs4Mc2bx5=pq=vv6j6dOJUgnZ57KJZK_3ZA@mail.gmail.com>
+Message-ID: <CAMuHMdVmX9-zfN5gs4Mc2bx5=pq=vv6j6dOJUgnZ57KJZK_3ZA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] pinctrl: renesas: r8a779g0: Add pins, groups and functions
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Em Mon, 6 Jun 2022 13:44:24 +0900
-Akira Yokosawa <akiyks@gmail.com> escreveu:
+Hi Morimoto-san,
 
-> Commit 48ec13d36d3f ("gpio: Properly document parent data union")
-> is supposed to have fixed a warning from "make htmldocs" regarding
-> kernel-doc comments to union members.  However, the same warning
-> still remains [1].
-> 
-> Fix the issue by following the example found in section "Nested
-> structs/unions" of Documentation/doc-guide/kernel-doc.rst.
-> 
-> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Fixes: 48ec13d36d3f ("gpio: Properly document parent data union")
-> Link: https://lore.kernel.org/r/20220606093302.21febee3@canb.auug.org.au/ [1]
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Joey Gouly <joey.gouly@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  include/linux/gpio/driver.h | 29 ++++++++++++++++-------------
->  1 file changed, 16 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index b1e0f1f8ee2e..54c3c6506503 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -167,21 +167,24 @@ struct gpio_irq_chip {
->  	 */
->  	irq_flow_handler_t parent_handler;
->  
-> -	/**
-> -	 * @parent_handler_data:
-> -	 *
-> -	 * If @per_parent_data is false, @parent_handler_data is a single
-> -	 * pointer used as the data associated with every parent interrupt.
-> -	 *
-> -	 * @parent_handler_data_array:
-> -	 *
-> -	 * If @per_parent_data is true, @parent_handler_data_array is
-> -	 * an array of @num_parents pointers, and is used to associate
-> -	 * different data for each parent. This cannot be NULL if
-> -	 * @per_parent_data is true.
-> -	 */
->  	union {
-> +		/**
-> +		 * @parent_handler_data:
-> +		 *
-> +		 * If @per_parent_data is false, @parent_handler_data is a
-> +		 * single pointer used as the data associated with every
-> +		 * parent interrupt.
-> +		 */
->  		void *parent_handler_data;
-> +
-> +		/**
-> +		 * @parent_handler_data_array:
-> +		 *
-> +		 * If @per_parent_data is true, @parent_handler_data_array is
-> +		 * an array of @num_parents pointers, and is used to associate
-> +		 * different data for each parent. This cannot be NULL if
-> +		 * @per_parent_data is true.
-> +		 */
->  		void **parent_handler_data_array;
->  	};
+On Mon, Jun 6, 2022 at 3:04 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> > > >   [1/3] pinctrl: renesas: Add PORT_GP_CFG_13 macros
+> > > >   [2/3] pinctrl: renesas: Initial R8A779G0 (V4H) PFC support
+> > > >   [3/3] pinctrl: renesas: r8a779g0: Add pins, groups and functions
+> > >
+> > > Thanks for your series!
+> > >
+> > > Here's a first set of quick comments. More will follow later.
+> >
+> > Thanks.
+> > I will fixup all, and will post v2 patch.
+>
+> Which git tree/branch should I base ?
+> I can find many pfc related branches on renesas-drivers.
 
-Yeah, kernel-doc expects inlined comments to be just before each
-declaration like the above.
+Please base it on renesas-pinctrl.
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+I have just rebased renesas-pinctrl-for-v5.20 to v5.19-rc1, and
+have fast-forwarded renesas-pinctrl to the latter.
 
-Regards,
-Mauro
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
