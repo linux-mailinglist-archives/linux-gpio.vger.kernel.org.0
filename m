@@ -2,116 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A81453ED1F
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jun 2022 19:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6696853EE3A
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jun 2022 20:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229920AbiFFRn3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Jun 2022 13:43:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37932 "EHLO
+        id S229837AbiFFS73 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jun 2022 14:59:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbiFFRnZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jun 2022 13:43:25 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1462231E514;
-        Mon,  6 Jun 2022 10:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654537404; x=1686073404;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/S6pr49WABi/EsUuj7n0Y6baq3JnjVB8EfNPrmXyCtI=;
-  b=Jm4Ht9Iu1f86D+kewB5Z+bywhNrLdaYJW7tv23812OAKJpp8SjEbimz0
-   eqmfsu7XQlQ0NDexlqWoqsvmQd2809g4O1uqNUKl1PWefrMzOe+oRRazT
-   md2VvZj/gHEOhw/7t5CS55TtOyOD8WDbl5+SIR1gQVn5os6g7x+VoWmpu
-   0=;
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 06 Jun 2022 10:43:23 -0700
-X-QCInternal: smtphost
-Received: from nasanex01b.na.qualcomm.com ([10.46.141.250])
-  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2022 10:43:22 -0700
-Received: from quicinc.com (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 6 Jun 2022
- 10:43:22 -0700
-Date:   Mon, 6 Jun 2022 10:43:20 -0700
-From:   Guru Das Srinagesh <quic_gurus@quicinc.com>
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-CC:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <wens@csie.org>,
-        <jic23@kernel.org>, <lee.jones@linaro.org>, <sre@kernel.org>,
-        <broonie@kernel.org>, <gregkh@linuxfoundation.org>,
-        <lgirdwood@gmail.com>, <lars@metafoo.de>, <rafael@kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/10] regmap-irq: Add get_irq_reg to support unusual
- register layouts
-Message-ID: <20220606174320.GA16522@quicinc.com>
-References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
- <20220603135714.12007-2-aidanmacdonald.0x0@gmail.com>
+        with ESMTP id S231641AbiFFS71 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jun 2022 14:59:27 -0400
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE31AAFB3C;
+        Mon,  6 Jun 2022 11:59:25 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id n144so134683iod.4;
+        Mon, 06 Jun 2022 11:59:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LBCu0rHUuV6/ftfk4QrcN/2mnb7WuKbppJnFTxyjW94=;
+        b=nwnRN47R8roUVlUIUAOh/EgLE6E9Lvtk84fNSNA10m+0NHYtJTrTwMjvhstpmz/Tax
+         56cX7I886Q8yhdZLBxWWGteKFB5PESsldSdY2C5+NZGDtkIEE6CgPlVY/do9HccR7xVY
+         dc1hCzuyY4mGqdZ5X9jPtXx28nClimi3wQ1fmryamAnAREAaebtUlA9TkSRE2dqm0mVl
+         6700YmXg5v38XHZMLIJkCwgxslhU+Zb/3/VM/IlReIUJfJRBBKa1KhuajwS7AvzSH463
+         dQSeZX9Bt/MfDxWGtnKdaOZj+qTFXVIz+9Df4i/IgMgJpegV+PEVLKLwpz+bwJtN7gbI
+         wqOA==
+X-Gm-Message-State: AOAM532mgY9EYbCJxjyiri7okz+rFPKR20gP2HV4ImwUebjmJnQQ+WIg
+        RZ65B2Cir/poAju1vBedtg==
+X-Google-Smtp-Source: ABdhPJweHrdLUcsa2RnGGF2haYRcX1atBS2HmAwJzesZ7+Tb0tRZgHJ+InjfDtx4dsAxjBZfbip76A==
+X-Received: by 2002:a05:6638:3787:b0:331:aaf5:950c with SMTP id w7-20020a056638378700b00331aaf5950cmr4180577jal.118.1654541965156;
+        Mon, 06 Jun 2022 11:59:25 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id n5-20020a056e02100500b002d5366820acsm1585158ilj.18.2022.06.06.11.59.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jun 2022 11:59:24 -0700 (PDT)
+Received: (nullmailer pid 1080359 invoked by uid 1000);
+        Mon, 06 Jun 2022 18:59:23 -0000
+Date:   Mon, 6 Jun 2022 13:59:23 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] pinctrl/arm: dt-bindings: deprecate header with
+ register constants
+Message-ID: <20220606185923.GA900292-robh@kernel.org>
+References: <20220605160508.134075-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220603135714.12007-2-aidanmacdonald.0x0@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220605160508.134075-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 03, 2022 at 02:57:05PM +0100, Aidan MacDonald wrote:
-> Add a new callback, get_irq_reg, for regmap IRQ chips, to support devices
-> with unusual register layouts. This is required in the rare cases where
-> the offset of an IRQ register is not constant with respect to the base
-> register. This is probably best illustrated with an example:
+On Sun, Jun 05, 2022 at 06:05:00PM +0200, Krzysztof Kozlowski wrote:
+> Hi,
 > 
->             mask    status
->     IRQ0    0x40    0x44
->     IRQ1    0x41    0x45
->     IRQ2    0x42    0x46
->     IRQ3    0x43    0x47
->     IRQ4    0x4a    0x4d
+> Merging
+> =======
+> 1. I plan to take the DTS changes (patches 1-6) via Samsung SoC tree.
+> 2. The driver change (patch 7) can go independently via pinctrl tree or via my
+>    Samsung pinctrl tree.
+> 3. The final bindings patch 8 will wait for next release, to avoid any cross
+>    tree merges or warnings.
 > 
-> If we set mask_base = 0x40 and status_base = 0x44, the offsets of each
-> register relative to the base are:
+> Changes since v2
+> ================
+> 1. Split last bindings patch per driver changes and bindings.
+> 2. Add tags.
 > 
->             mask    status
->     IRQ0    0       0
->     IRQ1    1       1
->     IRQ2    2       2
->     IRQ3    3       3
->     IRQ4    10      9
+> Changes since v1
+> ================
+> 1. Correct title (in the comment) of each header (Chanho).
+> 2. Patch #7: Adjust warning message.
+> 3. Add tags.
 > 
-> The existing mapping mechanisms can't include IRQ4 in the same irqchip
-> as IRQ0-3 because the offset of IRQ4's register depends on which type
-> of register we're asking for, ie. which base register is used.
+> Description
+> ===========
+> The Samsung pin controller drivers were always expecting DTS to use raw
+> register values for pin configuration (e.g. pull up/down, drive strength).  DTS
+> had these values hard-coded all over, so at some point we decided for
+> convenience to move them to dt-bindings header.  Less code duplication, some
+> meaning added to raw number, etc.
 > 
-> The get_irq_reg callback allows drivers to specify an arbitrary mapping
-> of (base register, register index) pairs to register addresses, instead
-> of the default linear mapping "base_register + register_index". This
-> allows unusual layouts, like the one above, to be handled using a single
-> regmap IRQ chip.
+> However these constants do not fit the purpose of bindings.  They do not
+> provide any abstraction, any hardware and driver independent ID.  With minor
+> exceptions, the Linux drivers actually do not use the bindings header at
+> all.  Because of this "dt-bindings ID" approach, these constants were re-used
+> between chips, e.g. Exynos ones in S5PV210.  These does not make much sense
+> because the values between Exynos and S5PV210 (or S3C24xx) are not related.  If
+> it was an abstraction ID, this would be fine. But it's not.
 > 
-> The drawback is that when get_irq_reg is used, it's impossible to use
-> bulk reads for status registers even if some of them are contiguous,
-> because the mapping is opaque to regmap-irq. This should be acceptable
-> for the case of a few infrequently-polled status registers.
+> Clean this up by:
+> 1. Moving the constants to DTS-local headers.
+> 2. Deprecating the bindings header.
+> 
+> Tested by comparing DTBs (dtx_diff, fdtdump).
+> 
+> Best regards,
+> Krzysztof
+> 
+> Krzysztof Kozlowski (8):
+>   ARM: dts: s3c2410: use local header for pinctrl register values
+>   ARM: dts: s3c64xx: use local header for pinctrl register values
+>   ARM: dts: s5pv210: use local header for pinctrl register values
+>   ARM: dts: exynos: use local header for pinctrl register values
+>   arm64: dts: exynos: use local header for pinctrl register values
+>   arm64: dts: fsd: use local header for pinctrl register values
+>   pinctrl: samsung: do not use bindings header with constants
+>   dt-bindings: pinctrl: samsung: deprecate header with register
+>     constants
 
-This patch does two things:
+For the series:
 
-1. Add a new callback `get_irq_reg`
-2. Replace unmask_offset calculation with call to sub_irq_reg()
+Acked-by: Rob Herring <robh@kernel.org>
 
-Could you please split the patch into two to better reflect this?
-
-Thank you.
-
-Guru Das.
