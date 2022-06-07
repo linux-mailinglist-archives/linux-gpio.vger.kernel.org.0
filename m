@@ -2,138 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F39E53F668
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 08:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4EA453F715
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 09:23:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbiFGGmV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 02:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50850 "EHLO
+        id S237599AbiFGHXF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 03:23:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229876AbiFGGmU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 02:42:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F2EF23BCF
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Jun 2022 23:42:19 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nySuv-00060U-19; Tue, 07 Jun 2022 08:42:17 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nySuv-006wTk-9R; Tue, 07 Jun 2022 08:42:15 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nySus-00EiMF-GA; Tue, 07 Jun 2022 08:42:14 +0200
-Date:   Tue, 7 Jun 2022 08:42:11 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel@pengutronix.de,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] gpio: pca953x: Make platform teardown callback return
- void
-Message-ID: <20220607064211.zyqbevl3bwh53o5m@pengutronix.de>
-References: <20220502170555.51183-1-u.kleine-koenig@pengutronix.de>
- <CAMRc=McHZWjdFywntMwfg19U2H4Jh99SBa8Zz+0N79W4EQJ9gg@mail.gmail.com>
- <20220527071136.zlyjp4s7stnhby6w@pengutronix.de>
+        with ESMTP id S237604AbiFGHXB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 03:23:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865C6193D4
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jun 2022 00:23:00 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id fu3so31841914ejc.7
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jun 2022 00:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
+        b=PsMyBKpPIW4M4oi5s8BlbY9lVTnMTX9E6ccsbCJU1RL+goYnA2LIRs3wKhCOAVI3xw
+         zjcMqyNEDJz+Db8kLcyq/kTHinzL1SXzDFzL/ad0QL2vJla5iOj1tnhAcarnJ+DKgb0v
+         DN3F5yiofw6wpneYSq0A/eRc1swG0phEI/uGBgFlvq6jYC/yQmdEMZwJkbRdw3pu5gT8
+         n99IB/6FV0H73nwQHEQ9L6u/n5Y7CvaMUDJxK3Z+8G5R2GejNynydkgr/UT0ukGSTxoP
+         DzXExcc+VEFm9F7E8z8jgIHU3JWId1DtqsBylQVKVwxQ86g1XY6G0NTjeOQ4U15/RtmY
+         03Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
+        b=Fv6YHGd7iIcVvqhPDcsXBY4jE/uYQeqFUoSG33Qy5i/3PUfcrTHSg4X+pkf+jkTfC3
+         WGoeYie9/HwBJsuexTaQr7rgTg1jouCIibD1j1wrSfbNUNPNombykIzyL7bx/aA4/aeA
+         z6v7F/WV2MdpLrX6YMPKn6Y6ry0PHlHT+7e6Obru4lJK090/JK/0uJ6Zl2hTTxHvaG0S
+         gUVgoSS8Mx58qAQwrzBqYQADFMi/F68nUus47GFryhgDGToKXn+oQ4vQTA7vSM9UEC91
+         ID4YkCiFJ/GKslayiGVvSCam9kjSfnvRyPJ7LBNnQplkvNlMg4zXNH4OgmTnLZQs6QvY
+         NOtg==
+X-Gm-Message-State: AOAM5327ZOkp+yaVC1AEfRZQMWex6UawG2mJkMZp3Or0+mo5+QXZXD0Z
+        6Hmqfvr1XZ0n5B0/BYpclgsRVxzFl2/J7DBcfJw=
+X-Google-Smtp-Source: ABdhPJz4k4UttdGgiLGpvxO9vryGrYVFDIkV+sv9ov2iF+siXqkWY9e6VzPU2dq2m3rnXaDECUfNIEHF2jvRW7Bf9gY=
+X-Received: by 2002:a17:907:1250:b0:711:d0bc:2370 with SMTP id
+ wc16-20020a170907125000b00711d0bc2370mr7663637ejb.454.1654586578888; Tue, 07
+ Jun 2022 00:22:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dfpk26jxnmniaz6r"
-Content-Disposition: inline
-In-Reply-To: <20220527071136.zlyjp4s7stnhby6w@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:6402:26c8:0:0:0:0 with HTTP; Tue, 7 Jun 2022 00:22:58
+ -0700 (PDT)
+Reply-To: andyhalford22@gmail.com
+From:   Andy Halford <fameyemrf@gmail.com>
+Date:   Tue, 7 Jun 2022 00:22:58 -0700
+Message-ID: <CAATdNavjCypNM5LXmQmsnwmeQeG9Z8E4ZdU2cotunP-+47s0DA@mail.gmail.com>
+Subject: Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=6.8 required=5.0 tests=BAYES_50,DEAR_FRIEND,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:644 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [fameyemrf[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [andyhalford22[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+-- 
+Hello Sir
 
---dfpk26jxnmniaz6r
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-On Fri, May 27, 2022 at 09:11:36AM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello,
->=20
-> On Thu, May 05, 2022 at 02:44:40PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, May 2, 2022 at 7:06 PM Uwe Kleine-K=F6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > >
-> > > All platforms that provide a teardown callback return 0. New users are
-> > > supposed to not make use of platform support, so there is no
-> > > functionality lost.
-> > >
-> > > This patch is a preparation for making i2c remove callbacks return vo=
-id.
-> > >
-> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > ---
-> >=20
-> > Looks good to me.
-> >=20
-> > Sekhar: please leave your Ack if you're fine with me taking this
-> > through the GPIO tree.
->=20
-> Sekhar: Did this patch fell through the cracks? Would be great to get
-> this in during the next merge window (i.e. depending on Linus Torvald's
-> counting abilities maybe the one for 5.20)
+  I am Andy Halford from London, UK. Nice to meet you. Sorry for the
+inconvenience it's because of the time difference. I contacted you
+specifically regarding an important piece of information I intend
+sharing with you that will be of interest to you. Having gone through
+an intelligent methodical search, I decided to specifically contact
+you hoping that you will find this information useful. Kindly confirm
+I got the correct email by replying via same email to ensure I don't
+send the information to the wrong person.
 
-I want to use the release of 5.19-rc1 as an opportunity to ping this
-patch. I intend to change the i2c remove callback to return void (i.e.
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index fbda5ada2afc..066b541a0d5d 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -273,7 +273,7 @@ struct i2c_driver {
-=20
- 	/* Standard driver model interfaces */
- 	int (*probe)(struct i2c_client *client, const struct i2c_device_id *id);
--	int (*remove)(struct i2c_client *client);
-+	void (*remove)(struct i2c_client *client);
-=20
- 	/* New driver model interface to aid the seamless removal of the
- 	 * current probe()'s, more commonly unused than used second parameter.
 
-) directly after the next merge window.
-
-So I ask you to either take this patch before (my preferred option), or
-accept that I send it as part of a bigger series that eventually
-contains the above hunk and will probably be merged via the i2c tree.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---dfpk26jxnmniaz6r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKe80AACgkQwfwUeK3K
-7AnvQAgAlLDai5zJ4poYFviz3zTTYcBpW8R7yLvk/f1RXff8vxi1cDYaZjoiFcjr
-3e2GwUISqODjuEhRO/uZo04Lo3MnW2b2bqpoV9eAPb5vQaMQ30np3IAtSBsIXnm9
-IR9N6Xpo3w8DkrsjdfDZ/YaFjg6SwYftRnh2V2V+y2Ij4hy5lAAHE7nHy00a+Vrc
-V/rhFbU+Pw1oSjFc/5bIfB3KQ4IOfVezntn31TJHXgHmwyx3U5ARbL6KJKbk0gKy
-AnNzXzxAbsbtdMCc306vIRA8OCXYDTZbbn9bO2/4MktozIFpFLmKK3cTfwAvz2S5
-lBlyf0sf4aAvKmjJYjPMnjEAOy/KnA==
-=yi37
------END PGP SIGNATURE-----
-
---dfpk26jxnmniaz6r--
+REGARDS
+Andy Halford
