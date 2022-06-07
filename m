@@ -2,183 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF65A53FBBD
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 12:45:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29AF853FBB3
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 12:44:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241452AbiFGKpn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 06:45:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41612 "EHLO
+        id S238639AbiFGKob (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 06:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241459AbiFGKpf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 06:45:35 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0B61E3E7;
-        Tue,  7 Jun 2022 03:45:28 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id v1so23651420ejg.13;
-        Tue, 07 Jun 2022 03:45:28 -0700 (PDT)
+        with ESMTP id S241396AbiFGKoT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 06:44:19 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE31F2983D
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jun 2022 03:44:10 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id n10so34358664ejk.5
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jun 2022 03:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=references:from:to:cc:subject:date:in-reply-to:message-id
-         :mime-version;
-        bh=5iMSi5NreryGR8izdeYc2rW3YzGt+AHDIAmvUOT38HA=;
-        b=mUGaFDf9Gq0PSdRL0ePEpqPTGkc1KrPolQlTAYyeymOzOnlEIgzV3lIifZX+vORBp4
-         aPyi3xOaoTHuTDpvRYxKep8i1RKNnJYRIgY5tBNcScV9B7KDzNgI90XHeDYh39IVbeOm
-         16vSzWm/lkp6CP+owW9BVb6RLwQzLyt8C3F2yEumydUgagXiWzN9PVOyHBdcnrfVOn1O
-         bP7ZQOiYH9lJ5HYmQwV0OEfZ3ofCnzj5ei0Bbgw0TNWlmb6yeFsGHiqK/jvz+JeQ/++R
-         oOKpuNnTlQmbT0RrXb3m6K0MJDn0oDuHvSeYPrPle0WJmKDTGM3bmwvA6DW28RkBRquX
-         lbBg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3byxb1CzUTj5QU1x3INzOXGHXvRaMAU3vicCeu44cJ0=;
+        b=F+lcqmhYEPUW5P4s8xBV283NYgFCNYcPoCR2yP9gyh/tZHJ210Qk7nbepEwKhgr1IU
+         BR4EMHV0UfMv8OSj9gwGS6HNtviEe9YbNLuAyRZL2UVfgT31LV2qnciHntZ2U3irCfN3
+         KXPYLg0Ah4UH7p8V/lTprSITzxn2vgcXYSZQBxaB0KXn8lm1Urcr9Am+5lL6nhOJ6+qj
+         VTSVZDnH+zOEoh2guBNh6tKBQ80+MIGATULn6uWHvtPgRqIYKkxj87tGIpjQUr8wqMgD
+         aXRi8kCBb2Iv5OYw2ufNEQKwBy5C3DCxDcH82k1zXuTe6yNb+i3hhEtHge2e9y+G3Aic
+         F65w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
-         :message-id:mime-version;
-        bh=5iMSi5NreryGR8izdeYc2rW3YzGt+AHDIAmvUOT38HA=;
-        b=MUO3LlOndnL+/OWB0NnHXS1pW2x9/C30lrB7SXlOen6nTsA3pSuNBXP2xT14se8ZD2
-         loFv00cBfZEqcCOI0E1E8gNPjZzBqlePs+v28e09v6GQedB16RgkKtEh0l8mHWfIcwj6
-         S9Od37U+9rPfXRKiIlAUxfUBCQ2r+qMgl3TgCgSvNtqOc9sUqNPoVnwY7bp8XNOoVk3j
-         YqwoiQHtIggpGJnLfdjRb0BBTu84+qov3MB4jLCxj7yo6aqE6AqpgmROI2CVRiy3wv0o
-         2gjHKQybw0VQ1NMIgm/2aPq/jgV6cJUn2HtLxgVbJ1MHFPYEb2X1D6zyw/AExsiDTLHr
-         CnGg==
-X-Gm-Message-State: AOAM5303tLabLlVHJ4R0GEmgB/tIZFHJMgZ2gpQ6pY4Jt8S2mOuTNr/F
-        eVAvbdROVHIw+E9uPDI3FeQ=
-X-Google-Smtp-Source: ABdhPJyC3axRmTgpQLe92bAYa+ea9uBIxBbgw9QtK8HQMRAK5klP6mYvkHGZslsJ56KeVDZNNFEhww==
-X-Received: by 2002:a17:907:761c:b0:6d6:e553:7bd1 with SMTP id jx28-20020a170907761c00b006d6e5537bd1mr25471613ejc.5.1654598726651;
-        Tue, 07 Jun 2022 03:45:26 -0700 (PDT)
-Received: from localhost (92.40.203.111.threembb.co.uk. [92.40.203.111])
-        by smtp.gmail.com with ESMTPSA id p4-20020a170906784400b00702d8b43df3sm7369536ejm.167.2022.06.07.03.45.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 03:45:25 -0700 (PDT)
-References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
- <20220603135714.12007-6-aidanmacdonald.0x0@gmail.com>
- <20220605225504.GA3678983-robh@kernel.org>
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
-        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
-        rafael@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/10] dt-bindings: gpio: Add AXP192 GPIO bindings
-Date:   Tue, 07 Jun 2022 11:34:19 +0100
-In-reply-to: <20220605225504.GA3678983-robh@kernel.org>
-Message-ID: <7w5P7NKqcSgfwmILB1hRmmdtkmw7UXrH@localhost>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3byxb1CzUTj5QU1x3INzOXGHXvRaMAU3vicCeu44cJ0=;
+        b=2dr9nZBdgI7bHoPR5n59Z2beucPj8CYtB6WBrIAi39u+4UZv+N4wPJDayONnsGtsp4
+         wm7vwmuFqDs+8VNcQ2jmxCN59Z6S1ddgeZlMM2sYTk+i/zydTe4eCdK94liOaVe09LAz
+         bxygnVxZn+ZjpAFuff60qhhlZz8LVXBUwO26bHjtux9QVOxD7dFtT+dR+Yf2Wb3x7Oc9
+         enPxRnBt5gNP+l5PxzYfHNx37G07ziG21/QhUkUAycwdMyeWyUkIPXM2wB9keAAfGmSF
+         EIsIlpGafRt+R+uRaw26NEynoh667JgYyibwP454O8dsU1ajAS3XeHWUX63euoajytYH
+         CvYg==
+X-Gm-Message-State: AOAM532F9CpKklu3tuzU8pluM99XBitDpNjVaOV5iU0KEiMZwrCQmjSz
+        FlgUeGRrUVM9h7Fx66zV0MIU2FU5FjLoSCZXXX4=
+X-Google-Smtp-Source: ABdhPJzm3Ivvt7Y3HN7cHMba/gN8+nFp91hMPr7OF6R7SfmR68fdljP+UOmPygJIHmKeDJ5qhzdUlLkJxRygPsio0yc=
+X-Received: by 2002:a17:906:1193:b0:70d:cf39:a4db with SMTP id
+ n19-20020a170906119300b0070dcf39a4dbmr20495940eja.44.1654598649167; Tue, 07
+ Jun 2022 03:44:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220525140704.94983-1-brgl@bgdev.pl> <20220525140704.94983-4-brgl@bgdev.pl>
+ <20220603124600.GA35695@sol> <20220604024131.GB13574@sol> <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
+ <20220607015220.GA9430@sol>
+In-Reply-To: <20220607015220.GA9430@sol>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 7 Jun 2022 12:43:32 +0200
+Message-ID: <CAHp75VduYPzVzpiGpVHrwuRm2nVasJs6QyUTf=CbFcWDTeKJ7g@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jun 7, 2022 at 5:11 AM Kent Gibson <warthog618@gmail.com> wrote:
+> On Mon, Jun 06, 2022 at 01:14:48PM +0300, Andy Shevchenko wrote:
+> > On Sat, Jun 04, 2022 at 10:41:31AM +0800, Kent Gibson wrote:
 
-Rob Herring <robh@kernel.org> writes:
+...
 
-> On Fri, Jun 03, 2022 at 02:57:09PM +0100, Aidan MacDonald wrote:
->> The AXP192 PMIC is different enough from the PMICs supported by
->> the AXP20x GPIO driver to warrant a separate driver. The AXP192
->> driver also supports interrupts and pinconf settings.
->> 
->> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
->> ---
->>  .../bindings/gpio/x-powers,axp192-gpio.yaml   | 59 +++++++++++++++++++
->>  1 file changed, 59 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
->> 
->> diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
->> new file mode 100644
->> index 000000000000..7a985640ade8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
->> @@ -0,0 +1,59 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/gpio/x-powers,axp192-gpio.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: X-Powers AXP192 GPIO Device Tree Bindings
->> +
->> +maintainers:
->> +  - Chen-Yu Tsai <wens@csie.org>
->> +
->> +properties:
->> +  "#gpio-cells":
->> +    const: 2
->> +    description: >
->> +      The first cell is the pin number and the second is the GPIO flags.
->> +
->> +  compatible:
->> +    oneOf:
->> +      - enum:
+> > From Python programmer perspective it's a good idea, but from GPIO (ABI)
+> > perspective, it may be confusing. Line name is not unique (globally) and
+> > basically not a part of ABI.
 >
-> No need for 'oneOf' with only 1 entry.
->
+> "basically not a part of the ABI"???
+> Damn - we should've removed it from the line info for uAPI v2 ;-).
 
-Got it.
+Yep, names are just aliases for the line numbers, but _not_ unique in
+the system. You may have many lines with the same name alias, but
+number. I remember that we made it stricter in the kernel, but as far
+as I understand there is nothing prevents some drivers to behave
+badly.
 
->> +          - x-powers,axp192-gpio
->> +
->> +  gpio-controller: true
->> +
->> +patternProperties:
->> +  "^.*-pins?$":
->
-> You can omit '^.*'
->
-> Why does 's' need to be optional?
->
+https://elixir.bootlin.com/linux/v5.19-rc1/source/drivers/gpio/gpiolib.c#L331
 
-TBH I just copied this from x-powers,axp209-gpio.yaml. A similar pattern
-is used in a few other bindings, eg. allwinner,sun4i-a10-pinctrl.yaml.
-I guess it's to allow the node names to sound more natural when there's
-only one pin.
+Also note, we don't validate names given by properties. Any DT may
+contain same names for several lines on the same chip.
 
-I am going to send a v2 with '-pins?$' but if you would prefer to have
-'-pins$' that's fine. I don't mind either way.
+...
 
-Regards,
-Aidan
+> Line names should be unique in well configured systems, even if the
+> kernel itself does not guarantee it.
 
->> +    $ref: /schemas/pinctrl/pinmux-node.yaml#
->> +
->> +    properties:
->> +      pins:
->> +        items:
->> +          enum:
->> +            - GPIO0
->> +            - GPIO1
->> +            - GPIO2
->> +            - GPIO3
->> +            - GPIO4
->> +            - N_RSTO
->> +
->> +      function:
->> +        enum:
->> +          - output
->> +          - input
->> +          - ldo
->> +          - pwm
->> +          - adc
->> +          - low_output
->> +          - floating
->> +          - ext_chg_ctl
->> +          - ldo_status
->> +
->> +required:
->> +  - compatible
->> +  - "#gpio-cells"
->> +  - gpio-controller
->> +
->> +additionalProperties: false
->> +
->> +...
->> -- 
->> 2.35.1
->> 
->> 
+It's not about kernel, but like you said "well configured systems". If
+we push the strict rules, we might be punished by users who want
+actually to have ambiguous names.
 
+...
+
+> But if the purpose of the Python binding is purely to minimally wrap the
+> C ABI, warts and all, then my suggestion should most certainly be ignored.
+
+As i said, it's very good suggestion, but pity we don't strict line
+naming in the kernel.
+
+-- 
+With Best Regards,
+Andy Shevchenko
