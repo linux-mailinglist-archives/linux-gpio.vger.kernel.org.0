@@ -2,117 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29AF853FBB3
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 12:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E461853FC15
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 12:49:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238639AbiFGKob (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 06:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38036 "EHLO
+        id S239845AbiFGKtn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 06:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241396AbiFGKoT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 06:44:19 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE31F2983D
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jun 2022 03:44:10 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id n10so34358664ejk.5
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jun 2022 03:44:10 -0700 (PDT)
+        with ESMTP id S241816AbiFGKsk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 06:48:40 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB3C3136E;
+        Tue,  7 Jun 2022 03:47:28 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id bg6so14520050ejb.0;
+        Tue, 07 Jun 2022 03:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3byxb1CzUTj5QU1x3INzOXGHXvRaMAU3vicCeu44cJ0=;
-        b=F+lcqmhYEPUW5P4s8xBV283NYgFCNYcPoCR2yP9gyh/tZHJ210Qk7nbepEwKhgr1IU
-         BR4EMHV0UfMv8OSj9gwGS6HNtviEe9YbNLuAyRZL2UVfgT31LV2qnciHntZ2U3irCfN3
-         KXPYLg0Ah4UH7p8V/lTprSITzxn2vgcXYSZQBxaB0KXn8lm1Urcr9Am+5lL6nhOJ6+qj
-         VTSVZDnH+zOEoh2guBNh6tKBQ80+MIGATULn6uWHvtPgRqIYKkxj87tGIpjQUr8wqMgD
-         aXRi8kCBb2Iv5OYw2ufNEQKwBy5C3DCxDcH82k1zXuTe6yNb+i3hhEtHge2e9y+G3Aic
-         F65w==
+        h=references:from:to:cc:subject:date:in-reply-to:message-id
+         :mime-version;
+        bh=Pgq5MawNxPb77sAjnIPnFN2fq8aE2jaJNXvjUTWy23s=;
+        b=e3kfSjAbsoTviVaMNfjdVxtoKtiTjcV2OsAN+3ENsSb1F1CXz9kskNbi+nMmkBTb/J
+         Sbq0w4htYEMnZCTs6zWgagvMnfgGN+3xv7XxOzRm52lyYk6bhPMqQZhG+mx4BUOmXi3u
+         4FGmSXXppL8R3yiREC0BCqDKgRRYUXzQJD41n2DgxSk+vvv1mTFB6mpGACcPD/4sk4pY
+         EbiG2y5lsTTNsY04+HxZUNXVC9tlDAC7dPO6TF9m3f2++E5OmgGg0gNSdAGuwEwB+TKf
+         5P6orTIcfqMHiDeQEMyYp2zYx/lcXShUu7Ls+evt7DXJZl6LcmY9kLURrzNePpq6h8qQ
+         CHhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3byxb1CzUTj5QU1x3INzOXGHXvRaMAU3vicCeu44cJ0=;
-        b=2dr9nZBdgI7bHoPR5n59Z2beucPj8CYtB6WBrIAi39u+4UZv+N4wPJDayONnsGtsp4
-         wm7vwmuFqDs+8VNcQ2jmxCN59Z6S1ddgeZlMM2sYTk+i/zydTe4eCdK94liOaVe09LAz
-         bxygnVxZn+ZjpAFuff60qhhlZz8LVXBUwO26bHjtux9QVOxD7dFtT+dR+Yf2Wb3x7Oc9
-         enPxRnBt5gNP+l5PxzYfHNx37G07ziG21/QhUkUAycwdMyeWyUkIPXM2wB9keAAfGmSF
-         EIsIlpGafRt+R+uRaw26NEynoh667JgYyibwP454O8dsU1ajAS3XeHWUX63euoajytYH
-         CvYg==
-X-Gm-Message-State: AOAM532F9CpKklu3tuzU8pluM99XBitDpNjVaOV5iU0KEiMZwrCQmjSz
-        FlgUeGRrUVM9h7Fx66zV0MIU2FU5FjLoSCZXXX4=
-X-Google-Smtp-Source: ABdhPJzm3Ivvt7Y3HN7cHMba/gN8+nFp91hMPr7OF6R7SfmR68fdljP+UOmPygJIHmKeDJ5qhzdUlLkJxRygPsio0yc=
-X-Received: by 2002:a17:906:1193:b0:70d:cf39:a4db with SMTP id
- n19-20020a170906119300b0070dcf39a4dbmr20495940eja.44.1654598649167; Tue, 07
- Jun 2022 03:44:09 -0700 (PDT)
+        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version;
+        bh=Pgq5MawNxPb77sAjnIPnFN2fq8aE2jaJNXvjUTWy23s=;
+        b=suNR+cxqIlBNJ18JrA/2un55tHxdfv4rdHKjWbDKfE4jylDTWQkOA7z8QdvtNIcVkr
+         jvGgv/dfhD9QnVmMV5JQNk7/0e+dXkhARKFf5Vl9AKQpfV+bS6HH2lW18+iTsh0zdY/E
+         k+I8HRLtAce8crUbrDu/uQOhPI6mM7x3ke+NSAH0BmeSH9u5AMQyo7ZUUCtosGAzP9vy
+         lGKFTiiYhdZmwh2hlGnZiKou50ol/AjNWNIaF69+PgvdiVZmbmIvShuJHSjDBWTcBDtg
+         /FWlvOlIQJ9zulGqFE2U9MzSPSusz2Q9MdDb7AqtemcUsFGBJF67ZMqB2qWFBGDoa74M
+         5E1A==
+X-Gm-Message-State: AOAM533IJUl15eAX+TSYqgo8kAI3n1lMUo+nSOO6heB5lHgM0YPg3DRS
+        VO34Y4GSpqGUNJAWcNjDzIs=
+X-Google-Smtp-Source: ABdhPJwE12iAv0pTVW95ulxsPwHuM4wYaFcQKpFYRThN/bNbeSFLp8E2X/JkdJoBlaXq5YK50hXBCw==
+X-Received: by 2002:a17:906:a188:b0:70c:1e17:b833 with SMTP id s8-20020a170906a18800b0070c1e17b833mr22500662ejy.271.1654598846780;
+        Tue, 07 Jun 2022 03:47:26 -0700 (PDT)
+Received: from localhost (92.40.203.113.threembb.co.uk. [92.40.203.113])
+        by smtp.gmail.com with ESMTPSA id n24-20020aa7c698000000b0042bb229e81esm10044086edq.15.2022.06.07.03.47.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 03:47:26 -0700 (PDT)
+References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
+ <20220603135714.12007-2-aidanmacdonald.0x0@gmail.com>
+ <20220606174320.GA16522@quicinc.com>
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Guru Das Srinagesh <quic_gurus@quicinc.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
+        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
+        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
+        rafael@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/10] regmap-irq: Add get_irq_reg to support unusual
+ register layouts
+Date:   Tue, 07 Jun 2022 11:46:54 +0100
+In-reply-to: <20220606174320.GA16522@quicinc.com>
+Message-ID: <shCOrWuZYFlO3x9fYvGVQDCINY4Z8d5E@localhost>
 MIME-Version: 1.0
-References: <20220525140704.94983-1-brgl@bgdev.pl> <20220525140704.94983-4-brgl@bgdev.pl>
- <20220603124600.GA35695@sol> <20220604024131.GB13574@sol> <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
- <20220607015220.GA9430@sol>
-In-Reply-To: <20220607015220.GA9430@sol>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Jun 2022 12:43:32 +0200
-Message-ID: <CAHp75VduYPzVzpiGpVHrwuRm2nVasJs6QyUTf=CbFcWDTeKJ7g@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2 API
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 7, 2022 at 5:11 AM Kent Gibson <warthog618@gmail.com> wrote:
-> On Mon, Jun 06, 2022 at 01:14:48PM +0300, Andy Shevchenko wrote:
-> > On Sat, Jun 04, 2022 at 10:41:31AM +0800, Kent Gibson wrote:
 
-...
+Guru Das Srinagesh <quic_gurus@quicinc.com> writes:
 
-> > From Python programmer perspective it's a good idea, but from GPIO (ABI)
-> > perspective, it may be confusing. Line name is not unique (globally) and
-> > basically not a part of ABI.
+> On Fri, Jun 03, 2022 at 02:57:05PM +0100, Aidan MacDonald wrote:
+>> Add a new callback, get_irq_reg, for regmap IRQ chips, to support devices
+>> with unusual register layouts. This is required in the rare cases where
+>> the offset of an IRQ register is not constant with respect to the base
+>> register. This is probably best illustrated with an example:
+>> 
+>>             mask    status
+>>     IRQ0    0x40    0x44
+>>     IRQ1    0x41    0x45
+>>     IRQ2    0x42    0x46
+>>     IRQ3    0x43    0x47
+>>     IRQ4    0x4a    0x4d
+>> 
+>> If we set mask_base = 0x40 and status_base = 0x44, the offsets of each
+>> register relative to the base are:
+>> 
+>>             mask    status
+>>     IRQ0    0       0
+>>     IRQ1    1       1
+>>     IRQ2    2       2
+>>     IRQ3    3       3
+>>     IRQ4    10      9
+>> 
+>> The existing mapping mechanisms can't include IRQ4 in the same irqchip
+>> as IRQ0-3 because the offset of IRQ4's register depends on which type
+>> of register we're asking for, ie. which base register is used.
+>> 
+>> The get_irq_reg callback allows drivers to specify an arbitrary mapping
+>> of (base register, register index) pairs to register addresses, instead
+>> of the default linear mapping "base_register + register_index". This
+>> allows unusual layouts, like the one above, to be handled using a single
+>> regmap IRQ chip.
+>> 
+>> The drawback is that when get_irq_reg is used, it's impossible to use
+>> bulk reads for status registers even if some of them are contiguous,
+>> because the mapping is opaque to regmap-irq. This should be acceptable
+>> for the case of a few infrequently-polled status registers.
 >
-> "basically not a part of the ABI"???
-> Damn - we should've removed it from the line info for uAPI v2 ;-).
+> This patch does two things:
+>
+> 1. Add a new callback `get_irq_reg`
+> 2. Replace unmask_offset calculation with call to sub_irq_reg()
+>
+> Could you please split the patch into two to better reflect this?
+>
+> Thank you.
+>
+> Guru Das.
 
-Yep, names are just aliases for the line numbers, but _not_ unique in
-the system. You may have many lines with the same name alias, but
-number. I remember that we made it stricter in the kernel, but as far
-as I understand there is nothing prevents some drivers to behave
-badly.
+No problem, I'll do that in my v2.
 
-https://elixir.bootlin.com/linux/v5.19-rc1/source/drivers/gpio/gpiolib.c#L331
-
-Also note, we don't validate names given by properties. Any DT may
-contain same names for several lines on the same chip.
-
-...
-
-> Line names should be unique in well configured systems, even if the
-> kernel itself does not guarantee it.
-
-It's not about kernel, but like you said "well configured systems". If
-we push the strict rules, we might be punished by users who want
-actually to have ambiguous names.
-
-...
-
-> But if the purpose of the Python binding is purely to minimally wrap the
-> C ABI, warts and all, then my suggestion should most certainly be ignored.
-
-As i said, it's very good suggestion, but pity we don't strict line
-naming in the kernel.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Aidan
