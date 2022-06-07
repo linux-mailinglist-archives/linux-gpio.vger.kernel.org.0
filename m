@@ -2,71 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8D3C53FCBE
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 13:01:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9CCE53FCEB
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 13:08:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242364AbiFGLBe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 07:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52848 "EHLO
+        id S242646AbiFGLIw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 07:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242549AbiFGLAT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 07:00:19 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2F4D240AD;
-        Tue,  7 Jun 2022 03:57:45 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id b8so5781550edj.11;
-        Tue, 07 Jun 2022 03:57:45 -0700 (PDT)
+        with ESMTP id S242531AbiFGLI1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 07:08:27 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B7C10EA4C;
+        Tue,  7 Jun 2022 04:04:32 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id v1so23748007ejg.13;
+        Tue, 07 Jun 2022 04:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=references:from:to:cc:subject:date:in-reply-to:message-id
-         :mime-version;
-        bh=yPufLHAHmFZwiernSymaEB3w3KO3bi6vBnV8PeUhLxI=;
-        b=hnKKSGjrNlED/ZlKz+Mk3ptadzuBrA4J1vL8VD7NRqCFW31W644HRaVQWmcraWSz71
-         5dMMJhQ+BcrWbNn2bCO8fTqN5+WThdkCsK5+8qkojv9mzGUNfRJSpSKT+5aUzYU7AriE
-         N7h2CR0qwrfJOvOIgBnFh1Ojle66VSa4bdCOAgWpyASOVWzfksdaV8BbDK99daFoltnx
-         9sKL5RHXz4+K+NTOK/9S5RP0flCJurYELlgQNxb44NTX2PeREFNp8IFqImXVcc7UKaUX
-         41e5IN3X4u4zJ6l/4WTvjR7NZhLpY5SRHCdxpyg9Mzyz377bI/qPH89bq5szta5I48YR
-         Z6NQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dE3IfDBto2P1Lw1uX63OsonLCvmTMY25nDr0mUDzn+Q=;
+        b=L3il+xydJWAarPyPUgZutiMe46kqGVZ4BfF4kMo68FgtCnXbiHU6vikypBkE5LvRhl
+         FL7QnepGJil4FpKHDOZE9wbRTJpBHgrCcV5XkK2U459iNIu219cAZNVOCNB9xlpS0jCE
+         5w6HqD8YN1XwLSbkiW+0wMMJ+F/gqx169QTy0GSd1Lu/gwYydPSo/A2BjLxsqrOUKk1X
+         At2BGene276+74Ezm8McnBoDjrruqc1afTRGD5O+02dM2D1v2zibsCnGHAvDYsytUS2s
+         5pLWqOt0nTUClno+zB8d1ealys8sy64/CKp9itA7l/5Okoiuapjq3ExRoxSje1zVvmW/
+         07fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
-         :message-id:mime-version;
-        bh=yPufLHAHmFZwiernSymaEB3w3KO3bi6vBnV8PeUhLxI=;
-        b=Gm/qfIlm1hviu7MYzhjE+rrnBeh601A0YerY2pCujipZ0abE1y1Swy3TE0vNNOgFCQ
-         AaSZRx4qn1ijiwSXHv2BhS40OsoylEaWAuG5PPoXUKhNTdG3tdnGjHA0jPqupFD/VH5C
-         K0mkxeaNlzHdM1b3P46c4NUjGlC6vHVC4CYpoLQ2qFcSCXBswNVZkPG9mE/U+105kbSp
-         19VGjvSqpamoDZsIpwIOROfA+608iF5RgLX3+SECq6SAS5hMnhGDpFN2F5M9f8RhSuIA
-         BFN4h5+WAWu7ePzIJwnzrUHYXK+tLwgUVa596lJGqBVZJ0e1RPfGDit8GjIUky0hgmml
-         wsxw==
-X-Gm-Message-State: AOAM532SuHrQTDBoIDzvmtT+yTPoesAb4fqNRiotBw41rHuejdG5pH+C
-        KSlCWgxwE/y0AwAoUjHZAjs=
-X-Google-Smtp-Source: ABdhPJyQ0oBf+aAihrAexYG8itdUihorYdbcNhw5dal9/wGkAvJYiJHkpOylC6RmzGwUA7Fxg7qaow==
-X-Received: by 2002:a05:6402:23a3:b0:42e:251a:c963 with SMTP id j35-20020a05640223a300b0042e251ac963mr27606354eda.173.1654599464256;
-        Tue, 07 Jun 2022 03:57:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dE3IfDBto2P1Lw1uX63OsonLCvmTMY25nDr0mUDzn+Q=;
+        b=EVzSCR4Gk+KCZAOb+ViN35LAGkOoxN/mQrG9zbjaRgeGBsywAyWFSpGnYl8Kj5e8Od
+         sH9ZrCl5noV7c3GflqmlzYuLr5SE0iOjjuZo7D/P694eo07QcLydjjTEHTKk2fuavZQt
+         uH3H/Zfjk6sdV5Skk2nUjGTwKVB9Rj6DjEEcefI2wcoetnSvwpo7XDVoq5+oVruSmysX
+         xQW9iVJQxljcVB3bk6MlJnMHa2xberkn+nFStsbKFdZJCSIgxbnMDnGzNGrY19q84Yw6
+         XOWRv/WPOxsrJP2qTvVjgZ0qxzibRjT80MFKejIIGO3l/da4E01zJzuPhxbZksmRS1od
+         78fQ==
+X-Gm-Message-State: AOAM531wLPspeL6ouim0O0m1t13T2TDhzWzL4+lnOHiXu8bjfZXt3W+G
+        OfgNu+fLhrkyp65Pbf/k5bYwaD1YHXE=
+X-Google-Smtp-Source: ABdhPJz32oazMNe3wlp0q6FpQDwb2PX5Xb5qk9yNIcHcCeuIKNwpHmlSOP9joOOtUDAgBRo1uET8/g==
+X-Received: by 2002:a17:907:3fa4:b0:6fe:b83b:d667 with SMTP id hr36-20020a1709073fa400b006feb83bd667mr25618262ejc.481.1654599871163;
+        Tue, 07 Jun 2022 04:04:31 -0700 (PDT)
 Received: from localhost (92.40.203.141.threembb.co.uk. [92.40.203.141])
-        by smtp.gmail.com with ESMTPSA id gj12-20020a170906e10c00b006fed8dfcf78sm7396457ejb.225.2022.06.07.03.57.43
+        by smtp.gmail.com with ESMTPSA id ft29-20020a170907801d00b0071145c2f494sm3726424ejc.27.2022.06.07.04.04.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 03:57:43 -0700 (PDT)
-References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
- <20220603135714.12007-9-aidanmacdonald.0x0@gmail.com>
- <20220603174744.642157d8@jic23-huawei>
- <e9ABtmBNzztlyRcJD5f36OmAYZW4i7KH@localhost>
- <20220604152711.22268711@jic23-huawei>
+        Tue, 07 Jun 2022 04:04:30 -0700 (PDT)
 From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     lars@metafoo.de, linus.walleij@linaro.org, brgl@bgdev.pl,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        wens@csie.org, lee.jones@linaro.org, sre@kernel.org,
-        broonie@kernel.org, gregkh@linuxfoundation.org,
-        lgirdwood@gmail.com, rafael@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] iio: adc: axp20x_adc: Add support for AXP192
-Date:   Tue, 07 Jun 2022 11:49:58 +0100
-In-reply-to: <20220604152711.22268711@jic23-huawei>
-Message-ID: <9Ju6ijQ68x8e8Es1zhzsVMZHprvKy16b@localhost>
+To:     paul@crapouillou.net, linus.walleij@linaro.org
+Cc:     linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: ingenic: Convert to immutable irq chip
+Date:   Tue,  7 Jun 2022 12:05:25 +0100
+Message-Id: <20220607110525.36922-1-aidanmacdonald.0x0@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -77,73 +66,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Update the driver to use an immutable IRQ chip to fix this warning:
 
-Jonathan Cameron <jic23@kernel.org> writes:
+    "not an immutable chip, please consider fixing it!"
 
-> On Sat, 04 Jun 2022 12:47:38 +0100
-> Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
->
->> Jonathan Cameron <jic23@kernel.org> writes:
->> 
->> > On Fri,  3 Jun 2022 14:57:12 +0100
->> > Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
->> >  
->> >> The AXP192 is identical to the AXP20x, except for the addition of
->> >> two more GPIO ADC channels.
->> >> 
->> >> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>  
->> > Hi Aidan,
->> >
->> > A few minor questions and comments inline.
->> >
->> > Thanks,
->> >
->> > Jonathan
->> >
->> > Unless I missed a previous patch adding labels to the other devices supported,
->> > this is the first driver to use these.  Why do they make sense here but not
->> > to add to existing supported devices?
->> >
->> > I don't particularly mind this addition, just looking for an explanation.
->> >  
->> 
->> That'd be because 1d4ef9b39ebecca8 ("iio: core: Add optional symbolic
->> label to a device channel") added read_label in 2020, while the AXP
->> driver was introduced in 2017. I could add read_label for the other
->> chips while I'm here, for consistency.
->
-> Thanks, I don't really mind either way on adding support for additional parts.
->
->> 
->> One question I have is why read_label exists when the kernel already has
->> unique names for IIO channels. Why not just expose the datasheet_name to
->> userspace from the IIO core instead of making drivers do it?
->
-> In general, datasheet_name refers to the name of the pin on a datasheet for this
-> device, whereas label can refer to how it is used.
-> There are dt bindings to allow a per channel label letting a driver (where it
-> makes sense) provide them for each individual ADC channel.
-> (e.g. the ad7768-1 driver does this).
->
-> On other devices they come from entirely different sources such as the hardcoded
-> choices in hid-sensor-custom-intel-hinge.
->
-> I vaguely recall that we've talked in the past about exposing datasheet name directly
-> but for many devices it's not that useful (the user doesn't care if a channel is
-> aux channel 1 or 7, but rather what it is wired up to).
->
-> At the moment this driver just exposes all channels rather than having
-> per channel bindings, so we don't have the option to use labeling in the device
-> tree to assign the names.   If it's particularly useful to you to have labels
-> that are datasheet names that's fine.
->
-> Jonathan
+Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 33 ++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
-Thanks for the explanation, makes sense that "gpio0_v" is probably not
-all that useful. I was thinking mainly of channels like battery charge
-current where the channel usage is fixed by hardware. The labels aren't
-terribly useful to me so I'll just leave them out, I'd rather not bother
-with adding dt labels.
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 1ca11616db74..37258fb05be3 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -135,7 +135,6 @@ struct ingenic_pinctrl {
+ struct ingenic_gpio_chip {
+ 	struct ingenic_pinctrl *jzpc;
+ 	struct gpio_chip gc;
+-	struct irq_chip irq_chip;
+ 	unsigned int irq, reg_base;
+ };
+ 
+@@ -3419,6 +3418,8 @@ static void ingenic_gpio_irq_enable(struct irq_data *irqd)
+ 	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
+ 	int irq = irqd->hwirq;
+ 
++	gpiochip_enable_irq(gc, irq);
++
+ 	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
+ 		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_INT, irq, true);
+ 	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
+@@ -3443,6 +3444,8 @@ static void ingenic_gpio_irq_disable(struct irq_data *irqd)
+ 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
+ 	else
+ 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIER, irq, false);
++
++	gpiochip_disable_irq(gc, irq);
+ }
+ 
+ static void ingenic_gpio_irq_ack(struct irq_data *irqd)
+@@ -3684,6 +3687,20 @@ static void ingenic_gpio_irq_release(struct irq_data *data)
+ 	return gpiochip_relres_irq(gpio_chip, data->hwirq);
+ }
+ 
++static const struct irq_chip ingenic_gpio_irqchip = {
++	.name			= "gpio",
++	.irq_enable		= ingenic_gpio_irq_enable,
++	.irq_disable		= ingenic_gpio_irq_disable,
++	.irq_unmask		= ingenic_gpio_irq_unmask,
++	.irq_mask		= ingenic_gpio_irq_mask,
++	.irq_ack		= ingenic_gpio_irq_ack,
++	.irq_set_type		= ingenic_gpio_irq_set_type,
++	.irq_set_wake		= ingenic_gpio_irq_set_wake,
++	.irq_request_resources	= ingenic_gpio_irq_request,
++	.irq_release_resources	= ingenic_gpio_irq_release,
++	.flags			= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
++};
++
+ static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
+ 		int pin, int func)
+ {
+@@ -4172,20 +4189,8 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
+ 	if (!jzgc->irq)
+ 		return -EINVAL;
+ 
+-	jzgc->irq_chip.name = jzgc->gc.label;
+-	jzgc->irq_chip.irq_enable = ingenic_gpio_irq_enable;
+-	jzgc->irq_chip.irq_disable = ingenic_gpio_irq_disable;
+-	jzgc->irq_chip.irq_unmask = ingenic_gpio_irq_unmask;
+-	jzgc->irq_chip.irq_mask = ingenic_gpio_irq_mask;
+-	jzgc->irq_chip.irq_ack = ingenic_gpio_irq_ack;
+-	jzgc->irq_chip.irq_set_type = ingenic_gpio_irq_set_type;
+-	jzgc->irq_chip.irq_set_wake = ingenic_gpio_irq_set_wake;
+-	jzgc->irq_chip.irq_request_resources = ingenic_gpio_irq_request;
+-	jzgc->irq_chip.irq_release_resources = ingenic_gpio_irq_release;
+-	jzgc->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
+-
+ 	girq = &jzgc->gc.irq;
+-	girq->chip = &jzgc->irq_chip;
++	gpio_irq_chip_set_chip(girq, &ingenic_gpio_irqchip);
+ 	girq->parent_handler = ingenic_gpio_irq_handler;
+ 	girq->num_parents = 1;
+ 	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+-- 
+2.35.1
 
-Regards,
-Aidan
