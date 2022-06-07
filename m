@@ -2,145 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 101D053FEFD
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 14:37:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8729F5400E2
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 16:11:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243805AbiFGMhl convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 7 Jun 2022 08:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54942 "EHLO
+        id S245214AbiFGOLs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 10:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243802AbiFGMg4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 08:36:56 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C848FE27BE;
-        Tue,  7 Jun 2022 05:36:52 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id y15so12480292qtx.4;
-        Tue, 07 Jun 2022 05:36:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jI9Eiy9NqYqthM/bM2aEWTmdS6Ov8FCqsQpj0jvzrm0=;
-        b=i3xBIdu0Imzpn7+GeYihuu7FZqWWmUkazEo4w0O0JfJkM7NFbnww16nSsMSFMTi63J
-         JTWuN+HETtLS1Y5fkmYBDcUOVvWwqhvOpWH6xy6RoqPkMkUfQso5BzvgDQ6o4T4VS1Rt
-         EF3ySOVUrBr1UbmGhLHYW6vWT09lScATSRKYr9hGX9Mul0eAmxpJLyFo3LksEE5gqTM/
-         +RvOAS1OXDaFm1XVKfh0OPFKEyODmUKNf9SIK9ZcLDLgkNKOfYWydhzrZRr7udEiV18O
-         UcfMvwm5Qjsh7J+AoSH7zaULP/wWZM06S11g97yWYCTho902T+y11AxyNShLqgafZ/KA
-         II4A==
-X-Gm-Message-State: AOAM532Wsv1yYYwZaR6/bKwMD1Yfb8coa9nL0sMVLNRUD9oWdOs03zZP
-        IdjRE0PZG/l9Pxp67ej1t3agCddLmjgyCQ==
-X-Google-Smtp-Source: ABdhPJwGod2ZTC35dVzxa46M26uqJXqucakYCo0RId/YXLNI8RDb6tjB9wj6NF6g49Hm73uxz8q1Ig==
-X-Received: by 2002:ac8:58ca:0:b0:2f3:da32:ab1 with SMTP id u10-20020ac858ca000000b002f3da320ab1mr22157947qta.308.1654605400840;
-        Tue, 07 Jun 2022 05:36:40 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id f12-20020a05620a280c00b0069fe1dfbeffsm218111qkp.92.2022.06.07.05.36.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jun 2022 05:36:40 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id p13so30908697ybm.1;
-        Tue, 07 Jun 2022 05:36:40 -0700 (PDT)
-X-Received: by 2002:a05:6902:a:b0:65c:b38e:6d9f with SMTP id
- l10-20020a056902000a00b0065cb38e6d9fmr30887112ybh.36.1654605399923; Tue, 07
- Jun 2022 05:36:39 -0700 (PDT)
+        with ESMTP id S245197AbiFGOLq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 10:11:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F18DA501E;
+        Tue,  7 Jun 2022 07:11:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E81C26157B;
+        Tue,  7 Jun 2022 14:11:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A53C385A5;
+        Tue,  7 Jun 2022 14:11:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654611104;
+        bh=letTzTlIdmYyCQr3t4i/4sQ++BrVupVi397GE8M9uvI=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=ZmrXJqh5VhK6LBrkWuZLcZPb6LB/aKqB7VgbxKHQ5EKdRZGn1B/UtUl37J/VZlncM
+         XaKVqUs9/CrLhurHZmfQE4ZHromAzF5QHFhfcePHGAZt6gJN4oXn1Jgu9OhytNBGsZ
+         Dpp8c39jiY4Y6vji5iZNzY0BkjvDT9oCjsHIgHSItTWWl1ZaFW8x1MWtKzh54+Jsmx
+         MgLY2ScRWCz28NxqLMnfdu2v0uWPvoMrX/y8LVhRzTo8e9BmO+8kP0GacNDIRYfLCx
+         +YjXzNg0JjEvKZfsqCZP5oIjyElXDN9wiUZpKQTLYg3m4X5qyHVoxoSHYehWp506BX
+         a+HtETwbE/zkg==
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-doc@vger.kernel.org, corbet@lwn.net, mchehab@kernel.org
+Cc:     linux@roeck-us.net, linux-cachefs@redhat.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dave.hansen@linux.intel.com, linux-samsung-soc@vger.kernel.org,
+        geert@linux-m68k.org, ulf.hansson@linaro.org, hpa@zytor.com,
+        alsa-devel@alsa-project.org, linux-m68k@lists.linux-m68k.org,
+        krzysztof.kozlowski+dt@linaro.org,
+        bcm-kernel-feedback-list@broadcom.com, kvm@vger.kernel.org,
+        mingo@redhat.com, mchehab+huawei@kernel.org, jdelvare@suse.com,
+        robh+dt@kernel.org, linux-gpio@vger.kernel.org, rafael@kernel.org,
+        linux-mmc@vger.kernel.org, federico.vaga@vaga.pv.it, bp@alien8.de,
+        linux-phy@lists.infradead.org, mmayer@broadcom.com,
+        keyrings@vger.kernel.org, x86@kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        alim.akhtar@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        jarkko@kernel.org, tglx@linutronix.de, linus.walleij@linaro.org
+In-Reply-To: <cover.1654529011.git.mchehab@kernel.org>
+References: <cover.1654529011.git.mchehab@kernel.org>
+Subject: Re: (subset) [PATCH 00/23] Update Documentation/ cross-references
+Message-Id: <165461109692.1597191.11390741473240531333.b4-ty@kernel.org>
+Date:   Tue, 07 Jun 2022 15:11:36 +0100
 MIME-Version: 1.0
-References: <20220526081550.1089805-1-saravanak@google.com> <20220526081550.1089805-9-saravanak@google.com>
-In-Reply-To: <20220526081550.1089805-9-saravanak@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Jun 2022 14:36:28 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXrTjjNcqro+FA0BPJ+rK3bCAX+boYdf5=ZvGGocVJPMw@mail.gmail.com>
-Message-ID: <CAMuHMdXrTjjNcqro+FA0BPJ+rK3bCAX+boYdf5=ZvGGocVJPMw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 8/9] net: ipconfig: Force fw_devlink to unblock any
- devices that might probe
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <jstultz@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Saravana,
+On Mon, 6 Jun 2022 16:25:22 +0100, Mauro Carvalho Chehab wrote:
+> There were a number of DT binding conversions and other docs change that
+> were not updated. Address them, in order to keep the cross-references on
+> a sane state.
+> 
+> Patch series is against v5.19-rc1 (and applies cleanly on the top of
+> today's -next).
+> 
+> [...]
 
-On Thu, May 26, 2022 at 10:16 AM Saravana Kannan <saravanak@google.com> wrote:
-> If there are network devices that could probe without some of their
-> suppliers probing and those network devices are needed for IP auto
-> config to work, then fw_devlink=on might break that usecase by blocking
-> the network devices from probing by the time IP auto config starts.
->
-> So, when IP auto config is enabled, make sure fw_devlink doesn't block
-> the probing of any device that has a driver by the time we get to IP
-> auto config.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  net/ipv4/ipconfig.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
-> index 9d41d5d5cd1e..aa7b8ba68ca6 100644
-> --- a/net/ipv4/ipconfig.c
-> +++ b/net/ipv4/ipconfig.c
-> @@ -1435,6 +1435,8 @@ static int __init wait_for_devices(void)
->  {
->         int i;
->
-> +       fw_devlink_unblock_may_probe();
-> +
->         for (i = 0; i < DEVICE_WAIT_MAX; i++) {
->                 struct net_device *dev;
->                 int found = 0;
+Applied to
 
-FTR, this lacks an include <linux/fwnode.h>, as my mips rbtx4927
-build fails with:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-net/ipv4/ipconfig.c:1438:2: error: implicit declaration of function
-‘fw_devlink_unblock_may_probe’ [-Werror=implicit-function-declaration]
+Thanks!
 
-Switching to v2 instead...
+[22/23] ASoC: wm8731: update wlf,wm8731.yaml reference
+        commit: 69c8027c5ff43d68449fda4510a8cce70e8578b0
 
-Gr{oetje,eeting}s,
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-                        Geert
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
