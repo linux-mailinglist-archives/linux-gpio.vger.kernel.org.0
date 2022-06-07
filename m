@@ -2,192 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 569DB540437
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 19:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C00CB540488
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 19:15:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345329AbiFGRAN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 13:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39498 "EHLO
+        id S1345466AbiFGRPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 13:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345363AbiFGRAJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 13:00:09 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0849F338F;
-        Tue,  7 Jun 2022 10:00:03 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id bg6so16635489ejb.0;
-        Tue, 07 Jun 2022 10:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:from:to:cc:subject:date:in-reply-to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=S4VNfIke2KvnIJMRH6f3rNuBXi/ZA3zV6uDJeQjXmuM=;
-        b=XoRM00N+6Fems+DaFXMoRxUfOYcdFfCtH6mFIARABY5BhA6F4rfx2mkxwv01maf96k
-         nTl5lEKoT2wjKMQFXlaUaCF4OGeNAV8zWFfdYk7Q5emAi3v1LD6anMPP/WNhi/5vM0At
-         FT1uPMLYhi8eiavZAe3FPEQstjLibpvEI+G5RMdP29SW+viUozVjvl5n2XY5aJYAdCUd
-         EwCDv6xfyA1l/kqo07ZZ6k3Yp5VmbgNtxjUJamVowAapQc5rS8QfZ7lZblRnnt2UJeRR
-         UNgdyOPV2wVDKRWU0VXGK9OMCe1tM2oCh8SRIMjvEOM6SV0AcJJxVn4zaGMX9SbQM70T
-         wM4Q==
+        with ESMTP id S1345470AbiFGRPk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 13:15:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ECD1610276C
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jun 2022 10:15:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654622139;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ylQrXRxCE5WefGCA0g7YA7OMYNSZuN3Qp/+5VKhMNKM=;
+        b=O+qFplb0SThYmxpCVm1fiEsk6/0pDyfrQnuPXveWV19z/9vai40+PT1aUj2kQYZ3AYyh48
+        atxO4jY4wFRwP+g+SgRUxGYzv3j4o0ZGMsjgcaE3L+MScSZ3KdWcix/4LrN8aN/eCgUyw6
+        KCav7x0D26kmKcTJHuE127B/vB53A1E=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-595-nAJGfSDiPiKA6djJVbVF9w-1; Tue, 07 Jun 2022 13:15:36 -0400
+X-MC-Unique: nAJGfSDiPiKA6djJVbVF9w-1
+Received: by mail-ed1-f72.google.com with SMTP id t14-20020a056402020e00b0042bd6f4467cso13012520edv.9
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jun 2022 10:15:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
-         :message-id:mime-version:content-transfer-encoding;
-        bh=S4VNfIke2KvnIJMRH6f3rNuBXi/ZA3zV6uDJeQjXmuM=;
-        b=T9oAYbSY3HpF3HQQznDwRuFpc/LofI4HCXPhIPWnTy09g4a4lZlC00lJuiiZlqpbt/
-         C/pq6QqmYaV3qu4OPcXFzR+X5w+1hkb9RNjQtLMlJ7P0D+d+pSgse9Fsf9zb45PBtWY5
-         TMA1rUQqoid6YFPFrclJNJGTGuZ0eM6vg0WkgObp4Iu+6u8sT+PGbiw9FiqUK2vI2rRv
-         MkmlKURiZECuaarNw+K6PQzJEpOBq7ris+XyFrS02jpaZfaNJS5KA5J/43QG9iRpguSj
-         lC8zPUcg/LkhWwX3YxDC18MTw1XCp3NFwLyrMN93CmDRWkQyKO0UK9mLBc4j/MoVfgxZ
-         4Fyw==
-X-Gm-Message-State: AOAM533f5ibeADo5I9Ktn8koyrnJYnJsFhn69t+EgWF8QUpwTMA69W6h
-        1r6Z87WbpUjdndzY0Kyha4c=
-X-Google-Smtp-Source: ABdhPJzltR9FAeMw59VT6yBMmW6WR18FUMvbw6FRycDCDKYttTuT7QrLC7JP8zVaXstbu0hJmuZIFQ==
-X-Received: by 2002:a17:906:54c3:b0:6ef:d07b:c8ec with SMTP id c3-20020a17090654c300b006efd07bc8ecmr27443327ejp.687.1654621202058;
-        Tue, 07 Jun 2022 10:00:02 -0700 (PDT)
-Received: from localhost (92.40.203.36.threembb.co.uk. [92.40.203.36])
-        by smtp.gmail.com with ESMTPSA id gi5-20020a1709070c8500b006feb8cebbbfsm7904125ejc.6.2022.06.07.10.00.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 10:00:01 -0700 (PDT)
-References: <20220607110525.36922-1-aidanmacdonald.0x0@gmail.com>
- <TC84DR.BXHQAW8NSA8H@crapouillou.net>
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     linus.walleij@linaro.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: ingenic: Convert to immutable irq chip
-Date:   Tue, 07 Jun 2022 17:47:19 +0100
-In-reply-to: <TC84DR.BXHQAW8NSA8H@crapouillou.net>
-Message-ID: <OUo8utshKyFB2wcmtEAH6jswJGetDRWg@localhost>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ylQrXRxCE5WefGCA0g7YA7OMYNSZuN3Qp/+5VKhMNKM=;
+        b=6FqM3AW0bjKXLbC7wdIr/U4hy8v65tMT7LO0NFa0tYAF89xZs1ZM9c9cHFPtS/yahG
+         fVQL0L259AP/nYQbDCeADOVBMc+qwaBOYLQNf93Oi+czmuFpfFZyg5owEPbqcx0mL2so
+         PRQwOE2NeZ2K86tmmmyTSepBEmooIAMd0PqD12eQ97AMgMrDrST7PL8CBbPpNoPadXm6
+         KS82PxjnYgvEKvKkYfXWtZ8nF/JgN1Lzjr2cEi/7GqeuqGZ8m2zh+opsNHi2JYheysnT
+         j0/zJxHogKR04cHrlLBS8T3Gv1gO/KTUGMZ62X0JqEFtKzFjqp8lGUlwqTp0+8joqFd3
+         64Eg==
+X-Gm-Message-State: AOAM530N+kk7gn/Zn+jcMtTkSML7Rm1EKWHTdmbF+TirNPfOAu5dPAU4
+        iD+F0i6HYuJR2SS0oH96BjVmEn1sSfxlp2J09oVcWHA9F6WWMGWiYmioM9CGE2/N6ZWwBlt1Jhl
+        T5gEWHe1Oo7v8Xbw2eKBk3w==
+X-Received: by 2002:a05:6402:5114:b0:42f:b5f3:1f96 with SMTP id m20-20020a056402511400b0042fb5f31f96mr23188465edd.260.1654622134895;
+        Tue, 07 Jun 2022 10:15:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyzX1Cu3nPKRVmyJ+MDxgaeYIxZau3BfUeQpL7WBwfYfiESgqradh0LlQ1DOcm/hAz2wDsIaw==
+X-Received: by 2002:a05:6402:5114:b0:42f:b5f3:1f96 with SMTP id m20-20020a056402511400b0042fb5f31f96mr23188425edd.260.1654622134615;
+        Tue, 07 Jun 2022 10:15:34 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id b23-20020a17090630d700b0070e1adff390sm5926625ejb.34.2022.06.07.10.15.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jun 2022 10:15:33 -0700 (PDT)
+Message-ID: <938117aa-001c-9e31-f50c-dbfa2d376d76@redhat.com>
+Date:   Tue, 7 Jun 2022 19:15:32 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v6 11/12] platform/x86: simatic-ipc: drop custom P2SB bar
+ code
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+ <20220606164138.66535-12-andriy.shevchenko@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220606164138.66535-12-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
-Paul Cercueil <paul@crapouillou.net> writes:
+On 6/6/22 18:41, Andy Shevchenko wrote:
+> From: Henning Schild <henning.schild@siemens.com>
+> 
+> The two drivers that used to use this have been switched over to the
+> common P2SB accessor, so this code is not needed any longer.
+> 
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Hi Aidan,
->
-> Le mar., juin 7 2022 at 12:05:25 +0100, Aidan MacDonald
-> <aidanmacdonald.0x0@gmail.com> a =C3=A9crit :
->> Update the driver to use an immutable IRQ chip to fix this warning:
->>     "not an immutable chip, please consider fixing it!"
->> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
->> ---
->>  drivers/pinctrl/pinctrl-ingenic.c | 33 ++++++++++++++++++-------------
->>  1 file changed, 19 insertions(+), 14 deletions(-)
->> diff --git a/drivers/pinctrl/pinctrl-ingenic.c
->> b/drivers/pinctrl/pinctrl-ingenic.c
->> index 1ca11616db74..37258fb05be3 100644
->> --- a/drivers/pinctrl/pinctrl-ingenic.c
->> +++ b/drivers/pinctrl/pinctrl-ingenic.c
->> @@ -135,7 +135,6 @@ struct ingenic_pinctrl {
->>  struct ingenic_gpio_chip {
->>  	struct ingenic_pinctrl *jzpc;
->>  	struct gpio_chip gc;
->> -	struct irq_chip irq_chip;
->>  	unsigned int irq, reg_base;
->>  };
->> @@ -3419,6 +3418,8 @@ static void ingenic_gpio_irq_enable(struct irq_data
->> *irqd)
->>  	struct ingenic_gpio_chip *jzgc =3D gpiochip_get_data(gc);
->>  	int irq =3D irqd->hwirq;
->> +	gpiochip_enable_irq(gc, irq);
->> +
->>  	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
->>  		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_INT, irq, true);
->>  	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
->> @@ -3443,6 +3444,8 @@ static void ingenic_gpio_irq_disable(struct irq_da=
-ta
->> *irqd)
->>  		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
->>  	else
->>  		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIER, irq, false);
->> +
->> +	gpiochip_disable_irq(gc, irq);
->>  }
->>  static void ingenic_gpio_irq_ack(struct irq_data *irqd)
->> @@ -3684,6 +3687,20 @@ static void ingenic_gpio_irq_release(struct irq_d=
-ata
->> *data)
->>  	return gpiochip_relres_irq(gpio_chip, data->hwirq);
->>  }
->> +static const struct irq_chip ingenic_gpio_irqchip =3D {
->> +	.name			=3D "gpio",
->> +	.irq_enable		=3D ingenic_gpio_irq_enable,
->> +	.irq_disable		=3D ingenic_gpio_irq_disable,
->> +	.irq_unmask		=3D ingenic_gpio_irq_unmask,
->> +	.irq_mask		=3D ingenic_gpio_irq_mask,
->> +	.irq_ack		=3D ingenic_gpio_irq_ack,
->> +	.irq_set_type		=3D ingenic_gpio_irq_set_type,
->> +	.irq_set_wake		=3D ingenic_gpio_irq_set_wake,
->> +	.irq_request_resources	=3D ingenic_gpio_irq_request,
->> +	.irq_release_resources	=3D ingenic_gpio_irq_release,
->> +	.flags			=3D IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
->> +};
->> +
->>  static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
->>  		int pin, int func)
->>  {
->> @@ -4172,20 +4189,8 @@ static int __init ingenic_gpio_probe(struct
->> ingenic_pinctrl *jzpc,
->>  	if (!jzgc->irq)
->>  		return -EINVAL;
->> -	jzgc->irq_chip.name =3D jzgc->gc.label;
->> -	jzgc->irq_chip.irq_enable =3D ingenic_gpio_irq_enable;
->> -	jzgc->irq_chip.irq_disable =3D ingenic_gpio_irq_disable;
->> -	jzgc->irq_chip.irq_unmask =3D ingenic_gpio_irq_unmask;
->> -	jzgc->irq_chip.irq_mask =3D ingenic_gpio_irq_mask;
->> -	jzgc->irq_chip.irq_ack =3D ingenic_gpio_irq_ack;
->> -	jzgc->irq_chip.irq_set_type =3D ingenic_gpio_irq_set_type;
->> -	jzgc->irq_chip.irq_set_wake =3D ingenic_gpio_irq_set_wake;
->> -	jzgc->irq_chip.irq_request_resources =3D ingenic_gpio_irq_request;
->> -	jzgc->irq_chip.irq_release_resources =3D ingenic_gpio_irq_release;
->> -	jzgc->irq_chip.flags =3D IRQCHIP_MASK_ON_SUSPEND;
->> -
->>  	girq =3D &jzgc->gc.irq;
->> -	girq->chip =3D &jzgc->irq_chip;
->> +	gpio_irq_chip_set_chip(girq, &ingenic_gpio_irqchip);
->
-> This will change each irq_chip's name to "gpio", do we want that?
->
-> You didn't remove jzgc->irq_chip, so maybe what you could do is
-> jzgc->irq_chip =3D ingenic_gpio_irqchip;
-> jzgc->irq_chip.name =3D jzgc->gc.label;
-> gpio_irq_chip_set_chip(girq, &jzgc->irq_chip);
->
-> Thoughts?
->
-> Cheers,
-> -Paul
->
+Thanks, patch looks good to me:
 
-I wondered that myself, but it doesn't seem to affect anything except
-what is displayed in /proc/interrupts. Is the name used anywhere else
-where it might cause confusion?
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-The only similar case I could find was pinctrl-microchip-sgpio.c where
-microchip_sgpio_register_bank() is called in a loop and registers the
-same irq chip repeatedly, so it's probably(?) okay to do this here. It
-seems to defeat the point of immutable irqchips if they just have to be
-copied anyway...
+Also Ack for merging this through the MFD tree.
 
-(btw, I did remove jzgc->irq_chip -- or did I miss something?)
+Regards,
 
-Best regards,
-Aidan
+Hans
 
->>  	girq->parent_handler =3D ingenic_gpio_irq_handler;
->>  	girq->num_parents =3D 1;
->>  	girq->parents =3D devm_kcalloc(dev, 1, sizeof(*girq->parents),
->> --
->> 2.35.1
->>=20
+> ---
+>  drivers/platform/x86/simatic-ipc.c            | 38 -------------------
+>  .../platform_data/x86/simatic-ipc-base.h      |  2 -
+>  2 files changed, 40 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
+> index b599cda5ba3c..26c35e1660cb 100644
+> --- a/drivers/platform/x86/simatic-ipc.c
+> +++ b/drivers/platform/x86/simatic-ipc.c
+> @@ -101,44 +101,6 @@ static int register_platform_devices(u32 station_id)
+>  	return 0;
+>  }
+>  
+> -/* FIXME: this should eventually be done with generic P2SB discovery code
+> - * the individual drivers for watchdogs and LEDs access memory that implements
+> - * GPIO, but pinctrl will not come up because of missing ACPI entries
+> - *
+> - * While there is no conflict a cleaner solution would be to somehow bring up
+> - * pinctrl even with these ACPI entries missing, and base the drivers on pinctrl.
+> - * After which the following function could be dropped, together with the code
+> - * poking the memory.
+> - */
+> -/*
+> - * Get membase address from PCI, used in leds and wdt module. Here we read
+> - * the bar0. The final address calculation is done in the appropriate modules
+> - */
+> -u32 simatic_ipc_get_membase0(unsigned int p2sb)
+> -{
+> -	struct pci_bus *bus;
+> -	u32 bar0 = 0;
+> -	/*
+> -	 * The GPIO memory is in bar0 of the hidden P2SB device.
+> -	 * Unhide the device to have a quick look at it, before we hide it
+> -	 * again.
+> -	 * Also grab the pci rescan lock so that device does not get discovered
+> -	 * and remapped while it is visible.
+> -	 * This code is inspired by drivers/mfd/lpc_ich.c
+> -	 */
+> -	bus = pci_find_bus(0, 0);
+> -	pci_lock_rescan_remove();
+> -	pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x0);
+> -	pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0, &bar0);
+> -
+> -	bar0 &= ~0xf;
+> -	pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x1);
+> -	pci_unlock_rescan_remove();
+> -
+> -	return bar0;
+> -}
+> -EXPORT_SYMBOL(simatic_ipc_get_membase0);
+> -
+>  static int __init simatic_ipc_init_module(void)
+>  {
+>  	const struct dmi_system_id *match;
+> diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h b/include/linux/platform_data/x86/simatic-ipc-base.h
+> index 62d2bc774067..39fefd48cf4d 100644
+> --- a/include/linux/platform_data/x86/simatic-ipc-base.h
+> +++ b/include/linux/platform_data/x86/simatic-ipc-base.h
+> @@ -24,6 +24,4 @@ struct simatic_ipc_platform {
+>  	u8	devmode;
+>  };
+>  
+> -u32 simatic_ipc_get_membase0(unsigned int p2sb);
+> -
+>  #endif /* __PLATFORM_DATA_X86_SIMATIC_IPC_BASE_H */
 
