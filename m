@@ -2,99 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B16F53FD27
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 13:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 413FA53FE79
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 14:13:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242684AbiFGLQN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 07:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56974 "EHLO
+        id S242467AbiFGMNo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 08:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242665AbiFGLQM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 07:16:12 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD14396B2;
-        Tue,  7 Jun 2022 04:16:10 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id u12-20020a17090a1d4c00b001df78c7c209so20546111pju.1;
-        Tue, 07 Jun 2022 04:16:10 -0700 (PDT)
+        with ESMTP id S243494AbiFGMNm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 08:13:42 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC038C4E97
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jun 2022 05:13:40 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id u12so34802695eja.8
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jun 2022 05:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Eyn/86c6liF5nYWGh9VyLqwQursjArpq+vyMDFNlc6Q=;
-        b=lJSgL87NXAVkX4HsOGSumdR1cCQzgHG+hwOLjOuEvSSOnDvzXbBcK1qSGnr85+iGiI
-         sIemmp+Qo8//8HwMOpA8byQpBC8n0ahRFcl/w0Vd6zJLLg6ezB+SV0TqW42pCwF/+jxa
-         cqVuV30rPHvPd0GRB/19ILrquvbkwVD71D0nNjPizXqG7OAN9u/+EAWtVXK21b6SOYT3
-         l+ID6KKwRS26/HRZWyAal5DWRW/PCPJQwrauv6xYY8AX1keacnmJL1BjkmNGaHpPfklu
-         H6LX6NrnnDI+V9C5M1c/pSsbBIdsKTuXr4wi/yYGDbAGe/OgwEeAV9uQvqGxJiamR4fv
-         +e6w==
+        bh=zD7WXjHKnOOdAs/2q46R5gmJNVeU3dxPe4dDabLcQvY=;
+        b=LjRRrSmSTZ3zi8QCgFXJAGaDa2Ryz6vspfZoyyftrFhsXyhRaucC/1bKq8VOgz9EOS
+         gsNnlW/BXHJ4BfFq0byWHCb+uUv2+DXKqSAghiyMcAEhoTC8d2k0EIvhljJsmYO7Q2d5
+         NJQDXL2lpFABGN4H+hdXKXfiVIY0kq8kil55uTaQUrqGH5vmpv8O14dVik0WcJI3/ToS
+         0/KwKiPNGZ/OkQaMCcvEYMooeh5ms5K1p40Fmn2dTpjUgU6wvTKy7EE4C5cc4IURBPCn
+         AdduBW245z7CQux9yrOoqSwOaTFMVZRQNPegpJLX6GgL/Q2U2PDEnJGc6IH6MVdXf5aO
+         Do+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Eyn/86c6liF5nYWGh9VyLqwQursjArpq+vyMDFNlc6Q=;
-        b=D0CS/EnkRH2PNBUCjNA2GtLp+MmL6EKjlVnN9jk9BW5dY1gv2aN1Ov+7YilRwWviGa
-         pmofYQqCj1shcObuOxv8vHrlXw//muQYqhXHc0LGWaxGREb8iu3Ched2nv81ySRwhIff
-         vJHbvauKzScD6OrEcrYub0cddpVe3bw3HkB36owpWAuswNQY0ttlaWoG5UwD3uy2Xcmj
-         dEuRLW3jXs1rsP6kLsmUeNMMe5I49plmVz9i5vjq48KQGvAyhTpkCX0eEDn3C7dDobkT
-         9YpSF431dY7LXAwahrqPl8Py9xytQoeX+F+qoa9bIVnXpeVQz+EbqFCITZolh600U4YM
-         ruHg==
-X-Gm-Message-State: AOAM532P5kKhf4h37Yyhym4kJ3DWRxISu1TnMl5iZwgl5ajEotu28uwu
-        Kf676LBeC55qbCcWDPl6Syk=
-X-Google-Smtp-Source: ABdhPJwsbxOSKLJ4weNQQd1EOj/uVEtmK7CBrmp6IGxccZZprAYQAw0GhOvk6bxPGoX0hsxG+uJvqw==
-X-Received: by 2002:a17:902:f605:b0:14d:bd53:e2cd with SMTP id n5-20020a170902f60500b0014dbd53e2cdmr28383722plg.164.1654600570302;
-        Tue, 07 Jun 2022 04:16:10 -0700 (PDT)
-Received: from localhost.localdomain ([202.120.234.246])
-        by smtp.googlemail.com with ESMTPSA id s23-20020a056a001c5700b0050dc762816fsm5213778pfw.73.2022.06.07.04.16.07
+        bh=zD7WXjHKnOOdAs/2q46R5gmJNVeU3dxPe4dDabLcQvY=;
+        b=7u/V5F3RZcqZpF0q1kis4Ku4aGjpN6jPzb9nlrUHEmLKxehm9N40lteqTTdswolPXY
+         c3W1q4aZJb3H3rZKE2qunfoZanp6sH0AttQFdwtq36VqU8+VBk1h1FQinvZCcOLsBLlq
+         jiplndUvGE2EWbazTLwlkPuGFTlu3P+ONilf65t+qHBBHotcKgS0ikmoPjr2BPyI/z8E
+         sL0PEd3jCUQ8VlZ89BnLWZVUltmSMrRsD3A6I5YcvblDf+w/zdYfZ1HTiEcmla2aEwFU
+         ceaThPNpWFZ6kMo07ViOVrvSIWmmXiWoR/QfiJmpQXFHbe9hOgxkpJ9TTEQ3r6+Si/i7
+         SHWg==
+X-Gm-Message-State: AOAM533rOsLGk97yg8+AUIO99KA8LvNgruMskaOWADJhdTG0C2n/kjWP
+        RJ2jsjhF+deCGyajeDE9lNdQ9A==
+X-Google-Smtp-Source: ABdhPJy9ErtNMrjxPqGpfnfj+AXYhngpmrALPZs6T0DtTpjfQ4zIzsuFm9KrZWaVDAqft1jzcvQh/A==
+X-Received: by 2002:a17:907:7fa9:b0:711:d214:36cd with SMTP id qk41-20020a1709077fa900b00711d21436cdmr8018509ejc.600.1654604019564;
+        Tue, 07 Jun 2022 05:13:39 -0700 (PDT)
+Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id fg16-20020a1709069c5000b006fe8d8c54a7sm7542749ejc.87.2022.06.07.05.13.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 04:16:09 -0700 (PDT)
-From:   Miaoqian Lin <linmq006@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        Tue, 07 Jun 2022 05:13:39 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linmq006@gmail.com
-Subject: [PATCH] pinctrl: nomadik: Fix refcount leak in nmk_pinctrl_dt_subnode_to_map
-Date:   Tue,  7 Jun 2022 15:16:01 +0400
-Message-Id: <20220607111602.57355-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] dt-bindings: pinctrl: sunplus,sp7021-pinctrl: reference generic schema
+Date:   Tue,  7 Jun 2022 14:13:35 +0200
+Message-Id: <20220607121335.131497-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-of_parse_phandle() returns a node pointer with refcount
-incremented, we should use of_node_put() on it when not need anymore.
-Add missing of_node_put() to avoid refcount leak."
+Reference generic pin controller schema to enforce proper root node
+name.
 
-Fixes: c2f6d059abfc ("pinctrl: nomadik: refactor DT parser to take two paths")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml  | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index 640e50d94f27..f5014d09d81a 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -1421,8 +1421,10 @@ static int nmk_pinctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+diff --git a/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+index d8e75b3e64f1..15092fdd4b5b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+@@ -288,11 +288,14 @@ required:
  
- 	has_config = nmk_pinctrl_dt_get_config(np, &configs);
- 	np_config = of_parse_phandle(np, "ste,config", 0);
--	if (np_config)
-+	if (np_config) {
- 		has_config |= nmk_pinctrl_dt_get_config(np_config, &configs);
-+		of_node_put(np_config);
-+	}
- 	if (has_config) {
- 		const char *gpio_name;
- 		const char *pin;
+ additionalProperties: false
+ 
++allOf:
++  - $ref: "pinctrl.yaml#"
++
+ examples:
+   - |
+     #include <dt-bindings/pinctrl/sppctl-sp7021.h>
+ 
+-    pinctl@9c000100 {
++    pinctrl@9c000100 {
+         compatible = "sunplus,sp7021-pctl";
+         reg = <0x9c000100 0x100>, <0x9c000300 0x100>,
+               <0x9c0032e4 0x1c>, <0x9c000080 0x20>;
 -- 
-2.25.1
+2.34.1
 
