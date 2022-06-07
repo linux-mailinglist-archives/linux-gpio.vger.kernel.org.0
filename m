@@ -2,152 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9CCE53FCEB
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 13:08:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B16F53FD27
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 13:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242646AbiFGLIw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 07:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
+        id S242684AbiFGLQN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 07:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242531AbiFGLI1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 07:08:27 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B7C10EA4C;
-        Tue,  7 Jun 2022 04:04:32 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id v1so23748007ejg.13;
-        Tue, 07 Jun 2022 04:04:32 -0700 (PDT)
+        with ESMTP id S242665AbiFGLQM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 07:16:12 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD14396B2;
+        Tue,  7 Jun 2022 04:16:10 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id u12-20020a17090a1d4c00b001df78c7c209so20546111pju.1;
+        Tue, 07 Jun 2022 04:16:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dE3IfDBto2P1Lw1uX63OsonLCvmTMY25nDr0mUDzn+Q=;
-        b=L3il+xydJWAarPyPUgZutiMe46kqGVZ4BfF4kMo68FgtCnXbiHU6vikypBkE5LvRhl
-         FL7QnepGJil4FpKHDOZE9wbRTJpBHgrCcV5XkK2U459iNIu219cAZNVOCNB9xlpS0jCE
-         5w6HqD8YN1XwLSbkiW+0wMMJ+F/gqx169QTy0GSd1Lu/gwYydPSo/A2BjLxsqrOUKk1X
-         At2BGene276+74Ezm8McnBoDjrruqc1afTRGD5O+02dM2D1v2zibsCnGHAvDYsytUS2s
-         5pLWqOt0nTUClno+zB8d1ealys8sy64/CKp9itA7l/5Okoiuapjq3ExRoxSje1zVvmW/
-         07fQ==
+        bh=Eyn/86c6liF5nYWGh9VyLqwQursjArpq+vyMDFNlc6Q=;
+        b=lJSgL87NXAVkX4HsOGSumdR1cCQzgHG+hwOLjOuEvSSOnDvzXbBcK1qSGnr85+iGiI
+         sIemmp+Qo8//8HwMOpA8byQpBC8n0ahRFcl/w0Vd6zJLLg6ezB+SV0TqW42pCwF/+jxa
+         cqVuV30rPHvPd0GRB/19ILrquvbkwVD71D0nNjPizXqG7OAN9u/+EAWtVXK21b6SOYT3
+         l+ID6KKwRS26/HRZWyAal5DWRW/PCPJQwrauv6xYY8AX1keacnmJL1BjkmNGaHpPfklu
+         H6LX6NrnnDI+V9C5M1c/pSsbBIdsKTuXr4wi/yYGDbAGe/OgwEeAV9uQvqGxJiamR4fv
+         +e6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dE3IfDBto2P1Lw1uX63OsonLCvmTMY25nDr0mUDzn+Q=;
-        b=EVzSCR4Gk+KCZAOb+ViN35LAGkOoxN/mQrG9zbjaRgeGBsywAyWFSpGnYl8Kj5e8Od
-         sH9ZrCl5noV7c3GflqmlzYuLr5SE0iOjjuZo7D/P694eo07QcLydjjTEHTKk2fuavZQt
-         uH3H/Zfjk6sdV5Skk2nUjGTwKVB9Rj6DjEEcefI2wcoetnSvwpo7XDVoq5+oVruSmysX
-         xQW9iVJQxljcVB3bk6MlJnMHa2xberkn+nFStsbKFdZJCSIgxbnMDnGzNGrY19q84Yw6
-         XOWRv/WPOxsrJP2qTvVjgZ0qxzibRjT80MFKejIIGO3l/da4E01zJzuPhxbZksmRS1od
-         78fQ==
-X-Gm-Message-State: AOAM531wLPspeL6ouim0O0m1t13T2TDhzWzL4+lnOHiXu8bjfZXt3W+G
-        OfgNu+fLhrkyp65Pbf/k5bYwaD1YHXE=
-X-Google-Smtp-Source: ABdhPJz32oazMNe3wlp0q6FpQDwb2PX5Xb5qk9yNIcHcCeuIKNwpHmlSOP9joOOtUDAgBRo1uET8/g==
-X-Received: by 2002:a17:907:3fa4:b0:6fe:b83b:d667 with SMTP id hr36-20020a1709073fa400b006feb83bd667mr25618262ejc.481.1654599871163;
-        Tue, 07 Jun 2022 04:04:31 -0700 (PDT)
-Received: from localhost (92.40.203.141.threembb.co.uk. [92.40.203.141])
-        by smtp.gmail.com with ESMTPSA id ft29-20020a170907801d00b0071145c2f494sm3726424ejc.27.2022.06.07.04.04.30
+        bh=Eyn/86c6liF5nYWGh9VyLqwQursjArpq+vyMDFNlc6Q=;
+        b=D0CS/EnkRH2PNBUCjNA2GtLp+MmL6EKjlVnN9jk9BW5dY1gv2aN1Ov+7YilRwWviGa
+         pmofYQqCj1shcObuOxv8vHrlXw//muQYqhXHc0LGWaxGREb8iu3Ched2nv81ySRwhIff
+         vJHbvauKzScD6OrEcrYub0cddpVe3bw3HkB36owpWAuswNQY0ttlaWoG5UwD3uy2Xcmj
+         dEuRLW3jXs1rsP6kLsmUeNMMe5I49plmVz9i5vjq48KQGvAyhTpkCX0eEDn3C7dDobkT
+         9YpSF431dY7LXAwahrqPl8Py9xytQoeX+F+qoa9bIVnXpeVQz+EbqFCITZolh600U4YM
+         ruHg==
+X-Gm-Message-State: AOAM532P5kKhf4h37Yyhym4kJ3DWRxISu1TnMl5iZwgl5ajEotu28uwu
+        Kf676LBeC55qbCcWDPl6Syk=
+X-Google-Smtp-Source: ABdhPJwsbxOSKLJ4weNQQd1EOj/uVEtmK7CBrmp6IGxccZZprAYQAw0GhOvk6bxPGoX0hsxG+uJvqw==
+X-Received: by 2002:a17:902:f605:b0:14d:bd53:e2cd with SMTP id n5-20020a170902f60500b0014dbd53e2cdmr28383722plg.164.1654600570302;
+        Tue, 07 Jun 2022 04:16:10 -0700 (PDT)
+Received: from localhost.localdomain ([202.120.234.246])
+        by smtp.googlemail.com with ESMTPSA id s23-20020a056a001c5700b0050dc762816fsm5213778pfw.73.2022.06.07.04.16.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 04:04:30 -0700 (PDT)
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     paul@crapouillou.net, linus.walleij@linaro.org
-Cc:     linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Tue, 07 Jun 2022 04:16:09 -0700 (PDT)
+From:   Miaoqian Lin <linmq006@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: ingenic: Convert to immutable irq chip
-Date:   Tue,  7 Jun 2022 12:05:25 +0100
-Message-Id: <20220607110525.36922-1-aidanmacdonald.0x0@gmail.com>
+Cc:     linmq006@gmail.com
+Subject: [PATCH] pinctrl: nomadik: Fix refcount leak in nmk_pinctrl_dt_subnode_to_map
+Date:   Tue,  7 Jun 2022 15:16:01 +0400
+Message-Id: <20220607111602.57355-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the driver to use an immutable IRQ chip to fix this warning:
+of_parse_phandle() returns a node pointer with refcount
+incremented, we should use of_node_put() on it when not need anymore.
+Add missing of_node_put() to avoid refcount leak."
 
-    "not an immutable chip, please consider fixing it!"
-
-Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Fixes: c2f6d059abfc ("pinctrl: nomadik: refactor DT parser to take two paths")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 33 ++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 14 deletions(-)
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 1ca11616db74..37258fb05be3 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -135,7 +135,6 @@ struct ingenic_pinctrl {
- struct ingenic_gpio_chip {
- 	struct ingenic_pinctrl *jzpc;
- 	struct gpio_chip gc;
--	struct irq_chip irq_chip;
- 	unsigned int irq, reg_base;
- };
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+index 640e50d94f27..f5014d09d81a 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -1421,8 +1421,10 @@ static int nmk_pinctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
  
-@@ -3419,6 +3418,8 @@ static void ingenic_gpio_irq_enable(struct irq_data *irqd)
- 	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
- 	int irq = irqd->hwirq;
- 
-+	gpiochip_enable_irq(gc, irq);
-+
- 	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
- 		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_INT, irq, true);
- 	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
-@@ -3443,6 +3444,8 @@ static void ingenic_gpio_irq_disable(struct irq_data *irqd)
- 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIER, irq, false);
-+
-+	gpiochip_disable_irq(gc, irq);
- }
- 
- static void ingenic_gpio_irq_ack(struct irq_data *irqd)
-@@ -3684,6 +3687,20 @@ static void ingenic_gpio_irq_release(struct irq_data *data)
- 	return gpiochip_relres_irq(gpio_chip, data->hwirq);
- }
- 
-+static const struct irq_chip ingenic_gpio_irqchip = {
-+	.name			= "gpio",
-+	.irq_enable		= ingenic_gpio_irq_enable,
-+	.irq_disable		= ingenic_gpio_irq_disable,
-+	.irq_unmask		= ingenic_gpio_irq_unmask,
-+	.irq_mask		= ingenic_gpio_irq_mask,
-+	.irq_ack		= ingenic_gpio_irq_ack,
-+	.irq_set_type		= ingenic_gpio_irq_set_type,
-+	.irq_set_wake		= ingenic_gpio_irq_set_wake,
-+	.irq_request_resources	= ingenic_gpio_irq_request,
-+	.irq_release_resources	= ingenic_gpio_irq_release,
-+	.flags			= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-+};
-+
- static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
- 		int pin, int func)
- {
-@@ -4172,20 +4189,8 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
- 	if (!jzgc->irq)
- 		return -EINVAL;
- 
--	jzgc->irq_chip.name = jzgc->gc.label;
--	jzgc->irq_chip.irq_enable = ingenic_gpio_irq_enable;
--	jzgc->irq_chip.irq_disable = ingenic_gpio_irq_disable;
--	jzgc->irq_chip.irq_unmask = ingenic_gpio_irq_unmask;
--	jzgc->irq_chip.irq_mask = ingenic_gpio_irq_mask;
--	jzgc->irq_chip.irq_ack = ingenic_gpio_irq_ack;
--	jzgc->irq_chip.irq_set_type = ingenic_gpio_irq_set_type;
--	jzgc->irq_chip.irq_set_wake = ingenic_gpio_irq_set_wake;
--	jzgc->irq_chip.irq_request_resources = ingenic_gpio_irq_request;
--	jzgc->irq_chip.irq_release_resources = ingenic_gpio_irq_release;
--	jzgc->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
--
- 	girq = &jzgc->gc.irq;
--	girq->chip = &jzgc->irq_chip;
-+	gpio_irq_chip_set_chip(girq, &ingenic_gpio_irqchip);
- 	girq->parent_handler = ingenic_gpio_irq_handler;
- 	girq->num_parents = 1;
- 	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+ 	has_config = nmk_pinctrl_dt_get_config(np, &configs);
+ 	np_config = of_parse_phandle(np, "ste,config", 0);
+-	if (np_config)
++	if (np_config) {
+ 		has_config |= nmk_pinctrl_dt_get_config(np_config, &configs);
++		of_node_put(np_config);
++	}
+ 	if (has_config) {
+ 		const char *gpio_name;
+ 		const char *pin;
 -- 
-2.35.1
+2.25.1
 
