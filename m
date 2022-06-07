@@ -2,64 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8729F5400E2
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 16:11:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2F7754023C
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jun 2022 17:17:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245214AbiFGOLs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jun 2022 10:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
+        id S1343936AbiFGPRJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jun 2022 11:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245197AbiFGOLq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 10:11:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F18DA501E;
-        Tue,  7 Jun 2022 07:11:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E81C26157B;
-        Tue,  7 Jun 2022 14:11:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A53C385A5;
-        Tue,  7 Jun 2022 14:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654611104;
-        bh=letTzTlIdmYyCQr3t4i/4sQ++BrVupVi397GE8M9uvI=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=ZmrXJqh5VhK6LBrkWuZLcZPb6LB/aKqB7VgbxKHQ5EKdRZGn1B/UtUl37J/VZlncM
-         XaKVqUs9/CrLhurHZmfQE4ZHromAzF5QHFhfcePHGAZt6gJN4oXn1Jgu9OhytNBGsZ
-         Dpp8c39jiY4Y6vji5iZNzY0BkjvDT9oCjsHIgHSItTWWl1ZaFW8x1MWtKzh54+Jsmx
-         MgLY2ScRWCz28NxqLMnfdu2v0uWPvoMrX/y8LVhRzTo8e9BmO+8kP0GacNDIRYfLCx
-         +YjXzNg0JjEvKZfsqCZP5oIjyElXDN9wiUZpKQTLYg3m4X5qyHVoxoSHYehWp506BX
-         a+HtETwbE/zkg==
-From:   Mark Brown <broonie@kernel.org>
-To:     linux-doc@vger.kernel.org, corbet@lwn.net, mchehab@kernel.org
-Cc:     linux@roeck-us.net, linux-cachefs@redhat.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dave.hansen@linux.intel.com, linux-samsung-soc@vger.kernel.org,
-        geert@linux-m68k.org, ulf.hansson@linaro.org, hpa@zytor.com,
-        alsa-devel@alsa-project.org, linux-m68k@lists.linux-m68k.org,
-        krzysztof.kozlowski+dt@linaro.org,
-        bcm-kernel-feedback-list@broadcom.com, kvm@vger.kernel.org,
-        mingo@redhat.com, mchehab+huawei@kernel.org, jdelvare@suse.com,
-        robh+dt@kernel.org, linux-gpio@vger.kernel.org, rafael@kernel.org,
-        linux-mmc@vger.kernel.org, federico.vaga@vaga.pv.it, bp@alien8.de,
-        linux-phy@lists.infradead.org, mmayer@broadcom.com,
-        keyrings@vger.kernel.org, x86@kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        alim.akhtar@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        jarkko@kernel.org, tglx@linutronix.de, linus.walleij@linaro.org
-In-Reply-To: <cover.1654529011.git.mchehab@kernel.org>
-References: <cover.1654529011.git.mchehab@kernel.org>
-Subject: Re: (subset) [PATCH 00/23] Update Documentation/ cross-references
-Message-Id: <165461109692.1597191.11390741473240531333.b4-ty@kernel.org>
-Date:   Tue, 07 Jun 2022 15:11:36 +0100
+        with ESMTP id S245065AbiFGPRI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jun 2022 11:17:08 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8627678ECB;
+        Tue,  7 Jun 2022 08:17:07 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id a10so15788458ioe.9;
+        Tue, 07 Jun 2022 08:17:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SjlVFdnR7tYxM3f/CB6jirW0jGfTyiV+Y5jKRvu7N1I=;
+        b=s877vHbaKA9MSmRAvrZNXnPsQAYmu+F3VyJSYEp1unKXgHRVfeqHbOzMslEmr10U+3
+         I4BVJAh94m4KXLjvhcsPvMCmVung+lcQteHvzeOf/p+qzhW73Ss6CPZZLGYAR1qIy2gM
+         TbqoowXOk5vQAYoXcwOG3109iFs+e2dcDZ1y5ZkDd4nt8vg/Um51uxZqlTEmCorHxjHo
+         pB2susAL5fBAU6zRW2NpuClOu8kTnILbw63qojPOjgC+uNcTaqaM27QFqdE6y36vA0Ya
+         0VBH8U/NoeGcEOyK4n/p4CV/C5t64sBGdunuO9WAJKynaWVH3AKoVWClHsJe4nDrwayz
+         G9Og==
+X-Gm-Message-State: AOAM532jkOUrtrS4Ig0bfjrBYWbCLnfqdLPCjduf+BOBvW5jZ8VasB6r
+        o6pxBI8h1dacvHvjmCEwB/Bye6bLWg==
+X-Google-Smtp-Source: ABdhPJzeQ1o4uHp2G2vvHri3+rguSybk1tpA6g0SN4mirpEdhY9wF4Tm3Db5kCMXTu/0HyRttUBqtg==
+X-Received: by 2002:a05:6638:13d5:b0:331:a6f2:3dbf with SMTP id i21-20020a05663813d500b00331a6f23dbfmr7413793jaj.9.1654615026710;
+        Tue, 07 Jun 2022 08:17:06 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t22-20020a5d8496000000b0065dc93eae5dsm6677682iom.7.2022.06.07.08.17.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 08:17:06 -0700 (PDT)
+Received: (nullmailer pid 3267286 invoked by uid 1000);
+        Tue, 07 Jun 2022 15:17:03 -0000
+Date:   Tue, 7 Jun 2022 09:17:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
+        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
+        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
+        rafael@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/10] dt-bindings: gpio: Add AXP192 GPIO bindings
+Message-ID: <20220607151703.GB3254370-robh@kernel.org>
+References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
+ <20220603135714.12007-6-aidanmacdonald.0x0@gmail.com>
+ <20220605225504.GA3678983-robh@kernel.org>
+ <7w5P7NKqcSgfwmILB1hRmmdtkmw7UXrH@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7w5P7NKqcSgfwmILB1hRmmdtkmw7UXrH@localhost>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,40 +69,71 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 6 Jun 2022 16:25:22 +0100, Mauro Carvalho Chehab wrote:
-> There were a number of DT binding conversions and other docs change that
-> were not updated. Address them, in order to keep the cross-references on
-> a sane state.
+On Tue, Jun 07, 2022 at 11:34:19AM +0100, Aidan MacDonald wrote:
 > 
-> Patch series is against v5.19-rc1 (and applies cleanly on the top of
-> today's -next).
+> Rob Herring <robh@kernel.org> writes:
 > 
-> [...]
+> > On Fri, Jun 03, 2022 at 02:57:09PM +0100, Aidan MacDonald wrote:
+> >> The AXP192 PMIC is different enough from the PMICs supported by
+> >> the AXP20x GPIO driver to warrant a separate driver. The AXP192
+> >> driver also supports interrupts and pinconf settings.
+> >> 
+> >> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> >> ---
+> >>  .../bindings/gpio/x-powers,axp192-gpio.yaml   | 59 +++++++++++++++++++
+> >>  1 file changed, 59 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
+> >> new file mode 100644
+> >> index 000000000000..7a985640ade8
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
+> >> @@ -0,0 +1,59 @@
+> >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: "http://devicetree.org/schemas/gpio/x-powers,axp192-gpio.yaml#"
+> >> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> >> +
+> >> +title: X-Powers AXP192 GPIO Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Chen-Yu Tsai <wens@csie.org>
+> >> +
+> >> +properties:
+> >> +  "#gpio-cells":
+> >> +    const: 2
+> >> +    description: >
+> >> +      The first cell is the pin number and the second is the GPIO flags.
+> >> +
+> >> +  compatible:
+> >> +    oneOf:
+> >> +      - enum:
+> >
+> > No need for 'oneOf' with only 1 entry.
+> >
+> 
+> Got it.
+> 
+> >> +          - x-powers,axp192-gpio
+> >> +
+> >> +  gpio-controller: true
+> >> +
+> >> +patternProperties:
+> >> +  "^.*-pins?$":
+> >
+> > You can omit '^.*'
+> >
+> > Why does 's' need to be optional?
+> >
+> 
+> TBH I just copied this from x-powers,axp209-gpio.yaml. A similar pattern
+> is used in a few other bindings, eg. allwinner,sun4i-a10-pinctrl.yaml.
+> I guess it's to allow the node names to sound more natural when there's
+> only one pin.
 
-Applied to
+Those cases were for compatibility with existing users. That shouldn't 
+be the case here.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[22/23] ASoC: wm8731: update wlf,wm8731.yaml reference
-        commit: 69c8027c5ff43d68449fda4510a8cce70e8578b0
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Rob
