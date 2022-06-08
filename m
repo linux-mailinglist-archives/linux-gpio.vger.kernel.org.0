@@ -2,68 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 196F5542B24
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 11:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B28AF542912
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 10:15:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234767AbiFHJQF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jun 2022 05:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
+        id S231270AbiFHIPX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jun 2022 04:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235376AbiFHJOz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 05:14:55 -0400
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4621DBD5F;
-        Wed,  8 Jun 2022 01:38:19 -0700 (PDT)
-X-UUID: bd92ecd6a1074869903cecc19770c9ce-20220608
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.5,REQID:4a36f448-f7bf-4c1d-b939-3e6c8349126c,OB:0,LO
-        B:0,IP:0,URL:0,TC:0,Content:-20,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,AC
-        TION:release,TS:-20
-X-CID-META: VersionHash:2a19b09,CLOUDID:d64715e5-2ba2-4dc1-b6c5-11feb6c769e0,C
-        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:1,EDM:-3,IP:nil,URL:0,File:nil
-        ,QS:0,BEC:nil
-X-UUID: bd92ecd6a1074869903cecc19770c9ce-20220608
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <guodong.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1638914147; Wed, 08 Jun 2022 16:38:15 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with ShadowRedundancy id 15.2.792.3;
- Wed, 8 Jun 2022 08:37:01 +0000
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
- Wed, 8 Jun 2022 13:39:52 +0800
-Received: from localhost.localdomain (10.17.3.154) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 8 Jun 2022 13:39:50 +0800
-From:   Guodong Liu <guodong.liu@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        =?UTF-8?q?N=EDcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= 
-        <nfraprado@collabora.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        Guodong Liu <guodong.liu@mediatek.com>
-Subject: [PATCH v1 4/4] pinctrl: mediatek: fix the pinconf definition of some GPIO pins
-Date:   Wed, 8 Jun 2022 13:39:09 +0800
-Message-ID: <20220608053909.1252-5-guodong.liu@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220608053909.1252-1-guodong.liu@mediatek.com>
-References: <20220608053909.1252-1-guodong.liu@mediatek.com>
+        with ESMTP id S232641AbiFHINi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 04:13:38 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E7A3104CD
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Jun 2022 00:42:44 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id l2-20020a05600c4f0200b0039c55c50482so2869662wmq.0
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jun 2022 00:42:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pDUMQH/JwikS3dGEuoL+s1rn8CjjChIDmrF7b583qjU=;
+        b=fKa3RQzgR1C9gPuzjlK18lPR2ODRZc9Pj5Y+S/gKLpIzbFKHaf1hSkOcGwqMnNsq9r
+         XMuR0mXisUyo/8tXYSJHQu1AEBby8iCEMYFo9QfFIPo7CeBdgGwt4qVeeX7wVgxf6yLX
+         bw288huVE7wnORJcuCI5o1dxTMI8dpA+TRhyYRY3VuiE+BlZ/D2EkZIJVJKnQEiTN0M4
+         2Tc/6fwu7DLHDdQbhhhmCxEbH3XYI2IzWnO/zUDfPluY0N6BMqQOxDd5pl8kgFNumtlP
+         e0rNv4a89XGj4Yn2zUj5RD1kWvz2pHoia7MKcqd+835Rt8u8iwj82sJeJYf00LEQTTM1
+         RbHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pDUMQH/JwikS3dGEuoL+s1rn8CjjChIDmrF7b583qjU=;
+        b=uwEHITD4v0AmF8WrBltBWQUIjtJ7UDgk8A98GVAopKFq4EpRQss2h7x1w0DBlk6wca
+         e8P2q/j4aY2GKk60ZOzxlQQhPgAbiisAV6wqHQU9vZqPd490uT5muwJ0Bcy0Y2P8GZsU
+         6XbLalOVl6kOLA25AtVWHqisGbWDrVdJG2ejv7XL9B+aCdBwyEImOoC2jLFB78HRBHap
+         c0T9ppS2dLjoP3HVWrZ9YLiclfgjyArBLUMFvnnaMX+04RgVE43Hb9i3ZaS1q69UL5vl
+         EwLxuAy5ZdBIXXZX5XM1NL+LL+utCao2zIm0UfR+WYEywGV2LLnSCwWosiExBTVEAxF6
+         aqGg==
+X-Gm-Message-State: AOAM533i7vnJFO3/Go8KN1I+aLQ3wWAl/2hvWFx4sIqgzKRJW6tsT34c
+        /hM7XhDws/aw71RiK5yWXb7nzw==
+X-Google-Smtp-Source: ABdhPJxfmsfGuJRdtDGKUMYuiYyopBGOApn2Jgo+2/o+D5JV/RRywsnhNTpqwclfgNE8JAcQiqHOkA==
+X-Received: by 2002:a05:600c:5021:b0:39c:6571:e0b0 with SMTP id n33-20020a05600c502100b0039c6571e0b0mr190102wmr.177.1654674163150;
+        Wed, 08 Jun 2022 00:42:43 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id g20-20020a05600c4c9400b0039749b01ea7sm26101954wmp.32.2022.06.08.00.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jun 2022 00:42:42 -0700 (PDT)
+Date:   Wed, 8 Jun 2022 08:42:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YqBS8I62YBPFC9iS@google.com>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-MTK:  N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=unavailable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,131 +90,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Remove pin definitions that do not support the R0 & R1 pinconfig property
+On Mon, 06 Jun 2022, Andy Shevchenko wrote:
 
-Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-mt8192.c | 60 -----------------------
- 1 file changed, 60 deletions(-)
+> There are a few users that would like to utilize P2SB mechanism of hiding
+> and unhiding a device from the PCI configuration space.
+> 
+> Here is the series to consolidate p2sb handling code for existing users
+> and to provide a generic way for new comer(s).
+> 
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
+> 
+> The patch that brings the helper ("platform/x86/intel: Add Primary to
+> Sideband (P2SB) bridge support") has a commit message that sheds a light
+> on what the P2SB is and why this is needed.
+> 
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> The series is ready to be merged via MFD tree, but see below.
+> 
+> The series also includes updates for Simatic IPC drivers that partially
+> tagged by respective maintainers (the main question is if Pavel is okay
+> with the last three patches, since I believe Hans is okay with removing
+> some code under PDx86). Hence the first 8 patches can be merged right
+> away and the rest when Pavel does his review.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8192.c b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-index 1486c141ee8c..13784a92a536 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-@@ -1107,24 +1107,10 @@ static const struct mtk_pin_field_calc mt8192_pin_pupd_range[] = {
- 	PIN_FIELD_BASE(54, 54, 1, 0x0060, 0x10, 2, 1),
- 	PIN_FIELD_BASE(55, 55, 1, 0x0060, 0x10, 4, 1),
- 	PIN_FIELD_BASE(56, 56, 1, 0x0060, 0x10, 3, 1),
--	PIN_FIELD_BASE(118, 118, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(119, 119, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(120, 120, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(121, 121, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(122, 122, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(123, 123, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(124, 124, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(125, 125, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(139, 139, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(140, 140, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(141, 141, 4, 0x00e0, 0x10, 31, 1),
--	PIN_FIELD_BASE(142, 142, 4, 0x00e0, 0x10, 31, 1),
- 	PIN_FIELD_BASE(152, 152, 7, 0x0090, 0x10, 3, 1),
- 	PIN_FIELD_BASE(153, 153, 7, 0x0090, 0x10, 2, 1),
- 	PIN_FIELD_BASE(154, 154, 7, 0x0090, 0x10, 0, 1),
- 	PIN_FIELD_BASE(155, 155, 7, 0x0090, 0x10, 1, 1),
--	PIN_FIELD_BASE(160, 160, 7, 0x00f0, 0x10, 31, 1),
--	PIN_FIELD_BASE(161, 161, 7, 0x00f0, 0x10, 31, 1),
- 	PIN_FIELD_BASE(183, 183, 9, 0x0030, 0x10, 1, 1),
- 	PIN_FIELD_BASE(184, 184, 9, 0x0030, 0x10, 2, 1),
- 	PIN_FIELD_BASE(185, 185, 9, 0x0030, 0x10, 4, 1),
-@@ -1137,12 +1123,6 @@ static const struct mtk_pin_field_calc mt8192_pin_pupd_range[] = {
- 	PIN_FIELD_BASE(192, 192, 9, 0x0030, 0x10, 0, 1),
- 	PIN_FIELD_BASE(193, 193, 9, 0x0030, 0x10, 5, 1),
- 	PIN_FIELD_BASE(194, 194, 9, 0x0030, 0x10, 11, 1),
--	PIN_FIELD_BASE(200, 200, 8, 0x0070, 0x10, 31, 1),
--	PIN_FIELD_BASE(201, 201, 8, 0x0070, 0x10, 31, 1),
--	PIN_FIELD_BASE(202, 202, 5, 0x0070, 0x10, 31, 1),
--	PIN_FIELD_BASE(203, 203, 5, 0x0070, 0x10, 31, 1),
--	PIN_FIELD_BASE(204, 204, 8, 0x0070, 0x10, 31, 1),
--	PIN_FIELD_BASE(205, 205, 8, 0x0070, 0x10, 31, 1),
- };
- 
- static const struct mtk_pin_field_calc mt8192_pin_r0_range[] = {
-@@ -1164,24 +1144,10 @@ static const struct mtk_pin_field_calc mt8192_pin_r0_range[] = {
- 	PIN_FIELD_BASE(54, 54, 1, 0x0080, 0x10, 2, 1),
- 	PIN_FIELD_BASE(55, 55, 1, 0x0080, 0x10, 4, 1),
- 	PIN_FIELD_BASE(56, 56, 1, 0x0080, 0x10, 3, 1),
--	PIN_FIELD_BASE(118, 118, 4, 0x00e0, 0x10, 0, 1),
--	PIN_FIELD_BASE(119, 119, 4, 0x00e0, 0x10, 12, 1),
--	PIN_FIELD_BASE(120, 120, 4, 0x00e0, 0x10, 10, 1),
--	PIN_FIELD_BASE(121, 121, 4, 0x00e0, 0x10, 22, 1),
--	PIN_FIELD_BASE(122, 122, 4, 0x00e0, 0x10, 8, 1),
--	PIN_FIELD_BASE(123, 123, 4, 0x00e0, 0x10, 20, 1),
--	PIN_FIELD_BASE(124, 124, 4, 0x00e0, 0x10, 6, 1),
--	PIN_FIELD_BASE(125, 125, 4, 0x00e0, 0x10, 18, 1),
--	PIN_FIELD_BASE(139, 139, 4, 0x00e0, 0x10, 4, 1),
--	PIN_FIELD_BASE(140, 140, 4, 0x00e0, 0x10, 16, 1),
--	PIN_FIELD_BASE(141, 141, 4, 0x00e0, 0x10, 2, 1),
--	PIN_FIELD_BASE(142, 142, 4, 0x00e0, 0x10, 14, 1),
- 	PIN_FIELD_BASE(152, 152, 7, 0x00c0, 0x10, 3, 1),
- 	PIN_FIELD_BASE(153, 153, 7, 0x00c0, 0x10, 2, 1),
- 	PIN_FIELD_BASE(154, 154, 7, 0x00c0, 0x10, 0, 1),
- 	PIN_FIELD_BASE(155, 155, 7, 0x00c0, 0x10, 1, 1),
--	PIN_FIELD_BASE(160, 160, 7, 0x00f0, 0x10, 0, 1),
--	PIN_FIELD_BASE(161, 161, 7, 0x00f0, 0x10, 2, 1),
- 	PIN_FIELD_BASE(183, 183, 9, 0x0040, 0x10, 1, 1),
- 	PIN_FIELD_BASE(184, 184, 9, 0x0040, 0x10, 2, 1),
- 	PIN_FIELD_BASE(185, 185, 9, 0x0040, 0x10, 4, 1),
-@@ -1194,12 +1160,6 @@ static const struct mtk_pin_field_calc mt8192_pin_r0_range[] = {
- 	PIN_FIELD_BASE(192, 192, 9, 0x0040, 0x10, 0, 1),
- 	PIN_FIELD_BASE(193, 193, 9, 0x0040, 0x10, 5, 1),
- 	PIN_FIELD_BASE(194, 194, 9, 0x0040, 0x10, 11, 1),
--	PIN_FIELD_BASE(200, 200, 8, 0x0070, 0x10, 2, 1),
--	PIN_FIELD_BASE(201, 201, 8, 0x0070, 0x10, 6, 1),
--	PIN_FIELD_BASE(202, 202, 5, 0x0070, 0x10, 0, 1),
--	PIN_FIELD_BASE(203, 203, 5, 0x0070, 0x10, 2, 1),
--	PIN_FIELD_BASE(204, 204, 8, 0x0070, 0x10, 0, 1),
--	PIN_FIELD_BASE(205, 205, 8, 0x0070, 0x10, 4, 1),
- };
- 
- static const struct mtk_pin_field_calc mt8192_pin_r1_range[] = {
-@@ -1221,24 +1181,10 @@ static const struct mtk_pin_field_calc mt8192_pin_r1_range[] = {
- 	PIN_FIELD_BASE(54, 54, 1, 0x0090, 0x10, 2, 1),
- 	PIN_FIELD_BASE(55, 55, 1, 0x0090, 0x10, 4, 1),
- 	PIN_FIELD_BASE(56, 56, 1, 0x0090, 0x10, 3, 1),
--	PIN_FIELD_BASE(118, 118, 4, 0x00e0, 0x10, 1, 1),
--	PIN_FIELD_BASE(119, 119, 4, 0x00e0, 0x10, 13, 1),
--	PIN_FIELD_BASE(120, 120, 4, 0x00e0, 0x10, 11, 1),
--	PIN_FIELD_BASE(121, 121, 4, 0x00e0, 0x10, 23, 1),
--	PIN_FIELD_BASE(122, 122, 4, 0x00e0, 0x10, 9, 1),
--	PIN_FIELD_BASE(123, 123, 4, 0x00e0, 0x10, 21, 1),
--	PIN_FIELD_BASE(124, 124, 4, 0x00e0, 0x10, 7, 1),
--	PIN_FIELD_BASE(125, 125, 4, 0x00e0, 0x10, 19, 1),
--	PIN_FIELD_BASE(139, 139, 4, 0x00e0, 0x10, 5, 1),
--	PIN_FIELD_BASE(140, 140, 4, 0x00e0, 0x10, 17, 1),
--	PIN_FIELD_BASE(141, 141, 4, 0x00e0, 0x10, 3, 1),
--	PIN_FIELD_BASE(142, 142, 4, 0x00e0, 0x10, 15, 1),
- 	PIN_FIELD_BASE(152, 152, 7, 0x00d0, 0x10, 3, 1),
- 	PIN_FIELD_BASE(153, 153, 7, 0x00d0, 0x10, 2, 1),
- 	PIN_FIELD_BASE(154, 154, 7, 0x00d0, 0x10, 0, 1),
- 	PIN_FIELD_BASE(155, 155, 7, 0x00d0, 0x10, 1, 1),
--	PIN_FIELD_BASE(160, 160, 7, 0x00f0, 0x10, 1, 1),
--	PIN_FIELD_BASE(161, 161, 7, 0x00f0, 0x10, 3, 1),
- 	PIN_FIELD_BASE(183, 183, 9, 0x0050, 0x10, 1, 1),
- 	PIN_FIELD_BASE(184, 184, 9, 0x0050, 0x10, 2, 1),
- 	PIN_FIELD_BASE(185, 185, 9, 0x0050, 0x10, 4, 1),
-@@ -1251,12 +1197,6 @@ static const struct mtk_pin_field_calc mt8192_pin_r1_range[] = {
- 	PIN_FIELD_BASE(192, 192, 9, 0x0050, 0x10, 0, 1),
- 	PIN_FIELD_BASE(193, 193, 9, 0x0050, 0x10, 5, 1),
- 	PIN_FIELD_BASE(194, 194, 9, 0x0050, 0x10, 11, 1),
--	PIN_FIELD_BASE(200, 200, 8, 0x0070, 0x10, 3, 1),
--	PIN_FIELD_BASE(201, 201, 8, 0x0070, 0x10, 7, 1),
--	PIN_FIELD_BASE(202, 202, 5, 0x0070, 0x10, 1, 1),
--	PIN_FIELD_BASE(203, 203, 5, 0x0070, 0x10, 3, 1),
--	PIN_FIELD_BASE(204, 204, 8, 0x0070, 0x10, 1, 1),
--	PIN_FIELD_BASE(205, 205, 8, 0x0070, 0x10, 5, 1),
- };
- 
- static const struct mtk_pin_field_calc mt8192_pin_drv_adv_range[] = {
+Can we just wait for Pavel's review, then merge them all at once?
+
 -- 
-2.25.5
-
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
