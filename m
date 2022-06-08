@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1A54542E46
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 12:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C914542E51
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 12:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237521AbiFHKtA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jun 2022 06:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
+        id S237540AbiFHKuG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jun 2022 06:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237469AbiFHKs7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 06:48:59 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B126B1B7827
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Jun 2022 03:48:57 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id n28so26506335edb.9
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jun 2022 03:48:57 -0700 (PDT)
+        with ESMTP id S237616AbiFHKuC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 06:50:02 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 178361E450E
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Jun 2022 03:49:53 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id s12so33427183ejx.3
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jun 2022 03:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=aUu+de0g86KF16rpJt3I15wAYwxHXppsK/rhqPeo1Q0=;
-        b=uaTceCdNGPnJo2LlPeOrg/JbnK2kXDBdeVy/uvKMknDrnjVMO3m0sBeb9QgQSPsifq
-         admE8n+5uE5XIPOj0tDvoPDYR1a2GScJDDB9zoRJCsaNSrP3FZRePa7ubOxMNHw0szsi
-         7nNeAj4lOtMWJWKk3yYoAY4ghC/a70g07XuBWRTwdKRHXWeLBA3mJFziYPudahTsgvXM
-         Z7/X/4e9osmX6nDOTRL9EyPRHVa9owJuioFihlIH7Qi11osxtgtXnYf/R1eSfDIYVyWS
-         OiqCUXpuUvpo9O6b5IJSgP2/LXp3WP3a2aJYCzPY0mLChsAKuxZc7pe/8pJZ9K9tc0XF
-         0taw==
+        bh=ppmJecFPUfINSV2AlV4steP2piT7HzfARnep8cf2hLk=;
+        b=l8muK1/VkKkOhNmipiIQRvwi177Flgj0aiEyx7YjD/cRfWip7klyqKusOlBQxXNNdO
+         aAXobXE/K2pB68YqljIPKpAlzLSH88GmGFULOB4aCiCGcCruAmgNxu2zBGC14aL16HJ8
+         uGrM0lcciever+JLI5I0yNo2/4VHS9+rqfDqQJjjv9wr+nEkIn+nDulQKIE9G7USArh9
+         5mfxi+7/1eMDWrTJ4NkOGQKz5DoGkvpWB+t0wTkO+g4X0k6DV1zl7hzbf0c1aGHJpEEA
+         hDsXNTYaadYyefvY/M/SkLeP3hJG+RGGywu9lqesYSQlk1AwQeY5EWOK0OpqY6FbwG4+
+         qJiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=aUu+de0g86KF16rpJt3I15wAYwxHXppsK/rhqPeo1Q0=;
-        b=tbjtCaRFBVNqVcEOfvgJv7PkZqcsI0wzgCCs8Ralx1AWc+PGdKD953q1sZov9IevnC
-         Y2Jubtt658UuiryeS641t/IG2nZjAvBNwQCaVRTwFLOMY4uTRkC0GiiEm92tO1Ms0D9A
-         bJvzcDhG0yNfHS9YWggqkcwkdDup2yuyeXfV3OdfxeYw5236MY8t5o1WNcVhHsp0pdc+
-         HeDrJFfaPpWEKcl24Fr5V+8eYWKZ5I+GbAnZwH4hl279iBXwHujcJ/oOgA9fiIi9kVzL
-         3iyUzhZb4QS6q5ig+kW5csh/cAnW2UmKAgsDe7E8ZZ0F0U93sWQS5c5/kToljcXFjPnA
-         BOIg==
-X-Gm-Message-State: AOAM531NuRW6IKYGeIMvZ0BVcMvudGvRXJGEv/S+XTvUK72JvsspGaIE
-        uElLXRrUGMFPG13sd3YEPtlA2w==
-X-Google-Smtp-Source: ABdhPJwdqTV1pWBZhjN2YI/U/7nc8D2TetBbktJD9lEYEYnMLwMaBrM2nINP/KaaH/nRoR6xz3acOg==
-X-Received: by 2002:a05:6402:1713:b0:42d:cb5e:d799 with SMTP id y19-20020a056402171300b0042dcb5ed799mr38264426edu.34.1654685336296;
-        Wed, 08 Jun 2022 03:48:56 -0700 (PDT)
+        bh=ppmJecFPUfINSV2AlV4steP2piT7HzfARnep8cf2hLk=;
+        b=v5NDOlNSkcrwEezm6NciFD+ZWpUX0y3Hb+9Edopngv/3bmGxpZGAdddEO1T/pp1Adi
+         vtrf9on7QMsdBHMpl7jx//Ik7+aK502Q3qDaNMXL8Ye1bcmn7mkxfBqNdIH7J2PX2q0K
+         1QtZCZ9+8A4CJFclLfVXxw+6BZdyf7rGKrGgPUd0DXPVW7dbw+uCuMWuidMl/4q9z0vP
+         WTI9NdH5yHNBT4N7qnSjNLfvCvdaP8wm5IEv3rGklzChfxcwQt0Jix9FzHqrvAVt986O
+         frkMkujA1NuvW1YlQLqmgOR/hm7AOFhcuijenWpERO7rHyae+/PjMsx30PlxH/yn2EDo
+         eyPA==
+X-Gm-Message-State: AOAM531C0KFhGFcYj2rVNAH+5jlGn7PBoBYHsaMcTuxhxFSHe7xMVM1p
+        Z0Bf/XKjhtqmBfH5QLmeTFWvig==
+X-Google-Smtp-Source: ABdhPJxclTtVb0y5AgFpqkyKKvKcjKZGmtq23R0+NldcOLXjcuLItIBpEgk03/t8KGwrkAHZMhAeyA==
+X-Received: by 2002:a17:906:c838:b0:711:d49f:687c with SMTP id dd24-20020a170906c83800b00711d49f687cmr12499044ejb.668.1654685391879;
+        Wed, 08 Jun 2022 03:49:51 -0700 (PDT)
 Received: from [192.168.0.191] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id rn13-20020a170906d92d00b006f3ef214df2sm8860508ejb.88.2022.06.08.03.48.54
+        by smtp.gmail.com with ESMTPSA id v9-20020a1709061dc900b006fea59ef3a5sm9025683ejh.32.2022.06.08.03.49.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jun 2022 03:48:55 -0700 (PDT)
-Message-ID: <d5465a36-f18a-ff48-b13e-e5f9c48a398a@linaro.org>
-Date:   Wed, 8 Jun 2022 12:48:54 +0200
+        Wed, 08 Jun 2022 03:49:51 -0700 (PDT)
+Message-ID: <30fbfe22-5c57-22b9-516c-fd435c7a754b@linaro.org>
+Date:   Wed, 8 Jun 2022 12:49:50 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v2 03/17] dt-bindings: mfd: add bindings for AXP192 MFD
- device
+Subject: Re: [PATCH v2 04/17] dt-bindings: iio: adc: axp209: Add AXP192
+ compatible
 Content-Language: en-US
 To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>,
         linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
@@ -66,9 +66,9 @@ Cc:     lars@metafoo.de, rafael@kernel.org, quic_gurus@quicinc.com,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-pm@vger.kernel.org
 References: <20220607155324.118102-1-aidanmacdonald.0x0@gmail.com>
- <20220607155324.118102-4-aidanmacdonald.0x0@gmail.com>
+ <20220607155324.118102-5-aidanmacdonald.0x0@gmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220607155324.118102-4-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220607155324.118102-5-aidanmacdonald.0x0@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -82,15 +82,12 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 07/06/2022 17:53, Aidan MacDonald wrote:
-> The AXP192 is another X-Powers PMIC similar to the existing ones.
+> The AXP192 is identical to the AXP20x, except for two additional
+> GPIO ADC channels.
 > 
 > Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-> ---
->  Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml | 1 +
 
-You got here ack, didn't you? Why sending without it?
-
-https://elixir.bootlin.com/linux/v5.19-rc1/source/Documentation/process/submitting-patches.rst#L536
+Same problem...
 
 
 Best regards,
