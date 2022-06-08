@@ -2,114 +2,294 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23B325450DF
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 17:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9348F545361
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 19:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240115AbiFIPb7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jun 2022 11:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56464 "EHLO
+        id S245571AbiFIRur (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jun 2022 13:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243423AbiFIPb6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 11:31:58 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDEE12768
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 08:31:56 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id v19so31698184edd.4
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 08:31:55 -0700 (PDT)
+        with ESMTP id S241642AbiFIRur (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 13:50:47 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93AD521D;
+        Thu,  9 Jun 2022 10:50:45 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id y19so48956332ejq.6;
+        Thu, 09 Jun 2022 10:50:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=PeAB4WdUupDaLbzIqQrrnRA29amPQ8PYJd3E0QmEGsE=;
-        b=EakJTslO6FLE81sHxNC1bk/UhJdyWwE3LaolAbYnM/XwG1uFz5Ko+NX7UNNu3tbcoN
-         K4rcFigA5wVJgxMnlO7NLPQdS3C/ggA1Vn8OzBb8vvyKZFT1e8iQCHxDYA2eB8gQtft+
-         7HzbxwQvQgZY6ae+bwehfzc7RnStB3PIBUZf7baw2dZU6u3EZKK9c5vh03InUK7PI/Xs
-         PjArKEXUAAVAQfrkTYYW6QeCkqxbR+gH5Pemmw+ozW5iwl6YhpAMgD9p9LlKl6lrcgHH
-         VT+W3GXIoaXr5Nc/REr/+pECZOjR0CqcLiiXkWlDSxBfAIMKAiL7Nj6L+FzleyxE5OcS
-         rrfQ==
+        d=gmail.com; s=20210112;
+        h=references:from:to:cc:subject:date:in-reply-to:message-id
+         :mime-version;
+        bh=gXcE6wxEZaP+bBDc88LJAQk22rXvPFk5Q6tlaHsBuyA=;
+        b=XyyhqqGv7jXlYrpM4ABumXRCwO9wRs36xgqlBa1Uo8RV6lqaVRhTDHj5DbdBZ0nZ1g
+         /BOy0mXiW2sCkpyclw00gb4FFmq6v7wzqSWPufJVQuV5Bwr+EDZ3g/uCkA46PpWjF8BL
+         vmMnrCcJESM7YtXgyulkqBlYqSl06wRXKdvizhPtqJjAl+iMsP65nfDWvGhfU/kyuXzp
+         rh/GyGzrvgnBV23cFquRMXzQ7Mw2R6gePS2lM7zliCrN/DTybHpDZsMNdI+99AeJ17Tm
+         Fo+p10PUBP487eslU4BEN7Dpnpn1qeS14Qr3BKzYW7fQD5RKQrGVbN9S+KG2MlcM2xk8
+         dtUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=PeAB4WdUupDaLbzIqQrrnRA29amPQ8PYJd3E0QmEGsE=;
-        b=wIQsq4l7QpRL+iOfM+IsMk43D/E9+u41BjSzaUUIS9w861U64h90A4eVwat0kVeW/K
-         2Hj6nx7n61qWWvhoVlGeIYykQiwEN7Q8cGs4jEEnRplW/8gmkisEfIE4DkFaeS7oTZ3t
-         DAEFPXCWrasBO39HUWGod6MaksbvxnLEGqqHtorejbabynNXHKeij1fJmKhtMXM5Hh/E
-         2pV3n++4wFMRqNcztg6rAZArM6xHri0sPZ14zgoco2ACgXWvtpVuzLykYxP18ZgIy6D/
-         KPg3xsK4a0zmEu4IdVDjv0/liqDDthPa92dUSvb4H6gJFjCtIt+OdRG94rYc4V8ddf3u
-         30VA==
-X-Gm-Message-State: AOAM532sp9vWBpwc6y0IR/Q7oeZH/T+yHBAG+12p3YPQXtXV/vZCpMFL
-        c/obHFZZTeeTvEz3tQ/BxfVgUw==
-X-Google-Smtp-Source: ABdhPJwOIiJjZlxWJ8Qllh5BIHfUY6pWFLHsCbCBYUYtWh67b6d6/Fy01aSRrec+f5WJFGHljJB2KQ==
-X-Received: by 2002:a05:6402:2788:b0:431:3f86:1d4e with SMTP id b8-20020a056402278800b004313f861d4emr29911904ede.238.1654788714499;
-        Thu, 09 Jun 2022 08:31:54 -0700 (PDT)
-Received: from [192.168.0.199] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id f27-20020a17090624db00b006f3ef214dcdsm10940096ejb.51.2022.06.09.08.31.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jun 2022 08:31:53 -0700 (PDT)
-Message-ID: <6d460a14-5da3-19f8-c614-307c2e737c17@linaro.org>
-Date:   Thu, 9 Jun 2022 17:31:52 +0200
+        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version;
+        bh=gXcE6wxEZaP+bBDc88LJAQk22rXvPFk5Q6tlaHsBuyA=;
+        b=rDIlBhfVEH4oHuJ+ftB/QMiEpdzp6RRmOY9X0l+ldBw181b3z25pkcWVmrQW6i2DFq
+         833Sx9ZwASnChkc6pepc1M7TlZR/EX0P1cy7Ycj6Xcuha9TLyYlqcBO3Wu/oo6jkw82Q
+         7//XxtnxqY8HYsl2/VQ9vlHTwHn0p+QDLJxP0NLP+0pxN+YFZpGtF71ia/oUGwfHWaEA
+         k55Yfd6vWFS9rgwU7CpE7qnHWik1VdDt+g97qmKUjATh8vsvQAIC4jXQQ4ZgvIn6Etok
+         tcOcXTOvTj6xTGgAIuO8ke/Qso7J6f6v75lj113QFgY3I9RKbqX3mFCqRDJcQew7Ow6w
+         hYcw==
+X-Gm-Message-State: AOAM530Ow+dXk1E/0a9NlNWQVfZQYYmUO9JNvVVmVUoTun/6DP7HA7x7
+        gU5xL91M8nVykwDpmq9drRPHXrGOawe0aw==
+X-Google-Smtp-Source: ABdhPJw+8nSbv9vhs+OkAxIY1IK3e3DuVkMtDoo4H9hM6FQP4voVPAug19zfl62xU/oPnifV1xRjiA==
+X-Received: by 2002:a17:906:7a4a:b0:712:c6d:46df with SMTP id i10-20020a1709067a4a00b007120c6d46dfmr3226717ejo.314.1654797044096;
+        Thu, 09 Jun 2022 10:50:44 -0700 (PDT)
+Received: from localhost (92.40.202.100.threembb.co.uk. [92.40.202.100])
+        by smtp.gmail.com with ESMTPSA id i7-20020a170906444700b0070e238ff66fsm8870390ejp.96.2022.06.09.10.50.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jun 2022 10:50:43 -0700 (PDT)
+References: <20220607155324.118102-1-aidanmacdonald.0x0@gmail.com>
+ <20220607155324.118102-11-aidanmacdonald.0x0@gmail.com>
+ <20220608142240.00001161@Huawei.com>
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
+        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
+        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
+        rafael@kernel.org, quic_gurus@quicinc.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 10/17] iio: adc: axp20x_adc: Minor code cleanups
+Date:   Wed, 08 Jun 2022 23:58:11 +0100
+In-reply-to: <20220608142240.00001161@Huawei.com>
+Message-ID: <O77RhgXy1hTudLgL6W1viJAUs7PAkVuZ@localhost>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2 04/48] dt-bindings: pinctrl: nuvoton,wpcm450-pinctrl:
- align key node name
-Content-Language: en-US
-To:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org, soc@kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220609113721.379932-1-krzysztof.kozlowski@linaro.org>
- <20220609113911.380368-3-krzysztof.kozlowski@linaro.org>
- <YqIP1vYuLztSQR+n@latitude>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <YqIP1vYuLztSQR+n@latitude>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/06/2022 17:20, Jonathan Neuschäfer wrote:
-> On Thu, Jun 09, 2022 at 01:39:06PM +0200, Krzysztof Kozlowski wrote:
->> gpio-keys schema requires keys to have more generic name.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
+
+> On Tue,  7 Jun 2022 16:53:17 +0100
+> Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
+>
+>> The code may be clearer if parameters are not re-purposed to hold
+>> temporary results like register values, so introduce local variables
+>> as necessary to avoid that. Also, use the common FIELD_PREP macro
+>> instead of a hand-rolled version.
+>> 
+>> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+>> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+>
+> Hi Aidan,
+>
+> Looks good.  One trivial further suggestion inline.
+>
+> Also, am I fine picking up the IIO patches, or does the whole
+> set need to go in via mfd?
+>
+> Thanks,
+>
+> Jonathan
+>
+
+I think it has to go through mfd because of the GPIO2-3 ADC registers
+which are added in the mfd patch. Cleanups are okay to pick up though.
+
 >> ---
->>  .../devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml    | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
->> index 47a56b83a610..4c7691c38b10 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
->> @@ -152,7 +152,7 @@ examples:
->>        pinctrl-names = "default";
->>        pinctrl-0 = <&pinctrl_uid>, <&pinmux_uid>;
+>>  drivers/iio/adc/axp20x_adc.c | 61 +++++++++++++++++++-----------------
+>>  1 file changed, 33 insertions(+), 28 deletions(-)
+>> 
+>> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
+>> index 53bf7d4899d2..9d5b1de24908 100644
+>> --- a/drivers/iio/adc/axp20x_adc.c
+>> +++ b/drivers/iio/adc/axp20x_adc.c
+>> @@ -15,6 +15,7 @@
+>>  #include <linux/property.h>
+>>  #include <linux/regmap.h>
+>>  #include <linux/thermal.h>
+>> +#include <linux/bitfield.h>
 >>  
->> -      uid {
->> +      switch-uid {
-> 
-> In this example, and more importantly the original copy in
-> nuvoton-wpcm450-supermicro-x9sci-ln4f.dts, I think button-uid fits
-> slightly better, because it's a momentary push button. (Still arguably a
-> switch, but not one that would stay in both the on and off position.)
+>>  #include <linux/iio/iio.h>
+>>  #include <linux/iio/driver.h>
+>> @@ -22,20 +23,20 @@
+>>  #include <linux/mfd/axp20x.h>
+>>  
+>>  #define AXP20X_ADC_EN1_MASK			GENMASK(7, 0)
+>> -
+>>  #define AXP20X_ADC_EN2_MASK			(GENMASK(3, 2) | BIT(7))
+>> +
+>>  #define AXP22X_ADC_EN1_MASK			(GENMASK(7, 5) | BIT(0))
+>>  
+>>  #define AXP20X_GPIO10_IN_RANGE_GPIO0		BIT(0)
+>>  #define AXP20X_GPIO10_IN_RANGE_GPIO1		BIT(1)
+>> -#define AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(x)	((x) & BIT(0))
+>> -#define AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(x)	(((x) & BIT(0)) << 1)
+>>  
+>>  #define AXP20X_ADC_RATE_MASK			GENMASK(7, 6)
+>> -#define AXP813_V_I_ADC_RATE_MASK		GENMASK(5, 4)
+>> -#define AXP813_ADC_RATE_MASK			(AXP20X_ADC_RATE_MASK | AXP813_V_I_ADC_RATE_MASK)
+>>  #define AXP20X_ADC_RATE_HZ(x)			((ilog2((x) / 25) << 6) & AXP20X_ADC_RATE_MASK)
+>> +
+>>  #define AXP22X_ADC_RATE_HZ(x)			((ilog2((x) / 100) << 6) & AXP20X_ADC_RATE_MASK)
+>> +
+>> +#define AXP813_V_I_ADC_RATE_MASK		GENMASK(5, 4)
+>> +#define AXP813_ADC_RATE_MASK			(AXP20X_ADC_RATE_MASK | AXP813_V_I_ADC_RATE_MASK)
+>>  #define AXP813_TS_GPIO0_ADC_RATE_HZ(x)		AXP20X_ADC_RATE_HZ(x)
+>>  #define AXP813_V_I_ADC_RATE_HZ(x)		((ilog2((x) / 100) << 4) & AXP813_V_I_ADC_RATE_MASK)
+>>  #define AXP813_ADC_RATE_HZ(x)			(AXP20X_ADC_RATE_HZ(x) | AXP813_V_I_ADC_RATE_HZ(x))
+>> @@ -234,7 +235,7 @@ static int axp20x_adc_raw(struct iio_dev *indio_dev,
+>>  			  struct iio_chan_spec const *chan, int *val)
+>>  {
+>>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+>> -	int size = 12;
+>> +	int ret, size;
+>>  
+>>  	/*
+>>  	 * N.B.:  Unlike the Chinese datasheets tell, the charging current is
+>> @@ -246,10 +247,11 @@ static int axp20x_adc_raw(struct iio_dev *indio_dev,
+>>  	else
+>>  		size = 12;
+>>  
+>> -	*val = axp20x_read_variable_width(info->regmap, chan->address, size);
+>> -	if (*val < 0)
+>> -		return *val;
+>> +	ret = axp20x_read_variable_width(info->regmap, chan->address, size);
+>> +	if (ret < 0)
+>> +		return ret;
+>>  
+>> +	*val = ret;
+>>  	return IIO_VAL_INT;
+>>  }
+>>  
+>> @@ -257,11 +259,13 @@ static int axp22x_adc_raw(struct iio_dev *indio_dev,
+>>  			  struct iio_chan_spec const *chan, int *val)
+>>  {
+>>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+>> +	int ret;
+>>  
+>> -	*val = axp20x_read_variable_width(info->regmap, chan->address, 12);
+>> -	if (*val < 0)
+>> -		return *val;
+>> +	ret = axp20x_read_variable_width(info->regmap, chan->address, 12);
+>> +	if (ret < 0)
+>> +		return ret;
+>>  
+>> +	*val = ret;
+>>  	return IIO_VAL_INT;
+>>  }
+>>  
+>> @@ -269,11 +273,13 @@ static int axp813_adc_raw(struct iio_dev *indio_dev,
+>>  			  struct iio_chan_spec const *chan, int *val)
+>>  {
+>>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+>> +	int ret;
+>>  
+>> -	*val = axp20x_read_variable_width(info->regmap, chan->address, 12);
+>> -	if (*val < 0)
+>> -		return *val;
+>> +	ret = axp20x_read_variable_width(info->regmap, chan->address, 12);
+>> +	if (ret < 0)
+>> +		return ret;
+>>  
+>> +	*val = ret;
+>>  	return IIO_VAL_INT;
+>>  }
+>>  
+>> @@ -443,27 +449,27 @@ static int axp20x_adc_offset_voltage(struct iio_dev *indio_dev, int channel,
+>>  				     int *val)
+>>  {
+>>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+>> +	unsigned int regval;
+>>  	int ret;
+>>  
+>> -	ret = regmap_read(info->regmap, AXP20X_GPIO10_IN_RANGE, val);
+>> +	ret = regmap_read(info->regmap, AXP20X_GPIO10_IN_RANGE, &regval);
+>>  	if (ret < 0)
+>>  		return ret;
+>>  
+>>  	switch (channel) {
+>>  	case AXP20X_GPIO0_V:
+>> -		*val &= AXP20X_GPIO10_IN_RANGE_GPIO0;
+>> +		regval &= AXP20X_GPIO10_IN_RANGE_GPIO0;
+>
+> Maybe use FIELD_GET() here to be clear you are extracting that
+> field (even though we don't care about the shift).
+>
+> Hopefully the compiler will be clever enough to remove the shift
+> anyway and using FIELD_GET() would act as slightly more 'documentation
+> in code'.
+>
 
-Sure, I'll change it to button-uid.
+You're probably right; I erred on the side of premature optimization.
+I'll go back to FIELD_GET in the v3 since I've got to resend anyway.
 
-Thanks!
+>>  		break;
+>>  
+>>  	case AXP20X_GPIO1_V:
+>> -		*val &= AXP20X_GPIO10_IN_RANGE_GPIO1;
+>> +		regval &= AXP20X_GPIO10_IN_RANGE_GPIO1;
+>>  		break;
+>>  
+>>  	default:
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> -	*val = *val ? 700000 : 0;
+>> -
+>> +	*val = regval ? 700000 : 0;
+>>  	return IIO_VAL_INT;
+>>  }
+>>  
+>> @@ -548,7 +554,7 @@ static int axp20x_write_raw(struct iio_dev *indio_dev,
+>>  			    long mask)
+>>  {
+>>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+>> -	unsigned int reg, regval;
+>> +	unsigned int regmask, regval;
+>>  
+>>  	/*
+>>  	 * The AXP20X PMIC allows the user to choose between 0V and 0.7V offsets
+>> @@ -560,25 +566,24 @@ static int axp20x_write_raw(struct iio_dev *indio_dev,
+>>  	if (val != 0 && val != 700000)
+>>  		return -EINVAL;
+>>  
+>> -	val = val ? 1 : 0;
+>> +	regval = val ? 1 : 0;
+>>  
+>>  	switch (chan->channel) {
+>>  	case AXP20X_GPIO0_V:
+>> -		reg = AXP20X_GPIO10_IN_RANGE_GPIO0;
+>> -		regval = AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(val);
+>> +		regmask = AXP20X_GPIO10_IN_RANGE_GPIO0;
+>> +		regval = FIELD_PREP(AXP20X_GPIO10_IN_RANGE_GPIO0, regval);
+>>  		break;
+>>  
+>>  	case AXP20X_GPIO1_V:
+>> -		reg = AXP20X_GPIO10_IN_RANGE_GPIO1;
+>> -		regval = AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(val);
+>> +		regmask = AXP20X_GPIO10_IN_RANGE_GPIO1;
+>> +		regval = FIELD_PREP(AXP20X_GPIO10_IN_RANGE_GPIO1, regval);
+>>  		break;
+>>  
+>>  	default:
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> -	return regmap_update_bits(info->regmap, AXP20X_GPIO10_IN_RANGE, reg,
+>> -				  regval);
+>> +	return regmap_update_bits(info->regmap, AXP20X_GPIO10_IN_RANGE, regmask, regval);
+>>  }
+>>  
+>>  static const struct iio_info axp20x_adc_iio_info = {
 
-
-Best regards,
-Krzysztof
