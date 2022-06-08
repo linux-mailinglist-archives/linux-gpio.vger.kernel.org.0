@@ -2,34 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 513675423CC
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 08:51:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 196F5542B24
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 11:17:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234057AbiFHG2l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jun 2022 02:28:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41632 "EHLO
+        id S234767AbiFHJQF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jun 2022 05:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348792AbiFHGNq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 02:13:46 -0400
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3CD1C4224;
-        Tue,  7 Jun 2022 22:39:58 -0700 (PDT)
-X-UUID: f18a994ce727490c8531a2f5d1f9568a-20220608
+        with ESMTP id S235376AbiFHJOz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 05:14:55 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4621DBD5F;
+        Wed,  8 Jun 2022 01:38:19 -0700 (PDT)
+X-UUID: bd92ecd6a1074869903cecc19770c9ce-20220608
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.5,REQID:b88ac77b-3b31-417c-8568-32712abd46e3,OB:0,LO
+X-CID-O-INFO: VERSION:1.1.5,REQID:4a36f448-f7bf-4c1d-b939-3e6c8349126c,OB:0,LO
         B:0,IP:0,URL:0,TC:0,Content:-20,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,AC
         TION:release,TS:-20
-X-CID-META: VersionHash:2a19b09,CLOUDID:1d7e0ce5-2ba2-4dc1-b6c5-11feb6c769e0,C
+X-CID-META: VersionHash:2a19b09,CLOUDID:d64715e5-2ba2-4dc1-b6c5-11feb6c769e0,C
         OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:1,EDM:-3,IP:nil,URL:0,File:nil
         ,QS:0,BEC:nil
-X-UUID: f18a994ce727490c8531a2f5d1f9568a-20220608
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+X-UUID: bd92ecd6a1074869903cecc19770c9ce-20220608
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
         (envelope-from <guodong.liu@mediatek.com>)
         (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 856678529; Wed, 08 Jun 2022 13:39:53 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+        with ESMTP id 1638914147; Wed, 08 Jun 2022 16:38:15 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with ShadowRedundancy id 15.2.792.3;
+ Wed, 8 Jun 2022 08:37:01 +0000
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
  Wed, 8 Jun 2022 13:39:52 +0800
 Received: from localhost.localdomain (10.17.3.154) by mtkcas10.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
@@ -60,7 +63,7 @@ Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-MTK:  N
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
