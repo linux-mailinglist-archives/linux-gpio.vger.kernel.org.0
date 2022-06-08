@@ -2,105 +2,267 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58749543023
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 14:21:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB27F54313E
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jun 2022 15:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238822AbiFHMVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jun 2022 08:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45292 "EHLO
+        id S240078AbiFHNWs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jun 2022 09:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238792AbiFHMVf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 08:21:35 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2ABE169E33
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Jun 2022 05:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654690894; x=1686226894;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=7KLlUTFXPzLaUOI8aYwILjGuDa7R4ZcQ2X1Cj6jiWyc=;
-  b=FcDBQKDSfbWtFKrW2I0v688fYyfNsLCRiXq4nftuGduguQDt/pmILDz3
-   XRIvMKSmtOnCbH3SZYZnDBZ2nmtidhjNd2wL2CQLq+pz7ZNhotItnnaCI
-   U7tP71Zmlq4pOQs02t1cV/BmIYswB8KnmzcHWJcOxqkHTBEns54hcyVb1
-   s/wIqaLW9E6XhWgPf0Vb6wCKQ0WZxjmbsjuLsELu27vfB1c9jq5+fNeEx
-   ZR0WWIPTZK9FKxkKWXjTqVUdAgHCBNJhHGfN+AoCk1A93T3IyNL4PqAHT
-   v8GufuLLGVL/Y6YUyfXpPSl4AsZCRZ0Tggfty1ZSWqOiTxOz7kubBxnxd
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="363207334"
-X-IronPort-AV: E=Sophos;i="5.91,286,1647327600"; 
-   d="scan'208";a="363207334"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2022 05:21:34 -0700
-X-IronPort-AV: E=Sophos;i="5.91,286,1647327600"; 
-   d="scan'208";a="670525767"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2022 05:21:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nyugk-000WzX-FV;
-        Wed, 08 Jun 2022 15:21:30 +0300
-Date:   Wed, 8 Jun 2022 15:21:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux pin control <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 5.19-3
-Message-ID: <YqCUSuvCamkqPpMn@smile.fi.intel.com>
+        with ESMTP id S239983AbiFHNWr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 09:22:47 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 756E95641D;
+        Wed,  8 Jun 2022 06:22:45 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJ7Cr1SYjz6H6pl;
+        Wed,  8 Jun 2022 21:21:28 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 8 Jun 2022 15:22:42 +0200
+Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 8 Jun
+ 2022 14:22:41 +0100
+Date:   Wed, 8 Jun 2022 14:22:40 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+CC:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <wens@csie.org>,
+        <jic23@kernel.org>, <lee.jones@linaro.org>, <sre@kernel.org>,
+        <broonie@kernel.org>, <gregkh@linuxfoundation.org>,
+        <lgirdwood@gmail.com>, <lars@metafoo.de>, <rafael@kernel.org>,
+        <quic_gurus@quicinc.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v2 10/17] iio: adc: axp20x_adc: Minor code cleanups
+Message-ID: <20220608142240.00001161@Huawei.com>
+In-Reply-To: <20220607155324.118102-11-aidanmacdonald.0x0@gmail.com>
+References: <20220607155324.118102-1-aidanmacdonald.0x0@gmail.com>
+        <20220607155324.118102-11-aidanmacdonald.0x0@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhreml739-chm.china.huawei.com (10.201.108.189) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux pin control  maintainers,
+On Tue,  7 Jun 2022 16:53:17 +0100
+Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
 
-MAINTAINERS database fix, please pull for v5.19-rcX, i.e. current cycle.
+> The code may be clearer if parameters are not re-purposed to hold
+> temporary results like register values, so introduce local variables
+> as necessary to avoid that. Also, use the common FIELD_PREP macro
+> instead of a hand-rolled version.
+> 
+> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+
+Hi Aidan,
+
+Looks good.  One trivial further suggestion inline.
+
+Also, am I fine picking up the IIO patches, or does the whole
+set need to go in via mfd?
 
 Thanks,
 
-With Best Regards,
-Andy Shevchenko
+Jonathan
 
-The following changes since commit f2906aa863381afb0015a9eb7fefad885d4e5a56:
+> ---
+>  drivers/iio/adc/axp20x_adc.c | 61 +++++++++++++++++++-----------------
+>  1 file changed, 33 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
+> index 53bf7d4899d2..9d5b1de24908 100644
+> --- a/drivers/iio/adc/axp20x_adc.c
+> +++ b/drivers/iio/adc/axp20x_adc.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/property.h>
+>  #include <linux/regmap.h>
+>  #include <linux/thermal.h>
+> +#include <linux/bitfield.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/driver.h>
+> @@ -22,20 +23,20 @@
+>  #include <linux/mfd/axp20x.h>
+>  
+>  #define AXP20X_ADC_EN1_MASK			GENMASK(7, 0)
+> -
+>  #define AXP20X_ADC_EN2_MASK			(GENMASK(3, 2) | BIT(7))
+> +
+>  #define AXP22X_ADC_EN1_MASK			(GENMASK(7, 5) | BIT(0))
+>  
+>  #define AXP20X_GPIO10_IN_RANGE_GPIO0		BIT(0)
+>  #define AXP20X_GPIO10_IN_RANGE_GPIO1		BIT(1)
+> -#define AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(x)	((x) & BIT(0))
+> -#define AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(x)	(((x) & BIT(0)) << 1)
+>  
+>  #define AXP20X_ADC_RATE_MASK			GENMASK(7, 6)
+> -#define AXP813_V_I_ADC_RATE_MASK		GENMASK(5, 4)
+> -#define AXP813_ADC_RATE_MASK			(AXP20X_ADC_RATE_MASK | AXP813_V_I_ADC_RATE_MASK)
+>  #define AXP20X_ADC_RATE_HZ(x)			((ilog2((x) / 25) << 6) & AXP20X_ADC_RATE_MASK)
+> +
+>  #define AXP22X_ADC_RATE_HZ(x)			((ilog2((x) / 100) << 6) & AXP20X_ADC_RATE_MASK)
+> +
+> +#define AXP813_V_I_ADC_RATE_MASK		GENMASK(5, 4)
+> +#define AXP813_ADC_RATE_MASK			(AXP20X_ADC_RATE_MASK | AXP813_V_I_ADC_RATE_MASK)
+>  #define AXP813_TS_GPIO0_ADC_RATE_HZ(x)		AXP20X_ADC_RATE_HZ(x)
+>  #define AXP813_V_I_ADC_RATE_HZ(x)		((ilog2((x) / 100) << 4) & AXP813_V_I_ADC_RATE_MASK)
+>  #define AXP813_ADC_RATE_HZ(x)			(AXP20X_ADC_RATE_HZ(x) | AXP813_V_I_ADC_RATE_HZ(x))
+> @@ -234,7 +235,7 @@ static int axp20x_adc_raw(struct iio_dev *indio_dev,
+>  			  struct iio_chan_spec const *chan, int *val)
+>  {
+>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+> -	int size = 12;
+> +	int ret, size;
+>  
+>  	/*
+>  	 * N.B.:  Unlike the Chinese datasheets tell, the charging current is
+> @@ -246,10 +247,11 @@ static int axp20x_adc_raw(struct iio_dev *indio_dev,
+>  	else
+>  		size = 12;
+>  
+> -	*val = axp20x_read_variable_width(info->regmap, chan->address, size);
+> -	if (*val < 0)
+> -		return *val;
+> +	ret = axp20x_read_variable_width(info->regmap, chan->address, size);
+> +	if (ret < 0)
+> +		return ret;
+>  
+> +	*val = ret;
+>  	return IIO_VAL_INT;
+>  }
+>  
+> @@ -257,11 +259,13 @@ static int axp22x_adc_raw(struct iio_dev *indio_dev,
+>  			  struct iio_chan_spec const *chan, int *val)
+>  {
+>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+> +	int ret;
+>  
+> -	*val = axp20x_read_variable_width(info->regmap, chan->address, 12);
+> -	if (*val < 0)
+> -		return *val;
+> +	ret = axp20x_read_variable_width(info->regmap, chan->address, 12);
+> +	if (ret < 0)
+> +		return ret;
+>  
+> +	*val = ret;
+>  	return IIO_VAL_INT;
+>  }
+>  
+> @@ -269,11 +273,13 @@ static int axp813_adc_raw(struct iio_dev *indio_dev,
+>  			  struct iio_chan_spec const *chan, int *val)
+>  {
+>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+> +	int ret;
+>  
+> -	*val = axp20x_read_variable_width(info->regmap, chan->address, 12);
+> -	if (*val < 0)
+> -		return *val;
+> +	ret = axp20x_read_variable_width(info->regmap, chan->address, 12);
+> +	if (ret < 0)
+> +		return ret;
+>  
+> +	*val = ret;
+>  	return IIO_VAL_INT;
+>  }
+>  
+> @@ -443,27 +449,27 @@ static int axp20x_adc_offset_voltage(struct iio_dev *indio_dev, int channel,
+>  				     int *val)
+>  {
+>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+> +	unsigned int regval;
+>  	int ret;
+>  
+> -	ret = regmap_read(info->regmap, AXP20X_GPIO10_IN_RANGE, val);
+> +	ret = regmap_read(info->regmap, AXP20X_GPIO10_IN_RANGE, &regval);
+>  	if (ret < 0)
+>  		return ret;
+>  
+>  	switch (channel) {
+>  	case AXP20X_GPIO0_V:
+> -		*val &= AXP20X_GPIO10_IN_RANGE_GPIO0;
+> +		regval &= AXP20X_GPIO10_IN_RANGE_GPIO0;
 
-  Linux 5.19-rc1 (2022-06-05 17:18:54 -0700)
+Maybe use FIELD_GET() here to be clear you are extracting that
+field (even though we don't care about the shift).
 
-are available in the Git repository at:
+Hopefully the compiler will be clever enough to remove the shift
+anyway and using FIELD_GET() would act as slightly more 'documentation
+in code'.
 
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.19-3
 
-for you to fetch changes up to ba79c5e45eecb9e009eca7f5da224f6e42bd4fcb:
 
-  MAINTAINERS: Update Intel pin control to Supported (2022-06-06 12:34:54 +0300)
-
-----------------------------------------------------------------
-intel-pinctrl for v5.19-3
-
-* Update a record in the MAINTAINERS database for Intel pin control drivers
-
-The following is an automated git shortlog grouped by driver:
-
-MAINTAINERS:
- -  Update Intel pin control to Supported
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      MAINTAINERS: Update Intel pin control to Supported
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+>  		break;
+>  
+>  	case AXP20X_GPIO1_V:
+> -		*val &= AXP20X_GPIO10_IN_RANGE_GPIO1;
+> +		regval &= AXP20X_GPIO10_IN_RANGE_GPIO1;
+>  		break;
+>  
+>  	default:
+>  		return -EINVAL;
+>  	}
+>  
+> -	*val = *val ? 700000 : 0;
+> -
+> +	*val = regval ? 700000 : 0;
+>  	return IIO_VAL_INT;
+>  }
+>  
+> @@ -548,7 +554,7 @@ static int axp20x_write_raw(struct iio_dev *indio_dev,
+>  			    long mask)
+>  {
+>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
+> -	unsigned int reg, regval;
+> +	unsigned int regmask, regval;
+>  
+>  	/*
+>  	 * The AXP20X PMIC allows the user to choose between 0V and 0.7V offsets
+> @@ -560,25 +566,24 @@ static int axp20x_write_raw(struct iio_dev *indio_dev,
+>  	if (val != 0 && val != 700000)
+>  		return -EINVAL;
+>  
+> -	val = val ? 1 : 0;
+> +	regval = val ? 1 : 0;
+>  
+>  	switch (chan->channel) {
+>  	case AXP20X_GPIO0_V:
+> -		reg = AXP20X_GPIO10_IN_RANGE_GPIO0;
+> -		regval = AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(val);
+> +		regmask = AXP20X_GPIO10_IN_RANGE_GPIO0;
+> +		regval = FIELD_PREP(AXP20X_GPIO10_IN_RANGE_GPIO0, regval);
+>  		break;
+>  
+>  	case AXP20X_GPIO1_V:
+> -		reg = AXP20X_GPIO10_IN_RANGE_GPIO1;
+> -		regval = AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(val);
+> +		regmask = AXP20X_GPIO10_IN_RANGE_GPIO1;
+> +		regval = FIELD_PREP(AXP20X_GPIO10_IN_RANGE_GPIO1, regval);
+>  		break;
+>  
+>  	default:
+>  		return -EINVAL;
+>  	}
+>  
+> -	return regmap_update_bits(info->regmap, AXP20X_GPIO10_IN_RANGE, reg,
+> -				  regval);
+> +	return regmap_update_bits(info->regmap, AXP20X_GPIO10_IN_RANGE, regmask, regval);
+>  }
+>  
+>  static const struct iio_info axp20x_adc_iio_info = {
 
