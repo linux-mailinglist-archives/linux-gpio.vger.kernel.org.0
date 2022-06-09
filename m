@@ -2,132 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AE44543FCC
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 01:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E97B5442C4
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 06:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230228AbiFHXPy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jun 2022 19:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59790 "EHLO
+        id S233290AbiFIEte (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jun 2022 00:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231311AbiFHXPq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jun 2022 19:15:46 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 803CF4C422
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Jun 2022 16:15:43 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-30c2f288f13so224662977b3.7
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jun 2022 16:15:44 -0700 (PDT)
+        with ESMTP id S229791AbiFIEtd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 00:49:33 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ACD86160
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Jun 2022 21:49:32 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id e24so20434959pjt.0
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jun 2022 21:49:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5dm3ORkewVvScpNnTHAWD0lWUpKHv8ZP9Eg12POa/hY=;
-        b=s8ajev8ylc24lWL+uVn0aQqBmKLBXSt4qhwBZySWYs06ap1dTsQm6yNKQo5ZZk1Ttw
-         CogFfnoV9WalwlDwJZQwIzhS53XYG0TnpLr6RaCiWz52oS8Ya2rxty3/51rSjmJayx7c
-         EWdKZF1ai138Psl2FvsA3fb81ZOFaNvnMqn373Non4bghec4LDcPh888h9mpuh/1unnN
-         f9dX3yfRPbSr2zW6HLeQ/tEvTedV0nhIrv0QdBSD7AwR10AtUBj/yefZJX+LJ+vEpqtI
-         mz7ygzZjwLzaYvbU7IBn1tdY8nY9jEOw6ZGRU2lMtt4y+nfEmnlgAfeCbdWY91a6rwLO
-         KGNQ==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7dBWxJcANaRiarlu4aQIbOIcgv0IF8mDn6YMEWjKl/0=;
+        b=HOljL+e65I5otR2V5oIEWTMPb+286b33HQQpYrew/Zmy6My5cO113uR2v6b1WTx28u
+         HWUl1/0uDHdonM7DdTR+VnNz9thQ7dwKZgoogxE2Cq8XnrH2LqdEVxEjDUUPwZ7VqFZy
+         spq1iZXrt9kPhlHPg37oOVHnPx749dASK9Hc/d6WTMs1jCQ/pJDimX7EmPYaCNzJFWE0
+         f8W/FDB9UJru1T0BUIPVwn8c2noXIrbY8++g9X67DomxtJ7NiHVhIDwY2fmoLX77ReQU
+         vo0vgh/vKxexS49V+15OToQL8wmKBTi5ZdRZC93K1+bRBmGAdoTcMvnmuzqSJCJ1a9UE
+         Tvcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5dm3ORkewVvScpNnTHAWD0lWUpKHv8ZP9Eg12POa/hY=;
-        b=43pdak15eWt5k7dmGYpZJkDoKJVaWxV/Nfzgad+Qeyh94sBfDkYbsK0t+Isrcu4C9C
-         vlecGc1r0+zS0BfyNEVY+iIFLvL1peXb8muAEPxhQKvvUsBwWAU58jo+puQY3A5PW/JQ
-         aDRmDqI4bpkN8RtmE1Q9Fi8ItNYBbBQwshALspuI22dsKDL6tz6o9MZyPI72Mfu9HAyd
-         s+sVvNp4Az2nHh/SM6qk/p4ptLKIgx7yIYgNiKRXUPAA5Py3UmQDnWtwQDLcDPUC6Um4
-         +U478+mnIQ5qA/cYu7A94/f7tCXwS+8CWVVYJonPuOu3WOSoQ9GMuObBRBOefI8IseKZ
-         d9Zw==
-X-Gm-Message-State: AOAM5330dEzMfcd+G3zomE1Zi2FlzzQj+ZBNyxJf+6XK2drL8ozOO1DB
-        zOZXwbqGzmqE0J0PbJT45e5yb+QZnpOdzMJtD+oe6A==
-X-Google-Smtp-Source: ABdhPJydbDnoddm1zrWGAsHzuwqdddTQzuodu0O1Gb1JEUm33YqJ1CQ0JnoMmfFGzaJs2LsBc2KxBacSkdprXywkGyo=
-X-Received: by 2002:a81:1a4c:0:b0:30c:8363:e170 with SMTP id
- a73-20020a811a4c000000b0030c8363e170mr38925926ywa.455.1654730143827; Wed, 08
- Jun 2022 16:15:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220601070707.3946847-1-saravanak@google.com>
- <CAMuHMdXkX-SXtBuTRGJOUnpw9goSP6RFr_PTt_3w_yWgBpWsqg@mail.gmail.com>
- <CAGETcx9f0UBhpp6dM+KJwtYpLx19wwsq6_ygi3En7FrXobOSpA@mail.gmail.com>
- <CAGETcx8VM+xOCe7HEx9FUU-1B9nrX8Q=tE=NjTyb9uX2_8RXLQ@mail.gmail.com>
- <CAMuHMdXzu8Vp=a7fyjOB=xt04aee=vWXV=TcRZeeKUGYFFZ1CA@mail.gmail.com>
- <CAGETcx_Nqo4ju7cWwO3dP3YM2wpCb0jx23OHOReexOjpT5pATA@mail.gmail.com>
- <CAMuHMdXQCwMQj_ZiOBAzusdCxd8w6NbTqD_7nzykhVs+UWx8Gw@mail.gmail.com>
- <CAGETcx8UO=4mk31tU4QaWU3RaNM_myA9woe0idBp6p7+X5AEgg@mail.gmail.com> <20220608154908.4ddb9795@kernel.org>
-In-Reply-To: <20220608154908.4ddb9795@kernel.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 8 Jun 2022 16:15:07 -0700
-Message-ID: <CAGETcx_ZPB2ce-7Zf-bVy4hHe8Nvk62_7HVeO1dhQvg1iuHQDw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] deferred_probe_timeout logic clean up
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7dBWxJcANaRiarlu4aQIbOIcgv0IF8mDn6YMEWjKl/0=;
+        b=3fKV3fWS1Mji2Cc/VEQrzQNoE6635jYs2D+T7xVvPS1YYhB/n5EPc10hOYxhO0dERi
+         LUxuPC8kRh2VelVN9lTOR8qGZ3pNyurxYTT5VBpa7kZnhft70g+7b4sr5zUKIIxY2WOD
+         L3x30P97EFnjUGc4i4bbhLTIU7g7G8u/SS+amg/zXMzEx1MpjJ8Oln5AKEG7IIbMhvTq
+         u9YrRGPhq8xZdce81pCP35pmYP+mTR8JbopC+HAqh/MuyZW87eLqltBuv4ppsijSJ6Is
+         AnhZasuRf4N4NleC/cRjp9bIg/PiU++FCtM0U5Sr8nb+wki6+WzBgolMbBR53NiGq5RI
+         x5pg==
+X-Gm-Message-State: AOAM533C66jwundEr4Xh+yS7VH+EnHdU0kGJXPqQmC78IkMbRYwNxZ0K
+        n5RFSerxyKqkqyb8RdJ9has=
+X-Google-Smtp-Source: ABdhPJy7ncawixdUnIyN6onVLcIQSLwwRtCBCmCncU8HBp2XUvGNnC3EqWoi9vTmfE4wvurUSgTb6g==
+X-Received: by 2002:a17:90b:1c07:b0:1e3:c8c:d4fa with SMTP id oc7-20020a17090b1c0700b001e30c8cd4famr1517825pjb.157.1654750171510;
+        Wed, 08 Jun 2022 21:49:31 -0700 (PDT)
+Received: from sol (14-200-166-137.static.tpgi.com.au. [14.200.166.137])
+        by smtp.gmail.com with ESMTPSA id 205-20020a6216d6000000b0050dc76281f0sm15949712pfw.202.2022.06.08.21.49.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jun 2022 21:49:30 -0700 (PDT)
+Date:   Thu, 9 Jun 2022 12:49:22 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2
+ API
+Message-ID: <20220609044922.GA11301@sol>
+References: <20220525140704.94983-1-brgl@bgdev.pl>
+ <20220525140704.94983-4-brgl@bgdev.pl>
+ <20220603124600.GA35695@sol>
+ <20220604024131.GB13574@sol>
+ <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
+ <20220607015220.GA9430@sol>
+ <CAMRc=MdwgGefC0AgRCvgMfAZmq_+1GnXH6XMezjyBEKs37QuAQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdwgGefC0AgRCvgMfAZmq_+1GnXH6XMezjyBEKs37QuAQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 8, 2022 at 3:49 PM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Wed, 8 Jun 2022 14:07:44 -0700 Saravana Kannan wrote:
-> > David/Jakub,
+On Wed, Jun 08, 2022 at 05:39:16PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Jun 7, 2022 at 3:52 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > Do the IP4 autoconfig changes look reasonable to you?
->
-> I'm no expert in this area, I'd trust the opinion of the embedded folks
-> (adding Florian as well) more than myself.
+> > On Mon, Jun 06, 2022 at 01:14:48PM +0300, Andy Shevchenko wrote:
+> > > On Sat, Jun 04, 2022 at 10:41:31AM +0800, Kent Gibson wrote:
+> > > > On Fri, Jun 03, 2022 at 08:46:00PM +0800, Kent Gibson wrote:
+> > > > > On Wed, May 25, 2022 at 04:07:02PM +0200, Bartosz Golaszewski wrote:
+> > >
+> > > ...
+> > >
+> > > > > The focus of my comments above is to simplify the API for the most common
+> > > > > case, and to make it a little more Pythonic rather than mirroring the C
+> > > > > API, in both cases by hiding implementation details that the casual user
+> > > > > doesn't need to know about.
+> > > > >
+> > > >
+> > > > Further to this, and recalling our discussions on tool changes, it would
+> > > > be great if the Python API supported identification of line by name, not
+> > > > just (chip,offset).
+> > > >
+> > > > e.g.
+> > > >     with gpiod.request_lines(
+> > > >         lines=("GPIO17", "GPIO18"),
+> > > >         edge_detection=Edge.BOTH,
+> > > >     ) as request:
+> > > >         for event in request.edge_events():
+> > > >             print(event)
+> > > >
+> > > > with the returned event extended to contain the line name if the line
+> > > > was identified by name in request_lines().
+> > > >
+> > > > The lines kwarg replaces offsets, and could contain names (strings) or
+> > > > offsets (integers), or a combination.  If any offsets are present then
+> > > > the chip path kwarg must also be provided.  If the chip isn't provided,
+> > > > request_lines() would find the corresponding chip based on the line name.
+> > >
+> > > From Python programmer perspective it's a good idea, but from GPIO (ABI)
+> > > perspective, it may be confusing. Line name is not unique (globally) and
+> > > basically not a part of ABI.
+> > >
+> >
+> > "basically not a part of the ABI"???
+> > Damn - we should've removed it from the line info for uAPI v2 ;-).
+> >
+> > A common request from users is to be able to request lines by name.
+> > Of the libgpiod bindings, Python is the best suited to allow that
+> > possibility directly as part of its core API.
+> > It also happens to be the one most likely to be used by said users.
+> >
+> > While identifying line by name can't be guaranteed to work universally,
+> > that doesn't mean that we should automatically exclude the possibility.
+> > It is possible with the current ABI - it is awkward, but possible.
+> > In libgpiod v1, gpiod_ctxless_find_line(), gpiod_chip_find_line() et al.,
+> > and in v2 gpiod_chip_get_line_offset_from_name(), do just that -
+> > I'm merely suggesting that similar functionality be incorporated into
+> > request_lines().
+> >
+> > Line names should be unique in well configured systems, even if the
+> > kernel itself does not guarantee it.
+> > The binding would perform an exhaustive search to ensure the requested
+> > line name is unique, and throw if not (unlike the libgpiod v1 functions
+> > that return the first match - yikes).
+> > (We could always extend the GPIO uAPI to make the mapping process less
+> > painful, e.g. an ioctl to perform the name to offset mapping, including
+> > uniqueness check, for a chip.)
+> > For applications targetting systems that don't guarantee uniqueness, the
+> > (chip,offset) approach remains available.
+> > And if the line names are thought to be unique within a chip, the middle
+> > ground of (chip,name) is also available.
+> >
+> > Wrt confusion, the alternative would be to provide a separate name based
+> > API wrapper, or insist that the user jump through the name mapping hoops
+> > themselves prior to calling the offset based API.
+> > Are either of those less confusing?
+> >
+> > But if the purpose of the Python binding is purely to minimally wrap the
+> > C ABI, warts and all, then my suggestion should most certainly be ignored.
+> >
+> 
+> I actually have a third alternative. I would like the gpiod module to
+> only expose the C API functionality but how about a gpiod_extended or
+> something similar with all kinds of python helpers? Python users are
+> indeed used to modules making the work easier and I'm not against it
+> but writing it in C would be a PITA so I'm thinking about a secondary
+> pure python module with those kinds of extensions.
+> 
 
-Thanks.
+Agree that it would be easier to write a pythonic wrapper around the C
+API in Python, so no problem with that.
+However, the pythonic wrapper should the one named gpiod, as it is
+intended to be the primary interface for Python.  Rename your existing
+to gpiod_c or gpiod_core or something.
 
-> It's unclear to me why we'd
-> wait_for_init_devices_probe() after the first failed iteration,
+Btw, I've only mentioned a small part of the API so far, but the same
+applies to the remainder. e.g. the RequestConfig and LineConfig could use
+the lines kwarg treatment as well. Though I suspect implementing that will
+be a bit of a bear, in either language.
 
-wait_for_init_devices_probe() relaxes ordering rules for all devices
-and it's not something we want to do unless we really need it. That's
-why we are doing that only if we can't find any network device in the
-first iteration.
-
-> sleep,
-> and then allow 11 more iterations with wait_for_device_probe().
-> Let me also add Thomas since he wrote e2ffe3ff6f5e ("net: ipconfig:
-> Wait for deferred device probes").
-
-Even without this change, I'm not sure the wait_for_device_probe()
-needs to be within the loop. It's probably sufficient to just do it
-once in the beginning, but it's already there and I'm not sure if I'm
-missing some scenarios, so I left that part as is.
-
--Saravana
+Cheers,
+Kent.
