@@ -2,99 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FE9C544A6A
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 13:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73F12544AEA
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 13:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241805AbiFILjY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jun 2022 07:39:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35166 "EHLO
+        id S245093AbiFILrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jun 2022 07:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240407AbiFILjW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 07:39:22 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CCD347054
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 04:39:21 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id fu3so45390404ejc.7
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 04:39:21 -0700 (PDT)
+        with ESMTP id S244606AbiFILrK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 07:47:10 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40E5E441F
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 04:45:38 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id be31so37588007lfb.10
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 04:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PsY51Y9LbGxALCP41QTkZafNtgUGmXvRyYQiy6lI9FU=;
-        b=zYVkK+/V8ZGti1yZD5tr+qJSCek+CBHl2Nd1S/T3io//rE3MLRz4Uc6JvOZh//3oZf
-         NI0ICECMerr05hjz/YzwcnYcowv9p8XnqaiK9gT1FKO+jvGLlLxJTRc5K8Tyl+cw0tli
-         GCrWHIkFLBzMLB4NdF9ll+WcNamrxTIkPgLQggG/rhOflxUtLzoFk4K8mZ5BvLElGwt6
-         lwfkDaDKEHIUH6k6qBWnaXgka8n9HzeMOXg0ZwINqRaQg3VDZdNZ47Es/FeEi/YCSAuQ
-         lCjAvCwH3a90XTLrXe2L173Z0Tt4dh7LQW3aGReoQTnq25LDPafCnA2RrIgWA9aIlpEG
-         gJCA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z3ypSb+XDrbeyHXO4y2Np7U53zPPEdC7B+zbSpknR0k=;
+        b=OY/i7kxud0oo+BFCt+TUyi9H+g3C5k5yrf+GXzEjHjPnjtkGEK4seV9DkRk020ZUWz
+         WKIH+f9T+Afyh0yOus92Sk0vZdrYShJ4ANs3mHE/+w0RKzy/cpBxO+5vSXpcs/6I/W1F
+         VgAz/3Vc0Nn9QjNv2tmAAZMKO/Zx0Ief1thCMpUMys0hnSluwTEWS9QWq5+xu+Xs3xCj
+         KJI2vfV/hzfKhedkmNIIP79nVy65JYBECsLTbLv14046cdq+juG+NEFNr00i7eve/JuS
+         L/L653ZLeJUs2U8MFmzrO0Dn6Jw5uA4RYssB8Qz6MWalyz5dsMEsbsKnbJjRN9KmbwEF
+         YCQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PsY51Y9LbGxALCP41QTkZafNtgUGmXvRyYQiy6lI9FU=;
-        b=fTIIcplYcNLjTsFaJ8qx6f3sF3QvXhZ/IRa3qdbOBTAjc4L8/u93Ol8uBnhDPBI504
-         XId+8MPrNBhwbztxJ+YR63HeEj6R8apw7bO98Nbt/v9G4DAe4j2TFFGRecYlot/hLqNN
-         5RE+NJZQYan/mbZqfzwAZntZlmudmxQsza4linXJxsW+MdcwkD6oX8jPUH0lMI86m/xd
-         KCnvhuN4YXcxyJWINNJlKOCk2UszWHW9cZ2ZohJcYbFjwfk1tKi38GnzqOajXCjbc0Ji
-         hp2nJiFmEovphYpagkZ1zWXH8qqG1vlG3GTDI0cQ4yWbkyTYBqfIVaCfpv6I3fOFlFjI
-         MUSQ==
-X-Gm-Message-State: AOAM532RC77zQ4S+OibuIEsdfyNfsYC5LSPC8ickvzPG2pHAs2GTWlBH
-        KuZLAX3ztZW06KwB9BeXcvxHfw==
-X-Google-Smtp-Source: ABdhPJxghBIkt/oPlnkhYfc+sNVuqIIRec7ri31pQri4hdc3zeWjKeem2e8hWbd5rY1utC5lGBYtqQ==
-X-Received: by 2002:a17:906:9b86:b0:6f8:24e7:af7d with SMTP id dd6-20020a1709069b8600b006f824e7af7dmr36649187ejc.295.1654774759852;
-        Thu, 09 Jun 2022 04:39:19 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id u14-20020aa7d54e000000b0042e21f8c412sm11898495edr.42.2022.06.09.04.39.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 04:39:19 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org, soc@kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 04/48] dt-bindings: pinctrl: nuvoton,wpcm450-pinctrl: align key node name
-Date:   Thu,  9 Jun 2022 13:39:06 +0200
-Message-Id: <20220609113911.380368-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220609113721.379932-1-krzysztof.kozlowski@linaro.org>
-References: <20220609113721.379932-1-krzysztof.kozlowski@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z3ypSb+XDrbeyHXO4y2Np7U53zPPEdC7B+zbSpknR0k=;
+        b=hE5CfJJ5Yb13UYGQSL89y/GvDqyM5eWf3UOzdCfyBF3qIr8xj9u31Exva9P4z0mH+y
+         gSlWv+q1mVByVB+kRdkZu3Fsf32IanWs80MwHPNOp0Tw9U3uQ4FLRqVIB2FVQC+45k6U
+         lRTJYUC6IYJH/XfJc/Kbc3eaMekqc7qoe6XCGOdP2uNnn04VzwB5rFylfw2Vpb+YIBjs
+         CAKZu0sVHR6l+SOLNJXPi0liEmm5S5uTXO14qrct9hbloBraPAw3a1faXPfzt7p0KQNh
+         HziooDBz3XLnQfgcn8FIBCYC74Rsu/SmwtaIcyYRdSXFEcEBMuD8fI0tPFnOzd9CklJ/
+         Q+DA==
+X-Gm-Message-State: AOAM530TNJcKO4AaJaBBzCfz8XfTbVs+AXz755o9q6ytFxiMMJd3UcQO
+        vd0U1G383hwauEVsk4+9Fk2aY963oFh+gJTz6ujxGw==
+X-Google-Smtp-Source: ABdhPJyH77X7NZCKlUAkh1b8rGns+ZTVzL2JJqtqHXE5Z9Yu2vwepFP1JhFxEiQXE3Fhj1dWwk3q+ErEVVRC0NDjZtA=
+X-Received: by 2002:a05:6512:303:b0:479:1baf:7e5b with SMTP id
+ t3-20020a056512030300b004791baf7e5bmr19877546lfp.184.1654775136919; Thu, 09
+ Jun 2022 04:45:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220601070707.3946847-1-saravanak@google.com> <20220601070707.3946847-2-saravanak@google.com>
+In-Reply-To: <20220601070707.3946847-2-saravanak@google.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 9 Jun 2022 13:44:59 +0200
+Message-ID: <CAPDyKFpZTmt71LgQ9vNE4_iRff-OBkDWkHrc7y9zQ7o_Z_UYFA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gpio-keys schema requires keys to have more generic name.
+On Wed, 1 Jun 2022 at 09:07, Saravana Kannan <saravanak@google.com> wrote:
+>
+> Now that fw_devlink=on by default and fw_devlink supports
+> "power-domains" property, the execution will never get to the point
+> where driver_deferred_probe_check_state() is called before the supplier
+> has probed successfully or before deferred probe timeout has expired.
+>
+> So, delete the call and replace it with -ENODEV.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml    | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+With fw_devlink=on by default - does that mean that the parameter
+can't be changed?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-index 47a56b83a610..4c7691c38b10 100644
---- a/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-@@ -152,7 +152,7 @@ examples:
-       pinctrl-names = "default";
-       pinctrl-0 = <&pinctrl_uid>, <&pinmux_uid>;
- 
--      uid {
-+      switch-uid {
-         label = "UID";
-         linux,code = <102>;
-         gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
--- 
-2.34.1
+Or perhaps the point is that we don't want to go back, but rather drop
+the fw_devlink parameter altogether when moving forward?
 
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+
+Just a minor nitpick below. Nevertheless, feel free to add:
+
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+> ---
+>  drivers/base/power/domain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 739e52cd4aba..3e86772d5fac 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2730,7 +2730,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
+>                 mutex_unlock(&gpd_list_lock);
+>                 dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+>                         __func__, PTR_ERR(pd));
+> -               return driver_deferred_probe_check_state(base_dev);
+
+Adding a brief comment about why -EPROBE_DEFER doesn't make sense
+here, would be nice.
+
+> +               return -ENODEV;
+>         }
+>
+>         dev_dbg(dev, "adding to PM domain %s\n", pd->name);
+> --
+> 2.36.1.255.ge46751e96f-goog
+>
+
+Kind regards
+Uffe
