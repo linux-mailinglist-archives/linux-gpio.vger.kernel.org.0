@@ -2,204 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8938544C3A
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 14:36:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55881544DB3
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 15:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245520AbiFIMgj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jun 2022 08:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38454 "EHLO
+        id S239796AbiFINb3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jun 2022 09:31:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245521AbiFIMgi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 08:36:38 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4031DE8;
-        Thu,  9 Jun 2022 05:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1654778189; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DmkQrS2GZnU4WU6MdKYgfrBEToonLo9W7ELjbdd0gZY=;
-        b=AyXyPKoytLKO8j56ZrycISKjWJ1+k28k/h1kldybb/7juL5l7D22CqimiLle+W2rpBZbrK
-        KzzgTot68mJ2+msATvN6w3uZPICa2giw3HID0ryRQqwi+1xc7l/oGWe77C/FZZ3fq2cEre
-        o6ZwobkGUPJLwFd+aQax/LVjiuGxdzY=
-Date:   Thu, 09 Jun 2022 13:36:19 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] pinctrl: ingenic: Convert to immutable irq chip
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>,
-        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <J0N7DR.9XKBU8Q47U6Y2@crapouillou.net>
-In-Reply-To: <1458d1b8982aa5a84680ebeb869f1c78@kernel.org>
-References: <20220607110525.36922-1-aidanmacdonald.0x0@gmail.com>
-        <TC84DR.BXHQAW8NSA8H@crapouillou.net>
-        <OUo8utshKyFB2wcmtEAH6jswJGetDRWg@localhost>
-        <8TF7DR.ISCIMDT0UMMA@crapouillou.net>
-        <1458d1b8982aa5a84680ebeb869f1c78@kernel.org>
+        with ESMTP id S238801AbiFINb0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 09:31:26 -0400
+X-Greylist: delayed 607 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 09 Jun 2022 06:31:22 PDT
+Received: from patejl.cela.cz (241-168-195-217.cust.centrio.cz [217.195.168.241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7140FA8690
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 06:31:22 -0700 (PDT)
+Received: from griffin (mem-185.47.222.164.jmnet.cz [185.47.222.164])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by patejl.cela.cz (Postfix) with ESMTPSA id 386A7A665;
+        Thu,  9 Jun 2022 15:21:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=upir.cz; s=mail;
+        t=1654780873; bh=tlV0TwvabMCDIgeG164b3Ba31Qh2U5kTmwI4rsYeFEQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=qiAsteDMSoRj2h0v3oTBU+yS9azYf+vHAetqFlA+XduJsJY/XhSoxobel4Cia39jo
+         xqC38eNlx+vrO/AsyRxOegqtLhJes9HIyFY5qfLgInespCfAcQqk+WNPIPZ0sWfyof
+         F19Hd7RazK5ECUAyCQ+iwnhKRmxR2baFsw63QbFA=
+Date:   Thu, 9 Jun 2022 15:21:12 +0200
+From:   Jiri Benc <jbenc@upir.cz>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2
+ API
+Message-ID: <20220609152112.12fc6db4@griffin>
+In-Reply-To: <CAMRc=Md_7WO69hKqToSoAAyDQWxfqgg-PisrBF5AzrsKMM8FQA@mail.gmail.com>
+References: <20220525140704.94983-1-brgl@bgdev.pl>
+        <20220525140704.94983-4-brgl@bgdev.pl>
+        <20220603124600.GA35695@sol>
+        <20220604024131.GB13574@sol>
+        <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
+        <20220607015220.GA9430@sol>
+        <CAMRc=MdwgGefC0AgRCvgMfAZmq_+1GnXH6XMezjyBEKs37QuAQ@mail.gmail.com>
+        <20220609044922.GA11301@sol>
+        <CAMRc=Md_7WO69hKqToSoAAyDQWxfqgg-PisrBF5AzrsKMM8FQA@mail.gmail.com>
+X-Mailer: Claws Mail 4.0.0git415 (GTK+ 3.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SORBS_DUL,RDNS_DYNAMIC,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Virus-Scanned: clamav-milter 0.103.3 at patejl
+X-Virus-Status: Clean
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
+On Thu, 9 Jun 2022 10:42:44 +0200, Bartosz Golaszewski wrote:
+> On Thu, Jun 9, 2022 at 6:49 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > Agree that it would be easier to write a pythonic wrapper around the C
+> > API in Python, so no problem with that.
+> > However, the pythonic wrapper should the one named gpiod, as it is
+> > intended to be the primary interface for Python.  Rename your existing
+> > to gpiod_c or gpiod_core or something.
+> 
+> I don't agree. The module that wraps the C library should still be
+> called gpiod and be the primary interface. The pythonic module would
+> just offer helpers that would still use the gpiod data types for most
+> part.
 
-Le jeu., juin 9 2022 at 13:08:53 +0100, Marc Zyngier <maz@kernel.org> a=20
-=E9crit :
-> On 2022-06-09 11:00, Paul Cercueil wrote:
->> Hi Aidan,
->>=20
->> Le mar., juin 7 2022 at 17:47:19 +0100, Aidan MacDonald
->> <aidanmacdonald.0x0@gmail.com> a =E9crit :
->>>=20
->>> Paul Cercueil <paul@crapouillou.net> writes:
->>>=20
->>>>  Hi Aidan,
->>>>=20
->>>>  Le mar., juin 7 2022 at 12:05:25 +0100, Aidan MacDonald
->>>>  <aidanmacdonald.0x0@gmail.com> a =E9crit :
->>>>>  Update the driver to use an immutable IRQ chip to fix this=20
->>>>> warning:
->>>>>      "not an immutable chip, please consider fixing it!"
->>>>>  Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
->>>>>  ---
->>>>>   drivers/pinctrl/pinctrl-ingenic.c | 33=20
->>>>> =7F=7F=7F=7F++++++++++++++++++-------------
->>>>>   1 file changed, 19 insertions(+), 14 deletions(-)
->>>>>  diff --git a/drivers/pinctrl/pinctrl-ingenic.c
->>>>>  b/drivers/pinctrl/pinctrl-ingenic.c
->>>>>  index 1ca11616db74..37258fb05be3 100644
->>>>>  --- a/drivers/pinctrl/pinctrl-ingenic.c
->>>>>  +++ b/drivers/pinctrl/pinctrl-ingenic.c
->>>>>  @@ -135,7 +135,6 @@ struct ingenic_pinctrl {
->>>>>   struct ingenic_gpio_chip {
->>>>>   	struct ingenic_pinctrl *jzpc;
->>>>>   	struct gpio_chip gc;
->>>>>  -	struct irq_chip irq_chip;
->>>>>   	unsigned int irq, reg_base;
->>>>>   };
->>>>>  @@ -3419,6 +3418,8 @@ static void ingenic_gpio_irq_enable(struct=20
->>>>> =7F=7F=7F=7Firq_data
->>>>>  *irqd)
->>>>>   	struct ingenic_gpio_chip *jzgc =3D gpiochip_get_data(gc);
->>>>>   	int irq =3D irqd->hwirq;
->>>>>  +	gpiochip_enable_irq(gc, irq);
->>>>>  +
->>>>>   	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
->>>>>   		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_INT, irq, true);
->>>>>   	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
->>>>>  @@ -3443,6 +3444,8 @@ static void=20
->>>>> ingenic_gpio_irq_disable(struct =7F=7F=7F=7Firq_data
->>>>>  *irqd)
->>>>>   		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
->>>>>   	else
->>>>>   		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIER, irq, false);
->>>>>  +
->>>>>  +	gpiochip_disable_irq(gc, irq);
->>>>>   }
->>>>>   static void ingenic_gpio_irq_ack(struct irq_data *irqd)
->>>>>  @@ -3684,6 +3687,20 @@ static void=20
->>>>> ingenic_gpio_irq_release(struct =7F=7F=7F=7Firq_data
->>>>>  *data)
->>>>>   	return gpiochip_relres_irq(gpio_chip, data->hwirq);
->>>>>   }
->>>>>  +static const struct irq_chip ingenic_gpio_irqchip =3D {
->>>>>  +	.name			=3D "gpio",
->>>>>  +	.irq_enable		=3D ingenic_gpio_irq_enable,
->>>>>  +	.irq_disable		=3D ingenic_gpio_irq_disable,
->>>>>  +	.irq_unmask		=3D ingenic_gpio_irq_unmask,
->>>>>  +	.irq_mask		=3D ingenic_gpio_irq_mask,
->>>>>  +	.irq_ack		=3D ingenic_gpio_irq_ack,
->>>>>  +	.irq_set_type		=3D ingenic_gpio_irq_set_type,
->>>>>  +	.irq_set_wake		=3D ingenic_gpio_irq_set_wake,
->>>>>  +	.irq_request_resources	=3D ingenic_gpio_irq_request,
->>>>>  +	.irq_release_resources	=3D ingenic_gpio_irq_release,
->>>>>  +	.flags			=3D IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
->>>>>  +};
->>>>>  +
->>>>>   static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl=20
->>>>> *jzpc,
->>>>>   		int pin, int func)
->>>>>   {
->>>>>  @@ -4172,20 +4189,8 @@ static int __init=20
->>>>> ingenic_gpio_probe(struct
->>>>>  ingenic_pinctrl *jzpc,
->>>>>   	if (!jzgc->irq)
->>>>>   		return -EINVAL;
->>>>>  -	jzgc->irq_chip.name =3D jzgc->gc.label;
->>>>>  -	jzgc->irq_chip.irq_enable =3D ingenic_gpio_irq_enable;
->>>>>  -	jzgc->irq_chip.irq_disable =3D ingenic_gpio_irq_disable;
->>>>>  -	jzgc->irq_chip.irq_unmask =3D ingenic_gpio_irq_unmask;
->>>>>  -	jzgc->irq_chip.irq_mask =3D ingenic_gpio_irq_mask;
->>>>>  -	jzgc->irq_chip.irq_ack =3D ingenic_gpio_irq_ack;
->>>>>  -	jzgc->irq_chip.irq_set_type =3D ingenic_gpio_irq_set_type;
->>>>>  -	jzgc->irq_chip.irq_set_wake =3D ingenic_gpio_irq_set_wake;
->>>>>  -	jzgc->irq_chip.irq_request_resources =3D=20
->>>>> ingenic_gpio_irq_request;
->>>>>  -	jzgc->irq_chip.irq_release_resources =3D=20
->>>>> ingenic_gpio_irq_release;
->>>>>  -	jzgc->irq_chip.flags =3D IRQCHIP_MASK_ON_SUSPEND;
->>>>>  -
->>>>>   	girq =3D &jzgc->gc.irq;
->>>>>  -	girq->chip =3D &jzgc->irq_chip;
->>>>>  +	gpio_irq_chip_set_chip(girq, &ingenic_gpio_irqchip);
->>>>=20
->>>>  This will change each irq_chip's name to "gpio", do we want that?
->>>>=20
->>>>  You didn't remove jzgc->irq_chip, so maybe what you could do is
->>>>  jzgc->irq_chip =3D ingenic_gpio_irqchip;
->>>>  jzgc->irq_chip.name =3D jzgc->gc.label;
->>>>  gpio_irq_chip_set_chip(girq, &jzgc->irq_chip);
->>>>=20
->>>>  Thoughts?
->>>>=20
->>>>  Cheers,
->>>>  -Paul
->>>>=20
->>>=20
->>> I wondered that myself, but it doesn't seem to affect anything=20
->>> except
->>> what is displayed in /proc/interrupts. Is the name used anywhere=20
->>> else
->>> where it might cause confusion?
->>=20
->> I don't really know. If it only really affects the display in
->> /proc/interrupts then I'm fine with it. In doubt, I'd prefer to keep
->> the existing names.
->>=20
->>> The only similar case I could find was pinctrl-microchip-sgpio.c=20
->>> where
->>> microchip_sgpio_register_bank() is called in a loop and registers=20
->>> the
->>> same irq chip repeatedly, so it's probably(?) okay to do this here.=20
->>> It
->>> seems to defeat the point of immutable irqchips if they just have=20
->>> to =7F=7Fbe
->>> copied anyway...
->>=20
->> The point of immutable irqchips is that they aren't modified by the
->> core, if I understand it correctly. Immutable doesn't mean it has to
->> be static const.
->=20
-> I want these to be made const. I agree that the fancy string should
-> be kept (sadly), as it is a userspace visible change, and we don't
-> do that.
->=20
-> You can solve it using the irq_print_chip() callback as part of
-> your irq_chip structures. See 3344265a2692 for an example.
+As a Python user, I'd much rather see the high level API being the
+primary interface and being named 'gpiod'. The easier to use and more
+Pythonic, the better. The low level library bindings and low level data
+types are just an implementation detail for me when coding in Python.
+If I wanted low level, I'd code everything directly in C.
 
-Works for me.
+Just my two cents. Thanks for the good work in either case.
 
-Cheers,
--Paul
-
-
+ Jiri
