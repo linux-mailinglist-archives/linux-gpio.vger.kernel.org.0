@@ -2,61 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2CB7545652
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 23:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12B125458A3
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 01:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235695AbiFIVM5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jun 2022 17:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47034 "EHLO
+        id S237001AbiFIX2O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jun 2022 19:28:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345522AbiFIVMs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 17:12:48 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F96277F9C;
-        Thu,  9 Jun 2022 14:12:29 -0700 (PDT)
-Received: from mercury (unknown [185.209.196.172])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 734C16601691;
-        Thu,  9 Jun 2022 22:12:28 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1654809148;
-        bh=Biq9wNptBm5X7lWGL+Xp0mwNq7LSzKKjxG1xeEdGruw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wuxz1IsIrKDPBn06aCwiIu1LhVeCfCIswf4AG6Aze8ynq1xOCDTrVTGFro+qpn/6s
-         wTw7M78crEk/vECjHUePG6IMk93pbcjxpgLD5Z5A+qHvvs+V4rMhWd3/7t7AkYyDxi
-         owWXBwuU08dnyGd0oOEBsbzwLtIf5emi5SHvRKE9AbDonuLCPEkEJXUQsyfr8XC/SN
-         7ap/IqpEl/LH4ovPfVpdS9oCy3IlZwxaDtX7HpdizFBQ7AobtH8ZZeBlz2tELi/AD2
-         0QMnFXZ2BwaqCQhGWvZxBrNu8kkWPiewHzJZPNek8yCQxnRwGpy/GDe7YLK0ad8/dd
-         m3ma5upUOTnkg==
-Received: by mercury (Postfix, from userid 1000)
-        id 44E8710605B9; Thu,  9 Jun 2022 23:12:26 +0200 (CEST)
-Date:   Thu, 9 Jun 2022 23:12:26 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
-        lee.jones@linaro.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
-        rafael@kernel.org, quic_gurus@quicinc.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 17/17] power: axp20x_battery: Add support for AXP192
-Message-ID: <20220609211226.5y7scqlfsxvfd3ag@mercury.elektranox.org>
-References: <20220607155324.118102-1-aidanmacdonald.0x0@gmail.com>
- <20220607155324.118102-18-aidanmacdonald.0x0@gmail.com>
+        with ESMTP id S229520AbiFIX2M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 19:28:12 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2118.outbound.protection.outlook.com [40.107.113.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C575BE3;
+        Thu,  9 Jun 2022 16:28:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aQuuqWJgapf3cIuXkjbLMVFlBzwyDwPdZfpdi+VciHN7TSxAHC0RhzMrYJ+4WzJ2XXFGEWyyMzmO+lgf6LYkc3Ce+UE8ue8Q7Tzn3HONtuSFUrDYrsGnrFB1nXWqSwRjcB0gUy3I+Wa74fan2exP+CkTOq9SgQC7fYYuTbSIjZLsPdtF20g5FS9EpFxMzN9xh+oQmeIE82d+h/+09vqb30tpy3L2jZjwTz3puTcO15WdHNqqUZJg5yCdi1ov4f+Ks9MGBXijjaYN2KwVq+l8ESzhEEaNpJ0i9tGGn8t7mvvc0L/eHPCb3SCVI0Q0zMIbo9lRpRUgUb7VBzJafogv1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Aa7fSAiV38z94cE2S9YfD6fDoM3fXeM0NHKCoFKhLug=;
+ b=C3tLKbO4CfTUc8b8gFAwOqa+BnUgd9+Mu6Dla84gocxfeODxrBa+Lo6RqFLnbrtbZx8JsZrvNQiHLFcdo0kZgNhsEBsFA5DUwcLGjFl8EWcVbs/z9dD8NHW7I+o+cF2QfW3cLzNp84CpLcBq/ys2EpBykAnONj3cB/jPmpdG+q9QA4CEFqeYWozSty5e0b3kC6QSbmrUwCNn11Zj2DWhAzjwwZNW8sb9GvIh2iywjt72wehzbgIfqaKmkkMwkopigwhZcEBrRGaHG9ze3uAcNWtflBLtG7URKpDhgKMFpKTADiJ7teKBEPb8Nuww+IMtIwf5JijJ/XOZY/MpsslkNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Aa7fSAiV38z94cE2S9YfD6fDoM3fXeM0NHKCoFKhLug=;
+ b=hidPGRuupy37wBckY/QLdA27xy80RhMvpJW1ex2cBLbPOXgyFszeR2FwjWEitN271wTPY0MfmStgiKtmdN/JKUTo+4WuvIunvL99PXTO74vqBb5EPvjvqakXlEEDyrAA4UVeCXBAQ4MzmaCuhwCtZraxZSMXH3NNjOiwz0I5B9E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
+ by OSBPR01MB4648.jpnprd01.prod.outlook.com (2603:1096:604:7b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.13; Thu, 9 Jun
+ 2022 23:28:08 +0000
+Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com
+ ([fe80::d5d9:3646:37df:867c]) by OS3PR01MB8426.jpnprd01.prod.outlook.com
+ ([fe80::d5d9:3646:37df:867c%6]) with mapi id 15.20.5332.013; Thu, 9 Jun 2022
+ 23:28:08 +0000
+Message-ID: <87mtelfmd4.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] pinctrl: renesas: r8a779g0: Add pins, groups and functions
+In-Reply-To: <CAMuHMdUeRtBYp_B_EKd4UkVoUQeOqwAuBCdSeaiiFJdhYS6_nQ@mail.gmail.com>
+References: <87zgipgu3s.wl-kuninori.morimoto.gx@renesas.com>
+        <87tu8xgu1f.wl-kuninori.morimoto.gx@renesas.com>
+        <CAMuHMdUeRtBYp_B_EKd4UkVoUQeOqwAuBCdSeaiiFJdhYS6_nQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date:   Thu, 9 Jun 2022 23:28:08 +0000
+X-ClientProxiedBy: TYAPR01CA0213.jpnprd01.prod.outlook.com
+ (2603:1096:404:29::33) To OS3PR01MB8426.jpnprd01.prod.outlook.com
+ (2603:1096:604:194::10)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cvqy65drvyycmane"
-Content-Disposition: inline
-In-Reply-To: <20220607155324.118102-18-aidanmacdonald.0x0@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ffd6df77-02ed-4ae6-07a0-08da4a6fb5fa
+X-MS-TrafficTypeDiagnostic: OSBPR01MB4648:EE_
+X-Microsoft-Antispam-PRVS: <OSBPR01MB464835885CAB7FF7A8E8DF78D4A79@OSBPR01MB4648.jpnprd01.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ikxR5ezPPTlOjuHshoHU4GTSjMK2skgYfxmPKPb/fFNEyxuIf8DHeEIDt3da3HMrwIuPD09z7QwhOrN1Ma5+W3Qmeq1hL12lrHERdT+8BgSiE1UdrCA8pfLvk9sl0/vAafMZquikVhx2L2No6dBrsEUSv7ZfXldDWOeFTGSXmIza8Pn9zht7LpO8TwNr5kU5mjouJrGy79o951fW3mR9yPwwll5pH36ZIe38muaJxS+cbArf6lfxivBuVKc3y1hcPx7SZeM6H36h/6CzkeqrrVijLcN+MMDS4gbgE2XcUaq57xSJg9QqAmQFbxKg/gCd+cAHDSvly9X8z4EFUktqa/KoKTV+vNQz3cDMl9+UyHqJZViv2hNWKBxWMd82iBE6uxqES+XkJjIMm9vDjI0jaRG69HUs6HKzgfbcIQbuxcYx/Y7GSFFkSX0/pE6wUECdTdhaEYe4fFNMbHHzJTn/8B+7uiJbqJBiERbb/zjkURn8cD6fp2sO9OIzljTEP5xr3ZpPqhEVAgmxCe87k6GtFBCrc6oKhiMw6NLXOMJfpc/SIT+3nvSVuFLh/bodisyLB/UjNxxEZU7FAz7G71aT7wgCSYnAZ3HLk/+WhXRkAs5z0mIsP/kzLTPkDlh9OjwHu1Q/WrGv4YWnbGfkFxuuIkoPDoKCSqCOQlLpRB8JtQACucjKg+ILIkr1zE/09BZk8vpnqa2hMb1wAtmws1A+Zg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4744005)(8936002)(316002)(2906002)(6506007)(2616005)(6486002)(36756003)(52116002)(38350700002)(38100700002)(6512007)(5660300002)(26005)(54906003)(6916009)(186003)(86362001)(8676002)(66476007)(66556008)(4326008)(508600001)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oINpXfRa9GtcTKtlv/A0V84Mwt3t6DFB64+drnIvteEFswmUHmxCjLSss29T?=
+ =?us-ascii?Q?QbouX0riUlVkgzXbgm7kYcRItvo63SY3zVKHXk3Kvsh7oD0VqinOArwNjuhO?=
+ =?us-ascii?Q?O6wSdpVwvFkEunQfwgV2Jc/jhwrPQF5dFX6RUvdZIAWeb0LFVYuhM/aqb1+i?=
+ =?us-ascii?Q?oSEmGi018qAgNNcIRZZFphafYLKYMPqTn0Fyhwrr3KWULa19JndY34MFSC8l?=
+ =?us-ascii?Q?A7xIAmNQpjwg2Jd29lLffRjgv5d0011mVGwFagN5vywWM0w0o9EsZnVxBfKf?=
+ =?us-ascii?Q?RoMEE6RiXs7r5WshIHYo4x6Kdpp3PR24Cc05vHyHFrZ4rCzFGrZagq/1/zjv?=
+ =?us-ascii?Q?to20WelyYnya780cshXMRgMrdimkrG8vNE3tT1uhQMOA9eniEj3wfUe3LRVb?=
+ =?us-ascii?Q?bZTyXVc+3Z40hHqJEKPrsgiYjxUCAf4mfpLYeEZivXmKcnBI35Mva1mja0tx?=
+ =?us-ascii?Q?QRJmDAv464JNu2ZRCdIIo5/2xFBuMQIR+7HZs5UOfWOcxTY5/1qg57D+NylM?=
+ =?us-ascii?Q?8h5BEulTRay1JDHwpABDeQvBGr9WZ53Fx50+zENgTlvlGjo5bes5zkziMPKa?=
+ =?us-ascii?Q?68zoEUAVR7B5pyO50DbC6OJzqPGN0exHhvmL5glIONQPcT8gVuyrUiWyTRuY?=
+ =?us-ascii?Q?/fTuGfZPFMhM1QYiXKnf1b3w7dYilmYixavzanR0tR65lpjeImQLArqijfSo?=
+ =?us-ascii?Q?hJYKifzy8l7AHH/kK2DtHbLBXDRAQf62ppptMmyuy/Wn+GroVEMltP/Lyumr?=
+ =?us-ascii?Q?gdasBbJ8tMrqjf5CUVyo5oD8SlHs2rgYR3emEz+LfDJBCMfi++ZDOOUYnNeN?=
+ =?us-ascii?Q?TPGfAbWLB4yCB72xTCOWfzoFwNx5BTMYWq7n0xt7gH7TpdcD/VW2jWbejZ3a?=
+ =?us-ascii?Q?RsIMh5XUDalTGXUGUqBS50HJ/YgECxTrVkthiumevX4luteBKE3PQD2UdE1m?=
+ =?us-ascii?Q?vp3sQhQqCxKcGP84RaGg53uxVOxSRvkr6V/IFBQYRaVKlSiBgtPU2gAJnmIC?=
+ =?us-ascii?Q?3gRt2PLegR0pdO89JeKrSe4ZPxMF19Fx7Z9faPf4HlF8vC3h8aoMpd/Tel7+?=
+ =?us-ascii?Q?+PaUOMnOru8LXlb6O1JRGvPF2Clt5oK8KF11jsVEZwGwkuVTMZV3kJwwV1Bk?=
+ =?us-ascii?Q?Vx+1OE0ZyZDohHtLODz0RD1sy3Z8D9NzVXd52L44VY7CEedaghMisxHiX1Rd?=
+ =?us-ascii?Q?MceZBzeEFJSdghtcRjxtwDh6LKCO4Gwta9IeFlLGNnynd4mNkihRmFzi9ma6?=
+ =?us-ascii?Q?GeHwyqGvAvGc6DN0OQ2E9pRE68+jnFGrz/xCEbfCMwH/VnHXOGF69bvZiopK?=
+ =?us-ascii?Q?3iI72XhRBpTyaTy5FWE2wQSmtMWhHP+rc7Y9g/F9/bQjJRcFXnney3xwt2XT?=
+ =?us-ascii?Q?7qrInkE9Ich8IJUu5lj24rR9yNz9hNQt30iZO0JdN6wUGOuo14A5mq/ipd+z?=
+ =?us-ascii?Q?dOsO19y8XvhIibmiYYISZM3hXlUO0eJ3jffFk6tyOXrG/xPq3/TgtnFQKvLm?=
+ =?us-ascii?Q?kIxsZEWudP0nuVlQ1nAMwF85rHcPNm6uuYTSrx4qm+H/VGe98+aNyQ80l1ri?=
+ =?us-ascii?Q?fwIchXCddkyK58uNIqvxxlW0s41wuUG4RU8AQ4I/XwjRnUDyuzPGWb0tC3jP?=
+ =?us-ascii?Q?BFhgeUtOkeuKGAuMH2js9CKYmURQVhzD+rTpuisrcZ065bNrjtH1fd9tE/OF?=
+ =?us-ascii?Q?/YULI9FZc5PZtyJwXFqln9Mp05wdt3Kg3e3AUwN9NEaQQTQWG95yPBxyosA/?=
+ =?us-ascii?Q?zaaJVNkiXfaGFcewORSRiVJ8tXWncDpMy6tMdseswH8v1GnV7HLP?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffd6df77-02ed-4ae6-07a0-08da4a6fb5fa
+X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8426.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2022 23:28:08.2014
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oO0PGhW+4ftrox6pJiuBc9kRPfHF7HwhfFWyI/gTSs7eQymrG/parfvqndfxffInkvN2EObzer4xSuhWi/mN/BexVMxaKJS/KlNGHYI+IiadT793yBEqYV2D+rrSQakj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4648
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -64,150 +120,34 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---cvqy65drvyycmane
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Geert
 
-Hi,
+Thank you for your feedback.
+I am very grateful and respectful for your reviewing
+this kind of very large and confusable patch.
 
-On Tue, Jun 07, 2022 at 04:53:24PM +0100, Aidan MacDonald wrote:
-> The AXP192 has a battery charger similar to other X-Powers PMICs,
-> but unlike the other supported devices, it does not have a fuel
-> gauge and can't report battery capacity directly.
->=20
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-> ---
+> > From: Phong Hoang <phong.hoang.wz@renesas.com>
+> >
+> > This patch adds SCIF, I2C, EthernetAVB, HSCIF, MMC, QSPI,
+> > MSIOF, PWM, CAN-FD, Ethernet-TSN, PCIe pins, groups, and functions
+> >
+> > [Morimoto merged above patches into one]
+> > Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
+> > Signed-off-by: Hai Pham <hai.pham.ud@renesas.com>
+> > Signed-off-by: Thanh Quan <thanh.quan.xn@renesas.com>
+> > Signed-off-by: CongDang <cong.dang.xn@renesas.com>
+> > Signed-off-by: Kazuya Mizuguch <kazuya.mizuguchi.ks@renesas.com>
+> > Signed-off-by: Tho Vu <tho.vu.wh@renesas.com>
+> > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> Thanks for your patch!
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Thanks.
+I will fixup all your pointed lines, and post v3 patch.
+Maybe next week.
 
->  drivers/power/supply/axp20x_battery.c | 49 +++++++++++++++++++++++++--
->  1 file changed, 46 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/power/supply/axp20x_battery.c b/drivers/power/supply=
-/axp20x_battery.c
-> index e9547e2d7c48..3fa2faa6f0f8 100644
-> --- a/drivers/power/supply/axp20x_battery.c
-> +++ b/drivers/power/supply/axp20x_battery.c
-> @@ -538,6 +538,19 @@ static int axp20x_battery_set_prop(struct power_supp=
-ly *psy,
->  	}
->  }
-> =20
-> +static enum power_supply_property axp192_battery_props[] =3D {
-> +	POWER_SUPPLY_PROP_PRESENT,
-> +	POWER_SUPPLY_PROP_ONLINE,
-> +	POWER_SUPPLY_PROP_STATUS,
-> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +	POWER_SUPPLY_PROP_CURRENT_NOW,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-> +	POWER_SUPPLY_PROP_HEALTH,
-> +	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-> +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-> +};
-> +
->  static enum power_supply_property axp20x_battery_props[] =3D {
->  	POWER_SUPPLY_PROP_PRESENT,
->  	POWER_SUPPLY_PROP_ONLINE,
-> @@ -562,6 +575,16 @@ static int axp20x_battery_prop_writeable(struct powe=
-r_supply *psy,
->  	       psp =3D=3D POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX;
->  }
-> =20
-> +static const struct power_supply_desc axp192_batt_ps_desc =3D {
-> +	.name =3D "axp192-battery",
-> +	.type =3D POWER_SUPPLY_TYPE_BATTERY,
-> +	.properties =3D axp192_battery_props,
-> +	.num_properties =3D ARRAY_SIZE(axp192_battery_props),
-> +	.property_is_writeable =3D axp20x_battery_prop_writeable,
-> +	.get_property =3D axp20x_battery_get_prop,
-> +	.set_property =3D axp20x_battery_set_prop,
-> +};
-> +
->  static const struct power_supply_desc axp20x_batt_ps_desc =3D {
->  	.name =3D "axp20x-battery",
->  	.type =3D POWER_SUPPLY_TYPE_BATTERY,
-> @@ -572,6 +595,19 @@ static const struct power_supply_desc axp20x_batt_ps=
-_desc =3D {
->  	.set_property =3D axp20x_battery_set_prop,
->  };
-> =20
-> +static const int axp192_ccc_table[AXP20X_CHRG_CTRL1_TGT_CURR+1] =3D {
-> +	100000,  190000,  280000,  360000,
-> +	450000,  550000,  630000,  700000,
-> +	780000,  880000,  960000,  1000000,
-> +	1080000, 1160000, 1240000, 1320000,
-> +};
-> +
-> +static const struct axp_data axp192_data =3D {
-> +	.ccc_table =3D axp192_ccc_table,
-> +	.get_max_voltage =3D axp20x_battery_get_max_voltage,
-> +	.set_max_voltage =3D axp20x_battery_set_max_voltage,
-> +};
-> +
->  static const struct axp_data axp209_data =3D {
->  	.ccc_scale =3D 100000,
->  	.ccc_offset =3D 300000,
-> @@ -600,6 +636,9 @@ static const struct axp_data axp813_data =3D {
-> =20
->  static const struct of_device_id axp20x_battery_ps_id[] =3D {
->  	{
-> +		.compatible =3D "x-powers,axp192-battery-power-supply",
-> +		.data =3D (void *)&axp192_data,
-> +	}, {
->  		.compatible =3D "x-powers,axp209-battery-power-supply",
->  		.data =3D (void *)&axp209_data,
->  	}, {
-> @@ -617,6 +656,7 @@ static int axp20x_power_probe(struct platform_device =
-*pdev)
->  	struct axp20x_batt_ps *axp20x_batt;
->  	struct power_supply_config psy_cfg =3D {};
->  	struct power_supply_battery_info *info;
-> +	const struct power_supply_desc *ps_desc;
->  	struct device *dev =3D &pdev->dev;
-> =20
->  	if (!of_device_is_available(pdev->dev.of_node))
-> @@ -660,9 +700,12 @@ static int axp20x_power_probe(struct platform_device=
- *pdev)
-> =20
->  	axp20x_batt->data =3D (struct axp_data *)of_device_get_match_data(dev);
-> =20
-> -	axp20x_batt->batt =3D devm_power_supply_register(&pdev->dev,
-> -						       &axp20x_batt_ps_desc,
-> -						       &psy_cfg);
-> +	if (!axp20x_batt->data->has_fg)
-> +		ps_desc =3D &axp192_batt_ps_desc;
-> +	else
-> +		ps_desc =3D &axp20x_batt_ps_desc;
-> +
-> +	axp20x_batt->batt =3D devm_power_supply_register(&pdev->dev, ps_desc, &=
-psy_cfg);
->  	if (IS_ERR(axp20x_batt->batt)) {
->  		dev_err(&pdev->dev, "failed to register power supply: %ld\n",
->  			PTR_ERR(axp20x_batt->batt));
-> --=20
-> 2.35.1
->=20
+Thank you for your help !!
 
---cvqy65drvyycmane
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmKiYjkACgkQ2O7X88g7
-+pqAYQ//TZl+Sj1/BciUuF9R1JmWTqHC+Ge+p8yyae0lpXJxi8fM6jEMarZsjYq6
-LHByD6fE5Yy2ldr2wgImlMSf4ZFIVF7lne8lrNz9TPJ88c8ML6jtmNHwO/eG+xom
-m1B3pg/R2eb8ttcvx9/G40vBVNCflRzLsuIxpfh+Ye0WnIL3r+14XRDKdUL2o1Ic
-JiTEEknVkQ/CqiuFlQURWOJ9rGOv5hYrZsasYwg5DKeQCIy43MIU616FlO+WfCkj
-SAeoksrqargiCkNZlu7P6c7juqzrhoi8rBXXkxMtx5GOtiNTayztkER2fL9Sudl3
-iyEvTqa/e91pVsCjf7N0V423zSqxuKxkOacKEOdL1Or1nSyoa72POFgbHK9jCdcu
-yk2XzUChk92vHr0s/jfrM4iMa+SWh39fIoXGTHeqyKAaWR52X1SalSpO2eFFfeIj
-h77lNxEX1zdyHrSMNoV6DsYntyyJQM+V+DeqenfRqmCGiAub61gt3yfmvl6qsHjb
-pe2QRf+jysNHhUoa2slF/hv7X5CvBo3wwX3/AyMthm9BOFOkatUQnlcGLBVYr39l
-AXltnffuW1imvlKwwhxFgOrLE5Pe4Qj9PL//8Y1pDqZlQZA6ZK2K+I6afRPM6XuM
-HjoRUjxWPOnfZNRt3PkwggIw4B8U9o4TXKHZ8mBwekvEAFAIX+I=
-=S4/4
------END PGP SIGNATURE-----
-
---cvqy65drvyycmane--
+Best regards
+---
+Kuninori Morimoto
