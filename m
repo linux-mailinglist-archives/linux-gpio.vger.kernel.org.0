@@ -2,286 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 160CB545358
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 19:50:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8DA454518A
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jun 2022 18:06:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345118AbiFIRuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jun 2022 13:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58604 "EHLO
+        id S231679AbiFIQGZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jun 2022 12:06:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245571AbiFIRuJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 13:50:09 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339AF21D;
-        Thu,  9 Jun 2022 10:50:07 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id d14so6638582eda.12;
-        Thu, 09 Jun 2022 10:50:07 -0700 (PDT)
+        with ESMTP id S234159AbiFIQGX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 12:06:23 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E22FC1B1CC4
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 09:06:22 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id v25so31839966eda.6
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 09:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:from:to:cc:subject:date:in-reply-to:message-id
-         :mime-version;
-        bh=0XskcUVqnA6r5CptCBzAguc49yR2w4k2s0FdtujbgmE=;
-        b=p/6bnwy66jbaWhRXzvyDqpRiX5oIcKqrBvgM/S2yeKcMGnzVmXHwuXJzIokTl0IWts
-         IQXn3lX/U4JphYcrS/yiI0ZHQ2LlXCtELshvjjumQRaxS64nWJK77mGp2pBchMxYXtPJ
-         BYnJCKpwiTC0YehP0IBimzvL2wyyd2KjJDYPc/kA1Ws5DqTUlSumEsWgdD7qgZ+VcNhK
-         7DzqnUGv9IqG90N3KbbGelkbNi4fuyd6xrtMIEzJwnig2aXxR7tkCPcgKaUXl8EqkWLg
-         cNf+46+VBGfan80CFSA6PsmuvnyY+sN6dTEv2ymgoehXug0VVHaKVSE814UfalbWzgDu
-         6Xdg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bbuoibGqpUzgIv8kzMZ72alXsr0IfG8c0YGuJCyKV1k=;
+        b=eM8BuGOB92Lhe5957W7wSWvgi/TvSREPfm4noIASBPJL5W/RUfHCLxbbEcGhdDOgSC
+         oBAym6VV4tO+GTg4KI/6BWMuTD+I+coDyTmJ90FOBAxV8JBWsiVjon2vAKnXcd4cQ/QN
+         OOMDFwWk2oUJl05U4iutfTbWecNZhxJaKPZkz1wFxtUh3sJQwXM+4nFjV0Z2+nlXidB5
+         yq6rquhl+B9LSyg3LwsyNyMije0/MA5E1Dviw8bQjBRuRGTQsQmDJ2QR38f7MQAEdh0H
+         jDPibi5UFT/grIQu4YHxUPeUpwyIMknohU6gaFti910IM2nUtgNjaXKagqslGJTKsHQa
+         gG8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
-         :message-id:mime-version;
-        bh=0XskcUVqnA6r5CptCBzAguc49yR2w4k2s0FdtujbgmE=;
-        b=UIal195fDRVabDbfMkrKauixMBx3BE59QkDOQhutiWOmNVObWcUeYabGDjCPKpA7Ap
-         SqklgZRRMJWbMVEgZIXHj8h0jDTQro157X2mOVTVjHmpaR/F6C+8pNBKlY+VKkk+3CR/
-         qZ/nUporPNWU5vspLLnHNBSX9AzQKSQG3h95nnwW4OIQujjfA6rpwcHlkUjPT15f1CVM
-         P1DC7j8JNmyL4L1+lClTnKW9SuiIZ5JP/eXgcq8UcHgSqtvVSGYumETVaf0yVpaIXAFt
-         Ueq3xdGBJsG+XWppAE99sB+31zCd6rnEGJTNC5jAhUyYGtzKN3jOdLHJjE/WVSX8BeXG
-         Luwg==
-X-Gm-Message-State: AOAM533ZhX/qcYsXTrF9R5Bukjy/s//bhTGoo789P+BWhXfrwwHayKM+
-        7LTJ/aXrVlD+mR2Kea5W4tU=
-X-Google-Smtp-Source: ABdhPJyQa4iYZLR6rVSvV1VGlaMr/rYrX4ug7kLrbCZORRq0xFSZhkrOafsh1Du6OOMz5xoiMdk7+g==
-X-Received: by 2002:aa7:d441:0:b0:431:486b:2573 with SMTP id q1-20020aa7d441000000b00431486b2573mr28896923edr.60.1654797005687;
-        Thu, 09 Jun 2022 10:50:05 -0700 (PDT)
-Received: from localhost (92.40.202.100.threembb.co.uk. [92.40.202.100])
-        by smtp.gmail.com with ESMTPSA id x9-20020a1709064a8900b006f3ef214e2csm11228438eju.146.2022.06.09.10.50.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 10:50:04 -0700 (PDT)
-References: <20220607155324.118102-1-aidanmacdonald.0x0@gmail.com>
- <20220607155324.118102-12-aidanmacdonald.0x0@gmail.com>
- <20220608142808.00000650@Huawei.com>
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
-        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
-        rafael@kernel.org, quic_gurus@quicinc.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 11/17] iio: adc: axp20x_adc: Consolidate ADC raw read
- functions
-Date:   Thu, 09 Jun 2022 00:13:47 +0100
-In-reply-to: <20220608142808.00000650@Huawei.com>
-Message-ID: <6DEqBtaiVPj93S9KpELsBGaDLDnbWsEX@localhost>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bbuoibGqpUzgIv8kzMZ72alXsr0IfG8c0YGuJCyKV1k=;
+        b=NBDp3UkARirt5iDTnjKEF0JIh2NDyUJchY6m9PfpTnuQ18IdhjFUciVqvYIOvasdgn
+         HASVraIpmDONUElkREsFT2iJJck3dGHW+RsAh0ECB1eaVZnMYFGFpAGv3rWJpVmTghM3
+         aq2KApz784qOcf+xHQpulIEYV0ChbnmNgiE8pQPou9C69duN/pQg8Q+AyS/bciXitqVi
+         fqD3IH2pTuA5cT2eQXIsAQ51cSML9NjPsQS9GgET3lESJL2xsSs9U/nOpE4AKKAUofEV
+         Z+dJCxeZ8w7LAn3C0uzjgBazsnEft6WG1D6aRIZZ4RFv5fbiqAi5OYZ+MnUjXCpCD47X
+         Tvfg==
+X-Gm-Message-State: AOAM532zCRP/3hCHmYxicWz8jHgXWfUVZ9WqBlbG3SQZWMzqq6sZRzXC
+        hD8HQjAkbaEQ4h0eYFr4KBB1HTAW4kWtXYmZZDK8nw==
+X-Google-Smtp-Source: ABdhPJzLH4aepDnkdX7I7UIFuLMYgl5PqXFBNuGJgE2hITzP8NVKmO4Nk9XnJuhTRgLl3zqGcsyS32K0r+n7HnbVopY=
+X-Received: by 2002:a05:6402:5008:b0:42d:c421:48c8 with SMTP id
+ p8-20020a056402500800b0042dc42148c8mr46482161eda.422.1654790775393; Thu, 09
+ Jun 2022 09:06:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+References: <20220525140704.94983-1-brgl@bgdev.pl> <20220525140704.94983-4-brgl@bgdev.pl>
+ <20220603124600.GA35695@sol> <20220604024131.GB13574@sol> <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
+ <20220607015220.GA9430@sol> <CAMRc=MdwgGefC0AgRCvgMfAZmq_+1GnXH6XMezjyBEKs37QuAQ@mail.gmail.com>
+ <20220609044922.GA11301@sol> <CAMRc=Md_7WO69hKqToSoAAyDQWxfqgg-PisrBF5AzrsKMM8FQA@mail.gmail.com>
+ <20220609152112.12fc6db4@griffin>
+In-Reply-To: <20220609152112.12fc6db4@griffin>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 9 Jun 2022 18:06:04 +0200
+Message-ID: <CAMRc=Mfgov0S-dZ7Ut2oj4A8=xE7d-4iX=8Q+Kv4Tb==JviMjw@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2 API
+To:     Jiri Benc <jbenc@upir.cz>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
-
-> On Tue,  7 Jun 2022 16:53:18 +0100
-> Aidan MacDonald <aidanmacdonald.0x0@gmail.com> wrote:
+On Thu, Jun 9, 2022 at 3:21 PM Jiri Benc <jbenc@upir.cz> wrote:
 >
->> Add an axp20x_id variant field to the axp_data struct and use it
->> to consolidate the adc_raw functions, reducing code duplication.
->> Variant IDs are chosen to match the OF compatible strings.
->> 
->> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> On Thu, 9 Jun 2022 10:42:44 +0200, Bartosz Golaszewski wrote:
+> > On Thu, Jun 9, 2022 at 6:49 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > Agree that it would be easier to write a pythonic wrapper around the C
+> > > API in Python, so no problem with that.
+> > > However, the pythonic wrapper should the one named gpiod, as it is
+> > > intended to be the primary interface for Python.  Rename your existing
+> > > to gpiod_c or gpiod_core or something.
+> >
+> > I don't agree. The module that wraps the C library should still be
+> > called gpiod and be the primary interface. The pythonic module would
+> > just offer helpers that would still use the gpiod data types for most
+> > part.
 >
-> Hi Aidan,
->
-> I'm not a big fan of using variant IDs, rather than a description
-> of what is actually different between devices.  Long term, variant
-> IDs tend to scale (as we add more supported devices) much worse
-> than a flag describing the actual difference.
->
-> Here I would have a field in struct axp_data called something like
-> discharge_curr_res and set it to 12 or 13 as appropriate.
+> As a Python user, I'd much rather see the high level API being the
+> primary interface and being named 'gpiod'. The easier to use and more
+> Pythonic, the better. The low level library bindings and low level data
+> types are just an implementation detail for me when coding in Python.
+> If I wanted low level, I'd code everything directly in C.
 >
 
-I agree with your point in general, but here it seems impossible to get
-away from variant IDs because the channel numbering depends on it and we
-use the channel number to decide what number of bits to use. The code
-I'm replacing is just disguising the variant IDs by giving every variant
-its own set of functions.
+But Kent is not talking about a whole new "pythonic" layer on top of
+the code that is the subject of this series. The bindings are already
+quite pythonic in that you can get most stuff done with a "logical"
+one-liner. The gpiod module doesn't map C API 1:1, it already
+simplifies a bunch of interfaces. Kent's idea IIUC is about providing
+a set of helpers that would produce the gpiod objects in shorter code
+by hiding the details of intermediate objects being created.
 
-To me it seemed clearer to describe the channel properties and then use
-one read_raw function for all variants, but when I did that it turned
-out not to make any difference in size for x86. Probably because tables
-encode a lot of redundant information compared to switches. It also
-relied on a hack to associate extra info with an iio_chan_spec so it
-wasn't much of an improvement, in the end.
+Re the event buffer: yeah, I think in python (unlike C++ or future
+Rust bindings) it makes sense to hide it within the request as we
+can't profit from implicitly not copying the event objects.
 
-So it's a question of using a variant ID explicitly or having separate
-functions for each device. Combining the functions with an explicit ID
-saves 752 bytes on x86, once the axp192 is added, and I don't think it
-is any harder to understand than the separate functions. And it's still
-possible to use a separate function when needed.
+If anyone wants to create an even simpler, complete interface for
+gpiod, then it's a task for a whole new project. Think: pydbus built
+on top of GLib dbus bindings in python, built on top of glib's dbus
+implementation.
 
-Nonetheless, if you'd prefer to stick with separate functions I'm fine
-with that.
-
-Regards,
-Aidan
-
->> ---
->>  drivers/iio/adc/axp20x_adc.c | 83 +++++++++++++++---------------------
->>  1 file changed, 34 insertions(+), 49 deletions(-)
->> 
->> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
->> index 9d5b1de24908..0260433782d8 100644
->> --- a/drivers/iio/adc/axp20x_adc.c
->> +++ b/drivers/iio/adc/axp20x_adc.c
->> @@ -71,6 +71,18 @@ struct axp20x_adc_iio {
->>  	const struct axp_data	*data;
->>  };
->>  
->> +struct axp_data {
->> +	const struct iio_info		*iio_info;
->> +	int				num_channels;
->> +	struct iio_chan_spec const	*channels;
->> +	unsigned long			adc_en1_mask;
->> +	unsigned long			adc_en2_mask;
->> +	int				(*adc_rate)(struct axp20x_adc_iio *info,
->> +						    int rate);
->> +	struct iio_map			*maps;
->> +	enum axp20x_variants		axp20x_id;
->> +};
->> +
->>  enum axp20x_adc_channel_v {
->>  	AXP20X_ACIN_V = 0,
->>  	AXP20X_VBUS_V,
->> @@ -237,15 +249,24 @@ static int axp20x_adc_raw(struct iio_dev *indio_dev,
->>  	struct axp20x_adc_iio *info = iio_priv(indio_dev);
->>  	int ret, size;
->>  
->> -	/*
->> -	 * N.B.:  Unlike the Chinese datasheets tell, the charging current is
->> -	 * stored on 12 bits, not 13 bits. Only discharging current is on 13
->> -	 * bits.
->> -	 */
->> -	if (chan->type == IIO_CURRENT && chan->channel == AXP20X_BATT_DISCHRG_I)
->> -		size = 13;
->> -	else
->> +	switch (info->data->axp20x_id) {
->> +	case AXP202_ID:
->> +	case AXP209_ID:
->> +		/*
->> +		 * N.B.:  Unlike the Chinese datasheets tell, the charging current is
->> +		 * stored on 12 bits, not 13 bits. Only discharging current is on 13
->> +		 * bits.
->> +		 */
->> +		if (chan->type == IIO_CURRENT && chan->channel == AXP20X_BATT_DISCHRG_I)
->
-> This line is getting a bit long, break it after the &&
->
->> +			size = 13;
->> +		else
->> +			size = 12;
->> +		break;
->> +
->> +	default:
->>  		size = 12;
->> +		break;
->> +	}
->>  
->>  	ret = axp20x_read_variable_width(info->regmap, chan->address, size);
->>  	if (ret < 0)
->> @@ -255,34 +276,6 @@ static int axp20x_adc_raw(struct iio_dev *indio_dev,
->>  	return IIO_VAL_INT;
->>  }
->>  
->> -static int axp22x_adc_raw(struct iio_dev *indio_dev,
->> -			  struct iio_chan_spec const *chan, int *val)
->> -{
->> -	struct axp20x_adc_iio *info = iio_priv(indio_dev);
->> -	int ret;
->> -
->> -	ret = axp20x_read_variable_width(info->regmap, chan->address, 12);
->> -	if (ret < 0)
->> -		return ret;
->> -
->> -	*val = ret;
->> -	return IIO_VAL_INT;
->> -}
->> -
->> -static int axp813_adc_raw(struct iio_dev *indio_dev,
->> -			  struct iio_chan_spec const *chan, int *val)
->> -{
->> -	struct axp20x_adc_iio *info = iio_priv(indio_dev);
->> -	int ret;
->> -
->> -	ret = axp20x_read_variable_width(info->regmap, chan->address, 12);
->> -	if (ret < 0)
->> -		return ret;
->> -
->> -	*val = ret;
->> -	return IIO_VAL_INT;
->> -}
->> -
->>  static int axp20x_adc_scale_voltage(int channel, int *val, int *val2)
->>  {
->>  	switch (channel) {
->> @@ -522,7 +515,7 @@ static int axp22x_read_raw(struct iio_dev *indio_dev,
->>  		return axp22x_adc_scale(chan, val, val2);
->>  
->>  	case IIO_CHAN_INFO_RAW:
->> -		return axp22x_adc_raw(indio_dev, chan, val);
->> +		return axp20x_adc_raw(indio_dev, chan, val);
->>  
->>  	default:
->>  		return -EINVAL;
->> @@ -542,7 +535,7 @@ static int axp813_read_raw(struct iio_dev *indio_dev,
->>  		return axp813_adc_scale(chan, val, val2);
->>  
->>  	case IIO_CHAN_INFO_RAW:
->> -		return axp813_adc_raw(indio_dev, chan, val);
->> +		return axp20x_adc_raw(indio_dev, chan, val);
->>  
->>  	default:
->>  		return -EINVAL;
->> @@ -620,17 +613,6 @@ static int axp813_adc_rate(struct axp20x_adc_iio *info, int rate)
->>  				 AXP813_ADC_RATE_HZ(rate));
->>  }
->>  
->> -struct axp_data {
->> -	const struct iio_info		*iio_info;
->> -	int				num_channels;
->> -	struct iio_chan_spec const	*channels;
->> -	unsigned long			adc_en1_mask;
->> -	int				(*adc_rate)(struct axp20x_adc_iio *info,
->> -						    int rate);
->> -	bool				adc_en2;
->> -	struct iio_map			*maps;
->> -};
->> -
->>  static const struct axp_data axp20x_data = {
->>  	.iio_info = &axp20x_adc_iio_info,
->>  	.num_channels = ARRAY_SIZE(axp20x_adc_channels),
->> @@ -639,6 +621,7 @@ static const struct axp_data axp20x_data = {
->>  	.adc_rate = axp20x_adc_rate,
->>  	.adc_en2 = true,
->>  	.maps = axp20x_maps,
->> +	.axp20x_id = AXP209_ID,
->>  };
->>  
->>  static const struct axp_data axp22x_data = {
->> @@ -649,6 +632,7 @@ static const struct axp_data axp22x_data = {
->>  	.adc_rate = axp22x_adc_rate,
->>  	.adc_en2 = false,
->>  	.maps = axp22x_maps,
->> +	.axp20x_id = AXP221_ID,
->>  };
->>  
->>  static const struct axp_data axp813_data = {
->> @@ -659,6 +643,7 @@ static const struct axp_data axp813_data = {
->>  	.adc_rate = axp813_adc_rate,
->>  	.adc_en2 = false,
->>  	.maps = axp22x_maps,
->> +	.axp20x_id = AXP813_ID,
->>  };
->>  
->>  static const struct of_device_id axp20x_adc_of_match[] = {
-
+Bart
