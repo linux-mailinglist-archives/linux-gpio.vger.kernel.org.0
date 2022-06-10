@@ -2,165 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E8DD545AF0
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 06:23:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33B1D545BD1
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 07:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237430AbiFJEXb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 00:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
+        id S234950AbiFJFqo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 01:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236191AbiFJEX2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 00:23:28 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FEF4E79
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 21:23:27 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id h192so16916925pgc.4
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 21:23:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4gDrySwiZUU+Rrp0o3CNRq4gn8NF53JOg4BPnZH89ic=;
-        b=jW6jP3H9ij7v3DUe9sesiVUnNCSZCgQhnjwbQ4y6fPB5EHNIdHXyNs/L2o9QGwZ5BR
-         weYd70TY+gdpvX9FHLHqI3XIQVJp3d/uJFzENzD0lsX1jeUSyOrN3UZ9zaCxVs/cQmTs
-         7S22WMx3dOsFldCo6tBBGGjgXe1KMjD99VLvd5qAAQvBtUX1/ZmuH1m2pPhal1PrJeHe
-         U4rg95NB4WCwvi5PtPD7B4OCDduP11qJ0CZvuK3mgfe6Zh3f5ipPk26V5FA+fszWk/Gx
-         fOb6KADQEoc4J4cgtGqO0PDmedzp5mnK9BK5IqTqM5W6REHTwi2KS/AVLwX4kcnyPfx7
-         pzkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4gDrySwiZUU+Rrp0o3CNRq4gn8NF53JOg4BPnZH89ic=;
-        b=g+tzeU/1EAG/CMH448dCRjcaqW4jsUpyikn8bNe7I3xZhEKsuFymCEgcEHn2MO69wX
-         Gf7vGkbSdg2aCt7nXwyG5EvJqYhWdcU1+ydaA2bekI3oZFCSwYg1DlJIbgKhIxaTAaQH
-         XRyOnfoHlwu2rh6CJxo/sfjSdI1oTofRbEbybDQkj3UWMjJa8q/6quuErCrumz+/bruT
-         rWTBFxoMmR/L8vNTjlD+ywvSo0XCd9Mpf04iXtUDEBpXmKHM2HjLqXveR1tzcTTbZFvO
-         B4mwydYJ3mseR6GVDOWbAYJy9diogHXrsOKFhzgPh9VJfLol/Bh1P3IApQmPZS6W6+6o
-         IQdg==
-X-Gm-Message-State: AOAM5309AlGepKX/iOWNiSrsZAb96V8s7VOE+cZln/P5D/bD8KebbKsD
-        45sL1r8NvRfw9EDMtTyzp34=
-X-Google-Smtp-Source: ABdhPJwAd3cwnTQtZFxtD4BHEw9gxhBESSBZoT82egCz6T7Oc4KTm8bFfA8w1LZl14cKV//ivjaUbQ==
-X-Received: by 2002:aa7:88d2:0:b0:50a:cf7d:6ff1 with SMTP id k18-20020aa788d2000000b0050acf7d6ff1mr44356715pff.67.1654835006307;
-        Thu, 09 Jun 2022 21:23:26 -0700 (PDT)
-Received: from sol (14-200-166-137.static.tpgi.com.au. [14.200.166.137])
-        by smtp.gmail.com with ESMTPSA id c15-20020a170902c2cf00b0016231f64631sm17293179pla.309.2022.06.09.21.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 21:23:25 -0700 (PDT)
-Date:   Fri, 10 Jun 2022 12:23:19 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jiri Benc <jbenc@upir.cz>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S235507AbiFJFqn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 01:46:43 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A661B2CDE0;
+        Thu,  9 Jun 2022 22:46:41 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 25A5kcU6076339;
+        Fri, 10 Jun 2022 00:46:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1654839998;
+        bh=wHqiXhAu2v2mq7YpYI22FqA+jgUuIC19t9HS/+ddvS0=;
+        h=From:To:CC:Subject:Date;
+        b=MxJgVe2D0508b/XVpVAMgM/Af5WcEv6Oh7n4qWSWL1vewVdTxesSyRmKx4OCCIjGR
+         804fnZ2r4Y/dbHdOQm1iOKEjuyBYRc4myUzatenH3PM/rlfLFsrA65kCbLKPkrb7Gc
+         Wbfb8VDUmv4uTAxyPlbuZA/Mms+0Lw9ytCUm4ypQ=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 25A5kcEX122664
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jun 2022 00:46:38 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 10
+ Jun 2022 00:46:38 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Fri, 10 Jun 2022 00:46:38 -0500
+Received: from gsaswath-HP-ProBook-640-G5.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 25A5kZlB114767;
+        Fri, 10 Jun 2022 00:46:35 -0500
+From:   Aswath Govindraju <a-govindraju@ti.com>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Aswath Govindraju <a-govindraju@ti.com>,
+        Devarsh Thakkar <devarsht@ti.com>, Keerthy <j-keerthy@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Joel Savitz <joelsavitz@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2
- API
-Message-ID: <20220610042319.GB7623@sol>
-References: <20220525140704.94983-4-brgl@bgdev.pl>
- <20220603124600.GA35695@sol>
- <20220604024131.GB13574@sol>
- <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
- <20220607015220.GA9430@sol>
- <CAMRc=MdwgGefC0AgRCvgMfAZmq_+1GnXH6XMezjyBEKs37QuAQ@mail.gmail.com>
- <20220609044922.GA11301@sol>
- <CAMRc=Md_7WO69hKqToSoAAyDQWxfqgg-PisrBF5AzrsKMM8FQA@mail.gmail.com>
- <20220609152112.12fc6db4@griffin>
- <CAMRc=Mfgov0S-dZ7Ut2oj4A8=xE7d-4iX=8Q+Kv4Tb==JviMjw@mail.gmail.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] gpio: davinci: Add support for system suspend/resume PM
+Date:   Fri, 10 Jun 2022 11:16:22 +0530
+Message-ID: <20220610054622.21281-1-a-govindraju@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mfgov0S-dZ7Ut2oj4A8=xE7d-4iX=8Q+Kv4Tb==JviMjw@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 06:06:04PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jun 9, 2022 at 3:21 PM Jiri Benc <jbenc@upir.cz> wrote:
-> >
-> > On Thu, 9 Jun 2022 10:42:44 +0200, Bartosz Golaszewski wrote:
-> > > On Thu, Jun 9, 2022 at 6:49 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > Agree that it would be easier to write a pythonic wrapper around the C
-> > > > API in Python, so no problem with that.
-> > > > However, the pythonic wrapper should the one named gpiod, as it is
-> > > > intended to be the primary interface for Python.  Rename your existing
-> > > > to gpiod_c or gpiod_core or something.
-> > >
-> > > I don't agree. The module that wraps the C library should still be
-> > > called gpiod and be the primary interface. The pythonic module would
-> > > just offer helpers that would still use the gpiod data types for most
-> > > part.
-> >
-> > As a Python user, I'd much rather see the high level API being the
-> > primary interface and being named 'gpiod'. The easier to use and more
-> > Pythonic, the better. The low level library bindings and low level data
-> > types are just an implementation detail for me when coding in Python.
-> > If I wanted low level, I'd code everything directly in C.
-> >
-> 
-> But Kent is not talking about a whole new "pythonic" layer on top of
-> the code that is the subject of this series. The bindings are already
-> quite pythonic in that you can get most stuff done with a "logical"
-> one-liner. The gpiod module doesn't map C API 1:1, it already
-> simplifies a bunch of interfaces. Kent's idea IIUC is about providing
-> a set of helpers that would produce the gpiod objects in shorter code
-> by hiding the details of intermediate objects being created.
-> 
+From: Devarsh Thakkar <devarsht@ti.com>
 
-Yeah, no, I'm saying that there should be one primary Python interface
-to gpiod, and it should be the most pythonic.  And complete.
-The casual user should be able to get by with a few simple commands, but
-the complete functionality should still be accessible, via that same
-API, for more complicated cases.
+Add support for system suspend/resume PM hooks, save the
+register context of all the required gpio registers on suspend
+and restore the context on resume.
 
-> Re the event buffer: yeah, I think in python (unlike C++ or future
-> Rust bindings) it makes sense to hide it within the request as we
-> can't profit from implicitly not copying the event objects.
-> 
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+---
 
-That is a consequence of building on top of the gpiod C API, as you have
-to deal with two object models, and the related type conversions or
-lifecycle management.
-A native binding built on top of the ioctls can use native objects
-throughout can take better advantage of the language.
-e.g. here the equivalent of my Python suggestion using my Rust
-gpiocdev library (sadly without named lines support as I hadn't
-considered that at the time):
+Changes since v1:
+- Moved header include to group with other similar headers
+- Removed unnecessary intializations
 
-    // request the lines
-    let req = Request::builder()
-        .on_chip("/dev/gpiochip0")
-        .with_lines(&[17,18])
-        .with_edge_detection(EdgeDetection::BothEdges)
-        .request()?;
+ drivers/gpio/gpio-davinci.c | 84 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
-    // wait for line edge events
-    for event in req.edge_events()? {
-        println!("{:?}", event?);
-    }
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index f960587f86a3..2c472ec21454 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -22,6 +22,7 @@
+ #include <linux/platform_data/gpio-davinci.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/spinlock.h>
++#include <linux/pm_runtime.h>
+ 
+ #include <asm-generic/gpio.h>
+ 
+@@ -62,6 +63,8 @@ struct davinci_gpio_controller {
+ 	void __iomem		*regs[MAX_REGS_BANKS];
+ 	int			gpio_unbanked;
+ 	int			irqs[MAX_INT_PER_BANK];
++	struct davinci_gpio_regs context[MAX_REGS_BANKS];
++	u32			binten_context;
+ };
+ 
+ static inline u32 __gpio_mask(unsigned gpio)
+@@ -622,6 +625,86 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void davinci_gpio_save_context(struct davinci_gpio_controller *chips,
++				      u32 nbank)
++{
++	struct davinci_gpio_regs __iomem *g;
++	struct davinci_gpio_regs *context;
++	u32 bank;
++	void __iomem *base;
++
++	base = chips->regs[0] - offset_array[0];
++	chips->binten_context = readl_relaxed(base + BINTEN);
++
++	for (bank = 0; bank < nbank; bank++) {
++		g = chips->regs[bank];
++		context = &chips->context[bank];
++		context->dir = readl_relaxed(&g->dir);
++		context->set_data = readl_relaxed(&g->set_data);
++		context->set_rising = readl_relaxed(&g->set_rising);
++		context->set_falling = readl_relaxed(&g->set_falling);
++	}
++
++	/* Clear Bank interrupt enable bit */
++	writel_relaxed(0, base + BINTEN);
++
++	/* Clear all interrupt status registers */
++	writel_relaxed(0xFFFFFFFF, &g->intstat);
++}
++
++static void davinci_gpio_restore_context(struct davinci_gpio_controller *chips,
++					 u32 nbank)
++{
++	struct davinci_gpio_regs __iomem *g;
++	struct davinci_gpio_regs *context;
++	u32 bank;
++	void __iomem *base;
++
++	base = chips->regs[0] - offset_array[0];
++
++	if (readl_relaxed(base + BINTEN) != chips->binten_context)
++		writel_relaxed(chips->binten_context, base + BINTEN);
++
++	for (bank = 0; bank < nbank; bank++) {
++		g = chips->regs[bank];
++		context = &chips->context[bank];
++		if (readl_relaxed(&g->dir) != context->dir)
++			writel_relaxed(context->dir, &g->dir);
++		if (readl_relaxed(&g->set_data) != context->set_data)
++			writel_relaxed(context->set_data, &g->set_data);
++		if (readl_relaxed(&g->set_rising) != context->set_rising)
++			writel_relaxed(context->set_rising, &g->set_rising);
++		if (readl_relaxed(&g->set_falling) != context->set_falling)
++			writel_relaxed(context->set_falling, &g->set_falling);
++	}
++}
++
++static int __maybe_unused davinci_gpio_suspend(struct device *dev)
++{
++	struct davinci_gpio_controller *chips = dev_get_drvdata(dev);
++	struct davinci_gpio_platform_data *pdata = dev_get_platdata(dev);
++	u32 nbank = DIV_ROUND_UP(pdata->ngpio, 32);
++
++	davinci_gpio_save_context(chips, nbank);
++
++	return 0;
++}
++
++static int __maybe_unused davinci_gpio_resume(struct device *dev)
++{
++	struct davinci_gpio_controller *chips = dev_get_drvdata(dev);
++	struct davinci_gpio_platform_data *pdata = dev_get_platdata(dev);
++	u32 nbank = DIV_ROUND_UP(pdata->ngpio, 32);
++
++	davinci_gpio_restore_context(chips, nbank);
++
++	return 0;
++}
++
++static const struct dev_pm_ops davinci_gpio_dev_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(davinci_gpio_suspend, davinci_gpio_resume)
++};
++
+ static const struct of_device_id davinci_gpio_ids[] = {
+ 	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
+ 	{ .compatible = "ti,am654-gpio", keystone_gpio_get_irq_chip},
+@@ -634,6 +717,7 @@ static struct platform_driver davinci_gpio_driver = {
+ 	.probe		= davinci_gpio_probe,
+ 	.driver		= {
+ 		.name		= "davinci_gpio",
++		.pm = &davinci_gpio_dev_pm_ops,
+ 		.of_match_table	= of_match_ptr(davinci_gpio_ids),
+ 	},
+ };
+-- 
+2.17.1
 
-That has a hidden event buffer within the request.  The default size is 1,
-but add .with_user_event_buffer_size(N) and you get an N event buffer.
-There is no copying involved, just borrowing, as all the objects are
-visible to the borrow checker.
-
-> If anyone wants to create an even simpler, complete interface for
-> gpiod, then it's a task for a whole new project. Think: pydbus built
-> on top of GLib dbus bindings in python, built on top of glib's dbus
-> implementation.
-> 
-
-Don't tempt me - though I would target the GPIO uAPI ioctls, not gpiod,
-for the reasons above.
-
-Cheers,
-Kent.
