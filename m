@@ -2,152 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B125458A3
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 01:28:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E04C545912
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 02:16:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237001AbiFIX2O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jun 2022 19:28:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53380 "EHLO
+        id S235145AbiFJAQV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jun 2022 20:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiFIX2M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 19:28:12 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2118.outbound.protection.outlook.com [40.107.113.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C575BE3;
-        Thu,  9 Jun 2022 16:28:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aQuuqWJgapf3cIuXkjbLMVFlBzwyDwPdZfpdi+VciHN7TSxAHC0RhzMrYJ+4WzJ2XXFGEWyyMzmO+lgf6LYkc3Ce+UE8ue8Q7Tzn3HONtuSFUrDYrsGnrFB1nXWqSwRjcB0gUy3I+Wa74fan2exP+CkTOq9SgQC7fYYuTbSIjZLsPdtF20g5FS9EpFxMzN9xh+oQmeIE82d+h/+09vqb30tpy3L2jZjwTz3puTcO15WdHNqqUZJg5yCdi1ov4f+Ks9MGBXijjaYN2KwVq+l8ESzhEEaNpJ0i9tGGn8t7mvvc0L/eHPCb3SCVI0Q0zMIbo9lRpRUgUb7VBzJafogv1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Aa7fSAiV38z94cE2S9YfD6fDoM3fXeM0NHKCoFKhLug=;
- b=C3tLKbO4CfTUc8b8gFAwOqa+BnUgd9+Mu6Dla84gocxfeODxrBa+Lo6RqFLnbrtbZx8JsZrvNQiHLFcdo0kZgNhsEBsFA5DUwcLGjFl8EWcVbs/z9dD8NHW7I+o+cF2QfW3cLzNp84CpLcBq/ys2EpBykAnONj3cB/jPmpdG+q9QA4CEFqeYWozSty5e0b3kC6QSbmrUwCNn11Zj2DWhAzjwwZNW8sb9GvIh2iywjt72wehzbgIfqaKmkkMwkopigwhZcEBrRGaHG9ze3uAcNWtflBLtG7URKpDhgKMFpKTADiJ7teKBEPb8Nuww+IMtIwf5JijJ/XOZY/MpsslkNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Aa7fSAiV38z94cE2S9YfD6fDoM3fXeM0NHKCoFKhLug=;
- b=hidPGRuupy37wBckY/QLdA27xy80RhMvpJW1ex2cBLbPOXgyFszeR2FwjWEitN271wTPY0MfmStgiKtmdN/JKUTo+4WuvIunvL99PXTO74vqBb5EPvjvqakXlEEDyrAA4UVeCXBAQ4MzmaCuhwCtZraxZSMXH3NNjOiwz0I5B9E=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
- by OSBPR01MB4648.jpnprd01.prod.outlook.com (2603:1096:604:7b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.13; Thu, 9 Jun
- 2022 23:28:08 +0000
-Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com
- ([fe80::d5d9:3646:37df:867c]) by OS3PR01MB8426.jpnprd01.prod.outlook.com
- ([fe80::d5d9:3646:37df:867c%6]) with mapi id 15.20.5332.013; Thu, 9 Jun 2022
- 23:28:08 +0000
-Message-ID: <87mtelfmd4.wl-kuninori.morimoto.gx@renesas.com>
-From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] pinctrl: renesas: r8a779g0: Add pins, groups and functions
-In-Reply-To: <CAMuHMdUeRtBYp_B_EKd4UkVoUQeOqwAuBCdSeaiiFJdhYS6_nQ@mail.gmail.com>
-References: <87zgipgu3s.wl-kuninori.morimoto.gx@renesas.com>
-        <87tu8xgu1f.wl-kuninori.morimoto.gx@renesas.com>
-        <CAMuHMdUeRtBYp_B_EKd4UkVoUQeOqwAuBCdSeaiiFJdhYS6_nQ@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date:   Thu, 9 Jun 2022 23:28:08 +0000
-X-ClientProxiedBy: TYAPR01CA0213.jpnprd01.prod.outlook.com
- (2603:1096:404:29::33) To OS3PR01MB8426.jpnprd01.prod.outlook.com
- (2603:1096:604:194::10)
+        with ESMTP id S245520AbiFJAQU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 20:16:20 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5E7281852;
+        Thu,  9 Jun 2022 17:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1654820172;
+        bh=/+ElgicZYLPAQqpAxpBc1K+pcplEGNPrxCUaHsk2cew=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=BJYg/2w6Z8G2uhwmKfw9zZr98K49tj7BuB8LbMVWcfXBFUJHYfOY2t+HqlYXoobL8
+         9aDgNEwUc+JR1WachioVryF+EQ+4F+VAw1T6OWGLgQtbOhfQcExwkK865PNQ+OZ1Hx
+         RNJ2Qg0NPfzNMyrpuZA4ekFcABFLPCIqrlNLloF4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.3]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MaJ7v-1oE9291sRR-00WDjj; Fri, 10
+ Jun 2022 02:16:12 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] pinctrl: nuvoton: wpcm450: Convert irqchip to IRQCHIP_IMMUTABLE
+Date:   Fri, 10 Jun 2022 02:16:08 +0200
+Message-Id: <20220610001609.276220-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ffd6df77-02ed-4ae6-07a0-08da4a6fb5fa
-X-MS-TrafficTypeDiagnostic: OSBPR01MB4648:EE_
-X-Microsoft-Antispam-PRVS: <OSBPR01MB464835885CAB7FF7A8E8DF78D4A79@OSBPR01MB4648.jpnprd01.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ikxR5ezPPTlOjuHshoHU4GTSjMK2skgYfxmPKPb/fFNEyxuIf8DHeEIDt3da3HMrwIuPD09z7QwhOrN1Ma5+W3Qmeq1hL12lrHERdT+8BgSiE1UdrCA8pfLvk9sl0/vAafMZquikVhx2L2No6dBrsEUSv7ZfXldDWOeFTGSXmIza8Pn9zht7LpO8TwNr5kU5mjouJrGy79o951fW3mR9yPwwll5pH36ZIe38muaJxS+cbArf6lfxivBuVKc3y1hcPx7SZeM6H36h/6CzkeqrrVijLcN+MMDS4gbgE2XcUaq57xSJg9QqAmQFbxKg/gCd+cAHDSvly9X8z4EFUktqa/KoKTV+vNQz3cDMl9+UyHqJZViv2hNWKBxWMd82iBE6uxqES+XkJjIMm9vDjI0jaRG69HUs6HKzgfbcIQbuxcYx/Y7GSFFkSX0/pE6wUECdTdhaEYe4fFNMbHHzJTn/8B+7uiJbqJBiERbb/zjkURn8cD6fp2sO9OIzljTEP5xr3ZpPqhEVAgmxCe87k6GtFBCrc6oKhiMw6NLXOMJfpc/SIT+3nvSVuFLh/bodisyLB/UjNxxEZU7FAz7G71aT7wgCSYnAZ3HLk/+WhXRkAs5z0mIsP/kzLTPkDlh9OjwHu1Q/WrGv4YWnbGfkFxuuIkoPDoKCSqCOQlLpRB8JtQACucjKg+ILIkr1zE/09BZk8vpnqa2hMb1wAtmws1A+Zg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4744005)(8936002)(316002)(2906002)(6506007)(2616005)(6486002)(36756003)(52116002)(38350700002)(38100700002)(6512007)(5660300002)(26005)(54906003)(6916009)(186003)(86362001)(8676002)(66476007)(66556008)(4326008)(508600001)(66946007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oINpXfRa9GtcTKtlv/A0V84Mwt3t6DFB64+drnIvteEFswmUHmxCjLSss29T?=
- =?us-ascii?Q?QbouX0riUlVkgzXbgm7kYcRItvo63SY3zVKHXk3Kvsh7oD0VqinOArwNjuhO?=
- =?us-ascii?Q?O6wSdpVwvFkEunQfwgV2Jc/jhwrPQF5dFX6RUvdZIAWeb0LFVYuhM/aqb1+i?=
- =?us-ascii?Q?oSEmGi018qAgNNcIRZZFphafYLKYMPqTn0Fyhwrr3KWULa19JndY34MFSC8l?=
- =?us-ascii?Q?A7xIAmNQpjwg2Jd29lLffRjgv5d0011mVGwFagN5vywWM0w0o9EsZnVxBfKf?=
- =?us-ascii?Q?RoMEE6RiXs7r5WshIHYo4x6Kdpp3PR24Cc05vHyHFrZ4rCzFGrZagq/1/zjv?=
- =?us-ascii?Q?to20WelyYnya780cshXMRgMrdimkrG8vNE3tT1uhQMOA9eniEj3wfUe3LRVb?=
- =?us-ascii?Q?bZTyXVc+3Z40hHqJEKPrsgiYjxUCAf4mfpLYeEZivXmKcnBI35Mva1mja0tx?=
- =?us-ascii?Q?QRJmDAv464JNu2ZRCdIIo5/2xFBuMQIR+7HZs5UOfWOcxTY5/1qg57D+NylM?=
- =?us-ascii?Q?8h5BEulTRay1JDHwpABDeQvBGr9WZ53Fx50+zENgTlvlGjo5bes5zkziMPKa?=
- =?us-ascii?Q?68zoEUAVR7B5pyO50DbC6OJzqPGN0exHhvmL5glIONQPcT8gVuyrUiWyTRuY?=
- =?us-ascii?Q?/fTuGfZPFMhM1QYiXKnf1b3w7dYilmYixavzanR0tR65lpjeImQLArqijfSo?=
- =?us-ascii?Q?hJYKifzy8l7AHH/kK2DtHbLBXDRAQf62ppptMmyuy/Wn+GroVEMltP/Lyumr?=
- =?us-ascii?Q?gdasBbJ8tMrqjf5CUVyo5oD8SlHs2rgYR3emEz+LfDJBCMfi++ZDOOUYnNeN?=
- =?us-ascii?Q?TPGfAbWLB4yCB72xTCOWfzoFwNx5BTMYWq7n0xt7gH7TpdcD/VW2jWbejZ3a?=
- =?us-ascii?Q?RsIMh5XUDalTGXUGUqBS50HJ/YgECxTrVkthiumevX4luteBKE3PQD2UdE1m?=
- =?us-ascii?Q?vp3sQhQqCxKcGP84RaGg53uxVOxSRvkr6V/IFBQYRaVKlSiBgtPU2gAJnmIC?=
- =?us-ascii?Q?3gRt2PLegR0pdO89JeKrSe4ZPxMF19Fx7Z9faPf4HlF8vC3h8aoMpd/Tel7+?=
- =?us-ascii?Q?+PaUOMnOru8LXlb6O1JRGvPF2Clt5oK8KF11jsVEZwGwkuVTMZV3kJwwV1Bk?=
- =?us-ascii?Q?Vx+1OE0ZyZDohHtLODz0RD1sy3Z8D9NzVXd52L44VY7CEedaghMisxHiX1Rd?=
- =?us-ascii?Q?MceZBzeEFJSdghtcRjxtwDh6LKCO4Gwta9IeFlLGNnynd4mNkihRmFzi9ma6?=
- =?us-ascii?Q?GeHwyqGvAvGc6DN0OQ2E9pRE68+jnFGrz/xCEbfCMwH/VnHXOGF69bvZiopK?=
- =?us-ascii?Q?3iI72XhRBpTyaTy5FWE2wQSmtMWhHP+rc7Y9g/F9/bQjJRcFXnney3xwt2XT?=
- =?us-ascii?Q?7qrInkE9Ich8IJUu5lj24rR9yNz9hNQt30iZO0JdN6wUGOuo14A5mq/ipd+z?=
- =?us-ascii?Q?dOsO19y8XvhIibmiYYISZM3hXlUO0eJ3jffFk6tyOXrG/xPq3/TgtnFQKvLm?=
- =?us-ascii?Q?kIxsZEWudP0nuVlQ1nAMwF85rHcPNm6uuYTSrx4qm+H/VGe98+aNyQ80l1ri?=
- =?us-ascii?Q?fwIchXCddkyK58uNIqvxxlW0s41wuUG4RU8AQ4I/XwjRnUDyuzPGWb0tC3jP?=
- =?us-ascii?Q?BFhgeUtOkeuKGAuMH2js9CKYmURQVhzD+rTpuisrcZ065bNrjtH1fd9tE/OF?=
- =?us-ascii?Q?/YULI9FZc5PZtyJwXFqln9Mp05wdt3Kg3e3AUwN9NEaQQTQWG95yPBxyosA/?=
- =?us-ascii?Q?zaaJVNkiXfaGFcewORSRiVJ8tXWncDpMy6tMdseswH8v1GnV7HLP?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffd6df77-02ed-4ae6-07a0-08da4a6fb5fa
-X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8426.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2022 23:28:08.2014
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oO0PGhW+4ftrox6pJiuBc9kRPfHF7HwhfFWyI/gTSs7eQymrG/parfvqndfxffInkvN2EObzer4xSuhWi/mN/BexVMxaKJS/KlNGHYI+IiadT793yBEqYV2D+rrSQakj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4648
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FSg/4zZ4D0F39BbK/XSWt8pWWf49vgchHRlaMl0mvzDrD6ye5Pp
+ zXkpvHSeK7qKzXQ+CBciZaT/TAlxhAwwkVnFeeRGiRkHCO3VhCi6T2MBYpyPSFvDHKmYejd
+ ZzJdN4B9+yI882DH0PPT/nDkjsL5sfz/PuwGxjXWrs8k+rdT7v17Q9DYIvk7Uxw4iui6W48
+ NpE9CffmSF7zuykKF+P7A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3ICSpxXLciI=:zfxksipzFdOubIlarRmUv+
+ wBvnj59BPc+tMGRyfHnXo4NUUBp4cByr1y7nAAqYE+rvwSRseXWlqsi3z4bjjgub0ZB+r3rWn
+ K/tEt2e+8dlHC2sowvyWHSPS0Pmps1fEKjcrv60ouwRsZznVlBjGTwI1TUUjB2qn6s1/suECL
+ X9QnF71twyQjEvw6BRsOTnhXR8tWnkf6zqjDZgjWM07DsDFPT1K69tHGB1N3hehK/vsgddKZl
+ etoeANexn+QUiVODUMB3zNefq1FgVTTWy4Yw906jujWKfNnxqtTW4DMZ0IkdHff6h3EXBZIvi
+ 2UzUoWcOvwKFxXne60yp6SBq1CwHDg5lsBErQRzIyqtJCM40IlyMxuWv4pl67Lz+/G8WVBfqh
+ ejV6fCH1tqYQV+GiduxeqJeqBwk8uLh02ohGOR3kCh76Dum9y8YPAjRD91ugC/CJbf6cvDllF
+ 936HuKVMC2NLI74Mnw2npK3UjWoPMVV4mSOxMIgT+9S07hWXOscZStQuesQPu12I8+pqfqN4Y
+ /v8awwWRQehzvmbumcXalnWcAVI3E0BuypHRBa0NoBLpKrwwg+R/5tRS6B9egl9L6rll9b4Te
+ WGa4U0qxn+zaGcY74g2P4f/0TQ7LaraE1oJ+b2eW1WXeK0YjlQUzwVAOTGbX7Q0AVxYnH4tZz
+ KhlQ7ji0kghdvMEWrvj0HHOCRI3UxWdofgBtDaeC7MC99a5gtJG1l4jLokTl2or0+lGjH4S8u
+ 5GwqyHh/NVp/GQq1fwpiR4DbRGtU1jsxd8V1JMWkVTM3MHRJh95Hm47eRDttOQEFfHicH8HtO
+ /C8Vg4ISpRfuQMPaIjFUW5EdQtN0T8+yGtMhctmPEBZ37J2+YpvXdH4Da2K6YGpgFSg839B3O
+ 9zip4bNoffn8oTtLwB66wT/ArSD3tXPH0BGpItrUhImov+4L53mYSypymrRhBXPhxuZGr/S74
+ LskHxQHWRZZruQlutBl61/2f21sUo06UbiBrYX96tIJpd4Lt1LuW8h4CZaFLVD2VJJyTzWUms
+ nev2fv5SnYt23RXqL7d5nH48e5C5ZIuQ7Ak0XCz018BmebaV67tXSMSL5nZrZ39PkMh938aEk
+ 6EetKqSw/FveVLnUiL0JxjjOXCxeXORP8F6QMYv6Cj4DvSSSSyxt6ECIQ==
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Commit 6c846d026d490 ("gpio: Don't fiddle with irqchips marked as
+immutable") added a warning for irqchips that are not marked with
+IRQCHIP_IMMUTABLE.
 
-Hi Geert
+Convert the pinctrl-wpcm450 driver to an immutable irqchip.
 
-Thank you for your feedback.
-I am very grateful and respectful for your reviewing
-this kind of very large and confusable patch.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
 
-> > From: Phong Hoang <phong.hoang.wz@renesas.com>
-> >
-> > This patch adds SCIF, I2C, EthernetAVB, HSCIF, MMC, QSPI,
-> > MSIOF, PWM, CAN-FD, Ethernet-TSN, PCIe pins, groups, and functions
-> >
-> > [Morimoto merged above patches into one]
-> > Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
-> > Signed-off-by: Hai Pham <hai.pham.ud@renesas.com>
-> > Signed-off-by: Thanh Quan <thanh.quan.xn@renesas.com>
-> > Signed-off-by: CongDang <cong.dang.xn@renesas.com>
-> > Signed-off-by: Kazuya Mizuguch <kazuya.mizuguchi.ks@renesas.com>
-> > Signed-off-by: Tho Vu <tho.vu.wh@renesas.com>
-> > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> Thanks for your patch!
+v2:
+- Add missing gpiochip_*able_irq calls in mask/unmask methods
+- Remove unused instance of struct irq_chip in struct struct wpcm450_bank
 
-Thanks.
-I will fixup all your pointed lines, and post v3 patch.
-Maybe next week.
+v1:
+- https://lore.kernel.org/lkml/20220606214301.2061467-1-j.neuschaefer@gmx.=
+net/
+=2D--
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-Thank you for your help !!
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/n=
+uvoton/pinctrl-wpcm450.c
+index 0dbeb91f0bf27..d44639ede2ce6 100644
+=2D-- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+@@ -49,7 +49,6 @@ struct wpcm450_bank;
+ struct wpcm450_gpio {
+ 	struct gpio_chip	gc;
+ 	struct wpcm450_pinctrl	*pctrl;
+-	struct irq_chip		irqc;
+ 	const struct wpcm450_bank *bank;
+ };
 
-Best regards
----
-Kuninori Morimoto
+@@ -142,7 +141,8 @@ static void wpcm450_gpio_irq_ack(struct irq_data *d)
+
+ static void wpcm450_gpio_irq_mask(struct irq_data *d)
+ {
+-	struct wpcm450_gpio *gpio =3D gpiochip_get_data(irq_data_get_irq_chip_da=
+ta(d));
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct wpcm450_gpio *gpio =3D gpiochip_get_data(gc);
+ 	struct wpcm450_pinctrl *pctrl =3D gpio->pctrl;
+ 	unsigned long flags;
+ 	unsigned long even;
+@@ -157,11 +157,14 @@ static void wpcm450_gpio_irq_mask(struct irq_data *d=
+)
+ 	__assign_bit(bit, &even, 0);
+ 	iowrite32(even, pctrl->gpio_base + WPCM450_GPEVEN);
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
++
++	gpiochip_disable_irq(gc, d->hwirq);
+ }
+
+ static void wpcm450_gpio_irq_unmask(struct irq_data *d)
+ {
+-	struct wpcm450_gpio *gpio =3D gpiochip_get_data(irq_data_get_irq_chip_da=
+ta(d));
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct wpcm450_gpio *gpio =3D gpiochip_get_data(gc);
+ 	struct wpcm450_pinctrl *pctrl =3D gpio->pctrl;
+ 	unsigned long flags;
+ 	unsigned long even;
+@@ -171,6 +174,8 @@ static void wpcm450_gpio_irq_unmask(struct irq_data *d=
+)
+ 	if (bit < 0)
+ 		return;
+
++	gpiochip_enable_irq(gc, d->hwirq);
++
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 	even =3D ioread32(pctrl->gpio_base + WPCM450_GPEVEN);
+ 	__assign_bit(bit, &even, 1);
+@@ -293,6 +298,8 @@ static const struct irq_chip wpcm450_gpio_irqchip =3D =
+{
+ 	.irq_unmask =3D wpcm450_gpio_irq_unmask,
+ 	.irq_mask =3D wpcm450_gpio_irq_mask,
+ 	.irq_set_type =3D wpcm450_gpio_set_irq_type,
++	.flags =3D IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+
+ static void wpcm450_gpio_irqhandler(struct irq_desc *desc)
+@@ -1068,9 +1075,8 @@ static int wpcm450_gpio_register(struct platform_dev=
+ice *pdev,
+ 		gpio->gc.fwnode =3D child;
+ 		gpio->gc.add_pin_ranges =3D wpcm450_gpio_add_pin_ranges;
+
+-		gpio->irqc =3D wpcm450_gpio_irqchip;
+ 		girq =3D &gpio->gc.irq;
+-		girq->chip =3D &gpio->irqc;
++		gpio_irq_chip_set_chip(girq, &wpcm450_gpio_irqchip);
+ 		girq->parent_handler =3D wpcm450_gpio_irqhandler;
+ 		girq->parents =3D devm_kcalloc(dev, WPCM450_NUM_GPIO_IRQS,
+ 					     sizeof(*girq->parents), GFP_KERNEL);
+=2D-
+2.35.1
+
