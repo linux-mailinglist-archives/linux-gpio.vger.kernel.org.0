@@ -2,114 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FB6E546543
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 13:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88FAE546549
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 13:15:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344921AbiFJLN6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 07:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55980 "EHLO
+        id S1344989AbiFJLOy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 07:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237108AbiFJLN5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 07:13:57 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3848613DC7;
-        Fri, 10 Jun 2022 04:13:57 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6400,9594,10373"; a="276375395"
-X-IronPort-AV: E=Sophos;i="5.91,290,1647327600"; 
-   d="scan'208";a="276375395"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 04:13:57 -0700
-X-IronPort-AV: E=Sophos;i="5.91,290,1647327600"; 
-   d="scan'208";a="671801598"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 04:13:54 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1nzcaN-000Yi5-Ix;
-        Fri, 10 Jun 2022 14:13:51 +0300
-Date:   Fri, 10 Jun 2022 14:13:51 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: dwapb: Don't print error on -EPROBE_DEFER
-Message-ID: <YqMnb9FjSuU6xd+n@smile.fi.intel.com>
-References: <20220610075152.10214-1-Sergey.Semin@baikalelectronics.ru>
- <20220610104500.28774-1-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S245507AbiFJLOx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 07:14:53 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1A3214915C;
+        Fri, 10 Jun 2022 04:14:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j6so23563723pfe.13;
+        Fri, 10 Jun 2022 04:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jwvPtBJlHjffDNQx8lPTiOlFv8Yml0X3QqZ5RFqKFOM=;
+        b=Ck0Q29cZZuM/Kh2xhbfXUt+BhMt9IcSGn615Yl6vJacDxaA8lIZEXPvkqrGnXquu7v
+         KdSyN5BDhsueBwizGiuCJ132pXWz2C/jkofBT7tUzu14Y4ZTy3QvbJBVleaVK5G6YI16
+         RiUyJQ1c9U+T/im7q2d8oN9uQuYy8SyivKExVFT2vqBQ4Z13ul0ujKl+PRyjPaaYYOaq
+         TY7Q5oQemfJR8PMRAKj4QF4COhGPi32as6lDCXc7zzNUx6FFb8Z7TWv1WAMyytAg9gMA
+         xvxQSKnzcaUeA5oJxtfBuhO8krjkPlTZYD3FWnEes5vTljA0X4BK7uW15yxRuNX+tBQy
+         4SrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jwvPtBJlHjffDNQx8lPTiOlFv8Yml0X3QqZ5RFqKFOM=;
+        b=bAnaZAOi0V/kMNPs8LANFWOO9xHP/Q2pTyN87CqNtzQN8/jvR32z19QsFjczlul0NH
+         vCLk/6UcDGOQWfDpGesU03XRBNZY8M/L7qE3MqeNW5fuWj+LvS1iLHF7Deyv9e6/AOkY
+         4Fke1f23eWDiqBwOpE3LBgZAlR1Do3xahr2ZQWPGitaoxnJK5X4uhccRVxY/oGG0OaRh
+         VjWtLSeLWKah44m7DhXD6mjZU14WFOOcljt08aieHr10wrRJrnpaUe+cnuT5IEVhauib
+         a31Sw3ygJd85X7sB4fYjtSWlGWLUhN7bmm7g5/fQQ+kn4wUAgfg+QbCJrQbk5mCnn8gL
+         hFtw==
+X-Gm-Message-State: AOAM5332pHnF7dZ9kHLQ468K161BF33Sl3bF9GzHpOtliGwjKU5jzUXS
+        A44TEAh7kNuRAGPQ3mb/P2g=
+X-Google-Smtp-Source: ABdhPJzBtL3PAEY3N/qiHUGqDpGAp+B0oH8SxkTt89cp2LNCw8a9iUYpnbFmz1kHBGKLl4F/nVPuEg==
+X-Received: by 2002:a63:1b53:0:b0:3fd:168e:d9a with SMTP id b19-20020a631b53000000b003fd168e0d9amr34794019pgm.617.1654859690303;
+        Fri, 10 Jun 2022 04:14:50 -0700 (PDT)
+Received: from localhost.localdomain ([209.146.108.140])
+        by smtp.gmail.com with ESMTPSA id t6-20020a1709028c8600b001636c0b98a7sm18497487plo.226.2022.06.10.04.14.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jun 2022 04:14:49 -0700 (PDT)
+From:   Genjian Zhang <zhanggenjian123@gmail.com>
+X-Google-Original-From: Genjian Zhang <zhanggenjian@kylinos.cn>
+To:     tsbogend@alpha.franken.de, linus.walleij@linaro.org, brgl@bgdev.pl,
+        f.fainelli@gmail.com
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huhai <huhai@kylinos.cn>,
+        k2ci <kernel-bot@kylinos.cn>,
+        Genjian Zhang <zhanggenjian@kylinos.cn>
+Subject: [PATCH v4] MIPS: Remove repetitive increase irq_err_count
+Date:   Fri, 10 Jun 2022 19:14:20 +0800
+Message-Id: <20220610111420.1520410-1-zhanggenjian@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220525043916.584850-1-zhanggenjian@kylinos.cn>
+References: <20220525043916.584850-1-zhanggenjian@kylinos.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220610104500.28774-1-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 01:45:00PM +0300, Serge Semin wrote:
-> Currently if the APB or Debounce clocks aren't yet ready to be requested
-> the DW GPIO driver will correctly handle that by deferring the probe
-> procedure, but the error is still printed to the system log. It needlessly
-> pollutes the log since there was no real error but a request to postpone
-> the clock request procedure since the clocks subsystem hasn't been fully
-> initialized yet. Let's fix that by using the dev_err_probe method to print
-> the APB/clock request error status. It will correctly handle the deferred
-> probe situation and print the error if it actually happens.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: huhai <huhai@kylinos.cn>
 
-With or without below nit-pick
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+commit 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx") added
+a function irq_dispatch, and it'll increase irq_err_count when the get_irq
+callback returns a negative value, but increase irq_err_count in get_irq
+was not removed.
 
-> ---
-> 
-> Link: https://lore.kernel.org/linux-gpio/20220610075152.10214-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v2:
-> - Use the dev_err_probe() return value as the return status of the
->   corresponding method. (@Philipp Zabel)
-> ---
->  drivers/gpio/gpio-dwapb.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index b0f3aca61974..9467d695a33e 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -652,10 +652,9 @@ static int dwapb_get_clks(struct dwapb_gpio *gpio)
->  	gpio->clks[1].id = "db";
->  	err = devm_clk_bulk_get_optional(gpio->dev, DWAPB_NR_CLOCKS,
->  					 gpio->clks);
-> -	if (err) {
-> -		dev_err(gpio->dev, "Cannot get APB/Debounce clocks\n");
-> -		return err;
-> -	}
-> +	if (err)
-> +		return dev_err_probe(gpio->dev, err,
-> +				     "Cannot get APB/Debounce clocks\n");
+And also, modpost complains once gpio-vr41xx drivers become modules.
+  ERROR: modpost: "irq_err_count" [drivers/gpio/gpio-vr41xx.ko] undefined!
 
-I would leave it on one line, checkpatch wouldn't complain even before 100
-characters era.
+So it would be a good idea to remove repetitive increase irq_err_count in
+get_irq callback.
 
->  
->  	err = clk_bulk_prepare_enable(DWAPB_NR_CLOCKS, gpio->clks);
->  	if (err) {
-> -- 
-> 2.35.1
-> 
+Fixes: 27fdd325dace ("MIPS: Update VR41xx GPIO driver to use gpiolib")
+Fixes: 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx")
+Reported-by: k2ci <kernel-bot@kylinos.cn>
+Signed-off-by: huhai <huhai@kylinos.cn>
+Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
+---
+ arch/mips/vr41xx/common/icu.c | 2 --
+ drivers/gpio/gpio-vr41xx.c    | 2 --
+ 2 files changed, 4 deletions(-)
 
+diff --git a/arch/mips/vr41xx/common/icu.c b/arch/mips/vr41xx/common/icu.c
+index 7b7f25b4b057..9240bcdbe74e 100644
+--- a/arch/mips/vr41xx/common/icu.c
++++ b/arch/mips/vr41xx/common/icu.c
+@@ -640,8 +640,6 @@ static int icu_get_irq(unsigned int irq)
+ 
+ 	printk(KERN_ERR "spurious ICU interrupt: %04x,%04x\n", pend1, pend2);
+ 
+-	atomic_inc(&irq_err_count);
+-
+ 	return -1;
+ }
+ 
+diff --git a/drivers/gpio/gpio-vr41xx.c b/drivers/gpio/gpio-vr41xx.c
+index 98cd715ccc33..8d09b619c166 100644
+--- a/drivers/gpio/gpio-vr41xx.c
++++ b/drivers/gpio/gpio-vr41xx.c
+@@ -217,8 +217,6 @@ static int giu_get_irq(unsigned int irq)
+ 	printk(KERN_ERR "spurious GIU interrupt: %04x(%04x),%04x(%04x)\n",
+ 	       maskl, pendl, maskh, pendh);
+ 
+-	atomic_inc(&irq_err_count);
+-
+ 	return -EINVAL;
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
