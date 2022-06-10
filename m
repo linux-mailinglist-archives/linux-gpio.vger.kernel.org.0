@@ -2,130 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 747AC546DA0
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 21:52:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97423546DF9
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 22:04:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350218AbiFJTv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 15:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51130 "EHLO
+        id S1348870AbiFJUEi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 16:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348190AbiFJTv5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 15:51:57 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB8C207EE2;
-        Fri, 10 Jun 2022 12:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654890716; x=1686426716;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=D95rmZyOn6FJr0xwZXFlkslFyxEjbwH6lMFM0MSberU=;
-  b=m01hox7GjOLOLv+G4dKCO8kq4PHW3ABr3gQ9F/ddsqonTX7t3wZJYKD0
-   HXrlCJpYwwBo4J5IFq42ErZqUZ0/AfUKx5C/5u/NiYKPfNUkrGZSwQ5Au
-   eMWANQwd2ByT/ErMAyK36h9T4lrz5wn+0mFpXaffcS0XQ1/qDbN3B7Yhg
-   W7wXCy3oQRGuvGA94l6TQKf986QaQIdv8dAtIpfWvZSEaRvTww6mOIamC
-   gCmSUSWwjcCnh0RyKOVth0s0lEJUnD9i+iAhRK3Sl+fPSLpcxePb7GEwc
-   zxt+mo4+AKjU9qPCJPYF9S+018VxpBoyAUUJgodw95kErkxNcedTV28wi
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10374"; a="258164393"
-X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
-   d="scan'208";a="258164393"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 12:51:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
-   d="scan'208";a="760646311"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 10 Jun 2022 12:51:50 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nzkfe-000IEe-2x;
-        Fri, 10 Jun 2022 19:51:50 +0000
-Date:   Sat, 11 Jun 2022 03:51:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Colin Foster <colin.foster@in-advantage.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa-dev@sang-engineering.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v9 net-next 7/7] mfd: ocelot: add support for the vsc7512
- chip via spi
-Message-ID: <202206110358.2hO4gzbU-lkp@intel.com>
-References: <20220610175655.776153-8-colin.foster@in-advantage.com>
+        with ESMTP id S1349029AbiFJUEc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 16:04:32 -0400
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D8F4199C
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jun 2022 13:04:30 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id y69so492167oia.7
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jun 2022 13:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
+         :subject:to;
+        bh=W6khq/CJ/jK9xDdyCa3D6opio63P/2KRxReDZd/cxiU=;
+        b=L2f6GdlZB9hiNU8S/GkGCil7hfYiQF4xIu0hJbUyR36m4jSLP7Jz9XQMVdA+Bq0rgD
+         JtKfbtpayzVcDX3CtE2Gzr5jVUkCmBFzZJG5rH0xB8/hbZbsAli8Zm9flefmXwV4kxc8
+         9uH40PA3iZzLPO2GepIiin0N8bXwZJIvC1meE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from
+         :user-agent:date:message-id:subject:to;
+        bh=W6khq/CJ/jK9xDdyCa3D6opio63P/2KRxReDZd/cxiU=;
+        b=2BBs02XjMK7jbUs73QLEpDYXR3SFZFbvptnbqZUijTSNEW44q8OuodRXotN3QAyZoy
+         0N682VvP49yY/NrjvLpo2u2I9X3rqNY32QkwfrdGYFeFjvH/gecn1G7iIGH292QEETw3
+         OfCmyGw2KjVO0aOiGN/Fj0mXqEIYqFXERdJqUWVhRn56f8jtKvOiBUB+RpsRqXicS6Io
+         15cj1T2unidMe2RmUWJlqRy2p66t23XOy+rq3VQq1Q8RDLptyqdGX4orpJjabJlQHrgM
+         VEdBcWljPyLItU7DWJ6KD5+XZ/vGNVcWuRndxzo1/vcoWMEnGiBfx18WXrUMxL9BYM9L
+         K7Jw==
+X-Gm-Message-State: AOAM532gi3Ab0pJxQa0Yh2lv6SE2jJK03mxGEC1NTftzkInjuJXa0hFl
+        LYK48GswG/JFeU3IWbymh3m0vCVv2fe5skEazkxY0g==
+X-Google-Smtp-Source: ABdhPJwSTDK+pBxm//5P5qx/CDLFe4k+ZU2smS4RLMyknqIy9EX3kH8/LMzqdWgLhly1FkW9ePNj8azaOd9duk3Y/ZE=
+X-Received: by 2002:a05:6808:e87:b0:32e:4789:d2c with SMTP id
+ k7-20020a0568080e8700b0032e47890d2cmr743744oil.193.1654891470062; Fri, 10 Jun
+ 2022 13:04:30 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 10 Jun 2022 13:04:29 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220610175655.776153-8-colin.foster@in-advantage.com>
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1654872335-4993-2-git-send-email-quic_srivasam@quicinc.com>
+References: <1654872335-4993-1-git-send-email-quic_srivasam@quicinc.com> <1654872335-4993-2-git-send-email-quic_srivasam@quicinc.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date:   Fri, 10 Jun 2022 13:04:29 -0700
+Message-ID: <CAE-0n53NdTwAO4DY0x7Fy9h4eRVR-3iKnGfqfZ-ggyghfsC9UA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: qcom: sc7280: Add boolean
+ param for ADSP bypass platforms
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
+        agross@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@quicinc.com, bjorn.andersson@linaro.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        judyhsiao@chromium.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, perex@perex.cz,
+        quic_plai@quicinc.com, quic_rohkumar@quicinc.com,
+        robh+dt@kernel.org, srinivas.kandagatla@linaro.org, tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Colin,
+Quoting Srinivasa Rao Mandadapu (2022-06-10 07:45:34)
+> Add boolean param qcom,adsp-bypass-mode to support adsp bypassed sc7280
+> platforms. Which is required to make clock voting as optional for ADSP
+> bypass platforms.
+>
+> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+> ---
+>  .../bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml          | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+> index d32ee32..ea9920c 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+> @@ -17,7 +17,14 @@ description: |
+>
+>  properties:
+>    compatible:
+> -    const: qcom,sc7280-lpass-lpi-pinctrl
+> +    enum:
+> +      - qcom,sc7280-lpass-lpi-pinctrl
 
-I love your patch! Perhaps something to improve:
+Drop this part.
 
-[auto build test WARNING on net-next/master]
+> +
+> +  qcom,adsp-bypass-mode:
+> +    description:
+> +      Tells pin controllers want to make clocks optional for ADSP bypass
+> +      targets.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220611-015854
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 7defbc9aed2b1fdf21586b78e085c468fd95a2d1
-config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20220611/202206110358.2hO4gzbU-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/be13bccb3f0b376d8d189aa8d14e5b461701f4db
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220611-015854
-        git checkout be13bccb3f0b376d8d189aa8d14e5b461701f4db
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash drivers/mfd/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/mfd/ocelot-core.c:81:16: warning: no previous prototype for 'ocelot_init_regmap_from_resource' [-Wmissing-prototypes]
-      81 | struct regmap *ocelot_init_regmap_from_resource(struct device *child,
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/ocelot_init_regmap_from_resource +81 drivers/mfd/ocelot-core.c
-
-    80	
-  > 81	struct regmap *ocelot_init_regmap_from_resource(struct device *child,
-    82							const struct resource *res)
-    83	{
-    84		struct device *dev = child->parent;
-    85	
-    86		return ocelot_spi_init_regmap(dev, child, res);
-    87	}
-    88	EXPORT_SYMBOL_NS(ocelot_init_regmap_from_resource, MFD_OCELOT);
-    89	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+How about "ADSP is in bypass mode"?
