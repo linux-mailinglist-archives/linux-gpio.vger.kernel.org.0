@@ -2,53 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49C85545DF6
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 10:00:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BFB4545F3F
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 10:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346871AbiFJH77 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 03:59:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49188 "EHLO
+        id S244754AbiFJIeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 04:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346724AbiFJH74 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 03:59:56 -0400
-X-Greylist: delayed 471 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Jun 2022 00:59:51 PDT
-Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A92152067AB
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jun 2022 00:59:49 -0700 (PDT)
-Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id B65CD16A1;
-        Fri, 10 Jun 2022 10:52:48 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com B65CD16A1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1654847569;
-        bh=XNpOtewZxQ8gfieftWFIAeUTrkuxCUoFN+kKHGah3qk=;
-        h=From:To:CC:Subject:Date:From;
-        b=Qq2AKhXtK/tgMSF2gW1lG9txGVhdW+t3H2u6KOjFkAMyMNrEB0c3Dc3etejjac4mz
-         XvgQaoaz9Z40G31jt9iOltvPvi5mZxJKY++iYJUPDiQnqDYecJS1/26JxzY8mkklkw
-         JQB6OwukDwgyjvHY5sUjcdWCww94TE5I/yzsXJJQ=
-Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 10:51:56 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] gpio: dwapb: Don't print error on -EPROBE_DEFER
-Date:   Fri, 10 Jun 2022 10:51:52 +0300
-Message-ID: <20220610075152.10214-1-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S1347950AbiFJIdZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 04:33:25 -0400
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D68A93FBE9;
+        Fri, 10 Jun 2022 01:31:03 -0700 (PDT)
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1nza2n-0001hj-00; Fri, 10 Jun 2022 10:31:01 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 61DD3C0331; Fri, 10 Jun 2022 10:30:44 +0200 (CEST)
+Date:   Fri, 10 Jun 2022 10:30:44 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Genjian Zhang <zhanggenjian123@gmail.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, f.fainelli@gmail.com,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huhai@kylinos.cn,
+        k2ci <kernel-bot@kylinos.cn>
+Subject: Re: [PATCH v3] MIPS: Remove repetitive increase irq_err_count
+Message-ID: <20220610083044.GA7565@alpha.franken.de>
+References: <20220525043916.584850-1-zhanggenjian@kylinos.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220525043916.584850-1-zhanggenjian@kylinos.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,33 +43,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently if the APB or Debounce clocks aren't yet ready to be requested
-the DW GPIO driver will correctly handle that by deferring the probe
-procedure, but the error is still printed to the system log. It needlessly
-pollutes the log since there was no real error but a request to postpone
-the clock request procedure since the clocks subsystem hasn't been fully
-initialized yet. Let's fix that by using the dev_err_probe method to print
-the APB/clock request error status. It will correctly handle the deferred
-probe situation and print the error if it actually happens.
+On Wed, May 25, 2022 at 12:39:16PM +0800, Genjian Zhang wrote:
+> From: huhai <huhai@kylinos.cn>
+> 
+> commit 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx") added
+> a function irq_dispatch, and it'll increase irq_err_count when the get_irq
+> callback returns a negative value, but increase irq_err_count in get_irq
+> was not removed.
+> 
+> And also, modpost complains once gpio-vr41xx drivers become modules.
+>   ERROR: modpost: "irq_err_count" [drivers/gpio/gpio-vr41xx.ko] undefined!
+> 
+> So it would be a good idea to remove repetitive increase irq_err_count in
+> get_irq callback.
+> 
+> Fixes: 27fdd325dace ("MIPS: Update VR41xx GPIO driver to use gpiolib")
+> Fixes: 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx")
+> Reported-by: k2ci <kernel-bot@kylinos.cn>
+> Signed-off-by: huhai <huhai@kylinos.cn>
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
----
- drivers/gpio/gpio-dwapb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is missing your the Signed-off-by as submitter of the patch.
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index b0f3aca61974..a51458be34a9 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -653,7 +653,7 @@ static int dwapb_get_clks(struct dwapb_gpio *gpio)
- 	err = devm_clk_bulk_get_optional(gpio->dev, DWAPB_NR_CLOCKS,
- 					 gpio->clks);
- 	if (err) {
--		dev_err(gpio->dev, "Cannot get APB/Debounce clocks\n");
-+		dev_err_probe(gpio->dev, err, "Cannot get APB/Debounce clocks\n");
- 		return err;
- 	}
- 
+Thomas.
+
 -- 
-2.35.1
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
