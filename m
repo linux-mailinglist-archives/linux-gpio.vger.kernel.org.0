@@ -2,230 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C887B545BE7
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 07:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56612545C59
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 08:37:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346324AbiFJFxG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 01:53:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51042 "EHLO
+        id S1346523AbiFJGh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 02:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243710AbiFJFxF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 01:53:05 -0400
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C46B5C65D;
-        Thu,  9 Jun 2022 22:53:03 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 25A5qxCv060735;
-        Fri, 10 Jun 2022 00:52:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1654840379;
-        bh=0fIRRl1QTOUs4hyP2zBUCxjB4G7FbYWfjqnJT01UtYg=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=OVswT/XaTicQdoy3rfmp3PwhR+Qlhhem/tePc70Mzs/vyfdTVFiu1l9kUUnw9NZ9E
-         TSVvZuoKpxrJXJOkVqBkxSJhUsHCy/utx/GJIOASje8+QT//xTOUzn70YSZ5SOw32c
-         kXd/sO/2zJIHxGRIprR4DQy6/DxgB+0oDUkE7cgI=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 25A5qx1I022690
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jun 2022 00:52:59 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 10
- Jun 2022 00:52:59 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Fri, 10 Jun 2022 00:52:59 -0500
-Received: from [172.24.145.198] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 25A5quLX120544;
-        Fri, 10 Jun 2022 00:52:57 -0500
-Message-ID: <140522b0-6b17-0c11-ace7-a3c3f4606ccb@ti.com>
-Date:   Fri, 10 Jun 2022 11:22:55 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] gpio: davinci: Add support for system suspend/resume PM
-Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Devarsh Thakkar <devarsht@ti.com>,
+        with ESMTP id S235495AbiFJGh0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 02:37:26 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E832E33A02
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 23:37:22 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id e5so6583186wma.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 23:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Qxlw/2GeYPhBz4i8FzCqobc8aHph2WQJ2uzH+wlAQPM=;
+        b=YvKD/lnZFHPf9Bklm5hR2t0kTgFB1/rXSkgOKvxFTago0OfV/XXVBnr65QfdQ0sIbE
+         X56d5w92lO93EaOJsDJ8oCNGyjZkcJXPRSg9xTkOKhWDw62K7tpcO84Az2vOBRZU/r3+
+         YIHnLV0yk1ox4ibJDxo/xtHUE91KPK5nhGt24yQglgyRLlAN46Y1Z1t0+GvzN7M+MEou
+         tOdQLaDCWTLurM3ng8g7elKpPBlMcfWMNnTz6GEuMIGKZgA7WgUpL2gOP6VsKo5/EHPb
+         626ZTuTKw9tktPSgibPC7QlWbKT0XcsOV4TdzYgmUmuC1ODYErjWurNuno/msyBC5MwG
+         9u4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Qxlw/2GeYPhBz4i8FzCqobc8aHph2WQJ2uzH+wlAQPM=;
+        b=fYl3A/f3/K8l4Nf9BCPETJpmxb3kKDhwC0tlJ+S8BpJerI5N6F/Pg55Otg0ZFqEBiD
+         iA8yRbVHkxTYcqwzb/pT6P6BF3uuiYdb9yf+kQNcMTSbql/QYhhDF1BkusR2kCxBFEvk
+         Ph50/H+ewfWsrdd7YJthwqbyAUYc6q3/TfELpGYz4O9kM8ub+v67FkrzhUJcuuTNOQW7
+         u77N9k9B4nfDyZmCBuqzn3mtk2dZIxgCdz0f46myqyafMoreE3Qn9R3k7MxtL6escK6Y
+         1TykQFZGDt8X+T59rst1M7FBSa63ai1gbFBD1/V2DlfEADlclvXHrlMHJULlRVRkbOMN
+         /LqQ==
+X-Gm-Message-State: AOAM533x75ePQZ531o87SPxZwIN/XHQYDMuGVy+vxEX7nYJs269NSj3X
+        Mw//9Fm6XGkTdAWXOeapFD8vIQ==
+X-Google-Smtp-Source: ABdhPJw4Hge4NDaRn0TL71ijVSQhRo1MhCaO3HbTb1tYRGHCORKkku8fnKoEAx9FGxDoG3CaWVnJNw==
+X-Received: by 2002:a1c:4e03:0:b0:39c:5bbc:e0d2 with SMTP id g3-20020a1c4e03000000b0039c5bbce0d2mr7034980wmh.184.1654843041123;
+        Thu, 09 Jun 2022 23:37:21 -0700 (PDT)
+Received: from localhost.localdomain ([2001:861:44c0:66c0:27b0:82d9:d0c6:702a])
+        by smtp.gmail.com with ESMTPSA id 2-20020a05600c228200b0039482d95ab7sm1729030wmf.24.2022.06.09.23.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jun 2022 23:37:20 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>, arm@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <kristo@kernel.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
-        Keerthy <j-keerthy@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-omap@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Nishanth Menon <nm@ti.com>,
+        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-msm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20220607060851.10838-1-a-govindraju@ti.com>
- <CAMRc=Mdcqu5__eZPQSP3egEpw=axeeAFgGjgKdChj6tN5v1Asg@mail.gmail.com>
-From:   Aswath Govindraju <a-govindraju@ti.com>
-In-Reply-To: <CAMRc=Mdcqu5__eZPQSP3egEpw=axeeAFgGjgKdChj6tN5v1Asg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        Samuel Holland <samuel@sholland.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        Andrew Jeffery <andrew@aj.id.au>, linux-input@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Peter Rosin <peda@axentia.se>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        linux-sunxi@lists.linux.dev,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Li Yang <leoyang.li@nxp.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-rockchip@lists.infradead.org
+Subject: Re: (subset) [PATCH v2 00/48] dt-bindings: input: gpio-keys: rework matching children
+Date:   Fri, 10 Jun 2022 08:37:18 +0200
+Message-Id: <165484301356.1384204.15957178175784526690.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220609113721.379932-1-krzysztof.kozlowski@linaro.org>
+References: <20220609113721.379932-1-krzysztof.kozlowski@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bart,
+Hi,
 
-On 09/06/22 20:05, Bartosz Golaszewski wrote:
-> On Tue, Jun 7, 2022 at 8:08 AM Aswath Govindraju <a-govindraju@ti.com> wrote:
->>
->> From: Devarsh Thakkar <devarsht@ti.com>
->>
->> Add support for system suspend/resume PM hooks, save the
->> register context of all the required gpio registers on suspend
->> and restore the context on resume.
->>
->> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
->> ---
->>  drivers/gpio/gpio-davinci.c | 84 +++++++++++++++++++++++++++++++++++++
->>  1 file changed, 84 insertions(+)
->>
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index f960587f86a3..aca352337c46 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -23,6 +23,7 @@
->>  #include <linux/irqchip/chained_irq.h>
->>  #include <linux/spinlock.h>
->>
->> +#include <linux/pm_runtime.h>
+On Thu, 9 Jun 2022 13:37:21 +0200, Krzysztof Kozlowski wrote:
+> Merging
+> =======
+> 1. dt-bindings: rebased on top of Rob's:
+>    https://lore.kernel.org/all/20220608211207.2058487-1-robh@kernel.org/
 > 
-> The below can stay here but please move the pm_runtime include
-> together with the other linux includes.
+> 2. DTS patches are independent. They can be picked up directly by sub-arch
+>    maintainers, by Arnd or Olof, or eventually by me (if you wish).
 > 
+> [...]
 
-moved this in the respin.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v5.20/arm64-dt)
 
->>  #include <asm-generic/gpio.h>
->>
->>  #define MAX_REGS_BANKS 5
->> @@ -62,6 +63,8 @@ struct davinci_gpio_controller {
->>         void __iomem            *regs[MAX_REGS_BANKS];
->>         int                     gpio_unbanked;
->>         int                     irqs[MAX_INT_PER_BANK];
->> +       struct davinci_gpio_regs context[MAX_REGS_BANKS];
->> +       u32                     binten_context;
->>  };
->>
->>  static inline u32 __gpio_mask(unsigned gpio)
->> @@ -622,6 +625,86 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>         return 0;
->>  }
->>
->> +static void davinci_gpio_save_context(struct davinci_gpio_controller *chips,
->> +                                     u32 nbank)
->> +{
->> +       struct davinci_gpio_regs __iomem *g = NULL;
->> +       struct davinci_gpio_regs *context = NULL;
->> +       u32 bank = 0;
->> +       void __iomem *base = NULL;
-> 
-> Only initialize variables that need it, please.
-> 
+[07/48] arm64: dts: amlogic: correct gpio-keys properties
+        https://git.kernel.org/amlogic/c/4956be9944d1fb23107f27bad8a2cca0fa167443
+[08/48] arm64: dts: amlogic: align gpio-key node names with dtschema
+        https://git.kernel.org/amlogic/c/4fd9afd894ebe5831dbd737e6ca7b6de14da7fda
 
-Removed the intializations in the respin.
+These changes has been applied on the intermediate git tree [1].
 
+The v5.20/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-Thank you for reviewing the patch. I have posted a respin v2,
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
 
-https://patchwork.ozlabs.org/project/linux-gpio/patch/20220610054622.21281-1-a-govindraju@ti.com/
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
 
-Regards,
-Aswath
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
 
->> +
->> +       base = chips->regs[0] - offset_array[0];
->> +       chips->binten_context = readl_relaxed(base + BINTEN);
->> +
->> +       for (bank = 0; bank < nbank; bank++) {
->> +               g = chips->regs[bank];
->> +               context = &chips->context[bank];
->> +               context->dir = readl_relaxed(&g->dir);
->> +               context->set_data = readl_relaxed(&g->set_data);
->> +               context->set_rising = readl_relaxed(&g->set_rising);
->> +               context->set_falling = readl_relaxed(&g->set_falling);
->> +       }
->> +
->> +       /* Clear Bank interrupt enable bit */
->> +       writel_relaxed(0, base + BINTEN);
->> +
->> +       /* Clear all interrupt status registers */
->> +       writel_relaxed(0xFFFFFFFF, &g->intstat);
->> +}
->> +
->> +static void davinci_gpio_restore_context(struct davinci_gpio_controller *chips,
->> +                                        u32 nbank)
->> +{
->> +       struct davinci_gpio_regs __iomem *g = NULL;
->> +       struct davinci_gpio_regs *context = NULL;
->> +       u32 bank = 0;
->> +       void __iomem *base = NULL;
->> +
->> +       base = chips->regs[0] - offset_array[0];
->> +
->> +       if (readl_relaxed(base + BINTEN) != chips->binten_context)
->> +               writel_relaxed(chips->binten_context, base + BINTEN);
->> +
->> +       for (bank = 0; bank < nbank; bank++) {
->> +               g = chips->regs[bank];
->> +               context = &chips->context[bank];
->> +               if (readl_relaxed(&g->dir) != context->dir)
->> +                       writel_relaxed(context->dir, &g->dir);
->> +               if (readl_relaxed(&g->set_data) != context->set_data)
->> +                       writel_relaxed(context->set_data, &g->set_data);
->> +               if (readl_relaxed(&g->set_rising) != context->set_rising)
->> +                       writel_relaxed(context->set_rising, &g->set_rising);
->> +               if (readl_relaxed(&g->set_falling) != context->set_falling)
->> +                       writel_relaxed(context->set_falling, &g->set_falling);
->> +       }
->> +}
->> +
->> +static int __maybe_unused davinci_gpio_suspend(struct device *dev)
->> +{
->> +       struct davinci_gpio_controller *chips = dev_get_drvdata(dev);
->> +       struct davinci_gpio_platform_data *pdata = dev_get_platdata(dev);
->> +       u32 nbank = DIV_ROUND_UP(pdata->ngpio, 32);
->> +
->> +       davinci_gpio_save_context(chips, nbank);
->> +
->> +       return 0;
->> +}
->> +
->> +static int __maybe_unused davinci_gpio_resume(struct device *dev)
->> +{
->> +       struct davinci_gpio_controller *chips = dev_get_drvdata(dev);
->> +       struct davinci_gpio_platform_data *pdata = dev_get_platdata(dev);
->> +       u32 nbank = DIV_ROUND_UP(pdata->ngpio, 32);
->> +
->> +       davinci_gpio_restore_context(chips, nbank);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct dev_pm_ops davinci_gpio_dev_pm_ops = {
->> +       SET_SYSTEM_SLEEP_PM_OPS(davinci_gpio_suspend, davinci_gpio_resume)
->> +};
->> +
->>  static const struct of_device_id davinci_gpio_ids[] = {
->>         { .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
->>         { .compatible = "ti,am654-gpio", keystone_gpio_get_irq_chip},
->> @@ -634,6 +717,7 @@ static struct platform_driver davinci_gpio_driver = {
->>         .probe          = davinci_gpio_probe,
->>         .driver         = {
->>                 .name           = "davinci_gpio",
->> +               .pm = &davinci_gpio_dev_pm_ops,
->>                 .of_match_table = of_match_ptr(davinci_gpio_ids),
->>         },
->>  };
->> --
->> 2.17.1
->>
-> 
-> Bart
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
