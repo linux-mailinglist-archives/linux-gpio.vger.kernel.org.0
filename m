@@ -2,84 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD9F2546C38
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 20:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 747AC546DA0
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 21:52:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347482AbiFJSTX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 14:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33942 "EHLO
+        id S1350218AbiFJTv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 15:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235665AbiFJSTX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 14:19:23 -0400
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4F41D30D9;
-        Fri, 10 Jun 2022 11:19:20 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id i16so6391175ioa.6;
-        Fri, 10 Jun 2022 11:19:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dUVF+4savVVo3Zk/eVEnxhnMTrHMPg1cr6NzLhj4vPE=;
-        b=oIP4x508sDuQpQW6rJrllz0KO6ahsC+mnye/c6DrG1FIF7L4Ko/MgSlnRWyjNi2xZE
-         xR6fXyKa2KCy6n+Gin5Ith99KwZYaQBlfynvPnZ4Gbmkq3YVJ7d4ewGfgxVeVbhQhO8s
-         d2bbW6Xs3fIWMRnBx88vJ1rPjpUtccjKOuafbuA5TerwrdroYHUZ74r7HQ5OgEwxhRHf
-         PVbEyLZ4urdB4qr1QZae2fKg8JBQvb1ZXeKJtxwbs0CYZQ9iPuQZ7tB22omu5o/eOzlR
-         e+60X523J+mdOkYeChtP9ZfUUG+5DGGFspODt2sVYOc2d80BpkFwe1Rgp3wqzGo463WA
-         kmEQ==
-X-Gm-Message-State: AOAM533XIpqwUjHcVnyUMb4Q1V+tvSaeH36Q5oS0JYqyP2SvEVO/Dl+W
-        3FsA/+NX4O7sDOtGVCXaOg==
-X-Google-Smtp-Source: ABdhPJxNF8rT+2V+EVqFx6lCZs1qfmv2YXD719wGMasOLQ6Bqd8aEkKG60Ov+gx5p10DfI9FIfzDnQ==
-X-Received: by 2002:a05:6602:168d:b0:669:8613:abd0 with SMTP id s13-20020a056602168d00b006698613abd0mr8616182iow.48.1654885159997;
-        Fri, 10 Jun 2022 11:19:19 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id g23-20020a02bb97000000b0032e1e0ac289sm11301883jan.8.2022.06.10.11.19.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jun 2022 11:19:19 -0700 (PDT)
-Received: (nullmailer pid 1935336 invoked by uid 1000);
-        Fri, 10 Jun 2022 18:19:17 -0000
-Date:   Fri, 10 Jun 2022 12:19:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        linux-mediatek@lists.infradead.org,
+        with ESMTP id S1348190AbiFJTv5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 15:51:57 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB8C207EE2;
+        Fri, 10 Jun 2022 12:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654890716; x=1686426716;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=D95rmZyOn6FJr0xwZXFlkslFyxEjbwH6lMFM0MSberU=;
+  b=m01hox7GjOLOLv+G4dKCO8kq4PHW3ABr3gQ9F/ddsqonTX7t3wZJYKD0
+   HXrlCJpYwwBo4J5IFq42ErZqUZ0/AfUKx5C/5u/NiYKPfNUkrGZSwQ5Au
+   eMWANQwd2ByT/ErMAyK36h9T4lrz5wn+0mFpXaffcS0XQ1/qDbN3B7Yhg
+   W7wXCy3oQRGuvGA94l6TQKf986QaQIdv8dAtIpfWvZSEaRvTww6mOIamC
+   gCmSUSWwjcCnh0RyKOVth0s0lEJUnD9i+iAhRK3Sl+fPSLpcxePb7GEwc
+   zxt+mo4+AKjU9qPCJPYF9S+018VxpBoyAUUJgodw95kErkxNcedTV28wi
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10374"; a="258164393"
+X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
+   d="scan'208";a="258164393"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 12:51:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
+   d="scan'208";a="760646311"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 10 Jun 2022 12:51:50 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nzkfe-000IEe-2x;
+        Fri, 10 Jun 2022 19:51:50 +0000
+Date:   Sat, 11 Jun 2022 03:51:26 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Colin Foster <colin.foster@in-advantage.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: ralink: Fix 'enum' lists with
- duplicate entries
-Message-ID: <20220610181917.GA1935073-robh@kernel.org>
-References: <20220606212239.1360877-1-robh@kernel.org>
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v9 net-next 7/7] mfd: ocelot: add support for the vsc7512
+ chip via spi
+Message-ID: <202206110358.2hO4gzbU-lkp@intel.com>
+References: <20220610175655.776153-8-colin.foster@in-advantage.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220606212239.1360877-1-robh@kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220610175655.776153-8-colin.foster@in-advantage.com>
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 06 Jun 2022 16:22:39 -0500, Rob Herring wrote:
-> There's no reason to list the same value twice in an 'enum'. This was fixed
-> treewide in commit c3b006819426 ("dt-bindings: Fix 'enum' lists with
-> duplicate entries"), but this one got added in the merge window.
-> 
-> A meta-schema change will catch future cases.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../pinctrl/ralink,mt7620-pinctrl.yaml        | 26 +++++++++++-------
->  .../pinctrl/ralink,rt305x-pinctrl.yaml        | 27 +++++++++----------
->  2 files changed, 28 insertions(+), 25 deletions(-)
-> 
+Hi Colin,
 
-Applied, thanks!
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on net-next/master]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220611-015854
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 7defbc9aed2b1fdf21586b78e085c468fd95a2d1
+config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20220611/202206110358.2hO4gzbU-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/be13bccb3f0b376d8d189aa8d14e5b461701f4db
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220611-015854
+        git checkout be13bccb3f0b376d8d189aa8d14e5b461701f4db
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash drivers/mfd/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/mfd/ocelot-core.c:81:16: warning: no previous prototype for 'ocelot_init_regmap_from_resource' [-Wmissing-prototypes]
+      81 | struct regmap *ocelot_init_regmap_from_resource(struct device *child,
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/ocelot_init_regmap_from_resource +81 drivers/mfd/ocelot-core.c
+
+    80	
+  > 81	struct regmap *ocelot_init_regmap_from_resource(struct device *child,
+    82							const struct resource *res)
+    83	{
+    84		struct device *dev = child->parent;
+    85	
+    86		return ocelot_spi_init_regmap(dev, child, res);
+    87	}
+    88	EXPORT_SYMBOL_NS(ocelot_init_regmap_from_resource, MFD_OCELOT);
+    89	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
