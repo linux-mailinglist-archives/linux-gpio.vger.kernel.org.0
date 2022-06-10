@@ -2,166 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E04C545912
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 02:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E8DD545AF0
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 06:23:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235145AbiFJAQV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jun 2022 20:16:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
+        id S237430AbiFJEXb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 00:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245520AbiFJAQU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jun 2022 20:16:20 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5E7281852;
-        Thu,  9 Jun 2022 17:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1654820172;
-        bh=/+ElgicZYLPAQqpAxpBc1K+pcplEGNPrxCUaHsk2cew=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=BJYg/2w6Z8G2uhwmKfw9zZr98K49tj7BuB8LbMVWcfXBFUJHYfOY2t+HqlYXoobL8
-         9aDgNEwUc+JR1WachioVryF+EQ+4F+VAw1T6OWGLgQtbOhfQcExwkK865PNQ+OZ1Hx
-         RNJ2Qg0NPfzNMyrpuZA4ekFcABFLPCIqrlNLloF4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.3]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MaJ7v-1oE9291sRR-00WDjj; Fri, 10
- Jun 2022 02:16:12 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-gpio@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        with ESMTP id S236191AbiFJEX2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 00:23:28 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FEF4E79
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 21:23:27 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id h192so16916925pgc.4
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 21:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4gDrySwiZUU+Rrp0o3CNRq4gn8NF53JOg4BPnZH89ic=;
+        b=jW6jP3H9ij7v3DUe9sesiVUnNCSZCgQhnjwbQ4y6fPB5EHNIdHXyNs/L2o9QGwZ5BR
+         weYd70TY+gdpvX9FHLHqI3XIQVJp3d/uJFzENzD0lsX1jeUSyOrN3UZ9zaCxVs/cQmTs
+         7S22WMx3dOsFldCo6tBBGGjgXe1KMjD99VLvd5qAAQvBtUX1/ZmuH1m2pPhal1PrJeHe
+         U4rg95NB4WCwvi5PtPD7B4OCDduP11qJ0CZvuK3mgfe6Zh3f5ipPk26V5FA+fszWk/Gx
+         fOb6KADQEoc4J4cgtGqO0PDmedzp5mnK9BK5IqTqM5W6REHTwi2KS/AVLwX4kcnyPfx7
+         pzkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4gDrySwiZUU+Rrp0o3CNRq4gn8NF53JOg4BPnZH89ic=;
+        b=g+tzeU/1EAG/CMH448dCRjcaqW4jsUpyikn8bNe7I3xZhEKsuFymCEgcEHn2MO69wX
+         Gf7vGkbSdg2aCt7nXwyG5EvJqYhWdcU1+ydaA2bekI3oZFCSwYg1DlJIbgKhIxaTAaQH
+         XRyOnfoHlwu2rh6CJxo/sfjSdI1oTofRbEbybDQkj3UWMjJa8q/6quuErCrumz+/bruT
+         rWTBFxoMmR/L8vNTjlD+ywvSo0XCd9Mpf04iXtUDEBpXmKHM2HjLqXveR1tzcTTbZFvO
+         B4mwydYJ3mseR6GVDOWbAYJy9diogHXrsOKFhzgPh9VJfLol/Bh1P3IApQmPZS6W6+6o
+         IQdg==
+X-Gm-Message-State: AOAM5309AlGepKX/iOWNiSrsZAb96V8s7VOE+cZln/P5D/bD8KebbKsD
+        45sL1r8NvRfw9EDMtTyzp34=
+X-Google-Smtp-Source: ABdhPJwAd3cwnTQtZFxtD4BHEw9gxhBESSBZoT82egCz6T7Oc4KTm8bFfA8w1LZl14cKV//ivjaUbQ==
+X-Received: by 2002:aa7:88d2:0:b0:50a:cf7d:6ff1 with SMTP id k18-20020aa788d2000000b0050acf7d6ff1mr44356715pff.67.1654835006307;
+        Thu, 09 Jun 2022 21:23:26 -0700 (PDT)
+Received: from sol (14-200-166-137.static.tpgi.com.au. [14.200.166.137])
+        by smtp.gmail.com with ESMTPSA id c15-20020a170902c2cf00b0016231f64631sm17293179pla.309.2022.06.09.21.23.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jun 2022 21:23:25 -0700 (PDT)
+Date:   Fri, 10 Jun 2022 12:23:19 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jiri Benc <jbenc@upir.cz>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pinctrl: nuvoton: wpcm450: Convert irqchip to IRQCHIP_IMMUTABLE
-Date:   Fri, 10 Jun 2022 02:16:08 +0200
-Message-Id: <20220610001609.276220-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.35.1
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2
+ API
+Message-ID: <20220610042319.GB7623@sol>
+References: <20220525140704.94983-4-brgl@bgdev.pl>
+ <20220603124600.GA35695@sol>
+ <20220604024131.GB13574@sol>
+ <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
+ <20220607015220.GA9430@sol>
+ <CAMRc=MdwgGefC0AgRCvgMfAZmq_+1GnXH6XMezjyBEKs37QuAQ@mail.gmail.com>
+ <20220609044922.GA11301@sol>
+ <CAMRc=Md_7WO69hKqToSoAAyDQWxfqgg-PisrBF5AzrsKMM8FQA@mail.gmail.com>
+ <20220609152112.12fc6db4@griffin>
+ <CAMRc=Mfgov0S-dZ7Ut2oj4A8=xE7d-4iX=8Q+Kv4Tb==JviMjw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FSg/4zZ4D0F39BbK/XSWt8pWWf49vgchHRlaMl0mvzDrD6ye5Pp
- zXkpvHSeK7qKzXQ+CBciZaT/TAlxhAwwkVnFeeRGiRkHCO3VhCi6T2MBYpyPSFvDHKmYejd
- ZzJdN4B9+yI882DH0PPT/nDkjsL5sfz/PuwGxjXWrs8k+rdT7v17Q9DYIvk7Uxw4iui6W48
- NpE9CffmSF7zuykKF+P7A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3ICSpxXLciI=:zfxksipzFdOubIlarRmUv+
- wBvnj59BPc+tMGRyfHnXo4NUUBp4cByr1y7nAAqYE+rvwSRseXWlqsi3z4bjjgub0ZB+r3rWn
- K/tEt2e+8dlHC2sowvyWHSPS0Pmps1fEKjcrv60ouwRsZznVlBjGTwI1TUUjB2qn6s1/suECL
- X9QnF71twyQjEvw6BRsOTnhXR8tWnkf6zqjDZgjWM07DsDFPT1K69tHGB1N3hehK/vsgddKZl
- etoeANexn+QUiVODUMB3zNefq1FgVTTWy4Yw906jujWKfNnxqtTW4DMZ0IkdHff6h3EXBZIvi
- 2UzUoWcOvwKFxXne60yp6SBq1CwHDg5lsBErQRzIyqtJCM40IlyMxuWv4pl67Lz+/G8WVBfqh
- ejV6fCH1tqYQV+GiduxeqJeqBwk8uLh02ohGOR3kCh76Dum9y8YPAjRD91ugC/CJbf6cvDllF
- 936HuKVMC2NLI74Mnw2npK3UjWoPMVV4mSOxMIgT+9S07hWXOscZStQuesQPu12I8+pqfqN4Y
- /v8awwWRQehzvmbumcXalnWcAVI3E0BuypHRBa0NoBLpKrwwg+R/5tRS6B9egl9L6rll9b4Te
- WGa4U0qxn+zaGcY74g2P4f/0TQ7LaraE1oJ+b2eW1WXeK0YjlQUzwVAOTGbX7Q0AVxYnH4tZz
- KhlQ7ji0kghdvMEWrvj0HHOCRI3UxWdofgBtDaeC7MC99a5gtJG1l4jLokTl2or0+lGjH4S8u
- 5GwqyHh/NVp/GQq1fwpiR4DbRGtU1jsxd8V1JMWkVTM3MHRJh95Hm47eRDttOQEFfHicH8HtO
- /C8Vg4ISpRfuQMPaIjFUW5EdQtN0T8+yGtMhctmPEBZ37J2+YpvXdH4Da2K6YGpgFSg839B3O
- 9zip4bNoffn8oTtLwB66wT/ArSD3tXPH0BGpItrUhImov+4L53mYSypymrRhBXPhxuZGr/S74
- LskHxQHWRZZruQlutBl61/2f21sUo06UbiBrYX96tIJpd4Lt1LuW8h4CZaFLVD2VJJyTzWUms
- nev2fv5SnYt23RXqL7d5nH48e5C5ZIuQ7Ak0XCz018BmebaV67tXSMSL5nZrZ39PkMh938aEk
- 6EetKqSw/FveVLnUiL0JxjjOXCxeXORP8F6QMYv6Cj4DvSSSSyxt6ECIQ==
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mfgov0S-dZ7Ut2oj4A8=xE7d-4iX=8Q+Kv4Tb==JviMjw@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 6c846d026d490 ("gpio: Don't fiddle with irqchips marked as
-immutable") added a warning for irqchips that are not marked with
-IRQCHIP_IMMUTABLE.
+On Thu, Jun 09, 2022 at 06:06:04PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Jun 9, 2022 at 3:21 PM Jiri Benc <jbenc@upir.cz> wrote:
+> >
+> > On Thu, 9 Jun 2022 10:42:44 +0200, Bartosz Golaszewski wrote:
+> > > On Thu, Jun 9, 2022 at 6:49 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > Agree that it would be easier to write a pythonic wrapper around the C
+> > > > API in Python, so no problem with that.
+> > > > However, the pythonic wrapper should the one named gpiod, as it is
+> > > > intended to be the primary interface for Python.  Rename your existing
+> > > > to gpiod_c or gpiod_core or something.
+> > >
+> > > I don't agree. The module that wraps the C library should still be
+> > > called gpiod and be the primary interface. The pythonic module would
+> > > just offer helpers that would still use the gpiod data types for most
+> > > part.
+> >
+> > As a Python user, I'd much rather see the high level API being the
+> > primary interface and being named 'gpiod'. The easier to use and more
+> > Pythonic, the better. The low level library bindings and low level data
+> > types are just an implementation detail for me when coding in Python.
+> > If I wanted low level, I'd code everything directly in C.
+> >
+> 
+> But Kent is not talking about a whole new "pythonic" layer on top of
+> the code that is the subject of this series. The bindings are already
+> quite pythonic in that you can get most stuff done with a "logical"
+> one-liner. The gpiod module doesn't map C API 1:1, it already
+> simplifies a bunch of interfaces. Kent's idea IIUC is about providing
+> a set of helpers that would produce the gpiod objects in shorter code
+> by hiding the details of intermediate objects being created.
+> 
 
-Convert the pinctrl-wpcm450 driver to an immutable irqchip.
+Yeah, no, I'm saying that there should be one primary Python interface
+to gpiod, and it should be the most pythonic.  And complete.
+The casual user should be able to get by with a few simple commands, but
+the complete functionality should still be accessible, via that same
+API, for more complicated cases.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
+> Re the event buffer: yeah, I think in python (unlike C++ or future
+> Rust bindings) it makes sense to hide it within the request as we
+> can't profit from implicitly not copying the event objects.
+> 
 
-v2:
-- Add missing gpiochip_*able_irq calls in mask/unmask methods
-- Remove unused instance of struct irq_chip in struct struct wpcm450_bank
+That is a consequence of building on top of the gpiod C API, as you have
+to deal with two object models, and the related type conversions or
+lifecycle management.
+A native binding built on top of the ioctls can use native objects
+throughout can take better advantage of the language.
+e.g. here the equivalent of my Python suggestion using my Rust
+gpiocdev library (sadly without named lines support as I hadn't
+considered that at the time):
 
-v1:
-- https://lore.kernel.org/lkml/20220606214301.2061467-1-j.neuschaefer@gmx.=
-net/
-=2D--
- drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+    // request the lines
+    let req = Request::builder()
+        .on_chip("/dev/gpiochip0")
+        .with_lines(&[17,18])
+        .with_edge_detection(EdgeDetection::BothEdges)
+        .request()?;
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/n=
-uvoton/pinctrl-wpcm450.c
-index 0dbeb91f0bf27..d44639ede2ce6 100644
-=2D-- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-@@ -49,7 +49,6 @@ struct wpcm450_bank;
- struct wpcm450_gpio {
- 	struct gpio_chip	gc;
- 	struct wpcm450_pinctrl	*pctrl;
--	struct irq_chip		irqc;
- 	const struct wpcm450_bank *bank;
- };
+    // wait for line edge events
+    for event in req.edge_events()? {
+        println!("{:?}", event?);
+    }
 
-@@ -142,7 +141,8 @@ static void wpcm450_gpio_irq_ack(struct irq_data *d)
+That has a hidden event buffer within the request.  The default size is 1,
+but add .with_user_event_buffer_size(N) and you get an N event buffer.
+There is no copying involved, just borrowing, as all the objects are
+visible to the borrow checker.
 
- static void wpcm450_gpio_irq_mask(struct irq_data *d)
- {
--	struct wpcm450_gpio *gpio =3D gpiochip_get_data(irq_data_get_irq_chip_da=
-ta(d));
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct wpcm450_gpio *gpio =3D gpiochip_get_data(gc);
- 	struct wpcm450_pinctrl *pctrl =3D gpio->pctrl;
- 	unsigned long flags;
- 	unsigned long even;
-@@ -157,11 +157,14 @@ static void wpcm450_gpio_irq_mask(struct irq_data *d=
-)
- 	__assign_bit(bit, &even, 0);
- 	iowrite32(even, pctrl->gpio_base + WPCM450_GPEVEN);
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	gpiochip_disable_irq(gc, d->hwirq);
- }
+> If anyone wants to create an even simpler, complete interface for
+> gpiod, then it's a task for a whole new project. Think: pydbus built
+> on top of GLib dbus bindings in python, built on top of glib's dbus
+> implementation.
+> 
 
- static void wpcm450_gpio_irq_unmask(struct irq_data *d)
- {
--	struct wpcm450_gpio *gpio =3D gpiochip_get_data(irq_data_get_irq_chip_da=
-ta(d));
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct wpcm450_gpio *gpio =3D gpiochip_get_data(gc);
- 	struct wpcm450_pinctrl *pctrl =3D gpio->pctrl;
- 	unsigned long flags;
- 	unsigned long even;
-@@ -171,6 +174,8 @@ static void wpcm450_gpio_irq_unmask(struct irq_data *d=
-)
- 	if (bit < 0)
- 		return;
+Don't tempt me - though I would target the GPIO uAPI ioctls, not gpiod,
+for the reasons above.
 
-+	gpiochip_enable_irq(gc, d->hwirq);
-+
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 	even =3D ioread32(pctrl->gpio_base + WPCM450_GPEVEN);
- 	__assign_bit(bit, &even, 1);
-@@ -293,6 +298,8 @@ static const struct irq_chip wpcm450_gpio_irqchip =3D =
-{
- 	.irq_unmask =3D wpcm450_gpio_irq_unmask,
- 	.irq_mask =3D wpcm450_gpio_irq_mask,
- 	.irq_set_type =3D wpcm450_gpio_set_irq_type,
-+	.flags =3D IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
-
- static void wpcm450_gpio_irqhandler(struct irq_desc *desc)
-@@ -1068,9 +1075,8 @@ static int wpcm450_gpio_register(struct platform_dev=
-ice *pdev,
- 		gpio->gc.fwnode =3D child;
- 		gpio->gc.add_pin_ranges =3D wpcm450_gpio_add_pin_ranges;
-
--		gpio->irqc =3D wpcm450_gpio_irqchip;
- 		girq =3D &gpio->gc.irq;
--		girq->chip =3D &gpio->irqc;
-+		gpio_irq_chip_set_chip(girq, &wpcm450_gpio_irqchip);
- 		girq->parent_handler =3D wpcm450_gpio_irqhandler;
- 		girq->parents =3D devm_kcalloc(dev, WPCM450_NUM_GPIO_IRQS,
- 					     sizeof(*girq->parents), GFP_KERNEL);
-=2D-
-2.35.1
-
+Cheers,
+Kent.
