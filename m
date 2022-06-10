@@ -2,144 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B8955466E8
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 14:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBEF4546818
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 16:15:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345266AbiFJMxi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 08:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55472 "EHLO
+        id S238485AbiFJOPL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 10:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349128AbiFJMxg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 08:53:36 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52BB544E5
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jun 2022 05:53:33 -0700 (PDT)
-Received: from [192.168.1.107] ([37.4.249.155]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MqINP-1nLJAD1R9X-00nSQ6; Fri, 10 Jun 2022 14:53:18 +0200
-Message-ID: <c42fd256-e988-ebed-b6b8-91419c30e57d@i2se.com>
-Date:   Fri, 10 Jun 2022 14:53:16 +0200
+        with ESMTP id S237744AbiFJOPK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 10:15:10 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB680294;
+        Fri, 10 Jun 2022 07:15:08 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id v25so35481487eda.6;
+        Fri, 10 Jun 2022 07:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jc3e3K9fjKuQFsXc0udFTdSyc0Wk0NlV5mtyrMlUESQ=;
+        b=qQAJN7RGaTvIZRcl8Dv0wSzr6O6oEXuJKOv0S1WLzjNDFkdZ88hMK7cJEz83N1oL/4
+         JcJfPUF5p2NjH2QioHWJSf0WKP8PA+t0PCmR+4yvUDsQyrOCjhq84M1ruq37Yqy2JGdW
+         9Sw+0JIfuIlsfl4gEAlwbwOFlCgEFTD4JBJdW0StJVOKPwhqGLMVWfBsSRx/3RrCNYQH
+         Ybr2mE4tLk/Glgd7jHIQRWr0UL94xqfsd7hp0a2ONlaOKKeuM8a0oOTxDtfdy7dLfdHT
+         DOm7lhrR9zwDCGPk/Y5kritgVei38OSMBttoiAejqQINdCMU6jMPIKCeEBDNlPB7o3M4
+         8ynQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jc3e3K9fjKuQFsXc0udFTdSyc0Wk0NlV5mtyrMlUESQ=;
+        b=eseO2grTKbSn/VOFz0Z4CwyMJIiwoJtfs+Rd+To7MNd4SXMZXtjJtEZR+4ROoKOO3J
+         8qpxl14u2Qi9xq2WQ81g4DPJzNTigbQ8ottXSWgzwuMRdZh3/8tqnP9nqVndDW4Bnpgm
+         bzuSNxrmQSPbD1GM5Te32xDcSUxVy2ZVt3Mb40tTUlP553WghbLlZ/2jr6gP9S7lNOcT
+         vz3R3KtYH0te281pYagOS6PvICwZqSIwyuHyL0m9oXH4LK0hnJm550EMmgcikubQg1Zq
+         Iq7d7jGvMmoKZX/KHCJN0qcgXlb5fNYhjmmOecEPdtI+oWOCUQmRAeP0aqNr+9krMnfP
+         S/TA==
+X-Gm-Message-State: AOAM530UDZHk2lwS3nZJWKFQI+GtP7BkewZ5cHi1pcPtYmwLBXMedpke
+        F9ErzXa0kC1MD97ADdOunmRzqekwBSWwFOHY33lhOboojWw=
+X-Google-Smtp-Source: ABdhPJxhvmb4o6j3Y2SxEQa9mbryRYzOrjzrGHUfx+Eu77n5bO7q5iFBngkcwJJgllmLOLtLiNZC3QrZPQaU1MNFfkk=
+X-Received: by 2002:aa7:d481:0:b0:42d:d5fd:f963 with SMTP id
+ b1-20020aa7d481000000b0042dd5fdf963mr51509702edr.209.1654870507104; Fri, 10
+ Jun 2022 07:15:07 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH RFC] pinctrl: bcm2835: Make the irqchip immutable
-Content-Language: en-US
-To:     Marc Zyngier <maz@misterjones.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20220607103302.37558-1-stefan.wahren@i2se.com>
- <80790ad5a55e58f923de1c411e970875@misterjones.org>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <80790ad5a55e58f923de1c411e970875@misterjones.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/+iuI1oqgHN8gZy/l8aWrc328byTLNiGKL1i6uzfn5aTJZmqycd
- Esd622mhWdI6N4UYXSeOIBGgzMW6E6boYzNQosWHvffNp2jaMajkP73e5UYhr2stmJgH4Hk
- b6CVZ6ZjvR6zhBKbhD0TocD5sGl752EtPgOzKP2p+k4kNy+CzhzlK9+5lYTIzxTX75WWfYe
- 6ksuEzwvQskZHQ6d0EB1A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4lRIhYH2/wE=:oxAbwIv94jNEYAZUcKcN9I
- rcbumF4rdHm0b48Qs/fSVJUflxXAx5kPBqSqyDr+HabvPK30frkht6vDup2LTDJZsmlx8cho5
- dsHRN8Y/SZjbwRqXFeZxQpv1T6HXUQfKK4Vn/jeUhCHXkO9EJsUEddsanlu/1UNcWSjfuCNF0
- 8HlZ4KR3ApC4hSempO8c8YC8qlzk871pAqGPzX7ioiTfs2AGS/K7wQPgDntK8JA/IvItpCg/Q
- 6+CU+Rnk+z9FiP0/LaWbFHPkjmkRoGFJh1VUYnLzRfsbbZ9BHzhDT/Jx0EDUdPvT11q7jC/Pv
- MjwcnTtbxotl/Ouw1b4GLl5Ys6JCt9lph1xPIlxNXUkaEgpDSLKzgXvM2weUvay4J8i8h1RGl
- oB8C2Q60lST4mReaqmGtDzneK9q8tNjTvURtG4hOw6LmHWSZcwWuZh7UXd6/LjRjIOKqgruvr
- 9vUvaxiCHUMSQ5aEWLKzObpGZ5bS9blCwkvS3VGDpg1X9i6ydBuQTi97iIG3Fga3mmstkPdQ+
- 4/eoTFy6XCt4RWLzI74dbPqzIkj2T+7KvgUbFr1VAx3unx5wuE0KCl0/10tgeLJO03a2FKpw8
- pTaMvJvjADHl8Cl80nCyIZSz7WOursyplAiuYhIHgkeJ7yDgFLVzemQHaILmBqs2P5C6vW3qO
- qmnk+6HW/Llq/jNPGdCiQbHrOyM5QG7UEA47cAcCtookcS586oireAH423zYNUHK++vZDg77J
- i2G7WJRfzC5Smyo+9Nq5tlJg1xVMSWy0MIxV86jWyN0AQDqW0k0o33RrbsU=
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220607110525.36922-1-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220607110525.36922-1-aidanmacdonald.0x0@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 10 Jun 2022 16:14:30 +0200
+Message-ID: <CAHp75Vcr=i2zSFkD6MhR=TE8fWqqYqsuWnZJTeQ5HcRjw3U3hA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ingenic: Convert to immutable irq chip
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
+On Tue, Jun 7, 2022 at 5:53 PM Aidan MacDonald
+<aidanmacdonald.0x0@gmail.com> wrote:
+>
+> Update the driver to use an immutable IRQ chip to fix this warning:
+>
+>     "not an immutable chip, please consider fixing it!"
 
-Am 10.06.22 um 10:51 schrieb Marc Zyngier:
-> On 2022-06-07 11:33, Stefan Wahren wrote:
->> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
->> immutable") added a warning to indicate if the gpiolib is altering the
->> internals of irqchips. The bcm2835 pinctrl is also affected by this
->> warning.
->>
->> Fix this by making the irqchip in the bcm2835 pinctrl driver immutable.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> ---
->>
->> Hi, not sure about this change because irq_mask/unmask also uses the
->> enable/disable callbacks.
->
-> Yeah, that's totally broken.
->
-> If you have both enable and mask, they *must* be doing something
-> different (the names are pretty unambiguous...). If they do the
-> same thing, then enable/disable has to go.
-i will send a seperate fix for this.
->
->>
->>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
->> b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
->> index dad453054776..f754f7ed9eb9 100644
->> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
->> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
->> @@ -516,6 +516,8 @@ static void bcm2835_gpio_irq_enable(struct 
->> irq_data *data)
->>      unsigned bank = GPIO_REG_OFFSET(gpio);
->>      unsigned long flags;
->>
->> +    gpiochip_enable_irq(chip, gpio);
->> +
->>      raw_spin_lock_irqsave(&pc->irq_lock[bank], flags);
->>      set_bit(offset, &pc->enabled_irq_map[bank]);
->>      bcm2835_gpio_irq_config(pc, gpio, true);
->> @@ -537,6 +539,8 @@ static void bcm2835_gpio_irq_disable(struct 
->> irq_data *data)
->>      bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
->>      clear_bit(offset, &pc->enabled_irq_map[bank]);
->>      raw_spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
->> +
->> +    gpiochip_disable_irq(chip, gpio);
->>  }
->>
->>  static int __bcm2835_gpio_irq_set_type_disabled(struct 
->> bcm2835_pinctrl *pc,
->> @@ -693,7 +697,7 @@ static int bcm2835_gpio_irq_set_wake(struct
->> irq_data *data, unsigned int on)
->>      return ret;
->>  }
->>
->> -static struct irq_chip bcm2835_gpio_irq_chip = {
->> +static const struct irq_chip bcm2835_gpio_irq_chip = {
->>      .name = MODULE_NAME,
->>      .irq_enable = bcm2835_gpio_irq_enable,
->>      .irq_disable = bcm2835_gpio_irq_disable,
->> @@ -702,7 +706,7 @@ static struct irq_chip bcm2835_gpio_irq_chip = {
->>      .irq_mask = bcm2835_gpio_irq_disable,
->>      .irq_unmask = bcm2835_gpio_irq_enable,
->>      .irq_set_wake = bcm2835_gpio_irq_set_wake,
->> -    .flags = IRQCHIP_MASK_ON_SUSPEND,
->> +    .flags = (IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE),
->
-> You are missing the callbacks into the resource management
-> code (GPIOCHIP_IRQ_RESOURCE_HELPERS).
-Thanks
->
-> Thanks,
->
->         M.
+...
+
+>         int irq = irqd->hwirq;
+
+Consider switching to irq_hw_number_t with irqd_to_hwirq() (in a
+separate patch) as pointed out in the documentation.
+
+-- 
+With Best Regards,
+Andy Shevchenko
