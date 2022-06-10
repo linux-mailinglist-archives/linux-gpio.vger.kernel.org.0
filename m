@@ -2,172 +2,180 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56612545C59
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 08:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49483545CBB
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jun 2022 08:58:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346523AbiFJGh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jun 2022 02:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57104 "EHLO
+        id S234157AbiFJG6I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jun 2022 02:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235495AbiFJGh0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 02:37:26 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E832E33A02
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 23:37:22 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id e5so6583186wma.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 23:37:22 -0700 (PDT)
+        with ESMTP id S244135AbiFJG6G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jun 2022 02:58:06 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A94156B7A
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jun 2022 23:58:02 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id v19so33995266edd.4
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jun 2022 23:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Qxlw/2GeYPhBz4i8FzCqobc8aHph2WQJ2uzH+wlAQPM=;
-        b=YvKD/lnZFHPf9Bklm5hR2t0kTgFB1/rXSkgOKvxFTago0OfV/XXVBnr65QfdQ0sIbE
-         X56d5w92lO93EaOJsDJ8oCNGyjZkcJXPRSg9xTkOKhWDw62K7tpcO84Az2vOBRZU/r3+
-         YIHnLV0yk1ox4ibJDxo/xtHUE91KPK5nhGt24yQglgyRLlAN46Y1Z1t0+GvzN7M+MEou
-         tOdQLaDCWTLurM3ng8g7elKpPBlMcfWMNnTz6GEuMIGKZgA7WgUpL2gOP6VsKo5/EHPb
-         626ZTuTKw9tktPSgibPC7QlWbKT0XcsOV4TdzYgmUmuC1ODYErjWurNuno/msyBC5MwG
-         9u4A==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vb9vZlA0KeF3DFt/HLpJJKuJybJZMakJSP4WouEemNc=;
+        b=RzqxMjVAjiCbR9VVX507YdKHxA2gFzS0HmZ3O9JxO99eC7/9ikzkGqI5EUM/9tUIPp
+         jAUN5cgtMH2W0qk1HMTzSK5vyO6vnnC5cQxJ0RhPlM9/CgzL2M8zZhRE/rSztWa9jN5e
+         7xoGyll+NNO352+07I4rbo1iJOLJCKaMqYBC/mIZKpHUgkTiqQ6IPcE6TMIThrAZzKpt
+         sXyRONEWvNeX5h+od1sD9DuV4gHrE04THfBErNDTYFWOAxbhkeXyUySWszHxhe936Wy2
+         uXf9PZ+IP6Byq2ozZ+tm/TF+eP0YUWGP6kIYRDN22T13GDxMCgniwYG0INtCykbcGi5Z
+         H0/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Qxlw/2GeYPhBz4i8FzCqobc8aHph2WQJ2uzH+wlAQPM=;
-        b=fYl3A/f3/K8l4Nf9BCPETJpmxb3kKDhwC0tlJ+S8BpJerI5N6F/Pg55Otg0ZFqEBiD
-         iA8yRbVHkxTYcqwzb/pT6P6BF3uuiYdb9yf+kQNcMTSbql/QYhhDF1BkusR2kCxBFEvk
-         Ph50/H+ewfWsrdd7YJthwqbyAUYc6q3/TfELpGYz4O9kM8ub+v67FkrzhUJcuuTNOQW7
-         u77N9k9B4nfDyZmCBuqzn3mtk2dZIxgCdz0f46myqyafMoreE3Qn9R3k7MxtL6escK6Y
-         1TykQFZGDt8X+T59rst1M7FBSa63ai1gbFBD1/V2DlfEADlclvXHrlMHJULlRVRkbOMN
-         /LqQ==
-X-Gm-Message-State: AOAM533x75ePQZ531o87SPxZwIN/XHQYDMuGVy+vxEX7nYJs269NSj3X
-        Mw//9Fm6XGkTdAWXOeapFD8vIQ==
-X-Google-Smtp-Source: ABdhPJw4Hge4NDaRn0TL71ijVSQhRo1MhCaO3HbTb1tYRGHCORKkku8fnKoEAx9FGxDoG3CaWVnJNw==
-X-Received: by 2002:a1c:4e03:0:b0:39c:5bbc:e0d2 with SMTP id g3-20020a1c4e03000000b0039c5bbce0d2mr7034980wmh.184.1654843041123;
-        Thu, 09 Jun 2022 23:37:21 -0700 (PDT)
-Received: from localhost.localdomain ([2001:861:44c0:66c0:27b0:82d9:d0c6:702a])
-        by smtp.gmail.com with ESMTPSA id 2-20020a05600c228200b0039482d95ab7sm1729030wmf.24.2022.06.09.23.37.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 23:37:20 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, arm@kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-omap@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Nishanth Menon <nm@ti.com>,
-        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
-        Andrew Jeffery <andrew@aj.id.au>, linux-input@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Peter Rosin <peda@axentia.se>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Gross <agross@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        linux-sunxi@lists.linux.dev,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Li Yang <leoyang.li@nxp.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: (subset) [PATCH v2 00/48] dt-bindings: input: gpio-keys: rework matching children
-Date:   Fri, 10 Jun 2022 08:37:18 +0200
-Message-Id: <165484301356.1384204.15957178175784526690.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220609113721.379932-1-krzysztof.kozlowski@linaro.org>
-References: <20220609113721.379932-1-krzysztof.kozlowski@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vb9vZlA0KeF3DFt/HLpJJKuJybJZMakJSP4WouEemNc=;
+        b=BoqAsfiJ8/YozlWFqO7EEv+0THvT8UD16wsp70jYAM3wPddMPS0gOwjndOL9bZ4blp
+         mIf7+L4ReILj0CO+ClfzXBYzWMB/kUBAuNxIQdiWFgj/cOcngs4tXkCtTbh891ibm8u0
+         0ijtrr61EZ7HvPFsn4tJOs3S/Z10gXfGUXtzPfZAjDZS+Vocg69fsVzzrSUxwN6w+N+5
+         Hi4vGiYB1pfqPGkjS4in8lxK2WihjdCzFtBvBDb7ZFr/NgCJtTcry93zdF/j2rXLfkjh
+         OgyfyM03kgLZIidCmbwKuZnWldpeY+YHtRLQsdQImfR7/pzpCGp/J3EnFpqywS4cs41+
+         8n6g==
+X-Gm-Message-State: AOAM5313J4oJc2AciMQ3OWk4XD4RzN3rFzn7FzZyFd/0wW2UjjXJL/pZ
+        mGMj5oeq+lfvvffidt3ivEvlrgexWWBhuHrOl5D83A==
+X-Google-Smtp-Source: ABdhPJy5jPkTijhNzaIayYKQLGHO9mpjvGtyf6RDmWLdlGoYXwWUqWbAGLiJLl4Wc5KrOBHC472Nn07uyJ8HQEMhWi8=
+X-Received: by 2002:a05:6402:e0c:b0:42d:7f16:ac2c with SMTP id
+ h12-20020a0564020e0c00b0042d7f16ac2cmr48954207edh.328.1654844280621; Thu, 09
+ Jun 2022 23:58:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20220525140704.94983-4-brgl@bgdev.pl> <20220603124600.GA35695@sol>
+ <20220604024131.GB13574@sol> <Yp3TmNg2uBlC0XzI@smile.fi.intel.com>
+ <20220607015220.GA9430@sol> <CAMRc=MdwgGefC0AgRCvgMfAZmq_+1GnXH6XMezjyBEKs37QuAQ@mail.gmail.com>
+ <20220609044922.GA11301@sol> <CAMRc=Md_7WO69hKqToSoAAyDQWxfqgg-PisrBF5AzrsKMM8FQA@mail.gmail.com>
+ <20220609152112.12fc6db4@griffin> <CAMRc=Mfgov0S-dZ7Ut2oj4A8=xE7d-4iX=8Q+Kv4Tb==JviMjw@mail.gmail.com>
+ <20220610042319.GB7623@sol>
+In-Reply-To: <20220610042319.GB7623@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 10 Jun 2022 08:57:50 +0200
+Message-ID: <CAMRc=MfZ2+17sGVoyDZXDYtR8nm6ZxQKzps9wviqX448h45guQ@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH 3/5] bindings: python: add examples for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Jiri Benc <jbenc@upir.cz>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Fri, Jun 10, 2022 at 6:23 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Thu, Jun 09, 2022 at 06:06:04PM +0200, Bartosz Golaszewski wrote:
+> > On Thu, Jun 9, 2022 at 3:21 PM Jiri Benc <jbenc@upir.cz> wrote:
+> > >
+> > > On Thu, 9 Jun 2022 10:42:44 +0200, Bartosz Golaszewski wrote:
+> > > > On Thu, Jun 9, 2022 at 6:49 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > Agree that it would be easier to write a pythonic wrapper around the C
+> > > > > API in Python, so no problem with that.
+> > > > > However, the pythonic wrapper should the one named gpiod, as it is
+> > > > > intended to be the primary interface for Python.  Rename your existing
+> > > > > to gpiod_c or gpiod_core or something.
+> > > >
+> > > > I don't agree. The module that wraps the C library should still be
+> > > > called gpiod and be the primary interface. The pythonic module would
+> > > > just offer helpers that would still use the gpiod data types for most
+> > > > part.
+> > >
+> > > As a Python user, I'd much rather see the high level API being the
+> > > primary interface and being named 'gpiod'. The easier to use and more
+> > > Pythonic, the better. The low level library bindings and low level data
+> > > types are just an implementation detail for me when coding in Python.
+> > > If I wanted low level, I'd code everything directly in C.
+> > >
+> >
+> > But Kent is not talking about a whole new "pythonic" layer on top of
+> > the code that is the subject of this series. The bindings are already
+> > quite pythonic in that you can get most stuff done with a "logical"
+> > one-liner. The gpiod module doesn't map C API 1:1, it already
+> > simplifies a bunch of interfaces. Kent's idea IIUC is about providing
+> > a set of helpers that would produce the gpiod objects in shorter code
+> > by hiding the details of intermediate objects being created.
+> >
+>
+> Yeah, no, I'm saying that there should be one primary Python interface
+> to gpiod, and it should be the most pythonic.  And complete.
+> The casual user should be able to get by with a few simple commands, but
+> the complete functionality should still be accessible, via that same
+> API, for more complicated cases.
+>
+> > Re the event buffer: yeah, I think in python (unlike C++ or future
+> > Rust bindings) it makes sense to hide it within the request as we
+> > can't profit from implicitly not copying the event objects.
+> >
+>
+> That is a consequence of building on top of the gpiod C API, as you have
+> to deal with two object models, and the related type conversions or
+> lifecycle management.
+> A native binding built on top of the ioctls can use native objects
+> throughout can take better advantage of the language.
+> e.g. here the equivalent of my Python suggestion using my Rust
+> gpiocdev library (sadly without named lines support as I hadn't
+> considered that at the time):
+>
+>     // request the lines
+>     let req = Request::builder()
+>         .on_chip("/dev/gpiochip0")
+>         .with_lines(&[17,18])
+>         .with_edge_detection(EdgeDetection::BothEdges)
+>         .request()?;
+>
 
-On Thu, 9 Jun 2022 13:37:21 +0200, Krzysztof Kozlowski wrote:
-> Merging
-> =======
-> 1. dt-bindings: rebased on top of Rob's:
->    https://lore.kernel.org/all/20220608211207.2058487-1-robh@kernel.org/
-> 
-> 2. DTS patches are independent. They can be picked up directly by sub-arch
->    maintainers, by Arnd or Olof, or eventually by me (if you wish).
-> 
-> [...]
+So in Python you'd like to see an equivalent in the form of:
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v5.20/arm64-dt)
+req = gpiod.request_lines(chip="/dev/gpiochip0", lines=["GPIO17",
+"RESET_0"], edge_detection=Edge.BOTH)
 
-[07/48] arm64: dts: amlogic: correct gpio-keys properties
-        https://git.kernel.org/amlogic/c/4956be9944d1fb23107f27bad8a2cca0fa167443
-[08/48] arm64: dts: amlogic: align gpio-key node names with dtschema
-        https://git.kernel.org/amlogic/c/4fd9afd894ebe5831dbd737e6ca7b6de14da7fda
+>     // wait for line edge events
+>     for event in req.edge_events()? {
+>         println!("{:?}", event?);
+>     }
 
-These changes has been applied on the intermediate git tree [1].
+and:
 
-The v5.20/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
+for event in req.read_edge_events():
+    print(event)
 
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
+Note that for the event reading: implementing yield in C API is not
+currently possible. I think the best way to implement the above
+example is to simply return a buffer filled with events that is
+already iterable.
 
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
+Ok I can work with that. It also makes sense to take keyword arguments
+by default in all methods.
 
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
+Thanks
+Bart
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
--- 
-Neil
+>
+> That has a hidden event buffer within the request.  The default size is 1,
+> but add .with_user_event_buffer_size(N) and you get an N event buffer.
+> There is no copying involved, just borrowing, as all the objects are
+> visible to the borrow checker.
+>
+> > If anyone wants to create an even simpler, complete interface for
+> > gpiod, then it's a task for a whole new project. Think: pydbus built
+> > on top of GLib dbus bindings in python, built on top of glib's dbus
+> > implementation.
+> >
+>
+> Don't tempt me - though I would target the GPIO uAPI ioctls, not gpiod,
+> for the reasons above.
+>
+> Cheers,
+> Kent.
