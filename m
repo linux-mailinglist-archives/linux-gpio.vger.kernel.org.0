@@ -2,112 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 351615473CD
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jun 2022 12:38:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7B7C5475A0
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jun 2022 16:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbiFKKiG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Jun 2022 06:38:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
+        id S235156AbiFKOar (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 Jun 2022 10:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiFKKiG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Jun 2022 06:38:06 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A5367D13;
-        Sat, 11 Jun 2022 03:38:05 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id b8so1711779edj.11;
-        Sat, 11 Jun 2022 03:38:05 -0700 (PDT)
+        with ESMTP id S230379AbiFKOar (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Jun 2022 10:30:47 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5A570921;
+        Sat, 11 Jun 2022 07:30:46 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id v14so1931322wra.5;
+        Sat, 11 Jun 2022 07:30:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TL01zc1wHBLAGsEfDb4Hq71GrxMg8CwLyZooSJWIhuQ=;
-        b=QtMJWb1UWXwOslP4l+K17Z3gPpguIKDzqP/AcqYwPBpC9m4HNdrAjx8i0yHIs3Jr81
-         T+JWJK6hUr31ohqOEfqY2jE6+afIfHuPKmSFsVHEQwRoq2HS0BakWDReEK31a4xLWKvh
-         HPtQxyskTRUBnBwAVtoWMBjdJ/+qSVbZEBUt7Xbbq6uFY4l0eKXbR2XeYQPB26nt7sTg
-         gKdrjJQ/SB6iyg/q6jT0XNZ1e9+gnB6bgwYTPEI1UHJ7nX0MN0JQ3865pCeA02GV5cYX
-         rjZa83ux9I4Jnsvh2vEcZwVkKMXC85eUejoUYIGlcftYfJSFZqYe6Misg/Hg1zXYK/uq
-         eqfQ==
+        h=references:from:to:cc:subject:date:in-reply-to:message-id
+         :mime-version;
+        bh=sD6DZtzCxz1XGT4WP0KYWyA1V0wDI+6N4mhrYaf6wNc=;
+        b=gvnIOjt4Yjh2RWXfj+r3iQqN9qQzZO9jZpNw7iJIHm91kYhMWKpONFiQTuAQvAOEa9
+         xj0ctN5tFYk4q/kwtDS0XATZ4INKq21QyU6qFaxs6T6scR6NmA7obRyBBfhKZYP7xqZo
+         3r2SgAtYkpfE5Fsdf0Ny8Pn3+ISy3mEkEjUC79EdrKSdOaBRg+tpddnimAI7hwq/sUqD
+         gr0HkaG38EEiPAC49r48WgO2dAHX9iBqGWQau3VLaUUC7rF9f8WUuOmn2ksr6s0pfyG/
+         7+iFC5adxxx70Aa74xmp0D9+JirD5g1T/FdytE4AtUg8gm+D7GF606CbHASxiXA2UVxI
+         h8hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TL01zc1wHBLAGsEfDb4Hq71GrxMg8CwLyZooSJWIhuQ=;
-        b=Erpc6IYTjF1ZZsnAumCcffnwE3GO5r/qfHKu+0mzQRg6QR0c8vgVL1QbH/KNVSSL5h
-         s8B4Jojgd3YvSdcRLtJWgwb5qzEYgYRjDbDnqtCis8jXff4XfJBEbwUSdvsFvDw5Iquv
-         m00JEIS9zTC4VL70V1kg27wycj1Wu6s/sqIaQc/LSlp5fLWMNql0dTzMHg0bfniRbwZR
-         A8LNt3Yb1ztlfEQfg0LhlCS65v1jp+9LI8k+jtZTKqn6ta75XILFbntdg+9PQs5rMRqc
-         PnwvWhvQovn0j9HvINj/r64D3C0c5sdR6Vk/DUTMzW9D6XVB4i7JDa/CcUUwBa58FH+X
-         p95g==
-X-Gm-Message-State: AOAM530VzFzugfYXmHJP6lPoN47pnUF6/Ja8xjQTcPlgAcXS3nwNfMsu
-        HrUloqJRgLHZ/Ua0DDSphbQZZ1pHZe9/Pa1ES+U=
-X-Google-Smtp-Source: ABdhPJxOKZWJKsTpPKPkSmo+fc5cRoKy2TeJYcjjoqHFnLmWCxs8wNug/URbpvWmB5zAg4RAjyWV7Q2UqWlqDbnMnIQ=
-X-Received: by 2002:aa7:d481:0:b0:42d:d5fd:f963 with SMTP id
- b1-20020aa7d481000000b0042dd5fdf963mr55696954edr.209.1654943883982; Sat, 11
- Jun 2022 03:38:03 -0700 (PDT)
+        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version;
+        bh=sD6DZtzCxz1XGT4WP0KYWyA1V0wDI+6N4mhrYaf6wNc=;
+        b=EjuDij0Ho1Tr3q8YvbisHHsJKyVvWA2aBbkV4z8+3V5tktoSEVgO8BLJnEmb4JlEpc
+         9QeZRJZfCB2Z8/uP93uwNOxspMkBDl7ER8iTS1ZhI9EH2VucTfHmqYcVVbllfIn8L5xx
+         uskn5koERzm0bTbS8T4+2gqtmf1hSYLjoa5lto0Wjk4xSWHZxQMEDD+M0wPi4rKtPSdQ
+         9EOKrDcqISpXk6T5Bq5hH5ULJY8QCeSh98UfyrSFuzxQpVqNo+RzDvFt6S1WMV99jwj5
+         P9jEYcmjHeApvKzCQTD76kPjjNlPoNctMTdBRnh1isZuehoKcWPG09W9cIN1L+gJ1WUN
+         quPQ==
+X-Gm-Message-State: AOAM530o7psdCxWcPp6+oa+RB2TLZQ8quNaFv99yLR9yzb0C6BFdy6Yb
+        ckb/K2OoThCCyiDssMPVcoc=
+X-Google-Smtp-Source: ABdhPJzBEpGcZhzolH3y0re0vAoAh7rSVG7272hENxhaAsPczjmKCuMzU2JQfTQY0ee/wUwmBvQHuQ==
+X-Received: by 2002:a5d:5885:0:b0:218:3d12:e0eb with SMTP id n5-20020a5d5885000000b002183d12e0ebmr32847579wrf.510.1654957844444;
+        Sat, 11 Jun 2022 07:30:44 -0700 (PDT)
+Received: from localhost (92.40.203.182.threembb.co.uk. [92.40.203.182])
+        by smtp.gmail.com with ESMTPSA id h12-20020a05600c2cac00b003942a244f40sm7233181wmc.25.2022.06.11.07.30.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jun 2022 07:30:43 -0700 (PDT)
+References: <20220607155324.118102-1-aidanmacdonald.0x0@gmail.com>
+ <20220607155324.118102-3-aidanmacdonald.0x0@gmail.com>
+ <YqDLflKTsYaupArl@sirena.org.uk>
+ <6YJcC5wyOg6x6Ny4Os8ujFbK2qB4alkU@localhost>
+ <YqN1iTyyiRx4/CMf@sirena.org.uk>
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
+        lee.jones@linaro.org, sre@kernel.org, gregkh@linuxfoundation.org,
+        lgirdwood@gmail.com, lars@metafoo.de, rafael@kernel.org,
+        quic_gurus@quicinc.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 02/17] regmap-irq: Add get_irq_reg to support unusual
+ register layouts
+Date:   Sat, 11 Jun 2022 15:22:30 +0100
+In-reply-to: <YqN1iTyyiRx4/CMf@sirena.org.uk>
+Message-ID: <xU4ZOVJZM7e2sDSZJ2mAJIBPI1teACp7@localhost>
 MIME-Version: 1.0
-References: <20220610202330.799510-1-colin.foster@in-advantage.com> <20220610202330.799510-2-colin.foster@in-advantage.com>
-In-Reply-To: <20220610202330.799510-2-colin.foster@in-advantage.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 11 Jun 2022 12:37:26 +0200
-Message-ID: <CAHp75Vc+V3APvBO8rJ0awu65iPbEoYKn5bn4GhC0DEvC4DiKiw@mail.gmail.com>
-Subject: Re: [PATCH v10 net-next 1/7] mfd: ocelot: add helper to get regmap
- from a resource
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 10:23 PM Colin Foster
-<colin.foster@in-advantage.com> wrote:
+
+Mark Brown <broonie@kernel.org> writes:
+
+> On Fri, Jun 10, 2022 at 04:40:20PM +0100, Aidan MacDonald wrote:
+>> Mark Brown <broonie@kernel.org> writes:
+>> > On Tue, Jun 07, 2022 at 04:53:09PM +0100, Aidan MacDonald wrote:
 >
-> Several ocelot-related modules are designed for MMIO / regmaps. As such,
-> they often use a combination of devm_platform_get_and_ioremap_resource and
-> devm_regmap_init_mmio.
+>> >> -	if (!chip->sub_reg_offsets || !chip->not_fixed_stride) {
+>> >> +	if (chip->get_irq_reg) {
+>> >> +		reg = chip->get_irq_reg(base_reg, i);
+>> >> +	} else if (!chip->sub_reg_offsets || !chip->not_fixed_stride) {
 >
-> Operating in an MFD might be different, in that it could be memory mapped,
-> or it could be SPI, I2C... In these cases a fallback to use IORESOURCE_REG
-> instead of IORESOURCE_MEM becomes necessary.
+>> > It seems like it would be cleaner and clearer to refactor things so that
+>> > we always have a get_irq_reg() with standard chips getting given a
+>> > default implementation which implements the current behaviour.
 >
-> When this happens, there's redundant logic that needs to be implemented in
-> every driver. In order to avoid this redundancy, utilize a single function
-> that, if the MFD scenario is enabled, will perform this fallback logic.
+>> I don't think that is a good way to clean things up. I only intended
+>> get_irq_reg() to be a quick hack to solve a problem; in my opinion it
+>> would be a poor abstraction to base the API around.
+>
+> I'm not sure why you are proposing this change if you are so convinced
+> it's a bad idea.  If you want to propose a different rework go ahead,
+> but adding the new operation without any form of factoring out is an
+> issue.  At first glance your suggestion looked plausible.
 
-v10 has the same issues I have pointed out in v9.
+This patch isn't a refactor and I don't think it's a bad idea when
+viewed as minimal solution to a problem, which was my intention.
+I just think it wouldn't be a good abstraction to refactor around.
+Thanks for your input anyhow.
 
-Please, take your time and instead of bombing mailing lists with new
-versions try to look how other (most recent) drivers have been done.
-
-Also pay attention to the API design.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Just as a heads up, I'll be resending these regmap-irq patches in v3
+so the series stays self-contained while I work on refactoring. Feel
+free to ignore them if you don't want to take them.
