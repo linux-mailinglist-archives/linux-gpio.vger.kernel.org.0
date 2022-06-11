@@ -2,80 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEEFF547726
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jun 2022 20:46:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C993C547781
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jun 2022 22:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbiFKSqf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Jun 2022 14:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
+        id S229587AbiFKU1j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 Jun 2022 16:27:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229672AbiFKSqe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Jun 2022 14:46:34 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D963F329;
-        Sat, 11 Jun 2022 11:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654973192; x=1686509192;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kyT6KKWjC/OdmE81Ef78B9jpCvknrCcdviqYlOzkN2I=;
-  b=dPCjKtaMJCYzLrmviWFc7ufW8qG9ZMrQ1RvuAvnHlqI1+HhvVBbxdgX7
-   /ubTuIq8hrsP3CyGlop4p1/3IAaLWK0fFiMkz2uQXfCqBUqXjkd+DaE+s
-   UhzHwuQNojP031oY1GMGXgE2IUGcdOdFxQ5ph838dZVRFNi1jNFx0yl+i
-   zWAJIIse+lIZ2drYQ/MoYzqPVHltnIJ2qX2b7hVlep6djXwK2oteEyWU6
-   EGLBCbKLVJ72PirOJmmzcovOe0AMoKM5eajPZGSlO0dJTE4sJAocjZaig
-   XmO41jAsA26Q4wiI5oJ/BoQ/8qiJkLP8kP6qfkIizYJKaGJQEdC2btug3
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10375"; a="266661910"
-X-IronPort-AV: E=Sophos;i="5.91,294,1647327600"; 
-   d="scan'208";a="266661910"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2022 11:46:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,294,1647327600"; 
-   d="scan'208";a="760973379"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 11 Jun 2022 11:46:26 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o067t-000JCD-Fy;
-        Sat, 11 Jun 2022 18:46:25 +0000
-Date:   Sun, 12 Jun 2022 02:45:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Colin Foster <colin.foster@in-advantage.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
+        with ESMTP id S231324AbiFKU1i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Jun 2022 16:27:38 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B3576A430
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Jun 2022 13:27:36 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id r123-20020a1c2b81000000b0039c1439c33cso1188795wmr.5
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Jun 2022 13:27:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nFNaxUZNCpwtJNNLY7AYmusKJ3kJUrDC+YV49C9O30c=;
+        b=xapK7w9Mp0+G8h+Q+vNaAd2AWR7BcAEpYzR8DL/+kEsxbCaf85qQyDgYBgZNCyeblC
+         S6XerCCZxg906asAmR3Fh9b2tzqOs/RBiEvevcBmWPiRAbqT02hfODBBQBi3ESm+pVRK
+         e1tLhsj1dUJHhRox9XtJXh3zlAY+pZfgEytKHCaNdsS7Zzlxr7JCtNQR7J+ABSv21R19
+         pBReugPHq6gGG9MT8IZzsET7UZY8m4mkqq+PU9mMJMfmICwyjj7S5bU8eD10l6znkA85
+         fZ4cyxy6Da6jdFJKp1KXcejnoDYR510PkphvLeQmhkn5OA5drmjkFJ4/YpAfMcnVDl0j
+         Z+ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nFNaxUZNCpwtJNNLY7AYmusKJ3kJUrDC+YV49C9O30c=;
+        b=5gSaqDUaj9hYcou6N/BlTFWqi7gUDCJe3MqhVfJtsnFZPlA1s4ZokQYtUggMOF6HPv
+         R8BiMI6CzdOllqAjdCY8KCVsJJMicsFEQTrn+Z11zWSdL5JyJtzaJYYWpF2pdXOwruXN
+         6mb8X+Hawrl+atX6l+G/+6UtcB6wycmFG4ln1qsMTz1ZrdzK403siFt+CWF/9SafkBGq
+         /3rtoXEl1UqZSZKiZSpGSuNsKzliSgqowB1JmviIfHCRXdxE17zk8QELyyzWyPuyweWc
+         OCojg8YuDRQPyKrRuKBzT6qI1pUHuJpotGY+PiALC2E/YQ1n2D8TuC8UQ0VlElhNIuh6
+         /LFA==
+X-Gm-Message-State: AOAM532eLeVobs3ea7jL2xWR121MRSqawuGWJwdtXnX7OQmygFtUhLkE
+        LjFL0YkejqvBL0U8zDzYvLs3OgPRhGpBzg==
+X-Google-Smtp-Source: ABdhPJzdHDOInnFkPrwicvPSpk+IUUMH8dbzNdVQe+zzy7teM4yj2g7KQMQBM3gU+9RioHq3G08ENw==
+X-Received: by 2002:a7b:c341:0:b0:37b:ed90:7dad with SMTP id l1-20020a7bc341000000b0037bed907dadmr6234923wmj.138.1654979255002;
+        Sat, 11 Jun 2022 13:27:35 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f2fe:1d3f:7d24:f28f])
+        by smtp.gmail.com with ESMTPSA id z18-20020a05600c0a1200b003973435c517sm3629501wmp.0.2022.06.11.13.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jun 2022 13:27:34 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa-dev@sang-engineering.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v10 net-next 7/7] mfd: ocelot: add support for the
- vsc7512 chip via spi
-Message-ID: <202206120247.2zx79Zg9-lkp@intel.com>
-References: <20220610202330.799510-8-colin.foster@in-advantage.com>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.19-rc2
+Date:   Sat, 11 Jun 2022 22:27:32 +0200
+Message-Id: <20220611202732.6602-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220610202330.799510-8-colin.foster@in-advantage.com>
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,72 +68,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Colin,
+Linus,
 
-I love your patch! Yet something to improve:
+Here's a set of fixes for the upcoming rc. Most address the new warning we
+emit at build time when irq chips are not immutable with some additional
+tweaks to gpio-crystalcove from Andy and a small tweak to gpio-dwapd.
 
-[auto build test ERROR on net-next/master]
+Please pull!
+Bartosz Golaszewski
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220611-042931
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git b97dcb85750b7e8bc5aaed5403ddf4b0552c7993
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20220612/202206120247.2zx79Zg9-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project ff4abe755279a3a47cc416ef80dbc900d9a98a19)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm64 cross compiling tool for clang build
-        # apt-get install binutils-aarch64-linux-gnu
-        # https://github.com/intel-lab-lkp/linux/commit/60523f7239bade660c86be121bd29954c24f53df
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220611-042931
-        git checkout 60523f7239bade660c86be121bd29954c24f53df
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/
+The following changes since commit f2906aa863381afb0015a9eb7fefad885d4e5a56:
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+  Linux 5.19-rc1 (2022-06-05 17:18:54 -0700)
 
-All errors (new ones prefixed by >>):
+are available in the Git repository at:
 
->> drivers/mfd/ocelot-core.c:118:40: error: initializer element is not a compile-time constant
-                   .of_reg = vsc7512_miim0_resources[0].start,
-                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
-   1 error generated.
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc2
 
+for you to fetch changes up to 77006f6edc0e0f58617eb25e53731f78641e820d:
 
-vim +118 drivers/mfd/ocelot-core.c
+  gpio: dwapb: Don't print error on -EPROBE_DEFER (2022-06-10 14:26:15 +0200)
 
-   103	
-   104	static const struct mfd_cell vsc7512_devs[] = {
-   105		{
-   106			.name = "ocelot-pinctrl",
-   107			.of_compatible = "mscc,ocelot-pinctrl",
-   108			.num_resources = ARRAY_SIZE(vsc7512_pinctrl_resources),
-   109			.resources = vsc7512_pinctrl_resources,
-   110		}, {
-   111			.name = "ocelot-sgpio",
-   112			.of_compatible = "mscc,ocelot-sgpio",
-   113			.num_resources = ARRAY_SIZE(vsc7512_sgpio_resources),
-   114			.resources = vsc7512_sgpio_resources,
-   115		}, {
-   116			.name = "ocelot-miim0",
-   117			.of_compatible = "mscc,ocelot-miim",
- > 118			.of_reg = vsc7512_miim0_resources[0].start,
-   119			.use_of_reg = true,
-   120			.num_resources = ARRAY_SIZE(vsc7512_miim0_resources),
-   121			.resources = vsc7512_miim0_resources,
-   122		}, {
-   123			.name = "ocelot-miim1",
-   124			.of_compatible = "mscc,ocelot-miim",
-   125			.num_resources = ARRAY_SIZE(vsc7512_miim1_resources),
-   126			.of_reg = vsc7512_miim1_resources[0].start,
-   127			.use_of_reg = true,
-   128			.resources = vsc7512_miim1_resources,
-   129		},
-   130	};
-   131	
+----------------------------------------------------------------
+gpio fixes for v5.19-rc2
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+- make irq_chip structs immutable in several Diolan and intel drivers to
+  get rid of the new warning we emit when fiddling with irq chips
+- don't print error messages on probe deferral in gpio-dwapb
+
+----------------------------------------------------------------
+Andy Shevchenko (7):
+      gpio: crystalcove: make irq_chip immutable
+      gpio: crystalcove: Use specific type and API for IRQ number
+      gpio: crystalcove: Join function declarations and long lines
+      gpio: wcove: make irq_chip immutable
+      gpio: merrifield: make irq_chip immutable
+      gpio: sch: make irq_chip immutable
+      gpio: dln2: make irq_chip immutable
+
+Bartosz Golaszewski (1):
+      Merge tag 'intel-gpio-v5.19-2' of gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-current
+
+Serge Semin (1):
+      gpio: dwapb: Don't print error on -EPROBE_DEFER
+
+ drivers/gpio/gpio-crystalcove.c | 70 ++++++++++++++++++++++-------------------
+ drivers/gpio/gpio-dln2.c        | 23 ++++++++------
+ drivers/gpio/gpio-dwapb.c       |  7 ++---
+ drivers/gpio/gpio-merrifield.c  | 22 ++++++++-----
+ drivers/gpio/gpio-sch.c         | 35 +++++++++++++--------
+ drivers/gpio/gpio-wcove.c       | 10 ++++--
+ 6 files changed, 99 insertions(+), 68 deletions(-)
