@@ -2,50 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B2D4547AB8
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jun 2022 17:10:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ED7F547B9C
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jun 2022 21:02:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234370AbiFLPKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Jun 2022 11:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
+        id S233423AbiFLTCC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 12 Jun 2022 15:02:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237475AbiFLPKh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Jun 2022 11:10:37 -0400
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D2BA5EDE1;
-        Sun, 12 Jun 2022 08:10:34 -0700 (PDT)
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by box.trvn.ru (Postfix) with ESMTPSA id 42F564B010;
-        Sun, 12 Jun 2022 20:00:18 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-        t=1655046018; bh=d75aH6lgsop7H0tTJMNEsXUOXMX4zeKLj6KVJaiEtl4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EaGNG4X9LzC4R+SBFyBhIoZYMfcgbDfpjypiC3F+s1ziY2oFYp4ZxR1c7NGzgKnXT
-         R5FPPlTa5+0WGxD2r3iYW5Edq1GrlBGkl6qHcBeY8Oi2rTfOdH/lBWt/2OFntqtE5n
-         Muc7aBr1Gd/NyrlN9Rid1o9+t8behBxbQ8q1ADSbX0IoN1xpLyOgmpa8hK9UvHj+44
-         RvHMh+N8eEB1DbfkGbrSN7/INyeQOcxBwWs/BSO6ybjdPie226PtZluC3UEF1bq4S9
-         SDiprayGYE5Q3fhIOvC7RIwBQ9zmojnLDoi4473YR/2Mb4wKajIIBuKfcUB4QWt/e8
-         RmeYtdHVNOckQ==
-From:   Nikita Travkin <nikita@trvn.ru>
-To:     mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
-        joonwoop@codeaurora.org, svarbanov@mm-sol.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Nikita Travkin <nikita@trvn.ru>
-Subject: [PATCH v2 4/4] clk: qcom: gcc-msm8916: Add rates to the GP clocks
-Date:   Sun, 12 Jun 2022 19:59:55 +0500
-Message-Id: <20220612145955.385787-5-nikita@trvn.ru>
-In-Reply-To: <20220612145955.385787-1-nikita@trvn.ru>
-References: <20220612145955.385787-1-nikita@trvn.ru>
+        with ESMTP id S233249AbiFLTCB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Jun 2022 15:02:01 -0400
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569A017AAF
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Jun 2022 12:01:58 -0700 (PDT)
+Received: from submission (posteo.de [185.67.36.169]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id D1132240029
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Jun 2022 21:01:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1655060515; bh=OIJ2JP7SQeXyamrKWxoIIVw/HJ+6Iauyz0L3wpT0p3s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pdv5QUjSULTph4ufdkyAhyOK41v50GuNzt8MFjO+nFdBTb10GK9w6jzRFrnsApqKm
+         t9xt7u8xnYT9nsyn8IY8/X7wlsuDvjT/cp/MHczuSTrqK94WHVqpKeT0hfeWHrWFTk
+         QyeclBX0tu1eHzk5cQobkM5KSZDSSk47OhroIETTdUT4iN0t1ZzKFTyru7TeRBEmxF
+         gGmPyRqLLwC0AbnvJqQnfmSF0dZYcDx60Un35Kq5mA2SGBjytGvGFHC+lNME90I45l
+         NZDl64+VYhsixylsRNTMwibr7U8YlrNrzBykzb0ijn/A7+oJTqDzu5xiQHrj6JP2cb
+         E+MmYNfnMyvng==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 4LLkZp6cJyz6tmX;
+        Sun, 12 Jun 2022 21:01:54 +0200 (CEST)
+Date:   Sun, 12 Jun 2022 19:01:09 +0000
+From:   Tom Schwindl <schwindl@posteo.de>
+To:     corbet@lwn.net
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: driver-api: gpio: Fix filename mismatch
+Message-ID: <YqY39Rwi4Lnzw2GH@posteo.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,79 +49,80 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-msm8916 has (at least) 6 "General Purpose" clocks that can be muxed to
-SoC pins. These clocks are:
+The filenames were changed a while ago, but board.rst, consumer.rst and
+intro.rst still refer to the old names. Fix those references to match the
+Actual names and avoid possible confusion.
 
-GP_CLK{0, 1} : GPIO_{31, 32} (Belongs to CAMSS according to Linux)
-GP_CLK_{1-3}{A, B} : GPIO_{49-51, 97, 12, 13} (Belongs to GCC itself)
-GP_MN : GPIO_110 (Doesn't seem to be described in gcc,
-    ignored in this patch)
-
-Those clocks may be used as e.g. PWM sources for external peripherals.
-Add more frequencies to the table for those clocks so it's possible
-for arbitrary peripherals to make use of them.
-
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+Signed-off-by: Tom Schwindl <schwindl@posteo.de>
 ---
- drivers/clk/qcom/gcc-msm8916.c | 35 ++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ Documentation/driver-api/gpio/board.rst    | 2 +-
+ Documentation/driver-api/gpio/consumer.rst | 6 +++---
+ Documentation/driver-api/gpio/intro.rst    | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
-index 17e4a5a2a9fd..9a46794f6eb8 100644
---- a/drivers/clk/qcom/gcc-msm8916.c
-+++ b/drivers/clk/qcom/gcc-msm8916.c
-@@ -765,7 +765,20 @@ static struct clk_rcg2 cci_clk_src = {
- 	},
- };
+diff --git a/Documentation/driver-api/gpio/board.rst b/Documentation/driver-api/gpio/board.rst
+index 4e3adf31c8d1..b33aa04f213f 100644
+--- a/Documentation/driver-api/gpio/board.rst
++++ b/Documentation/driver-api/gpio/board.rst
+@@ -6,7 +6,7 @@ This document explains how GPIOs can be assigned to given devices and functions.
  
-+/*
-+ * This is a frequency table for "General Purpose" clocks.
-+ * These clocks can be muxed to the SoC pins and may be used by
-+ * external devices. They're often used as PWM source.
-+ *
-+ * See comment at ftbl_gcc_gp1_3_clk.
-+ */
- static const struct freq_tbl ftbl_gcc_camss_gp0_1_clk[] = {
-+	F(10000,   P_XO,    16,  1, 120),
-+	F(100000,  P_XO,    16,  1,  12),
-+	F(500000,  P_GPLL0, 16,  1, 100),
-+	F(1000000, P_GPLL0, 16,  1,  50),
-+	F(2500000, P_GPLL0, 16,  1,  20),
-+	F(5000000, P_GPLL0, 16,  1,  10),
- 	F(100000000, P_GPLL0, 8, 0, 0),
- 	F(200000000, P_GPLL0, 4, 0, 0),
- 	{ }
-@@ -927,7 +940,29 @@ static struct clk_rcg2 crypto_clk_src = {
- 	},
- };
+ Note that it only applies to the new descriptor-based interface. For a
+ description of the deprecated integer-based GPIO interface please refer to
+-gpio-legacy.txt (actually, there is no real mapping possible with the old
++legacy.rst (actually, there is no real mapping possible with the old
+ interface; you just fetch an integer from somewhere and request the
+ corresponding GPIO).
  
-+/*
-+ * This is a frequency table for "General Purpose" clocks.
-+ * These clocks can be muxed to the SoC pins and may be used by
-+ * external devices. They're often used as PWM source.
-+ *
-+ * Please note that MND divider must be enabled for duty-cycle
-+ * control to be possible. (M != N) Also since D register is configured
-+ * with a value multiplied by 2, and duty cycle is calculated as
-+ *                             (2 * D) % 2^W
-+ *                DutyCycle = ----------------
-+ *                              2 * (N % 2^W)
-+ * (where W = .mnd_width)
-+ * N must be half or less than maximum value for the register.
-+ * Otherwise duty-cycle control would be limited.
-+ * (e.g. for 8-bit NMD N should be less than 128)
-+ */
- static const struct freq_tbl ftbl_gcc_gp1_3_clk[] = {
-+	F(10000,   P_XO,    16,  1, 120),
-+	F(100000,  P_XO,    16,  1,  12),
-+	F(500000,  P_GPLL0, 16,  1, 100),
-+	F(1000000, P_GPLL0, 16,  1,  50),
-+	F(2500000, P_GPLL0, 16,  1,  20),
-+	F(5000000, P_GPLL0, 16,  1,  10),
- 	F(19200000, P_XO, 1, 0,	0),
- 	{ }
- };
+diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/driver-api/gpio/consumer.rst
+index 47869ca8ccf0..72bcf5f5e3a2 100644
+--- a/Documentation/driver-api/gpio/consumer.rst
++++ b/Documentation/driver-api/gpio/consumer.rst
+@@ -4,7 +4,7 @@ GPIO Descriptor Consumer Interface
+ 
+ This document describes the consumer interface of the GPIO framework. Note that
+ it describes the new descriptor-based interface. For a description of the
+-deprecated integer-based GPIO interface please refer to gpio-legacy.txt.
++deprecated integer-based GPIO interface please refer to legacy.rst.
+ 
+ 
+ Guidelines for GPIOs consumers
+@@ -78,7 +78,7 @@ whether the line is configured active high or active low (see
+ 
+ The two last flags are used for use cases where open drain is mandatory, such
+ as I2C: if the line is not already configured as open drain in the mappings
+-(see board.txt), then open drain will be enforced anyway and a warning will be
++(see board.rst), then open drain will be enforced anyway and a warning will be
+ printed that the board configuration needs to be updated to match the use case.
+ 
+ Both functions return either a valid GPIO descriptor, or an error code checkable
+@@ -270,7 +270,7 @@ driven.
+ The same is applicable for open drain or open source output lines: those do not
+ actively drive their output high (open drain) or low (open source), they just
+ switch their output to a high impedance value. The consumer should not need to
+-care. (For details read about open drain in driver.txt.)
++care. (For details read about open drain in driver.rst.)
+ 
+ With this, all the gpiod_set_(array)_value_xxx() functions interpret the
+ parameter "value" as "asserted" ("1") or "de-asserted" ("0"). The physical line
+diff --git a/Documentation/driver-api/gpio/intro.rst b/Documentation/driver-api/gpio/intro.rst
+index 2e924fb5b3d5..c9c19243b97f 100644
+--- a/Documentation/driver-api/gpio/intro.rst
++++ b/Documentation/driver-api/gpio/intro.rst
+@@ -14,12 +14,12 @@ Due to the history of GPIO interfaces in the kernel, there are two different
+ ways to obtain and use GPIOs:
+ 
+   - The descriptor-based interface is the preferred way to manipulate GPIOs,
+-    and is described by all the files in this directory excepted gpio-legacy.txt.
++    and is described by all the files in this directory excepted legacy.rst.
+   - The legacy integer-based interface which is considered deprecated (but still
+-    usable for compatibility reasons) is documented in gpio-legacy.txt.
++    usable for compatibility reasons) is documented in legacy.rst.
+ 
+ The remainder of this document applies to the new descriptor-based interface.
+-gpio-legacy.txt contains the same information applied to the legacy
++legacy.rst contains the same information applied to the legacy
+ integer-based interface.
+ 
+ 
 -- 
-2.35.3
 
