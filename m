@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2902E549C6C
+	by mail.lfdr.de (Postfix) with ESMTP id CECA1549C70
 	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jun 2022 20:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244435AbiFMS7M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jun 2022 14:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45402 "EHLO
+        id S245634AbiFMS7N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jun 2022 14:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346654AbiFMS6p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jun 2022 14:58:45 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B6D58A338
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jun 2022 09:12:05 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id s12so12137101ejx.3
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jun 2022 09:12:05 -0700 (PDT)
+        with ESMTP id S1347314AbiFMS6y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jun 2022 14:58:54 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477B32CDC8
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jun 2022 09:13:05 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id kq6so12079793ejb.11
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jun 2022 09:13:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=P6lLiFcHNk1LYk41lJatoeCKPrB/NP5ibxP6H+rfMbU=;
-        b=WKjgJI44QJjFEdeEeg/V2vwM/ysH6UBEf+SThMJYB5k09nHUmBiCxZOHTcE4OFYK9G
-         4gwuPgOXVkN8MSTNMJqrJotfevsWvTOppvK5mjEDbE63hHncgUm5WtROMqoFC8tIU3KN
-         c7cJnqGtS7qtrR5yio6WY6UeqUY8TyaYpUna1AIbtVZKqT+Pz9h7JtOR0HTCXCZpXAeN
-         Ds/HgqD1bQj+A5ndGZt6DywKpjRr3QTmezSmJctLKy4gE7/z3Y3HuYwzucKsWoINTHvK
-         UNJfuTFBTNXgpezdv0/iQqbkPBZ0EWSUi+nzqcMCL6sBvZbjOH8LHbmJzjdl2SjeAVDG
-         QKIA==
+        bh=ClWJGxROkRDHXKyRKDqxhN+/3eAFVZ0J4XFXQm1t9qU=;
+        b=352ckjxwFkIPRoqqLFdZX1qx+ohNn0RBDoCcMhG20RcD8Am5eTfV3uZE0VupOpwFdS
+         JQxFM4g+EMOniZcH52An4JwINyQFsFGcYHRrDQhYh60Wp3OxVBFl3ut9qmMbePIQgovv
+         QxlmDkCHe6VoOOR7AmY6uFB3hPZ0xrRSo6UgMjmvCpFDLaE2n7HkR54ZJAs9OoeUBAFQ
+         1wJ4rJ38bIDtUFNVEVY6zOXyiBZ7O7azc+BYvlrplLCUz1rJ88BPzOBcIqELN2dNt6LZ
+         GLrE3KUAwVBUe8vZ7Rv8KRS57zXAKiTVwYLlXkh11EGZexZx30i+dld6IKhx7AbBJxdm
+         ADsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=P6lLiFcHNk1LYk41lJatoeCKPrB/NP5ibxP6H+rfMbU=;
-        b=YHfbqykdH0x+IumU7wPjg5WUFpGHTXxu/DN6DHGrQJUUYq3yTSKF5eVFADCrKkExGe
-         orRiOr/VvjoDjgNIPyKwh3AzPyuuCyP+6qOPP/HXMmDsluhjpGs0GVGIRJv42N/XNzNE
-         2cEGGjGNuZy8gdI3jl752uQz8e6ad75D0cQ4vuFRDAxQvD947amPZzyfMh5UySOWdnnV
-         7ofH4IISl6yDGscQ/oyYMVvAu4/aGCk99diQqN8+zsSkG2SOVmILij2BvQEHos1LBdNu
-         +kKDd75QdMzXv9iLqd3GgGWbrQj4AuEbpzea0g2DTlpWBTFGvXpAVpkevvo2Daj8+bvm
-         vyew==
-X-Gm-Message-State: AOAM533CuOGt35+UXvikAhJiXKdHpmvZD2Jy6l53AC/uZ7BLuM+ez4DA
-        qnsg+3B4gI9j0zJnjAQ2SENW8FO5mvMiHCMSX58l9uaXbPM=
-X-Google-Smtp-Source: ABdhPJx2YYY2W4TYzHoJIpn3Y15QBwZlPUgrmzriy3AcwiEjKh9UPDmSvoXAIQ/te02GZgqwsYirtnk0B8+m8D7JYxM=
-X-Received: by 2002:a17:907:3e21:b0:711:ea36:914e with SMTP id
- hp33-20020a1709073e2100b00711ea36914emr493892ejc.101.1655136723646; Mon, 13
- Jun 2022 09:12:03 -0700 (PDT)
+        bh=ClWJGxROkRDHXKyRKDqxhN+/3eAFVZ0J4XFXQm1t9qU=;
+        b=a1/GoedEJpA8R1HhdF/npGLcg3tPMXw+XsQBkt4+9zvzMbC7ZNm1j5aijkDwZ1iCGv
+         iyTvgfRSyAfgEGf5/F8ctbmDS1kFG0bsZIO0u3wJY8RjrlV8S46ME9zkR8pN5mnDNOiK
+         W6ouz8meY11XDypIRL8qUrFzPYdC56mJw4V8TvyLifHc2zQmxYFYWjkmA2f5+9TUqooq
+         zAgC2hCGqyQREEAelGfwzqAFIMxAj68JCPyc/yZUU7AT3hZyryl13ZtRO7miD3SH1ZTD
+         hFR2MKZSnCxQAZtlXqAWqB32IXO+VnSPhX0G+SKkIkTKU6pJzMbm2LaTywA3hIxJAG8X
+         nnxQ==
+X-Gm-Message-State: AOAM531D0257oNSTHomgL1t1qmCS7TI98kh325D0R7igNJGjKc6bVgwz
+        mpTafwVb/UEOlP631msMibAt++gGlsbOC4xywEDNGw==
+X-Google-Smtp-Source: ABdhPJySjC9TbtjM/sD70Pf5P+b3I/hrQhRNqdbWjkjgsqa+zsxIpqishLf6a0BMLEDd1Xhsp9hDMzexnGYeDSh2CL4=
+X-Received: by 2002:a17:907:90c8:b0:711:c8e1:7109 with SMTP id
+ gk8-20020a17090790c800b00711c8e17109mr517177ejb.492.1655136783827; Mon, 13
+ Jun 2022 09:13:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220613111134.23255-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20220613111134.23255-1-lukas.bulwahn@gmail.com>
+References: <YqY39Rwi4Lnzw2GH@posteo.de>
+In-Reply-To: <YqY39Rwi4Lnzw2GH@posteo.de>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 13 Jun 2022 18:11:52 +0200
-Message-ID: <CAMRc=Mfa8fMPFTGZcB5Tpj6e-w54u+Oa626+xJyLwHSzcyWCow@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add include/dt-bindings/gpio to GPIO SUBSYSTEM
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Mon, 13 Jun 2022 18:12:53 +0200
+Message-ID: <CAMRc=MeVHf2Zq3L9prhxSZ=tNDcY6+aXQKyq_BqO5XF0oDB1HQ@mail.gmail.com>
+Subject: Re: [PATCH] docs: driver-api: gpio: Fix filename mismatch
+To:     Tom Schwindl <schwindl@posteo.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -67,36 +68,84 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 1:11 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+On Sun, Jun 12, 2022 at 9:01 PM Tom Schwindl <schwindl@posteo.de> wrote:
 >
-> Maintainers of the directory Documentation/devicetree/bindings/gpio
-> are also the maintainers of the corresponding directory
-> include/dt-bindings/gpio.
+> The filenames were changed a while ago, but board.rst, consumer.rst and
+> intro.rst still refer to the old names. Fix those references to match the
+> Actual names and avoid possible confusion.
 >
-> Add the file entry for include/dt-bindings/gpio to the appropriate
-> section in MAINTAINERS.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Signed-off-by: Tom Schwindl <schwindl@posteo.de>
 > ---
-> Linus, Bartosz, please pick this MAINTAINERS addition to your section.
+>  Documentation/driver-api/gpio/board.rst    | 2 +-
+>  Documentation/driver-api/gpio/consumer.rst | 6 +++---
+>  Documentation/driver-api/gpio/intro.rst    | 6 +++---
+>  3 files changed, 7 insertions(+), 7 deletions(-)
 >
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+> diff --git a/Documentation/driver-api/gpio/board.rst b/Documentation/driver-api/gpio/board.rst
+> index 4e3adf31c8d1..b33aa04f213f 100644
+> --- a/Documentation/driver-api/gpio/board.rst
+> +++ b/Documentation/driver-api/gpio/board.rst
+> @@ -6,7 +6,7 @@ This document explains how GPIOs can be assigned to given devices and functions.
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1adf8767422b..d04e74ade88a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8517,6 +8517,7 @@ F:        Documentation/devicetree/bindings/gpio/
->  F:     Documentation/driver-api/gpio/
->  F:     drivers/gpio/
->  F:     include/asm-generic/gpio.h
-> +F:     include/dt-bindings/gpio/
->  F:     include/linux/gpio.h
->  F:     include/linux/gpio/
->  F:     include/linux/of_gpio.h
+>  Note that it only applies to the new descriptor-based interface. For a
+>  description of the deprecated integer-based GPIO interface please refer to
+> -gpio-legacy.txt (actually, there is no real mapping possible with the old
+> +legacy.rst (actually, there is no real mapping possible with the old
+>  interface; you just fetch an integer from somewhere and request the
+>  corresponding GPIO).
+>
+> diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/driver-api/gpio/consumer.rst
+> index 47869ca8ccf0..72bcf5f5e3a2 100644
+> --- a/Documentation/driver-api/gpio/consumer.rst
+> +++ b/Documentation/driver-api/gpio/consumer.rst
+> @@ -4,7 +4,7 @@ GPIO Descriptor Consumer Interface
+>
+>  This document describes the consumer interface of the GPIO framework. Note that
+>  it describes the new descriptor-based interface. For a description of the
+> -deprecated integer-based GPIO interface please refer to gpio-legacy.txt.
+> +deprecated integer-based GPIO interface please refer to legacy.rst.
+>
+>
+>  Guidelines for GPIOs consumers
+> @@ -78,7 +78,7 @@ whether the line is configured active high or active low (see
+>
+>  The two last flags are used for use cases where open drain is mandatory, such
+>  as I2C: if the line is not already configured as open drain in the mappings
+> -(see board.txt), then open drain will be enforced anyway and a warning will be
+> +(see board.rst), then open drain will be enforced anyway and a warning will be
+>  printed that the board configuration needs to be updated to match the use case.
+>
+>  Both functions return either a valid GPIO descriptor, or an error code checkable
+> @@ -270,7 +270,7 @@ driven.
+>  The same is applicable for open drain or open source output lines: those do not
+>  actively drive their output high (open drain) or low (open source), they just
+>  switch their output to a high impedance value. The consumer should not need to
+> -care. (For details read about open drain in driver.txt.)
+> +care. (For details read about open drain in driver.rst.)
+>
+>  With this, all the gpiod_set_(array)_value_xxx() functions interpret the
+>  parameter "value" as "asserted" ("1") or "de-asserted" ("0"). The physical line
+> diff --git a/Documentation/driver-api/gpio/intro.rst b/Documentation/driver-api/gpio/intro.rst
+> index 2e924fb5b3d5..c9c19243b97f 100644
+> --- a/Documentation/driver-api/gpio/intro.rst
+> +++ b/Documentation/driver-api/gpio/intro.rst
+> @@ -14,12 +14,12 @@ Due to the history of GPIO interfaces in the kernel, there are two different
+>  ways to obtain and use GPIOs:
+>
+>    - The descriptor-based interface is the preferred way to manipulate GPIOs,
+> -    and is described by all the files in this directory excepted gpio-legacy.txt.
+> +    and is described by all the files in this directory excepted legacy.rst.
+>    - The legacy integer-based interface which is considered deprecated (but still
+> -    usable for compatibility reasons) is documented in gpio-legacy.txt.
+> +    usable for compatibility reasons) is documented in legacy.rst.
+>
+>  The remainder of this document applies to the new descriptor-based interface.
+> -gpio-legacy.txt contains the same information applied to the legacy
+> +legacy.rst contains the same information applied to the legacy
+>  integer-based interface.
+>
+>
 > --
-> 2.17.1
 >
 
 Applied, thanks!
