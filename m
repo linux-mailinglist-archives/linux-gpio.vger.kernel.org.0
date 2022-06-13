@@ -2,106 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7A895481E7
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jun 2022 10:28:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A89F65483B5
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jun 2022 11:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239370AbiFMIFG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jun 2022 04:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55632 "EHLO
+        id S239912AbiFMJou (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jun 2022 05:44:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239582AbiFMIFA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jun 2022 04:05:00 -0400
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C06EE1DA64;
-        Mon, 13 Jun 2022 01:04:59 -0700 (PDT)
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25D7xS51019797;
-        Mon, 13 Jun 2022 01:04:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pfpt0220; bh=4kEqJsoH0xPOSiWdOim4stej7xTujvgJgudqDoTK4fo=;
- b=iH9K3s4peRHmMsEpNIdt27NMjZ0s3xLwPLU9Jh9BQ8KBRDlLVa9TPRdTri5leWUZ8Cok
- C77F14a5/+pdeMRmBGfpYJ9BNZF37PSwS1kkHL3YSzj+2YqgCDRz6YDFVBHDnjgWkPIF
- EzdxPyEjOg+VA7t1L6tyvHQNiQKFwRD6YjOaQcbiaW15sBE6Yr0r/lOpDmGkF4Ewrg2X
- M/9WpoZMcPUu/iSOvdRjF2W/KO7GP5qpa3kple4ncHHmpqdcE4QTJUR80NYxi5UA+ghj
- aDYTxgY39v7tazlkfM7CrOEYBFk2+j98ailX+w1bNqS0SGDHYOcxKcuHoCEHQPhDcMum vw== 
-Received: from dc5-exch02.marvell.com ([199.233.59.182])
-        by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3gmtjnwc3w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jun 2022 01:04:54 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 13 Jun
- 2022 01:04:52 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Mon, 13 Jun 2022 01:04:52 -0700
-Received: from Dell2s-9 (unknown [10.110.150.250])
-        by maili.marvell.com (Postfix) with ESMTP id 8D36D3F7067;
-        Mon, 13 Jun 2022 01:04:52 -0700 (PDT)
-Date:   Mon, 13 Jun 2022 01:04:52 -0700
-From:   Piyush Malgujar <pmalgujar@marvell.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <brgl@bgdev.pl>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <rric@kernel.org>, <cchavva@marvell.com>, <wsadowski@marvell.com>
-Subject: Re: [PATCH 2/5] dt-bindings: gpio: gpio-thunderx: Describe pin-cfg
- option
-Message-ID: <20220613080452.GA1884@Dell2s-9>
-References: <20220427144620.9105-1-pmalgujar@marvell.com>
- <20220427144620.9105-3-pmalgujar@marvell.com>
- <CACRpkdaqeTs-jHPBmtdiz+LdMM0pz0zqt4diX=e+YpgaGr0Jbw@mail.gmail.com>
- <20220603090618.GA27121@Dell2s-9>
- <CACRpkdaOd0-k_mt0ZrKT-DbVc3f0b5uXXmXpBNH=hq3BGCB+vQ@mail.gmail.com>
+        with ESMTP id S239981AbiFMJot (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jun 2022 05:44:49 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A8B18B37;
+        Mon, 13 Jun 2022 02:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1655113483;
+        bh=JV08/kjmQgd4Qe/JyQ5XWzd1+ENzu/6aRjVgufY/viA=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=LtmAWDnr6zYw+r4RHApWEQM1jdjbDBPbkIHdoJ1c4PXyTf5hKUH9aF6M44pXtWdbM
+         sRWari1IWHC3oSKNsTB7GB6iegjFyGl83abNCisPWTmip8fTz5DRcSGY9Ox3NWpDf2
+         QhQjEGdV/M1xxp/DFqTt/GkN13EAzfmZQDfHJgGc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.3]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mj8qd-1nUfCI3Twj-00fBb4; Mon, 13
+ Jun 2022 11:44:43 +0200
+Date:   Mon, 13 Jun 2022 11:44:42 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] pinctrl: nuvoton: wpcm450: Convert irqchip to
+ IRQCHIP_IMMUTABLE
+Message-ID: <YqcHClQU0hNYTbgt@latitude>
+References: <20220610001609.276220-1-j.neuschaefer@gmx.net>
+ <CAHp75VcLn5Ue0efoH_3kKJJqrD5OMbvetPh13FCQFshG9hnN9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nFuUPyBHrWNRC1jf"
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaOd0-k_mt0ZrKT-DbVc3f0b5uXXmXpBNH=hq3BGCB+vQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-GUID: bNpaeJuNQQ4maPDNeFH19KvJexjJLJFL
-X-Proofpoint-ORIG-GUID: bNpaeJuNQQ4maPDNeFH19KvJexjJLJFL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-13_02,2022-06-09_02,2022-02-23_01
+In-Reply-To: <CAHp75VcLn5Ue0efoH_3kKJJqrD5OMbvetPh13FCQFshG9hnN9w@mail.gmail.com>
+X-Provags-ID: V03:K1:ganESRDkMTNhY/3vfP34bJRGjKRv1dXv6gfWQaz9IJ1+21uuv+Y
+ Xd70/lMlnvkj1BupWk0HgtU7Q/kNhcaiQ88+dJ/GJbJFbUvGrliLPkXn5Y61mVepEMARZNs
+ ZKuGwKTrQ/oOwRKhm02CnZdEJnW+gHhiq9ufzZa9qI3xQASwNO6OFx59r50xxi95Mx0qz13
+ HnkNDfa1CcYqnS9ZNuKrw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y5stFMT5I88=:TidO2uItKM8jjIkwI9u6Ar
+ BkBb+Gn4HmfTqh+85Q0T0O1trkKnvhW23Cph9ih9O8yX28DJxM7jd9F9YGe/vadGjd0NI0aux
+ pLQbw92zSNWwtxIbiSjF0oH4ImwPNLc4CQ9fWDVg0PyTsNlgSJxFNsZqY4cNOVse8uH52CAQX
+ Lznt6MTl3qCx8/NQt7lE/A1ebkgfKc0YWm0yKfttmBlb/s6AFmYiCzt29xn5o7wSKoP4p/3tV
+ SVmM5zfALbtEdSl90Gfx6r+Oh5tDwafY05oCnT9QLeotKKNEYcFHkFFtKXZuMSPOhvMCTjQse
+ YdkO7ShTtBXyBRTviKGG0EHmjaBL2MGf0pVt+IK2cnYiNo5Ocq0zoOxuyoEErkzG9c67Z9k78
+ UfFuAntsvtArdAo0AyWXSJkIhh0L47jZZ2dWIruVuBj07E2Ryw3XrzTaAR4152jqHM0l87ItW
+ ur2hcBRhYbXKDzI95qi2nRMhcgjxb37f2Pv3GxdhWrau/gaiYO9nrtkUgsv2BqqhVQaaDkn0r
+ oAmZPS77b2ebGV6finM7JN3kAS5OXvekttvPMf0HFfX75k1EPhIHhNEOVWxf8jTF2FaA5Rchp
+ IddQCa9FHG3PEhvO9GXrM1mWVYLddjV4ZUcwAOznBNnSqKxIL8bRtW1fnVnz3jNIJe0bRz3GJ
+ gGk29vQwESKkqsjOlzyKpjIB3IviIqXsanf56/yYnSgNiF302PNPPA44//nN0qedY0d1DrHUJ
+ FHaYpZ0GuZMBokXFnuIRP+4l/zE8mLV9VUh6O1FFX9LCKIF7V9DwL2yAay2/6Gq3k2gZanmgI
+ nMKcxpjedG63YkWAJ54QA3aKPCkm93+AeLBtEV6dU/pkBKco2QNQ4DoT0SoY+MpCa0MBjgTBI
+ HfzKTNs9v7qtDEGkvS7kL7SWv5AoHxgQnWHgotiEXu8t2i5LOFogwSFQEl30KiZnDp4gbCb7l
+ 4l3TnXsVRe0awusfDmcGfQJ9UoFiwKXggq6Owcl+5Va/kCbj4Svr1xBXJTmvWtl99DsexrMjy
+ sveMmkOEvggiNVOoGpN1ZaHZhkjcJtIGo0oxNcsZecIOpsTGOOtDaIJvHqjygGvyyv44Id//D
+ gK1gzAbOqCdoKbufPy3tGW/NkCuqRrrkBNxoJWm1X0C/sbZPMJRIiiXGQ==
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 03, 2022 at 12:35:57PM +0200, Linus Walleij wrote:
-> On Fri, Jun 3, 2022 at 11:06 AM Piyush Malgujar <pmalgujar@marvell.com> wrote:
-> 
-> > The purpose of this pin-cfg entry is different than the standard GPIO pin config usage.
-> > It is to write a value to GPIO_BIT_CFG register which is used to configure fields like
-> > pin function, selecting which signal is reported to GPIO output or which signal GPIO
-> > input need to connect, filters, XOR and output mode.
-> 
-> Then implement pin control for this driver instead of inventing a custom hack?
-> https://docs.kernel.org/driver-api/pin-control.html
-> 
-> Several drivers implement pin control with a GPIO front-end, for example:
-> drivers/gpio/gpio-pl061.c is used as a front end with
-> drivers/pinctrl/pinctrl-single.c
-> 
-> There are also composite drivers in drivers/pinctrl that implement both
-> pincontrol (incl muxing) and GPIO, such as drivers/pinctrl/pinctrl-sx150x.c
-> 
-> Yours,
-> Linus Walleij
 
-Hi Linus,
+--nFuUPyBHrWNRC1jf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the reply.
-But as in this case, we expect a 32 bit reg value via DTS for this driver
-only from user with internal understanding of marvell soc and this reg bit
-value can have many different combinations as the register fields can vary
-for different marvell SoCs.
-This patch just reads the reg value from DTS and writes it to the register.
+On Fri, Jun 10, 2022 at 02:07:55PM +0200, Andy Shevchenko wrote:
+> On Fri, Jun 10, 2022 at 2:24 AM Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+> >
+> > Commit 6c846d026d490 ("gpio: Don't fiddle with irqchips marked as
+> > immutable") added a warning for irqchips that are not marked with
+> > IRQCHIP_IMMUTABLE.
+> >
+> > Convert the pinctrl-wpcm450 driver to an immutable irqchip.
+>=20
+> ...
+>=20
+> > +       gpiochip_disable_irq(gc, d->hwirq);
+>=20
+> > +       gpiochip_enable_irq(gc, d->hwirq);
+>=20
+> Can you use the helper (*) as stated in the documentation?
+>=20
+> *) irqd_to_hwirq(d)
+
+Ah, oops. I'll fix it.
+
 
 Thanks,
-Piyush
+Jonathan
+
+--nFuUPyBHrWNRC1jf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmKnBukACgkQCDBEmo7z
+X9vOiw//dDj/H/znJVravzUdFFJgpBmzBRjArecl9dEDhZj+Cgw7HXPNn2G0MgBh
++RqDSwTl+gtMn1n+a8sCt4m+O7inm4I29Za1AzaKTEfoG3Iw01QpCrHoFEyhpcpV
+oeNoyTDBaj72D2XJmlgC5oMwFql5jtnOCh2gJ77Uoi7synnH4822GoleNj27zCpf
+98Ch1TbqRWygSATj93FUHH0kPSLdWwYO1kaCofq80YwAOG+NkjBqzTEawdsb4CqI
+DLc1Zu4sptwe6NrrqIgj1/iD4oTjc0oYUnH4R2QY8pRF1LBS5y/3yLF3EByqww5z
+vY7Rv0j5qwM6yjYGb9mD3Ig7nhKk8/fGk/1y0QNsti21Gnz6wY6Wz9smfig/6X51
+7fIYUrRBrVG6b9nxGuhXev5/P5s/VxkD87RpBHqXKGdJf9PMMt8EviYwy1Ys4oHT
+NucOrKLS3ErEiNG63xTiwEMYflaVvpJz15PJ4hLZHrHeUx3bV5MqHeV0F/c69rKf
+NVWyD4zuhCU3u98Pbfvrdlhz83rfEWmNdC60PQ4Qwg1MF5yQR0B8ZjmKjCXvC1yU
+Id6Svok5zN+WdrYag+aYyri7F52ny/YEAYLDBJISzHDxy4471HSlIF8pTIdHJeVn
+YrPTuNChRzjXRTTq67Kl+1SmuwYUyMM3q9Ej8JtQWYp4mPRgOTI=
+=I1MA
+-----END PGP SIGNATURE-----
+
+--nFuUPyBHrWNRC1jf--
