@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4EF554A908
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jun 2022 07:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA92A54A90F
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jun 2022 07:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237699AbiFNF7H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jun 2022 01:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33034 "EHLO
+        id S235972AbiFNF7Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jun 2022 01:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237887AbiFNF7G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jun 2022 01:59:06 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2107.outbound.protection.outlook.com [40.107.113.107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDAEF35A95;
-        Mon, 13 Jun 2022 22:59:04 -0700 (PDT)
+        with ESMTP id S230077AbiFNF7P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jun 2022 01:59:15 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2099.outbound.protection.outlook.com [40.107.113.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B0F3585C;
+        Mon, 13 Jun 2022 22:59:12 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SI4k1pd7iaHOq8pd4mXGFXlF65bD2s3o9GlChA+zXlrn9mpu8e1H+Q8E1RaVGf7mc3wrXVtY73NrgFM3/mNJGV3BB8zfo3zXN2DHQob0ybVanLhXSTbEnLdgEn50Sxonm6QXt8JTiObdlQckJTPpCM94F1uGW2vEUVGP2o5LMbhTypAb8lixOoqHqYN1i8U8Tb0KwT6hXpDrt5gn+YtM/Vb1Cgw7YWkOdsRSBbJAym9wVLiF1DG9M9ttrKyweiAHQSv4eqpC2/DqFsCg7KhhCygpYFrVHd4B25SYIohEsu/WtFY6sm32wICg6w9ZvD62MKFj4uw0WfK32TAjmK1wgg==
+ b=jRs5x+qS+8OstOZ2OkA1Ds3T8AxFrBjaASBY/iDkPoAChvw8F34aYbIP+SA7dJ/WyT5o0vQZba3DmrWDd8aZkVzokZ5vRdifazMBzaCzJdiZiIJc0buuDSg3FKvuGzwo1eEcVI3sbMQf9EGQutlRNzs/gUIzl6QsiAYj5KW6YA/wcRydCbhFLOwgFjy5D/BuI9sxgRpEScgRVaQXcn9F2Jf1rJkC9FhCGAYJnaxRrTFRPLrg87xStqFu0ojxRAqikMUIhT0pSnNDL4WbXmYYYMUpTTn3DbGr+toa3wuUBxYuTe/gmikqUTJ54q6OLkGuEBoWgdujZTFRJebHPa4v2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4vSLSAoX1ddLTeppMSdTBeB7HdGzQjiT8icoMM8v3F8=;
- b=mTfiDTAgxnYDuGM9ojvHfwrPHd8RKdJOw48E5DEsYVQcN6x4TgG6hnVKNKlN0pzqwSN5o5QOMBM6La2U+hSNcS7rOmZh63FQkZdRj5BlFSheU++c7eFzAJD9NnoA2mdIZ8AmzlQiCCuDNUBl+iN44QJfUYBaKomSqCyVOh6IKVIblmeUjUgFDUGEnugkZziWzjUVkeP4VQtM2iPS/jm1mh9WMM9kWRSGCtvUOkvhLPIzQkAUsgvhBsnzAaBlBLHRXGz+xg+DyVuzhwc44wo8jjcEm6GYGFJ90iW0DmMoATkzRJi+wdCgedVUkfyy7tLNQq+FKNobpnA0Fs32ZcdBLw==
+ bh=i/etd4b4ldXP9X/7BSAugtOd82cfhP6Xh7GVDCxmCf4=;
+ b=bpxQbrW66BiLe5DmH6AaH5EgpP0/aE2UtGlLBi53pPKVRiXyg7qCUT5V6Cyt9yWIvRoLVMTHaFy2hPtGHn3n5K4eUWMgEjLWb4c8Z8oigFDq8QP2DuG/+pspJ/H6Zvcom78N1eJA5CySNXIpDox+Jx4TrOP3tIkLdPK5WcX9Es0o/Jj/+VEjvxGLc+f7XB63oNmKRLxP+uw7dbm42VssgTCE9aa9+CwD7bhpZcBUOfaU5fEarYxMukAZ9OdALYxKXaHR+8vumYR0odtVfiyooIRooyt3QcOfvmUespOXDKckZa8MVov4IGwUoSGXFDUfSqV8gV0/+mSlE3Yt5DGzlg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
  dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4vSLSAoX1ddLTeppMSdTBeB7HdGzQjiT8icoMM8v3F8=;
- b=aCVIg5evcYKfT/nfaO8xcdb3vKV3GshUoexmxUvoEGlztr5AhITZhLwVkoXhUCPptuNvg+5pPpVQL2skBTyqYzzTU9OI2woRddOx3foyrWu4WVMHHWu/3OCqHYlHGZqwIML1dp2g3283N8qJOQVn/d7vC87ovGBcq5xVEIED8BQ=
+ bh=i/etd4b4ldXP9X/7BSAugtOd82cfhP6Xh7GVDCxmCf4=;
+ b=bwJLHAQPwKx5gQ1ZkxyIKBRAVYeBaQR3rN+ez5/PShX8Nhr7anTsGXZlTrSYJSFdnpkMmM2BWPQR8tem0eVh6TBrqWF0YFNzCM40OZrUOy3ipH6D1niNYpOImjs9MBfM3N50Vme3NqF9Wr3fV4Q7nk7yylgtaKgTq5wfsuYMKwQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=renesas.com;
 Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
- by TYXPR01MB1711.jpnprd01.prod.outlook.com (2603:1096:403:b::16) with
+ by TYAPR01MB3613.jpnprd01.prod.outlook.com (2603:1096:404:c5::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.15; Tue, 14 Jun
- 2022 05:59:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.13; Tue, 14 Jun
+ 2022 05:59:09 +0000
 Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com
  ([fe80::d5d9:3646:37df:867c]) by OS3PR01MB8426.jpnprd01.prod.outlook.com
  ([fe80::d5d9:3646:37df:867c%6]) with mapi id 15.20.5332.022; Tue, 14 Jun 2022
- 05:59:01 +0000
-Message-ID: <87wndjkcpm.wl-kuninori.morimoto.gx@renesas.com>
+ 05:59:09 +0000
+Message-ID: <87v8t3kcpe.wl-kuninori.morimoto.gx@renesas.com>
 From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH v3 05/21] pinctrl: renesas: r8a779g0: remove not used NOGP definitions
+Subject: [PATCH v3 06/21] pinctrl: renesas: r8a779g0: remove not used IPxSRx definitions
 User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -50,66 +50,66 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
 In-Reply-To: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com>
 References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com>
 Content-Type: text/plain; charset=US-ASCII
-Date:   Tue, 14 Jun 2022 05:59:01 +0000
-X-ClientProxiedBy: TYAPR04CA0008.apcprd04.prod.outlook.com
- (2603:1096:404:15::20) To OS3PR01MB8426.jpnprd01.prod.outlook.com
+Date:   Tue, 14 Jun 2022 05:59:09 +0000
+X-ClientProxiedBy: TYAPR01CA0118.jpnprd01.prod.outlook.com
+ (2603:1096:404:2a::34) To OS3PR01MB8426.jpnprd01.prod.outlook.com
  (2603:1096:604:194::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7c0016b4-f497-4f50-e543-08da4dcafade
-X-MS-TrafficTypeDiagnostic: TYXPR01MB1711:EE_
-X-Microsoft-Antispam-PRVS: <TYXPR01MB17112B0A718748EF63588C60D4AA9@TYXPR01MB1711.jpnprd01.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 770b5960-5d45-4249-c665-08da4dcaff99
+X-MS-TrafficTypeDiagnostic: TYAPR01MB3613:EE_
+X-Microsoft-Antispam-PRVS: <TYAPR01MB3613D9C4B86CEBCAC6736C94D4AA9@TYAPR01MB3613.jpnprd01.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zkg9gkn+RvQIDPXzgByCu0XWOFbXPxopF45A6AAuVVnIRE1r5ofsLJsQ4qS3EvuFzZ3wikxUwzC4u05h4EEHlXhOYizakWj/LjhDtpoBIzQJXaOvij2r2gPcGphv9RbJfnXOmO4ScXHHbLd7izIs05PZT21B2wmz6Hr6YMJGXxWPodgEC6dxBVG9AFeFMAHOKu+byIU8aq6Rkt4QyA54NtksdEtv9OnqgsmO+g4fUPPQz3skPC5SEAkU8ZANutewwDUgwarrU7Bkzw00/eaT7GIsxC9S5uaZkNUFmblFnbrZZ6GOjmDCEFbSum2iok0a9P6uxPNXAJTA8Vuw/5e8T00gmj6t5R0IZIV7/aCnGNnSdIfoewCEYEeLa8GgdC5mXv4deCdxFreKBMz98av5FKksEKqYXPu3ZzAkaZW2NEzVwpf/xsTpp8V/TzXVLR4waPSuuC42lbox2hymqs8yKdG6+CiMkJFxl0KhqFcmjBe08LRQ4hfRsMPTqqeI6s0fdoI/UOcgQ2PR52auXm5+95gN0o4+XI0yYYVuN3blQoGWp4gubi4szSPA09mazaL9xLFswiSYx92vAMObcw4cMsquN6LuQtQCf3HN/4/jmy6mCy4EfowRmOGEhjfVVBfGs5C+VuwugL6Li2X3Dhisbs485Uv9CEg/eMmglxZuremr+tVF74NBAZ8mOrIkT4hCAgfLa5I7rTcYyUH5wM6NXg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(38100700002)(6506007)(38350700002)(2906002)(66946007)(86362001)(4326008)(66476007)(66556008)(8676002)(508600001)(52116002)(6486002)(2616005)(5660300002)(83380400001)(316002)(36756003)(26005)(6512007)(8936002)(186003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: n2ZqHO8Z4Xe34luieJOlShznq2i4+ilphcxwRkqBSv8Pbd2o/ILG34ZOVYWILnX1rWAmKWbrn1wNcSwn2NT9H0/IH1SqZXqQ2rdCPZSwuQdUf1fvrXTqS1rleAKnv793iHO5Obl80QKMgD49w65j3jJuGgsFSaDGFfk0yDbKjzFnvzHC1lS8XAhUwzc+nNCLleiCVpVy2hd/EAS5hXH9uaxK+ssoeQIHtkTiUG7GIufNYf+a4lHUcvqchzU1v21x/VtpLOZvf75okYFYFKbm3OF7djjQMCM3yKd0AHbdSm3mo7lPQeZWMZt24OfKWUBT6tFPSFr/BhJ0yW2AFjnGtefysxHj1qeLikiylLb6Zpz3nTIl7t74xrnwlLQS/O+laD3cKEOxyh6/nvm/HHNEFBktoqnulLC7kHtz9Qx3yd8ov8EXPwztWUnATaG2ZWBtdeHUQGcY8pYuSE5aj30pSRiZNh1fjklOOXsQPhM18GA7CGKKZdvN04Vl71SUNDcwLkUgPE722VRDxyAZP3DhLChZW5FB8/+fP4LsV4CNgJ887RGgXpfzb5VKL0u3SbEReGHjS192Iyvv+EgSUhZ4XgB+IVJWeTrwsdymCIhDwck6Dve4UHvPcyyXxIGo6ktR2EmXohbuOREEqm7Lq7r+OqRRUexwQhRYW3013FsLuS0NH3gJmHfM9FOl0EqQ0cmPR967/bCzh/R68C19BOL9rw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:is;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(316002)(36756003)(2906002)(2616005)(6506007)(38100700002)(38350700002)(52116002)(86362001)(4326008)(8676002)(6512007)(66476007)(66946007)(66556008)(30864003)(186003)(26005)(8936002)(6486002)(83380400001)(508600001)(5660300002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H4rCzqmamA+WQFxfp/ZSCEK5xSNjMe7zHAAraRpQ8hBI2I68aEeuvRCOey5D?=
- =?us-ascii?Q?TDEW8Z4F7HgS0GTCAgPaaYoRpnOITTX1UML8pJ6sLygxWwa+apiUE7bMne4v?=
- =?us-ascii?Q?fh+e0Hh4zucg+P+t6Db/nJGateUtfbHsBe0k8P+me+FHk8ufCDCNP23skyOR?=
- =?us-ascii?Q?CM+hC9DLCd94qtQa6Yvz4/eIWfQyfnbVXdROaaaz4aMmaEmpuM0W7V7qRKqk?=
- =?us-ascii?Q?RvFUfVF1htkBeyDZc1CPw5hWugR4D/eUJCiqbvbnTZLr3Vw4fRaDfNQat68d?=
- =?us-ascii?Q?NPz26jpMpXqRR2gJBy0PlH3ifEGxYkTDqtP5yw7jjcUZ4SHhU7kuKAz/M6cg?=
- =?us-ascii?Q?CvLfUK5Tvc3Y4kdE2ZjvnogPd7fk710YFIWZKB3abNZpLK/moql0sCBFsqOg?=
- =?us-ascii?Q?JewYvVJRZURK6xCdJ5pgGMQXRhkCSIrNhOloSEK5QyDwn1O3019bk9f15id5?=
- =?us-ascii?Q?AXEF52wcHgad25E0DxXRVfdJaNzQzTRHphod1ONzan68vVlDPC9Ni0qi8mNc?=
- =?us-ascii?Q?WflbsfmCK1dr7oXo4qlm+FLNMEEEu2Y1n55TVUhxQXqGIpv1ygspYLkFDHgr?=
- =?us-ascii?Q?gQw8p526rni2m2UUzPeIKAUPNLt76xMXHcigy8WB0k33WIVFCQ1IkZHxvGRW?=
- =?us-ascii?Q?UBco3cq2tWwQ3DGmGIduVwhcbgzDMuBrNGQDlgxTpUipwPGhwygZSpydHhXn?=
- =?us-ascii?Q?PRouqDsXXZrFMz4KXUxw+MVk/s2nY+SmRjgdZR1nVYp9aRz9sP0/NOT4D8zK?=
- =?us-ascii?Q?Ruz9dtpdlhyOrF4FhO5FECDt/8YmlMOjghrqq6Q9JuSxITB7mU+AE0h8e0sX?=
- =?us-ascii?Q?LC/Y/inUefZa1wTDUlI6knQixAW7CKsLid51S5wJ5H8Nn2YSwXefdvQRS6AP?=
- =?us-ascii?Q?ZRYaC98KM9a1wlHivq8TiZWp5a2qpu9yMjvXhP3/qw6w/MX9tRoAe5eXAXTo?=
- =?us-ascii?Q?G0mAB5KQuQsGNOBcBA2T46h/SkSneGYTz4/DXOQYvqxnOd/DLKRHXd8YB4aq?=
- =?us-ascii?Q?W6TvYL0I7q3HR3AWYcYN5WLoBm/RwmB9CezJt8aQ4LWiDBkCdC2ouvS6lt/r?=
- =?us-ascii?Q?czxhEao9Jk8UzTA9kpeH680fOV6C0ofkY66cd79umzafDgI3A406YzxP5rjD?=
- =?us-ascii?Q?ZlvhrnIXqH0f2Wgwp1sGdsAVSvrTleDlelJ9fyvQxSc/do3y/IpWMsM0K3o+?=
- =?us-ascii?Q?Df1pd8NsUbIiBQHhXklfrA4dp+Bm3tyJttA9yoKRO4VtBtuopr5gck8mgvUQ?=
- =?us-ascii?Q?mSkO4VLNWtTjQTdNoYMzJq1UtUa6JNWuS1bxOR7oDn6y2+OA/B26pMycYWYM?=
- =?us-ascii?Q?2mnQuqrfR8Q8c2CGe2TOQrPU91ZGn1O2tLCpMAOxah6BIX2TPCax7YyuUIBQ?=
- =?us-ascii?Q?PKLy7boe/7SFyGK0ZQ8UFBSZfib7m4/rjNpqp//2By8jaY9WEo/g3U5sK2YD?=
- =?us-ascii?Q?kZF/i+/MGoyqZ6RAwlSB4qCus4PyvRzC9Uddp27BIV+bJa91u4MgkMXzKuam?=
- =?us-ascii?Q?lr18wwUs9RUeVWGLv4B5BQyXZt41VldkWRnXCfYq3XdkVRMYBB3PiFZ/Dyqu?=
- =?us-ascii?Q?FEg0xm1wgE1hSJXDe/0BOXAlGcSy7+22i4We4FHs1dVMpYk+CUB1949bFXEy?=
- =?us-ascii?Q?3dUXrjr2J+MNAvLs4TTIGzmM55DXW2iqrFveoxMW6bXqbRS1afSHlM4t2Q1/?=
- =?us-ascii?Q?vi+kYR/CghLpV3B2PmCwESMgNrUB/tPmnyzYd70pOZS115RcTF5SyP0KTQXg?=
- =?us-ascii?Q?jJl4cXfPwwZjnEcE/jJ+aeqGdnlcyD9ajkP42MjuPTjpqdiVM/KZ?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xO26Zqo35CBmC6kx4ruJA0PlsqIrSS6UkyCTcjlXkTKZEoTjLsauGc5cOnpO?=
+ =?us-ascii?Q?/eY3+47L7asnsaEK0Qe0mL/ET++7S8HN9zvmx+PoJl76rQtPpV7AjidyJ7wj?=
+ =?us-ascii?Q?OAmEMYxGoD3AygqKpLqauc26FfwWovP7w1Idz3X9gESukQgGt6SeYN+ie3pq?=
+ =?us-ascii?Q?1/CBFfzlmyDZ6y/Yt3y9w5Cc4f2XumTlPROhTgf4dbIhbyYwNb/W4tKEje7k?=
+ =?us-ascii?Q?UMuuNvCfF92ZaKPOIu5nmL4iyZN3T7exBmIo0OVk89XNbuJVIDGVUd63c+p7?=
+ =?us-ascii?Q?eFKdXyW8WJsHUg3pmOHesPRcfsED4wz6FhD9WFEIeeLhe1hbqAabtmRGTIXj?=
+ =?us-ascii?Q?jcwHdHBJI133g+JepOhB8C6+InxjRhVMtAN66mr/3NdWdsdjzYdKNEb4a7Uh?=
+ =?us-ascii?Q?obB8gSa8qrXfXUmo63SpDHTAVOY//zW5/ukSP1MNfRpPjj90ffdoYJIHyfxJ?=
+ =?us-ascii?Q?/6t6doc1erA0F4CICekMzz6yf3bqM+/H8uRkNXrCCBWcZkRW8Cp78fCD3mNf?=
+ =?us-ascii?Q?0RAiVDx+lHuhGp2+hs8waSLtGfiAJfSXrmKSYoVl6vLK/CtmgrqxoFnVLDRY?=
+ =?us-ascii?Q?v0Wc3FUN/B7s1X2ajdrTAgsOXCs08Lt6Cz/NWnwtinUBllqPevMCYh1DQhPN?=
+ =?us-ascii?Q?mY/x6FCQ2m17c7BMQVdqW5ENML/W4+eJGyRqrw7If4xyphaNX3f6AK6jyY2N?=
+ =?us-ascii?Q?5h1xCxWxC2Z2RLMqZn1Jp/4xu3PbsF35uVn1DnlWcxmiWAVPWC/DqGuHrxFI?=
+ =?us-ascii?Q?DP+K5QKbV3cFtl3A5qnD/faI7qvTvs+IIal3CFPrfk7ddPbS52AKcK+9EE4f?=
+ =?us-ascii?Q?VmB7nA+ZZiUnMhLpeyxKDS/1gpb4ib2yAciYfOhSOild66zfhUYuJLLgoDz2?=
+ =?us-ascii?Q?f48IZGbmU/cjn0yQfPMhin+x/z35eieEO6rvIpWGsgSExEA47oyxiys3CQIk?=
+ =?us-ascii?Q?Fq5msnwdSKSocR2Gk/yLC/r1R0B8Zjjv+a98xjCutgpaIvO2PpOel4RW4Kzc?=
+ =?us-ascii?Q?v0Y3m5Z4tc/IBe7sOa7DDw1ACrb0s2G4/ANbmVxC1SHfG7icBlfqTshH5noj?=
+ =?us-ascii?Q?YtDDlTlrxlgtE/VOTrx1WEpzYjIe5JnJ6ItjqXRQrd+Y8FYO1vPdf78n6YDO?=
+ =?us-ascii?Q?Qz6nlOhUdRbbH3Ac5+2CjDKNI86k+NoHR6S0Kpq8igW7BBoY4MMwzKU8Lfzt?=
+ =?us-ascii?Q?IZMvHH5dNW0ebwyAa+foIz2qPoXFtjE8Nz+b9D5p5KABpDWVViBQ/zS4xxpZ?=
+ =?us-ascii?Q?EIEjTlq3p765f0cMgtW74kV+j9yci/2QVYrUxRT+BhnGtziNalyys12aGw6p?=
+ =?us-ascii?Q?B1qS+zlYFXJJUI9p8SEwua41MdVDLA6wr4PlCjXLD3aDl0J4Rffr/oSadpMm?=
+ =?us-ascii?Q?h/AfxoHCiqRy9C31ssNKuOAjhTnms79JxLdT5eTPzn+6dLwPpQcUNwOJj5ZW?=
+ =?us-ascii?Q?kUP2eQr1BfyNlDcxzpoXcPfzDqMPuoHaQsUkPs/H/d5ct4LXV8AxF1VQ5M9N?=
+ =?us-ascii?Q?Mgj/UM4Q72U3pwGCcwv5fUbEC2PioRzFiVFmTck6uWy/evXneP9gtKK0SHna?=
+ =?us-ascii?Q?ki3Q4nPLOGHAvU3wCk2EBPaZgj1GmWPzNGCM1SmooEsmB8yqzV9HLz00Q3a7?=
+ =?us-ascii?Q?Q+S56HtUWz+fPsPArz3fUdMeQ71Vf0cO6/xU8fAl5iyr8MNoCSJEyqKx7O5o?=
+ =?us-ascii?Q?Oi2Dintt/g5oAA5Vl3gfQzfRS0rWAO+D26tCQrs8hkDSJzZxHhlX82ik4XsV?=
+ =?us-ascii?Q?I7HMlNsFj/CjXOW2OBUMsjkncaU7EE/lnlrjLa0SudWL9ovOXGgn?=
 X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c0016b4-f497-4f50-e543-08da4dcafade
+X-MS-Exchange-CrossTenant-Network-Message-Id: 770b5960-5d45-4249-c665-08da4dcaff99
 X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8426.jpnprd01.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2022 05:59:01.4928
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2022 05:59:09.8346
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M7QFKEnxL3jd16NRyy5ReEpk5f66eAGeVaOq3oLHt2mDtnerVzp9Uaq7o+1YRaLAok5ZMR/C+QZuVkfP3AgHVI642gIoc+TOk212rhTLVjBvLfCe8OAx1G2SwBeuf5k8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1711
+X-MS-Exchange-CrossTenant-UserPrincipalName: 91eOazWXF4TMjivPGCAtr8ozvOp5CisUoR3GQwQnIiJ9o4mAXiTJLgLBpGtLD/Ky472luPp6KpExQ4426sQdbPRTRYHQikmqxd4FY7mXWuXkmTQwQ3ZHOouGE5rwPIC9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3613
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -118,49 +118,178 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Current V4H PFC code has many NOGP definitions. But these are not used,
-and it is different from original usage. This patch removes these.
+Current V4H PFC code has many IPxSRx definitions with all 0.
+But these have no meaning. This patch removes these.
 
 Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 ---
- drivers/pinctrl/renesas/pfc-r8a779g0.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 67 +++++++++-----------------
+ 1 file changed, 22 insertions(+), 45 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pfc-r8a779g0.c b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-index d42470b54d50..1716399350dc 100644
+index 1716399350dc..d049bb71dfe8 100644
 --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
 +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-@@ -43,22 +43,6 @@
- 	PORT_GP_CFG_21(7,	fn, sfx, CFG_FLAGS),					\
- 	PORT_GP_CFG_14(8,	fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE_18_33)
+@@ -286,11 +286,6 @@
+ #define IP2SR0_3_0	FM(MSIOF2_TXD)		FM(HCTS1_N)		FM(CTS1_N)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR0_7_4	FM(MSIOF2_SCK)		FM(HRTS1_N)		FM(RTS1_N)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR0_11_8	FM(MSIOF2_RXD)		FM(HSCK1)		FM(SCK1)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR0_15_12	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR0_19_16	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR0_23_20	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR0_27_24	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR0_31_28	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
  
--#define CPU_ALL_NOGP(fn)									\
--	PIN_NOGP_CFG(PRESETOUT_N,	"PRESETOUT#",	fn, SH_PFC_PIN_CFG_PULL_UP_DOWN),	\
--	PIN_NOGP_CFG(PRESETOUT0_N,	"PRESETOUT0#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
--	PIN_NOGP_CFG(PRESETOUT1_N,	"PRESETOUT1#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
--	PIN_NOGP_CFG(EXTALR,		"EXTALR",	fn, SH_PFC_PIN_CFG_PULL_UP_DOWN),	\
--	PIN_NOGP_CFG(DCUTRST0_N,	"DCUTRST0#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
--	PIN_NOGP_CFG(DCUTCK0,		"DCUTCK0",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
--	PIN_NOGP_CFG(DCUTMS0,		"DCUTMS0",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
--	PIN_NOGP_CFG(DCUTDI0,		"DCUTDI0",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
--	PIN_NOGP_CFG(DCUTRST1_N,	"DCUTRST1#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
--	PIN_NOGP_CFG(DCUTCK1,		"DCUTCK1",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
--	PIN_NOGP_CFG(DCUTMS1,		"DCUTMS1",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
--	PIN_NOGP_CFG(DCUTDI1,		"DCUTDI1",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
--	PIN_NOGP_CFG(EVTI_N,		"EVTI#",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
--	PIN_NOGP_CFG(MSYN_N,		"MSYN#",	fn, SH_PFC_PIN_CFG_PULL_UP)
+ /* SR1 */
+ /* IP0SR1 */		/* 0 */			/* 1 */			/* 2 */		/* 3		4	 5	  6	   7	    8	     9	      A	       B	C	 D	  E	   F */
+@@ -329,9 +324,6 @@
+ #define IP3SR1_11_8	FM(HRTS3_N)		FM(RTS3_N)		FM(MSIOF4_TXD)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP3SR1_15_12	FM(HCTS3_N)		FM(RX3)			FM(MSIOF4_RXD)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP3SR1_19_16	FM(HTX3)		FM(TX3)			FM(MSIOF4_SYNC)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP3SR1_23_20	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP3SR1_27_24	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP3SR1_31_28	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ 
+ /* SR2 */
+ /* IP0SR2 */		/* 0 */			/* 1 */			/* 2 */		/* 3		4	 5	  6	   7	    8	     9	      A	       B	C	 D	  E	   F */
+@@ -359,10 +351,6 @@
+ #define IP2SR2_7_4	FM(CANFD4_RX)		F_(0, 0)		FM(PWM5)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR2_11_8	FM(CANFD7_TX)		F_(0, 0)		FM(PWM6)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR2_15_12	FM(CANFD7_RX)		F_(0, 0)		FM(PWM7)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR2_19_16	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR2_23_20	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR2_27_24	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR2_31_28	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ 
+ /* SR3 */
+ /* IP0SR3 */		/* 0 */			/* 1 */			/* 2 */		/* 3		4	 5	  6	   7	    8	     9	      A	       B	C	 D	  E	   F */
+@@ -402,8 +390,6 @@
+ #define IP3SR3_15_12	FM(RPC_RESET_N)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP3SR3_19_16	FM(RPC_WP_N)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP3SR3_23_20	FM(RPC_INT_N)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP3SR3_27_24	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP3SR3_31_28	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ 
+ /* SR6 */
+ /* IP0SR6 */		/* 0 */			/* 1 */			/* 2 */		/* 3		4	 5	  6	   7	    8	     9	      A	       B	C	 D	  E	   F */
+@@ -432,9 +418,6 @@
+ #define IP2SR6_11_8	FM(AVB1_TD3)		FM(AVB1_MII_TD3)	F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR6_15_12	FM(AVB1_RD3)		FM(AVB1_MII_RD3)	F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR6_19_16	FM(AVB1_TXCREFCLK)	F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR6_23_20	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR6_27_24	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR6_31_28	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ 
+ /* SR7 */
+ /* IP0SR7 */		/* 0 */			/* 1 */			/* 2 */		/* 3		4	 5	  6	   7	    8	     9	      A	       B	C	 D	  E	   F */
+@@ -463,9 +446,6 @@
+ #define IP2SR7_11_8	FM(AVB0_RD0)		FM(AVB0_MII_RD0)	F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR7_15_12	FM(AVB0_RXC)		FM(AVB0_MII_RXC)	F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP2SR7_19_16	FM(AVB0_RX_CTL)		FM(AVB0_MII_RX_DV)	F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR7_23_20	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR7_27_24	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP2SR7_31_28	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ 
+ /* SR8 */
+ /* IP0SR8 */		/* 0 */			/* 1 */			/* 2 */		/* 3		4	 5	  6	   7	    8	     9	      A	       B	C	 D	  E	   F */
+@@ -485,9 +465,6 @@
+ #define IP1SR8_15_12	FM(SDA5)		FM(SCIF_CLK2)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP1SR8_19_16	F_(0, 0)		FM(HCTS2_N)		FM(TX4)		F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP1SR8_23_20	F_(0, 0)		FM(HSCK2)		FM(RX4)		F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP1SR8_27_24	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP1SR8_31_28	F_(0, 0)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
 -
- /* GPSR0 */
- #define GPSR0_18	F_(MSIOF2_RXD,		IP2SR0_11_8)
- #define GPSR0_17	F_(MSIOF2_SCK,		IP2SR0_7_4)
-@@ -1204,7 +1188,6 @@ static const u16 pinmux_data[] = {
-  */
- enum {
- 	GP_ASSIGN_LAST(),
--	NOGP_ALL(),
- };
  
- static const struct sh_pfc_pin pinmux_pins[] = {
+ #define PINMUX_GPSR	\
+ 						GPSR3_29											\
+@@ -526,29 +503,29 @@ GPSR0_0		GPSR1_0		GPSR2_0		GPSR3_0		GPSR4_0		GPSR5_0		GPSR6_0		GPSR7_0		GPSR8_0
+ FM(IP0SR0_3_0)		IP0SR0_3_0	FM(IP1SR0_3_0)		IP1SR0_3_0	FM(IP2SR0_3_0)		IP2SR0_3_0	\
+ FM(IP0SR0_7_4)		IP0SR0_7_4	FM(IP1SR0_7_4)		IP1SR0_7_4	FM(IP2SR0_7_4)		IP2SR0_7_4	\
+ FM(IP0SR0_11_8)		IP0SR0_11_8	FM(IP1SR0_11_8)		IP1SR0_11_8	FM(IP2SR0_11_8)		IP2SR0_11_8	\
+-FM(IP0SR0_15_12)	IP0SR0_15_12	FM(IP1SR0_15_12)	IP1SR0_15_12	FM(IP2SR0_15_12)	IP2SR0_15_12	\
+-FM(IP0SR0_19_16)	IP0SR0_19_16	FM(IP1SR0_19_16)	IP1SR0_19_16	FM(IP2SR0_19_16)	IP2SR0_19_16	\
+-FM(IP0SR0_23_20)	IP0SR0_23_20	FM(IP1SR0_23_20)	IP1SR0_23_20	FM(IP2SR0_23_20)	IP2SR0_23_20	\
+-FM(IP0SR0_27_24)	IP0SR0_27_24	FM(IP1SR0_27_24)	IP1SR0_27_24	FM(IP2SR0_27_24)	IP2SR0_27_24	\
+-FM(IP0SR0_31_28)	IP0SR0_31_28	FM(IP1SR0_31_28)	IP1SR0_31_28	FM(IP2SR0_31_28)	IP2SR0_31_28	\
++FM(IP0SR0_15_12)	IP0SR0_15_12	FM(IP1SR0_15_12)	IP1SR0_15_12	\
++FM(IP0SR0_19_16)	IP0SR0_19_16	FM(IP1SR0_19_16)	IP1SR0_19_16	\
++FM(IP0SR0_23_20)	IP0SR0_23_20	FM(IP1SR0_23_20)	IP1SR0_23_20	\
++FM(IP0SR0_27_24)	IP0SR0_27_24	FM(IP1SR0_27_24)	IP1SR0_27_24	\
++FM(IP0SR0_31_28)	IP0SR0_31_28	FM(IP1SR0_31_28)	IP1SR0_31_28	\
+ \
+ FM(IP0SR1_3_0)		IP0SR1_3_0	FM(IP1SR1_3_0)		IP1SR1_3_0	FM(IP2SR1_3_0)		IP2SR1_3_0	FM(IP3SR1_3_0)		IP3SR1_3_0	\
+ FM(IP0SR1_7_4)		IP0SR1_7_4	FM(IP1SR1_7_4)		IP1SR1_7_4	FM(IP2SR1_7_4)		IP2SR1_7_4	FM(IP3SR1_7_4)		IP3SR1_7_4	\
+ FM(IP0SR1_11_8)		IP0SR1_11_8	FM(IP1SR1_11_8)		IP1SR1_11_8	FM(IP2SR1_11_8)		IP2SR1_11_8	FM(IP3SR1_11_8)		IP3SR1_11_8	\
+ FM(IP0SR1_15_12)	IP0SR1_15_12	FM(IP1SR1_15_12)	IP1SR1_15_12	FM(IP2SR1_15_12)	IP2SR1_15_12	FM(IP3SR1_15_12)	IP3SR1_15_12	\
+ FM(IP0SR1_19_16)	IP0SR1_19_16	FM(IP1SR1_19_16)	IP1SR1_19_16	FM(IP2SR1_19_16)	IP2SR1_19_16	FM(IP3SR1_19_16)	IP3SR1_19_16	\
+-FM(IP0SR1_23_20)	IP0SR1_23_20	FM(IP1SR1_23_20)	IP1SR1_23_20	FM(IP2SR1_23_20)	IP2SR1_23_20	FM(IP3SR1_23_20)	IP3SR1_23_20	\
+-FM(IP0SR1_27_24)	IP0SR1_27_24	FM(IP1SR1_27_24)	IP1SR1_27_24	FM(IP2SR1_27_24)	IP2SR1_27_24	FM(IP3SR1_27_24)	IP3SR1_27_24	\
+-FM(IP0SR1_31_28)	IP0SR1_31_28	FM(IP1SR1_31_28)	IP1SR1_31_28	FM(IP2SR1_31_28)	IP2SR1_31_28	FM(IP3SR1_31_28)	IP3SR1_31_28	\
++FM(IP0SR1_23_20)	IP0SR1_23_20	FM(IP1SR1_23_20)	IP1SR1_23_20	FM(IP2SR1_23_20)	IP2SR1_23_20	\
++FM(IP0SR1_27_24)	IP0SR1_27_24	FM(IP1SR1_27_24)	IP1SR1_27_24	FM(IP2SR1_27_24)	IP2SR1_27_24	\
++FM(IP0SR1_31_28)	IP0SR1_31_28	FM(IP1SR1_31_28)	IP1SR1_31_28	FM(IP2SR1_31_28)	IP2SR1_31_28	\
+ \
+ FM(IP0SR2_3_0)		IP0SR2_3_0	FM(IP1SR2_3_0)		IP1SR2_3_0	FM(IP2SR2_3_0)		IP2SR2_3_0	\
+ FM(IP0SR2_7_4)		IP0SR2_7_4	FM(IP1SR2_7_4)		IP1SR2_7_4	FM(IP2SR2_7_4)		IP2SR2_7_4	\
+ FM(IP0SR2_11_8)		IP0SR2_11_8	FM(IP1SR2_11_8)		IP1SR2_11_8	FM(IP2SR2_11_8)		IP2SR2_11_8	\
+ FM(IP0SR2_15_12)	IP0SR2_15_12	FM(IP1SR2_15_12)	IP1SR2_15_12	FM(IP2SR2_15_12)	IP2SR2_15_12	\
+-FM(IP0SR2_19_16)	IP0SR2_19_16	FM(IP1SR2_19_16)	IP1SR2_19_16	FM(IP2SR2_19_16)	IP2SR2_19_16	\
+-FM(IP0SR2_23_20)	IP0SR2_23_20	FM(IP1SR2_23_20)	IP1SR2_23_20	FM(IP2SR2_23_20)	IP2SR2_23_20	\
+-FM(IP0SR2_27_24)	IP0SR2_27_24	FM(IP1SR2_27_24)	IP1SR2_27_24	FM(IP2SR2_27_24)	IP2SR2_27_24	\
+-FM(IP0SR2_31_28)	IP0SR2_31_28	FM(IP1SR2_31_28)	IP1SR2_31_28	FM(IP2SR2_31_28)	IP2SR2_31_28	\
++FM(IP0SR2_19_16)	IP0SR2_19_16	FM(IP1SR2_19_16)	IP1SR2_19_16	\
++FM(IP0SR2_23_20)	IP0SR2_23_20	FM(IP1SR2_23_20)	IP1SR2_23_20	\
++FM(IP0SR2_27_24)	IP0SR2_27_24	FM(IP1SR2_27_24)	IP1SR2_27_24	\
++FM(IP0SR2_31_28)	IP0SR2_31_28	FM(IP1SR2_31_28)	IP1SR2_31_28	\
+ \
+ FM(IP0SR3_3_0)		IP0SR3_3_0	FM(IP1SR3_3_0)		IP1SR3_3_0	FM(IP2SR3_3_0)		IP2SR3_3_0	FM(IP3SR3_3_0)		IP3SR3_3_0	\
+ FM(IP0SR3_7_4)		IP0SR3_7_4	FM(IP1SR3_7_4)		IP1SR3_7_4	FM(IP2SR3_7_4)		IP2SR3_7_4	FM(IP3SR3_7_4)		IP3SR3_7_4	\
+@@ -556,26 +533,26 @@ FM(IP0SR3_11_8)		IP0SR3_11_8	FM(IP1SR3_11_8)		IP1SR3_11_8	FM(IP2SR3_11_8)		IP2SR
+ FM(IP0SR3_15_12)	IP0SR3_15_12	FM(IP1SR3_15_12)	IP1SR3_15_12	FM(IP2SR3_15_12)	IP2SR3_15_12	FM(IP3SR3_15_12)	IP3SR3_15_12	\
+ FM(IP0SR3_19_16)	IP0SR3_19_16	FM(IP1SR3_19_16)	IP1SR3_19_16	FM(IP2SR3_19_16)	IP2SR3_19_16	FM(IP3SR3_19_16)	IP3SR3_19_16	\
+ FM(IP0SR3_23_20)	IP0SR3_23_20	FM(IP1SR3_23_20)	IP1SR3_23_20	FM(IP2SR3_23_20)	IP2SR3_23_20	FM(IP3SR3_23_20)	IP3SR3_23_20	\
+-FM(IP0SR3_27_24)	IP0SR3_27_24	FM(IP1SR3_27_24)	IP1SR3_27_24	FM(IP2SR3_27_24)	IP2SR3_27_24	FM(IP3SR3_27_24)	IP3SR3_27_24	\
+-FM(IP0SR3_31_28)	IP0SR3_31_28	FM(IP1SR3_31_28)	IP1SR3_31_28	FM(IP2SR3_31_28)	IP2SR3_31_28	FM(IP3SR3_31_28)	IP3SR3_31_28	\
++FM(IP0SR3_27_24)	IP0SR3_27_24	FM(IP1SR3_27_24)	IP1SR3_27_24	FM(IP2SR3_27_24)	IP2SR3_27_24						\
++FM(IP0SR3_31_28)	IP0SR3_31_28	FM(IP1SR3_31_28)	IP1SR3_31_28	FM(IP2SR3_31_28)	IP2SR3_31_28						\
+ \
+ FM(IP0SR6_3_0)		IP0SR6_3_0	FM(IP1SR6_3_0)		IP1SR6_3_0	FM(IP2SR6_3_0)		IP2SR6_3_0	\
+ FM(IP0SR6_7_4)		IP0SR6_7_4	FM(IP1SR6_7_4)		IP1SR6_7_4	FM(IP2SR6_7_4)		IP2SR6_7_4	\
+ FM(IP0SR6_11_8)		IP0SR6_11_8	FM(IP1SR6_11_8)		IP1SR6_11_8	FM(IP2SR6_11_8)		IP2SR6_11_8	\
+ FM(IP0SR6_15_12)	IP0SR6_15_12	FM(IP1SR6_15_12)	IP1SR6_15_12	FM(IP2SR6_15_12)	IP2SR6_15_12	\
+ FM(IP0SR6_19_16)	IP0SR6_19_16	FM(IP1SR6_19_16)	IP1SR6_19_16	FM(IP2SR6_19_16)	IP2SR6_19_16	\
+-FM(IP0SR6_23_20)	IP0SR6_23_20	FM(IP1SR6_23_20)	IP1SR6_23_20	FM(IP2SR6_23_20)	IP2SR6_23_20	\
+-FM(IP0SR6_27_24)	IP0SR6_27_24	FM(IP1SR6_27_24)	IP1SR6_27_24	FM(IP2SR6_27_24)	IP2SR6_27_24	\
+-FM(IP0SR6_31_28)	IP0SR6_31_28	FM(IP1SR6_31_28)	IP1SR6_31_28	FM(IP2SR6_31_28)	IP2SR6_31_28	\
++FM(IP0SR6_23_20)	IP0SR6_23_20	FM(IP1SR6_23_20)	IP1SR6_23_20	\
++FM(IP0SR6_27_24)	IP0SR6_27_24	FM(IP1SR6_27_24)	IP1SR6_27_24	\
++FM(IP0SR6_31_28)	IP0SR6_31_28	FM(IP1SR6_31_28)	IP1SR6_31_28	\
+ \
+ FM(IP0SR7_3_0)		IP0SR7_3_0	FM(IP1SR7_3_0)		IP1SR7_3_0	FM(IP2SR7_3_0)		IP2SR7_3_0	\
+ FM(IP0SR7_7_4)		IP0SR7_7_4	FM(IP1SR7_7_4)		IP1SR7_7_4	FM(IP2SR7_7_4)		IP2SR7_7_4	\
+ FM(IP0SR7_11_8)		IP0SR7_11_8	FM(IP1SR7_11_8)		IP1SR7_11_8	FM(IP2SR7_11_8)		IP2SR7_11_8	\
+ FM(IP0SR7_15_12)	IP0SR7_15_12	FM(IP1SR7_15_12)	IP1SR7_15_12	FM(IP2SR7_15_12)	IP2SR7_15_12	\
+ FM(IP0SR7_19_16)	IP0SR7_19_16	FM(IP1SR7_19_16)	IP1SR7_19_16	FM(IP2SR7_19_16)	IP2SR7_19_16	\
+-FM(IP0SR7_23_20)	IP0SR7_23_20	FM(IP1SR7_23_20)	IP1SR7_23_20	FM(IP2SR7_23_20)	IP2SR7_23_20	\
+-FM(IP0SR7_27_24)	IP0SR7_27_24	FM(IP1SR7_27_24)	IP1SR7_27_24	FM(IP2SR7_27_24)	IP2SR7_27_24	\
+-FM(IP0SR7_31_28)	IP0SR7_31_28	FM(IP1SR7_31_28)	IP1SR7_31_28	FM(IP2SR7_31_28)	IP2SR7_31_28	\
++FM(IP0SR7_23_20)	IP0SR7_23_20	FM(IP1SR7_23_20)	IP1SR7_23_20	\
++FM(IP0SR7_27_24)	IP0SR7_27_24	FM(IP1SR7_27_24)	IP1SR7_27_24	\
++FM(IP0SR7_31_28)	IP0SR7_31_28	FM(IP1SR7_31_28)	IP1SR7_31_28	\
+ \
+ FM(IP0SR8_3_0)		IP0SR8_3_0	FM(IP1SR8_3_0)		IP1SR8_3_0	\
+ FM(IP0SR8_7_4)		IP0SR8_7_4	FM(IP1SR8_7_4)		IP1SR8_7_4	\
+@@ -583,8 +560,8 @@ FM(IP0SR8_11_8)		IP0SR8_11_8	FM(IP1SR8_11_8)		IP1SR8_11_8	\
+ FM(IP0SR8_15_12)	IP0SR8_15_12	FM(IP1SR8_15_12)	IP1SR8_15_12	\
+ FM(IP0SR8_19_16)	IP0SR8_19_16	FM(IP1SR8_19_16)	IP1SR8_19_16	\
+ FM(IP0SR8_23_20)	IP0SR8_23_20	FM(IP1SR8_23_20)	IP1SR8_23_20	\
+-FM(IP0SR8_27_24)	IP0SR8_27_24	FM(IP1SR8_27_24)	IP1SR8_27_24	\
+-FM(IP0SR8_31_28)	IP0SR8_31_28	FM(IP1SR8_31_28)	IP1SR8_31_28
++FM(IP0SR8_27_24)	IP0SR8_27_24	\
++FM(IP0SR8_31_28)	IP0SR8_31_28
+ 
+ /* MOD_SEL4 */			/* 0 */				/* 1 */
+ #define MOD_SEL4_19		FM(SEL_TSN0_TD2_0)		FM(SEL_TSN0_TD2_1)
 -- 
 2.25.1
 
