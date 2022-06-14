@@ -2,146 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1177554B4CF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jun 2022 17:36:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1208D54BAE9
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jun 2022 21:48:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356877AbiFNPgS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jun 2022 11:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
+        id S238275AbiFNTsR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jun 2022 15:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344072AbiFNPgR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jun 2022 11:36:17 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5E72AC7A;
-        Tue, 14 Jun 2022 08:36:17 -0700 (PDT)
-Received: by mail-qt1-f172.google.com with SMTP id l3so5020303qtp.1;
-        Tue, 14 Jun 2022 08:36:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+0Hk2AFNKQgkWbvipCu+92xiO5qRKMwKyffIoACTDw4=;
-        b=TPKPykwF4a66qvj3NOgFEb4wZNOhvETiV4cHs2OD4DUULSfozeO+Daw08CcUNSxy5r
-         TGIsQSJrKbd/LXVPpUttFK/HLz345DtTO4gws/n+0y7SRh8puthDXEV3M1cOgZH7Cvj8
-         F8XubUUTAfdeMLuEcl/uQtI3eaw1CZXeAbKTJxWKMXSHQYHu6D8GCjHauBLfZV4544nW
-         oBztZaCbIyma0cZzjruQNtsu+ETVLHhC0sV5+U6n9wYjFnYmXDgTGctWsTgAkXWRTbbV
-         ib/1WUuMsfe/zbqTa1pzjR53AWUYOKKlNwcovsNpX+EMStr9WRNQ3sB8LJcfR1xPTbTk
-         oNnQ==
-X-Gm-Message-State: AOAM533lcUA3gI3pokJaOzMo5DmCaLtucCKLr1Qdq1u1UhKYWGcg632J
-        PYhteiMQEPKGeDatkpZ+9zrEH+L26uA3jg==
-X-Google-Smtp-Source: ABdhPJw/J/i/Mh961GuRUCWzaQqJPzHJI9J0yq8qJbZHmyut1cF+72A9FsV0/Ub3ToJvnzYTqQ+O8w==
-X-Received: by 2002:a05:622a:5c6:b0:306:6cf1:4f5e with SMTP id d6-20020a05622a05c600b003066cf14f5emr732103qtb.30.1655220976125;
-        Tue, 14 Jun 2022 08:36:16 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id bl4-20020a05622a244400b00304e33f21f7sm7163041qtb.68.2022.06.14.08.36.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jun 2022 08:36:16 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-3137316bb69so33497547b3.10;
-        Tue, 14 Jun 2022 08:36:15 -0700 (PDT)
-X-Received: by 2002:a81:1dd2:0:b0:30f:a4fc:315e with SMTP id
- d201-20020a811dd2000000b0030fa4fc315emr6497733ywd.383.1655220975600; Tue, 14
- Jun 2022 08:36:15 -0700 (PDT)
+        with ESMTP id S235323AbiFNTsQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jun 2022 15:48:16 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882CA3120C
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Jun 2022 12:48:15 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o1CWK-0004GG-Bi; Tue, 14 Jun 2022 21:48:12 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o1CWH-000Xvz-N3; Tue, 14 Jun 2022 21:48:11 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o1CWI-00GJ5h-F7; Tue, 14 Jun 2022 21:48:10 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, Marek Vasut <marex@denx.de>
+Subject: [PATCH] gpio: ucb1400: Remove platform setup and teardown support
+Date:   Tue, 14 Jun 2022 21:48:02 +0200
+Message-Id: <20220614194802.269738-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220520154051.29088-1-phil.edworthy@renesas.com>
- <20220520154051.29088-3-phil.edworthy@renesas.com> <CAMuHMdUiqUUN_A+a2hcVpdx56NKHSBPMiYyHeS0SAVwdZSbZZA@mail.gmail.com>
- <TYYPR01MB7086A7083ACEBF9468ACE2AFF5AA9@TYYPR01MB7086.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYYPR01MB7086A7083ACEBF9468ACE2AFF5AA9@TYYPR01MB7086.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jun 2022 17:36:03 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW=iUzNJRYnsK_MrVLA-CFsm-xfuCjZbUUe+q6oZx4Z4w@mail.gmail.com>
-Message-ID: <CAMuHMdW=iUzNJRYnsK_MrVLA-CFsm-xfuCjZbUUe+q6oZx4Z4w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: renesas: Add RZ/V2M pin and gpio controller driver
-To:     Phil Edworthy <phil.edworthy@renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2509; h=from:subject; bh=SNkL7rVEiXDJzFcK9oSwiOwt32w7CKUNRZRysLh2NBs=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiqOXp7J9Y3Xxiti7nNuI4FXPNoc5moCQVWylv3PtD V3uswxyJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYqjl6QAKCRDB/BR4rcrsCex6B/ 9AhAU1CPH1eBYYCBStvjdZvx1uJ7WwITUHM6pduW1l/ja/k0lXB1SGuxX1PGG3xilYiDbkN+A0q9rF PaM3l3KLZg8r2fZMVyQjJOxeUIdpyPhxDcTFo7R9YeKSeQPP+xvWnI2ndt/knERP7oSn6VegzTnuko WULP3CZzqZZEmxb7LUoyuLtz+lpNOk3gMEjQnQbxKVbBD1IOtLvGjfVdkji1NVCpeB+a+CS0TzjmSF SzQqzdiyo7LeoNYq7m0pvDIljX6YRhO/zuWfBU0+2u1rmShRfn5nVUyTtB/rxF2ZodFiEX0DI8v2ZN ixOh7XjAAwda2P1T9ZSQ5kdEZT4srv
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Phil,
+There is no user of these callbacks. The motivation for this change is
+to stop returning an error code from the remove callback.
 
-On Tue, Jun 14, 2022 at 5:00 PM Phil Edworthy <phil.edworthy@renesas.com> wrote:
-> On 14 June 2022 13:43 Geert Uytterhoeven wrote:
-> > On Fri, May 20, 2022 at 5:41 PM Phil Edworthy wrote:
-> > > Add support for pin and gpio controller driver for RZ/V2M SoC.
-> > > Based on the RZ/G2L driver.
-> > >
-> > > Note that the DETDO and DETMS dedicated pins are currently not
-> > > documented in the HW manual as to which pin group they are in.
-> > > HW team have since said that the output level of V1.8V I/O group 4
-> > > (for MD0-7, and debugger) is the same as the 1.8V IO group 3.
-> >
-> > Thank you, I rediscovered this explanation just before pressing send ;-)
-> >
-> > >
-> > > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > > Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > > --- a/drivers/pinctrl/renesas/Kconfig
-> > > +++ b/drivers/pinctrl/renesas/Kconfig
-> > > @@ -193,6 +194,18 @@ config PINCTRL_RZG2L
-> > >           This selects GPIO and pinctrl driver for Renesas
-> > RZ/{G2L,G2UL,V2L}
-> > >           platforms.
-> > >
-> > > +config PINCTRL_RZV2M
-> > > +       bool "pin control support for RZ/V2M"
-> > > +       depends on OF
-> > > +       depends on ARCH_R9A09G011 || COMPILE_TEST
-> > > +       select GPIOLIB
-> > > +       select GENERIC_PINCTRL_GROUPS
-> > > +       select GENERIC_PINMUX_FUNCTIONS
-> > > +       select GENERIC_PINCONF
-> > > +       help
-> > > +         This selects GPIO and pinctrl driver for Renesas RZ/V2M
-> > > +         platforms.
-> > > +
-> >
-> > Please preserve sort order.
-> For a while I couldn't see what's wrong here. It should be ordered on
-> the text, not the Kconfig symbol, right?
+This is a preparation for making platform remove callbacks return void.
 
-Exactly, cfr. commit d89a08f52b0dd30d ("pinctrl: sh-pfc: Tidy up
-driver description title").
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/gpio/gpio-ucb1400.c | 20 --------------------
+ drivers/mfd/ucb1400_core.c  |  6 ++----
+ include/linux/ucb1400.h     |  2 --
+ 3 files changed, 2 insertions(+), 26 deletions(-)
 
-> > > +       case PIN_CONFIG_DRIVE_STRENGTH_UA:
-> > > +               if (!(cfg & PIN_CFG_DRV))
-> > > +                       return -EINVAL;
-> > > +
-> > > +               /* DRV uses 2-bits per pin */
-> > > +               bit <<= 1;
-> > > +
-> > > +               /* Dedicated port is irregularly located to the others
-> > */
-> > > +               if (port_offset == RZV2M_DEDICATED_PORT_IDX)
-> > > +                       val = (readl(pctrl->base + DRV_DEDICATED) >>
-> > bit) & DRV_MASK;
-> > > +               else
-> > > +                       val = (readl(pctrl->base + DRV(port_offset))
-> > > + >> bit) & DRV_MASK;
-> >
-> > You can simplify this, by handling the dedicated port offset in the
-> > definition of the DRV() macro.  Same for SR().
-> Do you mean put conditional code in the DRV() macro?
+diff --git a/drivers/gpio/gpio-ucb1400.c b/drivers/gpio/gpio-ucb1400.c
+index d2a8644864c3..386e69300332 100644
+--- a/drivers/gpio/gpio-ucb1400.c
++++ b/drivers/gpio/gpio-ucb1400.c
+@@ -64,34 +64,14 @@ static int ucb1400_gpio_probe(struct platform_device *dev)
+ 	ucb->gc.can_sleep = true;
+ 
+ 	err = devm_gpiochip_add_data(&dev->dev, &ucb->gc, ucb);
+-	if (err)
+-		goto err;
+-
+-	if (ucb->gpio_setup)
+-		err = ucb->gpio_setup(&dev->dev, ucb->gc.ngpio);
+ 
+ err:
+ 	return err;
+ 
+ }
+ 
+-static int ucb1400_gpio_remove(struct platform_device *dev)
+-{
+-	int err = 0;
+-	struct ucb1400_gpio *ucb = platform_get_drvdata(dev);
+-
+-	if (ucb && ucb->gpio_teardown) {
+-		err = ucb->gpio_teardown(&dev->dev, ucb->gc.ngpio);
+-		if (err)
+-			return err;
+-	}
+-
+-	return err;
+-}
+-
+ static struct platform_driver ucb1400_gpio_driver = {
+ 	.probe	= ucb1400_gpio_probe,
+-	.remove	= ucb1400_gpio_remove,
+ 	.driver	= {
+ 		.name	= "ucb1400_gpio"
+ 	},
+diff --git a/drivers/mfd/ucb1400_core.c b/drivers/mfd/ucb1400_core.c
+index 8c3832a58ef6..ac1d18039568 100644
+--- a/drivers/mfd/ucb1400_core.c
++++ b/drivers/mfd/ucb1400_core.c
+@@ -72,11 +72,9 @@ static int ucb1400_core_probe(struct device *dev)
+ 
+ 	/* GPIO */
+ 	ucb_gpio.ac97 = ac97;
+-	if (pdata) {
+-		ucb_gpio.gpio_setup = pdata->gpio_setup;
+-		ucb_gpio.gpio_teardown = pdata->gpio_teardown;
++	if (pdata)
+ 		ucb_gpio.gpio_offset = pdata->gpio_offset;
+-	}
++
+ 	ucb->ucb1400_gpio = platform_device_alloc("ucb1400_gpio", -1);
+ 	if (!ucb->ucb1400_gpio) {
+ 		err = -ENOMEM;
+diff --git a/include/linux/ucb1400.h b/include/linux/ucb1400.h
+index 0968ef458447..22345391350b 100644
+--- a/include/linux/ucb1400.h
++++ b/include/linux/ucb1400.h
+@@ -84,8 +84,6 @@ struct ucb1400_gpio {
+ 	struct gpio_chip	gc;
+ 	struct snd_ac97		*ac97;
+ 	int			gpio_offset;
+-	int			(*gpio_setup)(struct device *dev, int ngpio);
+-	int			(*gpio_teardown)(struct device *dev, int ngpio);
+ };
+ 
+ struct ucb1400_ts {
 
-Indeed. Cfr. the IMUCTR(n) in drivers/iommu/ipmmu-vmsa.c.
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
+-- 
+2.36.1
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
