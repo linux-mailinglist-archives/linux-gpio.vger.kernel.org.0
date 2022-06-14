@@ -2,621 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0914E54B179
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jun 2022 14:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B198454B1D3
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jun 2022 15:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244156AbiFNMpZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jun 2022 08:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50782 "EHLO
+        id S242345AbiFNNA5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jun 2022 09:00:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356949AbiFNMn0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jun 2022 08:43:26 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6C938D86;
-        Tue, 14 Jun 2022 05:43:06 -0700 (PDT)
-Received: by mail-qt1-f178.google.com with SMTP id hf10so5951921qtb.7;
-        Tue, 14 Jun 2022 05:43:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UlHzJqDQVCFkJdgMmf2/8POq1e28CbVcI8O36R8k1ys=;
-        b=3iOLTqyWgJUY5GXj8sYyQ6jMtuMOOSsnuw8Zqi6ng3UkxV4Dc8LZ5B8M0H52m53ZbA
-         gH31zRxFgLOqw1Ca++iwIMRB9r+6y8Ecs2KhfdRqeg3hD1NNNlL0r7ROPkH8KK4+Qd92
-         4Qac21tBmIel3PY3aSl6JX1MhDmfwWx3dMlHYaatZqzv3UqdbNWtklFB/tWYUPkN6brK
-         okjkKOdEKPKyofs7HGIDc7GcOw92vsEiFrQ1WrMVaOtrgXPuhhSlklK0pk/jxhDje8ep
-         GPsIJNebF3/gPD6MpHSZRcObd9058OMOyW1d29GQJWRFzOQRTCpaMkn6LZNiK6J1KOmF
-         XDvA==
-X-Gm-Message-State: AOAM533olVpTyxXMzba64buV6kaH3mW5VY4GdXQX0bJM0vJRrTG8x5Pv
-        ktwBVPneRO9m1hiWq8DGOGBVMMQYVtgemg==
-X-Google-Smtp-Source: ABdhPJzjYwLKT0P2YzwRUb2D7Sll7kzxLtUCjVLzIVj7LW04NZUY2dfD+Fad02M3tsnLb1MCY7MhqQ==
-X-Received: by 2002:a05:622a:1484:b0:305:2c76:b401 with SMTP id t4-20020a05622a148400b003052c76b401mr3741420qtx.678.1655210585521;
-        Tue, 14 Jun 2022 05:43:05 -0700 (PDT)
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
-        by smtp.gmail.com with ESMTPSA id m4-20020a05620a24c400b006a098381abcsm9328174qkn.114.2022.06.14.05.43.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jun 2022 05:43:05 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-30ce6492a60so28026457b3.8;
-        Tue, 14 Jun 2022 05:43:05 -0700 (PDT)
-X-Received: by 2002:a81:f41:0:b0:313:4d6c:49db with SMTP id
- 62-20020a810f41000000b003134d6c49dbmr5354767ywp.384.1655210584857; Tue, 14
- Jun 2022 05:43:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220520154051.29088-1-phil.edworthy@renesas.com> <20220520154051.29088-3-phil.edworthy@renesas.com>
-In-Reply-To: <20220520154051.29088-3-phil.edworthy@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jun 2022 14:42:53 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUiqUUN_A+a2hcVpdx56NKHSBPMiYyHeS0SAVwdZSbZZA@mail.gmail.com>
-Message-ID: <CAMuHMdUiqUUN_A+a2hcVpdx56NKHSBPMiYyHeS0SAVwdZSbZZA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: renesas: Add RZ/V2M pin and gpio controller driver
-To:     Phil Edworthy <phil.edworthy@renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        with ESMTP id S231790AbiFNNAz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jun 2022 09:00:55 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2094.outbound.protection.outlook.com [40.107.113.94])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104D333A35;
+        Tue, 14 Jun 2022 06:00:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P6oIFFMTmlBfHPYcuMzsLGfsCfgtAmxVJB3Lm/4qO4nG7G9X/o2Oq9r2LYOLEGo/dH9Ee26lzsCa2tdPY637pN0rg6lataVMp1kmBTW9F+ykhp38hWH7VYY9tmMCG1QsPPCg4KofF6wXgiHMf2OLX4R1bdHT3VTslFWU+6IPLBBJIbUZIuVsqxXW9J3toX0k0/P5a4kzLn45j+06Hwn4XAGLF9OOciMy5PLcocx2vRniRerx2444hWaImLewvFca8hGLFU5G+4+I4BPyBWLYINtYWVtwU8egXFvmitCeZIK/Hk+36uOEf1+nXzKJO7DMNecnmxsYcQ/ldmPpaU2ijA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y31rKPdfSi44ZzHQ2vtHXNwOus4ukFe9i0N94xsSXVE=;
+ b=DZyXWULObozB2m5vGA39uHl8Wjw3vv+tUEZyhMSrThQmXpnTxvuG5GeSfHoSW3zkba9JGRMBFyiPFjxFpvF2uwlk3YDm/Ko9HCcoT7q/5f0YN2aQPy17HYXY1ds5WahxHeeGFeAvvqxxRH8GeITFhXVLdRKMPu4E+lKaB+EdUfWwZm7SrdHFeNd9BG+wdYhTnxAktIP0TsWIvWWkbHgsjOaoGLyDt6obA4fl2S87nR5kevXfLYW57er97snScoRqMMKzy/OVHOzBXb22X0gAlCL/166kBzYmPn31PbVijr5sZ2sWxH+G7ZX/xWWm5Yup/pY9Dm227FpqYNEls6+WJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y31rKPdfSi44ZzHQ2vtHXNwOus4ukFe9i0N94xsSXVE=;
+ b=bL+ZH43HvpP/AhVXhNgMxDoahJA9WiIxAlPFGzwK9oPmz63a0N0DDQ+OGAvLqkgvaQOHmQMg5bqFtHXq2N9oQwiocycZCTc3bH+GgEoOCYRB+oMXjPsRjebCrq1Qzc8Enj4znuqScpWrfewf4JC4wYcTSARA2CMpt9POJfo+/zI=
+Received: from TYYPR01MB7086.jpnprd01.prod.outlook.com (2603:1096:400:de::11)
+ by TY2PR01MB4620.jpnprd01.prod.outlook.com (2603:1096:404:111::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.15; Tue, 14 Jun
+ 2022 13:00:50 +0000
+Received: from TYYPR01MB7086.jpnprd01.prod.outlook.com
+ ([fe80::e180:5c8b:8ddf:7244]) by TYYPR01MB7086.jpnprd01.prod.outlook.com
+ ([fe80::e180:5c8b:8ddf:7244%6]) with mapi id 15.20.5332.022; Tue, 14 Jun 2022
+ 13:00:50 +0000
+From:   Phil Edworthy <phil.edworthy@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: RE: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add DT bindings for
+ RZ/V2M pinctrl
+Thread-Topic: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add DT bindings for
+ RZ/V2M pinctrl
+Thread-Index: AQHYbGAJuUt0o0UhwkGKZGmmj+mQHK1O9rEAgAAESvA=
+Date:   Tue, 14 Jun 2022 13:00:50 +0000
+Message-ID: <TYYPR01MB70865B5F1C4F918F3125CFB8F5AA9@TYYPR01MB7086.jpnprd01.prod.outlook.com>
+References: <20220520154051.29088-1-phil.edworthy@renesas.com>
+ <20220520154051.29088-2-phil.edworthy@renesas.com>
+ <CAMuHMdVyoCG7PNtk9b32JAnzq4R+EeLCxM-8owuphhD=KFS=Ow@mail.gmail.com>
+In-Reply-To: <CAMuHMdVyoCG7PNtk9b32JAnzq4R+EeLCxM-8owuphhD=KFS=Ow@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19e8495f-63f4-4a90-3a9e-08da4e05e811
+x-ms-traffictypediagnostic: TY2PR01MB4620:EE_
+x-microsoft-antispam-prvs: <TY2PR01MB4620373511477612976A306FF5AA9@TY2PR01MB4620.jpnprd01.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: z6lEviFBVHlJiQQnJiD+mtY+fUxQsTkHscCMPv8+GaeiZcMX8P4KkldRn+pKypP0u82ZIUrZHDHVSX1+q8pJ74fZJBIPlCFJo5XnuQPZUVGoeMiXFyjtqeoTHsB/7yOqCjh57soROFnHO4Sg8PC7wkRiBjp5uz2yc6eUYr3vEtXOwXolhmtz46cBdsmeC4kYeNJIDxk35Fd80yA0LLY3+7IQpz8Mmvag14deDvz3KDI9MJ0h/Rdr4QMZ9gBmn5NaUbY7ot3bpyjM2yE4yDZqqmHvQ1JxzqN7BpwpEKSLZI8tPv5j1jzN56a2RVM1yDoSqyqXaM38mQB8UtaI1TkdghHv2BuawVn9cz995kK4SPadRtUoa81C5INNa7Tov41+HvfcipkhEdFq050KEbvAf4IBLE3lW2VQ/sMl5z84L8DtIhZGwnTmRQ5bMHs8rbSD+vaAWDEi/eiG/mHluLce5Yt7AkgR8bD71hTpnTp6vZIwf9AwpyRPVqaS3epx4O12R6byYwNYn2qd4dMwjwkivWrR/zXqpLaWoKgHa8TwUmdU1wgRTXxWnJ07Xxii2DEaQPx+kuOu2Z0uAhDRjp93hdN62jpxL4sRagPGLk2mSliw3yVEXGSa6XH5RWJ1wkeDGbHXJ+VdKOONpIIywP8WmnHgPlcBO+FR3wJwyyXhy9P2YJD9Tsi+UffXzND5r58X50E5zqpnnGI0zB9jl6ZWcQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYYPR01MB7086.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(508600001)(38070700005)(8936002)(33656002)(54906003)(71200400001)(52536014)(186003)(6916009)(86362001)(6506007)(7696005)(122000001)(2906002)(316002)(9686003)(66946007)(26005)(53546011)(55236004)(55016003)(4326008)(5660300002)(66476007)(8676002)(38100700002)(66446008)(66556008)(64756008)(76116006)(44832011);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eVNqRFlPZmlrVmdDVGRreHVRS0w0ckdlb2R0N0twM1RFN3VSY3ViSUdsWGVU?=
+ =?utf-8?B?ZnVjanVuL25MSStHcTFudTR2OElvUFJVbjV6ZWl1RjVEZWNYMTA4S3lFbW9M?=
+ =?utf-8?B?WGZFbW94TjBWUFhXMnhJK243M2ZnblJhUWdzZ2ZpWjhJOFYxSHlWWGdPNFhm?=
+ =?utf-8?B?QUtaMDk5emJ1aTUvSHF4TDgvTEh6ekNDZTNXUitqTjFUN0VuRmZvbytaNk1x?=
+ =?utf-8?B?K0JZSnVjaHdIUEVXb1piUUVsdG9vQndjS1c5Z095anBta2lKSnV6Ti9YdG05?=
+ =?utf-8?B?aVJVOWpPNnJlbDJUTmRJcE05bFQrb2FMTU5wS1dLT2FRMklydzBMZ3VPRjkr?=
+ =?utf-8?B?OFVFN0Nsb0JMaDlKd3M2aGEwWGRCTVFjWlpCV1VuKzViRGcxS20wQVZrRkQv?=
+ =?utf-8?B?cnQ4YjByL3Q1VDlJOWRrY0xjRktoZ0lYL2NFRlNMWnVxN3o0V24vOXlSV3F3?=
+ =?utf-8?B?OXhIQlBGWU5Oa1lNVVIydEEwRXZnK0phSzF2empXV2RHbkRZWXRmYS9oeERv?=
+ =?utf-8?B?eVZBNHRiQy9iQzV4NmlkMnhWRitNUGJhcStNZVorNm1hakZUMXNTM0pWV3JW?=
+ =?utf-8?B?S3d2VitYR0dhSk1qcUxvVXp0OGMwcDVwMWVpVzkrbVY1R29UdmUwam5iQjBH?=
+ =?utf-8?B?VHNqTDl1a1F4Z1lVZ0F6c0QyazA0WC9WV2NFYjB5Wk5pQXg1bTVyVE0zUE5C?=
+ =?utf-8?B?by9aanp6YWtHQ1RONVd4VEl3ZU5PRUhqTVlLeXlUZENtUnd1Y2pKVEM1K2gx?=
+ =?utf-8?B?b2tJbFpudTUxNlE4V1ZWYUtZRnFpT1NxSmllNWN3cHdsSG1aYzZFK2o3Tk91?=
+ =?utf-8?B?YzdZUWtkL0lubjA1TXoxN3ExbUZwT2NHTEpUZkd5Y0VMM2thb0xrVDlySVUx?=
+ =?utf-8?B?SlFjaVNGNmN5djFoR0pLREJ2d2hWM24vRUF3SkVNd1cyTFdKamowTmU0MkJJ?=
+ =?utf-8?B?Z3loNVRwVGY1TndZRHE1T09PdmRDeFJEaW1HMFllZWRNZi9rcEFuR1BsVDdR?=
+ =?utf-8?B?U1ROM2pjOWdtNlJ2bmtFNXN4Vzh3VlBIVXBnWWFJc3pVdC9aT0pPczd4NC9y?=
+ =?utf-8?B?dElYK1pxMDhCVlp1UjBxZHhtTU95Z3o2V2w3NTdjZFZqZTh5UWE2N2FOVHJj?=
+ =?utf-8?B?RFl2QXR0akRUZ1ZpdUpUMVdyVjFUemh3Sk1KWHYrbUFlZUZQZnVDaVliRi9p?=
+ =?utf-8?B?cTYrVlQrc2VJUmRuSURpR3U4bmhGTXZSZ2NCLzhTMjg4OXJZcERDczgvZUV6?=
+ =?utf-8?B?MEZkSS9MZ1EwWnExUGUvWnp1OFZzSWpUbWJNWnFqZVBmN2dVWFVHY2owUlNr?=
+ =?utf-8?B?NjQzOGNJTEViRk9nTWJZRW92eDZvT1ZhMEtBWDdOa2FMSG9tZlAyL2hkTFJs?=
+ =?utf-8?B?MUFOc3EwVzRYa3ExcUV3S011RndHWFpOMGszNERvNmIrK0U5TkR1MVQveG4y?=
+ =?utf-8?B?UWRwNGl4N1NEOEdRR3VZOVE3NGdkOGM1NWtsVm5YY2pGajB3NzJWdGwxc3h2?=
+ =?utf-8?B?bzNwUWd3bDg1UEpabldsVHRxdFYxMjc1TW9PQURmSGZGU3c3YlhRRHNMZDJi?=
+ =?utf-8?B?VjNhTzJVeWNDSDNXQ0VjdW9waTlZajVjSVFzaVR1MUtoT3U0SHZyOG1RbjhY?=
+ =?utf-8?B?R3JEZnhQdEFXNVYwMysyOHhPQzNUZkJXL3B5Zk5wbFRaS3lKSjlDeVArTjVE?=
+ =?utf-8?B?S3RSeGRZSkhzVzUweTRmMFRXY2FlckRpbXZrOC91Rjc2UFVqajB0VnJkSWNr?=
+ =?utf-8?B?bC9TZFV4QllKSk04YVdMK3RZZFVjam5XK2srL0V0My85cXdjZ1V2VjU0UVNV?=
+ =?utf-8?B?SkIzMUR0SXNuOUpCS1R4ZmJzUmd3Yk8yaFhDUjYvajc4eitjeitEWHliQVMy?=
+ =?utf-8?B?cDFPSVlKd2g1ZDQ5VDEwZk0reWExVkowQjV5TW9HRlRPSW1LWUxVZWRLVGha?=
+ =?utf-8?B?dDBEcllEQXN4Yi9CZzJKdzIyTnRwY283enVXbURzZS9JcUFLYzh3b1RKdHNt?=
+ =?utf-8?B?MzROZ21kRmFzRmpTSGdmcSthVndiWU9JemQ0eGJSZk5FeHdySHpMNExtYlNa?=
+ =?utf-8?B?d0hyb2RJN0U5bDh5Qi9zZVhFblMycCtXUUltN1h3NE1SMkt3UHpESFVVeTFs?=
+ =?utf-8?B?bkovYUtNRStvMXFGRndhUlBpZ1h5T0pNbmlUYXdadllHSFhKNTI2TjkwNFJN?=
+ =?utf-8?B?MUNDM1JRdFZFNlVwcFlHVlBuWTFEcXBCdXhiSDY1dzAzZTJMS0VUbFVlSFYz?=
+ =?utf-8?B?SStBNU5ITzZQYmJnYUtYSTdTRkdobGljekZrdEhzT1ozcnpWTEk3ZzVtZUxB?=
+ =?utf-8?B?Uk1DWjFSNkVXc1JhR2JGNml3OXJmSURQU1daekFrUU5NTFlwUE96QThwUE5U?=
+ =?utf-8?Q?3eGGv0jVBwzRHfP8=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB7086.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19e8495f-63f4-4a90-3a9e-08da4e05e811
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2022 13:00:50.0968
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r0vJTfC6gxBfa037/nQDaB/4pIgRcxg7AmthFDnkGs1qX2QkTCXANNiSY2pq60fIgcpfj4yHekRMUN5XIhpKyEsgSbvo92mEmxob2IedG1Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4620
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Phil,
-
-Thanks for your patch!
-
-On Fri, May 20, 2022 at 5:41 PM Phil Edworthy <phil.edworthy@renesas.com> wrote:
-> Add support for pin and gpio controller driver for RZ/V2M SoC.
-> Based on the RZ/G2L driver.
->
-> Note that the DETDO and DETMS dedicated pins are currently not
-> documented in the HW manual as to which pin group they are in.
-> HW team have since said that the output level of V1.8V I/O group 4
-> (for MD0-7, and debugger) is the same as the 1.8V IO group 3.
-
-Thank you, I rediscovered this explanation just before pressing send ;-)
-
->
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-> --- a/drivers/pinctrl/renesas/Kconfig
-> +++ b/drivers/pinctrl/renesas/Kconfig
-> @@ -193,6 +194,18 @@ config PINCTRL_RZG2L
->           This selects GPIO and pinctrl driver for Renesas RZ/{G2L,G2UL,V2L}
->           platforms.
->
-> +config PINCTRL_RZV2M
-> +       bool "pin control support for RZ/V2M"
-> +       depends on OF
-> +       depends on ARCH_R9A09G011 || COMPILE_TEST
-> +       select GPIOLIB
-> +       select GENERIC_PINCTRL_GROUPS
-> +       select GENERIC_PINMUX_FUNCTIONS
-> +       select GENERIC_PINCONF
-> +       help
-> +         This selects GPIO and pinctrl driver for Renesas RZ/V2M
-> +         platforms.
-> +
-
-Please preserve sort order.
-
->  config PINCTRL_PFC_R8A77470
->         bool "pin control support for RZ/G1C" if COMPILE_TEST
->         select PINCTRL_SH_PFC
-> diff --git a/drivers/pinctrl/renesas/Makefile b/drivers/pinctrl/renesas/Makefile
-> index 5d936c154a6f..cfa966125c4e 100644
-> --- a/drivers/pinctrl/renesas/Makefile
-> +++ b/drivers/pinctrl/renesas/Makefile
-> @@ -48,6 +48,7 @@ obj-$(CONFIG_PINCTRL_PFC_SHX3)                += pfc-shx3.o
->  obj-$(CONFIG_PINCTRL_RZA1)     += pinctrl-rza1.o
->  obj-$(CONFIG_PINCTRL_RZA2)     += pinctrl-rza2.o
->  obj-$(CONFIG_PINCTRL_RZG2L)    += pinctrl-rzg2l.o
-> +obj-$(CONFIG_PINCTRL_RZV2M)    += pinctrl-rzv2m.o
-
-Please preserve sort order.
-
->  obj-$(CONFIG_PINCTRL_RZN1)     += pinctrl-rzn1.o
->
->  ifeq ($(CONFIG_COMPILE_TEST),y)
-> diff --git a/drivers/pinctrl/renesas/pinctrl-rzv2m.c b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
-> new file mode 100644
-> index 000000000000..610fc6b05e15
-> --- /dev/null
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
-> @@ -0,0 +1,1149 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Renesas RZ/V2M Pin Control and GPIO driver core
-> + *
-> + * Based on:
-> + *   Renesas RZ/G2L Pin Control and GPIO driver core
-> + *
-> + * Copyright (C) 2022 Renesas Electronics Corporation.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include <dt-bindings/pinctrl/rzv2m-pinctrl.h>
-> +
-> +#include "../core.h"
-> +#include "../pinconf.h"
-> +#include "../pinmux.h"
-> +
-> +#define DRV_NAME       "pinctrl-rzv2m"
-> +
-> +/*
-> + * Use 16 lower bits [15:0] for pin identifier
-> + * Use 16 higher bits [31:16] for pin mux function
-> + */
-> +#define MUX_PIN_ID_MASK                GENMASK(15, 0)
-> +#define MUX_FUNC_MASK          GENMASK(31, 16)
-> +#define MUX_FUNC_OFFS          16
-> +#define MUX_FUNC(pinconf)      (((pinconf) & MUX_FUNC_MASK) >> MUX_FUNC_OFFS)
-
-FIELD_GET(MUX_FUNC_MASK, (pinconf))?
-After that you can remove MUX_FUNC_OFFS.
-
-> +
-> +/* PIN capabilities */
-> +#define PIN_CFG_1_8V_GRP2              1
-> +#define PIN_CFG_1_8V_GRP3              2
-> +#define PIN_CFG_SWIO_GRP1              3
-> +#define PIN_CFG_SWIO_GRP2              4
-> +#define PIN_CFG_3_3V_GRP               5
-
-PIN_CFG_GRP_*, and move the definition of PIN_CFG_GRP_MASK here, to
-make it clear they use the same number space as the PIN_CFG_* below?
-
-> +#define PIN_CFG_IE                     BIT(3)
-> +#define PIN_CFG_BIAS                   BIT(4)
-> +#define PIN_CFG_DRV                    BIT(5)
-> +#define PIN_CFG_SLEW                   BIT(6)
-> +
-> +#define RZV2M_MPXED_PIN_FUNCS          (PIN_CFG_IE | \
-> +                                        PIN_CFG_BIAS | \
-> +                                        PIN_CFG_DRV | \
-> +                                        PIN_CFG_SLEW)
-> +
-> +#define PIN_CFG_GRP_MASK               7
-
-GENMASK(2, 0)
-
-> +
-> +/*
-> + * n indicates number of pins in the port, a is the register index
-> + * and f is pin configuration capabilities supported.
-> + */
-> +#define RZV2M_GPIO_PORT_PACK(n, a, f)  (((n) << 24) | ((a) << 16) | (f))
-> +#define RZV2M_GPIO_PORT_GET_PINCNT(x)  (((x) & GENMASK(31, 24)) >> 24)
-
-FIELD_GET(GENMASK(31, 24), (x)) etc?
-
-> +#define RZV2M_GPIO_PORT_GET_INDEX(x)   (((x) & GENMASK(23, 16)) >> 16)
-> +#define RZV2M_GPIO_PORT_GET_CFGS(x)    ((x) & GENMASK(15, 0))
-> +
-> +#define RZV2M_DEDICATED_PORT_IDX       22
-> +
-> +/*
-> + * BIT(31) indicates dedicated pin, b is the register bits (b * 16)
-> + * and f is the pin configuration capabilities supported.
-> + */
-> +#define RZV2M_SINGLE_PIN               BIT(31)
-> +#define RZV2M_SINGLE_PIN_PACK(b, f)    (RZV2M_SINGLE_PIN | \
-> +                                        ((RZV2M_DEDICATED_PORT_IDX) << 24) | \
-> +                                        ((b) << 16) | (f))
-> +#define RZV2M_SINGLE_PIN_GET_PORT_OFFSET(x)    (((x) & GENMASK(30, 24)) >> 24)
-> +#define RZV2M_SINGLE_PIN_GET_BIT(x)    (((x) & GENMASK(23, 16)) >> 16)
-> +#define RZV2M_SINGLE_PIN_GET_CFGS(x)   ((x) & GENMASK(15, 0))
-> +
-> +#define RZV2M_PIN_ID_TO_PORT(id)       ((id) / RZV2M_PINS_PER_PORT)
-> +#define RZV2M_PIN_ID_TO_PORT_OFFSET(id)        RZV2M_PIN_ID_TO_PORT(id)
-
-Unlike on RZ/G2L, there is no need to distinguish between port and
-port_offset on RZ/V2M, so you can drop RZV2M_PIN_ID_TO_PORT_OFFSET(),
-and always use RZV2M_PIN_ID_TO_PORT().
-
-> +#define RZV2M_PIN_ID_TO_PIN(id)                ((id) % RZV2M_PINS_PER_PORT)
-> +
-> +#define DO(n)                  (0x00 + (n) * 0x40)
-> +#define OE(n)                  (0x04 + (n) * 0x40)
-> +#define IE(n)                  (0x08 + (n) * 0x40)
-> +#define PFC(n)                 (0x10 + (n) * 0x40)
-
-PFSEL, to match the documentation?
-
-> +#define DI(n)                  (0x20 + (n) * 0x40)
-> +#define PUPD(n)                        (0x24 + (n) * 0x40)
-> +#define DRV(n)                 (0x28 + (n) * 0x40)
-> +#define SR(n)                  (0x2c + (n) * 0x40)
-> +#define DI_MSK(n)              (0x30 + (n) * 0x40)
-> +#define EN_MSK(n)              (0x34 + (n) * 0x40)
-> +#define DRV_DEDICATED          0x590
-> +#define SR_DEDICATED           0x594
-> +
-> +#define IE_MASK                        0x01
-> +#define PFC_MASK               0x07
-> +#define PUPD_MASK              0x03
-> +#define DRV_MASK               0x03
-> +#define SR_MASK                        0x01
-
-Do you need IE_MASK and SR_MASK, for single-bit fields?
-You don't have DO_MASK(), OE_MASK(), and IE_MASK().
-
-> +static const unsigned int drv_1_8V_group2_uA[] = { 1800, 3800, 7800, 11000 };
-> +static const unsigned int drv_1_8V_group3_uA[] = { 1600, 3200, 6400, 9600 };
-> +static const unsigned int drv_SWIO_group1_3_3V_uA[] = { 2000, 4000, 8000, 12000 };
-> +static const unsigned int drv_SWIO_group2_3_3V_uA[] = { 9000, 11000, 13000, 18000 };
-> +static const unsigned int drv_3_3V_group_uA[] = { 2000, 4000, 8000, 12000 };
-
-Can drv_SWIO_group1_3_3V_uA[] and drv_3_3V_group_uA[] be shared,
-as they contain the same values?
-Note that for the SWIO groups, the actual values are dependent on
-the I/O voltage, too.  But I guess it becomes too complicated to
-handle that (i.e. where to get the I/O voltage from)?
-
-> +
-> +/* Helper for registers that have a write enable bit in the upper word */
-> +static void rzv2m_writel_we(void __iomem *addr, u8 bit, u8 value)
-
-s/bit/shift/
-
-> +{
-> +       writel((BIT(16) | value) << bit, addr);
-> +}
-
-> +static void rzv2m_rmw_pin_config(struct rzv2m_pinctrl *pctrl, u32 offset,
-> +                                u8 bit, u32 mask, u32 val)
-
-s/bit/shift/
-
-> +{
-> +       void __iomem *addr = pctrl->base + offset;
-> +       unsigned long flags;
-> +       u32 reg;
-> +
-> +       spin_lock_irqsave(&pctrl->lock, flags);
-> +       reg = readl(addr) & ~(mask << bit);
-> +       writel(reg | (val << bit), addr);
-> +       spin_unlock_irqrestore(&pctrl->lock, flags);
-> +}
-> +
-> +static int rzv2m_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
-> +                                    unsigned int _pin,
-> +                                    unsigned long *config)
-> +{
-> +       struct rzv2m_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +       enum pin_config_param param = pinconf_to_config_param(*config);
-> +       const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
-> +       unsigned int *pin_data = pin->drv_data;
-> +       unsigned int arg = 0;
-> +       u32 port_offset;
-
-port?
-
-> +       u32 cfg = 0;
-> +       u8 bit = 0;
-
-No need to pre-initialize cfg and bit to zero.
-
-> +       u32 val;
-> +
-> +       if (!pin_data)
-> +               return -EINVAL;
-> +
-> +       if (*pin_data & RZV2M_SINGLE_PIN) {
-> +               port_offset = RZV2M_SINGLE_PIN_GET_PORT_OFFSET(*pin_data);
-> +               cfg = RZV2M_SINGLE_PIN_GET_CFGS(*pin_data);
-> +               bit = RZV2M_SINGLE_PIN_GET_BIT(*pin_data);
-> +       } else {
-> +               cfg = RZV2M_GPIO_PORT_GET_CFGS(*pin_data);
-> +               port_offset = RZV2M_PIN_ID_TO_PORT_OFFSET(_pin);
-> +               bit = RZV2M_PIN_ID_TO_PIN(_pin);
-> +
-> +               if (rzv2m_validate_gpio_pin(pctrl, *pin_data, RZV2M_PIN_ID_TO_PORT(_pin), bit))
-> +                       return -EINVAL;
-> +       }
-> +
-> +       switch (param) {
-> +       case PIN_CONFIG_BIAS_DISABLE:
-> +       case PIN_CONFIG_BIAS_PULL_UP:
-> +       case PIN_CONFIG_BIAS_PULL_DOWN: {
-> +               enum pin_config_param bias;
-> +
-> +               if (!(cfg & PIN_CFG_BIAS))
-> +                       return -EINVAL;
-> +
-> +               /* PUPD uses 2-bits per pin */
-> +               bit <<= 1;
-
-So bit is actually a shift...
-"*= 2" may be easier to read.
-
-> +
-> +               val = (readl(pctrl->base + PUPD(port_offset)) >> bit) & PUPD_MASK;
-> +               if (val == 0)
-> +                       bias = PIN_CONFIG_BIAS_PULL_DOWN;
-> +               else if (val == 2)
-> +                       bias = PIN_CONFIG_BIAS_PULL_UP;
-> +               else
-> +                       bias = PIN_CONFIG_BIAS_DISABLE;
-
-switch (readl(pctrl->base + PUPD(port_offset)) >> bit) & PUPD_MASK) { ... }
-
-> +               if (bias != param)
-> +                       return -EINVAL;
-> +               break;
-> +       }
-> +
-> +       case PIN_CONFIG_INPUT_ENABLE:
-> +               if (!(cfg & PIN_CFG_IE))
-> +                       return -EINVAL;
-> +
-> +               val = (readl(pctrl->base + IE(port_offset)) >> bit) & IE_MASK;
-
-"& BIT(bit)", or do you want to preserve symmetry with the other cases?
-
-> +               if (!val)
-> +                       return -EINVAL;
-> +               break;
-> +
-> +       case PIN_CONFIG_DRIVE_STRENGTH_UA:
-> +               if (!(cfg & PIN_CFG_DRV))
-> +                       return -EINVAL;
-> +
-> +               /* DRV uses 2-bits per pin */
-> +               bit <<= 1;
-> +
-> +               /* Dedicated port is irregularly located to the others */
-> +               if (port_offset == RZV2M_DEDICATED_PORT_IDX)
-> +                       val = (readl(pctrl->base + DRV_DEDICATED) >> bit) & DRV_MASK;
-> +               else
-> +                       val = (readl(pctrl->base + DRV(port_offset)) >> bit) & DRV_MASK;
-
-You can simplify this, by handling the dedicated port offset in the
-definition of the DRV() macro.  Same for SR().
-
-> +
-> +               if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_1_8V_GRP2)
-> +                       arg = drv_1_8V_group2_uA[val];
-> +               else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_1_8V_GRP3)
-> +                       arg = drv_1_8V_group3_uA[val];
-> +               else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_SWIO_GRP1)
-> +                       arg = drv_SWIO_group1_3_3V_uA[val];
-> +               else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_SWIO_GRP2)
-> +                       arg = drv_SWIO_group2_3_3V_uA[val];
-> +               else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_3_3V_GRP)
-> +                       arg = drv_3_3V_group_uA[val];
-> +               else
-> +                       return -EINVAL;
-
-switch (cfg & PIN_CFG_GRP_MASK) { ... }
-
-> +
-> +               break;
-> +
-> +       case PIN_CONFIG_SLEW_RATE:
-> +               if (!(cfg & PIN_CFG_SLEW))
-> +                       return -EINVAL;
-> +
-> +               /* Dedicated port is irregularly located to the others */
-> +               if (port_offset == RZV2M_DEDICATED_PORT_IDX)
-> +                       arg = (readl(pctrl->base + SR_DEDICATED) >> bit) & SR_MASK;
-
-"& BIT(bit)", or do you want to preserve symmetry with the other cases?
-
-> +               else
-> +                       arg = (readl(pctrl->base + SR(port_offset)) >> bit) & SR_MASK;
-> +               break;
-> +
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +
-> +       *config = pinconf_to_config_packed(param, arg);
-> +
-> +       return 0;
-> +};
-> +
-> +static int rzv2m_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
-> +                                    unsigned int _pin,
-> +                                    unsigned long *_configs,
-> +                                    unsigned int num_configs)
-> +{
-> +       struct rzv2m_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +       const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
-> +       unsigned int *pin_data = pin->drv_data;
-> +       enum pin_config_param param;
-> +       u32 port_offset;
-
-port?
-
-> +       unsigned int i;
-> +       u32 cfg = 0;
-> +       u8 bit = 0;
-
-No need to pre-initialize cfg and bit to zero.
-
-> +       u32 val;
-> +
-> +       if (!pin_data)
-> +               return -EINVAL;
-> +
-> +       if (*pin_data & RZV2M_SINGLE_PIN) {
-> +               port_offset = RZV2M_SINGLE_PIN_GET_PORT_OFFSET(*pin_data);
-> +               cfg = RZV2M_SINGLE_PIN_GET_CFGS(*pin_data);
-> +               bit = RZV2M_SINGLE_PIN_GET_BIT(*pin_data);
-> +       } else {
-> +               cfg = RZV2M_GPIO_PORT_GET_CFGS(*pin_data);
-> +               port_offset = RZV2M_PIN_ID_TO_PORT_OFFSET(_pin);
-> +               bit = RZV2M_PIN_ID_TO_PIN(_pin);
-> +
-> +               if (rzv2m_validate_gpio_pin(pctrl, *pin_data, RZV2M_PIN_ID_TO_PORT(_pin), bit))
-> +                       return -EINVAL;
-> +       }
-> +
-> +       for (i = 0; i < num_configs; i++) {
-> +               param = pinconf_to_config_param(_configs[i]);
-> +               switch (param) {
-> +               case PIN_CONFIG_BIAS_DISABLE:
-> +               case PIN_CONFIG_BIAS_PULL_UP:
-> +               case PIN_CONFIG_BIAS_PULL_DOWN:
-> +                       if (!(cfg & PIN_CFG_BIAS))
-> +                               return -EINVAL;
-> +
-> +                       /* PUPD uses 2-bits per pin */
-> +                       bit <<= 1;
-
-So bit is actually a shift...
-"*= 2" may be easier to read.
-
-> +
-> +                       if (param == PIN_CONFIG_BIAS_PULL_DOWN)
-> +                               val = 0;
-> +                       else if (param == PIN_CONFIG_BIAS_PULL_UP)
-> +                               val = 2;
-> +                       else
-> +                               val = 1;
- i
-switch (param) { ... }
-
-> +
-> +                       rzv2m_rmw_pin_config(pctrl, PUPD(port_offset), bit, PUPD_MASK, val);
-> +                       break;
-> +
-> +               case PIN_CONFIG_INPUT_ENABLE: {
-> +                       unsigned int arg = pinconf_to_config_argument(_configs[i]);
-> +
-> +                       if (!(cfg & PIN_CFG_IE))
-> +                               return -EINVAL;
-> +
-> +                       rzv2m_writel_we(pctrl->base + OE(port_offset), bit, !arg);
-
-Should OE be controlled through PIN_CONFIG_OUTPUT_ENABLE instead?
-
-> +                       rzv2m_writel_we(pctrl->base + IE(port_offset), bit, !!arg);
-> +                       break;
-> +               }
-> +
-> +               case PIN_CONFIG_DRIVE_STRENGTH_UA: {
-> +                       unsigned int arg = pinconf_to_config_argument(_configs[i]);
-> +                       const unsigned int *drv_strengths;
-> +                       unsigned int index;
-> +
-> +                       if (!(cfg & PIN_CFG_DRV))
-> +                               return -EINVAL;
-> +
-> +                       if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_1_8V_GRP2)
-> +                               drv_strengths = drv_1_8V_group2_uA;
-> +                       else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_1_8V_GRP3)
-> +                               drv_strengths = drv_1_8V_group3_uA;
-> +                       else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_SWIO_GRP1)
-> +                               drv_strengths = drv_SWIO_group1_3_3V_uA;
-> +                       else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_SWIO_GRP2)
-> +                               drv_strengths = drv_SWIO_group2_3_3V_uA;
-> +                       else if ((cfg & PIN_CFG_GRP_MASK) == PIN_CFG_3_3V_GRP)
-> +                               drv_strengths = drv_3_3V_group_uA;
-> +                       else
-> +                               return -EINVAL;
-
-switch (cfg & PIN_CFG_GRP_MASK) { ... }
-
-> +
-> +                       for (index = 0; index < 4; index++) {
-> +                               if (arg == drv_strengths[index])
-> +                                       break;
-> +                       }
-> +                       if (index >= 4)
-> +                               return -EINVAL;
-> +
-> +                       /* DRV uses 2-bits per pin */
-> +                       bit <<= 1;
-> +
-> +                       /* Dedicated port is irregularly located to the others */
-> +                       if (port_offset == RZV2M_DEDICATED_PORT_IDX)
-> +                               rzv2m_rmw_pin_config(pctrl, DRV_DEDICATED, bit, DRV_MASK, index);
-> +                       else
-> +                               rzv2m_rmw_pin_config(pctrl, DRV(port_offset), bit, DRV_MASK, index);
-> +                       break;
-> +               }
-> +
-> +               case PIN_CONFIG_SLEW_RATE: {
-> +                       unsigned int arg = pinconf_to_config_argument(_configs[i]);
-> +
-> +                       if (!(cfg & PIN_CFG_SLEW))
-> +                               return -EINVAL;
-> +
-> +                       /* Dedicated port is irregularly located to the others */
-> +                       if (port_offset == RZV2M_DEDICATED_PORT_IDX)
-> +                               rzv2m_writel_we(pctrl->base + SR_DEDICATED, bit, !arg);
-> +                       else
-> +                               rzv2m_writel_we(pctrl->base + SR(port_offset), bit, !arg);
-> +                       break;
-> +               }
-> +
-> +               default:
-> +                       return -EOPNOTSUPP;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-
-> +static void rzv2m_gpio_set_direction(struct rzv2m_pinctrl *pctrl, u32 port,
-> +                                    u8 bit, bool output)
-> +{
-> +       if (output == true) {
-
-"if (output)", as output is already a boolean value.
-
-But perhaps just get rid of the if/else, and write "output" resp. "!output"
-to the OE resp. IE bits?
-
-> +               rzv2m_writel_we(pctrl->base + IE(port), bit, 0);
-> +               rzv2m_writel_we(pctrl->base + OE(port), bit, 1);
-> +       } else {
-> +               rzv2m_writel_we(pctrl->base + OE(port), bit, 0);
-> +               rzv2m_writel_we(pctrl->base + IE(port), bit, 1);
-> +       }
-> +}
-
-> +static void rzv2m_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +                          int value)
-> +{
-> +       struct rzv2m_pinctrl *pctrl = gpiochip_get_data(chip);
-> +       u32 port = RZV2M_PIN_ID_TO_PORT(offset);
-> +       u8 bit = RZV2M_PIN_ID_TO_PIN(offset);
-> +
-> +       rzv2m_writel_we(pctrl->base + DO(port), bit, value);
-
-While gpiod_direction_output_raw_commit() already does this,
-I guess it doesn't hurt to use "!!value", just in case someone ever
-passes a non-0/1 value?
-
-> +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXchDQoNCk9uIDE0IEp1bmUgMjAyMiAx
+MzoxMCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+IE9uIEZyaSwgTWF5IDIwLCAyMDIyIGF0
+IDU6NDEgUE0gUGhpbCBFZHdvcnRoeSB3cm90ZToNCj4gPiBBZGQgZGV2aWNlIHRyZWUgYmluZGlu
+ZyBkb2N1bWVudGF0aW9uIGFuZCBoZWFkZXIgZmlsZSBmb3IgUmVuZXNhcw0KPiA+IFJaL1YyTSBw
+aW5jdHJsLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGhpbCBFZHdvcnRoeSA8cGhpbC5lZHdv
+cnRoeUByZW5lc2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogTGFkIFByYWJoYWthciA8cHJhYmhh
+a2FyLm1haGFkZXYtbGFkLnJqQGJwLnJlbmVzYXMuY29tPg0KPiANCj4gVGhhbmtzIGZvciB5b3Vy
+IHBhdGNoIQ0KPiANCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcmVuZXNhcyxyenYybS0NCj4gcGluY3RybC55YW1s
+DQo+ID4gQEAgLTAsMCArMSwxNzQgQEANCj4gDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOg0K
+PiA+ICsgIGFueU9mOg0KPiA+ICsgICAgLSB0eXBlOiBvYmplY3QNCj4gPiArICAgICAgYWxsT2Y6
+DQo+ID4gKyAgICAgICAgLSAkcmVmOiBwaW5jZmctbm9kZS55YW1sIw0KPiA+ICsgICAgICAgIC0g
+JHJlZjogcGlubXV4LW5vZGUueWFtbCMNCj4gPiArDQo+ID4gKyAgICAgIGRlc2NyaXB0aW9uOg0K
+PiA+ICsgICAgICAgIFBpbiBjb250cm9sbGVyIGNsaWVudCBkZXZpY2VzIHVzZSBwaW4gY29uZmln
+dXJhdGlvbiBzdWJub2Rlcw0KPiAoY2hpbGRyZW4NCj4gPiArICAgICAgICBhbmQgZ3JhbmRjaGls
+ZHJlbikgZm9yIGRlc2lyZWQgcGluIGNvbmZpZ3VyYXRpb24uDQo+ID4gKyAgICAgICAgQ2xpZW50
+IGRldmljZSBzdWJub2RlcyB1c2UgYmVsb3cgc3RhbmRhcmQgcHJvcGVydGllcy4NCj4gPiArDQo+
+ID4gKyAgICAgIHByb3BlcnRpZXM6DQo+ID4gKyAgICAgICAgcGhhbmRsZTogdHJ1ZQ0KPiA+ICsg
+ICAgICAgIHBpbm11eDoNCj4gPiArICAgICAgICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAg
+ICAgICBWYWx1ZXMgYXJlIGNvbnN0cnVjdGVkIGZyb20gR1BJTyBwb3J0IG51bWJlciwgcGluIG51
+bWJlciwNCj4gYW5kDQo+ID4gKyAgICAgICAgICAgIGFsdGVybmF0ZSBmdW5jdGlvbiBjb25maWd1
+cmF0aW9uIG51bWJlciB1c2luZyB0aGUNCj4gUlpWMk1fUE9SVF9QSU5NVVgoKQ0KPiA+ICsgICAg
+ICAgICAgICBoZWxwZXIgbWFjcm8gaW4gPGR0LWJpbmRpbmdzL3BpbmN0cmwvcnp2Mm0tcGluY3Ry
+bC5oPi4NCj4gPiArICAgICAgICBwaW5zOiB0cnVlDQo+ID4gKyAgICAgICAgYmlhcy1kaXNhYmxl
+OiB0cnVlDQo+ID4gKyAgICAgICAgYmlhcy1wdWxsLWRvd246IHRydWUNCj4gPiArICAgICAgICBi
+aWFzLXB1bGwtdXA6IHRydWUNCj4gPiArICAgICAgICBkcml2ZS1zdHJlbmd0aC1taWNyb2FtcDoN
+Cj4gPiArICAgICAgICAgICMgU3VwZXJzZXQgb2Ygc3VwcG9ydGVkIHZhbHVlcw0KPiA+ICsgICAg
+ICAgICAgZW51bTogWyAxNjAwLCAxODAwLCAyMDAwLCAzMjAwLCAzODAwLCA0MDAwLCA2NDAwLCA3
+ODAwLCA4MDAwLA0KPiA+ICsgICAgICAgICAgICAgICAgICA5MDAwLCA5NjAwLCAxMTAwMCwgMTIw
+MDAsIDEzMDAwLCAxODAwMCBdDQo+ID4gKw0KPiA+ICsgICAgICAgIHBvd2VyLXNvdXJjZToNCj4g
+PiArICAgICAgICAgIGRlc2NyaXB0aW9uOiBJL08gdm9sdGFnZSBpbiBtaWxsaXZvbHQuDQo+ID4g
+KyAgICAgICAgICBlbnVtOiBbIDE4MDAsIDMzMDAgXQ0KPiANCj4gSXMgcG93ZXItc291cmNlIGFj
+dHVhbGx5IHN1cHBvcnRlZD8NCj4gV2hpbGUgdGhlIGRvY3VtZW50YXRpb24gc2hvd3MgdGhlcmUg
+YXJlIHNvbWUgMS44LzMuM1YgcGluIGdyb3VwcywNCj4gSSBkaWRuJ3QgZmluZCBob3cgdG8gc3dp
+dGNoIHZvbHRhZ2U/DQpZb3UgYXJlIHJpZ2h0LCB0aGVyZSBpcyBubyB3YXkgdG8gY2hhbmdlIHRo
+ZSB2b2x0YWdlLCB0aGUgSS9PIHZvbHRhZ2UNCmlzIGJhc2VkIG9uIFZkZCBwaW4gaW5wdXQgdm9s
+dGFnZXMuIFNlZSBQQU1PRFZERCwgUEJNT0RWREQsIFBDTU9EVkRELA0KU0QwTU9EVkRELCBTRDFN
+T0RWREQsIGV0YyBwaW5zLg0KDQo+ID4gKyAgICAgICAgc2xldy1yYXRlOiB0cnVlDQo+IA0KPiBX
+aGF0IGFyZSB2YWxpZCB2YWx1ZXM/DQo+IExvb2tpbmcgYXQgdGhlIGNvZGUsIDAgPSBzbG93LCAx
+ID0gZmFzdD8NCkdvb2QgcG9pbnQsIEknbGwgYWRkIGVudW06IFswLCAxXSBhbmQgYSBkZXNjcmlw
+dGlvbi4NCg0KPiA+ICsgICAgICAgIGdwaW8taG9nOiB0cnVlDQo+ID4gKyAgICAgICAgZ3Bpb3M6
+IHRydWUNCj4gPiArICAgICAgICBpbnB1dC1lbmFibGU6IHRydWUNCj4gDQo+IE1pc3Npbmcgb3V0
+cHV0LWVuYWJsZT8NCklmIGl0J3MgYW4gb3V0cHV0LCB3b3VsZG4ndCB5b3Ugb25seSB3YW50IHRv
+IHNldCBpdCBoaWdoIG9yIGxvdz8NCg0KPiA+ICsgICAgICAgIG91dHB1dC1oaWdoOiB0cnVlDQo+
+ID4gKyAgICAgICAgb3V0cHV0LWxvdzogdHJ1ZQ0KPiA+ICsgICAgICAgIGxpbmUtbmFtZTogdHJ1
+ZQ0KDQpUaGFua3MNClBoaWwNCg==
