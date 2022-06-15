@@ -2,54 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F10D054C91A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 14:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C087454C99F
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 15:18:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349080AbiFOMva (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jun 2022 08:51:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56878 "EHLO
+        id S239827AbiFONSL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jun 2022 09:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349205AbiFOMvD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 08:51:03 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BF2544FF
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 05:50:18 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o1STP-0004bU-F8; Wed, 15 Jun 2022 14:50:15 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o1STM-000gVd-2V; Wed, 15 Jun 2022 14:50:13 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o1STM-00GRz1-MY; Wed, 15 Jun 2022 14:50:12 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de
-Subject: [PATCH] gpio: xgs-iproc: Drop if with an always false condition
-Date:   Wed, 15 Jun 2022 14:47:18 +0200
-Message-Id: <20220615124718.304719-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.36.1
+        with ESMTP id S237431AbiFONSJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 09:18:09 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA872FFD5
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:18:07 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-30ec2aa3b6cso60319887b3.11
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E6V4Ue+dndzuDT7j3moByTJo3sQjDjIr/li3Bn3qA9k=;
+        b=zGD1COlS5dQINR9FxGh1mSbulwGX0JEeM6g5U1JVj2GjCOFw0RWsLtrNqnmUBYbhn9
+         Ds97zfYou14tPKByWr5FiR2h4qFTmzhkch9+rj1SAo92vLZJuac2oJW86i16EHu3lvpu
+         0XqZCFYyjB9O5ZMFHFyLP2O8K/BWIUgDozW80GCCZusHzl5vzCYM5P4N5F/uI4tIrNqH
+         rqXXaSmS1IqcMSDGR2nB6hVLOtmOzlbz8tZhT595nDXr1MSIegKbd2ssDdkregLeW5oR
+         5XvlaGL4XHzYriIG+YQ4uib0qDzAnsKu7r1uaJii9rmBI9eJcpKvNVrFc1MIKDUsVc5h
+         T85g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E6V4Ue+dndzuDT7j3moByTJo3sQjDjIr/li3Bn3qA9k=;
+        b=o1vbQOcqSJ8EUQU6SElx/RfS2sK6n8CXcMsJ3eqMswJDctFwcGSCtvY/HFv4RzaO46
+         CRMhtFn3NsjJDlOxjBvS3zbZGSTSmDTRR2a69c6RKxj1ASXsQ2e5E/3M0s/Ri3F4p5RM
+         WgjT+yBPz2TjrDxaWxC9C/4zbUTETfoltp4j1Buj2b87HltkhfiWdqTsKZoK8pia433h
+         bruz/ajvmYq/csWy2H87PISWg848Xp939euaEwMf3NzmhfZZ+5bnUcvb34Wzm56K1Xhh
+         FzlxlHUhEKv3VGfS7xLzIO4XMW6kQX2dIB2YPOSq8N55ErMqrcOrxJhaRFctS2xL1iKp
+         O5yQ==
+X-Gm-Message-State: AJIora+jNmWrTVljtnrFFmySseghyFWVDZjwla3jhoruHpkBmu+EcKAc
+        kYLSQUVnUS2++iY1iGvVJZ51pgNyWx5hw4MC/CsGC/CSHfE=
+X-Google-Smtp-Source: AGRyM1v5bjntVwpzPV9DDMEuPHXjhLnFsrSsCYkao4d93p3BkffDo3oHs8NbOrG7qCLG7pjh26QW8ztV0Ytmnytapcg=
+X-Received: by 2002:a81:a00b:0:b0:30c:5c1a:19f with SMTP id
+ x11-20020a81a00b000000b0030c5c1a019fmr11550606ywg.437.1655299086690; Wed, 15
+ Jun 2022 06:18:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1193; h=from:subject; bh=cXPUkWfUt5G/YEia8MfBpcA1qhyBd8OYdGaeGNtISaQ=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiqdTSR0vpzL4t+QAsqkXD9WNwV1ZsZ7yQobdPxIyw HfyLm5+JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYqnU0gAKCRDB/BR4rcrsCWIqB/ sF14a9WBHyu0WRdELIZI655hlKnaVZ0JAQBeWEyf69ETCmOhk5+kqKJ4n2rkqNeTCbyJEjTqozsX3E wC4sm8gFXOLF4akqpgAnNaWHXkFyqkVDscE8ROZjKSktrIu6qVOujA5g5Y9EsyeNleE4WkgxRNpRDr t6biGsLzVBM/0HGy0az/+cU5n272cN2tpghHH3JfASI6WHgf4bDo6mYv2Od0Tz2qGw6nWwlYETB/xt StxjV6W7vVknkk7j9QFXdm3dvyOYyPiDScC03ClPaD01efotuTCWSkN3vhCHjPl3CIhe1kFIFpomlW 6sFx0nHW5Oy6d4URAMsmKl/eGFXrH1
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+References: <20220525190423.410609-1-andrey.lalaev@gmail.com>
+In-Reply-To: <20220525190423.410609-1-andrey.lalaev@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 15 Jun 2022 15:17:55 +0200
+Message-ID: <CACRpkdbfJhwee-dnkhE3=ijiLcSx8seVxoKPzyZ_n7bz=TkU7w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sunxi: sunxi_pconf_set: use correct offset
+To:     Andrei Lalaev <andrey.lalaev@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Yangtao Li <frank@allwinnertech.com>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,40 +68,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The remove callback is only called after probe completed successfully.
-In this case platform_set_drvdata() was called with a non-NULL argument
-and so chip is never NULL.
+On Wed, May 25, 2022 at 9:08 PM Andrei Lalaev <andrey.lalaev@gmail.com> wrote:
 
-Also note that returning an error code from a remove callback doesn't
-result in the device staying bound. It's still removed and devm
-callbacks are called.
+> Some Allwinner SoCs have 2 pinctrls (PIO and R_PIO).
+> Previous implementation used absolute pin numbering and it was incorrect
+> for R_PIO pinctrl.
+> It's necessary to take into account the base pin number.
+>
+> Fixes: 90be64e27621 ("pinctrl: sunxi: implement pin_config_set")
+> Signed-off-by: Andrei Lalaev <andrey.lalaev@gmail.com>
 
-This is a preparation for making platform remove callbacks return void.
+It fixes a patch by Maxime so want Maxime to ACK this if it should be
+applied. Paging Andre and Yangtao too, would be sad if we don't apply it
+if it is a necessary fix.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpio-xgs-iproc.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.c
-index 43ca52fa6f9a..fd88500399c6 100644
---- a/drivers/gpio/gpio-xgs-iproc.c
-+++ b/drivers/gpio/gpio-xgs-iproc.c
-@@ -281,11 +281,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 
- static int iproc_gpio_remove(struct platform_device *pdev)
- {
--	struct iproc_gpio_chip *chip;
--
--	chip = platform_get_drvdata(pdev);
--	if (!chip)
--		return -ENODEV;
-+	struct iproc_gpio_chip *chip = platform_get_drvdata(pdev);
- 
- 	if (chip->intr) {
- 		u32 val;
-
-base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
--- 
-2.36.1
-
+Yours,
+Linus Walleij
