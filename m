@@ -2,94 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8B4954CB31
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 16:23:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED15054CB3C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 16:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347378AbiFOOX6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jun 2022 10:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        id S245709AbiFOOY5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jun 2022 10:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347618AbiFOOX5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 10:23:57 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4411027FEC;
-        Wed, 15 Jun 2022 07:23:56 -0700 (PDT)
-Received: from notapiano (pool-98-113-53-228.nycmny.fios.verizon.net [98.113.53.228])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: nfraprado)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 8E4356601705;
-        Wed, 15 Jun 2022 15:23:53 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1655303034;
-        bh=eLJb9neGlwiL1HzETCo8YiMDWAxEGSgUuJk+Ye9uRwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ax6+sknRobFBT30rXJImWD36z3nQJuklAWV7ro+vnA9M6NpGXdUzCiXt2/IX9WX/i
-         KgCg6cVMRYsmxtZE7eRnEvQ4NbUERs6rB39KxieYX1PgecbqEpj8toatfI9l4nHXUk
-         J7QZq1C6rsPcs1Z/j9MStiz+Q6DgTHHGnN78OhkRCZT95/JwNqljX+va0PUWYce1Bx
-         JVi8s3dMLy/xcYttTBiUBkcWIbSRFcZlApHEx7VG1MXFDlIZxi9yMQ686/uyIGO1Uf
-         madLazEw/8ZHrKuDVwO1iNEDGGJNhLXZXXxDUYfWeccEr2LfonoA9UcK3n1J1pFdnc
-         3rtc2rh63HZFw==
-Date:   Wed, 15 Jun 2022 10:23:49 -0400
-From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado 
-        <nfraprado@collabora.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, kernel@collabora.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 0/2] MT8192 pinctrl properties adjustments
-Message-ID: <20220615142349.qgxsnaln7mtbhgur@notapiano>
-References: <20220531221954.160036-1-nfraprado@collabora.com>
- <CACRpkdYe=qhUvyCw-xKRUihWiaezaEyQdHFhPt2aD6bmkWTpBw@mail.gmail.com>
+        with ESMTP id S239055AbiFOOY4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 10:24:56 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E5638DBB
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 07:24:56 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id r82so20727558ybc.13
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 07:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m0/6B+ZI7yo0LWxIckWnNt0KBdhDtWdQjkQId2wLCUU=;
+        b=rIlNXD2CRCmohocx0jGUfx6WCJlJAAxujr7ifneFctCVn6xwYppYh/yQd6RHMxFRKt
+         tfGIxKowBFPDASSlPOJKEsuRg0qsYKS84gA2CM8zIM/OJzOV1s/0/Si22CSMW/c3tJYA
+         9eTMf1kHCEmRMa/YRySfsboC9+i/ueUqfraN9pmbbTIR7Qw/JcNo3clu9KZZW7S8mYO2
+         EE2hLPRDLwBwyRpNyeI68lrXPs0qbQpzemt58GK3C5xINKJDLObwIrOH8rRU0KJ+RyYe
+         ZbPyZzPyiBRly91ZJ6huP1TM7A3dlQH7XbxTWl3jZq9GfLyiEh7JMX2WKc2JJo5U4rPj
+         0DYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m0/6B+ZI7yo0LWxIckWnNt0KBdhDtWdQjkQId2wLCUU=;
+        b=zhcL4GEO7HyKDmVpNGKNQ3+liCPk+3v1HNLZjKzOVeYt1UsJ6wRHPnWBG21zOFuKWS
+         /bc8gV2zaSoVDfcS7UghU3nnJB6awxQSAnN4sPmLjLZS1lZ6hMM1PbtYYomragF7kewF
+         UrZD8TEHMvAwe7Lyw9B8Tr4BZtKHJ+pQsouOvj4J5BMNyrYUX/lvrpmrikxAqSwZ1lYE
+         whfRYRdUn52PSNASLyAAWQHUB5+WfVWk8SgatRwfA97jJFMSIFA8wsvD5YNhf1A2wXC4
+         B1n9FP/0p5wPKedvdzCHDlKA8q6WSlWNl5aCUwOY4Fev4qFs5mKq1ihqwr7Dw4qXuTTo
+         UBHw==
+X-Gm-Message-State: AJIora/+Jov3/5pQKPhzf+DwUpLlW4PoCW+uti2jUJswRb9314o+bd69
+        iRXfDfd1fsDj9LOou0xRt3GOOO043oAy7IM6O9y9eg==
+X-Google-Smtp-Source: AGRyM1shDK5Am3UVbdvXd8vxBgewPS67j/GYf/VHSGVjdm00nEHLH+RBI7hmP3DrfnKVxyiy5Vt7Vs9naBlh1d4dFmQ=
+X-Received: by 2002:a25:1256:0:b0:65d:6433:7993 with SMTP id
+ 83-20020a251256000000b0065d64337993mr92039ybs.626.1655303095223; Wed, 15 Jun
+ 2022 07:24:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYe=qhUvyCw-xKRUihWiaezaEyQdHFhPt2aD6bmkWTpBw@mail.gmail.com>
+References: <20220607121335.131497-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220607121335.131497-1-krzysztof.kozlowski@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 15 Jun 2022 16:24:44 +0200
+Message-ID: <CACRpkdbXsugx7FEof3VeDVw+fOSfZ9hi1FQkNvc1Kfmezj+1vA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: sunplus,sp7021-pinctrl: reference
+ generic schema
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 15, 2022 at 03:31:00PM +0200, Linus Walleij wrote:
-> On Wed, Jun 1, 2022 at 12:19 AM Nícolas F. R. A. Prado
-> <nfraprado@collabora.com> wrote:
-> 
-> > The two patches in this series substitute properties in the mt8192
-> > pinctrl dt-binding for ones which have a clearer meaning and are more
-> > standardized. At this point there's no DT using the mt8192 pinctrl
-> > binding, so if such changes are to be made, they need to happen now.
-> >
-> > v1: https://lore.kernel.org/linux-mediatek/20220525155714.1837360-1-nfraprado@collabora.com/
-> >
-> > Changes in v2:
-> > - Dropped Fixes tags
-> > - Added 'if' blocks to enforce mutual exclusion of properties
-> 
-> This does not apply on the current pinctrl devel branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
-> 
-> Could you please rebase onto my branch and resend as v3?
+On Tue, Jun 7, 2022 at 2:13 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Hi Linus,
+> Reference generic pin controller schema to enforce proper root node
+> name.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I checked out your branch locally and was able to apply the patch cleanly. Maybe
-you haven't pushed out all your local changes to that branch yet? Otherwise let
-me know and I'll send a rebased v3 to see if it helps in some way.
+Patch applied.
 
-Thanks,
-Nícolas
-
-> 
-> Yours,
-> Linus Walleij
+Yours,
+Linus Walleij
