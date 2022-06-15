@@ -2,69 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9FA554C9B6
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 15:26:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EFB554C9D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 15:31:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238254AbiFON0w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jun 2022 09:26:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
+        id S234457AbiFONbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jun 2022 09:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236362AbiFON0t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 09:26:49 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250B73F302
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:26:48 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id t1so20532579ybd.2
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:26:48 -0700 (PDT)
+        with ESMTP id S244665AbiFONbN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 09:31:13 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CDF33E07
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:31:12 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-30c2f288f13so60994897b3.7
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2uJBdNrvWnRJEqnKZPpIHQmnT1CIlbB2x7GUHZk371o=;
-        b=svkVmIzhK2OAHpVq1j7D5Y0BMlGsbs/r5txjoPVTRQ3mxbX2q+KeDYS5dFr9SedA1U
-         G+CX/SEC2YDtM171HS1vYVFypF4406i/Gp4cjq9VGt2NKyJlaxFACzAjfml3uTZ3ABTT
-         Bpawy4OLBnfnplZabQ57yj1fBScfFeEBlM3hbYQJ1dXlZHVmZbcgjKyDREq5hVzRnN+b
-         IB5WjZRUVCHQXSGfEW/U8kRnKjCVfywJVT3+PMNySB+DKE/v2s/UUYLBD+K0l8Krw2UF
-         0xuRAJLoVyxOH6swQ4Jjbke53RsOiIGZp5lG8ZzAG07mAFtniFJIWDPlglXPq7A4itVN
-         wRow==
+         :cc:content-transfer-encoding;
+        bh=VaDlzhe/4P2Kqx2Bwnrxn27JBdo5H/KOFM+Hot3AAmE=;
+        b=VjGtmxbDwO5KvtVwDsx0byMAEpIZJFQyb1385NLVlSIaOVXqE4BRBKo0Q+CB1K6clR
+         osZqtBgQQ8vtGi+c0v87jnfzT4gXOLYWe5IeLTNQzsEjRjWgU/37rSGtmIIP5/g5pZ2E
+         lRlL/CzFxL41AeCMnOPafpbPqgLCEOtcuVtvIwqP0YPBmvflkjGDMv2YXNFYCqNmizpP
+         MobXUKMIkpAVxy3trUAjZTIH+cU/LOqCng4dHafCdu9rFFkLByjosnAeyfeNtJtAcOIZ
+         49svvBvQUZS1pKEfKA2X8TKUMQsmlN4k+URgZm5RgfnljyrQO5mKlPbajY+LqYncEtnj
+         JxJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2uJBdNrvWnRJEqnKZPpIHQmnT1CIlbB2x7GUHZk371o=;
-        b=fkOyD+CX8+M14lFT6PLqbu0wDb4mU45LbRhSuHzZKdM0MzV6W42zb0NxjCpQ/dtvL7
-         OxP1+3QUMdpsGzhEn+W4Vcx9mlMa0fqIKJgNt1onh/pquAkiD2gVxYFa4Y5aOGYCg0bJ
-         1dfcVCkhr29Qi9s3ESm0zRdGqBKHsPkFN2vjtH3vL5D1L1A1yPhOC1XaSPkzevuaAD7T
-         XWyM904xQBRh+PUfov413H8rwTgWbpOQd0XsuFEt+9049kPtd3EvLObgyOKIeK2gqAOT
-         lQIDl3wcDPSBiB/VD8SiCcSbDsue84o6QgkVEuyc6xOX6mScgYf3kZPESVFxrcWqs941
-         oRPA==
-X-Gm-Message-State: AJIora8k1eBN36rqnwO872bWEL95a21L2R9tJTM6HQ6bGy4KqQmi5cl9
-        jEA+hX++vY/MIwv4FJj9BVHyBmdkpPyen65ICxmFBA==
-X-Google-Smtp-Source: AGRyM1uXbFdzJy6wHZ8d8kshG4hHCgicMvgdaZy4F6zLHljayPXpaH/KNqKvp55V9OEMRLWm5czLWFtEK5L8lLi/+pU=
-X-Received: by 2002:a25:dc0b:0:b0:65d:e5d:a87a with SMTP id
- y11-20020a25dc0b000000b0065d0e5da87amr10584832ybe.295.1655299607356; Wed, 15
- Jun 2022 06:26:47 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VaDlzhe/4P2Kqx2Bwnrxn27JBdo5H/KOFM+Hot3AAmE=;
+        b=kUwkbt3d+rv34dERuYf02qca0jvAPHV+nNYVR8wDBRya5nIex3rP573tbEud9wNY36
+         sXjRk3rCAgUb7/qUvP54eFjRJF/LI/G1TBYMnyiod+DSeRFGS21DSmaeXqHrCV3w81Ml
+         IkwT3yj7gTjboAqqXm+3hMhgmyieKrbIngVYFYP4mlrLyWXQp9KhvxL/CdvJdsncB18U
+         bCtzWXkZpH47zfAsEn7KgJUrLeG8QNf2jRiUeuluO208KQ+SxrViRVdUQBms7vhMD/Fz
+         R6qNzwaAFGd7jHfMEOIcYn4WtwvXVxVY25SuMCkGcaRffLGWffFxOe5OD+ZnKUv6kB+R
+         RdHQ==
+X-Gm-Message-State: AJIora/iwpveldoZOwW6x1PxdBfWgVeA98YZMsFlPVZygpdvLlt6jlzz
+        V3bmD6zfr/rjqUT0N+wlJ/arVTEOQg60idOU1Aa32A==
+X-Google-Smtp-Source: AGRyM1uhDAk/ild2A1mNKUqVV7KIjDeNtFQGXSjhxjTW8mxcpzZcCXEnXrU9MrIb4NLDnIGXlsp+0mACPztyzwGZO9I=
+X-Received: by 2002:a81:6807:0:b0:313:35ba:79da with SMTP id
+ d7-20020a816807000000b0031335ba79damr11666091ywc.268.1655299871601; Wed, 15
+ Jun 2022 06:31:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220531053623.43851-1-samuel@sholland.org>
-In-Reply-To: <20220531053623.43851-1-samuel@sholland.org>
+References: <20220531221954.160036-1-nfraprado@collabora.com>
+In-Reply-To: <20220531221954.160036-1-nfraprado@collabora.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jun 2022 15:26:36 +0200
-Message-ID: <CACRpkdas0MEu5ShkdJr-5rrM2i5LkrwARmC6J=X_UQGkRrc7EA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] pinctrl: sunxi: Remove non-existent reset line references
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
+Date:   Wed, 15 Jun 2022 15:31:00 +0200
+Message-ID: <CACRpkdYe=qhUvyCw-xKRUihWiaezaEyQdHFhPt2aD6bmkWTpBw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] MT8192 pinctrl properties adjustments
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@collabora.com>
+Cc:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>, kernel@collabora.com,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,29 +73,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 31, 2022 at 7:36 AM Samuel Holland <samuel@sholland.org> wrote:
+On Wed, Jun 1, 2022 at 12:19 AM N=C3=ADcolas F. R. A. Prado
+<nfraprado@collabora.com> wrote:
 
-> I assume these properties came from a lack of documentation, and the
-> very reasonable assumption that where there's a clock gate bit in the
-> CCU, there's a reset bit. But the pin controllers are special and don't
-> have a module reset line. The only way to reset the pin controller is to
-> reset the whole VDD_SYS power domain.
+> The two patches in this series substitute properties in the mt8192
+> pinctrl dt-binding for ones which have a clearer meaning and are more
+> standardized. At this point there's no DT using the mt8192 pinctrl
+> binding, so if such changes are to be made, they need to happen now.
 >
-> This series is preparation for converting the PRCM MFD and legacy clock
-> drivers to a CCU clock/reset driver like all of the other Allwinner
-> SoCs. I don't plan to add reset lines that don't actually exist to the
-> new CCU driver. So we might as well get rid of the references now.
-> Technically this breaks devicetree compatibility, since the old drivers
-> expect the reset. But the CCU conversion will be a compatibility break
-> anyway, so it's a bit of a moot point.
+> v1: https://lore.kernel.org/linux-mediatek/20220525155714.1837360-1-nfrap=
+rado@collabora.com/
 >
->
-> Samuel Holland (3):
->   pinctrl: sunxi: Remove reset controller consumers
->   ARM: dts: sunxi: Drop resets from r_pio nodes
->   dt-bindings: pinctrl: sunxi: Disallow the resets property
+> Changes in v2:
+> - Dropped Fixes tags
+> - Added 'if' blocks to enforce mutual exclusion of properties
 
-Patches applied for v5.20!
+This does not apply on the current pinctrl devel branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/lo=
+g/?h=3Ddevel
+
+Could you please rebase onto my branch and resend as v3?
 
 Yours,
 Linus Walleij
