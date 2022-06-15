@@ -2,146 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB67D54C604
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 12:26:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F365F54C67C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 12:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237884AbiFOK0Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jun 2022 06:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
+        id S1345882AbiFOKus (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jun 2022 06:50:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235119AbiFOK0P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 06:26:15 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D4F387B4
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 03:26:14 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id s12so22301743ejx.3
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 03:26:14 -0700 (PDT)
+        with ESMTP id S1345200AbiFOKur (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 06:50:47 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8856B4A3DE
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 03:50:45 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id n28so15521119edb.9
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 03:50:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=EmkszcqMBBGb1OdTUkLSlyQ821UY1SMh3X7FzjT1xOY=;
-        b=C3zTY81tZvxuplpN0hxMvdeadqDsWg7dxtVJRGa/6z6ZDXoJyll1p9exDczfsFS6dF
-         PpSQaX8TWq5kzhhJLU3VOfHN7Hzm5j0WoRF2Bu2n5coRTAoSOyDwk7UBXGVyYKOerkTe
-         pxojttFUcIMjNqkpALXHZJ1Ks2bT+ihNbQyBe2zeW4VEvGXoQAaB26HoHGUJ6D74P5xb
-         D44K+PoS7bBXcjpeySNJARRgE2cBhmHrrXbdsoiTGeFfAW77OUd7knVjdWKR+dNiw2WN
-         Gqlvcux1LhDo8KHHJphhWlBPYslK0NWH7sORKuk23i1WGNIQoqqz0MPjG82j1uPYy8DS
-         NJSA==
+        d=9elements.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HbCRVWIg4yL03ydTTeDTrw0h6dDwfLEEv0WldNRrBJ0=;
+        b=TVggHuvr//aXDNq+7VKamTSVvqhHY9sfUq+r/SbSvc2QBQRcNFlBkxURmbGz223Bzr
+         LmnQgN4H6WIJc1CmOmVavZSBuXp+FzNOpGUhVG5IAz5VRyL0JZ90AnvCKDBPZh1VNsV0
+         VZFBAG/Tmf/Qltcm7iTocSof/MXJo5EqIlLF/Qq8BXlh54fOS8XM5RafTz6XkzehoeXw
+         //zDQFeEbwfLIXciG0hhDYwX4LP1Lsp48VxCMRtZe7FiXBW8LhFvbuafbUrh6ClmDgsK
+         mnQuMD3JhKUw+Li29Mi1p26ztKwjP+bwglh/+FSKxJK1YTNo8D29/BJBR+c031tp3TB2
+         ZtSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EmkszcqMBBGb1OdTUkLSlyQ821UY1SMh3X7FzjT1xOY=;
-        b=o8zfm0bS1OhoFlfx/HGr21JjXyiqbjEK04IhEIFtXDcMwih3Mp3NRiP91LPkYbtU6x
-         MTY66nVVVMPPB/IopBS+0nGJY4CCSYy430asHhWwElHEsNf/s+ubz4MkEimAmCuxacrN
-         I6mgDbNoUx4yRi9fBkiJh7naKr3mHXNwh8zL95Lt7+ZiOZIuMaGqzzIkrud2VtW/C3+I
-         pklemqAUdKzinO9pGiaPIjzaSNFph4IGa36UMrbq3DEBQNR9oWfAzvw0Z/fhnphBM4+J
-         1veRlCTdh4c6OTdhZEbMoZZA7U/NY8A/iMCDUOzYyMGeZWxTb9qduWEWd+YEo74N4CRi
-         EI+w==
-X-Gm-Message-State: AOAM533JhgRfxsi4UwBaTTMIXBpfScXrwVMd1WKYpa80vEsrcc6aC3km
-        8FhrNf8A4EwPaot3L2rhkOo3F5uvElWMdw==
-X-Google-Smtp-Source: ABdhPJzvrj2dRU0qcK2OujZ3/6V7DAdAXck3obnligUjwZaeMcZgCm128EFaoHaVdZYFJWQ8+zlGQg==
-X-Received: by 2002:a17:907:d24:b0:712:1c03:c04 with SMTP id gn36-20020a1709070d2400b007121c030c04mr8205799ejc.375.1655288772679;
-        Wed, 15 Jun 2022 03:26:12 -0700 (PDT)
-Received: from development1.visionsystems.de (mail.visionsystems.de. [213.209.99.202])
-        by smtp.gmail.com with ESMTPSA id k24-20020a1709062a5800b006f3ef214dcdsm6137927eje.51.2022.06.15.03.26.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jun 2022 03:26:12 -0700 (PDT)
-From:   yegorslists@googlemail.com
-To:     linux-gpio@vger.kernel.org
-Cc:     brgl@bgdev.pl, Yegor Yefremov <yegorslists@googlemail.com>
-Subject: [libgpiod][PATCH] treewide: fix typos found with codespell
-Date:   Wed, 15 Jun 2022 12:26:08 +0200
-Message-Id: <20220615102608.11230-1-yegorslists@googlemail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HbCRVWIg4yL03ydTTeDTrw0h6dDwfLEEv0WldNRrBJ0=;
+        b=NZajbDRTTMOxTvjRQE7TkucQfmV0gHzlyhuqRRSKh9p4XiYRO70CocR97FXz67cMGI
+         LXYdF9grtRCh6SL2/R9plPrFx3/tADl9iI/4Q/8thgK1DKGox2/Z7txEw1iT4a3g0/VZ
+         6NAVZtl9EwfQO/AkMbBoI+3hfkggllmliNcldQUETG/nBxwtB72FDwhJDYB6TX1ilUSY
+         dVI3WWhIdplQNrlqTohr211rTTW6BL8QbhxGdrtZvj1FfWd2K0Az/1eW4tIjcZGbvFg5
+         2XwsJWePYh6Frj+fxopeThji83fb9Bu+kkV0dWICjUR6ERP9x759TsJHA9QxG06ZbKQH
+         aW1g==
+X-Gm-Message-State: AJIora9qKfrIP1QENv+E7kKmtqIuRXdSx/AQPiBx8kyRlyAEGmo1lqNz
+        uiF7zNnlfhOzrrpVPMOzEN4vjQ==
+X-Google-Smtp-Source: AGRyM1v4osd2jLFu0NBoRQ8Z2FPYoXw0b0vPMIyCD/IsDFsa9svxPp1gNAHB9OPT0w7HvcgiovglRA==
+X-Received: by 2002:a05:6402:4241:b0:431:574a:d74b with SMTP id g1-20020a056402424100b00431574ad74bmr11789245edb.374.1655290244091;
+        Wed, 15 Jun 2022 03:50:44 -0700 (PDT)
+Received: from fedora.sec.9e.network (ip-088-153-019-247.um27.pools.vodafone-ip.de. [88.153.19.247])
+        by smtp.gmail.com with ESMTPSA id t27-20020a1709060c5b00b006fec2097d53sm6098237ejf.118.2022.06.15.03.50.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 03:50:43 -0700 (PDT)
+From:   Patrick Rudolph <patrick.rudolph@9elements.com>
+To:     Patrick Rudolph <patrick.rudolph@9elements.com>,
+        linux-gpio@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] pinctrl: Add Cypress cy8c95x0
+Date:   Wed, 15 Jun 2022 12:49:18 +0200
+Message-Id: <20220615104921.1390138-1-patrick.rudolph@9elements.com>
+X-Mailer: git-send-email 2.35.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+Add Cypress cy8c95x0 pinctrl support.
 
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
----
- NEWS                                     | 6 +++---
- bindings/cxx/gpiod.hpp                   | 2 +-
- bindings/python/tests/gpiomockupmodule.c | 2 +-
- include/gpiod.h                          | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+v2:
+ - Update DT binding
+ - Support output pincfg through DT
+ - Always expose all GPIOs and ignore ngpios property
 
-diff --git a/NEWS b/NEWS
-index c843c3c..0e173f8 100644
---- a/NEWS
-+++ b/NEWS
-@@ -52,7 +52,7 @@ New features:
- 
- Improvements:
- - constified function arguments where applicable in libgpiomockup
--- fixed the name of the test exeucutable displayed at build time
-+- fixed the name of the test executable displayed at build time
- - improved the function pointer casting in Python bindings to avoid warnings
-   emitted by GCC8
- - switched to using the KERNEL_VERSION() macro in tests instead of handcoded
-@@ -65,7 +65,7 @@ Improvements:
-   using it to set the pull of dummy lines
- - add several new test cases
- - improved Python example programs (made gpiomon's output similar to the
--  original tool, make gpioset wait for an ENTER pres by default)
-+  original tool, make gpioset wait for an ENTER press by default)
- - fixed the major:minor number comparison between the device and sysfs
- - deprecated the gpiod_line_needs_update() function and removed the logic
-   behind it from the library
-@@ -233,7 +233,7 @@ Bug fixes:
-   gpioget
- - fix a line test case: don't use open-drain or open-source flags for input
-   mode
--- fix the flags passed to ar in order to supress a build warning
-+- fix the flags passed to ar in order to suppress a build warning
- - set the last error code in gpiod_chip_open_by_label() to ENOENT if a chip
-   can't be found
- - fix checking the kernel version in the test suite
-diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-index e3ce2fc..87ecf41 100644
---- a/bindings/cxx/gpiod.hpp
-+++ b/bindings/cxx/gpiod.hpp
-@@ -282,7 +282,7 @@ public:
- 
- 	/**
- 	 * @brief Get the offset of this line.
--	 * @return Offet of this line.
-+	 * @return Offset of this line.
- 	 */
- 	unsigned int offset(void) const;
- 
-diff --git a/bindings/python/tests/gpiomockupmodule.c b/bindings/python/tests/gpiomockupmodule.c
-index 761d431..46737c2 100644
---- a/bindings/python/tests/gpiomockupmodule.c
-+++ b/bindings/python/tests/gpiomockupmodule.c
-@@ -61,7 +61,7 @@ static PyObject *gpiomockup_Mockup_probe(gpiomockup_MockupObject *self,
- 		return NULL;
- 	} else if (num_chips == 0) {
- 		PyErr_SetString(PyExc_TypeError,
--				"Number of chips must be greater thatn 0");
-+				"Number of chips must be greater than 0");
- 		return NULL;
- 	}
- 
-diff --git a/include/gpiod.h b/include/gpiod.h
-index a4ce01f..6a20a7d 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -114,7 +114,7 @@ unsigned int gpiod_chip_get_num_lines(struct gpiod_chip *chip);
-  * @brief Get the handle to the GPIO line at given offset.
-  * @param chip The GPIO chip object.
-  * @param offset The offset of the GPIO line.
-- * @return Pointer to the GPIO line handle or NULL if an error occured.
-+ * @return Pointer to the GPIO line handle or NULL if an error occurred.
-  */
- struct gpiod_line *
- gpiod_chip_get_line(struct gpiod_chip *chip, unsigned int offset);
+Patrick Rudolph (2):
+  dt-binding: Add cypress,cy8c95x0 binding
+  pinctrl: Add Cypress cy8c95x0 support
+
+ .../bindings/pinctrl/cypress,cy8c95x0.yaml    |  131 ++
+ MAINTAINERS                                   |    6 +
+ drivers/pinctrl/Kconfig                       |   14 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-cy8c95x0.c            | 1380 +++++++++++++++++
+ 5 files changed, 1532 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-cy8c95x0.c
+
 -- 
-2.17.0
+2.35.3
 
