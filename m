@@ -2,64 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC8554CA0E
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 15:44:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EF9254CA44
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 15:50:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353663AbiFONoT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jun 2022 09:44:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52778 "EHLO
+        id S1353645AbiFONtx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jun 2022 09:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348460AbiFONoS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 09:44:18 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB0242C66B
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:44:16 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id u99so20560410ybi.11
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:44:16 -0700 (PDT)
+        with ESMTP id S1347269AbiFONts (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 09:49:48 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E8D73D490
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:49:48 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id r3so20632735ybr.6
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hp1aAAlFAq4/A1NH4phA+P7Vi5cvcSnxaSA1EwmzOjs=;
-        b=lVfAk6c7MPyRfXkCYOWdVQURkSp+OBByvpe056Tgq9IMl2OauUoGqFUnhviTFb2AA7
-         tXjeTRjUn04Ib4a9agWf/BW6v1+t9bnOMpPlIk5o5CFJmoXlocEzwCkrP+0K5pj/nEPH
-         aDv8LKc+BLj2jMBaKCSoMqp253iGg+GgWOMTUrh92DiDz2nN3xzGtbNEigp2bT+lUZwW
-         myZ/G45CpWEsSYjoHFTMDx2qQGWMl0eg3K0p86rOSedi3yBGeh1pOi7P0mhvV/S4b3sG
-         U4p5XmESE0mUSpPZZhUtNh3JDlRWOYlEHyn8IXpD9Jk95y29uBi8BBDPzbsRgbpO+vip
-         xiiA==
+        bh=U88w6rJYcyJnx/PiUJFBepiomOwqP/IlAl1ZUElx+ME=;
+        b=jJ3LLJifolkoYZ1YfbdVFN+8wHt8g2celG7g1c4F5G7jOrEHq/sEKBkogiMU+yAlmV
+         70E45k5zMfIX+LJr1FRtG2V9pWcgV1WU32SP6J18wKxMTBlt48cPYfehNldHyzZJzQGw
+         dQ8C5Tv2EW0YMKanBUnNoreZDtTGDHPWZrhJk+bU25QQXgjhFy+E+C1DfBzjmHLPI+/E
+         zyBjliyX6QovEvO9M9WVz/b/2yfiI3r/AWgyYoT6tYQRA4DKRFlQlpqPA5FSNIGxYZBd
+         OuNZ3xqj8AUDtwNXaO3MLwy+Py19AxS+rU/cdpZ5XlMmsmp0qaPHeDxUORjE2mcPKTZ4
+         ulVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hp1aAAlFAq4/A1NH4phA+P7Vi5cvcSnxaSA1EwmzOjs=;
-        b=jsDy2PlWnfX59B9gUPZv6d1l7nffYunR6+N3Pbl2CmJ+i7SU8eebwGeRzHZQ6FuV/r
-         UNZOdpf0jHDxUHj6q216ZYeRH8LARHPKJ6agcq27qoWB866sCcED7Sa5AOTF7O+zH6Qy
-         QIdBnxaxCGQwsmppMXewscxMb3d6y1V3WqiKOHiZJV8dVsSwaPEmOoFJq9jUKKFfE633
-         NjxqoJdIpB+SAY5IRmTZScwCCQtbDTNOT0WfAMNRECZCsAk0xwtVgWwJlmxPFrJurjqP
-         4y37G4Q1uKosWxLmjhXma64C4ATEhjm31igPIhHaheqew+x+u3dm+bwkaXsfmJ2rUcAT
-         QB3g==
-X-Gm-Message-State: AJIora+a64Cwu4NLbTcY8mFJBdBjt6G3HCOj1RNdY65TuG+Kkcq7dBQY
-        M5pRcBcqmZVrAp6GOyHJFPRt9TyacPFaSAUJ59g7Ng==
-X-Google-Smtp-Source: AGRyM1vwXQw90on1sHsRQC4/H0k1Bofmho0MnG9UWhioWNDMZYti404KFNThV3NhBXgLu5NZbUKp/nAL98zAv6yclsA=
-X-Received: by 2002:a25:1256:0:b0:65d:6433:7993 with SMTP id
- 83-20020a251256000000b0065d64337993mr10084424ybs.626.1655300656100; Wed, 15
- Jun 2022 06:44:16 -0700 (PDT)
+        bh=U88w6rJYcyJnx/PiUJFBepiomOwqP/IlAl1ZUElx+ME=;
+        b=u9eM4B62IimonC/HHClmQ5fAghlxdPnqJktDXMNKo5LFrIstrerwvMdGg2rZ/d/Ohc
+         vnffoR8+11ES5VMRG776Y2cpk+554RFj0xrs3xZ1A4YJqtZ9JenHOxxFXpNdVoZbHdAG
+         nIdnwy790yUesf6d/Rg74JPY0L3DaPmkiQxy3w6tTfbjOOFD5BECNvMVs82kmr4uG5Qt
+         KY140vGwO9C5PSJIDDKz0WDouSXry8R4XYsV+VJrFJdB7sjfl+oAzoOjt9EwSW+XR4hE
+         a6SU2ROzwAeIBRwqYlFpagUPvyUATM0DRNzZUVbeNUhQx+lIWqqi2g5FRpZvpQnCHkME
+         778A==
+X-Gm-Message-State: AJIora/Gs0vIKn/qVxqi8y4aRrR/kYSaoLFFC6Z2xiq9Nvfvx/0Isnsr
+        STLloIbycAigHemkNJaMuRlIjfwk4zKaVdxwNcEhKg==
+X-Google-Smtp-Source: AGRyM1uRGcS4u7CE8T+7q54IVeoVZ6QJLPafoXD4TtCs8MF/xkhyj+z422B9IZUbR9Pzir4GWckGrm2ekxu3ik3++Cw=
+X-Received: by 2002:a25:3417:0:b0:664:aab3:7c44 with SMTP id
+ b23-20020a253417000000b00664aab37c44mr10357824yba.533.1655300987386; Wed, 15
+ Jun 2022 06:49:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com> <20220603135714.12007-11-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220603135714.12007-11-aidanmacdonald.0x0@gmail.com>
+References: <20220605160508.134075-1-krzysztof.kozlowski@linaro.org> <20220605160508.134075-8-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220605160508.134075-8-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jun 2022 15:44:04 +0200
-Message-ID: <CACRpkdbObQ5WrzVC_xYobJPSBVSMyaz0HHXesLP+g1HCzCGJtQ@mail.gmail.com>
-Subject: Re: [PATCH 10/10] pinctrl: Add AXP192 pin control driver
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
-        lee.jones@linaro.org, sre@kernel.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, lgirdwood@gmail.com, lars@metafoo.de,
-        rafael@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 15 Jun 2022 15:49:35 +0200
+Message-ID: <CACRpkdZ-1FZv+SXGTG=3Tj4C7M9RNCASHNz-UeULVmu0z6kNeQ@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] pinctrl: samsung: do not use bindings header with constants
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -71,24 +71,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 3, 2022 at 3:56 PM Aidan MacDonald
-<aidanmacdonald.0x0@gmail.com> wrote:
+On Sun, Jun 5, 2022 at 6:05 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-> The AXP192 PMIC's GPIO registers are much different from the GPIO
-> registers of the AXP20x and AXP813 PMICs supported by the existing
-> pinctrl-axp209 driver. It makes more sense to add a new driver for
-> the AXP192, rather than add support in the existing axp20x driver.
+> The Samsung SoC pin controller driver uses only three defines from the
+> bindings header with pin configuration register values, which proves
+> the point that this header is not a proper bindings-type abstraction
+> layer with IDs.
 >
-> The pinctrl-axp192 driver is considerably more flexible in terms of
-> register layout and should be able to support other X-Powers PMICs.
-> Interrupts and pull down resistor configuration are supported too.
+> Define the needed register values directly in the driver and stop using
+> the bindings header.
 >
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Chanho Park <chanho61.park@samsung.com>
 
-Looks good to me (TM) but I'd like Michael Walle to take a look
-to check if this is one of those drivers that could make use of
-gpio-regmap.c CONFIG_GPIO_REGMAP to make it even
-simpler.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
