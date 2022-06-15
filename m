@@ -2,65 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AED3B54C9B3
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 15:24:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9FA554C9B6
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jun 2022 15:26:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352075AbiFONYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jun 2022 09:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60002 "EHLO
+        id S238254AbiFON0w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jun 2022 09:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344329AbiFONYK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 09:24:10 -0400
+        with ESMTP id S236362AbiFON0t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 09:26:49 -0400
 Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E203EA89
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:24:09 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id k2so20490044ybj.3
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:24:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250B73F302
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:26:48 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id t1so20532579ybd.2
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 06:26:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UJ8iaI1pTv/YM131C86Mnpd2Cs7gpkRb4SNOR9/hNuU=;
-        b=WWCVGdRbgpyX4JC60E1knSS/uwhU4ze16f8ZReamCR9o1Dj27V6VmZMuQI0hMSj+0y
-         eDBfWai5XlZ5g9HKJQGi9zFmX1Lcf0EnLacnZJ6TWl0+rAOvpYZ5XDVPq9TIYXjNe+gD
-         R++DrE91aVAzvH96TpvA5xZsdxzx5ipVAqsl/TlyBQZAkwgGYHerQaBqkkjpNKvGVKmS
-         0oKtDdUJrgqGw6Cv5T2Umy7PFz9gFsCxJKLWpKwJ1jwxkYMgK5ScDDRTp0axuRfKkNzh
-         ken5dnpzo4+0PznZJYM50eS8aRlVxZZKF00zFbrTkTa+r5LcHNPX9BM8eM2M0I0vZj6I
-         gEkw==
+        bh=2uJBdNrvWnRJEqnKZPpIHQmnT1CIlbB2x7GUHZk371o=;
+        b=svkVmIzhK2OAHpVq1j7D5Y0BMlGsbs/r5txjoPVTRQ3mxbX2q+KeDYS5dFr9SedA1U
+         G+CX/SEC2YDtM171HS1vYVFypF4406i/Gp4cjq9VGt2NKyJlaxFACzAjfml3uTZ3ABTT
+         Bpawy4OLBnfnplZabQ57yj1fBScfFeEBlM3hbYQJ1dXlZHVmZbcgjKyDREq5hVzRnN+b
+         IB5WjZRUVCHQXSGfEW/U8kRnKjCVfywJVT3+PMNySB+DKE/v2s/UUYLBD+K0l8Krw2UF
+         0xuRAJLoVyxOH6swQ4Jjbke53RsOiIGZp5lG8ZzAG07mAFtniFJIWDPlglXPq7A4itVN
+         wRow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UJ8iaI1pTv/YM131C86Mnpd2Cs7gpkRb4SNOR9/hNuU=;
-        b=q40vy8orjSIFGDsdiSpH4tL5BuqVKnWBOqyHX3KA1tgs8G41v5qGrrXh6otddGjrOB
-         6IzOaxXHkkg9xCV0qsNERlgpZsezV2lhcchk8R4HIOzp08qhjG8xdzWwUNGAcLbcQ8qy
-         0KiSNqJR77SEQQGV80IzKNDC6gqXpolo5zyiIV6MDu3uJqPfB13s6lGSmgDZqWIvg98u
-         6t57KCRPB+LdNj4b5sKAJk1yNnAsJR5qyEK48v2wmwaXkMITQvbQXYnPBVoUwrGtr51y
-         8+OGTyE5sVXdmSz2oNkdIKRx/OgXGseAQeBEoGzQkd03V2DYuGusOfLfFd4+6TWYOMdU
-         kzqA==
-X-Gm-Message-State: AJIora/fus8ParMahikLHWJbr0Nf8Ieo5Db9BYlkl4Lh3m/Cf2j+n/7o
-        yzA9l1eRx+aJ1wTL4WgFGpP9kEPJ6DL88Pfv1/OnQVs6tM8=
-X-Google-Smtp-Source: AGRyM1t5vbN1VRN0wQ0bZrJ9w/qnK3EiTQYoQv3YAhndL7v5GPOVjr/01mLr9EMdHOiqE1S1jfQPtZw4XGNv/p3Uo5Y=
-X-Received: by 2002:a25:8387:0:b0:664:7589:27b9 with SMTP id
- t7-20020a258387000000b00664758927b9mr10564795ybk.291.1655299449036; Wed, 15
- Jun 2022 06:24:09 -0700 (PDT)
+        bh=2uJBdNrvWnRJEqnKZPpIHQmnT1CIlbB2x7GUHZk371o=;
+        b=fkOyD+CX8+M14lFT6PLqbu0wDb4mU45LbRhSuHzZKdM0MzV6W42zb0NxjCpQ/dtvL7
+         OxP1+3QUMdpsGzhEn+W4Vcx9mlMa0fqIKJgNt1onh/pquAkiD2gVxYFa4Y5aOGYCg0bJ
+         1dfcVCkhr29Qi9s3ESm0zRdGqBKHsPkFN2vjtH3vL5D1L1A1yPhOC1XaSPkzevuaAD7T
+         XWyM904xQBRh+PUfov413H8rwTgWbpOQd0XsuFEt+9049kPtd3EvLObgyOKIeK2gqAOT
+         lQIDl3wcDPSBiB/VD8SiCcSbDsue84o6QgkVEuyc6xOX6mScgYf3kZPESVFxrcWqs941
+         oRPA==
+X-Gm-Message-State: AJIora8k1eBN36rqnwO872bWEL95a21L2R9tJTM6HQ6bGy4KqQmi5cl9
+        jEA+hX++vY/MIwv4FJj9BVHyBmdkpPyen65ICxmFBA==
+X-Google-Smtp-Source: AGRyM1uXbFdzJy6wHZ8d8kshG4hHCgicMvgdaZy4F6zLHljayPXpaH/KNqKvp55V9OEMRLWm5czLWFtEK5L8lLi/+pU=
+X-Received: by 2002:a25:dc0b:0:b0:65d:e5d:a87a with SMTP id
+ y11-20020a25dc0b000000b0065d0e5da87amr10584832ybe.295.1655299607356; Wed, 15
+ Jun 2022 06:26:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220530123425.689459-1-fparent@baylibre.com>
-In-Reply-To: <20220530123425.689459-1-fparent@baylibre.com>
+References: <20220531053623.43851-1-samuel@sholland.org>
+In-Reply-To: <20220531053623.43851-1-samuel@sholland.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jun 2022 15:23:57 +0200
-Message-ID: <CACRpkdYZJUWb4TBJiZVK4SNeA2Njn6341FuDjdYsn-0_yCeRKg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mediatek: common: add quirk for broken
- set/clr modes
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 15 Jun 2022 15:26:36 +0200
+Message-ID: <CACRpkdas0MEu5ShkdJr-5rrM2i5LkrwARmC6J=X_UQGkRrc7EA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] pinctrl: sunxi: Remove non-existent reset line references
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,17 +72,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 30, 2022 at 2:35 PM Fabien Parent <fparent@baylibre.com> wrote:
+On Tue, May 31, 2022 at 7:36 AM Samuel Holland <samuel@sholland.org> wrote:
 
-> On MT8365, the SET/CLR of the mode is broken and some pin modes won't
-> be set correctly. Add a quirk for such SoCs, so that instead of using
-> the SET/CLR register use the main R/W register
-> to read/update/write the modes.
+> I assume these properties came from a lack of documentation, and the
+> very reasonable assumption that where there's a clock gate bit in the
+> CCU, there's a reset bit. But the pin controllers are special and don't
+> have a module reset line. The only way to reset the pin controller is to
+> reset the whole VDD_SYS power domain.
 >
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> This series is preparation for converting the PRCM MFD and legacy clock
+> drivers to a CCU clock/reset driver like all of the other Allwinner
+> SoCs. I don't plan to add reset lines that don't actually exist to the
+> new CCU driver. So we might as well get rid of the references now.
+> Technically this breaks devicetree compatibility, since the old drivers
+> expect the reset. But the CCU conversion will be a compatibility break
+> anyway, so it's a bit of a moot point.
+>
+>
+> Samuel Holland (3):
+>   pinctrl: sunxi: Remove reset controller consumers
+>   ARM: dts: sunxi: Drop resets from r_pio nodes
+>   dt-bindings: pinctrl: sunxi: Disallow the resets property
 
-What is the state of this patch set? I see changes are requested by
-Angelo, are they being addressed?
+Patches applied for v5.20!
 
 Yours,
 Linus Walleij
