@@ -2,167 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 547EA54DEBF
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 12:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8594E54DFC9
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 13:11:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiFPKPa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jun 2022 06:15:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
+        id S1376425AbiFPLLC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jun 2022 07:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231517AbiFPKNd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 06:13:33 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0DA313A1
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 03:13:31 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id u12so1845865eja.8
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 03:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=yEmii/VYdbmNW8vwjvzUxn++J0ns1klpMAkL64h6Ugo=;
-        b=m7nNByzr3Ei8zaYNHETPvU9b366jgGxdxeIsDFyMFVZ+8lKq28zfDTlrsJ08ad/0WY
-         OBFTOR+iCqvKJoOhkFFHk9HMmxyNSbfRequM/50xJFT2ZNOMoI7zLSKh0ERUxYlYodiR
-         B+Dfts592xluMJoXLM4/aMgYPEMM9Qt57P1OSZNFFOXBjjHjX635I6qCgYysDKqsiMmT
-         ng1pbttc9QyGdplzkK4ZWH9q5SKt0U2HW4WyvHrQcN881lVVE0aVNwXiGo21TcKjY6HS
-         IZKaPNO9OGlW5FbWYTjfQAjs/WuVQiSM9L1mZv60H0VRMFB6fQ7b64USxyrOPo4bjKP5
-         +E1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yEmii/VYdbmNW8vwjvzUxn++J0ns1klpMAkL64h6Ugo=;
-        b=WbGA9gA78k3odnvs0bIPtbKL0Ya3WrKlapvnLvKKniR4RTfSvlte9niWEhtclx4KYz
-         tkeyxLx5IpppCG8P++QQIOheV1J2gwONkTBqKgmpnthXH1CuUlRjBDuvqx8vrVDlY6sM
-         fAmAqBW2FiBJ94WL00mFRsJnURZret3BJoHckifSLNRwbPQY+Q41PaBEhqxMjYgzSFTj
-         SpJ4f0Likk5LjMxeGTi6UzfdRMok+vpKaweS/ZlUNnXYFZ1xW2RaoW5UDAqW+3jYQ3VW
-         riwyf6yTx77tEbslwqpZ16NFif0lc02G4F/u9rNu/qP8GkQ8873Clz67DESy+huPFOFo
-         8iUw==
-X-Gm-Message-State: AJIora925PNZ2NvEUZDjgHfjCtrERT3gf/ndyQDsTAEeB8n+SkzQLGSX
-        19ORKKrXthP1wxyFtRi63jjTJxVTRtf9eA==
-X-Google-Smtp-Source: AGRyM1vbN509fe2izdcQoPy1quegywHO3XF2XgOOZmADVn/PNZAJOhKxGcCUvKvygWc0WrCf5/4gYw==
-X-Received: by 2002:a17:906:9c82:b0:6e1:2c94:1616 with SMTP id fj2-20020a1709069c8200b006e12c941616mr3819335ejc.64.1655374409629;
-        Thu, 16 Jun 2022 03:13:29 -0700 (PDT)
-Received: from development1.visionsystems.de (mail.visionsystems.de. [213.209.99.202])
-        by smtp.gmail.com with ESMTPSA id kz24-20020a17090777d800b00715a02874acsm602431ejc.35.2022.06.16.03.13.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jun 2022 03:13:29 -0700 (PDT)
-From:   yegorslists@googlemail.com
-To:     linux-gpio@vger.kernel.org
-Cc:     brgl@bgdev.pl, Yegor Yefremov <yegorslists@googlemail.com>
-Subject: [libgpiod][PATCH v2] treewide: fix typos found with codespell
-Date:   Thu, 16 Jun 2022 12:13:22 +0200
-Message-Id: <20220616101322.3644-1-yegorslists@googlemail.com>
-X-Mailer: git-send-email 2.17.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229748AbiFPLLB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 07:11:01 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3425C86F;
+        Thu, 16 Jun 2022 04:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655377860; x=1686913860;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8+NH6Ri5lpQfIS3/RPQfvg5J7ybyzEhikh7up91AaKE=;
+  b=Hc9/BbKXdZTqs7KjqSKu+cGHAYnNeqRGmAC/WxCuLkOEtn1yWfNg5nWZ
+   AF7AY2U73sjHiXx+9/BjdrkgnknAMGqOjNh4DiMMh/iazysoVXB6dwQ3M
+   xQhAn2Ka0zlG+3HVWwX4N6uIRvTQ+wR91FymO4E0jvGJ+lae+NRC/ZMqo
+   lf8cQzkmmjvYAftscTs5Q5DUfprbkFZeiCZSlFZOthoGv2j7byfc03jpZ
+   62tdIvONp72exz+wC+0TPn7dHsiGGCtR5zdDH3/iCvMidUg91IXqRa6cl
+   eLDAieAuNVSAQzZWSUA3WjinqYdfeaQTZiKelhd2HESOfZEQdZYPytEQx
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="262244491"
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="262244491"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 04:11:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="536413410"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 16 Jun 2022 04:10:57 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o1nOq-000OJd-Mv;
+        Thu, 16 Jun 2022 11:10:56 +0000
+Date:   Thu, 16 Jun 2022 19:10:53 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     frank zago <frank@zago.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc:     kbuild-all@lists.01.org
+Subject: Re: [PATCH v6 3/4] i2c: ch341: add I2C MFD cell driver for the CH341
+Message-ID: <202206161938.BiOHSAOi-lkp@intel.com>
+References: <20220616013747.126051-4-frank@zago.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220616013747.126051-4-frank@zago.net>
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+Hi frank,
 
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
----
-Changes
-  v1 - >2: apply codespell to the next/libgpiod-2.0 branch
+Thank you for the patch! Yet something to improve:
 
- NEWS                                     | 6 +++---
- bindings/python/tests/gpiomockupmodule.c | 2 +-
- include/gpiod.h                          | 6 +++---
- lib/line-config.c                        | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+[auto build test ERROR on lee-mfd/for-mfd-next]
+[also build test ERROR on brgl/gpio/for-next wsa/i2c/for-next linus/master v5.19-rc2 next-20220616]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-diff --git a/NEWS b/NEWS
-index c843c3c..0e173f8 100644
---- a/NEWS
-+++ b/NEWS
-@@ -52,7 +52,7 @@ New features:
- 
- Improvements:
- - constified function arguments where applicable in libgpiomockup
--- fixed the name of the test exeucutable displayed at build time
-+- fixed the name of the test executable displayed at build time
- - improved the function pointer casting in Python bindings to avoid warnings
-   emitted by GCC8
- - switched to using the KERNEL_VERSION() macro in tests instead of handcoded
-@@ -65,7 +65,7 @@ Improvements:
-   using it to set the pull of dummy lines
- - add several new test cases
- - improved Python example programs (made gpiomon's output similar to the
--  original tool, make gpioset wait for an ENTER pres by default)
-+  original tool, make gpioset wait for an ENTER press by default)
- - fixed the major:minor number comparison between the device and sysfs
- - deprecated the gpiod_line_needs_update() function and removed the logic
-   behind it from the library
-@@ -233,7 +233,7 @@ Bug fixes:
-   gpioget
- - fix a line test case: don't use open-drain or open-source flags for input
-   mode
--- fix the flags passed to ar in order to supress a build warning
-+- fix the flags passed to ar in order to suppress a build warning
- - set the last error code in gpiod_chip_open_by_label() to ENOENT if a chip
-   can't be found
- - fix checking the kernel version in the test suite
-diff --git a/bindings/python/tests/gpiomockupmodule.c b/bindings/python/tests/gpiomockupmodule.c
-index 761d431..46737c2 100644
---- a/bindings/python/tests/gpiomockupmodule.c
-+++ b/bindings/python/tests/gpiomockupmodule.c
-@@ -61,7 +61,7 @@ static PyObject *gpiomockup_Mockup_probe(gpiomockup_MockupObject *self,
- 		return NULL;
- 	} else if (num_chips == 0) {
- 		PyErr_SetString(PyExc_TypeError,
--				"Number of chips must be greater thatn 0");
-+				"Number of chips must be greater than 0");
- 		return NULL;
- 	}
- 
-diff --git a/include/gpiod.h b/include/gpiod.h
-index 5595ff2..75e5b39 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -1076,7 +1076,7 @@ size_t gpiod_line_config_get_num_overrides(struct gpiod_line_config *config);
-  * @brief Get the list of overridden offsets and the corresponding types of
-  *	  overridden settings.
-  * @param config Line config object.
-- * @param offsets Array to store the overidden offsets. Must be sized to hold
-+ * @param offsets Array to store the overridden offsets. Must be sized to hold
-  *		  the number of unsigned integers returned by
-  *		  ::gpiod_line_config_get_num_overrides.
-  * @param props Array to store the types of overridden settings. Must be sized
-@@ -1338,7 +1338,7 @@ int gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
-  * @return On success returns the number of events read from the file
-  *	   descriptor, on failure return -1.
-  * @note This function will block if no event was queued for the line request.
-- * @note Any exising events in the buffer are overwritten.  This is not an
-+ * @note Any existing events in the buffer are overwritten. This is not an
-  *       append operation.
-  */
- int gpiod_line_request_read_edge_event(struct gpiod_line_request *request,
-@@ -1434,7 +1434,7 @@ unsigned long gpiod_edge_event_get_line_seqno(struct gpiod_edge_event *event);
-  * @note If capacity equals 0, it will be set to a default value of 64. If
-  *	 capacity is larger than 1024, it will be limited to 1024.
-  * @note The user space buffer is independent of the kernel buffer
-- *	 (::gpiod_request_config_set_event_buffer_size).  As the user space
-+ *	 (::gpiod_request_config_set_event_buffer_size). As the user space
-  *	 buffer is filled from the kernel buffer, there is no benefit making
-  *	 the user space buffer larger than the kernel buffer.
-  *	 The default kernel buffer size for each request is 16*num_lines.
-diff --git a/lib/line-config.c b/lib/line-config.c
-index 979b4c5..07db6a6 100644
---- a/lib/line-config.c
-+++ b/lib/line-config.c
-@@ -44,7 +44,7 @@ static const int override_flag_list[] = {
- 
- /*
-  * Config overriding the defaults for a single line offset. Only flagged
-- * settings are actually overriden for a line.
-+ * settings are actually overridden for a line.
-  */
- struct override_config {
- 	struct base_config base;
+url:    https://github.com/intel-lab-lkp/linux/commits/frank-zago/add-driver-for-the-WCH-CH341-in-I2C-GPIO-mode/20220616-094113
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+config: arc-buildonly-randconfig-r004-20220616 (https://download.01.org/0day-ci/archive/20220616/202206161938.BiOHSAOi-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/46c68aee86d34ee630272146a73ad7c3147bb094
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review frank-zago/add-driver-for-the-WCH-CH341-in-I2C-GPIO-mode/20220616-094113
+        git checkout 46c68aee86d34ee630272146a73ad7c3147bb094
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "usb_bulk_msg" [drivers/i2c/busses/i2c-ch341.ko] undefined!
+>> ERROR: modpost: "usb_deregister" [drivers/mfd/ch341-core.ko] undefined!
+>> ERROR: modpost: "usb_register_driver" [drivers/mfd/ch341-core.ko] undefined!
+>> ERROR: modpost: "usb_find_common_endpoints" [drivers/mfd/ch341-core.ko] undefined!
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for MFD_CH341
+   Depends on HAS_IOMEM && USB
+   Selected by
+   - I2C_CH341 && I2C && HAS_IOMEM
+
 -- 
-2.17.0
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
