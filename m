@@ -2,60 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA1354DB81
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 09:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C377B54DE05
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 11:19:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359300AbiFPH0C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jun 2022 03:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
+        id S231664AbiFPJTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jun 2022 05:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359274AbiFPHZ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 03:25:56 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B795C367
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 00:25:54 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id n28so936425edb.9
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 00:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IXd5GHrMRSWqaYRiZMp6cxgQ+Mf0Qq8p0m+31elxZm4=;
-        b=OK8rjAzru//fME8r4HTG67ZWe8Hk8dntP+1ENsIm6DZS7QumVwkE9CAqIzFw7h1L1j
-         U7oMeBgs1jn+733WcmFA7WukiB+IHCtuejurExY2WLPYw25x8kDvdp8hSEvCBeDwAGj8
-         ggZLd8F0IGmNHIoVkup/HATpEilwINVeR8iDLaVg5+n7L+trBRUbIagXZlutrT7rRncU
-         fMH30lQvsn5H5iTlWA2qLGniDEZZ8tY7DEUd2B1BXOgRlef6Jny3uOQidOILVFmAgQM4
-         waQ5YytUULciuZFqFFYSgkmC+gBCX7ws9u9QlivHwykmJ2BM7yR9B6/Y8f/eBZhajODV
-         eBxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IXd5GHrMRSWqaYRiZMp6cxgQ+Mf0Qq8p0m+31elxZm4=;
-        b=MCGFqGuT9g7XxPQGx/uLBzzqCcRK6AXegUYbF0ebetiAWSjgRx29Lbycwc7Ucb8/yi
-         Yv+gYhht6fgWz3afIbNHEd0v289gU0oZBh5MY59zKZo+PM39qrmR41twrlBkOO63tl4N
-         PSTjPoJvYgi6bjl46HHH+gudeDybc4lkMIED13YROxOUDKa/veV/EXtSwdx/+rO8X6HA
-         kQbmAtmA4d13U00XitsSrTXrbJpXq/QBHdLPVNLs/iJ7EggetCQxGf/3RV9f2JqKqU3F
-         igcAjcvmJVHSG2GkwNzzK+AT+OP1F8u/SZHsE4dMoL47Wm6e+tuDPmemQX1ddW32Q58J
-         wN/g==
-X-Gm-Message-State: AJIora/ONoLSrLHOirfKNOmL4ZxjYD3FrVW3fJYtki5Vh6UPB4BVWfE/
-        M2h59U0FIwqSlotEvY2P6n36jkJ/U09q+sxbyBzw9LUhOAE=
-X-Google-Smtp-Source: AGRyM1vqU4zK78SKC2BlFRnpk8Ha8qMvdpJHmI8S+gggOfyDWUc5J5A87eItrorh4rFTKDnoSrGOqiRIqnmIJQa6R44=
-X-Received: by 2002:a05:6402:4408:b0:42d:dc8d:a081 with SMTP id
- y8-20020a056402440800b0042ddc8da081mr4673091eda.69.1655364352598; Thu, 16 Jun
- 2022 00:25:52 -0700 (PDT)
+        with ESMTP id S1359311AbiFPJS7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 05:18:59 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE71856F90;
+        Thu, 16 Jun 2022 02:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655371137; x=1686907137;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uhuD9564WbiMR6YEyqZCv/cGg7ljX8YyLbuqxfhjXNo=;
+  b=GSQEHAJFsXX96htgyQNZa2Sadhwem9qB0wfg7pQhCbccMvpJ9d/eGQJG
+   hfEozg/ILlo1xE89q+Lv13Qu2k8d5vIgss8lfsAP1iBdY5OcJJcx+wxJu
+   Ec5G+A4gPcK54iAVuF9vGCZdJWoXKLKoAMFma/VWFfflZHYnBINAdQIxb
+   r+IqghNARErsD9iN5OlJ9oWGLb7eZf8uembTVoBnN1l2qkxDk/A/Lqvg1
+   2ucLFz9tT7fBS6pdeVbRIIAMhl2KIEuw/U80iIUTJbxNY8lh5PZf2jLDK
+   qHD2cQn4RCKTzGD4vSd8K5ou4BL/KlIUuQwrRFYVNGXZRl4CRuWpt5pHx
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="304647613"
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="304647613"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 02:18:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="618816728"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 16 Jun 2022 02:18:54 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o1leP-000OEv-OU;
+        Thu, 16 Jun 2022 09:18:53 +0000
+Date:   Thu, 16 Jun 2022 17:18:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     frank zago <frank@zago.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc:     kbuild-all@lists.01.org
+Subject: Re: [PATCH v6 3/4] i2c: ch341: add I2C MFD cell driver for the CH341
+Message-ID: <202206161751.5icAiwNf-lkp@intel.com>
+References: <20220616013747.126051-4-frank@zago.net>
 MIME-Version: 1.0
-References: <20220615102608.11230-1-yegorslists@googlemail.com>
-In-Reply-To: <20220615102608.11230-1-yegorslists@googlemail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 16 Jun 2022 09:25:41 +0200
-Message-ID: <CAMRc=MeNxW2bEkueCbRwZgUox9sZhnPTrq49u55rcKKwa834jA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] treewide: fix typos found with codespell
-To:     yegorslists@googlemail.com
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220616013747.126051-4-frank@zago.net>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,94 +70,127 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 15, 2022 at 12:26 PM <yegorslists@googlemail.com> wrote:
->
-> From: Yegor Yefremov <yegorslists@googlemail.com>
->
-> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
-> ---
->  NEWS                                     | 6 +++---
->  bindings/cxx/gpiod.hpp                   | 2 +-
->  bindings/python/tests/gpiomockupmodule.c | 2 +-
->  include/gpiod.h                          | 2 +-
->  4 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/NEWS b/NEWS
-> index c843c3c..0e173f8 100644
-> --- a/NEWS
-> +++ b/NEWS
-> @@ -52,7 +52,7 @@ New features:
->
->  Improvements:
->  - constified function arguments where applicable in libgpiomockup
-> -- fixed the name of the test exeucutable displayed at build time
-> +- fixed the name of the test executable displayed at build time
->  - improved the function pointer casting in Python bindings to avoid warnings
->    emitted by GCC8
->  - switched to using the KERNEL_VERSION() macro in tests instead of handcoded
-> @@ -65,7 +65,7 @@ Improvements:
->    using it to set the pull of dummy lines
->  - add several new test cases
->  - improved Python example programs (made gpiomon's output similar to the
-> -  original tool, make gpioset wait for an ENTER pres by default)
-> +  original tool, make gpioset wait for an ENTER press by default)
->  - fixed the major:minor number comparison between the device and sysfs
->  - deprecated the gpiod_line_needs_update() function and removed the logic
->    behind it from the library
-> @@ -233,7 +233,7 @@ Bug fixes:
->    gpioget
->  - fix a line test case: don't use open-drain or open-source flags for input
->    mode
-> -- fix the flags passed to ar in order to supress a build warning
-> +- fix the flags passed to ar in order to suppress a build warning
->  - set the last error code in gpiod_chip_open_by_label() to ENOENT if a chip
->    can't be found
->  - fix checking the kernel version in the test suite
-> diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
-> index e3ce2fc..87ecf41 100644
-> --- a/bindings/cxx/gpiod.hpp
-> +++ b/bindings/cxx/gpiod.hpp
-> @@ -282,7 +282,7 @@ public:
->
->         /**
->          * @brief Get the offset of this line.
-> -        * @return Offet of this line.
-> +        * @return Offset of this line.
->          */
->         unsigned int offset(void) const;
->
-> diff --git a/bindings/python/tests/gpiomockupmodule.c b/bindings/python/tests/gpiomockupmodule.c
-> index 761d431..46737c2 100644
-> --- a/bindings/python/tests/gpiomockupmodule.c
-> +++ b/bindings/python/tests/gpiomockupmodule.c
-> @@ -61,7 +61,7 @@ static PyObject *gpiomockup_Mockup_probe(gpiomockup_MockupObject *self,
->                 return NULL;
->         } else if (num_chips == 0) {
->                 PyErr_SetString(PyExc_TypeError,
-> -                               "Number of chips must be greater thatn 0");
-> +                               "Number of chips must be greater than 0");
->                 return NULL;
->         }
->
-> diff --git a/include/gpiod.h b/include/gpiod.h
-> index a4ce01f..6a20a7d 100644
-> --- a/include/gpiod.h
-> +++ b/include/gpiod.h
-> @@ -114,7 +114,7 @@ unsigned int gpiod_chip_get_num_lines(struct gpiod_chip *chip);
->   * @brief Get the handle to the GPIO line at given offset.
->   * @param chip The GPIO chip object.
->   * @param offset The offset of the GPIO line.
-> - * @return Pointer to the GPIO line handle or NULL if an error occured.
-> + * @return Pointer to the GPIO line handle or NULL if an error occurred.
->   */
->  struct gpiod_line *
->  gpiod_chip_get_line(struct gpiod_chip *chip, unsigned int offset);
-> --
-> 2.17.0
->
+Hi frank,
 
-Can you run this tool on the next/libgpiod-2.0 branch instead? It will
-soon be merged into master and replace most of the code you're
-updating here.
+Thank you for the patch! Yet something to improve:
 
-Bart
+[auto build test ERROR on lee-mfd/for-mfd-next]
+[also build test ERROR on brgl/gpio/for-next wsa/i2c/for-next linus/master v5.19-rc2 next-20220615]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/frank-zago/add-driver-for-the-WCH-CH341-in-I2C-GPIO-mode/20220616-094113
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+config: nios2-randconfig-r026-20220616 (https://download.01.org/0day-ci/archive/20220616/202206161751.5icAiwNf-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/46c68aee86d34ee630272146a73ad7c3147bb094
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review frank-zago/add-driver-for-the-WCH-CH341-in-I2C-GPIO-mode/20220616-094113
+        git checkout 46c68aee86d34ee630272146a73ad7c3147bb094
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=nios2 SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   nios2-linux-ld: drivers/mfd/ch341-core.o: in function `ch341_usb_probe':
+>> drivers/mfd/ch341-core.c:46: undefined reference to `usb_find_common_endpoints'
+   drivers/mfd/ch341-core.c:46:(.text+0x8c): relocation truncated to fit: R_NIOS2_CALL26 against `usb_find_common_endpoints'
+   nios2-linux-ld: drivers/mfd/ch341-core.o: in function `ch341_usb_driver_init':
+>> drivers/mfd/ch341-core.c:86: undefined reference to `usb_register_driver'
+   drivers/mfd/ch341-core.c:86:(.init.text+0x1c): relocation truncated to fit: R_NIOS2_CALL26 against `usb_register_driver'
+   nios2-linux-ld: drivers/i2c/busses/i2c-ch341.o: in function `no_data_xfer':
+>> drivers/i2c/busses/i2c-ch341.c:81: undefined reference to `usb_bulk_msg'
+   drivers/i2c/busses/i2c-ch341.c:81:(.text+0xe0): relocation truncated to fit: R_NIOS2_CALL26 against `usb_bulk_msg'
+>> nios2-linux-ld: drivers/i2c/busses/i2c-ch341.c:89: undefined reference to `usb_bulk_msg'
+   drivers/i2c/busses/i2c-ch341.c:89:(.text+0x134): relocation truncated to fit: R_NIOS2_CALL26 against `usb_bulk_msg'
+   nios2-linux-ld: drivers/i2c/busses/i2c-ch341.o: in function `ch341_i2c_xfer':
+   drivers/i2c/busses/i2c-ch341.c:278: undefined reference to `usb_bulk_msg'
+   drivers/i2c/busses/i2c-ch341.c:278:(.text+0x4e0): relocation truncated to fit: R_NIOS2_CALL26 against `usb_bulk_msg'
+   nios2-linux-ld: drivers/i2c/busses/i2c-ch341.c:290: undefined reference to `usb_bulk_msg'
+   drivers/i2c/busses/i2c-ch341.c:290:(.text+0x558): relocation truncated to fit: R_NIOS2_CALL26 against `usb_bulk_msg'
+   nios2-linux-ld: drivers/i2c/busses/i2c-ch341.o: in function `ch341_i2c_probe':
+   drivers/i2c/busses/i2c-ch341.c:357: undefined reference to `usb_bulk_msg'
+   drivers/i2c/busses/i2c-ch341.c:357:(.text+0x778): relocation truncated to fit: R_NIOS2_CALL26 against `usb_bulk_msg'
+   pahole: .tmp_vmlinux.btf: No such file or directory
+   .btf.vmlinux.bin.o: file not recognized: file format not recognized
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for MFD_CH341
+   Depends on HAS_IOMEM && USB
+   Selected by
+   - I2C_CH341 && I2C && HAS_IOMEM
+
+
+vim +46 drivers/mfd/ch341-core.c
+
+f33ee28d4d85a8 frank zago 2022-06-15  29  
+f33ee28d4d85a8 frank zago 2022-06-15  30  static int ch341_usb_probe(struct usb_interface *iface,
+f33ee28d4d85a8 frank zago 2022-06-15  31  			   const struct usb_device_id *usb_id)
+f33ee28d4d85a8 frank zago 2022-06-15  32  {
+f33ee28d4d85a8 frank zago 2022-06-15  33  	struct usb_endpoint_descriptor *bulk_out;
+f33ee28d4d85a8 frank zago 2022-06-15  34  	struct usb_endpoint_descriptor *bulk_in;
+f33ee28d4d85a8 frank zago 2022-06-15  35  	struct usb_endpoint_descriptor *intr_in;
+f33ee28d4d85a8 frank zago 2022-06-15  36  	struct ch341_ddata *ddata;
+f33ee28d4d85a8 frank zago 2022-06-15  37  	int ret;
+f33ee28d4d85a8 frank zago 2022-06-15  38  
+f33ee28d4d85a8 frank zago 2022-06-15  39  	ddata = devm_kzalloc(&iface->dev, sizeof(*ddata), GFP_KERNEL);
+f33ee28d4d85a8 frank zago 2022-06-15  40  	if (!ddata)
+f33ee28d4d85a8 frank zago 2022-06-15  41  		return -ENOMEM;
+f33ee28d4d85a8 frank zago 2022-06-15  42  
+f33ee28d4d85a8 frank zago 2022-06-15  43  	ddata->usb_dev = interface_to_usbdev(iface);
+f33ee28d4d85a8 frank zago 2022-06-15  44  	mutex_init(&ddata->usb_lock);
+f33ee28d4d85a8 frank zago 2022-06-15  45  
+f33ee28d4d85a8 frank zago 2022-06-15 @46  	ret = usb_find_common_endpoints(iface->cur_altsetting, &bulk_in,
+f33ee28d4d85a8 frank zago 2022-06-15  47  					&bulk_out, &intr_in, NULL);
+f33ee28d4d85a8 frank zago 2022-06-15  48  	if (ret) {
+f33ee28d4d85a8 frank zago 2022-06-15  49  		dev_err(&iface->dev, "Could not find all endpoints\n");
+f33ee28d4d85a8 frank zago 2022-06-15  50  		return -ENODEV;
+f33ee28d4d85a8 frank zago 2022-06-15  51  	}
+f33ee28d4d85a8 frank zago 2022-06-15  52  
+f33ee28d4d85a8 frank zago 2022-06-15  53  	ddata->ep_in = bulk_in->bEndpointAddress;
+f33ee28d4d85a8 frank zago 2022-06-15  54  	ddata->ep_out = bulk_out->bEndpointAddress;
+f33ee28d4d85a8 frank zago 2022-06-15  55  	ddata->ep_intr = intr_in->bEndpointAddress;
+f33ee28d4d85a8 frank zago 2022-06-15  56  	ddata->ep_intr_interval = intr_in->bInterval;
+f33ee28d4d85a8 frank zago 2022-06-15  57  
+f33ee28d4d85a8 frank zago 2022-06-15  58  	usb_set_intfdata(iface, ddata);
+f33ee28d4d85a8 frank zago 2022-06-15  59  
+f33ee28d4d85a8 frank zago 2022-06-15  60  	ret = mfd_add_devices(&iface->dev, PLATFORM_DEVID_AUTO, ch341_devs,
+f33ee28d4d85a8 frank zago 2022-06-15  61  			      ARRAY_SIZE(ch341_devs), NULL, 0, NULL);
+f33ee28d4d85a8 frank zago 2022-06-15  62  	if (ret)
+f33ee28d4d85a8 frank zago 2022-06-15  63  		return dev_err_probe(&iface->dev, ret,
+f33ee28d4d85a8 frank zago 2022-06-15  64  				     "Failed to register child devices\n");
+f33ee28d4d85a8 frank zago 2022-06-15  65  
+f33ee28d4d85a8 frank zago 2022-06-15  66  	return 0;
+f33ee28d4d85a8 frank zago 2022-06-15  67  }
+f33ee28d4d85a8 frank zago 2022-06-15  68  
+f33ee28d4d85a8 frank zago 2022-06-15  69  static void ch341_usb_disconnect(struct usb_interface *usb_if)
+f33ee28d4d85a8 frank zago 2022-06-15  70  {
+f33ee28d4d85a8 frank zago 2022-06-15  71  	mfd_remove_devices(&usb_if->dev);
+f33ee28d4d85a8 frank zago 2022-06-15  72  }
+f33ee28d4d85a8 frank zago 2022-06-15  73  
+f33ee28d4d85a8 frank zago 2022-06-15  74  static const struct usb_device_id ch341_usb_table[] = {
+f33ee28d4d85a8 frank zago 2022-06-15  75  	{ USB_DEVICE(0x1a86, 0x5512) },
+f33ee28d4d85a8 frank zago 2022-06-15  76  	{ }
+f33ee28d4d85a8 frank zago 2022-06-15  77  };
+f33ee28d4d85a8 frank zago 2022-06-15  78  MODULE_DEVICE_TABLE(usb, ch341_usb_table);
+f33ee28d4d85a8 frank zago 2022-06-15  79  
+f33ee28d4d85a8 frank zago 2022-06-15  80  static struct usb_driver ch341_usb_driver = {
+f33ee28d4d85a8 frank zago 2022-06-15  81  	.name       = "ch341-mfd",
+f33ee28d4d85a8 frank zago 2022-06-15  82  	.id_table   = ch341_usb_table,
+f33ee28d4d85a8 frank zago 2022-06-15  83  	.probe      = ch341_usb_probe,
+f33ee28d4d85a8 frank zago 2022-06-15  84  	.disconnect = ch341_usb_disconnect,
+f33ee28d4d85a8 frank zago 2022-06-15  85  };
+f33ee28d4d85a8 frank zago 2022-06-15 @86  module_usb_driver(ch341_usb_driver);
+f33ee28d4d85a8 frank zago 2022-06-15  87  
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
