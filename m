@@ -2,67 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B19154E1C3
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 15:21:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B6954E2A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 15:57:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376733AbiFPNU7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jun 2022 09:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54994 "EHLO
+        id S1377367AbiFPN5H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jun 2022 09:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376284AbiFPNU4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 09:20:56 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36B043389
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 06:20:54 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id t32so2117836ybt.12
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 06:20:54 -0700 (PDT)
+        with ESMTP id S1377285AbiFPN5E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 09:57:04 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1609F46CA3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 06:57:03 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id c196so1600630pfb.1
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 06:57:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lUc87Jap898y+IIalqVZO2gl5CnCzU2QyBG8NQVcmGM=;
-        b=q88uiE0E1kg3prS5s8m72FF9o/VgEeIkZHBX7dcUXI31XCT6lwxPsHgs51tr53r2PA
-         0Mj25we68MBLG04mnrcLWpDKu2yvTkdJ0kFcIIwsE8sOYHefWxi+GH4qIVU+S2Mt7TAc
-         f0KmplnOOQ1iq9DRanS6RPoAoE+HUb2j5YxrX/5EHmgSgnV3QIaC7gvvtFWWL0VwHwtv
-         s3Y+EYeWpwkUkJ3ViyJaQ6tQ9CON2+JsWRrNFr9iizaNltsZ2JvrcqS7BBW7DbZnaTZ9
-         EbM7z0KihSrDBrJzRMycD8bZ0T4m3glrx/sUcbGVRXKHu+0rJczYWDoZCBqRENb1P6yc
-         6vCw==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=WF4lAn49sjJB9tDcffvKOR2ZsYx014rUPjpNYWe2CH4=;
+        b=n1wLv515CJx4S59bI6gUm/jJzYE1Jd4ZyAEjXYZY41fVhqp0NKiqt1/QkpPk1D8t82
+         iuMkt6sHeax+j1qVZLhL8P9r910GR29TsPcyG7zghs7Ifd1tgKZ16/3DDAi4smkoKOxP
+         Esri746E8NxIhzUMoDZT/xDm89MVNCHpLxf2Wiu0m+w3vUNUhaaPneZg/8bqliICfZkp
+         t6YRYoINqDoA2xIX7/ZqzCzF2N8+cH7NITpfqyKhEclO+zJ2HNeXjaXOobyxPW3J/UT/
+         RIWVO8F9JCy+oiYbnClKxhyepZU6oLJPWlUTAymbkx5n3TGn2CG+1g09mtAmsUrK1k5A
+         GpxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lUc87Jap898y+IIalqVZO2gl5CnCzU2QyBG8NQVcmGM=;
-        b=eiy7FFBiNgMNjpv9BEy7sVpTEpPDqC20n0eVEZFURVTHg+VIl6yXfJ9qLI/5t+Q4gy
-         HM7BQSxudln0EPzNhG7lbqviKwrGoxjkTOMVY+XuEjst4LresLxBPMiEr4DExnrXdihj
-         XQakTOiTEF3gkYAZpakBZs9ItxbZdZIJoaUc1y/cV0xQ5DUBWD77TzPSTp/oBinlE5+o
-         Px+r4Cg/hi1N6FJ21UHfRNSwAdR91357thK83vIAaBfldFz7h0gR8WPGHw8m3wBQpXea
-         417PFRdkoa9N3xyGIkq7x2GZSRwWhPunIPKeNwxBjsqQNND+jZ6ixOUcl3lzzpIrK64o
-         XtlQ==
-X-Gm-Message-State: AJIora+paqCiKgB3gwsKVKzZPyjpyWBZjW0Voie2yKqWjZRyJUvE+Ow+
-        EY0ktOIQnGHCMB+fpPHrUptDec5vWplMbo9/J+6sqg==
-X-Google-Smtp-Source: AGRyM1u2t1y+crLk3AHoDyDv4IsZ7WNZDTO6dDelMZMuSQjGCXA49t3VXN/k20a8ixUwj4L6zeUKsMoPoPZQ1VfCJZg=
-X-Received: by 2002:a25:dc0b:0:b0:65d:e5d:a87a with SMTP id
- y11-20020a25dc0b000000b0065d0e5da87amr5244211ybe.295.1655385654096; Thu, 16
- Jun 2022 06:20:54 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=WF4lAn49sjJB9tDcffvKOR2ZsYx014rUPjpNYWe2CH4=;
+        b=dsnlwbyS0A6G4PFTGrnktDS9qDMvluQZHyfPV8DRohq4sSI/bRsmdEytJvJEuxLBuG
+         +wkuAljS4VtSQ920fdmi8yHpdn79CPlbBMQUpOa3KPBiFfoMdnacddwat3KgifKcfiOX
+         nyS+1HprF+k6t1G2pOJ2/vSiSaBFrLIOZj0QOeUXBgv9wabccqwOsEpoiFpHdz5wHi+g
+         yxQPunq461fW3Y+HxW2j4p6PFePc7g58oyiJNXYIHZHDfZmRr5/rIR1JVdZqU7UID/qL
+         BFV5hxA+mUgKdsAbrW5A19fnDamrnsIM6AdrmjXVd9RHLmH3/s2M7RkiUDrismAA+zkn
+         PLaQ==
+X-Gm-Message-State: AJIora89YsHIhYoAScQ2MpN7yog36hd3whLdxMyrKNmxettQIE7ytiSQ
+        GLI2eNrNslzrDAP1YF61vwH7tg==
+X-Google-Smtp-Source: AGRyM1sHbtQQLESsZ+61Z/D9ovq2bt4L/GoaAb4iwdCOR9MeEktPEh/7EQdFda5Tek+t1qulAbQlmQ==
+X-Received: by 2002:a05:6a00:a16:b0:518:ffe0:7229 with SMTP id p22-20020a056a000a1600b00518ffe07229mr5022001pfh.49.1655387822594;
+        Thu, 16 Jun 2022 06:57:02 -0700 (PDT)
+Received: from [172.20.0.255] ([192.77.111.2])
+        by smtp.gmail.com with ESMTPSA id jd12-20020a170903260c00b0015e8d4eb1dbsm1693992plb.37.2022.06.16.06.57.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jun 2022 06:57:02 -0700 (PDT)
+Message-ID: <b12be0e9-4fbe-ff92-6a75-ab65dbaf5160@linaro.org>
+Date:   Thu, 16 Jun 2022 06:57:01 -0700
 MIME-Version: 1.0
-References: <1654921357-16400-1-git-send-email-quic_srivasam@quicinc.com>
-In-Reply-To: <1654921357-16400-1-git-send-email-quic_srivasam@quicinc.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jun 2022 15:20:43 +0200
-Message-ID: <CACRpkdbEi6MBPXTLfDPk+ksgN4Y_UHFVOcaiWy=sZMa9WZ3T-w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] [PATCH v4 0/2] Add pinctrl support adsp bypass platforms
-To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, quic_plai@quicinc.com,
-        bgoswami@quicinc.com, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, quic_rohkumar@quicinc.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        swboyd@chromium.org, judyhsiao@chromium.org,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 1/4] dt-bindings: gpio: Add AXP221/AXP223/AXP809
+ compatibles
+Content-Language: en-US
+To:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org
+References: <20220616060915.48325-1-samuel@sholland.org>
+ <20220616060915.48325-2-samuel@sholland.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220616060915.48325-2-samuel@sholland.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,16 +80,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 11, 2022 at 6:23 AM Srinivasa Rao Mandadapu
-<quic_srivasam@quicinc.com> wrote:
+On 15/06/2022 23:09, Samuel Holland wrote:
+> These PMICs each have 2 GPIOs with the same register layout as AXP813,
+> but without an ADC function.
+> 
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+> 
+>  .../devicetree/bindings/gpio/x-powers,axp209-gpio.yaml     | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+> index 0f628b088cec..6faa3ef28960 100644
+> --- a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+> @@ -19,7 +19,14 @@ properties:
+>      oneOf:
+>        - enum:
+>            - x-powers,axp209-gpio
+> +          - x-powers,axp221-gpio
+>            - x-powers,axp813-gpio
+> +      - items:
+> +          - const: x-powers,axp223-gpio
+> +          - const: x-powers,axp221-gpio
+> +      - items:
+> +          - const: x-powers,axp809-gpio
 
-> This patch set is to make clock voting optinal for adsp bypass
-> sc7280 platforms.
->
-> Changes Since V3:
+This is just an enum with 223 and 809. No need for two separate entries
+here.
 
-v4 looks really appetizing, just giving Bjorn some time to have a look
-before applying!
+> +          - const: x-powers,axp221-gpio
+>        - items:
+>            - const: x-powers,axp803-gpio
+>            - const: x-powers,axp813-gpio
 
-Yours,
-Linus Walleij
+
+Best regards,
+Krzysztof
