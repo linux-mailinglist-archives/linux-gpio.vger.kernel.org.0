@@ -2,159 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87CC754DA47
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 08:10:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D69B54DAFB
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 08:49:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359043AbiFPGJi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jun 2022 02:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58420 "EHLO
+        id S1358713AbiFPGtz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jun 2022 02:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359016AbiFPGJd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 02:09:33 -0400
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C708C2E9DD;
-        Wed, 15 Jun 2022 23:09:29 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 41B063200A57;
-        Thu, 16 Jun 2022 02:09:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 16 Jun 2022 02:09:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1655359767; x=1655446167; bh=Q6
-        7Ot5tdbFGVjczMQOtyiP3EgCUjO/QaLYKLX+IzOvo=; b=eyFK0Vy99b3mJB/2NK
-        fT1vC3q0wpxdZxR6Egmp65PmMxB08X14az1d72oN3D9SyD11p8w28Gi5cULbrz18
-        cihax6t8H4fq5SOlqf6N3PqUb5dGlEoWO/12aduSmB8irN/MJzxMAdZQVrjo5k1/
-        RbLLX7l4hUqb7gKwXo1Q7GxjElFbfaPh3oIAlLyVDGaVvR9lOCOGlz6E0tA3saJZ
-        CMzZgXE/53s3R8iH6+0ZWlZcYyJNkpAa7UmdYchCoXlFY6Z6/dXUkeOyIerxJ3VI
-        s47VuwRUz289oCS5s5pV4qA5Fs+7cFDH/lmECUIZfhXaBKG4jF0N+glOxx3cqYd2
-        Bj+g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1655359767; x=1655446167; bh=Q67Ot5tdbFGVj
-        czMQOtyiP3EgCUjO/QaLYKLX+IzOvo=; b=UwcL5PYe3LP6t/voujdgO89tALhl+
-        7iojztLB1Yr50yWzUBUjx+Wrx2KDX5V+AiM6ChCk4aqPyCLPnihQeb/3FFajFRIa
-        P02ZG3eHJRf82mbxO1V2/F6LFE2OBj9E7721uMQ4kkKGCOPUyKiIMsuQWLbdfPx4
-        80vQn/JUJ9I+Fb1Sb9VxBKX88HmGT9VtmakSDzyOdOtEypSIaFLOM3xaeSEHFoKe
-        txyp3lSGRruLU5Q8xXd5WOOMjhREMKK7avfyREWz6s0QfcVtIFyLFt95WbscrOd3
-        0QB81t/7QMevEFoUY8rOZYcEzVnUphIyyNIlv5qAYIpBkyUMflYQTpyMg==
-X-ME-Sender: <xms:F8mqYt6n9ZrB2dtrePeZSJpDyjXBkF5hkbY7Abzu9eNnO7Zr1YnDbg>
-    <xme:F8mqYq4JCDwuKV2ZUTyIbDFL4giJ99JuF11K5g4j9hu6tMKZ4akB0ndx7Imsb7W_3
-    N5lAexFIYB9O1Ymkw>
-X-ME-Received: <xmr:F8mqYkfL5o_f2mZXAthD1Zi1guGVofk8XiFcDPHq91aacmxvE-to7OtpxmPZVoCqtVWN7ZyZVoxE-Ik6yvtluhFGX_16fr5ZCtYwJABienOroDt5oykGU0Uele1MzRjneYfUZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddvvddguddtfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghm
-    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpedukeetueduhedtleetvefguddvvdejhfefudelgfduveeggeeh
-    gfdufeeitdevteenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:F8mqYmLDPdwWV-JYxHn0iIGEfglpct-1D4sEX7lNDPzvc_ss_4iqNw>
-    <xmx:F8mqYhIBcpohnLBz-vbe_Z0hw4XPPMk_OEQgODSIeUMJTDvAgt1QSQ>
-    <xmx:F8mqYvw8_0j6HE0hYwTiKHzF7SShcwbkYJ4lsoTdrqXFqp6pJeTSDA>
-    <xmx:F8mqYo8TC0uGegXBmx8_S-WMF16UvJaLjL6j75Dd6yoKGxZ214akIA>
-Feedback-ID: i0ad843c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 16 Jun 2022 02:09:27 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: axp22x/axp809: Add GPIO controller nodes
-Date:   Thu, 16 Jun 2022 01:09:15 -0500
-Message-Id: <20220616060915.48325-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220616060915.48325-1-samuel@sholland.org>
-References: <20220616060915.48325-1-samuel@sholland.org>
+        with ESMTP id S1358608AbiFPGty (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 02:49:54 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF9E5BD0D
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 23:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655362193; x=1686898193;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lU+roCrcVddAv74a/QT5uLSC6DoxFmseMoQxX7MdZlE=;
+  b=A+gAjhBy0v1t6ErScYH/O0d+gNOV897/qK0kEPwIfiZnxS3uQl7LK3GN
+   Q6tuxFWuxwudWbgF9RwEQ8p/VtGykjgZ+lkmhR3vtGYZjDjkoXCpieW7c
+   y/aTOD3DDDvAB48WnXTvbqGFpmMIXdo0Pl17PSiV2jPKlq/zsFe+VqwFb
+   zGz8JFrI7FiWFaUdcQN+br3GyGZ03xfHr4+11gy2AtNvoA0vKnvZmFehi
+   rSp6rR748cJI5yp0BNUlw2Q+6m9p5htIg59d1DWuXATlOluTLk5ANSjkI
+   bZPWbx59BPkNMreJa54nk4BjDMCOwv+j/eNt2l1acrhNznQWFCEL0rUtw
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="276755600"
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="276755600"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 23:49:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="653033418"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Jun 2022 23:49:50 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o1jK9-000O9N-Pq;
+        Thu, 16 Jun 2022 06:49:49 +0000
+Date:   Thu, 16 Jun 2022 14:49:48 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 0e9e3132fe51106a8cda96c4a120d50b0cacec69
+Message-ID: <62aad28c.f7MfMxqBe0EbJjHH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-These PMICs all contain a GPIO controller. Now that the binding is
-documented, wire up the controller in the device tree.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 0e9e3132fe51106a8cda96c4a120d50b0cacec69  dt-bindings: pinctrl: sunplus,sp7021-pinctrl: reference generic schema
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
+elapsed time: 939m
 
- arch/arm/boot/dts/axp22x.dtsi | 18 ++++++++++++++++++
- arch/arm/boot/dts/axp809.dtsi | 19 +++++++++++++++++++
- 2 files changed, 37 insertions(+)
+configs tested: 52
+configs skipped: 3
 
-diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-index a020c12b2884..5c233c84be92 100644
---- a/arch/arm/boot/dts/axp22x.dtsi
-+++ b/arch/arm/boot/dts/axp22x.dtsi
-@@ -67,6 +67,24 @@ battery_power_supply: battery-power {
- 		status = "disabled";
- 	};
- 
-+	axp_gpio: gpio {
-+		compatible = "x-powers,axp221-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		/omit-if-no-ref/
-+		gpio0_ldo: gpio0-ldo-pin {
-+			pins = "GPIO0";
-+			function = "ldo";
-+		};
-+
-+		/omit-if-no-ref/
-+		gpio1_ldo: gpio1-ldo-pin {
-+			pins = "GPIO1";
-+			function = "ldo";
-+		};
-+	};
-+
- 	regulators {
- 		/* Default work frequency for buck regulators */
- 		x-powers,dcdc-freq = <3000>;
-diff --git a/arch/arm/boot/dts/axp809.dtsi b/arch/arm/boot/dts/axp809.dtsi
-index ab8e5f2d9246..da92b105f3b0 100644
---- a/arch/arm/boot/dts/axp809.dtsi
-+++ b/arch/arm/boot/dts/axp809.dtsi
-@@ -50,4 +50,23 @@ &axp809 {
- 	compatible = "x-powers,axp809";
- 	interrupt-controller;
- 	#interrupt-cells = <1>;
-+
-+	axp_gpio: gpio {
-+		compatible = "x-powers,axp809-gpio",
-+			     "x-powers,axp221-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		/omit-if-no-ref/
-+		gpio0_ldo: gpio0-ldo-pin {
-+			pins = "GPIO0";
-+			function = "ldo";
-+		};
-+
-+		/omit-if-no-ref/
-+		gpio1_ldo: gpio1-ldo-pin {
-+			pins = "GPIO1";
-+			function = "ldo";
-+		};
-+	};
- };
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+ia64                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+
 -- 
-2.35.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
