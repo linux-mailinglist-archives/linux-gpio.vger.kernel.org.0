@@ -2,58 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2FC54D8DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 05:23:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64F8254D988
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 07:09:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350614AbiFPDXt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jun 2022 23:23:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
+        id S229742AbiFPFJq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jun 2022 01:09:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346410AbiFPDXs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jun 2022 23:23:48 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF3E2F64D
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 20:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655349826; x=1686885826;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AK6UZrchtYsvce4GNceYEGsztscJ6a5Re3TjX5l0MAI=;
-  b=AyrUJUrjOlFd7Po9vaHvVH3UUATmaJJVnyFiNTdePbm2+quGelnF5ZAp
-   levIBkcrN06IaUr9QY9vOtJ3vwqs3xo6zRHruz82WF4/SDHTLFFIaSQXY
-   KxJTNkeW/CA5hPJBJjhhojMgBIWol59Xj9vGei/wFWHE8P4ygQOSYLwWP
-   Os9siuHkquO0f527PR6Gm5LEoHhZ+Gt1qSO2lR2pxwq7XEh1VdX7SdVnz
-   OpMCgKC13YHZrjqbOa5SXiCWPoDeZOMBkdGtTXzlKE4ySBcSDC8odOtwz
-   Hugi+48V09unxRa36rI999mGPJqvJge/TTI4PWS5qzMe/U/Skn8jiPexy
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="279213375"
-X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
-   d="scan'208";a="279213375"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 20:23:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
-   d="scan'208";a="687630333"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Jun 2022 20:23:45 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o1g6i-000Nzl-Hu;
-        Thu, 16 Jun 2022 03:23:44 +0000
-Date:   Thu, 16 Jun 2022 11:23:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- f5143c44df51b4f3b9757b48d1e9d4bd7837b7b0
-Message-ID: <62aaa22e.3YhLM5947oRbW71M%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229694AbiFPFJp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 01:09:45 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8385E56B35;
+        Wed, 15 Jun 2022 22:09:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+        :In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=8mZ1bXeHffFC/kHmIXWI5Muej2f+NxPZdpt2fFJLCPg=; b=pwLr72dcqADpqWELJCQtWR6StY
+        fuboEy9QOQJ/IPzSuw2Mjmq9P95HaWH/L+Gl7M+ZJ43parY5YaQQMmS2FWsxQfso5RDLoLVsujWFt
+        HZIkOnTrJ76lQxPhS1gs/J95YzxEXr8Vbdv+w8YyfVM+ffGs7qWvpI04jcuME70RoQBgMGKnun4J8
+        IIZ41IPOjTu7Yb8uWhimoxa9ICjR3sU3X7TcSFf2YzcMpEM4gurASEm5mDBBU2m8g61Hse2WfLC52
+        C3xW4LM3pX8Q8LQlWftdVdqykqCTZ8D5mui0YOoIL64wYNycVGcJIHkLx8Y5Lzft2nc0v4ben4wkv
+        qFH6n6Fw==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o1hlC-008KMC-CQ; Thu, 16 Jun 2022 05:09:39 +0000
+Message-ID: <e04450b6-822e-ca66-484b-a48856e94a9e@infradead.org>
+Date:   Wed, 15 Jun 2022 22:09:31 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v6 3/4] i2c: ch341: add I2C MFD cell driver for the CH341
+Content-Language: en-US
+To:     frank zago <frank@zago.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20220616013747.126051-1-frank@zago.net>
+ <20220616013747.126051-4-frank@zago.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20220616013747.126051-4-frank@zago.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -62,72 +58,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: f5143c44df51b4f3b9757b48d1e9d4bd7837b7b0  Merge branch 'devel' into for-next
+Hi--
 
-elapsed time: 732m
+On 6/15/22 18:37, frank zago wrote:
+> The I2C interface can run at 4 different speeds. This driver currently
+> only offer 100kHz. Tested with a variety of I2C sensors, and the IIO
+> subsystem.
+> 
+> Signed-off-by: frank zago <frank@zago.net>
+> ---
+>  MAINTAINERS                    |   1 +
+>  drivers/i2c/busses/Kconfig     |  10 +
+>  drivers/i2c/busses/Makefile    |   1 +
+>  drivers/i2c/busses/i2c-ch341.c | 377 +++++++++++++++++++++++++++++++++
+>  4 files changed, 389 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-ch341.c
+> 
 
-configs tested: 53
-configs skipped: 3
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index a1bae59208e3..db9797345ad5 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -1199,6 +1199,16 @@ config I2C_RCAR
+>  
+>  comment "External I2C/SMBus adapter drivers"
+>  
+> +config I2C_CH341
+> +	tristate "CH341 USB to I2C support"
+> +	select MFD_CH341
+> +	help
+> +	  If you say yes to this option, I2C support will be included for the
+> +	  WCH CH341, a USB to I2C/SPI/GPIO interface.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called i2c-ch341.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I haven't tested it, but just from reading, it looks like
+this one needs a "depends on USB" since it selects MFD_CH341, which
+depends on USB, and since 'select' ignores dependency chains.
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-ia64                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
+The GPIO driver (patch 2/4) already depends on USB.
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+~Randy
