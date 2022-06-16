@@ -2,131 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D69B54DAFB
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 08:49:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E6AD54DB73
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 09:25:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358713AbiFPGtz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jun 2022 02:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39620 "EHLO
+        id S229714AbiFPHZM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jun 2022 03:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358608AbiFPGty (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 02:49:54 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF9E5BD0D
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jun 2022 23:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655362193; x=1686898193;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lU+roCrcVddAv74a/QT5uLSC6DoxFmseMoQxX7MdZlE=;
-  b=A+gAjhBy0v1t6ErScYH/O0d+gNOV897/qK0kEPwIfiZnxS3uQl7LK3GN
-   Q6tuxFWuxwudWbgF9RwEQ8p/VtGykjgZ+lkmhR3vtGYZjDjkoXCpieW7c
-   y/aTOD3DDDvAB48WnXTvbqGFpmMIXdo0Pl17PSiV2jPKlq/zsFe+VqwFb
-   zGz8JFrI7FiWFaUdcQN+br3GyGZ03xfHr4+11gy2AtNvoA0vKnvZmFehi
-   rSp6rR748cJI5yp0BNUlw2Q+6m9p5htIg59d1DWuXATlOluTLk5ANSjkI
-   bZPWbx59BPkNMreJa54nk4BjDMCOwv+j/eNt2l1acrhNznQWFCEL0rUtw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="276755600"
-X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
-   d="scan'208";a="276755600"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 23:49:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
-   d="scan'208";a="653033418"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jun 2022 23:49:50 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o1jK9-000O9N-Pq;
-        Thu, 16 Jun 2022 06:49:49 +0000
-Date:   Thu, 16 Jun 2022 14:49:48 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 0e9e3132fe51106a8cda96c4a120d50b0cacec69
-Message-ID: <62aad28c.f7MfMxqBe0EbJjHH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229462AbiFPHZL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 03:25:11 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360AC3630F
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 00:25:10 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id d14so917800eda.12
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 00:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j0RkBn38eIUcpCJRSb06o1L8Job+acwSCWg1EOotW4g=;
+        b=1oUsrp8BlieLOYSDspR0FJcrS0d/QOFio2VO3rAkh6qJAmk6dNf4lGodkqqt+2X7Xi
+         2qF4CVYzNMmdxBUvYHRZyenNWf1qbTp1eVqW1oswzU2ssdHxzsRn9QIfE6+wtKApB3fh
+         hrhBZ0APF2BxliKu4t2nyl701SgFBsSmFz20ajLUHiNRaOdUAJlXumRM8yaUvgijmGCQ
+         gcdLxfnLyYlx5MsmORRyQCrCRNDnKinHIm+oWJ/2yb5aoHzCu3dz8UKA+VRKUXNhzJXR
+         jsHu9JmCIwKw0zoN63TZ8AVFuV3j1caCSTnu1OLY5yF09XIp8I5e2r6Pxsbpt5BYy/lT
+         j1VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j0RkBn38eIUcpCJRSb06o1L8Job+acwSCWg1EOotW4g=;
+        b=ulrH67sbj0WKDq0UdEj5yIr7+tn/MiPB0Ly9/aaY+fXPMcuU5puHjaupbNMtXGUtfp
+         Spou73KHDNnerLp5fAkMGvyJAwDnc7R50JYAL8m50rNcn4uG7Ltmz1HXDd+FPrY5qXNa
+         E5PsiLB7WW/BveE+/spWoXx068UkCuKk3pcgYtJbaIEmpkXZmUseVAoIOFRNpjlL8ano
+         3PNV8hfNqjFgmvKEg14A2mi1SzAHgKse+x5Q18ZG0llfZ2uuE4diLsyfdwnay/iKSGmn
+         Q5d2X6E/Z1Dg9JVghO7c7GKLlrkBgGAZgjBRJpGZi1ZnpBy/bII6u8DwQVDbzB5WwAYN
+         +gjA==
+X-Gm-Message-State: AJIora+xDvpnCcJ0lraZXXCtmTn4zDieAsmxqirlGAOXl6s9r6lTKgED
+        QARbMeMtkrtpTJKLE15MUg9T422FqjKr6k0axY+k/gr85hM=
+X-Google-Smtp-Source: AGRyM1uzniWqMK5f8IutsNhZ0AVb4CzYVrEABsBuoXak8Ul8TADr/lfkPXNr7hmkLk1r2uG3J8lpwXkS2xN8OQ2InlI=
+X-Received: by 2002:a05:6402:1449:b0:42d:d250:e504 with SMTP id
+ d9-20020a056402144900b0042dd250e504mr4608747edx.213.1655364308821; Thu, 16
+ Jun 2022 00:25:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220615100505.3972-1-yegorslists@googlemail.com>
+In-Reply-To: <20220615100505.3972-1-yegorslists@googlemail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 16 Jun 2022 09:24:58 +0200
+Message-ID: <CAMRc=McZ96KAJzEZQ4sa89CCKgw8Uk2r+egAYXybUZj=8S3hWQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] gitignore: ignore ctags generated tags file
+To:     yegorslists@googlemail.com
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 0e9e3132fe51106a8cda96c4a120d50b0cacec69  dt-bindings: pinctrl: sunplus,sp7021-pinctrl: reference generic schema
+On Wed, Jun 15, 2022 at 12:05 PM <yegorslists@googlemail.com> wrote:
+>
+> From: Yegor Yefremov <yegorslists@googlemail.com>
+>
+> This index file will be used by editors like, for example, vim.
+>
+> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+> ---
+>  .gitignore | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/.gitignore b/.gitignore
+> index 2d7cc7f..24136ce 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -9,6 +9,7 @@ doc
+>  *.tar.gz
+>  *.patch
+>  *.swp
+> +tags
+>
+>  # autotools stuff
+>  .deps/
+> --
+> 2.17.0
+>
 
-elapsed time: 939m
+Applied, thanks!
 
-configs tested: 52
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-ia64                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Bart
