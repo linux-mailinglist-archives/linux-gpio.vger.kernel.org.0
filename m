@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D519B54FA1A
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC39B54FA0A
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382581AbiFQPTJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 11:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50400 "EHLO
+        id S1382409AbiFQPTP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 11:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382409AbiFQPTH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:19:07 -0400
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD1937028;
-        Fri, 17 Jun 2022 08:19:06 -0700 (PDT)
-Received: by mail-qv1-f44.google.com with SMTP id i17so207625qvo.13;
-        Fri, 17 Jun 2022 08:19:06 -0700 (PDT)
+        with ESMTP id S1381817AbiFQPTP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:19:15 -0400
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E09DA2DC2;
+        Fri, 17 Jun 2022 08:19:13 -0700 (PDT)
+Received: by mail-qv1-f49.google.com with SMTP id o43so6879891qvo.4;
+        Fri, 17 Jun 2022 08:19:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lsIWEWzTzOyc8CJ2FCjE9TLa/n37hCpK/hslTg5l3TE=;
-        b=ZgXv6gglFCIk5Sz2e1jEIzJkj9oJH254xBOPQRe2ajktaVbAfyBxRgQ4fm4gyJqJxN
-         Bqi+qaJLUN5C6xCN8e7szXtzovBh5s8s1flxGLnme1tPMJRatyMY0ohjNf39NqnI56vs
-         BIChe3OZmJugOEW6+eVz0Avqmff9fkl9jNjUJKSi24N0Y37vSql5NB23+TquzMHvY/WV
-         2PGhjpkKcqvqeQkVvXF/cIT/1426gSiKnje2YlNe7Vjc/R5Jy3F8yr9rQBM7XZnA/59u
-         RJczXP21OZuGdQ6/HsaY3cOZyU3+YQ6UI5SrcMwqgTQHLa+Ved1TvW43yy7e+UYf7LPi
-         kxGQ==
-X-Gm-Message-State: AJIora+zBwlwZWVxFFgA3CNuTLUZsns3s6hZKAN4AJLQhDYdjx1AjZq8
-        /4LkmMSxbcQ97BpdoRS6Ez8Wm7RYIYcowg==
-X-Google-Smtp-Source: AGRyM1v2fST9ZiOYwXx70/N4aCWaB3PXC/lwUrefb75YS4IFn1TITBXgtj64vaJ4lQihQ9zrWcExWw==
-X-Received: by 2002:a05:6214:1d25:b0:464:55a9:48df with SMTP id f5-20020a0562141d2500b0046455a948dfmr8722254qvd.113.1655479145787;
-        Fri, 17 Jun 2022 08:19:05 -0700 (PDT)
+        bh=ugvBXCw+/glHMrr0ck139366hFO/qQHWemWd0gavc7g=;
+        b=GIaPvi7Qgl48M7Z+zzJSSKW0rEVIyu4ys0hdyUT5D/yffaXqwHbk48uP2PVxwSsAPK
+         D1f3zRQ5uL2njQAkJ+t15c4yQ9uDQ9K1x7ldCmb9K/B3HRW8pKQyJkkxZt30UnuzfYYa
+         R9k3uyAbq92i+5YSaXZ3oJe5XCUYM9YygPVxOVDKOyzQcanVWN6vjo6zPj8xBZOl7h9L
+         dqJf9B717ERKHIbb2N4B6++wu5kdao9ttcdEi2XB8J+lNltvxkRCmFE7oxbqETcPHaJY
+         k/1yAe62LZe4FAuTuO57peW01L6N9/gsQoWVZcam0XAaR3nBbkcggKmKfIyIuT/DSecS
+         RUlw==
+X-Gm-Message-State: AJIora/rzVBvByz+jJEnceaK72WG4EZVmYky/J1yOfGlJCNRxa7rO3R0
+        wLxbySkMW1cMTyADsdYRqGOs6YlJOs6iVw==
+X-Google-Smtp-Source: AGRyM1vJhsC15qh+puhalH7gQfb+eExlGsqIzHBwM9NEPzCDIvj0mVRbUOYdJjFa8abCBqx8sjpRPQ==
+X-Received: by 2002:ac8:7d8b:0:b0:304:ff1e:23a0 with SMTP id c11-20020ac87d8b000000b00304ff1e23a0mr9102419qtd.186.1655479152777;
+        Fri, 17 Jun 2022 08:19:12 -0700 (PDT)
 Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id j5-20020a05620a000500b006a74458410csm4849012qki.123.2022.06.17.08.19.05
+        by smtp.gmail.com with ESMTPSA id br6-20020a05620a460600b006a6d3fa430csm4527974qkb.58.2022.06.17.08.19.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 08:19:05 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id l66so6335424ybl.10;
-        Fri, 17 Jun 2022 08:19:05 -0700 (PDT)
-X-Received: by 2002:a25:d146:0:b0:668:aa24:c321 with SMTP id
- i67-20020a25d146000000b00668aa24c321mr7165927ybg.89.1655479145180; Fri, 17
- Jun 2022 08:19:05 -0700 (PDT)
+        Fri, 17 Jun 2022 08:19:12 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id t1so7789098ybd.2;
+        Fri, 17 Jun 2022 08:19:12 -0700 (PDT)
+X-Received: by 2002:a05:6902:120e:b0:634:6f29:6b84 with SMTP id
+ s14-20020a056902120e00b006346f296b84mr11483592ybu.604.1655479152264; Fri, 17
+ Jun 2022 08:19:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87fsk7kcn3.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87fsk7kcn3.wl-kuninori.morimoto.gx@renesas.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87edzrkcmw.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87edzrkcmw.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jun 2022 17:18:53 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX-Pj4LwN7JYbXmEsUJ5pL40UbOxxZOXSi-OyqR0nQJxA@mail.gmail.com>
-Message-ID: <CAMuHMdX-Pj4LwN7JYbXmEsUJ5pL40UbOxxZOXSi-OyqR0nQJxA@mail.gmail.com>
-Subject: Re: [PATCH v3 17/21] pinctrl: renesas: r8a779g0: add missing FlaxRay
+Date:   Fri, 17 Jun 2022 17:19:00 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWPVyM0_KJFZs3t9_KT0FgDNK9NQ3=rTX5n3Jk6yG2P7w@mail.gmail.com>
+Message-ID: <CAMuHMdWPVyM0_KJFZs3t9_KT0FgDNK9NQ3=rTX5n3Jk6yG2P7w@mail.gmail.com>
+Subject: Re: [PATCH v3 18/21] pinctrl: renesas: r8a779g0: add missing PWM
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -66,44 +66,92 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Morimoto-san,
 
-Thanks for your patch!
-
 On Tue, Jun 14, 2022 at 8:00 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> This patch adds missing FlaxRay pins.
-
-FlexRay (also in the subject).
-
-> Because Document has 2xFXR_TXENA/B pin with no suffix (_A, _B),
-> this patch name it as _X.
+> V4H has PWM/PWM_A/PWM_B, but current PFC setting is mixed.
+> This patch add missing PWM settings, and tidyup these.
+>
+> According to Document, GP3_14 Function4 is PWM2_A,
+> but we can't select it at P1SR3[27:24].
+> This patch just ignore it for now.
 >
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
+Thanks for your patch!
+
 > --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
 > +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-> @@ -338,8 +338,8 @@
+> @@ -304,9 +304,9 @@
+>  #define IP1SR1_11_8    FM(MSIOF0_SCK)          FM(HSCK1_X)             FM(SCK1_X)      F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>  #define IP1SR1_15_12   FM(MSIOF0_RXD)          F_(0, 0)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>  #define IP1SR1_19_16   FM(HTX0)                FM(TX0)                 F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP1SR1_23_20   FM(HCTS0_N)             FM(CTS0_N)              FM(PWM8)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP1SR1_27_24   FM(HRTS0_N)             FM(RTS0_N)              FM(PWM9)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP1SR1_31_28   FM(HSCK0)               FM(SCK0)                FM(PWM0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> +#define IP1SR1_23_20   FM(HCTS0_N)             FM(CTS0_N)              FM(PWM8_A)      F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> +#define IP1SR1_27_24   FM(HRTS0_N)             FM(RTS0_N)              FM(PWM9_A)      F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> +#define IP1SR1_31_28   FM(HSCK0)               FM(SCK0)                FM(PWM0_A)      F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+
+I think all renames belong in "[PATCH v3 03/21] pinctrl: renesas:
+Initial R8A779G0 (V4H) PFC support", as it is a bug in that patch.
+
+> @@ -2847,20 +2869,28 @@ static const char * const pcie_groups[] = {
+>         "pcie1_clkreq_n",
+>  };
 >
->  /* IP1SR2 */           /* 0 */                 /* 1 */                 /* 2 */         /* 3            4        5        6        7        8        9        A        B        C        D        E        F */
->  #define IP1SR2_3_0     FM(TPU0TO0)             FM(CANFD6_RX)           F_(0, 0)        FM(TCLK1_A)     F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-> -#define IP1SR2_7_4     FM(CAN_CLK)             F_(0, 0)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-> -#define IP1SR2_11_8    FM(CANFD0_TX)           F_(0, 0)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-> +#define IP1SR2_7_4     FM(CAN_CLK)             FM(FXR_TXENA_X_N)       F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -static const char * const pwm0_groups[] = {
+> -       "pwm0",
+> +static const char * const pwm0_a_groups[] = {
+> +       "pwm0_a",
+> +};
+> +
+> +static const char * const pwm1_a_groups[] = {
+> +       "pwm1_a",
+> +};
+> +
+> +static const char * const pwm1_b_groups[] = {
+> +       "pwm1_b",
+>  };
 
-FXR_TXENA_N_X (everywhere)
+Please have a single pwm1_groups[], containing both "pwm1_a" and
+"pwm1_b".  Same for the other groups.
 
-> +#define IP1SR2_11_8    FM(CANFD0_TX)           FM(FXR_TXENB_X_N)       F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> @@ -3005,16 +3035,18 @@ static const struct sh_pfc_function pinmux_functions[] = {
+>
+>         SH_PFC_FUNCTION(pcie),
+>
+> -       SH_PFC_FUNCTION(pwm0),
+> -       SH_PFC_FUNCTION(pwm1),
+> -       SH_PFC_FUNCTION(pwm2),
+> -       SH_PFC_FUNCTION(pwm3),
+> +       SH_PFC_FUNCTION(pwm0_a),
+> +       SH_PFC_FUNCTION(pwm1_a),
+> +       SH_PFC_FUNCTION(pwm1_b),
+> +       SH_PFC_FUNCTION(pwm2_b),
+> +       SH_PFC_FUNCTION(pwm3_a),
+> +       SH_PFC_FUNCTION(pwm3_b),
+>         SH_PFC_FUNCTION(pwm4),
+>         SH_PFC_FUNCTION(pwm5),
+>         SH_PFC_FUNCTION(pwm6),
+>         SH_PFC_FUNCTION(pwm7),
+> -       SH_PFC_FUNCTION(pwm8),
+> -       SH_PFC_FUNCTION(pwm9),
+> +       SH_PFC_FUNCTION(pwm8_a),
+> +       SH_PFC_FUNCTION(pwm9_a),
 
-FXR_TXENB_N_X (everywhere)
+Please drop these changes, as they are not needed.
 
->  #define IP1SR2_15_12   FM(CANFD0_RX)           FM(STPWT_EXTFXR)        F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
->  #define IP1SR2_19_16   FM(CANFD2_TX)           FM(TPU0TO2)             F_(0, 0)        FM(TCLK3_A)     F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
->  #define IP1SR2_23_20   FM(CANFD2_RX)           FM(TPU0TO3)             FM(PWM1)        FM(TCLK4_A)     F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>
+>         SH_PFC_FUNCTION(qspi0),
+>         SH_PFC_FUNCTION(qspi1),
 
-Again, as the suffixes become part of the DT ABI when defining pin
-groups, we should get the conflicts resolved, and this cannot be
-applied as-is.
+However, given the inconsistent naming of pins for PWMs that are
+available on a single pin (PWM[08]_A vs. PWM[4-7]), I expect several
+of these to be renamed in future revisions of the documentation.
+As pin group names are part of the DT ABI, that should happen sooner
+rather than later...
 
 Gr{oetje,eeting}s,
 
