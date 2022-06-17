@@ -2,54 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E777254FA04
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:18:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85A0A54FA06
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:18:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236148AbiFQPRi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 11:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47858 "EHLO
+        id S1382514AbiFQPRx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 11:17:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382514AbiFQPRh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:17:37 -0400
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D6C25CA;
-        Fri, 17 Jun 2022 08:17:36 -0700 (PDT)
-Received: by mail-qv1-f51.google.com with SMTP id cu16so6264910qvb.7;
-        Fri, 17 Jun 2022 08:17:36 -0700 (PDT)
+        with ESMTP id S1382150AbiFQPRx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:17:53 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D77D13FA3;
+        Fri, 17 Jun 2022 08:17:51 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id b142so3368825qkg.2;
+        Fri, 17 Jun 2022 08:17:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LCJR5ZfbTPPDEpdS+K51zKJT/JWSBt5REGbqYDkd3ns=;
-        b=s8Uylzb5eRvyQJ1/Ar80qQPzSg9mhZl5NzWtBLSnL6GhkzTW/NRVRfW2lF80oq9TaW
-         7lzK5A8hSdGHKSQVJweeukxnlHfVqiZlSaqJdJ+InRIYpYG87TqYQoMFgThhZPVRwSp+
-         h6SFt6A+fNF7jeSe1T8RoIhNUMzcN1nln27WqKitkEbNH2Ne1vy5trBPolUFr5TfMQM0
-         EwvWcqOJKe/hxTOcl3kr2IYR+JHlSnnnFjlQS9h7pIknGGIg2XJDX6//PRNs9I1RXXr4
-         l4aO1bXVlWmtuaaax7nSMSZx8KOsN+0yJjHRg8xl/NwyFUbgo/7Z+YMxPr55m/rH9hfU
-         2/ug==
-X-Gm-Message-State: AJIora/NCPEedABuZ7R9xbPQaYmO+U9Hf+POB0XidQQkit3In4kQw5Hh
-        vZVWKe7ZHDiFtqyXvKW+0a1oe3v/opAytA==
-X-Google-Smtp-Source: AGRyM1t6QpjYunWxZXx1SBb6JfLWRKop8TUaFIDmI5a49yV2OqQ5zfmkF2iweqKLJHfhS3scpATKDA==
-X-Received: by 2002:a05:6214:2a4d:b0:464:54e8:5c7f with SMTP id jf13-20020a0562142a4d00b0046454e85c7fmr8839224qvb.124.1655479055511;
-        Fri, 17 Jun 2022 08:17:35 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id e7-20020a05620a014700b006a66f3d3708sm4252617qkn.129.2022.06.17.08.17.35
+        bh=KY9ZL4uRzR73X5IJX1t6sGjZlj444cvis9AOUy09f6A=;
+        b=uk1/hhprLd+Jq8Gd63mFvlhOotogibnkdXP3Y09UrsrRcJLeauuBzLP38mDlmNPn/0
+         P034TmB4J+kaxgSQaRus0e1hc4AJBuGARqn3rULp4OTFTtI4I/qLV9VbwxI5fgpDrr+/
+         eimdbopnKb9xMrdl1YpJ8bVb1AQylVX9tcIG58xGI7cCeN20hXr8rE/YAf8GW7ohd2Gu
+         Eq8ej80yCppFhUnemS8lv8YtcCm0Fpg5nkGQwJSL8moQ63RSikJFrZPa84P9kf1v4BBU
+         gryRtS0NMsKK5dMRMBIsaS1L+B+VfZRW0Xm8EMlErhAeZFpDodGUsy31pmzoxhzFK5ew
+         YbbA==
+X-Gm-Message-State: AJIora89WJ62NnZI7kje59vnNPmctUNL0LOmgsGlesAmdjxpKX32+ky7
+        lHJbICKVEi7vNY5RC4clMxkGcV9rBIzF2A==
+X-Google-Smtp-Source: AGRyM1vXRVEF39X6rPC6SD/DmEmJn4hM4JFNw0QHJluEs2W0IVlFdCgX4zblK2i+iatHMLTVS00Kew==
+X-Received: by 2002:a05:620a:1094:b0:6a7:1861:66e7 with SMTP id g20-20020a05620a109400b006a7186166e7mr7539148qkk.323.1655479070077;
+        Fri, 17 Jun 2022 08:17:50 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id f5-20020a05620a280500b006a6a6f148e6sm4290039qkp.17.2022.06.17.08.17.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 08:17:35 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-317710edb9dso45684497b3.0;
-        Fri, 17 Jun 2022 08:17:35 -0700 (PDT)
-X-Received: by 2002:a81:6157:0:b0:30c:7e4d:b28e with SMTP id
- v84-20020a816157000000b0030c7e4db28emr11911530ywb.502.1655479054895; Fri, 17
- Jun 2022 08:17:34 -0700 (PDT)
+        Fri, 17 Jun 2022 08:17:49 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id v81so7827221ybe.0;
+        Fri, 17 Jun 2022 08:17:49 -0700 (PDT)
+X-Received: by 2002:a25:d146:0:b0:668:aa24:c321 with SMTP id
+ i67-20020a25d146000000b00668aa24c321mr7159791ybg.89.1655479069458; Fri, 17
+ Jun 2022 08:17:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87tu8nkcp7.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87tu8nkcp7.wl-kuninori.morimoto.gx@renesas.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87r13rkcos.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87r13rkcos.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jun 2022 17:17:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVV6z-nCTvJyG_TV3Dj65QU8K=x85JAKDStQVnP3edO3w@mail.gmail.com>
-Message-ID: <CAMuHMdVV6z-nCTvJyG_TV3Dj65QU8K=x85JAKDStQVnP3edO3w@mail.gmail.com>
-Subject: Re: [PATCH v3 07/21] pinctrl: renesas: r8a779g0: remove not used
- MOD_SELx definitions
+Date:   Fri, 17 Jun 2022 17:17:38 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVVPN-dhnjw1y7WqQJjZNO-YG8PjaFjmCvawMAhZJJLsA@mail.gmail.com>
+Message-ID: <CAMuHMdVVPN-dhnjw1y7WqQJjZNO-YG8PjaFjmCvawMAhZJJLsA@mail.gmail.com>
+Subject: Re: [PATCH v3 09/21] pinctrl: renesas: r8a779g0: add missing TCLKx_A/TCLK_B/TCLKx_X
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -67,28 +66,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Morimoto-san,
 
-Thanks for your patch!
-
 On Tue, Jun 14, 2022 at 7:59 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> Current V4H PFC code has many MOD_SELx definitions with all 0.
-> But these have no meaning. This patch removes these, but keep
-> its definition to avoid unreadable PINMUX_MOD_SELS.
-
-You can just replace them with blanks, keeping the structure of the
-PINMUX_MOD_SELS table alive.
-
+> This patch adds missing TCLKx_A/TCLKx_B/TCLKx_X
+>
+> Because Document has 2xTCLK3/TCLK4 with no suffix (_A, _B),
+> this patch name it as _X.
 >
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Again, as the only net impact of this patch is the removal of several
-enums, and a shift in the numbering of later (internal) enums, I think
-it is safe to fold this into "[PATCH v3 03/21] pinctrl: renesas:
-Initial R8A779G0 (V4H) PFC support".
+Thanks for your patch!
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+LGTM, but as the suffixes become part of the DT ABI when defining
+pin groups, we should get the conflicts resolved, and this cannot
+be applied as-is.
 
 Gr{oetje,eeting}s,
 
