@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 879F154FA10
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99CC54FA17
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382512AbiFQPSp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 11:18:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49708 "EHLO
+        id S1382449AbiFQPSt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 11:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382840AbiFQPSo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:18:44 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3529313CF7;
-        Fri, 17 Jun 2022 08:18:44 -0700 (PDT)
-Received: by mail-qk1-f177.google.com with SMTP id d128so3363006qkg.8;
-        Fri, 17 Jun 2022 08:18:44 -0700 (PDT)
+        with ESMTP id S1382409AbiFQPSt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:18:49 -0400
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900AB45057;
+        Fri, 17 Jun 2022 08:18:48 -0700 (PDT)
+Received: by mail-qv1-f47.google.com with SMTP id p31so6856812qvp.5;
+        Fri, 17 Jun 2022 08:18:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tAtemtMjtCS/K/S6nkpnyrycqHb3niUdTny4Ns8dWpU=;
-        b=lmk9XyQE/3WDFjvyU05ognDRFrDyKuP/3A0rtJeeJglFlmbMvJFXe5Ikb2IC0lpXwF
-         MHWrq+R1t1XO/qp161Fp15ZKMGfYqm8XIZhe/W6RIr79YC/r8zIae/mcea+mKLZs18yw
-         tdiBnFDv4juABc0RIl6taryTpUMUs6Q62c2BMemckwQKrRe8eZXl7TFiWXv/l4WnDAWb
-         087nqdib975LwcpcozAU5E8gziWUo6KabQukiQIpmLMcwagzLOJF/KG642Mdq0NMHska
-         3gxY/Wsa8qQSsk40HdFRt+fERhH6V7a1HRDfeB4flmlcvdg/RVYLe2R9cMCN0hnhLTPq
-         H74g==
-X-Gm-Message-State: AJIora/0dTN3WSoo5kTbuVXLApnJxc4+aDrfAhn99Y0j5pJVEkyAtH6k
-        2oQnKSA0l4u/ePDdx7YpTejDWxrLk3JEXA==
-X-Google-Smtp-Source: AGRyM1tFUWqBBpVJHTIIVm+NFeCToijjy3l+Rc4gIftpYTfchmCWLkz8E0AoIWTclTjEm2RWYb9E1g==
-X-Received: by 2002:a05:620a:12e6:b0:6a6:a5b9:1c57 with SMTP id f6-20020a05620a12e600b006a6a5b91c57mr7148847qkl.393.1655479123078;
-        Fri, 17 Jun 2022 08:18:43 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id z16-20020a05620a08d000b006a5d2eb58b2sm4381260qkz.33.2022.06.17.08.18.42
+        bh=W9smBPqqrqwlaTilwUbt5I6MA0sfuB2cEe81bgfu49w=;
+        b=LAe99psZjdbhij+uxi3Q+jTPzIrzSI5QX+jkEe+zbrk5fFEzTXJ8Or7/UXzi8hWutX
+         NDfRbcj5FvKOUbQOU2A2x2P18EmwdzQ/r719jOVHFvgBDkoFIFyI02dt7plJzcxt4tLU
+         /gtWC+bALGOeGAqdPvmx/05gb9zNMllv2o5dB8WRYlpXOp/G/CNx69W90z/wL/3GD4xB
+         faGoE9yt4hEOJVI5FQ1ppQ3EBMg/eniI3rctUpMoCFNEB1H/QMEK7QEAobounJyAubVT
+         ewj+k5jrSIKrTN+z6smYIKzTNs3VgVRmEKAYoiNxhHbcy6K21dGw+qtLYtLpiUEVik5r
+         zitg==
+X-Gm-Message-State: AJIora8A2Zet0bRxLYydILAga+jv6KiImfYMVcR/oJDomrRFgr9xo4xG
+        F9vTMBq/xk8lStv/kMb7BJ0INDO6uI2Tpg==
+X-Google-Smtp-Source: AGRyM1tDGCj0B0szOog+B41geg90JmIPiH3xM54LRmX3IrVfxGikr71Dyxk4eug3049EIOgVcteI1g==
+X-Received: by 2002:ac8:5e4e:0:b0:306:773f:b747 with SMTP id i14-20020ac85e4e000000b00306773fb747mr8846374qtx.499.1655479127297;
+        Fri, 17 Jun 2022 08:18:47 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id h22-20020ac85856000000b00304e95ec0fbsm4642479qth.89.2022.06.17.08.18.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 08:18:42 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 23so7779885ybe.8;
-        Fri, 17 Jun 2022 08:18:42 -0700 (PDT)
-X-Received: by 2002:a05:6902:a:b0:65c:b38e:6d9f with SMTP id
- l10-20020a056902000a00b0065cb38e6d9fmr11643810ybh.36.1655479122377; Fri, 17
- Jun 2022 08:18:42 -0700 (PDT)
+        Fri, 17 Jun 2022 08:18:46 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-3137316bb69so45300717b3.10;
+        Fri, 17 Jun 2022 08:18:46 -0700 (PDT)
+X-Received: by 2002:a81:6157:0:b0:30c:7e4d:b28e with SMTP id
+ v84-20020a816157000000b0030c7e4db28emr11917930ywb.502.1655479126541; Fri, 17
+ Jun 2022 08:18:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87mtefkco7.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87mtefkco7.wl-kuninori.morimoto.gx@renesas.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87letzkcnz.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87letzkcnz.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jun 2022 17:18:30 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWMFH_998MEpmMjoatvuZ8ihTg8xbZQZTAuwqFQKLxmCw@mail.gmail.com>
-Message-ID: <CAMuHMdWMFH_998MEpmMjoatvuZ8ihTg8xbZQZTAuwqFQKLxmCw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/21] pinctrl: renesas: r8a779g0: add missing HSCIF1_X
+Date:   Fri, 17 Jun 2022 17:18:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV0x2CFkAMA1zU7Dvs3_OXVzDLu9Rc9DVHjGtnxpAU0LQ@mail.gmail.com>
+Message-ID: <CAMuHMdV0x2CFkAMA1zU7Dvs3_OXVzDLu9Rc9DVHjGtnxpAU0LQ@mail.gmail.com>
+Subject: Re: [PATCH v3 13/21] pinctrl: renesas: r8a779g0: add missing SCIF3
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -66,13 +66,17 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Morimoto-san,
 
-On Tue, Jun 14, 2022 at 7:59 AM Kuninori Morimoto
+On Tue, Jun 14, 2022 at 8:00 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> This patch adds missing HSCIF1.
-> Because Document has 2xHSCIF1 with no suffix (_A, _B),
-> this patch name it as _X.
+> V4H has SCIF3 and SCIF3_A, but current PFC setting is mixed.
+> Exising SCIF3 settings on IP3SR1 should be SCIF3_A,
+> and existing settings on scif3_xxx[] are for SCIF3.
+>
+> This patch add missing SCIF3 settings on IP0SR1,
+> rename IP3SR1 settings to SCIF3_A,
+> add missing scif3_a_xxx[].
 >
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
@@ -80,33 +84,92 @@ Thanks for your patch!
 
 > --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
 > +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-> @@ -1554,6 +1561,29 @@ static const unsigned int hscif1_ctrl_mux[] = {
->         HRTS1_N_MARK, HCTS1_N_MARK,
+> @@ -319,11 +319,11 @@
+>  #define IP2SR1_31_28   F_(0, 0)                FM(TCLK2)               FM(MSIOF4_SS1)  FM(IRQ3_B)      F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>
+>  /* IP3SR1 */           /* 0 */                 /* 1 */                 /* 2 */         /* 3            4        5        6        7        8        9        A        B        C        D        E        F */
+> -#define IP3SR1_3_0     FM(HRX3)                FM(SCK3)                FM(MSIOF4_SS2)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP3SR1_7_4     FM(HSCK3)               FM(CTS3_N)              FM(MSIOF4_SCK)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP3SR1_11_8    FM(HRTS3_N)             FM(RTS3_N)              FM(MSIOF4_TXD)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP3SR1_15_12   FM(HCTS3_N)             FM(RX3)                 FM(MSIOF4_RXD)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP3SR1_19_16   FM(HTX3)                FM(TX3)                 FM(MSIOF4_SYNC) F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> +#define IP3SR1_3_0     FM(HRX3)                FM(SCK3_A)              FM(MSIOF4_SS2)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+
+> +#define IP3SR1_7_4     FM(HSCK3)               FM(CTS3_A_N)            FM(MSIOF4_SCK)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+
+CTS3_N_A (everywhere)
+
+> +#define IP3SR1_11_8    FM(HRTS3_N)             FM(RTS3_A_N)            FM(MSIOF4_TXD)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+
+RTS3_N_A (everywhere)
+
+> +#define IP3SR1_15_12   FM(HCTS3_N)             FM(RX3_A)               FM(MSIOF4_RXD)  F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> +#define IP3SR1_19_16   FM(HTX3)                FM(TX3_A)               FM(MSIOF4_SYNC) F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+
+I think this part belongs in "[PATCH v3 03/21] pinctrl: renesas:
+Initial R8A779G0 (V4H) PFC support", as it is a bug in that patch.
+
+>
+>  /* SR2 */
+>  /* IP0SR2 */           /* 0 */                 /* 1 */                 /* 2 */         /* 3            4        5        6        7        8        9        A        B        C        D        E        F */
+
+> @@ -901,23 +906,23 @@ static const u16 pinmux_data[] = {
+>
+>         /* IP3SR1 */
+>         PINMUX_IPSR_GPSR(IP3SR1_3_0,    HRX3),
+> -       PINMUX_IPSR_GPSR(IP3SR1_3_0,    SCK3),
+> +       PINMUX_IPSR_GPSR(IP3SR1_3_0,    SCK3_A),
+>         PINMUX_IPSR_GPSR(IP3SR1_3_0,    MSIOF4_SS2),
+>
+>         PINMUX_IPSR_GPSR(IP3SR1_7_4,    HSCK3),
+> -       PINMUX_IPSR_GPSR(IP3SR1_7_4,    CTS3_N),
+> +       PINMUX_IPSR_GPSR(IP3SR1_7_4,    CTS3_A_N),
+>         PINMUX_IPSR_GPSR(IP3SR1_7_4,    MSIOF4_SCK),
+>
+>         PINMUX_IPSR_GPSR(IP3SR1_11_8,   HRTS3_N),
+> -       PINMUX_IPSR_GPSR(IP3SR1_11_8,   RTS3_N),
+> +       PINMUX_IPSR_GPSR(IP3SR1_11_8,   RTS3_A_N),
+>         PINMUX_IPSR_GPSR(IP3SR1_11_8,   MSIOF4_TXD),
+>
+>         PINMUX_IPSR_GPSR(IP3SR1_15_12,  HCTS3_N),
+> -       PINMUX_IPSR_GPSR(IP3SR1_15_12,  RX3),
+> +       PINMUX_IPSR_GPSR(IP3SR1_15_12,  RX3_A),
+>         PINMUX_IPSR_GPSR(IP3SR1_15_12,  MSIOF4_RXD),
+>
+>         PINMUX_IPSR_GPSR(IP3SR1_19_16,  HTX3),
+
+> -       PINMUX_IPSR_GPSR(IP3SR1_19_16,  TX3),
+> +       PINMUX_IPSR_GPSR(IP3SR1_19_16,  TX3_A),
+>         PINMUX_IPSR_GPSR(IP3SR1_19_16,  MSIOF4_SYNC),
+
+I think this part belongs in "[PATCH v3 03/21] pinctrl: renesas:
+Initial R8A779G0 (V4H) PFC support", as it is a bug in that patch.
+
+>
+>         /* IP0SR2 */
+> @@ -2228,6 +2233,29 @@ static const unsigned int scif3_ctrl_mux[] = {
+>         RTS3_N_MARK, CTS3_N_MARK,
 >  };
 >
-> +/* - HSCIF1_X---------------------------------------------------------------- */
-> +static const unsigned int hscif1_x_data_pins[] = {
+> +/* - SCIF3_A ------------------------------------------------------------------ */
+> +static const unsigned int scif3_a_data_pins[] = {
 
-hscif1_data_x_pins etc.
+scif3_data_a_pins etc.
 
-> +       /* HRX1_X, HTX1_X */
-> +       RCAR_GP_PIN(1, 7), RCAR_GP_PIN(1, 6),
+> +       /* RX3_A, TX3_A */
+> +       RCAR_GP_PIN(1, 27), RCAR_GP_PIN(1, 28),
 > +};
 
-> @@ -2805,6 +2844,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
->
->         SH_PFC_FUNCTION(hscif0),
->         SH_PFC_FUNCTION(hscif1),
-> +       SH_PFC_FUNCTION(hscif1_x),
+> @@ -2884,6 +2921,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
+>         SH_PFC_FUNCTION(scif0),
+>         SH_PFC_FUNCTION(scif1),
+>         SH_PFC_FUNCTION(scif3),
+> +       SH_PFC_FUNCTION(scif3_a),
 
-Please drop this.
+Please drop this, as it is not needed.
 
->         SH_PFC_FUNCTION(hscif2),
->         SH_PFC_FUNCTION(hscif3),
->         SH_PFC_FUNCTION(hscif3_a),
-
-Again, as the pin group names are part of the DT ABI, this cannot be
-applied as-is, and we have to wait for clarification of the suffixes.
+>         SH_PFC_FUNCTION(scif4),
+>         SH_PFC_FUNCTION(scif_clk),
 
 Gr{oetje,eeting}s,
 
