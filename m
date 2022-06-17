@@ -2,172 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4382A54F780
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 14:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF61454F79A
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 14:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382116AbiFQM2K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 08:28:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
+        id S236617AbiFQMaQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 08:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382197AbiFQM2F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 08:28:05 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989B219C2D;
-        Fri, 17 Jun 2022 05:28:01 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id eo8so6031104edb.0;
-        Fri, 17 Jun 2022 05:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6n/2pFzaPVH0G41YfmWwCvM9JbKPxBYICuNwYJcUzhA=;
-        b=fxhyTLXRaQmjffcKebPAhrCz0/mBiSKvbvixB62cf8rYpxCrrWB3sLGzva5Uv3T0Jn
-         U+g+S70QYfa0DqM10QWK/LtOF3nfKUn7tiL9lwwRH4OQ1g/nxTDz99ZpzglVnVIWQiIf
-         WdkddcrkB/IhonbMcSBAJBgV00Txr5jwJud3+/mrxN/oCrohWHrSMC3YakheI5IVvyFs
-         t9beg4gcrrsWJjPK7YnbBOXpbv+lPn/0iyoOuKSbnQ60FOkulzdnMafdFnp0fV3TcVTN
-         T1bblB/Hs+jV8rL8vC/814vWkNNPTzQazsEjHWlRxudbDBl+kRlup6gUshlgf3iqgmz1
-         azwQ==
+        with ESMTP id S236539AbiFQMaQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 08:30:16 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455EA4BFDA;
+        Fri, 17 Jun 2022 05:30:15 -0700 (PDT)
+Received: by mail-qk1-f172.google.com with SMTP id d23so3038649qke.0;
+        Fri, 17 Jun 2022 05:30:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6n/2pFzaPVH0G41YfmWwCvM9JbKPxBYICuNwYJcUzhA=;
-        b=tAMqP1oDPKNuR9Bb0jZf5bOFTWKWzA666Dqff0d2NDEGP0d2xZZo3XSkM66/JePK/+
-         FgaAsxVxJC8VBk4t/apATQyl/d59XkYPbmyZzCqN7kbH3W4clPo/vVq5wernmRUwfvKR
-         L47/3M3c4GBCWObCUhzk5HpQw9WLywFB7X4FFJ7nEoH5P9mYJ6/MzUs4DaPlpGcWQinz
-         6KAsQ08ouyXxQ4GQFpq8VDHrw+wcuKJSreaa2bsyvmOlM7EyP/Y99BjpSet3u0OQ1Ide
-         eCQBcQqzErvLzNDJuirXGZ6bsy3/mvnXTHm7/FWf6+7rn3abNVMmXp1wSKppQ36vPN/r
-         VPrw==
-X-Gm-Message-State: AJIora/u8WMEs/PDj2WQPyIJB7pTh7ubkb9aCistAshb+UaPAqEmhSJ/
-        caGpSWm58TlbKh/6/qDryDQ=
-X-Google-Smtp-Source: AGRyM1vqbq5YK6BFxrltot0aDVi3HLTVaJltTlM/iLoLlIzIMjxdHKy2O657RN12iRQ7fUpbzwnuIw==
-X-Received: by 2002:a05:6402:3482:b0:42d:e063:7c1d with SMTP id v2-20020a056402348200b0042de0637c1dmr12337169edc.40.1655468880253;
-        Fri, 17 Jun 2022 05:28:00 -0700 (PDT)
-Received: from localhost (92.40.168.194.threembb.co.uk. [92.40.168.194])
-        by smtp.gmail.com with ESMTPSA id e7-20020a50ec87000000b0043561e0c9adsm1032499edr.52.2022.06.17.05.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jun 2022 05:27:59 -0700 (PDT)
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     linus.walleij@linaro.org, paul@crapouillou.net
-Cc:     maz@kernel.org, andy.shevchenko@gmail.com,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] pinctrl: ingenic: Convert to immutable irq chip
-Date:   Fri, 17 Jun 2022 13:28:55 +0100
-Message-Id: <20220617122855.739190-3-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220617122855.739190-1-aidanmacdonald.0x0@gmail.com>
-References: <20220617122855.739190-1-aidanmacdonald.0x0@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6pLOiLBK3afupV8xE7NcjLGwoNH+e6P9P3CPrIurXIc=;
+        b=t56RzQd7doU8pHh3I+TWrx59oRENhRn9fdW7wmYq8GM0ENOAf3hqN02p4c5DJDg0+z
+         oVYsWg4QVoLcbWlXetOUS1V3qV2Byk3KEyVYlwLa8aCeO3//sPxO8qrZAYoscCYzPz/a
+         MKKBgZVQb01p+TRByeiHmY1sbVSPjoRc7SCkg/YXN1iM5jVOFk9DmEWmmRDELMDZ5PFS
+         +OVBDkFLHt7p6r8nCBWURmpI9ykFkrHrfmPsbBClLmcvYTOJ7W2cUvNPk/WoHVzRzf/k
+         6zrRbhzER2j5ZZL3SQXBXY7FSboIycoY4ZlTE6YN/QQN35RLYEdPKqXut7sXnAQm3kUQ
+         H1EA==
+X-Gm-Message-State: AJIora9eZvEusZqSsE0+DptzKyFYy+7tKosH/9ju67Zmugpq7PIfUkvy
+        UMQgUxvxoEjx0/6o1C9BxWaXDnEIKtBcoA==
+X-Google-Smtp-Source: AGRyM1sezzRpvPvYuQibtLWzoyX+Zgof6xfx97mM79RbTzcHjj1scZc1sq6ZD47yqvHWKh2v+MJO7g==
+X-Received: by 2002:a05:620a:bc9:b0:6a6:5d5a:4306 with SMTP id s9-20020a05620a0bc900b006a65d5a4306mr6892387qki.391.1655469014289;
+        Fri, 17 Jun 2022 05:30:14 -0700 (PDT)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id f9-20020a05620a408900b006a740bb8578sm4544950qko.83.2022.06.17.05.30.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jun 2022 05:30:13 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id l11so6995280ybu.13;
+        Fri, 17 Jun 2022 05:30:13 -0700 (PDT)
+X-Received: by 2002:a25:d146:0:b0:668:aa24:c321 with SMTP id
+ i67-20020a25d146000000b00668aa24c321mr6377378ybg.89.1655469012945; Fri, 17
+ Jun 2022 05:30:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <8735g7lrb6.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <8735g7lrb6.wl-kuninori.morimoto.gx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Jun 2022 14:30:01 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUYKRQN7+RdA0SaChN1OHL5DvsM-ReZB2PoSjmHNWaPtg@mail.gmail.com>
+Message-ID: <CAMuHMdUYKRQN7+RdA0SaChN1OHL5DvsM-ReZB2PoSjmHNWaPtg@mail.gmail.com>
+Subject: Re: [PATCH v3 01/21] dt-bindings: pinctrl: renesas,pfc: Document
+ r8a779g0 support
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the driver to use an immutable IRQ chip to fix this warning:
+On Tue, Jun 14, 2022 at 7:58 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>
+> Document Pin Function Controller (PFC) support for the Renesas
+> R-Car V4H (R8A779G0) SoC.
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-    "not an immutable chip, please consider fixing it!"
+My
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+on v2 is still valid.
 
-Preserve per-chip labels by adding an irq_print_chip callback.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
----
- drivers/pinctrl/pinctrl-ingenic.c | 41 ++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+                        Geert
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 69e0d88665d3..787a8daa400e 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -22,6 +22,7 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/seq_file.h>
- 
- #include "core.h"
- #include "pinconf.h"
-@@ -135,7 +136,6 @@ struct ingenic_pinctrl {
- struct ingenic_gpio_chip {
- 	struct ingenic_pinctrl *jzpc;
- 	struct gpio_chip gc;
--	struct irq_chip irq_chip;
- 	unsigned int irq, reg_base;
- };
- 
-@@ -3419,6 +3419,8 @@ static void ingenic_gpio_irq_enable(struct irq_data *irqd)
- 	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
- 	irq_hw_number_t irq = irqd_to_hwirq(irqd);
- 
-+	gpiochip_enable_irq(gc, irq);
-+
- 	if (is_soc_or_above(jzgc->jzpc, ID_JZ4770))
- 		ingenic_gpio_set_bit(jzgc, JZ4770_GPIO_INT, irq, true);
- 	else if (is_soc_or_above(jzgc->jzpc, ID_JZ4740))
-@@ -3443,6 +3445,8 @@ static void ingenic_gpio_irq_disable(struct irq_data *irqd)
- 		ingenic_gpio_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
- 	else
- 		ingenic_gpio_set_bit(jzgc, JZ4730_GPIO_GPIER, irq, false);
-+
-+	gpiochip_disable_irq(gc, irq);
- }
- 
- static void ingenic_gpio_irq_ack(struct irq_data *irqd)
-@@ -3687,6 +3691,27 @@ static void ingenic_gpio_irq_release(struct irq_data *data)
- 	return gpiochip_relres_irq(gpio_chip, irq);
- }
- 
-+static void ingenic_gpio_irq_print_chip(struct irq_data *data, struct seq_file *p)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
-+
-+	seq_printf(p, "%s", gpio_chip->label);
-+}
-+
-+static const struct irq_chip ingenic_gpio_irqchip = {
-+	.irq_enable		= ingenic_gpio_irq_enable,
-+	.irq_disable		= ingenic_gpio_irq_disable,
-+	.irq_unmask		= ingenic_gpio_irq_unmask,
-+	.irq_mask		= ingenic_gpio_irq_mask,
-+	.irq_ack		= ingenic_gpio_irq_ack,
-+	.irq_set_type		= ingenic_gpio_irq_set_type,
-+	.irq_set_wake		= ingenic_gpio_irq_set_wake,
-+	.irq_request_resources	= ingenic_gpio_irq_request,
-+	.irq_release_resources	= ingenic_gpio_irq_release,
-+	.irq_print_chip		= ingenic_gpio_irq_print_chip,
-+	.flags			= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-+};
-+
- static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
- 		int pin, int func)
- {
-@@ -4175,20 +4200,8 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
- 	if (!jzgc->irq)
- 		return -EINVAL;
- 
--	jzgc->irq_chip.name = jzgc->gc.label;
--	jzgc->irq_chip.irq_enable = ingenic_gpio_irq_enable;
--	jzgc->irq_chip.irq_disable = ingenic_gpio_irq_disable;
--	jzgc->irq_chip.irq_unmask = ingenic_gpio_irq_unmask;
--	jzgc->irq_chip.irq_mask = ingenic_gpio_irq_mask;
--	jzgc->irq_chip.irq_ack = ingenic_gpio_irq_ack;
--	jzgc->irq_chip.irq_set_type = ingenic_gpio_irq_set_type;
--	jzgc->irq_chip.irq_set_wake = ingenic_gpio_irq_set_wake;
--	jzgc->irq_chip.irq_request_resources = ingenic_gpio_irq_request;
--	jzgc->irq_chip.irq_release_resources = ingenic_gpio_irq_release;
--	jzgc->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
--
- 	girq = &jzgc->gc.irq;
--	girq->chip = &jzgc->irq_chip;
-+	gpio_irq_chip_set_chip(girq, &ingenic_gpio_irqchip);
- 	girq->parent_handler = ingenic_gpio_irq_handler;
- 	girq->num_parents = 1;
- 	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
--- 
-2.35.1
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
