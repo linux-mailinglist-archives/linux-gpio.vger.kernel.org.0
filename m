@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F0A154FA0F
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F256D54FA14
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382760AbiFQPTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 11:19:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50176 "EHLO
+        id S1382325AbiFQPTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 11:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382373AbiFQPS6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:18:58 -0400
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680CD5595;
-        Fri, 17 Jun 2022 08:18:57 -0700 (PDT)
-Received: by mail-qk1-f182.google.com with SMTP id l192so3349562qke.13;
-        Fri, 17 Jun 2022 08:18:57 -0700 (PDT)
+        with ESMTP id S1382991AbiFQPTE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:19:04 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B56CC4BBB9;
+        Fri, 17 Jun 2022 08:19:02 -0700 (PDT)
+Received: by mail-qk1-f169.google.com with SMTP id 68so3355755qkk.9;
+        Fri, 17 Jun 2022 08:19:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1iyyFEscyb4ggpP63h+9Ycw9HpR4002iwk1oGPIrxjc=;
-        b=cQpt7ruLsR70UittHo1fATyYeWKVW6DNDL8UJXeY76hEQfpPN88C9fODYL8FJT5c8b
-         URUGG6tuJ/3vphu2dbqxHmTvxDAsAK0Wj/o2rUJXMv8+ue6cQB/1GEbOFnhokh8PQ8WY
-         S/VCvyi33owsdqOmX2kCWuhxHRkyv4WU+0fv80jSeaoyasqly2v11ZyqUrQfNY7VAonj
-         G1Cn2zKy/xHFismmmkZpaQzMQ8rcl+xvUiQVlomR2AcZPPINjzUEl+dBYCjqGj/s6rU5
-         J1LxW8fD9JJhm/O8tVavdXvDCdSc5z7b8Ixj1vEJziFeFbvz9m5A46BWOb2Px/S1onUr
-         8a9Q==
-X-Gm-Message-State: AJIora/inGB1iu9pkMSV2o1MGF+z4Qlph3V1oxyQXOz/O9KgS9jtMJyz
-        RnQCeBDMQxUWeAGIFQ/o1A8FY6v4UDx8ng==
-X-Google-Smtp-Source: AGRyM1tfbmmc+o7PqJQaUhe3LN72pCStWDo81v+EhwMWyv8E2Wqp7yRstbXU0a+E3yZECXYKLGH2OA==
-X-Received: by 2002:a37:9ecb:0:b0:6a6:a6e4:fd47 with SMTP id h194-20020a379ecb000000b006a6a6e4fd47mr7624502qke.708.1655479136307;
-        Fri, 17 Jun 2022 08:18:56 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id f10-20020a05620a280a00b006a77940be22sm4686775qkp.95.2022.06.17.08.18.56
+        bh=+mDLDdPoNxGVZs4g3Mxdiga+Wg2GLuaipJcM19xog/E=;
+        b=a4VsYYfVrjGNZFKHQBa94Gn+W/XDyEvhKVS3KjToSq77QAbvv/M2k187BlSNhnBgfQ
+         7RvUnf9qYjjPMKDo9VoYH3UV3R5bkCp4eRid/e6TDRW5BTxN+JOhzk3ZkQpZ0FkNuUL0
+         EK/B4gMpqIbSHWf3Vytjw5mEprQBdzpqcCsLIOFEsNuAGnWW25PlXXbz0JtJBstjy6mZ
+         nPfjqwpwACxn2FoYGWqidk0GWqc+xEhz+M7ZftIc2lo8APTK596eeIfFAOwvj0iO2V2m
+         hcTynrD5rCkPP0XQAq/5tgZchOPS/fruP/RL8oLNMRpJuZaCxLDnxgdiC8rqB7AWAa+j
+         8C+w==
+X-Gm-Message-State: AJIora9jM8MlSdvFh/TCs8v2/PNXsumHst8ell2GxOWN8Uu2sTFoFsRP
+        bv24mT0gE2HGg5e1l+sJVz4yxn7Toxrj9Q==
+X-Google-Smtp-Source: AGRyM1vgIB23xrFF8GYnhOyi8y/eaX6SK+A6SlPOPEvHfLon8fufqc/u64+K3csXudhARqA6htWzig==
+X-Received: by 2002:a05:620a:2445:b0:6ab:961f:a925 with SMTP id h5-20020a05620a244500b006ab961fa925mr1430702qkn.485.1655479141301;
+        Fri, 17 Jun 2022 08:19:01 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id r3-20020ae9d603000000b0069c72b41b59sm4678337qkk.2.2022.06.17.08.19.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 08:18:56 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id t1so7787790ybd.2;
-        Fri, 17 Jun 2022 08:18:56 -0700 (PDT)
-X-Received: by 2002:a25:bd41:0:b0:668:c259:f6c2 with SMTP id
- p1-20020a25bd41000000b00668c259f6c2mr2339812ybm.365.1655479135681; Fri, 17
- Jun 2022 08:18:55 -0700 (PDT)
+        Fri, 17 Jun 2022 08:19:01 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id w6so7788910ybl.4;
+        Fri, 17 Jun 2022 08:19:00 -0700 (PDT)
+X-Received: by 2002:a25:2b48:0:b0:668:3b7d:326c with SMTP id
+ r69-20020a252b48000000b006683b7d326cmr10579067ybr.380.1655479140679; Fri, 17
+ Jun 2022 08:19:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87ilp3kcnh.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87ilp3kcnh.wl-kuninori.morimoto.gx@renesas.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87h74nkcna.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87h74nkcna.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jun 2022 17:18:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWzctagdqY5_3-vDPOk0Cb97bZDBcmE6=3-EKHD0vRfCw@mail.gmail.com>
-Message-ID: <CAMuHMdWzctagdqY5_3-vDPOk0Cb97bZDBcmE6=3-EKHD0vRfCw@mail.gmail.com>
-Subject: Re: [PATCH v3 15/21] pinctrl: renesas: r8a779g0: add missing CANFD5_B
+Date:   Fri, 17 Jun 2022 17:18:49 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXhARUeKXXGGk7dBXx7PcuFo4cgUp2TMJH0hj_D5Cf2_w@mail.gmail.com>
+Message-ID: <CAMuHMdXhARUeKXXGGk7dBXx7PcuFo4cgUp2TMJH0hj_D5Cf2_w@mail.gmail.com>
+Subject: Re: [PATCH v3 16/21] pinctrl: renesas: r8a779g0: add missing TPU0TOx_A
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -70,7 +70,7 @@ On Tue, Jun 14, 2022 at 8:00 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> This patch adds missing CANFD5_B
+> This patch adds missing TPU0TOx_A
 >
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
@@ -78,48 +78,33 @@ Thanks for your patch!
 
 > --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
 > +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-> @@ -299,8 +299,8 @@
->  #define IP0SR1_31_28   FM(MSIOF0_SS1)          FM(HRX1_X)              FM(RX1_X)       F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
->
->  /* IP1SR1 */           /* 0 */                 /* 1 */                 /* 2 */         /* 3            4        5        6        7        8        9        A        B        C        D        E        F */
-> -#define IP1SR1_3_0     FM(MSIOF0_SYNC)         FM(HCTS1_X_N)           FM(CTS1_X_N)    F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-> -#define IP1SR1_7_4     FM(MSIOF0_TXD)          FM(HRTS1_X_N)           FM(RTS1_X_N)    F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-> +#define IP1SR1_3_0     FM(MSIOF0_SYNC)         FM(HCTS1_X_N)           FM(CTS1_X_N)    FM(CANFD5_B_TX) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-
-CANFD5_TX_B (everywhere)
-
-> +#define IP1SR1_7_4     FM(MSIOF0_TXD)          FM(HRTS1_X_N)           FM(RTS1_X_N)    FM(CANFD5_B_RX) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-
-CANFD5_RX_B (everywhere)
-
->  #define IP1SR1_11_8    FM(MSIOF0_SCK)          FM(HSCK1_X)             FM(SCK1_X)      F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
->  #define IP1SR1_15_12   FM(MSIOF0_RXD)          F_(0, 0)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
->  #define IP1SR1_19_16   FM(HTX0)                FM(TX0)                 F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-
-> @@ -1498,6 +1500,15 @@ static const unsigned int canfd5_data_mux[] = {
->         CANFD5_TX_MARK, CANFD5_RX_MARK,
+> @@ -2906,6 +2944,13 @@ static const char * const tpu_groups[] = {
+>         "tpu_to3",
 >  };
 >
-> +/* - CANFD5_B ----------------------------------------------------------------- */
-> +static const unsigned int canfd5_b_data_pins[] = {
+> +static const char * const tpu_a_groups[] = {
+> +       "tpu_to0_a",
+> +       "tpu_to1_a",
+> +       "tpu_to2_a",
+> +       "tpu_to3_a",
 
-canfd5_data_b_pins etc.
+Please add these to the existing tpu_groups[] instead.
 
-> +       /* CANFD5_B_TX, CANFD5_B_RX */
-> +       RCAR_GP_PIN(1, 8), RCAR_GP_PIN(1, 9),
 > +};
-
-> @@ -2912,6 +2928,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
->         SH_PFC_FUNCTION(canfd3),
->         SH_PFC_FUNCTION(canfd4),
->         SH_PFC_FUNCTION(canfd5),
-> +       SH_PFC_FUNCTION(canfd5_b),
+> +
+>  static const char * const tsn0_groups[] = {
+>         "tsn0_link",
+>         "tsn0_phy_int",
+> @@ -2981,6 +3026,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
+>         SH_PFC_FUNCTION(scif_clk),
+>
+>         SH_PFC_FUNCTION(tpu),
+> +       SH_PFC_FUNCTION(tpu_a),
 
 Please drop this, as it is not needed.
 
->         SH_PFC_FUNCTION(canfd6),
->         SH_PFC_FUNCTION(canfd7),
->         SH_PFC_FUNCTION(can_clk),
+>
+>         SH_PFC_FUNCTION(tsn0),
 
 Gr{oetje,eeting}s,
 
