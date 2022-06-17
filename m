@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85A0A54FA06
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0F1054F9FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:18:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382514AbiFQPRx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 11:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48176 "EHLO
+        id S239096AbiFQPSB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 11:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382150AbiFQPRx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:17:53 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D77D13FA3;
-        Fri, 17 Jun 2022 08:17:51 -0700 (PDT)
-Received: by mail-qk1-f173.google.com with SMTP id b142so3368825qkg.2;
-        Fri, 17 Jun 2022 08:17:51 -0700 (PDT)
+        with ESMTP id S1382803AbiFQPSA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:18:00 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B6DB15729;
+        Fri, 17 Jun 2022 08:18:00 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id 15so3364930qki.6;
+        Fri, 17 Jun 2022 08:18:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KY9ZL4uRzR73X5IJX1t6sGjZlj444cvis9AOUy09f6A=;
-        b=uk1/hhprLd+Jq8Gd63mFvlhOotogibnkdXP3Y09UrsrRcJLeauuBzLP38mDlmNPn/0
-         P034TmB4J+kaxgSQaRus0e1hc4AJBuGARqn3rULp4OTFTtI4I/qLV9VbwxI5fgpDrr+/
-         eimdbopnKb9xMrdl1YpJ8bVb1AQylVX9tcIG58xGI7cCeN20hXr8rE/YAf8GW7ohd2Gu
-         Eq8ej80yCppFhUnemS8lv8YtcCm0Fpg5nkGQwJSL8moQ63RSikJFrZPa84P9kf1v4BBU
-         gryRtS0NMsKK5dMRMBIsaS1L+B+VfZRW0Xm8EMlErhAeZFpDodGUsy31pmzoxhzFK5ew
-         YbbA==
-X-Gm-Message-State: AJIora89WJ62NnZI7kje59vnNPmctUNL0LOmgsGlesAmdjxpKX32+ky7
-        lHJbICKVEi7vNY5RC4clMxkGcV9rBIzF2A==
-X-Google-Smtp-Source: AGRyM1vXRVEF39X6rPC6SD/DmEmJn4hM4JFNw0QHJluEs2W0IVlFdCgX4zblK2i+iatHMLTVS00Kew==
-X-Received: by 2002:a05:620a:1094:b0:6a7:1861:66e7 with SMTP id g20-20020a05620a109400b006a7186166e7mr7539148qkk.323.1655479070077;
-        Fri, 17 Jun 2022 08:17:50 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id f5-20020a05620a280500b006a6a6f148e6sm4290039qkp.17.2022.06.17.08.17.49
+        bh=WRFHImNbD7ySzMWa0njVU49a/DPBVKiAfFlGJrNLz/0=;
+        b=bNW9RbWdLnxC9Ac4ApCrRayYpU+eDgSoNoWqhn1Shz2fzEJD1ZrnDooqdI/peBDRvV
+         xI8L1Zc1rRUwMOYL8fckt1xFs1l8LPcaD+ai/cBdOQZAdfUIV017Qt4Z0O0QILJAgTE5
+         O+O3ysmj7meuwPolmZ6Bwu60P3Bzg/wFj4+QtJHAs4w3FE5FLAnJrnbdC/oeGb0ues8J
+         59e7MEW+akYx/NZcBUVf634hUCWVgGdewQcUvPUiaXEChlqhMhMaMTiFiB1xYfjbKytZ
+         pMAESfa84zd/7hc1BCqJ1/DsEG2JuSnAFDR2uZSgcIs0DL261MWrsgV6lzBqJh8AfuIP
+         h/mA==
+X-Gm-Message-State: AJIora9qytbaFH2FG4J72gjRsdWByqBcbWI6ncUS/vLon8PoCKKooS7p
+        4B3i2O2xPjW53VQoG4PrJV3NM8kOBAovdA==
+X-Google-Smtp-Source: AGRyM1s7hf240rn+cnxQXljjIED/VWsdomguO/RcZN5ipv6LXFKvgamFIz28NKMw/pZGSA7TVRgWdQ==
+X-Received: by 2002:a05:620a:17a1:b0:6a6:ed81:ec with SMTP id ay33-20020a05620a17a100b006a6ed8100ecmr7170779qkb.523.1655479079000;
+        Fri, 17 Jun 2022 08:17:59 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id h15-20020a05620a400f00b006a6d365e9b1sm4859768qko.57.2022.06.17.08.17.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 08:17:49 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id v81so7827221ybe.0;
-        Fri, 17 Jun 2022 08:17:49 -0700 (PDT)
-X-Received: by 2002:a25:d146:0:b0:668:aa24:c321 with SMTP id
- i67-20020a25d146000000b00668aa24c321mr7159791ybg.89.1655479069458; Fri, 17
- Jun 2022 08:17:49 -0700 (PDT)
+        Fri, 17 Jun 2022 08:17:58 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-3176b6ed923so45264637b3.11;
+        Fri, 17 Jun 2022 08:17:58 -0700 (PDT)
+X-Received: by 2002:a81:3a81:0:b0:317:7dcf:81d4 with SMTP id
+ h123-20020a813a81000000b003177dcf81d4mr5101717ywa.47.1655479078439; Fri, 17
+ Jun 2022 08:17:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87r13rkcos.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87r13rkcos.wl-kuninori.morimoto.gx@renesas.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87sfo7kcoz.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87sfo7kcoz.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jun 2022 17:17:38 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVVPN-dhnjw1y7WqQJjZNO-YG8PjaFjmCvawMAhZJJLsA@mail.gmail.com>
-Message-ID: <CAMuHMdVVPN-dhnjw1y7WqQJjZNO-YG8PjaFjmCvawMAhZJJLsA@mail.gmail.com>
-Subject: Re: [PATCH v3 09/21] pinctrl: renesas: r8a779g0: add missing TCLKx_A/TCLK_B/TCLKx_X
+Date:   Fri, 17 Jun 2022 17:17:47 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXd-A0u7c2aPyicS760GJ170XTru_PVyVWA1DMOLmg2ig@mail.gmail.com>
+Message-ID: <CAMuHMdXd-A0u7c2aPyicS760GJ170XTru_PVyVWA1DMOLmg2ig@mail.gmail.com>
+Subject: Re: [PATCH v3 08/21] pinctrl: renesas: r8a779g0: tidyup ioctrl_regs
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -70,18 +70,49 @@ On Tue, Jun 14, 2022 at 7:59 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> This patch adds missing TCLKx_A/TCLKx_B/TCLKx_X
+> This patch comment out POC2 which is not used/documented,
+> and remove TD0SEL3 which is no need to have.
 >
-> Because Document has 2xTCLK3/TCLK4 with no suffix (_A, _B),
-> this patch name it as _X.
->
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
 Thanks for your patch!
 
-LGTM, but as the suffixes become part of the DT ABI when defining
-pin groups, we should get the conflicts resolved, and this cannot
-be applied as-is.
+> --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
+> @@ -3657,27 +3657,25 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
+>  enum ioctrl_regs {
+>         POC0,
+>         POC1,
+> -       POC2,
+> +/*     POC2, is not used */
+
+Please drop it completely, as POC2 is not documented to exist at all
+(unlike TD0SEL3).
+
+>         POC3,
+>         POC4,
+>         POC5,
+>         POC6,
+>         POC7,
+>         POC8,
+> -       TD0SEL3,
+>  };
+>
+>  static const struct pinmux_ioctrl_reg pinmux_ioctrl_regs[] = {
+>         [POC0]          = { 0xE60500A0, },
+>         [POC1]          = { 0xE60508A0, },
+> -       [POC2]          = { 0xE60580A0, },
+> +/*     [POC2]          = { 0xE60580A0, }, is not used */
+>         [POC3]          = { 0xE60588A0, },
+>         [POC4]          = { 0xE60600A0, },
+>         [POC5]          = { 0xE60608A0, },
+>         [POC6]          = { 0xE60610A0, },
+>         [POC7]          = { 0xE60618A0, },
+>         [POC8]          = { 0xE60680A0, },
+> -       [TD0SEL3]       = { 0xE60589C0, },
+>         { /* sentinel */ },
+>  };
 
 Gr{oetje,eeting}s,
 
