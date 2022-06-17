@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0F1054F9FD
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEEC654FA20
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239096AbiFQPSB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 11:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48418 "EHLO
+        id S1382688AbiFQPSl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 11:18:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382803AbiFQPSA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:18:00 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B6DB15729;
-        Fri, 17 Jun 2022 08:18:00 -0700 (PDT)
-Received: by mail-qk1-f170.google.com with SMTP id 15so3364930qki.6;
-        Fri, 17 Jun 2022 08:18:00 -0700 (PDT)
+        with ESMTP id S1383119AbiFQPS1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:18:27 -0400
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED83514027;
+        Fri, 17 Jun 2022 08:18:24 -0700 (PDT)
+Received: by mail-qv1-f46.google.com with SMTP id i17so204517qvo.13;
+        Fri, 17 Jun 2022 08:18:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WRFHImNbD7ySzMWa0njVU49a/DPBVKiAfFlGJrNLz/0=;
-        b=bNW9RbWdLnxC9Ac4ApCrRayYpU+eDgSoNoWqhn1Shz2fzEJD1ZrnDooqdI/peBDRvV
-         xI8L1Zc1rRUwMOYL8fckt1xFs1l8LPcaD+ai/cBdOQZAdfUIV017Qt4Z0O0QILJAgTE5
-         O+O3ysmj7meuwPolmZ6Bwu60P3Bzg/wFj4+QtJHAs4w3FE5FLAnJrnbdC/oeGb0ues8J
-         59e7MEW+akYx/NZcBUVf634hUCWVgGdewQcUvPUiaXEChlqhMhMaMTiFiB1xYfjbKytZ
-         pMAESfa84zd/7hc1BCqJ1/DsEG2JuSnAFDR2uZSgcIs0DL261MWrsgV6lzBqJh8AfuIP
-         h/mA==
-X-Gm-Message-State: AJIora9qytbaFH2FG4J72gjRsdWByqBcbWI6ncUS/vLon8PoCKKooS7p
-        4B3i2O2xPjW53VQoG4PrJV3NM8kOBAovdA==
-X-Google-Smtp-Source: AGRyM1s7hf240rn+cnxQXljjIED/VWsdomguO/RcZN5ipv6LXFKvgamFIz28NKMw/pZGSA7TVRgWdQ==
-X-Received: by 2002:a05:620a:17a1:b0:6a6:ed81:ec with SMTP id ay33-20020a05620a17a100b006a6ed8100ecmr7170779qkb.523.1655479079000;
-        Fri, 17 Jun 2022 08:17:59 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id h15-20020a05620a400f00b006a6d365e9b1sm4859768qko.57.2022.06.17.08.17.58
+        bh=6ONgEDYuoKsVNHYNaThodUOv7VYnsBwlqmTU5Q3b3/I=;
+        b=YdM3qwSIh8jE38AgNH7ID0rpXmLuZb6r2pXcBI8Dd4m0NNIK7qQlFiWiJoPwqy7DvO
+         wI6yXGkq7UOhBD+INc1Dr/Hc2u49G2b3zs8zKGf6wC8LVC1Clvp97YecPWd2FNs8eapQ
+         meCgSul6CkeqyZ5t8e7sLEFZTR4n1aHHXjbLYlk5/aQvC7NDKQ3K/X6lwTxCJf9L97bS
+         PD74Klv1UXIxGxm0e47oxjFTADiTGlawxZKDYKwhXbM0c1ODx1J3CyaE2GYA2wBjjuAq
+         my/jiLFPi/k0iCIqKa6hg+nNlBP1SR1FeS20GUNdnK2Kv62YAdT5Xt6jC9wZP41lA0RN
+         ArJQ==
+X-Gm-Message-State: AJIora8kN+doetpYYGDFJK7DqH7ucRJCECclzT06TRyFVtMbTEZDsFdD
+        jOo8fEjRDZ83SQ5caedGShfQZKPJbLFnNg==
+X-Google-Smtp-Source: AGRyM1sP48W2L+vUXLMxHNjTwkUG+XwS4t5UeO7O+G+80L7jjXGr3ojzFmh9eS1mUp/M4NEdbodcqA==
+X-Received: by 2002:ac8:5903:0:b0:305:2900:4099 with SMTP id 3-20020ac85903000000b0030529004099mr8892695qty.93.1655479103931;
+        Fri, 17 Jun 2022 08:18:23 -0700 (PDT)
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
+        by smtp.gmail.com with ESMTPSA id w15-20020a05620a424f00b006a76a939dbasm4974557qko.112.2022.06.17.08.18.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 08:17:58 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-3176b6ed923so45264637b3.11;
-        Fri, 17 Jun 2022 08:17:58 -0700 (PDT)
-X-Received: by 2002:a81:3a81:0:b0:317:7dcf:81d4 with SMTP id
- h123-20020a813a81000000b003177dcf81d4mr5101717ywa.47.1655479078439; Fri, 17
- Jun 2022 08:17:58 -0700 (PDT)
+        Fri, 17 Jun 2022 08:18:23 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-31772f8495fso44559157b3.4;
+        Fri, 17 Jun 2022 08:18:23 -0700 (PDT)
+X-Received: by 2002:a81:f41:0:b0:313:4d6c:49db with SMTP id
+ 62-20020a810f41000000b003134d6c49dbmr12043763ywp.384.1655479103191; Fri, 17
+ Jun 2022 08:18:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87sfo7kcoz.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87sfo7kcoz.wl-kuninori.morimoto.gx@renesas.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87pmjbkcol.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87pmjbkcol.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jun 2022 17:17:47 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXd-A0u7c2aPyicS760GJ170XTru_PVyVWA1DMOLmg2ig@mail.gmail.com>
-Message-ID: <CAMuHMdXd-A0u7c2aPyicS760GJ170XTru_PVyVWA1DMOLmg2ig@mail.gmail.com>
-Subject: Re: [PATCH v3 08/21] pinctrl: renesas: r8a779g0: tidyup ioctrl_regs
+Date:   Fri, 17 Jun 2022 17:18:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWWt_McEeEnU=McDyEuRZxWicQMSP+3HG+B4n_DReKK6w@mail.gmail.com>
+Message-ID: <CAMuHMdWWt_McEeEnU=McDyEuRZxWicQMSP+3HG+B4n_DReKK6w@mail.gmail.com>
+Subject: Re: [PATCH v3 10/21] pinctrl: renesas: r8a779g0: add missing IRQx_A/IRQx_B
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -70,49 +70,42 @@ On Tue, Jun 14, 2022 at 7:59 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> This patch comment out POC2 which is not used/documented,
-> and remove TD0SEL3 which is no need to have.
+> This patch adds missing IRQx_A/IRQx_B
 >
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
 Thanks for your patch!
 
 > --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
 > +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-> @@ -3657,27 +3657,25 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
->  enum ioctrl_regs {
->         POC0,
->         POC1,
-> -       POC2,
-> +/*     POC2, is not used */
-
-Please drop it completely, as POC2 is not documented to exist at all
-(unlike TD0SEL3).
-
->         POC3,
->         POC4,
->         POC5,
->         POC6,
->         POC7,
->         POC8,
-> -       TD0SEL3,
->  };
+> @@ -278,7 +278,7 @@
+>  #define IP1SR0_11_8    FM(MSIOF5_TXD)          F_(0, 0)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>  #define IP1SR0_15_12   FM(MSIOF5_SCK)          F_(0, 0)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>  #define IP1SR0_19_16   FM(MSIOF5_RXD)          F_(0, 0)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> -#define IP1SR0_23_20   FM(MSIOF2_SS2)          FM(TCLK1)               F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+> +#define IP1SR0_23_20   FM(MSIOF2_SS2)          FM(TCLK1)               FM(IRQ2_A)      F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>  #define IP1SR0_27_24   FM(MSIOF2_SS1)          FM(HTX1)                FM(TX1)         F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>  #define IP1SR0_31_28   FM(MSIOF2_SYNC)         FM(HRX1)                FM(RX1)         F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
 >
->  static const struct pinmux_ioctrl_reg pinmux_ioctrl_regs[] = {
->         [POC0]          = { 0xE60500A0, },
->         [POC1]          = { 0xE60508A0, },
-> -       [POC2]          = { 0xE60580A0, },
-> +/*     [POC2]          = { 0xE60580A0, }, is not used */
->         [POC3]          = { 0xE60588A0, },
->         [POC4]          = { 0xE60600A0, },
->         [POC5]          = { 0xE60608A0, },
->         [POC6]          = { 0xE60610A0, },
->         [POC7]          = { 0xE60618A0, },
->         [POC8]          = { 0xE60680A0, },
-> -       [TD0SEL3]       = { 0xE60589C0, },
->         { /* sentinel */ },
->  };
+> @@ -313,10 +313,10 @@
+>  #define IP2SR1_7_4     FM(SCIF_CLK)            FM(IRQ4)                F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+
+"IRQ4" here should be "IRQ4_A", also in the corresponding
+PINMUX_IPSR_GPSR() definition.  Probably this should be fixed in
+"[PATCH v3 03/21] pinctrl: renesas: Initial R8A779G0 (V4H) PFC
+support"?
+
+The rest LGTM, as it matches the documentation, so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+However, given the inconsistent naming of pins for IRQs with two
+possible pin alternatives:
+  - IRQ2 and IRQ2_A,
+  - IRQ3 and IRQ3_B,
+  - IRQ4_A and IRQ4_B,
+I expect several of these to be renamed in future revisions of the
+documentation.  As these names become part of the DT ABI when defining
+pin groups, that happens sooner rather than later...
 
 Gr{oetje,eeting}s,
 
