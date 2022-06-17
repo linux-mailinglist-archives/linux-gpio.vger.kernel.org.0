@@ -2,89 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E044354F7E6
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 14:57:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56ECB54F8BC
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 15:59:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235842AbiFQM5H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 08:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45038 "EHLO
+        id S1382416AbiFQN6k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 09:58:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232578AbiFQM5G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 08:57:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D0A047AEF;
-        Fri, 17 Jun 2022 05:57:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8E28D61F93;
-        Fri, 17 Jun 2022 12:57:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F02C8C3411B;
-        Fri, 17 Jun 2022 12:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655470625;
-        bh=Bag8zwyhT9U8BMerjXOApyrnlO7JcS/Hr2CorYNNMwQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=spG7m69WD1WO8UoOYUOzv9EgwcVwI7m0c6B3o2WLnoIUVyYzNyRsg04fSg9lJ/5Ub
-         Yy7qftI/lK3toSRGGJ9hpvcrrFwjEIs0MGxuY1goYc2G6DkCIJQ/+inOH823N9okMg
-         5OE1sdcQaUtqbgPK9CwoYamVtGC8QS5hrXCE7+vRVRd+mUg1N34fvNtlElIt55q9SW
-         sN5gJ416axSb92DnSSUVCyO9SCIL5glPNEIP0htPyF1Rtj+mB9e0ehkY7JnwlrcByL
-         1xGhlRzvsjBK00O99R/l6xrW5Evmh/80aT+LuALQrLJo98hBHvroIswnWTn0M77Kn9
-         3y/y44E7/velQ==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1o2BX4-001IoW-Og;
-        Fri, 17 Jun 2022 13:57:02 +0100
-MIME-Version: 1.0
-Date:   Fri, 17 Jun 2022 13:57:02 +0100
-From:   Marc Zyngier <maz@kernel.org>
+        with ESMTP id S1382588AbiFQN6d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 09:58:33 -0400
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5243701C;
+        Fri, 17 Jun 2022 06:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1655474308; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hTpuY0oYSZHQ44/dO0MgMZ94JAo9TbzfsR7GSf1Zc+k=;
+        b=j4SU46lu6M1TGmh/+r3yaG9ulrjq6iU72dNXVyQmnl+g0c/mqGmv4DuOHs4owK3P/7Xrbg
+        RKXqISsQ5QEVuf/Daz3pb4LqPbDq5cQe9Yc7SR1+qzMRtODjEhtbme+CbQNN+IUOkE5lD2
+        y0f3lDGy5eatqAXbssKo/kBnt/kdL4c=
+Date:   Fri, 17 Jun 2022 14:58:18 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 0/2] pinctrl: ingenic: Convert to immutable irq chip
 To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     linus.walleij@linaro.org, paul@crapouillou.net,
+Cc:     linus.walleij@linaro.org, maz@kernel.org,
         andy.shevchenko@gmail.com, linux-mips@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] pinctrl: ingenic: Convert to immutable irq chip
+Message-Id: <65KMDR.VTVERMK75O601@crapouillou.net>
 In-Reply-To: <20220617122855.739190-1-aidanmacdonald.0x0@gmail.com>
 References: <20220617122855.739190-1-aidanmacdonald.0x0@gmail.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <75d6d91d786cf992f6c36bddb2c6a2b9@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: aidanmacdonald.0x0@gmail.com, linus.walleij@linaro.org, paul@crapouillou.net, andy.shevchenko@gmail.com, linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-06-17 13:28, Aidan MacDonald wrote:
+Hi Aidan,
+
+Le ven., juin 17 2022 at 13:28:53 +0100, Aidan MacDonald=20
+<aidanmacdonald.0x0@gmail.com> a =E9crit :
 > Two cleanup patches for pinctrl-ingenic.
-> 
+>=20
 > v2:
 > * Add print_chip callback to avoid changing /proc/interrupts output
 > * Add patch to use irqd_to_hwirq()
-> 
+>=20
 > Aidan MacDonald (2):
 >   pinctrl: ingenic: Use irqd_to_hwirq()
 >   pinctrl: ingenic: Convert to immutable irq chip
-> 
->  drivers/pinctrl/pinctrl-ingenic.c | 64 +++++++++++++++++++------------
+>=20
+>  drivers/pinctrl/pinctrl-ingenic.c | 64=20
+> +++++++++++++++++++------------
 >  1 file changed, 40 insertions(+), 24 deletions(-)
 
-For the series:
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+For the two patches.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Cheers,
+-Paul
+
+
