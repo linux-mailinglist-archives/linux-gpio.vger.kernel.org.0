@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60A2E54FA12
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 438E354FA18
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 17:20:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382752AbiFQPTX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jun 2022 11:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50516 "EHLO
+        id S1382033AbiFQPTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 11:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382224AbiFQPTW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:19:22 -0400
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D310D37028;
-        Fri, 17 Jun 2022 08:19:21 -0700 (PDT)
-Received: by mail-qv1-f44.google.com with SMTP id t16so1871440qvh.1;
-        Fri, 17 Jun 2022 08:19:21 -0700 (PDT)
+        with ESMTP id S1381663AbiFQPTe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 11:19:34 -0400
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52414BBA9;
+        Fri, 17 Jun 2022 08:19:31 -0700 (PDT)
+Received: by mail-qv1-f41.google.com with SMTP id 88so3345856qva.9;
+        Fri, 17 Jun 2022 08:19:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ui3SOZldAICVrytvhuEvB4kphXiQjWbE5sPkjUDLys8=;
-        b=bliB2o1PUvWW8diUK3NI7LHTdlvIl/9fJqUXziNMaOifyecGGNzQN/gC7jxo/upW6G
-         Rx6XVlKPOGW1kSLFW0PfO/iWejtQp2CF3OsmzuShl/mJvgZn+zn9i41nJfB2+dOHCRFE
-         pKeo4jNTSNBzJ4ISaMX1J6fxknywEZ02C3HcREgfTFNEnCtzPlX5GxqOxP/QTBClw7Zx
-         4nsaJWKSxk2ZRPzLMnTZEahjPXPv8FaC7bAbvPXsy3g4/KmhgXjSHYDOWuew/UEAXSuB
-         JX4y9LaFXgezNxNtHWznC+vY2CGxGMVpXruw6qR1X9+nk3ClQoAy5VXqJJ8qCqiuFUcP
-         ThPA==
-X-Gm-Message-State: AJIora+jSskGwz6lqTyrIRDP/d5Q5vnZf3F3GN/pmXkVNgDhU30RMYgl
-        aziHJgWuKiWZaYBR8eus5Djg6Yeis0iqig==
-X-Google-Smtp-Source: AGRyM1uZXOMAIBqzwfL0GpTwOMjCGgldOViRp8Kr02xxnrWloc+3cfC9k4gNzGdTT1tO7fz0nL2oYA==
-X-Received: by 2002:a05:6214:20e6:b0:46e:32e0:67e with SMTP id 6-20020a05621420e600b0046e32e0067emr8845261qvk.48.1655479160713;
-        Fri, 17 Jun 2022 08:19:20 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id bq38-20020a05620a46a600b006a785ba0c25sm4250603qkb.77.2022.06.17.08.19.20
+        bh=yt12e8dUYDnMPaIrx6AUJRjLMArXdOLKy5zPQ44jpyo=;
+        b=posu43J7Q9Bylz/hWwa316xW+EY94shl0vMb3qxdPKyOu5YP2I3TpYd44ZkSUhAGaT
+         ZhGLT36awCDTlzc/rwKnE1iyoDY/k/WdZT3M7yoVxvDICz21XuEH50j+YgbUzkhG6edD
+         3J9QUhZ0VJyrsa8uPBBM29BOsYvZOE9W+zTOPVYG9EHcxucCGxkhNp7STN7d1/lgnme/
+         zdA3nCtELh2gBo3dl2Zdojac/XimuYOkinMiJxBJggotBicgOR5SGvujSQBR+Sc3f9vm
+         y2mnDy3QcFaBaDqCD5SHmEsvdQU+ZWlQXmOEQuXZSxxOwldS16l/NKumewez13RfrjY4
+         qMOQ==
+X-Gm-Message-State: AJIora9Dakty0ZZ7Ga0zKJ+8rSBMaxNJrxbJW9WfOuGHTXiS+qLmkpIN
+        hzs29R2q6Ga/VCqv8J42UnLbWvp8z5YImA==
+X-Google-Smtp-Source: AGRyM1tImXQi7J+mJQ/4KZwhJ3rk/0BhOzpFWevU7USFhipXkNOVnCEAL6TxwnLJFiuKKGGx4QoSSA==
+X-Received: by 2002:ac8:5a93:0:b0:304:ec80:7943 with SMTP id c19-20020ac85a93000000b00304ec807943mr8973292qtc.330.1655479170940;
+        Fri, 17 Jun 2022 08:19:30 -0700 (PDT)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id l7-20020a378907000000b006a6ae636ce0sm4518910qkd.131.2022.06.17.08.19.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 08:19:20 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-317741c86fdso43785477b3.2;
-        Fri, 17 Jun 2022 08:19:20 -0700 (PDT)
-X-Received: by 2002:a0d:f801:0:b0:30f:f716:2950 with SMTP id
- i1-20020a0df801000000b0030ff7162950mr12389856ywf.358.1655479160036; Fri, 17
- Jun 2022 08:19:20 -0700 (PDT)
+        Fri, 17 Jun 2022 08:19:30 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-3178ea840easo7498757b3.13;
+        Fri, 17 Jun 2022 08:19:30 -0700 (PDT)
+X-Received: by 2002:a81:1dd2:0:b0:30f:a4fc:315e with SMTP id
+ d201-20020a811dd2000000b0030fa4fc315emr12533402ywd.383.1655479170315; Fri, 17
+ Jun 2022 08:19:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87czfbkcmp.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87czfbkcmp.wl-kuninori.morimoto.gx@renesas.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com> <87bkuvkcmi.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87bkuvkcmi.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jun 2022 17:19:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUP4nMt5y6fgOQwFXwt86pbDTTx9QisJj1gfsjF_bHrjQ@mail.gmail.com>
-Message-ID: <CAMuHMdUP4nMt5y6fgOQwFXwt86pbDTTx9QisJj1gfsjF_bHrjQ@mail.gmail.com>
-Subject: Re: [PATCH v3 19/21] pinctrl: renesas: r8a779g0: add missing ERROROUTC_A
+Date:   Fri, 17 Jun 2022 17:19:18 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVcUZdY6hfv1rAXE82+xaOgDhpSVEOMOpMj6Yr2MKO9hg@mail.gmail.com>
+Message-ID: <CAMuHMdVcUZdY6hfv1rAXE82+xaOgDhpSVEOMOpMj6Yr2MKO9hg@mail.gmail.com>
+Subject: Re: [PATCH v3 20/21] pinctrl: renesas: r8a779g0: add missing MODSELx
+ for TSN0
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -57,7 +58,8 @@ Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75 autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -70,8 +72,8 @@ On Tue, Jun 14, 2022 at 8:00 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> This patch add missing ERROROUTC_A settings.
-> Current existing ERROROUTC should be _B, this patch tidyup it.
+> TSN0 needs MODSEL4 settings.
+> This patch adds missing MODSELx setting for these.
 >
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
@@ -79,21 +81,55 @@ Thanks for your patch!
 
 > --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
 > +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-> @@ -263,7 +263,7 @@
+> @@ -720,27 +720,30 @@ static const u16 pinmux_data[] = {
+>         PINMUX_SINGLE(AVS0),
+>         PINMUX_SINGLE(PCIE1_CLKREQ_N),
+>         PINMUX_SINGLE(PCIE0_CLKREQ_N),
+> +
+> +       /* TSN0 without MDSEL4 */
+
+MODSEL4
+
+>         PINMUX_SINGLE(TSN0_TXCREFCLK),
+> -       PINMUX_SINGLE(TSN0_TD2),
+> -       PINMUX_SINGLE(TSN0_TD3),
+>         PINMUX_SINGLE(TSN0_RD2),
+>         PINMUX_SINGLE(TSN0_RD3),
+> -       PINMUX_SINGLE(TSN0_TD0),
+> -       PINMUX_SINGLE(TSN0_TD1),
+>         PINMUX_SINGLE(TSN0_RD1),
+> -       PINMUX_SINGLE(TSN0_TXC),
+>         PINMUX_SINGLE(TSN0_RXC),
+>         PINMUX_SINGLE(TSN0_RD0),
+> -       PINMUX_SINGLE(TSN0_TX_CTL),
+> -       PINMUX_SINGLE(TSN0_AVTP_PPS0),
+>         PINMUX_SINGLE(TSN0_RX_CTL),
+>         PINMUX_SINGLE(TSN0_AVTP_CAPTURE),
+> -       PINMUX_SINGLE(TSN0_AVTP_MATCH),
+>         PINMUX_SINGLE(TSN0_LINK),
+>         PINMUX_SINGLE(TSN0_PHY_INT),
+> -       PINMUX_SINGLE(TSN0_AVTP_PPS1),
+> -       PINMUX_SINGLE(TSN0_MDC),
+>         PINMUX_SINGLE(TSN0_MDIO),
+> +       /* TSN0 with MDSEL4 */
+
+MODSEL4
+
+> +       PINMUX_IPSR_NOGM(0, TSN0_TD2,           SEL_TSN0_TD2_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_TD3,           SEL_TSN0_TD3_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_TD0,           SEL_TSN0_TD0_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_TD1,           SEL_TSN0_TD1_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_TXC,           SEL_TSN0_TXC_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_TX_CTL,        SEL_TSN0_TX_CTL_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_AVTP_PPS0,     SEL_TSN0_AVTP_PPS0_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_AVTP_MATCH,    SEL_TSN0_AVTP_MATCH_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_AVTP_PPS1,     SEL_TSN0_AVTP_PPS1_1),
+> +       PINMUX_IPSR_NOGM(0, TSN0_MDC,           SEL_TSN0_MDC_1),
 >
->  /* SR0 */
->  /* IP0SR0 */           /* 0 */                 /* 1 */                 /* 2 */         /* 3            4        5        6        7        8        9        A        B        C        D        E        F */
-> -#define IP0SR0_3_0     F_(0, 0)                FM(ERROROUTC)           FM(TCLK2_A)     F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-> +#define IP0SR0_3_0     F_(0, 0)                FM(ERROROUTC_B)         FM(TCLK2_A)     F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+>         PINMUX_SINGLE(AVB2_RX_CTL),
+>         PINMUX_SINGLE(AVB2_TX_CTL),
 
-I think the rename belongs in "[PATCH v3 03/21] pinctrl: renesas:
-Initial R8A779G0 (V4H) PFC support", as it is a bug in that patch.
-
->  #define IP0SR0_7_4     F_(0, 0)                FM(MSIOF3_SS1)          F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
->  #define IP0SR0_11_8    F_(0, 0)                FM(MSIOF3_SS2)          F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
->  #define IP0SR0_15_12   FM(IRQ3)                FM(MSIOF3_SCK)          F_(0, 0)        F_(0, 0)        F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
-
-The rest LGTM, as it matches the documentation, so
+With the above fixed:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
