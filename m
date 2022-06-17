@@ -2,206 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E9854E80C
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jun 2022 18:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D501054F043
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jun 2022 06:32:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377577AbiFPQs4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jun 2022 12:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47538 "EHLO
+        id S1379122AbiFQEcN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jun 2022 00:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378477AbiFPQsb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jun 2022 12:48:31 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70077.outbound.protection.outlook.com [40.107.7.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0FC3483AC;
-        Thu, 16 Jun 2022 09:48:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X3pF1nFsL73cCnCNLKVqKC+FfUaS+7Dc1BQg9vVC9ufHN4Ha/zNNpsSujCldRwS99fNlxdOCXmFPQcdxEey2EViNT74Y5RelkFEeIxyCJsxlGVUNbZRWBUHZAQzEY9twChZqTTmGhO4uYmtIfZe+yQ3StdvmpDVneVzq9Mp4nYIM3bE8X6TBkq0ZMebn1EysudlQehz7CQSFZldL5Z7IRxZP/H/jSlo6LXNDKNrDhkmoZwDIaAEINw4aADBZGaVdX9diZ4q7kHVLrny44lYURYt3rimpyMykGvc48NeE5qCZzyscEiI0XQkkSAini0mYZF+vB/VxSYHFfz20SNQevw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X8GLwX1DMh9D0ebaKutVwV0uBbWg3yNF1zumBUrTZ2Y=;
- b=UtZR6VuONtouOR4r/bY2xOYxOBod20ZfaGnFlcMs5APuFb3NlFcASCDvspouKn0wEj72fAAJnzZPDhNuClG3VolfebxHp6i5GX9N73AdRZFm0bn9uKhmwRALwAGFh9aewvbf85eSQI9Z1KhFHAh40bzXhm8fXVzMePnyF0UOSvih+ASj8E6T1tcITHD/Ql8UgfhKR9+bpg6/BxEynmM4gSZ/s7cJD0AtpAgOGu78ppc+cbtT8n9P2y8dZjIVEHLT/xrDi2Zl3GktfMnTb7sGvyIVjTwzOz2x9dzr2rrmlgDs5/5pwLgMOGkrYeuztLvLPEDrynAoyIOsPN3cmIzRIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X8GLwX1DMh9D0ebaKutVwV0uBbWg3yNF1zumBUrTZ2Y=;
- b=CY3XOD3nBQYJQ30SmVKNz+NlsStYfM4t170NKPZ8JYgE5YjwR9UUZowWFZGbyWBbWs1HEmDqYjRKby5PVFGyxOwg7ASJLqobMhq8YPq8OORX2dbhiEJGV3rMWwlaeEoJGbBvEzizm1qeaYFjQSoYUavNOSwi16OILVvTd3ZsxqQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30)
- by AM8PR04MB7939.eurprd04.prod.outlook.com (2603:10a6:20b:241::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.22; Thu, 16 Jun
- 2022 16:48:25 +0000
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::7505:2581:368f:5619]) by VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::7505:2581:368f:5619%5]) with mapi id 15.20.5353.015; Thu, 16 Jun 2022
- 16:48:25 +0000
-Date:   Thu, 16 Jun 2022 19:48:13 +0300
-From:   Viorel Suman <viorel.suman@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Mirela Rabulea <mirela.rabulea@nxp.com>,
-        Liu Ying <victor.liu@nxp.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Peng Fan <peng.fan@nxp.com>, Shijie Qin <shijie.qin@nxp.com>,
-        Ming Qian <ming.qian@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     LnxNXP@nxp.com
-Subject: Re: [PATCH v4 00/14] dt-bindings: arm: freescale: Switch fsl,scu
- from txt to yaml
-Message-ID: <20220616164813.jf6og7d4wf25xx4w@fsr-ub1664-116>
-References: <20220615105834.743045-1-viorel.suman@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220615105834.743045-1-viorel.suman@nxp.com>
-X-ClientProxiedBy: AM0PR03CA0098.eurprd03.prod.outlook.com
- (2603:10a6:208:69::39) To VI1PR04MB5005.eurprd04.prod.outlook.com
- (2603:10a6:803:57::30)
+        with ESMTP id S229781AbiFQEcL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jun 2022 00:32:11 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A6D3663DC
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jun 2022 21:32:11 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id C2C385C00D9;
+        Fri, 17 Jun 2022 00:32:08 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 17 Jun 2022 00:32:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1655440328; x=
+        1655526728; bh=mlsoKVlXqPqeY2AbABBxaZnMTRS2pQThx4lkvWjNiOs=; b=i
+        uZwVvSSZy5wTKUuK1m07bF5k9hJ5YFDzBOQ4c9qxkp05xwZywnPn+SBQN2fFIACp
+        BLEF3D9oob2xxaMDmM4oG4j/34/FYxjWcwBNgISvoWB/DFTDejupTxFZMnZb0bw5
+        RJH9cKw0/mCNwzxmJf9M0PjbkXMQRlyqsTQrMDFhDwuIkknXpRWKRgrs6pQOf7+o
+        CJPmIKkoWqhtYry+vaFsx2X+sFZ7TGU7r2BtGxN11P6+wf+vr/Q+LJRQV2nVVfvY
+        Vl64Y4Ovh4QPTqGPvn0xmJDBcITi9LfEm0njYXR2praSR4MmTNOjJDn0ZE6szkRg
+        54wOjLnppHu3vD4pVPk5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1655440328; x=
+        1655526728; bh=mlsoKVlXqPqeY2AbABBxaZnMTRS2pQThx4lkvWjNiOs=; b=P
+        pwOp6xShACMLwjWypLIetU0ii+2klmtU8itRDkkrfZ/dugG1upe0d0PuuJJaO4Ns
+        JjhYyWqjH+JJ8Q+pckIBOXAvvMhTMNhNeXbr930Dw20Xh/Nnl7O0h4u4v7PZc0me
+        NPJzvioaxoyB0QfUTqCoYaAfYSjLhvpc68c1kJsaeWBaX5RU/oZFnWzFfGAin+Ot
+        i+NedrCOrkhPA3xw1PweCcS1Eeda2ZjpGopg+RA3MSCLlk1YG/XQPXHRernqU1B+
+        CHZpJKwyPILXrL8QISUQ05OyFyxfl8KSMLDlFzA7s2FE3mHoBXIREPwD7sE/xsLB
+        emywAImNEkEEwexwo9jAg==
+X-ME-Sender: <xms:yAOsYsFNbV9M1Pfh5tX2WaVY1AeQHQawhoDUKHk4V3S-Ym7AKxHY8A>
+    <xme:yAOsYlWdRylfq4y1FffO1lWSKhIQ5LjFj2zOt5iFxFdNVukqbisQdiEuu0j6lJtM1
+    it98LJy6iOCsBjE1g>
+X-ME-Received: <xmr:yAOsYmKzlKLtiNMKAGjqT9FD6P7RlvL_FnogArmhsipC7lkjX_Z_bZ8Go4zBwdtBRwzx6Udzs6PcFJtK3XwpzMgNo5UPftICiFIRS8-8AwPYh7fi-xu41gL_vA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddvgedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpedtvefhheehgfdvkeetffeludeuudehudeuvddtveelleekvedv
+    uedviefhkeeuheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:yAOsYuHYtXHovmw6cBTmp-Rj92ZnEgmNMKpLsiXla4bWB-Ylg3wdEg>
+    <xmx:yAOsYiVC9xSz-w2w8GtCVWRYJrEYb7ZBz_gulyFVorNU3mSNpSqimQ>
+    <xmx:yAOsYhMEt6Puxw7EXBDmM_aRrJ7zh1cNgnyQfKZGXMJx2usIQQqtBQ>
+    <xmx:yAOsYtEmVyevWqnU-xHUjvwtcYM8S8hAHdXAMPuwu4Z5V8zbvFexnQ>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 17 Jun 2022 00:32:07 -0400 (EDT)
+Subject: Re: [PATCH] pinctrl: sunxi: sunxi_pconf_set: use correct offset
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@gmail.com>,
+        Andrei Lalaev <andrey.lalaev@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Yangtao Li <frank@allwinnertech.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     wens@csie.org, linux-gpio@vger.kernel.org,
+        linux-sunxi@lists.linux.dev
+References: <20220525190423.410609-1-andrey.lalaev@gmail.com>
+ <CACRpkdbfJhwee-dnkhE3=ijiLcSx8seVxoKPzyZ_n7bz=TkU7w@mail.gmail.com>
+ <3106779.5fSG56mABF@kista>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <f1fd1974-3013-1622-10d5-255835f5905a@sholland.org>
+Date:   Thu, 16 Jun 2022 23:32:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cd4a935e-9266-4210-f257-08da4fb807ca
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7939:EE_
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-Microsoft-Antispam-PRVS: <AM8PR04MB793934D2FEDE7F3DD89A3BCD92AC9@AM8PR04MB7939.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iZhMPZyWJlyqkWiASHjXLA0cfVnaseDcGiafRe8C7RMoR+VODqWrdAZ4qNZAXFIZ4p9BIy1lg0wxUYeY0HKQhS3pMWRyLPFrxd/B8sxpKhjoQNkMktKdhi3CtrDWluMWW/dt1jq78IwxizYkLQXAy/yD8FjMk6XZl6nzog4IO1Yrob/tEOvDiSW6BGTsI1KCgznDIoOAHoCaGkK4hSzMCh57Bu33/72ylT+5AOLAEl9XQXW7tatdzwlLAoMr7pmu2xAD3d9IBN2CfCGvJj0odGkFwcICelLtfc7IJf0YNsTefQTZCWAdgbHVKKVgWgvgNW60dZtDR+66udBrRVQ1cdHwl/KA+E4qZcVUTU/TUgjmx91kI+V70jogUFTaCUogGlXjO4xO5x9sVbT1cusDvaqN9CjG0dHyi4mL5Oiax75ujW9rPJjENrbJ/bEg89akvVCHheJsutkxdMUv+EmLKxN797iYbpoPjJA0mi+3LDGsjbt6ZRBW08kyLevRD01/fPH4OfbZsqLx9wfZXSMomEY8HUGBrdAnfV0IFWvl26C0KLjrqosPuKUgroi0U7hZpptQ8TmGDIZXqbKxjcHGRAoBCphgCCKdqSyKRBeI89TbSe+wzbylR/3dYBecGYSGfRwOUGNJsOrfB8Uxr/zGuO18Uox+J3nHRVw6fBXTNKjvzFXYzViO7U3pVx1ii1GuAuksSTelUtwDGUIawmCDgaKLYXZcWDFEkfpRw1Tf355P2EYtF5g/gcyUJ+gYJT88BzfbipTBGkVYEJarXrwLUmie2n60DLj0iraF7ebBUvs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5005.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(7916004)(366004)(38100700002)(186003)(38350700002)(1076003)(921005)(86362001)(33716001)(83380400001)(8936002)(316002)(8676002)(110136005)(66946007)(4326008)(66476007)(66556008)(26005)(6486002)(966005)(5660300002)(52116002)(6506007)(53546011)(6512007)(44832011)(508600001)(6666004)(9686003)(2906002)(7406005)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AzkXtBI48EgDzpE/JJvxYCzZM4sjGdzdBQ8hsgAbFfHYnIJEooLjqOle0xja?=
- =?us-ascii?Q?+OI/FLb3lUvB338I22+gq5LYZlLZBCUf1Hk2oorsXafGJZqhyopVKWjP0bET?=
- =?us-ascii?Q?WCOQHMzoh+1qmGU/dOPB+0VszgXqD1NJpibuctU3lVslS35EOJOFNwduRIgG?=
- =?us-ascii?Q?SRHVGX9mMnLVW30IHOz3MuUQ6s/S5zAFBtHjDouJ9/ZUqWU+vSw9wxtq0D+q?=
- =?us-ascii?Q?GIFJvCm4OaE7AB5tLiu2Smu9vu+Cg2ulQ7BQcQrjXw6gxFj1Y6tMic70WLzi?=
- =?us-ascii?Q?Dw90u6Zkc5Wf3aNOFVgGWGS9P/OUE8mB4NzywYHAjX6CS4jIv3YB82vsTgmS?=
- =?us-ascii?Q?ohbAtg9hDInm8z696/EILwky6IVQ/zKedVZUoKI8e03dqj5ZcvjT6dwrlVTL?=
- =?us-ascii?Q?d+enNyowkr1PEzZQntN4O/UX9X1CFLEfXNxgRolC1bqfMUEcanLv1kMCA7DV?=
- =?us-ascii?Q?WEYJ0dxpyvcoDa+4GBsnQoK+fibxh0afhSHIYPY+ydZTerhiaW6Tlo+v7R1i?=
- =?us-ascii?Q?HBFx7/BlzjlAe7H5x5qBat8SktNBJJjBlbs8mPAT958vqIugOOim+J1eYLwk?=
- =?us-ascii?Q?XX3VQ5eeJ79XIc6k8l1QDF5u8nKkZrWhRd5J6jZcFxLdlzzg2YYaKcj6bg3h?=
- =?us-ascii?Q?w5XY1C19OhcCTi3lMp3IgibJyfdGgOVaK+kmat11zJgzzRo7v+chU8PxdUTN?=
- =?us-ascii?Q?blOsWOsiVWV1TNKVOEDSUWBJjhmp4C8zZrNtGGg2YONlQuKy9YHeX4FziFeJ?=
- =?us-ascii?Q?c0nNv7NcksD0imi1bp5tpHqekKwMql85GCVZ3mbSK5YVcZU4VrJ9dez7GRn5?=
- =?us-ascii?Q?lnAKH353VxUcyf1gHa34++p0hQSEdPnzJQ2Nul+fM2gzQX+erYhmFvGeuGIy?=
- =?us-ascii?Q?h9MFQjX73Lz8DEGkreJSvb2Hxt2JN8sBHoLkTAzLz9/gTFgEIACg+wLcRbN+?=
- =?us-ascii?Q?kkIB7kkEZOccXtI/2uY1ok01VF8Nfnh+7Dzn+3jptpylWO26bLn04VGi+HWJ?=
- =?us-ascii?Q?LCEqD9x6CHT1quSSJwZOIOiuLVPouOA9kmQl5muC7WORMnrnKe3Fu8LmuTvU?=
- =?us-ascii?Q?/epKc3iWH/9+QI4JJv+eQwQANk7KJap5S6Vp6nkmYTLP5muV/dFnV8p4Tiit?=
- =?us-ascii?Q?Ux3weJ913JLG352FX9NnKYgV+taSyUMntx24PgD8OwHfXZ+uWWvplI4uTn1Z?=
- =?us-ascii?Q?NzRje0/IDkrOPlWcAmwuMCPkqf4TdB2/yfKzfBzt7FfTofgzDzl5BJKK2r3w?=
- =?us-ascii?Q?selfy+W1xQkLI0gvxJbVSy8BaUMF3LPUPpFl2lqSnfWWKAmw19INVhkmOh4C?=
- =?us-ascii?Q?wIUz19x2TxlRKeemHFvtrrQTgyvyKJyZlgaKs1nEYCV+WqEdhGV8Gou1Gtr/?=
- =?us-ascii?Q?DccPyqrmBI+Q89zFPXDqB5M3UkAl1Jtgv253K6XxkukbzVfW2iWr3yha9avB?=
- =?us-ascii?Q?I4RvF2M3PX5UzY6ph+ZO9Gwz4a2p7yRZ8LQrEI7fD7gJlCiu8i402r4dZy6o?=
- =?us-ascii?Q?9lkRWKpXAKusHrA4r41J4HInLFQA5lhD+V9Y9OdhSP4o/FG2ATF07ohnFlhf?=
- =?us-ascii?Q?3aWVxPgqXM0xMio+emf0obk842NtfArz0JQBvpaiPu6ssbzgOWTxhnPRA3no?=
- =?us-ascii?Q?s5hjO98OfGVGL38omcHd2IEDcHp8Xm517CrJY8U22eVXNOOnHFhrgx9cXyzt?=
- =?us-ascii?Q?zeGVpGpQvKuJGeKraqzdxpz9D7ZoQLPUs15kFL6ENUEM4/vo4ua8J4lArfbN?=
- =?us-ascii?Q?kue2f5uIRw=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd4a935e-9266-4210-f257-08da4fb807ca
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5005.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2022 16:48:25.2632
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N6F8yQ9XSRHwbhApbCcRQ0p63k+fGOW8o/EKFbSIQ/HPEIEK6G7fz6rvCATbo2TF9Y+tDjRm77hgpryIi9+v2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7939
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <3106779.5fSG56mABF@kista>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All, please ignore this patchset. Sent V5 for review.
+On 6/15/22 10:56 AM, Jernej Škrabec wrote:
+> Dne sreda, 15. junij 2022 ob 15:17:55 CEST je Linus Walleij napisal(a):
+>> On Wed, May 25, 2022 at 9:08 PM Andrei Lalaev <andrey.lalaev@gmail.com> 
+> wrote:
+>>
+>>> Some Allwinner SoCs have 2 pinctrls (PIO and R_PIO).
+>>> Previous implementation used absolute pin numbering and it was incorrect
+>>> for R_PIO pinctrl.
+>>> It's necessary to take into account the base pin number.
+>>>
+>>> Fixes: 90be64e27621 ("pinctrl: sunxi: implement pin_config_set")
+>>> Signed-off-by: Andrei Lalaev <andrey.lalaev@gmail.com>
+>>
+>> It fixes a patch by Maxime so want Maxime to ACK this if it should be
+>> applied. Paging Andre and Yangtao too, would be sad if we don't apply it
+>> if it is a necessary fix.
+> 
+> From what I can see, this fixes makes code consistent with pattern in other 
+> functions, so I think it's good.
 
-Thanks,
-Viorel
+Reviewed-by: Samuel Holland <samuel@sholland.org>
 
-On 22-06-15 13:58:20, Viorel Suman wrote:
-> Here is the v3:
->   https://lore.kernel.org/lkml/20220609143423.2839186-1-abel.vesa@nxp.com/
-> 
-> Changes since v3:
->   * Examples included
->   * Included Abel's patches fixing thermal zone, keys and power controller names.
-> 
-> Abel Vesa (14):
->   arm64: dts: freescale: imx8qxp: Fix thermal zone name for cpu0
->   dt-bindings: clk: imx: Add fsl,scu-clk yaml file
->   dt-bindings: pinctrl: imx: Add fsl,scu-iomux yaml file
->   dt-bindings: input: Add fsl,scu-key yaml file
->   dt-bindings: nvmem: Add fsl,scu-ocotp yaml file
->   dt-bindings: power: Add fsl,scu-pd yaml file
->   dt-bindings: rtc: Add fsl,scu-rtc yaml file
->   dt-bindings: thermal: Add fsl,scu-thermal yaml file
->   dt-bindings: watchdog: Add fsl,scu-wdt yaml file
->   dt-bindings: firmware: Add fsl,scu yaml file
->   arm64: dts: freescale: imx8: Fix power controller name
->   arm64: dts: freescale: imx8qxp: Add fallback compatible for clock
->     controller
->   arm64: dts: freescale: imx8qxp: Fix the keys node name
->   dt-bindings: arm: freescale: Remove fsl,scu txt file
-> 
->  .../bindings/arm/freescale/fsl,scu.txt        | 271 ------------------
->  .../bindings/clock/fsl,scu-clk.yaml           |  58 ++++
->  .../devicetree/bindings/firmware/fsl,scu.yaml | 170 +++++++++++
->  .../bindings/input/fsl,scu-key.yaml           |  39 +++
->  .../bindings/nvmem/fsl,scu-ocotp.yaml         |  49 ++++
->  .../bindings/pinctrl/fsl,scu-pinctrl.yaml     |  47 +++
->  .../devicetree/bindings/power/fsl,scu-pd.yaml |  41 +++
->  .../devicetree/bindings/rtc/fsl,scu-rtc.yaml  |  28 ++
->  .../bindings/thermal/fsl,scu-thermal.yaml     |  38 +++
->  .../bindings/watchdog/fsl,scu-wdt.yaml        |  35 +++
->  arch/arm64/boot/dts/freescale/imx8qm.dtsi     |   2 +-
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi    |   8 +-
->  12 files changed, 510 insertions(+), 276 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml
->  create mode 100644 Documentation/devicetree/bindings/firmware/fsl,scu.yaml
->  create mode 100644 Documentation/devicetree/bindings/input/fsl,scu-key.yaml
->  create mode 100644 Documentation/devicetree/bindings/nvmem/fsl,scu-ocotp.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/power/fsl,scu-pd.yaml
->  create mode 100644 Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
->  create mode 100644 Documentation/devicetree/bindings/thermal/fsl,scu-thermal.yaml
->  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml
-> 
-> -- 
-> 2.25.1
-> 
+This patch looks right to me as well. It appears the subtraction was
+accidentally removed in the referenced commit.
+
+Regards,
+Samuel
