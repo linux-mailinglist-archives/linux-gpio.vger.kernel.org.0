@@ -2,141 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75E3155082D
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jun 2022 05:57:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C77AD550927
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jun 2022 09:34:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233922AbiFSD5L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Jun 2022 23:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
+        id S234081AbiFSHe2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Jun 2022 03:34:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229639AbiFSD5K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Jun 2022 23:57:10 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A76911C01;
-        Sat, 18 Jun 2022 20:57:09 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id d39so7594267vsv.7;
-        Sat, 18 Jun 2022 20:57:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=GbS9TDOHV4jf2htfhwIeIm8TpA0asWaDoPdyofcHL38=;
-        b=N7ZoypqMi1X63sj47YYzSqMlx18uwKWNrZZKoTFBfrqRA5Z8n9VIm+O+bB7WyRBzy9
-         ZbsS6jtzS6hufj6HZIUvgiseKETZSjywPqOsInvgF38FvnlsTdhUiWLaMZDDuKS2xAyg
-         Z81u0R+yDvsKCxkjdOKDKotE9B9No6gJgVYjqicBV+pqBUzMkFD/EUdNRQlRmuWuoSyX
-         8q1SSHpTGTzRkftVSxPDe01aX4+HiLqeCPVsVqvBuIOycWjdWA/GlmAvWyWzq+GpKR5e
-         +f5rIQkUkFD87nnCiVIoIswT41JVmtsbml89P8Q1vUW+VRyqDVOOxp0F7ZjSWIMN/sDp
-         XEew==
-X-Gm-Message-State: AJIora8Gn/TdOPDm2AWbY9+4m2P7qb+bnIJ4Wn1slinwrUNGUrUJ3OyZ
-        6Qnf7hUs/9iiMFnIWoKH9SPdmYOmOvSTcg==
-X-Google-Smtp-Source: AGRyM1uSfh6aSI/zfFzk668qTBuf6A1RkVJ3RCGLtrFnuGhW+BYOq1ahRenUh+Jg1zsvvrZ3yPWFbg==
-X-Received: by 2002:a05:6102:32c8:b0:34c:2358:1824 with SMTP id o8-20020a05610232c800b0034c23581824mr8083413vss.65.1655611028583;
-        Sat, 18 Jun 2022 20:57:08 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id k26-20020ab0715a000000b0037f029bcf0bsm809913uao.21.2022.06.18.20.57.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jun 2022 20:57:08 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id r15so2852271uaf.13;
-        Sat, 18 Jun 2022 20:57:08 -0700 (PDT)
-X-Received: by 2002:a9f:37a2:0:b0:379:2023:a630 with SMTP id
- q31-20020a9f37a2000000b003792023a630mr6647474uaq.73.1655611028267; Sat, 18
- Jun 2022 20:57:08 -0700 (PDT)
+        with ESMTP id S231939AbiFSHe2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jun 2022 03:34:28 -0400
+Received: from m15114.mail.126.com (m15114.mail.126.com [220.181.15.114])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C8AABBE1E
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Jun 2022 00:34:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qhxkr
+        /aOqu+vrmKB0+0pl6NWC0/MFEXuMV8Podpx0Ds=; b=MfggCQvt+upNsGoaH47cF
+        +b4IfpfMkVkJ0UZH5aI1kQAKd+Vvym4kbUwYlt8QESrmrmncIcXq23CoHykbNGit
+        bxa+8EXLpN5o43VpQTj/hGolvuaA9fRQgI1K7z/RceM12t8k03/flLtUQRDi+1Kr
+        QlaO9j8qYWvWeZ7NiaA6pE=
+Received: from localhost.localdomain (unknown [124.16.139.61])
+        by smtp7 (Coremail) with SMTP id DsmowACHl_M80a5iRtXFDg--.28970S2;
+        Sun, 19 Jun 2022 15:33:16 +0800 (CST)
+From:   Liang He <windhl@126.com>
+To:     linus.walleij@linaro.org, heiko@sntech.de
+Cc:     windhl@126.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH] pinctrl/rockchip: Fix refcount leak bug
+Date:   Sun, 19 Jun 2022 15:33:15 +0800
+Message-Id: <20220619073315.4067956-1-windhl@126.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220618214009.2178567-1-aidanmacdonald.0x0@gmail.com> <20220618214009.2178567-11-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220618214009.2178567-11-aidanmacdonald.0x0@gmail.com>
-Reply-To: wens@csie.org
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Sun, 19 Jun 2022 11:56:56 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65PLTcy53zjHA83qAaNq4y-Mmxfv4xvSuwqRLGBiwgjDQ@mail.gmail.com>
-Message-ID: <CAGb2v65PLTcy53zjHA83qAaNq4y-Mmxfv4xvSuwqRLGBiwgjDQ@mail.gmail.com>
-Subject: Re: [PATCH v3 10/16] iio: adc: axp20x_adc: Minor code cleanups
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, quic_gurus@quicinc.com,
-        sebastian.reichel@collabora.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>, michael@walle.cc,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: DsmowACHl_M80a5iRtXFDg--.28970S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtrykArWxAryrZw4fZr4UXFb_yoWfJrcEka
+        4xWr9rXr1UGFWrur42q3y3WFyFkanrWr4vvFn7ZasxCasrXw1Iqrn5Wry3K3s7Gr4ayr9r
+        GrZFvr4rJFWUJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUID7DUUUUU==
+X-Originating-IP: [124.16.139.61]
+X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbi3B0lF1pEDwJZSwAAsy
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 19, 2022 at 5:40 AM Aidan MacDonald
-<aidanmacdonald.0x0@gmail.com> wrote:
->
-> The code may be clearer if parameters are not re-purposed to hold
-> temporary results like register values, so introduce local variables
-> as necessary to avoid that. Also, use the common FIELD_PREP macro
-> instead of a hand-rolled version.
->
-> Suggested-by: Jonathan Cameron <jic23@kernel.org>
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-> ---
->  drivers/iio/adc/axp20x_adc.c | 61 +++++++++++++++++++-----------------
->  1 file changed, 33 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
-> index 53bf7d4899d2..041511280e1e 100644
-> --- a/drivers/iio/adc/axp20x_adc.c
-> +++ b/drivers/iio/adc/axp20x_adc.c
-> @@ -15,6 +15,7 @@
->  #include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/thermal.h>
-> +#include <linux/bitfield.h>
+In rockchip_pinctrl_parse_groups(), we need a of_node_put() in each
+loop for the of_find_node_by_phandle() to keep the refcount balance.
 
-Sort this group of headers alphabetically please.
+Signed-off-by: Liang He <windhl@126.com>
+---
+ drivers/pinctrl/pinctrl-rockchip.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->
->  #include <linux/iio/iio.h>
->  #include <linux/iio/driver.h>
-> @@ -22,20 +23,20 @@
->  #include <linux/mfd/axp20x.h>
->
->  #define AXP20X_ADC_EN1_MASK                    GENMASK(7, 0)
-> -
->  #define AXP20X_ADC_EN2_MASK                    (GENMASK(3, 2) | BIT(7))
-> +
->  #define AXP22X_ADC_EN1_MASK                    (GENMASK(7, 5) | BIT(0))
->
->  #define AXP20X_GPIO10_IN_RANGE_GPIO0           BIT(0)
->  #define AXP20X_GPIO10_IN_RANGE_GPIO1           BIT(1)
-> -#define AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(x)    ((x) & BIT(0))
-> -#define AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(x)    (((x) & BIT(0)) << 1)
->
->  #define AXP20X_ADC_RATE_MASK                   GENMASK(7, 6)
-> -#define AXP813_V_I_ADC_RATE_MASK               GENMASK(5, 4)
-> -#define AXP813_ADC_RATE_MASK                   (AXP20X_ADC_RATE_MASK | AXP813_V_I_ADC_RATE_MASK)
->  #define AXP20X_ADC_RATE_HZ(x)                  ((ilog2((x) / 25) << 6) & AXP20X_ADC_RATE_MASK)
-> +
->  #define AXP22X_ADC_RATE_HZ(x)                  ((ilog2((x) / 100) << 6) & AXP20X_ADC_RATE_MASK)
-> +
-> +#define AXP813_V_I_ADC_RATE_MASK               GENMASK(5, 4)
-> +#define AXP813_ADC_RATE_MASK                   (AXP20X_ADC_RATE_MASK | AXP813_V_I_ADC_RATE_MASK)
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 32e41395fc76..d78827c97760 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -2710,6 +2710,7 @@ static int rockchip_pinctrl_parse_groups(struct device_node *np,
+ 		np_config = of_find_node_by_phandle(be32_to_cpup(phandle));
+ 		ret = pinconf_generic_parse_dt_config(np_config, NULL,
+ 				&grp->data[j].configs, &grp->data[j].nconfigs);
++		of_node_put(np_config);
+ 		if (ret)
+ 			return ret;
+ 	}
+-- 
+2.25.1
 
-Please also mention "grouping macros based on chip type" in the commit log.
-
-Otherwise,
-
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
