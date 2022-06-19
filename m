@@ -2,45 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C77AD550927
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jun 2022 09:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F9FF5509CA
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Jun 2022 12:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234081AbiFSHe2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Jun 2022 03:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
+        id S231177AbiFSKoy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Jun 2022 06:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231939AbiFSHe2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jun 2022 03:34:28 -0400
-Received: from m15114.mail.126.com (m15114.mail.126.com [220.181.15.114])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C8AABBE1E
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Jun 2022 00:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qhxkr
-        /aOqu+vrmKB0+0pl6NWC0/MFEXuMV8Podpx0Ds=; b=MfggCQvt+upNsGoaH47cF
-        +b4IfpfMkVkJ0UZH5aI1kQAKd+Vvym4kbUwYlt8QESrmrmncIcXq23CoHykbNGit
-        bxa+8EXLpN5o43VpQTj/hGolvuaA9fRQgI1K7z/RceM12t8k03/flLtUQRDi+1Kr
-        QlaO9j8qYWvWeZ7NiaA6pE=
-Received: from localhost.localdomain (unknown [124.16.139.61])
-        by smtp7 (Coremail) with SMTP id DsmowACHl_M80a5iRtXFDg--.28970S2;
-        Sun, 19 Jun 2022 15:33:16 +0800 (CST)
-From:   Liang He <windhl@126.com>
-To:     linus.walleij@linaro.org, heiko@sntech.de
-Cc:     windhl@126.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH] pinctrl/rockchip: Fix refcount leak bug
-Date:   Sun, 19 Jun 2022 15:33:15 +0800
-Message-Id: <20220619073315.4067956-1-windhl@126.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229887AbiFSKoy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Jun 2022 06:44:54 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F112614;
+        Sun, 19 Jun 2022 03:44:53 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id ej4so7505323edb.7;
+        Sun, 19 Jun 2022 03:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yxOIwZjmxFnjMXJ6Xp1+MvDIzBj+ym+fo6gciVI2pfs=;
+        b=erxRoeDeeSAHC7idu736MyEPQuGc5jmV4U1+5N3dAyB/Dl1ew9cIgM9IKFGMi/79J8
+         zIdqn6oRCY0NvJH7Cm/T7TVHTiyZIeq6jMZ7HHmXrbiU/bD244DgcqOFQ7PdCsMcKcp9
+         JrI6J6+jH2IiwMDWxNKTZGlWvdIvQOjWs1A7arLZYc66nwF093xRdkT9DuiOnnDqBvah
+         +1hHLH6RSwEdUeOBI5i0cMSUnm5DpZyfcgsCoyAd5b68DY/tO7bIFLoD9n4FLY4Y6Yfv
+         esN7+5TGs01Pcnc27tdEiE9xSxwTG4BIQy7hw2dKznlvL4r3NZ92yvJdyhKh4kaMdk+j
+         8nQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yxOIwZjmxFnjMXJ6Xp1+MvDIzBj+ym+fo6gciVI2pfs=;
+        b=ppogYeHJxlaer9oGeCo7jt1zEpQOIe3+RmUgbyOPQpgxpXLYzrIGa1LXfVFtlTzus0
+         N9vvXb0cmnAw4RQSgGF+CwbxHNG2s6COfo3Tmcg5XT4n+nTihwFghRxUAsKFpOhGGTRq
+         mJinwO5eY7+HPHic9wljfJjDbEubgzWTxViAB6BLCbnsje4qxds/yBJPmsK4/OvVTsR8
+         Lh6zCcwaqWUnOZLdf9mnKdlubsHxmY3VU6w8G0Bkg/PI9vl8LfrdlPwK+Wca5fGwjTiL
+         qs5l7oUQtqfHvMk+87Y98oQQbMmtYwpXdoThqAxRlI0yzN0aAUfEBrs5Op6zMbN4sSKj
+         ha5w==
+X-Gm-Message-State: AJIora+jQPiJwajqhpu/44sIDlfpGXMhl5DHFwoPFMua/Ql0OIgPPA7S
+        G/dFtMmB8+zp9bdi5F4t7S8jTqNLuTiw1WGbT7M=
+X-Google-Smtp-Source: AGRyM1uwpM39Y5hJukPhhAsF+Sd/ykgw+tW++s88t51mRboT6d8T2fs8H7237eve9IHtlfZjLFeZ60kSXT46gM9QNmY=
+X-Received: by 2002:a05:6402:249e:b0:42d:bb88:865b with SMTP id
+ q30-20020a056402249e00b0042dbb88865bmr22547322eda.141.1655635491659; Sun, 19
+ Jun 2022 03:44:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DsmowACHl_M80a5iRtXFDg--.28970S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtrykArWxAryrZw4fZr4UXFb_yoWfJrcEka
-        4xWr9rXr1UGFWrur42q3y3WFyFkanrWr4vvFn7ZasxCasrXw1Iqrn5Wry3K3s7Gr4ayr9r
-        GrZFvr4rJFWUJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUID7DUUUUU==
-X-Originating-IP: [124.16.139.61]
-X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbi3B0lF1pEDwJZSwAAsy
+References: <20220618214009.2178567-1-aidanmacdonald.0x0@gmail.com> <20220618214009.2178567-9-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220618214009.2178567-9-aidanmacdonald.0x0@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 19 Jun 2022 12:44:14 +0200
+Message-ID: <CAHp75Ve7yyRfDOOcAbN1fQ9TNo-2okVr9jSyeEp8DfCY5K_wUg@mail.gmail.com>
+Subject: Re: [PATCH v3 08/16] mfd: axp20x: Add support for AXP192
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, quic_gurus@quicinc.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Michael Walle <michael@walle.cc>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -51,26 +83,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In rockchip_pinctrl_parse_groups(), we need a of_node_put() in each
-loop for the of_find_node_by_phandle() to keep the refcount balance.
+On Sat, Jun 18, 2022 at 11:40 PM Aidan MacDonald
+<aidanmacdonald.0x0@gmail.com> wrote:
+>
+> The AXP192 PMIC is similar to the AXP202/AXP209, but with different
+> regulators, additional GPIOs, and a different IRQ register layout.
 
-Signed-off-by: Liang He <windhl@126.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 1 +
- 1 file changed, 1 insertion(+)
+...
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 32e41395fc76..d78827c97760 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -2710,6 +2710,7 @@ static int rockchip_pinctrl_parse_groups(struct device_node *np,
- 		np_config = of_find_node_by_phandle(be32_to_cpup(phandle));
- 		ret = pinconf_generic_parse_dt_config(np_config, NULL,
- 				&grp->data[j].configs, &grp->data[j].nconfigs);
-+		of_node_put(np_config);
- 		if (ret)
- 			return ret;
- 	}
+> +static int axp192_get_irq_reg(unsigned int base_reg, int i)
+> +{
+> +       /* linear mapping for IRQ1 to IRQ4 */
+> +       if (i < 4)
+> +               return base_reg + i;
+> +
+> +       /* handle IRQ5 separately */
+> +       if (base_reg == AXP192_IRQ1_EN)
+> +               return AXP192_IRQ5_EN;
+
+> +       else
+
+Redundant 'else'.
+
+> +               return AXP192_IRQ5_STATE;
+> +}
+
+...
+
+> +enum {
+> +       AXP192_DCDC1 = 0,
+> +       AXP192_DCDC2,
+> +       AXP192_DCDC3,
+> +       AXP192_LDO1,
+> +       AXP192_LDO2,
+> +       AXP192_LDO3,
+> +       AXP192_LDO_IO0,
+
+> +       AXP192_REG_ID_MAX,
+
+Comma is not needed for a terminator.
+
+> +};
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
