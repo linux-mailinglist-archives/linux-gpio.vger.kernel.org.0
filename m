@@ -2,65 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 097EB5521C7
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jun 2022 18:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E745521DF
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jun 2022 18:09:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239153AbiFTQDN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jun 2022 12:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59618 "EHLO
+        id S242206AbiFTQI7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jun 2022 12:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiFTQDN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 12:03:13 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 917ED55B7;
-        Mon, 20 Jun 2022 09:03:12 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id es26so14057666edb.4;
-        Mon, 20 Jun 2022 09:03:12 -0700 (PDT)
+        with ESMTP id S229519AbiFTQI7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 12:08:59 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B971F2F4;
+        Mon, 20 Jun 2022 09:08:58 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id h23so22042147ejj.12;
+        Mon, 20 Jun 2022 09:08:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Y87tteo65fPwP2KFKjtu1f8D6jluauyBet2xHwdc9hM=;
-        b=VR3IMy6yFhkhF+Q30NdfXuDFk3tjHrqKWSO+wnLWXXxkIfXXClXX9moyzub2GN2nJz
-         pUSCytPYZ12S+zqdkDFpO/wGdif8G9wzbRgutHvGAo44/Fymw9ZIZGW7aUBnhuVONkmQ
-         N7W0XZJbzUypzqXEFLlb3mDVJtN933rbP+lGPYU+hs+izpOwqw6tXx1IFohl427Xo8eI
-         zc91bUn3sQK/OClztUyOH5uz65T/VzkXZhWCgCSQ1a37JWUUISw50xYTb1LPSGU8XNGW
-         246gVosXHJbvwznd00lpEScKmt+lsisGS3L8tKKcOYovyVDHcvXDDce0e/1QxXvUV6H2
-         409Q==
+        bh=7UqePF8/+Hm2P7IqihZhJWfNdv8VurIs2DoJU0Nq/ug=;
+        b=gdiuOE4+sAK5ES+HTqlkH6Cvtnoa7ihSsTn1ww3qCwEw6uIoQ9mUTBdui5+3b7gi09
+         +rfa9fZ4L02hJzLOhWXgTH0Qwzu9VoxoyFelAqMdISKvUekTKUXfUmEUggZZrUsApD86
+         4xC6i4iMmzfPmTsZXUw0NPjjiYakpntnDZh2BJbrCOldiHGOJAyrr2OoZg5whjPJKKkA
+         aAISw3j5iCY4NWCiZScodSRVhPRvufdRc23n/4ch3+ts7pz5grQadriMuYBZXYGpo+k3
+         mkKtMf3OWQJddP6/5/qrAVYEVRHoCY+E8GEv+j0WG52iwwiyxzNBf8GQqytQPJv4cRaH
+         sPpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Y87tteo65fPwP2KFKjtu1f8D6jluauyBet2xHwdc9hM=;
-        b=tFX7g59SuhAprzzoK5ZOKFSa7HaORzNoadaw6GVC8b5ROHP1rT8ORn8NIvA1BNdYxm
-         2mYwLchlJdPnN3UdtrXb5tfd7H3ZIKdXmtsPiUescYz60mQVck0M7p83B+aOFIeTjMIA
-         KCOJtD0LhzL47hX9fI2pBbMGZ4wFsGla1h2h2T0Iec9JSubmJZDre7RwD9vnCnG9QJBa
-         fB2/YSKGhrqqFXVtS3PhrAZjE2+uRTKYKuO9HHtSFi3zVyViX7IjdjN0+NNrnZW7umR7
-         pG2xeP5cw5g0MWpWPWYniuiAX63CB+wkEXwtbtPqJBiUWBS+lq2UEKVQxLkwrT+m9I0a
-         ap2w==
-X-Gm-Message-State: AJIora+BNoWFRR3QTolrNWOGgWh2x1W5f/Hn1Zi51tvymcphGCHdP3uF
-        ona9tB5+KGllUf/lMtgP/JBpdDR8UD9a1jfcMmk=
-X-Google-Smtp-Source: AGRyM1sPd0yc0qBXEGBRSSGH98qQAXbevPA3SWgu7Rg29DcdeRsUnYNbYNOVihlJ4XvBCDoajC5mrLHwD0cfMGzcvsI=
-X-Received: by 2002:a05:6402:4390:b0:42e:b7e:e9ac with SMTP id
- o16-20020a056402439000b0042e0b7ee9acmr30648861edc.97.1655740991082; Mon, 20
- Jun 2022 09:03:11 -0700 (PDT)
+        bh=7UqePF8/+Hm2P7IqihZhJWfNdv8VurIs2DoJU0Nq/ug=;
+        b=iRFj+tiQH5rL6wXx7uP/1HRWs1XaNaM6F+bopWSITfQxOXs0I+b0u+ZafJX1M8RNZ2
+         qXG1CCGQejlUSJ5/wndcbD9PRTknJN01X+Vatlb6/mYrHAjGLj6RU6b4eOuzzpiXUtCm
+         Yz+foTmdjuX0Z+R5PUV108NZov173bXyeGsxp6oG0wUlzjqxo7Nw6qFUYOpT0KMo7gAJ
+         /nYMqdZeG9xUHGCvEASEwZQ+q65QGbr86l6s07bViGiIR5jw4Nxbvw86m9FAE+FjJS6m
+         1VbDiGzHIxXWfxbzK9uJ3/gh/WFPEij9LxJvr08OqnGRsX119PofyfOpp40mtzUKtNTn
+         KFmA==
+X-Gm-Message-State: AJIora+nrEFz6enwqU6B1PkrcPybUdkBXynJqw9+JKR2LIHwxDTW4VVl
+        sKVINYuK1mVlkVg5Ijm6DKmc9ZITPi1NpEOs/hg=
+X-Google-Smtp-Source: AGRyM1vAB1akKJku/tYgE+WIdkNWNY2d0+86sCNsvo9KYRmVgXbSC+Z4rKhkKLeo8rmcO+b4zqeThedxboQH3ilnjik=
+X-Received: by 2002:a17:907:9721:b0:70c:65e7:2aa5 with SMTP id
+ jg33-20020a170907972100b0070c65e72aa5mr21552291ejc.132.1655741336829; Mon, 20
+ Jun 2022 09:08:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220307141955.28040-1-alifer.m@variscite.com>
- <CAHp75Vf=vQd5-PGPu3Pcx9bhKSfhdnYDOSOmZKQZQ+bxVkpmYg@mail.gmail.com> <AM6PR08MB4376058D3FFB4139E9292EE8FFB09@AM6PR08MB4376.eurprd08.prod.outlook.com>
-In-Reply-To: <AM6PR08MB4376058D3FFB4139E9292EE8FFB09@AM6PR08MB4376.eurprd08.prod.outlook.com>
+References: <20220616013747.126051-1-frank@zago.net> <20220616013747.126051-3-frank@zago.net>
+ <YrBLGMD/Gzfv0W6F@hovoldconsulting.com>
+In-Reply-To: <YrBLGMD/Gzfv0W6F@hovoldconsulting.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 20 Jun 2022 18:02:34 +0200
-Message-ID: <CAHp75VdDDhMgQ_oiHGA1m8TQmP+F6neT_KG=UKqsEe9P96HbHw@mail.gmail.com>
-Subject: Re: [PATCH] driver: pca953x: avoid error message when resuming
-To:     Pierluigi Passaro <pierluigi.p@variscite.com>,
-        Wolfram Sang <wsa@kernel.org>
-Cc:     Alifer Willians de Moraes <alifer.m@variscite.com>,
+Date:   Mon, 20 Jun 2022 18:08:19 +0200
+Message-ID: <CAHp75VfWbC2fbKenuzx6LXjUTApcUKyX6gXd-3Pe31cvrbT7kQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] gpio: ch341: add GPIO MFD cell driver for the CH341
+To:     Johan Hovold <johan@kernel.org>
+Cc:     frank zago <frank@zago.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Eran Matityahu <eran.m@variscite.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, USB <linux-usb@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Francesco Ferraro <francesco.f@variscite.com>
+        linux-i2c <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -72,34 +73,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 4:18 PM Pierluigi Passaro
-<pierluigi.p@variscite.com> wrote:
+On Mon, Jun 20, 2022 at 12:26 PM Johan Hovold <johan@kernel.org> wrote:
+> On Wed, Jun 15, 2022 at 08:37:45PM -0500, frank zago wrote:
 
 ...
 
-> > > Avoids the error messages "pca953x 1-0020: failed reading register"
-> > > when resuming from suspend using gpio-key attached to pca9534.
-> > Thanks for your report and fix. My comments below.
-> > First of all, how many of them do you get and why is it a problem?
+> > +     /* Create an URB for handling interrupt */
+> > +     dev->irq_urb = usb_alloc_urb(0, GFP_KERNEL);
+> > +     if (!dev->irq_urb)
+> > +             return dev_err_probe(&pdev->dev, -ENOMEM, "Cannot allocate the int URB\n");
 >
-> The number of occurrences depends on the time required to I2C bus to fully wake-up.
-> It's not a real problem, but the message may lead to think about a real I2C problem.
+> This isn't how dev_err_probe() is used.
 
-Wolfram, do we have any mechanisms that guarantees that I2C traffic is
-not going on a semi-woken up host controller?
+While I agree on the below comment, what does this imply?
 
-Writing this, I'm in doubt this patch is a fix we want. Wouldn't it
-just hide the real issue with some resume ordering?
-
-...
-
-> > > +       int is_in_suspend;
-> > Usually we call it is_suspended or so, check existing code by `git
-> > grep ...`. And it can be boolean.
->
-> Do you mean soomething like in drivers/gpio/gpio-omap.c ?
-
-I believe almost any from the list `git grep -nl -w is_suspended` will suffice.
+> And allocation failures are already logged so just return -ENOMEM here.
 
 -- 
 With Best Regards,
