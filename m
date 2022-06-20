@@ -2,110 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A56D45518E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jun 2022 14:29:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 525CA551CAE
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jun 2022 15:50:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240227AbiFTM3o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jun 2022 08:29:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45850 "EHLO
+        id S245292AbiFTNLG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jun 2022 09:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240064AbiFTM3n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 08:29:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816111E4
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jun 2022 05:29:42 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o3GXE-0006zq-FP; Mon, 20 Jun 2022 14:29:40 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o3GXC-001dd8-4C; Mon, 20 Jun 2022 14:29:39 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o3GXC-00HaSi-Rz; Mon, 20 Jun 2022 14:29:38 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] gpio: grgpio: Fix device removing
-Date:   Mon, 20 Jun 2022 14:29:33 +0200
-Message-Id: <20220620122933.106035-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.36.1
+        with ESMTP id S1344625AbiFTNK2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 09:10:28 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 130A31CFEA;
+        Mon, 20 Jun 2022 06:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655730336; x=1687266336;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZzVSD9qEoT6Yq+FOyrnnfBbkXdS74k0EP3YzW+wwaHs=;
+  b=cKdUwqb927M/u3Ek04PuESB/qbsEFJspcWBZC2D3NCxrvrIWTa84pfDs
+   52Sur0QTQ/2yhmf1PJMvMhXIN99HJ4ASzaDfY4f65+lAB6wVPivS5O/Vu
+   3zbhXYfOT0rR47ONJLe8+bFS1jQV9zY0NP2Vu22idMlHa0ydW2wp/0SvE
+   9jMVDOrgvX49GQx4CsO0p7p5rWZQ2BlJxB1ni6sASHqaY5TOA3tAVDxSm
+   BTrfSJvvClqkVjkKp7yVmDtudjq0ErV0F4v5Bg1zctznVkx5wutuVNPVU
+   bGNDYk3u+kAuJChMakfLWW+vioiyV6mQwsLARFaPDFvK4Fzfbj5t59ccr
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="341569969"
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="341569969"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 06:01:22 -0700
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="833107585"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 06:01:19 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 20 Jun 2022 16:01:17 +0300
+Date:   Mon, 20 Jun 2022 16:01:17 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/7] pinctrl: intel: Embed struct pingroup into struct
+ intel_pingroup
+Message-ID: <YrBvnW/pKj2Rgft/@lahna>
+References: <20220620114439.31491-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1694; h=from:subject; bh=YkQmf+LecKEaaLfapNFDMKh7Yb2jAhw7abjjjZFnFnQ=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBisGgpYK3paFDRxNQc9CApwgWjmUPyxqeu3cfCFpKV 37ttIUKJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYrBoKQAKCRDB/BR4rcrsCey2B/ 9J4bOoSEbZCOf6aVfSljOYW3pHT3E6yMdy8k1E2NQ3ETIcajzGoMf4edDjvZDh7uw+lgpJTy3f5HBH gu4A/UTn0klUsPBCywd87u6QPxwqQurDui1IMd3M767kMwWMNUtiVPU7iet9xMLo/ONcMctIKTAED7 TcoSeQ2foSDha+cuOoMLhv4/jzTm0iSndLPlFvYNtHIoEQN0GZ6iyjrn9OqX50NdqlYhBv/CAs2aus LIL8zCL7iiKKMWUdUPFZKXlXGWKX0O0EuucXVZAjzyXPG2Tsg18XyS8hLh/Azi2zIx72q4Jh0n5nHA GPdipgtTYOceR6+sHNriSrv69P1rLP
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220620114439.31491-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If a platform device's remove callback returns non-zero, the device core
-emits a warning and still removes the device and calls the devm cleanup
-callbacks.
+On Mon, Jun 20, 2022 at 02:44:33PM +0300, Andy Shevchenko wrote:
+> Add a new member to the struct intel_pingroup to cover generic
+> pin control group parameters. The idea is to convert all users
+> (one-by-one) to it and drop old members later on.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-So it's not save to not unregister the gpiochip because on the next request
-to a gpio the driver accesses kfree()'d memory. Also if an irq triggers,
-the freed memory is accessed.
+For the whole series,
 
-Instead rely on the gpio framework to ensure that after gpiochip_remove()
-all gpios are freed and so the corresponding irqs unmapped. (I'm think the
-gpio framework doesn't guarantee that, but that's a bug there and out of
-scope for this gpio driver to fix that.)
-
-This is a preparation for making platform remove callbacks return void.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpio-grgpio.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
-
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index df563616f943..bea0e32c195d 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -434,25 +434,13 @@ static int grgpio_probe(struct platform_device *ofdev)
- static int grgpio_remove(struct platform_device *ofdev)
- {
- 	struct grgpio_priv *priv = platform_get_drvdata(ofdev);
--	int i;
--	int ret = 0;
--
--	if (priv->domain) {
--		for (i = 0; i < GRGPIO_MAX_NGPIO; i++) {
--			if (priv->uirqs[i].refcnt != 0) {
--				ret = -EBUSY;
--				goto out;
--			}
--		}
--	}
- 
- 	gpiochip_remove(&priv->gc);
- 
- 	if (priv->domain)
- 		irq_domain_remove(priv->domain);
- 
--out:
--	return ret;
-+	return 0;
- }
- 
- static const struct of_device_id grgpio_match[] = {
-
-base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
--- 
-2.36.1
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
