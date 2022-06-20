@@ -2,201 +2,289 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2F02552591
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jun 2022 22:14:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B432B5526F4
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 00:31:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344314AbiFTULf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jun 2022 16:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38328 "EHLO
+        id S238210AbiFTWbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jun 2022 18:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344623AbiFTUJa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 16:09:30 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 019D6220D4;
-        Mon, 20 Jun 2022 13:07:41 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id m1so8328310wrb.2;
-        Mon, 20 Jun 2022 13:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8kelxsU1mTvCHb8JyuDiGnwBNKthLdTp6riqPTxASyE=;
-        b=o6bhf9AeZ2+5NqgP4pO+3P9gyNweVr/bGU2k/NUXa6NYXjGakzCObDD7wDkgdnebAg
-         v6HJT2NvVLc4mo3MpTeYh7ui7/s+BGJ7Q4/gnJt/JyyKpgFnZPhBR2Ka+BdipZTmpezs
-         50XXSFPysaMCnC2KyoQqTfJgpwHcP8Qs6csQsoSjKJr7YEOzIlf0AvxEBaBGy51urmg4
-         0Qc9l+ouyuPb6zVKalYja0H/6iGdSRaP0Jx3Ik9CPxUwZcQPoSFsBH2qzIwE8XNgSX1u
-         1SryEGKFSLwPnYG9/aqm/DK+EGcho8O+D/L54CfDLfTFRjDpxwWLjKpGj0GZHfs/pPGX
-         yvQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8kelxsU1mTvCHb8JyuDiGnwBNKthLdTp6riqPTxASyE=;
-        b=NODORLP8gEvs6jwWpB2eRLvVw22NeBxEhGrRL5qMQ7QVptqNAIjIlIPu0xIsg0rKCg
-         aW4NKW3bnx+XaB8mFdK+p8kDo0/s9WfWXf8Tw/c7sIOwovLX2W83VeTUYLuxX9scA1e5
-         vkoiGyk8kyiAStYNJ1ZUCtOl8Lgv7IDvxsQwiB3A/m93B+dhWSJR/EzXCn1jD9xs3phl
-         iHpCaD15618Vv2O4wiqAf+K5bVV3yGvqgtqsazXsBZu4hmvv7zPpsALCQehgEXhA1yDC
-         KIdw73jOkFIC0HptNN3L3LynryHRc4s1s3ODKiYeWgN34dkSNnIECVLIqU/QrV/Aa3hN
-         x5mA==
-X-Gm-Message-State: AJIora8slbMCbWStkhVOEEBLfuujqRR1EtXy8vwMXE/uJAmjpOUxKJ9z
-        T1VuBfxaKfUWwhpAcxErp98=
-X-Google-Smtp-Source: AGRyM1svSmsGihGwSulWHMLA111MOtQXrfsi0glFa3Tcg1QRdKrN9n0oiKBKxxv3eSGlgwCYymRU0Q==
-X-Received: by 2002:a05:6000:1689:b0:218:3fb1:fd30 with SMTP id y9-20020a056000168900b002183fb1fd30mr24704084wrd.302.1655755655073;
-        Mon, 20 Jun 2022 13:07:35 -0700 (PDT)
-Received: from localhost (92.40.169.63.threembb.co.uk. [92.40.169.63])
-        by smtp.gmail.com with ESMTPSA id j6-20020adff006000000b0021b892f4b35sm7152390wro.98.2022.06.20.13.07.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jun 2022 13:07:34 -0700 (PDT)
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     broonie@kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        srinivas.kandagatla@linaro.org, bgoswami@codeaurora.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        cw00.choi@samsung.com, krzysztof.kozlowski@linaro.org,
-        b.zolnierkie@samsung.com, myungjoo.ham@samsung.com,
-        michael@walle.cc, linus.walleij@linaro.org, brgl@bgdev.pl,
-        tglx@linutronix.de, maz@kernel.org, lee.jones@linaro.org,
-        mani@kernel.org, cristian.ciocaltea@gmail.com, wens@csie.org,
-        tharvey@gateworks.com, rjones@gateworks.com,
-        mazziesaccount@gmail.com, orsonzhai@gmail.com,
-        baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        jernej.skrabec@gmail.com, samuel@sholland.org, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        alsa-devel@alsa-project.org
-Subject: [PATCH 49/49] regmap-irq: Remove not_fixed_stride flag
-Date:   Mon, 20 Jun 2022 21:06:44 +0100
-Message-Id: <20220620200644.1961936-50-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
-References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
+        with ESMTP id S236639AbiFTWbO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 18:31:14 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49201CB39;
+        Mon, 20 Jun 2022 15:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655764271; x=1687300271;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Re7rWL4abOLtS+lrprFgG6IQmQ4DOHCKTCHvuEvnm94=;
+  b=CGVf4DsOCw+cQW0hnW6CECZiI8VHSjlPF/BREbANXGxNWzNiHNiQGUbM
+   sXxCckmwOcTyZECuNjmEG6jRP4z5w4cXJdzSwe/U7WFO2YOABOkyCh0xD
+   ZpzOX70J4ZV4JrDmgZ3eS9s/3OtebQtHXG60LJIGx5h8gV8qMmJg6Xmq4
+   MRIaRG0U+3h6aRZtaaWQqRdA04MmnJGIyMQyoVnxm0ApHfj+SXYzJmdKv
+   YmEeQdMDLd3jtDG6Vb/PIwCq+gxAidebv3HdbM4JOgFXvKRw+GIb24hBL
+   PZbOyfjvn5yXA7BRfwY7k8xqwWMuGXoe3mcOcgK38t1NB9SfitZJEtDF0
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10384"; a="259801828"
+X-IronPort-AV: E=Sophos;i="5.92,207,1650956400"; 
+   d="scan'208";a="259801828"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 15:31:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,207,1650956400"; 
+   d="scan'208";a="614530076"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 20 Jun 2022 15:31:09 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o3PvI-000Wkn-PL;
+        Mon, 20 Jun 2022 22:31:08 +0000
+Date:   Tue, 21 Jun 2022 06:30:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org
+Subject: Re: [PATCH v1 1/1] pinctrl: nomadik: Convert drivers to use struct
+ pingroup and PINCTRL_PINGROUP()
+Message-ID: <202206210623.0U4Kh4D3-lkp@intel.com>
+References: <20220620171136.84648-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220620171136.84648-1-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Clean up all the cruft related to not_fixed_stride. The same thing
-can be accomplished with a custom get_irq_reg() callback.
+Hi Andy,
 
-Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
----
- drivers/base/regmap/regmap-irq.c | 41 +++-----------------------------
- include/linux/regmap.h           |  7 ------
- 2 files changed, 3 insertions(+), 45 deletions(-)
+I love your patch! Yet something to improve:
 
-diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
-index acbd6e22b0cd..0c9dd218614a 100644
---- a/drivers/base/regmap/regmap-irq.c
-+++ b/drivers/base/regmap/regmap-irq.c
-@@ -320,15 +320,8 @@ static inline int read_sub_irq_data(struct regmap_irq_chip_data *data,
- 			unsigned int offset = subreg->offset[i];
- 			unsigned int index = offset / map->reg_stride;
- 
--			if (chip->not_fixed_stride)
--				ret = regmap_read(map,
--						chip->status_base + offset,
--						&data->status_buf[b]);
--			else
--				ret = regmap_read(map,
--						chip->status_base + offset,
--						&data->status_buf[index]);
--
-+			ret = regmap_read(map, chip->status_base + offset,
-+					  &data->status_buf[index]);
- 			if (ret)
- 				break;
- 		}
-@@ -380,18 +373,7 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
- 		 * sake of simplicity. and add bulk reads only if needed
- 		 */
- 		for (i = 0; i < chip->num_main_regs; i++) {
--			/*
--			 * For not_fixed_stride, don't use get_irq_reg().
--			 * It would produce an incorrect result.
--			 */
--			if (data->chip->not_fixed_stride)
--				reg = chip->main_status +
--					(i * map->reg_stride *
--					 data->irq_reg_stride);
--			else
--				reg = data->get_irq_reg(data,
--							chip->main_status, i);
--
-+			reg = data->get_irq_reg(data, chip->main_status, i);
- 			ret = regmap_read(map, reg, &data->main_status_buf[i]);
- 			if (ret) {
- 				dev_err(map->dev,
-@@ -561,17 +543,6 @@ unsigned int regmap_irq_get_irq_reg_linear(struct regmap_irq_chip_data *data,
- 	const struct regmap_irq_chip *chip = data->chip;
- 	struct regmap *map = data->map;
- 
--	/*
--	 * NOTE: This is for backward compatibility only and will be removed
--	 * when not_fixed_stride is dropped (it's only used by qcom-pm8008).
--	 */
--	if (chip->not_fixed_stride && chip->sub_reg_offsets) {
--		struct regmap_irq_sub_irq_map *subreg;
--
--		subreg = &chip->sub_reg_offsets[0];
--		return base + subreg->offset[0];
--	}
--
- 	return base + index * (map->reg_stride * chip->irq_reg_stride);
- }
- EXPORT_SYMBOL_GPL(regmap_irq_get_irq_reg_linear);
-@@ -674,12 +645,6 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
- 			return -EINVAL;
- 	}
- 
--	if (chip->not_fixed_stride) {
--		for (i = 0; i < chip->num_regs; i++)
--			if (chip->sub_reg_offsets[i].num_regs != 1)
--				return -EINVAL;
--	}
--
- 	if (irq_base) {
- 		irq_base = irq_alloc_descs(irq_base, 0, chip->num_irqs, 0);
- 		if (irq_base < 0) {
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index be51af0a2425..ecd3682de269 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -1446,9 +1446,6 @@ struct regmap_irq_chip_data;
-  *		     status_base. Should contain num_regs arrays.
-  *		     Can be provided for chips with more complex mapping than
-  *		     1.st bit to 1.st sub-reg, 2.nd bit to 2.nd sub-reg, ...
-- *		     When used with not_fixed_stride, each one-element array
-- *		     member contains offset calculated as address from each
-- *		     peripheral to first peripheral.
-  * @num_main_regs: Number of 'main status' irq registers for chips which have
-  *		   main_status set.
-  *
-@@ -1474,9 +1471,6 @@ struct regmap_irq_chip_data;
-  * @clear_on_unmask: For chips with interrupts cleared on read: read the status
-  *                   registers before unmasking interrupts to clear any bits
-  *                   set when they were masked.
-- * @not_fixed_stride: Used when chip peripherals are not laid out with fixed
-- * 		      stride. Must be used with sub_reg_offsets containing the
-- * 		      offsets to each peripheral.
-  * @status_invert: Inverted status register: cleared bits are active interrupts.
-  * @runtime_pm:  Hold a runtime PM lock on the device when accessing it.
-  *
-@@ -1529,7 +1523,6 @@ struct regmap_irq_chip {
- 	bool runtime_pm:1;
- 	bool type_in_mask:1;
- 	bool clear_on_unmask:1;
--	bool not_fixed_stride:1;
- 	bool status_invert:1;
- 
- 	int num_regs;
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linus/master v5.19-rc2 next-20220617]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-nomadik-Convert-drivers-to-use-struct-pingroup-and-PINCTRL_PINGROUP/20220621-011251
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+config: arm-randconfig-r015-20220619 (https://download.01.org/0day-ci/archive/20220621/202206210623.0U4Kh4D3-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project af6d2a0b6825e71965f3e2701a63c239fa0ad70f)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/b4fae758bbe7d632c6bac2fe8070634f41a7f9bf
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Andy-Shevchenko/pinctrl-nomadik-Convert-drivers-to-use-struct-pingroup-and-PINCTRL_PINGROUP/20220621-011251
+        git checkout b4fae758bbe7d632c6bac2fe8070634f41a7f9bf
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/pinctrl/nomadik/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1529:4: error: incompatible pointer types assigning to 'const struct nmk_pingroup *' from 'const struct pingroup *' [-Werror,-Wincompatible-pointer-types]
+           g = &npct->soc->groups[group].grp;
+             ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1533:54: error: no member named 'name' in 'struct nmk_pingroup'
+           dev_dbg(npct->dev, "enable group %s, %u pins\n", g->name, g->npins);
+                                                            ~  ^
+   include/linux/dev_printk.h:163:47: note: expanded from macro 'dev_dbg'
+                   dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
+                                                               ^~~~~~~~~~~
+   include/linux/dev_printk.h:129:34: note: expanded from macro 'dev_printk'
+                   _dev_printk(level, dev, fmt, ##__VA_ARGS__);            \
+                                                  ^~~~~~~~~~~
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1533:63: error: no member named 'npins' in 'struct nmk_pingroup'
+           dev_dbg(npct->dev, "enable group %s, %u pins\n", g->name, g->npins);
+                                                                     ~  ^
+   include/linux/dev_printk.h:163:47: note: expanded from macro 'dev_dbg'
+                   dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
+                                                               ^~~~~~~~~~~
+   include/linux/dev_printk.h:129:34: note: expanded from macro 'dev_printk'
+                   _dev_printk(level, dev, fmt, ##__VA_ARGS__);            \
+                                                  ^~~~~~~~~~~
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1568:22: error: no member named 'npins' in 'struct nmk_pingroup'
+                   for (i = 0; i < g->npins; i++)
+                                   ~  ^
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1569:12: error: no member named 'pins' in 'struct nmk_pingroup'
+                           slpm[g->pins[i] / NMK_GPIO_PER_CHIP] &= ~BIT(g->pins[i]);
+                                ~  ^
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1569:52: error: no member named 'pins' in 'struct nmk_pingroup'
+                           slpm[g->pins[i] / NMK_GPIO_PER_CHIP] &= ~BIT(g->pins[i]);
+                                                                        ~  ^
+   include/vdso/bits.h:7:30: note: expanded from macro 'BIT'
+   #define BIT(nr)                 (UL(1) << (nr))
+                                              ^~
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1573:21: error: no member named 'npins' in 'struct nmk_pingroup'
+           for (i = 0; i < g->npins; i++) {
+                           ~  ^
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1577:40: error: no member named 'pins' in 'struct nmk_pingroup'
+                   nmk_chip = find_nmk_gpio_from_pin(g->pins[i]);
+                                                     ~  ^
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1581:8: error: no member named 'pins' in 'struct nmk_pingroup'
+                                   g->pins[i], g->name, i);
+                                   ~  ^
+   include/linux/dev_printk.h:144:65: note: expanded from macro 'dev_err'
+           dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+                                                                          ^~~~~~~~~~~
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+                   _p_func(dev, fmt, ##__VA_ARGS__);                       \
+                                       ^~~~~~~~~~~
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1581:20: error: no member named 'name' in 'struct nmk_pingroup'
+                                   g->pins[i], g->name, i);
+                                               ~  ^
+   include/linux/dev_printk.h:144:65: note: expanded from macro 'dev_err'
+           dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+                                                                          ^~~~~~~~~~~
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+                   _p_func(dev, fmt, ##__VA_ARGS__);                       \
+                                       ^~~~~~~~~~~
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1584:62: error: no member named 'pins' in 'struct nmk_pingroup'
+                   dev_dbg(npct->dev, "setting pin %d to altsetting %d\n", g->pins[i], g->altsetting);
+                                                                           ~  ^
+   include/linux/dev_printk.h:163:47: note: expanded from macro 'dev_dbg'
+                   dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
+                                                               ^~~~~~~~~~~
+   include/linux/dev_printk.h:129:34: note: expanded from macro 'dev_printk'
+                   _dev_printk(level, dev, fmt, ##__VA_ARGS__);            \
+                                                  ^~~~~~~~~~~
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1587:12: error: no member named 'pins' in 'struct nmk_pingroup'
+                   bit = g->pins[i] % NMK_GPIO_PER_CHIP;
+                         ~  ^
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1610:37: error: no member named 'pins' in 'struct nmk_pingroup'
+                           nmk_prcm_altcx_set_mode(npct, g->pins[i],
+                                                         ~  ^
+   13 errors generated.
+
+
+vim +1529 drivers/pinctrl/nomadik/pinctrl-nomadik.c
+
+  1517	
+  1518	static int nmk_pmx_set(struct pinctrl_dev *pctldev, unsigned function,
+  1519			       unsigned group)
+  1520	{
+  1521		struct nmk_pinctrl *npct = pinctrl_dev_get_drvdata(pctldev);
+  1522		const struct nmk_pingroup *g;
+  1523		static unsigned int slpm[NUM_BANKS];
+  1524		unsigned long flags = 0;
+  1525		bool glitch;
+  1526		int ret = -EINVAL;
+  1527		int i;
+  1528	
+> 1529		g = &npct->soc->groups[group].grp;
+  1530		if (g->altsetting < 0)
+  1531			return -EINVAL;
+  1532	
+> 1533		dev_dbg(npct->dev, "enable group %s, %u pins\n", g->name, g->npins);
+  1534	
+  1535		/*
+  1536		 * If we're setting altfunc C by setting both AFSLA and AFSLB to 1,
+  1537		 * we may pass through an undesired state. In this case we take
+  1538		 * some extra care.
+  1539		 *
+  1540		 * Safe sequence used to switch IOs between GPIO and Alternate-C mode:
+  1541		 *  - Save SLPM registers (since we have a shadow register in the
+  1542		 *    nmk_chip we're using that as backup)
+  1543		 *  - Set SLPM=0 for the IOs you want to switch and others to 1
+  1544		 *  - Configure the GPIO registers for the IOs that are being switched
+  1545		 *  - Set IOFORCE=1
+  1546		 *  - Modify the AFLSA/B registers for the IOs that are being switched
+  1547		 *  - Set IOFORCE=0
+  1548		 *  - Restore SLPM registers
+  1549		 *  - Any spurious wake up event during switch sequence to be ignored
+  1550		 *    and cleared
+  1551		 *
+  1552		 * We REALLY need to save ALL slpm registers, because the external
+  1553		 * IOFORCE will switch *all* ports to their sleepmode setting to as
+  1554		 * to avoid glitches. (Not just one port!)
+  1555		 */
+  1556		glitch = ((g->altsetting & NMK_GPIO_ALT_C) == NMK_GPIO_ALT_C);
+  1557	
+  1558		if (glitch) {
+  1559			spin_lock_irqsave(&nmk_gpio_slpm_lock, flags);
+  1560	
+  1561			/* Initially don't put any pins to sleep when switching */
+  1562			memset(slpm, 0xff, sizeof(slpm));
+  1563	
+  1564			/*
+  1565			 * Then mask the pins that need to be sleeping now when we're
+  1566			 * switching to the ALT C function.
+  1567			 */
+  1568			for (i = 0; i < g->npins; i++)
+> 1569				slpm[g->pins[i] / NMK_GPIO_PER_CHIP] &= ~BIT(g->pins[i]);
+  1570			nmk_gpio_glitch_slpm_init(slpm);
+  1571		}
+  1572	
+  1573		for (i = 0; i < g->npins; i++) {
+  1574			struct nmk_gpio_chip *nmk_chip;
+  1575			unsigned bit;
+  1576	
+  1577			nmk_chip = find_nmk_gpio_from_pin(g->pins[i]);
+  1578			if (!nmk_chip) {
+  1579				dev_err(npct->dev,
+  1580					"invalid pin offset %d in group %s at index %d\n",
+  1581					g->pins[i], g->name, i);
+  1582				goto out_glitch;
+  1583			}
+  1584			dev_dbg(npct->dev, "setting pin %d to altsetting %d\n", g->pins[i], g->altsetting);
+  1585	
+  1586			clk_enable(nmk_chip->clk);
+  1587			bit = g->pins[i] % NMK_GPIO_PER_CHIP;
+  1588			/*
+  1589			 * If the pin is switching to altfunc, and there was an
+  1590			 * interrupt installed on it which has been lazy disabled,
+  1591			 * actually mask the interrupt to prevent spurious interrupts
+  1592			 * that would occur while the pin is under control of the
+  1593			 * peripheral. Only SKE does this.
+  1594			 */
+  1595			nmk_gpio_disable_lazy_irq(nmk_chip, bit);
+  1596	
+  1597			__nmk_gpio_set_mode_safe(nmk_chip, bit,
+  1598				(g->altsetting & NMK_GPIO_ALT_C), glitch);
+  1599			clk_disable(nmk_chip->clk);
+  1600	
+  1601			/*
+  1602			 * Call PRCM GPIOCR config function in case ALTC
+  1603			 * has been selected:
+  1604			 * - If selection is a ALTCx, some bits in PRCM GPIOCR registers
+  1605			 *   must be set.
+  1606			 * - If selection is pure ALTC and previous selection was ALTCx,
+  1607			 *   then some bits in PRCM GPIOCR registers must be cleared.
+  1608			 */
+  1609			if ((g->altsetting & NMK_GPIO_ALT_C) == NMK_GPIO_ALT_C)
+  1610				nmk_prcm_altcx_set_mode(npct, g->pins[i],
+  1611					g->altsetting >> NMK_GPIO_ALT_CX_SHIFT);
+  1612		}
+  1613	
+  1614		/* When all pins are successfully reconfigured we get here */
+  1615		ret = 0;
+  1616	
+  1617	out_glitch:
+  1618		if (glitch) {
+  1619			nmk_gpio_glitch_slpm_restore(slpm);
+  1620			spin_unlock_irqrestore(&nmk_gpio_slpm_lock, flags);
+  1621		}
+  1622	
+  1623		return ret;
+  1624	}
+  1625	
+
 -- 
-2.35.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
