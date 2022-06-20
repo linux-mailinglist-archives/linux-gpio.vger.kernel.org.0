@@ -2,67 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13E745521DF
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jun 2022 18:09:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A49552209
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jun 2022 18:14:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242206AbiFTQI7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jun 2022 12:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
+        id S244275AbiFTQOA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jun 2022 12:14:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiFTQI7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 12:08:59 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B971F2F4;
-        Mon, 20 Jun 2022 09:08:58 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id h23so22042147ejj.12;
-        Mon, 20 Jun 2022 09:08:58 -0700 (PDT)
+        with ESMTP id S244441AbiFTQN6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 12:13:58 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A9020F62
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jun 2022 09:13:58 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id cf14so6031526edb.8
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jun 2022 09:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7UqePF8/+Hm2P7IqihZhJWfNdv8VurIs2DoJU0Nq/ug=;
-        b=gdiuOE4+sAK5ES+HTqlkH6Cvtnoa7ihSsTn1ww3qCwEw6uIoQ9mUTBdui5+3b7gi09
-         +rfa9fZ4L02hJzLOhWXgTH0Qwzu9VoxoyFelAqMdISKvUekTKUXfUmEUggZZrUsApD86
-         4xC6i4iMmzfPmTsZXUw0NPjjiYakpntnDZh2BJbrCOldiHGOJAyrr2OoZg5whjPJKKkA
-         aAISw3j5iCY4NWCiZScodSRVhPRvufdRc23n/4ch3+ts7pz5grQadriMuYBZXYGpo+k3
-         mkKtMf3OWQJddP6/5/qrAVYEVRHoCY+E8GEv+j0WG52iwwiyxzNBf8GQqytQPJv4cRaH
-         sPpA==
+         :cc:content-transfer-encoding;
+        bh=ty8awprqai0PnsSCq09qPzo0eR34m1gtjsQlMZvrqrI=;
+        b=e61fj//1r/dHzRAdugX6C98CZ5+UMrG2yhgAj4xK+x83N5PHLzTM+ItVwqfS0KqoYH
+         mJddrsYXYKmsCDdNXWSPm8QWRDQg78ecljipxV4V4q1akNBHQBmYs0q4+/f7laPmolp0
+         0zJP3Tldn/tz4mldAixymI9Rq1HdPStRd/YL7fdM84bjFAmhR5JbYH8TDHu3Fj/gc7vQ
+         vhpt8Jarq4mqrZtZ8/gkcOUrbNRE1o++Mwm1lc241TpinW8wKq8D7QwO7PR1X4gYQT8G
+         UmwfnM8DgF6cEA0fWbMGqXeWlE2Mhn7wbeJccW9PzorbXDkMXrstSAMivlJabM5tquXa
+         R+zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7UqePF8/+Hm2P7IqihZhJWfNdv8VurIs2DoJU0Nq/ug=;
-        b=iRFj+tiQH5rL6wXx7uP/1HRWs1XaNaM6F+bopWSITfQxOXs0I+b0u+ZafJX1M8RNZ2
-         qXG1CCGQejlUSJ5/wndcbD9PRTknJN01X+Vatlb6/mYrHAjGLj6RU6b4eOuzzpiXUtCm
-         Yz+foTmdjuX0Z+R5PUV108NZov173bXyeGsxp6oG0wUlzjqxo7Nw6qFUYOpT0KMo7gAJ
-         /nYMqdZeG9xUHGCvEASEwZQ+q65QGbr86l6s07bViGiIR5jw4Nxbvw86m9FAE+FjJS6m
-         1VbDiGzHIxXWfxbzK9uJ3/gh/WFPEij9LxJvr08OqnGRsX119PofyfOpp40mtzUKtNTn
-         KFmA==
-X-Gm-Message-State: AJIora+nrEFz6enwqU6B1PkrcPybUdkBXynJqw9+JKR2LIHwxDTW4VVl
-        sKVINYuK1mVlkVg5Ijm6DKmc9ZITPi1NpEOs/hg=
-X-Google-Smtp-Source: AGRyM1vAB1akKJku/tYgE+WIdkNWNY2d0+86sCNsvo9KYRmVgXbSC+Z4rKhkKLeo8rmcO+b4zqeThedxboQH3ilnjik=
-X-Received: by 2002:a17:907:9721:b0:70c:65e7:2aa5 with SMTP id
- jg33-20020a170907972100b0070c65e72aa5mr21552291ejc.132.1655741336829; Mon, 20
- Jun 2022 09:08:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ty8awprqai0PnsSCq09qPzo0eR34m1gtjsQlMZvrqrI=;
+        b=wHYplfl4aJtwSsrsb+fKjIVpSsgEn7SpUdUSgAIzDXJSnDrvFnFI6PK9aXZoQcoFZ8
+         m9hYSCJi820v/8O9apkpkq687ou39QRAgOMGQjANINU5/DyMrwcprXkAzX1L3TAzGvuG
+         B39kyNx8gtSG+Pbe0jclL8urfNG1LOcNngFaG+M/4+P6nwlil3Q2SivUVgZiOHKcCIJL
+         diZn2PewSxCzr2kL9qFGGHsG10BODU9S1TOsiCgJy+uxF8G6NAwtBtHTAizUbaTjMZAX
+         wWnwQglGNNslcAwZHb7E9zYBykZRb+Jp2YOCxDLwGTSpmb8iEErmBKZTmWN0MYiK9dBD
+         c5kQ==
+X-Gm-Message-State: AJIora8mbkGzCaQysDtMFW09OCEzjxwdWrMrYLj/N7YnZNj1PJDDlvdk
+        sMFECaCCM2WrTSjjvl5wKLFiE/wHZ9P97dCIyg8=
+X-Google-Smtp-Source: AGRyM1tKax+yCR9s4kEdqIjfnO3iTGMs4HJYVd3k1yckw0alT8WthWsVVGXVADyPW1eHBAizSsEE43kGj0X9re0jNyo=
+X-Received: by 2002:a50:9f6a:0:b0:435:5804:e07 with SMTP id
+ b97-20020a509f6a000000b0043558040e07mr25510117edf.178.1655741637680; Mon, 20
+ Jun 2022 09:13:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220616013747.126051-1-frank@zago.net> <20220616013747.126051-3-frank@zago.net>
- <YrBLGMD/Gzfv0W6F@hovoldconsulting.com>
-In-Reply-To: <YrBLGMD/Gzfv0W6F@hovoldconsulting.com>
+References: <20220620122933.106035-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20220620122933.106035-1-u.kleine-koenig@pengutronix.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 20 Jun 2022 18:08:19 +0200
-Message-ID: <CAHp75VfWbC2fbKenuzx6LXjUTApcUKyX6gXd-3Pe31cvrbT7kQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] gpio: ch341: add GPIO MFD cell driver for the CH341
-To:     Johan Hovold <johan@kernel.org>
-Cc:     frank zago <frank@zago.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>, USB <linux-usb@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Mon, 20 Jun 2022 18:13:21 +0200
+Message-ID: <CAHp75VcjBny6oXpcceoC=w6z0O=zAFA18HgAWV=ZWqV=93r3xQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: grgpio: Fix device removing
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -73,22 +69,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 12:26 PM Johan Hovold <johan@kernel.org> wrote:
-> On Wed, Jun 15, 2022 at 08:37:45PM -0500, frank zago wrote:
+On Mon, Jun 20, 2022 at 2:33 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> If a platform device's remove callback returns non-zero, the device core
+> emits a warning and still removes the device and calls the devm cleanup
+> callbacks.
+>
+> So it's not save to not unregister the gpiochip because on the next reque=
+st
+
+safe
+
+> to a gpio the driver accesses kfree()'d memory. Also if an irq triggers,
+
+GPIO
+IRQ
+
+> the freed memory is accessed.
+>
+> Instead rely on the gpio framework to ensure that after gpiochip_remove()
+
+GPIO
+
+> all gpios are freed and so the corresponding irqs unmapped. (I'm think th=
+e
+
+GPIOs
+IRQs
+are unmapped
+
+I think
+
+> gpio framework doesn't guarantee that, but that's a bug there and out of
+
+GPIO
+
+> scope for this gpio driver to fix that.)
+
+GPIO
+
+> This is a preparation for making platform remove callbacks return void.
+
 
 ...
 
-> > +     /* Create an URB for handling interrupt */
-> > +     dev->irq_urb = usb_alloc_urb(0, GFP_KERNEL);
-> > +     if (!dev->irq_urb)
-> > +             return dev_err_probe(&pdev->dev, -ENOMEM, "Cannot allocate the int URB\n");
->
-> This isn't how dev_err_probe() is used.
+What a bug are you seeing in the GPIO library? IIRC for IRQ over GPIO
+the GPIO holds the module reference count as well as GPIO device
+reference count. Am I wrong?
 
-While I agree on the below comment, what does this imply?
-
-> And allocation failures are already logged so just return -ENOMEM here.
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
