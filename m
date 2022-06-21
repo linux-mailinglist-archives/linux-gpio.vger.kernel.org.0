@@ -2,105 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD0E7552B02
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 08:35:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62D44552B0E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 08:37:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345333AbiFUGfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 02:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
+        id S1344171AbiFUGhM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 02:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235008AbiFUGfi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 02:35:38 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DF115A07
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jun 2022 23:35:36 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o3XU6-0002Vh-12; Tue, 21 Jun 2022 08:35:34 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o3XU2-001mg1-7e; Tue, 21 Jun 2022 08:35:31 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o3XU2-0009Nd-Uv; Tue, 21 Jun 2022 08:35:30 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de
-Subject: [PATCH] gpio: brcmstb: Make .remove() obviously always return 0
-Date:   Tue, 21 Jun 2022 08:35:24 +0200
-Message-Id: <20220621063524.146604-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.36.1
+        with ESMTP id S242106AbiFUGhL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 02:37:11 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D264193F8;
+        Mon, 20 Jun 2022 23:37:10 -0700 (PDT)
+Received: by mail-qk1-f177.google.com with SMTP id o73so9362814qke.7;
+        Mon, 20 Jun 2022 23:37:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VuRgP6aC8spFcsTB2boTGraadu1JcWeDwC1bw6V+Hq8=;
+        b=eScEb7J2K97futC1gHOC2IUE2viGEnKmu+eTL216uZsOscmTmYHJK3daPSXuv8aFXE
+         x02jg1wP7eLvA2y5Egu4LB5QvOw6dXN9vRAxuTrxFAmkXNS7zpAK8KBdYaCrQqw1Um89
+         ZOGj7NMtejK7+Y7nN+xD2aWd0oGg19uFjab4CfOCOymSZw+cVSlM//Y5r86cMH0nIzhU
+         zcsBrM6BNOKNFIYeV1ghHE6AVGX7WtRbkkjfNLkOY7dPdaBKmJKKXNwq1KjpvRsgI0Lo
+         toicmkgJJ6BWghLDTzuMrLzxLsZUfe5WFCU558s1OnX8kaMWojdQ7ZsUuA8uTcNmY4r4
+         5ijA==
+X-Gm-Message-State: AJIora+blaPAOcrqOwA7QXTWX18kEwTj6NJCqxhyzwxxgtKeB+rKCc7W
+        m8hPT6WeUZmLAGThZJM96nsXrXQHieIEkg==
+X-Google-Smtp-Source: AGRyM1vhQsEc5zLCbC5j9tsGuaWyRpcfDwdR/mF3pVxce/+PWpSXUVR4paug2rjtDF7gsppzYvvqDQ==
+X-Received: by 2002:a05:620a:4107:b0:6a6:e13e:5b84 with SMTP id j7-20020a05620a410700b006a6e13e5b84mr19671996qko.24.1655793429606;
+        Mon, 20 Jun 2022 23:37:09 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id d7-20020ac86687000000b00304e47b9602sm11778102qtp.9.2022.06.20.23.37.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jun 2022 23:37:09 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-3177f4ce3e2so97050097b3.5;
+        Mon, 20 Jun 2022 23:37:09 -0700 (PDT)
+X-Received: by 2002:a81:7c1:0:b0:317:897d:ea90 with SMTP id
+ 184-20020a8107c1000000b00317897dea90mr5012151ywh.283.1655793428952; Mon, 20
+ Jun 2022 23:37:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1453; h=from:subject; bh=elYeY8lZw+FFM0NfPKFwTcZT0AbtnW5R5kafvn9u/Gg=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBisWappUPz26kDSXoAw/xCZQkwS1kAntSBW6+lwYCr 5kYMdiaJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYrFmqQAKCRDB/BR4rcrsCYewB/ sHSlcpcpRUbzQf+85ZwsBxRSV72r4AXaNQNiFoXBh6m5J83EAjaicVmKBh1puYFVjslKMVUq7UzeBC PW8FheSHOdB3IK7UvkTvoLb7YZxhAm9yPny0lm3WQaYpyemGuB1KV1e1m/msB4npHhj+CTmQTbleEy nfNOOY835Wp/kMn6CwVrvoafKmmWmywXZRO8WgLdLSbfCmCPQ+9Ody4mc7UEgNgOnH/yT8a/Yynkof QP55righgK3On42agR50gk1QVuMdjmEZDe5hF/R5evdsjav7m3B5yjXFWgJeJy+Kplzzkd1Z3YkWo/ SmuJkMirEePs3zjCQkX7KInlb5ANra
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com>
+ <87tu8nkcp7.wl-kuninori.morimoto.gx@renesas.com> <CAMuHMdVV6z-nCTvJyG_TV3Dj65QU8K=x85JAKDStQVnP3edO3w@mail.gmail.com>
+ <87czf2ub6f.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87czf2ub6f.wl-kuninori.morimoto.gx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 Jun 2022 08:36:57 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWGbDXCypVNWDU0mC29K0AuXvwL+zzCtvr5Ngxtj1n08w@mail.gmail.com>
+Message-ID: <CAMuHMdWGbDXCypVNWDU0mC29K0AuXvwL+zzCtvr5Ngxtj1n08w@mail.gmail.com>
+Subject: Re: [PATCH v3 07/21] pinctrl: renesas: r8a779g0: remove not used
+ MOD_SELx definitions
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-priv cannot be NULL because brcmstb_gpio_probe() calls
-platform_set_drvdata() with a non-NULL argument, so the check for !priv can
-be dropped.
+Hi Morimoto-san,
 
-Also remove the variable ret that is only used to hide a bit that in the
-end zero is returned.
+On Tue, Jun 21, 2022 at 2:12 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> > > Current V4H PFC code has many MOD_SELx definitions with all 0.
+> > > But these have no meaning. This patch removes these, but keep
+> > > its definition to avoid unreadable PINMUX_MOD_SELS.
+> >
+> > You can just replace them with blanks, keeping the structure of the
+> > PINMUX_MOD_SELS table alive.
+>
+> Sorry, but I don't understand this. Maybe "blanks" and "alive".
 
-This is a preparation for making platform remove callbacks return void.
+blanks = TABs, i.e. a hole in the table structure
+perhaps s/alive/intact/?
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpio-brcmstb.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+> Do you mean
+> 1) "remove unnecessary MOD_SELx, and update PINMUX_MOD_SELS table"
+>    (= need update on v4)
+>
+> or
+>
+> 2) "use NULL #define, and keep PINMUX_MOD_SELS" (= no update on v4)
 
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index 6b7439b44690..f620f0712134 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -385,12 +385,7 @@ static int brcmstb_gpio_remove(struct platform_device *pdev)
- {
- 	struct brcmstb_gpio_priv *priv = platform_get_drvdata(pdev);
- 	struct brcmstb_gpio_bank *bank;
--	int offset, ret = 0, virq;
--
--	if (!priv) {
--		dev_err(&pdev->dev, "called %s without drvdata!\n", __func__);
--		return -EFAULT;
--	}
-+	int offset, virq;
- 
- 	if (priv->parent_irq > 0)
- 		irq_set_chained_handler_and_data(priv->parent_irq, NULL, NULL);
-@@ -411,7 +406,7 @@ static int brcmstb_gpio_remove(struct platform_device *pdev)
- 	list_for_each_entry(bank, &priv->bank_list, node)
- 		gpiochip_remove(&bank->gc);
- 
--	return ret;
-+	return 0;
- }
- 
- static int brcmstb_gpio_of_xlate(struct gpio_chip *gc,
+I meant 1).
 
-base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
--- 
-2.36.1
+E.g.
 
+-#define MOD_SEL7_1
+
+and
+
+-MOD_SEL4_1             MOD_SEL5_1              MOD_SEL6_1
+ MOD_SEL7_1              MOD_SEL8_1      \
++MOD_SEL4_1             MOD_SEL5_1              MOD_SEL6_1
+                         MOD_SEL8_1      \
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
