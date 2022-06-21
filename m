@@ -2,163 +2,543 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA250552F98
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 12:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35B325530DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 13:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346086AbiFUKVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 06:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54404 "EHLO
+        id S1349413AbiFUL3N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 07:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbiFUKVf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 06:21:35 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2067.outbound.protection.outlook.com [40.107.237.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B5228733;
-        Tue, 21 Jun 2022 03:21:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aPMBtHqPeFzVCeQH0YfIS0w9egf8RqRI2hdjr2wtbtYPlTxVDqyR5O/6TVaoO4hgu/oEdnK7h05NTZl4SP1ZXeX8ftzMH/vUZfm7LoRU1Ru3Eo+mE/m/ixBcBemPPVpfXoRCSEVbwtQBZ5a+ZvIN9El7WDlxnmZSL7KHANK0YJ5Vqo9eaGvpIZk/nHdFmq+TehXoDxtNdbVdVoOnEJV+iXvN/R05sBMzEwN/B6LAaRl8bwF9NTtKzEUnMIAL8l0mHhWgxUGaewUFbTKEwOzTstNCPNqf7154KMjbTsM5eD1/suK8QZ5SHGOxQxV6L2sekSv/Effc3MQwm5WqpylICw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=91BOQ61aoS06OnxSM7W4cwaypow+WtqgdPfmXHUfKpI=;
- b=b+7XuTikMkVP0nLosnCWCgO2OcxK8jQAexVAHg4Nk1xJGlJpbgfvE9HJAse0KJr7m+/M89HjIJMwWICPo/ca+zNh2Z076x9K967KX6oZgYK2F5rai+Sfw3wTPZTSwU5FERArUeTpqgg/4dVhQVntSz8fE5FgO3vUL2gL2ucf5Yq9/EFk6f5s0mSHdnlIdOET8FP6wdcN6k2y6qFSsQuYGUpFlkUL8RB9mSOKMsKsLYlnjipwwzdN/IG9Iu9THYnLJg3uY37Jsve9BM4K6rJZQw5TQAKkeb5FPoCkRc45e2gijhc4ubBwuNzYP8hKRjZIPrt7qxD05VByC29IDOPyiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91BOQ61aoS06OnxSM7W4cwaypow+WtqgdPfmXHUfKpI=;
- b=g86HBhYKw+gF2LPzkcBF9FbGv+/ETgsBfqkFpDmjJwVA1NxsE8F9h7jiaMrmE/k4uLZvD+NEEHLg2cwda56jvEafa3KKCI9e2VOh9xLCvsa42k+UNV52UR+zdHZHNEZXGIB29HEGUQkQx75QqXb35SR4e8+9GvzxusntgO+eBXc=
-Received: from BY5PR12MB4902.namprd12.prod.outlook.com (2603:10b6:a03:1dd::9)
- by MN2PR12MB2861.namprd12.prod.outlook.com (2603:10b6:208:af::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.17; Tue, 21 Jun
- 2022 10:21:30 +0000
-Received: from BY5PR12MB4902.namprd12.prod.outlook.com
- ([fe80::59c7:d947:6370:7de6]) by BY5PR12MB4902.namprd12.prod.outlook.com
- ([fe80::59c7:d947:6370:7de6%7]) with mapi id 15.20.5353.022; Tue, 21 Jun 2022
- 10:21:30 +0000
-From:   "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>
-To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-CC:     "Simek, Michal" <michal.simek@amd.com>,
-        "Neeli, Srinivas" <srinivas.neeli@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>
-Subject: RE: [PATCH v2] gpio: xilinx: add missing blank line after
- declarations
-Thread-Topic: [PATCH v2] gpio: xilinx: add missing blank line after
- declarations
-Thread-Index: AQHYXhPga0uHdz+LKEm62rkF/51F2K1Z9MUg
-Date:   Tue, 21 Jun 2022 10:21:30 +0000
-Message-ID: <BY5PR12MB49023428EF7364CF9EFDD80481B39@BY5PR12MB4902.namprd12.prod.outlook.com>
-References: <20220502110040.12225-1-shubhrajyoti.datta@xilinx.com>
-In-Reply-To: <20220502110040.12225-1-shubhrajyoti.datta@xilinx.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Enabled=true;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SetDate=2022-06-21T10:21:25Z;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Method=Standard;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Name=General;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ActionId=24a3f90b-e941-4ee8-b795-1406f13f2bf6;
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ContentBits=1
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5c55828e-c61c-47ca-1231-08da536fcec9
-x-ms-traffictypediagnostic: MN2PR12MB2861:EE_
-x-microsoft-antispam-prvs: <MN2PR12MB2861A5338ED0327E0A10EE6681B39@MN2PR12MB2861.namprd12.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DqS6fxGVqAcvyfBWhL/rs24zSYkf4lALJY8AKad42zmCPge4O39tKBRNm4no17yw1lyBf6qS+NbP9AdZ/1/bZuidq92Z5ha3K56ZMRJlxc4oVzd8UH9MYLfJac/nDMePAp2MU/Crin+l4FgZ086cNZXsX4VZVaggCdUnrGt0201rFIRk4y9GMK3ZPuu2a4Ooktt5FOJls1T22LWzHDhsO6NNdMkCqPewg49+/v307eXhqZPGRAkqWOor2NZo1I82ryURTrnzOyRQNvWKGDq2lR4PRsKopTHukZgVax2rwK1xo1oVz/kdVC4/rNANfg5HXz4ANWw34RNpbS9q/lPjLgRZaGfEOCaRrC2/mw5o4Dp+scDh5CHAzIrU36haqpT3ofgSJWcJ1V1JWYZh216cCu5knFwkJhDX5WsNR2adEi0OHGslFHPpabC8yurtWtvWLQlbG9GEMFfalWuNFQHu6Yv/lRgd91zlzpbjH9zRhCLoYt4HCD/29EjXtNmqds8qlnIqB5E65PGkGeCiXeukOAxqAMnyH1x3jIqJ2JaYS96WIRl+eoGLcW8zrTkh2+JbOCjKPunRDPtaTA6S0GGly1n/C2AwH2vqYMDSWlhk8sgGX/LJkMnCSHng7X7D9ZQQihAZF8GHAm/II9bvpmKiSM+KxomICY2YntdbxpGgU3rHeGBGq2zl96YrYSq6BFgdExnYGkoeSEcWe9J1j3O8p961FKpGvSfxFgX8fXSHwV5tcUKeLyew4U0RW7Di0kc9
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4902.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(4326008)(66476007)(316002)(64756008)(450100002)(186003)(107886003)(66446008)(86362001)(478600001)(76116006)(83380400001)(66946007)(52536014)(2906002)(66556008)(38070700005)(4744005)(5660300002)(38100700002)(110136005)(41300700001)(9686003)(122000001)(8676002)(71200400001)(26005)(8936002)(6506007)(53546011)(33656002)(7696005)(54906003)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?D+bV8bIxu1xD6cHM+9Ju9o9q2gYKzbvcaU6JqYE6yulgsHH4e5OU14UY+Dmx?=
- =?us-ascii?Q?AMzUl4SSjCs6EaBdk8/maGl1RNKQ2/VzFIl94j2elzHs1XQLL7gClKKEsfVl?=
- =?us-ascii?Q?fcua3EkNdbUZf+TwCO6rvOYyuqiC4RffuJtiL1LvnrrtE++qxdgmWB+4CaaR?=
- =?us-ascii?Q?mSVXAN4d/pc0uFchxeDg2D352Q/9VeSugJWRzUdUmQHA7cgr22bDdbstXOPr?=
- =?us-ascii?Q?2g0rWOwk2XenzuvvoM13M2gp1xbOCHfZXKHLz2vZwr8B4wYBQ0SQ5RVHH8Kl?=
- =?us-ascii?Q?Ld2BH4RrDPQES+DMDalcK9F82DxqzIWPgemT/S5J7ayvjPgJMby06DtDzydX?=
- =?us-ascii?Q?4Y3Xh5j5SWOgNZDAdtwa/ib8qi7jBL2eaECgoX0hmxbTVIE7mQvGVPesuy/N?=
- =?us-ascii?Q?ffVJXj3B15iptdwYpqtrEf0UWMchHhw7sT+yM9h+iD1fbT5eOZ6nt+fmpRoC?=
- =?us-ascii?Q?684bjy+alChtex6MSUBb10A2qEHAPjfquaMyfyeJMMTU9FNPajsA8M5c5LhE?=
- =?us-ascii?Q?IY4D4okO/CKccZpAsFMz+u1x2NDDiMgfZHzXLSC0s/Phg64JhgH8ltcnwaKq?=
- =?us-ascii?Q?V3YFKQmU2eIkj8zGz2pFJd2dmGBHafiN0/+7WYSPp+xPmaVblS3aC2kjRodM?=
- =?us-ascii?Q?ZODEDki3pSC36tcpEVf37lPTXIvLYuzXbgGVlq5g2DPrJBsWk5s8Eo1bfaY8?=
- =?us-ascii?Q?YtPMGp0btK9C26z+D54wk+elUEA5i52EQncGRdVk0lTkzgohgl1E7OkLJHNy?=
- =?us-ascii?Q?3csYh1y5IJgHgyDWkJVBUKFWkYOTTj7fOQjsEU/5A6IFzL99V7RvmIXmCY9i?=
- =?us-ascii?Q?cBhnc3wSJpUiBzIUoV6AwUzXKDGpeuG8eDp39orKXtauA/pPFSxvJYm1W5GX?=
- =?us-ascii?Q?YjYaSALYwJxi6AJTgvBYmOu7CFF53ZXqEmFTwcWyOyyLpAVxkx2VGJKzxbYy?=
- =?us-ascii?Q?2NK7yghYKwvLZcHlcN95xcVWN42WMefolTbApRxwjAtems5IFCWVEokJmKrs?=
- =?us-ascii?Q?Sqaytbg3QgsvdEk/t5XpJNnPnJHobtBfh13i0d6x8uw4FfSHkR2TVz7m2UCd?=
- =?us-ascii?Q?jinxl4NpyAOVHAXPcuSMDO64Qoa9jIJqJUqPznboCzzJ5OfYhzn+eDaLOoVs?=
- =?us-ascii?Q?4p3M979QyJL2t4Nf7D1Swmas4SQPi8IjSEMIjXu78No91ZrZYUto9sh7/x93?=
- =?us-ascii?Q?X2Z4agsRucDSK4ndzz/FeMlF7PCmGgJLDKsgQ8abjgbZTxdzSuPGL1XpKc3W?=
- =?us-ascii?Q?ehBb+2WN3lWKxxKHa+KMD1I4RfVukg7YFl6elkO0IXFpUJ73cA+xVq9H9l6N?=
- =?us-ascii?Q?hxlv4fohYk9Lm/Bhg8vBg/l7AEprlTe6O/jmiqMZPJcMweg6T/vlDoBeRIn/?=
- =?us-ascii?Q?ud6sV8faxhufCNFLhXS1IvJ0vOwu9/zx3O1nEc3CmYScG/ebRsSyH8LIET45?=
- =?us-ascii?Q?xLvEUPz4KhVX8B+Y1pUxGwZgRmJ0qjPDIawe25bghgXEz/EZ7wd1F5oXcFM9?=
- =?us-ascii?Q?WFtGirW8VJXXZ8FXlsqAoWeveTljtzHeL7XbcuOLJHvhs1tRLihqUriTIXUS?=
- =?us-ascii?Q?pwH8XeUyaw5ulVyLqPeyrsdqVx+901MhNBexzeIr4oTtKfK4X+iz4I5GYs7+?=
- =?us-ascii?Q?SQcsx02RWSssRcOdOfGhAMs8GT3v27OOTSVtvcC+6W0b7SDWyMQCt+690Brj?=
- =?us-ascii?Q?DjYiEOUhypmv1D3vpvc1P9xGD37/LTu1XRXPWuTjZ4e45HxY?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S1349386AbiFUL3M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 07:29:12 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4269A95AB;
+        Tue, 21 Jun 2022 04:29:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655810951; x=1687346951;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kc9Iaz1j4xVieb577QXCtKE6VmFmh7/1+SYJ29NejBg=;
+  b=UuDrD4HVTdl8ry83kr35/pSlB9iKFEKwuhLwdBBtnLBAV0bxVJbLdV16
+   vA6/gXYzpuUWSbp8xV+CIjLOnnM+UFTOrkvfz+VbQom8b8bnssOl7N+eV
+   MB5l4//AiBtebc8SkkiDTJvMeVnGt96LzEQGK6aor6PdYwDV3Wolj+hei
+   m7VcOLQKxtFmB+GL0/5+FjYHBCKd3hyC3G2VlxSSUjvpMgBkM24kg8wR8
+   PGf1K70NETc3vo5WNKULZ3Y2U1xe2UHytsTyOgDojxG/0B4sYW53w9FHt
+   dvrjGoaJwVsUeaernz1NCnfeDsosu/FohvmQRmtgXm4cjD5qT4Moi6hyD
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10384"; a="366418902"
+X-IronPort-AV: E=Sophos;i="5.92,209,1650956400"; 
+   d="scan'208";a="366418902"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 04:29:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,209,1650956400"; 
+   d="scan'208";a="620448456"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 21 Jun 2022 04:29:01 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1AB4D13C; Tue, 21 Jun 2022 14:29:06 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] pinctrl: nomadik: Convert drivers to use struct pingroup and PINCTRL_PINGROUP()
+Date:   Tue, 21 Jun 2022 14:29:04 +0300
+Message-Id: <20220621112904.65674-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4902.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c55828e-c61c-47ca-1231-08da536fcec9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2022 10:21:30.1481
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OixrgltrFt5WPRRp0mT7kZ3gsemd0FGA9C6cGeTPWU5WwLf3Q0blZHOmSHKFgsvd16+mnhO023md5a2MEGKPfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2861
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[AMD Official Use Only - General]
+The pin control header provides struct pingroup and PINCTRL_PINGROUP() macro.
+Utilize them instead of open coded variants in the driver.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: fixed incorrect dereference (LKP)
+ .../pinctrl/nomadik/pinctrl-nomadik-db8500.c  | 295 +++++++++---------
+ .../pinctrl/nomadik/pinctrl-nomadik-stn8815.c |  29 +-
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c     |  26 +-
+ drivers/pinctrl/nomadik/pinctrl-nomadik.h     |  16 +-
+ 4 files changed, 180 insertions(+), 186 deletions(-)
 
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
+index ac3d4d91266d..758d21f0a850 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
+@@ -674,163 +674,160 @@ static const unsigned hwobs_oc4_1_pins[] = { DB8500_PIN_D17, DB8500_PIN_D16,
+ 	DB8500_PIN_D21, DB8500_PIN_D20,	DB8500_PIN_C20, DB8500_PIN_B21,
+ 	DB8500_PIN_C21, DB8500_PIN_A22, DB8500_PIN_B24, DB8500_PIN_C22 };
+ 
+-#define DB8500_PIN_GROUP(a, b) { .name = #a, .pins = a##_pins,		\
+-			.npins = ARRAY_SIZE(a##_pins), .altsetting = b }
+-
+ static const struct nmk_pingroup nmk_db8500_groups[] = {
+ 	/* Altfunction A column */
+-	DB8500_PIN_GROUP(u0_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(u1rxtx_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(u1ctsrts_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(ipi2c_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(ipi2c_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(msp0txrx_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(msp0tfstck_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(msp0rfsrck_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc0_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc0_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc0_dat47_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc0dat31dir_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(msp1txrx_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(msp1_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(lcdb_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(lcdvsi0_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(lcdvsi1_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(lcd_d0_d7_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(lcd_d8_d11_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(lcd_d12_d15_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(lcd_d12_d23_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(kp_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(kpskaskb_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc2_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc2_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(ssp1_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(ssp0_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(i2c0_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(ipgpio0_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(ipgpio1_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(modem_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(kp_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(msp2sck_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(msp2_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc4_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc1_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc1_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(mc1dir_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(hsir_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(hsit_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(hsit_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(clkout1_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(clkout1_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(clkout2_a_1, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(clkout2_a_2, NMK_GPIO_ALT_A),
+-	DB8500_PIN_GROUP(usb_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(u0_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(u1rxtx_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(u1ctsrts_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(ipi2c_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(ipi2c_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(msp0txrx_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(msp0tfstck_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(msp0rfsrck_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc0_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc0_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc0_dat47_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc0dat31dir_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(msp1txrx_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(msp1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(lcdb_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(lcdvsi0_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(lcdvsi1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(lcd_d0_d7_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(lcd_d8_d11_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(lcd_d12_d15_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(lcd_d12_d23_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(kp_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(kpskaskb_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc2_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc2_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(ssp1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(ssp0_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(i2c0_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(ipgpio0_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(ipgpio1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(modem_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(kp_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(msp2sck_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(msp2_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc4_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc1_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mc1dir_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(hsir_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(hsit_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(hsit_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(clkout1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(clkout1_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(clkout2_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(clkout2_a_2, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(usb_a_1, NMK_GPIO_ALT_A),
+ 	/* Altfunction B column */
+-	DB8500_PIN_GROUP(trig_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(i2c4_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(i2c1_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(i2c2_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(i2c2_b_2, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(msp0txrx_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(i2c1_b_2, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(u2rxtx_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(uartmodtx_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(msp0sck_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(uartmodrx_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(stmmod_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(uartmodrx_b_2, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(spi3_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(msp1txrx_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(kp_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(kp_b_2, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(sm_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(smcs0_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(smcs1_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(ipgpio7_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(ipgpio2_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(ipgpio3_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(lcdaclk_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(lcda_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(lcd_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(lcd_d16_d23_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(ddrtrig_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(pwl_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(spi1_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(mc3_b_1, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(pwl_b_2, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(pwl_b_3, NMK_GPIO_ALT_B),
+-	DB8500_PIN_GROUP(pwl_b_4, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(trig_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(i2c4_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(i2c1_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(i2c2_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(i2c2_b_2, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(msp0txrx_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(i2c1_b_2, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(u2rxtx_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(uartmodtx_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(msp0sck_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(uartmodrx_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(stmmod_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(uartmodrx_b_2, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(spi3_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(msp1txrx_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(kp_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(kp_b_2, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(sm_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(smcs0_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(smcs1_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(ipgpio7_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(ipgpio2_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(ipgpio3_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(lcdaclk_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(lcda_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(lcd_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(lcd_d16_d23_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(ddrtrig_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(pwl_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(spi1_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(mc3_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(pwl_b_2, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(pwl_b_3, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(pwl_b_4, NMK_GPIO_ALT_B),
+ 	/* Altfunction C column */
+-	DB8500_PIN_GROUP(ipjtag_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio6_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio0_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio1_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio3_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio2_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(slim0_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ms_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(iptrigout_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(u2rxtx_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(u2ctsrts_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(u0_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio4_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio5_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio6_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio7_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(smcleale_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(stmape_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(u2rxtx_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio2_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio3_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio4_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio5_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(mc5_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(mc2rstn_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(kp_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(smps0_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(smps1_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(u2rxtx_c_3, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(stmape_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(uartmodrx_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(uartmodtx_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(stmmod_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(usbsim_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(mc4rstn_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(clkout1_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(clkout2_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(i2c3_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(spi0_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(usbsim_c_2, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(i2c3_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipjtag_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio6_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio0_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio1_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio3_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio2_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(slim0_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ms_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(iptrigout_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(u2rxtx_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(u2ctsrts_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(u0_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio4_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio5_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio6_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio7_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(smcleale_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(stmape_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(u2rxtx_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio2_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio3_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio4_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(ipgpio5_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(mc5_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(mc2rstn_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(kp_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(smps0_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(smps1_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(u2rxtx_c_3, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(stmape_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(uartmodrx_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(uartmodtx_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(stmmod_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(usbsim_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(mc4rstn_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(clkout1_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(clkout2_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(i2c3_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(spi0_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(usbsim_c_2, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(i2c3_c_2, NMK_GPIO_ALT_C),
+ 	/* Other alt C1 column */
+-	DB8500_PIN_GROUP(u2rx_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(stmape_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(remap0_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(remap1_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(ptma9_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(kp_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(rf_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(hxclk_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(uartmodrx_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(uartmodtx_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(stmmod_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(hxgpio_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(rf_oc1_2, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(spi2_oc1_1, NMK_GPIO_ALT_C1),
+-	DB8500_PIN_GROUP(spi2_oc1_2, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(u2rx_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(stmape_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(remap0_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(remap1_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(ptma9_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(kp_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(rf_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(hxclk_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(uartmodrx_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(uartmodtx_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(stmmod_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(hxgpio_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(rf_oc1_2, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(spi2_oc1_1, NMK_GPIO_ALT_C1),
++	NMK_PIN_GROUP(spi2_oc1_2, NMK_GPIO_ALT_C1),
+ 	/* Other alt C2 column */
+-	DB8500_PIN_GROUP(sbag_oc2_1, NMK_GPIO_ALT_C2),
+-	DB8500_PIN_GROUP(etmr4_oc2_1, NMK_GPIO_ALT_C2),
+-	DB8500_PIN_GROUP(ptma9_oc2_1, NMK_GPIO_ALT_C2),
++	NMK_PIN_GROUP(sbag_oc2_1, NMK_GPIO_ALT_C2),
++	NMK_PIN_GROUP(etmr4_oc2_1, NMK_GPIO_ALT_C2),
++	NMK_PIN_GROUP(ptma9_oc2_1, NMK_GPIO_ALT_C2),
+ 	/* Other alt C3 column */
+-	DB8500_PIN_GROUP(stmmod_oc3_1, NMK_GPIO_ALT_C3),
+-	DB8500_PIN_GROUP(stmmod_oc3_2, NMK_GPIO_ALT_C3),
+-	DB8500_PIN_GROUP(uartmodrx_oc3_1, NMK_GPIO_ALT_C3),
+-	DB8500_PIN_GROUP(uartmodtx_oc3_1, NMK_GPIO_ALT_C3),
+-	DB8500_PIN_GROUP(etmr4_oc3_1, NMK_GPIO_ALT_C3),
++	NMK_PIN_GROUP(stmmod_oc3_1, NMK_GPIO_ALT_C3),
++	NMK_PIN_GROUP(stmmod_oc3_2, NMK_GPIO_ALT_C3),
++	NMK_PIN_GROUP(uartmodrx_oc3_1, NMK_GPIO_ALT_C3),
++	NMK_PIN_GROUP(uartmodtx_oc3_1, NMK_GPIO_ALT_C3),
++	NMK_PIN_GROUP(etmr4_oc3_1, NMK_GPIO_ALT_C3),
+ 	/* Other alt C4 column */
+-	DB8500_PIN_GROUP(sbag_oc4_1, NMK_GPIO_ALT_C4),
+-	DB8500_PIN_GROUP(hwobs_oc4_1, NMK_GPIO_ALT_C4),
++	NMK_PIN_GROUP(sbag_oc4_1, NMK_GPIO_ALT_C4),
++	NMK_PIN_GROUP(hwobs_oc4_1, NMK_GPIO_ALT_C4),
+ };
+ 
+ /* We use this macro to define the groups applicable to a function */
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c
+index 8d944bb3a036..c0d7c86d0939 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c
+@@ -303,23 +303,20 @@ static const unsigned usbhs_c_1_pins[] = { STN8815_PIN_E21, STN8815_PIN_E20,
+ 					   STN8815_PIN_C16, STN8815_PIN_A15,
+ 					   STN8815_PIN_D17, STN8815_PIN_C17 };
+ 
+-#define STN8815_PIN_GROUP(a, b) { .name = #a, .pins = a##_pins,		\
+-			.npins = ARRAY_SIZE(a##_pins), .altsetting = b }
+-
+ static const struct nmk_pingroup nmk_stn8815_groups[] = {
+-	STN8815_PIN_GROUP(u0txrx_a_1, NMK_GPIO_ALT_A),
+-	STN8815_PIN_GROUP(u0ctsrts_a_1, NMK_GPIO_ALT_A),
+-	STN8815_PIN_GROUP(u0modem_a_1, NMK_GPIO_ALT_A),
+-	STN8815_PIN_GROUP(mmcsd_a_1, NMK_GPIO_ALT_A),
+-	STN8815_PIN_GROUP(mmcsd_b_1, NMK_GPIO_ALT_B),
+-	STN8815_PIN_GROUP(u1_a_1, NMK_GPIO_ALT_A),
+-	STN8815_PIN_GROUP(i2c1_a_1, NMK_GPIO_ALT_A),
+-	STN8815_PIN_GROUP(i2c0_a_1, NMK_GPIO_ALT_A),
+-	STN8815_PIN_GROUP(u1_b_1, NMK_GPIO_ALT_B),
+-	STN8815_PIN_GROUP(i2cusb_b_1, NMK_GPIO_ALT_B),
+-	STN8815_PIN_GROUP(clcd_16_23_b_1, NMK_GPIO_ALT_B),
+-	STN8815_PIN_GROUP(usbfs_b_1, NMK_GPIO_ALT_B),
+-	STN8815_PIN_GROUP(usbhs_c_1, NMK_GPIO_ALT_C),
++	NMK_PIN_GROUP(u0txrx_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(u0ctsrts_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(u0modem_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mmcsd_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(mmcsd_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(u1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(i2c1_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(i2c0_a_1, NMK_GPIO_ALT_A),
++	NMK_PIN_GROUP(u1_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(i2cusb_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(clcd_16_23_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(usbfs_b_1, NMK_GPIO_ALT_B),
++	NMK_PIN_GROUP(usbhs_c_1, NMK_GPIO_ALT_C),
+ };
+ 
+ /* We use this macro to define the groups applicable to a function */
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+index f5014d09d81a..58c7ac8c7d4d 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -1179,17 +1179,17 @@ static const char *nmk_get_group_name(struct pinctrl_dev *pctldev,
+ {
+ 	struct nmk_pinctrl *npct = pinctrl_dev_get_drvdata(pctldev);
+ 
+-	return npct->soc->groups[selector].name;
++	return npct->soc->groups[selector].grp.name;
+ }
+ 
+ static int nmk_get_group_pins(struct pinctrl_dev *pctldev, unsigned selector,
+ 			      const unsigned **pins,
+-			      unsigned *num_pins)
++			      unsigned *npins)
+ {
+ 	struct nmk_pinctrl *npct = pinctrl_dev_get_drvdata(pctldev);
+ 
+-	*pins = npct->soc->groups[selector].pins;
+-	*num_pins = npct->soc->groups[selector].npins;
++	*pins = npct->soc->groups[selector].grp.pins;
++	*npins = npct->soc->groups[selector].grp.npins;
+ 	return 0;
+ }
+ 
+@@ -1531,7 +1531,7 @@ static int nmk_pmx_set(struct pinctrl_dev *pctldev, unsigned function,
+ 	if (g->altsetting < 0)
+ 		return -EINVAL;
+ 
+-	dev_dbg(npct->dev, "enable group %s, %u pins\n", g->name, g->npins);
++	dev_dbg(npct->dev, "enable group %s, %u pins\n", g->grp.name, g->grp.npins);
+ 
+ 	/*
+ 	 * If we're setting altfunc C by setting both AFSLA and AFSLB to 1,
+@@ -1566,26 +1566,26 @@ static int nmk_pmx_set(struct pinctrl_dev *pctldev, unsigned function,
+ 		 * Then mask the pins that need to be sleeping now when we're
+ 		 * switching to the ALT C function.
+ 		 */
+-		for (i = 0; i < g->npins; i++)
+-			slpm[g->pins[i] / NMK_GPIO_PER_CHIP] &= ~BIT(g->pins[i]);
++		for (i = 0; i < g->grp.npins; i++)
++			slpm[g->grp.pins[i] / NMK_GPIO_PER_CHIP] &= ~BIT(g->grp.pins[i]);
+ 		nmk_gpio_glitch_slpm_init(slpm);
+ 	}
+ 
+-	for (i = 0; i < g->npins; i++) {
++	for (i = 0; i < g->grp.npins; i++) {
+ 		struct nmk_gpio_chip *nmk_chip;
+ 		unsigned bit;
+ 
+-		nmk_chip = find_nmk_gpio_from_pin(g->pins[i]);
++		nmk_chip = find_nmk_gpio_from_pin(g->grp.pins[i]);
+ 		if (!nmk_chip) {
+ 			dev_err(npct->dev,
+ 				"invalid pin offset %d in group %s at index %d\n",
+-				g->pins[i], g->name, i);
++				g->grp.pins[i], g->grp.name, i);
+ 			goto out_glitch;
+ 		}
+-		dev_dbg(npct->dev, "setting pin %d to altsetting %d\n", g->pins[i], g->altsetting);
++		dev_dbg(npct->dev, "setting pin %d to altsetting %d\n", g->grp.pins[i], g->altsetting);
+ 
+ 		clk_enable(nmk_chip->clk);
+-		bit = g->pins[i] % NMK_GPIO_PER_CHIP;
++		bit = g->grp.pins[i] % NMK_GPIO_PER_CHIP;
+ 		/*
+ 		 * If the pin is switching to altfunc, and there was an
+ 		 * interrupt installed on it which has been lazy disabled,
+@@ -1608,7 +1608,7 @@ static int nmk_pmx_set(struct pinctrl_dev *pctldev, unsigned function,
+ 		 *   then some bits in PRCM GPIOCR registers must be cleared.
+ 		 */
+ 		if ((g->altsetting & NMK_GPIO_ALT_C) == NMK_GPIO_ALT_C)
+-			nmk_prcm_altcx_set_mode(npct, g->pins[i],
++			nmk_prcm_altcx_set_mode(npct, g->grp.pins[i],
+ 				g->altsetting >> NMK_GPIO_ALT_CX_SHIFT);
+ 	}
+ 
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.h b/drivers/pinctrl/nomadik/pinctrl-nomadik.h
+index ae0bac06639f..820f07f4db32 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.h
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.h
+@@ -105,21 +105,21 @@ struct nmk_function {
+ 
+ /**
+  * struct nmk_pingroup - describes a Nomadik pin group
+- * @name: the name of this specific pin group
+- * @pins: an array of discrete physical pins used in this group, taken
+- *	from the driver-local pin enumeration space
+- * @num_pins: the number of pins in this group array, i.e. the number of
+- *	elements in .pins so we can iterate over that array
++ * @grp: Generic data of the pin group (name and pins)
+  * @altsetting: the altsetting to apply to all pins in this group to
+  *	configure them to be used by a function
+  */
+ struct nmk_pingroup {
+-	const char *name;
+-	const unsigned int *pins;
+-	const unsigned npins;
++	struct pingroup grp;
+ 	int altsetting;
+ };
+ 
++#define NMK_PIN_GROUP(a, b)							\
++	{									\
++		.grp = PINCTRL_PINGROUP(#a, a##_pins, ARRAY_SIZE(a##_pins)),	\
++		.altsetting = b,						\
++	}
++
+ /**
+  * struct nmk_pinctrl_soc_data - Nomadik pin controller per-SoC configuration
+  * @pins:	An array describing all pins the pin controller affects.
+-- 
+2.35.1
 
-> -----Original Message-----
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> Sent: Monday, May 2, 2022 4:31 PM
-> To: linux-gpio@vger.kernel.org
-> Cc: Michal Simek <michals@xilinx.com>; Srinivas Neeli <sneeli@xilinx.com>=
-;
-> linux-kernel@vger.kernel.org; git <git@xilinx.com>; Shubhrajyoti Datta
-> <shubhraj@xilinx.com>
-> Subject: [PATCH v2] gpio: xilinx: add missing blank line after declaratio=
-ns
->=20
-> Add a missing blank line. No functional changes.
->=20
-> WARNING: Missing a blank line after declarations
-> 128: FILE: drivers/gpio/gpio-xilinx.c:120:
-> +       void __iomem *addr =3D chip->regs + reg + xgpio_regoffset(chip, b=
-it / 32);
-> +       xgpio_set_value32(a, bit, xgpio_readreg(addr));
->=20
-> WARNING: Missing a blank line after declarations
-> 136: FILE: drivers/gpio/gpio-xilinx.c:126:
-> +       void __iomem *addr =3D chip->regs + reg + xgpio_regoffset(chip, b=
-it / 32);
-> +       xgpio_writereg(addr, xgpio_get_value32(a, bit));
->=20
-> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
-If there are no further comments can it be merged.
