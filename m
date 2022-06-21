@@ -2,63 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86942552DDC
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B44FD552E29
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:23:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348009AbiFUJGI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 05:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50464 "EHLO
+        id S1346679AbiFUJWv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 05:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348055AbiFUJGH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:06:07 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493B1DFA0
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jun 2022 02:06:05 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id o10so18445883edi.1
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Jun 2022 02:06:05 -0700 (PDT)
+        with ESMTP id S1347951AbiFUJWn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:22:43 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC6A1FCCE;
+        Tue, 21 Jun 2022 02:22:41 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id h23so26109904ejj.12;
+        Tue, 21 Jun 2022 02:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=B+BudkbGeoeoLKhS9Lq+YqOl0bn0BEXvsxRDcEMFFGw=;
-        b=qw3PynOLXFD5iwLOSNoSb2UxpSlFYWwTTBG2MgBkLlGsXp63r2o6N1cOiK3hDxo+3O
-         rPKgMILw7Tq5yD4JF3H5cdbsPYuS9UQvmVJ9h4/PnHh5gFR9Cr3KdkJWP9Pk3MIpEbEW
-         VYc/fEBsQUpkNcZnEQd3wMAiDWrygZ/EFcAMwIgKTYsTCn6hJOOHHM2zKg4LuVzMpy5O
-         KyvJ/oIJEgJUFQEhzVbty6hE+kaKWI7QkGBDQRY5Vow4msaIqEEC9yICvexHnMVwHPi0
-         FosSRfnCZOzJW+7oAyBtI2cJuc6omnXs2Ur5kTOX4abOjxcGCy2vxxDm6L5Xq9N8dPDN
-         +/yA==
+         :cc;
+        bh=nwSBD3PTloVRfceK56G2aCfoof4Hwc6nnq2tpaiVX1E=;
+        b=SZC4AJowoOWLiXUnJNCXlRo+Fy21+43HuGqupG34NYAHev8FNX9LB4nFwui2g2ERc/
+         2nAJjFE7gSxwK3AKqYoV1+xDYo3j7xKpCHwaEkBrfpjwItcvjJqbKZBmsBC6S6wk0LeP
+         jECzrOFPrp+pM5SPwC+6kLb36nf+Eql2JHp+xmKVEp9KBopfkHCProz5vj1URUzLxuOc
+         2gtMsViSY39FbLby9xOKwyFIHQnssNg0xndDzN3H/27fb1evpypF3YvV3oswAKpp+Rdc
+         8SQN3kqU5KrBqva1r+R8tUi0Xkhp826IwLzXg6j6O1xwnr3vjRymNISR9wMWgtdGEpu5
+         ffSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=B+BudkbGeoeoLKhS9Lq+YqOl0bn0BEXvsxRDcEMFFGw=;
-        b=Nm7IPycrrB/lekRpZ/1L8CZZcMctjIIxN/02Z65mdg39uj/791FSM9OcW/VlSO1olP
-         YI2IvOqiYxXyb3BsnHlwXQRjlDc/x0xvGRHObHnkNWDT4LzIszTQ5v9e68JoW1DXJt3q
-         uZudBg6Zsvghmtmh69jRwczwy0e2YwgLm8aT3IuaRVBAsyeapxLsUz8228ETt42NJu6O
-         8kwV9kiRYxtHQZKdTfX8f9eQ2JGQaNDkx3DpF7rJ/ZlLhNq6yQ2MUUxjK9EKfDikC9jt
-         qyGxVbhjVpQLyu1NOxSgcAUkC5XES3wKu+/5W7ow2DOgQD6d+gh4bvuyeH4SuWW9PZz2
-         TYCA==
-X-Gm-Message-State: AJIora9mRHI6kBZBnWMhFV7brdgzFhUrs8AYPBa0xFTv4WFc+2RY5Wha
-        FCtcrUoGzH/Z2qNe3/Ovcwe8KtJ4G7IbNaWUHlg=
-X-Google-Smtp-Source: AGRyM1salgGaMVGaM2isKPkUDoN9M6TbTjaoMddRQc/jwqaW9p8h8gD0U1mUvOz59yiCBlSk1hlfwiweC+qAdaO8YTc=
-X-Received: by 2002:a50:9f6a:0:b0:435:5804:e07 with SMTP id
- b97-20020a509f6a000000b0043558040e07mr29385289edf.178.1655802363301; Tue, 21
- Jun 2022 02:06:03 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=nwSBD3PTloVRfceK56G2aCfoof4Hwc6nnq2tpaiVX1E=;
+        b=cBgAbuZo65rfgvivd9KbCbX7qu+EESGr1UGiiZk3ZnMl+R9dP4aOT3+gt3e6+ijiHS
+         1MJB4SwoI4cjGTxh/iPsamTQmele4Ww2JgOS+YLpdL1/a3wFgkS8v7AP+CL2vxSIsLjr
+         ITKolee/Z67GROdOPdnNV34NtnhAL+13UbHVyNvbLpZ3w2+UJZbWx9XhHWG0ABQNP4ve
+         SVjk+IPj84C+TWF56A4WxdfUYgzShjBi0SIoHPiRBLcUnYC6o47IC0DFZpdSQjNEMpoE
+         mWPfKm9h2cX3OMLiFG7LO7MizQ8OqTDEi8P/rz5VJAjl1B4bK83zCuaNauKrUYshIa0h
+         hYnA==
+X-Gm-Message-State: AJIora99Yf/xDgksfJnGnPDpQcxiyEo6xvVwUcstPyQ2H+Dj6XlaMyg/
+        Nxo2yABJ2hmL+25WcWz+18KtjuB5rQbwXu0Prqo=
+X-Google-Smtp-Source: AGRyM1st5l8YH2ggqJetd23NizO1SBXRfCSKIN2Ag6+snWa4U1k/4MnJ2Of8mZI6rssF1UlaIrePIaWD6CbQW7kd1/8=
+X-Received: by 2002:a17:906:149:b0:711:fca6:bc2f with SMTP id
+ 9-20020a170906014900b00711fca6bc2fmr25088970ejh.497.1655803360410; Tue, 21
+ Jun 2022 02:22:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220621064036.147797-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20220621064036.147797-1-u.kleine-koenig@pengutronix.de>
+References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com> <20220620200644.1961936-5-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220620200644.1961936-5-aidanmacdonald.0x0@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Jun 2022 11:05:27 +0200
-Message-ID: <CAHp75VfN8r5hviT70kWW0F7PJ0=Pm=4uVvT9xH6re3VEf5Oq9A@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: grgpio: Fix device removing
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Tue, 21 Jun 2022 11:22:03 +0200
+Message-ID: <CAHp75VePD-ROfnFtwU33Jt_h9a-qBC0QwRQcQfgmEbyOV22CKA@mail.gmail.com>
+Subject: Re: [PATCH 04/49] regmap-irq: Introduce config registers for irq types
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, tharvey@gateworks.com,
+        rjones@gateworks.com, Matti Vaittinen <mazziesaccount@gmail.com>,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
+        linux-actions@lists.infradead.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@lists.linux.dev,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -69,82 +96,72 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 21, 2022 at 8:40 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Mon, Jun 20, 2022 at 10:08 PM Aidan MacDonald
+<aidanmacdonald.0x0@gmail.com> wrote:
 >
-> If a platform device's remove callback returns non-zero, the device core
-> emits a warning and still removes the device and calls the devm cleanup
-> callbacks.
+> Config registers provide a more uniform approach to handling irq type
+> registers. They are essentially an extension of the virtual registers
+> used by the qcom-pm8008 driver.
 >
-> So it's not save to not unregister the gpiochip because on the next reque=
-st
-> to a GPIO the driver accesses kfree()'d memory. Also if an IRQ triggers,
-> the freed memory is accessed.
+> Config registers can be represented as a 2D array:
 >
-> Instead rely on the GPIO framework to ensure that after gpiochip_remove()
-> all GPIOs are freed and so the corresponding IRQs are unmapped.
+>     config_base[0]      reg0,0      reg0,1      reg0,2      reg0,3
+>     config_base[1]      reg1,0      reg1,1      reg1,2      reg1,3
+>     config_base[2]      reg2,0      reg2,1      reg2,2      reg2,3
 >
-> This is a preparation for making platform remove callbacks return void.
+> There are 'num_config_bases' base registers, each of which is used to
+> address 'num_config_regs' registers. The addresses are calculated in
+> the same way as for other bases. It is assumed that an irq's type is
+> controlled by one column of registers; that column is identified by
+> the irq's 'type_reg_offset'.
+>
+> The set_type_config() callback is responsible for updating the config
+> register contents. It receives an array of buffers (each represents a
+> row of registers) and the index of the column to update, along with
+> the 'struct regmap_irq' description and requested irq type.
+>
+> Buffered values are written to registers in regmap_irq_sync_unlock().
+> Note that the entire register contents are overwritten, which is a
+> minor change in behavior from type registers via 'type_base'.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+...
 
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Changes since (implicit) v1
-> (Message-Id: 20220620122933.106035-1-u.kleine-koenig@pengutronix.de):
->
->  - Fix capitalisation of GPIO and IRQ in commit log
->  - Add another "are" in the third paragraph.
->  - Drop note about a potential bug in GPIO framework
->    I'm not sure there is actually a bug.
->
-> Thanks to Andy Shevchenko for his feedback.
->
-> Best regards
-> Uwe
->
->  drivers/gpio/gpio-grgpio.c | 14 +-------------
->  1 file changed, 1 insertion(+), 13 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-> index df563616f943..bea0e32c195d 100644
-> --- a/drivers/gpio/gpio-grgpio.c
-> +++ b/drivers/gpio/gpio-grgpio.c
-> @@ -434,25 +434,13 @@ static int grgpio_probe(struct platform_device *ofd=
-ev)
->  static int grgpio_remove(struct platform_device *ofdev)
->  {
->         struct grgpio_priv *priv =3D platform_get_drvdata(ofdev);
-> -       int i;
-> -       int ret =3D 0;
-> -
-> -       if (priv->domain) {
-> -               for (i =3D 0; i < GRGPIO_MAX_NGPIO; i++) {
-> -                       if (priv->uirqs[i].refcnt !=3D 0) {
-> -                               ret =3D -EBUSY;
-> -                               goto out;
-> -                       }
-> -               }
-> -       }
->
->         gpiochip_remove(&priv->gc);
->
->         if (priv->domain)
->                 irq_domain_remove(priv->domain);
->
-> -out:
-> -       return ret;
-> +       return 0;
->  }
->
->  static const struct of_device_id grgpio_match[] =3D {
->
-> base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
-> --
-> 2.36.1
->
+> +                       ret = regmap_write(map, reg, d->config_buf[i][j]);
+> +                       if (ret != 0)
 
+if (ret)
 
---=20
+> +                               dev_err(d->map->dev,
+> +                                       "Failed to write config %x: %d\n",
+> +                                       reg, ret);
+> +               }
+
+...
+
+> + * regmap_irq_set_type_config_simple() - Simple IRQ type configuration callback.
+
+> + *
+
+Redundant line.
+
+...
+
+> +               d->config_buf = kcalloc(chip->num_config_bases,
+> +                                       sizeof(*d->config_buf), GFP_KERNEL);
+> +               if (!d->config_buf)
+> +                       goto err_alloc;
+> +
+> +               for (i = 0; i < chip->num_config_regs; i++) {
+> +                       d->config_buf[i] = kcalloc(chip->num_config_regs,
+> +                                                  sizeof(unsigned int),
+
+Can it be sizeof(**d->config_buf) ?
+
+> +                                                  GFP_KERNEL);
+> +                       if (!d->config_buf[i])
+> +                               goto err_alloc;
+> +               }
+
+-- 
 With Best Regards,
 Andy Shevchenko
