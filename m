@@ -2,130 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 880FD553183
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 13:59:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93DBD5535D5
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 17:21:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350286AbiFUL64 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 07:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40816 "EHLO
+        id S1352675AbiFUPV4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 11:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350349AbiFUL63 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 07:58:29 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCF92AC69;
-        Tue, 21 Jun 2022 04:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655812708; x=1687348708;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fJlvgZDVU/+AbpIeOVnnvWZJsUD7oZ1ag94qSd3Xs98=;
-  b=C/zx29/uNzbeu5d194OVBcPzGgzeDLqJBnM+PcMJdGBdVx9RXfRQExn6
-   YLKa8td27UEjgnRwoQJpB0x/yDzbydEPNuvI0DBqf88oBqE1MDjhcR2jV
-   daDGADbHhR3tSkwOSP0+dI+nqY+0r6DhZub3oNrVGZY0r90+n2sNzcSPs
-   UR0y/rqFVhYNylrA2Rv5oNwQPWgX9BkuaEjI/g1KH1zWQTWLFnwZwmyAo
-   fRXq3e2SEtwKwfwU6GN5vNudPnsRejw/N62NJZWJ3YNbTdI/tXIKnoQ/N
-   2f3Sl7FGEyqqB47kgVV9Uo/m3b9XPNOTG52AzmU8tokgSev2de6hWtx6d
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10384"; a="278869433"
-X-IronPort-AV: E=Sophos;i="5.92,209,1650956400"; 
-   d="scan'208";a="278869433"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 04:58:28 -0700
-X-IronPort-AV: E=Sophos;i="5.92,209,1650956400"; 
-   d="scan'208";a="538012895"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 04:58:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o3cWP-000r07-2e;
-        Tue, 21 Jun 2022 14:58:17 +0300
-Date:   Tue, 21 Jun 2022 14:58:16 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YrGyWCaY+swYAYzH@smile.fi.intel.com>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
- <YqBS8I62YBPFC9iS@google.com>
- <CAHp75Ve9Lju8AEQd5huz1aYGg4sOu-ae7tTdyDWCXPCBR=wXbQ@mail.gmail.com>
+        with ESMTP id S1352670AbiFUPVz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 11:21:55 -0400
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 788A9252BE;
+        Tue, 21 Jun 2022 08:21:54 -0700 (PDT)
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1o3fh4-0001zL-00; Tue, 21 Jun 2022 17:21:30 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 14293C0170; Tue, 21 Jun 2022 17:14:11 +0200 (CEST)
+Date:   Tue, 21 Jun 2022 17:14:11 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Genjian Zhang <zhanggenjian123@gmail.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, f.fainelli@gmail.com,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huhai <huhai@kylinos.cn>,
+        k2ci <kernel-bot@kylinos.cn>,
+        Genjian Zhang <zhanggenjian@kylinos.cn>
+Subject: Re: [PATCH v4] MIPS: Remove repetitive increase irq_err_count
+Message-ID: <20220621151410.GA12206@alpha.franken.de>
+References: <20220525043916.584850-1-zhanggenjian@kylinos.cn>
+ <20220610111420.1520410-1-zhanggenjian@kylinos.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Ve9Lju8AEQd5huz1aYGg4sOu-ae7tTdyDWCXPCBR=wXbQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220610111420.1520410-1-zhanggenjian@kylinos.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 08, 2022 at 12:50:44PM +0200, Andy Shevchenko wrote:
-> On Wed, Jun 8, 2022 at 9:42 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Mon, 06 Jun 2022, Andy Shevchenko wrote:
-> >
-> > > There are a few users that would like to utilize P2SB mechanism of hiding
-> > > and unhiding a device from the PCI configuration space.
-> > >
-> > > Here is the series to consolidate p2sb handling code for existing users
-> > > and to provide a generic way for new comer(s).
-> > >
-> > > It also includes a patch to enable GPIO controllers on Apollo Lake
-> > > when it's used with ABL bootloader w/o ACPI support.
-> > >
-> > > The patch that brings the helper ("platform/x86/intel: Add Primary to
-> > > Sideband (P2SB) bridge support") has a commit message that sheds a light
-> > > on what the P2SB is and why this is needed.
-> > >
-> > > I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> > > since we have an ACPI device for GPIO I do not see any attempts to recreate
-> > > one).
-> > >
-> > > The series is ready to be merged via MFD tree, but see below.
-> > >
-> > > The series also includes updates for Simatic IPC drivers that partially
-> > > tagged by respective maintainers (the main question is if Pavel is okay
-> > > with the last three patches, since I believe Hans is okay with removing
-> > > some code under PDx86). Hence the first 8 patches can be merged right
-> > > away and the rest when Pavel does his review.
-> >
-> > Can we just wait for Pavel's review, then merge them all at once?
+On Fri, Jun 10, 2022 at 07:14:20PM +0800, Genjian Zhang wrote:
+> From: huhai <huhai@kylinos.cn>
 > 
-> Sure, it would be the best course of action.
+> commit 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx") added
+> a function irq_dispatch, and it'll increase irq_err_count when the get_irq
+> callback returns a negative value, but increase irq_err_count in get_irq
+> was not removed.
+> 
+> And also, modpost complains once gpio-vr41xx drivers become modules.
+>   ERROR: modpost: "irq_err_count" [drivers/gpio/gpio-vr41xx.ko] undefined!
+> 
+> So it would be a good idea to remove repetitive increase irq_err_count in
+> get_irq callback.
+> 
+> Fixes: 27fdd325dace ("MIPS: Update VR41xx GPIO driver to use gpiolib")
+> Fixes: 979934da9e7a ("[PATCH] mips: update IRQ handling for vr41xx")
+> Reported-by: k2ci <kernel-bot@kylinos.cn>
+> Signed-off-by: huhai <huhai@kylinos.cn>
+> Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
+> ---
+>  arch/mips/vr41xx/common/icu.c | 2 --
+>  drivers/gpio/gpio-vr41xx.c    | 2 --
+>  2 files changed, 4 deletions(-)
+> 
+> diff --git a/arch/mips/vr41xx/common/icu.c b/arch/mips/vr41xx/common/icu.c
+> index 7b7f25b4b057..9240bcdbe74e 100644
+> --- a/arch/mips/vr41xx/common/icu.c
+> +++ b/arch/mips/vr41xx/common/icu.c
+> @@ -640,8 +640,6 @@ static int icu_get_irq(unsigned int irq)
+>  
+>  	printk(KERN_ERR "spurious ICU interrupt: %04x,%04x\n", pend1, pend2);
+>  
+> -	atomic_inc(&irq_err_count);
+> -
+>  	return -1;
+>  }
+>  
+> diff --git a/drivers/gpio/gpio-vr41xx.c b/drivers/gpio/gpio-vr41xx.c
+> index 98cd715ccc33..8d09b619c166 100644
+> --- a/drivers/gpio/gpio-vr41xx.c
+> +++ b/drivers/gpio/gpio-vr41xx.c
+> @@ -217,8 +217,6 @@ static int giu_get_irq(unsigned int irq)
+>  	printk(KERN_ERR "spurious GIU interrupt: %04x(%04x),%04x(%04x)\n",
+>  	       maskl, pendl, maskh, pendh);
+>  
+> -	atomic_inc(&irq_err_count);
+> -
+>  	return -EINVAL;
+>  }
+>  
+> -- 
+> 2.25.1
 
-Pavel, do you have a chance to review the patches (last three) that touch
-LED drivers? What would be your verdict?
+applied to mips-fixes.
+
+Thomas.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
