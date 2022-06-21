@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B134552F13
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:46:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85232552F29
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:51:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232828AbiFUJpz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 05:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58724 "EHLO
+        id S1346619AbiFUJv4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 05:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbiFUJpy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:45:54 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FE327B3F;
-        Tue, 21 Jun 2022 02:45:53 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id o10so18580215edi.1;
-        Tue, 21 Jun 2022 02:45:53 -0700 (PDT)
+        with ESMTP id S232828AbiFUJvz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:51:55 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66F327B2D;
+        Tue, 21 Jun 2022 02:51:54 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id cf14so8825284edb.8;
+        Tue, 21 Jun 2022 02:51:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CTHYGS8g7sCFv5p4IGpE8ByIK0vfNIUXHpKKS2cHepQ=;
-        b=aZan9a+4JhusAULYzHK4QFgDvTJUfc7zekQyAVoRGCyOHUagzlr3IY3SntNiCuk2D1
-         NQjyRuwmILTBnDHyj8RbP6weJG7bsYc7fpeAX5WMX7NI80xLjR2pEQelEAuHWyLISW03
-         dZaw/laN5sK9zCYrzCpBc92fUeGmzlgcNNnV+C/p3f0do3S2Xro53gDdPjHT4fWtJj81
-         rYkou1ikTNpl6+XOXXlO5K890puNv8x9VBAb1IKHcoUKaWjKVctK6anPKEkAjSj3/2W5
-         5VnldB0KCYV6EffLfKh44jApav4JdfNauC+sb7GhpOh85EPNh735t0b35swaLkY44kt/
-         +liQ==
+        bh=G4W5iRCpxf3logbYUk+vaaUqbarkwwxMMo6upR9gUBQ=;
+        b=F0iKTn0IOPk1RyoIOXx/9fQrQDEUk5S+5p/PPjKPXwc6epvlQST71mWhxR+3waqXCB
+         8hYjHeK4kQBeh/zfnt8/Gd8m+FNvsHQojomMiE00ZoSMMoPCBmxiqXxRF2r1SU5v9k46
+         Kv5bnO0ly5N7kd0NckGXgl7qGBHBvHYAhAN63gHHeZyCo6bAMhnaJ2sYiwp3oPpXGEH3
+         6XchV5hNnxVAkNSd3UVw0UzBrN2cQ6+/VTxPNrklzoDcSUwASVvijaAQrWC95FgtqYxJ
+         fSkvYOc61sxOfweyaUW/pFZcpDp7Gv/lyIqAEKbVzLxcPJEMGWZW70kD4F7aQeiKBMkB
+         jArw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CTHYGS8g7sCFv5p4IGpE8ByIK0vfNIUXHpKKS2cHepQ=;
-        b=kZUo2jRznMp5XfjLcAuBeECKC8lzI+QsrE70OpVq5nC5q5O9ihG9d6rp2lAlPR/xAb
-         zltZSQlGuK1WzBpBoy7IKOyrbkf6zOIfbjcPLkOA2QCkGP32i1GfwR0QJht0jYSPwjsb
-         twQAxEj/AWrTp2BXgPRyqA1/I+OEaJ3y02Oi23YqiGdKeBGXGWlf6YEyNs3rnK3MnVIR
-         s15QPax3CIrY+vZNto8dpEvi4UDkmrzaYNGQf+LSp9IZdLTpP8Au+zuHPeyf/6OsRqEQ
-         A15twnYf2srpKYdMwShgUF+ktJEttgRJ29o1UuuaGpgcD1mr5w85tAsr80DjelB56rMI
-         R5Ng==
-X-Gm-Message-State: AJIora+7j6MNdvZ9wR8Fo4UTzv+8y9g0YeDx7X0ovV2EIKlXUKYVuwa+
-        36JCxSctVAQG9AxXjjbGJs/rArVYDqBN9cK/SkM=
-X-Google-Smtp-Source: AGRyM1u+LlqfMEeQQX/kZr8ewmIWAzmzCCS9cETMG4/8g63994DOIJmrlDmEJXOU2GEP6EkqBPGnv4N6VF0F7gWLvvI=
-X-Received: by 2002:a05:6402:f8d:b0:435:6df2:68a with SMTP id
- eh13-20020a0564020f8d00b004356df2068amr20143116edb.209.1655804752004; Tue, 21
- Jun 2022 02:45:52 -0700 (PDT)
+        bh=G4W5iRCpxf3logbYUk+vaaUqbarkwwxMMo6upR9gUBQ=;
+        b=m1nJb6ST5JNEgOTaq9ZEDSi46vEOkK5/8J38nYsY5Sr+9Qe2+PV93ukM5eOd4dEBDG
+         l9ty1nd81ZMEeMMB2tB28DQzRICy33F1oHxFZEe07e15hKM6SN4OZsNkXX8qj9geBc0+
+         MsG3uE9tBi5CqScOFf+dSQRgDwrfeJBqI2uqEPlcGoM1oO5hC5Xd2UQ8ZpNhxHJMJvqJ
+         32+GpdtPxS2kv+4FUipJEHGQQBnjaA8ACdbarAswvjz9MjRjDR6WnIXIR/K6czX3POm7
+         OgLHbScM9P/GqVpm22s0dBdLzyosEbqjBP6RS0K45tMzmpUkBtwKIvPglcW2mDL4CWwM
+         wB3w==
+X-Gm-Message-State: AJIora9kVg3OyF5Ntp7zo9Wujbid1GN1KTEeJTo4GmtWli/NhA+lchvC
+        zPG+mnO5IoRqdpr6A4/CKh/qdRfX+SeTETKJabo=
+X-Google-Smtp-Source: AGRyM1uSpltIo/3tQd5aozJm5BFkUH3HKZnQozi1BRUdyqFMI1s00iuw7CgJCEeiuzaGluK7dwLzZcUki9IF9TJ/www=
+X-Received: by 2002:aa7:d29a:0:b0:435:705f:1319 with SMTP id
+ w26-20020aa7d29a000000b00435705f1319mr18633856edq.54.1655805113414; Tue, 21
+ Jun 2022 02:51:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com> <20220620200644.1961936-47-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220620200644.1961936-47-aidanmacdonald.0x0@gmail.com>
+References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com> <20220620200644.1961936-48-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220620200644.1961936-48-aidanmacdonald.0x0@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Jun 2022 11:45:15 +0200
-Message-ID: <CAHp75VcidJzb+1-uNMuDCKPSaxKkCdKnB=iF33g_PqaiyHAN8g@mail.gmail.com>
-Subject: Re: [PATCH 46/49] regmap-irq: Refactor checks for status bulk read support
+Date:   Tue, 21 Jun 2022 11:51:16 +0200
+Message-ID: <CAHp75VeGfBUq+jhyZ3F9M2JaaSZMe1+y9+-89bQTW0SCRgUkVg@mail.gmail.com>
+Subject: Re: [PATCH 47/49] regmap-irq: Add get_irq_reg() callback
 To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
 Cc:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -96,25 +96,78 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 10:11 PM Aidan MacDonald
+On Mon, Jun 20, 2022 at 10:12 PM Aidan MacDonald
 <aidanmacdonald.0x0@gmail.com> wrote:
 >
-> There are several conditions that must be satisfied to support
-> bulk read of status registers. Move the check into a function
-> to avoid duplicating it in two places.
+> Replace the internal sub_irq_reg() function with a public callback
+> that drivers can use when they have more complex register layouts.
+> The default implementation is regmap_irq_get_irq_reg_linear(), used
+> if the chip doesn't provide its own callback.
 
 ...
 
-> -       } else if (!map->use_single_read && map->reg_stride == 1 &&
-> -                  data->irq_reg_stride == 1) {
-> +       } else if (regmap_irq_can_bulk_read_status(data)) {
+> +       /*
+> +        * While possible that a user-defined get_irq_reg callback might be
 
->
+->get_irq_reg()
 
-While at it, you may drop this unneeded blank line.
+> +        * linear enough to support bulk reads, most of the time it won't.
+> +        * Therefore only allow them if the default callback is being used.
+> +        */
+>         return !map->use_single_read && map->reg_stride == 1 &&
+> -               data->irq_reg_stride == 1;
+> +               data->irq_reg_stride == 1 &&
+> +               data->get_irq_reg == regmap_irq_get_irq_reg_linear;
 
->                 u8 *buf8 = data->status_reg_buf;
->                 u16 *buf16 = data->status_reg_buf;
+If initially this had been as
+
+return _reg_stride && irq_reg_stride &&
+  !map->use_single_read;
+
+you would have done less changes by squeezing a new condition just in
+between the other two. It will preserve the grouping of the checks as
+well.
+
+>  }
+
+...
+
+> +               /*
+> +                * Note we can't use get_irq_reg() here because the offsets
+
+->get_irq_reg()
+
+> +                * in 'subreg' are *not* interchangeable with indices.
+> +                */
+
+...
+
+> +                       /*
+> +                        * For not_fixed_stride, don't use get_irq_reg().
+
+Ditto.
+
+> +                        * It would produce an incorrect result.
+> +                        */
+
+...
+
+> +                               reg = chip->main_status +
+> +                                       (i * map->reg_stride *
+> +                                        data->irq_reg_stride);
+
+Parentheses are not necessary. And perhaps the last two can be put on
+a single line.
+
+...
+
+> +       /*
+> +        * NOTE: This is for backward compatibility only and will be removed
+
+FIXME ?
+
+> +        * when not_fixed_stride is dropped (it's only used by qcom-pm8008).
+> +        */
 
 -- 
 With Best Regards,
