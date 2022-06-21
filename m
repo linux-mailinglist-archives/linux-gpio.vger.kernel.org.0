@@ -2,110 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 959ED552E81
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:36:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7A1F552ECF
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349035AbiFUJgb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 05:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47854 "EHLO
+        id S1349443AbiFUJkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 05:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349072AbiFUJga (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:36:30 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C4B2715F;
-        Tue, 21 Jun 2022 02:36:27 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id g26so4839519ejb.5;
-        Tue, 21 Jun 2022 02:36:27 -0700 (PDT)
+        with ESMTP id S1349283AbiFUJkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:40:08 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F4E27CD8
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jun 2022 02:39:55 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id i15so18642643ybp.1
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jun 2022 02:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B3mXXvSs4qGpLiVTug5tdC+fphrM4PCUnQdpfU/r3B4=;
-        b=GZTXPEfS47hEV7elN7AWU0dyhKzNKwdabIk8g/G/aEeYWfI/AEfKiiKKiJ0evIjaEd
-         FtH51zPQdYz0Wv0AmPXOMQLodWRlV7HyTinHEw6fgJQgOlyjsTl6fQZSl/ybu604W4F+
-         UxX4FRJSL6jlr9oxoyyq/C/sBcO8EH2byvWx7KEErHyh/iWfN8aNrTMTHnPVZ2W1J4lS
-         1/7esI1emn382GWt20lYVLjXhb37rvclxIVWEiEfxWQVq7ufkcL+iuwCEDXuZqtEs1hI
-         31L1rsZzI7J12QKbgN32jIG+MHsmRs2cNl3LB3qH6J7/PgBIg4Xu7+4egEgkvTA5IXOX
-         L5hw==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
+        b=NKhg6kSkfnglJlsPDVUWhCY3Iibudx7OhZC5CePFgeNekYJKNrcmU8wB8gkktmjPqY
+         f0o4DET3nwW7oGb1WQAmWVCm6yLISrVrQXMY/9qoCppMNLX7K/jA/JZ+JMs1mNT38j+N
+         qSlM2vTiSOIkQo5cZ6oY4dkMVda7fWn0vzKRT295Q67AStI8u0BTanvw38uSxo4IMvFm
+         mtbeFJOQugEk6bmbrSLJZHxNWvSEoU0AT9TQz59V3jAGDZbWiI6U0Fx8UlroTYMr9wGQ
+         +xC78kHT5AZK7k/f6wmWhdDj3ThC5Cy20ctCKCcYvb/idPExEpgvQXB/UX/ziCu3vO07
+         Q2/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B3mXXvSs4qGpLiVTug5tdC+fphrM4PCUnQdpfU/r3B4=;
-        b=bUkG6p78RZgOenmMJnBtDnetyk0ZI6GZPHDiMOryYm4MBh/Nx637LrLqr0XI7EzHzC
-         +uU4PiqECmz3UNkcIhCdDnwE56h/hwJSzMH7TVX3AR73Z8T+sAyyLpF1h/UXRY7xOPM4
-         5Im8pRb4he4CoivKXyNdccrSogHsHDFCFfbPL25GjNYx4thD14mBks21DFsubTwSl4zO
-         WDHoUPgUYdL+UaBhlXZsv+Kzb7arjmM2scEHMQj8Izvd2uvsxjRWuvOza8jpWy3UVwXy
-         T91q/iBGRpLeDmTldnTEn1NkSVNkYR77xk5BNiYOEh6RSrPsENOr7rf7q80/nvECfXNA
-         1ZCg==
-X-Gm-Message-State: AJIora/RgVFat76sdVIQPgUFp7vjRTXnprS6NazyAkryu/eSlYf73xC0
-        +nzD1uFJrO6sAnNcPSIkvM+eZUGKy8ANHC8e4h0=
-X-Google-Smtp-Source: AGRyM1sRYgfxiRNVCrgQTqEdasUCfu0meMegNlwo9FOn+D5YKqJkROr+llcEryQym3oDDQnhAyovKBjYaNBAW2RF8Ek=
-X-Received: by 2002:a17:907:9721:b0:70c:65e7:2aa5 with SMTP id
- jg33-20020a170907972100b0070c65e72aa5mr24694089ejc.132.1655804186418; Tue, 21
- Jun 2022 02:36:26 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
+        b=WDY33aZkfDmCM60omdDU5wi7xOUuG2wPEKIBWk+T3FAw84EsKmjsEAUeJKxum/Om/R
+         T7ASA1R1cY7eTwvw5/7klaOW/Q4FY5MgFx0luqzL8/PHQ8ziznTErzHjKFQ7bR9TkqAt
+         7HnBzxCDn8s5+P140SWpA7JD2wwBIlfWOiEW8oiPLOtT1ySRbRquKUzLf2PC2L32n6Sr
+         Z7d44ZwSaFuys7azJrpdmd60DDxoAvl/aZfGzJ7FJH9cPBSqFD45GSP/gUe6IOHHjEh0
+         Ko+aSyBL4v2RQ/NH063qmBavlBECai2ZajxVVf2pz5vXbFAgkSJ0xogox4n/Sh1z4P8T
+         JzYQ==
+X-Gm-Message-State: AJIora8TG68qZnmRJMMxr2k586bwxAn38ydghrCBL4Pk53C1fiQX1+bd
+        Ewzy/kmZpEBjshQMYCp1w4faOmb7kzKNQCrJfYePoOyBn4pfp8Zs
+X-Google-Smtp-Source: AGRyM1sTF/SvvxCyraPE52znD36ZX02jNmxmam87lP8bWzXT3yTfChS1a9JgJI9LjBXh9tpS4qLO5E/t+5efudcEruY=
+X-Received: by 2002:a0d:d7c7:0:b0:317:bfe8:4f2 with SMTP id
+ z190-20020a0dd7c7000000b00317bfe804f2mr12417910ywd.276.1655804384555; Tue, 21
+ Jun 2022 02:39:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com> <20220620200644.1961936-20-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220620200644.1961936-20-aidanmacdonald.0x0@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Jun 2022 11:35:49 +0200
-Message-ID: <CAHp75Vc9=fcUCAZuTAg9FTWCAtsOo8PaCdGj3NNyOwkN9PJHUA@mail.gmail.com>
-Subject: Re: [PATCH 19/49] mfd: stpmic1: Add broken_mask_unmask irq chip flag
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, tharvey@gateworks.com,
-        rjones@gateworks.com, Matti Vaittinen <mazziesaccount@gmail.com>,
-        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-actions@lists.infradead.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi@lists.linux.dev,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Received: by 2002:a05:7010:e10a:b0:2d9:e631:94d0 with HTTP; Tue, 21 Jun 2022
+ 02:39:44 -0700 (PDT)
+Reply-To: dimitryedik@gmail.com
+From:   Dimitry Edik <lsbthdwrds@gmail.com>
+Date:   Tue, 21 Jun 2022 02:39:44 -0700
+Message-ID: <CAGrL05aBO8rbFuij24J-APa+Luis69gEjhj35iv_GZfkHCVYDQ@mail.gmail.com>
+Subject: Dear Partner,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,
+        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b31 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [lsbthdwrds[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
+        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 10:08 PM Aidan MacDonald
-<aidanmacdonald.0x0@gmail.com> wrote:
->
-> The STPMIC1 has a normal "1 to disable" mask register with
-> separate set and clear registers. It's relying on masks and
-> unmasks being inverted from their intuitive meaning, so it
-> needs the broken_mask_unmask flag.
+Hello Dear,
 
-Same comment as per previous patch and continues to all patches of a kind.
+My Name is Dimitry Edik from Russia A special assistance to my Russia
+boss who deals in oil import and export He was killed by the Ukraine
+soldiers at the border side. He supplied
+oil to the Philippines company and he was paid over 90 per cent of the
+transaction and the remaining $18.6 Million dollars have been paid into a
+Taiwan bank in the Philippines..i want a partner that will assist me
+with the claims. Is a (DEAL ) 40% for you and 60% for me
+I have all information for the claims.
+Kindly read and reply to me back is 100 per cent risk-free
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yours Sincerely
+Dimitry Edik
