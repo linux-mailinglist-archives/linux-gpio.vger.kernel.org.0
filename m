@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BFC2552EFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:45:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B134552F13
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:46:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349396AbiFUJnL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 05:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56128 "EHLO
+        id S232828AbiFUJpz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 05:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349385AbiFUJnK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:43:10 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8AEC16591;
-        Tue, 21 Jun 2022 02:43:08 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id cw10so2512323ejb.3;
-        Tue, 21 Jun 2022 02:43:08 -0700 (PDT)
+        with ESMTP id S230328AbiFUJpy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:45:54 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FE327B3F;
+        Tue, 21 Jun 2022 02:45:53 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id o10so18580215edi.1;
+        Tue, 21 Jun 2022 02:45:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7W8pS4HaYS/K/F5s5QPICn7aqLZXMuTyRRVdAfsAcPg=;
-        b=XoZerS+qv1R28f40K6hoLnLM4Ct5C+e/yqRmtv+kzV9PCDFL/LS7bsUEdldOD+RyHB
-         ukczq/1O7qTvO3tyrlZrzFhXQ33KoFDifHZODZVFjJ3TigoHkBk7geFdz+QWVVDhdZd0
-         4QXA3Mcp4UOLWIVfOEaXgpOhro4R7EyEOzGxZz//6kMGNLexIQ1RMMhIHoy6Fmqp95s3
-         edH6j4r60Egf0+IoooN2Kl4dh1amXJKmc5SerDqp0IPAetq8boVtQMtd1V4UihFiytjO
-         i7exWG8M8Vy6qOonHlsopob38cCHeq//DmG2j5wMnELgMi7YdE2S591sC4Eqab5J28+F
-         vr/w==
+        bh=CTHYGS8g7sCFv5p4IGpE8ByIK0vfNIUXHpKKS2cHepQ=;
+        b=aZan9a+4JhusAULYzHK4QFgDvTJUfc7zekQyAVoRGCyOHUagzlr3IY3SntNiCuk2D1
+         NQjyRuwmILTBnDHyj8RbP6weJG7bsYc7fpeAX5WMX7NI80xLjR2pEQelEAuHWyLISW03
+         dZaw/laN5sK9zCYrzCpBc92fUeGmzlgcNNnV+C/p3f0do3S2Xro53gDdPjHT4fWtJj81
+         rYkou1ikTNpl6+XOXXlO5K890puNv8x9VBAb1IKHcoUKaWjKVctK6anPKEkAjSj3/2W5
+         5VnldB0KCYV6EffLfKh44jApav4JdfNauC+sb7GhpOh85EPNh735t0b35swaLkY44kt/
+         +liQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7W8pS4HaYS/K/F5s5QPICn7aqLZXMuTyRRVdAfsAcPg=;
-        b=EN4KTb12zFCgRCKjayRRLDTvs4wJ1cnJ8uu+JrJX83p5emApSz+eW5PXD/gqtCPK3Q
-         d6Vlzp/KGvYTii3zzQ9Dw8YxruLfgxWql4pCia9boDNdVze0dshqQpfiN+4EKrcxJlTU
-         jdYV63IsJE/l4VEL9UYWFE2Sc3UJ+5nv0p6HET8X9GkbKuIuvDs1hnPa6Stz9Eij4zKy
-         YuX1PufQv96qOx9rgqNUqAtsVq2+S2roXso8i8+jPukPNjf63HXkbtPzdHyelIs8z9QM
-         YHeC1R2rYhk5m/c6r5V9+UO3gbvnTx42f6c4J7u+bxUv6QAc805UqhIO/h+HAHnvhq5X
-         5Y7w==
-X-Gm-Message-State: AJIora8HTIHa1XvgZ3Gb6pn3v5VjanwJPE0fZ7gg4ekVcejTHtTPw7Mw
-        sXdBCRTPkCLfPTwDsrrFCMRzOjgDw/G5Pc5kY+c=
-X-Google-Smtp-Source: AGRyM1uYARWsSweZJveSPRopcUyqQF9g3LZ0zGnE7aD5N8bF+zyg2cKewkA1ySgZCwIP7Hmn7pVNYQGyGOFlItx8/YQ=
-X-Received: by 2002:a17:906:434f:b0:711:eb76:c320 with SMTP id
- z15-20020a170906434f00b00711eb76c320mr24832521ejm.636.1655804587541; Tue, 21
- Jun 2022 02:43:07 -0700 (PDT)
+        bh=CTHYGS8g7sCFv5p4IGpE8ByIK0vfNIUXHpKKS2cHepQ=;
+        b=kZUo2jRznMp5XfjLcAuBeECKC8lzI+QsrE70OpVq5nC5q5O9ihG9d6rp2lAlPR/xAb
+         zltZSQlGuK1WzBpBoy7IKOyrbkf6zOIfbjcPLkOA2QCkGP32i1GfwR0QJht0jYSPwjsb
+         twQAxEj/AWrTp2BXgPRyqA1/I+OEaJ3y02Oi23YqiGdKeBGXGWlf6YEyNs3rnK3MnVIR
+         s15QPax3CIrY+vZNto8dpEvi4UDkmrzaYNGQf+LSp9IZdLTpP8Au+zuHPeyf/6OsRqEQ
+         A15twnYf2srpKYdMwShgUF+ktJEttgRJ29o1UuuaGpgcD1mr5w85tAsr80DjelB56rMI
+         R5Ng==
+X-Gm-Message-State: AJIora+7j6MNdvZ9wR8Fo4UTzv+8y9g0YeDx7X0ovV2EIKlXUKYVuwa+
+        36JCxSctVAQG9AxXjjbGJs/rArVYDqBN9cK/SkM=
+X-Google-Smtp-Source: AGRyM1u+LlqfMEeQQX/kZr8ewmIWAzmzCCS9cETMG4/8g63994DOIJmrlDmEJXOU2GEP6EkqBPGnv4N6VF0F7gWLvvI=
+X-Received: by 2002:a05:6402:f8d:b0:435:6df2:68a with SMTP id
+ eh13-20020a0564020f8d00b004356df2068amr20143116edb.209.1655804752004; Tue, 21
+ Jun 2022 02:45:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com> <20220620200644.1961936-40-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220620200644.1961936-40-aidanmacdonald.0x0@gmail.com>
+References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com> <20220620200644.1961936-47-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220620200644.1961936-47-aidanmacdonald.0x0@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Jun 2022 11:42:31 +0200
-Message-ID: <CAHp75VfYebbY47_jOmyC0PapZB=ne1XA4gfV4OPuHcurFR6JCA@mail.gmail.com>
-Subject: Re: [PATCH 39/49] gpio: sl28cpld: replace irqchip mask_invert with unmask_base
+Date:   Tue, 21 Jun 2022 11:45:15 +0200
+Message-ID: <CAHp75VcidJzb+1-uNMuDCKPSaxKkCdKnB=iF33g_PqaiyHAN8g@mail.gmail.com>
+Subject: Re: [PATCH 46/49] regmap-irq: Refactor checks for status bulk read support
 To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
 Cc:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -96,37 +96,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 10:10 PM Aidan MacDonald
+On Mon, Jun 20, 2022 at 10:11 PM Aidan MacDonald
 <aidanmacdonald.0x0@gmail.com> wrote:
 >
-> An inverted mask register can be described more directly
-> as an unmask register.
+> There are several conditions that must be satisfied to support
+> bulk read of status registers. Move the check into a function
+> to avoid duplicating it in two places.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+...
 
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-> ---
->  drivers/gpio/gpio-sl28cpld.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
-> index 52404736ac86..2195f88c2048 100644
-> --- a/drivers/gpio/gpio-sl28cpld.c
-> +++ b/drivers/gpio/gpio-sl28cpld.c
-> @@ -70,8 +70,7 @@ static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
->         irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
->         irq_chip->num_regs = 1;
->         irq_chip->status_base = base + GPIO_REG_IP;
-> -       irq_chip->mask_base = base + GPIO_REG_IE;
-> -       irq_chip->mask_invert = true;
-> +       irq_chip->unmask_base = base + GPIO_REG_IE;
->         irq_chip->ack_base = base + GPIO_REG_IP;
->
->         ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
-> --
-> 2.35.1
+> -       } else if (!map->use_single_read && map->reg_stride == 1 &&
+> -                  data->irq_reg_stride == 1) {
+> +       } else if (regmap_irq_can_bulk_read_status(data)) {
+
 >
 
+While at it, you may drop this unneeded blank line.
+
+>                 u8 *buf8 = data->status_reg_buf;
+>                 u16 *buf16 = data->status_reg_buf;
 
 -- 
 With Best Regards,
