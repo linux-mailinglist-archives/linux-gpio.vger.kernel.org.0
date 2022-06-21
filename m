@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F2AA552E39
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:25:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78323552E54
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 11:30:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348533AbiFUJZ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 05:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
+        id S1348393AbiFUJaJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 05:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347053AbiFUJZz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:25:55 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BF97240A0;
-        Tue, 21 Jun 2022 02:25:54 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id g25so26122750ejh.9;
-        Tue, 21 Jun 2022 02:25:54 -0700 (PDT)
+        with ESMTP id S1348739AbiFUJaC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 05:30:02 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCDC26103;
+        Tue, 21 Jun 2022 02:30:01 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id c13so14050383eds.10;
+        Tue, 21 Jun 2022 02:30:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NOMsJgOH3MiCNjts6Vy2cOyGVGYl5lD+qutJwwCIfsM=;
-        b=U4TmMXAVNZeGSibLS1ghJJrIiOQVgWj4Qhzr2zXpZ+UjaA8vQDXSqrB0mhffAZ6Y9d
-         XaJxAG/q3qhi8lBbjSlIe4BCARpAkrbeLvmp7yJ8wuR7IahJDrPRtLyghlHUZlUs4nWB
-         FZTWmbA6jN6Dl+1dTCiUI5xSy7dHbNcZ9mHyH7xWZpPiLD4CjNeKT3bkajbgNmUNGssT
-         58FkgHEVrYlyPbFS9MvU+nFY1iGFJ3jlS3X3KFvPTYe8GBn4g2yDEArJsar8PRNVwU3S
-         TIAQj0k8aL5a3We6gBozjvqbKtUmm2XGgOixTPoPN+2bY4+KThPsVwTq4sbr78gBo2r6
-         edBg==
+        bh=eVfQd3XPechRFli107C/XOXRbeHsShcnB7OFUBR1wN4=;
+        b=SkWmIxEV+ESyHsCbsR1Xt7I9SQuAWrV1KNmPiHSefbw6tjpPMuthp3LqtVQ2N+GIyh
+         BF0EUqeIjZ/fTFqxBB6wXJ7xGaqQxl7IRe8eZi1sO2oZD7dNwzX7VC5QBndK7WTzX8pW
+         ar9X/Z0jZRtZLQ6fUs2aQmiDZ2d91v914nUh+KGkyPNtXOmVVYNnVMMqb+EzlDt8o66V
+         a0FVH1Zp8dBl16N3CmVzQ4p+Wj0SgKmTk9HwQkqHXo0LNrXTGtskvMPd3alLj3K0vLA/
+         //ny6WHJ/gvkwxF84HzdQy++kjBUu8yXxysyZC5+Z+VkMghwv8Mv/zySzZVeO0ePODU+
+         GlXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NOMsJgOH3MiCNjts6Vy2cOyGVGYl5lD+qutJwwCIfsM=;
-        b=KN2GuPZKkvOFKroLm3qy8kHCV0JXXd5xe2DrI7Njfq9xMQxJ5yCowZ41SFbAHmMTrh
-         XMNhSYXlVYx9JQDxkxwbPEnrmNGkGdhl52k8/HFktNHoUIzaDE/LO5bTFMvfKELoplSu
-         szrLyvn5XsVkGLLzDBDGZiDXOOvao/CXo9u0LmH3hk9x6pomEiAD222rSOLx3LooFGcT
-         fp6CMZ93pQwegN1h1//0PcBMKqQ95SFoqjPLruZ1U5d6NhjlQpQrOWq7SHcOQmXqhcMh
-         qcyEnEWkJHpYZjw39HOeF9/muhm3ooc8WVXLRQ6KveRDiEPSGCZX0GhMxeqhrdXIT+c3
-         9b4g==
-X-Gm-Message-State: AJIora+boOTEvvYSiXs8Oqw4KcqLERi4qXboNANvkGyKhUJaH4JfhCsS
-        qiH8Nb+WM3ewZTzBR+mjAEzznUsaHFmKnuMdzo4=
-X-Google-Smtp-Source: AGRyM1se8Q5QQtyQhqZ276ze+sQZWIHL5X2Uisw4LahZgr/oEQb+koeaLdBeR+uqRMsLqk/klYDHMQOlZMtTnGjBf6c=
-X-Received: by 2002:a17:907:72c7:b0:722:e5af:f666 with SMTP id
- du7-20020a17090772c700b00722e5aff666mr1241803ejc.44.1655803552679; Tue, 21
- Jun 2022 02:25:52 -0700 (PDT)
+        bh=eVfQd3XPechRFli107C/XOXRbeHsShcnB7OFUBR1wN4=;
+        b=2s3Zqa675upJTh6G69MjRIf79fYt619yMAGRheYVAhOZxjvDQh/V5uRTW8KkHbokA9
+         ouiE/OmoB1XtzoRptaBOv3XKHuuPiD3Ns1Sr1EuADusJC11+tn4AT+SubnHGt2nLFF3w
+         Ok1r8qNq3D4rPcrUp9jsp2RNFD/CsMHaaOUefgvn5v/3vOPT7ypff/YLKGRakBLrxc61
+         fG1G29jntFiqR1FkfILkZF4NHwCA3RMc6IFpkQt2UqL3kczeBE4SV1ywrCqFnNMd+3xq
+         m8Ww+dr8eipGBkP8yHtJ3bKLHKyUF6SkHIzyEktfgJ+lORTsUhGskbsoc0ugoVeqFgzv
+         jJrQ==
+X-Gm-Message-State: AJIora+lp2mb37z0mB42PIvjXoc2uJaTNpKki3+MO19gWE/TkME7EI89
+        i7MERN6dXbTg17CxZHU5EB+6jwIQ0Ci/+uavlCk=
+X-Google-Smtp-Source: AGRyM1tM0xU4gMjk8srBUxoaihaU7C2henLT+DWnWAydDDa7goTMcwvw8+NLuBGCqmwgWP4p2sY0HbLwAwb7ohmPFDY=
+X-Received: by 2002:a05:6402:4390:b0:42e:b7e:e9ac with SMTP id
+ o16-20020a056402439000b0042e0b7ee9acmr34685476edc.97.1655803800295; Tue, 21
+ Jun 2022 02:30:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
+References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com> <20220620200644.1961936-16-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220620200644.1961936-16-aidanmacdonald.0x0@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Jun 2022 11:25:16 +0200
-Message-ID: <CAHp75VcQ5xZV2eoC93zu3qA2TcE3LyMgZLMX=r0ibzQ1Fg6U0Q@mail.gmail.com>
-Subject: Re: [PATCH 00/49] regmap-irq cleanups and refactoring
+Date:   Tue, 21 Jun 2022 11:29:23 +0200
+Message-ID: <CAHp75Vd7Sq9RMqin_y-8qUEAJLaGfuqxAbe+qcMB22=bqkyZqg@mail.gmail.com>
+Subject: Re: [PATCH 15/49] regmap-irq: Change the behavior of mask_writeonly
 To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
 Cc:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -96,58 +96,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 10:07 PM Aidan MacDonald
+On Mon, Jun 20, 2022 at 10:08 PM Aidan MacDonald
 <aidanmacdonald.0x0@gmail.com> wrote:
 >
-> Hi Mark,
+> No drivers currently use mask_writeonly, and in its current form
+> it seems a bit misleading. When set, mask registers will be
+> updated with regmap_write_bits() instead of regmap_update_bits(),
+> but regmap_write_bits() still does a read-modify-write under the
+> hood. It's not a write-only operation.
 >
-> Here's a bunch of cleanups for regmap-irq focused on simplifying the API
-> and generalizing it a bit. It's broken up into three refactors, focusing
-> on one area at a time.
->
-> * Patches 01 and 02 are straightforward bugfixes, independent of the
->   rest of the series. Neither of the bugs are triggered by in-tree
->   drivers but they might be worth picking up early anyhow.
->
-> * Patches 03-13 clean up everything related to configuring IRQ types.
->
-> * Patches 14-45 deal with mask/unmask registers. First, make unmask
->   registers behave more intuitively and usefully, and get rid of the
->   mask_invert flag in favor of describing inverted mask registers as
->   unmask registers. Second, make the mask_writeonly flag more useful
->   and enable it for two chips where it makes sense.
->
-> * Patches 46-49 refactor sub_irq_reg() as a get_irq_reg() callback,
->   and use that to eliminate the not_fixed_stride flag.
->
-> The approach I used when refactoring is pretty simple: (1) introduce new
-> functionality in regmap-irq, (2) convert the drivers, and (3) remove any
-> old code. Nothing should break in the middle.
->
-> The patches can be re-ordered to some extent if that's preferable, but
-> it's best to add get_irq_reg() last to avoid having to think about how
-> it interacts with features that'll be removed anyway.
->
-> I can't test most of the devices affected by this series so a lot of the
-> code is only build tested. I've tested on real hardware with my AXP192
-> patchset[1], although it only provides limited code coverage.
->
-> qcom-pm8008 in particular deserves careful testing - it used all of the
-> features touched by the refactors and required the most changes. Other
-> drivers only required trivial changes but there are three of them worth
-> mentioning: wcd943x, wcd9335, and wcd938x. They have suspicious looking
-> IRQ type definitions and I'm pretty sure aren't working properly, but
-> I can't fix them myself. The refactor shouldn't affect their behavior
-> so how / when / if they get fixed shouldn't be much of an issue.
->
-> Oh, and I added the 'mask_writeonly' flag and volatile ranges to the
-> stpmic1 driver based on its datasheet[2] as a small optimization. It's
-> probably fine but testing would be a good idea.
->
-> [1]: https://lore.kernel.org/linux-iio/20220618214009.2178567-1-aidanmacdonald.0x0@gmailcom/
-> [2]: https://www.st.com/resource/en/datasheet/stpmic1.pdf
+> Performing a simple regmap_write() is probably more useful, since
+> it can be used for chips that have separate set & clear registers
+> for controlling mask bits. Such registers are normally volatile
+> and read as 0, so avoiding a register read minimizes bus traffic.
 
-Cool series, thanks for cleaning this up!
+Reading your explanations and the code, I would rather think about
+fixing the regmap_write_bits() to be writeonly op.
+
+Otherwise it's unclear what's the difference between
+regmap_write_bits() vs. regmap_update_bits().
+
+...
+
+>         if (d->chip->mask_writeonly)
+> -               return regmap_write_bits(d->map, reg, mask, val);
+> +               return regmap_write(d->map, reg, val & mask);
+>         else
+>                 return regmap_update_bits(d->map, reg, mask, val);
 
 -- 
 With Best Regards,
