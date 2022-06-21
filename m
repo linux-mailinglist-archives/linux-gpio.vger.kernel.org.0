@@ -2,104 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3908A5537A6
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 18:14:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4306155388E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 19:09:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353938AbiFUQMp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 12:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32860 "EHLO
+        id S1353359AbiFURJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 13:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353854AbiFUQMf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 12:12:35 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0752E9F4;
-        Tue, 21 Jun 2022 09:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1655827953; x=1687363953;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version;
-  bh=ptXjE3zECiT2wn/Ks+vJ3UipTTX8glzq7ANY1S4UC5o=;
-  b=ZD3wD+Gozw0f8RSRxEwLov0ERAdYhJkQpBdkTINWu+J/yN4zSlWd3Wvw
-   xTHxmCT7fY+XAXkmSZj9gkPMXQjZnUEv7sei0MZSt/EYJmrmkE9xqdAbc
-   NB++Hq2i5lS/vKfpSwyYv03dWeM9ADYbC23x9CdenB67huqLDWymUYxhJ
-   Q=;
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 21 Jun 2022 09:12:32 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 09:12:30 -0700
-Received: from nalasex01c.na.qualcomm.com (10.47.97.35) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Tue, 21 Jun 2022 09:12:30 -0700
-Received: from srichara-linux.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Tue, 21 Jun 2022 09:12:25 -0700
-From:   Sricharan R <quic_srichara@quicinc.com>
-To:     <quic_srichara@quicinc.com>, <agross@kernel.org>,
-        <bjorn.andersson@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <p.zabel@pengutronix.de>,
-        <quic_varada@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH V2 8/8] arm64: defconfig: Enable IPQ5018 SoC base configs
-Date:   Tue, 21 Jun 2022 21:41:26 +0530
-Message-ID: <20220621161126.15883-9-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220621161126.15883-1-quic_srichara@quicinc.com>
-References: <20220621161126.15883-1-quic_srichara@quicinc.com>
+        with ESMTP id S1352201AbiFURJH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 13:09:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5B424F2B;
+        Tue, 21 Jun 2022 10:09:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0AF3461569;
+        Tue, 21 Jun 2022 17:09:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A5EC3411C;
+        Tue, 21 Jun 2022 17:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655831345;
+        bh=hoetdcZUDckCVz1LG7Suq/7P7r1pBVIFo0Mc9wsofSc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RuybSt0jNYMAYfRsWXHYhHsk+0ofBeXFoZvGmqCeMqMzipoVYqGmD/I7MRQtP6yZ/
+         f2OrqFGZDKu2+YU5eEKKAxb/XnhnOW1ZiYTxI8BfYBDGIeWxc5rnfznR3+zzyBBWPY
+         l+OI573tJCSGgKT0iuPnOaDTDKa2XFj58pb5RNTm6I6QqKTZghMu9Xt8SmlG7hFaB6
+         T5JhW3h0TVGylxUTwooVthkO6xg+2d5FZexgNBSgeq+B7hKMbML8eZkTg23BR4PCys
+         sd3hltj6VukI77Q0dhGBCVocjx6KSic5cZMNvVCk+TZokH4jRCz2nGKiRABmOsSiS/
+         iivCrzf0kFV6Q==
+Date:   Tue, 21 Jun 2022 18:08:54 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        srinivas.kandagatla@linaro.org, bgoswami@codeaurora.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        cw00.choi@samsung.com, krzysztof.kozlowski@linaro.org,
+        b.zolnierkie@samsung.com, myungjoo.ham@samsung.com,
+        michael@walle.cc, linus.walleij@linaro.org, brgl@bgdev.pl,
+        tglx@linutronix.de, maz@kernel.org, lee.jones@linaro.org,
+        mani@kernel.org, cristian.ciocaltea@gmail.com, wens@csie.org,
+        tharvey@gateworks.com, rjones@gateworks.com,
+        mazziesaccount@gmail.com, orsonzhai@gmail.com,
+        baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        jernej.skrabec@gmail.com, samuel@sholland.org, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 00/49] regmap-irq cleanups and refactoring
+Message-ID: <YrH7JurP2LAl1uYU@sirena.org.uk>
+References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rrIaw91LstEgu4tF"
+Content-Disposition: inline
+In-Reply-To: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
+X-Cookie: Edited for television.
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
 
-Enables clk & pinctrl related configs
+--rrIaw91LstEgu4tF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Co-developed-by: Sricharan R <quic_srichara@quicinc.com>
-Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+On Mon, Jun 20, 2022 at 09:05:55PM +0100, Aidan MacDonald wrote:
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 50aa3d75ab4f..2534357107e4 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -522,6 +522,7 @@ CONFIG_PINCTRL_IMX8DXL=y
- CONFIG_PINCTRL_IMX8ULP=y
- CONFIG_PINCTRL_MSM=y
- CONFIG_PINCTRL_IPQ8074=y
-+CONFIG_PINCTRL_IPQ5018=y
- CONFIG_PINCTRL_IPQ6018=y
- CONFIG_PINCTRL_MSM8916=y
- CONFIG_PINCTRL_MSM8994=y
-@@ -1012,6 +1013,8 @@ CONFIG_QCOM_CLK_APCS_MSM8916=y
- CONFIG_QCOM_CLK_APCC_MSM8996=y
- CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
-+CONFIG_IPQ_GCC_5018=y
-+CONFIG_IPQ_APSS_5018=y
- CONFIG_IPQ_GCC_6018=y
- CONFIG_IPQ_GCC_8074=y
- CONFIG_MSM_GCC_8916=y
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> Here's a bunch of cleanups for regmap-irq focused on simplifying the API
+> and generalizing it a bit. It's broken up into three refactors, focusing
+> on one area at a time.
 
+This series is very large and the way it is interleaving patches for
+several different subsystems adds to the difficulty managing it.  As
+you've identified there's several different subserieses in here, if you
+need to resend any of this (I've not even started looking at the actual
+patches yet) it would be easier to digest with some combination of
+sending as separate serieses and reordering things so that all the
+things for each subsystem are grouped together.  That'd help with both
+review and with merging, both large serieses and cross subsystem
+dependencies tend to slow things down.
+
+--rrIaw91LstEgu4tF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmKx+yUACgkQJNaLcl1U
+h9ARhgf/d9WNHkTS7uOL1AjmOAryEB+Kl4XpvM2bPc6J1x3bJLQr0kY7ASfsP+sn
+EovP2WnmZcMN+6QP3IXqYa66Zs0TNpF9a+kE+ZRtrR+CA0IU2h1F+hxxXQqj0qnW
+mZN71F66k/6WM7N5ybsoQNBJpfE2nrPhFErbYaGlRX3XwNl3I2VKtR66QeX/wKUY
+7ZQWLnzg5a3cQ+WrIffyuSsjXVDB91hdPSXy0OhvCImHKadkEIps/tppbRY63kNe
+8jszRNa9Uwkkq2wLkt7L+8oxBdIoxui9RRaEPeUunjb63lzyzeCSv1ZYtUtU/dbR
+kf3eYLXPbjwDpknw9n3EJz21ZUZ12g==
+=maZ4
+-----END PGP SIGNATURE-----
+
+--rrIaw91LstEgu4tF--
