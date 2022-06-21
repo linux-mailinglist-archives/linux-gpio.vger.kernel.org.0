@@ -2,108 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4306155388E
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 19:09:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E91E553AA8
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 21:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353359AbiFURJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jun 2022 13:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45792 "EHLO
+        id S1354022AbiFUTet (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 15:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352201AbiFURJH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 13:09:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5B424F2B;
-        Tue, 21 Jun 2022 10:09:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0AF3461569;
-        Tue, 21 Jun 2022 17:09:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A5EC3411C;
-        Tue, 21 Jun 2022 17:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655831345;
-        bh=hoetdcZUDckCVz1LG7Suq/7P7r1pBVIFo0Mc9wsofSc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RuybSt0jNYMAYfRsWXHYhHsk+0ofBeXFoZvGmqCeMqMzipoVYqGmD/I7MRQtP6yZ/
-         f2OrqFGZDKu2+YU5eEKKAxb/XnhnOW1ZiYTxI8BfYBDGIeWxc5rnfznR3+zzyBBWPY
-         l+OI573tJCSGgKT0iuPnOaDTDKa2XFj58pb5RNTm6I6QqKTZghMu9Xt8SmlG7hFaB6
-         T5JhW3h0TVGylxUTwooVthkO6xg+2d5FZexgNBSgeq+B7hKMbML8eZkTg23BR4PCys
-         sd3hltj6VukI77Q0dhGBCVocjx6KSic5cZMNvVCk+TZokH4jRCz2nGKiRABmOsSiS/
-         iivCrzf0kFV6Q==
-Date:   Tue, 21 Jun 2022 18:08:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        srinivas.kandagatla@linaro.org, bgoswami@codeaurora.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        cw00.choi@samsung.com, krzysztof.kozlowski@linaro.org,
-        b.zolnierkie@samsung.com, myungjoo.ham@samsung.com,
-        michael@walle.cc, linus.walleij@linaro.org, brgl@bgdev.pl,
-        tglx@linutronix.de, maz@kernel.org, lee.jones@linaro.org,
-        mani@kernel.org, cristian.ciocaltea@gmail.com, wens@csie.org,
-        tharvey@gateworks.com, rjones@gateworks.com,
-        mazziesaccount@gmail.com, orsonzhai@gmail.com,
-        baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        jernej.skrabec@gmail.com, samuel@sholland.org, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 00/49] regmap-irq cleanups and refactoring
-Message-ID: <YrH7JurP2LAl1uYU@sirena.org.uk>
-References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
+        with ESMTP id S1352458AbiFUTes (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 15:34:48 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B6A32D1DD
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jun 2022 12:34:41 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 23so26230388ybe.8
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jun 2022 12:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GXndJbSr9Ys4cj6udGMJGPkAdQ+tLqQg3olnN64ieEQ=;
+        b=hs0LBDjDT9OlV72N7fBe49gCxiWYUZOxcBIws2Wgn8BN3WqTsnKUdVz0Q6ampLmXSV
+         5NkiSMbN9ezJtAmWUjyXVIOyvmB3tJWzCQSXBR+AO4tHEKCswdhBhhSG3vkBJZtJUVht
+         3JKyU0RJ2Ra5mCUJKBEJL8bG3wIYavBkn/AC2/Ch3FvXau57I9pfQARkPbGSgaJEoyGe
+         lTYcqa0zN/847nKzFl1WJjYqvmR1XHqpgkTYKwx4e2Qa8R6Ns1pVO3swtmqqCxrKN2V9
+         Bfty4fIeIEEKkVxTaMUi8q3bxkgjiWSJm0iXnvkRaHi2W0O9dPMwDc0y+T+TfR/UJ6Ei
+         2AEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GXndJbSr9Ys4cj6udGMJGPkAdQ+tLqQg3olnN64ieEQ=;
+        b=tsqehZ3zxBhYMp8ePSK7rpCDpGhVcKqUnsiT280Q15yTJEsjangfx0uqjDXZjOlkYQ
+         i5k+hN9VyAQiKlRxjIkJQ9pNSVeLW5ABX56+v3xNxhFXf/VnyJnsMG/izriZzJwftNWq
+         /wiGdKO3AfspxYj4ZI7XeggDBJCcRny81qEV54T8L/zOJyzRfAj2ImB5++9KaIsQ1RHK
+         0kjLhvLuhdQ6uGRMtsil9PXlHz7kf0t1erK1m76Qr1zkOMzOb6ULTaroBj1VNsNdC5pr
+         fW8n5Zf7HUSVVjDGzIUagYTtjbqx4I1GoXfwqiyDUglL0iwB4oKsStOsXO39lWuXR46X
+         kvLA==
+X-Gm-Message-State: AJIora8U87NbzCfvLQiR/NY3uqYMkFAESfkAIHCM5QwlTEVA+9408asV
+        gGaexKGLy3MF/i0QtgyprbiDlPd9Xqs4U2JCiCwdHw==
+X-Google-Smtp-Source: AGRyM1u+tZKGrSW1cGi362mrQj+GEMsoaxrv0rYK4Hl9mC2GWlTK9NyKv5qqlRv1HupVfSdChNkUORkFSlefFHsLXRY=
+X-Received: by 2002:a25:9947:0:b0:663:ec43:61eb with SMTP id
+ n7-20020a259947000000b00663ec4361ebmr32241009ybo.115.1655840080076; Tue, 21
+ Jun 2022 12:34:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rrIaw91LstEgu4tF"
-Content-Disposition: inline
-In-Reply-To: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
-X-Cookie: Edited for television.
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <20220601070707.3946847-2-saravanak@google.com> <YrFzK6EiVvXmzVG6@atomide.com>
+In-Reply-To: <YrFzK6EiVvXmzVG6@atomide.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 21 Jun 2022 12:34:03 -0700
+Message-ID: <CAGETcx_1USPRbFKV5j00qkQ-QXJkp7=FAfnFcfiNnM4J5KF1cQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jun 21, 2022 at 12:28 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> Hi,
+>
+> * Saravana Kannan <saravanak@google.com> [700101 02:00]:
+> > Now that fw_devlink=on by default and fw_devlink supports
+> > "power-domains" property, the execution will never get to the point
+> > where driver_deferred_probe_check_state() is called before the supplier
+> > has probed successfully or before deferred probe timeout has expired.
+> >
+> > So, delete the call and replace it with -ENODEV.
+>
+> Looks like this causes omaps to not boot in Linux next.
 
---rrIaw91LstEgu4tF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Can you please point me to an example DTS I could use for debugging
+this? I'm assuming you are leaving fw_devlink=on and not turning it
+off or putting it in permissive mode.
 
-On Mon, Jun 20, 2022 at 09:05:55PM +0100, Aidan MacDonald wrote:
+> With this
+> simple-pm-bus fails to probe initially as the power-domain is not
+> yet available.
 
-> Here's a bunch of cleanups for regmap-irq focused on simplifying the API
-> and generalizing it a bit. It's broken up into three refactors, focusing
-> on one area at a time.
+Before we get to late_initcall(), I'd expect this series to not have
+any impact because both fw_devlink and
+driver_deferred_probe_check_state() should be causing the device's
+probe to get deferred until the PM domain device comes up.
 
-This series is very large and the way it is interleaving patches for
-several different subsystems adds to the difficulty managing it.  As
-you've identified there's several different subserieses in here, if you
-need to resend any of this (I've not even started looking at the actual
-patches yet) it would be easier to digest with some combination of
-sending as separate serieses and reordering things so that all the
-things for each subsystem are grouped together.  That'd help with both
-review and with merging, both large serieses and cross subsystem
-dependencies tend to slow things down.
+To double check this, without this series, can you give me the list of
+"supplier:*" symlinks under a simple-pm-bus device's sysfs folder
+that's having problems with this series? And for all those symlinks,
+cat the "status" file under that directory?
 
---rrIaw91LstEgu4tF
-Content-Type: application/pgp-signature; name="signature.asc"
+In the system where this is failing, is the PM domain driver loaded as
+a module at a later point?
 
------BEGIN PGP SIGNATURE-----
+Couple of other things to try (with the patches) to narrow this down:
+* Can you set driver_probe_timeout=0 in the command line and see if that helps?
+* Can you set it to something high like 30 or even larger and see if it helps?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmKx+yUACgkQJNaLcl1U
-h9ARhgf/d9WNHkTS7uOL1AjmOAryEB+Kl4XpvM2bPc6J1x3bJLQr0kY7ASfsP+sn
-EovP2WnmZcMN+6QP3IXqYa66Zs0TNpF9a+kE+ZRtrR+CA0IU2h1F+hxxXQqj0qnW
-mZN71F66k/6WM7N5ybsoQNBJpfE2nrPhFErbYaGlRX3XwNl3I2VKtR66QeX/wKUY
-7ZQWLnzg5a3cQ+WrIffyuSsjXVDB91hdPSXy0OhvCImHKadkEIps/tppbRY63kNe
-8jszRNa9Uwkkq2wLkt7L+8oxBdIoxui9RRaEPeUunjb63lzyzeCSv1ZYtUtU/dbR
-kf3eYLXPbjwDpknw9n3EJz21ZUZ12g==
-=maZ4
------END PGP SIGNATURE-----
+> On platform_probe() genpd_get_from_provider() returns
+> -ENOENT.
 
---rrIaw91LstEgu4tF--
+This error is with the series I assume?
+
+> Seems like other stuff is potentially broken too, any ideas on
+> how to fix this?
+
+I'll want to understand the issue first. It's not yet clear to me why
+fw_devlink isn't blocking the probe of the simple-pm-bus device until
+the PM domain device shows up. And if it is not blocking, then why and
+at what point in boot it's giving up and letting the probe get to this
+point where there's an error.
+
+-Saravana
+
+>
+>
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/base/power/domain.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> > index 739e52cd4aba..3e86772d5fac 100644
+> > --- a/drivers/base/power/domain.c
+> > +++ b/drivers/base/power/domain.c
+> > @@ -2730,7 +2730,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
+> >               mutex_unlock(&gpd_list_lock);
+> >               dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+> >                       __func__, PTR_ERR(pd));
+> > -             return driver_deferred_probe_check_state(base_dev);
+> > +             return -ENODEV;
+> >       }
+> >
+> >       dev_dbg(dev, "adding to PM domain %s\n", pd->name);
+> > --
+> > 2.36.1.255.ge46751e96f-goog
+> >
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
