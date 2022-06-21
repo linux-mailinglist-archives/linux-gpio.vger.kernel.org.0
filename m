@@ -2,162 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B529D5529F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 06:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD0E7552B02
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jun 2022 08:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345332AbiFUDmy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jun 2022 23:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55822 "EHLO
+        id S1345333AbiFUGfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jun 2022 02:35:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345127AbiFUDmv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jun 2022 23:42:51 -0400
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDA220BEB;
-        Mon, 20 Jun 2022 20:42:38 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id CF57E32004AE;
-        Mon, 20 Jun 2022 23:42:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 20 Jun 2022 23:42:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1655782956; x=1655869356; bh=8+
-        kpyGFjwm1UBofAO7xT80QECZvTQRm9biCZ/RYfokc=; b=it63xThXVfY3WE0i72
-        vgILBXfJAv/1mQZfy9gvJqV6F3QvwtrmWk4dXoD6dBrMt2ZZwzwsj7OrQsjhka5N
-        2rkmpqZ+9UnPfRru/xLSAZv6M8qk/FifY9VmlmPNRXhaH16grHnFc0CZGRNaRDKW
-        1wghVFaos3Qu4InwwUvMlUP3kZXnda4ewbHm/WKv3l2CRvPX5OfLfKOAJWJJ0hwt
-        iW/vDgaFXY+acOR9m452Opmukw/iWhMi4532hrQYnzydLwzKv9YpAtwm7px6Kjvp
-        fffeSn0lEi5LZRZ+YPDQCfiNiLQsM9e2GRfuXSAuIeyXeJk9vvOGrZu2qGFeYHdS
-        loJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1655782956; x=1655869356; bh=8+kpyGFjwm1UB
-        ofAO7xT80QECZvTQRm9biCZ/RYfokc=; b=cuhN6LRnOFUy3ufxG2vB/PZV3wxn9
-        gUbR4Uim8aGsnipy+pPtv8VcdzAHyrk7OxEUKkYZPAg3tXQQNObScwt9PluDLzBe
-        Mo5+J0mV/O12kiJiDMuHBiITSpCjpaLUUmP6YAoKDx5hNF5pY+YdvyuLXjEIsEm6
-        05NVocZ0TIOBghDcYG2JrmgvCB0XpH+KqYg7xctdQrfGMZy4X7QyoL+5R1hALZHW
-        sTG3kFg2QQf0Auy2mbJgVOYXtq9tMcR/hRobsyeKkam5gf8S3M5lWtU4y83Ag1Bx
-        qWEHOCvhvyXnCh1MJwb4bPyyqyyywFc0spapXRmj990evCnmkQOz8SAMA==
-X-ME-Sender: <xms:LD6xYmARWSquplhF_PqNRp2R1AkDjr9fpNtDunDW8jurORgTu6oeXA>
-    <xme:LD6xYgjC_plEkUCy_JVW0ynN_rZkg3vGNjRKfk_AMo9MxKc1HARHs9SHYyZxSuxGB
-    b1RlT77wCpvt-b-BA>
-X-ME-Received: <xmr:LD6xYpkljDpJuig50uoxL8myHBeO1c4MXZWY4WWLdYvnSSWh5bhVGBSNj914jRG5JcjnIhXJo-DD2yzLdoR2iwB8YWP-rxe0T1BPqQ53RwXbxzihWbOttZJgzD-dsboYgmfiqg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudefvddgjedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepudekteeuudehtdelteevgfduvddvjefhfedulefgudevgeeghefg
-    udefiedtveetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:LD6xYkzkYnMfslj3stjZGJyXuPy5tJwzoVtFrxO359L2SW7K44Ya7Q>
-    <xmx:LD6xYrRAi5TYb1aJggJ0S6OSlQdNyKf7bM11tIHSzdAnvFmflugaeA>
-    <xmx:LD6xYvbgQpoF0Mgf4c1scPrGBu55JYTmg8LoYD52RlNn18__zaObmg>
-    <xmx:LD6xYmGm45Yi7ozDwslFHrqZIEZAUxwU9R4Ac1iafnq-sa3t6OQCbA>
-Feedback-ID: i0ad843c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 20 Jun 2022 23:42:35 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S235008AbiFUGfi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jun 2022 02:35:38 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DF115A07
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jun 2022 23:35:36 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o3XU6-0002Vh-12; Tue, 21 Jun 2022 08:35:34 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o3XU2-001mg1-7e; Tue, 21 Jun 2022 08:35:31 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o3XU2-0009Nd-Uv; Tue, 21 Jun 2022 08:35:30 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] ARM: dts: axp22x/axp809: Add GPIO controller nodes
-Date:   Mon, 20 Jun 2022 22:42:24 -0500
-Message-Id: <20220621034224.38995-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220621034224.38995-1-samuel@sholland.org>
-References: <20220621034224.38995-1-samuel@sholland.org>
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de
+Subject: [PATCH] gpio: brcmstb: Make .remove() obviously always return 0
+Date:   Tue, 21 Jun 2022 08:35:24 +0200
+Message-Id: <20220621063524.146604-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1453; h=from:subject; bh=elYeY8lZw+FFM0NfPKFwTcZT0AbtnW5R5kafvn9u/Gg=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBisWappUPz26kDSXoAw/xCZQkwS1kAntSBW6+lwYCr 5kYMdiaJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYrFmqQAKCRDB/BR4rcrsCYewB/ sHSlcpcpRUbzQf+85ZwsBxRSV72r4AXaNQNiFoXBh6m5J83EAjaicVmKBh1puYFVjslKMVUq7UzeBC PW8FheSHOdB3IK7UvkTvoLb7YZxhAm9yPny0lm3WQaYpyemGuB1KV1e1m/msB4npHhj+CTmQTbleEy nfNOOY835Wp/kMn6CwVrvoafKmmWmywXZRO8WgLdLSbfCmCPQ+9Ody4mc7UEgNgOnH/yT8a/Yynkof QP55righgK3On42agR50gk1QVuMdjmEZDe5hF/R5evdsjav7m3B5yjXFWgJeJy+Kplzzkd1Z3YkWo/ SmuJkMirEePs3zjCQkX7KInlb5ANra
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-These PMICs all contain a GPIO controller. Now that the binding is
-documented, wire up the controller in the device tree.
+priv cannot be NULL because brcmstb_gpio_probe() calls
+platform_set_drvdata() with a non-NULL argument, so the check for !priv can
+be dropped.
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+Also remove the variable ret that is only used to hide a bit that in the
+end zero is returned.
+
+This is a preparation for making platform remove callbacks return void.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
+ drivers/gpio/gpio-brcmstb.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-(no changes since v1)
-
- arch/arm/boot/dts/axp22x.dtsi | 18 ++++++++++++++++++
- arch/arm/boot/dts/axp809.dtsi | 19 +++++++++++++++++++
- 2 files changed, 37 insertions(+)
-
-diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-index a020c12b2884..5c233c84be92 100644
---- a/arch/arm/boot/dts/axp22x.dtsi
-+++ b/arch/arm/boot/dts/axp22x.dtsi
-@@ -67,6 +67,24 @@ battery_power_supply: battery-power {
- 		status = "disabled";
- 	};
+diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+index 6b7439b44690..f620f0712134 100644
+--- a/drivers/gpio/gpio-brcmstb.c
++++ b/drivers/gpio/gpio-brcmstb.c
+@@ -385,12 +385,7 @@ static int brcmstb_gpio_remove(struct platform_device *pdev)
+ {
+ 	struct brcmstb_gpio_priv *priv = platform_get_drvdata(pdev);
+ 	struct brcmstb_gpio_bank *bank;
+-	int offset, ret = 0, virq;
+-
+-	if (!priv) {
+-		dev_err(&pdev->dev, "called %s without drvdata!\n", __func__);
+-		return -EFAULT;
+-	}
++	int offset, virq;
  
-+	axp_gpio: gpio {
-+		compatible = "x-powers,axp221-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		/omit-if-no-ref/
-+		gpio0_ldo: gpio0-ldo-pin {
-+			pins = "GPIO0";
-+			function = "ldo";
-+		};
-+
-+		/omit-if-no-ref/
-+		gpio1_ldo: gpio1-ldo-pin {
-+			pins = "GPIO1";
-+			function = "ldo";
-+		};
-+	};
-+
- 	regulators {
- 		/* Default work frequency for buck regulators */
- 		x-powers,dcdc-freq = <3000>;
-diff --git a/arch/arm/boot/dts/axp809.dtsi b/arch/arm/boot/dts/axp809.dtsi
-index ab8e5f2d9246..da92b105f3b0 100644
---- a/arch/arm/boot/dts/axp809.dtsi
-+++ b/arch/arm/boot/dts/axp809.dtsi
-@@ -50,4 +50,23 @@ &axp809 {
- 	compatible = "x-powers,axp809";
- 	interrupt-controller;
- 	#interrupt-cells = <1>;
-+
-+	axp_gpio: gpio {
-+		compatible = "x-powers,axp809-gpio",
-+			     "x-powers,axp221-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		/omit-if-no-ref/
-+		gpio0_ldo: gpio0-ldo-pin {
-+			pins = "GPIO0";
-+			function = "ldo";
-+		};
-+
-+		/omit-if-no-ref/
-+		gpio1_ldo: gpio1-ldo-pin {
-+			pins = "GPIO1";
-+			function = "ldo";
-+		};
-+	};
- };
+ 	if (priv->parent_irq > 0)
+ 		irq_set_chained_handler_and_data(priv->parent_irq, NULL, NULL);
+@@ -411,7 +406,7 @@ static int brcmstb_gpio_remove(struct platform_device *pdev)
+ 	list_for_each_entry(bank, &priv->bank_list, node)
+ 		gpiochip_remove(&bank->gc);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int brcmstb_gpio_of_xlate(struct gpio_chip *gc,
+
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
 -- 
-2.35.1
+2.36.1
 
