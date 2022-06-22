@@ -2,57 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95068556E45
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 00:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0A19556E3F
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 00:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245065AbiFVV7l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jun 2022 17:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44144 "EHLO
+        id S243415AbiFVV7p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jun 2022 17:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345695AbiFVV73 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 17:59:29 -0400
+        with ESMTP id S1354289AbiFVV7h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 17:59:37 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BB911C15
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 14:59:20 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-31838c41186so32400597b3.23
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 14:59:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263C9167FD
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 14:59:23 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3177d1fe9f1so138951767b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 14:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=TSYl2OnOPgIUVM0FnB5YWNZt0eip9Aey9fKvGeEIZ6c=;
-        b=JuE5h9PD/539bkLCq5oHJhFDYzn1+YXoF+StWjq3SnT0H3RGIb3TdrcC6p2RLeJH3R
-         bTIkxwMMK0AiiTTVWJr1bnvrB7sBe9i/YUJdVTUH8qCKJ6CBcy1T2AWoZC86vVyizDWt
-         oGTf9T9Yk+Q1+GAdEjZWRFbG7dcw+Il6FZRB0YrQPlamrfx8M/FzcnHMkQsb8QcICNuF
-         xzcttoR+dnJQmlgVy6prUYYejJtZ/WT42YW3hnr93OrR/Q5Ta/bi8BEVNuipIYaI5OO4
-         8TmehohCKJnlYSQ3X9idRWuSjlYJiiVtcPtrwZ5dzjZpzQj1Q8FzEj9aHCcNtsFaA+uN
-         zAVQ==
+        bh=Ah2iRj02YiwPhgw+fxQ8yR+iMVe2r8+mhYVV0rIvZow=;
+        b=i3p4bjKEtbMXzQEuzp8oUcL2dOBUx5t3ouIxH3WFaHxtQBesxVZ95zRpRsbv0rotKc
+         DCfLguFUFd9z7qjx0Dt8NAVaz0jRnB1K5Fh9Yi5/ZA7DG9FgX6RK9DwoMGuX/btXSeNY
+         jRizfq/806YnP4p7qCTtBJ9GK0YOoKEvQNuF2KL6ayR3OaHneYEgbFUH1cZ3RoYx5Y7f
+         2KbJ9cRY3K9bypygWX7MY4tpexszDMtIlE99YgGPEudPytCeem3ndf6dqYBx6cC19AlU
+         1k9DIcVe8I+qgmnTG95ADMGi1utSftyTTlGvgR8EUYa2yoeI/p7XaS4EVakP4MZtD+7U
+         xgkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=TSYl2OnOPgIUVM0FnB5YWNZt0eip9Aey9fKvGeEIZ6c=;
-        b=txxOdZ7vjC1+2fW25AcPL7cJHlscnZea1KvbjFNPAttrnqqd3ZG9nasLKjHjKm73QD
-         yfcfeuKJ4bYhosHgQqrqNqd1iUkzz73FoTjZ5FrxH4qnxDSJpoeuoV4nt5Aeu2byfMFH
-         R2iC4R+vNcrfGlhKDLrBE6YfeLIBQHLxlp4YOcx24ihxxxM7xtLDLY6tlZ6L2+RaF8I6
-         UGspFK+AFXIkvOxtMVU9YXcmOcd35gJpFW/g8EaiHEicAmF5UwKsR6KgboMbYTSaLo+w
-         SXv5+ANOkA2mjjHAeCDVtKjopTF5h5nKE6M6AFM/WoKWI6Wik2YrWLjr7+9YZ/ySFmby
-         eEQg==
-X-Gm-Message-State: AJIora//WBp0W0OgeETjvehl+Px25zOt/RXYRmnNFq6RL5RY/GJZlhw8
-        pbBbBSS85FmscSqg52rpwmtfhl7/L6jRtQY=
-X-Google-Smtp-Source: AGRyM1u/ogeLy4+AFU9N+Uu+j4V9K9r4kJbRFsYGWYib4JKBkDIXDu12JK70RoVFkDx+eINHtoU6HV2JImNGlxs=
+        bh=Ah2iRj02YiwPhgw+fxQ8yR+iMVe2r8+mhYVV0rIvZow=;
+        b=Q29k1wcSvs0CrEL86Eh9CVY9wwr3bjS67I67ruZD0e9AUjtkiRNN7VN2+6SK6rCWJn
+         uFDFPY29nse40mPmEciQDAS1tRfbYetd7qF9Gzm75t9Zqat+Qd77NFnUdKa7sqnoePrh
+         +fK3aUy4dDE7VopgCUheEVKQ5QyH7pC8EdSEfScYn0w737P1PAUQyxhi2haUKYgVP20a
+         GkJPwuewRfYMbyUi7HSR1oCNjz4YQpThkpZ+TXbs2GLt+VrVfm7zZ094HrPKYPKDXCBH
+         1cF14UCUBUF6tlWYPZppdz/X/XqCPCimdZoMK1nt9HPNQA0gZ9EZ0wXTekJkw6xLXyTv
+         Af3g==
+X-Gm-Message-State: AJIora8MDzzdPfuYXjifObhwZnbvhP2FbCa6VZ1+HD1+MfF3I76UJ80x
+        Zt8ivA1h6aHSGiLWI29xmChNJukcRcehszA=
+X-Google-Smtp-Source: AGRyM1serWNuSMZl/j+NqgnonDe+81gNNUGvZ49e005IqIx08CvB3Gw4PJWEQaMJYGKoe5Xwjqr9aD6KRs6btJ0=
 X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:be1f:89ac:a37d:6bb4])
- (user=saravanak job=sendgmr) by 2002:a81:ff08:0:b0:317:7e90:8910 with SMTP id
- k8-20020a81ff08000000b003177e908910mr6784104ywn.417.1655935160200; Wed, 22
- Jun 2022 14:59:20 -0700 (PDT)
-Date:   Wed, 22 Jun 2022 14:59:10 -0700
+ (user=saravanak job=sendgmr) by 2002:a25:6a46:0:b0:669:1da2:ba1d with SMTP id
+ f67-20020a256a46000000b006691da2ba1dmr5894467ybc.163.1655935163161; Wed, 22
+ Jun 2022 14:59:23 -0700 (PDT)
+Date:   Wed, 22 Jun 2022 14:59:11 -0700
 In-Reply-To: <20220622215912.550419-1-saravanak@google.com>
-Message-Id: <20220622215912.550419-2-saravanak@google.com>
+Message-Id: <20220622215912.550419-3-saravanak@google.com>
 Mime-Version: 1.0
 References: <20220622215912.550419-1-saravanak@google.com>
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-Subject: [PATCH v1 1/2] driver core: fw_devlink: Allow firmware to mark
- devices as best effort
+Subject: [PATCH v1 2/2] of: base: Avoid console probe delay when fw_devlink.strict=1
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -94,59 +93,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When firmware sets the FWNODE_FLAG_BEST_EFFORT flag for a fwnode,
-fw_devlink will do a best effort ordering for that device where it'll
-only enforce the probe/suspend/resume ordering of that device with
-suppliers that have drivers. The driver of that device can then decide
-if it wants to defer probe or probe without the suppliers.
+Commit 71066545b48e ("driver core: Set fw_devlink.strict=1 by default")
+enabled iommus and dmas dependency enforcement by default. On some
+systems, this caused the console device's probe to get delayed until the
+deferred_probe_timeout expires.
 
-This will be useful for avoid probe delays of the console device that
-were caused by commit 71066545b48e ("driver core: Set
-fw_devlink.strict=1 by default").
+We need consoles to work as soon as possible, so mark the console device
+node with FWNODE_FLAG_BEST_EFFORT so that fw_delink knows not to delay
+the probe of the console device for suppliers without drivers. The
+driver can then make the decision on where it can probe without those
+suppliers or defer its probe.
 
 Fixes: 71066545b48e ("driver core: Set fw_devlink.strict=1 by default")
 Reported-by: Sascha Hauer <sha@pengutronix.de>
 Reported-by: Peng Fan <peng.fan@nxp.com>
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c    | 3 ++-
- include/linux/fwnode.h | 4 ++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/of/base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 839f64485a55..61edd18b7bf3 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -968,7 +968,8 @@ static void device_links_missing_supplier(struct device *dev)
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4f98c8469ed..a19cd0c73644 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1919,6 +1919,8 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ 			of_property_read_string(of_aliases, "stdout", &name);
+ 		if (name)
+ 			of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
++		if (of_stdout)
++			of_stdout->fwnode.flags |= FWNODE_FLAG_BEST_EFFORT;
+ 	}
  
- static bool dev_is_best_effort(struct device *dev)
- {
--	return fw_devlink_best_effort && dev->can_match;
-+	return (fw_devlink_best_effort && dev->can_match) ||
-+		dev->fwnode->flags & FWNODE_FLAG_BEST_EFFORT;
- }
- 
- /**
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 9a81c4410b9f..89b9bdfca925 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -27,11 +27,15 @@ struct device;
-  *			     driver needs its child devices to be bound with
-  *			     their respective drivers as soon as they are
-  *			     added.
-+ * BEST_EFFORT: The fwnode/device needs to probe early and might be missing some
-+ *		suppliers. Only enforce ordering with suppliers that have
-+ *		drivers.
-  */
- #define FWNODE_FLAG_LINKS_ADDED			BIT(0)
- #define FWNODE_FLAG_NOT_DEVICE			BIT(1)
- #define FWNODE_FLAG_INITIALIZED			BIT(2)
- #define FWNODE_FLAG_NEEDS_CHILD_BOUND_ON_ADD	BIT(3)
-+#define FWNODE_FLAG_BEST_EFFORT			BIT(4)
- 
- struct fwnode_handle {
- 	struct fwnode_handle *secondary;
+ 	if (!of_aliases)
 -- 
 2.37.0.rc0.161.g10f37bed90-goog
 
