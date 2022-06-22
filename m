@@ -2,133 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D584A5547EB
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 14:12:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9238E554689
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 14:10:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355373AbiFVKg4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jun 2022 06:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
+        id S1343768AbiFVKwm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jun 2022 06:52:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355402AbiFVKgx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 06:36:53 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FE13BA7D;
-        Wed, 22 Jun 2022 03:36:49 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id o10so23263128edi.1;
-        Wed, 22 Jun 2022 03:36:49 -0700 (PDT)
+        with ESMTP id S1348285AbiFVKwl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 06:52:41 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E93A3BBC6;
+        Wed, 22 Jun 2022 03:52:40 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id g25so33299003ejh.9;
+        Wed, 22 Jun 2022 03:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YFwi1vxkzrvgsqoCKPo5AQXebahZiMS5qtbuazVoioY=;
-        b=C60jruRIr3l7H20jbT6Re8q4TAOBzwgoJniFeCwP9jUCkCeFfZSyKWDXzuiR3+WsFk
-         iug9mCtL5f/362puhR37XxfXjPTn+feFC8tv5f+bUCGxDr5RecoUaz5WL/iKgw40h3f5
-         nRLlZkcl+Cgcr2kX9I7VZkqGcpVV39vi0d4feUx7Mg7xkPeRevq2RrFsFeI4kgEh2RbO
-         1N8lkUgvGsbvP6nJ0yewhGBY+YbTQLHkQCH0wrxztTUCL3jR2tFJCgJ4iW4RmvFKBM5x
-         9Wx0qhacGBBsF/oQxleSmTbsTojFMMwK1Y3Znaa7mITTI9ctZr+bJEAD7fH9uR2Py1m/
-         LCwQ==
+         :cc;
+        bh=oaXOVl5GbpzrwUwV/ImpOqO7sc14IuZ0zxyCyofIONY=;
+        b=fAYTDojmK1smvHwGNsWw7YZE+c033Tr1yoX1+0von2aMoUv1c6u/lXSW342IrQcP4M
+         xPN+GRDfDYCxmUIv6sDSqnaI8Em+Oh+JKrva7+3g/EzeKV1Ki583f+s9svwO4PTOK3VO
+         FNBVAE15VZ93Za7cLKMBU9l53ej2lPfk32eNT2dPoL31kpXd5JF9QExrHJGiNWskQaoi
+         GwbpG7yGkbThNaRXEKOmk3fTJtRnVtpyyhPasWlhFmRt+RC4liDaJM5tK4YKEVkPB0lZ
+         cAhCT1RJZQYl9ir4lgrKLNKqAQifLqf1rW/MelSqXTepRExaSRDBPQAnc0kZG468DnbP
+         an5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YFwi1vxkzrvgsqoCKPo5AQXebahZiMS5qtbuazVoioY=;
-        b=JUQkFuw/LJT3Zo+3RWVoPZFiD2r+ZQg17eyslr5kTL99ME8uvUy2BSEWuIUEBpx+Ju
-         5lgkWlveEWsfYs147upTOC8HupaMjHP3uTE3A4wji8AeY3atS3UnXWMtbGJP8uO7+aZI
-         b74tRwChr9xVkcZsQIyX39BXUzK2/Jy9rVSj5IpEa/fgr7U+sqNWqNJmOMpTaZ5BuT4y
-         kf+tGjg1l3SmsN2QleI70t7hF5P555BGdBlhsSaC8ui0NzV+WrdzsUFdihe0DEmvVdkK
-         tv8DMP+r6szL0EAIqsbNaYcUJjHK0VqEzfvQU5AySASWzRKDye8DpG51ZK8E1G+Tb9AJ
-         PIgg==
-X-Gm-Message-State: AJIora/JbIdlBFYOpg7Dm/7Z1IHgTL1xejn62ZJ6PGGBQCvMFfI1S14t
-        YVorYM/L8RLtE96StQo1Et71XIdRB3bDUjKODnQ=
-X-Google-Smtp-Source: AGRyM1tnnFr1LC7h/zRLo+HkB47D6IcosyajAFO4R/Wl+PPHAqyQruG56xeyLIJB7dGNj2Z8gyVtab2tS/XsOjguV9k=
-X-Received: by 2002:a05:6402:5002:b0:435:1ff1:99ee with SMTP id
- p2-20020a056402500200b004351ff199eemr3312157eda.230.1655894208315; Wed, 22
- Jun 2022 03:36:48 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=oaXOVl5GbpzrwUwV/ImpOqO7sc14IuZ0zxyCyofIONY=;
+        b=GcNvLXcE9tW7G6nUDJS/2kjcjmbbny+Zq3c7NsD2s4nBR3mw/JNhKvQ/t27uZ2MQBl
+         eD9wrKSLPmwfxY+00QAMbRQgiTJ/DnKJunbAVf4yFM0WGA9DuatGJeJpEGYh0PxuBfsB
+         NQ3e3XSKbX/pdszk1TjsbZJvTSG49sM4572CiOw44sb7bNDT6OatrQYXw5krTGFVVkYo
+         Tf2UfnAdLTvITHl4irZXu6G+LA9vBlsFZYUqqPryGV4hbvFJvUIFbd5/UH+d6wgVaPwl
+         z6jSc5aPasya2aBs0MlaKtUiG95ZSO0a+PTHAk7mYRlH2TSz++XLhZQBeRX+A4yUa7NS
+         BNkw==
+X-Gm-Message-State: AJIora/7Nr30JaVIyIEoYOjCS2mn6KHl5Fzl8ZBlgMjg7pI6dlShVq/V
+        YbpkyfV0EhK+lSITdzVeLAR+b2B+e8/pQ1aaERA=
+X-Google-Smtp-Source: AGRyM1uyQ/Y01CLF3k0VqbSatCLy5utHlTkfRj9OEacTCqDgiOfz+58yhgtrbg6k3a0mp5dlHgOdAW0EC2clcTJB1Rg=
+X-Received: by 2002:a17:906:149:b0:711:fca6:bc2f with SMTP id
+ 9-20020a170906014900b00711fca6bc2fmr2554745ejh.497.1655895158817; Wed, 22 Jun
+ 2022 03:52:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220314141643.22184-1-u.kleine-koenig@pengutronix.de>
- <20220314141643.22184-2-u.kleine-koenig@pengutronix.de> <d6b890c8-bfb5-cfa5-c6d8-ee245701c077@nvidia.com>
- <20220621204914.byokkrxiznvod7vq@pengutronix.de>
-In-Reply-To: <20220621204914.byokkrxiznvod7vq@pengutronix.de>
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <20220601070707.3946847-8-saravanak@google.com> <20220622074756.GA1647@pengutronix.de>
+ <CACRpkdYe=u9Ozj_dtLVr6GSau8yS5H7LnBNNrQHki1CJ1zST0A@mail.gmail.com>
+In-Reply-To: <CACRpkdYe=u9Ozj_dtLVr6GSau8yS5H7LnBNNrQHki1CJ1zST0A@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Jun 2022 12:36:11 +0200
-Message-ID: <CAHp75VcBEpLo+pYy+RG3O2BbePJbGEQ89jxi-oG1W6=+2hgXrQ@mail.gmail.com>
-Subject: Re: [PATCH v8 01/16] clk: generalize devm_clk_get() a bit
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-hwmon@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+Date:   Wed, 22 Jun 2022 12:52:02 +0200
+Message-ID: <CAHp75VdqjCoWAHV4AyYrju0o8buREA8pM5wyf8TD=rCMTs-tEA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] driver core: Set fw_devlink.strict=1 by default
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Sascha Hauer <sha@pengutronix.de>,
+        Saravana Kannan <saravanak@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Tomislav Denis <tomislav.denis@avl.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Andy Gross <agross@kernel.org>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        =?UTF-8?Q?Andr=C3=A9_Gustavo_Nakagomi_Lopez?= <andregnl@usp.br>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        linux-amlogic <linux-amlogic@lists.infradead.org>,
-        Amireddy Mallikarjuna reddy 
-        <mallikarjunax.reddy@linux.intel.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Cai Huoqing <caihuoqing@baidu.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -139,24 +89,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 21, 2022 at 11:01 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Tue, Jun 21, 2022 at 08:57:00PM +0100, Jon Hunter wrote:
+On Wed, Jun 22, 2022 at 10:44 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Jun 22, 2022 at 9:48 AM Sascha Hauer <sha@pengutronix.de> wrote:
 
 ...
 
-> (Pro tipp: The commit in next has a Link: footer. If you follow the
-> link, you find the thread that was actually applied (i.e. v9) and where
-> the fix is also contained.)
+> > This patch has the effect that console UART devices which have "dmas"
+> > properties specified in the device tree get deferred for 10 to 20
+> > seconds. This happens on i.MX and likely on other SoCs as well. On i.MX
+> > the dma channel is only requested at UART startup time and not at probe
+> > time. dma is not used for the console. Nevertheless with this driver probe
+> > defers until the dma engine driver is available.
+> >
+> > It shouldn't go in as-is.
+>
+> This affects all machines with the PL011 UART and DMAs specified as
+> well.
+>
+> It would be best if the console subsystem could be treated special and
+> not require DMA devlink to be satisfied before probing.
 
-Even easier, you may take a message-id from the Link and supply to `b4`:
+In 8250 we force disable DMA and PM on kernel consoles, because it's
+so-o PITA and has a lot of corner cases we may never chase down.
 
-  b4 mbox ${message-id}
-  mutt -f ${message-id}.mbx # or whatever MUA that handles mboxes
+089b6d365491 serial: 8250_port: Disable DMA operations for kernel console
+bedb404e91bb serial: 8250_port: Don't use power management for kernel console
 
 
-Dunno if `b4` has capability to parse Link instead of message-id.
+> It seems devlink is not quite aware of the concept of resources that are
+> necessary to probe vs resources that are nice to have and might be
+> added after probe. We need a strong devlink for the first category
+> and maybe a weak devlink for the latter category.
+>
+> I don't know if this is a generic hardware property for all operating
+> systems so it could be a DT property such as dma-weak-dependency?
+> Or maybe compromize and add a linux,dma-weak-dependency;
+> property?
 
---=20
+
+-- 
 With Best Regards,
 Andy Shevchenko
