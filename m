@@ -2,162 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 883D0554BDE
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 15:54:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A664554C4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 16:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352952AbiFVNyz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jun 2022 09:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46122 "EHLO
+        id S1357989AbiFVOMj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jun 2022 10:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231184AbiFVNyz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 09:54:55 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3843933E0B;
-        Wed, 22 Jun 2022 06:54:54 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id r20so3113933wra.1;
-        Wed, 22 Jun 2022 06:54:54 -0700 (PDT)
+        with ESMTP id S1357924AbiFVOMi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 10:12:38 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F2838DAB
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 07:12:37 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id j22so12904515ljg.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 07:12:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lvPaRLtCTYl6sHnDh9zdd2Yepnm2QSSHxZs+bnRqTmY=;
-        b=X4WJQmJnGwvBqXXiIvKubKCYTpNnmNVLJZhwQgHLHamALmAwX6ZMGK6Zl0BGTrnOo0
-         xlQjbwtKSZ9LMSmAvvnSeRfOylKzJdTDCon7/CGl8b3knBRBw+yyFuHx7Kd0O2VSlPBy
-         NcSIsZz1Wi2Z9qhQ3M8z4qM2xzVrqEy7Af/Y3wyrDZGFN1J5G0Y6cEyRbirb+0XFmBxj
-         klEFLzyXvJoStFiyccfyKW19EQk8XPMZzfH7Z+aSxKsh9c72yVbm9qodt1Q8REP5W/Ia
-         b0RfEEqYN7lOom5W019BKpn0bCZeB7NE30s9yAPHDJXHm06L71JFAptlO3cx+ouQyiKg
-         Ccpw==
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=6waykjR/9T7FXtMTe+chOz79m2C0wmaFrN+VMdV2rWQ=;
+        b=Y9SKNYiHV7MdtEfhviS1KyzZqMPBhGmzluzYzY8Ar1qLnNqAR8c1mHBbNe+u/9WO8a
+         v/xCaw1AjvehMVXoWWdS/wLRNIW9HJQ7aa20VLhbBQaTe1PMzRnJ6qxbfwPCfoHn263/
+         vS19OLkhfwob9+1pamkNnjMI7vbXWVtZ2+h7DaWTpaMwk3tCODMk0T/kgKV68f4hvM5D
+         9lx5DTr3GeTRhK5MtShTQ94xwPENlIl2wyCQepKN3EWy0nxl3/1Rx6czIfKbrmBY4qLI
+         m/mg+HM2jPZ7bUZgkI7D8NI9TvRevPWv1mST4SXjPtuEV7j8+fEYkMoUvWADXuYVvgKd
+         Cq8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lvPaRLtCTYl6sHnDh9zdd2Yepnm2QSSHxZs+bnRqTmY=;
-        b=q2ORwCNO+wCH2SGpG1s0LptZCKLiKtMDgKGXY5oSQyk5w+VjBlX76gkLQQdGUEKAs1
-         8AueRniTjWUFuYdkRtwskP3jdmHY3LO5Pu4fED26u/lvBLb6aP5Q6Zjg6QCUkZPsgTpv
-         pwBQ17QO9tuKJiykGzSiXbJbgGwLaDXKbMfrH5S6WVcQeXYFA4qfTkqBDaUnuJ1jMBVD
-         kvDUirltR0g1HzISt/k7C7JxDnKTfMIWiMeupTS3uv0NeEPIcgGlOqH7xM8gBx6p8QBD
-         avrVYuIErU9KMXkm3eg5LYHD/nVADNiZZjYoCca+i5U/QwebAYusXqf5851RW+0AsBYx
-         TyHg==
-X-Gm-Message-State: AJIora+gkLKuo1uowt1U6HFmxXn6pjYCUf6hhTbcNfS+KCQ4ZhKPDnhu
-        dyHqOiYROkuxYGbtAmudcck=
-X-Google-Smtp-Source: AGRyM1uQ4+Wn2JupuYPb4eiWdXiFXc8bCyqu6hOCrfKvthXdnok4hRxRXaf/LoxKfeBAVhrqnLQTrA==
-X-Received: by 2002:a5d:64e8:0:b0:218:519e:7896 with SMTP id g8-20020a5d64e8000000b00218519e7896mr3443007wri.207.1655906092761;
-        Wed, 22 Jun 2022 06:54:52 -0700 (PDT)
-Received: from orome (p200300e41f12c800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f12:c800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 129-20020a1c0287000000b0039db31f6372sm3632782wmc.2.2022.06.22.06.54.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jun 2022 06:54:51 -0700 (PDT)
-Date:   Wed, 22 Jun 2022 15:54:49 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        andrew@lunn.ch, thomas.petazzoni@free-electrons.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] dt-bindings: gpio: gpio-mvebu: document offset
- and marvell,pwm-offset
-Message-ID: <YrMfKRF+13GZvRc5@orome>
-References: <20220526012946.3862776-1-chris.packham@alliedtelesis.co.nz>
- <20220526012946.3862776-4-chris.packham@alliedtelesis.co.nz>
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=6waykjR/9T7FXtMTe+chOz79m2C0wmaFrN+VMdV2rWQ=;
+        b=iKRNJHc9/nfU22+eNMp9pqiW+8VTwSYwnmWl8xx52Rkmf+f1nkmP6ue2rbvntfMchY
+         xa6bvOFVJJS0xO43ql4NRAhLD6PMpLau/KKnownBPlynoDTeEEKop9xqu6qvWEjfMeIJ
+         u2+Q6GkrPM5euP/vlLKPFbuk3s4JsARWnGwsqaz2Wav47sPv/UhD+eC/AiiYxPj38zmv
+         FU+g4CcjU5c17NatrNvMF2BQK7qfYc1/9u/TPNV/Ubu4ayAJjfra5gkHc3WzQbJ5wwcB
+         zH7QQG/TGmfo2vo2207yxmk+ag7L7z9jUyX82i3Onv/nr6ruQqzXiDosz4+QRvELXhH1
+         b58Q==
+X-Gm-Message-State: AJIora9IFvwYyYsk3QoNSNdsaAaNmM6oD/hY5I+ik8g3yuI+Qbzyuh3y
+        QRvS+znPfCa4vjtoe/XWubLcM0XeZwp/nR1M7xo=
+X-Google-Smtp-Source: AGRyM1vwpq5qEIjnJUuK4Ib0yc6+zDhRL4BWVhjiuTvcsNhR9976jvxJhbcMgFmcMzBBu6e0IRXB17iIFYKYafnFj48=
+X-Received: by 2002:a2e:5752:0:b0:25a:6cff:6b06 with SMTP id
+ r18-20020a2e5752000000b0025a6cff6b06mr1955066ljd.435.1655907155525; Wed, 22
+ Jun 2022 07:12:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SkTTDVTmLy6JJbVk"
-Content-Disposition: inline
-In-Reply-To: <20220526012946.3862776-4-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/2.2.4 (c3baa83e) (2022-04-30)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Reply-To: drjordanphillips132@gmail.com
+Sender: kllystanley@gmail.com
+Received: by 2002:aa6:d90f:0:b0:1f4:e62f:241f with HTTP; Wed, 22 Jun 2022
+ 07:12:34 -0700 (PDT)
+From:   "Dr.Jordan Phillips" <drjordanphillips132@gmail.com>
+Date:   Wed, 22 Jun 2022 15:12:34 +0100
+X-Google-Sender-Auth: xr0OJ_ipEwRU8SEKrR4Y5OuCl_Q
+Message-ID: <CAFdxDYd_JL_F50+A2WDUFCk1N50A1++7edym-d9D1c6ADmaSng@mail.gmail.com>
+Subject: Dear Confident
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=7.7 required=5.0 tests=BAYES_99,BAYES_999,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,MILLION_HUNDRED,MILLION_USD,
+        MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:234 listed in]
+        [list.dnswl.org]
+        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
+        *      [score: 1.0000]
+        *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
+        *      [score: 1.0000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [drjordanphillips132[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [kllystanley[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
+        *  0.0 MILLION_USD BODY: Talks about millions of dollars
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+I have come to you with good intentions. I am Dr.Jordan Phillips, The
+Director of Logistics and Procurement in the department of Health
+Republic of Burkina Faso West Africa. During the covid 19 Pandemic my
+department and the Government of the Republic of Burkina Faso West
+Africa Contacted foreign contractors for the Supply of the Personal Protective
+Equipment (PPE) During the period under review, myself and few others
+in the Department of Health and some officials of the
+Government intentionally over-involved all (PPE) Contracts within the
+seven Months  the national Lock down to the tune of US$25,800,000.00 (
+Twenty Five Million Eight Hundred Thousand United States Dollars).
 
---SkTTDVTmLy6JJbVk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Let me remind that our Government voted about US$1.7billion to caution
+the effect of the pandemic, it is on this promise we all have decided
+those who have a little share of the fund, I want to equally inform
+you that the real contractors has been paid fully and this fund is
+currently floating in a special account with a commercial bank here in
+Burkina Faso West Africa.
 
-On Thu, May 26, 2022 at 01:29:46PM +1200, Chris Packham wrote:
-> The offset and marvell,pwm-offset properties weren't in the old binding.
-> Add them based on the existing usage in the driver and board DTS when
-> the marvell,armada-8k-gpio compatible is used.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->=20
-> Notes:
->     Changes in v4:
->     - Reword commit message slightly
->     - Add review from Krzysztof
->     Changes in v3:
->     - Split off from 1:1 conversion patch
->=20
->  Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Doc=
-umentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> index 459ec35864fe..f1bd1e6b2e1f 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> @@ -45,6 +45,10 @@ properties:
->        - const: pwm
->      minItems: 1
-> =20
-> +  offset:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Offset in the register map for the gpio registers (in b=
-ytes)
-> +
->    interrupts:
->      description: |
->        The list of interrupts that are used for all the pins managed by t=
-his
-> @@ -68,6 +72,10 @@ properties:
->    "#gpio-cells":
->      const: 2
-> =20
-> +  marvell,pwm-offset:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Offset in the register map for the pwm registers (in by=
-tes)
-> +
+Therefore in view of my career and a senior Civil Servant, I cannot
+claim this fund, I want to invite you to come and stand as the legal
+remaining contractor beneficiary of the fund, you will be provided
+with the documents to claim the fund through the legal  detects of the
+Country, You will be guided on how to claim the fund.
 
-It would probably have been better to add multiple compatible strings to
-hide parameters like this, but given that this has been in the DTS files
-for more than a year at this point, it's probably too late now.
+Let me know if you are interested to partner with me, for your
+participation, 30% of the fund is yours while 70% for me and my
+colleagues. I look forward to hearing from you.
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+And if you eventually get this mail in your spam please kindly note
+that it is the poor networking system that is here in Burkina Faso.
 
-Linus, Bartosz, will you pick up the series into the GPIO tree?
-
-Thierry
-
---SkTTDVTmLy6JJbVk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmKzHykACgkQ3SOs138+
-s6HfMg/+IXbNLZGYotD14cA93MJJgysADEHRcrOJlhkF9pBSWUTs9Zm7S8ANF0MV
-tzT7MP4X+Y9RINBnwGWMswPiUzEGA5NZTMaKIBp9fcChzf9TQQipkxbIRIf1Yh+F
-qfP3uxiHo02iL7elmHuhuCAp7RFVVYexwGe6tRT6m8kDY88N5ql3tXyf0xFlw5NW
-6xDFtE6Z2DeWk4MGmmqlX0qaehZT5PSdKi21CkJri2qO2VS9jBRDQ90ylUSxGhxz
-0FVyU6ZVbfeUCAhW2Ea4hs+aiUgLeOsn8BzSte1wTDD53J37eW0rsDhXYVE1DYkQ
-Hmkmr/GcXGa4bRCpTmdVUlgKLMt0DZDKsn/rBcyGTan7uLXm3mDeapmpvxFkiGPx
-TAW+X+fG4sdVryaJFdTnPVTZDvDNgAbOsPbzWgypXFM/Dztus1zty5dYRZ06c/0A
-o6KMZad01NpsDgTfDLvoVJ8hWrOqzLkFHQzpsCm0uN8+q32afR4hcWn6X2SlUZ+9
-6iSg9wVlJ/4yUtelu/c0NpExlf72aqSKiy/d0vrLrMgx+RXWxqGEJT1sqDhfIq7j
-+zEuHaywwU2oBWf6V1vZeO0+u35Akpl1D7BsDIE3Bf/fty1DW5rNTYmk2b8+p5nn
-sHiltrlZ6UQJWXoglpqZPoKYOtgkg8Y2/FcoYqo0vwvFrtFFJyI=
-=KFs0
------END PGP SIGNATURE-----
-
---SkTTDVTmLy6JJbVk--
+My Regards,
+Dr.Jordan Phillips
+Director,
+Logistics& procurement
+drjordanphillips132@gmail.com
+Department of Health
+Republic of Burkina Faso
+West Africa.
