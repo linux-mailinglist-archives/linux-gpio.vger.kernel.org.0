@@ -2,80 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83CAC55495A
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 14:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 630345546A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 14:11:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354358AbiFVI7L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jun 2022 04:59:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
+        id S232060AbiFVK0k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jun 2022 06:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355602AbiFVI6k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 04:58:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33681FCFD
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 01:58:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F3A261947
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 08:58:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3606C34114;
-        Wed, 22 Jun 2022 08:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655888315;
-        bh=Wr0E9HYR/lRdsNctiBQuhP55cBrX1u8h4v65qm1rnsY=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=CfFNlfkeB0uVJEACrg+cJByiY37SBtzOj7lhrbswI9hQZn07/662K3hEqbuMxVJQe
-         m2Gz0CpR38aRA4gVk94Q2xtsEL18uHQt6tdRTQF9knZaYeUQUxSXcpNBz4Ua4V2uFX
-         aXXtT/yfRzXUi3h6cgcoGZZ4G8NzPyYb8cg7ucSi2x6Wz9GXviSnQp5oFnl/HvmMn8
-         D1WHLDexphb8teM/mrv7BOW+Z+o52Ef1iqcRukPqfQec0Bs+7S8FA3YXNh66GRVs9s
-         yUz9hCMXT1W/IvVJ0b0XBCUk1eSF/3iHDeTYw2h8D47Bq70AGVaDGlWVF5NmYC3bnr
-         PWX+aUL9UVZ3w==
-Message-ID: <fea4cfbe-7425-ca0b-fe71-2f9cbcf24abe@kernel.org>
-Date:   Wed, 22 Jun 2022 10:58:30 +0200
+        with ESMTP id S231645AbiFVK0j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 06:26:39 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0372183B6
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 03:26:37 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id k14so3517938plh.4
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 03:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uJKY49OPBHK9wIGn9YiZYS14LH9y6Y8F10Qqi3Jphu4=;
+        b=oFHEXRmseYrcrrbNQmpYd+jpaRa2af2vxO0NIiYwhPSlIE7F4xvVSaaiPWvp/2vYrx
+         vdtYGkkSgihHf+pi4KQSWehG1+b266fLywtPBVvMu2LqWYdHM7AwD6Gw0Sk7T5QYoDh3
+         mz++Cc6zPXbZVyMZdwgmYK76H/KSoUO1TGE95DNO7NxVS73RFKmwdYtf4MxZ+ERnBour
+         Dax1c4HqTHZY7qAsG6huijpXA/bizKGE4+OOKysmFpYTS3hV2bJunGSMkQ9/9b2hX/fb
+         xq7Oip53iyNc5aU30ssU/1WF9txYZOXzhSWlfX5b26zKx8LOy9VNa4RJQ2wnzX2wGwoZ
+         j+qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uJKY49OPBHK9wIGn9YiZYS14LH9y6Y8F10Qqi3Jphu4=;
+        b=RcPToWclE91oNb8On35CtFwDmOoyxtVPzdMQRaZro92CqYmd3Vl6Um93HTfp+ZoZQE
+         hb3mcUV+JQAOlytvhcvRSTJISWBbs+u84yyRMOWhLllpsPSwoPH3RLejbFbbSoxXw0gq
+         d1hLNrd/BNz+pQzYEjB7+skaSO1LxLvubzA2UnG5hH++MxmJCHmylzcqQSzTLKO3DcgP
+         mPAy+atjKYgHchPKPdvsiZ3dK7wU618TA7Uyab+nSf0fQ15q9xvSPLk8lDZVg04C9u1x
+         P17SYg8bvaAhbT8+pdzlbU8/w5RsuTOhIl2aoVxJ9PnFy0cRVlhOD5KXzRx9BtZhodC7
+         2yoQ==
+X-Gm-Message-State: AJIora94R+B0l9G/HFP73u0DFztUAwn4XyiliyGlQZsCWY9shqnNzVaU
+        ed8LWKdcCNZLavGGiNhg2Tk=
+X-Google-Smtp-Source: AGRyM1vI/wm/6O5bQbh4acWR/3uOezaiqzdd4VwCpv2fn81xYs1NNSXbWrOYmhnYP3wQ5u28oD749w==
+X-Received: by 2002:a17:90a:e2c5:b0:1ec:ea7f:a85c with SMTP id fr5-20020a17090ae2c500b001ecea7fa85cmr1876239pjb.232.1655893597339;
+        Wed, 22 Jun 2022 03:26:37 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id jh21-20020a170903329500b0016a109c7606sm8429383plb.259.2022.06.22.03.26.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jun 2022 03:26:36 -0700 (PDT)
+Date:   Wed, 22 Jun 2022 18:26:32 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Yegor Yefremov <yegorslists@googlemail.com>
+Cc:     Linux GPIO List <linux-gpio@vger.kernel.org>, brgl@bgdev.pl
+Subject: Re: Reading current output value
+Message-ID: <20220622102632.GA37027@sol>
+References: <CAGm1_kvsAir70H41RJ5vzAGeBLBAFByHyR3fWfFeq3RW5O7cBA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] pinctrl/rockchip: Fix refcount leak bug
-Content-Language: en-US
-To:     Liang He <windhl@126.com>, linus.walleij@linaro.org,
-        heiko@sntech.de
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <20220619073315.4067956-1-windhl@126.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20220619073315.4067956-1-windhl@126.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGm1_kvsAir70H41RJ5vzAGeBLBAFByHyR3fWfFeq3RW5O7cBA@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19/06/2022 09:33, Liang He wrote:
-> In rockchip_pinctrl_parse_groups(), we need a of_node_put() in each
-> loop for the of_find_node_by_phandle() to keep the refcount balance.
+On Wed, Jun 22, 2022 at 09:54:41AM +0200, Yegor Yefremov wrote:
+> On a am335x based board I have a GPIO pin that enables/disables power
+> of an external device (the bootloader sets this pin to output and 1,
+> and the kernel is instructed to not change it). Using kernel
+> 5.19.0-rc2 and sysfs interface, I can read the current status as
+> follows:
 > 
-> Signed-off-by: Liang He <windhl@126.com>
-> ---
->  drivers/pinctrl/pinctrl-rockchip.c | 1 +
->  1 file changed, 1 insertion(+)
+> echo 68 > /sys/class/gpio/export
+> cat /sys/class/gpio/gpio68/value
+> 
+> As a result, I read 1.
+> 
+> Using gpioget (libgpiod) v1.6.3, the line will be configured to
+> "input" and the value is set to 0:
+> 
+> # gpioget 2 4
+> 0
+> 
+> So, how can I read the state without changing it? I am mostly
+> interested in using the kernel userspace API directly.
+> 
 
-Before applying the patch please check it carefully. Previous evidence
-[1][2] suggests that not it was not even compiled.
+The API itself supports it, but it isn't exposed in gpioget v1.6.3.
+The gpioget in libgpiod master has a --dir-as-is option for exactly
+this case, but that hasn't made its way into a libgpiod release yet.
+(commit 3a912fbc1e2 tools: gpioget: add new --dir-as-is option for GPO read-back)
+Can you try master?
 
+> By the way, setting pin to 0 works but not to 1:
+> 
+> gpioset 2 4=0 - OK
+> gpioset 2 4=1 - no level change
+> 
 
+gpioset has to remain running to guarantee the output level.
+The pin is probably reverting when gpioset exits.
+Try the --mode=wait option.
 
-[1] https://lore.kernel.org/all/202206221602.odN70SHs-lkp@intel.com/
+> sysfs works.
+> 
 
-[2]
-https://lore.kernel.org/all/16f9a971.44e5.1817068ee3c.Coremail.windhl@126.com/
+Yes and no.
 
-
-Best regards,
-Krzysztof
+Cheers,
+Kent.
