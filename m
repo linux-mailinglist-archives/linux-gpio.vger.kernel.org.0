@@ -2,180 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B0DE555261
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 19:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10301555385
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 20:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238207AbiFVR2n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jun 2022 13:28:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37634 "EHLO
+        id S1376884AbiFVStT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jun 2022 14:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377431AbiFVR2m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 13:28:42 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABBB6257;
-        Wed, 22 Jun 2022 10:28:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655918921; x=1687454921;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mMzbNFYrVsEjYMboVVdaTRJ6WGulZhS+fbjcnLtblGY=;
-  b=krWqYvmCPI1RoIOq1jM2emJf54O/FMEuxpBWt0yWjLZztd2tcORG90Ti
-   RV2dWIrXp5fEMRV8j+FLiIFBzIjsjt5RBe2GpdiuTr8UReCdoRu7uY8r1
-   UcbQaXqR3bgdiYjPELWHPlLnOibb1wGB0ExRsziG6SzlgS4T3x5pcwMEA
-   JsCTONcJGwIUp89jn/XtII7U9ID8mGYn4Q5n6DrBizTuQyfexuA/iP29y
-   hFpD5JaXreETf0WmDM9nuajyfikg0mmHPhsfkGOyF6FkiDEGuUKplA818
-   idXmavr/zGwKkY/lVjzArwaa8DglesfWvFJK8bkg3gpzcdwNbOu8C0Hga
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="344473675"
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="344473675"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 10:28:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="834223597"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Jun 2022 10:28:38 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 469FB136; Wed, 22 Jun 2022 20:28:43 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 1/1] gpiolib: devres: Get rid of unused devm_gpio_free()
-Date:   Wed, 22 Jun 2022 20:28:42 +0300
-Message-Id: <20220622172842.86713-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S1376899AbiFVStP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 14:49:15 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8696A31925;
+        Wed, 22 Jun 2022 11:49:12 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id i10so20923749wrc.0;
+        Wed, 22 Jun 2022 11:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRt21XGDrOQmvCWAO1/+rp6bkBghl2OkkGlvxy40ZeQ=;
+        b=MaylSmk4Ls7iH07YR1di4/Vxb2bhaasS6XPolJn8RtYFIUfzOW86+rFC5Q/ImrNLjK
+         PjsBNJDIQXAze6d71FYEIOTgDmSHzUxBdHSgvZvjl6I+3jtUdW85qGA7h7fHKGN2Oj2R
+         v7wa794oTyARQKIITO/B2/rZLUJwvQesKSnAnRPblUBadPnK3v0lFRRBK6lFd+lKpy2g
+         gCxNiIAq3qWw71jdO+yhLj0FhgIuIaU7GPNZpTH4sOMwSP0foB0sTCa+8rw+/xBL6OfD
+         WmWA7DVwxmVBsInIkUVk6HoaDGmOIsiO4qcRndCdmCxl1Nq0koo4rlraCPODW1DQd5ZG
+         cHbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRt21XGDrOQmvCWAO1/+rp6bkBghl2OkkGlvxy40ZeQ=;
+        b=QhXAc9qz7BluyhB9A3MIfUpLoCf6BpoK1a/fsxpQc6Bfv4XLu7KkLndsJNm3EFHmOG
+         x3dvSwUs3ouTB9BW3SKbhX+oEuHtj8c5f2wFURwQk1uweCHwasR2YuLum8/Ucu6o8ra5
+         Gl+IUdSQPCL0Ey475E0E/y1BAg/zBEufvan22xmiQ4n1x/qP/bfu4QAA3xPnitMgwKO/
+         PMYBM4ZN8ocYxDZy/4kz0RV/wkiKP0LSttsPg5388UXllYhX/Pxs4AJFo8Qu4lR1pB00
+         AgTn5nAPcAMfPAlbDv1PZecuGJLiPZwEG+NkzTaOl6wF7+iIEtfxwH+XcSOEG4adnkgy
+         kHWQ==
+X-Gm-Message-State: AJIora9zCCKlYYtXis3HqT+gSdM0J//6jZQMpjogIGKLCmWuZTDIYsjl
+        2r1eJN9gU975vWHyhATXroA=
+X-Google-Smtp-Source: AGRyM1sQYdQ36ov+1FAxWsDg8Y70mC3Dx1oAb0UW7Wz+GFn6MeWwpltQVD4ByWu87R5OShMulhiA9Q==
+X-Received: by 2002:adf:fb43:0:b0:21a:22eb:da43 with SMTP id c3-20020adffb43000000b0021a22ebda43mr4591639wrs.347.1655923751050;
+        Wed, 22 Jun 2022 11:49:11 -0700 (PDT)
+Received: from localhost (92.40.170.233.threembb.co.uk. [92.40.170.233])
+        by smtp.gmail.com with ESMTPSA id m19-20020a05600c461300b0039db7f1a3f5sm188332wmo.45.2022.06.22.11.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jun 2022 11:49:10 -0700 (PDT)
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     paul@crapouillou.net, maz@kernel.org, andy.shevchenko@gmail.com,
+        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] pinctrl: ingenic: Convert to immutable irq chip
+Date:   Wed, 22 Jun 2022 19:50:08 +0100
+Message-Id: <20220622185010.2022515-1-aidanmacdonald.0x0@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The last user, which in fact was a dead code, has gone a year ago,
-previous one 3 years ago. On top of that we want to drop away the
-legacy GPIO APIs in the kernel, so take a chance to get rid of
-unused devm_gpio_free() and accompanying stuff.
+Two cleanup patches for pinctrl-ingenic.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- .../driver-api/driver-model/devres.rst        |  1 -
- drivers/gpio/gpiolib-devres.c                 | 32 -------------------
- include/linux/gpio.h                          |  6 ----
- 3 files changed, 39 deletions(-)
+v3:
+* Put includes into alphabetical order.
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index 2d39967bafcc..55272942e721 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -277,7 +277,6 @@ GPIO
-   devm_gpiochip_add_data()
-   devm_gpio_request()
-   devm_gpio_request_one()
--  devm_gpio_free()
- 
- I2C
-   devm_i2c_new_dummy_device()
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 79da85d17b71..16a696249229 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -375,9 +375,6 @@ void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs)
- }
- EXPORT_SYMBOL_GPL(devm_gpiod_put_array);
- 
--
--
--
- static void devm_gpio_release(struct device *dev, void *res)
- {
- 	unsigned *gpio = res;
-@@ -385,13 +382,6 @@ static void devm_gpio_release(struct device *dev, void *res)
- 	gpio_free(*gpio);
- }
- 
--static int devm_gpio_match(struct device *dev, void *res, void *data)
--{
--	unsigned *this = res, *gpio = data;
--
--	return *this == *gpio;
--}
--
- /**
-  *      devm_gpio_request - request a GPIO for a managed device
-  *      @dev: device to request the GPIO for
-@@ -402,11 +392,7 @@ static int devm_gpio_match(struct device *dev, void *res, void *data)
-  *      same arguments and performs the same function as
-  *      gpio_request().  GPIOs requested with this function will be
-  *      automatically freed on driver detach.
-- *
-- *      If an GPIO allocated with this function needs to be freed
-- *      separately, devm_gpio_free() must be used.
-  */
--
- int devm_gpio_request(struct device *dev, unsigned gpio, const char *label)
- {
- 	unsigned *dr;
-@@ -459,24 +445,6 @@ int devm_gpio_request_one(struct device *dev, unsigned gpio,
- }
- EXPORT_SYMBOL_GPL(devm_gpio_request_one);
- 
--/**
-- *      devm_gpio_free - free a GPIO
-- *      @dev: device to free GPIO for
-- *      @gpio: GPIO to free
-- *
-- *      Except for the extra @dev argument, this function takes the
-- *      same arguments and performs the same function as gpio_free().
-- *      This function instead of gpio_free() should be used to manually
-- *      free GPIOs allocated with devm_gpio_request().
-- */
--void devm_gpio_free(struct device *dev, unsigned int gpio)
--{
--
--	WARN_ON(devres_release(dev, devm_gpio_release, devm_gpio_match,
--		&gpio));
--}
--EXPORT_SYMBOL_GPL(devm_gpio_free);
--
- static void devm_gpio_chip_release(void *data)
- {
- 	struct gpio_chip *gc = data;
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 008ad3ee56b7..a370387fa406 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -95,7 +95,6 @@ struct device;
- int devm_gpio_request(struct device *dev, unsigned gpio, const char *label);
- int devm_gpio_request_one(struct device *dev, unsigned gpio,
- 			  unsigned long flags, const char *label);
--void devm_gpio_free(struct device *dev, unsigned int gpio);
- 
- #else /* ! CONFIG_GPIOLIB */
- 
-@@ -240,11 +239,6 @@ static inline int devm_gpio_request_one(struct device *dev, unsigned gpio,
- 	return -EINVAL;
- }
- 
--static inline void devm_gpio_free(struct device *dev, unsigned int gpio)
--{
--	WARN_ON(1);
--}
--
- #endif /* ! CONFIG_GPIOLIB */
- 
- #endif /* __LINUX_GPIO_H */
+v2:
+* Add print_chip callback to avoid changing /proc/interrupts output
+* Add patch to use irqd_to_hwirq()
+
+Aidan MacDonald (2):
+  pinctrl: ingenic: Use irqd_to_hwirq()
+  pinctrl: ingenic: Convert to immutable irq chip
+
+ drivers/pinctrl/pinctrl-ingenic.c | 64 +++++++++++++++++++------------
+ 1 file changed, 40 insertions(+), 24 deletions(-)
+
 -- 
 2.35.1
 
