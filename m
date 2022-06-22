@@ -2,113 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45819555507
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 21:48:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A2E555573
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jun 2022 22:37:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359655AbiFVTsP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jun 2022 15:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
+        id S233265AbiFVUgL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jun 2022 16:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359444AbiFVTsO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 15:48:14 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E492DD60;
-        Wed, 22 Jun 2022 12:48:09 -0700 (PDT)
-Received: from [46.183.103.8] (helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1o46KG-0004LY-G0; Wed, 22 Jun 2022 21:47:45 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     soc@kernel.org, Olof Johansson <olof@lixom.net>, arm@kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Heiko Stuebner <heiko@sntech.de>, openbmc@lists.ozlabs.org,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Joel Stanley <joel@jms.id.au>, linux-arm-msm@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-aspeed@lists.ozlabs.org,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-input@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Gross <agross@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Li Yang <leoyang.li@nxp.com>, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-omap@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Tero Kristo <kristo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Andrew Lunn <andrew@lunn.ch>,
-        Nishanth Menon <nm@ti.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-mediatek@lists.infradead.org
-Subject: Re: (subset) [PATCH v3 00/40] dt-bindings: input: gpio-keys: rework matching children
-Date:   Wed, 22 Jun 2022 21:47:36 +0200
-Message-Id: <165592714968.3933570.9891201783444800337.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220616005224.18391-1-krzysztof.kozlowski@linaro.org>
-References: <20220616005224.18391-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S235223AbiFVUgK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 16:36:10 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32F738BEF
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 13:36:03 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-3177f4ce3e2so151178347b3.5
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 13:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k0Q20J3OyFK4BXoHp26oZBRHT0NT/TPRkGHoG9EjHBM=;
+        b=AIh/u0M6R759JTz79TyCN93gK6bgpHDzPVQZ1c1GJ5mwFOuIeCYHJ4edi50jml847F
+         YlyEIG6KHqq8aPkZTHE9o8riSh+o+aPdQkAJtuBIbSQJ1Qvz8SxbjAaqCBGJVWgX2P/S
+         /lWL8gVqkrxuDaPOll9RogYmQJePhkDfIDDmdpqwgFqUaxnpkJlZlOJqH2LK8OYh0EHS
+         NkvT2u3I65Z8qEvtK4yyQHIJoLFYRlLWUJzUrck6e096qTWwpgSy4j4OJNJBxKuqt4cm
+         +0dfDWU9Ra9WoP4nC6yrNay035tCUQh6UFCC2SBvyjlcMQdeY4uW7Ka6L/TCcUlvjRXY
+         RbvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k0Q20J3OyFK4BXoHp26oZBRHT0NT/TPRkGHoG9EjHBM=;
+        b=Ub8/mjtQwmg4XV8baq26nJheJGF54pNqVyaAnrlBoZUHXV9sDXtsnkQTPsI1bcq1zt
+         tcZIwXRRjmmcVO0vjJtzu5hlpPt5uNOuPuRPun5VvYIlqlEgV+3+pCuLP/TLNDgSZQjp
+         E1xp6szBfzepPUi0O9cccVnXEdCEAxzxjTUoxYcf3VVMq0vjSHDXHgIJ6AE4hbmUg5Jr
+         q33fRhKDnAe6vMlJ73FGsLle7yjVq1bSLlYEhEpRiw84BJQ+0iGYk86GbJ6a/jp5C2is
+         OdIX+6lYyeGvpCq+JAPu3NnTka+zabOBOTbCjt3Lk0Mw2J2OWQwDV/goarHMUrBxt5+J
+         lJiw==
+X-Gm-Message-State: AJIora/XlzT04hdp+6MfLCkbBD0FQ04Xh1zm9mkWhbsFcoHAlNgBKzsL
+        tuLwo2TD5Us5jfpGi0dLHn+VcY0+NJ9MxVETG3tNMg==
+X-Google-Smtp-Source: AGRyM1tZz2wdFHKMCQcrlrsexZuCcN2icaf5UPnPLdD9I4E6Eu6Q2ruY0h+nLZ4RTx4/aeKVzxa/AbO9gvemQvBe43c=
+X-Received: by 2002:a81:a095:0:b0:317:d4ce:38b6 with SMTP id
+ x143-20020a81a095000000b00317d4ce38b6mr6426893ywg.83.1655930162762; Wed, 22
+ Jun 2022 13:36:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,RCVD_IN_SBL_CSS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <20220601070707.3946847-8-saravanak@google.com> <20220622074756.GA1647@pengutronix.de>
+ <CACRpkdYe=u9Ozj_dtLVr6GSau8yS5H7LnBNNrQHki1CJ1zST0A@mail.gmail.com> <CAGETcx_qm7DWbNVTLfF9jTgGA8uH8oAQzbPcMDh4L6+5mdRFog@mail.gmail.com>
+In-Reply-To: <CAGETcx_qm7DWbNVTLfF9jTgGA8uH8oAQzbPcMDh4L6+5mdRFog@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 22 Jun 2022 13:35:26 -0700
+Message-ID: <CAGETcx8i9R51T-mGuV9_LUz-GXDCncpRWQ1Rj_7i2JrvCttq3w@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] driver core: Set fw_devlink.strict=1 by default
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Sascha Hauer <sha@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 15 Jun 2022 17:52:24 -0700, Krzysztof Kozlowski wrote:
-> Merging
-> =======
-> 1. dt-bindings: rebased on top of Rob's:
->    https://lore.kernel.org/all/20220608211207.2058487-1-robh@kernel.org/
-> 
-> 2. DTS patches are independent. They can be picked up directly by sub-arch
->    maintainers, by Arnd or Olof, or eventually by me (if you wish).
-> 
-> [...]
+On Wed, Jun 22, 2022 at 12:40 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Wed, Jun 22, 2022 at 1:44 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > On Wed, Jun 22, 2022 at 9:48 AM Sascha Hauer <sha@pengutronix.de> wrote:
+> >
+> > > This patch has the effect that console UART devices which have "dmas"
+> > > properties specified in the device tree get deferred for 10 to 20
+> > > seconds. This happens on i.MX and likely on other SoCs as well. On i.MX
+> > > the dma channel is only requested at UART startup time and not at probe
+> > > time. dma is not used for the console. Nevertheless with this driver probe
+> > > defers until the dma engine driver is available.
+>
+> FYI, if most of the drivers are built in, you could set
+> deferred_probe_timeout=1 to reduce the impact of this (should drop
+> down to 1 to 2 seconds). Is that an option until we figure out
+> something better?
+>
+> Actually, why isn't earlyconsole being used? That doesn't get blocked
+> on anything and the main point of that is to have console working from
+> really early on.
+>
+> > >
+> > > It shouldn't go in as-is.
+> >
+> > This affects all machines with the PL011 UART and DMAs specified as
+> > well.
+> >
+> > It would be best if the console subsystem could be treated special and
+> > not require DMA devlink to be satisfied before probing.
+>
+> If we can mark the console devices somehow before their drivers probe
+> them, I can make fw_devlink give them special treatment. Is there any
+> way I could identify them before their drivers probe?
+>
+> > It seems devlink is not quite aware of the concept of resources that are
+> > necessary to probe vs resources that are nice to have and might be
+> > added after probe.
+>
+> Correct, it can't tell them apart. Which is why it tries its best to
+> enforce them, get most of them ordered properly and then gives up
+> enforcing the rest after deferred_probe_timeout= expires. There's a
+> bit more nuance than what I explained here (explained in earlier
+> commit texts, LPC talks), but that's the gist of it. That's what's
+> going on in this case Sascha is pointing out.z
+>
+> > We need a strong devlink for the first category
+> > and maybe a weak devlink for the latter category.
+> >
+> > I don't know if this is a generic hardware property for all operating
+> > systems so it could be a DT property such as dma-weak-dependency?
+> >
+> > Or maybe compromize and add a linux,dma-weak-dependency;
+> > property?
+>
+> The linux,dma-weak-dependency might be an option, but then if the
+> kernel version changes and we want to enforce it because we now have a
+> dma driver (not related to Shasha's example) support, then the
+> fw_devlink still can't enforce it because of that property. But maybe
+> that's okay? The consumer can try to use dma and defer probe if it
+> fails?
+>
+> Another option is to mark console devices in DT with some property and
+> we can give special treatment for those without waiting for
+> deferred_probe_timeout= to expire.
 
-Applied, thanks!
+Heh, looks like there's already a property for that: stdout-path.
 
-[26/40] arm64: dts: rockchip: align gpio-key node names with dtschema
-        commit: 517ed0ffd3cc691bef747288d51d01d2705b2251
+Let me send a series that'll use that to give special treatment to
+console devices.
 
-        In the pinenote dts the original patch changed "cover" to
-        switch, so to keep the cover information intact, I changed
-        the node to "switch-cover" ... similar to other "switch-lid"
-        instances in some other Rockchip devicetrees.
-
-[27/40] ARM: dts: rockchip: align gpio-key node names with dtschema
-        commit: 271e2c92285075a890c58cba9ad5979a8959f6ff
-[28/40] ARM: dts: rockchip: rk3288-tinker: correct gpio-keys properties
-        commit: e5a3cbe8b45b0a436a39cc969b7bcc8353248018
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+-Saravana
