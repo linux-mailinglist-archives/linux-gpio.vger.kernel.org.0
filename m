@@ -2,123 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22293558785
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 20:29:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71671558798
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 20:33:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237116AbiFWS3T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 14:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41156 "EHLO
+        id S232425AbiFWSdn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 14:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237085AbiFWS3I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 14:29:08 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C05C80535
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 10:30:53 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-3176b6ed923so995967b3.11
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 10:30:53 -0700 (PDT)
+        with ESMTP id S237565AbiFWSdC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 14:33:02 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48433515AE;
+        Thu, 23 Jun 2022 10:34:35 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id u12so42536257eja.8;
+        Thu, 23 Jun 2022 10:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KOXrqOWcfMdTsdtXrpYVXi48JcFuUmjoexhlnfOOTGg=;
-        b=L4dJOWUZH8Ao72MwmMu0hlQebn/kw9JPayp5sizpod+mvJoa+Jk2c12U6dtGJw0ocL
-         FY0ahsSAadsHrWKiB46J+rcLToO2J7UvF9dIoPD0dwYD6fCgiC2WdrEctFh7m2vONz1A
-         i5kKXCDjiPHGInQZUAkTQeJKWzgc8xBF9HzM08vnWaL+MuxZ5JvD3IF2Be6NowkMVSgg
-         S+ucsFZ/JWQdteDBkGi0njXsklqZaAIz/FkVYezBWUTLcJOSi+wYLYWfkqidiVZs/Mft
-         8KjS3VdHIM1qyN71zTYrpDaez/WAciLANIBuy1v8KewlMSrgXXmZL/60tdhF7JlBxcPw
-         T2sQ==
+        bh=StaOvFslk0m+dKjepijTVYAfivMfIONPjbCLyZTW4N4=;
+        b=ppoAqXTrOEh7t1yD6clZoj2QYqGpEfRfaUPEbprI4huv/LwzstWKH+TRw7yP7LIlD1
+         srxISJP4erkJSkXBAvSPfRYMVs0jv2SLhy70QQk/l1fkKrsNxM+RLJwpGBIURELxSuLW
+         qPXz9Hk2CevAWZyFeJoTh+0T0hcpj/Iri+RTwNZPmlVUvR/74THS2o14h85h+XxQA30j
+         Rja4f9GJ2DdMH2ydNwRxY7Vq4jUcq8EvAYfasZj/r9YRYbg8e3BS3tkpwRq+m1CyOKQU
+         NLGa+Z+IwbIzW0sizAVKx9TdkHPcvsQpm5sIEaghD6LgfFF60ZW4jqkaRNYiHLvvHzUe
+         d6TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KOXrqOWcfMdTsdtXrpYVXi48JcFuUmjoexhlnfOOTGg=;
-        b=IagJjEmNSwg9Pc/4mDYm0FnnDCsHXTWR1WtlKgrfrhSrgJRXMDL548HZ71sMEi4rJZ
-         CNxVtIKpYqMxELLmnWrIBJJfBnxsgaErRZzXF5IxQAz2kMtx9QDOvi9wfDWclgRLfuWL
-         w3HcoUOPjyfBfMRfVyiSzXs/hQPPjKrxMvgKE/WIIbP1H3soY8brTJ3LYas4lQwPYxFf
-         3LCgXd2wEEDUrT5GHNJT3Ja/J6kRVlACK871EqwsxiaafzQ8KlQPOIUOPvSPouEr1cLM
-         1ThpqfUJ5nZOOImZ8cA/ms4wLXA4uqyiFpFieWUfArfg1/T//enw4IitWj7QP2knjzTm
-         iELw==
-X-Gm-Message-State: AJIora+PBOMxzVg6e8OsT//zf0usBgWHbdgm12Uf027FwExB/5uBqftS
-        fbN1TiBXy6q3Kgju0fx6dNWN77StE5u+IBmQm70u6g==
-X-Google-Smtp-Source: AGRyM1ul3O6ILFZqI77UreHIjC0wH+ddqVeLDfmwfl1PMnWdistPwRhbAXTfwUjlgyKKpmHDt2j86FuzSHATEelndGs=
-X-Received: by 2002:a0d:dfd5:0:b0:317:f0d4:505b with SMTP id
- i204-20020a0ddfd5000000b00317f0d4505bmr11413939ywe.518.1656005452363; Thu, 23
- Jun 2022 10:30:52 -0700 (PDT)
+        bh=StaOvFslk0m+dKjepijTVYAfivMfIONPjbCLyZTW4N4=;
+        b=SERMOHvIZDmhNvDOdVVNmHi3HCavQPooE6E/Ubf0KUSKZY1duxtwBPom3urVhJKhg5
+         T81xz79p6EchnmBJq20lZxuftfSfZWQWK/H0snC9bdZQyKDQ8ZyNFUNhak+hXUcazhx/
+         lqYSOYtHgz/21JXIZi/1upKxD+n+Aq/am/flNz3pnELQm8s7gWp9J5fcS5Z2bcPXTViG
+         QzHHUZ29TdrR63WShW/IPbBZfXWs9FLGOTnHTMdwbVaU4Bk7SlmRlIkcuudjQLlm4Amj
+         1v+at4MfYRGslGXT3shMEIDOtt4ZxXbSS54vAJnFg0b9iSRFe9sOSiViVu8dauPMCPvC
+         TWuw==
+X-Gm-Message-State: AJIora9Xge+KglS1JAxH/CyTHmnSx3jb/v/EYaM7KNlniv0WLphB8IOS
+        /U7Y25wSYL8ByxZRInXJOhoYZF22Hf7i6wJSBfaQyhJJ2W5SAA==
+X-Google-Smtp-Source: AGRyM1vgwgYNmYAbTlPj5EBqvUwvQ4xZRF6kkTNk8PmhpEDTStQku06Gc0Vam6zA78Y9OXdkGSCDWJBgwyM9Wl2Zi28=
+X-Received: by 2002:a17:907:9620:b0:722:fc5e:3259 with SMTP id
+ gb32-20020a170907962000b00722fc5e3259mr6150250ejc.579.1656005662167; Thu, 23
+ Jun 2022 10:34:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220623080344.783549-1-saravanak@google.com> <20220623080344.783549-3-saravanak@google.com>
- <20220623100421.GY1615@pengutronix.de> <YrSXKkYfr+Hinsuu@smile.fi.intel.com>
-In-Reply-To: <YrSXKkYfr+Hinsuu@smile.fi.intel.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 23 Jun 2022 10:30:16 -0700
-Message-ID: <CAGETcx8axPpXFv9Cc59nWrgW9_fYqZUYmNPUg83CTHTBZDC-ZA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] of: base: Avoid console probe delay when fw_devlink.strict=1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     sascha hauer <sha@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+References: <20220620162059.1097264-1-cosmin.tanislav@analog.com>
+ <20220620162059.1097264-3-cosmin.tanislav@analog.com> <CAHp75VcBJkQ+CwyoDaTJ_AD+mv9d0tEd_txqHwkPRy4-xvnyKg@mail.gmail.com>
+ <2aa93eab-de6d-866b-a829-36b47ff00982@gmail.com> <CAHp75Vc_fcAP6gGwMkYZUoMM6jKeUoQr8J+zYCUz8inSHnTF_w@mail.gmail.com>
+ <54bfff70-938f-16e1-198d-47ed9ba95db4@gmail.com>
+In-Reply-To: <54bfff70-938f-16e1-198d-47ed9ba95db4@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 23 Jun 2022 19:33:45 +0200
+Message-ID: <CAHp75VeRgnCLP0YqiOe8OkW3hQ178ia+Y3PjFtCMW4Sh7JfCZQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: adc: ad4130: add AD4130 driver
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, peng fan <peng.fan@nxp.com>,
-        kevin hilman <khilman@kernel.org>,
-        ulf hansson <ulf.hansson@linaro.org>,
-        len brown <len.brown@intel.com>, pavel machek <pavel@ucw.cz>,
-        joerg roedel <joro@8bytes.org>, will deacon <will@kernel.org>,
-        andrew lunn <andrew@lunn.ch>,
-        heiner kallweit <hkallweit1@gmail.com>,
-        russell king <linux@armlinux.org.uk>,
-        "david s. miller" <davem@davemloft.net>,
-        eric dumazet <edumazet@google.com>,
-        jakub kicinski <kuba@kernel.org>,
-        paolo abeni <pabeni@redhat.com>,
-        linus walleij <linus.walleij@linaro.org>,
-        hideaki yoshifuji <yoshfuji@linux-ipv6.org>,
-        david ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 9:39 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Jun 23, 2022 at 12:04:21PM +0200, sascha hauer wrote:
-> > On Thu, Jun 23, 2022 at 01:03:43AM -0700, Saravana Kannan wrote:
->
-> ...
->
-> > I wonder if it wouldn't be a better approach to just probe all devices
-> > and record the device(node) they are waiting on. Then you know that you
-> > don't need to probe them again until the device they are waiting for
-> > is available.
->
-> There may be no device, but resource. And we become again to the something like
-> deferred probe ugly hack.
->
-> The real solution is to rework device driver model in the kernel that it will
-> create a graph of dependencies and then simply follow it. But actually it should
-> be more than 1 graph, because there are resources and there are power, clock and
-> resets that may be orthogonal to the higher dependencies (like driver X provides
-> a resource to driver Y).
+On Thu, Jun 23, 2022 at 6:14 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+> On 6/23/22 18:39, Andy Shevchenko wrote:
+> > On Thu, Jun 23, 2022 at 5:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+> >> On 6/20/22 21:29, Andy Shevchenko wrote:
+> >>> On Mon, Jun 20, 2022 at 6:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
 
-We already do this with fw_devlink for DT based systems and we do
-effectively just probe the devices in graph order (by deferring any
-attempts that happen too early and before it even gets to the driver).
-The problem is the knowledge of what's considered an optional vs
-mandatory dependency and that's affected by the global state of driver
-support in the kernel.
+...
 
--Saravana
+> >>>> +       /*
+> >>>> +        * DMA (thus cache coherency maintenance) requires the
+> >>>> +        * transfer buffers to live in their own cache lines.
+> >>>> +        */
+> >>>
+> >>> This is a good comment, but what fields does it apply to?
+> >>
+> >> Whatever is below it, grouped together. This is not hard to
+> >> understand.
+> >
+> > It's hard to understand what exactly is DMA-aware here. I see only one
+> > buffer that is aligned properly for DMA, the rest are not, except the
+> > case if all of them are going in one DMA transaction. Is this the case
+> > here?
+> >
+> >>>> +       u8                      reset_buf[AD4130_RESET_BUF_SIZE] __aligned(IIO_DMA_MINALIGN);
+> >
+> > This is aligned.
+> >
+> >>>> +       u8                      reg_write_tx_buf[4];
+> >
+> > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0).
+> >
+> >>>> +       u8                      reg_read_tx_buf[1];
+> >
+> > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4).
+> >
+> >>>> +       u8                      reg_read_rx_buf[3];
+> >
+> > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4 + 1).
+> > And this is Rx.
+> >
+> >>>> +       u8                      fifo_tx_buf[2];
+> >
+> > Here is Tx again which is most likely is not aligned...
+> >
+> >>>> +       u8                      fifo_rx_buf[AD4130_FIFO_SIZE *
+> >>>> +                                           AD4130_FIFO_MAX_SAMPLE_SIZE];
+> >>>> +};
+> >
+>
+> This has been mentioned before by Jonathan as a reply to V6 of my
+> AD74413R driver.
+>
+>  > I'm surprised I didn't mention this before but you only need to
+> ensure  > that any memory used for DMA is not in a cacheline with memory
+> used
+>  > for other things that might change concurrently.
+>
+> To my understanding, as long as the DMA buffers will all be accessed by
+> the same DMA-compatible SPI controller, you only need to align them so
+> they're not in the same cacheline with memory that will not be accessed
+> by the SPI controller.
+
+SPI is synchronous by nature, what will happen if the Tx and Rx
+buffers are sharing the same cache line? Anybody to shed a light here?
+
+(I.o.w. I'm not sure that we don't need to split the Rx and Tx buffers
+of the same transfer.)
+
+-- 
+With Best Regards,
+Andy Shevchenko
