@@ -2,136 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF040557ED3
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 17:46:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18ADB557F65
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 18:09:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbiFWPqH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 11:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52082 "EHLO
+        id S232195AbiFWQIa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 12:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbiFWPqG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 11:46:06 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB892387A0
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 08:46:05 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-3177f4ce3e2so174743857b3.5
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 08:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=MCdBPcvc3aKS/nhtwFdXptVodbMIYgt74UixyLgUydo=;
-        b=f6goSR6ZbdZjXT1FK0Snv2VFi7Wx1RINfWlfDPBfP6R47/NWgFTESA0vsi4yBfKq70
-         8y/kErk4H2XFpSWBNzTl5ULkMz64HgDKLeqyliFYhSHjORgkDRmapzsBlneZg62AJ032
-         wyuu3J8wMyMg5ltYmZ9f9wY9onUAQy15tCZrKsPUj7I47udvcYToxOLPzxXdbxxnnAjk
-         NCVvBXmB6KUg4jfipWp2XQfjDqYEBIPjdwfChK6rwSGXPaqxbHZXBoXuGNqtyQBe40yZ
-         svVHlZPqJ0DmmzgHr9wBpoHOl/mTAAYhVkTaF3oZ3ybLYQyU9Y2x5BeNhUJx3nEUx54N
-         S93Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=MCdBPcvc3aKS/nhtwFdXptVodbMIYgt74UixyLgUydo=;
-        b=dW5QaDcXmWPaMxW7T2O41zb4c0fboys5DnEo+M0bNBMtjOqKSs8a/q1h4AqCJNbu0i
-         tC22uQJEd2vqYTFxK4UaY1qwEs6Zdz5lIuWxZB9uHfvf/EXphGnbCQ+7dCAP9ciPJlFu
-         XmoWT5Zc9OPJ3SWqvFEn1gMgZgGKYarCs4I0FY+2GCHmuL+j+xyb3WOfq+JitD0cxpZX
-         kCVdnvn1N/RrkA6QL7tplYsN7zyu/LuY44mFWL367ZYWA4VBj8dl+ixMMBPvnGYxq6el
-         ctDE9bArqRWQs2dQpFxkM8nP9G8hLCYkYFS0K+VG66ip0g+lfWM3okS++RvL8EijX5q4
-         CYHQ==
-X-Gm-Message-State: AJIora/aH34g/AcrARTguermf1xtZSnQ22rb/iwT2bxteKAfdigNupgL
-        /01QdgXMVkno8rhOgRqW1I+nP/D7ztYBet+ZqQs=
-X-Google-Smtp-Source: AGRyM1t6l6W52kvaF9sz8G5Mdwg3kARVYc3tn+JEaAZlVmp7aIIP3MZGntjMhl2lV8qE8i9Pc1xMOMvFoOzd32GpXLM=
-X-Received: by 2002:a81:1001:0:b0:317:d614:c3d6 with SMTP id
- 1-20020a811001000000b00317d614c3d6mr11262541ywq.164.1655999164618; Thu, 23
- Jun 2022 08:46:04 -0700 (PDT)
+        with ESMTP id S232210AbiFWQIT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 12:08:19 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D32B5FCD;
+        Thu, 23 Jun 2022 09:08:07 -0700 (PDT)
+Received: from jupiter.universe (unknown [95.33.159.255])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: sre)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id DE89E66017E6;
+        Thu, 23 Jun 2022 17:08:05 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1656000485;
+        bh=3PoFyOi2PuVN5eAkHhfUKGlEfV4vRXqknVKhZCnAjEw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QPA4ELcpdYYx23MTDi2g6vAWdqpF8SHoQ8U9hYwtymzt3F1+9y2O/V5CNRJaAydd9
+         U/HycEVJK79Xi9PqqkkRlDmDfUsmCDZkqVC+mk9ZRN/adqtsqUNDyIeLxURGSu0s+n
+         zgnPPVmRc0fldbgAq+yjPy4m5sIOFvfGxPpRcyLgQYGX3AbQKtihPPvtQPRAiMp3aA
+         /ks74AETRVPKPsXYvhDPhz0tCYEFTi8rLTeNM4Q5nHvl6gyiq82uSOb8doJ3wXRuJL
+         C1TKh4v3lxLRZzrl/8tf3uMF3Ft82PXyKhDWvdz2hTpXP/HR1OkB6JPqt8/MitHb+q
+         VyaeJSKxR61lQ==
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 9D2C1480122; Thu, 23 Jun 2022 18:08:03 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        kernel@collabora.com
+Subject: [PATCH 0/2] RK3588 GPIO Support
+Date:   Thu, 23 Jun 2022 18:07:59 +0200
+Message-Id: <20220623160801.240779-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Sender: robertroland0331@gmail.com
-Received: by 2002:a05:7108:6913:0:0:0:0 with HTTP; Thu, 23 Jun 2022 08:46:04
- -0700 (PDT)
-From:   MRS MARIA ROLAND <mariaroland74@gmail.com>
-Date:   Thu, 23 Jun 2022 08:46:04 -0700
-X-Google-Sender-Auth: HXN4nGNGTkgF1wPpoiEZzDuRpDc
-Message-ID: <CAKnR+Cc_wM+WHRW8KqqstSek10JtRbsYxvv0MZWQ5ccnPY=gVg@mail.gmail.com>
-Subject: Greetings dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_8,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:112b listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5164]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [robertroland0331[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [robertroland0331[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
-        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
-        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Greetings dear
+This has been part of a bigger patchset adding basic rk3588 support.
+Since that gets more and more out of hand, I'm now sending patches
+for each subsystem as individual patchset. Previou patchet:
 
+https://lore.kernel.org/all/20220504213251.264819-1-sebastian.reichel@collabora.com/
 
-   This letter might be a surprise to you, But I believe that you will
-be honest to fulfill my final wish. I bring peace and love to you. It
-is by the grace of god, I had no choice than to do what is lawful and
-right in the sight of God for eternal life and in the sight of man for
-witness of god's mercy and glory upon my life. My dear, I sent this
-mail praying it will find you in a good condition, since I myself am
-in a very critical health condition in which I sleep every night
-without knowing if I may be alive to see the next day. I am Mrs.Maria
-Roland, a widow suffering from a long time illness. I have some funds
-I inherited from my late husband, the sum of ($11,000,000.00, Eleven
-Million Dollars) my Doctor told me recently that I have serious
-sickness which is a cancer problem. What disturbs me most is my stroke
-sickness. Having known my condition, I decided to donate this fund to
-a good person that will utilize it the way I am going to instruct
-herein. I need a very honest and God fearing person who can claim this
-money and use it for Charity works, for orphanages and gives justice
-and help to the poor, needy and widows says The Lord." Jeremiah
-22:15-16.=E2=80=9C and also build schools for less privilege that will be
-named after my late husband if possible and to promote the word of god
-and the effort that the house of god is maintained.
+Changes:
+ * None (except for collecting Acks)
 
- I do not want a situation where this money will be used in an ungodly
-manner. That's why I'm taking this decision. I'm not afraid of death,
-so I know where I'm going. I accept this decision because I do not
-have any child who will inherit this money after I die. Please I want
-your sincere and urgent answer to know if you will be able to execute
-this project, and I will give you more information on how the fund
-will be transferred to your bank account. May the grace, peace, love
-and the truth in the Word of god be with you and all those that you
-love and  care for.
+-- Sebastian
 
-I am waiting for your reply.
+Jianqun Xu (1):
+  gpio: rockchip: add support for rk3588
 
-May God Bless you,
+Sebastian Reichel (1):
+  dt-bindings: gpio: rockchip: add gpio-ranges
 
- Mrs.Maria Roland.
+ Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 2 ++
+ drivers/gpio/gpio-rockchip.c                                   | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+-- 
+2.35.1
+
