@@ -2,108 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B819555772C
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 11:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68CC9557765
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 12:06:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230526AbiFWJym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 05:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56694 "EHLO
+        id S231444AbiFWKGd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 06:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbiFWJyl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 05:54:41 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D806D2B27E;
-        Thu, 23 Jun 2022 02:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655978080; x=1687514080;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=s9GG/sY6wixWx6Kt3EOgPjnu6ifIHWLBKr6/jZ+J2kc=;
-  b=IITV4DWRuYjDMX+DzJYsiSTcYCDNqm2xHBdymjGRcv/DW/n/dgKOGnHx
-   DUnrO3nAFsN96lba2guO0wGPJruWZ9aj7fDkLWj6kXDA/xadvSpW+hDeE
-   4qb/3h+7eoZIbl/HnJXDHW0mnuWt/kJIG5XGeaDnEXYg0RXpcCG45hKgZ
-   UkJo9LD/oyESJXFE8z/hZD3bql3348j152X3nYQH5ZYYcWY0ScVoaq5Kd
-   egAWPCQ8Wnf3VaFB0CwKeY4rNSelZXlI5PQLGXcuO8ZaDtwWk3cwaIKSJ
-   fpWRuBu+Pn/D4GZ74OagS6fxk0IVtMT2Iaz9QFnAcUr9L2sqXp+Emh+Od
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="306136383"
-X-IronPort-AV: E=Sophos;i="5.92,215,1650956400"; 
-   d="scan'208";a="306136383"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 02:54:40 -0700
-X-IronPort-AV: E=Sophos;i="5.92,215,1650956400"; 
-   d="scan'208";a="563387365"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 02:54:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o4JXn-000t1W-Hf;
-        Thu, 23 Jun 2022 12:54:35 +0300
-Date:   Thu, 23 Jun 2022 12:54:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] gpio: winbond: Fix error code in winbond_gpio_get()
-Message-ID: <YrQ4WwSzhpai0aPc@smile.fi.intel.com>
-References: <YrQkfBuIHArxHSNr@kili>
+        with ESMTP id S231233AbiFWKGP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 06:06:15 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB152AC4E
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 03:06:13 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1o4JhK-0001s4-PU; Thu, 23 Jun 2022 12:04:26 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1o4JhF-0006Dc-DA; Thu, 23 Jun 2022 12:04:21 +0200
+Date:   Thu, 23 Jun 2022 12:04:21 +0200
+From:   sascha hauer <sha@pengutronix.de>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, peng fan <peng.fan@nxp.com>,
+        kevin hilman <khilman@kernel.org>,
+        ulf hansson <ulf.hansson@linaro.org>,
+        len brown <len.brown@intel.com>, pavel machek <pavel@ucw.cz>,
+        joerg roedel <joro@8bytes.org>, will deacon <will@kernel.org>,
+        andrew lunn <andrew@lunn.ch>,
+        heiner kallweit <hkallweit1@gmail.com>,
+        russell king <linux@armlinux.org.uk>,
+        "david s. miller" <davem@davemloft.net>,
+        eric dumazet <edumazet@google.com>,
+        jakub kicinski <kuba@kernel.org>,
+        paolo abeni <pabeni@redhat.com>,
+        linus walleij <linus.walleij@linaro.org>,
+        hideaki yoshifuji <yoshfuji@linux-ipv6.org>,
+        david ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] of: base: Avoid console probe delay when
+ fw_devlink.strict=1
+Message-ID: <20220623100421.GY1615@pengutronix.de>
+References: <20220623080344.783549-1-saravanak@google.com>
+ <20220623080344.783549-3-saravanak@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YrQkfBuIHArxHSNr@kili>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220623080344.783549-3-saravanak@google.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 11:29:48AM +0300, Dan Carpenter wrote:
-> This error path returns 1, but it should instead propagate the negative
-> error code from winbond_sio_enter().
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Fixes: a0d65009411c ("gpio: winbond: Add driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+On Thu, Jun 23, 2022 at 01:03:43AM -0700, Saravana Kannan wrote:
+> Commit 71066545b48e ("driver core: Set fw_devlink.strict=1 by default")
+> enabled iommus and dmas dependency enforcement by default. On some
+> systems, this caused the console device's probe to get delayed until the
+> deferred_probe_timeout expires.
+> 
+> We need consoles to work as soon as possible, so mark the console device
+> node with FWNODE_FLAG_BEST_EFFORT so that fw_delink knows not to delay
+> the probe of the console device for suppliers without drivers. The
+> driver can then make the decision on where it can probe without those
+> suppliers or defer its probe.
+> 
+> Fixes: 71066545b48e ("driver core: Set fw_devlink.strict=1 by default")
+> Reported-by: Sascha Hauer <sha@pengutronix.de>
+> Reported-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Tested-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  drivers/gpio/gpio-winbond.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  drivers/of/base.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/gpio/gpio-winbond.c b/drivers/gpio/gpio-winbond.c
-> index 7f8f5b02e31d..4b61d975cc0e 100644
-> --- a/drivers/gpio/gpio-winbond.c
-> +++ b/drivers/gpio/gpio-winbond.c
-> @@ -385,12 +385,13 @@ static int winbond_gpio_get(struct gpio_chip *gc, unsigned int offset)
->  	unsigned long *base = gpiochip_get_data(gc);
->  	const struct winbond_gpio_info *info;
->  	bool val;
-> +	int ret;
->  
->  	winbond_gpio_get_info(&offset, &info);
->  
-> -	val = winbond_sio_enter(*base);
-> -	if (val)
-> -		return val;
-> +	ret = winbond_sio_enter(*base);
-> +	if (ret)
-> +		return ret;
->  
->  	winbond_sio_select_logical(*base, info->dev);
->  
-> -- 
-> 2.35.1
-> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d4f98c8469ed..a19cd0c73644 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1919,6 +1919,8 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>  			of_property_read_string(of_aliases, "stdout", &name);
+>  		if (name)
+>  			of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
+> +		if (of_stdout)
+> +			of_stdout->fwnode.flags |= FWNODE_FLAG_BEST_EFFORT;
+
+The device given in the stdout-path property doesn't necessarily have to
+be consistent with the console= parameter. The former is usually
+statically set in the device trees contained in the kernel while the
+latter is dynamically set by the bootloader. So if you change the
+console uart in the bootloader then you'll still run into this trap.
+
+It's problematic to consult only the device tree for dependencies. I
+found several examples of drivers in the tree for which dma support
+is optional. They use it if they can, but continue without it when
+not available. "hwlock" is another property which consider several
+drivers as optional. Also consider SoCs in early upstreaming phases
+when the device tree is merged with "dmas" or "hwlock" properties,
+but the corresponding drivers are not yet upstreamed. It's not nice
+to defer probing of all these devices for a long time.
+
+I wonder if it wouldn't be a better approach to just probe all devices
+and record the device(node) they are waiting on. Then you know that you
+don't need to probe them again until the device they are waiting for
+is available.
+
+Sascha
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
