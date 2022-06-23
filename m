@@ -2,155 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1139D5575F5
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 10:54:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AA65557632
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 11:03:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230215AbiFWIyr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 04:54:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34800 "EHLO
+        id S230201AbiFWJDw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 05:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230281AbiFWIyp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 04:54:45 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DCBC37BC9;
-        Thu, 23 Jun 2022 01:54:44 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id ge10so8060802ejb.7;
-        Thu, 23 Jun 2022 01:54:44 -0700 (PDT)
+        with ESMTP id S229595AbiFWJDv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 05:03:51 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 129B31034;
+        Thu, 23 Jun 2022 02:03:50 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id s10so22453207ljh.12;
+        Thu, 23 Jun 2022 02:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9ewocLK4QQe9PxZjCCcv8MwH3fNq/SZdcCp141CybdY=;
-        b=Kqjw6Rve6l85j+tA8aUQq34+hQ66vEsjrz7vZgWhz7Ljx6vlzB/s0S3zyfFQUH/3BT
-         ZkoVvbpAQT0P8iWwpcGzSap2PCc40eq4cSfiuq4QCtmnpAzDkPt+fMI4DBgkA+27LIrI
-         eN16lc3f2jh7/ppkiKXiryX6aWvVb0L2f3CHOBu2BLisB23B+Mm+9+WAoyze/eNLdB86
-         cQ6NsCSLdUsv8Nw+QsCT03NjVe4ZnUmWMNojoAUVbeFNtjfDZOzVbiJhuskuAzLjqHS8
-         udz2ZBV/V0Phaa/vIIg9iK+PVwKhCxdnuv2P+h5O+NOvgH+8yzA4YG26sHiAhVavWVzX
-         /36Q==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=ozaotd6LY3ERvzpwuGvbQZTaC8kPny1azl5sB1Hldp8=;
+        b=N+E4E6aBHykbEoIC0lGs7IRiK7feaBLf/CkLd78oSXziwtTtGtoy3tXA3mN4u+M1+H
+         2lEeyKhEQm7uMBzKjVgfV32iv3ycYBLlXefCytlCiYeWvc1vlkkqeVdHyvQa/4I7awPw
+         +yqS6OsEIt1tCt5xFxEtaCt0oLEVSvoZwtAwW4dIcdORniXK5c03omQkgHXW3VVUbG5+
+         pCxDaxADdI5OOyGHM8VigOdxW8fFm9ClSBdiUkl8+LnNLmV81U1i7QDLpG5qCPGM/ib4
+         ezVP1RIDjW8Fye2pDE0ph9F+Vj4aLCnvOMeonKSMKU9+nmoEZVsNcW8/ABtqbLZ0wEk1
+         ujjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9ewocLK4QQe9PxZjCCcv8MwH3fNq/SZdcCp141CybdY=;
-        b=Bq4CLLAM2UA13887kT4CGcFu3bjt9+1YYLlygNQk2c7KBl2dNhKVbhlkSccynjusvk
-         5koI9pZKZJjhFhaqcQJW5rqCvbgkZZkfqr2dgiOpHLnRfjnsiC94rutEsNTcMJTAYeMv
-         vkteWGfMRjhlHxnSIsa6blnvZQj70+Tuz5lm7JdPng2WV5b9E0VYq2bsM0UGWB4AP/rR
-         0QiqWiBzqkyM9k8P9d/tcozA4VO7QhPsubfwp8ATRdNcwxY8lVF5NR+PDKG1SuWHMuyu
-         6iU7VrBkv6fxbmLfa8VKFtCXGx8tHa9ek7yFid5xd/67pfKZVxE6Gus3iwj+ten850Rk
-         eyNA==
-X-Gm-Message-State: AJIora+pukWAxqt3wxjVn8X5WkbIPS/dudzhqWLwFFzRK77zxyXHqBG2
-        wVeJhOuXYhLKmqELjcCHrS7z2z1uOwyv7bFv5jw=
-X-Google-Smtp-Source: AGRyM1s/cuwwgO+0Sp2pW/dYpZ5m/GlC8Pm/9k9OqASIANcWAar3Aq5myyz+KQKUvdUTygA/txrImEaGpacIQGqXKII=
-X-Received: by 2002:a17:907:6295:b0:703:92b8:e113 with SMTP id
- nd21-20020a170907629500b0070392b8e113mr7172323ejc.594.1655974482584; Thu, 23
- Jun 2022 01:54:42 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ozaotd6LY3ERvzpwuGvbQZTaC8kPny1azl5sB1Hldp8=;
+        b=ST7gKjaVJZOeD90Q9EPyW/QaPZRPgHCYBzo+5KyYdKaIYc31SycMLjyzh48hBHYsDe
+         QIYYJj8NK8MHtL7aswKOqapRG6eIZhvvblK7Yi0A9QarMy7OUQNtm7On8D5gju8wfDRq
+         PlSvcFH9ZHkNvybprFPB1X4e6vbM7g0ygZDhpnSWjgK0+cE8Qd5Nk+lore75hCO6EawN
+         X8dLXrBG33xPHZEF2zYVrm/Bfeo0mH+q64r6RiBq4ZXH2hRaj9UirZdGAu8eS9/wT1zb
+         UOZjScmNlUxd8HODkLVwKdmuZkTfK+7z2iLlef+1kWurvba5R4I/mjH/dsiiC1yYXMjc
+         Tmuw==
+X-Gm-Message-State: AJIora9PZdFD7g29azr+qUAcUMhw5sb0VreDBvDSBY0c6iVRHT7BZmBB
+        VgSTw5wiN+njt+1c5c51SFA=
+X-Google-Smtp-Source: AGRyM1vF1zU4Gj87rqZsJvaSlU5/WAIf+VWD8fk9zG8OB0wQ+t7uncoazUPPDPmBI+qN6/ToK7aL7g==
+X-Received: by 2002:a05:651c:1609:b0:25a:86a5:9eab with SMTP id f9-20020a05651c160900b0025a86a59eabmr4055972ljq.61.1655975028288;
+        Thu, 23 Jun 2022 02:03:48 -0700 (PDT)
+Received: from [172.16.189.61] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id s16-20020a05651c201000b0025a73f7aa3bsm1153452ljo.96.2022.06.23.02.03.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jun 2022 02:03:47 -0700 (PDT)
+Message-ID: <415e6876-9304-9493-369e-d5eca0238bea@gmail.com>
+Date:   Thu, 23 Jun 2022 12:03:43 +0300
 MIME-Version: 1.0
-References: <20220607155324.118102-1-aidanmacdonald.0x0@gmail.com>
- <20220607155324.118102-3-aidanmacdonald.0x0@gmail.com> <YqDLflKTsYaupArl@sirena.org.uk>
- <6YJcC5wyOg6x6Ny4Os8ujFbK2qB4alkU@localhost>
-In-Reply-To: <6YJcC5wyOg6x6Ny4Os8ujFbK2qB4alkU@localhost>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 02/49] regmap-irq: Fix offset/index mismatch in
+ read_sub_irq_data()
+Content-Language: en-US
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, broonie@kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        srinivas.kandagatla@linaro.org, bgoswami@codeaurora.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        cw00.choi@samsung.com, krzysztof.kozlowski@linaro.org,
+        b.zolnierkie@samsung.com, myungjoo.ham@samsung.com,
+        michael@walle.cc, linus.walleij@linaro.org, brgl@bgdev.pl,
+        tglx@linutronix.de, maz@kernel.org, lee.jones@linaro.org,
+        mani@kernel.org, cristian.ciocaltea@gmail.com, wens@csie.org,
+        tharvey@gateworks.com, rjones@gateworks.com,
+        mazziesaccount@gmail.com, orsonzhai@gmail.com,
+        baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        jernej.skrabec@gmail.com, samuel@sholland.org, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        alsa-devel@alsa-project.org
+References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
+ <20220620200644.1961936-3-aidanmacdonald.0x0@gmail.com>
 From:   Matti Vaittinen <mazziesaccount@gmail.com>
-Date:   Thu, 23 Jun 2022 11:54:29 +0300
-Message-ID: <CANhJrGMqUmnSvyNRgRyp40YnGQkD3N_2AZLn94NDp+4RG0_x5w@mail.gmail.com>
-Subject: Re: [PATCH v2 02/17] regmap-irq: Add get_irq_reg to support unusual
- register layouts
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org, Chen-Yu Tsai <wens@csie.org>,
-        jic23@kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, lars@metafoo.de,
-        "Rafael J . Wysocki" <rafael@kernel.org>, quic_gurus@quicinc.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLY,
+In-Reply-To: <20220620200644.1961936-3-aidanmacdonald.0x0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi dee Ho peeps!
+On 6/20/22 23:05, Aidan MacDonald wrote:
+> We need to divide the sub-irq status register offset by register
+> stride to get an index for the status buffer to avoid an out of
+> bounds write when the register stride is greater than 1.
+> 
+> Fixes: a2d21848d921 ("regmap: regmap-irq: Add main status register support")
+> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> ---
+>   drivers/base/regmap/regmap-irq.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+> index 4f785bc7981c..a6db605707b0 100644
+> --- a/drivers/base/regmap/regmap-irq.c
+> +++ b/drivers/base/regmap/regmap-irq.c
+> @@ -387,6 +387,7 @@ static inline int read_sub_irq_data(struct regmap_irq_chip_data *data,
+>   		subreg = &chip->sub_reg_offsets[b];
+>   		for (i = 0; i < subreg->num_regs; i++) {
+>   			unsigned int offset = subreg->offset[i];
+> +			unsigned int index = offset / map->reg_stride;
+>   
+>   			if (chip->not_fixed_stride)
+>   				ret = regmap_read(map,
+> @@ -395,7 +396,7 @@ static inline int read_sub_irq_data(struct regmap_irq_chip_data *data,
+>   			else
+>   				ret = regmap_read(map,
+>   						chip->status_base + offset,
+> -						&data->status_buf[offset]);
+> +						&data->status_buf[index]);
+>   
+>   			if (ret)
+>   				break;
 
-Sorry for the late reply.
+Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
-pe 10. kes=C3=A4k. 2022 klo 18.43 Aidan MacDonald
-(aidanmacdonald.0x0@gmail.com) kirjoitti:
->
-> Mark Brown <broonie@kernel.org> writes:
->
-> > On Tue, Jun 07, 2022 at 04:53:09PM +0100, Aidan MacDonald wrote:
-> >
-> >> -    if (!chip->sub_reg_offsets || !chip->not_fixed_stride) {
-> >> +    if (chip->get_irq_reg) {
-> >> +            reg =3D chip->get_irq_reg(base_reg, i);
-> >> +    } else if (!chip->sub_reg_offsets || !chip->not_fixed_stride) {
-> >
-> > It seems like it would be cleaner and clearer to refactor things so tha=
-t
-> > we always have a get_irq_reg() with standard chips getting given a
-> > default implementation which implements the current behaviour.
->
-> I don't think that is a good way to clean things up. I only intended
-> get_irq_reg() to be a quick hack to solve a problem; in my opinion it
-> would be a poor abstraction to base the API around.
->
-> What I'd suggest is something that will simplify regmap-irq. Instead of
-> defining the base registers, etc. in the chip, introduce a new struct
-> to describe a register group:
->
->     struct regmap_irq_reg_group {
->         unsigned int status_base;
->         unsigned int mask_base;
->         ...
->
->         unsigned int irq_reg_stride;
->
->         int num_regs;
->     };
->
-> The idea is that the registers in a group are linearly mapped using the
-> formula "base + (i * irq_reg_stride)". Then it's possible to allow for
-> multiple register groups in regmap_irq_chip:
->
->     struct regmap_irq_chip {
->         const struct regmap_irq_reg_group *groups;
->         unsigned int num_groups;
->
->         unsigned int main_status_base;
->         unsigned int num_main_status_bits;
->         int num_main_regs;
->
->         ...
->     };
->
-> It should be straightforward to fit existing chips into this model.
->
-> - Chips that use a main status + sub-block IRQ layout will define
->   one register group for each sub-block and continue to describe the
->   location of the main status registers inside of regmap_irq_chip.
->   A group will only get polled if the corresponding main status bit
->   is set -- n'th group is polled if n'th bit is set.
-
-Does this work for devices where a single main status bit can flag
-IRQs in more than one sub-registers?
-
-Best Regards
- -- Matti
-
---=20
-
+-- 
 Matti Vaittinen
 Linux kernel developer at ROHM Semiconductors
 Oulu Finland
