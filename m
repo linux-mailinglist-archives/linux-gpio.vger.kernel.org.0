@@ -2,67 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D60895574D0
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 10:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B451F557540
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 10:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbiFWIE4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 04:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49210 "EHLO
+        id S229672AbiFWIWY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 04:22:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230456AbiFWIEy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 04:04:54 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB5F47079
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 01:04:52 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id w6so34474029ybl.4
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 01:04:52 -0700 (PDT)
+        with ESMTP id S229576AbiFWIWX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 04:22:23 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D85DB48330
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 01:22:21 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id l11so34497692ybu.13
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 01:22:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aJdGY8if0kKaADIOnNz/K5T0O1hT/jUoomceGsgv8qg=;
-        b=VTQtFvKLR234TeEsJG9hJ1cv/fTlg/g75r8DUnXK6ZHcXDiNZlsJYB9CHo/M+MtXXm
-         kHxKIuNF0rtlBZTftpqriI4HPVkNAF8Kgf2nEavzZoQhhOEgRbl56Yidg8QEwndgSNmo
-         guDcAYV+JbY07aCqXNXOm0MAQ374EyPk3ywDSm8OW4cMFCwWkHtQXObbRqfIV1Au2qL/
-         2xJX/OVUmoI0Ru+JwXOHrC9gjW8I3BqdmxJTIj+bkS/ZKg4cBj3SDMQZSf2iggQyehVV
-         s0m81yWPr2B/Nu8wqEz2Z07cBjk9Ng0bbJAp4gpara4efxy5PPr9RgZdjjBJiDIEtWTH
-         KYew==
+        bh=9PjNiNhLCuh9WhzT1AaONPfu5Pj4HpLdf/1QRxDQ9sQ=;
+        b=pzqGfXQLba3va5/8Sml5dTqasBd22VtMC6LsIY9XM86NydlS9zpVJnL7w7xX6iuDe8
+         X7CBtL21Xt/roY99vHIUugx0rcpAIZr/MRxvyoGKpsUZLiqAk//S2jlQpBwrNnHk7wGm
+         RQTEw34L8DZMyPfA1AsauTTsxDs05tA56d4f5svcOAWjw1Odk+3DTByfTvJrYBNr/zRF
+         iPbOdMh47ENO95zTpdz/17l4CgcdpExtT5e0NypAQFBQc/j/g67fTa8i40rOqRH7rdeC
+         +qNvOlp6pV5Z2uaLHf2Y3ZncmyJaUhr6W/xXlsYAJCLg8Ts5Y0LhOT8aCUZsWexiZHkk
+         67Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aJdGY8if0kKaADIOnNz/K5T0O1hT/jUoomceGsgv8qg=;
-        b=rW0D4AY0vIg46Wy3qzP2Le0LBFHcmvqiyPjoizV2anzzKyroH/4ZVV0/tvwQS3ZyaC
-         wCkXYOAkt+YDOUl31jk77nF7+ssEwIsC51afq5894lpWxgMs/0g3D6cyJ+1F/2XWvLAW
-         V2BR/pVa1NXYXGmNQuPcVbHKFhXrwNfqvfT1SUFHTuzPCzv7v0Mdyq3VxPkBOBGlRGwc
-         SyaTYSRyKB5Y1IhKxRSC44FQCgK44QHkAy5qYKYdsafLZaWD6oAgXEVWcIeBPoINi5R0
-         n3JGXzU4TbMc0PO69Lzo2L/e1GQwJsMfDCnqs3dp8A7M5qw9Q49MkTjdmrnpvaMyAjVm
-         iBYA==
-X-Gm-Message-State: AJIora8pASSTzh9gNg8bAamYRzmmH2prIcvL4vR5FbB/mBK1RiarRddN
-        n7T4oQCiGIEC0QJ/NwrzthsCVTW88rLE6HcVgli4Xg==
-X-Google-Smtp-Source: AGRyM1vSa06Bo2VNf1pFNqSEQ2ygrs7ov2BN88IdRJyYwpujxiov2K55jHdtpFFoYamFYqbsbeU9U6O7j7pmqWeF7uU=
-X-Received: by 2002:a25:d8c8:0:b0:669:5f5b:7d75 with SMTP id
- p191-20020a25d8c8000000b006695f5b7d75mr8205442ybg.80.1655971491674; Thu, 23
- Jun 2022 01:04:51 -0700 (PDT)
+        bh=9PjNiNhLCuh9WhzT1AaONPfu5Pj4HpLdf/1QRxDQ9sQ=;
+        b=iGANGoqf9H5AxGQ/hpOO1nKbAaICjjHIin6sfFxs38dyp9hJZx5kSD7DX5YMz6fDAu
+         l39UoGqg2btl+oT8thVgiG89oFSWy/3gsHiSsIfqrmVBX9lgQDtGZQ6sPtqV6LjUyq9E
+         kBvApxabX+QVd4GBIJZdjfa4zUqfM/ucLzLBau9OjydtnIdOZyEh7Jsb/cU2e7sNYFPW
+         oIantFFipcljBe53YFybhz5HQD+RvER+25f6ueL5biRfGvIzOwQDB8h+pG2U347mOxTn
+         iIQNtyGxwamhArkFQEi+PorDdYRI4Q0LaceRyCDnWRADBkfqu/R/dG6uYAHJe9visgqn
+         hQsQ==
+X-Gm-Message-State: AJIora/8JpGA6er1w7XRn66Re2ewF1dZNn2LOBfjhovbTH9qBWtn5MYW
+        +dOaZ4k5FSa87NwlC3fJGW0cerBNfYQbJnlMy5PRXQ==
+X-Google-Smtp-Source: AGRyM1vxaAj9yCr/MgE5OXOPyoZP2NZubFdKuQ3kk1yDt2x8rBApcAn2+N11GLiK2OWn/arC4N2rlY0DEOynYw1Ms08=
+X-Received: by 2002:a25:9e82:0:b0:669:b38d:e93e with SMTP id
+ p2-20020a259e82000000b00669b38de93emr775933ybq.242.1655972540895; Thu, 23 Jun
+ 2022 01:22:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220622215912.550419-1-saravanak@google.com> <20220622215912.550419-2-saravanak@google.com>
- <20220623065031.GX1615@pengutronix.de>
-In-Reply-To: <20220623065031.GX1615@pengutronix.de>
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <20220601070707.3946847-2-saravanak@google.com> <YrFzK6EiVvXmzVG6@atomide.com>
+ <CAGETcx_1USPRbFKV5j00qkQ-QXJkp7=FAfnFcfiNnM4J5KF1cQ@mail.gmail.com>
+ <YrKhkmj3jCQA39X/@atomide.com> <CAGETcx_11wO-HkZ2QsBF8o1+L9L3Xe1QBQ_GzegwozxAx1i0jg@mail.gmail.com>
+ <YrQP3OZbe8aCQxKU@atomide.com>
+In-Reply-To: <YrQP3OZbe8aCQxKU@atomide.com>
 From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 23 Jun 2022 01:04:14 -0700
-Message-ID: <CAGETcx_TaR+_Z9bf-Gsx3pXC9QwSUT85TTwALj5KjaOY1oNK8g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] driver core: fw_devlink: Allow firmware to mark
- devices as best effort
-To:     Sascha Hauer <sha@pengutronix.de>
+Date:   Thu, 23 Jun 2022 01:21:43 -0700
+Message-ID: <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Tony Lindgren <tony@atomide.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Peng Fan <peng.fan@nxp.com>,
         Kevin Hilman <khilman@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
@@ -79,8 +74,8 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         David Ahern <dsahern@kernel.org>, kernel-team@android.com,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -93,43 +88,128 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 22, 2022 at 11:50 PM Sascha Hauer <sha@pengutronix.de> wrote:
+On Thu, Jun 23, 2022 at 12:01 AM Tony Lindgren <tony@atomide.com> wrote:
 >
-> On Wed, Jun 22, 2022 at 02:59:10PM -0700, Saravana Kannan wrote:
-> > When firmware sets the FWNODE_FLAG_BEST_EFFORT flag for a fwnode,
-> > fw_devlink will do a best effort ordering for that device where it'll
-> > only enforce the probe/suspend/resume ordering of that device with
-> > suppliers that have drivers. The driver of that device can then decide
-> > if it wants to defer probe or probe without the suppliers.
+> * Saravana Kannan <saravanak@google.com> [220622 19:05]:
+> > On Tue, Jun 21, 2022 at 9:59 PM Tony Lindgren <tony@atomide.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > * Saravana Kannan <saravanak@google.com> [220621 19:29]:
+> > > > On Tue, Jun 21, 2022 at 12:28 AM Tony Lindgren <tony@atomide.com> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
+> > > > > > Now that fw_devlink=on by default and fw_devlink supports
+> > > > > > "power-domains" property, the execution will never get to the point
+> > > > > > where driver_deferred_probe_check_state() is called before the supplier
+> > > > > > has probed successfully or before deferred probe timeout has expired.
+> > > > > >
+> > > > > > So, delete the call and replace it with -ENODEV.
+> > > > >
+> > > > > Looks like this causes omaps to not boot in Linux next.
+> > > >
+> > > > Can you please point me to an example DTS I could use for debugging
+> > > > this? I'm assuming you are leaving fw_devlink=on and not turning it
+> > > > off or putting it in permissive mode.
+> > >
+> > > Sure, this seems to happen at least with simple-pm-bus as the top
+> > > level interconnect with a configured power-domains property:
+> > >
+> > > $ git grep -A10 "ocp {" arch/arm/boot/dts/*.dtsi | grep -B3 -A4 simple-pm-bus
 > >
-> > This will be useful for avoid probe delays of the console device that
-> > were caused by commit 71066545b48e ("driver core: Set
-> > fw_devlink.strict=1 by default").
+> > Thanks for the example. I generally start looking from dts (not dtsi)
+> > files in case there are some DT property override/additions after the
+> > dtsi files are included in the dts file. But I'll assume for now
+> > that's not the case. If there's a specific dts file for a board I can
+> > look from that'd be helpful to rule out those kinds of issues.
 > >
-> > Fixes: 71066545b48e ("driver core: Set fw_devlink.strict=1 by default")
-> > Reported-by: Sascha Hauer <sha@pengutronix.de>
-> > Reported-by: Peng Fan <peng.fan@nxp.com>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/base/core.c    | 3 ++-
-> >  include/linux/fwnode.h | 4 ++++
-> >  2 files changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 839f64485a55..61edd18b7bf3 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -968,7 +968,8 @@ static void device_links_missing_supplier(struct device *dev)
-> >
-> >  static bool dev_is_best_effort(struct device *dev)
-> >  {
-> > -     return fw_devlink_best_effort && dev->can_match;
-> > +     return (fw_devlink_best_effort && dev->can_match) ||
-> > +             dev->fwnode->flags & FWNODE_FLAG_BEST_EFFORT;
+> > For now, I looked at arch/arm/boot/dts/omap4.dtsi.
 >
-> Check for dev->fwnode first. I am running in a NULL pointer exception
-> here for a device that doesn't have a fwnode.
+> OK it should be very similar for all the affected SoCs.
+>
+> > > This issue is no directly related fw_devlink. It is a side effect of
+> > > removing driver_deferred_probe_check_state(). We no longer return
+> > > -EPROBE_DEFER at the end of driver_deferred_probe_check_state().
+> >
+> > Yes, I understand the issue. But driver_deferred_probe_check_state()
+> > was deleted because fw_devlink=on should have short circuited the
+> > probe attempt with an  -EPROBE_DEFER before reaching the bus/driver
+> > probe function and hitting this -ENOENT failure. That's why I was
+> > asking the other questions.
+>
+> OK. So where is the -EPROBE_DEFER supposed to happen without
+> driver_deferred_probe_check_state() then?
 
-Oops. Fixed and sent out a v2.
+device_links_check_suppliers() call inside really_probe() would short
+circuit and return an -EPROBE_DEFER if the device links are created as
+expected.
+
+>
+> > > > > On platform_probe() genpd_get_from_provider() returns
+> > > > > -ENOENT.
+> > > >
+> > > > This error is with the series I assume?
+> > >
+> > > On the first probe genpd_get_from_provider() will return -ENOENT in
+> > > both cases. The list is empty on the first probe and there are no
+> > > genpd providers at this point.
+> > >
+> > > Earlier with driver_deferred_probe_check_state(), the initial -ENOENT
+> > > ends up getting changed to -EPROBE_DEFER at the end of
+> > > driver_deferred_probe_check_state(), we are now missing that.
+> >
+> > Right, I was aware -ENOENT would be returned if we got this far. But
+> > the point of this series is that you shouldn't have gotten that far
+> > before your pm domain device is ready. Hence my questions from the
+> > earlier reply.
+>
+> OK
+>
+> > Can I get answers to rest of my questions in the first reply please?
+> > That should help us figure out why fw_devlink let us get this far.
+> > Summarize them here to make it easy:
+> > * Are you running with fw_devlink=on?
+>
+> Yes with the default with no specific kernel params so looks like
+> FW_DEVLINK_FLAGS_ON.
+>
+> > * Is the"ti,omap4-prm-inst"/"ti,omap-prm-inst" built-in in this case?
+>
+> Yes
+>
+> > * If it's not built-in, can you please try deferred_probe_timeout=0
+> > and deferred_probe_timeout=30 and see if either one of them help?
+>
+> It's built in so I did not try these.
+>
+> > * Can I get the output of "ls -d supplier:*" and "cat
+> > supplier:*/status" output from the sysfs dir for the ocp device
+> > without this series where it boots properly.
+>
+> Hmm so I'm not seeing any supplier for the top level ocp device in
+> the booting case without your patches. I see the suppliers for the
+> ocp child device instances only.
+
+Hmmm... this is strange (that the device link isn't there), but this
+is what I suspected.
+
+Now we need to figure out why it's missing. There are only a few
+things that could cause this and I don't see any of those. I already
+checked to make sure the power domain in this instance had a proper
+driver with a probe() function -- if it didn't, then that's one thing
+that'd could have caused the missing device link. The device does seem
+to have a proper driver, so looks like I can rule that out.
+
+Can you point me to the dts file that corresponds to the specific
+board you are testing this one? I probably won't find anything, but I
+want to rule out some of the possibilities.
+
+All the device link creation logic is inside drivers/base/core.c. So
+if you can look at the existing messages or add other stuff to figure
+out why the device link isn't getting created, that'd be handy. In
+either case, I'll continue staring at the DT and code to see what
+might be happening here.
 
 -Saravana
