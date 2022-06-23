@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3180D55800C
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 18:39:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A5B35586C3
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 20:17:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232307AbiFWQjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 12:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41384 "EHLO
+        id S236868AbiFWSQ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 14:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232305AbiFWQjV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 12:39:21 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9471E48E62;
-        Thu, 23 Jun 2022 09:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656002359; x=1687538359;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EI+QQ+/jwbwz1xOCAJK7+a2mr8/Kd1EZs7K/UPWhtF4=;
-  b=B0H4jhAwT9yCuhl5RKUj+DgehXTWyTO13dtL+RzviDUf49Eqwagc4mY1
-   e+6KS7drkldGFz6RD73L6/G5Mi6jFD8u0GrrTx0hon1VzXGA6w/wvuLlr
-   PDGNSzSRPQXgSMDeveGU1Rqt5x7ut5fRpHIYxY7r0JyQ8nlTDa9S2eXWL
-   HBYIy1n90+z7GqSUobqfkCRuefsC2hyDkQdCNzwkawFu3vfKwl2E6OTRm
-   0/3xis/GfyDVqIUX6CLvGLqnivMc9ZpxuSPRp1H1v+l++btgtn5hIJg0C
-   hgzFtZDX5OquyljzLAe0eBpbvo6klCjvhZFPluvLBE7mkvt6b64BGdz7j
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="342455606"
-X-IronPort-AV: E=Sophos;i="5.92,216,1650956400"; 
-   d="scan'208";a="342455606"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 09:39:19 -0700
-X-IronPort-AV: E=Sophos;i="5.92,216,1650956400"; 
-   d="scan'208";a="834715838"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 09:39:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o4PrG-000tDS-Q2;
-        Thu, 23 Jun 2022 19:39:06 +0300
-Date:   Thu, 23 Jun 2022 19:39:06 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     sascha hauer <sha@pengutronix.de>
-Cc:     Saravana Kannan <saravanak@google.com>,
+        with ESMTP id S236778AbiFWSQg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 14:16:36 -0400
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06B25DF35;
+        Thu, 23 Jun 2022 10:22:44 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id u9so219638ybq.3;
+        Thu, 23 Jun 2022 10:22:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QzySQcL24GEYxXoJc82RsC0c2BhGDpj4k4DOkY9xrS0=;
+        b=EA9QO/BQU35unKlx6FbkmO5/gPZgmhdZgoPbgFC6ffBaA9VooOcc0BRLOU39xQVF5u
+         oCQBgnLZoYCyzVFx7UIoZDv9EQX6dTDh4Rgq+u/q19CS8XJPMXCMbOzr/wvoN8a+JJEX
+         n+dfZAHFvr9Z2RZB/XL9H/844Gm0m5QrkH2LAFi2Edlk952DPNVmyNwpHEo0zDEgttH/
+         rh/cvmHqXZv3hq9jo2fuvJWXhzak+RaB6VSTOM7wwmz9+vUeiVyRW9eHndW02UhCqfSG
+         zciotoAlnfZ/mSNthxa1kW0Dqxa+aopjSNJbaqDfEBibkC99qnrZLbTwsBuiL8Fdv7Fv
+         iS+g==
+X-Gm-Message-State: AJIora8hjXpF/oHWli0PfCcSNJcgeSauYfwdswID16swkOdq45TP3wEt
+        BttImfYagxBaZOWbKf9rxILcTsZ7uMFC93gcX1A=
+X-Google-Smtp-Source: AGRyM1vlR+G3ynXaQ+rOy9k5hMBPieUkqHmh9QChAgpgAs7VODTNv3swHyAeiQ4sYXpc/+o+j6AcUnENYWlbLbMDoS8=
+X-Received: by 2002:a05:6902:1141:b0:669:3f2a:c6bb with SMTP id
+ p1-20020a056902114100b006693f2ac6bbmr10551083ybu.365.1656004963776; Thu, 23
+ Jun 2022 10:22:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220623080344.783549-1-saravanak@google.com> <20220623080344.783549-3-saravanak@google.com>
+ <20220623100421.GY1615@pengutronix.de> <YrSXKkYfr+Hinsuu@smile.fi.intel.com>
+In-Reply-To: <YrSXKkYfr+Hinsuu@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Jun 2022 19:22:32 +0200
+Message-ID: <CAJZ5v0girHMO5v=KMXmTuXNjrfx+1gi8ma25mNc+gt=3U8pppA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] of: base: Avoid console probe delay when fw_devlink.strict=1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     sascha hauer <sha@pengutronix.de>,
+        Saravana Kannan <saravanak@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -65,53 +65,59 @@ Cc:     Saravana Kannan <saravanak@google.com>,
         paolo abeni <pabeni@redhat.com>,
         linus walleij <linus.walleij@linaro.org>,
         hideaki yoshifuji <yoshfuji@linux-ipv6.org>,
-        david ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] of: base: Avoid console probe delay when
- fw_devlink.strict=1
-Message-ID: <YrSXKkYfr+Hinsuu@smile.fi.intel.com>
-References: <20220623080344.783549-1-saravanak@google.com>
- <20220623080344.783549-3-saravanak@google.com>
- <20220623100421.GY1615@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220623100421.GY1615@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        david ahern <dsahern@kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 12:04:21PM +0200, sascha hauer wrote:
-> On Thu, Jun 23, 2022 at 01:03:43AM -0700, Saravana Kannan wrote:
+On Thu, Jun 23, 2022 at 6:39 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Jun 23, 2022 at 12:04:21PM +0200, sascha hauer wrote:
+> > On Thu, Jun 23, 2022 at 01:03:43AM -0700, Saravana Kannan wrote:
+>
+> ...
+>
+> > I wonder if it wouldn't be a better approach to just probe all devices
+> > and record the device(node) they are waiting on. Then you know that you
+> > don't need to probe them again until the device they are waiting for
+> > is available.
+>
+> There may be no device, but resource. And we become again to the something like
+> deferred probe ugly hack.
+>
+> The real solution is to rework device driver model in the kernel that it will
+> create a graph of dependencies and then simply follow it. But actually it should
+> be more than 1 graph, because there are resources and there are power, clock and
+> resets that may be orthogonal to the higher dependencies (like driver X provides
+> a resource to driver Y).
 
-...
+There is one graph, or it wouldn't be possible to shut down the system orderly.
 
-> I wonder if it wouldn't be a better approach to just probe all devices
-> and record the device(node) they are waiting on. Then you know that you
-> don't need to probe them again until the device they are waiting for
-> is available.
+The problem is that this graph is generally dynamic, especially during
+system init, and following dependencies in transient states is
+generally hard.
 
-There may be no device, but resource. And we become again to the something like
-deferred probe ugly hack.
+Device links allow the already known dependencies to be recorded and
+taken into account later, so we already have a graph for those.
 
-The real solution is to rework device driver model in the kernel that it will
-create a graph of dependencies and then simply follow it. But actually it should
-be more than 1 graph, because there are resources and there are power, clock and
-resets that may be orthogonal to the higher dependencies (like driver X provides
-a resource to driver Y).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+The unknown dependencies obviously cannot be used for creating a graph
+of any sort, though, and here we are in the business of guessing what
+the unknown dependencies may be IIUC.
