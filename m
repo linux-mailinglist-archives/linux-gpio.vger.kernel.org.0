@@ -2,123 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E55557EBD
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 17:40:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF040557ED3
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 17:46:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230173AbiFWPkf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 11:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
+        id S229579AbiFWPqH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 11:46:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229863AbiFWPkf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 11:40:35 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A7804348A;
-        Thu, 23 Jun 2022 08:40:33 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id n15so12162001ljg.8;
-        Thu, 23 Jun 2022 08:40:33 -0700 (PDT)
+        with ESMTP id S229992AbiFWPqG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 11:46:06 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB892387A0
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 08:46:05 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-3177f4ce3e2so174743857b3.5
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 08:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xo3NKjzYcYrSFDKH7f5H5c3gspyfCAKzPPrQ5FJ0QBY=;
-        b=n6Ya8T5VM4CdJFKMItCxxqy104iNjfKStuVzDC/DuuwRRWj2l6D0uEH4gujwk4srg9
-         ell69hg6NCjg5OuXQYKE1ZCRe9yftbFFBhntbdj4TjvnQDJpIZKDB97FfrmgLRUYHtj9
-         ee5V8PyEQdVWO/LtUK1fruscf3BvoEsYzgxq5vpeX6keri8mIwIqCxH6tBt0QZFQsR0g
-         I7ssuQQcACX6tdIe2rlvkGTLRJ+h6r2LuyQbdfyvZaEC/7JzPUXwOApwub8VcG+sFtKO
-         Hwa/nqvaj0K0bn2IuO7Tr6gEqDUV4J1pSMUxZi7S1bMcXWtRdJrNDExRzom5gsMn/LX7
-         vFPw==
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=MCdBPcvc3aKS/nhtwFdXptVodbMIYgt74UixyLgUydo=;
+        b=f6goSR6ZbdZjXT1FK0Snv2VFi7Wx1RINfWlfDPBfP6R47/NWgFTESA0vsi4yBfKq70
+         8y/kErk4H2XFpSWBNzTl5ULkMz64HgDKLeqyliFYhSHjORgkDRmapzsBlneZg62AJ032
+         wyuu3J8wMyMg5ltYmZ9f9wY9onUAQy15tCZrKsPUj7I47udvcYToxOLPzxXdbxxnnAjk
+         NCVvBXmB6KUg4jfipWp2XQfjDqYEBIPjdwfChK6rwSGXPaqxbHZXBoXuGNqtyQBe40yZ
+         svVHlZPqJ0DmmzgHr9wBpoHOl/mTAAYhVkTaF3oZ3ybLYQyU9Y2x5BeNhUJx3nEUx54N
+         S93Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xo3NKjzYcYrSFDKH7f5H5c3gspyfCAKzPPrQ5FJ0QBY=;
-        b=UtamY5CyJKZTPI+4G9BzjnN5g4bB5EkTI8/VQ8/RoPtKg7n6wmgr5M4GmijmYirEJJ
-         MHvR4PGQjeZX6GBU3OJ7QUmICJPCb7+RFuBN39p1+4RO8b46rH7XCsFH2VakqfrZ4HHs
-         6wo+rFr8Fz1lrhk5ZIN62gtTwxJT768t19iUS0Z5yDxHo7SadZPeX1F6mYKPjTeNzZuE
-         kKrPibsiG3PXFTeG4GkfaiTZqJD1gBvtR0Ugqcf0o8z2qAEqFw8KJY/p1PaHO0kY7e9/
-         07gsQlWqLGtZENEoMB+O1x9NSEadpeQ3dUhnPySpP7CVzV+TpV8Fk8rKAoLAFL2kDksJ
-         kVVQ==
-X-Gm-Message-State: AJIora/bA7cJJHBypTt0Ts45FQu7aN4lGJUXMCI/DsKYrygPZvL5w08p
-        7gn5iluIKx+2CeNp+UWN5y9h8+928wzkNss4KWQ=
-X-Google-Smtp-Source: AGRyM1sxNfXyEUG5fs8Firg5juHCdJ881udwdPMUtVWcipHu8U/F4XPJL14dI3a+MDqZ4f+GoMbNZvNmPEyowpLlTV4=
-X-Received: by 2002:a2e:b8d1:0:b0:255:bfef:7212 with SMTP id
- s17-20020a2eb8d1000000b00255bfef7212mr5108176ljp.378.1655998831709; Thu, 23
- Jun 2022 08:40:31 -0700 (PDT)
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=MCdBPcvc3aKS/nhtwFdXptVodbMIYgt74UixyLgUydo=;
+        b=dW5QaDcXmWPaMxW7T2O41zb4c0fboys5DnEo+M0bNBMtjOqKSs8a/q1h4AqCJNbu0i
+         tC22uQJEd2vqYTFxK4UaY1qwEs6Zdz5lIuWxZB9uHfvf/EXphGnbCQ+7dCAP9ciPJlFu
+         XmoWT5Zc9OPJ3SWqvFEn1gMgZgGKYarCs4I0FY+2GCHmuL+j+xyb3WOfq+JitD0cxpZX
+         kCVdnvn1N/RrkA6QL7tplYsN7zyu/LuY44mFWL367ZYWA4VBj8dl+ixMMBPvnGYxq6el
+         ctDE9bArqRWQs2dQpFxkM8nP9G8hLCYkYFS0K+VG66ip0g+lfWM3okS++RvL8EijX5q4
+         CYHQ==
+X-Gm-Message-State: AJIora/aH34g/AcrARTguermf1xtZSnQ22rb/iwT2bxteKAfdigNupgL
+        /01QdgXMVkno8rhOgRqW1I+nP/D7ztYBet+ZqQs=
+X-Google-Smtp-Source: AGRyM1t6l6W52kvaF9sz8G5Mdwg3kARVYc3tn+JEaAZlVmp7aIIP3MZGntjMhl2lV8qE8i9Pc1xMOMvFoOzd32GpXLM=
+X-Received: by 2002:a81:1001:0:b0:317:d614:c3d6 with SMTP id
+ 1-20020a811001000000b00317d614c3d6mr11262541ywq.164.1655999164618; Thu, 23
+ Jun 2022 08:46:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220620162059.1097264-1-cosmin.tanislav@analog.com>
- <20220620162059.1097264-3-cosmin.tanislav@analog.com> <CAHp75VcBJkQ+CwyoDaTJ_AD+mv9d0tEd_txqHwkPRy4-xvnyKg@mail.gmail.com>
- <2aa93eab-de6d-866b-a829-36b47ff00982@gmail.com>
-In-Reply-To: <2aa93eab-de6d-866b-a829-36b47ff00982@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 23 Jun 2022 17:39:54 +0200
-Message-ID: <CAHp75Vc_fcAP6gGwMkYZUoMM6jKeUoQr8J+zYCUz8inSHnTF_w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] iio: adc: ad4130: add AD4130 driver
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
+Sender: robertroland0331@gmail.com
+Received: by 2002:a05:7108:6913:0:0:0:0 with HTTP; Thu, 23 Jun 2022 08:46:04
+ -0700 (PDT)
+From:   MRS MARIA ROLAND <mariaroland74@gmail.com>
+Date:   Thu, 23 Jun 2022 08:46:04 -0700
+X-Google-Sender-Auth: HXN4nGNGTkgF1wPpoiEZzDuRpDc
+Message-ID: <CAKnR+Cc_wM+WHRW8KqqstSek10JtRbsYxvv0MZWQ5ccnPY=gVg@mail.gmail.com>
+Subject: Greetings dear
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_8,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:112b listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5164]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [robertroland0331[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [robertroland0331[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
+        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
+        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 5:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
-> On 6/20/22 21:29, Andy Shevchenko wrote:
-> > On Mon, Jun 20, 2022 at 6:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+Greetings dear
 
-...
 
-> >> +       /*
-> >> +        * DMA (thus cache coherency maintenance) requires the
-> >> +        * transfer buffers to live in their own cache lines.
-> >> +        */
-> >
-> > This is a good comment, but what fields does it apply to?
->
-> Whatever is below it, grouped together. This is not hard to
-> understand.
+   This letter might be a surprise to you, But I believe that you will
+be honest to fulfill my final wish. I bring peace and love to you. It
+is by the grace of god, I had no choice than to do what is lawful and
+right in the sight of God for eternal life and in the sight of man for
+witness of god's mercy and glory upon my life. My dear, I sent this
+mail praying it will find you in a good condition, since I myself am
+in a very critical health condition in which I sleep every night
+without knowing if I may be alive to see the next day. I am Mrs.Maria
+Roland, a widow suffering from a long time illness. I have some funds
+I inherited from my late husband, the sum of ($11,000,000.00, Eleven
+Million Dollars) my Doctor told me recently that I have serious
+sickness which is a cancer problem. What disturbs me most is my stroke
+sickness. Having known my condition, I decided to donate this fund to
+a good person that will utilize it the way I am going to instruct
+herein. I need a very honest and God fearing person who can claim this
+money and use it for Charity works, for orphanages and gives justice
+and help to the poor, needy and widows says The Lord." Jeremiah
+22:15-16.=E2=80=9C and also build schools for less privilege that will be
+named after my late husband if possible and to promote the word of god
+and the effort that the house of god is maintained.
 
-It's hard to understand what exactly is DMA-aware here. I see only one
-buffer that is aligned properly for DMA, the rest are not, except the
-case if all of them are going in one DMA transaction. Is this the case
-here?
+ I do not want a situation where this money will be used in an ungodly
+manner. That's why I'm taking this decision. I'm not afraid of death,
+so I know where I'm going. I accept this decision because I do not
+have any child who will inherit this money after I die. Please I want
+your sincere and urgent answer to know if you will be able to execute
+this project, and I will give you more information on how the fund
+will be transferred to your bank account. May the grace, peace, love
+and the truth in the Word of god be with you and all those that you
+love and  care for.
 
-> >> +       u8                      reset_buf[AD4130_RESET_BUF_SIZE] __aligned(IIO_DMA_MINALIGN);
+I am waiting for your reply.
 
-This is aligned.
+May God Bless you,
 
-> >> +       u8                      reg_write_tx_buf[4];
-
-This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0).
-
-> >> +       u8                      reg_read_tx_buf[1];
-
-This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4).
-
-> >> +       u8                      reg_read_rx_buf[3];
-
-This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4 + 1).
-And this is Rx.
-
-> >> +       u8                      fifo_tx_buf[2];
-
-Here is Tx again which is most likely is not aligned...
-
-> >> +       u8                      fifo_rx_buf[AD4130_FIFO_SIZE *
-> >> +                                           AD4130_FIFO_MAX_SAMPLE_SIZE];
-> >> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+ Mrs.Maria Roland.
