@@ -2,160 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9789C556E90
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 00:34:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E29C4557004
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 03:41:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359505AbiFVWee (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Jun 2022 18:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37064 "EHLO
+        id S231915AbiFWBlL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jun 2022 21:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359662AbiFVWec (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 18:34:32 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEB04091F
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 15:34:27 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id w6so32686658ybl.4
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 15:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WKylA8pYtIvxwg5/dZiB/uZdIVVN/P980vi4sBmsa8g=;
-        b=J4pi/aKDOGnb+AER5hiC/Ur9ZSPqxLhl9mnB71A7+WIlfY2oiT/T5y5JfIyXfOCApX
-         pLilMQlV84wpeyWcdPvtM97nw68tnuZyysLqMtJ7DRRJ6ajeonNGzDXJprWOIg8xBf0y
-         NTH6Wl1a1nlYUaFdI4qtAMzn8cW7xPEjL5f7QJ94kT2HJ1ci6OAaAPqD1UX+0NL/zHh7
-         304JDEDsF/c/vE8OS7ScZ5S8psqurQ00bjxfdujGxOif8q+MEh1dX6y/brQOOJs5BypF
-         iAv8odstd+qJJe5X1KPMo+1qvBAD62prH31qb5OR0/0XW3vKz526q1m+3AN2s9rHhIps
-         PBRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WKylA8pYtIvxwg5/dZiB/uZdIVVN/P980vi4sBmsa8g=;
-        b=w4DrvtmcDK+1LNdWya6mYGVFdD38tkkB23UYT/YUclzpPSIQ53OeyO/GZQeJQyKcEg
-         5f1k58SQvpSR21ZOuqKlh/NdRN1vUv4E27qY215qpjKWt09D2PXwe65vE2uLy5UW0FJH
-         R5XBr+gsGOOC1jZPwYRtPJTC1/9AY5KKmt41jlEJmYZT9fOZfsNhfppJIB2uiEVdvtYX
-         IlNxWmbxYpw6b2hIhM1VrHVS3WUTN8cFdVmg7or0pOPO222+QLysj1zbvFDdAHBSaFRO
-         R8ypFdQsOzalNO87bcj4K0jOYfEXo+sZd3EwaIN5gNWavN0tMLpJxO88tgSMyzm8Sfjr
-         BfOw==
-X-Gm-Message-State: AJIora+4Z+aLktNNiNUGisa+I6oo9hHrEokumlKAlYZAnxwSOy9W8pAD
-        l2ecEhvZCUUDu40bBPGoD+tULzt/4NN0c7lL7pgsRg==
-X-Google-Smtp-Source: AGRyM1vtP8cTHTShZ6uWcl+OVMszNehOV5bCtDdbKW/msmtH+Wdf1HHxNjR1QJIjKUG41gGaaaYuCgB7moTXz8XY7EE=
-X-Received: by 2002:a25:d112:0:b0:669:17:8d98 with SMTP id i18-20020a25d112000000b0066900178d98mr6124766ybg.447.1655937266678;
- Wed, 22 Jun 2022 15:34:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220622215912.550419-1-saravanak@google.com> <DU0PR04MB941733BFD323D3542B7F75A888B29@DU0PR04MB9417.eurprd04.prod.outlook.com>
-In-Reply-To: <DU0PR04MB941733BFD323D3542B7F75A888B29@DU0PR04MB9417.eurprd04.prod.outlook.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 22 Jun 2022 15:33:50 -0700
-Message-ID: <CAGETcx-h4iDx+WG+HnN0_ej0qtLOp66oOXvkppm060TRCG3_Jg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Fix console probe delay due to fw_devlink
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Sascha Hauer <sha@pengutronix.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        with ESMTP id S229778AbiFWBlK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jun 2022 21:41:10 -0400
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com (mail-eopbgr10049.outbound.protection.outlook.com [40.107.1.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CBB4338C
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jun 2022 18:41:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l82kuvkriu3osqnCDpDD7sU3ehQwZDx8KNgfvjaDpouNMhsVOkOWNZvVUHGVWL6FSLwwU8zqYWp7w7g1vtXUFXhF1NhQiJQiejr1OraIeYYpoZXUn0vcgvWzTjlhmJNx9n8r66yd5yqlcVTqeY1WJpwka1ZETYwhCDKeDY8k+taORwOldqIgLX1GzfUTmlkeJBeR8lwAZLOn4Zj4vMlMrEvstb5vqHcb5aTVIR2nOWT4qqRf01hyCmtRY1aYzhEn8NvtonR65d7fin8J+woEXb9nUOh5hLK2vib7lIgwm+WbhQ9lgefu96PFUyxv26sBwkRZyd7yKlwS6lDydQXtRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QgsHssKfa/PyGM+2+X4gPkSc+q9mScQu8h3qm6aq+80=;
+ b=d9wKTIk7JwUrN0UM7YqZbhxKWzENCUZ/KSxGqufBHHMd34EFCBqXQQ14GG6J77E715tbiLvdE3uCdteCXart9i771AnhgH1+c4sTSRWy106EkDZNAEhQqWMGBxq91XS70ZDmTm8pAb5JFrWmmCIXwy6i64FYB8x6xqsAnD46Yrs5jzkURChp6CFTQSbzI2+mZDRqfYVVnnTVc1X7C1RpFw64KROb4P781Kg5cUWysiO6PThYxDsXZXG1o3PzVxMKXfWTg1xuthaKe+qmnAhci7ZlbsD2Myzdov26D+/xBp4WstkgJP1M4kSruBELKox41dFh08j2OAmssKBOZEiW+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QgsHssKfa/PyGM+2+X4gPkSc+q9mScQu8h3qm6aq+80=;
+ b=YpS5HroIHOpvoZps559dT3T/gw4By4pSplY/25nidc+Z8eoCbGLRfncpK9pj+0DOezScAbY+yTtZdPVBliTT+RWU7nOe9I4x/SfmUd2RCH1XeCQNQLcR8nV7/rnLUhY5YUGyfUbj8IRSpvt+bkJseghEbenh26r304u4WijMgGE=
+Received: from DB9PR04MB8412.eurprd04.prod.outlook.com (2603:10a6:10:24d::9)
+ by AM6PR0402MB3815.eurprd04.prod.outlook.com (2603:10a6:209:16::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.16; Thu, 23 Jun
+ 2022 01:41:06 +0000
+Received: from DB9PR04MB8412.eurprd04.prod.outlook.com
+ ([fe80::9dbf:79da:79b6:97b6]) by DB9PR04MB8412.eurprd04.prod.outlook.com
+ ([fe80::9dbf:79da:79b6:97b6%4]) with mapi id 15.20.5353.022; Thu, 23 Jun 2022
+ 01:41:06 +0000
+From:   Jacky Bai <ping.bai@nxp.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] pinctrl: imx: Add the zero base flag for imx93
+Thread-Topic: [PATCH] pinctrl: imx: Add the zero base flag for imx93
+Thread-Index: AQHYftQVxw3sppS650SYFFwqmU/2sa1cRsdQ
+Date:   Thu, 23 Jun 2022 01:41:06 +0000
+Message-ID: <DB9PR04MB8412383F8EE245B0E0751AEB87B59@DB9PR04MB8412.eurprd04.prod.outlook.com>
+References: <20220613031854.1571357-1-ping.bai@nxp.com>
+In-Reply-To: <20220613031854.1571357-1-ping.bai@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4379500c-47df-459f-c518-08da54b970b4
+x-ms-traffictypediagnostic: AM6PR0402MB3815:EE_
+x-microsoft-antispam-prvs: <AM6PR0402MB381567169BEE9D894978221687B59@AM6PR0402MB3815.eurprd04.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GULS+Eq2QBTH4rp2mizgRphNEpTuKoABBrT9JoZlCRtfZzEKB1m1riW5c0bCQN3j/1rE+nSJBg6pgP+O4mmvGYlBZZjxTCLFkgjiMDNfwBNqd4lyipqJQcdnuV8LGDeTrRAor7cl/0bR6HKSQ4pps4xpmgPAPTGSkB4k6gs/8H6YaGGoojiPefNdBlJ2vL3/GNyqtRytgXnazhRLEjtc2LpiDErQKNVc14pJbRPeu6Bqyf5Xtntwjy9dqTapA3qFt6DzeaDfjxgvRZvljcwiCGC3bu8jgkQ41r/Ey52k7TEYVCkgfKveq97EVSGncBb4eSAP42p/V7lHSFzByAYORSlqdFLbcWcJ5rb4uyAlJqgIZcNnjlPRyp9soxcav6O5NE/aXvNpmwa5AGloSRLKTNhaju++QhiIIR16eZvb6vHskXNqH3h/yc0dPe0I3P/a47VV3iRoTjdh/mm0ukNrRTuE4J9XyI69xt5Mc0IFanSjmO9UY4A76lga679YgY4pDvgzXMR4Wf9vVp/YCmf2pOy7mdKaWCI27mVOIdt0+ZpeBd1Kfkve5omj9ISPrA41mFaQSEFWb+zgduW0DBo9dlRO+wjdNWtlsdn0uwo36jyP/Iqb8mxZuJDrWWM3wKkYqY8yh//1JU1YAsdG6gTwcVnKV+jUCcnXUVtg9qwmMmhqVTlP55zFGuvhpCkxQDdBGFR7hE0WBqKNQxlIbE2loEupyIildep7S53VawHAUAxfFOOlVW8WQRTDrtR7Dzfr
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8412.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(186003)(86362001)(55016003)(2906002)(8936002)(4744005)(38100700002)(122000001)(5660300002)(71200400001)(8676002)(33656002)(52536014)(4326008)(66446008)(38070700005)(110136005)(6636002)(66476007)(66556008)(64756008)(54906003)(41300700001)(9686003)(26005)(76116006)(66946007)(7696005)(6506007)(478600001)(316002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Pqz8Qmu6+vW6BoyjCL+KD5RY2zOcjZB+1yCgaGkZHycg5WPiNC92JAM+B5PG?=
+ =?us-ascii?Q?CCzk1/KKnAuLWxl8YSyHAWWSOzYgJ8aPV6pcoiwi+XU0GK2N7yT5c+LD+RSM?=
+ =?us-ascii?Q?WO73zvUqCVXtdEAwycakdUDY2WQhyQyIsV/1eWKVl3HfuZ4+snUb6thz1XuN?=
+ =?us-ascii?Q?uP/UbzaDhr6fFANqOXLhafw90qU/IBRDb1vVOcWNUWA+xBqSviIA5/ag1a0L?=
+ =?us-ascii?Q?rQjTM7jKYWx75057CpePy3XSMmyJGW86/xY4YL+y+WnugxqRrG4b2bYQNO8D?=
+ =?us-ascii?Q?Y0Wr75Vc6p9ub0FGJCX/grZL/xRGqnj7bw8EHRguE3kwXgWGAg3cUK6EbGWj?=
+ =?us-ascii?Q?R+Dd3jWJUKVIuYkXjVChKkAp2+tKNhZVfcGwCEOBT4OCzKcMkGN8EKGRal+y?=
+ =?us-ascii?Q?NGp+5QGOI8aL6X2h5ZcqL3Zb5tS8tzrd0eOp2/IX5BBdmPKyraJu18FkDN1X?=
+ =?us-ascii?Q?djXozTcRFRiF4kL7fEcukA9PUnGAW3VGQjneWsx4ZaT/slCahecp7/5XVkTc?=
+ =?us-ascii?Q?kBp+9f2daVcThpPn7asXqVLomkCFp+LAuHlhRkkCbNyt1jETqqVgG7agRYca?=
+ =?us-ascii?Q?iqvq9oNAqJT44t3a8df7c/CdTArKyXoUcd73uHT6qTXE4Jo2Nun/xs0x9exb?=
+ =?us-ascii?Q?v9WhpdGDEfB7Mwgvk3gqhmoydJOOuw0TCuABpLQM1dTp7iv3l05DEbtDmld8?=
+ =?us-ascii?Q?yHYTohk5F6ee4DDUGKXB4JN4y/alQKquEmYp/bUjjjFVe/y9A/imzxG5P1O3?=
+ =?us-ascii?Q?N0WIgSfdq/uCcEyyFlwB968JP2/sM9MDI4sA+IYUAQOVJljpLPEIIZek8Lwy?=
+ =?us-ascii?Q?BXbWtslZLG75IZxGEbSYfZ8Rcu54mTRpudCDtwbpfkQKzJiTbbJ3MbBaYIMl?=
+ =?us-ascii?Q?/xrVkF74Oso+SPfy6y9k2ZDGNHQl1fEXlq6cyaL4NsGWaI/jo/+bTuhXhcqk?=
+ =?us-ascii?Q?NsFi3uagQaAsrg7I+iDEuGDpBOOecz+KAUBJkCZLbWU27SqCEgHxgjLoFqrd?=
+ =?us-ascii?Q?NJzH6Nudv65x2Q2XPjKdm3WcCYKiREvTsgrQ8LRBf0Y+PcYzK37tj2Ca7Ff7?=
+ =?us-ascii?Q?UA8S18u10OXT2XdIMH2gzw/elht1Xgx5FvI7NpN4S1fn3/hqIAGH2FTULm7w?=
+ =?us-ascii?Q?CdzpTguMNgmAzS44QkoZ9LuO5Mt5PZtnbInz7OEMMI7G/1GF9kPv/9IlcT/o?=
+ =?us-ascii?Q?u0LV79NRDXg327YJGb0Bp4j8N2WTIxx20wO11zJtKlWTjwbQe6R7RtoKJ8Up?=
+ =?us-ascii?Q?GT1tSOpn2yojDaSGRGKVoh7TlTO0umIV7/7ymhILq3kIoO4Vb7mwhog/k5Vs?=
+ =?us-ascii?Q?WDRiY7OLr1B646mV94xfBTM/6z48ghlDj3h+WlT5257fGNqDVr8dRcjNauUc?=
+ =?us-ascii?Q?GVNg3r10YZaKA3q47++dBZIfCpmR+Gcx9bECg2NKx/ZbuDUDGWJLsJRty1p0?=
+ =?us-ascii?Q?c5FFDZDOgJ6kwvZAutYb4qcZG5dztfatzSWM68cG+wap5UeaOo20q3oAIyie?=
+ =?us-ascii?Q?cgewVljuOBMjdX656T9mPNJq7WfpTfvXUci/8vwb6OKaJxLbTsTDEz0yNX0a?=
+ =?us-ascii?Q?lphtcT+pbwMZI7TGs+OM4E31XWH1NzPenbjyeh38sTb6RwJZEh0uqgPv7mv6?=
+ =?us-ascii?Q?wpMCwIC5sMKVv685/lC5E5u8nng1FXQmBjtUcsXlFvU6Oq8isUm50/xKWZxl?=
+ =?us-ascii?Q?M0WJtm/rPjZTXVpplZPrSTPnA+yzB0hi0rUaaNmx9yCiLV1MRlnESwjuhBRC?=
+ =?us-ascii?Q?pH3gsYwGlg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8412.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4379500c-47df-459f-c518-08da54b970b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2022 01:41:06.2455
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y2LhWcU19aB3A7+H3r3GwRMcSj0JXq3btewcJgSzrGFzsTnpwBxoy8MTg6mHc5ich1XfqCSoThMH7PkXm2oaKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3815
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 22, 2022 at 3:32 PM Peng Fan <peng.fan@nxp.com> wrote:
->
-> > Subject: [PATCH v1 0/2] Fix console probe delay due to fw_devlink
-> >
-> > fw_devlink.strict=1 has been enabled by default. This was delaying the probe
-> > of console devices. This series fixes that.
-> >
-> > Sasha/Peng,
-> >
-> > Can you test this please?
->
-> Thanks, just give a test on i.MX8MP-EVK, works well now.
->
-> Tested-by: Peng Fan <peng.fan@nxp.com> #i.MX8MP-EVK
+Ping...
 
-Lol, that was quick! Thanks!
+BR
+> Subject: [PATCH] pinctrl: imx: Add the zero base flag for imx93
+>=20
+> On i.MX93, the pin mux reg offset is from 0x0, so need to add the
+> 'ZERO_OFFSET_VALID' flag to make sure the pin at mux offset 0 can be foun=
+d.
+>=20
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> ---
+>  drivers/pinctrl/freescale/pinctrl-imx93.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pinctrl/freescale/pinctrl-imx93.c
+> b/drivers/pinctrl/freescale/pinctrl-imx93.c
+> index c0630f69e995..417e41b37a6f 100644
+> --- a/drivers/pinctrl/freescale/pinctrl-imx93.c
+> +++ b/drivers/pinctrl/freescale/pinctrl-imx93.c
+> @@ -239,6 +239,7 @@ static const struct pinctrl_pin_desc
+> imx93_pinctrl_pads[] =3D {  static const struct imx_pinctrl_soc_info
+> imx93_pinctrl_info =3D {
+>  	.pins =3D imx93_pinctrl_pads,
+>  	.npins =3D ARRAY_SIZE(imx93_pinctrl_pads),
+> +	.flags =3D ZERO_OFFSET_VALID,
+>  	.gpr_compatible =3D "fsl,imx93-iomuxc-gpr",  };
+>=20
+> --
+> 2.25.1
 
--Saravana
-
->
-> Thanks,
-> Peng.
->
-> >
-> > -Saravana
-> >
-> > Cc: Sascha Hauer <sha@pengutronix.de>
-> > Cc: Peng Fan <peng.fan@nxp.com>
-> > Cc: Kevin Hilman <khilman@kernel.org>
-> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > Cc: Len Brown <len.brown@intel.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Andrew Lunn <andrew@lunn.ch>
-> > Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Eric Dumazet <edumazet@google.com>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: Paolo Abeni <pabeni@redhat.com>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-> > Cc: David Ahern <dsahern@kernel.org>
-> > Cc: kernel-team@android.com
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: iommu@lists.linux-foundation.org
-> > Cc: netdev@vger.kernel.org
-> > Cc: linux-gpio@vger.kernel.org
-> > Cc: kernel@pengutronix.de
-> >
-> > Saravana Kannan (2):
-> >   driver core: fw_devlink: Allow firmware to mark devices as best effort
-> >   of: base: Avoid console probe delay when fw_devlink.strict=1
-> >
-> >  drivers/base/core.c    | 3 ++-
-> >  drivers/of/base.c      | 2 ++
-> >  include/linux/fwnode.h | 4 ++++
-> >  3 files changed, 8 insertions(+), 1 deletion(-)
-> >
-> > --
-> > 2.37.0.rc0.161.g10f37bed90-goog
->
