@@ -2,62 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C543558772
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 20:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22293558785
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jun 2022 20:29:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237191AbiFWS0g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 14:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59972 "EHLO
+        id S237116AbiFWS3T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 14:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237189AbiFWS0H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 14:26:07 -0400
+        with ESMTP id S237085AbiFWS3I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 14:29:08 -0400
 Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734DF6F7B5
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 10:27:23 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-3177f4ce3e2so1226897b3.5
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 10:27:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C05C80535
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 10:30:53 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-3176b6ed923so995967b3.11
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 10:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EL/06AiO/r0aaZHGPm8olM4Z1g8u3q+FzLtpTcwW9+E=;
-        b=JnCT42yA4RwkalddkzPrJcFW4xS8/AuSbzy9tJ3tePu5bM24Ibqr3x++pzaPDrLfSq
-         kaGJTArX9fUCrT0wKKOCtTLYJfjz7rj9imdcL7Pqfb4slmHg8IMENvZlqFm4OXbLEZny
-         J9YpduFdJ0C9SGIfK3lAhmOLKKSD54emhGXwyTKd4zLc6mUsVCr0UEcbk+IU96MD0I9r
-         JA/jzjJFQ+fQd7mJ8EkAmfjizWANCRRDX1m02PA1R+yQuTc3BWGj/hPC7P5U7eOqhdOe
-         TNE+ns8QKBZrDwGhF91i4cSeiE94OXjudpzhMpSeD6m7B9EcjFqLK1KazAZTYMoHsxV2
-         /pXA==
+        bh=KOXrqOWcfMdTsdtXrpYVXi48JcFuUmjoexhlnfOOTGg=;
+        b=L4dJOWUZH8Ao72MwmMu0hlQebn/kw9JPayp5sizpod+mvJoa+Jk2c12U6dtGJw0ocL
+         FY0ahsSAadsHrWKiB46J+rcLToO2J7UvF9dIoPD0dwYD6fCgiC2WdrEctFh7m2vONz1A
+         i5kKXCDjiPHGInQZUAkTQeJKWzgc8xBF9HzM08vnWaL+MuxZ5JvD3IF2Be6NowkMVSgg
+         S+ucsFZ/JWQdteDBkGi0njXsklqZaAIz/FkVYezBWUTLcJOSi+wYLYWfkqidiVZs/Mft
+         8KjS3VdHIM1qyN71zTYrpDaez/WAciLANIBuy1v8KewlMSrgXXmZL/60tdhF7JlBxcPw
+         T2sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EL/06AiO/r0aaZHGPm8olM4Z1g8u3q+FzLtpTcwW9+E=;
-        b=vG0j6TxYFy7tln8l7Qjr89ATSYVh5NF2/EbyrIb3XsPu/m7eTbfLz175Oi+MiEfS74
-         dX8WEbBW1fmnZ+Ik7gUaZ2MiMQmp2Op43OwKkAeOzSG7YpUCuDuKHux+5ul1DtbaT51s
-         A55lrJE0ttw/ozdl9Jy06+2KF6GY7YCwRMxSQ4RBHEAZLHntrpSiC7EKgKK8zDHcMQvN
-         zULmkNA75CsavNJEcUmhlBfAq1KVSVRfiuEwWQ62ZPRxGSk+dQGqXwMguzP5zC+GuSdF
-         Byv7rUfYnED+Vg7YKNpfgQdHtkixKmGFZYTHJi5rVsTWWqVynSFRcqzxO3wvzTklGi3E
-         EU8g==
-X-Gm-Message-State: AJIora+QM9NOgAkXMjw2UHoF4/KdltAki134e6bOxh+xNJym6p+zt47e
-        MdBMl/in+TzLI8mUCmYGwr7Mrz6zZuf0LByyJpsm9Q==
-X-Google-Smtp-Source: AGRyM1th3RmV9czY2nAQEMvAwHPPL7mFnNzI7DxsJuq4R6Wbusl3da+wwbtdHDw4EMO4U/ky+UtTRttD4UQUKoucelI=
-X-Received: by 2002:a81:a095:0:b0:317:d4ce:38b6 with SMTP id
- x143-20020a81a095000000b00317d4ce38b6mr11755149ywg.83.1656005242403; Thu, 23
- Jun 2022 10:27:22 -0700 (PDT)
+        bh=KOXrqOWcfMdTsdtXrpYVXi48JcFuUmjoexhlnfOOTGg=;
+        b=IagJjEmNSwg9Pc/4mDYm0FnnDCsHXTWR1WtlKgrfrhSrgJRXMDL548HZ71sMEi4rJZ
+         CNxVtIKpYqMxELLmnWrIBJJfBnxsgaErRZzXF5IxQAz2kMtx9QDOvi9wfDWclgRLfuWL
+         w3HcoUOPjyfBfMRfVyiSzXs/hQPPjKrxMvgKE/WIIbP1H3soY8brTJ3LYas4lQwPYxFf
+         3LCgXd2wEEDUrT5GHNJT3Ja/J6kRVlACK871EqwsxiaafzQ8KlQPOIUOPvSPouEr1cLM
+         1ThpqfUJ5nZOOImZ8cA/ms4wLXA4uqyiFpFieWUfArfg1/T//enw4IitWj7QP2knjzTm
+         iELw==
+X-Gm-Message-State: AJIora+PBOMxzVg6e8OsT//zf0usBgWHbdgm12Uf027FwExB/5uBqftS
+        fbN1TiBXy6q3Kgju0fx6dNWN77StE5u+IBmQm70u6g==
+X-Google-Smtp-Source: AGRyM1ul3O6ILFZqI77UreHIjC0wH+ddqVeLDfmwfl1PMnWdistPwRhbAXTfwUjlgyKKpmHDt2j86FuzSHATEelndGs=
+X-Received: by 2002:a0d:dfd5:0:b0:317:f0d4:505b with SMTP id
+ i204-20020a0ddfd5000000b00317f0d4505bmr11413939ywe.518.1656005452363; Thu, 23
+ Jun 2022 10:30:52 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220623080344.783549-1-saravanak@google.com> <20220623080344.783549-3-saravanak@google.com>
- <20220623100421.GY1615@pengutronix.de>
-In-Reply-To: <20220623100421.GY1615@pengutronix.de>
+ <20220623100421.GY1615@pengutronix.de> <YrSXKkYfr+Hinsuu@smile.fi.intel.com>
+In-Reply-To: <YrSXKkYfr+Hinsuu@smile.fi.intel.com>
 From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 23 Jun 2022 10:26:46 -0700
-Message-ID: <CAGETcx_eVkYtVX9=TOKnhpP2_ZpJwRDoBye3i7ND2u5Q-eQfPg@mail.gmail.com>
+Date:   Thu, 23 Jun 2022 10:30:16 -0700
+Message-ID: <CAGETcx8axPpXFv9Cc59nWrgW9_fYqZUYmNPUg83CTHTBZDC-ZA@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] of: base: Avoid console probe delay when fw_devlink.strict=1
-To:     sascha hauer <sha@pengutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     sascha hauer <sha@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Daniel Scally <djrscally@gmail.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -92,66 +92,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 3:05 AM sascha hauer <sha@pengutronix.de> wrote:
+On Thu, Jun 23, 2022 at 9:39 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Thu, Jun 23, 2022 at 01:03:43AM -0700, Saravana Kannan wrote:
-> > Commit 71066545b48e ("driver core: Set fw_devlink.strict=1 by default")
-> > enabled iommus and dmas dependency enforcement by default. On some
-> > systems, this caused the console device's probe to get delayed until the
-> > deferred_probe_timeout expires.
-> >
-> > We need consoles to work as soon as possible, so mark the console device
-> > node with FWNODE_FLAG_BEST_EFFORT so that fw_delink knows not to delay
-> > the probe of the console device for suppliers without drivers. The
-> > driver can then make the decision on where it can probe without those
-> > suppliers or defer its probe.
-> >
-> > Fixes: 71066545b48e ("driver core: Set fw_devlink.strict=1 by default")
-> > Reported-by: Sascha Hauer <sha@pengutronix.de>
-> > Reported-by: Peng Fan <peng.fan@nxp.com>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Tested-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/of/base.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index d4f98c8469ed..a19cd0c73644 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -1919,6 +1919,8 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
-> >                       of_property_read_string(of_aliases, "stdout", &name);
-> >               if (name)
-> >                       of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
-> > +             if (of_stdout)
-> > +                     of_stdout->fwnode.flags |= FWNODE_FLAG_BEST_EFFORT;
+> On Thu, Jun 23, 2022 at 12:04:21PM +0200, sascha hauer wrote:
+> > On Thu, Jun 23, 2022 at 01:03:43AM -0700, Saravana Kannan wrote:
 >
-> The device given in the stdout-path property doesn't necessarily have to
-> be consistent with the console= parameter. The former is usually
-> statically set in the device trees contained in the kernel while the
-> latter is dynamically set by the bootloader. So if you change the
-> console uart in the bootloader then you'll still run into this trap.
+> ...
 >
-> It's problematic to consult only the device tree for dependencies. I
-> found several examples of drivers in the tree for which dma support
-> is optional. They use it if they can, but continue without it when
-> not available. "hwlock" is another property which consider several
-> drivers as optional. Also consider SoCs in early upstreaming phases
-> when the device tree is merged with "dmas" or "hwlock" properties,
-> but the corresponding drivers are not yet upstreamed. It's not nice
-> to defer probing of all these devices for a long time.
+> > I wonder if it wouldn't be a better approach to just probe all devices
+> > and record the device(node) they are waiting on. Then you know that you
+> > don't need to probe them again until the device they are waiting for
+> > is available.
 >
-> I wonder if it wouldn't be a better approach to just probe all devices
-> and record the device(node) they are waiting on. Then you know that you
-> don't need to probe them again until the device they are waiting for
-> is available.
+> There may be no device, but resource. And we become again to the something like
+> deferred probe ugly hack.
+>
+> The real solution is to rework device driver model in the kernel that it will
+> create a graph of dependencies and then simply follow it. But actually it should
+> be more than 1 graph, because there are resources and there are power, clock and
+> resets that may be orthogonal to the higher dependencies (like driver X provides
+> a resource to driver Y).
 
-That actually breaks things in a worse sense. There are cases where
-the consumer driver is built in and the optional supplier driver is
-loaded at boot. Without fw_devlink and the deferred probe timeout, we
-end up probing the consumer with limited functionality. With the
-current setup, sure we delay some probes a bit but at least everything
-works with the right functionality. And you can reduce or remove the
-delay if you want to optimize it.
+We already do this with fw_devlink for DT based systems and we do
+effectively just probe the devices in graph order (by deferring any
+attempts that happen too early and before it even gets to the driver).
+The problem is the knowledge of what's considered an optional vs
+mandatory dependency and that's affected by the global state of driver
+support in the kernel.
 
 -Saravana
