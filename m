@@ -2,135 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 144B055A238
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jun 2022 21:56:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26E4855A4BD
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jun 2022 01:18:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230299AbiFXTvT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jun 2022 15:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42432 "EHLO
+        id S230421AbiFXXSV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jun 2022 19:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbiFXTvS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jun 2022 15:51:18 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36CC07FD24;
-        Fri, 24 Jun 2022 12:51:16 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id ej4so4873753edb.7;
-        Fri, 24 Jun 2022 12:51:16 -0700 (PDT)
+        with ESMTP id S230355AbiFXXSU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jun 2022 19:18:20 -0400
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346156DB14
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Jun 2022 16:18:20 -0700 (PDT)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-101e1a33fe3so5700586fac.11
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Jun 2022 16:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=IlyhdFMImGeb91lejRrs7vQ8r+23EDsm+NrRwbaFfRE=;
-        b=enHeReQVjJ/UJTqaKyFAhtCBoqIf4KF5UPWDs6zNR4rPduhPJrYpKY1MwhZV4RXVOK
-         vKyBgy8GeEju7Jv6VV67X+bNvMQOxX6V7idVurYMSaGWHnrAgobi1e1XXJWPkqFKirIj
-         2gz0IDsUJWHJt2ZNg67fZY+7FRNOM3VtG+42JJj5DAwrqo9fzTwRRpyinlB8N4oTIbNq
-         Z9B8tl0htTaROmO6eo2pTduVeOHQy3Sqa/VlIGvLv+HRP2A20pTEFggtwNKXKVZqw7Zb
-         AwYpkS74KAXhX2x35AJFPxgD/mFnkmN0TRilXOKqyTjzm3QEUwgB2zSYm+Ai7JUJgFBT
-         D19Q==
+        bh=Bc5VjbSeIO9kRIMOracq0GMGGBRs29d0aSqXajp/hwI=;
+        b=wm9N2bR1JIiQdKKktfSBITzvgbQHdwBvVRL8ET8EBdGecfjXp/dodT4tvny5AV497v
+         5ziPjGXtwE7hq7JX+YdHetwCQMygxyKmriMYifft7ZZCztRs6WAk7WiG9tkx23pVvTvC
+         oDVPwfrYhZvOkQPOQc0UaaGe2nOqhgfWMprH7VRVFwB+WeeupGMv+7Eq406aOPOncHq3
+         Xc/w0TFqwFiIDQoJtDx0tmybFEm7PgzSloWtA/ytXjWDJMEOWKGjApufwnf1J43/SPL6
+         v2UdW9408S1xKljwFZMOVsT4r2lxiJnh5EVCfjCwz8e7XIBh3HgC1Rxnsjw47JYisNK/
+         DcHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=IlyhdFMImGeb91lejRrs7vQ8r+23EDsm+NrRwbaFfRE=;
-        b=NoXtdAJ+5BISl2RR7r25pCQoHoAaQbvCck0Zo+0cbptduaZb7vawxUArBLrwOcb7Ny
-         aNRR7lT6A3hJh1z3MiBjjrwac3yBq8e132fVh+bKbiMScnhr1DU6T0dCNelXTWZLgf1V
-         oTrN9jGr/XlJZmLQ2AgD6hB+xS5C0uCQAI2pB8KJ4MJzvlCamIry+aLYWjyu44r9ycgz
-         pYAy1lCSTeAUCjF1XrSeqpvThH2sfxlVfeiB7+IDEl47fcww3v+M25r/WFELysLmFw/Z
-         WmOYIIrqlOK49NaMVf2q71rBM8/pp4Hqj3pr2kehhkRn1oL5Gl1v53DAtF1BCHTtgyWu
-         4WGA==
-X-Gm-Message-State: AJIora8i3arYmZXF9HRFA9OqtQxuZIvNMguIk8usJkyALuZEk8L7MiiG
-        Xn6pPzPJqOfbZ15jD3lUsfg=
-X-Google-Smtp-Source: AGRyM1tqs6Ke+BiFNzHottRZZOBZEqN8+W2JhAZk/a1fKvA9kbXP2z0IsZAy0X5EFEu3cOHTZ2UVvA==
-X-Received: by 2002:aa7:dad6:0:b0:435:7a44:7480 with SMTP id x22-20020aa7dad6000000b004357a447480mr981415eds.138.1656100274625;
-        Fri, 24 Jun 2022 12:51:14 -0700 (PDT)
-Received: from fedora.robimarko.hr (dh207-98-60.xnet.hr. [88.207.98.60])
-        by smtp.googlemail.com with ESMTPSA id jz27-20020a17090775fb00b007246492658asm1586316ejc.117.2022.06.24.12.51.13
+        bh=Bc5VjbSeIO9kRIMOracq0GMGGBRs29d0aSqXajp/hwI=;
+        b=k0cAzNzZ7jSVeJ7aWJuoaI4AKQZmPT25EcDq3MYQ/6kAoO0WpDfeLtyT72MpgrUYGw
+         XDUMzP+fcyeJs3lOmcGq11YovF2cNPE9s9Q3tfkOHq8XG8RJxRJp5fAtZxAizrzDek/g
+         XWyfmzdYq6gVpwnpahziNeQ4ajpS0Axg8cdAiMiqJ7ctUVgJodfsyuI9A8bBFOMEFRpr
+         FzTBjBG6UpsQprk4cpDLG0qYitpVIymV42gp6KpWLdLgPgPC4ZmbssnEn1ZjmpoKC5us
+         SUAs5Kxwse0u6LZ+6RYYFWrcUOAbhf3YbWnrjXP2g3+n9SFZDbqG6O2GSoeKzkyyMD5T
+         ZaZg==
+X-Gm-Message-State: AJIora9htFQsmXGcQ7CurV2K2lXTEZLW5NjRqfQZuaNGMEjJKAkzBmHA
+        Gl0cdgtlNl7+gXOgvmu0hiZmfHwln1faueyR
+X-Google-Smtp-Source: AGRyM1uLz0gWniUEDN4ZcL/LDrNA7m3FzlWIm4VwXNf8DoTvOpG9tIggdpE80lxk+jA4rPKoLcXrWw==
+X-Received: by 2002:a05:6870:5895:b0:fe:489c:d9d3 with SMTP id be21-20020a056870589500b000fe489cd9d3mr3442131oab.149.1656112698919;
+        Fri, 24 Jun 2022 16:18:18 -0700 (PDT)
+Received: from brgl-uxlite.. (BOINGO-WIRE.bear2.Houston1.Level3.net. [4.2.233.242])
+        by smtp.gmail.com with ESMTPSA id v6-20020a4ac906000000b0035eb4e5a6c7sm2110859ooq.29.2022.06.24.16.18.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jun 2022 12:51:14 -0700 (PDT)
-From:   Robert Marko <robimarko@gmail.com>
-To:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Robert Marko <robimarko@gmail.com>
-Subject: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
-Date:   Fri, 24 Jun 2022 21:51:12 +0200
-Message-Id: <20220624195112.894916-1-robimarko@gmail.com>
-X-Mailer: git-send-email 2.36.1
+        Fri, 24 Jun 2022 16:18:18 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.19-rc4
+Date:   Sat, 25 Jun 2022 01:18:12 +0200
+Message-Id: <20220624231812.5878-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-immutable") added a warning to indicate if the gpiolib is altering the
-internals of irqchips.
+Linus,
 
-Following this change the following warning is now observed for the SPMI
-PMIC pinctrl driver:
-gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
+Please pull the following set of fixes for the next rc. Details are
+in the signed tag as usual.
 
-Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
+Thanks!
+Bartosz Golaszewski
 
-Signed-off-by: Robert Marko <robimarko@gmail.com>
----
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+The following changes since commit b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3:
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index c3255b0bece4..406ee0933d0b 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -171,7 +171,6 @@ struct pmic_gpio_state {
- 	struct regmap	*map;
- 	struct pinctrl_dev *ctrl;
- 	struct gpio_chip chip;
--	struct irq_chip irq;
- 	u8 usid;
- 	u8 pid_base;
- };
-@@ -988,6 +987,17 @@ static void *pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
- 	return fwspec;
- }
- 
-+static const struct irq_chip spmi_gpio_irq_chip = {
-+	.name		= "spmi-gpio",
-+	.irq_ack	= irq_chip_ack_parent,
-+	.irq_mask	= irq_chip_mask_parent,
-+	.irq_unmask	= irq_chip_unmask_parent,
-+	.irq_set_type	= irq_chip_set_type_parent,
-+	.irq_set_wake	= irq_chip_set_wake_parent,
-+	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_MASK_ON_SUSPEND,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static int pmic_gpio_probe(struct platform_device *pdev)
- {
- 	struct irq_domain *parent_domain;
-@@ -1081,16 +1091,8 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 	if (!parent_domain)
- 		return -ENXIO;
- 
--	state->irq.name = "spmi-gpio",
--	state->irq.irq_ack = irq_chip_ack_parent,
--	state->irq.irq_mask = irq_chip_mask_parent,
--	state->irq.irq_unmask = irq_chip_unmask_parent,
--	state->irq.irq_set_type = irq_chip_set_type_parent,
--	state->irq.irq_set_wake = irq_chip_set_wake_parent,
--	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
--
- 	girq = &state->chip.irq;
--	girq->chip = &state->irq;
-+	gpio_irq_chip_set_chip(girq, &spmi_gpio_irq_chip);
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
- 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
--- 
-2.36.1
+  Linux 5.19-rc2 (2022-06-12 16:11:37 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc4
+
+for you to fetch changes up to b0d473185ba887c798ed0cd6f5abf4075363baa4:
+
+  gpio: mxs: Fix header comment (2022-06-23 23:18:13 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.19-rc4
+
+- make the irqchip immutable in gpio-realtek-otto
+- fix error code propagation in gpio-winbond
+- fix device removing in gpio-grgpio
+- fix a typo in gpio-mxs which indicates the driver is for a different model
+- documentation fixes
+- MAINTAINERS file updates
+
+----------------------------------------------------------------
+Akira Yokosawa (1):
+      gpio: Fix kernel-doc comments to nested union
+
+Dan Carpenter (1):
+      gpio: winbond: Fix error code in winbond_gpio_get()
+
+Lukas Bulwahn (1):
+      MAINTAINERS: add include/dt-bindings/gpio to GPIO SUBSYSTEM
+
+Sander Vanheule (1):
+      gpio: realtek-otto: Make the irqchip immutable
+
+Stefan Wahren (1):
+      gpio: mxs: Fix header comment
+
+Tom Schwindl (1):
+      docs: driver-api: gpio: Fix filename mismatch
+
+Uwe Kleine-König (1):
+      gpio: grgpio: Fix device removing
+
+ Documentation/driver-api/gpio/board.rst    |  2 +-
+ Documentation/driver-api/gpio/consumer.rst |  6 +++---
+ Documentation/driver-api/gpio/intro.rst    |  6 +++---
+ MAINTAINERS                                |  1 +
+ drivers/gpio/gpio-grgpio.c                 | 14 +-------------
+ drivers/gpio/gpio-mxs.c                    |  2 +-
+ drivers/gpio/gpio-realtek-otto.c           | 10 ++++++++--
+ drivers/gpio/gpio-winbond.c                |  7 ++++---
+ include/linux/gpio/driver.h                | 29 ++++++++++++++++-------------
+ 9 files changed, 38 insertions(+), 39 deletions(-)
