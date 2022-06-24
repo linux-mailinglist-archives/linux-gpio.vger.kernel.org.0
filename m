@@ -2,163 +2,192 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1021F559760
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jun 2022 12:10:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8957559763
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jun 2022 12:10:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229641AbiFXKJ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jun 2022 06:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53128 "EHLO
+        id S230010AbiFXKKC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jun 2022 06:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229862AbiFXKJ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jun 2022 06:09:56 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ECA17A6C5
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jun 2022 03:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656065395; x=1687601395;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=92M+XfnOsppn9R7tbFjtI0E2KWOi4TvX6x90Kuqnl7g=;
-  b=e9Am7Upyy88EPZgUjoJYVZpIHRcuw/CLPPufShoY2xi8X07Aelf7QipQ
-   2XMpVP5z/VTiAekv0puknxjfNCQDVhRiAGSMXj0XmAx5HsM2qP8qf1nrx
-   1GxTFM0ye2BtdsWM3T1yOyc/PgXeaP6SUaFEqi0QwTf/2+FyrfBzrOiYO
-   vcTUewEbJQ9hxeQoE6jlOsJpxk4JU/tsr2+7asKmf2+IJMjoO9c20dY8/
-   FXxv5a/GOCoWW8O5CC8KfLW1YM50AMiBYDM/NlX2UZkw9rk8g9OSFypkH
-   NHliBabdhJkzzEYGdCFspnQVhZ75HHuo7zSXr8A840jmD6gEW5ugORHLT
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="264009186"
-X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="264009186"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2022 03:09:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="731266167"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2022 03:09:53 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o4gG8-0003yp-W2;
-        Fri, 24 Jun 2022 10:09:52 +0000
-Date:   Fri, 24 Jun 2022 18:09:18 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- b0d473185ba887c798ed0cd6f5abf4075363baa4
-Message-ID: <62b58d4e.x3GFQZG2uSy/TMp2%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S230227AbiFXKKB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jun 2022 06:10:01 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4DC7A6DE
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Jun 2022 03:09:59 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id fi2so3668470ejb.9
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Jun 2022 03:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=lorZHDjvGx5GD+gar7tqgB1Qj4XdO8WewdyIcYo1mvQ=;
+        b=Ti+fVnTmNKYwrAedrBvndCldoW4NlBmv0536IQ1k7OjvfHGtm0ly+8LwT7LHpGHzlz
+         LafqDygKvgifpswBtGLrtk9U7xuH7aey9fjumlhSjD2X+iwlgI3p2XPtC7usywyN7xGY
+         W2A8LzDsZUGZY5uV7/tcGbZ1zfr+6u4F5Xye6rZDK8hni7hRyauGtjHMj53vdiF4nE9N
+         yE03ZJQdZx2IMeDGIfYUqCYHP4GkOp77AX6oMkRLiGOFVczBaH/FqSkmXXaTLaqqI4aU
+         ZZfC0gnTBThlESIIWgvLVe41AgjoHBQKfZAsMM2f26Sz4jxuYocBYsA3qE3lyJ7g+E/6
+         4bfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=lorZHDjvGx5GD+gar7tqgB1Qj4XdO8WewdyIcYo1mvQ=;
+        b=rzvt485jb+xi08czBsgpk8JKZW5XdMvOK3CjLEY+Rk7PFQtSVqrIcZXzYNX7Y5PGnD
+         G0/cHyqVb/m+Ip6lTl4B+rAemeBNj729hlvSK9c2bTuSPuiwm/5Y649ylyxN5xt7xJ/J
+         +/P6umUm+pAiPAFx7nPiWgJvDf9zMsONrTGcUCtrF+epAedzipZLnj96CvLSKD7Flsg5
+         FZBGnRk3PsTN2mcpaV0S8YuymaRt41BnwNJe1KttTohBVyQ+GR/hPovxYKjKY9bNErux
+         nJ6yPdcfWLhKfRMzh0JnWzoDX6oZmzMkVYm4Me/WBca1azFXEz6PNCAJZ4vso9lE6d6r
+         Zl7g==
+X-Gm-Message-State: AJIora/GBohuh0n7kVOnmaLmNBMN4Gn8vZ3jYWle15a4Jb1mERi+a84m
+        TTTW5A+dJKauiyhzSRgeCt+PEw==
+X-Google-Smtp-Source: AGRyM1uKgLP0q+F3EV/ZKpI4bKmuL8O9cSoJ6Y20J5j3QtItOyrNB6oS6chuuxpNORk9LaAzvkhBRg==
+X-Received: by 2002:a17:907:3f21:b0:722:ca29:7ec9 with SMTP id hq33-20020a1709073f2100b00722ca297ec9mr12231536ejc.417.1656065397338;
+        Fri, 24 Jun 2022 03:09:57 -0700 (PDT)
+Received: from [192.168.0.234] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id v10-20020a1709063bca00b006ffa19b7782sm841359ejf.74.2022.06.24.03.09.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jun 2022 03:09:56 -0700 (PDT)
+Message-ID: <3e8e2ad5-9a1c-44f3-cff9-50ad2124c9f9@linaro.org>
+Date:   Fri, 24 Jun 2022 12:09:54 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v5 03/14] dt-bindings: pinctrl: imx: Add fsl,scu-iomux
+ yaml file
+Content-Language: en-US
+To:     Viorel Suman <viorel.suman@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abelvesa@kernel.org>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Liu Ying <victor.liu@nxp.com>,
+        Ming Qian <ming.qian@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Abel Vesa <abel.vesa@nxp.com>
+References: <20220616164303.790379-1-viorel.suman@nxp.com>
+ <20220616164303.790379-4-viorel.suman@nxp.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220616164303.790379-4-viorel.suman@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: b0d473185ba887c798ed0cd6f5abf4075363baa4  gpio: mxs: Fix header comment
+On 16/06/2022 18:42, Viorel Suman wrote:
+> From: Abel Vesa <abel.vesa@nxp.com>
+> 
+> In order to replace the fsl,scu txt file from bindings/arm/freescale,
+> we need to split it between the right subsystems. This patch documents
+> separately the 'iomux/pinctrl' child node of the SCU main node.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> ---
+>  .../bindings/pinctrl/fsl,scu-pinctrl.yaml     | 47 +++++++++++++++++++
 
-elapsed time: 725m
+Since this is a conversion, I expect removal of existing bindings. This
+applies to each other patch as well.
 
-configs tested: 81
-configs skipped: 2
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..7a08c60da66f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/fsl,scu-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: i.MX SCU Client Device Node - Pinctrl bindings based on SCU Message Protocol
+> +
+> +maintainers:
+> +  - Dong Aisheng <aisheng.dong@nxp.com>
+> +
+> +description: i.MX SCU Client Device Node
+> +  Client nodes are maintained as children of the relevant IMX-SCU device node.
+> +  This binding uses the i.MX common pinctrl binding.
+> +  (Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt)
+> +
+> +properties:
+> +  compatible:
+> +    items:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+You have only one item, so no items.
 
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-mips                 randconfig-c004-20220622
-arm                         lubbock_defconfig
-arm                      jornada720_defconfig
-arm                        realview_defconfig
-arm                        keystone_defconfig
-microblaze                          defconfig
-arm                          iop32x_defconfig
-m68k                            q40_defconfig
-powerpc                      chrp32_defconfig
-alpha                               defconfig
-sh                         ecovec24_defconfig
-arm                           viper_defconfig
-ia64                             allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a015
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-arc                  randconfig-r043-20220622
-riscv                             allnoconfig
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
+> +      - enum:
+> +          - fsl,imx8qm-iomuxc
+> +          - fsl,imx8qxp-iomuxc
+> +          - fsl,imx8dxl-iomuxc
+> +
+> +patternProperties:
+> +  "grp$":
+> +    type: object
 
-clang tested configs:
-arm                                 defconfig
-powerpc                 mpc8560_ads_defconfig
-hexagon                             defconfig
-powerpc                 mpc836x_mds_defconfig
-x86_64                        randconfig-k001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-hexagon              randconfig-r041-20220622
-s390                 randconfig-r044-20220622
-hexagon              randconfig-r045-20220622
-riscv                randconfig-r042-20220622
-hexagon              randconfig-r041-20220623
-hexagon              randconfig-r045-20220623
-hexagon              randconfig-r041-20220624
-s390                 randconfig-r044-20220624
-hexagon              randconfig-r045-20220624
-riscv                randconfig-r042-20220624
+You need to describe the children and then additionalProperties:false.
+See other pinctrl bindings for example.
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> +
+> +required:
+> +  - compatible
+> +
+
+Missing allOf referencing pinctrl.
+
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/pads-imx8qxp.h>
+> +
+> +    pinctrl {
+> +             compatible = "fsl,imx8qxp-iomuxc";
+> +
+> +             pinctrl_lpuart0: lpuart0grp {
+> +                    fsl,pins = <
+> +                            IMX8QXP_UART0_RX_ADMA_UART0_RX   0x06000020
+> +                            IMX8QXP_UART0_TX_ADMA_UART0_TX   0x06000020
+> +                    >;
+> +             };
+> +    };
+
+
+Best regards,
+Krzysztof
