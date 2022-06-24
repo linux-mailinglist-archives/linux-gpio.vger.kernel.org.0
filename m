@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E00FC558F4F
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jun 2022 05:54:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AFE8558F79
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jun 2022 06:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230405AbiFXDy2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 23:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
+        id S231423AbiFXEFn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jun 2022 00:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229720AbiFXDy2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 23:54:28 -0400
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84B451334
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 20:54:26 -0700 (PDT)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-101bb9275bcso2167565fac.8
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 20:54:26 -0700 (PDT)
+        with ESMTP id S231320AbiFXEFl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jun 2022 00:05:41 -0400
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0407256745
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 21:05:39 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id p8so2106719oip.8
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 21:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=iFT3gQnFCDWatBOiparQTqrGIR1G2w5e82RRo7ggLlU=;
-        b=Q0iQp2tThdwD+u12wuvAGNQOIX/m/KPTVJUYMYS5tbSscEyTqCuPmPnDVOVJPyAZGS
-         cpfwX49GFplwzgszY4nWTkMRHKE6d5uVs8Js/7uzspGiWRI19N8ay+Eo85otkbLDf7/X
-         qAew5o9vscUHdChk5J74Py8FNbv85BqYzpIwW16G8m8ZFEgj6TIAvSbAqzhStmXGUwTG
-         ZwnOM6hGssMIjDsxyKVCSKXOOBiANfTDXqLCEjGp4TkrdzvP6QIq/hYfdKVlMLSlRvEb
-         LKE1TCce3PNdhZT3xU9OYjxkF4TSQSL1JVtQKDy6dhMYNdek6DDYwcI0UcCAN2VKH4Fy
-         E2jg==
+        bh=5Jjrq7awYQaeFzIlST9+9YCiK3puRVXguo52HCZEX/o=;
+        b=Jg2HxYha/NIZgJEWtC/HRXceJtHhMZJ1yOl23yPzbXLoV3kc+hbn3kalj7vjH7MEeO
+         X1r5KUBpuZf+MJ05ptSbldK4EcmucQBgQKOiDVQE97ktDpdmRFTP/U+k1TETkoNaB3P6
+         hZa36XQdTinfQ54HLNL5l+448dkt6dRoQzc/3ofXBFb09cMqV3woXsh6dp7cEiCZoC/G
+         lRahLFQCIy2WLmOBj7wogMP+PAeFUuALqD9YqkC5YubrwI71wDJ9ytlZloBGYRMPClhB
+         UT4ySd4lyfz4hVYYWwR1z2rfzQx0FIiG25vPy6+pjl6Yeux7xwtNz/YhqqqIq/F0U48/
+         fE4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=iFT3gQnFCDWatBOiparQTqrGIR1G2w5e82RRo7ggLlU=;
-        b=3ri6AuGMPmGalZZ4WU7zUfghaij69rgY+0HZmJDa4U0EIiHadrlinNIVdiJPwH+iVo
-         dUleFuj745eFc92Ari5K80hJJ7wvAwL3iEb0R22m1bqfwsUa93w4ZXF2A8w8VcXyFujv
-         tCYrdrnuMlh3UzU3a9AWtHVnEXGye8THUy5XEF55v6u+H7bze4v0zEf/OJSMQX51ZUTS
-         F3ppSYUbTop9IodsQUQB1l6V0rbAqsXxWIEx577UwkQwoXP92qBkiCaA+i9r6h/p02CI
-         X3JBTG2Gn3tREfPGaZbg5Tada3iLNw4yggHqeQpU6juIRqXcysGH9Pz+Lm3/Hs8D/cxy
-         8Z2w==
-X-Gm-Message-State: AJIora9ajnkpLRzyFkRQUXzZIZ8yE66g2SdDtzt5NZGUJSs/XEHfGR9m
-        Ko83EnZIo0BV2IvXSVtcfAsmkA==
-X-Google-Smtp-Source: AGRyM1viJEexCKUErsqTQhjYnEudnwnMhiqAJInvRUG+lD1YBOkBoOwMbz7X6qYfU1nlVaHfb9LctA==
-X-Received: by 2002:a05:6870:d10c:b0:102:820:1231 with SMTP id e12-20020a056870d10c00b0010208201231mr865943oac.122.1656042866308;
-        Thu, 23 Jun 2022 20:54:26 -0700 (PDT)
+        bh=5Jjrq7awYQaeFzIlST9+9YCiK3puRVXguo52HCZEX/o=;
+        b=Byd/PcwZXQff9zV0sC1Nj5dmVz7PK1Q1y70E7H4IiX6vL971a1QHHAOoQRGXlggRT0
+         dKuMP6HDYoimsBof9Ro4rFiLULOGTcZB9UtH8NJCfnZVkeyJ1w0k7LfoPWqgZW2bXm8p
+         wDYYR5HDlwafNXahmlvooz/S+pP9WYMgjZEy+mgENiPc0+XvdwQ7NY8/hS1LT9AKlESp
+         aWTEkwzFC99H26P1kIlvAWV/CdVcczKWDWmnzG2dkq9WNAfUfxrQORkpz+5R1vkxz0Xz
+         Zm9GSfk3FLPzJaeY/oseyLm7Es7KzzWzO0Zazl0fGYLuBVZWVEuh1CgCBMk15baAkOX7
+         fXHg==
+X-Gm-Message-State: AJIora8VWwlkC75Buxq3kjxzbXkGhq7E2gZ2O5vxxV+eD/WBjNDYJ90b
+        GFcBV3jO4AFZ0xBUwM2LCZoYdQ==
+X-Google-Smtp-Source: AGRyM1vDeI5MEyL2hISaemwrekGndBtHUjrULdlHJG/uc5iI8LR6oGhEiG9J6lfWw7kjbDqmUp1kDA==
+X-Received: by 2002:a05:6808:20a8:b0:32e:d283:2dfa with SMTP id s40-20020a05680820a800b0032ed2832dfamr791710oiw.279.1656043538330;
+        Thu, 23 Jun 2022 21:05:38 -0700 (PDT)
 Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id p2-20020a05680811c200b0032e3ffc5513sm595717oiv.4.2022.06.23.20.54.25
+        by smtp.gmail.com with ESMTPSA id s64-20020acaa943000000b0032f51af1999sm542996oie.42.2022.06.23.21.05.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jun 2022 20:54:25 -0700 (PDT)
-Date:   Thu, 23 Jun 2022 22:54:23 -0500
+        Thu, 23 Jun 2022 21:05:37 -0700 (PDT)
+Date:   Thu, 23 Jun 2022 23:05:35 -0500
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Sricharan R <quic_srichara@quicinc.com>
 Cc:     agross@kernel.org, robh+dt@kernel.org,
@@ -58,17 +58,18 @@ Cc:     agross@kernel.org, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 5/8] pinctrl: qcom: Add IPQ5018 pinctrl driver
-Message-ID: <YrU1b+37DeZqIMTh@builder.lan>
+Subject: Re: [PATCH V2 3/8] clk: qcom: Add Global Clock controller (GCC)
+ driver for IPQ5018
+Message-ID: <YrU4D+eDBctFl0ZY@builder.lan>
 References: <20220621161126.15883-1-quic_srichara@quicinc.com>
- <20220621161126.15883-6-quic_srichara@quicinc.com>
+ <20220621161126.15883-4-quic_srichara@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220621161126.15883-6-quic_srichara@quicinc.com>
+In-Reply-To: <20220621161126.15883-4-quic_srichara@quicinc.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,16 +78,84 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue 21 Jun 11:11 CDT 2022, Sricharan R wrote:
+> diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
 [..]
+> +static const struct clk_parent_data gcc_xo_gpll0_gpll0_out_main_div2[] = {
+> +	{ .fw_name = "xo", .name = "xo", },
+
+Please replace .fw_name with .index based lookup, in line with what was
+done in gcc-sc8280xp.c recently.
+
+There's no reason to include global name lookup (.name) in new drivers,
+so please omit this part.
+
+> +	{ .fw_name = "gpll0", .name = "gpll0", },
+> +	{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
+> +};
 > +
-> +static const struct of_device_id ipq5018_pinctrl_of_match[] = {
-> +	{ .compatible = "qcom,ipq5018-pinctrl", },
+[..]
+> +static struct clk_alpha_pll gpll0_main = {
+> +	.offset = 0x21000,
+> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
+> +	.clkr = {
+> +		.enable_reg = 0x0b000,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gpll0_main",
+> +			.parent_data = &(const struct clk_parent_data){
+> +				.fw_name = "xo",
+> +				.name = "xo",
 
-Please make this qcom,ipq5018-tlmm, as requested in the binding.
+Are you referring to the board XO here, or the CXO pin on the SoC? On
+many platforms these are not the same...
 
-With that:
+Please omit the .name here as well and as this is used a few times,
+please create a struct clk_parent_data for this parent.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_alpha_pll_stromer_ops,
+> +			.flags = CLK_IS_CRITICAL,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor gpll0_out_main_div2 = {
+> +	.mult = 1,
+> +	.div = 2,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "gpll0_out_main_div2",
+> +		.parent_data = &(const struct clk_parent_data){
+
+It would be nice to have a space inbetween ) and { in all these.
+
+> +			.fw_name = "gpll0_main",
+> +			.name = "gpll0_main",
+> +		},
+> +		.num_parents = 1,
+> +		.ops = &clk_fixed_factor_ops,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+[..]
+> +static struct clk_branch gcc_gephy_tx_clk = {
+> +	.halt_reg = 0x56014,
+> +	.halt_check = BRANCH_HALT_DELAY,
+> +	.clkr = {
+> +		.enable_reg = 0x56014,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_gephy_tx_clk",
+> +			.parent_data = &(const struct clk_parent_data){
+> +				.fw_name = "gmac0_tx_div_clk_src",
+> +				.name = "gmac0_tx_div_clk_src",
+> +			},
+
+This parent_data is repeated multiple times, but more importantly it's
+not an external clock, so you should use .parent_hw instead of
+.parent_data.
+
+Please review the parent for all your clocks.
 
 Regards,
 Bjorn
