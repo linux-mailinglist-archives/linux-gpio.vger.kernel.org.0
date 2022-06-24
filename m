@@ -2,301 +2,272 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7C05558C32
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jun 2022 02:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D7A1558F3C
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jun 2022 05:44:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230244AbiFXAVN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jun 2022 20:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
+        id S229546AbiFXDob (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jun 2022 23:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiFXAVM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 20:21:12 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1380F5DC27;
-        Thu, 23 Jun 2022 17:21:11 -0700 (PDT)
+        with ESMTP id S229800AbiFXDo2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jun 2022 23:44:28 -0400
+Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC7F4D612
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 20:44:26 -0700 (PDT)
+Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-1013ecaf7e0so2111688fac.13
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jun 2022 20:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1656030071; x=1687566071;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/4AhlIlzIXaCK8b1KJQH/xfkDhNB2s6ZxkkOv5WDaTw=;
-  b=UgHrC7KRUI9zztliuTFQgqwHsVoQ9jNPx3egICCLnCa2nXH0pNf9vT5E
-   om79/QpuxFST6coM2xsAoxXYLt0s0eyBIwL2klbFleqgtg+5Yasfzon5N
-   fRafCSvyb/nQQwYgOnlwAq57q8HANwVAmqODnTqJasyWgoYivJYNHuNjK
-   E=;
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 23 Jun 2022 17:21:10 -0700
-X-QCInternal: smtphost
-Received: from nasanex01b.na.qualcomm.com ([10.46.141.250])
-  by ironmsg03-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 17:21:08 -0700
-Received: from quicinc.com (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Thu, 23 Jun
- 2022 17:21:07 -0700
-Date:   Thu, 23 Jun 2022 17:21:06 -0700
-From:   Guru Das Srinagesh <quic_gurus@quicinc.com>
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-CC:     <broonie@kernel.org>, <agross@kernel.org>,
-        <bjorn.andersson@linaro.org>, <srinivas.kandagatla@linaro.org>,
-        <bgoswami@codeaurora.org>, <gregkh@linuxfoundation.org>,
-        <rafael@kernel.org>, <cw00.choi@samsung.com>,
-        <krzysztof.kozlowski@linaro.org>, <b.zolnierkie@samsung.com>,
-        <myungjoo.ham@samsung.com>, <michael@walle.cc>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <tglx@linutronix.de>,
-        <maz@kernel.org>, <lee.jones@linaro.org>, <mani@kernel.org>,
-        <cristian.ciocaltea@gmail.com>, <wens@csie.org>,
-        <tharvey@gateworks.com>, <rjones@gateworks.com>,
-        <mazziesaccount@gmail.com>, <orsonzhai@gmail.com>,
-        <baolin.wang7@gmail.com>, <zhang.lyra@gmail.com>,
-        <jernej.skrabec@gmail.com>, <samuel@sholland.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-actions@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH 20/49] regmap-irq: Fix inverted handling of unmask
- registers
-Message-ID: <20220624002106.GC21400@quicinc.com>
-References: <20220620200644.1961936-1-aidanmacdonald.0x0@gmail.com>
- <20220620200644.1961936-21-aidanmacdonald.0x0@gmail.com>
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LsVAWFxXYW9U7WkPksAuQVnNc7dyC8As5T0zm8UW5hA=;
+        b=D5WWm9pkGorlJ7Oa+cZXIDW1PD5SceZfIHMI8VXpHeIGLw0b83jZdMGGX8XbWbZfO4
+         K8rThFQLq1mkrE73KGALs4VVkDn8WobG02FY9KvRwfmW3VD5Cjz/12OORsaiqSmB36hl
+         5ns1Hr7gwIp6AKa9Lptj0zjZFtKHqwrEBsYR21yUcj84TM7gjgN4EVd5xRDm4xnXOHfG
+         ePFn3k5mw/rBp/Z1lR+HfB/YfhEFFJRH/Yowku94N3PZjpL5gzd/2Zwx+Cj6q4SmJdD/
+         iQJn98KTUvlRXgDwymt1y/haALFj9Z4kZhAQeLY98COTUK/SJn19XewzWzL2glXXj3Yi
+         GSCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LsVAWFxXYW9U7WkPksAuQVnNc7dyC8As5T0zm8UW5hA=;
+        b=uO9hwECFRPRkiBxGhGbIaI9tDJOCQeMHv2elY5ddPoxmpG0yq+kgJGJBdgdeRkcMDr
+         82T8TmrqY48s5CFKXfmwW8ReHjieWwnFE2N/gs0soA6vW4EFAWETxwOY0z/8XRn0HZli
+         HaoDzv1l38gURUvTnvteEzwO71p1AZa5KDIHTk8/X3Khu3zMhv4nmgjCO+MlX+2rWkSj
+         pNsdv6zjbWHmIJpdfWjP8xURD2Dh+QrJaFzSE2dqYH7fHQ1xGdKtoVoNmVimVB9FVT7U
+         qSDX9JrvzlOPdgTyPJ1dH/LQ5GaFWqttGdLhPjXMPSl9HtumQW+3bpjFHdusw4QaL9GO
+         Eldg==
+X-Gm-Message-State: AJIora/uqPImKbfQ7gP41HsAvQrqSvSySqRox1DYWnm9irBrwofq+AAp
+        /O5Bia2YCWRRZciy9TAbqIcBkQ==
+X-Google-Smtp-Source: AGRyM1tsiqNsqAvJu0wE+gfTif8LTF9rrpM54BGnBx5SoMvZNMqeZ0rwn08kFQqwe9EasV4DxsivsA==
+X-Received: by 2002:a05:6870:6195:b0:100:ee8a:ce86 with SMTP id a21-20020a056870619500b00100ee8ace86mr906630oah.40.1656042265790;
+        Thu, 23 Jun 2022 20:44:25 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id m28-20020a9d609c000000b0060c0b3c1b2asm907505otj.33.2022.06.23.20.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jun 2022 20:44:25 -0700 (PDT)
+Date:   Thu, 23 Jun 2022 22:44:22 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sricharan R <quic_srichara@quicinc.com>
+Cc:     agross@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, p.zabel@pengutronix.de,
+        quic_varada@quicinc.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V2 4/8] dt-bindings: pinctrl: qcom: Add ipq5018 pinctrl
+ bindings
+Message-ID: <YrUzFgB+PxYViH5L@builder.lan>
+References: <20220621161126.15883-1-quic_srichara@quicinc.com>
+ <20220621161126.15883-5-quic_srichara@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220620200644.1961936-21-aidanmacdonald.0x0@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220621161126.15883-5-quic_srichara@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 20, 2022 at 09:06:15PM +0100, Aidan MacDonald wrote:
-> To me "unmask" suggests that we write 1s to the register when
-> an interrupt is enabled. This also makes sense because it's the
-> opposite of what the "mask" register does (write 1s to disable
-> an interrupt).
-> 
-> But regmap-irq does the opposite: for a disabled interrupt, it
-> writes 1s to "unmask" and 0s to "mask". This is surprising and
-> deviates from the usual way mask registers are handled.
+On Tue 21 Jun 11:11 CDT 2022, Sricharan R wrote:
 
-Thank you for fixing this.
-
+> From: Varadarajan Narayanan <quic_varada@quicinc.com>
 > 
-> Additionally, mask_invert didn't interact with unmask registers
-> properly -- it caused them to be ignored entirely.
+> Add device tree binding Documentation details for ipq5018
+> pinctrl driver.
 > 
-> Fix this by making mask and unmask registers orthogonal, using
-> the following behavior:
-> 
-> * Mask registers are written with 1s for disabled interrupts.
-> * Unmask registers are written with 1s for enabled interrupts.
-
-This is more in line with my understanding of the semantics as well.
-
-> 
-> This behavior supports both normal or inverted mask registers
-> and separate set/clear registers via different combinations of
-> mask_base/unmask_base. The mask_invert flag is made redundant,
-> since an inverted mask register can be described more directly
-> as an unmask register.
-> 
-> To cope with existing drivers that rely on the old "backward"
-> behavior, check for the broken_mask_unmask flag and swap the
-> roles of mask/unmask registers. This is a compatibility measure
-> which can be dropped once the drivers are updated to use the
-> new, more consistent behavior.
-> 
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> Co-developed-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Co-developed-by: Sricharan R <quic_srichara@quicinc.com>
+> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
 > ---
->  drivers/base/regmap/regmap-irq.c | 96 +++++++++++++++++---------------
->  include/linux/regmap.h           |  7 ++-
->  2 files changed, 55 insertions(+), 48 deletions(-)
+>  .../pinctrl/qcom,ipq5018-pinctrl.yaml         | 145 ++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq5018-pinctrl.yaml
 > 
-> diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
-> index 875415fc3133..082a2981120c 100644
-> --- a/drivers/base/regmap/regmap-irq.c
-> +++ b/drivers/base/regmap/regmap-irq.c
-> @@ -30,6 +30,9 @@ struct regmap_irq_chip_data {
->  	int irq;
->  	int wake_count;
->  
-> +	unsigned int mask_base;
-> +	unsigned int unmask_base;
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq5018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq5018-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..9b16c08bd127
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq5018-pinctrl.yaml
+> @@ -0,0 +1,145 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq5018-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  	void *status_reg_buf;
->  	unsigned int *main_status_buf;
->  	unsigned int *status_buf;
-> @@ -95,7 +98,6 @@ static void regmap_irq_sync_unlock(struct irq_data *data)
->  	struct regmap *map = d->map;
->  	int i, j, ret;
->  	u32 reg;
-> -	u32 unmask_offset;
->  	u32 val;
->  
->  	if (d->chip->runtime_pm) {
-> @@ -124,35 +126,23 @@ static void regmap_irq_sync_unlock(struct irq_data *data)
->  	 * suppress pointless writes.
->  	 */
->  	for (i = 0; i < d->chip->num_regs; i++) {
-> -		if (!d->chip->mask_base)
-> -			continue;
-> -
-> -		reg = sub_irq_reg(d, d->chip->mask_base, i);
-> -		if (d->chip->mask_invert) {
-> +		if (d->mask_base) {
-> +			reg = sub_irq_reg(d, d->mask_base, i);
->  			ret = regmap_irq_update_mask_bits(d, reg,
-> -					 d->mask_buf_def[i], ~d->mask_buf[i]);
-> -		} else if (d->chip->unmask_base) {
-> -			/* set mask with mask_base register */
-> +					d->mask_buf_def[i], d->mask_buf[i]);
-> +			if (ret != 0)
-> +				dev_err(d->map->dev, "Failed to sync masks in %x\n",
-> +					reg);
-> +		}
+> +title: Qualcomm Technologies, Inc. IPQ5018 TLMM block
 > +
-> +		if (d->unmask_base) {
-> +			reg = sub_irq_reg(d, d->unmask_base, i);
->  			ret = regmap_irq_update_mask_bits(d, reg,
->  					d->mask_buf_def[i], ~d->mask_buf[i]);
-> -			if (ret < 0)
-> -				dev_err(d->map->dev,
-> -					"Failed to sync unmasks in %x\n",
-> +			if (ret != 0)
-> +				dev_err(d->map->dev, "Failed to sync masks in %x\n",
->  					reg);
-> -			unmask_offset = d->chip->unmask_base -
-> -							d->chip->mask_base;
-> -			/* clear mask with unmask_base register */
-> -			ret = regmap_irq_update_mask_bits(d,
-> -					reg + unmask_offset,
-> -					d->mask_buf_def[i],
-> -					d->mask_buf[i]);
-> -		} else {
-> -			ret = regmap_irq_update_mask_bits(d, reg,
-> -					 d->mask_buf_def[i], d->mask_buf[i]);
->  		}
-> -		if (ret != 0)
-> -			dev_err(d->map->dev, "Failed to sync masks in %x\n",
-> -				reg);
->  
->  		reg = sub_irq_reg(d, d->chip->wake_base, i);
->  		if (d->wake_buf) {
-> @@ -634,7 +624,6 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
->  	int i;
->  	int ret = -ENOMEM;
->  	u32 reg;
-> -	u32 unmask_offset;
->  
->  	if (chip->num_regs <= 0)
->  		return -EINVAL;
-> @@ -732,6 +721,24 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
->  	d->chip = chip;
->  	d->irq_base = irq_base;
->  
-> +	/*
-> +	 * Swap role of mask_base and unmask_base if mask bits are inverted.
-> +	 *
-> +	 * Historically, chips that specify both mask_base and unmask_base
-> +	 * got inverted mask behavior; this was arguably a bug in regmap-irq
-> +	 * and there was no way to get the normal, non-inverted behavior.
-> +	 * Those chips will set the broken_mask_unmask flag. They don't set
-> +	 * mask_invert so there is no need to worry about interactions with
-> +	 * that flag.
-> +	 */
-> +	if (chip->mask_invert || chip->broken_mask_unmask) {
-
-I'm not able to comment on whether mask_invert belongs here.
-
-> +		d->mask_base = chip->unmask_base;
-> +		d->unmask_base = chip->mask_base;
-> +	} else {
-> +		d->mask_base = chip->mask_base;
-> +		d->unmask_base = chip->unmask_base;
-> +	}
+> +maintainers:
+> +  - Varadarajan Narayanan <quic_varada@quicinc.com>
+> +  - Sricharan R <quic_srichara@quicinc.com>
+> +  - Nitheesh Sekar <quic_nsekar@quicinc.com>
 > +
->  	if (chip->irq_reg_stride)
->  		d->irq_reg_stride = chip->irq_reg_stride;
->  	else
-> @@ -755,28 +762,27 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
->  	/* Mask all the interrupts by default */
->  	for (i = 0; i < chip->num_regs; i++) {
->  		d->mask_buf[i] = d->mask_buf_def[i];
-> -		if (!chip->mask_base)
-> -			continue;
->  
-> -		reg = sub_irq_reg(d, d->chip->mask_base, i);
-> -
-> -		if (chip->mask_invert)
-> +		if (d->mask_base) {
-> +			reg = sub_irq_reg(d, d->mask_base, i);
->  			ret = regmap_irq_update_mask_bits(d, reg,
-> -					 d->mask_buf[i], ~d->mask_buf[i]);
-> -		else if (d->chip->unmask_base) {
-> -			unmask_offset = d->chip->unmask_base -
-> -					d->chip->mask_base;
-> -			ret = regmap_irq_update_mask_bits(d,
-> -					reg + unmask_offset,
-> -					d->mask_buf[i],
-> -					d->mask_buf[i]);
-> -		} else
-> +					d->mask_buf_def[i], d->mask_buf[i]);
-> +			if (ret != 0) {
-> +				dev_err(map->dev, "Failed to set masks in 0x%x: %d\n",
-> +					reg, ret);
-> +				goto err_alloc;
-> +			}
-> +		}
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  IPQ5018 platform.
 > +
-> +		if (d->unmask_base) {
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq5018-pinctrl
 
-This makes a lot of sense. unmask_base really needed to be handled separately
-and not as an offset from mask_base.
+qcom,ipq5018-tlmm please
 
-> +			reg = sub_irq_reg(d, d->unmask_base, i);
->  			ret = regmap_irq_update_mask_bits(d, reg,
-> -					 d->mask_buf[i], d->mask_buf[i]);
-> -		if (ret != 0) {
-> -			dev_err(map->dev, "Failed to set masks in 0x%x: %d\n",
-> -				reg, ret);
-> -			goto err_alloc;
-> +					d->mask_buf_def[i], ~d->mask_buf[i]);
-> +			if (ret != 0) {
-> +				dev_err(map->dev, "Failed to set masks in 0x%x: %d\n",
-> +					reg, ret);
-> +				goto err_alloc;
-> +			}
->  		}
->  
->  		if (!chip->init_ack_masked)
-> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-> index 21a70fd99493..0cf3c4a66946 100644
-> --- a/include/linux/regmap.h
-> +++ b/include/linux/regmap.h
-> @@ -1451,10 +1451,11 @@ struct regmap_irq_sub_irq_map {
->   *		   main_status set.
->   *
->   * @status_base: Base status register address.
-> - * @mask_base:   Base mask register address.
-> + * @mask_base:   Base mask register address. Mask bits are set to 1 when an
-> + *               interrupt is masked, 0 when unmasked.
->   * @mask_writeonly: Base mask register is write only.
-> - * @unmask_base:  Base unmask register address. for chips who have
-> - *                separate mask and unmask registers
-> + * @unmask_base:  Base unmask register address. Unmask bits are set to 1 when
-> + *                an interrupt is unmasked and 0 when masked.
->   * @ack_base:    Base ack address. If zero then the chip is clear on read.
->   *               Using zero value is possible with @use_ack bit.
->   * @wake_base:   Base address for wake enables.  If zero unsupported.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Specifies the TLMM summary IRQ
+> +    maxItems: 1
+
+Please rely on qcom,tlmm-common.yaml, in line with e.g.
+qcom,sc8280xp-pinctrl.yaml.
+
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      Specifies the PIN numbers and Flags, as defined in defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '-pinmux$':
+
+This will only allow describing properties directly in the state node,
+not under subnodes. Please update according to e.g. sc8280xp
+
+Also, please use the suffix "-state"
+
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([1-9]|[1-7][0-9]|80)$"
+
+According to the implementation you should only accept
+"^gpio([1-9]|[1-3][0-9]|4[0-6]$"
+
+> +        minItems: 1
+> +        maxItems: 4
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +        enum: [ atest_char, atest_char0, atest_char1, atest_char2, atest_char3,
+> +          audio_pdm0, audio_pdm1, audio_rxbclk, audio_rxd, audio_rxfsync,
+> +          audio_rxmclk, audio_txbclk, audio_txd, audio_txfsync, audio_txmclk,
+> +          blsp0_i2c, blsp0_spi, blsp0_uart0, blsp0_uart1, blsp1_i2c0,
+> +          blsp1_i2c1, blsp1_spi0, blsp1_spi1, blsp1_uart0, blsp1_uart1,
+> +          blsp1_uart2, blsp2_i2c0, blsp2_i2c1, blsp2_spi, blsp2_spi0,
+> +          blsp2_spi1, btss0, btss1, btss10, btss11, btss12, btss13, btss2,
+> +          btss3, btss4, btss5, btss6, btss7, btss8, btss9, burn0, burn1,
+> +          cri_trng, cri_trng0, cri_trng1, cxc_clk, cxc_data, dbg_out, eud_gpio,
+> +          gcc_plltest, gcc_tlmm, gpio, mac0, mac1, mdc, mdio, pcie0_clk,
+> +          pcie0_wake, pcie1_clk, pcie1_wake, pll_test, prng_rosc, pwm0, pwm1,
+> +          pwm2, pwm3, qdss_cti_trig_in_a0, qdss_cti_trig_in_a1,
+> +          qdss_cti_trig_in_b0, qdss_cti_trig_in_b1, qdss_cti_trig_out_a0,
+> +          qdss_cti_trig_out_a1, qdss_cti_trig_out_b0, qdss_cti_trig_out_b1,
+> +          qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
+> +          qdss_tracedata_a, qdss_tracedata_b, qspi_clk, qspi_cs, qspi0, qspi1,
+> +          qspi2, qspi3, reset_out, sdc1_clk, sdc1_cmd, sdc10, sdc11, sdc12,
+> +          sdc13, wci0, wci1, wci2, wci3, wci4, wci5, wci6, wci7, wsa_swrm,
+> +          wsi_clk3, wsi_data3, wsis_reset, xfem0, xfem1, xfem2, xfem3, xfem4,
+> +          xfem5, xfem6, xfem7 ]
+> +
+> +      drive-strength:
+> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +        default: 2
+> +        description:
+> +          Selects the drive strength for the specified pins, in mA.
+> +
+> +      bias-pull-down: true
+> +
+> +      bias-pull-up: true
+> +
+> +      bias-disable: true
+> +
+> +      output-high: true
+> +
+> +      output-low: true
+> +
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        tlmm: pinctrl@1000000 {
+> +              compatible = "qcom,ipq5018-pinctrl";
+> +              reg = <0x01000000 0x300000>;
+> +              interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +              interrupt-controller;
+> +              #interrupt-cells = <2>;
+> +              gpio-controller;
+> +              #gpio-cells = <2>;
+> +              gpio-ranges = <&tlmm 0 80>;
+
+I think this should be 47.
+
+Regards,
+Bjorn
+
+> +
+> +              serial3-pinmux {
+> +                      pins = "gpio44", "gpio45";
+> +                      function = "blsp0_uart0";
+> +                      drive-strength = <8>;
+> +                      bias-pull-down;
+> +              };
+> +        };
 > -- 
-> 2.35.1
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 > 
