@@ -2,379 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3325255AA15
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jun 2022 14:48:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5305E55AAB9
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jun 2022 16:03:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232815AbiFYMsg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Jun 2022 08:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41630 "EHLO
+        id S232954AbiFYN7X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Jun 2022 09:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232620AbiFYMsg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jun 2022 08:48:36 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC2017599;
-        Sat, 25 Jun 2022 05:48:34 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-318889e6a2cso47323797b3.1;
-        Sat, 25 Jun 2022 05:48:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pSrQucjneBEV33bL8EXRjpcp4KUNHnVHmvxgy91j5E4=;
-        b=nQe3v9bDh0mj1Mf+c6S9DzsJrObqOLc2Ttel/m/3Prj621ZfV8zXx2qDJ+fcBdGuTm
-         Aqt/FyuUccjpbtt6eNx/TEJILdD0hXuZadtOkhhutyv2SMvArmsTBpEDz01DRJpNA7vE
-         gC27YANgyt6btKpdX+QYWgQ20ZJo7GmwVWlfXR73KA57Qv/ZhBDy6+I75TV1EXy43gJN
-         x1Md+KR/WiWva29n/vOg+Y6poLqCAtJ0H9xuYzdxV7BLBBSdHRg27Dy2emFyMSbwyeaG
-         IHR2rmtVONP1UxSEJQoKyUnAqFdJqZbRDdkzswgomMTTq4PGn94MYwQ8piTkX8Zro67a
-         YM8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pSrQucjneBEV33bL8EXRjpcp4KUNHnVHmvxgy91j5E4=;
-        b=na0v1rE4Z1F8jT9DRywgtb/rKeaSAqtpmqnFfdVJGbaR/txuruP1J7c+7bJaP2PX+n
-         ygIZz6ayNaymx9EgLXeSz9Ojq6pA5M0MCVjbZT6jTzIr9iRQaCx67HJ7ZqB2UGacvK5Q
-         cjz822TDGL5AtTCgYyhMIqad6e2r2nY1hajoLVqd5ci2dz0ClhXKP9/d8dsFlm7Et3y8
-         myXusCTRVeLmw8/0drNjdDqeE1JdfzEdS25yqkOB0iqd/BlPBNicUGhlzPw7acQG42kR
-         ggq9umLCZrTkf5rDhJ1Wt3kHnVFkxGH2MXPQ0nPn6UizyMK861OKGIwcgKRPl9/8iVlq
-         bYVQ==
-X-Gm-Message-State: AJIora+Zbd8n/GRDe9/HnQQ38pIH3c7y6yoFCg0CGIaUs3EuZXP/HKuz
-        GFmRUNJJhz2Y5wVmaU8qdAe7ygrlJKQqaiwNVhM=
-X-Google-Smtp-Source: AGRyM1t8gI4m0LMlEovcOlP6DZZoYOUUgB9mdswUgzi89OfMZcaSeLehwbVOejFPsnc2W5qQjVbawYjJtN8Is8LMLGw=
-X-Received: by 2002:a0d:cb13:0:b0:318:39b9:89fc with SMTP id
- n19-20020a0dcb13000000b0031839b989fcmr4603440ywd.413.1656161314148; Sat, 25
- Jun 2022 05:48:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220523174238.28942-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220523174238.28942-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <871qvdf5tb.wl-maz@kernel.org> <CA+V-a8veE6-4C+9kyTNxqsf0jB5xCGhcHncTSM3ejDzBAfz=Bw@mail.gmail.com>
- <87fsjt2bep.wl-maz@kernel.org>
-In-Reply-To: <87fsjt2bep.wl-maz@kernel.org>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sat, 25 Jun 2022 13:48:08 +0100
-Message-ID: <CA+V-a8td93QOCC8cHLEPaba-hnX2gjydmKTbaCrF+zgH7hH8Jg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        with ESMTP id S232972AbiFYN7X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Jun 2022 09:59:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D453B140CB;
+        Sat, 25 Jun 2022 06:59:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CBF46133D;
+        Sat, 25 Jun 2022 13:59:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C55C3411C;
+        Sat, 25 Jun 2022 13:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656165560;
+        bh=NIUoySN+9uhjtO7bZji2ZxlL80qaYG7QqoukiQq6aoE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mu5KUgDM61c5Qb2xp5OHBy8OYLZOiRwFHZ4sSjM/J7iXhRAOETESlBtgP/VkiJxMn
+         HSlXn6U/quxhyHvDo64CmaEF+XNZNaxSDe8mz+IpcAyajH0+YK8u5eHHDIXq85hueS
+         up0pEwiqhZOFjwDyqLPk06IyyL8q+u9X1q05IQxVJD/RNeD5OBYjVScGUdpIzvASWg
+         auUPWJWi6Tj4So0hATdSzvwxk8988oCafyggD9ns581ose1CQbXNeoe+KgT4lmmpFB
+         a9m821d+qg8hXkFs0oKTCsRxc7FOTUi39D579dsSeIqyq9tshE08ncqQ2QBvF4OyOA
+         m8DqDvXJKNZ8Q==
+Date:   Sat, 25 Jun 2022 15:08:47 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Cosmin Tanislav <demonsingur@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>
+Subject: Re: [PATCH v5 2/2] iio: adc: ad4130: add AD4130 driver
+Message-ID: <20220625150847.44c8bc2d@jic23-huawei>
+In-Reply-To: <CAHp75VeRgnCLP0YqiOe8OkW3hQ178ia+Y3PjFtCMW4Sh7JfCZQ@mail.gmail.com>
+References: <20220620162059.1097264-1-cosmin.tanislav@analog.com>
+        <20220620162059.1097264-3-cosmin.tanislav@analog.com>
+        <CAHp75VcBJkQ+CwyoDaTJ_AD+mv9d0tEd_txqHwkPRy4-xvnyKg@mail.gmail.com>
+        <2aa93eab-de6d-866b-a829-36b47ff00982@gmail.com>
+        <CAHp75Vc_fcAP6gGwMkYZUoMM6jKeUoQr8J+zYCUz8inSHnTF_w@mail.gmail.com>
+        <54bfff70-938f-16e1-198d-47ed9ba95db4@gmail.com>
+        <CAHp75VeRgnCLP0YqiOe8OkW3hQ178ia+Y3PjFtCMW4Sh7JfCZQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
+On Thu, 23 Jun 2022 19:33:45 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On Sat, Jun 25, 2022 at 1:08 PM Marc Zyngier <maz@kernel.org> wrote:
->
-> On Sat, 25 Jun 2022 11:54:44 +0100,
-> "Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
+> On Thu, Jun 23, 2022 at 6:14 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+> > On 6/23/22 18:39, Andy Shevchenko wrote:  
+> > > On Thu, Jun 23, 2022 at 5:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:  
+> > >> On 6/20/22 21:29, Andy Shevchenko wrote:  
+> > >>> On Mon, Jun 20, 2022 at 6:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:  
+> 
+> ...
+> 
+> > >>>> +       /*
+> > >>>> +        * DMA (thus cache coherency maintenance) requires the
+> > >>>> +        * transfer buffers to live in their own cache lines.
+> > >>>> +        */  
+> > >>>
+> > >>> This is a good comment, but what fields does it apply to?  
+> > >>
+> > >> Whatever is below it, grouped together. This is not hard to
+> > >> understand.  
+> > >
+> > > It's hard to understand what exactly is DMA-aware here. I see only one
+> > > buffer that is aligned properly for DMA, the rest are not, except the
+> > > case if all of them are going in one DMA transaction. Is this the case
+> > > here?
+> > >  
+> > >>>> +       u8                      reset_buf[AD4130_RESET_BUF_SIZE] __aligned(IIO_DMA_MINALIGN);  
+> > >
+> > > This is aligned.
+> > >  
+> > >>>> +       u8                      reg_write_tx_buf[4];  
+> > >
+> > > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0).
+> > >  
+> > >>>> +       u8                      reg_read_tx_buf[1];  
+> > >
+> > > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4).
+> > >  
+> > >>>> +       u8                      reg_read_rx_buf[3];  
+> > >
+> > > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4 + 1).
+> > > And this is Rx.
+> > >  
+> > >>>> +       u8                      fifo_tx_buf[2];  
+> > >
+> > > Here is Tx again which is most likely is not aligned...
+> > >  
+> > >>>> +       u8                      fifo_rx_buf[AD4130_FIFO_SIZE *
+> > >>>> +                                           AD4130_FIFO_MAX_SAMPLE_SIZE];
+> > >>>> +};  
+> > >  
 > >
-> > Hi Marc,
+> > This has been mentioned before by Jonathan as a reply to V6 of my
+> > AD74413R driver.
+> >  
+> >  > I'm surprised I didn't mention this before but you only need to  
+> > ensure  > that any memory used for DMA is not in a cacheline with memory
+> > used  
+> >  > for other things that might change concurrently.  
 > >
-> > Thank you for the review.
-> >
-> > On Sat, Jun 25, 2022 at 10:30 AM Marc Zyngier <maz@kernel.org> wrote:
-> > >
-> > > On Mon, 23 May 2022 18:42:35 +0100,
-> > > Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > >
->
-> [...]
->
-> > > > +static int rzg2l_irqc_alloc(struct irq_domain *domain, unsigned in=
-t virq,
-> > > > +                         unsigned int nr_irqs, void *arg)
-> > > > +{
-> > > > +     struct rzg2l_irqc_priv *priv =3D domain->host_data;
-> > > > +     unsigned long *chip_data =3D NULL;
-> > >
-> > > Why the init to NULL?
-> > >
-> > Can be dropped.
-> >
-> > > > +     struct irq_fwspec spec;
-> > > > +     irq_hw_number_t hwirq;
-> > > > +     int tint =3D -EINVAL;
-> > > > +     unsigned int type;
-> > > > +     unsigned int i;
-> > > > +     int ret;
-> > > > +
-> > > > +     ret =3D irq_domain_translate_twocell(domain, arg, &hwirq, &ty=
-pe);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     /*
-> > > > +      * For TINT interrupts ie where pinctrl driver is child of ir=
-qc domain
-> > > > +      * the hwirq and TINT are encoded in fwspec->param[0].
-> > > > +      * hwirq for TINT range from 9-40, hwirq is embedded 0-15 bit=
-s and TINT
-> > > > +      * from 16-31 bits. TINT from the pinctrl driver needs to be =
-programmed
-> > > > +      * in IRQC registers to enable a given gpio pin as interrupt.
-> > > > +      */
-> > > > +     if (hwirq > IRQC_IRQ_COUNT) {
-> > > > +             tint =3D TINT_EXTRACT_GPIOINT(hwirq);
-> > > > +             hwirq =3D TINT_EXTRACT_HWIRQ(hwirq);
-> > > > +
-> > > > +             if (hwirq < IRQC_TINT_START)
-> > > > +                     return -EINVAL;
-> > > > +     }
-> > > > +
-> > > > +     if (hwirq > (IRQC_NUM_IRQ - 1))
-> > > > +             return -EINVAL;
-> > > > +
-> > > > +     chip_data =3D kzalloc(sizeof(*chip_data), GFP_KERNEL);
-> > >
-> > > Are we really allocating an unsigned long for something that already
-> > > fits in something that is pointer-sized?
-> > >
-> > I think I received some feedback to use unsigned long.  Let me know
-> > what you want me to use here.
->
-> I think this is just a waste of memory, but I don't really care.
->
-Is there any better way I can handle it?
+> > To my understanding, as long as the DMA buffers will all be accessed by
+> > the same DMA-compatible SPI controller, you only need to align them so
+> > they're not in the same cacheline with memory that will not be accessed
+> > by the SPI controller.  
+> 
+> SPI is synchronous by nature, what will happen if the Tx and Rx
+> buffers are sharing the same cache line? Anybody to shed a light here?
+> 
+> (I.o.w. I'm not sure that we don't need to split the Rx and Tx buffers
+> of the same transfer.)
+> 
+Oddly I thought I replied to this before lunch, but not seeing my own message.
+My understanding is that any device that trashes it's own buffers during
+DMA is broken and needs to implement bounce buffers within the SPI master
+driver.  That shouldn't happen anyway because the race conditions around
+this are about caching and stale data write back. During a transfer, only
+the device should touch the cacheline with the DMA buffers in it, so any
+write back that might return stale data should be pushing back the correct
+data (unchanged) or data the device wants to update..
 
-> >
-> > > > +     if (!chip_data)
-> > > > +             return -ENOMEM;
-> > > > +     *chip_data =3D tint;
-> > >
-> > > So here, *chip_data can be set to -EINVAL if hwirq <=3D IRQC_IRQ_COUN=
-T?
-> > > This can't be right.
-> > >
-> > Yes *chip_data can be -EINVAL. IRQC block handles IRQ0-7 and
-> > GPIOINT0-122. So the -EINVAL here is for IRQ0-7 case were dont
-> > required the chip data in the call backs hence -EINVAL, Whereas for
-> > GPIOINT0-122 we need chip_data in the callbacks as this value needs to
-> > be programmed in the hardware registers.
->
-> I can't see anything that checks it (let alone the difference in
-> types). And if it isn't checked, this means that the allocation is
-> pointless.
->
-There are checks for example below:
+My suggestion is an expanded comment (I'm fine adding this whilst applying
+and fixing the docs version numbering highlighted above). The key here
+is that we don't have one bit of the code changing the buffers whilst
+DMA is in progress via a different path.  They all need to be covered
+by the same lock.
 
-static void rzg2l_irqc_irq_enable(struct irq_data *d)
-{
-    unsigned int hw_irq =3D irqd_to_hwirq(d);
+	 * DMA (thus cache coherency maintenance) requires any
+	 * transfer buffers to live in their own cache lines.
+	 * As the use of these buffers is synchronous, all of the
+	 * buffers used for DMA in this driver may share a cache
+	 * line.
 
-    if (hw_irq >=3D IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ) {
-        struct rzg2l_irqc_priv *priv =3D irq_data_to_priv(d);
-        unsigned long chip_data =3D *(unsigned long *)d->chip_data;
-        u32 offset =3D hw_irq - IRQC_TINT_START;
-        u32 tssr_offset =3D TSSR_OFFSET(offset);
-        u8 tssr_index =3D TSSR_INDEX(offset);
-        u32 reg;
+Note I'm waiting on a DT review though before taking this. Complex
+binding but I see it's in their patchwork as needs review so hopefully
+they'll get to it soon. 
 
-        raw_spin_lock(&priv->lock);
-        reg =3D readl_relaxed(priv->base + TSSR(tssr_index));
-        reg |=3D (TIEN | chip_data) << TSSEL_SHIFT(tssr_offset);
-        writel_relaxed(reg, priv->base + TSSR(tssr_index));
-        raw_spin_unlock(&priv->lock);
-    }
-    irq_chip_enable_parent(d);
-}
-
-This check hw_irq >=3D IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ here
-would mean its GPIOINT0-122 and then the chip data will be used.
-
-> >
-> > > > +
-> > > > +     ret =3D irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &i=
-rqc_chip,
-> > > > +                                         chip_data);
-> > > > +     if (ret) {
-> > > > +             kfree(chip_data);
-> > > > +             return ret;
-> > > > +     }
-> > > > +
-> > > > +     spec.fwnode =3D domain->parent->fwnode;
-> > > > +     spec.param_count =3D priv->map[hwirq].args_count;
-> > > > +     for (i =3D 0; i < spec.param_count; i++)
-> > > > +             spec.param[i] =3D priv->map[hwirq].args[i];
-> > >
-> > > Why isn't that simply:
-> > >
-> > >         spec =3D priv->map[hwirq];
-> > >
-> > spec is of type =E2=80=98struct irq_fwspec=E2=80=99 and map is of type =
-=E2=80=98struct of_phandle_args=E2=80=99.
-> >
-> > > as this really is the interrupt you want to map to?
-> > >
-> > Yes.
-> >
-> > > > +
-> > > > +     ret =3D irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &=
-spec);
-> > >
-> > > or even better:
-> > >
-> > >         ret =3D irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
-> > >                                            &priv->map[hwirq]);
-> > >
-> > Does not work as map is of type =E2=80=98struct of_phandle_args=E2=80=
-=99.
->
-> Which begs the question: why don't you convert it to an irq_fwspec the
-> first place and be done with it?
->
-Right..
-> >
-> > > > +     if (ret)
-> > > > +             kfree(chip_data);
-> > > > +
-> > > > +     return ret;
-> > > > +}
-> > > > +
-> > > > +static void rzg2l_irqc_domain_free(struct irq_domain *domain, unsi=
-gned int virq,
-> > > > +                                unsigned int nr_irqs)
-> > > > +{
-> > > > +     struct irq_data *d;
-> > > > +
-> > > > +     d =3D irq_domain_get_irq_data(domain, virq);
-> > > > +     if (d)
-> > > > +             kfree(d->chip_data);
-> > > > +
-> > > > +     irq_domain_free_irqs_common(domain, virq, nr_irqs);
-> > > > +}
-> > > > +
-> > > > +static const struct irq_domain_ops rzg2l_irqc_domain_ops =3D {
-> > > > +     .alloc =3D rzg2l_irqc_alloc,
-> > > > +     .free =3D rzg2l_irqc_domain_free,
-> > > > +     .translate =3D irq_domain_translate_twocell,
-> > > > +};
-> > > > +
-> > > > +static int rzg2l_irqc_parse_map(struct rzg2l_irqc_priv *priv,
-> > > > +                             struct device_node *np)
->
-> nit: this function could afford being renamed to something more
-> correct. It really doesn't map anything, only retrieves the output
-> interrupts.
->
-Sure will do.
-
-> > > > +{
-> > > > +     unsigned int i;
-> > > > +     int ret;
-> > > > +
-> > > > +     for (i =3D 0; i < IRQC_NUM_IRQ; i++) {
-> > > > +             ret =3D of_irq_parse_one(np, i, &priv->map[i]);
->
-> Make map an array of irq_fwspec, and use of_phandle_args_to_fwspec()
-> for the conversion.
->
-... Good point, will do.
-
-> > > > +             if (ret)
-> > > > +                     return ret;
-> > > > +     }
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int rzg2l_irqc_init(struct device_node *node, struct device=
-_node *parent)
-> > > > +{
-> > > > +     struct irq_domain *irq_domain, *parent_domain;
-> > > > +     struct platform_device *pdev;
-> > > > +     struct reset_control *resetn;
-> > > > +     struct rzg2l_irqc_priv *priv;
-> > > > +     int ret;
-> > > > +
-> > > > +     pdev =3D of_find_device_by_node(node);
-> > > > +     if (!pdev)
-> > > > +             return -ENODEV;
-> > > > +
-> > > > +     parent_domain =3D irq_find_host(parent);
-> > > > +     if (!parent_domain) {
-> > > > +             dev_err(&pdev->dev, "cannot find parent domain\n");
-> > > > +             return -ENODEV;
-> > > > +     }
-> > > > +
-> > > > +     priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > > > +     if (!priv)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     priv->base =3D devm_of_iomap(&pdev->dev, pdev->dev.of_node, 0=
-, NULL);
-> > > > +     if (IS_ERR(priv->base))
-> > > > +             return PTR_ERR(priv->base);
-> > > > +
-> > > > +     ret =3D rzg2l_irqc_parse_map(priv, node);
-> > > > +     if (ret) {
-> > > > +             dev_err(&pdev->dev, "cannot parse interrupts: %d\n", =
-ret);
-> > > > +             return ret;
-> > > > +     }
-> > > > +
-> > > > +     resetn =3D devm_reset_control_get_exclusive_by_index(&pdev->d=
-ev, 0);
-> > > > +     if (IS_ERR(resetn))
-> > > > +             return IS_ERR(resetn);
-> > > > +
-> > > > +     ret =3D reset_control_deassert(resetn);
-> > > > +     if (ret) {
-> > > > +             dev_err(&pdev->dev, "failed to deassert resetn pin, %=
-d\n", ret);
-> > > > +             return ret;
-> > > > +     }
-> > > > +
-> > > > +     pm_runtime_enable(&pdev->dev);
-> > > > +     ret =3D pm_runtime_resume_and_get(&pdev->dev);
-> > > > +     if (ret < 0) {
-> > > > +             dev_err(&pdev->dev, "pm_runtime_resume_and_get failed=
-: %d\n", ret);
-> > > > +             goto pm_disable;
-> > > > +     }
-> > >
-> > > If using runtime PM, why isn't the core IRQ code made aware of this
-> > > dependency by registering the device with irq_domain_set_pm_device()
-> > > instead of leaving it enabled forever?
-> > >
-> > Ouch will add irq_domain_set_pm_device() below.
->
-> You'll need a bit more than that. You'll either need to take a PM
-> reference on each alloc, or improve irq_chip_pm_{get,put}() to talk
-> the hierarchy.
->
-Aha I see.
-
-> That's probably a separate patch.
->
-Agreed will make it a separate patch, once the driver gets in.
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20220620162059.1097264-2-cosmin.tanislav@analog.com/
 
 
-Cheers,
-Prabhakar
+Jonathan
+
