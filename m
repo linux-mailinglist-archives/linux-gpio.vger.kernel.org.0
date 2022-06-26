@@ -2,67 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EA0455B486
+	by mail.lfdr.de (Postfix) with ESMTP id C482C55B487
 	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jun 2022 02:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbiFZX7w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 Jun 2022 19:59:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
+        id S229850AbiFZX7Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Jun 2022 19:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiFZX7w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jun 2022 19:59:52 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C557B2AFC
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 16:59:49 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id a39so7948484ljq.11
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 16:59:49 -0700 (PDT)
+        with ESMTP id S229714AbiFZX7Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jun 2022 19:59:16 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1BF62AFD
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 16:59:15 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id p7so12618872ybm.7
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 16:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G/rsSvjEVx9HxUqXuN5EYDZnuHtx7IRYN8I0QYKvnmE=;
-        b=srl3ZbmUKUMgcReSKBJ25Qt6Sku6rI7lXWu3wvhulM6+DSOZbj5qjPtZ6N6++8oqiw
-         PmXIDAXrBqRDf8algNvwJHSa7zzThspUnxwK1OLq6ItWSIcVD1sDCiFarNCfRcWCi8/G
-         /dVaE7+mMV1TKazQ1TZpyfPa5M1cHR0nwBHSl2cZovJKC4RH6wCFVesn08HJ0OisLV+r
-         U4XR+W7mCekojKf+0fxYW4KbZKnovSWxTzz/XDY3/8DNT/xk6axFpP5vT2peiXnUeu5O
-         u6dy9/NW2KpmW1OGzxLNWVeEVsfUlf+XgBBwlkkBF5Lffe6gv+P+woEQxGCvpoG6VZLZ
-         /s6g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UX0ZahvnksbS43hC0oVDo55veOxsRUzLsN4dLUIysyE=;
+        b=i3ZS21swey8WZg7H+BaBJ9EAliYbZuHUj1tBOA4laEah3aLR+qlso79pJY4BQU4psg
+         KwX/zdg1c0U9SHIZkbNREjUorLQ8AFLCpJzGA1BWfGvkxT74O+XaXgKOLxp6RFANblrq
+         CGi2KTeqmrgm51Gbk70rcyC06q5GNRFEmXeqvtR5w+98pQD7eW73IUwobgoDZxTnF0UG
+         J/8KMUoIvZFTJKdfxBECGAxHe+/1YX+qidO/fF6iVtju1QMYle40sqQt56mE5TWoGLCX
+         Wo3/8jfGAHSkCmAo51L40VdswXGX3/QLN9C7sDT9amw8rpbwHUGXaCKJ2ozbwvwWYtUF
+         9WHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G/rsSvjEVx9HxUqXuN5EYDZnuHtx7IRYN8I0QYKvnmE=;
-        b=EKPaGbT4sSwtv1LFBySD8Qlh/yoYSpdbBiP5QpuvgcYKeojcM9p0wVe1tjXwzze4LY
-         wZwyQFMwcEjAeQFjoewOmb9NnbKlppeCz6oi+Ybs45DHJm7fyRwxL03lgq6QmwRfWrzH
-         Rz3GvZxAmcoIOz0V0h9H0hgmFn1LDiLIypF/yNDt+D9TV2VRyeNl1gdJRFWllcSqhKkE
-         Os+d/4vep4gY1Gk2zvStaXZIsl4L6NPlgd94bIhsM9PdO549UzxfLx/Zkztgc/WDNZ4U
-         YxxEeiKMP2t2RafKzE7mdCltyWUtxmpZp8PFwL8qwBmmYJaR1+JXbABUjSf+4U10xmuD
-         qDbA==
-X-Gm-Message-State: AJIora+3S0gPFKAh90U3Ovx1yX3UgigQ5qZP/QGRpcUuRNmhbFK4nWHB
-        tMeOsHWCPk6C/oENzKU2n99xlMMEi/LskQ==
-X-Google-Smtp-Source: AGRyM1sx+Q0GCDMwftBo4jZ8VcV3LFn7MtEcY4TEqcEHPHcr066ziW6XZ1OCAn2kRCzoIO0qZCf4BQ==
-X-Received: by 2002:a2e:a783:0:b0:25b:c52f:10ef with SMTP id c3-20020a2ea783000000b0025bc52f10efmr641671ljf.137.1656287987952;
-        Sun, 26 Jun 2022 16:59:47 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id g6-20020a056512118600b0047f987cc158sm1546051lfr.45.2022.06.26.16.59.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jun 2022 16:59:47 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Guodong Liu <guodong.liu@mediatek.com>,
-        =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= 
-        <nfraprado@collabora.com>
-Subject: [PATCH] pinctrl: mediatek: mt8192: Fix compile warnings
-Date:   Mon, 27 Jun 2022 01:57:43 +0200
-Message-Id: <20220626235743.87821-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.36.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UX0ZahvnksbS43hC0oVDo55veOxsRUzLsN4dLUIysyE=;
+        b=hnvLSyMASUMvglFyhNI+Vreug0XwuMtMRXpsgrOR4lD9eqwj9dKrIDTDPPrAZH+lt/
+         2IDU/5UAE/T3C7dIFi5eFjiRTyYx6eA242etXeqD/rNaToumHXcng6BHa2Y9CFhGSIXc
+         zVR/A5VLGEXH7em9K5+gS0k1NUKeFZCqqIFV05heTDJ9ov3Eotcn5l7cCXP3UVp5WXe2
+         0xFpBHLvsBZvbeByfFMn2Wg9wYsbV/Ew1cXV2dguqSS0H6xhOYBwx3mc35z91PBtkxlj
+         0yzQZZOQIaXc6Fk88A0+NEbEr28YD/KN8lQlVTJNcc9GjnyyuB+Yobc8pTNEowm5+LAl
+         KXwQ==
+X-Gm-Message-State: AJIora/TjWnVVWIAtHqRDVicv3UB7y6qOwBviLl5QZLoC3bhdUABjGEx
+        kvLPZJ97GK3UJK1BCabDv5Y2vDADcdPszVvA+qbhsrmOtEc=
+X-Google-Smtp-Source: AGRyM1vozhxXh9bkLXBjDcuH2MEgiR9GS/bmipxIfD2xqPOf9Wx/ekD7AcfNlreLynAjPlPQShKndHH5+/cWjK22m34=
+X-Received: by 2002:a05:6902:152:b0:66c:e116:6a7 with SMTP id
+ p18-20020a056902015200b0066ce11606a7mr723894ybh.533.1656287954770; Sun, 26
+ Jun 2022 16:59:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1656071849.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1656071849.git.geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 27 Jun 2022 01:59:03 +0200
+Message-ID: <CACRpkdZiSwSLtNRYJvWL3-0hZ=O0jmXw9ZW2howZuFhJ0BJX0A@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v5.20
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,51 +64,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-After applying patches I get these warnings:
+On Fri, Jun 24, 2022 at 2:01 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-  drivers/pinctrl/mediatek/pinctrl-mt8192.c:1302:56:
-  warning: "/*" within comment [-Wcomment]
-  drivers/pinctrl/mediatek/pinctrl-mt8192.c:1362:56:
-  warning: "/*" within comment [-Wcomment]
+> The following changes since commit f2906aa863381afb0015a9eb7fefad885d4e5a56:
+>
+>   Linux 5.19-rc1 (2022-06-05 17:18:54 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.20-tag1
+>
+> for you to fetch changes up to 5223c511eb4f919e6b423b2f66e02674e97e77e3:
+>
+>   pinctrl: renesas: rzg2l: Return -EINVAL for pins which have input disabled (2022-06-06 11:12:22 +0200)
 
-Something is wrong with the missing end-slashes. Add them.
+Pulled in!
 
-Cc: Guodong Liu <guodong.liu@mediatek.com>
-Cc: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/mediatek/pinctrl-mt8192.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8192.c b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-index a66394c6f443..78c02b7c81f0 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-@@ -1299,15 +1299,15 @@ static const unsigned int mt8192_pull_type[] = {
- 	MTK_PULL_PU_PD_TYPE,/*94*/ MTK_PULL_PU_PD_TYPE,/*95*/
- 	MTK_PULL_PU_PD_TYPE,/*96*/ MTK_PULL_PU_PD_TYPE,/*97*/
- 	MTK_PULL_PU_PD_TYPE,/*98*/ MTK_PULL_PU_PD_TYPE,/*99*/
--	MTK_PULL_PU_PD_TYPE,/*100* MTK_PULL_PU_PD_TYPE,/*101*/
--	MTK_PULL_PU_PD_TYPE,/*102* MTK_PULL_PU_PD_TYPE,/*103*/
--	MTK_PULL_PU_PD_TYPE,/*104* MTK_PULL_PU_PD_TYPE,/*105*/
--	MTK_PULL_PU_PD_TYPE,/*106* MTK_PULL_PU_PD_TYPE,/*107*/
--	MTK_PULL_PU_PD_TYPE,/*108* MTK_PULL_PU_PD_TYPE,/*109*/
--	MTK_PULL_PU_PD_TYPE,/*110* MTK_PULL_PU_PD_TYPE,/*111*/
--	MTK_PULL_PU_PD_TYPE,/*112* MTK_PULL_PU_PD_TYPE,/*113*/
--	MTK_PULL_PU_PD_TYPE,/*114* MTK_PULL_PU_PD_TYPE,/*115*/
--	MTK_PULL_PU_PD_TYPE,/*116* MTK_PULL_PU_PD_TYPE,/*117*/
-+	MTK_PULL_PU_PD_TYPE,/*100*/ MTK_PULL_PU_PD_TYPE,/*101*/
-+	MTK_PULL_PU_PD_TYPE,/*102*/ MTK_PULL_PU_PD_TYPE,/*103*/
-+	MTK_PULL_PU_PD_TYPE,/*104*/ MTK_PULL_PU_PD_TYPE,/*105*/
-+	MTK_PULL_PU_PD_TYPE,/*106*/ MTK_PULL_PU_PD_TYPE,/*107*/
-+	MTK_PULL_PU_PD_TYPE,/*108*/ MTK_PULL_PU_PD_TYPE,/*109*/
-+	MTK_PULL_PU_PD_TYPE,/*110*/ MTK_PULL_PU_PD_TYPE,/*111*/
-+	MTK_PULL_PU_PD_TYPE,/*112*/ MTK_PULL_PU_PD_TYPE,/*113*/
-+	MTK_PULL_PU_PD_TYPE,/*114*/ MTK_PULL_PU_PD_TYPE,/*115*/
-+	MTK_PULL_PU_PD_TYPE,/*116*/ MTK_PULL_PU_PD_TYPE,/*117*/
- 	MTK_PULL_PU_PD_RSEL_TYPE,/*118*/ MTK_PULL_PU_PD_RSEL_TYPE,/*119*/
- 	MTK_PULL_PU_PD_RSEL_TYPE,/*120*/ MTK_PULL_PU_PD_RSEL_TYPE,/*121*/
- 	MTK_PULL_PU_PD_RSEL_TYPE,/*122*/ MTK_PULL_PU_PD_RSEL_TYPE,/*123*/
--- 
-2.36.1
-
+Yours,
+Linus Walleij
