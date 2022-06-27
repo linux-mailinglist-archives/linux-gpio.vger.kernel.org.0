@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A390F55D92D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B98F55DBCE
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:25:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236226AbiF0Nqf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 09:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49590 "EHLO
+        id S236207AbiF0Nqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 09:46:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236225AbiF0Nqd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 09:46:33 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00066271
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 06:46:31 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id jb13so8210078plb.9
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 06:46:31 -0700 (PDT)
+        with ESMTP id S236017AbiF0Nqk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 09:46:40 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31C360C0
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 06:46:38 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id a15so9046315pfv.13
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 06:46:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IjWlFFPoHjfhByHYSNZryk1TNb+LKXad0m0aRtU8qzA=;
-        b=XS4wdj748m1OeV7xTOgfocqrd8yHfjP0+SSJDU4GwjcbboRdLRSQE7oj7A6PZ2QV5m
-         YwLL5bnhkVS1q2drmBXBowMpktV0Kex4aFrA3+unBjrXCKLS81noZVFgrOMKpkSz/VTq
-         g+IfMK28kAcgeYv1n7xMjIcjgpBKI/hhnS6TtD468g4RKIWEAUDGSzwHs1ELrZLrDhsS
-         OZ2d7iywT5a+nu6J9V1u/ecQE3UjvudBDP744lwzHUr3KOI3apO3aEt0EyxXVOuP2Nbc
-         qTBAx9YiQZNRd/ttKTlv14lXQQ/vk+Nb73IZz+MnZ5YJuO13sJxMdhOZuZqdGm70aI7c
-         zTXQ==
+        bh=bItcgwOweyHpbTdbB2yStlE3LoN6u/SIqUTXgS5X+NM=;
+        b=H5/X1uWvkgaoy61/W+cveuxNnnnl0UYHyzaGXFTJFa+BJxdk9Wr2EIWWqzjAqUOUqX
+         khnGdLO1Wgj0Tf2u8TUm65/EbjDVcKYVIerGmTGSRyGHZlXAI9uEvAo9786my5y6r1Pm
+         E2H45Vsxa6f6SqQqYLk1vEf22BajwCQSJpF/eClq4l9TB7ovGbYAZXfr5XG8vt6Cvp8X
+         3okEPD8zaLOosaDvs4IOrP6O5NfdV3nzeiixyjpSBABgQLuuNfDchtWlwAfmPx0bQ3uf
+         Zf98Jqy9sgiB1vu/uX6Te6QMkkTiVsU3hfnMx0ANC5L9hcfcJ+H79Q7JLE/gNLGLoJaw
+         Q55w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IjWlFFPoHjfhByHYSNZryk1TNb+LKXad0m0aRtU8qzA=;
-        b=RVrV2tKC7e0lksLj0+mGBRYi2Fa0+mWHqcKEFcuYu7CdlPw4a+HMCgcTbSy4tN8e8W
-         zZ6mICe5ip3FOu/quZkqTwMBPAYcjESaH+7DiAvzx9ULCHOSaSMDm1QpQonl6X3oFDrE
-         YEFFvhLh3cOZdb4JwnEGteZw3GZ8mWwGJN4eESoKbm9rYMeTIAR251g4UJieuTMo2nKG
-         ykFxNviIeN8Akp2foaawKH802ucWldieFyB2o2NMFkixGUT8UEqYJBtLam28BKm6pUeq
-         JuB04aL7vVCrd33SOFaJpERnEGhAb7JJrulSLf/eEaRUELpUktOCYtXE8VeEcdbxg6uf
-         u11A==
-X-Gm-Message-State: AJIora/lQ3eMhUQh3AQew+pE3sLvqMl2UEp9iCuES9JX52psCF0sEkJE
-        eV/2eAFsBPZ/EhnBi93VJgcpAt6F+p0=
-X-Google-Smtp-Source: AGRyM1vXEuTNO3AnHeVg+G4zLM8mQSJybDQ02XvEn8PsCJ6N/4M7tKYo+nvcD6X/0PKXh4nEb9FM+A==
-X-Received: by 2002:a17:90b:3505:b0:1ec:db5d:794b with SMTP id ls5-20020a17090b350500b001ecdb5d794bmr16387397pjb.24.1656337590798;
-        Mon, 27 Jun 2022 06:46:30 -0700 (PDT)
+        bh=bItcgwOweyHpbTdbB2yStlE3LoN6u/SIqUTXgS5X+NM=;
+        b=QxiVnZsxYZ2XHrHHnOK1j83PRzm8ffOyhAHPnVj2dTngnDM6nEZjDCN04ILWY/dcs6
+         Ppi3/WrAHDIhsNAnSTpBFu3XkxwceLsUX6NJsKOejPghbRT66nELASMcY1LgD8EM1/SE
+         D7uRXlzngzVoECmvE/b1PA41ln2RP3fb771G1b9VnyfxCnesQ3pUrAKJWEqrJwOoOKQx
+         4Dq8EIkzN2lZhkJej8bHOiaE0aybqpZAOpgJU0a+ugreGEyDf46wUgX6JYAm1PomHRz/
+         QAMZ8ULrKJtR72dish+3/OQsbzZGsRnfJYHt41SQpgr7a2YIH6o2QDaoYYzr1X+OZVxH
+         6X8A==
+X-Gm-Message-State: AJIora+iumKE1HY7e16QVzb70Q1xd4kmzjN7idrdeAu9I4cO2hpuLvmb
+        ycdpHFyEpTSWgnky9VlRAKJ5AVrObig=
+X-Google-Smtp-Source: AGRyM1vIFK1XuRz78H3KsHJd/Bh1JdImYDuKVEeTnJzSa7g6izgzwnF/2bN62v4bSGTBhspZZneTuw==
+X-Received: by 2002:a05:6a00:2355:b0:525:a0e9:4b with SMTP id j21-20020a056a00235500b00525a0e9004bmr9743967pfj.32.1656337597746;
+        Mon, 27 Jun 2022 06:46:37 -0700 (PDT)
 Received: from sol.home.arpa (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id b5-20020a170902bd4500b0016a565f3f34sm6783395plx.168.2022.06.27.06.46.28
+        by smtp.gmail.com with ESMTPSA id b5-20020a170902bd4500b0016a565f3f34sm6783395plx.168.2022.06.27.06.46.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 06:46:30 -0700 (PDT)
+        Mon, 27 Jun 2022 06:46:37 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod v2][PATCH 3/4] tools: add gpiowatch
-Date:   Mon, 27 Jun 2022 21:44:46 +0800
-Message-Id: <20220627134447.81927-4-warthog618@gmail.com>
+Subject: [libgpiod v2][PATCH 4/4] tools: gpiowatch tests
+Date:   Mon, 27 Jun 2022 21:44:47 +0800
+Message-Id: <20220627134447.81927-5-warthog618@gmail.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220627134447.81927-1-warthog618@gmail.com>
 References: <20220627134447.81927-1-warthog618@gmail.com>
@@ -68,281 +68,269 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a gpiowatch tool, based on gpiomon, but reporting line info change
-events similar to the gpio-watch tool in the linux kernel.
+Extend the tool test suite to cover the gpiowatch tool.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- man/Makefile.am   |   2 +-
- tools/.gitignore  |   1 +
- tools/Makefile.am |   4 +-
- tools/gpiowatch.c | 214 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 219 insertions(+), 2 deletions(-)
- create mode 100644 tools/gpiowatch.c
+ tools/gpio-tools-test.bats | 249 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 249 insertions(+)
 
-diff --git a/man/Makefile.am b/man/Makefile.am
-index 4d2c29b..3badd3b 100644
---- a/man/Makefile.am
-+++ b/man/Makefile.am
-@@ -3,7 +3,7 @@
- 
- if WITH_MANPAGES
- 
--dist_man1_MANS = gpiodetect.man gpioinfo.man gpioget.man gpioset.man gpiofind.man gpiomon.man
-+dist_man1_MANS = gpiodetect.man gpioinfo.man gpioget.man gpioset.man gpiofind.man gpiomon.man gpiowatch.man
- 
- %.man: $(top_builddir)/tools/$(*F)
- 	help2man $(top_builddir)/tools/$(*F) --include=$(srcdir)/template --output=$(builddir)/$@ --no-info
-diff --git a/tools/.gitignore b/tools/.gitignore
-index 0d53de9..6175e26 100644
---- a/tools/.gitignore
-+++ b/tools/.gitignore
-@@ -7,3 +7,4 @@ gpioget
- gpioset
- gpiomon
- gpiofind
-+gpiowatch
-diff --git a/tools/Makefile.am b/tools/Makefile.am
-index 4a13266..8bb2cac 100644
---- a/tools/Makefile.am
-+++ b/tools/Makefile.am
-@@ -9,7 +9,7 @@ libtools_common_la_SOURCES = tools-common.c tools-common.h
- 
- LDADD = libtools-common.la $(top_builddir)/lib/libgpiod.la
- 
--bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon gpiofind
-+bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon gpiofind gpiowatch
- 
- gpiodetect_SOURCES = gpiodetect.c
- 
-@@ -23,6 +23,8 @@ gpiomon_SOURCES = gpiomon.c
- 
- gpiofind_SOURCES = gpiofind.c
- 
-+gpiowatch_SOURCES = gpiowatch.c
+diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
+index eaa814f..73fdd93 100755
+--- a/tools/gpio-tools-test.bats
++++ b/tools/gpio-tools-test.bats
+@@ -2069,3 +2069,252 @@ request_release_line() {
+ 	dut_read
+ 	output_is "%x"
+ }
 +
- EXTRA_DIST = gpio-tools-test gpio-tools-test.bats
- 
- if WITH_TESTS
-diff --git a/tools/gpiowatch.c b/tools/gpiowatch.c
-new file mode 100644
-index 0000000..e6bfeb6
---- /dev/null
-+++ b/tools/gpiowatch.c
-@@ -0,0 +1,214 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <bartekgola@gmail.com>
++#
++# gpiowatch test cases
++#
 +
-+#include <getopt.h>
-+#include <gpiod.h>
-+#include <inttypes.h>
-+#include <poll.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
++@test "gpiowatch: by name" {
++	gpiosim_chip sim0 num_lines=8 line_name=4:foo
++	local sim0=$(gpiosim_chip_name sim0)
 +
-+#include "tools-common.h"
++	dut_run gpiowatch --banner foo
++	dut_regex_match "Watching line .*"
 +
-+static int by_name;
-+static int event_clock_mode;
-+static int banner;
++	request_release_line $sim0 4
 +
-+static const struct option longopts[] = {
-+	{ "banner",		no_argument,		&banner,	1 },
-+	{ "by-name",		no_argument,		&by_name,	1 },
-+	{ "chip",		required_argument,	NULL,	'c' },
-+	{ "help",		no_argument,		NULL,	'h' },
-+	{ "localtime",		no_argument,		&event_clock_mode,	2 },
-+	{ "strict",		no_argument,		NULL,	's' },
-+	{ "utc",		no_argument,		&event_clock_mode,	1 },
-+	{ "version",		no_argument,		NULL,	'v' },
-+	{ GETOPT_NULL_LONGOPT },
-+};
-+
-+static const char *const shortopts = "+c:shv";
-+
-+static void print_help(void)
-+{
-+	printf("Usage: %s [OPTIONS] <line> ...\n", get_progname());
-+	printf("\n");
-+	printf("Wait for changes to info on GPIO lines and print them to standard output.\n");
-+	printf("\n");
-+	printf("Lines are specified by name, or optionally by offset if the chip option\n");
-+	printf("is provided.\n");
-+	printf("\n");
-+	printf("Options:\n");
-+	printf("      --banner\t\tdisplay a banner on successful startup\n");
-+	printf("      --by-name\t\ttreat lines as names even if they would parse as an offset\n");
-+	printf("  -c, --chip <chip>\trestrict scope to a particular chip\n");
-+	printf("  -h, --help\t\tdisplay this help and exit\n");
-+	printf("      --localtime\treport event time as a local time (default is monotonic)\n");
-+	printf("  -s, --strict\t\tabort if requested line names are not unique\n");
-+	printf("      --utc\t\treport event time as UTC (default is monotonic)\n");
-+	printf("  -v, --version\t\toutput version information and exit\n");
-+	print_chip_help();
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+foo\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+foo\\s+.*"
++	# tools currently have no way to generate a RECONFIG event
 +}
 +
-+struct config {
-+	bool strict;
-+	const char *chip_id;
-+};
++@test "gpiowatch: by offset" {
++	gpiosim_chip sim0 num_lines=8
++	local sim0=$(gpiosim_chip_name sim0)
 +
-+int parse_config(int argc, char **argv, struct config *cfg)
-+{
-+	int opti, optc;
++	dut_run gpiowatch --banner --chip $sim0 4
++	dut_regex_match "Watching line .*"
 +
-+	memset(cfg, 0, sizeof(*cfg));
++	request_release_line $sim0 4
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+4\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+4\\s+.*"
 +
-+	for (;;) {
-+		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
-+		if (optc < 0)
-+			break;
-+
-+		switch (optc) {
-+		case 'c':
-+			cfg->chip_id = optarg;
-+			break;
-+		case 's':
-+			cfg->strict = true;
-+			break;
-+		case 'h':
-+			print_help();
-+			exit(EXIT_SUCCESS);
-+		case 'v':
-+			print_version();
-+			exit(EXIT_SUCCESS);
-+		case '?':
-+			die("try %s --help", get_progname());
-+		case 0:
-+			break;
-+		default:
-+			abort();
-+		}
-+	}
-+
-+	return optind;
++	assert_fail dut_readable
 +}
 +
-+static void print_banner(int num_lines, char **lines)
-+{
-+	int i;
++@test "gpiowatch: by chip and name" {
++	gpiosim_chip sim0 num_lines=8 line_name=4:foo
++	gpiosim_chip sim1 num_lines=8 line_name=2:foo
++	local sim1=$(gpiosim_chip_name sim1)
 +
-+	if (num_lines > 1) {
-+		printf("Watching lines ");
-+		for (i = 0; i < num_lines - 1; i++)
-+			printf("%s, ", lines[i]);
-+		printf("and %s...\n", lines[i]);
-+	} else {
-+		printf("Watching line %s ...\n", lines[0]);
-+	}
++	dut_run gpiowatch --banner --chip $sim1 foo
++	dut_regex_match "Watching line .*"
++
++	request_release_line $sim1 2
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim1\\s+2\\s+foo\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim1\\s+2\\s+foo\\s+.*"
++
++	assert_fail dut_readable
 +}
 +
-+static void event_print(struct gpiod_info_event *event, const char *chip_id)
-+{
-+	struct gpiod_line_info *info;
-+	uint64_t evtime, before, after, mono;
-+	char *evname;
-+	int evtype;
-+	struct timespec ts;
++@test "gpiowatch: first matching named line" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar line_name=3:foobar
++	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=2:foobar \
++				      line_name=4:xyz line_name=7:foobar
++	gpiosim_chip sim2 num_lines=16
 +
-+	info = gpiod_info_event_get_line_info(event);
-+	evtime = gpiod_info_event_get_timestamp_ns(event);
-+	evtype = gpiod_info_event_get_event_type(event);
++	dut_run gpiowatch --banner foobar
++	dut_regex_match "Watching line .*"
 +
-+	switch (evtype) {
-+	case GPIOD_INFO_EVENT_LINE_REQUESTED:
-+		evname = "REQUESTED";
-+		break;
-+	case GPIOD_INFO_EVENT_LINE_RELEASED:
-+		evname = "RELEASED ";
-+		break;
-+	case GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED:
-+		evname = "RECONFIG ";
-+		break;
-+	default:
-+		evname = "UNKNOWN  ";
-+	}
-+	if (event_clock_mode) {
-+		// map clock monotonic to realtime, as uAPI only supports CLOCK_MONOTONIC
-+		clock_gettime(CLOCK_REALTIME, &ts);
-+		before = ts.tv_nsec + ts.tv_sec * 1000000000;
-+		clock_gettime(CLOCK_MONOTONIC, &ts);
-+		mono = ts.tv_nsec + ts.tv_sec * 1000000000;
-+		clock_gettime(CLOCK_REALTIME, &ts);
-+		after = ts.tv_nsec + ts.tv_sec * 1000000000;
-+		evtime += (after/2 - mono + before/2);
-+	}
-+	print_event_time(evtime, event_clock_mode);
-+	printf(" %s", evname);
-+	if (chip_id)
-+		printf(" %s %d", chip_id, gpiod_line_info_get_offset(info));
-+	print_line_info(info);
-+	printf("\n");
++	request_release_line $(gpiosim_chip_name sim0) 3
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+foobar\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+foobar\\s+.*"
++
++	assert_fail dut_readable
 +}
 +
-+int main(int argc, char **argv)
-+{
-+	int i, j;
-+	struct gpiod_chip **chips;
-+	struct pollfd *pollfds;
-+	struct gpiod_chip *chip;
-+	struct line_resolver *resolver;
-+	struct gpiod_info_event *event;
-+	struct config cfg;
++@test "gpiowatch: multiple lines" {
++	gpiosim_chip sim0 num_lines=8
++	local sim0=$(gpiosim_chip_name sim0)
 +
-+	i = parse_config(argc, argv, &cfg);
-+	argc -= optind;
-+	argv += optind;
++	dut_run gpiowatch --banner --chip $sim0 1 2 3 4 5
++	dut_regex_match "Watching lines .*"
 +
-+	if (argc < 1)
-+		die("at least one GPIO line must be specified");
++	request_release_line $sim0 2
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+2\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+2\\s+.*"
 +
-+	if (argc > 64)
-+		die("too many lines given");
++	request_release_line $sim0 3
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+3\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+3\\s+.*"
 +
-+	resolver = resolve_lines(argc, argv, cfg.chip_id, cfg.strict, by_name);
-+	chips = calloc(resolver->num_chips, sizeof(*chips));
-+	pollfds = calloc(resolver->num_chips, sizeof(*pollfds));
-+	if (!pollfds)
-+		die("out of memory");
-+	for (i = 0; i < resolver->num_chips; i++) {
-+		chip = gpiod_chip_open(resolver->chip_paths[i]);
-+		if (!chip)
-+			die_perror("unable to open chip %s", resolver->chip_paths[i]);
++	request_release_line $sim0 4
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+4\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+4\\s+.*"
 +
-+		for (j = 0; j < resolver->num_lines; j++)
-+			if (resolver->lines[j].chip_path == resolver->chip_paths[i])
-+				if (!gpiod_chip_watch_line_info(chip, resolver->lines[j].offset))
-+					die_perror("unable to watch line on chip %s",
-+						   resolver->chip_paths[i]);
++	assert_fail dut_readable
++}
 +
-+		chips[i] = chip;
-+		pollfds[i].fd = gpiod_chip_get_fd(chip);
-+		pollfds[i].events = POLLIN;
-+	}
++@test "gpiowatch: multiple lines by name and offset" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar
++	local sim0=$(gpiosim_chip_name sim0)
 +
-+	if (banner)
-+		print_banner(argc, argv);
++	dut_run gpiowatch --banner --chip $sim0 bar foo 3
++	dut_regex_match "Watching lines .*"
 +
-+	for (;;) {
-+		if (poll(pollfds, resolver->num_chips, -1) < 0)
-+			die_perror("error polling for events");
++	request_release_line $sim0 2
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+2\\s+bar\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+2\\s+bar\\s+.*"
 +
-+		for (i = 0; i < resolver->num_chips; i++) {
-+			if (pollfds[i].revents == 0)
-+				continue;
++	request_release_line $sim0 1
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+1\\s+foo\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+1\\s+foo\\s+.*"
 +
-+			event = gpiod_chip_read_info_event(chips[i]);
-+			event_print(event, cfg.chip_id);
-+		}
-+	}
-+	for (i = 0; i < resolver->num_chips; i++)
-+		gpiod_chip_close(chips[i]);
-+	free(chips);
-+	free_line_resolver(resolver);
++	request_release_line $sim0 3
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+3\\s+unnamed\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+3\\s+unnamed\\s+.*"
 +
-+	return EXIT_SUCCESS;
++	assert_fail dut_readable
++}
++
++@test "gpiowatch: multiple lines across multiple chips" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar
++	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=4:xyz
++	local sim0=$(gpiosim_chip_name sim0)
++	local sim1=$(gpiosim_chip_name sim1)
++
++	dut_run gpiowatch --banner baz bar foo xyz
++	dut_regex_match "Watching lines .*"
++
++	request_release_line $sim0 2
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+bar\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+bar\\s+.*"
++
++	request_release_line $sim0 1
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+foo\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+foo\\s+.*"
++
++	request_release_line $sim1 4
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+xyz\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+xyz\\s+.*"
++
++	request_release_line $sim1 0
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+baz\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+baz\\s+.*"
++
++	assert_fail dut_readable
++}
++
++@test "gpiowatch: exit after SIGINT" {
++	gpiosim_chip sim0 num_lines=8
++
++	dut_run gpiowatch --banner --chip $(gpiosim_chip_name sim0) 4
++	dut_regex_match "Watching line .*"
++
++	dut_kill -SIGINT
++	dut_wait
++
++	status_is 130
++}
++
++@test "gpiowatch: exit after SIGTERM" {
++	gpiosim_chip sim0 num_lines=8
++
++	dut_run gpiowatch --banner --chip $(gpiosim_chip_name sim0) 4
++	dut_regex_match "Watching line .*"
++
++	dut_kill -SIGTERM
++	dut_wait
++
++	status_is 143
++}
++
++@test "gpiowatch: with nonexistent line" {
++	run_tool gpiowatch nonexistent-line
++
++	status_is 1
++	output_regex_match ".*cannot find line nonexistent-line"
++}
++
++@test "gpiowatch: with same line twice" {
++	gpiosim_chip sim0 num_lines=8 line_name=1:foo
++	local sim0=$(gpiosim_chip_name sim0)
++
++	# by offset
++	run_tool gpiowatch --chip $sim0 0 0
++
++	status_is 1
++	num_lines_is 1
++	output_regex_match ".*lines 0 and 0 are the same"
++
++	# by name
++	run_tool gpiowatch --chip $sim0 foo foo
++
++	status_is 1
++	num_lines_is 1
++	output_regex_match ".*lines foo and foo are the same"
++
++	# by name and offset
++	run_tool gpiowatch --chip $sim0 1 foo
++
++	status_is 1
++	num_lines_is 1
++	output_regex_match ".*lines 1 and foo are the same"
++}
++
++@test "gpiowatch: with strict named line check" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar line_name=3:foobar
++	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=2:foobar \
++				      line_name=4:xyz line_name=7:foobar
++	gpiosim_chip sim2 num_lines=16
++
++	run_tool gpiowatch --strict foobar
++
++	status_is 1
++	output_regex_match ".*line foobar is not unique"
++}
++
++@test "gpiowatch: with lines strictly by name" {
++	# not suggesting this setup makes sense - just test that we can deal with it
++	gpiosim_chip sim0 num_lines=8 line_name=1:42 line_name=6:13
++	local sim0=$(gpiosim_chip_name sim0)
++
++	dut_run gpiowatch --banner --by-name --chip $sim0 42 13
++	dut_flush
++
++	request_release_line $sim0 1
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+1\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+1\\s+.*"
++
++	request_release_line $sim0 6
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+6\\s+.*"
++	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+6\\s+.*"
++
++	assert_fail dut_readable
++}
++
++@test "gpiowatch: with no arguments" {
++	run_tool gpiowatch
++
++	status_is 1
++	output_regex_match ".*at least one GPIO line must be specified"
++}
++
++@test "gpiowatch: with no line specified" {
++	gpiosim_chip sim0 num_lines=8
++
++	run_tool gpiowatch --chip $(gpiosim_chip_name sim0)
++
++	status_is 1
++	output_regex_match ".*at least one GPIO line must be specified"
++}
++
++@test "gpiowatch: with offset out of range" {
++	gpiosim_chip sim0 num_lines=4
++	local sim0=$(gpiosim_chip_name sim0)
++
++	run_tool gpiowatch --chip $sim0 5
++
++	status_is 1
++	output_regex_match ".*offset 5 is out of range on chip $sim0"
 +}
 -- 
 2.36.1
