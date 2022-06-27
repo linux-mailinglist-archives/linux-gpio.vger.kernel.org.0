@@ -2,70 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A6CC55D26E
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74B5F55E05B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:32:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237115AbiF0LmR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 07:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34390 "EHLO
+        id S238721AbiF0Lxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 07:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236840AbiF0LlM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 07:41:12 -0400
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AB9CEA
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 04:35:50 -0700 (PDT)
-Received: by mail-oi1-x232.google.com with SMTP id s124so12492987oia.0
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 04:35:50 -0700 (PDT)
+        with ESMTP id S239074AbiF0LxR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 07:53:17 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1697DF5E
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 04:47:43 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id h14-20020a1ccc0e000000b0039eff745c53so5443098wmb.5
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 04:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IcWIfXiFNBAIIf3VuJJVlmluTZvQnqEwTI6tiVGeHOM=;
-        b=Ub56wbC9WV2M3ddHHUM7xeZonJ7VAeF0LDiy7Z4RsU+TjJycea+AOZ05VOTl4RaS+p
-         G2XeklteMZpiwaZltwcVORjxcyAlvE8Qo84HdDxwx6n3SHQMlyHOz16XpxkbjxUAyHmf
-         zZLeVDYyVhR7C0AIRbMnEiSIdVeRiOoauNqrkXbvNj4KDhYHi2j+OR9+FTKXzRzN7zxA
-         JSMdnVub+yQPmkQNzpLNr3pc3JVoF5gQRiyCOnVVrlBWCP1ARy/kiaKGm5NBdvqMy3N5
-         S3S3a0EfrJhTZdrgEcqlITyHJ09J1ZR0nt5zlx2DiX6YTxhZ3NkVUPyH3yi24UyCUw1H
-         SvoA==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=INtcSWuYJqZv/51emZbtl4GZQaiJjf0FK2Rx9NjjvdU=;
+        b=lXdwJ3T0hWwRd2FjZSZn9NLejvaZP+hX41vR+vG5z+fZjvrrydxxOLj1Mni1SG4T7y
+         Qe5BcuNLmNeZK/FS3GCOOf7x+pDpbcUgJxr+V6XrdkoUNaSn914ItjglppuYDkfPvMiy
+         zytYCkt0WQaCqTxpSMo592v4DxD5Hx+tQoZjbuwc/DFTsnQlp1GFxT7EOXhVdjxvQlTQ
+         Fo4M12AvXbbyS7Ws7mXh98rG/Ya9pqX80Gr4tTZKEL8OAe3xNpLc9mOK3hf9A+XHLuuA
+         AkjiwLE1Z67hLAP8huWWKsZh7jBohB5FQNIhzUz32SHG+Q1ftRvvGmykPeRm3NkcZ35g
+         ZF8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IcWIfXiFNBAIIf3VuJJVlmluTZvQnqEwTI6tiVGeHOM=;
-        b=ShU/T2vDEA1ViMQqxOmEgaxF0vLLQSokpDjZ2tWU68iMlM/vppCEX8CefIcp1bU88O
-         0L4Rvxvxqob9qDTtJwaFH77GJOyKhhV4eN01QsgFZz8xvPEHrqlj98LwLQtGmELFW/Te
-         67KNb3+mrtJpQ12Be3HKvfBiDFYYEjVVS8HhuXkloDOVtORpic2EaKcnIEKyouawtuL8
-         RWjJzpp2mBEWl7k4oetCvhRF6wskzpAYY8t/XsobdPffOH9fnvXorQbggaUlJPjiGthu
-         Lau/SReQJySTKCR3jhOX1na/2zRO9NIbW9kB9kWka6LnoGOjDRChmEaP3gzorM3wDBGj
-         Kxrw==
-X-Gm-Message-State: AJIora8DhdI+Gm+BRxtat/oZKc7RQnWz/NNrudTc2vELSuprg5Yur8W+
-        b1RmHijE88Ld0oTF/mZdRq8eKQ==
-X-Google-Smtp-Source: AGRyM1t9MaBMPNc0jNqrU6OWbaNrNp/+ZUE6wvY5inuaYW54e1wCVapZxo6fkOhveZqJLD+BI9khbw==
-X-Received: by 2002:a05:6808:16a7:b0:2f9:39c4:c597 with SMTP id bb39-20020a05680816a700b002f939c4c597mr7685474oib.101.1656329749912;
-        Mon, 27 Jun 2022 04:35:49 -0700 (PDT)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id r10-20020a056808210a00b00325cda1ff8esm5157405oiw.13.2022.06.27.04.35.48
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=INtcSWuYJqZv/51emZbtl4GZQaiJjf0FK2Rx9NjjvdU=;
+        b=jndWLu8n/V367tfz322k+KJBkq4eIGM1ta+0ALx1Gk/2WnhW2cmzMRJ9q/3pR8WVhz
+         AFHg74SP13yjyYepVUyuCGfKcOhdaqNgMXh+2z76khGp34WETVx+rjIR+3Kj8Ykv9Rkc
+         ZafdiO/Lly+CNcvnXeld2mXvrHLoATbJ1UfRWW9UEIZ6qfpUk7VP6MSNgVCJMoG3v+3x
+         gGmOousTaCUs0MHEx4yTnO22NzkOrpv3dP1EldGrcn7KXme+TGtPfaL/LU2ElTiQ8UZC
+         l02Le+pQ0eLTZb+o0uBnkJf8tDFdVlfAqWNHKcP6u6L7xtPsYfpqoG4XgTeZN59P/odU
+         17UA==
+X-Gm-Message-State: AJIora8y0HSVy1Ktfo8czbuGOUb83QZ4+zmr5qINxNM20OtSsyZmqxCe
+        o47KPL6ZWZV4bnOto2mz83e8Lw==
+X-Google-Smtp-Source: AGRyM1sxv+0qF++QDNW/7QJglg4BElyh4Bi1+WA1w2r7AwtDUgy4amACvWODEcwnxlDOf3dBJq0Zmg==
+X-Received: by 2002:a05:600c:58e:b0:3a0:48dc:defc with SMTP id o14-20020a05600c058e00b003a048dcdefcmr7554631wmd.54.1656330462296;
+        Mon, 27 Jun 2022 04:47:42 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id h4-20020a5d4304000000b0021b829d111csm10478996wrq.112.2022.06.27.04.47.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 04:35:49 -0700 (PDT)
-Date:   Mon, 27 Jun 2022 07:35:47 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] gpio: Implement and utilize register structures for
- ISA drivers
-Message-ID: <YrmWEwlxyJzj2zmZ@fedora>
-References: <cover.1654525394.git.william.gray@linaro.org>
- <CAMRc=MfoMjFV8EsDeXuHEFjOS2m7r4fW7BqETCDrcjTHVgzDbQ@mail.gmail.com>
+        Mon, 27 Jun 2022 04:47:41 -0700 (PDT)
+Date:   Mon, 27 Jun 2022 12:47:39 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
+        sre@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+        lgirdwood@gmail.com, lars@metafoo.de, rafael@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/10] dt-bindings: mfd: add bindings for AXP192 MFD
+ device
+Message-ID: <YrmY292D/0vfIO4j@google.com>
+References: <20220603135714.12007-1-aidanmacdonald.0x0@gmail.com>
+ <20220603135714.12007-3-aidanmacdonald.0x0@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qcqNbohE9h+Wv+21"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MfoMjFV8EsDeXuHEFjOS2m7r4fW7BqETCDrcjTHVgzDbQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220603135714.12007-3-aidanmacdonald.0x0@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,81 +78,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, 03 Jun 2022, Aidan MacDonald wrote:
 
---qcqNbohE9h+Wv+21
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The AXP192 is another X-Powers PMIC similar to the existing ones.
+> 
+> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-On Thu, Jun 09, 2022 at 04:39:41PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Jun 6, 2022 at 4:36 PM William Breathitt Gray
-> <william.gray@linaro.org> wrote:
-> >
-> > The PC104/ISA drivers were updated to use I/O memory accessor calls such
-> > as ioread8()/iowrite8() in a previous patch series [1]. This
-> > patchset is a continuation of the effort to improve the code readability
-> > and reduce magic numbers by implementing and utilizing named register
-> > data structures.
-> >
-> > One of the benefits is that we can now observe more easily similarities
-> > in devices that share similar interfaces; such as the i8255 interfaces
-> > used by the 104-DIO-48E, 104-IDI-48, and GPIO-MM drivers -- as well as
-> > the similar interface used by the 104-IDIO-16 and PCI-IDIO-16 drivers. I
-> > hope to consolidate some of these code blocks in future patchsets.
-> >
-> > [1] https://lore.kernel.org/all/cover.1652201921.git.william.gray@linar=
-o.org/
-> >
-> > William Breathitt Gray (5):
-> >   gpio: 104-dio-48e: Implement and utilize register structures
-> >   gpio: 104-idi-48: Implement and utilize register structures
-> >   gpio: 104-idio-16: Implement and utilize register structures
-> >   gpio: gpio-mm: Implement and utilize register structures
-> >   gpio: ws16c48: Implement and utilize register structures
-> >
-> >  drivers/gpio/gpio-104-dio-48e.c | 157 +++++++++++++++++++++-----------
-> >  drivers/gpio/gpio-104-idi-48.c  | 128 +++++++++++++-------------
-> >  drivers/gpio/gpio-104-idio-16.c |  58 ++++++++----
-> >  drivers/gpio/gpio-gpio-mm.c     | 116 ++++++++++++++---------
-> >  drivers/gpio/gpio-ws16c48.c     | 119 +++++++++++++++++-------
-> >  5 files changed, 366 insertions(+), 212 deletions(-)
-> >
-> >
-> > base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
-> > --
-> > 2.36.1
-> >
->=20
-> Hi William,
->=20
-> Unlike the previous patches which were relatively simple, these seem
-> like there's a lot of space for breakage (even though they're
-> attempting to do a good thing). Have you tested the code on real
-> hardware?
->=20
-> Bart
+Applied, thanks.
 
-I have a tester testing the changes for to the 104-IDIO-16 and GPIO-MM
-GPIO drivers on real hardware. I don't have access to the other three
-devices so I've only compile tested and loaded them in a VM to verify;
-I'll send out a request to ACCESIO and WinSystems to see if they have
-engineers willing to test these changes for their respective devices.
-
-I've also refactored the code in this patch series to simplify the
-changes in these patches. It should make the changes much easier to
-review so I'll release it in a v2 submission once the series is ready.
-
-William Breathitt Gray
-
---qcqNbohE9h+Wv+21
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCYrmWEwAKCRC1SFbKvhIj
-K571AP9BVDOeWF1ppEOM7vd/GiJ31qRTdxMzoLs15UZZ0AixOwD/bJ8wxcF6ARpp
-BTlCqZ06OCVeHW2v3UAaoTe2Z7eATQo=
-=tR33
------END PGP SIGNATURE-----
-
---qcqNbohE9h+Wv+21--
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
