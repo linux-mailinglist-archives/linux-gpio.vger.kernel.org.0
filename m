@@ -2,61 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE9B755DDDC
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:28:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B069D55DCE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:26:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232416AbiF0J16 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 05:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47330 "EHLO
+        id S233348AbiF0Jak (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 05:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231795AbiF0J14 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 05:27:56 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343A562E0
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 02:27:54 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id r9so4944968ljp.9
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 02:27:54 -0700 (PDT)
+        with ESMTP id S233795AbiF0Jaj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 05:30:39 -0400
+Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316C318A
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 02:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gN3nF3XcouQL/cVCpyx7ZrlwyAQWaFQc+AC2iPUl3mk=;
-        b=Gw1BickyXa7Ce+fFAWhaiKOGyn/Ah2/OoU0nK39dLFFciUiKFIdcRZ5jDssYLCuHPR
-         FwpniWrQDHoEm9VGihHYvFe17m+e5YvDOgn8Fmjknqj+UXZMmHUXd1Onzl85iOP521FX
-         u8lH/OGKBT+Asad5yTRQthKajwIwl6lg9OH8IPFdhvhB6tq5yPMDyF2iW+Of+KyWGPR7
-         bY/Q2CjNrhe2371DdxVCx8/rV7wanL3+/XRC533IG3KtnRoZHaXqgDqMPsRiBouolAkI
-         cnMi8sjW6+bMt5BOhzyqpCWAYy+x6b+SYqYqNFgm8fzMVTyHJK5RKTvxx258VqXOQY4Y
-         kPng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gN3nF3XcouQL/cVCpyx7ZrlwyAQWaFQc+AC2iPUl3mk=;
-        b=VwIkteFQLMFdnDjE+05ao+L2Ck59hG30lY48Z98HOyOSUqbhGdnLzZ5t8bhul5SMMN
-         S8HeotIZN9kJ/H+6nPe3rK/XlMYeHPI+pbSaQvJV+1DPOumDbIoX6QqrUkLScPij/9Xa
-         ruftScIUMrQk5gldAoSFO2PDkgTyLRVtc84vbge5SUJLQ/lJNdP9v9QKQLlQ80LjKm36
-         L1E9Qo4j2h4q9ZF90Z0KHyX9Sf5ik/RYRCRuxlqB+5EUsmtl4fRvp9t8gT+fTOH1iiIM
-         ruXskfMrfQIR89E41YS5TS6wPYazIZBH4Ey7MP/ir/R8ZlctGOjcp09CBM8Kfs6guR6P
-         tzgA==
-X-Gm-Message-State: AJIora/NEvQwhN2B0CNwo0sRvQByT/fcOhYG5biqugoOUAAgMMuMzKF9
-        GZJRt+Z099udEWhvnbFIUNlk7elmhNshidVt6pozyw==
-X-Google-Smtp-Source: AGRyM1tVSsjXPe5++ARLNUhpuau2SGj30HOReNKHpIbE86XK/nqCBFBRZKRvYgV5dc1Syd6xxcDne5wD4klkN/GDrd0=
-X-Received: by 2002:a2e:9f12:0:b0:25b:ad89:80e8 with SMTP id
- u18-20020a2e9f12000000b0025bad8980e8mr5880429ljk.145.1656322072538; Mon, 27
- Jun 2022 02:27:52 -0700 (PDT)
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1656322239; x=1687858239;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2TAk1HTirqWaRmYwpXIm8GXh5upucONd8Hs6TrcmmQI=;
+  b=T16Cbd7oWV518/rAf+w8MpwBgq4BHPBKKjm8Xzcoqr2m8xD+JUmT0Vlx
+   aAhurgvBbMQyWkUHdzrz9QY0KDVAYYwyg0vhnUjVnckW0STsxgn25Ive0
+   9Mt03tu8dAIGW9kK54m7txMaSnM9bk6ibQw81pi/fYYYWDG+COiKLgVm5
+   c=;
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 27 Jun 2022 02:30:38 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 02:30:38 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Mon, 27 Jun 2022 02:30:38 -0700
+Received: from [10.216.28.64] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 27 Jun
+ 2022 02:30:36 -0700
+Message-ID: <fda47a80-605e-ee39-d7a0-d48d40fc8840@quicinc.com>
+Date:   Mon, 27 Jun 2022 15:00:33 +0530
 MIME-Version: 1.0
-References: <20220525190423.410609-1-andrey.lalaev@gmail.com>
-In-Reply-To: <20220525190423.410609-1-andrey.lalaev@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 Jun 2022 11:27:41 +0200
-Message-ID: <CACRpkdY107+sT60D3iuPNhXCx48cWKm953tq4Uso8+n4mwvO0A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sunxi: sunxi_pconf_set: use correct offset
-To:     Andrei Lalaev <andrey.lalaev@gmail.com>
-Cc:     wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
-        linux-gpio@vger.kernel.org, linux-sunxi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] pinctrl: qcom: sc7280: Fix compile bug
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Stephen Boyd <swboyd@chromium.org>
+References: <20220627092425.98730-1-linus.walleij@linaro.org>
+From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Organization: Qualcomm
+In-Reply-To: <20220627092425.98730-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,17 +66,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 25, 2022 at 9:08 PM Andrei Lalaev <andrey.lalaev@gmail.com> wrote:
 
-> Some Allwinner SoCs have 2 pinctrls (PIO and R_PIO).
-> Previous implementation used absolute pin numbering and it was incorrect
-> for R_PIO pinctrl.
-> It's necessary to take into account the base pin number.
+On 6/27/2022 2:54 PM, Linus Walleij wrote:
+Thanks for Your Support Linus.
+> The idea was right but the code was breaking in next.
+> I assume some unstaged commit was involed. Fix it up.
 >
-> Fixes: 90be64e27621 ("pinctrl: sunxi: implement pin_config_set")
-> Signed-off-by: Andrei Lalaev <andrey.lalaev@gmail.com>
+> Cc: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Fixes: 36fe26843d6d ("pinctrl: qcom: sc7280: Add clock optional check for ADSP bypass targets")
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> index b3d4244a5266..b5d1b996c454 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> @@ -388,7 +388,8 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
+>   	pctrl->data = data;
+>   	pctrl->dev = &pdev->dev;
+>   
+> -	data->is_clk_optional = of_property_read_bool(np, "qcom,adsp-bypass-mode");
+> +	data->is_clk_optional = of_property_read_bool(dev->of_node,
+> +						      "qcom,adsp-bypass-mode");
 
-Patch queued for fixes, sorry for waiting so long :(
+There is another problem with this patch.  As lpi_pinctrl_variant_data 
+is const type,  unable to update this variable.
 
-Yours,
-Linus Walleij
+So I have posted the fix patch series v5. Please check and let me me if 
+anything to be done.
+
+>   
+>   	pctrl->clks[0].id = "core";
+>   	pctrl->clks[1].id = "audio";
