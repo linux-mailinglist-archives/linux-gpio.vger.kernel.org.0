@@ -2,299 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32A5B55D07A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:08:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0655555C1C7
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 14:45:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237696AbiF0OnZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 10:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
+        id S236458AbiF0OpF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 10:45:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237583AbiF0OnY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 10:43:24 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58EC56429
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 07:43:22 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id w17so13389474wrg.7
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 07:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=I3nC8B6be2rJKcDVylzZNDnz/D1EgBd9lnRAuMjTZ0A=;
-        b=OflRcSKTk5KJCsJhl/OOpbqhK8lJUAG5ameoeZ6v2VCXjDvoRSiavCQ3R1SeKuwP7R
-         KbeemSWZj0FBD0BGYqlJ9zS8r30ytnBo+ZfnhbBnEGCCqGR3VFgmCBFbM2Ri1w9nKmD3
-         Puk4NGy6VbGJKlsvbgETb7enuUR4hHJxrlL9u/Sn+TdoGHt16rM9rdRt04CQ42UTxvO6
-         Kzxmo/2csAxoA6QVmMiAYzHNH4FzLTzgjs6VRdFBeRRrEEdOz6cKDRINsq4la0W19ECu
-         u9sf6CUJIC8M2wLb+kZTBI0plSWsnXdcymHtHQ14ks2Lqp8b0msjqo9WP4H8G6nqd6wR
-         LRdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=I3nC8B6be2rJKcDVylzZNDnz/D1EgBd9lnRAuMjTZ0A=;
-        b=OI6NLescQ7LvwLtJeNupVNwETjWK+1jzPWCmKrenlxeumNA70BXrYxvI2k5FaO7U5d
-         F75imaaaq5MBFFrS9jNQHT8mLln+Sy/d3JJuM44aB75OQRGbQNRyZzAGQnHTcmbe1bW5
-         xt/Vmk0eQKKkGAg6D5XAZtSZN7X8UG8qDS+GEH/oZNJpbcNGKPlHO3AVNHVG1px3CrlP
-         zgdIcFcnWwifU3CnEFPsmhaT5vQBGPiAtPJ+VQhMrVfPdNz3E3dct5XRknTV6u7xOOyN
-         Y9mw2BkVR77zAFHvPbW8x5Vfgp+tCQd9lq648isU4jkN+dv0gcQrtW4URs9Mj0heTmaj
-         Djuw==
-X-Gm-Message-State: AJIora9HuouarQMytjwnDUhFHq9eZ3P2Z7Ne7iBwU/HTtoJlkO7p0A7x
-        k4MwURBZCvA3DzYYbUHUmP1UrQ==
-X-Google-Smtp-Source: AGRyM1tP0/3e0jF/X+My1isKflET6012raahzAfSWgsOfNodPOmlFfVxCEOpkadCal8x3313vLkjhQ==
-X-Received: by 2002:a5d:5a19:0:b0:21b:8eb8:f54b with SMTP id bq25-20020a5d5a19000000b0021b8eb8f54bmr12266223wrb.663.1656341000915;
-        Mon, 27 Jun 2022 07:43:20 -0700 (PDT)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id e7-20020adfe7c7000000b0021b9100b844sm10943277wrn.91.2022.06.27.07.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 07:43:20 -0700 (PDT)
-Date:   Mon, 27 Jun 2022 15:43:18 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     frank zago <frank@zago.net>, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
-        linux-usb@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v6 1/4] mfd: ch341: add core driver for the WCH CH341 in
- I2C/SPI/GPIO mode
-Message-ID: <YrnCBpvA8/y38Brg@google.com>
-References: <20220616013747.126051-1-frank@zago.net>
- <20220616013747.126051-2-frank@zago.net>
- <Yrm48AYxkmoUgdwr@google.com>
- <Yrm+kH6NvTy5A9WO@kroah.com>
+        with ESMTP id S236155AbiF0OpE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 10:45:04 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD007DEF4
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 07:45:02 -0700 (PDT)
+Received: from notapiano (pool-98-113-53-228.nycmny.fios.verizon.net [98.113.53.228])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: nfraprado)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id A9ADC660183A;
+        Mon, 27 Jun 2022 15:45:00 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1656341101;
+        bh=DidxRA9FuVtzSs+FsqyP8KjaAefBlqvwYqnZS4BeJL4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QnQBDu05ERdYuHPycsRhgHjKUVE0wnIY9QF+s63mRVwHFufi8F/yNiKK8C6NYCHOp
+         57nQzfTruH4ZahuDFAaia/vsWk8e86OCc5Qnmdu6pJfcpiF1AIFZ1L2usBn2McY/g6
+         GvXylg5Gf8rhswDqSURui83hbkmSzeRDSd3O1WCnVmneQCBf8t+2ZJnrHTXqyqZB84
+         qgIgySAubaSXfEzf1TlhFR1WyPdS7l4MMhOM0Zu707ROfz9cJMuCICMsRAoxNoNkJT
+         Wcxe9KwhnOQe2rUM0nTxO6x3ljuGJ7cAQy7s4FzZ6tGH0UcLuONGhwF8VXhLgpM+nV
+         /IWJBhVjr6QJg==
+Date:   Mon, 27 Jun 2022 10:44:57 -0400
+From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado 
+        <nfraprado@collabora.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, Guodong Liu <guodong.liu@mediatek.com>
+Subject: Re: [PATCH] pinctrl: mediatek: mt8192: Fix compile warnings
+Message-ID: <20220627144457.esdwcma4wibtc2jm@notapiano>
+References: <20220626235743.87821-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yrm+kH6NvTy5A9WO@kroah.com>
+In-Reply-To: <20220626235743.87821-1-linus.walleij@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 27 Jun 2022, Greg Kroah-Hartman wrote:
-
-> On Mon, Jun 27, 2022 at 03:04:32PM +0100, Lee Jones wrote:
-> > USB review please.
-> > 
-> > > The CH341 is a multifunction chip, presenting 3 different USB PID. One
-> > > 
-> > > of these functions is for I2C/SPI/GPIO. This new set of drivers will
-> > > manage I2C and GPIO.
-> > > 
-> > > Signed-off-by: frank zago <frank@zago.net>
-> > > ---
-> > >  MAINTAINERS               |  7 +++
-> > >  drivers/mfd/Kconfig       | 10 +++++
-> > >  drivers/mfd/Makefile      |  1 +
-> > >  drivers/mfd/ch341-core.c  | 90 +++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/ch341.h | 18 ++++++++
-> > >  5 files changed, 126 insertions(+)
-> > >  create mode 100644 drivers/mfd/ch341-core.c
-> > >  create mode 100644 include/linux/mfd/ch341.h
-> > > 
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 43d3d07afccd..628eeaa9bf68 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -21475,6 +21475,13 @@ M:	David HÃ¤rdeman <david@hardeman.nu>
-> > >  S:	Maintained
-> > >  F:	drivers/media/rc/winbond-cir.c
-> > >  
-> > > +WINCHIPHEAD CH341 I2C/GPIO MFD DRIVER
-> > > +M:	Frank Zago <frank@zago.net>
-> > > +L:	linux-usb@vger.kernel.org
-> > > +S:	Maintained
-> > > +F:	drivers/mfd/ch341-core.c
-> > > +F:	include/linux/mfd/ch341.h
-> > > +
-> > >  WINSYSTEMS EBC-C384 WATCHDOG DRIVER
-> > >  M:	William Breathitt Gray <vilhelm.gray@gmail.com>
-> > >  L:	linux-watchdog@vger.kernel.org
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 3b59456f5545..893acc821a42 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -1784,6 +1784,16 @@ config MFD_LOCHNAGAR
-> > >  	help
-> > >  	  Support for Cirrus Logic Lochnagar audio development board.
-> > >  
-> > > +config MFD_CH341
-> > > +	tristate "WinChipHead CH341 in I2C/SPI/GPIO mode"
-> > > +	depends on USB
-> > > +	help
-> > > +	  If you say yes to this option, support for the CH341 series
-> > > +	  of chips, running in I2C/SPI/GPIO mode will be included.
-> > > +
-> > > +	  This driver can also be built as a module.  If so, the
-> > > +	  module will be called ch341-core.
-> > > +
-> > >  config MFD_ARIZONA
-> > >  	select REGMAP
-> > >  	select REGMAP_IRQ
-> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > > index 858cacf659d6..fd615ab3929f 100644
-> > > --- a/drivers/mfd/Makefile
-> > > +++ b/drivers/mfd/Makefile
-> > > @@ -13,6 +13,7 @@ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
-> > >  obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
-> > >  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
-> > >  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
-> > > +obj-$(CONFIG_MFD_CH341)		+= ch341-core.o
-> > >  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
-> > >  obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
-> > >  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
-> > > diff --git a/drivers/mfd/ch341-core.c b/drivers/mfd/ch341-core.c
-> > > new file mode 100644
-> > > index 000000000000..f08a67dd6074
-> > > --- /dev/null
-> > > +++ b/drivers/mfd/ch341-core.c
-> > > @@ -0,0 +1,90 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Core driver for the CH341A, CH341B and CH341T in I2C/SPI/GPIO
-> > > + * mode. There are cell drivers available for I2C and GPIO. SPI is not
-> > > + * yet supported.
-> > > + *
-> > > + * Copyright 2022, Frank Zago
-> > > + * Copyright (c) 2017 Gunar Schorcht (gunar@schorcht.net)
-> > > + * Copyright (c) 2016 Tse Lun Bien
-> > > + * Copyright (c) 2014 Marco Gittler
-> > > + * Copyright (c) 2006-2007 Till Harbaum (Till@Harbaum.org)
-> > > + */
-> > > +
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/mfd/ch341.h>
-> > > +#include <linux/mfd/core.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/usb.h>
-> > > +
-> > > +static const struct mfd_cell ch341_devs[] = {
-> > > +	{
-> > > +		.name = "ch341-gpio",
-> > > +	},
-> > > +	{
-> > > +		.name = "ch341-i2c",
-> > > +	},
-> > > +};
-> > > +
-> > > +static int ch341_usb_probe(struct usb_interface *iface,
-> > > +			   const struct usb_device_id *usb_id)
-> > > +{
-> > > +	struct usb_endpoint_descriptor *bulk_out;
-> > > +	struct usb_endpoint_descriptor *bulk_in;
-> > > +	struct usb_endpoint_descriptor *intr_in;
-> > > +	struct ch341_ddata *ddata;
-> > > +	int ret;
-> > > +
-> > > +	ddata = devm_kzalloc(&iface->dev, sizeof(*ddata), GFP_KERNEL);
-> > > +	if (!ddata)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	ddata->usb_dev = interface_to_usbdev(iface);
-> > > +	mutex_init(&ddata->usb_lock);
-> > > +
-> > > +	ret = usb_find_common_endpoints(iface->cur_altsetting, &bulk_in,
-> > > +					&bulk_out, &intr_in, NULL);
-> > > +	if (ret) {
-> > > +		dev_err(&iface->dev, "Could not find all endpoints\n");
-> > > +		return -ENODEV;
-> > > +	}
-> > > +
-> > > +	ddata->ep_in = bulk_in->bEndpointAddress;
-> > > +	ddata->ep_out = bulk_out->bEndpointAddress;
-> > > +	ddata->ep_intr = intr_in->bEndpointAddress;
-> > > +	ddata->ep_intr_interval = intr_in->bInterval;
-> > > +
-> > > +	usb_set_intfdata(iface, ddata);
-> > > +
-> > > +	ret = mfd_add_devices(&iface->dev, PLATFORM_DEVID_AUTO, ch341_devs,
-> > > +			      ARRAY_SIZE(ch341_devs), NULL, 0, NULL);
-> > > +	if (ret)
-> > > +		return dev_err_probe(&iface->dev, ret,
-> > > +				     "Failed to register child devices\n");
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void ch341_usb_disconnect(struct usb_interface *usb_if)
-> > > +{
-> > > +	mfd_remove_devices(&usb_if->dev);
-> > > +}
-> > > +
-> > > +static const struct usb_device_id ch341_usb_table[] = {
-> > > +	{ USB_DEVICE(0x1a86, 0x5512) },
-> > > +	{ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(usb, ch341_usb_table);
-> > > +
-> > > +static struct usb_driver ch341_usb_driver = {
-> > > +	.name       = "ch341-mfd",
-> > > +	.id_table   = ch341_usb_table,
-> > > +	.probe      = ch341_usb_probe,
-> > > +	.disconnect = ch341_usb_disconnect,
-> > > +};
-> > > +module_usb_driver(ch341_usb_driver);
-> > > +
-> > > +MODULE_AUTHOR("Frank Zago <frank@zago.net>");
-> > > +MODULE_DESCRIPTION("CH341 USB to I2C/SPI/GPIO adapter");
-> > > +MODULE_LICENSE("GPL");
-> > > diff --git a/include/linux/mfd/ch341.h b/include/linux/mfd/ch341.h
-> > > new file mode 100644
-> > > index 000000000000..44f5da0720bd
-> > > --- /dev/null
-> > > +++ b/include/linux/mfd/ch341.h
-> > > @@ -0,0 +1,18 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +/* Definitions for the CH341 driver */
-> > > +
-> > > +#include <linux/mutex.h>
-> > > +#include <linux/types.h>
-> > > +
-> > > +struct usb_device;
-> > > +struct usb_interface;
-> > > +
-> > > +struct ch341_ddata {
-> > > +	struct usb_device *usb_dev;
-> > > +	struct mutex usb_lock;
-> > > +
-> > > +	int ep_in;
-> > > +	int ep_out;
-> > > +	int ep_intr;
-> > > +	u8 ep_intr_interval;
-> > > +};
+On Mon, Jun 27, 2022 at 01:57:43AM +0200, Linus Walleij wrote:
+> After applying patches I get these warnings:
 > 
+>   drivers/pinctrl/mediatek/pinctrl-mt8192.c:1302:56:
+>   warning: "/*" within comment [-Wcomment]
+>   drivers/pinctrl/mediatek/pinctrl-mt8192.c:1362:56:
+>   warning: "/*" within comment [-Wcomment]
 > 
-> Looks sane enough, but doesn't actually do any USB data transfers, maybe
-> that happens somewhere else...
+> Something is wrong with the missing end-slashes. Add them.
+> 
+> Cc: Guodong Liu <guodong.liu@mediatek.com>
+> Cc: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-I expect those to happen in *both* of these:
+Hi,
 
-  static const struct mfd_cell ch341_devs[] = {
-	{
-		.name = "ch341-gpio",
-	},
-	{
-		.name = "ch341-i2c",
-	},
-  };
+yes, this issue was noticed during review [1], and fixed on the following
+version [2], but since the commit before the correction was applied, this fix
+LGTM.
 
-Is that correct Frank?
+Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks,
+Nícolas
 
-Thanks.
+[1] https://lore.kernel.org/all/20220624152926.76hvymguryhfv4sq@notapiano
+[2] https://lore.kernel.org/all/20220626043955.32756-4-guodong.liu@mediatek.com/
 
--- 
-Lee Jones [æŽç¼æ–¯]
-Principal Technical Lead - Developer Services
-Linaro.org â”‚ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt8192.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8192.c b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
+> index a66394c6f443..78c02b7c81f0 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt8192.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
+> @@ -1299,15 +1299,15 @@ static const unsigned int mt8192_pull_type[] = {
+>  	MTK_PULL_PU_PD_TYPE,/*94*/ MTK_PULL_PU_PD_TYPE,/*95*/
+>  	MTK_PULL_PU_PD_TYPE,/*96*/ MTK_PULL_PU_PD_TYPE,/*97*/
+>  	MTK_PULL_PU_PD_TYPE,/*98*/ MTK_PULL_PU_PD_TYPE,/*99*/
+> -	MTK_PULL_PU_PD_TYPE,/*100* MTK_PULL_PU_PD_TYPE,/*101*/
+> -	MTK_PULL_PU_PD_TYPE,/*102* MTK_PULL_PU_PD_TYPE,/*103*/
+> -	MTK_PULL_PU_PD_TYPE,/*104* MTK_PULL_PU_PD_TYPE,/*105*/
+> -	MTK_PULL_PU_PD_TYPE,/*106* MTK_PULL_PU_PD_TYPE,/*107*/
+> -	MTK_PULL_PU_PD_TYPE,/*108* MTK_PULL_PU_PD_TYPE,/*109*/
+> -	MTK_PULL_PU_PD_TYPE,/*110* MTK_PULL_PU_PD_TYPE,/*111*/
+> -	MTK_PULL_PU_PD_TYPE,/*112* MTK_PULL_PU_PD_TYPE,/*113*/
+> -	MTK_PULL_PU_PD_TYPE,/*114* MTK_PULL_PU_PD_TYPE,/*115*/
+> -	MTK_PULL_PU_PD_TYPE,/*116* MTK_PULL_PU_PD_TYPE,/*117*/
+> +	MTK_PULL_PU_PD_TYPE,/*100*/ MTK_PULL_PU_PD_TYPE,/*101*/
+> +	MTK_PULL_PU_PD_TYPE,/*102*/ MTK_PULL_PU_PD_TYPE,/*103*/
+> +	MTK_PULL_PU_PD_TYPE,/*104*/ MTK_PULL_PU_PD_TYPE,/*105*/
+> +	MTK_PULL_PU_PD_TYPE,/*106*/ MTK_PULL_PU_PD_TYPE,/*107*/
+> +	MTK_PULL_PU_PD_TYPE,/*108*/ MTK_PULL_PU_PD_TYPE,/*109*/
+> +	MTK_PULL_PU_PD_TYPE,/*110*/ MTK_PULL_PU_PD_TYPE,/*111*/
+> +	MTK_PULL_PU_PD_TYPE,/*112*/ MTK_PULL_PU_PD_TYPE,/*113*/
+> +	MTK_PULL_PU_PD_TYPE,/*114*/ MTK_PULL_PU_PD_TYPE,/*115*/
+> +	MTK_PULL_PU_PD_TYPE,/*116*/ MTK_PULL_PU_PD_TYPE,/*117*/
+>  	MTK_PULL_PU_PD_RSEL_TYPE,/*118*/ MTK_PULL_PU_PD_RSEL_TYPE,/*119*/
+>  	MTK_PULL_PU_PD_RSEL_TYPE,/*120*/ MTK_PULL_PU_PD_RSEL_TYPE,/*121*/
+>  	MTK_PULL_PU_PD_RSEL_TYPE,/*122*/ MTK_PULL_PU_PD_RSEL_TYPE,/*123*/
+> -- 
+> 2.36.1
+> 
