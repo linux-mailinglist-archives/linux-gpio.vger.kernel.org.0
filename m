@@ -2,78 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9000055B489
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jun 2022 02:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C68855B4CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jun 2022 02:57:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbiF0ADj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 Jun 2022 20:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59322 "EHLO
+        id S229468AbiF0A4Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Jun 2022 20:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiF0ADh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jun 2022 20:03:37 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CF72BC4
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 17:03:36 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-3177f4ce3e2so70624897b3.5
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 17:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tV+5hEqlzeK4MVMUcyGrO+zWHO85wDG71TwH0FeAL48=;
-        b=HZIsijKbkoPXss058615i66Dsx2x/uaFSU58tDBBNU/Kc9sJw1B9n7yb4t1CKlnCYg
-         b8TCEfa5SdiUOO1IRFlnR4krDJAAB1RyFd05x8+Juv02VfAU4417tGiJHa2lVPI08gJM
-         k9ANc5hrFHga7vBzEmYdr/1KpI/rsCU9N848M1DlAlf7/XG3FJrIQHIufcqgLkFcedNY
-         vX5jp/NH290bQQp7xcxeqC++w1j1xyDVxOx3WexMRxrSTOZLywfj5E5B3d+tWRTKNoV0
-         Gzh6HQtmLIrDAMtcuFW7nMbcio5vtjnc5L35Q72vvPwAaOXLidjI2bWbSNxetp0IyTQR
-         juUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tV+5hEqlzeK4MVMUcyGrO+zWHO85wDG71TwH0FeAL48=;
-        b=YSfaj6m3aT11Yw6j0xqRkxldOlfsoZhrF1sStV7WynpMrjy2aiTwjg9RRxQLVtpmuX
-         jN4VNBNzTcgkF4dHCx1DWd/5GNwsoQFCC07q2kvAMWueNLw1iTN1j2Ww1zlCPq8YDxCX
-         ea6NVQPUlu00E3mI+EO+PvQFLh78zE+prCl6xOCL/JtMneVL+snFW2eZdY2SjgPbGC0C
-         GXkKoGnBOGQvXX334ZFou+cavmnPOzUyzLSSayFb+SMpFcMp2l0gW9r5unttgKlbR8DG
-         zn1qQnxb5qYqcccXIyH0V3jPclrWFd7KsxdSpoWliwJhKFi8HcWJcc1DP+o4GwZ71Eql
-         78VQ==
-X-Gm-Message-State: AJIora8Lai3W86RlIeGX/+m0SRS75WeHJjlcfjXJwEB6YV+3mEdAkXVj
-        L913PSomMl440eSjr0f9UYKDv9jK9z6utDfn/sqWBuEmAPY=
-X-Google-Smtp-Source: AGRyM1t6F6k8xfGB/lriGMi/dUPI8ruSvMEKeLbClV/EBMxDsiKazBH6BpLMX24F1pYBJe51/9DUhoQuqK4geEYq4+I=
-X-Received: by 2002:a0d:eace:0:b0:317:87ac:b3a8 with SMTP id
- t197-20020a0deace000000b0031787acb3a8mr12322750ywe.126.1656288215795; Sun, 26
- Jun 2022 17:03:35 -0700 (PDT)
+        with ESMTP id S229458AbiF0A4P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jun 2022 20:56:15 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6B42BEB
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 17:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656291374; x=1687827374;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7+lrCRYgImK0RJ7iPP+xRyEUdJKX38swJDG3wOMqf7M=;
+  b=AcikPkeMKcFCvbqgLfb+oQ+QV+BW1wzczuuOlarqPGHApDvO4n6ACDVL
+   nLknO52NeZ5ed+D6Nok5UMWYli75tIKe1XfH/hKx/b9RHAAM8H/JPq1QA
+   1NACEd/LeWgBSX0H65kN5NWZ2qZbQK2IfqpRtK4HNwpPXCeRfsvBmG5cd
+   h9Y8/KtI1worGkYTa2g10wr8x01bbwILHADg7yl4Ofu90NVW/uiABpnPd
+   dIZEQ66fR4+ladBzJ3j8f/vVnUnRFoYeCSNd0YGczCdAfM2VRKx0ChbHA
+   kzSs1YP/BZcoPYKyyKTGgW05ylOFv8MPAAHz8kFfOTiuCB1gbcZnAkDG7
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10390"; a="282061486"
+X-IronPort-AV: E=Sophos;i="5.92,225,1650956400"; 
+   d="scan'208";a="282061486"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2022 17:56:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,225,1650956400"; 
+   d="scan'208";a="616594227"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 26 Jun 2022 17:56:13 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o5d2y-00081X-Iq;
+        Mon, 27 Jun 2022 00:56:12 +0000
+Date:   Mon, 27 Jun 2022 08:55:24 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 8fad91bd5a6c63051ba8ffad6da0c81bf06c9308
+Message-ID: <62b8fffc.isIiEVmx0wMLTmVc%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <202206260954.NjQGnygt-lkp@intel.com> <37cb3f3239c9be1dd18e576e4823f364679bb44a.camel@mediatek.com>
-In-Reply-To: <37cb3f3239c9be1dd18e576e4823f364679bb44a.camel@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 Jun 2022 02:03:24 +0200
-Message-ID: <CACRpkdYxaZqw60Wui-8=mziPvfkvuS_nQE=03y3VCbzBdc61vQ@mail.gmail.com>
-Subject: Re: [linusw-pinctrl:devel 17/19] drivers/pinctrl/mediatek/pinctrl-mt8192.c:1362:56:
- warning: "/*" within comment
-To:     Guodong Liu <guodong.liu@mediatek.com>
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-gpio@vger.kernel.org,
-        =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 26, 2022 at 6:48 AM Guodong Liu <guodong.liu@mediatek.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 8fad91bd5a6c63051ba8ffad6da0c81bf06c9308  Merge branch 'devel' into for-next
 
-> Fixed in Next patch, thanks!
+elapsed time: 1500m
 
-I don't know which patch you mean, I just wrote a patch to fix it
-so my tree builds cleanly, thanks!
+configs tested: 50
+configs skipped: 2
 
-Yours,
-Linus Walleij
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+mips                             allyesconfig
+powerpc                           allnoconfig
+sh                               allmodconfig
+powerpc                          allmodconfig
+m68k                             allyesconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+i386                                defconfig
+i386                             allyesconfig
+m68k                             allmodconfig
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+x86_64                        randconfig-a011
+i386                          randconfig-a016
+i386                          randconfig-a012
+i386                          randconfig-a014
+arc                  randconfig-r043-20220626
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-syz
+x86_64                              defconfig
+x86_64                           allyesconfig
+
+clang tested configs:
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                          randconfig-a011
+hexagon              randconfig-r041-20220626
+hexagon              randconfig-r045-20220626
+riscv                randconfig-r042-20220626
+s390                 randconfig-r044-20220626
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
