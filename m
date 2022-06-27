@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A5D055CE75
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:05:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE7C355CDED
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241357AbiF0UeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 16:34:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55806 "EHLO
+        id S238087AbiF0UnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 16:43:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239299AbiF0UeF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 16:34:05 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA046340;
-        Mon, 27 Jun 2022 13:34:05 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id o9so14690887edt.12;
-        Mon, 27 Jun 2022 13:34:04 -0700 (PDT)
+        with ESMTP id S231700AbiF0UnG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 16:43:06 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B248AB1;
+        Mon, 27 Jun 2022 13:43:05 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id ge10so21587475ejb.7;
+        Mon, 27 Jun 2022 13:43:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OLWwuKwhDGZ5AVt1p7fFud+w2xnXRC2cyekV81w3MDU=;
-        b=dheqE6WHwvec6tvb6t2RbF5VQNheGf73O7aOBbWBM90uPgRY7rjxLwdopKqx72QETI
-         9+X7x7jSPVLe35HXCDQldILySK6vIaAFKfnX3HPBP0/j95N8DUoKhHp7021brMu9adLG
-         yQGG2iTCry+dnpBEIfhwqQI3FsMWrs6gaWN1SzhlRdwlpU7TA0f87EBVzhZUvyEl9p+v
-         naGmnvUsNkzChfpTJPj4aM2kXkZNXpdjNvCCAz1DtdjOEQXU3H55lUVo3BTVg3PJr9qn
-         krDTRJOYoa/gMT7+yRFcL+eTIiPJv1z1iYTuQSFygvCy6I+O2QDSnCP6uUX6MCdwidHK
-         IKVw==
+        bh=pX8mkwuBJMDVUqI/3IJvGaMM4XSCal/s1gxF0ly7VUQ=;
+        b=QoQQ4++P9s5DYrtw/AQwBYJLlNnFOBx7HzP+wYaYJH49psnaITjI7cPcPUnJeK1ujz
+         b1q4KJW1CeS5qGyyr57esEE21cjZEfz96ZImaxSazJDwYPF8QXtiWWsqf2InGxDpHdV+
+         2O2+2TxPVF3bTk+5addEEEC3ZhCzh+rtDfmt8qvBCgXqLV2EY/tP4Xs2xcAYb6XedBwM
+         4gq0erZfP56o9ybZBGG7GoczY68lAwmKDpk9X0q9EEFnh+Y5/yWipr8uruwFM/YF3gEl
+         N4+4B/VgTem7aR/yaFDlb+Y0EP5Rbi8XB+/yQ0ah39JLjLPq2jnbtRYeHiiR88KSh4kC
+         HErA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OLWwuKwhDGZ5AVt1p7fFud+w2xnXRC2cyekV81w3MDU=;
-        b=npCC/2A/rRewfTLLDahvlN07iqT6//+Cc3df09bfNy4n561wVLfxK0mjlTJrAqtgEg
-         xYWLSlwE2HtxaQcXytTcEKBvL+QIcpkvFcxTvbeIv3lnYfxcBqDoi94ZXEVk7dykap0F
-         H+blwsmATO0h6qHamCt9GMCQnW+tZUNGwou3OllmGIbH9/GlO+ZiWvOBeK3OPLNKutbN
-         r18JWkNxTuy8Pp73Hh8nN3iGiMbhNT6aTMPIiiU177VLQxCR4kHQIp9eF1J5Tp3gQFZa
-         CY+FpSQBuY6RT9eyJXtuicJQYIsCV0CySeDR2dvY/1ENrfnbI9Rc9q1SeD4R8l2QEfTn
-         aFIQ==
-X-Gm-Message-State: AJIora+5I/NoKCkc4jsfstWAuDdEiYKYYdG8u2lPD8RTzgPDBjMifSKd
-        cJDdv+CtSG+Tm6cAjXNseiYrC2jOjYo=
-X-Google-Smtp-Source: AGRyM1t+7vYQ+AGGmRmAHAA6HQWSIKQ56fM95D1r6YAj+WD+1Y+PPYMi6z7Zq+alDcC2KC05jXGFig==
-X-Received: by 2002:a05:6402:280b:b0:437:9efc:a065 with SMTP id h11-20020a056402280b00b004379efca065mr5648487ede.3.1656362043648;
-        Mon, 27 Jun 2022 13:34:03 -0700 (PDT)
+        bh=pX8mkwuBJMDVUqI/3IJvGaMM4XSCal/s1gxF0ly7VUQ=;
+        b=pZ4dpgoj4epbdTn56+NhTuDw5zHv8fYfaeaxYicClryPXK0aynHe43erh97YgvegX5
+         7Pl/Euyn/0G/l1DmZoO+xtgcQmX1sNYKImFjMlsy3voUXJAon5ytmrfMP2+BP9jQSbsk
+         2HlLnbUmDi+98M+lHZ3iykakAFu7BQDLJeuLbKUe4DfxhQILndxUztO8cdxXKtI2ku5Q
+         gLRHuN+LCvcek412+DvWQ1QVRx+dwjpQVjkHRHWK5w4+HV3IepROyXl7/IHfFndLcDnL
+         j+XaCwXl/FCqKuwYkfXd02RFjIn4NYnlRNltGyEFi7yetUjCL0WYEHOttXVSJHNUQmAq
+         L+Hg==
+X-Gm-Message-State: AJIora/zqKRGenWGB61QAnw3VJE4xUZx6BlQpXDwNf/xRrK66Xm9jW7F
+        1WroU9ajQ9Jc8dVhoCj8GKo=
+X-Google-Smtp-Source: AGRyM1u/Qpe9FohRa7baqPeSJkc20W7Civ6KZPWzhFWn2Ly0AZVHfraXHNtUlW02PWiwx1Qp1JfYMA==
+X-Received: by 2002:a17:907:3f9f:b0:726:39d8:4c8c with SMTP id hr31-20020a1709073f9f00b0072639d84c8cmr14083460ejc.241.1656362584143;
+        Mon, 27 Jun 2022 13:43:04 -0700 (PDT)
 Received: from jernej-laptop.localnet (213-161-3-76.dynamic.telemach.net. [213.161.3.76])
-        by smtp.gmail.com with ESMTPSA id b9-20020aa7d489000000b004358243e752sm8120949edr.5.2022.06.27.13.34.01
+        by smtp.gmail.com with ESMTPSA id dt16-20020a170906b79000b00704fa2748ffsm5528538ejb.99.2022.06.27.13.43.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 13:34:02 -0700 (PDT)
+        Mon, 27 Jun 2022 13:43:03 -0700 (PDT)
 From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
 To:     Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -57,11 +57,11 @@ Cc:     Samuel Holland <samuel@sholland.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH 2/6] pinctrl: sunxi: Add I/O bias setting for H6 R-PIO
-Date:   Mon, 27 Jun 2022 22:34:00 +0200
-Message-ID: <4405996.LvFx2qVVIh@jernej-laptop>
-In-Reply-To: <20220626021148.56740-3-samuel@sholland.org>
-References: <20220626021148.56740-1-samuel@sholland.org> <20220626021148.56740-3-samuel@sholland.org>
+Subject: Re: [PATCH 3/6] pinctrl: sunxi: Support the 2.5V I/O bias mode
+Date:   Mon, 27 Jun 2022 22:43:02 +0200
+Message-ID: <1818958.tdWV9SEqCh@jernej-laptop>
+In-Reply-To: <20220626021148.56740-4-samuel@sholland.org>
+References: <20220626021148.56740-1-samuel@sholland.org> <20220626021148.56740-4-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -75,22 +75,123 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dne nedelja, 26. junij 2022 ob 04:11:43 CEST je Samuel Holland napisal(a):
-> H6 requires I/O bias configuration on both of its PIO devices.
-> Previously it was only done for the main PIO.
+Dne nedelja, 26. junij 2022 ob 04:11:44 CEST je Samuel Holland napisal(a):
+> H616 and newer SoCs feature a 2.5V I/O bias mode in addition to the
+> 1.8V and 3.3V modes. This mode is entered by selecting the 3.3V level
+> and disabling the "withstand function".
 > 
-> The setting for Port L is at bit 0, so the bank calculation needs to
-> account for the pin base. Otherwise the wrong bit is used.
+> H616 supports this capability on its main PIO only. A100 supports this
+> capability on both its PIO and R-PIO.
 > 
-> Fixes: cc62383fcebe ("pinctrl: sunxi: Support I/O bias voltage setting on
-> H6") Signed-off-by: Samuel Holland <samuel@sholland.org>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+> 
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  1 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  2 +-
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c   |  2 +-
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 10 ++++++++++
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h         |  7 +++++++
+>  5 files changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+> b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c index
+> 21054fcacd34..afc1f5df7545 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+> @@ -82,6 +82,7 @@ static const struct sunxi_pinctrl_desc a100_r_pinctrl_data
+> = { .npins = ARRAY_SIZE(a100_r_pins),
+>  	.pin_base = PL_BASE,
+>  	.irq_banks = 1,
+> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_CTL,
+>  };
+> 
+>  static int a100_r_pinctrl_probe(struct platform_device *pdev)
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c index
+> e69f6da40dc0..f682e0e4244d 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> @@ -684,7 +684,7 @@ static const struct sunxi_pinctrl_desc a100_pinctrl_data
+> = { .npins = ARRAY_SIZE(a100_pins),
+>  	.irq_banks = 7,
+>  	.irq_bank_map = a100_irq_bank_map,
+> -	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_CTL,
+>  };
+> 
+>  static int a100_pinctrl_probe(struct platform_device *pdev)
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
+> b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c index
+> 152b71226a80..d6ca720ee8d8 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
+> @@ -525,7 +525,7 @@ static const struct sunxi_pinctrl_desc h616_pinctrl_data
+> = { .irq_banks = ARRAY_SIZE(h616_irq_bank_map),
+>  	.irq_bank_map = h616_irq_bank_map,
+>  	.irq_read_needs_mux = true,
+> -	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_CTL,
+>  };
+> 
+>  static int h616_pinctrl_probe(struct platform_device *pdev)
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> b/drivers/pinctrl/sunxi/pinctrl-sunxi.c index 3c5e71359ca8..eb3d595f816a
+> 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -662,6 +662,16 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct
+> sunxi_pinctrl *pctl, reg &= ~IO_BIAS_MASK;
+>  		writel(reg | val, pctl->membase + 
+sunxi_grp_config_reg(pin));
+>  		return 0;
+> +	case BIAS_VOLTAGE_PIO_POW_MODE_CTL:
+> +		val = uV > 1800000 && uV <= 2500000 ? BIT(bank) : 0;
+> +
+> +		raw_spin_lock_irqsave(&pctl->lock, flags);
+> +		reg = readl(pctl->membase + PIO_POW_MOD_CTL_REG);
+> +		reg &= ~BIT(bank);
+> +		writel(reg | val, pctl->membase + PIO_POW_MOD_CTL_REG);
+> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +
+> +		fallthrough;
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-
-Did you noticed any improvement with this properly set? In theory, 3.3 V bias 
-should always work, right?
+Would this set bit 12 as needed? According to documentation, it's a bit 
+special case, since it covers VCC-IO, port F and port H, at least according to 
+documentation. I guess BIAS_VOLTAGE_PIO_POW_MODE_SEL has same issue.
 
 Best regards,
 Jernej
+
+>  	case BIAS_VOLTAGE_PIO_POW_MODE_SEL:
+>  		val = uV <= 1800000 ? 1 : 0;
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> b/drivers/pinctrl/sunxi/pinctrl-sunxi.h index a32bb5bcb754..0f1aab58650c
+> 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -98,6 +98,7 @@
+>  #define PINCTRL_SUN8I_V3S	BIT(10)
+> 
+>  #define PIO_POW_MOD_SEL_REG	0x340
+> +#define PIO_POW_MOD_CTL_REG	0x344
+> 
+>  enum sunxi_desc_bias_voltage {
+>  	BIAS_VOLTAGE_NONE,
+> @@ -111,6 +112,12 @@ enum sunxi_desc_bias_voltage {
+>  	 * register, as seen on H6 SoC, for example.
+>  	 */
+>  	BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+> +	/*
+> +	 * Bias voltage is set through PIO_POW_MOD_SEL_REG
+> +	 * and PIO_POW_MOD_CTL_REG register, as seen on
+> +	 * A100 and D1 SoC, for example.
+> +	 */
+> +	BIAS_VOLTAGE_PIO_POW_MODE_CTL,
+>  };
+> 
+>  struct sunxi_desc_function {
+
+
 
 
