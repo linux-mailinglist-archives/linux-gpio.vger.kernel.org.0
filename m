@@ -2,131 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C68855B4CE
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jun 2022 02:57:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3361C55B50B
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jun 2022 04:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbiF0A4Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 Jun 2022 20:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        id S229753AbiF0CCS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Jun 2022 22:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbiF0A4P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jun 2022 20:56:15 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6B42BEB
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 17:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656291374; x=1687827374;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7+lrCRYgImK0RJ7iPP+xRyEUdJKX38swJDG3wOMqf7M=;
-  b=AcikPkeMKcFCvbqgLfb+oQ+QV+BW1wzczuuOlarqPGHApDvO4n6ACDVL
-   nLknO52NeZ5ed+D6Nok5UMWYli75tIKe1XfH/hKx/b9RHAAM8H/JPq1QA
-   1NACEd/LeWgBSX0H65kN5NWZ2qZbQK2IfqpRtK4HNwpPXCeRfsvBmG5cd
-   h9Y8/KtI1worGkYTa2g10wr8x01bbwILHADg7yl4Ofu90NVW/uiABpnPd
-   dIZEQ66fR4+ladBzJ3j8f/vVnUnRFoYeCSNd0YGczCdAfM2VRKx0ChbHA
-   kzSs1YP/BZcoPYKyyKTGgW05ylOFv8MPAAHz8kFfOTiuCB1gbcZnAkDG7
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10390"; a="282061486"
-X-IronPort-AV: E=Sophos;i="5.92,225,1650956400"; 
-   d="scan'208";a="282061486"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2022 17:56:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,225,1650956400"; 
-   d="scan'208";a="616594227"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 26 Jun 2022 17:56:13 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o5d2y-00081X-Iq;
-        Mon, 27 Jun 2022 00:56:12 +0000
-Date:   Mon, 27 Jun 2022 08:55:24 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S229463AbiF0CCR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Jun 2022 22:02:17 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F54CEB5
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Jun 2022 19:02:14 -0700 (PDT)
+X-UUID: 800a4fada75f4ac0918ac783fc702d14-20220627
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.6,REQID:54815c18-28fc-4576-b53d-73d472f609e1,OB:-327
+        68,LOB:0,IP:-32768,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-32768,FILE:0,RULE:R
+        elease_Ham,ACTION:release,TS:0
+X-CID-META: VersionHash:b14ad71,CLOUDID:1ad88eea-f7af-4e69-92ee-0fd74a0c286c,C
+        OID:nil,Recheck:0,SF:nil,TC:nil,Content:-5,EDM:-3,IP:nil,URL:1,File:nil,QS
+        :nil,BEC:nil,COL:0
+X-UUID: 800a4fada75f4ac0918ac783fc702d14-20220627
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+        (envelope-from <guodong.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 414658861; Mon, 27 Jun 2022 10:02:00 +0800
+Received: from mtkmbs07n1.mediatek.inc (172.21.101.16) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Mon, 27 Jun 2022 10:01:59 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 27 Jun 2022 10:01:59 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkmbs11n2.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.3 via Frontend
+ Transport; Mon, 27 Jun 2022 10:01:58 +0800
+Message-ID: <208aa8069584038593cbcb18f7f049f650782145.camel@mediatek.com>
+Subject: Re: [linusw-pinctrl:devel 17/19]
+ drivers/pinctrl/mediatek/pinctrl-mt8192.c:1362:56: warning: "/*" within
+ comment
+From:   Guodong Liu <guodong.liu@mediatek.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 8fad91bd5a6c63051ba8ffad6da0c81bf06c9308
-Message-ID: <62b8fffc.isIiEVmx0wMLTmVc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+CC:     kernel test robot <lkp@intel.com>, <kbuild-all@lists.01.org>,
+        <linux-gpio@vger.kernel.org>,
+        "=?ISO-8859-1?Q?N=EDcolas?= F. R. A. Prado" <nfraprado@collabora.com>
+Date:   Mon, 27 Jun 2022 10:01:58 +0800
+In-Reply-To: <CACRpkdYxaZqw60Wui-8=mziPvfkvuS_nQE=03y3VCbzBdc61vQ@mail.gmail.com>
+References: <202206260954.NjQGnygt-lkp@intel.com>
+         <37cb3f3239c9be1dd18e576e4823f364679bb44a.camel@mediatek.com>
+         <CACRpkdYxaZqw60Wui-8=mziPvfkvuS_nQE=03y3VCbzBdc61vQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 8fad91bd5a6c63051ba8ffad6da0c81bf06c9308  Merge branch 'devel' into for-next
+-----Original Message-----
+From: Linus Walleij <linus.walleij@linaro.org>
+To: Guodong Liu <guodong.liu@mediatek.com>
+Cc: kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org, 
+linux-gpio@vger.kernel.org, Nícolas F. R. A. Prado <
+nfraprado@collabora.com>
+Subject: Re: [linusw-pinctrl:devel 17/19]
+drivers/pinctrl/mediatek/pinctrl-mt8192.c:1362:56: warning: "/*" within
+comment
+Date: Mon, 27 Jun 2022 02:03:24 +0200
 
-elapsed time: 1500m
+On Sun, Jun 26, 2022 at 6:48 AM Guodong Liu <guodong.liu@mediatek.com>
+wrote:
 
-configs tested: 50
-configs skipped: 2
+> Fixed in Next patch, thanks!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I don't know which patch you mean, I just wrote a patch to fix it
+so my tree builds cleanly, thanks!
+evolution 
 
-gcc tested configs:
-arm                                 defconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-powerpc                          allmodconfig
-m68k                             allyesconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-i386                                defconfig
-i386                             allyesconfig
-m68k                             allmodconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-x86_64                        randconfig-a011
-i386                          randconfig-a016
-i386                          randconfig-a012
-i386                          randconfig-a014
-arc                  randconfig-r043-20220626
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-syz
-x86_64                              defconfig
-x86_64                           allyesconfig
+Fixed in Bellow patch, thanks!
 
-clang tested configs:
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-hexagon              randconfig-r041-20220626
-hexagon              randconfig-r045-20220626
-riscv                randconfig-r042-20220626
-s390                 randconfig-r044-20220626
+https://patchwork.kernel.org/project/linux-mediatek/patch/20220626043955.32756-4-guodong.liu@mediatek.com/
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Yours,
+Linus Walleij
+
