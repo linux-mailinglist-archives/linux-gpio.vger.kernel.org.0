@@ -2,336 +2,274 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B98F55DBCE
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:25:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A76CF55CC2A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:00:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236207AbiF0Nqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 09:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
+        id S236593AbiF0OEj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 10:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236017AbiF0Nqk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 09:46:40 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31C360C0
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 06:46:38 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id a15so9046315pfv.13
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 06:46:38 -0700 (PDT)
+        with ESMTP id S236595AbiF0OEh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 10:04:37 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24AED12095
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 07:04:36 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id o16so13248212wra.4
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 07:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bItcgwOweyHpbTdbB2yStlE3LoN6u/SIqUTXgS5X+NM=;
-        b=H5/X1uWvkgaoy61/W+cveuxNnnnl0UYHyzaGXFTJFa+BJxdk9Wr2EIWWqzjAqUOUqX
-         khnGdLO1Wgj0Tf2u8TUm65/EbjDVcKYVIerGmTGSRyGHZlXAI9uEvAo9786my5y6r1Pm
-         E2H45Vsxa6f6SqQqYLk1vEf22BajwCQSJpF/eClq4l9TB7ovGbYAZXfr5XG8vt6Cvp8X
-         3okEPD8zaLOosaDvs4IOrP6O5NfdV3nzeiixyjpSBABgQLuuNfDchtWlwAfmPx0bQ3uf
-         Zf98Jqy9sgiB1vu/uX6Te6QMkkTiVsU3hfnMx0ANC5L9hcfcJ+H79Q7JLE/gNLGLoJaw
-         Q55w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=0l/VKWYVQYUILKHgUYVfRFznW8ESnk3f9wu78mOXDpQ=;
+        b=fr6mv6TnpMpTlXuFkKPP4lOMfCrmwbEBAqT6sTs2WU1P5iVjUAvI7uc/M9w7s80gB1
+         e/se7CqifL1OHrTNbyHhvxo+UtbyjjKbQXH63175sLjIo4MVP+T5LoBteSmCsmyE+28w
+         4L5mSclfxQcbvxV5b6LzHQqIalkYvGayIfWLlbaClViFJS+MYtKDw/3NgVL1+pQyVR3m
+         5Wmv7z1bfxcmEoI93hJxj2Om16bD07GhWWxpkuCT++NEZ5FWt3ul7Zs3r2vOaPy8/ExF
+         7IKHQ+Dj7BuhZRfNQjFFLAptDa6yfQBlRRa4WRv9xNXN09f+IlOVf8Pe+BwkoK/F01W8
+         mEsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bItcgwOweyHpbTdbB2yStlE3LoN6u/SIqUTXgS5X+NM=;
-        b=QxiVnZsxYZ2XHrHHnOK1j83PRzm8ffOyhAHPnVj2dTngnDM6nEZjDCN04ILWY/dcs6
-         Ppi3/WrAHDIhsNAnSTpBFu3XkxwceLsUX6NJsKOejPghbRT66nELASMcY1LgD8EM1/SE
-         D7uRXlzngzVoECmvE/b1PA41ln2RP3fb771G1b9VnyfxCnesQ3pUrAKJWEqrJwOoOKQx
-         4Dq8EIkzN2lZhkJej8bHOiaE0aybqpZAOpgJU0a+ugreGEyDf46wUgX6JYAm1PomHRz/
-         QAMZ8ULrKJtR72dish+3/OQsbzZGsRnfJYHt41SQpgr7a2YIH6o2QDaoYYzr1X+OZVxH
-         6X8A==
-X-Gm-Message-State: AJIora+iumKE1HY7e16QVzb70Q1xd4kmzjN7idrdeAu9I4cO2hpuLvmb
-        ycdpHFyEpTSWgnky9VlRAKJ5AVrObig=
-X-Google-Smtp-Source: AGRyM1vIFK1XuRz78H3KsHJd/Bh1JdImYDuKVEeTnJzSa7g6izgzwnF/2bN62v4bSGTBhspZZneTuw==
-X-Received: by 2002:a05:6a00:2355:b0:525:a0e9:4b with SMTP id j21-20020a056a00235500b00525a0e9004bmr9743967pfj.32.1656337597746;
-        Mon, 27 Jun 2022 06:46:37 -0700 (PDT)
-Received: from sol.home.arpa (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id b5-20020a170902bd4500b0016a565f3f34sm6783395plx.168.2022.06.27.06.46.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=0l/VKWYVQYUILKHgUYVfRFznW8ESnk3f9wu78mOXDpQ=;
+        b=R8Ce7Zs8IdBgzJFwrvPXXh/uFUn5xRyrkVFbXA4XhCRmkxtABlbhRl4HGzawshjky0
+         Jqg+P9ge2VBplcuYr4QoyK8qkDgGYbCHXLuB/7VcvC6XgRl+Cew9gmt8Tz0tApp76S3m
+         df8uu1lhTBWJ1uEJfgMaC+FU9SOZ7QU/+8PcbltXbvDYNG8LKJB5PF6/Z78Jf5oj/Lr9
+         FVpGOAq3JpsAloJh/WRVZK9iJSGfXqhc5I+0wJtVTUaaZaxwKD5AK4TyKAJ/WVbQFHBF
+         Y6+qs/fJsFV0tKMGDKrppEU0uliZWlGOGYP76nmbe0rWpK1WFlIbKMd2NRmbtpxYLnVW
+         n6SQ==
+X-Gm-Message-State: AJIora+iGpCI5ml+ax2xQQQ1GNcJw5WnyiYwy+e7T0gNElel+h8IaBYQ
+        BzwsQm8DBTdeyfT55lXbx/TROg==
+X-Google-Smtp-Source: AGRyM1vvWxz6nF9L1dodsmukjEyzuMTKpQETdXdUB4Q85bp26hqLCSY/unFPZHKLoXk0uhvoU6atsg==
+X-Received: by 2002:a05:6000:2c8:b0:21d:1660:e32 with SMTP id o8-20020a05600002c800b0021d16600e32mr1744303wry.99.1656338674652;
+        Mon, 27 Jun 2022 07:04:34 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id h3-20020adfe983000000b0021b97ffa2a9sm10844166wrm.46.2022.06.27.07.04.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 06:46:37 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod v2][PATCH 4/4] tools: gpiowatch tests
-Date:   Mon, 27 Jun 2022 21:44:47 +0800
-Message-Id: <20220627134447.81927-5-warthog618@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220627134447.81927-1-warthog618@gmail.com>
-References: <20220627134447.81927-1-warthog618@gmail.com>
+        Mon, 27 Jun 2022 07:04:34 -0700 (PDT)
+Date:   Mon, 27 Jun 2022 15:04:32 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     frank zago <frank@zago.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v6 1/4] mfd: ch341: add core driver for the WCH CH341 in
+ I2C/SPI/GPIO mode
+Message-ID: <Yrm48AYxkmoUgdwr@google.com>
+References: <20220616013747.126051-1-frank@zago.net>
+ <20220616013747.126051-2-frank@zago.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220616013747.126051-2-frank@zago.net>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Extend the tool test suite to cover the gpiowatch tool.
+USB review please.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio-tools-test.bats | 249 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 249 insertions(+)
+> The CH341 is a multifunction chip, presenting 3 different USB PID. One
+> 
+> of these functions is for I2C/SPI/GPIO. This new set of drivers will
+> manage I2C and GPIO.
+> 
+> Signed-off-by: frank zago <frank@zago.net>
+> ---
+>  MAINTAINERS               |  7 +++
+>  drivers/mfd/Kconfig       | 10 +++++
+>  drivers/mfd/Makefile      |  1 +
+>  drivers/mfd/ch341-core.c  | 90 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ch341.h | 18 ++++++++
+>  5 files changed, 126 insertions(+)
+>  create mode 100644 drivers/mfd/ch341-core.c
+>  create mode 100644 include/linux/mfd/ch341.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 43d3d07afccd..628eeaa9bf68 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -21475,6 +21475,13 @@ M:	David Härdeman <david@hardeman.nu>
+>  S:	Maintained
+>  F:	drivers/media/rc/winbond-cir.c
+>  
+> +WINCHIPHEAD CH341 I2C/GPIO MFD DRIVER
+> +M:	Frank Zago <frank@zago.net>
+> +L:	linux-usb@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/mfd/ch341-core.c
+> +F:	include/linux/mfd/ch341.h
+> +
+>  WINSYSTEMS EBC-C384 WATCHDOG DRIVER
+>  M:	William Breathitt Gray <vilhelm.gray@gmail.com>
+>  L:	linux-watchdog@vger.kernel.org
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3b59456f5545..893acc821a42 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1784,6 +1784,16 @@ config MFD_LOCHNAGAR
+>  	help
+>  	  Support for Cirrus Logic Lochnagar audio development board.
+>  
+> +config MFD_CH341
+> +	tristate "WinChipHead CH341 in I2C/SPI/GPIO mode"
+> +	depends on USB
+> +	help
+> +	  If you say yes to this option, support for the CH341 series
+> +	  of chips, running in I2C/SPI/GPIO mode will be included.
+> +
+> +	  This driver can also be built as a module.  If so, the
+> +	  module will be called ch341-core.
+> +
+>  config MFD_ARIZONA
+>  	select REGMAP
+>  	select REGMAP_IRQ
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 858cacf659d6..fd615ab3929f 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
+>  obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
+>  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
+>  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
+> +obj-$(CONFIG_MFD_CH341)		+= ch341-core.o
+>  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
+>  obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
+>  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+> diff --git a/drivers/mfd/ch341-core.c b/drivers/mfd/ch341-core.c
+> new file mode 100644
+> index 000000000000..f08a67dd6074
+> --- /dev/null
+> +++ b/drivers/mfd/ch341-core.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Core driver for the CH341A, CH341B and CH341T in I2C/SPI/GPIO
+> + * mode. There are cell drivers available for I2C and GPIO. SPI is not
+> + * yet supported.
+> + *
+> + * Copyright 2022, Frank Zago
+> + * Copyright (c) 2017 Gunar Schorcht (gunar@schorcht.net)
+> + * Copyright (c) 2016 Tse Lun Bien
+> + * Copyright (c) 2014 Marco Gittler
+> + * Copyright (c) 2006-2007 Till Harbaum (Till@Harbaum.org)
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/ch341.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb.h>
+> +
+> +static const struct mfd_cell ch341_devs[] = {
+> +	{
+> +		.name = "ch341-gpio",
+> +	},
+> +	{
+> +		.name = "ch341-i2c",
+> +	},
+> +};
+> +
+> +static int ch341_usb_probe(struct usb_interface *iface,
+> +			   const struct usb_device_id *usb_id)
+> +{
+> +	struct usb_endpoint_descriptor *bulk_out;
+> +	struct usb_endpoint_descriptor *bulk_in;
+> +	struct usb_endpoint_descriptor *intr_in;
+> +	struct ch341_ddata *ddata;
+> +	int ret;
+> +
+> +	ddata = devm_kzalloc(&iface->dev, sizeof(*ddata), GFP_KERNEL);
+> +	if (!ddata)
+> +		return -ENOMEM;
+> +
+> +	ddata->usb_dev = interface_to_usbdev(iface);
+> +	mutex_init(&ddata->usb_lock);
+> +
+> +	ret = usb_find_common_endpoints(iface->cur_altsetting, &bulk_in,
+> +					&bulk_out, &intr_in, NULL);
+> +	if (ret) {
+> +		dev_err(&iface->dev, "Could not find all endpoints\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ddata->ep_in = bulk_in->bEndpointAddress;
+> +	ddata->ep_out = bulk_out->bEndpointAddress;
+> +	ddata->ep_intr = intr_in->bEndpointAddress;
+> +	ddata->ep_intr_interval = intr_in->bInterval;
+> +
+> +	usb_set_intfdata(iface, ddata);
+> +
+> +	ret = mfd_add_devices(&iface->dev, PLATFORM_DEVID_AUTO, ch341_devs,
+> +			      ARRAY_SIZE(ch341_devs), NULL, 0, NULL);
+> +	if (ret)
+> +		return dev_err_probe(&iface->dev, ret,
+> +				     "Failed to register child devices\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void ch341_usb_disconnect(struct usb_interface *usb_if)
+> +{
+> +	mfd_remove_devices(&usb_if->dev);
+> +}
+> +
+> +static const struct usb_device_id ch341_usb_table[] = {
+> +	{ USB_DEVICE(0x1a86, 0x5512) },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(usb, ch341_usb_table);
+> +
+> +static struct usb_driver ch341_usb_driver = {
+> +	.name       = "ch341-mfd",
+> +	.id_table   = ch341_usb_table,
+> +	.probe      = ch341_usb_probe,
+> +	.disconnect = ch341_usb_disconnect,
+> +};
+> +module_usb_driver(ch341_usb_driver);
+> +
+> +MODULE_AUTHOR("Frank Zago <frank@zago.net>");
+> +MODULE_DESCRIPTION("CH341 USB to I2C/SPI/GPIO adapter");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/ch341.h b/include/linux/mfd/ch341.h
+> new file mode 100644
+> index 000000000000..44f5da0720bd
+> --- /dev/null
+> +++ b/include/linux/mfd/ch341.h
+> @@ -0,0 +1,18 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Definitions for the CH341 driver */
+> +
+> +#include <linux/mutex.h>
+> +#include <linux/types.h>
+> +
+> +struct usb_device;
+> +struct usb_interface;
+> +
+> +struct ch341_ddata {
+> +	struct usb_device *usb_dev;
+> +	struct mutex usb_lock;
+> +
+> +	int ep_in;
+> +	int ep_out;
+> +	int ep_intr;
+> +	u8 ep_intr_interval;
+> +};
 
-diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
-index eaa814f..73fdd93 100755
---- a/tools/gpio-tools-test.bats
-+++ b/tools/gpio-tools-test.bats
-@@ -2069,3 +2069,252 @@ request_release_line() {
- 	dut_read
- 	output_is "%x"
- }
-+
-+#
-+# gpiowatch test cases
-+#
-+
-+@test "gpiowatch: by name" {
-+	gpiosim_chip sim0 num_lines=8 line_name=4:foo
-+	local sim0=$(gpiosim_chip_name sim0)
-+
-+	dut_run gpiowatch --banner foo
-+	dut_regex_match "Watching line .*"
-+
-+	request_release_line $sim0 4
-+
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+foo\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+foo\\s+.*"
-+	# tools currently have no way to generate a RECONFIG event
-+}
-+
-+@test "gpiowatch: by offset" {
-+	gpiosim_chip sim0 num_lines=8
-+	local sim0=$(gpiosim_chip_name sim0)
-+
-+	dut_run gpiowatch --banner --chip $sim0 4
-+	dut_regex_match "Watching line .*"
-+
-+	request_release_line $sim0 4
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+4\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+4\\s+.*"
-+
-+	assert_fail dut_readable
-+}
-+
-+@test "gpiowatch: by chip and name" {
-+	gpiosim_chip sim0 num_lines=8 line_name=4:foo
-+	gpiosim_chip sim1 num_lines=8 line_name=2:foo
-+	local sim1=$(gpiosim_chip_name sim1)
-+
-+	dut_run gpiowatch --banner --chip $sim1 foo
-+	dut_regex_match "Watching line .*"
-+
-+	request_release_line $sim1 2
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim1\\s+2\\s+foo\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim1\\s+2\\s+foo\\s+.*"
-+
-+	assert_fail dut_readable
-+}
-+
-+@test "gpiowatch: first matching named line" {
-+	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar line_name=3:foobar
-+	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=2:foobar \
-+				      line_name=4:xyz line_name=7:foobar
-+	gpiosim_chip sim2 num_lines=16
-+
-+	dut_run gpiowatch --banner foobar
-+	dut_regex_match "Watching line .*"
-+
-+	request_release_line $(gpiosim_chip_name sim0) 3
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+foobar\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+foobar\\s+.*"
-+
-+	assert_fail dut_readable
-+}
-+
-+@test "gpiowatch: multiple lines" {
-+	gpiosim_chip sim0 num_lines=8
-+	local sim0=$(gpiosim_chip_name sim0)
-+
-+	dut_run gpiowatch --banner --chip $sim0 1 2 3 4 5
-+	dut_regex_match "Watching lines .*"
-+
-+	request_release_line $sim0 2
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+2\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+2\\s+.*"
-+
-+	request_release_line $sim0 3
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+3\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+3\\s+.*"
-+
-+	request_release_line $sim0 4
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+4\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+4\\s+.*"
-+
-+	assert_fail dut_readable
-+}
-+
-+@test "gpiowatch: multiple lines by name and offset" {
-+	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar
-+	local sim0=$(gpiosim_chip_name sim0)
-+
-+	dut_run gpiowatch --banner --chip $sim0 bar foo 3
-+	dut_regex_match "Watching lines .*"
-+
-+	request_release_line $sim0 2
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+2\\s+bar\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+2\\s+bar\\s+.*"
-+
-+	request_release_line $sim0 1
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+1\\s+foo\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+1\\s+foo\\s+.*"
-+
-+	request_release_line $sim0 3
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+3\\s+unnamed\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+3\\s+unnamed\\s+.*"
-+
-+	assert_fail dut_readable
-+}
-+
-+@test "gpiowatch: multiple lines across multiple chips" {
-+	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar
-+	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=4:xyz
-+	local sim0=$(gpiosim_chip_name sim0)
-+	local sim1=$(gpiosim_chip_name sim1)
-+
-+	dut_run gpiowatch --banner baz bar foo xyz
-+	dut_regex_match "Watching lines .*"
-+
-+	request_release_line $sim0 2
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+bar\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+bar\\s+.*"
-+
-+	request_release_line $sim0 1
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+foo\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+foo\\s+.*"
-+
-+	request_release_line $sim1 4
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+xyz\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+xyz\\s+.*"
-+
-+	request_release_line $sim1 0
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+baz\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+baz\\s+.*"
-+
-+	assert_fail dut_readable
-+}
-+
-+@test "gpiowatch: exit after SIGINT" {
-+	gpiosim_chip sim0 num_lines=8
-+
-+	dut_run gpiowatch --banner --chip $(gpiosim_chip_name sim0) 4
-+	dut_regex_match "Watching line .*"
-+
-+	dut_kill -SIGINT
-+	dut_wait
-+
-+	status_is 130
-+}
-+
-+@test "gpiowatch: exit after SIGTERM" {
-+	gpiosim_chip sim0 num_lines=8
-+
-+	dut_run gpiowatch --banner --chip $(gpiosim_chip_name sim0) 4
-+	dut_regex_match "Watching line .*"
-+
-+	dut_kill -SIGTERM
-+	dut_wait
-+
-+	status_is 143
-+}
-+
-+@test "gpiowatch: with nonexistent line" {
-+	run_tool gpiowatch nonexistent-line
-+
-+	status_is 1
-+	output_regex_match ".*cannot find line nonexistent-line"
-+}
-+
-+@test "gpiowatch: with same line twice" {
-+	gpiosim_chip sim0 num_lines=8 line_name=1:foo
-+	local sim0=$(gpiosim_chip_name sim0)
-+
-+	# by offset
-+	run_tool gpiowatch --chip $sim0 0 0
-+
-+	status_is 1
-+	num_lines_is 1
-+	output_regex_match ".*lines 0 and 0 are the same"
-+
-+	# by name
-+	run_tool gpiowatch --chip $sim0 foo foo
-+
-+	status_is 1
-+	num_lines_is 1
-+	output_regex_match ".*lines foo and foo are the same"
-+
-+	# by name and offset
-+	run_tool gpiowatch --chip $sim0 1 foo
-+
-+	status_is 1
-+	num_lines_is 1
-+	output_regex_match ".*lines 1 and foo are the same"
-+}
-+
-+@test "gpiowatch: with strict named line check" {
-+	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar line_name=3:foobar
-+	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=2:foobar \
-+				      line_name=4:xyz line_name=7:foobar
-+	gpiosim_chip sim2 num_lines=16
-+
-+	run_tool gpiowatch --strict foobar
-+
-+	status_is 1
-+	output_regex_match ".*line foobar is not unique"
-+}
-+
-+@test "gpiowatch: with lines strictly by name" {
-+	# not suggesting this setup makes sense - just test that we can deal with it
-+	gpiosim_chip sim0 num_lines=8 line_name=1:42 line_name=6:13
-+	local sim0=$(gpiosim_chip_name sim0)
-+
-+	dut_run gpiowatch --banner --by-name --chip $sim0 42 13
-+	dut_flush
-+
-+	request_release_line $sim0 1
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+1\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+1\\s+.*"
-+
-+	request_release_line $sim0 6
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+REQUESTED\\s+$sim0\\s+6\\s+.*"
-+	dut_regex_match "\\s*[0-9]+\.[0-9]+\\s+RELEASED\\s+$sim0\\s+6\\s+.*"
-+
-+	assert_fail dut_readable
-+}
-+
-+@test "gpiowatch: with no arguments" {
-+	run_tool gpiowatch
-+
-+	status_is 1
-+	output_regex_match ".*at least one GPIO line must be specified"
-+}
-+
-+@test "gpiowatch: with no line specified" {
-+	gpiosim_chip sim0 num_lines=8
-+
-+	run_tool gpiowatch --chip $(gpiosim_chip_name sim0)
-+
-+	status_is 1
-+	output_regex_match ".*at least one GPIO line must be specified"
-+}
-+
-+@test "gpiowatch: with offset out of range" {
-+	gpiosim_chip sim0 num_lines=4
-+	local sim0=$(gpiosim_chip_name sim0)
-+
-+	run_tool gpiowatch --chip $sim0 5
-+
-+	status_is 1
-+	output_regex_match ".*offset 5 is out of range on chip $sim0"
-+}
 -- 
-2.36.1
-
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
