@@ -2,171 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DCDC55D458
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:13:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A5D055CE75
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:05:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237597AbiF0Tvt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 15:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34556 "EHLO
+        id S241357AbiF0UeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 16:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238433AbiF0Tvs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 15:51:48 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553AD1BE83;
-        Mon, 27 Jun 2022 12:51:46 -0700 (PDT)
+        with ESMTP id S239299AbiF0UeF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 16:34:05 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA046340;
+        Mon, 27 Jun 2022 13:34:05 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id o9so14690887edt.12;
+        Mon, 27 Jun 2022 13:34:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1656359507; x=1687895507;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4M4vuBj1FZO2Dx0Ze9OY5eJ59QeeaTSDFNt2IHMzOMc=;
-  b=OPy90ekIor3wW+btFI2RZXr9UvFxKyoTW1G+/DQ2gRv6l58QDsOPKQSI
-   iz/knB6QEfmpKBywIGwND/2l+bJv5/Uxk6BKsghs7dBr/OYJhDwKTRN9c
-   6nq9FEG2BaBQ8LNOVK6ml/zsmtNZ48clVIebPtmUzRDHtPJahROxz4dIU
-   o=;
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 27 Jun 2022 12:51:47 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 12:51:46 -0700
-Received: from nalasex01c.na.qualcomm.com (10.47.97.35) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Mon, 27 Jun 2022 12:51:45 -0700
-Received: from [10.216.11.205] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 27 Jun
- 2022 12:51:39 -0700
-Message-ID: <f358606f-0dd5-7dfa-ec6b-b6ade9d5a1a0@quicinc.com>
-Date:   Tue, 28 Jun 2022 01:21:36 +0530
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OLWwuKwhDGZ5AVt1p7fFud+w2xnXRC2cyekV81w3MDU=;
+        b=dheqE6WHwvec6tvb6t2RbF5VQNheGf73O7aOBbWBM90uPgRY7rjxLwdopKqx72QETI
+         9+X7x7jSPVLe35HXCDQldILySK6vIaAFKfnX3HPBP0/j95N8DUoKhHp7021brMu9adLG
+         yQGG2iTCry+dnpBEIfhwqQI3FsMWrs6gaWN1SzhlRdwlpU7TA0f87EBVzhZUvyEl9p+v
+         naGmnvUsNkzChfpTJPj4aM2kXkZNXpdjNvCCAz1DtdjOEQXU3H55lUVo3BTVg3PJr9qn
+         krDTRJOYoa/gMT7+yRFcL+eTIiPJv1z1iYTuQSFygvCy6I+O2QDSnCP6uUX6MCdwidHK
+         IKVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OLWwuKwhDGZ5AVt1p7fFud+w2xnXRC2cyekV81w3MDU=;
+        b=npCC/2A/rRewfTLLDahvlN07iqT6//+Cc3df09bfNy4n561wVLfxK0mjlTJrAqtgEg
+         xYWLSlwE2HtxaQcXytTcEKBvL+QIcpkvFcxTvbeIv3lnYfxcBqDoi94ZXEVk7dykap0F
+         H+blwsmATO0h6qHamCt9GMCQnW+tZUNGwou3OllmGIbH9/GlO+ZiWvOBeK3OPLNKutbN
+         r18JWkNxTuy8Pp73Hh8nN3iGiMbhNT6aTMPIiiU177VLQxCR4kHQIp9eF1J5Tp3gQFZa
+         CY+FpSQBuY6RT9eyJXtuicJQYIsCV0CySeDR2dvY/1ENrfnbI9Rc9q1SeD4R8l2QEfTn
+         aFIQ==
+X-Gm-Message-State: AJIora+5I/NoKCkc4jsfstWAuDdEiYKYYdG8u2lPD8RTzgPDBjMifSKd
+        cJDdv+CtSG+Tm6cAjXNseiYrC2jOjYo=
+X-Google-Smtp-Source: AGRyM1t+7vYQ+AGGmRmAHAA6HQWSIKQ56fM95D1r6YAj+WD+1Y+PPYMi6z7Zq+alDcC2KC05jXGFig==
+X-Received: by 2002:a05:6402:280b:b0:437:9efc:a065 with SMTP id h11-20020a056402280b00b004379efca065mr5648487ede.3.1656362043648;
+        Mon, 27 Jun 2022 13:34:03 -0700 (PDT)
+Received: from jernej-laptop.localnet (213-161-3-76.dynamic.telemach.net. [213.161.3.76])
+        by smtp.gmail.com with ESMTPSA id b9-20020aa7d489000000b004358243e752sm8120949edr.5.2022.06.27.13.34.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 13:34:02 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Samuel Holland <samuel@sholland.org>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>, Ondrej Jirman <x@xff.cz>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 2/6] pinctrl: sunxi: Add I/O bias setting for H6 R-PIO
+Date:   Mon, 27 Jun 2022 22:34:00 +0200
+Message-ID: <4405996.LvFx2qVVIh@jernej-laptop>
+In-Reply-To: <20220626021148.56740-3-samuel@sholland.org>
+References: <20220626021148.56740-1-samuel@sholland.org> <20220626021148.56740-3-samuel@sholland.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH V2 3/8] clk: qcom: Add Global Clock controller (GCC)
- driver for IPQ5018
-Content-Language: en-US
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <agross@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <p.zabel@pengutronix.de>,
-        <quic_varada@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20220621161126.15883-1-quic_srichara@quicinc.com>
- <20220621161126.15883-4-quic_srichara@quicinc.com>
- <YrU4D+eDBctFl0ZY@builder.lan>
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <YrU4D+eDBctFl0ZY@builder.lan>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Dne nedelja, 26. junij 2022 ob 04:11:43 CEST je Samuel Holland napisal(a):
+> H6 requires I/O bias configuration on both of its PIO devices.
+> Previously it was only done for the main PIO.
+> 
+> The setting for Port L is at bit 0, so the bank calculation needs to
+> account for the pin base. Otherwise the wrong bit is used.
+> 
+> Fixes: cc62383fcebe ("pinctrl: sunxi: Support I/O bias voltage setting on
+> H6") Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-On 6/24/2022 9:35 AM, Bjorn Andersson wrote:
-> On Tue 21 Jun 11:11 CDT 2022, Sricharan R wrote:
->> diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
-> [..]
->> +static const struct clk_parent_data gcc_xo_gpll0_gpll0_out_main_div2[] = {
->> +	{ .fw_name = "xo", .name = "xo", },
-> Please replace .fw_name with .index based lookup, in line with what was
-> done in gcc-sc8280xp.c recently.
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
+Did you noticed any improvement with this properly set? In theory, 3.3 V bias 
+should always work, right?
 
-  Sure, understand will fix it.
+Best regards,
+Jernej
 
->
-> There's no reason to include global name lookup (.name) in new drivers,
-> so please omit this part.
-
-   ok.
-
-
->> +	{ .fw_name = "gpll0", .name = "gpll0", },
->> +	{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
->> +};
->> +
-> [..]
->> +static struct clk_alpha_pll gpll0_main = {
->> +	.offset = 0x21000,
->> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->> +	.clkr = {
->> +		.enable_reg = 0x0b000,
->> +		.enable_mask = BIT(0),
->> +		.hw.init = &(struct clk_init_data){
->> +			.name = "gpll0_main",
->> +			.parent_data = &(const struct clk_parent_data){
->> +				.fw_name = "xo",
->> +				.name = "xo",
-> Are you referring to the board XO here, or the CXO pin on the SoC? On
-> many platforms these are not the same...
-   board XO, will refer your above example and fix it here as well
-> Please omit the .name here as well and as this is used a few times,
-> please create a struct clk_parent_data for this parent.
-
-   ok.
-
-
->> +			},
->> +			.num_parents = 1,
->> +			.ops = &clk_alpha_pll_stromer_ops,
->> +			.flags = CLK_IS_CRITICAL,
->> +		},
->> +	},
->> +};
->> +
->> +static struct clk_fixed_factor gpll0_out_main_div2 = {
->> +	.mult = 1,
->> +	.div = 2,
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "gpll0_out_main_div2",
->> +		.parent_data = &(const struct clk_parent_data){
-> It would be nice to have a space inbetween ) and { in all these.
-
-   ok.
-
-
->> +			.fw_name = "gpll0_main",
->> +			.name = "gpll0_main",
->> +		},
->> +		.num_parents = 1,
->> +		.ops = &clk_fixed_factor_ops,
->> +		.flags = CLK_SET_RATE_PARENT,
->> +	},
->> +};
-> [..]
->> +static struct clk_branch gcc_gephy_tx_clk = {
->> +	.halt_reg = 0x56014,
->> +	.halt_check = BRANCH_HALT_DELAY,
->> +	.clkr = {
->> +		.enable_reg = 0x56014,
->> +		.enable_mask = BIT(0),
->> +		.hw.init = &(struct clk_init_data){
->> +			.name = "gcc_gephy_tx_clk",
->> +			.parent_data = &(const struct clk_parent_data){
->> +				.fw_name = "gmac0_tx_div_clk_src",
->> +				.name = "gmac0_tx_div_clk_src",
->> +			},
-> This parent_data is repeated multiple times, but more importantly it's
-> not an external clock, so you should use .parent_hw instead of
-> .parent_data.
->
-> Please review the parent for all your clocks.
-
-   ok, will do.
-
-Regards,
-   Sricharan
 
