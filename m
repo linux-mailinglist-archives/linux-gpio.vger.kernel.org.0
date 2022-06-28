@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB30655D92E
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1C7A55C863
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 14:55:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243822AbiF1CWD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 22:22:03 -0400
+        id S244070AbiF1CYU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 22:24:20 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243656AbiF1CVH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 22:21:07 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3722F101E5;
-        Mon, 27 Jun 2022 19:21:01 -0700 (PDT)
+        with ESMTP id S243935AbiF1CXH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 22:23:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB7D82409D;
+        Mon, 27 Jun 2022 19:22:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 878B1CE1DCC;
-        Tue, 28 Jun 2022 02:20:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C50BCC385A9;
-        Tue, 28 Jun 2022 02:20:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 483CF617D4;
+        Tue, 28 Jun 2022 02:22:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FFCC34115;
+        Tue, 28 Jun 2022 02:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656382857;
-        bh=d4yHdwcIVcHGy3DfNH08m8dj2XE0tK+LPYMKfYq2wJ4=;
+        s=k20201202; t=1656382958;
+        bh=5LoBGLe92D5oV9TbNi9pTjn87zi03mWCmt8lmlnSN/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4ks9HAVBx2GaWJaBdHk9vcBDEXyyI2l+CWjs8xrbCPDnsKOdwQ0HyJvtXEEIocel
-         anvVBqDm3eTUcAgdyKBFnBrT3MrDPy6WYYSyaFVQAdMHmENDsyDfl84LwQhriIbgji
-         aWMBHEBU811MrmfkF340ZoFCCu2cGLdtw3vpDQgBtcxnr1Xubi/NU/Za2EURLlpwTy
-         KWPmUT9i6Doa0gZ2+ilIcylic1u0P2QjXmOlGxzn8APVGyoj4CMesSKxFMSXEuYaLL
-         qsQb3lQa9w3qGptWoFPKwD1LHIsT6BXjjegyTIxrb09cxcvUJroZmUEHVL1YhIuDGM
-         D4jiNniK/Uaxg==
+        b=TP//poHKjytC+MDInvBQljSudZub4jjiAwYCXZIi16QTpPTpejC5rK4n/hOHl0FCq
+         ar1ogs6PaVWW41kxVXJ6FY+jCAF6KLQ8ERCq6JbsTOENeXYTO78+9Lpqw1AbMWgFkv
+         Hq28FDhvdL5q1eWRXNLxSqoX9fWAX+Z6lslUY0ojWajRLrRZwO3NYXDOyys2V9OiEb
+         LOhxpSyAKyad1Cs2GllNlEtMmyTrlrxXIBuvuBx5StHB6fTt4vaEreV/tajIKUFvDS
+         gWEYe+HETCmBwCUKxZ2Lv9Uvla2ahAvLM4T1LQ65ZAYzy8/hJGlf1cfZOC0xlgeBgQ
+         oZU+s7qiOdA4g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -39,12 +39,12 @@ Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Sasha Levin <sashal@kernel.org>, linus.walleij@linaro.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 52/53] gpio: grgpio: Fix device removing
-Date:   Mon, 27 Jun 2022 22:18:38 -0400
-Message-Id: <20220628021839.594423-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 40/41] gpio: grgpio: Fix device removing
+Date:   Mon, 27 Jun 2022 22:20:59 -0400
+Message-Id: <20220628022100.595243-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220628021839.594423-1-sashal@kernel.org>
-References: <20220628021839.594423-1-sashal@kernel.org>
+In-Reply-To: <20220628022100.595243-1-sashal@kernel.org>
+References: <20220628022100.595243-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -86,10 +86,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 23d447e17a67..6ad0466828f4 100644
+index f954359c9544..46f6158d1c71 100644
 --- a/drivers/gpio/gpio-grgpio.c
 +++ b/drivers/gpio/gpio-grgpio.c
-@@ -434,25 +434,13 @@ static int grgpio_probe(struct platform_device *ofdev)
+@@ -435,25 +435,13 @@ static int grgpio_probe(struct platform_device *ofdev)
  static int grgpio_remove(struct platform_device *ofdev)
  {
  	struct grgpio_priv *priv = platform_get_drvdata(ofdev);
