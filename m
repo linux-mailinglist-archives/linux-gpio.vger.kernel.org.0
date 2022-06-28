@@ -2,56 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66B6155C632
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 14:52:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9260855CDE0
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:04:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234107AbiF0XtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 19:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60948 "EHLO
+        id S243048AbiF1B3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 21:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240866AbiF0XtK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 19:49:10 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4640213E85
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 16:49:09 -0700 (PDT)
+        with ESMTP id S243044AbiF1B3Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 21:29:24 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3104766D;
+        Mon, 27 Jun 2022 18:29:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656373749; x=1687909749;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yCkrgEG/I92viBGGPQYUPZd2CU51SSqd58KHwESN4FI=;
-  b=V3mT5Wdww8gcbZxQUeFMAaE/inqrn/vtuhrgRphWfkZuhdM6N8uL0Zan
-   3YRtX1gnyw0USOauXFhCVT3c8a7D4zDDvND9zUSdOY96DHBasp1uDDlbt
-   /WLUZLmduzmy4fkWTLniDMnVS9OLuwBRQyIlXt86pMNwCm5aTnJBshSt1
-   nQqvvzz5nNgWDkXsBuO7JayrTNg54Htk30KrF7p2Z1GR1mQRbgN1BrGiH
-   sDwTxXD4qcIarrfNNQV9HHJoi8NqLI0Rllyv8rTZYzSZxv2R+IeBQUZtt
-   anVZ59PLw06HOHjTeN/tgb1UCBQR65ow2NIRUU0qAdD3Ofqf1mBcsoSvk
+  t=1656379763; x=1687915763;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zVM39Trhl2hg5S6mqEpQJmIRMAE8wh097bxFRFFGXL8=;
+  b=ik8doJj4eEQ2GN5ht0IN+XgYFEV/q/WN2BkA5bbbi0SQr+l+rdB6es5w
+   B31gFmpa4ij5mJZ3KhbjRBKD9yDi3H6HUugUP/fijqNzrJvzn152tZGCL
+   e+FA3YKCIRuLzjwDg7kb8oZHAoWh+soBzbb8bXp5xguE0dgPA4mHSUwo1
+   OYGQxOX+cN7ENDo1ar+rNbks8b/za/5QVtcuZ1O6P5jXoQo/qa+U/9Noy
+   x9yr/HvyJPxe1f4CKHgvsVwbpWvWsoHc5yVKQvagR6TYQHuIN/me/MlHm
+   LhWbsv4XZ1roAmIVQVjQ25RCnB5sj1yM/Z9r1fLU4omnC6WIJsXn5mL6f
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="281627047"
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="279149560"
 X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="281627047"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 16:49:08 -0700
+   d="scan'208";a="279149560"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:29:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="590098044"
+   d="scan'208";a="732546014"
 Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 27 Jun 2022 16:49:07 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 27 Jun 2022 18:29:19 -0700
 Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
         (envelope-from <lkp@intel.com>)
-        id 1o5yTb-0009ES-0U;
-        Mon, 27 Jun 2022 23:49:07 +0000
-Date:   Tue, 28 Jun 2022 07:48:14 +0800
+        id 1o602T-0009LC-S6;
+        Tue, 28 Jun 2022 01:29:13 +0000
+Date:   Tue, 28 Jun 2022 09:28:58 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 243a0ef843c86e29ca7a62ee70fe0e005eeaa0fb
-Message-ID: <62ba41be.pInkwfW4ecNDFmYY%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+To:     Sricharan R <quic_srichara@quicinc.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, p.zabel@pengutronix.de,
+        quic_varada@quicinc.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org
+Subject: Re: [PATCH V2 3/8] clk: qcom: Add Global Clock controller (GCC)
+ driver for IPQ5018
+Message-ID: <202206280917.m3YJRqsF-lkp@intel.com>
+References: <20220621161126.15883-4-quic_srichara@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20220621161126.15883-4-quic_srichara@quicinc.com>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -62,145 +71,153 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 243a0ef843c86e29ca7a62ee70fe0e005eeaa0fb  Merge tag 'renesas-pinctrl-for-v5.20-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into devel
+Hi Sricharan,
 
-elapsed time: 1360m
+Thank you for the patch! Perhaps something to improve:
 
-configs tested: 125
-configs skipped: 2
+[auto build test WARNING on clk/clk-next]
+[also build test WARNING on robh/for-next linusw-pinctrl/devel linus/master v5.19-rc4 next-20220627]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20220628/202206280917.m3YJRqsF-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 016342e319fd31e41cf5ed16a6140a8ea2de74dd)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm64 cross compiling tool for clang build
+        # apt-get install binutils-aarch64-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/d7a0e1d14ecebd407df120468035592246a71cd6
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
+        git checkout d7a0e1d14ecebd407df120468035592246a71cd6
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash arch/arm64/kernel/ drivers/clk/qcom/ drivers/pinctrl/qcom/
 
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                 randconfig-c001-20220627
-m68k                       m5208evb_defconfig
-sh                        sh7763rdp_defconfig
-ia64                             alldefconfig
-s390                          debug_defconfig
-arm                          gemini_defconfig
-sparc64                             defconfig
-sparc64                          alldefconfig
-mips                           xway_defconfig
-sh                        sh7785lcr_defconfig
-arm                        spear6xx_defconfig
-xtensa                    smp_lx200_defconfig
-powerpc                       holly_defconfig
-arm                          pxa910_defconfig
-mips                      maltasmvp_defconfig
-arc                        nsim_700_defconfig
-arc                           tb10x_defconfig
-sh                   sh7770_generic_defconfig
-arm                          iop32x_defconfig
-sh                           sh2007_defconfig
-arm                        multi_v7_defconfig
-powerpc                     tqm8541_defconfig
-sh                        dreamcast_defconfig
-arm                        shmobile_defconfig
-powerpc                     mpc83xx_defconfig
-sh                           se7750_defconfig
-sh                         ap325rxa_defconfig
-openrisc                 simple_smp_defconfig
-sh                          rsk7201_defconfig
-sh                          sdk7780_defconfig
-arm                         cm_x300_defconfig
-riscv                    nommu_k210_defconfig
-arm                           sama5_defconfig
-arc                      axs103_smp_defconfig
-arm                       omap2plus_defconfig
-powerpc                         ps3_defconfig
-arm                        realview_defconfig
-m68k                          sun3x_defconfig
-powerpc                      bamboo_defconfig
-arc                     haps_hs_smp_defconfig
-xtensa                    xip_kc705_defconfig
-parisc                           allyesconfig
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-s390                                defconfig
-s390                             allmodconfig
-arc                                 defconfig
-alpha                               defconfig
-s390                             allyesconfig
-nios2                            allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-x86_64               randconfig-k001-20220627
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64               randconfig-a013-20220627
-x86_64               randconfig-a012-20220627
-x86_64               randconfig-a016-20220627
-x86_64               randconfig-a015-20220627
-x86_64               randconfig-a011-20220627
-x86_64               randconfig-a014-20220627
-x86_64                        randconfig-a015
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                 randconfig-a014-20220627
-i386                 randconfig-a012-20220627
-i386                 randconfig-a015-20220627
-i386                 randconfig-a013-20220627
-i386                 randconfig-a016-20220627
-i386                 randconfig-a011-20220627
-s390                 randconfig-r044-20220627
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-clang tested configs:
-arm                       mainstone_defconfig
-mips                       lemote2f_defconfig
-powerpc                     akebono_defconfig
-powerpc                    socrates_defconfig
-powerpc                      acadia_defconfig
-mips                           ip27_defconfig
-arm                        neponset_defconfig
-powerpc                     ksi8560_defconfig
-x86_64               randconfig-a004-20220627
-x86_64               randconfig-a006-20220627
-x86_64               randconfig-a001-20220627
-x86_64               randconfig-a005-20220627
-x86_64               randconfig-a002-20220627
-x86_64               randconfig-a003-20220627
-i386                 randconfig-a005-20220627
-i386                 randconfig-a001-20220627
-i386                 randconfig-a006-20220627
-i386                 randconfig-a004-20220627
-i386                 randconfig-a003-20220627
-i386                 randconfig-a002-20220627
-x86_64                        randconfig-a014
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20220627
-hexagon              randconfig-r045-20220627
+All warnings (new ones prefixed by >>):
+
+>> drivers/clk/qcom/gcc-ipq5018.c:118:37: warning: unused variable 'gcc_xo_gpll0_out_main_div2' [-Wunused-const-variable]
+   static const struct clk_parent_data gcc_xo_gpll0_out_main_div2[] = {
+                                       ^
+>> drivers/clk/qcom/gcc-ipq5018.c:123:32: warning: unused variable 'gcc_xo_gpll0_out_main_div2_map' [-Wunused-const-variable]
+   static const struct parent_map gcc_xo_gpll0_out_main_div2_map[] = {
+                                  ^
+>> drivers/clk/qcom/gcc-ipq5018.c:201:37: warning: unused variable 'gcc_xo_gpll0_gpll4_gpll2' [-Wunused-const-variable]
+   static const struct clk_parent_data gcc_xo_gpll0_gpll4_gpll2[] = {
+                                       ^
+>> drivers/clk/qcom/gcc-ipq5018.c:208:32: warning: unused variable 'gcc_xo_gpll0_gpll4_gpll2_map' [-Wunused-const-variable]
+   static const struct parent_map gcc_xo_gpll0_gpll4_gpll2_map[] = {
+                                  ^
+   4 warnings generated.
+
+
+vim +/gcc_xo_gpll0_out_main_div2 +118 drivers/clk/qcom/gcc-ipq5018.c
+
+   117	
+ > 118	static const struct clk_parent_data gcc_xo_gpll0_out_main_div2[] = {
+   119		{ .fw_name = "xo", .name = "xo", },
+   120		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
+   121	};
+   122	
+ > 123	static const struct parent_map gcc_xo_gpll0_out_main_div2_map[] = {
+   124		{ P_XO, 0 },
+   125		{ P_GPLL0_DIV2, 1 },
+   126	};
+   127	
+   128	static const struct clk_parent_data gcc_xo_gpll0_gpll4[] = {
+   129		{ .fw_name = "xo", .name = "xo", },
+   130		{ .fw_name = "gpll0", .name = "gpll0", },
+   131		{ .fw_name = "gpll4", .name = "gpll4", },
+   132	};
+   133	
+   134	static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
+   135		{ P_XO, 0 },
+   136		{ P_GPLL0, 1 },
+   137		{ P_GPLL4, 2 },
+   138	};
+   139	
+   140	static const struct clk_parent_data gcc_xo_gpll0_core_pi_sleep_clk[] = {
+   141		{ .fw_name = "xo", .name = "xo", },
+   142		{ .fw_name = "gpll0", .name = "gpll0", },
+   143		{ .fw_name = "sleep_clk", .name = "sleep_clk", },
+   144	};
+   145	
+   146	static const struct parent_map gcc_xo_gpll0_core_pi_sleep_clk_map[] = {
+   147		{ P_XO, 0 },
+   148		{ P_GPLL0, 2 },
+   149		{ P_CORE_PI_SLEEP_CLK, 6 },
+   150	};
+   151	
+   152	static const struct clk_parent_data gcc_xo_gpll0_gpll0_out_main_div2_sleep_clk[] = {
+   153		{ .fw_name = "xo", .name = "xo", },
+   154		{ .fw_name = "gpll0", .name = "gpll0", },
+   155		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
+   156		{ .fw_name = "sleep_clk", .name = "sleep_clk", },
+   157	};
+   158	
+   159	static const struct parent_map gcc_xo_gpll0_gpll0_out_main_div2_sleep_clk_map[] = {
+   160		{ P_XO, 0 },
+   161		{ P_GPLL0, 1 },
+   162		{ P_GPLL0_DIV2, 4 },
+   163		{ P_CORE_PI_SLEEP_CLK, 6 },
+   164	};
+   165	
+   166	static const struct clk_parent_data gcc_xo_gpll0_gpll2_gpll0_out_main_div2[] = {
+   167		{ .fw_name = "xo", .name = "xo", },
+   168		{ .fw_name = "gpll0", .name = "gpll0", },
+   169		{ .fw_name = "gpll2", .name = "gpll2", },
+   170		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
+   171	};
+   172	
+   173	static const struct parent_map gcc_xo_gpll0_gpll2_gpll0_out_main_div2_map[] = {
+   174		{ P_XO, 0 },
+   175		{ P_GPLL0, 1 },
+   176		{ P_GPLL2, 2 },
+   177		{ P_GPLL0_DIV2, 4 },
+   178	};
+   179	
+   180	static const struct clk_parent_data gcc_xo_gpll4_gpll0_gpll0_out_main_div2[] = {
+   181		{ .fw_name = "xo", .name = "xo", },
+   182		{ .fw_name = "gpll4", .name = "gpll4", },
+   183		{ .fw_name = "gpll0", .name = "gpll0", },
+   184		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
+   185	};
+   186	
+   187	static const struct parent_map gcc_xo_gpll4_gpll0_gpll0_out_main_div2_map1[] = {
+   188		{ P_XO, 0 },
+   189		{ P_GPLL4, 1 },
+   190		{ P_GPLL0, 2 },
+   191		{ P_GPLL0_DIV2, 4 },
+   192	};
+   193	
+   194	static const struct parent_map gcc_xo_gpll4_gpll0_gpll0_out_main_div2_map2[] = {
+   195		{ P_XO, 0 },
+   196		{ P_GPLL4, 1 },
+   197		{ P_GPLL0, 3 },
+   198		{ P_GPLL0_DIV2, 4 },
+   199	};
+   200	
+ > 201	static const struct clk_parent_data gcc_xo_gpll0_gpll4_gpll2[] = {
+   202		{ .fw_name = "xo", .name = "xo", },
+   203		{ .fw_name = "gpll0", .name = "gpll0", },
+   204		{ .fw_name = "gpll4", .name = "gpll4", },
+   205		{ .fw_name = "gpll2", .name = "gpll2", },
+   206	};
+   207	
+ > 208	static const struct parent_map gcc_xo_gpll0_gpll4_gpll2_map[] = {
+   209		{ P_XO, 0 },
+   210		{ P_GPLL0, 1 },
+   211		{ P_GPLL4, 3 },
+   212		{ P_GPLL2, 4 },
+   213	};
+   214	
 
 -- 
 0-DAY CI Kernel Test Service
