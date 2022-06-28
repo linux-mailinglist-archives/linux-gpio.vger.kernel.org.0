@@ -2,83 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0098C55EDD9
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 21:35:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51C9F55EE07
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 21:46:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230434AbiF1TfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 15:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49786 "EHLO
+        id S232026AbiF1Tpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 15:45:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiF1Tb6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 15:31:58 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA493A733
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 12:27:17 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id p136so17724744ybg.4
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 12:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=walg9+X25Qf0Q2kOl7EPuRRmD7l8R+TPYwiRkuq/taA=;
-        b=r5dhjikOjoOSTxH7twYmSKEfHqErqjhxkSM9McqWoCouOgLOQB7kvkMdEEzxx/BDX6
-         TQrjLVB6hMIfuOa9g8Jq2JmzE97r9+o77os7tKeNZgQG+gQR3fBWEr5T9i+X01s9wRKF
-         poqPtQCKU93338RDg9n0sUG/ZEqcMMUZPZnDwkORaC63HcYlFTRnittAcohjRCM8pOOF
-         g/UPD7ABIbEWrLq01pVgh4ii12ETWhUPrCA8/9LHWHuLKXXESxjWthvXPWzyjMNL6Oot
-         Hlc8iuNIiurItn418+oTScTJhM5C5ncPhx/nMRn5oHIDm7HNscLwCkwchgANUMMiViBr
-         lmvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=walg9+X25Qf0Q2kOl7EPuRRmD7l8R+TPYwiRkuq/taA=;
-        b=xC18bqkIyJ6LpQhL9rmnqJ4B8lP3I9IdO0UYe7D4CM4QQkNAs5Bqv42j0N/GPp8c1j
-         14fYgiYKzxPCkqj1+yrZKJoiT/CnYfzQ8C0CskylAB+63QzVM6DSMn7JbdWcchxnx/2k
-         BOUs10s4dKUkIe0PFidprYnpev2m7HkPFijy1cHmOLS60DqLCkBVApcNyrb8O0suDxpD
-         k2IZA9jB1rONY2tPKdRKlR86N20+MHzW0jmOpbEs7I5Q4TdU4Peo6v1wmlg0PuJU6rvF
-         WeDwN0/JXWn8Ipq/u319+xJqH46CMp+QIgNMEJnXem6bzRtAKk/+Y+enlHi4jez1ZpwD
-         YigQ==
-X-Gm-Message-State: AJIora9JrngLVSf5Iv73x+l6uu21+z2YBNvgUvMoVmDHLm9br2edQADY
-        yoVVz2mmwIqzmfITXOARKW0g6UB/uMWDW7Jt2bWZayv0jDU=
-X-Google-Smtp-Source: AGRyM1tix/MDbYpAocLhXqNa2cuD1sSvJJYVbcVLzqD1nAvkTSC00uKkSWSEB65C4UY4pgJ8yatan7ZYC8uyX2aYtAw=
-X-Received: by 2002:a25:e7d4:0:b0:66c:899b:49c6 with SMTP id
- e203-20020a25e7d4000000b0066c899b49c6mr21915704ybh.291.1656444414438; Tue, 28
- Jun 2022 12:26:54 -0700 (PDT)
+        with ESMTP id S231454AbiF1Tp3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 15:45:29 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA003BF8E;
+        Tue, 28 Jun 2022 12:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656445144; x=1687981144;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WFRvrLrs78r9lnnA1EVYp7hsPys2q5PlSUAARxpTtuQ=;
+  b=QDIZ0azXgtPNSaFEzJiZnzabbHkVymkcQjtcwMR8lJRE5+SHi51WkqYU
+   v2DLRRMYEwQ8OrZ0fimOLCmH7Di8omel6gavWYDbdrXCXnVL3Zf/sfOLe
+   lroNofva8glxIwG5lW2WVocbW17p9sPlw7TyhqdApHzyh8cs17/RtjZzC
+   RvUyJEDyA/NdvgZATVqcHP5xokINscbXA10RiTgo3+OcXuVi6z+ufEczx
+   K6/F/qbYqQp16wfofWYZmiZWvUkOqG9/2IbLQtJre9H9Ybhvd3YdPferz
+   rre5Mxg1cxiXGAfSP231DIZxEBQEFrBgG3piGEOsL0XMktfOkUJELjaTb
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="262241171"
+X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
+   d="scan'208";a="262241171"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 12:39:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,229,1650956400"; 
+   d="scan'208";a="540596666"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 28 Jun 2022 12:39:02 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 37383F1; Tue, 28 Jun 2022 22:39:08 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Michael Hennerich <michael.hennerich@analog.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/3] gpio: adp5588: Switch from of headers to mod_devicetable.h
+Date:   Tue, 28 Jun 2022 22:39:03 +0300
+Message-Id: <20220628193906.36350-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220616005224.18391-1-krzysztof.kozlowski@linaro.org> <20220616005333.18491-4-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220616005333.18491-4-krzysztof.kozlowski@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Jun 2022 21:26:43 +0200
-Message-ID: <CACRpkdawFWN_3EYV0p2AAgu54Lu1s0YgqiSiV3136wOSfSGhrg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/40] dt-bindings: pinctrl: nuvoton,wpcm450-pinctrl:
- align key node name
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     arm@kernel.org, soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 16, 2022 at 2:54 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+There is nothing directly using of specific interfaces in this driver,
+so lets not include the headers.
 
-> gpio-keys schema requires keys to have more generic name.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-adp5588.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Patch applied!
+diff --git a/drivers/gpio/gpio-adp5588.c b/drivers/gpio/gpio-adp5588.c
+index e388e75103f4..51ed23ba4645 100644
+--- a/drivers/gpio/gpio-adp5588.c
++++ b/drivers/gpio/gpio-adp5588.c
+@@ -6,7 +6,6 @@
+  * Copyright 2009-2010 Analog Devices Inc.
+  */
+ 
+-#include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+ #include <linux/init.h>
+@@ -14,7 +13,8 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+-#include <linux/of_device.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
+ 
+ #include <linux/platform_data/adp5588.h>
+ 
+@@ -427,18 +427,16 @@ static const struct i2c_device_id adp5588_gpio_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, adp5588_gpio_id);
+ 
+-#ifdef CONFIG_OF
+ static const struct of_device_id adp5588_gpio_of_id[] = {
+ 	{ .compatible = "adi," DRV_NAME, },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, adp5588_gpio_of_id);
+-#endif
+ 
+ static struct i2c_driver adp5588_gpio_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
+-		.of_match_table = of_match_ptr(adp5588_gpio_of_id),
++		.of_match_table = adp5588_gpio_of_id,
+ 	},
+ 	.probe_new = adp5588_gpio_probe,
+ 	.remove = adp5588_gpio_remove,
+-- 
+2.35.1
 
-Yours,
-Linus Walleij
