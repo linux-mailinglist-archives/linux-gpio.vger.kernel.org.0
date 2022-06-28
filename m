@@ -2,160 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EEFD55E8B5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:36:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35DB655E9CE
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:42:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236670AbiF1QZW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 12:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46902 "EHLO
+        id S231775AbiF1QeD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 12:34:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230038AbiF1QYr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 12:24:47 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B21BA3914B
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 09:17:01 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id x184so20312008ybg.12
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 09:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a+P6wSeN2x0ZvD2/JjzHKyqS9/n/5A6tY5jiA6Lhnb8=;
-        b=svPPiUXmjLu4A2+b3rJgoCqrzxWVmAH7KXTvVP4AwaLTDrIN9AN3BtNG2XiV2ycJ8x
-         6Y9oMX5BQlCl6K+KL9J1KxqNRcb1MdTb/c18nJgwvmc5rVyOe8EKUyj+KrCbNC70iJoL
-         OlJOsi9x5Scvw9W8cP8d/OYBAk6luTiA/PE8w/jzj7tOJ+ICpHFzyCnfh2xqrRn3YVLo
-         nvgpT4pJzONw4hikJOgq/y8DRHjrG2lOfrc2hEWRc02ovhuxlfgkK9/gOnTwVGME5DOU
-         4AXMX65QfUYiz76GEkrT/465op3M51kj45IkhJmeQobRe1+J32FVHZumFFaJBd9Gan88
-         /wYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a+P6wSeN2x0ZvD2/JjzHKyqS9/n/5A6tY5jiA6Lhnb8=;
-        b=zbLK86CkCNpn1m/CUgJ/3lP2gjE96/ynRoE9FWRVbAymh4RFjhf0qaXv9P0swv3J4h
-         2NLg2+DCPdkQx6fzPM5k49AulIzUTP2IzFJ0DObEHmggs2V1sjxvBG4rk8deMaK107vA
-         SEoCrZaEcHMBsTObJBh6+ADdHtXXnHAraEUYsP346nHGx3XEBHD67j6ZjhDD7O3yJKzr
-         ypmu/D7ohCPmZ13QNH6rTiIE8tCxEXfrWUrpyNN5oE71X4PQTYPHAu/rKHGeEKQaVSql
-         jeAHWoMQZNRGZJ74N2x/7RyrDJvOrBO8Zx1+PorXQkAZuimSeUBvVFqGsA51xu29+3FN
-         kzIA==
-X-Gm-Message-State: AJIora+ewFhyMDR32W3GgKoC9C3+RTpE2kj1pNmkxLjNRHz40cI+Uozq
-        +jrF+tZ8+4tikxB+819euwhDiGO0d9wQnnHVwzxxNg==
-X-Google-Smtp-Source: AGRyM1vHa4WRnJlk4sln0xuJGdVhcpu8QS15R2N9PrbVvkglI7Nzwr0PBFdp1lTun6HJ/nUSS1O/TmeoEjFZPidRK0U=
-X-Received: by 2002:a25:5bc3:0:b0:669:b722:beb8 with SMTP id
- p186-20020a255bc3000000b00669b722beb8mr20258885ybb.447.1656433020483; Tue, 28
- Jun 2022 09:17:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220628020110.1601693-1-saravanak@google.com>
- <20220628020110.1601693-3-saravanak@google.com> <20220628140025.qpom64ptru4ub6fu@distanz.ch>
-In-Reply-To: <20220628140025.qpom64ptru4ub6fu@distanz.ch>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 28 Jun 2022 09:16:24 -0700
-Message-ID: <CAGETcx_7jS3H2cphiXdk=NBfmuPzsusEwPBx75n3PrP6YTnjnA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] serial: Set probe_no_timeout for all DT based drivers
-To:     Tobias Klauser <tklauser@distanz.ch>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        with ESMTP id S229973AbiF1QdU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 12:33:20 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70049.outbound.protection.outlook.com [40.107.7.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282A732EF4;
+        Tue, 28 Jun 2022 09:26:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OdjwN7C6552Fyxi6Cudhf4DCKwacU4j/CgrlPsOdqrxfG186ZyyKMJwHQPmBi5+LRVL+/gjEv5OXaae33Xy2jDPJDKrLgO6HF2RdHLUHY5zCUnZtMZH3hzJsZdJTI9qsHUqlfImS5eYjaipjY+ifGwsBoZ+HnKgmcyjENWYoDVka4eIZYjuzrHiKlCBw7XomFUBHAHwtEFg4wZlNuqGmZ0hIV6ueWAO301FDsl49GvyEZAUCKAUR/RLEnET94BBMzI85Z2oapcm5TV2/f2k4RhAapA7borpvsAKazq0+XRVGfrnSbUxisf+iPDJCatFGg6hZrKE/wAkoNxL72gP9VA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YjsoKb4xNdz7SEsp5DrK7/0xuSh+X5ymvZ62id+fOGg=;
+ b=d1vDKhgn/enHpZxtresOq8Mq85MOm1gsIEe5wdTg1tuevacg+cDsD/wN8gP6bUA3UtyKINDWeezRTewAKk0+Tal005WlIEhKu7t4QCAzaFsy6cL/W7pvPADVU5/VwXVf3mO/Z5tguLxFPonOEPUFumMamUPKyvPyiIsHn5ULk2/sqVMR1XyOEDe7YCYE5AN/LPN/Xj83P0KRS5U3Z+rsTVKZGb8qtgIVL4WjhhOrRmpNF5jPXZsYGOuHRCuhTe1P4hoDOep0IHBrpyifmwnftU2u+8hP20sOSNZDu1D8ODLwWlZNQZa+ZWQnRxzEXZU0+8P9u0hFoGmK7PxAP3t1bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YjsoKb4xNdz7SEsp5DrK7/0xuSh+X5ymvZ62id+fOGg=;
+ b=PRoXTkz7lDDAH4d5p0qZVMdfTIu9ofoUfw5dvcyrsOCr5yV5lZxszqRvqty5hczPTGAHsDWZ5WVQjf/BZqgPiaW+42RZ1L5kLNPqwNYlhtJjCLVdpBAXeQYyQu3X27VDbPH28OzpBH6sBnfor3wW3QqY5zuLGrtAFLtoiMe0mOA=
+Received: from VI1PR04MB5136.eurprd04.prod.outlook.com (2603:10a6:803:55::19)
+ by VI1PR0401MB2367.eurprd04.prod.outlook.com (2603:10a6:800:24::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.18; Tue, 28 Jun
+ 2022 16:26:05 +0000
+Received: from VI1PR04MB5136.eurprd04.prod.outlook.com
+ ([fe80::94fe:9cbe:247b:47ea]) by VI1PR04MB5136.eurprd04.prod.outlook.com
+ ([fe80::94fe:9cbe:247b:47ea%7]) with mapi id 15.20.5373.018; Tue, 28 Jun 2022
+ 16:26:05 +0000
+From:   Vladimir Oltean <vladimir.oltean@nxp.com>
+To:     Colin Foster <colin.foster@in-advantage.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Gabriel Somlo <gsomlo@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Taichi Sugaya <sugaya.taichi@socionext.com>,
-        Takao Orito <orito.takao@socionext.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Pali Rohar <pali@kernel.org>,
-        Andreas Farber <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Peter Korsgaard <jacmet@sunsite.dk>,
-        Timur Tabi <timur@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh@kernel.org>,
-        sascha hauer <sha@pengutronix.de>, peng fan <peng.fan@nxp.com>,
-        kevin hilman <khilman@kernel.org>,
-        ulf hansson <ulf.hansson@linaro.org>,
-        len brown <len.brown@intel.com>, pavel machek <pavel@ucw.cz>,
-        joerg roedel <joro@8bytes.org>, will deacon <will@kernel.org>,
-        andrew lunn <andrew@lunn.ch>,
-        heiner kallweit <hkallweit1@gmail.com>,
-        eric dumazet <edumazet@google.com>,
-        jakub kicinski <kuba@kernel.org>,
-        paolo abeni <pabeni@redhat.com>,
-        linus walleij <linus.walleij@linaro.org>,
-        hideaki yoshifuji <yoshfuji@linux-ipv6.org>,
-        david ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org,
-        linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-actions@lists.infradead.org,
-        linux-unisoc@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        sparclinux@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v11 net-next 2/9] net: mdio: mscc-miim: add ability to be
+ used in a non-mmio configuration
+Thread-Topic: [PATCH v11 net-next 2/9] net: mdio: mscc-miim: add ability to be
+ used in a non-mmio configuration
+Thread-Index: AQHYiseFWqiBct4k00WOzITu2aZtrK1lAfYA
+Date:   Tue, 28 Jun 2022 16:26:05 +0000
+Message-ID: <20220628162604.fxhbcaimv2ioovrk@skbuf>
+References: <20220628081709.829811-1-colin.foster@in-advantage.com>
+ <20220628081709.829811-3-colin.foster@in-advantage.com>
+In-Reply-To: <20220628081709.829811-3-colin.foster@in-advantage.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 69cb9347-e168-4b3a-bbdf-08da5922e651
+x-ms-traffictypediagnostic: VI1PR0401MB2367:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dF3G/JbTcQa5VDWDVoR8Y/7FyEJcEmi8cBJjPYHuo7CDj2wHEyrg3dzLxPJHLhYYU7ldqMC8txGv2Y8yN5mtswaBzukrZH/9rKM0oJccCyLZ3/lvqsXa3CNZKJZEsZBsLSXbl4cQaO7GPQAcEUZIaMDI475lBUkRIAPb23PzYSoRYPPkDBcVsKVER0DTPCAEMO6VQTtaIKTJJlwGdQGypNOsNpPwokCuY+aMvkg1xf+uyVJhM30naFJ6F7OhkEWrh65CYQ9P3OqgJjTr1iZz0YS5g9jSETZ3k0aDsxLAcBBHCscSyv8N/x2I0oW62977wyH/FU+LQcUQ+RloZs0mdYEEiEmMrM6k890ACePyEaVn1fPEOZLYw53nDLaXQOLcSwYtfDDlrxTX5PY6G1XudYBvvI/UGFShDo327cF0uM5h+px+4htgEE2EtszvlJyR1NZynDRx2Fk3WDfrbpUR0TMUuyFYXU0FaQQZwgrqp47lrBmh37UWMjIsn7P6ubp0v6xHD51N2OUhO/a5iK9wjtGvXVcpJZBr7OZqT2gP77FlGsEIJ/hQkdgwE7dMSRgliTGLROIzupZS7dd+qm4XUig0CSNVFDSuBZ9pyE2JaFwW0SPGJoIbD49LijQlBlUj1YzE1vHFQlBQQCAgV2sRCZZNUBRhjeSKwMDQ7ZztqC3eI6jmZlhmrBTDrA21DGPa3oel7cF5eAm1+Iezy2CkfSb1nmpJ/l+FeOvvNvyts2gFhsbh8GOmm0KbkU7TtoaWIGaJ+LY2iBES3vFOrvfcPNCfYwW5JK+ASJ0tYgURmQw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5136.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(4636009)(39860400002)(396003)(136003)(376002)(366004)(346002)(41300700001)(6512007)(6506007)(66946007)(8676002)(26005)(83380400001)(478600001)(66556008)(86362001)(76116006)(66476007)(38070700005)(316002)(54906003)(38100700002)(64756008)(66446008)(4326008)(71200400001)(2906002)(33716001)(6916009)(1076003)(44832011)(7416002)(186003)(6486002)(4744005)(9686003)(122000001)(5660300002)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?PXcbKzKBL72uAqOjIIjpY+U9NsR4+xgZz/xLYHTF91S+ryU3SBOSPfT2edmf?=
+ =?us-ascii?Q?xTPX7mAq7WYoTYn+/s1XIurYProf87Gl1iEuMzO9qGV4unV5jNHutQ5DmPMf?=
+ =?us-ascii?Q?KOJiZzYw7Q6aMuE6gkyNvAxXvGDQ8PSS43NCHuJBWL0+OZZ4xrhWUlOecZQB?=
+ =?us-ascii?Q?Zsn6x7Jq1XnZXh5LjRhLt/LFS2C/SBpDTF/fYClZ00vqLBJZXWypu9y5G014?=
+ =?us-ascii?Q?GiOb0aBAWkbsk+/MbhbnloWAwnJKvuQ0SgjFj2/PGBBkWBczScwcqxCimF70?=
+ =?us-ascii?Q?K1tiYQNel7Q82Sc/v9/BTDANFUnut3r2UUKGDRBl6IfUOOBVHYiN2qWvJBDu?=
+ =?us-ascii?Q?68vXVT6nYx+PI3kBp/dUBo94u269XFLANMdJ1hfEcVwTTHr99ys68zy4rCt6?=
+ =?us-ascii?Q?BDpi/zRkyNEsHI9cFXcRWX8IySlIi+BEn0xRnVGcbGYzRi6wdU+DSDEI7x2I?=
+ =?us-ascii?Q?LzORFCZuS0Mnwh9mE3U3oHFG5OrYlrxgT3lxYtY2PXHA06SAObFUulJOA+0G?=
+ =?us-ascii?Q?k5wrHPAeIqKMaNosGlT5QwZfij9mBC7nIbUwWHpKmOo6jYO6UWyhB/BL6uLJ?=
+ =?us-ascii?Q?nWs/22UrEffNFMiineq8WXscNj9HbFsYHXQuuxXRzKRHGfL2iH3EO110bxY4?=
+ =?us-ascii?Q?ck2rpCdfYbADp8binFWTFIcpm6xjvPt0z4w9OOxMIxXYTLlaual7hKPJtznz?=
+ =?us-ascii?Q?k+FDd9eHvvuLsZPc+7e1pcqfNqIn2Kmb40lPKuRoB0y9CkTF/u/ixj2Ni3cP?=
+ =?us-ascii?Q?BksF+DPoUfz/pI4m8mt+WNZAmwE/H/VZN4t/EoCfs0VHpe/T4K0Bsjb+x0yG?=
+ =?us-ascii?Q?+X75ZvdKO0AtGdd3HRltjYjUpdWXk2Kwsb9HPZcm4nzjET6qIQgckiGrXwOX?=
+ =?us-ascii?Q?xhCJL56ekRURRb24GQFQV9GEAB9cc4Q6hXDWys1/FBGMxpDdAIvgqNwqhGem?=
+ =?us-ascii?Q?7HKsAVkfToZ+hf9XUowtHxBP4wDCORNI3ktyoKIZvs5uPjh/XNHOVkO0WCet?=
+ =?us-ascii?Q?jJe9IXTWlEH1Qxnj7h2DnZZS1zp9u9oxtkwK/usvkT/0uFD7eHdRkjP9eLnn?=
+ =?us-ascii?Q?fc34UecWps6IaDy8Idvx3OetkpIIY87exXx/3S034Wm2zgl1QJ7PIPKxik3J?=
+ =?us-ascii?Q?YxFGjQ+Py9neBLS6ftVH1rx2XJctuYOEp5rY40AFSN6H2OK5SKgkOwKzqH+X?=
+ =?us-ascii?Q?KvM2xy65uypzny5Pd1pk+M297znhUKqj/XyN4zWQb8es31/IU+gAcdl7bi88?=
+ =?us-ascii?Q?6BY62vaB9bU8k1WAwB5ZJa2DftbdbK/zGay7Oh+wB+lVuTe+knOZzzraurNC?=
+ =?us-ascii?Q?f5qEE+zeA7g3/VVMJYZWQYy6P57M9kKXFSmMLCqoBDA5p+z6niHgPUtBS3T6?=
+ =?us-ascii?Q?A8gGZujGp1fe+vozUYETZtMehsdEUeUQ2acULBH3k9QBFasrjUpQ4mqRsuel?=
+ =?us-ascii?Q?Ihnu0+PXI1sznKF0VJkqlvyLqc2IC1hcrIqa8kBBH2pJgAaIB5mhaPxmTIVe?=
+ =?us-ascii?Q?B/pmwzg27sQmDIBkFUkkdChDtFL1HyF2+s2MxCQ/iAa+VFKEiEtQ9kJONUB3?=
+ =?us-ascii?Q?Kjm8b+MNItJS+XnjEq8W5CXxmYcBXSqBbI40d8qzaUONiQTcAOrS3ed+fZaG?=
+ =?us-ascii?Q?DA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DEA2719DD20A2B47B79AC3DFE36E58F1@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5136.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69cb9347-e168-4b3a-bbdf-08da5922e651
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2022 16:26:05.4066
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W1H54u0klSJghA+k5ITglc5heLoR9c1aPtEZT5xlJU841Stngl287/ugwUB9cX05DEsSqhO3n8tNFagkZsrZkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2367
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -163,23 +140,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 7:00 AM Tobias Klauser <tklauser@distanz.ch> wrote:
->
-> On 2022-06-28 at 04:01:03 +0200, Saravana Kannan <saravanak@google.com> wrote:
-> > diff --git a/drivers/tty/serial/8250/8250_acorn.c b/drivers/tty/serial/8250/8250_acorn.c
-> > index 758c4aa203ab..5a6f2f67de4f 100644
-> > --- a/drivers/tty/serial/8250/8250_acorn.c
-> > +++ b/drivers/tty/serial/8250/8250_acorn.c
-> > @@ -114,7 +114,6 @@ static const struct ecard_id serial_cids[] = {
-> >  static struct ecard_driver serial_card_driver = {
-> >       .probe          = serial_card_probe,
-> >       .remove         = serial_card_remove,
-> > -     .id_table       = serial_cids,
->
-> Is this change intentional? All other drivers are only changed to set
-> .probe_no_time and I don't see anything mentioned in the commit message
-> re. this driver's change.
+On Tue, Jun 28, 2022 at 01:17:02AM -0700, Colin Foster wrote:
+> There are a few Ocelot chips that contain the logic for this bus, but are
+> controlled externally. Specifically the VSC7511, 7512, 7513, and 7514. In
+> the externally controlled configurations these registers are not
+> memory-mapped.
+>=20
+> Add support for these non-memory-mapped configurations.
+>=20
+> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> ---
 
-No, that's a mistake. Thanks for catching it! I'll check this patch again.
-
--Saravana
+These "add ability to be used in a non-MMIO configuration" commit
+messages are very confusing when you are only adding support for
+non-MMIO in ocelot_platform_init_regmap_from_resource() in patch 9/9.
+May I suggest a reorder?=
