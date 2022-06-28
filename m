@@ -2,88 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B83B955E65D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C30E55E88B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:36:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346699AbiF1Nlq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 09:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
+        id S1345597AbiF1Nro (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 09:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231337AbiF1Nlp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 09:41:45 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938FF29C94
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 06:41:43 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id h187so20068359ybg.0
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 06:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l0lBZBoRWVZwKeLsg5bhh62sfkY43Fuz7vbWyvz07jo=;
-        b=hGw9T6CarZQ/NMBim5LFKd5YTY/o2ySRURtSkju9ltnp+I2dfsm1E743dkEP7vIdI2
-         EF0DRNKbp1NoePxE8d03JMmSXIQyxTYmcA6StyWwY4r+YQPVJD8cCVXjq4KFryi4BOBX
-         R1mZO/ER1L2SAM2BBGv6AMAXI5Jfk4vSpWXci5dnkjMyWFiBRxV+lukWKp040ydV0UYw
-         pi8tg+vw420tIDHBWpl4HD2i87IuVJPBeZxJfEHlBvY0Am4KybIx85T311V7Sc3PDZDd
-         4o1lrjtE8IrlXi97SmhrBQzUpnLpRq4Op7bcrYUqg0s8X0We4xxPIjbi6qZfZCCR6FAX
-         0Wjg==
+        with ESMTP id S1346934AbiF1Nrh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 09:47:37 -0400
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 959512B19C;
+        Tue, 28 Jun 2022 06:47:32 -0700 (PDT)
+Received: by mail-il1-f180.google.com with SMTP id w10so8190721ilj.4;
+        Tue, 28 Jun 2022 06:47:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l0lBZBoRWVZwKeLsg5bhh62sfkY43Fuz7vbWyvz07jo=;
-        b=PT9itiRz7riMFqGcECLGc1Ky/LTyXOvXwqakDnJCKW6bR2LYvW1YfUzi86BQGaK9FJ
-         YN+/GezhqK6PfALHRuj3eK7IOTX2eq3kRb2g3oWeVHGW4ZQSbhmdcdfkgZBGTCtTiM/v
-         Hr16JhO66uL2Ji0JMwVg6Js2K5WhgxXjj5imSFoD/BMbHOxkY1Swu1ccUQcgKwRNlnIa
-         WqUnj3v4wz+W6opCi4omwFlyMWLEKZPLA6vOiUwxtjP9aT8HMtiBdkc3Jy2eYHzlckE/
-         3tSlHsfNDNPyji7CI3G1olmdTQJw5VTYhGGh1yT7iUWdpPEafMs2ZruIlLx3oExgLPKc
-         hS7Q==
-X-Gm-Message-State: AJIora/e27lOylqmvm9ZqtBBH2VuskVoyY0owKlBs/IvmPWM5N8WPfWi
-        z6fdCP/2LPb4DWrgbAkAOLo0YyA+XdN5a5arIG0YnQ==
-X-Google-Smtp-Source: AGRyM1vMJc6mshbdVpv82z3JrgHLSlBVD5A4IKCtkqq06YBNSTzatN88O/XMo49PG0TuIqgDUg33Srr26PKhV2f0pQk=
-X-Received: by 2002:a25:1f57:0:b0:669:b6fa:167e with SMTP id
- f84-20020a251f57000000b00669b6fa167emr20917137ybf.295.1656423702377; Tue, 28
- Jun 2022 06:41:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Mdgh0FPprIeUOtyoTIWGoo3tBFW6HponToZBl2Ks+E0=;
+        b=CTGjnmXFi7rts7tjh7EY++EReSVsJ39YmGyhzCh1XthI94AqK6+y4fxrLYVetBQ9Hx
+         74WCDBoaDq7q5hsO+T8m5Ig6Xr21/SuvQ/kI4lHloPWuDYq0zcoYPmq3nDQETwMkqAkV
+         V4HX/SB1PUyJ03RSirpZcM7WPnpl3rXLAslpT58OOMZtmFJfB9JDmVdOObxNxhzdFAFO
+         df82BQg+3buV28tra7q6B0ZEMClfBcsUJE89GiMxqfr47Vmmbb0kYvfB+K9SX/A9p0ei
+         7NKWoXN6bJIfCwNz0L9R2kM+4Amke6CiVEn+dkLhwbrmM5RbNVMG8yyc3yEr+xPL4Skw
+         qQOg==
+X-Gm-Message-State: AJIora/+M1KXdDZONWnhvemGs64bHkYki+DJ7xRNSJug3t3YxvGYQx55
+        nwBsQ4ii9lpJPFi7JPCIdw==
+X-Google-Smtp-Source: AGRyM1u/CZtvwnAAV6atCWMAqxyoLlQtGmnMKkJs2jsP03c6Zbrl75e3i+mDqWJX/yWP0L1PbJ3Rpg==
+X-Received: by 2002:a05:6e02:1d15:b0:2da:8628:fcc8 with SMTP id i21-20020a056e021d1500b002da8628fcc8mr8214290ila.49.1656424051706;
+        Tue, 28 Jun 2022 06:47:31 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id s10-20020a5ec64a000000b0067520155dedsm4736815ioo.15.2022.06.28.06.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jun 2022 06:47:31 -0700 (PDT)
+Received: (nullmailer pid 357097 invoked by uid 1000);
+        Tue, 28 Jun 2022 13:47:28 -0000
+Date:   Tue, 28 Jun 2022 07:47:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: iio: adc: add AD4130
+Message-ID: <20220628134728.GA349256-robh@kernel.org>
+References: <20220620162059.1097264-1-cosmin.tanislav@analog.com>
+ <20220620162059.1097264-2-cosmin.tanislav@analog.com>
 MIME-Version: 1.0
-References: <20220623080344.783549-1-saravanak@google.com> <20220623080344.783549-3-saravanak@google.com>
- <20220623100421.GY1615@pengutronix.de>
-In-Reply-To: <20220623100421.GY1615@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Jun 2022 15:41:30 +0200
-Message-ID: <CACRpkdY+MfDHGw4QrFy=A64y7dSrno26vuKbt_AnFbVm9y_hoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] of: base: Avoid console probe delay when fw_devlink.strict=1
-To:     sascha hauer <sha@pengutronix.de>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, peng fan <peng.fan@nxp.com>,
-        kevin hilman <khilman@kernel.org>,
-        ulf hansson <ulf.hansson@linaro.org>,
-        len brown <len.brown@intel.com>, pavel machek <pavel@ucw.cz>,
-        joerg roedel <joro@8bytes.org>, will deacon <will@kernel.org>,
-        andrew lunn <andrew@lunn.ch>,
-        heiner kallweit <hkallweit1@gmail.com>,
-        russell king <linux@armlinux.org.uk>,
-        "david s. miller" <davem@davemloft.net>,
-        eric dumazet <edumazet@google.com>,
-        jakub kicinski <kuba@kernel.org>,
-        paolo abeni <pabeni@redhat.com>,
-        hideaki yoshifuji <yoshfuji@linux-ipv6.org>,
-        david ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220620162059.1097264-2-cosmin.tanislav@analog.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,31 +67,294 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 12:05 PM sascha hauer <sha@pengutronix.de> wrote:
+On Mon, Jun 20, 2022 at 07:20:58PM +0300, Cosmin Tanislav wrote:
+> AD4130-8 is an ultra-low power, high precision, measurement solution for
+> low bandwidth battery operated applications.
+> 
+> The fully integrated AFE (Analog Front-End) includes a multiplexer for up
+> to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
+> Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
+> selectable filter options, smart sequencer, sensor biasing and excitation
+> options, diagnostics, and a FIFO buffer.
+> 
+> Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad4130.yaml          | 259 ++++++++++++++++++
+>  1 file changed, 259 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
+> new file mode 100644
+> index 000000000000..b72f3da07309
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
+> @@ -0,0 +1,259 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2022 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4130.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4130 ADC device driver
+> +
+> +maintainers:
+> +  - Cosmin Tanislav <cosmin.tanislav@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD4130 ADC. Datasheet can be found here:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4130-8.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad4130
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: phandle to the master clock (mclk)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mclk
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    description: |
+> +      Specify which interrupt pin should be configured as Data Ready / FIFO
+> +      interrupt.
+> +      Default if not supplied is int.
+> +    enum:
+> +      - int
+> +      - clk
+> +      - p2
+> +      - dout
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  refin1-supply:
+> +    description: refin1 supply. Can be used as reference for conversion.
+> +
+> +  refin2-supply:
+> +    description: refin2 supply. Can be used as reference for conversion.
+> +
+> +  avdd-supply:
+> +    description: AVDD voltage supply. Can be used as reference for conversion.
+> +
+> +  iovdd-supply:
+> +    description: IOVDD voltage supply. Used for the chip interface.
+> +
+> +  spi-max-frequency:
+> +    maximum: 5000000
+> +
+> +  adi,int-clk-out:
+> +    description: Specify if the internal clock should be exposed on the CLK pin.
+> +    type: boolean
+> +
+> +  adi,ext-clk-freq-hz:
+> +    description: Specify the frequency of the external clock.
+> +    enum: [76800, 153600]
+> +    default: 76800
+> +
+> +  adi,bipolar:
+> +    description: Specify if the device should be used in bipolar mode.
+> +    type: boolean
+> +
+> +  adi,vbias-pins:
+> +    description: Analog inputs to apply a voltage bias of (AVDD − AVSS) / 2 to.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    maxItems: 16
+> +    items:
+> +      minimum: 0
+> +      maximum: 15
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +patternProperties:
+> +  "^channel@([0-9]|1[0-5])$":
 
-> Also consider SoCs in early upstreaming phases
-> when the device tree is merged with "dmas" or "hwlock" properties,
-> but the corresponding drivers are not yet upstreamed. It's not nice
-> to defer probing of all these devices for a long time.
+Normally, unit-addresses are in hex.
 
-Actually this drives a truck through the entire approach in a way.
+> +    type: object
+> +    $ref: adc.yaml
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        description: The channel number.
+> +        minimum: 0
+> +        maximum: 15
+> +
+> +      diff-channels:
+> +        description: |
+> +          Besides the analog inputs available, internal inputs can be used.
+> +          16: Internal temperature sensor.
+> +          17: AVSS
+> +          18: Internal reference
+> +          19: DGND
+> +          20: (AVDD − AVSS)/6+
+> +          21: (AVDD − AVSS)/6-
+> +          22: (IOVDD − DGND)/6+
+> +          23: (IOVDD − DGND)/6-
+> +          24: (ALDO − AVSS)/6+
+> +          25: (ALDO − AVSS)/6-
+> +          26: (DLDO − DGND)/6+
+> +          27: (DLDO − DGND)/6-
+> +          28: V_MV_P
+> +          29: V_MV_M
+> +        items:
+> +          minimum: 0
+> +          maximum: 29
+> +
+> +      adi,reference-select:
+> +        description: |
+> +          Select the reference source to use when converting on the
+> +          specific channel. Valid values are:
+> +          0: REFIN1(+)/REFIN1(−)
+> +          1: REFIN2(+)/REFIN2(−)
+> +          2: REFOUT/AVSS (Internal reference)
+> +          3: AVDD/AVSS
+> +          If not specified, REFIN1 is used.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1, 2, 3]
+> +        default: 0
+> +
+> +      adi,excitation-pin-0:
+> +        description: |
+> +          Analog input to apply excitation current to while the channel
+> +          is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 15
+> +        default: 0
+> +
+> +      adi,excitation-pin-1:
+> +        description: |
+> +          Analog input to apply excitation current to while this channel
+> +          is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 15
+> +        default: 0
+> +
+> +      adi,excitation-current-0-nanoamp:
 
-It is perfectly legal to have a device tree with dmas specified
-but leave them unused in the operating system. DT just describes
-what hardware is there, it does not mandate that the OS
-implement drivers for all of it.
+This needs a new unit suffix added to dtschema.
 
-This approach really needs that the resolution mechanism
-is aware of whether:
-
-1. a driver exist for the resource at all so it will eventually resolve
-
-2. if that driver is compiled in or module at all (IS_ENABLED())
-
-3. If the resource should be grabbed early or optionally later
-    such as dmas for console UART
-
-Only then can the mechanism work in the generic case.
-
-Yours,
-Linus Walleij
+> +        description: |
+> +          Excitation current in nanoamps to be applied to pin specified in
+> +          adi,excitation-pin-0 while this channel is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 100, 10000, 20000, 50000, 100000, 150000, 200000]
+> +        default: 0
+> +
+> +      adi,excitation-current-1-nanoamp:
+> +        description: |
+> +          Excitation current in nanoamps to be applied to pin specified in
+> +          adi,excitation-pin-1 while this channel is active.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 100, 10000, 20000, 50000, 100000, 150000, 200000]
+> +        default: 0
+> +
+> +      adi,burnout-current-nanoamp:
+> +        description: |
+> +          Burnout current in nanoamps to be applied for this channel.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 500, 2000, 4000]
+> +        default: 0
+> +
+> +      adi,buffered-positive:
+> +        description: Enable buffered mode for positive input.
+> +        type: boolean
+> +
+> +      adi,buffered-negative:
+> +        description: Enable buffered mode for negative input.
+> +        type: boolean
+> +
+> +    required:
+> +      - reg
+> +      - diff-channels
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      adc@0 {
+> +        compatible = "adi,ad4130";
+> +        reg = <0>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        spi-max-frequency = <5000000>;
+> +        interrupts = <27 IRQ_TYPE_EDGE_FALLING>;
+> +        interrupt-parent = <&gpio>;
+> +
+> +        channel@0 {
+> +          reg = <0>;
+> +
+> +          adi,reference-select = <2>;
+> +
+> +          /* AIN8, AIN9 */
+> +          diff-channels = <8 9>;
+> +        };
+> +
+> +        channel@1 {
+> +          reg = <1>;
+> +
+> +          adi,reference-select = <2>;
+> +
+> +          /* AIN10, AIN11 */
+> +          diff-channels = <10 11>;
+> +        };
+> +
+> +        channel@2 {
+> +          reg = <2>;
+> +
+> +          adi,reference-select = <2>;
+> +
+> +          /* Temperature Sensor, DGND */
+> +          diff-channels = <16 19>;
+> +        };
+> +
+> +        channel@3 {
+> +          reg = <3>;
+> +
+> +          adi,reference-select = <2>;
+> +
+> +          /* Internal reference, DGND */
+> +          diff-channels = <18 19>;
+> +        };
+> +
+> +        channel@4 {
+> +          reg = <4>;
+> +
+> +          adi,reference-select = <2>;
+> +
+> +          /* DGND, DGND */
+> +          diff-channels = <19 19>;
+> +        };
+> +      };
+> +    };
+> -- 
+> 2.36.1
+> 
+> 
