@@ -2,64 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E664B55EDC9
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 21:20:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9882A55EDCC
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 21:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235417AbiF1TUU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 15:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52574 "EHLO
+        id S232618AbiF1TZN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 15:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234596AbiF1TUC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 15:20:02 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D130BBC86;
-        Tue, 28 Jun 2022 12:18:07 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id p136so17686293ybg.4;
-        Tue, 28 Jun 2022 12:18:07 -0700 (PDT)
+        with ESMTP id S232788AbiF1TYy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 15:24:54 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF7A25C5C
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 12:22:25 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-3176b6ed923so127152837b3.11
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 12:22:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7IQwRMlSVPcn362SikaZ4Eq9k/hWCiY8rzFaOjEbtVk=;
-        b=FDC3RGbxTQoQ3NUFARlxPcbwIJjMYPT8NIwvk/GEaHDvjtRsjy+RXmcQWcVcgaxgJM
-         l+YOMG3B2k8BQEXgG8Wru35PZ2bNtS+0dUVORxiuuIOx/dNMSPrE9EbITOtdCyYqsbfc
-         gMyVl0BBr8Lzw12Mbh57nI0zo3jbOLaEWbIiG8eU+SjZwCiBjMYscHxFVnBxY0n//Pgl
-         a/fyHEhJpOTcHMLm+v6QM13GdSstxmyqj442wNBqZADuvM/d7RhpqbOrlD//26JNBATL
-         XVieOKjstLHTfS5B8Zr189JAIdLhB6/Qdsx7H5XY8IV1i7Wif08fkK5AnXZRuQzZsPtU
-         XzOw==
+        bh=C8mNceUjsEzV58CF8Izijaf1LL3RieDehSF/+hLMsKA=;
+        b=JgN0mfHT+WkY7l9z20sPEEiVEFNQpYJGJ2Q9EgyebwjHWk8c+2IB0NiKp7A7y0jK31
+         pSegamBFQuXDaV6txhKbomrXZJKL1VgXbHPqfvhndP1GAo0pITsu8450NZ7IymPndapE
+         kWc7FG2l8uKCyXFtfhpkcltuabV1j+ts0AAIuFIK+L1oVkCpToytEKJl3CV/3ogqHkRx
+         C9qid2GCyJvpUzoHvI3Lp1zABSRtTL/GD+1eRRDDadFU39bANf40UuiZVB2HmUEjMgzg
+         uQZQvyUExIsgevBH5UsWHSlVJmPISjFbXU45HCVLP3YrbP4hl+B/9czk/6HS7AhzhIpw
+         1Kyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7IQwRMlSVPcn362SikaZ4Eq9k/hWCiY8rzFaOjEbtVk=;
-        b=TF/7IyEqN/AX/kZ9FRT58IcQKcDqUM4CXoZUWQ+8PCwOt1cuf+k897wFTd9r+uTPAr
-         gl4S9/I6vMjLZuWYvwQD5TA5EVEXu7QSRKPEzGT8627EkN43QSDYja4GxoVSp1VAfsj8
-         LPs5yXX1AGYmvKjg0/E1scS+XcSwNNn+cWwoCUCMMHoGoePzT779zz7gWe9BzungUylQ
-         mrsPKK9R3WI9GM7XaoFfpIZ4QmLPnNfrWh25mFIdKK0cGx8R28MWAJvKeuSzFoMypxk8
-         iIfGZk2KhFmWlTVogYpi+283ZTqOTzGzlXgWXD0tbR1Jc5vyom74NMiXSugtwKmdEErz
-         k2Tw==
-X-Gm-Message-State: AJIora9+i/VcIyrozVZ/4LUWXTmjYuC8V2hXsXP8WMiR4PW01CKzEMd1
-        JNy1RykRlrt5B5hD+3YZwfUSucL5QXrtjShPGq8=
-X-Google-Smtp-Source: AGRyM1uEN3nkmCVzMO/TlzxvXoovFrW87cughMH1YvZoZFaHztTpeANNEUP+JoPbzffhkdou55ZdBuW2i4y9gUZzIYU=
-X-Received: by 2002:a25:dd83:0:b0:66c:8d8d:4f5f with SMTP id
- u125-20020a25dd83000000b0066c8d8d4f5fmr19189893ybg.79.1656443886524; Tue, 28
- Jun 2022 12:18:06 -0700 (PDT)
+        bh=C8mNceUjsEzV58CF8Izijaf1LL3RieDehSF/+hLMsKA=;
+        b=l11fugCZx5Eru+HtMOX14fq3Dvf/UiGoB8M9RqjxF7nVx6Wez0TSnxvWcwf00XefLy
+         +RglQrHAGzOOgHDrZn1cd4r1GBUvnRCzf3RTMM9zy9SYYIBates2IVCPrxTfHgZP3zT1
+         uV839blxjnIY5AVJ4Z8LeR2VIfrKQjjwSHTBFDLgXeHXLMn7QfpEyA3WuYSG9j66Rxvb
+         KMNow/VhLC6YaEth9/idcLq51ALXGPNhHCC498bmEzl8YLD590NJchKQLDRp8BXPPIU5
+         92ExT8LihJCViVvmfdK5RLgKgOIeZW+TGjrioxHyVwuAP6MXUj8M55+xz4u59OmiSnpR
+         9ZhQ==
+X-Gm-Message-State: AJIora9dk2fomLuvAWnNEY9SGcAveyzJgGTOLsOsRSkL5aGrwucIbcLC
+        Cdu3WSUno9Zl9mIj79rOfa9kFWOt8A970jQEHM0=
+X-Google-Smtp-Source: AGRyM1s5xAvBeQDYA0el4oRa6jVQqKQ58Xu91Lfpu08nVibzfy2+8ppFdgNYXJw33bdPtqXoQTifOYbiGc0xVxy4VcE=
+X-Received: by 2002:a81:468b:0:b0:318:4cac:6576 with SMTP id
+ t133-20020a81468b000000b003184cac6576mr22635041ywa.277.1656444145025; Tue, 28
+ Jun 2022 12:22:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220628144649.3957286-1-cosmin.tanislav@analog.com> <20220628144649.3957286-3-cosmin.tanislav@analog.com>
-In-Reply-To: <20220628144649.3957286-3-cosmin.tanislav@analog.com>
+References: <1656426829-1008-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <1656426829-1008-3-git-send-email-shubhrajyoti.datta@xilinx.com> <CAHp75Ve5f+fO29=FwGC=LxYsYj=sKRrW6LYav3gx0yK7rx-uXg@mail.gmail.com>
+In-Reply-To: <CAHp75Ve5f+fO29=FwGC=LxYsYj=sKRrW6LYav3gx0yK7rx-uXg@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jun 2022 21:17:29 +0200
-Message-ID: <CAHp75Ve6f0dfMmctAwZ3UTA98MDs_injKik2C=wXpJ1zJyiPxA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] iio: adc: ad4130: add AD4130 driver
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
+Date:   Tue, 28 Jun 2022 21:21:48 +0200
+Message-ID: <CAHp75VfVaKnofadyyf2jF3Lk816i1TJf4pq9s11iN=wFqJH2rA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Add support for SLG7XL45106 I2C GPO expander
+To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Sungbo Eo <mans0n@gorani.run>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>, git@amd.com,
+        git <git@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -71,19 +68,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 4:49 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+On Tue, Jun 28, 2022 at 9:13 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> AD4130-8 is an ultra-low power, high precision, measurement solution for
-> low bandwidth battery operated applications.
+> On Tue, Jun 28, 2022 at 4:35 PM Shubhrajyoti Datta
+> <shubhrajyoti.datta@xilinx.com> wrote:
+> >
+> > From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+> >
+> > Dialog semiconductors SLG7XL45106 is an 8-bit I2C GPO expander.
+> > The output port is controlled by a data byte with register
+> > address.
 >
-> The fully integrated AFE (Analog Front-End) includes a multiplexer for up
-> to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
-> Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
-> selectable filter options, smart sequencer, sensor biasing and excitation
-> options, diagnostics, and a FIFO buffer.
+> 1/ Have you checked if there is a driver that sounds very similar to
+> this already upstream?
 
-It would be respectful, if you include given tags. Why didn't you do
-that? Any significant change that has to be re-reviewed?
+Actually, why can't pca9570 be amended to support this?
+
+> 2/ Have you tried to use gpio-regmap? Why can it not be used?
+
+Same Q for PCA9570 driver. (Maybe gpio-regmap wasn't existed that time?)
 
 -- 
 With Best Regards,
