@@ -2,58 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4C1B55E8A2
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:36:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20E1855E765
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:32:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231414AbiF1OOl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 10:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54590 "EHLO
+        id S229686AbiF1OQp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 10:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345249AbiF1OOk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 10:14:40 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF422EA01
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 07:14:39 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id x184so19699544ybg.12
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 07:14:39 -0700 (PDT)
+        with ESMTP id S1346334AbiF1OQo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 10:16:44 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F122ED69
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 07:16:40 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-318889e6a2cso118420907b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 07:16:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=yRKsEKAbcC84O4kmV91KMhoX8vJB4xrqfQjGdGIO0i0=;
-        b=ulakMtrzIO/z639ratWT8ml2sEdMQ9s98YlOcsymzYlmRWyHzMlqVS6P0cPv0nRTy6
-         uN445dFN49VkwAVd6rRYjap/2ZOZBBp1WKobZCWPVDeumoY0ohoKe5oAUZgUT5oMNNTU
-         UM60YkE46bWRbSPunjqfNzuxr1i9ngn/sQv903+GrruR0nRQJ7cBeeW/iq7+FMOHchLU
-         //sAIvAp/YAgqMEt3Us8qB8UGa7ZU44y0de4Tg1VYNSJhyxyBof/E68jOq94yFF3gOGG
-         syg7wjUa61hWvFqLPYONnc+QR22vAKOheV5a7EVhAcUAkY36aSlr6A5t5dJodtEV0hK+
-         mKDA==
+        bh=we5ZALKIcZuWUs35jjg9o55Ctsjy2HnxYxmPXSuiDyg=;
+        b=Eyd9FyAYXxniWyCJYJAkq2hVEGZtwL37/io0dfps5oXoGF9tQvN0UI0xhOQzqpcDR+
+         81ACSPLs6vR9gNEPPX6mzpEqhfkqcFtcXODLCvSZ052+43VrQ6YhTXiSRbXCyeik8rXe
+         0miraYk+TxbuFt4D+8hs+jR/K47yYaYDtR7B1p1kMFpoK5KNd539fnbJRsIpGggfdKlD
+         gfcytA/R9tSBaSCamjLMxfwiinGImTqJcKtssfwHZgiPZS/zn95H9omu8G9a/rvnouiW
+         9Lt/am7oME2JJgyri8zSnjm3Stqp2jqUtKBN3pK62Q23qVibf0OGiel/85TyZzDwmKwb
+         GbfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yRKsEKAbcC84O4kmV91KMhoX8vJB4xrqfQjGdGIO0i0=;
-        b=p2UPRpnFrjrHEgj1z3cZ/qzM8JJRhg7AyOERTZEKKdZILO9YZbFHimP/hLyp3ZjHoe
-         h5iltaw+5kShPMfoPL8+fZRWP3wOdNO0x1MCAHXuSw7beLZCBwZSH6S7Usucn516T32a
-         Yykb6IjTfqgf/Nlg80RiLZqTtoxRLBo7mD0y091iz1KbWEQx3TCcSgc7s7h+tRAcr8qS
-         4uLfT+d3UsZvB2KLn+dKUZlnDPYL5HVwZiGpbUCBjDds6DLZs9SK6Ps5WPQVyfqcwgab
-         BcMVUVSL6FFi65mcxkauam8uK3j88buBVpCYw8h4NeiD0z9h1RLkoIxNohfhhYQ9u9xa
-         xIIQ==
-X-Gm-Message-State: AJIora+0iCTdltB37K1drtQy5fO/24D/syCMAC/LPiDEXTI8oDPRE4pV
-        KZoizbjam7vBghGPdJmZOZYi/vUJUchUJRnC1uyNmaWbQ60=
-X-Google-Smtp-Source: AGRyM1t1bAMh97Lo2R3gBPI7zO542FRzDkx6+JFfvFJvwPDKhHjKDaEHn6/9FUsxUZp3QIXmsmVG8IM8cJsRyUIp7Uo=
-X-Received: by 2002:a25:1f57:0:b0:669:b6fa:167e with SMTP id
- f84-20020a251f57000000b00669b6fa167emr21092368ybf.295.1656425679084; Tue, 28
- Jun 2022 07:14:39 -0700 (PDT)
+        bh=we5ZALKIcZuWUs35jjg9o55Ctsjy2HnxYxmPXSuiDyg=;
+        b=Ybgvs40QoG4YFguq01t7TItCD74iARdxVk1g23QQtO0mawHHL2nwP/YW8ulge/ajal
+         +eTa/LT6EEFgv/Ei1Z7G9bDod3C6VLTsoEpzXu1RJD/hyjqfePs9IeCLbZZ68iG70usr
+         Yq2t1xTrFpdrzJVikfS/3J0pvFrhU5bBBJL2ZnljrEjllYZ7CV5FxpJ/MZmyogwVoi3M
+         2GTHrCro5zJSh/8mcqfukH4XGcHcUcX2q2eXiwhqH1ph1Z+m3SN+ioR2gSA5R59+T7cq
+         yWd9yb9vRYSW/CAynAMTyYisOBFXVBVjH48xT0yBydlWhqsFkjArPE06BldPe37aOhaY
+         WZhg==
+X-Gm-Message-State: AJIora8wSkUHLdpOR0Hm/v7tQt26yuAP10DblTmf/G4V6G+CNam5gD9d
+        trR2z2vAGzdQtYDCl9RL3ioCrhcy00bCddpIW3vhKg==
+X-Google-Smtp-Source: AGRyM1tUYDLFiLuFmKGH4vxI5KGQ3ut80NYRMBi3vRrXwmdeTwR14llzPy5yY/ZHPhJ3bpF4NVMUrneTqSzU7ULR33w=
+X-Received: by 2002:a0d:e20a:0:b0:317:ce36:a3a0 with SMTP id
+ l10-20020a0de20a000000b00317ce36a3a0mr22477892ywe.448.1656425799830; Tue, 28
+ Jun 2022 07:16:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220626235743.87821-1-linus.walleij@linaro.org> <20220627144457.esdwcma4wibtc2jm@notapiano>
-In-Reply-To: <20220627144457.esdwcma4wibtc2jm@notapiano>
+References: <20220627173209.604400-1-nfraprado@collabora.com>
+In-Reply-To: <20220627173209.604400-1-nfraprado@collabora.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Jun 2022 16:14:26 +0200
-Message-ID: <CACRpkdbBo4t34g9rhUSRquiRkHtQ_C62V_xAjtz1KLfLheef1Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: mt8192: Fix compile warnings
+Date:   Tue, 28 Jun 2022 16:16:28 +0200
+Message-ID: <CACRpkdbqfH5jG7jZdvoGhNGqWPMBB+ntHgBCL-Od1Y9f9tiiHg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: mt8192: Add RSEL values to bias-pull-{up,down}
 To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
         <nfraprado@collabora.com>
-Cc:     linux-gpio@vger.kernel.org, Guodong Liu <guodong.liu@mediatek.com>
+Cc:     kernel@collabora.com,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -66,34 +74,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 4:45 PM N=C3=ADcolas F. R. A. Prado
+On Mon, Jun 27, 2022 at 7:32 PM N=C3=ADcolas F. R. A. Prado
 <nfraprado@collabora.com> wrote:
-> On Mon, Jun 27, 2022 at 01:57:43AM +0200, Linus Walleij wrote:
-> > After applying patches I get these warnings:
-> >
-> >   drivers/pinctrl/mediatek/pinctrl-mt8192.c:1302:56:
-> >   warning: "/*" within comment [-Wcomment]
-> >   drivers/pinctrl/mediatek/pinctrl-mt8192.c:1362:56:
-> >   warning: "/*" within comment [-Wcomment]
-> >
-> > Something is wrong with the missing end-slashes. Add them.
-> >
-> > Cc: Guodong Liu <guodong.liu@mediatek.com>
-> > Cc: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Hi,
->
-> yes, this issue was noticed during review [1], and fixed on the following
-> version [2], but since the commit before the correction was applied, this=
- fix
-> LGTM.
->
-> Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
 
-Thanks, yeah the real problem is me lagging behind in reviewing
-and applying patches and making mistakes like not seeing there
-are newer patches in the front of the review queue...
+> Commit fe44e4984018 ("pinctrl: mediatek: add rsel setting on mt8192")
+> added RSEL bias type definition for some pins on mt8192. In order to be
+> able to configure the bias on those pins, add the RSEL values in the
+> bias-pull-up and bias-pull-down properties in the binding.
+>
+> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+
+Patch applied as uncontroversial and you obviously need this.
 
 Yours,
 Linus Walleij
