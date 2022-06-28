@@ -2,105 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB9E55E3E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:38:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF6355E3F8
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345448AbiF1M4I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 08:56:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49526 "EHLO
+        id S1346009AbiF1NBZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 09:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345249AbiF1M4F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 08:56:05 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7F22F660;
-        Tue, 28 Jun 2022 05:56:04 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id r3so22065082ybr.6;
-        Tue, 28 Jun 2022 05:56:04 -0700 (PDT)
+        with ESMTP id S1346028AbiF1NBX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 09:01:23 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04C6D2FFDA
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 06:01:23 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-31780ad7535so115987357b3.8
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 06:01:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ggwF5g1h8Ead4FuQw5zkAX1BhU9Zyqolzn8TdYVGstg=;
-        b=KeCLJ5ykrnqYEpWJJO9nXzaPfE5yt0z4Iq/Nje/aq0a043RgdvwLLQV9N99LTC6o66
-         neO4UcQYMDBwdFwCXMIaMYvKQxZ6v1pFmZJsxFGltIYh2by2CXKx3NmpbLgaSmEp9iE2
-         xXp9GVm1KHZ8TIeaVu1XWRPW1IUGhAmRvk0VSWKgoeogO+AJEtl1dKvTIzv2Br+KO6iH
-         uknuFW/Dy88sbBADAhdqNAk/Rr7YAxjywb6zMGIJ/n5LOomZvFrMS5rD5f7UZGZSAmhH
-         rg7WjkZtrtjJyayI4yLWQIe4J0IY96As42R+OlnJwepW6Ie/omPO4jukd5ozyg4JMo+i
-         bDoQ==
+        bh=Hd3XL93MmgNxl9VBaLiuBcv4b/i5SRbaDxLlwpB+u/c=;
+        b=MyZ/4vLxNMcMrNX+yXCZtcjXPFhB/wSlJiNjElM7eOk84dJ29151nrYiL+hOeKO/y3
+         h0o5lkMD+XQobd2vuhZ4XA8NHx3aqU+xdZO6A8oMtVllozIQL+CyteZJAp+S/mYyAwUK
+         AEqvbiCeBmAjjyCfMwEr09YJCiTzzo4rx8Zr899ktOAOUtak6CxdS91BY4CJ/3zMef7Q
+         c0OCPBsrKhruavhT1RemPcfqB866KPsk3AjkDyBFbq5FweTNxTCNxQLfTOsRNyaaTcE3
+         1o/uZWb02e7QeaFKX13xgi8s7H/cE419zmEQOHOKXjRbE6XFaDRAG0AJZ8xunIJnEcLV
+         Uy/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ggwF5g1h8Ead4FuQw5zkAX1BhU9Zyqolzn8TdYVGstg=;
-        b=V10Q+hd9a0gB+/X90e6RGRt65TJLT3TwZS0xWBr2XnPKEwvEiXWO0qJ33VxDOyx+K4
-         xWG9IcPlez45YZttfKn/vLthk+mIcRazMzy+tvdQWvIfdM9NDgarLk7GFsRh8ZbWSoMr
-         K8tWbPOuedaPBUg8iOnae4U4FdFYDeA/mKAn/JBKNPVW0Qk2IEcicptyzOsUvIjsvp56
-         hGdIcDx8kbb7b4drGFa9b+rd9MwY65xX7p32xAHyOZBePiEEzFs7350BfwEPS9OpAXnY
-         2FYU5ETLq1/y2fi9W8WQPGHJE62KvE4VJc/yR+yNc0UkEOlJU+pU56nJxun4NDiSYiMQ
-         0s9A==
-X-Gm-Message-State: AJIora8u2hxeT9N0PfKRBPETtmOu6BgIQOzrY6ZzPSZs3q7UsuHJ6Jyp
-        R7TTeF2fvocg+eIkvbYz3LVabgwxEcOg/h5bQZ4=
-X-Google-Smtp-Source: AGRyM1tJmBePXIn17WC/ITK/MV0xG89V4LBimXqbrTG2bJTr+PdbMYfS52+jNtpI0qjpMFF1BO0XbyVnla79lsfFCWM=
-X-Received: by 2002:a25:b2a8:0:b0:66c:8110:3331 with SMTP id
- k40-20020a25b2a8000000b0066c81103331mr20100404ybj.460.1656420963675; Tue, 28
- Jun 2022 05:56:03 -0700 (PDT)
+        bh=Hd3XL93MmgNxl9VBaLiuBcv4b/i5SRbaDxLlwpB+u/c=;
+        b=ZRnArMDkYUj+IZP/V4nZSXyPbta6vxSt7gDr4uge8Av6gEhgRMDTbRkBSQ0YAo4aGC
+         MrT9C8EuhVFSO72aUgBE9vhBunsswJ7Qo1iOaTpeQtCq55pSvtmwYNNNTy+Ac6OtyczY
+         5Wf2MuWhHTgF3nULyCPymroLCD2EN4F77t8lpWHUxX5/qG4y3d5UEtCaEDqOABDaiPup
+         XjpYg3NC6cEnl/D9V5ivZDTO8INuA4/S21tbd46w33XTLkSkWTmggngw15BNdzKWghR3
+         8w9b1tjYYUBxmy7EUple6t7VN08WpJ6IsVBGm0MfmSTEdt/CLV/JNEP1GiabPfKJ3Cxq
+         QPCA==
+X-Gm-Message-State: AJIora9pJwckVF0iwmQS7A354L6bBWi6+iz1ULPnakxZWoZszvNI7/bp
+        BJ1Hpc6YVacPzADFcVqcHic45EAZzM5LkEFm7f6ZTw==
+X-Google-Smtp-Source: AGRyM1tJOYiN++gGQe7eYZTvdGtI3GOuEZN7WBcRrjsQLknyG7NlgzAgkMZlyR1dNIzVB8TKvCJGJukoZrhgqMle/lk=
+X-Received: by 2002:a0d:e20a:0:b0:317:ce36:a3a0 with SMTP id
+ l10-20020a0de20a000000b00317ce36a3a0mr22036265ywe.448.1656421282218; Tue, 28
+ Jun 2022 06:01:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220628081709.829811-1-colin.foster@in-advantage.com> <20220628081709.829811-6-colin.foster@in-advantage.com>
-In-Reply-To: <20220628081709.829811-6-colin.foster@in-advantage.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jun 2022 14:55:23 +0200
-Message-ID: <CAHp75VcEcHxExFsdJGYu2FO0YZVOr5dNYPhCTqYNwRrE1wEQZA@mail.gmail.com>
-Subject: Re: [PATCH v11 net-next 5/9] pinctrl: microchip-sgpio: allow sgpio
- driver to be used as a module
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
+References: <20220622155422.23945-1-menglongwoo@aliyun.com> <20220622155422.23945-3-menglongwoo@aliyun.com>
+In-Reply-To: <20220622155422.23945-3-menglongwoo@aliyun.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Jun 2022 15:01:10 +0200
+Message-ID: <CACRpkdZVY+o684nGpEVA0umkCkkN+E3WC3Uc-dey8MUHMAkqUA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] docs: gpio-sim device-tree example with gpio-base
+To:     Menglong Wu <menglongwoo@aliyun.com>
+Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 10:17 AM Colin Foster
-<colin.foster@in-advantage.com> wrote:
+On Wed, Jun 22, 2022 at 5:54 PM Menglong Wu <menglongwoo@aliyun.com> wrote:
+
+> Update gpio-sim module device-tree example with property
+> 'gpio-base'
 >
-> As the commit message suggests, this simply adds the ability to select
-> SGPIO pinctrl as a module. This becomes more practical when the SGPIO
-> hardware exists on an external chip, controlled indirectly by I2C or SPI.
-> This commit enables that level of control.
+> Signed-off-by: Menglong Wu <menglongwoo@aliyun.com>
 
-...
+Linux-internal global GPIO numbers has no business in device tree
+since other operating systems have no use for it.
 
->  builtin_platform_driver(microchip_sgpio_pinctrl_driver);
+Also Linux don't really want to use these bases either but want to
+move away from it, see:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/TODO
 
-As per one of the previous patches. And repetitive if needed.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
