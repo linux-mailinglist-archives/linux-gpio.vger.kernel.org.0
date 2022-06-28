@@ -2,70 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA9CB55EF00
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 22:14:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DA7F55EF2A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 22:20:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231826AbiF1UOV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 16:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50174 "EHLO
+        id S231788AbiF1UUH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 16:20:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231828AbiF1UNu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 16:13:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7F813D64;
-        Tue, 28 Jun 2022 13:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=a6AnJ5JUpgsz1KJ9YhexUeYWOp5iHJCwBQ9saqPDdtA=; b=VnaHISVICqlvsTwkAW4MliAcH+
-        B5kOQBGYkOHR9O/YlEzHCKMUa5OBO76qUrCigMoSp+tNLqYtegiT3LTn6YRmj9cRVlVN83kVdJjaO
-        JKmYquyVSTibvxqOm0Va5VzPlZgaxgf2PzPoEVI1OrzsW1FO2zr+vNTYskV2OGp5lzwDnXmDyjXNj
-        GCf41sQpWwvJwVO+tKlAQYl6Kc3vPBkVCEI3oGkQyHzmudUODto0RUIzFiivhsch/Uf9b+NvNJsCi
-        rSmhPEIGEdA4Ol3SHO6d8+Ie7srm2JixdDNX9emZd7yZ/hICP1AxizvXriC7npaHtK2z5gju0N9F1
-        Elus4IGA==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.153])
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o6HV3-007yNs-7R; Tue, 28 Jun 2022 20:07:53 +0000
-Message-ID: <ddb01b36-1369-f0e3-49ab-3c0a571fe708@infradead.org>
-Date:   Tue, 28 Jun 2022 13:07:51 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v11 net-next 9/9] mfd: ocelot: add support for the vsc7512
- chip via spi
-Content-Language: en-US
-To:     Colin Foster <colin.foster@in-advantage.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+        with ESMTP id S231495AbiF1UTz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 16:19:55 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1AD1FCD3
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 13:15:48 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6Hcf-0000tr-77; Tue, 28 Jun 2022 22:15:45 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6Hca-003Gkp-55; Tue, 28 Jun 2022 22:15:43 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1o6Hcc-001kt3-Tf; Tue, 28 Jun 2022 22:15:42 +0200
+Date:   Tue, 28 Jun 2022 22:15:39 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
         Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20220628081709.829811-1-colin.foster@in-advantage.com>
- <20220628081709.829811-10-colin.foster@in-advantage.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20220628081709.829811-10-colin.foster@in-advantage.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 5/6] gpio: pca953x: Make platform teardown callback
+ return void
+Message-ID: <20220628201539.lm6sdkpqu23cnas5@pengutronix.de>
+References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
+ <20220628140313.74984-6-u.kleine-koenig@pengutronix.de>
+ <CAHp75VeqAxPjL9vhY9nL5U0Np=+Ysq2E-fQEdgUgrd-_6jcHVQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="p3ojebodrntmjpz2"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeqAxPjL9vhY9nL5U0Np=+Ysq2E-fQEdgUgrd-_6jcHVQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,35 +61,56 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
+--p3ojebodrntmjpz2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/28/22 01:17, Colin Foster wrote:
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -962,6 +962,24 @@ config MFD_MENF21BMC
->  	  This driver can also be built as a module. If so the module
->  	  will be called menf21bmc.
->  
-> +config MFD_OCELOT
-> +	bool "Microsemi Ocelot External Control Support"
-> +	depends on SPI_MASTER
-> +	select MFD_CORE
-> +	select REGMAP_SPI
-> +	help
-> +	  Ocelot is a family of networking chips that support multiple ethernet
-> +	  and fibre interfaces. In addition to networking, they contain several
-> +	  other functions, including pictrl, MDIO, and communication with
+On Tue, Jun 28, 2022 at 09:09:09PM +0200, Andy Shevchenko wrote:
+> On Tue, Jun 28, 2022 at 4:04 PM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > All platforms that provide a teardown callback return 0. New users are
+> > supposed to not make use of platform support, so there is no
+> > functionality lost.
+> >
+> > This patch is a preparation for making i2c remove callbacks return void.
+> >
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > Forwarded: id:20220502170555.51183-1-u.kleine-koenig@pengutronix.de
+>=20
+> What is this tag for? Has it been documented?
 
-	Is that                      pinctrl,
-?
+No, this is a note to myself and wasn't intended to be sent out.
 
-> +	  external chips. While some chips have an internal processor capable of
-> +	  running an OS, others don't. All chips can be controlled externally
-> +	  through different interfaces, including SPI, I2C, and PCIe.
-> +
-> +	  Say yes here to add support for Ocelot chips (VSC7511, VSC7512,
-> +	  VSC7513, VSC7514) controlled externally.
-> +
-> +	  If unsure, say N.
+> However, I prefer to see dropping those callbacks altogether (find the
+> way how to use GPIO descriptors / GPIO table / etc instead of ugly
+> custom callbacks).
 
--- 
-~Randy
+Agreed, but I didn't feel to sort out what happens there. Also I don't
+have any of these platforms to test. So I chose the more conservative
+approach.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--p3ojebodrntmjpz2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmK7YWgACgkQwfwUeK3K
+7AmPFgf/enbRQLnZV9KDyXiIThcqUdt17zK+oi09lPHiB71xIBmn6pVxix6BK+fd
+mHUbmL5r1631CsMxrdTDwJpi6NetBDhcaRTjES+3u7vvvUOYYLU0W7XdBXp9+5SM
+LsXhZ0dCWAHUnQ4JSu/C92dd8kkjLtkNwX2eFmGq/2oGW/M5wW92w1UTzpCpu4oz
+cHYTGMEc5e2T+Ml9xwcx5ME8bCZhTnhcKS4ddCCgwqXq1raU2LCdEF6KYFRz+uuJ
+qtMOFo+R2IQFEx+tmyRvtsDsiFX0a8cBPzdbUuESvMkJDH79edZwHpomco3UucAA
+Dos2pxSxB0sXFEWtbwyp17KwLbYZGQ==
+=ALYf
+-----END PGP SIGNATURE-----
+
+--p3ojebodrntmjpz2--
