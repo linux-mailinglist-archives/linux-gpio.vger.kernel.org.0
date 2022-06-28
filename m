@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2EC355E738
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 887BD55E676
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:27:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347537AbiF1Pda (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 11:33:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36970 "EHLO
+        id S1347734AbiF1QJr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 12:09:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348423AbiF1PdZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 11:33:25 -0400
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-eopbgr140073.outbound.protection.outlook.com [40.107.14.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA8D1EEE1;
-        Tue, 28 Jun 2022 08:33:24 -0700 (PDT)
+        with ESMTP id S1347751AbiF1QIx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 12:08:53 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70071.outbound.protection.outlook.com [40.107.7.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02473A45D;
+        Tue, 28 Jun 2022 09:08:13 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R/XXHhejpHiLzL4YHQp8C+1Yc6//naHzMSiew0GaEjfh+BDwie+XmItCzYF/SnGCgXrsZ3UMUzMbPfJ2CjtrYQVcvpiEZmM+cT0yy9WC7mrVvYzN1p4uIA7rhv1UjI8bvv3ao3mWs2e3CtbaajYlwSLW9qX6jhXiqS186f1x2bORwTI1qAD0xce2YP6WgCi0vNanoZnGnYUI/dj6V3vt9IGZvwCN/4vpB9DABCeX/s47wIwkLwQlMecdcCPrsZ2tqR2LbkiGJUFK8VRojXBf7NVSl4pIss+CoiUWhmmbZGrIeUPVCRqS+ErXZJK74IVKNVlHBIVRb1a9Kz8omhyWPw==
+ b=ioHkSy/PskT/doXqASFaquxT0UEGA7grFHX6Z1ou+9laYYkGP75YKRdIlA95MGRhXaD7Mi1wUKvNkqKji9x6a7g6ZlYm+NxP6P+LfukWhVcc0gg5FDh9+H9m3hvNWYgn6PaXunbupMrXluKy/UE/w0KrIactkJbzCPgnQtVSQC35lVtzb9fiIHeFQj0MVm7Y5kW0GEwtKosm4NhxQ6KejwyL1e29dLzIXnnWAMHgWG/r9tQSEvSluVcdAKB0ybDZV4FllY3pab+IuSLNGe/oO69TxdirLQCIFjpIg90cW/v2pNGf+CkQ48JUPL+eEpdogEUE8bE/GHEbQXCqUQxgoA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=di75XbfP9RwB6qzbud3+eS61e41dgw+MoM/b9DFLxGI=;
- b=XTJFqtieNczzGYL1x/dyMcc2oLTxOfnL8r5x+25IXw16l5UCKbImK8S5GWLnGf9gN4Vm8NjsFEc6LrfjBXYef5O6SLUhgZxnuJGlCGw6k3p4g6bj0y6TZ+IpcZRU4LgC70gEwWufCpXm1U47RFT1/oogoTSlb4AqDEI2XEJrgWvwydMa4nACTbOrwq27J1xfAHEjHrfZrdJ11BLtM1Vz9KRzfwpRse6U+0ne/5/OynQ5TChk6bB6ANksWA4ysko+N0SGq5rCGn5jOh6YQhceylFlcZH6GJx3V0qmIDl8GdwJZ56jEQw9R0oi3pNpEFby4yUZ5b6JRplDlGnLfEtmsA==
+ bh=8zX5N+ZynjZYV3VwBEDQC/yu++SgtqrvMDLJ4yAip+Y=;
+ b=aegRERwlcgO5tn0xCb/lmGIpFk/E0cliKvBJY9qnwmX84J2b1n7mseLryc0bXKQuJ4Wg9NPgNJnDmDLK9tzH5hv9yk1hwdJ+e83KOfLwDSHjPp0kmYv3Tr7fGOOMdvVdG1CigXRPvC/FXEUvH8At7gE5VoQ1fdRAbAvM+5o6w645WcYEGVaR5smaHvFqvvSnvhpGksy2AI1GAR5u0IaUjjaLBISLFQ98iZN2wCQpXbuf6//JfyA5FZs6B5KYMRyQgQFkL5sEaSH3tDHusr/bGfYfgLl+l/zmtEVD+yHE2mpHkX2Fk3LIxmum9T2wc24UCpb6GJUhW+3+YbIj0AvN6w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=di75XbfP9RwB6qzbud3+eS61e41dgw+MoM/b9DFLxGI=;
- b=gbtDdoYiBlqNk8qw8gFUho8sWozsfSk0lbjMlOyjwA3xwhbGBCCn5SdV0F/O7IaR99xiU0zfheQFmOVF4Iy7MfKQUYSSDXMuNqojt4xdujX6vngooZnJm57NBGPebD1C2wtn9PRQVIGro7QCszZ1+9hKj9xbo/Us7wkujQe9GXo=
+ bh=8zX5N+ZynjZYV3VwBEDQC/yu++SgtqrvMDLJ4yAip+Y=;
+ b=Pq3WPl/BV9uJzw2BrtsqQcdV1bJecFH/z69sZM/KmxPjWQGrTwIxgiGizsHVO0wslTfv2Sp8iXuu0pOxDGygETYZbMIcK9kXsDZtT87pjj6i2f8elBt2czOCQU7SLm7nHoIJEFZQuO5yuLqKCOZBIude47WLJ2ghNHsacGCoWIQ=
 Received: from VI1PR04MB5136.eurprd04.prod.outlook.com (2603:10a6:803:55::19)
- by AM0PR04MB5361.eurprd04.prod.outlook.com (2603:10a6:208:115::24) with
+ by AM6PR04MB3960.eurprd04.prod.outlook.com (2603:10a6:209:3f::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.18; Tue, 28 Jun
- 2022 15:33:21 +0000
+ 2022 16:08:10 +0000
 Received: from VI1PR04MB5136.eurprd04.prod.outlook.com
  ([fe80::94fe:9cbe:247b:47ea]) by VI1PR04MB5136.eurprd04.prod.outlook.com
  ([fe80::94fe:9cbe:247b:47ea%7]) with mapi id 15.20.5373.018; Tue, 28 Jun 2022
- 15:33:21 +0000
+ 16:08:10 +0000
 From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Colin Foster <colin.foster@in-advantage.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+To:     Colin Foster <colin.foster@in-advantage.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -57,21 +57,21 @@ CC:     Colin Foster <colin.foster@in-advantage.com>,
         Paolo Abeni <pabeni@redhat.com>,
         Lars Povlsen <lars.povlsen@microchip.com>,
         Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>
+        Terry Bowman <terry.bowman@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [PATCH v11 net-next 1/9] mfd: ocelot: add helper to get regmap
  from a resource
 Thread-Topic: [PATCH v11 net-next 1/9] mfd: ocelot: add helper to get regmap
  from a resource
-Thread-Index: AQHYiseGTWpqx8Siq0u0vYqv+P3KI61kxcMAgAAteAA=
-Date:   Tue, 28 Jun 2022 15:33:21 +0000
-Message-ID: <20220628153320.jrgofeemytyidbot@skbuf>
+Thread-Index: AQHYiseGTWpqx8Siq0u0vYqv+P3KI61k/PWA
+Date:   Tue, 28 Jun 2022 16:08:10 +0000
+Message-ID: <20220628160809.marto7t6k24lneau@skbuf>
 References: <20220628081709.829811-1-colin.foster@in-advantage.com>
  <20220628081709.829811-2-colin.foster@in-advantage.com>
- <CAHp75VevH4LODkF4AELH=E5tQRZZ8LjbWN62sA14PydLMeDRgA@mail.gmail.com>
-In-Reply-To: <CAHp75VevH4LODkF4AELH=E5tQRZZ8LjbWN62sA14PydLMeDRgA@mail.gmail.com>
+In-Reply-To: <20220628081709.829811-2-colin.foster@in-advantage.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -79,57 +79,57 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 54013e20-8fb6-4315-f5d0-08da591b8872
-x-ms-traffictypediagnostic: AM0PR04MB5361:EE_
+x-ms-office365-filtering-correlation-id: 2ab0eee9-2971-4839-560a-08da59206572
+x-ms-traffictypediagnostic: AM6PR04MB3960:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SBpCpvDd/XFTFLQDOi43lhNV9+ZrEem+rXu7NQPjXoJo83g82W+TKA72HVuwgARAaTzwom9QPXEvS91reJQBOThicv36/eOFQSyRnNWe7ZR6hU2wQ+5f8clspVOcdlp9THMeD3ckc/O3u6XhI+GVuhagOvGOkrTwmHzu8/hWaHNWjlBVfjBKRMYL40/4x+daEvGPya4z3f6F4MT46tieG1ELAlw96mRX29cBkSbsQ/V3CFppAyyVYCk9tXR5Mptet5s+rkZqbeWffctkSyUmr1nE+OiPE8IRpBGvb3HOF6nxLFdHlVjT1lwe8TdOb7EMC6kUIYSsKwLhmiELHAmzBvSpEBS06lD+jwoRv33daOZwS/4hfoyGr+xz/mMUzbFaYP+NS4KMADKEyjXuI0RyxDHJ3/wWvqUTiP9TIpgooUAqg3ep2EdMJPSgjVwJTCZ/O6XovDj+EDBiz4QD7FlEUcwPpCSWcNoEjPJomdewpzwiuGFLIVLR2EeGXoqhDh5r01HZTGLC/28g+znV7MnnhnZLDnMV1i+PYfFyoGPlmjJacI3er9Ar+MrBcNoslbAHT3bK5JkxCoO8nok9uj6EQUkd28+pOSNHhq8J6Glbo5zsygPqDl3CUafvuHn0jOdpkBTODm2vjjzCuS1JsEIxZhjPaalPSZMO7mNrpU6kXzWRykTNmbgh+StzR8OMlgaDft+V14bbTsHX7sKX74v0S+VK1yyeWgqK6NKn6PxFuLouAJx50d4lfmsZb2SW/O9G6Q0lvlg5HlOEj3r5SJ6PqhS8wWW67d002E3j6kfyp10=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5136.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(7916004)(136003)(346002)(376002)(396003)(39860400002)(366004)(66446008)(8936002)(5660300002)(4326008)(76116006)(64756008)(8676002)(66556008)(44832011)(6506007)(7416002)(83380400001)(66946007)(122000001)(38100700002)(66476007)(6486002)(86362001)(54906003)(38070700005)(6916009)(71200400001)(1076003)(186003)(478600001)(9686003)(6512007)(33716001)(316002)(26005)(3716004)(2906002)(41300700001)(53546011);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: L9CYD4V+vuGCh9gm5z/6AW0W5UKGdtGTHuo/DQrbytZsXDCEh/Kgxu5RUyAxiXbK6nU6oO3lBGUCTk2ySZWm26ewjAyk7g5LZyJ2Kf/NmvGD4ycFvrs3ij0T0lBQSQynOjccSi9hfWslNs7oMGv/DRjSi1Rz3FVTBzUrWkFkqg/i/zlsy7erbLUYfh6IPA3pJzdERmf5F8Hrcr/FGlD4B8wlKBPba+yqcInaCg2gddJG6YMrHKs681qGZGdnJZsMyOJjdKJf0Ci5KFL3eHPkpMTc+LHVeW7VreLCXHvl5Md+smcnm2kv4a5iAJiMlIAlILtEIFOj11t+1duffbDbGzO0OQnn/PCCTkWjCtIBO+2gHGdhDtShss/AiFLiqwsLTPA9wdlJeELbzTdFBUHCv7Sq4ZPsXb2+0WrHNmVoF3XWoWM+6uGv8hQdrEZSEQuW3Z/vQD6R1M2iXrVwiltToTIEUsQ2oMwfrPwrmFfUsA+b0GS392QiqN66PuxQJfJum8fSoVuS2VW5nrRE8ffGtaUcR7xnNuquscvprV/bL1eLkOngV1MoeaqRRv5rrwCerw09kRKROCkdtTGrIccqemDsedAHx2uteKUjqXeMq7P+FioSiaiVEhkN+ieeiDsYjur4qm4HB/QUzuRym/PCttI4xBRdYCSYE5M29dPQD4SkW0l6e26iqDmq+D4jqWSt0q5oLYcA/Ak578+f68YYgsjQ2BTZ6YYztQRY98DmAzKvuUlu7mevl4WRDbetymMNIN1xqVAgnnlcIx+bi0lvkwXeCfCjjrDER1sEtKLtD3M=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5136.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(7916004)(396003)(346002)(366004)(136003)(376002)(39860400002)(6506007)(8676002)(33716001)(66476007)(86362001)(7416002)(71200400001)(6486002)(64756008)(4326008)(76116006)(66946007)(41300700001)(478600001)(44832011)(2906002)(8936002)(66556008)(66446008)(122000001)(6512007)(38070700005)(6916009)(1076003)(54906003)(316002)(9686003)(38100700002)(186003)(5660300002)(26005);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?v4qqOa8Po030KK9gw/QnYsOkNo4JnXZyzB9ceOGz/cl7eOFtcywXt4NgPt1K?=
- =?us-ascii?Q?EGBVdxjUFv8KKDdXJbrrXi9bRUAdtUg+JTCJ/RaN5ac0ixbrndtMGeZFFuIv?=
- =?us-ascii?Q?2ckD8y12oRF4x6gvXhNtvnvlVvLkQEg/0duMpnMXOidaf5fIepJVTUP7eW7O?=
- =?us-ascii?Q?WZMRv1Jk55570loDhWJ0mzrWxYWWy3O7B4aeTXTKSWBWznBaEMgUraBC0BP4?=
- =?us-ascii?Q?c+R2tV9tv4TgQQri4RxeWMAvrJRdpjPsm2k701LHgrfNpX++2XNH1JC/5CU6?=
- =?us-ascii?Q?5S4dutKLK9DZfE5+6am/wJn0bP31in2/rxI2YJ6ZNNSPo5C42hDa8q3Pu1vw?=
- =?us-ascii?Q?2m/g/QBQZ6ThMwEBtl67k4beX7kNMkU4SCAaykqOE4vx+nNsgIJXnN4hapbX?=
- =?us-ascii?Q?ieXbZYC7gLaH3Q0VTVYL1NIPVGE0sJ8UlHPyLByWbYO2HYP1vPxzZ5LOa84j?=
- =?us-ascii?Q?3YwDZOlJi2PTKbbqQOJYvLnUDXk/7+Yi1SgaPgyuBgSPasTCpt+bEzfKc3Qx?=
- =?us-ascii?Q?pQ3kOwiCn9F5h7QzIBryrjzs1fP9li6oI4TXoo4xrFxkSYfJdNvsoyqX9JNq?=
- =?us-ascii?Q?pupl6pK/8XPvtmgaqXdVnM92+Gdus5uSloAuWUAIFz6+jWaBeKHu3u2dGHsd?=
- =?us-ascii?Q?dAJ5LDDMK/3EYphaDUTkTyQRn234y6ry6GxnYG5ViByum6373a3cAjQaMB/w?=
- =?us-ascii?Q?LSqlYQo9//635TumnUJ0+kYGz824R087sLT2IsMgHc2piFCk+fHvWf46obHV?=
- =?us-ascii?Q?ud527dyCDaBq6x9pZYnbYMt9QJToddSuzx561/boy3L8slw3Kzq9tkztd/m9?=
- =?us-ascii?Q?Ph0DAdOLqbiFuyh91UgAZM+I1pVOtkNKuNdXGLoR71/OASXMmMu24riPGZQo?=
- =?us-ascii?Q?hMaIEMH9Fan0E7+D83k7yiVVlmBB3nRWnFgoT2bklO3YSZmZ5CFMEy11fXf8?=
- =?us-ascii?Q?miffauSW+t+Y4OZti9IEtfpmpGdzz/zUvUoXQb4wKVeVsBRr5oj69BNBOnwc?=
- =?us-ascii?Q?phT0wGeez/HzfuQG9OQBmAM6/E0NDp4WGkIHwK/cFe8DsPr+Qkk3qaoq8xMQ?=
- =?us-ascii?Q?mHHIkXGPhe7vm1QrEBcMBiJbNluEFkEm2KqX6d0qHbmNTz8+5Ys3LJCvBfdU?=
- =?us-ascii?Q?Sd7pVUoGpy+JC989N9ttck14ejk/woU77Bkn4Mbx0r38fE6l9jRKhSgVAZW6?=
- =?us-ascii?Q?bhyJtoZFDr0aGY9X44o0A6FHm9bFyasil4Iop2TNXHG6BfuuvasOdJ0T2kC8?=
- =?us-ascii?Q?ukAVj9kvMct1HBtrSX7tqTP5HiJ9uDMu6aWxfeNkWyspPMQ2WaesyFhGW2ZB?=
- =?us-ascii?Q?2YQcvd3wEayOnO22CKe2AlnMkFCmjPOjds4SlaaVTTKktxA2zeIYRRq+6nI3?=
- =?us-ascii?Q?yXz5yKCOPpN73J9CvDMXhW0HOPRIgjN7GfVqZ6SMmbQ3p2BjmugAods6OUEL?=
- =?us-ascii?Q?Q//o5lEbW9pQNwXRQn1qIDagYQl6F7DuON+c22d+3gnYvoVchv+z094e8rRt?=
- =?us-ascii?Q?KlL3FC4UtmKWbrCkQU2g6glk3piBIaDmBqZeSGiutYjUs/M1hJqJPnkPwqHI?=
- =?us-ascii?Q?28/7RWfzYuXkHoryLzEy9qp4wry3pYXoi2bP8YFQFWgPqHuJ2IOb0xgObmct?=
- =?us-ascii?Q?YQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?MwQxlc0K/qihR/m4pJSBd3Skl/W+1x7BWnYDue0RkrpW63sH+U1sxl3fkC+D?=
+ =?us-ascii?Q?GdDpy6ztyB/fU/r3jiL/x9Fp4Bx981FcxB4qLwRwo5cwNBvB/M99b/JsFNk/?=
+ =?us-ascii?Q?/bE15CCf1tgw+J1s2j3qwh1qHnxotDb7YsnOAjggQ43pUYXmJQEuJYp+EsF9?=
+ =?us-ascii?Q?Jvb4UzWfDBXrLMNa2Im+oktXYigdB92H35zg+EBHIbz4InMZOyb2grjk5WKy?=
+ =?us-ascii?Q?MW7xhmUmKU6t1kQAy5mZOxN+dgWAnXLc4+T0lzM++WzZONATZShmdxGLoAnI?=
+ =?us-ascii?Q?XcNo+KckQelmHycHieTClIHsU+lQJbOXcn2XJegHWuR5LkErtMpplRu2Lx7d?=
+ =?us-ascii?Q?K+16izMTN6JRWLXlnFOTrO1ZNFXY8YfE+g+0YgJ+cp2V6UkbEPYfPV6PyG3K?=
+ =?us-ascii?Q?C5GEQRCnXj2frd+okVoHI43JoEB+tODaBKJaZ4cxhkr/7z4krKdt+DTXW2V3?=
+ =?us-ascii?Q?9kTHylvdl+oGpMM9VQNET7nH4T0oJLp3BxyNbzboNNjnh4fUWg84oF3paCLW?=
+ =?us-ascii?Q?2JVB+5JUmph/lNmv+oirhdpthIstBORcJCs1BGrGh/h3rVX2W2ngrfJXkzng?=
+ =?us-ascii?Q?/SAihfairjy6LxtyyYwijfEpS7EWPBWGdESKUenTLWoejcjetmvQjyhTjQWQ?=
+ =?us-ascii?Q?UI/La5xuCfpIyH6PkxuRdOvnksaKlXZzwCZLhgNHUteFxZNwArY0k81at6QC?=
+ =?us-ascii?Q?7wekQC8OsuCp3+lOGqjEmKWE2HIdjLK0pPWWMMUogDYTQocmhFVgiGBM7CtO?=
+ =?us-ascii?Q?c+3oOoKEqpSr4hxA8pyCTuWdPfzgEU6VkZ8Ub9nzgtzv7GBZhCZyA9Mo/fur?=
+ =?us-ascii?Q?C3Chp2hxIy3qoLhiPXAcjWM1ZGqEdFSrr+SwFunHiJbTBXTWCglKUqsKXEpT?=
+ =?us-ascii?Q?zA0Tmh3o5Do3lt8EVeadiovue6W9bl+WcpiyZWV/buj79nhTYvH9aocAYDCn?=
+ =?us-ascii?Q?+XFk1qaPVXoTGvYCi4LtRyGHvAKm5+bnFaARUQltvtqscyyzlH1OXP7pBImm?=
+ =?us-ascii?Q?trBTuADj891uswt6D8TUsHm1TQKXrncijVgQRluitFY9CEIVqViEwnFSV4el?=
+ =?us-ascii?Q?0cOTIkXQm4ue3Ek5sFDUfRr30DUvNqauunDbCI6ponmdjZmNp2m05tX09VR7?=
+ =?us-ascii?Q?ltVP2+WMy7oRgyns0AA+tj6ybDGGvf+CV9iHgNaVAGMYsUQMWoQ9KLl2YL+F?=
+ =?us-ascii?Q?PruDZ2rnwrPzI9j6eaiwHkgRYSeIxxKBCl8Y+MAmazyyckgx6Vzgk6vpFYH8?=
+ =?us-ascii?Q?AC6loqMWSHDyJvZall/6dJpSvjpGw/Q313PA3n+T5iC2es4fqyCp1b8m+wke?=
+ =?us-ascii?Q?VXvOulPZtauMW7do7gGa/DqcyYZWTLQcCFAd7WdeSNyQZxOx9oTw/Y8JCi2F?=
+ =?us-ascii?Q?aiH82FEL5VeD5v9g0uvGEFuk0sbSQbyXW7vbTf4HHVpT/u3bUzfO9jpyREw3?=
+ =?us-ascii?Q?fiQ21u7FJ3L7KLWDQn+r1sT5TVrufnMAnqWcoUDJmhdnRl0W52mmhCtw1bTg?=
+ =?us-ascii?Q?XkGIBPyBb3c7DGzYyhLmwphT3wbijcvyWdZvF9mVuQeMD0NKUR5dAqiCnOa/?=
+ =?us-ascii?Q?bxtoEqAGj9s6YjPRm3wJJA1DiMLOJyox/zbvdm8o+6BWdnpW3FztYKa3Am4v?=
+ =?us-ascii?Q?fA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7A348D1C53E6944E8700E13E18AC9A96@eurprd04.prod.outlook.com>
+Content-ID: <81C691B95E8EC74895C0068C3B5AFA80@eurprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5136.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54013e20-8fb6-4315-f5d0-08da591b8872
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2022 15:33:21.4102
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ab0eee9-2971-4839-560a-08da59206572
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2022 16:08:10.1851
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O+ycLldjxriBRl9aaKcOzLJdNXfGchmcLzM4TUEVjNChM04DQAvdwjCQxOWpkseHNpMbkNEqxD5cf1oXPrIK/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5361
+X-MS-Exchange-CrossTenant-userprincipalname: QWZ1N3/T4foI1Ka2AUb7/OIBe5hp/L76bdUfxS58AgIF8YN9mVd6AIpp382FZIAMocb/3JqsX93vpdIjQoMXmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB3960
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -140,41 +140,143 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 02:50:36PM +0200, Andy Shevchenko wrote:
-> On Tue, Jun 28, 2022 at 10:17 AM Colin Foster
-> <colin.foster@in-advantage.com> wrote:
-> >
-> > Several ocelot-related modules are designed for MMIO / regmaps. As such=
-,
-> > they often use a combination of devm_platform_get_and_ioremap_resource =
-and
-> > devm_regmap_init_mmio.
-> >
-> > Operating in an MFD might be different, in that it could be memory mapp=
-ed,
-> > or it could be SPI, I2C... In these cases a fallback to use IORESOURCE_=
-REG
-> > instead of IORESOURCE_MEM becomes necessary.
-> >
-> > When this happens, there's redundant logic that needs to be implemented=
- in
-> > every driver. In order to avoid this redundancy, utilize a single funct=
-ion
-> > that, if the MFD scenario is enabled, will perform this fallback logic.
->=20
-> > +       regs =3D devm_platform_get_and_ioremap_resource(pdev, index, &r=
-es);
-> > +
-> > +       if (!res)
-> > +               return ERR_PTR(-ENOENT);
->=20
-> This needs a comment why the original error code from devm_ call above
-> is not good here.
+On Tue, Jun 28, 2022 at 01:17:01AM -0700, Colin Foster wrote:
+> diff --git a/include/linux/mfd/ocelot.h b/include/linux/mfd/ocelot.h
+> new file mode 100644
+> index 000000000000..5c95e4ee38a6
+> --- /dev/null
+> +++ b/include/linux/mfd/ocelot.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
+> +/* Copyright 2022 Innovative Advantage Inc. */
+> +
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/types.h>
+> +
+> +struct resource;
+> +
+> +static inline struct regmap *
+> +ocelot_platform_init_regmap_from_resource(struct platform_device *pdev,
+> +					  unsigned int index,
+> +					  const struct regmap_config *config)
 
-I think what is really needed is an _optional() variant of
-ocelot_platform_init_regmap_from_resource(), which just returns NULL on
-missing resource and doesn't ioremap anything. It can be easily open
-coded, i.e. instead of creating devm_platform_get_and_ioremap_resource_opti=
-onal(),
-we could just call platform_get_resource() and devm_ioremap_resource()
-individually.=
+I think this function name is too long (especially if you're going to
+also introduce ocelot_platform_init_regmap_from_resource_optional),
+and I have the impression that the "platform_init_" part of the name
+doesn't bring too much value. How about ocelot_regmap_from_resource()?
+
+> +{
+> +	struct resource *res;
+> +	u32 __iomem *regs;
+> +
+> +	regs =3D devm_platform_get_and_ioremap_resource(pdev, index, &res);
+> +
+> +	if (!res)
+> +		return ERR_PTR(-ENOENT);
+> +	else if (IS_ERR(regs))
+> +		return ERR_CAST(regs);
+> +	else
+> +		return devm_regmap_init_mmio(&pdev->dev, regs, config);
+> +}
+> --=20
+> 2.25.1
+>
+
+To illustrate what I'm trying to say, these would be the shim
+definitions:
+
+static inline struct regmap *
+ocelot_regmap_from_resource(struct platform_device *pdev,
+			    unsigned int index,
+			    const struct regmap_config *config)
+{
+	struct resource *res;
+	void __iomem *regs;
+
+	regs =3D devm_platform_get_and_ioremap_resource(pdev, index, &res);
+	if (IS_ERR(regs))
+		return regs;
+
+	return devm_regmap_init_mmio(&pdev->dev, regs, config);
+}
+
+static inline struct regmap *
+ocelot_regmap_from_resource_optional(struct platform_device *pdev,
+				     unsigned int index,
+				     const struct regmap_config *config)
+{
+	struct resource *res;
+	void __iomem *regs;
+
+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, index);
+	if (!res)
+		return NULL;
+
+	regs =3D devm_ioremap_resource(&pdev->dev, r);
+	if (IS_ERR(regs))
+		return regs;
+
+	return devm_regmap_init_mmio(&pdev->dev, regs, config);
+}
+
+and these would be the full versions:
+
+static struct regmap *
+ocelot_regmap_from_mem_resource(struct device *dev, struct resource *res,
+				const struct regmap_config *config)
+{
+	void __iomem *regs;
+
+	regs =3D devm_ioremap_resource(dev, r);
+	if (IS_ERR(regs))
+		return regs;
+
+	return devm_regmap_init_mmio(dev, regs, config);
+}
+
+static struct regmap *
+ocelot_regmap_from_reg_resource(struct device *dev, struct resource *res,
+				const struct regmap_config *config)
+{
+	/* Open question: how to differentiate SPI from I2C resources? */
+	return ocelot_spi_init_regmap(dev->parent, dev, res);
+}
+
+struct regmap *
+ocelot_regmap_from_resource_optional(struct platform_device *pdev,
+				     unsigned int index,
+				     const struct regmap_config *config)
+{
+	struct device *dev =3D &pdev->dev;
+	struct resource *res;
+
+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, index);
+	if (res)
+		return ocelot_regmap_from_mem_resource(dev, res, config);
+
+	/*
+	 * Fall back to using IORESOURCE_REG, which is possible in an
+	 * MFD configuration
+	 */
+	res =3D platform_get_resource(pdev, IORESOURCE_REG, index);
+	if (res)
+		return ocelot_regmap_from_reg_resource(dev, res, config);
+
+	return NULL;
+}
+
+struct regmap *
+ocelot_regmap_from_resource(struct platform_device *pdev,
+			    unsigned int index,
+			    const struct regmap_config *config)
+{
+	struct regmap *map;
+
+	map =3D ocelot_regmap_from_resource_optional(pdev, index, config);
+	return map ? : ERR_PTR(-ENOENT);
+}
+
+I hope I didn't get something wrong, this is all code written within the
+email client, so it is obviously not compiled/tested....=
