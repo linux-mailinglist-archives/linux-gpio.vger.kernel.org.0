@@ -2,126 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1B0455C46A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 14:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69A8F55D643
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243218AbiF1DcM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 23:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
+        id S230053AbiF1ExA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 00:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243227AbiF1DcH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 23:32:07 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB48EB0;
-        Mon, 27 Jun 2022 20:32:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656387125; x=1687923125;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0aHN4mfLxYQCQhyA6ZlbNE5JoJBgYv0+uTjZnOONln0=;
-  b=P/YgSdgVcwhbhFeikaXra5mmJJyJEpgnLVt4YTh/irrzf3s+g7X4J0Ft
-   5W1yS4Lrn29c5h4+F1lff8uydvhZR2jGCoEIVBd581Y6zgBEmj3jUeVDn
-   ksoc8fsSQLjqUONP5LNlyYOXQ7nZVQIgqa8yduflInPIQxM8LY41s7adS
-   +l5I3jSWMMBWrreRTmQnXb4dvS18JxKTtk6+3LBiW+BLijlR8KTy/QZfW
-   9lukShzsUvWML04IJ1pEOttofNKq1PlkU3ouXZezWMZWEhM42T2M0r/bG
-   OQHzrbw/QpApiPe3m5HndimurJCcW/oxjhg63OLUjzLNSqHQTCg8GgYB+
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="262033251"
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="262033251"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 20:32:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="836485895"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Jun 2022 20:32:01 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o61xI-0009Sd-HC;
-        Tue, 28 Jun 2022 03:32:00 +0000
-Date:   Tue, 28 Jun 2022 11:31:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sricharan R <quic_srichara@quicinc.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, p.zabel@pengutronix.de,
-        quic_varada@quicinc.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org
-Subject: Re: [PATCH V2 5/8] pinctrl: qcom: Add IPQ5018 pinctrl driver
-Message-ID: <202206281113.juwklxoO-lkp@intel.com>
-References: <20220621161126.15883-6-quic_srichara@quicinc.com>
+        with ESMTP id S230252AbiF1Ew7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 00:52:59 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0209218340
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 21:52:59 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id dw10-20020a17090b094a00b001ed00a16eb4so11485055pjb.2
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 21:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BYCLfn6gUddeVnN3VQ7RRSdQecZWyAUrP0cTjuXAXw0=;
+        b=fQKRFnQNZV9peyxXbnklifLGtDzYhNQuny8Fb8rLVXLfCS/Kd88KRhphgsRBJbb+kX
+         uNlAa67yhbknDTRlgHpybzkESHJIaTvfcH525acVVQmz7ViDEalK2XVPj95Xj/5fX1BA
+         RSt6Q0udIYeQqpR5wlecFp0uMlCHT3ZX1kBs+OOHCwRueTMybP3ryzvkmUNhwW78SYEh
+         QkK9l1mNc4GzujSr5yfrChIOm1Sk1kA7xcuaqgIJShsMaG7VDTJb+0aRQFHl3ijnz4AW
+         XE7+ZGa/TSe/siGNFSjXIBxAUmNUGDNOGwLyOcvVjSQGTRfD5Eys5NHdOlmqJUyo/+QA
+         ZwaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BYCLfn6gUddeVnN3VQ7RRSdQecZWyAUrP0cTjuXAXw0=;
+        b=16r6ypwVEoSxmOyjKlkl8U4m/tOTLzd+V52HvJ1BHRD+2RfivlEH862WRRa/jaTHfg
+         F6iVxAnr9/iHzzXROYJAk2WP6sHHLIuFM3C2E7YluYC1iw9EXJiiwLSxWrZbRxk2wsKa
+         O8pM4U/587SANkgKQFCxhasAlDxieeewiguTO4MZoihWf376eB3EwXU7uNimPrLOiOcg
+         M5zF5V4yHMbOf1a2QcfYvPy1uAv5sUIUvOGzthD/y/1MQ4Wvtl2EJT+Dx7t0U701Px7S
+         JEkxAtY5CORHzjFFUC1rChS29W1QC1XwL5Hq8oPS9zVp1C6jUOO96LdQHS9edppIZype
+         UWgw==
+X-Gm-Message-State: AJIora81sNP5+fvgH/J3TROtiyCJg6biWekZJS6Td0c7MtAXFBDTofyu
+        lq0BzVL0FFPVhEce2pVRwAbrZ9fbg5Q=
+X-Google-Smtp-Source: AGRyM1vg4PjmXRy4TzKEbniRywjLfwqbl8Ja8nM7x30N/R3MTfaEl9UruQ1IcSUWoBTgPRK3DHqmMQ==
+X-Received: by 2002:a17:902:f7d3:b0:16a:208e:b2c4 with SMTP id h19-20020a170902f7d300b0016a208eb2c4mr3103202plw.64.1656391978423;
+        Mon, 27 Jun 2022 21:52:58 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id l15-20020a63da4f000000b0040d0a57be02sm7846328pgj.31.2022.06.27.21.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 21:52:57 -0700 (PDT)
+Date:   Tue, 28 Jun 2022 12:52:53 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Yegor Yefremov <yegorslists@googlemail.com>
+Cc:     Linux GPIO List <linux-gpio@vger.kernel.org>, brgl@bgdev.pl,
+        andy.shevchenko@gmail.com
+Subject: Re: Reading current output value
+Message-ID: <20220628045253.GA18105@sol>
+References: <CAGm1_kvsAir70H41RJ5vzAGeBLBAFByHyR3fWfFeq3RW5O7cBA@mail.gmail.com>
+ <20220622102632.GA37027@sol>
+ <CAGm1_kvf1RC7fHBy65PkRcS=a5eUgpVYyHM+6NmOvWv6YusTEA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220621161126.15883-6-quic_srichara@quicinc.com>
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <CAGm1_kvf1RC7fHBy65PkRcS=a5eUgpVYyHM+6NmOvWv6YusTEA@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sricharan,
+On Mon, Jun 27, 2022 at 12:37:46PM +0200, Yegor Yefremov wrote:
+> Hi Kent,
+> 
+> On Wed, Jun 22, 2022 at 12:26 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Wed, Jun 22, 2022 at 09:54:41AM +0200, Yegor Yefremov wrote:
+> > > On a am335x based board I have a GPIO pin that enables/disables power
+> > > of an external device (the bootloader sets this pin to output and 1,
+> > > and the kernel is instructed to not change it). Using kernel
+> > > 5.19.0-rc2 and sysfs interface, I can read the current status as
+> > > follows:
+> > >
+> > > echo 68 > /sys/class/gpio/export
+> > > cat /sys/class/gpio/gpio68/value
+> > >
+> > > As a result, I read 1.
+> > >
+> > > Using gpioget (libgpiod) v1.6.3, the line will be configured to
+> > > "input" and the value is set to 0:
+> > >
+> > > # gpioget 2 4
+> > > 0
+> > >
+> > > So, how can I read the state without changing it? I am mostly
+> > > interested in using the kernel userspace API directly.
+> > >
+> >
+> > The API itself supports it, but it isn't exposed in gpioget v1.6.3.
+> > The gpioget in libgpiod master has a --dir-as-is option for exactly
+> > this case, but that hasn't made its way into a libgpiod release yet.
+> > (commit 3a912fbc1e2 tools: gpioget: add new --dir-as-is option for GPO read-back)
+> > Can you try master?
+> 
+> # gpioget -v
+> gpioget (libgpiod) v2.0-devel
+> Copyright (C) 2017-2018 Bartosz Golaszewski
+> License: LGPLv2.1
+> This is free software: you are free to change and redistribute it.
+> There is NO WARRANTY, to the extent permitted by law.
+> 
+> Now, I get my "1", but as soon as gpioget exits, the pin goes at "0".
+> 
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on robh/for-next linusw-pinctrl/devel linus/master v5.19-rc4 next-20220627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20220628/202206281113.juwklxoO-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 016342e319fd31e41cf5ed16a6140a8ea2de74dd)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm64 cross compiling tool for clang build
-        # apt-get install binutils-aarch64-linux-gnu
-        # https://github.com/intel-lab-lkp/linux/commit/5986a00923b330deb4c2c70e0d531507a19fb840
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
-        git checkout 5986a00923b330deb4c2c70e0d531507a19fb840
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash arch/arm64/kernel/ drivers/clk/qcom/ drivers/pinctrl/qcom/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pinctrl/qcom/pinctrl-ipq5018.c:252:27: warning: unused variable '_groups' [-Wunused-const-variable]
-   static const char * const _groups[] = {
-                             ^
-   1 warning generated.
+Is that line the only line used (i.e. exported) on that chip?
+If that is the case, can you request another unused line first (e.g.
+using gpiomon in the background, or, and only since you've already
+mentioned sysfs, exporting using sysfs), then try the gpioget?
 
 
-vim +/_groups +252 drivers/pinctrl/qcom/pinctrl-ipq5018.c
+But fundamentally what you are trying to do is use the GPIO line as a
+persistent store, which it is not.  The state of a GPIO line is
+uncontrolled, and considered undefined, unless the line is requested
+(exported to use the sysfs terminology).
+The gpio tools have no option but to release the line when they exit,
+and so can't be guaranteed to do what you want here.
+It may work or, as you have found, it might not.
 
-   251	
- > 252	static const char * const _groups[] = {
-   253		"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
-   254		"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
-   255		"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
-   256		"gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
-   257		"gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
-   258		"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
-   259		"gpio43", "gpio44", "gpio45", "gpio46",
-   260	};
-   261	
+What you need is a userspace entity to request and hold the line and
+be the ultimate arbiter of the state of the line.  The initial state of
+the line could still be read from the line itself, though that should be
+a last resort.  You mention your bootloader is configured to
+initialise the line to 1, so you could take that as a given and have
+the arbiter set it to 1 on startup.
+I'm currently working on an update of gpioset for libgpiod v2 [1] that
+has an interactive mode, so you can set the line and then control the
+value later.
+ e.g. gpioset --interactive --chip 2 4=1
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Would that work for you?
+
+Cheers,
+Kent.
+
+[1] https://lore.kernel.org/linux-gpio/20220627134447.81927-1-warthog618@gmail.com/
