@@ -2,91 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2169155CFB9
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B0455C46A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 14:49:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233486AbiF1D35 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 23:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49758 "EHLO
+        id S243218AbiF1DcM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 23:32:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231728AbiF1D34 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 23:29:56 -0400
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E41F421B;
-        Mon, 27 Jun 2022 20:29:54 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 61ED4320097D;
-        Mon, 27 Jun 2022 23:29:53 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 27 Jun 2022 23:29:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1656386992; x=
-        1656473392; bh=GXdRtjVdnwILxLdtyM/xN95hYHB1ae83/NYaN89uAv8=; b=p
-        SZmozpusuFw5cqSpA4LbjEkNnKgbZG9kv+G7DTLU/QwgKaxXSNGV6+Sv23j1+qU0
-        3lFzGNvqVm97PJf+e1MfbWC2cwCq03ZG6R9SANqnPusxWcsgb979cJeMktuZBQV0
-        QcZCCmAWBo3rTvUDd1KCjSsyHLupgrF/vFOm0g1fL57FLKRz7QZmDzQjD8jpruLv
-        iee1UzDmEUGl//kVKof+EwxRIDXWx+5ktxjga8YM6ha/52hMJFb7OXQxBxonh2vI
-        3refu2XTBtY65BjchXPV3ddnOYT7z6WGfQYENnkQHclDorsRATcTp1twXu9p4bPa
-        8zLjmErGwf/57rFJgBkEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1656386992; x=
-        1656473392; bh=GXdRtjVdnwILxLdtyM/xN95hYHB1ae83/NYaN89uAv8=; b=a
-        YOuOrFSqzZd2cXPRbpdHzzeql076eT03IL90bzaLJIIxee/uJS3g2OApi2Bkr15K
-        eg2h4O+DSp9GJEvfjK1qYlsLCz1scA8kaRgunIyNYLNfv2++l1L2LUzy33Eqbo1X
-        gFT2ufZtJpqbQO6vYEmTMr5jzwPNA3Is5BIYzAYfsfOxMWTMXcvm1dGIJawcMRTP
-        5vG97PPUAdbj2uzIg5GdH1SpDdD7DEIdqJmF0TEx2ZOBIjyIGDxu81Ql3NNWty2C
-        39XbTupgNdH4fSxTe0Z9cQjTUz1s7ayHqNhtNL2R80jHv83Ja6z8TWRD3FXjJ1LF
-        5qEpDx05d7CqnX5g/F6fw==
-X-ME-Sender: <xms:sHW6YgjOBgHdmwEIns-ctdSBIUeE46Nm-j7TnVVAIuLhv455GPDmHg>
-    <xme:sHW6YpAFV7RcMuD_dRpRqsTq7nPd6PeIfM3cVCaOsqf6Mr07fY_UyOK0OTih2dZIu
-    PwqyOHYZMPk3sOKMA>
-X-ME-Received: <xmr:sHW6YoEWLfBpgoMj-yF1PEhg33slSCqEK-Clqga8quitBSkwhz0jwtBW8v44Z992pnxjZlnksXr23lV1djA3dE6mSChJmUaYuqpNaOWEKijhLYKGRlGo2Vsikg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudegiedgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpefurghm
-    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpedtvefhheehgfdvkeetffeludeuudehudeuvddtveelleekvedv
-    uedviefhkeeuheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:sHW6YhTnOaeM5Y74OwVlWRIdKvFIcceMRcXRV0cthlbAFx_IHVcYbg>
-    <xmx:sHW6Ytwf99M4HjheAEB9jZg8A8A2wQHhhMRUIOf2TLP1wlfyqOO38A>
-    <xmx:sHW6Yv7Uju4meBL2PW1Dq8nygHLT6ojtHnr4VSkzlvHFup1DUJW49A>
-    <xmx:sHW6YiphFUAsJFhnNd8qkBfEuOv8RTiJGMNnVkD9HWz_V0dfO7mqIA>
-Feedback-ID: i0ad843c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Jun 2022 23:29:51 -0400 (EDT)
-Subject: Re: [PATCH 3/6] pinctrl: sunxi: Support the 2.5V I/O bias mode
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>, Ondrej Jirman <x@xff.cz>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
-References: <20220626021148.56740-1-samuel@sholland.org>
- <20220626021148.56740-4-samuel@sholland.org>
- <1818958.tdWV9SEqCh@jernej-laptop>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <b1aaa895-59dd-bbb1-3dc1-9dfaa96dfdb0@sholland.org>
-Date:   Mon, 27 Jun 2022 22:29:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        with ESMTP id S243227AbiF1DcH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 23:32:07 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB48EB0;
+        Mon, 27 Jun 2022 20:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656387125; x=1687923125;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0aHN4mfLxYQCQhyA6ZlbNE5JoJBgYv0+uTjZnOONln0=;
+  b=P/YgSdgVcwhbhFeikaXra5mmJJyJEpgnLVt4YTh/irrzf3s+g7X4J0Ft
+   5W1yS4Lrn29c5h4+F1lff8uydvhZR2jGCoEIVBd581Y6zgBEmj3jUeVDn
+   ksoc8fsSQLjqUONP5LNlyYOXQ7nZVQIgqa8yduflInPIQxM8LY41s7adS
+   +l5I3jSWMMBWrreRTmQnXb4dvS18JxKTtk6+3LBiW+BLijlR8KTy/QZfW
+   9lukShzsUvWML04IJ1pEOttofNKq1PlkU3ouXZezWMZWEhM42T2M0r/bG
+   OQHzrbw/QpApiPe3m5HndimurJCcW/oxjhg63OLUjzLNSqHQTCg8GgYB+
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="262033251"
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="262033251"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 20:32:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="836485895"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Jun 2022 20:32:01 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o61xI-0009Sd-HC;
+        Tue, 28 Jun 2022 03:32:00 +0000
+Date:   Tue, 28 Jun 2022 11:31:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Sricharan R <quic_srichara@quicinc.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, p.zabel@pengutronix.de,
+        quic_varada@quicinc.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org
+Subject: Re: [PATCH V2 5/8] pinctrl: qcom: Add IPQ5018 pinctrl driver
+Message-ID: <202206281113.juwklxoO-lkp@intel.com>
+References: <20220621161126.15883-6-quic_srichara@quicinc.com>
 MIME-Version: 1.0
-In-Reply-To: <1818958.tdWV9SEqCh@jernej-laptop>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220621161126.15883-6-quic_srichara@quicinc.com>
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -94,94 +70,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 6/27/22 3:43 PM, Jernej Škrabec wrote:
-> Dne nedelja, 26. junij 2022 ob 04:11:44 CEST je Samuel Holland napisal(a):
->> H616 and newer SoCs feature a 2.5V I/O bias mode in addition to the
->> 1.8V and 3.3V modes. This mode is entered by selecting the 3.3V level
->> and disabling the "withstand function".
->>
->> H616 supports this capability on its main PIO only. A100 supports this
->> capability on both its PIO and R-PIO.
->>
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
->> ---
->>
->>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  1 +
->>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  2 +-
->>  drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c   |  2 +-
->>  drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 10 ++++++++++
->>  drivers/pinctrl/sunxi/pinctrl-sunxi.h         |  7 +++++++
->>  5 files changed, 20 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
->> b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c index
->> 21054fcacd34..afc1f5df7545 100644
->> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
->> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
->> @@ -82,6 +82,7 @@ static const struct sunxi_pinctrl_desc a100_r_pinctrl_data
->> = { .npins = ARRAY_SIZE(a100_r_pins),
->>  	.pin_base = PL_BASE,
->>  	.irq_banks = 1,
->> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_CTL,
->>  };
->>
->>  static int a100_r_pinctrl_probe(struct platform_device *pdev)
->> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
->> b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c index
->> e69f6da40dc0..f682e0e4244d 100644
->> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
->> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
->> @@ -684,7 +684,7 @@ static const struct sunxi_pinctrl_desc a100_pinctrl_data
->> = { .npins = ARRAY_SIZE(a100_pins),
->>  	.irq_banks = 7,
->>  	.irq_bank_map = a100_irq_bank_map,
->> -	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
->> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_CTL,
->>  };
->>
->>  static int a100_pinctrl_probe(struct platform_device *pdev)
->> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
->> b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c index
->> 152b71226a80..d6ca720ee8d8 100644
->> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
->> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
->> @@ -525,7 +525,7 @@ static const struct sunxi_pinctrl_desc h616_pinctrl_data
->> = { .irq_banks = ARRAY_SIZE(h616_irq_bank_map),
->>  	.irq_bank_map = h616_irq_bank_map,
->>  	.irq_read_needs_mux = true,
->> -	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
->> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_CTL,
->>  };
->>
->>  static int h616_pinctrl_probe(struct platform_device *pdev)
->> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> b/drivers/pinctrl/sunxi/pinctrl-sunxi.c index 3c5e71359ca8..eb3d595f816a
->> 100644
->> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
->> @@ -662,6 +662,16 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct
->> sunxi_pinctrl *pctl, reg &= ~IO_BIAS_MASK;
->>  		writel(reg | val, pctl->membase + 
-> sunxi_grp_config_reg(pin));
->>  		return 0;
->> +	case BIAS_VOLTAGE_PIO_POW_MODE_CTL:
->> +		val = uV > 1800000 && uV <= 2500000 ? BIT(bank) : 0;
->> +
->> +		raw_spin_lock_irqsave(&pctl->lock, flags);
->> +		reg = readl(pctl->membase + PIO_POW_MOD_CTL_REG);
->> +		reg &= ~BIT(bank);
->> +		writel(reg | val, pctl->membase + PIO_POW_MOD_CTL_REG);
->> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
->> +
->> +		fallthrough;
-> 
-> Would this set bit 12 as needed? According to documentation, it's a bit 
-> special case, since it covers VCC-IO, port F and port H, at least according to 
-> documentation. I guess BIAS_VOLTAGE_PIO_POW_MODE_SEL has same issue.
+Hi Sricharan,
 
-Right, it seems we would need some mask to tell us which ports are affected by
-bit 12, and which have their own setting. The current code is unlikely to cause
-any issue, though, because in practice VCC-IO is always 3.3 V.
+Thank you for the patch! Perhaps something to improve:
 
-Regards,
-Samuel
+[auto build test WARNING on clk/clk-next]
+[also build test WARNING on robh/for-next linusw-pinctrl/devel linus/master v5.19-rc4 next-20220627]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20220628/202206281113.juwklxoO-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 016342e319fd31e41cf5ed16a6140a8ea2de74dd)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm64 cross compiling tool for clang build
+        # apt-get install binutils-aarch64-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/5986a00923b330deb4c2c70e0d531507a19fb840
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
+        git checkout 5986a00923b330deb4c2c70e0d531507a19fb840
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash arch/arm64/kernel/ drivers/clk/qcom/ drivers/pinctrl/qcom/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pinctrl/qcom/pinctrl-ipq5018.c:252:27: warning: unused variable '_groups' [-Wunused-const-variable]
+   static const char * const _groups[] = {
+                             ^
+   1 warning generated.
+
+
+vim +/_groups +252 drivers/pinctrl/qcom/pinctrl-ipq5018.c
+
+   251	
+ > 252	static const char * const _groups[] = {
+   253		"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
+   254		"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
+   255		"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
+   256		"gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
+   257		"gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
+   258		"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
+   259		"gpio43", "gpio44", "gpio45", "gpio46",
+   260	};
+   261	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
