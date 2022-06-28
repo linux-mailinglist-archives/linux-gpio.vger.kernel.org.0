@@ -2,53 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 565D955E8F5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 432C755E711
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 18:31:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347333AbiF1ODb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 10:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42978 "EHLO
+        id S240696AbiF1OKB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 10:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347334AbiF1OD3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 10:03:29 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF4E2E9E2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 07:03:27 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o6BoG-0008Ka-UJ; Tue, 28 Jun 2022 16:03:20 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o6BoC-003DT7-Ln; Tue, 28 Jun 2022 16:03:20 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o6BoF-001gzN-0L; Tue, 28 Jun 2022 16:03:19 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de, linux-i2c@vger.kernel.org
-Subject: [PATCH 5/6] gpio: pca953x: Make platform teardown callback return void
-Date:   Tue, 28 Jun 2022 16:03:11 +0200
-Message-Id: <20220628140313.74984-6-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
-References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S231435AbiF1OKB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 10:10:01 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D533587C
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 07:10:00 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-317741c86fdso118395897b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 07:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BU/IDUxXLTGFY20zp82vJFbU25b/Q168KB0wOqs4ZkQ=;
+        b=TXxFjrNvO9VchIPwytsio/j+Qp7P80EWO3VpEWfjOcMuRrZO3TOeSZdOYut6fVXkP9
+         Br2TvVTIO82S5VbGrWL1TcQXVL9FytLbeB8XDsn+faTWBLG0sFP7E3redrO7g8GU/asu
+         FA03xfpp3YGGcbeC8/iHmzpCujF/74fR8ZE9Djfv/WXAVTGqFXlLmALr0joTjsvF+6gq
+         jL9rYFfwz1QSjHUCfj3sJjmYiIgJtENY4knais5Anp9g3jwrRJ9wx5NW8eM8BhNWY+nC
+         zizxmhlcUnYZ0m1akP9A2MQDW0TbtLWL946RMoL1oGXjNMnRlGHnT4TWxXKpWAkgOmV2
+         tZlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BU/IDUxXLTGFY20zp82vJFbU25b/Q168KB0wOqs4ZkQ=;
+        b=025vv6Lcih1AnmV5g0sTEZ8rq2sotjmwSg3dgfHhDwhzLt/YS1bO3QJQFK0p3/IPBh
+         CltKIyo5uCUcCOo2uuoFRNIcnZ4+18Uzk0VI2JdbQPGy/QiGoMgUrijRld13EC39Kpr4
+         8I6ZtBYYFRTKRLEiETQvedWlyo1YjYJ5ltaTkZL9biI6AZMgyI4uKR9jgQC6P7ysoa4T
+         r/scaHUUvw6ias9xOuP/nef1TXaVoW2vSQhbuR1Oolu0LlK6a8qT1T47OE1f0TEc4sZ/
+         tyjzqQr5ks3LrdAnIX/tzccQm0pPZjbx8KjVsNEkPrBDrVDn0ra2uB/kvfH3TnLeFNTU
+         Prmg==
+X-Gm-Message-State: AJIora/EO67ILp+RBnyejUyuf1YHOIfdm6nZwiNF84fvBkhvBYYub7YC
+        zMY4J4QHEeBEzRBgrTOuOFDO7lwFX9vKp0g7h2OQvgOE8qs=
+X-Google-Smtp-Source: AGRyM1v/XBqba54NNrJu6tK0BY1yIm0LIoGofnP8HbwwTZ8vAsy+I/hF6qk5BvHUbCF0ZbE8uihWemMKyVj8qs96oSA=
+X-Received: by 2002:a81:6587:0:b0:318:38c2:2fb1 with SMTP id
+ z129-20020a816587000000b0031838c22fb1mr21833224ywb.118.1656425399521; Tue, 28
+ Jun 2022 07:09:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3568; h=from:subject; bh=QXt4mJ3H+NGdOsmDjNtywoIO4ywvdWEcvDHh7lh6T6s=; b=owGbwMvMwMV48I9IxdpTbzgZT6slMSTt5hIVfL5mxdXA93cKJ/wrtEgVZFq4OtLERqV+eucBnlOS 8T2fOhmNWRgYuRhkxRRZ6oq0xCZIrPlvV7KEG2YQKxPIFAYuTgGYyPE77P/r8kVs2v/a1PU8eT+1/P ENwemeiXdTV12qeHTbnOtFzPd35yLtixLNN+5j/iec48D0ccXhg8Y6tmt8osQjJcVOW0bLshUwGLOY LLp5/mLF/6Jz3yvOBlS+3CtadVY9R8kuws93rf4tkcg9izvUWA/5BRnoe98qsLF8lvmbubZac59l+o +HhwVdElSXOuXIswmIqWV/Vnc4byDYnaXu7/HzwB456RX/2SQ51iy3i+6+x8+3NaNAyfxQRP5CiVK+ I/6XvOyui7yNcXj88Hv25nPrjp4SeLuB/bFMxsdSe5uWvvcLA5iezKmVSCp6s6fr+Ncyf59yQfWiH6 u9hPe+tc1p/zRpnuiujk3e1sFhAA==
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+References: <20220627092425.98730-1-linus.walleij@linaro.org> <fda47a80-605e-ee39-d7a0-d48d40fc8840@quicinc.com>
+In-Reply-To: <fda47a80-605e-ee39-d7a0-d48d40fc8840@quicinc.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Jun 2022 16:09:48 +0200
+Message-ID: <CACRpkdYwc33k1U9RpFpy4L+9fAqkCb=uOWG8gyBTC-m865wYBQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: sc7280: Fix compile bug
+To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Cc:     linux-gpio@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,101 +64,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All platforms that provide a teardown callback return 0. New users are
-supposed to not make use of platform support, so there is no
-functionality lost.
+On Mon, Jun 27, 2022 at 11:30 AM Srinivasa Rao Mandadapu
+<quic_srivasam@quicinc.com> wrote:
+> On 6/27/2022 2:54 PM, Linus Walleij wrote:
+> Thanks for Your Support Linus.
 
-This patch is a preparation for making i2c remove callbacks return void.
+> > The idea was right but the code was breaking in next.
+> > I assume some unstaged commit was involed. Fix it up.
+> >
+> > Cc: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+> > Cc: Stephen Boyd <swboyd@chromium.org>
+> > Fixes: 36fe26843d6d ("pinctrl: qcom: sc7280: Add clock optional check for ADSP bypass targets")
+> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+(...)
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Forwarded: id:20220502170555.51183-1-u.kleine-koenig@pengutronix.de
----
- arch/arm/mach-davinci/board-da850-evm.c | 12 ++++--------
- drivers/gpio/gpio-pca953x.c             | 11 +++--------
- include/linux/platform_data/pca953x.h   |  2 +-
- 3 files changed, 8 insertions(+), 17 deletions(-)
+> There is another problem with this patch.  As lpi_pinctrl_variant_data
+> is const type,  unable to update this variable.
 
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index efc26b472ef8..09253e70d0dc 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -518,8 +518,8 @@ static int da850_evm_ui_expander_setup(struct i2c_client *client, unsigned gpio,
- 	return ret;
- }
- 
--static int da850_evm_ui_expander_teardown(struct i2c_client *client,
--					unsigned gpio, unsigned ngpio, void *c)
-+static void da850_evm_ui_expander_teardown(struct i2c_client *client,
-+					   unsigned gpio, unsigned ngpio, void *c)
- {
- 	platform_device_unregister(&da850_evm_ui_keys_device);
- 
-@@ -531,8 +531,6 @@ static int da850_evm_ui_expander_teardown(struct i2c_client *client,
- 	gpio_free(gpio + DA850_EVM_UI_EXP_SEL_C);
- 	gpio_free(gpio + DA850_EVM_UI_EXP_SEL_B);
- 	gpio_free(gpio + DA850_EVM_UI_EXP_SEL_A);
--
--	return 0;
- }
- 
- /* assign the baseboard expander's GPIOs after the UI board's */
-@@ -699,13 +697,11 @@ static int da850_evm_bb_expander_setup(struct i2c_client *client,
- 	return ret;
- }
- 
--static int da850_evm_bb_expander_teardown(struct i2c_client *client,
--					unsigned gpio, unsigned ngpio, void *c)
-+static void da850_evm_bb_expander_teardown(struct i2c_client *client,
-+					   unsigned gpio, unsigned ngpio, void *c)
- {
- 	platform_device_unregister(&da850_evm_bb_leds_device);
- 	platform_device_unregister(&da850_evm_bb_keys_device);
--
--	return 0;
- }
- 
- static struct pca953x_platform_data da850_evm_ui_expander_info = {
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 08bc52c3cdcb..3eedeac9ec8d 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -1099,20 +1099,15 @@ static int pca953x_remove(struct i2c_client *client)
- {
- 	struct pca953x_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct pca953x_chip *chip = i2c_get_clientdata(client);
--	int ret;
- 
- 	if (pdata && pdata->teardown) {
--		ret = pdata->teardown(client, chip->gpio_chip.base,
--				      chip->gpio_chip.ngpio, pdata->context);
--		if (ret < 0)
--			dev_err(&client->dev, "teardown failed, %d\n", ret);
--	} else {
--		ret = 0;
-+		pdata->teardown(client, chip->gpio_chip.base,
-+				chip->gpio_chip.ngpio, pdata->context);
- 	}
- 
- 	regulator_disable(chip->regulator);
- 
--	return ret;
-+	return 0;
- }
- 
- #ifdef CONFIG_PM_SLEEP
-diff --git a/include/linux/platform_data/pca953x.h b/include/linux/platform_data/pca953x.h
-index 4eb53e023997..96c1a14ab365 100644
---- a/include/linux/platform_data/pca953x.h
-+++ b/include/linux/platform_data/pca953x.h
-@@ -22,7 +22,7 @@ struct pca953x_platform_data {
- 	int		(*setup)(struct i2c_client *client,
- 				unsigned gpio, unsigned ngpio,
- 				void *context);
--	int		(*teardown)(struct i2c_client *client,
-+	void		(*teardown)(struct i2c_client *client,
- 				unsigned gpio, unsigned ngpio,
- 				void *context);
- 	const char	*const *names;
--- 
-2.36.1
+Ooops
 
+> So I have posted the fix patch series v5. Please check and let me me if
+> anything to be done.
+
+I have already pulled other changes on top so I would have to revert
+the patches, can you inspect what is on my "devel" branch and
+just send a fixup patch on top?
+
+Yours,
+Linus Walleij
