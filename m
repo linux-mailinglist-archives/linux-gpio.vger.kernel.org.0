@@ -2,184 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0165055D870
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:19:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B35D055C6FA
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 14:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244368AbiF1CZI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 22:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
+        id S231144AbiF1DTH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 23:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244078AbiF1CXs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 22:23:48 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB936B94;
-        Mon, 27 Jun 2022 19:23:03 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 68so10793016pgb.10;
-        Mon, 27 Jun 2022 19:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HJxtqab0/tMiakWNEyC3nFz1/Ap3ZwjlyjInjl9oQ08=;
-        b=GtISRQAw32VwWkIqJjbS6kPz10YSeb/J+R05thf6bFPMAOY82jKQN3UdU/3Xm5A6wE
-         tMPJ9jiXwXd5WIpoNmuhYObSQi+a4vbyn3XjCacf3FIX++nTWeWgUHF+xWdV2kFekLbZ
-         0OzYqNi1FmudYoMCCJZeGvG2ye4sCgduv0rk2Zt4nVkQ98BfuFa3NPGjGKGgPVG9KtHY
-         DntPc1msd2JalXRAlzsxyFpEjwPnKkzTvOPkfaVuXEaP+ZKelLBEm4Nr7ZrcOOgm/4RV
-         HPa6kkD+OJGFCcd57tIyozXxW7wCGRkiieRac/DfVSrfyK1ch327OFoWU4ImG2SclPJ9
-         uIig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HJxtqab0/tMiakWNEyC3nFz1/Ap3ZwjlyjInjl9oQ08=;
-        b=uKtNSVIaMW9Afk2Jysh68j5jGzaY4UZsPPMdW7SZfsYYvY0v6Bo09tzf8KSCA+Fgm8
-         Va6JUpV1KXGNS/fpYTWvxUO+W8pU2ZebRpiE+seQuWUTiIr0Dj3ENGHm71zWjXSQSXUC
-         a5vdRjGXrSZLpYtjvaEpEcONTLDWOwz+eE0j6JQUaGW42rKHKJllTDEMTgQojWB9BNfY
-         EGP3l2tHt09Oy/l+W15beUJ2z6jcculr8sszAXkHvJvZTgHGVcTAbJFM9AnBJBVex5El
-         C+0qExBVo5Ki/EN0o02R35GVQzPk6hFvWkGrolIldrHoZmKXiXi2pyQsT18sW2boZbQa
-         MNxw==
-X-Gm-Message-State: AJIora9/lsd2H0Y1KkPVZPBON5mKRxcyiSWhum39wLTZW8EWzT1vM6UI
-        LKQvyxC709xvJlpCrV2Qfn3lC/9QvbzFsZjp+Qk=
-X-Google-Smtp-Source: AGRyM1tkELEQsXZZ9rCiYz26Ox2Bo3COuaabo0ODviEYu2B5j99coTUXvXqjCJz9EcYG+uOHPMvd9KNaBAGlSJExO9A=
-X-Received: by 2002:a65:6a0e:0:b0:405:2310:22d0 with SMTP id
- m14-20020a656a0e000000b00405231022d0mr15760605pgu.290.1656382983124; Mon, 27
- Jun 2022 19:23:03 -0700 (PDT)
+        with ESMTP id S230513AbiF1DS5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 23:18:57 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51761EC68;
+        Mon, 27 Jun 2022 20:18:55 -0700 (PDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 593873200956;
+        Mon, 27 Jun 2022 23:18:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Mon, 27 Jun 2022 23:18:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1656386330; x=
+        1656472730; bh=/YpMypc4CtUEpSm1nrTuU0i+0ewy87iAcDekmp+xtcA=; b=U
+        BZcVDfchVaWFO56Wp9ddD3Kb5jzex7CQrh0fAzLw9+tJxlvf6RNiq1EHMZDE6z3Y
+        SCe/zhclh2hLgnv2273e5KEABKupjZjmdlmz0gDHI9S2CUJkRE+qeeVxMRd44XQ7
+        unUpKkqe+1A4iaRF5yV8pTsgbyObVdpX8JMQ7L3vhfmZzec0gJo8flQBc+SlEtmX
+        CjyZBdZml+uLp5oQb3enjovrte4QPB+jGwOSvE3dMlRsaA8oPt/4ywJcwcIV3Kdt
+        m+oZ8xgOW0Kuyav4Y+LGRQtDGX+IUhdImTSiKALNwQ7GJ93HwTt4AV8SdDbn6kwo
+        GF1QevF8+P6eipMt/HqDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1656386330; x=
+        1656472730; bh=/YpMypc4CtUEpSm1nrTuU0i+0ewy87iAcDekmp+xtcA=; b=H
+        rDg86DII921aq69Gy4ZvLxZyipPCHUXDdsip8zmaFj43+zDzBaGgoKz7G19hxtC5
+        Vyn4al/oeY6p3IvbMaJV8u1dqG8qMdcnPILXYwG0XlEVWAmjtIs1JcH49BRwckR5
+        64CMBsQjOWPq3yZstOiEGJqiY8S7IzY+ltFhAEKOB9yqLxXWIg/0mwgnpO7PZ0vW
+        abp9UPhxqfX5C3SlGIhT/zN0d6uJOPaXuQ6CMkQI2zn6443ccHS2YZsKQtRGFoG2
+        E9r5VBieX9W4Q3SCBaT4ZsQ4x6byMAnXNBLK6gJh0/AcSDZQRMmDyd2h4H2QjWUs
+        lYzNGVb+RHe3e8hHk3tWw==
+X-ME-Sender: <xms:GXO6YhiTJQ0pARW7mR7Vjc1SCoVR9SVhQdWlC5hmJAIQ31SywnBakA>
+    <xme:GXO6YmBNPQ0wahjvTUpqMUjCjrmTLTsrifi3F8cPxPuhKu3kJqazk7vj6P5iMSutQ
+    9jR_RIt4lvMsqIj6A>
+X-ME-Received: <xmr:GXO6YhGKfkIiBUE5ripN-wkxAOW4rLpI_Zk_fwa3cIzNEdK6Hfd3iKTdGKlIgQwcgTWcSctczuWZJkcuHnK_SsegJdayF3DXoEayUopfd0V90OJ2RGMKTate4Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudegiedgjeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpedtvefhheehgfdvkeetffeludeuudehudeuvddtveelleekvedv
+    uedviefhkeeuheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:GXO6YmR7e0p1cKQpM83Zlctpcw0hXu4RMLTHbNXC3sgW4zGSnvroEg>
+    <xmx:GXO6Yuwl41vWCtpt6pDw9_zQH4IZLDEYvMjARqO87SaPJcpQLemSHA>
+    <xmx:GXO6Ys7JP1K-CKiWyyoRbGYjv6YZ2BaYqUBn7chd8m6g6X5V7mRGFg>
+    <xmx:GnO6YjoLT1qGFihLtcLS91hOQUXo8535d0onk1DbP7Zov7R5dIcqcA>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 27 Jun 2022 23:18:49 -0400 (EDT)
+Subject: Re: [PATCH 2/6] pinctrl: sunxi: Add I/O bias setting for H6 R-PIO
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>, Ondrej Jirman <x@xff.cz>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+References: <20220626021148.56740-1-samuel@sholland.org>
+ <20220626021148.56740-3-samuel@sholland.org>
+ <4405996.LvFx2qVVIh@jernej-laptop>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <bfb768a8-8286-c596-8b10-28222c962ec3@sholland.org>
+Date:   Mon, 27 Jun 2022 22:18:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20220628020110.1601693-1-saravanak@google.com>
-In-Reply-To: <20220628020110.1601693-1-saravanak@google.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 27 Jun 2022 23:22:52 -0300
-Message-ID: <CAOMZO5D29QqH_-pktht6yO_Ga7B7KgeGXxzyUHJWGYfGTJr4pw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Fix console probe delay when stdout-path isn't set
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tobias Klauser <tklauser@distanz.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Gabriel Somlo <gsomlo@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Taichi Sugaya <sugaya.taichi@socionext.com>,
-        Takao Orito <orito.takao@socionext.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Pali Rohar <pali@kernel.org>,
-        Andreas Farber <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Peter Korsgaard <jacmet@sunsite.dk>,
-        Timur Tabi <timur@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh@kernel.org>,
-        sascha hauer <sha@pengutronix.de>, peng fan <peng.fan@nxp.com>,
-        kevin hilman <khilman@kernel.org>,
-        ulf hansson <ulf.hansson@linaro.org>,
-        len brown <len.brown@intel.com>, pavel machek <pavel@ucw.cz>,
-        joerg roedel <joro@8bytes.org>, will deacon <will@kernel.org>,
-        andrew lunn <andrew@lunn.ch>,
-        heiner kallweit <hkallweit1@gmail.com>,
-        eric dumazet <edumazet@google.com>,
-        jakub kicinski <kuba@kernel.org>,
-        paolo abeni <pabeni@redhat.com>,
-        linus walleij <linus.walleij@linaro.org>,
-        hideaki yoshifuji <yoshfuji@linux-ipv6.org>,
-        david ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-serial@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-actions@lists.infradead.org,
-        linux-unisoc@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        sparclinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <4405996.LvFx2qVVIh@jernej-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Saravana,
+On 6/27/22 3:34 PM, Jernej Škrabec wrote:
+> Dne nedelja, 26. junij 2022 ob 04:11:43 CEST je Samuel Holland napisal(a):
+>> H6 requires I/O bias configuration on both of its PIO devices.
+>> Previously it was only done for the main PIO.
+>>
+>> The setting for Port L is at bit 0, so the bank calculation needs to
+>> account for the pin base. Otherwise the wrong bit is used.
+>>
+>> Fixes: cc62383fcebe ("pinctrl: sunxi: Support I/O bias voltage setting on
+>> H6") Signed-off-by: Samuel Holland <samuel@sholland.org>
+> 
+> Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> 
+> Did you noticed any improvement with this properly set? In theory, 3.3 V bias 
+> should always work, right?
 
-On Mon, Jun 27, 2022 at 11:03 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Since the series that fixes console probe delay based on stdout-path[1] got
-> pulled into driver-core-next, I made these patches on top of them.
->
-> Even if stdout-path isn't set in DT, this patch should take console
-> probe times back to how they were before the deferred_probe_timeout
-> clean up series[2].
->
-> Fabio/Ahmad/Sascha,
->
-> Can you give this a shot please?
+I think it matters for inputs, which may not detect a high level state if the
+bias (comparator reference) voltage is too high.
 
-This series works fine for me (with and without stdout-path), thanks:
+It looks like Orange Pi 3 has a 1.8 V supply for port M. I am not currently set
+up to test the behavior with different bias settings, but I may do that if I get
+the chance.
 
-Tested-by: Fabio Estevam <festevam@gmail.com>
+Regards,
+Samuel
