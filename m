@@ -2,223 +2,285 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9260855CDE0
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:04:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5564D55DA3B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243048AbiF1B3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jun 2022 21:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
+        id S237578AbiF1CDH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jun 2022 22:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243044AbiF1B3Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 21:29:24 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3104766D;
-        Mon, 27 Jun 2022 18:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656379763; x=1687915763;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zVM39Trhl2hg5S6mqEpQJmIRMAE8wh097bxFRFFGXL8=;
-  b=ik8doJj4eEQ2GN5ht0IN+XgYFEV/q/WN2BkA5bbbi0SQr+l+rdB6es5w
-   B31gFmpa4ij5mJZ3KhbjRBKD9yDi3H6HUugUP/fijqNzrJvzn152tZGCL
-   e+FA3YKCIRuLzjwDg7kb8oZHAoWh+soBzbb8bXp5xguE0dgPA4mHSUwo1
-   OYGQxOX+cN7ENDo1ar+rNbks8b/za/5QVtcuZ1O6P5jXoQo/qa+U/9Noy
-   x9yr/HvyJPxe1f4CKHgvsVwbpWvWsoHc5yVKQvagR6TYQHuIN/me/MlHm
-   LhWbsv4XZ1roAmIVQVjQ25RCnB5sj1yM/Z9r1fLU4omnC6WIJsXn5mL6f
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="279149560"
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="279149560"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 18:29:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="732546014"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Jun 2022 18:29:19 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o602T-0009LC-S6;
-        Tue, 28 Jun 2022 01:29:13 +0000
-Date:   Tue, 28 Jun 2022 09:28:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sricharan R <quic_srichara@quicinc.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, p.zabel@pengutronix.de,
-        quic_varada@quicinc.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org
-Subject: Re: [PATCH V2 3/8] clk: qcom: Add Global Clock controller (GCC)
- driver for IPQ5018
-Message-ID: <202206280917.m3YJRqsF-lkp@intel.com>
-References: <20220621161126.15883-4-quic_srichara@quicinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220621161126.15883-4-quic_srichara@quicinc.com>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S234962AbiF1CDH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jun 2022 22:03:07 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC6A5F42
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 19:03:05 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id c10-20020a251c0a000000b00669b463d2e1so9705091ybc.11
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jun 2022 19:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=/OuahP8oPHDxIXADrtMOHzHvbE6HS+PoE4WDHegn+rY=;
+        b=XSa6BG9j+Us6qSO6vPHqc2TVfQxumnU0pAOfjBJHFlWcIck0At2n2mfq5tAA7z3Bx5
+         PD0vlBv1k9Q/E/30MAFFG1P5OxPr5/WK6+axB0HoavtP7KnHzjHkg1qUFmVSky1XYmCE
+         keKg7zc6YYKZDYEnwk3qbSxvFO3Xk4Y8/tdDX97msFctgpLZBdPkJDnH5LbWzXx7pTZH
+         CgzyIamG5okMqCh9aY8wAvuFixrOfwL/UhwfbnX/7paM2krnQNZDjv67WdvSzvvMWo7D
+         m5fFpT4ZoMrA6AasD66OkuDUwH3oHEeuCSo5kX9VLcSW8/gQ+X2898P5YGyQhyrYIK8G
+         Aulw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=/OuahP8oPHDxIXADrtMOHzHvbE6HS+PoE4WDHegn+rY=;
+        b=x2AAIR3nl92W9HPnnH+kdbD3Ip6qOR/yCtojEEHHcYgcEXNvq879HgcNdC0o4PPdlR
+         p9vWyMafDKjqEtAT9bQHPaH7w2PAqxdZDHY9apwvpWXbTYJdH+CGoDb9daOOrIydptLv
+         LwbNlheB9pOokirDfUCx2m8MpO+b+0JOMlXdUJj1TtEAGk86gc49g3y7fp6gyvqiuxl6
+         FuHuYWNOzBLYLoDDFiUxUmjnD5S6hoPwdCii5jAGd8HM4NlUrGYDTjIFEtvf20aky1pw
+         6MlaeDVUO3DYfFtAVDencAFrtG2iFMk+obMCP67BSLwxgm7zXWFZj1lnr1b+3Rnqc/Ed
+         68MA==
+X-Gm-Message-State: AJIora9UPLOwEPMdIbvs1XrrXMGQs25nCjw847CyNOdXLo7Fs2l5Dfvm
+        kGJ83aZKUnLSIuSB2xDeX6dLJle6TwtfKfg=
+X-Google-Smtp-Source: AGRyM1s6TFssoICBD8dW4KaHJ9QFnbGLouWSVAgJ1icUDVgZq5pRLN92A6h2ACkaFVoX2i0qb9ktR7y39ECy36c=
+X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:1f27:a302:2101:1c82])
+ (user=saravanak job=sendgmr) by 2002:a81:9292:0:b0:317:dd64:5adc with SMTP id
+ j140-20020a819292000000b00317dd645adcmr19123629ywg.145.1656381784427; Mon, 27
+ Jun 2022 19:03:04 -0700 (PDT)
+Date:   Mon, 27 Jun 2022 19:01:01 -0700
+Message-Id: <20220628020110.1601693-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+Subject: [PATCH v1 0/2] Fix console probe delay when stdout-path isn't set
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tobias Klauser <tklauser@distanz.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Gabriel Somlo <gsomlo@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Taichi Sugaya <sugaya.taichi@socionext.com>,
+        Takao Orito <orito.takao@socionext.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pali Rohar <pali@kernel.org>,
+        Andreas Farber <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        Peter Korsgaard <jacmet@sunsite.dk>,
+        Timur Tabi <timur@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh@kernel.org>, sascha hauer <sha@pengutronix.de>,
+        peng fan <peng.fan@nxp.com>, kevin hilman <khilman@kernel.org>,
+        ulf hansson <ulf.hansson@linaro.org>,
+        len brown <len.brown@intel.com>, pavel machek <pavel@ucw.cz>,
+        joerg roedel <joro@8bytes.org>, will deacon <will@kernel.org>,
+        andrew lunn <andrew@lunn.ch>,
+        heiner kallweit <hkallweit1@gmail.com>,
+        eric dumazet <edumazet@google.com>,
+        jakub kicinski <kuba@kernel.org>,
+        paolo abeni <pabeni@redhat.com>,
+        linus walleij <linus.walleij@linaro.org>,
+        hideaki yoshifuji <yoshfuji@linux-ipv6.org>,
+        david ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org,
+        linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-actions@lists.infradead.org,
+        linux-unisoc@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sricharan,
+Since the series that fixes console probe delay based on stdout-path[1] got
+pulled into driver-core-next, I made these patches on top of them.
 
-Thank you for the patch! Perhaps something to improve:
+Even if stdout-path isn't set in DT, this patch should take console
+probe times back to how they were before the deferred_probe_timeout
+clean up series[2].
 
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on robh/for-next linusw-pinctrl/devel linus/master v5.19-rc4 next-20220627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Fabio/Ahmad/Sascha,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20220628/202206280917.m3YJRqsF-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 016342e319fd31e41cf5ed16a6140a8ea2de74dd)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm64 cross compiling tool for clang build
-        # apt-get install binutils-aarch64-linux-gnu
-        # https://github.com/intel-lab-lkp/linux/commit/d7a0e1d14ecebd407df120468035592246a71cd6
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Sricharan-R/Add-minimal-boot-support-for-IPQ5018/20220622-001751
-        git checkout d7a0e1d14ecebd407df120468035592246a71cd6
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash arch/arm64/kernel/ drivers/clk/qcom/ drivers/pinctrl/qcom/
+Can you give this a shot please?
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+[1] - https://lore.kernel.org/lkml/20220623080344.783549-1-saravanak@google.com/
+[2] - https://lore.kernel.org/lkml/20220601070707.3946847-1-saravanak@google.com/
 
-All warnings (new ones prefixed by >>):
+Thanks,
+Saravana
 
->> drivers/clk/qcom/gcc-ipq5018.c:118:37: warning: unused variable 'gcc_xo_gpll0_out_main_div2' [-Wunused-const-variable]
-   static const struct clk_parent_data gcc_xo_gpll0_out_main_div2[] = {
-                                       ^
->> drivers/clk/qcom/gcc-ipq5018.c:123:32: warning: unused variable 'gcc_xo_gpll0_out_main_div2_map' [-Wunused-const-variable]
-   static const struct parent_map gcc_xo_gpll0_out_main_div2_map[] = {
-                                  ^
->> drivers/clk/qcom/gcc-ipq5018.c:201:37: warning: unused variable 'gcc_xo_gpll0_gpll4_gpll2' [-Wunused-const-variable]
-   static const struct clk_parent_data gcc_xo_gpll0_gpll4_gpll2[] = {
-                                       ^
->> drivers/clk/qcom/gcc-ipq5018.c:208:32: warning: unused variable 'gcc_xo_gpll0_gpll4_gpll2_map' [-Wunused-const-variable]
-   static const struct parent_map gcc_xo_gpll0_gpll4_gpll2_map[] = {
-                                  ^
-   4 warnings generated.
+cc: Rob Herring <robh@kernel.org>
+cc: sascha hauer <sha@pengutronix.de>
+cc: peng fan <peng.fan@nxp.com>
+cc: kevin hilman <khilman@kernel.org>
+cc: ulf hansson <ulf.hansson@linaro.org>
+cc: len brown <len.brown@intel.com>
+cc: pavel machek <pavel@ucw.cz>
+cc: joerg roedel <joro@8bytes.org>
+cc: will deacon <will@kernel.org>
+cc: andrew lunn <andrew@lunn.ch>
+cc: heiner kallweit <hkallweit1@gmail.com>
+cc: russell king <linux@armlinux.org.uk>
+cc: "david s. miller" <davem@davemloft.net>
+cc: eric dumazet <edumazet@google.com>
+cc: jakub kicinski <kuba@kernel.org>
+cc: paolo abeni <pabeni@redhat.com>
+cc: linus walleij <linus.walleij@linaro.org>
+cc: hideaki yoshifuji <yoshfuji@linux-ipv6.org>
+cc: david ahern <dsahern@kernel.org>
+cc: kernel-team@android.com
+cc: linux-kernel@vger.kernel.org
+cc: linux-pm@vger.kernel.org
+cc: iommu@lists.linux-foundation.org
+cc: netdev@vger.kernel.org
+cc: linux-gpio@vger.kernel.org
+Cc: kernel@pengutronix.de
 
+Saravana Kannan (2):
+  driver core: Add probe_no_timeout flag for drivers
+  serial: Set probe_no_timeout for all DT based drivers
 
-vim +/gcc_xo_gpll0_out_main_div2 +118 drivers/clk/qcom/gcc-ipq5018.c
-
-   117	
- > 118	static const struct clk_parent_data gcc_xo_gpll0_out_main_div2[] = {
-   119		{ .fw_name = "xo", .name = "xo", },
-   120		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
-   121	};
-   122	
- > 123	static const struct parent_map gcc_xo_gpll0_out_main_div2_map[] = {
-   124		{ P_XO, 0 },
-   125		{ P_GPLL0_DIV2, 1 },
-   126	};
-   127	
-   128	static const struct clk_parent_data gcc_xo_gpll0_gpll4[] = {
-   129		{ .fw_name = "xo", .name = "xo", },
-   130		{ .fw_name = "gpll0", .name = "gpll0", },
-   131		{ .fw_name = "gpll4", .name = "gpll4", },
-   132	};
-   133	
-   134	static const struct parent_map gcc_xo_gpll0_gpll4_map[] = {
-   135		{ P_XO, 0 },
-   136		{ P_GPLL0, 1 },
-   137		{ P_GPLL4, 2 },
-   138	};
-   139	
-   140	static const struct clk_parent_data gcc_xo_gpll0_core_pi_sleep_clk[] = {
-   141		{ .fw_name = "xo", .name = "xo", },
-   142		{ .fw_name = "gpll0", .name = "gpll0", },
-   143		{ .fw_name = "sleep_clk", .name = "sleep_clk", },
-   144	};
-   145	
-   146	static const struct parent_map gcc_xo_gpll0_core_pi_sleep_clk_map[] = {
-   147		{ P_XO, 0 },
-   148		{ P_GPLL0, 2 },
-   149		{ P_CORE_PI_SLEEP_CLK, 6 },
-   150	};
-   151	
-   152	static const struct clk_parent_data gcc_xo_gpll0_gpll0_out_main_div2_sleep_clk[] = {
-   153		{ .fw_name = "xo", .name = "xo", },
-   154		{ .fw_name = "gpll0", .name = "gpll0", },
-   155		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
-   156		{ .fw_name = "sleep_clk", .name = "sleep_clk", },
-   157	};
-   158	
-   159	static const struct parent_map gcc_xo_gpll0_gpll0_out_main_div2_sleep_clk_map[] = {
-   160		{ P_XO, 0 },
-   161		{ P_GPLL0, 1 },
-   162		{ P_GPLL0_DIV2, 4 },
-   163		{ P_CORE_PI_SLEEP_CLK, 6 },
-   164	};
-   165	
-   166	static const struct clk_parent_data gcc_xo_gpll0_gpll2_gpll0_out_main_div2[] = {
-   167		{ .fw_name = "xo", .name = "xo", },
-   168		{ .fw_name = "gpll0", .name = "gpll0", },
-   169		{ .fw_name = "gpll2", .name = "gpll2", },
-   170		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
-   171	};
-   172	
-   173	static const struct parent_map gcc_xo_gpll0_gpll2_gpll0_out_main_div2_map[] = {
-   174		{ P_XO, 0 },
-   175		{ P_GPLL0, 1 },
-   176		{ P_GPLL2, 2 },
-   177		{ P_GPLL0_DIV2, 4 },
-   178	};
-   179	
-   180	static const struct clk_parent_data gcc_xo_gpll4_gpll0_gpll0_out_main_div2[] = {
-   181		{ .fw_name = "xo", .name = "xo", },
-   182		{ .fw_name = "gpll4", .name = "gpll4", },
-   183		{ .fw_name = "gpll0", .name = "gpll0", },
-   184		{ .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2", },
-   185	};
-   186	
-   187	static const struct parent_map gcc_xo_gpll4_gpll0_gpll0_out_main_div2_map1[] = {
-   188		{ P_XO, 0 },
-   189		{ P_GPLL4, 1 },
-   190		{ P_GPLL0, 2 },
-   191		{ P_GPLL0_DIV2, 4 },
-   192	};
-   193	
-   194	static const struct parent_map gcc_xo_gpll4_gpll0_gpll0_out_main_div2_map2[] = {
-   195		{ P_XO, 0 },
-   196		{ P_GPLL4, 1 },
-   197		{ P_GPLL0, 3 },
-   198		{ P_GPLL0_DIV2, 4 },
-   199	};
-   200	
- > 201	static const struct clk_parent_data gcc_xo_gpll0_gpll4_gpll2[] = {
-   202		{ .fw_name = "xo", .name = "xo", },
-   203		{ .fw_name = "gpll0", .name = "gpll0", },
-   204		{ .fw_name = "gpll4", .name = "gpll4", },
-   205		{ .fw_name = "gpll2", .name = "gpll2", },
-   206	};
-   207	
- > 208	static const struct parent_map gcc_xo_gpll0_gpll4_gpll2_map[] = {
-   209		{ P_XO, 0 },
-   210		{ P_GPLL0, 1 },
-   211		{ P_GPLL4, 3 },
-   212		{ P_GPLL2, 4 },
-   213	};
-   214	
+ drivers/base/base.h                         |  1 +
+ drivers/base/core.c                         |  7 +++++++
+ drivers/base/dd.c                           |  3 +++
+ drivers/tty/ehv_bytechan.c                  |  1 +
+ drivers/tty/goldfish.c                      |  1 +
+ drivers/tty/hvc/hvc_opal.c                  |  1 +
+ drivers/tty/serial/8250/8250_acorn.c        |  1 -
+ drivers/tty/serial/8250/8250_aspeed_vuart.c |  1 +
+ drivers/tty/serial/8250/8250_bcm2835aux.c   |  1 +
+ drivers/tty/serial/8250/8250_bcm7271.c      |  1 +
+ drivers/tty/serial/8250/8250_dw.c           |  1 +
+ drivers/tty/serial/8250/8250_em.c           |  1 +
+ drivers/tty/serial/8250/8250_ingenic.c      |  1 +
+ drivers/tty/serial/8250/8250_lpc18xx.c      |  1 +
+ drivers/tty/serial/8250/8250_mtk.c          |  1 +
+ drivers/tty/serial/8250/8250_of.c           |  1 +
+ drivers/tty/serial/8250/8250_omap.c         |  1 +
+ drivers/tty/serial/8250/8250_pxa.c          |  1 +
+ drivers/tty/serial/8250/8250_tegra.c        |  1 +
+ drivers/tty/serial/8250/8250_uniphier.c     |  1 +
+ drivers/tty/serial/altera_jtaguart.c        |  1 +
+ drivers/tty/serial/altera_uart.c            |  1 +
+ drivers/tty/serial/amba-pl011.c             |  1 +
+ drivers/tty/serial/apbuart.c                |  1 +
+ drivers/tty/serial/ar933x_uart.c            |  1 +
+ drivers/tty/serial/arc_uart.c               |  1 +
+ drivers/tty/serial/atmel_serial.c           |  1 +
+ drivers/tty/serial/bcm63xx_uart.c           |  1 +
+ drivers/tty/serial/clps711x.c               |  1 +
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c |  1 +
+ drivers/tty/serial/digicolor-usart.c        |  1 +
+ drivers/tty/serial/fsl_linflexuart.c        |  1 +
+ drivers/tty/serial/fsl_lpuart.c             |  1 +
+ drivers/tty/serial/imx.c                    |  1 +
+ drivers/tty/serial/lantiq.c                 |  1 +
+ drivers/tty/serial/liteuart.c               |  1 +
+ drivers/tty/serial/lpc32xx_hs.c             |  1 +
+ drivers/tty/serial/max310x.c                |  1 +
+ drivers/tty/serial/meson_uart.c             |  1 +
+ drivers/tty/serial/milbeaut_usio.c          |  1 +
+ drivers/tty/serial/mpc52xx_uart.c           |  1 +
+ drivers/tty/serial/mps2-uart.c              |  1 +
+ drivers/tty/serial/msm_serial.c             |  1 +
+ drivers/tty/serial/mvebu-uart.c             |  1 +
+ drivers/tty/serial/mxs-auart.c              |  1 +
+ drivers/tty/serial/omap-serial.c            |  1 +
+ drivers/tty/serial/owl-uart.c               |  1 +
+ drivers/tty/serial/pic32_uart.c             |  1 +
+ drivers/tty/serial/pmac_zilog.c             |  1 +
+ drivers/tty/serial/pxa.c                    |  1 +
+ drivers/tty/serial/qcom_geni_serial.c       |  1 +
+ drivers/tty/serial/rda-uart.c               |  1 +
+ drivers/tty/serial/samsung_tty.c            |  1 +
+ drivers/tty/serial/sc16is7xx.c              |  1 +
+ drivers/tty/serial/serial-tegra.c           |  1 +
+ drivers/tty/serial/sh-sci.c                 |  1 +
+ drivers/tty/serial/sifive.c                 |  1 +
+ drivers/tty/serial/sprd_serial.c            |  1 +
+ drivers/tty/serial/st-asc.c                 |  1 +
+ drivers/tty/serial/stm32-usart.c            |  1 +
+ drivers/tty/serial/sunhv.c                  |  1 +
+ drivers/tty/serial/sunplus-uart.c           |  1 +
+ drivers/tty/serial/sunsab.c                 |  1 +
+ drivers/tty/serial/sunsu.c                  |  1 +
+ drivers/tty/serial/sunzilog.c               |  1 +
+ drivers/tty/serial/tegra-tcu.c              |  1 +
+ drivers/tty/serial/uartlite.c               |  1 +
+ drivers/tty/serial/ucc_uart.c               |  1 +
+ drivers/tty/serial/vt8500_serial.c          |  1 +
+ drivers/tty/serial/xilinx_uartps.c          |  1 +
+ include/linux/device.h                      |  7 +++++++
+ include/linux/device/driver.h               | 11 +++++++++++
+ 72 files changed, 95 insertions(+), 1 deletion(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.37.0.rc0.161.g10f37bed90-goog
+
