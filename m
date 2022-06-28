@@ -2,108 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B70C955E3D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:38:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3316455E3DE
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jun 2022 15:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345850AbiF1Mya (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 08:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
+        id S1345996AbiF1Mzf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 08:55:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344839AbiF1My3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 08:54:29 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9BE2ED50;
-        Tue, 28 Jun 2022 05:54:28 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id r3so22057778ybr.6;
-        Tue, 28 Jun 2022 05:54:28 -0700 (PDT)
+        with ESMTP id S1345599AbiF1Mzd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 08:55:33 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C342F3AB
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 05:55:31 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id i7so21995567ybe.11
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 05:55:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LZb5sxIAZyqFSeUBv72kgXWLJxxiCuneWjOYk6qMHvY=;
-        b=YvPNpQebc6BcmR/vGLnXDgkroOA6+J62fZMmhhY6q+2Ykw4RrJublEEIDd8uAe5I22
-         Ggov82QkKumtxAypvS+UavkS+gQFZc/mrF2RqQZMNZlHt/td61LiMeXcF6dbkLp3DQ9L
-         YkxPEd1PGjy7+t/kBLdb+N0wBDELJtb46QsTMmmdjqTuCUZ7BlOT4KTWT9pFzX66kjtB
-         2oTraQwVU0buyQPwn//tADDBhtPxrGfpFuF6OvqbkVgjnf1DEsmIn+Husl0XGXSEYXW2
-         0Eaoxf5egrtRQzzjSQYM1snzrhJMpV2fZ3SSmmhRAlHJTiMifBKJ3JJjFtWwZKLB0XTi
-         yqjw==
+        bh=zmWEZn/MDT8BVlOf2j/0dbSY8mXMBqqiVxeYK+9B6lQ=;
+        b=JhUf9b2e4wqWDqQ8nebU+X8F21tnUWwiBkQ3caAT8ggv5nqGzZBBSIs1fyVqGmgTSz
+         P0bx2uU/Um+sT7/JMfPoyd+TMY/C0h/HDqX3iWSan4x+3gVgOFqQqxl7uMlO4YALgj1P
+         axnMd8R2aq8xen9gsHvKZXoB+QewakVfuJ8MoMEhQLsS7rq+b6tDv+KHy0ssO7jdghqo
+         YO21b4nExNXO9RgjmR71guAnd6SFsChnxgBNFeKm96PNLhb4OobEGJJroUD1rrau/T8h
+         1IW/3R1VEMOEupRLy+W8KoRPDUYOoNLb+cC2bED7huckB8a5gxeW6VgpiKBa8TJCGma3
+         hCoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LZb5sxIAZyqFSeUBv72kgXWLJxxiCuneWjOYk6qMHvY=;
-        b=fv8DbvEM+ZaKkQVsU9cLW6nZDLzYVzdB+QGuyWpjIkUxYNn7+2tC2l0Li3ikGTbmBd
-         f6Lsb4fqGcR8mlCCswkdf7a3Ki4QEUvItkFWj8MdIHnwyzZs8MxqayP0Wkv/Wr5TvzM6
-         XVU/MDZ0wMMAdkuMzuwbg44e5np4g8n8sPLdRqNiEfcM0WEWJKt6UP7ILV0PYSOqWpmE
-         v5h1TXeQv8mZ7zfQAIm69jTmvwGLSdyi4ozBz+CINnZC4KSoaTjfeUkKz5UyCuCKKWpK
-         CCsN7DOrmm91fpfadhxoWD5bSJ8Gl58FKignytghlCKXaUxpDav8m0sDKKz9m+0AVt/X
-         YYaQ==
-X-Gm-Message-State: AJIora/2KIGdmHe61nnkFv3eerh0OS09BAjSsyRkFXmzezW2kp/zgyYb
-        FkbEqZ8bSKwBq1gGF6XGZKa+T6FLYCuB8RmV/Ww=
-X-Google-Smtp-Source: AGRyM1sWVHglhFy7q5w7V1jVc/Uf/+16scjXoUL/hiTXrXPSn54TrxGXrl8OmIW82bw/30sHpyojpqwJNqO8Bo7e7q4=
-X-Received: by 2002:a05:6902:1142:b0:669:651:1bd4 with SMTP id
- p2-20020a056902114200b0066906511bd4mr19379795ybu.385.1656420867977; Tue, 28
- Jun 2022 05:54:27 -0700 (PDT)
+        bh=zmWEZn/MDT8BVlOf2j/0dbSY8mXMBqqiVxeYK+9B6lQ=;
+        b=EaKcbJ4bHsarlm52zAQBde6nBBqHHTFIm/o7QURFDlP4GVLw9zUJeGRjWn7WIyE8rD
+         o3HxjssI9l7Z57NAfyb8/UPCH64zZqVe5/glmF+k3D5xRax/E4UTsUDl4JTYNsKXy+OP
+         qAL9I13SRGXjJb51jdEYaE4vuXNXRB1SgdQHLjoMbdY//pJj8yWDDhALIYGWqbKM8Iey
+         3JPI6s/8wI9vFH7/g7WapOeROfiKownjUqwu4hwl4QBeS3bqvk2HYN0AMQCfZbWZiFFn
+         It5H24h6YCMzXomlAGnSTvMx9cvVbnLnAgEZTiOWIQOIQmIJZbdk8IUO5IV5BNOzk2bB
+         qM6A==
+X-Gm-Message-State: AJIora9sUKJ3ZXmHRslO+W7nu4Les3RzwdDt2HlDy6NZFRPtM6zqiTfi
+        kekIliIrgfVptZLnE/+1iUz8tcpxetHJCh6cTXvsFA==
+X-Google-Smtp-Source: AGRyM1tsaB9tgNaMSUle5S5+neod2eZjuTku0yKoAV6tHrXr5lM2cYOKc71QeSQjdMvN2lSTcPjYvD5JGxKdrp2cnJY=
+X-Received: by 2002:a25:cac5:0:b0:66d:2c32:8593 with SMTP id
+ a188-20020a25cac5000000b0066d2c328593mr2819682ybg.626.1656420931032; Tue, 28
+ Jun 2022 05:55:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220628081709.829811-1-colin.foster@in-advantage.com> <20220628081709.829811-4-colin.foster@in-advantage.com>
-In-Reply-To: <20220628081709.829811-4-colin.foster@in-advantage.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jun 2022 14:53:49 +0200
-Message-ID: <CAHp75Vcm=Zopv2CZZFWwqgxQ_g8XqNRZB6zEcX3F4BhmcPGxFA@mail.gmail.com>
-Subject: Re: [PATCH v11 net-next 3/9] pinctrl: ocelot: allow pinctrl-ocelot to
- be loaded as a module
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
+References: <20220621161126.15883-1-quic_srichara@quicinc.com>
+In-Reply-To: <20220621161126.15883-1-quic_srichara@quicinc.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Jun 2022 14:55:19 +0200
+Message-ID: <CACRpkdZs=kwFciZaNGWR3t=Q4Vy08qg6UNH6obcyubC=6jkYuw@mail.gmail.com>
+Subject: Re: [PATCH V2 0/8] Add minimal boot support for IPQ5018
+To:     Sricharan R <quic_srichara@quicinc.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, catalin.marinas@arm.com, p.zabel@pengutronix.de,
+        quic_varada@quicinc.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 10:17 AM Colin Foster
-<colin.foster@in-advantage.com> wrote:
+On Tue, Jun 21, 2022 at 6:11 PM Sricharan R <quic_srichara@quicinc.com> wrote:
+
+> The IPQ5018 is Qualcomm's 802.11ax SoC for Routers,
+> Gateways and Access Points.
 >
-> Work is being done to allow external control of Ocelot chips. When pinctrl
-> drivers are used internally, it wouldn't make much sense to allow them to
-> be loaded as modules. In the case where the Ocelot chip is controlled
-> externally, this scenario becomes practical.
+> This series adds minimal board boot support for ipq5018-mp03.1-c2 board.
 
-...
+Pretty cool!
 
->  builtin_platform_driver(ocelot_pinctrl_driver);
+>   dt-bindings: pinctrl: qcom: Add ipq5018 pinctrl bindings
+>   pinctrl: qcom: Add IPQ5018 pinctrl driver
 
-This contradicts the logic behind this change. Perhaps you need to
-move to module_platform_driver(). (Yes, I think functionally it won't
-be any changes if ->remove() is not needed, but for the sake of
-logical correctness...)
+I'm happy to merge the two pinctrl patches separately to the pinctrl
+tree if I can get a review from Bjorn or Krzysztof.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
