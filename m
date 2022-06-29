@@ -2,95 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3AFE55FEBF
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C160955FEDE
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:41:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232733AbiF2LhO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 07:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
+        id S230071AbiF2Lik (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 07:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232638AbiF2LhO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:37:14 -0400
-Received: from mx.kernkonzept.com (serv1.kernkonzept.com [IPv6:2a01:4f8:1c1c:b490::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5AAB7F1;
-        Wed, 29 Jun 2022 04:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kernkonzept.com; s=mx1; h=In-Reply-To:Content-Type:MIME-Version:References:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SSCPB9pAS9pvDKAWwMFfH89gInRxYovar8rDhCnxRHg=; b=DX5Xm9MwAXtkIm20QZxbhCZkSJ
-        IIKRCau45yfAPH1ZJGPk1+Dk1urm0m+5hLkSKdkSYlyXWO5FJngUZmtLakMiWFHBqJrXEF1qNOnK4
-        IBSZpGLenQOCyutD5NmZh+MNrVoSX29vmmm2CAEWG4b9CsXK5BpoZ14IQNk3DOexageyJQxI+QGKK
-        60RE4C74Q+BclH0TA+aMA+7+7EmiqAgvMLY0aIAoC6TFYqmyIeodohMe7XQwjzr7dI0L5EEFyNxJC
-        RotL/aEskwlj/weqLDo8dQpL6OLCHm3HpMyYbmfdRsUpWZYX1Mhd3KUc8moiYIImkpLCY67lkPKAi
-        NqZSS0pQ==;
-Received: from [10.22.3.24] (helo=kernkonzept.com)
-        by mx.kernkonzept.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim 4.94.2)
-        id 1o6W0I-006Sbe-5S; Wed, 29 Jun 2022 13:37:06 +0200
-Date:   Wed, 29 Jun 2022 13:37:00 +0200
-From:   Stephan Gerhold <stephan.gerhold@kernkonzept.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT schema for
- qcom,msm8909-tlmm
-Message-ID: <Yrw5UnFXKCZvAr2d@kernkonzept.com>
-References: <20220628145502.4158234-1-stephan.gerhold@kernkonzept.com>
- <20220628145502.4158234-2-stephan.gerhold@kernkonzept.com>
- <91d972d2-689c-d357-869f-fbd826173e33@linaro.org>
+        with ESMTP id S230383AbiF2Lij (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:38:39 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B2B332076;
+        Wed, 29 Jun 2022 04:38:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656502718; x=1688038718;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jvQQGBLtP2lMYjK15fTYrTMQlaw8xtvzDZjwyhz2efQ=;
+  b=csmzP7C/q9as80NazEbKJsSOl5rL4eYUlBADXbYRA+7tbi0sKRjTKEWr
+   3tlul+aMWJCIsGhcfYsDhwxVuGqOZIGp+4xxSWd2RqEpgr41ykIYee31u
+   8anMHa2WCg6sAVL98SQXjtsi45ZrFRlJrUExwVWQ3EPlLuISjTvCCmPTj
+   2iy9OkzryugCZdxXfN8+ag88ltSziAr7viBrlCSSRaWzrCk/0GjnT69c6
+   nmfzOawgUfVT/dDfCPm/OezWLspac9/Cho+diXqe3p7e28g9lSA1zbbCV
+   Y9f8FUoK06/wBOZTwFBwU3pVXVUuDHO2fX5lBqKIwKQFzdrbNBiTkiuVP
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="283103045"
+X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
+   d="scan'208";a="283103045"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 04:38:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
+   d="scan'208";a="623279570"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 29 Jun 2022 04:38:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 88935F1; Wed, 29 Jun 2022 14:38:41 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>,
+        Frank Rowand <frank.rowand@sony.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] of: unittest: Switch to use fwnode instead of of_node
+Date:   Wed, 29 Jun 2022 14:38:39 +0300
+Message-Id: <20220629113839.4604-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91d972d2-689c-d357-869f-fbd826173e33@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 29, 2022 at 11:38:01AM +0200, Krzysztof Kozlowski wrote:
-> On 28/06/2022 16:55, Stephan Gerhold wrote:
-> > Document the "qcom,msm8909-tlmm" compatible for the TLMM/pin control
-> > block in the MSM8909 SoC, together with the allowed GPIOs and functions.
-> > 
-> > Signed-off-by: Stephan Gerhold <stephan.gerhold@kernkonzept.com>
-> > ---
-> >  .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   | 152 ++++++++++++++++++
-> >  1 file changed, 152 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
-> > new file mode 100644
-> > index 000000000000..e03530091478
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
-> > @@ -0,0 +1,152 @@
-> > [...]
-> > +patternProperties:
-> > +  '-state$':
-> > +    oneOf:
-> > +      - $ref: "#/$defs/qcom-msm8909-tlmm-state"
-> 
-> No quotes here and other places, should be needed. I know you copied
-> from other bindings, but at least let's try new files to be proper.
-> 
+GPIO library now accepts fwnode as a firmware node, so
+switch the module to use it.
 
-The quotes are necessary, since # starts a comment in YAML and the
-property would be effectively empty. :)
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/of/unittest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I tried it anyway but "dt_binding_check" complains as suspected:
-qcom,msm8909-tlmm.yaml: patternProperties:-state$:oneOf:0:$ref: None is not of type 'string'
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 7f6bba18c515..03052ffb16e2 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1602,7 +1602,7 @@ static int unittest_gpio_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, devptr);
+ 
+-	devptr->chip.of_node = pdev->dev.of_node;
++	devptr->chip.fwnode = dev_fwnode(&pdev->dev);
+ 	devptr->chip.label = "of-unittest-gpio";
+ 	devptr->chip.base = -1; /* dynamic allocation */
+ 	devptr->chip.ngpio = 5;
+-- 
+2.35.1
 
-Thanks,
-Stephan
