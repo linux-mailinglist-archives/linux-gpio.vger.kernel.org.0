@@ -2,126 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1E9655F8CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 09:24:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EE4D55F904
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 09:32:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231143AbiF2HYA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 03:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        id S231552AbiF2Hbo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 03:31:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230514AbiF2HYA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 03:24:00 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EEA18E3A
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 00:23:58 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id l2so13674794pjf.1
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 00:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Nu3kqt4370AoHuaqSJe/6PAdmFsUkAh7HcmIbGv94U8=;
-        b=oDWxFec0vwJXks2VpXSxL2oyrvKSpqFC/UUtdnddEWT3ulSoeSEDSsnCmYH/84nDPY
-         XudkHvERvpfi3AV5KP2CZwDTsXHX/Q3AZaQbaZYM8UP9lz3EIAxphnC7Uzl9cKYxIMbv
-         L+t+eKOFkhNKADV/VkcF51IVx0JlK24BoA7Jopa4ssHUb+d79V92XUz0hbmmA58vzNjo
-         BabKRcqDFoeDQOkH7vGxFfyKqr6BqhkZsqMc3ptIraJwO2CePnNM+LT73LEdR2CDVGKZ
-         /VdTmHpm12iccAkhO+pi/IolHIh5VFJlbw1GlEtY6rRvubVfsItgYm6riX5pGlOXpDFN
-         255g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Nu3kqt4370AoHuaqSJe/6PAdmFsUkAh7HcmIbGv94U8=;
-        b=f9pFGfIAyXUuMJD7Mceq0hJzyROM0CFiHf3Qr1lInq7vmKZCL5pik5HkxoZm9HnRov
-         VTWtrxCeYXLRihuWphpdMFeExAjN+m9k/11UBGH8IBF9RrvROoABfAuff2IxF6nxD87/
-         DMTotSrqfXqfFdo/nQ+8U921cqgurMAYhI63yCR729783DAUJGRe0apax89oMIz/jSrR
-         sbCHUrIMWyb9EAg17n+ELDNcXbAT2WNSg0LEY+iq0IJU14lu69Ws+YnGqui8moQ7FfJL
-         89RKvZnSbZaBCRH6eLO6yV/iyOhutoq/9uqH7hCJMD/1zoLxRK+fTac4MNK7b6ftkLKf
-         1BYg==
-X-Gm-Message-State: AJIora+B8Q8c7+qM2Tl6k+wws37esUCb1zgCxWiHCW4Q7I9TvVekCvXA
-        ZXfXMd2E3/ZrHRBUXnMFD/WLOgzQglY=
-X-Google-Smtp-Source: AGRyM1sBM0W0okjl/mw2/rlDh9MuCFNz3dZFUmMDjF07sotlXxQJvTeSKgNruAtDcpt6HrXZmJc9Eg==
-X-Received: by 2002:a17:90b:3d86:b0:1ee:ec85:ec07 with SMTP id pq6-20020a17090b3d8600b001eeec85ec07mr4272047pjb.81.1656487438074;
-        Wed, 29 Jun 2022 00:23:58 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id f1-20020a654001000000b0040d22243295sm10707804pgp.79.2022.06.29.00.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 00:23:57 -0700 (PDT)
-Date:   Wed, 29 Jun 2022 15:23:53 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal@aksignal.cz>
-Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Subject: Re: [libgpiod] feature request: output state read and sustain
-Message-ID: <20220629072353.GA18684@sol>
-References: <62b30818-92fa-e44c-c9dd-fd8cc49a6e6a@aksignal.cz>
- <20220325145742.GA46960@sol>
- <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
- <20220325160146.GA49114@sol>
- <1d43c967-e3c9-21a8-3040-2db54ba85bdf@aksignal.cz>
- <20220328080841.GA14353@sol>
- <757ac53e-07bb-1ffa-2734-08c1c321ff0e@aksignal.cz>
+        with ESMTP id S229841AbiF2Hbn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 03:31:43 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65AB133EBA;
+        Wed, 29 Jun 2022 00:31:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZQ+hHmp4e0gswN+QWPNzlDStTH+H4MmcsXe5iRpDYuA+YN6xkpfxIW5QIKwHSGFI63zhqZ5CZJBf6+hWCWFiV3i89XGXXyridpkdRmg3ZfQ1vJwFLHF5ZpoGydyTPtDHEXQMrZawso4yLwgYpBk+p0LY+i1g4vlxZ+oFooehU54tq4cNasdQTDDzWpU2x81kNfGSYt0qP1brO/Ca3o4ERHcq1ZvUPFtBzYkgkYCd6mY4gVG6ct+cUz/YS0UjArA1XZ2HY3D2NB/rvONCYpjWVaXTCKyRmFBOmIyNhl7Tmfv1tYoOeZZ2AzJCWZbGPLj1WAIjGPbVm2tuuBhuNlgWTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/eZGA27mL8OtqSYn4Cwpw2fHa0n06FLX5M1Yx5nVgZY=;
+ b=lPELeqDpWfQH3jR7ZrK8t13ublLYzbLeNyLs9yvX0vJe8Y+bLik1SpS7/uBXyK/yzTLdv/gDJPOcVHv4iWSE3lFXcFoA7Zi1kmzeta1TUknhWnGW+hxkds9pjNOPE8IxpPGfjhE/aSCaqMtdyuw2GdrR029ExJqgNYaePGyY/q32hRCLEY5ukYAdbpvHEgONis80PMngCcCXysZ1qApJwiqEOwGO1/rS/f6lJqx/vjm9utE8VwKnP4YDvURLhrj83XU1LElwzaXLgZ0GrqgMBGABGKCEc2uFQrIUZh27kuZuvu/kGYb1/SQ0OLGDZkktV4z1EYxQWs5Bfozeo3KZkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/eZGA27mL8OtqSYn4Cwpw2fHa0n06FLX5M1Yx5nVgZY=;
+ b=Em5JzH883RMZB93/YIol3uvYBmsTOZwAq0F4dD2ufWFi6XQ8qg1Cu0PLGTChK5sS5UpuNDLC8T/VcLmq1F9JKHX3iB2tm5alqFsrMnCSH2SPD/IjyqjPMbGo/ifNQy724OOyW3ZVShf7JzjnNAMdRsI11HgyEv86hLzr6XgMlGA=
+Received: from BN6PR19CA0115.namprd19.prod.outlook.com (2603:10b6:404:a0::29)
+ by BN6PR1201MB0049.namprd12.prod.outlook.com (2603:10b6:405:57::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Wed, 29 Jun
+ 2022 07:31:40 +0000
+Received: from BN8NAM11FT020.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:a0:cafe::29) by BN6PR19CA0115.outlook.office365.com
+ (2603:10b6:404:a0::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14 via Frontend
+ Transport; Wed, 29 Jun 2022 07:31:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT020.mail.protection.outlook.com (10.13.176.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5373.15 via Frontend Transport; Wed, 29 Jun 2022 07:31:40 +0000
+Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 29 Jun
+ 2022 02:31:24 -0500
+Message-ID: <501a8539-cfe1-3fd4-65db-fabf509cebc4@amd.com>
+Date:   Wed, 29 Jun 2022 09:31:21 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <757ac53e-07bb-1ffa-2734-08c1c321ff0e@aksignal.cz>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] gpio: gpio-xilinx: Check return value of
+ of_property_read_u32
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        <neelisrinivas18@gmail.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        <srinivas.neeli@amd.com>, Srinivas Goud <sgoud@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>
+References: <20220617051921.3801832-1-srinivas.neeli@xilinx.com>
+ <CAHp75VfREw2F3bXDeS8O1jm0r1Ksj923jZDne9UE5vaHM+V17w@mail.gmail.com>
+ <d780076d-ed24-f656-46b1-4d78cd0a17c1@amd.com>
+ <CACRpkdbkm0C=GUvafi-ZzoqCk6k5fbNQ76GtvRtn_izcKWrVPA@mail.gmail.com>
+From:   Michal Simek <michal.simek@amd.com>
+In-Reply-To: <CACRpkdbkm0C=GUvafi-ZzoqCk6k5fbNQ76GtvRtn_izcKWrVPA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4bdb10e7-5491-4270-7d62-08da59a16857
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB0049:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GMJgIjR2UZe6CDAuabJ4Sb5+trmIzMlm7qCB0kVmC9Ab8T0kDGEEDoZyS4ZhaU2rjPDO1tGJzeulA9cBCrxLParaBPfHRILkiGvKrgGsnqMf4w7FvzwYzsNp0AK1uLzcelqxIDbvMwOqyeytvixU5bODJK5D3c6TNWHcvoj72+DPQyUVDkTuiyBwwZFOpjIJknwQEvOsnE0kQmEe1Msso79x9g1OhnI2bKOZNbsdfXJdZEOmaDqYmXSdQoskhkKo6Q8UJCmby8B5UKVXjxj3annFtmdatii/q4BZ6yZEzYEwSukoKcENymqX23Te5SK3/+x9zzoAlfcRL6+AHs6/udDiDUDK5wkt4xcIryiByNYa53IH7DGT8EsuEXeW8YnnnNXdaTXc4VX4RI/6U2UE5xVcwIKPzfJ4cYqGvTEduFgpiqzBU7yp9t/U0xyAGVqD6ci2HiWGzpK3Fs4gQmu31LEtBThr42mcq1tVyElPmzWWazk2qfo9nqrVQgu552Ftsr6UkmKr1hhAstzjkATqFBAkWFtHLxy/qrQ2q0K8b0Vk3yGvAa5A0AhrdJXAVhjlsBtkTqjn03donDFZrfHT3/A+t5N0ONTTsrCBm+/VLMIonmlDblRkqOIWz2BRgy5knkuUSNxzlUHFo83M70neVbIN5QH6Y5wSEPzE/oQ4C+4Cm2QUrCZQwcfZCDRCbkBKkqrb+Tpz0Id3hAJQGjgfSx7RsB7toz+nCtJ77DI3ihdf9dcteOrIba1Tfi7Na4yg12B+4X05S8riLq6yvpYkStRcMT12vAYj4jfGqyfUt4sLRaSLUTMfEn3mPioowy/XSc+VMKV7BEeGNC4rFwFHdaOqljh/CBbJOTLpEe1neoNWva2+6LIKhOewfXIap8h7
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(376002)(39860400002)(396003)(36840700001)(40470700004)(46966006)(5660300002)(16526019)(426003)(336012)(36756003)(356005)(47076005)(82310400005)(86362001)(26005)(40480700001)(31686004)(82740400003)(2616005)(44832011)(36860700001)(8936002)(70586007)(70206006)(83380400001)(8676002)(6916009)(478600001)(2906002)(81166007)(31696002)(186003)(40460700003)(41300700001)(316002)(4326008)(6666004)(16576012)(54906003)(53546011)(107886003)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2022 07:31:40.0892
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bdb10e7-5491-4270-7d62-08da59a16857
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT020.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0049
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 03:08:20PM +0200, Jiří Prchal wrote:
-> Hi,
-> using new libgpiod / chardev driver, is there any way to get state of
-> output? I mean one process sets it for example to 1 and another process
-> reads this output state for example to show that on web page.
-> I have to say that old sysfs interface was more user friendly...
+
+
+On 6/28/22 14:27, Linus Walleij wrote:
+> CAUTION: This message has originated from an External Source. Please use proper judgment and caution when opening attachments, clicking links, or responding to this email.
 > 
+> 
+> On Mon, Jun 20, 2022 at 8:26 AM Michal Simek <michal.simek@amd.com> wrote:
+>> On 6/17/22 18:02, Andy Shevchenko wrote:
+>>> On Fri, Jun 17, 2022 at 7:20 AM Srinivas Neeli
+>>> <srinivas.neeli@xilinx.com> wrote:
+>>>>
+>>>> In five different instances the return value of "of_property_read_u32"
+>>>> API was neither captured nor checked.
+>>>>
+>>>> Fixed it by capturing the return value and then checking for any error.
+>>>>
+>>>> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+>>>> Addresses-Coverity: "check_return"
+>>>
+>>> I think the best course of action here is to go and fix Coverity while
+>>> marking these as false positives.
+>>>
+>>> To the idea of castings -- this is not good style and (many?)
+>>> maintainers in kernel do not accept such "workaround" for fixing
+>>> broken tool.
+>>
+>> Let's wait for Linus what he will say about it.
+>> I can't see nothing wrong about declaring that I am intentionally ignoring
+>> return code.
+> 
+> I don't think this patch should be applied.
+> 
+> The problem with static analysis is that such tools have no feeling
+> for context at all, and in this case the context makes it pretty
+> clear why it is safe to ignore these return values.
+> 
+> But we need to adopt the tool to the code not adopt the code to
+> the tool.
 
-"new" being anything since Linux 4.8 ;-)?
-And strictly speaking it isn't a driver - libgpiod and the GPIO subsystem
-provide an interface to the chip driver.  More on that later.
+ok. No problem. Thanks for discussion.
 
-Only the process holding the line has access to the current value.
-If you need that value elsewhere then it has to be published by that
-process - it is not available through the GPIO API itself.
-There is nothing preventing that process publishing the value
-in whatever way is appropriate to your application.
-e.g. write it to a file that can be read by your webapp, just as it
-would from sysfs.
-
-Less restrictive access models are frequently "more user friendly", but
-have other issues. e.g. some misbehaving process just reset your
-modem for you.
-
-And sysfs has other great features like being slow and being complete
-rubbish for events on input lines.
-
-> And at second: it would be better to NOT "the state of a GPIO line
-> controlled over the character device reverts to default when the last
-> process referencing the file descriptor representing the device file exits."
-> "Set and forget" behavior is more natural to what some gpios are used. For
-> example resetting external modems, need set 1 for short time, then to 0 and
-> leave it for long long time until next reset is needed. It's non sense to
-> keep running some process only to keep output at 0.
-
-Agreed, that might be more natural, but that behaviour is not by choice,
-it is a consequence of the kernel internals.  In short, if the GPIO
-subsystem does not hold the chip then the driver is free to do what it
-likes to it.
-So when you release a line all bets are off.
-It may stay where you left it, but it may not - it may even switch to an
-input - it depends on the driver.
-If it works for you that's great, but without major kernel changes
-libgpiod has no better option than to provide the caveat as the "set and
-forget" behaviour is something that it cannot guarantee.
-
-Cheers,
-Kent.
-
+Thanks,
+Michal
