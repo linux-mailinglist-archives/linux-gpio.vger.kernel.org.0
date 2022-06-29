@@ -2,119 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A0A755F6B4
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 08:36:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDE2455F725
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 08:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231649AbiF2GfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 02:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
+        id S232314AbiF2GwH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 02:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232137AbiF2GfK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 02:35:10 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACC02C11E;
-        Tue, 28 Jun 2022 23:35:09 -0700 (PDT)
+        with ESMTP id S230088AbiF2GwH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 02:52:07 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8EB2E680;
+        Tue, 28 Jun 2022 23:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1656484509; x=1688020509;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=v+gu24eR5X5gNDxb60UqmAtP1yQjJyAU6/mkcYmJQno=;
-  b=ymY2TuwwKv+WCXHoI0pSHDHiQ2LFBs9xcYLpgWwKDwrJq29OicmAfhcw
-   jBOXwfHCoMma5IOU7ZmxMHhKhwt/aZtTCp14LqXphnBcfQoM2uP+qtVJc
-   7c6J+HXfNtv1R0TfSuZ0BmBlBbJD/znSuhbTY0F7McJefmQLDuJ9CNnYJ
-   c=;
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 28 Jun 2022 23:35:09 -0700
+  t=1656485526; x=1688021526;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pDeFX0MitWJP5A/Gqlq5Jl1bM/EI4WOu64tF/J2XmMo=;
+  b=kWC54FNg3YnTxBuE6ezaJqaC4fLOrTjlbEL8cas+T7ONNRGoPCzFNzf7
+   /7ZeRM1HFxDiJ1qoeenhG3ObUaffmSVxFMnY0NxvfqKJAHsOFe9q0dU5E
+   efPTbn/Dp+/v3mt+5eTGwzaTpLgEBdKoizXquayeLvpU336n5rW6JiHLz
+   k=;
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 28 Jun 2022 23:52:06 -0700
 X-QCInternal: smtphost
 Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 23:35:08 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 23:52:05 -0700
+Received: from nalasex01c.na.qualcomm.com (10.47.97.35) by
  nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Tue, 28 Jun 2022 23:35:08 -0700
-Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Tue, 28 Jun 2022 23:35:01 -0700
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <quic_plai@quicinc.com>, <bgoswami@quicinc.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <srinivas.kandagatla@linaro.org>,
-        <quic_rohkumar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <swboyd@chromium.org>,
-        <judyhsiao@chromium.org>, Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Subject: [PATCH] pinctrl: qcom: sc7280: Fix compile bug
-Date:   Wed, 29 Jun 2022 12:04:45 +0530
-Message-ID: <1656484485-23350-1-git-send-email-quic_srivasam@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+ 15.2.986.22; Tue, 28 Jun 2022 23:52:04 -0700
+Received: from [10.242.243.224] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Tue, 28 Jun
+ 2022 23:51:59 -0700
+Message-ID: <1bc6383a-4e82-342a-c458-4f2c847adf76@quicinc.com>
+Date:   Wed, 29 Jun 2022 12:21:56 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH V2 0/8] Add minimal boot support for IPQ5018
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC:     <agross@kernel.org>, <robh+dt@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <catalin.marinas@arm.com>, <p.zabel@pengutronix.de>,
+        <quic_varada@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20220621161126.15883-1-quic_srichara@quicinc.com>
+ <CACRpkdZs=kwFciZaNGWR3t=Q4Vy08qg6UNH6obcyubC=6jkYuw@mail.gmail.com>
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <CACRpkdZs=kwFciZaNGWR3t=Q4Vy08qg6UNH6obcyubC=6jkYuw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.80.80.8]
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+ nalasex01c.na.qualcomm.com (10.47.97.35)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix the compilation error, caused by updtating constant variable.
-Hence remove redundant constant variable, which is no more useful
-as per new design.
+Hi Linus,
 
-The issue is due to some unstaged changes. Fix it up.
+On 6/28/2022 6:25 PM, Linus Walleij wrote:
+> On Tue, Jun 21, 2022 at 6:11 PM Sricharan R <quic_srichara@quicinc.com> wrote:
+>
+>> The IPQ5018 is Qualcomm's 802.11ax SoC for Routers,
+>> Gateways and Access Points.
+>>
+>> This series adds minimal board boot support for ipq5018-mp03.1-c2 board.
+> Pretty cool!
+>
+>>    dt-bindings: pinctrl: qcom: Add ipq5018 pinctrl bindings
+>>    pinctrl: qcom: Add IPQ5018 pinctrl driver
+> I'm happy to merge the two pinctrl patches separately to the pinctrl
+> tree if I can get a review from Bjorn or Krzysztof.
 
-Fixes: 36fe26843d6d ("pinctrl: qcom: sc7280: Add clock optional check for ADSP bypass targets")
+    Thanks. Have few review comments from Bjorn and Krzysztof on the 
+bindings.
+     Will post V3 and hopefully that should have their acks on that.
 
-Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 5 +----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.h | 1 -
- 2 files changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index b5d1b99..e97ce45 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -388,9 +388,6 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 	pctrl->data = data;
- 	pctrl->dev = &pdev->dev;
- 
--	data->is_clk_optional = of_property_read_bool(dev->of_node,
--						      "qcom,adsp-bypass-mode");
--
- 	pctrl->clks[0].id = "core";
- 	pctrl->clks[1].id = "audio";
- 
-@@ -404,7 +401,7 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
- 				     "Slew resource not provided\n");
- 
--	if (data->is_clk_optional)
-+	if (of_property_read_bool(dev->of_node, "qcom,adsp-bypass-mode"))
- 		ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
- 	else
- 		ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-index 759d5d8..afbac2a 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-@@ -77,7 +77,6 @@ struct lpi_pinctrl_variant_data {
- 	int ngroups;
- 	const struct lpi_function *functions;
- 	int nfunctions;
--	bool is_clk_optional;
- };
- 
- int lpi_pinctrl_probe(struct platform_device *pdev);
--- 
-2.7.4
+Regards,
+   Sricharan
 
