@@ -2,102 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A75C255FBF9
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 11:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3997A55FC2E
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 11:38:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232812AbiF2J21 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 05:28:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41072 "EHLO
+        id S232840AbiF2JiH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 05:38:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231860AbiF2J20 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 05:28:26 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729C93898;
-        Wed, 29 Jun 2022 02:28:25 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id ge10so31332296ejb.7;
-        Wed, 29 Jun 2022 02:28:25 -0700 (PDT)
+        with ESMTP id S232959AbiF2JiG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 05:38:06 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35CCB86
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:38:04 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id eq6so21322783edb.6
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:38:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=OcjlEA+4dS73Cz+a5jVwrlBiB9UB3IJkomavNYdn3KE=;
-        b=CSJ8pKHssY81NHEo37dQakuHxjhhT72ifL3/WNSt4UG7uRbllRpC6LqsumzrysrNj1
-         2J7XeAWjQGy9zW2uqWtZj50hKVwnOyUVMJf/aZpijpzhi0eP/cSUZJJ12rm5XNsfP0e6
-         4+Zq29EnY25bBjwhUDk4wWcbxguIDwgp6wJ2NWjAyyUk9X2EFlKIWEi7ALMnokOJuadd
-         noHBqcMzta0Dr+8sWng04yjdaipXFj08YE0nP28p/KzrGsOsKtk7IQChBBQCKjXbzQxS
-         4jyKq/r2HdjKExfm5FQlst3qYI9GsFqOQriEm0sObNJ1KUOkbQjcJVo4z7f5sh0KY8y9
-         nPRw==
+        bh=I9e0lYWy7uCJKoc96qsb2y1N0WG5Wc6UBbbE3PgOBhw=;
+        b=wE4NGpCV0Qay9co9/9Z/AnRX+pXDoASpC/BRAAOfsOfqnzKaCl+um6OjOKSdMJAWGt
+         i458BtNboglnzROsVbkmWr0nF9xFgY+lusy85PBuQMsMPscSoW7gE3hSTK8vt3wlM0GP
+         Qojxy2hBc8G+vA4fgosegavTaZ84SbgYNZgIVsInn7IkxUgRiYxtou4HAEMPRk1BlbjI
+         hQWRIxQym6yQl/K+3BxNtGvZIJSPwJGV1bOjVxHqhA9p0E1CPDIyClElmT8sgM8La3lv
+         KmGK99lnc30oNTJHvVV9YkAolJ858I+VG4nOO2H0+0XOsZdGZUc+Oyvrj8ke8JQdfp8U
+         Uq4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=OcjlEA+4dS73Cz+a5jVwrlBiB9UB3IJkomavNYdn3KE=;
-        b=2oQ6L/YcIT0fHNH1KHm+pR9WeMaUz3BmAQd8NiQIg1ZM714YAdl59V9Y6+BKLgaB2S
-         T3QkGcTPAJ/g8Q3B3WfDBzIgMS4EYiqglZ5k5SU6cFAVwCjG3NspxgsxAnOCHTgTOjFC
-         oQGz+hwvA0+S+8ibfRtI51CT8GqgLw4R/mbX+H3ZAJo8YGiDC+YlOLpyf7pUlPJGaHBi
-         X1r/m8Fi/uGAG+2hoE3/qikj7XxYxmhTper6HpfHF2B0sIefcgxJlGmAM2CF7gz4klwF
-         U222D8iC+4S5vSCaQEANlhwkm+4QmKYmJc1fwvwXPaL539zKj/Lfv2endEvHzxmBhLxH
-         7T9g==
-X-Gm-Message-State: AJIora/HDa/sgeQTJYFkDGeD+MB0+T1rufChihAbFHK5hy/Vtwk1jPCV
-        3xEW+vRkVG2lGp2yf0v2wB8=
-X-Google-Smtp-Source: AGRyM1vs4gqfTQsGQHWewAwgtxD9xFaOVCxxUvBfBmWTRQabLQMl0/F/6JP8pjgYGhxg9n+kBDFMrA==
-X-Received: by 2002:a17:906:ce:b0:715:705e:52fb with SMTP id 14-20020a17090600ce00b00715705e52fbmr2278219eji.303.1656494903920;
-        Wed, 29 Jun 2022 02:28:23 -0700 (PDT)
-Received: from [192.168.0.182] ([79.119.98.153])
-        by smtp.gmail.com with ESMTPSA id r1-20020a17090638c100b007219c20dcd8sm7499978ejd.196.2022.06.29.02.28.22
+        bh=I9e0lYWy7uCJKoc96qsb2y1N0WG5Wc6UBbbE3PgOBhw=;
+        b=gs6Rj9/oJppD/PXUyD+/2KBXbopT9y6Pih6urH5d+9Nu6VC1KZ5s1wYYtSktvTkPVb
+         7Ibg1AngTeXccRSNPhedTn0/NUcLJ4dEhrtfbTPIN3VBF2Yv5GScMRlhtmwGKdZIlBu0
+         yl2wuyRSzcPc/IryJYUj8VvTGI/VSXIIG4pURVKjq514Q+0zkIdd/Nx4IEL4HaVTSrL8
+         p+6uhEF5tIp/jShJ9DDxM9sZpT/WoOI1gIIcUoty7KtSdVaAuA1lLbJv5HLZJc87Xa/J
+         DLqEq0AmBlEaQfwz1A/ksMpuD9cwp5cdhB3KrPwOfqLrhRchEQ9ymPp1ob+tbxfNbB7q
+         Oj0A==
+X-Gm-Message-State: AJIora/8KY8jOPfDUnxMBr0ngZeKj2rP+7mvTvOzDBPbaBSVZ26/4Qau
+        dNbKnj/keJ8/JMb/XAxdhvEmTQ==
+X-Google-Smtp-Source: AGRyM1seX/TiNSAbkRI6XBjpkxXx0lXfchCFWLwc9HbhIIJqmmot84t+JZ4qoenRaC6OqphS1co2yw==
+X-Received: by 2002:a05:6402:448a:b0:435:3fbe:2593 with SMTP id er10-20020a056402448a00b004353fbe2593mr2956604edb.226.1656495483272;
+        Wed, 29 Jun 2022 02:38:03 -0700 (PDT)
+Received: from [192.168.0.183] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id a4-20020a170906274400b00726b03f83a0sm3289270ejd.33.2022.06.29.02.38.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 02:28:23 -0700 (PDT)
-Message-ID: <7fc0292d-1d93-4ae8-2947-9444ef48a19e@gmail.com>
-Date:   Wed, 29 Jun 2022 12:28:21 +0300
+        Wed, 29 Jun 2022 02:38:02 -0700 (PDT)
+Message-ID: <91d972d2-689c-d357-869f-fbd826173e33@linaro.org>
+Date:   Wed, 29 Jun 2022 11:38:01 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v7 2/2] iio: adc: ad4130: add AD4130 driver
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT schema for
+ qcom,msm8909-tlmm
 Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
+To:     Stephan Gerhold <stephan.gerhold@kernkonzept.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
-References: <20220628144649.3957286-1-cosmin.tanislav@analog.com>
- <20220628144649.3957286-3-cosmin.tanislav@analog.com>
- <CAHp75Ve6f0dfMmctAwZ3UTA98MDs_injKik2C=wXpJ1zJyiPxA@mail.gmail.com>
-From:   Cosmin Tanislav <demonsingur@gmail.com>
-In-Reply-To: <CAHp75Ve6f0dfMmctAwZ3UTA98MDs_injKik2C=wXpJ1zJyiPxA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20220628145502.4158234-1-stephan.gerhold@kernkonzept.com>
+ <20220628145502.4158234-2-stephan.gerhold@kernkonzept.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220628145502.4158234-2-stephan.gerhold@kernkonzept.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 6/28/22 22:17, Andy Shevchenko wrote:
-> On Tue, Jun 28, 2022 at 4:49 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
->>
->> AD4130-8 is an ultra-low power, high precision, measurement solution for
->> low bandwidth battery operated applications.
->>
->> The fully integrated AFE (Analog Front-End) includes a multiplexer for up
->> to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
->> Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
->> selectable filter options, smart sequencer, sensor biasing and excitation
->> options, diagnostics, and a FIFO buffer.
+On 28/06/2022 16:55, Stephan Gerhold wrote:
+> Document the "qcom,msm8909-tlmm" compatible for the TLMM/pin control
+> block in the MSM8909 SoC, together with the allowed GPIOs and functions.
 > 
-> It would be respectful, if you include given tags. Why didn't you do
-> that? Any significant change that has to be re-reviewed?
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@kernkonzept.com>
+> ---
+>  .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   | 152 ++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> new file mode 100644
+> index 000000000000..e03530091478
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> @@ -0,0 +1,152 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,msm8909-tlmm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. MSM8909 TLMM block
+> +
+> +maintainers:
+> +  - Stephan Gerhold <stephan@gerhold.net>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer (TLMM) block found
+> +  in the MSM8909 platform.
+> +
+> +allOf:
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,msm8909-tlmm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  '#interrupt-cells': true
+> +  gpio-controller: true
+> +  gpio-reserved-ranges: true
+> +  '#gpio-cells': true
+> +  gpio-ranges: true
+> +  wakeup-parent: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  '-state$':
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-msm8909-tlmm-state"
 
-Sorry, I sometimes forget about picking up tags. Maybe Jonathan will do
-it if everything else is good.
+No quotes here and other places, should be needed. I know you copied
+from other bindings, but at least let's try new files to be proper.
+
+> +      - patternProperties:
+> +          ".*":
+> +            $ref: "#/$defs/qcom-msm8909-tlmm-state"
+> +
+> +$defs:
+> +  qcom-msm8909-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+
+Overall looks ok, to me, so with quote changes:
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+Best regards,
+Krzysztof
