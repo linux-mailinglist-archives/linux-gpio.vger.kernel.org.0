@@ -2,129 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D19455F42C
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 05:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A0A755F6B4
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 08:36:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbiF2Dfu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 23:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
+        id S231649AbiF2GfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 02:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiF2Dft (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 23:35:49 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C4B17AA3
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 20:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656473747; x=1688009747;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=z26Kc2YJ7El3YIERZfl5O1CnPyqzqA2XHZBn+lwvms4=;
-  b=HMikq3tmeL0MdzcZma58n69/cc876Wc50uyDwqJcLH1J3Z3JdgIx2dxs
-   mBz4hq1F0UGLwqCodDzzEiyDfH+NdSlHfBBf6wfe6wx8sUAitdbceKNVh
-   H9dSe8U7R7P3UEHMd2YBFDp4osYrsGBei71mVAxEXRnW3tacvQe1/NZPE
-   i53xpU+M7OT4/+yryzRWmi/midpUwh8niJZIgatMazHtk1Km3RS1K3i5I
-   SgGEMZFQRQe1GtJlQmK5Jq97+iLuX4Hw/fJ6LLln/dcm4B/BOZwFitnGL
-   aZgXLXKPhYBzzsFztjHZQtfX5ib+4hztv+Gi0bQ36wtkQNhSywG+aR36K
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="280673668"
-X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
-   d="scan'208";a="280673668"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 20:35:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
-   d="scan'208";a="917433661"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Jun 2022 20:35:46 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o6OUT-000AsA-PJ;
-        Wed, 29 Jun 2022 03:35:45 +0000
-Date:   Wed, 29 Jun 2022 11:35:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 869283d149c8f34f2352fac3d1179905eff19bcd
-Message-ID: <62bbc874.g4fzZWXnAPbokJYi%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S232137AbiF2GfK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 02:35:10 -0400
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACC02C11E;
+        Tue, 28 Jun 2022 23:35:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1656484509; x=1688020509;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=v+gu24eR5X5gNDxb60UqmAtP1yQjJyAU6/mkcYmJQno=;
+  b=ymY2TuwwKv+WCXHoI0pSHDHiQ2LFBs9xcYLpgWwKDwrJq29OicmAfhcw
+   jBOXwfHCoMma5IOU7ZmxMHhKhwt/aZtTCp14LqXphnBcfQoM2uP+qtVJc
+   7c6J+HXfNtv1R0TfSuZ0BmBlBbJD/znSuhbTY0F7McJefmQLDuJ9CNnYJ
+   c=;
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 28 Jun 2022 23:35:09 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 23:35:08 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Tue, 28 Jun 2022 23:35:08 -0700
+Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Tue, 28 Jun 2022 23:35:01 -0700
+From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <quic_plai@quicinc.com>, <bgoswami@quicinc.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <srinivas.kandagatla@linaro.org>,
+        <quic_rohkumar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <swboyd@chromium.org>,
+        <judyhsiao@chromium.org>, Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Subject: [PATCH] pinctrl: qcom: sc7280: Fix compile bug
+Date:   Wed, 29 Jun 2022 12:04:45 +0530
+Message-ID: <1656484485-23350-1-git-send-email-quic_srivasam@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 869283d149c8f34f2352fac3d1179905eff19bcd  Merge branch 'devel' into for-next
+Fix the compilation error, caused by updtating constant variable.
+Hence remove redundant constant variable, which is no more useful
+as per new design.
 
-elapsed time: 767m
+The issue is due to some unstaged changes. Fix it up.
 
-configs tested: 48
-configs skipped: 2
+Fixes: 36fe26843d6d ("pinctrl: qcom: sc7280: Add clock optional check for ADSP bypass targets")
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+---
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 5 +----
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.h | 1 -
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
-gcc tested configs:
-arm64                            allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-i386                                defconfig
-i386                             allyesconfig
-x86_64               randconfig-a012-20220627
-x86_64               randconfig-a011-20220627
-x86_64               randconfig-a014-20220627
-x86_64               randconfig-a015-20220627
-x86_64               randconfig-a016-20220627
-x86_64               randconfig-a013-20220627
-i386                 randconfig-a012-20220627
-i386                 randconfig-a015-20220627
-i386                 randconfig-a011-20220627
-i386                 randconfig-a013-20220627
-i386                 randconfig-a014-20220627
-i386                 randconfig-a016-20220627
-arc                  randconfig-r043-20220627
-riscv                randconfig-r042-20220627
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-
-clang tested configs:
-i386                 randconfig-a002-20220627
-i386                 randconfig-a003-20220627
-i386                 randconfig-a001-20220627
-i386                 randconfig-a006-20220627
-i386                 randconfig-a004-20220627
-i386                 randconfig-a005-20220627
-x86_64               randconfig-a002-20220627
-x86_64               randconfig-a003-20220627
-x86_64               randconfig-a001-20220627
-x86_64               randconfig-a005-20220627
-x86_64               randconfig-a004-20220627
-x86_64               randconfig-a006-20220627
-hexagon              randconfig-r041-20220627
-hexagon              randconfig-r045-20220627
-
+diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+index b5d1b99..e97ce45 100644
+--- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+@@ -388,9 +388,6 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
+ 	pctrl->data = data;
+ 	pctrl->dev = &pdev->dev;
+ 
+-	data->is_clk_optional = of_property_read_bool(dev->of_node,
+-						      "qcom,adsp-bypass-mode");
+-
+ 	pctrl->clks[0].id = "core";
+ 	pctrl->clks[1].id = "audio";
+ 
+@@ -404,7 +401,7 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
+ 				     "Slew resource not provided\n");
+ 
+-	if (data->is_clk_optional)
++	if (of_property_read_bool(dev->of_node, "qcom,adsp-bypass-mode"))
+ 		ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+ 	else
+ 		ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+index 759d5d8..afbac2a 100644
+--- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
++++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+@@ -77,7 +77,6 @@ struct lpi_pinctrl_variant_data {
+ 	int ngroups;
+ 	const struct lpi_function *functions;
+ 	int nfunctions;
+-	bool is_clk_optional;
+ };
+ 
+ int lpi_pinctrl_probe(struct platform_device *pdev);
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.7.4
+
