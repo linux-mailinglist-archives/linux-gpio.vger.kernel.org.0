@@ -2,53 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BFD55FBDE
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 11:26:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A75C255FBF9
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 11:28:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbiF2J0I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 05:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38946 "EHLO
+        id S232812AbiF2J21 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 05:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbiF2J0H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 05:26:07 -0400
-Received: from router.aksignal.cz (router.aksignal.cz [62.44.4.214])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762ED38DA7
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:26:01 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by router.aksignal.cz (Postfix) with ESMTP id 916064E013;
-        Wed, 29 Jun 2022 11:25:58 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at router.aksignal.cz
-Received: from router.aksignal.cz ([127.0.0.1])
-        by localhost (router.aksignal.cz [127.0.0.1]) (amavisd-new, port 10026)
-        with LMTP id Vuk3Je1AEk58; Wed, 29 Jun 2022 11:25:58 +0200 (CEST)
-Received: from [172.28.0.3] (unknown [193.150.13.224])
-        (Authenticated sender: jiri.prchal@aksignal.cz)
-        by router.aksignal.cz (Postfix) with ESMTPSA id C7A754E012;
-        Wed, 29 Jun 2022 11:25:57 +0200 (CEST)
-Message-ID: <a1cdd48d-0da9-b61a-3530-ef2e99539b74@aksignal.cz>
-Date:   Wed, 29 Jun 2022 11:25:57 +0200
+        with ESMTP id S231860AbiF2J20 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 05:28:26 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729C93898;
+        Wed, 29 Jun 2022 02:28:25 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id ge10so31332296ejb.7;
+        Wed, 29 Jun 2022 02:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=OcjlEA+4dS73Cz+a5jVwrlBiB9UB3IJkomavNYdn3KE=;
+        b=CSJ8pKHssY81NHEo37dQakuHxjhhT72ifL3/WNSt4UG7uRbllRpC6LqsumzrysrNj1
+         2J7XeAWjQGy9zW2uqWtZj50hKVwnOyUVMJf/aZpijpzhi0eP/cSUZJJ12rm5XNsfP0e6
+         4+Zq29EnY25bBjwhUDk4wWcbxguIDwgp6wJ2NWjAyyUk9X2EFlKIWEi7ALMnokOJuadd
+         noHBqcMzta0Dr+8sWng04yjdaipXFj08YE0nP28p/KzrGsOsKtk7IQChBBQCKjXbzQxS
+         4jyKq/r2HdjKExfm5FQlst3qYI9GsFqOQriEm0sObNJ1KUOkbQjcJVo4z7f5sh0KY8y9
+         nPRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=OcjlEA+4dS73Cz+a5jVwrlBiB9UB3IJkomavNYdn3KE=;
+        b=2oQ6L/YcIT0fHNH1KHm+pR9WeMaUz3BmAQd8NiQIg1ZM714YAdl59V9Y6+BKLgaB2S
+         T3QkGcTPAJ/g8Q3B3WfDBzIgMS4EYiqglZ5k5SU6cFAVwCjG3NspxgsxAnOCHTgTOjFC
+         oQGz+hwvA0+S+8ibfRtI51CT8GqgLw4R/mbX+H3ZAJo8YGiDC+YlOLpyf7pUlPJGaHBi
+         X1r/m8Fi/uGAG+2hoE3/qikj7XxYxmhTper6HpfHF2B0sIefcgxJlGmAM2CF7gz4klwF
+         U222D8iC+4S5vSCaQEANlhwkm+4QmKYmJc1fwvwXPaL539zKj/Lfv2endEvHzxmBhLxH
+         7T9g==
+X-Gm-Message-State: AJIora/HDa/sgeQTJYFkDGeD+MB0+T1rufChihAbFHK5hy/Vtwk1jPCV
+        3xEW+vRkVG2lGp2yf0v2wB8=
+X-Google-Smtp-Source: AGRyM1vs4gqfTQsGQHWewAwgtxD9xFaOVCxxUvBfBmWTRQabLQMl0/F/6JP8pjgYGhxg9n+kBDFMrA==
+X-Received: by 2002:a17:906:ce:b0:715:705e:52fb with SMTP id 14-20020a17090600ce00b00715705e52fbmr2278219eji.303.1656494903920;
+        Wed, 29 Jun 2022 02:28:23 -0700 (PDT)
+Received: from [192.168.0.182] ([79.119.98.153])
+        by smtp.gmail.com with ESMTPSA id r1-20020a17090638c100b007219c20dcd8sm7499978ejd.196.2022.06.29.02.28.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jun 2022 02:28:23 -0700 (PDT)
+Message-ID: <7fc0292d-1d93-4ae8-2947-9444ef48a19e@gmail.com>
+Date:   Wed, 29 Jun 2022 12:28:21 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [libgpiod] feature request: output state read and sustain
-Content-Language: cs
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-References: <62b30818-92fa-e44c-c9dd-fd8cc49a6e6a@aksignal.cz>
- <20220325145742.GA46960@sol>
- <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
- <20220325160146.GA49114@sol>
- <1d43c967-e3c9-21a8-3040-2db54ba85bdf@aksignal.cz>
- <20220328080841.GA14353@sol>
- <757ac53e-07bb-1ffa-2734-08c1c321ff0e@aksignal.cz>
- <20220629072353.GA18684@sol>
-From:   =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-In-Reply-To: <20220629072353.GA18684@sol>
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v7 2/2] iio: adc: ad4130: add AD4130 driver
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>
+References: <20220628144649.3957286-1-cosmin.tanislav@analog.com>
+ <20220628144649.3957286-3-cosmin.tanislav@analog.com>
+ <CAHp75Ve6f0dfMmctAwZ3UTA98MDs_injKik2C=wXpJ1zJyiPxA@mail.gmail.com>
+From:   Cosmin Tanislav <demonsingur@gmail.com>
+In-Reply-To: <CAHp75Ve6f0dfMmctAwZ3UTA98MDs_injKik2C=wXpJ1zJyiPxA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -57,65 +83,21 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-On 29. 06. 22 9:23, Kent Gibson wrote:
-> On Tue, Jun 28, 2022 at 03:08:20PM +0200, Jiří Prchal wrote:
->> Hi,
->> using new libgpiod / chardev driver, is there any way to get state of
->> output? I mean one process sets it for example to 1 and another process
->> reads this output state for example to show that on web page.
->> I have to say that old sysfs interface was more user friendly...
+On 6/28/22 22:17, Andy Shevchenko wrote:
+> On Tue, Jun 28, 2022 at 4:49 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
 >>
+>> AD4130-8 is an ultra-low power, high precision, measurement solution for
+>> low bandwidth battery operated applications.
+>>
+>> The fully integrated AFE (Analog Front-End) includes a multiplexer for up
+>> to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
+>> Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
+>> selectable filter options, smart sequencer, sensor biasing and excitation
+>> options, diagnostics, and a FIFO buffer.
 > 
-> "new" being anything since Linux 4.8 ;-)?
-> And strictly speaking it isn't a driver - libgpiod and the GPIO subsystem
-> provide an interface to the chip driver.  More on that later.
+> It would be respectful, if you include given tags. Why didn't you do
+> that? Any significant change that has to be re-reviewed?
 > 
-> Only the process holding the line has access to the current value.
-> If you need that value elsewhere then it has to be published by that
-> process - it is not available through the GPIO API itself.
-> There is nothing preventing that process publishing the value
-> in whatever way is appropriate to your application.
-> e.g. write it to a file that can be read by your webapp, just as it
-> would from sysfs.
-> 
-> Less restrictive access models are frequently "more user friendly", but
-> have other issues. e.g. some misbehaving process just reset your
-> modem for you.
-> 
-> And sysfs has other great features like being slow and being complete
-> rubbish for events on input lines.
-> 
->> And at second: it would be better to NOT "the state of a GPIO line
->> controlled over the character device reverts to default when the last
->> process referencing the file descriptor representing the device file exits."
->> "Set and forget" behavior is more natural to what some gpios are used. For
->> example resetting external modems, need set 1 for short time, then to 0 and
->> leave it for long long time until next reset is needed. It's non sense to
->> keep running some process only to keep output at 0.
-> 
-> Agreed, that might be more natural, but that behaviour is not by choice,
-> it is a consequence of the kernel internals.  In short, if the GPIO
-> subsystem does not hold the chip then the driver is free to do what it
-> likes to it.
-> So when you release a line all bets are off.
-> It may stay where you left it, but it may not - it may even switch to an
-> input - it depends on the driver.
-Does it mean that without changing this particular line it could be changed? For example by setting another line in chip?
 
-> If it works for you that's great, but without major kernel changes
-> libgpiod has no better option than to provide the caveat as the "set and
-> forget" behaviour is something that it cannot guarantee.
-Than is only way to write my own user space driver simulating sysfs? Or what is the right way of this scenario:
-start proces -> gpioset =1 -> sleep -> gpioset =0 -> do other things
-when the proces dies systemd will start it again
-
-and another scenario:
-proces checks time, if is the right time -> gpioset =1
-other proces reads output and print out on web
-
-Jiri
-
-> 
-> Cheers,
-> Kent.
-> 
+Sorry, I sometimes forget about picking up tags. Maybe Jonathan will do
+it if everything else is good.
