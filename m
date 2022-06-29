@@ -2,184 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE714560309
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 16:34:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A72456046D
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 17:23:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233577AbiF2Oa5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 10:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58728 "EHLO
+        id S232231AbiF2PXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 11:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232876AbiF2OaY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 10:30:24 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F8C35DF2;
-        Wed, 29 Jun 2022 07:30:15 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id s1so22744601wra.9;
-        Wed, 29 Jun 2022 07:30:15 -0700 (PDT)
+        with ESMTP id S229778AbiF2PXS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 11:23:18 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4042615A09
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 08:23:17 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-3137316bb69so151169937b3.10
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 08:23:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=I/6knLBCspYoJbBWZ+ks97ukajAgwVFBs4o2jAnU4CE=;
-        b=F0whcHo7Zc3k+GEpoS8SmLr8tVyFTKmt1wCz/oaQlx6Ib7ZKEX063yRQrkxoZs0r67
-         WuH740v9d1VXR0yfCyonHdTDr8SULH4ZkFuzdySuwlPcuOZ3LaJDMsxWd41SESYBfEIv
-         H8ji5KUI/doCTfmHIKSZX+Np38hQVSim+qGxZGJwI8ju5NQQox6gytgsiS1hLzkxMhVe
-         oRMky2ppDq/8k+h45DL81Ypj1rsrXdhjxJ/CW3xMCD+sE4+iUveaR5KbVMxWVdpWMNDA
-         81k4aiE8tNaiW0ZsvzBSEG1sNt6/1tKZAl0RtIhF/GQjlSGVa8zdL/IIkkA54mS5jP5f
-         nTvQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nqhKijJ1mWH3iv+qlrJv9N0/7O+wydulo+70v8M0TJw=;
+        b=kkvlBXCCd+abrfUeM94Fg61mDMU5qk1X5N8GZEwVELqN4zgseTCgRyWEbiw4XYt7UX
+         R+pMXaYeDZs1Seqh3pTbtXs0p7y2y9jcIdyQm6GwOLc1+hB2YUydBqqJio3mJPpAatdR
+         hHBL8m33i25kqsCojGg0mM6hqLCe2d1z1bG1PYDrqSzou/lBQangkRyHEuTRGlpYlwsl
+         /ZCNF3kugHzQsGe07+mYxUhggKMW8is6ipQ7S2wImj/FTwxzsR3bROspdxnTDDD9bx6K
+         pjyinuPNviRY5yX/rF5hUCrsP/eojV0oWxZpO+V1SdB+2nl0KH8K3Ovzno+9qqVQ/c81
+         UoQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=I/6knLBCspYoJbBWZ+ks97ukajAgwVFBs4o2jAnU4CE=;
-        b=QarWicW+fkgt/0GTNZH//6FRRqB2kd6Py7+WkTPz+arB9pbW8uR3bZa6daHDfiWzwD
-         KXVq19sZtMoa7nHI9cKB9CGosUnhcHdID3Lr5qgEGlXeIm4JCT0G963S9whz8kyDdhSd
-         9UC2KbOQgkDYjGO9CEY23Rb15WS2PbMjfZSS3/VIzpCDrpcGyV16TpNpNfZRleLH+Y+y
-         AsN25oyJSH0hWev5hziUxidkEcfwaYx6w2yz5ffKRE40g4/NwRVle6j/wIQpOfEMQE8W
-         h3F5SnPrq3XPkwfSTNogfZ//Ta7Ctvfj1wrb1oHl1EyOYS3RMcUdDfVu5puATWWD5/dX
-         8nSA==
-X-Gm-Message-State: AJIora8XkPWU9Px00XwtbiBCAt4Gf1yIcmBk0nD6LuB2NLi8uTRrN3iv
-        MyngoEuwrJNpMNCIV9gYURc=
-X-Google-Smtp-Source: AGRyM1ssJB+8a1pR4WAQ+kpPKxT8wl7jYM6SAD5uwinvRVog9qTcEzaMAvr1kw6gi5jmBcgoMiZX1g==
-X-Received: by 2002:a5d:528e:0:b0:21b:b85b:5873 with SMTP id c14-20020a5d528e000000b0021bb85b5873mr3425379wrv.191.1656513015000;
-        Wed, 29 Jun 2022 07:30:15 -0700 (PDT)
-Received: from localhost (92.40.168.16.threembb.co.uk. [92.40.168.16])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b0039c4d022a44sm3402041wmq.1.2022.06.29.07.30.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 07:30:14 -0700 (PDT)
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
-        sre@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org
-Cc:     lars@metafoo.de, quic_gurus@quicinc.com,
-        sebastian.reichel@collabora.com, andy.shevchenko@gmail.com,
-        michael@walle.cc, rdunlap@infradead.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v4 15/15] power: axp20x_battery: Add support for AXP192
-Date:   Wed, 29 Jun 2022 15:30:46 +0100
-Message-Id: <20220629143046.213584-16-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220629143046.213584-1-aidanmacdonald.0x0@gmail.com>
-References: <20220629143046.213584-1-aidanmacdonald.0x0@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nqhKijJ1mWH3iv+qlrJv9N0/7O+wydulo+70v8M0TJw=;
+        b=vOd0uj07Gi7nA1PU6HCRjEf6snlKzhqLGySeehlaGBUtsl044R3FzVb1SRVlcpj3Zu
+         5JMf38iGQFOn0JFeGaQIUq5cCbgv9eQ6Y5xfZT+kbKgx2i1mujzt2eHH+sLTNO/zCZVt
+         qeEr/rdd2tV/3WGaeui008LyhWP5nXWt6+7dGZgmhEj6yG8ajbGg/ixApZsPBoJdc7Rt
+         qJzw13rqgYrwQnuuGJWLcvdWbmOYxPK/6LHyLId+XlS9Yj39iF7OU2gpF5gblx8apDTg
+         kemY6KBOUpesCBXQgZsFqeYVeZ/0cbx02zQyUr0ln0/ozK54ES4mgt7p4TJxXJzU3XvM
+         qJPw==
+X-Gm-Message-State: AJIora8w+QF9d1f1gBWd22P5UhIc7pkhMMMpHbrJ5j9omDpd37VNYPw6
+        P4GadT8OCq78Ccj8d21aWBy3MqP7/zWy1rmtAiU=
+X-Google-Smtp-Source: AGRyM1uGXKMzifPqVciCSrMVGHRbr2jpzgG9yh0Iv+6Kb9HTcbN2q1I6pLpkK2DQZ9lUiKr4GYdCHbP4mDHd4qceWO4=
+X-Received: by 2002:a81:1889:0:b0:317:987b:8e82 with SMTP id
+ 131-20020a811889000000b00317987b8e82mr4365298ywy.185.1656516196355; Wed, 29
+ Jun 2022 08:23:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <62b30818-92fa-e44c-c9dd-fd8cc49a6e6a@aksignal.cz>
+ <20220325145742.GA46960@sol> <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
+ <20220325160146.GA49114@sol> <1d43c967-e3c9-21a8-3040-2db54ba85bdf@aksignal.cz>
+ <20220328080841.GA14353@sol> <757ac53e-07bb-1ffa-2734-08c1c321ff0e@aksignal.cz>
+ <20220629072353.GA18684@sol> <a1cdd48d-0da9-b61a-3530-ef2e99539b74@aksignal.cz>
+ <CAHp75Vd2=XAD_qmsYp0AWoi2mryR-FFq5ipFqa4d7qB+bFkS0g@mail.gmail.com>
+ <20220629104757.GA29289@sol> <CAHp75Ve5zpwgc9kk06LYJU8GveXFdgbgyyxXoQm0dy_OiLTF2Q@mail.gmail.com>
+ <CAMRc=MeS6MhcN7+58F4Hh5R9ZZjAFxiJO594_iuSTFrDUUbKaA@mail.gmail.com>
+In-Reply-To: <CAMRc=MeS6MhcN7+58F4Hh5R9ZZjAFxiJO594_iuSTFrDUUbKaA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Jun 2022 17:22:38 +0200
+Message-ID: <CAHp75VcWcZb2Nu_d-3Ae6TGS2sr0qzjhPqF+YrUuRWm0-zu4og@mail.gmail.com>
+Subject: Re: [libgpiod] feature request: output state read and sustain
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The AXP192 has a battery charger similar to other X-Powers PMICs,
-but unlike the other supported devices, it does not have a fuel
-gauge and can't report battery capacity directly.
+On Wed, Jun 29, 2022 at 2:56 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Wed, Jun 29, 2022 at 12:58 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Wed, Jun 29, 2022 at 12:48 PM Kent Gibson <warthog618@gmail.com> wro=
+te:
+> > > On Wed, Jun 29, 2022 at 12:27:13PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Jun 29, 2022 at 11:27 AM Ji=C5=99=C3=AD Prchal <jiri.prchal=
+@aksignal.cz> wrote:
+> >
+> > ...
+> >
+> > > > Do not use shell. Use proper programming language that may give you=
+ an
+> > > > easier way of handling this, i.e. _context_. Shell tools are
+> > > > _context-less_ and here is the problem you are trying to solve, but
+> > > > from the wrong end.
+> > >
+> > > Actually my proposed gpioset for v2 will support running interactivel=
+y
+> > > so it can maintain context and be driven from shell - for cases where
+> > > basic scripting will suffice.
+> >
+> > Dunno if it's the right direction and if I missed any (additional) disc=
+ussion.
+> > As far as I remember the idea was to introduce DBus aware daemon that
+> > should handle the context of the line and at the same time consider sec=
+urity
+>
+> And it's still very much on the roadmap.
+>
+> > implications. Allowing shell to be context-aware is a hidden mine
+> > field. What will happen if the script/user forgets to move the line to
+> > the proper state and the chip will drain a lot of current? So, at
+> > least PM concerns just popped up immediately to my mind. What else can
+> > be problematic? So, I dunno, it's a good idea to allow shell to leave
+> > a line in some state when the user actually doesn't care about it
+> > anymore. At the bare minimum this mustn't be default behaviour.
+> >
+>
+> It's not much different from letting your current gpioset run in the
+> background, is it?
+>
+> Kent just submitted his first version of gpioset, you can take a look
+> at it and review it. :)
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
----
- drivers/power/supply/axp20x_battery.c | 49 +++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 3 deletions(-)
+So far from Kent's and yours explanations there is no evidence to
+raise an alarm.
 
-diff --git a/drivers/power/supply/axp20x_battery.c b/drivers/power/supply/axp20x_battery.c
-index 574c1d001556..1e84d26ce8e3 100644
---- a/drivers/power/supply/axp20x_battery.c
-+++ b/drivers/power/supply/axp20x_battery.c
-@@ -544,6 +544,19 @@ static int axp20x_battery_set_prop(struct power_supply *psy,
- 	}
- }
- 
-+static enum power_supply_property axp192_battery_props[] = {
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-+	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-+};
-+
- static enum power_supply_property axp20x_battery_props[] = {
- 	POWER_SUPPLY_PROP_PRESENT,
- 	POWER_SUPPLY_PROP_ONLINE,
-@@ -568,6 +581,16 @@ static int axp20x_battery_prop_writeable(struct power_supply *psy,
- 	       psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX;
- }
- 
-+static const struct power_supply_desc axp192_batt_ps_desc = {
-+	.name = "axp192-battery",
-+	.type = POWER_SUPPLY_TYPE_BATTERY,
-+	.properties = axp192_battery_props,
-+	.num_properties = ARRAY_SIZE(axp192_battery_props),
-+	.property_is_writeable = axp20x_battery_prop_writeable,
-+	.get_property = axp20x_battery_get_prop,
-+	.set_property = axp20x_battery_set_prop,
-+};
-+
- static const struct power_supply_desc axp20x_batt_ps_desc = {
- 	.name = "axp20x-battery",
- 	.type = POWER_SUPPLY_TYPE_BATTERY,
-@@ -578,6 +601,19 @@ static const struct power_supply_desc axp20x_batt_ps_desc = {
- 	.set_property = axp20x_battery_set_prop,
- };
- 
-+static const int axp192_ccc_table[AXP20X_CHRG_CTRL1_TGT_CURR+1] = {
-+	100000,  190000,  280000,  360000,
-+	450000,  550000,  630000,  700000,
-+	780000,  880000,  960000,  1000000,
-+	1080000, 1160000, 1240000, 1320000,
-+};
-+
-+static const struct axp_data axp192_data = {
-+	.ccc_table = axp192_ccc_table,
-+	.get_max_voltage = axp20x_battery_get_max_voltage,
-+	.set_max_voltage = axp20x_battery_set_max_voltage,
-+};
-+
- static const struct axp_data axp209_data = {
- 	.ccc_scale = 100000,
- 	.ccc_offset = 300000,
-@@ -606,6 +642,9 @@ static const struct axp_data axp813_data = {
- 
- static const struct of_device_id axp20x_battery_ps_id[] = {
- 	{
-+		.compatible = "x-powers,axp192-battery-power-supply",
-+		.data = (void *)&axp192_data,
-+	}, {
- 		.compatible = "x-powers,axp209-battery-power-supply",
- 		.data = (void *)&axp209_data,
- 	}, {
-@@ -623,6 +662,7 @@ static int axp20x_power_probe(struct platform_device *pdev)
- 	struct axp20x_batt_ps *axp20x_batt;
- 	struct power_supply_config psy_cfg = {};
- 	struct power_supply_battery_info *info;
-+	const struct power_supply_desc *ps_desc;
- 	struct device *dev = &pdev->dev;
- 
- 	if (!of_device_is_available(pdev->dev.of_node))
-@@ -666,9 +706,12 @@ static int axp20x_power_probe(struct platform_device *pdev)
- 
- 	axp20x_batt->data = (struct axp_data *)of_device_get_match_data(dev);
- 
--	axp20x_batt->batt = devm_power_supply_register(&pdev->dev,
--						       &axp20x_batt_ps_desc,
--						       &psy_cfg);
-+	if (!axp20x_batt->data->has_fg)
-+		ps_desc = &axp192_batt_ps_desc;
-+	else
-+		ps_desc = &axp20x_batt_ps_desc;
-+
-+	axp20x_batt->batt = devm_power_supply_register(&pdev->dev, ps_desc, &psy_cfg);
- 	if (IS_ERR(axp20x_batt->batt)) {
- 		dev_err(&pdev->dev, "failed to register power supply: %ld\n",
- 			PTR_ERR(axp20x_batt->batt));
--- 
-2.35.1
 
+--=20
+With Best Regards,
+Andy Shevchenko
