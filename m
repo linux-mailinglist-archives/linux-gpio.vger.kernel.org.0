@@ -2,133 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 509DD55F89E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 09:20:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40C9155F8C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 09:23:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231555AbiF2HTK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 03:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
+        id S231878AbiF2HWn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 03:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229972AbiF2HRx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 03:17:53 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCF3340E0
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 00:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656487072; x=1688023072;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/yTrH9JNZlbgrrIY6ZDQ7ToqQMC2QWVxQniCd8aIECY=;
-  b=cZ2FmQTaFQSJQ8XF7eVGRU5yrhhtymaiB/IrYgQoS5YmVHBfFhVm5t8j
-   +x3Ijr+6jD8CQYZytZYYTWao+OoA5ajYWKqp7+1qGscv/20dInmj4JgNu
-   xazfhN/ZUqmfu+sbyEGqMvYk2oueRiETPMe18nhbnokobzzGn0cVQPdN3
-   rcbKkN1g1XAoU45iGO+nDepbs3+X8/NAh3qNl9pqN9HB4AL5QWhX1Lbpl
-   hOu94cS+gLmIzwc/lQui8BNGJ9Yz/AgagIq6TcatBWoCBRLE4QWe3ZhIe
-   81YZiE/BpFdOwSGKSvOdCeYpw44s34Mb1IO1yL8sZl/5lSTC8Klizzs1h
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="270712066"
-X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
-   d="scan'208";a="270712066"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 00:17:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
-   d="scan'208";a="917490731"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Jun 2022 00:17:50 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o6RxN-000AyX-SR;
-        Wed, 29 Jun 2022 07:17:49 +0000
-Date:   Wed, 29 Jun 2022 15:17:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- c3f464542b7099692827f0094c00aa9a26a2acbc
-Message-ID: <62bbfc88.gynOaKPeijs7oqc6%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231135AbiF2HWm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 03:22:42 -0400
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79E533EA1
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 00:22:41 -0700 (PDT)
+Received: by mail-oi1-x22e.google.com with SMTP id be10so20488810oib.7
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 00:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
+         :subject:to;
+        bh=TvfrSXu4f0TU8sJk8nHVngOGB75STSEGTvK6rVGCRBo=;
+        b=KSYNVPp/M+aBIfHacFqj11Sm5k23Er/fz5hD79lvLg2qAdMiNwn7Ieu7YNV90mA70F
+         daalhEZkwB6Apo4Ai71cvL4evznxFuW7QZ/jnNWgrXANheLoBxRLyN5sSUQiVHgCv9HR
+         97v9IV3l+QYGVehGdIPIXHssVTk8Z6wn9878g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from
+         :user-agent:date:message-id:subject:to;
+        bh=TvfrSXu4f0TU8sJk8nHVngOGB75STSEGTvK6rVGCRBo=;
+        b=6vbWp2W8LlY8lDDVUxH7qt1cliOzwTNgpq4y67d5bpPJSRSkxN2Z4s5Rr3OwtiAQoZ
+         2KcrBYKNmqwkXV8sxu+ydHNEnt60Xuc2t2hGdzgyOrzCgVvtrZiA+hVMGW/pbBBoAUN2
+         EbWozIf0qOP4CNVBwYVNchITKDAGMudntnXA4bsvn/Hen77ouRAVw+4gx0TNp/cQJ0lu
+         61cbgJ43StNvGjRf+EOjIvo42NLIDBpn1KPAAFtSCsd5+GyuEL9KdmAPZOvUYxkgaPPa
+         iA9TIzJC8X0jcDDKne2cayLJMDxO/LXJGp1Hsni/GWcVKq09LdOCNE0/Bkc5NTWrgdmQ
+         nWZg==
+X-Gm-Message-State: AJIora/DohHNz9JI5GzZdz7Z+jLJUK5iLpxT0Stwbvt//93XVc4g7Tqh
+        m0Szn9LNKAHqWLZ6o95GUY+N+gQ5MUZFnHDSXYIQzw==
+X-Google-Smtp-Source: AGRyM1v4WSDbVO+K2+4kAKFrYZQtpAn74YXqFxA1mnEY/IT8bcyyhmbIZcF9WfGx+sYO6Yz4yLIx2Fc2KzL9daEEeyw=
+X-Received: by 2002:a05:6808:171c:b0:334:9342:63ef with SMTP id
+ bc28-20020a056808171c00b00334934263efmr1192888oib.63.1656487360982; Wed, 29
+ Jun 2022 00:22:40 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 29 Jun 2022 02:22:40 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1656484485-23350-1-git-send-email-quic_srivasam@quicinc.com>
+References: <1656484485-23350-1-git-send-email-quic_srivasam@quicinc.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date:   Wed, 29 Jun 2022 02:22:40 -0500
+Message-ID: <CAE-0n50XpUfe9LQ0UByRXeWVcHjzXTmSb+Lf5m87pJmhjA0wVg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: sc7280: Fix compile bug
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
+        agross@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@quicinc.com, bjorn.andersson@linaro.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        judyhsiao@chromium.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, perex@perex.cz,
+        quic_plai@quicinc.com, quic_rohkumar@quicinc.com,
+        robh+dt@kernel.org, srinivas.kandagatla@linaro.org, tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: c3f464542b7099692827f0094c00aa9a26a2acbc  dt-bindings: pinctrl: mt8192: Add RSEL values to bias-pull-{up,down}
+Quoting Srinivasa Rao Mandadapu (2022-06-28 23:34:45)
+> Fix the compilation error, caused by updtating constant variable.
 
-elapsed time: 990m
+s/updtating/updating/
 
-configs tested: 52
-configs skipped: 2
+> Hence remove redundant constant variable, which is no more useful
+> as per new design.
+>
+> The issue is due to some unstaged changes. Fix it up.
+>
+> Fixes: 36fe26843d6d ("pinctrl: qcom: sc7280: Add clock optional check for ADSP bypass targets")
+>
+> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+> ---
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                            allyesconfig
-arm                              allyesconfig
-arm                                 defconfig
-ia64                             allmodconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-alpha                            allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-m68k                             allyesconfig
-i386                                defconfig
-i386                             allyesconfig
-x86_64               randconfig-a012-20220627
-x86_64               randconfig-a011-20220627
-x86_64               randconfig-a013-20220627
-x86_64               randconfig-a014-20220627
-x86_64               randconfig-a015-20220627
-x86_64               randconfig-a016-20220627
-i386                 randconfig-a012-20220627
-i386                 randconfig-a015-20220627
-i386                 randconfig-a011-20220627
-i386                 randconfig-a016-20220627
-i386                 randconfig-a013-20220627
-i386                 randconfig-a014-20220627
-s390                 randconfig-r044-20220627
-riscv                randconfig-r042-20220627
-arc                  randconfig-r043-20220627
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                         rhel-8.3-kunit
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-
-clang tested configs:
-x86_64               randconfig-a002-20220627
-x86_64               randconfig-a003-20220627
-x86_64               randconfig-a001-20220627
-x86_64               randconfig-a005-20220627
-x86_64               randconfig-a004-20220627
-x86_64               randconfig-a006-20220627
-i386                 randconfig-a002-20220627
-i386                 randconfig-a004-20220627
-i386                 randconfig-a003-20220627
-i386                 randconfig-a001-20220627
-i386                 randconfig-a006-20220627
-i386                 randconfig-a005-20220627
-hexagon              randconfig-r041-20220627
-hexagon              randconfig-r045-20220627
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
