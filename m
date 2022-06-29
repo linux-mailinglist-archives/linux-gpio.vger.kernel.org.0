@@ -2,84 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 099E155FEAB
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:31:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3AFE55FEBF
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232814AbiF2LbI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 07:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
+        id S232733AbiF2LhO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 07:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233193AbiF2La7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:30:59 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F123A3EF2F;
-        Wed, 29 Jun 2022 04:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656502254; x=1688038254;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SttLpnekTpHLqf0jeO2Z9mBo/959BLBoXWIJOeVu4ec=;
-  b=D0qT0yFyAwG8IprbcW6zvA/t5AQUSjB6D8VjtLddz36Gz2Bt433RvhfN
-   iQMOC5cmOhoEnErmshiZsmDXJ7Lo1nwlbpXnAzZD+H7caYzKbVcWM7VlA
-   5a/S2XsDRBpxNemG2ZBg9pNj5bU8bOcEm1dTdhKFqP5HCg6ZWbiU7QKAs
-   EncVAW+YAEo4tQ5p0ONAq/2/9xyGAUCv3moZW4GTvi8zA3xlgZ3IqTql5
-   Xokacc6eGgFVbwyCWcL72X9DpVOpAaM/n/kDXQtRAKSnQVtrAXLbCF3YT
-   ksbvVknOsaBaA6Z8BYXEPOiw82DfzrN1ZYWOc85HhMmjXWS/rUJXb3iFi
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="261807987"
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="261807987"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 04:30:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="595204434"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Jun 2022 04:30:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 482BAF1; Wed, 29 Jun 2022 14:30:59 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        with ESMTP id S232638AbiF2LhO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:37:14 -0400
+Received: from mx.kernkonzept.com (serv1.kernkonzept.com [IPv6:2a01:4f8:1c1c:b490::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5AAB7F1;
+        Wed, 29 Jun 2022 04:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kernkonzept.com; s=mx1; h=In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=SSCPB9pAS9pvDKAWwMFfH89gInRxYovar8rDhCnxRHg=; b=DX5Xm9MwAXtkIm20QZxbhCZkSJ
+        IIKRCau45yfAPH1ZJGPk1+Dk1urm0m+5hLkSKdkSYlyXWO5FJngUZmtLakMiWFHBqJrXEF1qNOnK4
+        IBSZpGLenQOCyutD5NmZh+MNrVoSX29vmmm2CAEWG4b9CsXK5BpoZ14IQNk3DOexageyJQxI+QGKK
+        60RE4C74Q+BclH0TA+aMA+7+7EmiqAgvMLY0aIAoC6TFYqmyIeodohMe7XQwjzr7dI0L5EEFyNxJC
+        RotL/aEskwlj/weqLDo8dQpL6OLCHm3HpMyYbmfdRsUpWZYX1Mhd3KUc8moiYIImkpLCY67lkPKAi
+        NqZSS0pQ==;
+Received: from [10.22.3.24] (helo=kernkonzept.com)
+        by mx.kernkonzept.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim 4.94.2)
+        id 1o6W0I-006Sbe-5S; Wed, 29 Jun 2022 13:37:06 +0200
+Date:   Wed, 29 Jun 2022 13:37:00 +0200
+From:   Stephan Gerhold <stephan.gerhold@kernkonzept.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpiolib: of: Use device_match_of_node() helper
-Date:   Wed, 29 Jun 2022 14:30:58 +0300
-Message-Id: <20220629113058.79617-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT schema for
+ qcom,msm8909-tlmm
+Message-ID: <Yrw5UnFXKCZvAr2d@kernkonzept.com>
+References: <20220628145502.4158234-1-stephan.gerhold@kernkonzept.com>
+ <20220628145502.4158234-2-stephan.gerhold@kernkonzept.com>
+ <91d972d2-689c-d357-869f-fbd826173e33@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91d972d2-689c-d357-869f-fbd826173e33@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Instead of open coding, use device_match_of_node() helper.
+On Wed, Jun 29, 2022 at 11:38:01AM +0200, Krzysztof Kozlowski wrote:
+> On 28/06/2022 16:55, Stephan Gerhold wrote:
+> > Document the "qcom,msm8909-tlmm" compatible for the TLMM/pin control
+> > block in the MSM8909 SoC, together with the allowed GPIOs and functions.
+> > 
+> > Signed-off-by: Stephan Gerhold <stephan.gerhold@kernkonzept.com>
+> > ---
+> >  .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   | 152 ++++++++++++++++++
+> >  1 file changed, 152 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> > new file mode 100644
+> > index 000000000000..e03530091478
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> > @@ -0,0 +1,152 @@
+> > [...]
+> > +patternProperties:
+> > +  '-state$':
+> > +    oneOf:
+> > +      - $ref: "#/$defs/qcom-msm8909-tlmm-state"
+> 
+> No quotes here and other places, should be needed. I know you copied
+> from other bindings, but at least let's try new files to be proper.
+> 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The quotes are necessary, since # starts a comment in YAML and the
+property would be effectively empty. :)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 3d6c3ffd5576..23b8de98bf7c 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -720,7 +720,7 @@ static void of_gpiochip_remove_hog(struct gpio_chip *chip,
- 
- static int of_gpiochip_match_node(struct gpio_chip *chip, void *data)
- {
--	return chip->gpiodev->dev.of_node == data;
-+	return device_match_of_node(&chip->gpiodev->dev, data);
- }
- 
- static struct gpio_chip *of_find_gpiochip_by_node(struct device_node *np)
--- 
-2.35.1
+I tried it anyway but "dt_binding_check" complains as suspected:
+qcom,msm8909-tlmm.yaml: patternProperties:-state$:oneOf:0:$ref: None is not of type 'string'
 
+Thanks,
+Stephan
