@@ -2,185 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AA8155F326
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 04:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 483E055F34A
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 04:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbiF2CJo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 22:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58522 "EHLO
+        id S230437AbiF2COy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 22:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230359AbiF2CJn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 22:09:43 -0400
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C438B27B1D;
-        Tue, 28 Jun 2022 19:09:42 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id l24so14627708ion.13;
-        Tue, 28 Jun 2022 19:09:42 -0700 (PDT)
+        with ESMTP id S230387AbiF2COx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 22:14:53 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CECEF5BB
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 19:14:52 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id dw10-20020a17090b094a00b001ed00a16eb4so14581016pjb.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 19:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PJBuTsmBDGPfQGeKAv84qtCGlgJlmTxO55RxEnHOrgo=;
+        b=F9kOQiSDnm4bnNY3PJWfDyXk/4cPTQPN0K7ykTB5JnQp85naNOp4dG5ZBJoKjwIxRw
+         aA7XAyXuMFF9nR7GEz08xG2BUnuDDHJQMYCekNtf9Cmuin+ueCR2F2SwZS7fq6kyMhBe
+         /NuLt+wP8fQpJx49Jdm9b7XVPQXWQTjkrI/ESI7HC5iC5o6KxTPVyKnTnjJRnrUmgVVA
+         jKHJ3f4mY8qo+X9sGBB21kFZBlTbJwEoj/pX7qATGZkhCmq426DAHBrQ0ToX1FNZvvxk
+         MXaQ7eXU0CFNrJdYucPtB+5uEMWNgiZaLlsJ9jAWcBtxdmyxZa0/dPChcqY2n0ibgpiJ
+         UzTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=3ww8IIJdv7f/OVWj83PtK7d2cH+9S36RhpLx7LDKL0k=;
-        b=rtAJnYongbcAVFY7m7g+oZvYQUCvd22g3O+oN+dfmDxarTCbSiUA96W42P5LCVQoX+
-         qNeKMxvDsxKBY3uB9yr31xl61+U2i765YVXGofAtxk5lb1XoHGlhXcjPbQTldLf4Gqd9
-         QkA8OWpd5way5fLXjhlTeeHF5cVwJ3tBfIY/OStMy8/iyUAcl519o0HLFIgLhnph+awI
-         OLA4vkxma+kHEV+phFfFHCxIyn1m2dAlH2dRJ+OtGwS7AUpvHKmQfoHnpv7Cb3JlU5Dc
-         86IEX1Tj5C5XNHC2BjYlfSxV5Hkn1nB99gOQCPBAJdMQ/gZZeQO1kt2IAwuNZ/hsXaYT
-         2gTQ==
-X-Gm-Message-State: AJIora/DimjXwk2kwxejUO0d/mwll84SF/7TC2x5mFFuNvAZ2O3q56bf
-        QLdvV3XCU+eFgNxyybTsiHRWVKwWnA==
-X-Google-Smtp-Source: AGRyM1uM6/M+XyyVT1BybyL1G5laT7fSjqJ92A94OIl6gk5IP9M1r72nNINaMr9MSibjz24mPvGRyQ==
-X-Received: by 2002:a05:6638:2494:b0:33c:cfb8:1e3c with SMTP id x20-20020a056638249400b0033ccfb81e3cmr299603jat.139.1656468581975;
-        Tue, 28 Jun 2022 19:09:41 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id u16-20020a6b4910000000b00669384fcf88sm7377409iob.1.2022.06.28.19.09.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PJBuTsmBDGPfQGeKAv84qtCGlgJlmTxO55RxEnHOrgo=;
+        b=gVVa0hIBx6RSmLWvXK8kjmAJfFWT13kAfF25hOG7UzDJOCClnm5+2BEeD3ZavqSYCU
+         Ks3wQKVIb3LkLPoPFbGzDzuPBvxDXzZ73NhHCxlVZUFDjOVrEzGZSj4CxPmkIDzz5In2
+         Bn6qnLYW+LoGIXFYucaXcLhu4XuGbw+uRukOIdmE1FiVz3Fm8GBjMOYb24T7Hzdm7P4u
+         EfEIeMDNPgHclAHFNAqd+sAPgOJAqy4GuF+/N3tExnwRbEvOcRHFdBzbd00dEitKgaYD
+         QpSBMNaxs7j/Ymxf8VYhiizwWTE1X7k99AwB4pWjplaT6dlRHzBMu5etWhkhDwinbpSG
+         EDmw==
+X-Gm-Message-State: AJIora954J0g0UMfGW+2JI+GZQ0laKUW2BjvS1IFBLFvwVXtv5m6ghs3
+        S740OpgXGWroyPh2tzibng4=
+X-Google-Smtp-Source: AGRyM1t9rHd7m9tWDLCgkHgbElSee2MKaRT9DYGwpIH5XdD52bOU/jt0l27JqUbcs+slGLpQfku50Q==
+X-Received: by 2002:a17:90b:3e89:b0:1ee:195e:abaf with SMTP id rj9-20020a17090b3e8900b001ee195eabafmr3138090pjb.112.1656468891825;
+        Tue, 28 Jun 2022 19:14:51 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id t4-20020a635f04000000b0040cc830b0cfsm10053220pgb.39.2022.06.28.19.14.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jun 2022 19:09:41 -0700 (PDT)
-Received: (nullmailer pid 1403669 invoked by uid 1000);
-        Wed, 29 Jun 2022 02:09:39 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-In-Reply-To: <20220628144649.3957286-2-cosmin.tanislav@analog.com>
-References: <20220628144649.3957286-1-cosmin.tanislav@analog.com> <20220628144649.3957286-2-cosmin.tanislav@analog.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: iio: adc: add AD4130
-Date:   Tue, 28 Jun 2022 20:09:39 -0600
-Message-Id: <1656468579.876540.1403668.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        Tue, 28 Jun 2022 19:14:50 -0700 (PDT)
+Date:   Wed, 29 Jun 2022 10:14:46 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Yegor Yefremov <yegorslists@googlemail.com>
+Cc:     Linux GPIO List <linux-gpio@vger.kernel.org>, brgl@bgdev.pl,
+        andy.shevchenko@gmail.com
+Subject: Re: Reading current output value
+Message-ID: <20220629021446.GB8799@sol>
+References: <CAGm1_kvsAir70H41RJ5vzAGeBLBAFByHyR3fWfFeq3RW5O7cBA@mail.gmail.com>
+ <20220622102632.GA37027@sol>
+ <CAGm1_kvf1RC7fHBy65PkRcS=a5eUgpVYyHM+6NmOvWv6YusTEA@mail.gmail.com>
+ <20220628045253.GA18105@sol>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220628045253.GA18105@sol>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 28 Jun 2022 17:46:48 +0300, Cosmin Tanislav wrote:
-> AD4130-8 is an ultra-low power, high precision, measurement solution for
-> low bandwidth battery operated applications.
+On Tue, Jun 28, 2022 at 12:52:53PM +0800, Kent Gibson wrote:
+> On Mon, Jun 27, 2022 at 12:37:46PM +0200, Yegor Yefremov wrote:
+> > Hi Kent,
+> > 
+> > On Wed, Jun 22, 2022 at 12:26 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> > > On Wed, Jun 22, 2022 at 09:54:41AM +0200, Yegor Yefremov wrote:
+> > > > On a am335x based board I have a GPIO pin that enables/disables power
+> > > > of an external device (the bootloader sets this pin to output and 1,
+> > > > and the kernel is instructed to not change it). Using kernel
+> > > > 5.19.0-rc2 and sysfs interface, I can read the current status as
+> > > > follows:
+> > > >
+> > > > echo 68 > /sys/class/gpio/export
+> > > > cat /sys/class/gpio/gpio68/value
+> > > >
+> > > > As a result, I read 1.
+> > > >
+> > > > Using gpioget (libgpiod) v1.6.3, the line will be configured to
+> > > > "input" and the value is set to 0:
+> > > >
+> > > > # gpioget 2 4
+> > > > 0
+> > > >
+> > > > So, how can I read the state without changing it? I am mostly
+> > > > interested in using the kernel userspace API directly.
+> > > >
+> > >
+> > > The API itself supports it, but it isn't exposed in gpioget v1.6.3.
+> > > The gpioget in libgpiod master has a --dir-as-is option for exactly
+> > > this case, but that hasn't made its way into a libgpiod release yet.
+> > > (commit 3a912fbc1e2 tools: gpioget: add new --dir-as-is option for GPO read-back)
+> > > Can you try master?
+> > 
+> > # gpioget -v
+> > gpioget (libgpiod) v2.0-devel
+> > Copyright (C) 2017-2018 Bartosz Golaszewski
+> > License: LGPLv2.1
+> > This is free software: you are free to change and redistribute it.
+> > There is NO WARRANTY, to the extent permitted by law.
+> > 
+> > Now, I get my "1", but as soon as gpioget exits, the pin goes at "0".
+> > 
 > 
-> The fully integrated AFE (Analog Front-End) includes a multiplexer for up
-> to 16 single-ended or 8 differential inputs, PGA (Programmable Gain
-> Amplifier), 24-bit Sigma-Delta ADC, on-chip reference and oscillator,
-> selectable filter options, smart sequencer, sensor biasing and excitation
-> options, diagnostics, and a FIFO buffer.
-> 
-> Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
-> ---
->  .../bindings/iio/adc/adi,ad4130.yaml          | 256 ++++++++++++++++++
->  1 file changed, 256 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
+> Is that line the only line used (i.e. exported) on that chip?
+> If that is the case, can you request another unused line first (e.g.
+> using gpiomon in the background, or, and only since you've already
+> mentioned sysfs, exporting using sysfs), then try the gpioget?
 > 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Just to expand on that a little, when the GPIO subsystem is finished
+with a chip, so it no longer has any lines requested, it calls free on
+the device driver.  What happens then depends on the device driver.
+In this case the device driver (I'm assuming gpio-omap.c is the driver
+for your am335x) reverts all the GPIO lines to inputs.
 
-yamllint warnings/errors:
+Any libgpiod tool will request the chip and then on exit, as no lines are
+requested, the chip will be freed - resulting in what you are seeing.
+Btw, the same would occur in you exported and unexported a line via sysfs.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml: patternProperties:^channel@([0-9a-f])$:properties:adi,excitation-current-1-nanoamp: 'oneOf' conditional failed, one must be fixed:
-	'type' is a required property
-		hint: A vendor boolean property can use "type: boolean"
-	Additional properties are not allowed ('default', 'enum' were unexpected)
-		hint: A vendor boolean property can use "type: boolean"
-	Additional properties are not allowed ('default' was unexpected)
-		hint: A vendor string property with exact values has an implicit type
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml: patternProperties:^channel@([0-9a-f])$:properties:adi,excitation-current-1-nanoamp: 'oneOf' conditional failed, one must be fixed:
-		'$ref' is a required property
-		'allOf' is a required property
-		hint: A vendor property needs a $ref to types.yaml
-		from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-	0 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	100 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	10000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	20000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	50000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	100000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	150000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	200000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	hint: Vendor specific properties must have a type and description unless they have a defined, common suffix.
-	from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml: patternProperties:^channel@([0-9a-f])$:properties:adi,burnout-current-nanoamp: 'oneOf' conditional failed, one must be fixed:
-	'type' is a required property
-		hint: A vendor boolean property can use "type: boolean"
-	Additional properties are not allowed ('default', 'enum' were unexpected)
-		hint: A vendor boolean property can use "type: boolean"
-	Additional properties are not allowed ('default' was unexpected)
-		hint: A vendor string property with exact values has an implicit type
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml: patternProperties:^channel@([0-9a-f])$:properties:adi,burnout-current-nanoamp: 'oneOf' conditional failed, one must be fixed:
-		'$ref' is a required property
-		'allOf' is a required property
-		hint: A vendor property needs a $ref to types.yaml
-		from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-	0 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	500 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	2000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	4000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	hint: Vendor specific properties must have a type and description unless they have a defined, common suffix.
-	from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml: patternProperties:^channel@([0-9a-f])$:properties:adi,excitation-current-0-nanoamp: 'oneOf' conditional failed, one must be fixed:
-	'type' is a required property
-		hint: A vendor boolean property can use "type: boolean"
-	Additional properties are not allowed ('default', 'enum' were unexpected)
-		hint: A vendor boolean property can use "type: boolean"
-	Additional properties are not allowed ('default' was unexpected)
-		hint: A vendor string property with exact values has an implicit type
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml: patternProperties:^channel@([0-9a-f])$:properties:adi,excitation-current-0-nanoamp: 'oneOf' conditional failed, one must be fixed:
-		'$ref' is a required property
-		'allOf' is a required property
-		hint: A vendor property needs a $ref to types.yaml
-		from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-	0 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	100 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	10000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	20000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	50000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	100000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	150000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	200000 is not of type 'string'
-		hint: A vendor string property with exact values has an implicit type
-	hint: Vendor specific properties must have a type and description unless they have a defined, common suffix.
-	from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml: ignoring, error in schema: patternProperties: ^channel@([0-9a-f])$: properties: adi,excitation-current-1-nanoamp
-Documentation/devicetree/bindings/iio/adc/adi,ad4130.example.dtb:0:0: /example-0/spi/adc@0: failed to match any schema with compatible: ['adi,ad4130']
+Hence the suggestion to request/export a line to prevent the chip being
+freed.  Or to switch to an approach where you hold the line and don't
+release it.
 
-doc reference errors (make refcheckdocs):
+Neither libgpiod nor the kernel gpio subsystem are explicitly requesting
+a change to the line - it is an unfortunate quirk of the GPIO chip
+driver interface.
 
-See https://patchwork.ozlabs.org/patch/
+I hope that helps.
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Cheers,
+Kent.
