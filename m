@@ -2,66 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7566C55FBDA
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 11:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03BFD55FBDE
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 11:26:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232786AbiF2JZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 05:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38214 "EHLO
+        id S230209AbiF2J0I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 05:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232622AbiF2JZU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 05:25:20 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4013638196
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:25:19 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id b26so9083855wrc.2
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wZXMB4ou39aHJBfpOtAkz0VGE1mJbTQ50FrN9wH0yuw=;
-        b=TMiM9GduV4kUsax+oP0BqCL+axbrfKZVtU/FwwA4stjYv3ZrsjQSN+cVLrrcMnJx17
-         rbNwEgzD0bMfjEKucqpL9OpkqF/msT9mEhRRzP1cWLhz1hLtKAvLKHHB1qQfJYIU18uH
-         e1L+2kQcABLJbGK5Mba9oD/EUcEDqosHWT/LDwgX45h+nuCcoar3qRIXKoxSMmkKKMb4
-         5GftnCHUe8DIV3miZrN0COF26J4L9PbpyD4Lrn6vWS5fraYPHofzK6Oa1tlqkOqz3N9B
-         uHqjcaB24E48cwyIG98lNaBw1VkFUOO5TwM1JxT8dKM5FM9E5iI/QuhvQgerGRuMXnsw
-         5Vaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wZXMB4ou39aHJBfpOtAkz0VGE1mJbTQ50FrN9wH0yuw=;
-        b=a/+ceqjX4FWMxpPeqP/FD9F/dPHYWrqeeupBv3ryzpRRIifLmLhG/HadSFBp9cJV0A
-         Yt3OvKWg1Sig9ea2yDD5wHm2ekUlPaCkTLdTyskBIHj5SNaTK2x7gwFS/ri4yMY8YVED
-         YnWdUgjSkNTdGP3QP1dKU+BUKs+Q0ygQVT8thLhnSN4Mo38vKDO0ofXphekPdISPqnBN
-         3chcccYtiI8NVXUKg4N8WGd4cMhE5FjttiLZ02IkldT1b+retHDFdsWcEAmjqxiGhiZE
-         LKGFbWI0AHxcO6T85jUInn4qjGs8VC83xllX2gA4AagGkFYX/6cwzQDy3239+h+JHIf8
-         PKBQ==
-X-Gm-Message-State: AJIora9PUtBTHWeAqrBDlF3zUv7fAvUH0lH81a6vYhBN5/BhW4WIXtEQ
-        HBrUoPYnLT+EKsjmD45gqO+AMw==
-X-Google-Smtp-Source: AGRyM1ta/+OXi4dIyS810zecgvgLP1IesobNM4wDE151WICwk06mXdyYUrZxu03MluDXlQFfX9TsvA==
-X-Received: by 2002:a05:6000:1ac7:b0:21d:134e:5d74 with SMTP id i7-20020a0560001ac700b0021d134e5d74mr2221078wry.78.1656494717822;
-        Wed, 29 Jun 2022 02:25:17 -0700 (PDT)
-Received: from srini-hackbase.lan (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
-        by smtp.gmail.com with ESMTPSA id g3-20020a05600c140300b0039c96b97359sm2446261wmi.37.2022.06.29.02.25.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 02:25:17 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     bjorn.andersson@linaro.org, linus.walleij@linaro.org
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] MAINTAINERS: pinctrl: update qcom file list to include yaml files
-Date:   Wed, 29 Jun 2022 10:25:14 +0100
-Message-Id: <20220629092514.70752-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S231659AbiF2J0H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 05:26:07 -0400
+Received: from router.aksignal.cz (router.aksignal.cz [62.44.4.214])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762ED38DA7
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:26:01 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by router.aksignal.cz (Postfix) with ESMTP id 916064E013;
+        Wed, 29 Jun 2022 11:25:58 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at router.aksignal.cz
+Received: from router.aksignal.cz ([127.0.0.1])
+        by localhost (router.aksignal.cz [127.0.0.1]) (amavisd-new, port 10026)
+        with LMTP id Vuk3Je1AEk58; Wed, 29 Jun 2022 11:25:58 +0200 (CEST)
+Received: from [172.28.0.3] (unknown [193.150.13.224])
+        (Authenticated sender: jiri.prchal@aksignal.cz)
+        by router.aksignal.cz (Postfix) with ESMTPSA id C7A754E012;
+        Wed, 29 Jun 2022 11:25:57 +0200 (CEST)
+Message-ID: <a1cdd48d-0da9-b61a-3530-ef2e99539b74@aksignal.cz>
+Date:   Wed, 29 Jun 2022 11:25:57 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [libgpiod] feature request: output state read and sustain
+Content-Language: cs
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+References: <62b30818-92fa-e44c-c9dd-fd8cc49a6e6a@aksignal.cz>
+ <20220325145742.GA46960@sol>
+ <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
+ <20220325160146.GA49114@sol>
+ <1d43c967-e3c9-21a8-3040-2db54ba85bdf@aksignal.cz>
+ <20220328080841.GA14353@sol>
+ <757ac53e-07bb-1ffa-2734-08c1c321ff0e@aksignal.cz>
+ <20220629072353.GA18684@sol>
+From:   =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
+In-Reply-To: <20220629072353.GA18684@sol>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,26 +55,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently Qualcomm pinctrl MAINTAINERS file list does not include yaml
-files. Include this for correctness.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c4648e86dc14..71e7725aa574 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15765,6 +15765,7 @@ M:	Bjorn Andersson <bjorn.andersson@linaro.org>
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pinctrl/qcom,*.txt
-+F:	Documentation/devicetree/bindings/pinctrl/qcom,*.yaml
- F:	drivers/pinctrl/qcom/
- 
- PIN CONTROLLER - RENESAS
--- 
-2.25.1
+On 29. 06. 22 9:23, Kent Gibson wrote:
+> On Tue, Jun 28, 2022 at 03:08:20PM +0200, Jiří Prchal wrote:
+>> Hi,
+>> using new libgpiod / chardev driver, is there any way to get state of
+>> output? I mean one process sets it for example to 1 and another process
+>> reads this output state for example to show that on web page.
+>> I have to say that old sysfs interface was more user friendly...
+>>
+> 
+> "new" being anything since Linux 4.8 ;-)?
+> And strictly speaking it isn't a driver - libgpiod and the GPIO subsystem
+> provide an interface to the chip driver.  More on that later.
+> 
+> Only the process holding the line has access to the current value.
+> If you need that value elsewhere then it has to be published by that
+> process - it is not available through the GPIO API itself.
+> There is nothing preventing that process publishing the value
+> in whatever way is appropriate to your application.
+> e.g. write it to a file that can be read by your webapp, just as it
+> would from sysfs.
+> 
+> Less restrictive access models are frequently "more user friendly", but
+> have other issues. e.g. some misbehaving process just reset your
+> modem for you.
+> 
+> And sysfs has other great features like being slow and being complete
+> rubbish for events on input lines.
+> 
+>> And at second: it would be better to NOT "the state of a GPIO line
+>> controlled over the character device reverts to default when the last
+>> process referencing the file descriptor representing the device file exits."
+>> "Set and forget" behavior is more natural to what some gpios are used. For
+>> example resetting external modems, need set 1 for short time, then to 0 and
+>> leave it for long long time until next reset is needed. It's non sense to
+>> keep running some process only to keep output at 0.
+> 
+> Agreed, that might be more natural, but that behaviour is not by choice,
+> it is a consequence of the kernel internals.  In short, if the GPIO
+> subsystem does not hold the chip then the driver is free to do what it
+> likes to it.
+> So when you release a line all bets are off.
+> It may stay where you left it, but it may not - it may even switch to an
+> input - it depends on the driver.
+Does it mean that without changing this particular line it could be changed? For example by setting another line in chip?
 
+> If it works for you that's great, but without major kernel changes
+> libgpiod has no better option than to provide the caveat as the "set and
+> forget" behaviour is something that it cannot guarantee.
+Than is only way to write my own user space driver simulating sysfs? Or what is the right way of this scenario:
+start proces -> gpioset =1 -> sleep -> gpioset =0 -> do other things
+when the proces dies systemd will start it again
+
+and another scenario:
+proces checks time, if is the right time -> gpioset =1
+other proces reads output and print out on web
+
+Jiri
+
+> 
+> Cheers,
+> Kent.
+> 
