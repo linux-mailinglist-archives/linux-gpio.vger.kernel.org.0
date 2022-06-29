@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEC2155FE60
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:20:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A86F455FE72
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:25:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229952AbiF2LUa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 07:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
+        id S229609AbiF2LZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 07:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbiF2LU3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:20:29 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D9021251
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 04:20:28 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id jh14so13829974plb.1
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 04:20:28 -0700 (PDT)
+        with ESMTP id S230416AbiF2LZZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:25:25 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4B8B36328
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 04:25:24 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id n16-20020a17090ade9000b001ed15b37424so15710292pjv.3
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 04:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XzQzuAzZBLpdi47JcJVArViKzFiEZuK1mi5ZJHtcsD8=;
-        b=GFhLZdbi7+bT0SQ4H88232LOs0FwdYNqbE0Z6v666Iuu9rZKCBCagKi1P/c1nMsKWb
-         Su81ggQP5bl87wMkuB6ZR0j505sBB2nAo1hyuVrDqL+picOk83dxbVv14nGIiIE/Zm4x
-         tdP1Y9TxeBL6HtimJCSQDmkb2TMCBrjHRfrZorEkl7Iy8leMQTVTUcUivkNmmuCBrecx
-         vvtu7s0weOI0AtYCR2m/guFXw16cfEK2Q2oILOI1ER6vXWv1O94/2+D641kpKmwMYBVT
-         MrgxMuBGMIRzyZ5vUL8/ftuNHINBrOvPo2PKD/ZpF1vigjKp7a3WcmalmcHDPJC/zM9j
-         ioqA==
+        bh=gVY6u58EznpOpzvOx/UArCDuJf9Rpm2Z/0RdvG/ZYqE=;
+        b=aQIOWP9dDYn7viGCtNA5bv7GV/nkMDiM2pIshF5asL/GrclG2HS3CilQGBqdS+BuC7
+         pU29KPhrw5SML3Ru0EX6dDJK6iFbiJftI84G3BhTnDfF8FQUkFqegqy9aqczWjom9JuR
+         8qyK6rXvymiy3rE6b/Ra+PYYI9BKqxzVUWwzuz1P1WF5O+aWxLzhmg2JUqFa3815FBJu
+         HIYW0U2Qxl2ecDcTQuqx9TwedDHuQB+/N8PoEFwxUb5T6IMQ2vi55X0tmi4v9I/3hNkE
+         GuwJfB+gB5GsYQLixVzEQzkoRcQFMQA3vFhBUOSmxFYRK8h7RAz6eisFXgHSGr6XNvhW
+         TahA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=XzQzuAzZBLpdi47JcJVArViKzFiEZuK1mi5ZJHtcsD8=;
-        b=C2CFEcHzXdPtcku9PurrDy/2hBsmeNt6uDOHRjObMhA/E4V6am9EjJ/ohvquaQtRqp
-         xYbizac+6SfI/bXXAGbdRrDVJsmQ1mBqMAJv5q+Y0nEAWA001noGKnajVfwNBUdCopvs
-         4m9fTjfxIfzrrxWDN297Lvt1H+c1DwS/9/LiunNB9XAb4E6ZPLe8C21YtqhIh2hfEBdf
-         3facWJeK3hYLVWHM6arR0Rfp69zWRtIGnZNJJ6usQJquycZTN7VhLX3cs6E0SVXfcFTB
-         di4FS/0MjwK8PeFjRYK1NeT/mYGxxm90ZGOCcxl3UBaxTFdSP9Oygz57AukeYqAfPce5
-         Mgfg==
-X-Gm-Message-State: AJIora/z+vNaAqSPUDBUrwMSVuCZPKKc7Qy2s5Z/5oZJs58NnzmyGEL8
-        uaQ++Uq5rvO/yDXrycKyDAI=
-X-Google-Smtp-Source: AGRyM1s0Fk22Jb/wWZLSX5b4tA9n+RF5IsBflq0lnJ9f1yaQp5+G/H4XPlCDag1/AWnuPzOpoyhxOQ==
-X-Received: by 2002:a17:902:8a8b:b0:16a:52d0:72bd with SMTP id p11-20020a1709028a8b00b0016a52d072bdmr8833437plo.78.1656501627785;
-        Wed, 29 Jun 2022 04:20:27 -0700 (PDT)
+        bh=gVY6u58EznpOpzvOx/UArCDuJf9Rpm2Z/0RdvG/ZYqE=;
+        b=DLp0oTeXpJtNvv/ZQrjgj5gLqHr0+zp100T+wfo9sGLpQB4wZjYVWgF977hjl2MMyf
+         bvMsfrGj64yk+JPMhSRnc0MnmjmC+zReqLzYm6ji1ZA8GxC+MwKXmfGhjoQ3Edu913U5
+         gEy2xmfZWZ4NaJTY9iaVYDuQTVq5aOLEsq6vt5iQT3Lx6AUqJXc5fM69I6vxJosHgpww
+         SPj4D4ZK1VbHbb22uwcDMrSia24mPa695Eq/h7Vwo59tggJAC9U8bS6cQ5T8jdFhgwa0
+         wSjr6UFh3tzu/1k1fNOCJDR/mBhynnQDOVcTwU8KDn6M2nHwPMb7Y2EGAS15wfg/gp/t
+         Y0DA==
+X-Gm-Message-State: AJIora+312Wt0WmMsYqypFb1jI/+sAcTHOu9JwtsI3bFr0ro+me36Aue
+        3zSBnoKx91WRbBcMfcZOSUWAllE5zfw=
+X-Google-Smtp-Source: AGRyM1vPnNa9879bJU4MX4D73z44PgpBMQVlMG1XCUM3/6Eb+1XTlj14KCMvGYKDroK1oSN3extrTA==
+X-Received: by 2002:a17:902:d2d1:b0:16a:1dd9:4d3d with SMTP id n17-20020a170902d2d100b0016a1dd94d3dmr10003056plc.18.1656501924312;
+        Wed, 29 Jun 2022 04:25:24 -0700 (PDT)
 Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id y8-20020a17090a134800b001ead46e77e2sm1844416pjf.13.2022.06.29.04.20.25
+        by smtp.gmail.com with ESMTPSA id u27-20020a62d45b000000b0050dc7628148sm11267647pfl.34.2022.06.29.04.25.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 04:20:27 -0700 (PDT)
-Date:   Wed, 29 Jun 2022 19:20:22 +0800
+        Wed, 29 Jun 2022 04:25:23 -0700 (PDT)
+Date:   Wed, 29 Jun 2022 19:25:19 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal@aksignal.cz>,
+To:     =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal@aksignal.cz>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Subject: Re: [libgpiod] feature request: output state read and sustain
-Message-ID: <20220629112022.GA30306@sol>
+Message-ID: <20220629112519.GA30910@sol>
 References: <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
  <20220325160146.GA49114@sol>
  <1d43c967-e3c9-21a8-3040-2db54ba85bdf@aksignal.cz>
@@ -65,12 +65,12 @@ References: <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
  <a1cdd48d-0da9-b61a-3530-ef2e99539b74@aksignal.cz>
  <CAHp75Vd2=XAD_qmsYp0AWoi2mryR-FFq5ipFqa4d7qB+bFkS0g@mail.gmail.com>
  <20220629104757.GA29289@sol>
- <CAHp75Ve5zpwgc9kk06LYJU8GveXFdgbgyyxXoQm0dy_OiLTF2Q@mail.gmail.com>
+ <b8d63150-cd1d-692a-9470-d75278135350@aksignal.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Ve5zpwgc9kk06LYJU8GveXFdgbgyyxXoQm0dy_OiLTF2Q@mail.gmail.com>
+In-Reply-To: <b8d63150-cd1d-692a-9470-d75278135350@aksignal.cz>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -81,56 +81,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 29, 2022 at 12:58:18PM +0200, Andy Shevchenko wrote:
-> On Wed, Jun 29, 2022 at 12:48 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Wed, Jun 29, 2022 at 01:17:54PM +0200, Jiří Prchal wrote:
+> 
+> 
+> On 29. 06. 22 12:47, Kent Gibson wrote:
 > > On Wed, Jun 29, 2022 at 12:27:13PM +0200, Andy Shevchenko wrote:
 > > > On Wed, Jun 29, 2022 at 11:27 AM Jiří Prchal <jiri.prchal@aksignal.cz> wrote:
-> 
-> ...
-> 
-> > > Do not use shell. Use proper programming language that may give you an
-> > > easier way of handling this, i.e. _context_. Shell tools are
-> > > _context-less_ and here is the problem you are trying to solve, but
-> > > from the wrong end.
-> >
-> > Actually my proposed gpioset for v2 will support running interactively
-> > so it can maintain context and be driven from shell - for cases where
-> > basic scripting will suffice.
-> 
-> Dunno if it's the right direction and if I missed any (additional) discussion.
-> As far as I remember the idea was to introduce DBus aware daemon that
-> should handle the context of the line and at the same time consider security
-> implications. Allowing shell to be context-aware is a hidden mine
-> field. What will happen if the script/user forgets to move the line to
-> the proper state and the chip will drain a lot of current? So, at
-> least PM concerns just popped up immediately to my mind. What else can
-> be problematic? So, I dunno, it's a good idea to allow shell to leave
-> a line in some state when the user actually doesn't care about it
-> anymore. At the bare minimum this mustn't be default behaviour.
+> > > > On 29. 06. 22 9:23, Kent Gibson wrote:
+> > > > > On Tue, Jun 28, 2022 at 03:08:20PM +0200, Jiří Prchal wrote:
+> > > 
+> > > > > > using new libgpiod / chardev driver, is there any way to get state of
+> > > > > > output? I mean one process sets it for example to 1 and another process
+> > > > > > reads this output state for example to show that on web page.
+> > > 
+> > > I'm not sure it's guaranteed to read output back. Some (b0rken?) GPIO
+> > > chips may not allow this on H/W level and when reading they always
+> > > will get the value of Input Buffer (now imagine if the line is
+> > > configured as Output with Input being disconnected from the physical
+> > > pin).
+> > > 
+> > 
+> > Agreed.  Userspace should know the value they set the output to, and so
+> > have no need to read it back.  GPIO is not NVM.
+> Not NVM, bat RAM and it keeps their data untill reset, after reset it has specific value (usually 0)
+> I haven't seen HW without possibility of reading back output register, but I don't say there couldn't be such one.
 > 
 
-I don't think it is what you think it is.
-Take a look.  If you don't like it then get Bart to bin it.
+No, no it is not RAM.
 
-There was no on-list discussion.  I had preliminary disussions with Bart,
-and had intended to float it as an RFC, but got distracted by other
-things and ended up going direct to an implementation.
-
-Last I heard the DBus daemon is still on the cards, but not sure where
-Bart is with it, and the gpioset addition is for simpler cases where
-DBus is overkill or where there is no daemon.
-
-It is not the default behaviour, it is an optional mode.
-
-gpioset maintains the context, not shell.
-
-"User's forgetting" is language independent.  Shell scripts matter!
-
-What else have I missed replying to? I don't know.
-
-And good to see our apparent agreement in the previous mails was just an
-aberation.  I was starting to think there was something wrong with the
-universe :-|.
+And I have seen hardware where you can't read back the output.
+And so has Andy apparently.
+That is the problem - there is lots of hardware out there and we are
+trying to provide a consistent interface to inconsistent hardware.
 
 Cheers,
 Kent.
