@@ -2,112 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2809755FF0A
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FA3F55FF1B
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 13:56:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233097AbiF2LuK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 07:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55150 "EHLO
+        id S232071AbiF2Lz5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 07:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231579AbiF2LuJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:50:09 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35BF93EF31;
-        Wed, 29 Jun 2022 04:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656503408; x=1688039408;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+6krQVdijwrt6bSpN8vEUeyDsgnZZttj6KBYBLaI76c=;
-  b=mtxix1FQ8+cQX6Gs/FOATH6U0jKIPglFayqAMHtCld+fIst0YpQpJHhb
-   fM7hHTwHoJZh2cF/x2DSM2Gk8IvtJCCdW8NOAec3EnHQWFm4PnDlyLPqz
-   nvOqtPk6SuEOYmf6eLZ2J0QYB++y1rYYFHpq8XxiLgbotfTpUGG8/BOn0
-   lbOoyQ+WG8capIIk+xQOzR0VDGiVEPyyNLpQeZ7jIS3IGdixaR3g73k9G
-   PD1q/TA2jWkETZYzvWa+ScawOnGxNqHkRAQyPpBpXlshP4QvlVQ//CdwT
-   W6IWIf1oczrUAVW+lQMSjHO1frHHr/eK0+PT0yERYuSDJFoQKOXed+29b
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="270773989"
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="270773989"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 04:50:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="590723543"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jun 2022 04:50:05 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 33E0DF1; Wed, 29 Jun 2022 14:50:11 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 2/2] of: unittest: make unittest_gpio_remove() consistent with unittest_gpio_probe()
-Date:   Wed, 29 Jun 2022 14:50:10 +0300
-Message-Id: <20220629115010.10538-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220629115010.10538-1-andriy.shevchenko@linux.intel.com>
-References: <20220629115010.10538-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231350AbiF2Lz4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 07:55:56 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B573F304
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 04:55:55 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-3178acf2a92so145411887b3.6
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 04:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=L4S+XGlQ8O/W1cikvFGBcAbdmj465OeX/GhaJJUYfVI=;
+        b=MIA/EQOqTFM4A+JvBhtpDIsDHti6kSuYGUXc+41kkmJ+pxhLUkpgr4cIOW/RMdv9jZ
+         7P/mV80pZrj8ofnVHIMhXvZuqFvP5zsI98PK6MGLIzYnz/eW9vHMv0V/Aci5jOns4JDR
+         c0KE8GW+WtoNfKRRAU9ujri2C0e57N9kl2L2NM47tn50fmujLNbDxSAlelxHaFHWbpzC
+         7xdkaJYr4yaCg7dCb55FJmz/6LArgBXTpcaxbt0ntOfecoYKKholBeCjeRPPlP5h9Myg
+         tw1UI8tB1Ibr7sT9mlXGo8VoIzCVPbiTxrECpZZ72iiRk6qANosK1HLGsScTi3PzZ69O
+         9Cig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=L4S+XGlQ8O/W1cikvFGBcAbdmj465OeX/GhaJJUYfVI=;
+        b=JWRZlNT0/VVfs3hqBeDbeIw/wR7g/yVo7nm4elOfjzRDH22tUpKY3t8Pcb7ReJbUml
+         Wlwz+xAu6LwyjjtpBdEQjI5Jimr8fr9ZEO5rgfwkuW2HaE8V1lNfU3ar+w35uH1fplfb
+         RVpxr9/ocC0ruswGwFfBAdeEs0XUJPLvvlbFr3wU2bkR3CANgTv6MUVCg0k8KWxnj/Lh
+         M5+jRRBfM2UqlecBgYchLdjaKOdhyDbAaSYqoUZUknFeuU0c0ZILMzmDljyZ6KHYJOxm
+         wmpTzxovx+WfKQomdBn6D7QG4FVlX1wOYy1z6GQ66mHK1IIEHE4nWjgX+GGmOC9m8Utm
+         xf5Q==
+X-Gm-Message-State: AJIora/36FlputBI7E8U9CwfQQig0vbUAiH17/DfJVP+GgD3uxdeLwY0
+        Q4fm4lD2Z4Mf0sZxIpk5Mlclnu6M/y5UlfdQ9O8=
+X-Google-Smtp-Source: AGRyM1uSLtl0/CwMR1e5pmab/0Ji91Q2SEu2gjdculBhvYO1kGVwQm9jplerDzCqe9kTp6EjGePboizc9wWw13sAhHY=
+X-Received: by 2002:a81:5d88:0:b0:318:31c1:56f3 with SMTP id
+ r130-20020a815d88000000b0031831c156f3mr3421506ywb.18.1656503754716; Wed, 29
+ Jun 2022 04:55:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
+ <20220325160146.GA49114@sol> <1d43c967-e3c9-21a8-3040-2db54ba85bdf@aksignal.cz>
+ <20220328080841.GA14353@sol> <757ac53e-07bb-1ffa-2734-08c1c321ff0e@aksignal.cz>
+ <20220629072353.GA18684@sol> <a1cdd48d-0da9-b61a-3530-ef2e99539b74@aksignal.cz>
+ <CAHp75Vd2=XAD_qmsYp0AWoi2mryR-FFq5ipFqa4d7qB+bFkS0g@mail.gmail.com>
+ <20220629104757.GA29289@sol> <CAHp75Ve5zpwgc9kk06LYJU8GveXFdgbgyyxXoQm0dy_OiLTF2Q@mail.gmail.com>
+ <20220629112022.GA30306@sol>
+In-Reply-To: <20220629112022.GA30306@sol>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Jun 2022 13:55:12 +0200
+Message-ID: <CAHp75VcXTCCMRn+eC3vsdi=VN1iEca40xWCnqkqxgi63UHMDKw@mail.gmail.com>
+Subject: Re: [libgpiod] feature request: output state read and sustain
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On the ->remove() stage the callback uses physical device node instead of one
-from GPIO chip and the variable name which is different to one used in
-unittest_gpio_probe(). Make these consistent with unittest_gpio_probe().
+On Wed, Jun 29, 2022 at 1:20 PM Kent Gibson <warthog618@gmail.com> wrote:
+> On Wed, Jun 29, 2022 at 12:58:18PM +0200, Andy Shevchenko wrote:
+> > On Wed, Jun 29, 2022 at 12:48 PM Kent Gibson <warthog618@gmail.com> wro=
+te:
+> > > On Wed, Jun 29, 2022 at 12:27:13PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Jun 29, 2022 at 11:27 AM Ji=C5=99=C3=AD Prchal <jiri.prchal=
+@aksignal.cz> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v3: new patch
- drivers/of/unittest.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+...
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 5a842dfc27e8..eafa8ffefbd0 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1620,20 +1620,19 @@ static int unittest_gpio_probe(struct platform_device *pdev)
- 
- static int unittest_gpio_remove(struct platform_device *pdev)
- {
--	struct unittest_gpio_dev *gdev = platform_get_drvdata(pdev);
-+	struct unittest_gpio_dev *devptr = platform_get_drvdata(pdev);
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = pdev->dev.of_node;
- 
--	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
-+	dev_dbg(dev, "%s for node @%pfw\n", __func__, devptr->chip.fwnode);
- 
--	if (!gdev)
-+	if (!devptr)
- 		return -EINVAL;
- 
--	if (gdev->chip.base != -1)
--		gpiochip_remove(&gdev->chip);
-+	if (devptr->chip.base != -1)
-+		gpiochip_remove(&devptr->chip);
- 
- 	platform_set_drvdata(pdev, NULL);
--	kfree(gdev);
-+	kfree(devptr);
- 
- 	return 0;
- }
--- 
-2.35.1
+> > > > Do not use shell. Use proper programming language that may give you=
+ an
+> > > > easier way of handling this, i.e. _context_. Shell tools are
+> > > > _context-less_ and here is the problem you are trying to solve, but
+> > > > from the wrong end.
+> > >
+> > > Actually my proposed gpioset for v2 will support running interactivel=
+y
+> > > so it can maintain context and be driven from shell - for cases where
+> > > basic scripting will suffice.
+> >
+> > Dunno if it's the right direction and if I missed any (additional) disc=
+ussion.
+> > As far as I remember the idea was to introduce DBus aware daemon that
+> > should handle the context of the line and at the same time consider sec=
+urity
+> > implications. Allowing shell to be context-aware is a hidden mine
+> > field. What will happen if the script/user forgets to move the line to
+> > the proper state and the chip will drain a lot of current? So, at
+> > least PM concerns just popped up immediately to my mind. What else can
+> > be problematic? So, I dunno, it's a good idea to allow shell to leave
+> > a line in some state when the user actually doesn't care about it
+> > anymore. At the bare minimum this mustn't be default behaviour.
+>
+> I don't think it is what you think it is.
+> Take a look.  If you don't like it then get Bart to bin it.
+>
+> There was no on-list discussion.  I had preliminary disussions with Bart,
+> and had intended to float it as an RFC, but got distracted by other
+> things and ended up going direct to an implementation.
+>
+> Last I heard the DBus daemon is still on the cards, but not sure where
+> Bart is with it, and the gpioset addition is for simpler cases where
+> DBus is overkill or where there is no daemon.
+>
+> It is not the default behaviour, it is an optional mode.
 
+Good!
+
+> gpioset maintains the context, not shell.
+
+A-ha, that's cool, it pleases me.
+
+> "User's forgetting" is language independent.  Shell scripts matter!
+
+:-)
+
+> What else have I missed replying to? I don't know.
+>
+> And good to see our apparent agreement in the previous mails was just an
+> aberation.  I was starting to think there was something wrong with the
+> universe :-|.
+
+Ha-ha.
+
+--=20
+With Best Regards,
+Andy Shevchenko
