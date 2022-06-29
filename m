@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CFA956081E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 19:59:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E83356082B
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 19:59:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232153AbiF2R70 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 13:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39520 "EHLO
+        id S232185AbiF2R7s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 13:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231877AbiF2R7X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 13:59:23 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A59397
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:59:14 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id o9so23257453edt.12
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:59:14 -0700 (PDT)
+        with ESMTP id S232183AbiF2R7r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 13:59:47 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9427EF25
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:59:45 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id mf9so34235223ejb.0
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:59:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=qLQoQNqzIX44NBq4eyXo8pb4zSiHlNiTFmIzQcS3Dno=;
-        b=Mz1L28ohTu6cZ91xNTXSq6PQXSe7pEV86eueM3ccaMT7npnybQ7OsqG1zzkrZrtTjt
-         YE9c+/tj9f5cATNFEOVPBbAqsw8RQ9FqxRQ055C8kabY1gNvzoLjKFoBMExzsgsZGBQs
-         NMByrjLnhXz3SydxjsxGlhms159RezTVkwPw75noYwsyVgI69gnBHfbMsxoL487g9ooH
-         Wcw/cX/cHNB89dZ7+9rmtLaYwoO/wVt012A7vW9Q0D2YDfdtYpUZPtP9McRMCBL40+DB
-         is/IojyBhL5bugopD4xcTvondIPaL15gMOgS1WWrtAEDtgxH84bWShukCjqMwI64ug+q
-         4NkA==
+        bh=9oQd/aihk9MFiV6slPYqynKa26o3HWCnjoP1XQYdYX4=;
+        b=JGZ4c7I/UkOZR64cp+6z+AfI133QAf6mVrdAlIAPz+hfF7OW0udq3GnJD+JIPWFVNA
+         Qbt0PbBu/M8IQoLqBPcQ77r5sYlo8q40FEiO3oIyphub+iziB3l1zzaaZv2ufoNR6KRQ
+         Fmgm/7KCCEFmc0Cr6ilrmuOf/oxBn7ixvXTczRTLEPjxjvfvchnYn6VLovHhgSkbqBm/
+         0D8SfN4Xi9dtob5xiLOuzXipqRUbBuAhBqWFqc5r5ZjZFZDeDjXiD+EdEXj2t0yY25rn
+         eZr8A54495SXi2JTkzDLZNoscAexbY+m7Tptce+Md4x6rCIihKerub+aKxvmzWd3vgXx
+         nWGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=qLQoQNqzIX44NBq4eyXo8pb4zSiHlNiTFmIzQcS3Dno=;
-        b=4ktvYPntg7hyErwJVw8QX9EpqxVBv2gbc8iV+YXH9nzMlDVSi5Vg54uZhRU5Cw/Rst
-         Ympx8GxcMl0Bh0olOvhlBdQa+6f2hT4sS7DkjDKyBqBZ4aLfxnGKM+/YB24EmKNuOPiY
-         ISWdOwg5G9Gz5kFMkpKe/aC0yjFmTQUQ9hPg/scI3ld4sv73Mi/8PFZ7tZ6lXkTAiO1b
-         ygdefUBciTDnG79GzlPYoNcSidFe53IEaMIfrbRQbfqaG/Uiu1EbGup3fnG4AtAlniW4
-         8d/I4YtO6Ka77ZRyF+twKDTAOlRQI7ol6nkRcGI3GDY6hZJhXxFo3RrLFID0JSa2cj88
-         QQRQ==
-X-Gm-Message-State: AJIora/2NpvAD+iTTist3OeyqDGwLNl2/Pvy5EdRtKX8S5D4bI2H+sxo
-        wDTZApF2DwudbQUuo2+iIvOULA==
-X-Google-Smtp-Source: AGRyM1t97qwz1beIrGRPTxbppC20aUggb1YzhT36TA5Umo2qx6ih3V8+jwWRhbMZVzIExLz3IbVmrA==
-X-Received: by 2002:a05:6402:d05:b0:425:b7ab:776e with SMTP id eb5-20020a0564020d0500b00425b7ab776emr5998674edb.142.1656525552801;
-        Wed, 29 Jun 2022 10:59:12 -0700 (PDT)
+        bh=9oQd/aihk9MFiV6slPYqynKa26o3HWCnjoP1XQYdYX4=;
+        b=A9sO0cGbpIVtUTl6vK24f5jY5UoTGNjlBiRiKDycDGDIs3Q6RstkOxYr79Ug48rU2Y
+         9ZMgXMp6U1TDrJAf6wQrx5ZfwAbdA65KjgSPC4L+c8slSK11N7vsF4dtJVfzSk4u9WxS
+         29AwxZDWMdqAnRkUOwYxUp0RTlgtoyZYt1eHdWuqVhQ1G5OKd9HH4UJTQCez6Ax23YEM
+         dFSueNMn2HILZjXmbWzkvqTfyuBMVMQ5XvoNw8BN5SUApNx2ShHVESkJ3FhMNf/XDwZz
+         Wv0FGUvVJZ6OVsTBwlaAawFsxPYRbRxjWCKiyt+ptJREaf7RtZa3PueOee3ULbxFZE2O
+         ut6Q==
+X-Gm-Message-State: AJIora8cSxT9FWftfMzaVhkMWF7edGdKkawn1uzL7MGUfPWF71hHVSfU
+        E+DHNrHDUFx7Ndlsmu5W+JjLiA==
+X-Google-Smtp-Source: AGRyM1tEvw4Z+sdS8R2b5pMQ4mI40CTjDyQX6wt24Ed3+/7JZJ4AE+2EZXxDaUOUK81SuQaIegr+pw==
+X-Received: by 2002:a17:906:3f51:b0:712:3945:8c0d with SMTP id f17-20020a1709063f5100b0071239458c0dmr4466853ejj.302.1656525584092;
+        Wed, 29 Jun 2022 10:59:44 -0700 (PDT)
 Received: from [192.168.0.187] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id bo5-20020a170906d04500b006ff0fe78cb7sm7981879ejb.133.2022.06.29.10.59.10
+        by smtp.gmail.com with ESMTPSA id h1-20020a1709063c0100b006feec47dae9sm7958751ejg.157.2022.06.29.10.59.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 10:59:12 -0700 (PDT)
-Message-ID: <7560d60d-b4bb-6fcd-bfac-e9f4da911561@linaro.org>
-Date:   Wed, 29 Jun 2022 19:59:10 +0200
+        Wed, 29 Jun 2022 10:59:43 -0700 (PDT)
+Message-ID: <988844aa-f7ce-3cba-dd6c-227fa6d58102@linaro.org>
+Date:   Wed, 29 Jun 2022 19:59:41 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v6 07/14] dt-bindings: thermal: Add fsl,scu-thermal yaml
- file
+Subject: Re: [PATCH v6 08/14] dt-bindings: watchdog: Add fsl,scu-wdt yaml file
 Content-Language: en-US
 To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -91,9 +90,9 @@ To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
- <20220629164414.301813-8-viorel.suman@oss.nxp.com>
+ <20220629164414.301813-9-viorel.suman@oss.nxp.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220629164414.301813-8-viorel.suman@oss.nxp.com>
+In-Reply-To: <20220629164414.301813-9-viorel.suman@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -111,7 +110,7 @@ On 29/06/2022 18:44, Viorel Suman (OSS) wrote:
 > 
 > In order to replace the fsl,scu txt file from bindings/arm/freescale,
 > we need to split it between the right subsystems. This patch documents
-> separately the 'thermal' child node of the SCU main node.
+> separately the 'watchdog' child node of the SCU main node.
 > 
 > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
