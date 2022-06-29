@@ -2,145 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 483E055F34A
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 04:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A27955F363
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 04:34:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbiF2COy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jun 2022 22:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34926 "EHLO
+        id S229706AbiF2C1T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jun 2022 22:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230387AbiF2COx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 22:14:53 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CECEF5BB
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 19:14:52 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id dw10-20020a17090b094a00b001ed00a16eb4so14581016pjb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jun 2022 19:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PJBuTsmBDGPfQGeKAv84qtCGlgJlmTxO55RxEnHOrgo=;
-        b=F9kOQiSDnm4bnNY3PJWfDyXk/4cPTQPN0K7ykTB5JnQp85naNOp4dG5ZBJoKjwIxRw
-         aA7XAyXuMFF9nR7GEz08xG2BUnuDDHJQMYCekNtf9Cmuin+ueCR2F2SwZS7fq6kyMhBe
-         /NuLt+wP8fQpJx49Jdm9b7XVPQXWQTjkrI/ESI7HC5iC5o6KxTPVyKnTnjJRnrUmgVVA
-         jKHJ3f4mY8qo+X9sGBB21kFZBlTbJwEoj/pX7qATGZkhCmq426DAHBrQ0ToX1FNZvvxk
-         MXaQ7eXU0CFNrJdYucPtB+5uEMWNgiZaLlsJ9jAWcBtxdmyxZa0/dPChcqY2n0ibgpiJ
-         UzTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PJBuTsmBDGPfQGeKAv84qtCGlgJlmTxO55RxEnHOrgo=;
-        b=gVVa0hIBx6RSmLWvXK8kjmAJfFWT13kAfF25hOG7UzDJOCClnm5+2BEeD3ZavqSYCU
-         Ks3wQKVIb3LkLPoPFbGzDzuPBvxDXzZ73NhHCxlVZUFDjOVrEzGZSj4CxPmkIDzz5In2
-         Bn6qnLYW+LoGIXFYucaXcLhu4XuGbw+uRukOIdmE1FiVz3Fm8GBjMOYb24T7Hzdm7P4u
-         EfEIeMDNPgHclAHFNAqd+sAPgOJAqy4GuF+/N3tExnwRbEvOcRHFdBzbd00dEitKgaYD
-         QpSBMNaxs7j/Ymxf8VYhiizwWTE1X7k99AwB4pWjplaT6dlRHzBMu5etWhkhDwinbpSG
-         EDmw==
-X-Gm-Message-State: AJIora954J0g0UMfGW+2JI+GZQ0laKUW2BjvS1IFBLFvwVXtv5m6ghs3
-        S740OpgXGWroyPh2tzibng4=
-X-Google-Smtp-Source: AGRyM1t9rHd7m9tWDLCgkHgbElSee2MKaRT9DYGwpIH5XdD52bOU/jt0l27JqUbcs+slGLpQfku50Q==
-X-Received: by 2002:a17:90b:3e89:b0:1ee:195e:abaf with SMTP id rj9-20020a17090b3e8900b001ee195eabafmr3138090pjb.112.1656468891825;
-        Tue, 28 Jun 2022 19:14:51 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id t4-20020a635f04000000b0040cc830b0cfsm10053220pgb.39.2022.06.28.19.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jun 2022 19:14:50 -0700 (PDT)
-Date:   Wed, 29 Jun 2022 10:14:46 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Yegor Yefremov <yegorslists@googlemail.com>
-Cc:     Linux GPIO List <linux-gpio@vger.kernel.org>, brgl@bgdev.pl,
-        andy.shevchenko@gmail.com
-Subject: Re: Reading current output value
-Message-ID: <20220629021446.GB8799@sol>
-References: <CAGm1_kvsAir70H41RJ5vzAGeBLBAFByHyR3fWfFeq3RW5O7cBA@mail.gmail.com>
- <20220622102632.GA37027@sol>
- <CAGm1_kvf1RC7fHBy65PkRcS=a5eUgpVYyHM+6NmOvWv6YusTEA@mail.gmail.com>
- <20220628045253.GA18105@sol>
+        with ESMTP id S229633AbiF2C1S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jun 2022 22:27:18 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351AF1A385;
+        Tue, 28 Jun 2022 19:27:17 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 40F883200905;
+        Tue, 28 Jun 2022 22:27:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 28 Jun 2022 22:27:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1656469633; x=
+        1656556033; bh=RezzKQz5lCHiF85I1womsS66xU9W7I5xMpCJe6Reo0Q=; b=r
+        tA5QkwwPaOJHCryzlW7yMURGrR4xbEWjEEuvvB9tkbE+8i/uAt0g+TFVAglDD6YE
+        rI2vzWjFDNb06sHh0Ym+TJbtJxJstax3owmPe7IW5r/svaInj/xgbu4qita684UZ
+        X8i18zvOl/QNB6CqoYO0xdn5Iq4Ekgtbn6uk2N3PE9Lu46ptN1JzjCDEmZPT1L5F
+        efcY3IXXIiPSfcw8MqsEcnB944W74FyL+/HPmBd8rP+YTlxHw6PltlMP40f5pWO1
+        yUNZEWJBcKV98K4KLYFGIihfeGDqlhUXbIhXFNek4bfFa6Uc9uYx92Ovme0lAe3L
+        GfvJe7Xg5+0mkAlpnmQCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1656469633; x=
+        1656556033; bh=RezzKQz5lCHiF85I1womsS66xU9W7I5xMpCJe6Reo0Q=; b=w
+        kw2P3jrLEKEuonZbPOIfF9RYg5jyk/qy5JBEV804zPeivGWmCjsE3q8BgMzD+o7/
+        0o4OHvHqwUaV4QVJ38KWDpiZKssE/Gir86O5beLk67WGW63UEBMsfcUAldP/a+8u
+        yU3/SKpRilxUps7gpWRKilDv7WTcO5+MICFsHPVl9lsj//j2GszbbRPVGsOF/7N6
+        A2zgFJtua8KwlFcJ/9WK9H/iwucbYflDvlYXjgjq95IOy46AFGTHuuddeCIXk8x/
+        qbsYHSliluEvX4jx4jMkyKFIKu+77CQc3/Ox0mQeYXGWEt3nFWdLEhjSF9il/ERS
+        br2rA7rPB9/IfiRL8cbQg==
+X-ME-Sender: <xms:gbi7YspBxefnNoz9en_O90ic7KNi3oQVzArzqEe9cTWo720GvkPxQQ>
+    <xme:gbi7YiqbRgI_WWRk7q1BmXfaehLTv_l3DsUFKEKli2LUUde7bx-HeSGfpogCQO2G7
+    OBG2Sce1KqP13qckg>
+X-ME-Received: <xmr:gbi7YhMlkNXtTZ14Dc5opIlrazRNH0pUuYT4zvdO30svOKHvoQ6q7st3kYoBuCoXI7Ta8t23rHXb5s9y47iRI5MXTq00cG2bBN3dBQ9jwhw71GU3D1-nunu1vw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudegkedgheejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpeelteejffdvgeehkedtkeevueeuteffteffhedufeeujedvudef
+    udetieeijeevleenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhl
+    rghnugdrohhrgh
+X-ME-Proxy: <xmx:gbi7Yj5HFlxN08pkH_od1MMSIW0iJCUKUH0Bcpd6ruAL9dODVyOPlg>
+    <xmx:gbi7Yr7N6eb5hmW8rVc96n3d8TmxrwCL2dX4gre8h6Ok5nmj2t2zpg>
+    <xmx:gbi7Yjjqc1A2hSUT2pKUdlgEtiycT1RoaACXQiHrH05m_NLrM6gOWg>
+    <xmx:gbi7YuZDlSLKer43a1_VRpPX_HOgXUQakUJxFxpmJFaDYOyh0w71eQ>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 28 Jun 2022 22:27:12 -0400 (EDT)
+Subject: Re: [PATCH v2 2/4] mfd: axp20x: Add AXP221/AXP223/AXP809 GPIO cells
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org
+References: <20220621034224.38995-1-samuel@sholland.org>
+ <20220621034224.38995-3-samuel@sholland.org>
+ <CACRpkdaxodnaJsKfFMvYHWtPwZyACiec4iX3ZXSBL5Ptfa6mRg@mail.gmail.com>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <ffe66c81-9a2c-e2b3-ad9c-ad46824fe76e@sholland.org>
+Date:   Tue, 28 Jun 2022 21:26:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220628045253.GA18105@sol>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CACRpkdaxodnaJsKfFMvYHWtPwZyACiec4iX3ZXSBL5Ptfa6mRg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 12:52:53PM +0800, Kent Gibson wrote:
-> On Mon, Jun 27, 2022 at 12:37:46PM +0200, Yegor Yefremov wrote:
-> > Hi Kent,
-> > 
-> > On Wed, Jun 22, 2022 at 12:26 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Wed, Jun 22, 2022 at 09:54:41AM +0200, Yegor Yefremov wrote:
-> > > > On a am335x based board I have a GPIO pin that enables/disables power
-> > > > of an external device (the bootloader sets this pin to output and 1,
-> > > > and the kernel is instructed to not change it). Using kernel
-> > > > 5.19.0-rc2 and sysfs interface, I can read the current status as
-> > > > follows:
-> > > >
-> > > > echo 68 > /sys/class/gpio/export
-> > > > cat /sys/class/gpio/gpio68/value
-> > > >
-> > > > As a result, I read 1.
-> > > >
-> > > > Using gpioget (libgpiod) v1.6.3, the line will be configured to
-> > > > "input" and the value is set to 0:
-> > > >
-> > > > # gpioget 2 4
-> > > > 0
-> > > >
-> > > > So, how can I read the state without changing it? I am mostly
-> > > > interested in using the kernel userspace API directly.
-> > > >
-> > >
-> > > The API itself supports it, but it isn't exposed in gpioget v1.6.3.
-> > > The gpioget in libgpiod master has a --dir-as-is option for exactly
-> > > this case, but that hasn't made its way into a libgpiod release yet.
-> > > (commit 3a912fbc1e2 tools: gpioget: add new --dir-as-is option for GPO read-back)
-> > > Can you try master?
-> > 
-> > # gpioget -v
-> > gpioget (libgpiod) v2.0-devel
-> > Copyright (C) 2017-2018 Bartosz Golaszewski
-> > License: LGPLv2.1
-> > This is free software: you are free to change and redistribute it.
-> > There is NO WARRANTY, to the extent permitted by law.
-> > 
-> > Now, I get my "1", but as soon as gpioget exits, the pin goes at "0".
-> > 
+On 6/28/22 9:03 AM, Linus Walleij wrote:
+> On Tue, Jun 21, 2022 at 5:42 AM Samuel Holland <samuel@sholland.org> wrote:
 > 
-> Is that line the only line used (i.e. exported) on that chip?
-> If that is the case, can you request another unused line first (e.g.
-> using gpiomon in the background, or, and only since you've already
-> mentioned sysfs, exporting using sysfs), then try the gpioget?
+>> These PMICs all contain a compatible GPIO controller.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
 > 
+> If I can get Lee's ACK on this patch I suppose I can apply patches
+> 1-3 to the pin control tree?
 
-Just to expand on that a little, when the GPIO subsystem is finished
-with a chip, so it no longer has any lines requested, it calls free on
-the device driver.  What happens then depends on the device driver.
-In this case the device driver (I'm assuming gpio-omap.c is the driver
-for your am335x) reverts all the GPIO lines to inputs.
+Looks like he already applied v1 of this patch (which was identical):
 
-Any libgpiod tool will request the chip and then on exit, as no lines are
-requested, the chip will be freed - resulting in what you are seeing.
-Btw, the same would occur in you exported and unexported a line via sysfs.
+https://lore.kernel.org/lkml/YrnZof9lwsIQCqu7@google.com/
 
-Hence the suggestion to request/export a line to prevent the chip being
-freed.  Or to switch to an approach where you hold the line and don't
-release it.
-
-Neither libgpiod nor the kernel gpio subsystem are explicitly requesting
-a change to the line - it is an unfortunate quirk of the GPIO chip
-driver interface.
-
-I hope that helps.
-
-Cheers,
-Kent.
+Regards,
+Samuel
