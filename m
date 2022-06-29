@@ -2,117 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 480AF5608E1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 20:17:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FC895609C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 20:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbiF2SRJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 14:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
+        id S231396AbiF2Suo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 14:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiF2SRI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 14:17:08 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDF93A18E
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:17:06 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id c65so23360791edf.4
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:17:06 -0700 (PDT)
+        with ESMTP id S231161AbiF2Sun (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 14:50:43 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F18719C1F
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:50:41 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id d2so22665947ejy.1
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=E1jlEoaTPiNrxpMd8CbmD+GquuR2xwFVd9hdNuD3pQg=;
-        b=IMgvJNI2Shu2YS7FRrkuNOoKotUuk+Gd5objaOVBsEnVVBB82azq2pGZzKy08ce5Lx
-         0dOVNDIzkmGnqX/yNuK3G8TvwkXyoasGPPmGvgdX+1+77T71yGeQ5OqLqj2Qzh9xewZS
-         t04/PxMPqgs98zQfD/f6firmFl2/Jpa/GQVaeERfF/5tUwQlxw2oyQpvMlQvnDlDL+wd
-         PFBmY73Ho1OEgMtY9IYc+dGr2MFHeS+wR/rSD3BcziClhyjTE8SQRfu1XtYOHGIOD8e6
-         C4QnGx/WivSfHEB2ayQrwSP/fX9Gqi6iU0TE8FBzTtsrBsPxJEXggml4VvpwKNn0+RCZ
-         9Xiw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VGp0r8sM5mZknQfVI2yfDxCg19sys5aNVE3+EWpAW9s=;
+        b=Tl/EXqGcU+gTZSJmaC6LTPd+O7MER1FPtuy99jHEqhAJI/gQ51pcJXiwpACzJZ7SES
+         PVtX7w8SgecUl6H809W36x0KyBpId8SOGe53QQQmllzidRX780Cdeb22xUz+c+JqVPAX
+         RvSKHQahI3BCy0KxOdr2vuBHV3vOztuK15zP8XJ5LsSMJArgDvy7pgMr4DDaLjeckJcU
+         hNGq233FtQPYdjVFDJ+yMrJd4FPogy3Ovb/9HgQkQSoUe8aLTGjrspqcTADrDNsFm1DH
+         xIeJJh9tVwExx6FB5MlJIAA21YDuuIEbD1gTBEEXl46NYq5uHl6p05LnaTjge0MUpoqA
+         PViQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=E1jlEoaTPiNrxpMd8CbmD+GquuR2xwFVd9hdNuD3pQg=;
-        b=SJHzvjxLq2bAD3HuR5TdYMTTEu1B6WDkmQRFG69nQGecuXbqGJJhXY0Nob912WQiiA
-         zbLomi7mvoRi8fT5bWYh+T0A1yszdZ/lLAJRuA9y4Yn8OKnIMLwe2G76uaJCRrs4zDNw
-         aouRF0fDzglLkAZrD9cj7XytbxRW1BPNZ2NFTpBHxn0YRkM2Gb8KdHLbiKErYJR13t4t
-         92IVTZUP6qysQA6VOqi+LL050PkTxxXyoa55OZU+DATMD1jFSaPzFq81X9jEUl5HPPYl
-         yC7DVYdWjDINwzWxagSxxnEGEzaPBXWj3eceT+U/iMGFbMHQR5Rmep8+2Fpu88nMy514
-         6XHw==
-X-Gm-Message-State: AJIora/EXF6qA103fjtV7bt1os+SZpIXP1d//Vvn+E6nOII4hwEdxpMT
-        tfykgmqmojox+zK/rn/rKyOPvw==
-X-Google-Smtp-Source: AGRyM1tqWVzV1AZV22fnO/A7rGjKFDP+PsQHU5xoa8tsJ3MnfAUQCYmOGVMe/tTQ+u93YZGrhNA4IQ==
-X-Received: by 2002:a05:6402:520b:b0:435:c2a4:f822 with SMTP id s11-20020a056402520b00b00435c2a4f822mr6209482edd.198.1656526625454;
-        Wed, 29 Jun 2022 11:17:05 -0700 (PDT)
-Received: from [192.168.0.187] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id n4-20020aa7c784000000b00437e08d319csm555612eds.61.2022.06.29.11.17.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 11:17:05 -0700 (PDT)
-Message-ID: <506c9d41-6808-64b8-f57e-380d4520cc0d@linaro.org>
-Date:   Wed, 29 Jun 2022 20:17:03 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VGp0r8sM5mZknQfVI2yfDxCg19sys5aNVE3+EWpAW9s=;
+        b=T2ATnapUhWQmJ0bITPsGblyM55y6f8hQxnBEGlCTHXkilx5QtWVJqg7Vpp1SOfuNii
+         dJrobEeuZhFK7JvK9GJLdyf/0UOHi3/KPQrZaILbOirlytwNwy7GILBweLie5AyBQcDk
+         /VpWZYdbY/mnsDKASdfhqNuLPSHfsBQNwvtOeRMn3/rtSBfBxnQowP3mR15KkjSfseI6
+         +GS1tdse2JQrGK4oSjSBdSCC+kXJl2FjeKZ/dH9in6oA3w6jkaVICkP9NuxoTrWes5ze
+         B0Lcjxu4r6kmYWaLeSJ6T5zwGIMXrhWzB1jYdhDt3i/vPbh6sVMuWPTS6AZ3QkzIcFyz
+         d4ZQ==
+X-Gm-Message-State: AJIora9nrvXzXC/EDjTFldzYqjYVedxqSbZE5FMO/GZ/4pRDUwUHnJmi
+        ZO1PHeoZO3n+y12w7TD0lVw++5N84bgtKe3Lr3bXdw==
+X-Google-Smtp-Source: AGRyM1uAEQa5n0jWp6G0//caHTKUPFeS+Y57BmjJG23TZwaIXDhf11hwGuBY2nZ8ndjyCfvJbyaKABb3F1Guh9y72+0=
+X-Received: by 2002:a17:907:60cc:b0:722:e564:eb11 with SMTP id
+ hv12-20020a17090760cc00b00722e564eb11mr4643048ejc.736.1656528640056; Wed, 29
+ Jun 2022 11:50:40 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v4 04/15] dt-bindings: gpio: Add AXP192 GPIO bindings
-Content-Language: en-US
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>,
-        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
-        sre@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org
-Cc:     lars@metafoo.de, quic_gurus@quicinc.com,
-        sebastian.reichel@collabora.com, andy.shevchenko@gmail.com,
-        michael@walle.cc, rdunlap@infradead.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20220629143046.213584-1-aidanmacdonald.0x0@gmail.com>
- <20220629143046.213584-5-aidanmacdonald.0x0@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220629143046.213584-5-aidanmacdonald.0x0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220629115010.10538-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220629115010.10538-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 29 Jun 2022 20:50:28 +0200
+Message-ID: <CAMRc=MccLs3SNp30d=fPEim8r1q3nPda5USnbM08dYNJA_VL3A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] of: unittest: Switch to use fwnode instead of of_node
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Frank Rowand <frank.rowand@sony.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/06/2022 16:30, Aidan MacDonald wrote:
-> The AXP192 PMIC is different enough from the PMICs supported by
-> the AXP20x GPIO driver to warrant a separate driver. The AXP192
-> driver also supports interrupts and pinconf settings.
-> 
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+On Wed, Jun 29, 2022 at 1:50 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> GPIO library now accepts fwnode as a firmware node, so
+> switch the module to use it.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  .../bindings/gpio/x-powers,axp192-gpio.yaml   | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
-> new file mode 100644
-> index 000000000000..ceb94aa2bc97
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/x-powers,axp192-gpio.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/gpio/x-powers,axp192-gpio.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
+> v3: no changes
+>  drivers/of/unittest.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 7f6bba18c515..5a842dfc27e8 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -1602,7 +1602,7 @@ static int unittest_gpio_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, devptr);
+>
+> -       devptr->chip.of_node = pdev->dev.of_node;
+> +       devptr->chip.fwnode = dev_fwnode(&pdev->dev);
+>         devptr->chip.label = "of-unittest-gpio";
+>         devptr->chip.base = -1; /* dynamic allocation */
+>         devptr->chip.ngpio = 5;
+> @@ -1611,7 +1611,7 @@ static int unittest_gpio_probe(struct platform_device *pdev)
+>         ret = gpiochip_add_data(&devptr->chip, NULL);
+>
+>         unittest(!ret,
+> -                "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
+> +                "gpiochip_add_data() for node @%pfw failed, ret = %d\n", devptr->chip.fwnode, ret);
+>
+>         if (!ret)
+>                 unittest_gpio_probe_pass_count++;
+> --
+> 2.35.1
+>
 
-If there is going to be next version, please drop the quotes for these
-two. In every patch.
-
-Anyway:
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
-Best regards,
-Krzysztof
+Reviewed-by: Bartosz Golaszewski <brgl@bgdev.pl>
