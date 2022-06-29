@@ -2,59 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4342255FB22
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 10:57:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C03A355FBA8
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 11:18:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230226AbiF2I5z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 04:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39404 "EHLO
+        id S229898AbiF2JR1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 05:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbiF2I5y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 04:57:54 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B613C703
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 01:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656493074; x=1688029074;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pSfd2Q5DbRrLDr78bbFvVphOS/e8SiYlFDo0Vn7CFZI=;
-  b=cBBa+bvV7f2PXuTcrHKvNbE/NSkaN2PWoqbKZ/Tiktzp2xMAd/oO/grW
-   d/VZ4RdCXddSe7F45Uz+OhsJjwxOphc2NW8YWch1JKfHhF+4e6L36FAi1
-   /5ke2qo1eyyOXKRyzG38wpBabxC3rZrFotm+6RsS650kBW4mtBWYkOd8c
-   H0MdILR8Bu9SvRSC7ox7CK1snzdW+YYVpazwNs6vg+Sy3t1J3vQhKkrYt
-   vLfocESplYrlvL0CgeOL7tL5FvvAA7BsvwFIjpCDyK+LQ7Z5o+m91+BIb
-   HxIhLopYxDbGV19Bsr5Mplu5wo2o1zf7p7w2dYczZF5KoBJbvP+6E28E+
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="368289941"
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="368289941"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 01:57:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,231,1650956400"; 
-   d="scan'208";a="658478160"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Jun 2022 01:57:53 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o6TWC-000B2K-7X;
-        Wed, 29 Jun 2022 08:57:52 +0000
-Date:   Wed, 29 Jun 2022 16:57:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- a1d4ef1adf8bbd302067534ead671a94759687ed
-Message-ID: <62bc13e9.wfHpb+bPqSCzVLbK%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231831AbiF2JRY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 05:17:24 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D176E2CDC8
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:17:23 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id n185so8928682wmn.4
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 02:17:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q1VS4ZR2kVMuM2BPvqXZE8kitmI8cxAl7zyv/R4Rp1g=;
+        b=iErPEykS+awt1rQO9zFz1unwsp7n+QkqXRfHMKqOHEVZJ8N1+UCwe+dhajv0gjWob/
+         7KtDraQdL4hfrWXCpYjIzAKF/2Z2XWE1MKvAoWZehqZEDtBCAT3QajB0KSh0bnYoStR7
+         aKBYjA7PJyn6UgerZ7MAXojqTxjcsJ0bEE8PLurhgmsWjyrrmIVYyHaz6zG0Ov+pr1pD
+         TOwGazP5csB1VJF2/Z/ds+ib9aki2627sN22Ubp21GW2F/WPYQP+ocpzMQnzV18+ueb0
+         AM97aMLOGThXqa0vROhkKxbTwJPCQ1Dm71HJJb6OO8oiNKV7Q+VV1MAcy9Ajb2NBzKMa
+         vSvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q1VS4ZR2kVMuM2BPvqXZE8kitmI8cxAl7zyv/R4Rp1g=;
+        b=u7HglDLYHCiNJTx8ugWhwWQ7KHuAw9usxgumBi3r5xFgS6xD3zAfUcI90cssu3ZPby
+         dlSXK5eTzgtWp2fAs1p4ccTRgr8iwCMSouVQEEYfNG5Yr1qoy16Zs+6/gkxkKxYGU42F
+         gbbOHqchHAr0u6zWfwv8+BMz35aOjVJqYazA2fLkAPaZkjvwGqViJJUjeugc+n7x2JTu
+         DnO0cBRtVbk2DRXOCn2UMSljPvtOJFarH8ZazkgF/4+CDpVuNt5yRKebsYrOwplhKBCO
+         Y9QxgssYpCS74+Y8TakbMnfpMaAg04Q2iF3U4GE2F7WKDlkxp4CTN5B6gKfFGklpYeAY
+         p7bQ==
+X-Gm-Message-State: AJIora9saNzAvoWEYXBss050WIWQqLacYkly8f0RZQw7BEYEjhoikF0n
+        LxqOVKUNCPlJ8PGcTCLaVGnFZw==
+X-Google-Smtp-Source: AGRyM1sVTNmfbruTJVZq71LNhDx/tYBuCAzb0/8zfTDBny0VdrsOoKltMvLwIRXvZDPHRPMC7aIFVA==
+X-Received: by 2002:a05:600c:2055:b0:3a0:4605:df1a with SMTP id p21-20020a05600c205500b003a04605df1amr4519587wmg.75.1656494242443;
+        Wed, 29 Jun 2022 02:17:22 -0700 (PDT)
+Received: from srini-hackbase.lan (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
+        by smtp.gmail.com with ESMTPSA id t18-20020a05600c199200b003a03a8475bfsm2896443wmq.16.2022.06.29.02.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jun 2022 02:17:21 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     bjorn.andersson@linaro.org, linus.walleij@linaro.org
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/2] pinctrl: add support for SM8450 LPASS LPI pinctrl
+Date:   Wed, 29 Jun 2022 10:17:14 +0100
+Message-Id: <20220629091716.68771-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,139 +69,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: a1d4ef1adf8bbd302067534ead671a94759687ed  pinctrl: stm32: fix optional IRQ support to gpios
+This patchset adds pinctrl driver to support pin configuration for LPASS
+(Low Power Audio SubSystem) LPI (Low Power Island) pinctrl on SM8450.
+    
+This IP is an additional pin control block for Audio Pins on top the
+existing SoC Top level pin-controller.
+    
+Tested this on SM8450 MTP
 
-elapsed time: 1089m
+Thanks,
+Srini
 
-configs tested: 118
-configs skipped: 3
+Srinivas Kandagatla (2):
+  dt-bindings: pinctrl: qcom: Add sm8450 lpass lpi pinctrl bindings
+  pinctrl: qcom: Add sm8450 lpass lpi pinctrl driver
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                 randconfig-c001-20220627
-i386                          randconfig-c001
-xtensa                  audio_kc705_defconfig
-sh                              ul2_defconfig
-sh                               j2_defconfig
-sh                           se7343_defconfig
-parisc64                         alldefconfig
-powerpc                      ppc40x_defconfig
-arm                        realview_defconfig
-arm                            pleb_defconfig
-parisc64                            defconfig
-arm                          pxa910_defconfig
-i386                             alldefconfig
-powerpc                         ps3_defconfig
-m68k                        stmark2_defconfig
-arm                            mps2_defconfig
-arm                          simpad_defconfig
-sh                ecovec24-romimage_defconfig
-arm                            hisi_defconfig
-arc                     nsimosci_hs_defconfig
-arm                        cerfcube_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                 mpc837x_mds_defconfig
-sh                           se7712_defconfig
-arm                      jornada720_defconfig
-sh                           se7721_defconfig
-m68k                             allmodconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                             ezx_defconfig
-powerpc                       holly_defconfig
-ia64                         bigsur_defconfig
-arm                       aspeed_g5_defconfig
-sh                   sh7770_generic_defconfig
-arc                            hsdk_defconfig
-arm                         cm_x300_defconfig
-riscv                            allyesconfig
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-s390                                defconfig
-s390                             allmodconfig
-arc                                 defconfig
-alpha                               defconfig
-s390                             allyesconfig
-nios2                            allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc                           allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-x86_64               randconfig-c001-20220627
-arm                  randconfig-c002-20220627
-ia64                             allmodconfig
-x86_64               randconfig-k001-20220627
-m68k                             allyesconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64               randconfig-a013-20220627
-x86_64               randconfig-a012-20220627
-x86_64               randconfig-a016-20220627
-x86_64               randconfig-a015-20220627
-x86_64               randconfig-a011-20220627
-x86_64               randconfig-a014-20220627
-i386                 randconfig-a014-20220627
-i386                 randconfig-a011-20220627
-i386                 randconfig-a012-20220627
-i386                 randconfig-a015-20220627
-i386                 randconfig-a016-20220627
-i386                 randconfig-a013-20220627
-arc                  randconfig-r043-20220627
-s390                 randconfig-r044-20220627
-riscv                randconfig-r042-20220627
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-
-clang tested configs:
-arm                      pxa255-idp_defconfig
-arm                            dove_defconfig
-mips                       lemote2f_defconfig
-arm                         lpc32xx_defconfig
-arm                        neponset_defconfig
-x86_64                        randconfig-k001
-x86_64               randconfig-a004-20220627
-x86_64               randconfig-a006-20220627
-x86_64               randconfig-a001-20220627
-x86_64               randconfig-a005-20220627
-x86_64               randconfig-a002-20220627
-x86_64               randconfig-a003-20220627
-i386                 randconfig-a002-20220627
-i386                 randconfig-a004-20220627
-i386                 randconfig-a003-20220627
-i386                 randconfig-a006-20220627
-i386                 randconfig-a001-20220627
-i386                 randconfig-a005-20220627
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20220627
-hexagon              randconfig-r045-20220627
+ .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 138 ++++++++++
+ drivers/pinctrl/qcom/Kconfig                  |   9 +
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ .../pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c   | 240 ++++++++++++++++++
+ 4 files changed, 388 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.25.1
+
