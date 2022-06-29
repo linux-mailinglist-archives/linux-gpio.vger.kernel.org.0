@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44F3056089C
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 20:07:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5EB56089F
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 20:07:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231501AbiF2SGj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 14:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
+        id S231650AbiF2SHB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 14:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232447AbiF2SGW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 14:06:22 -0400
+        with ESMTP id S232725AbiF2SGl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 14:06:41 -0400
 Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0C740E77
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:05:03 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id d2so22435235ejy.1
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:05:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D92AF3FDAF
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:05:51 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id u12so34121717eja.8
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 11:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:in-reply-to:content-transfer-encoding;
-        bh=QSfgLXgFfiGaok0lJdcTWMoQDlToXF+BRlTaDwPiloE=;
-        b=MeoRgOZVtDqrD1BXTHuzWUgHKg59UHeJcfZILwn01ko3si8mEmIRSF7PZGoMYFnpSe
-         UPsJMrSHsVVgvuYWA0BkwQVKseCCL7fdZVk7qASBp2fBqik35D7ADK09VSAG4NXgTMMd
-         Fn7MvZjStPJVT/IB0yqIlKwG2m8zdfi3lBLCMd2c70R/w3jeikg5+J0oxqeNIgv9J0SK
-         FzEBOO4wjBzWSc18UAp+xZ6uusQZYAb7snw/6MCIznSFGO0tPrjNxAoB4fM4KMLT/8NI
-         ohW/Jc+N5MWrwvDMCsUcl81gFhKH/4lI/zzm34r2TWSmE+LzbeEPWfJBwPsGyTN7jlEN
-         XeLw==
+        bh=us3+4U/6NS+9bUTvamba37DRKpthQlGNNn2eGBCrdmM=;
+        b=vbuaaFUYqN1guX3EHj2/BmchL8/O601kaBMJ0zDDI6+sG4DLOkANm8JNnernJAONbn
+         UcgAZArlvEyfdDw8xg9VbPHyOM97a6LZp8E9RREWM5XoeuGB/KTfZJ9n0bjMew0vnDlz
+         0TJMVQo419wctcCnxgz/i+1x35gC2NhWNe47DPYG18HC4B68XRZDi2BsZNKLm6g9x3bp
+         SdJ/pxYX5ibbv7r3FHqaMpQy6AUKkij4SwdHtrT4jWHw31sN+v15qrI1BDfPGRIU1NxO
+         pdlvlGsboJo5pc9j3Lh1Sk7lqtmPVbNfAkXegBcYWpI6DUgg8WTY68eizLe87jJM8kil
+         dN8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=QSfgLXgFfiGaok0lJdcTWMoQDlToXF+BRlTaDwPiloE=;
-        b=SAHZ5z4y4/OVMXAFaM4LorI1HXbarOzCdSwZmXUzk2p2boUJxrrOHI4sZpLqn2DmJI
-         E625NwDHC6hi3PbU4tKo9in7STJYCk5wR7BSYV21nKQqzjEMt6yjsZe7AkSYVMx/dv3L
-         ae3xxrVwnUUceWKw2bRP5/Tqlev+pjPptjrTFP44OI3zQRKShXMsEuMA0+8ndA7ukTew
-         U4j+s/tSP5tk7b4xAcwmkinw5SjZHrxGsbCh9KvzTVqhTzOckWRcwEnXLrucL+kLlKpJ
-         ph2aVeQMxI3eXacGS9iE5C8lNHCkinrz2bxmeNyPB4TunzR70ZJi4cIi7Jnqkvn2HFmP
-         yRHQ==
-X-Gm-Message-State: AJIora/e0CEj2iTCcJebEVYNSpfaUxQY/kvwCwTlPBBJKFHJ8Hsqos8J
-        RFbQ70iEKcFCsXrKN2ScZHXFkQ==
-X-Google-Smtp-Source: AGRyM1uveF1FWSHXgBj8uURIFKTL+sgiRu8h6GV4IGO4002y0D6+mokBlHcmA5uQEoUy6sKdGRLgwg==
-X-Received: by 2002:a17:907:3f82:b0:726:3732:961c with SMTP id hr2-20020a1709073f8200b007263732961cmr4751329ejc.727.1656525902194;
-        Wed, 29 Jun 2022 11:05:02 -0700 (PDT)
+        bh=us3+4U/6NS+9bUTvamba37DRKpthQlGNNn2eGBCrdmM=;
+        b=Aths9ydnzIhRLCxHRY1PqB9sYW74rzaWEQpKbeyoHsIOj+cfT1+7P16VlCCKJK2QRs
+         nYUCoIaVUqB3d9MTazZ8MBPSkhvSCgMR8KuxDJVQGAWQNIorfrXRZTu1RbO7Gw63vvb/
+         IVfr14JMU5naIn/fHqXxyxK04JF13jujAm+UWT3q1M4UtsN7oOsNCyrogQRNzYKKPUSI
+         +5qrwgXfjvV/u5B9281ae0O2O1AkIQlctuC20xfVr0vZBGO+hbVFCqYkamN10H9NwkQC
+         Dr0eEh4C7C8msISKZldItIVOea1PV6ZzMEfLjSOyWkbTj3j4TN7FZm7rn5f1jjA5Qjb1
+         EkwQ==
+X-Gm-Message-State: AJIora+/C4DhMbKnLU/02cJgQxpvBLISzBwtz8JIvc4Vv+yqgp5QiqFR
+        ylElQdkcp1FYU77HG7i+OtZXGA==
+X-Google-Smtp-Source: AGRyM1sWMDnn3S+Hc1i9wxDUNunPqB3FVeRluJtNmaPIT8itwCMTAUqzlXg0BsktQka3qSLa83AIJg==
+X-Received: by 2002:a17:906:7c0c:b0:6f9:1fc:ebf3 with SMTP id t12-20020a1709067c0c00b006f901fcebf3mr4455187ejo.403.1656525950438;
+        Wed, 29 Jun 2022 11:05:50 -0700 (PDT)
 Received: from [192.168.0.187] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id n6-20020a509346000000b004319b12371asm11957216eda.47.2022.06.29.11.05.00
+        by smtp.gmail.com with ESMTPSA id ml22-20020a170906cc1600b006febce7081bsm8018575ejb.163.2022.06.29.11.05.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 11:05:01 -0700 (PDT)
-Message-ID: <392186b6-d5cd-ec6a-ca98-c02a824eaa7c@linaro.org>
-Date:   Wed, 29 Jun 2022 20:05:00 +0200
+        Wed, 29 Jun 2022 11:05:49 -0700 (PDT)
+Message-ID: <1303740a-d975-54ec-1bfa-6f1f6a6dc391@linaro.org>
+Date:   Wed, 29 Jun 2022 20:05:48 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v6 11/14] arm64: dts: freescale: imx8: Fix power
- controller name
+Subject: Re: [PATCH v6 12/14] arm64: dts: freescale: imx8qxp: Add fallback
+ compatible for clock controller
 Content-Language: en-US
 To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -91,9 +91,9 @@ To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
- <20220629164414.301813-12-viorel.suman@oss.nxp.com>
+ <20220629164414.301813-13-viorel.suman@oss.nxp.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220629164414.301813-12-viorel.suman@oss.nxp.com>
+In-Reply-To: <20220629164414.301813-13-viorel.suman@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -109,11 +109,13 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 29/06/2022 18:44, Viorel Suman (OSS) wrote:
 > From: Abel Vesa <abel.vesa@nxp.com>
 > 
-> The proper name is power-controller, not imx8qx-pd.
+> Both i.MX8QM and i.MX8DXL use the fallback fsl,scu-clk compatible.
+> They rely on the same driver generic part as the i.MX8QXP, so
+> lets add it to i.MX8QXP too, for consitency.
 > 
 > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> ---
+
 
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
