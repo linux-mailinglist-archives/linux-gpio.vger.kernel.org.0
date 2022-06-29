@@ -2,103 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59CA155F8B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 09:20:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 509DD55F89E
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 09:20:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbiF2HQt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 03:16:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60442 "EHLO
+        id S231555AbiF2HTK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 03:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231381AbiF2HQq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 03:16:46 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF96338A4;
-        Wed, 29 Jun 2022 00:16:45 -0700 (PDT)
-Received: by mail-qk1-f171.google.com with SMTP id b133so11398103qkc.6;
-        Wed, 29 Jun 2022 00:16:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QHnTw+1dh39iLHqR9tM/upSF9rPKTfu4pJ0mDQbSipM=;
-        b=bJBiHgnxN3gFCdJ0nMSn0I8Gbgmzz/I65rE6Ss1RW2tgA6wwcZb65OXBRYzMvYH8in
-         Xf5d7oEazg+Y6lTPhsT8V6aSOaMZhpi3bdLAd5xi9p1GOGulPVAqSngKfB+HH0jWINnw
-         BLyrtplFe9BeZdLvpAL1HTDKGUBfMP6oZDrcL0VPiHB2EmAtvL62hBjltlhvYXmnSGpo
-         At0xqdHqIeLtq/1d4KW3AKFqZmuQpNQAxtc3NFtgKjDVuHxZ7Lx8z4zruSEOKrXnV3nx
-         CO37PC6FV1hUFm/dyUQTGkZ2ZUNqd01V30bYY1GT+DX0OQq+hN47IGhpmq87KntNAvO7
-         wl6w==
-X-Gm-Message-State: AJIora+CvGDkEOflQ9eN6JmvwGjg2l8TeViatHLthh4fOm7ReN6sIkKN
-        80nzc5nsyBZsFfNiRtsQQRen93s6IY0wZA==
-X-Google-Smtp-Source: AGRyM1sn/xFg4j+kAILXah5nPATN/CoZ7OOZ9YSfbXZHkAmUj2K+WErd2Xc1mIwBrDG5FJ9jdCIo/Q==
-X-Received: by 2002:a05:620a:294a:b0:6ae:fb7f:831 with SMTP id n10-20020a05620a294a00b006aefb7f0831mr1004462qkp.130.1656487004135;
-        Wed, 29 Jun 2022 00:16:44 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id s12-20020a05620a29cc00b006a36b0d7f27sm13510541qkp.76.2022.06.29.00.16.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 00:16:43 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id q132so26304148ybg.10;
-        Wed, 29 Jun 2022 00:16:43 -0700 (PDT)
-X-Received: by 2002:a5b:6c1:0:b0:669:a7c3:4c33 with SMTP id
- r1-20020a5b06c1000000b00669a7c34c33mr1776911ybq.543.1656487003120; Wed, 29
- Jun 2022 00:16:43 -0700 (PDT)
+        with ESMTP id S229972AbiF2HRx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 03:17:53 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCF3340E0
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 00:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656487072; x=1688023072;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/yTrH9JNZlbgrrIY6ZDQ7ToqQMC2QWVxQniCd8aIECY=;
+  b=cZ2FmQTaFQSJQ8XF7eVGRU5yrhhtymaiB/IrYgQoS5YmVHBfFhVm5t8j
+   +x3Ijr+6jD8CQYZytZYYTWao+OoA5ajYWKqp7+1qGscv/20dInmj4JgNu
+   xazfhN/ZUqmfu+sbyEGqMvYk2oueRiETPMe18nhbnokobzzGn0cVQPdN3
+   rcbKkN1g1XAoU45iGO+nDepbs3+X8/NAh3qNl9pqN9HB4AL5QWhX1Lbpl
+   hOu94cS+gLmIzwc/lQui8BNGJ9Yz/AgagIq6TcatBWoCBRLE4QWe3ZhIe
+   81YZiE/BpFdOwSGKSvOdCeYpw44s34Mb1IO1yL8sZl/5lSTC8Klizzs1h
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="270712066"
+X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
+   d="scan'208";a="270712066"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 00:17:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
+   d="scan'208";a="917490731"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Jun 2022 00:17:50 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o6RxN-000AyX-SR;
+        Wed, 29 Jun 2022 07:17:49 +0000
+Date:   Wed, 29 Jun 2022 15:17:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ c3f464542b7099692827f0094c00aa9a26a2acbc
+Message-ID: <62bbfc88.gynOaKPeijs7oqc6%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com>
- <87r13rkcos.wl-kuninori.morimoto.gx@renesas.com> <CAMuHMdVVPN-dhnjw1y7WqQJjZNO-YG8PjaFjmCvawMAhZJJLsA@mail.gmail.com>
- <87r138jm3r.wl-kuninori.morimoto.gx@renesas.com> <87k090ji9t.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87k090ji9t.wl-kuninori.morimoto.gx@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 29 Jun 2022 09:16:30 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWPWzhBoDeTR-ueS9Y9sBVWx_zUAM+6b168Tb8LYcGxcg@mail.gmail.com>
-Message-ID: <CAMuHMdWPWzhBoDeTR-ueS9Y9sBVWx_zUAM+6b168Tb8LYcGxcg@mail.gmail.com>
-Subject: Re: [PATCH v3 09/21] pinctrl: renesas: r8a779g0: add missing TCLKx_A/TCLK_B/TCLKx_X
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Morimoto-san,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: c3f464542b7099692827f0094c00aa9a26a2acbc  dt-bindings: pinctrl: mt8192: Add RSEL values to bias-pull-{up,down}
 
-On Wed, Jun 29, 2022 at 4:49 AM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> > > LGTM, but as the suffixes become part of the DT ABI when defining
-> > > pin groups, we should get the conflicts resolved, and this cannot
-> > > be applied as-is.
-> >
-> > It seems HW team / Doc team are now fixuping suffixes.
-> > I think I need to use new Doc for v4.
->
-> We don't know when new Doc comming,
-> and I don't think there is someone who will get DT naming exchange issue for now
-> (Because no uses).
->
-> So, I'm happy if you can accept my next v4 patch-set (suffix is still using _X).
-> and I'm happy to post new incremental patch which is for
-> "update PFC to adjust to latest Datasheet" in such case.
+elapsed time: 990m
 
-My worry is not about the group of pins marked _X, but about its
-siblings without _X.  E.g. your patches have SCIF1 and SCIF1_X,
-but we do not know yet if SCIF1 should be renamed, too.
+configs tested: 52
+configs skipped: 2
 
-I agree it is unlikely to become an issue with TCLK soon, but (H)SCIF1
-are more likely to become enabled, also on real products.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Gr{oetje,eeting}s,
+gcc tested configs:
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                                 defconfig
+ia64                             allmodconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+alpha                            allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+m68k                             allyesconfig
+i386                                defconfig
+i386                             allyesconfig
+x86_64               randconfig-a012-20220627
+x86_64               randconfig-a011-20220627
+x86_64               randconfig-a013-20220627
+x86_64               randconfig-a014-20220627
+x86_64               randconfig-a015-20220627
+x86_64               randconfig-a016-20220627
+i386                 randconfig-a012-20220627
+i386                 randconfig-a015-20220627
+i386                 randconfig-a011-20220627
+i386                 randconfig-a016-20220627
+i386                 randconfig-a013-20220627
+i386                 randconfig-a014-20220627
+s390                 randconfig-r044-20220627
+riscv                randconfig-r042-20220627
+arc                  randconfig-r043-20220627
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-syz
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
 
-                        Geert
+clang tested configs:
+x86_64               randconfig-a002-20220627
+x86_64               randconfig-a003-20220627
+x86_64               randconfig-a001-20220627
+x86_64               randconfig-a005-20220627
+x86_64               randconfig-a004-20220627
+x86_64               randconfig-a006-20220627
+i386                 randconfig-a002-20220627
+i386                 randconfig-a004-20220627
+i386                 randconfig-a003-20220627
+i386                 randconfig-a001-20220627
+i386                 randconfig-a006-20220627
+i386                 randconfig-a005-20220627
+hexagon              randconfig-r041-20220627
+hexagon              randconfig-r045-20220627
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
