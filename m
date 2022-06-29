@@ -2,69 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96B4156079E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 19:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35CB55607B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 19:48:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbiF2Rq5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 13:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53144 "EHLO
+        id S229966AbiF2Rs2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 13:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231754AbiF2Rq4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 13:46:56 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B4A3C737
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:46:52 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id r18so15377198edb.9
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:46:52 -0700 (PDT)
+        with ESMTP id S231941AbiF2RsR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 13:48:17 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0010712AE2
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:48:12 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id fi2so34037388ejb.9
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 10:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Xj8KYBMxIXHvOyiU4Z2mgS/vdHnq9bALri3yt1aiv1c=;
-        b=LMLK9CMKYfcCCde1mzzTCAVpgkAvify1XeN+DPrlC7muTHWNXIPuHm5OMoaKmFCI99
-         oxDy+T1G4xjbXE0r3lBVd9wmcN6uk8YeaLkci4BtFehnh8aQX0z1RTE3TSDTSiHBadNB
-         qFLG52gJZmVRO+9ayB/3LAl1mYyGSCpIL1fMOI0uhaNLNpHqPdFj5VO+at/9nUVq0vrL
-         xTHQUb7z9K2M3wnYPGD/G6um0QrAjHW8w8IxoLE6WmTErGQnwVipqw9MSzWU4Cc0FAuW
-         KkzXRy2tm+Wo+IsODh5/e4g6ucEnSrlBsdTnKn7aJmX1h5qqiX7qQWKAxwCXMUlNXWOS
-         ++xQ==
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=sikhifeguM4ffT8b3q2AAA4YOa4F7ZoLxP0wUvhq6/g=;
+        b=wmemF2kISMpdcc58JqukhQYHNzP+s7FHmT03Uv/WkL1lm9/TnlXYpnt9Ghat7q+t26
+         Ir3UyfOTBkNLMKbg/0SztdMRSfODpBLzH7arlnBx2z4sZLhCbAchzPzfmQPPwm+d73/J
+         Pizmu8v8i85FND872tmc2Y1ny2tlnB4LfQo3Czrwx/b8PE5TBhjDm4mi/tzk+tfuXM9s
+         lpeGD6+kvZHpCya+UJ7J3V+dk2mjmsMi/1KdkbxmrAmFDfTMigB3ApMZ22/8YxUDnEZv
+         zkvK2TDJn3adF4uCuPh33cxxF/LeB1FamNhlx85Mp8uYE2U68o9jfk+iMtc8lXD7kraL
+         BN8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Xj8KYBMxIXHvOyiU4Z2mgS/vdHnq9bALri3yt1aiv1c=;
-        b=QeFme2MZThQKN1Tb0dJjn8/1SiUsdNjs+OXS1sRB4p00f+4tL18kEbhCsVHqshI7fC
-         QQJOFZroh6fJ/vsXOC/DBVp+n3E0ECqcERm12FxkAeGyR8x/rqUXsLyRsGe9adeqoKoo
-         e8PoY2PfdWLVrHzv15NXtGzCrIiv0FAZRRgRezwi91OY6Spy9BjvrEtaU/TPmCp+UAqr
-         MoPYrgPfvv+b0cW8iqLGu7fGp8eIzZP/f3s3wBIpmZ1e1XLE0m9fCXBczyyETnI582tD
-         UBbqVstptjT0nHjBLR8KC0nj7mdV8IYZQzRjjNakhFwJfdXnEAmWFjU2Fm9/QUxlrkJn
-         qzSg==
-X-Gm-Message-State: AJIora/tal2T+ncdesZNBXtsfzA/ZrVJ/Np8Rvv+M9q2LF3XRpLHiGYc
-        F00gW0l2BpnLwPlLJe50cmIxYg==
-X-Google-Smtp-Source: AGRyM1tlsatjUt6BNSfWIUKLcq3TCqWC1HHWCKujc+N6jjnj9QFCJ4i7h/7H6rIwxHOGjzxR499Dnw==
-X-Received: by 2002:a05:6402:606:b0:435:72af:4680 with SMTP id n6-20020a056402060600b0043572af4680mr5816972edv.224.1656524811195;
-        Wed, 29 Jun 2022 10:46:51 -0700 (PDT)
+        bh=sikhifeguM4ffT8b3q2AAA4YOa4F7ZoLxP0wUvhq6/g=;
+        b=AbWxUDK/XVOO7mfwC2LJJ3G0MXDduSBbqAYkioKgc5Vos0iV+Kr+9sSYjWG0WYw3sS
+         DnJ2RE/47F+bnAdcwEdHkekSxAJvP3Q/XKon82xvetvlSu1qDqdVqITlHA8sAvnW7/p1
+         7m/2oK3sgh04bfChjOrzd8ZmPynfhP1AG579U/Fv9arQKH9hJJ+1VXc/IEnL9dINI0/U
+         abNr5zsoElsTGWBqMJFrKRf5G5u7JAVoFRTgW11SzNSHnHvK+6V+0Xa2ZpTtvJGdrIMu
+         uGSpJOoz/Ge3Aw0biGTRJ5yQUiKO9kSwMpiCpzK240y7CDR6dHbDsVLbbS4p+H/JqDHu
+         QKFA==
+X-Gm-Message-State: AJIora8zfuucDM9C+vcLEWfXgAmQ2LyOogdg8N1oucPMZxk5BgDICYF7
+        52UQnjGjbiUDyGhKh6mV6+MJdw==
+X-Google-Smtp-Source: AGRyM1trKjyrZm3TCGY63mfEZIhc+tkObQ9Pl2m1fVlhR+iabfH3Q+7yMBjnp58xANwGQ29L43bHLg==
+X-Received: by 2002:a17:906:9c84:b0:6e0:7c75:6f01 with SMTP id fj4-20020a1709069c8400b006e07c756f01mr4552991ejc.103.1656524891488;
+        Wed, 29 Jun 2022 10:48:11 -0700 (PDT)
 Received: from [192.168.0.187] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id k11-20020a1709062a4b00b00726abf9a32bsm3808687eje.138.2022.06.29.10.46.50
+        by smtp.gmail.com with ESMTPSA id f13-20020a170906824d00b00726e108b566sm2230990ejx.173.2022.06.29.10.48.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 10:46:50 -0700 (PDT)
-Message-ID: <11b937dd-0f05-9126-5ec0-73518b29e8aa@linaro.org>
-Date:   Wed, 29 Jun 2022 19:46:49 +0200
+        Wed, 29 Jun 2022 10:48:10 -0700 (PDT)
+Message-ID: <f559cb30-7820-bcb7-0d34-c8b32c1ee889@linaro.org>
+Date:   Wed, 29 Jun 2022 19:48:09 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v2 1/2] gpio: pca9570: Add DT bindings for NXP PCA9571
+Subject: Re: [PATCH v6 01/14] dt-bindings: clk: imx: Add fsl,scu-clk yaml file
 Content-Language: en-US
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, patchwork-lst@pengutronix.de
-References: <20220629170420.2712077-1-l.stach@pengutronix.de>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abelvesa@kernel.org>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Liu Ying <victor.liu@nxp.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Ming Qian <ming.qian@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
+ <20220629164414.301813-2-viorel.suman@oss.nxp.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220629170420.2712077-1-l.stach@pengutronix.de>
+In-Reply-To: <20220629164414.301813-2-viorel.suman@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -77,18 +105,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/06/2022 19:04, Lucas Stach wrote:
-> This patch adds device tree bindings for the NXP PCA9571,
-> a 8-bit I2C GPIO expander.
+On 29/06/2022 18:44, Viorel Suman (OSS) wrote:
+> From: Abel Vesa <abel.vesa@nxp.com>
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> In order to replace the fsl,scu txt file from bindings/arm/freescale,
+> we need to split it between the right subsystems. This patch documents
+> separately the 'clock' child node of the SCU main node.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/clock/fsl,scu-clk.yaml           | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml
 > 
 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
 Best regards,
