@@ -2,151 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4492055FA1C
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 10:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB0AB55FA3D
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jun 2022 10:20:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231225AbiF2IJL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jun 2022 04:09:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56440 "EHLO
+        id S230088AbiF2IUa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jun 2022 04:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231613AbiF2IJK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 04:09:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 774633BBD1
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 01:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656490147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7hQQnP6ElkRz6EikrOqVkat5RAwQAYxqOhDbZ9zjeug=;
-        b=fgsDzeyRjFEk2KeWSqmbecKyn25Vy9Yr9ksDNykkz9dbfibRQ1L2qZtCKWDjwTLV/Uk6rf
-        5eskSYYjJuqE8dTfdzbVu/c8lHf9ZfI/MxhZTUQ/0PRnz/2WCOCjXmOWpkNEs2HTUBOUZc
-        hcCoase9/NGzpmY7V6jwkU2icPl1iRM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-328-NwFZcNsVNWiHw-qFcQW87w-1; Wed, 29 Jun 2022 04:09:05 -0400
-X-MC-Unique: NwFZcNsVNWiHw-qFcQW87w-1
-Received: by mail-wm1-f69.google.com with SMTP id v184-20020a1cacc1000000b0039c7efa3e95so6285115wme.3
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 01:09:05 -0700 (PDT)
+        with ESMTP id S229772AbiF2IU3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jun 2022 04:20:29 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0183C3BBD1
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 01:20:28 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id g16-20020a17090a7d1000b001ea9f820449so18571570pjl.5
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 01:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AYS//Bqz000jGoeMpecKzBIqVnJgMYJudKwyObTDuyU=;
+        b=Y3JVNBPBeCWYlSIaXnPoNVu9F4R8BmLCnT2qf71vMOIE48I6fqDowpDeycmDQik//4
+         HSdsnF5epcXMEtE4vab2Q8tHQEPVoy9y9JO5jiINfajmuaVRR7/1n4izvuWO1EP72uUe
+         kjuGZwX9HGS1z8xT8ussA+fA1Nn9rUyX//TpemDYvOdrU6HFl8qHUO9efBJnfPFZhJiX
+         0WJVOiksNZqctoVK1XOQG7SkN/ZIQIfo9l1OspPkuom4otXgGmvDMiir3YO+HoLixx4v
+         /7zF0sJ6y6mwAeVA1BWQ4gakJ1D2v/a8s70pP/rAajiEJCmGf0seOVn3MEFK8WuTQnAU
+         Y/rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=7hQQnP6ElkRz6EikrOqVkat5RAwQAYxqOhDbZ9zjeug=;
-        b=yLw7zoIwqnbTbulN8bGQhmsJbH2P43rn6VBRJ3vHgfzfJuf1MOKd6e80a1oFVUztKx
-         c5rZuWWoLOdh/q2LesokCVgOSKDgtDEIhraMxgJFjbNAXWhwEBqD0u7wirWukUy8C4DY
-         oMdgZwF1FqAzeqcsY5r+FK0+/8gOIHZ/LnIBoT07O7qrdQPOJZjSpUDlD+yuYc32YuuR
-         wq9bkvFFBxcysj6g8Hhn/xBRmpZnVx3aalrEFptX5uG294YUGU2iZLY83UDho7JhqQWG
-         uZUtIPit1kVgw09zTmegdHHk19Bc47a2l2SM04JmZ8W24F0fy5tLBsiyrfUWzyd2MyQ1
-         VIUA==
-X-Gm-Message-State: AJIora81Ts8Pc0K42bLhUFtJ2pUewnL5VVFza5z0G8WSf2/FaStUDl5p
-        rC8D5UMFalwdVQnltInNKB4l77oBeZj2A0VhStYhyRviY4BGuRNB0/mvaedqFrPX6xCf7zsDgcr
-        qiY5hgYtgeZEiiekIRVuZZA==
-X-Received: by 2002:a05:600c:2246:b0:3a0:4d14:e9d5 with SMTP id a6-20020a05600c224600b003a04d14e9d5mr2201647wmm.70.1656490144653;
-        Wed, 29 Jun 2022 01:09:04 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1usFW/96xeCeX9gWa5EcwEsowhB540yEb4Gaanj9433iMcJH3n1uDXhdEWzSLPQicn1TmuJ9w==
-X-Received: by 2002:a05:600c:2246:b0:3a0:4d14:e9d5 with SMTP id a6-20020a05600c224600b003a04d14e9d5mr2201616wmm.70.1656490144372;
-        Wed, 29 Jun 2022 01:09:04 -0700 (PDT)
-Received: from [192.168.1.129] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id p2-20020a05600c358200b003942a244f47sm2507134wmq.32.2022.06.29.01.09.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jun 2022 01:09:03 -0700 (PDT)
-Message-ID: <a5a3e2ca-030a-4838-296e-50dbb6d87330@redhat.com>
-Date:   Wed, 29 Jun 2022 10:09:01 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AYS//Bqz000jGoeMpecKzBIqVnJgMYJudKwyObTDuyU=;
+        b=30ZqMrsHWEgKtiKDOKEmBeAirqF+iTJtMVLRq5TuRfcqphQgM1EmE5W+x211kvjaQe
+         jRRNFxIXUcE50LHIFITxPmCc6kyVbMNTa1Tuaqvbko/7Hudm6G+Z0Gs5w8mAIA8v3TI0
+         Wv7zvhEArOUefD6anSsrgTm/fGUBo9hKUEy8YolokpP+EJLvQ+IrbYjobaj3KvsR6GKr
+         FkHp4P6zZiqiiSrk6sIe4H+4dmexiSwTX1SyaR9VmD94ZNM1vVz5KfCRPpE3rYSMMGEb
+         le9r6BH2KLK1Q5yiNENhBGNJBqeZQo/cYNaY+eBU6LlQBk8daZmilEoeJyUPQM+7/C36
+         ABZg==
+X-Gm-Message-State: AJIora9FjzV7XvaxVQ0/77zTNqEwml2m/Os/NpO2T9qN8GUytmrK5UDG
+        ZVYJkMX8X3gZGw1JrsH7xYk=
+X-Google-Smtp-Source: AGRyM1toZjPTx5cg7PnAqsTJafDm0r+Bn1xh0Wf8Qt8EiK7H2PEdjCXfgBG7G9qWifMboNGHdg/l8Q==
+X-Received: by 2002:a17:902:6b42:b0:15d:3603:6873 with SMTP id g2-20020a1709026b4200b0015d36036873mr9070035plt.30.1656490827424;
+        Wed, 29 Jun 2022 01:20:27 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id x5-20020a1709029a4500b001678e9670d8sm10768834plv.2.2022.06.29.01.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jun 2022 01:20:26 -0700 (PDT)
+Date:   Wed, 29 Jun 2022 16:20:21 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Yegor Yefremov <yegorslists@googlemail.com>
+Cc:     Linux GPIO List <linux-gpio@vger.kernel.org>, brgl@bgdev.pl,
+        andy.shevchenko@gmail.com
+Subject: Re: Reading current output value
+Message-ID: <20220629082021.GA24434@sol>
+References: <CAGm1_kvsAir70H41RJ5vzAGeBLBAFByHyR3fWfFeq3RW5O7cBA@mail.gmail.com>
+ <20220622102632.GA37027@sol>
+ <CAGm1_kvf1RC7fHBy65PkRcS=a5eUgpVYyHM+6NmOvWv6YusTEA@mail.gmail.com>
+ <20220628045253.GA18105@sol>
+ <20220629021446.GB8799@sol>
+ <CAGm1_kubUyw1oSn2wFYVReCB5KcUnQ4KrGP_jEHuQ0fPLYEvXg@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
-Content-Language: en-US
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Jeremy Kerr <jk@codeconstruct.com.au>
-Cc:     "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "chrome-platform@lists.linux.dev" <chrome-platform@lists.linux.dev>,
-        "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "acpi4asus-user@lists.sourceforge.net" 
-        <acpi4asus-user@lists.sourceforge.net>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
- <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
- <60cc6796236f23c028a9ae76dbe00d1917df82a5.camel@codeconstruct.com.au>
- <20220629072304.qazmloqdi5h5kdre@pengutronix.de>
- <5517f329-b6ba-efbd-ccab-3d5caa658b80@csgroup.eu>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <5517f329-b6ba-efbd-ccab-3d5caa658b80@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGm1_kubUyw1oSn2wFYVReCB5KcUnQ4KrGP_jEHuQ0fPLYEvXg@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 6/29/22 09:55, Christophe Leroy wrote:
+On Wed, Jun 29, 2022 at 09:50:54AM +0200, Yegor Yefremov wrote:
+> Hi Kent,
 > 
+> On Wed, Jun 29, 2022 at 4:14 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Tue, Jun 28, 2022 at 12:52:53PM +0800, Kent Gibson wrote:
+> > > On Mon, Jun 27, 2022 at 12:37:46PM +0200, Yegor Yefremov wrote:
+> > > > Hi Kent,
+> > > >
+> > > > On Wed, Jun 22, 2022 at 12:26 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > >
+> > > > > On Wed, Jun 22, 2022 at 09:54:41AM +0200, Yegor Yefremov wrote:
+> > > > > > On a am335x based board I have a GPIO pin that enables/disables power
+> > > > > > of an external device (the bootloader sets this pin to output and 1,
+> > > > > > and the kernel is instructed to not change it). Using kernel
+> > > > > > 5.19.0-rc2 and sysfs interface, I can read the current status as
+> > > > > > follows:
+> > > > > >
+> > > > > > echo 68 > /sys/class/gpio/export
+> > > > > > cat /sys/class/gpio/gpio68/value
+> > > > > >
+> > > > > > As a result, I read 1.
+> > > > > >
+> > > > > > Using gpioget (libgpiod) v1.6.3, the line will be configured to
+> > > > > > "input" and the value is set to 0:
+> > > > > >
+> > > > > > # gpioget 2 4
+> > > > > > 0
+> > > > > >
+> > > > > > So, how can I read the state without changing it? I am mostly
+> > > > > > interested in using the kernel userspace API directly.
+> > > > > >
+> > > > >
+> > > > > The API itself supports it, but it isn't exposed in gpioget v1.6.3.
+> > > > > The gpioget in libgpiod master has a --dir-as-is option for exactly
+> > > > > this case, but that hasn't made its way into a libgpiod release yet.
+> > > > > (commit 3a912fbc1e2 tools: gpioget: add new --dir-as-is option for GPO read-back)
+> > > > > Can you try master?
+> > > >
+> > > > # gpioget -v
+> > > > gpioget (libgpiod) v2.0-devel
+> > > > Copyright (C) 2017-2018 Bartosz Golaszewski
+> > > > License: LGPLv2.1
+> > > > This is free software: you are free to change and redistribute it.
+> > > > There is NO WARRANTY, to the extent permitted by law.
+> > > >
+> > > > Now, I get my "1", but as soon as gpioget exits, the pin goes at "0".
+> > > >
+> > >
+> > > Is that line the only line used (i.e. exported) on that chip?
+> > > If that is the case, can you request another unused line first (e.g.
+> > > using gpiomon in the background, or, and only since you've already
+> > > mentioned sysfs, exporting using sysfs), then try the gpioget?
+> > >
+> >
+> > Just to expand on that a little, when the GPIO subsystem is finished
+> > with a chip, so it no longer has any lines requested, it calls free on
+> > the device driver.  What happens then depends on the device driver.
+> > In this case the device driver (I'm assuming gpio-omap.c is the driver
+> > for your am335x) reverts all the GPIO lines to inputs.
+> >
+> > Any libgpiod tool will request the chip and then on exit, as no lines are
+> > requested, the chip will be freed - resulting in what you are seeing.
+> > Btw, the same would occur in you exported and unexported a line via sysfs.
+> >
+> > Hence the suggestion to request/export a line to prevent the chip being
+> > freed.  Or to switch to an approach where you hold the line and don't
+> > release it.
+> >
+> > Neither libgpiod nor the kernel gpio subsystem are explicitly requesting
+> > a change to the line - it is an unfortunate quirk of the GPIO chip
+> > driver interface.
+> >
+> > I hope that helps.
 > 
-> Le 29/06/2022 à 09:23, Uwe Kleine-König a écrit :
->> Hello,
->>
->> [I dropped nearly all individuals from the Cc: list because various
->> bounces reported to be unhappy about the long (logical) line.]
+> Thanks for your thorough explanations. I see your point and the
+> similarity with sysfs export/unexport semantics.
 > 
-> Good idea, even patchwork made a mess of it, see 
-> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20220628140313.74984-7-u.kleine-koenig@pengutronix.de/
+> So inputs are no problem and some real physical GPIOs can be handled
+> this way as well.
+> 
+> The only thing that I'd like to handle differently would be our mPCIe
+> VCC enable pin. It has a function of a regulator. AFAIK, the best way
+> is to use a userspace-consumer driver [1] like described here [2]. As
+> there is still no support for such a regulator in Device Tree, one
+> needs a dummy device as a consumer. So far, I couldn't find a suitable
+> example describing the whole setup. Do you have an idea how to
+> implement this function?
 > 
 
-FYI, for patches like these what I usually use is:
+Sorry outside my domain.
 
-./scripts/get_maintainer.pl --nogit-fallback --no-m --no-r
+But if it is just the enable pin you need to control and the pin is
+accessible to the GPIO subsystem then you can control it like any
+other GPIO line.
 
--- 
-Best regards,
+That might not give you any of the advantages of integrating with the
+voltage and current regulator framework, but it could get your lights
+on.
 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+Cheers,
+Kent.
 
