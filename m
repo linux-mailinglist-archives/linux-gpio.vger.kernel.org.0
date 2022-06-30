@@ -2,191 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24B9F562717
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 01:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9515E562725
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 01:35:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232585AbiF3XbD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 19:31:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
+        id S229891AbiF3Xfe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 19:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232099AbiF3XbC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 19:31:02 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBD14D170
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 16:31:00 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id p7so1121484ybm.7
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 16:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7rzBjlWyrGCVnHojYy7aloe09Kk1ZJFyFafJ4B59izQ=;
-        b=esSzbAG9SStIKedEdEyPNCZEwWeV7CGfw2gDAyv7xNkZGiGhAKyelsjm5S6l3zYohJ
-         d/Eo0n6Mp+36R9EN/Pq2SisCS+9HoblIrvPkImxxTHiatXxbVEpvW3y/yNgVziC5uyoZ
-         vYyHIRU3pYbXRmHkZLlWk/frQQwicQxGxfoUSBXj3PLfoEnFnvnX+lQNgSCCK/G112nQ
-         +h/LHrk5XRmANsD8K55QOlIqREK2mYKCbE3t0k3EnnSD9DyzGjrrvdjT+EJJoRKX1F7X
-         eGAoOxj+hwQhHxN9wOQ0TOIBLZRRt2Qt2wLPB0KOY9Z/NrqQd5sdoLelt/izUN/UnoDM
-         mZeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7rzBjlWyrGCVnHojYy7aloe09Kk1ZJFyFafJ4B59izQ=;
-        b=2b4CaJOpOUCHPF+EO7MukRztc8A+jd/HUdzADhYYMw3WoXj5ivfJuUHYNteKwDhepH
-         sGua2Shfl2bdfov3szhAWMzQhtuZNnVJyLmcSQgIXtxuhsqmIUopq1ydPTrr/Sgr0y0o
-         aSm0hyag7nzzA0l2WmfadDp3TwvBfoBYc838mnQtQO4OsSiuuDVJni9i8VbXO5n6rbyK
-         K+hksF9sFNiFnfmAl6B5bFNP5dp2B8VOJq5yvlm+TOf3fi6Q+S8a9Xxs0tHe2qgbAoJ7
-         TEdHPuiqqy0QaYeu8A5MYdrDjV7M8dEEQyvfTAIHEvVqLt8k44yvVaME5+4Svvlje8+I
-         z/Qg==
-X-Gm-Message-State: AJIora9QTVWYursC3HINSf4K7gjFDf3pMXZuT3/n+iodwCL3gKmQ1Rbw
-        yrZzh6W1A1qlbV5KPlxEAYrquiIT2g+KcD5gxjPKEw==
-X-Google-Smtp-Source: AGRyM1vZ35BqSkdVoL3YwWkOXOHYil4MKgDP8iAYz+Rz4wCD4ADLbbR0rsgTYZHYxiDej4wVmrVuer94e9q4LpiXAmA=
-X-Received: by 2002:a25:5bc3:0:b0:669:b722:beb8 with SMTP id
- p186-20020a255bc3000000b00669b722beb8mr12118791ybb.447.1656631859258; Thu, 30
- Jun 2022 16:30:59 -0700 (PDT)
+        with ESMTP id S229563AbiF3Xfd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 19:35:33 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2110.outbound.protection.outlook.com [40.107.114.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8041E59243;
+        Thu, 30 Jun 2022 16:35:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KFQzb+7jtvgCqpGN8Jcf8dewghrWnXhLEUK9wQx9bOenwvBpStCiMVIhxL6QrzwHlU9xCsYImMu2sxaothRo6LFd14MhgmiEVafnvIayNueUDb8pJHS/9gGNkQ+Y3tgjCfQ9ZZ6l8JQL8NF4xxx3l3jagMYd/OC+DxVFwSve+3bc6ATb5eaYnptpbDvttc+irKsOtKaDYvT7rlRuQ6r1r6GHZDwKmFte0bmCN9s0k39NTZ7rhf9eT7yCisrmSF594yTcnobEvKq7GOoBszR4VTwYGh0P5vzn8ndbw0fbMS6KQ3AaRZBT7WS9QgkBbBW+yYJWlcIVR9ZO67y+ZNF8Gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e1iOmPem4El7Oh3IyiNnb3C2znR3Y+8cBKm/h7zrlhc=;
+ b=BEXU/gLRVRulLxINas23+WnT68O4chBF1XsYWi5vUfYQ5CvpjMts+dFc9K/gvWxJBftUQ7Hdk327zGwmPzsVn3qFQKV5A2hh0AQIHilNK07s8FdvXRjearJ/9G6/Aqp0GgT9DUBTIq+PwWs91xZXMG8/VWJ37JfA2NWepMCLePp2SW9eg1LKLEnlz9GAMKuTYJIUFd00aCzyt2E/2JprzGNEMT/FCF1qBFYME8Qr7HNiD8bpd4ruQwv3jVl5gqKeQ7ylyZUTuSJcahl9SfV44GwIT6gJ6ZgP43/IilPv+E5HVsnoCclmTrokJ1FJUFlntFf7uoB2dT9z5O99QVqWWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e1iOmPem4El7Oh3IyiNnb3C2znR3Y+8cBKm/h7zrlhc=;
+ b=lkuH323FzF9dglVHjB6AOjUWZv6QhsKc5ObaE+ZW+TYl+tt0Tj9JevhZGdyTiJ/lOpDzuZRuuhemhw7uJBRt7KUoEavTsEyappp0+uAaPgWp8X579hdqdyWGB0z/7/WJeIapie7QYzDrjgejkhG9/fPZwb7DSfY+8D4q0+prp+8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
+ by OSAPR01MB2691.jpnprd01.prod.outlook.com (2603:1096:604:5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Thu, 30 Jun
+ 2022 23:35:24 +0000
+Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com
+ ([fe80::3838:1a73:ae46:bab2]) by OS3PR01MB8426.jpnprd01.prod.outlook.com
+ ([fe80::3838:1a73:ae46:bab2%5]) with mapi id 15.20.5395.014; Thu, 30 Jun 2022
+ 23:35:23 +0000
+Message-ID: <87mtdtu3lw.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 09/21] pinctrl: renesas: r8a779g0: add missing TCLKx_A/TCLK_B/TCLKx_X
+In-Reply-To: <CAMuHMdW0WwW=dxVKhDAc55Erra2qYwoVgmw5hvY4rjt+468e7w@mail.gmail.com>
+References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com>
+        <87r13rkcos.wl-kuninori.morimoto.gx@renesas.com>
+        <CAMuHMdVVPN-dhnjw1y7WqQJjZNO-YG8PjaFjmCvawMAhZJJLsA@mail.gmail.com>
+        <87r138jm3r.wl-kuninori.morimoto.gx@renesas.com>
+        <87k090ji9t.wl-kuninori.morimoto.gx@renesas.com>
+        <CAMuHMdWPWzhBoDeTR-ueS9Y9sBVWx_zUAM+6b168Tb8LYcGxcg@mail.gmail.com>
+        <87y1xf59eq.wl-kuninori.morimoto.gx@renesas.com>
+        <CAMuHMdW0WwW=dxVKhDAc55Erra2qYwoVgmw5hvY4rjt+468e7w@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date:   Thu, 30 Jun 2022 23:35:23 +0000
+X-ClientProxiedBy: TYAPR01CA0013.jpnprd01.prod.outlook.com (2603:1096:404::25)
+ To OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
 MIME-Version: 1.0
-References: <20220601070707.3946847-1-saravanak@google.com>
- <20220601070707.3946847-2-saravanak@google.com> <YrFzK6EiVvXmzVG6@atomide.com>
- <CAGETcx_1USPRbFKV5j00qkQ-QXJkp7=FAfnFcfiNnM4J5KF1cQ@mail.gmail.com>
- <YrKhkmj3jCQA39X/@atomide.com> <CAGETcx_11wO-HkZ2QsBF8o1+L9L3Xe1QBQ_GzegwozxAx1i0jg@mail.gmail.com>
- <YrQP3OZbe8aCQxKU@atomide.com> <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
- <Yrlz/P6Un2fACG98@atomide.com> <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
- <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 30 Jun 2022 16:30:23 -0700
-Message-ID: <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-To:     Rob Herring <robh@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 93fddf00-fe8d-470b-6c69-08da5af1344e
+X-MS-TrafficTypeDiagnostic: OSAPR01MB2691:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aRVHRfB8dQoynjq6LjQN4rZODk7jkw0Qy1dwFknW5+e3QUyf5SdecpL5Lxwdw0UZGojm5pegSwcU2Fdmd08gDI3k6y/kgSjSxaA76hZlQtvZGkr+Vz9MZhYbWAujDQ1yrErccaPaaH4UsOnTvD0st7S7t7u+JXHSagWAkH1/vjJCYYu0n+Pwac12LEbrMOWLIY53xetBwWa4XbYpygop6SVQ6CNeNF128c79d/IeMrothcpn7mMQuvNG5XZUzLTLlb2DTUIswsvD8P+oH0duFh6umfoAz/AtJkZoibQ98ozW3SOUSKcYMjv5Yyq1dnbV4+jTOxxWD4WhIdsvpN6fyxH/QwLPwzhtJ6wEzWivsr3NosFu256ZAiqm2R7RqRgv0VipAdV5tIQ7NAYM3bcuKTFWMXQTFCu9lddv0lzz+OS1lEArn0NXsQAEZ4Dsu47DOipm5rwZy5cyT3N3XvMx8niADMntCV4cS28EDOaudGobobIkJf0AmvcA6xJijFsLCaq5pA2O0b/K8JoCs5xp9CAfgbx03VnroTrVZPI5iUYelUBZF+pNgzrfgFzk7260s1VSgwTX8K+S9vUz89A6JOAQ0MSvGyejF5EPvqqbyyxwiFNJzyTA18BLpagNtziO9X/0jzpee6SnOp3ZyBtEsHI1xqvt++W1Jnh9chgB+3O5L6mqlgDySeYDM5uQdT2RG2DpP+1vbaah5ygs08IcIe4S3nlCWpWOdhkQFs4U10pvkHL+HduCZSEtVIYFF2wpEaF43pGSPXASQgWuL8egeuR0w0KRgN5zsAwYERaErfo7/dggp1sRnYell0I8DhAm
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(396003)(346002)(376002)(366004)(136003)(478600001)(41300700001)(38350700002)(38100700002)(2906002)(2616005)(6506007)(558084003)(6512007)(26005)(36756003)(52116002)(5660300002)(86362001)(8936002)(54906003)(6916009)(6486002)(316002)(4326008)(186003)(8676002)(66476007)(66946007)(66556008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?G/lzx9RwTNc9F8TyCDLA7P0gsdgmZ3hIuSO98Vc8dS2CB/0/4trehSo4zklf?=
+ =?us-ascii?Q?KF+EXiALapTe5pjJOrW66s3WPtpb2orYSMWBwn/yAZWEwbEyjCSMiOtQ5y/V?=
+ =?us-ascii?Q?Yib1nfpmYc/h38Dk00KEb81NCF8WYpNdhYErlkOwdAoh3YEio4LbjjWYV9GV?=
+ =?us-ascii?Q?fIMYJE0Hd7HyJxudhQjRQlOHPYVkvu5avOG4kQHlBVpnkKSxLifvaC2ZIUDP?=
+ =?us-ascii?Q?IuM1gRDpXhxvtBfhENk4lT2tieJHRVDHl0p6lcuRv0NXUqvBvt8N/ND25siF?=
+ =?us-ascii?Q?97sFOdkUEAiGPVRsZJ566X04tAQjVd06R1ENZwGwQ5TpuCsEe/f3wlnsWzih?=
+ =?us-ascii?Q?2STeZ9glq3t5B0jbUJCiPIDOMR0qC+9ne2fVHQdPU+EB48TmzwLlAOUxIYlv?=
+ =?us-ascii?Q?C2rQvB6VdShRa/yurrQf7DjVXl6RTXjCrLXHNc+Twvmu+6jgJGbqxapq3EuG?=
+ =?us-ascii?Q?YrXMv8rTlttXMXYU9ih8usP5ZToFAeL4VXYqUeR4Af9mKl1JTFAhqQj0RuRs?=
+ =?us-ascii?Q?jcY2xz2N6Nk3BxLY/osH3XvabQ3SHxMHQS1qN4T81H4S34LkKvoWpj3iCNHi?=
+ =?us-ascii?Q?NvxNURidP3T93lvfBcE8aQLEBRKHxHUnf8NCHzbTfyZVdlziFh8pV6eRCYKf?=
+ =?us-ascii?Q?UF+5dnmWXo9thpCLHKtsbSzJZt/TzhZ9x+GKc1EyRYntO+V9+pXlcfpFpMWq?=
+ =?us-ascii?Q?sXz93/BLnE7LOpvpoLTXistO2wQdQBpjhP5MkXbQOsQBr9jqKQLOKr3O5MzM?=
+ =?us-ascii?Q?f2MH56bkwisi2Fvfxxcz9N2p8rsSegK1fwm9p5RJ0767oDxShA54myhVvwM9?=
+ =?us-ascii?Q?8MY9LSCFWZ/yvip0WWNOtr3UlRl02nND1NaD4dW+Li7rR6e04+J+uMWib1Xc?=
+ =?us-ascii?Q?CYKN+aN+gAvMMarlZ8FbczUZEavLLfE7BXSxC9iPUQmzcrV4x6+lfYuqgvnO?=
+ =?us-ascii?Q?mP/yFSub3P1aphS/zx5zHhIEGhlJdYZ2H5LRP/4ixLIpK8ZNaJMqySziFWcZ?=
+ =?us-ascii?Q?3TMWMwLvp9YebDEqPtdd2OcUa9i6scBK8zKYW1N7a7/csA5aJUB1PtF9j8og?=
+ =?us-ascii?Q?GK02c5VNIj0I8gzeYPsEVRYEKHZnRwG4kQejDyykNDum3P5mRbNmXFoFdb48?=
+ =?us-ascii?Q?YHL2qSy6VT8QNlDycf8o7q4EIY6qbpO+0FWk6qGM/9ejStyKcDE3BzJkRwzh?=
+ =?us-ascii?Q?NtAOpH3mROTYA1mkIZgFX3WJtydKTrDkUA/xr5HKH7dzprmMIj128Nt9mnf+?=
+ =?us-ascii?Q?HV7gqf681ISdKcI7IzW7cI9EI+9zsW8/T6WKAeJxNmSiHiMZ0v0OcqZxUERT?=
+ =?us-ascii?Q?iSuEwjhal2GlmFA0wWAtIma8i9BEpxdW48oEq4qVffDV65Ne8e8jfmkVOo3A?=
+ =?us-ascii?Q?fNgxcK4UyClPNXN22BR8vBhfEVXpKmM5wvCUwcAARQ73jobmBbgkeWDx8Y9n?=
+ =?us-ascii?Q?C6ajOyaTtxQT0KNrs9PPESWM1C7eNshH9Zn2ojRQFNjmNKIdBtnxnpSz46Nq?=
+ =?us-ascii?Q?3SnrWuAMdX5t37aZ7h8nHb5ihTKMW8b3WTg1Q2+PkX/3LQRXxnSQwhs25T6H?=
+ =?us-ascii?Q?WrpMHYn9X24TkU0ZL/s0XgTJMcPK2ZMt7+Itszn5O0hjwXA2tvMxYyMYPnVC?=
+ =?us-ascii?Q?eFl8ToJnlPcWyeCG3xZAsg8=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93fddf00-fe8d-470b-6c69-08da5af1344e
+X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8426.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 23:35:23.9081
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /bSGwlDOwo0pHYOhGvQDrsnVOgwm0o/Dy+DaZTnKJZAPFEJvU5EKyUCWJ4Ktf9aVSbyWQbJ+MdBJC0H7g0etURGgE3MkAwmAcxAaqAp2LeXkvBSr5vvK/DUl9xFoy+ey
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2691
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 4:26 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Jun 30, 2022 at 5:11 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > On Mon, Jun 27, 2022 at 2:10 AM Tony Lindgren <tony@atomide.com> wrote:
-> > >
-> > > * Saravana Kannan <saravanak@google.com> [220623 08:17]:
-> > > > On Thu, Jun 23, 2022 at 12:01 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > > >
-> > > > > * Saravana Kannan <saravanak@google.com> [220622 19:05]:
-> > > > > > On Tue, Jun 21, 2022 at 9:59 PM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > > This issue is no directly related fw_devlink. It is a side effect of
-> > > > > > > removing driver_deferred_probe_check_state(). We no longer return
-> > > > > > > -EPROBE_DEFER at the end of driver_deferred_probe_check_state().
-> > > > > >
-> > > > > > Yes, I understand the issue. But driver_deferred_probe_check_state()
-> > > > > > was deleted because fw_devlink=on should have short circuited the
-> > > > > > probe attempt with an  -EPROBE_DEFER before reaching the bus/driver
-> > > > > > probe function and hitting this -ENOENT failure. That's why I was
-> > > > > > asking the other questions.
-> > > > >
-> > > > > OK. So where is the -EPROBE_DEFER supposed to happen without
-> > > > > driver_deferred_probe_check_state() then?
-> > > >
-> > > > device_links_check_suppliers() call inside really_probe() would short
-> > > > circuit and return an -EPROBE_DEFER if the device links are created as
-> > > > expected.
-> > >
-> > > OK
-> > >
-> > > > > Hmm so I'm not seeing any supplier for the top level ocp device in
-> > > > > the booting case without your patches. I see the suppliers for the
-> > > > > ocp child device instances only.
-> > > >
-> > > > Hmmm... this is strange (that the device link isn't there), but this
-> > > > is what I suspected.
-> > >
-> > > Yup, maybe it's because of the supplier being a device in the child
-> > > interconnect for the ocp.
-> >
-> > Ugh... yeah, this is why the normal (not SYNC_STATE_ONLY) device link
-> > isn't being created.
-> >
-> > So the aggregated view is something like (I had to set tabs = 4 space
-> > to fit it within 80 cols):
-> >
-> >     ocp: ocp {         <========================= Consumer
-> >         compatible = "simple-pm-bus";
-> >         power-domains = <&prm_per>; <=========== Supplier ref
-> >
-> >                 l4_wkup: interconnect@44c00000 {
-> >             compatible = "ti,am33xx-l4-wkup", "simple-pm-bus";
-> >
-> >             segment@200000 {  /* 0x44e00000 */
-> >                 compatible = "simple-pm-bus";
-> >
-> >                 target-module@0 { /* 0x44e00000, ap 8 58.0 */
-> >                     compatible = "ti,sysc-omap4", "ti,sysc";
-> >
-> >                     prcm: prcm@0 {
-> >                         compatible = "ti,am3-prcm", "simple-bus";
-> >
-> >                         prm_per: prm@c00 { <========= Actual Supplier
-> >                             compatible = "ti,am3-prm-inst", "ti,omap-prm-inst";
-> >                         };
-> >                     };
-> >                 };
-> >             };
-> >         };
-> >     };
-> >
-> > The power-domain supplier is the great-great-great-grand-child of the
-> > consumer. It's not clear to me how this is valid. What does it even
-> > mean?
-> >
-> > Rob, is this considered a valid DT?
->
-> Valid DT for broken h/w.
 
-I'm not sure even in that case it's valid. When the parent device is
-in reset (when the SoC is coming out of reset), there's no way the
-descendant is functional. And if the descendant is not functional, how
-is the parent device powered up? This just feels like an incorrect
-representation of the real h/w.
+Hi Geert
 
-> So the domain must be default on and then simple-pm-bus is going to
-> hold a reference to the domain preventing it from ever getting powered
-> off and things seem to work. Except what happens during suspend?
+> OK, then please continue.
+> But perhaps add a comment to the SH_PFC_PIN_GROUP() definitions,
+> to make it clear they are preliminary?
 
-But how can simple-pm-bus even get a reference? The PM domain can't
-get added until we are well into the probe of the simple-pm-bus and
-AFAICT the genpd attach is done before the driver probe is even
-called.
+Yes ! Good idea !
 
--Saravana
+
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
