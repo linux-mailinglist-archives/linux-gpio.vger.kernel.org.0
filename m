@@ -2,84 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDD33561DE5
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 16:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F095561E4D
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 16:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237098AbiF3O3I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 10:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
+        id S232240AbiF3OnU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 10:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236633AbiF3O2y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 10:28:54 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E247CC68;
-        Thu, 30 Jun 2022 07:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656598311; x=1688134311;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/jj7IiySnenbJ6Jt3exYRBe8CNXmvllxDBc9it60MkI=;
-  b=GsD8EYLeEWnrpITONd+w9XUUlZCEDsi4hD1pcGYL27hArYhPrrkOMxGf
-   8fX3+beJPlayIsIIyvVp2ZqeD4Uco2bXF2dXUo/Bd49CETbhptDgwB0qc
-   7BJdFRj5JHUQpQyXBQj4yPU4I5P76FMeONv3tqWZIIMgyE1sFtZFSApGd
-   U+BNarJfdjX6VO6N+X4fYmKTjilRUuCTF7ZJNjhAJyJFuib58bAESH48H
-   4dYWRbMgDu5PjSdLukYXz3wPZtorMNlv1h48cyXcY6s0SJdZ6/Ifps+eU
-   b72Z5g9pO973H2auDB3OPF7dy9c1Ky01AIVMHevanJ+bFjg2V4G1786eD
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="283092199"
-X-IronPort-AV: E=Sophos;i="5.92,234,1650956400"; 
-   d="scan'208";a="283092199"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 07:11:18 -0700
-X-IronPort-AV: E=Sophos;i="5.92,234,1650956400"; 
-   d="scan'208";a="541340582"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2022 07:11:16 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o6usz-000ybK-Hh;
-        Thu, 30 Jun 2022 17:11:13 +0300
-Date:   Thu, 30 Jun 2022 17:11:13 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: Add Intel Meteor Lake pin
- controller support
-Message-ID: <Yr2vATzSrWTD5rmn@smile.fi.intel.com>
-References: <20220630123858.74300-1-andriy.shevchenko@linux.intel.com>
- <Yr2eaj9oxhYQDKJG@lahna>
+        with ESMTP id S230518AbiF3OnT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 10:43:19 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E7DDF5D;
+        Thu, 30 Jun 2022 07:43:17 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d5so17187003plo.12;
+        Thu, 30 Jun 2022 07:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=RUoQVUfGIj+k3cK9VwLwIAhO4opF70rEutg3/2JWbC4=;
+        b=mgt0FAe0RaXxmkNV3dy2J1eV/FbHCE1/hDOnsUyVtVhvzO5yUJ0GR22CtF1X14Qnr7
+         CXxb8edTqh/LWLZmNaoF0bq7rHhonzgqNKelVBfU+dOi03LOjpThN7IxfB6vDgYeLd4r
+         W0LxeHexHjzHAzClwJwrY5Bnq0FsevwUOiYTReuID5T2LmFDZN2SHDD2ZNe9v9wLKdA8
+         ZyMYqUXMTrbGbwHxnttvTjIGZUA2dF3zxMuD01r9Lp3atcGjoQamcELO+XoLNGj8RJpQ
+         CU81vdOtOqTnAjLfDLcNGWg8u3YkUSsZ23oQwudqa3tZib6HtnbnoXIDq13jo2916ARP
+         CCLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :subject:content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=RUoQVUfGIj+k3cK9VwLwIAhO4opF70rEutg3/2JWbC4=;
+        b=KCpvofXeV2g5fyo/9PrMVCLKlO3Ljd+H9xjkkrpumdIOhrk1WBIMl4CQUG8KAQi3wn
+         5TerU3ep1zivUc31OsYF+dr/ZWc24HEGlpKAGUTwFXmowon6DacN5xJtet2s6X432ODG
+         JmNg/yjWorODlckfQmRBffGygvINM5ShbyZ8xXHEiGNmg0EL1Jn5WYcMGzB5ySFlIB90
+         aV5kqCUB3P61Kbi0vnAVD81x8gEzmO5h/u8V2RozyWvAlsU0q9oI/PTY9stkBKh/lJTh
+         vKCoBZWK/XsIGo/heirHzjrF+EqMM71RtVNkrtWJMgROTWkyngD/xA0qAuGAQ5WMABZ7
+         qfdg==
+X-Gm-Message-State: AJIora+Sy96qocbWefnzwuczWpyXcBg8vfqP2FJ4t533d7IkeSpWeV3s
+        LgO1TxYyZnwiBRDAV302Ahg=
+X-Google-Smtp-Source: AGRyM1sYB1R3u1XCkRIl82xDtM8/BHbKNahIwLTkJ9JVsgEUEwGEDwnGSfR9o/mfcbDeU5mr4vFWJg==
+X-Received: by 2002:a17:90b:d82:b0:1ef:366f:b654 with SMTP id bg2-20020a17090b0d8200b001ef366fb654mr4955387pjb.151.1656600196861;
+        Thu, 30 Jun 2022 07:43:16 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o15-20020a17090ab88f00b001e305f5cd22sm4498009pjr.47.2022.06.30.07.43.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jun 2022 07:43:15 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <05ab4cec-ed35-1923-5750-e43c3ed30c50@roeck-us.net>
+Date:   Thu, 30 Jun 2022 07:43:11 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yr2eaj9oxhYQDKJG@lahna>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v6 08/14] dt-bindings: watchdog: Add fsl,scu-wdt yaml file
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abelvesa@kernel.org>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Liu Ying <victor.liu@nxp.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Ming Qian <ming.qian@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
+ <20220629164414.301813-9-viorel.suman@oss.nxp.com>
+ <988844aa-f7ce-3cba-dd6c-227fa6d58102@linaro.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <988844aa-f7ce-3cba-dd6c-227fa6d58102@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 04:00:26PM +0300, Mika Westerberg wrote:
-> On Thu, Jun 30, 2022 at 03:38:58PM +0300, Andy Shevchenko wrote:
-> > This driver adds pinctrl/GPIO support for Intel Meteor Lake. The
-> > GPIO controller is based on the next generation GPIO hardware but still
-> > compatible with the one supported by the Intel core pinctrl/GPIO driver.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 6/29/22 10:59, Krzysztof Kozlowski wrote:
+> On 29/06/2022 18:44, Viorel Suman (OSS) wrote:
+>> From: Abel Vesa <abel.vesa@nxp.com>
+>>
+>> In order to replace the fsl,scu txt file from bindings/arm/freescale,
+>> we need to split it between the right subsystems. This patch documents
+>> separately the 'watchdog' child node of the SCU main node.
+>>
+>> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+>> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+>> ---
 > 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Assuming all patches are taken independently:
+> 
+> 
+Assuming the same:
 
-Pushed to my review and testing queue, thanks!
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>  >
+> Best regards,
+> Krzysztof
 
