@@ -2,310 +2,233 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B73F5623F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 22:10:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 445EF5624D6
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 23:08:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237104AbiF3UKJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 16:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40248 "EHLO
+        id S236786AbiF3VIx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 17:08:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237000AbiF3UKI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 16:10:08 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2136.outbound.protection.outlook.com [40.107.212.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DC74579C;
-        Thu, 30 Jun 2022 13:09:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EV2cge2DyLp0tBzhX07wONDG3IR2neevKE7P/NWbacM8VmxIvG7ryUmlN5QRY/0KvVDW53TH/zAgo+VKJdZwc7x9ay/N587EstLJC+99FKuBwhGWo+8EKE7qph9KjPNzI6qazlNM83MnZ94lPhIIWbB+JimGoX6vloprLP4fEUGXM3hGm4+IES5uVd5I/SVYtb2hgPMmLd2BaVyW+V1BF7kQLKNvl6kRmuj/zlDsMwyat7DAToZsyS/arPgddMJyNOc8VfPD8kFS1lzntlbfMrjD59Bfgs2lJ7+jZK+Jzj4hPidHo8Ky0Brc3K3KjjdO8vzE+bkJYRUuE4EWFvbryQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ogMWQIYA9pxfw5hVK4YaeHRyGVTF9RxxWXiyTsrtWNs=;
- b=NI5cV5qCT3568TdJV1Dh6RZET0vuDLDRMAee0/bhrPkHvmaO6mjYSOGRxCisURx93d2usby3BJqVCKxMlp+ZNYaW2ru4P84Yr4Y6nLQCbV8bexW8+lU2pEgcjXMqfa9Q2uSEA5W6Gw0w0MHcwghfx6RgBSNEaaQUnZOjMbI775pdn8KhC+iyeSZFF60N+noX8n+BacY1uU3uiOBwJIBDGnObHn0XukQw1w1RdFl+3F+uICfjDuHidwcVBS/kJ6lOn3Z7mt+gwXuBDEjxb0r3eURZM2DASEDjgnL0fV+qWNHldQ6QX4cnvPQm7QwP8fReQiGWzzOMIrP2b/1chulBCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ogMWQIYA9pxfw5hVK4YaeHRyGVTF9RxxWXiyTsrtWNs=;
- b=hvD6f7WbP3kFYiDqYA60BNIKAm5ZU/27LRCrkhdMlon5CpJql2iW7PxcRrary9RZrdGM22E+APvmuMjHWbSLDdGTD5ebsgJentQaNZ0K3HNjm11Y3vOm+j+zwXqWjoGqkbsjSxvfDdohEjTlPiyfA/9E6TvQmgZkqkICJNT4vEg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by DM8PR10MB5464.namprd10.prod.outlook.com
- (2603:10b6:8:25::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.15; Thu, 30 Jun
- 2022 20:09:54 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::712f:6916:3431:e74e]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::712f:6916:3431:e74e%6]) with mapi id 15.20.5373.018; Thu, 30 Jun 2022
- 20:09:54 +0000
-Date:   Thu, 30 Jun 2022 13:09:51 -0700
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH v11 net-next 1/9] mfd: ocelot: add helper to get regmap
- from a resource
-Message-ID: <20220630200951.GB2152027@euler>
-References: <20220628172518.GA855398@euler>
- <20220628184659.sel4kfvrm2z6rwx6@skbuf>
- <20220628185638.dpm2w2rfc3xls7xd@skbuf>
- <CAHp75Ve-MF=MafvwYbFvW330-GhZM9VKKUWmSVxUQ4r_8U1mJQ@mail.gmail.com>
- <20220628195654.GE855398@euler>
- <20220629175305.4pugpbmf5ezeemx3@skbuf>
- <20220629203905.GA932353@euler>
- <20220629230805.klgcklovkkunn5cm@skbuf>
- <20220629235435.GA992734@euler>
- <20220630131155.hs7jzehiyw7tpf5f@skbuf>
+        with ESMTP id S237330AbiF3VIw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 17:08:52 -0400
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99F7B1E3F0;
+        Thu, 30 Jun 2022 14:08:51 -0700 (PDT)
+Received: by mail-io1-f46.google.com with SMTP id d3so394885ioi.9;
+        Thu, 30 Jun 2022 14:08:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OlkG5d3SBHOeWSJIz3gFTBLiUAyuGYv/0tzGunrQ1ho=;
+        b=IQNewkJFRU3NJxQ4MMkLAdrcNCunzW/DivwfE95lnOlkn89BSQuJ4sUGfVb86OhaHd
+         FMJLkVojd/ZJ8xK1046eitZY/lbCiGEKLAlro9murmeVCW6CqfSDhQqzaPoSNIZYNueC
+         paJaSaYqrkAgJgjRXI5e5AISJSJdkoNm7yMpjsJ5CWQCeuGSodXOb/XpJ6H3GqEBnz8q
+         xf21TQ855iA0OXmP32MBhW+2VzCMLJBdcKhGOrQRiWclJvVw3/wgZ5EvZQvh6GlXUwKu
+         rrH5URqGes5gnM+8hgkwxxyM52higR0KQGayplQZlSjyX3835cWHqm7LfZLB40+MDkpb
+         U/Rg==
+X-Gm-Message-State: AJIora/QDLEaIbQOuheFlUUrkDG1/rPVv4Oi+TNJBuVhWukDZAbVEgBq
+        8AAuUcNOStG3a93+7d+zjw==
+X-Google-Smtp-Source: AGRyM1vhC2i4RNNi7xljmoIcx+S2hlEw3OGseJQIbqK34sO+w9ryaKyF/3rtri9PGpQCo1akU3lV8A==
+X-Received: by 2002:a02:a809:0:b0:339:e6ba:dee1 with SMTP id f9-20020a02a809000000b00339e6badee1mr6511943jaj.1.1656623330778;
+        Thu, 30 Jun 2022 14:08:50 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id r20-20020a5d9b94000000b0066952cfe3e2sm9437564iom.39.2022.06.30.14.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jun 2022 14:08:50 -0700 (PDT)
+Received: (nullmailer pid 3300975 invoked by uid 1000);
+        Thu, 30 Jun 2022 21:08:48 -0000
+Date:   Thu, 30 Jun 2022 15:08:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8450 lpass lpi
+ pinctrl bindings
+Message-ID: <20220630210848.GA3295428-robh@kernel.org>
+References: <20220629091716.68771-1-srinivas.kandagatla@linaro.org>
+ <20220629091716.68771-2-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220630131155.hs7jzehiyw7tpf5f@skbuf>
-X-ClientProxiedBy: MW4PR03CA0097.namprd03.prod.outlook.com
- (2603:10b6:303:b7::12) To MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0a5474b3-1703-47c0-fce5-08da5ad47f3f
-X-MS-TrafficTypeDiagnostic: DM8PR10MB5464:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kRzouS1JhJeC33P3S+SRs06gUbdBWffymTg16DWy0lB4Gz+tRMrAOHQTHsRcqkwD0fmVClI7Up+D49s0KeFbmXWu37Z9HwgXZPmUhtj9VviK2Pc7T/RgMXve2629+QO027Go8bzUn0QZcTxigcSioyfgkepuj0Kqcmz3GGl6NAorirWrNtuC1/ejQQCOZzIG0fi6MftUzrqPa7B6zoI6sLAUa88oWvuderSpKOaJzQSelU7UZ2Wr8JMaWuluR/P036dZ9LT23rhthESakp/Fo3KVtD183pAyNE0J7SOP5wDm3O55MKQFUjIiLEuPHhRRYv6L2dvNJCs7mU4rptSLWJ0tdS2uxJbi8CYegKgMnJhIA2y5p/5bgyzaYAjw6Q0JHX6XUzL1ehePYqSy+LJkQ4Fma71Q7nmnVif7MC5XfXd248Fi7L9taWFiR2cLXWJ0yYfwNyoBECdAMD5CJIw24d0iEopU0bTTtaOdHZjfIkv3X0LQIks4wUVTbfNlu1nEDmuBf6DT4sFVdBpgFXoKJ8SOLXhnQWRe8W/kDyq0Nmqc0Sw6KOFzM5Lh6roXtComNg3CqcSPqzgu0GXUxRosfMWBP+Sxt29Cp/xEnPyofi1fvcdaKNUUoNPEp53mNXo+iJEsKrrh5WAZRUBZzz8LIxljj8QB5bZB7Prke0g38XujuTI3o+DZWu/P9aIwOXfXzfcHBzJTTe4qlsYnKso0c+OcwByL117fFNIDpZ9e2AU572aPugpfILxJKpKPCSFfl9RjAI+a11+AP5xQrVu/CCkDxAia2e4jT3kLV1elplwdrRadH1v4TuOE7FqsB7QF
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(346002)(136003)(376002)(366004)(396003)(39830400003)(7416002)(1076003)(83380400001)(186003)(5660300002)(33716001)(8936002)(44832011)(478600001)(26005)(6512007)(6506007)(52116002)(33656002)(6666004)(6486002)(9686003)(316002)(41300700001)(54906003)(6916009)(2906002)(38100700002)(38350700002)(8676002)(66556008)(66946007)(4326008)(66476007)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zVz/DNELVWnmMkQnzfFIUEJ/jQoMH5aIx0I7Bk7ECFwhsvJLNDvrj55qMzdR?=
- =?us-ascii?Q?Kki7KIGQSrJuubWBI66uu5ny7uOdI9d5Z/YiB/IcADB5Vjarm5dh/Vi2shBm?=
- =?us-ascii?Q?Z6eebhnfjt0hsj5PyCd0gDljaKzZwSoIXQmnscNyWmBF13fWYiJZEvM9pt+y?=
- =?us-ascii?Q?RlJQyuF4xGjPo+y/fqG1jApso1E4SdMJWF3yMGsEjLLsvmVFMFLqSJtfFl/l?=
- =?us-ascii?Q?nIMsFufL1Msa3+Bbbmf4aZTg6ERHD4sjMr3au5rFWUIYe6+t3GlOaOiHk108?=
- =?us-ascii?Q?heT6xM5kA7eBebj1MRHclOyDpup//Qqjh75Nib0KSeagSan5aRHKolztWrLu?=
- =?us-ascii?Q?TUL3+zHqd9BNfaX/B57IqNmQ9+hOYfJZjqBzRpi7jrjuToSD0JAH6h0q7loy?=
- =?us-ascii?Q?cANiSafoOIWY7kli+dBTlPtHKEZ/b3GndnFeCvZbJM0rwyXTzQq3QH2zRUOl?=
- =?us-ascii?Q?kSuVr217L6wGDCIJ4fOeTKqzs19my1Ym0i2rm5mPhK+tSiNKYWN8LjvDvTQU?=
- =?us-ascii?Q?O2VyAQoHZMmLHkhtT18oUQLTNvF8R6PPsHmJ30vPwhnTY8ykJHxIXnufmGOj?=
- =?us-ascii?Q?jemh43eZMoB5/KnlCFFzEFJZWnMvMKlry+uhdKZQNjxYHW5g7/dWBjmqyoNP?=
- =?us-ascii?Q?uWEF2M5zrhsMdW9SBl+7WklnUg6n3A0OQlWMtBC0WZPrILM/a5nOKWUle4JB?=
- =?us-ascii?Q?AWdnTaz6x6TURIGaQT77jc2uExDH5SoNAo0C1c2LUtTFPg718RgIwiBuGR1A?=
- =?us-ascii?Q?srg7vz44UNeJtfHd2H1gloTtQxUvoPoKuqwh+JuRcAdx7uCmdtTudl/WBnLL?=
- =?us-ascii?Q?NXpGIu7Et+R0aXviJf05Kvbce5zmYAPa3Z952MHKjmfLPAUdaSJDJsl8Yuen?=
- =?us-ascii?Q?ujXtygm+5SK0zFprUQm5UZxZdCwgxqyyY2P5/mcZLYC2CTY0WQ6dui1l9eig?=
- =?us-ascii?Q?IBtNxMLTX1mSGB6l1bwqXiGFArjG80VQhOd6PsZgBJObGQRW2AxKlwrlNTpc?=
- =?us-ascii?Q?PguhDcZ++Wg4xwerxbRBhGAUoWSA3UkVQSDEMFt1tXyEWFapmkJEKIcgWhQJ?=
- =?us-ascii?Q?YHsGsytigmK7AxU56hsCDKXwRZKa6Y8ZLCOo7dbikKrIeeZ+xq8Hie73lUVk?=
- =?us-ascii?Q?Qr6vb6wUJFDYgWyl/xTD0tfogjehKYH5xv6bdqUypllaUJLElWN34/fy8Nf0?=
- =?us-ascii?Q?MjYzEDqzcXLX+sHkBIK8j2yvRXAYJ3YVlSnZrgAjHQHHCqWqA0xwo8E3gYIu?=
- =?us-ascii?Q?4O75mzgDwkLr0rJDIvSr+o2qbujULDIjbJI3fVHWYGEicfNimVUPi9Ohzp9e?=
- =?us-ascii?Q?4CZ8jg9KklemOKKT9dCI8uOo/RKsuVCRJ8flfqJpJdz3JI15vmgIisZTC8wz?=
- =?us-ascii?Q?hCxBHLac4t7NFxm3ljho/bwZ4mdWbfOaSz3t7ppMAYDd0ax6P8Zsb945jC4G?=
- =?us-ascii?Q?kAOgKqt6DDT+hba+6El6T3J3CQts4FYwVmEsM/kGmuGGK9Iws8srsqNMKNAM?=
- =?us-ascii?Q?2yQ8g+BqoeRcW6mE1yfGdaTaeJeVjCf27IPEemYCqFC8NNv0sQS3oVCrtBeu?=
- =?us-ascii?Q?O0wPwJ6CKmoCqHXBCwp7SOoSbmOQL55+L/Z7rFzDXem80j6SqxsdMqnAMWkt?=
- =?us-ascii?Q?9w=3D=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a5474b3-1703-47c0-fce5-08da5ad47f3f
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 20:09:54.3156
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w53q5kjVb9jHYS+TY6vPn1aK0TUumM/5n4BbwYTawZiuIfcVHptFNTWzCQM1WceTG2BFnVuQeCTTjacNoTfQ8YDSp08gRFmTpBNTzk+t1hI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR10MB5464
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220629091716.68771-2-srinivas.kandagatla@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 01:11:56PM +0000, Vladimir Oltean wrote:
-> On Wed, Jun 29, 2022 at 04:54:35PM -0700, Colin Foster wrote:
-> > > > In that case, "name" would either be hard-coded to match what is in
-> > > > drivers/mfd/ocelot-core.c. The other option is to fall back to
-> > > > platform_get_resource(pdev, IORESOURCE_REG, 0), and pass in
-> > > > resource->name. I'll be able to deal with that when I try it. (hopefully
-> > > > this evening)
-> > > 
-> > > I'm not exactly clear on what you'd do with the REG resource once you
-> > > get it. Assuming you'd get access to the "reg = <0x71070034 0x6c>;"
-> > > from the device tree, what next, who's going to set up the SPI regmap
-> > > for you?
-> > 
-> > The REG resource would only get the resource name, while the MFD core
-> > driver would set up the regmaps.
-> > 
-> > e.g. drivers/mfd/ocelot-core.c has (annotated):
-> > static const struct resource vsc7512_sgpio_resources[] = {
-> >     DEFINE_RES_REG_NAMED(start, size, "gcb_gpio") };
-> > 
-> > Now, the drivers/pinctrl/pinctrl-ocelot.c expects resource 0 to be the
-> > gpio resource, and gets the resource by index.
-> > 
-> > So for this there seem to be two options:
-> > Option 1:
-> > drivers/pinctrl/pinctrl-ocelot.c:
-> > res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> > map = dev_get_regmap(dev->parent, res->name);
-> > 
-> > 
-> > OR Option 2:
-> > include/linux/mfd/ocelot.h has something like:
-> > #define GCB_GPIO_REGMAP_NAME "gcb_gpio"
-> > 
-> > and drivers/pinctrl/pinctrl-ocelot.c skips get_resource and jumps to:
-> > map = dev_get_regmap(dev->parent, GCB_GPIO_REGMAP_NAME);
-> > 
-> > (With error checking, macro reuse, etc.)
-> > 
-> > 
-> > I like option 1, since it then makes ocelot-pinctrl.c have no reliance
-> > on include/linux/mfd/ocelot.h. But in both cases, all the regmaps are
-> > set up in advance during the start of ocelot_core_init, just before
-> > devm_mfd_add_devices is called.
-> > 
-> > 
-> > I should be able to test this all tonight.
+On Wed, Jun 29, 2022 at 10:17:15AM +0100, Srinivas Kandagatla wrote:
+> Add device tree binding Documentation details for Qualcomm SM8450
+> LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
 > 
-> I see what you mean now with the named resources from drivers/mfd/ocelot-core.c.
-> I don't particularly like the platform_get_resource(0) option, because
-> it's not as obvious/searchable what resource the pinctrl driver is
-> asking for.
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 138 ++++++++++++++++++
+>  1 file changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
 > 
-> I suppose a compromise variant might be to combine the 2 options.
-> Put enum ocelot_target in a header included by both drivers/mfd/ocelot-core.c,
-> then create a _single_ resource table in the MFD driver, indexed by enum
-> ocelot_target:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..b49d70b9ba9a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> @@ -0,0 +1,138 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
+> +  Low Power Island (LPI) TLMM block
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  LPASS LPI IP on most Qualcomm SoCs
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm8450-lpass-lpi-pinctrl
+> +
+> +  reg:
+> +    minItems: 2
+> +    maxItems: 2
+
+What is each entry?
+
+> +
+> +  clocks:
+> +    items:
+> +      - description: LPASS Core voting clock
+> +      - description: LPASS Audio voting clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: audio
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9])$"
+
+Don't need oneOf with only 1.
+
+> +        minItems: 1
+> +        maxItems: 23
+> +
+> +      function:
+> +        enum: [ swr_tx_clk, swr_tx_data, swr_rx_clk, swr_rx_data,
+> +                dmic1_clk, dmic1_data, dmic2_clk, dmic2_data, dmic4_clk,
+> +                dmic4_data, i2s2_clk, i2s2_ws, dmic3_clk, dmic3_data,
+> +                qua_mi2s_sclk, qua_mi2s_ws, qua_mi2s_data, i2s1_clk, i2s1_ws,
+> +                i2s1_data, wsa_swr_clk, wsa_swr_data, wsa2_swr_clk,
+> +                wsa2_swr_data, i2s2_data, i2s4_ws, i2s4_clk, i2s4_data,
+> +                slimbus_clk, i2s3_clk, i2s3_ws, i2s3_data, slimbus_data,
+> +                ext_mclk1_c, ext_mclk1_b, ext_mclk1_a, ext_mclk1_d,
+> +                ext_mclk1_e ]
+> +
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +
+> +      drive-strength:
+> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +        default: 2
+> +        description:
+> +          Selects the drive strength for the specified pins, in mA.
+> +
+> +      slew-rate:
+> +        enum: [0, 1, 2, 3]
+> +        default: 0
+> +        description: |
+> +            0: No adjustments
+> +            1: Higher Slew rate (faster edges)
+> +            2: Lower Slew rate (slower edges)
+> +            3: Reserved (No adjustments)
+
+Indent should be 2 more, not 4.
+
+> +
+> +      bias-pull-down: true
+> +
+> +      bias-pull-up: true
+> +
+> +      bias-disable: true
+> +
+> +      output-high: true
+> +
+> +      output-low: true
+> +
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: "pinctrl.yaml#"
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/sound/qcom,q6afe.h>
+> +    lpi_tlmm: pinctrl@3440000 {
+> +        compatible = "qcom,sm8450-lpass-lpi-pinctrl";
+> +        reg = <0x3440000 0x20000>,
+> +              <0x34d0000 0x10000>;
+> +        clocks = <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
+> +                 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
+> +        clock-names = "core", "audio";
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        gpio-ranges = <&lpi_tlmm 0 0 23>;
+> +    };
+> -- 
+> 2.25.1
 > 
-> static const struct resource vsc7512_resources[TARGET_MAX] = {
-> 	[ANA] = DEFINE_RES_REG_NAMED(start, end, "ana"),
-> 	...
-> };
 > 
-> then provide the exact same resource table to all children.
-> 
-> In the pinctrl driver you can then do:
-> 	res = platform_get_resource(pdev, IORESOURCE_REG, GPIO);
-> 	map = dev_get_regmap(dev->parent, res->name);
-> 
-> and you get both the benefit of not hardcoding the string twice, and the
-> benefit of having some obvious keyword which can be used to link the mfd
-> driver to the child driver via grep, for those trying to understand what
-> goes on.
-> 
-> In addition, if there's a single resource table used for all peripherals,
-> theoretically you need to modify less code in mfd/ocelot-core.c in case
-> one driver or another needs access to one more regmap, if that regmap
-> happened to be needed by some other driver already. Plus fewer tables to
-> lug around, in general.
-
-Ok... so I haven't yet changed any of the pinctrl / mdio drivers yet,
-but I'm liking this:
-
-static inline struct regmap *
-ocelot_regmap_from_resource(struct platform_device *pdev, unsigned int index,
-                            const struct regmap_config *config)
-{
-        struct device *dev = &pdev->dev;
-        struct resource *res;
-        u32 __iomem *regs;
-
-        res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-        if (res) {
-                regs = devm_ioremap_resource(dev, res);
-                if (IS_ERR(regs))
-                        return ERR_CAST(regs);
-                return devm_regmap_init_mmio(dev, regs, config);
-        }
-
-        /*
-         * Fall back to using REG and getting the resource from the parent
-         * device, which is possible in an MFD configuration
-         */
-        res = platform_get_resource(pdev, IORESOURCE_REG, index);
-        if (!res)
-                return ERR_PTR(-ENOENT);
-
-        return (dev_get_regmap(dev->parent, res->name));
-}
-
-So now there's no need for #if (CONFIG_MFD_OCELOT) - it can just remain
-an inline helper function. And so long as ocelot_core_init does this:
-
-static void ocelot_core_try_add_regmap(struct device *dev,
-                                       const struct resource *res)
-{
-        if (!dev_get_regmap(dev, res->name)) {
-                ocelot_spi_init_regmap(dev, res);
-        }
-}
-
-static void ocelot_core_try_add_regmaps(struct device *dev,
-                                        const struct mfd_cell *cell)
-{
-        int i;
-
-        for (i = 0; i < cell->num_resources; i++) {
-                ocelot_core_try_add_regmap(dev, &cell->resources[i]);
-        }
-}
-
-int ocelot_core_init(struct device *dev)
-{
-        int i, ndevs;
-
-        ndevs = ARRAY_SIZE(vsc7512_devs);
-
-        for (i = 0; i < ndevs; i++)
-                ocelot_core_try_add_regmaps(dev, &vsc7512_devs[i]);
-
-        return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, vsc7512_devs,
-                                    ndevs, NULL, 0, NULL);
-}
-EXPORT_SYMBOL_NS(ocelot_core_init, MFD_OCELOT);
-
-we're good! (sorry about spaces / tabs... I have to up my mutt/vim/tmux
-game still)
-
-
-I like the enum / macro idea for cleanup, but I think that's a different
-problem I can address. The main question I have now is this:
-
-The ocelot_regmap_from_resource now has nothing to do with the ocelot
-MFD system. It is generic. (If you listen carefully, you might hear me
-cheering)
-
-I can keep this in linux/mfd/ocelot.h, but is this actually something
-that belongs elsewhere? platform? device? mfd-core?
-
-
-And yes, I like the idea of changing the driver to
-"ocelot_regmap_from_resource(pdev, GPIO, config);" from
-"ocelot_regmap_from_resource(pdev, 0, config);"
-
