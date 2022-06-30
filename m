@@ -2,63 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 831DA56250F
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 23:22:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CF1C56254F
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 23:34:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237475AbiF3VWf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 17:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44060 "EHLO
+        id S235476AbiF3VeU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 17:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237509AbiF3VW3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 17:22:29 -0400
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177E04D157;
-        Thu, 30 Jun 2022 14:22:29 -0700 (PDT)
-Received: by mail-il1-f171.google.com with SMTP id p9so212209ilj.7;
-        Thu, 30 Jun 2022 14:22:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T4909o+ZJwgi1L8MENIjc0OE7vRQ1YbJuBfUhGjWQ1Y=;
-        b=X8pUNAquAXfSF/uIdQO/a2jFB2pKta48hmSBJ7I+sX3P3PoIFYLYf8dOX46bm2N9fp
-         ODNn9jmEg2AQQn42m0nS2ks/IvwS/PL6TAa92R9Kfc6qHvWn2jOtNOQHXD+XD4Do5H9S
-         wrm5ovy20+TSiUSqhSpe9XR3gu6ioR7cYhYi2yhvH8XAxdXllu2HhjjNJAQ5gSMLMOJd
-         vSwa24OqYbCYaN+jp4+IPMCa0T9pCb9tHHuHxxUcRwdL/0gyh4mSgBksKC+14L+uO0lq
-         rhI/5e0TwRJFitI+MYk3Q249AP2sXnh68X1R69AxJv8lLEobLE0fEBUdMEH+QQyRqeeN
-         /pxg==
-X-Gm-Message-State: AJIora/Nkvei6StRl5rwJcl8CY7ADuVWCd/nDHWVvZMwO6tIyIIQK0MD
-        4q8h9/KXBm+dHSNMcxN8Og==
-X-Google-Smtp-Source: AGRyM1tUHkRznlT3Zwq7RVA5PUw0xyPJTRlCsDeBnrR2kcY+djt+IfRnZuYf80Z7Nv6TfFTCt9EuSA==
-X-Received: by 2002:a92:d5cf:0:b0:2d1:d9b0:d5b1 with SMTP id d15-20020a92d5cf000000b002d1d9b0d5b1mr6199947ilq.252.1656624148343;
-        Thu, 30 Jun 2022 14:22:28 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id m4-20020a924b04000000b002d3edd935e5sm8402748ilg.53.2022.06.30.14.22.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jun 2022 14:22:27 -0700 (PDT)
-Received: (nullmailer pid 3323810 invoked by uid 1000);
-        Thu, 30 Jun 2022 21:22:26 -0000
-Date:   Thu, 30 Jun 2022 15:22:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com, sean.wang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, nfraprado@collabora.com,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: Add and use
- drive-strength-microamp
-Message-ID: <20220630212226.GA3323748-robh@kernel.org>
-References: <20220630131543.225554-1-angelogioacchino.delregno@collabora.com>
+        with ESMTP id S230392AbiF3VeR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 17:34:17 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87904475B;
+        Thu, 30 Jun 2022 14:34:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 61404CE302F;
+        Thu, 30 Jun 2022 21:34:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACABC341CF;
+        Thu, 30 Jun 2022 21:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656624853;
+        bh=D2s+ZcxWc13QZ3Howbe3kBarPMoDIzINRNcSNPpkJnA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=luvEGDjZt8Ljt1cdrdLPSRkHfxx4EcJ0DCb5X96dXECsc+SPP8VdOnUMUlkRzhtOm
+         oEB4VgSo7oj+LwMlSwPaHW0gZLDlxcSsSpEQEpIt4WAAGwJZUiW+GTRcTIZJ1bVUTG
+         6A2HDoexXAbjcFYoPCRW74rXbsosaoAUIJPTfUB2LFdrSyuJIL02/sLnFnWg1p3eTU
+         pfVApwETFAEGOGudLj/8JHXIlP0JKxcpU1mUU/z6K5E++cOIPlxBkw7i9++4TPMO47
+         WrYs5lN7Z19C2sAHcK3hk2QyKipmqahLoqjTKEvtP7zvm4vgEpeJ9cav8xZyJlY9z3
+         ehtRYriJ2+cTA==
+Received: by mail-vs1-f44.google.com with SMTP id o190so524314vsc.5;
+        Thu, 30 Jun 2022 14:34:13 -0700 (PDT)
+X-Gm-Message-State: AJIora8t2ZjczctwmXCTremqbgTxtzyXb8AMvfGbLCsIw9STOslDqEii
+        qzk8BTBYu2sXhLPHCBISxvUrxHN6YUQOTdFF0A==
+X-Google-Smtp-Source: AGRyM1vErMln+ylh4+9+m8Kp0tMQS4jT0ujsjpMLCpwWWuQCoV797B9eVWfZ18zgb3ZtvLJ0PbNFxgv7qH/qgP4i+ts=
+X-Received: by 2002:a67:1787:0:b0:354:6490:437f with SMTP id
+ 129-20020a671787000000b003546490437fmr10423267vsx.26.1656624852529; Thu, 30
+ Jun 2022 14:34:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220630131543.225554-1-angelogioacchino.delregno@collabora.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+References: <20220629115010.10538-1-andriy.shevchenko@linux.intel.com>
+ <20220630162716.GA2842206-robh@kernel.org> <CAHp75VdARCTnpEMyVRAWv7jVSj_+m8_xYiNTwmX6LCzpZT8Tuw@mail.gmail.com>
+In-Reply-To: <CAHp75VdARCTnpEMyVRAWv7jVSj_+m8_xYiNTwmX6LCzpZT8Tuw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 30 Jun 2022 15:34:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJH0tngWDCdLdxbbKx2VYG4u26fFJKgq2JC9a+jif50aA@mail.gmail.com>
+Message-ID: <CAL_JsqJH0tngWDCdLdxbbKx2VYG4u26fFJKgq2JC9a+jif50aA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] of: unittest: Switch to use fwnode instead of of_node
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frank Rowand <frank.rowand@sony.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,20 +68,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 30 Jun 2022 15:15:43 +0200, AngeloGioacchino Del Regno wrote:
-> As was already done for MT8192 in commit b52e695324bb ("dt-bindings:
-> pinctrl: mt8192: Add drive-strength-microamp"), replace the custom
-> mediatek,drive-strength-adv property with the standardized pinconf
-> 'drive-strength-microamp' one.
-> 
-> Similarly to the mt8192 counterpart, there's no user of property
-> 'mediatek,drive-strength-adv', hence removing it is safe.
-> 
-> Fixes: 69c3d58dc187 ("dt-bindings: pinctrl: mt8195: Add mediatek,drive-strength-adv property")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 27 ++-----------------
->  1 file changed, 2 insertions(+), 25 deletions(-)
-> 
+On Thu, Jun 30, 2022 at 1:03 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Jun 30, 2022 at 6:29 PM Rob Herring <robh@kernel.org> wrote:
+> > On Wed, Jun 29, 2022 at 02:50:09PM +0300, Andy Shevchenko wrote:
+> > > GPIO library now accepts fwnode as a firmware node, so
+> > > switch the module to use it.
+>
+> ...
+>
+> > > -     devptr->chip.of_node = pdev->dev.of_node;
+> > > +     devptr->chip.fwnode = dev_fwnode(&pdev->dev);
+> >
+> > Perhaps I want the DT test code to test using the of_node pointer. We do
+> > want that to work, right?
+>
+> Nope. We want to get rid of of_node in GPIO.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I would think there's old PPC users preventing that, but if not, good job.
+
+> > I'm really not a fan of fwnode'ifying things that are DT only. It's
+> > really pointless churn.
+>
+> Other way around, keeping an of_node for just 3 drivers (and counting
+> down) + one test case is pointless churn.
+>
+> But I got that commit message that is unclear about the intentions
+> behind. I will update that if you agree on the rest.
+
+If it is going away, then what choice do I have. :)
+
+Rob
