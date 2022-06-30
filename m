@@ -2,159 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D54956221D
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 20:33:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3F3B562281
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 21:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236689AbiF3Sds (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 14:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
+        id S236795AbiF3TDc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 15:03:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236695AbiF3Sdq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 14:33:46 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD1A225E9B
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 11:33:43 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id z19so27653558edb.11
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 11:33:43 -0700 (PDT)
+        with ESMTP id S236790AbiF3TDb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 15:03:31 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2303631F;
+        Thu, 30 Jun 2022 12:03:31 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id q132so24935ybg.10;
+        Thu, 30 Jun 2022 12:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=yJGEttsMIPFNExRUVjMuioYnkzWMdO3yRAB963cFp2o=;
-        b=bVZKc01WEs5LMjU5JtELjSXU1pShwhHGLZhNmZYt3wfTdiQE/yN2UAshZdvCOv8QGq
-         jvuwowiNtOjr5posUthWXU7PWhNZt5GOF4X2vS97DTQrhkMDd85y2516gnqfIuFFlh2I
-         ruddBdJWCPzK2JSEvz6DATLXX11xi0ZKag2bf5Laj6MHMpCI7ursQwhCZpecYj90tw5h
-         nPUB4qcjaCKLvbhHoLjfivF0IkdS9P0U2XM5vlr2MQX+1XbAOzaKqW9xv/xG0frtmHy6
-         SsZzW6ElgdT4rkY8rdjUlQFfxOrx2HPWseOs3kKWIzs1pfoxsos6mZK6KSJsuFIKNtoI
-         Jsqw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1YP4rROQ1KlH9M242+3quyf1kYcOl9MA5IfXsRWFwso=;
+        b=h2im3IXFyogBb14K6BHYaDSE5rpz351bdfXp9jmHfEOAr+b+AQKkLt4CYSVDElw2fh
+         kwU+gYpGccPZWggO+Jfu3ZqvTRiEs/F5EE3gVad9VC1VDqxCEFCDqh23+VQ/QPnoc33g
+         Eo/wG6mqvs0a+KwTUpzsA9cKeecgoamMY1J2u+qL/zwb0vJD7lb3X3/AE3E/Jo0lrzgx
+         K04c0QaBU1t25yhIKcR0GlivbHPaI1ck6crO+s3CvGKoE0blb771/Nyx0lvkAYiqcSsJ
+         ZMB2xZFE2AxvwVz4tmohJrNeEIWJqM9UFLCABStEup/glneFbNgXU4sAHEbOf628dFwG
+         grjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=yJGEttsMIPFNExRUVjMuioYnkzWMdO3yRAB963cFp2o=;
-        b=gF/p44TiuWYV6qoyaJ69W1UbtGV0t/+Ol54aqBD80Sl9sLXKBPHkehG3w+2ex8CP+v
-         puzHFYXA9b+rEdoeFYGcFok8pE0uoy96vhmeTTK09WgIZmFt8ghuKE6RpT5ziiIABpC6
-         9GRe4Y2oa96xzRqIA5hqxWtX2WXgIWAg8coU5hGgvNMXQR7oozUJKtKWGPO4omz2A1hI
-         XYkkFPQ6+iBwpYUT91vpxlFxNW+TiVBjZUa8CvrGxlxlcLsAupNYjvhtnNi/2GVw+Z8t
-         4B8+lBL1vxcG/xnx/T4ojSqD6EnVB44WvrVPoGrrxjbLw7lN7ZGdLon9DGSeKCk0arQ2
-         OsUw==
-X-Gm-Message-State: AJIora/juQLyz04jt0gI0BGVDXSMiFIAH3w54vSZzsN1E7h1DwIlozNA
-        9gjyM+q7GuSSH+kBQMotpZNXRA==
-X-Google-Smtp-Source: AGRyM1s8xy762cCi9FZl1Kcj0KeKPHclcEopngQ5Us/lz3lUXqlZKh+6oqktKAwNKh4wiC/U7Zn6jA==
-X-Received: by 2002:a05:6402:3708:b0:433:2d3b:ed5 with SMTP id ek8-20020a056402370800b004332d3b0ed5mr13495310edb.246.1656614022289;
-        Thu, 30 Jun 2022 11:33:42 -0700 (PDT)
-Received: from [192.168.0.190] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id w3-20020a1709067c8300b00722fc0779e3sm9482072ejo.85.2022.06.30.11.33.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jun 2022 11:33:41 -0700 (PDT)
-Message-ID: <78faf75d-80b7-7a0e-e306-6351dbe5133c@linaro.org>
-Date:   Thu, 30 Jun 2022 20:33:39 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1YP4rROQ1KlH9M242+3quyf1kYcOl9MA5IfXsRWFwso=;
+        b=A9sWlDh/JQeVPaDbGQDTnIBoEbZuWt8+K1uzYgvnf+YzagG2dQoT2NUbIM25EYjv7M
+         Uc2+yU//dkXBUokH7ZRHgUDJhVYLnVvlDMPQx9WuCOFiDn99E6+fohqVfpLEAzqhYrFo
+         wIYCW0BfwYa8N5RiEV5ITg7mPkL1Z1eSDT7anTt2iboreL5xFD45ljEpXt/uKLbbptbz
+         w1Lsi09hTGzfquZYEb0ZX9hzIGFF1o/OykXPW9WB1bR7O4SEGPYvBn1UVMFH0RAQkOtp
+         l0bwJN36I9NTvZoineX7lxaHhIsIzCaZgoZs4u71zElnie+sL+xhahDeRX6923/MUX9k
+         uM5g==
+X-Gm-Message-State: AJIora/j/2mIi55Q9inYZZKaOUNh/A5UgvQHaveGH1lFWxoUZNsBRLTf
+        ZmCUACD4pP6Yy9Z18RnQqUY/Q7FZ0pZrRL70e9Y=
+X-Google-Smtp-Source: AGRyM1vGdc4tj1sIjgz8UYjpRrxDv/s84ytlBbORBjuGdinTMQCg18ZnMkqwM6+ZhPswFP/8ZGSKkh7uLCbGZmDByLs=
+X-Received: by 2002:a05:6902:10c9:b0:668:e27c:8f7 with SMTP id
+ w9-20020a05690210c900b00668e27c08f7mr11119502ybu.128.1656615810234; Thu, 30
+ Jun 2022 12:03:30 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v6 02/14] dt-bindings: pinctrl: imx: Add fsl,scu-iomux
- yaml file
-Content-Language: en-US
-To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+References: <20220629115010.10538-1-andriy.shevchenko@linux.intel.com> <20220630162716.GA2842206-robh@kernel.org>
+In-Reply-To: <20220630162716.GA2842206-robh@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 30 Jun 2022 21:02:53 +0200
+Message-ID: <CAHp75VdARCTnpEMyVRAWv7jVSj_+m8_xYiNTwmX6LCzpZT8Tuw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] of: unittest: Switch to use fwnode instead of of_node
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frank Rowand <frank.rowand@sony.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abelvesa@kernel.org>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Liu Ying <victor.liu@nxp.com>,
-        Mirela Rabulea <mirela.rabulea@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Ming Qian <ming.qian@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
- <20220629164414.301813-3-viorel.suman@oss.nxp.com>
- <f0634bf0-77e9-939e-693f-31d50af4768c@linaro.org>
- <20220630123754.esbuac4pfktlseh2@fsr-ub1664-116>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220630123754.esbuac4pfktlseh2@fsr-ub1664-116>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/06/2022 14:37, Viorel Suman (OSS) wrote:
-> On 22-06-29 19:53:51, Krzysztof Kozlowski wrote:
->> On 29/06/2022 18:44, Viorel Suman (OSS) wrote:
->>> From: Abel Vesa <abel.vesa@nxp.com>
->>>
->>> In order to replace the fsl,scu txt file from bindings/arm/freescale,
->>> we need to split it between the right subsystems. This patch documents
->>> separately the 'iomux/pinctrl' child node of the SCU main node.
->>>
->>> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
->>> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
->>> ---
->>>  .../bindings/pinctrl/fsl,scu-pinctrl.yaml     | 68 +++++++++++++++++++
->>>  1 file changed, 68 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
->>> new file mode 100644
->>> index 000000000000..76a2e7b28172
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
-> [...]
->>> +      fsl,pins:
->>> +        description:
->>> +          each entry consists of 3 integers and represents the pin ID, the mux value
->>> +          and config setting for the pin. The first 2 integers - pin_id and mux_val - are
->>> +          specified using a PIN_FUNC_ID macro, which can be found in
->>> +          <include/dt-bindings/pinctrl/pads-imx8qxp.h>. The last integer CONFIG is
->>> +          the pad setting value like pull-up on this pin. Please refer to the
->>> +          appropriate i.MX8 Reference Manual for detailed CONFIG settings.
->>> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
->>
->> Look at fsl,imx8mq-pinctrl.yaml. Each item is described (items under items).
-> 
-> Added them initially, but later dropped because of some logs like
-> "pinctrl@xxxxxxx: usdhc1grp:fsl,pins:0: [...] is too long" shown by
-> "make dt_binding_check dtbs_check DT_SCHEMA_FILES=[...]/fsl,scu-pinctrl.yaml"
-> 
-> Same logs are shown for "fsl,imx8mq-pinctrl.yaml". Will add the items description in the next
-> version.
+On Thu, Jun 30, 2022 at 6:29 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jun 29, 2022 at 02:50:09PM +0300, Andy Shevchenko wrote:
+> > GPIO library now accepts fwnode as a firmware node, so
+> > switch the module to use it.
+
+...
+
+> > -     devptr->chip.of_node = pdev->dev.of_node;
+> > +     devptr->chip.fwnode = dev_fwnode(&pdev->dev);
 >
+> Perhaps I want the DT test code to test using the of_node pointer. We do
+> want that to work, right?
 
-The fsl,imx8mq-pinctrl.yaml should be correct and I don't see the reason
-why dtschema complains in some of the entries. It's like one define was
-not correct... I'll take a look at this later, but anyway keep the same
-as fsl,imx8mq-pinctrl.yaml even if it complains.
+Nope. We want to get rid of of_node in GPIO.
 
+> I'm really not a fan of fwnode'ifying things that are DT only. It's
+> really pointless churn.
 
-Best regards,
-Krzysztof
+Other way around, keeping an of_node for just 3 drivers (and counting
+down) + one test case is pointless churn.
+
+But I got that commit message that is unclear about the intentions
+behind. I will update that if you agree on the rest.
+
+-- 
+With Best Regards,
+Andy Shevchenko
