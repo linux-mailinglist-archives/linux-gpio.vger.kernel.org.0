@@ -2,151 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5EC15611DB
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 07:40:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A24225612C5
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jun 2022 08:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232039AbiF3Fkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 01:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58456 "EHLO
+        id S232862AbiF3Gyh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 02:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbiF3Fku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 01:40:50 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2126A213;
-        Wed, 29 Jun 2022 22:40:49 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id q6so36701569eji.13;
-        Wed, 29 Jun 2022 22:40:49 -0700 (PDT)
+        with ESMTP id S231757AbiF3Gyg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 02:54:36 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451DA2CDDD
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 23:54:36 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id x8so13003504pgj.13
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jun 2022 23:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sWgN6CFIETedoR5asDITdmqEoVxTerB8Rm7YXCH/ejI=;
-        b=Xka2UZzDjCNUjQ62ik87OhSKy17vv7/K7W44vUPjJg91nvTH9J+1R2Bqfuqtd+Fd9B
-         PE5bouoBm6M6Ge1lT76Qxj6L9tzXgc1wY/ujRwwRpHYfDin3aoQjTfEpxgv7DoeYFru/
-         7rYl8jkU+ok/de6qD3DO0hgxsDbBIor97JiYk+YMJPpPtOQ1V8FbEWr8nPTvo12pssUh
-         iqrbX/iO3Qyj3rP4eQ/Iw3JmOY4hCBKbRgU3N8PyK2qHavMjqdixtDnzguvoFztyd8mr
-         77cSnRmro8MbkgwXjPvK2rp9cYjUYXMCoAmF6rvnrLpwPIf/G5H4dOP50KI8SQbFR7qq
-         m7yw==
+         :cc:content-transfer-encoding;
+        bh=zBVwCq3j2p6U4a2i/jMeg+qggdkonfpPMtSG1jSAdwQ=;
+        b=h4xFTNDttWFzMh2IOGT5IBaoOfS56qwbRGDL+8GMTWhCvIXXTiFZqpgrJsE0JT7Ocl
+         dor2nW3XYYLOV6n1GdyvLjW49ipcSiTE3USJPirbFsKEhXzbnq7CJ5GljCr48Ov1YyWd
+         Id8AprafSxPYiTs42uKUN+D7tDYWom7exKD3pfHD9aMS8sGWRK3l0UNNB4tWUqNhobIg
+         +TJUri1If90UW8ApSysABjC500pyJ2JNqnLIirUih0ikaC7N9GfnoExzvIswVbdG4btr
+         hiy1LLTQI8dHOS2C7+WnW6xPVd0Ol4DMcLYhROwpFWa+Tg+GHs+9hGsET/4AWr//ZjQB
+         uE+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sWgN6CFIETedoR5asDITdmqEoVxTerB8Rm7YXCH/ejI=;
-        b=CjZyvVHPAIvRY9bKQp5TgEs6IMTBiI2gQ8qiHzz64yH4yuArUETiNydUI8N2pFcmi/
-         wsIS7J8L1uq3t8XomeeOUpaIH44BRhfPSaZe1u8EQDz2a5x1EtnXsleTSJpoaOSJyPRz
-         ETrzvko4aAziQ702htbdZGzTb2POeIWpA03SuWMrWWazRXcVboIu2H4trfsJfSyu+RXr
-         fKCzqp9tDZVFxP6BZvFwxqL3eMEOERjREkLRSEuCSjMkMUqyonYzo/UuB+iALauIW54A
-         TWbeNVcIwpBRUO1LMRq96hSUSog15gmrbqENptbyYMzt1iisiEOwtNX1stv2QfXI+URA
-         O5jg==
-X-Gm-Message-State: AJIora89+FKifqyJs+QMHPxGf5H3deDYagJE1+E5NNV3UZT4RqWOJwVT
-        /dw5FFVKv9NATuQdvjMNDulrmJjlbG/aIOtJeOo=
-X-Google-Smtp-Source: AGRyM1uoy/Y4xr5vEES0MoYvJmJQ0KxLhYf5Rqg4en/Nz/V0Um49hYuoeLRWMj9Nf1xYbkhlpuZizkIffMUCFZgFK/E=
-X-Received: by 2002:a17:906:4985:b0:727:c6ac:5b31 with SMTP id
- p5-20020a170906498500b00727c6ac5b31mr6950859eju.501.1656567647742; Wed, 29
- Jun 2022 22:40:47 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zBVwCq3j2p6U4a2i/jMeg+qggdkonfpPMtSG1jSAdwQ=;
+        b=DeF6662F69smog0JK1V9QsT6DOXsjY9xjpLlHD60J6FQ5ucxVl8FA8sGS29mRA0zwa
+         z5UTm5C7xHWBF324TioBe2dtQOwr2ZyrflkyJ74oxF2GVLgtiJ7TD8NvqGTlg8iHyQml
+         fR9xkDwyp/ZfbZ0ZKcuFl8wMGC/kAyns69m7FpmEb6p6qX3xm2SFjSTu3DZSO6dZHjTM
+         QjjSLen9uGSpqHb7wKdTcv3kSserYyGqe4b9bs1zyp+QfuFQ5NujCfiSQfLqAIezi0fJ
+         dfkJy8VirPiRWg+b+vr6r6VK1/cfxuXktS/FIALmbdM7kCPcD3T1LwDKh7c5mMTRn0en
+         yV+w==
+X-Gm-Message-State: AJIora+DGzwyoxua2wcOMQpNwduAIMdLihvZ4Nch0GYKS2tWrxUsj6zL
+        ZAWQAVwO6Mw3CFij9xEtfx8ZB+nqPTsGUUPBIQfCSQ==
+X-Google-Smtp-Source: AGRyM1uda1FGBNlLaAa1MTWUfYE5xQhdzHfHblx6a+Rtw2BknvvXh4HU9UtTFysvs34HDJbuldOOrATscnNCxNZCjTc=
+X-Received: by 2002:a63:730b:0:b0:40c:3a65:537f with SMTP id
+ o11-20020a63730b000000b0040c3a65537fmr6181173pgc.267.1656572075767; Wed, 29
+ Jun 2022 23:54:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220625200600.7582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220625200600.7582-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <f51a6ccda0f7b4596406789fa73e1bdad85186bc.camel@pengutronix.de>
-In-Reply-To: <f51a6ccda0f7b4596406789fa73e1bdad85186bc.camel@pengutronix.de>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 30 Jun 2022 06:40:21 +0100
-Message-ID: <CA+V-a8vHZC8DZqJ57WuEeqne09+AB5Z-oLc9aXitp8VxRSV6Lw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+References: <20220628084226.472035-1-brgl@bgdev.pl> <20220628084226.472035-6-brgl@bgdev.pl>
+ <20220630022522.GA17221@sol>
+In-Reply-To: <20220630022522.GA17221@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 30 Jun 2022 08:54:24 +0200
+Message-ID: <CAMRc=MfXqKuj4u9OiBe5Euo8BtRFb06CMZbLOoF6PD2OvJsRWg@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
+ implementation for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Philipp,
-
-Thank you for the review.
-
-On Wed, Jun 29, 2022 at 5:29 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+On Thu, Jun 30, 2022 at 4:25 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> On Sa, 2022-06-25 at 21:05 +0100, Lad Prabhakar wrote:
-> > Add a driver for the Renesas RZ/G2L Interrupt Controller.
+> On Tue, Jun 28, 2022 at 10:42:26AM +0200, Bartosz Golaszewski wrote:
+> > This is the implementation of the new python API for libgpiod v2.
 > >
-> > This supports external pins being used as interrupts. It supports
-> > one line for NMI, 8 external pins and 32 GPIO pins (out of 123)
-> > to be used as IRQ lines.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/irqchip/Kconfig             |   8 +
-> >  drivers/irqchip/Makefile            |   1 +
-> >  drivers/irqchip/irq-renesas-rzg2l.c | 393 ++++++++++++++++++++++++++++
-> >  3 files changed, 402 insertions(+)
-> >  create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
-> >
-> [...]
-> > diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-> > new file mode 100644
-> > index 000000000000..cc16fcf2bbc6
-> > --- /dev/null
-> > +++ b/drivers/irqchip/irq-renesas-rzg2l.c
-> > @@ -0,0 +1,393 @@
-> [...]
-> > +static int rzg2l_irqc_init(struct device_node *node, struct device_node *parent)
-> > +{
-> > +     struct irq_domain *irq_domain, *parent_domain;
-> > +     struct platform_device *pdev;
-> > +     struct reset_control *resetn;
-> > +     struct rzg2l_irqc_priv *priv;
-> > +     int ret;
-> > +
-> > +     pdev = of_find_device_by_node(node);
-> > +     if (!pdev)
-> > +             return -ENODEV;
-> > +
-> > +     parent_domain = irq_find_host(parent);
-> > +     if (!parent_domain) {
-> > +             dev_err(&pdev->dev, "cannot find parent domain\n");
-> > +             return -ENODEV;
+>
+> [snip]
+>
 > > +     }
 > > +
-> > +     priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
-> > +
-> > +     priv->base = devm_of_iomap(&pdev->dev, pdev->dev.of_node, 0, NULL);
-> > +     if (IS_ERR(priv->base))
-> > +             return PTR_ERR(priv->base);
-> > +
-> > +     ret = rzg2l_irqc_parse_interrupts(priv, node);
-> > +     if (ret) {
-> > +             dev_err(&pdev->dev, "cannot parse interrupts: %d\n", ret);
-> > +             return ret;
+> > +     res =3D PyObject_Call(method, args, line_cfg_kwargs);
+> > +     Py_DECREF(args);
+> > +     Py_DECREF(method);
+> > +     if (!Py_IsNone(res)) {
+> > +             Py_DECREF(res);
+> > +             return NULL;
 > > +     }
 > > +
-> > +     resetn = devm_reset_control_get_exclusive_by_index(&pdev->dev, 0);
 >
-> Why is this by index? I'd expect
+> Building against python 3.9 (the min required by configure.ac) gives:
 >
->         resetn = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> module.c:276:7: warning: implicit declaration of function =E2=80=98Py_IsN=
+one=E2=80=99; did you mean =E2=80=98Py_None=E2=80=99? [-Wimplicit-function-=
+declaration]
+>   276 |  if (!Py_IsNone(res)) {
+>       |       ^~~~~~~~~
+>       |       Py_None
 >
-> should work just as well?
 >
-Agreed will replace it to devm_reset_control_get_exclusive().
+> Py_IsNone didn't get added to the Stable ABI until 3.10.
+>
+> Cheers,
+> Kent.
 
-Cheers,
-Prabhakar
+It seems like most distros still ship python 3.9, I don't want to make
+3.10 the requirement. This can be replaced by `if (res !=3D Py_None)`.
+Are there any more build issues?
+
+Bart
