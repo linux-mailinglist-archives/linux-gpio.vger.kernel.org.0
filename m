@@ -2,70 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8D92563995
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 21:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 560795639C1
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 21:29:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231393AbiGATN4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 15:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58184 "EHLO
+        id S232466AbiGAT0v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 15:26:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiGATNz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 15:13:55 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F612AE3D
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 12:13:53 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id r3so5629641ybr.6
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 12:13:53 -0700 (PDT)
+        with ESMTP id S232460AbiGAT0c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 15:26:32 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2118.outbound.protection.outlook.com [40.107.100.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FB84D4CA;
+        Fri,  1 Jul 2022 12:26:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VrJ/ZS56DhadZ8+I8REn4qWdfF7XCt33k/tWOKIQSVfG2YIhU4r3tXEqGyAOwbdpdaAObYo7FY0TOd+N/3ZWXOoKiU+t9c0AKxOn/umtzwmi5ygShCzCVdM59N0jf2oh9HDSihpZ18c3kXLRz5PUO4iyqWuhL4Ud1W0vTcVFQfgWwR5j8VnwujpCZ5yL0NKAlul/wDcksyPxrw7OJQ7ZncLcd4PZGAHKZq4eYeq7fzBfNhbSuwp5z2X1xWKdpi0bcTHwDPLCH4xD7iu7IEisqxORhjM3hbSdhcJ406r/NuuTF5DTjk1mvRW43XjEFRzG8TKXXAyWb/kzMnrWKFbslg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UH6yRkNTL3l2eV4x+3ZKfB466PM52XOrYOv+6IJbg08=;
+ b=QpyeCnIxZ9vJ11aT97VPnSLVqcaZUz0vnnMQoE8mY6yzHDz4+22zbnOGngeVy3h/Z+Mty+Ej8ZU3pPl0QtIlvODdbkZ0wuC6WDQCFfT9GvpoF237TALjpICGFyatUeXs3MbTF3VRJJuK/ZjR2LqZRi4hyhp2Uw/f/5N8Mj8r1hyNdTjynk28WMadfw+sSCdb7XnqWqDK/lh0rY2zEWxbPS2YhC5iVpeTG0ccb76XZmiDSq2H1IxSVFIk4gGMan/mz3IJBblkA/38Jhi+ULUHgIzQFEhR2Cl6H1GdnDg9qS7EzICivvOw1C4t+L9w3DxQ+cDOyBegIGkxt55LIa3jAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=in-advantage.com; dmarc=pass action=none
+ header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0QS+dcPV5O8kLzr2+REcEkzxVnC/iy1E7v+r8knheu0=;
-        b=YxJMJqn/vOk+95wW9H3XyxhU7b6ot8wJfR5j/hJXXANi9ACWI8OWpYLc7idqKtR70V
-         I3f03mBuDThOJwgTtewRvSXUMPEEQyG2ilkW3LrxcIy7/7G+z/lvGEKEHqAw36hYhA+D
-         6ECYWOChAVa+UxOkE+iS+daPXf69U0SflOW9HtDhl9SR2FAyXKxcYvKm3CgyTVMStMHC
-         d3loWbDJUvP5cApZmY9sk39gsPipm7VWUwXpJ6tYDGtPK2MW5LBo5X+RScgoYXv7fbLo
-         O9phoX29OCjJ0I+QGlNLfK3+Itz44Me8/dSf5Psw1rGo4PvdspD0oJiqYd3r+D2c9F2x
-         uSLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0QS+dcPV5O8kLzr2+REcEkzxVnC/iy1E7v+r8knheu0=;
-        b=GLaq3mFhXO2IOMknZx8nMBSszF5rztZSUjskIyGG4YIvp2oIOXHRR1NUg2ULiyTWA0
-         JdaujmTrN+C36LWvP5NmIgVknO9pfdt/++nR9m95XRm+naFZ03q8jx1bi2EFx1yz1HPU
-         q796HstAM014Qjdpb+N9NtQfVSUZgzAu2Pz1FP+A+S0frdOa4hUFZDwI4R91z+The4Ax
-         g0i4onJVgcIOcSpOyxP5KYsK/3xDzggvfi77BPZJqtEV1WJnmQyTojofTUQlMYs02GKb
-         uywBXeA64+OnDKEajPKw7S4UHp9MYFr5iRGv/AkRLkJ4ndK3ScVlRNCV9YEbP03D4qE+
-         +rjQ==
-X-Gm-Message-State: AJIora+HNcuZuavW4siKvBmARXhM3xQ+eaqFHdSCJZ2bXwkYovmpjl5n
-        q4paSfZssCRLn+Zv8M54vJeFTjg5kEi4Yvs1e9tMjg==
-X-Google-Smtp-Source: AGRyM1tQv6CCDFx3u07LEvOjaGIhnXAU5l72oCC5MmwYKS+JqS6dGPS426l3v4HvKqgb/fUO3PdDTLb3hZ+49n67IRs=
-X-Received: by 2002:a25:5bc3:0:b0:669:b722:beb8 with SMTP id
- p186-20020a255bc3000000b00669b722beb8mr16783331ybb.447.1656702832727; Fri, 01
- Jul 2022 12:13:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <YrQP3OZbe8aCQxKU@atomide.com> <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
- <Yrlz/P6Un2fACG98@atomide.com> <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
- <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
- <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
- <Yr6HQOtS4ctUYm9m@atomide.com> <Yr6QUzdoFWv/eAI6@atomide.com>
- <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com>
- <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com> <20220701150848.75eeprptmb5beip7@bogus>
-In-Reply-To: <20220701150848.75eeprptmb5beip7@bogus>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 1 Jul 2022 12:13:16 -0700
-Message-ID: <CAGETcx_Y-9WBeRwf22v3NSuY8PGpPrTxtx_uBqe_Q7rD6mEQMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UH6yRkNTL3l2eV4x+3ZKfB466PM52XOrYOv+6IJbg08=;
+ b=TVmrSITnzrS5Db7AeR1nuRNbOKCUlYZM94I1KXk2YMD0Pkp4eMLeL9Kgdu4f6mTa+VOWJraYfSjekQ8wEBF/EVw/E8SGxXrQxMrbsdWrLGXU92uNueFNaDQU1Ia7i2H5qCLJUSg0356niuDOjFdH16OJKLXqtLxBP7kqGj+HiiU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=in-advantage.com;
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37) by CY4PR1001MB2230.namprd10.prod.outlook.com
+ (2603:10b6:910:46::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17; Fri, 1 Jul
+ 2022 19:26:19 +0000
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::712f:6916:3431:e74e]) by MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::712f:6916:3431:e74e%6]) with mapi id 15.20.5373.018; Fri, 1 Jul 2022
+ 19:26:19 +0000
+From:   Colin Foster <colin.foster@in-advantage.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Andrew Lunn <andrew@lunn.ch>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
@@ -73,117 +55,245 @@ Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
         Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Wolfram Sang <wsa@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        katie.morris@in-advantage.com
+Subject: [PATCH v12 net-next 0/9] add support for VSC7512 control over SPI
+Date:   Fri,  1 Jul 2022 12:26:00 -0700
+Message-Id: <20220701192609.3970317-1-colin.foster@in-advantage.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR1601CA0006.namprd16.prod.outlook.com
+ (2603:10b6:300:da::16) To MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a269b5e1-eb28-4e3f-b0d4-08da5b9792cc
+X-MS-TrafficTypeDiagnostic: CY4PR1001MB2230:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zbQMfAcV8jnUiuXx3XHgRbTEiX9PynrPGJo6Z7OeR4IcVvE0Y0ju2MmYjIFlKO+TK/BGmjyCS6YxjeemaWYMrHO9HwgBhkCqXbZ/WkQat06P2Eoz1pkfIT9ryMdmmNyWberDx2KVkANq+fCktjC+zlRYNxjHlafBg7HvT+LCHke33o1KtrMG/KLeOtyAW06g+GywSVWUBq23+R3pXmOtYoOuWt9Lsf/jS9ftceVxEkRRxbDHUUZzGMhQvT3Sq/yjTMiO0K9C5YHk6sIQHNDjzni5npkJlIHFOuwrWBrgPLEnb2ApOHjp/1HGgkBL2SQ/f+bqsBpg7GfDhQ5mo3SpCB6c3SH4w8rp2418MS5YRTLsVxHUowsGUPRDHIOD3bh0Yd7Xi1GcpSfDyS58Zk/2rQB3ZIw/5vjrtseu25KR/Hu4VmeP/nVZNIV/XNSqAeEFPq2WnK2j/aqXuHpatP7MqKF9t1XxN4b2PKn0VUfUJml79ZJv/0nhane/oK4UIaLHRY1xlA2aUvxrli7aGIWxmBid0jyLUMva9hTChek9rLJ0NTV2JKwpdiu4t5Q2abPB6BOgaTWec3HDdL+eLXkO1Cc3/jR/LPyZwxc4fL2KxU8phgJYFNN4KVkFgZBWKsqfJ//R3DfG0cpN2ajlG/uK+OSRl4BKlGQfbj79xsJCUjX/47GDJT6QZymnSmslp0eE7QSDrg+unV+sPh/JRQRKVMAjbJ+5PbpFONB0IkIIDm2Wexm5iiDB5dWUOgtdUge05AlDeB6WjS3S3uXFnT6wyYA62riACi9TYWf296bev1Gt1RjAuCn6SmXe/ebPmuWp
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(346002)(39830400003)(376002)(136003)(396003)(66476007)(38350700002)(186003)(8676002)(8936002)(4326008)(86362001)(66946007)(1076003)(5660300002)(6666004)(38100700002)(107886003)(83380400001)(66556008)(7416002)(41300700001)(478600001)(316002)(36756003)(52116002)(44832011)(2906002)(6512007)(2616005)(6506007)(6486002)(26005)(54906003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wC22Qw/GnjHAK5zC195wtKAsavcfaM2RZgn3vI3e2mwV0x+swVxxHedWHC8K?=
+ =?us-ascii?Q?l3JG/YkzMITjgpy3dM8jOku0dp0BadGCwCk5+lB00XmJX9/fWecIbomSUCKv?=
+ =?us-ascii?Q?NhAMK+d+LJz/VrbXOuCd1A8jLwDyRVK2IA+7o7+T2J8vzkBotUR361z2KuKt?=
+ =?us-ascii?Q?t3qNshQS1SJlS5rW6YjX5MZdoaCdQ5J3WEdv7Vwcedsd+wgvJZfz1i1OliFM?=
+ =?us-ascii?Q?0vOCKYjUyUTvU3KK7N/79yfCauLm7Q/Z7cn0yBvisvc/1IttoR+Y0SvDpjyo?=
+ =?us-ascii?Q?ib1Y8SOipdx3d3SriGxfKNQ0zlJZp0EA2aj4o8ZVpBrl3UnGTBMlCKk1Uohd?=
+ =?us-ascii?Q?8+yDEewDkidYn4FphN7EnOoUUR2W2Pd8rqGztmM2+PSB5jtdwrn9s+pH1xLY?=
+ =?us-ascii?Q?eQfL51hovHiDXwRf+9uTgHOyS5GeJita4ENID6Fwhdb/PyMkyy7zg9QT8mqJ?=
+ =?us-ascii?Q?BQED/GOZuREx6hD/OpEf6Tp4o4oigVRkzwsL/NGX4zdv+Y4kVG2U5C4/Ms99?=
+ =?us-ascii?Q?kDoziHn2DN7sA5y3JOqAHxugOHrRdQ3cc1gS6HD5RgP1SxNEXAdyX3TbIrqs?=
+ =?us-ascii?Q?PhWsPU93SzljVd79aKAW00OgzMZs88ZninHS00SSLJ2Py9bx+d+QqakQlo53?=
+ =?us-ascii?Q?mIbEJuQeOXLXqsQ0CVlyQ56Lrew874iZEZreZBZe3hLqq+QkkWZfsUcufHez?=
+ =?us-ascii?Q?FiAYKVxoLg5rE5HmgVciirdAnsOjVSkw/WRo52ByMVYeyaKxFPKHMYQvFkj5?=
+ =?us-ascii?Q?FFAsyOKAyEclVsZirQK59nEc0/9fbFLaCJ4gw3vPkE+SH4ylxKCnDyI4qkmJ?=
+ =?us-ascii?Q?lJIxGLT9Ing754ipMR6gvNLVbpuFzxcybNlq9NS9kWQuETMqZzb/3fbfdKAg?=
+ =?us-ascii?Q?FhF/mf/JReEW/ewTdCH4LdaGGT0ld749ax9upzDjBbQ9R+izV+7wuS8LL3Bt?=
+ =?us-ascii?Q?9vjB+evB7WwYfDfVnOSrX5OO+KIaTIuN0eMQ5E1hhCWd7DFm52SAmD77iGbA?=
+ =?us-ascii?Q?lxMdbN9yHWce3drXHOebLW8pTFPG2tU8FHR4BQ6OWwYRIBRg/wFmEZNcAqqe?=
+ =?us-ascii?Q?f08MJbD+su4l8cTsupj2aNLr6kJR1gh/CHmTos0jRJrYZVTiO/0dm5SpOuUe?=
+ =?us-ascii?Q?MEleSz+rPFPxw/9bGtafGiMV7TCKWTCuFqpuqeEKSE/havS8XxlSXJ2EaF5n?=
+ =?us-ascii?Q?8NNsTgbqioeWn2IaionRetH25M7G1AZY19PH0Umszw3QD0O765FrGq1iT/Pp?=
+ =?us-ascii?Q?Iz3sYk8jqwVfPxJAz4fR7VYUZkrZxLAGgBnZm34XPR594jiaMmUMVQZyu+Wh?=
+ =?us-ascii?Q?WCLauqAFbz9qn71Byql4fRDhrpXh0lpNvHmZDxKsxJZnXmt7xGxi8xoyzwRe?=
+ =?us-ascii?Q?4HD8g/E8UvbsKxElI/0mDTpP+yzReacr/BiQpQ/myGYa///GFPWODdBDll4t?=
+ =?us-ascii?Q?Alab43upizs0/tbDzoIFbN3OcqzhsXSNwwZFzTnf7QXkqy3w9SfR5bnBw0C6?=
+ =?us-ascii?Q?Avjxm01MElfvbedileFvWPgNnqIQHSzgbniVNxTAjP9y5c6IkSWcSdbqFbZk?=
+ =?us-ascii?Q?orvyhlIrKkcsc0Iyv8LssHEmHw3O6qeCRZUbSOqYPpmHiYBPr5bK3RJ9oZgT?=
+ =?us-ascii?Q?Dg=3D=3D?=
+X-OriginatorOrg: in-advantage.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a269b5e1-eb28-4e3f-b0d4-08da5b9792cc
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2022 19:26:18.9611
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fkc7lS7B5qAqGgxUIQbe9xUESzbGEC6D+lnf6kpgA2ydsS1Xik2vF4GHXHhS7DTASqJj1EimgvdQU5+376lUBgaZtPxlMJazxGibHZTBPCA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1001MB2230
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 8:08 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> Hi, Saravana,
->
-> On Fri, Jul 01, 2022 at 01:26:12AM -0700, Saravana Kannan wrote:
->
-> [...]
->
-> > Can you check if this hack helps? If so, then I can think about
-> > whether we can pick it up without breaking everything else. Copy-paste
-> > tab mess up warning.
->
-> Sorry for jumping in late and not even sure if this is right thread.
-> I have not bisected anything yet, but I am seeing issues on my Juno R2
-> with SCMI enabled power domains and Coresight AMBA devices.
->
-> OF: amba_device_add() failed (-19) for /etf@20010000
-> OF: amba_device_add() failed (-19) for /tpiu@20030000
-> OF: amba_device_add() failed (-19) for /funnel@20040000
-> OF: amba_device_add() failed (-19) for /etr@20070000
-> OF: amba_device_add() failed (-19) for /stm@20100000
-> OF: amba_device_add() failed (-19) for /replicator@20120000
-> OF: amba_device_add() failed (-19) for /cpu-debug@22010000
-> OF: amba_device_add() failed (-19) for /etm@22040000
-> OF: amba_device_add() failed (-19) for /cti@22020000
-> OF: amba_device_add() failed (-19) for /funnel@220c0000
-> OF: amba_device_add() failed (-19) for /cpu-debug@22110000
-> OF: amba_device_add() failed (-19) for /etm@22140000
-> OF: amba_device_add() failed (-19) for /cti@22120000
-> OF: amba_device_add() failed (-19) for /cpu-debug@23010000
-> OF: amba_device_add() failed (-19) for /etm@23040000
-> OF: amba_device_add() failed (-19) for /cti@23020000
-> OF: amba_device_add() failed (-19) for /funnel@230c0000
-> OF: amba_device_add() failed (-19) for /cpu-debug@23110000
-> OF: amba_device_add() failed (-19) for /etm@23140000
-> OF: amba_device_add() failed (-19) for /cti@23120000
-> OF: amba_device_add() failed (-19) for /cpu-debug@23210000
-> OF: amba_device_add() failed (-19) for /etm@23240000
-> OF: amba_device_add() failed (-19) for /cti@23220000
-> OF: amba_device_add() failed (-19) for /cpu-debug@23310000
-> OF: amba_device_add() failed (-19) for /etm@23340000
-> OF: amba_device_add() failed (-19) for /cti@23320000
-> OF: amba_device_add() failed (-19) for /cti@20020000
-> OF: amba_device_add() failed (-19) for /cti@20110000
-> OF: amba_device_add() failed (-19) for /funnel@20130000
-> OF: amba_device_add() failed (-19) for /etf@20140000
-> OF: amba_device_add() failed (-19) for /funnel@20150000
-> OF: amba_device_add() failed (-19) for /cti@20160000
->
-> These are working fine with deferred probe in the mainline.
-> I tried the hack you have suggested here(rather Tony's version),
+The patch set in general is to add support for the VSC7512, and
+eventually the VSC7511, VSC7513 and VSC7514 devices controlled over
+SPI. Specifically this patch set enables pinctrl, serial gpio expander
+access, and control of an internal and an external MDIO bus.
 
-Thanks for trying that.
+I have mentioned previously:
+The hardware setup I'm using for development is a beaglebone black, with
+jumpers from SPI0 to the microchip VSC7512 dev board. The microchip dev
+board has been modified to not boot from flash, but wait for SPI. An
+ethernet cable is connected from the beaglebone ethernet to port 0 of
+the dev board. Network functionality will be included in a future patch set.
 
-> also
-> tried with fw_devlink=0 and fw_devlink=1
+The device tree I'm using is included in the documentation, so I'll not
+include that in this cover letter. I have exported the serial GPIOs to the
+LEDs, and verified functionality via
+"echo heartbeat > sys/class/leds/port0led/trigger"
 
-0 and 1 aren't valid input to fw_devlink. But yeah, I don't expect
-disabling it to make anything better.
+/ {
+	vscleds {
+		compatible = "gpio-leds";
+		vscled@0 {
+			label = "port0led";
+			gpios = <&sgpio_out1 0 0 GPIO_ACTIVE_LOW>;
+			default-state = "off";
+		};
+		vscled@1 {
+			label = "port0led1";
+			gpios = <&sgpio_out1 0 1 GPIO_ACTIVE_LOW>;
+			default-state = "off";
+		};
+[ ... ]
+	};
+};
 
-> && fw_devlink.strict=0
-> No change in the behaviour.
->
-> The DTS are in arch/arm64/boot/dts/arm/juno-*-scmi.dts and there
-> coresight devices are mostly in juno-cs-r1r2.dtsi
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.19.0-rc3-00745-g30c05ffbecdc (arm-linux-gnueabi-gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #826 SMP PREEMPT Fri Jul 1 11:26:44 PDT 2022
+...
+[    1.952616] pinctrl-ocelot ocelot-pinctrl.0.auto: DMA mask not set
+[    1.956522] pinctrl-ocelot ocelot-pinctrl.0.auto: driver registered
+[    1.967188] pinctrl-microchip-sgpio ocelot-sgpio.1.auto: DMA mask not set
+[    1.983763] mscc-miim ocelot-miim0.2.auto: DMA mask not set
+[    3.020687] mscc-miim ocelot-miim1.3.auto: DMA mask not set
 
-Thanks
 
-> Let me know if there is anything obvious or you want me to bisect which
-> means I need more time. I can do that next week.
+I only have hardware to test the last patch, so any testers are welcome.
+I've been extra cautious about the ocelot_regmap_from_resource helper
+function, both before and after the last patch. I accidentally broke it
+in the past and would like to avoid doing so again.
 
-I'll let you know once I poke at the DTS. We need to figure out why
-fw_devlink wasn't blocking these from getting to the error (same as in
-Tony's case). But since these are amba devices, I think I have some
-guesses.
 
-This is an old series that had some issues in some cases and I haven't
-gotten around to looking at it. You can give that a shot if you can
-apply it to a recent tree.
-https://lore.kernel.org/lkml/20210304195101.3843496-1-saravanak@google.com/
+RFC history:
+v1 (accidentally named vN)
+	* Initial architecture. Not functional
+	* General concepts laid out
 
-After looking at that old patch again, I think I know what's going on.
-For normal devices, the pm domain attach happens AFTER the device is
-added and fw_devlink has had a chance to set up device links. And if
-the suppliers aren't ready, really_probe() won't get as far as
-dev_pm_domain_attach(). But for amba, the clock and pm domain
-suppliers are "grabbed" before adding the device.
+v2
+	* Near functional. No CPU port communication, but control over all
+	external ports
+	* Cleaned up regmap implementation from v1
 
-So with that old patch + always returning -EPROBE_DEFER in
-amba_device_add() if amba_read_periphid() fails should fix your issue.
+v3
+	* Functional
+	* Shared MDIO transactions routed through mdio-mscc-miim
+	* CPU / NPI port enabled by way of vsc7512_enable_npi_port /
+	felix->info->enable_npi_port
+	* NPI port tagging functional - Requires a CPU port driver that supports
+	frames of 1520 bytes. Verified with a patch to the cpsw driver
 
--Saravana
+v4
+    * Functional
+    * Device tree fixes
+    * Add hooks for pinctrl-ocelot - some functionality by way of sysfs
+    * Add hooks for pinctrl-microsemi-sgpio - not yet fully functional
+    * Remove lynx_pcs interface for a generic phylink_pcs. The goal here
+    is to have an ocelot_pcs that will work for each configuration of
+    every port.
+
+v5
+    * Restructured to MFD
+    * Several commits were split out, submitted, and accepted
+    * pinctrl-ocelot believed to be fully functional (requires commits
+    from the linux-pinctrl tree)
+    * External MDIO bus believed to be fully functional
+
+v6
+    * Applied several suggestions from the last RFC from Lee Jones. I
+      hope I didn't miss anything.
+    * Clean up MFD core - SPI interaction. They no longer use callbacks.
+    * regmaps get registered to the child device, and don't attempt to
+      get shared. It seems if a regmap is to be shared, that should be
+      solved with syscon, not dev or mfd.
+
+v7
+    * Applied as much as I could from Lee and Vladimir's suggestions. As
+      always, the feedback is greatly appreciated!
+    * Remove "ocelot_spi" container complication
+    * Move internal MDIO bus from ocelot_ext to MFD, with a devicetree
+      change to match
+    * Add initial HSIO support
+    * Switch to IORESOURCE_REG for resource definitions
+
+v8
+    * Applied another round of suggestions from Lee and Vladimir
+    * Utilize regmap bus reads, which speeds bulk transfers up by an
+      order of magnitude
+    * Add two additional patches to utilize phylink_generic_validate
+    * Changed GPL V2 to GPL in licenses where applicable (checkpatch)
+    * Remove initial hsio/serdes changes from the RFC
+
+v9
+    * Submitting as a PATCH instead of an RFC
+    * Remove switch functionality - will be a separate patch set
+    * Remove Kconfig tristate module options
+    * Another round of suggestions from Lee, Vladimir, and Andy. Many
+      thanks!
+    * Add documentation
+    * Update maintainers
+
+v10
+    * Fix warming by removing unused function
+
+v11
+    * Suggestions from Rob and Andy. Thanks!
+    * Add pinctrl module functionality back and fixing those features
+    * Fix aarch64 compiler error
+
+v12
+    * Suggestions from Vladimir, Andy, Randy, and Rob. Thanks as always!
+    * Utilize dev_get_regmap to clean up interfaces
+    * MFD_OCELOT can be a module
+
+Colin Foster (9):
+  mfd: ocelot: add helper to get regmap from a resource
+  net: mdio: mscc-miim: add ability to be used in a non-mmio
+    configuration
+  pinctrl: ocelot: allow pinctrl-ocelot to be loaded as a module
+  pinctrl: ocelot: add ability to be used in a non-mmio configuration
+  pinctrl: microchip-sgpio: allow sgpio driver to be used as a module
+  pinctrl: microchip-sgpio: add ability to be used in a non-mmio
+    configuration
+  resource: add define macro for register address resources
+  dt-bindings: mfd: ocelot: add bindings for VSC7512
+  mfd: ocelot: add support for the vsc7512 chip via spi
+
+ .../devicetree/bindings/mfd/mscc,ocelot.yaml  | 160 +++++++++
+ MAINTAINERS                                   |   7 +
+ drivers/mfd/Kconfig                           |  18 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/ocelot-core.c                     | 164 +++++++++
+ drivers/mfd/ocelot-spi.c                      | 312 ++++++++++++++++++
+ drivers/mfd/ocelot.h                          |  28 ++
+ drivers/net/mdio/mdio-mscc-miim.c             |  34 +-
+ drivers/pinctrl/Kconfig                       |   4 +-
+ drivers/pinctrl/pinctrl-microchip-sgpio.c     |  14 +-
+ drivers/pinctrl/pinctrl-ocelot.c              |  15 +-
+ include/linux/ioport.h                        |   5 +
+ include/linux/mfd/ocelot.h                    |  51 +++
+ 13 files changed, 772 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml
+ create mode 100644 drivers/mfd/ocelot-core.c
+ create mode 100644 drivers/mfd/ocelot-spi.c
+ create mode 100644 drivers/mfd/ocelot.h
+ create mode 100644 include/linux/mfd/ocelot.h
+
+-- 
+2.25.1
+
