@@ -2,72 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A9505636A1
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 17:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01C815636C0
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 17:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233726AbiGAPJB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 11:09:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38736 "EHLO
+        id S230129AbiGAPQQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 11:16:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233728AbiGAPJA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 11:09:00 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BC7952655C;
-        Fri,  1 Jul 2022 08:08:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19C17113E;
-        Fri,  1 Jul 2022 08:08:55 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F3BE3F66F;
-        Fri,  1 Jul 2022 08:08:51 -0700 (PDT)
-Date:   Fri, 1 Jul 2022 16:08:48 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        with ESMTP id S229559AbiGAPQP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 11:16:15 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6A73057F;
+        Fri,  1 Jul 2022 08:16:14 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 549FB3200684;
+        Fri,  1 Jul 2022 11:16:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 01 Jul 2022 11:16:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1656688570; x=
+        1656774970; bh=Tqwsov16Tb0O3xmHbTi4I+HfDNbMkRJRXqdUjVyems0=; b=f
+        IR3s4uS4yWZciAfs+E8sv1lP4+d4xh9McJaAh+lLsBBivpn4rTbX4iIe3lb9Jnv4
+        pfaUQPUMPss2tykJLQlt1OL4DF2c64giwSjAHzhb0Wmw4v09Kprw3Fgeic5/tiA7
+        Sg7ZN9QVaau7+pZYx0bHqG/aORhLS3XIl6AXBvZ8+NGs5aXl4VDseDZaPZj72ybe
+        G5HHazVhkg5Ev7WyPOkFn/lDYH+yDi/j014Kup4kjOLG0AkmVI6Rid1Y6t3i0+wM
+        PhXBM/NUcXPdgdUEmFC41D8QSh9b1HiiqEoVXWjrD1gg3m0oSxMNnhhlfrJO+K9K
+        AOg7iowiiRYEzQTRjmJCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1656688570; x=
+        1656774970; bh=Tqwsov16Tb0O3xmHbTi4I+HfDNbMkRJRXqdUjVyems0=; b=e
+        +Hdle0aD9T5q2Zxi+2LOdnfPs+A2JW2Owdfw1YtAZeD/8sJghUqhOM8eEmgKM21X
+        UQBDjK+I4xVJUUatNYt/MxTFONARP/lROXkldTXoV97sl6WDOl6uA2sYqiNuGzj2
+        57K/JMwf4k1P3kkYLDFrKPq3WNf3LgQPNXc0pcEiKqzlCR7nPZuyw6gxnCWNBNDS
+        wQ7+j6QNiVN7TJtKuFkzCx6Luf6X/5/qEjh4dTtlG1NtSu1L9ROgA2CU8RpAA9YS
+        +X6zA+RpAzhiPgnao/Q9Zf2a8ytHVlj/DwQrKmR4KTafONBd/xo2+03RP9+GdBGo
+        /xaFLFnnyBV0lbesMLlAg==
+X-ME-Sender: <xms:uQ-_Yuxb0GQMRCVEJJqp2RMZJk1ZedtGxiRbprHZfQLLCOz7ZkhiOw>
+    <xme:uQ-_YqRH08y6riR4f4Xji7XlN3emQmWe2QEoCeHP0JbLpvdLS9cOjCx0XXM3_bsjw
+    0HiVSIxN1cwRxKhcA>
+X-ME-Received: <xmr:uQ-_YgUx40LlBe6syWCBJHSz9acW7DQOROdgHAbxhiINJT_DtrWrZL-3sJh3O9LGITtvYScm5_Y-XLvD-pNegcmI0zkMphe5TyLaMGO9D6SdCxl4M368RWU1Jg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudehfedgkeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpefftdevkedvgeekueeutefgteffieelvedukeeuhfehledvhfei
+    tdehudfhudehhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:uQ-_YkjJRWT8TPe9MP3hVekmyrt2oqD5kWCEG0eNuyxe03Z3SBI-0w>
+    <xmx:uQ-_YgAoMZ-uLUf8naXGiZfDwfFNGmsoXM9OmjdpSz0jcXAD6TnCTA>
+    <xmx:uQ-_YlKkxFLALD803MggfrKfXtcSSezkc8FKpUyRNor2v30eguH-uw>
+    <xmx:ug-_YpJv9AA1oHVjBlqdhJrv1b4xiOOu64EsUc5YsPzr2wQopcJQcQ>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 1 Jul 2022 11:16:08 -0400 (EDT)
+Subject: Re: [PATCH 6/6] pinctrl: sunxi: Add driver for Allwinner D1/D1s
+To:     Heiko Stuebner <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of
- driver_deferred_probe_check_state()
-Message-ID: <20220701150848.75eeprptmb5beip7@bogus>
-References: <YrQP3OZbe8aCQxKU@atomide.com>
- <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
- <Yrlz/P6Un2fACG98@atomide.com>
- <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
- <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
- <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
- <Yr6HQOtS4ctUYm9m@atomide.com>
- <Yr6QUzdoFWv/eAI6@atomide.com>
- <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com>
- <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com>
+        linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>, Ondrej Jirman <x@xff.cz>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@lists.linux.dev
+References: <20220626021148.56740-1-samuel@sholland.org>
+ <20220626021148.56740-7-samuel@sholland.org> <17090319.JCcGWNJJiE@phil>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <e6d2d4e8-b385-11d6-4d41-454542735269@sholland.org>
+Date:   Fri, 1 Jul 2022 10:16:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com>
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <17090319.JCcGWNJJiE@phil>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,64 +94,78 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi, Saravana,
+Hi Heiko,
 
-On Fri, Jul 01, 2022 at 01:26:12AM -0700, Saravana Kannan wrote:
+On 7/1/22 8:13 AM, Heiko Stuebner wrote:
+> Am Sonntag, 26. Juni 2022, 04:11:47 CEST schrieb Samuel Holland:
+>> These SoCs contain a pinctrl with a new register layout. Use the variant
+>> parameter to set the right register offsets. This pinctrl also increases
+>> the number of functions per pin from 8 to 16, taking advantage of all 4
+>> bits in the mux config field (so far, only functions 0-8 and 14-15 are
+>> used). This increases the maximum possible number of functions.
+>>
+>> D1s is a low pin count version of the D1 SoC, with some pins omitted.
+>> The remaining pins have the same function assignments as D1.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> 
+> On a D1-Nezha
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> 
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> 
+> with one remark below
 
-[...]
+Thanks for reviewing the series.
 
-> Can you check if this hack helps? If so, then I can think about
-> whether we can pick it up without breaking everything else. Copy-paste
-> tab mess up warning.
+>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>> index ec7daaa5666b..350044d4c1b5 100644
+>> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+>> @@ -1297,11 +1297,11 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+>>  
+>>  	/*
+>>  	 * Find an upper bound for the maximum number of functions: in
+>> -	 * the worst case we have gpio_in, gpio_out, irq and up to four
+>> +	 * the worst case we have gpio_in, gpio_out, irq and up to seven
+>>  	 * special functions per pin, plus one entry for the sentinel.
+>>  	 * We'll reallocate that later anyway.
+>>  	 */
+>> -	pctl->functions = kcalloc(4 * pctl->ngroups + 4,
+>> +	pctl->functions = kcalloc(7 * pctl->ngroups + 4,
+>>  				  sizeof(*pctl->functions),
+>>  				  GFP_KERNEL);
+>>  	if (!pctl->functions)
+>> @@ -1494,9 +1494,15 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
+>>  	pctl->dev = &pdev->dev;
+>>  	pctl->desc = desc;
+>>  	pctl->variant = variant;
+>> -	pctl->bank_mem_size = BANK_MEM_SIZE;
+>> -	pctl->pull_regs_offset = PULL_REGS_OFFSET;
+>> -	pctl->dlevel_field_width = DLEVEL_FIELD_WIDTH;
+>> +	if (pctl->variant >= PINCTRL_SUN20I_D1) {
+>> +		pctl->bank_mem_size = D1_BANK_MEM_SIZE;
+>> +		pctl->pull_regs_offset = D1_PULL_REGS_OFFSET;
+>> +		pctl->dlevel_field_width = D1_DLEVEL_FIELD_WIDTH;
+>> +	} else {
+>> +		pctl->bank_mem_size = BANK_MEM_SIZE;
+>> +		pctl->pull_regs_offset = PULL_REGS_OFFSET;
+>> +		pctl->dlevel_field_width = DLEVEL_FIELD_WIDTH;
+>> +	}
+> 
+> this is likely ok for _one_ variant (so for now this should be ok) but
+> will get ugly when there are more of them.
+> 
+> So in the long term it might make sense to pass these values in from
+> the soc-specific driver maybe?
 
-Sorry for jumping in late and not even sure if this is right thread.
-I have not bisected anything yet, but I am seeing issues on my Juno R2
-with SCMI enabled power domains and Coresight AMBA devices.
+Yes, in the long term. It took 10 years before the first layout change, so I do
+not expect another layout change any time soon.
 
-OF: amba_device_add() failed (-19) for /etf@20010000
-OF: amba_device_add() failed (-19) for /tpiu@20030000
-OF: amba_device_add() failed (-19) for /funnel@20040000
-OF: amba_device_add() failed (-19) for /etr@20070000
-OF: amba_device_add() failed (-19) for /stm@20100000
-OF: amba_device_add() failed (-19) for /replicator@20120000
-OF: amba_device_add() failed (-19) for /cpu-debug@22010000
-OF: amba_device_add() failed (-19) for /etm@22040000
-OF: amba_device_add() failed (-19) for /cti@22020000
-OF: amba_device_add() failed (-19) for /funnel@220c0000
-OF: amba_device_add() failed (-19) for /cpu-debug@22110000
-OF: amba_device_add() failed (-19) for /etm@22140000
-OF: amba_device_add() failed (-19) for /cti@22120000
-OF: amba_device_add() failed (-19) for /cpu-debug@23010000
-OF: amba_device_add() failed (-19) for /etm@23040000
-OF: amba_device_add() failed (-19) for /cti@23020000
-OF: amba_device_add() failed (-19) for /funnel@230c0000
-OF: amba_device_add() failed (-19) for /cpu-debug@23110000
-OF: amba_device_add() failed (-19) for /etm@23140000
-OF: amba_device_add() failed (-19) for /cti@23120000
-OF: amba_device_add() failed (-19) for /cpu-debug@23210000
-OF: amba_device_add() failed (-19) for /etm@23240000
-OF: amba_device_add() failed (-19) for /cti@23220000
-OF: amba_device_add() failed (-19) for /cpu-debug@23310000
-OF: amba_device_add() failed (-19) for /etm@23340000
-OF: amba_device_add() failed (-19) for /cti@23320000
-OF: amba_device_add() failed (-19) for /cti@20020000
-OF: amba_device_add() failed (-19) for /cti@20110000
-OF: amba_device_add() failed (-19) for /funnel@20130000
-OF: amba_device_add() failed (-19) for /etf@20140000
-OF: amba_device_add() failed (-19) for /funnel@20150000
-OF: amba_device_add() failed (-19) for /cti@20160000
+For now, I did not want to deal with the overhead of passing in the offsets
+individually, nor coming up with a name for each layout to look up the offsets
+from a table. (The BSP calls the variants "SUNXI_PCTL_HW_TYPE_0" and
+"SUNXI_PCTL_HW_TYPE_1", which is... not descriptive.)
 
-These are working fine with deferred probe in the mainline.
-I tried the hack you have suggested here(rather Tony's version), also
-tried with fw_devlink=0 and fw_devlink=1 && fw_devlink.strict=0
-No change in the behaviour.
-
-The DTS are in arch/arm64/boot/dts/arm/juno-*-scmi.dts and there
-coresight devices are mostly in juno-cs-r1r2.dtsi
-
-Let me know if there is anything obvious or you want me to bisect which
-means I need more time. I can do that next week.
-
--- 
 Regards,
-Sudeep
+Samuel
