@@ -2,297 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C560562E2C
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 10:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A8EF562E43
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 10:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234741AbiGAI2d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 04:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58466 "EHLO
+        id S233470AbiGAI3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 04:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236910AbiGAI2F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 04:28:05 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4351735B9
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 01:26:49 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-318889e6a2cso16732047b3.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 01:26:49 -0700 (PDT)
+        with ESMTP id S235329AbiGAI2q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 04:28:46 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEA423BE0
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 01:28:44 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id d2so2752808ejy.1
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 01:28:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DFHQbeJx5jwdm59RTWIMoBtHZxmRicrNH3p04gGarLE=;
-        b=AzTS8CSHgg24vVLWLAVAUKBTE2q2L1PVl7ppLTo3Zj86QBew7/SFn1zxxqsqLRAMVg
-         GM4zHuwZkkAh0kJhkpSeJHqAnmR6/4yPzcJxJS/c5e1zkGtXFw6Wen6LjUa1YXAF1cMN
-         mcqprTGQfkN1s6ue74YKMXGtIxXOTQBbdPBgM/o2A0OiokSErKLCj1DubDW0lscRUkkc
-         eNGHuji8/eElVM4S5dNkZ0zCSKTlHAUbR05NKJtSPMoTXCLbd8zzSXASpMDq9OD4/7ZO
-         4Iy1dRJNcEnugt0k5eO4jdqKIlTPV0d4hc1l4rz4ta7mLkpK4ad7qQisJOBbcXVWDk/Z
-         KrhQ==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=KpRihbZiSTt9WSRfafM5Hr6SzD6WulPA9ejW+Q/RSW4=;
+        b=urqzcie5Vsin+uIl/jgbKt65PLgul2NzQXuJT76Fp6UK2Nk6X2m4bHrGffOW0JjmuE
+         bp3HklF/K6nR3d+yvEq1LonlPa4C73uWvY1875g2tmBhQ/PdioH6R/ArOhhJDOECD+bq
+         nMMzilAeWFUFDvsO45lhzLtFgGdjpJnUnF60WFOsm2gccwSmsWDjyjlx79q/Yd9/qMYh
+         qTUc2IrHfHMtOrWE3VCLxFa4AXGnAeimo4dqdLdrCUeqzu56YZ7SjQewdsEJj5inHQ/J
+         tJPSMqnL/N7HbQIJbl7uhQrOqtV1EyejR6AOOKZr/1swaQrJ8mGrNL9ZFlQXGVfhAsMD
+         Ng1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DFHQbeJx5jwdm59RTWIMoBtHZxmRicrNH3p04gGarLE=;
-        b=6MAZK1d8+WPW35SrCTl1fkNGOw22g4k4fL3W9IFs5OzjjjKwg8T3Ktqg7DvS4If0h4
-         tek9/MurD6Opy4/dVRH2NteJqdykqdqA3EhD9SPm4wLA3krMrwfSzIFIvH01TWjKtH7e
-         lOCmNQ0F75xVsotPO9nyOFPbch7xKJ5TWf58lg3SukS7ITrZ5JSRoeJFeuhNCAtacTnv
-         VDYMKEdce28d9MQ3ObRCqMbQEdo2GxAakjqFStnZQbUXpWDhK7XQuGs8icucDWtmnxBf
-         MHIM7+KGKFvInClwrI4qpiq8BDaW89JuGZKxe6FRwbtmzBLOql5S++9V7rHDntmk6WYy
-         PHRQ==
-X-Gm-Message-State: AJIora+tpt5XONMepV4Tg03upszn5u9L3tb1BYU04f0kkT1y9daMDKHu
-        OBlLbXyy66Mf9s+igPZcgJGHJIQu+gAHWUodGep9Eg==
-X-Google-Smtp-Source: AGRyM1up3BnIZtVTno8CLly59mX1nlGCMK6yx7mZcwIJuREZEw964lzwOzB2OYTG2R1vIk9rd4N3GYoPzRQKhBjtmhA=
-X-Received: by 2002:a81:7557:0:b0:317:6536:d404 with SMTP id
- q84-20020a817557000000b003176536d404mr15306258ywc.459.1656664008847; Fri, 01
- Jul 2022 01:26:48 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=KpRihbZiSTt9WSRfafM5Hr6SzD6WulPA9ejW+Q/RSW4=;
+        b=GYOD43eX8tgOoJn83BKDvWToPbnVryFMriBlYuSafr4wYlBxcbSECmPriArip6hJH1
+         RZoMstgBSKerc1vI1w+2v0nN9zOeCOm2Km/zO15B07kZCQ6zuJasslDLnDcLM6qk83wX
+         zp2Q3NGzVAhTvgxgoTIHyYaxrn16/ncs/JGEsAMsQ9E6GEwNQrqlyhQl/ykSR3eysQfY
+         3yIfGbvacEp5SEhzcmAlE2Ec+5hVwZzwsjRZcynC43XElNDTeAGGvF75efRVjlgWM59o
+         7oTEvLQfjxafUPxpRT+Hk/dy9M/EESJY0KqgwLal0VCuVDaXxJWSxwkMzUNChi8ziPyW
+         txRw==
+X-Gm-Message-State: AJIora97aLc7DSnYp8wNh9TNYB97g9F9KZcs+P7PDXeCSXN1WdGXvLwl
+        iK5fRFYYALyM+t7yl9xx0PuUHg==
+X-Google-Smtp-Source: AGRyM1tsY/ZhfsK0nitrIZl9qMahGP5WendMPNYNOe5gVtJZkp37q6OwEpwydF354sR9EH6KMrEG0w==
+X-Received: by 2002:a17:907:7d8b:b0:726:aad6:f421 with SMTP id oz11-20020a1709077d8b00b00726aad6f421mr12821705ejc.80.1656664123249;
+        Fri, 01 Jul 2022 01:28:43 -0700 (PDT)
+Received: from [192.168.0.190] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id d16-20020a170906545000b006feb20b5235sm10202295ejp.84.2022.07.01.01.28.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Jul 2022 01:28:42 -0700 (PDT)
+Message-ID: <2d63cbf2-8e59-a8db-3faf-747b92d2eb66@linaro.org>
+Date:   Fri, 1 Jul 2022 10:28:41 +0200
 MIME-Version: 1.0
-References: <CAGETcx_1USPRbFKV5j00qkQ-QXJkp7=FAfnFcfiNnM4J5KF1cQ@mail.gmail.com>
- <YrKhkmj3jCQA39X/@atomide.com> <CAGETcx_11wO-HkZ2QsBF8o1+L9L3Xe1QBQ_GzegwozxAx1i0jg@mail.gmail.com>
- <YrQP3OZbe8aCQxKU@atomide.com> <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
- <Yrlz/P6Un2fACG98@atomide.com> <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
- <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
- <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
- <Yr6HQOtS4ctUYm9m@atomide.com> <Yr6QUzdoFWv/eAI6@atomide.com> <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com>
-In-Reply-To: <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 1 Jul 2022 01:26:12 -0700
-Message-ID: <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] MAINTAINERS: pinctrl: update qcom file list to include
+ yaml files
+Content-Language: en-US
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        bjorn.andersson@linaro.org, linus.walleij@linaro.org
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220629092514.70752-1-srinivas.kandagatla@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220629092514.70752-1-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 1:10 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Jun 30, 2022 at 11:12 PM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Tony Lindgren <tony@atomide.com> [220701 08:33]:
-> > > * Saravana Kannan <saravanak@google.com> [220630 23:25]:
-> > > > On Thu, Jun 30, 2022 at 4:26 PM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, Jun 30, 2022 at 5:11 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > >
-> > > > > > On Mon, Jun 27, 2022 at 2:10 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > >
-> > > > > > > * Saravana Kannan <saravanak@google.com> [220623 08:17]:
-> > > > > > > > On Thu, Jun 23, 2022 at 12:01 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > > > >
-> > > > > > > > > * Saravana Kannan <saravanak@google.com> [220622 19:05]:
-> > > > > > > > > > On Tue, Jun 21, 2022 at 9:59 PM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > > > > > > This issue is no directly related fw_devlink. It is a side effect of
-> > > > > > > > > > > removing driver_deferred_probe_check_state(). We no longer return
-> > > > > > > > > > > -EPROBE_DEFER at the end of driver_deferred_probe_check_state().
-> > > > > > > > > >
-> > > > > > > > > > Yes, I understand the issue. But driver_deferred_probe_check_state()
-> > > > > > > > > > was deleted because fw_devlink=on should have short circuited the
-> > > > > > > > > > probe attempt with an  -EPROBE_DEFER before reaching the bus/driver
-> > > > > > > > > > probe function and hitting this -ENOENT failure. That's why I was
-> > > > > > > > > > asking the other questions.
-> > > > > > > > >
-> > > > > > > > > OK. So where is the -EPROBE_DEFER supposed to happen without
-> > > > > > > > > driver_deferred_probe_check_state() then?
-> > > > > > > >
-> > > > > > > > device_links_check_suppliers() call inside really_probe() would short
-> > > > > > > > circuit and return an -EPROBE_DEFER if the device links are created as
-> > > > > > > > expected.
-> > > > > > >
-> > > > > > > OK
-> > > > > > >
-> > > > > > > > > Hmm so I'm not seeing any supplier for the top level ocp device in
-> > > > > > > > > the booting case without your patches. I see the suppliers for the
-> > > > > > > > > ocp child device instances only.
-> > > > > > > >
-> > > > > > > > Hmmm... this is strange (that the device link isn't there), but this
-> > > > > > > > is what I suspected.
-> > > > > > >
-> > > > > > > Yup, maybe it's because of the supplier being a device in the child
-> > > > > > > interconnect for the ocp.
-> > > > > >
-> > > > > > Ugh... yeah, this is why the normal (not SYNC_STATE_ONLY) device link
-> > > > > > isn't being created.
-> > > > > >
-> > > > > > So the aggregated view is something like (I had to set tabs = 4 space
-> > > > > > to fit it within 80 cols):
-> > > > > >
-> > > > > >     ocp: ocp {         <========================= Consumer
-> > > > > >         compatible = "simple-pm-bus";
-> > > > > >         power-domains = <&prm_per>; <=========== Supplier ref
-> > > > > >
-> > > > > >                 l4_wkup: interconnect@44c00000 {
-> > > > > >             compatible = "ti,am33xx-l4-wkup", "simple-pm-bus";
-> > > > > >
-> > > > > >             segment@200000 {  /* 0x44e00000 */
-> > > > > >                 compatible = "simple-pm-bus";
-> > > > > >
-> > > > > >                 target-module@0 { /* 0x44e00000, ap 8 58.0 */
-> > > > > >                     compatible = "ti,sysc-omap4", "ti,sysc";
-> > > > > >
-> > > > > >                     prcm: prcm@0 {
-> > > > > >                         compatible = "ti,am3-prcm", "simple-bus";
-> > > > > >
-> > > > > >                         prm_per: prm@c00 { <========= Actual Supplier
-> > > > > >                             compatible = "ti,am3-prm-inst", "ti,omap-prm-inst";
-> > > > > >                         };
-> > > > > >                     };
-> > > > > >                 };
-> > > > > >             };
-> > > > > >         };
-> > > > > >     };
-> > > > > >
-> > > > > > The power-domain supplier is the great-great-great-grand-child of the
-> > > > > > consumer. It's not clear to me how this is valid. What does it even
-> > > > > > mean?
-> > > > > >
-> > > > > > Rob, is this considered a valid DT?
-> > > > >
-> > > > > Valid DT for broken h/w.
-> > > >
-> > > > I'm not sure even in that case it's valid. When the parent device is
-> > > > in reset (when the SoC is coming out of reset), there's no way the
-> > > > descendant is functional. And if the descendant is not functional, how
-> > > > is the parent device powered up? This just feels like an incorrect
-> > > > representation of the real h/w.
-> > >
-> > > It should be correct representation based on scanning the interconnects
-> > > and looking at the documentation. Some interconnect parts are wired
-> > > always-on and some interconnect instances may be dual-mapped.
->
-> Thanks for helping to debug this. Appreciate it.
->
-> > >
-> > > We have a quirk to probe prm/prcm first with pdata_quirks_init_clocks().
->
-> :'(
->
-> I checked out the code. These prm devices just get populated with NULL
-> as the parent. So they are effectively top level devices from the
-> perspective of driver core.
->
-> > > Maybe that also now fails in addition to the top level interconnect
-> > > probing no longer producing -EPROBE_DEFER.
->
-> As far as I can tell pdata_quirks_init_clocks() is just adding these
-> prm devices (amongst other drivers). So I don't expect that to fail.
->
-> > >
-> > > > > So the domain must be default on and then simple-pm-bus is going to
-> > > > > hold a reference to the domain preventing it from ever getting powered
-> > > > > off and things seem to work. Except what happens during suspend?
-> > > >
-> > > > But how can simple-pm-bus even get a reference? The PM domain can't
-> > > > get added until we are well into the probe of the simple-pm-bus and
-> > > > AFAICT the genpd attach is done before the driver probe is even
-> > > > called.
-> > >
-> > > The prm/prcm gets of_platform_populate() called on it early.
->
-> :'(
->
-> > The hackish patch below makes things boot for me, not convinced this
-> > is the preferred fix compared to earlier deferred probe handling though.
-> > Going back to the init level tinkering seems like a step back to me.
->
-> The goal of fw_devlink is to avoid init level tinkering and it does
-> help with that in general. But these kinds of quirks are going to need
-> a few exceptions -- with them being quirks and all. And this change
-> will avoid an unnecessary deferred probe (that used to happen even
-> before my change).
->
-> The other option to handle this quirk is to create the invalid
-> (consumer is parent of supplier) fwnode_link between the prm device
-> and its consumers when the prm device is populated. Then fw_devlink
-> will end up creating a device link when ocp gets added. But I'm not
-> sure if it's going to be easy to find and add all those consumers.
->
-> I'd say, for now, let's go with this patch below. I'll see if I can
-> get fw_devlink to handle these odd quirks without breaking the normal
-> cases or making them significantly slower. But that'll take some time
-> and I'm not sure there'll be a nice solution.
+On 29/06/2022 11:25, Srinivas Kandagatla wrote:
+> Currently Qualcomm pinctrl MAINTAINERS file list does not include yaml
+> files. Include this for correctness.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c4648e86dc14..71e7725aa574 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15765,6 +15765,7 @@ M:	Bjorn Andersson <bjorn.andersson@linaro.org>
+>  L:	linux-arm-msm@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/pinctrl/qcom,*.txt
+> +F:	Documentation/devicetree/bindings/pinctrl/qcom,*.yaml
 
-Can you check if this hack helps? If so, then I can think about
-whether we can pick it up without breaking everything else. Copy-paste
-tab mess up warning.
+Instead just:
+Documentation/devicetree/bindings/pinctrl/qcom,*
 
--Saravana
+>  F:	drivers/pinctrl/qcom/
+>  
+>  PIN CONTROLLER - RENESAS
 
-8< ----------------
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 967f79b59016..f671a7528719 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1138,18 +1138,6 @@ static int of_link_to_phandle(struct device_node *con_np,
-                return -ENODEV;
-        }
-
--       /*
--        * Don't allow linking a device node as a consumer of one of its
--        * descendant nodes. By definition, a child node can't be a functional
--        * dependency for the parent node.
--        */
--       if (of_is_ancestor_of(con_np, sup_np)) {
--               pr_debug("Not linking %pOFP to %pOFP - is descendant\n",
--                        con_np, sup_np);
--               of_node_put(sup_np);
--               return -EINVAL;
--       }
--
-        /*
-         * Don't create links to "early devices" that won't have struct devices
-         * created for them.
-@@ -1163,6 +1151,25 @@ static int of_link_to_phandle(struct device_node *con_np,
-                of_node_put(sup_np);
-                return -ENODEV;
-        }
-+
-+       /*
-+        * Don't allow linking a device node as a consumer of one of its
-+        * descendant nodes. By definition, a child node can't be a functional
-+        * dependency for the parent node.
-+        *
-+        * However, if the child node already has a device while the parent is
-+        * in the process of being added, it's probably some weird quirk
-+        * handling. So, don't both checking if the consumer is an ancestor of
-+        * the supplier.
-+        */
-+       if (!sup_dev && of_is_ancestor_of(con_np, sup_np)) {
-+               pr_debug("Not linking %pOFP to %pOFP - is descendant\n",
-+                        con_np, sup_np);
-+               put_device(sup_dev);
-+               of_node_put(sup_np);
-+               return -EINVAL;
-+       }
-+
+Best regards,
+Krzysztof
