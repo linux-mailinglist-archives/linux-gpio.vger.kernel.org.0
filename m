@@ -2,139 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 870DC562EF7
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 10:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64FA2562F9F
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 11:16:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232365AbiGAIwl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 04:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
+        id S235550AbiGAJOc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 05:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234854AbiGAIwX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 04:52:23 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69AB6E7E
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 01:52:22 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id t21so1861831pfq.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 01:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jx9jtx/XNTqOBt85GUAAuTJloFAJBHUlyu7DU7cwbTg=;
-        b=AS2QyM3dfUvuNaUXiTydyer+K3WEEUF70ynxMa0Q4JdSq7VzK3Ud6m5lHkUBl8lYtC
-         4FjWWol22VCUU4EIlroffrLWCVjMPVV6n2R6HOWrzwzNBr16bdwWM5NpN7klVWGOO5Ng
-         NtzrSqoYkY61FtItuLNlzu1+Xsvm4rSkdgcgtnD9omKVWvs27GVxwTndCA+T11KR2zo4
-         4YwdlTdvk4P0Ju9FOX7T9LNWBfLIKBoYyx0dSViE68cM/bT0Kl+Fte/XukXsMFS633gs
-         mcISTVCUQnq4tRJuK3xyUh2nidBhHG5T7S+jUSPrbaYvfn9FkLDCUzcPw5qJohv2gmd7
-         +HCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jx9jtx/XNTqOBt85GUAAuTJloFAJBHUlyu7DU7cwbTg=;
-        b=kfK3vep8sBxyXhYEKj+8G2dmdeEYuurVCLs21WPgGH//QLi2F3B/9DsYIp6P1dv0HN
-         UqUe35TDEFLnMHc1De2LTLqZamyRtp8HckS1U6fnhOpQwLJd2fT7VtnuDiImYHd9tdCl
-         X73wfNCZXyJrcrC2i6QofHnaZKnOIwVZ/BRONlkyhUQsDE9OxP9Z88W2ehi+vPvABId5
-         mBTT+XW5BxTa4q2E/RxF2gMn22b/x7XKPh193RfVorKGszHJvHg6o3Z70A+SSdb2lR3v
-         X6K+jgq0771j9hIWmkMMEDYc96zIkYg9g+FewH6AiohTWS2PkixRDQ6Ktc9LCmwq+u+T
-         tPBw==
-X-Gm-Message-State: AJIora9NU+ev187yWfW0rAN75C8pjgMiS3PMuqKI0bBHENIcuCmiEG6k
-        uWyvqmS9rUYyE+ui+4yLNLU=
-X-Google-Smtp-Source: AGRyM1vHnO6ftfvA3wuUJzsri3knXMiFqfBvZvikp/Cb9ym20/9POZW5izKttEs1QMUXleBedZuHBw==
-X-Received: by 2002:a63:2c2:0:b0:411:ef11:129e with SMTP id 185-20020a6302c2000000b00411ef11129emr321107pgc.185.1656665541885;
-        Fri, 01 Jul 2022 01:52:21 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id b19-20020a621b13000000b00527f22dbe4asm5408444pfb.17.2022.07.01.01.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 01:52:21 -0700 (PDT)
-Date:   Fri, 1 Jul 2022 16:52:15 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
- implementation for v2 API
-Message-ID: <20220701085215.GA35727@sol>
-References: <20220630081450.GB23652@sol>
- <20220630083851.GA24642@sol>
- <20220701060736.GA28431@sol>
- <CAMRc=Mdhogn2HDR7NYmjugTi6V3zwcw38vmdpfH55f44EPOHRw@mail.gmail.com>
- <20220701072655.GA31738@sol>
- <CAMRc=McwhnjovSB7RuZQTnZ9tKww=WDvk813Wbmt5PYaK95cPA@mail.gmail.com>
- <20220701073338.GA33559@sol>
- <20220701080252.GB33559@sol>
- <CAMRc=Md7vzozjWLBMp8-fJX7Za9wKj9_uzYd9fgz5wE8gSk2AA@mail.gmail.com>
- <CAMRc=MdMSwbikyZZDVayd_HZ3B=nAA2ZFXhMh5v0quT5nsYoHQ@mail.gmail.com>
+        with ESMTP id S231298AbiGAJOa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 05:14:30 -0400
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-eopbgr20040.outbound.protection.outlook.com [40.107.2.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC7944757;
+        Fri,  1 Jul 2022 02:14:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aOENq+GjtyJTaKrhHQtMD3k4nwuwK+EXuV8aXOdqFQKFLHYJlpSkK5GHqYF9ygH1SQ8RhO/tF9dinPcS0NrQuQSvWRhL6zAJ6+CCfzAWPutc9DlBMI1MgcfYGbp4OkQZvgNqgdpfQYYpJrudEY7AxbgNnxuabxAl5cDg4iesHPO5EB5oL2yBfS8SyLzRAdLoHIo1+H1amkSKhbHeV1dbDvTJ/vfc5d2KHrgWJOIBXBsahC8dSdMaWeVcKMhKIsQ/F6+zOZfRxEPbxgEr99y2w4YD3+6RDbqWaZxk1ydTgAwypthqAvrvgAN666cnuT+LONFLzKdhwSBY8ploiAS2iQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fFn6xSNGn11Tw1reH3bwrNxGeWp4jj/ppeQHNJQVHR0=;
+ b=lYlWkiIj60czv/bIta+hL5WAs/WJs/uFGB+mwLWDdtwZALnnErLREHd0wdb0f3FZp3r3CXFGu5+5JJ/DygphbtVPfSB9phsi/YJ93RN1CYoCqw9QVxKmc0yHtAKp9gLV+FtN7Im7G/RN2msfsQlHBOd22J1+Mx8PlgrwJeHmglLhZxm2jc88JGKMA5bBY9dbE5ZXwm7TykQ2HBjXBTlrd8WKpu/5nbBwV9Yl98iPS4mSmIK8fv7glKGlTu6dSeFWTERW1rsFh4jgdgUYeWywr43RK+bQK0KTkAUSPOmu9yrKov8m+mwNvgvQM1zncUCBwAYfXvlxf6bAiginWI0l7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.72) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=siemens.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=siemens.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fFn6xSNGn11Tw1reH3bwrNxGeWp4jj/ppeQHNJQVHR0=;
+ b=MGlU90AoTcVTPUEHaDedJsHe0Lv/TxvLaGW3VNrA1IMdCiwQB/FXWSc9v5Pk78FWXQD1OqWlLInsU9hvsK31JSj2RtJLOZPpIssk0hvBqf8rVJ4ooIaaWeK1UUIclUfWQ0MdafL2qn7DvNJGZcuXFlurOBfLRhLqGHjGpp0tKJvEar8Ar9cJ1a8jsIPvOPkem/Zjh+JhnWVodoj3fDaxUJ3uVwCuwJ2GzKdRQ5xcaHL9S3IYUfnt0RmaonvflhcLZtqvDeISVMoLrWmMODlx70ASwM8h1yGpWcllsbTYHcnLa5pCcJ39pMl0bvnb4C4ht42cUcScoh7H5PIUOMMfOA==
+Received: from OL1P279CA0006.NORP279.PROD.OUTLOOK.COM (2603:10a6:e10:12::11)
+ by AS4PR10MB5545.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:4ff::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Fri, 1 Jul
+ 2022 09:14:27 +0000
+Received: from HE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:e10:12:cafe::3f) by OL1P279CA0006.outlook.office365.com
+ (2603:10a6:e10:12::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.15 via Frontend
+ Transport; Fri, 1 Jul 2022 09:14:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.72)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.72 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.72; helo=hybrid.siemens.com; pr=C
+Received: from hybrid.siemens.com (194.138.21.72) by
+ HE1EUR01FT031.mail.protection.outlook.com (10.152.0.177) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5395.14 via Frontend Transport; Fri, 1 Jul 2022 09:14:27 +0000
+Received: from DEMCHDC89XA.ad011.siemens.net (139.25.226.103) by
+ DEMCHDC9SMA.ad011.siemens.net (194.138.21.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.9; Fri, 1 Jul 2022 11:14:25 +0200
+Received: from md1za8fc.ad001.siemens.net (139.25.68.241) by
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.9; Fri, 1 Jul 2022 11:14:25 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>
+CC:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Kuan-Wei Ho <cwho@nuvoton.com>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH 0/1] add device driver for Nuvoton SIO gpio function
+Date:   Fri, 1 Jul 2022 11:14:11 +0200
+Message-ID: <20220701091412.20718-1-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdMSwbikyZZDVayd_HZ3B=nAA2ZFXhMh5v0quT5nsYoHQ@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [139.25.68.241]
+X-ClientProxiedBy: DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) To
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103)
+X-TM-AS-Product-Ver: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-AS-Result: No-10--14.762500-8.000000
+X-TMASE-MatchedRID: 7A6GU0Gm5XHZZee1+o5TZrKInvvcD/cTKBLfE09F1HJswYo64ufkVY35
+        bSBoWhq9H8jJDe3vPQOxVpcooiqIm30sLl6yOD1JdlqJAfns3+dXKa5mdWEgiSa1MaKuob8PYi1
+        nZ7WB6LEfmRnL8RBuBO0MuScTztGMkpsU2cOjMqF8XGXq+kYTkOq4eBfl/7E8CuDAUX+yO6YXiv
+        wflisSrFgLks93sG9tTBJ5VCdJL8UbP/eOGYK8VoAy6p60ZV62fJ5/bZ6npdg7AFczfjr/7PtfJ
+        60CTYV2pzmeonZHr9BMniG9LKahgayy8p2Vvqk2+TEEeBO+vyI=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--14.762500-8.000000
+X-TMASE-Version: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-SNTS-SMTP: 42FA62E12592507C1E39F899CD506352F4D954EF8CAAB54915A059DADAD6BD382000:8
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: de934b1b-3e1d-4543-cf45-08da5b421922
+X-MS-TrafficTypeDiagnostic: AS4PR10MB5545:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CNrOrj06OcAeu3PH0y64aAxMwSE0m4CsLA9jrF8bWBSrHqXrSZ5L+ieDxh30sXVmQoEXf+Np4GVenXMeO/HwCjecnSIFpPkvqkh0VPB4+qOzlUz6m+bdcc/bNyhZ3z01THr8wwwdFSbm1TltQZ/scOX5mwciMYhLDAN4FX4v0j0bj71zuttMEgy4FWUuX1HU3U0Z8MFDH/xD5F/n9gDs6nex78PQvn5p2m0TFGacB/Hptd2eYmO6bjOQyq4KjM1I7/8IPwBtPANpdW2ZzebA1mMxi6DP3VxToWDyX4zn7O2I3TJ+RWKkX7fDlErEPI6T1CRMydiGnDhNfw4j30xl11ACwh3QaVCrdPu9Ogucr7Bs1hRlnyzqjOz8n0LfMnSrl53MY6slyWvol+QHh+FZMjRE2+dMXBlyCoFW7U3PYRpBfQ4w2wxuWjUFt2fHQK4nIj3nyzP3Ywk/xU87f8LY5C8r4/Pnt1uVJdbyZwfRHBaSPD6VW+5qBr9NWzJ0tx+dzCd8gdyDMoTbujFFlTjzCY3jlRiOf8ZBe6J8komd5AD1TDCeYA5mwqCJ965hSTa0fw9W2OaT+y86ULMLIifQX8OU2deOdlOHY+unx2An2/HxyrtRr1IagdWKSH6n+3zYDrECz5aSAwWt5OJ4wVrGuzb1a7E+tBKWJdGGGGXGbj/PZf4W5npXi2OBaJBhdXlpdmzPyV/2QUuzwyEOaNLyErt6LrVIcexkxYaiytajnAgBJconh+HPYKyNh09wuGprFaljUGtBAU+vlDAsT0FMcHvt/wJ42wHIpqil5XKiYa1H909p2tGS4ZfRaEmWnfMbDYZJwYo5p1+P+od6UcG3lNw9uZozU+nIj+2ndw3vsuE=
+X-Forefront-Antispam-Report: CIP:194.138.21.72;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(346002)(376002)(136003)(39860400002)(396003)(40470700004)(46966006)(36840700001)(16526019)(26005)(5660300002)(54906003)(86362001)(47076005)(82960400001)(40480700001)(82740400003)(336012)(956004)(44832011)(2616005)(8936002)(36860700001)(82310400005)(478600001)(356005)(36756003)(83380400001)(70586007)(1076003)(2906002)(4326008)(70206006)(40460700003)(81166007)(41300700001)(316002)(8676002)(186003)(110136005)(107886003)(6666004)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2022 09:14:27.3246
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: de934b1b-3e1d-4543-cf45-08da5b421922
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.72];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR10MB5545
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 01, 2022 at 10:32:30AM +0200, Bartosz Golaszewski wrote:
-> On Fri, Jul 1, 2022 at 10:18 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
+This adds gpio support for several Super IO chips from Nuvoton. The
+driver was originally developed by Nuvoton and i am just contributing it
+on behalf, because other patches i will send later will require access
+to the gpios. The driver is valid on its own.
 
-....
+The driver supports several chips, of which i only managed to test one
+but did not want to drop the others.
 
-> > > > >
-> > > > > Timedelta constructor is much more explicit than a float IMO. How
-> > > > > about a compromise and taking both (mutually exclusive)?
-> > > > > timeout=datettime.timedelta(seconds=1) == timeout_sec=float(1.0)?
-> > > > >
-> > > >
-> > > > Maybe, but float seconds seems to be the way they do it.
-> > > > If you insist on both then just the one timeout parameter and work the
-> > > > type out on the fly. (it's Python, so dynamic typing...)
-> > > >
-> > >
-> > > Same issue for chip.wait_info_event(), btw.
-> > > Still working through a full review - but it'll probably take a while.
-> > >
-> > > Wrt the wait, does the C API have a blocking wait, or do you have to
-> > > poll() the fd?
-> > >
-> >
-> > Blocking wait is simply reading the event without checking if an event
-> > is there to be read. select() (the system call) waits indefinitely if
-> > the timeval struct is NULL, ppoll() behaves the same for a NULL
-> > timespec, poll() does the same for a negative timeout (which is an
-> > int). We take an uint64_t so we can't do it. Either we need to switch
-> > to int64_t and interpret a negative value as indefinite wait or just
-> > not do it at all and tell users to just call the (blocking)
-> > read_edge_event().
-> >
-> > Bart
-> >
-> 
-> I'm still on the fence about using timespec. It seems that the more
-> recent linux interfaces avoid timespec and timeval altogether due to
-> the year 2038 problem and the subsequent change in the struct layout.
-> On the other hand the timeouts are unlikely to be set to years. :)
-> 
-> What do you think?
-> 
+I hope the original authors will help with the testing and addressing
+review feedback. The changes i did so far mainly are inspired by similar
+drivers and some just concern coding style. If more has to be done and
+the original authors do not jump in, we might start off with just that
+one chip i can test and add the others later on.
 
-I prefer not using timespecs.  I prefer the int64 microseconds/nanoseconds
-or float seconds approaches.
-Especially for the time scales we are concerned with.
-I only use timespecs where existing APIs such as ppoll() require it.
+Henning Schild (1):
+  gpio: nct6116d: add new driver for several Nuvoton super io chips
 
-For the C API I'd go with int64 nsec, for Python float secs.
-(though as already covered - with Python you could accept float
-secs, int nsec, or a timedelta all in the one parameter)
+ drivers/gpio/Kconfig         |   9 +
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-nct6116d.c | 401 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 411 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6116d.c
 
-Cheers,
-Kent.
+-- 
+2.35.1
+
