@@ -2,179 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E606562B29
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 08:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2C4B562B33
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 08:07:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234166AbiGAGCK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 02:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36810 "EHLO
+        id S234622AbiGAGHt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 02:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233635AbiGAGCH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 02:02:07 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF916B81E;
-        Thu, 30 Jun 2022 23:02:01 -0700 (PDT)
+        with ESMTP id S234116AbiGAGHs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 02:07:48 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46CCF37A13
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 23:07:43 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id jb13so1420857plb.9
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 23:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1656655322; x=1688191322;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=88W0IhCdmASo0Tm8efAxg0rx5GK9cZqYIieLJEzdB/g=;
-  b=QC9t5NAwDpvtU481hI8sRR3goRJzZE4rgZUjX0al6s5zQ3xYH3Xjd0Mw
-   UEKNoyxe/DpdLBakPbBkTxeFxZaf7pQBotqD0St+9+bFy/M5igxgubTHr
-   1oQbDFf+VRYA5iAk7QdCrZpgYXhmx4eUXtNmXiPIdmdtEv6tH/F5zdhP8
-   FakkAS33Rmw59RgFCTR8ow0J6VOIUsQUsvi1BDQ9vmi8zhM161YkLbs65
-   CDIQz/0ufdUrHv/o+DQVNuH3+H3fp43JoNcAy6wPtczyT1QmwUYgneC+h
-   Gewx5fAvc13z0wZCUGvnH94UxjlLUm7CcjtWm8ZyPvXN1/mUODotch7QZ
-   w==;
-X-IronPort-AV: E=Sophos;i="5.92,236,1650924000"; 
-   d="scan'208";a="24791549"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 01 Jul 2022 08:01:59 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 01 Jul 2022 08:01:59 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 01 Jul 2022 08:01:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1656655319; x=1688191319;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=88W0IhCdmASo0Tm8efAxg0rx5GK9cZqYIieLJEzdB/g=;
-  b=K6Q2CfywRqDUvlFcJVmFu6SslcG04+Frpxyc2nE7tT9SSWUzopX9hnsx
-   i6hJLpLOtTHT9IVKGQC+koLLc/A/bGGIkSAIfUyMDrKbj4CHLsr+sUstl
-   aKw3+7dp0h/TxION+F2+Bk8XlOfNfla4YtFnUkE/YnWbuQ43uXkNzO17g
-   UCnShk/d3oJONlpNe5O3TXeunAeL5rX6ZhnfYiWsDMOQpN4WIeq0x9MvP
-   FUNanteNRubdyH9vtorxD286thuUKE7eIO6xZuLlN0TxahRJb8e/k6vez
-   V5LBq6rqg/eU0Vz1vkuGh6ZK93H6lyFCyiRsOzS4gP/elcCZNoqD85/w0
-   g==;
-X-IronPort-AV: E=Sophos;i="5.92,236,1650924000"; 
-   d="scan'208";a="24791548"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 01 Jul 2022 08:01:59 +0200
-Received: from steina-w.localnet (unknown [10.123.49.12])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 8C3D0280071;
-        Fri,  1 Jul 2022 08:01:58 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: (EXT) Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-Date:   Fri, 01 Jul 2022 08:01:56 +0200
-Message-ID: <5265491.31r3eYUQgx@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com>
-References: <20220601070707.3946847-1-saravanak@google.com> <4799738.LvFx2qVVIh@steina-w> <CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com>
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=jTYQSjAnAA60oroP8yeAEh1s36txQZos6JSLifEXVyg=;
+        b=aO2tqjbgdYuZwV83zVdCkVvChS2vp4+yctHELrxlOhWFMSbcmjbxejsR4E2cilP+Hk
+         m2GBrcg0z1XEmCzVMbz93noq+fsmA1qKKxq2vdolfQ6XwazAJDTLCRq4SYsMx943cB91
+         gKwC+ij+/afpCcKKWHvo1bEnHslU3Pz8ft1S5uogVNmS7Zbzfj03x/4US/IKeMwuYkE9
+         M9YVsIxl/YX9T2+GGXo/jN5YL0im2npkkhszQ0jgQ3ZWk6bsfuR722uCLFnFaJ4DDZvn
+         b2TAbvrAYOkynqzIn0BOpvBHSkO3j50e8QkfwptFIYHoTZxU8l9Jh+ZKzv4gVzuXA4lc
+         uDKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=jTYQSjAnAA60oroP8yeAEh1s36txQZos6JSLifEXVyg=;
+        b=21wH8jlR2ecbo9U7L42+IkRvufaeb8+0GtWfKYrJeXiM/lK10oQND82Y3cqXjMs7Oi
+         DTvyZ3rglsPQT7W6BchLVYP3LGawspl1QESz5PjIr/gkvH7ucRIvr2j1OXmo6EEU4kGW
+         uAhv2MIa7YeVXNk0KDJ8J70CGTuTerEtWA8WJJVQ7PW5FFs5NQyVtQ1gPxnyITQGCdGV
+         d7HehyEHgqLIzoSJqKXSYZTRUGaDnjnRvy9xDr78Lu1exD+g77MjnONyceVjGOVt1XrW
+         jEy38J7f97VOGmmjhJBTlDkbSTAdxCuB3Kkx5S1PkGRR8raI3Se9JKIxMHAdzTTpFAQH
+         UA4g==
+X-Gm-Message-State: AJIora9tnlG06RfOA7lmCerj520XF1mZtph0eHh2N1Zp3nPnv59g/YI5
+        FG0cchXahFqpYwed00UWfTw=
+X-Google-Smtp-Source: AGRyM1ut/6BMnv9C7vIx49ha7uP7oBZ/229pT2u3AdRa3FNE+/ohFhTPGZkR1W2RnoCYs71aTLtn+g==
+X-Received: by 2002:a17:90b:3b92:b0:1ed:27b7:5457 with SMTP id pc18-20020a17090b3b9200b001ed27b75457mr14249435pjb.85.1656655662717;
+        Thu, 30 Jun 2022 23:07:42 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id g4-20020a655944000000b003fe4da67980sm14354043pgu.68.2022.06.30.23.07.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jun 2022 23:07:42 -0700 (PDT)
+Date:   Fri, 1 Jul 2022 14:07:36 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
+ implementation for v2 API
+Message-ID: <20220701060736.GA28431@sol>
+References: <20220628084226.472035-1-brgl@bgdev.pl>
+ <20220628084226.472035-6-brgl@bgdev.pl>
+ <20220630022522.GA17221@sol>
+ <CAMRc=MfXqKuj4u9OiBe5Euo8BtRFb06CMZbLOoF6PD2OvJsRWg@mail.gmail.com>
+ <20220630081450.GB23652@sol>
+ <20220630083851.GA24642@sol>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220630083851.GA24642@sol>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Saravana,
-
-Am Freitag, 1. Juli 2022, 02:37:14 CEST schrieb Saravana Kannan:
-> On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
-> 
-> <alexander.stein@ew.tq-group.com> wrote:
-> > Hi,
+On Thu, Jun 30, 2022 at 04:38:51PM +0800, Kent Gibson wrote:
+> On Thu, Jun 30, 2022 at 04:14:50PM +0800, Kent Gibson wrote:
+> > On Thu, Jun 30, 2022 at 08:54:24AM +0200, Bartosz Golaszewski wrote:
+> > > On Thu, Jun 30, 2022 at 4:25 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > > On Tue, Jun 28, 2022 at 10:42:26AM +0200, Bartosz Golaszewski wrote:
+> > > > > This is the implementation of the new python API for libgpiod v2.
+> > > > >
+> > > >
+> > > > [snip]
+> > > >
+> > > > > +     }
+> > > > > +
+> > > > > +     res = PyObject_Call(method, args, line_cfg_kwargs);
+> > > > > +     Py_DECREF(args);
+> > > > > +     Py_DECREF(method);
+> > > > > +     if (!Py_IsNone(res)) {
+> > > > > +             Py_DECREF(res);
+> > > > > +             return NULL;
+> > > > > +     }
+> > > > > +
+> > > >
+> > > > Building against python 3.9 (the min required by configure.ac) gives:
+> > > >
+> > > > module.c:276:7: warning: implicit declaration of function ‘Py_IsNone’; did you mean ‘Py_None’? [-Wimplicit-function-declaration]
+> > > >   276 |  if (!Py_IsNone(res)) {
+> > > >       |       ^~~~~~~~~
+> > > >       |       Py_None
+> > > >
+> > > >
+> > > > Py_IsNone didn't get added to the Stable ABI until 3.10.
+> > > >
+> > > > Cheers,
+> > > > Kent.
+> > > 
+> > > It seems like most distros still ship python 3.9, I don't want to make
+> > > 3.10 the requirement. This can be replaced by `if (res != Py_None)`.
+> > > Are there any more build issues?
+> > > 
 > > 
-> > Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony Lindgren:
-> > > Hi,
-> > > 
-> > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
-> > > > Now that fw_devlink=on by default and fw_devlink supports
-> > > > "power-domains" property, the execution will never get to the point
-> > > > where driver_deferred_probe_check_state() is called before the
-> > > > supplier
-> > > > has probed successfully or before deferred probe timeout has expired.
-> > > > 
-> > > > So, delete the call and replace it with -ENODEV.
-> > > 
-> > > Looks like this causes omaps to not boot in Linux next. With this
-> > > simple-pm-bus fails to probe initially as the power-domain is not
-> > > yet available. On platform_probe() genpd_get_from_provider() returns
-> > > -ENOENT.
-> > > 
-> > > Seems like other stuff is potentially broken too, any ideas on
-> > > how to fix this?
+> > No, that was the only one.
 > > 
-> > I think I'm hit by this as well, although I do not get a lockup.
-> > In my case I'm using
-> > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts and probing of
-> > 38320000.blk-ctrl fails as the power-domain is not (yet) registed.
 > 
-> Ok, took a look.
+> But I am seeing a test failure:
 > 
-> The problem is that there are two drivers for the same device and they
-> both initialize this device.
+> $ sudo bindings/python/tests/gpiod_py_test.py
+> .............................................................................F................................
+> ======================================================================
+> FAIL: test_module_line_request_edge_detection (cases.tests_line_request.ModuleLineRequestWorks)
+> ----------------------------------------------------------------------
+> Traceback (most recent call last):
+>   File "/home/dev/libgpiod/bindings/python/tests/cases/tests_line_request.py", line 71, in test_module_line_request_edge_detection
+>     self.assertTrue(req.wait_edge_event())
+> AssertionError: False is not true
 > 
->     gpc: gpc@303a0000 {
->         compatible = "fsl,imx8mq-gpc";
->     }
+> ----------------------------------------------------------------------
+> Ran 110 tests in 2.652s
 > 
-> $ git grep -l "fsl,imx7d-gpc" -- drivers/
-> drivers/irqchip/irq-imx-gpcv2.c
-> drivers/soc/imx/gpcv2.c
+> FAILED (failures=1)
 > 
-> IMHO, this is a bad/broken design.
-> 
-> So what's happening is that fw_devlink will block the probe of
-> 38320000.blk-ctrl until 303a0000.gpc is initialized. And it stops
-> blocking the probe of 38320000.blk-ctrl as soon as the first driver
-> initializes the device. In this case, it's the irqchip driver.
-> 
-> I'd recommend combining these drivers into one. Something like the
-> patch I'm attaching (sorry for the attachment, copy-paste is mangling
-> the tabs). Can you give it a shot please?
 
-I tried this patch and it delayed the driver initialization (those of UART as 
-well BTW). Unfortunately the driver fails the same way:
-> [    1.125253] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV: failed to 
-attach power domain "bus"
+The req.wait_edge_event() does not wait without a timeout parameter,
+which is a bit nonintuitive, so the test has a race.
+Adding a timeout=datetime.timedelta(microseconds=1) (the shortest
+possible) works for me, so anything that triggers a context switch is
+probably sufficient, though a longer timeout probably wouldn't hurt.
 
-More than that it even introduced some more errors:
-> [    0.008160] irq: no irq domain found for gpc@303a0000 !
-> [    0.013251] Failed to map interrupt for
-> /soc@0/bus@30400000/timer@306a0000
-> [    0.020152] Failed to initialize '/soc@0/bus@30400000/timer@306a0000':
-> -22
+The Python API should take timeout=NONE to mean wait indefinitely, and
+0 as a poll.  And it should take the timeout as a float, not a
+timedelta, as per select.select.  From its doc:
+"The optional timeout argument specifies a time-out as a floating point
+number in seconds. When the timeout argument is omitted the function
+blocks until at least one file descriptor is ready. A time-out value of
+zero specifies a poll and never blocks."
 
-I kept the timestamps to show that these errors happen very early. So now the 
-usage of the "global" interrupt parent, set at line 18,
-> interrupt-parent = <&gpc>;
-is not possible at this point of boot time.
-
-Best regards,
-Alexander
-
-
+Cheers,
+Kent.
 
