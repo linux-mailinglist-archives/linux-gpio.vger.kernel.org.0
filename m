@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B82C956326D
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 13:25:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 365CB563273
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 13:25:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233327AbiGALZP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S234343AbiGALZP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Fri, 1 Jul 2022 07:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54582 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233883AbiGALZI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 07:25:08 -0400
+        with ESMTP id S234192AbiGALZN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 07:25:13 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A3897E02E;
-        Fri,  1 Jul 2022 04:25:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8EDA6804A0;
+        Fri,  1 Jul 2022 04:25:12 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38D54143D;
-        Fri,  1 Jul 2022 04:25:08 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C8841516;
+        Fri,  1 Jul 2022 04:25:12 -0700 (PDT)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5F063F66F;
-        Fri,  1 Jul 2022 04:25:05 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93A9C3F66F;
+        Fri,  1 Jul 2022 04:25:10 -0700 (PDT)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@gmail.com>,
@@ -30,9 +30,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH v12 2/7] dt-bindings: pinctrl: sunxi: Make interrupts optional
-Date:   Fri,  1 Jul 2022 12:24:48 +0100
-Message-Id: <20220701112453.2310722-3-andre.przywara@arm.com>
+Subject: [PATCH v12 4/7] dt-bindings: pinctrl: sunxi: allow vcc-pi-supply
+Date:   Fri,  1 Jul 2022 12:24:50 +0100
+Message-Id: <20220701112453.2310722-5-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220701112453.2310722-1-andre.przywara@arm.com>
 References: <20220701112453.2310722-1-andre.przywara@arm.com>
@@ -47,57 +47,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The R_PIO pinctrl device on the Allwinner H616 SoC does not have an
-interrupt (it features only two pins).
-However the binding requires at least naming one upstream interrupt,
-plus the #interrupt-cells and interrupt-controller properties.
-
-Drop the unconditional requirement for the interrupt properties, and
-make them dependent on being not this particular pinctrl device.
+The Allwinner H616 SoC contains a VCC_PI pin, which supplies the voltage
+for GPIO port I.
+Extend the range of supply port names to include vcc-pi-supply to cover
+that.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml      | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ .../bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml           | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-index bfce850c20351..0bd903954195b 100644
+index 0bd903954195b..25d31c8a191a8 100644
 --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-@@ -133,14 +133,11 @@ patternProperties:
+@@ -127,7 +127,7 @@ patternProperties:
  
- required:
-   - "#gpio-cells"
--  - "#interrupt-cells"
-   - compatible
-   - reg
--  - interrupts
-   - clocks
-   - clock-names
-   - gpio-controller
--  - interrupt-controller
+     additionalProperties: false
  
- allOf:
-   # FIXME: We should have the pin bank supplies here, but not a lot of
-@@ -148,6 +145,18 @@ allOf:
-   # warnings.
+-  "^vcc-p[a-hlm]-supply$":
++  "^vcc-p[a-ilm]-supply$":
+     description:
+       Power supplies for pin banks.
  
-   - $ref: "pinctrl.yaml#"
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            enum:
-+              - allwinner,sun50i-h616-r-pinctrl
-+    then:
-+      required:
-+        - "#interrupt-cells"
-+        - interrupts
-+        - interrupt-controller
-+
-   - if:
-       properties:
-         compatible:
 -- 
 2.25.1
 
