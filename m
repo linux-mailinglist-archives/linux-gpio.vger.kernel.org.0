@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A093B563212
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 13:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E70456321A
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 13:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236195AbiGALAh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 07:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
+        id S236460AbiGALBC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 07:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237126AbiGALAa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 07:00:30 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0157280481
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 04:00:29 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id r81-20020a1c4454000000b003a0297a61ddso3498391wma.2
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 04:00:28 -0700 (PDT)
+        with ESMTP id S235046AbiGALBB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 07:01:01 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3598048E
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 04:01:00 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id u12-20020a05600c210c00b003a02b16d2b8so1355325wml.2
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 04:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DGFRjyiI2rjdSwFVjnHgFB+h+dGxDD2Kue7XHNWDgF0=;
-        b=Q8voRC517y8DrZq0VaJe3Mzq95Y1ZWWGUq2H1UNOdWofbQpc8Bi97/QufImafF8OLI
-         5qiX9JJbx1O4i8kLtHCC8pbCPF3tL1oYU1Iyt3wOnoqWKU/2RwFJ0wYSOrAx8CI6wvl5
-         g28NeQD2S8ghutuzcLIfIWRA0wX0t5+M+eGLYDBtd9OXi0g6KsimgZeVgy85JvBWSijF
-         U+uAMNckjxW0hWcJu+oFDASncGbCZCRvBlEE1nS8YCcf1qSSvhzXSRdCy4cVBhcIULxA
-         5wt7MsGcUc6qM/7JOQ5M+ffNGhvkhhWfsHv0sYU6tTQwsTF93SjmP00W3woQSeq9GchA
-         363w==
+        bh=nJldAKKHinXa/XRWbYBZ2KokKSoOQLC7ui9hKeuDCm8=;
+        b=bdvORm6xs7okZdEYEbyQdn04Uwd0JirGXgHK3B/LOgaO4Ppr7HDsDYCpqKu3kdtrAn
+         Y+XBJ1AKl/ZOwpO84cZCJtRVBlPgWdpXlOalPqsNZAXCidN1PRc6nxSQKw+KEySy5BHu
+         uCv7U9psOocLM3ZDn726hda6vqRzXvFO6FRzq4x9YcF5UzylccYt1V70iml8zKkGTuSc
+         3KZcl8nmPDR1+S0Y32F0sOHKjklhokHtuObx4/KNgEkoa54dPGMFHILplXo2mkCFtDJ+
+         N8nP3920SIJXcXbOH8R+1uuLI5tXo8l9l42g3NDuUjM/fhpivmtim9/oX0i6PJQk1opo
+         au3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DGFRjyiI2rjdSwFVjnHgFB+h+dGxDD2Kue7XHNWDgF0=;
-        b=MSWMlbJXF3R17drJujT03BmiZW+t9rfKgXb5p4fjfmW8enZfcEaifYSpaQ8zfpngyQ
-         UOtnw/IFuSfhfY+iyJzghP3rlGCCOeqjwpqIEhKml0LQe7+a1WV+e+NxZsdoWvJDMyGK
-         /zZ4AmVHpByr0f6/EWp0pNcxExvmN+26iHle/ACmQtsEN9Imf476eJbMBhKBbDnyI0j5
-         AvmlPM/i92ZBRVF4kXm7Red350jbLPjWe6PPVKcrBUhaaLZ6/e9v95koSbKlI5eJ3SC3
-         Jq8DtOx7BsK/x9fnIpPKqYajjaZ8+ozcrYIn76mfNca8ul1fTnVYnDBYW2cTdeoS7Au7
-         NfHw==
-X-Gm-Message-State: AJIora/9UNj9m2/xz50W/ONB3grslctN/To5lQykjJMXswnzRe+HfXHY
-        aDhH+sTmcIuc1euBZR7zqCyoDw==
-X-Google-Smtp-Source: AGRyM1uvDb89WvQ7zk8MpFrAtOqyk7mSLWjfxR+70iYdOyzwud5xhVmDyNbP+vRtqAi5Ta4oKwRhhA==
-X-Received: by 2002:a05:600c:3ca2:b0:3a0:1825:2e6b with SMTP id bg34-20020a05600c3ca200b003a018252e6bmr17414873wmb.132.1656673227534;
-        Fri, 01 Jul 2022 04:00:27 -0700 (PDT)
+        bh=nJldAKKHinXa/XRWbYBZ2KokKSoOQLC7ui9hKeuDCm8=;
+        b=3A2DoiRgALv1e7bMEqREq9h4Yf8HLHl7nuiKfckeVRWOwDcLi0+CXzMYunXAPUHSHp
+         3oG9UYKkQUWcKehgKIP5pxEEQI7jdjXNGaZ0l7ddEIkBG++WNIMNDnwF4qDpaVAf56Vl
+         0DJKCW+OaUdr+nZaBBPSYzYqLhQfEfVZLQKEK6WOlrGpiK086cBi/naR6MvJNKU9neBi
+         5t+7fvs5UflIl4iPYr6w4d1Ondts7Ogwgl0fOfGloBt5YhzMKgZcIMlu0IBF+vZ08iwG
+         T6hkxCldLUoR9HXv5ejjYXO0IkXroFIj/VfruHhZx43jeVkiSHTXHSF15xnwuM6tDBEN
+         P9EA==
+X-Gm-Message-State: AJIora+b2ydIwZCvah3lwBKV2P1RsIPojt5QYmKBgu8gHWzNwqUEEmBH
+        IPJSK4IB2vNUSNATMLrVt1yzHA==
+X-Google-Smtp-Source: AGRyM1u29bJdk2BIpvpggCS7kkkg30osRK6HvhvGTCWMaTKkx51GvEVtwdGwxQMMYbnAL4LexiuCeQ==
+X-Received: by 2002:a7b:c8d8:0:b0:3a0:42ca:d03 with SMTP id f24-20020a7bc8d8000000b003a042ca0d03mr17712102wml.167.1656673259018;
+        Fri, 01 Jul 2022 04:00:59 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:694b:5dfa:a897:b176])
-        by smtp.gmail.com with ESMTPSA id n12-20020a5d6b8c000000b0020c5253d8fcsm26091165wrx.72.2022.07.01.04.00.27
+        by smtp.gmail.com with ESMTPSA id b3-20020a5d6343000000b0021a36955493sm21392888wrw.74.2022.07.01.04.00.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 04:00:27 -0700 (PDT)
+        Fri, 01 Jul 2022 04:00:58 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod v2][PATCH] treewide: allow polling functions to block indefinitely
-Date:   Fri,  1 Jul 2022 13:00:25 +0200
-Message-Id: <20220701110025.58399-1-brgl@bgdev.pl>
+Subject: [libgpiod v2][PATCH] misc: make gpiod_is_gpiochip_device() not set errno
+Date:   Fri,  1 Jul 2022 13:00:56 +0200
+Message-Id: <20220701110056.58502-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -67,132 +67,218 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All polling system calls have some way of being instructed to block
-indefinitely until some event is registered on the file descriptor.
-
-Make both the gpiod_chip_wait_info_event() and
-gpiod_line_request_wait_edge_event() accept negative timeout values in
-which case the underlying ppoll() will block indefinitely.
+This function should just report whether the file indicated by path is
+a GPIO chip or not. Let's rework it to not set errno. Failure to open a
+chip should still report errro numbers like before.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- include/gpiod.h    | 14 ++++++++++----
  lib/chip.c         |  2 +-
- lib/internal.c     | 10 ++++++----
- lib/internal.h     |  2 +-
- lib/line-request.c |  2 +-
- 5 files changed, 19 insertions(+), 11 deletions(-)
+ lib/internal.c     | 65 +++++++++++++++++++++++++++++++++++++++++++++-
+ lib/internal.h     |  2 ++
+ lib/misc.c         | 62 ++-----------------------------------------
+ tests/tests-misc.c |  2 ++
+ 5 files changed, 71 insertions(+), 62 deletions(-)
 
-diff --git a/include/gpiod.h b/include/gpiod.h
-index 5595ff2..d8b5f39 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -135,11 +135,14 @@ int gpiod_chip_get_fd(struct gpiod_chip *chip);
-  * @brief Wait for line status change events on any of the watched lines
-  *	  on the chip.
-  * @param chip GPIO chip object.
-- * @param timeout_ns Wait time limit in nanoseconds.
-+ * @param timeout_ns Wait time limit in nanoseconds. If set to 0, the function
-+ *		     returns immediatelly. If set to a negative number, the
-+ *		     function blocks indefinitely until an event becomes
-+ *		     available.
-  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event is
-  *	   pending.
-  */
--int gpiod_chip_wait_info_event(struct gpiod_chip *chip, uint64_t timeout_ns);
-+int gpiod_chip_wait_info_event(struct gpiod_chip *chip, int64_t timeout_ns);
- 
- /**
-  * @brief Read a single line status change event from the chip.
-@@ -1320,7 +1323,10 @@ int gpiod_line_request_get_fd(struct gpiod_line_request *request);
- /**
-  * @brief Wait for edge events on any of the requested lines.
-  * @param request GPIO line request.
-- * @param timeout_ns Wait time limit in nanoseconds.
-+ * @param timeout_ns Wait time limit in nanoseconds. If set to 0, the function
-+ *		     returns immediatelly. If set to a negative number, the
-+ *		     function blocks indefinitely until an event becomes
-+ *		     available.
-  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event is
-  *	   pending.
-  *q
-@@ -1328,7 +1334,7 @@ int gpiod_line_request_get_fd(struct gpiod_line_request *request);
-  * By default edge detection is disabled.
-  */
- int gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
--				       uint64_t timeout_ns);
-+				       int64_t timeout_ns);
- 
- /**
-  * @brief Read a number of edge events from a line request.
 diff --git a/lib/chip.c b/lib/chip.c
-index fc3dda2..038d3dd 100644
+index fc3dda2..666a1ac 100644
 --- a/lib/chip.c
 +++ b/lib/chip.c
-@@ -145,7 +145,7 @@ GPIOD_API int gpiod_chip_get_fd(struct gpiod_chip *chip)
- }
+@@ -21,7 +21,7 @@ GPIOD_API struct gpiod_chip *gpiod_chip_open(const char *path)
+ 	struct gpiod_chip *chip;
+ 	int fd;
  
- GPIOD_API int gpiod_chip_wait_info_event(struct gpiod_chip *chip,
--					 uint64_t timeout_ns)
-+					 int64_t timeout_ns)
- {
- 	return gpiod_poll_fd(chip->fd, timeout_ns);
- }
+-	if (!gpiod_is_gpiochip_device(path))
++	if (!gpiod_check_gpiochip_device(path, true))
+ 		return NULL;
+ 
+ 	fd = open(path, O_RDWR | O_CLOEXEC | O_NONBLOCK);
 diff --git a/lib/internal.c b/lib/internal.c
-index b7da67e..d948814 100644
+index b7da67e..ba7b90f 100644
 --- a/lib/internal.c
 +++ b/lib/internal.c
-@@ -7,7 +7,7 @@
+@@ -1,12 +1,75 @@
+ // SPDX-License-Identifier: LGPL-2.1-or-later
+-// SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl>
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
+ #include <errno.h>
+ #include <poll.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
+ #include <string.h>
++#include <sys/stat.h>
++#include <sys/sysmacros.h>
++#include <sys/types.h>
++#include <unistd.h>
  
  #include "internal.h"
  
--int gpiod_poll_fd(int fd, uint64_t timeout_ns)
-+int gpiod_poll_fd(int fd, int64_t timeout_ns)
++bool gpiod_check_gpiochip_device(const char *path, bool set_errno)
++{
++	char *realname, *sysfsp, devpath[64];
++	struct stat statbuf;
++	bool ret = false;
++	int rv;
++
++	rv = lstat(path, &statbuf);
++	if (rv)
++		goto out;
++
++	/*
++	 * Is it a symbolic link? We have to resolve it before checking
++	 * the rest.
++	 */
++	realname = S_ISLNK(statbuf.st_mode) ? realpath(path, NULL)
++					    : strdup(path);
++	if (realname == NULL)
++		goto out;
++
++	rv = stat(realname, &statbuf);
++	if (rv)
++		goto out_free_realname;
++
++	/* Is it a character device? */
++	if (!S_ISCHR(statbuf.st_mode)) {
++		errno = ENOTTY;
++		goto out_free_realname;
++	}
++
++	/* Is the device associated with the GPIO subsystem? */
++	snprintf(devpath, sizeof(devpath), "/sys/dev/char/%u:%u/subsystem",
++		 major(statbuf.st_rdev), minor(statbuf.st_rdev));
++
++	sysfsp = realpath(devpath, NULL);
++	if (!sysfsp)
++		goto out_free_realname;
++
++	if (strcmp(sysfsp, "/sys/bus/gpio") != 0) {
++		/* This is a character device but not the one we're after. */
++		errno = ENODEV;
++		goto out_free_sysfsp;
++	}
++
++	ret = true;
++
++out_free_sysfsp:
++	free(sysfsp);
++out_free_realname:
++	free(realname);
++out:
++	if (!set_errno)
++		errno = 0;
++	return ret;
++}
++
+ int gpiod_poll_fd(int fd, uint64_t timeout_ns)
  {
  	struct timespec ts;
- 	struct pollfd pfd;
-@@ -17,10 +17,12 @@ int gpiod_poll_fd(int fd, uint64_t timeout_ns)
- 	pfd.fd = fd;
- 	pfd.events = POLLIN | POLLPRI;
- 
--	ts.tv_sec = timeout_ns / 1000000000ULL;
--	ts.tv_nsec = timeout_ns % 1000000000ULL;
-+	if (timeout_ns >= 0) {
-+		ts.tv_sec = timeout_ns / 1000000000ULL;
-+		ts.tv_nsec = timeout_ns % 1000000000ULL;
-+	}
- 
--	ret = ppoll(&pfd, 1, &ts, NULL);
-+	ret = ppoll(&pfd, 1, timeout_ns < 0 ? NULL : &ts, NULL);
- 	if (ret < 0)
- 		return -1;
- 	else if (ret == 0)
 diff --git a/lib/internal.h b/lib/internal.h
-index c87df91..fab12c3 100644
+index c87df91..12f184e 100644
 --- a/lib/internal.h
 +++ b/lib/internal.h
-@@ -36,7 +36,7 @@ struct gpiod_info_event *
- gpiod_info_event_from_uapi(struct gpio_v2_line_info_changed *uapi_evt);
- struct gpiod_info_event *gpiod_info_event_read_fd(int fd);
+@@ -18,6 +18,8 @@
  
--int gpiod_poll_fd(int fd, uint64_t timeout);
-+int gpiod_poll_fd(int fd, int64_t timeout);
+ #define GPIOD_BIT(nr)	(1UL << (nr))
  
- void gpiod_line_mask_zero(uint64_t *mask);
- void gpiod_line_mask_fill(uint64_t *mask);
-diff --git a/lib/line-request.c b/lib/line-request.c
-index 33f7f67..04bd78d 100644
---- a/lib/line-request.c
-+++ b/lib/line-request.c
-@@ -200,7 +200,7 @@ GPIOD_API int gpiod_line_request_get_fd(struct gpiod_line_request *request)
++bool gpiod_check_gpiochip_device(const char *path, bool set_errno);
++
+ struct gpiod_chip_info *
+ gpiod_chip_info_from_uapi(struct gpiochip_info *uapi_info);
+ struct gpiod_line_info *
+diff --git a/lib/misc.c b/lib/misc.c
+index 5c326eb..b0899b3 100644
+--- a/lib/misc.c
++++ b/lib/misc.c
+@@ -1,71 +1,13 @@
+ // SPDX-License-Identifier: LGPL-2.1-or-later
+-// SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
++// SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <bartekgola@gmail.com>
  
- GPIOD_API int
- gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
--				   uint64_t timeout_ns)
-+				   int64_t timeout_ns)
+-#include <errno.h>
+ #include <gpiod.h>
+-#include <stdint.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <sys/stat.h>
+-#include <sys/sysmacros.h>
+-#include <sys/types.h>
+-#include <unistd.h>
+ 
+ #include "internal.h"
+ 
+ GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
  {
- 	return gpiod_poll_fd(request->fd, timeout_ns);
+-	char *realname, *sysfsp, devpath[64];
+-	struct stat statbuf;
+-	bool ret = false;
+-	int rv;
+-
+-	rv = lstat(path, &statbuf);
+-	if (rv)
+-		goto out;
+-
+-	/*
+-	 * Is it a symbolic link? We have to resolve it before checking
+-	 * the rest.
+-	 */
+-	realname = S_ISLNK(statbuf.st_mode) ? realpath(path, NULL)
+-					    : strdup(path);
+-	if (realname == NULL)
+-		goto out;
+-
+-	rv = stat(realname, &statbuf);
+-	if (rv)
+-		goto out_free_realname;
+-
+-	/* Is it a character device? */
+-	if (!S_ISCHR(statbuf.st_mode)) {
+-		errno = ENOTTY;
+-		goto out_free_realname;
+-	}
+-
+-	/* Is the device associated with the GPIO subsystem? */
+-	snprintf(devpath, sizeof(devpath), "/sys/dev/char/%u:%u/subsystem",
+-		 major(statbuf.st_rdev), minor(statbuf.st_rdev));
+-
+-	sysfsp = realpath(devpath, NULL);
+-	if (!sysfsp)
+-		goto out_free_realname;
+-
+-	if (strcmp(sysfsp, "/sys/bus/gpio") != 0) {
+-		/* This is a character device but not the one we're after. */
+-		errno = ENODEV;
+-		goto out_free_sysfsp;
+-	}
+-
+-	ret = true;
+-
+-out_free_sysfsp:
+-	free(sysfsp);
+-out_free_realname:
+-	free(realname);
+-out:
+-	return ret;
++	return gpiod_check_gpiochip_device(path, false);
  }
+ 
+ GPIOD_API const char *gpiod_version_string(void)
+diff --git a/tests/tests-misc.c b/tests/tests-misc.c
+index c473aff..d3c9a82 100644
+--- a/tests/tests-misc.c
++++ b/tests/tests-misc.c
+@@ -15,7 +15,9 @@
+ GPIOD_TEST_CASE(is_gpiochip_bad)
+ {
+ 	g_assert_false(gpiod_is_gpiochip_device("/dev/null"));
++	g_assert_cmpint(errno, ==, 0);
+ 	g_assert_false(gpiod_is_gpiochip_device("/dev/nonexistent"));
++	g_assert_cmpint(errno, ==, 0);
+ }
+ 
+ GPIOD_TEST_CASE(is_gpiochip_good)
 -- 
 2.34.1
 
