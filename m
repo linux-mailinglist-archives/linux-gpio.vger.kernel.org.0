@@ -2,99 +2,225 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C413256316D
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 12:32:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5E505631CE
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 12:46:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234895AbiGAKco (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 06:32:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
+        id S236802AbiGAKqs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 06:46:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236048AbiGAKcl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 06:32:41 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FE4796B0
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 03:32:39 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id z41so2420527ede.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 03:32:39 -0700 (PDT)
+        with ESMTP id S237096AbiGAKqm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 06:46:42 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023787E01C;
+        Fri,  1 Jul 2022 03:46:36 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id r3so3342538ybr.6;
+        Fri, 01 Jul 2022 03:46:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JOFbrEFB9DCfHsTRcts2PWWLes6+Uj7GP9RbVOzCFVM=;
-        b=G+gv7lbE9ycKvCE2XLzqdLc2Ydvt8ZMtLvSeU8HaZ9IBTC9+4C4J6ma8pDYRasv6wq
-         dcAt/tL/BVFPZBcEhMgdJxdBXiLcrR5bmHv75VIK3GY2JxCSNscmZtvnZBYdFRUX9Qcy
-         IisiKj6sGhICKwcz5anBl2siQIhcRP+Uc4j32evQkEIK3AZcvRK1nehjJQIM5EzR/bPG
-         fi6N0RqIPnU/tv562fCX7SXzZa+R0t5D5E/Ffu34GINVQTBi1YcK1LVQLyZlIFvcww/7
-         Qm2IqQQtvN82DMspOaGPkO152of48xEt9tQYjv0rwDLdjcEcLNFX8kaM4qN61e0hgIvf
-         93/Q==
+        bh=RWCMizkXva41Nm1wqlGXLvbQDsWrO1ICOtX0qSZGbJo=;
+        b=XYyB8IdTaXHGEitNXV+dgDP8Tx5lfY9J/39gAzlPnOPe57t3dV44GcU5DqByaWhnBt
+         c3cXvHd6Yu1OaeIiB80MwSS98vYnk9JPM/UNneYKTFc6UuPycV8UhPy00m2+b7duuEIW
+         VOvJ0PqiVKsORGTH6H01GBaQTizG23QTIpoT4Z/iCxcZDW5ef6pKhaCCbHar8PmmYVb0
+         gUBdl83IL39y5E1xSTBLW/CTA00cm60OOFTxaUkmj5003Jk1U4ZRASxC+22hIHG8AWia
+         FzjlBhOOwmEaMoCcCGzZYO56zahDUKoqMdUL06TmeITaRNV2u775WDUhbJBO5nYN0I0b
+         SOGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JOFbrEFB9DCfHsTRcts2PWWLes6+Uj7GP9RbVOzCFVM=;
-        b=FX6DG9BFdUlgz4zCGhcxJkxSV8/AM2/1pyRyGmgx85UVQhvo103ZXzczNYGmI/0AFo
-         KyGNbTVOWL//axCk3LDTfztnYjebilDpwXuDzl5XGdBbm0ExJ7VIBKQH2P0GjsAFxySm
-         7QkirfvX8OEZJNaAumoqX5uyTdh4177FF2CSjMKlR2E7Onl10joXNIkx/lCIbjhVIN+/
-         bjMoMNpPFPt9Rr1YfVY4W7ETAbWb4USzPNlSTFPWSw73gveRGhtMolCOMRl0acb6E3nm
-         9VB+jli6FztQxY75K1MPWUHWXpv0iJ7EG08dIJfKy15tfppky81rEykGZdFYj5wYny1v
-         lC6Q==
-X-Gm-Message-State: AJIora+vEQOBCZPFaS0f8J4xUQdvvhrAsWJcVx02ukArC7N4+k2VV+ii
-        vofwW7mZcX+0iBLbkTocrnLxCuIlZzc9F98aYBaQwVvQ/ec=
-X-Google-Smtp-Source: AGRyM1vgIA6SqnHR0nHNlzVRqwiqRXFzYSzGJQPFnq7om9GgN5s8pDmkyBxQwG7kziOKv65nyKva/jRmpalBobiJTEQ=
-X-Received: by 2002:a05:6402:d0a:b0:437:66ca:c211 with SMTP id
- eb10-20020a0564020d0a00b0043766cac211mr18200869edb.29.1656671558454; Fri, 01
- Jul 2022 03:32:38 -0700 (PDT)
+        bh=RWCMizkXva41Nm1wqlGXLvbQDsWrO1ICOtX0qSZGbJo=;
+        b=vYWE2KXwLPC4JtbxA/Jme5s4QqO1Os+3gUYNqHZrxnnPxPf/8ZrXh/lqLyqN9pp1RV
+         PZ+wvpdaim3xYagTYmZ+aGta3S+vxr36DyZA/TMAeKUI9luuUAIyjircWHno6/pZpeZ3
+         MYQpavQbmwPbovUrUrm6nLyTVM2DqkGw8DLRk7npudBYiOlnocsCsU8utEW+oTw5Gg5f
+         nqa7EbuTEg7BZIafhIH2CyMXhh9hSKCuShsvk8jlz04+5XdbL2AlHKy0lGI7Hd/AFU74
+         HOWeglqBffsYK3IiwRWBRmi627RJoDS08NXbNHdPTepcZrvFuglBhGKXUrb9xLKm6eoL
+         tARg==
+X-Gm-Message-State: AJIora/Yw4LQ1AntjU/EnvBEO3VCKI/8lGPR/W/n73qZ0/CWrIlYn9JA
+        Z+rTR9UQ/8Rq9Ezug6RmfNoZ4QglhjRKn8d2ESZlOMuhWmDibYBPDBs=
+X-Google-Smtp-Source: AGRyM1t8n7hxMdE5FzKlZGrnuS1T6c61dW+z5ixhFpQmMQxwN2OkLejdcuV+aH191xXe8O6/lwJovM0emTmsE+xWVJA=
+X-Received: by 2002:a25:dd83:0:b0:66c:8d8d:4f5f with SMTP id
+ u125-20020a25dd83000000b0066c8d8d4f5fmr14396420ybg.79.1656672395126; Fri, 01
+ Jul 2022 03:46:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220623160801.240779-1-sebastian.reichel@collabora.com>
-In-Reply-To: <20220623160801.240779-1-sebastian.reichel@collabora.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 1 Jul 2022 12:32:27 +0200
-Message-ID: <CAMRc=Mc9KHb1Y4EGbhaAKgVFwto+ujcF9f+VWC2P9imbawrcog@mail.gmail.com>
-Subject: Re: [PATCH 0/2] RK3588 GPIO Support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+References: <20220701091412.20718-1-henning.schild@siemens.com> <20220701091412.20718-2-henning.schild@siemens.com>
+In-Reply-To: <20220701091412.20718-2-henning.schild@siemens.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 1 Jul 2022 12:45:58 +0200
+Message-ID: <CAHp75VcoN6eekZXPK8Kpw4aaJN7jfirnUH+1Q0JTEyLSKwrB0w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: nct6116d: add new driver for several Nuvoton
+ super io chips
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, kernel@collabora.com
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Kuan-Wei Ho <cwho@nuvoton.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 6:08 PM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
+On Fri, Jul 1, 2022 at 11:15 AM Henning Schild
+<henning.schild@siemens.com> wrote:
 >
-> This has been part of a bigger patchset adding basic rk3588 support.
-> Since that gets more and more out of hand, I'm now sending patches
-> for each subsystem as individual patchset. Previou patchet:
->
-> https://lore.kernel.org/all/20220504213251.264819-1-sebastian.reichel@collabora.com/
->
-> Changes:
->  * None (except for collecting Acks)
->
-> -- Sebastian
->
-> Jianqun Xu (1):
->   gpio: rockchip: add support for rk3588
->
-> Sebastian Reichel (1):
->   dt-bindings: gpio: rockchip: add gpio-ranges
->
->  Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 2 ++
->  drivers/gpio/gpio-rockchip.c                                   | 3 ++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> --
-> 2.35.1
->
+> This patch adds gpio support for several Nuvoton NCTXXX chips. These super
+> io chips offer multiple functions of which several already have drivers in
 
-Both applied, thanks!
+Super-I/O (to be consistent with the help in Kconfig, etc).
 
-Bart
+
+> the kernel, i.e. hwmon and wdt.
+
+watchdog
+
+...
+
+Since you are talking about authorship in the cover letter, is it
+possible to get the original authorship to be preserved in the commit
+and authors / co-developers giving their SoB tags?
+
+...
+
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/io.h>
+> +#include <linux/gpio/driver.h>
+
+Keep it sorted?
+
+...
+
+> +#define SIO_ID_MASK            0xFFF0
+
+GENMASK() ?
+
+...
+
+> +enum chips {
+> +       nct5104d,
+> +       nct6106d,
+> +       nct6116d,
+> +       nct6122d,
+> +};
+> +
+> +static const char * const nct6116d_names[] = {
+> +       "nct5104d",
+> +       "nct6106d",
+> +       "nct6116d",
+> +       "nct6122d",
+
+It would be slightly more flexible to use enum values as indices here:
+
+[nct5104d] = "nct5104d",
+
+> +};
+
+...
+
+> +               pr_err(DRVNAME "I/O address 0x%04x already in use\n", base);
+
+Why not use pr_fmt() properly and drop DRVNAME here and in other pr_*(), if any?
+
+...
+
+> +static int nct6116d_gpio_direction_in(struct gpio_chip *chip, unsigned int offset);
+> +static int nct6116d_gpio_get(struct gpio_chip *chip, unsigned int offset);
+> +static int nct6116d_gpio_direction_out(struct gpio_chip *chip,
+> +                                    unsigned int offset, int value);
+> +static void nct6116d_gpio_set(struct gpio_chip *chip, unsigned int offset, int value);
+
+Is it possible to avoid forward declarations?
+
+...
+
+> +#define NCT6116D_GPIO_BANK(_base, _ngpio, _regbase, _label)                    \
+> +       {                                                               \
+> +               .chip = {                                               \
+> +                       .label            = _label,                     \
+> +                       .owner            = THIS_MODULE,                \
+> +                       .direction_input  = nct6116d_gpio_direction_in, \
+> +                       .get              = nct6116d_gpio_get,          \
+> +                       .direction_output = nct6116d_gpio_direction_out,        \
+> +                       .set              = nct6116d_gpio_set,          \
+
+.get_direction ?
+
+> +                       .base             = _base,                      \
+> +                       .ngpio            = _ngpio,                     \
+> +                       .can_sleep        = false,                      \
+> +               },                                                      \
+> +               .regbase = _regbase,                                    \
+> +       }
+
+...
+
+> +       int err;
+> +       struct nct6116d_gpio_bank *bank =
+> +               container_of(chip, struct nct6116d_gpio_bank, chip);
+
+Can it be transformed to macro or inliner and then
+
+       struct nct6116d_gpio_bank *bank = to_nct6116d_gpio_bank(chip);
+
+> +       struct nct6116d_sio *sio = bank->data->sio;
+> +       u8 dir;
+
+Here and everywhere else, perhaps keep the reversed xmas tree order?
+
+...
+
+> +               err = devm_gpiochip_add_data(&pdev->dev, &bank->chip, bank);
+> +               if (err) {
+> +                       dev_err(&pdev->dev,
+> +                               "Failed to register gpiochip %d: %d\n",
+> +                               i, err);
+> +                       return err;
+
+return dev_err_probe(...);
+
+...
+
+> +       pr_info(DRVNAME ": Found %s at %#x chip id 0x%04x\n",
+> +                       nct6116d_names[sio->type],
+> +                       (unsigned int)addr,
+
+Casting in printf() very often means a wrong specifier in use.
+
+> +                       devid);
+
+...
+
+> +       nct6116d_gpio_pdev = platform_device_alloc(DRVNAME, -1);
+> +       if (!nct6116d_gpio_pdev)
+> +               return -ENOMEM;
+> +
+> +       err = platform_device_add_data(nct6116d_gpio_pdev, sio, sizeof(*sio));
+> +       if (err) {
+> +               pr_err(DRVNAME "Platform data allocation failed\n");
+> +               goto err;
+> +       }
+> +
+> +       err = platform_device_add(nct6116d_gpio_pdev);
+> +       if (err) {
+> +               pr_err(DRVNAME "Device addition failed\n");
+> +               goto err;
+> +       }
+
+Wonder, don't we have some shortcuts for these? Perhaps
+platform_device_register_full()?
+
+-- 
+With Best Regards,
+Andy Shevchenko
