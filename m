@@ -2,199 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05392562C35
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 09:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17D6A562C7E
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 09:22:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235195AbiGAHDB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 03:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
+        id S233993AbiGAHWN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 03:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235158AbiGAHDA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 03:03:00 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1434A675AF
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 00:02:59 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-31bf3656517so14485647b3.12
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 00:02:59 -0700 (PDT)
+        with ESMTP id S231313AbiGAHWM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 03:22:12 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B9368A08
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 00:22:10 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id d2so2471069ejy.1
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 00:22:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3Oxpr/H6WS/cbatfKxunj+Rm+HXq43uwJ9TOx0tf4pg=;
-        b=G4+aGmI06EueqwK7C5Qo4w/41Yp3wU/CWyAMnimOU3r1x56NK0xwWd5NnQsEtkPJT1
-         j1wWR6jutsCmi+xE7hxYUqJNrQrMI+GL07X5ZYgIgqDAqQnMWhF8y5nc40xNPfhYS3jC
-         0nJhLPxfL1eyodYvq4oKHJFLeueGwA5XPbFVGoQA05bmNWxXq8PGbVqamZrTZs9J6qBh
-         1fRZx/U4bPFmJBSVu1knm/cNESUDsxYs6X7kurTJA14GFNtyIPF26073epdL9z6eSE2L
-         X78efI4BN3icU+xkSEEQMO42kPgo3k8M7uVN2JrWdQyoK9p0Z0nOVmWHNbnRgASj9y0m
-         xe+Q==
+         :cc:content-transfer-encoding;
+        bh=uMP7er2/z507jsWTEgmiRGgYUMuo3t8/oEk91b2L8S8=;
+        b=76alPVnnw/bFfm50gLPwpM8B2TtvktIGiWXo8Fp4b6xT0kC9F7JHKJ88mVRfYyIrhY
+         dbBPDRrF2wpSdfLPxQx71M02/YCxZn/Ivtdjmer5E4u1KNrnEUV9xgSw49agu7WjNVPk
+         hM/d6w4WtX7qmcTidoOYG30WH7AGZFAOCydMCk3aNHRKFKamFJLkaELOVh3sgr2G9cQp
+         XbQkN7OYxIjZ591MpqbOVPiPSFHXOd99xKCzRB6xOTX9lGeU3XeRS5WxzNLip14m4CD1
+         ZEwqZZCBOIzCcaad3MwNZQZ72cQ0F51qtt4mTljdXpidJVGVjZfxEpZ1kO05Am+wsAxL
+         3Z6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Oxpr/H6WS/cbatfKxunj+Rm+HXq43uwJ9TOx0tf4pg=;
-        b=o1i8U+8HgwN64j3vNnPdpDOn4gWc+cfUC6JOjJtW9mEbOT/mFP8O1JxmuKq7T1JFYW
-         5yCarvdjLAb+Ksozmu1tSkdJmOz7lG3xVYEi+IPpW7eJ5QcrWspfHt6wZn8L4iNJEuSw
-         qPT8KbyDJ3xLRQZSYFPt7NJ2Cy1MVPkgzswg1flOnvrh18jOBxLbUhdYRE9OayXAggkY
-         0K7GaZ7zzjqDFg+L5aUHTgupmR403Au86lDkHW8YymMGsPR1sqmWsKuTFR07gu8qSbHO
-         4x0wYdccOL+3dHKMBiD3v3Xqm8wl+R3Hc290qgL34BF3E4XKuAvkN/JzhYNVJjNXtqTC
-         rjsg==
-X-Gm-Message-State: AJIora+jwDgGag/gQkYHLxXxopJQ/I5JBUwkcyrUI3DUqAs9lFkrlx+H
-        WgVAg40aFQHLGKhDwkCYMAMnwZce4RIN912ZV8hJzg==
-X-Google-Smtp-Source: AGRyM1sjHYE6b1ihEm8EzVroyoytiPu2X1qfGuWU3WGWHfolVcCLEjpB4ZdcYExvwYNCmCj3ip+B1gZf6PvcXiQN0KE=
-X-Received: by 2002:a81:4896:0:b0:317:f767:95f8 with SMTP id
- v144-20020a814896000000b00317f76795f8mr15214195ywa.218.1656658978077; Fri, 01
- Jul 2022 00:02:58 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uMP7er2/z507jsWTEgmiRGgYUMuo3t8/oEk91b2L8S8=;
+        b=NTk381ppwVp6yDEBDCKFfWk3hKYbEoWsgxgVAIPCfnXD0pE833LJmWyCPB85biWSOb
+         meW3QHwIzEjIyF0IMw4pn5bRaD7raROrs3RF4wfZsQgeUIkdfsfqetIZx3fBEYiUuY8d
+         EaJ9/GW73HZU9KClQEUYEZ84x+jO8qCwGErvDKw/XJtTSZfpfN+OD4xx2dzCH+O/9rRp
+         pfJomxPDTEtylYhFEwYg/FzOv3eD/NgWt56hT732cSj9Wol1oBnIiDBx0ZauAEyEJ/Bz
+         0CfYQNfIA8h+cqugk/Tf2qC0E5MJUldcusxvw37frGftvnbADTtiIfpo94Ny6ZPUOPRs
+         +yqA==
+X-Gm-Message-State: AJIora9y1VZna5CbGii48nQZ45a0UUBdQBmJpZruLaprkbauXwHmeA9a
+        Kf1y5+DGSU9HHJCepwcm4b41NbCvL7APzSohmLOw3g==
+X-Google-Smtp-Source: AGRyM1sDBiiCRIjsq+RO3IdUaDbvwhoLXJix3+BB4KFjdvCgvxU+p0nHal7gu6Ks2jsoKbtk7+UNDK2g1FEF4nfKEvs=
+X-Received: by 2002:a17:907:60cc:b0:722:e564:eb11 with SMTP id
+ hv12-20020a17090760cc00b00722e564eb11mr12704104ejc.736.1656660129037; Fri, 01
+ Jul 2022 00:22:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220601070707.3946847-1-saravanak@google.com>
- <4799738.LvFx2qVVIh@steina-w> <CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com>
- <5265491.31r3eYUQgx@steina-w>
-In-Reply-To: <5265491.31r3eYUQgx@steina-w>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 1 Jul 2022 00:02:22 -0700
-Message-ID: <CAGETcx-fLAXnG+1S4MHJwg9t7O6jj6Mp+q25bh==C_Z1CLs-mg@mail.gmail.com>
-Subject: Re: (EXT) Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20220628084226.472035-1-brgl@bgdev.pl> <20220628084226.472035-6-brgl@bgdev.pl>
+ <20220630022522.GA17221@sol> <CAMRc=MfXqKuj4u9OiBe5Euo8BtRFb06CMZbLOoF6PD2OvJsRWg@mail.gmail.com>
+ <20220630081450.GB23652@sol> <20220630083851.GA24642@sol> <20220701060736.GA28431@sol>
+In-Reply-To: <20220701060736.GA28431@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 1 Jul 2022 09:21:58 +0200
+Message-ID: <CAMRc=Mdhogn2HDR7NYmjugTi6V3zwcw38vmdpfH55f44EPOHRw@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
+ implementation for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 11:02 PM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
+On Fri, Jul 1, 2022 at 8:07 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Hi Saravana,
->
-> Am Freitag, 1. Juli 2022, 02:37:14 CEST schrieb Saravana Kannan:
-> > On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
-> >
-> > <alexander.stein@ew.tq-group.com> wrote:
-> > > Hi,
-> > >
-> > > Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony Lindgren:
-> > > > Hi,
-> > > >
-> > > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
-> > > > > Now that fw_devlink=on by default and fw_devlink supports
-> > > > > "power-domains" property, the execution will never get to the point
-> > > > > where driver_deferred_probe_check_state() is called before the
-> > > > > supplier
-> > > > > has probed successfully or before deferred probe timeout has expired.
+> On Thu, Jun 30, 2022 at 04:38:51PM +0800, Kent Gibson wrote:
+> > On Thu, Jun 30, 2022 at 04:14:50PM +0800, Kent Gibson wrote:
+> > > On Thu, Jun 30, 2022 at 08:54:24AM +0200, Bartosz Golaszewski wrote:
+> > > > On Thu, Jun 30, 2022 at 4:25 AM Kent Gibson <warthog618@gmail.com> =
+wrote:
 > > > > >
-> > > > > So, delete the call and replace it with -ENODEV.
+> > > > > On Tue, Jun 28, 2022 at 10:42:26AM +0200, Bartosz Golaszewski wro=
+te:
+> > > > > > This is the implementation of the new python API for libgpiod v=
+2.
+> > > > > >
+> > > > >
+> > > > > [snip]
+> > > > >
+> > > > > > +     }
+> > > > > > +
+> > > > > > +     res =3D PyObject_Call(method, args, line_cfg_kwargs);
+> > > > > > +     Py_DECREF(args);
+> > > > > > +     Py_DECREF(method);
+> > > > > > +     if (!Py_IsNone(res)) {
+> > > > > > +             Py_DECREF(res);
+> > > > > > +             return NULL;
+> > > > > > +     }
+> > > > > > +
+> > > > >
+> > > > > Building against python 3.9 (the min required by configure.ac) gi=
+ves:
+> > > > >
+> > > > > module.c:276:7: warning: implicit declaration of function =E2=80=
+=98Py_IsNone=E2=80=99; did you mean =E2=80=98Py_None=E2=80=99? [-Wimplicit-=
+function-declaration]
+> > > > >   276 |  if (!Py_IsNone(res)) {
+> > > > >       |       ^~~~~~~~~
+> > > > >       |       Py_None
+> > > > >
+> > > > >
+> > > > > Py_IsNone didn't get added to the Stable ABI until 3.10.
+> > > > >
+> > > > > Cheers,
+> > > > > Kent.
 > > > >
-> > > > Looks like this causes omaps to not boot in Linux next. With this
-> > > > simple-pm-bus fails to probe initially as the power-domain is not
-> > > > yet available. On platform_probe() genpd_get_from_provider() returns
-> > > > -ENOENT.
+> > > > It seems like most distros still ship python 3.9, I don't want to m=
+ake
+> > > > 3.10 the requirement. This can be replaced by `if (res !=3D Py_None=
+)`.
+> > > > Are there any more build issues?
 > > > >
-> > > > Seems like other stuff is potentially broken too, any ideas on
-> > > > how to fix this?
 > > >
-> > > I think I'm hit by this as well, although I do not get a lockup.
-> > > In my case I'm using
-> > > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts and probing of
-> > > 38320000.blk-ctrl fails as the power-domain is not (yet) registed.
+> > > No, that was the only one.
+> > >
 > >
-> > Ok, took a look.
+> > But I am seeing a test failure:
 > >
-> > The problem is that there are two drivers for the same device and they
-> > both initialize this device.
+> > $ sudo bindings/python/tests/gpiod_py_test.py
+> > .......................................................................=
+......F................................
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > FAIL: test_module_line_request_edge_detection (cases.tests_line_request=
+.ModuleLineRequestWorks)
+> > ----------------------------------------------------------------------
+> > Traceback (most recent call last):
+> >   File "/home/dev/libgpiod/bindings/python/tests/cases/tests_line_reque=
+st.py", line 71, in test_module_line_request_edge_detection
+> >     self.assertTrue(req.wait_edge_event())
+> > AssertionError: False is not true
 > >
-> >     gpc: gpc@303a0000 {
-> >         compatible = "fsl,imx8mq-gpc";
-> >     }
+> > ----------------------------------------------------------------------
+> > Ran 110 tests in 2.652s
 > >
-> > $ git grep -l "fsl,imx7d-gpc" -- drivers/
-> > drivers/irqchip/irq-imx-gpcv2.c
-> > drivers/soc/imx/gpcv2.c
+> > FAILED (failures=3D1)
 > >
-> > IMHO, this is a bad/broken design.
-> >
-> > So what's happening is that fw_devlink will block the probe of
-> > 38320000.blk-ctrl until 303a0000.gpc is initialized. And it stops
-> > blocking the probe of 38320000.blk-ctrl as soon as the first driver
-> > initializes the device. In this case, it's the irqchip driver.
-> >
-> > I'd recommend combining these drivers into one. Something like the
-> > patch I'm attaching (sorry for the attachment, copy-paste is mangling
-> > the tabs). Can you give it a shot please?
 >
-> I tried this patch and it delayed the driver initialization (those of UART as
-> well BTW). Unfortunately the driver fails the same way:
+> The req.wait_edge_event() does not wait without a timeout parameter,
+> which is a bit nonintuitive, so the test has a race.
 
-Thanks for testing the patch!
+Ah, makes sense.
 
-> > [    1.125253] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV: failed to
-> attach power domain "bus"
+> Adding a timeout=3Ddatetime.timedelta(microseconds=3D1) (the shortest
+> possible) works for me, so anything that triggers a context switch is
+> probably sufficient, though a longer timeout probably wouldn't hurt.
 >
-> More than that it even introduced some more errors:
-> > [    0.008160] irq: no irq domain found for gpc@303a0000 !
 
-So the idea behind my change was that as long as the irqchip isn't the
-root of the irqdomain (might be using the terms incorrectly) like the
-gic, you can make it a platform driver. And I was trying to hack up a
-patch that's the equivalent of platform_irqchip_probe() (which just
-ends up eventually calling the callback you use in IRQCHIP_DECLARE().
-I probably made some mistake in the quick hack that I'm sure if
-fixable.
+I'll change that.
 
-> > [    0.013251] Failed to map interrupt for
-> > /soc@0/bus@30400000/timer@306a0000
+> The Python API should take timeout=3DNONE to mean wait indefinitely, and
+> 0 as a poll.
 
-However, this timer driver also uses TIMER_OF_DECLARE() which can't
-handle failure to get the IRQ (because it's can't -EPROBE_DEFER). So,
-this means, the timer driver inturn needs to be converted to a
-platform driver if it's supposed to work with the IRQCHIP_DECLARE()
-being converted to a platform driver.
+This makes sense but I'd still want to have some default behavior for
+when timeout is not given. Maybe wait indefinitely?
 
-But that's a can of worms not worth opening. But then I remembered
-this simpler workaround will work and it is pretty much a variant of
-the workaround that's already in the gpc's irqchip driver to allow two
-drivers to probe the same device (people really should stop doing
-that).
+> And it should take the timeout as a float, not a
+> timedelta, as per select.select.  From its doc:
 
-Can you drop my previous hack patch and try this instead please? I'm
-99% sure this will work.
+I don't necessarily want to mirror select's interface. Why would we
+prefer a float over a class that's the standard python interface for
+storing time deltas?
 
-diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
-index b9c22f764b4d..8a0e82067924 100644
---- a/drivers/irqchip/irq-imx-gpcv2.c
-+++ b/drivers/irqchip/irq-imx-gpcv2.c
-@@ -283,6 +283,7 @@ static int __init imx_gpcv2_irqchip_init(struct
-device_node *node,
-         * later the GPC power domain driver will not be skipped.
-         */
-        of_node_clear_flag(node, OF_POPULATED);
-+       fwnode_dev_initialized(domain->fwnode, false);
-        return 0;
- }
+Bart
 
--Saravana
+> "The optional timeout argument specifies a time-out as a floating point
+> number in seconds. When the timeout argument is omitted the function
+> blocks until at least one file descriptor is ready. A time-out value of
+> zero specifies a poll and never blocks."
+>
+> Cheers,
+> Kent.
+>
