@@ -2,68 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE6D5632C9
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 13:44:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EDD75632E6
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 13:51:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbiGALoB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 07:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45062 "EHLO
+        id S235741AbiGALu7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 07:50:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234901AbiGALoA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 07:44:00 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A4883F01
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 04:43:57 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id l6so2126098plg.11
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 04:43:57 -0700 (PDT)
+        with ESMTP id S235687AbiGALu7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 07:50:59 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 532137B357
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 04:50:58 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id e2so2653610edv.3
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 04:50:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EmrEyb/vcMOj8X/KVOCoTT3JrzJ8cr3oXaXnqMa7EvU=;
-        b=S89l3CUcLcdKXBEN+EKKHjmz/FkMzzseffgZZTzDF8Xl91jtlaAL4Ad4I+gBf30ayg
-         EUtevnhQzkbPdxEt4ETCmwJmifU0twVhS3b7uFa12HydsqitPkASnNq2sX0bwaSswgOJ
-         ZEnEeOQsPEpivrgGGGdhVxqwlT1c7hU5cHUI59w5EZ/VBER7+WwWLNiqamDuse0vKZm5
-         SabibwmqeSKRrzu7a3Br6RDWiP9bl6YrxOt3OLa3mlU86KgPjxF3gj24uYPWh6v2FN9M
-         OGCizWkOvav13XL1PT/buIoY1wyElg3TVnOPDMNTbydcGe9Q1Rc/N5FE6W+4TmyS9ws3
-         Hf4A==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PyQeznPQ3vinDWmATOmVWGjNnGlxn8MSK8bXY75HTf4=;
+        b=I48ndf2IWnm/AqKC8eDSmh/n2+2UWlan6pUzhqp1rejVSbVN7WblvxHdWTCcQJYDl6
+         JYKvPgTYrxOFkhbMM/Na5idIrj/70benmT+hS7uHahnux/qtjsfXGbmtAGhdcEIh23jo
+         MqI0+Bri/hFgxEED0cooJzFqmHfYfj5OlfTQVH0+h/tPHs5c7tibnu/3SOKpJYoHdTEw
+         S1U2/1trIxL89IttToLQF7VkCO3ClLzb61y45pQBTSLRGghwQhA4oD+5EEPh5/c8BXIW
+         0AYkVjmGvzJMGqcnOB0kEyKpCfjcJm0DuHjbuYRadFFZTVfDMRIrMydnFr+kiHHz2b5V
+         kw0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EmrEyb/vcMOj8X/KVOCoTT3JrzJ8cr3oXaXnqMa7EvU=;
-        b=L30URNocnapij5Wl3Gbdt9iD+OUk0ONGl0NrnJotDsUP1vqEyZECYLnu74mgODBqXB
-         rmKQ7+g38ouL7UWndmydrc2o0jIEYrfvpc/oS4XnxX83q0gCWVe9jrX/elkbZU+RN0Lx
-         bvwXFNEyM3SgJRwigYOc3yMF5Hhv0r+wnBUaACDcewpIi9hQZGyCYYS62iE7kFoWt+O8
-         t4rWcEHV8LeIBIZuyxHcWQXqTuGazDFa6QtGc9NmVCALsizH+YJufKsD6QwJuGbWU4HL
-         K8OnL8GhBhjVikZlB+MAr34xN3fuIinf+3w3FD8aDQxkJKO4G+x1XSM/pVWr45bsCnWE
-         +xqw==
-X-Gm-Message-State: AJIora8GUjca2JT20WGj+dTx/6FI0gHl6RCD6GEce+bVt+KprxeSl8VO
-        cwNtbbjCgJLTK3iWEDef3+E=
-X-Google-Smtp-Source: AGRyM1vgxyF019zBH8d0TOay652o3CiHBuC39X9vzGct458z+s7nU+K3M1xxGaSGTIGPD3NGPaN+NA==
-X-Received: by 2002:a17:90b:3b82:b0:1ec:ac0d:5d3b with SMTP id pc2-20020a17090b3b8200b001ecac0d5d3bmr18274898pjb.158.1656675836769;
-        Fri, 01 Jul 2022 04:43:56 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id p12-20020a170902eacc00b0016370e1af6bsm15378517pld.128.2022.07.01.04.43.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 04:43:56 -0700 (PDT)
-Date:   Fri, 1 Jul 2022 19:43:51 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PyQeznPQ3vinDWmATOmVWGjNnGlxn8MSK8bXY75HTf4=;
+        b=hz33LRx+RyDNAew+UcDNyQ/LFV7uYsiBRBx29vw2Nmvd2zXTHhRkLh7K7MxWXFyvch
+         XN/wkHYOIgciCcqCfBpzNAO4kEXpOcxxwC9iaX1V2barzsw/oE2XSnG21Df7iIc3mXb1
+         I0WXt4iWsyNYaXx3aFrlwwMIkR+8qxbA0A5s5T4o0ekdeG2pbkIQGQ1FmDs2i8rxfp7N
+         NFEYwncge+mGeDGtgYJAds5jopFsOZvsrtjsIEAxf4DHk19h0nnJSAJiAcNiqNuByUo8
+         B1n46nfXoOALNpnFvOVxAmNnFEfReYfZR5p+R/kUYFKv4uwFqce3ZhHekzp/c0qfWI+4
+         ZPCg==
+X-Gm-Message-State: AJIora9Xez9kJwUXkl2PpvT2lSqbIeAM5IkROcUosn1RXbNoGrGX/dWn
+        uzpZim7hxGvBMmxpUYE/R1rfKJNfEbdJ/xVB60xUcg==
+X-Google-Smtp-Source: AGRyM1s+TM/Mpvv+C7F98EwHOUR0bNqHN7CaFoa/LBJ1GU0R5hrgFhAVIM4QqUpnv+9HDfHwdQkqAXu1iKZTKzMxivg=
+X-Received: by 2002:a05:6402:150:b0:437:b93c:3a9 with SMTP id
+ s16-20020a056402015000b00437b93c03a9mr17749677edu.82.1656676256879; Fri, 01
+ Jul 2022 04:50:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220701110056.58502-1-brgl@bgdev.pl> <20220701114351.GA41317@sol>
+In-Reply-To: <20220701114351.GA41317@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 1 Jul 2022 13:50:46 +0200
+Message-ID: <CAMRc=MeNfO0-1sn8a4aPpb2tskueVMT=oALbx+VK0x0_yGo-fA@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH] misc: make gpiod_is_gpiochip_device() not
+ set errno
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH] misc: make gpiod_is_gpiochip_device() not
- set errno
-Message-ID: <20220701114351.GA41317@sol>
-References: <20220701110056.58502-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220701110056.58502-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,18 +66,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 01, 2022 at 01:00:56PM +0200, Bartosz Golaszewski wrote:
-> This function should just report whether the file indicated by path is
-> a GPIO chip or not. Let's rework it to not set errno. Failure to open a
-> chip should still report errro numbers like before.
-> 
+On Fri, Jul 1, 2022 at 1:43 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Fri, Jul 01, 2022 at 01:00:56PM +0200, Bartosz Golaszewski wrote:
+> > This function should just report whether the file indicated by path is
+> > a GPIO chip or not. Let's rework it to not set errno. Failure to open a
+> > chip should still report errro numbers like before.
+> >
+>
+> This is will break my tool patch, for sure.
+> My gpiodetect uses the errno behaviour to give a clue as to why a chip
+> might not be available to a user, and that work was already done in
+> gpiod_is_gpiochip_device().
+> There might be other places the errno was propagated as well, but
+> whatever, I'll sort something out.
+>
 
-This is will break my tool patch, for sure.
-My gpiodetect uses the errno behaviour to give a clue as to why a chip
-might not be available to a user, and that work was already done in
-gpiod_is_gpiochip_device().
-There might be other places the errno was propagated as well, but
-whatever, I'll sort something out.
+Doesn't it make more sense to call gpiod_is_gpiochip_device() and then
+if it returns true, just try to open it and then report failure?
 
-Cheers,
-Kent.
+Bart
