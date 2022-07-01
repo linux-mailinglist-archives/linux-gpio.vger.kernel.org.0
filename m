@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BBE6562857
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 03:36:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 340CC562859
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 03:37:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231124AbiGABgz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 21:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47824 "EHLO
+        id S232029AbiGABhG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 21:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbiGABgz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 21:36:55 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2093.outbound.protection.outlook.com [40.107.114.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142215C942;
-        Thu, 30 Jun 2022 18:36:54 -0700 (PDT)
+        with ESMTP id S229750AbiGABhE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 21:37:04 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2128.outbound.protection.outlook.com [40.107.114.128])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486D75C948;
+        Thu, 30 Jun 2022 18:37:02 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GTmDKQluBPQODI9D43BGeSGXihIbcHUeEh9Bxhm1WX8N6IUGesIzM6E2np0HTwrTE8vv9CH8U7M87Zyn6tPKUTI96ynx4odFLPZtIb6hXms76QYEic5jGexo/ffBM5MFe7JvKRTEgS8/fmsqpWRgjveuEdnmpiZ/gdYbt7+UKKMm3nLePh6GvQ8tRo95JQLqbLm0CxhPMg84szjOiLykCdut6uVa8OmvB5MOdGXRs+j3PKHfkCaMFQGXy6ccCUNOIcDZvOtQUb4G/r53Vti9DXaBpxa5J0c35E20Fs9GPWmAQiQdgVYl1Kit5RZFIVOaJgyJgAITmqxAU+zkJ0otmw==
+ b=OfPJsGA+7QUTdTR7fhPnIVi0WMpeLhrVdrce5YxyLDpF96GQ1tKMoxg5qgDYKqB6G2wEDlZ2BK++hPI1dqsNSeHXBlB5R/Ed8aOjaF1vBzITskkk3yePBUPSoj2NIz6vhQ9X2Hhqo7xDPVves4JNlvVmcEovJG5k8YMSdj5JoS5iLN7ZDlLD14+tbudoFajHodhWmM8U8m4nyqf30W6kavjHsUrrHET1iJuM+QWmykTYfdF4d2Y+Sihciy3iehiYqF21FKbP9/pj+/2zlv8+yCA9zNzbl49+RIyczvEaJfX7Ce74KzWm7MDNHc+b8sJJuP9WMZnXqOECR+SJYxlCYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=33GmAdYosCQN/PfmkE3fnonpUjTa+9JdAsBKyQ/YmHA=;
- b=k9tLLeL8whvzWGxyXSYGvyTD7L0Oxb2mIIPAY/ZFf55jZGxNTV2BvODgl57EF3mlgWT31p92z0t432945l6u4+S8aFw+UUNriVcnjZh1uS8IfL9+g3ZeuAHv5APFcjQqfQywmsGXaOp+69adqJxxIIL3L+nDhEtElesqioa4IB9GNbf9iXd4lf1AFnT83WpUbQICsYX3KzLQsl6r+J3xlBDf773o1SK3KQuszMao25rLbmAcxwFK6VrFGY/6/62fDKMtKGvHMzNLyXWxpe/bPpiGZzNNxNdNlUFn7r6lzXj0PG3B9/OHSzi20s1WGpODymN29nqdvRUNAKZUTUnFqg==
+ bh=LgUR7mlZcR1Wom4MwikXJUn+AuCbZZOeIkF9+v0URYQ=;
+ b=AfzZYeqOfTlR9rS8RNQt5mlsJlG0isxBfEHpQsGi7+uhJLWS/Z0EGpj4oZ9V/1og/TAKu0bIDUX9tTNL/Qqn3uSFxhCzTj6wE5/9TOEOA2KOaxhLMT+L7DcTjzbCerJaUtUg/iVkzFv4/+ggGu2wgPpi7FZGv3MdX4P2av9GhUV4HySCj41Cm/EseLqom6SG2y1LVfMP0yGPwChFteva280k6NQLsjnU3qu2/XbzIWEZzYZgb84FF1XU8WqqXhDbUIJaH8mmEWPVrroSvqqWxoF8pbroE0uW5x1sizMSEkAVpvJlHaMLKozYebB8Vt8YrEc/0D09QrjH8/WSNoTqyg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
  dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=33GmAdYosCQN/PfmkE3fnonpUjTa+9JdAsBKyQ/YmHA=;
- b=f2CTm0mMUMssrlqYG9+i7R/m/c0jHpG4gvjmOV9YOE/c2R09U39IE6fVmxA7A05Xx6nSBCFSWfIRs7GNE47lVrL5Oo8sk4fY+ANn1ZP8Gfhg7mZDyAW/Wo7M+FKSYcCBzNEBTpn69caRHPayBDRz7MjOgYXg8DuLcIHwMDuVvMk=
+ bh=LgUR7mlZcR1Wom4MwikXJUn+AuCbZZOeIkF9+v0URYQ=;
+ b=DIsQggIAkpXs3WqisoQgCLMtHE9YsRg5mP+tgkBhPp30jn1KHsNzJd/6NiWyRe1DUj0spQ/EY3a8aQSOG1tRuyXtJxTLjoii3fnLjBy94YOY3r3/Gr0sqzXnrLKYeRN3MCVkd2xkNvhnRvhDhDplkPWmvSqNL3QrbOoKhdLOuP0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=renesas.com;
 Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
  by OSBPR01MB4567.jpnprd01.prod.outlook.com (2603:1096:604:72::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.15; Fri, 1 Jul
- 2022 01:36:52 +0000
+ 2022 01:37:00 +0000
 Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com
  ([fe80::3838:1a73:ae46:bab2]) by OS3PR01MB8426.jpnprd01.prod.outlook.com
  ([fe80::3838:1a73:ae46:bab2%5]) with mapi id 15.20.5395.014; Fri, 1 Jul 2022
- 01:36:51 +0000
-Message-ID: <87a69ttxzg.wl-kuninori.morimoto.gx@renesas.com>
+ 01:37:00 +0000
+Message-ID: <878rpdtxz8.wl-kuninori.morimoto.gx@renesas.com>
 From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH v4 05/23] pinctrl: renesas: r8a779g0: fixup MODSEL8
+Subject: [PATCH v4 06/23] pinctrl: renesas: r8a779g0: remove not used NOGP definitions
 User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Geert Uytterhoeven <geert.uytterhoeven@gmail.com>,
@@ -53,58 +53,58 @@ Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
 In-Reply-To: <87h741ty20.wl-kuninori.morimoto.gx@renesas.com>
 References: <87h741ty20.wl-kuninori.morimoto.gx@renesas.com>
 Content-Type: text/plain; charset=US-ASCII
-Date:   Fri, 1 Jul 2022 01:36:51 +0000
-X-ClientProxiedBy: TYAPR01CA0224.jpnprd01.prod.outlook.com
- (2603:1096:404:11e::20) To OS3PR01MB8426.jpnprd01.prod.outlook.com
+Date:   Fri, 1 Jul 2022 01:36:59 +0000
+X-ClientProxiedBy: TYCP286CA0099.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b4::17) To OS3PR01MB8426.jpnprd01.prod.outlook.com
  (2603:1096:604:194::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d9a41034-07f8-4927-89fc-08da5b022c44
+X-MS-Office365-Filtering-Correlation-Id: de4a19d5-67b6-4df6-ce06-08da5b023133
 X-MS-TrafficTypeDiagnostic: OSBPR01MB4567:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CtdevYFYxIdtyPc/719bkDX/Vi4u60jp/2vs9ODOaE2UF3GZDNaaFerft8ii/5WwcYXobVnq7PwDZX1MTrr0ukZ7ew+6J439w1ceZsz1dqvj4/IwW2t5BlxOSuR1ptUqBWYntktyx3NxfwMuZSvGyxJZSVZwqp8a1hTqHcc+eUh4yibl0kItvlogiwrzSB3M5VlBLWE8xj1r2wkpbwk5C24MSVmLXfZMsveT2foLDH712gFoTKcoUeAghN9w4L8UYjeWGbRoCeibxW1WWCOr2Il5+7nO+eIXS8vwUS+L2J9MXbFBV0jO4q2O+B/1M/scDDU1fnIKfbPHaYslAb984FdhYwU8k6xnCaynYYCy/LUIT0kuoO1CrvSWYut1IIP8PNTktb+V+8InyW5wzIH29ODqNAS+URRtWq/VYg+5BEWpGynePhvOTVzOLGULlKQ72EXA9/MYcVvcz5cvB3Oh6pDSXeT+LOTHdxZVAs9utEi98weuL2/rM9/hQG9V7x5062tKfzTMayRdj1HPpXO9BxMR5+OyeoJO5tlP3kkujczOyCxecuniiRARcQIssQIsjF8DhaQwhRDmIb5DIKt4CHVZdKKtlChIMb9Kns/lJE37ivAmCB1MBTjU8RDJ3VZrZLewTAZu73F8hym43qPQ21TpUjPVfXNP3hGLR7/EKLkSsIkzahk9a83VylZgxsPWsRzP+L81lxMPT3Q4DwZ07k4XnOnWeH7ssAN8oLr5iRCu017a5qBbfvkYGBLFmMF4e+u2zp4uNmZk7nS6JaK/mlipfs7AEoZ22b+B/xMASkutvkMorVfoX6XMmq8yY5Sx
+X-Microsoft-Antispam-Message-Info: 8fLgpsvQPi5SaDoAnma5yiZrF61Q+vsl6j5iHt0Lhkg+XiaREusK7YhB2MX5L/7Nc1oJh6dN4rf5BNHlATQgMW/jIG3O2qd6lDqsOdCHhrub7enUK7KTbBDc+ZDga2BYIRUHthecbKa16PH1wFpUTFEY0j+41qosHE4iSPN5FkucIRG3TcLvsZCcBGPRUg5Ek+FKfGoGU0667fr4fX9YqH+nqcBUhViNrZZYtSL9N1O7U0xbUBM9VQr/3soUI+sjEb+dhbQNGeIU1xWb/+16xeSZlKuQIrRZNVrJ7N91XBtkbnaCVGa8p2hXbMTFdse0XW27IBkVX/YR7WNBxOo7oh8/R8Zv0xR1xrqlAw9BAqjm9z340bmeTFULVvaBOjwxFSyRSNV+mxhdMsW92x2Mz7JTYvlKjx/2Y9HO7+qfHSke4Gjsv36uIwsDp2e6p57MW+kW0I1n7GD2PLC2KGfj431unvSIgmPrlUSPp7D2gRBSChonNJsYaoSKzXLKswvNpBqqEt+B+QHpgR7UoTFAAaEoNkJ1KqcIfXAvGIx+Npci8lyqhnQC7+sH3ZAvCXmX5N6Lln/YtjNtR5Lbii9jlMEuoacqpcsot7/uQtmyVkp2cPxcY5RGocTw/6B8y+/4v5nbScO8LWWhwzRnb/B8Y6wfnkRSsAaDrcDBT6n43clrdcthGE3G68TNiWiE6I6X3/ibeGLIFY3jUm86m4Gb4BZksoh7+2kzmZ+xw3eTOUfGR+n1G/8JUM4ACNm9PfojknYdaAs1A356KOJna9/vSa5cNCJ2IuV1Z65+PMWKLTA6feiiUZcatxwBOG7bhGPW
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(376002)(39860400002)(366004)(136003)(110136005)(54906003)(38100700002)(38350700002)(186003)(2906002)(36756003)(478600001)(83380400001)(6486002)(66476007)(66556008)(8676002)(4326008)(86362001)(41300700001)(52116002)(26005)(2616005)(316002)(8936002)(6512007)(5660300002)(6506007)(66946007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qBwP5pOaRvDdefdq6fJns+b4FyTCuyCdHIAHK92pEz70SXd+MBGNlRG4DCEa?=
- =?us-ascii?Q?KCl0HZQPfI+rrdVRuocqERGmOW+YiLfTNwqd0FSyvFgTcKqFSo5pgGTyK/MP?=
- =?us-ascii?Q?HnphBEWML7kje3pg1RYWN/6NSKbkOBBZSKlG5RainQDJlrY7iojvGQAKu5uy?=
- =?us-ascii?Q?sR6eDi6WPjS2W3dltRsToGSQnh8BaR9sBqVTWpQ8jVYVl78rnQQ0Ai8BGl8T?=
- =?us-ascii?Q?agGVbho1l1v95Edb5U7I5SbGhD3RfRkAIUYBoMDLJ3jH2ZL5DC5N1FYotiV1?=
- =?us-ascii?Q?DzxPmPOMZu9H8Jfk/xPmkZFPlG5FbiRQpqadLNCDy/nCPiMtcvjMjW2EtSAi?=
- =?us-ascii?Q?oEjoZcrw8nSUHDsdiLxj9887E63ZnPFubD3O+CuvMSyqzYc5NH8e+mixbMRP?=
- =?us-ascii?Q?MlT957gCQkhbpoR7tP4ISN52tiA/Gut3tEC+I3Mc1NQkZrnk9T/ARKMRpAU0?=
- =?us-ascii?Q?pEjV+pARjL7iiMQmXcL586gzj26f1cQhSFF9UuA9/3N9V5GE7nPP8IpKf+4N?=
- =?us-ascii?Q?T9idinkSweTne6ROW9ym8Sk3Z514RosJ6v9XVy7aGYL+jtlZyafjqGpCozyb?=
- =?us-ascii?Q?JRax9Iu8yr2DG+Lyp/bPLVk9zPxVNXpP+drwOjy541rdKh6bGOWHWIrjW8cY?=
- =?us-ascii?Q?cS9/pvgfEj1udYRHRxSwLntdxVuMIWHQyW9JJPw612cBPYyApZlkb9nNp09p?=
- =?us-ascii?Q?G8Xs9GZ83SRLwWT9cam/T/mWFeE/powSVyf53c2p6vKYKC7yqlzUMdiYkQr+?=
- =?us-ascii?Q?oyfpz3e2i6KnirJ2JF075DvMk29pjz6StsjzDnqYK7zsTD3Zk3OECvanEJg+?=
- =?us-ascii?Q?OH3xUgj3jl77XI5zw9ppNMagM5BJcIXztGgmO8LipLAwhIsEroGxr7PGIh7s?=
- =?us-ascii?Q?otYwQI4pjIuEhXCimd+UPxVOUrcD3SpIgr7ij3N4HPtFbva/+I20zE+a3wpF?=
- =?us-ascii?Q?EBSzK4Hmie9JWhb8AYnBBjf6QB0ncoxDPfMIONnW6MvkQ3DpDBio1pVtmBbF?=
- =?us-ascii?Q?nKfr9Jl1UUAXmY61axY+xwBFmSLuyntuViAZMvbT5o7DTAxsSgTbv5qP+tPo?=
- =?us-ascii?Q?KO4OyauEiIuGq6wMJ/NJ/qOMPfiOOMsaST5RemLLDkojYgy/mwUekjNM8BTv?=
- =?us-ascii?Q?lz0zbmbGNXVbHUtaHos+dL/QxBfOS9pzPcNVy46sSJBPkLL4/ZCZe7vHAgv6?=
- =?us-ascii?Q?XN2n8gvfJczd/HxARR/okxh/gTuwUcty05db98DNA+T1/vgxG/a14iSotL+g?=
- =?us-ascii?Q?fNR7F2JwilEd1r72KOnuEVHEx0SE2ON/ekdNzIUmnl3eMHQZqfR7qc/NT+Ai?=
- =?us-ascii?Q?MMiNdq7T5Zci92/jppsrprHwjoS8np67IGdnS15mJZAH+VWzLhNQ2syCS7Yo?=
- =?us-ascii?Q?N3JL3m20krWSEtgrHS6IF14pWw+wWSt+CKT0xFjOn8nE8m21g+Wck2Qph0gY?=
- =?us-ascii?Q?exidagywBJPIROoFeR5O38sBmTEo+LnHWtwgQtU+oGTJgux87aM8PQr8STLh?=
- =?us-ascii?Q?eDRUQnSHm7a9FdWfmO7I1ecSJoDOIlv3ODT/LvR35hY6qhQfLi869tM5BvCd?=
- =?us-ascii?Q?eKwPPkspy7NmYrQm6RKdYqDuDXJUjba3QQq36rLuvEtuo4DHDzMRXatDZati?=
- =?us-ascii?Q?LNCItWr+VJqU//1YQEAVhNU=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Sikk/CRYMzg4bRO1x4qyw2MkmGj3PELfAI4tV0T3wnmSFZtsO+/YlQlNRNXa?=
+ =?us-ascii?Q?XzKqrjAkzfpSEaYHrNkOxQ3eBHZai7sSAlBenDRmaZJ5ruzq2Kq7qH5RKKUh?=
+ =?us-ascii?Q?nIoRDT1fEV1j0zD851bzEHRRnb7aqySz9dl4ywh4HvUtQ2KxrBARr9vfu/eK?=
+ =?us-ascii?Q?RJeB2MVe4/qtpa5aMi3QKGkO4TYETnToCLFsYRWLPBHB37NA8HLPGezqJPfQ?=
+ =?us-ascii?Q?OQpfHpjMr/MfsfF98NMyV1Mb+Q1fMW9j2P5rYLezLEl+SyqiiN+IcPR3CGup?=
+ =?us-ascii?Q?uLUtURJLXoBtjP10hkZj8QJv4b02Z48201tJ+DGFk3r4mQsy+dH5WGw+j1+9?=
+ =?us-ascii?Q?cTyLFgUMgF74wJTG+KKQ7ZjbzDCr8KFf9JhTeVDLmvhk04ydS/3nGRgQjug5?=
+ =?us-ascii?Q?R1RpNNdyMVwAw/2kzlGmKStRU8gmOsOoufMj863jq7+48Rup7hCKiS294zw+?=
+ =?us-ascii?Q?vFejT/F8fnHvKN12oUtLXrXv5R717FjtA/+/YA13bG53tdmSTL6vM3gftWT0?=
+ =?us-ascii?Q?LCzyOojvtbjPdTjDQzc5k9tYClE+Oi+ye2C9Zj8hUPIaz3ENgLyXY/P1fj+L?=
+ =?us-ascii?Q?/qDshSTFCv8+GIJZNYC4CHEo8pkgBxXbjkueYYsW0pEjzZKNiAJTTzYk0Tqs?=
+ =?us-ascii?Q?6KA8lAtYPmFPlECTz6lavgg7gJ/V/XfKhzkhOVF8SPa+AD9he392E481ZACY?=
+ =?us-ascii?Q?I3GL5bgGrRvjIEjFlTAt9feT6y0AQSIK/vt+dEahJhyYCJX/BcGMBCfFW8fx?=
+ =?us-ascii?Q?r9UTXPS5EfS2S6HFlJzCBdPQI6e6uVc+sqWf8av0Eg7fpit7+y+4lrubkanu?=
+ =?us-ascii?Q?Qj7rxDiSir7q8Ay8CihkRwCPN3vlcOffSfmfeWl012ICIDve5wxqe7rg12iq?=
+ =?us-ascii?Q?gGkzMPc3WNseg5OpNaXLyc9vBcHu3SUjB0Ib/RQU6KaSftVrSZIVLwnoDKnB?=
+ =?us-ascii?Q?jVq+cB1ahnxUiQQgx3u8Y0w5sL6p6Ci/6uceQzJO46UQzTk2GranIssm4xWQ?=
+ =?us-ascii?Q?NMe9Puj9U2aeYAjUzmcGL0euC+3jzq8/aXQWfYsJaSH4sKUhazBNT+3EVZES?=
+ =?us-ascii?Q?3sDLG09dpJ43xqmzr2lOowwbPeWOLtS5ZrWYYQTNXmpSPBMZgyAj+5IJCnf8?=
+ =?us-ascii?Q?an0CtOnhc/slC1ZSVUhTDLabt2cXmvtRt8eH5Q/OG/Z8VQR7PdmbBIv2a88f?=
+ =?us-ascii?Q?mDOmmuHiRbdDOwV99vGfppHGAGt4sn1LBw1ApLlBkuTNUyxzQXKzRY6x9LT2?=
+ =?us-ascii?Q?wxesqCEA8qvD32+sKxeVCO+k5bV58sa4i2GydSHV+jVnN6OAHAeU8+3ljl/d?=
+ =?us-ascii?Q?Sd8jb5yGYmykoMjtwOZBz3jmy6mydVruyUq3io6n4l4q6b1w1RzO/FWHLBcc?=
+ =?us-ascii?Q?a0TbhP6VVgJMJF8zUa/k5dN/+Zs60AXKcgUsDlqkmevHHZD6a7Ry5oClGEB2?=
+ =?us-ascii?Q?fzf2psoqnv2EoCWATG6RJVZas8UNWhYDdjoyxoKGjFFOUWaHADMzlwTNUWSK?=
+ =?us-ascii?Q?wCvstfI/5PEQJDqOjjepqiu5gEe276GZTR0k1+GsRORt8/0pHngTo6lprmSu?=
+ =?us-ascii?Q?W5yIl0oaYttu8zSgi6bvxRp9U2NcU70g7x7xrLQcN0eM9if1F+9hW3Uqt4Vv?=
+ =?us-ascii?Q?BN/vNpNio9XGgYLNipG9YVg=3D?=
 X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9a41034-07f8-4927-89fc-08da5b022c44
+X-MS-Exchange-CrossTenant-Network-Message-Id: de4a19d5-67b6-4df6-ce06-08da5b023133
 X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8426.jpnprd01.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2022 01:36:51.8035
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2022 01:37:00.1137
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x3sv3li/IVIVeThHDTKLcfVPo4Ny+UZ7ezWgYBnos/kF0tlIlawxlrFYiQYgvYpWMCFZlMSqynzMu0fZzx1sozF/TOY4Lx84/+MFNk4IJ41vVh43DBsywR+zuOGM1HI4
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wg4ZA4NjLtHOVCXcZON3juOxTFlCv+3zVQgUfkGDJsEZwTh4vsTRI3ZZSGjvM42EVml/t+BaIb0Go3ailQmgx7mkezzWbwl0prHgT4vP0ViO9e7Tml1ov8r7+iQ2MC6D
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4567
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -116,65 +116,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
 From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-MODSEL8 controls I2C vs GPIO modes, and Datasheet (Rev.0.51) is
-indicating that I2C needs 1. But we should use 0 for all cases
-in reality. New Datasheet should be updated.
+Current V4H PFC code has many NOGP definitions. But these are not used,
+and it is different from original usage. This patch removes these.
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pinctrl/renesas/pfc-r8a779g0.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pfc-r8a779g0.c b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-index 93b8810e8533..cb1cbe77ca7b 100644
+index cb1cbe77ca7b..007319df5ed7 100644
 --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
 +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-@@ -1167,29 +1167,29 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_GPSR(IP2SR7_19_16,	AVB0_MII_RX_DV),
+@@ -43,22 +43,6 @@
+ 	PORT_GP_CFG_21(7,	fn, sfx, CFG_FLAGS),					\
+ 	PORT_GP_CFG_14(8,	fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE_18_33)
  
- 	/* IP0SR8 */
--	PINMUX_IPSR_MSEL(IP0SR8_3_0,	SCL0,			SEL_SCL0_1),
--	PINMUX_IPSR_MSEL(IP0SR8_7_4,	SDA0,			SEL_SDA0_1),
--	PINMUX_IPSR_MSEL(IP0SR8_11_8,	SCL1,			SEL_SCL1_1),
--	PINMUX_IPSR_MSEL(IP0SR8_15_12,	SDA1,			SEL_SDA1_1),
--	PINMUX_IPSR_MSEL(IP0SR8_19_16,	SCL2,			SEL_SCL2_1),
--	PINMUX_IPSR_MSEL(IP0SR8_23_20,	SDA2,			SEL_SDA2_1),
--	PINMUX_IPSR_MSEL(IP0SR8_27_24,	SCL3,			SEL_SCL3_1),
--	PINMUX_IPSR_MSEL(IP0SR8_31_28,	SDA3,			SEL_SDA3_1),
-+	PINMUX_IPSR_MSEL(IP0SR8_3_0,	SCL0,			SEL_SCL0_0),
-+	PINMUX_IPSR_MSEL(IP0SR8_7_4,	SDA0,			SEL_SDA0_0),
-+	PINMUX_IPSR_MSEL(IP0SR8_11_8,	SCL1,			SEL_SCL1_0),
-+	PINMUX_IPSR_MSEL(IP0SR8_15_12,	SDA1,			SEL_SDA1_0),
-+	PINMUX_IPSR_MSEL(IP0SR8_19_16,	SCL2,			SEL_SCL2_0),
-+	PINMUX_IPSR_MSEL(IP0SR8_23_20,	SDA2,			SEL_SDA2_0),
-+	PINMUX_IPSR_MSEL(IP0SR8_27_24,	SCL3,			SEL_SCL3_0),
-+	PINMUX_IPSR_MSEL(IP0SR8_31_28,	SDA3,			SEL_SDA3_0),
+-#define CPU_ALL_NOGP(fn)									\
+-	PIN_NOGP_CFG(PRESETOUT_N,	"PRESETOUT#",	fn, SH_PFC_PIN_CFG_PULL_UP_DOWN),	\
+-	PIN_NOGP_CFG(PRESETOUT0_N,	"PRESETOUT0#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
+-	PIN_NOGP_CFG(PRESETOUT1_N,	"PRESETOUT1#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
+-	PIN_NOGP_CFG(EXTALR,		"EXTALR",	fn, SH_PFC_PIN_CFG_PULL_UP_DOWN),	\
+-	PIN_NOGP_CFG(DCUTRST0_N,	"DCUTRST0#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
+-	PIN_NOGP_CFG(DCUTCK0,		"DCUTCK0",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
+-	PIN_NOGP_CFG(DCUTMS0,		"DCUTMS0",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
+-	PIN_NOGP_CFG(DCUTDI0,		"DCUTDI0",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
+-	PIN_NOGP_CFG(DCUTRST1_N,	"DCUTRST1#",	fn, SH_PFC_PIN_CFG_PULL_DOWN),		\
+-	PIN_NOGP_CFG(DCUTCK1,		"DCUTCK1",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
+-	PIN_NOGP_CFG(DCUTMS1,		"DCUTMS1",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
+-	PIN_NOGP_CFG(DCUTDI1,		"DCUTDI1",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
+-	PIN_NOGP_CFG(EVTI_N,		"EVTI#",	fn, SH_PFC_PIN_CFG_PULL_UP),		\
+-	PIN_NOGP_CFG(MSYN_N,		"MSYN#",	fn, SH_PFC_PIN_CFG_PULL_UP)
+-
+ /* GPSR0 */
+ #define GPSR0_18	F_(MSIOF2_RXD,		IP2SR0_11_8)
+ #define GPSR0_17	F_(MSIOF2_SCK,		IP2SR0_7_4)
+@@ -1204,7 +1188,6 @@ static const u16 pinmux_data[] = {
+  */
+ enum {
+ 	GP_ASSIGN_LAST(),
+-	NOGP_ALL(),
+ };
  
- 	/* IP1SR8 */
--	PINMUX_IPSR_MSEL(IP1SR8_3_0,	SCL4,			SEL_SCL4_1),
-+	PINMUX_IPSR_MSEL(IP1SR8_3_0,	SCL4,			SEL_SCL4_0),
- 	PINMUX_IPSR_MSEL(IP1SR8_3_0,	HRX2,			SEL_SCL4_0),
- 	PINMUX_IPSR_MSEL(IP1SR8_3_0,	SCK4,			SEL_SCL4_0),
- 
--	PINMUX_IPSR_MSEL(IP1SR8_7_4,	SDA4,			SEL_SDA4_1),
-+	PINMUX_IPSR_MSEL(IP1SR8_7_4,	SDA4,			SEL_SDA4_0),
- 	PINMUX_IPSR_MSEL(IP1SR8_7_4,	HTX2,			SEL_SDA4_0),
- 	PINMUX_IPSR_MSEL(IP1SR8_7_4,	CTS4_N,			SEL_SDA4_0),
- 
--	PINMUX_IPSR_MSEL(IP1SR8_11_8,	SCL5,			SEL_SCL5_1),
-+	PINMUX_IPSR_MSEL(IP1SR8_11_8,	SCL5,			SEL_SCL5_0),
- 	PINMUX_IPSR_MSEL(IP1SR8_11_8,	HRTS2_N,		SEL_SCL5_0),
- 	PINMUX_IPSR_MSEL(IP1SR8_11_8,	RTS4_N,			SEL_SCL5_0),
- 
--	PINMUX_IPSR_MSEL(IP1SR8_15_12,	SDA5,			SEL_SDA5_1),
-+	PINMUX_IPSR_MSEL(IP1SR8_15_12,	SDA5,			SEL_SDA5_0),
- 	PINMUX_IPSR_MSEL(IP1SR8_15_12,	SCIF_CLK2,		SEL_SDA5_0),
- 
- 	PINMUX_IPSR_GPSR(IP1SR8_19_16,	HCTS2_N),
+ static const struct sh_pfc_pin pinmux_pins[] = {
 -- 
 2.25.1
 
