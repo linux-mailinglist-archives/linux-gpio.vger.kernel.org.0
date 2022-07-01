@@ -2,151 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 830F3563A79
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 22:12:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 812EE563A91
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 22:12:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231865AbiGAUBQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 16:01:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
+        id S230090AbiGAUGm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 16:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231489AbiGAUBP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 16:01:15 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C97A4D173;
-        Fri,  1 Jul 2022 13:01:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 7A0D7CE34FF;
-        Fri,  1 Jul 2022 20:01:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58350C3411E;
-        Fri,  1 Jul 2022 20:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656705667;
-        bh=Cx39TKDx06zEIo+2/ffVq627izh+6z2Iy9I9BSiLrCk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KAvE/oVKbLXJvyvcATd66TBI/KpGdyz+TtyjNirZ939ZqNyF/HgCunZgGrMyMhdul
-         ajR37NRnzWvIjN3BWkJ3sz/ENU1KTdhuFAmheJdjnrnmPa77Mo2Gk1cOa4WdUPClRE
-         tfad86p4ct+koOlhmWVx8Y4DwnPxOtK7/b0rI2sFiqnX3698ye0h9Zv4ZBwixuc+W+
-         SJLxkIsl3zJA8ZgDBsfh/aetGuewOthojRAzyV9WKXOK00Iv9OWyT+u+4I9QXlOIZx
-         d+fwqTR6MzX+M2UHcs3q92oerXxgfTIix7faORVQFgpqkOTPFoIpQEKUie95hrXG2q
-         ozoYJZZVAG+Ng==
-Received: from 82-132-245-195.dab.02.net ([82.132.245.195] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1o7Mp6-004fIl-Ry;
-        Fri, 01 Jul 2022 21:01:05 +0100
-Date:   Fri, 01 Jul 2022 21:00:57 +0100
-Message-ID: <87mtdseh6u.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        with ESMTP id S229503AbiGAUGl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 16:06:41 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE2B45505;
+        Fri,  1 Jul 2022 13:06:41 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id v185so5811463ybe.8;
+        Fri, 01 Jul 2022 13:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mmR8iUUwPvvGa3qQx8YQJ+SVKO3sq39Az7PLcxuZz3A=;
+        b=oY05/wttYxGli/gCgXA2u18vdKojjR8sSMqUIKrFDsJQgTnMZb9ZFCjIOov+/xPw0O
+         BLvk2Hw/Rf0aJ6CLpX3SEDQojPG1VYqPBHhY6HvlaWxBUgDdXUry2qapteRg/HmeU5+u
+         0Cnz8nfclK+NSm0dRaDw8e7crDQ8vVyw9Tpyu9w+KKKVx8Ymyrns1nhxdn05lEMZK2MA
+         XPvhCY7flL6vF3yDEtS6D8o5lHExK6dl3rOLds+EPVY3Gf2jsrV6MygdgQp8/N/DWJq9
+         Ro5jJOw2jB+oRxI+VLfC47JIZhDlrNmC3nyQF0P1nF3aCT2sFy4orCjsxxqDfBoOogJz
+         ccCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mmR8iUUwPvvGa3qQx8YQJ+SVKO3sq39Az7PLcxuZz3A=;
+        b=lFLEoHeSbkUp4MHbN7O7WNnDzWSYNsS6ex3sTZuEHut/EPvMzyxiCMEvk6bHNbE6QY
+         UgNeh6VbbOa07aa0aLHy61SxFWIvfzhbkpS3SiL+/hh+iLabRsxDz5y9ZQOTab+C0HSm
+         cWiEHJq4u/sUwR82UsYIvnGFaaf51EwNy4SZE7tkU5RELD3ScHZVlZ/bbwBFP1dXYRDK
+         vAfHkuFPswE0Tt8vY54BNl+TDHSTUUi+Z0Vr4fcB7MgpH8jPDvG2PC07rtbmiJRXSDQC
+         Xh0ThQSc5nrJ90cPWJtZYM6oXQzUG8cD2hIXcGaQx9EuNkqwRO1ad8S4j85y9yqWloD9
+         xD5A==
+X-Gm-Message-State: AJIora+gI/Rnkwg4ZNTqCMmt2zNm0RSXKXjhJP0bab9ETAA4pNQsTHa0
+        hdPHe2nNBQPhpIWgKtYZH9RWMfUzcLZE0AHNIvEObir7DXr9dhCn
+X-Google-Smtp-Source: AGRyM1tmbSsGff7AGFP4d/BpQmef7a+vmYTOkolqSckN06zSGysXK009G4NGKGvyDgzwacFwpWobPEEG40Gs13Q4h+4=
+X-Received: by 2002:a25:ca0a:0:b0:66b:4e6c:e094 with SMTP id
+ a10-20020a25ca0a000000b0066b4e6ce094mr18394272ybg.296.1656706000179; Fri, 01
+ Jul 2022 13:06:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220629143046.213584-1-aidanmacdonald.0x0@gmail.com>
+ <20220629143046.213584-13-aidanmacdonald.0x0@gmail.com> <CAHp75Vduv_fN=2DKbOwReRoPeAYjGqSANT7UhDaRifUJ4zf5XQ@mail.gmail.com>
+ <oMIjFujkw4ZeuMGoTkWq64BbfEejJF12@localhost>
+In-Reply-To: <oMIjFujkw4ZeuMGoTkWq64BbfEejJF12@localhost>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 1 Jul 2022 22:06:03 +0200
+Message-ID: <CAHp75VdVyJyOZCkLQgbDNC9bSWwF0ksLOvMG=96fH8dzmukE5g@mail.gmail.com>
+Subject: Re: [PATCH v4 12/15] pinctrl: Add AXP192 pin control driver
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, quic_gurus@quicinc.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Michael Walle <michael@walle.cc>,
+        Randy Dunlap <rdunlap@infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v6 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO interrupt
-In-Reply-To: <CA+V-a8v_US0aa1q4gEXGHrLMicr3Oa6FUGB-4nTegzmv+8oCHA@mail.gmail.com>
-References: <20220625200600.7582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <20220625200600.7582-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <87pmir1ln2.wl-maz@kernel.org>
-        <CA+V-a8v_US0aa1q4gEXGHrLMicr3Oa6FUGB-4nTegzmv+8oCHA@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.245.195
-X-SA-Exim-Rcpt-To: prabhakar.csengg@gmail.com, prabhakar.mahadev-lad.rj@bp.renesas.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, geert+renesas@glider.be, linus.walleij@linaro.org, brgl@bgdev.pl, p.zabel@pengutronix.de, linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, biju.das.jz@bp.renesas.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 01 Jul 2022 19:15:41 +0100,
-"Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
-> 
-> Hi Marc,
-> 
-> On Wed, Jun 29, 2022 at 5:26 PM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On Sat, 25 Jun 2022 21:06:00 +0100,
-> > Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > >
-> > > Add IRQ domain to RZ/G2L pinctrl driver to handle GPIO interrupt.
-> > >
-> > > GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can be
-> > > used as IRQ lines at a given time. Selection of pins as IRQ lines
-> > > is handled by IA55 (which is the IRQC block) which sits in between the
-> > > GPIO and GIC.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 236 ++++++++++++++++++++++++
-> > >  1 file changed, 236 insertions(+)
-> > >
-> >
-> > [...]
-> >
-> > > +static void *rzg2l_gpio_populate_parent_fwspec(struct gpio_chip *chip,
-> > > +                                            unsigned int parent_hwirq,
-> > > +                                            unsigned int parent_type)
-> > > +{
-> > > +     struct irq_fwspec *fwspec;
-> > > +
-> > > +     fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
-> > > +     if (!fwspec)
-> > > +             return NULL;
-> > > +
-> > > +     fwspec->fwnode = chip->irq.parent_domain->fwnode;
-> > > +     fwspec->param_count = 2;
-> > > +     fwspec->param[0] = parent_hwirq;
-> > > +     fwspec->param[1] = parent_type;
-> > > +
-> > > +     return fwspec;
-> > > +}
-> >
-> > I jumped at this one again.
-> >
-> > Can you please pick [1] as part of your series and write this in a way
-> > that doesn't require extra memory allocation? It has already been
-> > ack'ed by Linus anyway, and we'd put an end to this thing for good.
-> >
-> > Thanks,
-> >
-> >         M.
-> >
-> > [1] https://lore.kernel.org/r/20220512162320.2213488-1-maz@kernel.org
-> >
-> I tried applying [1] on linux-next  (c4185b16aba7) and 5.19-rc4
-> (03c765b0e3b4) but this patch does not apply cleanly. Can you please
-> point me to the repo where this patch exists (or repo where the patch
-> applies cleanly)?
+On Fri, Jul 1, 2022 at 5:36 PM Aidan MacDonald
+<aidanmacdonald.0x0@gmail.com> wrote:
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> > On Wed, Jun 29, 2022 at 4:30 PM Aidan MacDonald
+> > <aidanmacdonald.0x0@gmail.com> wrote:
 
-Odd, it applies cleanly here to -rc4. Anyway, I've now pushed it out
-to [1] with Linus' RB and a typo fix in the commit message.
+...
 
-Thanks,
+> >> +struct axp192_pctl_function {
+> >> +       const char              *name;
+> >> +       /* Mux value written to the control register to select the function (-1 if unsupported) */
+> >> +       const u8                *muxvals;
+> >> +       const char * const      *groups;
+> >> +       unsigned int            ngroups;
+> >> +};
+> >
+> > Can it be replaced by struct function_desc?
+> > https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/pinmux.h#L130
+>
+> That'd work, but using the generic infrastructure doesn't allow me to
+> simplify anything -- I can eliminate three trivial functions, but the
+> generic code is higher overhead (extra allocations, radix trees, ...)
 
-	M.
+I really don't see how it gets into extra allocations. Either way you
+have a pointer to opaque data or in your current code it's called
+muxvals. Other fields seem 1:1 what is in struct function_desc. The
+code will be probably the same.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/gpio-fwspec-stack
+I.o.w. I'm talking of eliminating data type, and not about simplifying
+the code by fully switching to generic infrastructure.
+
+> so I'd prefer to stick with the current approach.
+
 
 -- 
-Without deviation from the norm, progress is not possible.
+With Best Regards,
+Andy Shevchenko
