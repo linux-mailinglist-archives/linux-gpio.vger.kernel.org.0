@@ -2,225 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5E505631CE
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 12:46:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A093B563212
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 13:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236802AbiGAKqs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 06:46:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43414 "EHLO
+        id S236195AbiGALAh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 07:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237096AbiGAKqm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 06:46:42 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023787E01C;
-        Fri,  1 Jul 2022 03:46:36 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id r3so3342538ybr.6;
-        Fri, 01 Jul 2022 03:46:35 -0700 (PDT)
+        with ESMTP id S237126AbiGALAa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 07:00:30 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0157280481
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 04:00:29 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id r81-20020a1c4454000000b003a0297a61ddso3498391wma.2
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 04:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RWCMizkXva41Nm1wqlGXLvbQDsWrO1ICOtX0qSZGbJo=;
-        b=XYyB8IdTaXHGEitNXV+dgDP8Tx5lfY9J/39gAzlPnOPe57t3dV44GcU5DqByaWhnBt
-         c3cXvHd6Yu1OaeIiB80MwSS98vYnk9JPM/UNneYKTFc6UuPycV8UhPy00m2+b7duuEIW
-         VOvJ0PqiVKsORGTH6H01GBaQTizG23QTIpoT4Z/iCxcZDW5ef6pKhaCCbHar8PmmYVb0
-         gUBdl83IL39y5E1xSTBLW/CTA00cm60OOFTxaUkmj5003Jk1U4ZRASxC+22hIHG8AWia
-         FzjlBhOOwmEaMoCcCGzZYO56zahDUKoqMdUL06TmeITaRNV2u775WDUhbJBO5nYN0I0b
-         SOGg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DGFRjyiI2rjdSwFVjnHgFB+h+dGxDD2Kue7XHNWDgF0=;
+        b=Q8voRC517y8DrZq0VaJe3Mzq95Y1ZWWGUq2H1UNOdWofbQpc8Bi97/QufImafF8OLI
+         5qiX9JJbx1O4i8kLtHCC8pbCPF3tL1oYU1Iyt3wOnoqWKU/2RwFJ0wYSOrAx8CI6wvl5
+         g28NeQD2S8ghutuzcLIfIWRA0wX0t5+M+eGLYDBtd9OXi0g6KsimgZeVgy85JvBWSijF
+         U+uAMNckjxW0hWcJu+oFDASncGbCZCRvBlEE1nS8YCcf1qSSvhzXSRdCy4cVBhcIULxA
+         5wt7MsGcUc6qM/7JOQ5M+ffNGhvkhhWfsHv0sYU6tTQwsTF93SjmP00W3woQSeq9GchA
+         363w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RWCMizkXva41Nm1wqlGXLvbQDsWrO1ICOtX0qSZGbJo=;
-        b=vYWE2KXwLPC4JtbxA/Jme5s4QqO1Os+3gUYNqHZrxnnPxPf/8ZrXh/lqLyqN9pp1RV
-         PZ+wvpdaim3xYagTYmZ+aGta3S+vxr36DyZA/TMAeKUI9luuUAIyjircWHno6/pZpeZ3
-         MYQpavQbmwPbovUrUrm6nLyTVM2DqkGw8DLRk7npudBYiOlnocsCsU8utEW+oTw5Gg5f
-         nqa7EbuTEg7BZIafhIH2CyMXhh9hSKCuShsvk8jlz04+5XdbL2AlHKy0lGI7Hd/AFU74
-         HOWeglqBffsYK3IiwRWBRmi627RJoDS08NXbNHdPTepcZrvFuglBhGKXUrb9xLKm6eoL
-         tARg==
-X-Gm-Message-State: AJIora/Yw4LQ1AntjU/EnvBEO3VCKI/8lGPR/W/n73qZ0/CWrIlYn9JA
-        Z+rTR9UQ/8Rq9Ezug6RmfNoZ4QglhjRKn8d2ESZlOMuhWmDibYBPDBs=
-X-Google-Smtp-Source: AGRyM1t8n7hxMdE5FzKlZGrnuS1T6c61dW+z5ixhFpQmMQxwN2OkLejdcuV+aH191xXe8O6/lwJovM0emTmsE+xWVJA=
-X-Received: by 2002:a25:dd83:0:b0:66c:8d8d:4f5f with SMTP id
- u125-20020a25dd83000000b0066c8d8d4f5fmr14396420ybg.79.1656672395126; Fri, 01
- Jul 2022 03:46:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220701091412.20718-1-henning.schild@siemens.com> <20220701091412.20718-2-henning.schild@siemens.com>
-In-Reply-To: <20220701091412.20718-2-henning.schild@siemens.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 1 Jul 2022 12:45:58 +0200
-Message-ID: <CAHp75VcoN6eekZXPK8Kpw4aaJN7jfirnUH+1Q0JTEyLSKwrB0w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] gpio: nct6116d: add new driver for several Nuvoton
- super io chips
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DGFRjyiI2rjdSwFVjnHgFB+h+dGxDD2Kue7XHNWDgF0=;
+        b=MSWMlbJXF3R17drJujT03BmiZW+t9rfKgXb5p4fjfmW8enZfcEaifYSpaQ8zfpngyQ
+         UOtnw/IFuSfhfY+iyJzghP3rlGCCOeqjwpqIEhKml0LQe7+a1WV+e+NxZsdoWvJDMyGK
+         /zZ4AmVHpByr0f6/EWp0pNcxExvmN+26iHle/ACmQtsEN9Imf476eJbMBhKBbDnyI0j5
+         AvmlPM/i92ZBRVF4kXm7Red350jbLPjWe6PPVKcrBUhaaLZ6/e9v95koSbKlI5eJ3SC3
+         Jq8DtOx7BsK/x9fnIpPKqYajjaZ8+ozcrYIn76mfNca8ul1fTnVYnDBYW2cTdeoS7Au7
+         NfHw==
+X-Gm-Message-State: AJIora/9UNj9m2/xz50W/ONB3grslctN/To5lQykjJMXswnzRe+HfXHY
+        aDhH+sTmcIuc1euBZR7zqCyoDw==
+X-Google-Smtp-Source: AGRyM1uvDb89WvQ7zk8MpFrAtOqyk7mSLWjfxR+70iYdOyzwud5xhVmDyNbP+vRtqAi5Ta4oKwRhhA==
+X-Received: by 2002:a05:600c:3ca2:b0:3a0:1825:2e6b with SMTP id bg34-20020a05600c3ca200b003a018252e6bmr17414873wmb.132.1656673227534;
+        Fri, 01 Jul 2022 04:00:27 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:694b:5dfa:a897:b176])
+        by smtp.gmail.com with ESMTPSA id n12-20020a5d6b8c000000b0020c5253d8fcsm26091165wrx.72.2022.07.01.04.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Jul 2022 04:00:27 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Kuan-Wei Ho <cwho@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [libgpiod v2][PATCH] treewide: allow polling functions to block indefinitely
+Date:   Fri,  1 Jul 2022 13:00:25 +0200
+Message-Id: <20220701110025.58399-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 11:15 AM Henning Schild
-<henning.schild@siemens.com> wrote:
->
-> This patch adds gpio support for several Nuvoton NCTXXX chips. These super
-> io chips offer multiple functions of which several already have drivers in
+All polling system calls have some way of being instructed to block
+indefinitely until some event is registered on the file descriptor.
 
-Super-I/O (to be consistent with the help in Kconfig, etc).
+Make both the gpiod_chip_wait_info_event() and
+gpiod_line_request_wait_edge_event() accept negative timeout values in
+which case the underlying ppoll() will block indefinitely.
 
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+ include/gpiod.h    | 14 ++++++++++----
+ lib/chip.c         |  2 +-
+ lib/internal.c     | 10 ++++++----
+ lib/internal.h     |  2 +-
+ lib/line-request.c |  2 +-
+ 5 files changed, 19 insertions(+), 11 deletions(-)
 
-> the kernel, i.e. hwmon and wdt.
-
-watchdog
-
-...
-
-Since you are talking about authorship in the cover letter, is it
-possible to get the original authorship to be preserved in the commit
-and authors / co-developers giving their SoB tags?
-
-...
-
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/gpio/driver.h>
-
-Keep it sorted?
-
-...
-
-> +#define SIO_ID_MASK            0xFFF0
-
-GENMASK() ?
-
-...
-
-> +enum chips {
-> +       nct5104d,
-> +       nct6106d,
-> +       nct6116d,
-> +       nct6122d,
-> +};
-> +
-> +static const char * const nct6116d_names[] = {
-> +       "nct5104d",
-> +       "nct6106d",
-> +       "nct6116d",
-> +       "nct6122d",
-
-It would be slightly more flexible to use enum values as indices here:
-
-[nct5104d] = "nct5104d",
-
-> +};
-
-...
-
-> +               pr_err(DRVNAME "I/O address 0x%04x already in use\n", base);
-
-Why not use pr_fmt() properly and drop DRVNAME here and in other pr_*(), if any?
-
-...
-
-> +static int nct6116d_gpio_direction_in(struct gpio_chip *chip, unsigned int offset);
-> +static int nct6116d_gpio_get(struct gpio_chip *chip, unsigned int offset);
-> +static int nct6116d_gpio_direction_out(struct gpio_chip *chip,
-> +                                    unsigned int offset, int value);
-> +static void nct6116d_gpio_set(struct gpio_chip *chip, unsigned int offset, int value);
-
-Is it possible to avoid forward declarations?
-
-...
-
-> +#define NCT6116D_GPIO_BANK(_base, _ngpio, _regbase, _label)                    \
-> +       {                                                               \
-> +               .chip = {                                               \
-> +                       .label            = _label,                     \
-> +                       .owner            = THIS_MODULE,                \
-> +                       .direction_input  = nct6116d_gpio_direction_in, \
-> +                       .get              = nct6116d_gpio_get,          \
-> +                       .direction_output = nct6116d_gpio_direction_out,        \
-> +                       .set              = nct6116d_gpio_set,          \
-
-.get_direction ?
-
-> +                       .base             = _base,                      \
-> +                       .ngpio            = _ngpio,                     \
-> +                       .can_sleep        = false,                      \
-> +               },                                                      \
-> +               .regbase = _regbase,                                    \
-> +       }
-
-...
-
-> +       int err;
-> +       struct nct6116d_gpio_bank *bank =
-> +               container_of(chip, struct nct6116d_gpio_bank, chip);
-
-Can it be transformed to macro or inliner and then
-
-       struct nct6116d_gpio_bank *bank = to_nct6116d_gpio_bank(chip);
-
-> +       struct nct6116d_sio *sio = bank->data->sio;
-> +       u8 dir;
-
-Here and everywhere else, perhaps keep the reversed xmas tree order?
-
-...
-
-> +               err = devm_gpiochip_add_data(&pdev->dev, &bank->chip, bank);
-> +               if (err) {
-> +                       dev_err(&pdev->dev,
-> +                               "Failed to register gpiochip %d: %d\n",
-> +                               i, err);
-> +                       return err;
-
-return dev_err_probe(...);
-
-...
-
-> +       pr_info(DRVNAME ": Found %s at %#x chip id 0x%04x\n",
-> +                       nct6116d_names[sio->type],
-> +                       (unsigned int)addr,
-
-Casting in printf() very often means a wrong specifier in use.
-
-> +                       devid);
-
-...
-
-> +       nct6116d_gpio_pdev = platform_device_alloc(DRVNAME, -1);
-> +       if (!nct6116d_gpio_pdev)
-> +               return -ENOMEM;
-> +
-> +       err = platform_device_add_data(nct6116d_gpio_pdev, sio, sizeof(*sio));
-> +       if (err) {
-> +               pr_err(DRVNAME "Platform data allocation failed\n");
-> +               goto err;
-> +       }
-> +
-> +       err = platform_device_add(nct6116d_gpio_pdev);
-> +       if (err) {
-> +               pr_err(DRVNAME "Device addition failed\n");
-> +               goto err;
-> +       }
-
-Wonder, don't we have some shortcuts for these? Perhaps
-platform_device_register_full()?
-
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 5595ff2..d8b5f39 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -135,11 +135,14 @@ int gpiod_chip_get_fd(struct gpiod_chip *chip);
+  * @brief Wait for line status change events on any of the watched lines
+  *	  on the chip.
+  * @param chip GPIO chip object.
+- * @param timeout_ns Wait time limit in nanoseconds.
++ * @param timeout_ns Wait time limit in nanoseconds. If set to 0, the function
++ *		     returns immediatelly. If set to a negative number, the
++ *		     function blocks indefinitely until an event becomes
++ *		     available.
+  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event is
+  *	   pending.
+  */
+-int gpiod_chip_wait_info_event(struct gpiod_chip *chip, uint64_t timeout_ns);
++int gpiod_chip_wait_info_event(struct gpiod_chip *chip, int64_t timeout_ns);
+ 
+ /**
+  * @brief Read a single line status change event from the chip.
+@@ -1320,7 +1323,10 @@ int gpiod_line_request_get_fd(struct gpiod_line_request *request);
+ /**
+  * @brief Wait for edge events on any of the requested lines.
+  * @param request GPIO line request.
+- * @param timeout_ns Wait time limit in nanoseconds.
++ * @param timeout_ns Wait time limit in nanoseconds. If set to 0, the function
++ *		     returns immediatelly. If set to a negative number, the
++ *		     function blocks indefinitely until an event becomes
++ *		     available.
+  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event is
+  *	   pending.
+  *q
+@@ -1328,7 +1334,7 @@ int gpiod_line_request_get_fd(struct gpiod_line_request *request);
+  * By default edge detection is disabled.
+  */
+ int gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
+-				       uint64_t timeout_ns);
++				       int64_t timeout_ns);
+ 
+ /**
+  * @brief Read a number of edge events from a line request.
+diff --git a/lib/chip.c b/lib/chip.c
+index fc3dda2..038d3dd 100644
+--- a/lib/chip.c
++++ b/lib/chip.c
+@@ -145,7 +145,7 @@ GPIOD_API int gpiod_chip_get_fd(struct gpiod_chip *chip)
+ }
+ 
+ GPIOD_API int gpiod_chip_wait_info_event(struct gpiod_chip *chip,
+-					 uint64_t timeout_ns)
++					 int64_t timeout_ns)
+ {
+ 	return gpiod_poll_fd(chip->fd, timeout_ns);
+ }
+diff --git a/lib/internal.c b/lib/internal.c
+index b7da67e..d948814 100644
+--- a/lib/internal.c
++++ b/lib/internal.c
+@@ -7,7 +7,7 @@
+ 
+ #include "internal.h"
+ 
+-int gpiod_poll_fd(int fd, uint64_t timeout_ns)
++int gpiod_poll_fd(int fd, int64_t timeout_ns)
+ {
+ 	struct timespec ts;
+ 	struct pollfd pfd;
+@@ -17,10 +17,12 @@ int gpiod_poll_fd(int fd, uint64_t timeout_ns)
+ 	pfd.fd = fd;
+ 	pfd.events = POLLIN | POLLPRI;
+ 
+-	ts.tv_sec = timeout_ns / 1000000000ULL;
+-	ts.tv_nsec = timeout_ns % 1000000000ULL;
++	if (timeout_ns >= 0) {
++		ts.tv_sec = timeout_ns / 1000000000ULL;
++		ts.tv_nsec = timeout_ns % 1000000000ULL;
++	}
+ 
+-	ret = ppoll(&pfd, 1, &ts, NULL);
++	ret = ppoll(&pfd, 1, timeout_ns < 0 ? NULL : &ts, NULL);
+ 	if (ret < 0)
+ 		return -1;
+ 	else if (ret == 0)
+diff --git a/lib/internal.h b/lib/internal.h
+index c87df91..fab12c3 100644
+--- a/lib/internal.h
++++ b/lib/internal.h
+@@ -36,7 +36,7 @@ struct gpiod_info_event *
+ gpiod_info_event_from_uapi(struct gpio_v2_line_info_changed *uapi_evt);
+ struct gpiod_info_event *gpiod_info_event_read_fd(int fd);
+ 
+-int gpiod_poll_fd(int fd, uint64_t timeout);
++int gpiod_poll_fd(int fd, int64_t timeout);
+ 
+ void gpiod_line_mask_zero(uint64_t *mask);
+ void gpiod_line_mask_fill(uint64_t *mask);
+diff --git a/lib/line-request.c b/lib/line-request.c
+index 33f7f67..04bd78d 100644
+--- a/lib/line-request.c
++++ b/lib/line-request.c
+@@ -200,7 +200,7 @@ GPIOD_API int gpiod_line_request_get_fd(struct gpiod_line_request *request)
+ 
+ GPIOD_API int
+ gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
+-				   uint64_t timeout_ns)
++				   int64_t timeout_ns)
+ {
+ 	return gpiod_poll_fd(request->fd, timeout_ns);
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
+2.34.1
+
