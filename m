@@ -2,269 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFFDD562D80
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 10:11:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EA31562D9B
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 10:18:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234379AbiGAILa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 04:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
+        id S234025AbiGAISQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 04:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235910AbiGAIL3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 04:11:29 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7390070AC7
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 01:11:26 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id i7so2700841ybe.11
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 01:11:26 -0700 (PDT)
+        with ESMTP id S236102AbiGAISO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 04:18:14 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1BCAE55
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 01:18:12 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id fd6so1979118edb.5
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 01:18:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hHlkuZMmnoq/Fcx5WJPgqnbubzspv6b5yJUWnWtjBFU=;
-        b=ef3c0Q9NjuflyQ+MqqXmFYsu6VqqoBDzl3Rn9YOZ6BtoUOKK35qOxdgC8QR/fTDybG
-         VqqyO8E0kSnvEPQLWxHMS1kOy7d31CPndv9IcUcD1PZLZYa4nQ8pJrAPz/ENotu6Fg+T
-         cv1U55Rkpgay9b5N9Cz/uaM1OcWmVrSoIxTsrnEXfFYEuj/E7nl1nLRX5Jmy3jh1toiX
-         m6K3sNRCdCrEU4AMi4upx2V2xs8eSYC2ucM/rUpwcUaeacdhm6JFJPOXHzwhz9f44Iz2
-         TiArY9oQLDmL0lT1Yba9o0E0/3CCha39GqTmMcxgRbms+W6WPbfZ6/kPtFAZ3gzJXLrq
-         H1MQ==
+         :cc:content-transfer-encoding;
+        bh=wR40lz49WPrCSAsudYF9C4ywNsaTFQUsyyZettZELvs=;
+        b=yD6szaLw1iCGs6A7/MPcunGPByjEWxOKsPjW/cyZ5yi1BMqawQT9fDU/1bQSEK9hGM
+         j0JxAPBj1kYep38ZYnRfVfR2kOEq4q4vLoh7hMJ1gGjKNRboRyHhOF6TzkVKJ4Kf3bp/
+         pFz9KozHaJ2Qc3Zwot2vYMzUdcnyCXXjayv0ZDiIfGQWwJU/su4CCKePxhXvf4yaRZIr
+         OlLEd8bEl4P+M0K4Mp4RrGxXxoYqobvXcgdkzbl+1YTY2yVoIfLZD3i4Fcz6UfTzMS8Q
+         mc2ZEZNytgbvA1/RcN88BFhN5n6lBfX6cPr9+aoaooKk9eDNPrYwYTxRrI/Wag+VzQHV
+         ajjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hHlkuZMmnoq/Fcx5WJPgqnbubzspv6b5yJUWnWtjBFU=;
-        b=AQPrSrRjeloMRuc5YLDc0OdboMNAmRp153kiBiEwKhNsNkIne8/muY9mxyTiWLy+6W
-         jqUQg14gSdUzdg2/gnE999cCqXDHa/stsBXuPet+Z4tsOCsKs/VRp0lagqHwOU1p4wm8
-         VkZAUtzg2oXypCZRHEqkzWKK2brb8bueFa37ebptYEOWrHDEjVneFBtHMjGdwZYgZrqe
-         fs7FVZBUdUtd31/QTX1lUq+7/myZUyqrMJtpA2sTHd32fMdonJSep5hdmLs1d4/Xuz4j
-         XRoJofz4BbGuJ4veyJZYIJSQJP7+fNf7uVdZfzR+hJjinxpkcmxlb6EUAyq2IEdZXo4S
-         bNLA==
-X-Gm-Message-State: AJIora+A5XLQX/FeanRWmBzxTYPXosOhtihaWJBaV6CI5/xQC3+y7TkX
-        f+lafbralM1a2MSrHmQKRCD+3ksdcU+qPUpW2nb3Pg==
-X-Google-Smtp-Source: AGRyM1vDgmfSwZquyidL3tNXvh2BQFGuYMc3TLjl4/SGBSIpusjC3N4lyjRUlXNEzsK9FZ7zCyuWpHbcQKPzr3oaKYo=
-X-Received: by 2002:a05:6902:1544:b0:66d:3948:deae with SMTP id
- r4-20020a056902154400b0066d3948deaemr14505784ybu.530.1656663085093; Fri, 01
- Jul 2022 01:11:25 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wR40lz49WPrCSAsudYF9C4ywNsaTFQUsyyZettZELvs=;
+        b=HtIEczF+pkZYKxOoVVKaZEacTeZpm0/qO4hhAicY1fgcrVT7Q2HWbzvupqYSvAFvxU
+         qctuH3QVR0TQnpMo4hwN6WZBS2demrncK90SURwo6ouAq9bW2Bq6miCNDjCEZjl31e68
+         pTg5RJSgC3nJnXFb6fi7KuFkhQXWSlISluEolIZwc44tafW40suX4kbFKJLKxMyzfMfd
+         y54HkMsvdTUxcXYqPS0P5ROJQPYkLVcGYb8tJio6QVcUyAwrMPCDIwYihF/m6xeUEUK6
+         SE/Fivl4MTr16uF4XbDKy5SYfoFigih9DCJLpUtxGl46aB6US5JblC1B4qx1poIkohnc
+         bVZA==
+X-Gm-Message-State: AJIora+MrUNkW30YHuSriqCRgmgvf0/xW28ZkWo0gLIqWSoNqOsqOdzo
+        KTCTVl5aE66vCXkPQj8WM8WQ84Vhtsp32i00puW48Q==
+X-Google-Smtp-Source: AGRyM1sAohrOCOgDcXmSH0VunW7HW4wkOQ14y0OjgV551LCNSj4tlZFaydGOzLvLpWNFSGOCxELHH1hc1uJU1ByaX68=
+X-Received: by 2002:a05:6402:d0a:b0:437:66ca:c211 with SMTP id
+ eb10-20020a0564020d0a00b0043766cac211mr17463023edb.29.1656663491250; Fri, 01
+ Jul 2022 01:18:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAGETcx_1USPRbFKV5j00qkQ-QXJkp7=FAfnFcfiNnM4J5KF1cQ@mail.gmail.com>
- <YrKhkmj3jCQA39X/@atomide.com> <CAGETcx_11wO-HkZ2QsBF8o1+L9L3Xe1QBQ_GzegwozxAx1i0jg@mail.gmail.com>
- <YrQP3OZbe8aCQxKU@atomide.com> <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
- <Yrlz/P6Un2fACG98@atomide.com> <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
- <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
- <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
- <Yr6HQOtS4ctUYm9m@atomide.com> <Yr6QUzdoFWv/eAI6@atomide.com>
-In-Reply-To: <Yr6QUzdoFWv/eAI6@atomide.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 1 Jul 2022 01:10:48 -0700
-Message-ID: <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
+References: <20220628084226.472035-6-brgl@bgdev.pl> <20220630022522.GA17221@sol>
+ <CAMRc=MfXqKuj4u9OiBe5Euo8BtRFb06CMZbLOoF6PD2OvJsRWg@mail.gmail.com>
+ <20220630081450.GB23652@sol> <20220630083851.GA24642@sol> <20220701060736.GA28431@sol>
+ <CAMRc=Mdhogn2HDR7NYmjugTi6V3zwcw38vmdpfH55f44EPOHRw@mail.gmail.com>
+ <20220701072655.GA31738@sol> <CAMRc=McwhnjovSB7RuZQTnZ9tKww=WDvk813Wbmt5PYaK95cPA@mail.gmail.com>
+ <20220701073338.GA33559@sol> <20220701080252.GB33559@sol>
+In-Reply-To: <20220701080252.GB33559@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 1 Jul 2022 10:18:00 +0200
+Message-ID: <CAMRc=Md7vzozjWLBMp8-fJX7Za9wKj9_uzYd9fgz5wE8gSk2AA@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
+ implementation for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 11:12 PM Tony Lindgren <tony@atomide.com> wrote:
+On Fri, Jul 1, 2022 at 10:02 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> * Tony Lindgren <tony@atomide.com> [220701 08:33]:
-> > * Saravana Kannan <saravanak@google.com> [220630 23:25]:
-> > > On Thu, Jun 30, 2022 at 4:26 PM Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jul 01, 2022 at 03:33:38PM +0800, Kent Gibson wrote:
+> > On Fri, Jul 01, 2022 at 09:29:53AM +0200, Bartosz Golaszewski wrote:
+> > > On Fri, Jul 1, 2022 at 9:27 AM Kent Gibson <warthog618@gmail.com> wro=
+te:
 > > > >
-> > > > On Thu, Jun 30, 2022 at 5:11 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > >
-> > > > > On Mon, Jun 27, 2022 at 2:10 AM Tony Lindgren <tony@atomide.com> wrote:
+> > > > On Fri, Jul 01, 2022 at 09:21:58AM +0200, Bartosz Golaszewski wrote=
+:
+> > > > > On Fri, Jul 1, 2022 at 8:07 AM Kent Gibson <warthog618@gmail.com>=
+ wrote:
 > > > > > >
-> > > > > > * Saravana Kannan <saravanak@google.com> [220623 08:17]:
-> > > > > > > On Thu, Jun 23, 2022 at 12:01 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > > >
-> > > > > > > > * Saravana Kannan <saravanak@google.com> [220622 19:05]:
-> > > > > > > > > On Tue, Jun 21, 2022 at 9:59 PM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > > > > > This issue is no directly related fw_devlink. It is a side effect of
-> > > > > > > > > > removing driver_deferred_probe_check_state(). We no longer return
-> > > > > > > > > > -EPROBE_DEFER at the end of driver_deferred_probe_check_state().
+> > > > > > On Thu, Jun 30, 2022 at 04:38:51PM +0800, Kent Gibson wrote:
+> > > > > > > On Thu, Jun 30, 2022 at 04:14:50PM +0800, Kent Gibson wrote:
+> > > > > > > > On Thu, Jun 30, 2022 at 08:54:24AM +0200, Bartosz Golaszews=
+ki wrote:
+> > > > > > > > > On Thu, Jun 30, 2022 at 4:25 AM Kent Gibson <warthog618@g=
+mail.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Tue, Jun 28, 2022 at 10:42:26AM +0200, Bartosz Golas=
+zewski wrote:
+> > > > > > > > > > > This is the implementation of the new python API for =
+libgpiod v2.
+> > > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > [snip]
+> > > > > > > > > >
+> > > > > > > > > > > +     }
+> > > > > > > > > > > +
+> > > > > > > > > > > +     res =3D PyObject_Call(method, args, line_cfg_kw=
+args);
+> > > > > > > > > > > +     Py_DECREF(args);
+> > > > > > > > > > > +     Py_DECREF(method);
+> > > > > > > > > > > +     if (!Py_IsNone(res)) {
+> > > > > > > > > > > +             Py_DECREF(res);
+> > > > > > > > > > > +             return NULL;
+> > > > > > > > > > > +     }
+> > > > > > > > > > > +
+> > > > > > > > > >
+> > > > > > > > > > Building against python 3.9 (the min required by config=
+ure.ac) gives:
+> > > > > > > > > >
+> > > > > > > > > > module.c:276:7: warning: implicit declaration of functi=
+on =E2=80=98Py_IsNone=E2=80=99; did you mean =E2=80=98Py_None=E2=80=99? [-W=
+implicit-function-declaration]
+> > > > > > > > > >   276 |  if (!Py_IsNone(res)) {
+> > > > > > > > > >       |       ^~~~~~~~~
+> > > > > > > > > >       |       Py_None
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > Py_IsNone didn't get added to the Stable ABI until 3.10=
+.
+> > > > > > > > > >
+> > > > > > > > > > Cheers,
+> > > > > > > > > > Kent.
 > > > > > > > > >
-> > > > > > > > > Yes, I understand the issue. But driver_deferred_probe_check_state()
-> > > > > > > > > was deleted because fw_devlink=on should have short circuited the
-> > > > > > > > > probe attempt with an  -EPROBE_DEFER before reaching the bus/driver
-> > > > > > > > > probe function and hitting this -ENOENT failure. That's why I was
-> > > > > > > > > asking the other questions.
+> > > > > > > > > It seems like most distros still ship python 3.9, I don't=
+ want to make
+> > > > > > > > > 3.10 the requirement. This can be replaced by `if (res !=
+=3D Py_None)`.
+> > > > > > > > > Are there any more build issues?
+> > > > > > > > >
 > > > > > > > >
-> > > > > > > > OK. So where is the -EPROBE_DEFER supposed to happen without
-> > > > > > > > driver_deferred_probe_check_state() then?
+> > > > > > > > No, that was the only one.
+> > > > > > > >
 > > > > > > >
-> > > > > > > device_links_check_suppliers() call inside really_probe() would short
-> > > > > > > circuit and return an -EPROBE_DEFER if the device links are created as
-> > > > > > > expected.
-> > > > > >
-> > > > > > OK
-> > > > > >
-> > > > > > > > Hmm so I'm not seeing any supplier for the top level ocp device in
-> > > > > > > > the booting case without your patches. I see the suppliers for the
-> > > > > > > > ocp child device instances only.
+> > > > > > > But I am seeing a test failure:
 > > > > > > >
-> > > > > > > Hmmm... this is strange (that the device link isn't there), but this
-> > > > > > > is what I suspected.
+> > > > > > > $ sudo bindings/python/tests/gpiod_py_test.py
+> > > > > > > .............................................................=
+................F................................
+> > > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > > > > FAIL: test_module_line_request_edge_detection (cases.tests_li=
+ne_request.ModuleLineRequestWorks)
+> > > > > > > -------------------------------------------------------------=
+---------
+> > > > > > > Traceback (most recent call last):
+> > > > > > >   File "/home/dev/libgpiod/bindings/python/tests/cases/tests_=
+line_request.py", line 71, in test_module_line_request_edge_detection
+> > > > > > >     self.assertTrue(req.wait_edge_event())
+> > > > > > > AssertionError: False is not true
+> > > > > > >
+> > > > > > > -------------------------------------------------------------=
+---------
+> > > > > > > Ran 110 tests in 2.652s
+> > > > > > >
+> > > > > > > FAILED (failures=3D1)
+> > > > > > >
 > > > > > >
-> > > > > > Yup, maybe it's because of the supplier being a device in the child
-> > > > > > interconnect for the ocp.
+> > > > > > The req.wait_edge_event() does not wait without a timeout param=
+eter,
+> > > > > > which is a bit nonintuitive, so the test has a race.
 > > > > >
-> > > > > Ugh... yeah, this is why the normal (not SYNC_STATE_ONLY) device link
-> > > > > isn't being created.
+> > > > > Ah, makes sense.
 > > > > >
-> > > > > So the aggregated view is something like (I had to set tabs = 4 space
-> > > > > to fit it within 80 cols):
+> > > > > > Adding a timeout=3Ddatetime.timedelta(microseconds=3D1) (the sh=
+ortest
+> > > > > > possible) works for me, so anything that triggers a context swi=
+tch is
+> > > > > > probably sufficient, though a longer timeout probably wouldn't =
+hurt.
+> > > > > >
 > > > > >
-> > > > >     ocp: ocp {         <========================= Consumer
-> > > > >         compatible = "simple-pm-bus";
-> > > > >         power-domains = <&prm_per>; <=========== Supplier ref
+> > > > > I'll change that.
 > > > > >
-> > > > >                 l4_wkup: interconnect@44c00000 {
-> > > > >             compatible = "ti,am33xx-l4-wkup", "simple-pm-bus";
+> > > > > > The Python API should take timeout=3DNONE to mean wait indefini=
+tely, and
+> > > > > > 0 as a poll.
 > > > > >
-> > > > >             segment@200000 {  /* 0x44e00000 */
-> > > > >                 compatible = "simple-pm-bus";
-> > > > >
-> > > > >                 target-module@0 { /* 0x44e00000, ap 8 58.0 */
-> > > > >                     compatible = "ti,sysc-omap4", "ti,sysc";
-> > > > >
-> > > > >                     prcm: prcm@0 {
-> > > > >                         compatible = "ti,am3-prcm", "simple-bus";
-> > > > >
-> > > > >                         prm_per: prm@c00 { <========= Actual Supplier
-> > > > >                             compatible = "ti,am3-prm-inst", "ti,omap-prm-inst";
-> > > > >                         };
-> > > > >                     };
-> > > > >                 };
-> > > > >             };
-> > > > >         };
-> > > > >     };
-> > > > >
-> > > > > The power-domain supplier is the great-great-great-grand-child of the
-> > > > > consumer. It's not clear to me how this is valid. What does it even
-> > > > > mean?
-> > > > >
-> > > > > Rob, is this considered a valid DT?
+> > > > > This makes sense but I'd still want to have some default behavior=
+ for
+> > > > > when timeout is not given. Maybe wait indefinitely?
 > > > >
-> > > > Valid DT for broken h/w.
+> > > > That is what I said - you get timeout=3DNone if the kwarg is not sp=
+ecified.
+> > > >
+> > > > >
+> > > > > > And it should take the timeout as a float, not a
+> > > > > > timedelta, as per select.select.  From its doc:
+> > > > >
+> > > > > I don't necessarily want to mirror select's interface. Why would =
+we
+> > > > > prefer a float over a class that's the standard python interface =
+for
+> > > > > storing time deltas?
+> > > > >
+> > > >
+> > > > Cos you are forcing the user to create a timedelta, which is a PITA=
+,
+> > > > and both time.sleep and select.select (i.e. standard Python modules=
+)
+> > > > do it that way.  The float is the Pythonic way.
+> > > >
 > > >
-> > > I'm not sure even in that case it's valid. When the parent device is
-> > > in reset (when the SoC is coming out of reset), there's no way the
-> > > descendant is functional. And if the descendant is not functional, how
-> > > is the parent device powered up? This just feels like an incorrect
-> > > representation of the real h/w.
-> >
-> > It should be correct representation based on scanning the interconnects
-> > and looking at the documentation. Some interconnect parts are wired
-> > always-on and some interconnect instances may be dual-mapped.
-
-Thanks for helping to debug this. Appreciate it.
-
-> >
-> > We have a quirk to probe prm/prcm first with pdata_quirks_init_clocks().
-
-:'(
-
-I checked out the code. These prm devices just get populated with NULL
-as the parent. So they are effectively top level devices from the
-perspective of driver core.
-
-> > Maybe that also now fails in addition to the top level interconnect
-> > probing no longer producing -EPROBE_DEFER.
-
-As far as I can tell pdata_quirks_init_clocks() is just adding these
-prm devices (amongst other drivers). So I don't expect that to fail.
-
-> >
-> > > > So the domain must be default on and then simple-pm-bus is going to
-> > > > hold a reference to the domain preventing it from ever getting powered
-> > > > off and things seem to work. Except what happens during suspend?
+> > > Timedelta constructor is much more explicit than a float IMO. How
+> > > about a compromise and taking both (mutually exclusive)?
+> > > timeout=3Ddatettime.timedelta(seconds=3D1) =3D=3D timeout_sec=3Dfloat=
+(1.0)?
 > > >
-> > > But how can simple-pm-bus even get a reference? The PM domain can't
-> > > get added until we are well into the probe of the simple-pm-bus and
-> > > AFAICT the genpd attach is done before the driver probe is even
-> > > called.
 > >
-> > The prm/prcm gets of_platform_populate() called on it early.
-
-:'(
-
-> The hackish patch below makes things boot for me, not convinced this
-> is the preferred fix compared to earlier deferred probe handling though.
-> Going back to the init level tinkering seems like a step back to me.
-
-The goal of fw_devlink is to avoid init level tinkering and it does
-help with that in general. But these kinds of quirks are going to need
-a few exceptions -- with them being quirks and all. And this change
-will avoid an unnecessary deferred probe (that used to happen even
-before my change).
-
-The other option to handle this quirk is to create the invalid
-(consumer is parent of supplier) fwnode_link between the prm device
-and its consumers when the prm device is populated. Then fw_devlink
-will end up creating a device link when ocp gets added. But I'm not
-sure if it's going to be easy to find and add all those consumers.
-
-I'd say, for now, let's go with this patch below. I'll see if I can
-get fw_devlink to handle these odd quirks without breaking the normal
-cases or making them significantly slower. But that'll take some time
-and I'm not sure there'll be a nice solution.
-
-Thanks,
-Saravana
-
-> Regards,
+> > Maybe, but float seconds seems to be the way they do it.
+> > If you insist on both then just the one timeout parameter and work the
+> > type out on the fly. (it's Python, so dynamic typing...)
+> >
 >
-> Tony
+> Same issue for chip.wait_info_event(), btw.
+> Still working through a full review - but it'll probably take a while.
 >
-> 8< ----------------
-> diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
-> --- a/drivers/soc/ti/omap_prm.c
-> +++ b/drivers/soc/ti/omap_prm.c
-> @@ -991,4 +991,9 @@ static struct platform_driver omap_prm_driver = {
->                 .of_match_table = omap_prm_id_table,
->         },
->  };
-> -builtin_platform_driver(omap_prm_driver);
-> +
-> +static int __init omap_prm_init(void)
-> +{
-> +        return platform_driver_register(&omap_prm_driver);
-> +}
-> +subsys_initcall(omap_prm_init);
-> --
-> 2.36.1
+> Wrt the wait, does the C API have a blocking wait, or do you have to
+> poll() the fd?
 >
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+
+Blocking wait is simply reading the event without checking if an event
+is there to be read. select() (the system call) waits indefinitely if
+the timeval struct is NULL, ppoll() behaves the same for a NULL
+timespec, poll() does the same for a negative timeout (which is an
+int). We take an uint64_t so we can't do it. Either we need to switch
+to int64_t and interpret a negative value as indefinite wait or just
+not do it at all and tell users to just call the (blocking)
+read_edge_event().
+
+Bart
+
+> And can you add a description of the timeout=3D0 behaviour to
+> gpiod_chip_wait_info_event() etc, as 0 is sometimes taken as block.
 >
