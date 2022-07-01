@@ -2,198 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92138562C9D
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 09:30:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5887562C9F
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 09:30:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231313AbiGAHaN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 03:30:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56262 "EHLO
+        id S233024AbiGAHao (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 03:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbiGAHaM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 03:30:12 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D8B16B832
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 00:30:05 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id sb34so2414888ejc.11
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 00:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bTlnTEQMlYEcUGki7b0wIvMX6eHCcDB3bfvbS0u/EEY=;
-        b=aHwfEdkJ3BHAG6ngxv2AlUyDtYrE1X8WQOMWC7/iT5uvYvejPqb5EnJQLIbqnoV2fN
-         ABQAhP0BFaGATcOE5ilV3wDQyeFvpc67B3Ay4Q7kpWR3hIlY2fej3AO856XFDgJxy/Pg
-         EHVMrl/F4QboPzkAAEBTWC769AZB0wZ3XnomerwysyOOvEWVXwozc4IJJgowsPO2LpOJ
-         SXGLe2wDVncL58VcNcbGR12TQI1/opkugf7D1uuLmLWsNFzu6krRUZenVJ3Lfr8ZmYKZ
-         0bcp4Bzh8CCevATlz3u8uJUJNkpoB6EbK16wNzHJAkm+DKwoLM/rP29p6Oq7lqhok5WE
-         lPbw==
+        with ESMTP id S230523AbiGAHan (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 03:30:43 -0400
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAED36B816;
+        Fri,  1 Jul 2022 00:30:42 -0700 (PDT)
+Received: by mail-qv1-f46.google.com with SMTP id cs6so3346520qvb.6;
+        Fri, 01 Jul 2022 00:30:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bTlnTEQMlYEcUGki7b0wIvMX6eHCcDB3bfvbS0u/EEY=;
-        b=wKFb3JxpVE1gE7ml30OdweGjalk1rutfnLAGIksikTs70WoikP2FXEerCoi9Kx8Zqs
-         AEw5xdahe3B2p+TS5y/BHNUKCUOFurYtIBuM58EkX4doyxIESh8YlvE89RvZAYWnRZLA
-         W1UYuX4AFNDHShW31/XBb4FcRBFdwk4ac3rw/91MyljdinOPQr9mVmAo1SR02N1eqb4W
-         Urjlb95qScW/jZSA8jygtTVl4sANvUtSiXzuF3X4/yBiP3flHqA047YhiSoGNSphA0If
-         1XonBC1rhYbd81OwQ8N4bHWv2Bwi5KbjKF0tSpLuh/4ZU32N2HXoYSMZKUV884s4z0sp
-         /nxw==
-X-Gm-Message-State: AJIora8kQyyZnwP+8V7lWcyeFnc/V5LJM3zJ8u4KO7Zt5N1+6cL55tDY
-        v4n0wDxjc1r+ZfrprKsn8RGdf4C4rpWZcpagbG/MGA==
-X-Google-Smtp-Source: AGRyM1tUOvwmC085qKIO326Gt2KqRv1j2QYPL15JpTX4DK5NJeWcFOHs2DJb9+s5SS+9/8GzeZVd8S5Ao+npRyOuwsw=
-X-Received: by 2002:a17:907:cc14:b0:726:3555:ac63 with SMTP id
- uo20-20020a170907cc1400b007263555ac63mr12376484ejc.697.1656660603971; Fri, 01
- Jul 2022 00:30:03 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=YU1XddcO32RLHJVgcyV4xbGLKtUqtr7Z4CGj+gDtTi4=;
+        b=VkpdRWCRntWC8WiwirkMoru7TKi6USC/NtwS2PZ4hGyli2lDhw88rAPX4qj4kNGy92
+         bOPCi/3NfuwYw+ZD5l58OlDRV6TBSm3nrzyJhYe5YtnavvxB7Er4qj9B2enXoxKffNML
+         8LdlKKoAP7lHt6RHVfftT2Y5CrXXwDA2Pgk/0B2I7zZDT8Ncsr2oeXznWIHoQH0i53R3
+         dNtRAndUEnchZtHYhrfZPp9PSKz6x24/m26Y1xR2MF7TANjABtMAyFVVmyEV8x//UjmM
+         qZYummJcpHySLdxM6tSQ+dwlkbl9IVN/Ot+1Mj4AcSYQcLDVOcDwb2tZuYwe50b4YCUS
+         2YOQ==
+X-Gm-Message-State: AJIora+5XdTQQ+EqLTpeKUXj5kJBtCODY43VrAiMkEpfQ7g9x7pLiOka
+        APBsfPt+osBwL7vz47kbMC4iqDl/18eB3A==
+X-Google-Smtp-Source: AGRyM1uPm/dzjQeUTCuNo2BRTxrRYx2CQxjdWBttFkrF/KcFFazSri6wYThC+6RMF6XK/5fp9CMW4g==
+X-Received: by 2002:a05:622a:3ce:b0:305:2667:5103 with SMTP id k14-20020a05622a03ce00b0030526675103mr11208027qtx.7.1656660641568;
+        Fri, 01 Jul 2022 00:30:41 -0700 (PDT)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id v2-20020a05622a130200b00304e47b9602sm15428507qtk.9.2022.07.01.00.30.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Jul 2022 00:30:40 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-31780ad7535so15241047b3.8;
+        Fri, 01 Jul 2022 00:30:39 -0700 (PDT)
+X-Received: by 2002:a0d:c787:0:b0:31b:a963:e1de with SMTP id
+ j129-20020a0dc787000000b0031ba963e1demr15110386ywd.283.1656660639601; Fri, 01
+ Jul 2022 00:30:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220628084226.472035-1-brgl@bgdev.pl> <20220628084226.472035-6-brgl@bgdev.pl>
- <20220630022522.GA17221@sol> <CAMRc=MfXqKuj4u9OiBe5Euo8BtRFb06CMZbLOoF6PD2OvJsRWg@mail.gmail.com>
- <20220630081450.GB23652@sol> <20220630083851.GA24642@sol> <20220701060736.GA28431@sol>
- <CAMRc=Mdhogn2HDR7NYmjugTi6V3zwcw38vmdpfH55f44EPOHRw@mail.gmail.com> <20220701072655.GA31738@sol>
-In-Reply-To: <20220701072655.GA31738@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 1 Jul 2022 09:29:53 +0200
-Message-ID: <CAMRc=McwhnjovSB7RuZQTnZ9tKww=WDvk813Wbmt5PYaK95cPA@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
- implementation for v2 API
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <20220601070707.3946847-2-saravanak@google.com> <YrFzK6EiVvXmzVG6@atomide.com>
+ <4799738.LvFx2qVVIh@steina-w> <CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com>
+In-Reply-To: <CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 1 Jul 2022 09:30:28 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUJbWtTvDdtJGcDKfdULA+uqo_HGaiOz4p2UjszAJtsRQ@mail.gmail.com>
+Message-ID: <CAMuHMdUJbWtTvDdtJGcDKfdULA+uqo_HGaiOz4p2UjszAJtsRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 9:27 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Fri, Jul 01, 2022 at 09:21:58AM +0200, Bartosz Golaszewski wrote:
-> > On Fri, Jul 1, 2022 at 8:07 AM Kent Gibson <warthog618@gmail.com> wrote=
-:
-> > >
-> > > On Thu, Jun 30, 2022 at 04:38:51PM +0800, Kent Gibson wrote:
-> > > > On Thu, Jun 30, 2022 at 04:14:50PM +0800, Kent Gibson wrote:
-> > > > > On Thu, Jun 30, 2022 at 08:54:24AM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > On Thu, Jun 30, 2022 at 4:25 AM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > > > > > >
-> > > > > > > On Tue, Jun 28, 2022 at 10:42:26AM +0200, Bartosz Golaszewski=
- wrote:
-> > > > > > > > This is the implementation of the new python API for libgpi=
-od v2.
-> > > > > > > >
-> > > > > > >
-> > > > > > > [snip]
-> > > > > > >
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > > +     res =3D PyObject_Call(method, args, line_cfg_kwargs);
-> > > > > > > > +     Py_DECREF(args);
-> > > > > > > > +     Py_DECREF(method);
-> > > > > > > > +     if (!Py_IsNone(res)) {
-> > > > > > > > +             Py_DECREF(res);
-> > > > > > > > +             return NULL;
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > >
-> > > > > > > Building against python 3.9 (the min required by configure.ac=
-) gives:
-> > > > > > >
-> > > > > > > module.c:276:7: warning: implicit declaration of function =E2=
-=80=98Py_IsNone=E2=80=99; did you mean =E2=80=98Py_None=E2=80=99? [-Wimplic=
-it-function-declaration]
-> > > > > > >   276 |  if (!Py_IsNone(res)) {
-> > > > > > >       |       ^~~~~~~~~
-> > > > > > >       |       Py_None
-> > > > > > >
-> > > > > > >
-> > > > > > > Py_IsNone didn't get added to the Stable ABI until 3.10.
-> > > > > > >
-> > > > > > > Cheers,
-> > > > > > > Kent.
-> > > > > >
-> > > > > > It seems like most distros still ship python 3.9, I don't want =
-to make
-> > > > > > 3.10 the requirement. This can be replaced by `if (res !=3D Py_=
-None)`.
-> > > > > > Are there any more build issues?
-> > > > > >
-> > > > >
-> > > > > No, that was the only one.
-> > > > >
-> > > >
-> > > > But I am seeing a test failure:
-> > > >
-> > > > $ sudo bindings/python/tests/gpiod_py_test.py
-> > > > ...................................................................=
-..........F................................
-> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > FAIL: test_module_line_request_edge_detection (cases.tests_line_req=
-uest.ModuleLineRequestWorks)
-> > > > -------------------------------------------------------------------=
----
-> > > > Traceback (most recent call last):
-> > > >   File "/home/dev/libgpiod/bindings/python/tests/cases/tests_line_r=
-equest.py", line 71, in test_module_line_request_edge_detection
-> > > >     self.assertTrue(req.wait_edge_event())
-> > > > AssertionError: False is not true
-> > > >
-> > > > -------------------------------------------------------------------=
----
-> > > > Ran 110 tests in 2.652s
-> > > >
-> > > > FAILED (failures=3D1)
-> > > >
-> > >
-> > > The req.wait_edge_event() does not wait without a timeout parameter,
-> > > which is a bit nonintuitive, so the test has a race.
-> >
-> > Ah, makes sense.
-> >
-> > > Adding a timeout=3Ddatetime.timedelta(microseconds=3D1) (the shortest
-> > > possible) works for me, so anything that triggers a context switch is
-> > > probably sufficient, though a longer timeout probably wouldn't hurt.
-> > >
-> >
-> > I'll change that.
-> >
-> > > The Python API should take timeout=3DNONE to mean wait indefinitely, =
-and
-> > > 0 as a poll.
-> >
-> > This makes sense but I'd still want to have some default behavior for
-> > when timeout is not given. Maybe wait indefinitely?
->
-> That is what I said - you get timeout=3DNone if the kwarg is not specifie=
-d.
->
-> >
-> > > And it should take the timeout as a float, not a
-> > > timedelta, as per select.select.  From its doc:
-> >
-> > I don't necessarily want to mirror select's interface. Why would we
-> > prefer a float over a class that's the standard python interface for
-> > storing time deltas?
-> >
->
-> Cos you are forcing the user to create a timedelta, which is a PITA,
-> and both time.sleep and select.select (i.e. standard Python modules)
-> do it that way.  The float is the Pythonic way.
->
+Hi Saravana,
 
-Timedelta constructor is much more explicit than a float IMO. How
-about a compromise and taking both (mutually exclusive)?
-timeout=3Ddatettime.timedelta(seconds=3D1) =3D=3D timeout_sec=3Dfloat(1.0)?
+On Fri, Jul 1, 2022 at 2:37 AM Saravana Kannan <saravanak@google.com> wrote:
+> On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
+> <alexander.stein@ew.tq-group.com> wrote:
+> > Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony Lindgren:
 
-Bart
+> > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
+> > > > Now that fw_devlink=on by default and fw_devlink supports
+> > > > "power-domains" property, the execution will never get to the point
+> > > > where driver_deferred_probe_check_state() is called before the supplier
+> > > > has probed successfully or before deferred probe timeout has expired.
+> > > >
+> > > > So, delete the call and replace it with -ENODEV.
+> > >
+> > > Looks like this causes omaps to not boot in Linux next. With this
+> > > simple-pm-bus fails to probe initially as the power-domain is not
+> > > yet available. On platform_probe() genpd_get_from_provider() returns
+> > > -ENOENT.
+> > >
+> > > Seems like other stuff is potentially broken too, any ideas on
+> > > how to fix this?
+> >
+> > I think I'm hit by this as well, although I do not get a lockup.
+> > In my case I'm using arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts
+> > and probing of 38320000.blk-ctrl fails as the power-domain is not (yet)
+> > registed.
+>
+> Ok, took a look.
+>
+> The problem is that there are two drivers for the same device and they
+> both initialize this device.
+>
+>     gpc: gpc@303a0000 {
+>         compatible = "fsl,imx8mq-gpc";
+>     }
+>
+> $ git grep -l "fsl,imx7d-gpc" -- drivers/
+> drivers/irqchip/irq-imx-gpcv2.c
+> drivers/soc/imx/gpcv2.c
+
+You missed the "driver" in arch/arm/mach-imx/src.c ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
