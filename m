@@ -2,106 +2,255 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A8EF562E43
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 10:30:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9904562E4D
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 10:33:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233470AbiGAI3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 04:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58964 "EHLO
+        id S231901AbiGAIcr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 04:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235329AbiGAI2q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 04:28:46 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEA423BE0
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 01:28:44 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id d2so2752808ejy.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 01:28:44 -0700 (PDT)
+        with ESMTP id S236418AbiGAIcn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 04:32:43 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ADCF13D44
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 01:32:42 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id e40so2047755eda.2
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 01:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=KpRihbZiSTt9WSRfafM5Hr6SzD6WulPA9ejW+Q/RSW4=;
-        b=urqzcie5Vsin+uIl/jgbKt65PLgul2NzQXuJT76Fp6UK2Nk6X2m4bHrGffOW0JjmuE
-         bp3HklF/K6nR3d+yvEq1LonlPa4C73uWvY1875g2tmBhQ/PdioH6R/ArOhhJDOECD+bq
-         nMMzilAeWFUFDvsO45lhzLtFgGdjpJnUnF60WFOsm2gccwSmsWDjyjlx79q/Yd9/qMYh
-         qTUc2IrHfHMtOrWE3VCLxFa4AXGnAeimo4dqdLdrCUeqzu56YZ7SjQewdsEJj5inHQ/J
-         tJPSMqnL/N7HbQIJbl7uhQrOqtV1EyejR6AOOKZr/1swaQrJ8mGrNL9ZFlQXGVfhAsMD
-         Ng1A==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EFMWfFYwjPbV+Vh6ijuw1PLzVlmTvTGprC9c8n3MF7s=;
+        b=BKdQnN9ilzMd/jyoP9N6SYX4riNnoe7iz91UIArgNUex2+T970QRgmEtazYzC8iRRQ
+         EIS7U8SJqHm/bw4thKh/3urk7nDvslNbmx/fjVnncrVUpcJ/avVhG163TWEKxe8qI7+8
+         cuaxqP6JZUhNWsneQnTNMxfWWioqT6TxFOxyO9VIlZ3I0ZFwMwrmmjMGRoWXIrUUTL1b
+         fOIUdASD+dW0t6lftSGlVmWDB8hoTmpgof7fmgsFnEKZTvInLtFIMX0xq97ZUCQHTfEi
+         Ix6MX7Aak/O9I8T1JIFOdUEq1vPAiZhW4Mej+nlnuQMolh95LS9lAFsojfOKcwCgPUhw
+         9suw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=KpRihbZiSTt9WSRfafM5Hr6SzD6WulPA9ejW+Q/RSW4=;
-        b=GYOD43eX8tgOoJn83BKDvWToPbnVryFMriBlYuSafr4wYlBxcbSECmPriArip6hJH1
-         RZoMstgBSKerc1vI1w+2v0nN9zOeCOm2Km/zO15B07kZCQ6zuJasslDLnDcLM6qk83wX
-         zp2Q3NGzVAhTvgxgoTIHyYaxrn16/ncs/JGEsAMsQ9E6GEwNQrqlyhQl/ykSR3eysQfY
-         3yIfGbvacEp5SEhzcmAlE2Ec+5hVwZzwsjRZcynC43XElNDTeAGGvF75efRVjlgWM59o
-         7oTEvLQfjxafUPxpRT+Hk/dy9M/EESJY0KqgwLal0VCuVDaXxJWSxwkMzUNChi8ziPyW
-         txRw==
-X-Gm-Message-State: AJIora97aLc7DSnYp8wNh9TNYB97g9F9KZcs+P7PDXeCSXN1WdGXvLwl
-        iK5fRFYYALyM+t7yl9xx0PuUHg==
-X-Google-Smtp-Source: AGRyM1tsY/ZhfsK0nitrIZl9qMahGP5WendMPNYNOe5gVtJZkp37q6OwEpwydF354sR9EH6KMrEG0w==
-X-Received: by 2002:a17:907:7d8b:b0:726:aad6:f421 with SMTP id oz11-20020a1709077d8b00b00726aad6f421mr12821705ejc.80.1656664123249;
-        Fri, 01 Jul 2022 01:28:43 -0700 (PDT)
-Received: from [192.168.0.190] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id d16-20020a170906545000b006feb20b5235sm10202295ejp.84.2022.07.01.01.28.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Jul 2022 01:28:42 -0700 (PDT)
-Message-ID: <2d63cbf2-8e59-a8db-3faf-747b92d2eb66@linaro.org>
-Date:   Fri, 1 Jul 2022 10:28:41 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EFMWfFYwjPbV+Vh6ijuw1PLzVlmTvTGprC9c8n3MF7s=;
+        b=I2mHDRBy7K0vd1/1MYDI9MjKT5nUeZtpvb3COIfIx9T24SqOI1gNrqBAX+xcCxvtoU
+         DW5UqNJJeJCeQoDhftVxog8GF1nCnF6T3FC9VtR8IiReYdCYvFgavpkMBtEGZqHPHAV3
+         i/cNBOXDT5+VIGfjPcB+o0CCGlvieo6FZPV6RHDdogCRTjOeVlyphcAOxkcbLmFvCMPp
+         CMK89lkXpiUDVJZhJWnfvi+HVTTxzZxmIwW8luAAJ4Vl5W80oXgwWjH2uV/EJF1DdqxR
+         0fmN0vhu2JmGoc0rsmzRNpA4+B4U5MBCHC0t/8tD6ERMs9ghjhXolmEuxN7iS2KqR3zs
+         U0eA==
+X-Gm-Message-State: AJIora8zYmNv6gPmxWTKAEX/UaXw3e9OnCEB9k+KWCS/pkniofRVlZCY
+        NlZNT7esYInRakXBp4l46gX1mEllPZ54sW2U17FWqg==
+X-Google-Smtp-Source: AGRyM1vQh7xyjYZTePLMACtI4cMWp1IBvJDBBKgeyRCp2sjHYOKCNJLGJ+NX5Xhm4GWrM9iatDFg8LuuRDylZZI7qJc=
+X-Received: by 2002:a05:6402:430e:b0:435:9e41:6858 with SMTP id
+ m14-20020a056402430e00b004359e416858mr17655356edc.69.1656664360781; Fri, 01
+ Jul 2022 01:32:40 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] MAINTAINERS: pinctrl: update qcom file list to include
- yaml files
-Content-Language: en-US
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        bjorn.andersson@linaro.org, linus.walleij@linaro.org
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220629092514.70752-1-srinivas.kandagatla@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220629092514.70752-1-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220628084226.472035-6-brgl@bgdev.pl> <20220630022522.GA17221@sol>
+ <CAMRc=MfXqKuj4u9OiBe5Euo8BtRFb06CMZbLOoF6PD2OvJsRWg@mail.gmail.com>
+ <20220630081450.GB23652@sol> <20220630083851.GA24642@sol> <20220701060736.GA28431@sol>
+ <CAMRc=Mdhogn2HDR7NYmjugTi6V3zwcw38vmdpfH55f44EPOHRw@mail.gmail.com>
+ <20220701072655.GA31738@sol> <CAMRc=McwhnjovSB7RuZQTnZ9tKww=WDvk813Wbmt5PYaK95cPA@mail.gmail.com>
+ <20220701073338.GA33559@sol> <20220701080252.GB33559@sol> <CAMRc=Md7vzozjWLBMp8-fJX7Za9wKj9_uzYd9fgz5wE8gSk2AA@mail.gmail.com>
+In-Reply-To: <CAMRc=Md7vzozjWLBMp8-fJX7Za9wKj9_uzYd9fgz5wE8gSk2AA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 1 Jul 2022 10:32:30 +0200
+Message-ID: <CAMRc=MdMSwbikyZZDVayd_HZ3B=nAA2ZFXhMh5v0quT5nsYoHQ@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
+ implementation for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/06/2022 11:25, Srinivas Kandagatla wrote:
-> Currently Qualcomm pinctrl MAINTAINERS file list does not include yaml
-> files. Include this for correctness.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c4648e86dc14..71e7725aa574 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15765,6 +15765,7 @@ M:	Bjorn Andersson <bjorn.andersson@linaro.org>
->  L:	linux-arm-msm@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/pinctrl/qcom,*.txt
-> +F:	Documentation/devicetree/bindings/pinctrl/qcom,*.yaml
+On Fri, Jul 1, 2022 at 10:18 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Fri, Jul 1, 2022 at 10:02 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Fri, Jul 01, 2022 at 03:33:38PM +0800, Kent Gibson wrote:
+> > > On Fri, Jul 01, 2022 at 09:29:53AM +0200, Bartosz Golaszewski wrote:
+> > > > On Fri, Jul 1, 2022 at 9:27 AM Kent Gibson <warthog618@gmail.com> w=
+rote:
+> > > > >
+> > > > > On Fri, Jul 01, 2022 at 09:21:58AM +0200, Bartosz Golaszewski wro=
+te:
+> > > > > > On Fri, Jul 1, 2022 at 8:07 AM Kent Gibson <warthog618@gmail.co=
+m> wrote:
+> > > > > > >
+> > > > > > > On Thu, Jun 30, 2022 at 04:38:51PM +0800, Kent Gibson wrote:
+> > > > > > > > On Thu, Jun 30, 2022 at 04:14:50PM +0800, Kent Gibson wrote=
+:
+> > > > > > > > > On Thu, Jun 30, 2022 at 08:54:24AM +0200, Bartosz Golasze=
+wski wrote:
+> > > > > > > > > > On Thu, Jun 30, 2022 at 4:25 AM Kent Gibson <warthog618=
+@gmail.com> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > On Tue, Jun 28, 2022 at 10:42:26AM +0200, Bartosz Gol=
+aszewski wrote:
+> > > > > > > > > > > > This is the implementation of the new python API fo=
+r libgpiod v2.
+> > > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > [snip]
+> > > > > > > > > > >
+> > > > > > > > > > > > +     }
+> > > > > > > > > > > > +
+> > > > > > > > > > > > +     res =3D PyObject_Call(method, args, line_cfg_=
+kwargs);
+> > > > > > > > > > > > +     Py_DECREF(args);
+> > > > > > > > > > > > +     Py_DECREF(method);
+> > > > > > > > > > > > +     if (!Py_IsNone(res)) {
+> > > > > > > > > > > > +             Py_DECREF(res);
+> > > > > > > > > > > > +             return NULL;
+> > > > > > > > > > > > +     }
+> > > > > > > > > > > > +
+> > > > > > > > > > >
+> > > > > > > > > > > Building against python 3.9 (the min required by conf=
+igure.ac) gives:
+> > > > > > > > > > >
+> > > > > > > > > > > module.c:276:7: warning: implicit declaration of func=
+tion =E2=80=98Py_IsNone=E2=80=99; did you mean =E2=80=98Py_None=E2=80=99? [=
+-Wimplicit-function-declaration]
+> > > > > > > > > > >   276 |  if (!Py_IsNone(res)) {
+> > > > > > > > > > >       |       ^~~~~~~~~
+> > > > > > > > > > >       |       Py_None
+> > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > Py_IsNone didn't get added to the Stable ABI until 3.=
+10.
+> > > > > > > > > > >
+> > > > > > > > > > > Cheers,
+> > > > > > > > > > > Kent.
+> > > > > > > > > >
+> > > > > > > > > > It seems like most distros still ship python 3.9, I don=
+'t want to make
+> > > > > > > > > > 3.10 the requirement. This can be replaced by `if (res =
+!=3D Py_None)`.
+> > > > > > > > > > Are there any more build issues?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > No, that was the only one.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > But I am seeing a test failure:
+> > > > > > > >
+> > > > > > > > $ sudo bindings/python/tests/gpiod_py_test.py
+> > > > > > > > ...........................................................=
+..................F................................
+> > > > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > > > > > > > FAIL: test_module_line_request_edge_detection (cases.tests_=
+line_request.ModuleLineRequestWorks)
+> > > > > > > > -----------------------------------------------------------=
+-----------
+> > > > > > > > Traceback (most recent call last):
+> > > > > > > >   File "/home/dev/libgpiod/bindings/python/tests/cases/test=
+s_line_request.py", line 71, in test_module_line_request_edge_detection
+> > > > > > > >     self.assertTrue(req.wait_edge_event())
+> > > > > > > > AssertionError: False is not true
+> > > > > > > >
+> > > > > > > > -----------------------------------------------------------=
+-----------
+> > > > > > > > Ran 110 tests in 2.652s
+> > > > > > > >
+> > > > > > > > FAILED (failures=3D1)
+> > > > > > > >
+> > > > > > >
+> > > > > > > The req.wait_edge_event() does not wait without a timeout par=
+ameter,
+> > > > > > > which is a bit nonintuitive, so the test has a race.
+> > > > > >
+> > > > > > Ah, makes sense.
+> > > > > >
+> > > > > > > Adding a timeout=3Ddatetime.timedelta(microseconds=3D1) (the =
+shortest
+> > > > > > > possible) works for me, so anything that triggers a context s=
+witch is
+> > > > > > > probably sufficient, though a longer timeout probably wouldn'=
+t hurt.
+> > > > > > >
+> > > > > >
+> > > > > > I'll change that.
+> > > > > >
+> > > > > > > The Python API should take timeout=3DNONE to mean wait indefi=
+nitely, and
+> > > > > > > 0 as a poll.
+> > > > > >
+> > > > > > This makes sense but I'd still want to have some default behavi=
+or for
+> > > > > > when timeout is not given. Maybe wait indefinitely?
+> > > > >
+> > > > > That is what I said - you get timeout=3DNone if the kwarg is not =
+specified.
+> > > > >
+> > > > > >
+> > > > > > > And it should take the timeout as a float, not a
+> > > > > > > timedelta, as per select.select.  From its doc:
+> > > > > >
+> > > > > > I don't necessarily want to mirror select's interface. Why woul=
+d we
+> > > > > > prefer a float over a class that's the standard python interfac=
+e for
+> > > > > > storing time deltas?
+> > > > > >
+> > > > >
+> > > > > Cos you are forcing the user to create a timedelta, which is a PI=
+TA,
+> > > > > and both time.sleep and select.select (i.e. standard Python modul=
+es)
+> > > > > do it that way.  The float is the Pythonic way.
+> > > > >
+> > > >
+> > > > Timedelta constructor is much more explicit than a float IMO. How
+> > > > about a compromise and taking both (mutually exclusive)?
+> > > > timeout=3Ddatettime.timedelta(seconds=3D1) =3D=3D timeout_sec=3Dflo=
+at(1.0)?
+> > > >
+> > >
+> > > Maybe, but float seconds seems to be the way they do it.
+> > > If you insist on both then just the one timeout parameter and work th=
+e
+> > > type out on the fly. (it's Python, so dynamic typing...)
+> > >
+> >
+> > Same issue for chip.wait_info_event(), btw.
+> > Still working through a full review - but it'll probably take a while.
+> >
+> > Wrt the wait, does the C API have a blocking wait, or do you have to
+> > poll() the fd?
+> >
+>
+> Blocking wait is simply reading the event without checking if an event
+> is there to be read. select() (the system call) waits indefinitely if
+> the timeval struct is NULL, ppoll() behaves the same for a NULL
+> timespec, poll() does the same for a negative timeout (which is an
+> int). We take an uint64_t so we can't do it. Either we need to switch
+> to int64_t and interpret a negative value as indefinite wait or just
+> not do it at all and tell users to just call the (blocking)
+> read_edge_event().
+>
+> Bart
+>
 
-Instead just:
-Documentation/devicetree/bindings/pinctrl/qcom,*
+I'm still on the fence about using timespec. It seems that the more
+recent linux interfaces avoid timespec and timeval altogether due to
+the year 2038 problem and the subsequent change in the struct layout.
+On the other hand the timeouts are unlikely to be set to years. :)
 
->  F:	drivers/pinctrl/qcom/
->  
->  PIN CONTROLLER - RENESAS
+What do you think?
 
-
-Best regards,
-Krzysztof
+Bart
