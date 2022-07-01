@@ -2,26 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59883562B47
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 08:12:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05392562C35
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 09:03:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233683AbiGAGMk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 02:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        id S235195AbiGAHDB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 03:03:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233375AbiGAGMi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 02:12:38 -0400
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8B2F61A83D;
-        Thu, 30 Jun 2022 23:12:37 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A72FA80B0;
-        Fri,  1 Jul 2022 06:07:18 +0000 (UTC)
-Date:   Fri, 1 Jul 2022 09:12:35 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        with ESMTP id S235158AbiGAHDA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 03:03:00 -0400
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1434A675AF
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 00:02:59 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-31bf3656517so14485647b3.12
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 00:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Oxpr/H6WS/cbatfKxunj+Rm+HXq43uwJ9TOx0tf4pg=;
+        b=G4+aGmI06EueqwK7C5Qo4w/41Yp3wU/CWyAMnimOU3r1x56NK0xwWd5NnQsEtkPJT1
+         j1wWR6jutsCmi+xE7hxYUqJNrQrMI+GL07X5ZYgIgqDAqQnMWhF8y5nc40xNPfhYS3jC
+         0nJhLPxfL1eyodYvq4oKHJFLeueGwA5XPbFVGoQA05bmNWxXq8PGbVqamZrTZs9J6qBh
+         1fRZx/U4bPFmJBSVu1knm/cNESUDsxYs6X7kurTJA14GFNtyIPF26073epdL9z6eSE2L
+         X78efI4BN3icU+xkSEEQMO42kPgo3k8M7uVN2JrWdQyoK9p0Z0nOVmWHNbnRgASj9y0m
+         xe+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Oxpr/H6WS/cbatfKxunj+Rm+HXq43uwJ9TOx0tf4pg=;
+        b=o1i8U+8HgwN64j3vNnPdpDOn4gWc+cfUC6JOjJtW9mEbOT/mFP8O1JxmuKq7T1JFYW
+         5yCarvdjLAb+Ksozmu1tSkdJmOz7lG3xVYEi+IPpW7eJ5QcrWspfHt6wZn8L4iNJEuSw
+         qPT8KbyDJ3xLRQZSYFPt7NJ2Cy1MVPkgzswg1flOnvrh18jOBxLbUhdYRE9OayXAggkY
+         0K7GaZ7zzjqDFg+L5aUHTgupmR403Au86lDkHW8YymMGsPR1sqmWsKuTFR07gu8qSbHO
+         4x0wYdccOL+3dHKMBiD3v3Xqm8wl+R3Hc290qgL34BF3E4XKuAvkN/JzhYNVJjNXtqTC
+         rjsg==
+X-Gm-Message-State: AJIora+jwDgGag/gQkYHLxXxopJQ/I5JBUwkcyrUI3DUqAs9lFkrlx+H
+        WgVAg40aFQHLGKhDwkCYMAMnwZce4RIN912ZV8hJzg==
+X-Google-Smtp-Source: AGRyM1sjHYE6b1ihEm8EzVroyoytiPu2X1qfGuWU3WGWHfolVcCLEjpB4ZdcYExvwYNCmCj3ip+B1gZf6PvcXiQN0KE=
+X-Received: by 2002:a81:4896:0:b0:317:f767:95f8 with SMTP id
+ v144-20020a814896000000b00317f76795f8mr15214195ywa.218.1656658978077; Fri, 01
+ Jul 2022 00:02:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <4799738.LvFx2qVVIh@steina-w> <CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com>
+ <5265491.31r3eYUQgx@steina-w>
+In-Reply-To: <5265491.31r3eYUQgx@steina-w>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 1 Jul 2022 00:02:22 -0700
+Message-ID: <CAGETcx-fLAXnG+1S4MHJwg9t7O6jj6Mp+q25bh==C_Z1CLs-mg@mail.gmail.com>
+Subject: Re: (EXT) Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Kevin Hilman <khilman@kernel.org>,
@@ -37,168 +70,131 @@ Cc:     Rob Herring <robh@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of
- driver_deferred_probe_check_state()
-Message-ID: <Yr6QUzdoFWv/eAI6@atomide.com>
-References: <CAGETcx_1USPRbFKV5j00qkQ-QXJkp7=FAfnFcfiNnM4J5KF1cQ@mail.gmail.com>
- <YrKhkmj3jCQA39X/@atomide.com>
- <CAGETcx_11wO-HkZ2QsBF8o1+L9L3Xe1QBQ_GzegwozxAx1i0jg@mail.gmail.com>
- <YrQP3OZbe8aCQxKU@atomide.com>
- <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
- <Yrlz/P6Un2fACG98@atomide.com>
- <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
- <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
- <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
- <Yr6HQOtS4ctUYm9m@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yr6HQOtS4ctUYm9m@atomide.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [220701 08:33]:
-> * Saravana Kannan <saravanak@google.com> [220630 23:25]:
-> > On Thu, Jun 30, 2022 at 4:26 PM Rob Herring <robh@kernel.org> wrote:
+On Thu, Jun 30, 2022 at 11:02 PM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+>
+> Hi Saravana,
+>
+> Am Freitag, 1. Juli 2022, 02:37:14 CEST schrieb Saravana Kannan:
+> > On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
+> >
+> > <alexander.stein@ew.tq-group.com> wrote:
+> > > Hi,
 > > >
-> > > On Thu, Jun 30, 2022 at 5:11 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony Lindgren:
+> > > > Hi,
 > > > >
-> > > > On Mon, Jun 27, 2022 at 2:10 AM Tony Lindgren <tony@atomide.com> wrote:
+> > > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
+> > > > > Now that fw_devlink=on by default and fw_devlink supports
+> > > > > "power-domains" property, the execution will never get to the point
+> > > > > where driver_deferred_probe_check_state() is called before the
+> > > > > supplier
+> > > > > has probed successfully or before deferred probe timeout has expired.
 > > > > >
-> > > > > * Saravana Kannan <saravanak@google.com> [220623 08:17]:
-> > > > > > On Thu, Jun 23, 2022 at 12:01 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > >
-> > > > > > > * Saravana Kannan <saravanak@google.com> [220622 19:05]:
-> > > > > > > > On Tue, Jun 21, 2022 at 9:59 PM Tony Lindgren <tony@atomide.com> wrote:
-> > > > > > > > > This issue is no directly related fw_devlink. It is a side effect of
-> > > > > > > > > removing driver_deferred_probe_check_state(). We no longer return
-> > > > > > > > > -EPROBE_DEFER at the end of driver_deferred_probe_check_state().
-> > > > > > > >
-> > > > > > > > Yes, I understand the issue. But driver_deferred_probe_check_state()
-> > > > > > > > was deleted because fw_devlink=on should have short circuited the
-> > > > > > > > probe attempt with an  -EPROBE_DEFER before reaching the bus/driver
-> > > > > > > > probe function and hitting this -ENOENT failure. That's why I was
-> > > > > > > > asking the other questions.
-> > > > > > >
-> > > > > > > OK. So where is the -EPROBE_DEFER supposed to happen without
-> > > > > > > driver_deferred_probe_check_state() then?
-> > > > > >
-> > > > > > device_links_check_suppliers() call inside really_probe() would short
-> > > > > > circuit and return an -EPROBE_DEFER if the device links are created as
-> > > > > > expected.
-> > > > >
-> > > > > OK
-> > > > >
-> > > > > > > Hmm so I'm not seeing any supplier for the top level ocp device in
-> > > > > > > the booting case without your patches. I see the suppliers for the
-> > > > > > > ocp child device instances only.
-> > > > > >
-> > > > > > Hmmm... this is strange (that the device link isn't there), but this
-> > > > > > is what I suspected.
-> > > > >
-> > > > > Yup, maybe it's because of the supplier being a device in the child
-> > > > > interconnect for the ocp.
+> > > > > So, delete the call and replace it with -ENODEV.
 > > > >
-> > > > Ugh... yeah, this is why the normal (not SYNC_STATE_ONLY) device link
-> > > > isn't being created.
+> > > > Looks like this causes omaps to not boot in Linux next. With this
+> > > > simple-pm-bus fails to probe initially as the power-domain is not
+> > > > yet available. On platform_probe() genpd_get_from_provider() returns
+> > > > -ENOENT.
 > > > >
-> > > > So the aggregated view is something like (I had to set tabs = 4 space
-> > > > to fit it within 80 cols):
-> > > >
-> > > >     ocp: ocp {         <========================= Consumer
-> > > >         compatible = "simple-pm-bus";
-> > > >         power-domains = <&prm_per>; <=========== Supplier ref
-> > > >
-> > > >                 l4_wkup: interconnect@44c00000 {
-> > > >             compatible = "ti,am33xx-l4-wkup", "simple-pm-bus";
-> > > >
-> > > >             segment@200000 {  /* 0x44e00000 */
-> > > >                 compatible = "simple-pm-bus";
-> > > >
-> > > >                 target-module@0 { /* 0x44e00000, ap 8 58.0 */
-> > > >                     compatible = "ti,sysc-omap4", "ti,sysc";
-> > > >
-> > > >                     prcm: prcm@0 {
-> > > >                         compatible = "ti,am3-prcm", "simple-bus";
-> > > >
-> > > >                         prm_per: prm@c00 { <========= Actual Supplier
-> > > >                             compatible = "ti,am3-prm-inst", "ti,omap-prm-inst";
-> > > >                         };
-> > > >                     };
-> > > >                 };
-> > > >             };
-> > > >         };
-> > > >     };
-> > > >
-> > > > The power-domain supplier is the great-great-great-grand-child of the
-> > > > consumer. It's not clear to me how this is valid. What does it even
-> > > > mean?
-> > > >
-> > > > Rob, is this considered a valid DT?
+> > > > Seems like other stuff is potentially broken too, any ideas on
+> > > > how to fix this?
 > > >
-> > > Valid DT for broken h/w.
-> > 
-> > I'm not sure even in that case it's valid. When the parent device is
-> > in reset (when the SoC is coming out of reset), there's no way the
-> > descendant is functional. And if the descendant is not functional, how
-> > is the parent device powered up? This just feels like an incorrect
-> > representation of the real h/w.
-> 
-> It should be correct representation based on scanning the interconnects
-> and looking at the documentation. Some interconnect parts are wired
-> always-on and some interconnect instances may be dual-mapped.
-> 
-> We have a quirk to probe prm/prcm first with pdata_quirks_init_clocks().
-> Maybe that also now fails in addition to the top level interconnect
-> probing no longer producing -EPROBE_DEFER.
-> 
-> > > So the domain must be default on and then simple-pm-bus is going to
-> > > hold a reference to the domain preventing it from ever getting powered
-> > > off and things seem to work. Except what happens during suspend?
-> > 
-> > But how can simple-pm-bus even get a reference? The PM domain can't
-> > get added until we are well into the probe of the simple-pm-bus and
-> > AFAICT the genpd attach is done before the driver probe is even
-> > called.
-> 
-> The prm/prcm gets of_platform_populate() called on it early.
+> > > I think I'm hit by this as well, although I do not get a lockup.
+> > > In my case I'm using
+> > > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts and probing of
+> > > 38320000.blk-ctrl fails as the power-domain is not (yet) registed.
+> >
+> > Ok, took a look.
+> >
+> > The problem is that there are two drivers for the same device and they
+> > both initialize this device.
+> >
+> >     gpc: gpc@303a0000 {
+> >         compatible = "fsl,imx8mq-gpc";
+> >     }
+> >
+> > $ git grep -l "fsl,imx7d-gpc" -- drivers/
+> > drivers/irqchip/irq-imx-gpcv2.c
+> > drivers/soc/imx/gpcv2.c
+> >
+> > IMHO, this is a bad/broken design.
+> >
+> > So what's happening is that fw_devlink will block the probe of
+> > 38320000.blk-ctrl until 303a0000.gpc is initialized. And it stops
+> > blocking the probe of 38320000.blk-ctrl as soon as the first driver
+> > initializes the device. In this case, it's the irqchip driver.
+> >
+> > I'd recommend combining these drivers into one. Something like the
+> > patch I'm attaching (sorry for the attachment, copy-paste is mangling
+> > the tabs). Can you give it a shot please?
+>
+> I tried this patch and it delayed the driver initialization (those of UART as
+> well BTW). Unfortunately the driver fails the same way:
 
-The hackish patch below makes things boot for me, not convinced this
-is the preferred fix compared to earlier deferred probe handling though.
-Going back to the init level tinkering seems like a step back to me.
+Thanks for testing the patch!
 
-Regards,
+> > [    1.125253] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV: failed to
+> attach power domain "bus"
+>
+> More than that it even introduced some more errors:
+> > [    0.008160] irq: no irq domain found for gpc@303a0000 !
 
-Tony
+So the idea behind my change was that as long as the irqchip isn't the
+root of the irqdomain (might be using the terms incorrectly) like the
+gic, you can make it a platform driver. And I was trying to hack up a
+patch that's the equivalent of platform_irqchip_probe() (which just
+ends up eventually calling the callback you use in IRQCHIP_DECLARE().
+I probably made some mistake in the quick hack that I'm sure if
+fixable.
 
-8< ----------------
-diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
---- a/drivers/soc/ti/omap_prm.c
-+++ b/drivers/soc/ti/omap_prm.c
-@@ -991,4 +991,9 @@ static struct platform_driver omap_prm_driver = {
- 		.of_match_table	= omap_prm_id_table,
- 	},
- };
--builtin_platform_driver(omap_prm_driver);
-+
-+static int __init omap_prm_init(void)
-+{
-+        return platform_driver_register(&omap_prm_driver);
-+}
-+subsys_initcall(omap_prm_init);
--- 
-2.36.1
+> > [    0.013251] Failed to map interrupt for
+> > /soc@0/bus@30400000/timer@306a0000
+
+However, this timer driver also uses TIMER_OF_DECLARE() which can't
+handle failure to get the IRQ (because it's can't -EPROBE_DEFER). So,
+this means, the timer driver inturn needs to be converted to a
+platform driver if it's supposed to work with the IRQCHIP_DECLARE()
+being converted to a platform driver.
+
+But that's a can of worms not worth opening. But then I remembered
+this simpler workaround will work and it is pretty much a variant of
+the workaround that's already in the gpc's irqchip driver to allow two
+drivers to probe the same device (people really should stop doing
+that).
+
+Can you drop my previous hack patch and try this instead please? I'm
+99% sure this will work.
+
+diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+index b9c22f764b4d..8a0e82067924 100644
+--- a/drivers/irqchip/irq-imx-gpcv2.c
++++ b/drivers/irqchip/irq-imx-gpcv2.c
+@@ -283,6 +283,7 @@ static int __init imx_gpcv2_irqchip_init(struct
+device_node *node,
+         * later the GPC power domain driver will not be skipped.
+         */
+        of_node_clear_flag(node, OF_POPULATED);
++       fwnode_dev_initialized(domain->fwnode, false);
+        return 0;
+ }
+
+-Saravana
