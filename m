@@ -2,138 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF8ED563B46
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 22:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 058D9563B91
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 23:15:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231942AbiGAUm1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 16:42:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42780 "EHLO
+        id S232459AbiGAU5H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 16:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231253AbiGAUmY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 16:42:24 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6983D5A2F6;
-        Fri,  1 Jul 2022 13:42:23 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id d145so2757156ybh.1;
-        Fri, 01 Jul 2022 13:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yp9XN4S+Opt5OiPcD1GcnJhSinyAA39zjfk4/yaqO8s=;
-        b=SSa3GZ+C8FrgSyg1dfnwW60dlyF0osSJcGZGmfieTSZO8LN1tTnuBZvrpmznVl6l5B
-         IgQmQe4055mdbiFozpxMvnggCiMyc7NOrvfm29fp9LbuZ5i5ON/B8m2J5GXb5vWVA6c0
-         RewnXDqM8bApuZzbq6JtS4ZDUAhrXph9cYmjL7knYaBXHm/BBAXDwNZa1cdzz/6Ej2IG
-         Nz7sdgqorS24+OA2LMNycsTyc5r3QxbSzQCNOBWWKXmM0MNeZkST886/Rkqe5ab/udOX
-         y+NeJom41Oze0ooJeXmmFQBDfTWqcBjfimdSVuFjjTTbaXAuFIg3+jp92fXuR96azOE4
-         e51Q==
+        with ESMTP id S231255AbiGAU5G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 16:57:06 -0400
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05642675A2;
+        Fri,  1 Jul 2022 13:57:06 -0700 (PDT)
+Received: by mail-io1-f54.google.com with SMTP id s17so3374572iob.7;
+        Fri, 01 Jul 2022 13:57:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yp9XN4S+Opt5OiPcD1GcnJhSinyAA39zjfk4/yaqO8s=;
-        b=3kmXpcnAPO8TLXIAZG2/bOiI5Ax9fmc76lE3ztVEsoS82Vu9ngW4oDDBWJL7RZdum1
-         iBL53yxOu6F7V4+3J30WDx7sZIoHwbjYfEPbQqjVFFrl8a8FTcTYx6pQvNPhWngSHdxD
-         g1oybV9ym5KtC3WhHecJMkGbTl/a+hjP/o79Xr3gb4jQPiKpX7bS/iJR7Rm9JNqJzokJ
-         0boBA6yZXXL0B4F3vBpWAuBl2uNqYtub8lGl8KEY+1K3pYNyMdmZOCWH1TSfdf8MCRlx
-         nHd6z8Tpyz0x8kgKzbgTo64ClHb2ATWB4v4byXdNkgRCOKKiQKQiC0DyG7b8omGh2VZz
-         lWdw==
-X-Gm-Message-State: AJIora8rAQge/vk2uq3brrtRSmSCU2kDk51BDz7KrmQ33Pu851+TVBSa
-        7225rCYsNnAVn2RxLjQiIkReX4dniGd+tb8TMf4=
-X-Google-Smtp-Source: AGRyM1ubWJCx0SPiTeTHy1XH1UrTXqKhbiuskgaTbILYM9h0vFVUsY93Ykxv678H610M89IRqGuslFj82aLn/+EiSQg=
-X-Received: by 2002:a05:6902:1142:b0:66d:999a:81a7 with SMTP id
- p2-20020a056902114200b0066d999a81a7mr13475371ybu.460.1656708142638; Fri, 01
- Jul 2022 13:42:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220701192609.3970317-1-colin.foster@in-advantage.com>
- <20220701192609.3970317-2-colin.foster@in-advantage.com> <CAHp75Vf0FPrUPK8F=9gMuZPUsuTbSO+AB3zfh1=uAKu6L2eemA@mail.gmail.com>
- <20220701203453.GB3327062@euler>
-In-Reply-To: <20220701203453.GB3327062@euler>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 1 Jul 2022 22:41:43 +0200
-Message-ID: <CAHp75Ve1AVtNsmCrBr8XCcm2fJnKYQhF98v49OD8Y4kBUzb0-w@mail.gmail.com>
-Subject: Re: [PATCH v12 net-next 1/9] mfd: ocelot: add helper to get regmap
- from a resource
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xgE/JcMImFsLHC9kd8+2fcNfM7vDxsP6gVBtPDttJ1Y=;
+        b=dFKDsu4xiB4THbJE4DQTaPzcYZikHV3oqwkwNhrdlG+xYwZq5pjhOUYvVr4Bqcijah
+         BHe7uBDzFyGRan5JuIeC/KCxF/2OghrZG9VdgMAkTJlhyDJrgN97KYn6kCal6cW0jMNl
+         tk6Iwphp9Bv8aQhurDrnfHQLxhIV/qcVcPLmmpDbdFPC/kZnElfh2T9JsT8cEBg+5eox
+         wBRT2aiB7gCp6PmfNnT9CEanEGWJjak2ivKK4CJIk1ftRGjnwu7nYWzZw6QnzJvSLN/A
+         sacJZR2rgbEgux4PlUcJQLknLW6u/qNp0S7MA0y/Brm7ccUj+A+LTs+fG3SkjkT3CawU
+         SoBw==
+X-Gm-Message-State: AJIora+UJ0WOtSLXECFgSUZRCFhgH8cW87nEe/MDtrMVwW6j2VD4LfOA
+        7Hb2eTXKDghCM5fBPZL1LQ==
+X-Google-Smtp-Source: AGRyM1vBsdqcy5YkIu5jY2aKYkyMTBVIaMSTTEbsoJvFJCBb92KYANiqzH2w4D61p9EBRSIzvZZHOQ==
+X-Received: by 2002:a5d:8485:0:b0:672:76d6:3848 with SMTP id t5-20020a5d8485000000b0067276d63848mr8209832iom.18.1656709025310;
+        Fri, 01 Jul 2022 13:57:05 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id j12-20020a6b794c000000b0067275a52928sm10681358iop.9.2022.07.01.13.57.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Jul 2022 13:57:04 -0700 (PDT)
+Received: (nullmailer pid 1515827 invoked by uid 1000);
+        Fri, 01 Jul 2022 20:57:03 -0000
+Date:   Fri, 1 Jul 2022 14:57:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        katie.morris@in-advantage.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v12 2/7] dt-bindings: pinctrl: sunxi: Make interrupts
+ optional
+Message-ID: <20220701205703.GA1515763-robh@kernel.org>
+References: <20220701112453.2310722-1-andre.przywara@arm.com>
+ <20220701112453.2310722-3-andre.przywara@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220701112453.2310722-3-andre.przywara@arm.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 10:35 PM Colin Foster
-<colin.foster@in-advantage.com> wrote:
-> On Fri, Jul 01, 2022 at 10:23:36PM +0200, Andy Shevchenko wrote:
-> > On Fri, Jul 1, 2022 at 9:26 PM Colin Foster
-> > <colin.foster@in-advantage.com> wrote:
+On Fri, 01 Jul 2022 12:24:48 +0100, Andre Przywara wrote:
+> The R_PIO pinctrl device on the Allwinner H616 SoC does not have an
+> interrupt (it features only two pins).
+> However the binding requires at least naming one upstream interrupt,
+> plus the #interrupt-cells and interrupt-controller properties.
+> 
+> Drop the unconditional requirement for the interrupt properties, and
+> make them dependent on being not this particular pinctrl device.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml      | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
 
-...
-
-> > > +       res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> > > +       if (res) {
-> > > +               regs = devm_ioremap_resource(dev, res);
-> > > +               if (IS_ERR(regs))
-> > > +                       return ERR_CAST(regs);
-> >
-> > Why can't it be devm_platform_get_and_ioremap_resource() here?
->
-> It can... but it invokes prints of "invalid resource" during
-> initialization.
->
-> Here it was implied that I should break the function call out:
-> https://patchwork.kernel.org/project/netdevbpf/patch/20220628081709.829811-2-colin.foster@in-advantage.com/#24917551
-
-Perhaps a comment in the code, so nobody will try to optimize this in
-the future.
-
-> > > +               return devm_regmap_init_mmio(dev, regs, config);
-> > > +       }
-
-...
-
-> > > +       return (map) ? map : ERR_PTR(-ENOENT);
-> >
-> > Too many parentheses.
-> >
-> > Also you may use short form of ternary operator:
-> >
-> >        return map ?: ERR_PTR(-ENOENT);
->
-> Agreed, and I didn't know about that operator. When Vladimir suggested
-> it I thought it was a typo. I should've known better.
-
-It's easy to remember by thinking of
-
-"X ?: Y" as "X _or_ Y".
-
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Rob Herring <robh@kernel.org>
