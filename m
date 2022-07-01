@@ -2,122 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 812EE563A91
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 22:12:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E89DB563ACF
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 22:12:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbiGAUGm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 16:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41536 "EHLO
+        id S232468AbiGAULy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 16:11:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiGAUGl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 16:06:41 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE2B45505;
-        Fri,  1 Jul 2022 13:06:41 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id v185so5811463ybe.8;
-        Fri, 01 Jul 2022 13:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mmR8iUUwPvvGa3qQx8YQJ+SVKO3sq39Az7PLcxuZz3A=;
-        b=oY05/wttYxGli/gCgXA2u18vdKojjR8sSMqUIKrFDsJQgTnMZb9ZFCjIOov+/xPw0O
-         BLvk2Hw/Rf0aJ6CLpX3SEDQojPG1VYqPBHhY6HvlaWxBUgDdXUry2qapteRg/HmeU5+u
-         0Cnz8nfclK+NSm0dRaDw8e7crDQ8vVyw9Tpyu9w+KKKVx8Ymyrns1nhxdn05lEMZK2MA
-         XPvhCY7flL6vF3yDEtS6D8o5lHExK6dl3rOLds+EPVY3Gf2jsrV6MygdgQp8/N/DWJq9
-         Ro5jJOw2jB+oRxI+VLfC47JIZhDlrNmC3nyQF0P1nF3aCT2sFy4orCjsxxqDfBoOogJz
-         ccCw==
+        with ESMTP id S232460AbiGAULa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 16:11:30 -0400
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D9E53EC7;
+        Fri,  1 Jul 2022 13:11:18 -0700 (PDT)
+Received: by mail-il1-f170.google.com with SMTP id p9so2063856ilj.7;
+        Fri, 01 Jul 2022 13:11:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mmR8iUUwPvvGa3qQx8YQJ+SVKO3sq39Az7PLcxuZz3A=;
-        b=lFLEoHeSbkUp4MHbN7O7WNnDzWSYNsS6ex3sTZuEHut/EPvMzyxiCMEvk6bHNbE6QY
-         UgNeh6VbbOa07aa0aLHy61SxFWIvfzhbkpS3SiL+/hh+iLabRsxDz5y9ZQOTab+C0HSm
-         cWiEHJq4u/sUwR82UsYIvnGFaaf51EwNy4SZE7tkU5RELD3ScHZVlZ/bbwBFP1dXYRDK
-         vAfHkuFPswE0Tt8vY54BNl+TDHSTUUi+Z0Vr4fcB7MgpH8jPDvG2PC07rtbmiJRXSDQC
-         Xh0ThQSc5nrJ90cPWJtZYM6oXQzUG8cD2hIXcGaQx9EuNkqwRO1ad8S4j85y9yqWloD9
-         xD5A==
-X-Gm-Message-State: AJIora+gI/Rnkwg4ZNTqCMmt2zNm0RSXKXjhJP0bab9ETAA4pNQsTHa0
-        hdPHe2nNBQPhpIWgKtYZH9RWMfUzcLZE0AHNIvEObir7DXr9dhCn
-X-Google-Smtp-Source: AGRyM1tmbSsGff7AGFP4d/BpQmef7a+vmYTOkolqSckN06zSGysXK009G4NGKGvyDgzwacFwpWobPEEG40Gs13Q4h+4=
-X-Received: by 2002:a25:ca0a:0:b0:66b:4e6c:e094 with SMTP id
- a10-20020a25ca0a000000b0066b4e6ce094mr18394272ybg.296.1656706000179; Fri, 01
- Jul 2022 13:06:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bsGXONk8NHMc+Ouuuz0n5DIppbte+ODnFw+dCWHoPlk=;
+        b=v9MqdTa7InzFzmLBZom1H7DMfvvAqhSScmN5AM4u7tswSJjxKza12fFhjZuBDzvfCg
+         Kn1wFHVQrNORtzZsIu4V5nxPrtNSAbj/pv6w/EVgVbXbWRqs2q2/LWITbaZ7wEqWjaWh
+         AFCZczKIvGAloHgewAOWt+O08wkvG9qpvYI6fXMySzxAzw+m8un5oJMW6gKm9IkBelRi
+         HbuD3PtnJsCi4IGzNt5jfN6S9KKP7lsEcYdD2J6zOoMm9BfwcfAqaq8LjaEsq74+hF4x
+         YnbQqudxylqUQpqEwh5eEyCNVnKJzpx/cr/bOsEC7zK+LQehxn5ZF1k67b2f+UHlSmPv
+         t58g==
+X-Gm-Message-State: AJIora8qdvD05qQc/UpSLnqlApKD9tC0dbjnLoJJ7KdctGVlpAQ1BGuJ
+        9zXur4SNcqw6xt9yZwTXwA==
+X-Google-Smtp-Source: AGRyM1sQr9on9f/i3W+HzDLrop3QB8HUNE+suPlqzim3Ia3W9/3g2hWw9BJyd/+X2qBvEEHcaQiZqg==
+X-Received: by 2002:a05:6e02:180d:b0:2d9:26a6:d016 with SMTP id a13-20020a056e02180d00b002d926a6d016mr9294139ilv.170.1656706277255;
+        Fri, 01 Jul 2022 13:11:17 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id f7-20020a05660215c700b00674f80edd63sm10897632iow.23.2022.07.01.13.11.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Jul 2022 13:11:16 -0700 (PDT)
+Received: (nullmailer pid 1439506 invoked by uid 1000);
+        Fri, 01 Jul 2022 20:11:15 -0000
+Date:   Fri, 1 Jul 2022 14:11:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     nfraprado@collabora.com, devicetree@vger.kernel.org,
+        matthias.bgg@gmail.com, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org,
+        krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, sean.wang@mediatek.com,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: Fix name for
+ mediatek,rsel-resistance-in-si-unit
+Message-ID: <20220701201114.GA1439444-robh@kernel.org>
+References: <20220630122334.216903-1-angelogioacchino.delregno@collabora.com>
 MIME-Version: 1.0
-References: <20220629143046.213584-1-aidanmacdonald.0x0@gmail.com>
- <20220629143046.213584-13-aidanmacdonald.0x0@gmail.com> <CAHp75Vduv_fN=2DKbOwReRoPeAYjGqSANT7UhDaRifUJ4zf5XQ@mail.gmail.com>
- <oMIjFujkw4ZeuMGoTkWq64BbfEejJF12@localhost>
-In-Reply-To: <oMIjFujkw4ZeuMGoTkWq64BbfEejJF12@localhost>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 1 Jul 2022 22:06:03 +0200
-Message-ID: <CAHp75VdVyJyOZCkLQgbDNC9bSWwF0ksLOvMG=96fH8dzmukE5g@mail.gmail.com>
-Subject: Re: [PATCH v4 12/15] pinctrl: Add AXP192 pin control driver
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, quic_gurus@quicinc.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Michael Walle <michael@walle.cc>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220630122334.216903-1-angelogioacchino.delregno@collabora.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 5:36 PM Aidan MacDonald
-<aidanmacdonald.0x0@gmail.com> wrote:
-> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> > On Wed, Jun 29, 2022 at 4:30 PM Aidan MacDonald
-> > <aidanmacdonald.0x0@gmail.com> wrote:
+On Thu, 30 Jun 2022 14:23:34 +0200, AngeloGioacchino Del Regno wrote:
+> When this property was introduced, it contained underscores, but
+> the actual code wants dashes.
+> 
+> Change it from mediatek,rsel_resistance_in_si_unit to
+> mediatek,rsel-resistance-in-si-unit.
+> 
+> Fixes: 91e7edceda96 ("dt-bindings: pinctrl: mt8195: change pull up/down description")
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+> 
+> Note: No devicetree uses this property as of now.
+>       Even if any DT did, it wouldn't work, as the pinctrl code checks
+>       for 'mediatek,rsel-resistance-in-si-unit'.
+> 
+>  .../devicetree/bindings/pinctrl/pinctrl-mt8195.yaml    | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
 
-...
-
-> >> +struct axp192_pctl_function {
-> >> +       const char              *name;
-> >> +       /* Mux value written to the control register to select the function (-1 if unsupported) */
-> >> +       const u8                *muxvals;
-> >> +       const char * const      *groups;
-> >> +       unsigned int            ngroups;
-> >> +};
-> >
-> > Can it be replaced by struct function_desc?
-> > https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/pinmux.h#L130
->
-> That'd work, but using the generic infrastructure doesn't allow me to
-> simplify anything -- I can eliminate three trivial functions, but the
-> generic code is higher overhead (extra allocations, radix trees, ...)
-
-I really don't see how it gets into extra allocations. Either way you
-have a pointer to opaque data or in your current code it's called
-muxvals. Other fields seem 1:1 what is in struct function_desc. The
-code will be probably the same.
-
-I.o.w. I'm talking of eliminating data type, and not about simplifying
-the code by fully switching to generic infrastructure.
-
-> so I'd prefer to stick with the current approach.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Rob Herring <robh@kernel.org>
