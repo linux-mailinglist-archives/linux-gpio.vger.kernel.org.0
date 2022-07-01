@@ -2,138 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22FDB56391A
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 20:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8D92563995
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 21:14:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbiGASQL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Jul 2022 14:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44552 "EHLO
+        id S231393AbiGATN4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Jul 2022 15:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229926AbiGASQK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 14:16:10 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C183014082;
-        Fri,  1 Jul 2022 11:16:09 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id o25so5470724ejm.3;
-        Fri, 01 Jul 2022 11:16:09 -0700 (PDT)
+        with ESMTP id S229503AbiGATNz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Jul 2022 15:13:55 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F612AE3D
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 12:13:53 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id r3so5629641ybr.6
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Jul 2022 12:13:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qbwtZuVdzUuegUJwivo+X5ay7SFIYm4IMz9LKh/3woM=;
-        b=AMlsqsBHk4nxUvPONMyHzCmL25MRrhk9QEGd4hXXdILut6LfXa0RsQr5iRLqoUwPEL
-         YNYZ6L9lEdLFxVtoS2i76qeG7rpebQZX35VN8GcwP3oQXHEP29qr+qk8n6mEuAGH9Rvr
-         7lQ38uTKMJl9NA64ZMUldmLooBznu/FYMI8ur/o0a7K2zLgAT5FbxU6d0pTfIWQwqwyy
-         tFptTRPypDKIyKEWgVZHuG6a3PeXwVorLqXPEGBeo3+I9TpJMijLQNnxky9cuYhk5YE9
-         3FmNkIHFbQRc58awMoEKjkoG/LL1qoKwHsFnSrBpKouV3ullLvvxyu5U/Nz1MA5VgFTd
-         RWKw==
+        bh=0QS+dcPV5O8kLzr2+REcEkzxVnC/iy1E7v+r8knheu0=;
+        b=YxJMJqn/vOk+95wW9H3XyxhU7b6ot8wJfR5j/hJXXANi9ACWI8OWpYLc7idqKtR70V
+         I3f03mBuDThOJwgTtewRvSXUMPEEQyG2ilkW3LrxcIy7/7G+z/lvGEKEHqAw36hYhA+D
+         6ECYWOChAVa+UxOkE+iS+daPXf69U0SflOW9HtDhl9SR2FAyXKxcYvKm3CgyTVMStMHC
+         d3loWbDJUvP5cApZmY9sk39gsPipm7VWUwXpJ6tYDGtPK2MW5LBo5X+RScgoYXv7fbLo
+         O9phoX29OCjJ0I+QGlNLfK3+Itz44Me8/dSf5Psw1rGo4PvdspD0oJiqYd3r+D2c9F2x
+         uSLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qbwtZuVdzUuegUJwivo+X5ay7SFIYm4IMz9LKh/3woM=;
-        b=d9q/ZqoZqYOjxKHtxIZOQlMEujwnszsBBWmtuLSQYkgbdXTjSINlAULb1qhVLE1t32
-         6WD6FHwrmqWieyKj+Aji1QxEdVDYEKeKdOcdGNOE91A3HSj03rgsuE9OA+kG8CmYWKpK
-         G8avpslQ0f1iugcNz8NqRwK9jyC8StWdI+nkUM5Vuri4BNW5fIGY2QyaAiiVt6slg820
-         JB9349jZjfVkhOQCESb5a1c2ewFhdsQQsrlyN1WrfecHE26SQ+H6SNjA3o9bfPh+XnBT
-         g6koTMEfk6mztivjhLquBfVsin9FksW1AY/bjgDEIAmKS1sBOWii3Nc9cCyzjYJza/vC
-         qrOg==
-X-Gm-Message-State: AJIora9swKj+OwAQ/ONvDhNajONqvSw6v4DSNeAOIi9IGkLDlBbV46Yv
-        j7lJSQn5q8GMYGzLbEmbF11e8TfV9RWWJGhhsD8=
-X-Google-Smtp-Source: AGRyM1tsDbqWuNy2XI0Iv4BQc4pW5R8UeM8nXn1rpenTQ9q64t9OHwQc+nTR67aZ9LvlfBKV9INcKf9gqNe+nJ3gBBg=
-X-Received: by 2002:a17:907:72c4:b0:726:9406:f760 with SMTP id
- du4-20020a17090772c400b007269406f760mr15281003ejc.247.1656699368356; Fri, 01
- Jul 2022 11:16:08 -0700 (PDT)
+        bh=0QS+dcPV5O8kLzr2+REcEkzxVnC/iy1E7v+r8knheu0=;
+        b=GLaq3mFhXO2IOMknZx8nMBSszF5rztZSUjskIyGG4YIvp2oIOXHRR1NUg2ULiyTWA0
+         JdaujmTrN+C36LWvP5NmIgVknO9pfdt/++nR9m95XRm+naFZ03q8jx1bi2EFx1yz1HPU
+         q796HstAM014Qjdpb+N9NtQfVSUZgzAu2Pz1FP+A+S0frdOa4hUFZDwI4R91z+The4Ax
+         g0i4onJVgcIOcSpOyxP5KYsK/3xDzggvfi77BPZJqtEV1WJnmQyTojofTUQlMYs02GKb
+         uywBXeA64+OnDKEajPKw7S4UHp9MYFr5iRGv/AkRLkJ4ndK3ScVlRNCV9YEbP03D4qE+
+         +rjQ==
+X-Gm-Message-State: AJIora+HNcuZuavW4siKvBmARXhM3xQ+eaqFHdSCJZ2bXwkYovmpjl5n
+        q4paSfZssCRLn+Zv8M54vJeFTjg5kEi4Yvs1e9tMjg==
+X-Google-Smtp-Source: AGRyM1tQv6CCDFx3u07LEvOjaGIhnXAU5l72oCC5MmwYKS+JqS6dGPS426l3v4HvKqgb/fUO3PdDTLb3hZ+49n67IRs=
+X-Received: by 2002:a25:5bc3:0:b0:669:b722:beb8 with SMTP id
+ p186-20020a255bc3000000b00669b722beb8mr16783331ybb.447.1656702832727; Fri, 01
+ Jul 2022 12:13:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220625200600.7582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220625200600.7582-6-prabhakar.mahadev-lad.rj@bp.renesas.com> <87pmir1ln2.wl-maz@kernel.org>
-In-Reply-To: <87pmir1ln2.wl-maz@kernel.org>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 1 Jul 2022 19:15:41 +0100
-Message-ID: <CA+V-a8v_US0aa1q4gEXGHrLMicr3Oa6FUGB-4nTegzmv+8oCHA@mail.gmail.com>
-Subject: Re: [PATCH v6 5/5] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to
- handle GPIO interrupt
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+References: <YrQP3OZbe8aCQxKU@atomide.com> <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
+ <Yrlz/P6Un2fACG98@atomide.com> <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
+ <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
+ <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
+ <Yr6HQOtS4ctUYm9m@atomide.com> <Yr6QUzdoFWv/eAI6@atomide.com>
+ <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com>
+ <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com> <20220701150848.75eeprptmb5beip7@bogus>
+In-Reply-To: <20220701150848.75eeprptmb5beip7@bogus>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 1 Jul 2022 12:13:16 -0700
+Message-ID: <CAGETcx_Y-9WBeRwf22v3NSuY8PGpPrTxtx_uBqe_Q7rD6mEQMQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        Alexander Stein <alexander.stein@ew.tq-group.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
-
-On Wed, Jun 29, 2022 at 5:26 PM Marc Zyngier <maz@kernel.org> wrote:
+On Fri, Jul 1, 2022 at 8:08 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
 >
-> On Sat, 25 Jun 2022 21:06:00 +0100,
-> Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Add IRQ domain to RZ/G2L pinctrl driver to handle GPIO interrupt.
-> >
-> > GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can be
-> > used as IRQ lines at a given time. Selection of pins as IRQ lines
-> > is handled by IA55 (which is the IRQC block) which sits in between the
-> > GPIO and GIC.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 236 ++++++++++++++++++++++++
-> >  1 file changed, 236 insertions(+)
-> >
+> Hi, Saravana,
+>
+> On Fri, Jul 01, 2022 at 01:26:12AM -0700, Saravana Kannan wrote:
 >
 > [...]
 >
-> > +static void *rzg2l_gpio_populate_parent_fwspec(struct gpio_chip *chip,
-> > +                                            unsigned int parent_hwirq,
-> > +                                            unsigned int parent_type)
-> > +{
-> > +     struct irq_fwspec *fwspec;
-> > +
-> > +     fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
-> > +     if (!fwspec)
-> > +             return NULL;
-> > +
-> > +     fwspec->fwnode = chip->irq.parent_domain->fwnode;
-> > +     fwspec->param_count = 2;
-> > +     fwspec->param[0] = parent_hwirq;
-> > +     fwspec->param[1] = parent_type;
-> > +
-> > +     return fwspec;
-> > +}
+> > Can you check if this hack helps? If so, then I can think about
+> > whether we can pick it up without breaking everything else. Copy-paste
+> > tab mess up warning.
 >
-> I jumped at this one again.
+> Sorry for jumping in late and not even sure if this is right thread.
+> I have not bisected anything yet, but I am seeing issues on my Juno R2
+> with SCMI enabled power domains and Coresight AMBA devices.
 >
-> Can you please pick [1] as part of your series and write this in a way
-> that doesn't require extra memory allocation? It has already been
-> ack'ed by Linus anyway, and we'd put an end to this thing for good.
+> OF: amba_device_add() failed (-19) for /etf@20010000
+> OF: amba_device_add() failed (-19) for /tpiu@20030000
+> OF: amba_device_add() failed (-19) for /funnel@20040000
+> OF: amba_device_add() failed (-19) for /etr@20070000
+> OF: amba_device_add() failed (-19) for /stm@20100000
+> OF: amba_device_add() failed (-19) for /replicator@20120000
+> OF: amba_device_add() failed (-19) for /cpu-debug@22010000
+> OF: amba_device_add() failed (-19) for /etm@22040000
+> OF: amba_device_add() failed (-19) for /cti@22020000
+> OF: amba_device_add() failed (-19) for /funnel@220c0000
+> OF: amba_device_add() failed (-19) for /cpu-debug@22110000
+> OF: amba_device_add() failed (-19) for /etm@22140000
+> OF: amba_device_add() failed (-19) for /cti@22120000
+> OF: amba_device_add() failed (-19) for /cpu-debug@23010000
+> OF: amba_device_add() failed (-19) for /etm@23040000
+> OF: amba_device_add() failed (-19) for /cti@23020000
+> OF: amba_device_add() failed (-19) for /funnel@230c0000
+> OF: amba_device_add() failed (-19) for /cpu-debug@23110000
+> OF: amba_device_add() failed (-19) for /etm@23140000
+> OF: amba_device_add() failed (-19) for /cti@23120000
+> OF: amba_device_add() failed (-19) for /cpu-debug@23210000
+> OF: amba_device_add() failed (-19) for /etm@23240000
+> OF: amba_device_add() failed (-19) for /cti@23220000
+> OF: amba_device_add() failed (-19) for /cpu-debug@23310000
+> OF: amba_device_add() failed (-19) for /etm@23340000
+> OF: amba_device_add() failed (-19) for /cti@23320000
+> OF: amba_device_add() failed (-19) for /cti@20020000
+> OF: amba_device_add() failed (-19) for /cti@20110000
+> OF: amba_device_add() failed (-19) for /funnel@20130000
+> OF: amba_device_add() failed (-19) for /etf@20140000
+> OF: amba_device_add() failed (-19) for /funnel@20150000
+> OF: amba_device_add() failed (-19) for /cti@20160000
 >
-> Thanks,
->
->         M.
->
-> [1] https://lore.kernel.org/r/20220512162320.2213488-1-maz@kernel.org
->
-I tried applying [1] on linux-next  (c4185b16aba7) and 5.19-rc4
-(03c765b0e3b4) but this patch does not apply cleanly. Can you please
-point me to the repo where this patch exists (or repo where the patch
-applies cleanly)?
+> These are working fine with deferred probe in the mainline.
+> I tried the hack you have suggested here(rather Tony's version),
 
-Cheers,
-Prabhakar
+Thanks for trying that.
+
+> also
+> tried with fw_devlink=0 and fw_devlink=1
+
+0 and 1 aren't valid input to fw_devlink. But yeah, I don't expect
+disabling it to make anything better.
+
+> && fw_devlink.strict=0
+> No change in the behaviour.
+>
+> The DTS are in arch/arm64/boot/dts/arm/juno-*-scmi.dts and there
+> coresight devices are mostly in juno-cs-r1r2.dtsi
+
+Thanks
+
+> Let me know if there is anything obvious or you want me to bisect which
+> means I need more time. I can do that next week.
+
+I'll let you know once I poke at the DTS. We need to figure out why
+fw_devlink wasn't blocking these from getting to the error (same as in
+Tony's case). But since these are amba devices, I think I have some
+guesses.
+
+This is an old series that had some issues in some cases and I haven't
+gotten around to looking at it. You can give that a shot if you can
+apply it to a recent tree.
+https://lore.kernel.org/lkml/20210304195101.3843496-1-saravanak@google.com/
+
+After looking at that old patch again, I think I know what's going on.
+For normal devices, the pm domain attach happens AFTER the device is
+added and fw_devlink has had a chance to set up device links. And if
+the suppliers aren't ready, really_probe() won't get as far as
+dev_pm_domain_attach(). But for amba, the clock and pm domain
+suppliers are "grabbed" before adding the device.
+
+So with that old patch + always returning -EPROBE_DEFER in
+amba_device_add() if amba_read_periphid() fails should fix your issue.
+
+-Saravana
