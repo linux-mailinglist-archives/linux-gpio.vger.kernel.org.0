@@ -2,136 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9515E562725
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 01:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2CC05627C4
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Jul 2022 02:37:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbiF3Xfe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jun 2022 19:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56488 "EHLO
+        id S230526AbiGAAhz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Jun 2022 20:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiF3Xfd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 19:35:33 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2110.outbound.protection.outlook.com [40.107.114.110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8041E59243;
-        Thu, 30 Jun 2022 16:35:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KFQzb+7jtvgCqpGN8Jcf8dewghrWnXhLEUK9wQx9bOenwvBpStCiMVIhxL6QrzwHlU9xCsYImMu2sxaothRo6LFd14MhgmiEVafnvIayNueUDb8pJHS/9gGNkQ+Y3tgjCfQ9ZZ6l8JQL8NF4xxx3l3jagMYd/OC+DxVFwSve+3bc6ATb5eaYnptpbDvttc+irKsOtKaDYvT7rlRuQ6r1r6GHZDwKmFte0bmCN9s0k39NTZ7rhf9eT7yCisrmSF594yTcnobEvKq7GOoBszR4VTwYGh0P5vzn8ndbw0fbMS6KQ3AaRZBT7WS9QgkBbBW+yYJWlcIVR9ZO67y+ZNF8Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e1iOmPem4El7Oh3IyiNnb3C2znR3Y+8cBKm/h7zrlhc=;
- b=BEXU/gLRVRulLxINas23+WnT68O4chBF1XsYWi5vUfYQ5CvpjMts+dFc9K/gvWxJBftUQ7Hdk327zGwmPzsVn3qFQKV5A2hh0AQIHilNK07s8FdvXRjearJ/9G6/Aqp0GgT9DUBTIq+PwWs91xZXMG8/VWJ37JfA2NWepMCLePp2SW9eg1LKLEnlz9GAMKuTYJIUFd00aCzyt2E/2JprzGNEMT/FCF1qBFYME8Qr7HNiD8bpd4ruQwv3jVl5gqKeQ7ylyZUTuSJcahl9SfV44GwIT6gJ6ZgP43/IilPv+E5HVsnoCclmTrokJ1FJUFlntFf7uoB2dT9z5O99QVqWWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e1iOmPem4El7Oh3IyiNnb3C2znR3Y+8cBKm/h7zrlhc=;
- b=lkuH323FzF9dglVHjB6AOjUWZv6QhsKc5ObaE+ZW+TYl+tt0Tj9JevhZGdyTiJ/lOpDzuZRuuhemhw7uJBRt7KUoEavTsEyappp0+uAaPgWp8X579hdqdyWGB0z/7/WJeIapie7QYzDrjgejkhG9/fPZwb7DSfY+8D4q0+prp+8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
- by OSAPR01MB2691.jpnprd01.prod.outlook.com (2603:1096:604:5::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Thu, 30 Jun
- 2022 23:35:24 +0000
-Received: from OS3PR01MB8426.jpnprd01.prod.outlook.com
- ([fe80::3838:1a73:ae46:bab2]) by OS3PR01MB8426.jpnprd01.prod.outlook.com
- ([fe80::3838:1a73:ae46:bab2%5]) with mapi id 15.20.5395.014; Thu, 30 Jun 2022
- 23:35:23 +0000
-Message-ID: <87mtdtu3lw.wl-kuninori.morimoto.gx@renesas.com>
-From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 09/21] pinctrl: renesas: r8a779g0: add missing TCLKx_A/TCLK_B/TCLKx_X
-In-Reply-To: <CAMuHMdW0WwW=dxVKhDAc55Erra2qYwoVgmw5hvY4rjt+468e7w@mail.gmail.com>
-References: <874k0nlrbw.wl-kuninori.morimoto.gx@renesas.com>
-        <87r13rkcos.wl-kuninori.morimoto.gx@renesas.com>
-        <CAMuHMdVVPN-dhnjw1y7WqQJjZNO-YG8PjaFjmCvawMAhZJJLsA@mail.gmail.com>
-        <87r138jm3r.wl-kuninori.morimoto.gx@renesas.com>
-        <87k090ji9t.wl-kuninori.morimoto.gx@renesas.com>
-        <CAMuHMdWPWzhBoDeTR-ueS9Y9sBVWx_zUAM+6b168Tb8LYcGxcg@mail.gmail.com>
-        <87y1xf59eq.wl-kuninori.morimoto.gx@renesas.com>
-        <CAMuHMdW0WwW=dxVKhDAc55Erra2qYwoVgmw5hvY4rjt+468e7w@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date:   Thu, 30 Jun 2022 23:35:23 +0000
-X-ClientProxiedBy: TYAPR01CA0013.jpnprd01.prod.outlook.com (2603:1096:404::25)
- To OS3PR01MB8426.jpnprd01.prod.outlook.com (2603:1096:604:194::10)
+        with ESMTP id S229555AbiGAAhx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jun 2022 20:37:53 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD1053EE4
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 17:37:51 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-31772f8495fso9358227b3.4
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Jun 2022 17:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VvnQLRW3jtos30YOXCac41NBCyC2GZh1yMj7tf5Q9R0=;
+        b=oyKgnTd4PpBv38WuQljuauvS82SM3dQlAPCb0vgCngpk91UWhkvTbZ51UyYbfAoPxT
+         emAKlWy7SwOEebwyrY/bBlmJ7gBRqbOBdvj1P9MoQ4xxBvLVL5YPNa172XzXRY2FHp0H
+         w2PV+L3bfaqtsyPtMEvIpSBAPKjV/QZNEyFmJ5sEU1kg24dtrFeUBpECBRoklWoXFZE/
+         J/YZVng3McgGPZFq/KpeWHT/1N3xNE3GUH3gGkPhKBLhmrhYlOEh2+3RKVhy5pZaPEPH
+         oYcoVGcU8mbLw8UZFRcEzdlq8qpnbjYWAOPuj+WSMPfq5aGJDObMbOGZGGljUFCYxDAr
+         YsXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VvnQLRW3jtos30YOXCac41NBCyC2GZh1yMj7tf5Q9R0=;
+        b=6qVolvMyYMv0VVI/+Wut0Zj/veAB6+aSFn+3/0ivnTZIZMEHqeJQUa7p6/gdb3hU6l
+         iY/p0xql2CSSw+h/s3mjLfqZXH75xY141x1co4LOZ75VUhqnzht3uXE7Z2khIboU4/BJ
+         dQ5N/F2JNDIcHPixrbiqkamGcQAorY7OcELwtgmGevA6mKVffJEhS2Cb15vzyfbLB5+B
+         DZxazOZrAy6SfmrwdJrm9aadKz+sGVlu+nzYsIRtLURN+qRqTxDVQCrhM7HYTxjYPx3p
+         brhZIMq5Ip+LGxxOUsEEnLirTtGnZNKDe848Ctr5L6CAm5atVmjd+Lsh4hK+oguSfeUl
+         FwCw==
+X-Gm-Message-State: AJIora+lLy99s9FTY9UwzJNVdFi6jOs3ImEILDyUiAXXVzUW9aBUpYB+
+        NLWjZ1Qhxuc0B+VEOA+OqTvRILbaaUhJkT2E+HO6aA==
+X-Google-Smtp-Source: AGRyM1umaTTvGggQULFTozCe9tetZyZETwjRyDuJ0B5d5pAN2Z0BoGkXYjkuA50JAwucoHRiSQCT/DR4v+US44sWmFM=
+X-Received: by 2002:a0d:ca16:0:b0:31b:7adf:d91 with SMTP id
+ m22-20020a0dca16000000b0031b7adf0d91mr13637664ywd.455.1656635871014; Thu, 30
+ Jun 2022 17:37:51 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 93fddf00-fe8d-470b-6c69-08da5af1344e
-X-MS-TrafficTypeDiagnostic: OSAPR01MB2691:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aRVHRfB8dQoynjq6LjQN4rZODk7jkw0Qy1dwFknW5+e3QUyf5SdecpL5Lxwdw0UZGojm5pegSwcU2Fdmd08gDI3k6y/kgSjSxaA76hZlQtvZGkr+Vz9MZhYbWAujDQ1yrErccaPaaH4UsOnTvD0st7S7t7u+JXHSagWAkH1/vjJCYYu0n+Pwac12LEbrMOWLIY53xetBwWa4XbYpygop6SVQ6CNeNF128c79d/IeMrothcpn7mMQuvNG5XZUzLTLlb2DTUIswsvD8P+oH0duFh6umfoAz/AtJkZoibQ98ozW3SOUSKcYMjv5Yyq1dnbV4+jTOxxWD4WhIdsvpN6fyxH/QwLPwzhtJ6wEzWivsr3NosFu256ZAiqm2R7RqRgv0VipAdV5tIQ7NAYM3bcuKTFWMXQTFCu9lddv0lzz+OS1lEArn0NXsQAEZ4Dsu47DOipm5rwZy5cyT3N3XvMx8niADMntCV4cS28EDOaudGobobIkJf0AmvcA6xJijFsLCaq5pA2O0b/K8JoCs5xp9CAfgbx03VnroTrVZPI5iUYelUBZF+pNgzrfgFzk7260s1VSgwTX8K+S9vUz89A6JOAQ0MSvGyejF5EPvqqbyyxwiFNJzyTA18BLpagNtziO9X/0jzpee6SnOp3ZyBtEsHI1xqvt++W1Jnh9chgB+3O5L6mqlgDySeYDM5uQdT2RG2DpP+1vbaah5ygs08IcIe4S3nlCWpWOdhkQFs4U10pvkHL+HduCZSEtVIYFF2wpEaF43pGSPXASQgWuL8egeuR0w0KRgN5zsAwYERaErfo7/dggp1sRnYell0I8DhAm
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3PR01MB8426.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(396003)(346002)(376002)(366004)(136003)(478600001)(41300700001)(38350700002)(38100700002)(2906002)(2616005)(6506007)(558084003)(6512007)(26005)(36756003)(52116002)(5660300002)(86362001)(8936002)(54906003)(6916009)(6486002)(316002)(4326008)(186003)(8676002)(66476007)(66946007)(66556008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?G/lzx9RwTNc9F8TyCDLA7P0gsdgmZ3hIuSO98Vc8dS2CB/0/4trehSo4zklf?=
- =?us-ascii?Q?KF+EXiALapTe5pjJOrW66s3WPtpb2orYSMWBwn/yAZWEwbEyjCSMiOtQ5y/V?=
- =?us-ascii?Q?Yib1nfpmYc/h38Dk00KEb81NCF8WYpNdhYErlkOwdAoh3YEio4LbjjWYV9GV?=
- =?us-ascii?Q?fIMYJE0Hd7HyJxudhQjRQlOHPYVkvu5avOG4kQHlBVpnkKSxLifvaC2ZIUDP?=
- =?us-ascii?Q?IuM1gRDpXhxvtBfhENk4lT2tieJHRVDHl0p6lcuRv0NXUqvBvt8N/ND25siF?=
- =?us-ascii?Q?97sFOdkUEAiGPVRsZJ566X04tAQjVd06R1ENZwGwQ5TpuCsEe/f3wlnsWzih?=
- =?us-ascii?Q?2STeZ9glq3t5B0jbUJCiPIDOMR0qC+9ne2fVHQdPU+EB48TmzwLlAOUxIYlv?=
- =?us-ascii?Q?C2rQvB6VdShRa/yurrQf7DjVXl6RTXjCrLXHNc+Twvmu+6jgJGbqxapq3EuG?=
- =?us-ascii?Q?YrXMv8rTlttXMXYU9ih8usP5ZToFAeL4VXYqUeR4Af9mKl1JTFAhqQj0RuRs?=
- =?us-ascii?Q?jcY2xz2N6Nk3BxLY/osH3XvabQ3SHxMHQS1qN4T81H4S34LkKvoWpj3iCNHi?=
- =?us-ascii?Q?NvxNURidP3T93lvfBcE8aQLEBRKHxHUnf8NCHzbTfyZVdlziFh8pV6eRCYKf?=
- =?us-ascii?Q?UF+5dnmWXo9thpCLHKtsbSzJZt/TzhZ9x+GKc1EyRYntO+V9+pXlcfpFpMWq?=
- =?us-ascii?Q?sXz93/BLnE7LOpvpoLTXistO2wQdQBpjhP5MkXbQOsQBr9jqKQLOKr3O5MzM?=
- =?us-ascii?Q?f2MH56bkwisi2Fvfxxcz9N2p8rsSegK1fwm9p5RJ0767oDxShA54myhVvwM9?=
- =?us-ascii?Q?8MY9LSCFWZ/yvip0WWNOtr3UlRl02nND1NaD4dW+Li7rR6e04+J+uMWib1Xc?=
- =?us-ascii?Q?CYKN+aN+gAvMMarlZ8FbczUZEavLLfE7BXSxC9iPUQmzcrV4x6+lfYuqgvnO?=
- =?us-ascii?Q?mP/yFSub3P1aphS/zx5zHhIEGhlJdYZ2H5LRP/4ixLIpK8ZNaJMqySziFWcZ?=
- =?us-ascii?Q?3TMWMwLvp9YebDEqPtdd2OcUa9i6scBK8zKYW1N7a7/csA5aJUB1PtF9j8og?=
- =?us-ascii?Q?GK02c5VNIj0I8gzeYPsEVRYEKHZnRwG4kQejDyykNDum3P5mRbNmXFoFdb48?=
- =?us-ascii?Q?YHL2qSy6VT8QNlDycf8o7q4EIY6qbpO+0FWk6qGM/9ejStyKcDE3BzJkRwzh?=
- =?us-ascii?Q?NtAOpH3mROTYA1mkIZgFX3WJtydKTrDkUA/xr5HKH7dzprmMIj128Nt9mnf+?=
- =?us-ascii?Q?HV7gqf681ISdKcI7IzW7cI9EI+9zsW8/T6WKAeJxNmSiHiMZ0v0OcqZxUERT?=
- =?us-ascii?Q?iSuEwjhal2GlmFA0wWAtIma8i9BEpxdW48oEq4qVffDV65Ne8e8jfmkVOo3A?=
- =?us-ascii?Q?fNgxcK4UyClPNXN22BR8vBhfEVXpKmM5wvCUwcAARQ73jobmBbgkeWDx8Y9n?=
- =?us-ascii?Q?C6ajOyaTtxQT0KNrs9PPESWM1C7eNshH9Zn2ojRQFNjmNKIdBtnxnpSz46Nq?=
- =?us-ascii?Q?3SnrWuAMdX5t37aZ7h8nHb5ihTKMW8b3WTg1Q2+PkX/3LQRXxnSQwhs25T6H?=
- =?us-ascii?Q?WrpMHYn9X24TkU0ZL/s0XgTJMcPK2ZMt7+Itszn5O0hjwXA2tvMxYyMYPnVC?=
- =?us-ascii?Q?eFl8ToJnlPcWyeCG3xZAsg8=3D?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93fddf00-fe8d-470b-6c69-08da5af1344e
-X-MS-Exchange-CrossTenant-AuthSource: OS3PR01MB8426.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 23:35:23.9081
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /bSGwlDOwo0pHYOhGvQDrsnVOgwm0o/Dy+DaZTnKJZAPFEJvU5EKyUCWJ4Ktf9aVSbyWQbJ+MdBJC0H7g0etURGgE3MkAwmAcxAaqAp2LeXkvBSr5vvK/DUl9xFoy+ey
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2691
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <20220601070707.3946847-2-saravanak@google.com> <YrFzK6EiVvXmzVG6@atomide.com>
+ <4799738.LvFx2qVVIh@steina-w>
+In-Reply-To: <4799738.LvFx2qVVIh@steina-w>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 30 Jun 2022 17:37:14 -0700
+Message-ID: <CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: multipart/mixed; boundary="0000000000009dba6c05e2b398fc"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+--0000000000009dba6c05e2b398fc
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geert
+On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+>
+> Hi,
+>
+> Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony Lindgren:
+> > Hi,
+> >
+> > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
+> > > Now that fw_devlink=on by default and fw_devlink supports
+> > > "power-domains" property, the execution will never get to the point
+> > > where driver_deferred_probe_check_state() is called before the supplier
+> > > has probed successfully or before deferred probe timeout has expired.
+> > >
+> > > So, delete the call and replace it with -ENODEV.
+> >
+> > Looks like this causes omaps to not boot in Linux next. With this
+> > simple-pm-bus fails to probe initially as the power-domain is not
+> > yet available. On platform_probe() genpd_get_from_provider() returns
+> > -ENOENT.
+> >
+> > Seems like other stuff is potentially broken too, any ideas on
+> > how to fix this?
+>
+> I think I'm hit by this as well, although I do not get a lockup.
+> In my case I'm using arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts
+> and probing of 38320000.blk-ctrl fails as the power-domain is not (yet)
+> registed.
 
-> OK, then please continue.
-> But perhaps add a comment to the SH_PFC_PIN_GROUP() definitions,
-> to make it clear they are preliminary?
+Ok, took a look.
 
-Yes ! Good idea !
+The problem is that there are two drivers for the same device and they
+both initialize this device.
 
+    gpc: gpc@303a0000 {
+        compatible = "fsl,imx8mq-gpc";
+    }
 
-Thank you for your help !!
+$ git grep -l "fsl,imx7d-gpc" -- drivers/
+drivers/irqchip/irq-imx-gpcv2.c
+drivers/soc/imx/gpcv2.c
 
-Best regards
----
-Kuninori Morimoto
+IMHO, this is a bad/broken design.
+
+So what's happening is that fw_devlink will block the probe of
+38320000.blk-ctrl until 303a0000.gpc is initialized. And it stops
+blocking the probe of 38320000.blk-ctrl as soon as the first driver
+initializes the device. In this case, it's the irqchip driver.
+
+I'd recommend combining these drivers into one. Something like the
+patch I'm attaching (sorry for the attachment, copy-paste is mangling
+the tabs). Can you give it a shot please?
+
+-Saravana
+
+--0000000000009dba6c05e2b398fc
+Content-Type: application/x-patch; name="0001-combine-drivers.patch"
+Content-Disposition: attachment; filename="0001-combine-drivers.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_l51q58ij0>
+X-Attachment-Id: f_l51q58ij0
+
+RnJvbSAwOGI4Nzk1YjYzMDBkZTg5NTAyYTI2YmEzMzQ3YjJlNTRkNDMzODFkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBTYXJhdmFuYSBLYW5uYW4gPHNhcmF2YW5ha0Bnb29nbGUuY29t
+PgpEYXRlOiBUaHUsIDMwIEp1biAyMDIyIDE3OjA0OjI2IC0wNzAwClN1YmplY3Q6IFtQQVRDSF0g
+Y29tYmluZSBkcml2ZXJzCgotLS0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtaW14LWdwY3YyLmMgfCAx
+OSArKysrLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL3NvYy9pbXgvZ3BjdjIuYyAgICAgICAgIHwg
+MTAgKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAxNSBkZWxl
+dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLWlteC1ncGN2Mi5jIGIv
+ZHJpdmVycy9pcnFjaGlwL2lycS1pbXgtZ3BjdjIuYwppbmRleCBiOWMyMmY3NjRiNGQuLjYyMTIx
+MWU1ODAwYSAxMDA2NDQKLS0tIGEvZHJpdmVycy9pcnFjaGlwL2lycS1pbXgtZ3BjdjIuYworKysg
+Yi9kcml2ZXJzL2lycWNoaXAvaXJxLWlteC1ncGN2Mi5jCkBAIC0xOTksMTMgKzE5OSwxMyBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBncGN2Ml9vZl9tYXRjaFtdID0gewogCXsg
+LyogRU5EICovIH0KIH07CiAKLXN0YXRpYyBpbnQgX19pbml0IGlteF9ncGN2Ml9pcnFjaGlwX2lu
+aXQoc3RydWN0IGRldmljZV9ub2RlICpub2RlLAotCQkJICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqcGFyZW50KQoraW50IGlteF9ncGN2Ml9pcnFjaGlwX2luaXQoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldiwKKwkJCSAgIHVuc2lnbmVkIGxvbmcgY29yZV9udW0pCiB7CisJc3RydWN0IGRl
+dmljZV9ub2RlICpub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7CisJc3RydWN0IGRldmljZV9ub2Rl
+ICpwYXJlbnQgPSBvZl9pcnFfZmluZF9wYXJlbnQobm9kZSk7CiAJc3RydWN0IGlycV9kb21haW4g
+KnBhcmVudF9kb21haW4sICpkb21haW47CiAJc3RydWN0IGdwY3YyX2lycWNoaXBfZGF0YSAqY2Q7
+Ci0JY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqaWQ7Ci0JdW5zaWduZWQgbG9uZyBjb3JlX251
+bTsKIAlpbnQgaTsKIAogCWlmICghcGFyZW50KSB7CkBAIC0yMTMsMTQgKzIxMyw2IEBAIHN0YXRp
+YyBpbnQgX19pbml0IGlteF9ncGN2Ml9pcnFjaGlwX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpu
+b2RlLAogCQlyZXR1cm4gLUVOT0RFVjsKIAl9CiAKLQlpZCA9IG9mX21hdGNoX25vZGUoZ3BjdjJf
+b2ZfbWF0Y2gsIG5vZGUpOwotCWlmICghaWQpIHsKLQkJcHJfZXJyKCIlcE9GOiB1bmtub3duIGNv
+bXBhdGliaWxpdHkgc3RyaW5nXG4iLCBub2RlKTsKLQkJcmV0dXJuIC1FTk9ERVY7Ci0JfQotCi0J
+Y29yZV9udW0gPSAodW5zaWduZWQgbG9uZylpZC0+ZGF0YTsKLQogCXBhcmVudF9kb21haW4gPSBp
+cnFfZmluZF9ob3N0KHBhcmVudCk7CiAJaWYgKCFwYXJlbnRfZG9tYWluKSB7CiAJCXByX2Vycigi
+JXBPRjogdW5hYmxlIHRvIGdldCBwYXJlbnQgZG9tYWluXG4iLCBub2RlKTsKQEAgLTI4NSw2ICsy
+NzcsMyBAQCBzdGF0aWMgaW50IF9faW5pdCBpbXhfZ3BjdjJfaXJxY2hpcF9pbml0KHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbm9kZSwKIAlvZl9ub2RlX2NsZWFyX2ZsYWcobm9kZSwgT0ZfUE9QVUxBVEVE
+KTsKIAlyZXR1cm4gMDsKIH0KLQotSVJRQ0hJUF9ERUNMQVJFKGlteF9ncGN2Ml9pbXg3ZCwgImZz
+bCxpbXg3ZC1ncGMiLCBpbXhfZ3BjdjJfaXJxY2hpcF9pbml0KTsKLUlSUUNISVBfREVDTEFSRShp
+bXhfZ3BjdjJfaW14OG1xLCAiZnNsLGlteDhtcS1ncGMiLCBpbXhfZ3BjdjJfaXJxY2hpcF9pbml0
+KTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL2lteC9ncGN2Mi5jIGIvZHJpdmVycy9zb2MvaW14
+L2dwY3YyLmMKaW5kZXggODVhYTg2ZTEzMzhhLi4zY2E1MzgyZmY1ZDMgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvc29jL2lteC9ncGN2Mi5jCisrKyBiL2RyaXZlcnMvc29jL2lteC9ncGN2Mi5jCkBAIC0z
+MDUsNiArMzA1LDcgQEAgc3RydWN0IGlteF9wZ2NfZG9tYWluX2RhdGEgewogCXNpemVfdCBkb21h
+aW5zX251bTsKIAljb25zdCBzdHJ1Y3QgcmVnbWFwX2FjY2Vzc190YWJsZSAqcmVnX2FjY2Vzc190
+YWJsZTsKIAljb25zdCBzdHJ1Y3QgaW14X3BnY19yZWdzICpwZ2NfcmVnczsKKwl1bnNpZ25lZCBs
+b25nIGlycV9jb3JlX251bTsKIH07CiAKIHN0YXRpYyBpbmxpbmUgc3RydWN0IGlteF9wZ2NfZG9t
+YWluICoKQEAgLTU0OSw2ICs1NTAsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlteF9wZ2NfZG9t
+YWluX2RhdGEgaW14N19wZ2NfZG9tYWluX2RhdGEgPSB7CiAJLmRvbWFpbnNfbnVtID0gQVJSQVlf
+U0laRShpbXg3X3BnY19kb21haW5zKSwKIAkucmVnX2FjY2Vzc190YWJsZSA9ICZpbXg3X2FjY2Vz
+c190YWJsZSwKIAkucGdjX3JlZ3MgPSAmaW14N19wZ2NfcmVncywKKwkuaXJxX2NvcmVfbnVtID0g
+MiwKIH07CiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaW14X3BnY19kb21haW4gaW14OG1fcGdjX2Rv
+bWFpbnNbXSA9IHsKQEAgLTcxOCw2ICs3MjAsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlteF9w
+Z2NfZG9tYWluX2RhdGEgaW14OG1fcGdjX2RvbWFpbl9kYXRhID0gewogCS5kb21haW5zX251bSA9
+IEFSUkFZX1NJWkUoaW14OG1fcGdjX2RvbWFpbnMpLAogCS5yZWdfYWNjZXNzX3RhYmxlID0gJmlt
+eDhtX2FjY2Vzc190YWJsZSwKIAkucGdjX3JlZ3MgPSAmaW14N19wZ2NfcmVncywKKwkuaXJxX2Nv
+cmVfbnVtID0gNCwKIH07CiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaW14X3BnY19kb21haW4gaW14
+OG1tX3BnY19kb21haW5zW10gPSB7CkBAIC0xNDI1LDYgKzE0MjgsOSBAQCBzdGF0aWMgc3RydWN0
+IHBsYXRmb3JtX2RyaXZlciBpbXhfcGdjX2RvbWFpbl9kcml2ZXIgPSB7CiB9OwogYnVpbHRpbl9w
+bGF0Zm9ybV9kcml2ZXIoaW14X3BnY19kb21haW5fZHJpdmVyKQogCitleHRlcm4gaW50IGlteF9n
+cGN2Ml9pcnFjaGlwX2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKKwkJCQkgIHVu
+c2lnbmVkIGxvbmcgY29yZV9udW0pOworCiBzdGF0aWMgaW50IGlteF9ncGN2Ml9wcm9iZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogewogCWNvbnN0IHN0cnVjdCBpbXhfcGdjX2RvbWFp
+bl9kYXRhICpkb21haW5fZGF0YSA9CkBAIC0xNDQ0LDYgKzE0NTAsMTAgQEAgc3RhdGljIGludCBp
+bXhfZ3BjdjJfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAl2b2lkIF9faW9t
+ZW0gKmJhc2U7CiAJaW50IHJldDsKIAorCXJldCA9IGlteF9ncGN2Ml9pcnFjaGlwX2luaXQocGRl
+diwgZG9tYWluX2RhdGEtPmlycV9jb3JlX251bSk7CisJaWYgKHJldCkKKwkJcmV0dXJuIHJldDsK
+KwogCXBnY19ucCA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKGRldi0+b2Zfbm9kZSwgInBnYyIpOwog
+CWlmICghcGdjX25wKSB7CiAJCWRldl9lcnIoZGV2LCAiTm8gcG93ZXIgZG9tYWlucyBzcGVjaWZp
+ZWQgaW4gRFRcbiIpOwotLSAKMi4zNy4wLnJjMC4xNjEuZzEwZjM3YmVkOTAtZ29vZwoK
+--0000000000009dba6c05e2b398fc--
