@@ -2,59 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C523563E83
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Jul 2022 06:39:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE00C563F5C
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Jul 2022 12:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbiGBEjj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Jul 2022 00:39:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39342 "EHLO
+        id S232048AbiGBKFA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Jul 2022 06:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230289AbiGBEjg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Jul 2022 00:39:36 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD2520F78
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Jul 2022 21:39:36 -0700 (PDT)
+        with ESMTP id S229446AbiGBKE7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Jul 2022 06:04:59 -0400
+Received: from mga17.intel.com (unknown [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86835186C1;
+        Sat,  2 Jul 2022 03:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656736776; x=1688272776;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Hnz1KVcZUpeoHtnXX6ZS6F6FU5tqvzXGPnAl+9jxDy4=;
-  b=kqDrtTWRgtNBhVJ5zOpblcKvb6xlrhKTS18VBlQER4JHX4t3kp4d9lYP
-   3VEGDJ4C5+C9o8JrYtd3ruKE/iOUEy4wVd7umvXeBtq+i4etBZ4m8aBE0
-   1LKsAexLIsbTYHXNwBqLStRPhjdBbsUGR1faDzt8x7y3vhHZd9S/qZVrm
-   i0gC7zmexxf1K1VBpn6HsuirbMAiQhL2FEHZmWIBDjKOWke0O3NsA5rMZ
-   hurERrSRZHQgQ9DrdO3DcMBKubwzC/t7bdBNPfm/Gc/ScxGNESIXl2YBI
-   DNq1hExaRsBRFhbU99ubqy7ZOcmmMAeHT6LxFbfPMdv2ylZ1AprT7jy8n
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10395"; a="282821182"
+  t=1656756298; x=1688292298;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AZl8HN5oDnj9aknNKQSHbkKjT0Qvlv4fnPi+jb+GiQQ=;
+  b=Jb4vS8FXieNFrA1YDcAyeFC59Zyj5vtvhKIP2LkeS9kySti9k3ttuM6F
+   m0pU1MLrMXLG0DkPwldEz2D6hDgn2gHhiYQvRYZlygMsr58ukOlP0cqIf
+   yBBZOEqjx4rCkughh4PhY5RyalYOeT3LlHiH1wfLyC7AVLJ5B0UXFAm54
+   oMwfXrWDAV78JiYoUYPvBZFj2PzY+imy9QNB5/7XIkDBvyNo7kDOI7nW5
+   YgyaZkxknIQ1RpF42UwT2b+EqpXEh8YVXDr2G6conAJrafevpfJGlAFf6
+   4K2X8+GrrXOd2Hi0NP9ZV3H5qUVrAYupOQeFnWOgfFk18WECohBfBtwcR
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10395"; a="263209557"
 X-IronPort-AV: E=Sophos;i="5.92,239,1650956400"; 
-   d="scan'208";a="282821182"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2022 21:39:35 -0700
+   d="scan'208";a="263209557"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2022 03:04:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,239,1650956400"; 
-   d="scan'208";a="694742479"
+   d="scan'208";a="596534543"
 Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2022 21:39:35 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 02 Jul 2022 03:04:53 -0700
 Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
         (envelope-from <lkp@intel.com>)
-        id 1o7Uus-000EpU-Bj;
-        Sat, 02 Jul 2022 04:39:34 +0000
-Date:   Sat, 02 Jul 2022 12:39:27 +0800
+        id 1o7Zzb-000F7b-KF;
+        Sat, 02 Jul 2022 10:04:47 +0000
+Date:   Sat, 2 Jul 2022 18:04:44 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 1ddcae6cd6c1c4d6333641a5ffb705372ed0a78d
-Message-ID: <62bfcbff.zGLYE44zUOJ7PMId%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+To:     Colin Foster <colin.foster@in-advantage.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        katie.morris@in-advantage.com
+Subject: Re: [PATCH v12 net-next 9/9] mfd: ocelot: add support for the
+ vsc7512 chip via spi
+Message-ID: <202207021703.v9TWwjUK-lkp@intel.com>
+References: <20220701192609.3970317-10-colin.foster@in-advantage.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Disposition: inline
+In-Reply-To: <20220701192609.3970317-10-colin.foster@in-advantage.com>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RDNS_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,69 +83,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 1ddcae6cd6c1c4d6333641a5ffb705372ed0a78d  Merge branch 'devel' into for-next
+Hi Colin,
 
-elapsed time: 2333m
+I love your patch! Yet something to improve:
 
-configs tested: 49
-configs skipped: 2
+[auto build test ERROR on net-next/master]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220702-032824
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git dbdd9a28e1406ab8218a69e60f10a168b968c81d
+config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20220702/202207021703.v9TWwjUK-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/86c3be9af85a12a7b190790d80944693dd07a132
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Colin-Foster/add-support-for-VSC7512-control-over-SPI/20220702-032824
+        git checkout 86c3be9af85a12a7b190790d80944693dd07a132
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-ia64                             allmodconfig
-arc                              allyesconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-i386                                defconfig
-i386                             allyesconfig
-alpha                            allyesconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-i386                          randconfig-a001
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-arc                  randconfig-r043-20220629
-riscv                randconfig-r042-20220629
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-x86_64                              defconfig
-x86_64                               rhel-8.3
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-hexagon              randconfig-r041-20220629
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "ocelot_spi_init_regmap" [drivers/mfd/ocelot-core.ko] undefined!
+WARNING: modpost: module ocelot-spi uses symbol ocelot_chip_reset from namespace MFD_OCELOT, but does not import it.
+WARNING: modpost: module ocelot-spi uses symbol ocelot_core_init from namespace MFD_OCELOT, but does not import it.
 
 -- 
 0-DAY CI Kernel Test Service
