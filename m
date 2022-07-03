@@ -2,61 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A751A5646FA
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jul 2022 13:10:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7649A564720
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jul 2022 13:26:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232395AbiGCLKP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jul 2022 07:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35352 "EHLO
+        id S232450AbiGCL0k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jul 2022 07:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232487AbiGCLKN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jul 2022 07:10:13 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB3C95A7;
-        Sun,  3 Jul 2022 04:10:12 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id f2so4072184wrr.6;
-        Sun, 03 Jul 2022 04:10:12 -0700 (PDT)
+        with ESMTP id S231533AbiGCL0j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jul 2022 07:26:39 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9E295B8;
+        Sun,  3 Jul 2022 04:26:38 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id m184so3835799wme.1;
+        Sun, 03 Jul 2022 04:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8mLa6YcJ8/LXS3JX6YxujO7pIsxppw7hodqInEX9ajw=;
-        b=ab7Rio2GCTDvhPeqJGMtzyfo957Uh8UdAwwT9mq2XpxQHFbgq22302eaYgiX9T6e7m
-         ZvRlEDPD/2icwrzFPQfExwkWzlnv9VYjuXYaZEm0yj0VB5ojYNlmw52+d2QzNWwDgPPe
-         4TASz7OEZ9z8DdADuHfKbs9FqVOVgQczhSU7FXMm80TQrSCk0c78/RvyXFdMlgOHbhV/
-         +1CPRpTBuKxOirpQoPyyz6CDJOGSGBcoyHQgtLYgHK0FD4x39yCC78xn2sXjRESHD52e
-         BrdVlpuMnOuAr8sGzCA+AOqC2WNEQuHL16u+XPZWD9IMzkQjN7xNgnULUfTfYxk0Xqlu
-         iusA==
+        h=references:from:to:cc:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=y8JsYVvjrg3nX9Y9fVIfnji/DXIDBrBrl79jkU1TvKU=;
+        b=IGuIFHB+7c7eCSBqB3HdiS16/ssQSIiRjeDQkRGLTFQinjaZhsaCrxLLLgJtTmxVCB
+         wHvVqrLQWUYSHpLIvA2fyDG/7DDhz78XqMjSDbw0+kKI7NsT/b5gCmqxjopREAi81kK8
+         2ZRG048rWue8DT28p2NbXPdsCN1aNwK66XM+lwHoEew4w5WP24lFcAGLw4zbsiO7XmU1
+         Z/CgCIX0oD31/KiE+6j7fB6NkJZDDPnjxg4WZDdBru+ZcytfPb2jYy1R56hlMYlGQYfP
+         KI6KPvRsN1+qPY0EnfOpsCGlx4PduvLdUon3okM8HldTwGT4fKpEcYYt3DSfWgraZrLr
+         u05w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8mLa6YcJ8/LXS3JX6YxujO7pIsxppw7hodqInEX9ajw=;
-        b=DjCFjGYuo36sTSiJhY51iOSZ57CMO8tu6nsm2L8Jzk1y4mOiTQ/7d+OjrwR/U4JMDg
-         3SXUah9ma1V+9h+5kThrqZjmWJA5KEs6sEXm7TiGqKhV9GTGNmPzWj0k0mgTV6fVlR/f
-         nSIhRIAbAX74aQ1l+GBY/S1ZKs7PPQtmrgoF65YRvp1JGs3c+bEGF0XVJpbRLAZTsUUf
-         huRRt/EUIvH55PvoIL0ojg8nQy6n8nqKK/uIY37AVFBwv+GPsnKoyldtQ+S6IjYu5sg0
-         iu6C826uhAdrz1iLbEo9XeOigby4nyRWcGO4xRGxya6/VI+rzZkeQNTZXR5kxFYZhyRG
-         RYVA==
-X-Gm-Message-State: AJIora/xza388Ms4p3mPvs9uvQm4XA0n0NIE18me5B/LDJq3W9Lano87
-        8NCp0VAc2RJcitgVFNo5Yl0=
-X-Google-Smtp-Source: AGRyM1twLWvI9q5JpGIybFHUO9Ryc2CLbeMQvjL8oYmSwzzh2WE/rDXDRDAae8kUIkiRSP6Q/nhC9Q==
-X-Received: by 2002:adf:fa8d:0:b0:21d:6a23:f627 with SMTP id h13-20020adffa8d000000b0021d6a23f627mr69498wrr.295.1656846611274;
-        Sun, 03 Jul 2022 04:10:11 -0700 (PDT)
-Received: from localhost (92.40.202.9.threembb.co.uk. [92.40.202.9])
-        by smtp.gmail.com with ESMTPSA id v4-20020a7bcb44000000b0039746638d6esm15825418wmj.33.2022.07.03.04.10.10
+        h=x-gm-message-state:references:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=y8JsYVvjrg3nX9Y9fVIfnji/DXIDBrBrl79jkU1TvKU=;
+        b=4XU/j6qVAYOli80P6VdB9YO6O68hElClq1kW116QXgt5cPfpTarW+3JfbtZsuxPBUt
+         xrr1PDeSwpk5jjiYm9a1wYasiZCYOuneISV0u2vz3wEWnKnPpdXvlRX/00AZu8ZvODUk
+         g7f+1KQnLgtPbe+bcI1NVhLAbaoa5eul7dKDI8ceIOpZ600Mi0cknlEieEsNot4FEfVU
+         3sT664iuMMhaZKtyl3j1oN/0bWhgF+oaJ44uBTk/GxU3NhjDdJHaq0U9GzeO34CQG8eL
+         tKqH+OD+liSd+wIW7I5qyaF8d/RujoL0D49OFin11Ac9O7uSgMnBLuH4e+iVbMYq1yWX
+         eL/A==
+X-Gm-Message-State: AJIora+IG8gXwAWvFKFLYARHhv1ObHmOqJP1nuGolgUeWjQ7oT0wYiLo
+        zf6LakZnTGE9UFQpMoyneD8=
+X-Google-Smtp-Source: AGRyM1v6QL7OjuVE6xLHx03p+2vy4QZhGP+nZtS496B+gM5MOIGkydAO/Cfqk6NlDuuk8F8/xC7uew==
+X-Received: by 2002:a05:600c:154c:b0:3a1:884e:72ac with SMTP id f12-20020a05600c154c00b003a1884e72acmr16618750wmg.23.1656847597004;
+        Sun, 03 Jul 2022 04:26:37 -0700 (PDT)
+Received: from localhost (92.40.202.1.threembb.co.uk. [92.40.202.1])
+        by smtp.gmail.com with ESMTPSA id n15-20020a05600c4f8f00b003a1980d55c4sm4354395wmq.47.2022.07.03.04.26.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Jul 2022 04:10:10 -0700 (PDT)
+        Sun, 03 Jul 2022 04:26:36 -0700 (PDT)
+References: <20220629143046.213584-1-aidanmacdonald.0x0@gmail.com>
+ <20220629143046.213584-13-aidanmacdonald.0x0@gmail.com>
+ <37d40cf2-4512-754f-2e44-ee1449bc2e9f@sholland.org>
 From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     michael@walle.cc, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
-Date:   Sun,  3 Jul 2022 12:10:57 +0100
-Message-Id: <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
-References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     wens@csie.org, linus.walleij@linaro.org, brgl@bgdev.pl,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        jic23@kernel.org, sre@kernel.org, lee.jones@linaro.org,
+        lgirdwood@gmail.com, broonie@kernel.org, lars@metafoo.de,
+        quic_gurus@quicinc.com, sebastian.reichel@collabora.com,
+        andy.shevchenko@gmail.com, michael@walle.cc, rdunlap@infradead.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 12/15] pinctrl: Add AXP192 pin control driver
+In-reply-to: <37d40cf2-4512-754f-2e44-ee1449bc2e9f@sholland.org>
+Date:   Sun, 03 Jul 2022 12:27:44 +0100
+Message-ID: <CeGWHuCl1EmopK1ddAnah2VepohGrPTq@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -67,94 +77,170 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some GPIO chips require a custom to_irq() callback for mapping
-their IRQs, eg. because their interrupts come from a parent IRQ
-chip where the GPIO offset doesn't map 1-to-1 with hwirq number.
 
-Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
----
- drivers/gpio/gpio-regmap.c  | 17 +++++++++++++++++
- include/linux/gpio/regmap.h |  4 ++++
- 2 files changed, 21 insertions(+)
+Samuel Holland <samuel@sholland.org> writes:
 
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 4bc01329fb14..d11b202e51fd 100644
---- a/drivers/gpio/gpio-regmap.c
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -34,6 +34,8 @@ struct gpio_regmap {
- 				unsigned int *reg, unsigned int *mask,
- 				unsigned int *values);
- 
-+	int (*to_irq)(struct gpio_regmap *gpio, unsigned int offset);
-+
- 	void *driver_data;
- };
- 
-@@ -193,6 +195,13 @@ static int gpio_regmap_direction_output(struct gpio_chip *chip,
- 	return gpio_regmap_set_direction(chip, offset, true);
- }
- 
-+static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpio_regmap *gpio = gpiochip_get_data(chip);
-+
-+	return gpio->to_irq(gpio, offset);
-+}
-+
- void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
- {
- 	return gpio->driver_data;
-@@ -242,6 +251,10 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 	if (config->reg_field_xlate && config->reg_mask_xlate)
- 		return ERR_PTR(-EINVAL);
- 
-+	/* an irq_domain will override the to_irq hook, so don't allow both */
-+	if (config->irq_domain && config->to_irq)
-+		return ERR_PTR(-EINVAL);
-+
- 	gpio = kzalloc(sizeof(*gpio), GFP_KERNEL);
- 	if (!gpio)
- 		return ERR_PTR(-ENOMEM);
-@@ -253,6 +266,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 	gpio->reg_stride = config->reg_stride;
- 	gpio->reg_mask_xlate = config->reg_mask_xlate;
- 	gpio->reg_field_xlate = config->reg_field_xlate;
-+	gpio->to_irq = config->to_irq;
- 	gpio->reg_dat_base = config->reg_dat_base;
- 	gpio->reg_set_base = config->reg_set_base;
- 	gpio->reg_clr_base = config->reg_clr_base;
-@@ -302,6 +316,9 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 		chip->direction_output = gpio_regmap_direction_output;
- 	}
- 
-+	if (gpio->to_irq)
-+		chip->to_irq = gpio_regmap_to_irq;
-+
- 	ret = gpiochip_add_data(chip, gpio);
- 	if (ret < 0)
- 		goto err_free_gpio;
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index 47acea8cca32..9755854d6747 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -45,6 +45,8 @@ struct regmap;
-  *			to register, mask, and field values. If not given
-  *			the default gpio_regmap_field_xlate() is used, which
-  *			is implemented in terms of ->reg_mask_xlate.
-+ * @to_irq:		(Optional) hook for supporting custom IRQ mappings,
-+ *			behaves the same as the gpio_chip to_irq hook.
-  * @drvdata:		(Optional) Pointer to driver specific data which is
-  *			not used by gpio-remap but is provided "as is" to the
-  *			driver callback(s).
-@@ -102,6 +104,8 @@ struct gpio_regmap_config {
- 				unsigned int *reg, unsigned int *mask,
- 				unsigned int *values);
- 
-+	int (*to_irq)(struct gpio_regmap *gpio, unsigned int offset);
-+
- 	void *drvdata;
- };
- 
--- 
-2.35.1
+> On 6/29/22 9:30 AM, Aidan MacDonald wrote:
+>> The AXP192 PMIC's GPIO registers are much different from the GPIO
+>> registers of the AXP20x and AXP813 PMICs supported by the existing
+>> pinctrl-axp209 driver. It makes more sense to add a new driver for
+>> the AXP192, rather than add support in the existing axp20x driver.
+>> 
+>> The pinctrl-axp192 driver is considerably more flexible in terms of
+>> register layout and should be able to support other X-Powers PMICs.
+>> Interrupts and pull down resistor configuration are supported too.
+>
+> I am planning to implement gpio/pinctrl support for AXP152[1], which is
+> somewhere between AXP20x and AXP192 in terms of GPIO capability.
+>
+> Which driver should I add it to? How much work would it be to convert AXP20x
+> variants to the new driver? And if supporting other X-Powers PMICs is the plan,
+> would it make sense to convert the existing driver in-place to avoid dealing
+> with Kconfig migrations?
+>
+> [1]: https://linux-sunxi.org/AXP152
+>
+
+I'd assume variants getting new GPIO support would be better off using
+this driver. The existing one supports only AXP209 and AXP803/813, and
+it hardcodes far too many details.
+
+I'll let the maintainers decide whether converting the existing driver
+is better than dealing with possible future migrations. If conversion
+is the way to go then I'll drop this patch and revisit GPIO support at
+a later date.
+
+>> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+>> ---
+>>  drivers/pinctrl/Kconfig          |  13 +
+>>  drivers/pinctrl/Makefile         |   1 +
+>>  drivers/pinctrl/pinctrl-axp192.c | 598 +++++++++++++++++++++++++++++++
+>>  3 files changed, 612 insertions(+)
+>>  create mode 100644 drivers/pinctrl/pinctrl-axp192.c
+>> [...]
+>> +static int axp192_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin, unsigned long *config)
+>> +{
+>> +	enum pin_config_param param = pinconf_to_config_param(*config);
+>> +	unsigned int arg = 1;
+>> +	bool pull_down;
+>> +	int ret;
+>> +
+>> +	switch (param) {
+>> +	case PIN_CONFIG_BIAS_DISABLE:
+>> +		ret = axp192_pinconf_get_pull_down(pctldev, pin, &pull_down);
+>> +		if (ret)
+>> +			return ret;
+>> +		if (pull_down)
+>> +			return -EINVAL;
+>> +		break;
+>> +
+>> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+>> +		ret = axp192_pinconf_get_pull_down(pctldev, pin, &pull_down);
+>> +		if (ret)
+>> +			return ret;
+>> +		if (!pull_down)
+>> +			return -EINVAL;
+>> +		break;
+>> +
+>> +	default:
+>> +		return -ENOTSUPP;
+>> +	}
+>> +
+>> +	*config = pinconf_to_config_packed(param, arg);
+>> +	return 0;
+>> +}
+>> +
+>> +static int axp192_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>> +			      unsigned long *configs, unsigned int num_configs)
+>> +{
+>> +	int ret;
+>> +	unsigned int cfg;
+>> +
+>> +	for (cfg = 0; cfg < num_configs; cfg++) {
+>> +		switch (pinconf_to_config_param(configs[cfg])) {
+>> +		case PIN_CONFIG_BIAS_DISABLE:
+>> +			ret = axp192_pinconf_set_pull_down(pctldev, pin, 0);
+>> +			if (ret)
+>> +				return ret;
+>> +			break;
+>> +
+>> +		case PIN_CONFIG_BIAS_PULL_DOWN:
+>> +			ret = axp192_pinconf_set_pull_down(pctldev, pin, 1);
+>> +			if (ret)
+>> +				return ret;
+>> +			break;
+>> +
+>> +		default:
+>> +			return -ENOTSUPP;
+>
+> The GPIO outputs are always open-drain. It looks like this needs to handle
+> PIN_CONFIG_DRIVE_OPEN_DRAIN, or gpiolib will try to emulate it.
+>
+> And I would suggest returning -EINVAL for PIN_CONFIG_DRIVE_PUSH_PULL, but
+> gpiolib does not check the return value when setting that.
+>
+
+You're right, thanks for pointing that out... guess I should actually
+read the documentation sometimes!
+
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> [...]
+>> +
+>> +static int axp192_pctl_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct axp20x_dev *axp20x = dev_get_drvdata(dev->parent);
+>> +	struct axp192_pctl *pctl;
+>> +	struct pinctrl_desc *pctrl_desc;
+>> +	int ret, i;
+>> +
+>> +	pctl = devm_kzalloc(dev, sizeof(*pctl), GFP_KERNEL);
+>> +	if (!pctl)
+>> +		return -ENOMEM;
+>> +
+>> +	pctl->desc = device_get_match_data(dev);
+>> +	pctl->regmap = axp20x->regmap;
+>> +	pctl->regmap_irqc = axp20x->regmap_irqc;
+>> +	pctl->dev = dev;
+>> +
+>> +	pctl->chip.base			= -1;
+>> +	pctl->chip.can_sleep		= true;
+>> +	pctl->chip.request		= gpiochip_generic_request;
+>> +	pctl->chip.free			= gpiochip_generic_free;
+>> +	pctl->chip.parent		= dev;
+>> +	pctl->chip.label		= dev_name(dev);
+>> +	pctl->chip.owner		= THIS_MODULE;
+>> +	pctl->chip.get			= axp192_gpio_get;
+>> +	pctl->chip.get_direction	= axp192_gpio_get_direction;
+>> +	pctl->chip.set			= axp192_gpio_set;
+>> +	pctl->chip.direction_input	= axp192_gpio_direction_input;
+>> +	pctl->chip.direction_output	= axp192_gpio_direction_output;
+>> +	pctl->chip.to_irq		= axp192_gpio_to_irq;
+>> +	pctl->chip.ngpio		= pctl->desc->npins;
+>> +
+>> +	pctl->irqs = devm_kcalloc(dev, pctl->desc->npins, sizeof(int), GFP_KERNEL);
+>> +	if (!pctl->irqs)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < pctl->desc->npins; i++) {
+>> +		ret = platform_get_irq_byname_optional(pdev, pctl->desc->pins[i].name);
+>> +		if (ret > 0)
+>> +			pctl->irqs[i] = ret;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, pctl);
+>> +
+>> +	pctrl_desc = devm_kzalloc(dev, sizeof(*pctrl_desc), GFP_KERNEL);
+>> +	if (!pctrl_desc)
+>> +		return -ENOMEM;
+>
+> This can go inside struct axp192_pctl. It does not need a separate allocation.
+>
+> Regards,
+> Samuel
 
