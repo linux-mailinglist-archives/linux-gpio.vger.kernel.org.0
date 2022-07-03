@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 908995647B1
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jul 2022 16:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E687564812
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jul 2022 16:33:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232910AbiGCOP3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jul 2022 10:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
+        id S232060AbiGCOYz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jul 2022 10:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232839AbiGCOPO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jul 2022 10:15:14 -0400
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF03765D4;
-        Sun,  3 Jul 2022 07:14:45 -0700 (PDT)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-317a66d62dfso61118307b3.7;
-        Sun, 03 Jul 2022 07:14:45 -0700 (PDT)
+        with ESMTP id S232419AbiGCOYy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jul 2022 10:24:54 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C714EB07;
+        Sun,  3 Jul 2022 07:24:53 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 64so3164830ybt.12;
+        Sun, 03 Jul 2022 07:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w0FH56a+Shs/91/PsN1Ki0zVCm9WciZlIf0/Nr3AfS0=;
-        b=XMl/KiO1rtvigAKy+uGtMZz328eE5t9CxIohDrLEz+CizJcfX4PXtfjO9/16ZPfvPH
-         9CzZwHmT9FvVY2dJpoFqv+tWQumT9hn3s3xHXxjFaYMF1mSOYEcGgkClLcUU1s1CVv6+
-         q634F9c9vSZf1jJLxwR0SVVLmAu6ykIkijZfx67sFw5EJC0KyK/ys0LqvqG3kudgqa5Q
-         GibTEEUGgj30W5EAIwcd0uHp4A8nxqzGLyYUbKvKlntWfo/8g6G3SQn7Q1yFN5KblxPA
-         X7w6mJNVobAa2aShzoOpn9ueRBEqQo3NdxArVnqTNPfvdtJIsryQloBy4xxkr9nYw43D
-         9MTQ==
+        bh=cS/cfinqeIf5OIiB7qn+MoimwKg2hSamwBWQECwEou0=;
+        b=k26sRRdowdDjbK9ACcwG4ZFIMKPQmgRpyi+IqWhLBeOom37kXWkG3ZGEydAmKxpGJJ
+         MdOh/r1C0/46vXMFxmwxE4aBG5l+LM12ZappnFADiBXbZdOz8aaRaQCoUBHsOUvmIjgC
+         a0BbUGaZDOpEnYDQCavA7aF5vYYiQYXOJVSinxCM/GK/tv4Apcz8UmyeGBn7JVF89jM9
+         RxssJHY4hpSxGVOlq/pajIUruA9p258ebRmLusXwOhTQNUZ9FjhUPtFt0kr7U9TNux6d
+         glL0l2bXT/Ss7r3tXw7f/V5kICpvEZBdw4ZH/ntmflBw/UNzlhTS5gJHy/1l56b+J8Re
+         tvgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w0FH56a+Shs/91/PsN1Ki0zVCm9WciZlIf0/Nr3AfS0=;
-        b=lkeDB4hc9EerIcZ8nmzSKzAk074ed7krkjnYw8xuYGQQHIQC/p2ahOIx9OsnYZ6Eq8
-         Z5/up/efkmfDRvAAL/47XW9aXy/Zn8yV7aYaNDWmPEohTPrSXTIbdO+YH0sKYn+o+bOg
-         MwMSqrxU0NdnhoqRLWiT3g5W/UST/YAjmbnRbRnFqDwGJ9HtL5wXmB2KJkypr3mHRjLQ
-         dVE20f1JTKsvv5gu8n6iZ16XAFOrL0hRR6WNmjLBI/Z6sNVDFWZeCXtlcvVg/NRpVEJg
-         a/oe8XYitSTfsQzpbqLyMu8jYrXrSDL36Og2ZbGI6EzQjtXVYKlzZmZWAzF0Dj9hnoln
-         dh2g==
-X-Gm-Message-State: AJIora+uFEd7bYg/JVOdJSUU0+o/U8MCJMsvRw24qT5eDbUKmuRC3lgv
-        IxOx0RImScm/7CrqHNdaZvrLo+CNJ7NF62Jy6k5ScZd0qLYb5w==
-X-Google-Smtp-Source: AGRyM1uf3eSmQXwBLhqdFaSKUHbaLEKa/Irc8krnHWk6gpxnyVII4Xysoy81SMPHJdlwUBlOzIQaZQtVEKJW6KDTmO8=
-X-Received: by 2002:a81:6f02:0:b0:31b:dd95:1ccf with SMTP id
- k2-20020a816f02000000b0031bdd951ccfmr26982262ywc.520.1656857684481; Sun, 03
- Jul 2022 07:14:44 -0700 (PDT)
+        bh=cS/cfinqeIf5OIiB7qn+MoimwKg2hSamwBWQECwEou0=;
+        b=fFtDtYV2sSOFTyuA1ID5RKJnQacq/AIIi8k/2G1sXmJafh9dEIpNYKUVnkYea62epx
+         CwFVIVVWc0jKrHLiWZLq0pMF4FaR3D4q02+6NgoZD579yU4Ma/nBswbtZAfzbUdJ1v3T
+         PVGgNniwxZeIQXwwIU9neEKfPDQm1Hp5l7wXewfA/+kKlKZG+ZrYiiRAeI9iufDXlnLr
+         FpyCjahBreSbODFtVQSbpgHUWg5JZ3OCtl2wNRsrjH5DtdvsgOao6DeiT/p6EWa4Mlsu
+         mKTW2VM8P8F0P4aC+53iKxQaCeUZYK/Ce+KVKKu9S0Xo1ozyn6Lzx/2aKzdO8Su/2ooo
+         EoYg==
+X-Gm-Message-State: AJIora8Rgd3CyO7iyL633wKx3BEeQJwDxJg5fyZ4fW2cIkCCvzfk68rl
+        1/W8m+ny01WKOp2xw1nzId+GMfOhP/sWt4tMqxI=
+X-Google-Smtp-Source: AGRyM1tV0QF2GHqsh8QCRW+pMlSe4eewDy6SMUl9wil0ZFQkdqIFbYQpFo4A2JOY1nqrrsrtyq9tycg1XRzexc10SPI=
+X-Received: by 2002:a05:6902:10c9:b0:668:e27c:8f7 with SMTP id
+ w9-20020a05690210c900b00668e27c08f7mr25810818ybu.128.1656858293000; Sun, 03
+ Jul 2022 07:24:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com> <20220703111057.23246-3-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220703111057.23246-3-aidanmacdonald.0x0@gmail.com>
+References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com> <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 3 Jul 2022 16:14:07 +0200
-Message-ID: <CAHp75VcshqBNtd7HFMR39Fh3mR=Uv0m4rznpFPDhix3hB0or7g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: regmap: Support combined GPIO and pin control drivers
+Date:   Sun, 3 Jul 2022 16:24:16 +0200
+Message-ID: <CAHp75Vc30zZL7LLg6zn7VnMARMOKsYo421KVMDu7RGp4QCtcXg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
 To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
 Cc:     Michael Walle <michael@walle.cc>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -71,39 +71,16 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Sun, Jul 3, 2022 at 1:11 PM Aidan MacDonald
 <aidanmacdonald.0x0@gmail.com> wrote:
 >
-> Allow gpio-regmap to be used for the GPIO portion of a combined
-> pin control and GPIO driver by setting the has_pinctrl flag. This
-> flag will cause GPIO direction set ops to be implemented as calls
-> to pinctrl_gpio_direction_input/output() instead of updating the
-> direction set registers directly.
->
-> Note that reg_dir_out/in_base is still required for implementing
-> the GPIO chip's ->get_direction() callback.
+> Some GPIO chips require a custom to_irq() callback for mapping
+> their IRQs, eg. because their interrupts come from a parent IRQ
+> chip where the GPIO offset doesn't map 1-to-1 with hwirq number.
 
-...
+Don't they follow a hierarchical IRQ domain in that case?
 
-> +       /*
-> +        * we need a direction register for implementing ->get_direction
-> +        * even if ->direction_input/output is handled by pin control
-> +        */
-
-/*
- * Multi-line comments go with this format
- * or style. Pay attention to the capitalization
- * and English grammar, e.g. period at the end of sentence(s).
- */
-
-...
-
-> +       if (config->has_pinctrl && !(config->reg_dir_in_base ||
-> +                                    config->reg_dir_out_base))
-
-Can you re-indent this either to be one line or put the second part of
-the conditional onto the second line?
-
-And why not use && everywhere?
-
-> +               return ERR_PTR(-EINVAL);
+And to be honest after the commit ef38237444ce ("gpiolib: add a
+warning on gpiochip->to_irq defined") I have no idea how it works in
+your case and also I feel this patch is a wrong direction of
+development.
 
 -- 
 With Best Regards,
