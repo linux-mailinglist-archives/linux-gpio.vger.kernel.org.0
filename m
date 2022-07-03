@@ -2,56 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35AF65647B6
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jul 2022 16:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 908995647B1
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Jul 2022 16:18:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231162AbiGCOKG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Jul 2022 10:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56772 "EHLO
+        id S232910AbiGCOP3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Jul 2022 10:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbiGCOKF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jul 2022 10:10:05 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 812492735;
-        Sun,  3 Jul 2022 07:10:04 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id l11so12384090ybu.13;
-        Sun, 03 Jul 2022 07:10:04 -0700 (PDT)
+        with ESMTP id S232839AbiGCOPO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Jul 2022 10:15:14 -0400
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF03765D4;
+        Sun,  3 Jul 2022 07:14:45 -0700 (PDT)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-317a66d62dfso61118307b3.7;
+        Sun, 03 Jul 2022 07:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eWbCu1r2xegPtorccEt93lf8b9HPFUvuS5WXxyAvzZQ=;
-        b=nd43pgElSJxznZuuljhBywhGZV2EFwhHs4t51OLkV8D9qLOy62yz47dCk5TtTeoLOa
-         UPNoBLynxOsCT8gE4obmMI7kOfn1RJI0gPMNbPFUx2AcVaEPzgzeLB0r9AtIcaczRYzw
-         lxB/jGcTtZNFNBM+tbQPkt3QlgLjDl5osetZO321U0Xc05cRGqVmMFuCkPSUHR/py1pv
-         3t8BncmykSin6VNPjB2qpP1Ik1R1LTCTH5YTWtfdAus4AmywgG03kQB7FKrVjDDcWNa1
-         +fLzI6Cd/ShBu5mjmt66QINWNbQPpBiXiKZHFqOm+vejjvOy5ejtZB8GIaeCjKyhGYGz
-         pidg==
+        bh=w0FH56a+Shs/91/PsN1Ki0zVCm9WciZlIf0/Nr3AfS0=;
+        b=XMl/KiO1rtvigAKy+uGtMZz328eE5t9CxIohDrLEz+CizJcfX4PXtfjO9/16ZPfvPH
+         9CzZwHmT9FvVY2dJpoFqv+tWQumT9hn3s3xHXxjFaYMF1mSOYEcGgkClLcUU1s1CVv6+
+         q634F9c9vSZf1jJLxwR0SVVLmAu6ykIkijZfx67sFw5EJC0KyK/ys0LqvqG3kudgqa5Q
+         GibTEEUGgj30W5EAIwcd0uHp4A8nxqzGLyYUbKvKlntWfo/8g6G3SQn7Q1yFN5KblxPA
+         X7w6mJNVobAa2aShzoOpn9ueRBEqQo3NdxArVnqTNPfvdtJIsryQloBy4xxkr9nYw43D
+         9MTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eWbCu1r2xegPtorccEt93lf8b9HPFUvuS5WXxyAvzZQ=;
-        b=aPV6aqBplmiE5q0QB/2LKa0+dXe/JwGVCWL4r5qQpv7m+wOoPhLeyHmDqB72+MgMBr
-         Pg16DA+/XakRasRsOKRsuURa0gssoEd4ea/VOIL0GI8kzwFPuGnkYiWLJwnruqgQCj5L
-         6n6er8rdvQ4+YT8/MnsIKOw9c0OTNl+kh9LGi6wNMRnVRptMLafGXpUwePaXOPxs8nfH
-         IlhUr0Au51oswHEXeaSak637czU5OcZhGbm2lR6IrDySCIntUxgYrRHatJsN04xYWy0+
-         AEUW55JHGI1Hg0Pd71OY2kXbMvN3uaN9GCejXxBT0L8S0EkTx6Etm6M1zQNwcih2ouSt
-         nvPQ==
-X-Gm-Message-State: AJIora9B9C0kVBN+7vZ633m/N/DGI44BEkXkWx+zk3DbVRQrdYEAmWuO
-        W8nwoQqCy90lF3m1c0zfKkHpdpmgdSiu3O76C8w=
-X-Google-Smtp-Source: AGRyM1sJyi35oUDBpRXfGN1qX8qgyUHqqTcV5bdZJms/JB89iLsSnCKSuf66hbpRdBBp1oTYn7V/rM7dYi81N93Oolg=
-X-Received: by 2002:a25:858e:0:b0:66e:4898:63e2 with SMTP id
- x14-20020a25858e000000b0066e489863e2mr425468ybk.296.1656857403543; Sun, 03
- Jul 2022 07:10:03 -0700 (PDT)
+        bh=w0FH56a+Shs/91/PsN1Ki0zVCm9WciZlIf0/Nr3AfS0=;
+        b=lkeDB4hc9EerIcZ8nmzSKzAk074ed7krkjnYw8xuYGQQHIQC/p2ahOIx9OsnYZ6Eq8
+         Z5/up/efkmfDRvAAL/47XW9aXy/Zn8yV7aYaNDWmPEohTPrSXTIbdO+YH0sKYn+o+bOg
+         MwMSqrxU0NdnhoqRLWiT3g5W/UST/YAjmbnRbRnFqDwGJ9HtL5wXmB2KJkypr3mHRjLQ
+         dVE20f1JTKsvv5gu8n6iZ16XAFOrL0hRR6WNmjLBI/Z6sNVDFWZeCXtlcvVg/NRpVEJg
+         a/oe8XYitSTfsQzpbqLyMu8jYrXrSDL36Og2ZbGI6EzQjtXVYKlzZmZWAzF0Dj9hnoln
+         dh2g==
+X-Gm-Message-State: AJIora+uFEd7bYg/JVOdJSUU0+o/U8MCJMsvRw24qT5eDbUKmuRC3lgv
+        IxOx0RImScm/7CrqHNdaZvrLo+CNJ7NF62Jy6k5ScZd0qLYb5w==
+X-Google-Smtp-Source: AGRyM1uf3eSmQXwBLhqdFaSKUHbaLEKa/Irc8krnHWk6gpxnyVII4Xysoy81SMPHJdlwUBlOzIQaZQtVEKJW6KDTmO8=
+X-Received: by 2002:a81:6f02:0:b0:31b:dd95:1ccf with SMTP id
+ k2-20020a816f02000000b0031bdd951ccfmr26982262ywc.520.1656857684481; Sun, 03
+ Jul 2022 07:14:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com> <20220703111057.23246-2-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220703111057.23246-2-aidanmacdonald.0x0@gmail.com>
+References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com> <20220703111057.23246-3-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220703111057.23246-3-aidanmacdonald.0x0@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 3 Jul 2022 16:09:26 +0200
-Message-ID: <CAHp75VeosViEcLZ3LF92=_bpSmyGthh2j9V4xYtHTt0Z-fn3-Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: regmap: Support registers with more than one
- bit per GPIO
+Date:   Sun, 3 Jul 2022 16:14:07 +0200
+Message-ID: <CAHp75VcshqBNtd7HFMR39Fh3mR=Uv0m4rznpFPDhix3hB0or7g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpio: regmap: Support combined GPIO and pin control drivers
 To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
 Cc:     Michael Walle <michael@walle.cc>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -72,67 +71,39 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Sun, Jul 3, 2022 at 1:11 PM Aidan MacDonald
 <aidanmacdonald.0x0@gmail.com> wrote:
 >
-> Some devices use a multi-bit register field to change the GPIO
-> input/output direction. Add the ->reg_field_xlate() callback to
-> support such devices in gpio-regmap.
+> Allow gpio-regmap to be used for the GPIO portion of a combined
+> pin control and GPIO driver by setting the has_pinctrl flag. This
+> flag will cause GPIO direction set ops to be implemented as calls
+> to pinctrl_gpio_direction_input/output() instead of updating the
+> direction set registers directly.
 >
-> ->reg_field_xlate() builds on ->reg_mask_xlate() by allowing the
-> driver to return a mask and values to describe a register field.
-> gpio-regmap will use the mask to isolate the field and compare or
-> update it using the values to implement GPIO level and direction
-> get and set ops.
-
-Thanks for the proposal. My comments below.
+> Note that reg_dir_out/in_base is still required for implementing
+> the GPIO chip's ->get_direction() callback.
 
 ...
 
-> +static void
-> +gpio_regmap_simple_field_xlate(struct gpio_regmap *gpio,
-> +                              unsigned int base, unsigned int offset,
-> +                              unsigned int *reg, unsigned int *mask,
-> +                              unsigned int *values)
-> +{
-> +       gpio->reg_mask_xlate(gpio, base, offset, reg, mask);
-> +       values[0] = 0;
-> +       values[1] = *mask;
+> +       /*
+> +        * we need a direction register for implementing ->get_direction
+> +        * even if ->direction_input/output is handled by pin control
+> +        */
 
-This is a fragile and less compile-check prone approach. If you know
-the amount of values, make a specific data type for that, or pass the
-length of the output buffer..
-
-> +}
+/*
+ * Multi-line comments go with this format
+ * or style. Pay attention to the capitalization
+ * and English grammar, e.g. period at the end of sentence(s).
+ */
 
 ...
 
-> +       unsigned int values[2];
+> +       if (config->has_pinctrl && !(config->reg_dir_in_base ||
+> +                                    config->reg_dir_out_base))
 
-> +       return (val & mask) == values[1];
+Can you re-indent this either to be one line or put the second part of
+the conditional onto the second line?
 
-> +       unsigned int values[2];
+And why not use && everywhere?
 
-How will the callee know that it's only 2 available?
-
-
-> +       regmap_update_bits(gpio->regmap, reg, mask, values[!!val]);
-
-If we have special meaning of the values, perhaps it needs to follow
-an enum of some definitions, so everybody will understand how indices
-are mapped to the actual data in the array.
-
-> +       unsigned int values[2];
-
-> +       regmap_update_bits(gpio->regmap, reg, mask, values[1]);
-
-> +       unsigned int values[2];
-
-> +       if ((val & mask) == values[invert])
-
-How do you guarantee this won't overflow? (see above comment about
-indices mapping)
-
-> +       unsigned int values[2];
-
-As per above comments.
+> +               return ERR_PTR(-EINVAL);
 
 -- 
 With Best Regards,
