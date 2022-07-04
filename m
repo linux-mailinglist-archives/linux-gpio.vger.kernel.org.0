@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0AE6565C7F
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 18:58:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F88B565C89
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 18:58:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230488AbiGDQ6N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 12:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
+        id S231787AbiGDQ6R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 12:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbiGDQ6M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 12:58:12 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A60B1145E;
-        Mon,  4 Jul 2022 09:58:11 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id u12so17654544eja.8;
-        Mon, 04 Jul 2022 09:58:11 -0700 (PDT)
+        with ESMTP id S231191AbiGDQ6P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 12:58:15 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A9111A04;
+        Mon,  4 Jul 2022 09:58:13 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id g26so17695339ejb.5;
+        Mon, 04 Jul 2022 09:58:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OfKy+t9eej6LcIbWKFGm8p8rPXhAsAzPwV9PEyYyS+c=;
-        b=MWgCUQKkuJT2bkQya+7Zr1GgW0UWykbwmkAFgf0p6Gm0wb5YUP77Gtqx0MpKzjvjkj
-         MZ2GPPO/2dV1V9dSiJsGRBqvi9G7a76VTiniTJ2E2ruG1p0G4p6pdv6XzjFMTCwyApYS
-         wgeABDBLXd9l3dyM6V3Qy53ax8gndP2YmqSnhPgDjZ2+208FFEmXVYoN8PFwf9eIfl4F
-         HYcxyt/DTQSl0odAAHa9MBBC6RnyHZ9u8C4M6wcyALDv5Jd/FZUgvkfbFRLRc3aDUZWj
-         4UrJtjbWGOG0km4XM1lk6vWNpj/Uycbz0NWcD5obaLrFxmnBAY81MBbN9txrrObbgdr8
-         l4ew==
+        bh=gX2swLqWDUl+FF70aULjZDFAI5dxce0MemhwqeowhzU=;
+        b=DXCkblUVFGd9WN8AJpdyog/VC/hnPadWp5tOOBZclcfjxJaFiHrgSbvubVGG9hm06l
+         xv8134+uX0Okcwf8OPS8oMLhPBN397nCqyOwnU1Qp642U/Hq4715OU3BrCSoOSan6Tq/
+         w76IqZzdjtqX0WS3oa+NAw9M94zixLsPalpN2UMD3Z+o/an5Gf32bKAekfmcMtssHKTV
+         wKnCfIZ5/ibINKFAFSklR5hkw9jOgaGDkyaTkDxawnc+o72+7kLKlxcUkn0rgEjSgQRk
+         ep+Rbx9iN8xZghFrxilCT/E2Gpq8D1t4fKgytkmaCLmJy426Vc9C4dzJgtLbL8ZLSPaG
+         BtHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OfKy+t9eej6LcIbWKFGm8p8rPXhAsAzPwV9PEyYyS+c=;
-        b=RqP9n0mndYgszVbTX8jtzWqEeXp874MoZYtGsAKjvSEX7kht3YYQ2SXzQZ8aeyZQKp
-         Wieya/6MihmROFrKcmplr1uNDZlS+T+Kq08rtU9MR9rKO5lyypf++YY2z3hHIFRn03WQ
-         zb9e+kzYT235LQLSe8EK1iEkAPSihbaNZBLOjKYSjNt9VjR1gwK3gFBw0A1S4HixvW48
-         fue4s/fttGD85QKpz4eW8vDGihagkJnQE2lsVRKhRZcgjqVknG/vxCQkT2RrwPeaHXTO
-         /vtXHEM0famUlkIdbh56+dBIpIB83pqK7+3D8HQgUGWSVFRTNvB0WnUxylhdWYlUqkMs
-         +4Ig==
-X-Gm-Message-State: AJIora/fGsii87t9kCynEY23yBzgXataCsD6uMGGXPdYm0SZU4vaPVgp
-        p+ZKzjGEknCOU8Rb1ZMidZQ=
-X-Google-Smtp-Source: AGRyM1uus9T3cSrrGByAtkHU1n2cxxeA4aUizk2PkZlzQpdpWci4CkUN5atoVPhOfxaqzp5HssB7CQ==
-X-Received: by 2002:a17:907:160a:b0:726:40fa:36d3 with SMTP id hb10-20020a170907160a00b0072640fa36d3mr28467871ejc.694.1656953889766;
-        Mon, 04 Jul 2022 09:58:09 -0700 (PDT)
+        bh=gX2swLqWDUl+FF70aULjZDFAI5dxce0MemhwqeowhzU=;
+        b=S/6yPjf+mPNpzFa3N6BnDEGow9iffLQPrz5Niz9JOy2WPX+sBkQdt1kRzkcE7RKquX
+         Tu+7SNgoWBSf5pZRwYngNYg0J2rfuZcfq26UoSqn77YuPmPtxzrBA0sUO7VFrBA0+Pn/
+         oV6XBj55oEtOzta4XmxPzsBhM0yKWn6sdeh9v0uw8V7q42w7gJPOyLkBMtuRfORNaItO
+         HlKTo0MIbutm8u7weh3yixoMdW60VCBF2LYhTzgZybYI9BHgr6s9DEP9t8n/zeSvMs2m
+         fnTHjWrGicgctnQwIsaJ+PZbsj0N46KdrI9vRPtfWp7p/x9v5y6IEJEyrfftVDOFymgP
+         a8Eg==
+X-Gm-Message-State: AJIora8VBzF4FqKnSvuwbD64yglTafR9+S2v//N+xlRG8HZSlVUB6Te6
+        ZN+I7RfceP6iTyMLUeY7PD3gDcxkgKI=
+X-Google-Smtp-Source: AGRyM1thuAj+pK33Y7q4S4lfxZsh5VFpbLZx0enOBWqA12vbnS6us6ZWr80/fE82SmtWbepKEuOLlg==
+X-Received: by 2002:a17:907:6d0d:b0:726:d066:4631 with SMTP id sa13-20020a1709076d0d00b00726d0664631mr29965679ejc.271.1656953891693;
+        Mon, 04 Jul 2022 09:58:11 -0700 (PDT)
 Received: from localhost (p200300e41f12c800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f12:c800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id bq15-20020a056402214f00b00435a742e350sm21125745edb.75.2022.07.04.09.58.08
+        by smtp.gmail.com with ESMTPSA id g5-20020a17090613c500b00722fb3c99bcsm14369850ejc.203.2022.07.04.09.58.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Jul 2022 09:58:08 -0700 (PDT)
+        Mon, 04 Jul 2022 09:58:10 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -55,9 +55,9 @@ Cc:     Jon Hunter <jonathanh@nvidia.com>,
         Prathamesh Shete <pshete@nvidia.com>,
         Vidya Sagar <vidyas@nvidia.com>, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 2/4] dt-bindings: pinctrl: tegra194: Separate instances
-Date:   Mon,  4 Jul 2022 18:58:00 +0200
-Message-Id: <20220704165802.129717-3-thierry.reding@gmail.com>
+Subject: [PATCH v2 3/4] pinctrl: tegra: Separate Tegra194 instances
+Date:   Mon,  4 Jul 2022 18:58:01 +0200
+Message-Id: <20220704165802.129717-4-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220704165802.129717-1-thierry.reding@gmail.com>
 References: <20220704165802.129717-1-thierry.reding@gmail.com>
@@ -78,300 +78,474 @@ From: Thierry Reding <treding@nvidia.com>
 Tegra194 has two separate instances of the pin controller, one called
 AON (in the always-on domain) and another called "main". Instead of
 treating them as a single pin controller, split them up into two
-separate controllers. Doing so allows the mapping between the pinmux and
-GPIO controllers to be trivial identity mappings and more cleanly
+separate controllers. Doing so allows the mapping between the pinmux
+and GPIO controllers to be trivial identity mappings and more cleanly
 separates the AON from the main IP blocks.
-
-Note that while this changes the DT node in an incompatible way, this
-doesn't have any practical implications for backwards-compatibility. The
-reason for this is that device trees have only reconfigured a very
-narrow subset of pins of the main controller, so the new driver will
-remain backwards-compatible with old device trees.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
-Changes in v2:
-- add missing "type: object" to patternProperties nodes
-- add note about backwards-compatibility
+ drivers/pinctrl/tegra/pinctrl-tegra.c    |  33 ++-
+ drivers/pinctrl/tegra/pinctrl-tegra.h    |   2 +
+ drivers/pinctrl/tegra/pinctrl-tegra194.c | 286 +++++++++++++----------
+ 3 files changed, 173 insertions(+), 148 deletions(-)
 
- .../pinctrl/nvidia,tegra194-pinmux.yaml       | 235 ++++++++++++++++--
- 1 file changed, 216 insertions(+), 19 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.yaml
-index 322e146d52dd..0dd2ff6ace0f 100644
---- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.yaml
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
- $id: http://devicetree.org/schemas/pinctrl/nvidia,tegra194-pinmux.yaml#
-@@ -12,12 +12,13 @@ maintainers:
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 50bd26a30ac0..0fcbaa425ff5 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -668,19 +668,6 @@ static const struct pinconf_ops tegra_pinconf_ops = {
+ #endif
+ };
  
- properties:
-   compatible:
--    const: nvidia,tegra194-pinmux
-+    enum:
-+      - nvidia,tegra194-pinmux
-+      - nvidia,tegra194-pinmux-aon
- 
-   reg:
-     items:
--      - description: APB_MISC_GP_*_PADCTRL registers (pad control)
--      - description: PINMUX_AUX_* registers (pinmux)
-+      - description: pinmux registers
- 
- additionalProperties:
-   $ref: 'nvidia,tegra-pinmux-common.yaml#/definitions/pinconf-node'
-@@ -25,20 +26,17 @@ additionalProperties:
-     "^pinmux(-[a-z0-9-_]+)?$":
-       additionalProperties: false
-       properties:
--        nvidia,pins:
--          description: An array of strings. Each string contains the name of a
--            pin or group. Valid values for these names are listed below.
+-static struct pinctrl_gpio_range tegra_pinctrl_gpio_range = {
+-	.name = "Tegra GPIOs",
+-	.id = 0,
+-	.base = 0,
+-};
 -
--            Note that the pex_l5_clkreq_n_pgg0 and pex_l5_rst_n_pgg1 pins are
--            part of PCIE C5 power partition. Client devices must enable this
--            partition before accessing the configuration for these pins.
--          items:
--            enum: [ pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1,
--                    # drive groups
--                    drive_pex_l5_clkreq_n_pgg0, drive_pex_l5_rst_n_pgg1 ]
+-static struct pinctrl_desc tegra_pinctrl_desc = {
+-	.pctlops = &tegra_pinctrl_ops,
+-	.pmxops = &tegra_pinmux_ops,
+-	.confops = &tegra_pinconf_ops,
+-	.owner = THIS_MODULE,
+-};
 -
-         nvidia,function:
--          enum: [ pe5 ]
-+          enum: [ aud, can0, can1, ccla, dca, dcb, dgpu, directdc, directdc1,
-+                  displaya, displayb, dmic1, dmic2, dmic3, dmic4, dmic5, dp,
-+                  dspk0, dspk1, eqos, extperiph1, extperiph2, extperiph3,
-+                  extperiph4, gp, gpio, hdmi, i2c1, i2c2, i2c3, i2c5, i2c8,
-+                  i2s1, i2s2, i2s3, i2s4, i2s5, i2s6, igpu, iqc1, iqc2, mipi,
-+                  nv, pe0, pe1, pe2, pe3, pe4, pe5, qspi, qspi0, qspi1, rsvd0,
-+                  rsvd1, rsvd2, rsvd3, sata, sce, sdmmc1, sdmmc3, sdmmc4, slvs,
-+                  soc, spdif, spi1, spi2, spi3, touch, uarta, uartb, uartc,
-+                  uartd, uarte, uartg, ufs0, usb, vgp1, vgp2, vgp3, vgp4, vgp5,
-+                  vgp6, wdt ]
+ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+ {
+ 	int i = 0;
+@@ -831,10 +818,18 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 		}
+ 	}
  
-         nvidia,enable-input:
-           $ref: 'nvidia,tegra-pinmux-common.yaml#/definitions/enable-input'
-@@ -58,6 +56,206 @@ additionalProperties:
-       required:
-         - nvidia,pins
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          const: nvidia,tegra194-pinmux
-+    then:
-+      type: object
-+      additionalProperties:
-+        patternProperties:
-+          "^pinmux(-[a-z0-9-_]+)?$":
-+            type: object
-+            properties:
-+              nvidia,pins:
-+                description: An array of strings. Each string contains the name
-+                  of a pin or group. Valid values for these names are listed
-+                  below.
+-	tegra_pinctrl_gpio_range.npins = pmx->soc->ngpios;
+-	tegra_pinctrl_desc.name = dev_name(&pdev->dev);
+-	tegra_pinctrl_desc.pins = pmx->soc->pins;
+-	tegra_pinctrl_desc.npins = pmx->soc->npins;
++	pmx->gpio_range.name = "Tegra GPIOs";
++	pmx->gpio_range.id = 0;
++	pmx->gpio_range.base = 0;
++	pmx->gpio_range.npins = pmx->soc->ngpios;
 +
-+                  Note that the pex_l5_clkreq_n_pgg0 and pex_l5_rst_n_pgg1 pins
-+                  are part of PCIE C5 power partition. Client devices must
-+                  enable this partition before accessing the configuration for
-+                  these pins.
-+                items:
-+                  enum: [ dap6_sclk_pa0, dap6_dout_pa1, dap6_din_pa2,
-+                          dap6_fs_pa3, dap4_sclk_pa4, dap4_dout_pa5,
-+                          dap4_din_pa6, dap4_fs_pa7, cpu_pwr_req_0_pb0,
-+                          cpu_pwr_req_1_pb1, qspi0_sck_pc0, qspi0_cs_n_pc1,
-+                          qspi0_io0_pc2, qspi0_io1_pc3, qspi0_io2_pc4,
-+                          qspi0_io3_pc5, qspi1_sck_pc6, qspi1_cs_n_pc7,
-+                          qspi1_io0_pd0, qspi1_io1_pd1, qspi1_io2_pd2,
-+                          qspi1_io3_pd3, eqos_txc_pe0, eqos_td0_pe1,
-+                          eqos_td1_pe2, eqos_td2_pe3, eqos_td3_pe4,
-+                          eqos_tx_ctl_pe5, eqos_rd0_pe6, eqos_rd1_pe7,
-+                          eqos_rd2_pf0, eqos_rd3_pf1, eqos_rx_ctl_pf2,
-+                          eqos_rxc_pf3, eqos_sma_mdio_pf4, eqos_sma_mdc_pf5,
-+                          soc_gpio00_pg0, soc_gpio01_pg1, soc_gpio02_pg2,
-+                          soc_gpio03_pg3, soc_gpio08_pg4, soc_gpio09_pg5,
-+                          soc_gpio10_pg6, soc_gpio11_pg7, soc_gpio12_ph0,
-+                          soc_gpio13_ph1, soc_gpio14_ph2, uart4_tx_ph3,
-+                          uart4_rx_ph4, uart4_rts_ph5, uart4_cts_ph6,
-+                          dap2_sclk_ph7, dap2_dout_pi0, dap2_din_pi1,
-+                          dap2_fs_pi2, gen1_i2c_scl_pi3, gen1_i2c_sda_pi4,
-+                          sdmmc1_clk_pj0, sdmmc1_cmd_pj1, sdmmc1_dat0_pj2,
-+                          sdmmc1_dat1_pj3, sdmmc1_dat2_pj4, sdmmc1_dat3_pj5,
-+                          pex_l0_clkreq_n_pk0, pex_l0_rst_n_pk1,
-+                          pex_l1_clkreq_n_pk2, pex_l1_rst_n_pk3,
-+                          pex_l2_clkreq_n_pk4, pex_l2_rst_n_pk5,
-+                          pex_l3_clkreq_n_pk6, pex_l3_rst_n_pk7,
-+                          pex_l4_clkreq_n_pl0, pex_l4_rst_n_pl1,
-+                          pex_wake_n_pl2, sata_dev_slp_pl3, dp_aux_ch0_hpd_pm0,
-+                          dp_aux_ch1_hpd_pm1, dp_aux_ch2_hpd_pm2,
-+                          dp_aux_ch3_hpd_pm3, hdmi_cec_pm4, soc_gpio50_pm5,
-+                          soc_gpio51_pm6, soc_gpio52_pm7, soc_gpio53_pn0,
-+                          soc_gpio54_pn1, soc_gpio55_pn2, sdmmc3_clk_po0,
-+                          sdmmc3_cmd_po1, sdmmc3_dat0_po2, sdmmc3_dat1_po3,
-+                          sdmmc3_dat2_po4, sdmmc3_dat3_po5, extperiph1_clk_pp0,
-+                          extperiph2_clk_pp1, cam_i2c_scl_pp2, cam_i2c_sda_pp3,
-+                          soc_gpio04_pp4, soc_gpio05_pp5, soc_gpio06_pp6,
-+                          soc_gpio07_pp7, soc_gpio20_pq0, soc_gpio21_pq1,
-+                          soc_gpio22_pq2, soc_gpio23_pq3, soc_gpio40_pq4,
-+                          soc_gpio41_pq5, soc_gpio42_pq6, soc_gpio43_pq7,
-+                          soc_gpio44_pr0, soc_gpio45_pr1, uart1_tx_pr2,
-+                          uart1_rx_pr3, uart1_rts_pr4, uart1_cts_pr5,
-+                          dap1_sclk_ps0, dap1_dout_ps1, dap1_din_ps2,
-+                          dap1_fs_ps3, aud_mclk_ps4, soc_gpio30_ps5,
-+                          soc_gpio31_ps6, soc_gpio32_ps7, soc_gpio33_pt0,
-+                          dap3_sclk_pt1, dap3_dout_pt2, dap3_din_pt3,
-+                          dap3_fs_pt4, dap5_sclk_pt5, dap5_dout_pt6,
-+                          dap5_din_pt7, dap5_fs_pu0, directdc1_clk_pv0,
-+                          directdc1_in_pv1, directdc1_out0_pv2,
-+                          directdc1_out1_pv3, directdc1_out2_pv4,
-+                          directdc1_out3_pv5, directdc1_out4_pv6,
-+                          directdc1_out5_pv7, directdc1_out6_pw0,
-+                          directdc1_out7_pw1, gpu_pwr_req_px0, cv_pwr_req_px1,
-+                          gp_pwm2_px2, gp_pwm3_px3, uart2_tx_px4, uart2_rx_px5,
-+                          uart2_rts_px6, uart2_cts_px7, spi3_sck_py0,
-+                          spi3_miso_py1, spi3_mosi_py2, spi3_cs0_py3,
-+                          spi3_cs1_py4, uart5_tx_py5, uart5_rx_py6,
-+                          uart5_rts_py7, uart5_cts_pz0, usb_vbus_en0_pz1,
-+                          usb_vbus_en1_pz2, spi1_sck_pz3, spi1_miso_pz4,
-+                          spi1_mosi_pz5, spi1_cs0_pz6, spi1_cs1_pz7,
-+                          ufs0_ref_clk_pff0, ufs0_rst_pff1,
-+                          pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1,
-+                          directdc_comp, sdmmc4_clk, sdmmc4_cmd, sdmmc4_dqs,
-+                          sdmmc4_dat7, sdmmc4_dat6, sdmmc4_dat5, sdmmc4_dat4,
-+                          sdmmc4_dat3, sdmmc4_dat2, sdmmc4_dat1, sdmmc4_dat0,
-+                          sdmmc1_comp, sdmmc1_hv_trim, sdmmc3_comp,
-+                          sdmmc3_hv_trim, eqos_comp, qspi_comp,
-+                          # drive groups
-+                          drive_soc_gpio33_pt0, drive_soc_gpio32_ps7,
-+                          drive_soc_gpio31_ps6, drive_soc_gpio30_ps5,
-+                          drive_aud_mclk_ps4, drive_dap1_fs_ps3,
-+                          drive_dap1_din_ps2, drive_dap1_dout_ps1,
-+                          drive_dap1_sclk_ps0, drive_dap3_fs_pt4,
-+                          drive_dap3_din_pt3, drive_dap3_dout_pt2,
-+                          drive_dap3_sclk_pt1, drive_dap5_fs_pu0,
-+                          drive_dap5_din_pt7, drive_dap5_dout_pt6,
-+                          drive_dap5_sclk_pt5, drive_dap6_fs_pa3,
-+                          drive_dap6_din_pa2, drive_dap6_dout_pa1,
-+                          drive_dap6_sclk_pa0, drive_dap4_fs_pa7,
-+                          drive_dap4_din_pa6, drive_dap4_dout_pa5,
-+                          drive_dap4_sclk_pa4, drive_extperiph2_clk_pp1,
-+                          drive_extperiph1_clk_pp0, drive_cam_i2c_sda_pp3,
-+                          drive_cam_i2c_scl_pp2, drive_soc_gpio40_pq4,
-+                          drive_soc_gpio41_pq5, drive_soc_gpio42_pq6,
-+                          drive_soc_gpio43_pq7, drive_soc_gpio44_pr0,
-+                          drive_soc_gpio45_pr1, drive_soc_gpio20_pq0,
-+                          drive_soc_gpio21_pq1, drive_soc_gpio22_pq2,
-+                          drive_soc_gpio23_pq3, drive_soc_gpio04_pp4,
-+                          drive_soc_gpio05_pp5, drive_soc_gpio06_pp6,
-+                          drive_soc_gpio07_pp7, drive_uart1_cts_pr5,
-+                          drive_uart1_rts_pr4, drive_uart1_rx_pr3,
-+                          drive_uart1_tx_pr2, drive_dap2_din_pi1,
-+                          drive_dap2_dout_pi0, drive_dap2_fs_pi2,
-+                          drive_dap2_sclk_ph7, drive_uart4_cts_ph6,
-+                          drive_uart4_rts_ph5, drive_uart4_rx_ph4,
-+                          drive_uart4_tx_ph3, drive_soc_gpio03_pg3,
-+                          drive_soc_gpio02_pg2, drive_soc_gpio01_pg1,
-+                          drive_soc_gpio00_pg0, drive_gen1_i2c_scl_pi3,
-+                          drive_gen1_i2c_sda_pi4, drive_soc_gpio08_pg4,
-+                          drive_soc_gpio09_pg5, drive_soc_gpio10_pg6,
-+                          drive_soc_gpio11_pg7, drive_soc_gpio12_ph0,
-+                          drive_soc_gpio13_ph1, drive_soc_gpio14_ph2,
-+                          drive_soc_gpio50_pm5, drive_soc_gpio51_pm6,
-+                          drive_soc_gpio52_pm7, drive_soc_gpio53_pn0,
-+                          drive_soc_gpio54_pn1, drive_soc_gpio55_pn2,
-+                          drive_dp_aux_ch0_hpd_pm0, drive_dp_aux_ch1_hpd_pm1,
-+                          drive_dp_aux_ch2_hpd_pm2, drive_dp_aux_ch3_hpd_pm3,
-+                          drive_hdmi_cec_pm4, drive_pex_l2_clkreq_n_pk4,
-+                          drive_pex_wake_n_pl2, drive_pex_l1_clkreq_n_pk2,
-+                          drive_pex_l1_rst_n_pk3, drive_pex_l0_clkreq_n_pk0,
-+                          drive_pex_l0_rst_n_pk1, drive_pex_l2_rst_n_pk5,
-+                          drive_pex_l3_clkreq_n_pk6, drive_pex_l3_rst_n_pk7,
-+                          drive_pex_l4_clkreq_n_pl0, drive_pex_l4_rst_n_pl1,
-+                          drive_sata_dev_slp_pl3, drive_pex_l5_clkreq_n_pgg0,
-+                          drive_pex_l5_rst_n_pgg1, drive_cpu_pwr_req_1_pb1,
-+                          drive_cpu_pwr_req_0_pb0, drive_sdmmc1_clk_pj0,
-+                          drive_sdmmc1_cmd_pj1, drive_sdmmc1_dat3_pj5,
-+                          drive_sdmmc1_dat2_pj4, drive_sdmmc1_dat1_pj3,
-+                          drive_sdmmc1_dat0_pj2, drive_sdmmc3_dat3_po5,
-+                          drive_sdmmc3_dat2_po4, drive_sdmmc3_dat1_po3,
-+                          drive_sdmmc3_dat0_po2, drive_sdmmc3_cmd_po1,
-+                          drive_sdmmc3_clk_po0, drive_gpu_pwr_req_px0,
-+                          drive_spi3_miso_py1, drive_spi1_cs0_pz6,
-+                          drive_spi3_cs0_py3, drive_spi1_miso_pz4,
-+                          drive_spi3_cs1_py4, drive_gp_pwm3_px3,
-+                          drive_gp_pwm2_px2, drive_spi1_sck_pz3,
-+                          drive_spi3_sck_py0, drive_spi1_cs1_pz7,
-+                          drive_spi1_mosi_pz5, drive_spi3_mosi_py2,
-+                          drive_cv_pwr_req_px1, drive_uart2_tx_px4,
-+                          drive_uart2_rx_px5, drive_uart2_rts_px6,
-+                          drive_uart2_cts_px7, drive_uart5_rx_py6,
-+                          drive_uart5_tx_py5, drive_uart5_rts_py7,
-+                          drive_uart5_cts_pz0, drive_usb_vbus_en0_pz1,
-+                          drive_usb_vbus_en1_pz2, drive_ufs0_rst_pff1,
-+                          drive_ufs0_ref_clk_pff0 ]
-+
-+  - if:
-+      properties:
-+        compatible:
-+          const: nvidia,tegra194-pinmux-aon
-+    then:
-+      type: object
-+      additionalProperties:
-+        patternProperties:
-+          "^pinmux(-[a-z0-9-_]+)?$":
-+            type: object
-+            properties:
-+              nvidia,pins:
-+                items:
-+                  enum: [ can1_dout_paa0, can1_din_paa1, can0_dout_paa2,
-+                          can0_din_paa3, can0_stb_paa4, can0_en_paa5,
-+                          can0_wake_paa6, can0_err_paa7, can1_stb_pbb0,
-+                          can1_en_pbb1, can1_wake_pbb2, can1_err_pbb3,
-+                          spi2_sck_pcc0, spi2_miso_pcc1, spi2_mosi_pcc2,
-+                          spi2_cs0_pcc3, touch_clk_pcc4, uart3_tx_pcc5,
-+                          uart3_rx_pcc6, gen2_i2c_scl_pcc7, gen2_i2c_sda_pdd0,
-+                          gen8_i2c_scl_pdd1, gen8_i2c_sda_pdd2,
-+                          safe_state_pee0, vcomp_alert_pee1,
-+                          ao_retention_n_pee2, batt_oc_pee3, power_on_pee4,
-+                          pwr_i2c_scl_pee5, pwr_i2c_sda_pee6, sys_reset_n,
-+                          shutdown_n, pmu_int_n, soc_pwr_req, clk_32k_in,
-+                          # drive groups
-+                          drive_shutdown_n, drive_pmu_int_n,
-+                          drive_safe_state_pee0, drive_vcomp_alert_pee1,
-+                          drive_soc_pwr_req, drive_batt_oc_pee3,
-+                          drive_clk_32k_in, drive_power_on_pee4,
-+                          drive_pwr_i2c_scl_pee5, drive_pwr_i2c_sda_pee6,
-+                          drive_ao_retention_n_pee2, drive_touch_clk_pcc4,
-+                          drive_uart3_rx_pcc6, drive_uart3_tx_pcc5,
-+                          drive_gen8_i2c_sda_pdd2, drive_gen8_i2c_scl_pdd1,
-+                          drive_spi2_mosi_pcc2, drive_gen2_i2c_scl_pcc7,
-+                          drive_spi2_cs0_pcc3, drive_gen2_i2c_sda_pdd0,
-+                          drive_spi2_sck_pcc0, drive_spi2_miso_pcc1,
-+                          drive_can1_dout_paa0, drive_can1_din_paa1,
-+                          drive_can0_dout_paa2, drive_can0_din_paa3,
-+                          drive_can0_stb_paa4, drive_can0_en_paa5,
-+                          drive_can0_wake_paa6, drive_can0_err_paa7,
-+                          drive_can1_stb_pbb0, drive_can1_en_pbb1,
-+                          drive_can1_wake_pbb2, drive_can1_err_pbb3 ]
-+
- required:
-   - compatible
-   - reg
-@@ -68,8 +266,7 @@ examples:
++	pmx->desc.pctlops = &tegra_pinctrl_ops;
++	pmx->desc.pmxops = &tegra_pinmux_ops;
++	pmx->desc.confops = &tegra_pinconf_ops;
++	pmx->desc.owner = THIS_MODULE;
++	pmx->desc.name = dev_name(&pdev->dev);
++	pmx->desc.pins = pmx->soc->pins;
++	pmx->desc.npins = pmx->soc->npins;
  
-     pinmux@2430000 {
-       compatible = "nvidia,tegra194-pinmux";
--      reg = <0x2430000 0x17000>,
--            <0xc300000 0x04000>;
-+      reg = <0x2430000 0x17000>;
+ 	for (i = 0; ; i++) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+@@ -860,7 +855,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 			return PTR_ERR(pmx->regs[i]);
+ 	}
  
-       pinctrl-names = "pex_rst";
-       pinctrl-0 = <&pex_rst_c5_out_state>;
+-	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
++	pmx->pctl = devm_pinctrl_register(&pdev->dev, &pmx->desc, pmx);
+ 	if (IS_ERR(pmx->pctl)) {
+ 		dev_err(&pdev->dev, "Couldn't register pinctrl driver\n");
+ 		return PTR_ERR(pmx->pctl);
+@@ -869,7 +864,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 	tegra_pinctrl_clear_parked_bits(pmx);
+ 
+ 	if (pmx->soc->ngpios > 0 && !tegra_pinctrl_gpio_node_has_range(pmx))
+-		pinctrl_add_gpio_range(pmx->pctl, &tegra_pinctrl_gpio_range);
++		pinctrl_add_gpio_range(pmx->pctl, &pmx->gpio_range);
+ 
+ 	platform_set_drvdata(pdev, pmx);
+ 
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
+index f8269858eb78..6130cba7cce5 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.h
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+@@ -15,6 +15,8 @@ struct tegra_pmx {
+ 	const struct tegra_pinctrl_soc_data *soc;
+ 	const char **group_pins;
+ 
++	struct pinctrl_gpio_range gpio_range;
++	struct pinctrl_desc desc;
+ 	int nbanks;
+ 	void __iomem **regs;
+ 	u32 *backup_regs;
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra194.c b/drivers/pinctrl/tegra/pinctrl-tegra194.c
+index f6c5d5e6dbb6..277973c88434 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra194.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra194.c
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/init.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+@@ -23,7 +24,7 @@
+ #include "pinctrl-tegra.h"
+ 
+ /* Define unique ID for each pins */
+-enum pin_id {
++enum {
+ 	TEGRA_PIN_DAP6_SCLK_PA0,
+ 	TEGRA_PIN_DAP6_DOUT_PA1,
+ 	TEGRA_PIN_DAP6_DIN_PA2,
+@@ -189,6 +190,31 @@ enum pin_id {
+ 	TEGRA_PIN_SPI1_MOSI_PZ5,
+ 	TEGRA_PIN_SPI1_CS0_PZ6,
+ 	TEGRA_PIN_SPI1_CS1_PZ7,
++	TEGRA_PIN_UFS0_REF_CLK_PFF0,
++	TEGRA_PIN_UFS0_RST_PFF1,
++	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
++	TEGRA_PIN_PEX_L5_RST_N_PGG1,
++	TEGRA_PIN_DIRECTDC_COMP,
++	TEGRA_PIN_SDMMC4_CLK,
++	TEGRA_PIN_SDMMC4_CMD,
++	TEGRA_PIN_SDMMC4_DQS,
++	TEGRA_PIN_SDMMC4_DAT7,
++	TEGRA_PIN_SDMMC4_DAT6,
++	TEGRA_PIN_SDMMC4_DAT5,
++	TEGRA_PIN_SDMMC4_DAT4,
++	TEGRA_PIN_SDMMC4_DAT3,
++	TEGRA_PIN_SDMMC4_DAT2,
++	TEGRA_PIN_SDMMC4_DAT1,
++	TEGRA_PIN_SDMMC4_DAT0,
++	TEGRA_PIN_SDMMC1_COMP,
++	TEGRA_PIN_SDMMC1_HV_TRIM,
++	TEGRA_PIN_SDMMC3_COMP,
++	TEGRA_PIN_SDMMC3_HV_TRIM,
++	TEGRA_PIN_EQOS_COMP,
++	TEGRA_PIN_QSPI_COMP,
++};
++
++enum {
+ 	TEGRA_PIN_CAN1_DOUT_PAA0,
+ 	TEGRA_PIN_CAN1_DIN_PAA1,
+ 	TEGRA_PIN_CAN0_DOUT_PAA2,
+@@ -219,28 +245,6 @@ enum pin_id {
+ 	TEGRA_PIN_POWER_ON_PEE4,
+ 	TEGRA_PIN_PWR_I2C_SCL_PEE5,
+ 	TEGRA_PIN_PWR_I2C_SDA_PEE6,
+-	TEGRA_PIN_UFS0_REF_CLK_PFF0,
+-	TEGRA_PIN_UFS0_RST_PFF1,
+-	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
+-	TEGRA_PIN_PEX_L5_RST_N_PGG1,
+-	TEGRA_PIN_DIRECTDC_COMP,
+-	TEGRA_PIN_SDMMC4_CLK,
+-	TEGRA_PIN_SDMMC4_CMD,
+-	TEGRA_PIN_SDMMC4_DQS,
+-	TEGRA_PIN_SDMMC4_DAT7,
+-	TEGRA_PIN_SDMMC4_DAT6,
+-	TEGRA_PIN_SDMMC4_DAT5,
+-	TEGRA_PIN_SDMMC4_DAT4,
+-	TEGRA_PIN_SDMMC4_DAT3,
+-	TEGRA_PIN_SDMMC4_DAT2,
+-	TEGRA_PIN_SDMMC4_DAT1,
+-	TEGRA_PIN_SDMMC4_DAT0,
+-	TEGRA_PIN_SDMMC1_COMP,
+-	TEGRA_PIN_SDMMC1_HV_TRIM,
+-	TEGRA_PIN_SDMMC3_COMP,
+-	TEGRA_PIN_SDMMC3_HV_TRIM,
+-	TEGRA_PIN_EQOS_COMP,
+-	TEGRA_PIN_QSPI_COMP,
+ 	TEGRA_PIN_SYS_RESET_N,
+ 	TEGRA_PIN_SHUTDOWN_N,
+ 	TEGRA_PIN_PMU_INT_N,
+@@ -415,36 +419,6 @@ static const struct pinctrl_pin_desc tegra194_pins[] = {
+ 	PINCTRL_PIN(TEGRA_PIN_SPI1_MOSI_PZ5, "SPI1_MOSI_PZ5"),
+ 	PINCTRL_PIN(TEGRA_PIN_SPI1_CS0_PZ6, "SPI1_CS0_PZ6"),
+ 	PINCTRL_PIN(TEGRA_PIN_SPI1_CS1_PZ7, "SPI1_CS1_PZ7"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN1_DOUT_PAA0, "CAN1_DOUT_PAA0"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN1_DIN_PAA1, "CAN1_DIN_PAA1"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN0_DOUT_PAA2, "CAN0_DOUT_PAA2"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN0_DIN_PAA3, "CAN0_DIN_PAA3"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN0_STB_PAA4, "CAN0_STB_PAA4"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN0_EN_PAA5, "CAN0_EN_PAA5"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN0_WAKE_PAA6, "CAN0_WAKE_PAA6"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN0_ERR_PAA7, "CAN0_ERR_PAA7"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN1_STB_PBB0, "CAN1_STB_PBB0"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN1_EN_PBB1, "CAN1_EN_PBB1"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN1_WAKE_PBB2, "CAN1_WAKE_PBB2"),
+-	PINCTRL_PIN(TEGRA_PIN_CAN1_ERR_PBB3, "CAN1_ERR_PBB3"),
+-	PINCTRL_PIN(TEGRA_PIN_SPI2_SCK_PCC0, "SPI2_SCK_PCC0"),
+-	PINCTRL_PIN(TEGRA_PIN_SPI2_MISO_PCC1, "SPI2_MISO_PCC1"),
+-	PINCTRL_PIN(TEGRA_PIN_SPI2_MOSI_PCC2, "SPI2_MOSI_PCC2"),
+-	PINCTRL_PIN(TEGRA_PIN_SPI2_CS0_PCC3, "SPI2_CS0_PCC3"),
+-	PINCTRL_PIN(TEGRA_PIN_TOUCH_CLK_PCC4, "TOUCH_CLK_PCC4"),
+-	PINCTRL_PIN(TEGRA_PIN_UART3_TX_PCC5, "UART3_TX_PCC5"),
+-	PINCTRL_PIN(TEGRA_PIN_UART3_RX_PCC6, "UART3_RX_PCC6"),
+-	PINCTRL_PIN(TEGRA_PIN_GEN2_I2C_SCL_PCC7, "GEN2_I2C_SCL_PCC7"),
+-	PINCTRL_PIN(TEGRA_PIN_GEN2_I2C_SDA_PDD0, "GEN2_I2C_SDA_PDD0"),
+-	PINCTRL_PIN(TEGRA_PIN_GEN8_I2C_SCL_PDD1, "GEN8_I2C_SCL_PDD1"),
+-	PINCTRL_PIN(TEGRA_PIN_GEN8_I2C_SDA_PDD2, "GEN8_I2C_SDA_PDD2"),
+-	PINCTRL_PIN(TEGRA_PIN_SAFE_STATE_PEE0, "SAFE_STATE_PEE0"),
+-	PINCTRL_PIN(TEGRA_PIN_VCOMP_ALERT_PEE1, "VCOMP_ALERT_PEE1"),
+-	PINCTRL_PIN(TEGRA_PIN_AO_RETENTION_N_PEE2, "AO_RETENTION_N_PEE2"),
+-	PINCTRL_PIN(TEGRA_PIN_BATT_OC_PEE3, "BATT_OC_PEE3"),
+-	PINCTRL_PIN(TEGRA_PIN_POWER_ON_PEE4, "POWER_ON_PEE4"),
+-	PINCTRL_PIN(TEGRA_PIN_PWR_I2C_SCL_PEE5, "PWR_I2C_SCL_PEE5"),
+-	PINCTRL_PIN(TEGRA_PIN_PWR_I2C_SDA_PEE6, "PWR_I2C_SDA_PEE6"),
+ 	PINCTRL_PIN(TEGRA_PIN_UFS0_REF_CLK_PFF0, "UFS0_REF_CLK_PFF0"),
+ 	PINCTRL_PIN(TEGRA_PIN_UFS0_RST_PFF1, "UFS0_RST_PFF1"),
+ 	PINCTRL_PIN(TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0, "PEX_L5_CLKREQ_N_PGG0"),
+@@ -467,11 +441,6 @@ static const struct pinctrl_pin_desc tegra194_pins[] = {
+ 	PINCTRL_PIN(TEGRA_PIN_SDMMC3_HV_TRIM, "SDMMC3_HV_TRIM"),
+ 	PINCTRL_PIN(TEGRA_PIN_EQOS_COMP, "EQOS_COMP"),
+ 	PINCTRL_PIN(TEGRA_PIN_QSPI_COMP, "QSPI_COMP"),
+-	PINCTRL_PIN(TEGRA_PIN_SYS_RESET_N, "SYS_RESET_N"),
+-	PINCTRL_PIN(TEGRA_PIN_SHUTDOWN_N, "SHUTDOWN_N"),
+-	PINCTRL_PIN(TEGRA_PIN_PMU_INT_N, "PMU_INT_N"),
+-	PINCTRL_PIN(TEGRA_PIN_SOC_PWR_REQ, "SOC_PWR_REQ"),
+-	PINCTRL_PIN(TEGRA_PIN_CLK_32K_IN, "CLK_32K_IN"),
+ };
+ 
+ static const unsigned int dap6_sclk_pa0_pins[] = {
+@@ -1379,29 +1348,7 @@ static struct tegra_function tegra194_functions[] = {
+ 		.drvtype_bit = 13,				\
+ 		.lpdr_bit = e_lpdr,				\
+ 
+-#define drive_touch_clk_pcc4            DRV_PINGROUP_ENTRY_Y(0x2004,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_uart3_rx_pcc6             DRV_PINGROUP_ENTRY_Y(0x200c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_uart3_tx_pcc5             DRV_PINGROUP_ENTRY_Y(0x2014,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_gen8_i2c_sda_pdd2         DRV_PINGROUP_ENTRY_Y(0x201c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_gen8_i2c_scl_pdd1         DRV_PINGROUP_ENTRY_Y(0x2024,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_spi2_mosi_pcc2            DRV_PINGROUP_ENTRY_Y(0x202c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_gen2_i2c_scl_pcc7         DRV_PINGROUP_ENTRY_Y(0x2034,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_spi2_cs0_pcc3             DRV_PINGROUP_ENTRY_Y(0x203c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_gen2_i2c_sda_pdd0         DRV_PINGROUP_ENTRY_Y(0x2044,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_spi2_sck_pcc0             DRV_PINGROUP_ENTRY_Y(0x204c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_spi2_miso_pcc1            DRV_PINGROUP_ENTRY_Y(0x2054,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_can1_dout_paa0            DRV_PINGROUP_ENTRY_Y(0x3004,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can1_din_paa1             DRV_PINGROUP_ENTRY_Y(0x300c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can0_dout_paa2            DRV_PINGROUP_ENTRY_Y(0x3014,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can0_din_paa3             DRV_PINGROUP_ENTRY_Y(0x301c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can0_stb_paa4             DRV_PINGROUP_ENTRY_Y(0x3024,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can0_en_paa5              DRV_PINGROUP_ENTRY_Y(0x302c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can0_wake_paa6            DRV_PINGROUP_ENTRY_Y(0x3034,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can0_err_paa7             DRV_PINGROUP_ENTRY_Y(0x303c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can1_stb_pbb0             DRV_PINGROUP_ENTRY_Y(0x3044,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can1_en_pbb1              DRV_PINGROUP_ENTRY_Y(0x304c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can1_wake_pbb2            DRV_PINGROUP_ENTRY_Y(0x3054,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
+-#define drive_can1_err_pbb3             DRV_PINGROUP_ENTRY_Y(0x305c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	1)
++/* main drive pin groups */
+ #define drive_soc_gpio33_pt0            DRV_PINGROUP_ENTRY_Y(0x1004,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
+ #define drive_soc_gpio32_ps7            DRV_PINGROUP_ENTRY_Y(0x100c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
+ #define drive_soc_gpio31_ps6            DRV_PINGROUP_ENTRY_Y(0x1014,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
+@@ -1509,17 +1456,6 @@ static struct tegra_function tegra194_functions[] = {
+ #define drive_sdmmc3_dat0_po2           DRV_PINGROUP_ENTRY_Y(0xa01c,	-1,	-1,	-1,	-1,	28,	2,	30,	2,	0)
+ #define drive_sdmmc3_cmd_po1            DRV_PINGROUP_ENTRY_Y(0xa02c,	-1,	-1,	-1,	-1,	28,	2,	30,	2,	0)
+ #define drive_sdmmc3_clk_po0            DRV_PINGROUP_ENTRY_Y(0xa034,	-1,	-1,	-1,	-1,	28,	2,	30,	2,	0)
+-#define drive_shutdown_n                DRV_PINGROUP_ENTRY_Y(0x1004,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_pmu_int_n                 DRV_PINGROUP_ENTRY_Y(0x100c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_safe_state_pee0           DRV_PINGROUP_ENTRY_Y(0x1014,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_vcomp_alert_pee1          DRV_PINGROUP_ENTRY_Y(0x101c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_soc_pwr_req               DRV_PINGROUP_ENTRY_Y(0x1024,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_batt_oc_pee3              DRV_PINGROUP_ENTRY_Y(0x102c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_clk_32k_in                DRV_PINGROUP_ENTRY_Y(0x1034,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_power_on_pee4             DRV_PINGROUP_ENTRY_Y(0x103c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_pwr_i2c_scl_pee5          DRV_PINGROUP_ENTRY_Y(0x1044,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_pwr_i2c_sda_pee6          DRV_PINGROUP_ENTRY_Y(0x104c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+-#define drive_ao_retention_n_pee2       DRV_PINGROUP_ENTRY_Y(0x1064,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
+ #define drive_gpu_pwr_req_px0           DRV_PINGROUP_ENTRY_Y(0xD004,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
+ #define drive_spi3_miso_py1             DRV_PINGROUP_ENTRY_Y(0xD00c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
+ #define drive_spi1_cs0_pz6              DRV_PINGROUP_ENTRY_Y(0xD014,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
+@@ -1600,6 +1536,42 @@ static struct tegra_function tegra194_functions[] = {
+ #define drive_directdc1_in_pv1          DRV_PINGROUP_ENTRY_N(no_entry)
+ #define drive_directdc1_clk_pv0         DRV_PINGROUP_ENTRY_N(no_entry)
+ 
++/* AON drive pin groups */
++#define drive_shutdown_n                DRV_PINGROUP_ENTRY_Y(0x1004,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_pmu_int_n                 DRV_PINGROUP_ENTRY_Y(0x100c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_safe_state_pee0           DRV_PINGROUP_ENTRY_Y(0x1014,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_vcomp_alert_pee1          DRV_PINGROUP_ENTRY_Y(0x101c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_soc_pwr_req               DRV_PINGROUP_ENTRY_Y(0x1024,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_batt_oc_pee3              DRV_PINGROUP_ENTRY_Y(0x102c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_clk_32k_in                DRV_PINGROUP_ENTRY_Y(0x1034,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_power_on_pee4             DRV_PINGROUP_ENTRY_Y(0x103c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_pwr_i2c_scl_pee5          DRV_PINGROUP_ENTRY_Y(0x1044,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_pwr_i2c_sda_pee6          DRV_PINGROUP_ENTRY_Y(0x104c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_ao_retention_n_pee2       DRV_PINGROUP_ENTRY_Y(0x1064,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_touch_clk_pcc4            DRV_PINGROUP_ENTRY_Y(0x2004,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_uart3_rx_pcc6             DRV_PINGROUP_ENTRY_Y(0x200c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_uart3_tx_pcc5             DRV_PINGROUP_ENTRY_Y(0x2014,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_gen8_i2c_sda_pdd2         DRV_PINGROUP_ENTRY_Y(0x201c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_gen8_i2c_scl_pdd1         DRV_PINGROUP_ENTRY_Y(0x2024,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_spi2_mosi_pcc2            DRV_PINGROUP_ENTRY_Y(0x202c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_gen2_i2c_scl_pcc7         DRV_PINGROUP_ENTRY_Y(0x2034,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_spi2_cs0_pcc3             DRV_PINGROUP_ENTRY_Y(0x203c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_gen2_i2c_sda_pdd0         DRV_PINGROUP_ENTRY_Y(0x2044,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_spi2_sck_pcc0             DRV_PINGROUP_ENTRY_Y(0x204c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_spi2_miso_pcc1            DRV_PINGROUP_ENTRY_Y(0x2054,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	0)
++#define drive_can1_dout_paa0            DRV_PINGROUP_ENTRY_Y(0x3004,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can1_din_paa1             DRV_PINGROUP_ENTRY_Y(0x300c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can0_dout_paa2            DRV_PINGROUP_ENTRY_Y(0x3014,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can0_din_paa3             DRV_PINGROUP_ENTRY_Y(0x301c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can0_stb_paa4             DRV_PINGROUP_ENTRY_Y(0x3024,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can0_en_paa5              DRV_PINGROUP_ENTRY_Y(0x302c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can0_wake_paa6            DRV_PINGROUP_ENTRY_Y(0x3034,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can0_err_paa7             DRV_PINGROUP_ENTRY_Y(0x303c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can1_stb_pbb0             DRV_PINGROUP_ENTRY_Y(0x3044,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can1_en_pbb1              DRV_PINGROUP_ENTRY_Y(0x304c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can1_wake_pbb2            DRV_PINGROUP_ENTRY_Y(0x3054,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++#define drive_can1_err_pbb3             DRV_PINGROUP_ENTRY_Y(0x305c,	28,	2,	30,	2,	-1,	-1,	-1,	-1,	0)
++
+ #define PINGROUP(pg_name, f0, f1, f2, f3, r, bank, pupd, e_io_hv, e_lpbk, e_input, e_lpdr, e_pbias_buf, \
+ 			gpio_sfio_sel, e_od, schmitt_b, drvtype, epreemp, io_reset, rfu_in, io_rail)	\
+ 	{							\
+@@ -1622,30 +1594,6 @@ static struct tegra_function tegra194_functions[] = {
+ 	}
+ 
+ static const struct tegra_pingroup tegra194_groups[] = {
+-
+-	PINGROUP(touch_clk_pcc4,	GP,		TOUCH,		RSVD2,		RSVD3,		0x2000,		1,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(uart3_rx_pcc6,		UARTC,		RSVD1,		RSVD2,		RSVD3,		0x2008,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(uart3_tx_pcc5,		UARTC,		RSVD1,		RSVD2,		RSVD3,		0x2010,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(gen8_i2c_sda_pdd2,	I2C8,		RSVD1,		RSVD2,		RSVD3,		0x2018,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(gen8_i2c_scl_pdd1,	I2C8,		RSVD1,		RSVD2,		RSVD3,		0x2020,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(spi2_mosi_pcc2,	SPI2,		UARTG,		RSVD2,		RSVD3,		0x2028,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(gen2_i2c_scl_pcc7,	I2C2,		RSVD1,		RSVD2,		RSVD3,		0x2030,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(spi2_cs0_pcc3,		SPI2,		UARTG,		RSVD2,		RSVD3,		0x2038,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(gen2_i2c_sda_pdd0,	I2C2,		RSVD1,		RSVD2,		RSVD3,		0x2040,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(spi2_sck_pcc0,		SPI2,		UARTG,		RSVD2,		RSVD3,		0x2048,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(spi2_miso_pcc1,	SPI2,		UARTG,		RSVD2,		RSVD3,		0x2050,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
+-	PINGROUP(can1_dout_paa0,	CAN1,		RSVD1,		RSVD2,		RSVD3,		0x3000,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can1_din_paa1,		CAN1,		RSVD1,		RSVD2,		RSVD3,		0x3008,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can0_dout_paa2,	CAN0,		RSVD1,		RSVD2,		RSVD3,		0x3010,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can0_din_paa3,		CAN0,		RSVD1,		RSVD2,		RSVD3,		0x3018,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can0_stb_paa4,		RSVD0,		WDT,		RSVD2,		RSVD3,		0x3020,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can0_en_paa5,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3028,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can0_wake_paa6,	RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3030,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can0_err_paa7,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3038,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can1_stb_pbb0,		RSVD0,		DMIC3,		DMIC5,		RSVD3,		0x3040,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can1_en_pbb1,		RSVD0,		DMIC3,		DMIC5,		RSVD3,		0x3048,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can1_wake_pbb2,	RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3050,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+-	PINGROUP(can1_err_pbb3,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3058,		1,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
+ 	PINGROUP(soc_gpio33_pt0,	RSVD0,		SPDIF,		RSVD2,		RSVD3,		0x1000,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_audio"),
+ 	PINGROUP(soc_gpio32_ps7,	RSVD0,		SPDIF,		RSVD2,		RSVD3,		0x1008,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_audio"),
+ 	PINGROUP(soc_gpio31_ps6,	RSVD0,		SDMMC1,		RSVD2,		RSVD3,		0x1010,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_audio"),
+@@ -1805,17 +1753,6 @@ static const struct tegra_pingroup tegra194_groups[] = {
+ 	PINGROUP(sdmmc4_dat2,		SDMMC4,		RSVD1,		RSVD2,		RSVD3,		0x6048,		0,	Y,	-1,	-1,	6,	-1,	-1,	-1,	-1,	-1,	Y,	-1,	-1,	N,	"vddio_sdmmc4"),
+ 	PINGROUP(sdmmc4_dat1,		SDMMC4,		RSVD1,		RSVD2,		RSVD3,		0x6050,		0,	Y,	-1,	-1,	6,	-1,	-1,	-1,	-1,	-1,	Y,	-1,	-1,	N,	"vddio_sdmmc4"),
+ 	PINGROUP(sdmmc4_dat0,		SDMMC4,		RSVD1,		RSVD2,		RSVD3,		0x6058,		0,	Y,	-1,	-1,	6,	-1,	-1,	-1,	-1,	-1,	Y,	-1,	-1,	N,	"vddio_sdmmc4"),
+-	PINGROUP(shutdown_n,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1000,		1,	Y,	5,	-1,	6,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(pmu_int_n,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1008,		1,	Y,	-1,	-1,	6,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(safe_state_pee0,	SCE,		RSVD1,		RSVD2,		RSVD3,		0x1010,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(vcomp_alert_pee1,	SOC,		RSVD1,		RSVD2,		RSVD3,		0x1018,		1,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(soc_pwr_req,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1020,		1,	Y,	-1,	-1,	6,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(batt_oc_pee3,		SOC,		RSVD1,		RSVD2,		RSVD3,		0x1028,		1,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(clk_32k_in,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1030,		1,	Y,	-1,	-1,	-1,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(power_on_pee4,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1038,		1,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(pwr_i2c_scl_pee5,	I2C5,		RSVD1,		RSVD2,		RSVD3,		0x1040,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(pwr_i2c_sda_pee6,	I2C5,		RSVD1,		RSVD2,		RSVD3,		0x1048,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+-	PINGROUP(ao_retention_n_pee2,	GPIO,		RSVD1,		RSVD2,		RSVD3,		0x1060,		1,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
+ 	PINGROUP(gpu_pwr_req_px0,	RSVD0,		RSVD1,		RSVD2,		RSVD3,		0xD000,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_uart"),
+ 	PINGROUP(spi3_miso_py1,		SPI3,		RSVD1,		RSVD2,		RSVD3,		0xD008,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_uart"),
+ 	PINGROUP(spi1_cs0_pz6,		SPI1,		RSVD1,		RSVD2,		RSVD3,		0xD010,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_uart"),
+@@ -1857,13 +1794,104 @@ static const struct tegra_pinctrl_soc_data tegra194_pinctrl = {
+ 	.sfsel_in_mux = true,
+ };
+ 
++static const struct pinctrl_pin_desc tegra194_aon_pins[] = {
++	PINCTRL_PIN(TEGRA_PIN_CAN1_DOUT_PAA0, "CAN1_DOUT_PAA0"),
++	PINCTRL_PIN(TEGRA_PIN_CAN1_DIN_PAA1, "CAN1_DIN_PAA1"),
++	PINCTRL_PIN(TEGRA_PIN_CAN0_DOUT_PAA2, "CAN0_DOUT_PAA2"),
++	PINCTRL_PIN(TEGRA_PIN_CAN0_DIN_PAA3, "CAN0_DIN_PAA3"),
++	PINCTRL_PIN(TEGRA_PIN_CAN0_STB_PAA4, "CAN0_STB_PAA4"),
++	PINCTRL_PIN(TEGRA_PIN_CAN0_EN_PAA5, "CAN0_EN_PAA5"),
++	PINCTRL_PIN(TEGRA_PIN_CAN0_WAKE_PAA6, "CAN0_WAKE_PAA6"),
++	PINCTRL_PIN(TEGRA_PIN_CAN0_ERR_PAA7, "CAN0_ERR_PAA7"),
++	PINCTRL_PIN(TEGRA_PIN_CAN1_STB_PBB0, "CAN1_STB_PBB0"),
++	PINCTRL_PIN(TEGRA_PIN_CAN1_EN_PBB1, "CAN1_EN_PBB1"),
++	PINCTRL_PIN(TEGRA_PIN_CAN1_WAKE_PBB2, "CAN1_WAKE_PBB2"),
++	PINCTRL_PIN(TEGRA_PIN_CAN1_ERR_PBB3, "CAN1_ERR_PBB3"),
++	PINCTRL_PIN(TEGRA_PIN_SPI2_SCK_PCC0, "SPI2_SCK_PCC0"),
++	PINCTRL_PIN(TEGRA_PIN_SPI2_MISO_PCC1, "SPI2_MISO_PCC1"),
++	PINCTRL_PIN(TEGRA_PIN_SPI2_MOSI_PCC2, "SPI2_MOSI_PCC2"),
++	PINCTRL_PIN(TEGRA_PIN_SPI2_CS0_PCC3, "SPI2_CS0_PCC3"),
++	PINCTRL_PIN(TEGRA_PIN_TOUCH_CLK_PCC4, "TOUCH_CLK_PCC4"),
++	PINCTRL_PIN(TEGRA_PIN_UART3_TX_PCC5, "UART3_TX_PCC5"),
++	PINCTRL_PIN(TEGRA_PIN_UART3_RX_PCC6, "UART3_RX_PCC6"),
++	PINCTRL_PIN(TEGRA_PIN_GEN2_I2C_SCL_PCC7, "GEN2_I2C_SCL_PCC7"),
++	PINCTRL_PIN(TEGRA_PIN_GEN2_I2C_SDA_PDD0, "GEN2_I2C_SDA_PDD0"),
++	PINCTRL_PIN(TEGRA_PIN_GEN8_I2C_SCL_PDD1, "GEN8_I2C_SCL_PDD1"),
++	PINCTRL_PIN(TEGRA_PIN_GEN8_I2C_SDA_PDD2, "GEN8_I2C_SDA_PDD2"),
++	PINCTRL_PIN(TEGRA_PIN_SAFE_STATE_PEE0, "SAFE_STATE_PEE0"),
++	PINCTRL_PIN(TEGRA_PIN_VCOMP_ALERT_PEE1, "VCOMP_ALERT_PEE1"),
++	PINCTRL_PIN(TEGRA_PIN_AO_RETENTION_N_PEE2, "AO_RETENTION_N_PEE2"),
++	PINCTRL_PIN(TEGRA_PIN_BATT_OC_PEE3, "BATT_OC_PEE3"),
++	PINCTRL_PIN(TEGRA_PIN_POWER_ON_PEE4, "POWER_ON_PEE4"),
++	PINCTRL_PIN(TEGRA_PIN_PWR_I2C_SCL_PEE5, "PWR_I2C_SCL_PEE5"),
++	PINCTRL_PIN(TEGRA_PIN_PWR_I2C_SDA_PEE6, "PWR_I2C_SDA_PEE6"),
++	PINCTRL_PIN(TEGRA_PIN_SYS_RESET_N, "SYS_RESET_N"),
++	PINCTRL_PIN(TEGRA_PIN_SHUTDOWN_N, "SHUTDOWN_N"),
++	PINCTRL_PIN(TEGRA_PIN_PMU_INT_N, "PMU_INT_N"),
++	PINCTRL_PIN(TEGRA_PIN_SOC_PWR_REQ, "SOC_PWR_REQ"),
++	PINCTRL_PIN(TEGRA_PIN_CLK_32K_IN, "CLK_32K_IN"),
++};
++
++static const struct tegra_pingroup tegra194_aon_groups[] = {
++	PINGROUP(shutdown_n,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1000,		0,	Y,	5,	-1,	6,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(pmu_int_n,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1008,		0,	Y,	-1,	-1,	6,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(safe_state_pee0,	SCE,		RSVD1,		RSVD2,		RSVD3,		0x1010,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(vcomp_alert_pee1,	SOC,		RSVD1,		RSVD2,		RSVD3,		0x1018,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(soc_pwr_req,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1020,		0,	Y,	-1,	-1,	6,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(batt_oc_pee3,		SOC,		RSVD1,		RSVD2,		RSVD3,		0x1028,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(clk_32k_in,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1030,		0,	Y,	-1,	-1,	-1,	8,	-1,	-1,	-1,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(power_on_pee4,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x1038,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(pwr_i2c_scl_pee5,	I2C5,		RSVD1,		RSVD2,		RSVD3,		0x1040,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(pwr_i2c_sda_pee6,	I2C5,		RSVD1,		RSVD2,		RSVD3,		0x1048,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(ao_retention_n_pee2,	GPIO,		RSVD1,		RSVD2,		RSVD3,		0x1060,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_sys"),
++	PINGROUP(touch_clk_pcc4,	GP,		TOUCH,		RSVD2,		RSVD3,		0x2000,		0,	Y,	-1,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(uart3_rx_pcc6,		UARTC,		RSVD1,		RSVD2,		RSVD3,		0x2008,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(uart3_tx_pcc5,		UARTC,		RSVD1,		RSVD2,		RSVD3,		0x2010,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(gen8_i2c_sda_pdd2,	I2C8,		RSVD1,		RSVD2,		RSVD3,		0x2018,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(gen8_i2c_scl_pdd1,	I2C8,		RSVD1,		RSVD2,		RSVD3,		0x2020,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(spi2_mosi_pcc2,	SPI2,		UARTG,		RSVD2,		RSVD3,		0x2028,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(gen2_i2c_scl_pcc7,	I2C2,		RSVD1,		RSVD2,		RSVD3,		0x2030,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(spi2_cs0_pcc3,		SPI2,		UARTG,		RSVD2,		RSVD3,		0x2038,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(gen2_i2c_sda_pdd0,	I2C2,		RSVD1,		RSVD2,		RSVD3,		0x2040,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(spi2_sck_pcc0,		SPI2,		UARTG,		RSVD2,		RSVD3,		0x2048,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(spi2_miso_pcc1,	SPI2,		UARTG,		RSVD2,		RSVD3,		0x2050,		0,	Y,	5,	-1,	6,	8,	-1,	10,	11,	12,	N,	-1,	-1,	N,	"vddio_ao"),
++	PINGROUP(can1_dout_paa0,	CAN1,		RSVD1,		RSVD2,		RSVD3,		0x3000,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can1_din_paa1,		CAN1,		RSVD1,		RSVD2,		RSVD3,		0x3008,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can0_dout_paa2,	CAN0,		RSVD1,		RSVD2,		RSVD3,		0x3010,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can0_din_paa3,		CAN0,		RSVD1,		RSVD2,		RSVD3,		0x3018,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can0_stb_paa4,		RSVD0,		WDT,		RSVD2,		RSVD3,		0x3020,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can0_en_paa5,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3028,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can0_wake_paa6,	RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3030,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can0_err_paa7,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3038,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can1_stb_pbb0,		RSVD0,		DMIC3,		DMIC5,		RSVD3,		0x3040,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can1_en_pbb1,		RSVD0,		DMIC3,		DMIC5,		RSVD3,		0x3048,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can1_wake_pbb2,	RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3050,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++	PINGROUP(can1_err_pbb3,		RSVD0,		RSVD1,		RSVD2,		RSVD3,		0x3058,		0,	Y,	-1,	-1,	6,	-1,	9,	10,	-1,	12,	Y,	-1,	-1,	Y,	"vddio_ao_hv"),
++};
++
++static const struct tegra_pinctrl_soc_data tegra194_pinctrl_aon = {
++	.pins = tegra194_aon_pins,
++	.npins = ARRAY_SIZE(tegra194_aon_pins),
++	.functions = tegra194_functions,
++	.nfunctions = ARRAY_SIZE(tegra194_functions),
++	.groups = tegra194_aon_groups,
++	.ngroups = ARRAY_SIZE(tegra194_aon_groups),
++	.hsm_in_mux = true,
++	.schmitt_in_mux = true,
++	.drvtype_in_mux = true,
++	.sfsel_in_mux = true,
++};
++
+ static int tegra194_pinctrl_probe(struct platform_device *pdev)
+ {
+-	return tegra_pinctrl_probe(pdev, &tegra194_pinctrl);
++	const struct tegra_pinctrl_soc_data *soc = of_device_get_match_data(&pdev->dev);
++
++	return tegra_pinctrl_probe(pdev, soc);
+ }
+ 
+ static const struct of_device_id tegra194_pinctrl_of_match[] = {
+-	{ .compatible = "nvidia,tegra194-pinmux", },
++	{ .compatible = "nvidia,tegra194-pinmux", .data = &tegra194_pinctrl },
++	{ .compatible = "nvidia,tegra194-pinmux-aon", .data = &tegra194_pinctrl_aon },
+ 	{ },
+ };
+ 
 -- 
 2.36.1
 
