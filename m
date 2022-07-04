@@ -2,122 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 092D2565E41
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 22:09:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A523F565EE7
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 23:24:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231639AbiGDUJx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 16:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59290 "EHLO
+        id S230433AbiGDVYK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 17:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbiGDUJw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 16:09:52 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34826391;
-        Mon,  4 Jul 2022 13:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656965391; x=1688501391;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dORptIljIbU1gDl2c5HL9A7Fj0TfMaBEiP2o3fiaXmU=;
-  b=QbpMYlgwxRi9sO+SJ+Nmze7nlhLZ1fh6/72/ZHLt08a7ZB7X7sqSojtF
-   GjZjE6Lm3P7wrizSL5HDBuoMyduCrNPz7/rO08rG7tNE7i5HqcZC09zS8
-   craqKYNEQgsw5Ug21z6DpbIFQhf+DPAs9KRQSjwjEBB3xPKioBMFI+j9Q
-   RbnlZyY/5gaT6wIBNgkmhzbqerAY60je7grqcjTyvIBPt9omWv4Jt6tla
-   NgwngxBl+Qfoqaj9L9RlrHlnuGEHv0vBSm03hbBPmoGUa8bzD75cc+8Y/
-   826klEvGHzEx5+Tw4NuKRHrUgbPz0ZeO+t/onffCunumqHjgSTLsGwbZK
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10398"; a="281949639"
-X-IronPort-AV: E=Sophos;i="5.92,243,1650956400"; 
-   d="scan'208";a="281949639"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2022 13:09:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,243,1650956400"; 
-   d="scan'208";a="919458027"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Jul 2022 13:09:49 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o8SOC-000I93-D6;
-        Mon, 04 Jul 2022 20:09:48 +0000
-Date:   Tue, 5 Jul 2022 04:09:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     kbuild-all@lists.01.org, bjorn.andersson@linaro.org,
-        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masneyb@onstation.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH] pinctrl: qcom-pmic-gpio: Make irqchip immutable
-Message-ID: <202207050342.WcNFJKKy-lkp@intel.com>
-References: <20220704150527.361470-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S229703AbiGDVYJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 17:24:09 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF37310FE1;
+        Mon,  4 Jul 2022 14:24:06 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id eq6so13024538edb.6;
+        Mon, 04 Jul 2022 14:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6YK0Qy2E/EJZUmG508VlvTboIMY5FeBTto36YOpoAJM=;
+        b=cLyxJ9nj0B6idyzePiQTDbd6GrawwqiqBL9J4RALJGSQ43ljmxmygR5n7wsNroZWcX
+         W5rEl/8NFZRmqtWfj5AparSqGPanCoqRoKR4kZ6mb1QwzLYxf/LEb9k6KT44ionRxDj5
+         s+O2t9YhcHQxg2KfYm0Qvnn2f3W5zrnIOJ7OKYZceWKI0YIqGrMug+xA6H82UgcyLn/k
+         6sRPNk6iPHo8xee94DhS7PoUw73HAMZK4M2UBqW3IR4orLpjsXIRsT3U1yGUMsKfzlY8
+         axLp1G0bEVGAk46nAdtOU2d/qTtKWLYnte7rzozi6rwHLW2Z/ngCwlSNCH5vnaoX0Vif
+         zI6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6YK0Qy2E/EJZUmG508VlvTboIMY5FeBTto36YOpoAJM=;
+        b=ZmHnnfkSVfx2OQLQVe+iDP6eJUY/hsBiHDUTgjDJnwygUbIVH/FACBSk2DFj/IX5nw
+         EBT9QFTMokyxBYRQdyLh+S1NIPiYa8tlVnNFSweXr+xPeo1j3xmPoxQX3xSiDm/ddvcm
+         vntjsG7+9KAANO7wFkYAcFlMXI5cCB05EygVA+lybLREbP30L4yAcpk8WEPGosH25fQD
+         Ygyemyq00oVfzZIQcv1PqesjkbaZ594gAvTOlEkEfqyLh5guGzZhtl3Su3UcTBKMZfBd
+         yiJlMrR+vUE/lj4calMyk89cGc3jss4HJj9fApDLfY3X8FzMlAqRMimR1nestB+YOSNR
+         6nmQ==
+X-Gm-Message-State: AJIora99Qn3mhABPBAvk3qdC8tha3lR7060Ua0pwF0R4/LIsHzMLepiF
+        g8Ve7GAP0IGMZl5CFoGhp7k=
+X-Google-Smtp-Source: AGRyM1s0uahroH7j430DAMUMmeCYbOJfpqgBJL7TKvrQ10BOSx53TueNzEINxulMH4uj6aeQwz00VA==
+X-Received: by 2002:a05:6402:84a:b0:423:fe99:8c53 with SMTP id b10-20020a056402084a00b00423fe998c53mr42552801edz.195.1656969845581;
+        Mon, 04 Jul 2022 14:24:05 -0700 (PDT)
+Received: from fedora.robimarko.hr (dh207-99-90.xnet.hr. [88.207.99.90])
+        by smtp.googlemail.com with ESMTPSA id k18-20020a056402049200b0042dcbc3f302sm20131117edv.36.2022.07.04.14.24.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Jul 2022 14:24:05 -0700 (PDT)
+From:   Robert Marko <robimarko@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        konrad.dybcio@somainline.org, lee.jones@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        jic23@kernel.org, lars@metafoo.de, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
+Cc:     Robert Marko <robimarko@gmail.com>
+Subject: [PATCH v6 01/12] dt-bindings: mfd: qcom-spmi-pmic: add support for PMP8074
+Date:   Mon,  4 Jul 2022 23:23:51 +0200
+Message-Id: <20220704212402.1715182-1-robimarko@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220704150527.361470-1-manivannan.sadhasivam@linaro.org>
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Manivannan,
+Document compatible for the PMP8074 PMIC.
 
-I love your patch! Perhaps something to improve:
+I planned to convert the bindings to dtschema, but there is already a
+patch to do so [1].
+I will make a patch to add the compatible to dtschema once it gets
+accepted.
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linus/master v5.19-rc5 next-20220704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+[1] https://lore.kernel.org/linux-arm-msm/20220626191630.176835-1-david@ixit.cz/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam/pinctrl-qcom-pmic-gpio-Make-irqchip-immutable/20220704-230712
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20220705/202207050342.WcNFJKKy-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/4de81cf5dd3098fa10c3e384d497e024675cf068
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Manivannan-Sadhasivam/pinctrl-qcom-pmic-gpio-Make-irqchip-immutable/20220704-230712
-        git checkout 4de81cf5dd3098fa10c3e384d497e024675cf068
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/pinctrl/qcom/
+Signed-off-by: Robert Marko <robimarko@gmail.com>
+---
+ Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:998:37: warning: excess elements in struct initializer
-     998 |         .flags = IRQCHIP_IMMUTABLE, IRQCHIP_MASK_ON_SUSPEND,
-         |                                     ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:998:37: note: (near initialization for 'pmic_gpio_irqchip')
-
-
-vim +998 drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-
-   990	
-   991	static const struct irq_chip pmic_gpio_irqchip = {
-   992		.name = "spmi-gpio",
-   993		.irq_ack = irq_chip_ack_parent,
-   994		.irq_mask = irq_chip_mask_parent,
-   995		.irq_unmask = irq_chip_unmask_parent,
-   996		.irq_set_type = irq_chip_set_type_parent,
-   997		.irq_set_wake = irq_chip_set_wake_parent,
- > 998		.flags = IRQCHIP_IMMUTABLE, IRQCHIP_MASK_ON_SUSPEND,
-   999		GPIOCHIP_IRQ_RESOURCE_HELPERS,
-  1000	};
-  1001	
-
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+index eb78e3ae7703..c46d17609f3a 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+@@ -46,6 +46,7 @@ Required properties:
+                    "qcom,pmi8998",
+                    "qcom,pmk8002",
+                    "qcom,pmk8350",
++                   "qcom,pmp8074",
+                    "qcom,pmr735a",
+                    "qcom,smb2351",
+                    or generalized "qcom,spmi-pmic".
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.36.1
+
