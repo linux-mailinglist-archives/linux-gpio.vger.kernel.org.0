@@ -2,121 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70E7A565F93
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 01:05:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7696C565FC7
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 01:56:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230347AbiGDXFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 19:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
+        id S230507AbiGDX4C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 19:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiGDXFe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 19:05:34 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D21BF6F
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Jul 2022 16:05:33 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 64so9684259ybt.12
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Jul 2022 16:05:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XycWTMWtIwricire+FFIRRMgzV1gWh/SUQexd6DnnYc=;
-        b=U6zGQBjdWzmnVw/QKpLpnpUYTxQGzObW1o/Zl132xkUurDx9PsOVRnWQ6K9MQyEPBQ
-         6vOzYWcNejk4zkkvS4sGH5QhpfuOJTcyS+gpXgRUJ3fsg1nGC5sV8GrUoF2GHYIkP2GN
-         SrSesILXEWvnDMIi2x/KHqeBCjm/l6awVAe/ohkuQaUT7GgrygtKLMcYiGMiwcUqvp6A
-         BE+XkuYrXfj2RKTuvGPammVj7P3/WhUzpGjqveRU4pmotZNzUBPZSQB+WCCbXwf+yIjt
-         6PbSJWYIQf4cbiBJCpZem8uursmIQ5g9Yt9rQw5BZt613nQHFss3QcGnNOXTXa+Lm9G1
-         H0Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XycWTMWtIwricire+FFIRRMgzV1gWh/SUQexd6DnnYc=;
-        b=n3j538wICWaEtkZMxZjv61PVbKp3MGQD+yajNHAZ9MFk+YpkRtDRorvV0TJ62YAjBF
-         JAnLZ7KELQnmO31+ZFD0sM4DJdhBxqYF+FUTnTGCW9+5J534s2leiFWshYg9IeAic8f4
-         MIASjfmfW7CiNpfB928waI1ERwl2qxloVunRLjSwEVH/HwNOA6y52vyWe/tg/6u7iZ9S
-         k2iMQdlB5zNYiOa4MBicRHHOtWHvWHNorQwVE3xMHm2jQv/0vD3bYaz6pWwc974n9HNn
-         nih9s+nPQbeV2djJZjuVkeboJMf+ymqXAjofaQ4IOVW+jIVPZc7oDdfLVysMVaFSP69B
-         kC5w==
-X-Gm-Message-State: AJIora9raQ2k4EipyOsJEjTYwR+ve2T02DOl4CJ2G3VNpThZctwvzdJZ
-        n1AoZNGFnOoZeVEo0/FSmMy09bRQIWnRQxVe0eleHXtens2cVg==
-X-Google-Smtp-Source: AGRyM1urReHFGRpDt4228+rssCI9u4xNZb5KZUtgIg0y+Uw7HPx2keXEsdL3wNgYwiwKCidfhIJbuZH0U01zBCLbxts=
-X-Received: by 2002:a25:d07:0:b0:66e:6c0e:a2d1 with SMTP id
- 7-20020a250d07000000b0066e6c0ea2d1mr882331ybn.369.1656975932454; Mon, 04 Jul
- 2022 16:05:32 -0700 (PDT)
+        with ESMTP id S229614AbiGDX4C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 19:56:02 -0400
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D577650;
+        Mon,  4 Jul 2022 16:56:01 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id B8C1D5C00DD;
+        Mon,  4 Jul 2022 19:56:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 04 Jul 2022 19:56:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1656978960; x=
+        1657065360; bh=VjjCNK/QUJQgIUTHTpMOStvQY2cL+8rDq3LhVbeEC1Q=; b=h
+        ifwV1yYFNvbZC/udgowFCmTOSmQ/qcy2IOL1cTA8TMdVqjZhB9dnAHZSMTvDZej/
+        7f8JVANCeh2WkC4Gx0lbISJquIb/EYAsH7G+w8Avw7tNbG5EEsbqIfWOoo/Kl1Sl
+        zDDUUR3a1495DQ8KQ1ZqlMKQbCX4XRvdu1sQ02OsaubVt/TKq0bSXc82t7MwFmgf
+        8wVwLk/tjIlZh17NInWC6o7T1WLeQqmpI7JPhjqQ2Of0VhpP22i1VHBakOFpl8n+
+        PFHBG6oyN6QnLzMkGMKeedBjw11r1R82EvLyFHXFGgxTaiTeMfGDWu5oIRyEh1F6
+        nkjqcLWNH15X0/5FF43Jg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1656978960; x=
+        1657065360; bh=VjjCNK/QUJQgIUTHTpMOStvQY2cL+8rDq3LhVbeEC1Q=; b=R
+        TfYJfkvawaWXek+h6Zjyz4SYSCyrOlatEV2aVVi3K9KE/5JO2sTjVWLnHJse8zGu
+        y1vw8jIt8HuiyyAsxt4HDpGiZGaBFE8H0KSxkyzIP0Uu/hpLQx29qo3hqXFQhCJy
+        oIm3OoqjzqREaxG73SbcUYjbl1XSOKzuzKy9dv9/OGLu5CR0HYWK/o4AZQylbbeH
+        m24CjKkXDGhEyDulJjs9krZlEUhSOj9D3WO4GVPqYr3+AscUSw7sDSIafmTWeHfy
+        OVlPrKR2kGddRUQdIR9In8KqUNbrghtgCDLsXi4zpyqVknimZCYWIpg+vBR+6IKb
+        ZPZjr30lTUAXID68e5X7g==
+X-ME-Sender: <xms:EH7DYvWbRUH8tTcu-a_7OhCENgU3bg5LBZp7rPwzF0wBSs0NvE0VUw>
+    <xme:EH7DYnmhk9gDVCrR66Keb9k5qquPEyPP3T-UECCulDX04sICbDqKsqLm6nzZ-STZQ
+    _bkSdwEPJJaJnGjVg>
+X-ME-Received: <xmr:EH7DYrbO2prypG0RvHH_4a_vxgxuvB5Ybboo2nqO47ljSDtzvvJ3sHVr3i5RkhVrLo_RwYwWn1FJn1bBuTiyI7ml1ToH9J-JTLxkIR6iu1JVcWcJ6uaAsGbOLg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudeitddgvdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpefftdevkedvgeekueeutefgteffieelvedukeeuhfehledvhfei
+    tdehudfhudehhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:EH7DYqXzjC3S-vANAIgpERQCjTt-QuPff7X3R7z6yWIwbREF4ntQvg>
+    <xmx:EH7DYpm_SfYE_oP0QSRD5dBf_9rtcOLBa6r2GgL6ZaYQUeMNSDhpNA>
+    <xmx:EH7DYnemfO8_xw_clYBvmvIUnIyLIyz8023rquBwyAzkxzUJCz5JYw>
+    <xmx:EH7DYqhHig5EpJ-EFrQn9UYxW4YZDZe8m3AQ5iRs1_5IN545ezH0Zw>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 4 Jul 2022 19:55:59 -0400 (EDT)
+Subject: Re: [PATCH v12 2/7] dt-bindings: pinctrl: sunxi: Make interrupts
+ optional
+To:     Andre Przywara <andre.przywara@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20220701112453.2310722-1-andre.przywara@arm.com>
+ <20220701112453.2310722-3-andre.przywara@arm.com>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <74a5466c-a84b-57fa-79ad-96155c1324a0@sholland.org>
+Date:   Mon, 4 Jul 2022 18:55:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com> <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
-In-Reply-To: <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Jul 2022 01:05:20 +0200
-Message-ID: <CACRpkdamknwRPGEeGGQGQPtKw=dPXa79GAJy+E6y+03NakN=cA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     michael@walle.cc, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220701112453.2310722-3-andre.przywara@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jul 3, 2022 at 1:10 PM Aidan MacDonald
-<aidanmacdonald.0x0@gmail.com> wrote:
+On 7/1/22 6:24 AM, Andre Przywara wrote:
+> The R_PIO pinctrl device on the Allwinner H616 SoC does not have an
+> interrupt (it features only two pins).
+> However the binding requires at least naming one upstream interrupt,
+> plus the #interrupt-cells and interrupt-controller properties.
+> 
+> Drop the unconditional requirement for the interrupt properties, and
+> make them dependent on being not this particular pinctrl device.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
-> Some GPIO chips require a custom to_irq() callback for mapping
-> their IRQs, eg. because their interrupts come from a parent IRQ
-> chip where the GPIO offset doesn't map 1-to-1 with hwirq number.
->
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Acked-by: Samuel Holland <samuel@sholland.org>
 
-What is the usecase for this?
+> ---
+>  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml      | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> index bfce850c20351..0bd903954195b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> @@ -133,14 +133,11 @@ patternProperties:
+>  
+>  required:
+>    - "#gpio-cells"
+> -  - "#interrupt-cells"
+>    - compatible
+>    - reg
+> -  - interrupts
+>    - clocks
+>    - clock-names
+>    - gpio-controller
+> -  - interrupt-controller
+>  
+>  allOf:
+>    # FIXME: We should have the pin bank supplies here, but not a lot of
+> @@ -148,6 +145,18 @@ allOf:
+>    # warnings.
+>  
+>    - $ref: "pinctrl.yaml#"
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            enum:
+> +              - allwinner,sun50i-h616-r-pinctrl
+> +    then:
 
-Since GPIO chips and IRQ chips are orthogonal there is absolutely
-no guarantee that ->to_irq() is called before a driver start to use
-an IRQ from the irqchip side:
+Nit: all of the existing ifs and thens have blank lines between them.
 
-(quoting Documentation/driver-api/gpio/driver.rst)
+> +      required:
+> +        - "#interrupt-cells"
+> +        - interrupts
+> +        - interrupt-controller
+> +
+>    - if:
+>        properties:
+>          compatible:
+> 
 
- It is legal for any IRQ consumer to request an IRQ from any irqchip even if it
- is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
- irq_chip are orthogonal, and offering their services independent of each
- other.
-
- gpiod_to_irq() is just a convenience function to figure out the IRQ for a
- certain GPIO line and should not be relied upon to have been called before
- the IRQ is used.
-
- Always prepare the hardware and make it ready for action in respective
- callbacks from the GPIO and irq_chip APIs. Do not rely on gpiod_to_irq() having
- been called first.
-
-(end quote)
-
-Using ->to_irq() makes sense in a few cases such as when
-a GPIO key that can also poll for state want to get hold of an
-IRQ to react to edges.
-
-Now: if a consumer requests IRQ nr 3 from your driver say from ACPI or
-from a device tree, and as you say GPIOs and IRQs are not 1-to-1 mapped,
-so IRQ nr 3 may be coming from GPIO 314, isn't this going to be really
-messy for users? One local numberspace for GPIO and another local
-numberspace for IRQs?
-
-To me it seems like the reasoning is something like
-
-- I only use GPIO line numbers like <&gpio 3>;
-- Then I call gpiod_to_irq() on that number so I do not need to
-  deal with looking up the IRQ some other way
-- request_irq();
-- Profit.
-
-There is no guarantee that the API will be used like that at all, actually
-it is uncommon.
-
-Yours,
-Linus Walleij
