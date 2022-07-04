@@ -2,127 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35143564F4A
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 10:07:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 210E7564FEA
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 10:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233084AbiGDIGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 04:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48480 "EHLO
+        id S231491AbiGDIoy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 04:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232995AbiGDIGp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 04:06:45 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A37AE5B
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Jul 2022 01:06:43 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id l7so9360862ljj.4
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Jul 2022 01:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=W9vEcsuPOmb6PFD1YP9Cd5t2i8+H7vKDdbGELGM7w6o=;
-        b=qIVH3JbKvPTI90pL62KYY0CE73JeN2SUYSrBybV8uswZCRUzC7TyQR8SVFp8MZtE+n
-         xr7tJOlv3L2n5ZyjubWWSM+HvxpWMMviQPJGc+z61rfEV7BG6cQlF6JShpAp0jtu8vVF
-         ceTB3j2pH2b/Yt1sE4BJDCgHdKQmyfJZMtTr8D5mHqeWpIZvfd9zndu2IJA4nuyF61qJ
-         PLuksfEnXLVGlUXKspIWeM/QLHcLr0LmFBlIvSpGCb9lgFdOCT5hGek9uM/lI/l3D+aq
-         iN+8aCJy4pGjNnJY/joNcWnXboVwrTUBBtxKGrp15wZVhuCWO0JNd1/VK0fRmlhAUyqW
-         ctvw==
+        with ESMTP id S233020AbiGDIow (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 04:44:52 -0400
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5208EB87C;
+        Mon,  4 Jul 2022 01:44:51 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id j21so14629223lfe.1;
+        Mon, 04 Jul 2022 01:44:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=W9vEcsuPOmb6PFD1YP9Cd5t2i8+H7vKDdbGELGM7w6o=;
-        b=QNzFi/KXcF38zUM8t4iAd3qw7/sNFWTYoc/66ZwF2Oj+VLNhSsduOmIDuYJ4Yhvk0Q
-         S71Yq/aCYuE/4a2f/6582CBivCt9GsAEATZ6gXm1F5XXdZx6y+xQ0n7wXe0pb2JZWzqp
-         Z6puspXFnuXt0MAdHIal9e6jqXfqpOF2tO6ExQc9BB/QtT6vm9oCoe7qTDlQQHK8u1Ip
-         3IKe70FFpqV0Toc+5ecKfAx9wktzsppwR9DHh8Z1SzU4pO7gOgjklkite3Jbu91lYUj0
-         CKREjPbSeLlewzC4R5S0763AQKPgqIz1rOp4WbVO/cc2TIHirUq7fJzA7H/gxVNkVDEM
-         nMyw==
-X-Gm-Message-State: AJIora982LTm67Nu6b86JO6mCQt2mOOcat6f/GafbMnL89MpaUNvLfuX
-        81xBQDrVPFqpWtm4dY+2HJIfmQ==
-X-Google-Smtp-Source: AGRyM1shyweS5X2mqdSfWYknlmTWWG1DGobjjvfheeS4TSNX76HtThJhWEt1hwbwlkge4YLK4Rb5CA==
-X-Received: by 2002:a2e:9097:0:b0:25a:6e3a:8b21 with SMTP id l23-20020a2e9097000000b0025a6e3a8b21mr15698533ljg.37.1656922001547;
-        Mon, 04 Jul 2022 01:06:41 -0700 (PDT)
-Received: from [192.168.1.52] ([84.20.121.239])
-        by smtp.gmail.com with ESMTPSA id b8-20020a056512218800b0047f7c897b61sm5018145lft.129.2022.07.04.01.06.39
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1wvvDrPdMiWD2bKHNoXzQT9rzvWbrQJdRittsndPYoM=;
+        b=xcWyEnjRX4la4FJyp6L3L1HKjN/zzxvfDc88zuDX1vWws3bAEMKEKpYV/gT/idNgzy
+         oT9t0fnyYLClVHG5c+sDDYfzUlgARvAKxq3d9Qv5p9u2H9KvDKBU/sCiTfqCv/lCyem1
+         2ut5yI7+Alc1geF26vKj6+/VEGLxXOVLndPWlO67FG62WX3AOZwFawHGJI+8tlVkCUfl
+         CRI8vrFy+MaJJMRVA5LcDOe8snBmjGPcPkYAhe2WTDVvm3Q4czAwuMIhHD8/Yc/fD43V
+         RQ7PwejH5y1RfOD3wFHY7oe41/lmdAck4Bm0hoSIFfWXovOFmjPbfwLKxFs5bkqztqRk
+         x57g==
+X-Gm-Message-State: AJIora9EuRVxWcluZYOFrV1Ey0i1k9+khd9RYyMBZgo6UsLvwT46+0GB
+        6quM0IcaUcyLydNYcimiC+jEr92xqkbzxf1Y
+X-Google-Smtp-Source: AGRyM1tIAD2gDbVwR0taNgi/mVkd3JFXcD4fx4aHkSlpTAnl3gJJeuLCPJhXGnmq7euqgdViuEDv3w==
+X-Received: by 2002:a05:6512:1691:b0:47f:ae89:906f with SMTP id bu17-20020a056512169100b0047fae89906fmr17885871lfb.229.1656924288889;
+        Mon, 04 Jul 2022 01:44:48 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id x2-20020a0565123f8200b0047f8132d10bsm5018352lfa.281.2022.07.04.01.44.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Jul 2022 01:06:40 -0700 (PDT)
-Message-ID: <2823c36d-efce-6c02-3b00-df1466c0d2bc@linaro.org>
-Date:   Mon, 4 Jul 2022 10:06:39 +0200
+        Mon, 04 Jul 2022 01:44:47 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id v9so10187121ljk.10;
+        Mon, 04 Jul 2022 01:44:46 -0700 (PDT)
+X-Received: by 2002:a2e:9203:0:b0:25c:785:8c7c with SMTP id
+ k3-20020a2e9203000000b0025c07858c7cmr8066041ljg.383.1656924286419; Mon, 04
+ Jul 2022 01:44:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v6 10/14] arm64: dts: freescale: imx8qxp: Remove
- unnecessary clock related entries
-Content-Language: en-US
-To:     Viorel Suman <viorel.suman@oss.nxp.com>
-Cc:     Viorel Suman <viorel.suman@nxp.com>,
+References: <20220703194020.78701-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220703194020.78701-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20220703194020.78701-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 Jul 2022 10:44:31 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWDQYp+ub+GW8mBb=fFz9KJH5ZwxKe28cDj_0O6E0FN+w@mail.gmail.com>
+Message-ID: <CAMuHMdWDQYp+ub+GW8mBb=fFz9KJH5ZwxKe28cDj_0O6E0FN+w@mail.gmail.com>
+Subject: Re: [PATCH v7 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/G2L Interrupt Controller
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abelvesa@kernel.org>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Liu Ying <victor.liu@nxp.com>,
-        Mirela Rabulea <mirela.rabulea@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Ming Qian <ming.qian@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
- <20220629164414.301813-11-viorel.suman@oss.nxp.com>
- <483d5115-4027-e811-8bce-15da6c7c660f@linaro.org>
- <20220630083636.2c7mclmbq3tjma2j@fsr-ub1664-116>
- <5d8b2044-5ca6-c90c-57b4-afbb2ae20dde@linaro.org>
- <20220630194804.sa3mvokpv7iksgbx@fsr-ub1664-116>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220630194804.sa3mvokpv7iksgbx@fsr-ub1664-116>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/06/2022 21:48, Viorel Suman wrote:
-> 
-> The question context looks a bit shifted. The "clocks" and "clock-names"
-> attributes are removed from a clock provider device.
-> 
-> The OS clock provider in this case is a client which uses some protocol
-> to communicate with SCU via a messaging unit. There is no
-> access to xtal clocks via the existing OS<->SCU communication protocol.
+Hi Prabhakar,
 
-SCU does not need to access them via communication protocol. It's enough
-that they are clock inputs, physical clocks being fed to your hardware
-which you describe in the DTS.
+On Sun, Jul 3, 2022 at 9:41 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> Add DT bindings for the Renesas RZ/G2L Interrupt Controller.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+checkpatch.pl:
+WARNING: From:/Signed-off-by: email address mismatch: 'From: Lad
+Prabhakar <prabhakar.csengg@gmail.com>' != 'Signed-off-by: Lad
+Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>'
 
-Best regards,
-Krzysztof
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
