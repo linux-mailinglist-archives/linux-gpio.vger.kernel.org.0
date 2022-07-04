@@ -2,129 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7216E565A47
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 17:46:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32BBD565A8E
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 18:00:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233680AbiGDPpf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 11:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33520 "EHLO
+        id S234043AbiGDQAO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 12:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234157AbiGDPpb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 11:45:31 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 949ACB3D;
-        Mon,  4 Jul 2022 08:45:30 -0700 (PDT)
-Received: by mail-qt1-f169.google.com with SMTP id c13so10317969qtq.10;
-        Mon, 04 Jul 2022 08:45:30 -0700 (PDT)
+        with ESMTP id S234234AbiGDQAM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 12:00:12 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D92A3BA;
+        Mon,  4 Jul 2022 09:00:09 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id j7so5657302wmp.2;
+        Mon, 04 Jul 2022 09:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=references:from:to:cc:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=4JdnfBFmGrVX5YOJOcmnMbispSWgMSddL5cpJkYT3AU=;
+        b=RAB870cX4kXaR6xf3unMvDAsoZPwmC0Idf04JNqTgXKOYAArDZwMbbSHBGH20U2tY/
+         0QoIN/go641WVHGqF7GKRISvxkLOEc0Yc6s7xZ4XXSjW+mdm4H+zbWsXpitx8OyJFFNh
+         /eyiMcg+j5YCqtPTMA0/j2GafVZeO9kVXJtx2w66396Ndluy/LOmRKVKE0bcMAcKmOG6
+         ZG9nYa5jPOngI9W75G9thAeBTNvzZWiZqNBDC8tbk5Ov/ndvsc0gc4eKFpEPZ0qhRIe0
+         RTwQXn515ed4K9Tf133ILMz9kCKNv0wk5DTaaLGqUrUXaq52xP4yHJAkZBy2diBNdwG9
+         0VLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5LO/4HZXu94y4sL8QMUqIb64SoNyDEn2QYbinIRTZqA=;
-        b=FocRYcBX0bToTlDdRxnruC8iy7IdjXJxUuw8s97aAbmqMisjAQ4G3hv1k3yloQ9hNO
-         /7IBJX0e215ez5Xbg/OCKilAUGISOllc+yrkaOzV6BIm9rIQjqD5eBA4eZNiBtGb1kQL
-         I6Wom2hiQHo9wlL27PlFg3Kf+l7dZco6L2uRWDf18r4cRLt6MfFtYRa2W82w4gsJl76k
-         bG8de2i4NR32AoaX0BmYM3J052CaZzPMwgvfWCYuLttV129EdhRj5DP0a4K+GW8BqC3a
-         s6d9G86FUeG9Ju/b7Xvf1DDBbXupeAhefb9W5xdqxsVHsN429ymzIQGPepNFXuLBKNBR
-         fj6g==
-X-Gm-Message-State: AJIora9igCDz+cjbAKjmUhSqI8YuCsDKhRn05Es3MJwT5vF8JTIqUO9u
-        eYcfm03mskqs4k683ysGxgYG7HE3xKKNKbJ3
-X-Google-Smtp-Source: AGRyM1upBdN+6uuoCu37JfShYarqqfnWd3PbjT9tx+dTxR/W0lkeF5h0bOFcjiQknpUC0HxhU6cV2w==
-X-Received: by 2002:ac8:5b0d:0:b0:31d:3b6f:969b with SMTP id m13-20020ac85b0d000000b0031d3b6f969bmr13269635qtw.84.1656949529518;
-        Mon, 04 Jul 2022 08:45:29 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id o16-20020a05620a2a1000b006a68fdc2d18sm21462266qkp.130.2022.07.04.08.45.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Jul 2022 08:45:29 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id e69so10947592ybh.2;
-        Mon, 04 Jul 2022 08:45:29 -0700 (PDT)
-X-Received: by 2002:a05:6902:1246:b0:66d:5b0b:19b0 with SMTP id
- t6-20020a056902124600b0066d5b0b19b0mr30754947ybu.365.1656949529019; Mon, 04
- Jul 2022 08:45:29 -0700 (PDT)
+        h=x-gm-message-state:references:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=4JdnfBFmGrVX5YOJOcmnMbispSWgMSddL5cpJkYT3AU=;
+        b=UpC7YxwiPHOkU3A3Uc9xGwx0YSdCY8RThFgBMNURF3BrWnU0MOOsbAKqriDDOernMg
+         Fah7NQNz79a0HO5qPErCOHAxPnIVqtTzPdfmJlST1p1lxy2fztU4GHIpIEDFCSQtZLm7
+         vRyTYD7TxJzJNEADossRViqlZh2I1y1gQNhCI3URQHN25vbaQ2xb4zylfUqLoWNUB8Db
+         HFlZSD0u+D3/iZTyq+ym6PTfPCen2U45DVggo2NvxQmF/if2QrfwO8+RrTPhf6Ww4r28
+         JVbL4SN2o0kXIvVlhxX32HvWRHULX2WtMrBremHZ9Cvo3RGOgctQjFsmnfFwanmoG4al
+         VQhQ==
+X-Gm-Message-State: AJIora+EvHt1EcB63B8Hhkh/0BfJcWfFnohWF92SlBRS3M+23V0kfXU1
+        CKEFb6cmJvd8M2FFpCvR7/g=
+X-Google-Smtp-Source: AGRyM1uXsUkkq2QZ8ImfwkHIap5WzUNNc4mow9pRMJ+YFVg05z1G4i4Zm8gKmO59XOAlh1kOoiGYPA==
+X-Received: by 2002:a05:600c:3653:b0:3a0:5716:203a with SMTP id y19-20020a05600c365300b003a05716203amr30801186wmq.175.1656950407832;
+        Mon, 04 Jul 2022 09:00:07 -0700 (PDT)
+Received: from localhost (92.40.202.6.threembb.co.uk. [92.40.202.6])
+        by smtp.gmail.com with ESMTPSA id j14-20020a5d564e000000b0021d68d3a27dsm5127329wrw.45.2022.07.04.09.00.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Jul 2022 09:00:07 -0700 (PDT)
+References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
+ <20220703111057.23246-2-aidanmacdonald.0x0@gmail.com>
+ <4c9092d20a35ef3fd6a1723e07adad79@walle.cc>
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/3] gpio: regmap: Support registers with more than one
+ bit per GPIO
+In-reply-to: <4c9092d20a35ef3fd6a1723e07adad79@walle.cc>
+Date:   Mon, 04 Jul 2022 17:01:15 +0100
+Message-ID: <R11Wg2gY4kEFeq6ZSy2mXbGejo7XRfjG@localhost>
 MIME-Version: 1.0
-References: <87h741ty20.wl-kuninori.morimoto.gx@renesas.com> <87k08xsj81.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87k08xsj81.wl-kuninori.morimoto.gx@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 Jul 2022 17:45:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUY-9ksg-rHrqhZ_AfMQLFj_V074iiXD_7xW5z+Zwup9Q@mail.gmail.com>
-Message-ID: <CAMuHMdUY-9ksg-rHrqhZ_AfMQLFj_V074iiXD_7xW5z+Zwup9Q@mail.gmail.com>
-Subject: Re: [PATCH v4 23/23] pinctrl: renesas: r8a779g0: add missing MODSELx
- for AVBx
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Morimoto-san,
 
-On Fri, Jul 1, 2022 at 3:41 AM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Michael Walle <michael@walle.cc> writes:
+
+> Am 2022-07-03 13:10, schrieb Aidan MacDonald:
+>> Some devices use a multi-bit register field to change the GPIO
+>> input/output direction. Add the ->reg_field_xlate() callback to
+>> support such devices in gpio-regmap.
+>> ->reg_field_xlate() builds on ->reg_mask_xlate() by allowing the
+>> driver to return a mask and values to describe a register field.
+>> gpio-regmap will use the mask to isolate the field and compare or
+>> update it using the values to implement GPIO level and direction
+>> get and set ops.
 >
-> AVB1 needs MODSEL6, AVB2 needs MODSEL5 settings.
-> This patch adds missing MODSELx setting for these.
+> Thanks for working on this. Here are my thoughts on how to improve
+> it:
+>  - I'm wary on the value translation of the set and get, you
+>    don't need that at the moment, correct? I'd concentrate on
+>    the direction for now.
+>  - I'd add a xlate_direction(), see below for an example
+
+Yeah, I only need direction, but there's no advantage to creating a
+specific mechanism. I'm not opposed to doing that but I don't see
+how it can be done cleanly. Being more general is more consistent
+for the API and implementation -- even if the extra flexibility
+probably won't be needed, it doesn't hurt.
+
+>  - because we can then handle the value too, we don't need the
+>    invert handling in the {set,get}_direction. drop it there
+>    and handle it in a simple_xlat. In gpio_regmap,
+>    store "reg_dir_base" and "invert_direction", derived from
+>    config->reg_dir_in_base and config->reg_dir_out_base.
 >
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Thanks for your patch!
+I think this is more complicated and less consistent than handling
+reg_dir_in/out_base separately.
 
-> --- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
-> +++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-
-> @@ -1031,23 +1033,23 @@ static const u16 pinmux_data[] = {
->         /* IP0SR6 */
->         PINMUX_IPSR_GPSR(IP0SR6_3_0,    AVB1_MDIO),
+> static int gpio_regmap_simple_xlat_direction(struct gpio_regmap *gpio
+>                                              unsigend int base,
+>                                              unsigned int offset,
+>                                              unsigned int *dir_out,
+>                                              unsigned int *dir_in)
+> {
+>     unsigned int line = offset % gpio->ngpio_per_reg;
+>     unsigned int mask = BIT(line);
 >
-> -       PINMUX_IPSR_GPSR(IP0SR6_7_4,    AVB1_MAGIC),
-> +       PINMUX_IPSR_MSEL(IP0SR6_7_4,    AVB1_MAGIC,             SEL_AVB1_MAGIC_1),
+>     if (!gpio->invert_direction) {
+>         *dir_out = mask;
+>         *dir_in = 0;
+>     } else {
+>         *dir_out = 0;
+>         *dir_in = mask;
+>     }
 >
-> -       PINMUX_IPSR_GPSR(IP0SR6_11_8,   AVB1_MDC),
-> +       PINMUX_IPSR_MSEL(IP0SR6_11_8,   AVB1_MDC,               SEL_AVB1_MDC_1),
+>     return 0;
+> }
+
+This isn't really an independent function: what do *dir_out and *dir_in
+mean on their own? You need use the matching mask from ->reg_mask_xlate
+for those values to be of any use. And those two functions have to match
+up because they need to agree on the same mask.
+
 >
->         PINMUX_IPSR_GPSR(IP0SR6_15_12,  AVB1_PHY_INT),
+> And in the {set,get}_direction() you can then check both
+> values and convert it from or to GPIO_LINE_DIRECTION_{OUT,IN}.
+
+Agreed, checking both values and erroring out if the register has an
+unexpected value is a good idea.
+
 >
->         PINMUX_IPSR_GPSR(IP0SR6_19_16,  AVB1_LINK),
->         PINMUX_IPSR_GPSR(IP0SR6_19_16,  AVB1_MII_TX_ER),
+> Thoughts?
 >
-> -       PINMUX_IPSR_GPSR(IP0SR6_23_20,  AVB1_AVTP_MATCH),
-> -       PINMUX_IPSR_GPSR(IP0SR6_23_20,  AVB1_MII_RX_ER),
-> +       PINMUX_IPSR_MSEL(IP0SR6_23_20,  AVB1_AVTP_MATCH,        SEL_AVB1_AVTP_MATCH_1),
-> +       PINMUX_IPSR_MSEL(IP0SR6_23_20,  AVB1_MII_RX_ER,         SEL_AVB1_AVTP_MATCH_0),
->
-> -       PINMUX_IPSR_GPSR(IP0SR6_27_24,  AVB1_TXC),
-> -       PINMUX_IPSR_GPSR(IP0SR6_27_24,  AVB1_MII_TXC),
-> +       PINMUX_IPSR_MSEL(IP0SR6_27_24,  AVB1_TXC,               SEL_AVB1_TXC_1),
-> +       PINMUX_IPSR_MSEL(IP0SR6_27_24,  AVB1_MII_TXC,           SEL_AVB1_TXC_0),
+> -michael
 
-Just like before, this doesn't look right to me: if TXC needs output
-enable, I would expect MII_TXC to need output enable, too.
-The same is true for (at least) TD[0-3].
-
-Anyway, without hardware access it's very hard to verify what "output
-enable" really means, so let's just keep it like this, and fix it up
-later if needed.
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl-for-v5.20.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
