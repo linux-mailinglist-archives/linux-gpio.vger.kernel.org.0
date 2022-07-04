@@ -2,50 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E3E56511C
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 11:42:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D6865651BC
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 12:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233919AbiGDJmb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 05:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
+        id S233235AbiGDKJM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 06:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233921AbiGDJmX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 05:42:23 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 70AD0274;
-        Mon,  4 Jul 2022 02:42:21 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6255223A;
-        Mon,  4 Jul 2022 02:42:21 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 484563F792;
-        Mon,  4 Jul 2022 02:42:19 -0700 (PDT)
-Date:   Mon, 4 Jul 2022 10:42:14 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        with ESMTP id S231341AbiGDKJL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 06:09:11 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A840CE0A
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Jul 2022 03:09:10 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id k7so12704844wrc.12
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Jul 2022 03:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=tjeRInKEKqAWjWoE+Kds4XJz4I2chMZrRloYt8wM3Sg=;
+        b=FTjczWMtFdffEgCg6fYeLAcsaohojm3y09PFf26sYoxxdO28vfzRh3OATSMzR5YM9o
+         G/x7sEotgIDrZcfx4sFNxfZzRQuaplIVXTY7/UrJrVrNZ/cmD/6NTP9MkTg/BGFRlgak
+         zwWhgDTB3eQ0NT4V4t9yQzOkGfIv5mAY7zdmaX4fsMTdCOzxZ3QWuo1KVMw/t8LYWAmD
+         kJ4MZe1kpxqWVR0zSXNdYZYG0l/41aHMLf1o9KegxGYm6Zk/PbeK+4cmBRrTmkHQFeeY
+         q3PTgKGQ3I1MVnktWHRK6v5NaBwZPgj1ZdeQgdH7qNGYWubnesQhrK+La1YfYZpzUpOp
+         PrCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=tjeRInKEKqAWjWoE+Kds4XJz4I2chMZrRloYt8wM3Sg=;
+        b=aIKeBqbpx2FBkqHyWkHX1JGdF2/94s8+rgOvmWuZWgiHUGUt3ITWVa2R1n+3s+cLKh
+         aeGWr/ZiE4vz7WulHrpFSdmjNkwbwFYn2zPTHylvue6MgSDEb/SC9izpRrkXkPJXNQi8
+         r+Jz5UHuBOm4ifezdy0+1NnT4H5cdJEmjiET4ovONm/fm7OVgYgM6Jyl9LWIMUoZ+Nw3
+         3fL2uG32LsL0vTKL5Bv1LUTucZQW6lqIl8S8DF0kDRRDfM3vR7Je1sgeqDxK4dQmibjL
+         zUbQW1vZQTZGP1/5dQ9+Xv5hcX9q3ChQ5T5iRG0pcRI24xsR6nEu3ZAWDi+FXQ6m+pIC
+         i1iA==
+X-Gm-Message-State: AJIora/Dn+1SbTzuov8uM31ynXJN0cu7/Ydn3DDXiOfL9VPrw0j/f5XE
+        w2ltZdwWzJ1mKXaHeHTsMviHdg==
+X-Google-Smtp-Source: AGRyM1tqV2zS4LRMVBV1qGONS7/oBYJgM4sjtlBHm+Q0P1sRp1D7V85uw9eFjg9PdAWrco3GtSpwsg==
+X-Received: by 2002:a5d:534e:0:b0:21b:adf3:dc19 with SMTP id t14-20020a5d534e000000b0021badf3dc19mr25248415wrv.543.1656929348704;
+        Mon, 04 Jul 2022 03:09:08 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id w17-20020adf8bd1000000b0021a3c960214sm31261099wra.6.2022.07.04.03.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Jul 2022 03:09:07 -0700 (PDT)
+Date:   Mon, 4 Jul 2022 11:09:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     frank zago <frank@zago.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-usb@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>, Ondrej Jirman <x@xff.cz>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 6/6] pinctrl: sunxi: Add driver for Allwinner D1/D1s
-Message-ID: <20220704104214.2d9cd1a0@donnerap.cambridge.arm.com>
-In-Reply-To: <ef4454cb-a387-7dda-67e3-7493a89be8e7@sholland.org>
-References: <20220626021148.56740-1-samuel@sholland.org>
-        <20220626021148.56740-7-samuel@sholland.org>
-        <20220702154647.53c6755a@slackpad.lan>
-        <ef4454cb-a387-7dda-67e3-7493a89be8e7@sholland.org>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v6 1/4] mfd: ch341: add core driver for the WCH CH341 in
+ I2C/SPI/GPIO mode
+Message-ID: <YsK8Qm+QPO5FnKxj@google.com>
+References: <20220616013747.126051-1-frank@zago.net>
+ <20220616013747.126051-2-frank@zago.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220616013747.126051-2-frank@zago.net>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,163 +78,205 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 2 Jul 2022 10:43:05 -0500
-Samuel Holland <samuel@sholland.org> wrote:
+On Wed, 15 Jun 2022, frank zago wrote:
 
-Hi Samuel,
-
-> On 7/2/22 9:47 AM, Andre Przywara wrote:
-> > On Sat, 25 Jun 2022 21:11:47 -0500
-> > Samuel Holland <samuel@sholland.org> wrote:
-> > 
-> > Hi Samuel,
-> >   
-> >> These SoCs contain a pinctrl with a new register layout. Use the variant
-> >> parameter to set the right register offsets. This pinctrl also increases
-> >> the number of functions per pin from 8 to 16, taking advantage of all 4
-> >> bits in the mux config field (so far, only functions 0-8 and 14-15 are
-> >> used). This increases the maximum possible number of functions.
-> >>
-> >> D1s is a low pin count version of the D1 SoC, with some pins omitted.
-> >> The remaining pins have the same function assignments as D1.  
-> > 
-> > So do we actually need this extra variant, if there are no conflicts?
-> > The D1s seems to be a simple subset of the D1. I think we followed the
-> > same approach for the H616 already, where there are more pins in the
-> > pinctrl driver than the manual describes, and which are used in other
-> > package variants, like the T507.
-> > In case of the H616, those pins are there, you can program them (which
-> > is not the case for not implemented pins otherwise), they are just not
-> > connected to the package.
-> > I would expect a DT to never reference them, and even if, it doesn't do
-> > any harm other than just not working.  
+> The CH341 is a multifunction chip, presenting 3 different USB PID. One
+> of these functions is for I2C/SPI/GPIO. This new set of drivers will
+> manage I2C and GPIO.
 > 
-> I am following the example of V3/V3s here, so it seems we are inconsistent on
-> this point. I needed to supply one variant for the register layout anyway, so I
-> though I might as well be "accurate".
+> Signed-off-by: frank zago <frank@zago.net>
+> ---
+>  MAINTAINERS               |  7 +++
+>  drivers/mfd/Kconfig       | 10 +++++
+>  drivers/mfd/Makefile      |  1 +
+>  drivers/mfd/ch341-core.c  | 90 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ch341.h | 18 ++++++++
+>  5 files changed, 126 insertions(+)
+>  create mode 100644 drivers/mfd/ch341-core.c
+>  create mode 100644 include/linux/mfd/ch341.h
 > 
-> But with Allwinner releasing lots of packages per die, it is probably overkill
-> to have a separate compatible per packge. As you note, there is no harm in
-> configuring pins that do not map to any pad.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 43d3d07afccd..628eeaa9bf68 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -21475,6 +21475,13 @@ M:	David Härdeman <david@hardeman.nu>
+>  S:	Maintained
+>  F:	drivers/media/rc/winbond-cir.c
+>  
+> +WINCHIPHEAD CH341 I2C/GPIO MFD DRIVER
+> +M:	Frank Zago <frank@zago.net>
+> +L:	linux-usb@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/mfd/ch341-core.c
+> +F:	include/linux/mfd/ch341.h
+> +
+>  WINSYSTEMS EBC-C384 WATCHDOG DRIVER
+>  M:	William Breathitt Gray <vilhelm.gray@gmail.com>
+>  L:	linux-watchdog@vger.kernel.org
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3b59456f5545..893acc821a42 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1784,6 +1784,16 @@ config MFD_LOCHNAGAR
+>  	help
+>  	  Support for Cirrus Logic Lochnagar audio development board.
+>  
+> +config MFD_CH341
+> +	tristate "WinChipHead CH341 in I2C/SPI/GPIO mode"
+> +	depends on USB
+> +	help
+> +	  If you say yes to this option, support for the CH341 series
+> +	  of chips, running in I2C/SPI/GPIO mode will be included.
+> +
+> +	  This driver can also be built as a module.  If so, the
+> +	  module will be called ch341-core.
+> +
+>  config MFD_ARIZONA
+>  	select REGMAP
+>  	select REGMAP_IRQ
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 858cacf659d6..fd615ab3929f 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
+>  obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
+>  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
+>  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
+> +obj-$(CONFIG_MFD_CH341)		+= ch341-core.o
+>  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
+>  obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
+>  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+> diff --git a/drivers/mfd/ch341-core.c b/drivers/mfd/ch341-core.c
+> new file mode 100644
+> index 000000000000..f08a67dd6074
+> --- /dev/null
+> +++ b/drivers/mfd/ch341-core.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Core driver for the CH341A, CH341B and CH341T in I2C/SPI/GPIO
+> + * mode. There are cell drivers available for I2C and GPIO. SPI is not
+> + * yet supported.
+> + *
+> + * Copyright 2022, Frank Zago
+> + * Copyright (c) 2017 Gunar Schorcht (gunar@schorcht.net)
+> + * Copyright (c) 2016 Tse Lun Bien
+> + * Copyright (c) 2014 Marco Gittler
+> + * Copyright (c) 2006-2007 Till Harbaum (Till@Harbaum.org)
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/ch341.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb.h>
+> +
+> +static const struct mfd_cell ch341_devs[] = {
+> +	{
+> +		.name = "ch341-gpio",
+> +	},
+> +	{
+> +		.name = "ch341-i2c",
+> +	},
+> +};
 
-Yes, thanks, that current inflation of SoC variants is what I was
-concerned about.
+These should both be on one line each.
 
-> Some notes for completeness:
->  - D1 documents all three JTAG functions (ARM, RISC-V, and DSP), although the
-> ARM JTAG does not work.
->  - D1s/F133 only documents the RISC-V JTAG function.
->  - T113 only documents the ARM and DSP JTAG functions.
->  - T113 adds a CAN function on mux 8 of PB2-PB5. The CAN controller accidentally
-> made it in to one version of the D1 datasheet, so it may unofficially exist there.
+> +static int ch341_usb_probe(struct usb_interface *iface,
+> +			   const struct usb_device_id *usb_id)
+> +{
+> +	struct usb_endpoint_descriptor *bulk_out;
+> +	struct usb_endpoint_descriptor *bulk_in;
+> +	struct usb_endpoint_descriptor *intr_in;
+> +	struct ch341_ddata *ddata;
+> +	int ret;
+> +
+> +	ddata = devm_kzalloc(&iface->dev, sizeof(*ddata), GFP_KERNEL);
+> +	if (!ddata)
+> +		return -ENOMEM;
+> +
+> +	ddata->usb_dev = interface_to_usbdev(iface);
+> +	mutex_init(&ddata->usb_lock);
+> +
+> +	ret = usb_find_common_endpoints(iface->cur_altsetting, &bulk_in,
+> +					&bulk_out, &intr_in, NULL);
+> +	if (ret) {
+> +		dev_err(&iface->dev, "Could not find all endpoints\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ddata->ep_in = bulk_in->bEndpointAddress;
+> +	ddata->ep_out = bulk_out->bEndpointAddress;
+> +	ddata->ep_intr = intr_in->bEndpointAddress;
+> +	ddata->ep_intr_interval = intr_in->bInterval;
+> +
+> +	usb_set_intfdata(iface, ddata);
+> +
+> +	ret = mfd_add_devices(&iface->dev, PLATFORM_DEVID_AUTO, ch341_devs,
+> +			      ARRAY_SIZE(ch341_devs), NULL, 0, NULL);
+> +	if (ret)
+> +		return dev_err_probe(&iface->dev, ret,
+> +				     "Failed to register child devices\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void ch341_usb_disconnect(struct usb_interface *usb_if)
+> +{
+> +	mfd_remove_devices(&usb_if->dev);
 
-Have you checked whether the CAN peripheral registers are there, on the D1?
+Why not use the devm_* version?
 
-One more thing below:
+> +}
+> +
+> +static const struct usb_device_id ch341_usb_table[] = {
+> +	{ USB_DEVICE(0x1a86, 0x5512) },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(usb, ch341_usb_table);
+> +
+> +static struct usb_driver ch341_usb_driver = {
+> +	.name       = "ch341-mfd",
+> +	.id_table   = ch341_usb_table,
+> +	.probe      = ch341_usb_probe,
+> +	.disconnect = ch341_usb_disconnect,
+> +};
+> +module_usb_driver(ch341_usb_driver);
+> +
+> +MODULE_AUTHOR("Frank Zago <frank@zago.net>");
+> +MODULE_DESCRIPTION("CH341 USB to I2C/SPI/GPIO adapter");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/ch341.h b/include/linux/mfd/ch341.h
+> new file mode 100644
+> index 000000000000..44f5da0720bd
+> --- /dev/null
+> +++ b/include/linux/mfd/ch341.h
+> @@ -0,0 +1,18 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Definitions for the CH341 driver */
 
-> None of these variations are conflicting.
-> 
-> > For the table below: I checked every pin against the D1 manual (yes,
-> > that took an hour), and found only one small issue and some nits in
-> > PortE, see inline.
-> >   
-> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> >> ---
-> >>
-> >>  drivers/pinctrl/sunxi/Kconfig             |   5 +
-> >>  drivers/pinctrl/sunxi/Makefile            |   1 +
-> >>  drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c | 860 ++++++++++++++++++++++
-> >>  drivers/pinctrl/sunxi/pinctrl-sunxi.c     |  16 +-
-> >>  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |   7 +
-> >>  5 files changed, 884 insertions(+), 5 deletions(-)
-> >>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-> >>
-> >> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-> >> index 33751a6a0757..a6ac1c1f2585 100644
-> >> --- a/drivers/pinctrl/sunxi/Kconfig
-> >> +++ b/drivers/pinctrl/sunxi/Kconfig
-> >> @@ -84,6 +84,11 @@ config PINCTRL_SUN9I_A80_R
-> >>  	depends on RESET_CONTROLLER
-> >>  	select PINCTRL_SUNXI
-> >>  
-> >> +config PINCTRL_SUN20I_D1
-> >> +	bool "Support for the Allwinner D1 PIO"
-> >> +	default RISCV && ARCH_SUNXI
+What definitions?
 
-Is there any chance you can add the "MACH_SUN8I || " already?
-Not that it is really surprising, but I explicitly compared the pin mux
-overview tables of the R528(ARMv7) and D1(RISC-V) manuals, and they are
-identical. So we just use the D1 compatible string as a fallback for the
-R528 and T113 parts, in which case the driver should be build for ARM, too.
+> +
+> +#include <linux/mutex.h>
+> +#include <linux/types.h>
+> +
+> +struct usb_device;
+> +struct usb_interface;
+> +
+> +struct ch341_ddata {
+> +	struct usb_device *usb_dev;
+> +	struct mutex usb_lock;
+> +
+> +	int ep_in;
+> +	int ep_out;
+> +	int ep_intr;
+> +	u8 ep_intr_interval;
+> +};
 
-Cheers,
-Andre
-
-> >> +	select PINCTRL_SUNXI
-> >> +
-> >>  config PINCTRL_SUN50I_A64
-> >>  	bool "Support for the Allwinner A64 PIO"
-> >>  	default ARM64 && ARCH_SUNXI
-> >> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-> >> index d3440c42b9d6..2ff5a55927ad 100644
-> >> --- a/drivers/pinctrl/sunxi/Makefile
-> >> +++ b/drivers/pinctrl/sunxi/Makefile
-> >> @@ -20,6 +20,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A83T_R)	+= pinctrl-sun8i-a83t-r.o
-> >>  obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
-> >>  obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
-> >>  obj-$(CONFIG_PINCTRL_SUN8I_V3S)		+= pinctrl-sun8i-v3s.o
-> >> +obj-$(CONFIG_PINCTRL_SUN20I_D1)		+= pinctrl-sun20i-d1.o
-> >>  obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
-> >>  obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
-> >>  obj-$(CONFIG_PINCTRL_SUN50I_H6_R)	+= pinctrl-sun50i-h6-r.o
-> >> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-> >> new file mode 100644
-> >> index 000000000000..7247c1f1d92c
-> >> --- /dev/null
-> >> +++ b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-> >> @@ -0,0 +1,860 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Allwinner D1 SoC pinctrl driver.
-> >> + *
-> >> + * Copyright (c) 2020 wuyan@allwinnertech.com
-> >> + * Copyright (c) 2021-2022 Samuel Holland <samuel@sholland.org>
-> >> + */
-> >> +
-> >> +#include <linux/module.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/pinctrl/pinctrl.h>
-> >> +
-> >> +#include "pinctrl-sunxi.h"
-> >> +
-> >> +static const struct sunxi_desc_pin d1_pins[] = {
-> >> +	/* PB */
-> >> +	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(B, 0),
-> >> +		PINCTRL_SUN20I_D1,
-> >> +		SUNXI_FUNCTION(0x0, "gpio_in"),
-> >> +		SUNXI_FUNCTION(0x1, "gpio_out"),
-> >> +		SUNXI_FUNCTION(0x2, "pwm"),  
-> > 
-> > The manual mentions the PWM channel number in the pin name, and it
-> > seems like in other pinctrl drivers we use the number either in the
-> > function name, or at least in the comment.
-> > Shall we do one of them here as well?  
-> 
-> I originally had the numbers in the function name, but then I realized that no
-> pin has multiple PWM muxes, so I removed them. As you mention, other drivers
-> have them, so I will add them back.
-> 
-> > And the mux numbers for pwm are all over the place, so lets hope we
-> > never need pwm in U-Boot ;-)  
-> 
-> PWM is used for the CPU voltage regulator on at least one board (Nezha), but I
-> think we can get away without U-Boot support for that. And including the PWM
-> number in the function name will improve things somewhat.
-> 
-> I will fix the typos you noted below.
-> 
-> Regards,
-> Samuel
-
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
