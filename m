@@ -2,177 +2,176 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C6A7565D26
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 19:39:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 116F5565D60
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 20:10:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbiGDRjI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 13:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46814 "EHLO
+        id S233295AbiGDSKq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 14:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230140AbiGDRjI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 13:39:08 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B93D64D7;
-        Mon,  4 Jul 2022 10:39:04 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id e69so11382067ybh.2;
-        Mon, 04 Jul 2022 10:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gOTZyHFdUTa8U4zXWLRYwsWp0kE0o23lf+AazO1yZjk=;
-        b=BIFnXFzZIG3+UMVOXUZw3SG3zvSK6CeFeNGZ+Jaghh4e8Qll6q5eKy6e2NxPrIplBU
-         bsej8y6T9pjS/3RjC5E/ZMVZygaPw/1klpdORSnUXueRS5y3N7k0AFM+wtFe9bzW3+IS
-         J88UkUl0ToTgMVR2t2wPdx9KvIpGU86OCkvNOrtErhXkGXWG0DnqrSpE89wLJCIJOQl2
-         ltVz+cY/Oc6gjz7yqENP8Aln3ELbrwylSq5RhsTHSfAV72xSiXG5YK7Z2XTgF6By1EXY
-         6u3+BD8c0dpIznaRpfi/MAU599qdJ5yK4xMkE+OslCC6Htot8GZ7IrF9cWXABj2EuMWX
-         C0sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gOTZyHFdUTa8U4zXWLRYwsWp0kE0o23lf+AazO1yZjk=;
-        b=nc+JM7wi7z4KSZNpifFC0seYWqTh1VVLAggAYT/yNkjzTWE/AEPlPleKtMzxSpjXzA
-         I9EU4RiA9CabSVheKUF9jU6oZILDXL2IVP7jeyqyI77xHowJbHYBS1kOhZTFwBhD/Vmh
-         HSbG9vJwl5K+RfW2RMDg+4noysOVkKY3ncfqmYZJ9cfepnec0P+BExkHPZE+2VMPdP2w
-         bonSqm0qa4RokPhU31Bm/DTNh7xy7Vqc9qXLkSU9S/IWRelYa8sKtesAq8IBUWL4mB/m
-         8K6E3+r2J1v6mkmhPca0cVv03ApbOcVI0hZXB0xDoFzGh8L+ZQC7DAPE6tJvbWswwB2W
-         4nQw==
-X-Gm-Message-State: AJIora+EPvxHIbJrt5lqCwAS8mDNTjT3KXMSvT0G3rV5rOJ6gI98fnBq
-        /349IGC8w1hDDZHPJR9uFO2nsUJr4tmDUDCzTqs=
-X-Google-Smtp-Source: AGRyM1uQptl1N56k+FKu7zMx7GHM8ktGGH6d0GDzIzKLXwK5/2m7diRK3L8g0QPYOsKefRk4TlJSW16n3H+LnYe59gU=
-X-Received: by 2002:a5b:68a:0:b0:66e:472a:83f4 with SMTP id
- j10-20020a5b068a000000b0066e472a83f4mr7754072ybq.570.1656956343261; Mon, 04
- Jul 2022 10:39:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220704130602.12307-1-henning.schild@siemens.com> <20220704130602.12307-2-henning.schild@siemens.com>
-In-Reply-To: <20220704130602.12307-2-henning.schild@siemens.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 Jul 2022 19:38:26 +0200
-Message-ID: <CAHp75VdTJZ+4wF-AXbj2ERQ6zW-a+JpnO8gfO6T+LhFJyzBhJg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio: nct6116d: add new driver for several Nuvoton
- super io chips
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+        with ESMTP id S229515AbiGDSKm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 14:10:42 -0400
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5887C636A;
+        Mon,  4 Jul 2022 11:10:40 -0700 (PDT)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id C715EE000A;
+        Mon,  4 Jul 2022 18:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1656958234;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bbTMYur9hGe+to/gtv00HbU/WaQ6VXCyohWjpUEuf0E=;
+        b=eyxcpojn5k/20aWTArkinYNnHoOORfNkzn+tGURVbE2BmPQ8FhFXfE3NbRa9CF1Pdate3e
+        52J3akmoXPD4S9uhzJb8PV6ZzGOK5pw9KLefDDwa5QSagsUjzHvBUheJMg+3uk4PItYtaJ
+        lsRujrtpvnARhqrh8tTcik9rTHEbj1VuG8jGvLRcaP4YL8OfuTopouHTblRrHI/92GERCB
+        1myPKjPf2gU2TjxW8diEIN/YKIiuNTHSUfK3dzJj8V7LErA3q1cNE/divpVopVx8qQp8VY
+        4dhQgBKBN//kXCCWTr8+QTQOwob06pEsMaJ0QR4m4OAW6IkbgDEB2y7zgQ5VOg==
+Date:   Mon, 4 Jul 2022 20:10:30 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Kuan-Wei Ho <cwho@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abelvesa@kernel.org>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        Liu Ying <victor.liu@nxp.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Ming Qian <ming.qian@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH v7 06/15] dt-bindings: rtc: Add fsl,scu-rtc yaml file
+Message-ID: <YsMtFhctM19giyAj@mail.local>
+References: <20220704161541.943696-1-viorel.suman@oss.nxp.com>
+ <20220704161541.943696-7-viorel.suman@oss.nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220704161541.943696-7-viorel.suman@oss.nxp.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 4, 2022 at 3:06 PM Henning Schild
-<henning.schild@siemens.com> wrote:
->
-> This patch adds gpio support for several Nuvoton NCTXXX chips. These
+On 04/07/2022 19:15:32+0300, Viorel Suman (OSS) wrote:
+> From: Abel Vesa <abel.vesa@nxp.com>
+> 
+> In order to replace the fsl,scu txt file from bindings/arm/freescale,
+> we need to split it between the right subsystems. This patch documents
+> separately the 'rtc' child node of the SCU main node.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
 
-GPIO
+You had a reviewed-by, please add it in the subsequent series or it may
+be lost.
 
-s/This patch adds/Add/
-
-> Super-I/O chips offer multiple functions of which several already have
-> drivers in the kernel, i.e. hwmon and watchdog.
-
-Seems better, my comments below.
-
-...
-
-> +#include <linux/gpio/driver.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-
-At least types.h and bits.h are missed here.
-
-...
-
-> +#define gpio_dir(base) ((base) + 0)
-> +#define gpio_data(base) ((base) + 1)
-
-Can you prefix them? gpio_ namespace is not owned by this driver and
-may collide with something in the future.
-
-...
-
-> +       if (dir & 1 << offset)
-
-Missed BIT(offset) ?
-
-> +               return GPIO_LINE_DIRECTION_OUT;
-
-...
-
-> +static int __init
-> +nct6116d_gpio_device_add(const struct nct6116d_sio *sio)
-> +{
-> +       int err;
+> ---
+>  .../bindings/arm/freescale/fsl,scu.txt        | 10 ------
+>  .../devicetree/bindings/rtc/fsl,scu-rtc.yaml  | 31 +++++++++++++++++++
+>  2 files changed, 31 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 1a06f627b125..6c0161fa4adf 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -62,12 +62,6 @@ i.MX SCU Client Device Node:
+>  
+>  Client nodes are maintained as children of the relevant IMX-SCU device node.
+>  
+> -RTC bindings based on SCU Message Protocol
+> -------------------------------------------------------------
+> -
+> -Required properties:
+> -- compatible: should be "fsl,imx8qxp-sc-rtc";
+> -
+>  Watchdog bindings based on SCU Message Protocol
+>  ------------------------------------------------------------
+>  
+> @@ -116,10 +110,6 @@ firmware {
+>  			  &lsio_mu1 1 3
+>  			  &lsio_mu1 3 3>;
+>  
+> -		rtc: rtc {
+> -			compatible = "fsl,imx8qxp-sc-rtc";
+> -		};
+> -
+>  		watchdog {
+>  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+>  			timeout-sec = <60>;
+> diff --git a/Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml b/Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
+> new file mode 100644
+> index 000000000000..8c102b70d735
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
+> @@ -0,0 +1,31 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/fsl,scu-rtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +       nct6116d_gpio_pdev = platform_device_alloc(KBUILD_MODNAME, -1);
-> +       if (!nct6116d_gpio_pdev)
-> +               return -ENOMEM;
+> +title: i.MX SCU Client Device Node - RTC bindings based on SCU Message Protocol
 > +
-> +       err = platform_device_add_data(nct6116d_gpio_pdev, sio, sizeof(*sio));
-> +       if (err) {
-> +               pr_err("Platform data allocation failed\n");
-> +               goto err;
-> +       }
+> +maintainers:
+> +  - Dong Aisheng <aisheng.dong@nxp.com>
 > +
-> +       err = platform_device_add(nct6116d_gpio_pdev);
-> +       if (err) {
-> +               pr_err("Device addition failed\n");
-> +               goto err;
-> +       }
+> +description: i.MX SCU Client Device Node
+> +  Client nodes are maintained as children of the relevant IMX-SCU device node.
 > +
-> +       return 0;
-
-platform_device_register_full() ?
-
-Yeah, just read your other message. Can you drop an excerpt here to
-see how it looks?
-
-> +err:
-> +       platform_device_put(nct6116d_gpio_pdev);
+> +allOf:
+> +  - $ref: rtc.yaml#
 > +
-> +       return err;
-> +}
-
-...
-
-> +static int __init nct6116d_gpio_init(void)
-> +{
-> +       struct nct6116d_sio sio;
-> +       int err;
+> +properties:
+> +  compatible:
+> +    const: fsl,imx8qxp-sc-rtc
 > +
-> +       if (nct6116d_find(0x2e, &sio) &&
-> +           nct6116d_find(0x4e, &sio))
-> +               return -ENODEV;
+> +required:
+> +  - compatible
 > +
-> +       err = platform_driver_register(&nct6116d_gpio_driver);
-> +       if (!err) {
-
-if (err)
-  return err;
-
-
-> +               err = nct6116d_gpio_device_add(&sio);
-> +               if (err)
-> +                       platform_driver_unregister(&nct6116d_gpio_driver);
-> +       }
+> +additionalProperties: false
 > +
-> +       return err;
-> +}
+> +examples:
+> +  - |
+> +    rtc {
+> +        compatible = "fsl,imx8qxp-sc-rtc";
+> +    };
+> -- 
+> 2.25.1
+> 
 
---
-With Best Regards,
-Andy Shevchenko
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
