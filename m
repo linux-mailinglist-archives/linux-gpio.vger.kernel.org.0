@@ -2,64 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32BBD565A8E
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 18:00:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82991565A92
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 18:02:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234043AbiGDQAO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 12:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43292 "EHLO
+        id S233988AbiGDQCj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 12:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234234AbiGDQAM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 12:00:12 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D92A3BA;
-        Mon,  4 Jul 2022 09:00:09 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id j7so5657302wmp.2;
-        Mon, 04 Jul 2022 09:00:09 -0700 (PDT)
+        with ESMTP id S233449AbiGDQCi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 12:02:38 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF6422D;
+        Mon,  4 Jul 2022 09:02:37 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 205-20020a1c02d6000000b003a03567d5e9so7831952wmc.1;
+        Mon, 04 Jul 2022 09:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=references:from:to:cc:subject:in-reply-to:date:message-id
          :mime-version;
-        bh=4JdnfBFmGrVX5YOJOcmnMbispSWgMSddL5cpJkYT3AU=;
-        b=RAB870cX4kXaR6xf3unMvDAsoZPwmC0Idf04JNqTgXKOYAArDZwMbbSHBGH20U2tY/
-         0QoIN/go641WVHGqF7GKRISvxkLOEc0Yc6s7xZ4XXSjW+mdm4H+zbWsXpitx8OyJFFNh
-         /eyiMcg+j5YCqtPTMA0/j2GafVZeO9kVXJtx2w66396Ndluy/LOmRKVKE0bcMAcKmOG6
-         ZG9nYa5jPOngI9W75G9thAeBTNvzZWiZqNBDC8tbk5Ov/ndvsc0gc4eKFpEPZ0qhRIe0
-         RTwQXn515ed4K9Tf133ILMz9kCKNv0wk5DTaaLGqUrUXaq52xP4yHJAkZBy2diBNdwG9
-         0VLw==
+        bh=G56nKI/O2hNdAH6LeBwH+SCn4OXisZtyAQoA0hUm9ms=;
+        b=RfxlueZGqzLz9V4IpA0gOeFziZfUgz+gq+3PYW4JyFndv7bE8LEbW6v7NM68W4XD1G
+         Avch0rCuaDgjUXHhuGWH6oH5clCFBy97hfnlcphtTBgB2OEmGwaf3I8X5hlfbHF7F4JR
+         A3XcQO4FSAvoAb/0gymh7izDMG7KMj9WZT5w60Z3twYD6/ZYfo6ZEJkVWml8C2PpjXNK
+         aFawPrY3wz2U6j+ESko0ECfN/ZXWsZkAPKQkV+5CY4oVbk5x/QgKbX3nc2BOpoQQB//9
+         Qni147AUnmZxMuyAexnPMmjIIocdCKxSmxV36uxgIbLk1ssXUhR/8FHUkgSOjkbaMEXV
+         ULoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:references:from:to:cc:subject:in-reply-to:date
          :message-id:mime-version;
-        bh=4JdnfBFmGrVX5YOJOcmnMbispSWgMSddL5cpJkYT3AU=;
-        b=UpC7YxwiPHOkU3A3Uc9xGwx0YSdCY8RThFgBMNURF3BrWnU0MOOsbAKqriDDOernMg
-         Fah7NQNz79a0HO5qPErCOHAxPnIVqtTzPdfmJlST1p1lxy2fztU4GHIpIEDFCSQtZLm7
-         vRyTYD7TxJzJNEADossRViqlZh2I1y1gQNhCI3URQHN25vbaQ2xb4zylfUqLoWNUB8Db
-         HFlZSD0u+D3/iZTyq+ym6PTfPCen2U45DVggo2NvxQmF/if2QrfwO8+RrTPhf6Ww4r28
-         JVbL4SN2o0kXIvVlhxX32HvWRHULX2WtMrBremHZ9Cvo3RGOgctQjFsmnfFwanmoG4al
-         VQhQ==
-X-Gm-Message-State: AJIora+EvHt1EcB63B8Hhkh/0BfJcWfFnohWF92SlBRS3M+23V0kfXU1
-        CKEFb6cmJvd8M2FFpCvR7/g=
-X-Google-Smtp-Source: AGRyM1uXsUkkq2QZ8ImfwkHIap5WzUNNc4mow9pRMJ+YFVg05z1G4i4Zm8gKmO59XOAlh1kOoiGYPA==
-X-Received: by 2002:a05:600c:3653:b0:3a0:5716:203a with SMTP id y19-20020a05600c365300b003a05716203amr30801186wmq.175.1656950407832;
-        Mon, 04 Jul 2022 09:00:07 -0700 (PDT)
-Received: from localhost (92.40.202.6.threembb.co.uk. [92.40.202.6])
-        by smtp.gmail.com with ESMTPSA id j14-20020a5d564e000000b0021d68d3a27dsm5127329wrw.45.2022.07.04.09.00.06
+        bh=G56nKI/O2hNdAH6LeBwH+SCn4OXisZtyAQoA0hUm9ms=;
+        b=YLLwEuF4IuaKvRqnL9vsQX34LE0LNeGy6jwB5jkwJhJBj7B4dwWvzHlYiwFbGtz0Ya
+         gjcOD5d+MheJx19KTRbvFpKzBudZy4Ehy/gAndZsHEYRkWQNPjY/qhXIfwFT1xLCdww1
+         VZG91nA//JDfZSfGi1gUbNViGxNkDcowY00slSDAzJNArK2HnK5Jn9Q6PIGdKsul7aJz
+         KXO80wRMj/p/V+G1iuKMdZePMIN+FAdZMoQ70SE4XWxWspFGyx2gf2tTZkZJOQT1BNOx
+         XA1BE3EJloYLZSkXStjZO4PoTiTGvEehAQDoSH8swexGLlmiAGQ6GSzpgxpVs/QLVIbt
+         1fRw==
+X-Gm-Message-State: AJIora9x9JZCYZOYvFAqDkAUK4X85kn+1+oiRngj6IZn9fWzIKBbaP56
+        BZ22szdphBZc3vV7vIaNlcUhRIYN0+c=
+X-Google-Smtp-Source: AGRyM1u3VmK34bN5YjRqMzmMGmRNnbDk4+6oKqnKCFgdo3aQhglfkJLZXnQ1WXsm4JUYyG+enBS/HA==
+X-Received: by 2002:a05:600c:3d11:b0:3a1:8c05:6e75 with SMTP id bh17-20020a05600c3d1100b003a18c056e75mr19508943wmb.203.1656950555951;
+        Mon, 04 Jul 2022 09:02:35 -0700 (PDT)
+Received: from localhost (92.40.202.10.threembb.co.uk. [92.40.202.10])
+        by smtp.gmail.com with ESMTPSA id m1-20020a7bcb81000000b003a05621dc53sm19868227wmi.29.2022.07.04.09.02.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Jul 2022 09:00:07 -0700 (PDT)
+        Mon, 04 Jul 2022 09:02:35 -0700 (PDT)
 References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
  <20220703111057.23246-2-aidanmacdonald.0x0@gmail.com>
- <4c9092d20a35ef3fd6a1723e07adad79@walle.cc>
+ <CAHp75VeosViEcLZ3LF92=_bpSmyGthh2j9V4xYtHTt0Z-fn3-Q@mail.gmail.com>
 From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH 1/3] gpio: regmap: Support registers with more than one
  bit per GPIO
-In-reply-to: <4c9092d20a35ef3fd6a1723e07adad79@walle.cc>
-Date:   Mon, 04 Jul 2022 17:01:15 +0100
-Message-ID: <R11Wg2gY4kEFeq6ZSy2mXbGejo7XRfjG@localhost>
+In-reply-to: <CAHp75VeosViEcLZ3LF92=_bpSmyGthh2j9V4xYtHTt0Z-fn3-Q@mail.gmail.com>
+Date:   Mon, 04 Jul 2022 17:03:44 +0100
+Message-ID: <vida3rYRhoYbLy6DJhvZgLhDgrHRy5mn@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -73,75 +75,75 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Michael Walle <michael@walle.cc> writes:
+Andy Shevchenko <andy.shevchenko@gmail.com> writes:
 
-> Am 2022-07-03 13:10, schrieb Aidan MacDonald:
+> On Sun, Jul 3, 2022 at 1:11 PM Aidan MacDonald
+> <aidanmacdonald.0x0@gmail.com> wrote:
+>>
 >> Some devices use a multi-bit register field to change the GPIO
 >> input/output direction. Add the ->reg_field_xlate() callback to
 >> support such devices in gpio-regmap.
+>>
 >> ->reg_field_xlate() builds on ->reg_mask_xlate() by allowing the
 >> driver to return a mask and values to describe a register field.
 >> gpio-regmap will use the mask to isolate the field and compare or
 >> update it using the values to implement GPIO level and direction
 >> get and set ops.
 >
-> Thanks for working on this. Here are my thoughts on how to improve
-> it:
->  - I'm wary on the value translation of the set and get, you
->    don't need that at the moment, correct? I'd concentrate on
->    the direction for now.
->  - I'd add a xlate_direction(), see below for an example
-
-Yeah, I only need direction, but there's no advantage to creating a
-specific mechanism. I'm not opposed to doing that but I don't see
-how it can be done cleanly. Being more general is more consistent
-for the API and implementation -- even if the extra flexibility
-probably won't be needed, it doesn't hurt.
-
->  - because we can then handle the value too, we don't need the
->    invert handling in the {set,get}_direction. drop it there
->    and handle it in a simple_xlat. In gpio_regmap,
->    store "reg_dir_base" and "invert_direction", derived from
->    config->reg_dir_in_base and config->reg_dir_out_base.
+> Thanks for the proposal. My comments below.
 >
-
-I think this is more complicated and less consistent than handling
-reg_dir_in/out_base separately.
-
-> static int gpio_regmap_simple_xlat_direction(struct gpio_regmap *gpio
->                                              unsigend int base,
->                                              unsigned int offset,
->                                              unsigned int *dir_out,
->                                              unsigned int *dir_in)
-> {
->     unsigned int line = offset % gpio->ngpio_per_reg;
->     unsigned int mask = BIT(line);
+> ...
 >
->     if (!gpio->invert_direction) {
->         *dir_out = mask;
->         *dir_in = 0;
->     } else {
->         *dir_out = 0;
->         *dir_in = mask;
->     }
+>> +static void
+>> +gpio_regmap_simple_field_xlate(struct gpio_regmap *gpio,
+>> +                              unsigned int base, unsigned int offset,
+>> +                              unsigned int *reg, unsigned int *mask,
+>> +                              unsigned int *values)
+>> +{
+>> +       gpio->reg_mask_xlate(gpio, base, offset, reg, mask);
+>> +       values[0] = 0;
+>> +       values[1] = *mask;
 >
->     return 0;
-> }
-
-This isn't really an independent function: what do *dir_out and *dir_in
-mean on their own? You need use the matching mask from ->reg_mask_xlate
-for those values to be of any use. And those two functions have to match
-up because they need to agree on the same mask.
-
+> This is a fragile and less compile-check prone approach. If you know
+> the amount of values, make a specific data type for that, or pass the
+> length of the output buffer..
 >
-> And in the {set,get}_direction() you can then check both
-> values and convert it from or to GPIO_LINE_DIRECTION_{OUT,IN}.
-
-Agreed, checking both values and erroring out if the register has an
-unexpected value is a good idea.
-
+>> +}
 >
-> Thoughts?
+> ...
 >
-> -michael
+>> +       unsigned int values[2];
+>
+>> +       return (val & mask) == values[1];
+>
+>> +       unsigned int values[2];
+>
+> How will the callee know that it's only 2 available?
+>
+>
+>> +       regmap_update_bits(gpio->regmap, reg, mask, values[!!val]);
+>
+> If we have special meaning of the values, perhaps it needs to follow
+> an enum of some definitions, so everybody will understand how indices
+> are mapped to the actual data in the array.
+>
+>> +       unsigned int values[2];
+>
+>> +       regmap_update_bits(gpio->regmap, reg, mask, values[1]);
+>
+>> +       unsigned int values[2];
+>
+>> +       if ((val & mask) == values[invert])
+>
+> How do you guarantee this won't overflow? (see above comment about
+> indices mapping)
+>
+>> +       unsigned int values[2];
+>
+> As per above comments.
 
+The documentation states that ->reg_field_xlate returns values[0] and
+values[1] for low/high level or input/output direction. IOW, 0 is low
+level / input direction and 1 is high level / output direction.
+
+Embedding the array in a struct seems like a better idea though, thanks.
