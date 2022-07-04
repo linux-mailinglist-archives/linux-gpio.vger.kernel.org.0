@@ -2,99 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A4E5565AD6
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 18:16:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2309F565C3F
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 18:36:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234672AbiGDQQ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 12:16:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52768 "EHLO
+        id S230311AbiGDQgz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 12:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234640AbiGDQQ0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 12:16:26 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0BCBE2C;
-        Mon,  4 Jul 2022 09:16:25 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id c143so9116328ybf.3;
-        Mon, 04 Jul 2022 09:16:25 -0700 (PDT)
+        with ESMTP id S233708AbiGDQgy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 12:36:54 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3530B1D7;
+        Mon,  4 Jul 2022 09:36:53 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id d16so7890091wrv.10;
+        Mon, 04 Jul 2022 09:36:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6xFkniXGF5vICWa6x302C3+4JBqKaRAScVn9xWniJRE=;
-        b=gxM92HZ4njr9Z5mLNP8JumPapHbUNh/LCwY7+45zu6hLWxStNHbG7qoYgqsObHDptE
-         cIiUKMUPuDj2R1QkYyDx3fPNCY0H2bYYmOgGuhl1ei1AxyoNYkWq7Mv4E+bQVN70TEsb
-         0H78JCHH0CgWIUvxIs/BJ3UnxswETE2ilblVF6epl+HKPnpq2wCODFQ0q4islKKrZaEV
-         LHSEi2QBY6xxnqjx81EMZom5sCyh95/gStDlKbahOUfnSsjTDCOVPkGTbHtTPFquCfBj
-         YYatziYtGuC4EhL+/6HdCilollpTXwhTmf8uwq6vOMNO5hNjpiBQ4EqeX6a+rFQjxLp7
-         BLsQ==
+        h=references:from:to:cc:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=fgGIkrds/LxOxZz24kZBpk6WZZ1UMSDRaDt1bZLPE0s=;
+        b=d89EYI1iAYaRo4lBjclN7TTgOAEcBAz0/NAyQlkyeyu6k4hzHD1X+CMnfkQQCl+s6N
+         exr8k3L+itILkzj4yPq8gIODXyn4z6S0bnQ1HTdnq4/GXE6hxSSfMVBvOfS15NsunRXt
+         B0jF3KsOPbR8NqR0C7meErK23dZtlUtuvwx7/CdL3vzlrYg561ZHFpETUTIVntVGFp/E
+         CAIEhqFd5ZRUrRHZJam0J9hu9wOfPm91IDpba72UQEWCbVhgR4VPC0gHydao4qwNtj+o
+         489zLGIGHFzk0VVAmaENQraLZ3TIld4tqMrfuOIw7GbUTf9APfP21c47NyxfSVymsj1p
+         edBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6xFkniXGF5vICWa6x302C3+4JBqKaRAScVn9xWniJRE=;
-        b=RtO/HlViLDN0zIK2keB0h1cxnkfo+J3Ebdndl/cycOUKswGt9lCj25bqyRwhbL615t
-         cu7+YOOr5eqQDG3GbwJOG3ExAGVpKXv/jAEEWL6YwD6MnNiIJY0oYnp3QeIdyYras8j+
-         dm2Yt2+9J2CJQRWqb0qiX4mcNNAew8+tJMI2tLFJbpfs/QExp/o4UawOSZpvvQAZVJxG
-         mPPKExicMYOCHCykxCnoVfGLDq71ZICGP86r1D8fU+rEtV5BR2Cs8kSbyL7m4nxKYcR7
-         ogTtP4fGPkscv1wlGev5tUVipEhBDpmtJiGxxRiA1kDcQ1fhbGL8Gt7CMNAQ3rxuu3tX
-         7/6Q==
-X-Gm-Message-State: AJIora84x3VmqGQWq0dKv1K4V77pYwuWfT+ovS2yzUY9k2N402ZQVpfq
-        AQldwvBC2l6tRinSdrnp/wPhXLHYti8KE48nNP9DuCUL9oQyC9en
-X-Google-Smtp-Source: AGRyM1vg69LqUqPq1YlKWrUAomNKokyEW1mjXxhrblqClb6chH1lObTFk0hleFx62rwA0zgJ28hlB/Dih1kVBDmwCb0=
-X-Received: by 2002:a25:858e:0:b0:66e:4898:63e2 with SMTP id
- x14-20020a25858e000000b0066e489863e2mr7181616ybk.296.1656951384394; Mon, 04
- Jul 2022 09:16:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220703194020.78701-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220703194020.78701-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220703194020.78701-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 Jul 2022 18:15:47 +0200
-Message-ID: <CAHp75VfFZ146p1sZ2=Ec-F-9zYJZHPWyvgYQeVsG=2TzssaPmA@mail.gmail.com>
-Subject: Re: [PATCH v7 3/5] gpio: gpiolib: Allow free() callback to be overridden
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        h=x-gm-message-state:references:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=fgGIkrds/LxOxZz24kZBpk6WZZ1UMSDRaDt1bZLPE0s=;
+        b=bTm/gP0/NNrXalwPsoqyAqNbyLAbElIIUcuRJJZ2W0VGdzcsvvpaPiCmtjbZGMLuO3
+         K1nGGL49nSzx0WW+frfNDLtXlNEXEwabmlIvlagUICPy6QK5jbHqAEcKgBmIYM0Ceh/i
+         HuAsgMcc+xSiWFoad9rG2Mz4pPqCwWWdTzQpvBHW69bMZ+L7yoUNlnfKcXS/fhqTrSyX
+         y4/ppiTLpoaQk2Yuibhpv8CljLRKNhOkzd+b+uXOfD3iUBJOFYWZhjXRG1sXrdV1CaSD
+         VM49iEBziGUjEZqz7GHJEDv6TGJB/d5AccyjmVgk3qNhsN7Hq+l3gjnZWjq3gApApv//
+         eaAw==
+X-Gm-Message-State: AJIora8PB3a80DrY9F5VRPxTvhJQwwZlcnR6hf2xazQDan7u6YlI1Wku
+        yVrPjtwz4t0HJfAfNJsNK4I=
+X-Google-Smtp-Source: AGRyM1uXbXGZEHV0QcEoDOjA2l7XZbhSe99v16OLg7QRBhdeUzKuv4UcHDE6pX4/d0lCWt9vv8XDOQ==
+X-Received: by 2002:adf:e3cb:0:b0:21b:8de5:ec7d with SMTP id k11-20020adfe3cb000000b0021b8de5ec7dmr28277287wrm.714.1656952612611;
+        Mon, 04 Jul 2022 09:36:52 -0700 (PDT)
+Received: from localhost (92.40.202.7.threembb.co.uk. [92.40.202.7])
+        by smtp.gmail.com with ESMTPSA id c1-20020adfef41000000b00219b391c2d2sm3813241wrp.36.2022.07.04.09.36.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Jul 2022 09:36:52 -0700 (PDT)
+References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
+ <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
+ <CAHp75Vc30zZL7LLg6zn7VnMARMOKsYo421KVMDu7RGp4QCtcXg@mail.gmail.com>
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
+In-reply-to: <CAHp75Vc30zZL7LLg6zn7VnMARMOKsYo421KVMDu7RGp4QCtcXg@mail.gmail.com>
+Date:   Mon, 04 Jul 2022 17:38:00 +0100
+Message-ID: <EP4LzL5PhvL2RLOodKu5K24zNSfLTjAi@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jul 3, 2022 at 9:43 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->
-> Allow free() callback to be overridden from irq_domain_ops for
-> hierarchical chips.
->
-> This allows drivers to free up resources which are allocated during
-> child_to_parent_hwirq()/populate_parent_alloc_arg() callbacks.
->
-> On Renesas RZ/G2L platform a bitmap is maintained for TINT slots, a slot
-> is allocated in child_to_parent_hwirq() callback which is freed up in free
-> callback hence this override.
 
-Hmm... To me this sounds asymmetrical. We alloc something in another
-callback, which is not what this free is for. Perhaps it should be an
-optional
+Andy Shevchenko <andy.shevchenko@gmail.com> writes:
 
-free_populated_parent_arg() or alike?
+> On Sun, Jul 3, 2022 at 1:11 PM Aidan MacDonald
+> <aidanmacdonald.0x0@gmail.com> wrote:
+>>
+>> Some GPIO chips require a custom to_irq() callback for mapping
+>> their IRQs, eg. because their interrupts come from a parent IRQ
+>> chip where the GPIO offset doesn't map 1-to-1 with hwirq number.
+>
+> Don't they follow a hierarchical IRQ domain in that case?
+>
+> And to be honest after the commit ef38237444ce ("gpiolib: add a
+> warning on gpiochip->to_irq defined") I have no idea how it works in
+> your case and also I feel this patch is a wrong direction of
+> development.
 
--- 
-With Best Regards,
-Andy Shevchenko
+My own use case is an MFD device with a shared IRQ chip that is
+used by other sub-drivers. This is a very common case that seems
+to map onto ->to_irq() cleanly. Do we really need an IRQ domain?
+What you're suggesting would be a 1-to-1 mapping from GPIO offset
+to hwirq number in a virtual domain, then remapping to the real
+hwirq number, which seems unnecessarily complicated when we can
+just change the GPIO offset -> hwirq mapping.
+
+The commit you mentioned is warning users of GPIOLIB_IRQCHIP when a
+custom ->to_irq() method is overridden. That's not relevant here.
+Using an IRQ domain also overrides ->to_irq() so I included a check
+in this patch to ensure gpio-regmap chips are well-behaved.
