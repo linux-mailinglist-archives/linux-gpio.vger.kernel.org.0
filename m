@@ -2,228 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D2C7564E4D
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 09:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35143564F4A
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 10:07:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233235AbiGDHI0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 03:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
+        id S233084AbiGDIGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 04:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232982AbiGDHIF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 03:08:05 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71CE0958F;
-        Mon,  4 Jul 2022 00:07:54 -0700 (PDT)
+        with ESMTP id S232995AbiGDIGp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 04:06:45 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A37AE5B
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Jul 2022 01:06:43 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id l7so9360862ljj.4
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Jul 2022 01:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1656918475; x=1688454475;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AgnZ/0GTsI5N0Vyb3VmA0aulIyEF8kyx7iX2ZYUNwqY=;
-  b=fI6PIOcCNHbueT+UWd4e8oeNh64huXABoRcBiayGlgaAHgxauL7Jou8c
-   SeEuYKRhvKoqJUsitl8F7gVGEN/Txos9m/as6NABcR8Zoi6YtUPZRh71m
-   cexVjuZU+cg9FiKuEumI0D4jOV8yULYaf1A8HHtQuwIyEoWa0zK4JJEyn
-   y4zvUO5L7Zvk0TKXnp9bcxpJAfAcnTRL0AB+p00eBX9BFjGJC3tlrQAli
-   ecj1y7sZtYlK4De5ODGRrZjJd1s5RbDvrenBbyVcIevFVdMaeMBvAIdCx
-   WeerA93nTOf+4rByiy0Enhf9hmO5OnDZC9bC2MqW8ddV8LBnJuekilEZw
-   w==;
-X-IronPort-AV: E=Sophos;i="5.92,243,1650924000"; 
-   d="scan'208";a="24825060"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 04 Jul 2022 09:07:52 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 04 Jul 2022 09:07:52 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 04 Jul 2022 09:07:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1656918472; x=1688454472;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AgnZ/0GTsI5N0Vyb3VmA0aulIyEF8kyx7iX2ZYUNwqY=;
-  b=LDsL/qkgTLzLCiPw0J1xSWUct9sHyZrn+x98rgSroq34z+NFujNwgraa
-   cq1AbZNacqmgfIS3WcoWHUGz0pf3QZvd+UR5qyDOfUODNyR9g+UdqTJSz
-   H7qUPSd+RW8A1BUbFQNrAYR9nfOdFhQuMqrkmAjDEE9UH8tHhIsG3fJ6Y
-   FVPSBOHKjmmGquzgpSVNx0vt/WECg3USZVHgWZ3p34RIYbLqrfwqNFGeT
-   ekkBex+cCC0951V4IKOqgDWDqqMCgPhCvxXuMQJzxBbU/1ODpLglwlkKv
-   5oC5SqlB3Ue39Dgh9nt2YTZw3swiPA6vJei+ZVfZT964Seidcqdvez+rj
-   A==;
-X-IronPort-AV: E=Sophos;i="5.92,243,1650924000"; 
-   d="scan'208";a="24825059"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 04 Jul 2022 09:07:51 +0200
-Received: from steina-w.localnet (unknown [10.123.49.12])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 6A945280071;
-        Mon,  4 Jul 2022 09:07:51 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-Date:   Mon, 04 Jul 2022 09:07:48 +0200
-Message-ID: <5717577.DvuYhMxLoT@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <CAGETcx-fLAXnG+1S4MHJwg9t7O6jj6Mp+q25bh==C_Z1CLs-mg@mail.gmail.com>
-References: <20220601070707.3946847-1-saravanak@google.com> <5265491.31r3eYUQgx@steina-w> <CAGETcx-fLAXnG+1S4MHJwg9t7O6jj6Mp+q25bh==C_Z1CLs-mg@mail.gmail.com>
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=W9vEcsuPOmb6PFD1YP9Cd5t2i8+H7vKDdbGELGM7w6o=;
+        b=qIVH3JbKvPTI90pL62KYY0CE73JeN2SUYSrBybV8uswZCRUzC7TyQR8SVFp8MZtE+n
+         xr7tJOlv3L2n5ZyjubWWSM+HvxpWMMviQPJGc+z61rfEV7BG6cQlF6JShpAp0jtu8vVF
+         ceTB3j2pH2b/Yt1sE4BJDCgHdKQmyfJZMtTr8D5mHqeWpIZvfd9zndu2IJA4nuyF61qJ
+         PLuksfEnXLVGlUXKspIWeM/QLHcLr0LmFBlIvSpGCb9lgFdOCT5hGek9uM/lI/l3D+aq
+         iN+8aCJy4pGjNnJY/joNcWnXboVwrTUBBtxKGrp15wZVhuCWO0JNd1/VK0fRmlhAUyqW
+         ctvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=W9vEcsuPOmb6PFD1YP9Cd5t2i8+H7vKDdbGELGM7w6o=;
+        b=QNzFi/KXcF38zUM8t4iAd3qw7/sNFWTYoc/66ZwF2Oj+VLNhSsduOmIDuYJ4Yhvk0Q
+         S71Yq/aCYuE/4a2f/6582CBivCt9GsAEATZ6gXm1F5XXdZx6y+xQ0n7wXe0pb2JZWzqp
+         Z6puspXFnuXt0MAdHIal9e6jqXfqpOF2tO6ExQc9BB/QtT6vm9oCoe7qTDlQQHK8u1Ip
+         3IKe70FFpqV0Toc+5ecKfAx9wktzsppwR9DHh8Z1SzU4pO7gOgjklkite3Jbu91lYUj0
+         CKREjPbSeLlewzC4R5S0763AQKPgqIz1rOp4WbVO/cc2TIHirUq7fJzA7H/gxVNkVDEM
+         nMyw==
+X-Gm-Message-State: AJIora982LTm67Nu6b86JO6mCQt2mOOcat6f/GafbMnL89MpaUNvLfuX
+        81xBQDrVPFqpWtm4dY+2HJIfmQ==
+X-Google-Smtp-Source: AGRyM1shyweS5X2mqdSfWYknlmTWWG1DGobjjvfheeS4TSNX76HtThJhWEt1hwbwlkge4YLK4Rb5CA==
+X-Received: by 2002:a2e:9097:0:b0:25a:6e3a:8b21 with SMTP id l23-20020a2e9097000000b0025a6e3a8b21mr15698533ljg.37.1656922001547;
+        Mon, 04 Jul 2022 01:06:41 -0700 (PDT)
+Received: from [192.168.1.52] ([84.20.121.239])
+        by smtp.gmail.com with ESMTPSA id b8-20020a056512218800b0047f7c897b61sm5018145lft.129.2022.07.04.01.06.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Jul 2022 01:06:40 -0700 (PDT)
+Message-ID: <2823c36d-efce-6c02-3b00-df1466c0d2bc@linaro.org>
+Date:   Mon, 4 Jul 2022 10:06:39 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v6 10/14] arm64: dts: freescale: imx8qxp: Remove
+ unnecessary clock related entries
+Content-Language: en-US
+To:     Viorel Suman <viorel.suman@oss.nxp.com>
+Cc:     Viorel Suman <viorel.suman@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abelvesa@kernel.org>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Liu Ying <victor.liu@nxp.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Ming Qian <ming.qian@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
+ <20220629164414.301813-11-viorel.suman@oss.nxp.com>
+ <483d5115-4027-e811-8bce-15da6c7c660f@linaro.org>
+ <20220630083636.2c7mclmbq3tjma2j@fsr-ub1664-116>
+ <5d8b2044-5ca6-c90c-57b4-afbb2ae20dde@linaro.org>
+ <20220630194804.sa3mvokpv7iksgbx@fsr-ub1664-116>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220630194804.sa3mvokpv7iksgbx@fsr-ub1664-116>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Freitag, 1. Juli 2022, 09:02:22 CEST schrieb Saravana Kannan:
-> On Thu, Jun 30, 2022 at 11:02 PM Alexander Stein
+On 30/06/2022 21:48, Viorel Suman wrote:
 > 
-> <alexander.stein@ew.tq-group.com> wrote:
-> > Hi Saravana,
-> > 
-> > Am Freitag, 1. Juli 2022, 02:37:14 CEST schrieb Saravana Kannan:
-> > > On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
-> > > 
-> > > <alexander.stein@ew.tq-group.com> wrote:
-> > > > Hi,
-> > > > 
-> > > > Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony Lindgren:
-> > > > > Hi,
-> > > > > 
-> > > > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
-> > > > > > Now that fw_devlink=on by default and fw_devlink supports
-> > > > > > "power-domains" property, the execution will never get to the
-> > > > > > point
-> > > > > > where driver_deferred_probe_check_state() is called before the
-> > > > > > supplier
-> > > > > > has probed successfully or before deferred probe timeout has
-> > > > > > expired.
-> > > > > > 
-> > > > > > So, delete the call and replace it with -ENODEV.
-> > > > > 
-> > > > > Looks like this causes omaps to not boot in Linux next. With this
-> > > > > simple-pm-bus fails to probe initially as the power-domain is not
-> > > > > yet available. On platform_probe() genpd_get_from_provider() returns
-> > > > > -ENOENT.
-> > > > > 
-> > > > > Seems like other stuff is potentially broken too, any ideas on
-> > > > > how to fix this?
-> > > > 
-> > > > I think I'm hit by this as well, although I do not get a lockup.
-> > > > In my case I'm using
-> > > > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts and probing of
-> > > > 38320000.blk-ctrl fails as the power-domain is not (yet) registed.
-> > > 
-> > > Ok, took a look.
-> > > 
-> > > The problem is that there are two drivers for the same device and they
-> > > both initialize this device.
-> > > 
-> > >     gpc: gpc@303a0000 {
-> > >     
-> > >         compatible = "fsl,imx8mq-gpc";
-> > >     
-> > >     }
-> > > 
-> > > $ git grep -l "fsl,imx7d-gpc" -- drivers/
-> > > drivers/irqchip/irq-imx-gpcv2.c
-> > > drivers/soc/imx/gpcv2.c
-> > > 
-> > > IMHO, this is a bad/broken design.
-> > > 
-> > > So what's happening is that fw_devlink will block the probe of
-> > > 38320000.blk-ctrl until 303a0000.gpc is initialized. And it stops
-> > > blocking the probe of 38320000.blk-ctrl as soon as the first driver
-> > > initializes the device. In this case, it's the irqchip driver.
-> > > 
-> > > I'd recommend combining these drivers into one. Something like the
-> > > patch I'm attaching (sorry for the attachment, copy-paste is mangling
-> > > the tabs). Can you give it a shot please?
-> > 
-> > I tried this patch and it delayed the driver initialization (those of UART
-> > as
-> > well BTW). Unfortunately the driver fails the same way:
-> Thanks for testing the patch!
+> The question context looks a bit shifted. The "clocks" and "clock-names"
+> attributes are removed from a clock provider device.
 > 
-> > > [    1.125253] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV: failed
-> > > to
-> > 
-> > attach power domain "bus"
-> > 
-> > More than that it even introduced some more errors:
-> > > [    0.008160] irq: no irq domain found for gpc@303a0000 !
-> 
-> So the idea behind my change was that as long as the irqchip isn't the
-> root of the irqdomain (might be using the terms incorrectly) like the
-> gic, you can make it a platform driver. And I was trying to hack up a
-> patch that's the equivalent of platform_irqchip_probe() (which just
-> ends up eventually calling the callback you use in IRQCHIP_DECLARE().
-> I probably made some mistake in the quick hack that I'm sure if
-> fixable.
-> 
-> > > [    0.013251] Failed to map interrupt for
-> > > /soc@0/bus@30400000/timer@306a0000
-> 
-> However, this timer driver also uses TIMER_OF_DECLARE() which can't
-> handle failure to get the IRQ (because it's can't -EPROBE_DEFER). So,
-> this means, the timer driver inturn needs to be converted to a
-> platform driver if it's supposed to work with the IRQCHIP_DECLARE()
-> being converted to a platform driver.
-> 
-> But that's a can of worms not worth opening. But then I remembered
-> this simpler workaround will work and it is pretty much a variant of
-> the workaround that's already in the gpc's irqchip driver to allow two
-> drivers to probe the same device (people really should stop doing
-> that).
-> 
-> Can you drop my previous hack patch and try this instead please? I'm
-> 99% sure this will work.
-> 
-> diff --git a/drivers/irqchip/irq-imx-gpcv2.c
-> b/drivers/irqchip/irq-imx-gpcv2.c index b9c22f764b4d..8a0e82067924 100644
-> --- a/drivers/irqchip/irq-imx-gpcv2.c
-> +++ b/drivers/irqchip/irq-imx-gpcv2.c
-> @@ -283,6 +283,7 @@ static int __init imx_gpcv2_irqchip_init(struct
-> device_node *node,
->          * later the GPC power domain driver will not be skipped.
->          */
->         of_node_clear_flag(node, OF_POPULATED);
-> +       fwnode_dev_initialized(domain->fwnode, false);
->         return 0;
->  }
+> The OS clock provider in this case is a client which uses some protocol
+> to communicate with SCU via a messaging unit. There is no
+> access to xtal clocks via the existing OS<->SCU communication protocol.
 
-Just to be sure here, I tried this patch on top of next-20220701 but 
-unfortunately this doesn't fix the original problem either. The timer errors 
-are gone though.
-The probe of imx8m-blk-ctrl got slightly delayed (from 0.74 to 0.90s printk 
-time) but results in the identical error message.
+SCU does not need to access them via communication protocol. It's enough
+that they are clock inputs, physical clocks being fed to your hardware
+which you describe in the DTS.
+
 
 Best regards,
-Alexander
-
-
-
+Krzysztof
