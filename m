@@ -2,110 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39EE2565F15
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 23:27:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E7A565F93
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 01:05:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234347AbiGDVYi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 17:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37130 "EHLO
+        id S230347AbiGDXFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 19:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233925AbiGDVYV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 17:24:21 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F143612096;
-        Mon,  4 Jul 2022 14:24:18 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id c65so13049423edf.4;
-        Mon, 04 Jul 2022 14:24:18 -0700 (PDT)
+        with ESMTP id S229641AbiGDXFe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 19:05:34 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D21BF6F
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Jul 2022 16:05:33 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id 64so9684259ybt.12
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Jul 2022 16:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HDQxB7Fy3SfPJmcU/nMuUlTiaBaKupFDi/Um612kFO8=;
-        b=UH0nEw+JDVS5JB6oX+Zir/ZDPriDB2qIkWp3OB9DiL8PcStuZljt2kKBfxZz/8jX6D
-         u7YDSxPLoZlxmZVW2P2dFylf644p7ogvHsIkVCv70cRwCakTtt8xdYFAELTMdSM52KT+
-         cXxcvyQ528WCJrZ1rYO/BJ9IAf/KKT79kFtLYZRllKMFLfUSnwSD4to8YYmWxWRN1iNW
-         AD0UpgYUrz9B1KMpzQQ95XFlruayVWtP9xHEDr+6W8hJhzujT0VT0HaKif3AMyHFB3AK
-         7nuifcHrnWWWhB5S/Ev6MsmfVwzaz+DcsmhcbtDa66TaDxMFH6c2/Kp9xxyClJAnKqEA
-         U+Tw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XycWTMWtIwricire+FFIRRMgzV1gWh/SUQexd6DnnYc=;
+        b=U6zGQBjdWzmnVw/QKpLpnpUYTxQGzObW1o/Zl132xkUurDx9PsOVRnWQ6K9MQyEPBQ
+         6vOzYWcNejk4zkkvS4sGH5QhpfuOJTcyS+gpXgRUJ3fsg1nGC5sV8GrUoF2GHYIkP2GN
+         SrSesILXEWvnDMIi2x/KHqeBCjm/l6awVAe/ohkuQaUT7GgrygtKLMcYiGMiwcUqvp6A
+         BE+XkuYrXfj2RKTuvGPammVj7P3/WhUzpGjqveRU4pmotZNzUBPZSQB+WCCbXwf+yIjt
+         6PbSJWYIQf4cbiBJCpZem8uursmIQ5g9Yt9rQw5BZt613nQHFss3QcGnNOXTXa+Lm9G1
+         H0Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HDQxB7Fy3SfPJmcU/nMuUlTiaBaKupFDi/Um612kFO8=;
-        b=2TdIyE/zt7Pu/9B/0lwxANXszgGj5yPQrcFkBNrpQ9CApYjh6lzPIffeVnYkRKgsXt
-         mAswhyRgnkEzl6z2Fn34IZB4pX9kUmQeMkac/n9ZQtMLOuqD1JC/jBHTvd/WSwXzZoKt
-         TEHRw+q04cf8VlS2shvUrL//NxOOAaCymOIPFK9lwUl3+30pxkXqQ333ikNL+dMnuweC
-         +PoJA8ugiACylsA/dFZarp7BEdd5PabO7jaU+G+yaAOILxmZ4xDFpeqb1JTnbsYjIYmV
-         pzd1FyrqlaKyFJrvwFBohi9FfMD/dGqmjWIFvjnijtjIgI9XwqdMKPhOdvDkVRRLSzmE
-         ZCBw==
-X-Gm-Message-State: AJIora/LCYW2Zf1QodbjQ0wXxgmuh3ij+DPvdD/iUJ2Ap3A2nDWUGdly
-        XY7zk3Cf7yWMI29KG8J4iyo=
-X-Google-Smtp-Source: AGRyM1tmVI0Dsj6e4UIWi3qajxeF82gbxgVA/AT2jS1VqUufrtB9MP25vkcoNu2lIxrfjYdYZgdfnw==
-X-Received: by 2002:aa7:c486:0:b0:435:5d50:ab39 with SMTP id m6-20020aa7c486000000b004355d50ab39mr42209716edq.104.1656969858619;
-        Mon, 04 Jul 2022 14:24:18 -0700 (PDT)
-Received: from fedora.robimarko.hr (dh207-99-90.xnet.hr. [88.207.99.90])
-        by smtp.googlemail.com with ESMTPSA id k18-20020a056402049200b0042dcbc3f302sm20131117edv.36.2022.07.04.14.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Jul 2022 14:24:18 -0700 (PDT)
-From:   Robert Marko <robimarko@gmail.com>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        konrad.dybcio@somainline.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        jic23@kernel.org, lars@metafoo.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
-Cc:     Robert Marko <robimarko@gmail.com>
-Subject: [PATCH v6 12/12] arm64: dts: qcom: ipq8074-hk01: add VQMMC supply
-Date:   Mon,  4 Jul 2022 23:24:02 +0200
-Message-Id: <20220704212402.1715182-12-robimarko@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220704212402.1715182-1-robimarko@gmail.com>
-References: <20220704212402.1715182-1-robimarko@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XycWTMWtIwricire+FFIRRMgzV1gWh/SUQexd6DnnYc=;
+        b=n3j538wICWaEtkZMxZjv61PVbKp3MGQD+yajNHAZ9MFk+YpkRtDRorvV0TJ62YAjBF
+         JAnLZ7KELQnmO31+ZFD0sM4DJdhBxqYF+FUTnTGCW9+5J534s2leiFWshYg9IeAic8f4
+         MIASjfmfW7CiNpfB928waI1ERwl2qxloVunRLjSwEVH/HwNOA6y52vyWe/tg/6u7iZ9S
+         k2iMQdlB5zNYiOa4MBicRHHOtWHvWHNorQwVE3xMHm2jQv/0vD3bYaz6pWwc974n9HNn
+         nih9s+nPQbeV2djJZjuVkeboJMf+ymqXAjofaQ4IOVW+jIVPZc7oDdfLVysMVaFSP69B
+         kC5w==
+X-Gm-Message-State: AJIora9raQ2k4EipyOsJEjTYwR+ve2T02DOl4CJ2G3VNpThZctwvzdJZ
+        n1AoZNGFnOoZeVEo0/FSmMy09bRQIWnRQxVe0eleHXtens2cVg==
+X-Google-Smtp-Source: AGRyM1urReHFGRpDt4228+rssCI9u4xNZb5KZUtgIg0y+Uw7HPx2keXEsdL3wNgYwiwKCidfhIJbuZH0U01zBCLbxts=
+X-Received: by 2002:a25:d07:0:b0:66e:6c0e:a2d1 with SMTP id
+ 7-20020a250d07000000b0066e6c0ea2d1mr882331ybn.369.1656975932454; Mon, 04 Jul
+ 2022 16:05:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com> <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Jul 2022 01:05:20 +0200
+Message-ID: <CACRpkdamknwRPGEeGGQGQPtKw=dPXa79GAJy+E6y+03NakN=cA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     michael@walle.cc, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since now we have control over the PMP8074 PMIC providing various system
-voltages including L11 which provides the SDIO/eMMC I/O voltage set it as
-the SDHCI VQMMC supply.
+On Sun, Jul 3, 2022 at 1:10 PM Aidan MacDonald
+<aidanmacdonald.0x0@gmail.com> wrote:
 
-This allows SDHCI controller to switch to 1.8V I/O mode and support high
-speed modes like HS200 and HS400.
+> Some GPIO chips require a custom to_irq() callback for mapping
+> their IRQs, eg. because their interrupts come from a parent IRQ
+> chip where the GPIO offset doesn't map 1-to-1 with hwirq number.
+>
+> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
 
-Signed-off-by: Robert Marko <robimarko@gmail.com>
----
- arch/arm64/boot/dts/qcom/ipq8074-hk01.dts | 2 ++
- 1 file changed, 2 insertions(+)
+What is the usecase for this?
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-index de20cb98acd3..a73909a24935 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-@@ -3,6 +3,7 @@
- /* Copyright (c) 2017, The Linux Foundation. All rights reserved.
-  */
- #include "ipq8074.dtsi"
-+#include "pmp8074.dtsi"
- 
- / {
- 	#address-cells = <0x2>;
-@@ -87,6 +88,7 @@ nand@0 {
- 
- &sdhc_1 {
- 	status = "okay";
-+	vqmmc-supply = <&l11>;
- };
- 
- &qusb_phy_0 {
--- 
-2.36.1
+Since GPIO chips and IRQ chips are orthogonal there is absolutely
+no guarantee that ->to_irq() is called before a driver start to use
+an IRQ from the irqchip side:
 
+(quoting Documentation/driver-api/gpio/driver.rst)
+
+ It is legal for any IRQ consumer to request an IRQ from any irqchip even if it
+ is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
+ irq_chip are orthogonal, and offering their services independent of each
+ other.
+
+ gpiod_to_irq() is just a convenience function to figure out the IRQ for a
+ certain GPIO line and should not be relied upon to have been called before
+ the IRQ is used.
+
+ Always prepare the hardware and make it ready for action in respective
+ callbacks from the GPIO and irq_chip APIs. Do not rely on gpiod_to_irq() having
+ been called first.
+
+(end quote)
+
+Using ->to_irq() makes sense in a few cases such as when
+a GPIO key that can also poll for state want to get hold of an
+IRQ to react to edges.
+
+Now: if a consumer requests IRQ nr 3 from your driver say from ACPI or
+from a device tree, and as you say GPIOs and IRQs are not 1-to-1 mapped,
+so IRQ nr 3 may be coming from GPIO 314, isn't this going to be really
+messy for users? One local numberspace for GPIO and another local
+numberspace for IRQs?
+
+To me it seems like the reasoning is something like
+
+- I only use GPIO line numbers like <&gpio 3>;
+- Then I call gpiod_to_irq() on that number so I do not need to
+  deal with looking up the IRQ some other way
+- request_irq();
+- Profit.
+
+There is no guarantee that the API will be used like that at all, actually
+it is uncommon.
+
+Yours,
+Linus Walleij
