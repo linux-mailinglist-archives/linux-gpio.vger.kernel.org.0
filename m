@@ -2,107 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4C9C565557
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 14:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B28B5565671
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 15:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234234AbiGDM3J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 08:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35650 "EHLO
+        id S233441AbiGDNFy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 09:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234229AbiGDM2w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 08:28:52 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A37E271D;
-        Mon,  4 Jul 2022 05:28:24 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0C45022175;
-        Mon,  4 Jul 2022 14:28:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1656937702;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zR+tJ9UwOFekRbH/nZ7x+CvhxJgh39NwZ7//BFWpJE8=;
-        b=PEtOjuv2nF248emeqfsIGMi+zFyBul4tZlMLfP3vqcZNWEJXluA84YSZSHLjzkX7lU1g3n
-        JExq0nDqX9VKgXYuzU/ApwoPGS3uxgoH4Z9A/wV2m1jG40Mt7UcTsjKks8j0SZBfPH0fmy
-        QE+i3o/hjMnv5lr34lDLoPuy2urbXig=
+        with ESMTP id S233370AbiGDNFy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 09:05:54 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D4264C9;
+        Mon,  4 Jul 2022 06:05:53 -0700 (PDT)
+Received: from dggpeml500024.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Lc5ZX6JgkzhZ4V;
+        Mon,  4 Jul 2022 21:03:00 +0800 (CST)
+Received: from huawei.com (10.175.112.208) by dggpeml500024.china.huawei.com
+ (7.185.36.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 4 Jul
+ 2022 21:05:23 +0800
+From:   Yuan Can <yuancan@huawei.com>
+To:     <linux-gpio@vger.kernel.org>
+CC:     <brgl@bgdev.pl>, <linus.walleij@linaro.org>,
+        <robert.jarzmik@free.fr>, <linux-kernel@vger.kernel.org>,
+        <yuancan@huawei.com>
+Subject: [PATCH -next] gpio: pxa: Add missing clk_disable_unprepare() in pxa_gpio_probe()
+Date:   Mon, 4 Jul 2022 13:03:23 +0000
+Message-ID: <20220704130323.104294-1-yuancan@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 04 Jul 2022 14:28:21 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/3] gpio: regmap: Support registers with more than one
- bit per GPIO
-In-Reply-To: <20220703111057.23246-2-aidanmacdonald.0x0@gmail.com>
-References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
- <20220703111057.23246-2-aidanmacdonald.0x0@gmail.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <4c9092d20a35ef3fd6a1723e07adad79@walle.cc>
-X-Sender: michael@walle.cc
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.208]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500024.china.huawei.com (7.185.36.10)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2022-07-03 13:10, schrieb Aidan MacDonald:
-> Some devices use a multi-bit register field to change the GPIO
-> input/output direction. Add the ->reg_field_xlate() callback to
-> support such devices in gpio-regmap.
-> 
-> ->reg_field_xlate() builds on ->reg_mask_xlate() by allowing the
-> driver to return a mask and values to describe a register field.
-> gpio-regmap will use the mask to isolate the field and compare or
-> update it using the values to implement GPIO level and direction
-> get and set ops.
+Add clk_disable_unprepare() on error path in pxa_gpio_probe().
 
-Thanks for working on this. Here are my thoughts on how to improve
-it:
-  - I'm wary on the value translation of the set and get, you
-    don't need that at the moment, correct? I'd concentrate on
-    the direction for now.
-  - I'd add a xlate_direction(), see below for an example
-  - because we can then handle the value too, we don't need the
-    invert handling in the {set,get}_direction. drop it there
-    and handle it in a simple_xlat. In gpio_regmap,
-    store "reg_dir_base" and "invert_direction", derived from
-    config->reg_dir_in_base and config->reg_dir_out_base.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yuan Can <yuancan@huawei.com>
+---
+ drivers/gpio/gpio-pxa.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-static int gpio_regmap_simple_xlat_direction(struct gpio_regmap *gpio
-                                              unsigend int base,
-                                              unsigned int offset,
-                                              unsigned int *dir_out,
-                                              unsigned int *dir_in)
-{
-     unsigned int line = offset % gpio->ngpio_per_reg;
-     unsigned int mask = BIT(line);
+diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+index c7fbfa3ae43b..08963975dd1b 100644
+--- a/drivers/gpio/gpio-pxa.c
++++ b/drivers/gpio/gpio-pxa.c
+@@ -676,6 +676,7 @@ static int pxa_gpio_probe(struct platform_device *pdev)
+ 	/* Initialize GPIO chips */
+ 	ret = pxa_init_gpio_chip(pchip, pxa_last_gpio + 1, gpio_reg_base);
+ 	if (ret) {
++		clk_disable_unprepare(clk);
+ 		clk_put(clk);
+ 		return ret;
+ 	}
+-- 
+2.17.1
 
-     if (!gpio->invert_direction) {
-         *dir_out = mask;
-         *dir_in = 0;
-     } else {
-         *dir_out = 0;
-         *dir_in = mask;
-     }
-
-     return 0;
-}
-
-And in the {set,get}_direction() you can then check both
-values and convert it from or to GPIO_LINE_DIRECTION_{OUT,IN}.
-
-Thoughts?
-
--michael
