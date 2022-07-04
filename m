@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB379565A28
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 17:44:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F282E565A2A
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Jul 2022 17:44:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234575AbiGDPnx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 11:43:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58536 "EHLO
+        id S234645AbiGDPoJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 11:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233983AbiGDPnT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 11:43:19 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEDE11819;
-        Mon,  4 Jul 2022 08:43:01 -0700 (PDT)
-Received: by mail-qk1-f175.google.com with SMTP id v6so7029013qkh.2;
-        Mon, 04 Jul 2022 08:43:01 -0700 (PDT)
+        with ESMTP id S234646AbiGDPn5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 11:43:57 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AF725E;
+        Mon,  4 Jul 2022 08:43:19 -0700 (PDT)
+Received: by mail-qk1-f171.google.com with SMTP id f14so7057275qkm.0;
+        Mon, 04 Jul 2022 08:43:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EdaiclKxx119XPlQAdki18st+7KwCFV3e2UkWfqJmik=;
-        b=ULCRxBxTR0YhLRMagZ41pmPNn8aPsTPZd8K/LTO9jDTHlyH4UWJ//CNssmMjnamkTo
-         nIXZAnMU5LmAeYMmRsONfTKYth/6XKNPneB8oBj4gQsA5tCX5LQ3mtyAOnzd4c919frb
-         ob63eQhD2Hfp2XPNzstzNO5624D8zCI1qBD+BnMR0coGemSFIQbPezeke4/stcv4RCIR
-         GIwVBMp2I+siY77c4Y6+ZbXX4PDZk1hO/vWX0sHnadHH/xHs++SnbCWEzfhlnztTMci4
-         vSXJ281EvfXXZq9TNgEvkuYzxaHWNShfYxamhP7d0QwJZaCPxNdrGciDvDg29OJQK3p1
-         ZEHQ==
-X-Gm-Message-State: AJIora+PYhb2XgKKP1x+FH5hCEo6fW0ipzd0cdYDniKftulliLzLZE+g
-        v61Ibv98+afrvdjVRlbBOXqHNeO/TwrT9uel
-X-Google-Smtp-Source: AGRyM1u2GpCFM26OXHneElDcTXxqYUqnl4RitRU4uyteRBzfhiRgTrwEEmmdRAfXqI5NEyIDgQf59g==
-X-Received: by 2002:a05:620a:1a9b:b0:6a6:d3f6:5c97 with SMTP id bl27-20020a05620a1a9b00b006a6d3f65c97mr20443153qkb.225.1656949380648;
-        Mon, 04 Jul 2022 08:43:00 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id i13-20020a05622a08cd00b00317ccf991a3sm324760qte.19.2022.07.04.08.43.00
+        bh=sgOGZ7r9ugUMuJVM3W/Z/MJMP3kOnAsP3a9gfeiMHJQ=;
+        b=GaCV10JRnGJrYbqjktDwt+8+1OhFs7TvYM5W4+wc3fbF9riItA3KAsJWZdnZnvE21A
+         97Ar7tEK1zTKcbTGmuUsfOJfun0z9Peav6yHNwDPpq4nwQe3c2yWEM9w7OljWXC7tCfA
+         CBaiuQ7o9GQZnq0/c43wi653zSkUdnRDyXW+V4PKeXtKE5r894J8Ge2k35Yal1/W+vHE
+         uMCJbG5Rx2L3l/Jzs1F6tJi1RhSKfj7H32WGeLvILFxnHyzn+W8xtHnAmfOUKb/hF+QB
+         x0QDNnY7bsp4167ePZ8mnE4kxxY6cuxKJKJ7qp4FG/Z7J4TK5dYhksdu02o7dz3PNbR5
+         npuQ==
+X-Gm-Message-State: AJIora+KIs/yDRtvVMw3RFhhIvAVVssma0FEGv2l26NgJClSL18YNGuR
+        SFRGrGwp6/yBPQr4yqBoQeEo3M0DvoGd5M+e
+X-Google-Smtp-Source: AGRyM1uDRRl8pPPWPtSzViwMatIukbLJW0zBkA0UyvkL3Nq5FTnkUdiYFGMfmAGXdCV/mwMiNbNIEQ==
+X-Received: by 2002:a37:8904:0:b0:6af:199b:bcb with SMTP id l4-20020a378904000000b006af199b0bcbmr20699566qkd.462.1656949397907;
+        Mon, 04 Jul 2022 08:43:17 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id v12-20020a05620a0f0c00b006a73654c19bsm26900270qkl.23.2022.07.04.08.43.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Jul 2022 08:43:00 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id r3so17522473ybr.6;
-        Mon, 04 Jul 2022 08:43:00 -0700 (PDT)
-X-Received: by 2002:a25:2b48:0:b0:668:3b7d:326c with SMTP id
- r69-20020a252b48000000b006683b7d326cmr31234786ybr.380.1656949380149; Mon, 04
- Jul 2022 08:43:00 -0700 (PDT)
+        Mon, 04 Jul 2022 08:43:17 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 64so8222713ybt.12;
+        Mon, 04 Jul 2022 08:43:17 -0700 (PDT)
+X-Received: by 2002:a25:3288:0:b0:66c:8a91:74bb with SMTP id
+ y130-20020a253288000000b0066c8a9174bbmr31677301yby.89.1656949397367; Mon, 04
+ Jul 2022 08:43:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <87h741ty20.wl-kuninori.morimoto.gx@renesas.com> <878rpdtxz8.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <878rpdtxz8.wl-kuninori.morimoto.gx@renesas.com>
+References: <87h741ty20.wl-kuninori.morimoto.gx@renesas.com> <877d4xtxyv.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <877d4xtxyv.wl-kuninori.morimoto.gx@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 Jul 2022 17:42:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWixDrYNcxZvuG_T6o5Zdnh=GoJ9_OOfv=kEbRiAO=29A@mail.gmail.com>
-Message-ID: <CAMuHMdWixDrYNcxZvuG_T6o5Zdnh=GoJ9_OOfv=kEbRiAO=29A@mail.gmail.com>
-Subject: Re: [PATCH v4 06/23] pinctrl: renesas: r8a779g0: remove not used NOGP definitions
+Date:   Mon, 4 Jul 2022 17:43:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVDBMBUu8RRNWKN3ik0JV+j-b2VV1cKi1zW4dX8CPuQgw@mail.gmail.com>
+Message-ID: <CAMuHMdVDBMBUu8RRNWKN3ik0JV+j-b2VV1cKi1zW4dX8CPuQgw@mail.gmail.com>
+Subject: Re: [PATCH v4 07/23] pinctrl: renesas: r8a779g0: remove not used
+ IPxSRx definitions
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -68,8 +69,8 @@ On Fri, Jul 1, 2022 at 3:37 AM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 >
-> Current V4H PFC code has many NOGP definitions. But these are not used,
-> and it is different from original usage. This patch removes these.
+> Current V4H PFC code has many IPxSRx definitions with all 0.
+> But these have no meaning. This patch removes these.
 >
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
