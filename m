@@ -2,71 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B00E9566818
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 12:37:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 677785668E7
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 13:08:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231614AbiGEKhL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jul 2022 06:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59294 "EHLO
+        id S230389AbiGELIY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jul 2022 07:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230104AbiGEKhJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jul 2022 06:37:09 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED83B1D6
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jul 2022 03:37:08 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o8fuq-0001LC-19; Tue, 05 Jul 2022 12:36:24 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o8fue-004XxA-J7; Tue, 05 Jul 2022 12:36:16 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o8fuh-0038F6-8t; Tue, 05 Jul 2022 12:36:15 +0200
-Date:   Tue, 5 Jul 2022 12:36:15 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     Wolfram Sang <wsa@kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-integrity@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, chrome-platform@lists.linux.dev,
-        linux-rpi-kernel@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 6/6] i2c: Make remove callback return void
-Message-ID: <20220705103615.ceeq7rku53x743ps@pengutronix.de>
-References: <20220628140313.74984-1-u.kleine-koenig@pengutronix.de>
- <20220628140313.74984-7-u.kleine-koenig@pengutronix.de>
- <20220705120852.049dc235@endymion.delvare>
+        with ESMTP id S231318AbiGELIY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jul 2022 07:08:24 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23704B8F;
+        Tue,  5 Jul 2022 04:08:21 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id r14so11243305wrg.1;
+        Tue, 05 Jul 2022 04:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=references:from:to:cc:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=rGy19FOb3651PZBhMiKsi+mYXIqLyLsJIOOT5/FayXM=;
+        b=UNLzgpKPch+ns5dVbll7mhlTZcqr82OMlInIDOoCidkLtUTaZOf8/s0rso2o9wVPwN
+         1JnUzPFFR0N7Aa6LB+n0D+Is9iwVgZ+7BBbDAsdhO7thw+vWD1Z6Z10UYirhvX1HI+wY
+         zazp6/DppRHrmlE0hrFGgNt86cUtIikxYXdx3Z6gfJ1nH0+jNMcvt/BoLBIDORCG7stS
+         n3ZQ7yo5nRZhEKWcnxbnNAZ09gS12GxgV7kNtjtoYOzOylVqiRyWZ2QDIHLledmIgjAY
+         YjroEUF+h3ovwsTcmVteuNRXA96SCQAwdjXjSx+opZals5iEq+FyjtGU+WqX7Qm+LLhz
+         5LVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:references:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=rGy19FOb3651PZBhMiKsi+mYXIqLyLsJIOOT5/FayXM=;
+        b=OEsEmZEwu7DilnTGCWXpOy5iRjcHCgpwPwkaXiljGKXuC34apQ2QNxcs0qGh+RdO/W
+         gykhxgHhm39AFYgNzKhxKyrkqcXZF2YF/m2KY1/9ufiaPoyVqGJLHsPoxgaBcPSHtEhI
+         WrwDreXyLbOg798yRXcuNsq7qxicVS9jyZZrvjb0c+EX2Ird6HdJ3BinkB/OCZV5WmD2
+         0Irft9ceRs5RKl6Rz2NoSNnPjU/Ks64XZBPCSMaGE7nZMY2yHUQP1hVjWYDF1AHGHEeI
+         PSzIRlYqsJQCngfvAV+xF2iV7xC6GJwdXdM5YfoYJx9GOGRFql8atpLKolTaBy9EGuE+
+         WqgA==
+X-Gm-Message-State: AJIora/h8Q6wm1SQ9GRw3qpNDLYAQX9GJn+3olo3mM7SKpL0JICcFirQ
+        AqkmPC4vENLZQxn1FFRumlmW4cEVCuo=
+X-Google-Smtp-Source: AGRyM1vUBXmNptlwCc+RXJFUGSEoPrN81LdeONOmYqvrpw9l7WSz2W4/W9TPlvskKH7ZHuU7pv+s+A==
+X-Received: by 2002:a5d:6483:0:b0:21b:c708:ba3e with SMTP id o3-20020a5d6483000000b0021bc708ba3emr33705212wri.597.1657019300444;
+        Tue, 05 Jul 2022 04:08:20 -0700 (PDT)
+Received: from localhost (92.40.203.24.threembb.co.uk. [92.40.203.24])
+        by smtp.gmail.com with ESMTPSA id ay26-20020a5d6f1a000000b0021baf5e590dsm32671527wrb.71.2022.07.05.04.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Jul 2022 04:08:20 -0700 (PDT)
+References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
+ <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
+ <CACRpkdamknwRPGEeGGQGQPtKw=dPXa79GAJy+E6y+03NakN=cA@mail.gmail.com>
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     michael@walle.cc, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
+In-reply-to: <CACRpkdamknwRPGEeGGQGQPtKw=dPXa79GAJy+E6y+03NakN=cA@mail.gmail.com>
+Date:   Tue, 05 Jul 2022 12:09:28 +0100
+Message-ID: <GrX3yDSwNOGIBcWmKqusaJ3dDqNGLr3Y@localhost>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gut2agzhpaayxotv"
-Content-Disposition: inline
-In-Reply-To: <20220705120852.049dc235@endymion.delvare>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,89 +71,99 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---gut2agzhpaayxotv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Linus Walleij <linus.walleij@linaro.org> writes:
 
-On Tue, Jul 05, 2022 at 12:08:52PM +0200, Jean Delvare wrote:
-> On Tue, 28 Jun 2022 16:03:12 +0200, Uwe Kleine-K=F6nig wrote:
-> > From: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
-> >=20
-> > The value returned by an i2c driver's remove function is mostly ignored.
-> > (Only an error message is printed if the value is non-zero that the
-> > error is ignored.)
-> >=20
-> > So change the prototype of the remove function to return no value. This
-> > way driver authors are not tempted to assume that passing an error to
-> > the upper layer is a good idea. All drivers are adapted accordingly.
-> > There is no intended change of behaviour, all callbacks were prepared to
-> > return 0 before.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
->=20
-> That's a huge change for a relatively small benefit, but if this is
-> approved by the I2C core maintainer then fine with me. For:
+> On Sun, Jul 3, 2022 at 1:10 PM Aidan MacDonald
+> <aidanmacdonald.0x0@gmail.com> wrote:
+>
+>> Some GPIO chips require a custom to_irq() callback for mapping
+>> their IRQs, eg. because their interrupts come from a parent IRQ
+>> chip where the GPIO offset doesn't map 1-to-1 with hwirq number.
+>>
+>> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+>
+> What is the usecase for this?
 
-Agreed, it's huge. The benefit isn't really measureable, the motivation
-is to improve the situation for driver authors who with the change
-cannot make wrong assumptions about what to return in .remove(). During
-the preparation this uncovered a few bugs. See for example
-bbc126ae381cf0a27822c1f822d0aeed74cc40d9.
+This is a generic GPIO chip; so I guess any use case for ->to_irq()?
 
-> >  drivers/hwmon/adc128d818.c                                | 4 +---
-> >  drivers/hwmon/adt7470.c                                   | 3 +--
-> >  drivers/hwmon/asb100.c                                    | 6 ++----
-> >  drivers/hwmon/asc7621.c                                   | 4 +---
-> >  drivers/hwmon/dme1737.c                                   | 4 +---
-> >  drivers/hwmon/f75375s.c                                   | 5 ++---
-> >  drivers/hwmon/fschmd.c                                    | 6 ++----
-> >  drivers/hwmon/ftsteutates.c                               | 3 +--
-> >  drivers/hwmon/ina209.c                                    | 4 +---
-> >  drivers/hwmon/ina3221.c                                   | 4 +---
-> >  drivers/hwmon/jc42.c                                      | 3 +--
-> >  drivers/hwmon/mcp3021.c                                   | 4 +---
-> >  drivers/hwmon/occ/p8_i2c.c                                | 4 +---
-> >  drivers/hwmon/pcf8591.c                                   | 3 +--
-> >  drivers/hwmon/smm665.c                                    | 3 +--
-> >  drivers/hwmon/tps23861.c                                  | 4 +---
-> >  drivers/hwmon/w83781d.c                                   | 4 +---
-> >  drivers/hwmon/w83791d.c                                   | 6 ++----
-> >  drivers/hwmon/w83792d.c                                   | 6 ++----
-> >  drivers/hwmon/w83793.c                                    | 6 ++----
-> >  drivers/hwmon/w83795.c                                    | 4 +---
-> >  drivers/hwmon/w83l785ts.c                                 | 6 ++----
-> >  drivers/i2c/i2c-core-base.c                               | 6 +-----
-> >  drivers/i2c/i2c-slave-eeprom.c                            | 4 +---
-> >  drivers/i2c/i2c-slave-testunit.c                          | 3 +--
-> >  drivers/i2c/i2c-smbus.c                                   | 3 +--
-> >  drivers/i2c/muxes/i2c-mux-ltc4306.c                       | 4 +---
-> >  drivers/i2c/muxes/i2c-mux-pca9541.c                       | 3 +--
-> >  drivers/i2c/muxes/i2c-mux-pca954x.c                       | 3 +--
->=20
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+> Since GPIO chips and IRQ chips are orthogonal there is absolutely
+> no guarantee that ->to_irq() is called before a driver start to use
+> an IRQ from the irqchip side:
+>
+> (quoting Documentation/driver-api/gpio/driver.rst)
+>
+>  It is legal for any IRQ consumer to request an IRQ from any irqchip even if it
+>  is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
+>  irq_chip are orthogonal, and offering their services independent of each
+>  other.
+>
+>  gpiod_to_irq() is just a convenience function to figure out the IRQ for a
+>  certain GPIO line and should not be relied upon to have been called before
+>  the IRQ is used.
+>
+>  Always prepare the hardware and make it ready for action in respective
+>  callbacks from the GPIO and irq_chip APIs. Do not rely on gpiod_to_irq() having
+>  been called first.
+>
+> (end quote)
 
-Thanks
-Uwe
+That's fine, and I don't require ->to_irq() to be called. The IRQ chip
+in my case is provided by an MFD driver (axp20x to be specific) and it
+*does* work orthogonally to the GPIO driver -- the GPIO driver neither
+knows nor cares about the IRQ chip.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> Using ->to_irq() makes sense in a few cases such as when
+> a GPIO key that can also poll for state want to get hold of an
+> IRQ to react to edges.
 
---gut2agzhpaayxotv
-Content-Type: application/pgp-signature; name="signature.asc"
+This is my use case; specifically, GPIO keys and ASoC jack detection.
 
------BEGIN PGP SIGNATURE-----
+> Now: if a consumer requests IRQ nr 3 from your driver say from ACPI or
+> from a device tree, and as you say GPIOs and IRQs are not 1-to-1 mapped,
+> so IRQ nr 3 may be coming from GPIO 314, isn't this going to be really
+> messy for users? One local numberspace for GPIO and another local
+> numberspace for IRQs?
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLEFBwACgkQwfwUeK3K
-7AkavggAgLmynakXX/rOF4Jwy2OuBXH29kecKqPd6xj4yHsu3ggy8kd/hlU4jJib
-vV0H9ioq69hhMqjme5AHJJsueLFi/t/iwuQwuWUKluCBBlx0RXBsVx8qxV7A0uWa
-mdKU3ApPaN7y0cS1jccdN7ydsL3H2ayzIwfQuNqx1G3P/uqXfkusV0fjwQ/rQct3
-qs4t2/QiHUd0tStlGw2eSKxp1z5KRrDMstK17fiZSsw/SYoMyldV8Ame6+gaxx0X
-e93FqM5jj67ovjD3jJanfOwI5vesu4+szu4GK6vHRWvpsieHsSeyS+GNgfM5oLA7
-iguZ0rauzy0je3hrHuKgp1maJ59ibQ==
-=fYiS
------END PGP SIGNATURE-----
+Well, this is how MFD drivers with GPIO functionality often work, they
+aren't creating a special IRQ sub-domain for GPIOs and it doesn't seem
+to be a problem there. Most likely because those MFD devices are being
+used for GPIO keys or something similar.
 
---gut2agzhpaayxotv--
+Referring to the interrupt directly would make sense if the GPIO was
+wired to another chip's IRQ line, but that is unlikely to be the case
+for MFD devices because they're behind a slow bus.
+
+> To me it seems like the reasoning is something like
+>
+> - I only use GPIO line numbers like <&gpio 3>;
+> - Then I call gpiod_to_irq() on that number so I do not need to
+>   deal with looking up the IRQ some other way
+> - request_irq();
+> - Profit.
+>
+
+Yeah, that's accurate for my use case.
+
+> There is no guarantee that the API will be used like that at all, actually
+> it is uncommon.
+>
+> Yours,
+> Linus Walleij
+
+I'm not trying to argue that hierarchical IRQ domains are always a bad
+thing -- I'm just pointing out they're not always useful or necessary.
+All your points make sense when the GPIO controller is a large distinct
+block with potentially many GPIOs. When we're dealing with an MFD device
+with just a few GPIOs, maybe even just one, having a separate IRQ domain
+makes less sense; the added structure is generally not useful.
+
+Looking at other GPIO drivers using a hierarchical IRQ domain, they
+include their own IRQ chips with specialized ops. In my case I don't
+need any of that (and it'd be the same with other MFD devices) so it
+looks like using an IRQ domain would mean I'd have to create a fake
+IRQ chip and domain just to translate between two number spaces.
+
+Is that really better than simply using ->to_irq()?
+
+Regards,
+Aidan
