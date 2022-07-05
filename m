@@ -2,66 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00DD356654F
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 10:44:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE905665F2
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 11:18:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230226AbiGEIoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jul 2022 04:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49196 "EHLO
+        id S230136AbiGEJSj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Jul 2022 05:18:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229727AbiGEIop (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jul 2022 04:44:45 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9148A62F7
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jul 2022 01:44:44 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id 76so5017277ybd.0
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Jul 2022 01:44:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2nqg94hUDjf5VEy31mCYebRLyQWKOgGJpJElSft6kJk=;
-        b=oVdJFaZLt6iik+gYVPoDhE3E0/T/qMpp81wNqUxEUTmekiaqU9ynpZ0mDpnp2WD8cV
-         1XxBK2Tr40GZWioBld+i2V2kPexOZDXUouMVZ8Ta2CmvZ6vewWiUjnGTEovIbce1WKpR
-         nRulH13G0QJpSAV8IrG/vyGQL8xWb2qk/6ax3FTz3YAu5ngRNie2xDTdyn/3wo8LdI4n
-         4XMCNJA3C+XzvqbqeIqouGJjzVPFaCYGN7b0gBNrXW2dEfwZAh5IeAKq/qf7jDjP6DxQ
-         sJuscQX3dxs/MUyavOF2DrQo82K7EPd+OrV7QEVmkdbS/+lXRLFYmWGyqUhmElgGNChc
-         XHOg==
+        with ESMTP id S229512AbiGEJSi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jul 2022 05:18:38 -0400
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9928110C;
+        Tue,  5 Jul 2022 02:18:37 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-10bffc214ffso5617001fac.1;
+        Tue, 05 Jul 2022 02:18:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2nqg94hUDjf5VEy31mCYebRLyQWKOgGJpJElSft6kJk=;
-        b=w7TCj69XJxKggoMVRtufe70m55Wuep+eL02o3Swq6Z5rLBEjY4bqNCTp8/3LB0B3Db
-         507OC7LTMm/E98iMrIJwGlKW8EOOu+huLI1FbiTwr21QZJ9Rx3Biw5Gej17gD1hb4E9c
-         ZNGVDHP5YTvxNcefZ+izQCTMZaRtZlyQyC4Z+Z8YlwOm8C+6X+D/YZORUkt1xaGVo+SV
-         XlH0kiE6E8UwrQkJeI67sX/StnzbMTKq0ui5LmZ4HvsruG7r7IZ8kIXEfdeE1GaIz70b
-         Go1WJKNs8fsbQ5hHdFsTNrs+ps12jQtZQb9qnmNVGhzXG8rc+bLN23TRRQNNp9gwTRiZ
-         g8HA==
-X-Gm-Message-State: AJIora8wfz3NIKQ0BpP0ktr5WhfcKyKZjnGrglFXPSXBm74M/sGZOSZM
-        N2EedR57Cv95WEsb+k7fneTlk2c28gWmfqWkXI778A==
-X-Google-Smtp-Source: AGRyM1s3KR9timt0Nv154BBVjZtVup9YxTIdAuMg5rdc0L5tuSQBdw4qLUFuMUr86cFiFJimYkgebSO//Pbzv6BbJEU=
-X-Received: by 2002:a25:abce:0:b0:66e:38e8:d286 with SMTP id
- v72-20020a25abce000000b0066e38e8d286mr12961807ybi.447.1657010683689; Tue, 05
- Jul 2022 01:44:43 -0700 (PDT)
+        bh=8zMI7hf4Fvo1gks6+DJgLH8iax3WJOoRMgpJl0b4G5s=;
+        b=GReoJw8YWx8gBUWb3QJsnMh9IQoyJBpx0+Qt6TwuJOdkt6BVxl2571g41BP+9ej5K8
+         zR33myHI4bCD+wgQMIE+S1IN9UtGBJ1mFWEZ1Plej1qLHQvkhzyk1qE/5JYsroamqFgI
+         tEayFU6yMd5ahuZGMF6JvriHyogOie+J/dkC0ZRB5t86izfGUuJRKhExXUepculBzMr4
+         5rQ6t+XBhTVz0MMAV3F7+oUR5jI7WCDL7g4OykM7L3QWl6iMybzTw+aFMExYTXZa7m25
+         I5nPsdOKoIv8rqpUelZjNXHqGZXNKw0lwnHlRBuEVy55qVJk16fpw2vbwLyORGHMm7KX
+         KgzQ==
+X-Gm-Message-State: AJIora+GcZGVkrQYQNEDAZrEb0E+AMIg5ODXYfw5ii9IojFeejG8Ym7y
+        lhZVbdq+3AIhoHVKMLDmmoQthYZig93X9g==
+X-Google-Smtp-Source: AGRyM1uGa/3l1fVNu6+dlHIjmG/OIbyvoDSYlukAwjYeIGkNc7XVajBKi2XvW2WcMmbLHjgjWZi0PQ==
+X-Received: by 2002:a05:6870:5b91:b0:108:374a:96b0 with SMTP id em17-20020a0568705b9100b00108374a96b0mr19731432oab.126.1657012716872;
+        Tue, 05 Jul 2022 02:18:36 -0700 (PDT)
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com. [209.85.161.48])
+        by smtp.gmail.com with ESMTPSA id y27-20020a544d9b000000b0032b99637366sm11862308oix.25.2022.07.05.02.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Jul 2022 02:18:36 -0700 (PDT)
+Received: by mail-oo1-f48.google.com with SMTP id n11-20020a4ad12b000000b00425b01c3326so2271519oor.8;
+        Tue, 05 Jul 2022 02:18:36 -0700 (PDT)
+X-Received: by 2002:a81:9209:0:b0:31c:b1b7:b063 with SMTP id
+ j9-20020a819209000000b0031cb1b7b063mr6920267ywg.383.1657012293585; Tue, 05
+ Jul 2022 02:11:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <YrQP3OZbe8aCQxKU@atomide.com> <CAGETcx9aFBzMcuOiTAEy5SJyWw3UfajZ8DVQfW2DGmzzDabZVg@mail.gmail.com>
- <Yrlz/P6Un2fACG98@atomide.com> <CAGETcx8c+P0r6ARmhv+ERaz9zAGBOVJQu3bSDXELBycEGfkYQw@mail.gmail.com>
- <CAL_JsqJd3J6k6pRar7CkHVaaPbY7jqvzAePd8rVDisRV-dLLtg@mail.gmail.com>
- <CAGETcx9ZmeTyP1sJCFZ9pBbMyXeifQFohFvWN3aBPx0sSOJ2VA@mail.gmail.com>
- <Yr6HQOtS4ctUYm9m@atomide.com> <Yr6QUzdoFWv/eAI6@atomide.com>
- <CAGETcx-0bStPx8sF3BtcJFiu74NwiB0btTQ+xx_B=8B37TEb8w@mail.gmail.com>
- <CAGETcx-Yp2JKgCNfaGD0SzZg9F2Xnu8A3zXmV5=WX1hY7uR=0g@mail.gmail.com>
- <20220701150848.75eeprptmb5beip7@bogus> <CAGETcx_Y-9WBeRwf22v3NSuY8PGpPrTxtx_uBqe_Q7rD6mEQMQ@mail.gmail.com>
-In-Reply-To: <CAGETcx_Y-9WBeRwf22v3NSuY8PGpPrTxtx_uBqe_Q7rD6mEQMQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 5 Jul 2022 01:44:07 -0700
-Message-ID: <CAGETcx8hECfU9-rXpXnnB5m4HcTBJVKNuG77FjhpqRcBkOOotw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+References: <20220601070707.3946847-1-saravanak@google.com> <20220601070707.3946847-4-saravanak@google.com>
+In-Reply-To: <20220601070707.3946847-4-saravanak@google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 Jul 2022 11:11:21 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWo_wRwV-i_iyTxVnEsf3Th9GBAG+wxUQMQGnw1t2ijTg@mail.gmail.com>
+Message-ID: <CAMuHMdWo_wRwV-i_iyTxVnEsf3Th9GBAG+wxUQMQGnw1t2ijTg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/9] net: mdio: Delete usage of driver_deferred_probe_check_state()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Kevin Hilman <khilman@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
@@ -78,124 +67,97 @@ Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
         David Ahern <dsahern@kernel.org>,
         Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
         Linux IOMMU <iommu@lists.linux-foundation.org>,
         netdev <netdev@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 12:13 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Fri, Jul 1, 2022 at 8:08 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > Hi, Saravana,
-> >
-> > On Fri, Jul 01, 2022 at 01:26:12AM -0700, Saravana Kannan wrote:
-> >
-> > [...]
-> >
-> > > Can you check if this hack helps? If so, then I can think about
-> > > whether we can pick it up without breaking everything else. Copy-paste
-> > > tab mess up warning.
-> >
-> > Sorry for jumping in late and not even sure if this is right thread.
-> > I have not bisected anything yet, but I am seeing issues on my Juno R2
-> > with SCMI enabled power domains and Coresight AMBA devices.
-> >
-> > OF: amba_device_add() failed (-19) for /etf@20010000
-> > OF: amba_device_add() failed (-19) for /tpiu@20030000
-> > OF: amba_device_add() failed (-19) for /funnel@20040000
-> > OF: amba_device_add() failed (-19) for /etr@20070000
-> > OF: amba_device_add() failed (-19) for /stm@20100000
-> > OF: amba_device_add() failed (-19) for /replicator@20120000
-> > OF: amba_device_add() failed (-19) for /cpu-debug@22010000
-> > OF: amba_device_add() failed (-19) for /etm@22040000
-> > OF: amba_device_add() failed (-19) for /cti@22020000
-> > OF: amba_device_add() failed (-19) for /funnel@220c0000
-> > OF: amba_device_add() failed (-19) for /cpu-debug@22110000
-> > OF: amba_device_add() failed (-19) for /etm@22140000
-> > OF: amba_device_add() failed (-19) for /cti@22120000
-> > OF: amba_device_add() failed (-19) for /cpu-debug@23010000
-> > OF: amba_device_add() failed (-19) for /etm@23040000
-> > OF: amba_device_add() failed (-19) for /cti@23020000
-> > OF: amba_device_add() failed (-19) for /funnel@230c0000
-> > OF: amba_device_add() failed (-19) for /cpu-debug@23110000
-> > OF: amba_device_add() failed (-19) for /etm@23140000
-> > OF: amba_device_add() failed (-19) for /cti@23120000
-> > OF: amba_device_add() failed (-19) for /cpu-debug@23210000
-> > OF: amba_device_add() failed (-19) for /etm@23240000
-> > OF: amba_device_add() failed (-19) for /cti@23220000
-> > OF: amba_device_add() failed (-19) for /cpu-debug@23310000
-> > OF: amba_device_add() failed (-19) for /etm@23340000
-> > OF: amba_device_add() failed (-19) for /cti@23320000
-> > OF: amba_device_add() failed (-19) for /cti@20020000
-> > OF: amba_device_add() failed (-19) for /cti@20110000
-> > OF: amba_device_add() failed (-19) for /funnel@20130000
-> > OF: amba_device_add() failed (-19) for /etf@20140000
-> > OF: amba_device_add() failed (-19) for /funnel@20150000
-> > OF: amba_device_add() failed (-19) for /cti@20160000
-> >
-> > These are working fine with deferred probe in the mainline.
-> > I tried the hack you have suggested here(rather Tony's version),
->
-> Thanks for trying that.
->
-> > also
-> > tried with fw_devlink=0 and fw_devlink=1
->
-> 0 and 1 aren't valid input to fw_devlink. But yeah, I don't expect
-> disabling it to make anything better.
->
-> > && fw_devlink.strict=0
-> > No change in the behaviour.
-> >
-> > The DTS are in arch/arm64/boot/dts/arm/juno-*-scmi.dts and there
-> > coresight devices are mostly in juno-cs-r1r2.dtsi
->
-> Thanks
->
-> > Let me know if there is anything obvious or you want me to bisect which
-> > means I need more time. I can do that next week.
->
-> I'll let you know once I poke at the DTS. We need to figure out why
-> fw_devlink wasn't blocking these from getting to the error (same as in
-> Tony's case). But since these are amba devices, I think I have some
-> guesses.
->
-> This is an old series that had some issues in some cases and I haven't
-> gotten around to looking at it. You can give that a shot if you can
-> apply it to a recent tree.
-> https://lore.kernel.org/lkml/20210304195101.3843496-1-saravanak@google.com/
+Hi Saravana,
 
-I rebased it to driver-core-next and tested the patch  (for
-correctness, not with your issue though). I'm fairly sure it should
-help with your issue. Can you give it a shot please?
-
-https://lore.kernel.org/lkml/20220705083934.3974140-1-saravanak@google.com/T/#u
-
--Saravana
-
+On Wed, Jun 1, 2022 at 2:44 PM Saravana Kannan <saravanak@google.com> wrote:
+> Now that fw_devlink=on by default and fw_devlink supports interrupt
+> properties, the execution will never get to the point where
+> driver_deferred_probe_check_state() is called before the supplier has
+> probed successfully or before deferred probe timeout has expired.
 >
-> After looking at that old patch again, I think I know what's going on.
-> For normal devices, the pm domain attach happens AFTER the device is
-> added and fw_devlink has had a chance to set up device links. And if
-> the suppliers aren't ready, really_probe() won't get as far as
-> dev_pm_domain_attach(). But for amba, the clock and pm domain
-> suppliers are "grabbed" before adding the device.
+> So, delete the call and replace it with -ENODEV.
 >
-> So with that old patch + always returning -EPROBE_DEFER in
-> amba_device_add() if amba_read_periphid() fails should fix your issue.
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+
+Thanks for your patch, which is now commit f8217275b57aa48d ("net:
+mdio: Delete usage of driver_deferred_probe_check_state()") in
+driver-core/driver-core-next.
+
+Seems like I missed something when providing my T-b for this series,
+sorry for that.
+
+arch/arm/boot/dts/r8a7791-koelsch.dts has:
+
+    &ether {
+            pinctrl-0 = <&ether_pins>, <&phy1_pins>;
+            pinctrl-names = "default";
+
+            phy-handle = <&phy1>;
+            renesas,ether-link-active-low;
+            status = "okay";
+
+            phy1: ethernet-phy@1 {
+                    compatible = "ethernet-phy-id0022.1537",
+                                 "ethernet-phy-ieee802.3-c22";
+                    reg = <1>;
+                    interrupt-parent = <&irqc0>;
+                    interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+                    micrel,led-mode = <1>;
+                    reset-gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
+            };
+    };
+
+Despite the interrupts property, &ether is now probed before irqc0
+(interrupt-controller@e61c0000 in arch/arm/boot/dts/r8a7791.dtsi),
+causing the PHY not finding its interrupt, and resorting to polling:
+
+    -Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY
+driver (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=185)
+    +Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY
+driver (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=POLL)
+
+Reverting this commit, and commit 9cbffc7a59561be9 ("driver core:
+Delete driver_deferred_probe_check_state()") fixes that.
+
+> --- a/drivers/net/mdio/fwnode_mdio.c
+> +++ b/drivers/net/mdio/fwnode_mdio.c
+> @@ -47,9 +47,7 @@ int fwnode_mdiobus_phy_device_register(struct mii_bus *mdio,
+>          * just fall back to poll mode
+>          */
+>         if (rc == -EPROBE_DEFER)
+> -               rc = driver_deferred_probe_check_state(&phy->mdio.dev);
+> -       if (rc == -EPROBE_DEFER)
+> -               return rc;
+> +               rc = -ENODEV;
 >
-> -Saravana
+>         if (rc > 0) {
+>                 phy->irq = rc;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
