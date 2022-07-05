@@ -2,156 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7696C565FC7
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 01:56:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B001566052
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 02:58:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbiGDX4C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Jul 2022 19:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41148 "EHLO
+        id S230170AbiGEAkI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Jul 2022 20:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbiGDX4C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 19:56:02 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D577650;
-        Mon,  4 Jul 2022 16:56:01 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id B8C1D5C00DD;
-        Mon,  4 Jul 2022 19:56:00 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 04 Jul 2022 19:56:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1656978960; x=
-        1657065360; bh=VjjCNK/QUJQgIUTHTpMOStvQY2cL+8rDq3LhVbeEC1Q=; b=h
-        ifwV1yYFNvbZC/udgowFCmTOSmQ/qcy2IOL1cTA8TMdVqjZhB9dnAHZSMTvDZej/
-        7f8JVANCeh2WkC4Gx0lbISJquIb/EYAsH7G+w8Avw7tNbG5EEsbqIfWOoo/Kl1Sl
-        zDDUUR3a1495DQ8KQ1ZqlMKQbCX4XRvdu1sQ02OsaubVt/TKq0bSXc82t7MwFmgf
-        8wVwLk/tjIlZh17NInWC6o7T1WLeQqmpI7JPhjqQ2Of0VhpP22i1VHBakOFpl8n+
-        PFHBG6oyN6QnLzMkGMKeedBjw11r1R82EvLyFHXFGgxTaiTeMfGDWu5oIRyEh1F6
-        nkjqcLWNH15X0/5FF43Jg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1656978960; x=
-        1657065360; bh=VjjCNK/QUJQgIUTHTpMOStvQY2cL+8rDq3LhVbeEC1Q=; b=R
-        TfYJfkvawaWXek+h6Zjyz4SYSCyrOlatEV2aVVi3K9KE/5JO2sTjVWLnHJse8zGu
-        y1vw8jIt8HuiyyAsxt4HDpGiZGaBFE8H0KSxkyzIP0Uu/hpLQx29qo3hqXFQhCJy
-        oIm3OoqjzqREaxG73SbcUYjbl1XSOKzuzKy9dv9/OGLu5CR0HYWK/o4AZQylbbeH
-        m24CjKkXDGhEyDulJjs9krZlEUhSOj9D3WO4GVPqYr3+AscUSw7sDSIafmTWeHfy
-        OVlPrKR2kGddRUQdIR9In8KqUNbrghtgCDLsXi4zpyqVknimZCYWIpg+vBR+6IKb
-        ZPZjr30lTUAXID68e5X7g==
-X-ME-Sender: <xms:EH7DYvWbRUH8tTcu-a_7OhCENgU3bg5LBZp7rPwzF0wBSs0NvE0VUw>
-    <xme:EH7DYnmhk9gDVCrR66Keb9k5qquPEyPP3T-UECCulDX04sICbDqKsqLm6nzZ-STZQ
-    _bkSdwEPJJaJnGjVg>
-X-ME-Received: <xmr:EH7DYrbO2prypG0RvHH_4a_vxgxuvB5Ybboo2nqO47ljSDtzvvJ3sHVr3i5RkhVrLo_RwYwWn1FJn1bBuTiyI7ml1ToH9J-JTLxkIR6iu1JVcWcJ6uaAsGbOLg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudeitddgvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
-    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpefftdevkedvgeekueeutefgteffieelvedukeeuhfehledvhfei
-    tdehudfhudehhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:EH7DYqXzjC3S-vANAIgpERQCjTt-QuPff7X3R7z6yWIwbREF4ntQvg>
-    <xmx:EH7DYpm_SfYE_oP0QSRD5dBf_9rtcOLBa6r2GgL6ZaYQUeMNSDhpNA>
-    <xmx:EH7DYnemfO8_xw_clYBvmvIUnIyLIyz8023rquBwyAzkxzUJCz5JYw>
-    <xmx:EH7DYqhHig5EpJ-EFrQn9UYxW4YZDZe8m3AQ5iRs1_5IN545ezH0Zw>
-Feedback-ID: i0ad843c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 4 Jul 2022 19:55:59 -0400 (EDT)
-Subject: Re: [PATCH v12 2/7] dt-bindings: pinctrl: sunxi: Make interrupts
- optional
-To:     Andre Przywara <andre.przywara@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229734AbiGEAkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Jul 2022 20:40:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B9892BEA;
+        Mon,  4 Jul 2022 17:40:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 25C4E616ED;
+        Tue,  5 Jul 2022 00:40:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD839C3411E;
+        Tue,  5 Jul 2022 00:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656981606;
+        bh=SP8Jaem1tPIKC61mxYfgYhbEnJ0OUuIXySTXu0B8/J8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IQ1EZQO59cjvnku9rPPMRRLGYX9sCwIw7GGDkayK1eKN9UzbL6bRbTbzz8DVm8fWZ
+         n1NDsUpT7LhXoKmX/ZTm8BDcsriryl3BG7moNtSmaPzmjytHc5GyDqxLQW2GWqXKd2
+         U1jiha42NBbsbbmdINYFFRlHogMTxwbJfxODx5IStmMQ4Qzvj9fSvDbl7h5cb3RpmK
+         FZgMbIV1GHxjpUFTvqUsiaQ0C/skH46cF2vN3/22l3wcoF8JdhgSDI0bFz/pGRee4C
+         WMAofjVrFJDp8pbwJB8H8dxlEwrhYIXTm4Xfy5giTfCuVifST8kNCUgbrnuxTGpqH5
+         nkM1TnJyy8BLA==
+Date:   Tue, 5 Jul 2022 08:39:55 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20220701112453.2310722-1-andre.przywara@arm.com>
- <20220701112453.2310722-3-andre.przywara@arm.com>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <74a5466c-a84b-57fa-79ad-96155c1324a0@sholland.org>
-Date:   Mon, 4 Jul 2022 18:55:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abelvesa@kernel.org>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Liu Ying <victor.liu@nxp.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Ming Qian <ming.qian@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 00/14] dt-bindings: arm: freescale: Switch fsl,scu
+ from txt to yaml
+Message-ID: <20220705003955.GO819983@dragon>
+References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
+ <0e515289-9d3c-9c61-950d-09c14b33c8c2@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20220701112453.2310722-3-andre.przywara@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e515289-9d3c-9c61-950d-09c14b33c8c2@linaro.org>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/1/22 6:24 AM, Andre Przywara wrote:
-> The R_PIO pinctrl device on the Allwinner H616 SoC does not have an
-> interrupt (it features only two pins).
-> However the binding requires at least naming one upstream interrupt,
-> plus the #interrupt-cells and interrupt-controller properties.
+On Wed, Jun 29, 2022 at 07:51:06PM +0200, Krzysztof Kozlowski wrote:
+> On 29/06/2022 18:44, Viorel Suman (OSS) wrote:
+> > From: Viorel Suman <viorel.suman@nxp.com>
+> > 
+> > Changes since v5: https://lore.kernel.org/lkml/20220616164303.790379-1-viorel.suman@nxp.com/
+> >   * Updated according to Krzysztof Kozlowski comments
+> > 
 > 
-> Drop the unconditional requirement for the interrupt properties, and
-> make them dependent on being not this particular pinctrl device.
+> My comment a about removal of each part of TXT bindings in each patch,
+> was not addressed. Your approach makes it more difficult to read patches
+> and makes sense only if each subsystem maintainer will take the patches
+> (separately). If the patches are going through one tree, then better to
+> remove the TXT gradually.
 > 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> So the question - who is going to take each of the patches?
 
-Acked-by: Samuel Holland <samuel@sholland.org>
+I can take the series through IMX tree if that makes the most sense.
 
-> ---
->  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml      | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-> index bfce850c20351..0bd903954195b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-> @@ -133,14 +133,11 @@ patternProperties:
->  
->  required:
->    - "#gpio-cells"
-> -  - "#interrupt-cells"
->    - compatible
->    - reg
-> -  - interrupts
->    - clocks
->    - clock-names
->    - gpio-controller
-> -  - interrupt-controller
->  
->  allOf:
->    # FIXME: We should have the pin bank supplies here, but not a lot of
-> @@ -148,6 +145,18 @@ allOf:
->    # warnings.
->  
->    - $ref: "pinctrl.yaml#"
-> +  - if:
-> +      not:
-> +        properties:
-> +          compatible:
-> +            enum:
-> +              - allwinner,sun50i-h616-r-pinctrl
-> +    then:
-
-Nit: all of the existing ifs and thens have blank lines between them.
-
-> +      required:
-> +        - "#interrupt-cells"
-> +        - interrupts
-> +        - interrupt-controller
-> +
->    - if:
->        properties:
->          compatible:
-> 
-
+Shawn
