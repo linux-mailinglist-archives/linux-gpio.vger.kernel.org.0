@@ -2,97 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE81156768D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Jul 2022 20:34:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA8B1568573
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 12:25:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230143AbiGESeO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Jul 2022 14:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
+        id S232484AbiGFKYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jul 2022 06:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbiGESeN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Jul 2022 14:34:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAC71ADB5;
-        Tue,  5 Jul 2022 11:34:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 05C0FB818C2;
-        Tue,  5 Jul 2022 18:34:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F60C341D1;
-        Tue,  5 Jul 2022 18:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657046049;
-        bh=kIyot3zMyMDO8B1YVidHQ7qgbvG3Xa6UO0gOQL2C6Jg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JsU79BmfynIReY3T89cOgEH/6tFNiBBDFqKBs8oXNQm6/+g5IkfnSz6lnxKwnFqNS
-         1j47RNad0YhesCc/SIiouNRpyt21tXxp+7UujB4zP8xtmbwRtNJauDkGspmgUyDhgl
-         fn9thf0FJV9aayLYjrKzsPTW4fWtqpM+dZ3RveMpUH7WbnRHfbzb18F0miRMtdvQQg
-         STNIB53IAwMygQuY6izE+2HL9mzZsy2/DnNlSXpayAhlmHiEb92zuAdqA/GH/jWeIU
-         Jv7618fva2U+QU/c6uDzeyF1fZYZvuxpgXK3qTZ+hcZqIl+t9mRe/sRlTrt7BFed4l
-         OpSgj1Sj26zAw==
-Received: by mail-vs1-f49.google.com with SMTP id h7so12788288vsr.11;
-        Tue, 05 Jul 2022 11:34:09 -0700 (PDT)
-X-Gm-Message-State: AJIora9OmprPX2zAR5He1YiIY879nxCd15nKzisOw36K+FdtQEVDd53T
-        u2U/rkYqhJcRMauGSRv2NZ54vf6RdkWSuCmyBQ==
-X-Google-Smtp-Source: AGRyM1uIXQO86wcgJn/AvE4+AWlqrvIba5lSJyE0SPqE7mHdOeHYb1wL3dEnTAICHhhvz3Q4xUajqxFIJ9dC4e0p4xY=
-X-Received: by 2002:a67:d194:0:b0:357:8ea:5554 with SMTP id
- w20-20020a67d194000000b0035708ea5554mr562557vsi.0.1657046048517; Tue, 05 Jul
- 2022 11:34:08 -0700 (PDT)
+        with ESMTP id S232386AbiGFKYf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 06:24:35 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A4E023BFC;
+        Wed,  6 Jul 2022 03:24:34 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id z12so11778001wrq.7;
+        Wed, 06 Jul 2022 03:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=references:from:to:cc:subject:date:in-reply-to:message-id
+         :mime-version;
+        bh=gAAFLxTVBbke7idk+TJqhtAe46jVc+eusFaZ2+NGDNc=;
+        b=T01qQGVCFpQvsrYLXbIulhJcGg0HUmQARvvOBgipM53C+Kp8/JIW6EVZQb5v0UNLwb
+         ml0P7sxKFGboDz7Kyc82mBHUJNEO0yRFzMpFmbK4JRLCoyqkfBGu/dlbT2ajCZH8/rag
+         fEVKcZ2ywOjzx+JWnLYUwVSpbUU4PWhsNQzBTji78zfstk9Yu3qAhwlP6Kf0vvPvkd2b
+         PP2nxprfreGNNm0gX45OMoKjagQ6gYAa1hM2XRfJomg8WJjQmTsdOWUbhDH+1SGW2013
+         GeHT4vlC7fliPHYqfW+hPr4R0eArQu9KrGpNAZm9xnx+v/SIAhMOH/Wjyabf+lLJm7iW
+         gzkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version;
+        bh=gAAFLxTVBbke7idk+TJqhtAe46jVc+eusFaZ2+NGDNc=;
+        b=kk9CrQ79OGzuPlAzaQ37UxR0TJLH4d+7ndJqi7cuBEEFOpGi57TVrGV2KSP8UeGT5k
+         mXzntGrptd7iz+IVGwdglKH9ZXmoBRD8Q/ytqaELjRMtdnKLjw8ZKKMhgc3lX/DyRq0K
+         q/rJMgfec5NrUowTy3TfBZQo+19OHZs50KbtHJshivTmNd+yXvug3VAKQ7n58GzfoKlf
+         Ph14ZjTM/P2/ZNGWO0BjI9mJdG9aSB+5Rni9r+1YY0Ws66bgECfv27QXNWjNQjJHI/6i
+         Qxu+HfYYoyVy0rIYlwNNSuPaS7N9BjpX5U6JG6GcLUWnwUBWlDRO7i8XZk3EQOED9Kya
+         WKtA==
+X-Gm-Message-State: AJIora9m8dwFSvgPlgsEk+USgQ6Z198joG6WXwVFwqBKiaDYBSP+o6+0
+        S+WC1izObcHnMBmG/6E/myc=
+X-Google-Smtp-Source: AGRyM1vU3MJHoH322VL/VZ3kLVOdxQZ29efLU3+xNpoRRoRaYcb0Iv3nb/x5LHrg9UdFMQ7tbtgPbw==
+X-Received: by 2002:adf:d1ea:0:b0:21b:a6cb:fcf6 with SMTP id g10-20020adfd1ea000000b0021ba6cbfcf6mr36825810wrd.477.1657103072945;
+        Wed, 06 Jul 2022 03:24:32 -0700 (PDT)
+Received: from localhost (92.40.202.163.threembb.co.uk. [92.40.202.163])
+        by smtp.gmail.com with ESMTPSA id bq25-20020a5d5a19000000b0021d6d74a0ecsm6931272wrb.96.2022.07.06.03.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Jul 2022 03:24:32 -0700 (PDT)
+References: <20220629143046.213584-1-aidanmacdonald.0x0@gmail.com>
+ <20220629143046.213584-7-aidanmacdonald.0x0@gmail.com>
+ <YsQwHiVdooN2TWbh@google.com> <MiQPswErEouy9b8OQ6k5WeQxH3ENw94W@localhost>
+ <YsRM0O3MQmBO5WXK@google.com>
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, wens@csie.org, jic23@kernel.org,
+        sre@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        lars@metafoo.de, quic_gurus@quicinc.com,
+        sebastian.reichel@collabora.com, andy.shevchenko@gmail.com,
+        michael@walle.cc, rdunlap@infradead.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 06/15] mfd: axp20x: Add support for AXP192
+Date:   Tue, 05 Jul 2022 20:42:43 +0100
+In-reply-to: <YsRM0O3MQmBO5WXK@google.com>
+Message-ID: <VHU3uih5i4iLk4b8WSSqo4p8Dc5tMaDN@localhost>
 MIME-Version: 1.0
-References: <20220629164414.301813-1-viorel.suman@oss.nxp.com>
- <20220629164414.301813-3-viorel.suman@oss.nxp.com> <f0634bf0-77e9-939e-693f-31d50af4768c@linaro.org>
- <20220630123754.esbuac4pfktlseh2@fsr-ub1664-116> <78faf75d-80b7-7a0e-e306-6351dbe5133c@linaro.org>
-In-Reply-To: <78faf75d-80b7-7a0e-e306-6351dbe5133c@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 5 Jul 2022 12:33:57 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+0GJBTVkS12XTvUKphMH4XuQ5AS1-QHMw6ULgpWbZBQQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+0GJBTVkS12XTvUKphMH4XuQ5AS1-QHMw6ULgpWbZBQQ@mail.gmail.com>
-Subject: Re: [PATCH v6 02/14] dt-bindings: pinctrl: imx: Add fsl,scu-iomux
- yaml file
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abelvesa@kernel.org>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Liu Ying <victor.liu@nxp.com>,
-        Mirela Rabulea <mirela.rabulea@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Ming Qian <ming.qian@nxp.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -100,63 +79,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 12:33 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+
+Lee Jones <lee.jones@linaro.org> writes:
+
+> On Tue, 05 Jul 2022, Aidan MacDonald wrote:
 >
-> On 30/06/2022 14:37, Viorel Suman (OSS) wrote:
-> > On 22-06-29 19:53:51, Krzysztof Kozlowski wrote:
-> >> On 29/06/2022 18:44, Viorel Suman (OSS) wrote:
-> >>> From: Abel Vesa <abel.vesa@nxp.com>
-> >>>
-> >>> In order to replace the fsl,scu txt file from bindings/arm/freescale,
-> >>> we need to split it between the right subsystems. This patch documents
-> >>> separately the 'iomux/pinctrl' child node of the SCU main node.
-> >>>
-> >>> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> >>> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> >>> ---
-> >>>  .../bindings/pinctrl/fsl,scu-pinctrl.yaml     | 68 +++++++++++++++++++
-> >>>  1 file changed, 68 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
-> >>> new file mode 100644
-> >>> index 000000000000..76a2e7b28172
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
-> > [...]
-> >>> +      fsl,pins:
-> >>> +        description:
-> >>> +          each entry consists of 3 integers and represents the pin ID, the mux value
-> >>> +          and config setting for the pin. The first 2 integers - pin_id and mux_val - are
-> >>> +          specified using a PIN_FUNC_ID macro, which can be found in
-> >>> +          <include/dt-bindings/pinctrl/pads-imx8qxp.h>. The last integer CONFIG is
-> >>> +          the pad setting value like pull-up on this pin. Please refer to the
-> >>> +          appropriate i.MX8 Reference Manual for detailed CONFIG settings.
-> >>> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> >>
-> >> Look at fsl,imx8mq-pinctrl.yaml. Each item is described (items under items).
-> >
-> > Added them initially, but later dropped because of some logs like
-> > "pinctrl@xxxxxxx: usdhc1grp:fsl,pins:0: [...] is too long" shown by
-> > "make dt_binding_check dtbs_check DT_SCHEMA_FILES=[...]/fsl,scu-pinctrl.yaml"
-> >
-> > Same logs are shown for "fsl,imx8mq-pinctrl.yaml". Will add the items description in the next
-> > version.
-> >
+>> 
+>> Lee Jones <lee.jones@linaro.org> writes:
+>> 
+>> > On Wed, 29 Jun 2022, Aidan MacDonald wrote:
+>> >
+>> >> The AXP192 PMIC is similar to the AXP202/AXP209, but with different
+>> >> regulators, additional GPIOs, and a different IRQ register layout.
+>> >> 
+>> >> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+>> >> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+>> >> ---
+>> >>  drivers/mfd/axp20x-i2c.c   |   2 +
+>> >>  drivers/mfd/axp20x.c       | 152 +++++++++++++++++++++++++++++++++++++
+>> >>  include/linux/mfd/axp20x.h |  84 ++++++++++++++++++++
+>> >>  3 files changed, 238 insertions(+)
+>> >> [...]
+>> >> +static const struct regmap_irq_chip axp192_regmap_irq_chip = {
+>> >> +	.name			= "axp192_irq_chip",
+>> >> +	.status_base		= AXP192_IRQ1_STATE,
+>> >> +	.ack_base		= AXP192_IRQ1_STATE,
+>> >> +	.unmask_base		= AXP192_IRQ1_EN,
+>> >> +	.init_ack_masked	= true,
+>> >> +	.irqs			= axp192_regmap_irqs,
+>> >> +	.num_irqs		= ARRAY_SIZE(axp192_regmap_irqs),
+>> >> +	.num_regs		= 5,
+>> >> +	.get_irq_reg		= axp192_get_irq_reg,
+>> >
+>> > Fix me:
+>> >
+>> > drivers/mfd/axp20x.c:634:35: error: initialization of 'unsigned int (*)(struct regmap_irq_chip_data *, unsigned int,  int)' from incompatible pointer type 'int (*)(unsigned int,  int)' [-Werror=incompatible-pointer-types]
+>> >   634 |         .get_irq_reg            = axp192_get_irq_reg,
+>> >       |                                   ^~~~~~~~~~~~~~~~~~
+>> > drivers/mfd/axp20x.c:634:35: note: (near initialization for 'axp192_regmap_irq_chip.get_irq_reg')
+>> >
+>> 
+>> This doesn't need fixing. You are missing the prerequisite patches.
+>> 
+>> -- snip --
+>> Changes in v4:
+>> * Drop regmap-irq patches and rebase on top of the regmap-irq
+>>   refactoring series[1], which implements the same functionality.
+>> 
+>> [1]: https://lore.kernel.org/lkml/20220623211420.918875-1-aidanmacdonald.0x0@gmail.com/
+>> -- snip --
 >
-> The fsl,imx8mq-pinctrl.yaml should be correct and I don't see the reason
-> why dtschema complains in some of the entries. It's like one define was
-> not correct... I'll take a look at this later, but anyway keep the same
-> as fsl,imx8mq-pinctrl.yaml even if it complains.
+>> Perhaps I wasn't clear enough that it was a dependency, sorry for
+>> any confusion.
+>
+> Any idea why the regmap-irq patches weren't in -next?
 
-The issue is that 'fsl,pins' is problematic for the new dtb decoding
-because it has a variable definition in terms of matrix bounds as each
-i.MX platform has its own length (typ 5 or 6). The tools try to work
-around it by figuring out which size fits. That works until there are
-multiple answers which seems to be what's happening here.
+Uh, sorry, I didn't pay attention and assumed this was the same error
+the kernel test robot was reporting against mfd-next (missing field).
+But the field does exist; this error is a type mismatch:
 
-The easiest solution I think is to just strip the constraints in
-occurances of this property. I'll look into that.
+  initialization of 'unsigned int (*)(struct regmap_irq_chip_data *,
+                                      unsigned int,  int)'
+  from incompatible pointer type 'int (*)(unsigned int,  int)'
 
-Rob
+So the regmap-irq patches were in -next, the problem is you were
+using the old patch from v3.
+
+FYI, I just sent a v5 which drops the GPIO driver, so please use
+the patches from that version. Thanks.
+
+Regards,
+Aidan
