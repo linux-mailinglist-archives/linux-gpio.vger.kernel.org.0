@@ -2,97 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2280A5688AF
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 14:51:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 566545688B5
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 14:52:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230233AbiGFMvT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jul 2022 08:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53114 "EHLO
+        id S233710AbiGFMvz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jul 2022 08:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233048AbiGFMvS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 08:51:18 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E18B1836D
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 05:51:18 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-31c8a1e9e33so86521037b3.5
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Jul 2022 05:51:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hIhZgzY+R7Szf1VHUaAXx2kwOo3r5qSKv01pfqvbTrM=;
-        b=Wn9p1QCJY8wiVyZIQTTF6MpnoYsw2c/7oCLi54SPOkaDoPBFz5Bowau6HJsE681Sgm
-         5GKtvX2bPAHLDRR+Va8GF8srUAfP02J1oClcvIVRf5Mo6iGoIKifbGZNuSHu0x8DgHD+
-         85k2GZ8VQlU1UEKBsds/9jWU1NElikJFIHs3/BqntvwpipLn5tB2YFfd8sCWm/2b+qcf
-         6/j4k92BUWgun7/fPUEsHqM7YQa/6UBDZctRRYp+b90JtQdSRz8PN14ORl+Hlk0S27Qr
-         F7zuFSoqD+k/ywrXcvXmvNx1wQgv3hanEdvNrQ+0gfrUxdBGN/e0rK2nBAnd5txUHgxP
-         IsVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hIhZgzY+R7Szf1VHUaAXx2kwOo3r5qSKv01pfqvbTrM=;
-        b=eeI1dK7ptVZmqIaPvWJQjAqXLSpPGDYX/739RxbVFNAZa+GJG9h1mjpn4qVYgU8yuo
-         ANRzPYOrLYN0BVG6LP+zpNnVMV7HtK0gvPOX8Bpz+EBKFEzGKWaKdDS082d4IrCqBnxf
-         o4V64a+emJ9Zj0Oy1lw9AU7r8rdPUZJZ9ZnBQ14M4qqjED4ysqf2bPP7NMgqai1oHvMN
-         rZcWZOzJvpWndLOc/Rin2FxNyh4g+r0Ya1nQDQIFWZ5B0DBLjs/JRBNN36SWPjWl5oh7
-         gB8U/MENi8X0mxPB110/o/MQCnHwlDWz5Ht+DNsHb2cdVfvRPtogeUukNYuQl2J5QEpo
-         vPVg==
-X-Gm-Message-State: AJIora9cuyc+W4bGR1KZvHVREAJXcd6h5FQbvrmVHcnLU6vGYKOSB2Wz
-        qAQiGMHok+nl6MJ02H8rMBQejs2+QvxG7H/N7j4lVg==
-X-Google-Smtp-Source: AGRyM1tEZbfGk56rVU2h9fMy0NUrOYpcQOprH6kTMOB9yU5r+JXBjKglcUudZ/ZVq5fu1s8ldo5O0Bgxnmifrt5gf9I=
-X-Received: by 2002:a0d:cbd8:0:b0:31c:7dc5:120c with SMTP id
- n207-20020a0dcbd8000000b0031c7dc5120cmr26625968ywd.448.1657111877315; Wed, 06
- Jul 2022 05:51:17 -0700 (PDT)
+        with ESMTP id S232771AbiGFMvy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 08:51:54 -0400
+Received: from m1564.mail.126.com (m1564.mail.126.com [220.181.15.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8DDFD2125E
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 05:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=BTPe1
+        Tia7gwG3s/PaBwOv8zi5Mq1d6gWt9si7zhNr/4=; b=P+Yej7RLVXvioaPNAj7mO
+        JbVmVzPAVN+dhUZDLqMMK5AozVi/KPerp2vUQL2uoQpz1DCFw4Jo1J29qWdk46yT
+        2MeJ32FTRi3CG/EULEkCFiTmf7ybeoTdcfnQ5AcBhdolrUTApP/1Af6cdsDo1jzt
+        jHLG7pGIkEaVJjHWup5gLE=
+Received: from windhl$126.com ( [124.16.139.61] ) by ajax-webmail-wmsvr64
+ (Coremail) ; Wed, 6 Jul 2022 20:51:36 +0800 (CST)
+X-Originating-IP: [124.16.139.61]
+Date:   Wed, 6 Jul 2022 20:51:36 +0800 (CST)
+From:   "Liang He" <windhl@126.com>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        =?GBK?Q?Heiko_St=A8=B9bner?= <heiko@sntech.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re:Re: [PATCH] gpio: rockchip: Fix missing of_node_put() in
+ rockchip_gpio_probe() and rockchip_gpiolib_register()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20220113(9671e152)
+ Copyright (c) 2002-2022 www.mailtech.cn 126com
+In-Reply-To: <CAHp75VdWBx2hMyu6902exeist24cm5NnO3z9aKjhV=H5tb8y9g@mail.gmail.com>
+References: <20220706060222.302051-1-windhl@126.com>
+ <CAHp75VdWBx2hMyu6902exeist24cm5NnO3z9aKjhV=H5tb8y9g@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-References: <20220613031854.1571357-1-ping.bai@nxp.com> <CACRpkdZSUYpMeod7kmF1QgQ9YjzzbVnoU_fZ6RcwKDe_1n61tg@mail.gmail.com>
- <DB9PR04MB8412F8BCEA28371979965D3987BE9@DB9PR04MB8412.eurprd04.prod.outlook.com>
-In-Reply-To: <DB9PR04MB8412F8BCEA28371979965D3987BE9@DB9PR04MB8412.eurprd04.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 6 Jul 2022 14:51:05 +0200
-Message-ID: <CACRpkdYt1XpWseeSmqprNyQHup3CL1iYQ0beeFAdB2YNUHTy_g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: imx: Add the zero base flag for imx93
-To:     Jacky Bai <ping.bai@nxp.com>
-Cc:     Sascha Hauer <kernel@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Message-ID: <10b8f377.75ee.181d390dfe0.Coremail.windhl@126.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: QMqowABXX3NZhcViGMlGAA--.57102W
+X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbizgE2F18RPcbEfgACsj
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 4, 2022 at 8:04 AM Jacky Bai <ping.bai@nxp.com> wrote:
-> > Subject: Re: [PATCH] pinctrl: imx: Add the zero base flag for imx93
-> > On Mon, Jun 13, 2022 at 5:17 AM Jacky Bai <ping.bai@nxp.com> wrote:
-> >
-> > > On i.MX93, the pin mux reg offset is from 0x0, so need to add the
-> > > 'ZERO_OFFSET_VALID' flag to make sure the pin at mux offset 0 can be
-> > > found.
-> > >
-> > > Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> >
-> > No reply from maintainers for an urgent fix for two weeks -> patch applied.
-> >
-> > Jacky, maybe you should be listed as comaintainer for the freescale pin
-> > controller if you are doing active maintenance on it?
->
-> Yes, I can help on this.
-
-Please send a patch to MAINATINERS adding yourself as maintainer
-and CC the other maintainers listed there.
-
-Maybe you have some internal NXP mail list and procedure to follow
-too, no idea :D discuss amongs yourselves if necessary, but I really
-like active maintainers.
-
-Thanks!
-Linus Walleij
+CgpBdCAyMDIyLTA3LTA2IDIwOjI3OjQxLCAiQW5keSBTaGV2Y2hlbmtvIiA8YW5keS5zaGV2Y2hl
+bmtvQGdtYWlsLmNvbT4gd3JvdGU6Cj5PbiBXZWQsIEp1bCA2LCAyMDIyIGF0IDg6MjkgQU0gTGlh
+bmcgSGUgPHdpbmRobEAxMjYuY29tPiB3cm90ZToKPj4KPj4gV2Ugc2hvdWxkIGNhbGwgb2Zfbm9k
+ZV9wdXQoKSBmb3IgdGhlIHJlZmVyZW5jZSByZXR1cm5lZCBieQo+PiBvZl9nZXRfcGFyZW50KCkg
+d2hpY2ggd2lsbCBpbmNyZWFzZSB0aGUgcmVmY291bnQuCj4KPklzIGl0IHN1Z2dlc3RlZCBieSB0
+aGUgc28tY2FsbGVkIEh1bGsgUm9ib3Q/IElmIHNvLCBpdCdzIG5vdCB0aGUgZmlyc3QKPnRpbWUg
+SSBzZWUgdGhhdCBwZW9wbGUgZG9uJ3QgdGhpbmsgYWJvdXQsIGFuZCBqdXN0IHJlcGVhdCBhcyBy
+b2JvdHMKPmRvLiBIYXZlIHlvdSByZWFkIHRoZSBjb2RlPyBIYXZlIHlvdSB0cmllZCB0byB1bmRl
+cnN0YW5kIHdoYXQgbWF5Cj5oYXBwZW4gd2hlbiB5b3UgcHV0IGFuIE9GIG5vZGU/IFdoYXQgd291
+bGQgYmUgcG9zc2libGUgY29uc2VxdWVuY2VzIHRvCj50aGUgcmVzdCBvZiB0aGUgY29kZT8KPgo+
+VGhlIGFib3ZlIHNlbnRlbmNlIGlzIGNvcnJlY3QsIGltcGxlbWVudGF0aW9uIGlzIG5vdCB0aG91
+Z2h0IHRocm91Z2guCj5JdCBtaWdodCBiZSBhIGNvcnJlY3QgZml4LCBidXQgdGhlIGNvbW1pdCBt
+ZXNzYWdlIGRvZXNuJ3Qgc2hvdyB0aGF0Cj55b3UgcmVhbGx5IHNwZW50IHRpbWUgb24gdGhlIGNo
+YW5nZS4KPgo+UC5TPiBJIHdvdWxkIHBlcnNvbmFsbHkgcHV0IGFsbCB0aG9zZSBIdWxrIFJvYm90
+IGJsYS1ibGEtYmxhIHdpdGgKPmxvd2VzdCBwcmlvcml0eSB0byBjb25zaWRlciwgdG9vIG1hbnkg
+YnJva2VuIHN1Ym1pc3Npb25zLi4uCj4KPi0tIAo+V2l0aCBCZXN0IFJlZ2FyZHMsCj5BbmR5IFNo
+ZXZjaGVua28KCkhpLCBBbmR5LAoKVGhhbmtzIHZlcnkgbXVjaCBmb3IgeW91IHRvIHJldmlldyBt
+eSBhbm90aGVyIHBhdGNoIGNvZGUuCgpGaXJzdCBvZiBhbGwsIGFsbCBvZiBteSBjb21taXRzIGFy
+ZSBub3QgZnJvbSBIdWxrIFJvYm90IGFuZCBJIGFtIHNvcnJ5IHRoYXQgeW91IGhhdmUgc3BlbnQg
+bG90cyBvZiB0aW1lCmZvciB0aG9zZSBicm9rZW4gc3VibWlzc2lvbnMuCgpTZWNvbmQsIGZvciB0
+aGlzIGJ1Zywgd2hpbGUgdGhlIG9mX2dldF9wYXJlbnQoKSBpcyBvbmx5IDMtNCBsaW5lcyBhYm92
+ZSB0aGUgYWRkaW5nIG9mX25vZGVfcHV0KCksIAppdCBpcyBteSBmYXVsdCB0byB3cml0ZSBzbyBz
+aG9ydCBjb21taXQgbG9nLiAKCgpUaGFua3MgYWdhaW4sCgpMaWFuZwoKCgoKCgoK
