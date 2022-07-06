@@ -2,59 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 784D9567EF0
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 08:50:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5E5B567F2F
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 09:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbiGFGu1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jul 2022 02:50:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
+        id S230518AbiGFHB1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jul 2022 03:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiGFGu1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 02:50:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A235914D0B
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Jul 2022 23:50:25 -0700 (PDT)
+        with ESMTP id S229592AbiGFHBV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 03:01:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB3D1EAFC;
+        Wed,  6 Jul 2022 00:01:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F62261D61
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 06:50:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628F3C3411C;
-        Wed,  6 Jul 2022 06:50:24 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9F093B81AE8;
+        Wed,  6 Jul 2022 07:01:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C463C3411C;
+        Wed,  6 Jul 2022 07:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657090224;
-        bh=DzVHEMxpDxQ8vR8RHgWKIUUG5JDE1uXIiD9Dvu40D7Q=;
+        s=k20201202; t=1657090878;
+        bh=+cM9fbXgghc45VgTmM6OgjrtFCbCpn//QrK67G8SxMw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GpQNi9FO+MMD+bq4DAR+ZYM9vpv4GC5kEIP4mEDow+8ihEMWLH3FJEIC5xc8AMfzk
-         UZ0NwkK7c2+/rXfxXoflEy1ehBFQla/rEC/oNqx4J0IP5ePzOkQXWDy67ErO9ytTby
-         x7KElPuLuHvNm8XF8a7gy7/spTsv4FP3BuhfZ6MOj7gLYI7C/A7fmKkKybfwOgwnQg
-         cfqrpn91Nqp8rszr63i8lx0nNrs1N9VLFJa+G2EKIZte9GZRjqlTcYTMr/y0nESl9t
-         fi2cjGLquDUISh52aJJqY05pdlHdEZXHN+8QXNbWq765/srRt76m7cYgiuI4WkEIlT
-         5YBvBAwTOdcjQ==
+        b=t+PGTy4NrxmmE4XEqgl/Ogpy+Cnfpimwnc0xiX8KVK0JUyww/ppKs89RePW/5uzsp
+         giOTLrbd8L++9gPSsDPtEC3M6tluCPSlyCCcLvjX8xqZfqVBXFA5RfkzQbMjiKRqUh
+         7vekQaK6qNdaFFVjg6KMbWlxXrAKjnEDv21PuY5E6IJ1B2aWdVIBcSBVuYpqcUosHp
+         n8brPLCgqQRjgE6Yrnb96dpnuWvmjYmtYrHMZYtaFlvgBdI2Wz8XlLb29Ccpgg13X/
+         w13ynAMiJofDLsjBj9ODtCoE+s5FPkKffWpzGYQ/fzzQlFmfN1cJIej0kyZIfPlf2L
+         g25PaWGEGZJqg==
 Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
         (envelope-from <maz@kernel.org>)
-        id 1o8yrd-005Y2w-Qu;
-        Wed, 06 Jul 2022 07:50:22 +0100
-Date:   Wed, 06 Jul 2022 07:50:00 +0100
-Message-ID: <87k08qn3af.wl-maz@kernel.org>
+        id 1o8z2A-005YBP-E3;
+        Wed, 06 Jul 2022 08:01:16 +0100
+Date:   Wed, 06 Jul 2022 08:01:08 +0100
+Message-ID: <87iloan2rv.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
-To:     <lewis.hanly@microchip.com>
-Cc:     <linux-gpio@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
-        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>
-Subject: Re: [PATCH 1/1] gpio: mpfs - add polarfire soc gpio support
-In-Reply-To: <20220705134912.2740421-2-lewis.hanly@microchip.com>
-References: <20220705134912.2740421-1-lewis.hanly@microchip.com>
-        <20220705134912.2740421-2-lewis.hanly@microchip.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v7 3/5] gpio: gpiolib: Allow free() callback to be overridden
+In-Reply-To: <CA+V-a8vua6t5wDNc2CT_XWhoy6OjmzCXyaJ1FtGaqeG5g-qS-w@mail.gmail.com>
+References: <20220703194020.78701-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <20220703194020.78701-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <CAHp75VfFZ146p1sZ2=Ec-F-9zYJZHPWyvgYQeVsG=2TzssaPmA@mail.gmail.com>
+        <CA+V-a8vua6t5wDNc2CT_XWhoy6OjmzCXyaJ1FtGaqeG5g-qS-w@mail.gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 185.104.136.29
-X-SA-Exim-Rcpt-To: lewis.hanly@microchip.com, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, conor.dooley@microchip.com, daire.mcnamara@microchip.com
+X-SA-Exim-Rcpt-To: prabhakar.csengg@gmail.com, andy.shevchenko@gmail.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, geert+renesas@glider.be, linus.walleij@linaro.org, brgl@bgdev.pl, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -67,387 +80,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 05 Jul 2022 14:49:12 +0100,
-<lewis.hanly@microchip.com> wrote:
+On Tue, 05 Jul 2022 05:53:03 +0100,
+"Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
 > 
-> From: Lewis Hanly <lewis.hanly@microchip.com>
-> 
-> Add a driver to support the Polarfire SoC gpio controller.
-> 
-> Signed-off-by: Lewis Hanly <lewis.hanly@microchip.com>
-> ---
->  drivers/gpio/Kconfig     |   7 +
->  drivers/gpio/Makefile    |   1 +
->  drivers/gpio/gpio-mpfs.c | 358 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 366 insertions(+)
->  create mode 100644 drivers/gpio/gpio-mpfs.c
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index b01961999ced..e279eac198da 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -490,6 +490,13 @@ config GPIO_PMIC_EIC_SPRD
->  	help
->  	  Say yes here to support Spreadtrum PMIC EIC device.
->  
-> +config GPIO_POLARFIRE_SOC
-> +	bool "Microchip FPGA GPIO support"
-> +	depends on OF_GPIO
-> +	select GPIOLIB_IRQCHIP
-> +	help
-> +	  Say yes here to support the GPIO device on Microchip FPGAs
-> +
->  config GPIO_PXA
->  	bool "PXA GPIO support"
->  	depends on ARCH_PXA || ARCH_MMP || COMPILE_TEST
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 14352f6dfe8e..3b8b6703e593 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -119,6 +119,7 @@ obj-$(CONFIG_GPIO_PCI_IDIO_16)		+= gpio-pci-idio-16.o
->  obj-$(CONFIG_GPIO_PISOSR)		+= gpio-pisosr.o
->  obj-$(CONFIG_GPIO_PL061)		+= gpio-pl061.o
->  obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+= gpio-pmic-eic-sprd.o
-> +obj-$(CONFIG_GPIO_POLARFIRE_SOC)	+= gpio-mpfs.o
->  obj-$(CONFIG_GPIO_PXA)			+= gpio-pxa.o
->  obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
->  obj-$(CONFIG_GPIO_RC5T583)		+= gpio-rc5t583.o
-> diff --git a/drivers/gpio/gpio-mpfs.c b/drivers/gpio/gpio-mpfs.c
-> new file mode 100644
-> index 000000000000..df48f2836e97
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-mpfs.c
-> @@ -0,0 +1,358 @@
-> +// SPDX-License-Identifier: (GPL-2.0)
-> +/*
-> + * Microchip PolarFire SoC (MPFS) GPIO controller driver
-> + *
-> + * Copyright (c) 2018-2022 Microchip Technology Inc. and its subsidiaries
-> + *
-> + * Author: Lewis Hanly <lewis.hanly@microchip.com>
-> + *
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/init.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define NUM_GPIO			32
-> +#define BYTE_BOUNDARY			0x04
-> +#define MPFS_GPIO_EN_INT		3
-> +#define MPFS_GPIO_EN_OUT_BUF		BIT(2)
-> +#define MPFS_GPIO_EN_IN			BIT(1)
-> +#define MPFS_GPIO_EN_OUT		BIT(0)
-> +
-> +#define MPFS_GPIO_TYPE_INT_EDGE_BOTH	0x80
-> +#define MPFS_GPIO_TYPE_INT_EDGE_NEG	0x60
-> +#define MPFS_GPIO_TYPE_INT_EDGE_POS	0x40
-> +#define MPFS_GPIO_TYPE_INT_LEVEL_LOW	0x20
-> +#define MPFS_GPIO_TYPE_INT_LEVEL_HIGH	0x00
-> +#define MPFS_GPIO_TYPE_INT_MASK		GENMASK(7, 5)
-> +#define MPFS_IRQ_REG			0x80
-> +#define MPFS_INP_REG			0x84
-> +#define MPFS_OUTP_REG			0x88
-> +
-> +struct mpfs_gpio_chip {
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +	spinlock_t lock; /* lock */
+> On Mon, Jul 4, 2022 at 5:16 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Sun, Jul 3, 2022 at 9:43 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > >
+> > > Allow free() callback to be overridden from irq_domain_ops for
+> > > hierarchical chips.
+> > >
+> > > This allows drivers to free up resources which are allocated during
+> > > child_to_parent_hwirq()/populate_parent_alloc_arg() callbacks.
+> > >
+> > > On Renesas RZ/G2L platform a bitmap is maintained for TINT slots, a slot
+> > > is allocated in child_to_parent_hwirq() callback which is freed up in free
+> > > callback hence this override.
+> >
+> > Hmm... To me this sounds asymmetrical. We alloc something in another
+> > callback, which is not what this free is for. Perhaps it should be an
+> > optional
+> >
+> > free_populated_parent_arg() or alike?
+> >
+> @Marc your thoughts?
 
-Interrupt controllers must use a raw spinlock. Please drop the
-pointless comment.
+I think there are enough optional callbacks, and we don't currently
+have a clear picture of how this may be used in the future, specially
+based on a sample of *one*.
 
-> +	struct gpio_chip gc;
-> +};
-> +
-> +static void mpfs_gpio_assign_bit(void __iomem *addr, unsigned int bit_offset, int value)
-> +{
-> +	u32 output = readl(addr);
-> +
-> +	if (value)
-> +		output |= BIT(bit_offset);
-> +	else
-> +		output &= ~BIT(bit_offset);
-
-Use __assign_bit() instead. and make value a bool to reflect the fact
-that this is a single bit.
-
-> +
-> +	writel(output, addr);
-> +}
-> +
-> +static int mpfs_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio_index)
-> +{
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +	u32 gpio_cfg;
-> +	unsigned long flags;
-> +
-> +	if (gpio_index >= NUM_GPIO)
-> +		return -EINVAL;
-
-How can this happen?
-
-> +
-> +	spin_lock_irqsave(&mpfs_gpio->lock, flags);
-> +
-> +	gpio_cfg = readl(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
-> +	gpio_cfg |= MPFS_GPIO_EN_IN;
-> +	gpio_cfg &= ~(MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF);
-> +	writel(gpio_cfg, mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
-> +
-> +	spin_unlock_irqrestore(&mpfs_gpio->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mpfs_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio_index, int value)
-> +{
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +	u32 gpio_cfg;
-> +	unsigned long flags;
-> +
-> +	if (gpio_index >= NUM_GPIO)
-> +		return -EINVAL;
-> +
-> +	spin_lock_irqsave(&mpfs_gpio->lock, flags);
-> +
-> +	gpio_cfg = readl(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
-> +	gpio_cfg |= MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF;
-> +	gpio_cfg &= ~MPFS_GPIO_EN_IN;
-> +	writel(gpio_cfg, mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
-> +
-> +	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_OUTP_REG, gpio_index, value);
-> +
-> +	spin_unlock_irqrestore(&mpfs_gpio->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mpfs_gpio_get_direction(struct gpio_chip *gc,
-> +				   unsigned int gpio_index)
-> +{
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +	u32 gpio_cfg;
-> +
-> +	if (gpio_index >= NUM_GPIO)
-> +		return -EINVAL;
-> +
-> +	gpio_cfg = readl(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
-> +
-> +	if (gpio_cfg & MPFS_GPIO_EN_IN)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mpfs_gpio_get(struct gpio_chip *gc,
-> +			 unsigned int gpio_index)
-> +{
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +
-> +	if (gpio_index >= NUM_GPIO)
-> +		return -EINVAL;
-> +
-> +	return !!(readl(mpfs_gpio->base + MPFS_INP_REG) & BIT(gpio_index));
-> +}
-> +
-> +static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_index, int value)
-> +{
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +	unsigned long flags;
-> +
-> +	if (gpio_index >= NUM_GPIO)
-> +		return;
-> +
-> +	spin_lock_irqsave(&mpfs_gpio->lock, flags);
-> +
-> +	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_OUTP_REG,
-> +			     gpio_index, value);
-> +
-> +	spin_unlock_irqrestore(&mpfs_gpio->lock, flags);
-> +}
-> +
-> +static int mpfs_gpio_irq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> +	int gpio_index = irqd_to_hwirq(data);
-> +	u32 interrupt_type;
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +	u32 gpio_cfg;
-> +	unsigned long flags;
-> +
-> +	if (gpio_index >= NUM_GPIO)
-> +		return -EINVAL;
-> +
-> +	switch (type) {
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_BOTH;
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_NEG;
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_POS;
-> +		break;
-> +
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		interrupt_type = MPFS_GPIO_TYPE_INT_LEVEL_HIGH;
-> +		break;
-> +
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +	default:
-
-What's this default for?
-
-> +		interrupt_type = MPFS_GPIO_TYPE_INT_LEVEL_LOW;
-> +		break;
-> +	}
-> +
-> +	spin_lock_irqsave(&mpfs_gpio->lock, flags);
-> +
-> +	gpio_cfg = readl(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
-> +	gpio_cfg &= ~MPFS_GPIO_TYPE_INT_MASK;
-> +	gpio_cfg |= interrupt_type;
-> +	writel(gpio_cfg, mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
-> +
-> +	spin_unlock_irqrestore(&mpfs_gpio->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static void mpfs_gpio_irq_enable(struct irq_data *data)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +	int gpio_index = irqd_to_hwirq(data) % NUM_GPIO;
-> +
-> +	mpfs_gpio_direction_input(gc, gpio_index);
-> +	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_IRQ_REG, gpio_index, 1);
-> +	mpfs_gpio_assign_bit(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY),
-> +			     MPFS_GPIO_EN_INT, 1);
-> +}
-> +
-> +static void mpfs_gpio_irq_disable(struct irq_data *data)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-> +	int gpio_index = irqd_to_hwirq(data) % NUM_GPIO;
-> +
-> +	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_IRQ_REG, gpio_index, 1);
-> +	mpfs_gpio_assign_bit(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY),
-> +			     MPFS_GPIO_EN_INT, 0);
-> +}
-> +
-> +static struct irq_chip mpfs_gpio_irqchip = {
-
-Must be const.
-
-> +	.name = "mpfs_gpio_irqchip",
-
-Drop the pointless "gpio_irqchip".
-
-> +	.irq_set_type = mpfs_gpio_irq_set_type,
-> +	.irq_enable = mpfs_gpio_irq_enable,
-> +	.irq_disable = mpfs_gpio_irq_disable,
-
-These should be unmask/mask. enable/disable *supplement* unmask/mask
-on startup.
-
-> +	.flags = IRQCHIP_MASK_ON_SUSPEND,
-> +};
-
-No. Please read the documentation and use the current API. The kernel
-should already be telling you that your driver needs fixing.
-
-> +
-> +static irqreturn_t mpfs_gpio_irq_handler(int irq, void *mpfs_gpio_data)
-> +{
-> +	struct mpfs_gpio_chip *mpfs_gpio = mpfs_gpio_data;
-> +	unsigned long status;
-> +	int offset;
-> +
-> +	status = readl(mpfs_gpio->base + MPFS_IRQ_REG);
-> +
-> +	for_each_set_bit(offset, &status, mpfs_gpio->gc.ngpio) {
-> +		mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_IRQ_REG, offset, 1);
-> +		generic_handle_irq(irq_find_mapping(mpfs_gpio->gc.irq.domain, offset));
-> +	}
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int mpfs_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct clk *clk;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct mpfs_gpio_chip *mpfs_gpio;
-> +	int i, ret, ngpio;
-> +	struct gpio_irq_chip *irq_c;
-> +
-> +	mpfs_gpio = devm_kzalloc(dev, sizeof(*mpfs_gpio), GFP_KERNEL);
-> +	if (!mpfs_gpio)
-> +		return -ENOMEM;
-> +
-> +	mpfs_gpio->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(mpfs_gpio->base)) {
-> +		dev_err(dev, "failed to allocate device memory\n");
-> +		return PTR_ERR(mpfs_gpio->base);
-> +	}
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(clk), "failed to get clock\n");
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to enable clock\n");
-> +
-> +	mpfs_gpio->clk = clk;
-> +
-> +	spin_lock_init(&mpfs_gpio->lock);
-> +
-> +	ngpio = of_irq_count(node);
-> +	if (ngpio > NUM_GPIO) {
-> +		dev_err(dev, "too many interrupts\n");
-> +		goto cleanup_clock;
-> +	}
-> +
-> +	mpfs_gpio->gc.direction_input = mpfs_gpio_direction_input;
-> +	mpfs_gpio->gc.direction_output = mpfs_gpio_direction_output;
-> +	mpfs_gpio->gc.get_direction = mpfs_gpio_get_direction;
-> +	mpfs_gpio->gc.get = mpfs_gpio_get;
-> +	mpfs_gpio->gc.set = mpfs_gpio_set;
-> +	mpfs_gpio->gc.base = -1;
-> +	mpfs_gpio->gc.ngpio = ngpio;
-> +	mpfs_gpio->gc.label = dev_name(dev);
-> +	mpfs_gpio->gc.parent = dev;
-> +	mpfs_gpio->gc.owner = THIS_MODULE;
-> +
-> +	irq_c = &mpfs_gpio->gc.irq;
-> +	irq_c->chip = &mpfs_gpio_irqchip;
-
-Same thing about the use of the current API.
-
-> +	irq_c->chip->parent_device = dev;
-
-OK, you clearly are developing against an ancient kernel. Don't bother
-posting another version if you haven't tested your code on top of a
-recent -rc.
-
-> +	irq_c->handler = handle_simple_irq;
-
-Why? This looks broken. You should use the flow that actually matches
-the triggering, and not this.
+Let's get it in as is, and tweak things as we go, should another user
+require a slightly different behaviour. This also saves us the debate
+around the naming, which is always pretty useless.
 
 Thanks,
 
