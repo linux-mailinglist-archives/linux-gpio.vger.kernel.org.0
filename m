@@ -2,163 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6E59568B17
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 16:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C403568A7F
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 16:01:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232623AbiGFOVR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jul 2022 10:21:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
+        id S230420AbiGFOAl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jul 2022 10:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232280AbiGFOVQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 10:21:16 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6348C1FCDA;
-        Wed,  6 Jul 2022 07:21:14 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id k30so11363902edk.8;
-        Wed, 06 Jul 2022 07:21:14 -0700 (PDT)
+        with ESMTP id S232890AbiGFOAk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 10:00:40 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A84A81AF09
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 07:00:37 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id a15so8589186pjs.0
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Jul 2022 07:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:from:to:cc:subject:date:in-reply-to:message-id
-         :mime-version;
-        bh=3Wb+2NYdNYlT/r55W5Q9BfPi7qfSp7lu+o+6L0rJtv8=;
-        b=gWJipTj+zP9LdoXW9ZZmPEOCzTlBkuyB0ff9epBmgDE/i75a/0ROab93UWiX68yi+7
-         Yt1iVTbV0mmGIUPRsu7Iv5ZcPakBrVTGgNn3QbSAbJtpD1ll+9ETR4NC2zrYuD2Fnhr0
-         3uqRa9NzLc3SPWQvYGtU92MRw784mM0wllnyz59w08XWzjpZjczcPBBFzQBfGl7lqBnO
-         kAPfQ328Di9nQotQ680IHOoOE5XpcYZIGGB+pFBD4V5yok26buCnhT3XtXyauzJsZOcl
-         ODNecWdJmbQGMgGDmfrBQHUim98ctmI2881WkJtNSMeuMS9vVtFx62bUPJeJme6xPEAJ
-         6VZA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=XGOAzLfiIBaUE5hKEF3LhixwuP+tVymp1O1VXS0KHeE=;
+        b=P+t87zBrFa4h4Z7Nm8/KvhJEOvcDyhcGTVBrwWwcgFzyMBIohPPj5asiDfLoC+JqU9
+         C+jyckc6TPV9NRylDkSRg8UW+/W5iwCKbsjK4L8+Lvbh5Hfxpvnic4kuvis6NiV7Fgv5
+         AZ84QbkDcIL94O0J7/pLTKGifGXyZPipR/5q0/27h/dRmx2JkCpoasw4EtKUdlc3O2FP
+         iiboZoSOepv3fFg8jnZl2hYYkavvAtd51zGvGX30azrMUe1MMBCc+yhB6hikaAkqonft
+         B41ZpPQDLzHh0UFa2VLSIZ0A2kPPeIZmjW7gRzD1ANjPllmvuwPCXxbO+TKnNPRKiTtV
+         TmLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:references:from:to:cc:subject:date:in-reply-to
-         :message-id:mime-version;
-        bh=3Wb+2NYdNYlT/r55W5Q9BfPi7qfSp7lu+o+6L0rJtv8=;
-        b=MHGARK1MfbjPjTMfgUdD/6o2VGqgirUU9ipTgpm7GN4fDtporzacIFB304Vg+/Ccd1
-         H2gdAQkFYSfmXfAP8eJQshsEwpyaxcm7WVOhLb8GDT4ViLjFIoPPym9KDN+gjMiWd4vj
-         OxNzleQc7hx2pU5j4itClotuPl3vzs+VnCfnYvU8z074G8WwecHRqP4P6geJavmHGg6I
-         qv5rkVnev5BaNix64wVJS5es2+++XLgHz+QzATADI788Gsw/M1xzRGPIi1wSmHDvCnFK
-         savL0E/iJy3MKGek+2Xm8r0vLELaIrU5PpxvftwsgzJlUrkQz/ThI9Vb/EXA0iTlcAii
-         Fr4g==
-X-Gm-Message-State: AJIora89nVyHkJMpDQs8S0r3TM9+uo18Pl4CdqmcR8j2t0ope/Gkzm7s
-        lUlJ+cUdHX4sjSw3DAa0HPG4f3vTOoE=
-X-Google-Smtp-Source: AGRyM1tT9stuoFyBcHRx0dfy4qvcPGQyu83eyJWdXOLAslwHbMig41DsfUkSzMnQ7gjy24d4uY2z1Q==
-X-Received: by 2002:a05:6402:2985:b0:439:651b:c1f4 with SMTP id eq5-20020a056402298500b00439651bc1f4mr43380871edb.276.1657117272992;
-        Wed, 06 Jul 2022 07:21:12 -0700 (PDT)
-Received: from localhost (92.40.202.41.threembb.co.uk. [92.40.202.41])
-        by smtp.gmail.com with ESMTPSA id au8-20020a170907092800b00722e19fec6dsm17325213ejc.156.2022.07.06.07.21.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=XGOAzLfiIBaUE5hKEF3LhixwuP+tVymp1O1VXS0KHeE=;
+        b=K8IFI2vxnx09b/1tXQKkUIDK4jA8qGHozQTMphqfvQwiWDupuZKKTWZOJIserN1nSl
+         0J305qWLizTux9OhNFDjbSK9Lq4xM1LsVgGkA8OoUzOP8MCGG9CqOxSF/MpUvtmjsA6X
+         Cjv2wLiJwOMfUN31uu6gWNH6Fp8BewuH0gjeoQ1Ma9ju4Eev9GF/vF9xRzGmsQlfOMwO
+         +3LnLyjr8rxsaBnZmeZ70Iyf0c8FSpYjyBnHcBwY3UK1K12jAo1n7etKvSruNjXO1qMo
+         2ce+Zvy9wLT/uHEbJNJUGk//uMaovyCq6RaPvJs+qBC9+0asyfQ3UmUBOg6xVe8Vq+U7
+         rwvw==
+X-Gm-Message-State: AJIora/TRFV6PHdzDJhnDAl0p1vL0qNP0sxCLEPEzFZWF44baiPNKVAG
+        gzw9hJaKia1uhsg7zbLqYomfusN8rTkp
+X-Google-Smtp-Source: AGRyM1twtwmsrNvpt6gTv7kScz14KKqm/0ECGH4tOu5mMFIiKv1InaWYOEEdgQakWXhgBCw6tYmP2g==
+X-Received: by 2002:a17:902:dac1:b0:16a:3ebe:c722 with SMTP id q1-20020a170902dac100b0016a3ebec722mr45645641plx.169.1657116037038;
+        Wed, 06 Jul 2022 07:00:37 -0700 (PDT)
+Received: from thinkpad ([117.202.190.202])
+        by smtp.gmail.com with ESMTPSA id t16-20020aa79390000000b0052521fd273fsm24826252pfe.218.2022.07.06.07.00.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 07:21:12 -0700 (PDT)
-References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
- <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com>
- <CACRpkdamknwRPGEeGGQGQPtKw=dPXa79GAJy+E6y+03NakN=cA@mail.gmail.com>
- <GrX3yDSwNOGIBcWmKqusaJ3dDqNGLr3Y@localhost>
- <CACRpkdbHg-vTj6CnkF=oMxtpy+FxEPdn2_qKzgtsT0TYU6Nv-g@mail.gmail.com>
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     michael@walle.cc, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
-Date:   Wed, 06 Jul 2022 14:50:49 +0100
-In-reply-to: <CACRpkdbHg-vTj6CnkF=oMxtpy+FxEPdn2_qKzgtsT0TYU6Nv-g@mail.gmail.com>
-Message-ID: <ZTG1etjWj47jkqTxIRgriV6pQhW9dasf@localhost>
+        Wed, 06 Jul 2022 07:00:36 -0700 (PDT)
+Date:   Wed, 6 Jul 2022 19:30:31 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Robert Marko <robimarko@gmail.com>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
+Message-ID: <20220706140031.GB2327@thinkpad>
+References: <20220624195112.894916-1-robimarko@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: *
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220624195112.894916-1-robimarko@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Jun 24, 2022 at 09:51:12PM +0200, Robert Marko wrote:
+> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+> immutable") added a warning to indicate if the gpiolib is altering the
+> internals of irqchips.
+> 
+> Following this change the following warning is now observed for the SPMI
+> PMIC pinctrl driver:
+> gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
+> 
+> Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
+> 
+> Signed-off-by: Robert Marko <robimarko@gmail.com>
 
-Linus Walleij <linus.walleij@linaro.org> writes:
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> On Tue, Jul 5, 2022 at 1:08 PM Aidan MacDonald
-> <aidanmacdonald.0x0@gmail.com> wrote:
->> Linus Walleij <linus.walleij@linaro.org> writes:
->
->> I'm not trying to argue that hierarchical IRQ domains are always a bad
->> thing -- I'm just pointing out they're not always useful or necessary.
->> All your points make sense when the GPIO controller is a large distinct
->> block with potentially many GPIOs. When we're dealing with an MFD device
->> with just a few GPIOs, maybe even just one, having a separate IRQ domain
->> makes less sense; the added structure is generally not useful.
->
-> Do you mean your driver does this:
->
-> MFD main device
-> MFD irqchip
->  |
->  +->  MFD gpiochip
->          No irqchip here, so .to_irq() just refers ^ to that one up there
->
-> IIUC you mean that if I want to use the irqchip directly then
-> I have to refer to the MFD irqchip, I just cannot refer to the
-> gpiochip subnode because that one does not have an irqchip.
+I've also tested this patch on Lenovo X13s, so
 
-Yep, that's right.
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> // Getting GPIO from gpiochip and irq from MFD device
-> // for the same GPIO line
-> gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
-> irqs = <&mfd 114 IRQ_EDGE_RISING>;
->
-> Then for a Linux driver this can be papered over by using the
-> .to_irq() callback and just defining gpios.
->
-> This isn't very good, if you created a separate gpiochip then you
-> should have a separate (hierarchical) irqchip associated with that
-> gpiochip as well.
->
-> // Getting GPIO and irq from the same gpiochip node
-> gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
-> irqs = <&gpio 3 IRQ_EDGE_RISING>;
->
-> I made this mistake with the ab8500 driver and
-> I would not do it like this today. I would use hierarchical gpio
-> irqchip. And I should go and fix it. (Is on my TODO.)
->
+Thanks,
+Mani
 
-If moving to hierarchical IRQ chips is the plan, could we add a note
-to say .to_irq() is discouraged and shouldn't be used in new code?
-Based on what you're saying (which I agree makes sense) it sounds
-like there's really no reason to ever use .to_irq().
+> ---
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index c3255b0bece4..406ee0933d0b 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -171,7 +171,6 @@ struct pmic_gpio_state {
+>  	struct regmap	*map;
+>  	struct pinctrl_dev *ctrl;
+>  	struct gpio_chip chip;
+> -	struct irq_chip irq;
+>  	u8 usid;
+>  	u8 pid_base;
+>  };
+> @@ -988,6 +987,17 @@ static void *pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
+>  	return fwspec;
+>  }
+>  
+> +static const struct irq_chip spmi_gpio_irq_chip = {
+> +	.name		= "spmi-gpio",
+> +	.irq_ack	= irq_chip_ack_parent,
+> +	.irq_mask	= irq_chip_mask_parent,
+> +	.irq_unmask	= irq_chip_unmask_parent,
+> +	.irq_set_type	= irq_chip_set_type_parent,
+> +	.irq_set_wake	= irq_chip_set_wake_parent,
+> +	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_MASK_ON_SUSPEND,
+> +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+> +
+>  static int pmic_gpio_probe(struct platform_device *pdev)
+>  {
+>  	struct irq_domain *parent_domain;
+> @@ -1081,16 +1091,8 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+>  	if (!parent_domain)
+>  		return -ENXIO;
+>  
+> -	state->irq.name = "spmi-gpio",
+> -	state->irq.irq_ack = irq_chip_ack_parent,
+> -	state->irq.irq_mask = irq_chip_mask_parent,
+> -	state->irq.irq_unmask = irq_chip_unmask_parent,
+> -	state->irq.irq_set_type = irq_chip_set_type_parent,
+> -	state->irq.irq_set_wake = irq_chip_set_wake_parent,
+> -	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
+> -
+>  	girq = &state->chip.irq;
+> -	girq->chip = &state->irq;
+> +	gpio_irq_chip_set_chip(girq, &spmi_gpio_irq_chip);
+>  	girq->default_type = IRQ_TYPE_NONE;
+>  	girq->handler = handle_level_irq;
+>  	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
+> -- 
+> 2.36.1
+> 
 
->> Looking at other GPIO drivers using a hierarchical IRQ domain, they
->> include their own IRQ chips with specialized ops. In my case I don't
->> need any of that (and it'd be the same with other MFD devices) so it
->> looks like using an IRQ domain would mean I'd have to create a fake
->> IRQ chip and domain just to translate between two number spaces.
->>
->> Is that really better than simply using ->to_irq()?
->
-> To be honest most irqchips are "fake", what they mostly do is figure
-> out which of a few internal sources that fired the irq, so it models the
-> different things connected to a single IRQ line.
->
-> So yeah, I think the hierarchical irqchip is worth it, especially if that
-> means the offset of the irqs and gpios become the same.
->
-> Maybe we can add more helpers in the core to make it dirt simple
-> though? It would help others with the same problem.
->
-> Yours,
-> Linus Walleij
-
-Okay, that sounds like a good plan. I'll look more carefully at the
-existing drivers and see if I can use existing gpiolib helpers.
-
-One potential issue (from reading the code) is that hierarchical IRQ
-domains seemingly can't have a non-hierarchical domain as the parent:
-irq_domain_alloc_irqs_parent() calls irq_domain_alloc_irqs_hierarchy()
-and the latter fails with -ENOSYS for a non-hierarchical domain.
-
-In my case I'm using a regmap IRQ chip, which is non-hierarchical,
-so perhaps that will need to be expanded? 
-
-Regards,
-Aidan
+-- 
+மணிவண்ணன் சதாசிவம்
