@@ -2,63 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2CB56871E
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 13:46:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D24E556873B
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 13:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233287AbiGFLql (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jul 2022 07:46:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
+        id S229804AbiGFLtE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jul 2022 07:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233163AbiGFLqV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 07:46:21 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDD02982C;
-        Wed,  6 Jul 2022 04:45:58 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-31cf1adbf92so10146167b3.4;
-        Wed, 06 Jul 2022 04:45:57 -0700 (PDT)
+        with ESMTP id S231673AbiGFLtD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 07:49:03 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55705275E9;
+        Wed,  6 Jul 2022 04:49:03 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id e69so20293009ybh.2;
+        Wed, 06 Jul 2022 04:49:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QUhZU8l1cSFtEAE9w63tM/F8Nsz8lxaAJecN4EZgch8=;
-        b=M8GssJ8J2ueq01HRhYiHBpQQ5huVt+L89qB7xKpQfVPkt8lyodQCKSAWiIldj1PLjr
-         GARM8FFg01YfrHADVWtLHmNidrkusZe2+cm0KgSUcZla1jzX3xarHgSg4uxfmd1QzPfv
-         /VVMWflu+QQbeaZGnB3ngfiIwHCevulGBiqcqJVYT/FpAqd/tNKwJRDoTr97frvFVLzF
-         yue2y/oPhhXcod5riIc2Qo5DgmIkXkQl8bjZ3HVlwtSk8d2KOim2i8lEwCZzpD4s6hOP
-         91rTyGz4PEN5xBk0s+NdezjlVZCai/EiCGLWd6BxUAnm+ACDgHIejZy1N5c88/4qsiXB
-         VmGg==
+        bh=lcQ5M5Km2OfgeROxMy5ZnJEqoGOIn28HhlbwZQ5PQj0=;
+        b=p5GrKPrZDN1nvjy8BBxMksQAfYYyMnagD1K966fE07GLbwDbSf9yx3eE7NejrHgbDX
+         feTiDyDd83lvsS1HAokmoZ/4I1PP0KBSwQZnT/ppaBfYhvpA6nYNy7+48INz9Pjw1SB9
+         nFufm56r1gM9LTt799PE02xNyclTnFtBLbT/6yTUbxwpMYMbAOLtP2rA//dsO4cavbfx
+         5r5LQZeePiKpZ6CUQy43o/NEjETZCsleyX4YwLCgcK+5setVbs80NntF/6l+ZKG/4tNI
+         DhILF82XxaEYWlydXJcBpMHxkEX1dVvkIzQLDybgPS0hdsWuUFzclI+7N8rHeRYNueJe
+         i/FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QUhZU8l1cSFtEAE9w63tM/F8Nsz8lxaAJecN4EZgch8=;
-        b=kI3fVbohDxRVtgLSqudCfNFpp+BFrzHOxBtQJVIQXwmPi+Bn+z5wLnfUKZQNGVEqMa
-         m4/Y4Kib6JdQ38OrNXlb7toMmOyArX13g8m+V1vQJ9jePJ0Z7kBt7RSjNbSJFBAhaLpx
-         TlMTCajkP/lB3uZ3WTPEm8TINYRQOeC3+yjEfy2KdUEDlKADdRG8AH7EYxssgsklIiyt
-         sNvJrWDHJaZpHWtrvUJT5MzhzwHVnC1mVVmcZuK2xLwk+Lty5F+vF3BphHYFHhEUXKhY
-         CZ2+GGVc+oWBNgNvsqo0AyKrFT2HIgTFmKGiLWomYhmXPooa2/NcgVdc1vGyOvnhU4fg
-         8JBQ==
-X-Gm-Message-State: AJIora84wJd+B1o6KquHBYog38OUe1Zm+Z5oSNxlIzybEi9/9kRRhSNA
-        GWRvMUwaLNKidXc1mJ/ExIUHlbOJoKYo0rniZYZQ/jAufho=
-X-Google-Smtp-Source: AGRyM1sL1ab9SfSd+1Z5lpB3AJYYLl4lkjzfKeTr4hpPnkGtSPWE/ENDhVmunkW6L4meti7pQ3T5x0FsqAAliD5/POE=
-X-Received: by 2002:a81:4bd7:0:b0:31c:91da:5a20 with SMTP id
- y206-20020a814bd7000000b0031c91da5a20mr20145277ywa.131.1657107956990; Wed, 06
- Jul 2022 04:45:56 -0700 (PDT)
+        bh=lcQ5M5Km2OfgeROxMy5ZnJEqoGOIn28HhlbwZQ5PQj0=;
+        b=W+qPrrfaGxP9/UpM21jyiJIJ7PYlNnafC81MQhc3aoEG1bKsPK/J6iSfdUWSdxWWVN
+         5Dx2yYLuoRbs5qI3/aUhLm935ywkSpkMyr1K25ltFeLdpDxHIVsatg/O7NDt5Mpf9Vro
+         Z+Js/HLFaplRXzrM/315ygfKStQXyKA+WKXylqvCNqqjKewTjWamsI97PWmMrHRSR7ru
+         IKdnotaN/jWjrxzP8APT57SzCe7bsPtNgxKX6R3uj1NWhA0QB7up/s8HEdFIBbxRTI0I
+         WaNcJfIA/sC+xoZIYnW+8HeDzyJCryehzz1qzIgc1CZfB8TXS0YXZwwESoykIrXzAqPX
+         PcPA==
+X-Gm-Message-State: AJIora93/O2kcJ8zk56SIjE5YONh8lPR/2+NQy1fLsjru+I6VbswcUCC
+        4reyn4O3LtW0rmYpheRI1jDPmxzMuTueIqKKsDsqqOCAiRg=
+X-Google-Smtp-Source: AGRyM1ukx8KknAVZRX14jVT+IZa43KEUinbk+y1Re0E9uKoJxbT1eJ8Bdhqpa1T+0UsKsYBXrQ0Rb88X6QVKfjTL19o=
+X-Received: by 2002:a25:dd83:0:b0:66c:8d8d:4f5f with SMTP id
+ u125-20020a25dd83000000b0066c8d8d4f5fmr42580242ybg.79.1657108142530; Wed, 06
+ Jul 2022 04:49:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
- <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com> <CACRpkdamknwRPGEeGGQGQPtKw=dPXa79GAJy+E6y+03NakN=cA@mail.gmail.com>
- <GrX3yDSwNOGIBcWmKqusaJ3dDqNGLr3Y@localhost>
-In-Reply-To: <GrX3yDSwNOGIBcWmKqusaJ3dDqNGLr3Y@localhost>
+References: <20220705171835.4923-1-brgl@bgdev.pl>
+In-Reply-To: <20220705171835.4923-1-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 6 Jul 2022 13:45:20 +0200
-Message-ID: <CAHp75Vd9P3Mf75TcXeWB3QE4n_rn7QcWz6g5fDYpPiLVOMsAig@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+Date:   Wed, 6 Jul 2022 13:48:26 +0200
+Message-ID: <CAHp75Ve3sPhFOZhL=_2p+1avuo96CP995KD+bi+Pn3gyj1F9TA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pxa: schedule a devm action for the clock struct
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        "Signed-off-by : Yuan Can" <yuancan@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -70,17 +70,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 5, 2022 at 1:22 PM Aidan MacDonald
-<aidanmacdonald.0x0@gmail.com> wrote:
+On Tue, Jul 5, 2022 at 7:29 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> The clock is never released after probe(). Schedule devm actions for
+> putting and disabling the clock.
 
 ...
 
-> Is that really better than simply using ->to_irq()?
+> Reported-by: Signed-off-by: Yuan Can <yuancan@huawei.com>
 
-We have Intel PMIC drivers (that are in MFD) and they have respective
-GPIO drivers, none of them is using ->to_irq() and all of them provide
-IRQ functionality. Can it be taken as an example or is it something
-quite different to your hardware?
+Me puzzled.
+
+
+...
+
+> +       ret = devm_add_action_or_reset(&pdev->dev, pxa_gpio_clk_put, clk);
+> +       if (ret)
+> +               return ret;
+> +
+>         ret = clk_prepare_enable(clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = devm_add_action_or_reset(&pdev->dev,
+> +                                      pxa_gpio_clk_disable_unprepare, clk);
+> +       if (ret)
+>                 return ret;
+
+Can we use recently introduced clk APIs for that? Maybe Stephen has an
+immutable branch you may reuse?
 
 -- 
 With Best Regards,
