@@ -2,220 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D5C568849
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 14:27:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46E1E56884C
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 14:28:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233074AbiGFM1e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jul 2022 08:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60364 "EHLO
+        id S232815AbiGFM2V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jul 2022 08:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233106AbiGFM1d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 08:27:33 -0400
-Received: from relay08.th.seeweb.it (relay08.th.seeweb.it [5.144.164.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3630923141
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 05:27:32 -0700 (PDT)
-Received: from [192.168.1.101] (abxi46.neoplus.adsl.tpnet.pl [83.9.2.46])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id A886C3F756;
-        Wed,  6 Jul 2022 14:27:24 +0200 (CEST)
-Message-ID: <a443cd40-a1d5-6e17-1c49-d592a590f1f8@somainline.org>
-Date:   Wed, 6 Jul 2022 14:27:23 +0200
+        with ESMTP id S232759AbiGFM2U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 08:28:20 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5696224BE4
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 05:28:19 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-31c9b70c382so75716047b3.6
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Jul 2022 05:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SFftCeoPS9JnX0LvmFdEe3yxlwM+TuWNOSlHpz2qIMc=;
+        b=J3vc7xUIe4IFwiah47beurvZCXS/x3GNgWPBE83dOoan3xrjnc1LfCdezuE4Fe5Fwv
+         rzMpwWjv0tVFL01zy+dB8TokOg3n873YwP58UIQmuQtFRRDEPw1ThWThWmAHnlSdniL0
+         ezGT0SeAiLs+BqYvcKVq+oIZIUpEs2qTSI3jwsDl/tnuE8NzIUBl23IvymcXiapygQpU
+         6H07Gxwte4Nbb+iEHEbz1oBWHVnX356q3/QKXU1wnjKzy5Mwh0uMQd6vFVBhNh1nQE+v
+         AJ6Q+2Nkdn3n+vT6sxPQFvn5KIeKJdSXVGpU+wtnw9O2ouM5+yhoRKxHjlBOSOPoeGaC
+         brhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SFftCeoPS9JnX0LvmFdEe3yxlwM+TuWNOSlHpz2qIMc=;
+        b=H12yP7WZ3aqk8Pz8AyDnWeS7ggvyj1fIjSDdXO7htL9/FynJ3pJhpHNxALA9cQXUmo
+         QSD4rWGhv7uOEBNJO/n0IejmMYlQfnGr334A2qhMmc5sIYD04SpwZXRuDKrZ8Ujf6h2N
+         fCQrsJ4AuOniqHBgbI0EZgDboqX5L7nJNk/A1SJkEQnbHdu28aovhiylQdKqfIl/3OXV
+         24OEvE9LgoJint7SP+x0mjZSGWgTIm6rO+rbzlD5/OQtayA8U5hYuNABX+Far7xjiWE9
+         GR9ihrJSkZ8I6Dc2viP2TW70yj6hYYAlLVtxpDAh5AvCl7zOqkUeoF4/PCO+9HO6ycR0
+         4G4Q==
+X-Gm-Message-State: AJIora/ZDVY/A696zbE1HRhOeBTXZtEV8yiQT7S8L75YeJLYoz7zLa0v
+        /Briz7IxAUvyqCZ9RIJOHCHRKUA55wT21o/aCCAgW4J7ITk=
+X-Google-Smtp-Source: AGRyM1tYRg8zHOl/8p0zgKwGm70EF+XAwRrFQ4qLEnQad/6wb8fINO7eJgAmuTDZwC/aXrzFgznSN52x2bUJJrL5Ljk=
+X-Received: by 2002:a81:468b:0:b0:318:4cac:6576 with SMTP id
+ t133-20020a81468b000000b003184cac6576mr43759042ywa.277.1657110498401; Wed, 06
+ Jul 2022 05:28:18 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v6 11/12] arm64: dts: qcom: add PMP8074 DTSI
-Content-Language: en-US
-To:     Robert Marko <robimarko@gmail.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        jic23@kernel.org, lars@metafoo.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20220704212402.1715182-1-robimarko@gmail.com>
- <20220704212402.1715182-11-robimarko@gmail.com>
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-In-Reply-To: <20220704212402.1715182-11-robimarko@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+References: <20220706060222.302051-1-windhl@126.com>
+In-Reply-To: <20220706060222.302051-1-windhl@126.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 Jul 2022 14:27:41 +0200
+Message-ID: <CAHp75VdWBx2hMyu6902exeist24cm5NnO3z9aKjhV=H5tb8y9g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: rockchip: Fix missing of_node_put() in
+ rockchip_gpio_probe() and rockchip_gpiolib_register()
+To:     Liang He <windhl@126.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Jul 6, 2022 at 8:29 AM Liang He <windhl@126.com> wrote:
+>
+> We should call of_node_put() for the reference returned by
+> of_get_parent() which will increase the refcount.
 
+Is it suggested by the so-called Hulk Robot? If so, it's not the first
+time I see that people don't think about, and just repeat as robots
+do. Have you read the code? Have you tried to understand what may
+happen when you put an OF node? What would be possible consequences to
+the rest of the code?
 
-On 4.07.2022 23:24, Robert Marko wrote:
-> PMP8074 is a companion PMIC to the Qualcomm IPQ8074 series that is
-> controlled via SPMI.
-> 
-> Add DTSI for it providing GPIO, regulator and RTC support.
-> 
-> RTC is disabled by default as there is no built-in battery so it will
-> loose time unless board vendor added a battery, so make it optional.
-> 
-> Signed-off-by: Robert Marko <robimarko@gmail.com>
-> ---
-> Changes in v6:
-> * Add RTC and GPIO nodes
-> 
-> Changes in v5:
-> * Remove #address-cells and #size-cells as they are not required for
-> regulator subnodes
-> ---
->  arch/arm64/boot/dts/qcom/pmp8074.dtsi | 125 ++++++++++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pmp8074.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pmp8074.dtsi b/arch/arm64/boot/dts/qcom/pmp8074.dtsi
-> new file mode 100644
-> index 000000000000..a3b395e4d78f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pmp8074.dtsi
-> @@ -0,0 +1,125 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-Hi,
+The above sentence is correct, implementation is not thought through.
+It might be a correct fix, but the commit message doesn't show that
+you really spent time on the change.
 
-Please consider BSD3, or at least dual-licensing with some permissive
-license (so that for example BSDs can re-use these DTs).
-> +
-> +#include <dt-bindings/spmi/spmi.h>
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> +
-> +&spmi_bus {
-> +	pmic@0 {
-> +		compatible = "qcom,pmp8074", "qcom,spmi-pmic";
-> +		reg = <0x0 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pmp8074_adc: adc@3100 {
-> +			compatible = "qcom,spmi-adc-rev2";
-> +			reg = <0x3100>;
-> +			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			#io-channel-cells = <1>;
-> +
-> +			ref_gnd@0 {
-No underscores in node names, please change this to ref-gnd (and consequently
-for all other nodes). Note that this only concerns node names and not labels.
+P.S> I would personally put all those Hulk Robot bla-bla-bla with
+lowest priority to consider, too many broken submissions...
 
-> +				reg = <ADC5_REF_GND>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			vref_1p25@1 {
-> +				reg = <ADC5_1P25VREF>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			vref_vadc@2 {
-> +				reg = <ADC5_VREF_VADC>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			pmic_die: die_temp@6 {
-> +				reg = <ADC5_DIE_TEMP>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			xo_therm: xo_temp@76 {
-> +				reg = <ADC5_XO_THERM_100K_PU>;
-> +				qcom,ratiometric;
-> +				qcom,hw-settle-time = <200>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			pa_therm1: thermistor1@77 {
-> +				reg = <ADC5_AMUX_THM1_100K_PU>;
-> +				qcom,ratiometric;
-> +				qcom,hw-settle-time = <200>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			pa_therm2: thermistor2@78 {
-> +				reg = <ADC5_AMUX_THM2_100K_PU>;
-> +				qcom,ratiometric;
-> +				qcom,hw-settle-time = <200>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			pa_therm3: thermistor3@79 {
-> +				reg = <ADC5_AMUX_THM3_100K_PU>;
-> +				qcom,ratiometric;
-> +				qcom,hw-settle-time = <200>;
-> +				qcom,pre-scaling = <1 1>;
-> +			};
-> +
-> +			vph_pwr@131 {
-> +				reg = <ADC5_VPH_PWR>;
-> +				qcom,pre-scaling = <1 3>;
-> +			};
-> +		};
-> +
-> +		pmp8074_rtc: rtc@6000 {
-> +			compatible = "qcom,pm8941-rtc";
-> +			reg = <0x6000>;
-> +			reg-names = "rtc", "alarm";
-> +			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
-> +			allow-set-time;
-> +			status = "disabled";
-Isn't this PMIC-internal, aka accessible on all devices using PMP8074?
-
-> +		};
-> +
-> +		pmp8074_gpios: gpio@c000 {
-> +			compatible = "qcom,pmp8074-gpio", "qcom,spmi-gpio";
-> +			reg = <0xc000>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmp8074_gpios 0 0 12>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
-> +	};
-> +
-> +	pmic@1 {
-> +		compatible = "qcom,pmp8074", "qcom,spmi-pmic";
-> +		reg = <0x1 SPMI_USID>;
-> +
-> +		regulators {
-> +			compatible = "qcom,pmp8074-regulators";
-> +
-> +			s3: s3 {
-> +				regulator-name = "vdd_s3";
-> +				regulator-min-microvolt = <592000>;
-> +				regulator-max-microvolt = <1064000>;
-
-Are you sure no other configurations are supported with this PMIC?
-Otherwise you may accidentally burn somebody's board by setting up
-regulators in a place that's not usually expected to have them..
-
-Konrad
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			s4: s4 {
-> +				regulator-name = "vdd_s4";
-> +				regulator-min-microvolt = <712000>;
-> +				regulator-max-microvolt = <992000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			l11: l11 {
-> +				regulator-name = "l11";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +		};
-> +	};
-> +};
+-- 
+With Best Regards,
+Andy Shevchenko
