@@ -2,78 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87BA05687AF
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 14:03:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C09505687AD
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Jul 2022 14:03:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231190AbiGFMCK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jul 2022 08:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        id S233055AbiGFMDG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Jul 2022 08:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232099AbiGFMCI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 08:02:08 -0400
-Received: from m1550.mail.126.com (m1550.mail.126.com [220.181.15.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C88132408D
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 05:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=UguFE
-        fqkOBqPe7p4i03kFWYdWm1MKDWnqJDN5w91UUw=; b=cjzSZ+9axqoDDA8cJPmHp
-        3yFSltjJl/kcAVzGXQK7nOgXm9StnyWX2KwnKMpSmggAOmtLiDvDjw8xm1UA98vo
-        wQcM0oQnC8z9FZeNiAY+pjIrMLRRvzGXpVNzole178fuGQLkvXl1WgzF/V/QWpw+
-        hzWfMTKCXltK7TrJTKsYiQ=
-Received: from windhl$126.com ( [123.112.71.157] ) by ajax-webmail-wmsvr50
- (Coremail) ; Wed, 6 Jul 2022 20:01:56 +0800 (CST)
-X-Originating-IP: [123.112.71.157]
-Date:   Wed, 6 Jul 2022 20:01:56 +0800 (CST)
-From:   "Liang He" <windhl@126.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Cc:     "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re:Re: Re: [PATCH] gpio: gpiolib-of: Fix refcount bugs in
- of_mm_gpiochip_add_data()
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20220113(9671e152)
- Copyright (c) 2002-2022 www.mailtech.cn 126com
-In-Reply-To: <CAHp75VdY=PD+kPOgXf-rjj2zMLF6uDrXk3-jVRB_MRiLdu=TKg@mail.gmail.com>
-References: <20220704091313.277567-1-windhl@126.com>
- <CAMRc=MdGR4BdH4FfiRjzHY2uS7=13qRKzQZj9jcw5PnghYT2Gg@mail.gmail.com>
- <16c361ba.606.181d110bde1.Coremail.windhl@126.com>
- <CAHp75VdY=PD+kPOgXf-rjj2zMLF6uDrXk3-jVRB_MRiLdu=TKg@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+        with ESMTP id S233401AbiGFMDA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 08:03:00 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D048729C81
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 05:02:57 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id j7so20576411ybj.10
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Jul 2022 05:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0gmjR92/ilIXmcsx4h/zr5BFgWECYWRbjj9sJUHVD5g=;
+        b=N0QdBambMGMYoYTp/ybVCNWrXaoTghttU7dgzH1l1Y815ND8OXpTpu5QKKrePRio6K
+         7KRIAEGNTbZNiZMcIdV01pU5MrQKf6HbwibJdhvBWUGxTwsln5OQOxD1KyYopxUZJcPE
+         mMQC3hncbvPCqEN5/TDUcHDFsNGPQrjNyEjWQLjKOkKp7AFoE/YneoshO+XADZxAckrp
+         RqeX1dSD8GhOF6x1crOVz6mxaTuPjvplVjwE0a42z076XoJUpLWAIDKt2gdd0dWbw6vJ
+         b+gii6IWb+yFYUGp21En+gqfoYPiDpaQ2MKBGmjaw9Mj62zCGnlxLSNNREnE97v4WciT
+         HTKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0gmjR92/ilIXmcsx4h/zr5BFgWECYWRbjj9sJUHVD5g=;
+        b=MVUtkrhD8JEV/DG0No3ISlEjyhN6JbziG+vevTThVd7eciHFcGnfQhhjf2q2L84JCR
+         jWNgcfbfNKrXMJJXX3cbqcgUPP6DkCUhb1RHlF0CPgOFBBZej1FJa5fxnfXJKstAGXz8
+         OaVzIqFmlltwhPnqUpQYVz/jLbmHUZ5Jr7RNblbGwppE2MVQQELr79n2TJ9afwH+AOCA
+         tOjIBEKZBbpScK/NN8TJBypsUGhxC2CETKrC43tnT+XYabgKojtFGaCTSQltkf2rClG8
+         d3wPk/w7ExfjlAHCDUbT4Z7S3qIS02iPwlvtkiA3462n1DFFP9NbnJA536SvGahWc8Ru
+         bfnQ==
+X-Gm-Message-State: AJIora8o1HVw+5wp4J76nbheMEaEFmkLKKR3W2XI2LgXCSuRngChjpPi
+        ejNoNyl/XCXLA7RQ5FFNhU0uCC9NgvP2adBKlxIE6A==
+X-Google-Smtp-Source: AGRyM1scIVOs0IANCeR4dGbkLq+Asjhy7uyA2rcSCG+/Hp/SD0OHvYykzYTKpepZq4LxW7fE9lvCJ2AbK8AjUePoonI=
+X-Received: by 2002:a05:6902:1241:b0:66e:a6f1:83f3 with SMTP id
+ t1-20020a056902124100b0066ea6f183f3mr859140ybu.492.1657108977088; Wed, 06 Jul
+ 2022 05:02:57 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <d6cb15d.7794.181d3636886.Coremail.windhl@126.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: MsqowADnPPG1ecViLZJEAA--.49510W
-X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbi3BQ2F1pED3w9rwACsU
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+References: <20220703111057.23246-1-aidanmacdonald.0x0@gmail.com>
+ <20220703111057.23246-4-aidanmacdonald.0x0@gmail.com> <CACRpkdamknwRPGEeGGQGQPtKw=dPXa79GAJy+E6y+03NakN=cA@mail.gmail.com>
+ <GrX3yDSwNOGIBcWmKqusaJ3dDqNGLr3Y@localhost>
+In-Reply-To: <GrX3yDSwNOGIBcWmKqusaJ3dDqNGLr3Y@localhost>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 6 Jul 2022 14:02:43 +0200
+Message-ID: <CACRpkdbHg-vTj6CnkF=oMxtpy+FxEPdn2_qKzgtsT0TYU6Nv-g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: regmap: Support a custom ->to_irq() hook
+To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc:     michael@walle.cc, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-CgpBdCAyMDIyLTA3LTA2IDE5OjUyOjQ0LCAiQW5keSBTaGV2Y2hlbmtvIiA8YW5keS5zaGV2Y2hl
-bmtvQGdtYWlsLmNvbT4gd3JvdGU6Cj5PbiBXZWQsIEp1bCA2LCAyMDIyIGF0IDM6NDkgQU0gTGlh
-bmcgSGUgPHdpbmRobEAxMjYuY29tPiB3cm90ZToKPj4gQXQgMjAyMi0wNy0wNSAyMzo0MDoxMiwg
-IkJhcnRvc3ogR29sYXN6ZXdza2kiIDxicmdsQGJnZGV2LnBsPiB3cm90ZToKPj4gPk9uIE1vbiwg
-SnVsIDQsIDIwMjIgYXQgMTE6MTMgQU0gTGlhbmcgSGUgPHdpbmRobEAxMjYuY29tPiB3cm90ZToK
-Pgo+Li4uCj4KPj4gVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiB0aGUgZmFjdCB0aGF0IHRoZXJlIGlz
-IGEgY2FsbCBzaXRlIGluIGZ1bmN0aW9uICdxZV9hZGRfZ3Bpb2NoaXBzKCknCj4+IG9mIHNyYyBm
-aWxlICdkcml2ZXJzXHNvY1xmc2xccWVcZ3Bpby5jJy4KPj4KPj4gSW4gdGhhdCBmdW5jdGlvbiwg
-b2ZfbW1fZ3Bpb2NoaXBfYWRkX2RhdGEoKSBpcyBjb250YWluZWQgaW4gYSBpdGVyYXRpb24gb2Yg
-Zm9yX2VhY2hfY29tcGF0aWJsZV9ub2RlKCksCj4+IHdoaWNoIHdpbGwgYXV0b21hdGljYWxseSBp
-bmNyZWFzZSBhbmQgZGVjcmVhc2UgdGhlIHJlZmNvdW50Lgo+Cj4iYW5kIGRlY3JlYXNlIgo+Cj4K
-Pj4gQXMgdGhlcmUgaXMgYSBuZXcgcmVmZXJlbmNlIGVzY2FwZWQgaW50byB0aGUgbW1fZ2MtPmdj
-Lm9mX25vZGUsIHdlIHNob3VsZCBpbmNyZWFzZSB0aGUKPj4gcmVmY291bnQsIG90aGVyd2lzZSwg
-dGhlcmUgbWF5IGJlIGEgcHJlbWF0dXJlIGZyZWUgYXMgd2UgZG8gbm90IGtub3cgdGhlIGV4aXN0
-ZW5jZSBvZgo+PiB0aGUgcmVmZXJlbmNlIGluICdtbV9nYy0+Z2Mub2Zfbm9kZScuCj4+Cj4+IElm
-IG15IHVuZGVyc3RhbmRpbmcgaXMgd3JvbmcsIHBsZWFzZSBjb3JyZWN0IG1lLgo+Cj5ZZXMsIHNl
-ZSBhYm92ZS4KPgo+LS0gCj5XaXRoIEJlc3QgUmVnYXJkcywKPkFuZHkgU2hldmNoZW5rbwoKSGmj
-rEFuZHksCgpJIHRoaW5rIHlvdSBkaWQgbm90IGdldCBteSBwb2ludC4KClRoZSBmb3JfZWFjaF94
-eHggT0YgYXBpIGhhcyBkZWNyZWFzZWQgdGhlIHJlZmNvdW50LCBidXQgCnRoZXJlIGlzIGEgcmVm
-ZXJlbmNlIHxFU0NBUEV8IG91dCBvZiB0aGUgbG9jYWwgYXJlYSwgc28gd2UKbmVlZCBhZGRpdGlv
-bmFsIHJlZmNvdW50aW5nLCByaWdodD8KClRoYW5rcywKCkxpYW5nCg==
+On Tue, Jul 5, 2022 at 1:08 PM Aidan MacDonald
+<aidanmacdonald.0x0@gmail.com> wrote:
+> Linus Walleij <linus.walleij@linaro.org> writes:
+
+> I'm not trying to argue that hierarchical IRQ domains are always a bad
+> thing -- I'm just pointing out they're not always useful or necessary.
+> All your points make sense when the GPIO controller is a large distinct
+> block with potentially many GPIOs. When we're dealing with an MFD device
+> with just a few GPIOs, maybe even just one, having a separate IRQ domain
+> makes less sense; the added structure is generally not useful.
+
+Do you mean your driver does this:
+
+MFD main device
+MFD irqchip
+ |
+ +->  MFD gpiochip
+         No irqchip here, so .to_irq() just refers ^ to that one up there
+
+IIUC you mean that if I want to use the irqchip directly then
+I have to refer to the MFD irqchip, I just cannot refer to the
+gpiochip subnode because that one does not have an irqchip.
+
+// Getting GPIO from gpiochip and irq from MFD device
+// for the same GPIO line
+gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
+irqs = <&mfd 114 IRQ_EDGE_RISING>;
+
+Then for a Linux driver this can be papered over by using the
+.to_irq() callback and just defining gpios.
+
+This isn't very good, if you created a separate gpiochip then you
+should have a separate (hierarchical) irqchip associated with that
+gpiochip as well.
+
+// Getting GPIO and irq from the same gpiochip node
+gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
+irqs = <&gpio 3 IRQ_EDGE_RISING>;
+
+I made this mistake with the ab8500 driver and
+I would not do it like this today. I would use hierarchical gpio
+irqchip. And I should go and fix it. (Is on my TODO.)
+
+> Looking at other GPIO drivers using a hierarchical IRQ domain, they
+> include their own IRQ chips with specialized ops. In my case I don't
+> need any of that (and it'd be the same with other MFD devices) so it
+> looks like using an IRQ domain would mean I'd have to create a fake
+> IRQ chip and domain just to translate between two number spaces.
+>
+> Is that really better than simply using ->to_irq()?
+
+To be honest most irqchips are "fake", what they mostly do is figure
+out which of a few internal sources that fired the irq, so it models the
+different things connected to a single IRQ line.
+
+So yeah, I think the hierarchical irqchip is worth it, especially if that
+means the offset of the irqs and gpios become the same.
+
+Maybe we can add more helpers in the core to make it dirt simple
+though? It would help others with the same problem.
+
+Yours,
+Linus Walleij
