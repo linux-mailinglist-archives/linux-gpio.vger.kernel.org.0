@@ -2,58 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BCCB56A9EF
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 19:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83C8A56AEF1
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 01:17:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236266AbiGGRpS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 13:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51946 "EHLO
+        id S236216AbiGGXQR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 19:16:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235320AbiGGRpR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 13:45:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E27275C95A;
-        Thu,  7 Jul 2022 10:45:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D6AE62091;
-        Thu,  7 Jul 2022 17:45:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC55FC3411E;
-        Thu,  7 Jul 2022 17:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657215915;
-        bh=6utmIEBNmJdH+aR9y6LOhDYh2NSUvaIjv2jcybsXQCc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cAyhptaXy+sXh7tJLLUO+9hfDyjRzLENSJ+HBy9X2F4/HeOhUBO8Meizj2dsj48tz
-         2+VupD/n2oX7oFzpv16iq8VNsclGafp+yIWNsiOIFOX2W8H4xvQ3Q6HCgALmEozHL6
-         XTOxP9EBdkL8eUZvR6Bk/6juwd4q+iXJXVPOHNNA8TPzcIhRm2vMZ461Nw/sRDZf88
-         m/b4+3DIOKRlWJ5jWfCQILcqGxpewHxdxLsAKdMD29xuKKWJReWU+qmJkVrMFyzE0q
-         azNUDuTJIrNHopCJpU0ZKAgvGCeREEI34ir7vMV89SbCvKbfA+lN86hFzyoQpRuPFm
-         UY+TA4fWyt11Q==
-Date:   Thu, 7 Jul 2022 18:54:56 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        konrad.dybcio@somainline.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        lars@metafoo.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v6 10/12] iio: adc: qcom-spmi-adc5: add ADC5_VREF_VADC
- to rev2 ADC5
-Message-ID: <20220707185456.45ff3958@jic23-huawei>
-In-Reply-To: <20220704212402.1715182-10-robimarko@gmail.com>
-References: <20220704212402.1715182-1-robimarko@gmail.com>
-        <20220704212402.1715182-10-robimarko@gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+        with ESMTP id S236128AbiGGXQQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 19:16:16 -0400
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D60675B6
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 16:16:15 -0700 (PDT)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-101b4f9e825so27274943fac.5
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Jul 2022 16:16:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K3GtFLT5VlHIMmMMlLDEGSWPueKfPOd59FonXvTzyyE=;
+        b=HaK0sV1wqReBsLI5fYuywyIsK7IX8zq2V0C3U4KAcNkLTQILSU0CP1lyPlfvHr/WjE
+         ml4+0viUos4z0FKMiUTBEsAoq8Ap4hrnsoMbZ0HSP7e2jfzz3EkamK/Xh1IpCL4rNM4N
+         Dg4wb7cLNpQ1RoXtxw3Jy84B5I77DPJiLZGzZe/bafVfYgYzcth9XVL9Xd0SX/n6CQGL
+         4PR+uqHrcTllvDEvJnumD1+mSOyMkCyyh3Oci8R5OBrliZA49RzOfx249nS99Cyeq5rN
+         GDrP6FHYvFgDoQBvMJ6iZ4gXG0MdSnSQIJc2886+NJr+7Ivvx1X90mqi595it9vWKc4+
+         MnHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K3GtFLT5VlHIMmMMlLDEGSWPueKfPOd59FonXvTzyyE=;
+        b=vTBxle+HVnMC1bbzs3XZfCfz1EuSufVpxF1OVlA2IwYnLVcaoyQBdrwPKGTUUcMICa
+         4O6RuqdzQJ88xwcpSnJZ7TAlb8i1zr3s7ztLOj6MjMOjnxOD/yb/2JkqQ2c1hICsQ6mz
+         xrKVsxEEfGiEqCOLXA9I9SuZ37PZ2+ds1tn3Pn51HJQndmlfnzRIqL8l5Vp+fjK7gnWd
+         AK7a/AGNcPMcKP9qEJUvu8HVhAGd+e/0SL97PSpCzLVJDk6b4ZF7T8gnmEGbPDcbzzSE
+         NNVUf3hXXHlN9JfmFJ+4LD5qlSg6TxFDashte6xzE5CtrmUpVBxWtt0U2NBe6UJFdVD4
+         fNfQ==
+X-Gm-Message-State: AJIora8VJ9QLZKZmV6jjs/IInZ7W4RNJP1VjaSN1iGp9BYZj2DZI1caE
+        sdIHGaHMhYyig6eJZkj/cb7Zyw==
+X-Google-Smtp-Source: AGRyM1uog+T7XWwPK+NaACTq1k/xU9UmzU4HnRc/BXdZwD6n3ZAmkFK6NlgZF1pL5XX4Au8NK3SRUg==
+X-Received: by 2002:a05:6870:a70c:b0:10c:3bb7:ea15 with SMTP id g12-20020a056870a70c00b0010c3bb7ea15mr3640528oam.69.1657235774716;
+        Thu, 07 Jul 2022 16:16:14 -0700 (PDT)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id cg10-20020a056830630a00b006190efaf118sm2177606otb.66.2022.07.07.16.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 16:16:14 -0700 (PDT)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>,
+        John Hentges <jhentges@accesio.com>,
+        Jay Dolan <jay.dolan@accesio.com>,
+        Fred Eckert <Frede@cmslaser.com>,
+        Paul Demetrotion <pdemetrotion@winsystems.com>,
+        techsupport@winsystems.com
+Subject: [PATCH v2 0/6] gpio: Implement and utilize register structures for ISA drivers
+Date:   Thu,  7 Jul 2022 14:10:02 -0400
+Message-Id: <cover.1657216200.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,37 +72,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon,  4 Jul 2022 23:24:00 +0200
-Robert Marko <robimarko@gmail.com> wrote:
+Changes in v2:
+ - Implement support for the Intel 8255 interface as a new gpio-i8255
+   module; common code among gpio-104-dio-48e, gpio-104-idi-48, and
+   gpio-gpio-mm are consolidated in the gpio-i8255 module
+ - Refactor the gpio-104-dio-48e, gpio-104-idi-48, and gpio-gpio-mm to
+   utilize the new gpio-i8255 functions; this greatly simplifies the
+   changes for these drivers
 
-> Add support for ADC5_VREF_VADC channel to rev2 ADC5 channel list.
-> This channel measures the VADC reference LDO output.
-> 
-> Signed-off-by: Robert Marko <robimarko@gmail.com>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The PC104/ISA drivers were updated to use I/O memory accessor calls such
+as ioread8()/iowrite8() in a previous patch series [1]. This
+patchset is a continuation of the effort to improve the code readability
+and reduce magic numbers by implementing and utilizing named register
+data structures.
 
-I'm assuming this will go in via MFD. Shout if I should pick it up
-directly.
+One of the benefits is that we can now observe more easily similarities
+in devices that share similar interfaces; such as the i8255 interfaces
+used by the 104-DIO-48E, 104-IDI-48, and GPIO-MM drivers -- as well as
+the similar interface used by the 104-IDIO-16 and PCI-IDIO-16 drivers.
 
-Thanks,
+A new module supporting the Intel 8255 interface is introduced to
+consolidate the common code found among the 104-DIO-48E, 104-IDI-48, and
+GPIO-MM drivers.
 
-Jonathan
+[1] https://lore.kernel.org/all/cover.1652201921.git.william.gray@linaro.org/
 
-> ---
->  drivers/iio/adc/qcom-spmi-adc5.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
-> index 87438d1e5c0b..7bd3745884f0 100644
-> --- a/drivers/iio/adc/qcom-spmi-adc5.c
-> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
-> @@ -589,6 +589,8 @@ static const struct adc5_channels adc5_chans_rev2[ADC5_MAX_CHANNEL] = {
->  					SCALE_HW_CALIB_DEFAULT)
->  	[ADC5_1P25VREF]		= ADC5_CHAN_VOLT("vref_1p25", 0,
->  					SCALE_HW_CALIB_DEFAULT)
-> +	[ADC5_VREF_VADC]	= ADC5_CHAN_VOLT("vref_vadc", 0,
-> +					SCALE_HW_CALIB_DEFAULT)
->  	[ADC5_VPH_PWR]		= ADC5_CHAN_VOLT("vph_pwr", 1,
->  					SCALE_HW_CALIB_DEFAULT)
->  	[ADC5_VBAT_SNS]		= ADC5_CHAN_VOLT("vbat_sns", 1,
+William Breathitt Gray (6):
+  gpio: i8255: Introduce the i8255 module
+  gpio: 104-dio-48e: Implement and utilize register structures
+  gpio: 104-idi-48: Implement and utilize register structures
+  gpio: gpio-mm: Implement and utilize register structures
+  gpio: 104-idio-16: Implement and utilize register structures
+  gpio: ws16c48: Implement and utilize register structures
+
+ MAINTAINERS                     |   6 +
+ drivers/gpio/Kconfig            |   6 +
+ drivers/gpio/Makefile           |   1 +
+ drivers/gpio/gpio-104-dio-48e.c | 224 +++++++++-------------------
+ drivers/gpio/gpio-104-idi-48.c  | 123 +++++++---------
+ drivers/gpio/gpio-104-idio-16.c |  58 +++++---
+ drivers/gpio/gpio-gpio-mm.c     | 177 +++++------------------
+ drivers/gpio/gpio-i8255.c       | 249 ++++++++++++++++++++++++++++++++
+ drivers/gpio/gpio-ws16c48.c     | 119 ++++++++++-----
+ include/linux/gpio/i8255.h      |  34 +++++
+ 10 files changed, 575 insertions(+), 422 deletions(-)
+ create mode 100644 drivers/gpio/gpio-i8255.c
+ create mode 100644 include/linux/gpio/i8255.h
+
+
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
+-- 
+2.36.1
 
