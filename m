@@ -2,402 +2,209 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD38C5697F4
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 04:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1073A569974
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 06:49:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234723AbiGGC1i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Jul 2022 22:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38096 "EHLO
+        id S235010AbiGGEtX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 00:49:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234687AbiGGC1i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Jul 2022 22:27:38 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2A21CFC8
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 19:27:35 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id bh13so9988551pgb.4
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Jul 2022 19:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fnpve7PSl8/JEJ8yUnSeCGl1TqWP5RcW7MtocC82bEc=;
-        b=Rl4wFFn0zmwG5TDiikUGiJZTZ9dpVxkx8f0ftFBAvttA3pxJBCISeRXOCXztjbZGzQ
-         hZpx/Rn/XE8syyVVgoxmt19V/WYGRZj9GCMdOgBHBmpVI2rLvtZpKNmslrW/uNSkVmkK
-         PSClVVkM6MX31Ik76SyO7wssBLUh16NIbDpG4ebeaXXWnDn4kIFhSSE4m+sLoVjef+Ab
-         ElA5vQgJHWCHIf62zyoW0q84m3othkRj8U8ei6H4tten4foYrTeKemp21zLTYFDkwvzD
-         Td250bZzwVWMKr0P7NjmnGYbfHYldTCd+uvNMIk5heW43OK6y7yv+nabFEDdRBCXQ3+c
-         VkPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fnpve7PSl8/JEJ8yUnSeCGl1TqWP5RcW7MtocC82bEc=;
-        b=7RgCFAgvasNGz92l47A8JzXeEQIcQu2Z/H8SGgkpkWwE7qDbeitQ46rgh3eMd15XcA
-         Qjk+0jur8nA+f/Pa57i+x7C+0sVSr1uBS/PkSpqt6Iea7nXtRZRGDThLBpTQ1LGUuFHF
-         qJUXfkHQvjKk8jpIlfThnPEveqRwMfHfVXGdinyoRqR2dTMasEk+HV/4YfymJuF5Kw8h
-         O5MDlribNnUe9M7FVaGP9ZASSbbqqLx75cemSxjAldpzqnl5bqamLWMTHprT3xlo/oVj
-         xniBaT0YcyC3UaCntzreAu0p0+l/kXdZ8+r1gvXm1tezuU30mi0BqdBnpuHpmhFoijh0
-         e4BA==
-X-Gm-Message-State: AJIora+JYJ3ArUYYb7hHEttbwbnzvuGLKeAySaOQjhoys0gAnRYKIVKo
-        +Dyfa4MsKHZC5cV+SPD71yV4yvpsDH0=
-X-Google-Smtp-Source: AGRyM1sJu+sM42MTVzY+Ohl9PB9ekFUyOwULmy5MTvQmOyhZbLK3CzRgA+KgbjbU2aXgtiLBkNhs5Q==
-X-Received: by 2002:a63:d614:0:b0:411:acdb:5c55 with SMTP id q20-20020a63d614000000b00411acdb5c55mr30574180pgg.245.1657160855020;
-        Wed, 06 Jul 2022 19:27:35 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id z3-20020a1709027e8300b0016bf0200cd8sm4881982pla.296.2022.07.06.19.27.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 19:27:34 -0700 (PDT)
-Date:   Thu, 7 Jul 2022 10:27:30 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH 3/4] tools: add gpiowatch
-Message-ID: <20220707022730.GB7250@sol>
-References: <20220627134447.81927-1-warthog618@gmail.com>
- <20220627134447.81927-4-warthog618@gmail.com>
- <CAMRc=Mf1ux1o9BEOhEAWoVkren-wH-nuPPvvKOisxtqiNyrfOA@mail.gmail.com>
+        with ESMTP id S235071AbiGGEtB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 00:49:01 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D6A31230
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Jul 2022 21:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657169246; x=1688705246;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KPHeN1M2tikU2dR02upVUOR2LHepqS/qsCyrD3NSLx0=;
+  b=Jgvw1T0FKDvYenW58kfNSkUL7CGyOnyVX1Q2kdhCcLGjPwPqvezrKHZG
+   7PAF+oEj0+4JKnI9IZgc7QZakZhS/arapHE7Cb8sMuRN8u0ucQSDnKcf/
+   F5e1qKN3vklD6x2AX05nxTwphBOUxqYCHttq5a38mvCdxqZ5kZ3vSaUwb
+   hRpxqO2+6ryIj+ieOEkXIP7B4ud1wsLnV2DCagf5/a/4D4I0EtviF5zZC
+   JbptRG40daAfl1Dqh4myem3dxC8dZaaTWddgG2SDdYXVH3O99nPM/paHB
+   7q7+QHHUHrsYmkBD/PhQftOfbKwB4I0K/bFnXZ0AzIuq0eKu86y+PfThc
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10400"; a="285053657"
+X-IronPort-AV: E=Sophos;i="5.92,251,1650956400"; 
+   d="scan'208";a="285053657"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2022 21:47:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,251,1650956400"; 
+   d="scan'208";a="568356991"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 06 Jul 2022 21:47:23 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o9JQA-000LYg-Hb;
+        Thu, 07 Jul 2022 04:47:22 +0000
+Date:   Thu, 7 Jul 2022 12:46:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     lewis.hanly@microchip.com, linux-gpio@vger.kernel.org,
+        linux-riscv@lists.infradead.org, palmer@dabbelt.com, maz@kernel.org
+Cc:     kbuild-all@lists.01.org, paul.walmsley@sifive.com,
+        conor.dooley@microchip.com, daire.mcnamara@microchip.com,
+        lewis.hanly@microchip.com
+Subject: Re: [PATCH 1/1] gpio: mpfs - add polarfire soc gpio support
+Message-ID: <202207071219.0Jw0owWG-lkp@intel.com>
+References: <20220705134912.2740421-2-lewis.hanly@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=Mf1ux1o9BEOhEAWoVkren-wH-nuPPvvKOisxtqiNyrfOA@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220705134912.2740421-2-lewis.hanly@microchip.com>
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 06, 2022 at 10:46:28PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Jun 27, 2022 at 3:46 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Add a gpiowatch tool, based on gpiomon, but reporting line info change
-> > events similar to the gpio-watch tool in the linux kernel.
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >  man/Makefile.am   |   2 +-
-> >  tools/.gitignore  |   1 +
-> >  tools/Makefile.am |   4 +-
-> >  tools/gpiowatch.c | 214 ++++++++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 219 insertions(+), 2 deletions(-)
-> >  create mode 100644 tools/gpiowatch.c
-> >
-> > diff --git a/man/Makefile.am b/man/Makefile.am
-> > index 4d2c29b..3badd3b 100644
-> > --- a/man/Makefile.am
-> > +++ b/man/Makefile.am
-> > @@ -3,7 +3,7 @@
-> >
-> >  if WITH_MANPAGES
-> >
-> > -dist_man1_MANS = gpiodetect.man gpioinfo.man gpioget.man gpioset.man gpiofind.man gpiomon.man
-> > +dist_man1_MANS = gpiodetect.man gpioinfo.man gpioget.man gpioset.man gpiofind.man gpiomon.man gpiowatch.man
-> >
-> >  %.man: $(top_builddir)/tools/$(*F)
-> >         help2man $(top_builddir)/tools/$(*F) --include=$(srcdir)/template --output=$(builddir)/$@ --no-info
-> > diff --git a/tools/.gitignore b/tools/.gitignore
-> > index 0d53de9..6175e26 100644
-> > --- a/tools/.gitignore
-> > +++ b/tools/.gitignore
-> > @@ -7,3 +7,4 @@ gpioget
-> >  gpioset
-> >  gpiomon
-> >  gpiofind
-> > +gpiowatch
-> > diff --git a/tools/Makefile.am b/tools/Makefile.am
-> > index 4a13266..8bb2cac 100644
-> > --- a/tools/Makefile.am
-> > +++ b/tools/Makefile.am
-> > @@ -9,7 +9,7 @@ libtools_common_la_SOURCES = tools-common.c tools-common.h
-> >
-> >  LDADD = libtools-common.la $(top_builddir)/lib/libgpiod.la
-> >
-> > -bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon gpiofind
-> > +bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon gpiofind gpiowatch
-> >
-> >  gpiodetect_SOURCES = gpiodetect.c
-> >
-> > @@ -23,6 +23,8 @@ gpiomon_SOURCES = gpiomon.c
-> >
-> >  gpiofind_SOURCES = gpiofind.c
-> >
-> > +gpiowatch_SOURCES = gpiowatch.c
-> > +
-> >  EXTRA_DIST = gpio-tools-test gpio-tools-test.bats
-> >
-> >  if WITH_TESTS
-> > diff --git a/tools/gpiowatch.c b/tools/gpiowatch.c
-> > new file mode 100644
-> > index 0000000..e6bfeb6
-> > --- /dev/null
-> > +++ b/tools/gpiowatch.c
-> > @@ -0,0 +1,214 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +// SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <bartekgola@gmail.com>
-> > +
-> > +#include <getopt.h>
-> > +#include <gpiod.h>
-> > +#include <inttypes.h>
-> > +#include <poll.h>
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <string.h>
-> > +#include <time.h>
-> > +
-> > +#include "tools-common.h"
-> > +
-> > +static int by_name;
-> > +static int event_clock_mode;
-> > +static int banner;
-> > +
-> > +static const struct option longopts[] = {
-> > +       { "banner",             no_argument,            &banner,        1 },
-> > +       { "by-name",            no_argument,            &by_name,       1 },
-> > +       { "chip",               required_argument,      NULL,   'c' },
-> > +       { "help",               no_argument,            NULL,   'h' },
-> > +       { "localtime",          no_argument,            &event_clock_mode,      2 },
-> > +       { "strict",             no_argument,            NULL,   's' },
-> > +       { "utc",                no_argument,            &event_clock_mode,      1 },
-> > +       { "version",            no_argument,            NULL,   'v' },
-> > +       { GETOPT_NULL_LONGOPT },
-> > +};
-> > +
-> > +static const char *const shortopts = "+c:shv";
-> > +
-> > +static void print_help(void)
-> > +{
-> > +       printf("Usage: %s [OPTIONS] <line> ...\n", get_progname());
-> > +       printf("\n");
-> > +       printf("Wait for changes to info on GPIO lines and print them to standard output.\n");
-> > +       printf("\n");
-> > +       printf("Lines are specified by name, or optionally by offset if the chip option\n");
-> > +       printf("is provided.\n");
-> > +       printf("\n");
-> > +       printf("Options:\n");
-> > +       printf("      --banner\t\tdisplay a banner on successful startup\n");
-> > +       printf("      --by-name\t\ttreat lines as names even if they would parse as an offset\n");
-> > +       printf("  -c, --chip <chip>\trestrict scope to a particular chip\n");
-> > +       printf("  -h, --help\t\tdisplay this help and exit\n");
-> > +       printf("      --localtime\treport event time as a local time (default is monotonic)\n");
-> > +       printf("  -s, --strict\t\tabort if requested line names are not unique\n");
-> > +       printf("      --utc\t\treport event time as UTC (default is monotonic)\n");
-> > +       printf("  -v, --version\t\toutput version information and exit\n");
-> > +       print_chip_help();
-> > +}
-> > +
-> > +struct config {
-> > +       bool strict;
-> > +       const char *chip_id;
-> > +};
-> 
-> Let's either have all options in a local config struct (preferred) or
-> all of them as global variables, otherwise it's confusing. If you want
-> to use flags in long opts you can always define that structure within
-> the function calling getopt().
-> 
+Hi,
 
-Agreed.  I wasn't keen on moving the struct into the function, but will
-do.
+I love your patch! Yet something to improve:
 
-Btw I prefer the long only options for the corner case options to avoid
-poluting the short space.  The common options get a short form as well.
+[auto build test ERROR on brgl/gpio/for-next]
+[also build test ERROR on linus/master v5.19-rc5 next-20220706]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> > +
-> > +int parse_config(int argc, char **argv, struct config *cfg)
-> > +{
-> > +       int opti, optc;
-> > +
-> > +       memset(cfg, 0, sizeof(*cfg));
-> > +
-> > +       for (;;) {
-> > +               optc = getopt_long(argc, argv, shortopts, longopts, &opti);
-> > +               if (optc < 0)
-> > +                       break;
-> > +
-> > +               switch (optc) {
-> > +               case 'c':
-> > +                       cfg->chip_id = optarg;
-> > +                       break;
-> > +               case 's':
-> > +                       cfg->strict = true;
-> > +                       break;
-> > +               case 'h':
-> > +                       print_help();
-> > +                       exit(EXIT_SUCCESS);
-> > +               case 'v':
-> > +                       print_version();
-> > +                       exit(EXIT_SUCCESS);
-> > +               case '?':
-> > +                       die("try %s --help", get_progname());
-> > +               case 0:
-> > +                       break;
-> > +               default:
-> > +                       abort();
-> > +               }
-> > +       }
-> > +
-> > +       return optind;
-> > +}
-> > +
-> > +static void print_banner(int num_lines, char **lines)
-> > +{
-> > +       int i;
-> > +
-> > +       if (num_lines > 1) {
-> > +               printf("Watching lines ");
-> > +               for (i = 0; i < num_lines - 1; i++)
-> > +                       printf("%s, ", lines[i]);
-> > +               printf("and %s...\n", lines[i]);
-> > +       } else {
-> > +               printf("Watching line %s ...\n", lines[0]);
-> > +       }
-> > +}
-> > +
-> > +static void event_print(struct gpiod_info_event *event, const char *chip_id)
-> > +{
-> > +       struct gpiod_line_info *info;
-> > +       uint64_t evtime, before, after, mono;
-> > +       char *evname;
-> > +       int evtype;
-> > +       struct timespec ts;
-> > +
-> > +       info = gpiod_info_event_get_line_info(event);
-> > +       evtime = gpiod_info_event_get_timestamp_ns(event);
-> > +       evtype = gpiod_info_event_get_event_type(event);
-> > +
-> > +       switch (evtype) {
-> > +       case GPIOD_INFO_EVENT_LINE_REQUESTED:
-> > +               evname = "REQUESTED";
-> > +               break;
-> > +       case GPIOD_INFO_EVENT_LINE_RELEASED:
-> > +               evname = "RELEASED ";
-> > +               break;
-> > +       case GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED:
-> > +               evname = "RECONFIG ";
-> > +               break;
-> > +       default:
-> > +               evname = "UNKNOWN  ";
-> > +       }
-> 
-> Newline for readability, please.
-> 
-> > +       if (event_clock_mode) {
-> 
-> C-style comments only except for SPDX headers please.
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/lewis-hanly-microchip-com/Add-Polarfire-SoC-GPIO-support/20220705-220421
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20220707/202207071219.0Jw0owWG-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/f1c1cf42734c00cf02babb6220f8b68a62e86d0e
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review lewis-hanly-microchip-com/Add-Polarfire-SoC-GPIO-support/20220705-220421
+        git checkout f1c1cf42734c00cf02babb6220f8b68a62e86d0e
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/
 
-Yeah, sorry - lazy habit.  I don't even notice I'm doing it.
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-> > +               // map clock monotonic to realtime, as uAPI only supports CLOCK_MONOTONIC
-> > +               clock_gettime(CLOCK_REALTIME, &ts);
-> > +               before = ts.tv_nsec + ts.tv_sec * 1000000000;
-> > +               clock_gettime(CLOCK_MONOTONIC, &ts);
-> > +               mono = ts.tv_nsec + ts.tv_sec * 1000000000;
-> > +               clock_gettime(CLOCK_REALTIME, &ts);
-> > +               after = ts.tv_nsec + ts.tv_sec * 1000000000;
-> > +               evtime += (after/2 - mono + before/2);
-> > +       }
-> 
-> Moar newlines, I really like between blocks of code, it really helps me, thanks.
-> 
+All errors (new ones prefixed by >>):
 
-Oh, ok, I see this as being one block.  Where would you like the splits?
+   drivers/gpio/gpio-mpfs.c: In function 'mpfs_gpio_probe':
+>> drivers/gpio/gpio-mpfs.c:290:20: error: 'struct irq_chip' has no member named 'parent_device'
+     290 |         irq_c->chip->parent_device = dev;
+         |                    ^~
+>> drivers/gpio/gpio-mpfs.c:310:23: error: implicit declaration of function 'devm_request_irq'; did you mean 'can_request_irq'? [-Werror=implicit-function-declaration]
+     310 |                 ret = devm_request_irq(&pdev->dev, irq,
+         |                       ^~~~~~~~~~~~~~~~
+         |                       can_request_irq
+>> drivers/gpio/gpio-mpfs.c:312:40: error: 'IRQF_SHARED' undeclared (first use in this function)
+     312 |                                        IRQF_SHARED, mpfs_gpio->gc.label, mpfs_gpio);
+         |                                        ^~~~~~~~~~~
+   drivers/gpio/gpio-mpfs.c:312:40: note: each undeclared identifier is reported only once for each function it appears in
+   cc1: some warnings being treated as errors
 
-> > +       print_event_time(evtime, event_clock_mode);
-> > +       printf(" %s", evname);
-> > +       if (chip_id)
-> > +               printf(" %s %d", chip_id, gpiod_line_info_get_offset(info));
-> > +       print_line_info(info);
-> > +       printf("\n");
-> > +}
-> > +
-> > +int main(int argc, char **argv)
-> > +{
-> > +       int i, j;
-> > +       struct gpiod_chip **chips;
-> > +       struct pollfd *pollfds;
-> > +       struct gpiod_chip *chip;
-> > +       struct line_resolver *resolver;
-> > +       struct gpiod_info_event *event;
-> > +       struct config cfg;
-> > +
-> > +       i = parse_config(argc, argv, &cfg);
-> > +       argc -= optind;
-> > +       argv += optind;
-> > +
-> > +       if (argc < 1)
-> > +               die("at least one GPIO line must be specified");
-> > +
-> > +       if (argc > 64)
-> > +               die("too many lines given");
-> > +
-> > +       resolver = resolve_lines(argc, argv, cfg.chip_id, cfg.strict, by_name);
-> > +       chips = calloc(resolver->num_chips, sizeof(*chips));
-> > +       pollfds = calloc(resolver->num_chips, sizeof(*pollfds));
-> > +       if (!pollfds)
-> > +               die("out of memory");
-> > +       for (i = 0; i < resolver->num_chips; i++) {
-> > +               chip = gpiod_chip_open(resolver->chip_paths[i]);
-> > +               if (!chip)
-> > +                       die_perror("unable to open chip %s", resolver->chip_paths[i]);
-> > +
-> 
-> Don't other tools do the same thing basically (resolving and opening
-> chips)? Can't we fold it into tools-common.c so that we get a list of
-> open chips?
-> 
 
-Yes and no.  I wasn't keen on opening all the chips at once in the
-common code as in general the chips are immediately closed once the lines
-are requested. And the request is tool specific.
-Watch is a bit of an aberation in that regard - it holds the chips open
-indefinitely.
+vim +290 drivers/gpio/gpio-mpfs.c
 
-> > +               for (j = 0; j < resolver->num_lines; j++)
-> > +                       if (resolver->lines[j].chip_path == resolver->chip_paths[i])
-> > +                               if (!gpiod_chip_watch_line_info(chip, resolver->lines[j].offset))
-> > +                                       die_perror("unable to watch line on chip %s",
-> > +                                                  resolver->chip_paths[i]);
-> > +
-> > +               chips[i] = chip;
-> > +               pollfds[i].fd = gpiod_chip_get_fd(chip);
-> > +               pollfds[i].events = POLLIN;
-> > +       }
-> > +
-> > +       if (banner)
-> > +               print_banner(argc, argv);
-> > +
-> > +       for (;;) {
-> > +               if (poll(pollfds, resolver->num_chips, -1) < 0)
-> > +                       die_perror("error polling for events");
-> > +
-> > +               for (i = 0; i < resolver->num_chips; i++) {
-> > +                       if (pollfds[i].revents == 0)
-> > +                               continue;
-> > +
-> > +                       event = gpiod_chip_read_info_event(chips[i]);
-> > +                       event_print(event, cfg.chip_id);
-> > +               }
-> > +       }
-> > +       for (i = 0; i < resolver->num_chips; i++)
-> > +               gpiod_chip_close(chips[i]);
-> > +       free(chips);
-> > +       free_line_resolver(resolver);
-> > +
-> > +       return EXIT_SUCCESS;
-> > +}
-> > --
-> > 2.36.1
-> >
-> 
-> Looks good to me, I would have probably added a machine-readable
-> output formatting like gpiomon but we can always extend it later.
-> 
+   240	
+   241	static int mpfs_gpio_probe(struct platform_device *pdev)
+   242	{
+   243		struct clk *clk;
+   244		struct device *dev = &pdev->dev;
+   245		struct device_node *node = pdev->dev.of_node;
+   246		struct mpfs_gpio_chip *mpfs_gpio;
+   247		int i, ret, ngpio;
+   248		struct gpio_irq_chip *irq_c;
+   249	
+   250		mpfs_gpio = devm_kzalloc(dev, sizeof(*mpfs_gpio), GFP_KERNEL);
+   251		if (!mpfs_gpio)
+   252			return -ENOMEM;
+   253	
+   254		mpfs_gpio->base = devm_platform_ioremap_resource(pdev, 0);
+   255		if (IS_ERR(mpfs_gpio->base)) {
+   256			dev_err(dev, "failed to allocate device memory\n");
+   257			return PTR_ERR(mpfs_gpio->base);
+   258		}
+   259		clk = devm_clk_get(&pdev->dev, NULL);
+   260		if (IS_ERR(clk))
+   261			return dev_err_probe(&pdev->dev, PTR_ERR(clk), "failed to get clock\n");
+   262	
+   263		ret = clk_prepare_enable(clk);
+   264		if (ret)
+   265			return dev_err_probe(&pdev->dev, ret, "failed to enable clock\n");
+   266	
+   267		mpfs_gpio->clk = clk;
+   268	
+   269		spin_lock_init(&mpfs_gpio->lock);
+   270	
+   271		ngpio = of_irq_count(node);
+   272		if (ngpio > NUM_GPIO) {
+   273			dev_err(dev, "too many interrupts\n");
+   274			goto cleanup_clock;
+   275		}
+   276	
+   277		mpfs_gpio->gc.direction_input = mpfs_gpio_direction_input;
+   278		mpfs_gpio->gc.direction_output = mpfs_gpio_direction_output;
+   279		mpfs_gpio->gc.get_direction = mpfs_gpio_get_direction;
+   280		mpfs_gpio->gc.get = mpfs_gpio_get;
+   281		mpfs_gpio->gc.set = mpfs_gpio_set;
+   282		mpfs_gpio->gc.base = -1;
+   283		mpfs_gpio->gc.ngpio = ngpio;
+   284		mpfs_gpio->gc.label = dev_name(dev);
+   285		mpfs_gpio->gc.parent = dev;
+   286		mpfs_gpio->gc.owner = THIS_MODULE;
+   287	
+   288		irq_c = &mpfs_gpio->gc.irq;
+   289		irq_c->chip = &mpfs_gpio_irqchip;
+ > 290		irq_c->chip->parent_device = dev;
+   291		irq_c->handler = handle_simple_irq;
+   292	
+   293		ret = devm_irq_alloc_descs(&pdev->dev, -1, 0, ngpio, 0);
+   294		if (ret < 0) {
+   295			dev_err(dev, "failed to allocate descs\n");
+   296			goto cleanup_clock;
+   297		}
+   298	
+   299		/*
+   300		 * Setup the interrupt handlers. Interrupts can be
+   301		 * direct and/or non-direct mode, based on register value:
+   302		 * GPIO_INTERRUPT_FAB_CR.
+   303		 */
+   304		for (i = 0; i < ngpio; i++) {
+   305			int irq = platform_get_irq_optional(pdev, i);
+   306	
+   307			if (irq < 0)
+   308				continue;
+   309	
+ > 310			ret = devm_request_irq(&pdev->dev, irq,
+   311					       mpfs_gpio_irq_handler,
+ > 312					       IRQF_SHARED, mpfs_gpio->gc.label, mpfs_gpio);
+   313			if (ret) {
+   314				dev_err(&pdev->dev, "failed to request irq %d: %d\n",
+   315					irq, ret);
+   316				goto cleanup_clock;
+   317			}
+   318		}
+   319	
+   320		ret = gpiochip_add_data(&mpfs_gpio->gc, mpfs_gpio);
+   321		if (ret)
+   322			goto cleanup_clock;
+   323	
+   324		platform_set_drvdata(pdev, mpfs_gpio);
+   325		dev_info(dev, "Microchip MPFS GPIO registered %d GPIOs\n", ngpio);
+   326	
+   327		return 0;
+   328	
+   329	cleanup_clock:
+   330		clk_disable_unprepare(mpfs_gpio->clk);
+   331		return ret;
+   332	}
+   333	
 
-You mean the format option?
-
-Cheers,
-Kent.
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
