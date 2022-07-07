@@ -2,71 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8078456AA00
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 19:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26C7F56AA0A
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 19:52:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235347AbiGGRvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 13:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
+        id S235320AbiGGRwG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 13:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235320AbiGGRva (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 13:51:30 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D2D59244;
-        Thu,  7 Jul 2022 10:51:29 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a9so3997244ejf.6;
-        Thu, 07 Jul 2022 10:51:29 -0700 (PDT)
+        with ESMTP id S235801AbiGGRwF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 13:52:05 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23CF59253;
+        Thu,  7 Jul 2022 10:52:04 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id sb34so33673935ejc.11;
+        Thu, 07 Jul 2022 10:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iPGmSSkEKuIxkfYPNKaLme5kcpaEx5EEbQVv8NiY+tI=;
-        b=U0R7WqvJPyFPmcL4fOV3316P0Hhb34jweRuqTB8ek+Z1bKKURM9xsHivQcxmY5O4tE
-         7TBB5IgU03h5hFkXmYrfzStmUfDfB8Ox6sK0GtKZA+iSP6ntBWImA+cDDoi+bRwcpE8N
-         3bio6laXZtLrd3/djtuD2ml4CxcggyXgYZa2H85RH4ntOzO3VqtpXGD7cKo6ZwrP0HBE
-         hYTmwWicjJ6Bliu3qnZiwnsHSgPfMHWbJWiOgo3gSZ0ZKIOXuck+0dIAoV3+VcYnyZiH
-         s/17UFEZrF7iqB+6onW9uJxRXRR+idPmM94vdrIiB9k+Efvn1pvnp2tvu8l3zwdDBmrg
-         OX8Q==
+        bh=KR2UDwCoOFfk3aid7VAOv89TmttgxGQj+7CaHoga6Qg=;
+        b=MRaATrwPP9hjvm1NNuEqHIaDKRUA3QAdXALhua1f36jJBhfBmI/gHkcre0uKbhYPeq
+         0W1nLnew8xh5il2NpNw4CK56oP1NALRfP+hIP8zFb5t6RNBMRG36zmvq/sS5Pj8d9CTZ
+         m25BzjRTwsLGI3bu64jSSYuYJezxrjLZQJbw1sTcqvTa/FMa9b7V0r31ErRJLGur2aBh
+         cfz51uSxB513iHKKLBq17+dtbwXBLjlu2WEG/R4VHnZ46+FCsursWfc1SWTWCFi0AS9o
+         BJeib9RUdQrCjtFnK6Oj8hQ7zv79cBgbhvdYIdFg3kjES2nUAvbiWHal0AzJqOT07Kg6
+         HYrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iPGmSSkEKuIxkfYPNKaLme5kcpaEx5EEbQVv8NiY+tI=;
-        b=xplZo841qEhxbPyUTzkQBACPYK1H3P7z5N0DmhkG0NZDZkKll8arXY7U5N7rPFnUQE
-         6/h5vIquibAAizYnqIOdt5efC/d3jwkUgxMU07liSk+ULYn93dNAlj5EsBz9033NfLCW
-         vKOfWsxCtaU3Yic8tV7S87u+JXKF/+hFe0FcXmteP4sfEGhJ2ohAdPV9XCrt0tLdmA/5
-         S0jisiMK2QNQBZwz4yja9nF16N3yUMHyAhiefkbIKGECKKmFHxnv6i0LCSgVGXps/h26
-         ZYbEmK7s+QOWTW2kxyCl1ovhKdIP75Es+tiQXmENqdksDkzeUTOzJHNzmwodStw4ZumP
-         Di0A==
-X-Gm-Message-State: AJIora+3LPisHbZjRIme1efNDnzgKd9huyEQy51U/CV6Yj78hdiDxCi9
-        OsqKwyOWiCWIwMrTc0q3frPUDv9sEjShihBpYj+8UghE
-X-Google-Smtp-Source: AGRyM1ueUAvCxvaIlb/9gHATajCw3Vep06RVIjsU9x8Eq8J5AZqrZORkbSmSBUF0OCdWAabZ2WBo8gXl02QpYjJbQpc=
-X-Received: by 2002:a17:907:6eac:b0:72a:fb80:d39 with SMTP id
- sh44-20020a1709076eac00b0072afb800d39mr8623143ejc.536.1657216287772; Thu, 07
- Jul 2022 10:51:27 -0700 (PDT)
+        bh=KR2UDwCoOFfk3aid7VAOv89TmttgxGQj+7CaHoga6Qg=;
+        b=zr2dKfBgKDoXLlu1GB6jReRw+Q70DUl5sDJRpLQjdoN5MldcSlFjGhOmMUZ75qi94J
+         +BYmjrHfSlvbu1PLBZqDKtff/64ZfvwrNY2oCDYKKGo+UyhxF5EaogdC8OcOkR1TaE5H
+         elegxv0tCM3i0bWq9UdMHYEARd68Q0Z10xy/te23gD318raUXwbc7IbzRXPswsJyRp1u
+         oH2+x0ZUtWTjNo+OvMdLgaLSe6ST23aEWAfqs0bunZkDeKb/5k0NlGtfDHUHaoU/phvu
+         nQ8uP+KYwyeTfG4/GqDlfH76/hmdnP7h7UeMz3qpoUSS5nW/uaHY/pkEB+FWHrAf9u7C
+         iaSg==
+X-Gm-Message-State: AJIora9cpX0VGrLUx/GnlTi5CJK/6PeygABEwDdwIK7+SGTZHcMw/U9+
+        hR9tLNBE0uyE5UM76RdYUPD/wi13yXera5JompQ=
+X-Google-Smtp-Source: AGRyM1uMk9Z0CtOaCfORAc+j23Jcvk1cBQMlmf5u9QjL6vDaOGE8rwki82hA51td2jlapijoqWB/QzoOnLstUmyMLUY=
+X-Received: by 2002:a17:907:3f92:b0:72a:b80c:ef3 with SMTP id
+ hr18-20020a1709073f9200b0072ab80c0ef3mr25975249ejc.264.1657216323499; Thu, 07
+ Jul 2022 10:52:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220703194020.78701-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220703194020.78701-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAHp75VfFZ146p1sZ2=Ec-F-9zYJZHPWyvgYQeVsG=2TzssaPmA@mail.gmail.com>
- <CA+V-a8vua6t5wDNc2CT_XWhoy6OjmzCXyaJ1FtGaqeG5g-qS-w@mail.gmail.com> <87iloan2rv.wl-maz@kernel.org>
-In-Reply-To: <87iloan2rv.wl-maz@kernel.org>
+References: <20220703194020.78701-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <87h73un2pv.wl-maz@kernel.org>
+In-Reply-To: <87h73un2pv.wl-maz@kernel.org>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Jul 2022 18:51:01 +0100
-Message-ID: <CA+V-a8uQ5ESFNhnBATsm0s0OZooA2-+wxqK2tc7cM3XyGf9eVA@mail.gmail.com>
-Subject: Re: [PATCH v7 3/5] gpio: gpiolib: Allow free() callback to be overridden
+Date:   Thu, 7 Jul 2022 18:51:37 +0100
+Message-ID: <CA+V-a8tKOEcBD=X4=8S=jtw53ypfnckv-4+h7Dd4R969QNNeww@mail.gmail.com>
+Subject: Re: [PATCH v7 0/5] Renesas RZ/G2L IRQC support
 To:     Marc Zyngier <maz@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -80,43 +77,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 6, 2022 at 8:01 AM Marc Zyngier <maz@kernel.org> wrote:
+Hi Marc,
+
+On Wed, Jul 6, 2022 at 8:02 AM Marc Zyngier <maz@kernel.org> wrote:
 >
-> On Tue, 05 Jul 2022 05:53:03 +0100,
-> "Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
+> On Sun, 03 Jul 2022 20:40:15 +0100,
+> Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
 > >
-> > On Mon, Jul 4, 2022 at 5:16 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Sun, Jul 3, 2022 at 9:43 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > > >
-> > > > Allow free() callback to be overridden from irq_domain_ops for
-> > > > hierarchical chips.
-> > > >
-> > > > This allows drivers to free up resources which are allocated during
-> > > > child_to_parent_hwirq()/populate_parent_alloc_arg() callbacks.
-> > > >
-> > > > On Renesas RZ/G2L platform a bitmap is maintained for TINT slots, a slot
-> > > > is allocated in child_to_parent_hwirq() callback which is freed up in free
-> > > > callback hence this override.
-> > >
-> > > Hmm... To me this sounds asymmetrical. We alloc something in another
-> > > callback, which is not what this free is for. Perhaps it should be an
-> > > optional
-> > >
-> > > free_populated_parent_arg() or alike?
-> > >
-> > @Marc your thoughts?
+> > Hi All,
+> >
+> > The RZ/G2L Interrupt Controller is a front-end for the GIC found on
+> > Renesas RZ/G2L SoC's with below pins:
+> > - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI
+> >   interrupts
+> > - GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
+> >   maximum of only 32 can be mapped to 32 GIC SPI interrupts,
+> > - NMI edge select.
+> >
+> >                                                              _____________
+> >                                                              |    GIC     |
+> >                                                              |  ________  |
+> >                                       ____________           | |        | |
+> > NMI --------------------------------->|          |  SPI0-479 | | GIC-600| |
+> >              _______                  |          |------------>|        | |
+> >              |      |                 |          |  PPI16-31 | |        | |
+> >              |      | IRQ0-IRQ7       |   IRQC   |------------>|        | |
+> > P0_P48_4 --->| GPIO |---------------->|          |           | |________| |
+> >              |      |GPIOINT0-122     |          |           |            |
+> >              |      |---------------->| TINT0-31 |           |            |
+> >              |______|                 |__________|           |____________|
+> >
+> > The proposed patches add hierarchical IRQ domain, one in IRQC driver and
+> > another in pinctrl driver. Upon interrupt requests map the interrupt to
+> > GIC. Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is
+> > handled by the pinctrl and IRQC driver.
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > v6->v7:
+> > * Used devm_reset_control_get_exclusive() instead of
+> >   devm_reset_control_get_exclusive_by_index()
+> > * Included RB tag from Linus for patch 5/5
+> > * Switched to newer version of populate_parent_alloc_arg() (patch depends
+> >   on https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/
+> >   patch/?id=178b7e21459e9a7e2a2c369711ef0cc9b1cfbcd7)
 >
-> I think there are enough optional callbacks, and we don't currently
-> have a clear picture of how this may be used in the future, specially
-> based on a sample of *one*.
+> Please add this patch as part of the series.
 >
-> Let's get it in as is, and tweak things as we go, should another user
-> require a slightly different behaviour. This also saves us the debate
-> around the naming, which is always pretty useless.
->
-Thanks, I will repost it as is.
+Sure will do.
 
 Cheers,
 Prabhakar
