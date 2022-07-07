@@ -2,69 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B113569E71
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 11:19:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04712569F5D
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 12:18:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234132AbiGGJSy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 05:18:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59818 "EHLO
+        id S234865AbiGGKRj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 06:17:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229792AbiGGJSy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 05:18:54 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95545326DA
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 02:18:53 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id i190so4779614pge.7
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jul 2022 02:18:53 -0700 (PDT)
+        with ESMTP id S235387AbiGGKRb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 06:17:31 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEC450739
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 03:17:29 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id z41so22555053ede.1
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Jul 2022 03:17:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BiSDmXw+YCQmzXKuYXE+FYx2waoT+9d5JcgYX/UIM8s=;
-        b=Op60KyFObQ+xOn1tjS/zM8byElDtCg2l+cHW6kUO4taJGmE2MgPAdydVxjF0A0ixuq
-         YmMNijh1fGcVboH/cCl7SE18jN0DcFtmfLgL9OOWeza8GIe4//YI30phViv2LzjuS3WL
-         G4ZTwuYAErP8PhqFHJQr5rmVnmnSw2+i0mpKxcHRPloEHIPYV36qzyP3MXEGhcOxAo18
-         icJ42VJv8h5xpotb2rusM3xWfkBVOUL0agpD4g6cmt5AWvdqNFxzbXvi1fAB9XjN8NO0
-         qUqHObFmv7LGj3dYCUy3xsuO6cioHFtarmw2qEa97tEnLiyx19D2Ohl6iUgYTaBemJVw
-         OcfQ==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Hir62cna6VyCgmuO3387M8rXK8c+QxaVwYs9bAIIvg=;
+        b=Bapr/mg8CxVo/vZ158OUP2423m/G4FDhizPX9QdZp+cHwKfZRNw9EiNM0RLWJBryhu
+         TykCb4apO1uaiGdq+4XE7oEA3YE89i7ahIpNbIcIa4JLhf2yLHNg5fB/raotDH2rN3yb
+         puDhtqHcNiKtt4X0T/cvko+SutEbdqdmh2XM8IGQQmL8HTJ31mfQar8VgyFwNNzPtPkN
+         1g8eFpL/RhiiZtGwpEHQUTf9UHQffcRlldKnWLSqq5o0NfnQZWxreM3Xe/dZGMWpIeq4
+         G6mmJtqj8pQYUbPHwhlwUVEAp7/GWHyQYc4eCG9M5a64wbeeSIFFu52LxkGOvAyPK4q3
+         /LDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BiSDmXw+YCQmzXKuYXE+FYx2waoT+9d5JcgYX/UIM8s=;
-        b=1djO4HHgX9gRtGHfs2Qo592rH0RcnoFvXpPuJfyS3vOiPkKxGUFd9gx9shDz2snili
-         Tpi5JWs4j7TAq38dwDRqheuXSTa1hFn1iO30O63vRTeB+pFPi+u/kzD7mxejIm3Bh+Iu
-         b0a0kzSXgx4eweOpLNIdfoen4tp75etwsTzeI+2bl2DgAxsuXuS6LW2nfqJMRkPsw2gN
-         WP1XT/Ftz+adf/FN5ibWOramOZYQ7zZqfusakPPRkTFRaLk6ysgkglzsBY7RcprMe1RN
-         n8Rx5Rq6AAZzamu3z6GokUOfx7FAay0MsncxFSvhzMR83knIJeAXuAW5fmDZzpSOeJLO
-         eSJw==
-X-Gm-Message-State: AJIora9RofYRR/As2gDg8KKiCf1p6F1dNJs5VQHApBPc0nHpPD3b3PE7
-        8wOWUUPxZ+A18WO4tvXhUrqYPcQMJis=
-X-Google-Smtp-Source: AGRyM1v8DQ8BkNV9ltk0UEVFlLwVKNc/+bIdVeoDa1+oK0ENnvH9t+dxghIqCWLnCzx8QswhpEO4bg==
-X-Received: by 2002:a17:902:d549:b0:16a:3ac1:354 with SMTP id z9-20020a170902d54900b0016a3ac10354mr52326629plf.148.1657185532913;
-        Thu, 07 Jul 2022 02:18:52 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id n9-20020a17090b0d0900b001ef8912f763sm8170818pjz.7.2022.07.07.02.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 02:18:52 -0700 (PDT)
-Date:   Thu, 7 Jul 2022 17:18:48 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH 1/4] tools: line name focussed rework
-Message-ID: <20220707091848.GA57683@sol>
-References: <20220627134447.81927-1-warthog618@gmail.com>
- <20220627134447.81927-2-warthog618@gmail.com>
- <CAMRc=Mf_WKcTNq0o8AbcBWzdMa=-D_=A5S_Y3ZJ40wimhMUwXw@mail.gmail.com>
- <20220707022407.GA7250@sol>
- <CAMRc=McGO6B-zGSbOMz5RXQ=EgTm2o-Si8TAw1RWXBmhFbtYhw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Hir62cna6VyCgmuO3387M8rXK8c+QxaVwYs9bAIIvg=;
+        b=dpml24A2IYJw4VfSAGRSXCYVn+khU+JE+BC5JaV9gUTrtCJ+btaj/zgaI7/rqn0hmA
+         vmWfdC1q7TFOLxzoK3cOnFw3xBRA8lQzTjAWzaQjGxCLSgVHl100/cDAeKg67hcyN87m
+         jttmhnnziNzZ7jXRR24n+juw4S12qMexpyhqu4QGO7D0LwwxcBq60JZmV3PBlkzyyLcN
+         gy+3nqDov2ANAun0yFILDpuj+V5NzrZLKN3Ta4M8CMCXVuiEDEcrioHL/SLbPw0xRDnh
+         GGfKSazXx2mkxGinRuv6mTN0DuT4hb0MmqAP42+gtOdDduiLZuTs+Jb0MHEeVGmedTjn
+         /DPQ==
+X-Gm-Message-State: AJIora+xvvoHWlzZdWd0CkI2KiZYLVLlzC70luBMnLu5PkjKy+6ZUdI1
+        rIOKmZcttvzriwVUpr0xRu+0HACRn0vHa56ydg1uvLzAsZY=
+X-Google-Smtp-Source: AGRyM1voVUblMVitc6nrzeywyQW8D3aIEWfU3D4+Uahd2+riNruYdSjEquowN082anyyCSVYDJklY8jd4mdRg+A4WYQ=
+X-Received: by 2002:a05:6402:d0a:b0:437:66ca:c211 with SMTP id
+ eb10-20020a0564020d0a00b0043766cac211mr62038508edb.29.1657189048151; Thu, 07
+ Jul 2022 03:17:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McGO6B-zGSbOMz5RXQ=EgTm2o-Si8TAw1RWXBmhFbtYhw@mail.gmail.com>
+References: <20220628084226.472035-1-brgl@bgdev.pl> <20220628084226.472035-5-brgl@bgdev.pl>
+ <20220705020845.GA6652@sol>
+In-Reply-To: <20220705020845.GA6652@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 7 Jul 2022 12:17:17 +0200
+Message-ID: <CAMRc=MegkfLxQr5tEWdn0jOoC=PzpZPHTtqUtk6QEr8ZZU4o0g@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v2 4/5] bindings: python: add tests for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,118 +69,236 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 11:01:49AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jul 7, 2022 at 4:24 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Tue, Jul 5, 2022 at 4:08 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Tue, Jun 28, 2022 at 10:42:25AM +0200, Bartosz Golaszewski wrote:
+> > This adds a python wrapper around libgpiosim and a set of test cases
+> > for the v2 API using python's standard unittest module.
 > >
-> > On Wed, Jul 06, 2022 at 10:20:00PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Jun 27, 2022 at 3:46 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > > > Rework the tool suite to support identifying lines by name and to
-> > > > support operating on the GPIO lines available to the user at once, rather
-> > > > than on one particular GPIO chip.
-> > > >
-> > > > All tools, other than gpiodetect, now provide the name to (chip,offset)
-> > > > mapping that was previously only performed by gpiofind. As names are not
-> > > > guaranteed to be unique, a --strict option is provided for all tools to
-> > > > either abort the operation or report all lines with the matching name, as
-> > > > appropriate.
-> > > > By default the tools operate on the first line found with a matching name.
-> > > >
-> > > > Selection of line by (chip,offset) is still supported with a --chip
-> > > > option, though it restricts the scope of the operation to an individual
-> > > > chip.  When the --chip option is specified, the lines are assumed to be
-> > > > identified by offset where they parse as an integer, else by name.
-> > > > To cater for the unusual case where a line name parses as an integer,
-> > > > but is different from the offset, the --by-name option forces the lines
-> > > > to be identified by name.
-> > > >
-> > >
-> > > We could potentially extend it by allowing multiple --chip arguments
-> > > for multiple chips but let's not go there unless requested.
-> > >
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > ---
+> >  bindings/python/tests/Makefile.am             |  14 +
+> >  bindings/python/tests/cases/__init__.py       |  12 +
+> >  bindings/python/tests/cases/tests_chip.py     | 157 +++++++
+> >  .../python/tests/cases/tests_chip_info.py     |  59 +++
+> >  .../python/tests/cases/tests_edge_event.py    | 279 +++++++++++
+> >  .../python/tests/cases/tests_info_event.py    | 135 ++++++
+> >  .../python/tests/cases/tests_line_config.py   | 254 ++++++++++
+> >  .../python/tests/cases/tests_line_info.py     |  90 ++++
+> >  .../python/tests/cases/tests_line_request.py  | 345 ++++++++++++++
+> >  bindings/python/tests/cases/tests_misc.py     |  53 +++
+> >  .../tests/cases/tests_request_config.py       |  77 ++++
+> >  bindings/python/tests/gpiod_py_test.py        |  25 +
+> >  bindings/python/tests/gpiosimmodule.c         | 434 ++++++++++++++++++
+> >  13 files changed, 1934 insertions(+)
+> >  create mode 100644 bindings/python/tests/Makefile.am
+> >  create mode 100644 bindings/python/tests/cases/__init__.py
+> >  create mode 100644 bindings/python/tests/cases/tests_chip.py
+> >  create mode 100644 bindings/python/tests/cases/tests_chip_info.py
+> >  create mode 100644 bindings/python/tests/cases/tests_edge_event.py
+> >  create mode 100644 bindings/python/tests/cases/tests_info_event.py
+> >  create mode 100644 bindings/python/tests/cases/tests_line_config.py
+> >  create mode 100644 bindings/python/tests/cases/tests_line_info.py
+> >  create mode 100644 bindings/python/tests/cases/tests_line_request.py
+> >  create mode 100644 bindings/python/tests/cases/tests_misc.py
+> >  create mode 100644 bindings/python/tests/cases/tests_request_config.py
+> >  create mode 100755 bindings/python/tests/gpiod_py_test.py
+> >  create mode 100644 bindings/python/tests/gpiosimmodule.c
 > >
-> > We could but then we'd have to custom parse the command line.
-> > Or repeatedly apply getopt()?
-> > So yeah, keep it simple for now.
-> 
-> getopt() will go to the relevant switch case everytime it encounters
-> the flag, then you can process it and add it to the list.
-> 
+> > diff --git a/bindings/python/tests/Makefile.am b/bindings/python/tests/Makefile.am
+> > new file mode 100644
+> > index 0000000..099574f
+> > --- /dev/null
+> > +++ b/bindings/python/tests/Makefile.am
+> > @@ -0,0 +1,14 @@
+> > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+> > +
+>
+> It is 2022?
+>
+> Which email address are you going with?  gmail here and bgdev below.
+>
 
-Yeah, but the lines are positional parameters between the --chip
-options.
-i.e.
- 
- --chip gpiochip1 1 2 4  --chip gpiochip3 6 7 8
+These patches will be squashed together anyway. When I wrote this part
+I used this email and then switched to brgl@bgdev.pl. It's just
+copyright anyway. I can fix it up later.
 
-I thought getopt() bails when it hits positional args?
-Or am I missing something?
+[snip!]
 
-> >
-> > > > The updated tools are intentionally NOT backwardly compatible with the
-> > > > previous tools. Using old command lines with the updated tools will
-> > > > almost certainly fail, though migrating old command lines is generally as
-> > > > simple as adding a '-c' before the chip.
-> > > >
-> > > > In addition the individual tools are modified as follows:
-> > > >
-> > > > gpiodetect:
-> > > >
-> > > > Add the option to select individual chips.
-> > > >
-> > >
-> > > We discussed at some point that gpiodetect should also check if any of
-> > > the files it iterates over is a symbolic link to a GPIO device and
-> > > print some info accordingly (e.g. foobar [link to /dev/gpiochip2])-
-> > > are you thinking about adding this too?
-> > >
-> >
-> > Did we?  My bad then - I clearly forgot and instead filtered the symlinks
-> > out so it only reports actual chips (btw the v1 tools report the symlinks
-> > by repeating the actual, which is the worst of both worlds).
-> >
-> 
-> I think so. In any case I think this would be useful.
-> 
+> > +
+> > +    def test_falling_edge_event(self):
+> > +        with gpiod.request_lines(
+> > +            self.sim.dev_path,
+> > +            gpiod.RequestConfig(offsets=[6]),
+> > +            gpiod.LineConfig(edge_detection=Edge.FALLING),
+> > +        ) as req:
+> > +            buf = gpiod.EdgeEventBuffer()
+> > +            self.thread = threading.Thread(
+> > +                target=partial(self.trigger_falling_and_rising_edge, 6)
+> > +            )
+> > +            self.thread.start()
+> > +
+>
+> Benefit of the thread? (and elsewhere a background thread is used)
+> The sleeps therein are only necessary because it is run in the
+> background.
+>
 
-gpiodetect on a symlink will report for the chip that link points to.
-Similarly gpioinfo.
-Isn't that sufficient?
+Just to make it similar to real-life applications. I did the same for
+C++ and C. And no: if I triggered multiple events without any sleeps
+in between, then some of them would risk not being registered. You can
+try it for yourself with gpiosim. It happens because when the kernel
+irq_work is busy adding an interrupt, new ones get ignored.
 
-i.e. the bare form of gpiodetect and gpioinfo report all the actual
-chipts, while the specific form reports whatever the provided path,
-resolves to, including following symlinks.
+[nsip]
 
-...
-> > >
-> > > readline is licensed under GPLv3 - this bleeds into gpioset and will
-> > > make a lot of companies bounce off of it. Any chance you could use
-> > > libedit instead? It's supposed to be a drop-in replacement for
-> > > readline but I have never used it first hand.
-> > >
-> >
-> > Hey, you mentioned readline before I implemented it.
-> > Though I don't recall "avoid" being mentioned :-(.
-> >
-> 
-> No, you're right, I mentioned it but then realized it's GPLv3.
-> 
-> > Ok, I'll take a look.  Hopefully it is just a drop-in.
-> >
-> > Out of curiosity which aspect of GPLv3 is the problem, for a tool
-> > which is publicly available and they aren't going to modify?
-> > Just having a GPLv3 library on their system?
-> >
-> 
-> You'd be surprised how allergic companies are to GPLv3. Anything
-> "tainted" with GPLv3 is often banned.
-> 
+> > +    def test_module_line_request_direction(self):
+> > +        sim = gpiosim.Chip(num_lines=2)
+> > +
+> > +        with gpiod.request_lines(
+> > +            sim.dev_path, lines=[0, 1], direction=Direction.OUTPUT
+> > +        ) as req:
+> > +            with gpiod.Chip(sim.dev_path) as chip:
+> > +                info = chip.get_line_info(0)
+> > +                self.assertEqual(info.direction, Direction.OUTPUT)
+> > +                self.assertTrue(info.used)
+> > +
+> > +    def test_module_line_request_edge_detection(self):
+> > +        sim = gpiosim.Chip()
+> > +
+> > +        with gpiod.request_lines(
+> > +            sim.dev_path, lines=[0], edge_detection=Edge.BOTH
+> > +        ) as req:
+> > +            sim.set_pull(0, Pull.PULL_UP)
+> > +            self.assertTrue(req.wait_edge_event())
+> > +            self.assertEqual(req.read_edge_event()[0].line_offset, 0)
+> > +
+> > +
+> > +class RequestingLinesFailsWithInvalidArguments(unittest.TestCase):
+>
+> These tests should be in tests_chip.py, as they are testing the
+> Chip.request_lines() method.
+>
 
-Ok, news to me.  I might quarantine them to prevent building against
-them, but banning them outright is a bit extreme.
-OTOH I've worked at places that banned Linux (or tried to anyway).
+I would argue that there's some overlap in where the test cases should
+live. For instance - if we moved the line watching out of
+tests_info_event into tests_chip then not much would be left. I would
+leave these here as they test the general idea of requesting lines
+rather than the functionality of class LineRequest. Same for the
+module level line requests.
 
-Anyway, I'll look into the alternatives.
+> And they should have module level equivalents (don't assume one wraps
+> the other).
+>
 
-Cheers,
-Kent.
+Makes sense.
+
+> > +    def setUp(self):
+> > +        self.sim = gpiosim.Chip(num_lines=8)
+> > +        self.chip = gpiod.Chip(self.sim.dev_path)
+> > +
+> > +    def tearDown(self):
+> > +        self.chip.close()
+> > +        self.chip = None
+> > +        self.sim = None
+> > +
+> > +    def test_passing_invalid_types_as_configs(self):
+> > +        with self.assertRaises(TypeError):
+> > +            self.chip.request_lines("foobar", gpiod.LineConfig())
+> > +
+> > +        with self.assertRaises(TypeError):
+> > +            self.chip.request_lines(gpiod.RequestConfig(offsets=[0]), "foobar")
+> > +
+> > +    def test_no_offsets(self):
+> > +        with self.assertRaises(ValueError):
+> > +            self.chip.request_lines(gpiod.RequestConfig(), gpiod.LineConfig())
+> > +
+> > +    def test_duplicate_offsets(self):
+> > +        with self.assertRaises(OSError) as ex:
+> > +            self.chip.request_lines(
+> > +                gpiod.RequestConfig(offsets=[2, 5, 1, 7, 5]), gpiod.LineConfig()
+> > +            )
+> > +
+> > +        self.assertEqual(ex.exception.errno, errno.EBUSY)
+> > +
+> > +    def test_offset_out_of_range(self):
+> > +        with self.assertRaises(ValueError):
+> > +            self.chip.request_lines(
+> > +                gpiod.RequestConfig(offsets=[1, 0, 4, 8]), gpiod.LineConfig()
+> > +            )
+> > +
+>
+> [snip]
+> > +++ b/bindings/python/tests/cases/tests_misc.py
+> > @@ -0,0 +1,53 @@
+> > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+> > +
+>
+> The tests in this file are all module scope, and cover functions from
+> module.c, so rename to tests_module.py.
+>
+> > +import gpiod
+> > +import gpiosim
+> > +import os
+> > +import re
+> > +import unittest
+> > +
+> > +
+> > +class LinkGuard:
+> > +    def __init__(self, src, dst):
+> > +        self.src = src
+> > +        self.dst = dst
+> > +
+> > +    def __enter__(self):
+> > +        os.symlink(self.src, self.dst)
+> > +
+> > +    def __exit__(self, type, val, tb):
+> > +        os.unlink(self.dst)
+> > +
+> > +
+> > +class IsGPIOChip(unittest.TestCase):
+> > +    def test_is_gpiochip_bad(self):
+> > +        self.assertFalse(gpiod.is_gpiochip_device("/dev/null"))
+> > +        self.assertFalse(gpiod.is_gpiochip_device("/dev/nonexistent"))
+> > +
+> > +    def test_is_gpiochip_good(self):
+> > +        sim = gpiosim.Chip()
+> > +
+> > +        self.assertTrue(gpiod.is_gpiochip_device(sim.dev_path))
+> > +
+> > +    def test_is_gpiochip_link_good(self):
+> > +        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
+> > +        sim = gpiosim.Chip()
+> > +
+> > +        with LinkGuard(sim.dev_path, link):
+> > +            self.assertTrue(gpiod.is_gpiochip_device(link))
+> > +
+> > +    def test_is_gpiochip_link_bad(self):
+> > +        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
+> > +
+> > +        with LinkGuard("/dev/null", link):
+> > +            self.assertFalse(gpiod.is_gpiochip_device(link))
+> > +
+> > +
+> > +class VersionString(unittest.TestCase):
+> > +    def test_version_string(self):
+> > +        self.assertTrue(
+> > +            re.match(
+> > +                "^[0-9][1-9]?\\.[0-9][1-9]?([\\.0-9]?|\\-devel)$", gpiod.__version__
+> > +            )
+> > +        )
+> > diff --git a/bindings/python/tests/cases/tests_request_config.py b/bindings/python/tests/cases/tests_request_config.py
+> [snip]
+>
+> A complete audit of the test coverage would be beneficial.
+> I haven't attempted that - only pointed out any gaps I happened to notice.
+> Are there any coverage tools available for Python C modules?
+>
+
+One can use gcov as usual. I will do this but I don't expect to have
+100% coverage in the first version, we can add more test cases once
+this is in master.
+
+Bart
