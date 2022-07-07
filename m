@@ -2,78 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E728656AA75
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 20:26:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03D6E56AA85
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 20:27:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236281AbiGGSZQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 14:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50832 "EHLO
+        id S236022AbiGGSZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 14:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236267AbiGGSZL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 14:25:11 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336CD31360;
-        Thu,  7 Jul 2022 11:25:10 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id y141so21036924pfb.7;
-        Thu, 07 Jul 2022 11:25:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EOi6ye8INiqN8HnncVv3ZVs2L4XvBCNLdv4z2vZ3/Bg=;
-        b=RbSxVCncU5/g6BnOLenM4/4krgK6UUCJru8ihZSKdiNlnCHsbx82/tvGryrUY1X9rp
-         WrytpsnJRFi+eBR/eTvfFubVXjQh5UuWmrJq5wZR5TmtOoXCl+kXsXAE5ISmRQkJ+IQO
-         6tY6ZbtbdNUedhoawdOz8azsN+8HnzzhDSQDpxUDINwBh5TjLqBTvp3OALcA/tCQqiJU
-         RneUaU7PlVzmBG9wwxSTzMA07DHWat0qVfluJ1ZUmO4DpJpxegGlLGr+CiJYSHQDrIRE
-         pG9lteRbrpvrI0uQ8wjBBtz97oVYrGYfh7w8PUTsVnd5W7h5hLh4G0cFugmssTHXaBg7
-         pMjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EOi6ye8INiqN8HnncVv3ZVs2L4XvBCNLdv4z2vZ3/Bg=;
-        b=iWAqFOWnq4eltna+/fn0SRiUqRS4r78MsK5d0CsUKXibyXBrs3EERpP11zZLMDzN9t
-         qXSESdYEatCltPNDptcCrgNqKwrmiAfzWjyqdq6Bb3SDjbNJGeQ1piES2l1pIPRc03U+
-         DLScBGEBGBT2z5PHVYvpxcE2bad4yfMm7f61BSdZHyeDd2QYXjX/NtCkGVl1BpAKD7MI
-         cUAOSH2wnKUIQNPk6sONFTFzOUNTo4EfXdahX83h+tsxn87+2rF8t5o/U8JX3ou6QuqW
-         rHs/iTyQ2HpwmbVbeu1E89wLVhlrBtjj0W6F0IDzSgIZeTXLfvg2NMUMAA/C64/7Qg18
-         JQaw==
-X-Gm-Message-State: AJIora/AgyX/C+4VIzc60sB0/SzJNOq84TuzpnaeJmqOatV09YaW4a8M
-        SU8VaY6/ZDMuFTmRRfbJeX0=
-X-Google-Smtp-Source: AGRyM1sbUq7SSiSBTjb5BtCtgVvuhcz9ba7W4FYTZutXMp1JzJfXn29u+jzNp5ZQIf+r8vHGcIdkzw==
-X-Received: by 2002:a62:b419:0:b0:529:f06a:973e with SMTP id h25-20020a62b419000000b00529f06a973emr789259pfn.5.1657218309619;
-        Thu, 07 Jul 2022 11:25:09 -0700 (PDT)
-Received: from prasmi.domain.name ([103.219.60.85])
-        by smtp.gmail.com with ESMTPSA id o12-20020a170902d4cc00b0016a3f9e4865sm28589279plg.148.2022.07.07.11.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 11:25:09 -0700 (PDT)
-From:   prabhakar.csengg@gmail.com
-X-Google-Original-From: prabhakar.mahadev-lad.rj@bp.renesas.com
-To:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v8 6/6] pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO interrupt
-Date:   Thu,  7 Jul 2022 19:23:14 +0100
-Message-Id: <20220707182314.66610-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220707182314.66610-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20220707182314.66610-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        with ESMTP id S236308AbiGGSZZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 14:25:25 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94FE02F674
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 11:25:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YRblCTiidjM4p/XIjhXBvACZOQT/N0jH9tz6jf+ba9sP3fQcISL4oW62zEIa9UlGO0Sny4SEKTHAYxl6YCmdVklxheVwzbgoSxyLxcehniZCaIODDTjMe+sfa1S+MO6YRJ4Q27gDI1JORBtsyAkEeBin/PNOcrIsmmGD/Slep1LCHJsQjH8Hz+0NyKkfqdacw7gT7mCjEl0D3mdBVO08PfEWXYk3RAr+WC8RVbQx17Ot+aPkbNGOS8Uzc53EbELizE7Pn21ZTzzrv7YeHnTuzrIgbLf48qUTOVNF8EiCbgXmv4ooJMuAowhp5JW5vhBkXSrnwHk0kKw9kZKJ4vYcoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zmAKg967EC1uDeRCf71sTNoRd2GxQw1ShukBxTO7dPs=;
+ b=ZVj5MeGqKq/nS6y71UtrB/vkujIdEE2fkTvP3fdxpJk5DRPrlkbwf7khcYfQaTfCpmXH0QHoM0JxSTvCXlCS0qKfVqTI8rDrlHzWytK1AuqRVOdnW09UWR3GJSIofsXTJmWGNAUbRFYLZ2h5Ay585yGumXcW0nFBX07jxcElpRwkEK2NyL4AurJm3NHMeU8O4/gAe8Ym5E74KQ0i10OWIG09s6NBkPePrI5TTUVMMRuPdW4y3//3Di4ikEWkIjLAOPcz6Skq5fo7eTl3PpDUePkQzcYoQ3xsO614qpAHWaJjwFeDs40S5WTvtgk0B+dqEQ94HlQr9K0OUZpaaSDcqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zmAKg967EC1uDeRCf71sTNoRd2GxQw1ShukBxTO7dPs=;
+ b=1UeqRI7WBv5sHDlyECmFp+0c/kLz87jLLbabAOH8wFR+apO1EGDS1j+jNti7JWboc6P1Cz8nE0o6+0pTrBtjBHgLQVVciCpq5jo4eyOMz627sCa3cUNXqBP9C6+jKfXbUb9JDwiSyFCl9xAB20HBS6BRkILhX10JnAixnVTswqM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by BY5PR12MB4257.namprd12.prod.outlook.com (2603:10b6:a03:20f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Thu, 7 Jul
+ 2022 18:25:19 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598%5]) with mapi id 15.20.5395.021; Thu, 7 Jul 2022
+ 18:25:19 +0000
+Message-ID: <81a6c035-ff4a-aa3f-416f-fc9b337c8cf6@amd.com>
+Date:   Thu, 7 Jul 2022 13:25:17 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 0/3] Fixes and updates to pinctrl-amd
+Content-Language: en-US
+To:     linus.walleij@linaro.org
+References: <20220613064127.220416-1-Basavaraj.Natikar@amd.com>
+Cc:     "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <20220613064127.220416-1-Basavaraj.Natikar@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR19CA0042.namprd19.prod.outlook.com
+ (2603:10b6:208:19b::19) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 27587774-cf58-4952-ba67-08da60460c49
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4257:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: da+5b3SDaYuNOSqKV4m+ptuN17tiJaYsNiuP9f7Sr19gQy4dlTWQ6bWGXfbz/wRMlzfUGCesukY/0qQHsj20HgkVPVOXyLfl4MgNMf52G+r9St8+xFxwO0jWvxHSesAqEj+GLLTzO/S8gqa5LFwKNMJ1d6MJmPD7pUL0wYBYgRx43h/G6zo/RNPiwmYlyJSW+Wfp07blNfDHs2ohBBJxeKA+fShqkS9KRiIOdXmea3YhE8NeMTA+JP/eMsDiH40jLCz4Um+pDmNBDPUZEsJyiAmW3hDT9m/sMRMHYxKC15vjIx5L1ODfaVrpwyeW2uBA+6r45r8MHM6+rsIgCkAHhHjAAzlfu5zzs5wVn1/mmsMJFO0ubys6w83JfI7VDHWbiV/Ta/8HEvNg+BipY1C0Mq6VOdjfvUkRDy/xo+Bmw0+Y63A5XlYCpXHmKE5MFGTuqtI5S4QzCqYin+alY8R0bhf8zfcYSFk7L4RwnN1mQf3iXHRvV2qCT+eAkJyOqo3sLAXF91LJewJw9QDhd6PgzM/L4kyIlB7CLH/NNn/uVAQjTOs2upJTAKMSMAdw/Z/8D0aID/jve6ALS9FJKxflbKk+sr/HXJXGwlksoJ7+UzZKIzGDN2mw3y7DeC1HCrXJecRt4YuRCJ/G6MDlIi2OIv6x2TBP0anZpGTpzCLO7szeC6iGd4W/Csh2tpUJP9COhN4xhP4AJBayfiGjf322wLZHeQNoV0pAQ/rwdHZlV92gRGn9iIOROx49U0dA9SaKYenTIj+LaME3HrDiGcLTicwQt15KWiD1hEKrqnhaLPsxdc6FZZCnkCKbFJso6HfxgiAXGGC8HY6DOspRDfsnJyhnAujar82Cl5Tnid7sNQs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(2906002)(478600001)(41300700001)(8676002)(4326008)(66476007)(54906003)(316002)(31696002)(86362001)(6486002)(36756003)(31686004)(53546011)(6512007)(26005)(66946007)(66556008)(6506007)(83380400001)(38100700002)(2616005)(8936002)(6916009)(4744005)(5660300002)(186003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UW1IajlPTWdxR0p5d1NUaDJIU0pjOFFSd2JvTWdkcENBZjhwWXlFcmJqUHUz?=
+ =?utf-8?B?b0FtMVpVa3RZSUNOZUFhd29mdnVXSzIxazA0VkgxazdXZW5Yd3d3YVZFeXhl?=
+ =?utf-8?B?SUlvWDMvekpSYVVORmVFbVBBTHZvR0ZXQk5tOXRCVkNoU0hjeGhzemJ1cS93?=
+ =?utf-8?B?WFZZNXFBRHgyOWZKWHJ2L01mdVl0Y0FsRzlrSE9LVzZIZVc3UndGbm5xb25z?=
+ =?utf-8?B?bXg2S2VQaWZ4MlZMalRkRDIxZmgrQjUwS1QveHltbWExL1ErZ1YvbnMva0xD?=
+ =?utf-8?B?U2ZEWUJSdWJrdVY5MGt4VW9yeGNUYUZnNDJaS2RycS9OckFQRktpVGpaUHNm?=
+ =?utf-8?B?cEtmRmpUWFlqeEJWY3c3Mk9zbFVZbjI4cWpsSDZ6b2Mybk14bTRKQ0xaT1Aw?=
+ =?utf-8?B?QmYzeVdHSEVYZXpMN1BqSEk0OHEzSHZqK05zM1dPbXIwS1NsQXh2aHBZc1Ry?=
+ =?utf-8?B?TGdEYldqRW9VU1ZrazQzS3N4b3pQcTVXTktIQmg0SEltUEMvdFNZNlZHMHIz?=
+ =?utf-8?B?TUpJMkEyRjZMUGQ5TmRrWURuazZ3aGJLcWM0eERzWURTRmduOUoyVVlvMVh4?=
+ =?utf-8?B?bWJFRjJTZFJhcW42WGgwUXNCNzNFZ2h0YUR0QW1HQUFFZmdGeGtyQW1OOW5h?=
+ =?utf-8?B?dGhBamRaS2lVRmx1Q0xGb3hQSlpteSs5aTlma2drQmpuSW5USGdOdXdVUlFH?=
+ =?utf-8?B?RGdEcFFORkVCUGw3MUY3a2JyWURSd0hqZ3FSVUR6V2VjOExmanBsTlowMTgv?=
+ =?utf-8?B?Qm1PdDEzRFpRQWY3eE9laHBOSmNJSFRpdXAyandBTVd5VWRoN3N1eHlRWVBL?=
+ =?utf-8?B?TEhLalRCeHhaVXZjNUZPLzBaWTV3NGtwYUR6OFhFbjN5WVFPdThsRk14N3lP?=
+ =?utf-8?B?dW9FLzhyblFKSVF0V2Q3NTdsOEMzS0JwWGZFcWZhS21yQlFKTUhvY3Z6SVQ2?=
+ =?utf-8?B?YVk0RGRCRTBTNmtvTzVIUGhPN3BmVUY5d2JNYkFHaUdLWG9yV2hLbmUxMTRy?=
+ =?utf-8?B?cEdpeFA4d3ZtbWVRQW9yWTEwckZOdXg1N0lISE51N2c3bTBwY3p3ejFUNVli?=
+ =?utf-8?B?S3I0TzFMSlhSQktUTDF1QVlEU0RscHh4UGtXZGppc2xHS1BCdTY1bVduUjY1?=
+ =?utf-8?B?d0ltTEozdXg3OVhLVFZlWmw4a0NpYUx2QXZqVno3R01jTzBiVTM3V2tNOUhC?=
+ =?utf-8?B?OHVvWG04N3MrUzR0RmVOanAwWHlxUGNwVW83TUxucUtvek5TS1lQT3NxZlJ1?=
+ =?utf-8?B?UzZueUVNRzlGelM2U1FFNE1ZVXRFY0hJWFRwRUMzMFNzM3AwMFJMU0Z4OHlK?=
+ =?utf-8?B?R3ZpNzN1YkhlajJzMWlhTDRkdEFOa2FrMHNmSlVZR1U5RHdSYy8rRjJaQXRU?=
+ =?utf-8?B?SDd0L3N3MGsvajUvWDM1dG1QOWFwSzdSZjdQZGdrK1h6NDNycmgxNWJpbGlE?=
+ =?utf-8?B?VnJjS3UyYlNIWFlPZ2ZIRXlzZ1lJeDRTc2J3ZlBYeHVGdy9xbEcwL1JLSjN4?=
+ =?utf-8?B?dXNaaDlpMVRvRXV6SHVlRy8xTi9ia0JST1FBTS9JaEYzQnlTOEEvZzVaMzZl?=
+ =?utf-8?B?MmhFU2dkL3JEWjExQUNYRU5OY3Nhd3I0U0dTWUkyN1Q2ZTMyN3kzTWdkSkJ5?=
+ =?utf-8?B?UXJrRGxXaW0xY2hSdFN3d241bWFPeFdjSmxsYUdEZzh1QlB4aHExQlBvZGhl?=
+ =?utf-8?B?d2RxZGVUdTFYczMrQXhlaERKUVhMUG9Cdk9jenN3TGNJT1VseEZvaW5vQktE?=
+ =?utf-8?B?YjVLQXNDaDkvaWJ2cVljSjdiWm1hQk0yMHZZSjVob2swUjFDVWNpemk1b0ox?=
+ =?utf-8?B?Z1dqVlR4SmtKS1NIdDJScFMya2w5cnhNZzl4YXhPRll0alNUeTdUM0I1bnMx?=
+ =?utf-8?B?K3lIaU9YVkNGK0VldjRZYjZmQXVIWGg2ekluSEhkT0NLQ2FHcHE2dStCcEtw?=
+ =?utf-8?B?YkVQdWF1Q3lIVjZPaWFCVEtCU1l0aHprQXRSekFxMi83Z2hUbTN0MVhUbXpI?=
+ =?utf-8?B?cExyeitxUklma0R4cW1TaFIwOFd0ejNwczcvRGl5ODlYNlhwSnhrTVZtRUl5?=
+ =?utf-8?B?cEhBaC9KRFkycTllQXBKZmpibWJmdW4rRzVSN0YxcVg0dkxRVElrSHg2OURn?=
+ =?utf-8?Q?DHSjmgTkhLfrg09+Nl4LyO2U0?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27587774-cf58-4952-ba67-08da60460c49
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2022 18:25:19.7575
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vq+NEHfi713rfU3YhO8SnezjPuWE4qO8Ogd/rOfuZ6ApJEeFgXshqE+N9EU38A33ldk0vD1lEV1MulBHLQs77g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4257
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,326 +124,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 6/13/2022 01:41, Basavaraj Natikar wrote:
+> Changes include use of devm_platform_get_and_ioremap_resource,
+> save/restore pending irq bits and removing of
+> contact information.
+> 
+> Basavaraj Natikar (3):
+>    pinctrl: amd: Use devm_platform_get_and_ioremap_resource
+>    pinctrl: amd: Don't save/restore interrupt status and wake status bits
+>    pinctrl: amd: Remove contact information
+> 
+>   drivers/pinctrl/pinctrl-amd.c | 24 ++++++++++++------------
+>   1 file changed, 12 insertions(+), 12 deletions(-)
+> 
 
-Add IRQ domain to RZ/G2L pinctrl driver to handle GPIO interrupt.
+Linus Walleij,
 
-GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can be
-used as IRQ lines at a given time. Selection of pins as IRQ lines
-is handled by IA55 (which is the IRQC block) which sits in between the
-GPIO and GIC.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 233 ++++++++++++++++++++++++
- 1 file changed, 233 insertions(+)
-
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index c3cdf52b7294..a43824fd9505 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -9,8 +9,10 @@
- #include <linux/clk.h>
- #include <linux/gpio/driver.h>
- #include <linux/io.h>
-+#include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/of_irq.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinctrl.h>
-@@ -89,6 +91,7 @@
- #define PIN(n)			(0x0800 + 0x10 + (n))
- #define IOLH(n)			(0x1000 + (n) * 8)
- #define IEN(n)			(0x1800 + (n) * 8)
-+#define ISEL(n)			(0x2c80 + (n) * 8)
- #define PWPR			(0x3014)
- #define SD_CH(n)		(0x3000 + (n) * 4)
- #define QSPI			(0x3008)
-@@ -112,6 +115,10 @@
- #define RZG2L_PIN_ID_TO_PORT_OFFSET(id)	(RZG2L_PIN_ID_TO_PORT(id) + 0x10)
- #define RZG2L_PIN_ID_TO_PIN(id)		((id) % RZG2L_PINS_PER_PORT)
- 
-+#define RZG2L_TINT_MAX_INTERRUPT	32
-+#define RZG2L_TINT_IRQ_START_INDEX	9
-+#define RZG2L_PACK_HWIRQ(t, i)		(((t) << 16) | (i))
-+
- struct rzg2l_dedicated_configs {
- 	const char *name;
- 	u32 config;
-@@ -137,6 +144,9 @@ struct rzg2l_pinctrl {
- 
- 	struct gpio_chip		gpio_chip;
- 	struct pinctrl_gpio_range	gpio_range;
-+	DECLARE_BITMAP(tint_slot, RZG2L_TINT_MAX_INTERRUPT);
-+	spinlock_t			bitmap_lock;
-+	unsigned int			hwirq[RZG2L_TINT_MAX_INTERRUPT];
- 
- 	spinlock_t			lock;
- };
-@@ -885,8 +895,14 @@ static int rzg2l_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 
- static void rzg2l_gpio_free(struct gpio_chip *chip, unsigned int offset)
- {
-+	unsigned int virq;
-+
- 	pinctrl_gpio_free(chip->base + offset);
- 
-+	virq = irq_find_mapping(chip->irq.domain, offset);
-+	if (virq)
-+		irq_dispose_mapping(virq);
-+
- 	/*
- 	 * Set the GPIO as an input to ensure that the next GPIO request won't
- 	 * drive the GPIO pin as an output.
-@@ -1106,14 +1122,221 @@ static struct {
- 	}
- };
- 
-+static int rzg2l_gpio_get_gpioint(unsigned int virq)
-+{
-+	unsigned int gpioint;
-+	unsigned int i;
-+	u32 port, bit;
-+
-+	port = virq / 8;
-+	bit = virq % 8;
-+
-+	if (port >= ARRAY_SIZE(rzg2l_gpio_configs) ||
-+	    bit >= RZG2L_GPIO_PORT_GET_PINCNT(rzg2l_gpio_configs[port]))
-+		return -EINVAL;
-+
-+	gpioint = bit;
-+	for (i = 0; i < port; i++)
-+		gpioint += RZG2L_GPIO_PORT_GET_PINCNT(rzg2l_gpio_configs[i]);
-+
-+	return gpioint;
-+}
-+
-+static void rzg2l_gpio_irq_disable(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-+	unsigned int hwirq = irqd_to_hwirq(d);
-+	unsigned long flags;
-+	void __iomem *addr;
-+	u32 port;
-+	u8 bit;
-+
-+	port = RZG2L_PIN_ID_TO_PORT(hwirq);
-+	bit = RZG2L_PIN_ID_TO_PIN(hwirq);
-+
-+	addr = pctrl->base + ISEL(port);
-+	if (bit >= 4) {
-+		bit -= 4;
-+		addr += 4;
-+	}
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+	writel(readl(addr) & ~BIT(bit * 8), addr);
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	gpiochip_disable_irq(gc, hwirq);
-+	irq_chip_disable_parent(d);
-+}
-+
-+static void rzg2l_gpio_irq_enable(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-+	unsigned int hwirq = irqd_to_hwirq(d);
-+	unsigned long flags;
-+	void __iomem *addr;
-+	u32 port;
-+	u8 bit;
-+
-+	gpiochip_enable_irq(gc, hwirq);
-+
-+	port = RZG2L_PIN_ID_TO_PORT(hwirq);
-+	bit = RZG2L_PIN_ID_TO_PIN(hwirq);
-+
-+	addr = pctrl->base + ISEL(port);
-+	if (bit >= 4) {
-+		bit -= 4;
-+		addr += 4;
-+	}
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+	writel(readl(addr) | BIT(bit * 8), addr);
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	irq_chip_enable_parent(d);
-+}
-+
-+static int rzg2l_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	return irq_chip_set_type_parent(d, type);
-+}
-+
-+static void rzg2l_gpio_irqc_eoi(struct irq_data *d)
-+{
-+	irq_chip_eoi_parent(d);
-+}
-+
-+static void rzg2l_gpio_irq_print_chip(struct irq_data *data, struct seq_file *p)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+
-+	seq_printf(p, dev_name(gc->parent));
-+}
-+
-+static const struct irq_chip rzg2l_gpio_irqchip = {
-+	.name = "rzg2l-gpio",
-+	.irq_disable = rzg2l_gpio_irq_disable,
-+	.irq_enable = rzg2l_gpio_irq_enable,
-+	.irq_mask = irq_chip_mask_parent,
-+	.irq_unmask = irq_chip_unmask_parent,
-+	.irq_set_type = rzg2l_gpio_irq_set_type,
-+	.irq_eoi = rzg2l_gpio_irqc_eoi,
-+	.irq_print_chip = rzg2l_gpio_irq_print_chip,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
-+static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
-+					    unsigned int child,
-+					    unsigned int child_type,
-+					    unsigned int *parent,
-+					    unsigned int *parent_type)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(gc);
-+	unsigned long flags;
-+	int gpioint, irq;
-+
-+	gpioint = rzg2l_gpio_get_gpioint(child);
-+	if (gpioint < 0)
-+		return gpioint;
-+
-+	spin_lock_irqsave(&pctrl->bitmap_lock, flags);
-+	irq = bitmap_find_free_region(pctrl->tint_slot, RZG2L_TINT_MAX_INTERRUPT, get_order(1));
-+	spin_unlock_irqrestore(&pctrl->bitmap_lock, flags);
-+	if (irq < 0)
-+		return -ENOSPC;
-+	pctrl->hwirq[irq] = child;
-+	irq += RZG2L_TINT_IRQ_START_INDEX;
-+
-+	/* All these interrupts are level high in the CPU */
-+	*parent_type = IRQ_TYPE_LEVEL_HIGH;
-+	*parent = RZG2L_PACK_HWIRQ(gpioint, irq);
-+	return 0;
-+}
-+
-+static int rzg2l_gpio_populate_parent_fwspec(struct gpio_chip *chip,
-+					     union gpio_irq_fwspec *gfwspec,
-+					     unsigned int parent_hwirq,
-+					     unsigned int parent_type)
-+{
-+	struct irq_fwspec *fwspec = &gfwspec->fwspec;
-+
-+	fwspec->fwnode = chip->irq.parent_domain->fwnode;
-+	fwspec->param_count = 2;
-+	fwspec->param[0] = parent_hwirq;
-+	fwspec->param[1] = parent_type;
-+
-+	return 0;
-+}
-+
-+static void rzg2l_gpio_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-+				       unsigned int nr_irqs)
-+{
-+	struct irq_data *d;
-+
-+	d = irq_domain_get_irq_data(domain, virq);
-+	if (d) {
-+		struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+		struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-+		irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+		unsigned long flags;
-+		unsigned int i;
-+
-+		for (i = 0; i < RZG2L_TINT_MAX_INTERRUPT; i++) {
-+			if (pctrl->hwirq[i] == hwirq) {
-+				spin_lock_irqsave(&pctrl->bitmap_lock, flags);
-+				bitmap_release_region(pctrl->tint_slot, i, get_order(1));
-+				spin_unlock_irqrestore(&pctrl->bitmap_lock, flags);
-+				pctrl->hwirq[i] = 0;
-+				break;
-+			}
-+		}
-+	}
-+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+}
-+
-+static void rzg2l_init_irq_valid_mask(struct gpio_chip *gc,
-+				      unsigned long *valid_mask,
-+				      unsigned int ngpios)
-+{
-+	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(gc);
-+	struct gpio_chip *chip = &pctrl->gpio_chip;
-+	unsigned int offset;
-+
-+	/* Forbid unused lines to be mapped as IRQs */
-+	for (offset = 0; offset < chip->ngpio; offset++) {
-+		u32 port, bit;
-+
-+		port = offset / 8;
-+		bit = offset % 8;
-+
-+		if (port >= ARRAY_SIZE(rzg2l_gpio_configs) ||
-+		    bit >= RZG2L_GPIO_PORT_GET_PINCNT(rzg2l_gpio_configs[port]))
-+			clear_bit(offset, valid_mask);
-+	}
-+}
-+
- static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
- {
- 	struct device_node *np = pctrl->dev->of_node;
- 	struct gpio_chip *chip = &pctrl->gpio_chip;
- 	const char *name = dev_name(pctrl->dev);
-+	struct irq_domain *parent_domain;
- 	struct of_phandle_args of_args;
-+	struct device_node *parent_np;
-+	struct gpio_irq_chip *girq;
- 	int ret;
- 
-+	parent_np = of_irq_find_parent(np);
-+	if (!parent_np)
-+		return -ENXIO;
-+
-+	parent_domain = irq_find_host(parent_np);
-+	of_node_put(parent_np);
-+	if (!parent_domain)
-+		return -EPROBE_DEFER;
-+
- 	ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &of_args);
- 	if (ret) {
- 		dev_err(pctrl->dev, "Unable to parse gpio-ranges\n");
-@@ -1140,6 +1363,15 @@ static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
- 	chip->base = -1;
- 	chip->ngpio = of_args.args[2];
- 
-+	girq = &chip->irq;
-+	gpio_irq_chip_set_chip(girq, &rzg2l_gpio_irqchip);
-+	girq->fwnode = of_node_to_fwnode(np);
-+	girq->parent_domain = parent_domain;
-+	girq->child_to_parent_hwirq = rzg2l_gpio_child_to_parent_hwirq;
-+	girq->populate_parent_alloc_arg = rzg2l_gpio_populate_parent_fwspec;
-+	girq->child_irq_domain_ops.free = rzg2l_gpio_irq_domain_free;
-+	girq->init_valid_mask = rzg2l_init_irq_valid_mask;
-+
- 	pctrl->gpio_range.id = 0;
- 	pctrl->gpio_range.pin_base = 0;
- 	pctrl->gpio_range.base = 0;
-@@ -1255,6 +1487,7 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	spin_lock_init(&pctrl->lock);
-+	spin_lock_init(&pctrl->bitmap_lock);
- 
- 	platform_set_drvdata(pdev, pctrl);
- 
--- 
-2.25.1
-
+Just wanted to double check this series wasn't forgotten as you get 5.20 
+preparations ready.  I didn't see it in ib-v5.20-amd-pinctrl.
