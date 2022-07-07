@@ -2,174 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6BAA56A293
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 14:53:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52E8956A318
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 15:03:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235790AbiGGMvw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 08:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
+        id S234977AbiGGNDM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 09:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235746AbiGGMvq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 08:51:46 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70082.outbound.protection.outlook.com [40.107.7.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C074B2C669;
-        Thu,  7 Jul 2022 05:51:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iBGKGmFtcx+wCX4Zj++ZPZIQrm/4BlaQaZd8BfJAdq0yMKKXrn03Bh47fIeBQeK0diigLLlXkosjcfzf+JTVZRSCzOADTBM1L0Fo6zMaV3Y6+PXbrDKJuYtkkvpJuuNQe5OLHVslPklz8Zmx8xY9lR/k2p1/4TP7wRAiYsEBrxcGASIQfpN9NICFDhljwJDQVEvJqsDiYHo7qXiDefSdiK13F2VkZezzuKODt3uLmmZ7rOO/4rENaNp0pMZ9tpbQGFyEta7yHu9+Tls3PFogaYBmDwWBnRhpDP35DEaBxkcCfFYcIgn5AgVcL9rzgImOizwjO5QmhFp30Cd7VzUwsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p6Qz8bG7EFeGQxxcGEl3M3BGepTij70D5bkS9ZS3Hks=;
- b=beB1aTpV8Fc6DZVQX8MpUDpsyNCxxgOL9QNRLYXP2Zh+rSmzHD9X46BLABIFK/hGKEtPCP2qA7q/HDQvzypFk377P1VQrtCFQnqK7AWYpdO1kdJ0aQDGPbiY2D+VzPP+c87GvcrmpIbIeus0g8Y6CHHbBelK1PNkf1Ruo3U12tO8HXBjv4t5N3ucEnE6CsxBl41fkv1Va9nQlUDvfjSPgpOHbhQcacMj5/MszQIij5mg6U8MbKrsaSdPRuO5PmWCb4NsVWd13kq9sJ3DEMrRi/3HfNIP7KYeLeaRd6SnjTDg8MVyf1eSVLY7v2WppVB1UlydhzM6WzkHQ6bu4rtn1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p6Qz8bG7EFeGQxxcGEl3M3BGepTij70D5bkS9ZS3Hks=;
- b=ViDBNLWmmUtn8Jk1FHc/I/tflhRnj9f5XKU+SH98Cw30fcfWB/xGaol5Njzc/2TDBXIIWecEcL9DguwmD9KkecHRVoXRJWnquSa/Pjv0kjYYSAWwuglErXzmH37o7aqAqY28PbZicywDT9zsih0/WIOwCHp+DBGUF2ljQLqiBpc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30)
- by DU0PR04MB9276.eurprd04.prod.outlook.com (2603:10a6:10:357::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.15; Thu, 7 Jul
- 2022 12:51:37 +0000
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::6546:3ee1:5e6c:278f]) by VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::6546:3ee1:5e6c:278f%5]) with mapi id 15.20.5417.016; Thu, 7 Jul 2022
- 12:51:37 +0000
-From:   "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abelvesa@kernel.org>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Peng Fan <peng.fan@nxp.com>, Liu Ying <victor.liu@nxp.com>,
-        Shijie Qin <shijie.qin@nxp.com>, Ming Qian <ming.qian@nxp.com>,
-        Mirela Rabulea <mirela.rabulea@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Viorel Suman <viorel.suman@oss.nxp.com>
-Subject: [PATCH v8 15/15] arm64: dts: freescale: imx8qxp: Fix the keys node name
-Date:   Thu,  7 Jul 2022 15:50:22 +0300
-Message-Id: <20220707125022.1156498-16-viorel.suman@oss.nxp.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220707125022.1156498-1-viorel.suman@oss.nxp.com>
-References: <20220707125022.1156498-1-viorel.suman@oss.nxp.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM9P192CA0026.EURP192.PROD.OUTLOOK.COM
- (2603:10a6:20b:21d::31) To VI1PR04MB5005.eurprd04.prod.outlook.com
- (2603:10a6:803:57::30)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a881357a-de8b-491b-6d1a-08da60176e10
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9276:EE_
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7JyF/r8mBGD3UG5iS7cD5+kx41V2ABvjTLs+THMSeTRiOAZ2x83BXM4z75nmGa08o5zZGFWVRJhVDppQDj7z1q7J8dtl4zv5HTqZ+rFlWTyFFeew9fdtCGs4JJfHJLwBzafb7b1o15t61qvMTu2zMO2JWJj0J7ZW/FKOkkzRtf0cpws2wGwxP1J4fbcGkGLNGb5PAy2qS//tfcqe9s7LBWlP8YoXfvgShR3ky8Ds0mMfRbxKdxF43BJbRXxw3S0I0LqGp+VlnFtJCUaVFGAnJWiCTuBaXD2++hyTBFm2Z5+9aqe1K4oXwcV4EJ68qlM4jYY+M9Ka09X16uzrjUrO6Q89hdbSUbXuBsdk29WiGS121D6xpcHDspmDcXVuA6qQp1x2DvUzwxE9ZXzIECa0EvOUcNHHNPAGUDpcCaAefbu9Cpb9Vcf8vF5gig24sFdEMAcs7mO2a4eaZ685oVxMhPUwULGHalD2tNg7rrXuoeTJKSAyDyUguMHc38719jE/tl0BRIKmoeUo3x681hwRQKV2zZZ8HsjRglcdJVma5L9z4emVmzC+mMCXlMzekXRx3mGOkrsP2TLkJieDCPqqwCZb2b7uJv3qjljkDwpuMtHJsWU2fz8uJKNFSCm4M1OjREKCCdJ5ISpPuhmuhDOWyurxj62b4l3+Dz4j7J+AB5lX27wUl12HqbUoXXUjJDIMg4LnaP3nyYo5Iw5h7ZTS8GNNsxFNdjQduVi3cfohSC1aHjq3tWOBqD8+4fFjJO6+RkSMQwckcw1rAL5jf1meiSYQdsdQ2pdECsJzAkDHCNP3FPfQTZVstA+Au5m1DnNt2YwZKARXDh542yf3q+7jhWg+WgxL0l1356HSaqzXs6c=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5005.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(921005)(5660300002)(7406005)(4744005)(7416002)(8936002)(8676002)(66476007)(66946007)(83380400001)(6512007)(86362001)(316002)(26005)(2616005)(4326008)(186003)(1076003)(38350700002)(6666004)(478600001)(6486002)(38100700002)(52116002)(66556008)(6506007)(110136005)(2906002)(41300700001)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?yUjvcfan5aRO4fQa4jKhR1bY+sEIo/Gq4UAZWdZqF+y3pUlkZ5diTRa6Di?=
- =?iso-8859-1?Q?WyZF035BkypsVzXajZ0faZskcin+b7jcKct0IjExFRjzZX6IOrt0e6m01Z?=
- =?iso-8859-1?Q?OX0nREjwAk9JMhg0p7pSUNf84L21E+zu5cLoZwg9uaEHMwmIYHnjhv4eC5?=
- =?iso-8859-1?Q?Y0sivKbe4MKq0bDT8bU8vsOiWWlCF7wLY7dlzPA+AHwEq34FkFQQXavN5Y?=
- =?iso-8859-1?Q?R+3/ER5qLkDAa8xfQv1v8oYVXbyoxn0BfTECQFx5dmFe1rNftMAwtsbzmg?=
- =?iso-8859-1?Q?+EMS/N0zt4AFyUhazSrBV7xZQg0znZW4II7sl8q3xTNFlyWDtCC19T7Xgu?=
- =?iso-8859-1?Q?DpXRcmoGfY5CuOJbqKY6GnzuZrTBZhdrzFtw4eM5nmccw6i1NDKY5f6Yor?=
- =?iso-8859-1?Q?QeGpt7tgf5lSNP8hE1y7mSPDQcjaTv45dyPTArIqhO18npB2+fzvRO63mR?=
- =?iso-8859-1?Q?lA/luN1ctcZHwiqQLuew7Xi5bnSHGIdRJE1/KzbRYNudPrx9Yb4GfO2vfZ?=
- =?iso-8859-1?Q?RTxf4PbIWqC5k6WRp9J8dL1nlTGIO/m4VhTj17vLeQGYEnUBbLO4GnJRFG?=
- =?iso-8859-1?Q?IBiBd5EM8uu8sY5fVnxgCTPOefQ1QX3R65XzxttLJbK0NqHwHRM/6HENdp?=
- =?iso-8859-1?Q?egxCuCTaS/ireU0KMe0YABE3IP5YpwmFuUqDI4ntywnAAggueZEs+FUXCN?=
- =?iso-8859-1?Q?brW+f+td/SZpN/HMKRa8eKGyqFulskne1RFuvvf5lMvQOdnYvpVabKq1+v?=
- =?iso-8859-1?Q?OaulwZmpKmxnBpNc5h6t8/CVxhAr33gllpCISmd9H57aH0z85QVYxrEooF?=
- =?iso-8859-1?Q?6X9YuU1dJzKzSIQRuXiEM24RV92n+sR0EhdBEgGWXjsWLi10jKWM4jxuW6?=
- =?iso-8859-1?Q?ItFBEywF18Av1MjqrIUOT/jFGhAr73quJRdGU/ETeOPzL0L+nNXFEoxs0E?=
- =?iso-8859-1?Q?OMSxhqLhx0e2GU8BFBcc9jkIXUWuWZ42UlTvC1QKnw3amAiPgHluavIb1P?=
- =?iso-8859-1?Q?AL7rONWiR+wqUS2H0DxIc9v76yjcA/TnTdva/YC6H0hTrKp3sEGqJ7hNGL?=
- =?iso-8859-1?Q?jxxKQBIBpvQKpnGrIzwDOAxG+GPePIjRPtxAhBVGcPTmH7bFdvWiusdNQx?=
- =?iso-8859-1?Q?2Q+fUI4GnUj+rQYAI9PiEp19vO4+qDyfQm+ZmT7lYN19hgMCydU2qzHhj2?=
- =?iso-8859-1?Q?0+abE1udnJzb7+n/lRjfaU+OYqyJJe5O05HsOHZlca97b8xdN55KUJiNcm?=
- =?iso-8859-1?Q?h3rGfAIiUHc8s+sD62IjC/Vsjqb7tLn0xK8BYtFpMXGtBPTxDDqOz/VAXA?=
- =?iso-8859-1?Q?+7JNDxqpNr6LJqU5AzyXCInYBeUKlncNHto+xGhLdS3cOxMT8cpI2o2r1W?=
- =?iso-8859-1?Q?PQ1Q+d7DERXboiEVjYJbl4miTmQ2wHE0qqc71Vtz5j7qyLVS+BW/7Y7I40?=
- =?iso-8859-1?Q?bMQ8tV/lGW4hP9YFVTeep//I7TLA8cK3Pd63pWObnlNKI8c+Q1E1rFjCYh?=
- =?iso-8859-1?Q?o45bT7IDnogOUn2HzyKfE5pzKn3f0g95ZcqGAFal18uMnMvwtHw4ifxCKV?=
- =?iso-8859-1?Q?CCJCFY+39AOlvKV968eAkG07BkhRilfhCXYP/CRmb3pP03XgNBt6GopUZy?=
- =?iso-8859-1?Q?Uru2M4Hq8tc5JYGDMgADmkJTf/yqliEuPo?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a881357a-de8b-491b-6d1a-08da60176e10
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5005.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2022 12:51:37.5149
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6CvDYsfe6GbllYjKYrXThp6HjGwhNzKvhGEG9aWRqyL2rWIfHRY7hPZ9Wgf8urdaoQhNyOespHbYUaTXJZMhQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9276
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234399AbiGGNDL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 09:03:11 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD53915A0B
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 06:03:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5AFFCB82174
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 13:03:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C963C3411E;
+        Thu,  7 Jul 2022 13:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657198988;
+        bh=JvrQgePcTuXPghLJ1pZjiTFoMYlCaBLNdQQR08PnrwY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mG+vIaT0UroIiain+ca1XKfgbsxLHSGz/rPZYS//Q7gsGCaPhpY9SmMIEXXpPNL/6
+         FbQ5ydYbRrKWC44M8QRH2V5ASYbXAMvHcUaHkW5kjQbXEuaM4+RUoqgfmVxysEBmn3
+         +HlHJrkzHW+1kvErFAPql6iP10ZT9Pz5NEfHUVBzbCNB1m9Kyw7rgsKq4EoHYngPFz
+         4ZwkwGEllGeVYSNeO9Qmf6NxFS/Bt0bKgvptGLr8v8jeW1jHekRAsqL1WOjBPgc4Sq
+         2TFdURjhLW2LIhaO7W5Jmha3URpjHiYuqjSOUgEsysLBlnm2KC+UIbnGSU366odso8
+         aX+alHmCeaolw==
+Received: from [185.201.63.253] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1o9R9t-005v8C-OG;
+        Thu, 07 Jul 2022 14:03:06 +0100
+Date:   Thu, 07 Jul 2022 14:03:04 +0100
+Message-ID: <87wncpkrcn.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     kernel test robot <lkp@intel.com>, lewis.hanly@microchip.com
+Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        palmer@dabbelt.com, kbuild-all@lists.01.org,
+        paul.walmsley@sifive.com, conor.dooley@microchip.com,
+        daire.mcnamara@microchip.com
+Subject: Re: [PATCH 1/1] gpio: mpfs - add polarfire soc gpio support
+In-Reply-To: <202207071219.0Jw0owWG-lkp@intel.com>
+References: <20220705134912.2740421-2-lewis.hanly@microchip.com>
+        <202207071219.0Jw0owWG-lkp@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.201.63.253
+X-SA-Exim-Rcpt-To: lkp@intel.com, lewis.hanly@microchip.com, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, palmer@dabbelt.com, kbuild-all@lists.01.org, paul.walmsley@sifive.com, conor.dooley@microchip.com, daire.mcnamara@microchip.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Abel Vesa <abel.vesa@nxp.com>
+On Thu, 07 Jul 2022 05:46:44 +0100,
+kernel test robot <lkp@intel.com> wrote:
+> 
+> Hi,
+> 
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on brgl/gpio/for-next]
+> [also build test ERROR on linus/master v5.19-rc5 next-20220706]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/lewis-hanly-microchip-com/Add-Polarfire-SoC-GPIO-support/20220705-220421
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+> config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20220707/202207071219.0Jw0owWG-lkp@intel.com/config)
+> compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+> reproduce (this is a W=1 build):
+>         # https://github.com/intel-lab-lkp/linux/commit/f1c1cf42734c00cf02babb6220f8b68a62e86d0e
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review lewis-hanly-microchip-com/Add-Polarfire-SoC-GPIO-support/20220705-220421
+>         git checkout f1c1cf42734c00cf02babb6220f8b68a62e86d0e
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/
+> 
+> If you fix the issue, kindly add following tag where applicable
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/gpio/gpio-mpfs.c: In function 'mpfs_gpio_probe':
+> >> drivers/gpio/gpio-mpfs.c:290:20: error: 'struct irq_chip' has no member named 'parent_device'
+>      290 |         irq_c->chip->parent_device = dev;
+>          |                    ^~
+> >> drivers/gpio/gpio-mpfs.c:310:23: error: implicit declaration of function 'devm_request_irq'; did you mean 'can_request_irq'? [-Werror=implicit-function-declaration]
+>      310 |                 ret = devm_request_irq(&pdev->dev, irq,
 
-The proper name is 'keys', not 'scu-keys'.
+I missed this in my initial eyeballing of this patch. This should
+implement a chained interrupt flow, and not request the mux interrupt
+directly. That's yet another level of brokenness in this driver.
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	M.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index ddcc0131b861..f4ea18bb95ab 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -230,7 +230,7 @@ ocotp: ocotp {
- 			#size-cells = <1>;
- 		};
- 
--		scu_key: scu-key {
-+		scu_key: keys {
- 			compatible = "fsl,imx8qxp-sc-key", "fsl,imx-sc-key";
- 			linux,keycodes = <KEY_POWER>;
- 			status = "disabled";
 -- 
-2.25.1
-
+Without deviation from the norm, progress is not possible.
