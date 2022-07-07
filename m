@@ -2,237 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7063B56A32B
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 15:11:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6012956A331
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 15:13:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235363AbiGGNKI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 09:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35492 "EHLO
+        id S235075AbiGGNNC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 09:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234163AbiGGNKH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 09:10:07 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB23B2
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 06:10:02 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id n12so19329110pfq.0
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jul 2022 06:10:02 -0700 (PDT)
+        with ESMTP id S234888AbiGGNNB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 09:13:01 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7692D220E1;
+        Thu,  7 Jul 2022 06:12:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YMsmvK0um10+egVhzBs2SOQ5p/lGQGDQV43PhkV/+ZHprOAfRtGSjdEDkZf+0FoPb4Ream59fNEgcUs0dJf+MVmttoE6homtSSmQEF+v0rQwki/SRP0Wa8NUVM5JMDheQ//oAPZGiXSbwVkqVkojWWn4v0byrVaS91v8N6JJ+tdmISV2CotxTL9c4YkcL31zhcZGGxpr5/4oCBU/ARdSwdrkdg09cYgAAVPNkQ75EO8gG2eQsDyjM7HtYzFEySlHRtnORmZM0vp49IOVyYNQcDqWFsZ9Bshie+uhvkxuzYnQ6DPHJrgi3lTfCo4yYFrS1cxgSP3nTHX81k++fEfX4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kKPylHrBOwaxCAkPgXc+ZVw0PpiWgi4WwzzmmMdl5MY=;
+ b=a9mMbAZXDZQ60dsMv/QlycKhTaS+ON9dpRp8OcrrWcOwKjCMRtyGDWqWPzRGYRHM7iKEHX5soQ5KWcocurlRInqj4v/qflXa8bt+8CmKQDEKEbA8C8Fam5nDJxsrJHGEWcrdEA/SljLIpWTEhQpwMNAoah3NmEAdpfBX/nF94VNe9ab4jP745/qMXdQPmhkb3STwrTQBKHXdom/sgsM90UqiVE62M248L2enRBgesc3BBB1oj4SGy5DmPJZRw5oSY35+KS84zXDLYk6RVHmsdAvJ/HPRWsyuI3jPccXUZBKvaCuyXp444PI17lhMSr5iua2SidrS4yc4O4MDU2AoxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gDOYdhE3B186UnPAoYD+RUnP2sxjAF6Mi+ce7L0GXDo=;
-        b=kI9N7cLi/KTrkiYTXPEQ/LJcg9G5rUzPAl+2OKKK47V580sDLyBa+8//KHkllAljuA
-         6KU1L/jv191N3hWv/vxJtbktm6/TGS5PLMewrmGjAAtAkOQNWowp9dXGtDWokCbFg1Le
-         LNKWksKBIcqgCFJ/nYrWtTOpRlcsnYi4SOSgACXNXyhtJ9Isd441o2jpYRtJ3cQZopw9
-         4MwfvJ0XlLEAKFEWoGpFjl7DlnP8vOr+TtYe6UD5z+W5EgBenBKZMioofXdMtLjM9PLx
-         PuvbVQNG/g2BPayIcK+8X71lK0Ow3gUV6tEKEmnirbZLnxkzm2/3KlTtZDX5sMZiAtTZ
-         aV5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gDOYdhE3B186UnPAoYD+RUnP2sxjAF6Mi+ce7L0GXDo=;
-        b=ZF67tarx7dJGRdBt6Rbz0ClOCQj9q5dCajUxEvUYM9ypOykmE8KY9i1kZ82M4ryj5r
-         HKVwq9KlhA8gcNjGdjcZuYZGjJqtzCj/WkowaywXBJ7KCJu872yIbrPirbsCVGTIL1Zm
-         oSYFdnP/MKMnNNWBm5zxX8WFfxcgNwtn8DnqCZzh3BStBxoeNLzoJhVdLYawwBHmcaB/
-         033+qro4IrqiQFMsQ1Zjhp+JBCBvY5U/9TvyLQpLtN/X74azPFmIQm+ig3RkX8j79K3v
-         s8UlhhmosRsPhzx5FZAhONKeqNNQ6kv5b6s3C6vjmD2H5jRYbTxCCI78QEV6zDjqgVwR
-         LQmA==
-X-Gm-Message-State: AJIora9IBpIZxb5i4BoKRR6Q6MzP+FGxeqSHarhh76ZMeBqkeUZXFazO
-        oLcD4AQOKawsA6Cq5rWzWuU=
-X-Google-Smtp-Source: AGRyM1vgK1DxtvjFz32PeqmyL1ZWHT4YgVyPcOHNxGEgWhFT8TGIGrBPXWvrmqGwcMOjB5VHaVKlug==
-X-Received: by 2002:a63:f405:0:b0:40d:48c1:e32d with SMTP id g5-20020a63f405000000b0040d48c1e32dmr37769077pgi.25.1657199402266;
-        Thu, 07 Jul 2022 06:10:02 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id f10-20020a631f0a000000b003fbb455040dsm25664031pgf.84.2022.07.07.06.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 06:10:01 -0700 (PDT)
-Date:   Thu, 7 Jul 2022 21:09:55 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
- implementation for v2 API
-Message-ID: <20220707130955.GB66970@sol>
-References: <20220628084226.472035-1-brgl@bgdev.pl>
- <20220628084226.472035-6-brgl@bgdev.pl>
- <20220705020937.GB6652@sol>
- <CAMRc=Mec4C2RUvZjxc=6G6Nv0-Us91X-j-3jnNNGzE8MjrbCag@mail.gmail.com>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kKPylHrBOwaxCAkPgXc+ZVw0PpiWgi4WwzzmmMdl5MY=;
+ b=rY1GWJb94p0j874vo+o/3KV+Cfl/tumKo1k257CniTBpNB0CbzXhCZNo+jYpMmlnqOXqRS6WVqWrRZQUAFkHHB3KhpOOAEjPCUmDiZNYtJYvgyGW4D/2Sd0JHQmRIh0qWwW07JqbE8jyWG5YBruc9hCKxh9tQP6bqTYbgRqi9Uc=
+Received: from DM6PR13CA0036.namprd13.prod.outlook.com (2603:10b6:5:bc::49) by
+ MN2PR02MB5981.namprd02.prod.outlook.com (2603:10b6:208:11e::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Thu, 7 Jul
+ 2022 13:12:55 +0000
+Received: from DM3NAM02FT054.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:bc:cafe::74) by DM6PR13CA0036.outlook.office365.com
+ (2603:10b6:5:bc::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.5 via Frontend
+ Transport; Thu, 7 Jul 2022 13:12:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT054.mail.protection.outlook.com (10.13.5.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5417.15 via Frontend Transport; Thu, 7 Jul 2022 13:12:54 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Thu, 7 Jul 2022 06:12:53 -0700
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Thu, 7 Jul 2022 06:12:53 -0700
+Envelope-to: git@xilinx.com,
+ linux-gpio@vger.kernel.org,
+ bgolaszewski@baylibre.com,
+ linux-kernel@vger.kernel.org
+Received: from [10.254.241.52] (port=58456)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1o9RJN-0000kv-3U; Thu, 07 Jul 2022 06:12:53 -0700
+Message-ID: <b78d9a15-5933-5965-edc6-7a050eb1bc0f@xilinx.com>
+Date:   Thu, 7 Jul 2022 15:12:50 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mec4C2RUvZjxc=6G6Nv0-Us91X-j-3jnNNGzE8MjrbCag@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2] gpio: xilinx: add missing blank line after
+ declarations
+Content-Language: en-US
+To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <michal.simek@xilinx.com>, <srinivas.neeli@xilinx.com>,
+        <linux-kernel@vger.kernel.org>, <git@xilinx.com>
+References: <20220502110040.12225-1-shubhrajyoti.datta@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+In-Reply-To: <20220502110040.12225-1-shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2edcbbc4-81d8-4d9e-54af-08da601a679d
+X-MS-TrafficTypeDiagnostic: MN2PR02MB5981:EE_
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qQpROhCKQMorcqiKuevupkAqHGuoLr+X22ed7VMltz+q2Um8B3pFkpumbQlBL5jsK9aRusdBq0nV0aFcWh/3URuMlvVDcwNsOb8cy9NgHPTBAWFQWXC6Enjvh+3QqgQm9UAtOnpeegJs2vDbgu1JrzrKoUtJKhlmXvLqCaDKEReG5c6hZ/3TiN5l89zsSmNvctaGeL6eeizivVJraONHIIQBLt63+UR9ZVv39w4wzyvteb2EUsoICrmPEc1xD7wzO9n62oBcNTPpldsKV5o9s9otFIXbO86ZoUfDvKFYTjQaXX4BtfCY02uVINJowD5amRHgD9XMoedzdwEMfPaOwptdMDPloUTA/af3d1wDQwNJtFj8qiHGo5YrWBehFROMYcMMpCSfyZRkOWYSFLW6nS5uENboExIZVlxJ/J7MvYzsIV5rMiWF7PSYRakCMkjXZtnefymGYLlmKZI9nWVk5w0/o5/PmNgvxrW/SyRbfFYTfG0KNTtk9wcxB99xfeR42SJnhjYcRvf5Dq8Sh4Zs9w1v3RI/IxjztEIKpnjdaRcFnjXdHXM17VYj50E8g5nBlL6tKprovGrhEPElW7KhdueR8yYYvep2TzWQHGnVSjXjfB9/SRkqUWXsk3njmDPjM9rQ5tTMIeNFJWWrEKg3MYsFXd32O0hzZqHqf5C791gaL3a6KzW4nQKGSQ04/c4KmyFjWo3HO56l8QRCiRzAxYNfl+GiXaKkf6fwOkdFUFoWm3vxEVGuYTmBYaXJo4hV6Dt41oNX4W8t10/sNkCTHMzBaiw0zq3e94Of40O04U3scVvFr0Th6MztmuPXg7ddfClAcxOECkYcQB1RejDrcIEiyzoqClO+HQwSd4Cj70Qw17QajuGvwK01sF9hCHJ8
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230016)(4636009)(346002)(136003)(396003)(376002)(39860400002)(40470700004)(36840700001)(46966006)(2906002)(41300700001)(82310400005)(478600001)(31696002)(356005)(82740400003)(7636003)(70206006)(70586007)(83380400001)(2616005)(107886003)(4326008)(336012)(8676002)(426003)(47076005)(53546011)(26005)(36860700001)(40460700003)(44832011)(40480700001)(8936002)(9786002)(110136005)(36756003)(31686004)(316002)(54906003)(186003)(5660300002)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2022 13:12:54.9189
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2edcbbc4-81d8-4d9e-54af-08da601a679d
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT054.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB5981
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 02:19:17PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Jul 5, 2022 at 4:09 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
+
+
+On 5/2/22 13:00, Shubhrajyoti Datta wrote:
+> Add a missing blank line. No functional changes.
 > 
-> [snip]
+> WARNING: Missing a blank line after declarations
+> 128: FILE: drivers/gpio/gpio-xilinx.c:120:
+> +       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
+> +       xgpio_set_value32(a, bit, xgpio_readreg(addr));
 > 
-> > > +PyDoc_STRVAR(chip_get_line_offset_from_name_doc,
-> > > +"Map a line's name to its offset within the chip.\n"
-> > > +"\n"
-> > > +"Args:\n"
-> > > +"  name:\n"
-> > > +"    Name of the GPIO line to map.\n"
-> > > +"\n"
-> > > +"Returns:\n"
-> > > +"  Line offset corresponding with the name or None if a line with given name\n"
-> > > +"  is not exposed by this chip.");
-> > > +
-> >
-> > It should throw if the name search fails.
-> >
-> > If name is already an int then just return the int.
-> > (to allow the method to be used as a mapping function on a mixed
-> > list.)  Though ironically the name isn't the best then.
-> > Perhaps just get_line_offset() or map_line_offset()?
-> >
+> WARNING: Missing a blank line after declarations
+> 136: FILE: drivers/gpio/gpio-xilinx.c:126:
+> +       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
+> +       xgpio_writereg(addr, xgpio_get_value32(a, bit));
 > 
-> Do you think we should change the C function name to
-> gpiod_chip_map_line_offset() too? And possibly make it parse strings
-> representing integers as well?
+> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+> v2: Update commit message
 > 
-
-No, Python is different due to dynamic typing.
-
-For C, the function we already provide is fundamental.  It can be used
-to build the function you are describing, but we should leave it as is.
-
-If you are asking if we should add that higher level mapper as well...
-maybe.
-
-> > [snip]
-> >
-> > Provide a helper to convert timestamp_ns to time.datetime.
-> > This one is a bit trickier as the kernel only ever provides monotonic
-> > clock, so need to perform the monotonic -> realtime conversion.
-> > (for reference my proposed gpiowatch tool does this)
-> >
+>   drivers/gpio/gpio-xilinx.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> Should this be put into libgpiod C API directly maybe?
-> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index b6d3a57e27ed..7f129e7eae78 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -117,12 +117,14 @@ static inline int xgpio_regoffset(struct xgpio_instance *chip, int ch)
+>   static void xgpio_read_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
+>   {
+>   	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
+> +
+>   	xgpio_set_value32(a, bit, xgpio_readreg(addr));
+>   }
+>   
+>   static void xgpio_write_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
+>   {
+>   	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
+> +
+>   	xgpio_writereg(addr, xgpio_get_value32(a, bit));
+>   }
+>   
 
-If you mean converting between clocks, like gpiowatch does, I'd rather
-not - not something I want to actively encourage.
-Only doing it here as a last resort - would prefer to be able to request
-the appropriate clock from the kernel.
 
-> > [snip]
-> > > +PyDoc_STRVAR(line_config_set_props_default_doc,
-> > > +"Set the defaults for properties.\n"
-> > > +"\n"
-> > > +"Args:\n"
-> > > +"  direction:\n"
-> > > +"    Default direction.\n"
-> > > +"  edge_detection:\n"
-> > > +"    Default edge detection.\n"
-> > > +"  bias:\n"
-> > > +"    Default bias.\n"
-> > > +"  drive:\n"
-> > > +"    Default drive.\n"
-> > > +"  active_low:\n"
-> > > +"    Default active-low setting.\n"
-> > > +"  debounce_period:\n"
-> > > +"    Default debounce period.\n"
-> > > +"  event_clock:\n"
-> > > +"    Default event clock.\n"
-> > > +"  output_value:\n"
-> > > +"    Default output value.");
-> > > +
-> >
-> > How about merging the _default and _offset forms by adding an offsets
-> > kwarg?
-> > offsets=None (or unspecified) -> default
-> > offsets=int -> offset
-> > offsets=iterable -> offsets
-> >
-> > Off on a bit of a tangent... why should the end user care about
-> > defaults and overrides?
-> > For a higher level abstraction I'd prefer to see the whole "default"
-> > concept disappear in favour of the config for each line.  That would
-> > remove a lot of the complexity from the LineConfig interface.
-> > Though it would add complexity to the binding internals.
-> >
-> 
-> What would that look like (in python code) if I wanted to request 5
-> lines and use the same config for them?
-> 
+Fixes: 02b3f84d9080 ("gpio: xilinx: Switch to use bitmap APIs")
 
-That is the trivial case - you use the module level
-gpiod.request_lines() as is and pass in the config parameters and list of
-lines you want.
+Reviewed-by: Michal Simek <michal.simek@amd.com>
 
-req = gpiod.request_lines(chip="gpiochip0", offsets=[1,2,3,4,5],
-                          direction="output", values=[1,0,1,0,0])
+Bartosz: Can you please apply it?
 
-The more complicated case is where the lines config differs.
-Then you have to build the LineConfig by adding the config for each set
-of lines in a separate call to set_props().
-Then you provide that LineConfig to the request_lines(), along with the
-set of lines.
-
-lc.set_props(offsets=[1,2,3], direction="input")
-lc.set_props(offsets=[4,5], direction="output", values=[1,0])
-req = gpiod.request_lines(chip="gpiochip0", line_cfg=lc)
-
-(simplified examples using stringified prop values etc - hope you get
-the idea)
-
-Building that on top of the C API, you would determine the "default"
-config based on the most common attribute values, then override the
-config for the lines that differ from that default.
-That is the internal complexity I mentioned.
-
-> > [snip]
-> > > +     static char *kwlist[] = {
-> > > +             "path",
-> > > +             "req_cfg",
-> > > +             "line_cfg",
-> > > +             "lines",
-> > > +             "direction",
-> > > +             "edge_detection",
-> > > +             "bias",
-> > > +             "drive",
-> > > +             "active_low",
-> > > +             "debounce_period",
-> > > +             "event_clock",
-> > > +             "output_value",
-> > > +             "output_values",
-> > > +             NULL
-> > > +     };
-> > > +
-> >
-> > My suggestion to provide a lines parameter here was actually a poor one,
-> > given the LineConfig only deals with offsets - which is totally reasonable
-> > as supporting line names in LineConfig would be complicated.
-> > I would prefer the two to be consistent, and so use offsets.
-> >
-> 
-> I disagree. In the module-wide request function we have the chip
-> already, we can map the names to offsets. It makes perfect sense to do
-> it implicitly here as a pythonic shorthand for opening the chip
-> manually and requesting lines separately. This function already got
-> improved a lot in my v3.
-> 
-
-Yeah, good point - the caller of the module level function won't have a
-Chip object to do the mapping.  And forcing them to create one defeats
-the purpose of having the module level function in the first place.
-
-Cheers,
-Kent.
+Thanks,
+Michal
