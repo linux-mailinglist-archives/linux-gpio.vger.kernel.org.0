@@ -2,63 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41D44569F76
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 12:20:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A07D569FE8
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 12:29:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235136AbiGGKTa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 06:19:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
+        id S233305AbiGGK3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 06:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235038AbiGGKT2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 06:19:28 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07067271D
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 03:19:27 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id r21so2791840eju.0
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jul 2022 03:19:26 -0700 (PDT)
+        with ESMTP id S232161AbiGGK3Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 06:29:25 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FF153D37;
+        Thu,  7 Jul 2022 03:29:24 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id x184so5099848pfx.2;
+        Thu, 07 Jul 2022 03:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tbTM/nQcxZJ6BgR09aHGQ/QMYCWLXE45+KSnJNIU0dY=;
-        b=vmMs0IRIkxK/RTIkpvHZ3Jh92559SFP+37T/C6vcMRhlarT9BUlv/SasH5H4D1qrYg
-         ggSwKX2BzjBqJYkRyCXCSxYctonGyV7bdftuhnmOxGn5kC+OE611aQcITA9Rp1SgPH4W
-         3ZuJZ9z2K/IVRNlQ+7Ca2lTPPWkSWyxZBiMQhd9XS4iqWv1AQDvAebsMLE0vda8yvmyt
-         sP2Zstg6T6et1RUKNOVVCg+PyRGpAI/3CE3oFelXR3pmhLNgoqGQFv8SVFoV4JVz92jn
-         6XddmbYv7msOWQmue7TM+VRQxHzU2X6Pt30CVTlCX6DO9GnrjuNeVbsiTIEjMAEli75P
-         s1wg==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xkSpYLA2hqfsxahuAfQtyWp9WK9S+AEkS7nnUigkbP4=;
+        b=Uy5v44vF9ZsC6U9vhuFog2+tIzl/k7lGP1idZ1pJFp3qODEFlxzooW77oadSFlrjw0
+         6aDNqySOr//5AIurRFLZi2V2Zbycp/HmFjwOs/xYcnRdgdhlPy6QLGEHIcjEY1KCyBwP
+         G3PsuIlZOt4D3WKq9Z7EwGDinu6OdVS1oxzbyhKfhy22wC2ZtbInbu171AfNg9u00Ngw
+         vagMIiliIX0AKs8Zd9dTbpkOOIVmRKa0qu5LLsqTPW9Mmj7f5qOhFV0KL6HXoLsWOwB4
+         R7R7RNiNU+J99Xs/BOLbJuV2MhWluVjq8byyqJ05Zk5of2D1PRWSlJYojCAQwZ1VMKAc
+         7VpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tbTM/nQcxZJ6BgR09aHGQ/QMYCWLXE45+KSnJNIU0dY=;
-        b=corSd54CJE1WoyyR5zuf9IrZtxqhMEqzyq1hLMkWHuFhXuXu5PCPxb9kSEEhmPG5v7
-         2nMaApM0KobTJ5wlYDymH85wssh4YQ7CStwkTMoPNMDMYEi9/T+WN/SIWsRrLFnoSM7F
-         iyoPRVCJG52/jgvu5WyKQWYVUOZg5/abzo7Dc4JqT/eQVlj25IRuGG24wJJx58i6Wstw
-         rFAVKtxhVe5O839J96QWF/eogEc3gkjnoDuWHa51YotaQ+Q6KuD5dQSu5J9DnL7qyDIr
-         zCwOiy8WDIArKI/WTqPwKxAc9oqJaVp7ajb85ygiYhyGpGpAzKjyo0BtqRkVarjl84Ut
-         tGsQ==
-X-Gm-Message-State: AJIora9Ag2trbkv9619EwYjR4kuTdBtYJhpZMQR+7RVjaQfE/TSmbX4u
-        mClrMZAjc2dkDFsaMpbDCGzL4P6lWB6mMwxyM2P5zQ==
-X-Google-Smtp-Source: AGRyM1uyDxONACwUuTs6eFi5pFfWPYFxEXM593ZufX32OxEulj+Eeix2cte4tMMdSVy9+m9q4DPS15M4cIKGaWo+N1Q=
-X-Received: by 2002:a17:907:8a25:b0:726:c9f2:2f5e with SMTP id
- sc37-20020a1709078a2500b00726c9f22f5emr43343549ejc.286.1657189165528; Thu, 07
- Jul 2022 03:19:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220706084507.2259415-1-warthog618@gmail.com>
- <20220706085025.GA2259579@sol> <20220707090006.GB57165@sol>
-In-Reply-To: <20220707090006.GB57165@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 7 Jul 2022 12:19:15 +0200
-Message-ID: <CAMRc=Mcqvp4oN_tHXS1cb0AnEOU=Znd4bmSwO4ZZ1GszRfXhSA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: fix null pointer dereference in linereq_free()
-To:     Kent Gibson <warthog618@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xkSpYLA2hqfsxahuAfQtyWp9WK9S+AEkS7nnUigkbP4=;
+        b=7apW+kwLML1bis1UYH6wY8+TAv15wTBV0sP4n1iPdUovWu6hwZumOs6rJ/Q/lXXhjE
+         FZASq60h7tu5RQZZmGWrH7dBGuck7DoKAupSKyZutAFs4HBItTSPaQYXicTasHN32Qa7
+         WTMs8hPjjgEJ5ENV1YhGzuFXQrM3QacuoDK+fhO56h/Lm+HvUSziFerHuH4bN7WS0cgH
+         t+7MClAHbBwqVdnDNoWdPfsIsjfIztp/7lMRT5SjYC5tjUIzON1pe/J9fgTGklr4+AxO
+         uJ5bjLqmik1uVkoQ+7ZwnEabm/QRKHuwD+BG8oh1JR7tLFR9dZlU3MXN/clbPewJQGXL
+         wykQ==
+X-Gm-Message-State: AJIora9SolYOdAfFs2N+gIbntToMTYmyL25hs9QM4hj/qqjl0LrzOYf/
+        bljsW1bTCkoAr4gXufcOIsc=
+X-Google-Smtp-Source: AGRyM1vEWHbbgcYl0W0A1GHrpbNU7Fdbax7IR4Xy1VLt1k/b2LAsjPQRIy1XjDKHSuXn1eApEqYC7Q==
+X-Received: by 2002:a63:1724:0:b0:412:7bee:fdba with SMTP id x36-20020a631724000000b004127beefdbamr10476410pgl.340.1657189763823;
+        Thu, 07 Jul 2022 03:29:23 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id l15-20020a170902f68f00b0016c1948ef7esm452394plg.296.2022.07.07.03.29.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 03:29:23 -0700 (PDT)
+Date:   Thu, 7 Jul 2022 18:29:18 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] gpiolib: cdev: fix null pointer dereference in
+ linereq_free()
+Message-ID: <20220707102918.GA60169@sol>
+References: <20220706084507.2259415-1-warthog618@gmail.com>
+ <20220706085025.GA2259579@sol>
+ <20220707090006.GB57165@sol>
+ <CAMRc=Mcqvp4oN_tHXS1cb0AnEOU=Znd4bmSwO4ZZ1GszRfXhSA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mcqvp4oN_tHXS1cb0AnEOU=Znd4bmSwO4ZZ1GszRfXhSA@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,29 +74,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 7, 2022 at 11:00 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Wed, Jul 06, 2022 at 04:50:25PM +0800, Kent Gibson wrote:
-> > On Wed, Jul 06, 2022 at 04:45:07PM +0800, Kent Gibson wrote:
-> > > This patch fixes a kernel NULL pointer dereference that is reported by
-> > > gpio kselftests.
+On Thu, Jul 07, 2022 at 12:19:15PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Jul 7, 2022 at 11:00 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Wed, Jul 06, 2022 at 04:50:25PM +0800, Kent Gibson wrote:
+> > > On Wed, Jul 06, 2022 at 04:45:07PM +0800, Kent Gibson wrote:
+> > > > This patch fixes a kernel NULL pointer dereference that is reported by
+> > > > gpio kselftests.
+> > > >
+> > >
+> > > Should be:
+> > >
+> > > Fix a kernel NULL pointer dereference reported by gpio kselftests.
+> > >
+> > > Sorry - I rushed this one a bit.
 > > >
 > >
-> > Should be:
+> > And I might not've been totally clear, but this bug is present in
+> > v5.19-rc1 onwards (when HTE was added), up to and including rc5.
 > >
-> > Fix a kernel NULL pointer dereference reported by gpio kselftests.
+> > Would be good to get it fixed before v5.19 goes out the door.
 > >
-> > Sorry - I rushed this one a bit.
-> >
->
-> And I might not've been totally clear, but this bug is present in
-> v5.19-rc1 onwards (when HTE was added), up to and including rc5.
->
-> Would be good to get it fixed before v5.19 goes out the door.
->
-> Cheers,
-> Kent.
+> > Cheers,
+> > Kent.
+> 
+> Yep, figured that out. Applied and fixed the commit message, thanks!
+> 
 
-Yep, figured that out. Applied and fixed the commit message, thanks!
+Good to hear.  I never got around to reviewing that final HTE patch
+and, while it did end up pretty close to what I expected, there are a
+few things that I would've done slightly differently that I'd like to
+tidy up.
+And also have the HTE specific code compiled out unless CONFIG_HTE is
+selected, as that is very likely to be the case for most builds.
+But that can wait for v5.20.
 
-Bart
+Cheers,
+Kent.
+
