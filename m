@@ -2,74 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E37E56A1DD
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 14:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3050456A255
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 14:51:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235540AbiGGMWv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 08:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
+        id S235471AbiGGMuz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 08:50:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235186AbiGGMWt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 08:22:49 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08C227158
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 05:22:48 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id y141so19017003pfb.7
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jul 2022 05:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=U+NFT8m9/rVhPNhSw9wwQbwP67czxDm8+mnTNm42ngo=;
-        b=Y8LZeBMvast8Q9aCHgoni1ebmYOOIaB9euBvZ4EeMgeBD0Qc2jBJv9W8uTRbbTIj1F
-         lrkBFp3moFGK8hQx5snq7yMhQbGxrSN0r5JkbMctxr0icG8oxOzBu6ZWfm7tzfYf2LvO
-         Abc1nq4bItpXFXzQG+eExR+tCqsuGxzvW7UDH2m3j76U3mkmwJS8TmNqn9YOxZD0cebY
-         EAm730XSQHIhpKnwqrSZ/cEZGH+hLEKv1/YbrNLsorqiHmqPpl0ZyRxm5eWmeMctQtUW
-         BJ+6A1oEuwk959o+1UU7yTb7ed9nePRz+i3lGhvGhiHLc5oNmm6mwPfq41cXHjp84++Y
-         9nlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U+NFT8m9/rVhPNhSw9wwQbwP67czxDm8+mnTNm42ngo=;
-        b=xH2LZBQejsuBw5r3mSaHFFgpAC36Lu9RJhInWuAav3UzAN77Bk5tONM9YCtiXTu/LI
-         dAB12gIN8t+7sM67lWD4QhV5e/fg4x0d/BXRCUPs1Jog8GQrtxd77uCGGm8YbvkeCSeT
-         l3xNfNIkWNGMF7QBBhU+mHceaY9PyJiI2tf11SdysrqDP/S/KksiVzyzcYS+wrLXUbT3
-         LJ1nc2ilElT2uoC5tfehwOKrfcUDwboEutbiVcgnENRrYFPSJSkEis4S4GTwo30biKdf
-         3Jg/6JVKcHBAjmygqPc92FIF6IPsIg3PaH8TugquMQt3PCX0Ffm3hLe7Lmedg7+tqp6z
-         wu4A==
-X-Gm-Message-State: AJIora/itdVbMM5wPxIQUjXUKQy474ShLxJHQcaE3SPNTrSGZ+V8kxK0
-        NujolcjYYpMzPeJLGJ5ExzI=
-X-Google-Smtp-Source: AGRyM1sYQwriuDfacGzVSttYqhavGFndnEXs8Jew37soTPwyjVnI8hFz56gaPCEIchXIvPtPVCpA6w==
-X-Received: by 2002:a63:5a21:0:b0:3fd:41e4:f833 with SMTP id o33-20020a635a21000000b003fd41e4f833mr38909276pgb.409.1657196568012;
-        Thu, 07 Jul 2022 05:22:48 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id t16-20020aa79390000000b0052521fd273fsm26747262pfe.218.2022.07.07.05.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 05:22:47 -0700 (PDT)
-Date:   Thu, 7 Jul 2022 20:22:42 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH v2 4/5] bindings: python: add tests for v2
- API
-Message-ID: <20220707122242.GA66970@sol>
-References: <20220628084226.472035-1-brgl@bgdev.pl>
- <20220628084226.472035-5-brgl@bgdev.pl>
- <20220705020845.GA6652@sol>
- <CAMRc=MegkfLxQr5tEWdn0jOoC=PzpZPHTtqUtk6QEr8ZZU4o0g@mail.gmail.com>
+        with ESMTP id S234508AbiGGMuy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 08:50:54 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2052.outbound.protection.outlook.com [40.107.21.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BCB92BB11;
+        Thu,  7 Jul 2022 05:50:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ob65cDvmTjAt5lYJ7ElQnCr41wlWx+KHf9390sfzZBhKkYK5ElI85LE+Fwu9ObdzE/rFY/ctfAcqOIDAmhW54znZ9nkiDMc5Mxd8682JSI7j/Zlb4BEKyPcNJFqhBgWe9xANpqh5PHuHi5gMWvpMkTn/oT8r711ePlSz3K9yzCKKJzxvi7fzHR9dwhceDVHZF9j/PXhMGh8BtxvFEtKqfUt61tCrrxMl5PFr4k5M28hajFFLvIJ8+XLyLNGIGeMqgv0MESdUzSm5z2KZfZJauQas2qVLOQQ/TUbdN5omT2baycj22joPHSXfIXippIzwrf0O/OUqtYeT/gsgbjDiMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TFL26jaC0mDaNwHponh0VpQIq4I6lMPZoPIuLQN/HaQ=;
+ b=NninBTvfPsGJUoJIsqQZeAhLSjr4S5NhICbhp/E3EvhVcWgBGs67M/kIYyzdS8sivOc4bl+hrYVt/gZyGdSnz7YTgDV+fWqgnCOvrXhPHOsarki3+EmitkGKHfX0uMo+5Q3/MAImNK27m9K0/aFwf3L8emtu5gBNxf8/T5vQ5ND5pA5a/pMGhv0Uu3A8nMxkC5qqlKVvoqA8T7TGw7iF8DpIZmI97Cmao5j6hMrhkA6PrUnp1TqGWQL63lN92ejG+1FqAWAvq2hd61KX0B07LcitpbFv92wZwkWgKR/k9UZ2Zw/KvUMl/YSYvH79ySweNgBV1GwzqOiAibxhH0T7iA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TFL26jaC0mDaNwHponh0VpQIq4I6lMPZoPIuLQN/HaQ=;
+ b=XSgeaQvK1kWFE4WtK/a4UUjLWX41V/0HVHsv9yL7A6rZrujZRYWHgf1n34bGldXU+szhL0sP3aYSsT/iU0nuwZQgP/1xOrdCfA1+Z6eG8bjBmdLE4URDPsZd2fYVBN0iE19TKyAtTXteGDQNUM3LoyRa0xC/Aa5l5xgpNO9uhPw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30)
+ by AM0PR04MB6418.eurprd04.prod.outlook.com (2603:10a6:208:169::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Thu, 7 Jul
+ 2022 12:50:49 +0000
+Received: from VI1PR04MB5005.eurprd04.prod.outlook.com
+ ([fe80::6546:3ee1:5e6c:278f]) by VI1PR04MB5005.eurprd04.prod.outlook.com
+ ([fe80::6546:3ee1:5e6c:278f%5]) with mapi id 15.20.5417.016; Thu, 7 Jul 2022
+ 12:50:49 +0000
+From:   "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abelvesa@kernel.org>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Peng Fan <peng.fan@nxp.com>, Liu Ying <victor.liu@nxp.com>,
+        Shijie Qin <shijie.qin@nxp.com>, Ming Qian <ming.qian@nxp.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Viorel Suman <viorel.suman@oss.nxp.com>
+Subject: [PATCH v8 00/15] dt-bindings: arm: freescale: Switch fsl,scu from txt to yaml
+Date:   Thu,  7 Jul 2022 15:50:07 +0300
+Message-Id: <20220707125022.1156498-1-viorel.suman@oss.nxp.com>
+X-Mailer: git-send-email 2.25.1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM9P192CA0026.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21d::31) To VI1PR04MB5005.eurprd04.prod.outlook.com
+ (2603:10a6:803:57::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MegkfLxQr5tEWdn0jOoC=PzpZPHTtqUtk6QEr8ZZU4o0g@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ecf6893f-3574-4b14-736a-08da60175128
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6418:EE_
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FxVzHycaNY9Tket7hLcAZ9lLsY0+Lj5OdJkWAqDuEusvqHYI23gkwPCjglKHvpNPYevEnJsuDHVglorwjKj5QMn8arM9Ixzowo2PfVK6xMrJhY8xEiYLrQCuAajAql6ZLY1RdrIGc+GATMcYPeDT5OR3+lgVyeEsVGInQ0mMyOHvvY2XDiptJCsNUd9xUgu3ugG3OOA/XXlHM+Llkb1Jz5TrKkW9afoZixfLLJULbKCdSX3JxwE3ok+bQ3Oqh/FUBM7vzTBoZQGKmuOSJgqUiCJAyUMMbvUfYnl4gVeTrUpNReaWrvvYv1z7gly4f3Z8XniEuFs3OnioP2Hu1+Grea6vQAg8zxizTWONAXBPYN0vIipab4MYENwGkGRXTngcfU+tdygi3p8QgQ90GYulfmHojOqL2Pzv78oszdKZ4CUD/dMJiJ8IFsR9PJq4Uu5gEEdmLDQeEN3dCMu1fV/FZJ6GwraWIu3+KSftfD0J7JuXfNFzhSe/K67Ftphvnsse0AKXCkoMrmtOgKUzKZvMDPmxDYvy7YkoC54Y0+Ieu6lm1LbNtB48/l77N84I+KWkAxsr0X8XWACL0CdLTEUEhb2Yil7i8EHE/Ntu0afUMo5RK31qEiCZOj+sHMvPbD3lgi4BTmFV1WcVsOYMJC6FMv3LvxQDYQP2aNLIkAEa/zX1RIRGbIG6ZVHJRa4YtPnKQqj2ELBJKC0BCshLrlWJpvK5RGmJzs5Npf3U8GkoGv/ebJy9HZNOpUPF2dm5zmEZa8q5FNSwiwO6iJrPj3ELMJGLZ/Aox9c2OmDQA/T49m1hD8EcDlALWzf/YQdNhfuAJw3YPLnixIbuXogW9P2HWu83erTJmj0JrtSMB+sQpR3hPkx4jbowWvSwBzuKKlOSiz2rzrP66GHz+FLSxuZ75g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5005.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(6666004)(86362001)(5660300002)(966005)(38350700002)(6486002)(316002)(38100700002)(2906002)(41300700001)(7416002)(478600001)(921005)(7406005)(66946007)(66476007)(6512007)(66556008)(8676002)(4326008)(8936002)(186003)(52116002)(83380400001)(26005)(110136005)(2616005)(6506007)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?YKlqU+OGmXDosSzBQHyDXVEnqyfJw+FRem9dH9tuY2j+IgsEYFci61JbkR?=
+ =?iso-8859-1?Q?VIYAxlNVi7iVkUh/WgaWa96s14Cf9Zo/cGYO7WtaOMBN+qIkEAjdlOAhEB?=
+ =?iso-8859-1?Q?GdAVBLq5Kqqlmv/CRaHAg4IgYDY+W1TGhwyihUksReg15aoQn+OgGra9eb?=
+ =?iso-8859-1?Q?a35cuy3DgaqgeMICO09FtJ2NqgySfHb3I8xkCYPzAE+TJ3fXROX/uHCHQi?=
+ =?iso-8859-1?Q?x7s6IFI0/q0wcRWOAnSQo6FMfySjl5pCnmiSl+K6Y4PAWV1cFrlKQf8A99?=
+ =?iso-8859-1?Q?5R6GN8EV3yzjMLnj/OMOlyMv7XjmVzPH2wvOjTzpz/o98J569p662ssiOO?=
+ =?iso-8859-1?Q?WxdDmh6FIbW87fve4GY2kiXCaOoaKtErcEU4BosbMyMWu67FuaHOpl14vr?=
+ =?iso-8859-1?Q?0fvm7ceVP1yPMYMgXr8P4RhgiZmuPEg6ypZzvmFSpxhZZRDjGY7n0giTIf?=
+ =?iso-8859-1?Q?ZNqoLObnrpE8beDY/I70E0TtWSCEozfcYpZRmuiY8MelFLgwKaSFxNKwQC?=
+ =?iso-8859-1?Q?RCs9aAVvvI28v9BZDyg/73PTqokzs3DVYkqPHFR1NZeXi1JyJYPeEl/4PQ?=
+ =?iso-8859-1?Q?O1PfvjPhSWj+ilbN8FEin4beLDqAZn3C9v5zEh4SzwCzPCsaRflWXaxrtL?=
+ =?iso-8859-1?Q?Whfhe9up8+VnpI/1tBX2fu8ffcs4YkrJ+3iaxOPGwRiQnzy1ljyW9eGlcQ?=
+ =?iso-8859-1?Q?y00+TyhwSafsHN+EaFvb1s9dSGz69mTuG3ZwBYiqm/ml69epWNTq8Hxrae?=
+ =?iso-8859-1?Q?SwDw48GN74Af3dxSyOIGcO0Cy4kcO6I5oXJKhmvWigBCiX5DUXJi/2GBjk?=
+ =?iso-8859-1?Q?vZ19S/B+91YCHiwsLpQs/LthhRBEWw0v96vaS+hMxFlCKL22wZqxZBwy77?=
+ =?iso-8859-1?Q?oOZ9yoF470loZY4Q44zB0VD/9qCPYT54+ktUBUvuYX6fxBCUUAk6hkUnOz?=
+ =?iso-8859-1?Q?YU8/oATPGvGhMIPJ9IFnhrpYdHc7I3ST38uRF7aMzU+ASTgEAMvWYKyiT7?=
+ =?iso-8859-1?Q?dvLcQRvbIJloiqqGx9jwq+HRfnnCmKhz1lhwvmuhh+pGrWaBhUExPLUixP?=
+ =?iso-8859-1?Q?ySEGoGvhkx8V3Bdn/pnfWFowXvYjWnvyg6sos3vHwcGy/o89Z8EJBkaCB5?=
+ =?iso-8859-1?Q?qpBSuM+pZiU/PQ/D8+LT6LHGymNlqLBjyXqF1P/wjiWb4xJViQuvPXu3+s?=
+ =?iso-8859-1?Q?o36yaRHis5ptZ9eMCT1Czyo79F144H4Z7uyazHumlFtMWe+IyPlANZSyJk?=
+ =?iso-8859-1?Q?nfSUKtX3L/fzCQQ5wr7wF7jP5ukaKscaNSsisB74ow5ficgJPbWwiwA1gT?=
+ =?iso-8859-1?Q?t+1yzSuInqSVI9MSPQdi2p5jlkRNfq2ryywABv7jWZtI+L/2X9s2h1n5Yo?=
+ =?iso-8859-1?Q?639bHv+viRm0NWqVS8SFp6vzODQVmg8LF2xkdDEJH+zqrZZQqFyVgeoQ25?=
+ =?iso-8859-1?Q?uJkpRgKwTFPALYc3nRjWGEM8YJdl2r7Jalb4ZvoFlO6cBewkVjt/BIC5Qi?=
+ =?iso-8859-1?Q?nXMIHMXItR/gNIgM3Tnv0lMBxYbuF/s9wD7lQq0RRr1865QT8/45vhomc/?=
+ =?iso-8859-1?Q?EdTmBG8sb2Aq/GS76lGJANhJ5e5P1clvHHcXRIN4uaVEefs6fa2T9v4g+i?=
+ =?iso-8859-1?Q?z/X1nwoT5lW33vTyry0iup51cFnkdLfpjQ?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecf6893f-3574-4b14-736a-08da60175128
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5005.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2022 12:50:49.1122
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rfJSMzYpf1bupjC1F9ZdEGors5XcZYRMw/2t3kECyELOZ8HzJfT+0iSGLwUMasqgD19Z16c8kaZjLzvtOnKBSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6418
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,138 +145,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 12:17:17PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Jul 5, 2022 at 4:08 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Jun 28, 2022 at 10:42:25AM +0200, Bartosz Golaszewski wrote:
-> > > This adds a python wrapper around libgpiosim and a set of test cases
-> > > for the v2 API using python's standard unittest module.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > > ---
-> > >  bindings/python/tests/Makefile.am             |  14 +
-> > >  bindings/python/tests/cases/__init__.py       |  12 +
-> > >  bindings/python/tests/cases/tests_chip.py     | 157 +++++++
-> > >  .../python/tests/cases/tests_chip_info.py     |  59 +++
-> > >  .../python/tests/cases/tests_edge_event.py    | 279 +++++++++++
-> > >  .../python/tests/cases/tests_info_event.py    | 135 ++++++
-> > >  .../python/tests/cases/tests_line_config.py   | 254 ++++++++++
-> > >  .../python/tests/cases/tests_line_info.py     |  90 ++++
-> > >  .../python/tests/cases/tests_line_request.py  | 345 ++++++++++++++
-> > >  bindings/python/tests/cases/tests_misc.py     |  53 +++
-> > >  .../tests/cases/tests_request_config.py       |  77 ++++
-> > >  bindings/python/tests/gpiod_py_test.py        |  25 +
-> > >  bindings/python/tests/gpiosimmodule.c         | 434 ++++++++++++++++++
-> > >  13 files changed, 1934 insertions(+)
-> > >  create mode 100644 bindings/python/tests/Makefile.am
-> > >  create mode 100644 bindings/python/tests/cases/__init__.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_chip.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_chip_info.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_edge_event.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_info_event.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_line_config.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_line_info.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_line_request.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_misc.py
-> > >  create mode 100644 bindings/python/tests/cases/tests_request_config.py
-> > >  create mode 100755 bindings/python/tests/gpiod_py_test.py
-> > >  create mode 100644 bindings/python/tests/gpiosimmodule.c
-> > >
-> > > diff --git a/bindings/python/tests/Makefile.am b/bindings/python/tests/Makefile.am
-> > > new file mode 100644
-> > > index 0000000..099574f
-> > > --- /dev/null
-> > > +++ b/bindings/python/tests/Makefile.am
-> > > @@ -0,0 +1,14 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > > +# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
-> > > +
-> >
-> > It is 2022?
-> >
-> > Which email address are you going with?  gmail here and bgdev below.
-> >
-> 
-> These patches will be squashed together anyway. When I wrote this part
-> I used this email and then switched to brgl@bgdev.pl. It's just
-> copyright anyway. I can fix it up later.
-> 
-> [snip!]
-> 
-> > > +
-> > > +    def test_falling_edge_event(self):
-> > > +        with gpiod.request_lines(
-> > > +            self.sim.dev_path,
-> > > +            gpiod.RequestConfig(offsets=[6]),
-> > > +            gpiod.LineConfig(edge_detection=Edge.FALLING),
-> > > +        ) as req:
-> > > +            buf = gpiod.EdgeEventBuffer()
-> > > +            self.thread = threading.Thread(
-> > > +                target=partial(self.trigger_falling_and_rising_edge, 6)
-> > > +            )
-> > > +            self.thread.start()
-> > > +
-> >
-> > Benefit of the thread? (and elsewhere a background thread is used)
-> > The sleeps therein are only necessary because it is run in the
-> > background.
-> >
-> 
-> Just to make it similar to real-life applications. I did the same for
-> C++ and C. And no: if I triggered multiple events without any sleeps
-> in between, then some of them would risk not being registered. You can
-> try it for yourself with gpiosim. It happens because when the kernel
-> irq_work is busy adding an interrupt, new ones get ignored.
-> 
+From: Viorel Suman <viorel.suman@nxp.com>
 
-I know, and I still don't think that this is the place for that.
-I'd rather see some example code do that.
-If you want to add some threaded tests in then sure, do that, but the
-tests do not really need it - it just makes them more complicated than
-you require.
+Changes since v7: https://lore.kernel.org/lkml/20220704161541.943696-1-viorel.suman@oss.nxp.com/
+  * added missing Reviewed-By: 
+  * Defined "mboxes" and "mbox-names" sections in scu-key.yaml as schema.
 
-Sure, you can't issue multiple events on a single gpio-sim line without
-waiting for the result, but you never need to.  You toggle a line
-and check the result.  Toggle a line, check a result.
-All from the main thread.
+Changes since v6: https://lore.kernel.org/lkml/20220629164414.301813-1-viorel.suman@oss.nxp.com/
+  * The series updated so that each patch making the conversion removes
+    the piece being converted, then finally the patch adding fsl,scu.yaml
+    removes the last pieces, as suggested by Krzysztof Kozlowski.
+  * Updated ocotp and system-controller node names in the existing DTS
+    files
 
-And yeah, it is a bit disconcerting that userspace can toggle the
-gpio-sim line faster than the interrupt handling in the kernel can
-manage.  But I can live with that.
+Changes since v5: https://lore.kernel.org/lkml/20220616164303.790379-1-viorel.suman@nxp.com/
+  * Updated according to Krzysztof Kozlowski comments
 
-> [nsip]
-> 
-> >
-> > These tests should be in tests_chip.py, as they are testing the
-> > Chip.request_lines() method.
-> >
-> 
-> I would argue that there's some overlap in where the test cases should
-> live. For instance - if we moved the line watching out of
-> tests_info_event into tests_chip then not much would be left. I would
-> leave these here as they test the general idea of requesting lines
-> rather than the functionality of class LineRequest. Same for the
-> module level line requests.
-> 
+Changes since v4: https://lore.kernel.org/lkml/20220615105834.743045-1-viorel.suman@nxp.com/
+  * Missing SoB added
 
-And I would argue the reverse - that overlap is imaginary.
-This is just basic discoverability.
-I looked in the tests_chip.py for the tests for Chip.request_lines(), so a
-method on a Chip and implemented in chip.c, and found nothing.
-Putting them in tests_line_request.py because that is what they
-construct is a wee bit unintuitive.
+Changes since v3: https://lore.kernel.org/lkml/20220609143423.2839186-1-abel.vesa@nxp.com/
+  * Examples included
+  * Included Abel's patches fixing thermal zone, keys and power controller names.
 
-The tests in test_line_request.py will certainly need to call
-Chip.request_lines(), as that is effectively the constructor, but I
-would only epxect to see successful Chip.request_lines() there as part
-of the test setup, not the test proper.  All the failure cases should be
-in tests_chip.py, and of course some success cases as well.
-But that isn't overlap.
+Abel Vesa (12):
+  dt-bindings: clk: imx: Add fsl,scu-clk yaml file
+  dt-bindings: pinctrl: imx: Add fsl,scu-iomux yaml file
+  dt-bindings: input: Add fsl,scu-key yaml file
+  dt-bindings: nvmem: Add fsl,scu-ocotp yaml file
+  dt-bindings: power: Add fsl,scu-pd yaml file
+  dt-bindings: rtc: Add fsl,scu-rtc yaml file
+  dt-bindings: thermal: Add fsl,scu-thermal yaml file
+  dt-bindings: watchdog: Add fsl,scu-wdt yaml file
+  dt-bindings: firmware: Add fsl,scu yaml file
+  arm64: dts: freescale: imx8: Fix power controller name
+  arm64: dts: freescale: imx8qxp: Add fallback compatible for clock
+    controller
+  arm64: dts: freescale: imx8qxp: Fix the keys node name
 
-In general the tests in tests_<blah>.py should be for the methods
-implemented in <blah>.c.  In the case of InfoEvent, that might not be
-much, but you get that - it is a tiny module.  Those tests being
-lonely is not a good reason to move tests in from tests_chip.c.
+Viorel Suman (3):
+  arm64: dts: freescale: imx8qxp: Remove unnecessary clock related
+    entries
+  arm64: dts: freescale: imx8qxp: Fix the ocotp node name
+  arm64: dts: freescale: imx8: Fix the system-controller node name
 
-Cheers,
-Kent.
+ .../bindings/arm/freescale/fsl,scu.txt        | 271 ------------------
+ .../bindings/clock/fsl,scu-clk.yaml           |  43 +++
+ .../devicetree/bindings/firmware/fsl,scu.yaml | 210 ++++++++++++++
+ .../bindings/input/fsl,scu-key.yaml           |  40 +++
+ .../bindings/nvmem/fsl,scu-ocotp.yaml         |  56 ++++
+ .../bindings/pinctrl/fsl,scu-pinctrl.yaml     |  74 +++++
+ .../devicetree/bindings/power/fsl,scu-pd.yaml |  41 +++
+ .../devicetree/bindings/rtc/fsl,scu-rtc.yaml  |  31 ++
+ .../bindings/thermal/fsl,scu-thermal.yaml     |  38 +++
+ .../bindings/watchdog/fsl,scu-wdt.yaml        |  34 +++
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi     |   4 +-
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    |  12 +-
+ 12 files changed, 574 insertions(+), 280 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml
+ create mode 100644 Documentation/devicetree/bindings/firmware/fsl,scu.yaml
+ create mode 100644 Documentation/devicetree/bindings/input/fsl,scu-key.yaml
+ create mode 100644 Documentation/devicetree/bindings/nvmem/fsl,scu-ocotp.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,scu-pd.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/fsl,scu-thermal.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml
+
+-- 
+2.25.1
+
