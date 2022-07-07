@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C465569E30
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 10:56:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 349A5569E38
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Jul 2022 11:00:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235218AbiGGIzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 04:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43078 "EHLO
+        id S231545AbiGGJAN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Jul 2022 05:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230361AbiGGIzb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 04:55:31 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB4F4D166
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Jul 2022 01:55:31 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id r22so10380319pgr.2
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Jul 2022 01:55:31 -0700 (PDT)
+        with ESMTP id S230222AbiGGJAN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 05:00:13 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290E0266B;
+        Thu,  7 Jul 2022 02:00:12 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id w185so14377641pfb.4;
+        Thu, 07 Jul 2022 02:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=RbTg6fN7jh4Z/iXbySp7st+O0tSJNfIBOAR5vgyqfUQ=;
-        b=UDrf7NPKmmX4+eL+6bnz4csHxRY7S0C879USImWAvt5iTLp/2o3EG6oRv8SM4e/5aS
-         IbilnTgESqOwVpyDMXDo1wb4qF7HdUGJ/gZahrhmkLG65febx8pjwTpdW5C368fUIvxO
-         XVHVRE8BECx1sJVQO5yLCmZOrdywaSrL2Am676Ho8o1BVmYZLpFs5hEb5k3TzO1G6EQK
-         Uec+kNQDwhzZfHCepjZA5w0NB49AxZ0CiUhDAFt5oYpI18kIJU/Ru5S19lGcfNbC42A3
-         fR576QxamDBvZaEQTh7t1eNUjuwvmyRDJh8aYtVyXuHywH5HEi/kbq3i3FxRZyQKiTte
-         WOng==
+        bh=Qia7K7oXMVoh++cPl/L18hRITa83j7MGb2ebBNSvcKk=;
+        b=qRrDuIpdE/Ta4sjVTzdZDHOsikCs7bP/WvW9c8CAbFe6pSSvzH+eBG2Qy508UAHwI6
+         fAS6CssqGhiC/5iuu1cbyA0s1pc0XRWqx3BE7lAqBkWu6FHUHXe7GOQ3eKBDUf4+5nFV
+         RnWePmC/UR+IlMZ3xY1VuANZDCe94+lLpPlFdQnQDerwdqbX5J8JLBI9XR7bvrxXm0bj
+         Th8qgk6sWyYckErKtlecNLW04NfJYcTPrGoHDlcuv/tA318z4F7+UKUWgTLPbTqFg9a1
+         XDdyYLFQLwXTU6n39RdOsv8YHR+qTuZkhnX0f/SMcn61JQ8xTcBwjzPR+NAP/lCpJIHG
+         oXVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RbTg6fN7jh4Z/iXbySp7st+O0tSJNfIBOAR5vgyqfUQ=;
-        b=C4B7iR28Ys0ScZll10xaM0Ff6k8Md46u39J2lU0+V9zNarqNKM9uu8hc84ysI06WcR
-         PFA+1hgxHjwjgUxxdqoGtNj9wGFj+TGEE7S2L0OZDGp7328sCn3jPAJsWHgCm3vXDHIR
-         4SqKHqjmd5F0SFjXwIWNFXFI0q3Zb2ng1QQQoP4rjfnb0tOkkxofFeppJSc8QLYtvhlv
-         zvitGqqfiMN9YQxBTCXD7F4jaUVIRAvgZPNeFZCf21n6kT4yNlUqNl2mrk27kcxg9qhT
-         eJ6HLwwJnc2NISobwj8DhdOaSgeuk+ZHU9ns6GPq3ESXIJVXDz26M6cCM3mr4yHpmh94
-         eOxg==
-X-Gm-Message-State: AJIora+TrRD7cemYMJROBbVuDKjmwRT26QGAOYvjtuqYkff2Vy+D9DUM
-        YsrFzVDgXR3GCdNlVSjoxxZg/PijjDM=
-X-Google-Smtp-Source: AGRyM1uOVMm+4lCEZIFAMFhE09ONmLgHT1ZGiLaCjM8kHLRoxdY+9tUdl/aukkkQeNyiAKTRd/7pCw==
-X-Received: by 2002:a17:90b:1e45:b0:1ed:2fae:bc5a with SMTP id pi5-20020a17090b1e4500b001ed2faebc5amr4003925pjb.208.1657184130430;
-        Thu, 07 Jul 2022 01:55:30 -0700 (PDT)
+        bh=Qia7K7oXMVoh++cPl/L18hRITa83j7MGb2ebBNSvcKk=;
+        b=OmkEWCkSF2yLzWsBGhtRiGYN5OJqS/g2dkIZvFmhA0xZWsKokhHWf1zxvNCsTOU14S
+         P1ibsegPWLGAFuN4BKB+5CfZMHlXA4jRwdr2dEGasajX02r+HKcO/qpjkZF/rqY8prkW
+         Vje1aIYJts9YeV7M8O74pfxgPPRWAup1mFIp7yIqzag2rE9v68USQtIRxVrHYvINCS/C
+         XDdywyZdI/e4qUxJCJrltmym/hvhswbZiifvFHAUMdkaPmV0hyyjlBZ4FMJYDFVGaPJL
+         YFZU5WfzyByyFJ4gvEzc0m1jx/gxYND8y2ZTGPv4uaFv81oLwfM2ZBmpxIB+KxlNsYlP
+         5f4A==
+X-Gm-Message-State: AJIora9CgOHGRvx2UFidk3KMAFMjLk94GCZRGWZrvDUPBvXwBTJg6AjR
+        PWNp3NSW5aoKn6tlbjpahTA6Pz7JLbk=
+X-Google-Smtp-Source: AGRyM1vpXdl/O2jwldng7mE8O/8bCID951M7KXbbDEebc7RbmiWCQ3P3g8R0mmjRXKJXsTQ6sK25+w==
+X-Received: by 2002:a05:6a00:80d:b0:525:520a:1736 with SMTP id m13-20020a056a00080d00b00525520a1736mr50798742pfk.36.1657184411294;
+        Thu, 07 Jul 2022 02:00:11 -0700 (PDT)
 Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id r10-20020a17090a1bca00b001e2f892b352sm16117310pjr.45.2022.07.07.01.55.27
+        by smtp.gmail.com with ESMTPSA id n4-20020a170903110400b0016bef4a9dadsm6156874plh.77.2022.07.07.02.00.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 01:55:29 -0700 (PDT)
-Date:   Thu, 7 Jul 2022 16:55:25 +0800
+        Thu, 07 Jul 2022 02:00:10 -0700 (PDT)
+Date:   Thu, 7 Jul 2022 17:00:06 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod v2][PATCH 3/4] tools: add gpiowatch
-Message-ID: <20220707085525.GA57165@sol>
-References: <20220627134447.81927-1-warthog618@gmail.com>
- <20220627134447.81927-4-warthog618@gmail.com>
- <CAMRc=Mf1ux1o9BEOhEAWoVkren-wH-nuPPvvKOisxtqiNyrfOA@mail.gmail.com>
- <20220707022730.GB7250@sol>
- <CAMRc=McMPMgwJ7d9-JRxL_DcxbkAuwrM_nNEAF0-bnVJrBfcww@mail.gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        brgl@bgdev.pl, linus.walleij@linaro.org
+Subject: Re: [PATCH] gpiolib: cdev: fix null pointer dereference in
+ linereq_free()
+Message-ID: <20220707090006.GB57165@sol>
+References: <20220706084507.2259415-1-warthog618@gmail.com>
+ <20220706085025.GA2259579@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=McMPMgwJ7d9-JRxL_DcxbkAuwrM_nNEAF0-bnVJrBfcww@mail.gmail.com>
+In-Reply-To: <20220706085025.GA2259579@sol>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -72,67 +70,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 10:41:21AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jul 7, 2022 at 4:27 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Wed, Jul 06, 2022 at 10:46:28PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Jun 27, 2022 at 3:46 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > > > Add a gpiowatch tool, based on gpiomon, but reporting line info change
-> > > > events similar to the gpio-watch tool in the linux kernel.
-> > > >
-> > > > +       }
-
-...
-
-> > >
-> > > Moar newlines, I really like between blocks of code, it really helps me, thanks.
-> > >
-> >
-> > Oh, ok, I see this as being one block.  Where would you like the splits?
-> >
+On Wed, Jul 06, 2022 at 04:50:25PM +0800, Kent Gibson wrote:
+> On Wed, Jul 06, 2022 at 04:45:07PM +0800, Kent Gibson wrote:
+> > This patch fixes a kernel NULL pointer dereference that is reported by
+> > gpio kselftests.
+> > 
 > 
-> I will add them myself later, don't worry about it.
+> Should be:
+> 
+> Fix a kernel NULL pointer dereference reported by gpio kselftests.
+> 
+> Sorry - I rushed this one a bit.
 > 
 
-I think I know what you mean.
-Anyway, I'll add a tonne of whitespace...
+And I might not've been totally clear, but this bug is present in
+v5.19-rc1 onwards (when HTE was added), up to and including rc5.
 
-> > > > +       print_event_time(evtime, event_clock_mode);
-> > > > +       printf(" %s", evname);
-
-Like here
-
-> > > > +       if (chip_id)
-> > > > +               printf(" %s %d", chip_id, gpiod_line_info_get_offset(info));
-
-and here.
-
-> > > > +       print_line_info(info);
-> > > > +       printf("\n");
-> > > > +}
-> > > > +
-
-...
-
-> > > >
-> > >
-> > > Looks good to me, I would have probably added a machine-readable
-> > > output formatting like gpiomon but we can always extend it later.
-> > >
-> >
-> > You mean the format option?
-> >
-> 
-> Yes. But that can be easily added later.
-> 
-
-I was thinking the Python bindings would be the way to go if you want
-to extract specific bits.
-
-Turns out when I created a new libgpiod workspace in my editor it
-defaulted tabs to 4 spaces, which might've been the cause of some
-unfortunate formatting.  Sorted for the next version.
+Would be good to get it fixed before v5.19 goes out the door.
 
 Cheers,
 Kent.
