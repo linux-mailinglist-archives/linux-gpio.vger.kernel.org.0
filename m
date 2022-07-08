@@ -2,68 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F94956BE00
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 18:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1B2056BD88
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 18:08:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236808AbiGHPKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 11:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
+        id S238754AbiGHPON (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 11:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231849AbiGHPKm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:10:42 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716EC18398;
-        Fri,  8 Jul 2022 08:10:41 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id 64so29025751ybt.12;
-        Fri, 08 Jul 2022 08:10:41 -0700 (PDT)
+        with ESMTP id S238759AbiGHPON (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:14:13 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B9230F46;
+        Fri,  8 Jul 2022 08:14:12 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id p129so8549625yba.7;
+        Fri, 08 Jul 2022 08:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FyATTXW146ePrbCJoAXM5Za7QyR2Mr4OTZR5vn1lyDg=;
-        b=ZDuR9wB5fnbcwR9fHlBpG9DlcDgeYNi+9oZqjroVeq0hfv8JaD5loNyjZCzMUv3NmC
-         AHxGEtUZCxeMBYIWS7Pj7LW3Vxre8YdMo2EaaViM/SCNSlfIYPQjT9r+3iTqPUUhJXV/
-         rdET2kW/0Kfocfk38n5HviqsvxVFYDWqhR9UU0RsTwITxBPJWfWK+Sj9wie1ZFOYDodU
-         HDCdcUhCJcnbrv/2MC+kmsZ1A3huOAmOMaCF7vC3Hm7LwECvMOL5MVbuD4Fzw4X6Feg0
-         OuGYnMgGddGoEzwiBw5PD38SoCYu0loSwqpOlh0CfTrHGh24SRCHacifWSAXRO2iV0/m
-         QINg==
+         :cc;
+        bh=K0qR0/WRFp+dSGfUNqNNESrvV3EATxxD7VgxKv3r2KA=;
+        b=CqgxYBea7Xw8XvBT6EpataJvt/NaLXh1Uxm9wsKrINnwqJX3Gbz56Df6QnJgWZbcaU
+         dTzBYOavgJ8q6MdQf4bgCfsZhy24Y2CjLnWKjfhmXuSpl+gfbDPsrVLGTCijWOvI7VVW
+         OuRlwZmYd0mN37Dzrf3Kner0I7hXKzgLj4G9okLcUbchcICzwsWM3QtqTsE6v4vKw/ZE
+         liT8laDllBnSuA2LSkq0IxnT7ar0xNj4TBgCD/AScz536LD+AYFqmnqf80O9HrQV0F8o
+         VrURbpzS8hamWc6dvmqn/vydN0p+9cbeKAvvSu/x9u3YD1nyNc8NZKDzTjD/l2nJc27n
+         7CDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FyATTXW146ePrbCJoAXM5Za7QyR2Mr4OTZR5vn1lyDg=;
-        b=IYd0synIuxzU+05ZUrC+Zz8srib2V3REgRJDkYOJaREaHgvQsvLrNo1DdkGln6e0+h
-         c+3QXTzsCF2JGYpus4XFCs0RD2IHwnkSqs7y7rnWQ32VN6F9h/D6fZoa8xVTYJS2xllN
-         fytyP0bEh2tbwMwD2v6slhIOMaAGt819SxFQ3PSZcAnt42u0kHERXRR0kc/xz0fIp+dH
-         h14MYiB7vbxUu7uZrxFD7fzJsQ1sdfjqhkBO+Qqsl37d5TOyhRZLD19DdvEemvPHRzFD
-         w92lSW31bNyygk9JYKVREKmRboHuedBbaReaRZY+3F8sON7gshpngWY1PZYktuCk7KI8
-         oukg==
-X-Gm-Message-State: AJIora9FnEfFVdmondY9JXefaH7F+fhSupNoZxW6xfWXc+tTMhd0rA2G
-        Nkpnd83M+bXx5AU6B2zTUwq1RazRTionePIk5SgbHCno57A=
-X-Google-Smtp-Source: AGRyM1takYE1ha7D7dK3xwnG6palmPl6uHCRAap+iqh+HC0UC294NH1T4mPi7ZjwDITu9DCw/L+GRjhdWgocl+PREMo=
-X-Received: by 2002:a25:dd83:0:b0:66c:8d8d:4f5f with SMTP id
- u125-20020a25dd83000000b0066c8d8d4f5fmr4225765ybg.79.1657293040625; Fri, 08
- Jul 2022 08:10:40 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=K0qR0/WRFp+dSGfUNqNNESrvV3EATxxD7VgxKv3r2KA=;
+        b=p0aCCWO2uASzVIzpRCrCcaw7JYlq8EymExqdMIpFwa780EQqez/AaTWqbviOJRqluR
+         jYdw4WXT/jMCeMv3uSr3UheuFxO2tT18BvILmMKwqOrRA31ulnTWutkicw4smgkj0e1T
+         AktS03DEf5zqU6IhQQ0CBdIOdJzjww4kWM4408cmVNypV6Fd/3iRQDvuPxVa24cpbt5f
+         XB6HBG//BeGJOw0nub0Ze/zZT5zZsPR769OU0Hr7yHRnkmueIlFY8/94YFa9BD8xsWsS
+         daa7aSp5XGQzEIXoCIgd8bGz/8fa6LRoBKg3ysgCg72N7ESqyIqV1NfXlV3bUWehwFb3
+         NC1A==
+X-Gm-Message-State: AJIora/UxcgdXlTsq84IwMuo62K/BIxiQXksas+7juv8TWkqeNbBGl7v
+        /t4dy+g3VBXjhgRoPG4eCTIbSLaFBO5gvqontKY=
+X-Google-Smtp-Source: AGRyM1saoM2+5oEj3fiXHKMiUuO+fy8OeA39Dff92b/anSd471hPJoxxEr02uRCnKwb+GctLJrfZr3s8YDh6Nob616I=
+X-Received: by 2002:a05:6902:154c:b0:66e:8254:146e with SMTP id
+ r12-20020a056902154c00b0066e8254146emr4447945ybu.570.1657293251579; Fri, 08
+ Jul 2022 08:14:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220708093448.42617-1-nuno.sa@analog.com> <20220708093448.42617-8-nuno.sa@analog.com>
- <CAHp75VeKg9G7o6evb47P8jgwG2Pgh5prw7WJYwXZq4pMGZCxUQ@mail.gmail.com> <PH0PR03MB67865B851C724E5958F21CDA99829@PH0PR03MB6786.namprd03.prod.outlook.com>
-In-Reply-To: <PH0PR03MB67865B851C724E5958F21CDA99829@PH0PR03MB6786.namprd03.prod.outlook.com>
+References: <585795d19c13a7136bc4b61307114591af2aea69.1657279521.git.viresh.kumar@linaro.org>
+ <CAMRc=MdHAZ=OE+jjxx5BV_4Z2L4g0WmEVaiyifN+nu2JnMx82g@mail.gmail.com>
+In-Reply-To: <CAMRc=MdHAZ=OE+jjxx5BV_4Z2L4g0WmEVaiyifN+nu2JnMx82g@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 Jul 2022 17:10:04 +0200
-Message-ID: <CAHp75Vd+REEtRmhHoNaBXR-uRoQ5munE46zub_WV7=nQHR=pOQ@mail.gmail.com>
-Subject: Re: [PATCH 07/10] input: keyboard: adp5588-keys: fix coding style warnings
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
+Date:   Fri, 8 Jul 2022 17:13:34 +0200
+Message-ID: <CAHp75VdWe_EaJB3Bqz13rb362uDBTJAGaVh7Sjeq874tm=wrgA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: cdev: Don't access uninitialized descriptor
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -74,32 +71,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 5:05 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: Friday, July 8, 2022 4:50 PM
-> > On Fri, Jul 8, 2022 at 11:36 AM Nuno S=C3=A1 <nuno.sa@analog.com> wrote=
-:
+On Fri, Jul 8, 2022 at 3:32 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Fri, Jul 8, 2022 at 1:25 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
 ...
 
-> > > -#define ADP5588_KE_IEN         (1 << 0)
-> >
-> > > +#define ADP5588_KE_IEN         BIT(0)
-> >
-> > This is actually a change. And if there wasn't bits.h included, you
-> > would do it as well.
-> >
->
-> You mean because of it being unsigned now? Well, I guess it's true
-> but in practice I don't think it will have any side effect..
+> Kent beat you to it with commit c8e27a4a5136e7230f9e4ffcf132705bf56864cc.
 
-int --> unsigned long
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c8e27a4a5136e7230f9e4ffcf132705bf56864cc
+Notice: this object is not reachable from any branch.
 
-FYI: We used to have bugs with this conversation in the past.
+Rebased?
 
-So, please amend the commit message accordingly. And as I mentioned,
-this should probably be done before the rest of this patch.
-
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
