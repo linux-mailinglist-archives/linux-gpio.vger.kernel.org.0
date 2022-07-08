@@ -2,230 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D769B56B5F7
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 11:54:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15A4D56B711
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 12:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237853AbiGHJuU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 05:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
+        id S237537AbiGHKIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 06:08:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237676AbiGHJuT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 05:50:19 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76651823BC
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 02:50:11 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a9so7084005ejf.6
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 02:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vFg34GBTrDPV7mJXn7hPjAYCguC+rPNSl2CgD0TJNAw=;
-        b=DQiNC4BuyhCk8yhlvocA01Gm7vW6Cwtnuqmjn9Cf8I9tf+9SHPwaHg+mkcPHHh1TAS
-         6foVH9YBCc3XJQUrTQ9GGYWVo7CMQwyhJNUuOI1hcuyDbDbS52J4VqfWMILB+sWYeWWX
-         dcPDU71AD5JRj8wQoKAfDipIPU+jxsnSeFMY3bxYOstn4Nfc6eb9T9TNrDAEe1BVaUy9
-         EQBp9Bqi/bQUNmRnhm+tAJDX85Vm0GLDnDB+wAcDt+Itpb4Sw7b8NrssHwpbbHiD+sT9
-         d27BVSkHm/W9ahngWFvj3GR9Onke50SlgnnRx/hiLIXKyjmglVLqqVPZN/oUV0ZLKGEK
-         Y9gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vFg34GBTrDPV7mJXn7hPjAYCguC+rPNSl2CgD0TJNAw=;
-        b=XoExCLb1n3BzFG6zdWTC8sX1OAesNwvyINlQ+3wHeFUqcNw6oA1jZroN859aqnRu0t
-         3ZaVJ7j2DT6v8WbgAdHgYwGoJ3C+casEPnHLSBumkUO5ysb0Y0wwC3Qp4j1XzaxpBD0W
-         /nG9ByP1z5rFcmC4PeX8NvqPG7GkzW4oOFcTF6jtaP7DdzsMgOsSc3NlYKH7u+0/qWmT
-         je6PfuajuKcWBFvAhvhbbwoUXnuNmcYTUkk9GUjucyiJf33+iXhPZvQuj/EW3XEDlrf0
-         a2MUGHOwUe2gDXStgxjA36W8qWYVfeeFLbFV/o9zljqj8V/7EnikWR1tyddsh9UchSTP
-         c9vA==
-X-Gm-Message-State: AJIora/BmcCwzhp9K5MBmVlYfHAijWGXBKlPd7xYTI1vJWojH11YaHVO
-        kvWPeqSumc1UMCfNxW29VoD1UHDU+M6xkso2c2FNSPCA2ao=
-X-Google-Smtp-Source: AGRyM1v85PbnRAdWnDiJzHdUYhMp3tFCgh1cxS4UwWU8aQnuPzo0gt2CS438712uN6MkJisryD7z2CZwhDeSiuOb5K8=
-X-Received: by 2002:a17:907:3e20:b0:726:2c09:3fa4 with SMTP id
- hp32-20020a1709073e2000b007262c093fa4mr2589359ejc.101.1657273809897; Fri, 08
- Jul 2022 02:50:09 -0700 (PDT)
+        with ESMTP id S237826AbiGHKIQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 06:08:16 -0400
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2087.outbound.protection.outlook.com [40.107.20.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D3184EC5;
+        Fri,  8 Jul 2022 03:08:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oD/vQUJv+GHUZGA9YuqhtFGpqWmItd2Oh+OJMfZtcvsk0xMR/7jItBydWqgOyNvcwU7Lt29hats0oJKxGt2Jgcs/z6tDwE5w5vyLvoP2+WuFr9vAbfiEddA/ChXpqoz7IUs/JJNp/hSvXyVeXJlFQsQGCfmA6z3k+i/K0XIZMoTVX2hIbu498ouN57E3aMdS3emgC5OZV9olgO0x5iMvU8g0kk/bG8oskROIdESFs30qPwL9yY3TWBzqUuP+/si1QF/8ZZ9jmW42lh88/g81mMmZvui1BYss4OF5lywzjQ8dj9ypnBnq37vqvghwc9H6LCZwDzFdv2rV6/uTQBh97g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Dzf6yby0RvyaSJDqpgac6Xwu1ueqt4Uj/OymCymLT7E=;
+ b=P4uFtdEzELJ04vInOBLDHjo/h/BCLAIwMiRiOmHourrXGXk4pyHGQ2FcKJnyHShurS2MfBXCw4KENFFO5/u8aqngtTKVaYdiQYjxWik60gbdkledltRzpF2H6o1VMMCuZkP6sSb19i85EvIAP6CITfTK5vd3zWv3HVDB64Q8KqFSY2KtJZ/f8oHa04f850BHcXuBHgVJqmjUAJ8GSvMr08a2sNyea0jJ7Ij4zYtqKHWxnf4rvcLSONEmcx1L75+pAogdg5Y8iEI6mpDhXd9JCzwnlMQwTz6Fb7tIYJNssb0F5aZz0HufZzS9pu9AOITVVmonSDqCL8bZI1paWGmq5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dzf6yby0RvyaSJDqpgac6Xwu1ueqt4Uj/OymCymLT7E=;
+ b=IUzoAStpHQwc+tKAatTSUEbSerfT1039VURLK4N/BcXSmsKok75YFRBVKAPg8LJ06V7Gxo+8ZKp0nROm1f4qRwWYD/IhoMmywCARDkiYjX+D7r260GJFmffAgWKGNI75sIwrYSuBqlOjdVZDHAnu40gqGCO9n6YOPc7QIABe0K8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB8412.eurprd04.prod.outlook.com (2603:10a6:10:24d::9)
+ by DB9PR04MB9474.eurprd04.prod.outlook.com (2603:10a6:10:368::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.20; Fri, 8 Jul
+ 2022 10:08:11 +0000
+Received: from DB9PR04MB8412.eurprd04.prod.outlook.com
+ ([fe80::1c1b:6695:20d7:fd10]) by DB9PR04MB8412.eurprd04.prod.outlook.com
+ ([fe80::1c1b:6695:20d7:fd10%6]) with mapi id 15.20.5417.016; Fri, 8 Jul 2022
+ 10:08:11 +0000
+From:   Jacky Bai <ping.bai@nxp.com>
+To:     linus.walleij@linaro.org, aisheng.dong@nxp.com, festevam@gmail.com,
+        shawnguo@kernel.org, stefan@agner.ch
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: [PATCH] MAINTAINERS: Update freescale pin controllers maintainer
+Date:   Fri,  8 Jul 2022 18:09:52 +0800
+Message-Id: <20220708100952.1998673-1-ping.bai@nxp.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0009.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::18) To DB9PR04MB8412.eurprd04.prod.outlook.com
+ (2603:10a6:10:24d::9)
 MIME-Version: 1.0
-References: <20220628084226.472035-1-brgl@bgdev.pl> <20220628084226.472035-6-brgl@bgdev.pl>
- <20220705020937.GB6652@sol> <CAMRc=Mec4C2RUvZjxc=6G6Nv0-Us91X-j-3jnNNGzE8MjrbCag@mail.gmail.com>
- <20220707130955.GB66970@sol> <CAMRc=MfuzzjkApJ4LBARG0OpfvfBeMqVMTRnKJuj7zV4Gvez1Q@mail.gmail.com>
- <20220708013834.GA6484@sol>
-In-Reply-To: <20220708013834.GA6484@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 8 Jul 2022 11:49:59 +0200
-Message-ID: <CAMRc=MfGT_FZ=LToa4DPqc3UqjAbt+9dpT2NtKOmMqhcFKWLZQ@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
- implementation for v2 API
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 469253df-9fc8-42fd-c6aa-08da60c9c344
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9474:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f5UqAEEFU0kow5K4OsEatcVej09BmNB6HCu8S2+vlgum2kcEiESPKUw29Avy+1iI73K/OJqXhpXXTlR+0iaBfhlXESPlrluh97DZ4qsujwJ0zVDpjBn9nVcCpzEXxqMevwcLP4tbKHhV7mPRLTcw0KuX+mvvLDbmyMA6SCStUTSSGZwTEJGHKchOxD6vc6ZxLv6RZUGBTD+CGBLmDGWiKEX1njsrDUYR2306zTOTNlE1NGyi3cltGqOLtNaRaVJxZ1Csku8QKBr/H3v4mFBOaTiGefOP3xjA0uSm72lPwSh5pjZRAvSf0CeCWz6vPayIqEY1U1XCkoX5rP6UQt4tQUpg2NmBUucVWFJSOpH+K7fAR9rC9HmOAWqV8SCt9soDlKDnjbZ757YfQ8dikfSqH6eBJD8PW/cDqGjYdgH8uOcbLISxAD7b61npSZ2pokIoXcgi+iPVLa+I6kA5yDgTCFxHLUkfZwaHUzoU+5duXrKZVVQkzRidJTUeKSSBToq4hmEWRZUbdNRHHkP2HS6Wo6coid4LUHxj5AWn2M0z3VB8Cd0bZ7Ix54LU8GY7awPFWNkjRKKkf2TmPaV2r/qdAKZHOavsGblzpI4+UoPqf3C6Mhbg5kzWSVhGq6RypKJ1FbBi22JMxo8tIrKErh4OV2oHguO5jY9fC8Eb65gKi6OLxR5z2l1NqCUKuSQXDrd4JtngdFJ9axDSevsvObOn5Uy6d+llajGsEDhmqM31J9DaV/quyqzE7vemAYe2wEMEwpFRqFClqHXawhY0XEXI4jJr6moz+FhHYld5G/1I14YBzxuHcQ3lwrozIAlC1dMS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8412.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(316002)(36756003)(6486002)(4326008)(66556008)(8676002)(66476007)(66946007)(6666004)(4744005)(86362001)(41300700001)(478600001)(8936002)(5660300002)(1076003)(2616005)(6512007)(26005)(2906002)(52116002)(6506007)(38350700002)(186003)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?i8Ujzi6t2oZG8sODFddnm/xGR/pz7SmDMZV2nZv3AGSHtKGJOERbUkyrB5MX?=
+ =?us-ascii?Q?Qps6F6IGA4QyA738qyjKpwJvdtsuXmfmLHfg/Elyxn7VmQ2L7/0NW5rNRJSX?=
+ =?us-ascii?Q?qUpERbZ657g6puICkkdfvch0Apae2jQIaXnMOaHVunaVM+aJzRGBsMW92TgC?=
+ =?us-ascii?Q?8ODKpPVWJQsrRNMbm6c4YDSEdhIWryIjBcSGCHvEDv6/ZCmEGoY3uWynL3g5?=
+ =?us-ascii?Q?CjcH6NdrMVpoEP0EKgaKt3kHlGfSV19UGca8rTYZ4DLDOWBrPkLMoUojCKG9?=
+ =?us-ascii?Q?/0vxzcxLDn0PtP1xzulFmH0TViWUongm4zMsE1dNuGBUalcIVdn6EfrkOwIM?=
+ =?us-ascii?Q?mOe5rfSQAKQ89aakYwinJakvVHhh9VAzH3cu0wikWWyq+bu9Xn77GD4Tn601?=
+ =?us-ascii?Q?omwky+4CXAICetZOb2dOFM+N/hOXReo4q2NfYzlamm/Bg60XHs4hH9RQFzHM?=
+ =?us-ascii?Q?AfSJdVmQSkzRDPjc+bSYENoAiVvCXV/vTNohNNd8MATjd/35MHSOBf5d2dQR?=
+ =?us-ascii?Q?M8N80Nxfc/jIrktHlpf5YTi09blqtHD4s0rQ/VFzqZPmssnk5m4OpPfzkZ/z?=
+ =?us-ascii?Q?hXdI1sxIieP/LFLhAReb6JyUSMzThvRbcOj634JBqGhZJnvM1gOIVQdfptp2?=
+ =?us-ascii?Q?OD2FGS+OMJWkzmtcAK+TBQ533F91gacGPew3bvhGuR1VycKJ/2mPL3DyW+3H?=
+ =?us-ascii?Q?Ih02iaPEbmEpB3unzLwdnH78DafVIBFx2HkMfT2sDWw9GJ4hfToqW3PQV/vB?=
+ =?us-ascii?Q?pohugvzt2Lkns5mW4gEOxK2L8ilt27vd1W7hlhswYgxSzvOcSn4RbB8DJOMH?=
+ =?us-ascii?Q?+4zptCMXilFWdh3hUn9K02nyAYsYMzQPs4/21B2jH/saXrfO03cMyi/ShGK0?=
+ =?us-ascii?Q?3vkAxcz/TyblzvoAEfPkpep4anpSNsLI59DwcIcX/UZnT7qJ2oeh2L23tQA/?=
+ =?us-ascii?Q?xHjskPJgst6/xEawsDfLpqAN31vvz0dfsv3+49FRfr2ywLL8yY+9rrr5KgFj?=
+ =?us-ascii?Q?dceOoN/ttNob/bsbz0oHLcWxkr30QHCXgJlf9/iqh3P/GCqEI5Drw3nrotNR?=
+ =?us-ascii?Q?Jh8F8ByygG2Td93NpxPrKjYB/k/LucJ0F9O7cEjKDuAyjOKP+uoalbjRqsMG?=
+ =?us-ascii?Q?K6KX3Nxedwy1mgC2UNhUR0SoXV6Y4XzWBBsvl9PEwqU3c+vXmPDLrnPGPET3?=
+ =?us-ascii?Q?o+rHAHcY+9si7ZaZZLKrz1blSNNmbnnYU9UwzA8cXSvxHcQb3M9syf/0J9xF?=
+ =?us-ascii?Q?ZA5xGMj3q7kp4xpqrQ9jsaO0ptvtWQxFvzdhyzq70WnyjNAB8v8llI5R/CzI?=
+ =?us-ascii?Q?VYR+bN9YAGMdJt8dL92vsdkBkY3zQKKS6G3VV3UOND+tsI0TNYmgsgYbBfrw?=
+ =?us-ascii?Q?uNxkTjavPzAyM8SV7kShW/NFU9WtdF53yrNwOID4m6K1Wy6dDCjHOUfwLIlS?=
+ =?us-ascii?Q?vMTLkqN/6ezcqGF2IVBR2hriaZ00wYXo66HukGVfF4/hgS0MudU1py3tDCTC?=
+ =?us-ascii?Q?SBFzlQbqj33KAjGPOTBSxhjVOVfzKdpbI4D1VG397jbCpbQ5QVgBnbOrixt9?=
+ =?us-ascii?Q?GhbP44a9PO1/MHxzRb04D1Ku0uFNgCMCYdCs+L05?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 469253df-9fc8-42fd-c6aa-08da60c9c344
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8412.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2022 10:08:11.0540
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QXED3GEZFG/g2ets/ub9RcDlvZYOBoUb2b4NRI4UfqztI5tsLs5tVIIQqDN5bk/X69s5IVoMSAwPmpMwStDENg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9474
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 3:38 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Thu, Jul 07, 2022 at 10:09:44PM +0200, Bartosz Golaszewski wrote:
-> > On Thu, Jul 7, 2022 at 3:10 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Thu, Jul 07, 2022 at 02:19:17PM +0200, Bartosz Golaszewski wrote:
-> > > > On Tue, Jul 5, 2022 at 4:09 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > [snip]
-> >
-> > > > >
-> > > > > How about merging the _default and _offset forms by adding an offsets
-> > > > > kwarg?
-> > > > > offsets=None (or unspecified) -> default
-> > > > > offsets=int -> offset
-> > > > > offsets=iterable -> offsets
-> > > > >
-> > > > > Off on a bit of a tangent... why should the end user care about
-> > > > > defaults and overrides?
-> > > > > For a higher level abstraction I'd prefer to see the whole "default"
-> > > > > concept disappear in favour of the config for each line.  That would
-> > > > > remove a lot of the complexity from the LineConfig interface.
-> > > > > Though it would add complexity to the binding internals.
-> > > > >
-> > > >
-> > > > What would that look like (in python code) if I wanted to request 5
-> > > > lines and use the same config for them?
-> > > >
-> > >
-> > > That is the trivial case - you use the module level
-> > > gpiod.request_lines() as is and pass in the config parameters and list of
-> > > lines you want.
-> > >
-> > > req = gpiod.request_lines(chip="gpiochip0", offsets=[1,2,3,4,5],
-> > >                           direction="output", values=[1,0,1,0,0])
-> > >
-> >
-> > This is close to what I have now in my v3 branch. Except that values
-> > is called output_values and takes a dictionary like its counterpart in
-> > LineConfig but that can be extended to interpreting a list as
-> > providing the values for corresponding offsets/lines. Current version
-> > of request_lines() takes all LineConfig options and uses them as the
-> > defaults.
-> >
-> > > The more complicated case is where the lines config differs.
-> > > Then you have to build the LineConfig by adding the config for each set
-> > > of lines in a separate call to set_props().
-> > > Then you provide that LineConfig to the request_lines(), along with the
-> > > set of lines.
-> > >
-> > > lc.set_props(offsets=[1,2,3], direction="input")
-> > > lc.set_props(offsets=[4,5], direction="output", values=[1,0])
-> > > req = gpiod.request_lines(chip="gpiochip0", line_cfg=lc)
-> > >
-> > > (simplified examples using stringified prop values etc - hope you get
-> > > the idea)
-> > >
-> > > Building that on top of the C API, you would determine the "default"
-> > > config based on the most common attribute values, then override the
-> > > config for the lines that differ from that default.
-> > > That is the internal complexity I mentioned.
-> > >
-> >
-> > Internal complexity is fine - it's the implicitness of the defaults
-> > that make me not like this idea. I think we discussed something
-> > similar for the C API and I was against it too. Your examples are fine
-> > but the defaults for lines not mentioned in set_props() would be
-> > filled by a freshly created LineConfig with its well defined default
-> > values. In other words I prefer to keep the override mechanism visible
-> > in python but unification of the property setters is something I will
-> > consider.
-> >
->
-> I suspect you are right that we've been here before and I'm flogging a
-> dead horse, but you get that - I must think there is still a bit of life
-> in the old nag ;-).
->
-> I find it ironic that a feature of the uAPI that is there due to
-> the constraints on the uAPI, i.e. to keep the line_config to a
-> manageable size, gets propagated this highly.  In my mind the
-> configuration for each line has always been distinct, and the uAPI
-> line_config is just a reduced form.
->
+Add myself as co-maintainer of freescale pin controllers driver.
 
-The limitation of the uAPI is what keeps us from making it true in
-user-space (that each line can have its own config). As it is, only up
-to 9-10 lines can have distinct configs and making the API look and
-behave as if it wasn't the case is more confusing (E2BIG errors) than
-simply admitting we have the concept of defaults and overrides (to
-which the interface is greatly simplified in the high-level
-libraries). The idea about making the most common config attributes
-become the defaults is simply bad. It would require the user to
-anticipate how the library will behave for every attribute and lead to
-way more confusion than simply providing a set of defaults (either
-implicitly from a freshly created LineConfig or by defining a set of
-defaults manually). I would argue that deriving the defaults from the
-most common values would be much more dangerous than the case you
-describe below. :)
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-> (it was also a logical stepping stone from the v1 "all lines have the
-> same config", which maybe where your attachment to a default originates,
-> to "all lines can be configured independently" that I was going for in
-> v2, but practicality limited to "all lines can be configured
-> independently - to a point", basically by supporting a limited number
-> of deltas - which you refer to as overrides)
->
-> > To me it should look like:
-> >
-> > lc.set_props(direction=Direction.INPUT, edge_detection=Edge.BOTH) sets
-> > the defaults
-> > lc.set_props(offset=4, direction=Direction.OUTPUT) sets a single override
-> > lc.set_props(offsets=[5, 1], direction=Direction.OUTPUT,
-> > output_value=Value.ACTIVE) sets a set of overrides.
-> >
->
-> I could argue that I don't like the implictness of lines 1, 2 and 3 here.
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6d879cb0afd..fbed6cc287b7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15557,6 +15557,7 @@ M:	Dong Aisheng <aisheng.dong@nxp.com>
+ M:	Fabio Estevam <festevam@gmail.com>
+ M:	Shawn Guo <shawnguo@kernel.org>
+ M:	Stefan Agner <stefan@agner.ch>
++M:	Jacky Bai <ping.bai@nxp.com>
+ R:	Pengutronix Kernel Team <kernel@pengutronix.de>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+-- 
+2.25.1
 
-I disagree. They are defined (if you actually do request them) as:
-take the safe defaults from a new LineConfig and set direction to
-input and detect both edge interrupts. Without the first call, they
-would use the defaults from LineConfig. It's not that complicated.
-
-> The LineConfig defaults are safe.  Allowing the user to redefine the
-> defaults that apply to a request, separately from where the request is
-> made mind you, is potentially dangerous.
->
-
-Yes, the implicit defaults are safe. That's not an argument against
-allowing the defaults to be EXPLICITLY changed by the user though.
-
-> What if you make the default OUTPUT, and then elsewhere you request
-> lines and include line 6, forgetting to set it to an INPUT or assuming
-> that by default you'll get an INPUT?  Kiss that board goodbye.
->
-
-I don't buy this argument. The same user could forget any number of
-other configuration options. You want to be safe? You use a fresh
-LineConfig when requesting lines. There's always a trade-off between
-giving more power to users and not letting them shoot themselves in
-the foot. It's just a matter of where the line is drawn.
-
-> OTOH the LineConfig "well defined default values" are safe.
-> Forget to define the config for a line - get a vanilla input.
->
-> I wasn't overly concerned about this in the uAPI itself as I was assuming
-> that at a higher level the lines would be configured separately, and
-> the higher level language binding would perform the encoding to uAPI.
-> Turns out that isn't always the case :-|.
->
-
-It's a question of the most common use-cases vs advanced usage. With
-the module-wide request function in Python, the code can be very
-concise and intuitive and you don't need to think about defaults and
-overrides at all. But if you want to do something else, you can.
-
-Bart
