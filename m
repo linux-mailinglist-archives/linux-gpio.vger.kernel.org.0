@@ -2,135 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC0B256B9C6
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 14:38:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDD7C56BAA6
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 15:28:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238253AbiGHMgO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 08:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
+        id S237622AbiGHN2U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 09:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238246AbiGHMgM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 08:36:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237417C1A6;
-        Fri,  8 Jul 2022 05:36:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B2D856271D;
-        Fri,  8 Jul 2022 12:36:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DE9C341CB;
-        Fri,  8 Jul 2022 12:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657283771;
-        bh=hq0+B/dAKE6KAtx/w8/pzHOgIoBA3D5lqFzL4AAZuD0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oszWAku0C+PsBkcHAWimhkDNHJmcX4DGcNbiIuPC97mm+hQp3UNk68L+XMeRTGwyi
-         iRpcSXZKS/mWe/Q7AIGIujWDCIHszuz369g9mKkKm5lpdFtXwj4zD8oDnBvv59RRxa
-         h9EZsRzRFunJJa1pT+K1aIImOmqlGe3VmpTmnbthscUIY52de6/UAmcJ7g0H5+0Qcu
-         cgOhf5uWTsaaTskZUL1wOECszcwH1v4us+aJju3wULm3dkUgC85zccKr3gpnrA/JzG
-         i5Cce56flAuxGHq3aWpM0iKuGqjWZRk+qkHMf765TQurQHKnlY8I5GZPy8BFAnQS+v
-         4xvVp0DSbOyMg==
-Date:   Fri, 8 Jul 2022 20:35:59 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abelvesa@kernel.org>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Peng Fan <peng.fan@nxp.com>, Liu Ying <victor.liu@nxp.com>,
-        Shijie Qin <shijie.qin@nxp.com>, Ming Qian <ming.qian@nxp.com>,
-        Mirela Rabulea <mirela.rabulea@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 00/15] dt-bindings: arm: freescale: Switch fsl,scu
- from txt to yaml
-Message-ID: <20220708083952.GV819983@dragon>
-References: <20220707125022.1156498-1-viorel.suman@oss.nxp.com>
+        with ESMTP id S237610AbiGHN2T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 09:28:19 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669132CC99
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 06:28:17 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id u12so37684401eja.8
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 06:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=m9WVXbkDJLtZC6olxtUbRFTPOOp7yjkrqp9x2/VUb9k=;
+        b=VKwkclyYjAhTg8dlqMvNrZ+3Ykn5Ytw/eFWV/vSC+1XdiSw+3CdLH1yAxoqWsIcJdQ
+         NRNZprgLz8UEYnI/B15Dxc3qmxR1o2+eHgSzTsQDnqFYkX2jGwWvQ5QqU39Eqoukx8nR
+         mEyH3gSH/m5jEK0VAS/M6Qa37h6/n/kFqsgcSrERKrZYkc28qJhVTvn1o1+bM37l9sxy
+         L4CKxPT+SNVK5/BCz98HfMjTrdI/+cnUrGKDdDCny1BTc53CK5j1X1GlXJ1bFqLlXBBT
+         B584xoudZ5gHfdnCg3YK4nRDL/Q12hxOFYI6cWQ/WlcF5K+p2lWpQ2dkuPhi7XSrCO/B
+         7jZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=m9WVXbkDJLtZC6olxtUbRFTPOOp7yjkrqp9x2/VUb9k=;
+        b=jSpYIW2bCxU3IDpJbrIoE8vSxC1VQwlaLuXGljYv2oPGPJggtcjqY+zTYo6qGvEtcM
+         dqdc4c+R1IiBmmt5QHjiRq61SsmOmoGOTWcmmKDWhimDRWMEzrct8knnW9gVOphuZTAZ
+         PHtzJZtERFzGCv1x2pju2IkWq0+Krq1AsZFBQSHytiQy0J3sIDR4ZQ3hnggwo1zbc+cJ
+         A791Z/cwReKIBqKCGcVdzSTZkpxRA1zaBwsxC3u/Vr3hWPt2zQUMxNnPCPpC4pif4ijP
+         F0TDB79MeG5kPYNI5308zu69dPVB4Aaild9bWTb5ySb6sZVG9epWscVktVK4mGSlfSA5
+         zWJg==
+X-Gm-Message-State: AJIora9UjGV9qnJZHH8A6J9A4sdS3MpIU1OpRIviWmy9JiIEJbqyKyPe
+        QHCV3z5qaupazj0Lr5JsSdGIfWFO1+c5RPvZxn+CcA==
+X-Google-Smtp-Source: AGRyM1u1PFamNCZgncPVIkAWV6ivSfJgSKEN+GTn1zW6Ogyj0JGUNmoBgwrz2oApIcZRb+y8xHcD/VigW89l9cVx8cg=
+X-Received: by 2002:a17:906:739d:b0:722:e94a:24c5 with SMTP id
+ f29-20020a170906739d00b00722e94a24c5mr3575057ejl.734.1657286896011; Fri, 08
+ Jul 2022 06:28:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220707125022.1156498-1-viorel.suman@oss.nxp.com>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220708093448.42617-1-nuno.sa@analog.com> <20220708093448.42617-3-nuno.sa@analog.com>
+In-Reply-To: <20220708093448.42617-3-nuno.sa@analog.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 8 Jul 2022 15:28:05 +0200
+Message-ID: <CAMRc=MeqbxE_e+cLD_ouyzZKFirqmfU5fs16jp5tP=igYqALJw@mail.gmail.com>
+Subject: Re: [PATCH 02/10] gpio: gpio-adp5588: drop the driver
+To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 03:50:07PM +0300, Viorel Suman (OSS) wrote:
-> From: Viorel Suman <viorel.suman@nxp.com>
-> 
-> Changes since v7: https://lore.kernel.org/lkml/20220704161541.943696-1-viorel.suman@oss.nxp.com/
->   * added missing Reviewed-By: 
->   * Defined "mboxes" and "mbox-names" sections in scu-key.yaml as schema.
-> 
-> Changes since v6: https://lore.kernel.org/lkml/20220629164414.301813-1-viorel.suman@oss.nxp.com/
->   * The series updated so that each patch making the conversion removes
->     the piece being converted, then finally the patch adding fsl,scu.yaml
->     removes the last pieces, as suggested by Krzysztof Kozlowski.
->   * Updated ocotp and system-controller node names in the existing DTS
->     files
-> 
-> Changes since v5: https://lore.kernel.org/lkml/20220616164303.790379-1-viorel.suman@nxp.com/
->   * Updated according to Krzysztof Kozlowski comments
-> 
-> Changes since v4: https://lore.kernel.org/lkml/20220615105834.743045-1-viorel.suman@nxp.com/
->   * Missing SoB added
-> 
-> Changes since v3: https://lore.kernel.org/lkml/20220609143423.2839186-1-abel.vesa@nxp.com/
->   * Examples included
->   * Included Abel's patches fixing thermal zone, keys and power controller names.
-> 
-> Abel Vesa (12):
->   dt-bindings: clk: imx: Add fsl,scu-clk yaml file
->   dt-bindings: pinctrl: imx: Add fsl,scu-iomux yaml file
->   dt-bindings: input: Add fsl,scu-key yaml file
->   dt-bindings: nvmem: Add fsl,scu-ocotp yaml file
->   dt-bindings: power: Add fsl,scu-pd yaml file
->   dt-bindings: rtc: Add fsl,scu-rtc yaml file
->   dt-bindings: thermal: Add fsl,scu-thermal yaml file
->   dt-bindings: watchdog: Add fsl,scu-wdt yaml file
->   dt-bindings: firmware: Add fsl,scu yaml file
->   arm64: dts: freescale: imx8: Fix power controller name
->   arm64: dts: freescale: imx8qxp: Add fallback compatible for clock
->     controller
->   arm64: dts: freescale: imx8qxp: Fix the keys node name
-> 
-> Viorel Suman (3):
->   arm64: dts: freescale: imx8qxp: Remove unnecessary clock related
->     entries
->   arm64: dts: freescale: imx8qxp: Fix the ocotp node name
->   arm64: dts: freescale: imx8: Fix the system-controller node name
+On Fri, Jul 8, 2022 at 11:34 AM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+>
+> With commit 1c18af5f21cc
+> ("input: keyboard: adp5588-keys: support gpi key events as 'gpio keys'"),
+> the irchip functionality is directly supported in the input driver as
+> the main goal of these pins is to be used as gpio keys. Hence, this
+> driver can be removed.
+>
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> ---
 
-I'm preparing material for the next merge window, so just picked the
-series up.  If there is more outstanding review comments coming up,
-let's address them with follow-up changes.
-
-Shawn
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
