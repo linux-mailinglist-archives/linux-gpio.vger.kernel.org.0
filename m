@@ -2,109 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCEEA56B2AF
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 08:25:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2301956B480
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 10:29:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237194AbiGHGVc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 02:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
+        id S237504AbiGHI2K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 04:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236958AbiGHGVc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 02:21:32 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 878F72409B;
-        Thu,  7 Jul 2022 23:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657261291; x=1688797291;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2+Q11omODNcL1YvdnrPZrcbEdnlk0V7G8eOhRvnexJo=;
-  b=TE9z43hO/StC9J4a3Qgr/hBy4slCQKZVDJl8mhmdlAvmepFEKUK9TrK2
-   DiQOl1ds1wqqEUpHy/xcW1QWf2Os6QDHWW/g7IlDiTSH5wnaaZEoco/HN
-   Ie1Wh07INmHB+bp6/+QzFpu7by/XyLWgxtD6XI+XDHysw4dQx13LEe26w
-   IsGOfrK/YTvlaCjsVaBkBnaJNoshDpQvZqfA37HVSZteuTV9HxcZcFHK6
-   2u/RMox6XJOjitAuP4VhprHFniKnKmE7D2iygSHw3wI1tlaaqMlYRh91m
-   Bxa9EgxTHeev2KMvsPg7nEvTcWY8x6enbukzuq0Byy0/MwOwhP44tt83g
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10401"; a="284943716"
-X-IronPort-AV: E=Sophos;i="5.92,254,1650956400"; 
-   d="scan'208";a="284943716"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2022 23:21:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,254,1650956400"; 
-   d="scan'208";a="621092749"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 07 Jul 2022 23:21:28 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o9hMm-000N1K-2x;
-        Fri, 08 Jul 2022 06:21:28 +0000
-Date:   Fri, 8 Jul 2022 14:21:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linus.walleij@linaro.org,
-        kavyasree.kotagiri@microchip.com, alexandre.belloni@bootlin.com,
-        colin.foster@in-advantage.com, UNGLinuxDriver@microchip.com,
-        maxime.chevallier@bootlin.com,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: Re: [PATCH 2/2] pinctrl: ocelot: Fix pincfg
-Message-ID: <202207081432.wshyILwP-lkp@intel.com>
-References: <20220707185342.2697569-3-horatiu.vultur@microchip.com>
+        with ESMTP id S237593AbiGHI2K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 04:28:10 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F11814B9;
+        Fri,  8 Jul 2022 01:28:07 -0700 (PDT)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EE00A221D4;
+        Fri,  8 Jul 2022 10:28:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1657268885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ID/+qW4zs1m53ZSU7+O0Bo0ZHpvrpLWwIGXzC/NBmL0=;
+        b=mpilrBbTo0R4ScG1a5DqNUsMa3Ui38t1xQi/Qso0boC3IBLQIi5uAQ8yvcUPuJohc+lHan
+        y5MxV0Ezi3K89QGhN2X+axW7GvhN9ytHvG3C86T3iaomz9GmreBroxN9BbmDb2Lg7kr2tn
+        PdR4EpQmU022RlzqdKHEUedPIgBtRK0=
+From:   Michael Walle <michael@walle.cc>
+To:     horatiu.vultur@microchip.com
+Cc:     UNGLinuxDriver@microchip.com, alexandre.belloni@bootlin.com,
+        colin.foster@in-advantage.com, kavyasree.kotagiri@microchip.com,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maxime.chevallier@bootlin.com,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH 1/2] pinctrl: ocelot: Fix pincfg for lan966x
+Date:   Fri,  8 Jul 2022 10:27:52 +0200
+Message-Id: <20220708082752.1745233-1-michael@walle.cc>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220707185342.2697569-2-horatiu.vultur@microchip.com>
+References: <20220707185342.2697569-2-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220707185342.2697569-3-horatiu.vultur@microchip.com>
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Horatiu,
+> -static struct pinctrl_desc luton_desc = {
+> -	.name = "luton-pinctrl",
+> -	.pins = luton_pins,
+> -	.npins = ARRAY_SIZE(luton_pins),
+> -	.pctlops = &ocelot_pctl_ops,
+> -	.pmxops = &ocelot_pmx_ops,
+> -	.owner = THIS_MODULE,
+> +static struct ocelot_match_data luton_desc = {
+> +	{
+.desc = {
 
-I love your patch! Perhaps something to improve:
+Same for all the structs. Also it looks like it is way too big
+for a stable backport:
+ "It cannot be bigger than 100 lines, with context."
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linus/master v5.19-rc5 next-20220707]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +		.name = "luton-pinctrl",
+> +		.pins = luton_pins,
+> +		.npins = ARRAY_SIZE(luton_pins),
+> +		.pctlops = &ocelot_pctl_ops,
+> +		.pmxops = &ocelot_pmx_ops,
+> +		.owner = THIS_MODULE,
+> +	}
+>  };
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Horatiu-Vultur/pinctrl-ocelot-Add-fixes-for-ocelot-driver/20220708-025029
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-config: i386-randconfig-m021 (https://download.01.org/0day-ci/archive/20220708/202207081432.wshyILwP-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-smatch warnings:
-drivers/pinctrl/pinctrl-ocelot.c:1954 ocelot_pinctrl_create_pincfg() warn: inconsistent indenting
-
-vim +1954 drivers/pinctrl/pinctrl-ocelot.c
-
-ce8dc0943357a5 Alexandre Belloni 2018-01-06  1949  
-076d9e71bcf8a8 Colin Foster      2021-11-19  1950  static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
-076d9e71bcf8a8 Colin Foster      2021-11-19  1951  {
-076d9e71bcf8a8 Colin Foster      2021-11-19  1952  	void __iomem *base;
-076d9e71bcf8a8 Colin Foster      2021-11-19  1953  
-94ef32970d4076 Michael Walle     2022-02-16 @1954  		base = devm_platform_ioremap_resource(pdev, 1);
-076d9e71bcf8a8 Colin Foster      2021-11-19  1955  	if (IS_ERR(base)) {
-076d9e71bcf8a8 Colin Foster      2021-11-19  1956  		dev_dbg(&pdev->dev, "Failed to ioremap config registers (no extended pinconf)\n");
-076d9e71bcf8a8 Colin Foster      2021-11-19  1957  		return NULL;
-076d9e71bcf8a8 Colin Foster      2021-11-19  1958  	}
-076d9e71bcf8a8 Colin Foster      2021-11-19  1959  
-162d70439a9da8 Horatiu Vultur    2022-07-07  1960  	return devm_regmap_init_mmio(&pdev->dev, base, &regmap_pincfg);
-076d9e71bcf8a8 Colin Foster      2021-11-19  1961  }
-076d9e71bcf8a8 Colin Foster      2021-11-19  1962  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+-michael
