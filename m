@@ -2,69 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4B0456BD9B
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 18:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCE5956BD5A
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 18:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238853AbiGHP1H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 11:27:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45708 "EHLO
+        id S236791AbiGHPsk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 11:48:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238412AbiGHP1G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:27:06 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142F072ED3
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 08:27:05 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id a9so8555250ejf.6
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 08:27:05 -0700 (PDT)
+        with ESMTP id S238052AbiGHPsj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:48:39 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A348AD10A
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 08:48:36 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id r14so25323349wrg.1
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 08:48:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ndvNml/8P4SdhAWpCYCcRNKcsZRl843HLHUfSm3CXtQ=;
-        b=n+iGOScU2/O2FOY4PuC5ag2SZ47t1xwYBfjwAZOgLzw4cOacerncetV5GiYYKV5psy
-         8BoU6Z0ajpZbFmeBahWEnLUr3YTEiKtlCG2XVFxPYcA3z8LNjQ/BAa6wX2zHr25deFJg
-         KHDA6v1Ju/y+czwSiPDfRagFy9ArM9gkxqI/gb2zowcSgI+MZzdGuvqCRB1YDKE+VEYJ
-         gm90yGJ3kpoF5IpzBfi6lW1Ou5rjy2A9oT54Nx2uwuxFI/u3wH3HThsaPExnkvMjZo8J
-         i7pBlLDlOxoXCMd7OvmT4XtANvi32UfC6bdIj9Eo7+BFb1K6idfhI7DoC+Oetus/OkZ7
-         tC0g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c4TnFR2Q9YmCmADU+mpEOsvnqVimQx/GMp9QcmpwALM=;
+        b=ZvpY9fbp5EIY4ryVuzlfHXcQ3yT/bykq2Fhoy2n4xuzuIpt7PntezNCTVWCpb/zwVD
+         Ix8aIt0HB2ey6V4mn+74JJHEcEK6N/i4vguikAoVEiVFeBqzv0zvhbhxjFgZ5xwSa5tu
+         HWH9L5m/8e45tE3rYvDnNPAaFdGS8e9rQbAX/HBEjwiw4VnBZ5sPj8REHRnQvn2DrOf/
+         qLvwxjM6OotYWiMhjqyL7S3uCTIxosirRkmziGJDt1dWdRxbROFJICpWiOrX8WSJ9EV6
+         D9dC6inqsr3NJW3gYyivs++DhpeaBVx20bBG5+lJGCGnlwHj5GKI423Sn2pizRec4ZEc
+         0rfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ndvNml/8P4SdhAWpCYCcRNKcsZRl843HLHUfSm3CXtQ=;
-        b=QKzyqWYWioChHegmcn5p75MTbM9XHsCgE7L773pstzpC95ib7FUHQ4JfgbV6xiy8mD
-         BU0hYdul/iPQwc8an1quxd1u0kJjQHVAMqQ43f0MXtqcosZg/N7qd9PqghZkqeInqO0B
-         oPd9XWKV87bhcBfEVGHyd3xWim9Ykj93L+NzK3raGMm9BQThK6iAVVICtsggZESHgJR8
-         JjN2T4K4NaK5z9DsSBD62G6yS2gEKInKQglQgufyuf3x7epFAZ91Yc72H+BA7bpVwUGm
-         M2kp/rhMF4B/N9z4A3bWJy3RczE0l1UYevhDYGFTXiOYukGB20KsIVVImgggMBdxzADR
-         98xQ==
-X-Gm-Message-State: AJIora+2rVm9V4EImqdlSomYz0J0wnhRHRL4YCVEeNLAXi+s9dPoLqzw
-        T1YJJ4tlBH7Tg7FaKEsL5IhRa2lXUUBsr/1b34LmoA==
-X-Google-Smtp-Source: AGRyM1sNzLjp6e5Z28so5RLeAS2LpL5v0iM+EBwH8I++NboN6eg8uk2hbeZSisbTc+QD11rLJ8BTwMam+XCmlxzbP5U=
-X-Received: by 2002:a17:907:3e20:b0:726:2c09:3fa4 with SMTP id
- hp32-20020a1709073e2000b007262c093fa4mr4036165ejc.101.1657294023526; Fri, 08
- Jul 2022 08:27:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220628084226.472035-1-brgl@bgdev.pl> <20220628084226.472035-6-brgl@bgdev.pl>
- <20220705020937.GB6652@sol> <CAMRc=Mec4C2RUvZjxc=6G6Nv0-Us91X-j-3jnNNGzE8MjrbCag@mail.gmail.com>
- <20220707130955.GB66970@sol> <CAMRc=MfuzzjkApJ4LBARG0OpfvfBeMqVMTRnKJuj7zV4Gvez1Q@mail.gmail.com>
- <20220708013834.GA6484@sol> <CAMRc=MfGT_FZ=LToa4DPqc3UqjAbt+9dpT2NtKOmMqhcFKWLZQ@mail.gmail.com>
- <20220708105634.GA84979@sol> <CAMRc=McSN5MEOXW0husOaX62EQq+xZyahX1SuvmimuZHOT1RTw@mail.gmail.com>
-In-Reply-To: <CAMRc=McSN5MEOXW0husOaX62EQq+xZyahX1SuvmimuZHOT1RTw@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c4TnFR2Q9YmCmADU+mpEOsvnqVimQx/GMp9QcmpwALM=;
+        b=GpT10UXFBLvP5SaVRcTcETv5VTOATa9DO1wHiEKTn2/9pwexG9kgtQP+WWJuD0gJ5l
+         xs+di/2VGE/YfgNg99N38DDrfqSb89xkAwvLQRqbD3HI7vHqDO4BME1ZbdVvBZCW1Cqq
+         I9qnD2mAzXT8JPRZ7cwmefheibtFClkSkLmItfyvlhBNhBApqpp5QqBVja6Bho3wzsms
+         GmJg9GJDfHvWit9d6wAIhktuEnEM+qJjRM7fSLPo472dC6lyj/DBWQJnJP1c9T8eS9IH
+         9SyRnk+NskcK7tOc/eCm+IkHv/8GSYZ33dBsNNoIN4uKB/4Fx7CP5h2soACYaIiW9Rcy
+         hDwA==
+X-Gm-Message-State: AJIora/IrfdDC4YhZG6R8mZF2jybE6jfMP4g6mLKnBRO0cBCgiwSYzMf
+        oDJr1RsLgETUd5YqqAtVPvTSsA==
+X-Google-Smtp-Source: AGRyM1ttmvmjEiqRAegnp9UX0GrMdPHyD2e0mr9WMZkxNN1oQmYPf4Ht2TM9jVSRluTD382HdSwZ+Q==
+X-Received: by 2002:a05:6000:992:b0:21d:9240:4337 with SMTP id by18-20020a056000099200b0021d92404337mr2600512wrb.323.1657295315219;
+        Fri, 08 Jul 2022 08:48:35 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:6297:9b4f:f1ed:cde0])
+        by smtp.gmail.com with ESMTPSA id c8-20020a05600c0a4800b003a03e63e428sm3869870wmq.36.2022.07.08.08.48.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Jul 2022 08:48:34 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 8 Jul 2022 17:26:52 +0200
-Message-ID: <CAMRc=McupSnE+m0uOcMh3T9wm74J4Z+N5f_GKnQf5D2jxHoLVg@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
- implementation for v2 API
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darrien <darrien@freenet.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.19-rc6
+Date:   Fri,  8 Jul 2022 17:48:32 +0200
+Message-Id: <20220708154832.67452-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -74,70 +68,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 1:28 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Fri, Jul 8, 2022 at 12:56 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
->
-> [snip]
->
-> > >
-> > > The limitation of the uAPI is what keeps us from making it true in
-> > > user-space (that each line can have its own config). As it is, only u=
-p
-> > > to 9-10 lines can have distinct configs and making the API look and
-> > > behave as if it wasn't the case is more confusing (E2BIG errors) than
-> > > simply admitting we have the concept of defaults and overrides (to
-> > > which the interface is greatly simplified in the high-level
-> > > libraries). The idea about making the most common config attributes
-> > > become the defaults is simply bad. It would require the user to
-> > > anticipate how the library will behave for every attribute and lead t=
-o
-> >
-> > It requires nothing from the user.  They are not even aware of the
-> > concept of "defaults" or "overrides".  They just set config on lines.
-> > If that is too complicated, which is quite unlikely, then they get
-> > E2BIG and they need to repartition their lines into multiple requests.
-> >
-> > Anyway, that horse is dead.
-> >
->
-> For a python user, this:
->
-> lc =3D gpiod.LineConfig()
-> lc.set_props(offsets=3D[2, 3], direction=3DDirection.OUTPUT)
-> req =3D gpiod.request_lines("/dev/gpiochip0", line_cfg=3Dlc)
->
-> is pretty much as simple as it gets. They still don't need to be aware
-> of the underlying split into defaults and overrides. I believe it's
-> GoodEnough=E2=84=A2.
->
-> I imagine in Rust bindings we'll be able to chain set_props() as is
-> customary and we'll get a one-liner out of that.
->
+Linus,
 
-The code I posted here is wrong as it's missing the request config but
-it made me think: how about in case of req_cfg=3DNone or not passed at
-all, we derive the lines to request from overridden offsets in the
-line config? In that case if the user does:
+Please pull the following fixes from the GPIO subsystem.
 
-  lc =3D gpiod.LineConfig()
-  lc.set_props(offsets=3D[0, 1], direction=3DDirection.OUTPUT,
-output_value=3DValue.ACTIVE)
-  lc.set_props(offset=3D4, direction=3DDirection.INPUT)
-  req =3D gpiod.request_lines("/dev/gpiochip0", line_cfg=3Dlc)
+Best Regards,
+Bartosz Golaszewski
 
-Then it will be interpreted as lines=3D[0, 1, 4]?
+The following changes since commit 03c765b0e3b4cb5063276b086c76f7a612856a9a:
 
-I'm also thinking that we could allow the output values to be mapped
-as <line name> -> <value> within gpiod.LineConfig like that:
+  Linux 5.19-rc4 (2022-06-26 14:22:10 -0700)
 
-  lc.set_props(lines=3D["foo", 4], direction=3DDirection.OUTPUT)
-  lc.set_output_values({"foo": Value.Active, 4: Value.INACTIVE})
+are available in the Git repository at:
 
-It would require us to retrieve the names of all lines from the chip
-at the time of the request and store them in the request structure
-(for reconfigure to work) but it would make the entire thing even more
-"pythonic".
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc6
 
-Bart
+for you to fetch changes up to c8e27a4a5136e7230f9e4ffcf132705bf56864cc:
+
+  gpiolib: cdev: fix null pointer dereference in linereq_free() (2022-07-07 12:18:18 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.19-rc6
+
+- fix a build error in gpio-vf610
+- fix a null-pointer dereference in the GPIO character device code
+
+----------------------------------------------------------------
+Kent Gibson (1):
+      gpiolib: cdev: fix null pointer dereference in linereq_free()
+
+Leon Romanovsky (1):
+      gpio: vf610: fix compilation error
+
+ drivers/gpio/gpio-vf610.c   | 1 +
+ drivers/gpio/gpiolib-cdev.c | 7 ++++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
