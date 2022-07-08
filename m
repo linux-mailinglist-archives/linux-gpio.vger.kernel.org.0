@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 657A656BC45
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 17:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F94956BE00
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 18:09:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238692AbiGHPIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 11:08:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59400 "EHLO
+        id S236808AbiGHPKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 11:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238766AbiGHPIF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:08:05 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EA461D50;
-        Fri,  8 Jul 2022 08:08:05 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-31c89111f23so150839767b3.0;
-        Fri, 08 Jul 2022 08:08:05 -0700 (PDT)
+        with ESMTP id S231849AbiGHPKm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:10:42 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716EC18398;
+        Fri,  8 Jul 2022 08:10:41 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id 64so29025751ybt.12;
+        Fri, 08 Jul 2022 08:10:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=FoauNT8sTZEYYOxxre6ENk8BK6sfLeoBHDyIlRgoBcU=;
-        b=h6gG2azplVjGTYbAAIwgA5ZQgUTP0y3rNoPeOb47vm+LNmPow/NiMgcHUvyKUfi3a3
-         TON/uJqHbf+fn2j4lv7SOeMJ4UothO1cLdL9hVW2BcVMBLCz7phCMt23Ftuh1WTiirkf
-         urXYRge+otewk6gnpqdRTThn5R1w/VjcEUDgcsbom0yUa2INPJq4TxvPH/oFeonZMLh8
-         NOEfRcQUSrtUhFjFliTq6hdxj9zZf7968DfmhW3rk3dSS49vhw1IW45In6Sb/livv6pQ
-         swgXC9J0ykcneE/3LgS+JcbWFMwhOsSL5N4LRVR+F4frDf1S0MQBaJVTftjl4c+LhLTI
-         waeQ==
+        bh=FyATTXW146ePrbCJoAXM5Za7QyR2Mr4OTZR5vn1lyDg=;
+        b=ZDuR9wB5fnbcwR9fHlBpG9DlcDgeYNi+9oZqjroVeq0hfv8JaD5loNyjZCzMUv3NmC
+         AHxGEtUZCxeMBYIWS7Pj7LW3Vxre8YdMo2EaaViM/SCNSlfIYPQjT9r+3iTqPUUhJXV/
+         rdET2kW/0Kfocfk38n5HviqsvxVFYDWqhR9UU0RsTwITxBPJWfWK+Sj9wie1ZFOYDodU
+         HDCdcUhCJcnbrv/2MC+kmsZ1A3huOAmOMaCF7vC3Hm7LwECvMOL5MVbuD4Fzw4X6Feg0
+         OuGYnMgGddGoEzwiBw5PD38SoCYu0loSwqpOlh0CfTrHGh24SRCHacifWSAXRO2iV0/m
+         QINg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FoauNT8sTZEYYOxxre6ENk8BK6sfLeoBHDyIlRgoBcU=;
-        b=LbLjisPR738cZUr2UjIydEdWIJV8LB+XlRCxsv1H4SDKcb1/4nxTJYbkUiUBwYtvhk
-         HtfX9Jy3wHObOoU/GZOkdrZE150uMUCQv5mT/4d9vWaVPAiOmsF7KDNV/qsfFt2YBIE8
-         B2N3mZcEU3hzWxs70XF6QhnrxMNRR9CCRWcfWGuAu9/0atSjcSi5mtQ9vq6/B/GenAD1
-         z9fNtxRBGNf7foisuorFLVmhTtYe2lnDJ5yTfcOrpkD5JOTaKS06VTGfrdAN50vwAxox
-         MM4y61WlcWtwTgzVULefh5VZRysAXt1d2DbTkTFz/9KQTVj1nTGy19YfdGwT8u4v60ZT
-         J39A==
-X-Gm-Message-State: AJIora8/v4HGQkq9SHeN+bFScLvkjHj9Cr9b0CMK3jdNDzZ4qkGXpAT9
-        9tdMNFx7ntRW2o+GD8rubAS41ySxNx5tpDVGarfLQ1mXDLY=
-X-Google-Smtp-Source: AGRyM1t2nBQ1nmniHR0WGe1SNeZCNy0OtQYHTstAF8J6Kom7cNEliNsvADL2pDMCSKFz5ATmNKonFCWHoV8j8AcF2hU=
-X-Received: by 2002:a81:4986:0:b0:31d:388b:d08d with SMTP id
- w128-20020a814986000000b0031d388bd08dmr147327ywa.185.1657292884081; Fri, 08
- Jul 2022 08:08:04 -0700 (PDT)
+        bh=FyATTXW146ePrbCJoAXM5Za7QyR2Mr4OTZR5vn1lyDg=;
+        b=IYd0synIuxzU+05ZUrC+Zz8srib2V3REgRJDkYOJaREaHgvQsvLrNo1DdkGln6e0+h
+         c+3QXTzsCF2JGYpus4XFCs0RD2IHwnkSqs7y7rnWQ32VN6F9h/D6fZoa8xVTYJS2xllN
+         fytyP0bEh2tbwMwD2v6slhIOMaAGt819SxFQ3PSZcAnt42u0kHERXRR0kc/xz0fIp+dH
+         h14MYiB7vbxUu7uZrxFD7fzJsQ1sdfjqhkBO+Qqsl37d5TOyhRZLD19DdvEemvPHRzFD
+         w92lSW31bNyygk9JYKVREKmRboHuedBbaReaRZY+3F8sON7gshpngWY1PZYktuCk7KI8
+         oukg==
+X-Gm-Message-State: AJIora9FnEfFVdmondY9JXefaH7F+fhSupNoZxW6xfWXc+tTMhd0rA2G
+        Nkpnd83M+bXx5AU6B2zTUwq1RazRTionePIk5SgbHCno57A=
+X-Google-Smtp-Source: AGRyM1takYE1ha7D7dK3xwnG6palmPl6uHCRAap+iqh+HC0UC294NH1T4mPi7ZjwDITu9DCw/L+GRjhdWgocl+PREMo=
+X-Received: by 2002:a25:dd83:0:b0:66c:8d8d:4f5f with SMTP id
+ u125-20020a25dd83000000b0066c8d8d4f5fmr4225765ybg.79.1657293040625; Fri, 08
+ Jul 2022 08:10:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220708093448.42617-1-nuno.sa@analog.com> <20220708093448.42617-5-nuno.sa@analog.com>
- <CAHp75Vcv8i-XXarjA=sE_gkG57ngADLrsG2=xA71zOfxtfEUCg@mail.gmail.com> <PH0PR03MB67864AAC5B51C36E6FB202BF99829@PH0PR03MB6786.namprd03.prod.outlook.com>
-In-Reply-To: <PH0PR03MB67864AAC5B51C36E6FB202BF99829@PH0PR03MB6786.namprd03.prod.outlook.com>
+References: <20220708093448.42617-1-nuno.sa@analog.com> <20220708093448.42617-8-nuno.sa@analog.com>
+ <CAHp75VeKg9G7o6evb47P8jgwG2Pgh5prw7WJYwXZq4pMGZCxUQ@mail.gmail.com> <PH0PR03MB67865B851C724E5958F21CDA99829@PH0PR03MB6786.namprd03.prod.outlook.com>
+In-Reply-To: <PH0PR03MB67865B851C724E5958F21CDA99829@PH0PR03MB6786.namprd03.prod.outlook.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 Jul 2022 17:07:26 +0200
-Message-ID: <CAHp75VfqT7L7EkSt=6DTwYeK-Nz6pX9edhrfoAR9AUTz40pcMA@mail.gmail.com>
-Subject: Re: [PATCH 04/10] input: keyboard: adp5588-keys: add support for fw properties
+Date:   Fri, 8 Jul 2022 17:10:04 +0200
+Message-ID: <CAHp75Vd+REEtRmhHoNaBXR-uRoQ5munE46zub_WV7=nQHR=pOQ@mail.gmail.com>
+Subject: Re: [PATCH 07/10] input: keyboard: adp5588-keys: fix coding style warnings
 To:     "Sa, Nuno" <Nuno.Sa@analog.com>
 Cc:     devicetree <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -74,50 +74,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 5:04 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+On Fri, Jul 8, 2022 at 5:05 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
 > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: Friday, July 8, 2022 4:56 PM
-> > On Fri, Jul 8, 2022 at 11:37 AM Nuno S=C3=A1 <nuno.sa@analog.com> wrote=
+> > Sent: Friday, July 8, 2022 4:50 PM
+> > On Fri, Jul 8, 2022 at 11:36 AM Nuno S=C3=A1 <nuno.sa@analog.com> wrote=
 :
 
 ...
 
-> > Okay, you add something in the wrong form and then fix it in the other
-> > patch in the very same series? Please no ping-pong type of changes.
-> > Squash / rebase your series accordingly.
->
-> Well, I thought to just copy it as it was on the platform file and then j=
-ust fix
-> it with the rest of the coding styles changes. But I'm fine in fixing it =
-already
-> in this patch. In fact, there's a lot of defines that are not used (it's =
-just
-> defining the complete register map) so I can as well get rid of all the s=
-tuff
-> that is not used anywhere in the driver.
-
-This needs to be split to:
-
-1) fix existing
-2) move data
-3) use that data
-
-Or
-
-1) move data (no other changes, if possible)
-2) fix data
-3) use it
-
-...
-
-> > > +       ret =3D adp5588_write(client, KP_GPIO2, KP_SEL(kpad->cols) &
-> > 0xFF);
+> > > -#define ADP5588_KE_IEN         (1 << 0)
 > >
-> > Do you need these " & 0xFF" parts?
+> > > +#define ADP5588_KE_IEN         BIT(0)
+> >
+> > This is actually a change. And if there wasn't bits.h included, you
+> > would do it as well.
+> >
 >
-> Not sure but probably not. I just kept as it was...
+> You mean because of it being unsigned now? Well, I guess it's true
+> but in practice I don't think it will have any side effect..
 
-It's rather for a separate change.
+int --> unsigned long
+
+FYI: We used to have bugs with this conversation in the past.
+
+So, please amend the commit message accordingly. And as I mentioned,
+this should probably be done before the rest of this patch.
 
 --=20
 With Best Regards,
