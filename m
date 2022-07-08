@@ -2,112 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71FF056C46A
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jul 2022 01:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97DA256C236
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jul 2022 01:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240344AbiGHVpl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 17:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
+        id S239096AbiGHV64 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 17:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239869AbiGHVpk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 17:45:40 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAEE23153;
-        Fri,  8 Jul 2022 14:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657316739; x=1688852739;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=scaxfi9b+Fo210pb1G9BZje6ENg5BFTq+IGw3i8M+wA=;
-  b=PwzEZkGfsh1SmLyzQm388P1bDpRy8j8yQHyJZ6QlnVrpfXJJZQUQ2NFy
-   cHBus/O3/eT33gqJvFAx1dahkXZTbWF1yOvYMvdMWNirAuH0bafeyrYnj
-   PgEdfqi+q2/5LO5/J//k52Jp7dLaCaXcAWTXSaZzKJbdCfZGSucX4Ve6P
-   56+JP8k3N+W6IvwmilnE/jeGQb1BZwCzOsKPwd/g3bgtJ7RSalPsTnmY8
-   XjdM+hMB6lWAXtSFwvyvSmdkySAY52Ypv0y1p2LO/ppxXbLMekW614YGu
-   yHtXXqBKAeDpEfQP5miK0QAl744+h2tcqqR6xZihlKsPx6j9ul1/zWWbE
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="264151935"
-X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="264151935"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 14:45:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="569089890"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2022 14:45:35 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 16091AD; Sat,  9 Jul 2022 00:45:43 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 2/2] of: unittest: make unittest_gpio_remove() consistent with unittest_gpio_probe()
-Date:   Sat,  9 Jul 2022 00:45:39 +0300
-Message-Id: <20220708214539.7254-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220708214539.7254-1-andriy.shevchenko@linux.intel.com>
-References: <20220708214539.7254-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231845AbiGHV6z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 17:58:55 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFDE083F2A;
+        Fri,  8 Jul 2022 14:58:54 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-2ef5380669cso822317b3.9;
+        Fri, 08 Jul 2022 14:58:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HcIFKf7bOOx+mUBC0KpignSQRFrA0hcG12j1sFhX+t0=;
+        b=W8uPaklZvQ3bukLnBTN3S6Ew4/U4OZaUQuLD2WYfEreEfd7Pk11dzS4SDlTkV3V2r2
+         jNz936jT/ukpQM2GmftDOkWh18wCZ4tDJLHVPM/nD7uvjzxt0ae5OgK9pvIlztw7z/0Y
+         9a0tShegjjxTvEhJbfCh75iwHpywUYlz3l6fkJ+0sQqcCGr2i9DKxrlnbc0i84JzSCqe
+         fxMwX0XOnZ6NA4PMaK4LYFGmDCC5n7Q9HpQO7d42gV0FN5mHtw3pWnOesDUxw1aVieMO
+         vEfbMNCcyDV6+ojq2IjE9jxQ6+GVaY3/ByY0figdbK2JAyvNQtzJAFNeus0evDGRtI+0
+         v4UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HcIFKf7bOOx+mUBC0KpignSQRFrA0hcG12j1sFhX+t0=;
+        b=tVnhlwBuoswkDsqNyz3H5jI8+y56AekvJ+B0lsdAApp7BMj6GonXxu9qCgwEpqhKnA
+         gsFas2Z4QdfwmijnV4L0Kihvaj2vRl6tsK4MDsUNXSn5fK7vmKw1MU+oWKtaLHTG8izY
+         qQ5Y2gGsE71EodxONgK8LAX65imMtVBtIWNDGBg2oSRN1yMzToz8MCyeAqqfXr+7JFSu
+         SE+16nKj/cVH6MIalIN0vwEh4TxmgdhNaZseIY9j5hRYo/pNg7H7JEycg9Hu2CtgMTlH
+         GwWdTYtsIrfhxhLcLvKEfdjfQ10u5rG3blWofORTh8C0sgBTtLJIBAtLFPBaZ/b0t+UZ
+         id/w==
+X-Gm-Message-State: AJIora8fAv0njy2yk6Vc97JtS74DCgnVrDd7Oq8Op5kuWSTZn0mBeCLq
+        XZUNToAnODuytOkRa84VZjH7wC0XmTxWxcoP/OE=
+X-Google-Smtp-Source: AGRyM1tVeXi6GZYH/Bk0++Ct746gudsbDP6YSoe8uT+Jl7b5ezmsuWM1Oak5RmOZWuCwX4JjuDrR0OB7iVxiTaV+twY=
+X-Received: by 2002:a81:108f:0:b0:31c:d7ae:9ff1 with SMTP id
+ 137-20020a81108f000000b0031cd7ae9ff1mr6404186ywq.18.1657317534133; Fri, 08
+ Jul 2022 14:58:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220708195510.2951661-1-horatiu.vultur@microchip.com> <20220708195510.2951661-2-horatiu.vultur@microchip.com>
+In-Reply-To: <20220708195510.2951661-2-horatiu.vultur@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 8 Jul 2022 23:58:17 +0200
+Message-ID: <CAHp75VdPi8rT_EJd8L8-waAkH_Lm947WVKMLHjjW5MpFW9A06Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: ocelot: Fix pincfg for lan966x
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        kavyasree.kotagiri@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Michael Walle <michael@walle.cc>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On the ->remove() stage the callback uses physical device node instead of one
-from GPIO chip and the variable name which is different to one used in
-unittest_gpio_probe(). Make these consistent with unittest_gpio_probe().
+On Fri, Jul 8, 2022 at 10:10 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
+>
+> The blamed commit introduce support for lan966x which use the same
+> pinconf_ops as sparx5. The problem is that pinconf_ops is specific to
+> sparx5. More precisely the offset of the bits in the pincfg register are
+> different and also lan966x doesn't have support for
+> PIN_CONFIG_INPUT_SCHMITT_ENABLE.
+>
+> Fix this by making pinconf_ops more generic such that it can be also
+> used by lan966x. This is done by introducing 'ocelot_pincfg_data' which
+> contains the offset and what is supported for each SOC.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: no changes
- drivers/of/unittest.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+...
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 5a842dfc27e8..eafa8ffefbd0 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1620,20 +1620,19 @@ static int unittest_gpio_probe(struct platform_device *pdev)
- 
- static int unittest_gpio_remove(struct platform_device *pdev)
- {
--	struct unittest_gpio_dev *gdev = platform_get_drvdata(pdev);
-+	struct unittest_gpio_dev *devptr = platform_get_drvdata(pdev);
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = pdev->dev.of_node;
- 
--	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
-+	dev_dbg(dev, "%s for node @%pfw\n", __func__, devptr->chip.fwnode);
- 
--	if (!gdev)
-+	if (!devptr)
- 		return -EINVAL;
- 
--	if (gdev->chip.base != -1)
--		gpiochip_remove(&gdev->chip);
-+	if (devptr->chip.base != -1)
-+		gpiochip_remove(&devptr->chip);
- 
- 	platform_set_drvdata(pdev, NULL);
--	kfree(gdev);
-+	kfree(devptr);
- 
- 	return 0;
- }
+> +struct ocelot_pincfg_data {
+> +       bool has_schmitt;
+> +       u8 schmitt_bit;
+> +       u8 pd_bit;
+> +       u8 pu_bit;
+> +       u8 drive_bits;
+
+I would go with mandatory fields first and leave optional (that is
+with boolean flag) at last.
+
+> +};
+
+...
+
+>  struct ocelot_pinctrl {
+>         struct device *dev;
+>         struct pinctrl_dev *pctl;
+> @@ -330,6 +331,12 @@ struct ocelot_pinctrl {
+>         struct pinctrl_desc *desc;
+>         struct ocelot_pmx_func func[FUNC_MAX];
+>         u8 stride;
+> +       struct ocelot_pincfg_data *pincfg_data;
+
+It might waste too many bytes in some cases. I would recommend moving
+it somewhere above, definitely before the u8 member.
+
+> +};
+
+Yes, I understand that for a certain architecture it might be the same
+result in sizeof(), the rationale is to make code better in case
+somebody copies'n'pastes pieces or ideas from it.
+
+...
+
+>                 if (param == PIN_CONFIG_BIAS_DISABLE)>                         val = (val == 0);
+>                 else if (param == PIN_CONFIG_BIAS_PULL_DOWN)
+> -                       val = (val & BIAS_PD_BIT ? true : false);
+> +                       val = (val & info->pincfg_data->pd_bit ? true : false);
+>                 else    /* PIN_CONFIG_BIAS_PULL_UP */
+> -                       val = (val & BIAS_PU_BIT ? true : false);
+> +                       val = (val & info->pincfg_data->pu_bit ? true : false);
+>                 break;
+
+> +               val = (val & info->pincfg_data->schmitt_bit ? true : false);
+
+
+!!(val & ...) will be a much shorter equivalent to ternary.
+
+>                 break;
+
+...
+
+> +static struct ocelot_match_data ocelot_desc = {
+> +       .desc = {
+> +               .name = "ocelot-pinctrl",
+> +               .pins = ocelot_pins,
+> +               .npins = ARRAY_SIZE(ocelot_pins),
+> +               .pctlops = &ocelot_pctl_ops,
+> +               .pmxops = &ocelot_pmx_ops,
+> +               .owner = THIS_MODULE,
+> +       }
+
+Please, keep a comma here. It's definitely not a terminating entry, so
+it might help in the future.
+
+Ditto for all cases like this.
+
+>  };
+
+...
+
+> +       struct ocelot_match_data *data;
+
+Any specific reason why this is not const?
+
+...
+
+> +       data = (struct ocelot_match_data *)device_get_match_data(dev);
+
+And here you drop the qualifier...
+
+I would recommend making it const and dropping the cast completely.
+
+> +       if (!data)
+> +               return -EINVAL;
+
 -- 
-2.35.1
-
+With Best Regards,
+Andy Shevchenko
