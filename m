@@ -2,94 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E18256BDDF
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 18:09:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C211156BD84
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 18:08:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238549AbiGHPs7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 11:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34382 "EHLO
+        id S238430AbiGHPuo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 11:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238135AbiGHPs6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:48:58 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C420327B2D
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 08:48:57 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id b11so1026122eju.10
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 08:48:57 -0700 (PDT)
+        with ESMTP id S238797AbiGHPun (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 11:50:43 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A41460505
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 08:50:42 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id j22so12129520ejs.2
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 08:50:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=j+o9UFkr4miZ6ZJbv7jIOMm65fDIfcGoDCu77QllkD8=;
-        b=Vf6J5lrdT2e0t9YKquocE6p1+bGCXw6F1c+2Qci6EmZi70bVMm5E4XZS4x/EfnpOj9
-         u05z08rhPvF5VZpVwFIA1j8Lr/jyVttU7ZvnV9tgPOBvLMi7bNMoRSdriFc4uDFF3f7x
-         aHRh9VYizgSYoF0131drXiCaMsVbJOzyo4zNYmjKWoytlApkqX7hVt2xrK/dsdWuYV9Q
-         OFAXaUHW437J859SxB+Leonk0Sl1vZttUylRiZGcminEHB070sinyZX1LflXRoK3PUew
-         wBtKD/jhF7jSPhppXOu2000CSzd7sj4RiRkKX+dT/izGsog0I3Mxz5ZihYEPQTnZZoh+
-         Nqag==
+        bh=jl7f3zCIIBfJgcYQrmkUSn7PhHRlgAzBj5FJLVNttC4=;
+        b=ajjKeS6nN/0t/H3DqKPb39ZKq8Tf4LJTG2iFJ6onS3ODZ1vuYr7Wt19M3zZ5bWjWQ3
+         VOdsYiuDpn/qEbdw4lnyTH7bj8vtyoKnWRhiGge8mdreOqeBMzQExcGhQIdLDe2JYsL6
+         9UGanBLMzQXlHg3zWje9etwHJLZLe1btM9HsAYpqtxDkR9wdxO+BSEfZy6cgWLzPZZsz
+         jd1hQEosYNdg1CV7j0FnaTpPDl0i0irWCFqe4y0GsPjC7iqR9bnrbTLabK1rZn/wzDaV
+         A5WbAtunZjUoRscgybF23XEIT4akJbKl3445znNj1F/Q7ope3b5s8rzUg+bt8bwtEQbK
+         AXEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=j+o9UFkr4miZ6ZJbv7jIOMm65fDIfcGoDCu77QllkD8=;
-        b=2L45QXgK64hPDrvtHGDnmXuyh5UeLwXnLOSrMgvHFmyS7gcaqsgnL5RznTxueLviZk
-         tgfzElmbt2eofoikJJRf9d6JhVUYs7hRXEA8zp7r9+QdhljC0g2boAmacBeLmdAhV4Wq
-         n1FBl9ZGpfPDkeGHlYH1s3BkhMDHUZYEcI5yFfjJtTzVXdfjJFlFmXtOFbZQCJ0ayNki
-         XXVmbn+JmTD+//UCCn3w6eu8K9Url2iUhcBGHYKqBBy08ssn8u1B5fGzuXxFYBiAyCW5
-         a6e/G4nDMV2c2E+J4VySySs6xl0RjCKV/+VlZmVJ/gT6W2SsMvg29TbfcoH+mEM4ykZw
-         uOEA==
-X-Gm-Message-State: AJIora8bBWjuQkG2CDmpx+K8aRhgb1Nw+9kL/hmSiTxYIDC2pSANFAme
-        tAtT/eUqVUcv7Ai+A2+sVG4/s8VlgVgswLAG5+6zUg==
-X-Google-Smtp-Source: AGRyM1vn3WWbG5xseO7A/ootbQ5rPnYmuU7wj8wUNkHcp3HiF7KweWR7h/oruLE4pVAZ4aw0zsvqwjpJnSc0j8/XOFU=
-X-Received: by 2002:a17:907:8a25:b0:726:c9f2:2f5e with SMTP id
- sc37-20020a1709078a2500b00726c9f22f5emr4230156ejc.286.1657295336291; Fri, 08
- Jul 2022 08:48:56 -0700 (PDT)
+        bh=jl7f3zCIIBfJgcYQrmkUSn7PhHRlgAzBj5FJLVNttC4=;
+        b=mrp2jO9X05szRZo+kgP3x9wJSsawBjtC5ylZ16Tw/0Gb1bKEISTvAuFCaCJfM2Voga
+         e++qsy5BxmGhWGCXAXAFf+p2VhG/6B7F84sJwbRi3OYbmIOUabHc6hjjiKeSPRbEG5ey
+         dyUznToXwv6rBNs5QzhHyDg6zwzQ8p1hMo8j1n6ad+PzbQ6jGviYlcwJLyTOVHfUKRLn
+         4QG2EWlzdELECONpiHh7Vqxo9xLfmcOmfLWYlvQW8cFj/ZBBiEGl4GYuFGjtptCb6Fl4
+         P2j9JyXz7tPvqnvkx3518eBBhG/qH5mbPLTQMn0IQf0rf7lK9FSjVQh7Q+rBZKgO+snI
+         poCQ==
+X-Gm-Message-State: AJIora8rZTJJectX6Zaq+LF85U33BBYzdyUaKGTczsWzzydDePndZIHP
+        erbEjB3xNeY9YJ5ZeBOCZgkmX9qGLzgEO2uhMlVMew==
+X-Google-Smtp-Source: AGRyM1tMTGpPQQDaNeDtx5dmCuICKJw0T4N4k3T1R0Jc2GXgx02gefgVaIUJEkTdl0odGW6SDqb9aY22UWsvdDj1i5M=
+X-Received: by 2002:a17:906:739d:b0:722:e94a:24c5 with SMTP id
+ f29-20020a170906739d00b00722e94a24c5mr4167021ejl.734.1657295440850; Fri, 08
+ Jul 2022 08:50:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <585795d19c13a7136bc4b61307114591af2aea69.1657279521.git.viresh.kumar@linaro.org>
- <CAMRc=MdHAZ=OE+jjxx5BV_4Z2L4g0WmEVaiyifN+nu2JnMx82g@mail.gmail.com> <CAHp75VdWe_EaJB3Bqz13rb362uDBTJAGaVh7Sjeq874tm=wrgA@mail.gmail.com>
-In-Reply-To: <CAHp75VdWe_EaJB3Bqz13rb362uDBTJAGaVh7Sjeq874tm=wrgA@mail.gmail.com>
+References: <20220223174215.17838-1-a-m1@ti.com> <CACRpkdbj2B90-RE2XKQJ5qEj1hZQA-u=vUu2vpXwNqQLf_kaPg@mail.gmail.com>
+ <e682175fcfc54217a6ed006270877f4d@ti.com> <ddc2b24e-37a3-4751-80b9-84b13606a703@ti.com>
+ <CACRpkdZ7Kb0=7LHa13KJeZc2Kwb6z5kuH9nnHrk4p9OqB8+QgA@mail.gmail.com> <08422d68-21e4-b2c3-7d07-a19a121b24de@ti.com>
+In-Reply-To: <08422d68-21e4-b2c3-7d07-a19a121b24de@ti.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 8 Jul 2022 17:48:45 +0200
-Message-ID: <CAMRc=MeePjCDagyAO6K3GrL5zjaygtsAP8P9+prG5Dq+BDg6-g@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: Don't access uninitialized descriptor
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 8 Jul 2022 17:50:30 +0200
+Message-ID: <CAMRc=MdWcRPFXOTWct+mfSWPr=zp54_23PeCfHqmP-XXZpdOGg@mail.gmail.com>
+Subject: Re: [PATCH v5] dt-bindings: gpio: Convert TI TPIC2810 GPIO Controller
+ bindings to YAML
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 5:14 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Fri, Jul 8, 2022 at 7:24 AM Vignesh Raghavendra <vigneshr@ti.com> wrote:
 >
-> On Fri, Jul 8, 2022 at 3:32 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Fri, Jul 8, 2022 at 1:25 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> ...
 >
-> > Kent beat you to it with commit c8e27a4a5136e7230f9e4ffcf132705bf56864cc.
+> On 07/07/22 16:49, Linus Walleij wrote:
+> > On Thu, Jul 7, 2022 at 7:19 AM Vignesh Raghavendra <vigneshr@ti.com> wrote:
+> >
+> >> Hi Bartosz,
+> >>
+> >> On 05/05/22 14:28, M, Aparna wrote:
+> >>> +Vignesh
+> >>>
+> >>> Ping. Can this be picked up for next merge cycle?
+> >>>
+> >>> On 15/03/22 06:31, Linus Walleij wrote:
+> >>>> On Wed, Feb 23, 2022 at 6:42 PM Aparna M <a-m1@ti.com> wrote:
+> >>>>
+> >>>>> Convert gpio-tpic2810 bindings to yaml format and remove outdated
+> >>>>> bindings in .txt format.
+> >>>>>
+> >>>>> Signed-off-by: Aparna M <a-m1@ti.com>
+> >>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >>>>
+> >>>> Yours,
+> >>>> Linus Walleij
+> >>>>
+> >>
+> >> Sorry, this patch has been around for sometime w/o any comments and has
+> >> relevant R-bys. Wondering if this fell off the radar
+> >>
+> >> I believe patch would go via GPIO tree?
+> >
+> > You need to use the right mail address to Bartosz so he can pick it up.
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c8e27a4a5136e7230f9e4ffcf132705bf56864cc
-> Notice: this object is not reachable from any branch.
+> oops, thanks! looks like original author copied wrong ID
 >
-> Rebased?
+> >
+> > Bartosz: this seems to have fallen between the mail address cracks,
+> > check it out.
+> >
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> Bartosz,
+>
+> Let me if I need to resend to right inbox.
+>
 
-It's in next and I just sent it out to Torvalds too.
+Yes please resend it, I can't find it now.
 
 Bart
