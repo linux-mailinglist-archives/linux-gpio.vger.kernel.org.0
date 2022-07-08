@@ -2,122 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AB4956B866
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 13:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2488756B884
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 13:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237343AbiGHLZy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 07:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52766 "EHLO
+        id S237827AbiGHL1O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 07:27:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237700AbiGHLZy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 07:25:54 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F704904D6
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 04:25:53 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id o12so9734470pfp.5
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 04:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UDl1890BxqLi0+AWKt7rROBs44QkFSQepV5hIlB2ldA=;
-        b=odbsLJwCDZDPbK/HbbgrtL+F5N9C4qJ9lmpGU2vfefDkq/Y7Fj4qPROVlczLeNa9zG
-         qNDHaXneqMp0+/FgkdNgaz0tCDC4rwV5RUR1HwfufDYlD2khwl03lwPU+ubSyKySFl9y
-         lQ4LfqD0GWlb9CO9lhliZ0y2HLSK3npEp5ZlaWVq7WhY3PhmIsAoZNzW/hc7SFFWsRtM
-         qVnpMFPSvIdsq2xJTxa2ubi99brCWMKaONNpr5zL5RHLdxCP69+BYnLWtJWn6YhZofBO
-         BnQh4KaXnZv0oaEELcNzQfPlu0fIr80JPqDOzm4acqhevFa2ajSBeLxhpPcoH+pZzI/o
-         tHBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UDl1890BxqLi0+AWKt7rROBs44QkFSQepV5hIlB2ldA=;
-        b=vYV6U9W9b8z9+2y+QenxElUW2nGt3gRW8McEKNKogaQDgnRwTVLPQhEFign/Iy8wZ3
-         PIL0BsQ1pZmpyeh8YikBCXbRKQ7CzQotqk73ODs36OaW9coBZRAFw5tyEKVy15amy0Fw
-         3TgxnqmJy4KU6stJOx52zZBtRycPH/W6QgucH6+BOlXf8Y8LW1KMcPOg8EFgR5n73mNd
-         vECNm2Kj6QRjt5Z13GhH40Ym37fYuuTbjmEnpFuKkFDiRVksLcs4VBCVjPEnVudwUISI
-         oRXrS7VdPDF4hNZJhDjZKHHzBpnxK7yJiQsNPjOsF5E45/ZfyXaccKNfr2DlwaeDM5UY
-         3ZrA==
-X-Gm-Message-State: AJIora/p1WzF3SkRUCCcW8iMmpSuWDBQvzUrGLpEzdVGsxcCEF2JWQYk
-        hEXPoKmvtyDN9uEyJUb764Yz7g==
-X-Google-Smtp-Source: AGRyM1scaHl3QUWgfXynBJoqnWLZVQTqjE0oAtWphBChk05i18c2Ayqj4WvS88Vo0rhCcZnQsREy5A==
-X-Received: by 2002:a63:da47:0:b0:415:c9d:4e40 with SMTP id l7-20020a63da47000000b004150c9d4e40mr2820515pgj.408.1657279552907;
-        Fri, 08 Jul 2022 04:25:52 -0700 (PDT)
-Received: from localhost ([122.171.18.80])
-        by smtp.gmail.com with ESMTPSA id cp2-20020a170902e78200b0015e8d4eb1d7sm29663610plb.33.2022.07.08.04.25.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jul 2022 04:25:52 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: cdev: Don't access uninitialized descriptor
-Date:   Fri,  8 Jul 2022 16:55:48 +0530
-Message-Id: <585795d19c13a7136bc4b61307114591af2aea69.1657279521.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+        with ESMTP id S237847AbiGHL1L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 07:27:11 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82FCC904DD
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 04:27:10 -0700 (PDT)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by albert.telenet-ops.be with bizsmtp
+        id sbTA270014C55Sk06bTAd6; Fri, 08 Jul 2022 13:27:10 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1o9m8b-002bbK-Ke; Fri, 08 Jul 2022 13:27:09 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1o9m8b-00BLZ4-9G; Fri, 08 Jul 2022 13:27:09 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v5.20 (take two)
+Date:   Fri,  8 Jul 2022 13:27:08 +0200
+Message-Id: <cover.1657279527.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linereq_free() can be called from in the middle of errors, where the
-descriptor may be NULL for few lines. Don't access uninitialized
-descriptor pointer as it leads to kernel crash:
+	Hi Linus,
 
-    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+The following changes since commit 5223c511eb4f919e6b423b2f66e02674e97e77e3:
 
-    [...]
+  pinctrl: renesas: rzg2l: Return -EINVAL for pins which have input disabled (2022-06-06 11:12:22 +0200)
 
-    Call trace:
-     linereq_free+0x54/0xb8
-     linereq_create+0x424/0x570
-     gpio_ioctl+0x94/0x640
-     __arm64_sys_ioctl+0xac/0xf0
-     invoke_syscall+0x44/0x100
-     el0_svc_common.constprop.3+0x6c/0xf0
-     do_el0_svc+0x2c/0xb8
-     el0_svc+0x20/0x60
-     el0t_64_sync_handler+0x98/0xc0
-     el0t_64_sync+0x170/0x174
+are available in the Git repository at:
 
-Fixes: 2068339a6c35 ("gpiolib: cdev: Add hardware timestamp clock type")
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/gpio/gpiolib-cdev.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.20-tag2
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index f5aa5f93342a..d3d1b5aed282 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1460,11 +1460,13 @@ static ssize_t linereq_read(struct file *file,
- static void linereq_free(struct linereq *lr)
- {
- 	unsigned int i;
--	bool hte;
-+	bool hte = false;
- 
- 	for (i = 0; i < lr->num_lines; i++) {
--		hte = !!test_bit(FLAG_EVENT_CLOCK_HTE,
--				 &lr->lines[i].desc->flags);
-+		if (lr->lines[i].desc) {
-+			hte = !!test_bit(FLAG_EVENT_CLOCK_HTE,
-+					 &lr->lines[i].desc->flags);
-+		}
- 		edge_detector_stop(&lr->lines[i], hte);
- 		if (lr->lines[i].desc)
- 			gpiod_free(lr->lines[i].desc);
--- 
-2.31.1.272.g89b43f80a514
+for you to fetch changes up to 36611d28f5130d8bb9aa36ec64d4ebcd736e8dba:
 
+  pinctrl: renesas: r8a779g0: Add missing MODSELx for AVBx (2022-07-05 09:12:37 +0200)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.20 (take two)
+
+  - Add support for the RZ/V2M and R-Car V4H SoCs,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Geert Uytterhoeven (2):
+      dt-bindings: pinctrl: renesas: Remove spaces before #define
+      pinctrl: renesas: r8a779f0: Remove unused POC2
+
+Kuninori Morimoto (21):
+      dt-bindings: pinctrl: renesas,pfc: Document r8a779g0 support
+      pinctrl: renesas: Add PORT_GP_CFG_13 macros
+      pinctrl: renesas: r8a779g0: Fixup MODSEL8
+      pinctrl: renesas: r8a779g0: Remove unused NOGP definitions
+      pinctrl: renesas: r8a779g0: Remove unused IPxSRx definitions
+      pinctrl: renesas: r8a779g0: Remove unused MOD_SELx definitions
+      pinctrl: renesas: r8a779g0: Tidy up ioctrl_regs
+      pinctrl: renesas: r8a779g0: Tidyup POC1 voltage
+      pinctrl: renesas: r8a779g0: Add missing TCLKx_A/TCLKx_B/TCLKx_X
+      pinctrl: renesas: r8a779g0: Add missing IRQx_A/IRQx_B
+      pinctrl: renesas: r8a779g0: Add missing HSCIF3_A
+      pinctrl: renesas: r8a779g0: Add missing HSCIF1_X
+      pinctrl: renesas: r8a779g0: Add missing SCIF3
+      pinctrl: renesas: r8a779g0: Add missing SCIF1_X
+      pinctrl: renesas: r8a779g0: Add missing CANFD5_B
+      pinctrl: renesas: r8a779g0: Add missing TPU0TOx_A
+      pinctrl: renesas: r8a779g0: Add missing FlexRay
+      pinctrl: renesas: r8a779g0: Add missing PWM
+      pinctrl: renesas: r8a779g0: Add missing ERROROUTC_A
+      pinctrl: renesas: r8a779g0: Add missing MODSELx for TSN0
+      pinctrl: renesas: r8a779g0: Add missing MODSELx for AVBx
+
+LUU HOAI (1):
+      pinctrl: renesas: Initial R8A779G0 (R-Car V4H) PFC support
+
+Phil Edworthy (2):
+      dt-bindings: pinctrl: Add DT bindings for Renesas RZ/V2M pinctrl
+      pinctrl: renesas: Add RZ/V2M pin and gpio controller driver
+
+Phong Hoang (1):
+      pinctrl: renesas: r8a779g0: Add pins, groups and functions
+
+ .../devicetree/bindings/pinctrl/renesas,pfc.yaml   |    1 +
+ .../bindings/pinctrl/renesas,rzv2m-pinctrl.yaml    |  170 +
+ drivers/pinctrl/renesas/Kconfig                    |   18 +
+ drivers/pinctrl/renesas/Makefile                   |    2 +
+ drivers/pinctrl/renesas/core.c                     |    6 +
+ drivers/pinctrl/renesas/pfc-r8a779f0.c             |    2 -
+ drivers/pinctrl/renesas/pfc-r8a779g0.c             | 4262 ++++++++++++++++++++
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c            | 1119 +++++
+ drivers/pinctrl/renesas/sh_pfc.h                   |    9 +-
+ include/dt-bindings/pinctrl/r7s9210-pinctrl.h      |    2 +-
+ include/dt-bindings/pinctrl/rzg2l-pinctrl.h        |    2 +-
+ include/dt-bindings/pinctrl/rzv2m-pinctrl.h        |   23 +
+ 12 files changed, 5610 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/renesas/pfc-r8a779g0.c
+ create mode 100644 drivers/pinctrl/renesas/pinctrl-rzv2m.c
+ create mode 100644 include/dt-bindings/pinctrl/rzv2m-pinctrl.h
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
