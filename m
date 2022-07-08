@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 827DA56B949
+	by mail.lfdr.de (Postfix) with ESMTP id C9EAC56B94A
 	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 14:09:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237474AbiGHMHs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 08:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33538 "EHLO
+        id S231921AbiGHMID (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 08:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiGHMHs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 08:07:48 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B8B9CE0D
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 05:07:35 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 145so22172514pga.12
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 05:07:35 -0700 (PDT)
+        with ESMTP id S231301AbiGHMH6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 08:07:58 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9F69B1BF
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 05:07:46 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d5so16153040plo.12
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 05:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TbZhzP7kuWS9bzskXmMRzoVjWEZkp4iu+uu/M1YYJzU=;
-        b=Mb05n2WqydSl/pwRWV/yegtlpyu43Ht9iLVMMSxPDhFZHWKzKQbEch4qNMNyM4JCPq
-         f33uR8mTDVa+f6t2dTjEk3np9dGxi7bpBcVcQpB4XPAgfzHzOvgRi4f1PduN8T8pGqwy
-         7N9nfO/TBVjMkVNU7EvTW8SXS1v8gud1Hwzbt3RjiQX3HkfJ6BLfATbfncO8RYriTkSP
-         /rQkW5GMK6w+kstyakMGCwsfNq5hy3bWCwEsoLXHZ/J0GZID9XHlTeNOaXxABcs2SZdZ
-         w9X/33RMKYkdOkDDbfspdLAJyIng2j3Pi+i74CgTQqf5POVM7gIRPaLmFQ+JYlP/gK2a
-         Fiqw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=627OVJjqlN8m2Ju/HQQdT8PR771OaTbXxPQ8yMX/ve4=;
+        b=d6C61h+lDPvBPrkcMWqIR5imoeNQ1YrD9eTCs8ykfd1A65IrphbHIzspFzE4H/PqJN
+         Wt4DB5c3FVtu9pcs0B4ykP3ypE2DFrTzjzNQ2Dk3Rxh06coxEIgh6roL/ym5/EMwPGK3
+         MsXfpcvPuGt6wJqnEABPKG/R4a3ZaazmKm4zgifLV3fREQdCPdHj2vBOaC2kUNyjW1+l
+         RwOc5StmDfpVn0GJ1FMrJe4eYDVWFDbSO1LOStQ/JYHvUbh/We00+hfQZE27GO2PUrHE
+         F6UBrtSYHORx6/eOMnGgXZ4BZtGDW++X+vlJ4NTCnCEVwqWqwN9vWamDL8FrYlhKmzgi
+         vVNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TbZhzP7kuWS9bzskXmMRzoVjWEZkp4iu+uu/M1YYJzU=;
-        b=13cAUwccfeQnc/k0yJT5c/TLL/AJkk6Q6EU2ErNcXirV0hRwqNQqjQlZWGrBZ/x3Bw
-         zKe/SI9yu6wUW1pljUemiuOF0vUTQy0E6OZo0iobQmIt1gLy9CJxGU8KK3aH3FT5VdLx
-         YQQIUootflj+apsR2w1jxkE6fxWkUasFp4DHi3Nywp6YGjHGTY+oII0swsxFxyKeukp3
-         KHUlPW7qBMwGQ7HIB+RBBSnHJYxkksh/iiBBgPPj5Ga8FmYP2T2YStVpkJveKeGwG7xY
-         J/IVwXNUZTkexpWMMbD+XZNLX1PDJnqa/L7J22AZVX75redceVSjFmlcbrwcKc5NGi0z
-         SLTw==
-X-Gm-Message-State: AJIora8BCoKUc0tN6go9fAXXB/VozOgaaxLZX+swC1JYmvhwk7g2R9CG
-        qCZH0JW4Vi9FctzzyDH0kuARN4kD2b8=
-X-Google-Smtp-Source: AGRyM1vMlNmf7mIXgp5ySuNGtP/hPY86QYLokAH8YwxmAJem0z8MlMTFcciQ6SzVrrzwrrCPkRmdlg==
-X-Received: by 2002:a63:9547:0:b0:408:be53:b599 with SMTP id t7-20020a639547000000b00408be53b599mr3026448pgn.463.1657282054633;
-        Fri, 08 Jul 2022 05:07:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=627OVJjqlN8m2Ju/HQQdT8PR771OaTbXxPQ8yMX/ve4=;
+        b=K10kQ9mHojfHz0ljaT21gc9O0voRCau/H16UC3MtqyJYXjqdA3QHxU4BvgAF8jnEey
+         aZ8U5AsBsBGkSGOLkk97Qvzw/god4B/GwaFI28srVBEFY0ua6SeuPRujsFO5EAhAEo+i
+         CdvULrwIQJKXivrZGa0ZM+ruvjNxI3j9Y+StmPyvPbSeFnmBVFln2Vo+tpgZHUbKx9bN
+         xN4ypNkHXXfRs27fsOOmtCEd0wI3xkTt6PonVaQvmzguYq+ZTI12AyUqch8mXQuvQzma
+         AUzaHapoqqKPPARn4L1LTXNIPZv+iCufMk/UA+YWTHdI0mWqg7Bj8SAJp4Ea9MXQ9NSy
+         homg==
+X-Gm-Message-State: AJIora/Y3lnHYHD+OnFV+JXNuhoc/Zs1MzyO3yBjDm8ucdHsC4j7T2s2
+        k1DuArofJ3RE9ZwAKFpdxy9a0i0/tzU=
+X-Google-Smtp-Source: AGRyM1uP+siu2D3eYbJ5lng+dh56XUq8hyeH2WK16aDSDR/c3gAZGHDRhCbxVGvjB6G057dBxGkESw==
+X-Received: by 2002:a17:90a:d188:b0:1ef:980f:c2e7 with SMTP id fu8-20020a17090ad18800b001ef980fc2e7mr11758352pjb.96.1657282064395;
+        Fri, 08 Jul 2022 05:07:44 -0700 (PDT)
 Received: from sol.home.arpa (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id s16-20020a170902a51000b0016bfafffa0esm6490312plq.227.2022.07.08.05.07.32
+        by smtp.gmail.com with ESMTPSA id s16-20020a170902a51000b0016bfafffa0esm6490312plq.227.2022.07.08.05.07.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jul 2022 05:07:34 -0700 (PDT)
+        Fri, 08 Jul 2022 05:07:43 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod v2][PATCH v2 0/6] tools: improvements for v2
-Date:   Fri,  8 Jul 2022 20:06:20 +0800
-Message-Id: <20220708120626.89844-1-warthog618@gmail.com>
+Subject: [libgpiod v2][PATCH v2 1/6] tools: remove old code to simplify review
+Date:   Fri,  8 Jul 2022 20:06:21 +0800
+Message-Id: <20220708120626.89844-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.37.0
+In-Reply-To: <20220708120626.89844-1-warthog618@gmail.com>
+References: <20220708120626.89844-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -66,100 +68,2216 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch series is an optimistic reimagining of the tools intended to
-simplify usage for well configured systems, i.e. for systems where lines
-can be uniquely identified by name.  In such systems the chip and offset
-location of the line is no longer of relevance to the user, so the tools
-should be able to operate without mentioning them.
-e.g.
-  gpioget GPIO17
+Remove functions that are so heavily modified in the subsequent patch
+that they are effectively complete re-writes, so the old code just
+obfuscates the new.
 
-  gpioset GPIO17=active
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ tools/gpio-tools-test.bats | 893 -------------------------------------
+ tools/gpiodetect.c         |  79 ----
+ tools/gpiofind.c           |  80 ----
+ tools/gpioget.c            | 140 ------
+ tools/gpioinfo.c           | 240 ----------
+ tools/gpiomon.c            | 301 -------------
+ tools/gpioset.c            | 315 -------------
+ tools/tools-common.c       |  68 ---
+ 8 files changed, 2116 deletions(-)
 
-  gpiomon --localtime GPIO17 GPIO18 
-
-It is accepted that the kernel does not guarantee line name uniqueness
-within the system, or even within a chip, and not all systems are well
-configured, so the tools retain the option to identify lines by chip
-and offset.  The hope and expectation is that over time systems will
-become more well configured, not less, and identification of GPIO lines
-by name will become the norm.
-
-The core of the series is patch 1 which is a reworking of the tools to
-support identifying lines by name, and to operate across multiple GPIO
-chips if named lines are located on different chips.
-The gpioset tool is extended to support toggling lines and interactive
-control of line values, so some common use cases can be trivially
-implemented from the command line.
-e.g.
-  gpioset --toggle 500ms LED=on
-
-will blink the LED line at 1Hz, indefinitely.
-More complex outputs can be generated by adding more entries to the
-toggle sequence:
-  gpioset --toggle 1s,2s,1s,300ms LED=on
-
-Even more complex outputs can be generated by driving gpioset in
-interactive mode from another script.
-
-Those are the major changes.  A more complete list of the changes can be
-found in the patch description.
-
-The core tool changes are contained in patch 2.  To simplify review,
-patch 1 removes old code replaced by that in patch 2 and 3.
-
-Patch 3 updates and extends the tool tests to cover the reworked tools,
-including demonstrating gpioset being driven interactively via a script.
-
-Patch 4 adds a gpiowatch tool that monitors changes to the state line
-information, similar to the gpio-watch tool in the kernel, and
-patch 5 extends the test suite to cover it.
-
-Patch 6 removes the gpiofind tool, as the other tools now perform
-the name to offset search themselves.
-
-Cheers,
-Kent.
-
-Changes V1 -> v2:
-  - code formatting, particularly trying to keep to the 80 character
-    limit and C style comments.
-  - move global config fields into the struct config for each tool.
-  - switch gpioset from readline to libedit.
-  - add tests for symlink chip path behaviour.
-  - long lived tools flush stdout before blocking.
-  - fix copyrights
-  - replace gpiosim attr lookup functions with cached values.
-  - remove gpiofind
-
-
-Kent Gibson (6):
-  tools: remove old code to simplify review
-  tools: line name focussed rework
-  tools: tests for line name focussed rework
-  tools: add gpiowatch
-  tools: gpiowatch tests
-  tools: remove gpiofind
-
- configure.ac               |    8 +-
- man/Makefile.am            |    2 +-
- tools/.gitignore           |    1 +
- tools/Makefile.am          |    6 +-
- tools/gpio-tools-test      |    3 -
- tools/gpio-tools-test.bats | 2639 +++++++++++++++++++++++++++---------
- tools/gpiodetect.c         |  122 +-
- tools/gpiofind.c           |   93 --
- tools/gpioget.c            |  214 +--
- tools/gpioinfo.c           |  363 +++--
- tools/gpiomon.c            |  524 ++++---
- tools/gpioset.c            |  944 +++++++++----
- tools/gpiowatch.c          |  231 ++++
- tools/tools-common.c       |  679 +++++++++-
- tools/tools-common.h       |   63 +-
- 15 files changed, 4355 insertions(+), 1537 deletions(-)
- delete mode 100644 tools/gpiofind.c
- create mode 100644 tools/gpiowatch.c
-
+diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
+index 69ad786..d200df1 100755
+--- a/tools/gpio-tools-test.bats
++++ b/tools/gpio-tools-test.bats
+@@ -220,896 +220,3 @@ teardown() {
+ 	gpiosim_cleanup
+ }
+ 
+-#
+-# gpiodetect test cases
+-#
+-
+-@test "gpiodetect: list chips" {
+-	gpiosim_chip sim0 num_lines=4
+-	gpiosim_chip sim1 num_lines=8
+-	gpiosim_chip sim2 num_lines=16
+-
+-	run_tool gpiodetect
+-
+-	test "$status" -eq 0
+-	output_contains_line "$(gpiosim_chip_name sim0) [$(gpiosim_dev_name sim0)-node0] (4 lines)"
+-	output_contains_line "$(gpiosim_chip_name sim1) [$(gpiosim_dev_name sim1)-node0] (8 lines)"
+-	output_contains_line "$(gpiosim_chip_name sim2) [$(gpiosim_dev_name sim2)-node0] (16 lines)"
+-}
+-
+-@test "gpiodetect: invalid args" {
+-	run_tool gpiodetect unimplemented-arg
+-	test "$status" -eq 1
+-}
+-
+-#
+-# gpioinfo test cases
+-#
+-
+-@test "gpioinfo: dump all chips" {
+-	gpiosim_chip sim0 num_lines=4
+-	gpiosim_chip sim1 num_lines=8
+-
+-	run_tool gpioinfo
+-
+-	test "$status" -eq 0
+-	output_contains_line "$(gpiosim_chip_name sim0) - 4 lines:"
+-	output_contains_line "$(gpiosim_chip_name sim1) - 8 lines:"
+-
+-	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+unused\\s+input\\s+active-high"
+-	output_regex_match "\\s+line\\s+7:\\s+unnamed\\s+unused\\s+input\\s+active-high"
+-}
+-
+-@test "gpioinfo: dump all chips with one line exported" {
+-	gpiosim_chip sim0 num_lines=4
+-	gpiosim_chip sim1 num_lines=8
+-
+-	coproc_run_tool gpioset --mode=signal --active-low "$(gpiosim_chip_name sim1)" 7=1
+-
+-	run_tool gpioinfo
+-
+-	test "$status" -eq 0
+-	output_contains_line "$(gpiosim_chip_name sim0) - 4 lines:"
+-	output_contains_line "$(gpiosim_chip_name sim1) - 8 lines:"
+-	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+unused\\s+input\\s+active-high"
+-	output_regex_match "\\s+line\\s+7:\\s+unnamed\\s+\\\"gpioset\\\"\\s+output\\s+active-low"
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-}
+-
+-@test "gpioinfo: dump one chip" {
+-	gpiosim_chip sim0 num_lines=8
+-	gpiosim_chip sim1 num_lines=4
+-
+-	run_tool gpioinfo "$(gpiosim_chip_name sim1)"
+-
+-	test "$status" -eq 0
+-	assert_fail output_contains_line "$(gpiosim_chip_name sim0) - 8 lines:"
+-	output_contains_line "$(gpiosim_chip_name sim1) - 4 lines:"
+-	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+unused\\s+input\\s+active-high"
+-	assert_fail output_regex_match "\\s+line\\s+7:\\s+unnamed\\s+unused\\s+input\\s+active-high"
+-}
+-
+-@test "gpioinfo: dump all but one chip" {
+-	gpiosim_chip sim0 num_lines=4
+-	gpiosim_chip sim1 num_lines=4
+-	gpiosim_chip sim2 num_lines=8
+-	gpiosim_chip sim3 num_lines=4
+-
+-	run_tool gpioinfo "$(gpiosim_chip_name sim0)" \
+-			"$(gpiosim_chip_name sim1)" "$(gpiosim_chip_name sim3)"
+-
+-	test "$status" -eq 0
+-	output_contains_line "$(gpiosim_chip_name sim0) - 4 lines:"
+-	output_contains_line "$(gpiosim_chip_name sim1) - 4 lines:"
+-	assert_fail output_contains_line "$(gpiosim_chip_name sim2) - 8 lines:"
+-	output_contains_line "$(gpiosim_chip_name sim3) - 4 lines:"
+-	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+unused\\s+input\\s+active-high"
+-	assert_fail output_regex_match "\\s+line\\s+7:\\s+unnamed\\s+unused\\s+input\\s+active-high"
+-}
+-
+-@test "gpioinfo: inexistent chip" {
+-	run_tool gpioinfo "inexistent"
+-
+-	test "$status" -eq 1
+-}
+-
+-#
+-# gpiofind test cases
+-#
+-
+-@test "gpiofind: line found" {
+-	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=3:bar
+-	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=4:xyz line_name=7:foobar
+-	gpiosim_chip sim2 num_lines=16
+-
+-	run_tool gpiofind foobar
+-
+-	test "$status" -eq "0"
+-	test "$output" = "$(gpiosim_chip_name sim1) 7"
+-}
+-
+-@test "gpiofind: line not found" {
+-	gpiosim_chip sim0 num_lines=4
+-	gpiosim_chip sim1 num_lines=8
+-	gpiosim_chip sim2 num_lines=16
+-
+-	run_tool gpiofind nonexistent-line
+-
+-	test "$status" -eq "1"
+-}
+-
+-@test "gpiofind: invalid args" {
+-	run_tool gpiodetect unimplemented-arg
+-	test "$status" -eq 1
+-}
+-
+-#
+-# gpioget test cases
+-#
+-
+-@test "gpioget: read all lines" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 3 pull-up
+-	gpiosim_set_pull sim0 5 pull-up
+-	gpiosim_set_pull sim0 7 pull-up
+-
+-	run_tool gpioget "$(gpiosim_chip_name sim0)" 0 1 2 3 4 5 6 7
+-
+-	test "$status" -eq "0"
+-	test "$output" = "0 0 1 1 0 1 0 1"
+-}
+-
+-@test "gpioget: read all lines (active-low)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 3 pull-up
+-	gpiosim_set_pull sim0 5 pull-up
+-	gpiosim_set_pull sim0 7 pull-up
+-
+-	run_tool gpioget --active-low "$(gpiosim_chip_name sim0)" 0 1 2 3 4 5 6 7
+-
+-	test "$status" -eq "0"
+-	test "$output" = "1 1 0 0 1 0 1 0"
+-}
+-
+-@test "gpioget: read all lines (pull-up)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 3 pull-up
+-	gpiosim_set_pull sim0 5 pull-up
+-	gpiosim_set_pull sim0 7 pull-up
+-
+-	run_tool gpioget --bias=pull-up "$(gpiosim_chip_name sim0)" 0 1 2 3 4 5 6 7
+-
+-	test "$status" -eq "0"
+-	test "$output" = "1 1 1 1 1 1 1 1"
+-}
+-
+-@test "gpioget: read all lines (pull-down)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 3 pull-up
+-	gpiosim_set_pull sim0 5 pull-up
+-	gpiosim_set_pull sim0 7 pull-up
+-
+-	run_tool gpioget --bias=pull-down "$(gpiosim_chip_name sim0)" 0 1 2 3 4 5 6 7
+-
+-	test "$status" -eq "0"
+-	test "$output" = "0 0 0 0 0 0 0 0"
+-}
+-
+-@test "gpioget: read some lines" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 1 pull-up
+-	gpiosim_set_pull sim0 4 pull-up
+-	gpiosim_set_pull sim0 6 pull-up
+-
+-	run_tool gpioget "$(gpiosim_chip_name sim0)" 0 1 4 6
+-
+-	test "$status" -eq "0"
+-	test "$output" = "0 1 1 1"
+-}
+-
+-@test "gpioget: no arguments" {
+-	run_tool gpioget
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*gpiochip must be specified"
+-}
+-
+-@test "gpioget: no lines specified" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioget "$(gpiosim_chip_name sim0)"
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*at least one GPIO line offset must be specified"
+-}
+-
+-@test "gpioget: too many lines specified" {
+-	gpiosim_chip sim0 num_lines=4
+-
+-	run_tool gpioget "$(gpiosim_chip_name sim0)" 0 1 2 3 4
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*unable to request lines.*"
+-}
+-
+-@test "gpioget: same line twice" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioget "$(gpiosim_chip_name sim0)" 0 0
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*unable to request lines"
+-}
+-
+-@test "gpioget: invalid bias" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioget --bias=bad "$(gpiosim_chip_name sim0)" 0 1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*invalid bias.*"
+-}
+-
+-#
+-# gpioset test cases
+-#
+-
+-@test "gpioset: set lines and wait for SIGTERM" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpioset --mode=signal "$(gpiosim_chip_name sim0)" \
+-					0=0 1=0 2=1 3=1 4=1 5=1 6=0 7=1
+-
+-	gpiosim_check_value sim0 0 0
+-	gpiosim_check_value sim0 1 0
+-	gpiosim_check_value sim0 2 1
+-	gpiosim_check_value sim0 3 1
+-	gpiosim_check_value sim0 4 1
+-	gpiosim_check_value sim0 5 1
+-	gpiosim_check_value sim0 6 0
+-	gpiosim_check_value sim0 7 1
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: set lines and wait for SIGTERM (active-low)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpioset --active-low --mode=signal "$(gpiosim_chip_name sim0)" \
+-					0=0 1=0 2=1 3=1 4=1 5=1 6=0 7=1
+-
+-	gpiosim_check_value sim0 0 1
+-	gpiosim_check_value sim0 1 1
+-	gpiosim_check_value sim0 2 0
+-	gpiosim_check_value sim0 3 0
+-	gpiosim_check_value sim0 4 0
+-	gpiosim_check_value sim0 5 0
+-	gpiosim_check_value sim0 6 1
+-	gpiosim_check_value sim0 7 0
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: set lines and wait for SIGTERM (push-pull)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpioset --drive=push-pull --mode=signal "$(gpiosim_chip_name sim0)" \
+-					0=0 1=0 2=1 3=1 4=1 5=1 6=0 7=1
+-
+-	gpiosim_check_value sim0 0 0
+-	gpiosim_check_value sim0 1 0
+-	gpiosim_check_value sim0 2 1
+-	gpiosim_check_value sim0 3 1
+-	gpiosim_check_value sim0 4 1
+-	gpiosim_check_value sim0 5 1
+-	gpiosim_check_value sim0 6 0
+-	gpiosim_check_value sim0 7 1
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: set lines and wait for SIGTERM (open-drain)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 3 pull-up
+-	gpiosim_set_pull sim0 5 pull-up
+-	gpiosim_set_pull sim0 7 pull-up
+-
+-	coproc_run_tool gpioset --drive=open-drain --mode=signal "$(gpiosim_chip_name sim0)" \
+-					0=0 1=0 2=1 3=1 4=1 5=1 6=0 7=1
+-
+-	gpiosim_check_value sim0 0 0
+-	gpiosim_check_value sim0 1 0
+-	gpiosim_check_value sim0 2 1
+-	gpiosim_check_value sim0 3 1
+-	gpiosim_check_value sim0 4 0
+-	gpiosim_check_value sim0 5 1
+-	gpiosim_check_value sim0 6 0
+-	gpiosim_check_value sim0 7 1
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: set lines and wait for SIGTERM (open-source)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 3 pull-up
+-	gpiosim_set_pull sim0 5 pull-up
+-	gpiosim_set_pull sim0 7 pull-up
+-
+-	coproc_run_tool gpioset --drive=open-source --mode=signal "$(gpiosim_chip_name sim0)" \
+-					0=0 1=0 2=1 3=0 4=1 5=1 6=0 7=1
+-
+-	gpiosim_check_value sim0 0 0
+-	gpiosim_check_value sim0 1 0
+-	gpiosim_check_value sim0 2 1
+-	gpiosim_check_value sim0 3 1
+-	gpiosim_check_value sim0 4 1
+-	gpiosim_check_value sim0 5 1
+-	gpiosim_check_value sim0 6 0
+-	gpiosim_check_value sim0 7 1
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: set some lines and wait for ENTER" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpioset --mode=wait "$(gpiosim_chip_name sim0)" \
+-					1=0 2=1 5=1 6=0 7=1
+-
+-	gpiosim_check_value sim0 1 0
+-	gpiosim_check_value sim0 2 1
+-	gpiosim_check_value sim0 5 1
+-	gpiosim_check_value sim0 6 0
+-	gpiosim_check_value sim0 7 1
+-
+-	coproc_tool_stdin_write ""
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: set some lines and wait for SIGINT" {
+-	gpiosim_chip sim0 num_lines=4
+-
+-	coproc_run_tool gpioset --mode=signal "$(gpiosim_chip_name sim0)" 0=1
+-
+-	gpiosim_check_value sim0 0 1
+-
+-	coproc_tool_kill -SIGINT
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: set some lines and wait with --mode=time" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpioset --mode=time --sec=1 --usec=200000 \
+-				"$(gpiosim_chip_name sim0)" 0=1 5=0 7=1
+-
+-	gpiosim_check_value sim0 0 1
+-	gpiosim_check_value sim0 5 0
+-	gpiosim_check_value sim0 7 1
+-
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: no arguments" {
+-	run_tool gpioset
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*gpiochip must be specified"
+-}
+-
+-@test "gpioset: no lines specified" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset "$(gpiosim_chip_name sim1)"
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*at least one GPIO line offset to value mapping must be specified"
+-}
+-
+-@test "gpioset: too many lines specified" {
+-	gpiosim_chip sim0 num_lines=4
+-
+-	run_tool gpioset "$(gpiosim_chip_name sim0)" 0=1 1=1 2=1 3=1 4=1 5=1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*unable to request lines.*"
+-}
+-
+-@test "gpioset: use --sec without --mode=time" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset --mode=exit --sec=1 "$(gpiosim_chip_name sim0)" 0=1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*can't specify wait time in this mode"
+-}
+-
+-@test "gpioset: use --usec without --mode=time" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset --mode=exit --usec=1 "$(gpiosim_chip_name sim1)" 0=1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*can't specify wait time in this mode"
+-}
+-
+-@test "gpioset: default mode" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset "$(gpiosim_chip_name sim0)" 0=1
+-
+-	test "$status" -eq "0"
+-}
+-
+-@test "gpioset: invalid mapping" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset "$(gpiosim_chip_name sim1)" 0=c
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*invalid offset<->value mapping"
+-}
+-
+-@test "gpioset: invalid value" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset "$(gpiosim_chip_name sim1)" 0=3
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*value must be 0 or 1"
+-}
+-
+-@test "gpioset: invalid offset" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset "$(gpiosim_chip_name sim1)" 4000000000=0
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*invalid offset"
+-}
+-
+-@test "gpioset: invalid bias" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset --bias=bad "$(gpiosim_chip_name sim1)" 0=1 1=1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*invalid bias.*"
+-}
+-
+-@test "gpioset: invalid drive" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset --drive=bad "$(gpiosim_chip_name sim1)" 0=1 1=1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*invalid drive.*"
+-}
+-
+-@test "gpioset: daemonize in invalid mode" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset --background "$(gpiosim_chip_name sim1)" 0=1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*can't daemonize in this mode"
+-}
+-
+-@test "gpioset: same line twice" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpioset "$(gpiosim_chip_name sim0)" 0=1 0=1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*unable to request lines"
+-}
+-
+-#
+-# gpiomon test cases
+-#
+-
+-@test "gpiomon: single rising edge event" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon --rising-edge "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match \
+-"event:\\s+RISING\\s+EDGE\\s+offset:\\s+4\\s+timestamp:\\s+\[\s*[0-9]+\.[0-9]+\]"
+-}
+-
+-@test "gpiomon: single falling edge event" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon --falling-edge "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	gpiosim_set_pull sim0 4 pull-down
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match \
+-"event:\\s+FALLING\\s+EDGE\\s+offset:\\s+4\\s+timestamp:\\s+\[\s*[0-9]+\.[0-9]+\]"
+-}
+-
+-@test "gpiomon: single falling edge event (pull-up)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 4 pull-down
+-
+-	coproc_run_tool gpiomon --bias=pull-up "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-down
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match \
+-"event:\\s+FALLING\\s+EDGE\\s+offset:\\s+4\\s+timestamp:\\s+\[\s*[0-9]+\.[0-9]+\]"
+-}
+-
+-@test "gpiomon: single rising edge event (pull-down)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-
+-	coproc_run_tool gpiomon --bias=pull-down "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match \
+-"event:\\s+RISING\\s+EDGE\\s+offset:\\s+4\\s+timestamp:\\s+\[\s*[0-9]+\.[0-9]+\]"
+-}
+-
+-@test "gpiomon: single rising edge event (active-low)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-
+-	coproc_run_tool gpiomon --rising-edge --active-low "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-down
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match \
+-"event:\\s+RISING\\s+EDGE\\s+offset:\\s+4\\s+timestamp:\\s+\[\s*[0-9]+\.[0-9]+\]"
+-}
+-
+-@test "gpiomon: single rising edge event (silent mode)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon --rising-edge --silent "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test -z "$output"
+-}
+-
+-@test "gpiomon: four alternating events" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon --num-events=4 "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-	gpiosim_set_pull sim0 4 pull-down
+-	sleep 0.2
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-	gpiosim_set_pull sim0 4 pull-down
+-	sleep 0.2
+-
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match \
+-"event\\:\\s+FALLING\\s+EDGE\\s+offset\\:\\s+4\\s+timestamp:\\s+\\[\s*[0-9]+\\.[0-9]+\\]"
+-	output_regex_match \
+-"event\\:\\s+RISING\\s+EDGE\\s+offset\\:\\s+4\\s+timestamp:\\s+\\[\s*[0-9]+\\.[0-9]+\\]"
+-}
+-
+-@test "gpiomon: exit after SIGINT" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "$(gpiosim_chip_name sim0)" 4
+-
+-	coproc_tool_kill -SIGINT
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test -z "$output"
+-}
+-
+-@test "gpiomon: exit after SIGTERM" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "$(gpiosim_chip_name sim0)" 4
+-
+-	coproc_tool_kill -SIGTERM
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test -z "$output"
+-}
+-
+-@test "gpiomon: both event flags" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon --falling-edge --rising-edge "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-	gpiosim_set_pull sim0 4 pull-down
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match \
+-"event\\:\\s+FALLING\\s+EDGE\\s+offset\\:\\s+4\\s+timestamp:\\s+\\[\s*[0-9]+\\.[0-9]+\\]"
+-	output_regex_match \
+-"event\\:\\s+RISING\\s+EDGE\\s+offset\\:\\s+4\\s+timestamp:\\s+\\[\s*[0-9]+\\.[0-9]+\\]"
+-}
+-
+-@test "gpiomon: watch multiple lines" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon --format=%o "$(gpiosim_chip_name sim0)" 1 2 3 4 5
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 3 pull-up
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "${lines[0]}" = "2"
+-	test "${lines[1]}" = "3"
+-	test "${lines[2]}" = "4"
+-}
+-
+-@test "gpiomon: watch multiple lines (lines in mixed-up order)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon --format=%o "$(gpiosim_chip_name sim0)" 5 2 7 1 6
+-
+-	gpiosim_set_pull sim0 2 pull-up
+-	gpiosim_set_pull sim0 1 pull-up
+-	gpiosim_set_pull sim0 6 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "${lines[0]}" = "2"
+-	test "${lines[1]}" = "1"
+-	test "${lines[2]}" = "6"
+-}
+-
+-@test "gpiomon: same line twice" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpiomon "$(gpiosim_chip_name sim0)" 0 0
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*unable to request lines"
+-}
+-
+-@test "gpiomon: no arguments" {
+-	run_tool gpiomon
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*gpiochip must be specified"
+-}
+-
+-@test "gpiomon: line not specified" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpiomon "$(gpiosim_chip_name sim0)"
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*GPIO line offset must be specified"
+-}
+-
+-@test "gpiomon: line out of range" {
+-	gpiosim_chip sim0 num_lines=4
+-
+-	run_tool gpiomon "$(gpiosim_chip_name sim0)" 5
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*unable to request lines"
+-}
+-
+-@test "gpiomon: invalid bias" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	run_tool gpiomon --bias=bad "$(gpiosim_chip_name sim0)" 0 1
+-
+-	test "$status" -eq "1"
+-	output_regex_match ".*invalid bias.*"
+-}
+-
+-@test "gpiomon: custom format (event type + offset)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=%e %o" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "$output" = "1 4"
+-}
+-
+-@test "gpiomon: custom format (event type + offset joined)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=%e%o" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "$output" = "14"
+-}
+-
+-@test "gpiomon: custom format (timestamp)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=%e %o %s.%n" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	output_regex_match "1 4 [0-9]+\\.[0-9]+"
+-}
+-
+-@test "gpiomon: custom format (double percent sign)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=%%" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "$output" = "%"
+-}
+-
+-@test "gpiomon: custom format (double percent sign + event type specifier)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=%%e" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "$output" = "%e"
+-}
+-
+-@test "gpiomon: custom format (single percent sign)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=%" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "$output" = "%"
+-}
+-
+-@test "gpiomon: custom format (single percent sign between other characters)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=foo % bar" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "$output" = "foo % bar"
+-}
+-
+-@test "gpiomon: custom format (unknown specifier)" {
+-	gpiosim_chip sim0 num_lines=8
+-
+-	coproc_run_tool gpiomon "--format=%x" "$(gpiosim_chip_name sim0)" 4
+-
+-	gpiosim_set_pull sim0 4 pull-up
+-	sleep 0.2
+-
+-	coproc_tool_kill
+-	coproc_tool_wait
+-
+-	test "$status" -eq "0"
+-	test "$output" = "%x"
+-}
+diff --git a/tools/gpiodetect.c b/tools/gpiodetect.c
+index 8f6e8b3..30bde32 100644
+--- a/tools/gpiodetect.c
++++ b/tools/gpiodetect.c
+@@ -11,82 +11,3 @@
+ 
+ #include "tools-common.h"
+ 
+-static const struct option longopts[] = {
+-	{ "help",	no_argument,	NULL,	'h' },
+-	{ "version",	no_argument,	NULL,	'v' },
+-	{ GETOPT_NULL_LONGOPT },
+-};
+-
+-static const char *const shortopts = "+hv";
+-
+-static void print_help(void)
+-{
+-	printf("Usage: %s [OPTIONS]\n", get_progname());
+-	printf("\n");
+-	printf("List all GPIO chips, print their labels and number of GPIO lines.\n");
+-	printf("\n");
+-	printf("Options:\n");
+-	printf("  -h, --help:\t\tdisplay this message and exit\n");
+-	printf("  -v, --version:\tdisplay the version and exit\n");
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	int optc, opti, num_chips, i;
+-	struct gpiod_chip *chip;
+-	struct gpiod_chip_info *info;
+-	struct dirent **entries;
+-
+-	for (;;) {
+-		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+-		if (optc < 0)
+-			break;
+-
+-		switch (optc) {
+-		case 'h':
+-			print_help();
+-			return EXIT_SUCCESS;
+-		case 'v':
+-			print_version();
+-			return EXIT_SUCCESS;
+-		case '?':
+-			die("try %s --help", get_progname());
+-		default:
+-			abort();
+-		}
+-	}
+-
+-	argc -= optind;
+-	argv += optind;
+-
+-	if (argc > 0)
+-		die("unrecognized argument: %s", argv[0]);
+-
+-	num_chips = scandir("/dev/", &entries, chip_dir_filter, alphasort);
+-	if (num_chips < 0)
+-		die_perror("unable to scan /dev");
+-
+-	for (i = 0; i < num_chips; i++) {
+-		chip = chip_open_by_name(entries[i]->d_name);
+-		if (!chip)
+-			die_perror("unable to open %s", entries[i]->d_name);
+-
+-		info = gpiod_chip_get_info(chip);
+-		if (!info)
+-			die_perror("unable to get info for %s", entries[i]->d_name);
+-
+-
+-		printf("%s [%s] (%zu lines)\n",
+-		       gpiod_chip_info_get_name(info),
+-		       gpiod_chip_info_get_label(info),
+-		       gpiod_chip_info_get_num_lines(info));
+-
+-		gpiod_chip_info_free(info);
+-		gpiod_chip_close(chip);
+-		free(entries[i]);
+-	}
+-
+-	free(entries);
+-
+-	return EXIT_SUCCESS;
+-}
+diff --git a/tools/gpiofind.c b/tools/gpiofind.c
+index 03b15c9..30bde32 100644
+--- a/tools/gpiofind.c
++++ b/tools/gpiofind.c
+@@ -11,83 +11,3 @@
+ 
+ #include "tools-common.h"
+ 
+-static const struct option longopts[] = {
+-	{ "help",	no_argument,	NULL,	'h' },
+-	{ "version",	no_argument,	NULL,	'v' },
+-	{ GETOPT_NULL_LONGOPT },
+-};
+-
+-static const char *const shortopts = "+hv";
+-
+-static void print_help(void)
+-{
+-	printf("Usage: %s [OPTIONS] <name>\n", get_progname());
+-	printf("\n");
+-	printf("Find a GPIO line by name. The output of this command can be used as input for gpioget/set.\n");
+-	printf("\n");
+-	printf("Options:\n");
+-	printf("  -h, --help:\t\tdisplay this message and exit\n");
+-	printf("  -v, --version:\tdisplay the version and exit\n");
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	int i, num_chips, optc, opti, offset;
+-	struct gpiod_chip *chip;
+-	struct gpiod_chip_info *info;
+-	struct dirent **entries;
+-
+-	for (;;) {
+-		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+-		if (optc < 0)
+-			break;
+-
+-		switch (optc) {
+-		case 'h':
+-			print_help();
+-			return EXIT_SUCCESS;
+-		case 'v':
+-			print_version();
+-			return EXIT_SUCCESS;
+-		case '?':
+-			die("try %s --help", get_progname());
+-		default:
+-			abort();
+-		}
+-	}
+-
+-	argc -= optind;
+-	argv += optind;
+-
+-	if (argc != 1)
+-		die("exactly one GPIO line name must be specified");
+-
+-	num_chips = scandir("/dev/", &entries, chip_dir_filter, alphasort);
+-	if (num_chips < 0)
+-		die_perror("unable to scan /dev");
+-
+-	for (i = 0; i < num_chips; i++) {
+-		chip = chip_open_by_name(entries[i]->d_name);
+-		if (!chip) {
+-			if (errno == EACCES)
+-				continue;
+-
+-			die_perror("unable to open %s", entries[i]->d_name);
+-		}
+-
+-		offset = gpiod_chip_get_line_offset_from_name(chip, argv[0]);
+-		if (offset >= 0) {
+-			info = gpiod_chip_get_info(chip);
+-			if (!info)
+-				die_perror("unable to get info for %s", entries[i]->d_name);
+-
+-			printf("%s %u\n",
+-			       gpiod_chip_info_get_name(info), offset);
+-			gpiod_chip_info_free(info);
+-			gpiod_chip_close(chip);
+-			return EXIT_SUCCESS;
+-		}
+-	}
+-
+-	return EXIT_FAILURE;
+-}
+diff --git a/tools/gpioget.c b/tools/gpioget.c
+index ae80271..1b3e666 100644
+--- a/tools/gpioget.c
++++ b/tools/gpioget.c
+@@ -10,143 +10,3 @@
+ 
+ #include "tools-common.h"
+ 
+-static const struct option longopts[] = {
+-	{ "help",	no_argument,		NULL,	'h' },
+-	{ "version",	no_argument,		NULL,	'v' },
+-	{ "active-low",	no_argument,		NULL,	'l' },
+-	{ "dir-as-is",	no_argument,		NULL,	'n' },
+-	{ "bias",	required_argument,	NULL,	'B' },
+-	{ GETOPT_NULL_LONGOPT },
+-};
+-
+-static const char *const shortopts = "+hvlnB:";
+-
+-static void print_help(void)
+-{
+-	printf("Usage: %s [OPTIONS] <chip name/number> <offset 1> <offset 2> ...\n",
+-	       get_progname());
+-	printf("\n");
+-	printf("Read line value(s) from a GPIO chip\n");
+-	printf("\n");
+-	printf("Options:\n");
+-	printf("  -h, --help:\t\tdisplay this message and exit\n");
+-	printf("  -v, --version:\tdisplay the version and exit\n");
+-	printf("  -l, --active-low:\tset the line active state to low\n");
+-	printf("  -n, --dir-as-is:\tdon't force-reconfigure line direction\n");
+-	printf("  -B, --bias=[as-is|disable|pull-down|pull-up] (defaults to 'as-is'):\n");
+-	printf("		set the line bias\n");
+-	printf("\n");
+-	print_bias_help();
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	int direction = GPIOD_LINE_DIRECTION_INPUT;
+-	int optc, opti, bias = 0, ret, *values;
+-	struct gpiod_request_config *req_cfg;
+-	struct gpiod_line_request *request;
+-	struct gpiod_line_config *line_cfg;
+-	struct gpiod_chip *chip;
+-	bool active_low = false;
+-	unsigned int *offsets;
+-	size_t i, num_lines;
+-	char *device, *end;
+-
+-	for (;;) {
+-		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+-		if (optc < 0)
+-			break;
+-
+-		switch (optc) {
+-		case 'h':
+-			print_help();
+-			return EXIT_SUCCESS;
+-		case 'v':
+-			print_version();
+-			return EXIT_SUCCESS;
+-		case 'l':
+-			active_low = true;
+-			break;
+-		case 'n':
+-			direction = GPIOD_LINE_DIRECTION_AS_IS;
+-			break;
+-		case 'B':
+-			bias = parse_bias(optarg);
+-			break;
+-		case '?':
+-			die("try %s --help", get_progname());
+-		default:
+-			abort();
+-		}
+-	}
+-
+-	argc -= optind;
+-	argv += optind;
+-
+-	if (argc < 1)
+-		die("gpiochip must be specified");
+-
+-	if (argc < 2)
+-		die("at least one GPIO line offset must be specified");
+-
+-	device = argv[0];
+-	num_lines = argc - 1;
+-
+-	offsets = calloc(num_lines, sizeof(*offsets));
+-	values = calloc(num_lines, sizeof(*values));
+-	if (!offsets || ! values)
+-		die("out of memory");
+-
+-	for (i = 0; i < num_lines; i++) {
+-		offsets[i] = strtoul(argv[i + 1], &end, 10);
+-		if (*end != '\0' || offsets[i] > INT_MAX)
+-			die("invalid GPIO offset: %s", argv[i + 1]);
+-	}
+-
+-	chip = chip_open_lookup(device);
+-	if (!chip)
+-		die_perror("unable to open %s", device);
+-
+-	line_cfg = gpiod_line_config_new();
+-	if (!line_cfg)
+-		die_perror("unable to allocate the line config structure");
+-
+-	gpiod_line_config_set_direction_default(line_cfg, direction);
+-
+-	if (bias)
+-		gpiod_line_config_set_bias_default(line_cfg, bias);
+-
+-	if (active_low)
+-		gpiod_line_config_set_active_low_default(line_cfg, true);
+-
+-	req_cfg = gpiod_request_config_new();
+-	if (!req_cfg)
+-		die_perror("unable to allocate the request config structure");
+-
+-	gpiod_request_config_set_consumer(req_cfg, "gpioget");
+-	gpiod_request_config_set_offsets(req_cfg, num_lines, offsets);
+-
+-	request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+-	if (!request)
+-		die_perror("unable to request lines");
+-
+-	ret = gpiod_line_request_get_values(request, values);
+-	if (ret)
+-		die_perror("unable to read GPIO line values");
+-
+-	for (i = 0; i < num_lines; i++) {
+-		printf("%d", values[i]);
+-		if (i != num_lines - 1)
+-			printf(" ");
+-	}
+-	printf("\n");
+-
+-	gpiod_line_request_release(request);
+-	gpiod_request_config_free(req_cfg);
+-	gpiod_line_config_free(line_cfg);
+-	gpiod_chip_close(chip);
+-	free(offsets);
+-	free(values);
+-
+-	return EXIT_SUCCESS;
+-}
+diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
+index fbe2a13..ae368fa 100644
+--- a/tools/gpioinfo.c
++++ b/tools/gpioinfo.c
+@@ -12,243 +12,3 @@
+ 
+ #include "tools-common.h"
+ 
+-typedef bool (*is_set_func)(struct gpiod_line_info *);
+-
+-struct flag {
+-	const char *name;
+-	is_set_func is_set;
+-};
+-
+-static bool line_bias_is_pullup(struct gpiod_line_info *info)
+-{
+-	return gpiod_line_info_get_bias(info) == GPIOD_LINE_BIAS_PULL_UP;
+-}
+-
+-static bool line_bias_is_pulldown(struct gpiod_line_info *info)
+-{
+-	return gpiod_line_info_get_bias(info) == GPIOD_LINE_BIAS_PULL_DOWN;
+-}
+-
+-static bool line_bias_is_disabled(struct gpiod_line_info *info)
+-{
+-	return gpiod_line_info_get_bias(info) == GPIOD_LINE_BIAS_DISABLED;
+-}
+-
+-static bool line_drive_is_open_drain(struct gpiod_line_info *info)
+-{
+-	return gpiod_line_info_get_drive(info) == GPIOD_LINE_DRIVE_OPEN_DRAIN;
+-}
+-
+-static bool line_drive_is_open_source(struct gpiod_line_info *info)
+-{
+-	return gpiod_line_info_get_drive(info) == GPIOD_LINE_DRIVE_OPEN_SOURCE;
+-}
+-
+-static const struct flag flags[] = {
+-	{
+-		.name = "used",
+-		.is_set = gpiod_line_info_is_used,
+-	},
+-	{
+-		.name = "open-drain",
+-		.is_set = line_drive_is_open_drain,
+-	},
+-	{
+-		.name = "open-source",
+-		.is_set = line_drive_is_open_source,
+-	},
+-	{
+-		.name = "pull-up",
+-		.is_set = line_bias_is_pullup,
+-	},
+-	{
+-		.name = "pull-down",
+-		.is_set = line_bias_is_pulldown,
+-	},
+-	{
+-		.name = "bias-disabled",
+-		.is_set = line_bias_is_disabled,
+-	},
+-};
+-
+-static const struct option longopts[] = {
+-	{ "help",	no_argument,	NULL,	'h' },
+-	{ "version",	no_argument,	NULL,	'v' },
+-	{ GETOPT_NULL_LONGOPT },
+-};
+-
+-static const char *const shortopts = "+hv";
+-
+-static void print_help(void)
+-{
+-	printf("Usage: %s [OPTIONS] <gpiochip1> ...\n", get_progname());
+-	printf("\n");
+-	printf("Print information about all lines of the specified GPIO chip(s) (or all gpiochips if none are specified).\n");
+-	printf("\n");
+-	printf("Options:\n");
+-	printf("  -h, --help:\t\tdisplay this message and exit\n");
+-	printf("  -v, --version:\tdisplay the version and exit\n");
+-}
+-
+-static PRINTF(3, 4) void prinfo(bool *of,
+-				unsigned int prlen, const char *fmt, ...)
+-{
+-	char *buf, *buffmt = NULL;
+-	size_t len;
+-	va_list va;
+-	int rv;
+-
+-	va_start(va, fmt);
+-	rv = vasprintf(&buf, fmt, va);
+-	va_end(va);
+-	if (rv < 0)
+-		die("vasprintf: %s\n", strerror(errno));
+-
+-	len = strlen(buf) - 1;
+-
+-	if (len >= prlen || *of) {
+-		*of = true;
+-		printf("%s", buf);
+-	} else {
+-		rv = asprintf(&buffmt, "%%%us", prlen);
+-		if (rv < 0)
+-			die("asprintf: %s\n", strerror(errno));
+-
+-		printf(buffmt, buf);
+-	}
+-
+-	free(buf);
+-	if (fmt)
+-		free(buffmt);
+-}
+-
+-static void list_lines(struct gpiod_chip *chip)
+-{
+-	bool flag_printed, of, active_low;
+-	struct gpiod_chip_info *chip_info;
+-	struct gpiod_line_info *info;
+-	const char *name, *consumer;
+-	size_t i, offset, num_lines;
+-	int direction;
+-
+-	chip_info = gpiod_chip_get_info(chip);
+-	if (!chip_info)
+-		die_perror("unable to retrieve the chip info from chip");
+-
+-	num_lines = gpiod_chip_info_get_num_lines(chip_info);
+-	printf("%s - %zu lines:\n",
+-	       gpiod_chip_info_get_name(chip_info), num_lines);
+-
+-	for (offset = 0; offset < num_lines; offset++) {
+-		info = gpiod_chip_get_line_info(chip, offset);
+-		if (!info)
+-			die_perror("unable to retrieve the line info from chip");
+-		name = gpiod_line_info_get_name(info);
+-		consumer = gpiod_line_info_get_consumer(info);
+-		direction = gpiod_line_info_get_direction(info);
+-		active_low = gpiod_line_info_is_active_low(info);
+-
+-		of = false;
+-
+-		printf("\tline ");
+-		prinfo(&of, 3, "%zu", offset);
+-		printf(": ");
+-
+-		name ? prinfo(&of, 12, "\"%s\"", name)
+-		     : prinfo(&of, 12, "unnamed");
+-		printf(" ");
+-
+-		if (!gpiod_line_info_is_used(info))
+-			prinfo(&of, 12, "unused");
+-		else
+-			consumer ? prinfo(&of, 12, "\"%s\"", consumer)
+-				 : prinfo(&of, 12, "kernel");
+-
+-		printf(" ");
+-
+-		prinfo(&of, 8, "%s ", direction == GPIOD_LINE_DIRECTION_INPUT
+-							? "input" : "output");
+-		prinfo(&of, 13, "%s ",
+-		       active_low ? "active-low" : "active-high");
+-
+-		flag_printed = false;
+-		for (i = 0; i < ARRAY_SIZE(flags); i++) {
+-			if (flags[i].is_set(info)) {
+-				if (flag_printed)
+-					printf(" ");
+-				else
+-					printf("[");
+-				printf("%s", flags[i].name);
+-				flag_printed = true;
+-			}
+-		}
+-		if (flag_printed)
+-			printf("]");
+-
+-		printf("\n");
+-
+-		gpiod_line_info_free(info);
+-	}
+-	gpiod_chip_info_free(chip_info);
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	int num_chips, i, optc, opti;
+-	struct gpiod_chip *chip;
+-	struct dirent **entries;
+-
+-	for (;;) {
+-		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+-		if (optc < 0)
+-			break;
+-
+-		switch (optc) {
+-		case 'h':
+-			print_help();
+-			return EXIT_SUCCESS;
+-		case 'v':
+-			print_version();
+-			return EXIT_SUCCESS;
+-		case '?':
+-			die("try %s --help", get_progname());
+-		default:
+-			abort();
+-		}
+-	}
+-
+-	argc -= optind;
+-	argv += optind;
+-
+-	if (argc == 0) {
+-		num_chips = scandir("/dev/", &entries,
+-				    chip_dir_filter, alphasort);
+-		if (num_chips < 0)
+-			die_perror("unable to scan /dev");
+-
+-		for (i = 0; i < num_chips; i++) {
+-			chip = chip_open_by_name(entries[i]->d_name);
+-			if (!chip)
+-				die_perror("unable to open %s",
+-					   entries[i]->d_name);
+-
+-			list_lines(chip);
+-
+-			gpiod_chip_close(chip);
+-			free(entries[i]);
+-		}
+-		free(entries);
+-	} else {
+-		for (i = 0; i < argc; i++) {
+-			chip = chip_open_lookup(argv[i]);
+-			if (!chip)
+-				die_perror("looking up chip %s", argv[i]);
+-
+-			list_lines(chip);
+-
+-			gpiod_chip_close(chip);
+-		}
+-	}
+-
+-	return EXIT_SUCCESS;
+-}
+diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+index f6a0dba..6fa19b6 100644
+--- a/tools/gpiomon.c
++++ b/tools/gpiomon.c
+@@ -17,304 +17,3 @@
+ 
+ #define EVENT_BUF_SIZE 32
+ 
+-static const struct option longopts[] = {
+-	{ "help",		no_argument,		NULL,	'h' },
+-	{ "version",		no_argument,		NULL,	'v' },
+-	{ "active-low",		no_argument,		NULL,	'l' },
+-	{ "bias",		required_argument,	NULL,	'B' },
+-	{ "num-events",		required_argument,	NULL,	'n' },
+-	{ "silent",		no_argument,		NULL,	's' },
+-	{ "rising-edge",	no_argument,		NULL,	'r' },
+-	{ "falling-edge",	no_argument,		NULL,	'f' },
+-	{ "line-buffered",	no_argument,		NULL,	'b' },
+-	{ "format",		required_argument,	NULL,	'F' },
+-	{ GETOPT_NULL_LONGOPT },
+-};
+-
+-static const char *const shortopts = "+hvlB:n:srfbF:";
+-
+-static void print_help(void)
+-{
+-	printf("Usage: %s [OPTIONS] <chip name/number> <offset 1> <offset 2> ...\n",
+-	       get_progname());
+-	printf("\n");
+-	printf("Wait for events on GPIO lines and print them to standard output\n");
+-	printf("\n");
+-	printf("Options:\n");
+-	printf("  -h, --help:\t\tdisplay this message and exit\n");
+-	printf("  -v, --version:\tdisplay the version and exit\n");
+-	printf("  -l, --active-low:\tset the line active state to low\n");
+-	printf("  -B, --bias=[as-is|disable|pull-down|pull-up] (defaults to 'as-is'):\n");
+-	printf("		set the line bias\n");
+-	printf("  -n, --num-events=NUM:\texit after processing NUM events\n");
+-	printf("  -s, --silent:\t\tdon't print event info\n");
+-	printf("  -r, --rising-edge:\tonly process rising edge events\n");
+-	printf("  -f, --falling-edge:\tonly process falling edge events\n");
+-	printf("  -b, --line-buffered:\tset standard output as line buffered\n");
+-	printf("  -F, --format=FMT\tspecify custom output format\n");
+-	printf("\n");
+-	print_bias_help();
+-	printf("\n");
+-	printf("Format specifiers:\n");
+-	printf("  %%o:  GPIO line offset\n");
+-	printf("  %%e:  event type (0 - falling edge, 1 rising edge)\n");
+-	printf("  %%s:  seconds part of the event timestamp\n");
+-	printf("  %%n:  nanoseconds part of the event timestamp\n");
+-}
+-
+-struct mon_ctx {
+-	unsigned int offset;
+-	bool silent;
+-	char *fmt;
+-};
+-
+-static void event_print_custom(unsigned int offset, uint64_t timeout,
+-			       int event_type, struct mon_ctx *ctx)
+-{
+-	char *prev, *curr, fmt;
+-
+-	for (prev = curr = ctx->fmt;;) {
+-		curr = strchr(curr, '%');
+-		if (!curr) {
+-			fputs(prev, stdout);
+-			break;
+-		}
+-
+-		if (prev != curr)
+-			fwrite(prev, curr - prev, 1, stdout);
+-
+-		fmt = *(curr + 1);
+-
+-		switch (fmt) {
+-		case 'o':
+-			printf("%u", offset);
+-			break;
+-		case 'e':
+-			if (event_type == GPIOD_EDGE_EVENT_RISING_EDGE)
+-				fputc('1', stdout);
+-			else
+-				fputc('0', stdout);
+-			break;
+-		case 's':
+-			printf("%"PRIu64, timeout / 1000000000);
+-			break;
+-		case 'n':
+-			printf("%"PRIu64, timeout % 1000000000);
+-			break;
+-		case '%':
+-			fputc('%', stdout);
+-			break;
+-		case '\0':
+-			fputc('%', stdout);
+-			goto end;
+-		default:
+-			fwrite(curr, 2, 1, stdout);
+-			break;
+-		}
+-
+-		curr += 2;
+-		prev = curr;
+-	}
+-
+-end:
+-	fputc('\n', stdout);
+-}
+-
+-static void event_print_human_readable(unsigned int offset,
+-				       uint64_t timeout, int event_type)
+-{
+-	char *evname;
+-
+-	if (event_type == GPIOD_EDGE_EVENT_RISING_EDGE)
+-		evname = " RISING EDGE";
+-	else
+-		evname = "FALLING EDGE";
+-
+-	printf("event: %s offset: %u timestamp: [%8"PRIu64".%09"PRIu64"]\n",
+-	       evname, offset, timeout / 1000000000, timeout % 1000000000);
+-}
+-
+-static void handle_event(unsigned int line_offset, unsigned int event_type,
+-			 uint64_t timestamp, struct mon_ctx *ctx)
+-{
+-	if (!ctx->silent) {
+-		if (ctx->fmt)
+-			event_print_custom(line_offset, timestamp,
+-					   event_type, ctx);
+-		else
+-			event_print_human_readable(line_offset,
+-						   timestamp, event_type);
+-	}
+-}
+-
+-static void handle_signal(int signum UNUSED)
+-{
+-	exit(EXIT_SUCCESS);
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	bool watch_rising = false, watch_falling = false, active_low = false;
+-	size_t num_lines = 0, events_wanted = 0, events_done = 0;
+-	struct gpiod_edge_event_buffer *event_buffer;
+-	int optc, opti, ret, i, edge, bias = 0;
+-	uint64_t timeout = 10 * 1000000000LLU;
+-	struct gpiod_request_config *req_cfg;
+-	struct gpiod_line_request *request;
+-	struct gpiod_line_config *line_cfg;
+-	unsigned int offsets[64], offset;
+-	struct gpiod_edge_event *event;
+-	struct gpiod_chip *chip;
+-	struct mon_ctx ctx;
+-	char *end;
+-
+-	/*
+-	 * FIXME: use signalfd once the API has been converted to using a single file
+-	 * descriptor as provided by uAPI v2.
+-	 */
+-	signal(SIGINT, handle_signal);
+-	signal(SIGTERM, handle_signal);
+-
+-	memset(&ctx, 0, sizeof(ctx));
+-
+-	for (;;) {
+-		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+-		if (optc < 0)
+-			break;
+-
+-		switch (optc) {
+-		case 'h':
+-			print_help();
+-			return EXIT_SUCCESS;
+-		case 'v':
+-			print_version();
+-			return EXIT_SUCCESS;
+-		case 'l':
+-			active_low = true;
+-			break;
+-		case 'B':
+-			bias = parse_bias(optarg);
+-			break;
+-		case 'n':
+-			events_wanted = strtoul(optarg, &end, 10);
+-			if (*end != '\0')
+-				die("invalid number: %s", optarg);
+-			break;
+-		case 's':
+-			ctx.silent = true;
+-			break;
+-		case 'r':
+-			watch_rising = true;
+-			break;
+-		case 'f':
+-			watch_falling = true;
+-			break;
+-		case 'b':
+-			setlinebuf(stdout);
+-			break;
+-		case 'F':
+-			ctx.fmt = optarg;
+-			break;
+-		case '?':
+-			die("try %s --help", get_progname());
+-		default:
+-			abort();
+-		}
+-	}
+-
+-	argc -= optind;
+-	argv += optind;
+-
+-	if (watch_rising && !watch_falling)
+-		edge = GPIOD_LINE_EDGE_RISING;
+-	else if (watch_falling && !watch_rising)
+-		edge = GPIOD_LINE_EDGE_FALLING;
+-	else
+-		edge = GPIOD_LINE_EDGE_BOTH;
+-
+-	if (argc < 1)
+-		die("gpiochip must be specified");
+-
+-	if (argc < 2)
+-		die("at least one GPIO line offset must be specified");
+-
+-	if (argc > 65)
+-		die("too many offsets given");
+-
+-	for (i = 1; i < argc; i++) {
+-		offset = strtoul(argv[i], &end, 10);
+-		if (*end != '\0' || offset > INT_MAX)
+-			die("invalid GPIO offset: %s", argv[i]);
+-
+-		offsets[i - 1] = offset;
+-		num_lines++;
+-	}
+-
+-	chip = chip_open_lookup(argv[0]);
+-	if (!chip)
+-		die_perror("unable to open %s", argv[0]);
+-
+-	line_cfg = gpiod_line_config_new();
+-	if (!line_cfg)
+-		die_perror("unable to allocate the line config structure");
+-
+-	if (bias)
+-		gpiod_line_config_set_bias_default(line_cfg, bias);
+-	if (active_low)
+-		gpiod_line_config_set_active_low_default(line_cfg, true);
+-	gpiod_line_config_set_edge_detection_default(line_cfg, edge);
+-
+-	req_cfg = gpiod_request_config_new();
+-	if (!req_cfg)
+-		die_perror("unable to allocate the request config structure");
+-
+-	gpiod_request_config_set_consumer(req_cfg, "gpiomon");
+-	gpiod_request_config_set_offsets(req_cfg, num_lines, offsets);
+-
+-	request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+-	if (!request)
+-		die_perror("unable to request lines");
+-
+-	event_buffer = gpiod_edge_event_buffer_new(EVENT_BUF_SIZE);
+-	if (!event_buffer)
+-		die_perror("unable to allocate the line event buffer");
+-
+-	for (;;) {
+-		ret = gpiod_line_request_wait_edge_event(request, timeout);
+-		if (ret < 0)
+-			die_perror("error waiting for events");
+-		if (ret == 0)
+-			continue;
+-
+-		ret = gpiod_line_request_read_edge_event(request, event_buffer,
+-							 EVENT_BUF_SIZE);
+-		if (ret < 0)
+-			die_perror("error reading line events");
+-
+-		for (i = 0; i < ret; i++) {
+-			event = gpiod_edge_event_buffer_get_event(event_buffer,
+-								  i);
+-			if (!event)
+-				die_perror("unable to retrieve the event from the buffer");
+-
+-			handle_event(gpiod_edge_event_get_line_offset(event),
+-				     gpiod_edge_event_get_event_type(event),
+-				     gpiod_edge_event_get_timestamp_ns(event),
+-				     &ctx);
+-
+-			events_done++;
+-
+-			if (events_wanted && events_done >= events_wanted)
+-				goto done;
+-		}
+-	}
+-
+-done:
+-	gpiod_edge_event_buffer_free(event_buffer);
+-	gpiod_line_request_release(request);
+-	gpiod_request_config_free(req_cfg);
+-	gpiod_line_config_free(line_cfg);
+-	gpiod_chip_close(chip);
+-
+-	return EXIT_SUCCESS;
+-}
+diff --git a/tools/gpioset.c b/tools/gpioset.c
+index 576b87d..0e3a1e4 100644
+--- a/tools/gpioset.c
++++ b/tools/gpioset.c
+@@ -14,318 +14,3 @@
+ 
+ #include "tools-common.h"
+ 
+-static const struct option longopts[] = {
+-	{ "help",		no_argument,		NULL,	'h' },
+-	{ "version",		no_argument,		NULL,	'v' },
+-	{ "active-low",		no_argument,		NULL,	'l' },
+-	{ "bias",		required_argument,	NULL,	'B' },
+-	{ "drive",		required_argument,	NULL,	'D' },
+-	{ "mode",		required_argument,	NULL,	'm' },
+-	{ "sec",		required_argument,	NULL,	's' },
+-	{ "usec",		required_argument,	NULL,	'u' },
+-	{ "background",		no_argument,		NULL,	'b' },
+-	{ GETOPT_NULL_LONGOPT },
+-};
+-
+-static const char *const shortopts = "+hvlB:D:m:s:u:b";
+-
+-static void print_help(void)
+-{
+-	printf("Usage: %s [OPTIONS] <chip name/number> <offset1>=<value1> <offset2>=<value2> ...\n",
+-	       get_progname());
+-	printf("\n");
+-	printf("Set GPIO line values of a GPIO chip and maintain the state until the process exits\n");
+-	printf("\n");
+-	printf("Options:\n");
+-	printf("  -h, --help:\t\tdisplay this message and exit\n");
+-	printf("  -v, --version:\tdisplay the version and exit\n");
+-	printf("  -l, --active-low:\tset the line active state to low\n");
+-	printf("  -B, --bias=[as-is|disable|pull-down|pull-up] (defaults to 'as-is'):\n");
+-	printf("		set the line bias\n");
+-	printf("  -D, --drive=[push-pull|open-drain|open-source] (defaults to 'push-pull'):\n");
+-	printf("		set the line drive mode\n");
+-	printf("  -m, --mode=[exit|wait|time|signal] (defaults to 'exit'):\n");
+-	printf("		tell the program what to do after setting values\n");
+-	printf("  -s, --sec=SEC:\tspecify the number of seconds to wait (only valid for --mode=time)\n");
+-	printf("  -u, --usec=USEC:\tspecify the number of microseconds to wait (only valid for --mode=time)\n");
+-	printf("  -b, --background:\tafter setting values: detach from the controlling terminal\n");
+-	printf("\n");
+-	print_bias_help();
+-	printf("\n");
+-	printf("Drives:\n");
+-	printf("  push-pull:\tdrive the line both high and low\n");
+-	printf("  open-drain:\tdrive the line low or go high impedance\n");
+-	printf("  open-source:\tdrive the line high or go high impedance\n");
+-	printf("\n");
+-	printf("Modes:\n");
+-	printf("  exit:\t\tset values and exit immediately\n");
+-	printf("  wait:\t\tset values and wait for user to press ENTER\n");
+-	printf("  time:\t\tset values and sleep for a specified amount of time\n");
+-	printf("  signal:\tset values and wait for SIGINT or SIGTERM\n");
+-	printf("\n");
+-	printf("Note: the state of a GPIO line controlled over the character device reverts to default\n");
+-	printf("when the last process referencing the file descriptor representing the device file exits.\n");
+-	printf("This means that it's wrong to run gpioset, have it exit and expect the line to continue\n");
+-	printf("being driven high or low. It may happen if given pin is floating but it must be interpreted\n");
+-	printf("as undefined behavior.\n");
+-}
+-
+-struct callback_data {
+-	/* Replace with a union once we have more modes using callback data. */
+-	struct timeval tv;
+-	bool daemonize;
+-};
+-
+-static void maybe_daemonize(bool daemonize)
+-{
+-	int rv;
+-
+-	if (daemonize) {
+-		rv = daemon(0, 0);
+-		if (rv < 0)
+-			die("unable to daemonize: %s", strerror(errno));
+-	}
+-}
+-
+-static void wait_enter(void *data UNUSED)
+-{
+-	getchar();
+-}
+-
+-static void wait_time(void *data)
+-{
+-	struct callback_data *cbdata = data;
+-
+-	maybe_daemonize(cbdata->daemonize);
+-	select(0, NULL, NULL, NULL, &cbdata->tv);
+-}
+-
+-static void wait_signal(void *data)
+-{
+-	struct callback_data *cbdata = data;
+-	struct pollfd pfd;
+-	int sigfd, rv;
+-
+-	sigfd = make_signalfd();
+-
+-	memset(&pfd, 0, sizeof(pfd));
+-	pfd.fd = sigfd;
+-	pfd.events = POLLIN | POLLPRI;
+-
+-	maybe_daemonize(cbdata->daemonize);
+-
+-	for (;;) {
+-		rv = poll(&pfd, 1, 1000 /* one second */);
+-		if (rv < 0)
+-			die("error polling for signals: %s", strerror(errno));
+-		else if (rv > 0)
+-			break;
+-	}
+-
+-	/*
+-	 * Don't bother reading siginfo - it's enough to know that we
+-	 * received any signal.
+-	 */
+-	close(sigfd);
+-}
+-
+-enum {
+-	MODE_EXIT = 0,
+-	MODE_WAIT,
+-	MODE_TIME,
+-	MODE_SIGNAL,
+-};
+-
+-struct mode_mapping {
+-	int id;
+-	const char *name;
+-	void (*callback)(void *);
+-};
+-
+-static const struct mode_mapping modes[] = {
+-	[MODE_EXIT] = {
+-		.id		= MODE_EXIT,
+-		.name		= "exit",
+-		.callback	= NULL,
+-	},
+-	[MODE_WAIT] = {
+-		.id		= MODE_WAIT,
+-		.name		= "wait",
+-		.callback	= wait_enter,
+-	},
+-	[MODE_TIME] = {
+-		.id		= MODE_TIME,
+-		.name		= "time",
+-		.callback	= wait_time,
+-	},
+-	[MODE_SIGNAL] = {
+-		.id		= MODE_SIGNAL,
+-		.name		= "signal",
+-		.callback	= wait_signal,
+-	},
+-};
+-
+-static const struct mode_mapping *parse_mode(const char *mode)
+-{
+-	size_t i;
+-
+-	for (i = 0; i < ARRAY_SIZE(modes); i++)
+-		if (strcmp(mode, modes[i].name) == 0)
+-			return &modes[i];
+-
+-	return NULL;
+-}
+-
+-static int parse_drive(const char *option)
+-{
+-	if (strcmp(option, "open-drain") == 0)
+-		return GPIOD_LINE_DRIVE_OPEN_DRAIN;
+-	if (strcmp(option, "open-source") == 0)
+-		return GPIOD_LINE_DRIVE_OPEN_SOURCE;
+-	if (strcmp(option, "push-pull") != 0)
+-		die("invalid drive: %s", option);
+-	return 0;
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	const struct mode_mapping *mode = &modes[MODE_EXIT];
+-	int ret, optc, opti, bias = 0, drive = 0, *values;
+-	struct gpiod_request_config *req_cfg;
+-	struct gpiod_line_request *request;
+-	struct gpiod_line_config *line_cfg;
+-	struct callback_data cbdata;
+-	struct gpiod_chip *chip;
+-	bool active_low = false;
+-	unsigned int *offsets;
+-	size_t i, num_lines;
+-	char *device, *end;
+-
+-	memset(&cbdata, 0, sizeof(cbdata));
+-
+-	for (;;) {
+-		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+-		if (optc < 0)
+-			break;
+-
+-		switch (optc) {
+-		case 'h':
+-			print_help();
+-			return EXIT_SUCCESS;
+-		case 'v':
+-			print_version();
+-			return EXIT_SUCCESS;
+-		case 'l':
+-			active_low = true;
+-			break;
+-		case 'B':
+-			bias = parse_bias(optarg);
+-			break;
+-		case 'D':
+-			drive = parse_drive(optarg);
+-			break;
+-		case 'm':
+-			mode = parse_mode(optarg);
+-			if (!mode)
+-				die("invalid mode: %s", optarg);
+-			break;
+-		case 's':
+-			cbdata.tv.tv_sec = strtoul(optarg, &end, 10);
+-			if (*end != '\0')
+-				die("invalid time value in seconds: %s", optarg);
+-			break;
+-		case 'u':
+-			cbdata.tv.tv_usec = strtoul(optarg, &end, 10);
+-			if (*end != '\0')
+-				die("invalid time value in microseconds: %s",
+-				    optarg);
+-			break;
+-		case 'b':
+-			cbdata.daemonize = true;
+-			break;
+-		case '?':
+-			die("try %s --help", get_progname());
+-		default:
+-			abort();
+-		}
+-	}
+-
+-	argc -= optind;
+-	argv += optind;
+-
+-	if (mode->id != MODE_TIME && (cbdata.tv.tv_sec || cbdata.tv.tv_usec))
+-		die("can't specify wait time in this mode");
+-
+-	if (mode->id != MODE_SIGNAL &&
+-	    mode->id != MODE_TIME &&
+-	    cbdata.daemonize)
+-		die("can't daemonize in this mode");
+-
+-	if (argc < 1)
+-		die("gpiochip must be specified");
+-
+-	if (argc < 2)
+-		die("at least one GPIO line offset to value mapping must be specified");
+-
+-	device = argv[0];
+-
+-	num_lines = argc - 1;
+-
+-	offsets = calloc(num_lines, sizeof(*offsets));
+-	values = calloc(num_lines, sizeof(*values));
+-	if (!offsets)
+-		die("out of memory");
+-
+-	for (i = 0; i < num_lines; i++) {
+-		ret = sscanf(argv[i + 1], "%u=%d", &offsets[i], &values[i]);
+-		if (ret != 2)
+-			die("invalid offset<->value mapping: %s", argv[i + 1]);
+-
+-		if (values[i] != 0 && values[i] != 1)
+-			die("value must be 0 or 1: %s", argv[i + 1]);
+-
+-		if (offsets[i] > INT_MAX)
+-			die("invalid offset: %s", argv[i + 1]);
+-	}
+-
+-	chip = chip_open_lookup(device);
+-	if (!chip)
+-		die_perror("unable to open %s", device);
+-
+-	line_cfg = gpiod_line_config_new();
+-	if (!line_cfg)
+-		die_perror("unable to allocate the line config structure");
+-
+-	if (bias)
+-		gpiod_line_config_set_bias_default(line_cfg, bias);
+-	if (drive)
+-		gpiod_line_config_set_drive_default(line_cfg, drive);
+-	if (active_low)
+-		gpiod_line_config_set_active_low_default(line_cfg, true);
+-	gpiod_line_config_set_direction_default(line_cfg,
+-						GPIOD_LINE_DIRECTION_OUTPUT);
+-	gpiod_line_config_set_output_values(line_cfg, num_lines,
+-					    offsets, values);
+-
+-	req_cfg = gpiod_request_config_new();
+-	if (!req_cfg)
+-		die_perror("unable to allocate the request config structure");
+-
+-	gpiod_request_config_set_consumer(req_cfg, "gpioset");
+-	gpiod_request_config_set_offsets(req_cfg, num_lines, offsets);
+-
+-	request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+-	if (!request)
+-		die_perror("unable to request lines");
+-
+-	if (mode->callback)
+-		mode->callback(&cbdata);
+-
+-	gpiod_line_request_release(request);
+-	gpiod_request_config_free(req_cfg);
+-	gpiod_line_config_free(line_cfg);
+-	gpiod_chip_close(chip);
+-	free(offsets);
+-
+-	return EXIT_SUCCESS;
+-}
+diff --git a/tools/tools-common.c b/tools/tools-common.c
+index f5fd50c..ea7dfa8 100644
+--- a/tools/tools-common.c
++++ b/tools/tools-common.c
+@@ -79,26 +79,6 @@ void print_bias_help(void)
+ 	printf("  pull-down:\tenable pull-down\n");
+ }
+ 
+-int make_signalfd(void)
+-{
+-	sigset_t sigmask;
+-	int sigfd, rv;
+-
+-	sigemptyset(&sigmask);
+-	sigaddset(&sigmask, SIGTERM);
+-	sigaddset(&sigmask, SIGINT);
+-
+-	rv = sigprocmask(SIG_BLOCK, &sigmask, NULL);
+-	if (rv < 0)
+-		die("error masking signals: %s", strerror(errno));
+-
+-	sigfd = signalfd(-1, &sigmask, 0);
+-	if (sigfd < 0)
+-		die("error creating signalfd: %s", strerror(errno));
+-
+-	return sigfd;
+-}
+-
+ int chip_dir_filter(const struct dirent *entry)
+ {
+ 	bool is_chip;
+@@ -114,38 +94,6 @@ int chip_dir_filter(const struct dirent *entry)
+ 	return !!is_chip;
+ }
+ 
+-struct gpiod_chip *chip_open_by_name(const char *name)
+-{
+-	struct gpiod_chip *chip;
+-	char *path;
+-	int ret;
+-
+-	ret = asprintf(&path, "/dev/%s", name);
+-	if (ret < 0)
+-		return NULL;
+-
+-	chip = gpiod_chip_open(path);
+-	free(path);
+-
+-	return chip;
+-}
+-
+-static struct gpiod_chip *chip_open_by_number(unsigned int num)
+-{
+-	struct gpiod_chip *chip;
+-	char *path;
+-	int ret;
+-
+-	ret = asprintf(&path, "/dev/gpiochip%u", num);
+-	if (!ret)
+-		return NULL;
+-
+-	chip = gpiod_chip_open(path);
+-	free(path);
+-
+-	return chip;
+-}
+-
+ static bool isuint(const char *str)
+ {
+ 	for (; *str && isdigit(*str); str++)
+@@ -153,19 +101,3 @@ static bool isuint(const char *str)
+ 
+ 	return *str == '\0';
+ }
+-
+-struct gpiod_chip *chip_open_lookup(const char *device)
+-{
+-	struct gpiod_chip *chip;
+-
+-	if (isuint(device)) {
+-		chip = chip_open_by_number(strtoul(device, NULL, 10));
+-	} else {
+-		if (strncmp(device, "/dev/", 5))
+-			chip = chip_open_by_name(device);
+-		else
+-			chip = gpiod_chip_open(device);
+-	}
+-
+-	return chip;
+-}
 -- 
 2.37.0
 
