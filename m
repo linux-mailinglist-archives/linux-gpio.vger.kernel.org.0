@@ -2,103 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DA5A56B067
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 04:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FA5956B238
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 07:25:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236754AbiGHCG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Jul 2022 22:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41462 "EHLO
+        id S236803AbiGHFZH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 01:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236626AbiGHCGZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Jul 2022 22:06:25 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723F6735B2;
-        Thu,  7 Jul 2022 19:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657245981; x=1688781981;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MCg8kR4TS25FrYcEhQ1dqxKwo2QmLPDolQW0nQZ5zIQ=;
-  b=b/j2cCm7ARBszkITvk5Qq9ZVrRJdtwZa1tfYWBGBsBv3iq/An7SG13Gk
-   hNqvouPpmNXvc47T/Vo7LDQ9R6hQSWLhDUeTqMr8k9pHrt3Zvjy783Fh1
-   LdDA4geeyP0sdw9tIO0t9KTe46cpL2jRkxpD5xN1gNr9ALr4Oey9fd9N9
-   L/5FTPj39psTXPA4JbSUOcIBb3/b9XU/Pr4IGyhMqaH+lDnNpgejGXlpy
-   WHSvYDzSrn+j7y69VChpqvBsRVdPSsQ2Tz2O8J4R7T+ypLqpC2FMEZf4R
-   KqQY6vGTmMpK/7fHv2Tzqt4gXWJAxP1VPaS5F3a7mPbJJbKYmQOWeUBft
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10401"; a="272964077"
-X-IronPort-AV: E=Sophos;i="5.92,254,1650956400"; 
-   d="scan'208";a="272964077"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2022 19:06:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,254,1650956400"; 
-   d="scan'208";a="593951503"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 07 Jul 2022 19:06:18 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o9dNp-000Mkw-W3;
-        Fri, 08 Jul 2022 02:06:17 +0000
-Date:   Fri, 8 Jul 2022 10:05:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linus.walleij@linaro.org,
-        kavyasree.kotagiri@microchip.com, alexandre.belloni@bootlin.com,
-        colin.foster@in-advantage.com, UNGLinuxDriver@microchip.com,
-        maxime.chevallier@bootlin.com,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: Re: [PATCH 2/2] pinctrl: ocelot: Fix pincfg
-Message-ID: <202207080905.doKxbD08-lkp@intel.com>
-References: <20220707185342.2697569-3-horatiu.vultur@microchip.com>
+        with ESMTP id S230147AbiGHFZG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 01:25:06 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36217255AF;
+        Thu,  7 Jul 2022 22:25:05 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2685Ormr084794;
+        Fri, 8 Jul 2022 00:24:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1657257893;
+        bh=xK5TBYGanW67/SypumVd0v/dH1Qgsl08EJyTmepsg3g=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=tiRSZ6xi5iKTUyIMEC1oyF24B3MCA5BqXKUXWyXVTzr8qLNxrE2PA1/+i+6lVk9aL
+         f1vwjAx+Elafz826diUQ6WrZgg0XZ/zAnVb9V7+WW6aDpWJSO5DLy/k4ZwKlxJ3z79
+         dBp0sOkv0Sj5ditAbGIHonTL+2dasqYExVZqAbiI=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2685Or10101383
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Jul 2022 00:24:53 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 8
+ Jul 2022 00:24:53 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Fri, 8 Jul 2022 00:24:53 -0500
+Received: from [172.24.145.182] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2685Op2Y017254;
+        Fri, 8 Jul 2022 00:24:51 -0500
+Message-ID: <08422d68-21e4-b2c3-7d07-a19a121b24de@ti.com>
+Date:   Fri, 8 Jul 2022 10:54:50 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220707185342.2697569-3-horatiu.vultur@microchip.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v5] dt-bindings: gpio: Convert TI TPIC2810 GPIO Controller
+ bindings to YAML
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20220223174215.17838-1-a-m1@ti.com>
+ <CACRpkdbj2B90-RE2XKQJ5qEj1hZQA-u=vUu2vpXwNqQLf_kaPg@mail.gmail.com>
+ <e682175fcfc54217a6ed006270877f4d@ti.com>
+ <ddc2b24e-37a3-4751-80b9-84b13606a703@ti.com>
+ <CACRpkdZ7Kb0=7LHa13KJeZc2Kwb6z5kuH9nnHrk4p9OqB8+QgA@mail.gmail.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <CACRpkdZ7Kb0=7LHa13KJeZc2Kwb6z5kuH9nnHrk4p9OqB8+QgA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Horatiu,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linus/master v5.19-rc5 next-20220707]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Horatiu-Vultur/pinctrl-ocelot-Add-fixes-for-ocelot-driver/20220708-025029
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-config: i386-randconfig-s001 (https://download.01.org/0day-ci/archive/20220708/202207080905.doKxbD08-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/162d70439a9da8a7142091d2fe2690f92756e34b
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Horatiu-Vultur/pinctrl-ocelot-Add-fixes-for-ocelot-driver/20220708-025029
-        git checkout 162d70439a9da8a7142091d2fe2690f92756e34b
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 SHELL=/bin/bash drivers/pinctrl/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
 
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pinctrl/pinctrl-ocelot.c:306:28: sparse: sparse: symbol 'regmap_pincfg' was not declared. Should it be static?
+On 07/07/22 16:49, Linus Walleij wrote:
+> On Thu, Jul 7, 2022 at 7:19 AM Vignesh Raghavendra <vigneshr@ti.com> wrote:
+> 
+>> Hi Bartosz,
+>>
+>> On 05/05/22 14:28, M, Aparna wrote:
+>>> +Vignesh
+>>>
+>>> Ping. Can this be picked up for next merge cycle?
+>>>
+>>> On 15/03/22 06:31, Linus Walleij wrote:
+>>>> On Wed, Feb 23, 2022 at 6:42 PM Aparna M <a-m1@ti.com> wrote:
+>>>>
+>>>>> Convert gpio-tpic2810 bindings to yaml format and remove outdated
+>>>>> bindings in .txt format.
+>>>>>
+>>>>> Signed-off-by: Aparna M <a-m1@ti.com>
+>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>>
+>>>> Yours,
+>>>> Linus Walleij
+>>>>
+>>
+>> Sorry, this patch has been around for sometime w/o any comments and has
+>> relevant R-bys. Wondering if this fell off the radar
+>>
+>> I believe patch would go via GPIO tree?
+> 
+> You need to use the right mail address to Bartosz so he can pick it up.
+
+oops, thanks! looks like original author copied wrong ID
+
+> 
+> Bartosz: this seems to have fallen between the mail address cracks,
+> check it out.
+> 
+
+Bartosz,
+
+Let me if I need to resend to right inbox.
+
+> Yours,
+> Linus Walleij
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Regards
+Vignesh
