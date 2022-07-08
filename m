@@ -2,134 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2488756B884
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 13:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F08C56B87E
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Jul 2022 13:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237827AbiGHL1O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 07:27:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
+        id S237946AbiGHL23 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 07:28:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237847AbiGHL1L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 07:27:11 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82FCC904DD
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 04:27:10 -0700 (PDT)
-Received: from ramsan.of.borg ([84.195.186.194])
-        by albert.telenet-ops.be with bizsmtp
-        id sbTA270014C55Sk06bTAd6; Fri, 08 Jul 2022 13:27:10 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1o9m8b-002bbK-Ke; Fri, 08 Jul 2022 13:27:09 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1o9m8b-00BLZ4-9G; Fri, 08 Jul 2022 13:27:09 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v5.20 (take two)
-Date:   Fri,  8 Jul 2022 13:27:08 +0200
-Message-Id: <cover.1657279527.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S237928AbiGHL22 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 07:28:28 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 328BB2DB
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Jul 2022 04:28:27 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id h23so37143482ejj.12
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Jul 2022 04:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XruMh8IfXThcYIkdijBsGMsL80sRdIUfK0W/u+c06Uo=;
+        b=QDq+6hcPSCatsmFq7T6+ltMnbqeuHSPTxj4N91rBNp0yD4/x+X3c/SpdTUs4gO5zOf
+         zC1tWNZCYmtInAa12X0toNceprn1BQb9lkGRLNWWRD7PxWh8UnZ/xtQ8K80wySVFuTyZ
+         GMpE5cpaE5uHM9CWtLiAe8uIco6iODgPCLEJ/Ttid3b69PE8R7c9tES+u6SCYx+PIhXX
+         2nR8C5eUinhC5fOIRMESHfYxCRwn19v/FWSqMTQ9KLRZJoDALFWSUlaMmDkFKiVjXxxB
+         bUPVpRVW3jCR9IZuS3e0aC+WRkhDB8hzzDzscDUNxTR//09GacpyWV8GFMA67pCsYYra
+         GxIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XruMh8IfXThcYIkdijBsGMsL80sRdIUfK0W/u+c06Uo=;
+        b=bZyE5kXVlSLsbSPB9SXybGhQKpmmCr2Z3IVwjLX06WlnUp3RXnBNEWVA6G3m00sFPB
+         OsbWa6z+2Kzx02wngPS3NwR3EnYQPu4849/uTazBK756iwFRi3Ye3tU2RWEdKdF8lmEs
+         KHwkvZxqonU3lhYUL8+ZlTELyVuNm8m2FEhuxpSO9Gcjk8ohtS3dVoI7cQZgffsru187
+         NqCsLAWgBLT6pYoAqaeMqxUaCyEdfn+nw+mv9AKCKZtN6LFeI4AqYSCk+crJODzQQJBP
+         R0BqHUD/OvdLVUtl9mPLAr9xMhQYqwZtlOUrGeEy+lIIHd+4VmeaZgLpObKrVYuust06
+         Dxzw==
+X-Gm-Message-State: AJIora8i0kF5ZHdHraSzev+rjeei4KkD2mZVaD5rAzE+5UEax33x5fBb
+        RttZid0aK+sAzmQdDZKJeVuFQjVHA7JTgx6WTGyKGQ==
+X-Google-Smtp-Source: AGRyM1uMLvytrFeEz4uI7rw5A/IGBcBcBHmXFx/vEUjph8SOLH3psmE6A5UaI4pdPsJTITjgyygDFipnphflIYwTBQY=
+X-Received: by 2002:a17:907:2c61:b0:72b:172d:6413 with SMTP id
+ ib1-20020a1709072c6100b0072b172d6413mr2992183ejc.492.1657279705635; Fri, 08
+ Jul 2022 04:28:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220628084226.472035-1-brgl@bgdev.pl> <20220628084226.472035-6-brgl@bgdev.pl>
+ <20220705020937.GB6652@sol> <CAMRc=Mec4C2RUvZjxc=6G6Nv0-Us91X-j-3jnNNGzE8MjrbCag@mail.gmail.com>
+ <20220707130955.GB66970@sol> <CAMRc=MfuzzjkApJ4LBARG0OpfvfBeMqVMTRnKJuj7zV4Gvez1Q@mail.gmail.com>
+ <20220708013834.GA6484@sol> <CAMRc=MfGT_FZ=LToa4DPqc3UqjAbt+9dpT2NtKOmMqhcFKWLZQ@mail.gmail.com>
+ <20220708105634.GA84979@sol>
+In-Reply-To: <20220708105634.GA84979@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 8 Jul 2022 13:28:14 +0200
+Message-ID: <CAMRc=McSN5MEOXW0husOaX62EQq+xZyahX1SuvmimuZHOT1RTw@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v2 5/5] bindings: python: add the
+ implementation for v2 API
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darrien <darrien@freenet.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Benc <jbenc@upir.cz>, Joel Savitz <joelsavitz@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+On Fri, Jul 8, 2022 at 12:56 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
 
-The following changes since commit 5223c511eb4f919e6b423b2f66e02674e97e77e3:
+[snip]
 
-  pinctrl: renesas: rzg2l: Return -EINVAL for pins which have input disabled (2022-06-06 11:12:22 +0200)
+> >
+> > The limitation of the uAPI is what keeps us from making it true in
+> > user-space (that each line can have its own config). As it is, only up
+> > to 9-10 lines can have distinct configs and making the API look and
+> > behave as if it wasn't the case is more confusing (E2BIG errors) than
+> > simply admitting we have the concept of defaults and overrides (to
+> > which the interface is greatly simplified in the high-level
+> > libraries). The idea about making the most common config attributes
+> > become the defaults is simply bad. It would require the user to
+> > anticipate how the library will behave for every attribute and lead to
+>
+> It requires nothing from the user.  They are not even aware of the
+> concept of "defaults" or "overrides".  They just set config on lines.
+> If that is too complicated, which is quite unlikely, then they get
+> E2BIG and they need to repartition their lines into multiple requests.
+>
+> Anyway, that horse is dead.
+>
 
-are available in the Git repository at:
+For a python user, this:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.20-tag2
+lc =3D gpiod.LineConfig()
+lc.set_props(offsets=3D[2, 3], direction=3DDirection.OUTPUT)
+req =3D gpiod.request_lines("/dev/gpiochip0", line_cfg=3Dlc)
 
-for you to fetch changes up to 36611d28f5130d8bb9aa36ec64d4ebcd736e8dba:
+is pretty much as simple as it gets. They still don't need to be aware
+of the underlying split into defaults and overrides. I believe it's
+GoodEnough=E2=84=A2.
 
-  pinctrl: renesas: r8a779g0: Add missing MODSELx for AVBx (2022-07-05 09:12:37 +0200)
+I imagine in Rust bindings we'll be able to chain set_props() as is
+customary and we'll get a one-liner out of that.
 
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v5.20 (take two)
-
-  - Add support for the RZ/V2M and R-Car V4H SoCs,
-  - Miscellaneous fixes and improvements.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Geert Uytterhoeven (2):
-      dt-bindings: pinctrl: renesas: Remove spaces before #define
-      pinctrl: renesas: r8a779f0: Remove unused POC2
-
-Kuninori Morimoto (21):
-      dt-bindings: pinctrl: renesas,pfc: Document r8a779g0 support
-      pinctrl: renesas: Add PORT_GP_CFG_13 macros
-      pinctrl: renesas: r8a779g0: Fixup MODSEL8
-      pinctrl: renesas: r8a779g0: Remove unused NOGP definitions
-      pinctrl: renesas: r8a779g0: Remove unused IPxSRx definitions
-      pinctrl: renesas: r8a779g0: Remove unused MOD_SELx definitions
-      pinctrl: renesas: r8a779g0: Tidy up ioctrl_regs
-      pinctrl: renesas: r8a779g0: Tidyup POC1 voltage
-      pinctrl: renesas: r8a779g0: Add missing TCLKx_A/TCLKx_B/TCLKx_X
-      pinctrl: renesas: r8a779g0: Add missing IRQx_A/IRQx_B
-      pinctrl: renesas: r8a779g0: Add missing HSCIF3_A
-      pinctrl: renesas: r8a779g0: Add missing HSCIF1_X
-      pinctrl: renesas: r8a779g0: Add missing SCIF3
-      pinctrl: renesas: r8a779g0: Add missing SCIF1_X
-      pinctrl: renesas: r8a779g0: Add missing CANFD5_B
-      pinctrl: renesas: r8a779g0: Add missing TPU0TOx_A
-      pinctrl: renesas: r8a779g0: Add missing FlexRay
-      pinctrl: renesas: r8a779g0: Add missing PWM
-      pinctrl: renesas: r8a779g0: Add missing ERROROUTC_A
-      pinctrl: renesas: r8a779g0: Add missing MODSELx for TSN0
-      pinctrl: renesas: r8a779g0: Add missing MODSELx for AVBx
-
-LUU HOAI (1):
-      pinctrl: renesas: Initial R8A779G0 (R-Car V4H) PFC support
-
-Phil Edworthy (2):
-      dt-bindings: pinctrl: Add DT bindings for Renesas RZ/V2M pinctrl
-      pinctrl: renesas: Add RZ/V2M pin and gpio controller driver
-
-Phong Hoang (1):
-      pinctrl: renesas: r8a779g0: Add pins, groups and functions
-
- .../devicetree/bindings/pinctrl/renesas,pfc.yaml   |    1 +
- .../bindings/pinctrl/renesas,rzv2m-pinctrl.yaml    |  170 +
- drivers/pinctrl/renesas/Kconfig                    |   18 +
- drivers/pinctrl/renesas/Makefile                   |    2 +
- drivers/pinctrl/renesas/core.c                     |    6 +
- drivers/pinctrl/renesas/pfc-r8a779f0.c             |    2 -
- drivers/pinctrl/renesas/pfc-r8a779g0.c             | 4262 ++++++++++++++++++++
- drivers/pinctrl/renesas/pinctrl-rzv2m.c            | 1119 +++++
- drivers/pinctrl/renesas/sh_pfc.h                   |    9 +-
- include/dt-bindings/pinctrl/r7s9210-pinctrl.h      |    2 +-
- include/dt-bindings/pinctrl/rzg2l-pinctrl.h        |    2 +-
- include/dt-bindings/pinctrl/rzv2m-pinctrl.h        |   23 +
- 12 files changed, 5610 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
- create mode 100644 drivers/pinctrl/renesas/pfc-r8a779g0.c
- create mode 100644 drivers/pinctrl/renesas/pinctrl-rzv2m.c
- create mode 100644 include/dt-bindings/pinctrl/rzv2m-pinctrl.h
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Bart
