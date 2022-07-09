@@ -2,124 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C861A56C9CE
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jul 2022 16:06:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA47756CB20
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jul 2022 20:56:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbiGIOGg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 Jul 2022 10:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40592 "EHLO
+        id S229470AbiGIS4U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 Jul 2022 14:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbiGIOGg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Jul 2022 10:06:36 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2055.outbound.protection.outlook.com [40.107.101.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BB34AD44
-        for <linux-gpio@vger.kernel.org>; Sat,  9 Jul 2022 07:06:34 -0700 (PDT)
+        with ESMTP id S229448AbiGIS4T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Jul 2022 14:56:19 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60060.outbound.protection.outlook.com [40.107.6.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44463FD09;
+        Sat,  9 Jul 2022 11:56:18 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kgDZjOq5uw3acKKVvIgvc4Fh/ec+eRdA46N/44ENN87h06/RhEp/uiEDf8hevcO1Nsxvs7U0TPhrwd9QtzzD5vXkUjgBO6PHbU91Nagfc+nPPj9tkzzAzAfbIYIYszdDLUvlI/4/W/Rg8+g1vuXL/7zL4Nl/UAD3fQEsfCwqTN0sGUIqmQ3bA9B4n9klKh3smMeVy0EYw0oQ7zT/jjyy1U0VPuyFPyr3D/9GU3/yLGjobWX5Za7CnQzHuSqtnPkrLEXcGjm8yNWyXw/mI7LBVwhFVLMT3WHgg343LdvhrlqxE+pqBSs0SidZLrGMlVRXsIA/05Q3H+64P9Nau+XYUw==
+ b=nQ1/1P69QUGe1O0mjbeD/jeWltbZJzDGfuGpgnoMBxQGARH6WX7QxERgsNmMKaxpLTqcBCmobLwOg1CcZj20UGdmys9Hm4K5zPPg9yXxKz+t57EBrFRuqaqkeVaLmQVJNpWcGIrGOTbn1/jlhxq45MhzJvqkG1bc3ILXA8FtCHNVqPym+xzNBz2GpDP2S+44P39mMpy07qFGd368NcmwwXa0Bn1xlol015gjYoxk1TwuzKIdYWZtn9QrKq9QeS7eUtyGh7fQDFlRiH4D4SShelVTAlz3RY/KzIgCqj/yX90yIH70a9667RLb93y2xDqk9ZS6U23n4PS514lcFsuOQA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HRKHg9SSA6ViZSWq2lz2Ty0BgDFGc64AZPWrbguyFkI=;
- b=XukOGWUsyRKWncBxdE9eQB22tMPGd4SkN9eW3qNfNkvYejz8dN3IBi5CxP1yJ568GLyTVgU58LNPF/eQxCYq9G62n7weKIcrbzZ/VFNOnN82w789YhsAb6Eoo6zdHm/EN07yQechVoXShVO5WOg5w6kQ6qdW7VbWN+JoBF9dhPUAgMQP1JiIHQHMhM+5I9s9aD4hjsgTSRP8nRDDHZZ7coI5299x8MW6195w9pA6ouAz8cFwQww8Eta/JcyAHZID4jV7w0hBTZdANGb+Wcj5YJGRPg+6b9Mq0vRUDeCk7pBXF46OUP8Gd6qRNNIP7hxMMpKIKRqpu/TdfZ2wNWYmrg==
+ bh=oNVdXiEJlP6KWy/uKc/nqqPN5sKBlV/uANLwd8ieq3U=;
+ b=WwbxFkqOvBidGm43CZCV95IsPfigROC4Ab3XtxR0GXyaPjhtxwEccU+jMXUYA2Vhi/PWnzSKkYY86ZmplLvV1QS1GGMHZMmiqqOAgxtcfaSBjykjRs88foX4zQdIMmbhXyyIX4kBiMO4fibeYqSmxGijxmVJ7ptKWGkkjwIXQiDvptKcr4wI7WoRnYUmf3IO0O4A4VwMsjpKNBKRjiwyl3d+sOgDY1EHGiE7eouKzzR5WL1g94uz3cjDty1UX0+69CZD21pYGPEVCc4Y5RMIk8zY6t6eSMo2kQDujdZPTJJlX7u0fQppw0xwFW28rXvToFLwMX+YlKWMIrHRPRzGKw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HRKHg9SSA6ViZSWq2lz2Ty0BgDFGc64AZPWrbguyFkI=;
- b=RClhtPXgyCofHnHScYK32Jk4PvaD2gPGJoEYeQr+5hRC7fQfi26LmUDwp2L4BJzlx/Nzq/0Z16xGuTghndC0auiXcN6GHWnDXN5NoWHj5hBWcZHWe781Laq+olkXDMG30Qk1Ba1mqACsPjNkaSDslXMtum2L/Gq+Qs7pfHnxW/4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM4PR12MB6302.namprd12.prod.outlook.com (2603:10b6:8:a4::21) with
+ bh=oNVdXiEJlP6KWy/uKc/nqqPN5sKBlV/uANLwd8ieq3U=;
+ b=ZyR8xyxvKriFno9JMx/ZUu/wvslERYIrBgHb4umLe6ep/RkCftdri742+h+d65BvVrKbgLpajDzYx/PLvE3qH5EjqFboKWVE0us7ltcsmbjl8qS3lAYR2jM6zKprm79qc+mxFpa98RjHHOSxZBM7MCv/DJkkjm3juK82alaIAZY=
+Received: from VI1PR04MB5136.eurprd04.prod.outlook.com (2603:10a6:803:55::19)
+ by PA4PR04MB9462.eurprd04.prod.outlook.com (2603:10a6:102:2aa::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.23; Sat, 9 Jul
- 2022 14:06:32 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::1143:10a5:987a:7598]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::1143:10a5:987a:7598%5]) with mapi id 15.20.5417.020; Sat, 9 Jul 2022
- 14:06:32 +0000
-Message-ID: <64457e5e-060b-0514-aa1c-501b34d3a968@amd.com>
-Date:   Sat, 9 Jul 2022 09:06:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 2/3] pinctrl: amd: Don't save/restore interrupt status and
- wake status bits
-Content-Language: en-US
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ 2022 18:56:15 +0000
+Received: from VI1PR04MB5136.eurprd04.prod.outlook.com
+ ([fe80::71b7:8ed1:e4e0:3857]) by VI1PR04MB5136.eurprd04.prod.outlook.com
+ ([fe80::71b7:8ed1:e4e0:3857%4]) with mapi id 15.20.5417.020; Sat, 9 Jul 2022
+ 18:56:15 +0000
+From:   Vladimir Oltean <vladimir.oltean@nxp.com>
+To:     Colin Foster <colin.foster@in-advantage.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>
-References: <20220613064127.220416-1-Basavaraj.Natikar@amd.com>
- <20220613064127.220416-3-Basavaraj.Natikar@amd.com>
- <MN0PR12MB6101592307B55649B8EFE47AE2AB9@MN0PR12MB6101.namprd12.prod.outlook.com>
-In-Reply-To: <MN0PR12MB6101592307B55649B8EFE47AE2AB9@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9P223CA0015.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:806:26::20) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "katie.morris@in-advantage.com" <katie.morris@in-advantage.com>
+Subject: Re: [PATCH v13 net-next 1/9] mfd: ocelot: add helper to get regmap
+ from a resource
+Thread-Topic: [PATCH v13 net-next 1/9] mfd: ocelot: add helper to get regmap
+ from a resource
+Thread-Index: AQHYkLCMdCdG3kd5wEePWYl2oYvNba12ab4A
+Date:   Sat, 9 Jul 2022 18:56:15 +0000
+Message-ID: <20220709185614.4rrzo4hvmkena3ob@skbuf>
+References: <20220705204743.3224692-1-colin.foster@in-advantage.com>
+ <20220705204743.3224692-2-colin.foster@in-advantage.com>
+In-Reply-To: <20220705204743.3224692-2-colin.foster@in-advantage.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 76a99870-ad99-483f-5e35-08da61dcb31d
+x-ms-traffictypediagnostic: PA4PR04MB9462:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: X1SSrVM+rg4K60X+HHtbVBuCJD9FaXbg+vDnoghkIUH2VQMFKMDOxSkHWWhLKRUPAPTMMfhAD0Ny5gCfo1hB9E9ESIyhNv171C7lk2c1I8P02QYqJDKlftq8YOE/SQzGydd50bZEzKs2fwbpM38TGknzX6Kr6FA18MLUnVIZdrMIs3PI/RuLWkeuSVqCeqO9jP3d4H/0oq4VoJh0YTaNgq6bk9R34dcUKYDvVXHCDbWvTI05Na8ppNx4MgmyQHH/jvD0wosz2ztrfybRIGWfymc1Y6Dzu++a1f8JGjbRMhIadCQxpyUNOHFMy4DO9qBIU8+NE1r7hseRbUFd2RwV4NC/NGe7LAzlmvZhvS5avuA5+Vw8TCWZ2XdXaYltlJmw77K6IB8o/Pq6MCS7tqGzP2H3FPcdxsCfmSlhFtpD41bI8bzytYs0+LI+ptiNH4HidpS5DNksfJ4ZD2hZI6zYvOvKQXb80LSh6fl6gTR7Q1HY+CXsOWacYqklj0vCfQhBnFuwvm/zSS08liLrC2IwhpqCROfbSZR6vDxgfdTjiZeGPoCQYehDQdu3INcltOwZEFLfWC3nWqcpvV5mfZ1z5Kq1fqytMiRg6+xsjUdDhbl3wAJ2AZ2VpiNjaYULZe1uDEyZ6N2tutn2pogAnkrKTXfnUIMqjRphD5eufOZy6hOAC7m99FAyXIM/oBrJYoq3/G2efHWiT95i9D5f2BkTl4YXwLnAKGMGKhJ+8ij+Y31hsYE4swZM/LVxydBT7Gqox8kX5uZgRjx1N46+Swww/gX9k41aU/hAgN/Yzx96NFOAN6BFtdxZDbnZ4kzVyi5m
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5136.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(6512007)(9686003)(38070700005)(26005)(86362001)(122000001)(38100700002)(6486002)(6506007)(76116006)(44832011)(7416002)(478600001)(4326008)(8936002)(64756008)(66556008)(66946007)(8676002)(66476007)(66446008)(5660300002)(186003)(33716001)(2906002)(91956017)(41300700001)(71200400001)(54906003)(6916009)(316002)(1076003)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?k8YySaJHCMZXstI1K2PfJtjrHjbkKa779CERcUKxqb9StqTGuoXGtWYsqZBD?=
+ =?us-ascii?Q?mJ/0uqqQwlw1VpASbarlQxGfjt8/aClGwT5HolRO8lCcvQn2VJsOx4tdkOWR?=
+ =?us-ascii?Q?MA2Sy7yPYRQ33Q3lyh3hnqjMI/eoZTDCGjFBnByZcBmMd1y+B3T/+U6b9c3G?=
+ =?us-ascii?Q?zhhEXoNqnQwGMh9oPCXEE66MA0VNiMFChBUroyzCJY1vDcl16q40VeEWuVgC?=
+ =?us-ascii?Q?zOcqQwRwDYp7GJOGzBE3kk9DWn7q4PkxqaTa7vSyF0ld8FksD8eJ03doRxE9?=
+ =?us-ascii?Q?07XUGXNk2jaKlSuW+f5kHU+GD6R4yWsrbEMsJ92QnyEf214UN8OcLNAOAp8Q?=
+ =?us-ascii?Q?4yrOta19aPFWOAfsz9NjaRG6eKyIvZKOpPa2LR8jtR+1kxgclMktZNZfMMug?=
+ =?us-ascii?Q?FRDVFrSwF6Dfv8NDxVGYLbmGMVkjvTrBqQWDAwbw717DleTRPd7v5oDl5xwN?=
+ =?us-ascii?Q?RdaqV2TGwRQxbu5iChY8naA7/AgdBS8HnbhTIyzLBLY6jzZHugVlJ7nFPfBA?=
+ =?us-ascii?Q?cf4jIJKvZqpkmOTIJ6rGCrPLWlbF52BwF/I2ohRHU9IZIJzagv5AqbAnre45?=
+ =?us-ascii?Q?Zkly/T64hct0zlt0FsWKFHK76dOXE1JWnqSIeE2FfMDB0h4alY61FpumkkKZ?=
+ =?us-ascii?Q?hiULx6/vlDv3+1E5efnBoS6puIqePff+QxQihDLgT6YNp8T0TPAJKfHqXo7+?=
+ =?us-ascii?Q?2qNgza9CQIizmP/UxleAdeDeTOulPgsFWUR3cvgbQwvHq4TvHxp9UA500WKx?=
+ =?us-ascii?Q?SUcVASBQj1zI91L7gc0lKevzQuQY5utpcoTJG+37/mHb+gOZukabg6D29CvK?=
+ =?us-ascii?Q?NuqIYoUdlZbKh1mKvrxGya7T7JDL2OxgTMJiCEm3OfW8LC9ToJIM67Dwz5L4?=
+ =?us-ascii?Q?M2Hlr5bljtcA4ftSUU9exsDehIUp1Hv4Ibf8aynpmN5E9DldnemXaRKOufRB?=
+ =?us-ascii?Q?elP+wmLNyexJGG08O367VulZ2boTQ7P2WhSLNoX7epQ6hypxB25L5aFm/TDN?=
+ =?us-ascii?Q?n5U3QwWaS3CzWJEzz9JAy3L1HQmOzhxEywogP6uM2sBvlLt7trLdBrc/wGaE?=
+ =?us-ascii?Q?52IGT2Ft3sQfPzSYYh34EMKnZ3oJKFxj5x4Oq80DN87zVlSkO51+QJHjtSm8?=
+ =?us-ascii?Q?bcan9t2LsZEVB9rl84xjgk9cSYcTgmz5CZ8ZQF/Ase2yIQxkaYLHAJDy4x+1?=
+ =?us-ascii?Q?5g3ufssdzp6iMO09R5vE8KtOTLHwegROGOGN9sUiV+jsjzqS++9bGfh+w8t0?=
+ =?us-ascii?Q?66LCfjw+fzuGYw/xeztO8bt/3HVEX+3yqv5tHjhzW9VCPCnqUsuxKpCmzFSK?=
+ =?us-ascii?Q?omPvwSUPXvuel00w9ki5g8gai98RiwyxKO6swKFJmtQsmCQWqGZKcnlTSfD+?=
+ =?us-ascii?Q?glvN9ESEjEdl6m5i9Kc+CTXGmtUG4efvRGsiDDJyN5t86xn9FJvYuwmxqTsR?=
+ =?us-ascii?Q?INz9VoGKMkt3F+nJqT4GRJCVMqtjMK6kgV88LCmnZUSjz3jt9hjb3AhLc+JD?=
+ =?us-ascii?Q?jVYQSgMS07UtTRSct8ARNaDnlV6fJOwChbNhcx1waO0LrngN0nuEonhL7piM?=
+ =?us-ascii?Q?ZS7o5QGeqAglsTJ8tjYG9Zw+PDIzMCZK7U0RHusStwZD6aEwveoxzIfmjiaE?=
+ =?us-ascii?Q?oQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <64FFC8B0678A144B8940B4D0D14A45B2@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3d321cae-4c1c-468b-dfa9-08da61b43a36
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6302:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XeUA4gpXFRnSVtZUWyvh8kLHtnsrh5e+RDJhxDpqeyTsdUkaKtUkYui1lqH4Ixlq8ipKRKQYHDLMU0Vsmqeo+eRripYTJrxR5LMVEBBZxTkizpxAmR5O6EXShA8RQNJm9on3KW9Iycz7crQRD7+hZ9Mgb+Q2+XWzwwlEfkbXNwbK0QzMNJVpgRbu69amtLvlknOKUNPfZEC7Bik0uDy9DqoCenlTkUpBnR+BJ1Xs2LI+jnIyhx8i2iXtl3ZCwRkq+QtLQxNPrDsps9sjKaso5mQ+Oru5WFvH/qEkrVAis/NqRhT4aeI6H12atjLJtJHh9g+f3+Uoq+4oYNRxgySSOpEP1kMbgfuil8L4nGwnePQx9NoUKL6wFmrUZ1DVDWI9g8QvG7eLRhgTRrij5g3gYlnTdVID7VGRXrT9PYOfx+ji3d3yapQtH62YWX8s+TAALVY6yRwZ29f1ReeoafxipCKcKFW+6X2S8vFX/dQJMRhAg34I7AaFf1QZ/5HRtUHTLDurXUYvWaYh5sk/J+RWWFpmVv34+SivH3EPYI8LOn8GrZhH4HjXGO2MYbcu/KSwy4yVDaDVPz5f+8VrZP7i2oXIlCY02HhBkiIM45peeAgmdVZyPJ16BmJIfpyXBkJcs3Kqdc5/BNeZLECSlaX2xl38GIoQIYt/baD03uBPvyvFYVvf3po+vOsr5UJmUJM4PoqLEyV9EYM4AbtCPvqZMo8/hraqLlDtJU9SUZ82RZwxqQcTtJuU2I+e5QhcM3xiwV0ejGmR7G24vZWL7Yw9qv8uQoqudEWzf9Cy9VAfiBI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(366004)(39860400002)(396003)(376002)(136003)(66476007)(6636002)(66556008)(6506007)(66946007)(316002)(6486002)(53546011)(966005)(41300700001)(110136005)(6666004)(478600001)(8936002)(8676002)(2906002)(44832011)(2616005)(5660300002)(38100700002)(31696002)(86362001)(31686004)(36756003)(186003)(6512007)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bjQ4M3d6WEJrbEM2RG9rbnA2cDFjUXlEdUI0QXBYSkhCdldGZ0xhYW1YMjJW?=
- =?utf-8?B?ampOSS9KQnpwL2Y4ZmthM3EzS3IraDkydFI2RVlSWUJ6NzJuUCtsSDZlbkdJ?=
- =?utf-8?B?UkxjVmd0eklBN1FPOTdFb0EzN3FGMkRRZ2FVT2UvMU5MQUFrb0tKakFMK3U1?=
- =?utf-8?B?c0pqb0JpblBkWC9adVJMQXVJZmpqQ1U3RGJHRmdKbjdQTzFxS1Z3VFpYRjhl?=
- =?utf-8?B?WmdnODFIV0J0VnJTL2RLa0lHaFpNLzRZdi9pRG9BYmhvUXgvZmh6OTRNa0Jv?=
- =?utf-8?B?ZDJpbUZEUTFsN0ZzYiswM1VrbEZPZHVtY2NBVSt4RElwMGx4NmVlME0vcHhy?=
- =?utf-8?B?d1ZZYzlraFBQbjBvcUU1ZmI3cDRMREhlWjdWK0xPazZIWWExZUhERVNtY2hQ?=
- =?utf-8?B?NFVVdWpjSWxiU0tRaGwxbDQ2ZkNCRTY1M1IxN0o2SXp5WEJOem9KWTRlelNl?=
- =?utf-8?B?SUtNMlhmNm9iL3FNang0U05ac2xubUZtVXIveGdMUjkvNk8vc3lLZXFzZ0tr?=
- =?utf-8?B?b2QvWGVyeUNBN0ZtNEkybjBUdk12Sml6TE53OXpHU2FOblM1U3hNTnJiT1pl?=
- =?utf-8?B?b2JVMEsxWWpGYnJPdE9JeDVtMGVUSkN4M2drLy8rc1dQSmdReXBheUFxbXMx?=
- =?utf-8?B?b3U5Tk1UVExPS1dqYjJzNVZRMlpzdjFVbTk2cGhLOXVWblliZDJRSGdpRHdw?=
- =?utf-8?B?SGo4NkVZWU9HeVJPTW1lWEdlZ3NkdUZMUHZMQWg3SjBPQndLN3l2VDNFNE9M?=
- =?utf-8?B?WG1QVnRwdXNKYnZidWxIaVZiWlI0bm5PcFJPMi9QT0xtQkt0dXkvWGwwQXZv?=
- =?utf-8?B?bDdwRGcyTHBMdjlXb2RwZFpvUTdwMW1wN0l5dWErL0gxZUxTVGc4LzhzUVBQ?=
- =?utf-8?B?ckhDSVlpK3Arc3E4L0JnWVFmR1RDVGd3bVJScVlvSVlXaU80b3dzaGlPS215?=
- =?utf-8?B?bzA1aTRDMjNuSHVyY21qemdxVnY2SXRIM00ybTNNNHAvL3YzSXk0MlB1R3ZR?=
- =?utf-8?B?OE9EcERXdGJYMnRPdmpKTjYrRW51ajNranFlcmhCaHFHclBSSldIZlJ1WWtD?=
- =?utf-8?B?MDhPeDJERHRjcFowMENHVzBkMDl6S2Fjb1lzYlpvcXFaRWVXUHVCMFREMGNl?=
- =?utf-8?B?UUFvNUt2ajF6Sm5mSUVjcnhRZ1BIZGZzTm5QV3lyaFFsa28xVXlkUDBUcmg1?=
- =?utf-8?B?SE9RNDUwaHIrakVxb09FU0d4LzQ2VE1ielNMSm42bEM3R3JnaWxBNHZ0Yi8v?=
- =?utf-8?B?ZXVlY2lydExBL2FlM2tZQjlkaEFKYzdvNVo0b0R2dnQ0K0g3VE1uRXphTVFt?=
- =?utf-8?B?MHBiVXRzZHBQaCt6Wi9PczJpZ3FWWTdraGd0b3pBR1YxdjZBWnNGM1Y2NTll?=
- =?utf-8?B?eTRPK3FvV0lkV3hJdC9nTXZidFhGbzRtVkNYT25xaFVLdVpVSjZ4THZTN2lU?=
- =?utf-8?B?eldkcGdoRlNFemp2NW0xZzRFY1VNZDdrYi9hMnh4cFB6TUdBZXZaQVhPQnRz?=
- =?utf-8?B?bnZvZVEzTmhka09kNFFtSXlGRENQbnNrMVNVQmlYM2daT2x4SHA0amF6Visz?=
- =?utf-8?B?anZNSDlhWWd1Y01xKzlZbEZYNEtTYXNYM2hnaXRteEFnV3dEZ284Z0xkMldr?=
- =?utf-8?B?MGRTTGhteUdkbVhQSVM0MG15eUlCZUVtME1uS2RwbXMvdEpUaGpSWTVvNmtM?=
- =?utf-8?B?b09UVG5YTy9mb0JuUUp1NHdQbTg1YmFsTzNzRGJobE5TU2d0NHJvVm9NUjFK?=
- =?utf-8?B?b0ovWE0rbnBVTUdtRG4vaGVwMXRteU9Rbm9qYTJoQ1N3cjVSdmhCcWJUSFJp?=
- =?utf-8?B?Z3RQMEYwV0F3Mnc1bTl6UTFiald6cEEzc1I2dkpuSy9HRlBrSno1NWllT1lt?=
- =?utf-8?B?dmtqU2cvZ2JQcTdaeHphekhNMzdRTXZITmJEN0NpUUJLRjNlSnNrQ2hSWHF0?=
- =?utf-8?B?YjFTczlJcE5aaTFkcXpadG1aOUg4YzRGTGg3RHViWVdGUW9JUG1CSCtWWHVV?=
- =?utf-8?B?aFNIWTdLNFBOb3YvQmVzSWdsN0pabDFDanAwKzNIYi8zdnA0cUFmVWhJUDFX?=
- =?utf-8?B?V1RtdWJOK0pSZ1diZVNMSUZyOUxlWWM3UjlBQUM3QUtBbjNTRUVCQjdZSjV4?=
- =?utf-8?B?R3ZvS1lsQXFTNURDUUEwR1lXZXltZ3pEVTUwaUxlSmRPOEtyZ1BBKzhyZFVu?=
- =?utf-8?Q?eEV7TQkT3hFYCJhcxJm9tHMJ0u7/jBFflbim3woQx/zd?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d321cae-4c1c-468b-dfa9-08da61b43a36
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2022 14:06:32.6434
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5136.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76a99870-ad99-483f-5e35-08da61dcb31d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2022 18:56:15.1935
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Sd4BpGnnsifJocQ3iV38PhWwDU/ukUC2RcpDVTmfuIYZmEqZ4KtAfxFAQicJNQ15aDmr61yn1yrfqcP581lw4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6302
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lUs/3Op5eT70ZiweT9FQe/OufHyT2G4eHKr0dl77ABb/sNWLLTprfD7IaePemh5tRjoEIStOKtspH6NgqQ3AvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9462
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -128,84 +141,134 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 6/13/22 09:17, Limonciello, Mario wrote:
-> [Public]
-> 
->> -----Original Message-----
->> From: Natikar, Basavaraj <Basavaraj.Natikar@amd.com>
->> Sent: Monday, June 13, 2022 01:41
->> To: linus.walleij@linaro.org; linux-gpio@vger.kernel.org; S-k, Shyam-sundar
->> <Shyam-sundar.S-k@amd.com>
->> Cc: Limonciello, Mario <Mario.Limonciello@amd.com>; Natikar, Basavaraj
->> <Basavaraj.Natikar@amd.com>
->> Subject: [PATCH 2/3] pinctrl: amd: Don't save/restore interrupt status and wake
->> status bits
->>
->> Saving/restoring interrupt and wake status bits across suspend can
->> cause the suspend to fail if an IRQ is serviced across the
->> suspend cycle.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> 
-> I think this should also pick up this tag:
-> Fixes: 79d2c8bede2c ("pinctrl/amd: save pin registers over suspend/resume")
+On Tue, Jul 05, 2022 at 01:47:35PM -0700, Colin Foster wrote:
+> Several ocelot-related modules are designed for MMIO / regmaps. As such,
+> they often use a combination of devm_platform_get_and_ioremap_resource an=
+d
+> devm_regmap_init_mmio.
+>=20
+> Operating in an MFD might be different, in that it could be memory mapped=
+,
+> or it could be SPI, I2C... In these cases a fallback to use IORESOURCE_RE=
+G
+> instead of IORESOURCE_MEM becomes necessary.
+>=20
+> When this happens, there's redundant logic that needs to be implemented i=
+n
+> every driver. In order to avoid this redundancy, utilize a single functio=
+n
+> that, if the MFD scenario is enabled, will perform this fallback logic.
+>=20
+> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> ---
 
-This was confirmed to fix a bug reported to AMD gitlab with multiple 
-suspend/resume cycles.  So one more tag to add:
+To me this looks good, I'll just add a few minor comments which I think
+you don't necessarily need to address by resending, they're just things
+I noticed.
 
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1333
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-> 
->> ---
->>   drivers/pinctrl/pinctrl-amd.c | 11 +++++++++--
->>   1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
->> index ff3d0edbea48..40e23b5795b0 100644
->> --- a/drivers/pinctrl/pinctrl-amd.c
->> +++ b/drivers/pinctrl/pinctrl-amd.c
->> @@ -917,6 +917,7 @@ static int amd_gpio_suspend(struct device *dev)
->>   {
->>   	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
->>   	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
->> +	unsigned long flags;
->>   	int i;
->>
->>   	for (i = 0; i < desc->npins; i++) {
->> @@ -925,7 +926,9 @@ static int amd_gpio_suspend(struct device *dev)
->>   		if (!amd_gpio_should_save(gpio_dev, pin))
->>   			continue;
->>
->> -		gpio_dev->saved_regs[i] = readl(gpio_dev->base + pin*4);
->> +		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
->> +		gpio_dev->saved_regs[i] = readl(gpio_dev->base + pin * 4) &
->> ~PIN_IRQ_PENDING;
->> +		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
->>   	}
->>
->>   	return 0;
->> @@ -935,6 +938,7 @@ static int amd_gpio_resume(struct device *dev)
->>   {
->>   	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
->>   	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
->> +	unsigned long flags;
->>   	int i;
->>
->>   	for (i = 0; i < desc->npins; i++) {
->> @@ -943,7 +947,10 @@ static int amd_gpio_resume(struct device *dev)
->>   		if (!amd_gpio_should_save(gpio_dev, pin))
->>   			continue;
->>
->> -		writel(gpio_dev->saved_regs[i], gpio_dev->base + pin*4);
->> +		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
->> +		gpio_dev->saved_regs[i] |= readl(gpio_dev->base + pin * 4) &
->> PIN_IRQ_PENDING;
->> +		writel(gpio_dev->saved_regs[i], gpio_dev->base + pin * 4);
->> +		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
->>   	}
->>
->>   	return 0;
->> --
->> 2.25.1
+>  MAINTAINERS                |  5 ++++
+>  include/linux/mfd/ocelot.h | 55 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 include/linux/mfd/ocelot.h
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 28108e4fdb8f..f781caceeb38 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14467,6 +14467,11 @@ F:	net/dsa/tag_ocelot.c
+>  F:	net/dsa/tag_ocelot_8021q.c
+>  F:	tools/testing/selftests/drivers/net/ocelot/*
+> =20
+> +OCELOT EXTERNAL SWITCH CONTROL
+> +M:	Colin Foster <colin.foster@in-advantage.com>
+> +S:	Supported
+> +F:	include/linux/mfd/ocelot.h
+> +
+>  OCXL (Open Coherent Accelerator Processor Interface OpenCAPI) DRIVER
+>  M:	Frederic Barrat <fbarrat@linux.ibm.com>
+>  M:	Andrew Donnellan <ajd@linux.ibm.com>
+> diff --git a/include/linux/mfd/ocelot.h b/include/linux/mfd/ocelot.h
+> new file mode 100644
+> index 000000000000..353b7c2ee445
+> --- /dev/null
+> +++ b/include/linux/mfd/ocelot.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
+> +/* Copyright 2022 Innovative Advantage Inc. */
 
+A header file should have ifdefs which should prevent double inclusion,
+like
+
+#ifndef _MFD_OCELOT_H
+#define _MFD_OCELOT_H
+
+...
+
+#endif
+
+> +
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/types.h>
+> +
+> +struct resource;
+
+IMO if include/linux/platform_device.h doesn't provide "struct resource"
+that's a problem for that header to solve, not for its users.
+
+> +
+> +static inline struct regmap *
+> +ocelot_regmap_from_resource_optional(struct platform_device *pdev,
+> +				     unsigned int index,
+> +				     const struct regmap_config *config)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct resource *res;
+> +	u32 __iomem *regs;
+
+"regs" could be void *.
+
+> +
+> +	/*
+> +	 * Don't use get_and_ioremap_resource here, since that will invoke
+> +	 * prints of "invalid resource" which simply add confusion
+> +	 */
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, index);
+> +	if (res) {
+> +		regs =3D devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(regs))
+> +			return ERR_CAST(regs);
+> +		return devm_regmap_init_mmio(dev, regs, config);
+> +	}
+> +
+> +	/*
+> +	 * Fall back to using REG and getting the resource from the parent
+> +	 * device, which is possible in an MFD configuration
+> +	 */
+> +	if (dev->parent) {
+> +		res =3D platform_get_resource(pdev, IORESOURCE_REG, index);
+> +		if (!res)
+> +			return NULL;
+> +
+> +		return dev_get_regmap(dev->parent, res->name);
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static inline struct regmap *
+> +ocelot_regmap_from_resource(struct platform_device *pdev, unsigned int i=
+ndex,
+> +			    const struct regmap_config *config)
+> +{
+> +	struct regmap *map;
+> +
+> +	map =3D ocelot_regmap_from_resource_optional(pdev, index, config);
+> +	return map ?: ERR_PTR(-ENOENT);
+> +}
+> --=20
+> 2.25.1
+>=
