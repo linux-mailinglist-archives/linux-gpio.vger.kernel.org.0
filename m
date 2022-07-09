@@ -2,112 +2,202 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E19556C310
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jul 2022 01:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E9956C5A5
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Jul 2022 03:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238621AbiGHWCx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Jul 2022 18:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34162 "EHLO
+        id S229453AbiGIBPU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Jul 2022 21:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238280AbiGHWCw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 18:02:52 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D55784EC2;
-        Fri,  8 Jul 2022 15:02:52 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 6so11046099ybc.8;
-        Fri, 08 Jul 2022 15:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z2u1zHtkYnpDwEfAUW7nEKjfU14t5rnPhoACc6h227U=;
-        b=bBTRJIORm9ieZSXfdT/Uuorn3jS1wFhkpQJFg1fmR+fPtqupYIuo/E8K3WFpCxWHcF
-         SiiAyqKSXPGs7s0ZrQUnqBXldQt4/f89C5Rbxt0doPqXT36em19NXK/eD6Ix7QAJ6ULP
-         e74ofT7y4eKSIcrnxjS/NEI0Gnxee+d2Ozkqv9Dw/IsYQNwevi2urzCKKv9+nXET/iDA
-         Sp9NBcQbD5XS3PqCZRkopcLEZ9uD3edUWd0YONuQYZdZx8smTbtN8omFQiubQi6gCJGx
-         MHGVlDINQRhX0/5v3l+NMVgNTDD3Or0LpCwWPUQKtQ9yM60sila4OK50/uwhpLtFisjv
-         pszg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z2u1zHtkYnpDwEfAUW7nEKjfU14t5rnPhoACc6h227U=;
-        b=wQ0kLAE4mQWT/bpk3knUWH0y+faIgdunbuEsZBhiLXFeg/q8tcV1ToZWUfUtpf2px9
-         6Y0EdMqVWQMjHVvIDdhDU682mzUlP39ULXKTnQNh9nXzHT1MgmvMEoCqgSFsj0PWrQ2F
-         +xfMiTUVhgwDFMFsSrDFFp9btX30ZDGoN842RIQEml0soc2DHQMF3VKX7FGTTuiZ2IGR
-         XXxZZ72FsJmTpVulnoMtwwgftn6zSd7bTJzY4kqKANO0g/EGAbkA1XNbdorsNwREnOed
-         AS1UFIo8p0czzW1u03vyuWMq1zIEN/iUOUZu3D/asouqQ8yTl+/9lx2WDJuWgDCbRUTA
-         DHxA==
-X-Gm-Message-State: AJIora9UvkZCEofnFHyej2SGsNMSZ/SwNDe94XLKn1nt8f0FvV4IG0k2
-        OYtjYGweNT452MQAySYlULnprSoj3sSbKBOZQU4=
-X-Google-Smtp-Source: AGRyM1s6L9VAdS8oWVJev1EU+2rONvuvH6Uios5YxmkrJYv/y64Suc0TdqrUrQNbwvydktEtdaKIXKuuaCzCOpmpBc8=
-X-Received: by 2002:a05:6902:10c9:b0:668:e27c:8f7 with SMTP id
- w9-20020a05690210c900b00668e27c08f7mr6096119ybu.128.1657317771326; Fri, 08
- Jul 2022 15:02:51 -0700 (PDT)
+        with ESMTP id S229379AbiGIBPT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Jul 2022 21:15:19 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8379A643D5;
+        Fri,  8 Jul 2022 18:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657329318; x=1688865318;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SFN91SBKl8zV0FODfRS2tJ2kUZI5R8GwUBZHq04TEEA=;
+  b=KoOQNJPQXXMut5+xFOZEZNB8chhQo3bMeTMnaISSqzxRebromUwEK34B
+   cAuIVn2GtgF60PJHyV18dWLp4undvN4l11cbaKHwEo0VMTWPeVHB1cCaV
+   84xsw0nTwz3eXCcMhWRvR3j57LzZylUv7r4QI9SnSo651R0RBFzvaBK9o
+   fYs1SsgYTvLOlYtz0PnZCMKz79xMuI6A0ANtKSAzn/D/DhH2mFAYlmlh2
+   977wz6HBMzmdRBgR8bEpqXkcMMGZ7HiAk6MOzu5UXldjxTXHI5/VGTKGo
+   /qb2StE6ulXtUklOFDmAt/KHBZJSl9+DCSWJ9BFCc38fuRaZ+B+n96iAz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="309985066"
+X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
+   d="scan'208";a="309985066"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 18:15:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
+   d="scan'208";a="661954457"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Jul 2022 18:15:15 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o9z3y-000O8E-QS;
+        Sat, 09 Jul 2022 01:15:14 +0000
+Date:   Sat, 9 Jul 2022 09:14:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org
+Cc:     kbuild-all@lists.01.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 04/10] input: keyboard: adp5588-keys: add support for fw
+ properties
+Message-ID: <202207090942.hoWXaKCu-lkp@intel.com>
+References: <20220708093448.42617-5-nuno.sa@analog.com>
 MIME-Version: 1.0
-References: <20220708195510.2951661-1-horatiu.vultur@microchip.com>
- <20220708195510.2951661-3-horatiu.vultur@microchip.com> <YsiQhA9pHaX4s3R8@colin-ia-desktop>
-In-Reply-To: <YsiQhA9pHaX4s3R8@colin-ia-desktop>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 9 Jul 2022 00:02:14 +0200
-Message-ID: <CAHp75Vc0EasS2Z3x=cgTv==osXprPU3Zkc-Q9DMf4BMz2p6oLw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: ocelot: Fix pincfg
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kavyasree.kotagiri@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Michael Walle <michael@walle.cc>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220708093448.42617-5-nuno.sa@analog.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 10:17 PM Colin Foster
-<colin.foster@in-advantage.com> wrote:
-> On Fri, Jul 08, 2022 at 09:55:10PM +0200, Horatiu Vultur wrote:
-> > The blamed commit changed to use regmaps instead of __iomem. But it
-> > didn't update the register offsets to be at word offset, so it uses byte
-> > offset.
-> > Another issue with the same commit is that it a limit of 32 registers
+Hi "Nuno,
 
-it has a limit
+I love your patch! Perhaps something to improve:
 
-> > which is incorrect. The sparx5 has 64 while lan966x has 77.
+[auto build test WARNING on dtor-input/next]
+[cannot apply to brgl/gpio/for-next hid/for-next linus/master v5.19-rc5 next-20220708]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-...
+url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-S/adp5588-keys-refactor-and-fw-properties-support/20220708-173730
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20220709/202207090942.hoWXaKCu-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/75ce2e5c9e3267912dc4bc6773869d135a753e35
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Nuno-S/adp5588-keys-refactor-and-fw-properties-support/20220708-173730
+        git checkout 75ce2e5c9e3267912dc4bc6773869d135a753e35
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/input/keyboard/
 
-> > -             .max_register = 32,
->
-> What happens in /sys/kernel/debug/regmap/*-pincfg/{range,registers} when
-> there's no max register?
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Good question!
+All warnings (new ones prefixed by >>):
 
-> Should it be this?
->
-> struct regmap_config regmap_config = {
->     ...
-> };
-> regmap_config.max_register = info->desc->npins * regmap_config.reg_stride;
->
-> >               .name = "pincfg",
-> >       };
+   In file included from include/linux/device.h:15,
+                    from include/linux/gpio/driver.h:5,
+                    from drivers/input/keyboard/adp5588-keys.c:13:
+   drivers/input/keyboard/adp5588-keys.c: In function 'adp5588_fw_parse':
+>> drivers/input/keyboard/adp5588-keys.c:667:39: warning: format '%d' expects argument of type 'int', but argument 4 has type 'long unsigned int' [-Wformat=]
+     667 |                 dev_err(&client->dev, "number of unlock keys(%d) > (%d)\n",
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                              ^~~
+   include/linux/dev_printk.h:144:56: note: in expansion of macro 'dev_fmt'
+     144 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                        ^~~~~~~
+   drivers/input/keyboard/adp5588-keys.c:667:17: note: in expansion of macro 'dev_err'
+     667 |                 dev_err(&client->dev, "number of unlock keys(%d) > (%d)\n",
+         |                 ^~~~~~~
+   drivers/input/keyboard/adp5588-keys.c:667:70: note: format string is defined here
+     667 |                 dev_err(&client->dev, "number of unlock keys(%d) > (%d)\n",
+         |                                                                     ~^
+         |                                                                      |
+         |                                                                      int
+         |                                                                     %ld
 
-If regmap configuration may be const, I would prefer to have a
-hardcoded value and different configuration based on the chip, but if
-it's not feasible, then this could suffice.
+
+vim +667 drivers/input/keyboard/adp5588-keys.c
+
+   631	
+   632	static int adp5588_fw_parse(struct adp5588_kpad *kpad)
+   633	{
+   634		struct i2c_client *client = kpad->client;
+   635		int ret, i;
+   636	
+   637		ret = matrix_keypad_parse_properties(&client->dev, &kpad->rows,
+   638						     &kpad->cols);
+   639		if (ret)
+   640			return ret;
+   641	
+   642		if (kpad->rows > ADP5588_ROWS_MAX || kpad->cols > ADP5588_COLS_MAX) {
+   643			dev_err(&client->dev, "Invalid nr of rows(%u) or cols(%u)\n",
+   644				kpad->rows, kpad->cols);
+   645			return -EINVAL;
+   646		}
+   647	
+   648		ret = matrix_keypad_build_keymap(NULL, NULL, kpad->rows, kpad->cols,
+   649						 kpad->keycode, kpad->input);
+   650		if (ret)
+   651			return ret;
+   652	
+   653		kpad->row_shift = get_count_order(kpad->cols);
+   654	
+   655		if (device_property_read_bool(&client->dev, "autorepeat"))
+   656			__set_bit(EV_REP, kpad->input->evbit);
+   657	
+   658		kpad->nkeys_unlock = device_property_count_u32(&client->dev,
+   659							       "adi,unlock-keys");
+   660		if (kpad->nkeys_unlock <= 0) {
+   661			/* so that we don't end up enabling key lock */
+   662			kpad->nkeys_unlock = 0;
+   663			return 0;
+   664		}
+   665	
+   666		if (kpad->nkeys_unlock > ARRAY_SIZE(kpad->unlock_keys)) {
+ > 667			dev_err(&client->dev, "number of unlock keys(%d) > (%d)\n",
+   668				kpad->nkeys_unlock, ARRAY_SIZE(kpad->unlock_keys));
+   669			return -EINVAL;
+   670		}
+   671	
+   672		ret = device_property_read_u32_array(&client->dev, "adi,unlock-keys",
+   673						     kpad->unlock_keys,
+   674						     kpad->nkeys_unlock);
+   675		if (ret)
+   676			return ret;
+   677	
+   678		for (i = 0; i < kpad->nkeys_unlock; i++) {
+   679			/*
+   680			 * Even though it should be possible (as stated in the datasheet)
+   681			 * to use GPIs (which are part of the keys event) as unlock keys,
+   682			 * it was not working at all and was leading to overflow events
+   683			 * at some point. Hence, for now, let's just allow keys which are
+   684			 * part of keypad matrix to be used and if a reliable way of
+   685			 * using GPIs is found, this condition can be removed/lightened.
+   686			 */
+   687			if (kpad->unlock_keys[i] >= kpad->cols * kpad->rows) {
+   688				dev_err(&client->dev, "Invalid unlock key(%d)\n",
+   689					kpad->unlock_keys[i]);
+   690				return -EINVAL;
+   691			}
+   692	
+   693			/*
+   694			 * fw properties keys start from 0 but on the device they
+   695			 * start from 1.
+   696			 */
+   697			kpad->unlock_keys[i] += 1;
+   698		}
+   699	
+   700		return 0;
+   701	}
+   702	
 
 -- 
-With Best Regards,
-Andy Shevchenko
+0-DAY CI Kernel Test Service
+https://01.org/lkp
