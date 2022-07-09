@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 486D956CBE5
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jul 2022 01:08:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C17C56CBE6
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Jul 2022 01:10:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbiGIXId (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 Jul 2022 19:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47740 "EHLO
+        id S229476AbiGIXKC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 Jul 2022 19:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiGIXIc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Jul 2022 19:08:32 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671BDB6B
-        for <linux-gpio@vger.kernel.org>; Sat,  9 Jul 2022 16:08:31 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id y195so3337097yby.0
-        for <linux-gpio@vger.kernel.org>; Sat, 09 Jul 2022 16:08:31 -0700 (PDT)
+        with ESMTP id S229471AbiGIXKB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Jul 2022 19:10:01 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B453167FA
+        for <linux-gpio@vger.kernel.org>; Sat,  9 Jul 2022 16:10:00 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-31cac89d8d6so18397017b3.2
+        for <linux-gpio@vger.kernel.org>; Sat, 09 Jul 2022 16:10:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vnbxUfPe4Wv3r7bkgdhBdHy8QD3875PR8OE7vTRZZcc=;
-        b=Nl3qI7AmtVx6yQrfbsUdAVwltRNGlTViHYE5wj7y5g1OLa//n6SG3rv82eiT8AHQ4i
-         dXYWPsVmxqFdmJ+NKEszIzMN5S4utXr0X0vYUQVAPXUlozNd3RMSvTI8FxMnK9e+itGr
-         8652Wf64TWPGSGS/l4nuONOc8RhSsmzEuhFs8gbP2utdRLvPyUZteUP8quvLIwEGnmai
-         HzHlgukukyt7Ji4aS5FvT1uRo/zhju5Slt/yvp/g+gJlr9eZTHTMeVItLDdWKWQ2VlU3
-         yiYvriUAx34swgP/lI0TYnl1/+NK3zvJGL+SD1JITFTQJbZznXKqhBVBxQVSsrQniRVm
-         nGMw==
+        bh=JkWokYXmjMB+GO56Z46uvr8QrCPXsyHR7Lu0241rZa0=;
+        b=NlXyB4KjXBUF1nqiSIMRVI2olAK7KzGBJTsgd/cBx2UTFglJ/mxpvuT1W3lSg09HUW
+         OwzKCIXFbZ4dX4frI9Gu6wPqmV/9LR3JU6vw9G80PiUQnj+rDclwAEsAYc9BZtxPeOJR
+         eUMX09LngSHkxfVkkz34ZlUk5dxPVuY4GPXM2/tMb8IRmN3FPmBml4i0+gdFdZqCcNyd
+         f4Be8nJgelMHsU1BFdNq7vFYpchtWdpGMUurbZ7o/3369r0KiXiHxMmNY/MN5m2vQYq+
+         LNkoz3e/EVRy2+xY2eB2AI0MMYj4eX9bmf2gWypTE0oMQ3nx7Y2oVRul7OpmcFbLPPw2
+         cNyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vnbxUfPe4Wv3r7bkgdhBdHy8QD3875PR8OE7vTRZZcc=;
-        b=XFCEBY4yWc8Fw2bXYsnUR6xjaB0wqU77DxW5DSmXGLi1V6WmllYxqIkhbktfHJAsL9
-         fSTtDkMSnUlxheJbgWOFZGzH/DELh+POYRcdjtLioRkPMC9yStac4kNexfYfcixjaDPI
-         4fPz8zM+yyFoGHqTlCfr7IdcYcaFg4yIt60bZh6Tw47V21ZY93Jsvc2TLp7aXFA4r7+y
-         0nrE7iGiVJ3MeFZYc5as6eL/e+U+xQhQkQsy5QiOwyjxxmcXFRmzFKT2LyRXI1/fJtpY
-         AWOEOPfMgnSzbXtznwLJH38wpz4JJJGEr86yprMgXyQAj4ZmdAtSEuElpf0hkEbNpYfk
-         tKuA==
-X-Gm-Message-State: AJIora+c932qmtY6trxEWociaoQtRafExwcCjzjQMZmVC69GZylh11f/
-        ChLvigxGWgLkoV8NFuZsJGcj0x6ipYVclbapSgr2vKhmkTQ=
-X-Google-Smtp-Source: AGRyM1sI4768Xzrm4OnJ2xhKrP6MT783ivNwQAMh7Z+Res6cuXa8vyX02uf1Dpju19WrehhrVrNY7irLbbVQ1sGXfOc=
-X-Received: by 2002:a25:e00f:0:b0:66e:2aa9:82b1 with SMTP id
- x15-20020a25e00f000000b0066e2aa982b1mr10821078ybg.626.1657408110599; Sat, 09
- Jul 2022 16:08:30 -0700 (PDT)
+        bh=JkWokYXmjMB+GO56Z46uvr8QrCPXsyHR7Lu0241rZa0=;
+        b=FhsNpGh9NQiZu1U3c56vFbqhOQI2l6/ABVE6ocoEFvaTIsAhOxMs/dJoCCwtmKYPGr
+         zOyPqTJImDQXqNwofb9g2r7/fel29JjfHgFCE57SRK66rkH++mOf5IDC3dtCDgoWHNeS
+         zguhjnLlupM9dSFt9gvbOelvQy1AoEb//Zk953Fko6CM5G91Qw/B0V8EDoKh0RK716jp
+         N2m/VD4m4AhZcRTzU8N+wxEbyo7DPP7rBtvUs10tx/NwsYX4ZuHt9zEUAMhaY7ODsIAn
+         WNYTUwoQg+0l7PeaJdXJ1Qr1i0HY3RYm77XcX7ntnecqRv1Dzyq1YVy0P2ImSkVypeZr
+         GSoQ==
+X-Gm-Message-State: AJIora/DDOAAlSiH/DGG/jjxN+sGdzZvNztPOS9Yu1YgGusZ2UPtaG+l
+        Tgp9D/HmlyoWpTyZ0mJe9i2DzYhyZFgnA0RVxA5t9wCsQDI=
+X-Google-Smtp-Source: AGRyM1vNvQoQ1AtLUCCLgxuRfmqbtdVfPQbzrk4BjnbbXp3Xwubgw0+UoJoMVG2FPa1S6aOzYxUgQdlvMEnbMo1RbFU=
+X-Received: by 2002:a81:6cf:0:b0:31c:913c:144c with SMTP id
+ 198-20020a8106cf000000b0031c913c144cmr12142466ywg.437.1657408199788; Sat, 09
+ Jul 2022 16:09:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <YsiWqB1vCr4gdt7Q@smile.fi.intel.com>
-In-Reply-To: <YsiWqB1vCr4gdt7Q@smile.fi.intel.com>
+References: <20220613064127.220416-1-Basavaraj.Natikar@amd.com>
+In-Reply-To: <20220613064127.220416-1-Basavaraj.Natikar@amd.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 10 Jul 2022 01:08:19 +0200
-Message-ID: <CACRpkdZmkv-11kLnxxoCRkNmAwSkkfS3nJMKV3TgRhxPcp3q7Q@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-pinctrl for 5.20-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Sun, 10 Jul 2022 01:09:48 +0200
+Message-ID: <CACRpkdaMpeJiLL-n-xGZbUAFNdd49B6EFs7MfBg_7H0XmEXpeQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Fixes and updates to pinctrl-amd
+To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc:     linux-gpio@vger.kernel.org, Shyam-sundar.S-k@amd.com,
+        mario.limonciello@amd.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -65,13 +65,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 10:42 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Jun 13, 2022 at 8:43 AM Basavaraj Natikar
+<Basavaraj.Natikar@amd.com> wrote:
 
-> For the v5.20 we have not much stuff that was sitting a few weeks in Linux Next.
-> Please, pull!
+> Changes include use of devm_platform_get_and_ioremap_resource,
+> save/restore pending irq bits and removing of
+> contact information.
 
-Pulled in, thanks!
+Patches applied!
 
 Yours,
 Linus Walleij
