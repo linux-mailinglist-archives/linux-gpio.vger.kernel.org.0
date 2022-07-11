@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A5B9570BD0
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:31:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 346E5570BDC
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231893AbiGKUbu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 16:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55146 "EHLO
+        id S229476AbiGKUdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 16:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232050AbiGKUbg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:31:36 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92F087354;
-        Mon, 11 Jul 2022 13:29:50 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id f73so10592333yba.10;
-        Mon, 11 Jul 2022 13:29:50 -0700 (PDT)
+        with ESMTP id S229470AbiGKUdu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:33:50 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1905D33404;
+        Mon, 11 Jul 2022 13:33:49 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-31cac89d8d6so61444227b3.2;
+        Mon, 11 Jul 2022 13:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ShzjEhLEe0k5FQ6GyMvo3z3FN/ZLOq7ZYOFzyB6kD20=;
-        b=oIo3c7K7sfGKtX+P9CqNGT20A9gc1caPNVU/ahHOcNlb7iyuOBDC7JAr8+TGCGyYgF
-         +2YWKr+UAr+2VNTEdOp0E5ijfyM0Svlzt90iUxi5A3IZReUU+VvaOKc4dZfmzWutTtXW
-         BUCJ9j/z4c6RgwfbWluszvZ0+sxeG+8KglLi/ZYVTNPxbQDgvpCisDbvQflmgKVXmKYa
-         9WKuXWr7jmVCIjbYRRyb2Vok/JDbMHK4EBPOOcm/+WBbhBXpDqqAD+tGz46P+hklk9Pk
-         GERqz9JVe1+01jjuv/hgK/sgmqPZRgZLu1mrMFMGE84OvfIbvDOcLJFL2IBEfuqA/40B
-         f7nA==
+        bh=847p17DesiUPrAbTrGt+da4YJYmyj4ybBvLUVEuSIjY=;
+        b=J4WttHlaqvEgBfuXBOlq7Cn8H1LHHBEHnfD+usVNNf3XdpUKSGcz8IGIC0CH1Yfmol
+         kUpd0qMrcglCv7BVwhQ7brGk96fa5ovV5b6TzmWIVXjV4xgrpuznHRCgtQRSzXPr7E/J
+         OUS2TYH8ALc8D31qvjCclWzRy4E5MwvPQSsMuUve8EGSRLKpr6FS7ilsuaz2fPNiMnjg
+         FJrsIi8Yuu1Etq+XLcVJ0li4S7B1wVbV1xnFvRZhlWo4rS4foOG3zIEb5Xi1OzBdOI6s
+         Ksz0exapPlOZnUdUZ4jrnGSIvV/1pTKOzmXtNiZs/w3LY3lPGrlG7HVFdyUzmuOpLkDF
+         G5nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ShzjEhLEe0k5FQ6GyMvo3z3FN/ZLOq7ZYOFzyB6kD20=;
-        b=UooUyLCg/Cl5vphGNNxj/XlOJUn5ScuQBj0skcVA01KvG8qWXeFficcSd5Lk5vvzqn
-         r3N7iA5MqSPxQO7YSMSRuZrOErtgMGOrwy7SMcAtVgYUCahQNxZ6qzEY7LmSznnGhaG0
-         uXQ/UJOuQTi9t5pNlCwLRBFU74d8n5VAyJGSgkUqMc+XqlsDf45XaDytJZwp+EMLpfV9
-         3C+QHop5k6ATu73ciJIi6ci1Kjwcq7mME/hjz0kLetGPHWifxozTyKLES4y8C+ccElgj
-         9swVCOekaLhNeWYkYHIRI0kHqHtW2+vSR0oq0byeRu4oQV5Gl4X1T2TFrhsreNtnuVPm
-         Aftg==
-X-Gm-Message-State: AJIora9hSiOfNNgTpKUCn2M300crCjBTDcEOoGMdnd+H+fE8TxkKka9d
-        gWNQWpjaDXF0WanlK2ZQYfjvrUvFFQGK83Uu5j4=
-X-Google-Smtp-Source: AGRyM1vWoRu/kFl3OAas1bDl0jpatlNqpbg+RlHPiqlRykpWGdO7kua3L5SZ0OFZTsKlED0D7rSpkR+VJHg9fCAKE9o=
-X-Received: by 2002:a05:6902:1143:b0:66e:eb08:4c23 with SMTP id
- p3-20020a056902114300b0066eeb084c23mr13624745ybu.570.1657571390165; Mon, 11
- Jul 2022 13:29:50 -0700 (PDT)
+        bh=847p17DesiUPrAbTrGt+da4YJYmyj4ybBvLUVEuSIjY=;
+        b=bY3/IWI/zLkJFl5xNRR1pweqAi544ETzwKyP25tAIQRS/lahDl6xH6m4Iht8ghY5FI
+         8RL3ZQLwuiCMGTeaAB05hms4/ToATwrLOLnh+g5B7qoq5lnDKjvN2HZYQdois1JEiRjA
+         ptA7IdeABzUuXqSwjOjBDcGA4RwKzBvivh+ElnV9wRWL6ljE5plN6WPjJbrIsKLbnQYT
+         3INexnYuzEVCSGfilINBPrLd8V1J1lfM66BXscbjmNCwDT7Ec18ZI19ZXNoP2/RVcaNq
+         BAyJ2vs6+NLHuuTJhM9AH4ArXskt25878Y4n20hNCG9WaZ5DiEZE9Xa//f6hvu44ZlY9
+         gOWg==
+X-Gm-Message-State: AJIora/eqMjjlWign45HJ79ABw/CqY7Vu+sIv87xF2CKbyr7ajOefMFD
+        f2iyE7O78U1vtiUjnSLeqXPieQv+URvOKRJRbiQ=
+X-Google-Smtp-Source: AGRyM1soa/b5CVtvIJwCZk3wxZrzaUqyUaH+jrfMwcncwn0dl8Hm8H2RvISAWcx5pab5/XocLBsGF/kqMjj8c3nfY18=
+X-Received: by 2002:a81:4bd7:0:b0:31c:91da:5a20 with SMTP id
+ y206-20020a814bd7000000b0031c91da5a20mr23140384ywa.131.1657571628325; Mon, 11
+ Jul 2022 13:33:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220711192113.3522664-1-horatiu.vultur@microchip.com>
  <20220711192113.3522664-3-horatiu.vultur@microchip.com> <CAHp75VdeZSP62qoOdQf=g4b7AheFd4=jNxfjMh-_T7Q1Zi=LbA@mail.gmail.com>
- <20220711202646.om65vrksyifvkfkw@soft-dev3-1.localhost>
-In-Reply-To: <20220711202646.om65vrksyifvkfkw@soft-dev3-1.localhost>
+ <20220711202646.om65vrksyifvkfkw@soft-dev3-1.localhost> <CAHp75VeJgUFdFgBpG5avmKCn-CGNOJ6wZAhc0a4f2MHfLbvXmA@mail.gmail.com>
+In-Reply-To: <CAHp75VeJgUFdFgBpG5avmKCn-CGNOJ6wZAhc0a4f2MHfLbvXmA@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 11 Jul 2022 22:29:13 +0200
-Message-ID: <CAHp75VeJgUFdFgBpG5avmKCn-CGNOJ6wZAhc0a4f2MHfLbvXmA@mail.gmail.com>
+Date:   Mon, 11 Jul 2022 22:33:11 +0200
+Message-ID: <CAHp75VdTUqP+Ho2cmeMiOwNtu_HhOMoo3cCUQ27vdPftcJ-xUA@mail.gmail.com>
 Subject: Re: [PATCH v3 2/2] pinctrl: ocelot: Fix pincfg
 To:     Horatiu Vultur <horatiu.vultur@microchip.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -74,44 +74,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 10:23 PM Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
+On Mon, Jul 11, 2022 at 10:29 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> The 07/11/2022 21:51, Andy Shevchenko wrote:
+> On Mon, Jul 11, 2022 at 10:23 PM Horatiu Vultur
+> <horatiu.vultur@microchip.com> wrote:
 > >
-> > On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
-> > <horatiu.vultur@microchip.com> wrote:
+> > The 07/11/2022 21:51, Andy Shevchenko wrote:
 > > >
-> > > The blamed commit changed to use regmaps instead of __iomem. But it
-> > > didn't update the register offsets to be at word offset, so it uses byte
-> > > offset.
-> > > Another issue with the same commit is that it has a limit of 32 registers
-> > > which is incorrect. The sparx5 has 64 while lan966x has 77.
+> > > On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
+> > > <horatiu.vultur@microchip.com> wrote:
+> > > >
+> > > > The blamed commit changed to use regmaps instead of __iomem. But it
+> > > > didn't update the register offsets to be at word offset, so it uses byte
+> > > > offset.
+> > > > Another issue with the same commit is that it has a limit of 32 registers
+> > > > which is incorrect. The sparx5 has 64 while lan966x has 77.
+> > >
+> > > ...
+> > >
+> > > > -static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
+> > > > +static struct regmap *ocelot_pinctrl_create_pincfg(struct ocelot_pinctrl *info,
+> > > > +                                                  struct platform_device *pdev)
+> > >
+> > > const?
+> > >
+> > > And I would leave pdev to be the first parameter, if there are no
+> > > other functions that have them like this.
 > >
-> > ...
-> >
-> > > -static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
-> > > +static struct regmap *ocelot_pinctrl_create_pincfg(struct ocelot_pinctrl *info,
-> > > +                                                  struct platform_device *pdev)
-> >
-> > const?
-> >
-> > And I would leave pdev to be the first parameter, if there are no
-> > other functions that have them like this.
+> > I will do that in the next version.
+> > Just for my understanding/knowledge why is this desire to have const or
+> > to keep the const?
 >
-> I will do that in the next version.
-> Just for my understanding/knowledge why is this desire to have const or
-> to keep the const?
+> For non-POD types it's a good coding practice to reduce surface of
+> attack, if any (the data will be located in the pages with RO flag
+> set, and attempt to write will give you a page fault or other
+> exception, it depends on architecture).
+> Also a common sense, if you don't change data (which is actually
+> initial configuration or so), then why shouldn't you use const?
+> Note, in cases when it's not initial data, but runtime stuff (like
+> really run time), const is obviously either can't or not needed to be
+> used.
 
-For non-POD types it's a good coding practice to reduce surface of
-attack, if any (the data will be located in the pages with RO flag
-set, and attempt to write will give you a page fault or other
-exception, it depends on architecture).
-Also a common sense, if you don't change data (which is actually
-initial configuration or so), then why shouldn't you use const?
-Note, in cases when it's not initial data, but runtime stuff (like
-really run time), const is obviously either can't or not needed to be
-used.
+One more specifically for drivers (related to the first item above),
+it allows one to scope the point of failure in case of wrong
+configuration comes in. The device might misbehave badly because of
+some garbage somewhere. Also, the driver won't write data to that
+area, which is just a good preventive programming practice (but this I
+already implied by the second item above).
+
 
 -- 
 With Best Regards,
