@@ -2,88 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 529E45709D6
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 20:22:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DF43570A23
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 20:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229986AbiGKSWX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 14:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46860 "EHLO
+        id S229733AbiGKSuM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 14:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbiGKSWV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 14:22:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8068532470;
-        Mon, 11 Jul 2022 11:22:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 24329614DB;
-        Mon, 11 Jul 2022 18:22:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9625C34115;
-        Mon, 11 Jul 2022 18:22:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657563739;
-        bh=CvQRlE/ufLqF5vMtPD31qdoYcNYjoAvuZ3UjFo4NIrA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kuHdm9IZqSaGlxtM3jWp0VqxJgW8mxBvW8RhxQQI/wqhqG9zQDcc6uqKwJac3DRy2
-         nHx36rn5b7/rEniXgAKi7kp7ZvmUCyPlFDeEwNFyrcVTz8ubG5iVxoKMFvmdmAaK32
-         GyrYtRuVPnk92U9vGUG4rhdC6V9TSwDCBkf4HPYaLqQOjoKP/hHeFDkXHyNViBd4BM
-         1WymX3Imn3xMxzrhiEb5Spf6V8ivZ1jbQQXW054QUA0/RRyU8msJcqlrkL288sxJdD
-         K6UyHJhlCet0ylR73YPmkOX9v2Od9C8Dd5wgYUEXSuF/4UQGooHihol4p1D9zcoNqy
-         QgaDSVAlEmH7g==
-Date:   Mon, 11 Jul 2022 11:22:09 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        katie.morris@in-advantage.com
-Subject: Re: [PATCH v13 net-next 2/9] net: mdio: mscc-miim: add ability to
- be used in a non-mmio configuration
-Message-ID: <20220711112209.4902720b@kernel.org>
-In-Reply-To: <20220705204743.3224692-3-colin.foster@in-advantage.com>
-References: <20220705204743.3224692-1-colin.foster@in-advantage.com>
-        <20220705204743.3224692-3-colin.foster@in-advantage.com>
+        with ESMTP id S229638AbiGKSuM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 14:50:12 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA555925C;
+        Mon, 11 Jul 2022 11:50:11 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id 75so8925495ybf.4;
+        Mon, 11 Jul 2022 11:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vdn+kWdlLc5kFjA8AyxY+9HV+a6I1ZLb2j4vBgodHP8=;
+        b=nIgMnALMjfiydsKZpOyh42VUXRWOAA/5gVzOGa7gtA+X4nWqSPxmdtDpom+kUzCWrF
+         O4fDJRhl6UeOvWYXY2pEPjirrKOBA164uZkjagVFqy6+Jp++N+xzmpaJMElIgLMFtXPz
+         w558uImDA/tKjtwXQt1MwAFFub4t/mwUktfkNfWfI/r1pxh8EZFubxzgR7un1XuEOLQK
+         TXC4OwXeLAF7ewc8NuAhyCWHk6/CHLPK2oIMk7YTvI+zaWNyK38UVC5FOmAx5RTm4ymh
+         glCAIkcMQZg2z6Lm/NCARAa4q6EPVS5C0d7qUivmD+eu+c1by9KjkWM/B77rnxFC6XyX
+         QHDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vdn+kWdlLc5kFjA8AyxY+9HV+a6I1ZLb2j4vBgodHP8=;
+        b=n6COzIheb3pK9/nYviTCjThvFkoL+zjAJVKR7GoACB8PuRadNyhe2OpMc9ssvqNIDL
+         N86ofsfaHz3OAOzjUYSYNtEPGUQPn0vvG44TuOJ79H2QYBYMX1d/c416ip8Mhn5re1Rt
+         i6zD3uCOirp1lRIVnPtCX5WboFF1o+GQWqXR29fUaxqkpHQ5Ux3e4YJlGBJUum6iinAz
+         2EJVM2B44kG2sG71OcEMLLRdxYKJCnnAjhcHnFqKSSFRxzOmCGMVaRQ5BqxbfDBiBA/d
+         t0MJqwmfGFWTEtQexunWe43aLHAaa9uK/L1Z7Xws1y1pB/ZFLEyGMwzQ/LOIhlVwJczv
+         8A9w==
+X-Gm-Message-State: AJIora8lnqQNoBWb9n7/rc7T5MF9ovGI0M6xeE1vOT5Sb4GeITDW2HN/
+        KsqJ7QdyNQs3XCspCBQOf9aA1yq812WoZVFQX1Y=
+X-Google-Smtp-Source: AGRyM1sBy72a4o+/lKFzYxMildRzLwg3ico+w5eERCzyniThfzFft8EK9iDR81O/wYjWDroQ60Sh1KHhDK+QzE3thmA=
+X-Received: by 2002:a25:dd83:0:b0:66c:8d8d:4f5f with SMTP id
+ u125-20020a25dd83000000b0066c8d8d4f5fmr19018621ybg.79.1657565410549; Mon, 11
+ Jul 2022 11:50:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220711173418.91709-1-brgl@bgdev.pl>
+In-Reply-To: <20220711173418.91709-1-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 11 Jul 2022 20:49:34 +0200
+Message-ID: <CAHp75VcHVJu2bX_qWKf84e2t=FrNRvsRLnEXirRKVPh=kZz=hQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: fix the chip_name configfs item
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue,  5 Jul 2022 13:47:36 -0700 Colin Foster wrote:
-> There are a few Ocelot chips that contain the logic for this bus, but are
-> controlled externally. Specifically the VSC7511, 7512, 7513, and 7514. In
-> the externally controlled configurations these registers are not
-> memory-mapped.
-> 
-> Add support for these non-memory-mapped configurations.
-> 
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+On Mon, Jul 11, 2022 at 7:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> The chip_name configs attribute always displays the device name of the
+> first GPIO bank because the logic of the relevant function is simply
+> wrong.
+>
+> Fix it by correctly comparing the bank's swnode against the GPIO
+> device's children.
+>
+> Fixes: cb8c474e79be ("gpio: sim: new testing module")
+> Cc: stable@vger.kernel.org
+> Reported-by: Kent Gibson <warthog618@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 
-Since the patch may go via MFD:
+...
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+>  struct gpio_sim_chip_name_ctx {
+> -       struct gpio_sim_device *dev;
+> +       struct fwnode_handle *swnode;
+
+I would call it fwnode even if we know the backend provider.
+
+>         char *page;
+>  };
+
+...
+
+>         struct fwnode_handle *swnode;
+
+Do you still need this? See below.
+
+...
+
+>         swnode = dev_fwnode(dev);
+>
+> +       if (swnode == ctx->swnode)
+> +               return sprintf(ctx->page, "%s\n", dev_name(dev));
+
+So, now it can be
+
+if (device_match_fwnode(dev, ctx->fwnode))
+  return sprintf(...);
+
+-- 
+With Best Regards,
+Andy Shevchenko
