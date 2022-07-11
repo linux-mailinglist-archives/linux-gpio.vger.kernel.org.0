@@ -2,103 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB3F3570361
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 14:52:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 639555703BE
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 15:02:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232132AbiGKMww (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 08:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55692 "EHLO
+        id S229698AbiGKNC0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 09:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231250AbiGKMww (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 08:52:52 -0400
-Received: from mail-m964.mail.126.com (mail-m964.mail.126.com [123.126.96.4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AFC7F49B67
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 05:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=vf2D1
-        CO68HWN+wn5OV2jl2FCGSL7hFU89U+VShJvqq0=; b=U/5DA8huupXY3DYW+eCh2
-        OWPRe9VZfUMFX5xFspgrl+WvJ41khCsQOARh18l1ZKsg7IxkgZ/R5N0ObewGnyzU
-        asbrvrplWg1Unh273zOlmFzaeI6CnAW4/d+FALM0G0ecC3rM/h3B9v9HAKTSCa3/
-        LVaoH4kdn9CQFgKIMyuGOg=
-Received: from localhost.localdomain (unknown [124.16.139.61])
-        by smtp9 (Coremail) with SMTP id NeRpCgCnjdEXHcxiH9APGg--.56764S2;
-        Mon, 11 Jul 2022 20:52:40 +0800 (CST)
-From:   Liang He <windhl@126.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, windhl@126.com
-Subject: [PATCH v2] gpio: gpiolib-of: Fix refcount bugs in of_mm_gpiochip_add_data()
-Date:   Mon, 11 Jul 2022 20:52:38 +0800
-Message-Id: <20220711125238.360962-1-windhl@126.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229695AbiGKNCY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 09:02:24 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2695E7B
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 06:02:22 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 136so8581098ybl.5
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 06:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jBLM5Pi9tPv6vKM0pZCCueIUCFwTFpFPFADh+Fgewz0=;
+        b=SNjylM88LckGpiE4V/QUaMe32JWa/uYAO8RGp/aAtFaJRJpGCN6w0mykgjuvUSGDur
+         lrFqFOwDHaoNloZrphn14yC0t+vufFpHzADq4YWaNThEc1Ugi/ioeS7l8Z+iO7+ClNyY
+         f2j/Rg8i1AOf7VlII+FHdmrOtQ3JfUygah2qq1q8P6/sXeEg5FItPM52F1ecGvQO9c0L
+         6cwowVtD0lP3a0eu8KH6kAVi5VceEXcC9flnLWL2cU7eTUyLFebg8dGbRlajiXYcvrw+
+         4oCWvmmlOeSQMQd8juIi+UUOMtqwlE+OP258+eVPXXHf9WqrIOgfscAvF6CJA2vvda/1
+         10dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jBLM5Pi9tPv6vKM0pZCCueIUCFwTFpFPFADh+Fgewz0=;
+        b=7V4NuIER+Cnt64nc+0C/YXXESAvo8gTKQG3jGLGv5ySxrRTdxxLTqyixlWpZPNetsg
+         RYZZJKDCm+WajjNfSu7Ml/ORc5h19erDLW5V0zInJaNAvASbSYTB7Jl1hwg5Xi/HkBbM
+         wxZFPJI7coJnEHXahvZ9GEYVSrJfnS++/Wj+hZO2Gv0ZfCnlv5bPRBJ0L9l/G5/OPFJK
+         Rmb9+BKuz3uPJfZtqJaUHwuZUM0K3SixUC6k21HYLZtH9X146+C+y4zmGLHtdMLk7rKL
+         O1Hk93vWKfn+E2WQX7V2wI3gjcgfz17sLJjhIE8BpHQAGA/WaXMtK9ZYLpzwfBU+6/LI
+         V+vw==
+X-Gm-Message-State: AJIora8s8AwNYEs8XLmJvMh+Nym84lxmEPyKZD43mA2waNnXznShSbdU
+        WH9IyvH1UIgHunO9tojCsCezEEzNRJfDHwJzlVR6yQ==
+X-Google-Smtp-Source: AGRyM1t29T3PB4THchLEbX8ZYCRztrVQWphL7uBS+Yep1DzncLFf/md0RvUmi8E6sALH+K4tBCYHuiDNW0qA8+E+wqw=
+X-Received: by 2002:a05:6902:1184:b0:66e:756d:3baa with SMTP id
+ m4-20020a056902118400b0066e756d3baamr16793466ybu.533.1657544541545; Mon, 11
+ Jul 2022 06:02:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: NeRpCgCnjdEXHcxiH9APGg--.56764S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw4rWw1DGrWxWw18CF1fCrg_yoW8Cr18p3
-        y7KryfAw1kKr4xGryvvF18uFWY934vkFWag3WIkFyavw1qgasYy3y2gayrZ3s0vFW8CrW5
-        Xr40qF15G3Wv9aUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_iSdJUUUUU=
-X-Originating-IP: [124.16.139.61]
-X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbi2hg7F1uwMYlBYAAAsc
+References: <cover.1657216200.git.william.gray@linaro.org> <6be749842a4ad629c8697101f170dc7e425ae082.1657216200.git.william.gray@linaro.org>
+In-Reply-To: <6be749842a4ad629c8697101f170dc7e425ae082.1657216200.git.william.gray@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 11 Jul 2022 15:02:10 +0200
+Message-ID: <CACRpkdZn-PV6H+uBcoONt=SThGBAODy-YG=rkx5OX-rcpeE+aw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] gpio: i8255: Introduce the i8255 module
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fred Eckert <Frede@cmslaser.com>,
+        John Hentges <jhentges@accesio.com>,
+        Jay Dolan <jay.dolan@accesio.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We should use of_node_get() when a new reference of device_node
-is created. It is noted that the old reference stored in
-'mm_gc->gc.of_node' should also be decreased.
+On Fri, Jul 8, 2022 at 1:16 AM William Breathitt Gray
+<william.gray@linaro.org> wrote:
 
-This patch is based on the fact that there is a call site in function
-'qe_add_gpiochips()' of src file 'drivers\soc\fsl\qe\gpio.c'. In this
-function, of_mm_gpiochip_add_data() is contained in an iteration of
-for_each_compatible_node() which will automatically increase and
-decrease the refcount. So we need additional of_node_get() for the
-reference escape in of_mm_gpiochip_add_data().
+> Exposes consumer functions providing support for Intel 8255 Programmable
+> Peripheral Interface devices. A CONFIG_GPIO_I8255 Kconfig option is
+> introduced; modules wanting access to these functions should select this
+> Kconfig option.
+>
+> Tested-by: Fred Eckert <Frede@cmslaser.com>
+> Cc: John Hentges <jhentges@accesio.com>
+> Cc: Jay Dolan <jay.dolan@accesio.com>
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 
-Fixes: a19e3da5bc5f ("of/gpio: Kill of_gpio_chip and add members directly to gpio_chip")
-Signed-off-by: Liang He <windhl@126.com>
----
- changelog:
+This chip is like 50 years old, but so am I and I am not obsolete, it's about
+time that we implement a proper driver for it!
 
- v2: (1) add more explaination advised by Linus Walleij
-     (2) use correct fix tag
- v1: fix the refcount bug by
- https://lore.kernel.org/all/20220704091313.277567-1-windhl@126.com/
+But I suppose you are not really using the actual discrete i8255 component?
+This is certainly used as integrated into some bridge or so? (Should be
+mentioned in the commit.)
 
- NOTE: I have confirmed that the mm_gc->gc.of_node has been correctly
-put by
-of_mm_gpiochip_remove()-->gpiochip_remove()-->of_gpiochip_remove()
+> +config GPIO_I8255
+> +       tristate
 
- drivers/gpio/gpiolib-of.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+That's a bit terse :D Explain that this is a Intel 8255 PPI chip first developed
+in the first half of the 1970ies.
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 3d6c3ffd5576..de100b0217da 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -860,7 +860,8 @@ int of_mm_gpiochip_add_data(struct device_node *np,
- 	if (mm_gc->save_regs)
- 		mm_gc->save_regs(mm_gc);
- 
--	mm_gc->gc.of_node = np;
-+	of_node_put(mm_gc->gc.of_node);
-+	mm_gc->gc.of_node = of_node_get(np);
- 
- 	ret = gpiochip_add_data(gc, data);
- 	if (ret)
-@@ -868,6 +869,7 @@ int of_mm_gpiochip_add_data(struct device_node *np,
- 
- 	return 0;
- err2:
-+	of_node_put(np);
- 	iounmap(mm_gc->regs);
- err1:
- 	kfree(gc->label);
--- 
-2.25.1
+> +++ b/include/linux/gpio/i8255.h
 
+You need to provide a rationale for the separate .h file in the commit
+message even if it is clear
+how it is used in the following patches.
+
+Yours,
+Linus Walleij
