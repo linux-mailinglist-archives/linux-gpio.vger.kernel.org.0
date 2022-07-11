@@ -2,138 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB557570442
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 15:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D1F5570528
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 16:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229937AbiGKN1q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 09:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59478 "EHLO
+        id S229972AbiGKOPb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 10:15:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbiGKN1p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 09:27:45 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70078.outbound.protection.outlook.com [40.107.7.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABAB45079;
-        Mon, 11 Jul 2022 06:27:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A1j5uy5f8wiflV4VCQHv3qoI0BXajR4w7RaPLEAM1pa6F8T+mrfvSWGeuIMlQ2J256untcfDwX+a9C3793+Bg82KzEn2dl0TkQ8G2O17+iog3q/R5a+2jFf8eH7xx6O3L53aMHR5IcxR7tWJHMdCW2MFG27hoPY6OuCYQojHfckn3rfW8SBSmj7Iogq8nUak1iV1H09XlQBY9g0nOslhYlIp6PbuKDIiwsSd3tip7HiN21RNXKomt4NqOPK1uaqXDZZ7tJnljZzBXc0CWR0/uTneKwcCegzAt5o61NFRWZGn35BwZ8GyPvjzK8AN/UHff/u/XMsMC13PvenS8UTqtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FVUrzmFRQIMF/yhjnTTC+IyI/gX7wC1pBDyXN6owt6I=;
- b=mL60tos7RXZxNiUfptLNZETg60XvmvZWT9wp1LIO7GFytDDsP+iZ2Wn1dlIucpdsI7HFJMB49ypZCqkkQ9XcHEoB4uovHHhE9+erXF8KzDo4mGbyZZVhyM9Gm62cCF/al6LCKzvzVb768zY4eAwbmGGSBxddtp3/KrJ7yvgCGzCuNXN4kuJ0/dtUMb+1xk+LJAeomYDbRYOaQrXO3GAyVShXA0aB4htBkdhMewJXK9OMB4LaUemnY+YMbrPb9kEHbGZFyOQTtYTvLMzZ1QgIU1rNlbNCGzL3vZ0Jg9bpVQRPQUmjlhlt1JvI2EfwrnfTSgRHFswzX76+2EDWonil2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVUrzmFRQIMF/yhjnTTC+IyI/gX7wC1pBDyXN6owt6I=;
- b=M9kCKJDwosjjOZWHZ3zIMouOqOCAHnoD4ZJ+3K9DGoB1v+YtFJFTtt/B9K3HVDearKQNtlX5RvtAkWIV2OEeBrv8zXyxY2wnTmE+0xlNNV6hiCmWj1e7AiZHtIWmtpmXlEyCdVGDBt3J+wGDLWlNdw3hG6MzXEq3SUtlRFIJt04=
-Received: from VI1PR04MB5136.eurprd04.prod.outlook.com (2603:10a6:803:55::19)
- by PA4PR04MB7742.eurprd04.prod.outlook.com (2603:10a6:102:b9::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.26; Mon, 11 Jul
- 2022 13:27:42 +0000
-Received: from VI1PR04MB5136.eurprd04.prod.outlook.com
- ([fe80::71b7:8ed1:e4e0:3857]) by VI1PR04MB5136.eurprd04.prod.outlook.com
- ([fe80::71b7:8ed1:e4e0:3857%4]) with mapi id 15.20.5417.026; Mon, 11 Jul 2022
- 13:27:41 +0000
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Colin Foster <colin.foster@in-advantage.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S229536AbiGKOPa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 10:15:30 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C67F02DAB0;
+        Mon, 11 Jul 2022 07:15:29 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id z23-20020a7bc7d7000000b003a2e00222acso1890056wmk.0;
+        Mon, 11 Jul 2022 07:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=frW5NMx6E736jHy6OxQtX58IMXxNhpe8fKpMWLaqeaQ=;
+        b=M3Pjp1jMA3RZOYDusE6sfvvgal/ljkqkDcpzoUAZyz2XlGj4a98gMrq7zfSIWVXkGZ
+         knBujiXaJffxluoMIBT2s/36V8/9mgOejsMgsnrU49kSnFBph8bjSFrU9kcFfutUq2j0
+         CpUrsdx1O4Je21njGK7dIfOBdUc/5zGgxnB4gDVrDrzKLPJ6a9elAY8JkHsHKeuHze1Y
+         sxywECYinW9xKWs+8LuBRtB9vzXV55HHRuUVThiq3Lx2JGHDRqCrBMV5Ml2vHT6J9mfx
+         mVy3XMw8XPHJTEa5cixa32iY1+6Ep1b/8YYetPfKNL063z/k1ATtEaS8nDBAVAhNlNn8
+         yyiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=frW5NMx6E736jHy6OxQtX58IMXxNhpe8fKpMWLaqeaQ=;
+        b=cSbFgbGEmEn9XimHM7C11w+xfpmSaBzagUiT8o6hjYU8Ke5kgFa/DYVxUofombOpAH
+         whc+pnhawLw5He7MBSlizVk/nJ0JNZ+PAh4YKHvdDTrabVE+YopEeF0Hz1Vc4hnOHDtl
+         U+7q9QwcW7s4QCa9JpLM94iLmHTvLMZdWawbztXo1wimjSavD4eGL0y50NOZ8BESyox9
+         XosWZzVQLmGbpN4igP0jg/dgcR5LKYFhax7wOlzEDucafMiPK8z4Dwkid9oSzlatyTv8
+         yvK7yhJqxZh8XxpmweBvhu/1Pe2uzwquZHx2MnrE5VX4mYbwOXXWYrm2yNM+okA58H42
+         q47w==
+X-Gm-Message-State: AJIora/NBuN7/QmpCQcSJS15/emAe5SBPQVAUsPFmrlhxwlIpWJXx1kA
+        FO6X1GuLTL2BJ8zDGZEMaIo=
+X-Google-Smtp-Source: AGRyM1tsO2EPsSzHvGdrkz3Px/FannPm8LaiQTQsukRL6qSEfNc2egW5KyT7qT/TtHq3wH+844eQRA==
+X-Received: by 2002:a05:600c:3845:b0:3a2:daf6:89c5 with SMTP id s5-20020a05600c384500b003a2daf689c5mr16280293wmr.120.1657548928331;
+        Mon, 11 Jul 2022 07:15:28 -0700 (PDT)
+Received: from p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de (p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de. [2003:f6:ef03:6f00:5de6:a4d0:d791:ed01])
+        by smtp.gmail.com with ESMTPSA id c9-20020a05600c0a4900b0039c4ba160absm26565585wmq.2.2022.07.11.07.15.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 07:15:28 -0700 (PDT)
+Message-ID: <a87cffae7ab1bd86c7e1c923bf110b5799671219.camel@gmail.com>
+Subject: Re: [PATCH 01/10] input: keyboard: adp5588-keys: support gpi key
+ events as 'gpio keys'
+From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "katie.morris@in-advantage.com" <katie.morris@in-advantage.com>
-Subject: Re: [PATCH v13 net-next 9/9] mfd: ocelot: add support for the vsc7512
- chip via spi
-Thread-Topic: [PATCH v13 net-next 9/9] mfd: ocelot: add support for the
- vsc7512 chip via spi
-Thread-Index: AQHYkLCPgEvqIBosNUe2nxXKVdr3Ka15MpsA
-Date:   Mon, 11 Jul 2022 13:27:41 +0000
-Message-ID: <20220711132740.q3ietozqgucdutqu@skbuf>
-References: <20220705204743.3224692-1-colin.foster@in-advantage.com>
- <20220705204743.3224692-10-colin.foster@in-advantage.com>
-In-Reply-To: <20220705204743.3224692-10-colin.foster@in-advantage.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 56c47670-1d5c-4a27-34b2-08da634121e0
-x-ms-traffictypediagnostic: PA4PR04MB7742:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Pts8R1r9KCSXl8FF8OUi/6FMksXs67+UlgEEKKb17anyXwzQeJ7EZeRP4hqREimL6v7O1ztMHqWCRfRQayUmz1i873Ahj7+/j6Jey9bdEGVR4uKcnSb/PIIh4qfbyX/UbY1A6m1RCnOcLwdGmeMnALok9zUJlm5H4B68vQuMdg567oOdK7B918BC2yBWmUmzN16Zlf/27c6yUhzQhtVe1puZPGkYhkt5T/MFZtiYylyfw4EcuNGFHgxbiUjgfKc3qxiOIFwYnIjnI3wd4qhicdRHGKwVL0qid0REcb6n6b81YEleVWXncI7xK4Ce+nLFqAknjzxQSdzz6ahM3L4lFp+gwXFz1NP5ao8yJLkZkUDt73zf1GZS8+nTGqQoyolJYly5H2xra69lFPBF0jPnK8BWkLuCPEgPaC3JEvR1nM4mO20vdbiacRODpcZFlD24Ie8zpbWqqkzCe0wqdND5dCvm/rl2g0MxKafpbJKeKWHafgTKlSzehw9N+c5ppHU+Asw3Ryftn6/PdTHIG0tbNjyMyw5Fu/nZR2UUkJ3+XOzZEozhxhITWqJaSqwYgSg2fI87h+gxZhd4tQEhhzpdHcQF1bW0q2Hsfjg82h95nnKUGEPHqU6ZWZFfoIVIZuqhEMCbkLvbojo2X91fgT/GVdCCAY7xKjOBu9/rXiR2WebIETTJD1VvRkOMLiZb3+Mog/EcnoYVg9M68p1V4qBYjehhAQVMseG//6Q57G2Tmo0ajoqouOUaKhJyERZT7CjpnHd7NT7daPqpN17de4R3wOHuOZgasV94Nnc+orD8NGK7yAYhxhOszjalPGoJCvDC
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5136.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(7916004)(136003)(39860400002)(376002)(396003)(346002)(366004)(186003)(122000001)(33716001)(38100700002)(5660300002)(66556008)(66476007)(66446008)(64756008)(6916009)(76116006)(4326008)(66946007)(54906003)(316002)(86362001)(6506007)(8676002)(71200400001)(8936002)(2906002)(6486002)(478600001)(41300700001)(9686003)(6512007)(38070700005)(7416002)(1076003)(44832011)(4744005)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?hr86I2slcTDEhJxommxbnElsr63e9Xsm+8wEOWRCKMYTd/nZr8ioJ9u262RZ?=
- =?us-ascii?Q?rRZH7rE8r3k3FvgLYj5TwHlmXi/oK7NsFLH8CXKHKRoBrSCIwa5E7Xt8siEj?=
- =?us-ascii?Q?pX0cPnkdR2aXX+XKLJowWDLTEvvkOWKFhz8uv6PBFfR2yU1arbcm0LCK4z23?=
- =?us-ascii?Q?MPgqjOUasQ70TPj7UINGQDet1rv+Fw84Dv27sTIwMMCbkoatHCgzqxCtctCr?=
- =?us-ascii?Q?SMVIq9f0VLDeiv3RC1U4pvbVr3ZRgSNtqeI1cI/DNnXGsbNmO44RPo7riBCe?=
- =?us-ascii?Q?MDwstpC/ZqhvUzvx7xA00HfBLQdj8y/P2tBi31q1xqIMsAvkeXX7aFoo7ivb?=
- =?us-ascii?Q?4agAd3CtKWw949IXTx4XNkGukYBOpzMAn5LKE4q8a7GjC/ZIM/XV/QndGoFt?=
- =?us-ascii?Q?UBw8P0ykogkOm5A6mV5JRdhuL4tRVJY6c8Bt4B9zFTAPpkxzWiZLk78PxRVH?=
- =?us-ascii?Q?XP1I0X24+Io32No7PJbd7az2ds/YoFulTMxlwxWGEnowHdqQH5Vd40Qxaoco?=
- =?us-ascii?Q?/LnJqJfPF1/tr3zLJCptyIf3PxlsM9amEKXqZmkNtDs0j66TspuR4WOtyCRf?=
- =?us-ascii?Q?S82MZr4YRHwS3gQ53nO/gW3Z7Hh5EfMSEUu0zlrr297f7VHMYmj/g/k6VFc+?=
- =?us-ascii?Q?T8zgsJnsD0EClnU3e5CmviCyiikz7MjiwzVqiKa7bfN/OCYHw+O9VplmSbd9?=
- =?us-ascii?Q?yR9UP2BJgDDA4z29iRVVqwHKeKj4vfPvF3yJyXl1enzcDZud5/dxdnGTX2Pp?=
- =?us-ascii?Q?sApzr2kvsJ2dMpG2++pYdbupywT/q/fXuzozBTHY/mA1qB1HW8mVwZnoTOP3?=
- =?us-ascii?Q?6Nlia1sIxHrGwMQ5z25vgDMNtr3FswOvCl1S9bhN9mHXBaAtzm9NZKNJUSUG?=
- =?us-ascii?Q?iypIV+K5FyHEmYHHXekJc4NAILymjfNRo0yElhFURxRhnEO4m+JyyHALXgPf?=
- =?us-ascii?Q?rkEtjAXx14HO4AeuGZ98ex2BbdYVfnHSu19AemUoSUYnfPYubZFoYrP2M2x+?=
- =?us-ascii?Q?HDf/KpevTWSPgW7wOsSoRQdA6SZgGJcojORFjqREO8QA7vf4aRi2klPpg/KY?=
- =?us-ascii?Q?VNtW93Xv0Sc1/94uCVWcgwNUcWnRLsnPPci4T2LqbheoOnVQaatT99i7YRsV?=
- =?us-ascii?Q?bkCuUuaMX/CJHSsj+4klmZdZowmTugdzCsuhwLtB9sy8XVX+FdS++CaO4gSG?=
- =?us-ascii?Q?WMZ/Zhxwguilslwb9pwa8UmfsqP8JC11/zKTfKBd8RUYDj9f16YZL3fJm9gt?=
- =?us-ascii?Q?TERA/VKm1A4XGgCWCy+yrsfzU1egJG/enbf8mgEZxJRnJYc7/Sr6yuqTh9HO?=
- =?us-ascii?Q?XQgQG91iB33Dx62+pRKM6t9ouYTxkx9obTYVcMNM9lyFOQVBnoL1rZ4n6Lx+?=
- =?us-ascii?Q?A4Zm7mhzRU6n4L+zEVubuJ9k/++NqSd9tEhFt3zzJas0ru++Ii5ZDP1HRgEo?=
- =?us-ascii?Q?sO2mXpeyghHNcTVxTKsYluFGqFQWY97ePbqIu7g3SAyCj4x1ByVEgWfEmAuc?=
- =?us-ascii?Q?Ef8Fc0AC35I/wpoX4df/YovuGIrqQsQtxbKNhfgNc4EeexlCZQOTYQNmsPir?=
- =?us-ascii?Q?sMrtr+72gwCQDrtPfPxz/UxC5Vax6nFnR1BKTM9eeWjmfkNlYRAA6FNSpJWV?=
- =?us-ascii?Q?1A=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0C60D734D83E7F4C8E9C8155F35167FE@eurprd04.prod.outlook.com>
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 11 Jul 2022 16:16:31 +0200
+In-Reply-To: <PH0PR03MB678606B868F668FFBE9DF8FE99829@PH0PR03MB6786.namprd03.prod.outlook.com>
+References: <20220708093448.42617-1-nuno.sa@analog.com>
+         <20220708093448.42617-2-nuno.sa@analog.com>
+         <CAHp75VcJErVteT0P7=HhHB+c0UWFP8R5rc6u==Zf4p5JS4c=6A@mail.gmail.com>
+         <PH0PR03MB678607A61ECA67E28480565499829@PH0PR03MB6786.namprd03.prod.outlook.com>
+         <CAHp75VfWABdHczuvBPh02cNarZZwNw-M8LhMmMQuFX6pDNMn+w@mail.gmail.com>
+         <PH0PR03MB678606B868F668FFBE9DF8FE99829@PH0PR03MB6786.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5136.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56c47670-1d5c-4a27-34b2-08da634121e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2022 13:27:41.8399
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RaS0/maP9V0KWKWIn6Hp4Dx1ptp/9mbzOWd9XxSIgYCdewPtMMWPyh932yBX5nDgg7iTgeLuNVPPoreVTdsYiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7742
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -141,19 +84,201 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 05, 2022 at 01:47:43PM -0700, Colin Foster wrote:
-> The VSC7512 is a networking chip that contains several peripherals. Many =
-of
-> these peripherals are currently supported by the VSC7513 and VSC7514 chip=
-s,
-> but those run on an internal CPU. The VSC7512 lacks this CPU, and must be
-> controlled externally.
+On Fri, 2022-07-08 at 15:24 +0000, Sa, Nuno wrote:
 >=20
-> Utilize the existing drivers by referencing the chip as an MFD. Add suppo=
-rt
-> for the two MDIO buses, the internal phys, pinctrl, and serial GPIO.
 >=20
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> ---
+> > -----Original Message-----
+> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Sent: Friday, July 8, 2022 5:05 PM
+> > To: Sa, Nuno <Nuno.Sa@analog.com>
+> > Cc: devicetree <devicetree@vger.kernel.org>; open list:GPIO
+> > SUBSYSTEM <linux-gpio@vger.kernel.org>; linux-input <linux-
+> > input@vger.kernel.org>; Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com>; Bartosz Golaszewski
+> > <brgl@bgdev.pl>; Hennerich, Michael
+> > <Michael.Hennerich@analog.com>; Rob Herring
+> > <robh+dt@kernel.org>; Krzysztof Kozlowski
+> > <krzysztof.kozlowski+dt@linaro.org>; Linus Walleij
+> > <linus.walleij@linaro.org>
+> > Subject: Re: [PATCH 01/10] input: keyboard: adp5588-keys: support
+> > gpi
+> > key events as 'gpio keys'
+> >=20
+> > [External]
+> >=20
+> > On Fri, Jul 8, 2022 at 4:55 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+> > > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > Sent: Friday, July 8, 2022 4:18 PM
+> > > > On Fri, Jul 8, 2022 at 11:36 AM Nuno S=C3=A1 <nuno.sa@analog.com>
+> > wrote:
+> >=20
+> > ...
+> >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kpad->gc.parent =3D &kpad->=
+client->dev;
+> > > >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kpad->gc.of_node =3D kpad->=
+client->dev.of_node;
+> > > >=20
+> > > > We are going to remove of_node from GPIO. Moreover the parent
+> > > > device
+> > > > and its node is a duplication, just drop the latter and GPIO
+> > > > library
+> > > > will take care of it.
+> > > >=20
+> > >=20
+> > > Well the of_node was set so that I had a proper name in the IRQ
+> > domain
+> > > IIRC. Will this be handled in the GPIO lib in the future?
+> >=20
+> > In your case it's a dup. So in _your_ case it will be handled in
+> > the
+> > future. For the rest we already have an fwnode member.
+>=20
+> ok, I will drop the assignment...
+>=20
+> > > The parent assignment was also to make things neater in
+> > > /sys/kernel/debug/gpio.
+> >=20
+> > Sure.
+> >=20
+> > ...
+> >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 girq->handler =3D handle_si=
+mple_irq;
+> > > >=20
+> > > > By default it should be handle_bad_irq() and locked in the -
+> > > > > irq_set_type().
+> > > >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 girq->threaded =3D true;
+> > > >=20
+> > > > See documentation above.
+> > >=20
+> > > I see... I will look at Docs. In practice I don't think this
+> > > matters much
+> > > since this handler should never really be called (I think) as we
+> > > just
+> > > call handle_nested_irq().
+> >=20
+> > There are two different comments, one about handler, another about
+> > how
+> > to properly write IRQ chip data structure and mask()/unmask()
+> > callbacks.
+> >=20
 
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>=
+So I think I have most of stuff understood for v2. About the handler, I
+don't think we really need to set 'handle_edge_irq()' in
+'irq_set_type()' as this is a nested threaded interrupt and so, the
+desc->handle_irq() should never be called (I think, not 100% if there's
+any strange case where it might).
+
+That said, if you still think that I should do it (for correctness),
+fine by me.
+
+> > ...
+> >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* should never happen */
+> > > >=20
+> > > > Then why it's here?
+> > >=20
+> > > because I do not trust the HW to always cooperate :). In theory,
+> > > we can get some invalid 'gpio' from it.
+> > >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON_ONCE(hwirq =3D=3D n=
+gpios);
+> >=20
+> > On some setups this can lead to panic. Why? Is this so critical
+> > error?
+>=20
+> Ahh, you're right. Forgot that in some cases WARN can actually panic.
+>=20
+> > hardware can't anymore function?
+>=20
+> If we get in here, the device is probably in a very bad state but
+> that
+> does not mean that the system is...
+>=20
+> I will just move to dev_warn(). Thanks for the remainder!
+>=20
+> > ...
+> >=20
+> > > > I don't know this code, can you summarize why this additional
+> > mapping
+> > > > is needed?
+> > >=20
+> > > You have 18 possible pins to use as GPIOs (and hence be IRQ
+> > sources). Now,
+> > > if you just want to use pins 16 and 17 that will map int hwirq 0
+> > > and 1.
+> > But
+> > > what we get from the device in 'key_val - GPI_PIN_BASE' is, for
+> > example,
+> > > 16 and so we need to get the hwirq which will be 0. It's pretty
+> > > much
+> > the
+> > > reverse of what it's being done in the GPIOs callbacks.
+> >=20
+> > Any reason why irq_valid_mask can't be used for that?
+>=20
+> I will have to look at irq_valid_mask.
+>=20
+> > ...
+> >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Default is active l=
+ow which means key_press is
+> > > > > asserted
+> > on
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the falling edge.
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((irq_type & IRQ_TYPE_ED=
+GE_RISING && !key_press)
+> > > > > ||
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (ir=
+q_type & IRQ_TYPE_EDGE_FALLING && key_press))
+> > > >=20
+> > > > This is dup from ->irq_set_type(). Or how this can be not like
+> > > > this?
+> > >=20
+> > > We get here if we get a key press (falling edge) or a key release
+> > (rising
+> > > edge). The events are given by the device and it might be that in
+> > some
+> > > cases we just want to handle/propagate key presses
+> > > (not sure if it makes sense). So we need to match it with the
+> > > appropriate irq_type requested. Note that this kind of
+> > > controlling the
+> > IRQ
+> > > from SW as there's no way from doing it in the device. That is
+> > > why we
+> > don't
+> > > do more than just making sure the IRQ types are valid in
+> > irq_set_type.
+> >=20
+> > I see, thanks for elaboration.
+> >=20
+> > ...
+> >=20
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 handle_nested_irq(irq);
+> > > >=20
+> > > > There is new helpers I believe for getting domain and handle an
+> > IRQ.
+> > > > Grep for the recent (one-two last cycles) changes in the GPIO
+> > drivers.
+> > > >=20
+> > >=20
+> > > Hmm, I think I saw it but somehow I though I could not use it
+> > (because
+> > > of the previous calls to get the irq_type). Hmmm...
+> >=20
+> > Maybe you can double check?
+>=20
+> Sure, I think the helper can be used...
+>=20
+
+So I did looked and I think you are thinking about
+'generic_handle_domain_irq()'. For nested threaded I could not find a
+similar one (maybe a new helper to be added).
+
+- Nuno S=C3=A1
