@@ -2,67 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6C5E570157
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 13:56:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ACA3570167
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 13:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbiGKL4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 07:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
+        id S230186AbiGKL62 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 07:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbiGKL4R (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 07:56:17 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD98326E0
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 04:56:16 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id 75so7012825ybf.4
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 04:56:16 -0700 (PDT)
+        with ESMTP id S230114AbiGKL6X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 07:58:23 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E402332BAD
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 04:58:21 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-31d85f82f0bso10213877b3.7
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 04:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ASd7dm6lYrZdAzK3N6daMmc+CWirepg6OyYYSdtPBtQ=;
-        b=zHlbUAwwapxF0MLHHEdAUgC30UDRWwnmS4vWTffZbOif1EEJuaKGsHMyFKMaHRVznO
-         wPDPGav91x3qQXQWMV961AiC0MaN6ftXSo9GLdhSM7sU+DS7KZx05CPvL7TM3mp94Qtg
-         n7TpdkJwZxF3XZegob+8sngX6WiLYZExfCCR3smH131STPnOCJCjALZhH34nfL7ebw/H
-         B4xiKKGBsN9200igRrKqn1QfUWJLrck3SgRhJcg3NdFEhQmWHHvEXU9U/NxFVC2PncJ0
-         Cjx5HdHf+VjIknNmNKTYpkBKGAULzRObXs1wHI5fABmFmyMtSytDvpoYEFSKNC+1Mk9z
-         1Hzg==
+        bh=Kb9KHIuo4IosRBw4fXiFNpYBgAtjRiuQdEYMHy61dYk=;
+        b=uuzucqYoJK9QyuGI60SrzoVpti+2eBlJqaCC6sB9ZZJd08dlBVmeCukV4HfC6zZVhe
+         1/X/qe6RzkOA/Q+PuOEA0auY09gTuarB3qd9dqHvZTDV3zFz2f++mKS7gh0uMHZz/QaB
+         rrdn12qHtkuMmBtsPJc3r1Ohad2owVw1j4OQI2HRw1CbbNkim870g3cUO6VQ9Lvgm8Zp
+         QTDX/2jmvmoB/kKzXTbrY19GS92XKmd/rAkm/4WYpC3ZXPJ+fS5EnaXEMj1SdT6sBWP8
+         9j3WF8jB6rdPDEHdldwClYu2VKbdZQ6i0P2XBLQgjXq3lg+CzUXaBSMaFuhDmOqlGYB1
+         yZPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ASd7dm6lYrZdAzK3N6daMmc+CWirepg6OyYYSdtPBtQ=;
-        b=ijviKR5PyWIgyyaBrDXd3uCGpdinS53STIqOxMXyLXE0GPeMtslxjwxDcr7/k2pjJi
-         9UJMBYUScPGKo3OJ9LEeGy4k7gYndIfT/604wvOzV4fOcwgj4bnfQIiJ8YVrJ9wuFZXy
-         Qvla2dUQ9y0wfkVpRH87bFT9PUxB+dMNUFe897u0Zz7tdWWev09XmsnUzj419yu0wFlm
-         aYCIH+S+bc1CNZM7GZiweJ05indb75kNJASaEyX4yW4HmyU45gM2RGrTL66Uju3pCsXE
-         Ec5r/5v8n4ia65O3bwiwYV2oVt0EigKqXDda9zib4pTrNqkbSy2UGx78h2H4TzFCNN/z
-         CRGg==
-X-Gm-Message-State: AJIora8O+xx8GiuHXy36/9gCRMULO656qpPsAJngmf0HN4/2fjC7jI4f
-        s+/nUeQlItNFYun6pPQRrxdagHsEFHZEuHKE1PoAFg==
-X-Google-Smtp-Source: AGRyM1v5CLjNTsjcq5fYn7SA01Pi7mP2T5BVXZXBSbQVgj46pIJy/5zI+faxrUyGQR4WPVtKoUIQ5lemEHunE6+RpE4=
-X-Received: by 2002:a25:d07:0:b0:66e:6c0e:a2d1 with SMTP id
- 7-20020a250d07000000b0066e6c0ea2d1mr15127181ybn.369.1657540575867; Mon, 11
- Jul 2022 04:56:15 -0700 (PDT)
+        bh=Kb9KHIuo4IosRBw4fXiFNpYBgAtjRiuQdEYMHy61dYk=;
+        b=qaNZh2tkNlXo9AWIclfDSUq3NfGXVwdD1W2Dv5nuMrpuAuqt+JTx7aGQnNq5yuIRFX
+         5nEER8B4jwmIZavJz8SMGaI1W6LxI8w40IBKQV8pG9Uywqer3sBL7uY8BEmg8x5pqvBB
+         TpEMWt5Ay3d6q6sp4g4KgsdB9JgotxPNZl7Byq4fZ3yycxVE0KYdkVGPj8ZyxJYwJOiW
+         w2nyg6EHcanl+ztn+2EwBav3kpaLYPylWxX0tqd4RWTx85ltsSG6dtDVxxzD+Zzj4B4K
+         Z6HblLl7ExUCOMlJbtXDLzLveSgRjtPr2+vgxVvgjtC9UTuln5tuMrpTfZ7jkwMGXi4S
+         pZaQ==
+X-Gm-Message-State: AJIora+Xit3retWebbfGBoyNGb8sXLuRhvUol/d4bcsMm6rPBIomYorQ
+        6SFDiQR708Lzk9GpYQ6rS8W7IGVJZ4dC/Iaati+mPg==
+X-Google-Smtp-Source: AGRyM1s/a3hRCOR5r59cRwkAhmMUw0kBr01CcqkFmETfUZZ7ZH7MngwVHzji1O6LK5sxiEbLLw+AGGSOXnjRa4RncAA=
+X-Received: by 2002:a81:34c:0:b0:31c:8b37:6595 with SMTP id
+ 73-20020a81034c000000b0031c8b376595mr19493629ywd.126.1657540701119; Mon, 11
+ Jul 2022 04:58:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220704212402.1715182-1-robimarko@gmail.com> <20220704212402.1715182-9-robimarko@gmail.com>
-In-Reply-To: <20220704212402.1715182-9-robimarko@gmail.com>
+References: <20220630122334.216903-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20220630122334.216903-1-angelogioacchino.delregno@collabora.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 11 Jul 2022 13:56:04 +0200
-Message-ID: <CACRpkdaAb14TGF0atvbB8NHygsRGNCKJCf_S2gOzvvTxxDEeRA@mail.gmail.com>
-Subject: Re: [PATCH v6 09/12] pinctrl: qcom-pmic-gpio: add support for PMP8074
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        konrad.dybcio@somainline.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        lgirdwood@gmail.com, broonie@kernel.org, jic23@kernel.org,
-        lars@metafoo.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
+Date:   Mon, 11 Jul 2022 13:58:10 +0200
+Message-ID: <CACRpkdbkpBwABmj31yY0GN++gvbaaox6=i7GkrRYu6ESROZzGg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: Fix name for mediatek,rsel-resistance-in-si-unit
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        matthias.bgg@gmail.com, sean.wang@mediatek.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nfraprado@collabora.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,15 +70,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 4, 2022 at 11:24 PM Robert Marko <robimarko@gmail.com> wrote:
+On Thu, Jun 30, 2022 at 2:23 PM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
 
-> PMP8074 has 12 GPIO-s with holes on GPIO1 and GPIO12.
+> When this property was introduced, it contained underscores, but
+> the actual code wants dashes.
 >
-> Signed-off-by: Robert Marko <robimarko@gmail.com>
+> Change it from mediatek,rsel_resistance_in_si_unit to
+> mediatek,rsel-resistance-in-si-unit.
+>
+> Fixes: 91e7edceda96 ("dt-bindings: pinctrl: mt8195: change pull up/down description")
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Since there are no compile-time dependencies I expect to pick
-the pinctrl-related patches separately to the pinctrl tree on next
-v7 iteration.
-
+Patch applied!
 Yours,
 Linus Walleij
