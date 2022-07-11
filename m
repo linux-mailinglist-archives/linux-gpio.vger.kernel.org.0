@@ -2,133 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB0385708F1
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 19:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7575709D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 20:21:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbiGKRea (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 13:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
+        id S229730AbiGKSVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 14:21:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbiGKRe2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 13:34:28 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594BA28718
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 10:34:27 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id f2so7939698wrr.6
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 10:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zhemavgI4ydhrI08UVwAiDdznt/RffszwqLG6HFDp4E=;
-        b=kopdkhB7cizOyS8zahe5evUVqfwltl/0QCPTvZH71hvUsSPc2jOjIm2PAXY4XWfygd
-         hMM+xLSwzYnwwhnxpjHKmbjD4V4CkZ85D6n/Gphf5LGvxPtHlUdyTtexG3rv7x8skvT8
-         vPPBdRL6Nfh5QONcwlRmK7LvJ0v1gNCrTkdNrieaDYdz+styCTDPX5CvtGs/0lOUfDS4
-         8ltlrhScgVm4BvARdNeHVjbxb1+kCJiyv23Q0IAiydOTtEqfvsUeU8E8t/wb54ND+UOk
-         8OfrgxSRJp2Icdq4ClcU8Bx9mPWfx6XNFrqqPFcnqJpw8sw8VV2Z5yYAQuKkBk1WXCGx
-         rrPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zhemavgI4ydhrI08UVwAiDdznt/RffszwqLG6HFDp4E=;
-        b=E5MSiVbyQvvj1W12MuSYOJvUNOsNTB+jsmixFmXWYJtLo03SvvnYp6p0N4sQfPQv71
-         X9mSMooWJmwMl/Dlc0XZi3FYV5pDAU4P1mp0zEd2UDUScg8xBvxJL6VtZ3ELXJ/e2N/B
-         h1v9GKY6r1I92XVXX9xgPI9q02Z+ouxBSD61M2mlbHWC+rjy88JEU6GK+6OVL6KwBd/o
-         dfzAst2hJVlhoeLdkxBm/eiSM6Clz/f6JOVmDCeYqOFf52Gttwmtz5ayoEJoM/JOm5LF
-         zCrYwwms8wUYPO0FlTu2RBR1XF4XgspRgYVvQVXam9BT5s7LPCvbYex6eKrnSQAET3QR
-         Cgyg==
-X-Gm-Message-State: AJIora+4u4UDiGonIA/KXgQ5CjA25cgHUIlVFinOG1FiP1hzCi7+omSW
-        Z/M2oMPdnXyU69Zjath/4wrydA==
-X-Google-Smtp-Source: AGRyM1u1G0CVskNV+B5VY74AYXJQnreMsr9SFnboxszFScdTaPz2H94fFluLFgm6nTs+9m67Row0tA==
-X-Received: by 2002:a5d:584d:0:b0:21b:a3a2:d67c with SMTP id i13-20020a5d584d000000b0021ba3a2d67cmr17165271wrf.149.1657560865906;
-        Mon, 11 Jul 2022 10:34:25 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5ec7:cc93:2210:a24b])
-        by smtp.gmail.com with ESMTPSA id m65-20020a1c2644000000b003a2e87549f6sm2821042wmm.21.2022.07.11.10.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 10:34:25 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>, stable@vger.kernel.org
-Subject: [PATCH] gpio: sim: fix the chip_name configfs item
-Date:   Mon, 11 Jul 2022 19:34:18 +0200
-Message-Id: <20220711173418.91709-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229635AbiGKSVb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 14:21:31 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB7032468;
+        Mon, 11 Jul 2022 11:21:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 6C277CE140D;
+        Mon, 11 Jul 2022 18:21:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4FACC34115;
+        Mon, 11 Jul 2022 18:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657563686;
+        bh=Hvuab+BJPtTL2KeqX1EXN+dkDwg1hOiOXl5zkH6UkmU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jiDa2k7Tgjdcq8hRiumQkx460Nf7JmnyEKOsszWE9X+DXPHzqBqF2+6kbzTcgZfRR
+         SmhDjH4oeCUgBXKQHfoto3Gw7l6LIVcZJYUP00RfEs81PgiXnwZZawi0YumsgWrHld
+         a0LjZfw5aVzzR32Mi76Nt7PT/VXrQwEnD3L4WjhW70GmD2bJ8nXliTXCoApsdePjk/
+         nR7fhH7cUh9cVo53mbW2hvM3Wp+wauA3uGe6/aGAUldUuLzYkkddOp2lU8s0nc1b/+
+         nUxL4oGuGqRDKijs3EJjIFpeguce4Nnss1OXnm+mm5UmfW9LP5zGVsoE9odafGHEHM
+         xabKF+o4xXcYA==
+Date:   Mon, 11 Jul 2022 11:21:16 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com, Wolfram Sang <wsa@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        katie.morris@in-advantage.com
+Subject: Re: [PATCH v13 net-next 0/9] add support for VSC7512 control over
+ SPI
+Message-ID: <20220711112116.2f931390@kernel.org>
+In-Reply-To: <YsvWh8YJGeJNbQFB@google.com>
+References: <20220705204743.3224692-1-colin.foster@in-advantage.com>
+        <20220708200918.131c0950@kernel.org>
+        <YsvWh8YJGeJNbQFB@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The chip_name configs attribute always displays the device name of the
-first GPIO bank because the logic of the relevant function is simply
-wrong.
+On Mon, 11 Jul 2022 08:51:35 +0100 Lee Jones wrote:
+> > Can this go into net-next if there are no more complains over the
+> > weekend? Anyone still planning to review?  
+> 
+> As the subsystem with the fewest changes, I'm not sure why it would.
 
-Fix it by correctly comparing the bank's swnode against the GPIO
-device's children.
+Yeah, just going by the tag in the subject. I have no preference,
+looks like it applies cleanly to Linus'.
 
-Fixes: cb8c474e79be ("gpio: sim: new testing module")
-Cc: stable@vger.kernel.org
-Reported-by: Kent Gibson <warthog618@gmail.com>
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
- drivers/gpio/gpio-sim.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+> I'd planed to route this in via MFD and send out a pull-request for
+> other sub-system maintainers to pull from.
+> 
+> If you would like to co-ordinate it instead, you'd be welcome to.
+> However, I (and probably Linus) would need a succinct immutable branch
+> to pull from.
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 98109839102f..a370d3aec6d9 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -991,7 +991,7 @@ static struct configfs_attribute *gpio_sim_device_config_attrs[] = {
- };
- 
- struct gpio_sim_chip_name_ctx {
--	struct gpio_sim_device *dev;
-+	struct fwnode_handle *swnode;
- 	char *page;
- };
- 
-@@ -999,7 +999,6 @@ static int gpio_sim_emit_chip_name(struct device *dev, void *data)
- {
- 	struct gpio_sim_chip_name_ctx *ctx = data;
- 	struct fwnode_handle *swnode;
--	struct gpio_sim_bank *bank;
- 
- 	/* This would be the sysfs device exported in /sys/class/gpio. */
- 	if (dev->class)
-@@ -1007,12 +1006,10 @@ static int gpio_sim_emit_chip_name(struct device *dev, void *data)
- 
- 	swnode = dev_fwnode(dev);
- 
--	list_for_each_entry(bank, &ctx->dev->bank_list, siblings) {
--		if (bank->swnode == swnode)
--			return sprintf(ctx->page, "%s\n", dev_name(dev));
--	}
-+	if (swnode == ctx->swnode)
-+		return sprintf(ctx->page, "%s\n", dev_name(dev));
- 
--	return -ENODATA;
-+	return 0;
- }
- 
- static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
-@@ -1020,7 +1017,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
- {
- 	struct gpio_sim_bank *bank = to_gpio_sim_bank(item);
- 	struct gpio_sim_device *dev = gpio_sim_bank_get_device(bank);
--	struct gpio_sim_chip_name_ctx ctx = { dev, page };
-+	struct gpio_sim_chip_name_ctx ctx = { bank->swnode, page };
- 	int ret;
- 
- 	mutex_lock(&dev->lock);
--- 
-2.34.1
+Oh, that'd be perfect, sorry, I didn't realize there was already a plan.
+If you're willing to carry on as intended, please do.
 
+Colin if there is another version please make a note of the above
+merging plan in the cover letter and drop the net-next tag. 
+Just in  case my goldfish brain forgets.
