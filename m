@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 291E0570AEF
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 21:48:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91394570AF4
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 21:52:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229437AbiGKTsf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 15:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50282 "EHLO
+        id S229601AbiGKTwA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 15:52:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229996AbiGKTse (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 15:48:34 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC2726C;
-        Mon, 11 Jul 2022 12:48:30 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id f73so10423237yba.10;
-        Mon, 11 Jul 2022 12:48:30 -0700 (PDT)
+        with ESMTP id S229437AbiGKTv7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 15:51:59 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AC63F32B;
+        Mon, 11 Jul 2022 12:51:58 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-31c9b70c382so60250907b3.6;
+        Mon, 11 Jul 2022 12:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VkomuDQLIrGkpVVzmeFT3DYYD8yFSVIJULiDQqnLKDw=;
-        b=o5Js5nG9JFrnJw8FTiNWMEV88/jxGJgvHjwEV4Gq4kBjLVyQPqioyP0vEKHho5OYsb
-         nUrTreABi1P6j0Com5OJ+nHYveim720M8LxJjduQ1g4khIkBdWL4BiyUvtXhvgS4WJnY
-         CdiJXESyLtomBUrhIafge6ECdQ02REUXb8nOMp5Kr0EXoLsPtBGdTxEVLtA+ujs/y3+x
-         Q434BIhOY75cziF/DL4771iz4nr81QNA8KAIV6gtSaD+G5O3JWp3N4tJxdcLKeILEDyb
-         oDTSIx9ShPXrcP+gU873yiLx3I+4nc5kSfa7tiUJham162qK0oF/NUsPfN83w7U4bL0i
-         VZTA==
+        bh=0bcHAJ8pPu9Z1dzwWU277Taf7IekpIK9rBLhRh5jWmg=;
+        b=DvGAa0zK7HF46aB4MyzxMuUILtwCScFPzDzgP0it6UdyIbOGLVY1S2FdA0PbJoxiSh
+         ze6DBRZBRKGCq2YdUjM3FasdOPTNoVygliP/fQlVRM+HUZWWAcXF9whSngETrgb+JsZX
+         smYRS+jbDrcjrtcY2KenTHhKqZ/l4hWD1SCpANjcyh/jxQRXcxFeFKqPegE/lowVciTW
+         atcfvW5Z7NyTJZIMNue0bOYSJxQV0xSzJ1SdgIgy8qD1qwHuTJGLbiJs/H7dj44+KQXc
+         abg0OjJ/DfKuArHGSQ6KotSx3y6b6RQ4b5LpczBpdy0igiE+bEAfai2vdd4Z5hKJrMSr
+         vy/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VkomuDQLIrGkpVVzmeFT3DYYD8yFSVIJULiDQqnLKDw=;
-        b=cD4XzwpFz5RHKnZL88UNIGckBnUhn7Vo4MVmKiNi3XsdFhgLvOjAJwCg+v5TLgDa1g
-         l5ltfBiwMAiVUBiaEBAWeVA7ieihEdzBr4vZZw2blYG7zDwvZ7jvBKiLn99sqSxnbUi6
-         XpBoX8+9jnck45j8oZ1H5o42d9zbIHP0VGzS+y47gb5pg0Jt5AdI8bxhRHeGNJBWlKoB
-         12zhgLuOUBj3MVm2M6JgpsH9yvndwqban/DfgBk6qslARu5jmJo5OOMZhKzUVdiyYBWP
-         sE5XLtrIA5tpV9PbQIH0Wcfu744voex1pYvviDh624FAGUyOoasKyyP0tMXalG3/FQAT
-         OSkQ==
-X-Gm-Message-State: AJIora88TQgLcEa8Oum6SzqXkrdjFchjvsVnhwa00ZudGb1ShP9Wh6/d
-        27Jo9i3wk7tXc2x0KG6VC2xvpQejLQU3M+cOmH4=
-X-Google-Smtp-Source: AGRyM1uJ2YrRHaWNO/NcEhC1mvA+w9x+HZp1INbuCKtI+dHb6RiQx7Z9HGo20m4O7PWUREkPpZKWsxNuqM9JyhIqvps=
-X-Received: by 2002:a05:6902:10c9:b0:668:e27c:8f7 with SMTP id
- w9-20020a05690210c900b00668e27c08f7mr18789665ybu.128.1657568910080; Mon, 11
- Jul 2022 12:48:30 -0700 (PDT)
+        bh=0bcHAJ8pPu9Z1dzwWU277Taf7IekpIK9rBLhRh5jWmg=;
+        b=xmDQBB/w7hzr8lOLC8uG4zKg40MomKkr60nDiS9Ni+Lb76O92D5yJ+WJ6qgudbYnka
+         pft0l1nU9FsWntVIjfCL9HFJHxsJy6kbm93YT7JO2UOuWdRbAEg0+7DpeVDyQSvdLY3m
+         QaftgkIGoR/2eSoOgCFI43+ghxlF4TuV4ajQh2agSlqdiiQ4M4vnBB6MNOW6Og7dlPQX
+         lZpOtXZbh3zWPclVu8daRJYBPdAaoMhnjwsbDoBWZBpsyXd7TPgA4satxNCskCIC1CHi
+         S7XiXoBjWa7pQtIh9eS+TmrZ7J9XodenVnh4eMryUTM1qZQ7OfKyx1kZo8PRpsbVRccE
+         vZQw==
+X-Gm-Message-State: AJIora+NIbyyP3AKCPT1h+SKLYefScclGyZpdQsgv+QVg6hEVENL55BZ
+        HZfvTpfzG9ighKCTTv9cQoj/Voh/pKJu6zjiCMs=
+X-Google-Smtp-Source: AGRyM1s0GzjIdZ6IxH9DtjsXq8yr4icmAJGSU8Bb25HOYqSIg36WSyORcHFgw/kXzLiERs5OY7g032OZCQBohYrVvnM=
+X-Received: by 2002:a81:8397:0:b0:31c:8a02:3f6d with SMTP id
+ t145-20020a818397000000b0031c8a023f6dmr21537093ywf.486.1657569117610; Mon, 11
+ Jul 2022 12:51:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220711192113.3522664-1-horatiu.vultur@microchip.com> <20220711192113.3522664-2-horatiu.vultur@microchip.com>
-In-Reply-To: <20220711192113.3522664-2-horatiu.vultur@microchip.com>
+References: <20220711192113.3522664-1-horatiu.vultur@microchip.com> <20220711192113.3522664-3-horatiu.vultur@microchip.com>
+In-Reply-To: <20220711192113.3522664-3-horatiu.vultur@microchip.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 11 Jul 2022 21:47:53 +0200
-Message-ID: <CAHp75Vfs8EH-rRn58cS692tZMRFmjFLv6=kB4oqVEGXi5R8BHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] pinctrl: ocelot: Fix pincfg for lan966x
+Date:   Mon, 11 Jul 2022 21:51:20 +0200
+Message-ID: <CAHp75VdeZSP62qoOdQf=g4b7AheFd4=jNxfjMh-_T7Q1Zi=LbA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pinctrl: ocelot: Fix pincfg
 To:     Horatiu Vultur <horatiu.vultur@microchip.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -75,55 +75,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
 <horatiu.vultur@microchip.com> wrote:
 >
-> The blamed commit introduce support for lan966x which use the same
-> pinconf_ops as sparx5. The problem is that pinconf_ops is specific to
-> sparx5. More precisely the offset of the bits in the pincfg register are
-> different and also lan966x doesn't have support for
-> PIN_CONFIG_INPUT_SCHMITT_ENABLE.
->
-> Fix this by making pinconf_ops more generic such that it can be also
-> used by lan966x. This is done by introducing 'ocelot_pincfg_data' which
-> contains the offset and what is supported for each SOC.
-
-Thanks for an update!
-My comments below.
+> The blamed commit changed to use regmaps instead of __iomem. But it
+> didn't update the register offsets to be at word offset, so it uses byte
+> offset.
+> Another issue with the same commit is that it has a limit of 32 registers
+> which is incorrect. The sparx5 has 64 while lan966x has 77.
 
 ...
 
-I believe introducing
+> -static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
+> +static struct regmap *ocelot_pinctrl_create_pincfg(struct ocelot_pinctrl *info,
+> +                                                  struct platform_device *pdev)
 
-  struct ocelot_pincfg_data *opd = info->pincfg_data;
+const?
 
-may allow to reduce LoCs...
-
-> +                       *val = regcfg &
-> +                               (info->pincfg_data->pd_bit |
-> +                                info->pincfg_data->pu_bit);
-
-...like here:
-
- *val = regcfg & (opd->pd_bit | opd->pu_bit);
-
-...
-
-> +       info->desc = devm_kmemdup(dev, &data->desc,
-> +                                 sizeof(struct pinctrl_desc), GFP_KERNEL);
-
-sizeof(*info->desc)
-
-and missed the NULL check.
-
-...
-
-> +       info->pincfg_data = devm_kmemdup(dev, &data->pincfg_data,
-> +                                        sizeof(struct ocelot_match_data),
-
-sizeof(*info->pincfg_data)
-(isn't it a bug here?)
-
-> +                                        GFP_KERNEL);
-
-and missed the NULL check.
+And I would leave pdev to be the first parameter, if there are no
+other functions that have them like this.
 
 -- 
 With Best Regards,
