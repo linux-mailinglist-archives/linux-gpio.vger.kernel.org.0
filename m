@@ -2,58 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC455701C7
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 14:11:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56F985701D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 14:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbiGKML1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 08:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40084 "EHLO
+        id S229615AbiGKMOS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 08:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbiGKMLW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 08:11:22 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D114C612
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 05:11:19 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-3137316bb69so46334227b3.10
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 05:11:19 -0700 (PDT)
+        with ESMTP id S231629AbiGKMOL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 08:14:11 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3F8F41D3F
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 05:14:10 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id p129so8374716yba.7
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 05:14:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BgDGubWi1cWBp+dpCoifPHQpsWok1yMug5l0DJZVuMg=;
-        b=AWq/y1cZ7co9w9SottxwtSovYU5UA4yE9vShFw9Aet+krKVobiZAv9X5J+oVmTSrHI
-         GrZcs6fcKtztVPpPSCdLrUJlGDNK/WDGcCFaGlz5aAD4/0viCB3PQUk1bT9w+l7io1Cr
-         vH10KFlKsLonFZPuF6YFCjVzJZpyNGyEcOAFogiSWPZMrUPvDPFodR+I+kfhwQjR9nOX
-         cvlrGN/D7i5qhPvtR0MAwp7zlbg1uvpOsXxbWCeY2v6lj5wqQPOlx+NKi41Ka36+Oawq
-         T5Bylo3L6tiF00TQ/QsFtjqm3iYUAiM/weSVBwT3xB8OhGUOB9qdinHiZVEUGTay6cK5
-         wQOg==
+        bh=fc0PtwUweiQ9pzsOaOGFjNkymJkFNLrkGpP7BL52FuY=;
+        b=B//aEmTrhqrisoWA1D48UdfOGerRxLSBAaTNNahCw3iNiGDVPMD2caUWvYOQCI2jKk
+         vTKlllemVySF3z8K9VtKRjuvGnXtmOMEK3bH7sG9hQstt5VxpeWaPxt/yd7ZOVxD/yWX
+         RNaZZdxcew6bpKf9BG+STgTfO7R86LMPzl1+3GsihmHvkZHSUlYYkKamCWXO/p70bqOx
+         fs9RdByVchoLzXIcdciQbx35HhRGcQ58aDT6D1vBJy/3dHNs07bzUm/5tbrT6IJM7mE/
+         /VQq+4H5zsSPI9ZigE3E8MSX9adRrc5yoILqKfz95N0nS4+PlgGq/UsazXc5ahBj+/MD
+         by9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BgDGubWi1cWBp+dpCoifPHQpsWok1yMug5l0DJZVuMg=;
-        b=HotKG1FWhkUL9O4UGPP5VqDK7/89pzi+a7RffU72/E/7ZZofTJ6RJeZgKGaObQxC8J
-         w+UBF8aZM5W1eu/oud/N6m9BHjRcd38plv9nWW2p2XnXeifOq6pMAFaD80Qs0qw4ccSr
-         r6+LHexNEAdvz7YloGQL7JEbFa78RCyEUGlglPW1Lobnc5yk04tmcHuKaI46oCTd2VRK
-         TYHoVe4sxTFdZndYoS09dBdkAx2jFe7O9LVVMYcbriUSTcifihvhSN+m1TY/d0XbeFEX
-         klre4WeyTAsy0lzKnd05tRUQTi767YXCyFEA1oJ5sMoKmoiCi9hQySXN2uGKkV41pRcD
-         1GIA==
-X-Gm-Message-State: AJIora+0c2OrGzZkUT36ayO3l5wzfrnaBGt6Ojc/lTCQKx9NgNxQE5mC
-        fL/1Y+9eMfZJO9fiNp58nYzDZD+RjlctFK9Fp5KAMQ==
-X-Google-Smtp-Source: AGRyM1vp7xgLdsfGLBD68lbN205z6Q99ouqJKCW7hfi4Kij6p7GkfVGe9T6RGOkygbujMUZyE90hQxj/6M3slj2XDC8=
-X-Received: by 2002:a81:cc4:0:b0:31c:839c:7e27 with SMTP id
- 187-20020a810cc4000000b0031c839c7e27mr19420047ywm.151.1657541478797; Mon, 11
- Jul 2022 05:11:18 -0700 (PDT)
+        bh=fc0PtwUweiQ9pzsOaOGFjNkymJkFNLrkGpP7BL52FuY=;
+        b=MMS1L99uBrOKkkuJoWXzlhFhlBNNEiE4NozPeVBV8AZEY42dAKFLJYQZkGrYZ6LR0x
+         OCR/0rFSEViNQz6fTnDuVZuUg+Q5lBYme18wiDN1TonCEWo97BKC9r4/KpLNgr8OVp+Z
+         P4VFDRt626MHk7Z6pssLvSTgvrbaqPyaxzMs5bsxry4Q02c/9pErzgt3bduMuYaIoz2C
+         UH9NKoWo+Q9Pf8Fhmc1jWPbXlSxCqqd5+30CIS/dnZY2KN6r7gn5qIV1kb1Mbpi81tku
+         9IHoM+p+ul6/+EDeZuLfcXLQSUouZG+6csCrs96+G82Q8wc2J7vg+uHCbrYmUBA+RAbe
+         4Oig==
+X-Gm-Message-State: AJIora9KYICpk9wk6XRQEfFeGTT85IQawDtYEngGXNmLLJT/666XF6DX
+        QJGliCKevLDiLyWwOojYrrJ1MJM2K8xjB2y0tjSKIL1xKXI=
+X-Google-Smtp-Source: AGRyM1un5rkK4pRDKYuzMyxqTxMkEjBGn442jQN6k5jbffqhdw3h1EGyWA3vdO/jvoPUdmpXF5Z2/pjj0Unneh6ydwk=
+X-Received: by 2002:a25:e00f:0:b0:66e:2aa9:82b1 with SMTP id
+ x15-20020a25e00f000000b0066e2aa982b1mr16611856ybg.626.1657541649979; Mon, 11
+ Jul 2022 05:14:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220704091313.277567-1-windhl@126.com> <CACRpkdZWEC2jtCk0Xjcq9HOWAbSQvqU7EQiwhbg2bJCVjy+WbQ@mail.gmail.com>
- <7f16a40d.774f.181d3aa58e5.Coremail.windhl@126.com>
-In-Reply-To: <7f16a40d.774f.181d3aa58e5.Coremail.windhl@126.com>
+References: <20220706151553.1580790-1-michael@walle.cc> <20220706151553.1580790-2-michael@walle.cc>
+In-Reply-To: <20220706151553.1580790-2-michael@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 11 Jul 2022 14:11:07 +0200
-Message-ID: <CACRpkdaJ78kmTNqnP729R=iUhwORnK74jptRN94XOnHP5kEZSg@mail.gmail.com>
-Subject: Re: Re: [PATCH] gpio: gpiolib-of: Fix refcount bugs in of_mm_gpiochip_add_data()
-To:     Liang He <windhl@126.com>
-Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org
+Date:   Mon, 11 Jul 2022 14:13:59 +0200
+Message-ID: <CACRpkdZQvWJEtrCmAD8L=ZzUnF-zeAb--cifntyakoDqSWok7w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: ocelot: make irq_chip immutable
+To:     Michael Walle <michael@walle.cc>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -65,17 +66,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 6, 2022 at 3:19 PM Liang He <windhl@126.com> wrote:
+On Wed, Jul 6, 2022 at 5:16 PM Michael Walle <michael@walle.cc> wrote:
 
-> At 2022-07-06 20:47:08, "Linus Walleij" <linus.walleij@linaro.org> wrote:
-> Second, while I would like very much to make a bigger change, it will need
-> days for me to learn the whole semantic of the source code as now I only have learned
-> the semantic of OF APIs and can only make a small step to decide if there is a refcount bug.
+> Since recently, the kernel is nagging about mutable irq_chips:
 >
-> But now, should I re-post this patch with the above commit log you suggested or do more
-> things after I can?
+> [    2.593426] gpio gpiochip0: (ocelot-gpio): not an immutable chip, please consider fixing it!
+>
+> Make it const, flag it as IRQCHIP_IMMUTABLE, add the new helper
+> functions and call the appropriate gpiolib functions.
+>
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Sure no problem, just post it!
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+I hear that Marc want to queue this patch with 1/2 so go ahead Marc!
 
 Yours,
 Linus Walleij
