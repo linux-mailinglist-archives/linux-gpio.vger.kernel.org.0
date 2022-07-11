@@ -2,64 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 639555703BE
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 15:02:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE07B5703C3
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 15:04:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbiGKNC0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 09:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
+        id S229688AbiGKNE2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 09:04:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiGKNCY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 09:02:24 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2695E7B
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 06:02:22 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id 136so8581098ybl.5
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 06:02:22 -0700 (PDT)
+        with ESMTP id S229676AbiGKNE2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 09:04:28 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE1F2E9CF
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 06:04:27 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-31c8a1e9e33so48024077b3.5
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 06:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jBLM5Pi9tPv6vKM0pZCCueIUCFwTFpFPFADh+Fgewz0=;
-        b=SNjylM88LckGpiE4V/QUaMe32JWa/uYAO8RGp/aAtFaJRJpGCN6w0mykgjuvUSGDur
-         lrFqFOwDHaoNloZrphn14yC0t+vufFpHzADq4YWaNThEc1Ugi/ioeS7l8Z+iO7+ClNyY
-         f2j/Rg8i1AOf7VlII+FHdmrOtQ3JfUygah2qq1q8P6/sXeEg5FItPM52F1ecGvQO9c0L
-         6cwowVtD0lP3a0eu8KH6kAVi5VceEXcC9flnLWL2cU7eTUyLFebg8dGbRlajiXYcvrw+
-         4oCWvmmlOeSQMQd8juIi+UUOMtqwlE+OP258+eVPXXHf9WqrIOgfscAvF6CJA2vvda/1
-         10dg==
+        bh=9JKRBi7riS8dgDanXOkqRAyM5H4qVguce4FeaGzoT7s=;
+        b=okcsyTE0zJ0p2APWdLeNBmYNX8aFctszqIOEnjmyHinbyXjv4TrkM3plisAYlh6vAh
+         FEuT5tA3ikYdJQXUYj3t2QSj4xJU7UPICd6IRv+HfPChYvOlfLGjhHbFTawXcJRhVDQ6
+         aH3VVl4EfFAq1yQb31uooHzZTnwLY3OncgwszldSzE0Rh9P0EQPsZ4LBBV0nS+sCQMbd
+         XTDSGUJoNHsKXm6JVZv+uQzQfmYElbijb67isYpyrPV/TlTujXNMUwExfXeyKIeyz50Y
+         7rpr9p8FKpouuoDhBAX7fsk/lzsM/5TA3AuPW8JTK9IaklWJrcUisOo86/iv4W7iJ/Sf
+         soDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jBLM5Pi9tPv6vKM0pZCCueIUCFwTFpFPFADh+Fgewz0=;
-        b=7V4NuIER+Cnt64nc+0C/YXXESAvo8gTKQG3jGLGv5ySxrRTdxxLTqyixlWpZPNetsg
-         RYZZJKDCm+WajjNfSu7Ml/ORc5h19erDLW5V0zInJaNAvASbSYTB7Jl1hwg5Xi/HkBbM
-         wxZFPJI7coJnEHXahvZ9GEYVSrJfnS++/Wj+hZO2Gv0ZfCnlv5bPRBJ0L9l/G5/OPFJK
-         Rmb9+BKuz3uPJfZtqJaUHwuZUM0K3SixUC6k21HYLZtH9X146+C+y4zmGLHtdMLk7rKL
-         O1Hk93vWKfn+E2WQX7V2wI3gjcgfz17sLJjhIE8BpHQAGA/WaXMtK9ZYLpzwfBU+6/LI
-         V+vw==
-X-Gm-Message-State: AJIora8s8AwNYEs8XLmJvMh+Nym84lxmEPyKZD43mA2waNnXznShSbdU
-        WH9IyvH1UIgHunO9tojCsCezEEzNRJfDHwJzlVR6yQ==
-X-Google-Smtp-Source: AGRyM1t29T3PB4THchLEbX8ZYCRztrVQWphL7uBS+Yep1DzncLFf/md0RvUmi8E6sALH+K4tBCYHuiDNW0qA8+E+wqw=
-X-Received: by 2002:a05:6902:1184:b0:66e:756d:3baa with SMTP id
- m4-20020a056902118400b0066e756d3baamr16793466ybu.533.1657544541545; Mon, 11
- Jul 2022 06:02:21 -0700 (PDT)
+        bh=9JKRBi7riS8dgDanXOkqRAyM5H4qVguce4FeaGzoT7s=;
+        b=1kpE9YoC6uuKiAu3gT0seDqnzYeOf5GPPSiZwBGONRcXLnjWxMwKffiu6iCNh741YP
+         vmpyVOuiUEoxOuteAl1FxfagOhP2I2/3J3nXmfDpS19EsBGv3dzmNV7j9wva7NsE9lTj
+         z8w3tWCncXbtuUUU6X23k7n8iTLmtgBZCQOqofWRIwip9+lL4mOeRygcb2prHDYlZMjc
+         5mfrTskrSoXwQqgCnHb5cEQvwIcKXe/4ObpF9dC8+IgtoqvyiTxJGxSbNHoNTAvdGEs6
+         +pcPbTwEkjR8CtolD5iiNpWybn39HOxkWp05uNjLIgPgELfv5OqEfhXHjaNZCzcq+U//
+         3mFQ==
+X-Gm-Message-State: AJIora86tHiUrPempC5KYQDfqbIUGuo9kISNAyGpysAFPLD42PlJFqCP
+        uYF3u4NgjqhFB+y75XSgLrpwtE+t8tmgBKpoyRts4t1r50Y=
+X-Google-Smtp-Source: AGRyM1soi5CEesjCriJC5s0V8He+RqLwxBsOQ7/WmYldHS3JUxOjl1iLjob8jJN+e13tAYA/yAS2ilrm2Sp1NITCnSU=
+X-Received: by 2002:a81:a8d:0:b0:31c:cb2f:c805 with SMTP id
+ 135-20020a810a8d000000b0031ccb2fc805mr20481784ywk.118.1657544666696; Mon, 11
+ Jul 2022 06:04:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1657216200.git.william.gray@linaro.org> <6be749842a4ad629c8697101f170dc7e425ae082.1657216200.git.william.gray@linaro.org>
-In-Reply-To: <6be749842a4ad629c8697101f170dc7e425ae082.1657216200.git.william.gray@linaro.org>
+References: <20220710154822.2610801-1-williamsukatube@163.com>
+In-Reply-To: <20220710154822.2610801-1-williamsukatube@163.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 11 Jul 2022 15:02:10 +0200
-Message-ID: <CACRpkdZn-PV6H+uBcoONt=SThGBAODy-YG=rkx5OX-rcpeE+aw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] gpio: i8255: Introduce the i8255 module
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fred Eckert <Frede@cmslaser.com>,
-        John Hentges <jhentges@accesio.com>,
-        Jay Dolan <jay.dolan@accesio.com>
+Date:   Mon, 11 Jul 2022 15:04:15 +0200
+Message-ID: <CACRpkdY-USEfscMOb6bPONW6xcSqhe3HU-93vJC800xJYCTkGA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Add check for kcalloc
+To:     williamsukatube@163.com
+Cc:     dvorkin@tibbo.com, wellslutw@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        William Dean <williamsukatube@gmail.com>,
+        Hacash Robot <hacashRobot@santino.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,37 +68,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 1:16 AM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Sun, Jul 10, 2022 at 5:48 PM <williamsukatube@163.com> wrote:
 
-> Exposes consumer functions providing support for Intel 8255 Programmable
-> Peripheral Interface devices. A CONFIG_GPIO_I8255 Kconfig option is
-> introduced; modules wanting access to these functions should select this
-> Kconfig option.
+> From: William Dean <williamsukatube@gmail.com>
 >
-> Tested-by: Fred Eckert <Frede@cmslaser.com>
-> Cc: John Hentges <jhentges@accesio.com>
-> Cc: Jay Dolan <jay.dolan@accesio.com>
-> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> As the potential failure of the kcalloc(),
+> it should be better to check it in order to
+> avoid the dereference of the NULL pointer.
+>
+> Fixes: aa74c44be19c8 ("pinctrl: Add driver for Sunplus SP7021")
+> Reported-by: Hacash Robot <hacashRobot@santino.com>
+> Signed-off-by: William Dean <williamsukatube@gmail.com>
 
-This chip is like 50 years old, but so am I and I am not obsolete, it's about
-time that we implement a proper driver for it!
-
-But I suppose you are not really using the actual discrete i8255 component?
-This is certainly used as integrated into some bridge or so? (Should be
-mentioned in the commit.)
-
-> +config GPIO_I8255
-> +       tristate
-
-That's a bit terse :D Explain that this is a Intel 8255 PPI chip first developed
-in the first half of the 1970ies.
-
-> +++ b/include/linux/gpio/i8255.h
-
-You need to provide a rationale for the separate .h file in the commit
-message even if it is clear
-how it is used in the following patches.
+Patch applied, tweaked the subject a bit,
 
 Yours,
 Linus Walleij
