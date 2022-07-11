@@ -2,68 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 346E5570BDC
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B403570BE9
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:34:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229476AbiGKUdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 16:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58034 "EHLO
+        id S231463AbiGKUe0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 16:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiGKUdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:33:50 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1905D33404;
-        Mon, 11 Jul 2022 13:33:49 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-31cac89d8d6so61444227b3.2;
-        Mon, 11 Jul 2022 13:33:49 -0700 (PDT)
+        with ESMTP id S232140AbiGKUeO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:34:14 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DB45247F;
+        Mon, 11 Jul 2022 13:34:13 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id os14so10787302ejb.4;
+        Mon, 11 Jul 2022 13:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=847p17DesiUPrAbTrGt+da4YJYmyj4ybBvLUVEuSIjY=;
-        b=J4WttHlaqvEgBfuXBOlq7Cn8H1LHHBEHnfD+usVNNf3XdpUKSGcz8IGIC0CH1Yfmol
-         kUpd0qMrcglCv7BVwhQ7brGk96fa5ovV5b6TzmWIVXjV4xgrpuznHRCgtQRSzXPr7E/J
-         OUS2TYH8ALc8D31qvjCclWzRy4E5MwvPQSsMuUve8EGSRLKpr6FS7ilsuaz2fPNiMnjg
-         FJrsIi8Yuu1Etq+XLcVJ0li4S7B1wVbV1xnFvRZhlWo4rS4foOG3zIEb5Xi1OzBdOI6s
-         Ksz0exapPlOZnUdUZ4jrnGSIvV/1pTKOzmXtNiZs/w3LY3lPGrlG7HVFdyUzmuOpLkDF
-         G5nA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ygfoxsCOcEZFDvZwwxHJZr7GgBlZqbqyOyuBkqlE4/k=;
+        b=FCVkMHINOi+2nayP8xiMeu+6NxUb1DpQe8dqbjAdVDiNqodttsFdNUyGFXI+oLNvd0
+         iECv+ebdL2J8jGqBB+PU/VsPUxc8WxkRFs6iwA061C9s3norGTb1t0DmDjEB7BgL2YJ2
+         8hVFkC/FavZPXtwF3ETGluwEExsTXP8PCNiuoCwSNXarpyLer5nveuP6L/qBKKgDrgdU
+         qHa6n7XpyZApbvu4PYQzziBxsQWIIXTr4L6GKhlDgjBwcOfEcLFV40C0pI/0UEwObCZj
+         GZmsY7bDG0QO/374g/WhV4dCtqDVkMRX3smkyCGBt8p+1SEB+xxUM28QTqPOO/P4vZBr
+         oHNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=847p17DesiUPrAbTrGt+da4YJYmyj4ybBvLUVEuSIjY=;
-        b=bY3/IWI/zLkJFl5xNRR1pweqAi544ETzwKyP25tAIQRS/lahDl6xH6m4Iht8ghY5FI
-         8RL3ZQLwuiCMGTeaAB05hms4/ToATwrLOLnh+g5B7qoq5lnDKjvN2HZYQdois1JEiRjA
-         ptA7IdeABzUuXqSwjOjBDcGA4RwKzBvivh+ElnV9wRWL6ljE5plN6WPjJbrIsKLbnQYT
-         3INexnYuzEVCSGfilINBPrLd8V1J1lfM66BXscbjmNCwDT7Ec18ZI19ZXNoP2/RVcaNq
-         BAyJ2vs6+NLHuuTJhM9AH4ArXskt25878Y4n20hNCG9WaZ5DiEZE9Xa//f6hvu44ZlY9
-         gOWg==
-X-Gm-Message-State: AJIora/eqMjjlWign45HJ79ABw/CqY7Vu+sIv87xF2CKbyr7ajOefMFD
-        f2iyE7O78U1vtiUjnSLeqXPieQv+URvOKRJRbiQ=
-X-Google-Smtp-Source: AGRyM1soa/b5CVtvIJwCZk3wxZrzaUqyUaH+jrfMwcncwn0dl8Hm8H2RvISAWcx5pab5/XocLBsGF/kqMjj8c3nfY18=
-X-Received: by 2002:a81:4bd7:0:b0:31c:91da:5a20 with SMTP id
- y206-20020a814bd7000000b0031c91da5a20mr23140384ywa.131.1657571628325; Mon, 11
- Jul 2022 13:33:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ygfoxsCOcEZFDvZwwxHJZr7GgBlZqbqyOyuBkqlE4/k=;
+        b=ZQpOArmK0z9vfIPK5fh08yNqdaIM1a2jxG7i0s9EbjXNOllRyIUBIU8yyG72FFCHhK
+         LgSimP2OJV/ivSlsFzTn5iYSPQpN3+nFKHLjvAtkk1TBGgA69aaylUsnd38eFrzALhei
+         UO1pik/n754J23Pn0w9uFiLFxusKWL5JUkkyUhRpVPVvMd88YHgXTowRSLNG310UYwbV
+         AjSCzHT+XVT+ySLxburJkhUDXpxaEyCjXoWetHFWcKiE9XTYAsI9eUIM5Jr0PIudoiFW
+         lPAlfNuP5n9cvNKyiDwFUdJEPkz0BXMTJkflLpWMwqx9xcIJv7YHeCUkx1xAcJIXo5aO
+         8GXw==
+X-Gm-Message-State: AJIora+XkPxdvY0+5Ltvsx8LjT+gHvK3cXfT8SZgODKYFjjTQ60bFZw6
+        hCVIQou2fhqowcTgqN5injI=
+X-Google-Smtp-Source: AGRyM1tZwrEqdPTK36k8QOQt/Uhr1nRt5Zz9+7YdYR0j9LZM8H0iTxhFlm1Nh2VfhJCSZeit3NIDww==
+X-Received: by 2002:a17:907:2bd3:b0:72b:44ed:6d6b with SMTP id gv19-20020a1709072bd300b0072b44ed6d6bmr11741284ejc.632.1657571652006;
+        Mon, 11 Jul 2022 13:34:12 -0700 (PDT)
+Received: from fedora.robimarko.hr (cpe-94-253-165-104.zg.cable.xnet.hr. [94.253.165.104])
+        by smtp.googlemail.com with ESMTPSA id l11-20020a056402124b00b0043a422801f8sm4936264edw.87.2022.07.11.13.34.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 13:34:10 -0700 (PDT)
+From:   Robert Marko <robimarko@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        konrad.dybcio@somainline.org, lee.jones@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, jic23@kernel.org, lars@metafoo.de,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Cc:     Robert Marko <robimarko@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 1/7] dt-bindings: mfd: qcom-spmi-pmic: add support for PMP8074
+Date:   Mon, 11 Jul 2022 22:34:02 +0200
+Message-Id: <20220711203408.2949888-1-robimarko@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220711192113.3522664-1-horatiu.vultur@microchip.com>
- <20220711192113.3522664-3-horatiu.vultur@microchip.com> <CAHp75VdeZSP62qoOdQf=g4b7AheFd4=jNxfjMh-_T7Q1Zi=LbA@mail.gmail.com>
- <20220711202646.om65vrksyifvkfkw@soft-dev3-1.localhost> <CAHp75VeJgUFdFgBpG5avmKCn-CGNOJ6wZAhc0a4f2MHfLbvXmA@mail.gmail.com>
-In-Reply-To: <CAHp75VeJgUFdFgBpG5avmKCn-CGNOJ6wZAhc0a4f2MHfLbvXmA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 11 Jul 2022 22:33:11 +0200
-Message-ID: <CAHp75VdTUqP+Ho2cmeMiOwNtu_HhOMoo3cCUQ27vdPftcJ-xUA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: ocelot: Fix pincfg
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kavyasree.kotagiri@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Michael Walle <michael@walle.cc>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -74,56 +73,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 10:29 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Jul 11, 2022 at 10:23 PM Horatiu Vultur
-> <horatiu.vultur@microchip.com> wrote:
-> >
-> > The 07/11/2022 21:51, Andy Shevchenko wrote:
-> > >
-> > > On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
-> > > <horatiu.vultur@microchip.com> wrote:
-> > > >
-> > > > The blamed commit changed to use regmaps instead of __iomem. But it
-> > > > didn't update the register offsets to be at word offset, so it uses byte
-> > > > offset.
-> > > > Another issue with the same commit is that it has a limit of 32 registers
-> > > > which is incorrect. The sparx5 has 64 while lan966x has 77.
-> > >
-> > > ...
-> > >
-> > > > -static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
-> > > > +static struct regmap *ocelot_pinctrl_create_pincfg(struct ocelot_pinctrl *info,
-> > > > +                                                  struct platform_device *pdev)
-> > >
-> > > const?
-> > >
-> > > And I would leave pdev to be the first parameter, if there are no
-> > > other functions that have them like this.
-> >
-> > I will do that in the next version.
-> > Just for my understanding/knowledge why is this desire to have const or
-> > to keep the const?
->
-> For non-POD types it's a good coding practice to reduce surface of
-> attack, if any (the data will be located in the pages with RO flag
-> set, and attempt to write will give you a page fault or other
-> exception, it depends on architecture).
-> Also a common sense, if you don't change data (which is actually
-> initial configuration or so), then why shouldn't you use const?
-> Note, in cases when it's not initial data, but runtime stuff (like
-> really run time), const is obviously either can't or not needed to be
-> used.
+Document compatible for the PMP8074 PMIC.
 
-One more specifically for drivers (related to the first item above),
-it allows one to scope the point of failure in case of wrong
-configuration comes in. The device might misbehave badly because of
-some garbage somewhere. Also, the driver won't write data to that
-area, which is just a good preventive programming practice (but this I
-already implied by the second item above).
+Signed-off-by: Robert Marko <robimarko@gmail.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+Changes in v7:
+* Fixup commit description
 
+I planned to convert the bindings to dtschema, but there is already a
+patch to do so [1].
+I will make a patch to add the compatible to dtschema once it gets
+accepted.
 
+[1] https://lore.kernel.org/linux-arm-msm/20220626191630.176835-1-david@ixit.cz/
+---
+ Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+index eb78e3ae7703..c46d17609f3a 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+@@ -46,6 +46,7 @@ Required properties:
+                    "qcom,pmi8998",
+                    "qcom,pmk8002",
+                    "qcom,pmk8350",
++                   "qcom,pmp8074",
+                    "qcom,pmr735a",
+                    "qcom,smb2351",
+                    or generalized "qcom,spmi-pmic".
 -- 
-With Best Regards,
-Andy Shevchenko
+2.36.1
+
