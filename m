@@ -2,65 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCFB5570ABC
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 21:29:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 291E0570AEF
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 21:48:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbiGKT33 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 15:29:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
+        id S229437AbiGKTsf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 15:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbiGKT31 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 15:29:27 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735EF2A433;
-        Mon, 11 Jul 2022 12:29:26 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id q5-20020a17090a304500b001efcc885cc4so5844316pjl.4;
-        Mon, 11 Jul 2022 12:29:26 -0700 (PDT)
+        with ESMTP id S229996AbiGKTse (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 15:48:34 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC2726C;
+        Mon, 11 Jul 2022 12:48:30 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id f73so10423237yba.10;
+        Mon, 11 Jul 2022 12:48:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:content-transfer-encoding:date:message-id:cc:subject
-         :from:to:references:in-reply-to;
-        bh=dt9ajF6fcJjGOiO9pFsmnlVg5KP/cQHfnIOqjxWko10=;
-        b=B3zce7njlIj0lIcx8i1HPL0WQREmVEyNn15hteyCSGv3mNXSQFZS0GqGvQwe5AGFv8
-         4uPkFqrPhc2nUtyGnVOmZiOumxjr++okaiFAvlH11g41uIfTXLMDGAJSpGTgYHSlrdXl
-         0XdvtsbS9IEtof1t6ilDOSEwJ+qGM5w4tO0APW52LhppevshRxRThGS4PksLtw6OhTu2
-         hSLCmGiuttDkfB1kx16vYcQ9ukVBkYnoT/w9Rm61QzYKlOM9+KWBqlG6XlJI+MjoCbFn
-         Bs/lM41IOZ3M/pADKQqWj8Oq7hRysYf1UXRtcCV4QdXTncIv5LEzXHXH/Df5mkw5+qy4
-         z6GA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VkomuDQLIrGkpVVzmeFT3DYYD8yFSVIJULiDQqnLKDw=;
+        b=o5Js5nG9JFrnJw8FTiNWMEV88/jxGJgvHjwEV4Gq4kBjLVyQPqioyP0vEKHho5OYsb
+         nUrTreABi1P6j0Com5OJ+nHYveim720M8LxJjduQ1g4khIkBdWL4BiyUvtXhvgS4WJnY
+         CdiJXESyLtomBUrhIafge6ECdQ02REUXb8nOMp5Kr0EXoLsPtBGdTxEVLtA+ujs/y3+x
+         Q434BIhOY75cziF/DL4771iz4nr81QNA8KAIV6gtSaD+G5O3JWp3N4tJxdcLKeILEDyb
+         oDTSIx9ShPXrcP+gU873yiLx3I+4nc5kSfa7tiUJham162qK0oF/NUsPfN83w7U4bL0i
+         VZTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:content-transfer-encoding:date
-         :message-id:cc:subject:from:to:references:in-reply-to;
-        bh=dt9ajF6fcJjGOiO9pFsmnlVg5KP/cQHfnIOqjxWko10=;
-        b=gcLI+0r1SWAW8S0Uo+T4RQ/M8SfJDIZMuPO0qivuQtrR6nlOzEmoY3osCk4i8Qkrw3
-         n4Ws8M6MJO0exILJt1wBJXDQuKHo41YnGbEycAmXOI0q5PlOMU6iEA1xiJ/lDhpop/UY
-         aD2xcsmWfTcwubE/UmsLThWaopx9HH7kgiUy+i5RLmzujNnSlPOnca5kTF7rBlmhABgz
-         YObpveiOc0WALeeE7C+/JWzEbQftL3DcVtsnrneoqq4CPPmMI9E6zUNBdEWJAOKTiAWm
-         C70orWA9THTojQTyG3g/+nBgJDMKyrCN1rosGf76rNGGJwhbwg4uOqChXQGiw6VCDuMl
-         EPsw==
-X-Gm-Message-State: AJIora8ZoKXpo0EJBbg3mjtpCrlIWT2k0sKkgO4cLzyUOmGINLV2UnKN
-        9jkYaLv75Yxv1eAC2ez1Sc/UwsCTSr7BJRaO
-X-Google-Smtp-Source: AGRyM1uHygxjTAesTKTeLYOwAKf/vjKwMP1LxCtf7rH05N60cuar1UWhqrNRF//8gtl1IiVsKXlNUw==
-X-Received: by 2002:a17:902:aa44:b0:16c:fc8:a625 with SMTP id c4-20020a170902aa4400b0016c0fc8a625mr20573486plr.139.1657567765974;
-        Mon, 11 Jul 2022 12:29:25 -0700 (PDT)
-Received: from localhost ([116.193.141.30])
-        by smtp.gmail.com with ESMTPSA id d10-20020a170902ceca00b0015e8d4eb2cdsm5109846plg.279.2022.07.11.12.29.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Jul 2022 12:29:25 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 12 Jul 2022 00:59:17 +0530
-Message-Id: <CLD2QBMKNA4W.3ICD19XKEALSR@ArtixLinux>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VkomuDQLIrGkpVVzmeFT3DYYD8yFSVIJULiDQqnLKDw=;
+        b=cD4XzwpFz5RHKnZL88UNIGckBnUhn7Vo4MVmKiNi3XsdFhgLvOjAJwCg+v5TLgDa1g
+         l5ltfBiwMAiVUBiaEBAWeVA7ieihEdzBr4vZZw2blYG7zDwvZ7jvBKiLn99sqSxnbUi6
+         XpBoX8+9jnck45j8oZ1H5o42d9zbIHP0VGzS+y47gb5pg0Jt5AdI8bxhRHeGNJBWlKoB
+         12zhgLuOUBj3MVm2M6JgpsH9yvndwqban/DfgBk6qslARu5jmJo5OOMZhKzUVdiyYBWP
+         sE5XLtrIA5tpV9PbQIH0Wcfu744voex1pYvviDh624FAGUyOoasKyyP0tMXalG3/FQAT
+         OSkQ==
+X-Gm-Message-State: AJIora88TQgLcEa8Oum6SzqXkrdjFchjvsVnhwa00ZudGb1ShP9Wh6/d
+        27Jo9i3wk7tXc2x0KG6VC2xvpQejLQU3M+cOmH4=
+X-Google-Smtp-Source: AGRyM1uJ2YrRHaWNO/NcEhC1mvA+w9x+HZp1INbuCKtI+dHb6RiQx7Z9HGo20m4O7PWUREkPpZKWsxNuqM9JyhIqvps=
+X-Received: by 2002:a05:6902:10c9:b0:668:e27c:8f7 with SMTP id
+ w9-20020a05690210c900b00668e27c08f7mr18789665ybu.128.1657568910080; Mon, 11
+ Jul 2022 12:48:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220711192113.3522664-1-horatiu.vultur@microchip.com> <20220711192113.3522664-2-horatiu.vultur@microchip.com>
+In-Reply-To: <20220711192113.3522664-2-horatiu.vultur@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 11 Jul 2022 21:47:53 +0200
+Message-ID: <CAHp75Vfs8EH-rRn58cS692tZMRFmjFLv6=kB4oqVEGXi5R8BHQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] pinctrl: ocelot: Fix pincfg for lan966x
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio/gpio-lp3943: unsigned to unsigned int cleanup
-From:   "Aakash Sen Sharma" <aakashsensharma@gmail.com>
-To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
-X-Mailer: aerc 0.9.0
-References: <20220711052935.2322-1-aakashsensharma@gmail.com>
- <CAMRc=MefDXzawodvNYWS8h-fzdeUhmSCFjOFwfkALpB-a0PjCw@mail.gmail.com>
-In-Reply-To: <CAMRc=MefDXzawodvNYWS8h-fzdeUhmSCFjOFwfkALpB-a0PjCw@mail.gmail.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        kavyasree.kotagiri@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Michael Walle <michael@walle.cc>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -71,16 +72,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon Jul 11, 2022 at 1:44 PM IST, Bartosz Golaszewski wrote:
-> On Mon, Jul 11, 2022 at 7:29 AM Shinyzenith <aakashsensharma@gmail.com> w=
-rote:
-> >
-> > Getting rid of checkpatch findings. No functional changes.
-> >
-> > Signed-off-by: Shinyzenith <aakashsensharma@gmail.com>
-> > ---
+On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
 >
-> Applied with a tweaked commit message.
+> The blamed commit introduce support for lan966x which use the same
+> pinconf_ops as sparx5. The problem is that pinconf_ops is specific to
+> sparx5. More precisely the offset of the bits in the pincfg register are
+> different and also lan966x doesn't have support for
+> PIN_CONFIG_INPUT_SCHMITT_ENABLE.
 >
-> Bart
-Thank you!
+> Fix this by making pinconf_ops more generic such that it can be also
+> used by lan966x. This is done by introducing 'ocelot_pincfg_data' which
+> contains the offset and what is supported for each SOC.
+
+Thanks for an update!
+My comments below.
+
+...
+
+I believe introducing
+
+  struct ocelot_pincfg_data *opd = info->pincfg_data;
+
+may allow to reduce LoCs...
+
+> +                       *val = regcfg &
+> +                               (info->pincfg_data->pd_bit |
+> +                                info->pincfg_data->pu_bit);
+
+...like here:
+
+ *val = regcfg & (opd->pd_bit | opd->pu_bit);
+
+...
+
+> +       info->desc = devm_kmemdup(dev, &data->desc,
+> +                                 sizeof(struct pinctrl_desc), GFP_KERNEL);
+
+sizeof(*info->desc)
+
+and missed the NULL check.
+
+...
+
+> +       info->pincfg_data = devm_kmemdup(dev, &data->pincfg_data,
+> +                                        sizeof(struct ocelot_match_data),
+
+sizeof(*info->pincfg_data)
+(isn't it a bug here?)
+
+> +                                        GFP_KERNEL);
+
+and missed the NULL check.
+
+-- 
+With Best Regards,
+Andy Shevchenko
