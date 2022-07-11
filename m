@@ -2,95 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 433A1570B29
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:11:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE5F3570B3D
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:17:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbiGKULT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 16:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
+        id S229572AbiGKURx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 16:17:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbiGKULS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:11:18 -0400
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05132A72E;
-        Mon, 11 Jul 2022 13:11:17 -0700 (PDT)
-Received: by mail-qv1-xf33.google.com with SMTP id l11so1168182qvu.13;
-        Mon, 11 Jul 2022 13:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y7SHA/z8BOa8wh+UPK+wnNg27Xa7/eY8+Vpvp2gYlkk=;
-        b=XjhGErLQpeUic9yY27h96GD0jf40eQ8ShJnFm1QdMvY+d69KFUrkoNCJic0i/T3uO8
-         lfRPX6akik2lQGF+nhy2QSS+SD+NQ+W3x3qnUXgoOqP/zDNTVVqNJam2K7mHqXwexMet
-         LCBvR6zrambhoEuABXGe6XFxlnfC5tL1PpckYPim499odDVcwrbz8FxLkf5n9SdUeqBB
-         Ohg5dt7v1RQ5PQVi6vK0hvd0wYyP4EsL/t7l6OFqI1vr90UUyvMS1BkdWPgEO/RXTm9Y
-         KxFrg49JUEhEWUdnsgXCFsEGEv+7AwRrfdjYBiCrjWZhM4fvFVRn8WLZoHQXTZ+DrBey
-         q1fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y7SHA/z8BOa8wh+UPK+wnNg27Xa7/eY8+Vpvp2gYlkk=;
-        b=YRh1eWc+ngS8i5uoCVojCOSo1lGOE8t3BGcFTJoJAbHFQ+gyY/KmsXMY+1nlpr6nzM
-         cf3oSqTijvTs0XBQMsj8psgy1ctxtn73X2m6oLdb1DfI+LZWPgeGD4KNxx62Q2zwbhCf
-         OQqXOaK7KSx16bEGEORb/lZuCM24O3+woD2so1orNYhG1fawYYNkwIjTkDHvdGm2EtCh
-         PqJ/fXlf8sxgsU7DT08ZLgTPhuUdNcQ8yRYKDW7Jy8EmAKIsDGY4NgPpu3mrbn5iJ1ZR
-         DmAEAEh7s+cJm5+zJCf0M1+K9duz9lrdvhlROj58ORd45TOLlOXAboE5UWVOzzQZzU8b
-         Pm4g==
-X-Gm-Message-State: AJIora9z277aVLZyu8Fc7rCKFMPQwi53LS64c18wH1wcGymE0mIgg8ff
-        IOKeP0jve0OeTVtqXhLKawptKBV7wgqK7Fsldomm0gF4FGs=
-X-Google-Smtp-Source: AGRyM1uZtS85BzP3kwXmdYKyYAZ/KlQV8Yf28ztSF22Fz9gHtnceKubKIOXnsT90Qr4ubtZ6GmitYC2XvgNtmds0AGE=
-X-Received: by 2002:a0c:8c89:0:b0:470:9ab6:bb27 with SMTP id
- p9-20020a0c8c89000000b004709ab6bb27mr15074994qvb.118.1657570277109; Mon, 11
- Jul 2022 13:11:17 -0700 (PDT)
+        with ESMTP id S229470AbiGKURw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:17:52 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 556F93341A;
+        Mon, 11 Jul 2022 13:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1657570671; x=1689106671;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7QRIbD+k2P4Uf7zNShR6UhofAnNAkSohtHFWigS5ETQ=;
+  b=bQUZngXm43ypBT3R/VstrYp2OqFMHN0juIpHU5dRBbs+DqD7ma3NX9xs
+   jm1H2lYeWeco8FnfTGr0FKqSSpVlT6EK2IhlZk/RtWtItN1sOS+Lquo7e
+   MApSJQU8TFlZ6GhDkVEo39Z3kxQhwHKXdfbndLrwMj6W1zzoEXR/KP8UF
+   83ZH2OdaqEltYUxNJ1fMR4+FmJTo5VIeR2zjBm9KGJhzYRY8RSzUY+cm0
+   AGGMAaq7420wg3K70+xRURdkX31WHyL0/S5yuoqHFa3Ou3696D4RleN1r
+   Oud8Zy9C923R26/LHpO+0k4CDsE9TIEqMRiWWCO6z0cotBPZBHRY9QuH5
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.92,263,1650956400"; 
+   d="scan'208";a="167352871"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Jul 2022 13:17:50 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Mon, 11 Jul 2022 13:17:49 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Mon, 11 Jul 2022 13:17:48 -0700
+Date:   Mon, 11 Jul 2022 22:21:50 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <kavyasree.kotagiri@microchip.com>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v3 1/2] pinctrl: ocelot: Fix pincfg for lan966x
+Message-ID: <20220711202150.7yoxazefe3zzlzpw@soft-dev3-1.localhost>
+References: <20220711192113.3522664-1-horatiu.vultur@microchip.com>
+ <20220711192113.3522664-2-horatiu.vultur@microchip.com>
+ <CAHp75Vfs8EH-rRn58cS692tZMRFmjFLv6=kB4oqVEGXi5R8BHQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220704212402.1715182-1-robimarko@gmail.com> <20220704212402.1715182-9-robimarko@gmail.com>
- <CACRpkdaAb14TGF0atvbB8NHygsRGNCKJCf_S2gOzvvTxxDEeRA@mail.gmail.com>
-In-Reply-To: <CACRpkdaAb14TGF0atvbB8NHygsRGNCKJCf_S2gOzvvTxxDEeRA@mail.gmail.com>
-From:   Robert Marko <robimarko@gmail.com>
-Date:   Mon, 11 Jul 2022 22:11:06 +0200
-Message-ID: <CAOX2RU6xNRipZT7mFa1oCdJkMY_=R73p__zhHFzVuf7APSLEtg@mail.gmail.com>
-Subject: Re: [PATCH v6 09/12] pinctrl: qcom-pmic-gpio: add support for PMP8074
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        lee.jones@linaro.org, Rob Herring <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org, lgirdwood@gmail.com,
-        Mark Brown <broonie@kernel.org>, jic23@kernel.org,
-        lars@metafoo.de, linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vfs8EH-rRn58cS692tZMRFmjFLv6=kB4oqVEGXi5R8BHQ@mail.gmail.com>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 11 Jul 2022 at 13:56, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Jul 4, 2022 at 11:24 PM Robert Marko <robimarko@gmail.com> wrote:
->
-> > PMP8074 has 12 GPIO-s with holes on GPIO1 and GPIO12.
+The 07/11/2022 21:47, Andy Shevchenko wrote:
+> 
+> On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
+> <horatiu.vultur@microchip.com> wrote:
 > >
-> > Signed-off-by: Robert Marko <robimarko@gmail.com>
->
-> Since there are no compile-time dependencies I expect to pick
-> the pinctrl-related patches separately to the pinctrl tree on next
-> v7 iteration.
+> > The blamed commit introduce support for lan966x which use the same
+> > pinconf_ops as sparx5. The problem is that pinconf_ops is specific to
+> > sparx5. More precisely the offset of the bits in the pincfg register are
+> > different and also lan966x doesn't have support for
+> > PIN_CONFIG_INPUT_SCHMITT_ENABLE.
+> >
+> > Fix this by making pinconf_ops more generic such that it can be also
+> > used by lan966x. This is done by introducing 'ocelot_pincfg_data' which
+> > contains the offset and what is supported for each SOC.
+> 
+> 
+> ...
+> 
+> > +       info->pincfg_data = devm_kmemdup(dev, &data->pincfg_data,
+> > +                                        sizeof(struct ocelot_match_data),
+> 
+> sizeof(*info->pincfg_data)
+> (isn't it a bug here?)
 
-Great, I will send that out tonight as Mark picked the regulator
-changes.
+Yes it looks like it is. I think underneath it still allocates a page so
+that could be the reason why I haven't see any crashes when I have tried
+it.
+I will fix this in the next version.
 
-Regards,
-Robert
->
-> Yours,
-> Linus Walleij
+> 
+> > +                                        GFP_KERNEL);
+> 
+> and missed the NULL check.
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+-- 
+/Horatiu
