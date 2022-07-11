@@ -2,119 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD97C570197
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 14:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AC825701B4
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 14:08:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231529AbiGKMDZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 08:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57456 "EHLO
+        id S231480AbiGKMIh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 08:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231335AbiGKMDU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 08:03:20 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E835A3DF28;
-        Mon, 11 Jul 2022 05:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1657540991; x=1689076991;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2029vpBZxaoYh8HV6PEJ1yGjJDrgRwD0SKpNgEYQ2PI=;
-  b=kpS0fsSQkmwDimE+hLBOuY2TP9TH3Wx6i8FGtRxzpMdCUk99FQ2yIra0
-   96bLHmpVncpegn2qic0msAhGcsbfsDj7kGNwb2sXiy9heshZImH832Im0
-   Mol9SfimuvAtgiDXTgB1dX88bi5rdC1rL3Qy2fP47VGk1lDdtZKxR4Vpy
-   mHFXCkeDJtHpoKX+ljCnwuWR8k8akCilalZ3+2Qm81yPYt3Sj7jQISWAd
-   0ZBiaaplnH+92mOAqYhjrceHw53i537Sc2aUZkSzuYbMshJZg6xeuGz1e
-   U+sBrVUqGwGJk5vK4V7bLDfQydl0w4OXBca+Sv7Aa64ov1bFRCoTlUrNH
-   A==;
-X-IronPort-AV: E=Sophos;i="5.92,262,1650956400"; 
-   d="scan'208";a="181598669"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Jul 2022 05:03:11 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 11 Jul 2022 05:03:10 -0700
-Received: from [10.159.245.112] (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Mon, 11 Jul 2022 05:03:08 -0700
-Message-ID: <8dbed370-c6d6-496c-eb41-efce2ee78286@microchip.com>
-Date:   Mon, 11 Jul 2022 14:03:07 +0200
+        with ESMTP id S231508AbiGKMIf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 08:08:35 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524742FD
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 05:08:31 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id h62so5715058ybb.11
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 05:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Om2IrQfwCrPo0MA8/pPxysfzEs3CSkoYWwAPxfYhOy0=;
+        b=bpngKpW1cpJzuExDn73o9dXJWjMhC065/MNqX7+1rTYeKgmQEsfy3KL+pLh+iQ6hlq
+         fX9hyJKwMApG8XGmdcTeKoVWyFYU3XuvMcoGyBkv0HypeJ0jfAsVp8giTyEn4eX/X0zs
+         +wCpviCB/3KqunIAxvKR/EUNBmXeTKX7xgn8wotAdtsquR1I66axptZysGtqmmRkI81/
+         9lCXU3JgaNxX2V0prGE1BLeycAEMjE1s35Ci3928TKwlWc5WZ/uQgOPolLpcPicqaPKr
+         N2Xj/U0iqID17uUz/xS7yPs1clMdyArW50MNFGknEJAsyJ+OB8MgxabX2VO1/o5LpOdF
+         UFfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Om2IrQfwCrPo0MA8/pPxysfzEs3CSkoYWwAPxfYhOy0=;
+        b=Hjkx9gCXLU35XIB1kIQ8nvUMfbG0FlMNYZtFhF7tMEaLoAx6wZ/+snQ5IPUp+6l/tc
+         84JcfA3SrPiOXoKTVT+WJIgFnw11i8IBLaZfmj231d6jWgqsMdU20Q8WiVOdSui8+YFq
+         6+RMY1PeSELDTCAD7EqqIpR//Z8u+mZc19fiOhsCUrAld29PcL3dLcVntdH3XHH0zRte
+         12McW1hbXRkC83H79XF7dUeZ+xY3KQ5mccX74LwKPyDTXzAhIjEb7GeWU5cP4Y9UY5RD
+         99Oo/kGiiP5//C/cihNQDYSVhF9rNMnOWC6VhPHAFG5AUb8jIRqNU92FOMCWE22lUtTj
+         F+gg==
+X-Gm-Message-State: AJIora+qo2lswEZfHSYjTICx2uYciISAx8whNu1tjRGRJ4Z/SvTb3S7m
+        IbLQwkQoh34nfoGiefmzwqEiAjmvjEwFtpgeJrRYlQ==
+X-Google-Smtp-Source: AGRyM1uldZ7mscnM9yjMgQRRAkgMfsy29eTNxFaZYpnUZZVT4BQtbiMleio3HxQvnWhm3kGB0DQPI6GM8LHvL8yVOrs=
+X-Received: by 2002:a25:38e:0:b0:66f:5224:2c71 with SMTP id
+ 136-20020a25038e000000b0066f52242c71mr1844120ybd.295.1657541310547; Mon, 11
+ Jul 2022 05:08:30 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] gpio: GPIO_SAMA5D2_PIOBU should depend on ARCH_AT91
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Conor Dooley <Conor.Dooley@microchip.com>,
-        Horatiu Vultur <Horatiu.Vultur@microchip.com>,
-        Kavyasree Kotagiri <Kavyasree.Kotagiri@microchip.com>
-CC:     <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <9996cb86818d2e935494d6b414d549432f91797a.1657528504.git.geert+renesas@glider.be>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <9996cb86818d2e935494d6b414d549432f91797a.1657528504.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220629115840.16241-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220629115840.16241-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 11 Jul 2022 14:08:19 +0200
+Message-ID: <CACRpkdZ9qAkjgWDf9nm=_csOTWQ90V_Gto4uGjRoshrnSNWNSw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: core: Use device_match_of_node() helper
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/07/2022 at 10:36, Geert Uytterhoeven wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> The SAMA5D2 PIOBU is only present on some AT91/Microchip SoCs.  Hence
-> add a dependency on ARCH_AT91, to prevent asking the user about this
-> driver when configuring a kernel without AT91/Microchip SoC support.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, Jun 29, 2022 at 1:58 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Looks good to me:
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Instead of open coding, use device_match_of_node() helper.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I'm adding to the thread my colleagues from lan966 and mpfs if it 
-happens that they use this same IP on their SoC. Anyway, we can add them 
-afterwards.
+Patch applied!
 
-Thanks for your heads-up Geert, Best regards,
-   Nicolas
-
-> ---
->   drivers/gpio/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 63a89ff7865e374f..1852656d5eb248f6 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -553,6 +553,7 @@ config GPIO_SAMA5D2_PIOBU
->          tristate "SAMA5D2 PIOBU GPIO support"
->          depends on MFD_SYSCON
->          depends on OF_GPIO
-> +       depends on ARCH_AT91 || COMPILE_TEST
->          select GPIO_SYSCON
->          help
->            Say yes here to use the PIOBU pins as GPIOs.
-> --
-> 2.25.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
--- 
-Nicolas Ferre
+Yours,
+Linus Walleij
