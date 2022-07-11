@@ -2,103 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CB48570B46
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:23:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A5B9570BD0
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 22:31:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229437AbiGKUXH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 16:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
+        id S231893AbiGKUbu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 16:31:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbiGKUXG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:23:06 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904ED357FF;
-        Mon, 11 Jul 2022 13:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1657570984; x=1689106984;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sNVS+KcPsWhAjJnadCcEhTGBjML0xg+WgJRGyIyOaj0=;
-  b=WQGwEcncRO4y/T69LEi9bW8XTw18l6X3GxZwokcoR2Zq+OQZYMYrQHly
-   1DmYdhDHFpa0/aX8clq345PjFQOf5Q1rgaR+DDke7+Vv3HKiCSkicRqTg
-   bt435hT7Ym53uaukaCVCAAxGhN+aVQAWRzzWSEIYmYBbnCeTWPdGTK2ZP
-   L5spoxeq03cZoYYiqJDBTC2nJbSqaFvN1ePBvtT2UIKh+vRvDvRsHVz3Y
-   U3buYyjlaZKX82qKzIygL21FIt/J08X1LRpa4bWO4E+7lKnteeqqQqkJV
-   zMAYYcrQMi+qLihaaruGyEhsX0X7CGIgP7OEscdsfwU1qxrtKei/uRErB
-   w==;
-X-IronPort-AV: E=Sophos;i="5.92,263,1650956400"; 
-   d="scan'208";a="103985574"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Jul 2022 13:22:46 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 11 Jul 2022 13:22:45 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Mon, 11 Jul 2022 13:22:45 -0700
-Date:   Mon, 11 Jul 2022 22:26:46 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        with ESMTP id S232050AbiGKUbg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 16:31:36 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92F087354;
+        Mon, 11 Jul 2022 13:29:50 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id f73so10592333yba.10;
+        Mon, 11 Jul 2022 13:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ShzjEhLEe0k5FQ6GyMvo3z3FN/ZLOq7ZYOFzyB6kD20=;
+        b=oIo3c7K7sfGKtX+P9CqNGT20A9gc1caPNVU/ahHOcNlb7iyuOBDC7JAr8+TGCGyYgF
+         +2YWKr+UAr+2VNTEdOp0E5ijfyM0Svlzt90iUxi5A3IZReUU+VvaOKc4dZfmzWutTtXW
+         BUCJ9j/z4c6RgwfbWluszvZ0+sxeG+8KglLi/ZYVTNPxbQDgvpCisDbvQflmgKVXmKYa
+         9WKuXWr7jmVCIjbYRRyb2Vok/JDbMHK4EBPOOcm/+WBbhBXpDqqAD+tGz46P+hklk9Pk
+         GERqz9JVe1+01jjuv/hgK/sgmqPZRgZLu1mrMFMGE84OvfIbvDOcLJFL2IBEfuqA/40B
+         f7nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ShzjEhLEe0k5FQ6GyMvo3z3FN/ZLOq7ZYOFzyB6kD20=;
+        b=UooUyLCg/Cl5vphGNNxj/XlOJUn5ScuQBj0skcVA01KvG8qWXeFficcSd5Lk5vvzqn
+         r3N7iA5MqSPxQO7YSMSRuZrOErtgMGOrwy7SMcAtVgYUCahQNxZ6qzEY7LmSznnGhaG0
+         uXQ/UJOuQTi9t5pNlCwLRBFU74d8n5VAyJGSgkUqMc+XqlsDf45XaDytJZwp+EMLpfV9
+         3C+QHop5k6ATu73ciJIi6ci1Kjwcq7mME/hjz0kLetGPHWifxozTyKLES4y8C+ccElgj
+         9swVCOekaLhNeWYkYHIRI0kHqHtW2+vSR0oq0byeRu4oQV5Gl4X1T2TFrhsreNtnuVPm
+         Aftg==
+X-Gm-Message-State: AJIora9hSiOfNNgTpKUCn2M300crCjBTDcEOoGMdnd+H+fE8TxkKka9d
+        gWNQWpjaDXF0WanlK2ZQYfjvrUvFFQGK83Uu5j4=
+X-Google-Smtp-Source: AGRyM1vWoRu/kFl3OAas1bDl0jpatlNqpbg+RlHPiqlRykpWGdO7kua3L5SZ0OFZTsKlED0D7rSpkR+VJHg9fCAKE9o=
+X-Received: by 2002:a05:6902:1143:b0:66e:eb08:4c23 with SMTP id
+ p3-20020a056902114300b0066eeb084c23mr13624745ybu.570.1657571390165; Mon, 11
+ Jul 2022 13:29:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220711192113.3522664-1-horatiu.vultur@microchip.com>
+ <20220711192113.3522664-3-horatiu.vultur@microchip.com> <CAHp75VdeZSP62qoOdQf=g4b7AheFd4=jNxfjMh-_T7Q1Zi=LbA@mail.gmail.com>
+ <20220711202646.om65vrksyifvkfkw@soft-dev3-1.localhost>
+In-Reply-To: <20220711202646.om65vrksyifvkfkw@soft-dev3-1.localhost>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 11 Jul 2022 22:29:13 +0200
+Message-ID: <CAHp75VeJgUFdFgBpG5avmKCn-CGNOJ6wZAhc0a4f2MHfLbvXmA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pinctrl: ocelot: Fix pincfg
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        <kavyasree.kotagiri@microchip.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        kavyasree.kotagiri@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Colin Foster <colin.foster@in-advantage.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>,
         Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v3 2/2] pinctrl: ocelot: Fix pincfg
-Message-ID: <20220711202646.om65vrksyifvkfkw@soft-dev3-1.localhost>
-References: <20220711192113.3522664-1-horatiu.vultur@microchip.com>
- <20220711192113.3522664-3-horatiu.vultur@microchip.com>
- <CAHp75VdeZSP62qoOdQf=g4b7AheFd4=jNxfjMh-_T7Q1Zi=LbA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdeZSP62qoOdQf=g4b7AheFd4=jNxfjMh-_T7Q1Zi=LbA@mail.gmail.com>
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 07/11/2022 21:51, Andy Shevchenko wrote:
-> 
-> On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
-> <horatiu.vultur@microchip.com> wrote:
+On Mon, Jul 11, 2022 at 10:23 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
+>
+> The 07/11/2022 21:51, Andy Shevchenko wrote:
 > >
-> > The blamed commit changed to use regmaps instead of __iomem. But it
-> > didn't update the register offsets to be at word offset, so it uses byte
-> > offset.
-> > Another issue with the same commit is that it has a limit of 32 registers
-> > which is incorrect. The sparx5 has 64 while lan966x has 77.
-> 
-> ...
-> 
-> > -static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
-> > +static struct regmap *ocelot_pinctrl_create_pincfg(struct ocelot_pinctrl *info,
-> > +                                                  struct platform_device *pdev)
-> 
-> const?
-> 
-> And I would leave pdev to be the first parameter, if there are no
-> other functions that have them like this.
+> > On Mon, Jul 11, 2022 at 9:17 PM Horatiu Vultur
+> > <horatiu.vultur@microchip.com> wrote:
+> > >
+> > > The blamed commit changed to use regmaps instead of __iomem. But it
+> > > didn't update the register offsets to be at word offset, so it uses byte
+> > > offset.
+> > > Another issue with the same commit is that it has a limit of 32 registers
+> > > which is incorrect. The sparx5 has 64 while lan966x has 77.
+> >
+> > ...
+> >
+> > > -static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
+> > > +static struct regmap *ocelot_pinctrl_create_pincfg(struct ocelot_pinctrl *info,
+> > > +                                                  struct platform_device *pdev)
+> >
+> > const?
+> >
+> > And I would leave pdev to be the first parameter, if there are no
+> > other functions that have them like this.
+>
+> I will do that in the next version.
+> Just for my understanding/knowledge why is this desire to have const or
+> to keep the const?
 
-I will do that in the next version.
-Just for my understanding/knowledge why is this desire to have const or
-to keep the const?
-
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
+For non-POD types it's a good coding practice to reduce surface of
+attack, if any (the data will be located in the pages with RO flag
+set, and attempt to write will give you a page fault or other
+exception, it depends on architecture).
+Also a common sense, if you don't change data (which is actually
+initial configuration or so), then why shouldn't you use const?
+Note, in cases when it's not initial data, but runtime stuff (like
+really run time), const is obviously either can't or not needed to be
+used.
 
 -- 
-/Horatiu
+With Best Regards,
+Andy Shevchenko
