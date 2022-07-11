@@ -2,132 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC9056D83D
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 10:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E4AD56D885
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Jul 2022 10:42:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbiGKIhL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Jul 2022 04:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
+        id S229677AbiGKImx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Jul 2022 04:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbiGKIgs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 04:36:48 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A0712AB1;
-        Mon, 11 Jul 2022 01:36:27 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id h62so4958839ybb.11;
-        Mon, 11 Jul 2022 01:36:26 -0700 (PDT)
+        with ESMTP id S230282AbiGKIme (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Jul 2022 04:42:34 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072C021835
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 01:42:19 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-31d85f82f0bso5816977b3.7
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Jul 2022 01:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/urHEMzh2bc5TwNR8Jg3HlbigYCzgoWwkXUrjrAfWC8=;
-        b=XGmSAiIGZxYQeqyvett+yhyFmsQZIVbGMwwau29NqEDDZPY0DoB9heByadkEGBc83p
-         l5oh2J4YHg2IziqPBXZiLKUyUW2PD9Xj6y9pN2AFk1LxWcDX29uChlfblfaMI6ChU+5a
-         eEAN+gV66aQ9r7TPYbU8Q4C6W5HmboykOURNxDgEhuAQQ0X/Rkr4nl4XNxVnKLaRuesi
-         2cJHC+XzmH6peK8BcO/O3VyhoyIMfRGnLAzFnbMPyCm/znRvt//8nJcWwP9NnXA9cLsn
-         rVhIt6dYM+jz4jtZU47j2c9u7Xiny4kcW5uLj6V9Z8QaoBzgWO78hSx27k0gIw5JpxK/
-         NgIw==
+        bh=BbEeMhaMhMOIFE7vJDdeDc8ULQN4ZptBVrKw7X+VxQs=;
+        b=ObFrz41RIzdXr5qaNWjyskEd6dnfwk81/aVaeIgneQ6+j1lxaCxsXaPxDZ1Y8pyeeI
+         1dCH3tqKuqRAMzKr+HkTWWk4qLZ6/u+XfjaZrWvcRuMiOXGWBiBwjpXWBYYJcu1pCt/b
+         5HYoYKInUcmpxUzwhQW3+tJrdVZzYox1JchV7Nz820Ve0vsgtabIFxfKIysBu9mo2b2s
+         yGVAxhQlK+l44yEZENaSvle4e6JkQRjqqamD5RjANh+/3lhw0i+VhTufxOViRW0ScrrS
+         LE94O+xTjaz09s4qCkz4f/g4hlWP8q28NVvZ0bsbvD2EJGIemUgNbfkzXFyuGlz/no+M
+         WEPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/urHEMzh2bc5TwNR8Jg3HlbigYCzgoWwkXUrjrAfWC8=;
-        b=XQNjZyRTi1brE0KeK19ifkfmD3xB0z7Q+hg7L8BD5Svh/f+B0xAcm/39mSAa1u7UC4
-         KjtPittk3EFjFkKx0bEnED2RRhnihHHTDX6vAcc506V+cCk32eFCGfZquhZvTk1A5aQu
-         urx9LLtahpCz9gw8y8A6WIUaa6YrsdNwpnkPA7t12CrK05h7OBonloo8w6oC/Mb0EKfz
-         mt6y9+x2Erf1mWqvtMIdXoI+lJmeEjFsDtPD34yXP9QiO+xqeT/L0mJ5JmRBPBLZdxbl
-         Tv+e6TUjlG0DUcrKi5DZfyK1d3yvGiR5i34kPjVxIb40CkavgbdLoDuTWydfy6Y6FxUk
-         roTw==
-X-Gm-Message-State: AJIora9kOiNb/OEGsTntGYrZiIPiNI/5ZNKeLlsVqzmpwzoZPyycMyPG
-        +XENCdNeOeS2HzhVcOKjB417d3mJHJtJMQGfVA8=
-X-Google-Smtp-Source: AGRyM1vzQAGVZ8apoNozUcEzZu+mjoPUu3+q9WkSyjYKuHvlYS46eciGCWtdJc855CKUdcMoEgpkfWpSFB+UmT0ASGk=
-X-Received: by 2002:a05:6902:c4:b0:64b:4677:331b with SMTP id
- i4-20020a05690200c400b0064b4677331bmr15665437ybs.93.1657528586108; Mon, 11
- Jul 2022 01:36:26 -0700 (PDT)
+        bh=BbEeMhaMhMOIFE7vJDdeDc8ULQN4ZptBVrKw7X+VxQs=;
+        b=UBHBrL2KtYat+Ityl5PIom3V1tqNIwyCRop43iHkB/lH7POVoX2SpDSHbcG35O9P28
+         pEYFa/7FilxIkTIMPHFLJlcEOGOOv4T9hG+uanPd9dulClkEYCGptGwGMO4HH8Y5J+sO
+         zySl3bmHY32ZLCZ4R4keBQSvwtTgOyH+PxE5tD7tKCgD2tf2vRIv8kGk+qbN72Iba3JU
+         0u8uSNC+t/+uCqsr9gTYJXvEeynNIsFEerxbR+4ZjfRV3hbrHMufZtfxq25b0XkniZZN
+         YeZJgGf9+yL6R8xrJv0rYuc5mwtfJNF8/UfnVuiudUeWr4Mq7RdmqTS1Rlw172twMyMx
+         zZgA==
+X-Gm-Message-State: AJIora/ZFzCaWKqHZouwIaTjtumDnOS+DxhXBnjJm6q1AN+qMS/Wo0AE
+        DCq/7rs1PwQSRj9/5ggCqb+PzL7aSGFdhH9903czzQ==
+X-Google-Smtp-Source: AGRyM1tu+11jEpO9I0Zp/q1P64jol0ViZ8rD11nXo7P0I6A8tRWYlerraqnGejlpiHTPIxLEgh9vgYaErsEarPH8PiA=
+X-Received: by 2002:a81:a8d:0:b0:31c:cb2f:c805 with SMTP id
+ 135-20020a810a8d000000b0031ccb2fc805mr19345536ywk.118.1657528938287; Mon, 11
+ Jul 2022 01:42:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220708195510.2951661-1-horatiu.vultur@microchip.com>
- <20220708195510.2951661-3-horatiu.vultur@microchip.com> <YsiQhA9pHaX4s3R8@colin-ia-desktop>
- <CAHp75Vc0EasS2Z3x=cgTv==osXprPU3Zkc-Q9DMf4BMz2p6oLw@mail.gmail.com> <20220711065547.drpgq466ueujkxah@soft-dev3-1.localhost>
-In-Reply-To: <20220711065547.drpgq466ueujkxah@soft-dev3-1.localhost>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 11 Jul 2022 10:35:49 +0200
-Message-ID: <CAHp75VcOY-fHMvdoazB+STYxGNCJTmpxN9yMaAvQAcVUn7yL7g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: ocelot: Fix pincfg
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kavyasree.kotagiri@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Michael Walle <michael@walle.cc>
+References: <20220704130602.12307-1-henning.schild@siemens.com> <20220704130602.12307-2-henning.schild@siemens.com>
+In-Reply-To: <20220704130602.12307-2-henning.schild@siemens.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 11 Jul 2022 10:42:07 +0200
+Message-ID: <CACRpkdaZK+0r5VfyAzp-4wYkdANQ68pMnwZAobusnkZS1qaN8w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio: nct6116d: add new driver for several Nuvoton
+ super io chips
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Kuan-Wei Ho <cwho@nuvoton.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 8:51 AM Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
-> The 07/09/2022 00:02, Andy Shevchenko wrote:
-> > On Fri, Jul 8, 2022 at 10:17 PM Colin Foster
-> > <colin.foster@in-advantage.com> wrote:
-> > > On Fri, Jul 08, 2022 at 09:55:10PM +0200, Horatiu Vultur wrote:
+On Mon, Jul 4, 2022 at 3:06 PM Henning Schild
+<henning.schild@siemens.com> wrote:
 
-Please, remove unneeded context when replying!
-
-...
-
-> > > > -             .max_register = 32,
-> > >
-> > > What happens in /sys/kernel/debug/regmap/*-pincfg/{range,registers} when
-> > > there's no max register?
-> >
-> > Good question!
+> This patch adds gpio support for several Nuvoton NCTXXX chips. These
+> Super-I/O chips offer multiple functions of which several already have
+> drivers in the kernel, i.e. hwmon and watchdog.
 >
-> If .max_register is missing then I got the following:
->
-> # cd /sys/kernel/debug/regmap/e2004064.pinctrl-pincfg/
-> # cat range
-> 0-0
-> # cat registers
-> 0: 00000005
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
 
-This is effectively a regression.
-
-> > > Should it be this?
-> > >
-> > > struct regmap_config regmap_config = {
-> > >     ...
-> > > };
-> > > regmap_config.max_register = info->desc->npins * regmap_config.reg_stride;
-> > >
-> > > >               .name = "pincfg",
-> > > >       };
-> >
-> > If regmap configuration may be const, I would prefer to have a
-> > hardcoded value and different configuration based on the chip, but if
-> > it's not feasible, then this could suffice.
+(...)
+>  drivers/gpio/Kconfig         |   9 +
+(...)
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -457,6 +457,15 @@ config GPIO_MXS
+>         select GPIO_GENERIC
+>         select GENERIC_IRQ_CHIP
 >
-> What about if we do something like:
->
-> const struct regmap_config regmap_config = {
->     ...
->     .max_register = info->desc->npins * 4,
->     ...
-> };
->
-> This is based on what Colin suggested only that we keep the const.
+> +config GPIO_NCT6116D
+> +       tristate "Nuvoton Super-I/O GPIO support"
+> +       help
+> +         This option enables support for GPIOs found on Nuvoton Super-I/O
+> +         chips NCT5104D, NCT6106D, NCT6116D, NCT6122D.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called gpio-nct6116d.
+> +
+>  config GPIO_OCTEON
 
-As long as it's const, I like it.
+This driver is put among the memory-mapped GPIO drivers
+in Kconfig despite it is using port-mapped IO.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Move it to the right section with the other port-mapped IO
+GPIO drivers that begins like this:
+
+menu "Port-mapped I/O GPIO drivers"
+        depends on X86 # Unconditional I/O space access
+
+
+Yours,
+Linus Walleij
