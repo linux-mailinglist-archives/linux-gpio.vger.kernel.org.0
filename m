@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDDD957156A
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:13:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CD48571571
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:15:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbiGLJNz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 05:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
+        id S232296AbiGLJPD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 05:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbiGLJNx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:13:53 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E7533354;
-        Tue, 12 Jul 2022 02:13:52 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id n18so11179508lfq.1;
-        Tue, 12 Jul 2022 02:13:52 -0700 (PDT)
+        with ESMTP id S229945AbiGLJPB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:15:01 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F03537F82;
+        Tue, 12 Jul 2022 02:15:00 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id t25so12894369lfg.7;
+        Tue, 12 Jul 2022 02:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XE4JnhtsX+9bRSJhafx+QlBOIlHNZ8nXGn9GMY6ZGvU=;
-        b=fgzBI7tmy8Cb6oUEPpfkpvoea/PU5XC7pGYQSEbWgr04jQoGrZbCjCZax6kpCp75md
-         ZaoBwmfWoCuCFOXaR4k/QHlsLstZm7qflsq+Ca9y+Jgb0vr/3R3utOpkquNp+D2Y3cBh
-         rZB5SpBNJrXLGm/NYqcEOUyJGcFjbE45vYYkIEeI0AFRtsy4M6gTMHAmyYVdEGWAhW6M
-         4NccffhC7JgEq7l99JCVoU9LOcOOaeqlXF0KDR6jOOKv++79o1bKCM8LQHHouAD3ELRp
-         rqfeU0oiICFHyG2tiVP0UnUPo8FMmL1Oe7g1JRsHxWrL0aaVEv2wqM+KmgQ3PWm/tbHK
-         OtfA==
+        bh=7dJBg9LfnofgHy6ilpqchRetbtEZkPv+AKVAP45NFCo=;
+        b=EQlz5Lplp1HgN4bVm90otjod7REHApUJ/Bgf60gHtsysuTPq9ehNegy42naHnCJwGg
+         OZi38SGg28hVF2EJTbz9umxAsENo/grt3QU8SQ5nSheMt/g+V6DSCe7fo8VJTv+u2LNs
+         XWwZ5XihCKiuT4sV+GGGxOkbx4V3ppshvovK+0Xd1Wyw0RokFcT+B4J2W8yi+5YTQLPa
+         e1GaGZKLCt4MDxlhEwA8aytF8c1mQEkG8rVw0E4gRoijZlJLAvpz3ENvEiMWA1Hjk3l6
+         zSxqhjbJp3gEMKLi9megxBc9HTcu54+qLN+3g1wcIlxrl1H+PFG8IYaOvbYsYBCx4654
+         1acg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XE4JnhtsX+9bRSJhafx+QlBOIlHNZ8nXGn9GMY6ZGvU=;
-        b=ast8euF8uy/aYclWKyZV3/jR8JVuepN6WX9UsF+gbzQjawP7FfnfsOgum/wVzKkhrT
-         f4t+g9BTfUIYGk7tRFt6BUgMNga12jYI2ka0/TukcI/IyAowmehjDpJgalUw2WEf/OUO
-         cO9HZHxJxoJG9fxI2lrGcGl+dT4gkFTffBrTII5JSyHNerixNhT2eSpmBvRJZallvzVw
-         h3kHsoLlHYE9IJnPp2jowZ8GmahFOtDXmbL8HPaOimO2QG8smdVdMUfey/+vmK4bajZ/
-         e7nBQMyWbpNCbDtoXQQswmd/+bCKyFplliGdcNXz1Ej1l5+yrlaATCFsl08mwAdCmEzC
-         iuMg==
-X-Gm-Message-State: AJIora9+UMBXFKK/pc9vXJtsIF4nPlDG+fTS9zS7savyg2lqwukxDv3a
-        ckFO0OoMpqpouAvvCVynLc3MuAcxdHFDN6pM2pE=
-X-Google-Smtp-Source: AGRyM1ujIrpTXlHRVeL1sEk9M68DIgjXlavfWyRNERd8qdnleE1cNRbRkOgVk8bBzRogNd0Knv27++LNA8MziaZ1FU8=
-X-Received: by 2002:a05:6512:3183:b0:47f:79f3:af9a with SMTP id
- i3-20020a056512318300b0047f79f3af9amr13953057lfe.182.1657617230889; Tue, 12
- Jul 2022 02:13:50 -0700 (PDT)
+        bh=7dJBg9LfnofgHy6ilpqchRetbtEZkPv+AKVAP45NFCo=;
+        b=JlD3kmmQ0xZ/7c+pyPrGfeIKqsabWSNFoDUj64oJHnlZaDXxxaqRZpzpVMWPQR83oa
+         mUWl6Ebz7apYmgfNzubfDLSHoI3BwV8+VpIpKmoEv2CWmjZOmL1PExoBVSAf/qHV0C/Y
+         8i9KpGwFIvm+479vLbqya21YFqMsPIsMKlcFqWTcw3Qy2sw2+rURTJEjAH0uiXcsSY9S
+         HQWbZrtUsH6ZIsygr51BxLaR2ERlBmY7Wvr6EmOCAgUPBc2vI+BJGFmNyQXcIavGaqsO
+         DGHA3Kpck9GFA/juynLl5tAktuqQthilR1BprT13G0ec/ccAC9bsGZoXl8lTtma63Z6r
+         /cRA==
+X-Gm-Message-State: AJIora+zpvys2zkA5ThzN8kFBB9MLUZxuyiOxDjlAuDpA78NOfIEcT0Y
+        ZqZJEwk9vvfKH0LUMvcCx2zmYBZdQUYqchfPH+NGhEpeA2ixsA==
+X-Google-Smtp-Source: AGRyM1tLHDQVyhND/WjqFxauc7FSgxBOMlNB6TthUBvoulmqIDIORuUfU3yX4w4mI3mKkUXSuJRG0bzcoBuz8LHvpzE=
+X-Received: by 2002:a05:6512:3ca4:b0:489:d112:569a with SMTP id
+ h36-20020a0565123ca400b00489d112569amr8363512lfv.207.1657617298692; Tue, 12
+ Jul 2022 02:14:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220711173418.91709-1-brgl@bgdev.pl> <20220712023714.GA9406@sol>
-In-Reply-To: <20220712023714.GA9406@sol>
+References: <20220712074055.10588-1-brgl@bgdev.pl>
+In-Reply-To: <20220712074055.10588-1-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 12 Jul 2022 11:13:14 +0200
-Message-ID: <CAHp75VcPaDq-3iL+3NpnYrOoLEX06HKX+tAhbP=P35jZ5NUuGQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: fix the chip_name configfs item
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Tue, 12 Jul 2022 11:14:22 +0200
+Message-ID: <CAHp75VdAidZxorVKvUfsc8fnNK19k2TpoTTJUXJpBo+wnALAWw@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: sim: fix the chip_name configfs item
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Stable <stable@vger.kernel.org>
@@ -69,18 +69,80 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 4:40 AM Kent Gibson <warthog618@gmail.com> wrote:
-> On Mon, Jul 11, 2022 at 07:34:18PM +0200, Bartosz Golaszewski wrote:
+On Tue, Jul 12, 2022 at 9:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> The chip_name configs attribute always displays the device name of the
+> first GPIO bank because the logic of the relevant function is simply
+> wrong.
+>
+> Fix it by correctly comparing the bank's swnode against the GPIO
+> device's children.
 
-...
+Taking into account that name swnode is used in other places in the
+code, I'm fine with this version,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> Not totally convinced by Andy's suggestion to rename swnode to fwnode.
-> Variables should be named for what they represent, not their type, and
-> you use swnode extensively elsewhere in the module, so either change it
-> everywhere or not at all, and such a sweeping change is beyond the scope
-> this patch.
+> Fixes: cb8c474e79be ("gpio: sim: new testing module")
+> Cc: stable@vger.kernel.org
+> Reported-by: Kent Gibson <warthog618@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+> v1 -> v2:
+> - use device_match_fwnode for shorter code
+>
+>  drivers/gpio/gpio-sim.c | 16 +++++-----------
+>  1 file changed, 5 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> index 98109839102f..1020c2feb249 100644
+> --- a/drivers/gpio/gpio-sim.c
+> +++ b/drivers/gpio/gpio-sim.c
+> @@ -991,28 +991,22 @@ static struct configfs_attribute *gpio_sim_device_config_attrs[] = {
+>  };
+>
+>  struct gpio_sim_chip_name_ctx {
+> -       struct gpio_sim_device *dev;
+> +       struct fwnode_handle *swnode;
+>         char *page;
+>  };
+>
+>  static int gpio_sim_emit_chip_name(struct device *dev, void *data)
+>  {
+>         struct gpio_sim_chip_name_ctx *ctx = data;
+> -       struct fwnode_handle *swnode;
+> -       struct gpio_sim_bank *bank;
+>
+>         /* This would be the sysfs device exported in /sys/class/gpio. */
+>         if (dev->class)
+>                 return 0;
+>
+> -       swnode = dev_fwnode(dev);
+> +       if (device_match_fwnode(dev, ctx->swnode))
+> +               return sprintf(ctx->page, "%s\n", dev_name(dev));
+>
+> -       list_for_each_entry(bank, &ctx->dev->bank_list, siblings) {
+> -               if (bank->swnode == swnode)
+> -                       return sprintf(ctx->page, "%s\n", dev_name(dev));
+> -       }
+> -
+> -       return -ENODATA;
+> +       return 0;
+>  }
+>
+>  static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
+> @@ -1020,7 +1014,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
+>  {
+>         struct gpio_sim_bank *bank = to_gpio_sim_bank(item);
+>         struct gpio_sim_device *dev = gpio_sim_bank_get_device(bank);
+> -       struct gpio_sim_chip_name_ctx ctx = { dev, page };
+> +       struct gpio_sim_chip_name_ctx ctx = { bank->swnode, page };
+>         int ret;
+>
+>         mutex_lock(&dev->lock);
+> --
+> 2.34.1
+>
 
-Ah, I agree that consistency has higher priority here.
 
 -- 
 With Best Regards,
