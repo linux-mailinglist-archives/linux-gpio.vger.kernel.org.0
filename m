@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42FC657161B
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2690571625
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232836AbiGLJtG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 05:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40296 "EHLO
+        id S232136AbiGLJuv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 05:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230285AbiGLJs5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:48:57 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8622BA2E79
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 02:48:55 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id bp17so5176479lfb.3
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 02:48:55 -0700 (PDT)
+        with ESMTP id S229450AbiGLJuv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:50:51 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29CDAA75D
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 02:50:49 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id o7so13015973lfq.9
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 02:50:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=/uH8F4Kby+JXg7Mpe1L96lV/BObBUJ58/FjGSd2zwrI=;
-        b=GHOwDC5960hhrGAi98lxdFsoVxYhQ2I/DQd5NEQZVKWyX92WrTsf8t2uM3S5O5Pasz
-         EaPxmoLo+up67H/T1lw9SK2ICPtDIXbpnFpjwJEtiMkaxLplr6Ne1TOqGXTgTi8dkiJA
-         Y+POzrid5V/l1fFk3bQz7NlKDjxL0IasYJ/SW4GtFYSRTmqGaVUb5ssUlJPMjQEp0dX2
-         QuR/+sJhEfI6EpUkJFI81oMNUs+Zf4ivdtf7J/KU5ISvA1qtBbwfx5fjRbkU6DYVeBma
-         +Chaapuv217t3WUW1yU+2nFRqqg5WTThyOJWMsUVHxYikwNKEpGEhL7fhgjQVQCcgH6f
-         yB1A==
+        bh=FD4c+Hsdhye940ZDEYK0eytq3nanfYvmmstMbkyO/KM=;
+        b=W5RHqZowOwhOPQ8/RfQ5YqvUbKKcnHpt1kN2nGQenjFAB7MhIu6m6uTfPb5Yhtb9nr
+         2Ssyeg8syQRdCjW7HIPgT93IEwq0G1hrOYIcnhTCPeDoP1ca63AJAhCwoifaGxPWjfhd
+         Ymxri9PDqT2yw67XsU7ZkgNGq4X7OgU/3ehn31khxdpwvyzMskIHAvFf3sMHE+bHxdo3
+         MHOZs/U8BoXD0aF/3yCQH+1zll75Hk+j7zYlbjxsBM3H3LxauvjviWbrAaUbah1kuoyD
+         Qm73s8514RSBUhflv1snfQ6184+nXJmHQ0CYIsbPxzBaMMd/ErBDJY5/FMjGO2SwU60y
+         bOcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=/uH8F4Kby+JXg7Mpe1L96lV/BObBUJ58/FjGSd2zwrI=;
-        b=Nw3CxtuxM1l+cYY1yeLLLidMQKfZtZbuuksybHmD+z10+MXtA3Mq0UIvRC7BFkswfH
-         QqAvuDX2mLvW2MC8swHKqk5ScGHR/kE9Q8nqMCnP91er4KifeM4SWH+Q0yoBeeK1XxD2
-         X50Rib9x7VOk3kK7v96y2KnZ/Zgg2EVr014tRnEld0lyQLeJn/HUnW2tLQ7lOIF0KZ2x
-         jWwYdLqT5xFjGkqm697b9pXURhHe0L2TN1WtWMgSknXrk1Qve6Bp/6ITiH3V6ZZLGZiU
-         XBoQMKhsOu4AkjdlphIMmkcXmaTc2dvzISW1WDq+taHgiZc8n6co7oIyB4P5XTbce+bW
-         UMRQ==
-X-Gm-Message-State: AJIora+wjqFUdztyOTzVpSX0TrvkdPggEpvmf1WOPM8741Vmt+OknmlN
-        XpnnRKbgjoUYlr257KpD13ZA9g==
-X-Google-Smtp-Source: AGRyM1uRD8Jy2As78zbcShpLvk3bPyap8hDx7k+p73eBuiJheG1Djr3s1kq+1523oqqWLjtGEhb0lQ==
-X-Received: by 2002:a05:6512:3b91:b0:489:e63f:47b1 with SMTP id g17-20020a0565123b9100b00489e63f47b1mr4117169lfv.410.1657619333888;
-        Tue, 12 Jul 2022 02:48:53 -0700 (PDT)
+        bh=FD4c+Hsdhye940ZDEYK0eytq3nanfYvmmstMbkyO/KM=;
+        b=vt4E8oHDkVCN4LptQ2pn10qSfFzoEJdqODG/hMTgfVhO4Zxd2kprPMQTtD4fONr9pt
+         wI7zUe0EIkBMcnxPYli7NIOvFqOvI721B8eD1R0HiVzwKFgdCzvW0zMaqORBl1ZS2sWJ
+         C4nFEuupRJKK3pBR0LT+efrrleVxmwZVWFemD4NOXqDCbbZE23bwUY1BnJmksjcpNCMk
+         6qZ13jDYij1CCqpFeBulY6uAb5mDlmrFsatzuzhtWYxvosztK9/QDo9pGCxcwDq1zTLz
+         dZyy4DCO0Dc4aEGtvFA4D48o9Wl9oQ5U2EbpDz/8zf38ZW/YBK1BMuZugQFIE7oX6KQX
+         nEAQ==
+X-Gm-Message-State: AJIora9ktokJIzU9L2dNqP0r72vyeNPtr726PHzl3FVpxBGYXuxbr5gk
+        +sWE/SgLGWo1Ol9ZRVVJXWisQQ==
+X-Google-Smtp-Source: AGRyM1t3ZG+j0jDG56+HTVYdVe2y58DlRXCAYBUR6gEBaEULs+nKR0Ll1WKpTXs0nFfxRDUTyAcA1A==
+X-Received: by 2002:a19:6b07:0:b0:489:c785:8dfc with SMTP id d7-20020a196b07000000b00489c7858dfcmr11265554lfa.268.1657619448133;
+        Tue, 12 Jul 2022 02:50:48 -0700 (PDT)
 Received: from [10.0.0.8] (fwa5da9-171.bb.online.no. [88.93.169.171])
-        by smtp.gmail.com with ESMTPSA id s3-20020ac24643000000b0047255d2111csm2073378lfo.75.2022.07.12.02.48.51
+        by smtp.gmail.com with ESMTPSA id v4-20020a056512348400b004795bcfe953sm2080436lfr.214.2022.07.12.02.50.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Jul 2022 02:48:53 -0700 (PDT)
-Message-ID: <8b1393e4-275b-6791-ad71-2edfeacd0a63@linaro.org>
-Date:   Tue, 12 Jul 2022 11:48:50 +0200
+        Tue, 12 Jul 2022 02:50:47 -0700 (PDT)
+Message-ID: <95d12b72-be9d-5503-c4ea-801303bb7776@linaro.org>
+Date:   Tue, 12 Jul 2022 11:50:45 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v1 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
- documentation
+Subject: Re: [PATCH v1 2/2] pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO
+ driver
 Content-Language: en-US
 To:     Tomer Maimon <tmaimon77@gmail.com>, avifishman70@gmail.com,
         tali.perry1@gmail.com, joel@jms.id.au, venture@google.com,
@@ -65,14 +65,14 @@ To:     Tomer Maimon <tmaimon77@gmail.com>, avifishman70@gmail.com,
 Cc:     openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 References: <20220710102110.39748-1-tmaimon77@gmail.com>
- <20220710102110.39748-2-tmaimon77@gmail.com>
+ <20220710102110.39748-3-tmaimon77@gmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220710102110.39748-2-tmaimon77@gmail.com>
+In-Reply-To: <20220710102110.39748-3-tmaimon77@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,241 +81,91 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 10/07/2022 12:21, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
-> pinmux and GPIO controller.
+> Add pinctrl and GPIO controller driver support to Arbel BMC NPCM8XX SoC.
+> 
+> Arbel BMC NPCM8XX pinctrl driver based on Poleg NPCM7XX, except the
+> pin mux mapping difference the NPCM8XX GPIO supports adjust debounce
+> period time.
 > 
 > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 205 ++++++++++++++++++
->  1 file changed, 205 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..6395ef2bf5b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
-> @@ -0,0 +1,205 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,npcm845-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton NPCM845 Pin Controller and GPIO
-> +
-> +maintainers:
-> +  - Tomer Maimon <tmaimon77@gmail.com>
-> +
-> +description:
-> +  The Nuvoton BMC NPCM8XX Pin Controller multi-function routed through
-> +  the multiplexing block, Each pin supports GPIO functionality (GPIOx)
-> +  and multiple functions that directly connect the pin to different
-> +  hardware blocks.
-> +
-> +properties:
-> +  compatible:
-> +    const: nuvoton,npcm845-pinctrl
-> +
-> +  ranges:
-> +    maxItems: 1
 
-ranges without reg? Does it even work? Did you test the bindings?
+(...)
 
 > +
-> +  '#address-cells':
-> +    const: 1
+> +static int npcm8xx_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +	struct npcm8xx_pinctrl *pctrl;
+> +	int ret;
 > +
-> +  '#size-cells':
-> +    const: 1
+> +	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+> +	if (!pctrl)
+> +		return -ENOMEM;
 > +
-> +patternProperties:
-> +  "^gpio@":
-> +    type: object
+> +	pctrl->dev = &pdev->dev;
+> +	dev_set_drvdata(&pdev->dev, pctrl);
 > +
-> +    description:
-> +      Eight GPIO banks that each contain between 32 GPIOs.
-> +
-> +    properties:
-> +
+> +	pctrl->gcr_regmap =
+> +		syscon_regmap_lookup_by_compatible("nuvoton,npcm845-gcr");
 
-No blank line.
+No. Use property. By this patchset, I would expect that you learnt from
+previous mistakes around this. Why repeating the same trouble second time?
 
-> +      gpio-controller: true
+> +	if (IS_ERR(pctrl->gcr_regmap)) {
+> +		dev_err(pctrl->dev, "didn't find nuvoton,npcm845-gcr\n");
+> +		return PTR_ERR(pctrl->gcr_regmap);
+> +	}
 > +
-> +      '#gpio-cells':
-> +        const: 2
+> +	ret = npcm8xx_gpio_of(pctrl);
+> +	if (ret < 0) {
+> +		dev_err(pctrl->dev, "Failed to gpio dt-binding %u\n", ret);
+> +		return ret;
+> +	}
 > +
-> +      reg:
-> +        maxItems: 1
+> +	pctrl->pctldev = devm_pinctrl_register(&pdev->dev,
+> +					       &npcm8xx_pinctrl_desc, pctrl);
+> +	if (IS_ERR(pctrl->pctldev)) {
+> +		dev_err(&pdev->dev, "Failed to register pinctrl device\n");
+> +		return PTR_ERR(pctrl->pctldev);
+> +	}
 > +
-> +      interrupts:
-> +        maxItems: 1
+> +	ret = npcm8xx_gpio_register(pctrl);
+> +	if (ret < 0) {
+> +		dev_err(pctrl->dev, "Failed to register gpio %u\n", ret);
+> +		return ret;
+> +	}
 > +
-> +      gpio-ranges:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - gpio-controller
-> +      - '#gpio-cells'
-> +      - reg
-> +      - interrupts
-> +      - gpio-ranges
-> +
-> +  "-pin":
-> +    $ref: pinmux-node.yaml#
+> +	pr_info("npcm8xx Pinctrl driver probed\n");
 
-Shouldn't this be under bank?
 
-> +
-> +    properties:
-> +      groups:
-> +        description:
-> +          One or more groups of pins to mux to a certain function
-> +        items:
-> +          enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
-> +                  smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
-> +                  smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
-> +                  smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
-> +                  spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
-> +                  bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
-> +                  rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
-> +                  fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
-> +                  fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
-> +                  r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
-> +                  rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
-> +                  smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
-> +                  smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
-> +                  pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
-> +                  serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
-> +                  spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
-> +                  smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
-> +                  smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
-> +                  hgpio4, hgpio5, hgpio6, hgpio7 ]
-> +
-> +      function:
-> +        description:
-> +          The function that a group of pins is muxed to
-> +        enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
-> +                smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
-> +                smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
-> +                smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
-> +                spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
-> +                bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
-> +                rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
-> +                fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
-> +                fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
-> +                r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
-> +                rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
-> +                smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
-> +                smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
-> +                pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
-> +                serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
-> +                spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
-> +                smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
-> +                smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
-> +                hgpio4, hgpio5, hgpio6, hgpio7 ]
-> +
-> +    dependencies:
-> +      groups: [ function ]
-> +      function: [ groups ]
-> +
-> +    additionalProperties: false
-> +
-> +  "^pin":
+No pr_ in devices. No success debug messages.
 
-This is almost the same as previous property. Confusing and I think it
-does not work.
-
-> +    $ref: pincfg-node.yaml#
+> +	return 0;
+> +}
 > +
-> +    properties:
-> +      pins:
-> +        description:
-> +          A list of pins to configure in certain ways, such as enabling
-> +          debouncing
+> +static const struct of_device_id npcm8xx_pinctrl_match[] = {
+> +	{ .compatible = "nuvoton,npcm845-pinctrl" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, npcm8xx_pinctrl_match);
 > +
-> +      bias-disable: true
+> +static struct platform_driver npcm8xx_pinctrl_driver = {
+> +	.probe = npcm8xx_pinctrl_probe,
+> +	.driver = {
+> +		.name = "npcm8xx-pinctrl",
+> +		.of_match_table = npcm8xx_pinctrl_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
 > +
-> +      bias-pull-up: true
+> +static int __init npcm8xx_pinctrl_register(void)
+> +{
+> +	return platform_driver_register(&npcm8xx_pinctrl_driver);
+> +}
+> +arch_initcall(npcm8xx_pinctrl_register);
 > +
-> +      bias-pull-down: true
-> +
-> +      input-enable: true
-> +
-> +      output-low: true
-> +
-> +      output-high: true
-> +
-> +      drive-push-pull: true
-> +
-> +      drive-open-drain: true
-> +
-> +      input-debounce:
-> +        description:
-> +          Debouncing periods in microseconds, one period per interrupt
-> +          bank found in the controller
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 1
-> +        maxItems: 4
-> +
-> +      slew-rate:
-> +        description: |
-> +          0: Low rate
-> +          1: High rate
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 1]
-> +
-> +      drive-strength:
-> +        enum: [ 0, 1, 2, 4, 8, 12 ]
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - ranges
-> +  - '#address-cells'
-> +  - '#size-cells'
-
-Missing allOf with ref to pinctrl.yaml.
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      pinctrl: pinctrl@f0800000 {
-> +        compatible = "nuvoton,npcm845-pinctrl";
-> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        gpio0: gpio@f0010000 {
-> +          gpio-controller;
-> +          #gpio-cells = <2>;
-> +          reg = <0x0 0xB0>;
-> +          interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-> +          gpio-ranges = <&pinctrl 0 0 32>;
-> +        };
-> +
-> +        fanin0_pin: fanin0-pin {
-> +          groups = "fanin0";
-> +          function = "fanin0";
-> +        };
-> +
-> +        pin34_slew: pin34-slew {
-
-and how does it pass your checks?
-
-Did you test the bindings?
-
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("tomer.maimon@nuvoton.com");
+> +MODULE_DESCRIPTION("Nuvoton NPCM8XX Pinctrl and GPIO driver");
 
 
 Best regards,
