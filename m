@@ -2,95 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BE9B571401
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 10:09:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A0CA571474
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 10:26:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232599AbiGLIJl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 04:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40518 "EHLO
+        id S229657AbiGLI02 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 04:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232573AbiGLIJW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 04:09:22 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8673E558E0;
-        Tue, 12 Jul 2022 01:09:17 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id f11so6032004pgj.7;
-        Tue, 12 Jul 2022 01:09:17 -0700 (PDT)
+        with ESMTP id S229559AbiGLI01 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 04:26:27 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E482578DD3
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 01:26:26 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id 136so12739653ybl.5
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 01:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mf64p6IVaP9Hci3QPNE+Bn67PkfAD3xjmW63tzAmGCQ=;
-        b=BPXMUa/9LvoaABZiKfxwgew6ncC6tYy8HoIjGTUbJ+MZUKJmacs+lKcuehLWsZ3Fi4
-         EXnlf/ao8fcTonT0pTgNZrmfOnxyJS/C7FJGsRDIo/bVyEP0rGBGrat4k/6/V7+dyHvT
-         rEYMsztmYeO7uDri7lh3dynDi2xQRVs4CQbfkMutrOlUgXKsy/Su6NBvRKM5vnhXJexJ
-         rYHKLiZD4XdG7jJ2UGDCeZHQ0SiOyLNrLgPcXJRzPAXjfnXIp4C0Ifgon9tqe1NCQeX5
-         aG2mTv1zbmJFRyE0dr+nbzMFoxjxPTzHIDjZ1K0q3Rpw9L0QpYR+z+gKyk5bCvHXaNPu
-         smtg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cdwxK6sqddclopLMDQXjGSjLursyiRjgU3MJexMgrN8=;
+        b=T0mE9leD4xAeEnQzNe1mGvbTU54tE591kkrtZQbGYmGc7EycL36Z0zNh4GYKex6Aen
+         PS7pbj+TxdcWJWy6I+f+SM+RCHh9vi0SWg5s5sBnouNh54+xUrMgPF9JSgv5lrKcaa5D
+         6Q0cCpe35CVD+efZerCXq2mzJ5Qvz9+/AVtIYLOeEnuvkUe6i5UHjqdOdPlekTs1Uz7u
+         4D1lVWmUP0TSvwidh8MdZeGYAUG4XHcvXD0p9HVBQXbRNSNfy9Dh4eT0Ud1iZMul/RiF
+         8sNwgwGZl2Bmfic8J2jWrodm3A8Ow8XztUb08p9xxZaRuEzfh9GT+bHudTqs8szsNftc
+         9WTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mf64p6IVaP9Hci3QPNE+Bn67PkfAD3xjmW63tzAmGCQ=;
-        b=m5Qn9Z3ibaav5qHgW6dHgm7UMxArSU3zFy5fAPr3foDDFJIzH8hl67c7dWPYXAsnKZ
-         ra3PJgpdR8tURDPDwuu+rfhC6znLArqVxL4DOhphV18r/sVnSX4BSw66gG3Fll3p37WG
-         OeBMLksHIrtk9Qtd2rG2ONH84NIcF7aSX9lWFRhv1wxhhXRDYfSzFXQLfaDAtxqyNkAs
-         fLf/ntfyZAHGZ+wr3PXwvxHnA1TzR1TqnP2wL7gTTL5m3XaylSBDCnj3KYHJyzo3vohw
-         9TZNrG/VYQThHYfZ0SdE2MHDNr/+rGUWADRryjtyjOzaQm/18qQoyjGseR8JAedkM94c
-         HAeg==
-X-Gm-Message-State: AJIora9b6uavGQWAEpIXyyUIMYamXjYHIIdIwL3QlmkdTTcd2pSuxsGh
-        r3baGsUT2c4oZGoixuvG+So=
-X-Google-Smtp-Source: AGRyM1sWcHqPHK0pmVykvXon8fJB8LDcUlnnVllisCl+oHyWzkXZ4nzas5Mwu73MdNC1QssldxIc/g==
-X-Received: by 2002:a63:481a:0:b0:411:7951:cbcd with SMTP id v26-20020a63481a000000b004117951cbcdmr19424157pga.66.1657613356965;
-        Tue, 12 Jul 2022 01:09:16 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id z16-20020aa79590000000b005289cade5b0sm6079093pfj.124.2022.07.12.01.09.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 01:09:16 -0700 (PDT)
-Date:   Tue, 12 Jul 2022 16:09:11 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: sim: fix the chip_name configfs item
-Message-ID: <20220712080911.GA240577@sol>
-References: <20220712074055.10588-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cdwxK6sqddclopLMDQXjGSjLursyiRjgU3MJexMgrN8=;
+        b=LYke/f2h+kMAalKOZJNWMRQ5S9icPuuFq0IbEvzxYaNhLD1CfevOXs22Q+/Ew4Zljh
+         pXQTAzqfT8uWpJWJXh7Guec3zweJ75cTfXE80xBIfpAI1LxEYBxo0Vlph0MbS8ee3emI
+         s7WuSybtNRZtBe3/n+5Semt1wZwpXH0yYWVXDY1TLDR+CYyGpNI0UBorCTaolQCBYogs
+         j5R59k9XEIcEVD+xrDASu0EJ6GKH4EFUIZWyDJLdm03VzPYq5FEgQxBLnONDCKv2y94w
+         C1P/jc7H2pteHadBsovzG/e7JWz3KylRXaow1mhzwdq9QyzL5S7C6eUNeuFolRfZbzyI
+         2Tng==
+X-Gm-Message-State: AJIora9rXpm97iOan6vVZmDJ9SUms8AhmfF8g1MlPs8Nr8iw+arUSEk/
+        CjpjnauHRRE5oSD1e19UeZBWl6tjCoj30H2LU5012XmPvP8=
+X-Google-Smtp-Source: AGRyM1skU7B/1Gl0/uh6OxHgWgqtXXalUK32WZZ1omCInIqFTjNoRwTkWmiNd5ic0U7V725ztvnU+sfgDKBAA9PmB6M=
+X-Received: by 2002:a25:fe04:0:b0:66e:1f8a:8e89 with SMTP id
+ k4-20020a25fe04000000b0066e1f8a8e89mr21731565ybe.514.1657614386132; Tue, 12
+ Jul 2022 01:26:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220712074055.10588-1-brgl@bgdev.pl>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220711125238.360962-1-windhl@126.com> <CACRpkdZJBT86um5VM0e2mnMEv=cVrg7PmZNGbZ0GwxC-1nXbBQ@mail.gmail.com>
+In-Reply-To: <CACRpkdZJBT86um5VM0e2mnMEv=cVrg7PmZNGbZ0GwxC-1nXbBQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 Jul 2022 10:26:15 +0200
+Message-ID: <CACRpkdY0HH1c2bWz+W9wna7wP1-HjuOL-tRBsvUo0iEuGx3VQQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: gpiolib-of: Fix refcount bugs in of_mm_gpiochip_add_data()
+To:     Liang He <windhl@126.com>
+Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 09:40:55AM +0200, Bartosz Golaszewski wrote:
-> The chip_name configs attribute always displays the device name of the
-> first GPIO bank because the logic of the relevant function is simply
-> wrong.
-> 
-> Fix it by correctly comparing the bank's swnode against the GPIO
-> device's children.
-> 
-> Fixes: cb8c474e79be ("gpio: sim: new testing module")
-> Cc: stable@vger.kernel.org
-> Reported-by: Kent Gibson <warthog618@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
-> v1 -> v2:
-> - use device_match_fwnode for shorter code
-> 
+On Mon, Jul 11, 2022 at 3:23 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Jul 11, 2022 at 2:52 PM Liang He <windhl@126.com> wrote:
+>
+> > We should use of_node_get() when a new reference of device_node
+> > is created. It is noted that the old reference stored in
+> > 'mm_gc->gc.of_node' should also be decreased.
+> >
+> > This patch is based on the fact that there is a call site in function
+> > 'qe_add_gpiochips()' of src file 'drivers\soc\fsl\qe\gpio.c'. In this
+> > function, of_mm_gpiochip_add_data() is contained in an iteration of
+> > for_each_compatible_node() which will automatically increase and
+> > decrease the refcount. So we need additional of_node_get() for the
+> > reference escape in of_mm_gpiochip_add_data().
+> >
+> > Fixes: a19e3da5bc5f ("of/gpio: Kill of_gpio_chip and add members directly to gpio_chip")
+> > Signed-off-by: Liang He <windhl@126.com>
+>
+> Patch applied for next as nonurgent fix!
 
-Works for me.
+Oh no I shouldn't. This goes to the GPIO tree, took it out again.
 
-Reviewed-and-tested-by: Kent Gibson <warthog618@gmail.com>
-
-Cheers,
-Kent.
+Yours,
+Linus Walleij
