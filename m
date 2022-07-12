@@ -2,347 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69251571BA1
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 15:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3572F571CA8
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 16:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230301AbiGLNph (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 09:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
+        id S230110AbiGLOa7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 10:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232197AbiGLNpa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 09:45:30 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA3C2AE32
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 06:45:29 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id a9so13999304lfk.11
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 06:45:29 -0700 (PDT)
+        with ESMTP id S229924AbiGLOax (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 10:30:53 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D3523BE3;
+        Tue, 12 Jul 2022 07:30:52 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id v10-20020a05600c15ca00b003a2db8aa2c4so4919237wmf.2;
+        Tue, 12 Jul 2022 07:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=zBdmor3ebYTz4M9G/JpFZaGhUnOIPV+4b94hb7PZEos=;
-        b=IPE6fTbLabiis/jTdAiQrM62Q2T+deFH1WYVaOvljATrO6pfjrSpwDPz1LECJSdqGq
-         F7GENV15O+V79DNAeQSjed4PXhExPnziSb8wnTWtogcqKjCQb0Zkyct85FN9V54Imn95
-         Pq/b+AHsZKAfzlBG6Rd8Q91h2EBFas+J2+UM2nwlsPawa0TOWf08IAk/dsAxihNWnuE2
-         CyZB7zxIeh/koJILOf/5YR0z3s4zi76vMEnFhk/yVIRubXR+K3c3nVAEuBoQclT9eVV3
-         rzg88JZZ4s627F7JzF6p5+Hjq77gxYTqKKkLhCHd0rQ+VslLzaIlwnMYbWWbkw+pTZRd
-         y7Zg==
+        d=gmail.com; s=20210112;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=bzwxy70TNOzVzbC2SQ6pvxX4LI9i4auhhVyInyenLbg=;
+        b=iiLNdHTC8ESUCoAHkM/+WlHCV0Sw8CzK1CV5E4nKh5s0HWbiBPfsQXDmKQCIQMvsO5
+         EBw+FZRQr/NfAxusxfMt9/y9ycRcOcthOKHMKJdpjTU4v+soZknV+8Vc+uDD9pAZ7xLR
+         2iHXxvLSi2yCxTeDI3P/2EURCcQuYlv4Fli9+fUqvpASymmcmC1+mdHrSMMUb1LS9Oxo
+         ZEBr888IZ2Mitnnnh6AUYHDXNT+P4sS6B/7tcvUmIqc/q9hEjs1rLKrlCMX6+CY9ifIo
+         MZ88IZHbppWvq7YbXZpanMSwMRZrM0zaKkWbTQfAL6aAhF/WHboXOLrNuT+exLr8xI4i
+         LB3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=zBdmor3ebYTz4M9G/JpFZaGhUnOIPV+4b94hb7PZEos=;
-        b=rJwcJsyokGSI9CvMusQeSwDap6mZXSi3iGm2Bc/PkDZ8Ryyo7I+4/xEMEuTj2o9aBV
-         Z3t6oPQgmURjnWpTq/GHndrGUQukSPHsxRPPAUcvIpqI+fwSCM86qZPRA4JfERopU65i
-         mTfY+cXD+W9zWy5gDcthL6nOrnBTRb6XAvshNaGLSbX2mrFMjC8YBhYzx+lZY8U5vy55
-         0whJrIyauklWA+T2vrSLC1vZ6ykCUwGXbZHwqh6EZscNzaJ5+RCHgt7if1NhR1Se+kSZ
-         A6yfHqhJ4rY5DYf+nqxjocBUCGxaShOrUPD+/umHHqIoI56LHf2PwGW+wNwwKwyqS6cg
-         ZWng==
-X-Gm-Message-State: AJIora/1THBfkU+rV17FaP7/Wf/3522G/uRHibP3iBzg9Fuj7EUVASe+
-        /O/BYB94X9u86LKtn2vKd7le1Q==
-X-Google-Smtp-Source: AGRyM1seDrDaus34guCoomrD0xee7IUSvzKkKV8gR/Jz7H2Tpc7jd3+CHxhj7TZoLefb/LQfdAOVfg==
-X-Received: by 2002:a05:6512:1087:b0:489:ee61:ba58 with SMTP id j7-20020a056512108700b00489ee61ba58mr2443773lfg.408.1657633527414;
-        Tue, 12 Jul 2022 06:45:27 -0700 (PDT)
-Received: from [10.0.0.8] (fwa5da9-171.bb.online.no. [88.93.169.171])
-        by smtp.gmail.com with ESMTPSA id p27-20020a056512329b00b00482bb824214sm1889067lfe.221.2022.07.12.06.45.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Jul 2022 06:45:26 -0700 (PDT)
-Message-ID: <4ffc1060-671e-cbec-a100-5e26f1957eeb@linaro.org>
-Date:   Tue, 12 Jul 2022 15:45:18 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v1 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
- documentation
-Content-Language: en-US
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=bzwxy70TNOzVzbC2SQ6pvxX4LI9i4auhhVyInyenLbg=;
+        b=73cHvYrhANK6Xs2yXj1J2N7uzQApTrffd27JNScQWpGAEbzhS0/rvWCDdIe5b+kDuU
+         219zHQzP2/En4g4RSxFhpJwbKqymfmxFJuvZNciV6Sg9rTcAiJHr5UtErqfiEp6oRlg4
+         4wjuub3iwyt6u94vXGjA2ihK0Ydie85b5kSyuJRaVCOGoxCpsJ7LBGNaTjjrqk/jcEhC
+         goFhJR4t5B9ePe/hjKE2aaAJHkW5fxBRexofp6+1xdxj0HM7KPwJPj/hNAuhhPTR/Lhr
+         9KOnWE9KTS1Fu8YpWovrQ0jzORw0tMI7uuPShvVLj7TnbevcPXWX3zd/ml/7i/Px9bp8
+         Mjsg==
+X-Gm-Message-State: AJIora/Xn8rYGTGGAQGAq3+bFDBCd89mvSJROJ0qIePPR7EDu2vDkG6a
+        qgQPWgqsrYQ+m6ByjyHLx/c=
+X-Google-Smtp-Source: AGRyM1tG2wW154+SibgSBju+PDxt2tIJ0H01DgYNd4GXlcgDCdTYxqt2DoAhWPKhuoYxERcQ7TwiHw==
+X-Received: by 2002:a05:600c:1f08:b0:3a2:e82f:7b49 with SMTP id bd8-20020a05600c1f0800b003a2e82f7b49mr4172537wmb.11.1657636250998;
+        Tue, 12 Jul 2022 07:30:50 -0700 (PDT)
+Received: from p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de (p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de. [2003:f6:ef03:6f00:5de6:a4d0:d791:ed01])
+        by smtp.gmail.com with ESMTPSA id bd10-20020a05600c1f0a00b003a18de85a64sm1915169wmb.24.2022.07.12.07.30.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 07:30:50 -0700 (PDT)
+Message-ID: <cf0a46c499de1f97987b231a0b162d09f961b702.camel@gmail.com>
+Subject: Re: [PATCH 04/10] input: keyboard: adp5588-keys: add support for fw
+ properties
+From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-References: <20220710102110.39748-1-tmaimon77@gmail.com>
- <20220710102110.39748-2-tmaimon77@gmail.com>
- <8b1393e4-275b-6791-ad71-2edfeacd0a63@linaro.org>
- <CAP6Zq1iuMPD21dM7Gpg4AEfM1cqE1mFhnO5hhUWvDZvEz=rTqw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAP6Zq1iuMPD21dM7Gpg4AEfM1cqE1mFhnO5hhUWvDZvEz=rTqw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 Jul 2022 16:31:53 +0200
+In-Reply-To: <CAHp75VfqT7L7EkSt=6DTwYeK-Nz6pX9edhrfoAR9AUTz40pcMA@mail.gmail.com>
+References: <20220708093448.42617-1-nuno.sa@analog.com>
+         <20220708093448.42617-5-nuno.sa@analog.com>
+         <CAHp75Vcv8i-XXarjA=sE_gkG57ngADLrsG2=xA71zOfxtfEUCg@mail.gmail.com>
+         <PH0PR03MB67864AAC5B51C36E6FB202BF99829@PH0PR03MB6786.namprd03.prod.outlook.com>
+         <CAHp75VfqT7L7EkSt=6DTwYeK-Nz6pX9edhrfoAR9AUTz40pcMA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
+MIME-Version: 1.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/07/2022 15:29, Tomer Maimon wrote:
-> Hi Krzysztof,
-> 
-> Thanks for your comments.
-> 
-> On Tue, 12 Jul 2022 at 12:48, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 10/07/2022 12:21, Tomer Maimon wrote:
->>> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
->>> pinmux and GPIO controller.
->>>
->>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->>> ---
->>>  .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 205 ++++++++++++++++++
->>>  1 file changed, 205 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
->>> new file mode 100644
->>> index 000000000000..6395ef2bf5b3
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
->>> @@ -0,0 +1,205 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,npcm845-pinctrl.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Nuvoton NPCM845 Pin Controller and GPIO
->>> +
->>> +maintainers:
->>> +  - Tomer Maimon <tmaimon77@gmail.com>
->>> +
->>> +description:
->>> +  The Nuvoton BMC NPCM8XX Pin Controller multi-function routed through
->>> +  the multiplexing block, Each pin supports GPIO functionality (GPIOx)
->>> +  and multiple functions that directly connect the pin to different
->>> +  hardware blocks.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: nuvoton,npcm845-pinctrl
->>> +
->>> +  ranges:
->>> +    maxItems: 1
->>
->> ranges without reg? Does it even work? Did you test the bindings?
-> The ranges related to GPIO node reg
+On Fri, 2022-07-08 at 17:07 +0200, Andy Shevchenko wrote:
+> On Fri, Jul 8, 2022 at 5:04 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+> > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Sent: Friday, July 8, 2022 4:56 PM
+> > > On Fri, Jul 8, 2022 at 11:37 AM Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > wrote:
+>=20
+> ...
+>=20
+> > > Okay, you add something in the wrong form and then fix it in the
+> > > other
+> > > patch in the very same series? Please no ping-pong type of
+> > > changes.
+> > > Squash / rebase your series accordingly.
+> >=20
+> > Well, I thought to just copy it as it was on the platform file and
+> > then just fix
+> > it with the rest of the coding styles changes. But I'm fine in
+> > fixing it already
+> > in this patch. In fact, there's a lot of defines that are not used
+> > (it's just
+> > defining the complete register map) so I can as well get rid of all
+> > the stuff
+> > that is not used anywhere in the driver.
+>=20
+> This needs to be split to:
+>=20
+> 1) fix existing
+> 2) move data
+> 3) use that data
+>=20
+> Or
+>=20
+> 1) move data (no other changes, if possible)
+> 2) fix data
+> 3) use it
+>=20
+> ...
 
-But you do not allow here a 'reg', do you? So how can you have an unit
-address in pinctrl node?
+Well, I think in the current form is already your option 2... And fix
+is a strong word in here, these are coding style changes :)
 
-> 
-> I did test the pin controller document and it passed.
-> bash-4.2$ make ARCH=arm64 dt_binding_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
->   LINT    Documentation/devicetree/bindings
->   CHKDT   Documentation/devicetree/bindings/processed-schema.json
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->   DTEX    Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dts
->   DTC     Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dtb
->   CHECK   Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dtb
-> Did I need to run anything else than dt_binding_check for testing the document?
+- Nuno S=C3=A1
 
-Indeed it will pass, because you do not have reg in pinctrl node. But
-your dts won't pass make dtbs W=1
-
-
->>
->>> +
->>> +  '#address-cells':
->>> +    const: 1
->>> +
->>> +  '#size-cells':
->>> +    const: 1
->>> +
->>> +patternProperties:
->>> +  "^gpio@":
->>> +    type: object
->>> +
->>> +    description:
->>> +      Eight GPIO banks that each contain between 32 GPIOs.
->>> +
->>> +    properties:
->>> +
->>
->> No blank line.
-> O.K.
->>
->>> +      gpio-controller: true
->>> +
->>> +      '#gpio-cells':
->>> +        const: 2
->>> +
->>> +      reg:
->>> +        maxItems: 1
->>> +
->>> +      interrupts:
->>> +        maxItems: 1
->>> +
->>> +      gpio-ranges:
->>> +        maxItems: 1
->>> +
->>> +    required:
->>> +      - gpio-controller
->>> +      - '#gpio-cells'
->>> +      - reg
->>> +      - interrupts
->>> +      - gpio-ranges
->>> +
->>> +  "-pin":
->>> +    $ref: pinmux-node.yaml#
->>
->> Shouldn't this be under bank?
-> Do you mean after the group and function properties?
-> The -pin shouldn't use for the group property naming?
-
-Hm, I guess it's fine, I actually don't remember the recommendation for
-gpio banks in relation to pinmux nodes.
-
->>
->>> +
->>> +    properties:
->>> +      groups:
->>> +        description:
->>> +          One or more groups of pins to mux to a certain function
->>> +        items:
->>> +          enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
->>> +                  smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
->>> +                  smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
->>> +                  smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
->>> +                  spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
->>> +                  bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
->>> +                  rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
->>> +                  fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
->>> +                  fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
->>> +                  r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
->>> +                  rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
->>> +                  smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
->>> +                  smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
->>> +                  pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
->>> +                  serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
->>> +                  spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
->>> +                  smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
->>> +                  smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
->>> +                  hgpio4, hgpio5, hgpio6, hgpio7 ]
->>> +
->>> +      function:
->>> +        description:
->>> +          The function that a group of pins is muxed to
->>> +        enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
->>> +                smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
->>> +                smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
->>> +                smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
->>> +                spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
->>> +                bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
->>> +                rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
->>> +                fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
->>> +                fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
->>> +                r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
->>> +                rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
->>> +                smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
->>> +                smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
->>> +                pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
->>> +                serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
->>> +                spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
->>> +                smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
->>> +                smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
->>> +                hgpio4, hgpio5, hgpio6, hgpio7 ]
->>> +
->>> +    dependencies:
->>> +      groups: [ function ]
->>> +      function: [ groups ]
->>> +
->>> +    additionalProperties: false
->>> +
->>> +  "^pin":
->>
->> This is almost the same as previous property. Confusing and I think it
->> does not work.
-> if I remove it I get the following error:
-> pinctrl@f0800000: 'pin34-slew' does not match any of the regexes:
-> '-pin', '^gpio@', 'pinctrl-[0-9]+'
-> Can you advise what I should do?
-
-Ah, the pattern is indeed different - you start with pin. Anyway it's
-confusing to have cfg starting with pin and mux ending in pin. How
-"pin-pin" would work? :)
-
-Use maybe similar pattern, so start with mux for mux and pin for cfg.
-Look at wpcm450 pinctrl.
-
-
->>
->>> +    $ref: pincfg-node.yaml#
->>> +
->>> +    properties:
->>> +      pins:
->>> +        description:
->>> +          A list of pins to configure in certain ways, such as enabling
->>> +          debouncing
->>> +
->>> +      bias-disable: true
->>> +
->>> +      bias-pull-up: true
->>> +
->>> +      bias-pull-down: true
->>> +
->>> +      input-enable: true
->>> +
->>> +      output-low: true
->>> +
->>> +      output-high: true
->>> +
->>> +      drive-push-pull: true
->>> +
->>> +      drive-open-drain: true
->>> +
->>> +      input-debounce:
->>> +        description:
->>> +          Debouncing periods in microseconds, one period per interrupt
->>> +          bank found in the controller
->>> +        $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +        minItems: 1
->>> +        maxItems: 4
->>> +
->>> +      slew-rate:
->>> +        description: |
->>> +          0: Low rate
->>> +          1: High rate
->>> +        $ref: /schemas/types.yaml#/definitions/uint32
->>> +        enum: [0, 1]
->>> +
->>> +      drive-strength:
->>> +        enum: [ 0, 1, 2, 4, 8, 12 ]
->>> +
->>> +    additionalProperties: false
->>> +
->>> +required:
->>> +  - compatible
->>> +  - ranges
->>> +  - '#address-cells'
->>> +  - '#size-cells'
->>
->> Missing allOf with ref to pinctrl.yaml.
-> Do you mean adding
-> allOf:
->   - $ref: "pinctrl.yaml#"
-
-Yes.
-
-
-
-Best regards,
-Krzysztof
