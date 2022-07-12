@@ -2,80 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E6C7571368
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 09:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8A425713EC
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 10:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230502AbiGLHtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 03:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
+        id S231160AbiGLIG7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 04:06:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232416AbiGLHtF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 03:49:05 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D6B27B0D
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:49:04 -0700 (PDT)
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 867693F1BC
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 07:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1657612137;
-        bh=vNBZvuUXiXCxiG8WzoPq174R/6y/8FtvVvGT3U1v9yQ=;
-        h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
-        b=LYa2uYYPfjNZcA20V2e6jQKf32d17Z3rPAYt9iA7tQWCNl0Q8K9rNS5VmhyT4turk
-         e5gPmbx2FzVWQdy4BozlVoAUl65SkZ44JnA9UG8Lih2vQSt6TB2OSBXDz0edXbgzpQ
-         aRLWdqF12cTTIjaRKFf5tqd4mvjvoT/3nbpBkd8HPVlA+QgQrtpIShIXMr5TfUTRtt
-         4laI84WQ5HCENJ6ZIs/AufQ0imh0N9GcDXbzkXh9UBzSPPpBiaAE2/RWrckSob4qI4
-         SuM/qmJeAw64M+jOy5NAgALp4HDBOS1mI/XTAh9fvKLskk3niSFk4GIe77du6M7XBs
-         qtQdEPf6YhfQg==
-Received: by mail-ej1-f69.google.com with SMTP id ga9-20020a1709070c0900b0072b4d787f5dso1705166ejc.21
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:48:57 -0700 (PDT)
+        with ESMTP id S230352AbiGLIG6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 04:06:58 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD174DF1C;
+        Tue, 12 Jul 2022 01:06:56 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id u12so12910794eja.8;
+        Tue, 12 Jul 2022 01:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HkZSgCnQI1eO9qu6qqxTjO6amioZ3t5sm12IidirK00=;
+        b=TRON5GwVaAz/wlDRFRuYTy1ceA1h+VnEpmI8OKRF939thQ4wo0wIoakbTof4BSipKu
+         nO0qd+Xz6eVAafR04UlfNOGeWQjmbrsSagAhoZPDkuJlPWmOJRjHqRzfAei0VTxoxWBJ
+         /ZquWtskxDRGmjjjeaptmMddauNsWOkGo8y0R/eX6kdYzoFv8Oc5Hkzd/Skhugw2efZV
+         xSeel2jNMJJHuU+x4Zw2zDIcYfhPmTGh/od22K7vyVXN6DS8txsGM/Au4ytU/4grU6Wh
+         jZO1Z0jv2FWrP6YtZAZ+wVQ7bzBvK6lR4YTye87Lb8Niky+gOnRG0O81oUr5lIjEvmTg
+         5CkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=vNBZvuUXiXCxiG8WzoPq174R/6y/8FtvVvGT3U1v9yQ=;
-        b=IRK2kDt5qGas5fJxHOv/kO22zEbRhUwEfdng6alyUjbsJ1gOXOlyDqSssYG+LjtD49
-         UErOTeyFTwkBiG1CuPfZ1hs1cPTIIPw3tI9VhRGdiBPwwZQudpkR2Xq6G6gYj6564df9
-         +IVEV3ifHv5pVrzISzNmsy1YvTKf/7DuW8gah/ZXxaIVmOxDtNu5rlp6y72JeYsyoYJs
-         scZqv8fjFVHXtaYuxY20AKAPXujzBGy9Wckw5c0k3yxqMD5FoUE1ScDtGgruYJff79Jv
-         PNoN9V/q1S3ByvF3TK5XCww/RO37AK7DLC+VDCzqS9pyULkVZEvob8uCrweSyWE3liN8
-         TBUQ==
-X-Gm-Message-State: AJIora/Tfg3YHUjXy1/SXRZmkPT3eYdN5Epaq/URBhowKdUC/9aQjyZo
-        UKwBdVjdreqhpNP5XphQYW6TsQCKuJI+CKCi1ufx9IlBgt4lkZJ3rB3OSJuiJSRqH57A/1iDVqT
-        a5GAhl5iXmkJrsQ6kKnKUCYfIzIFbeycsPjt2UXkXp0TwB5wlzwb4Rzg=
-X-Received: by 2002:a17:907:7745:b0:6f3:674a:339 with SMTP id kx5-20020a170907774500b006f3674a0339mr23171708ejc.207.1657612135915;
-        Tue, 12 Jul 2022 00:48:55 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sKYiyaVXyjLX2K8AMBJ+btE5lXskW7S/DIpnNUwqaIqJ5PAG/WMZxBrdtZXYX9M2gauyjRuECXBD+kUypXypM=
-X-Received: by 2002:a17:907:7745:b0:6f3:674a:339 with SMTP id
- kx5-20020a170907774500b006f3674a0339mr23171698ejc.207.1657612135771; Tue, 12
- Jul 2022 00:48:55 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HkZSgCnQI1eO9qu6qqxTjO6amioZ3t5sm12IidirK00=;
+        b=z4R+Bx3Gi1YSc69DKBq7SX2azR4bztWCXVfWKbj3G3wJ5/R9BG0UWCv8tnYLen/7Vt
+         nlmW/j8NE9315UchZcLVPB3W8iNo+ushAqZ5OINHFPZoBhtUuM0eSVrub0E+h++8cmum
+         sVal/7iWgltDucMbu+8gHgt0eg/bJhjUBc94BZo2W6jdYuB8eD5mzaMpiAuF78uYWF7M
+         VOhTA+hpna8VJeBscQ8fvMRa28H1bC4Xx4n3eQ5bBfDtGg8E/X3KRUnsyPqeifwCJu4t
+         mX7DmI0JLxuflVqHKg76QeQF4+phXY3izhaAoykAEW3yj4EuKxMia4w1kkrf5wMmu1lb
+         bcnw==
+X-Gm-Message-State: AJIora+ygF7Zdw3NTZezPlbnsjojkpaT1/d4f2fOr2wL30F4jX6IW32H
+        sEmldiK+46WnrA+FRWimWvAfJ8v7/xH7Nj/p/K8=
+X-Google-Smtp-Source: AGRyM1uiD3cOchmZZSvROPPgfWYOHudZV6UrSIbCZkc2o5s6xeJDbEiTm4ZR8uuFgHvcmYqHezivFUlevc4qeEbxBlo=
+X-Received: by 2002:a17:906:58cf:b0:722:e4e1:c174 with SMTP id
+ e15-20020a17090658cf00b00722e4e1c174mr22511764ejs.85.1657613215351; Tue, 12
+ Jul 2022 01:06:55 -0700 (PDT)
 MIME-Version: 1.0
-From:   Alexandre Ghiti <alexandre.ghiti@canonical.com>
-Date:   Tue, 12 Jul 2022 09:48:45 +0200
-Message-ID: <CA+zEjCsqpAffGqJPJrsLJLeyrJJDch_-Qctb1Zxi+j5JU9Wg9A@mail.gmail.com>
-Subject: libgpiod API v2 release
-To:     linux-gpio@vger.kernel.org
+References: <20220710154822.2610801-1-williamsukatube@163.com> <CACRpkdY-USEfscMOb6bPONW6xcSqhe3HU-93vJC800xJYCTkGA@mail.gmail.com>
+In-Reply-To: <CACRpkdY-USEfscMOb6bPONW6xcSqhe3HU-93vJC800xJYCTkGA@mail.gmail.com>
+From:   William Dean <williamsukatube@gmail.com>
+Date:   Tue, 12 Jul 2022 16:06:43 +0800
+Message-ID: <CAK6EE7=YZQtboueyb1zbXnAtAtCNRZRJ-69eyYp_sa9hoktCEQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Add check for kcalloc
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     williamsukatube@163.com, dvorkin@tibbo.com, wellslutw@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Hacash Robot <hacashRobot@santino.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+thx :)
 
-Ubuntu kernels do not enable GPIO_CDEV_V1 as it is deprecated, but the
-libgpiod package that we ship is still based on the latest version
-1.6.3 which does not implement the API v2. So I'd like to update
-libgpiod, do you have any recommendations about what branch/sha1 I
-should use? Do you plan to make a release that implements the API v2?
+Linus Walleij <linus.walleij@linaro.org> =E4=BA=8E2022=E5=B9=B47=E6=9C=8811=
+=E6=97=A5=E5=91=A8=E4=B8=80 21:04=E5=86=99=E9=81=93=EF=BC=9A
 
-Thanks,
-
-Alex
+>
+> On Sun, Jul 10, 2022 at 5:48 PM <williamsukatube@163.com> wrote:
+>
+> > From: William Dean <williamsukatube@gmail.com>
+> >
+> > As the potential failure of the kcalloc(),
+> > it should be better to check it in order to
+> > avoid the dereference of the NULL pointer.
+> >
+> > Fixes: aa74c44be19c8 ("pinctrl: Add driver for Sunplus SP7021")
+> > Reported-by: Hacash Robot <hacashRobot@santino.com>
+> > Signed-off-by: William Dean <williamsukatube@gmail.com>
+>
+> Patch applied, tweaked the subject a bit,
+>
+> Yours,
+> Linus Walleij
