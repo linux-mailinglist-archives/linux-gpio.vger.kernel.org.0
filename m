@@ -2,80 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5EB45714D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 10:40:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDDD957156A
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:13:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232615AbiGLIkB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 04:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41674 "EHLO
+        id S229994AbiGLJNz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 05:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232684AbiGLIjw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 04:39:52 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543BFA5E73
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 01:39:45 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id i14so12798119yba.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 01:39:45 -0700 (PDT)
+        with ESMTP id S229591AbiGLJNx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:13:53 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E7533354;
+        Tue, 12 Jul 2022 02:13:52 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id n18so11179508lfq.1;
+        Tue, 12 Jul 2022 02:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ReJp5eNoUXAUtu6DCSWj66id3qW1pGhq285sGI/akT8=;
-        b=fip2+z2yTofjt4Urhkg+qkjscmAE6MjHAyUus9OQYPbfaOaMqbxykaSzTKXrU7zlo3
-         82cTWeWHZ4RS19nv1ndvzKE2tamPpk8IBxnOuMg1eim6YmcC7cE8LKPIbgIM1yyEBe/j
-         X5jYBZJX1/aHuQa7OVKHVeDLycxNhccTvs67RQYA/twhwWTY/F+w+zwfGw40hemniBlD
-         TDwCYMOFoD2ZQFzCuJZiHYk9+pJ0IxXx4hEPtcZ4uiRUYieQiAIKHXJlyXz6BD2QoevN
-         b57XTjXEb4I6V6todH510JDBx3fVrSNTAb9hMvny0rAa8UFcuK2qYEFRnv2JcVjPU1Kn
-         zJhA==
+        bh=XE4JnhtsX+9bRSJhafx+QlBOIlHNZ8nXGn9GMY6ZGvU=;
+        b=fgzBI7tmy8Cb6oUEPpfkpvoea/PU5XC7pGYQSEbWgr04jQoGrZbCjCZax6kpCp75md
+         ZaoBwmfWoCuCFOXaR4k/QHlsLstZm7qflsq+Ca9y+Jgb0vr/3R3utOpkquNp+D2Y3cBh
+         rZB5SpBNJrXLGm/NYqcEOUyJGcFjbE45vYYkIEeI0AFRtsy4M6gTMHAmyYVdEGWAhW6M
+         4NccffhC7JgEq7l99JCVoU9LOcOOaeqlXF0KDR6jOOKv++79o1bKCM8LQHHouAD3ELRp
+         rqfeU0oiICFHyG2tiVP0UnUPo8FMmL1Oe7g1JRsHxWrL0aaVEv2wqM+KmgQ3PWm/tbHK
+         OtfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ReJp5eNoUXAUtu6DCSWj66id3qW1pGhq285sGI/akT8=;
-        b=5ERP/qlOBSho/e7MQOZJOS4I492ToQn3eno51Egq46U+w3UrlNm6j3pEwhgM4ErCRj
-         Cr29Hr81U6F5verVZQi0H/RxkySZStsDgsbnQBGvcy/LoDBFu53jCUgTSO6+JaVMaf/P
-         O+/sU7ZuPortnjpQfQ+EJSIw8lL5GM5laVOOEWBo1qP1W+wZdQ3h42EUA6j8Uf+0vGGR
-         0pZOK0VVoUZe6/M9/vvzcYnIyYd4J7wQqAk5uXJZsktUpnvw+a7G3eDzATeO0/46gJBV
-         4Jsp+rdHU6gXngIeW70FtoTq744RwCsu2WoAE78leyIwTp720goWk3ANxjjNnQeXbHR3
-         9Zlw==
-X-Gm-Message-State: AJIora8P8YfDvpXLrr1d6ZAonRAdG2HmWpsiF3sl6lUazyz537J76N2e
-        WM5iACV0r4HUzy0zWQqVCtMW/QTE165sviBO8q3R0g==
-X-Google-Smtp-Source: AGRyM1sw7wwLPCzQznWMVUMoT3n16tyAexVcWXjzdIIg0S+6vuCEuZeLVvmkxWA1WuMl0G6NMXtD8dHg5e5qHO2GMws=
-X-Received: by 2002:a05:6902:1184:b0:66e:756d:3baa with SMTP id
- m4-20020a056902118400b0066e756d3baamr20982414ybu.533.1657615184543; Tue, 12
- Jul 2022 01:39:44 -0700 (PDT)
+        bh=XE4JnhtsX+9bRSJhafx+QlBOIlHNZ8nXGn9GMY6ZGvU=;
+        b=ast8euF8uy/aYclWKyZV3/jR8JVuepN6WX9UsF+gbzQjawP7FfnfsOgum/wVzKkhrT
+         f4t+g9BTfUIYGk7tRFt6BUgMNga12jYI2ka0/TukcI/IyAowmehjDpJgalUw2WEf/OUO
+         cO9HZHxJxoJG9fxI2lrGcGl+dT4gkFTffBrTII5JSyHNerixNhT2eSpmBvRJZallvzVw
+         h3kHsoLlHYE9IJnPp2jowZ8GmahFOtDXmbL8HPaOimO2QG8smdVdMUfey/+vmK4bajZ/
+         e7nBQMyWbpNCbDtoXQQswmd/+bCKyFplliGdcNXz1Ej1l5+yrlaATCFsl08mwAdCmEzC
+         iuMg==
+X-Gm-Message-State: AJIora9+UMBXFKK/pc9vXJtsIF4nPlDG+fTS9zS7savyg2lqwukxDv3a
+        ckFO0OoMpqpouAvvCVynLc3MuAcxdHFDN6pM2pE=
+X-Google-Smtp-Source: AGRyM1ujIrpTXlHRVeL1sEk9M68DIgjXlavfWyRNERd8qdnleE1cNRbRkOgVk8bBzRogNd0Knv27++LNA8MziaZ1FU8=
+X-Received: by 2002:a05:6512:3183:b0:47f:79f3:af9a with SMTP id
+ i3-20020a056512318300b0047f79f3af9amr13953057lfe.182.1657617230889; Tue, 12
+ Jul 2022 02:13:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220711203408.2949888-1-robimarko@gmail.com> <20220711203408.2949888-4-robimarko@gmail.com>
-In-Reply-To: <20220711203408.2949888-4-robimarko@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Jul 2022 10:39:33 +0200
-Message-ID: <CACRpkdb6uuRuD5cKJe7gXvhJ4BgoFF5S17zjBNb=3_tkWxHjSA@mail.gmail.com>
-Subject: Re: [PATCH v7 4/7] pinctrl: qcom-pmic-gpio: add support for PMP8074
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        konrad.dybcio@somainline.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        jic23@kernel.org, lars@metafoo.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20220711173418.91709-1-brgl@bgdev.pl> <20220712023714.GA9406@sol>
+In-Reply-To: <20220712023714.GA9406@sol>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 12 Jul 2022 11:13:14 +0200
+Message-ID: <CAHp75VcPaDq-3iL+3NpnYrOoLEX06HKX+tAhbP=P35jZ5NUuGQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: fix the chip_name configfs item
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 10:34 PM Robert Marko <robimarko@gmail.com> wrote:
+On Tue, Jul 12, 2022 at 4:40 AM Kent Gibson <warthog618@gmail.com> wrote:
+> On Mon, Jul 11, 2022 at 07:34:18PM +0200, Bartosz Golaszewski wrote:
 
-> PMP8074 has 12 GPIO-s with holes on GPIO1 and GPIO12.
->
-> Signed-off-by: Robert Marko <robimarko@gmail.com>
+...
 
-Patch applied to the pinctrl tree.
+> Not totally convinced by Andy's suggestion to rename swnode to fwnode.
+> Variables should be named for what they represent, not their type, and
+> you use swnode extensively elsewhere in the module, so either change it
+> everywhere or not at all, and such a sweeping change is beyond the scope
+> this patch.
 
-Yours,
-Linus Walleij
+Ah, I agree that consistency has higher priority here.
+
+-- 
+With Best Regards,
+Andy Shevchenko
