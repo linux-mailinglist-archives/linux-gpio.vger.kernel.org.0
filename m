@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C1B2571D30
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 16:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68B00571D43
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 16:49:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233632AbiGLOpL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 10:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37180 "EHLO
+        id S233727AbiGLOtx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 10:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233704AbiGLOnp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 10:43:45 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B11BDBB5;
-        Tue, 12 Jul 2022 07:43:23 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id 64so14265033ybt.12;
-        Tue, 12 Jul 2022 07:43:23 -0700 (PDT)
+        with ESMTP id S229746AbiGLOtv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 10:49:51 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3237B326D7;
+        Tue, 12 Jul 2022 07:49:51 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id 136so14322338ybl.5;
+        Tue, 12 Jul 2022 07:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=coKDGy3LG/pzJw/5Ba+mZia0etc8htd3qdA0mBwoUlo=;
-        b=Gku7tM75sCcOnsW5gmmQaJQqu/YdWVcLpDihH/AY2KffEl1m0BgyreMwVjQD6ZHHUE
-         UU/8W8HTbEveGbwg84Muss162f9qfB9Pf1dyKy/eNrm8mNGsboVeq5awDuPNvXW8nEYV
-         NfsShs5wR1nL2traL6zHc1HX9R6EKavv+TM2xOxZMSm+RmlYsDQUtgGYTi7uazhgRpHG
-         OHo/R5VOg1WJ2Z/k3jvlFdw2isQ6uYo+mRE/DgdGKyox0Hh+eCJwK6VjvjFMT/f+E7eM
-         1A/y4Vso219JXUkK3mREY2W0e4lnm0OgcY+OVPqSQbP5+GqDwEDL629/JP7t+/SVuygx
-         AO5w==
+        bh=7iVcCSNEDPVXZO7KkmaQ6UWTAKgIuOoWOIi+ZoUvMiI=;
+        b=kB6ipQhwRymVgL6MecvMix0v5bVQaqPiDDELB6uuhqJCgucni9ofmwnblXQsmy4Dwp
+         YXT3QO3CX1F8odY9GwupzSdxv5lK8H8UceT/jiFlEyBKGMJgMLh1fIyDjp9Y9XV04xZm
+         K0LZB3pZFNu9hBabtegxj9/z6ijGHSq0EarHW5ckbO65k2vp1ixBaIduwMSGx0NnuGEW
+         m6K2YeamWHz+dlBWaOfTXUH5xG4qe/LemopGUnmCsaCZ4z5wjj74NOuniXI0tPkc06wX
+         Xje/3nicZylu9l/L9bA2b6YRKBncHict54Or5qKgVT1KEsvFEAF4BqAGcdHaQBtk05gA
+         w+Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=coKDGy3LG/pzJw/5Ba+mZia0etc8htd3qdA0mBwoUlo=;
-        b=k6j44E5ILsLC1u5QpVvFH1MVsKpkSJAvf8WaPqz5+ZTCPwZWuzlVn0MIlx/Az+efVe
-         2JCH34lGah78wAntF6hujFTWUwjf9Imrb6kFmxN3nA7+dArvN/mEetdRHuQtJXD6GKkk
-         zbzlq+kMIdrAdO2lcWA+PWajIImAycC2WmEVcUItyq6S9Sz1sZFqxjpPClrxt36owBZe
-         CPqUOLs2pz12H7aX7CW7ZoAFvu3iieawAzF/woasqlVQ1ubgE4oE8wn4awNcr7iY/IDZ
-         TD6yY+MYsS5satpyfueyiyK52gQxvn3/cO1VwwYua2kQsCKhFlBca2VyJDHMsybIS9JY
-         YzxQ==
-X-Gm-Message-State: AJIora+aDbo67x3tTHtdgJZQ8oHI0Amcxqm4ad6slEJUIf7HizqX3myT
-        Lo+4FdCZyFL6rIlk2CO1gW7poTSDiXaEpV9F9Hw=
-X-Google-Smtp-Source: AGRyM1vFZMoDBRYL342rw6lRXJa26nXlAWhIwYlJBklTEiX5huDMwLdHT/sItLUcdmlpLdS3mr1eTrz+kwvtlxJtcic=
-X-Received: by 2002:a25:cbcf:0:b0:66e:8893:a02c with SMTP id
- b198-20020a25cbcf000000b0066e8893a02cmr23385993ybg.460.1657637003075; Tue, 12
- Jul 2022 07:43:23 -0700 (PDT)
+        bh=7iVcCSNEDPVXZO7KkmaQ6UWTAKgIuOoWOIi+ZoUvMiI=;
+        b=T7vT0xC5gYJc68YSTmnCefSk+7SZMCUeO5Tl6lQ1s1alG2sLQp9HMQJEf33Rth23ek
+         33yOkX1D8dPemuDkw0dGSn8kVxa3u2FdBbsMO6BPNRcEanajba4HX1svZJ/Rsu8LT108
+         AdUF9O1oE2lwv5zu+56RtEWL9whjc2/A118LQ44imyhjLAgtCQ9z8p7PTOTwyAUPUvue
+         tU6cDp2JurKNBIKQueUtg4sr1M+j/WoT1Y3iC6Ks5qg1jJsRgoVigP5ij373oLq5270g
+         djh0p9lkTmJpIOdD6Qi7xaT2IxRiXphn2jWLF48BjQziV/6Iowj1nNnckKAZit5YbHDN
+         w3GQ==
+X-Gm-Message-State: AJIora/aAAOnSbV/s4QLyRafb4JWl7VFJsFO9pFakBLQuIqJ5bxuIAdN
+        zOwiyY5Oz29nMNMwC/vxScm98fC26Y6HYGn0OyY=
+X-Google-Smtp-Source: AGRyM1u8xxquE10f6yTO7C4T8Li18XfMHlXCfwSUMfAeX5wy3klYVBZK3dXatnRZC6nKrV1LWitwOC3d3GqqLff+8ck=
+X-Received: by 2002:a05:6902:10c9:b0:668:e27c:8f7 with SMTP id
+ w9-20020a05690210c900b00668e27c08f7mr22824445ybu.128.1657637390435; Tue, 12
+ Jul 2022 07:49:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220712143237.13992-1-henning.schild@siemens.com>
-In-Reply-To: <20220712143237.13992-1-henning.schild@siemens.com>
+References: <20220712143237.13992-1-henning.schild@siemens.com> <20220712143237.13992-2-henning.schild@siemens.com>
+In-Reply-To: <20220712143237.13992-2-henning.schild@siemens.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 12 Jul 2022 16:42:46 +0200
-Message-ID: <CAHp75VeYHi8XTf3Y6HMmitVvuvF2uiWdSzpiKFji5SfV20HqpQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/1] add device driver for Nuvoton SIO gpio function
+Date:   Tue, 12 Jul 2022 16:49:13 +0200
+Message-ID: <CAHp75VfCDRRS+WdyN-s5h+C7wnpFOpxOp7DU9_X5rpkL32M45g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] gpio: nct6116d: add new driver for several Nuvoton
+ super io chips
 To:     Henning Schild <henning.schild@siemens.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -73,34 +74,55 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Jul 12, 2022 at 4:32 PM Henning Schild
 <henning.schild@siemens.com> wrote:
 >
-> changes since v2:
->  - move from subsys_initcall to module_init
->  - add 2 more patches to show how it can be used later
->  - v2 is based on [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
->
-> changes since v1:
->  - implement get_direction function
->  - style changes requested in review
+> This patch adds gpio support for several Nuvoton NCTXXX chips. These
+> Super-I/O chips offer multiple functions of which several already have
+> drivers in the kernel, i.e. hwmon and watchdog.
 
-JFYI: You have a strange subject. Had you used `git format-patch
---cover-letter ...`?
+...
 
-> This adds gpio support for several Super IO chips from Nuvoton. The
-> driver was originally developed by Nuvoton and i am just contributing it
-> on behalf, because other patches i will send later will require access
-> to the gpios. The driver is valid on its own.
-> In fact v2 of this series shows a future user, not to be merged right
-> away but to show what is planned.
->
-> The driver supports several chips, of which i only managed to test one
-> but did not want to drop the others.
->
-> I hope the original authors will help with the testing and addressing
-> review feedback. The changes i did so far mainly are inspired by similar
-> drivers and some just concern coding style. If more has to be done and
-> the original authors do not jump in, we might start off with just that
-> one chip i can test and add the others later on.
+> +#include <linux/gpio/driver.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
 
++ bits.h
++ types.h.
+
+...
+
+> +static inline int superio_enter(int base)
+> +{
+> +       /* Don't step on other drivers' I/O space by accident. */
+> +       if (!request_muxed_region(base, 2, KBUILD_MODNAME)) {
+> +               pr_err("I/O address 0x%04x already in use\n", base);
+> +               return -EBUSY;
+> +       }
+> +
+> +       /* According to the datasheet the key must be send twice. */
+
+sent
+
+> +       outb(SIO_UNLOCK_KEY, base);
+> +       outb(SIO_UNLOCK_KEY, base);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +#define gpio_dir(base) ((base) + 0)
+> +#define gpio_data(base) ((base) + 1)
+
+Dunno, why haven't you changed this? It might be a hidden mine for the
+future GPIO library development. I recommend using namespace whenever
+it feels right, and here it's exactly the case.
+
+> +       if (dir & 1 << offset)
+
+Another ignored comment... BIT(offset)
+
+I'm stopping here to let you double check what version you have sent.
 
 -- 
 With Best Regards,
