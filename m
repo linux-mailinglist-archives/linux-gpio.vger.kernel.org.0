@@ -2,180 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 626615718A8
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 13:35:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4D28571908
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 13:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232276AbiGLLfI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 07:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49810 "EHLO
+        id S232883AbiGLLxJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 07:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231474AbiGLLfH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 07:35:07 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CAABAB7C9;
-        Tue, 12 Jul 2022 04:35:06 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id o7so13426157lfq.9;
-        Tue, 12 Jul 2022 04:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CAogKIT73o6WsGNfWbcRAMtgA4sSrigPm6Y2Wj+ZIcw=;
-        b=qSZV1HITDQyra3oc8/Oct9IzQ3sM8J+s9EtxXRlZ/MQIe5FVJxIrUL14RFtKJwwhqH
-         M+oPvCc14LE/E+dTXMIe5VNJUrWornG2dgBWYqkTgZrlC0/RPnGYJJLxEpdoMfx1Og8/
-         YBmVAp9iRPVjrqWSHnQxw6klk70DohWWLKOxd72zv9XfYobIbk7wmVMC2qQCqPeDFg1R
-         hVJLMG6PEO4Ksd626xiB1Gs2GZ9SeFienidPedvCIj/y3ldJPkI04wQ6duxbwvgKjHFt
-         dXPcMHCWi9reAIB141hZFIkaYYovI9Y8ycx4lLB/eJVp/x02Njt2O8TbMivWRn/x2Dwc
-         NRYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CAogKIT73o6WsGNfWbcRAMtgA4sSrigPm6Y2Wj+ZIcw=;
-        b=6hCi2XF3Y8Msi8slD1k70TAA2q2wUV5BtwE9tUMbJJyMLC9CatTzATIVdwRwqStpna
-         6+TXBfHOzcUVNAMc8sxXN4ZCrHJdrVcQ+vLjYlwMGBab7hWvDaKS3D0CDAyB01sQDpfP
-         1NVgOJ22PXlv/yOXxm2JIsjxStTphBsSkSZRdV0QlUw/buLVlufYbV5Hr6tL1o2rtN1D
-         LjYzCdsZmgUb2aaDZvhw5YInDmQPVBdV9X71IBBZ9oEC0RsUs/b1r/rycMVtpx7gjWne
-         NNcM54vhYOqeRf2tqnlg3RMnbwNzNPCok4dGbYdN0mp86u27bk3lzazg85/fTqDQoWwD
-         HpUA==
-X-Gm-Message-State: AJIora+FhoFw5H+RORob4lImpB07Xu3A7cLEC20E98W5SYg8LrSYkCUf
-        3/z/rl9pyzWPu1XrEslqUdsi45byQ5yBi8Ho2O0=
-X-Google-Smtp-Source: AGRyM1u25zmSsKgmzNKlKp3f5zvdI6W3e74UTp2OHlKEAXvvMqdmUpMqS1A3mQZX0T2H0c71x9pVprhZe5mBHdElQZg=
-X-Received: by 2002:a05:6512:3f84:b0:489:3345:c459 with SMTP id
- x4-20020a0565123f8400b004893345c459mr14908703lfa.576.1657625704786; Tue, 12
- Jul 2022 04:35:04 -0700 (PDT)
+        with ESMTP id S232756AbiGLLwz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 07:52:55 -0400
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BEFB38C7
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 04:52:13 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2804:14c:485:4b69:755f:8694:ae3:d33f])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: festevam@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id 3B5078411C;
+        Tue, 12 Jul 2022 13:52:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1657626725;
+        bh=Mn5brWp0mjNGUL1TxJF2mki0kPB5NopXQXYy8CC2D+I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BtaeQVfzKedjFmsyLyC+qrUcQAT+sVkhwQgLxZS2yQAfimPbIWw9ypqgvyZmQ0GuN
+         WrhAoWoI4lzvDxZYXYSNNzPhN9q3WKHpSGXdBhpAYKlpp7B5/mKn3nG8nVh3k4vtlY
+         Hi1DeVZaaHbwuB9ypxUgMr+r2QLV/P5uP+IJfVx9GNe8rEl0c8aM2ECGzzfz4mEU3n
+         PJUzMFJm9SJ8jIEjJM4NHaBn2+aLYuW2qEa0lCQE+72GCypmDfp4OhFIeRcmH7o5ik
+         eTUu6IFwdfl9CzMC403RFK9/IeJ9a/xPhbPVkUUviyrTJZpI9bqujXNRVGc7T+AIvP
+         VaWKBtXUWjnOw==
+From:   Fabio Estevam <festevam@denx.de>
+To:     linus.walleij@linaro.org
+Cc:     ping.bai@nxp.com, linux-gpio@vger.kernel.org,
+        Fabio Estevam <festevam@denx.de>
+Subject: [PATCH] pinctrl: imx93: Add MODULE_DEVICE_TABLE()
+Date:   Tue, 12 Jul 2022 08:51:54 -0300
+Message-Id: <20220712115154.2348971-1-festevam@denx.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220710102110.39748-1-tmaimon77@gmail.com> <20220710102110.39748-3-tmaimon77@gmail.com>
- <95d12b72-be9d-5503-c4ea-801303bb7776@linaro.org>
-In-Reply-To: <95d12b72-be9d-5503-c4ea-801303bb7776@linaro.org>
-From:   Tomer Maimon <tmaimon77@gmail.com>
-Date:   Tue, 12 Jul 2022 14:34:53 +0300
-Message-ID: <CAP6Zq1h=JjODnmPjwwEbrThGU8kQOX08Z1NipaJx_Gcwg1s1FQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-HI Krzysztof,
+Pass MODULE_DEVICE_TABLE() so that module autoloading can work.
 
-Thanks for your comment, they will be addressed next version,
+This also aligns with the other i.MX8 pinctrl drivers.
 
-On Tue, 12 Jul 2022 at 12:50, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 10/07/2022 12:21, Tomer Maimon wrote:
-> > Add pinctrl and GPIO controller driver support to Arbel BMC NPCM8XX SoC.
-> >
-> > Arbel BMC NPCM8XX pinctrl driver based on Poleg NPCM7XX, except the
-> > pin mux mapping difference the NPCM8XX GPIO supports adjust debounce
-> > period time.
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->
-> (...)
->
-> > +
-> > +static int npcm8xx_pinctrl_probe(struct platform_device *pdev)
-> > +{
-> > +     struct npcm8xx_pinctrl *pctrl;
-> > +     int ret;
-> > +
-> > +     pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
-> > +     if (!pctrl)
-> > +             return -ENOMEM;
-> > +
-> > +     pctrl->dev = &pdev->dev;
-> > +     dev_set_drvdata(&pdev->dev, pctrl);
-> > +
-> > +     pctrl->gcr_regmap =
-> > +             syscon_regmap_lookup_by_compatible("nuvoton,npcm845-gcr");
->
-> No. Use property. By this patchset, I would expect that you learnt from
-> previous mistakes around this. Why repeating the same trouble second time?
->
-> > +     if (IS_ERR(pctrl->gcr_regmap)) {
-> > +             dev_err(pctrl->dev, "didn't find nuvoton,npcm845-gcr\n");
-> > +             return PTR_ERR(pctrl->gcr_regmap);
-> > +     }
-> > +
-> > +     ret = npcm8xx_gpio_of(pctrl);
-> > +     if (ret < 0) {
-> > +             dev_err(pctrl->dev, "Failed to gpio dt-binding %u\n", ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     pctrl->pctldev = devm_pinctrl_register(&pdev->dev,
-> > +                                            &npcm8xx_pinctrl_desc, pctrl);
-> > +     if (IS_ERR(pctrl->pctldev)) {
-> > +             dev_err(&pdev->dev, "Failed to register pinctrl device\n");
-> > +             return PTR_ERR(pctrl->pctldev);
-> > +     }
-> > +
-> > +     ret = npcm8xx_gpio_register(pctrl);
-> > +     if (ret < 0) {
-> > +             dev_err(pctrl->dev, "Failed to register gpio %u\n", ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     pr_info("npcm8xx Pinctrl driver probed\n");
->
->
-> No pr_ in devices. No success debug messages.
->
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct of_device_id npcm8xx_pinctrl_match[] = {
-> > +     { .compatible = "nuvoton,npcm845-pinctrl" },
-> > +     { },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, npcm8xx_pinctrl_match);
-> > +
-> > +static struct platform_driver npcm8xx_pinctrl_driver = {
-> > +     .probe = npcm8xx_pinctrl_probe,
-> > +     .driver = {
-> > +             .name = "npcm8xx-pinctrl",
-> > +             .of_match_table = npcm8xx_pinctrl_match,
-> > +             .suppress_bind_attrs = true,
-> > +     },
-> > +};
-> > +
-> > +static int __init npcm8xx_pinctrl_register(void)
-> > +{
-> > +     return platform_driver_register(&npcm8xx_pinctrl_driver);
-> > +}
-> > +arch_initcall(npcm8xx_pinctrl_register);
-> > +
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_AUTHOR("tomer.maimon@nuvoton.com");
-> > +MODULE_DESCRIPTION("Nuvoton NPCM8XX Pinctrl and GPIO driver");
->
->
-> Best regards,
-> Krzysztof
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+ drivers/pinctrl/freescale/pinctrl-imx93.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Best regards,
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx93.c b/drivers/pinctrl/freescale/pinctrl-imx93.c
+index 417e41b37a6f..91b3ee1e6fa9 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx93.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx93.c
+@@ -247,6 +247,7 @@ static const struct of_device_id imx93_pinctrl_of_match[] = {
+ 	{ .compatible = "fsl,imx93-iomuxc", },
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, imx93_pinctrl_of_match);
+ 
+ static int imx93_pinctrl_probe(struct platform_device *pdev)
+ {
+-- 
+2.25.1
 
-Tomer
