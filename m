@@ -2,131 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD7165712E7
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 09:16:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED04A571343
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 09:41:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232285AbiGLHQJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 03:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55146 "EHLO
+        id S232409AbiGLHl0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 03:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229747AbiGLHQI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 03:16:08 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE2874796
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657610167; x=1689146167;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vQlaYRgJLbykbfqUJ+kvoPog0mHkICT3XPBbtH+PtNo=;
-  b=Y1ax1xRj55dMmvLjN0M7mxA1oPOTrpR0D+thqQjpX2NieO2O4zTwpIrI
-   ewknBdlsReLwJkuv6t49bjqmXKs0GQvt2wA+AcUo1DulWEbDh5dklGmlw
-   xNSLU7Ks1AHRpyPMSCH8y1d/6xaaBNKivIAfAO/28elGlPCoYwXPxRHAA
-   RJINGcY0E14upfMk6nDg/otgC7sDwNsi4ETafcRLOfqRi8KdmRYlJe3ki
-   kUjhVM2eVcU+LX2GWwvMXt7UkVe+zSbujarthLmQ+j6w1T012pvCRjVqv
-   2WwmB65cqK/lMnN0KArTxzV94m4bZNyI2HVwWkPvB1QJHK9hfG7B3O8/G
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10405"; a="265272029"
-X-IronPort-AV: E=Sophos;i="5.92,265,1650956400"; 
-   d="scan'208";a="265272029"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 00:16:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,265,1650956400"; 
-   d="scan'208";a="622396510"
-Received: from lkp-server02.sh.intel.com (HELO 8708c84be1ad) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 12 Jul 2022 00:16:04 -0700
-Received: from kbuild by 8708c84be1ad with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oBA7n-0001rT-Fj;
-        Tue, 12 Jul 2022 07:16:03 +0000
-Date:   Tue, 12 Jul 2022 15:15:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 5a65514c718527b95c0155fa24489916c16d42c3
-Message-ID: <62cd1faf.MvLnS0+NckG0foK1%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S232408AbiGLHlM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 03:41:12 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F1A9A69E
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:41:02 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id v14so9946227wra.5
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uXpg/iY82hEm9tokQdYtqJ4gX8iwUMDbB/yvs2d8omo=;
+        b=hfD3Z60Vyp2ebK1/oVLfYekTLjmEM4uokftPm7qlCpAyugRjZ8+NglNPS0HCz3ro8s
+         RhRCfmEUjEBKhEgOfOLPmgJeZ7mH/qZU2ZDSPlC+OW2FeHoiUMrKFWZBvJ1nzm0prWqC
+         tAH4mHgrNRPIX1Cgqv0zxcR983u9EKacVJLurjU2HnM4R/O/GLvC26nmf9nez9Inx76N
+         kVyCHCWUwB0xf/9G0Haq9lDHtkto1yudX6xB+1OZsraKscQvym+psv7AXupqBnLldzYH
+         Jz6qZwRzKF4lpQDRYFqQ86IwVEVyxwJfLrvZkp2lsd5vpaYh8FTkz/CzDwvrUsq4YCm4
+         VOiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uXpg/iY82hEm9tokQdYtqJ4gX8iwUMDbB/yvs2d8omo=;
+        b=DXdMycqFi6CRl5tqGuT1lb6y6Q3zvKLClfkW0ZpivF0OV3ouaTqr8VJYsOgN967QR/
+         aOqHIBNzYiAeHNDi2gA/aWx7JydyStzi33CGgPar3CAnpkHi4r8zGV/hD7rlkLYUhVC8
+         LV/i4dng/xQrGrT25t5vY2MluioEHyeuW7m277MnJGzLBe8Kx14bXw3jI69Jx8B4Wm4H
+         yh+jv6Mlck+mKd3pPuf11WjppEldYkwklRSSPlGPvGLxDyH1HqqEdvfvYcVT9wqayMv1
+         JFYihdIVtNB94u+iOO91EjkvdVcZTDhR/gDub8arpMQ3gsIzc3Mrb0kzXajGPoYrV2Pu
+         iOwA==
+X-Gm-Message-State: AJIora8NvKfHatsTdl2ZZJL/rL7NfdYhYtRRSBxNde8aamHp6rXyttir
+        ejyi6Tgs0p6X0ndixIl+pe4q9lfOEF/+IA==
+X-Google-Smtp-Source: AGRyM1sjO+5Zp5uEx98PsQdY6oBQiAuF6TvxkZBfMtLneoIj5n4eudQALZXKfBo3YT2MZNyOp54vDw==
+X-Received: by 2002:adf:f345:0:b0:21d:6a26:6d8f with SMTP id e5-20020adff345000000b0021d6a266d8fmr21114628wrp.538.1657611660742;
+        Tue, 12 Jul 2022 00:41:00 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f331:f20b:d10:e79e])
+        by smtp.gmail.com with ESMTPSA id m9-20020a056000024900b0021d9207e6f1sm7725462wrz.34.2022.07.12.00.41.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 00:41:00 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>, stable@vger.kernel.org
+Subject: [PATCH v2] gpio: sim: fix the chip_name configfs item
+Date:   Tue, 12 Jul 2022 09:40:55 +0200
+Message-Id: <20220712074055.10588-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 5a65514c718527b95c0155fa24489916c16d42c3  pinctrl: qcom: spmi-gpio: Add pm8226 compatibility
+The chip_name configs attribute always displays the device name of the
+first GPIO bank because the logic of the relevant function is simply
+wrong.
 
-elapsed time: 1044m
+Fix it by correctly comparing the bank's swnode against the GPIO
+device's children.
 
-configs tested: 50
-configs skipped: 2
+Fixes: cb8c474e79be ("gpio: sim: new testing module")
+Cc: stable@vger.kernel.org
+Reported-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+v1 -> v2:
+- use device_match_fwnode for shorter code
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+ drivers/gpio/gpio-sim.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-gcc tested configs:
-arm                                 defconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-ia64                             allmodconfig
-arc                              allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-mips                             allyesconfig
-i386                                defconfig
-i386                             allyesconfig
-alpha                            allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a016
-i386                          randconfig-a014
-riscv                randconfig-r042-20220710
-arc                  randconfig-r043-20220710
-s390                 randconfig-r044-20220710
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-
-clang tested configs:
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220710
-hexagon              randconfig-r045-20220710
-
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 98109839102f..1020c2feb249 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -991,28 +991,22 @@ static struct configfs_attribute *gpio_sim_device_config_attrs[] = {
+ };
+ 
+ struct gpio_sim_chip_name_ctx {
+-	struct gpio_sim_device *dev;
++	struct fwnode_handle *swnode;
+ 	char *page;
+ };
+ 
+ static int gpio_sim_emit_chip_name(struct device *dev, void *data)
+ {
+ 	struct gpio_sim_chip_name_ctx *ctx = data;
+-	struct fwnode_handle *swnode;
+-	struct gpio_sim_bank *bank;
+ 
+ 	/* This would be the sysfs device exported in /sys/class/gpio. */
+ 	if (dev->class)
+ 		return 0;
+ 
+-	swnode = dev_fwnode(dev);
++	if (device_match_fwnode(dev, ctx->swnode))
++		return sprintf(ctx->page, "%s\n", dev_name(dev));
+ 
+-	list_for_each_entry(bank, &ctx->dev->bank_list, siblings) {
+-		if (bank->swnode == swnode)
+-			return sprintf(ctx->page, "%s\n", dev_name(dev));
+-	}
+-
+-	return -ENODATA;
++	return 0;
+ }
+ 
+ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
+@@ -1020,7 +1014,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
+ {
+ 	struct gpio_sim_bank *bank = to_gpio_sim_bank(item);
+ 	struct gpio_sim_device *dev = gpio_sim_bank_get_device(bank);
+-	struct gpio_sim_chip_name_ctx ctx = { dev, page };
++	struct gpio_sim_chip_name_ctx ctx = { bank->swnode, page };
+ 	int ret;
+ 
+ 	mutex_lock(&dev->lock);
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.34.1
+
