@@ -2,95 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B802571725
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 12:20:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5194B57173A
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 12:24:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232428AbiGLKUq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 06:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44514 "EHLO
+        id S232380AbiGLKYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 06:24:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232516AbiGLKUj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 06:20:39 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2D0AD86E
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:20:37 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id b11so13433994eju.10
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:20:37 -0700 (PDT)
+        with ESMTP id S232805AbiGLKYK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 06:24:10 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B67ADD67
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:24:09 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id m16so9474706edb.11
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ozaUeoGi3u7WP897E9FYN6L8XxErhvpYIqmXDVkaws8=;
-        b=oY0zxEH4gl02SnRbgAFxJ2+lBq/GxElIYWnEWPfG+LGU3FWG06Dsm3AHfsmOTJzf2t
-         DnfLDxFu4JBi+55gE4MZ3A9K+NSNqEJUl0Ob2HT/fj/+Otbf7nRRIilGliNhK9OjMAxX
-         0+F2QZZZMMqFuVDS+3UOlPNVmmH0jLHrfmS8FjD8h7fi3PULhu4SCJbwlpZVxbMCoJ3n
-         CjR1CHyK2Flxs0eZ9YXrU5SUHhpbAdKfIrVrVhNviXCidtgkn6nuG/C8YtJBl/2mrxQu
-         rBe6/Njiic1nltnDUfsC83MbVKW4nNkS7w3AlNFGBDhBVfh98MyeMb0vSj1AXEecYmvg
-         ZhRQ==
+        bh=AmO51byIMiOVb4cRzs66BBjupIjrQQmBiHJH/wAWMQk=;
+        b=XHFr5hfGXn/Nw+Hxav30NPiwSpMaSjFeRW9xeebgnEQ65ddoHX9DWUhNvWEALbShXa
+         ULAkHZt5gG1cIDI+nYcgk78l0H3rbtOxmAIOfSy8FFK9hsBA9JicQQ/rqsDbFV0jkrFa
+         jUOUgSiUKw0IFQspJSHe/iDrMde884XlxPwnhA8J5oX6NSdsfzDjzx1fEolBzTB7xjyR
+         MKFaZgFYwDUA46seOv6Jf/tEoB8hOabMXW5lZWz3HrI8Shku/GmsDuBPB8sX0pvERUD6
+         TtGDjmW1gqjhLGYu4DPZreadxaEh4Kodll7jAT8xAMy3HB57R3P9fIMBAHVRKZGZXpfH
+         htwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ozaUeoGi3u7WP897E9FYN6L8XxErhvpYIqmXDVkaws8=;
-        b=w3ddsoINl66irWXHhpPvRN+HokSUyZbTof5b+kIUm9GvspWQryJm/Nwbipt4K3+fGD
-         zirs7re3ImX2XIBRAoJCjr0ef7wbIJmGt5RpqetvGBQRa/swzyKnF1pDZntCudaik3PW
-         7kH188zu71Z4bezY3bIbWSYOM5vmcyIseVsRtxms9efpoRgQOsGHn4OkD1gYaMAu7azp
-         Wjqu8hTE+zm+1uDofRPk7T3rk4+K2ahVBUGYmgSmSbq4I0BkUT4fdTD5cQwWXYgwczaO
-         nsFRlqKdB8X3CIoX9F/1UTrG00DJGBMS9SWkB+c6gyn8oUKSnuho63AfZqhfSEzIXzsa
-         3zkg==
-X-Gm-Message-State: AJIora8wCUyBJoqo8SZitPiGLQB27nWu448o3Bg4FYa6u3s6PjXQH44L
-        0uS3iBa0luhtivrp5T49ceYXaXtpIBmzM9AUUaQiLg==
-X-Google-Smtp-Source: AGRyM1tPRLVa7IMVqTA4GFU4n9EOzVyNXdCLGRWuzDCY0akWo2JtYKzBbAIIPKP9iwkIHZHXQWkcKKHZ0BS6QE2IbCw=
-X-Received: by 2002:a17:907:7d8a:b0:72b:86ef:acf6 with SMTP id
- oz10-20020a1709077d8a00b0072b86efacf6mr1153989ejc.101.1657621236031; Tue, 12
- Jul 2022 03:20:36 -0700 (PDT)
+        bh=AmO51byIMiOVb4cRzs66BBjupIjrQQmBiHJH/wAWMQk=;
+        b=BPNLHB0NID6QeeMIa2W5oX2pYGq+dZsJbE32Jd+rFMWN06XFtnoTDyvujvLq1/vkgd
+         qqXZuHHJ7ZoJjOwTyLBRkWOHTEvQoJ0f0d9L9JqEM1HvyhCcGjld7TDIeL6jHIHxXRI1
+         N7W5tC7bb/Nl+WYPdwiafjDLisQDFGmHmn3zcx7nHWLoVesYhBBmY/AFeEUIAay/1tC5
+         Xkr86bUbn+t5PaywgYUU6dK2SOFqFUnlIeSXeArPqtA7FRWDvozo579ErqAsy9g8LDrb
+         VbEPP2MdFyPHuDTYoQVxHiG/gDadzETiKXo3F6CRh+1ivIXzXwKPEPwXhxv5mJMwRuZM
+         jd7g==
+X-Gm-Message-State: AJIora9Q3+6KVcvKUa2tcdskJvUsFh1wAF8Qz98+oOQZCit+00370kSx
+        Mthbe2z4pXxnJzfRqvZ/UZjkzc9d6/yr7SWq3LglVg==
+X-Google-Smtp-Source: AGRyM1srkG0qvmIar6mDAAoHm0Gh7RSLqulhEcDlDx31EiT1+eqj12pqGn4VbkGhRUeqL0umg3iSuQc62JdtTBJGhTc=
+X-Received: by 2002:a05:6402:150:b0:437:b93c:3a9 with SMTP id
+ s16-20020a056402015000b00437b93c03a9mr29626324edu.82.1657621447950; Tue, 12
+ Jul 2022 03:24:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220711125238.360962-1-windhl@126.com> <CACRpkdZJBT86um5VM0e2mnMEv=cVrg7PmZNGbZ0GwxC-1nXbBQ@mail.gmail.com>
- <CACRpkdY0HH1c2bWz+W9wna7wP1-HjuOL-tRBsvUo0iEuGx3VQQ@mail.gmail.com>
-In-Reply-To: <CACRpkdY0HH1c2bWz+W9wna7wP1-HjuOL-tRBsvUo0iEuGx3VQQ@mail.gmail.com>
+References: <9996cb86818d2e935494d6b414d549432f91797a.1657528504.git.geert+renesas@glider.be>
+In-Reply-To: <9996cb86818d2e935494d6b414d549432f91797a.1657528504.git.geert+renesas@glider.be>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 Jul 2022 12:20:25 +0200
-Message-ID: <CAMRc=MdKRL-TtWeOaJ0kr0gpNA=G2MpZbS0mrcEu9zW-v6mTqA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: gpiolib-of: Fix refcount bugs in of_mm_gpiochip_add_data()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Liang He <windhl@126.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Tue, 12 Jul 2022 12:23:57 +0200
+Message-ID: <CAMRc=MdDp+Pwqifp0xCkFic+DO65RL=qOw3Prrze9WoyKkV8fQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: GPIO_SAMA5D2_PIOBU should depend on ARCH_AT91
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 10:26 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Mon, Jul 11, 2022 at 12:27 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 >
-> On Mon, Jul 11, 2022 at 3:23 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Mon, Jul 11, 2022 at 2:52 PM Liang He <windhl@126.com> wrote:
-> >
-> > > We should use of_node_get() when a new reference of device_node
-> > > is created. It is noted that the old reference stored in
-> > > 'mm_gc->gc.of_node' should also be decreased.
-> > >
-> > > This patch is based on the fact that there is a call site in function
-> > > 'qe_add_gpiochips()' of src file 'drivers\soc\fsl\qe\gpio.c'. In this
-> > > function, of_mm_gpiochip_add_data() is contained in an iteration of
-> > > for_each_compatible_node() which will automatically increase and
-> > > decrease the refcount. So we need additional of_node_get() for the
-> > > reference escape in of_mm_gpiochip_add_data().
-> > >
-> > > Fixes: a19e3da5bc5f ("of/gpio: Kill of_gpio_chip and add members directly to gpio_chip")
-> > > Signed-off-by: Liang He <windhl@126.com>
-> >
-> > Patch applied for next as nonurgent fix!
+> The SAMA5D2 PIOBU is only present on some AT91/Microchip SoCs.  Hence
+> add a dependency on ARCH_AT91, to prevent asking the user about this
+> driver when configuring a kernel without AT91/Microchip SoC support.
 >
-> Oh no I shouldn't. This goes to the GPIO tree, took it out again.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/gpio/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Yours,
-> Linus Walleij
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 63a89ff7865e374f..1852656d5eb248f6 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -553,6 +553,7 @@ config GPIO_SAMA5D2_PIOBU
+>         tristate "SAMA5D2 PIOBU GPIO support"
+>         depends on MFD_SYSCON
+>         depends on OF_GPIO
+> +       depends on ARCH_AT91 || COMPILE_TEST
+>         select GPIO_SYSCON
+>         help
+>           Say yes here to use the PIOBU pins as GPIOs.
+> --
+> 2.25.1
+>
 
-Applied to GPIO tree.
+Applied, thanks!
 
 Bart
