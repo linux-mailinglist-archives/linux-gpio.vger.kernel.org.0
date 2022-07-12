@@ -2,91 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8A425713EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 10:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BE9B571401
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 10:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbiGLIG7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 04:06:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38100 "EHLO
+        id S232599AbiGLIJl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 04:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230352AbiGLIG6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 04:06:58 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD174DF1C;
-        Tue, 12 Jul 2022 01:06:56 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id u12so12910794eja.8;
-        Tue, 12 Jul 2022 01:06:56 -0700 (PDT)
+        with ESMTP id S232573AbiGLIJW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 04:09:22 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8673E558E0;
+        Tue, 12 Jul 2022 01:09:17 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id f11so6032004pgj.7;
+        Tue, 12 Jul 2022 01:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HkZSgCnQI1eO9qu6qqxTjO6amioZ3t5sm12IidirK00=;
-        b=TRON5GwVaAz/wlDRFRuYTy1ceA1h+VnEpmI8OKRF939thQ4wo0wIoakbTof4BSipKu
-         nO0qd+Xz6eVAafR04UlfNOGeWQjmbrsSagAhoZPDkuJlPWmOJRjHqRzfAei0VTxoxWBJ
-         /ZquWtskxDRGmjjjeaptmMddauNsWOkGo8y0R/eX6kdYzoFv8Oc5Hkzd/Skhugw2efZV
-         xSeel2jNMJJHuU+x4Zw2zDIcYfhPmTGh/od22K7vyVXN6DS8txsGM/Au4ytU/4grU6Wh
-         jZO1Z0jv2FWrP6YtZAZ+wVQ7bzBvK6lR4YTye87Lb8Niky+gOnRG0O81oUr5lIjEvmTg
-         5CkA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mf64p6IVaP9Hci3QPNE+Bn67PkfAD3xjmW63tzAmGCQ=;
+        b=BPXMUa/9LvoaABZiKfxwgew6ncC6tYy8HoIjGTUbJ+MZUKJmacs+lKcuehLWsZ3Fi4
+         EXnlf/ao8fcTonT0pTgNZrmfOnxyJS/C7FJGsRDIo/bVyEP0rGBGrat4k/6/V7+dyHvT
+         rEYMsztmYeO7uDri7lh3dynDi2xQRVs4CQbfkMutrOlUgXKsy/Su6NBvRKM5vnhXJexJ
+         rYHKLiZD4XdG7jJ2UGDCeZHQ0SiOyLNrLgPcXJRzPAXjfnXIp4C0Ifgon9tqe1NCQeX5
+         aG2mTv1zbmJFRyE0dr+nbzMFoxjxPTzHIDjZ1K0q3Rpw9L0QpYR+z+gKyk5bCvHXaNPu
+         smtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HkZSgCnQI1eO9qu6qqxTjO6amioZ3t5sm12IidirK00=;
-        b=z4R+Bx3Gi1YSc69DKBq7SX2azR4bztWCXVfWKbj3G3wJ5/R9BG0UWCv8tnYLen/7Vt
-         nlmW/j8NE9315UchZcLVPB3W8iNo+ushAqZ5OINHFPZoBhtUuM0eSVrub0E+h++8cmum
-         sVal/7iWgltDucMbu+8gHgt0eg/bJhjUBc94BZo2W6jdYuB8eD5mzaMpiAuF78uYWF7M
-         VOhTA+hpna8VJeBscQ8fvMRa28H1bC4Xx4n3eQ5bBfDtGg8E/X3KRUnsyPqeifwCJu4t
-         mX7DmI0JLxuflVqHKg76QeQF4+phXY3izhaAoykAEW3yj4EuKxMia4w1kkrf5wMmu1lb
-         bcnw==
-X-Gm-Message-State: AJIora+ygF7Zdw3NTZezPlbnsjojkpaT1/d4f2fOr2wL30F4jX6IW32H
-        sEmldiK+46WnrA+FRWimWvAfJ8v7/xH7Nj/p/K8=
-X-Google-Smtp-Source: AGRyM1uiD3cOchmZZSvROPPgfWYOHudZV6UrSIbCZkc2o5s6xeJDbEiTm4ZR8uuFgHvcmYqHezivFUlevc4qeEbxBlo=
-X-Received: by 2002:a17:906:58cf:b0:722:e4e1:c174 with SMTP id
- e15-20020a17090658cf00b00722e4e1c174mr22511764ejs.85.1657613215351; Tue, 12
- Jul 2022 01:06:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mf64p6IVaP9Hci3QPNE+Bn67PkfAD3xjmW63tzAmGCQ=;
+        b=m5Qn9Z3ibaav5qHgW6dHgm7UMxArSU3zFy5fAPr3foDDFJIzH8hl67c7dWPYXAsnKZ
+         ra3PJgpdR8tURDPDwuu+rfhC6znLArqVxL4DOhphV18r/sVnSX4BSw66gG3Fll3p37WG
+         OeBMLksHIrtk9Qtd2rG2ONH84NIcF7aSX9lWFRhv1wxhhXRDYfSzFXQLfaDAtxqyNkAs
+         fLf/ntfyZAHGZ+wr3PXwvxHnA1TzR1TqnP2wL7gTTL5m3XaylSBDCnj3KYHJyzo3vohw
+         9TZNrG/VYQThHYfZ0SdE2MHDNr/+rGUWADRryjtyjOzaQm/18qQoyjGseR8JAedkM94c
+         HAeg==
+X-Gm-Message-State: AJIora9b6uavGQWAEpIXyyUIMYamXjYHIIdIwL3QlmkdTTcd2pSuxsGh
+        r3baGsUT2c4oZGoixuvG+So=
+X-Google-Smtp-Source: AGRyM1sWcHqPHK0pmVykvXon8fJB8LDcUlnnVllisCl+oHyWzkXZ4nzas5Mwu73MdNC1QssldxIc/g==
+X-Received: by 2002:a63:481a:0:b0:411:7951:cbcd with SMTP id v26-20020a63481a000000b004117951cbcdmr19424157pga.66.1657613356965;
+        Tue, 12 Jul 2022 01:09:16 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id z16-20020aa79590000000b005289cade5b0sm6079093pfj.124.2022.07.12.01.09.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 01:09:16 -0700 (PDT)
+Date:   Tue, 12 Jul 2022 16:09:11 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: sim: fix the chip_name configfs item
+Message-ID: <20220712080911.GA240577@sol>
+References: <20220712074055.10588-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20220710154822.2610801-1-williamsukatube@163.com> <CACRpkdY-USEfscMOb6bPONW6xcSqhe3HU-93vJC800xJYCTkGA@mail.gmail.com>
-In-Reply-To: <CACRpkdY-USEfscMOb6bPONW6xcSqhe3HU-93vJC800xJYCTkGA@mail.gmail.com>
-From:   William Dean <williamsukatube@gmail.com>
-Date:   Tue, 12 Jul 2022 16:06:43 +0800
-Message-ID: <CAK6EE7=YZQtboueyb1zbXnAtAtCNRZRJ-69eyYp_sa9hoktCEQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Add check for kcalloc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     williamsukatube@163.com, dvorkin@tibbo.com, wellslutw@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Hacash Robot <hacashRobot@santino.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220712074055.10588-1-brgl@bgdev.pl>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-thx :)
+On Tue, Jul 12, 2022 at 09:40:55AM +0200, Bartosz Golaszewski wrote:
+> The chip_name configs attribute always displays the device name of the
+> first GPIO bank because the logic of the relevant function is simply
+> wrong.
+> 
+> Fix it by correctly comparing the bank's swnode against the GPIO
+> device's children.
+> 
+> Fixes: cb8c474e79be ("gpio: sim: new testing module")
+> Cc: stable@vger.kernel.org
+> Reported-by: Kent Gibson <warthog618@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+> v1 -> v2:
+> - use device_match_fwnode for shorter code
+> 
 
-Linus Walleij <linus.walleij@linaro.org> =E4=BA=8E2022=E5=B9=B47=E6=9C=8811=
-=E6=97=A5=E5=91=A8=E4=B8=80 21:04=E5=86=99=E9=81=93=EF=BC=9A
+Works for me.
 
->
-> On Sun, Jul 10, 2022 at 5:48 PM <williamsukatube@163.com> wrote:
->
-> > From: William Dean <williamsukatube@gmail.com>
-> >
-> > As the potential failure of the kcalloc(),
-> > it should be better to check it in order to
-> > avoid the dereference of the NULL pointer.
-> >
-> > Fixes: aa74c44be19c8 ("pinctrl: Add driver for Sunplus SP7021")
-> > Reported-by: Hacash Robot <hacashRobot@santino.com>
-> > Signed-off-by: William Dean <williamsukatube@gmail.com>
->
-> Patch applied, tweaked the subject a bit,
->
-> Yours,
-> Linus Walleij
+Reviewed-and-tested-by: Kent Gibson <warthog618@gmail.com>
+
+Cheers,
+Kent.
