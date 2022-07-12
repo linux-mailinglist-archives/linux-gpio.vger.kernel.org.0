@@ -2,118 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B99CF5716E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 12:12:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02EC5716F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 12:15:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232880AbiGLKMr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 06:12:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59054 "EHLO
+        id S232409AbiGLKPE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 06:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232982AbiGLKM3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 06:12:29 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB9BAC065
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:12:27 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id n18so11414684lfq.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=eWssZ8ZNk3gocz18m8mxnb0jwQqX8IeZqZTs5Fk7aHM=;
-        b=JseBNvXaGcHl37bXbzLEObqqScnvnojABWCUOoOp6tN4QPBvtfsps5OHtPnAtGrGRz
-         w8cYqdyjgTYXVlVF8Gcddz8rLWscdKFUzG2pntSRnGRtekgFF9FcU+lhcR41v3Luc0FV
-         4reiTerDsu2I5SbQB9VyFjwQeLFDxZDkLRhx5RmiY3sA1X5U4AprmiekgqMRgq9m2ilQ
-         fSiu/OoYjqp9If1/DkwgkuuHkRAmdd449t6Yt4tiB7smB68phEFad+nFZcKl6zUGUTzR
-         S1gonwcm1vY/t6GimCj+6ucqQp0SyC2P4wY52JUEoiB1eEZu2qxLVAhLOGNqPdvq1hYq
-         TK1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=eWssZ8ZNk3gocz18m8mxnb0jwQqX8IeZqZTs5Fk7aHM=;
-        b=Sk8HdMop5VC/c6Fn4wbxUnHtTwSmEgKQI/NbiJ94vafkGpVUul7RQrAsSnhAeZEcgx
-         lO0OqP6XQ3p31htqkE980+pCMWEGVC1ONr7NKPpUUG6mfOiiFdSqchxmJ5FUBMMg+6An
-         P/v6QqVLaHonMqvshUG/7wdFbmlegH4BWcQfr4tcT8vAx/mSn1ZWfbF/rH1YUNzJjdgt
-         wvtMQIGqPd9XFCJtTsTRgq99gIT/9ZxMi7Z7ldQmH5gXqy8VisYHZ56elE9EjwO4tzwt
-         w3wLDzuFDHkdr86incOzAmLBNVdepWHHsSm/E8VBwfsP5g1MUa6ckFwdC2zwcb0Eg3PW
-         mmRw==
-X-Gm-Message-State: AJIora+pkEVAYogpuEAv67p344O3k2Kt5hNyUi8fnbd3rkSN2/JWM4PA
-        t8bYfHKn/zstSjx/YUJV+GIvhrPCw25DdraXcp4=
-X-Google-Smtp-Source: AGRyM1sG6VzvnaTxkGL8fDk+g1rwMUXUsQv1InU1jIwO46txUs+f7AM/SOF14RZuWgmXwA+FnLnf3czzPHejLk8AoGk=
-X-Received: by 2002:a05:6512:3083:b0:489:e0e1:6a3f with SMTP id
- z3-20020a056512308300b00489e0e16a3fmr5515449lfd.73.1657620745824; Tue, 12 Jul
- 2022 03:12:25 -0700 (PDT)
+        with ESMTP id S230316AbiGLKPD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 06:15:03 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25756AAB0F;
+        Tue, 12 Jul 2022 03:15:02 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id B67325C0223;
+        Tue, 12 Jul 2022 06:14:59 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 12 Jul 2022 06:14:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1657620899; x=
+        1657707299; bh=v0+CmKWP2loTCoFQCysnsurtV75oEd9q2EXIWMHg5G8=; b=o
+        WEp3IO5JG0BJyeXFFtLCdU98eQKJ8c2mFFnkxAVVl5wnbzNZUYwSos4nIBajtUKw
+        HyfKD/0yEdmn536AkVyAAiB569drM0c5GHk/pqN8AggbVehaLizP9mRwq99S1DB2
+        SLgU3NW8kYvWf9TWSFnN4O0eAZAeySVq+IXZwxtBpgCbQ8mlaihhvwROiwx07tn3
+        TV/whk9JkujdyM90LVP+OrL2AG8gRQXOeLxVSIxPLomjcin3mFvF0XWHTLfNXLu8
+        X5wUxtUJExMYhkDyVJJngQwzdfiexguZReFJRUYFul2xwt2TCLGeGEsjogfHBJto
+        /z8aQ5OfyywJeIu2dpzvQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1657620899; x=
+        1657707299; bh=v0+CmKWP2loTCoFQCysnsurtV75oEd9q2EXIWMHg5G8=; b=a
+        jE3Sw1L2U+FQzaAjg7GzxHpYJ69GRATwL0/nWdjVHlMdVZPWFoUbehNIioHuM5r9
+        wB3Q7KzRuWVqRCItA3jS4iUQZbvpfB0YIUN6PgJQjVcTnKg2vP6/RldytpHlS0GQ
+        rIt/YgITu7DTqA6Y9l1jIRuBxYlN6pNoRYv/m9Ts5lnvvKOXtaiBZX5Q5m0gRSl3
+        uIJLi3ubR539EpNz/Txi7qO+lG7tLbdB8GgKzNC4VTCFXQjk9IvYwvAIjImBafDK
+        EfQ0n+Rb9y1BGD96yqoP7eSBwCBaEVntgDOpod7IKenQg0NxoPhbl8h359+SveEt
+        VUpA7Vfe8PRW1Fn96/Xtg==
+X-ME-Sender: <xms:oknNYvuz4lsXsLEmy0KQIoSCiwdrJpRKQyBNOVDeU7ZrNvK2NeOLTQ>
+    <xme:oknNYgdAlKrhMPCRlOVjBAThFjb7FsCJ5Xc1flP1ixejHef-Qwk4DNrwcMaSwfwZf
+    7w32LVS6wsSstY_lQ>
+X-ME-Received: <xmr:oknNYizleeJvReSYmDtL4qj73KfaS-FAQ-E8mHAuG1plPLJISsJvDnfuArxfY4t-QB7Lrwat83OAmmt8-JwJ4cbXB0AMmKd3ebW7AKKQuesorx2ETijB8E3XIg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudejhedgvdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpefftdevkedvgeekueeutefgteffieelvedukeeuhfehledvhfei
+    tdehudfhudehhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:oknNYuOHP6O5r1KRG-24Sr9ateMDvk6aeVG4kqg1THqLTrtwwn-m5g>
+    <xmx:oknNYv-RqvFyYUbiCxD5iwlDiLquLYeuLXcJYMTzyuU6X6-u5xa7uQ>
+    <xmx:oknNYuXfxV5hmusWWxOCkeOvJ9oaZr3ufcXj0kQd0Avov0hQ6bhkfg>
+    <xmx:o0nNYuW1Vy4mq7_mZ1PaUMuYu3V2G3QBjeQ3a8-qT-0b1bc26ieFag>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 12 Jul 2022 06:14:58 -0400 (EDT)
+Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: Add compatibles for Allwinner
+ D1/D1s
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>, Ondrej Jirman <x@xff.cz>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        Andre Przywara <andre.przywara@arm.com>
+References: <20220626021148.56740-1-samuel@sholland.org>
+ <20220626021148.56740-2-samuel@sholland.org>
+ <CACRpkdY65q12sjDwH0UOOAa8GkBO--EDTsKrnEwn8NoTYTgtPQ@mail.gmail.com>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <879fb3b2-4bcb-82d6-e186-e845d62c9843@sholland.org>
+Date:   Tue, 12 Jul 2022 05:14:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Sender: ojongonwa@gmail.com
-Received: by 2002:a2e:a4b5:0:0:0:0:0 with HTTP; Tue, 12 Jul 2022 03:12:24
- -0700 (PDT)
-From:   "Doris.David" <mrs.doris.david02@gmail.com>
-Date:   Tue, 12 Jul 2022 03:12:24 -0700
-X-Google-Sender-Auth: ExkhDOylQkuHjErENeUflnizXHA
-Message-ID: <CAA-P_sPpeMSpQW+Mz9wDGqRWMq+qxns4i3BGf64yOa761_Kaqg@mail.gmail.com>
-Subject: Re: Greetings My Dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=6.4 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_8,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
+In-Reply-To: <CACRpkdY65q12sjDwH0UOOAa8GkBO--EDTsKrnEwn8NoTYTgtPQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:129 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5001]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [ojongonwa[at]gmail.com]
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
-        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
-        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Greetings,
+Hi Linus,
 
-I sent this mail praying it will find you in a good condition, since I
-myself am in a very critical health condition in which I sleep every
-night  without knowing if I may be alive to see the next day. I am
-Mrs.Doris David, a widow suffering from a long time illness. I have
-some funds I  inherited from my late husband, the sum of
-($11,000,000.00) my Doctor told me recently that I have serious
-sickness which is a cancer problem. What disturbs me most is my stroke
-sickness. Having known my condition, I decided to donate this fund to
-a good person that will utilize it the way I am going to instruct
-herein. I need a very honest God.
+On 7/11/22 3:58 AM, Linus Walleij wrote:
+> On Sun, Jun 26, 2022 at 4:11 AM Samuel Holland <samuel@sholland.org> wrote:
+> 
+>> D1 contains a pin controller similar to previous SoCs, but with some
+>> register layout changes. It includes 6 interrupt-capable pin banks.
+>>
+>> D1s is a low pin count version of the D1 SoC, with some pins omitted.
+>> The remaining pins have the same function assignments as D1.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> 
+> All 6 patches applied to the pinctrl tree, the last patch 6/6
+> required some fuzzing so please check the result!
 
-fearing a person who can claim this money and use it for charity
-works, for orphanages, widows and also build schools for less
-privileges that will be named after my late husband if possible and to
-promote the word of God and the effort that the house of God is
-maintained. I do not want a situation where this money will be used in
-an ungodly manner. That's why I' making this decision. I'm not afraid
-of death so I know where I'm going. I accept this decision because I
-do not have any child who will inherit this money after I die. Please
-I want your sincere and urgent answer to know if you will be able to
-execute this project, and I will give you more information on how
-thunder will be transferred to your bank account. I am waiting for
-your reply.
+Somehow the version of patch 6 applied to the pinctrl tree did not include the
+new driver source file. It only applied changes to existing files (including the
+Makefile reference to the new file).
 
-May God Bless you,
-Mrs.Doris David,
+I also needed to make some minor changes to patch 6 to resolve comments from Andre.
+
+Is it okay if I send a v2 of just patch 6? Or do I need to send a follow-up
+based on what was already applied?
+
+Regards,
+Samuel
