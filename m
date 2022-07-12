@@ -2,128 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B00571D43
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 16:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0952571DE1
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 17:04:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233727AbiGLOtx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 10:49:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43190 "EHLO
+        id S233758AbiGLPER (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 11:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbiGLOtv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 10:49:51 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3237B326D7;
-        Tue, 12 Jul 2022 07:49:51 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id 136so14322338ybl.5;
-        Tue, 12 Jul 2022 07:49:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7iVcCSNEDPVXZO7KkmaQ6UWTAKgIuOoWOIi+ZoUvMiI=;
-        b=kB6ipQhwRymVgL6MecvMix0v5bVQaqPiDDELB6uuhqJCgucni9ofmwnblXQsmy4Dwp
-         YXT3QO3CX1F8odY9GwupzSdxv5lK8H8UceT/jiFlEyBKGMJgMLh1fIyDjp9Y9XV04xZm
-         K0LZB3pZFNu9hBabtegxj9/z6ijGHSq0EarHW5ckbO65k2vp1ixBaIduwMSGx0NnuGEW
-         m6K2YeamWHz+dlBWaOfTXUH5xG4qe/LemopGUnmCsaCZ4z5wjj74NOuniXI0tPkc06wX
-         Xje/3nicZylu9l/L9bA2b6YRKBncHict54Or5qKgVT1KEsvFEAF4BqAGcdHaQBtk05gA
-         w+Cw==
+        with ESMTP id S233603AbiGLPDR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 11:03:17 -0400
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE46E093;
+        Tue, 12 Jul 2022 08:00:02 -0700 (PDT)
+Received: by mail-io1-f47.google.com with SMTP id u20so8050896iob.8;
+        Tue, 12 Jul 2022 08:00:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7iVcCSNEDPVXZO7KkmaQ6UWTAKgIuOoWOIi+ZoUvMiI=;
-        b=T7vT0xC5gYJc68YSTmnCefSk+7SZMCUeO5Tl6lQ1s1alG2sLQp9HMQJEf33Rth23ek
-         33yOkX1D8dPemuDkw0dGSn8kVxa3u2FdBbsMO6BPNRcEanajba4HX1svZJ/Rsu8LT108
-         AdUF9O1oE2lwv5zu+56RtEWL9whjc2/A118LQ44imyhjLAgtCQ9z8p7PTOTwyAUPUvue
-         tU6cDp2JurKNBIKQueUtg4sr1M+j/WoT1Y3iC6Ks5qg1jJsRgoVigP5ij373oLq5270g
-         djh0p9lkTmJpIOdD6Qi7xaT2IxRiXphn2jWLF48BjQziV/6Iowj1nNnckKAZit5YbHDN
-         w3GQ==
-X-Gm-Message-State: AJIora/aAAOnSbV/s4QLyRafb4JWl7VFJsFO9pFakBLQuIqJ5bxuIAdN
-        zOwiyY5Oz29nMNMwC/vxScm98fC26Y6HYGn0OyY=
-X-Google-Smtp-Source: AGRyM1u8xxquE10f6yTO7C4T8Li18XfMHlXCfwSUMfAeX5wy3klYVBZK3dXatnRZC6nKrV1LWitwOC3d3GqqLff+8ck=
-X-Received: by 2002:a05:6902:10c9:b0:668:e27c:8f7 with SMTP id
- w9-20020a05690210c900b00668e27c08f7mr22824445ybu.128.1657637390435; Tue, 12
- Jul 2022 07:49:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yEnL/KIgKCXSzN8Ltrj7vvOsqZOeF/KHqy5gLlC4xaE=;
+        b=FgkQqrjDC1D2wMLqVg7JUHwRcUrtQ6kSNR1EJ8aN7fmNa1o5ogpTTULlJE4iZK5zhj
+         5kQWhI3HA0Qm5uR3gtsVkR9ym6J4D2DLXdRCbVgt/uiTFnGfR2I519j8rSdzrYhnpaQ6
+         tPMLDpNF6qu9/6/iSl86bwvFeZyPhMaqSspU7sl/Jqz+XhlzWWXNlF4dqjTEcIULbtTf
+         lkQfAxlLE+P5c0JJLVCv9SXVtEFnSC5XAiJ7VoOJ8GZPXb7YCrLNnVWlSAYkE+ZSO1A3
+         7sXe4pRb/YlO1kkkgkjK0TfkJCJ29tzfGjIdi3k3AHY3SZRRX5dJZ9PWLuIH/hKIbgop
+         Bnyw==
+X-Gm-Message-State: AJIora/Dh7Hg6Hd37XTZcV+nbpE8m+EWx0iFDZAtdvDvNiqcXuytVuk7
+        td9qztT8PmYcrQvUDARed4Eym9kxBA==
+X-Google-Smtp-Source: AGRyM1srwAoh9+nd31Kl3lWr+FwP4VX3QljvAhk93cCuGk7a5QOtzDblJssDYK7XMfHSAc4aFnUi2Q==
+X-Received: by 2002:a6b:103:0:b0:67b:731c:86a5 with SMTP id 3-20020a6b0103000000b0067b731c86a5mr11644464iob.76.1657637998864;
+        Tue, 12 Jul 2022 07:59:58 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id l19-20020a056e02067300b002dc0c1b8edbsm3820209ilt.83.2022.07.12.07.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 07:59:58 -0700 (PDT)
+Received: (nullmailer pid 1851041 invoked by uid 1000);
+        Tue, 12 Jul 2022 14:59:57 -0000
+Date:   Tue, 12 Jul 2022 08:59:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8450 lpass lpi
+ pinctrl bindings
+Message-ID: <20220712145957.GB1823936-robh@kernel.org>
+References: <20220629091716.68771-1-srinivas.kandagatla@linaro.org>
+ <20220629091716.68771-2-srinivas.kandagatla@linaro.org>
+ <20220630210848.GA3295428-robh@kernel.org>
+ <864aac78-d3a4-0008-345f-d210582b100e@linaro.org>
 MIME-Version: 1.0
-References: <20220712143237.13992-1-henning.schild@siemens.com> <20220712143237.13992-2-henning.schild@siemens.com>
-In-Reply-To: <20220712143237.13992-2-henning.schild@siemens.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 12 Jul 2022 16:49:13 +0200
-Message-ID: <CAHp75VfCDRRS+WdyN-s5h+C7wnpFOpxOp7DU9_X5rpkL32M45g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] gpio: nct6116d: add new driver for several Nuvoton
- super io chips
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Kuan-Wei Ho <cwho@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <864aac78-d3a4-0008-345f-d210582b100e@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 4:32 PM Henning Schild
-<henning.schild@siemens.com> wrote:
->
-> This patch adds gpio support for several Nuvoton NCTXXX chips. These
-> Super-I/O chips offer multiple functions of which several already have
-> drivers in the kernel, i.e. hwmon and watchdog.
+On Fri, Jul 01, 2022 at 11:06:18AM +0100, Srinivas Kandagatla wrote:
+> thanks Rob,
+> 
+> On 30/06/2022 22:08, Rob Herring wrote:
+> > On Wed, Jun 29, 2022 at 10:17:15AM +0100, Srinivas Kandagatla wrote:
+> > > Add device tree binding Documentation details for Qualcomm SM8450
+> > > LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
+> > > 
+> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > ---
+> > >   .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 138 ++++++++++++++++++
+> > >   1 file changed, 138 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> > > new file mode 100644
+> > > index 000000000000..b49d70b9ba9a
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> > > @@ -0,0 +1,138 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
+> > > +  Low Power Island (LPI) TLMM block
+> > > +
+> > > +maintainers:
+> > > +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > +
+> > > +description: |
+> > > +  This binding describes the Top Level Mode Multiplexer block found in the
+> > > +  LPASS LPI IP on most Qualcomm SoCs
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: qcom,sm8450-lpass-lpi-pinctrl
+> > > +
+> > > +  reg:
+> > > +    minItems: 2
+> > > +    maxItems: 2
+> > 
+> > What is each entry?
+> 
+> These are tlmm and slew register base address.
+> 
+> This has been like this in previous bindings for sm8250 and sc7280 lpi
+> binding.
 
-...
+There's always bad examples to follow.
+ 
+> Are you suggesting that we should add a description for reg for more
+> clarity?
 
-> +#include <linux/gpio/driver.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
+Well, 2 descriptions:
 
-+ bits.h
-+ types.h.
+items:
+  - description: ...
+  - description: ...
 
-...
-
-> +static inline int superio_enter(int base)
-> +{
-> +       /* Don't step on other drivers' I/O space by accident. */
-> +       if (!request_muxed_region(base, 2, KBUILD_MODNAME)) {
-> +               pr_err("I/O address 0x%04x already in use\n", base);
-> +               return -EBUSY;
-> +       }
-> +
-> +       /* According to the datasheet the key must be send twice. */
-
-sent
-
-> +       outb(SIO_UNLOCK_KEY, base);
-> +       outb(SIO_UNLOCK_KEY, base);
-> +
-> +       return 0;
-> +}
-
-...
-
-> +#define gpio_dir(base) ((base) + 0)
-> +#define gpio_data(base) ((base) + 1)
-
-Dunno, why haven't you changed this? It might be a hidden mine for the
-future GPIO library development. I recommend using namespace whenever
-it feels right, and here it's exactly the case.
-
-> +       if (dir & 1 << offset)
-
-Another ignored comment... BIT(offset)
-
-I'm stopping here to let you double check what version you have sent.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Rob
