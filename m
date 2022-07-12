@@ -2,68 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5255F5715D9
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:38:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42FC657161B
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:49:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232409AbiGLJio (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 05:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
+        id S232836AbiGLJtG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 05:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbiGLJiF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:38:05 -0400
-Received: from sender4-op-o18.zoho.com (sender4-op-o18.zoho.com [136.143.188.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D543666ACE;
-        Tue, 12 Jul 2022 02:37:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1657618653; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=XOK5i+BNpDgcX1BYMZe2LaCKoK0yyKdgVeb0O1DjcKKiddv3nOBUXD6X8d2jH/haPjYm+zOFbgFTa8gSlybnnE3jsvf7w4zMNGPwMJ9EUB45DEnfa4y5NNQalHlhbNacI5/9hbZ2T2nyzZcB4vaP+iPNZb3ZUvjmeEhkWhKd92c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1657618653; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=+8NaXtyVZremBRcm+Cxpd7Fd0peEWVZxSFKa1EJngXk=; 
-        b=mHbW9OMt/4UEU28Cd4c9GOK9Asqyy1CyAcuJW42NCvKXWSTLXwdZejIGSHhBDImLNwheR10dC55pq69xeRVhrUwZ6vxNPbWoD8mJGatqDFVf4zwqSj6RjX40RD1ft56FTQdfR7+ZW76ltuqUEEI3Qp2mUc4iNcSkv3+U720/Pso=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=icenowy.me;
-        spf=pass  smtp.mailfrom=uwu@icenowy.me;
-        dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1657618653;
-        s=zmail; d=icenowy.me; i=uwu@icenowy.me;
-        h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=+8NaXtyVZremBRcm+Cxpd7Fd0peEWVZxSFKa1EJngXk=;
-        b=H5IGUqO4IVFVuUCjLMknbc3MO6YG+adVYmsFVqcDTH0JMmZ7OyXW14ekFNhJLhVh
-        BMUA0g+QzWyPoCJQ2KtjdBA8YOLwZDgiQBZEM8MPJzYMlz7qr7ahAElKSdq11iCOMp3
-        2dmkFOe7wvRbLO9DCYXlP0Cr+Nmr4fybEsATpjmw=
-Received: from edelgard.icenowy.me (59.41.160.3 [59.41.160.3]) by mx.zohomail.com
-        with SMTPS id 1657618651670659.3452916221531; Tue, 12 Jul 2022 02:37:31 -0700 (PDT)
-Message-ID: <7a947683de71e68a0925cfd4cab80238c3a03205.camel@icenowy.me>
-Subject: Re: [PATCH v2 2/3] pinctrl: sunxi: add support for R329 CPUX pin
- controller
-From:   Icenowy Zheng <uwu@icenowy.me>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi@lists.linux.dev,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>
-Date:   Tue, 12 Jul 2022 17:37:14 +0800
-In-Reply-To: <CAHp75Vdso_PGUomjmKaF1ytdUe4qLeAbpwkNmcRng9aNHs7g8w@mail.gmail.com>
-References: <20220710081853.1699028-1-uwu@icenowy.me>
-         <20220710081853.1699028-3-uwu@icenowy.me>
-         <CAHp75Vdso_PGUomjmKaF1ytdUe4qLeAbpwkNmcRng9aNHs7g8w@mail.gmail.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 
+        with ESMTP id S230285AbiGLJs5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:48:57 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8622BA2E79
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 02:48:55 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id bp17so5176479lfb.3
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 02:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=/uH8F4Kby+JXg7Mpe1L96lV/BObBUJ58/FjGSd2zwrI=;
+        b=GHOwDC5960hhrGAi98lxdFsoVxYhQ2I/DQd5NEQZVKWyX92WrTsf8t2uM3S5O5Pasz
+         EaPxmoLo+up67H/T1lw9SK2ICPtDIXbpnFpjwJEtiMkaxLplr6Ne1TOqGXTgTi8dkiJA
+         Y+POzrid5V/l1fFk3bQz7NlKDjxL0IasYJ/SW4GtFYSRTmqGaVUb5ssUlJPMjQEp0dX2
+         QuR/+sJhEfI6EpUkJFI81oMNUs+Zf4ivdtf7J/KU5ISvA1qtBbwfx5fjRbkU6DYVeBma
+         +Chaapuv217t3WUW1yU+2nFRqqg5WTThyOJWMsUVHxYikwNKEpGEhL7fhgjQVQCcgH6f
+         yB1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/uH8F4Kby+JXg7Mpe1L96lV/BObBUJ58/FjGSd2zwrI=;
+        b=Nw3CxtuxM1l+cYY1yeLLLidMQKfZtZbuuksybHmD+z10+MXtA3Mq0UIvRC7BFkswfH
+         QqAvuDX2mLvW2MC8swHKqk5ScGHR/kE9Q8nqMCnP91er4KifeM4SWH+Q0yoBeeK1XxD2
+         X50Rib9x7VOk3kK7v96y2KnZ/Zgg2EVr014tRnEld0lyQLeJn/HUnW2tLQ7lOIF0KZ2x
+         jWwYdLqT5xFjGkqm697b9pXURhHe0L2TN1WtWMgSknXrk1Qve6Bp/6ITiH3V6ZZLGZiU
+         XBoQMKhsOu4AkjdlphIMmkcXmaTc2dvzISW1WDq+taHgiZc8n6co7oIyB4P5XTbce+bW
+         UMRQ==
+X-Gm-Message-State: AJIora+wjqFUdztyOTzVpSX0TrvkdPggEpvmf1WOPM8741Vmt+OknmlN
+        XpnnRKbgjoUYlr257KpD13ZA9g==
+X-Google-Smtp-Source: AGRyM1uRD8Jy2As78zbcShpLvk3bPyap8hDx7k+p73eBuiJheG1Djr3s1kq+1523oqqWLjtGEhb0lQ==
+X-Received: by 2002:a05:6512:3b91:b0:489:e63f:47b1 with SMTP id g17-20020a0565123b9100b00489e63f47b1mr4117169lfv.410.1657619333888;
+        Tue, 12 Jul 2022 02:48:53 -0700 (PDT)
+Received: from [10.0.0.8] (fwa5da9-171.bb.online.no. [88.93.169.171])
+        by smtp.gmail.com with ESMTPSA id s3-20020ac24643000000b0047255d2111csm2073378lfo.75.2022.07.12.02.48.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 02:48:53 -0700 (PDT)
+Message-ID: <8b1393e4-275b-6791-ad71-2edfeacd0a63@linaro.org>
+Date:   Tue, 12 Jul 2022 11:48:50 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v1 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
+ documentation
+Content-Language: en-US
+To:     Tomer Maimon <tmaimon77@gmail.com>, avifishman70@gmail.com,
+        tali.perry1@gmail.com, joel@jms.id.au, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, j.neuschaefer@gmx.net,
+        zhengbin13@huawei.com
+Cc:     openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20220710102110.39748-1-tmaimon77@gmail.com>
+ <20220710102110.39748-2-tmaimon77@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220710102110.39748-2-tmaimon77@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,39 +80,243 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=E5=9C=A8 2022-07-10=E6=98=9F=E6=9C=9F=E6=97=A5=E7=9A=84 21:06 +0200=EF=BC=
-=8CAndy Shevchenko=E5=86=99=E9=81=93=EF=BC=9A
-> On Sun, Jul 10, 2022 at 10:22 AM Icenowy Zheng <uwu@icenowy.me>
-> wrote:
-> >=20
-> > Allwinner R329 SoC has two pin controllers similar to ones on
-> > previous
-> > SoCs, one in CPUX power domain and another in CPUS.
-> >=20
-> > This patch adds support for the CPUX domain pin controller.
->=20
-> ...
->=20
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
->=20
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
->=20
-> No use of these.
->=20
-> > +#include <linux/pinctrl/pinctrl.h>
->=20
-> Missed headers:
-> mod_devicetable.h
+On 10/07/2022 12:21, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
+> pinmux and GPIO controller.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 205 ++++++++++++++++++
+>  1 file changed, 205 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..6395ef2bf5b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> @@ -0,0 +1,205 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,npcm845-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Nuvoton NPCM845 Pin Controller and GPIO
+> +
+> +maintainers:
+> +  - Tomer Maimon <tmaimon77@gmail.com>
+> +
+> +description:
+> +  The Nuvoton BMC NPCM8XX Pin Controller multi-function routed through
+> +  the multiplexing block, Each pin supports GPIO functionality (GPIOx)
+> +  and multiple functions that directly connect the pin to different
+> +  hardware blocks.
+> +
+> +properties:
+> +  compatible:
+> +    const: nuvoton,npcm845-pinctrl
+> +
+> +  ranges:
+> +    maxItems: 1
 
-Thanks for these.
+ranges without reg? Does it even work? Did you test the bindings?
 
-In addition, how to decide what header should be included? The code
-works properly because of_device.h includes mod_devicetable.h.
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^gpio@":
+> +    type: object
+> +
+> +    description:
+> +      Eight GPIO banks that each contain between 32 GPIOs.
+> +
+> +    properties:
+> +
 
->=20
-> > +#include "pinctrl-sunxi.h"
->=20
+No blank line.
+
+> +      gpio-controller: true
+> +
+> +      '#gpio-cells':
+> +        const: 2
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +
+> +      gpio-ranges:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - gpio-controller
+> +      - '#gpio-cells'
+> +      - reg
+> +      - interrupts
+> +      - gpio-ranges
+> +
+> +  "-pin":
+> +    $ref: pinmux-node.yaml#
+
+Shouldn't this be under bank?
+
+> +
+> +    properties:
+> +      groups:
+> +        description:
+> +          One or more groups of pins to mux to a certain function
+> +        items:
+> +          enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
+> +                  smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
+> +                  smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
+> +                  smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
+> +                  spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
+> +                  bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
+> +                  rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
+> +                  fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
+> +                  fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
+> +                  r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
+> +                  rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
+> +                  smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
+> +                  smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
+> +                  pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
+> +                  serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
+> +                  spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
+> +                  smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
+> +                  smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
+> +                  hgpio4, hgpio5, hgpio6, hgpio7 ]
+> +
+> +      function:
+> +        description:
+> +          The function that a group of pins is muxed to
+> +        enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
+> +                smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
+> +                smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
+> +                smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
+> +                spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
+> +                bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
+> +                rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
+> +                fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
+> +                fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
+> +                r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
+> +                rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
+> +                smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
+> +                smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
+> +                pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
+> +                serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
+> +                spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
+> +                smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
+> +                smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
+> +                hgpio4, hgpio5, hgpio6, hgpio7 ]
+> +
+> +    dependencies:
+> +      groups: [ function ]
+> +      function: [ groups ]
+> +
+> +    additionalProperties: false
+> +
+> +  "^pin":
+
+This is almost the same as previous property. Confusing and I think it
+does not work.
+
+> +    $ref: pincfg-node.yaml#
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          A list of pins to configure in certain ways, such as enabling
+> +          debouncing
+> +
+> +      bias-disable: true
+> +
+> +      bias-pull-up: true
+> +
+> +      bias-pull-down: true
+> +
+> +      input-enable: true
+> +
+> +      output-low: true
+> +
+> +      output-high: true
+> +
+> +      drive-push-pull: true
+> +
+> +      drive-open-drain: true
+> +
+> +      input-debounce:
+> +        description:
+> +          Debouncing periods in microseconds, one period per interrupt
+> +          bank found in the controller
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 1
+> +        maxItems: 4
+> +
+> +      slew-rate:
+> +        description: |
+> +          0: Low rate
+> +          1: High rate
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+> +
+> +      drive-strength:
+> +        enum: [ 0, 1, 2, 4, 8, 12 ]
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - ranges
+> +  - '#address-cells'
+> +  - '#size-cells'
+
+Missing allOf with ref to pinctrl.yaml.
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      pinctrl: pinctrl@f0800000 {
+> +        compatible = "nuvoton,npcm845-pinctrl";
+> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        gpio0: gpio@f0010000 {
+> +          gpio-controller;
+> +          #gpio-cells = <2>;
+> +          reg = <0x0 0xB0>;
+> +          interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> +          gpio-ranges = <&pinctrl 0 0 32>;
+> +        };
+> +
+> +        fanin0_pin: fanin0-pin {
+> +          groups = "fanin0";
+> +          function = "fanin0";
+> +        };
+> +
+> +        pin34_slew: pin34-slew {
+
+and how does it pass your checks?
+
+Did you test the bindings?
 
 
+
+Best regards,
+Krzysztof
