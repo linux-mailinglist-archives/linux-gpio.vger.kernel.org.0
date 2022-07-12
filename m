@@ -2,140 +2,399 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58E925720F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 18:34:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED9915723D2
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 20:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233784AbiGLQeE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 12 Jul 2022 12:34:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49638 "EHLO
+        id S234551AbiGLSww (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 14:52:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233556AbiGLQd7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 12:33:59 -0400
-Received: from de-smtp-delivery-113.mimecast.com (de-smtp-delivery-113.mimecast.com [194.104.111.113])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5AA7526103
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 09:33:56 -0700 (PDT)
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com
- (mail-gv0che01lp2047.outbound.protection.outlook.com [104.47.22.47]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-22-YhE3n9sQNaiEuQ0SLJnAOw-6; Tue, 12 Jul 2022 18:33:54 +0200
-X-MC-Unique: YhE3n9sQNaiEuQ0SLJnAOw-6
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8) by
- ZRAP278MB0173.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2c::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5417.15; Tue, 12 Jul 2022 16:33:49 +0000
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::3d:ca30:8c24:1a95]) by ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::3d:ca30:8c24:1a95%7]) with mapi id 15.20.5417.026; Tue, 12 Jul 2022
- 16:33:48 +0000
-From:   Francesco Dolcini <francesco.dolcini@toradex.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        linux-input@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: [PATCH v2 5/5] dt-bindings: input: touchscreen: stmpe: Remove node name requirement
-Date:   Tue, 12 Jul 2022 18:33:45 +0200
-Message-ID: <20220712163345.445811-6-francesco.dolcini@toradex.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220712163345.445811-1-francesco.dolcini@toradex.com>
-References: <20220712163345.445811-1-francesco.dolcini@toradex.com>
-X-ClientProxiedBy: MR2P264CA0141.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:500:30::33) To ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:2e::8)
+        with ESMTP id S229568AbiGLSwI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 14:52:08 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423ACE5DEA;
+        Tue, 12 Jul 2022 11:45:02 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id e28so11854415lfj.4;
+        Tue, 12 Jul 2022 11:45:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TSYxzRetE0xzOUL5oATBDWLEJob2VZEcsK5w82xrERE=;
+        b=Q4kTE8giG6tUw/VALyiPXkeVjsQggKIUwW+XwPsviNkQJ6HWGI25UafKopXMnlpAFM
+         USY/KfSOs7AjaswwzN2QU76QnBI7lMEO91i0BHNyyYm/r42DUa9dzWQry5xob+ZCZKIg
+         cdO+BQJ4brnp2Z+5E+A8vNYfZfQj5MR/pu8/i3cumf2ZU25e8So9Tdvmy7xHq+PP4vel
+         Moyy7RJ4l+KpUv81q0vO8L90JlKaGuDB8zeMbBcfE2tzto5lmumePuLCU7uAafOMly7u
+         NtlSubwsJ3u1TZobcJLfLyznd9elV+cCPfx7XCcGsFsLIgwAUW0G7hjG5gDCWa8+Rmxb
+         vDgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TSYxzRetE0xzOUL5oATBDWLEJob2VZEcsK5w82xrERE=;
+        b=r57MKxRni6I5Tm6yU3OlM1uIYKWrOtCSNXPc+ZSxpXos3yc5NU27SSil+BB5rCZreh
+         pOIMHtMRvbf6anXi2T/83xak2QRFKZS9eFwQNDbdJBPMjo2qVnXCZUXz8HWH6Ly61Nl2
+         FEcFA5AMfIwkwYfTb45jCuZk+qXl6aYcUbHAwnyORjbJQg+dAafGTcGRGANRBSx7LRNQ
+         MMmUQa4t1LdBGirvMkGtqv0S2ZcQOtqqIpNnlI4BYUGjeoJ+yk7R1HFIIubvAL24A0Zp
+         MkO0tw8oArSTtflkLgYfYBiLRDI2Vdyrv1ZS0BD6sk7QVn0e0YOwrCo+LFxhYaCjekPc
+         rxGA==
+X-Gm-Message-State: AJIora+7YrLz5ni/UrC32SHk6CezYWuuQ+H6riQ5P3YZahnlYfPTUrtg
+        g531uYz3gRqROMBDQqVKXitJkTeXE3mObDZxRfA=
+X-Google-Smtp-Source: AGRyM1vdXWIDP62unu/SEbcZVgWajLNxVJE7Qi9msWf9w8vS/g/P6DrkgVzWkbnCBCgEvWKeVNKRIXQY2H7bbafgITo=
+X-Received: by 2002:a05:6512:324a:b0:486:a915:7b70 with SMTP id
+ c10-20020a056512324a00b00486a9157b70mr14602896lfr.265.1657651498434; Tue, 12
+ Jul 2022 11:44:58 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ef14eb12-6841-4609-3fbc-08da64244c09
-X-MS-TrafficTypeDiagnostic: ZRAP278MB0173:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0
-X-Microsoft-Antispam-Message-Info: +OHKvMfKQtyjN5h7PV139KkarzLijwAPlwtrwS1sbqVXNLpqDN49j9REc9dx7F2HB6O3AFHY/RQyz1bcNKH/RV9Ws3am9/f/c7tI6TUxKflKq+Kx1R0KWJa8O+FXq79a8mve8XLQX+FUlSrIi8o21BCVHL3fQXIfpeGNt4Rm3wd+XzsHT6guJFMonHia5Vdx1cmOAi1Ft+Y0WWPviR1HRvlC6o6hCQ80jx9tVn6aKBscR4T/JQFypMZSO+spNNd+s4/ixxUqrtinl5z694XEZbOVOakXTe2/DWvi8iWkOPAYm6Wq3DILYmu8d4oVKxmYan/MBfc4/CV0BBJWKCUjv2uR3UD5DIJvuu5VrHHR8xz4V+jrXNcHCqJw9Habpljtdg8qnH+i961lxmUh9dxAO3xrtjpswVDyZXgThnLSaqk+pA3zfK7VUj6G3iZfKfeUZ5jM1F3Nf/IeIR5aNV1LTZERBZzN7JZnJNfrt9a36mMgk6Q0B2N13uIweDke+g+8B29Rrni7i0nHxE+/vvkZtCmNjnpGDHvEyntQdblZrdXVLitCTITUq/cUwDotKIpVcGJyiJCDaF/rniGVxoklEjQfXjM3ydL3J/dQ/umGRJkPl+GI7DVxw79NExyuWsBSc2H8xOwJONF2WhBYo5TLaqkow1YDkkYLpqmHfjTCRwcfjgpm01o2My+N52cTwYvojgeWDfL1SKD6dNfSu/XWUd2bRgszS0yzj2zaT6D3OvxXiqnLoWiQ9VYlJKZ4GKTcgUNyPQq5BEu2cnz+ccQMA6uBvz+o1ZoEQlmfBSRxmPjRnN7WYUwTSJONaxSNgfKe
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39850400004)(376002)(346002)(366004)(396003)(136003)(478600001)(44832011)(6666004)(36756003)(6486002)(8936002)(41300700001)(83380400001)(7416002)(110136005)(316002)(5660300002)(2616005)(66946007)(26005)(1076003)(66556008)(8676002)(6512007)(186003)(52116002)(4326008)(66476007)(2906002)(38350700002)(6506007)(38100700002)(86362001);DIR:OUT;SFP:1102
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NjPpBsTfWm/r3Y8NOlP30kSyZmEZn2nvlVWSvxOiCCnI3/sPbOZ+SwAdUP5k?=
- =?us-ascii?Q?1plglscyLOSj++6N/HQ/ZJSLkANS3yYwiBVQLTwqRVf6XM2BNRX2LX8NqUOn?=
- =?us-ascii?Q?SKhFrWdxcOuuF+L0gKLmgYRG+1nvpX78+uneQnsW39r5gHltvj4PQ6IXDiPb?=
- =?us-ascii?Q?vJqUa3EFDfq7UMlrTqeUbT5vmlk5r8wF2h8R5mWd5IQcpQLHvl9bKldn8AOU?=
- =?us-ascii?Q?oLLEPYoW9hezc4DFaVpyQIOylunKsFS0evNZXmCab4IZXBrpsXnEFc1ZV5n3?=
- =?us-ascii?Q?nSfb/AR0+XmECv3XNbB1Ng+NGEC7SAyRBfHinNCZ/5jF0HU31jZiVLDnKitc?=
- =?us-ascii?Q?uWpN5aKhMJwASCJQjttXWndK3BFfnrPIlJ5EmdUOr+spt0hHyuguiKjlVSUb?=
- =?us-ascii?Q?5Ncf3pP2ktfR4PlI/ixCn6Q96CPcURwmm2rxxV1YyIn9tKNl6p8XD1G6wxtU?=
- =?us-ascii?Q?CIjhUdZEB49MwRRDUOgAM/UVhCE770PcuqSwN/mIEMrqoO/S+ARM7jawz+XS?=
- =?us-ascii?Q?EMFQyGKFhMtZ7Sy4Mi/P1ss8M1wXfa2D6q3LAYLtd6jIIJh4eqTJELqpdr3M?=
- =?us-ascii?Q?0ca6cavq2zDNaT8I+NX8bkXvw402hGyc4VOkkdh5CNk9A9vB13z5HwKtpO8P?=
- =?us-ascii?Q?nmdxX/lcGgq28RLZtHvVZvjTMKQV4npPvthTB6gSlTboAJdnMRN/J1lZMx9w?=
- =?us-ascii?Q?d5i2PEY4NqOMuvwsmAW+mLmqACzLjq2LfIBI1GvFRIj+pVNg7Wt3VwXPM7vy?=
- =?us-ascii?Q?5VfYXEAOZOOBOazchbWCEl72JqzxkBOBx1bqf0e2NO3wI4N/mFzpbngLZ596?=
- =?us-ascii?Q?U66Mp26DoFiP6rmcWHRq+y1GyzUxINQQgNHF4fnXbxioNFZ/T5dTiLlFKaJW?=
- =?us-ascii?Q?l/sDIHClXV1HON4r3eVqY8poJHSRbkJyYIJjaw6FBHPBl/7vRA+EOURf6RN8?=
- =?us-ascii?Q?2XgiTaaGpzL8Ho+hcUD3rAcgnew6it5IxBF6tNDYoZQoTXv0T75o2xxn2iHv?=
- =?us-ascii?Q?3GQaPHn/lxgOp+RQu+PhLfEMCBtFkMZkUXyMymXyUcDM54EVqK+MsOVGvAtY?=
- =?us-ascii?Q?zB9UrnRGs3l8eITUps+aZBzzchEDr/qBu1YjAXvv6BM+O1nlu96xU+dTqsdr?=
- =?us-ascii?Q?qymWkOIxReEd7lT1a/Q516Kt5Yx7rtjtujC7W0DcqeXx7pUKo+sOJ+9Oplm1?=
- =?us-ascii?Q?w1pjjo4oOj0qoGAqcgKFkTFsT8PDxhHRmFhP5XejwA47LmG42Gs12gEQ0cxr?=
- =?us-ascii?Q?FzLdAsvuLcP5TyOtedGGGKGC2TOkPVlEIQce/oOxRxLM9y6rbK680BO6MdsC?=
- =?us-ascii?Q?uIv6D7uStDc7UihgtPIYFu7wYnwmW3kl4HxJCg/UZx6Vq0J6KRBqEXBEBmD4?=
- =?us-ascii?Q?KBfFj2tVn/mDfx2VsL1/MmGCLqB4NuvxR2vCXfKgFskzfv83pDz1cao10OwB?=
- =?us-ascii?Q?um8VdPl2WJKxi4NyBIp6Hd1kJ4RZwbQHpNdQOayWHpSqHJsu5UHvYnXjC4+e?=
- =?us-ascii?Q?rV03eDHA2u6hR247O/qOL0aU0a/+ptDSdWtz50/wquW/p/B9Kzit4M/WRNXb?=
- =?us-ascii?Q?/fvthzRzVcG8bGpAXacXzNFPY4RqgEvVo+XT4pd4HBFtl6Y9lHe06FnLCZZo?=
- =?us-ascii?Q?xg=3D=3D?=
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef14eb12-6841-4609-3fbc-08da64244c09
-X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2022 16:33:48.4694
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: guYmCgSURjfA0WIhFTUIQbHbynKZCpkPMWD1SUNOSzi5EWLZ9+ASIXj7Jrwdrxgjik2whORtIFOhfFDUCoGRwwXdS7txJt8U5WluN1Bugco=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZRAP278MB0173
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CDE13A77 smtp.mailfrom=francesco.dolcini@toradex.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: toradex.com
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=WINDOWS-1252
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220710102110.39748-1-tmaimon77@gmail.com> <20220710102110.39748-2-tmaimon77@gmail.com>
+ <8b1393e4-275b-6791-ad71-2edfeacd0a63@linaro.org> <CAP6Zq1iuMPD21dM7Gpg4AEfM1cqE1mFhnO5hhUWvDZvEz=rTqw@mail.gmail.com>
+ <4ffc1060-671e-cbec-a100-5e26f1957eeb@linaro.org>
+In-Reply-To: <4ffc1060-671e-cbec-a100-5e26f1957eeb@linaro.org>
+From:   Tomer Maimon <tmaimon77@gmail.com>
+Date:   Tue, 12 Jul 2022 21:44:46 +0300
+Message-ID: <CAP6Zq1igaQhM79sUqTLdiH3WZiEG52Pva9k0g_A-BibAJKfm=Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO documentation
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-STMPE driver does not require a specific node name anymore, only the
-compatible is checked, update binding according to this.
+Hi Krzysztof,
 
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- Documentation/devicetree/bindings/input/touchscreen/stmpe.txt | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Thanks for your clarifications.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-index c549924603d2..238b51555c04 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-@@ -54,8 +54,7 @@ Optional properties common with MFD (deprecated):
- 				1 -> 3.25 MHz
- 				2 || 3 -> 6.5 MHz
- 
--Node name must be stmpe_touchscreen and should be child node of stmpe node to
--which it belongs.
-+Node should be child node of stmpe node to which it belongs.
- 
- Note that common ADC settings of stmpe_touchscreen (child) will take precedence
- over the settings done in MFD.
--- 
-2.25.1
+On Tue, 12 Jul 2022 at 16:45, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 12/07/2022 15:29, Tomer Maimon wrote:
+> > Hi Krzysztof,
+> >
+> > Thanks for your comments.
+> >
+> > On Tue, 12 Jul 2022 at 12:48, Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> On 10/07/2022 12:21, Tomer Maimon wrote:
+> >>> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
+> >>> pinmux and GPIO controller.
+> >>>
+> >>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> >>> ---
+> >>>  .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 205 ++++++++++++++++++
+> >>>  1 file changed, 205 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> >>> new file mode 100644
+> >>> index 000000000000..6395ef2bf5b3
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> >>> @@ -0,0 +1,205 @@
+> >>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> >>> +%YAML 1.2
+> >>> +---
+> >>> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,npcm845-pinctrl.yaml#
+> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>> +
+> >>> +title: Nuvoton NPCM845 Pin Controller and GPIO
+> >>> +
+> >>> +maintainers:
+> >>> +  - Tomer Maimon <tmaimon77@gmail.com>
+> >>> +
+> >>> +description:
+> >>> +  The Nuvoton BMC NPCM8XX Pin Controller multi-function routed through
+> >>> +  the multiplexing block, Each pin supports GPIO functionality (GPIOx)
+> >>> +  and multiple functions that directly connect the pin to different
+> >>> +  hardware blocks.
+> >>> +
+> >>> +properties:
+> >>> +  compatible:
+> >>> +    const: nuvoton,npcm845-pinctrl
+> >>> +
+> >>> +  ranges:
+> >>> +    maxItems: 1
+> >>
+> >> ranges without reg? Does it even work? Did you test the bindings?
+> > The ranges related to GPIO node reg
+>
+> But you do not allow here a 'reg', do you? So how can you have an unit
+> address in pinctrl node?
+I allow the reg unit address in the GPIO node.
+This is why reg is in the GPIO node as follow:
 
+                compatible = "nuvoton,npcm845-pinctrl";
+                ranges = <0x0 0x0 0xf0010000 0x8000>;
+                #address-cells = <1>;
+                #size-cells = <1>;
+                status = "okay";
+                gpio0: gpio@f0010000 {
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        reg = <0x0 0xB0>;
+                        interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+                        gpio-ranges = <&pinctrl 0 0 32>;
+                };
+                gpio1: gpio@f0011000 {
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        reg = <0x1000 0xB0>;
+                        interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+                        gpio-ranges = <&pinctrl 0 32 32>;
+                };
+                gpio2: gpio@f0012000 {
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        reg = <0x2000 0xB0>;
+                        interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+                        gpio-ranges = <&pinctrl 0 64 32>;
+                };
+...
+Is it problematic?
+
+>
+> >
+> > I did test the pin controller document and it passed.
+> > bash-4.2$ make ARCH=arm64 dt_binding_check
+> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> >   LINT    Documentation/devicetree/bindings
+> >   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+> >   DTEX    Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dts
+> >   DTC     Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dtb
+> >   CHECK   Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dtb
+> > Did I need to run anything else than dt_binding_check for testing the document?
+>
+> Indeed it will pass, because you do not have reg in pinctrl node. But
+> your dts won't pass make dtbs W=1
+After running make ARCH=arm64 dtbs W=1 I don't see warning related to pinctrl
+bash-4.2$ make ARCH=arm64 dtbs W=1
+  DTC     arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dtb
+arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi:69.7-183.5:
+Warning (unit_address_vs_reg): /ahb/apb: node has a reg or ranges
+property, but no unit name
+arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts:20.9-22.4: Warning
+(unit_address_vs_reg): /memory: node has a reg or ranges property, but
+no unit name
+arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi:69.7-183.5:
+Warning (simple_bus_reg): /ahb/apb: simple-bus unit address format
+error, expected "f0000000"
+arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi:56.35-61.5:
+Warning (unique_unit_address): /ahb/reset-controller@f0801000:
+duplicate unit-address (also used in node
+/ahb/clock-controller@f0801000)
+I did got warning but it dont related to the pinctrl, Maybe I didn't
+run the test correct?
+>
+>
+> >>
+> >>> +
+> >>> +  '#address-cells':
+> >>> +    const: 1
+> >>> +
+> >>> +  '#size-cells':
+> >>> +    const: 1
+> >>> +
+> >>> +patternProperties:
+> >>> +  "^gpio@":
+> >>> +    type: object
+> >>> +
+> >>> +    description:
+> >>> +      Eight GPIO banks that each contain between 32 GPIOs.
+> >>> +
+> >>> +    properties:
+> >>> +
+> >>
+> >> No blank line.
+> > O.K.
+> >>
+> >>> +      gpio-controller: true
+> >>> +
+> >>> +      '#gpio-cells':
+> >>> +        const: 2
+> >>> +
+> >>> +      reg:
+> >>> +        maxItems: 1
+> >>> +
+> >>> +      interrupts:
+> >>> +        maxItems: 1
+> >>> +
+> >>> +      gpio-ranges:
+> >>> +        maxItems: 1
+> >>> +
+> >>> +    required:
+> >>> +      - gpio-controller
+> >>> +      - '#gpio-cells'
+> >>> +      - reg
+> >>> +      - interrupts
+> >>> +      - gpio-ranges
+> >>> +
+> >>> +  "-pin":
+> >>> +    $ref: pinmux-node.yaml#
+> >>
+> >> Shouldn't this be under bank?
+> > Do you mean after the group and function properties?
+> > The -pin shouldn't use for the group property naming?
+>
+> Hm, I guess it's fine, I actually don't remember the recommendation for
+> gpio banks in relation to pinmux nodes.
+>
+> >>
+> >>> +
+> >>> +    properties:
+> >>> +      groups:
+> >>> +        description:
+> >>> +          One or more groups of pins to mux to a certain function
+> >>> +        items:
+> >>> +          enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
+> >>> +                  smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
+> >>> +                  smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
+> >>> +                  smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
+> >>> +                  spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
+> >>> +                  bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
+> >>> +                  rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
+> >>> +                  fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
+> >>> +                  fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
+> >>> +                  r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
+> >>> +                  rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
+> >>> +                  smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
+> >>> +                  smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
+> >>> +                  pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
+> >>> +                  serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
+> >>> +                  spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
+> >>> +                  smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
+> >>> +                  smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
+> >>> +                  hgpio4, hgpio5, hgpio6, hgpio7 ]
+> >>> +
+> >>> +      function:
+> >>> +        description:
+> >>> +          The function that a group of pins is muxed to
+> >>> +        enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
+> >>> +                smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
+> >>> +                smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
+> >>> +                smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
+> >>> +                spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
+> >>> +                bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
+> >>> +                rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
+> >>> +                fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
+> >>> +                fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
+> >>> +                r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
+> >>> +                rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
+> >>> +                smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
+> >>> +                smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
+> >>> +                pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
+> >>> +                serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
+> >>> +                spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
+> >>> +                smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
+> >>> +                smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
+> >>> +                hgpio4, hgpio5, hgpio6, hgpio7 ]
+> >>> +
+> >>> +    dependencies:
+> >>> +      groups: [ function ]
+> >>> +      function: [ groups ]
+> >>> +
+> >>> +    additionalProperties: false
+> >>> +
+> >>> +  "^pin":
+> >>
+> >> This is almost the same as previous property. Confusing and I think it
+> >> does not work.
+> > if I remove it I get the following error:
+> > pinctrl@f0800000: 'pin34-slew' does not match any of the regexes:
+> > '-pin', '^gpio@', 'pinctrl-[0-9]+'
+> > Can you advise what I should do?
+>
+> Ah, the pattern is indeed different - you start with pin. Anyway it's
+> confusing to have cfg starting with pin and mux ending in pin. How
+> "pin-pin" would work? :)
+>
+> Use maybe similar pattern, so start with mux for mux and pin for cfg.
+> Look at wpcm450 pinctrl.
+It indeed confusing, I will work with different naming.
+>
+>
+> >>
+> >>> +    $ref: pincfg-node.yaml#
+> >>> +
+> >>> +    properties:
+> >>> +      pins:
+> >>> +        description:
+> >>> +          A list of pins to configure in certain ways, such as enabling
+> >>> +          debouncing
+> >>> +
+> >>> +      bias-disable: true
+> >>> +
+> >>> +      bias-pull-up: true
+> >>> +
+> >>> +      bias-pull-down: true
+> >>> +
+> >>> +      input-enable: true
+> >>> +
+> >>> +      output-low: true
+> >>> +
+> >>> +      output-high: true
+> >>> +
+> >>> +      drive-push-pull: true
+> >>> +
+> >>> +      drive-open-drain: true
+> >>> +
+> >>> +      input-debounce:
+> >>> +        description:
+> >>> +          Debouncing periods in microseconds, one period per interrupt
+> >>> +          bank found in the controller
+> >>> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> >>> +        minItems: 1
+> >>> +        maxItems: 4
+> >>> +
+> >>> +      slew-rate:
+> >>> +        description: |
+> >>> +          0: Low rate
+> >>> +          1: High rate
+> >>> +        $ref: /schemas/types.yaml#/definitions/uint32
+> >>> +        enum: [0, 1]
+> >>> +
+> >>> +      drive-strength:
+> >>> +        enum: [ 0, 1, 2, 4, 8, 12 ]
+> >>> +
+> >>> +    additionalProperties: false
+> >>> +
+> >>> +required:
+> >>> +  - compatible
+> >>> +  - ranges
+> >>> +  - '#address-cells'
+> >>> +  - '#size-cells'
+> >>
+> >> Missing allOf with ref to pinctrl.yaml.
+> > Do you mean adding
+> > allOf:
+> >   - $ref: "pinctrl.yaml#"
+>
+> Yes.
+>
+>
+>
+> Best regards,
+> Krzysztof
+
+Best regards,
+
+Tomer
