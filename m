@@ -2,81 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 902B2572887
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 23:23:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0FA35728BC
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 23:45:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233445AbiGLVXW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 17:23:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57410 "EHLO
+        id S230051AbiGLVpL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 17:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233344AbiGLVXT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 17:23:19 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F2CD0E3B
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 14:23:17 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id t25so16043459lfg.7
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 14:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=ZIixC2bV5bk0+HIicGoB7Neycw0Y+e5g1F3XyfSlUow=;
-        b=lEd2am2qFIvJv6mvwUPXijftjd8L/Wyv9Yx+kKh+EvPQy2tACUdBFYr9SBMhe52bh4
-         oypuIStUzdaV9hnFKV8CZx6YYvxyWyBt+hdEKrL0xT8OBGD7oRh55m4WKmqzfkbzj5Dp
-         XMjQMxMW8vWxEpXgr3S5Y1Ti7r5bCIkZ4ftbbTBEg93nORt5WH5trqMQe35/+EvhDdak
-         RVOBEB9WpNO4QJ8LX7couSF9n0zEMJpevFZOlFiQKveOzKA8dDVowBooFkhWIfiz5GRv
-         kiov8wQwDs2OA8iiTDK4cv5moIrCKR7v3VOys92mWJTzS/unkodYL9b7uHt/oeRUfBuP
-         lbBg==
+        with ESMTP id S229994AbiGLVpK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 17:45:10 -0400
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4714A2EE0;
+        Tue, 12 Jul 2022 14:45:07 -0700 (PDT)
+Received: by mail-il1-f174.google.com with SMTP id a20so5658507ilk.9;
+        Tue, 12 Jul 2022 14:45:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ZIixC2bV5bk0+HIicGoB7Neycw0Y+e5g1F3XyfSlUow=;
-        b=37vgzEV+tFoGGSpMLdJ8OyrOpdnV59u61BdaLMdZbguYRpNFFhB8GHHzO8AJsEydlU
-         Hs7Qsy5pFWf/QiBmyd8Sjo+C91PzvedZ3i3y5gulrco80++fL5R0AZ2N3Gj0WjT5tSak
-         7jaZlNMb92mThYCAOXWecRm/Xn83hHw2CZ7rg2goZ35QiFiPmuKi/gVS94hSHfDF2ij5
-         vSGlaNm5jmRRtvIxBkXNALvT7c5CuZFqs6eRPz1DsJIZwvD5QAwxmaCab8+6E0zvQ5Pe
-         pBShJZd3Rg6cyW7yXA/8VDgAwPV/aqSdJCGX/pMVtD3pPbfMWz0JQh1z42ZbCi6j6Ntx
-         zvHQ==
-X-Gm-Message-State: AJIora8dOOQ4GxQhOI2hHt+Z6yV9RMBxXggqCc9KPJsxYfcLKfqwpjbQ
-        QzcwxEcADyfr3lW/H18hBxmtPg==
-X-Google-Smtp-Source: AGRyM1sLfpcYmbiEjWfaKm08jr8ScrE2GfPqP64cecPIr1DDlLCmyOl86WwUnjYrA+y/rjH/i6DnAQ==
-X-Received: by 2002:a05:6512:3b8f:b0:489:c6c9:f522 with SMTP id g15-20020a0565123b8f00b00489c6c9f522mr11797lfv.244.1657660996339;
-        Tue, 12 Jul 2022 14:23:16 -0700 (PDT)
-Received: from [10.0.0.8] (fwa5da9-171.bb.online.no. [88.93.169.171])
-        by smtp.gmail.com with ESMTPSA id v11-20020ac2560b000000b0047f9dca3708sm2391737lfd.51.2022.07.12.14.23.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Jul 2022 14:23:15 -0700 (PDT)
-Message-ID: <ca26630c-a09c-6f4d-51de-7a2ba615bd58@linaro.org>
-Date:   Tue, 12 Jul 2022 23:23:13 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ePtbEiXwYlvkWg0Ag9Bm1oGl7ingDp4ZCOmvX1M6pNI=;
+        b=2KciIB9vTflRmDYvQTZ2m3EVq9j7om7MdAXsHMut2CMJMLpQi6B3pVz4b1qej/DxCm
+         LUXbLJ19uiahyr/zbq5z/qGnmA2m0e7QpORulzPDO4/yiOUMpVgsHmQDUd6sawPEmgVB
+         N94lD+AAJwloHrwEVc6529C9hUQNTy3zMpm6thM7315DWbBZ0fQekCe6kQjFiwDrFnbV
+         xA1wv4eBXWmMkePdItVC3XCBp5rl7yzwKWS+pvHjkpIg6kx/71U0hOBQdJj7G1TsJb06
+         JzUdrwwJvsFJO0ZuQP3tl3h4o/bQpmoIjj9dXh19mlVQkYhXuWc+zqtJyfxVtfsduns3
+         5vlw==
+X-Gm-Message-State: AJIora+IT7DFVtTy9XmRqWsLVzI7cyyp0RPoNHLHNeeMAey0AMSaJFl7
+        8KUP1OhDkJ+2oRjdAjWocFgnH14/xQ==
+X-Google-Smtp-Source: AGRyM1vs4nXiw4f1tuiBUKQsDxdW4uQzJoTcvQ2HSFXT+BSz1UKNJ7AwJozIhVDHyqqWkHVKWWGz3Q==
+X-Received: by 2002:a05:6e02:1808:b0:2dc:9f6b:6082 with SMTP id a8-20020a056e02180800b002dc9f6b6082mr151717ilv.262.1657662307014;
+        Tue, 12 Jul 2022 14:45:07 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id t8-20020a02c908000000b00332044db2aasm4581828jao.95.2022.07.12.14.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 14:45:06 -0700 (PDT)
+Received: (nullmailer pid 2415364 invoked by uid 1000);
+        Tue, 12 Jul 2022 21:45:04 -0000
+Date:   Tue, 12 Jul 2022 15:45:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: tegra: Convert to
+ json-schema
+Message-ID: <20220712214504.GR1823936-robh@kernel.org>
+References: <20220704165802.129717-1-thierry.reding@gmail.com>
+ <20220704165802.129717-2-thierry.reding@gmail.com>
+ <20220706153822.GA54439-robh@kernel.org>
+ <YsXwchhxAdSRPFzD@orome>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 5/5] dt-bindings: input: touchscreen: stmpe: Remove
- node name requirement
-Content-Language: en-US
-To:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-input@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-References: <20220712163345.445811-1-francesco.dolcini@toradex.com>
- <20220712163345.445811-6-francesco.dolcini@toradex.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220712163345.445811-6-francesco.dolcini@toradex.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YsXwchhxAdSRPFzD@orome>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,18 +69,319 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/07/2022 18:33, Francesco Dolcini wrote:
-> STMPE driver does not require a specific node name anymore, only the
-> compatible is checked, update binding according to this.
+On Wed, Jul 06, 2022 at 10:28:34PM +0200, Thierry Reding wrote:
+> On Wed, Jul 06, 2022 at 09:38:22AM -0600, Rob Herring wrote:
+> > On Mon, Jul 04, 2022 at 06:57:59PM +0200, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > > 
+> > > Convert the NVIDIA Tegra pinmux controller bindings from the free-form
+> > > text format to json-schema.
+> > > 
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > > Changes in v2:
+> > > - wrap lines at 80 characters instead of the standard 100 characters in Linux
+> > > - use GPL-2.0-only instead of GPL-2.0+ license for DT bindings
+> > > - reorder additionalProperties for better readability
+> > > - move common definitions into a shared schema
+> > > - remove consumer snippets from examples
+> > > 
+> > >  .../bindings/clock/nvidia,tegra124-dfll.yaml  |   2 +-
+> > >  .../pinctrl/nvidia,tegra-pinmux-common.yaml   | 195 ++++++++++++++++++
+> > >  .../pinctrl/nvidia,tegra114-pinmux.txt        | 131 ------------
+> > >  .../pinctrl/nvidia,tegra114-pinmux.yaml       | 162 +++++++++++++++
+> > >  .../pinctrl/nvidia,tegra124-pinmux.txt        | 153 --------------
+> > >  .../pinctrl/nvidia,tegra124-pinmux.yaml       | 182 ++++++++++++++++
+> > >  .../pinctrl/nvidia,tegra194-pinmux.txt        | 107 ----------
+> > >  .../pinctrl/nvidia,tegra194-pinmux.yaml       |  88 ++++++++
+> > >  .../pinctrl/nvidia,tegra20-pinmux.txt         | 143 -------------
+> > >  .../pinctrl/nvidia,tegra20-pinmux.yaml        | 107 ++++++++++
+> > >  .../pinctrl/nvidia,tegra210-pinmux.txt        | 166 ---------------
+> > >  .../pinctrl/nvidia,tegra210-pinmux.yaml       | 146 +++++++++++++
+> > >  .../pinctrl/nvidia,tegra30-pinmux.txt         | 144 -------------
+> > >  .../pinctrl/nvidia,tegra30-pinmux.yaml        | 176 ++++++++++++++++
+> > >  14 files changed, 1057 insertions(+), 845 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra-pinmux-common.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml
+> > > index 85234a48b590..96c54c215f77 100644
+> > > --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml
+> > > +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.yaml
+> > > @@ -219,7 +219,7 @@ examples:
+> > >  
+> > >      /*
+> > >       * pinmux nodes added for completeness. Binding doc can be found in:
+> > > -     * Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
+> > > +     * Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.yaml
+> > >       */
+> > >  
+> > >      pinmux: pinmux@700008d4 {
+> > > diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-pinmux-common.yaml b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-pinmux-common.yaml
+> > > new file mode 100644
+> > > index 000000000000..cb6b722b89af
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-pinmux-common.yaml
+> > > @@ -0,0 +1,195 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pinctrl/nvidia,tegra-pinmux-common.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: NVIDIA Tegra Pinmux Controller
+> > > +
+> > > +maintainers:
+> > > +  - Thierry Reding <thierry.reding@gmail.com>
+> > > +  - Jonathan Hunter <jonathanh@nvidia.com>
+> > > +
+> > > +definitions:
+> > 
+> > This likely doesn't work because 'definitions' doesn't get fixups 
+> > applied. '$defs' would, but in general I prefer avoiding this pattern 
+> > except when really needed. I don't think it helps here. More below.
+> > 
+> > > +  pinconf-node:
+> > > +    type: object
+> > > +    description: |
+> > > +      Please refer to pinctrl-bindings.txt in this directory for details of the
+> > > +      common pinctrl bindings used by client devices, including the meaning of
+> > > +      the phrase "pin configuration node".
+> > > +
+> > > +      Tegra's pin configuration nodes act as a container for an arbitrary number
+> > > +      of subnodes. Each of these subnodes represents some desired configuration
+> > > +      for a pin, a group, or a list of pins or groups. This configuration can
+> > > +      include the mux function to select on those pin(s)/ group(s), and various
+> > > +      pin configuration parameters, such as pull-up, tristate, drive strength,
+> > > +      etc.
+> > > +
+> > > +      The name of each subnode is not important; all subnodes should be
+> > > +      enumerated and processed purely based on their content.
+> > > +
+> > > +      Each subnode only affects those parameters that are explicitly listed. In
+> > > +      other words, a subnode that lists a mux function but no pin configuration
+> > > +      parameters implies no information about any pin configuration parameters.
+> > > +
+> > > +      Similarly, a pin subnode that describes a pullup parameter implies no
+> > > +      information about e.g.  the mux function or tristate parameter. For this
+> > > +      reason, even seemingly boolean values are actually tristates in this
+> > > +      binding: unspecified, off, or on. Unspecified is represented as an absent
+> > > +      property, and off/on are represented as integer values 0 and 1.
+> > > +
+> > > +      Note that many of these properties are only valid for certain specific pins
+> > > +      or groups. See the Tegra TRM and various pinmux spreadsheets for complete
+> > > +      details regarding which groups support which functionality. The Linux
+> > > +      pinctrl driver may also be a useful reference, since it consolidates,
+> > > +      disambiguates, and corrects data from all those sources.
+> > > +
+> > > +    patternProperties:
+> > > +      "^pinmux(-[a-z0-9-_]+)?$":
+> > 
+> > Drop this and make all the below be at the top level (i.e. no indent).
 > 
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/stmpe.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> The intention was to include the general structure as well as the
+> description in each of the derived schemas. Some of the description
+> could perhaps be dropped, but especially the bit about the tristate
+> nature of some of these properties should stay in because it has caused
+> confusion in the past.
+> 
+> Is there any other way that the description can be shared with your
+> proposal (other than duplicating it in each binding document).
+
+The 'description' above? You can move that to top-level too.
+
+> > > +        type: object
+> > > +        properties:
+> > > +          nvidia,pins:
+> > > +            $ref: /schemas/types.yaml#/definitions/string-array
+> > > +            description: An array of strings. Each string contains the name of
+> > > +              a pin or group.  Valid values for these names are listed below.
+> > > +
+> > > +          nvidia,function:
+> > > +            $ref: /schemas/types.yaml#/definitions/string
+> > > +            description: A string containing the name of the function to mux to
+> > > +              the pin or group. Valid values for function names are listed
+> > > +              below. See the Tegra TRM to determine which are valid for each
+> > > +              pin or group.
+> > > +
+> > > +          nvidia,pull:
+> > > +            description: Pull-down/up setting to apply to the pin.
+> > > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > > +            oneOf:
+> > > +              - description: none
+> > > +                const: 0
+> > > +              - description: down
+> > > +                const: 1
+> > > +              - description: up
+> > > +                const: 2
+> > > +
+> > > +          nvidia,tristate:
+> > > +            description: Tristate setting to apply to the pin.
+> > > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > > +            oneOf:
+> > > +              - description: drive
+> > > +                const: 0
+> > > +              - description: tristate
+> > > +                const: 1
+> > > +
+> > > +          nvidia,schmitt:
+> > > +            description: Enable Schmitt trigger on the input.
+> > > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > > +            oneOf:
+> > > +              - description: disable Schmitt trigger on the input
+> > > +                const: 0
+> > > +              - description: enable Schmitt trigger on the input
+> > > +                const: 1
+> > > +
+> > > +          nvidia,pull-down-strength:
+> > > +            description: Controls drive strength. 0 is weakest. The range of
+> > > +              valid values depends on the pingroup. See "CAL_DRVDN" in the
+> > > +              Tegra TRM.
+> > > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +          nvidia,pull-up-strength:
+> > > +            description: Controls drive strength. 0 is weakest. The range of
+> > > +              valid values depends on the pingroup. See "CAL_DRVUP" in the
+> > > +              Tegra TRM.
+> > > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +  high-speed-mode:
+> > 
+> > Why do all these need to be definitions? They all have the same name and 
+> > apply to the pinmux nodes. Just move them there with the right name.
+> 
+> All of the ones that are separate definitions are properties that appear
+> for only a subset of the IP generations. So the idea was to create a
+> definition and then derived bindings could cherry-pick these as
+> necessary to complement the pinconf-node definition.
+> 
+> If I move these definitions to the top level, then they'll end up
+> validating properly on devices where they shouldn't exist. Alternatively
+> I'd have to duplicate all of these across various derivative bindings
+> which gets us mostly back to the previous version of the patch (i.e. we
+> don't save very much by only factoring out the truly common properties).
+
+Not if you use 'additionalProperties: false'. Since it doesn't see into 
+$ref's like unevaluatedProperties does, you have to list out which 
+properties you are using in the derived binding:
+
+$ref: list-of-common-props.yaml#
+
+properties:
+  high-speed-mode: true
+
+additionalProperties: false
+
+list-of-common-props.yaml could have a gazillion properties in 
+it, but anything not listed locally will be disallowed.
 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > +    description: Enable high speed mode the pins.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    oneOf:
+> > > +      - description: normal speed mode
+> > > +        const: 0
+> > > +      - description: high speed mode
+> > > +        const: 1
+> > > +
+> > > +  low-power-mode:
+> > > +    description: Controls the drive power or current. Valid values are
+> > > +      from 0 through 3, where 0 specifies the least power and 3 specifies
+> > > +      the most power. See "Low Power Mode" or "LPMD1" and "LPMD0" in the
+> > > +      Tegra TRM.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    enum: [ 0, 1, 2, 3 ]
+> > > +
+> > > +  enable-input:
+> > > +    description: Enable the pin's input path.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    oneOf:
+> > > +      - description: disable input (i.e. output only)
+> > > +        const: 0
+> > > +      - description: enable input
+> > > +        const: 1
+> > > +
+> > > +  open-drain:
+> > > +    description: Open-drain configuration for the pin.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    oneOf:
+> > > +      - description: disable open-drain
+> > > +        const: 0
+> > > +      - description: enable open-drain
+> > > +        const: 1
+> > > +
+> > > +  lock:
+> > > +    description: Lock the pin configuration against further changes until
+> > > +      reset.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    oneOf:
+> > > +      - description: disable pin configuration lock
+> > > +        const: 0
+> > > +      - description: enable pin configuration lock
+> > > +        const: 1
+> > > +
+> > > +  io-reset:
+> > > +    description: reset the I/O path
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    enum: [ 0, 1 ]
+> > > +
+> > > +  rcv-sel:
+> > > +    description: select VIL/VIH receivers
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    oneOf:
+> > > +      - description: normal receivers
+> > > +        const: 0
+> > > +      - description: high-voltage receivers
+> > > +        const: 1
+> > > +
+> > > +  drive-type:
+> > > +    description: Drive type to configure for the pin.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    enum: [ 0, 1, 2, 3 ]
+> > > +
+> > > +  io-hv:
+> > > +    description: Select high-voltage receivers.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    oneOf:
+> > > +      - description: Use normal receivers.
+> > > +        const: 0
+> > > +      - description: Use high-voltage receivers.
+> > > +        const: 1
+> > > +
+> > > +  slew-rate-rising:
+> > > +    description: Controls rising signal slew rate. 0 is fastest. The
+> > > +      range of valid values depends on the pingroup. See "DRVDN_SLWR" in
+> > > +      the Tegra TRM.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +  slew-rate-falling:
+> > > +    description: Controls falling signal slew rate. 0 is fastest. The
+> > > +      range of valid values depends on the pingroup. See "DRVUP_SLWF" in
+> > > +      the Tegra TRM.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +properties:
+> > > +  reg:
+> > > +    minItems: 1
+> > > +    maxItems: 4
+> > 
+> > This doesn't get used anywhere.
+> 
+> I think I needed the properties keyword here because the tooling would
+> otherwise consider this schema invalid. Perhaps if I restructure this
+> that error will go away as well.
 
+Probably so. All part of keeping people within the lines. :)
 
-Best regards,
-Krzysztof
+Rob
