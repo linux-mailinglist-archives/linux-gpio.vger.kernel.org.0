@@ -2,100 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5194B57173A
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 12:24:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2243D57177B
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 12:42:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232380AbiGLKYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 06:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
+        id S232018AbiGLKmi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 06:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232805AbiGLKYK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 06:24:10 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B67ADD67
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:24:09 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id m16so9474706edb.11
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 03:24:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AmO51byIMiOVb4cRzs66BBjupIjrQQmBiHJH/wAWMQk=;
-        b=XHFr5hfGXn/Nw+Hxav30NPiwSpMaSjFeRW9xeebgnEQ65ddoHX9DWUhNvWEALbShXa
-         ULAkHZt5gG1cIDI+nYcgk78l0H3rbtOxmAIOfSy8FFK9hsBA9JicQQ/rqsDbFV0jkrFa
-         jUOUgSiUKw0IFQspJSHe/iDrMde884XlxPwnhA8J5oX6NSdsfzDjzx1fEolBzTB7xjyR
-         MKFaZgFYwDUA46seOv6Jf/tEoB8hOabMXW5lZWz3HrI8Shku/GmsDuBPB8sX0pvERUD6
-         TtGDjmW1gqjhLGYu4DPZreadxaEh4Kodll7jAT8xAMy3HB57R3P9fIMBAHVRKZGZXpfH
-         htwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AmO51byIMiOVb4cRzs66BBjupIjrQQmBiHJH/wAWMQk=;
-        b=BPNLHB0NID6QeeMIa2W5oX2pYGq+dZsJbE32Jd+rFMWN06XFtnoTDyvujvLq1/vkgd
-         qqXZuHHJ7ZoJjOwTyLBRkWOHTEvQoJ0f0d9L9JqEM1HvyhCcGjld7TDIeL6jHIHxXRI1
-         N7W5tC7bb/Nl+WYPdwiafjDLisQDFGmHmn3zcx7nHWLoVesYhBBmY/AFeEUIAay/1tC5
-         Xkr86bUbn+t5PaywgYUU6dK2SOFqFUnlIeSXeArPqtA7FRWDvozo579ErqAsy9g8LDrb
-         VbEPP2MdFyPHuDTYoQVxHiG/gDadzETiKXo3F6CRh+1ivIXzXwKPEPwXhxv5mJMwRuZM
-         jd7g==
-X-Gm-Message-State: AJIora9Q3+6KVcvKUa2tcdskJvUsFh1wAF8Qz98+oOQZCit+00370kSx
-        Mthbe2z4pXxnJzfRqvZ/UZjkzc9d6/yr7SWq3LglVg==
-X-Google-Smtp-Source: AGRyM1srkG0qvmIar6mDAAoHm0Gh7RSLqulhEcDlDx31EiT1+eqj12pqGn4VbkGhRUeqL0umg3iSuQc62JdtTBJGhTc=
-X-Received: by 2002:a05:6402:150:b0:437:b93c:3a9 with SMTP id
- s16-20020a056402015000b00437b93c03a9mr29626324edu.82.1657621447950; Tue, 12
- Jul 2022 03:24:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <9996cb86818d2e935494d6b414d549432f91797a.1657528504.git.geert+renesas@glider.be>
-In-Reply-To: <9996cb86818d2e935494d6b414d549432f91797a.1657528504.git.geert+renesas@glider.be>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 Jul 2022 12:23:57 +0200
-Message-ID: <CAMRc=MdDp+Pwqifp0xCkFic+DO65RL=qOw3Prrze9WoyKkV8fQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: GPIO_SAMA5D2_PIOBU should depend on ARCH_AT91
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229889AbiGLKmh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 06:42:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883B17CB61;
+        Tue, 12 Jul 2022 03:42:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 21E0361844;
+        Tue, 12 Jul 2022 10:42:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75BCAC3411C;
+        Tue, 12 Jul 2022 10:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657622554;
+        bh=bym/CE9Aj5kn+/hAjLYdJF+4twPaMd7GMf1jkhpHwrg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GlTeeEWJYhJKaolay+JIdInK+gzOnXlV/OTTielBgCBE9hulI+PBn86NdOLbvkuOA
+         yMjrA84OYGKr1S+LYFZd33krQ85pD2ywVQW3xW/8yBTszd84q165vs1jRRi/Sq5L8s
+         Ee2eIaR7xomm0PBXcFg/t9TuZS/JTncdwV+7dB5CGATj+EqnOeFFzyPc0OUZBZop3K
+         xF3zUzs/WEPNGys6174DCuDJxyFpoxlladDmdvBl9mj8JvcEBffl0R6dLLo3r3Hm69
+         BkvCjuteqF3Ud1KMc0q1FyZPLorfOT7q3/ef+RK40XY80W1U2RZHfJfJl1n2eM6rtg
+         /zhWO55RK3Ofg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oBDLc-006uBC-E6;
+        Tue, 12 Jul 2022 11:42:32 +0100
+Date:   Tue, 12 Jul 2022 11:42:32 +0100
+Message-ID: <87edyq1ujr.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Robert Marko <robimarko@gmail.com>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
+In-Reply-To: <20220624195112.894916-1-robimarko@gmail.com>
+References: <20220624195112.894916-1-robimarko@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: robimarko@gmail.com, bjorn.andersson@linaro.org, agross@kernel.org, linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 12:27 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> The SAMA5D2 PIOBU is only present on some AT91/Microchip SoCs.  Hence
-> add a dependency on ARCH_AT91, to prevent asking the user about this
-> driver when configuring a kernel without AT91/Microchip SoC support.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, 24 Jun 2022 20:51:12 +0100,
+Robert Marko <robimarko@gmail.com> wrote:
+> 
+> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+> immutable") added a warning to indicate if the gpiolib is altering the
+> internals of irqchips.
+> 
+> Following this change the following warning is now observed for the SPMI
+> PMIC pinctrl driver:
+> gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
+> 
+> Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
+> 
+> Signed-off-by: Robert Marko <robimarko@gmail.com>
 > ---
->  drivers/gpio/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 63a89ff7865e374f..1852656d5eb248f6 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -553,6 +553,7 @@ config GPIO_SAMA5D2_PIOBU
->         tristate "SAMA5D2 PIOBU GPIO support"
->         depends on MFD_SYSCON
->         depends on OF_GPIO
-> +       depends on ARCH_AT91 || COMPILE_TEST
->         select GPIO_SYSCON
->         help
->           Say yes here to use the PIOBU pins as GPIOs.
-> --
-> 2.25.1
->
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index c3255b0bece4..406ee0933d0b 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -171,7 +171,6 @@ struct pmic_gpio_state {
+>  	struct regmap	*map;
+>  	struct pinctrl_dev *ctrl;
+>  	struct gpio_chip chip;
+> -	struct irq_chip irq;
+>  	u8 usid;
+>  	u8 pid_base;
+>  };
+> @@ -988,6 +987,17 @@ static void *pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
+>  	return fwspec;
+>  }
+>  
+> +static const struct irq_chip spmi_gpio_irq_chip = {
+> +	.name		= "spmi-gpio",
+> +	.irq_ack	= irq_chip_ack_parent,
+> +	.irq_mask	= irq_chip_mask_parent,
+> +	.irq_unmask	= irq_chip_unmask_parent,
 
-Applied, thanks!
+No, this is wrong. Please look at the documentation to see how you
+must now directly call into the gpiolib helpers for these two
+callbacks.
 
-Bart
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
