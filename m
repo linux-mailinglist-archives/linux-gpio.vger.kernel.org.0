@@ -2,148 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CD48571571
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:15:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5255F5715D9
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 11:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232296AbiGLJPD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 05:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
+        id S232409AbiGLJio (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 05:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229945AbiGLJPB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:15:01 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F03537F82;
-        Tue, 12 Jul 2022 02:15:00 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id t25so12894369lfg.7;
-        Tue, 12 Jul 2022 02:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7dJBg9LfnofgHy6ilpqchRetbtEZkPv+AKVAP45NFCo=;
-        b=EQlz5Lplp1HgN4bVm90otjod7REHApUJ/Bgf60gHtsysuTPq9ehNegy42naHnCJwGg
-         OZi38SGg28hVF2EJTbz9umxAsENo/grt3QU8SQ5nSheMt/g+V6DSCe7fo8VJTv+u2LNs
-         XWwZ5XihCKiuT4sV+GGGxOkbx4V3ppshvovK+0Xd1Wyw0RokFcT+B4J2W8yi+5YTQLPa
-         e1GaGZKLCt4MDxlhEwA8aytF8c1mQEkG8rVw0E4gRoijZlJLAvpz3ENvEiMWA1Hjk3l6
-         zSxqhjbJp3gEMKLi9megxBc9HTcu54+qLN+3g1wcIlxrl1H+PFG8IYaOvbYsYBCx4654
-         1acg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7dJBg9LfnofgHy6ilpqchRetbtEZkPv+AKVAP45NFCo=;
-        b=JlD3kmmQ0xZ/7c+pyPrGfeIKqsabWSNFoDUj64oJHnlZaDXxxaqRZpzpVMWPQR83oa
-         mUWl6Ebz7apYmgfNzubfDLSHoI3BwV8+VpIpKmoEv2CWmjZOmL1PExoBVSAf/qHV0C/Y
-         8i9KpGwFIvm+479vLbqya21YFqMsPIsMKlcFqWTcw3Qy2sw2+rURTJEjAH0uiXcsSY9S
-         HQWbZrtUsH6ZIsygr51BxLaR2ERlBmY7Wvr6EmOCAgUPBc2vI+BJGFmNyQXcIavGaqsO
-         DGHA3Kpck9GFA/juynLl5tAktuqQthilR1BprT13G0ec/ccAC9bsGZoXl8lTtma63Z6r
-         /cRA==
-X-Gm-Message-State: AJIora+zpvys2zkA5ThzN8kFBB9MLUZxuyiOxDjlAuDpA78NOfIEcT0Y
-        ZqZJEwk9vvfKH0LUMvcCx2zmYBZdQUYqchfPH+NGhEpeA2ixsA==
-X-Google-Smtp-Source: AGRyM1tLHDQVyhND/WjqFxauc7FSgxBOMlNB6TthUBvoulmqIDIORuUfU3yX4w4mI3mKkUXSuJRG0bzcoBuz8LHvpzE=
-X-Received: by 2002:a05:6512:3ca4:b0:489:d112:569a with SMTP id
- h36-20020a0565123ca400b00489d112569amr8363512lfv.207.1657617298692; Tue, 12
- Jul 2022 02:14:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220712074055.10588-1-brgl@bgdev.pl>
-In-Reply-To: <20220712074055.10588-1-brgl@bgdev.pl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 12 Jul 2022 11:14:22 +0200
-Message-ID: <CAHp75VdAidZxorVKvUfsc8fnNK19k2TpoTTJUXJpBo+wnALAWw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: sim: fix the chip_name configfs item
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S229628AbiGLJiF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 05:38:05 -0400
+Received: from sender4-op-o18.zoho.com (sender4-op-o18.zoho.com [136.143.188.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D543666ACE;
+        Tue, 12 Jul 2022 02:37:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1657618653; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=XOK5i+BNpDgcX1BYMZe2LaCKoK0yyKdgVeb0O1DjcKKiddv3nOBUXD6X8d2jH/haPjYm+zOFbgFTa8gSlybnnE3jsvf7w4zMNGPwMJ9EUB45DEnfa4y5NNQalHlhbNacI5/9hbZ2T2nyzZcB4vaP+iPNZb3ZUvjmeEhkWhKd92c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1657618653; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=+8NaXtyVZremBRcm+Cxpd7Fd0peEWVZxSFKa1EJngXk=; 
+        b=mHbW9OMt/4UEU28Cd4c9GOK9Asqyy1CyAcuJW42NCvKXWSTLXwdZejIGSHhBDImLNwheR10dC55pq69xeRVhrUwZ6vxNPbWoD8mJGatqDFVf4zwqSj6RjX40RD1ft56FTQdfR7+ZW76ltuqUEEI3Qp2mUc4iNcSkv3+U720/Pso=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=icenowy.me;
+        spf=pass  smtp.mailfrom=uwu@icenowy.me;
+        dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1657618653;
+        s=zmail; d=icenowy.me; i=uwu@icenowy.me;
+        h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=+8NaXtyVZremBRcm+Cxpd7Fd0peEWVZxSFKa1EJngXk=;
+        b=H5IGUqO4IVFVuUCjLMknbc3MO6YG+adVYmsFVqcDTH0JMmZ7OyXW14ekFNhJLhVh
+        BMUA0g+QzWyPoCJQ2KtjdBA8YOLwZDgiQBZEM8MPJzYMlz7qr7ahAElKSdq11iCOMp3
+        2dmkFOe7wvRbLO9DCYXlP0Cr+Nmr4fybEsATpjmw=
+Received: from edelgard.icenowy.me (59.41.160.3 [59.41.160.3]) by mx.zohomail.com
+        with SMTPS id 1657618651670659.3452916221531; Tue, 12 Jul 2022 02:37:31 -0700 (PDT)
+Message-ID: <7a947683de71e68a0925cfd4cab80238c3a03205.camel@icenowy.me>
+Subject: Re: [PATCH v2 2/3] pinctrl: sunxi: add support for R329 CPUX pin
+ controller
+From:   Icenowy Zheng <uwu@icenowy.me>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <mripard@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@lists.linux.dev,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>
+        Maxime Ripard <maxime@cerno.tech>
+Date:   Tue, 12 Jul 2022 17:37:14 +0800
+In-Reply-To: <CAHp75Vdso_PGUomjmKaF1ytdUe4qLeAbpwkNmcRng9aNHs7g8w@mail.gmail.com>
+References: <20220710081853.1699028-1-uwu@icenowy.me>
+         <20220710081853.1699028-3-uwu@icenowy.me>
+         <CAHp75Vdso_PGUomjmKaF1ytdUe4qLeAbpwkNmcRng9aNHs7g8w@mail.gmail.com>
+Organization: Anthon Open-Source Community
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 9:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> The chip_name configs attribute always displays the device name of the
-> first GPIO bank because the logic of the relevant function is simply
-> wrong.
->
-> Fix it by correctly comparing the bank's swnode against the GPIO
-> device's children.
+=E5=9C=A8 2022-07-10=E6=98=9F=E6=9C=9F=E6=97=A5=E7=9A=84 21:06 +0200=EF=BC=
+=8CAndy Shevchenko=E5=86=99=E9=81=93=EF=BC=9A
+> On Sun, Jul 10, 2022 at 10:22 AM Icenowy Zheng <uwu@icenowy.me>
+> wrote:
+> >=20
+> > Allwinner R329 SoC has two pin controllers similar to ones on
+> > previous
+> > SoCs, one in CPUX power domain and another in CPUS.
+> >=20
+> > This patch adds support for the CPUX domain pin controller.
+>=20
+> ...
+>=20
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+>=20
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+>=20
+> No use of these.
+>=20
+> > +#include <linux/pinctrl/pinctrl.h>
+>=20
+> Missed headers:
+> mod_devicetable.h
 
-Taking into account that name swnode is used in other places in the
-code, I'm fine with this version,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks for these.
 
-> Fixes: cb8c474e79be ("gpio: sim: new testing module")
-> Cc: stable@vger.kernel.org
-> Reported-by: Kent Gibson <warthog618@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
-> v1 -> v2:
-> - use device_match_fwnode for shorter code
->
->  drivers/gpio/gpio-sim.c | 16 +++++-----------
->  1 file changed, 5 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index 98109839102f..1020c2feb249 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -991,28 +991,22 @@ static struct configfs_attribute *gpio_sim_device_config_attrs[] = {
->  };
->
->  struct gpio_sim_chip_name_ctx {
-> -       struct gpio_sim_device *dev;
-> +       struct fwnode_handle *swnode;
->         char *page;
->  };
->
->  static int gpio_sim_emit_chip_name(struct device *dev, void *data)
->  {
->         struct gpio_sim_chip_name_ctx *ctx = data;
-> -       struct fwnode_handle *swnode;
-> -       struct gpio_sim_bank *bank;
->
->         /* This would be the sysfs device exported in /sys/class/gpio. */
->         if (dev->class)
->                 return 0;
->
-> -       swnode = dev_fwnode(dev);
-> +       if (device_match_fwnode(dev, ctx->swnode))
-> +               return sprintf(ctx->page, "%s\n", dev_name(dev));
->
-> -       list_for_each_entry(bank, &ctx->dev->bank_list, siblings) {
-> -               if (bank->swnode == swnode)
-> -                       return sprintf(ctx->page, "%s\n", dev_name(dev));
-> -       }
-> -
-> -       return -ENODATA;
-> +       return 0;
->  }
->
->  static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
-> @@ -1020,7 +1014,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
->  {
->         struct gpio_sim_bank *bank = to_gpio_sim_bank(item);
->         struct gpio_sim_device *dev = gpio_sim_bank_get_device(bank);
-> -       struct gpio_sim_chip_name_ctx ctx = { dev, page };
-> +       struct gpio_sim_chip_name_ctx ctx = { bank->swnode, page };
->         int ret;
->
->         mutex_lock(&dev->lock);
-> --
-> 2.34.1
->
+In addition, how to decide what header should be included? The code
+works properly because of_device.h includes mod_devicetable.h.
+
+>=20
+> > +#include "pinctrl-sunxi.h"
+>=20
 
 
--- 
-With Best Regards,
-Andy Shevchenko
