@@ -2,97 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE73571348
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 09:41:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E6C7571368
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 09:49:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232382AbiGLHlw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 03:41:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
+        id S230502AbiGLHtK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 03:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231608AbiGLHlt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 03:41:49 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496989A6A2
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:41:48 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id va17so12878462ejb.0
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NSrNMqUgWaYuH+mTVW1bDRg+I5uODANEes06ggGuCQ8=;
-        b=hSinwd2+o7s7Z5GqAva/JbWo3c3bbU31+fz4J9bmDcla74i63981XKzdYwltOdOu1s
-         2jTGjN6+qb5wlVV+hkl0h60UYgDH8kFDFL2aVikT8YCXbwim0ernZtNOJWgcZbcLbb2i
-         PdZr11THsg6zAbwfwDrRoSIduA+KV9lUAknSTADM1h0faJPFYZo/mf86nSUbWkClq5Mp
-         52rUpSHWGHvwV/UJ1DbTRI/iEgEA0ZuaV0I/zwH8xzq5VaxPhbdIqHoWScSbZ4olJSPO
-         CfUTV8fs2HWp92EhfeTstC8tbHSSCX/trZxM0SQybm5vscnXl8h0QEebFp1UHZlMj3zm
-         xCQQ==
+        with ESMTP id S232416AbiGLHtF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 03:49:05 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D6B27B0D
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:49:04 -0700 (PDT)
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 867693F1BC
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 07:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1657612137;
+        bh=vNBZvuUXiXCxiG8WzoPq174R/6y/8FtvVvGT3U1v9yQ=;
+        h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
+        b=LYa2uYYPfjNZcA20V2e6jQKf32d17Z3rPAYt9iA7tQWCNl0Q8K9rNS5VmhyT4turk
+         e5gPmbx2FzVWQdy4BozlVoAUl65SkZ44JnA9UG8Lih2vQSt6TB2OSBXDz0edXbgzpQ
+         aRLWdqF12cTTIjaRKFf5tqd4mvjvoT/3nbpBkd8HPVlA+QgQrtpIShIXMr5TfUTRtt
+         4laI84WQ5HCENJ6ZIs/AufQ0imh0N9GcDXbzkXh9UBzSPPpBiaAE2/RWrckSob4qI4
+         SuM/qmJeAw64M+jOy5NAgALp4HDBOS1mI/XTAh9fvKLskk3niSFk4GIe77du6M7XBs
+         qtQdEPf6YhfQg==
+Received: by mail-ej1-f69.google.com with SMTP id ga9-20020a1709070c0900b0072b4d787f5dso1705166ejc.21
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 00:48:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NSrNMqUgWaYuH+mTVW1bDRg+I5uODANEes06ggGuCQ8=;
-        b=P1zQzYfpLRSoM+KFVdiCQlUCZG8DSAthsfgwDe1PtOHs91XY+JVuNNTxR+36ZsqhyS
-         QQ/B2Mosvh+0A+jn1lCfazgdY7rB/v6A3CWv+2Gi3vOD0q2CaFFy7rsfdFB09qhqWNTJ
-         MgnbLuuPHvG4Inj1o70FwnUVKLTL8bwCuvBIObdWtQercUb/zKWMo5sa9yErlxmXPyYo
-         CMRkG9TR41nP5sR7djMTGaIq0Dv6oO+ZM26l3rFZzUuBj8bPySbtH+Gg+cy/bfhx8FfU
-         eN+YQmSqtk5MHgzGJ2eXs9gc40Qtk5NbTcBhmFrBNVMXquUAsNtwcC5W2LDa5jQBEZaV
-         PhJg==
-X-Gm-Message-State: AJIora8jw1h9oJi6ebFWGstJOG8x0csMayZmL7QTCQsE9YQmOnl0e8PH
-        HZmsFPvfypmAl9jawcphmVp1DDy7K4eTtrU9qtUpHQ==
-X-Google-Smtp-Source: AGRyM1t1jqeS/pkiVbY2dvEmVvi4l4xwSga9AY8LFBsQiNHxBtdvWIBVEBlrrfH6Dh4ib0IVtklOMMyO9OTHI3qY87c=
-X-Received: by 2002:a17:907:cc14:b0:726:3555:ac63 with SMTP id
- uo20-20020a170907cc1400b007263555ac63mr21853308ejc.697.1657611706834; Tue, 12
- Jul 2022 00:41:46 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=vNBZvuUXiXCxiG8WzoPq174R/6y/8FtvVvGT3U1v9yQ=;
+        b=IRK2kDt5qGas5fJxHOv/kO22zEbRhUwEfdng6alyUjbsJ1gOXOlyDqSssYG+LjtD49
+         UErOTeyFTwkBiG1CuPfZ1hs1cPTIIPw3tI9VhRGdiBPwwZQudpkR2Xq6G6gYj6564df9
+         +IVEV3ifHv5pVrzISzNmsy1YvTKf/7DuW8gah/ZXxaIVmOxDtNu5rlp6y72JeYsyoYJs
+         scZqv8fjFVHXtaYuxY20AKAPXujzBGy9Wckw5c0k3yxqMD5FoUE1ScDtGgruYJff79Jv
+         PNoN9V/q1S3ByvF3TK5XCww/RO37AK7DLC+VDCzqS9pyULkVZEvob8uCrweSyWE3liN8
+         TBUQ==
+X-Gm-Message-State: AJIora/Tfg3YHUjXy1/SXRZmkPT3eYdN5Epaq/URBhowKdUC/9aQjyZo
+        UKwBdVjdreqhpNP5XphQYW6TsQCKuJI+CKCi1ufx9IlBgt4lkZJ3rB3OSJuiJSRqH57A/1iDVqT
+        a5GAhl5iXmkJrsQ6kKnKUCYfIzIFbeycsPjt2UXkXp0TwB5wlzwb4Rzg=
+X-Received: by 2002:a17:907:7745:b0:6f3:674a:339 with SMTP id kx5-20020a170907774500b006f3674a0339mr23171708ejc.207.1657612135915;
+        Tue, 12 Jul 2022 00:48:55 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sKYiyaVXyjLX2K8AMBJ+btE5lXskW7S/DIpnNUwqaIqJ5PAG/WMZxBrdtZXYX9M2gauyjRuECXBD+kUypXypM=
+X-Received: by 2002:a17:907:7745:b0:6f3:674a:339 with SMTP id
+ kx5-20020a170907774500b006f3674a0339mr23171698ejc.207.1657612135771; Tue, 12
+ Jul 2022 00:48:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220711173418.91709-1-brgl@bgdev.pl> <20220712023714.GA9406@sol>
-In-Reply-To: <20220712023714.GA9406@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 Jul 2022 09:41:36 +0200
-Message-ID: <CAMRc=McJjcOo2_xcU0CgoQMO9PJH3t_dWeSyS8QX3wYaxeufhA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: fix the chip_name configfs item
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
+From:   Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Date:   Tue, 12 Jul 2022 09:48:45 +0200
+Message-ID: <CA+zEjCsqpAffGqJPJrsLJLeyrJJDch_-Qctb1Zxi+j5JU9Wg9A@mail.gmail.com>
+Subject: libgpiod API v2 release
+To:     linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 4:37 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Mon, Jul 11, 2022 at 07:34:18PM +0200, Bartosz Golaszewski wrote:
-> > The chip_name configs attribute always displays the device name of the
-> > first GPIO bank because the logic of the relevant function is simply
-> > wrong.
-> >
-> > Fix it by correctly comparing the bank's swnode against the GPIO
-> > device's children.
-> >
->
-> That works for me, so thanks for that.
->
-> Not totally convinced by Andy's suggestion to rename swnode to fwnode.
-> Variables should be named for what they represent, not their type, and
-> you use swnode extensively elsewhere in the module, so either change it
-> everywhere or not at all, and such a sweeping change is beyond the scope
-> this patch.
->
-> Though it may make his other suggestion to use device_match_fwnode()
-> read a little better.  No issue with that suggestion.
->
-> Cheers,
-> Kent.
+Hi,
 
-I agree on device_match_fwnode() and disagree on the swnode rename. v2 sent out.
+Ubuntu kernels do not enable GPIO_CDEV_V1 as it is deprecated, but the
+libgpiod package that we ship is still based on the latest version
+1.6.3 which does not implement the API v2. So I'd like to update
+libgpiod, do you have any recommendations about what branch/sha1 I
+should use? Do you plan to make a release that implements the API v2?
 
-Bart
+Thanks,
+
+Alex
