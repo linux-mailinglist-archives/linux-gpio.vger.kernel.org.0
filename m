@@ -2,62 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E88985726B5
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 21:53:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 477D4572793
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 22:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235255AbiGLTws (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 15:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
+        id S233545AbiGLUoY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 16:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233311AbiGLTwc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 15:52:32 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455D2B38D8;
-        Tue, 12 Jul 2022 12:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1657655217; x=1689191217;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=o6Smb2LVrKinxr1kedwUxtMmyszMdP7k3W+zKSv/R04=;
-  b=QgUY620m5q8A226FaopbPUrd3+VkirkxaN93Zap8hHOB6wVxzmkUsafR
-   Ys9BrHggpOqFee0eOBkMLjoAy9duaKUwXeZWBs60qPG6MFuOhVwS41cuu
-   /EniF1EVAFOonOWWxGeT9YrnRd7MrLCJoqeBP1p2GeD0zjmwoNz8FBfic
-   nyUMfJO1QGJ+Sw9p9eF6srxA18ZF76V7INiNoBuzjStoSz5BURtmE8ZPt
-   SIKBsZjhZeveS1hT2XuFHZ6VlBuPOhNeKp+KewYX2J3x8TTiRX3PYhx5I
-   2s+rJIlMmEe/4vUA/ZmwxaL5+4lX52w3uu5TqNGsBg68ORPLzziMldHjp
-   w==;
-X-IronPort-AV: E=Sophos;i="5.92,266,1650956400"; 
-   d="scan'208";a="167525930"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2022 12:46:55 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Tue, 12 Jul 2022 12:46:55 -0700
-Received: from soft-dev3-1.microsemi.net (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2375.17 via Frontend Transport; Tue, 12 Jul 2022 12:46:52 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <linus.walleij@linaro.org>, <alexandre.belloni@bootlin.com>,
-        <kavyasree.kotagiri@microchip.com>,
-        <colin.foster@in-advantage.com>, <UNGLinuxDriver@microchip.com>,
-        <maxime.chevallier@bootlin.com>, <michael@walle.cc>,
-        <andy.shevchenko@gmail.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH v4 2/2] pinctrl: ocelot: Fix pincfg
-Date:   Tue, 12 Jul 2022 21:50:43 +0200
-Message-ID: <20220712195043.3842081-3-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20220712195043.3842081-1-horatiu.vultur@microchip.com>
-References: <20220712195043.3842081-1-horatiu.vultur@microchip.com>
+        with ESMTP id S232706AbiGLUoQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 16:44:16 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9571631226
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 13:44:13 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id bu42so15977981lfb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Jul 2022 13:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=MORAWQZYnuqS2wo/SekKYPQ26Eg73UPTOY0oQe/BW5E=;
+        b=PDPvQkT26U+LXywcEP5RPf9apr6nUtCd/XTpypCJnJVs6//VWgJQxjog1JRq0yDLaL
+         O7b1fG8yUGpUK3tim5Tqvgi8OV2hFa2taxSkmpxv2dclb8XmHSZP9+YkEIVf1GaxI66f
+         vUjzNCQKjA3hQlBDXLwvmO+vUARZNjFrwaKMB/I4V4naq3/ZyP3Ey5Cntb/z57BQAqkc
+         MUiIvrYGZQ4GK1czFEHA848IjP3wQwkqc1BWsqstWCNjUW5mb2nHpxFJhDcdUceQDAWO
+         8gjKm/NoTh1YTPh6GIz6pO+RfJ7287WPg8nNTm4IEOS90AiSv9P71HpuP2affhe4WmEf
+         z9pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=MORAWQZYnuqS2wo/SekKYPQ26Eg73UPTOY0oQe/BW5E=;
+        b=P5sgdJPaqPY9ooclHmZSVbbcR+POUqgx3ReT1GMUBP7WbbMWuCEe1kG39wh2z9a2wd
+         AVLZsQF+8BXgXPBwEl7xko0rsPik1GHk0yrJlbzRhXPfpJTT13NX2Pf3ENdmgRXy2TV8
+         9rgCdMrEKiU14S6cOviIxxz/vxeo7DO3CT52mRjMHAJ1ptczs9SFwIWzROX/l1IqLfwY
+         ksBgPDuPSUuM25GyAKlOsV5e02MfNCc7EM2dynd77YX5UPnq+88/cO8HB3zOkg86EYa8
+         qw6j7SpKxpbFWjvzUsYFj+bZHvqElnsbecpDF8sRVXdJ9powY4zcW/QxuunXtNmQaqyC
+         6SIw==
+X-Gm-Message-State: AJIora9mm0N4kG1LY8rNAcg4SMLTc/Oqdo++g8/a7cSdig3KX8AEuoJs
+        kVg9laNTJCgQihQMpK176D/dDQ==
+X-Google-Smtp-Source: AGRyM1vscXSaxgyzLVxVMjxRaAsSXWTk//tWWNmKX7HaJIodJ0W7gC97Iosv6THw75rpvarLQ4hZaw==
+X-Received: by 2002:a05:6512:74:b0:488:a062:281d with SMTP id i20-20020a056512007400b00488a062281dmr15742119lfo.43.1657658651676;
+        Tue, 12 Jul 2022 13:44:11 -0700 (PDT)
+Received: from [10.0.0.8] (fwa5da9-171.bb.online.no. [88.93.169.171])
+        by smtp.gmail.com with ESMTPSA id s28-20020a05651c201c00b0025d547bf08asm2656253ljo.74.2022.07.12.13.44.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 13:44:11 -0700 (PDT)
+Message-ID: <5dec7907-9cab-6735-4775-142aeede185e@linaro.org>
+Date:   Tue, 12 Jul 2022 22:44:08 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v1 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
+ documentation
+Content-Language: en-US
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+References: <20220710102110.39748-1-tmaimon77@gmail.com>
+ <20220710102110.39748-2-tmaimon77@gmail.com>
+ <8b1393e4-275b-6791-ad71-2edfeacd0a63@linaro.org>
+ <CAP6Zq1iuMPD21dM7Gpg4AEfM1cqE1mFhnO5hhUWvDZvEz=rTqw@mail.gmail.com>
+ <4ffc1060-671e-cbec-a100-5e26f1957eeb@linaro.org>
+ <CAP6Zq1igaQhM79sUqTLdiH3WZiEG52Pva9k0g_A-BibAJKfm=Q@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAP6Zq1igaQhM79sUqTLdiH3WZiEG52Pva9k0g_A-BibAJKfm=Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,82 +91,138 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The blamed commit changed to use regmaps instead of __iomem. But it
-didn't update the register offsets to be at word offset, so it uses byte
-offset.
-Another issue with the same commit is that it has a limit of 32 registers
-which is incorrect. The sparx5 has 64 while lan966x has 77.
+On 12/07/2022 20:44, Tomer Maimon wrote:
+> Hi Krzysztof,
+> 
+> Thanks for your clarifications.
+> 
+> On Tue, 12 Jul 2022 at 16:45, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 12/07/2022 15:29, Tomer Maimon wrote:
+>>> Hi Krzysztof,
+>>>
+>>> Thanks for your comments.
+>>>
+>>> On Tue, 12 Jul 2022 at 12:48, Krzysztof Kozlowski
+>>> <krzysztof.kozlowski@linaro.org> wrote:
+>>>>
+>>>> On 10/07/2022 12:21, Tomer Maimon wrote:
+>>>>> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
+>>>>> pinmux and GPIO controller.
+>>>>>
+>>>>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+>>>>> ---
+>>>>>  .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 205 ++++++++++++++++++
+>>>>>  1 file changed, 205 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..6395ef2bf5b3
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+>>>>> @@ -0,0 +1,205 @@
+>>>>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>>>>> +%YAML 1.2
+>>>>> +---
+>>>>> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,npcm845-pinctrl.yaml#
+>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>> +
+>>>>> +title: Nuvoton NPCM845 Pin Controller and GPIO
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Tomer Maimon <tmaimon77@gmail.com>
+>>>>> +
+>>>>> +description:
+>>>>> +  The Nuvoton BMC NPCM8XX Pin Controller multi-function routed through
+>>>>> +  the multiplexing block, Each pin supports GPIO functionality (GPIOx)
+>>>>> +  and multiple functions that directly connect the pin to different
+>>>>> +  hardware blocks.
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    const: nuvoton,npcm845-pinctrl
+>>>>> +
+>>>>> +  ranges:
+>>>>> +    maxItems: 1
+>>>>
+>>>> ranges without reg? Does it even work? Did you test the bindings?
+>>> The ranges related to GPIO node reg
+>>
+>> But you do not allow here a 'reg', do you? So how can you have an unit
+>> address in pinctrl node?
+> I allow the reg unit address in the GPIO node.
+> This is why reg is in the GPIO node as follow:
+> 
+>                 compatible = "nuvoton,npcm845-pinctrl";
+>                 ranges = <0x0 0x0 0xf0010000 0x8000>;
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>                 status = "okay";
+>                 gpio0: gpio@f0010000 {
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         reg = <0x0 0xB0>;
+>                         interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-ranges = <&pinctrl 0 0 32>;
+>                 };
+>                 gpio1: gpio@f0011000 {
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         reg = <0x1000 0xB0>;
+>                         interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-ranges = <&pinctrl 0 32 32>;
+>                 };
+>                 gpio2: gpio@f0012000 {
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         reg = <0x2000 0xB0>;
+>                         interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-ranges = <&pinctrl 0 64 32>;
+>                 };
+> ...
+> Is it problematic?
 
-Fixes: 076d9e71bcf8 ("pinctrl: ocelot: convert pinctrl to regmap")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/pinctrl/pinctrl-ocelot.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index 873bba245522..c5a9f87f0c49 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -1334,7 +1334,9 @@ static int ocelot_hw_get_value(struct ocelot_pinctrl *info,
- 		const struct ocelot_pincfg_data *opd = info->pincfg_data;
- 		u32 regcfg;
- 
--		ret = regmap_read(info->pincfg, pin, &regcfg);
-+		ret = regmap_read(info->pincfg,
-+				  pin * regmap_get_reg_stride(info->pincfg),
-+				  &regcfg);
- 		if (ret)
- 			return ret;
- 
-@@ -1366,14 +1368,18 @@ static int ocelot_pincfg_clrsetbits(struct ocelot_pinctrl *info, u32 regaddr,
- 	u32 val;
- 	int ret;
- 
--	ret = regmap_read(info->pincfg, regaddr, &val);
-+	ret = regmap_read(info->pincfg,
-+			  regaddr * regmap_get_reg_stride(info->pincfg),
-+			  &val);
- 	if (ret)
- 		return ret;
- 
- 	val &= ~clrbits;
- 	val |= setbits;
- 
--	ret = regmap_write(info->pincfg, regaddr, val);
-+	ret = regmap_write(info->pincfg,
-+			   regaddr * regmap_get_reg_stride(info->pincfg),
-+			   val);
- 
- 	return ret;
- }
-@@ -1932,7 +1938,8 @@ static const struct of_device_id ocelot_pinctrl_of_match[] = {
- 	{},
- };
- 
--static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
-+static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev,
-+						   const struct ocelot_pinctrl *info)
- {
- 	void __iomem *base;
- 
-@@ -1940,7 +1947,7 @@ static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
- 		.reg_bits = 32,
- 		.val_bits = 32,
- 		.reg_stride = 4,
--		.max_register = 32,
-+		.max_register = info->desc->npins * 4,
- 		.name = "pincfg",
- 	};
- 
-@@ -2008,7 +2015,7 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
- 
- 	/* Pinconf registers */
- 	if (info->desc->confops) {
--		pincfg = ocelot_pinctrl_create_pincfg(pdev);
-+		pincfg = ocelot_pinctrl_create_pincfg(pdev, info);
- 		if (IS_ERR(pincfg))
- 			dev_dbg(dev, "Failed to create pincfg regmap\n");
- 		else
--- 
-2.33.0
+It seems not, looks ok because of ranges, although it is a bit confusing
+that your pinctrl unit address is 0xf0800000 but ranges is 0xf0010000.
 
+>>
+>>>
+>>> I did test the pin controller document and it passed.
+>>> bash-4.2$ make ARCH=arm64 dt_binding_check
+>>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+>>>   LINT    Documentation/devicetree/bindings
+>>>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>>>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>>>   DTEX    Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dts
+>>>   DTC     Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dtb
+>>>   CHECK   Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.example.dtb
+>>> Did I need to run anything else than dt_binding_check for testing the document?
+>>
+>> Indeed it will pass, because you do not have reg in pinctrl node. But
+>> your dts won't pass make dtbs W=1
+> After running make ARCH=arm64 dtbs W=1 I don't see warning related to pinctrl
+> bash-4.2$ make ARCH=arm64 dtbs W=1
+>   DTC     arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dtb
+> arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi:69.7-183.5:
+> Warning (unit_address_vs_reg): /ahb/apb: node has a reg or ranges
+> property, but no unit name
+> arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts:20.9-22.4: Warning
+> (unit_address_vs_reg): /memory: node has a reg or ranges property, but
+> no unit name
+> arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi:69.7-183.5:
+> Warning (simple_bus_reg): /ahb/apb: simple-bus unit address format
+> error, expected "f0000000"
+> arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi:56.35-61.5:
+> Warning (unique_unit_address): /ahb/reset-controller@f0801000:
+> duplicate unit-address (also used in node
+> /ahb/clock-controller@f0801000)
+> I did got warning but it dont related to the pinctrl, Maybe I didn't
+> run the test correct?
+
+Looks correct, indeed.
+
+Best regards,
+Krzysztof
