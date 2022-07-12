@@ -2,64 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0952571DE1
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 17:04:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1D90571EBC
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Jul 2022 17:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233758AbiGLPER (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 11:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55126 "EHLO
+        id S229769AbiGLPRg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 11:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233603AbiGLPDR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 11:03:17 -0400
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE46E093;
-        Tue, 12 Jul 2022 08:00:02 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id u20so8050896iob.8;
-        Tue, 12 Jul 2022 08:00:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yEnL/KIgKCXSzN8Ltrj7vvOsqZOeF/KHqy5gLlC4xaE=;
-        b=FgkQqrjDC1D2wMLqVg7JUHwRcUrtQ6kSNR1EJ8aN7fmNa1o5ogpTTULlJE4iZK5zhj
-         5kQWhI3HA0Qm5uR3gtsVkR9ym6J4D2DLXdRCbVgt/uiTFnGfR2I519j8rSdzrYhnpaQ6
-         tPMLDpNF6qu9/6/iSl86bwvFeZyPhMaqSspU7sl/Jqz+XhlzWWXNlF4dqjTEcIULbtTf
-         lkQfAxlLE+P5c0JJLVCv9SXVtEFnSC5XAiJ7VoOJ8GZPXb7YCrLNnVWlSAYkE+ZSO1A3
-         7sXe4pRb/YlO1kkkgkjK0TfkJCJ29tzfGjIdi3k3AHY3SZRRX5dJZ9PWLuIH/hKIbgop
-         Bnyw==
-X-Gm-Message-State: AJIora/Dh7Hg6Hd37XTZcV+nbpE8m+EWx0iFDZAtdvDvNiqcXuytVuk7
-        td9qztT8PmYcrQvUDARed4Eym9kxBA==
-X-Google-Smtp-Source: AGRyM1srwAoh9+nd31Kl3lWr+FwP4VX3QljvAhk93cCuGk7a5QOtzDblJssDYK7XMfHSAc4aFnUi2Q==
-X-Received: by 2002:a6b:103:0:b0:67b:731c:86a5 with SMTP id 3-20020a6b0103000000b0067b731c86a5mr11644464iob.76.1657637998864;
-        Tue, 12 Jul 2022 07:59:58 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id l19-20020a056e02067300b002dc0c1b8edbsm3820209ilt.83.2022.07.12.07.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 07:59:58 -0700 (PDT)
-Received: (nullmailer pid 1851041 invoked by uid 1000);
-        Tue, 12 Jul 2022 14:59:57 -0000
-Date:   Tue, 12 Jul 2022 08:59:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        with ESMTP id S230327AbiGLPRR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 11:17:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D53CCB470;
+        Tue, 12 Jul 2022 08:12:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BD52861646;
+        Tue, 12 Jul 2022 15:12:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24646C341CF;
+        Tue, 12 Jul 2022 15:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657638731;
+        bh=C/YAeZwDaigaxiGNOsANIwwPCDhFaElCOC+xb+Ncslk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HWb2gLVikJ2R3JWQl05H9QpB8Mi+R9RhrTLs8tlLOCG6eALoEp0LFYgosDp6xjgM+
+         iKkcQT5kUPROff/siuM/sYJqQDd1JgAE6329DzyjTJ0xnfP5jAvTrQcxrP5Go6S7zv
+         94Mlqb1HzV78jipvmYjXs/oJQJ1XAuT58RVSiqSv4bW5tGO7RU0LHYHgKtfFNjlnq6
+         7Fhs4dVeqSlSmEN+V/XSKzrHrVjqiiKhOQgDNmFhflniVkV5ZHj4gzdVvjhMO/6rt/
+         KkGr3QGfkzAL7LxVJ82exaHypl9vOihtC1eC4OztNb9wy2PttwFGSdx0mbcONDqK2R
+         qpb5OdVoSSevw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oBHYW-006yUs-Nt;
+        Tue, 12 Jul 2022 16:12:08 +0100
+Date:   Tue, 12 Jul 2022 16:12:08 +0100
+Message-ID: <87czea1i2f.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Robert Marko <robimarko@gmail.com>, bjorn.andersson@linaro.org,
+        agross@kernel.org, linus.walleij@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8450 lpass lpi
- pinctrl bindings
-Message-ID: <20220712145957.GB1823936-robh@kernel.org>
-References: <20220629091716.68771-1-srinivas.kandagatla@linaro.org>
- <20220629091716.68771-2-srinivas.kandagatla@linaro.org>
- <20220630210848.GA3295428-robh@kernel.org>
- <864aac78-d3a4-0008-345f-d210582b100e@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <864aac78-d3a4-0008-345f-d210582b100e@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
+In-Reply-To: <20220712124445.GC21746@workstation>
+References: <20220624195112.894916-1-robimarko@gmail.com>
+        <87edyq1ujr.wl-maz@kernel.org>
+        <20220712124445.GC21746@workstation>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: manivannan.sadhasivam@linaro.org, robimarko@gmail.com, bjorn.andersson@linaro.org, agross@kernel.org, linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,66 +69,81 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 01, 2022 at 11:06:18AM +0100, Srinivas Kandagatla wrote:
-> thanks Rob,
+On Tue, 12 Jul 2022 13:44:45 +0100,
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
 > 
-> On 30/06/2022 22:08, Rob Herring wrote:
-> > On Wed, Jun 29, 2022 at 10:17:15AM +0100, Srinivas Kandagatla wrote:
-> > > Add device tree binding Documentation details for Qualcomm SM8450
-> > > LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
+> On Tue, Jul 12, 2022 at 11:42:32AM +0100, Marc Zyngier wrote:
+> > On Fri, 24 Jun 2022 20:51:12 +0100,
+> > Robert Marko <robimarko@gmail.com> wrote:
 > > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+> > > immutable") added a warning to indicate if the gpiolib is altering the
+> > > internals of irqchips.
+> > > 
+> > > Following this change the following warning is now observed for the SPMI
+> > > PMIC pinctrl driver:
+> > > gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
+> > > 
+> > > Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
+> > > 
+> > > Signed-off-by: Robert Marko <robimarko@gmail.com>
 > > > ---
-> > >   .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 138 ++++++++++++++++++
-> > >   1 file changed, 138 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> > >  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 22 ++++++++++++----------
+> > >  1 file changed, 12 insertions(+), 10 deletions(-)
 > > > 
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
-> > > new file mode 100644
-> > > index 000000000000..b49d70b9ba9a
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
-> > > @@ -0,0 +1,138 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
-> > > +  Low Power Island (LPI) TLMM block
-> > > +
-> > > +maintainers:
-> > > +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > +
-> > > +description: |
-> > > +  This binding describes the Top Level Mode Multiplexer block found in the
-> > > +  LPASS LPI IP on most Qualcomm SoCs
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: qcom,sm8450-lpass-lpi-pinctrl
-> > > +
-> > > +  reg:
-> > > +    minItems: 2
-> > > +    maxItems: 2
+> > > diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> > > index c3255b0bece4..406ee0933d0b 100644
+> > > --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> > > +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> > > @@ -171,7 +171,6 @@ struct pmic_gpio_state {
+> > >  	struct regmap	*map;
+> > >  	struct pinctrl_dev *ctrl;
+> > >  	struct gpio_chip chip;
+> > > -	struct irq_chip irq;
+> > >  	u8 usid;
+> > >  	u8 pid_base;
+> > >  };
+> > > @@ -988,6 +987,17 @@ static void *pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
+> > >  	return fwspec;
+> > >  }
+> > >  
+> > > +static const struct irq_chip spmi_gpio_irq_chip = {
+> > > +	.name		= "spmi-gpio",
+> > > +	.irq_ack	= irq_chip_ack_parent,
+> > > +	.irq_mask	= irq_chip_mask_parent,
+> > > +	.irq_unmask	= irq_chip_unmask_parent,
 > > 
-> > What is each entry?
+> > No, this is wrong. Please look at the documentation to see how you
+> > must now directly call into the gpiolib helpers for these two
+> > callbacks.
+> > 
 > 
-> These are tlmm and slew register base address.
-> 
-> This has been like this in previous bindings for sm8250 and sc7280 lpi
-> binding.
+> IIUC, you are referring to gpiochip_disable_irq() and
+> gpiochip_enable_irq() APIs.
 
-There's always bad examples to follow.
- 
-> Are you suggesting that we should add a description for reg for more
-> clarity?
+I am indeed.
 
-Well, 2 descriptions:
+> These APIs are supposed to let the gpiolib know about that the IRQ
+> usage of these GPIOs. But for the case of hierarchial IRQ domain,
+> isn't the parent is going to do that?
 
-items:
-  - description: ...
-  - description: ...
+Why would it? The parent has no clue about what sits above it. In a
+hierarchical configuration, each level is responsible for its own
+level, and the GPIO layer should be responsible for its own
+management.
 
-Rob
+> Please correct me if I'm wrong.
+
+I'm afraid you are, and this patch is a fairly obvious change in
+behaviour, as the callbacks you mention above are not called anymore,
+while they were before.
+
+If they are not necessary (for reasons I can't fathom), then this
+should be clearly explained.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
