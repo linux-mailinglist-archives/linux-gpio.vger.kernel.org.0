@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6BF5733A3
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 11:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AECE5733B3
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 12:03:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230071AbiGMJ7u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 05:59:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
+        id S235165AbiGMKDq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 06:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229863AbiGMJ7t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 05:59:49 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0124265D51;
-        Wed, 13 Jul 2022 02:59:47 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id p129so18415551yba.7;
-        Wed, 13 Jul 2022 02:59:47 -0700 (PDT)
+        with ESMTP id S234441AbiGMKDq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 06:03:46 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C66DF35;
+        Wed, 13 Jul 2022 03:03:45 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-31cac89d8d6so107319517b3.2;
+        Wed, 13 Jul 2022 03:03:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3V7JNBzAmCFMy3KxZokjQA49UEMuoZy2lqB3+H595sU=;
-        b=VZ4UJtzK8yDW1jD4r6pXDGeurS3US2G79ZHGbw++f7O8EcsTWHlHnWZ3YdgXIrm+TB
-         h3ehiMpWVlBbisUH55ntPt3Fwulgmn8JeLuLarVKHc1NbCyUrp2NxXAKWCRDRtsS8486
-         ROx3NR/YyUeny7fkiPCmMgTsYvP7+YItl2cFmbJY5DHNrtdODQf0rWMcDcqQXGV7W+g3
-         2DrFgGZjAsqiE/E7Nu8jBcidl9+6Nqen0Pvui+LSoLfer4pV0sY7qBq/KbwSEOiU+P6B
-         9dke3usKPuSmxFp2suGzxV4T+lG3Zn1ATGKE3Hw41OLfKH/9cd2K8NJ4+n9zMIhHZ/oz
-         CZfA==
+        bh=gYjk25BuMhDSQ35zmvHQJKfbRO8JKe4egdencUOB3Ng=;
+        b=K6551hRA1arH81z4Mjzun6igd2wv8HT1VBg/AzFdZF6dU+7eqyZfc37PVyV6TUOdJs
+         bW0VXOsA8whh1SYYSbZYKmN9Ft2rCLPjLHYgS2lq9/bhxNkXebtCZJDEoUs0RpHWKSbU
+         4zh1agO7a+1CR3XXpnPbUGoABxxypgKbWf6WCtKWvJTzn1JGUPZq5QvYqsSecwG0ver5
+         ZSXN/8N+B1C1wE00/gAEI/WBR8XI/kQUTfGzArkGQr7KoBQfYOwmxOR4po9ZkOvjEg8z
+         rgoa2Q3eMo2VVe0dfdRAVWLY+z490J3vNKnHxgYQfgc3mayHldiaDWjGZy7YICJRX1RT
+         AHsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3V7JNBzAmCFMy3KxZokjQA49UEMuoZy2lqB3+H595sU=;
-        b=bKpc73mF46vOMBH91b2JpDcivVIDn375cyTpnjjuuAozm1+OwURkwrVufVrqCFHK93
-         2duxSEuPrMGbnKjfvg+IKnqt/JvKVxWu2MF4M0/RgAEs+wCRjLfG3CR13qKlkmtBx1DY
-         SeNtd/wyYy3A86MgNvRsoVATzkgYolYHMCn+NHWUzgiZFjF3lkIn/kck2m53o9o5dgdp
-         /dE73Qz7V7La4w/SIjCLBDHqf6TA1Q0eBhdbcJ0C03wwG5Gouv8m3/rgvOQelZeQM0Sk
-         dSgb6KmznQ1WdKbYJ8Eoktb5MbTta0eWrqGoOCqIkdfxRHicoXsQeaPQYdWVxOvQqyCr
-         mp2g==
-X-Gm-Message-State: AJIora9hiFl3mjn9WB+FcJ/TpqG61vE68f+jciWIOPKKA81kh9DF5a5s
-        wav/IY+20Wlhqg1Ydz9GdFQoTxepPkWMTK5mYSQ=
-X-Google-Smtp-Source: AGRyM1sikGdrKDgS1wWPc2PwWg67hih6R2IQ9l/6VFeL3SbKFA6k29BWl/ZIaykidyteAhSp2mqDvRth5yWYVnALiIc=
-X-Received: by 2002:a05:6902:686:b0:66e:627f:4d29 with SMTP id
- i6-20020a056902068600b0066e627f4d29mr2556805ybt.385.1657706387134; Wed, 13
- Jul 2022 02:59:47 -0700 (PDT)
+        bh=gYjk25BuMhDSQ35zmvHQJKfbRO8JKe4egdencUOB3Ng=;
+        b=Qk1LyoulTkS+ulBiOjZsl4AKnm4IjfnESM4Q5MmXmCQWlRqcLhRjqyOBF4hrOCpzrE
+         mY6/ZXi/rvYu0KBwVu1TTlItXnrZk6NxZoO0x9HrrbwSXp4pQ4QXvhA2pSemfA1sq/nB
+         ElAx45/ru8ZCjLtUq4Ure/NoILLOMJXlSYKrKmBBsXW78TBEYEhCMTKjmDj0/PNgoj5v
+         ADZtdFJkL5HrvNxhioLL94VvbmO4meCkN6VvKXSTJi41lWU91L0LpcUOtgUl1Ctl9BgL
+         b83yzAMHqJbSVVPwFRs9go5XbuONfPJVrDUI96T+vjyb0QCYWHOpZH3qe0xFpXNjKRmZ
+         kArA==
+X-Gm-Message-State: AJIora8hoafJre6MupRq8nO1GUADEciEtUayZNzn9fFOLD0YLE/QWOOu
+        AJ3LjJqoLk6JTyXM6AZXzdEoSIYOzKSDmeTDaC0=
+X-Google-Smtp-Source: AGRyM1uvusCX++8mkox1YoQ1Be026yN/Kojzv9GRLfYzL+xX1/J/63uUNvmNo4TO5+YJHAUfIYc1qIPYtGmzmlgqpX8=
+X-Received: by 2002:a81:3984:0:b0:31c:b59e:a899 with SMTP id
+ g126-20020a813984000000b0031cb59ea899mr3215851ywa.195.1657706624450; Wed, 13
+ Jul 2022 03:03:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220713013721.68879-1-warthog618@gmail.com> <20220713013721.68879-5-warthog618@gmail.com>
-In-Reply-To: <20220713013721.68879-5-warthog618@gmail.com>
+References: <20220713013721.68879-1-warthog618@gmail.com> <20220713013721.68879-7-warthog618@gmail.com>
+In-Reply-To: <20220713013721.68879-7-warthog618@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 Jul 2022 11:59:10 +0200
-Message-ID: <CAHp75VeRshC3Db8Q2J80fk7=UvLiRymrkoAbuWceOfncfzvr7A@mail.gmail.com>
-Subject: Re: [PATCH 4/6] gpiolib: cdev: simplify line event identification
+Date:   Wed, 13 Jul 2022 12:03:07 +0200
+Message-ID: <CAHp75Vd7je7U7qsoFDz+2jcNkwCzJHJOadsaSNwk6xD2_vgdpA@mail.gmail.com>
+Subject: Re: [PATCH 6/6] gpiolib: cdev: compile out HTE unless CONFIG_HTE selected
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -70,16 +70,39 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Wed, Jul 13, 2022 at 3:39 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Reorganise line event identification code to reduce code duplication,
-> and replace if-else initializers with the ternary equivalent to
-> improve readability.
+> The majority of builds do not include HTE, so compile out hte
+> functionality unless CONFIG_HTE is selected.
 
 ...
 
-> +               le.id = level ? GPIO_V2_LINE_EVENT_RISING_EDGE :
-> +                               GPIO_V2_LINE_EVENT_FALLING_EDGE;
+> +#ifdef CONFIG_HTE
+>         /*
+>          * -- hte specific fields --
+>          */
 
-It seems several times you are doing the same, perhaps a helper?
+Now this comment seems useless to me and it takes 3 LoCs.
+
+...
+
+> +       else if (IS_ENABLED(CONFIG_HTE) &&
+> +                (test_bit(FLAG_EVENT_CLOCK_HTE, &line->desc->flags)))
+
+Too many parentheses.
+
+...
+
+> +               if (!IS_ENABLED(CONFIG_HTE) ||
+> +                   !test_bit(FLAG_EVENT_CLOCK_HTE, &line->desc->flags)) {
+
+if (!(x && y)) ?
+
+...
+
+> +       if (!IS_ENABLED(CONFIG_HTE) &&
+> +           (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE))
+> +               return -EOPNOTSUPP;
+
+Ditto for consistency?
 
 -- 
 With Best Regards,
