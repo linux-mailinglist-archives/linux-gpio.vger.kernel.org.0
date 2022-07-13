@@ -2,147 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D85E1572EA4
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 09:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98691572ED0
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 09:10:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234440AbiGMHDP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 03:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57912 "EHLO
+        id S234512AbiGMHJ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 03:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231133AbiGMHDO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 03:03:14 -0400
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-ve1eur03on060b.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe09::60b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35401E0F78
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:03:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A57Ma6q4il5C8ZdVaHZRWnOV3buKBT+1SymTPwbcnXSN1YkozYPsvx4FokYyKxDDCVBw/bWDPmlnA0aZrCP9wxQvt7LJON9IcI5GhBzR5IU7oq4R94qgYebVbk/IRTsEDag2bGasQ5+DulAyDa5P3NPDKzozIWeUIc0N3L6qF0tlFfXmbXIhUSLba8i0fvS8UNNvEdtMFSTLqEhiPg8cIcUVoXXNthgdlgdGNLDyEntFYy0mzNMRz5YuwUeaCeeqn8L7g2YlKxikpPdQX/0ZIUBjvYoCoZ6IvBcZtqKYhc8sQhhWacSPSrWTDuCopqAv06+ODLVxB6E7tSzvpPwfSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D4BWf41OfXqB920LFtbdakleou8kvUVCGcrKXecoF6g=;
- b=LH0Ns1xRWNNz6KhyRGSeWVE7T75oSgd1oaMwQSnDJ2pia/onJBfe/66dU4IgV2Z6S/3uYiWiZRrUF8pEjzVrYvkzcUzvmXjPXnT3bxaQWNwdE+OcdDi1opadQ5Bx2gx86qwL+2nPJ0758hnfJbT/3oGQD43N1zjM9y7mFw7MdigTG+vnSbb5BEY5fU+JfQ9kyWYFBGCGW/a7MEkXoWKfit7tTqvoxaO1LHZBT6rfWPtYaEEUReOXPWK0hxu0dVUraEgZH3LWydTlo8tKvMs72ef9KAWG0ReXqvG52Wt2BwafizmzrlAjvOElUEX90DPuAQqiGSCxi9pFf1imkp9jaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D4BWf41OfXqB920LFtbdakleou8kvUVCGcrKXecoF6g=;
- b=UG1uE03kaAJZb5IsMv28nek/BycHzz7jourXEY0QDDh2mlDZob92F2NXWtKE5BZxvsYBm/6gd2R8xjgrtbHOuEf/ZaZBFKJi24DWSnAADVnDaeiaEBYXCpdjPymUDY/96Jp1hmYQOjPmDaKa8cMGm03kkh0s0fW9SLIQDJGQyhQ=
-Received: from DB9PR04MB8412.eurprd04.prod.outlook.com (2603:10a6:10:24d::9)
- by PAXPR04MB9138.eurprd04.prod.outlook.com (2603:10a6:102:22d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.26; Wed, 13 Jul
- 2022 07:03:09 +0000
-Received: from DB9PR04MB8412.eurprd04.prod.outlook.com
- ([fe80::1c1b:6695:20d7:fd10]) by DB9PR04MB8412.eurprd04.prod.outlook.com
- ([fe80::1c1b:6695:20d7:fd10%5]) with mapi id 15.20.5438.012; Wed, 13 Jul 2022
- 07:03:08 +0000
-From:   Jacky Bai <ping.bai@nxp.com>
-To:     Fabio Estevam <festevam@denx.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH] pinctrl: imx93: Add MODULE_DEVICE_TABLE()
-Thread-Topic: [PATCH] pinctrl: imx93: Add MODULE_DEVICE_TABLE()
-Thread-Index: AQHYleXPSUbcOKoNu0eQfqKVys6AfK174L0w
-Date:   Wed, 13 Jul 2022 07:03:08 +0000
-Message-ID: <DB9PR04MB8412A5EA6C8196F2026DC27F87899@DB9PR04MB8412.eurprd04.prod.outlook.com>
-References: <20220712115154.2348971-1-festevam@denx.de>
-In-Reply-To: <20220712115154.2348971-1-festevam@denx.de>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1562ab2a-0abe-407d-cdc6-08da649dbe2b
-x-ms-traffictypediagnostic: PAXPR04MB9138:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ME9mOzufYpzAbs9phJLLD8ul91beZCuTJcAl3NuvaklFGgmgDwcccb8UlUn0SoqeGJ75z+fhyD422A5uK8Av2kF05pKGax4Q6U2gq+6i37W2AoifhrK2TrPZjC0yqrXldUNhQxek5AvmNejKB+4Q4ZJMobFubmnKJ6/uolCRX9zWpAKLGVOQHO9wzaR+TzJBgPco1Kc6YNbVqpaZZ20Mt+AfLGN/PtSZEiCzhZuUgIWZlYS0Nus31qoUwBCY4QszfLoCJagv6qIwAZHzqSDCX8fRGS5Um2Oo3VUUVKfDWirJNL/ylWJXUbyGK4M0FNQw/HctTYbAxa1qcKKoiZph32I7bYVlUCuZqp0PW+YyRrbY+j5c7tDzkXjKuWOSVRMeUUdg3PgJrFLvSNlYVowKz5zb6Fbw25r2namenZDpF7AIP70CxFTXe59VIlQmHJFuS0ue5WIc/eHOL3v+IXp8+Z+AJgAFku4TBqeuWvtcNxJ2Ah+pFlez8HnuIBfAc3CJCVdVS2QIbQR3lFE8HKke6tyEd7WRMOdZ/Nm9yNN4XB8i+Gh0gS8PUYQUMkRbl4bwlHOWHc32S+KuujrNs4hra2DSyuuH0Fe9Twh2/gdCHem/ChgG20jxaJnDcWKCMkMo6xYAqIZzrIoY+iL/HQIRlM56frP/GnM5wNOHylNE9WSu9X9bQTWXhvylIsvNrrd5TPFmsQpgnH3M5vrlHQXbxRbeLSresPK/m4NoxkVv7wIjHWTzlmlOKm/fKDEQ217g2rVDr8sDQfEC/5UD71MExlWhwhfHxUbg98wdbvs928zQr9ghY6qm0kgm1+6PTDPH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8412.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(39860400002)(396003)(136003)(376002)(346002)(8676002)(5660300002)(4744005)(55016003)(2906002)(33656002)(122000001)(8936002)(66446008)(66556008)(52536014)(316002)(86362001)(71200400001)(110136005)(66476007)(6506007)(76116006)(64756008)(9686003)(41300700001)(186003)(7696005)(66946007)(4326008)(478600001)(26005)(38070700005)(38100700002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HXgFT9s03FdmhtsyplXcEOiwFKD3df8+aWlzovfjj6uiJ3JP2aTDxXxk0ckM?=
- =?us-ascii?Q?LHUTrPgZvAyGHfa3SM1YSk/ZwjjkRBEPuP8OAnFtQFtQ4j1doOh35ziPtiCe?=
- =?us-ascii?Q?CNyXAMatL/5R+OVCKCbYmSDfq7/Ui6wynAiLqtBFXjwVGAZ5aG7JqsAjV2O/?=
- =?us-ascii?Q?6pE22Kc6A1qlQwd7GfWxNQYltVo0upaSJ2SMrybdxKqViTuA79i+Qxn/hw1z?=
- =?us-ascii?Q?n58ed1tgfv2+RDQEV3INOLWtIT+NAggXwGOF5dhbxuc3WhUe1R6R/UALaX/L?=
- =?us-ascii?Q?Qoz8tEgpQEtrdGO+zShpatwLvs0bMV5z9ymvHM/kzgH1vWetNGaINwMoH4hE?=
- =?us-ascii?Q?rnrjW3gNxD734Zu5+OnetmGZH+hOLeB8i7jYEfr38EJncrDocxvIsyb/T/5+?=
- =?us-ascii?Q?OAISbNNPmtF2zazOdq8FHIjzMUdUrLD6mG4xyw3NL75fqFLSVJv1PePirvbX?=
- =?us-ascii?Q?O8dijNyEDEOJ+zaS58s5Wf6BuIru9meeMCvaT1ecsR0H+B+b24Fs6yuylIlm?=
- =?us-ascii?Q?b/I43qPjZInJLhTPtg7qKZyO5k88EmgZc8da4yK1TgoA8Crw1Bqbs70h4QGr?=
- =?us-ascii?Q?84i7VHQwwBkXdwzrQpafJDcc37Ha5wm+e/lZ69c49J5RL2+eH0AzbgB404ws?=
- =?us-ascii?Q?kYBMlnrPq067X4BAub5cTSvCL0WVFiclqTcKOzvebER0/vXeG7x3a9IgNIkD?=
- =?us-ascii?Q?zHk4+2JjULay6wBbK63XaoEhqVEvA9MEjsKLwNxCTg0xSN+SvEmS8uyITwpt?=
- =?us-ascii?Q?NRvz/bAt5EA79GdtLpQnX2nIXYI7ZeR9z+03PlFNgZ8hMGY4/qAETOaS2FWz?=
- =?us-ascii?Q?WLfxs9AOTRCHLpDssOYCRUlk77ddPFcEK7usWE9F3f/auFiyG38IsaiAyqNG?=
- =?us-ascii?Q?cvwm+OmaD0iswVCjArSV+1TFhq/2oU6I3ixQjtRV/LBrmZBnCdOn3M2+pbdy?=
- =?us-ascii?Q?OZAQzJuk37bEDkIQvAs5G0mV2fqMHf0a98Pp/Us8SwqFQpHTqZnvJbv3qENo?=
- =?us-ascii?Q?Mw9STO5mYcpX52wZ5A1id9bKobjb2mgtkLtVXfFgyywhkcNWVLZVxDsI1h2S?=
- =?us-ascii?Q?fa9cCWfFBvLI5wAh9KJlpMSWrMZ6wdaCid5ensV00T7KOyaqR7AK+u4R3Bwl?=
- =?us-ascii?Q?aIj1I9VNDLJS81isTSCNALc603FK8hkps7QTeP3qOtsPh9CdXns8MrYbcCSb?=
- =?us-ascii?Q?JULYz2V5eOqDqePLnYBqA2th/CowjHrBr2FBU/vCVHZNr0u6Y4pWjQUdyQ69?=
- =?us-ascii?Q?J8B+13aqp9OeeMLVGIEtzak4OpAON+QTGiSZ5xgNUCt75UbxHT0O/4B5JZnz?=
- =?us-ascii?Q?Cw4EnIDhLCupPW6RQwnbtO3nYvXKLz4Pza7dToi0t3Xd51df+8Y0SVWY7MF3?=
- =?us-ascii?Q?ffIKrcwI33hjQWwG0K/S8/p1UfwtOncVUUzXsVJn5wO25oi0QQMQoyT0kcl1?=
- =?us-ascii?Q?PfVeCm8rnd6BYQbuHqA9b8Z6NElgj1tnl8KcroJGFBBi7TnCT2gdgD451/yP?=
- =?us-ascii?Q?Ws6/I8ymaUdV4b1GOpAEt8Zw3Qw4fS5ptUi5P1mGVJNpJMZcJofpEBvnV2Tw?=
- =?us-ascii?Q?fJlz5O1dYtT7KhawBIU=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S234689AbiGMHJp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 03:09:45 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B52E4749
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:09:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657696149; x=1689232149;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xHTvuY+P4V/wGypo+Pd1X+BbhaQJs+b9nN5KmfYp9Bg=;
+  b=dbJZ2ejSw5EatUaNqkzwcvxuAoypJ6EQYT+O6Ac+vUImU4svbauNJFH1
+   09FEwma/2RHvkQwBHW4EWa+i72XC95J6RW2sWCbbcYTfq1bvT24HuqNvn
+   /1O96p86tNfvtX+QjEKCkR9r/P9tELwtQEJQW5Xg9V+FsJpRn+ZlCs2Gh
+   y0znWr2A/J2YgbUsvq7GEd6IjuXPXfE7sntDUZgFuHclu2s3y6NvWeD/l
+   hDPgdQcIVTHaEzsLhFXgrKNkgDiiC7YZmUra7vRuYMp9ijWrawe8n4a+Z
+   qRxgyF8p1r2nWykFV8I4ZGTCzmytM/1F4tkfieqiQM77knLrGhZudMTnr
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="285876453"
+X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
+   d="scan'208";a="285876453"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 00:08:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
+   d="scan'208";a="622825551"
+Received: from lkp-server02.sh.intel.com (HELO 8708c84be1ad) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 13 Jul 2022 00:08:52 -0700
+Received: from kbuild by 8708c84be1ad with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1oBWUN-0003FT-2v;
+        Wed, 13 Jul 2022 07:08:51 +0000
+Date:   Wed, 13 Jul 2022 15:08:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 2ec1aa95dafb97290d1623ba0646e31b5dbe9e6a
+Message-ID: <62ce6f81.3Jg5EKwoxsNaX+jU%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8412.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1562ab2a-0abe-407d-cdc6-08da649dbe2b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2022 07:03:08.9062
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fZK7g7NynognTpudSIjjr/xNfHcAfNUeyksraVROEChLNFJetkMSvR546hxf7Ji43fu638VGie4G9FnF9vbQsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9138
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
-        T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> Subject: [PATCH] pinctrl: imx93: Add MODULE_DEVICE_TABLE()
->=20
-> Pass MODULE_DEVICE_TABLE() so that module autoloading can work.
->=20
-> This also aligns with the other i.MX8 pinctrl drivers.
->=20
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 2ec1aa95dafb97290d1623ba0646e31b5dbe9e6a  Merge branch 'devel' into for-next
 
-Reviewed-by: Jacky Bai <ping.bai@nxp.com>
+elapsed time: 1355m
 
-BR
+configs tested: 13
+configs skipped: 2
 
-> Signed-off-by: Fabio Estevam <festevam@denx.de>
-> ---
->  drivers/pinctrl/freescale/pinctrl-imx93.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx93.c
-> b/drivers/pinctrl/freescale/pinctrl-imx93.c
-> index 417e41b37a6f..91b3ee1e6fa9 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx93.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx93.c
-> @@ -247,6 +247,7 @@ static const struct of_device_id
-> imx93_pinctrl_of_match[] =3D {
->  	{ .compatible =3D "fsl,imx93-iomuxc", },
->  	{ /* sentinel */ }
->  };
-> +MODULE_DEVICE_TABLE(of, imx93_pinctrl_of_match);
->=20
->  static int imx93_pinctrl_probe(struct platform_device *pdev)  {
-> --
-> 2.25.1
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
