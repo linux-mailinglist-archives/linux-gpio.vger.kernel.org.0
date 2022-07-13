@@ -2,136 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 898DE572B95
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 04:56:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D85E1572EA4
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 09:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232590AbiGMC4n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 22:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59362 "EHLO
+        id S234440AbiGMHDP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 03:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbiGMC4h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 22:56:37 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56EDD65E8;
-        Tue, 12 Jul 2022 19:56:37 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id B882F5C00E1;
-        Tue, 12 Jul 2022 22:56:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 12 Jul 2022 22:56:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm1; t=1657680996; x=
-        1657767396; bh=K/cj+gRS3RhE670rnCrMr2lhCalMsbp97ysqO+RlgnI=; b=E
-        7Sn8IFON6Zrl4Ob6F1aytfkRmGHTKz957uZaOClRwJ57glVCfyKG55qYn0JUOwLD
-        Gqf5AF8QUVJNF4HKVmwFIxzASlL0WHFn8LM8P7oqTYRDYO6zVeEQOCO1P16N2+KX
-        7dWLhzzDKJZ/JsCvZBA1SxLiajj0QvYQOCLsC4vcZ2ls6cNokHEq67VSTG06xWNm
-        xGpCWHtWTIxsj+cNiYE77XH5siNZwXd2N24aPldGtPGeVPm75W3twZMe3Bet1Zru
-        Yzx0n9owsovqB4E33A7ldDpYEOOosle3ZP6+djLeA7nIfFS05y574hL94K4bo5VL
-        NwtxwXEvaiwbiHg2oV+gQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1657680996; x=
-        1657767396; bh=K/cj+gRS3RhE670rnCrMr2lhCalMsbp97ysqO+RlgnI=; b=S
-        fjMWjpxcw/u7t+a5sUBFj93BsL+Noa5Y04fImJT49vl8+h6zpuPd2Nakp0Qhsuv1
-        dFxcuZMUXGptJBr7r6siDElNuzg6ZxGqMPsKQFfAcTDP6A3nNb24CwKLJzg1My9B
-        lX+3pD0mbo8z0KGOYm1Sx01L9qvAzK0er2g68ols89dEknIfqp2+t9z9vtQqGcfP
-        0wFmyoH+lCpHqtqxgnnjt2FopGW6q1uHaN+zbWNUfa+KyBz/SU9IuZ/gUdhVtkCG
-        qGhvGX07afP7Gj/ugrgrQHpYtJisQh8RbQWelJm6DF/A6KUetrPIia7rJbxqEEGD
-        +NImoIohgdDF2qlJncIHw==
-X-ME-Sender: <xms:ZDTOYkKG1xM3VRQTo_3c5qBJVUGiVFWOWqGUNCms86Pj_kQePlq9cg>
-    <xme:ZDTOYkKSMV451J2o9ivexatzTvHZsu7Kcki7s_9Fh7NLL0ZrCmT0WdbFoCkshMHui
-    Ae-bSp0AJPzG4kkuA>
-X-ME-Received: <xmr:ZDTOYkvquqz0Qz4reIALRH8asmOzLF1RmKvR4tY_-Ad0eTHqmGcRAcVzahccwIj38wSDGRg99x1g2SPAR2s5q_a0pIn9dRIIcjxW3ShnYMpuwD_lgPJ-ziGwJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudejiedgieejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffhvfevfhfkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
-    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpeejgfdtffeiheduuefggeehkefhlefghedvheekheduueffudel
-    vedvtdelveevieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhl
-    rghnugdrohhrgh
-X-ME-Proxy: <xmx:ZDTOYhaQHMaH_41kEYG7Ic8GfrPpLH5ybJXrv5bsRYkFZLBP-2jx-g>
-    <xmx:ZDTOYrbhKChr2TYwYXjG5sy5sJSojTouB17B9YYRIoAUgxsF0zPsyg>
-    <xmx:ZDTOYtA64DxTtoPaV_nvrkAB4pN4lWDp3pVfLMbBGjJPlPM1ZO2OAA>
-    <xmx:ZDTOYpChOhounWK14SmvvDFlWrSTVwivI4VvRLxqNGcPXbDSZnAB8Q>
-Feedback-ID: i0ad843c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 12 Jul 2022 22:56:35 -0400 (EDT)
-Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: Add compatibles for Allwinner
- D1/D1s
-From:   Samuel Holland <samuel@sholland.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>, Ondrej Jirman <x@xff.cz>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
-        Andre Przywara <andre.przywara@arm.com>
-References: <20220626021148.56740-1-samuel@sholland.org>
- <20220626021148.56740-2-samuel@sholland.org>
- <CACRpkdY65q12sjDwH0UOOAa8GkBO--EDTsKrnEwn8NoTYTgtPQ@mail.gmail.com>
- <879fb3b2-4bcb-82d6-e186-e845d62c9843@sholland.org>
-Message-ID: <3418c509-c54a-484a-cb2e-c4705bc829a6@sholland.org>
-Date:   Tue, 12 Jul 2022 21:56:35 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <879fb3b2-4bcb-82d6-e186-e845d62c9843@sholland.org>
-Content-Type: text/plain; charset=utf-8
+        with ESMTP id S231133AbiGMHDO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 03:03:14 -0400
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-ve1eur03on060b.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe09::60b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35401E0F78
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:03:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A57Ma6q4il5C8ZdVaHZRWnOV3buKBT+1SymTPwbcnXSN1YkozYPsvx4FokYyKxDDCVBw/bWDPmlnA0aZrCP9wxQvt7LJON9IcI5GhBzR5IU7oq4R94qgYebVbk/IRTsEDag2bGasQ5+DulAyDa5P3NPDKzozIWeUIc0N3L6qF0tlFfXmbXIhUSLba8i0fvS8UNNvEdtMFSTLqEhiPg8cIcUVoXXNthgdlgdGNLDyEntFYy0mzNMRz5YuwUeaCeeqn8L7g2YlKxikpPdQX/0ZIUBjvYoCoZ6IvBcZtqKYhc8sQhhWacSPSrWTDuCopqAv06+ODLVxB6E7tSzvpPwfSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D4BWf41OfXqB920LFtbdakleou8kvUVCGcrKXecoF6g=;
+ b=LH0Ns1xRWNNz6KhyRGSeWVE7T75oSgd1oaMwQSnDJ2pia/onJBfe/66dU4IgV2Z6S/3uYiWiZRrUF8pEjzVrYvkzcUzvmXjPXnT3bxaQWNwdE+OcdDi1opadQ5Bx2gx86qwL+2nPJ0758hnfJbT/3oGQD43N1zjM9y7mFw7MdigTG+vnSbb5BEY5fU+JfQ9kyWYFBGCGW/a7MEkXoWKfit7tTqvoxaO1LHZBT6rfWPtYaEEUReOXPWK0hxu0dVUraEgZH3LWydTlo8tKvMs72ef9KAWG0ReXqvG52Wt2BwafizmzrlAjvOElUEX90DPuAQqiGSCxi9pFf1imkp9jaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D4BWf41OfXqB920LFtbdakleou8kvUVCGcrKXecoF6g=;
+ b=UG1uE03kaAJZb5IsMv28nek/BycHzz7jourXEY0QDDh2mlDZob92F2NXWtKE5BZxvsYBm/6gd2R8xjgrtbHOuEf/ZaZBFKJi24DWSnAADVnDaeiaEBYXCpdjPymUDY/96Jp1hmYQOjPmDaKa8cMGm03kkh0s0fW9SLIQDJGQyhQ=
+Received: from DB9PR04MB8412.eurprd04.prod.outlook.com (2603:10a6:10:24d::9)
+ by PAXPR04MB9138.eurprd04.prod.outlook.com (2603:10a6:102:22d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.26; Wed, 13 Jul
+ 2022 07:03:09 +0000
+Received: from DB9PR04MB8412.eurprd04.prod.outlook.com
+ ([fe80::1c1b:6695:20d7:fd10]) by DB9PR04MB8412.eurprd04.prod.outlook.com
+ ([fe80::1c1b:6695:20d7:fd10%5]) with mapi id 15.20.5438.012; Wed, 13 Jul 2022
+ 07:03:08 +0000
+From:   Jacky Bai <ping.bai@nxp.com>
+To:     Fabio Estevam <festevam@denx.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] pinctrl: imx93: Add MODULE_DEVICE_TABLE()
+Thread-Topic: [PATCH] pinctrl: imx93: Add MODULE_DEVICE_TABLE()
+Thread-Index: AQHYleXPSUbcOKoNu0eQfqKVys6AfK174L0w
+Date:   Wed, 13 Jul 2022 07:03:08 +0000
+Message-ID: <DB9PR04MB8412A5EA6C8196F2026DC27F87899@DB9PR04MB8412.eurprd04.prod.outlook.com>
+References: <20220712115154.2348971-1-festevam@denx.de>
+In-Reply-To: <20220712115154.2348971-1-festevam@denx.de>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1562ab2a-0abe-407d-cdc6-08da649dbe2b
+x-ms-traffictypediagnostic: PAXPR04MB9138:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ME9mOzufYpzAbs9phJLLD8ul91beZCuTJcAl3NuvaklFGgmgDwcccb8UlUn0SoqeGJ75z+fhyD422A5uK8Av2kF05pKGax4Q6U2gq+6i37W2AoifhrK2TrPZjC0yqrXldUNhQxek5AvmNejKB+4Q4ZJMobFubmnKJ6/uolCRX9zWpAKLGVOQHO9wzaR+TzJBgPco1Kc6YNbVqpaZZ20Mt+AfLGN/PtSZEiCzhZuUgIWZlYS0Nus31qoUwBCY4QszfLoCJagv6qIwAZHzqSDCX8fRGS5Um2Oo3VUUVKfDWirJNL/ylWJXUbyGK4M0FNQw/HctTYbAxa1qcKKoiZph32I7bYVlUCuZqp0PW+YyRrbY+j5c7tDzkXjKuWOSVRMeUUdg3PgJrFLvSNlYVowKz5zb6Fbw25r2namenZDpF7AIP70CxFTXe59VIlQmHJFuS0ue5WIc/eHOL3v+IXp8+Z+AJgAFku4TBqeuWvtcNxJ2Ah+pFlez8HnuIBfAc3CJCVdVS2QIbQR3lFE8HKke6tyEd7WRMOdZ/Nm9yNN4XB8i+Gh0gS8PUYQUMkRbl4bwlHOWHc32S+KuujrNs4hra2DSyuuH0Fe9Twh2/gdCHem/ChgG20jxaJnDcWKCMkMo6xYAqIZzrIoY+iL/HQIRlM56frP/GnM5wNOHylNE9WSu9X9bQTWXhvylIsvNrrd5TPFmsQpgnH3M5vrlHQXbxRbeLSresPK/m4NoxkVv7wIjHWTzlmlOKm/fKDEQ217g2rVDr8sDQfEC/5UD71MExlWhwhfHxUbg98wdbvs928zQr9ghY6qm0kgm1+6PTDPH
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8412.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(39860400002)(396003)(136003)(376002)(346002)(8676002)(5660300002)(4744005)(55016003)(2906002)(33656002)(122000001)(8936002)(66446008)(66556008)(52536014)(316002)(86362001)(71200400001)(110136005)(66476007)(6506007)(76116006)(64756008)(9686003)(41300700001)(186003)(7696005)(66946007)(4326008)(478600001)(26005)(38070700005)(38100700002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HXgFT9s03FdmhtsyplXcEOiwFKD3df8+aWlzovfjj6uiJ3JP2aTDxXxk0ckM?=
+ =?us-ascii?Q?LHUTrPgZvAyGHfa3SM1YSk/ZwjjkRBEPuP8OAnFtQFtQ4j1doOh35ziPtiCe?=
+ =?us-ascii?Q?CNyXAMatL/5R+OVCKCbYmSDfq7/Ui6wynAiLqtBFXjwVGAZ5aG7JqsAjV2O/?=
+ =?us-ascii?Q?6pE22Kc6A1qlQwd7GfWxNQYltVo0upaSJ2SMrybdxKqViTuA79i+Qxn/hw1z?=
+ =?us-ascii?Q?n58ed1tgfv2+RDQEV3INOLWtIT+NAggXwGOF5dhbxuc3WhUe1R6R/UALaX/L?=
+ =?us-ascii?Q?Qoz8tEgpQEtrdGO+zShpatwLvs0bMV5z9ymvHM/kzgH1vWetNGaINwMoH4hE?=
+ =?us-ascii?Q?rnrjW3gNxD734Zu5+OnetmGZH+hOLeB8i7jYEfr38EJncrDocxvIsyb/T/5+?=
+ =?us-ascii?Q?OAISbNNPmtF2zazOdq8FHIjzMUdUrLD6mG4xyw3NL75fqFLSVJv1PePirvbX?=
+ =?us-ascii?Q?O8dijNyEDEOJ+zaS58s5Wf6BuIru9meeMCvaT1ecsR0H+B+b24Fs6yuylIlm?=
+ =?us-ascii?Q?b/I43qPjZInJLhTPtg7qKZyO5k88EmgZc8da4yK1TgoA8Crw1Bqbs70h4QGr?=
+ =?us-ascii?Q?84i7VHQwwBkXdwzrQpafJDcc37Ha5wm+e/lZ69c49J5RL2+eH0AzbgB404ws?=
+ =?us-ascii?Q?kYBMlnrPq067X4BAub5cTSvCL0WVFiclqTcKOzvebER0/vXeG7x3a9IgNIkD?=
+ =?us-ascii?Q?zHk4+2JjULay6wBbK63XaoEhqVEvA9MEjsKLwNxCTg0xSN+SvEmS8uyITwpt?=
+ =?us-ascii?Q?NRvz/bAt5EA79GdtLpQnX2nIXYI7ZeR9z+03PlFNgZ8hMGY4/qAETOaS2FWz?=
+ =?us-ascii?Q?WLfxs9AOTRCHLpDssOYCRUlk77ddPFcEK7usWE9F3f/auFiyG38IsaiAyqNG?=
+ =?us-ascii?Q?cvwm+OmaD0iswVCjArSV+1TFhq/2oU6I3ixQjtRV/LBrmZBnCdOn3M2+pbdy?=
+ =?us-ascii?Q?OZAQzJuk37bEDkIQvAs5G0mV2fqMHf0a98Pp/Us8SwqFQpHTqZnvJbv3qENo?=
+ =?us-ascii?Q?Mw9STO5mYcpX52wZ5A1id9bKobjb2mgtkLtVXfFgyywhkcNWVLZVxDsI1h2S?=
+ =?us-ascii?Q?fa9cCWfFBvLI5wAh9KJlpMSWrMZ6wdaCid5ensV00T7KOyaqR7AK+u4R3Bwl?=
+ =?us-ascii?Q?aIj1I9VNDLJS81isTSCNALc603FK8hkps7QTeP3qOtsPh9CdXns8MrYbcCSb?=
+ =?us-ascii?Q?JULYz2V5eOqDqePLnYBqA2th/CowjHrBr2FBU/vCVHZNr0u6Y4pWjQUdyQ69?=
+ =?us-ascii?Q?J8B+13aqp9OeeMLVGIEtzak4OpAON+QTGiSZ5xgNUCt75UbxHT0O/4B5JZnz?=
+ =?us-ascii?Q?Cw4EnIDhLCupPW6RQwnbtO3nYvXKLz4Pza7dToi0t3Xd51df+8Y0SVWY7MF3?=
+ =?us-ascii?Q?ffIKrcwI33hjQWwG0K/S8/p1UfwtOncVUUzXsVJn5wO25oi0QQMQoyT0kcl1?=
+ =?us-ascii?Q?PfVeCm8rnd6BYQbuHqA9b8Z6NElgj1tnl8KcroJGFBBi7TnCT2gdgD451/yP?=
+ =?us-ascii?Q?Ws6/I8ymaUdV4b1GOpAEt8Zw3Qw4fS5ptUi5P1mGVJNpJMZcJofpEBvnV2Tw?=
+ =?us-ascii?Q?fJlz5O1dYtT7KhawBIU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8412.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1562ab2a-0abe-407d-cdc6-08da649dbe2b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2022 07:03:08.9062
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fZK7g7NynognTpudSIjjr/xNfHcAfNUeyksraVROEChLNFJetkMSvR546hxf7Ji43fu638VGie4G9FnF9vbQsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9138
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/12/22 5:14 AM, Samuel Holland wrote:
-> Hi Linus,
-> 
-> On 7/11/22 3:58 AM, Linus Walleij wrote:
->> On Sun, Jun 26, 2022 at 4:11 AM Samuel Holland <samuel@sholland.org> wrote:
->>
->>> D1 contains a pin controller similar to previous SoCs, but with some
->>> register layout changes. It includes 6 interrupt-capable pin banks.
->>>
->>> D1s is a low pin count version of the D1 SoC, with some pins omitted.
->>> The remaining pins have the same function assignments as D1.
->>>
->>> Signed-off-by: Samuel Holland <samuel@sholland.org>
->>
->> All 6 patches applied to the pinctrl tree, the last patch 6/6
->> required some fuzzing so please check the result!
+> Subject: [PATCH] pinctrl: imx93: Add MODULE_DEVICE_TABLE()
+>=20
+> Pass MODULE_DEVICE_TABLE() so that module autoloading can work.
+>=20
+> This also aligns with the other i.MX8 pinctrl drivers.
+>=20
 
-I do not see anything in patch 6 that would have required a 3-way merge, so I
-don't understand what the issue was here.
+Reviewed-by: Jacky Bai <ping.bai@nxp.com>
 
-> Somehow the version of patch 6 applied to the pinctrl tree did not include the
-> new driver source file. It only applied changes to existing files (including the
-> Makefile reference to the new file).
-> 
-> I also needed to make some minor changes to patch 6 to resolve comments from Andre.
-> 
-> Is it okay if I send a v2 of just patch 6? Or do I need to send a follow-up
-> based on what was already applied?
+BR
 
-I sent a v2 of the whole series:
+> Signed-off-by: Fabio Estevam <festevam@denx.de>
+> ---
+>  drivers/pinctrl/freescale/pinctrl-imx93.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pinctrl/freescale/pinctrl-imx93.c
+> b/drivers/pinctrl/freescale/pinctrl-imx93.c
+> index 417e41b37a6f..91b3ee1e6fa9 100644
+> --- a/drivers/pinctrl/freescale/pinctrl-imx93.c
+> +++ b/drivers/pinctrl/freescale/pinctrl-imx93.c
+> @@ -247,6 +247,7 @@ static const struct of_device_id
+> imx93_pinctrl_of_match[] =3D {
+>  	{ .compatible =3D "fsl,imx93-iomuxc", },
+>  	{ /* sentinel */ }
+>  };
+> +MODULE_DEVICE_TABLE(of, imx93_pinctrl_of_match);
+>=20
+>  static int imx93_pinctrl_probe(struct platform_device *pdev)  {
+> --
+> 2.25.1
 
-https://lore.kernel.org/linux-gpio/20220713025233.27248-1-samuel@sholland.org/
-
-Please let me know if you want something different.
-
-Regards,
-Samuel
