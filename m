@@ -2,183 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17B00573787
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 15:36:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BF805737BA
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 15:42:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbiGMNf6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 09:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36168 "EHLO
+        id S234827AbiGMNmB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 09:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbiGMNf6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 09:35:58 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B882DBE;
-        Wed, 13 Jul 2022 06:35:57 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id t25so19107017lfg.7;
-        Wed, 13 Jul 2022 06:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OYKoXtQBi+UHHvlNJzsiB51zZLZoDshebAIvkG4Ze80=;
-        b=h9bIngDNE7y+/fKX/oHw7+azOdfnTz2i7MgBHs5a3O0NBQRb9Jhkr8NN2D43RoxyaQ
-         JfUUqNxRf2r2xyx2nr4o8UNpakeH0ch8O8dWrBQI6SYIqEOWBlqDbVQ3TBs4GPXW6srI
-         p5ZXpOypyN4OimKhc5jlB186gygVDd4N0/Qii6mfN6TSSuKSh/11YEtz9bf/yameG/xy
-         iC6f3xvZ8U3eAj68RJBuEiLDxNrnb0yGrSf/Qbvq9YIypvHGX/XJ+oApN9+olMdZ0pQA
-         sSJA4NHPhXzcg87Q+SzqCMW0+e0mS4OdDvc7z5y6nJuyk6I2OyYTaAh7tLbCfJJadw7b
-         srWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OYKoXtQBi+UHHvlNJzsiB51zZLZoDshebAIvkG4Ze80=;
-        b=sHpyXunXcCHoe1R6i9d135KDjTkN6nj9DVM1RPIQCc4RiMjHHXauHsxjqQ4n4hrYMT
-         n9jhprhvrp2NyooBaTFeFVOEEH9nWgO1ztWPhmnJCmPIrWjLaCnvX3vyo8i42v5hxRi1
-         Ctr/ef92iWADGCNvod0n1iqg4yrvtvdQRAk5GMrn5vnN8hZcn6/46/ft4OYiDIR00bke
-         IN2Y1Y1HlYt4JMRzt1fzFxZXkK18Filwkmw2QITIN7G/gi7uPy7H5Wj8jxzcgxr3FZYJ
-         kQ7Jj8YX3ghWsJUVFCzr84Eq0boH7+1bH2oKaYKEwOVaiVFpQRdskg1hsx+wS+aASI2z
-         efNw==
-X-Gm-Message-State: AJIora8Q3m4WVGorp60fYjgM2c4i+0ZoHKqdA4tesvHgDKTHBEcX1AW+
-        BEpbDS4t6+QGeb70MXFcDkGbqf05Ov4IyOQ3wDo=
-X-Google-Smtp-Source: AGRyM1vZwX/9j0zxDeNWK/kUwAPgULFU7qG8J/00nPnrZg/qF45PRYUI3V3dq8xEhcBmSYrsRfjR+Ysv5M0gTCzqdeo=
-X-Received: by 2002:a05:6512:2382:b0:48a:24d:51cc with SMTP id
- c2-20020a056512238200b0048a024d51ccmr1936006lfv.108.1657719355396; Wed, 13
- Jul 2022 06:35:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220710102110.39748-1-tmaimon77@gmail.com> <20220710102110.39748-3-tmaimon77@gmail.com>
- <95d12b72-be9d-5503-c4ea-801303bb7776@linaro.org>
-In-Reply-To: <95d12b72-be9d-5503-c4ea-801303bb7776@linaro.org>
-From:   Tomer Maimon <tmaimon77@gmail.com>
-Date:   Wed, 13 Jul 2022 16:35:43 +0300
-Message-ID: <CAP6Zq1geFJsKrdQEN5Vqjw6e8bsiArDe1tzJ-jkQm-2XT-0KyQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
+        with ESMTP id S234967AbiGMNl4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 09:41:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880D72D8;
+        Wed, 13 Jul 2022 06:41:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 311B6B81FB2;
+        Wed, 13 Jul 2022 13:41:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F34C34114;
+        Wed, 13 Jul 2022 13:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657719712;
+        bh=xmUoqOOBgA2t6pg95C1MASNzNP0bdoPooUwh0AdNjtM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FBYiw7f0ICc4X3WhnCNFdiSV6AtSY38TRtCfJ08Bfc3B2pss5pvf74NdHqCXSrfmg
+         oJEQnG4ab7Uk4T/xfoIZs0ZfcgqyET9P+brU7F+8P1JcyHQiBI1RdvhVjDAlet2P4s
+         98zvRaBIiidlaqHZucUKkWCacIKfpYkb/6jxwHCiqKPjfELyJeVC8EIZfNhHGnPO4o
+         1nwu3/4cUZORX/oFHEvoJivSQJdAThnKsgAzZonb1FVgTZJTICir2PeumPunZ697Vq
+         3maA+gGB0ZCDVwBU+owISQthtLjFsMmOEEJ29fqv0731s9puhuaQLYUa6UIjMJqbJT
+         iziSvYHDya5Zw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oBccg-007E8Y-Ex;
+        Wed, 13 Jul 2022 14:41:50 +0100
+Date:   Wed, 13 Jul 2022 14:41:50 +0100
+Message-ID: <8735f5165d.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Robert Marko <robimarko@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
+In-Reply-To: <CAOX2RU5k0UJiJ7o3ULjLVLUO=cchT_Azdvzs5FKdjXLX1_muOQ@mail.gmail.com>
+References: <20220624195112.894916-1-robimarko@gmail.com>
+        <87edyq1ujr.wl-maz@kernel.org>
+        <20220712124445.GC21746@workstation>
+        <87czea1i2f.wl-maz@kernel.org>
+        <CAOX2RU5RX+H=omuKGye2fBy9dOFmfC9HC_3pekeGMxDJuReCUw@mail.gmail.com>
+        <d8912a0d811b5eb924b8c4136b099f72@kernel.org>
+        <CAOX2RU4MpyEQ0RtcrZ07VXRbB+SWWU=1zWfYUXhQFtvh=MCiDw@mail.gmail.com>
+        <874jzl17lc.wl-maz@kernel.org>
+        <CAOX2RU5k0UJiJ7o3ULjLVLUO=cchT_Azdvzs5FKdjXLX1_muOQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: robimarko@gmail.com, manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org, agross@kernel.org, linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof,
-
-Thanks for your comments.
-
-On Tue, 12 Jul 2022 at 12:50, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 10/07/2022 12:21, Tomer Maimon wrote:
-> > Add pinctrl and GPIO controller driver support to Arbel BMC NPCM8XX SoC.
+On Wed, 13 Jul 2022 14:34:46 +0100,
+Robert Marko <robimarko@gmail.com> wrote:
+> 
+> On Wed, 13 Jul 2022 at 15:10, Marc Zyngier <maz@kernel.org> wrote:
 > >
-> > Arbel BMC NPCM8XX pinctrl driver based on Poleg NPCM7XX, except the
-> > pin mux mapping difference the NPCM8XX GPIO supports adjust debounce
-> > period time.
+> > On Wed, 13 Jul 2022 13:33:32 +0100,
+> > Robert Marko <robimarko@gmail.com> wrote:
+> > >
+> > > On Wed, 13 Jul 2022 at 13:47, Marc Zyngier <maz@kernel.org> wrote:
+> > > >
+> > > > On 2022-07-13 12:08, Robert Marko wrote:
+> > > > > I will look at IRQ GPIO docs, but in this case, then we have more
+> > > > > conversions that
+> > > > > are not correct.
+> > > >
+> > > > Then please point them out.
+> > >
+> > > Oh, now I get the issue, I was misunderstanding it completely.
+> > > gpiochip_enable_irq and gpiochip_disable_irq are not being called
+> > > at all.
+> > >
+> > > However, I dont see them being called before the conversion as well.
+> > > I am not really familiar with the PMIC IRQ-s, looked like an easy conversion
+> > > to get rid of the warning.
 > >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->
-> (...)
->
-> > +
-> > +static int npcm8xx_pinctrl_probe(struct platform_device *pdev)
-> > +{
-> > +     struct npcm8xx_pinctrl *pctrl;
-> > +     int ret;
-> > +
-> > +     pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
-> > +     if (!pctrl)
-> > +             return -ENOMEM;
-> > +
-> > +     pctrl->dev = &pdev->dev;
-> > +     dev_set_drvdata(&pdev->dev, pctrl);
-> > +
-> > +     pctrl->gcr_regmap =
-> > +             syscon_regmap_lookup_by_compatible("nuvoton,npcm845-gcr");
->
-> No. Use property. By this patchset, I would expect that you learnt from
-> previous mistakes around this. Why repeating the same trouble second time?
-You suggest to use phandle property like nuvoton,sysgcr even that the
-NPCM8XX pin controller driver is used only NPCM8XX SoC, so the only
-GCR node in the NPCM8XX SoC is nuvoton,npcm845-gcr?
->
-> > +     if (IS_ERR(pctrl->gcr_regmap)) {
-> > +             dev_err(pctrl->dev, "didn't find nuvoton,npcm845-gcr\n");
-> > +             return PTR_ERR(pctrl->gcr_regmap);
-> > +     }
-> > +
-> > +     ret = npcm8xx_gpio_of(pctrl);
-> > +     if (ret < 0) {
-> > +             dev_err(pctrl->dev, "Failed to gpio dt-binding %u\n", ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     pctrl->pctldev = devm_pinctrl_register(&pdev->dev,
-> > +                                            &npcm8xx_pinctrl_desc, pctrl);
-> > +     if (IS_ERR(pctrl->pctldev)) {
-> > +             dev_err(&pdev->dev, "Failed to register pinctrl device\n");
-> > +             return PTR_ERR(pctrl->pctldev);
-> > +     }
-> > +
-> > +     ret = npcm8xx_gpio_register(pctrl);
-> > +     if (ret < 0) {
-> > +             dev_err(pctrl->dev, "Failed to register gpio %u\n", ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     pr_info("npcm8xx Pinctrl driver probed\n");
->
->
-> No pr_ in devices. No success debug messages.
->
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct of_device_id npcm8xx_pinctrl_match[] = {
-> > +     { .compatible = "nuvoton,npcm845-pinctrl" },
-> > +     { },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, npcm8xx_pinctrl_match);
-> > +
-> > +static struct platform_driver npcm8xx_pinctrl_driver = {
-> > +     .probe = npcm8xx_pinctrl_probe,
-> > +     .driver = {
-> > +             .name = "npcm8xx-pinctrl",
-> > +             .of_match_table = npcm8xx_pinctrl_match,
-> > +             .suppress_bind_attrs = true,
-> > +     },
-> > +};
-> > +
-> > +static int __init npcm8xx_pinctrl_register(void)
-> > +{
-> > +     return platform_driver_register(&npcm8xx_pinctrl_driver);
-> > +}
-> > +arch_initcall(npcm8xx_pinctrl_register);
-> > +
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_AUTHOR("tomer.maimon@nuvoton.com");
-> > +MODULE_DESCRIPTION("Nuvoton NPCM8XX Pinctrl and GPIO driver");
->
->
-> Best regards,
-> Krzysztof
+> > They definitely were. Look at how gpiochip_add_data() eventually ends
+> > up calling gpiochip_set_irq_hooks((), which hijacks the irq_chip
+> > function pointers to insert the calls to these helpers.
+> 
+> Well, that is the thing, since irqchip->irq_enable and
+> irqchip->irq_disable were never populated in the SPMI GPIO driver,
+> gpiochip_set_irq_hooks then does not insert them.
+> During runtime, gpiochip_irq_enable and gpiochip_irq_disable are
+> never used even before the conversion, that is what I am trying to
+> convey.
 
-Best regards,
+It is the mask/unmask versions that would be used, with similar
+effects.
 
-Tomer
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
