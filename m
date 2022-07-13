@@ -2,297 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A3A05735BC
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 13:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60D655735B9
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 13:44:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235226AbiGMLpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 07:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
+        id S235206AbiGMLoW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 07:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229777AbiGMLpt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 07:45:49 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07992FC980;
-        Wed, 13 Jul 2022 04:45:48 -0700 (PDT)
-Received: by mail-oi1-f180.google.com with SMTP id w184so7770374oie.3;
-        Wed, 13 Jul 2022 04:45:48 -0700 (PDT)
+        with ESMTP id S236062AbiGMLoV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 07:44:21 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E760BE6A4
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 04:44:19 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id o31-20020a17090a0a2200b001ef7bd037bbso3211990pjo.0
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 04:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=oFPao6+FHTUKOYc11RmLF8YTaUlvFn2TAMXlqT2wmEQ=;
+        b=JYP3d56dJ72OzPYX5DaWitD86h20bCOsjPAk09KLMrvRp98PMr1klPNcg89503orVP
+         I5Mtb/T3w3SyAY0ZAnKZ3gIt2lDFjDq5ul3CBwV9FmhyI155YG125gK37WsGLwZkemU7
+         y1PkYYWmT+Uxi3p7HNRQCJFPc3IRvPY1Pb3cjHiIbbAc2IPnkLCygERzb5C3r1o/W0/t
+         LakJ718gQSlQVu20QNzkk64Kv+DvLt1K+NElL9LoCFbKikyXRY81xAwRhcSQI7nuKtfD
+         sgQu7KVW14prlNfIMvchFmZfytKH7AF6SGSIEtpJSgyKv8cUZ8RsCARDKeRIHAyt1Tko
+         l6xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QW3oqiCBvV/mmmfK9tpRDVl5ot7G1y1i5VioSZJ8QMk=;
-        b=mDPjbAC7RvvYsCf+WvNNqRFO//Ex0CvUezMgNWizoodlxe5aQALnE2V/W5IhaWPqSb
-         2Jt25mE4jJap+7ns1/eeRkbZrmrxEP6Sq2jy8WG43orYlb3NGBWKFF1stLj/+qQwWRpc
-         oxb7g70HNUjTn9hPgFRh+y5TeuxBTgyJLKB3NCTM4905fbS9P2G8BHO9LZOc/yDqQEhv
-         oFRYxbPYHjT8bm/nUL6LLyQKAyRgMupyOndKyKI4yn4ojMHqEMLMBCKtv1f7jgys5cLd
-         /53lMT3Qxq+zbjeepLaxgtmEiEBLn9EDzIiC5NZ7l6EgTePhWxrV2Q79O/pSwyGci3Mq
-         kZMQ==
-X-Gm-Message-State: AJIora8HSC50kD7YDeXXjlXv42+XsjEHf5AManBGirt+WRkye6a7X4At
-        hs9oxLFpV3OjLj8jicjiSMc5sDuLZYgn+A==
-X-Google-Smtp-Source: AGRyM1sHlMlHvD5RCxq842CtnAuvkBsVaNQJbrsSaLwKs4hFJfzoJDpzLOXnnFtEuOts0BRfa4ZNOQ==
-X-Received: by 2002:a05:6808:d48:b0:339:b862:3abb with SMTP id w8-20020a0568080d4800b00339b8623abbmr1594893oik.22.1657712747044;
-        Wed, 13 Jul 2022 04:45:47 -0700 (PDT)
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com. [209.85.161.52])
-        by smtp.gmail.com with ESMTPSA id d8-20020a056870e24800b0010490c6b552sm5993344oac.35.2022.07.13.04.45.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Jul 2022 04:45:46 -0700 (PDT)
-Received: by mail-oo1-f52.google.com with SMTP id x128-20020a4a4186000000b0043558a8e208so731928ooa.4;
-        Wed, 13 Jul 2022 04:45:46 -0700 (PDT)
-X-Received: by 2002:a05:6902:154f:b0:66e:e2d3:ce1 with SMTP id
- r15-20020a056902154f00b0066ee2d30ce1mr2997263ybu.365.1657712357596; Wed, 13
- Jul 2022 04:39:17 -0700 (PDT)
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=oFPao6+FHTUKOYc11RmLF8YTaUlvFn2TAMXlqT2wmEQ=;
+        b=UbiQCZ7AfQg+yItFFWoLvH38iIqstdLSgA8IztXVXONkW0QrvRzQGFMc2RT/UZd3wi
+         TvqdPHBj9vRNs2o3zwCMTEx7AtyfsdFy6MLRqaGRV6vk9Ka6kgM/leRQtb5OeZPyabUu
+         T8Ce7WbdVO0wvQPFEmYavO+D9qV5IEYJXKFiKZR6Np9FjIwFwYpvJLOeqjhQVR6PgpNH
+         1EDLlmQ913XvbH8mSQfp8hxKK7wHVAMmUDmXd9erPz53Fb59Wew36cfQAQaXYZYAEx/c
+         xvFirTycZbelACJ1Zw/R3s/G/CbesWEqvQNmLqoj19SlxBI0Uxrc7Djn0jDVrZQERV8E
+         KDBw==
+X-Gm-Message-State: AJIora9zWQV50urEPoJSbcAc2j/A3KnCQfjpVju4OW0Q/KR2DT9/lG41
+        kNTTTc0xqN8oUISUGviqwUfOM5mdTC2FObGhZ7I=
+X-Google-Smtp-Source: AGRyM1sL/M8XqFY59qvs3R3/TeSsn+Stl4Z7NceElFHShVhl0VwlDoMRX6yl8KOgwlMfPBkkn1vkxiDzeJiZ1M8ZIkk=
+X-Received: by 2002:a17:90b:3b86:b0:1f0:3a65:a002 with SMTP id
+ pc6-20020a17090b3b8600b001f03a65a002mr9414462pjb.226.1657712658432; Wed, 13
+ Jul 2022 04:44:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220601070707.3946847-1-saravanak@google.com>
- <20220601070707.3946847-4-saravanak@google.com> <CAMuHMdWo_wRwV-i_iyTxVnEsf3Th9GBAG+wxUQMQGnw1t2ijTg@mail.gmail.com>
- <CAGETcx-jU5+Tc0Qkt1e4QY0YprYSp-4A+MoaSRjpdPp_8tZm5g@mail.gmail.com>
-In-Reply-To: <CAGETcx-jU5+Tc0Qkt1e4QY0YprYSp-4A+MoaSRjpdPp_8tZm5g@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 13 Jul 2022 13:39:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUrpnsvc_G33FQA6GtqNowidMrjjYBEZW-_biBMYvqjgQ@mail.gmail.com>
-Message-ID: <CAMuHMdUrpnsvc_G33FQA6GtqNowidMrjjYBEZW-_biBMYvqjgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] net: mdio: Delete usage of driver_deferred_probe_check_state()
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Sender: gudinamrassefa@gmail.com
+Received: by 2002:a05:6a20:3c91:b0:8b:cab:6628 with HTTP; Wed, 13 Jul 2022
+ 04:44:17 -0700 (PDT)
+From:   Ibrahim idewu <ibrahimidewu4@gmail.com>
+Date:   Wed, 13 Jul 2022 12:44:17 +0100
+X-Google-Sender-Auth: Ff06t0deb6f6vvxVL-3XLVeYtHc
+Message-ID: <CALpdxiY+Vs1pOrAo6_kt+bYEfW134UFCfdBAi9RBBZNa59+UTQ@mail.gmail.com>
+Subject: I NEED YOUR RESPOND PLEASE
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_5_NEW_FRM_MNY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FILL_THIS_FORM,FREEMAIL_FROM,HK_SCAM,LOTS_OF_MONEY,MONEY_FORM,
+        MONEY_FRAUD_8,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
+        T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1036 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5009]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [gudinamrassefa[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  2.0 HK_SCAM No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
+        *  0.0 FILL_THIS_FORM Fill in a form with personal information
+        *  0.0 MONEY_FORM Lots of money if you fill out a form
+        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
+        *  0.0 ADVANCE_FEE_5_NEW_FRM_MNY Advance Fee fraud form and lots of
+        *      money
+        *  2.7 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Saravana,
+Dear,
+                       Can you trust a financial relationship that is
+mutually beneficial to us both? I have received your name and contact
+information from your country's banking data Information, hoping that
+you are interested in what I am going to tell you.
 
-On Wed, Jul 13, 2022 at 3:40 AM Saravana Kannan <saravanak@google.com> wrote:
-> On Tue, Jul 5, 2022 at 2:11 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, Jun 1, 2022 at 2:44 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > Now that fw_devlink=on by default and fw_devlink supports interrupt
-> > > properties, the execution will never get to the point where
-> > > driver_deferred_probe_check_state() is called before the supplier has
-> > > probed successfully or before deferred probe timeout has expired.
-> > >
-> > > So, delete the call and replace it with -ENODEV.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >
-> > Thanks for your patch, which is now commit f8217275b57aa48d ("net:
-> > mdio: Delete usage of driver_deferred_probe_check_state()") in
-> > driver-core/driver-core-next.
-> >
-> > Seems like I missed something when providing my T-b for this series,
-> > sorry for that.
->
-> > arch/arm/boot/dts/r8a7791-koelsch.dts has:
-> >
-> >     &ether {
-> >             pinctrl-0 = <&ether_pins>, <&phy1_pins>;
-> >             pinctrl-names = "default";
-> >
-> >             phy-handle = <&phy1>;
-> >             renesas,ether-link-active-low;
-> >             status = "okay";
-> >
-> >             phy1: ethernet-phy@1 {
-> >                     compatible = "ethernet-phy-id0022.1537",
-> >                                  "ethernet-phy-ieee802.3-c22";
-> >                     reg = <1>;
-> >                     interrupt-parent = <&irqc0>;
-> >                     interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> >                     micrel,led-mode = <1>;
-> >                     reset-gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
-> >             };
-> >     };
-> >
-> > Despite the interrupts property, &ether is now probed before irqc0
-> > (interrupt-controller@e61c0000 in arch/arm/boot/dts/r8a7791.dtsi),
-> > causing the PHY not finding its interrupt, and resorting to polling:
->
-> I'd still expect the device link to have been created properly for
-> this phy device. Could you enable the logging in device_link_add() to
-> check the link is created between the phy and the IRQ?
->
-> My guess is that this probably has something to do with phys being
-> attached to drivers differently.
+I'm Mr. Ibrahim idewu from Ouagadougou, here in Burkina Faso. I work
+for coris bank international. I am writing to you about a business
+proposal that will be of great benefit to both of us. In my
+department, as a banker, I discovered $19,300,000 in the account of
+one of our deceased foreign clients.
+The choice to contact you depends on the sensitivity of the
+transaction and the confidentiality it contains. Now our bank has been
+waiting for one of the family members to file the application, but
+nobody has done so. Personally, I have not found family members for a
+long time. I ask for permission to present you as the next of kin /
+beneficiary of the deceased, so the proceeds of this account are worth
+$19,300,000 to you.
 
-Comparison of dmesg before/after enabling debugging, for
-related nodes:
+This is paid or shared in these percentages, 60% for me and 40% for
+you. I have secured legal documents that can be used to substantiate
+this claim. The only thing I have to do is put your names in the
+documents and legalize them here in court to prove you as the rightful
+beneficiary. All I need now is your honest cooperation,
+confidentiality and your trust, so that we can complete this
+transaction. I guarantee that this transaction is 100% risk-free, as
+the transfer is subject to international banking law
 
-    +interrupt-controller@e61c0000 Linked as a fwnode consumer to
-clock-controller@e6150000
+Please give me this as we have 5 days to work through this. This is very urgent.
 
-    +pmic@58 Linked as a fwnode consumer to interrupt-controller@e61c0000
-    +regulator@68 Linked as a fwnode consumer to interrupt-controller@e61c0000
+1. Full Name:
+2. Your direct mobile number:
+3. Your contact address:
+4. Your job:
+5. Your nationality:
+6. Your gender / age:
 
-Other user of irqc
+Please confirm your message and interest to provide further
+information. Please do get back to me on time.
 
-    +ethernet@ee700000 Linked as a fwnode consumer to clock-controller@e6150000
-    +ethernet@ee700000 Linked as a fwnode consumer to pinctrl@e6060000
-    +ethernet-phy@1 Linked as a fwnode consumer to interrupt-controller@e61c0000
-    +ethernet-phy@1 Linked as a fwnode consumer to gpio@e6055000
-
-PHY linked correctly to consumers
-
-    +device: 'e61c0000.interrupt-controller': device_add
-    +device: 'platform:e6150000.clock-controller--platform:e61c0000.interrupt-controller':
-device_add
-    +devices_kset: Moving e61c0000.interrupt-controller to end of list
-    +platform e61c0000.interrupt-controller: Linked as a consumer to
-e6150000.clock-controller
-    +interrupt-controller@e61c0000 Dropping the fwnode link to
-clock-controller@e6150000
-    +platform e61c0000.interrupt-controller: error -EPROBE_DEFER:
-supplier e6150000.clock-controller not ready
-
-Tried to probe irqc (why? consumer not ready), deferred.
-
-    +device: 'platform:e61c0000.interrupt-controller--platform:e60b0000.i2c':
-device_add
-    +platform e60b0000.i2c: Linked as a sync state only consumer to
-e61c0000.interrupt-controller
-
-I guess sync state means through other (child) consumers (pmic,
-regulator) above?
-
-    +device: 'ee700000.ethernet': device_add
-    +device: 'platform:e6060000.pinctrl--platform:ee700000.ethernet': device_add
-    +devices_kset: Moving ee700000.ethernet to end of list
-    +platform ee700000.ethernet: Linked as a consumer to e6060000.pinctrl
-    +ethernet@ee700000 Dropping the fwnode link to pinctrl@e6060000
-    +device: 'platform:e6150000.clock-controller--platform:ee700000.ethernet':
-device_add
-    +devices_kset: Moving ee700000.ethernet to end of list
-    +platform ee700000.ethernet: Linked as a consumer to
-e6150000.clock-controller
-    +ethernet@ee700000 Dropping the fwnode link to clock-controller@e6150000
-    +device: 'platform:e6055000.gpio--platform:ee700000.ethernet': device_add
-    +platform ee700000.ethernet: Linked as a sync state only consumer
-to e6055000.gpio
-    +device: 'platform:e61c0000.interrupt-controller--platform:ee700000.ethernet':
-device_add
-    +platform ee700000.ethernet: Linked as a sync state only consumer
-to e61c0000.interrupt-controller
-
-Hence linking ethernet to child (phy) consumers.
-
-    +device: 'ee700000.ethernet-ffffffff': device_add
-
-Probing ethernet...
-
-     libphy: fwnode_get_phy_id: fwnode
-/soc/ethernet@ee700000/ethernet-phy@1 phy_id = 0x00221537
-     libphy: fwnode_get_phy_id: fwnode
-/soc/ethernet@ee700000/ethernet-phy@1 phy_id = 0x00221537
-    +fwnode_mdiobus_phy_device_register: fwnode_irq_get() returned -517
-    +fwnode_mdiobus_phy_device_register: ignoring -EPROBE_DEFER
-
-This is the part that got changed by this patch.
-
-    +device: 'ee700000.ethernet-ffffffff:01': device_add
-    +device: 'platform:e6055000.gpio--mdio_bus:ee700000.ethernet-ffffffff:01':
-device_add
-    +devices_kset: Moving ee700000.ethernet-ffffffff:01 to end of list
-    +mdio_bus ee700000.ethernet-ffffffff:01: Linked as a consumer to
-e6055000.gpio
-    +ethernet-phy@1 Dropping the fwnode link to gpio@e6055000
-    +device: 'platform:e61c0000.interrupt-controller--mdio_bus:ee700000.ethernet-ffffffff:01':
-device_add
-    +devices_kset: Moving ee700000.ethernet-ffffffff:01 to end of list
-    +mdio_bus ee700000.ethernet-ffffffff:01: Linked as a consumer to
-e61c0000.interrupt-controller
-    +ethernet-phy@1 Dropping the fwnode link to interrupt-controller@e61c0000
-    +mdio_bus ee700000.ethernet-ffffffff:01: error -EPROBE_DEFER:
-supplier e61c0000.interrupt-controller not ready
-
-Why was ethernet probed this early?
-We knew the supplier of the phy was still missing?
-
-    +device: 'eth1': device_add
-     sh-eth ee700000.ethernet eth1: Base address at 0xee700000,
-2e:09:0a:00:6d:85, IRQ 104.
-    +sh-eth ee700000.ethernet: Dropping the link to e6055000.gpio
-    +device: 'platform:e6055000.gpio--platform:ee700000.ethernet':
-device_unregister
-    +sh-eth ee700000.ethernet: Dropping the link to
-e61c0000.interrupt-controller
-    +device: 'platform:e61c0000.interrupt-controller--platform:ee700000.ethernet':
-device_unregister
-
-    +devices_kset: Moving e61c0000.interrupt-controller to end of list
-    +devices_kset: Moving ee700000.ethernet-ffffffff:01 to end of list
-     renesas_irqc e61c0000.interrupt-controller: driving 10 irqs
-
-Finally, irqc is probed.
-
-    +device: '6-0058': device_add
-    +device: 'platform:e61c0000.interrupt-controller--i2c:6-0058': device_add
-    +devices_kset: Moving 6-0058 to end of list
-    +i2c 6-0058: Linked as a consumer to e61c0000.interrupt-controller
-    +pmic@58 Dropping the fwnode link to interrupt-controller@e61c0000
-
-    +device: '6-0068': device_add
-    +device: 'platform:e61c0000.interrupt-controller--i2c:6-0068': device_add
-    +devices_kset: Moving 6-0068 to end of list
-    +i2c 6-0068: Linked as a consumer to e61c0000.interrupt-controller
-    +regulator@68 Dropping the fwnode link to interrupt-controller@e61c0000
-
-Propagating other irqc suppliers to the parent of their consumers
-
-    +i2c-sh_mobile e60b0000.i2c: Dropping the link to
-e61c0000.interrupt-controller
-    +device: 'platform:e61c0000.interrupt-controller--platform:e60b0000.i2c':
-device_unregister
-
-    +devices_kset: Moving ee700000.ethernet-ffffffff:01 to end of list
-
-     Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY
-driver (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=POLL)
-     sh-eth ee700000.ethernet eth1: Link is Up - 100Mbps/Full - flow control off
-     Sending DHCP requests ., OK
-
-> >     -Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY
-> > driver (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=185)
-> >     +Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY
-> > driver (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=POLL)
->
-> Can you drop a WARN() where this is printed to get the stack trace to
-> check my hypothesis?
-
-That didn't help much, as this is the messenger, not the cause.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards
+Mr. Ibrahim idewu
