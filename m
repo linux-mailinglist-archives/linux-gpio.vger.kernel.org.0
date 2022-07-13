@@ -2,67 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EC30573108
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 10:26:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20C3B57338C
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 11:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235684AbiGMI0q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 04:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59528 "EHLO
+        id S235510AbiGMJyf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 05:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235626AbiGMI03 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 04:26:29 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 911109FE1D;
-        Wed, 13 Jul 2022 01:25:03 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id g6so11315202qtu.2;
-        Wed, 13 Jul 2022 01:25:03 -0700 (PDT)
+        with ESMTP id S235185AbiGMJyd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 05:54:33 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3946B1CD4;
+        Wed, 13 Jul 2022 02:54:32 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id 6so18394784ybc.8;
+        Wed, 13 Jul 2022 02:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aSPbs5jGfLTZctvd5nbr966YtO4x5hSc1Gz30C4v3cA=;
-        b=HiJ/y+GNuYUzwt2HnUqRwSRWUatDURDJknYaE9V2CvwhTd8ND6InA6EFP7baAeIEtI
-         mi/b2Syk0DqAGKgAVpSGFb2tXWhywxT0+MtWXsk8xGf77IPZ4l4H90xAjKPbJPiNDfbx
-         xEW6HUYjS2b3mXVD1anijEvRq7xSBD9UxaiAM9fd79ZurjLcG34v1l8bA22UAvnQX5C6
-         p58LpcTKybMjirqwQTZ0Qv5cROyD0NJ2pHGNQ0lAi2UYSOAQ2U4KfwIrqY0dILXf0xKk
-         TdooFTKzDIJ1wIDf4kSQkFPGq/x+IemBUSuV+e36fBOJexqTMoMJA1QmUL8zmVQ1ZNPN
-         zprg==
+        bh=sPSIxVNqSB9G6SRgGp4hjqBXmPGfCStVgCLOhu5E9sY=;
+        b=GJ3HcaOWlpP40hbU/+p0Cf8DX90GQmn0aUsoMMXrVSg3WjgE/THWJUp72nHPRF1V2i
+         h1PJug/F0rU0uqjSfLe1Df4ete5iAKUHmO/dcw7hISBkASfVGB80X6exxuGSHFCtnbc7
+         aaquWzA8IYx5sKGfl5QJuLpQqW2BerSiFqOMTSFMljXMUjKUakWXjMl4eaG5rvhyfzEc
+         tu/zlkRn2yUsx2VjFHbhDQ090+inDXH2uQ0oE/+hwNfKhi5bK878Gg6x9olUc1cuSPdY
+         jjpQ9dsBH1eKQ7MuYo4hur5HEnn+Cq27wjVMc5Rj7FG3U3AOqeRR7h4EsDxmZABG3wNI
+         bA5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aSPbs5jGfLTZctvd5nbr966YtO4x5hSc1Gz30C4v3cA=;
-        b=GKQeAqh2VgL9B4VO8+IfdNLpRo6aoEjXp6VtQf+ybrfBFfytLcVACKVtVwpOn8JAs6
-         Rhgy1SyuK8gkYT6968uel9kZDNfPjYgCs+Afd5oSP/Ro+DGwoUU6buHOP2gJqwk5SQd4
-         vQHJgwDuyN+Exk19iD7GTzcmS7gF3BzYP16w6/+ncJ3f1BULEdoqk/xSENqHMjjz9Zg2
-         zWoa00spih4ru7l9xARO3hk8kVgM+8czmGW652n1E91USHKwB8Yq0NIiRVTOAYj88LP/
-         QD0VdPahD1vyCWoQnUokcsZr+9PdaVxrK4oxy6nr3MbjvuG5ksM1mQmS/4AbHW1fDwIP
-         pt6A==
-X-Gm-Message-State: AJIora+oNKqD0LuX1xewdDGLGQCiT9eJZ65dU/5rWkHcwrrlYZrvUTvL
-        O3LD46OFvcXXhBDy+BlCqBRJqe+i6Qeihmi22CM68FnL
-X-Google-Smtp-Source: AGRyM1sEzdqXq/1mgwSZSo2VnWb3RUhBjvBFgMyKxI3yId74xi6MmqySKCLqmxMb5QyIN4478qIRXzcgzqkZNJ/vjU0=
-X-Received: by 2002:ac8:5bcd:0:b0:31e:b0c5:4298 with SMTP id
- b13-20020ac85bcd000000b0031eb0c54298mr1811791qtb.318.1657700701299; Wed, 13
- Jul 2022 01:25:01 -0700 (PDT)
+        bh=sPSIxVNqSB9G6SRgGp4hjqBXmPGfCStVgCLOhu5E9sY=;
+        b=6P54VVhPE/9lNi+94zXwsbYcAi9h5Fsysisyt1omxsp4eqe38fFMtuNI6SImyv/Dra
+         cOzDqxDSeNV3RXVUL3GCjbOB4u/j8Iyyw8g0ergBCJd87sMwjPO+a5HsWM/84rCz+k/a
+         dYflGx6x5EZwSQJXMBJankMgNmGhDW8OzKgIP6tnWhRI2viS/QgMe2fCiC2m1DmQ/Vd8
+         A6BnPLAq2BbtwerErRas2B5GwpQMP+dAX0vlpATnWJwlQ1+JvvG7cy441G4aQoKU/qh9
+         30UpbiTKq1nqg4w5v7Pe91A8x0XnQXcJCyq/T565b8jScEqzcHxhnJrQl6UhFEc8Xdu0
+         QuFw==
+X-Gm-Message-State: AJIora8rCxLeFr4U9ssVeluHU4Ngmv9rhYgOJpoanjKzvx5+gIb8XyNU
+        vIfHHDzuy3Pihnap2jNaq39amK+ylqPC/0jQytxXbckY+BLnLQ==
+X-Google-Smtp-Source: AGRyM1vW6EzHFn8SmAqc0MGiAqqOrlbY41AYPMgRFDLYsDM6DU6s5kp/eDr1PcDAn6dFj5Tvca3Ta1GpQT5zj6tjSGM=
+X-Received: by 2002:a25:cbcf:0:b0:66e:8893:a02c with SMTP id
+ b198-20020a25cbcf000000b0066e8893a02cmr2813539ybg.460.1657706071710; Wed, 13
+ Jul 2022 02:54:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220711203408.2949888-1-robimarko@gmail.com> <20220711203408.2949888-3-robimarko@gmail.com>
- <CACRpkdbLKXrVu9q3m1BRfRMT5q4gtrtuSNw0PmTsZBraeytVFw@mail.gmail.com>
-In-Reply-To: <CACRpkdbLKXrVu9q3m1BRfRMT5q4gtrtuSNw0PmTsZBraeytVFw@mail.gmail.com>
-From:   Robert Marko <robimarko@gmail.com>
-Date:   Wed, 13 Jul 2022 10:24:50 +0200
-Message-ID: <CAOX2RU6uRbkU3VCZRuNQewndEGiJweRbr0PehARyHGjhq6-5FA@mail.gmail.com>
-Subject: Re: [PATCH v7 3/7] dt-bindings: pinctrl: qcom,pmic-gpio: add PMP8074
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        lee.jones@linaro.org, Rob Herring <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org, jic23@kernel.org,
-        lars@metafoo.de, linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20220712195043.3842081-1-horatiu.vultur@microchip.com> <20220712195043.3842081-2-horatiu.vultur@microchip.com>
+In-Reply-To: <20220712195043.3842081-2-horatiu.vultur@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 Jul 2022 11:53:55 +0200
+Message-ID: <CAHp75VepPJXCiwW+Ztw6awoXwL-d3Sr=TF8xkLyg9uR-bzFxRQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: ocelot: Fix pincfg for lan966x
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        kavyasree.kotagiri@microchip.com,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Michael Walle <michael@walle.cc>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -74,24 +72,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 12 Jul 2022 at 10:39, Linus Walleij <linus.walleij@linaro.org> wrote:
+On Tue, Jul 12, 2022 at 9:46 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
 >
-> On Mon, Jul 11, 2022 at 10:34 PM Robert Marko <robimarko@gmail.com> wrote:
+> The blamed commit introduce support for lan966x which use the same
+> pinconf_ops as sparx5. The problem is that pinconf_ops is specific to
+> sparx5. More precisely the offset of the bits in the pincfg register are
+> different and also lan966x doesn't have support for
+> PIN_CONFIG_INPUT_SCHMITT_ENABLE.
 >
-> > Document the compatible for PMP8074 which has 12 GPIO-s with holes at
-> > GPIO1 and GPIO12.
-> >
-> > Signed-off-by: Robert Marko <robimarko@gmail.com>
-> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
-> Patch applied to the pinctrl tree.
+> Fix this by making pinconf_ops more generic such that it can be also
+> used by lan966x. This is done by introducing 'ocelot_pincfg_data' which
+> contains the offset and what is supported for each SOC.
 
-Hi Linus,
-Dont want to bother you, but I am not seeing this and the GPIO patch
-in the pinctrl tree.
+Looks better, my comments below.
 
-Regards,
-Robert
->
-> Yours,
-> Linus Walleij
+...
+
+> +               const struct ocelot_pincfg_data *opd = info->pincfg_data;
+
+This one...
+
+...
+
+> @@ -1425,17 +1436,20 @@ static int ocelot_pinconf_get(struct pinctrl_dev *pctldev,
+
+...can also be applied here...
+
+...
+
+>                 case PIN_CONFIG_BIAS_PULL_DOWN:
+>                         arg = (param == PIN_CONFIG_BIAS_DISABLE) ? 0 :
+> -                       (param == PIN_CONFIG_BIAS_PULL_UP) ? BIAS_PU_BIT :
+> -                       BIAS_PD_BIT;
+> +                       (param == PIN_CONFIG_BIAS_PULL_UP) ? info->pincfg_data->pu_bit :
+> +                       info->pincfg_data->pd_bit;
+
+...which in particular may help to sort out this indentation mess.
+
+-- 
+With Best Regards,
+Andy Shevchenko
