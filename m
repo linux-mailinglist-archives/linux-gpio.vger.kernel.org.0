@@ -2,130 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C66E6572AE1
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 03:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B8D7572B7B
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 04:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233538AbiGMBfs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Jul 2022 21:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39870 "EHLO
+        id S231410AbiGMCwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Jul 2022 22:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbiGMBfr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 21:35:47 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2120.outbound.protection.outlook.com [40.107.92.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69A5CB448;
-        Tue, 12 Jul 2022 18:35:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hVDieQz88IsVnoFAwccPx9UKB0bWebYn1dhTvDFQRx6P9nEWvn/xwfmQ0NFi7oOjQ8PCVFjOeRM+9D3gxzPeLSkIJZIU/deqxPxI/6GTo8aMc1YIVmW9XHGHftroW2DRW51aeGfOHlowEuqCwYeHfhFQrxOUQuWgqEU3SP0SrSIHxdoXIC0zeKZ17GiEDTdFipmODaWtBxVHfg1Xk85eVtTdz60F4IyYtEKsX69YBcP7BGaXTy/1IlI2DYpF/M1izQs+AGZLyknBImYqSXisdSeqohOEEUiGdUpucF26bs1EbuNnk0Cr2KJnwDVIjBZeYqH3jUyCS4UygV0YptTzuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ddo/S8RK8zfpj2dyMNU8a7uWnD8XMriQO6FxXXYVM8E=;
- b=Tr6Ef0kXDoQ3/QZ4oECcWSxkW6LVP/gziVO+ePKU4ck6assQXYwKi+FKt8LbdZE8SkmLwmfjaItecACa1SqF+mC/kYv4Os9axovDEzNWY0iBDl81ufK7l05Ewcr3Ff6FRfaYMP8JWLxYdgxp91TdxMcPu5h6iN9fDVC88IZyDlQxmwYrc1CdbkQcBw4xPo92AwtaPhTsfifkVR5wvL70BSXdx1C1VJMwSz30EqUJVihkcWwQRR/LJVuX6qg94UED/O8dXijIo/4ezw2DwHyB80tg8/mTfKa691Ur7t3vpAOIsS4D3TaY3HK2F3+aJwLGe89nTMQL2mTvdt3FpbKFyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ddo/S8RK8zfpj2dyMNU8a7uWnD8XMriQO6FxXXYVM8E=;
- b=CqnNj9XHIcrD8u1MJJxW+AVA25sjlApk0cwdYQ3G+ukctqI42D4O4Kjj7McO99dMtmRiDS8ShQzPcmQl50sOgAsbtB0NviQH8RfjDRKocQruXfaHZfrU3u7yqMMJq1ndGWPlm0hJzxiYc+mnNaH5tjjuKv7ZbCuMDNhDQ4DM23M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by BLAPR10MB4931.namprd10.prod.outlook.com
- (2603:10b6:208:331::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.15; Wed, 13 Jul
- 2022 01:35:40 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::712f:6916:3431:e74e]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::712f:6916:3431:e74e%6]) with mapi id 15.20.5395.020; Wed, 13 Jul 2022
- 01:35:40 +0000
-Date:   Wed, 13 Jul 2022 01:35:37 -0700
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, alexandre.belloni@bootlin.com,
-        kavyasree.kotagiri@microchip.com, UNGLinuxDriver@microchip.com,
-        maxime.chevallier@bootlin.com, michael@walle.cc,
-        andy.shevchenko@gmail.com
-Subject: Re: [PATCH v4 2/2] pinctrl: ocelot: Fix pincfg
-Message-ID: <Ys6D2adSuRmoSD3s@COLIN-DESKTOP1.localdomain>
-References: <20220712195043.3842081-1-horatiu.vultur@microchip.com>
- <20220712195043.3842081-3-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220712195043.3842081-3-horatiu.vultur@microchip.com>
-X-ClientProxiedBy: SJ0PR03CA0055.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::30) To MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37)
+        with ESMTP id S230263AbiGMCwq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Jul 2022 22:52:46 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF89D31D1;
+        Tue, 12 Jul 2022 19:52:38 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 71E945C0051;
+        Tue, 12 Jul 2022 22:52:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Tue, 12 Jul 2022 22:52:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm1; t=1657680756; x=1657767156; bh=LZJK/dcxtbGpNFfRmqzuMotXu
+        yK73IQLM1tbkYhb0Z0=; b=ogOpoho0bZhFI3vl/qb7l3r8aR0gVws3pei5wJvE/
+        izMYNcT7oTK3+o/hQqcgoCfV5iwM3y1KMSCo1Iu4Nn4YATPMsp5gLIbFoqvQdJkb
+        HArecbgO+Ozqv1PiAaoOPjBObENFOiDqbXAdutN322XdpPAf43KwbJNbLRxKLHOH
+        An469/x1xmQd2fjWmzCs/4HsKPiKnkVy4ZGvo1gj/lZxBKLtvCGYDcSpunOfheV0
+        /FQt1+oaW5L3HMIMt5N1jXFme7tnk7z/ttvv49I2yol5Y4Rwri6PRqEP5lj+NnmD
+        DqFreuWBNm7MfPqnHwAqSLX3IVseJmhISaFybCzgAsPzA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1657680756; x=1657767156; bh=LZJK/dcxtbGpNFfRmqzuMotXuyK73IQLM1t
+        bkYhb0Z0=; b=vfofMhc2knqiEwCpHManqRmcVoRqMf6w9H+p/QuPCrBdEtx7cKM
+        0lRCWwapS4rzIEt+IX1OFQX8PoW8trYbAzjFJAmEuBnZdfci+nsZL7fmbnNU7WG3
+        mrERxZIOhrfJxLknfsHSd9mOSOh8PvrEfW9YoD+mvEfA2LAqiwFIs2ZStltuR6ao
+        i762gu6FdDmzq7UBv/wnD69K4piGh/U2jrMWHyxuWmndPjl6vEcQkzhhjqOUPsvM
+        zy1NKCFqZhYvcZFQwMlRwxmFtEKeqPUXljmXP2tzBsgOIq87rEDKnaHM+7Bu1Nlo
+        oXBivARaDuXcuLEIqF8JjJjhIqQj1lyPJ8g==
+X-ME-Sender: <xms:czPOYka7o2niLhWtYu6SAi0ABE5SNQQ3HrhiMztwxuLEPSPiVen_jw>
+    <xme:czPOYva8dbXTyEosvtbW9aiCjvvDAWNICO3RYEiN4OS-gdI8JnrLzKzip9XMAY0dC
+    Hn7ipHP2_Me0rOexw>
+X-ME-Received: <xmr:czPOYu_QDokyqNG_yhLYghHCIbUPlKjJhA8VL2iiCtN8fA3VDG_hsMWXtlDqKLHMseBvHBBoy79UPKdN-v9IZuD31lvZJu7Y4lnoKkkdW9MvKQMsxXtAzNnqCRHS6NC28fWPwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudejiedgieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
+    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrf
+    grthhtvghrnhepkeevlefhjeeuleeltedvjedvfeefteegleehueejffehgffffeekhefh
+    hfekkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:czPOYuobPc6vhuTUJTHcP4CTwM4dGzvx8OuH00yazV8WET1QrpRvvA>
+    <xmx:czPOYvriFJuFKiFP2qP46505sxU-TfQgLIV1yp9eS5DmdiwtqkdG-A>
+    <xmx:czPOYsTcL1dzIP6M6oLH9UxDy5eHVUpcA5PtEIMIfgioEmso0NYEzw>
+    <xmx:dDPOYoSoRkrktCoFnVoU6aTOL8Le1zRmzWzr6YhL2GJ0IvYx5SWaGw>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 12 Jul 2022 22:52:34 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andre Przywara <andre.przywara@arm.com>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: [PATCH v2 0/6] pinctrl: sunxi: Allwinner D1 support
+Date:   Tue, 12 Jul 2022 21:52:27 -0500
+Message-Id: <20220713025233.27248-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 770587ab-51bd-4b74-e28d-08da646ffe82
-X-MS-TrafficTypeDiagnostic: BLAPR10MB4931:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aQ0RsYgNmnKk6PfLdktylZ2taootKFXVkhKvtzelCuGAXKBaczhQv2CiEnbPJ/ghwoOvq2YhO0DFX1jiRFvzoCHBgAl37fiP0+S6khdz5S3QJgnSS3UaWUbC+BgqDKj3fIWB9E5T7lBRdrpJNMMeTznYurvpTDORn7+TTvmPeSkTSnGG3FTTyJiMMZVhBR2RG/Q/zIfgZkqE6aZKJ9aemSHg49/V6OF54AMpVI76n99iIWgi2cuZJhKrDMuJoOYfPu/V3qcw8WsMFvjm5h3FZppa2mprrOgJ4br9N7rC6oFkenQphKu4I3KI3OaGUG/2xf5gHwba+sqdQsObGjKJVE+gbMZnz6IA6RhKlUo0wflQUrJns0PB4qDOQvpl1RukaBbYVZebt/FhUlRPP7qYmh16e6fn/mT6sZWkPY1Lom3U5JIhv3rVLNgbmHthT7u4l2UpRwV811WeYe6J3u+I55dUd0R9jIhUHmpMQLdJdUO8XBI/6FYAOWQrgHL4XUNIZ+3Jkwwhq8F+1H7ls00MykPB4n8adKRoe/baJpsIqAk2ljxgN2fp/aZKcNxJOPo2B8nHgV/1yKepEk9xJqqWZdOLT1lmFe3sVG6IH34YoZbgejMaVITqAEeZHJTYqay4waZTk6NEo5Gika9xWRpTUxfYUOKb83UYF4f2ySZoC7uYl5/fSTeY8eLfWod5nNLxzbYT0oyFGDll+CixR1kchDoFNQ0R7i59Myf96OrqWMWQ6Fe8v5whu7J/EvMWtA27
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(376002)(346002)(39830400003)(136003)(366004)(396003)(478600001)(44832011)(4744005)(6666004)(83380400001)(8936002)(6486002)(6916009)(41300700001)(7416002)(5660300002)(316002)(66946007)(26005)(8676002)(66556008)(6512007)(186003)(4326008)(2906002)(66476007)(6506007)(9686003)(86362001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5+AAGnYfYoeO6PWv9bbvdhcyqyyseZjGCuZcFUbqNKvFw/HprHUUoauyJHnP?=
- =?us-ascii?Q?fzgx5bBtDg10QHnAJ221gD/98k5JZyK3rvzmm8Axtf/20VChC5L8ETAbwjHd?=
- =?us-ascii?Q?TBa/xR7cgDPdnkvRKmroFOmOk11YPLEPVoLxTB0hXTrzxBmkUad661qgrokV?=
- =?us-ascii?Q?SFUXGz+fGw0abbgO5NGkdH4MS49786KWNX+aF+UcURpVB3I9uXWzvC7b41XR?=
- =?us-ascii?Q?2BlR8DUYOymAek8xzzCLK77yf5DPH/6qS8JDRU4uMwOgBo5zR3sugZ61FK31?=
- =?us-ascii?Q?WuNZq93Eto8FxckW+lbk5SeKd4t9MZAGFj6vBLiK3pJzNmkIpd//IDugLeP9?=
- =?us-ascii?Q?XLGXdU4ifpcecqnBDUi2ZRc6JpsXQ8cNtFcI8cP4C2G0SDylvVPnchqAVToO?=
- =?us-ascii?Q?dnzHy1E87xxxebdPTunWe7fIBaf3ndK2aDaFAzuEN9dtAxbcDubB5A6vPSHd?=
- =?us-ascii?Q?bm2vAjotb46h8aLomkC5ip9aQvHc4cn7NBPInR5dH99MV6oi9ISu5TH1BhNg?=
- =?us-ascii?Q?aptkUSBAjxEjJO39/woDg2eGdCf/EXyoRumnLpek0mpySSebN6OBHbLHyRJ8?=
- =?us-ascii?Q?RQ5sT2wprS7TV35b6AbIqFavGCDgoJF7rbDt2zt6lyh+QLrsLJQX1jSY3T/f?=
- =?us-ascii?Q?9Sdqks4/gW2R5t0v61cU0/cJladOO9vbcrFPfl3wo7f9v7W+BAdyfoX/U4f/?=
- =?us-ascii?Q?jQbFaZSh7P49TeWIbbIfMzNBVEZH45qqTuBFePSgyxEMMfoe8MH5VZeDEvpt?=
- =?us-ascii?Q?a5ahfIJhtXumsbvgtDe4sAGOVoJrP/IT5Twsw/oEnjW/uDiul8MQudD3rH3h?=
- =?us-ascii?Q?0zUbGAGEo/DGSCcWR39RxE2jo2QmKeQjnSnw/qARpALrlRyQ8kxklo/lsQzX?=
- =?us-ascii?Q?O0xayj12fxmeGsj8ebpqb42VphEOvFWQUk9lZI+EM4R7GQOYQOhugyN3XAfN?=
- =?us-ascii?Q?xV8CEyykRi8Ao7IftWunbC9xL6dU1VZMlsBpcLKO0k0HfzCU2iQigsff1Usm?=
- =?us-ascii?Q?9ZUEHxNevzch6Z5SMPvOIx0aNNtFs2Y81VHOdLO+fOgh5+ou8wbhD/g1U/a7?=
- =?us-ascii?Q?seWpNTVi8d9HDj/n4ION/mvqp/N1KUaZxJyuIKwcaPT7S9Bs0AVsRpaBVtet?=
- =?us-ascii?Q?cLKzUl1TEE+zTnMSKGt/460lY3xC8XPJMcnGY/x+BDeO5hUvWYYPvGv+vt2n?=
- =?us-ascii?Q?yrrnjXH0LKcoqgt7632bU+IkV+TiGqOLdpAxks5QP2QSk2wfV0W5ON0muMX9?=
- =?us-ascii?Q?458E1nEgIW7KIUKTv4Hv9vtn5B2g2C9mT+QFx3ahv+nxiqg6MWO9ErPieVfy?=
- =?us-ascii?Q?URzcl4WZPsPQnEmxBavr6GzbgYNDT20dc8ZZk9dcpn96HJg3id7nBiH4JllG?=
- =?us-ascii?Q?wlMASSofql0UTO04DQ3GyK0N5xrPtq+WgdSEgYiSuZJUEpJRoJGUdGc8clT5?=
- =?us-ascii?Q?iag3SYmf/TJpSbl94aPAMMRbIfzcx7etOPmZoMcEhfkZPYy2av8NfEhbCOsM?=
- =?us-ascii?Q?eR/n02Rxt5JznCIM8VNwgisNHUg+R1i9is+/357Bw7DEDb9pnM+XUWMu9bpm?=
- =?us-ascii?Q?INHDMLm7lvSEIhdYigSK7zlkWNy7qabG4KYJ4CnpVhzLalRCVxdpfrJLfNwV?=
- =?us-ascii?Q?4A=3D=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 770587ab-51bd-4b74-e28d-08da646ffe82
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2022 01:35:40.2515
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Zx1ozCkafBtslADpuZdWzNZdH81ubRhgD2LDdM9h8bn1Zbx8F0lmSzKrTO8R9CZWF8lGjTnvlFPvN89VW87TQrtIP8NWz650A8hP3rj4gYY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4931
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 09:50:43PM +0200, Horatiu Vultur wrote:
-> The blamed commit changed to use regmaps instead of __iomem. But it
-> didn't update the register offsets to be at word offset, so it uses byte
-> offset.
-> Another issue with the same commit is that it has a limit of 32 registers
-> which is incorrect. The sparx5 has 64 while lan966x has 77.
-> 
-> Fixes: 076d9e71bcf8 ("pinctrl: ocelot: convert pinctrl to regmap")
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+In the interest of keeping the series ready for v5.20, I decided to drop
+the D1s bits so we can decide how to handle the compatibles next cycle.
 
-Acked-by: Colin Foster <colin.foster@in-advantage.com>
+This series adds pinctrl support for the Allwinner D1 SoC. First,
+it updates the I/O bias code to support the new mode found on the D1
+(as well as some existing SoCs). Then it refactors the driver to support
+the new register layout found on the D1. Finally, it adds the new
+driver.
+
+The code size impact of the dynamic register layout ends up being just
+over 100 bytes:
+
+   text    data     bss     dec     hex filename
+  11293     564       0   11857    2e51 pinctrl-sunxi.o (patch 3)
+  11405     564       0   11969    2ec1 pinctrl-sunxi.o (patch 6)
+
+This series was tested on A64, H6, and D1.
+
+Changes in v2:
+ - Drop D1s compatible for now, due to ongoing discussion
+ - Fix PE3 function "csi0" -> "ncsi0"
+ - Fix comments for JTAG DI/DO pins
+ - Include channel numbers in PWM functions
+ - Drop the separate D1s variant, since D1s is a non-conflicting subset
+ - Enable the driver for MACH_SUN8I to cover T113 (same die, but ARMv7)
+
+Samuel Holland (6):
+  dt-bindings: pinctrl: Add compatible for Allwinner D1
+  pinctrl: sunxi: Add I/O bias setting for H6 R-PIO
+  pinctrl: sunxi: Support the 2.5V I/O bias mode
+  pinctrl: sunxi: Refactor register/offset calculation
+  pinctrl: sunxi: Make some layout parameters dynamic
+  pinctrl: sunxi: Add driver for Allwinner D1
+
+ .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  13 +
+ drivers/pinctrl/sunxi/Kconfig                 |   5 +
+ drivers/pinctrl/sunxi/Makefile                |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c     | 840 ++++++++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6-r.c   |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c   |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 156 +++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         | 109 +--
+ 10 files changed, 999 insertions(+), 131 deletions(-)
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
+
+-- 
+2.35.1
 
