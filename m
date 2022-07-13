@@ -2,56 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F05DA5733CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 12:08:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E9325733D2
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 12:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235081AbiGMKIH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 06:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
+        id S235181AbiGMKJN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 06:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235068AbiGMKIH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 06:08:07 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B07FA1CC;
-        Wed, 13 Jul 2022 03:08:06 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-31c89653790so106951107b3.13;
-        Wed, 13 Jul 2022 03:08:06 -0700 (PDT)
+        with ESMTP id S235575AbiGMKJL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 06:09:11 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352143121C;
+        Wed, 13 Jul 2022 03:09:10 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-3137316bb69so107029767b3.10;
+        Wed, 13 Jul 2022 03:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XicFWh548yhev8fLUn0ntz6L95VUQXkSA0mKYWVRMO4=;
-        b=S/B1jN4BpYl8UksrkGmxDgTB5l8YqJiUeXobdbVONSfhDqpnqMTiZx7Zuxgxd6UHa8
-         Vh6VAjo88TkG+GfN/inSNXHM46byjTgTDeni87b8t1IUAr5wm8wKHCJSnUjkzMMhLIWl
-         zucPQIfG3EMx7T/u6nDNBZqycqIFmu2cPxI4m6TozPf//xDuT3z4j+6gnRqTa1OkWdBp
-         p/oknD/1VPLsekVbPSiBqwzA3G7Pc0aQ8AaiI68Lm2+ZBQIyR52fgYNPDAkmqh/gFzWY
-         YMH+TtQmzXBB1RnBcid2GK+8seuREcV0vfjNFDecPalxFvpXhHycNJSDhDoCVJFZHFuJ
-         +ksA==
+        bh=E2TlXEAIZFvPmK9h/xYib4bfCYK2i9suWn0UJBr3XYM=;
+        b=R3H4xNPlytdYvhfcrA/DcKC13l0wft2b74FnHF4HmnuTvRR0I3y2nSP2CYLjeCfDoh
+         NJ5qHO0dtSkhIJdJAbf1RveCRGZ9x4/8goj3FTvPgpH3g4PUk9NghmHXKMaiw1DgTYUU
+         nwIW9fMp6eKwqHQ3OqbxssE8oSLuHJ8U4vHhD8IpHebZ7OtZ8J9O1OlAZlYBqczLvHhH
+         y8gGWMN+iyIkEvad+0efDNndedad2bIfckI5w9cpwqLUtDYvytP1XlvTRRYT4YjX3nc9
+         VDZRsSubYRIDE+3U17XV10Ln9L6v+wAhQfzjN7fxM4TW4z89LNoRZTGyuNCF1GyxBjf/
+         KKKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XicFWh548yhev8fLUn0ntz6L95VUQXkSA0mKYWVRMO4=;
-        b=DbLMnshxljx7IbSLOchdd61M96ERBx+TRJLesgebj8EwyxKjWFYAvY/85h0EZEhplW
-         duDK7u0cNk7GG7wdmXY3WgYbDcX+TLklHVJwfbz0P+HroyLJhTU+Wym6GHefXVeAZpxn
-         y5V/6j28s47sRD+3vXmDbZ9Tyy+u8aje9TWdv9Nb3o/X1D7ZjOQWpXqAe2AcEuL5qONp
-         yLkxCpVM6MpnN5wxUDiyynWTt6iChrTGW83ZguFQhOEkReLBLjsFEeCV+to7gnk8xi7e
-         O8X9Monmwhi+893HwgBk81hD9lARSTACuquzBgYn2mFkRdtylq4YcCJpgJRlhodTDOcp
-         Fi1Q==
-X-Gm-Message-State: AJIora8dTHoW2+nY5hUWioHkxuY9sbSUDYJT9Ef3Xi3IaxFxzqY/7N60
-        s02Vz4qDJVVo6BYyU4LV8vYf7RyVuhIdns8DiEY=
-X-Google-Smtp-Source: AGRyM1skebGqLCdtqQ0gR3sr5HfxmQ62b9sCRARYJ2PJ/e6xhdoT7jLTiFXxsLm5uRD9Laf6c5ZPmZAhBC463J1yXnY=
-X-Received: by 2002:a81:468b:0:b0:318:4cac:6576 with SMTP id
- t133-20020a81468b000000b003184cac6576mr3174506ywa.277.1657706885696; Wed, 13
- Jul 2022 03:08:05 -0700 (PDT)
+        bh=E2TlXEAIZFvPmK9h/xYib4bfCYK2i9suWn0UJBr3XYM=;
+        b=CEP0SwqYLrw78ith4hHL1dJCJi99mahqMKz8oP/qTWF9PJf+qM5mAipvWTo622zufx
+         oS0/0UcQv+/tM5JycDiaIBX7NciXG5zgC9o39aqwxUGGmnZ2dZSI+WyhdB/KqZvIsZeZ
+         Z1qBbl4N6JZNxs2hF/5pUskXMry0T4tPdIW3DpVPHPy7tdrz75NFaU1y7aMhElfY0xTA
+         NyS8gRP7MTTKMlTscVA5OyE2qNU2JGh+uub4lKePeT6ZVraV4DizVsEnYWXBx9cgbNOL
+         QTObFk0NNLG6neOPmLAfd+iCC9PzqVZa1eOJll0YNr7ag3cLlaFN8PB/b4n9ptVMmEmR
+         Iw6Q==
+X-Gm-Message-State: AJIora8vNiFOImUr2XOoT8sZjN3GrdbULVEDx8Tybr0DXrD/ziNA6+Ma
+        oYoVDTvhsl/tSmG2I2nlCRag6nyECPMH/pV/5O07zUXJCwWV2A==
+X-Google-Smtp-Source: AGRyM1sXzAkkd/7ZVWugsi73rSqHwX/V3GSvpVnMufS8fy6MNP+macidwe8Zs38ZimRkNTGAgbxphdkC5zSaL+YgpI8=
+X-Received: by 2002:a81:108f:0:b0:31c:d7ae:9ff1 with SMTP id
+ 137-20020a81108f000000b0031cd7ae9ff1mr3203739ywq.18.1657706949440; Wed, 13
+ Jul 2022 03:09:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220713013721.68879-1-warthog618@gmail.com> <20220713013721.68879-6-warthog618@gmail.com>
-In-Reply-To: <20220713013721.68879-6-warthog618@gmail.com>
+References: <20220713013721.68879-1-warthog618@gmail.com>
+In-Reply-To: <20220713013721.68879-1-warthog618@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 Jul 2022 12:07:29 +0200
-Message-ID: <CAHp75VeTyS_77LCp6Uab18M3hJ0dtf5jiSSrPN4tHaBHFEUTkg@mail.gmail.com>
-Subject: Re: [PATCH 5/6] gpiolib: cdev: consolidate edge detector
- configuration flags
+Date:   Wed, 13 Jul 2022 12:08:33 +0200
+Message-ID: <CAHp75Ve-VK8fVy9=sCZHV7yx84zbXKjB9WGBq=Cj0mM8ew=DzQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] gpiolib: cdev: code cleanup following hte integration
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -69,54 +68,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 3:39 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Wed, Jul 13, 2022 at 3:38 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Combine the polarity_change flag, struct line eflags, and hte enable
-> flag into a single flag variable.
+> This patch series is a collection of improvements to simplify the
+> code, improve readability, and compile out unused code.
+> There are no functional changes.
 >
-> The combination of these flags describes the configuration state
-> of the edge detector, so formalize and clarify that by combining
-> them into a single variable, edflags, in struct line.
+> The first patch is a cleanup for my recent linereq_free() fix. I
+> noted then that the edge_detector_stop() could probably be safely
+> moved inside the line desc check block, but wanted to keep that
+> change minimal just in case.  It can be safely moved, and so here
+> it is.
 >
-> The edflags is a subset of the GPIO_V2_LINE_FLAGsb relevant to
-> the edge detector, and is also a superset of the eflags it replaces.
-> The eflags name is still used to describe the subset of edflags
-> corresponding to the rising/falling edge flags where edflags is
-> masked down to that subset.
+> Patch 2 makes use of an existing macro to simplify a call.
 >
-> This consolidation reduces the number of variables being passed,
-> simplifies state comparisons, and provides a more extensible
-> foundation should additional edge sources be integrated in the
-> future.
+> Patch 3 replaces some more if-else chains with switches, which is
+> more readable (YMMV).
+>
+> Patch 4 reorganizes the line identification code to share code
+> common to alternate paths.
+>
+> Patch 5 consolidates a number of separate flags into one.  This
+> reduces code complexity, simplifies any future edge source additions,
+> and makes patch 6 significantly simpler.
+>
+> Patch 6 totally compiles out the hte specific code when CONFIG_HTE
+> is not selected.
+>
+> I've based this series on gpio/for-current, as it requires the fix
+> patch -
+> commit c8e27a4a5136 ("gpiolib: cdev: fix null pointer dereference in linereq_free()")
+> Happy to rebase if that doesn't suit.
+>
+> Dipen, I don't have any HTE compatible hardware to test with, so
+> could you check that this still works for you?
 
-I believe that you have checked this from a locking perspective, so we
-won't have worse lock contamination, if any.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+for uncommented patches.
 
-...
+You may also use it if you are going to address comments as suggested.
 
->         struct linereq *lr;
->         struct gpio_v2_line_event le;
->         int level;
-> -       u64 eflags;
-> +       u64 edflags;
+> Kent Gibson (6):
+>   gpiolib: cdev: simplify linereq_free
+>   gpiolib: cdev: simplify parameter in call to hte_edge_setup
+>   gpiolib: cdev: replace if-else chains with switches
+>   gpiolib: cdev: simplify line event identification
+>   gpiolib: cdev: consolidate edge detector configuration flags
+>   gpiolib: cdev: compile out HTE unless CONFIG_HTE selected
+>
+>  drivers/gpio/gpiolib-cdev.c | 286 +++++++++++++++++++-----------------
+>  1 file changed, 149 insertions(+), 137 deletions(-)
+>
+>
+> base-commit: 7329b071729645e243b6207e76bca2f4951c991b
+> --
+> 2.37.0
+>
 
-I would at the same time move it up before `int level;`.
-
-...
-
-> +       int level = -1, diff_seqno;
-> +       u64 eflags, edflags = READ_ONCE(line->edflags);
-
-Ditto.
-
-...
-
->         u32 debounce_period_us;
->         unsigned long irqflags = 0;
->         int irq, ret;
-> +       u64 eflags;
-
-Ditto for similarity.
 
 -- 
 With Best Regards,
