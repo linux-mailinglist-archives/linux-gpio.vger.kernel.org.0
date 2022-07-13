@@ -2,59 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 183ED573677
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 14:38:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5719C5736EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 15:10:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbiGMMiB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 08:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
+        id S235924AbiGMNKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 09:10:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbiGMMiA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 08:38:00 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D86F5D4A
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 05:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657715879; x=1689251879;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wjn75gGvSoP65vSZi9J/Inei0C+6L96i/Yz3O5yLg5o=;
-  b=O2gUr7WIs4OBWqjDFwTZlWoporPpfYNyF3ZzQE1FGr9tvj81FTUc+gng
-   widFYxSNBqkI4PRiHa/rWyb/L+JQDT+46LnHwwGm1u3zKCm5R3JbyCiQj
-   4XvP6hvgoeqgbliPDCAD1m6Oy2esN2cjpWnlC0k9new+C+Secc7+qDX8T
-   3Gq/RY0r7agmsf+Zm17gMEUNvdyj46feYeQi1N9jt3WLc6X9qujHg706N
-   MqC6WeMPKm0PM0ack8dkqPQovNQb7Sd83vH02z0XPWE3P4sqA3Aw+ZFhh
-   w0O8Az1877koxYE+L5oVJtVVDnzDODotFLPvXMoKDEjybs/9veqyw9sHJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="349169929"
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="349169929"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 05:37:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="622923254"
-Received: from lkp-server02.sh.intel.com (HELO 8708c84be1ad) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 13 Jul 2022 05:37:58 -0700
-Received: from kbuild by 8708c84be1ad with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oBbcr-0003T5-Dy;
-        Wed, 13 Jul 2022 12:37:57 +0000
-Date:   Wed, 13 Jul 2022 20:37:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 7329b071729645e243b6207e76bca2f4951c991b
-Message-ID: <62cebc8a.Ji890MpAtZ00jjrG%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S235769AbiGMNKn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 09:10:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF89DDEC6;
+        Wed, 13 Jul 2022 06:10:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A0E061C44;
+        Wed, 13 Jul 2022 13:10:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D90C34114;
+        Wed, 13 Jul 2022 13:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657717841;
+        bh=grGkUc3D+IG+DZrJbKuNKawjh32B2s20ZjA++y40M1k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qRkyDkrvAUpQmZqGueeCpxzDaKUXet2jxabh06alBveQOw2Pjqyw1VgdM2X9ymlVC
+         Mr0SJCEHHPhivTdLPh/efvnNYLeTX686lp+n7GwXRfYq5ULzSxH2sLutBv0Ddrdxbo
+         l/d+d08/wl+eYJYHpmp3nFl4dfApssvDdGbeofa+g6by3Mv9p9wilmES9T2sp/JCKg
+         2U5erzg0g8ds3MZFZHqRRNbXuQXBZ1JylpzVr8jrjZloiJtNGso6X+elevPDARYtw8
+         EuX9BTVM5EmM1pOfD/yB7G+h0br2ozWI3ytIlXRQ3xQTaBBoX/hxSjdxNYPrJ2IGlp
+         nqU32Juzk/SCw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oBc8V-007Dgp-Iz;
+        Wed, 13 Jul 2022 14:10:39 +0100
+Date:   Wed, 13 Jul 2022 14:10:39 +0100
+Message-ID: <874jzl17lc.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Robert Marko <robimarko@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
+In-Reply-To: <CAOX2RU4MpyEQ0RtcrZ07VXRbB+SWWU=1zWfYUXhQFtvh=MCiDw@mail.gmail.com>
+References: <20220624195112.894916-1-robimarko@gmail.com>
+        <87edyq1ujr.wl-maz@kernel.org>
+        <20220712124445.GC21746@workstation>
+        <87czea1i2f.wl-maz@kernel.org>
+        <CAOX2RU5RX+H=omuKGye2fBy9dOFmfC9HC_3pekeGMxDJuReCUw@mail.gmail.com>
+        <d8912a0d811b5eb924b8c4136b099f72@kernel.org>
+        <CAOX2RU4MpyEQ0RtcrZ07VXRbB+SWWU=1zWfYUXhQFtvh=MCiDw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: robimarko@gmail.com, manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org, agross@kernel.org, linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,73 +76,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 7329b071729645e243b6207e76bca2f4951c991b  gpio: sim: fix the chip_name configfs item
+On Wed, 13 Jul 2022 13:33:32 +0100,
+Robert Marko <robimarko@gmail.com> wrote:
+> 
+> On Wed, 13 Jul 2022 at 13:47, Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On 2022-07-13 12:08, Robert Marko wrote:
+> > > I will look at IRQ GPIO docs, but in this case, then we have more
+> > > conversions that
+> > > are not correct.
+> >
+> > Then please point them out.
+> 
+> Oh, now I get the issue, I was misunderstanding it completely.
+> gpiochip_enable_irq and gpiochip_disable_irq are not being called
+> at all.
+> 
+> However, I dont see them being called before the conversion as well.
+> I am not really familiar with the PMIC IRQ-s, looked like an easy conversion
+> to get rid of the warning.
 
-elapsed time: 1452m
+They definitely were. Look at how gpiochip_add_data() eventually ends
+up calling gpiochip_set_irq_hooks((), which hijacks the irq_chip
+function pointers to insert the calls to these helpers.
 
-configs tested: 52
-configs skipped: 2
+This is what this conversion process is all about, and you absolutely
+need to understand that code before blindly changing drivers to squash
+a run-time warning.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-ia64                             allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-i386                                defconfig
-i386                             allyesconfig
-i386                          randconfig-a005
-i386                          randconfig-a001
-i386                          randconfig-a003
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                        randconfig-a002
-riscv                randconfig-r042-20220710
-arc                  randconfig-r043-20220710
-s390                 randconfig-r044-20220710
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-
-clang tested configs:
-i386                          randconfig-a006
-i386                          randconfig-a002
-i386                          randconfig-a004
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-hexagon              randconfig-r041-20220710
-hexagon              randconfig-r045-20220710
-x86_64                        randconfig-a005
+	M.
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Without deviation from the norm, progress is not possible.
