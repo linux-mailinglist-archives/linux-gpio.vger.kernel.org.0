@@ -2,63 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34689572F57
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 09:38:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C622572F6A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 09:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234595AbiGMHiE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 03:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        id S234548AbiGMHnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 03:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230452AbiGMHiE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 03:38:04 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45473E3C08
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:38:03 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id bp15so8084850ejb.6
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:38:03 -0700 (PDT)
+        with ESMTP id S231277AbiGMHnR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 03:43:17 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D633E5860
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:43:16 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id bp15so8104646ejb.6
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZlY3VXM/QHzKvU9o+3MNd2IiJhLzdLo1xoINNsP4UTs=;
-        b=LB7Y3psQVVEiOl2wnU1xWwm+mTj7HaqJSzK5Y8tJZ8U4jz7z7+3R+o8GMnsOAAjhtw
-         nXD4wzj55zC5Yz8Wrb14/cm4hmZ6hSmT272bBMkMefJVMd3DW6Xb/xDrQD5OgLCG1/t0
-         svYqgyHqfWQmExcgFCssubphWfZwVJJftNeE2dxPXazfmf84jWmyWL2/Huaw0/ds2WKD
-         HWVwSsprP31zdxbgFjLYAzmPQv5nMSeV/gkWrhYxDVSdrBnA199csc5EI0m4M9YLdBEq
-         0EMuPrVaytCtcWv3rKgXwbLqU0woI5P4hNUXsS/f/sUldYtD8vZi2qgVCUBztw+2Wu5w
-         Nk+A==
+        bh=/VlnmlHCQfW3p97UCy5YcE83IQ1M7mTcSHN9rJn92L0=;
+        b=DMmVsyTnzW/ZzHy/WNEhXKuJ/wvbeUmmgXu5noAA5OBSdWDoQXacYqh811HBuPUcB2
+         1704vMKky0r/XykIbgErzhYfAUaQwcS9in9Iyv7UDr89rtWYHrjgAoS4/ftDM13e6zET
+         6Zq3W/iDUAstij4E96pl6A4dFBehNRT4BC9T4B+TDbUnPluj2ffkyJngYthP+RTyypoS
+         8Ngpxqp4L5W5uQXKECMiWjztav+0/GDWvhzTqjfXmJSqE4LeJbCOxop9s0KYRQHCvYwi
+         E53Ud0ve7qzEcCxNGVvfN7QIMwZ7/wVNGUlwjNS+1AxhR4BSF0jl8P02UdhUEjzq2usI
+         6Yhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZlY3VXM/QHzKvU9o+3MNd2IiJhLzdLo1xoINNsP4UTs=;
-        b=E9TAj/ivbndkBlaz8CvULUpxTc6ORvCKLyjzPQmQeos+KQ+edHSOi57Q+2eswjiNO3
-         ERtOmD2ZXoGZi13U1sCA5ZxdLrV3xC0PNhw1Isevj0f5MgrkCKMGgTemrGGyvX4Vjm7n
-         jIQdqZn1cXs2TAPc8Of/cPq47nax9aukxBNWfY+rDsbsJMgGcpvwtDg/5skpQPOeiZxI
-         rSQaRey+HDCQ8B5QfAXkpLQcm3QcVfTs841Eme9V0DZc+k9lNngzAxLPkOQQ1D2t8uuR
-         vv0mDFYe12rF+rYWsBNxTwE+tjeK9NEGmsfOAj/ARfe2obPcBIQZSJlMMzKSwv+mtVFF
-         LCIA==
-X-Gm-Message-State: AJIora+lRmRHDDAWwlVx4bOfLPpO+DIYT6DvyOP/l4hQa1M6PJTZ1A6Y
-        iT9SX+tIqCS5NwMaduYX1k4JJ29Wu0OtPqKpSJyzfaEv5eY=
-X-Google-Smtp-Source: AGRyM1talQC7qA2uYMm1I+tSsqNtJ8wetRjtoOUdNOeXBd1ccqb56IY9Ru1CB4OPrwcdOJUN+qucVhR6iEQKAm/oL+A=
-X-Received: by 2002:a17:907:2c4a:b0:72b:5b9b:9c50 with SMTP id
- hf10-20020a1709072c4a00b0072b5b9b9c50mr2145734ejc.636.1657697881725; Wed, 13
- Jul 2022 00:38:01 -0700 (PDT)
+        bh=/VlnmlHCQfW3p97UCy5YcE83IQ1M7mTcSHN9rJn92L0=;
+        b=A67WMMZrrFylH2bx5Suvya2aKEK3UZLGaaE/Ng/9+WwSTxZbBLzUDCEBDzW/JvYXzk
+         oeTXU9pXGlUztvdSbmXnM20g9L7V7SuhSaMDB+HKqS+MRyjAgjkF5QU9PhhlId9pFIjk
+         lREmjaS6i0Z+Ic5kkjTJkseQrDdSCipE2aKWjijkwY3/y71SC4rjGUaP8L4cUesWArTr
+         a/pGMjYkX9J19VnFBm+X7uiU65i+Dy0zkIveH2sfLPVTg0ElXBA0YOHX3VpsMT4tLwpB
+         WOBSH9O5fo8B+JfGoegWEi6HvZi0c1TrxEw+P5WtrV/OQ5DpwgNy26Izgc0EkJIWTIc+
+         FiDg==
+X-Gm-Message-State: AJIora/ViKBZaAT7xEdVz16dbpI7LeIfbTBINili8qw2+nl9Q+ySufNV
+        lFc9sQ+GcxgymPmSed/HfV1ehYOiy21jKwI8SklJAw==
+X-Google-Smtp-Source: AGRyM1sqqwrs67V0xYX+vIkQzt1SsBz/eWMrr7ikKraa6psgwLTFp/02ZOU5oQQud0MALSLXgtkrRGzhBoT1X0IdY9c=
+X-Received: by 2002:a17:907:87b0:b0:72b:9f0d:3f89 with SMTP id
+ qv48-20020a17090787b000b0072b9f0d3f89mr1053322ejc.734.1657698194579; Wed, 13
+ Jul 2022 00:43:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1657216200.git.william.gray@linaro.org> <6be749842a4ad629c8697101f170dc7e425ae082.1657216200.git.william.gray@linaro.org>
- <CACRpkdZn-PV6H+uBcoONt=SThGBAODy-YG=rkx5OX-rcpeE+aw@mail.gmail.com> <YszlP1+sBhxvz3Fo@fedora>
-In-Reply-To: <YszlP1+sBhxvz3Fo@fedora>
+References: <20220712163345.445811-1-francesco.dolcini@toradex.com> <20220712163345.445811-4-francesco.dolcini@toradex.com>
+In-Reply-To: <20220712163345.445811-4-francesco.dolcini@toradex.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 13 Jul 2022 09:37:51 +0200
-Message-ID: <CAMRc=Mc0=nL_t9Fwmb1uNbsa_v4L4M5BJm2y-vZ8PV47Ryk+Sw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] gpio: i8255: Introduce the i8255 module
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Wed, 13 Jul 2022 09:43:04 +0200
+Message-ID: <CAMRc=McUdeXSNwE9WBVh_ZrsL+-WusEQjqcuE2v=m1exHS6_eA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] dt-bindings: gpio: stmpe: Remove node name requirement
+To:     Francesco Dolcini <francesco.dolcini@toradex.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fred Eckert <Frede@cmslaser.com>,
-        John Hentges <jhentges@accesio.com>,
-        Jay Dolan <jay.dolan@accesio.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -70,66 +76,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 5:06 AM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Tue, Jul 12, 2022 at 6:33 PM Francesco Dolcini
+<francesco.dolcini@toradex.com> wrote:
 >
-> On Mon, Jul 11, 2022 at 03:02:10PM +0200, Linus Walleij wrote:
-> > On Fri, Jul 8, 2022 at 1:16 AM William Breathitt Gray
-> > <william.gray@linaro.org> wrote:
-> >
-> > > Exposes consumer functions providing support for Intel 8255 Programmable
-> > > Peripheral Interface devices. A CONFIG_GPIO_I8255 Kconfig option is
-> > > introduced; modules wanting access to these functions should select this
-> > > Kconfig option.
-> > >
-> > > Tested-by: Fred Eckert <Frede@cmslaser.com>
-> > > Cc: John Hentges <jhentges@accesio.com>
-> > > Cc: Jay Dolan <jay.dolan@accesio.com>
-> > > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
-> >
-> > This chip is like 50 years old, but so am I and I am not obsolete, it's about
-> > time that we implement a proper driver for it!
-> >
-> > But I suppose you are not really using the actual discrete i8255 component?
-> > This is certainly used as integrated into some bridge or so? (Should be
-> > mentioned in the commit.)
+> STMPE driver does not require a specific node name anymore, only the
+> compatible is checked, update binding according to this.
 >
-> Interestingly, there are some PC/104 devices out there that use actual
-> i8255 components (e.g. Diamond Systems Onyx-MM with its 82C55 chips),
-> but honestly the majority of devices I come across are simply emulating
-> the i8255 interface in an FPGA or similar.
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-stmpe.txt | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> I'll adjust the commit to make it clearer that this is a library for
-> i8255-compatible interfaces rather than support for any physical Intel
-> 8255 chip in particular.
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+> index a0e4cf885213..b33f8f02c0d7 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+> @@ -8,8 +8,7 @@ Optional properties:
+>   - st,norequest-mask: bitmask specifying which GPIOs should _not_ be requestable
+>     due to different usage (e.g. touch, keypad)
 >
-> > > +config GPIO_I8255
-> > > +       tristate
-> >
-> > That's a bit terse :D Explain that this is a Intel 8255 PPI chip first developed
-> > in the first half of the 1970ies.
+> -Node name must be stmpe_gpio and should be child node of stmpe node to which it
+> -belongs.
+> +Node should be child node of stmpe node to which it belongs.
 >
-> Ack.
+>  Example:
+>         stmpe_gpio {
+> --
+> 2.25.1
 >
-> > > +++ b/include/linux/gpio/i8255.h
-> >
-> > You need to provide a rationale for the separate .h file in the commit
-> > message even if it is clear
-> > how it is used in the following patches.
-> >
-> > Yours,
-> > Linus Walleij
->
-> I think I'll move this to gpio/driver.h as per Andy Shevchenko's
 
-I don't think this is what Andy meant. I think he suggested moving
-this header into drivers/gpio/ because it doesn't make sense for it to
-be publicly accessible for anyone else than the GPIO drivers.
-
-Andy: correct me if I'm wrong.
-
-Bart
-
-> suggestion. For now only a few drivers under drivers/gpio/ use this
-> library, so it probably doesn't need to be separate just yet.
->
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
