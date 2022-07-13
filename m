@@ -2,145 +2,545 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7D30572EF3
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 09:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B1C7572F37
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 09:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbiGMHUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 03:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
+        id S234599AbiGMH2N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 03:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229968AbiGMHUf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 03:20:35 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80079.outbound.protection.outlook.com [40.107.8.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D2F7391B;
-        Wed, 13 Jul 2022 00:20:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z5zYbpXuvMajuypvdFzaHlEmxL+7ZzYvJGbuEbaWBcln7H2AWRMcYHcm73XSJlxzaTUiwadnOMqR7ikPhl7iIrFxc7asTNsYArfPD1IPmraBKf743oOsUJB0riX7HW4sbGWHHhAnU6S3mlR0P1VDZEaRIgmQqvUU98M8DwlDKeYm1RzY/RObW8yM0BcIe1IcDb9CGvRJERkSdHZYMxpqEHWqYnUTGYfc4uoTBcUIqO3++IKUdGy8agnDMIVz2+bIlhtsJ2et8wsNlsOO08NdbEHN88HAc+gUL9qGboPzNO5nPYmQPa0k+SMeP9gSziLuDmtx7GpkXkj0FVXBbTiyxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mEXMr6HZ+r+igrCK+9V5nMmN7rMtstnaioWad/Rsq7o=;
- b=eEMSKyXwgRvkRSllGeUPkK4WvGIlf0W36jBx2n29OfgtVLOkEpsbLvWhhH7Ap+PNmD9HNQOR+eprYvkUjESNp4wVoiwSDBZgffkJJGu0WO7SV62YlqvHfEdJNz9l3WPLsxHZksVbrI9JU20Upb4SW4zAvtSOOsBash0jT1ax6OtV3U1htCEzvGHL4YvEs/g4JNfoGwnPjFMDim7hv7hlw0DvHKg1uxTOZYLZ/gjLrsOp0ml322fz8r659eB8xCG/khaNhPr3OQqxl83QYmkw9JzI2JkEXWdjE5VQXvSRe0E1TRfiReXo5cYXqUYiHu2jRTknqvIwSoGtwVqYGseztQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mEXMr6HZ+r+igrCK+9V5nMmN7rMtstnaioWad/Rsq7o=;
- b=eqbNeG+H+uxdftk3rGIJD5OpRmE+ZHbe1E1sjmJ2Bxwtj1YHujq1U/sggexXapqxVClf5LJmvucv+k26Qloc8Z2/HcNf1q5QycDzlArxIxksmC+2DOJJv7ZYlmHlmlIrFfWx1GvY/SDZEyg/NRsD31y+hhCqPkYdAgr++4wR/BPnJNHkWPi3k2mlE/t/q+DZAe4HKTPw1yA+wU5AcDRkTbphlnGk6it6l3Wu7RENP5kwZkgwH7hZxIOpuMgfvbgYJdL2UaKeGFxJpIaw9Bp592oniu9oa4Vj5nwdQP7fJN2A02k3mxqAN/H7SzJ5WGp3tM5OL1uswNdg+oagm+MX+Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
- by PRAPR10MB5422.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:27a::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.26; Wed, 13 Jul
- 2022 07:20:30 +0000
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::253b:4d66:1a99:f6e0]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::253b:4d66:1a99:f6e0%8]) with mapi id 15.20.5417.026; Wed, 13 Jul 2022
- 07:20:30 +0000
-Date:   Wed, 13 Jul 2022 09:20:27 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        with ESMTP id S234519AbiGMH2K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 03:28:10 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57CCE3C2D
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:28:08 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id t3so12718809edd.0
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 00:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wwzETJKIQrlU+8+QLl9F0AGowG0zSA3uMJrcnyFEu/c=;
+        b=ornLNe9OOfq6PnB/k5Z5tWvTBEd/cGXmE13J9IbhA1+7I9SLxu2WcQiRYvY8Y6fgGi
+         lHvSm3XOxH4JV5MHPqHaPI6mFZ6SXXYC8e+ap9cyr0e8AtbYBt+uR8Gj9uhW9a3/99gZ
+         M9YLWVml/J/d2Mnf1vyXW7SZu+YG4UTRCmCb3P9795f8BjGqC68ComatjWZRvZBXQpGq
+         dsEa53pNz2Pj+bYpzUycIbAPPShd72qCRmZc6N5Gz1Y0aWnM2opW8xHbb8ahwp7pgUPZ
+         h1DRxgZ5volkY3d2opjGX/Kdmj3FZL+z3SZCprwNNPXMk3OzjzEXOLCzf5kboMCysuLn
+         plEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wwzETJKIQrlU+8+QLl9F0AGowG0zSA3uMJrcnyFEu/c=;
+        b=xaLwbHP+x1doMnfe9NlLJigISqVQQOhU2YpmHAwPT/8MSasPMcJq4TgpmQe+dOJ24J
+         7YTORHT2UDUk7J47YuJ1DA509CuBuj0tw4XhFyuuaT0HI5KuWm0xKGxxkPfB8VBoso+0
+         f9LrGb4IXjowjpFm/Sp4nneNht6gBtNcsgOmBv8EpS4Hl+ou6rRuiZ5bb0hNuSd4YDHS
+         lVIM3dRL75wqIcfIMkbA3Jiznc/xehwq3dRFi/kRAwIwSzGXbD2mxia7O9oSi/nkkKCz
+         GGBdSsfp1z25VRv6QfhW5irNWCMyiO9rO4XssNv6zxlL2gSaF3/AI+AndHu1+TlwkIBe
+         9LPQ==
+X-Gm-Message-State: AJIora8s8lEvHQQCLtOl1BN/t0tmCwvPaOKzDnIcKl6TDkRKYFq6NRAh
+        m8hN2vnTnj5fGV0GBpMih2fuqahGL9ncpINVpab/GQ==
+X-Google-Smtp-Source: AGRyM1sQw++6I/l2EhVW6jlBTxMvQTO3mfdwwI8tvG/HGB7ECkghVpYMQmg1p1shY2t/qsrgvuXSo7B6SPggglIdLvM=
+X-Received: by 2002:a05:6402:27c8:b0:43a:f392:8fdd with SMTP id
+ c8-20020a05640227c800b0043af3928fddmr2857035ede.328.1657697287109; Wed, 13
+ Jul 2022 00:28:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220712143237.13992-1-henning.schild@siemens.com> <20220712143237.13992-2-henning.schild@siemens.com>
+In-Reply-To: <20220712143237.13992-2-henning.schild@siemens.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 13 Jul 2022 09:27:56 +0200
+Message-ID: <CAMRc=Md7uVpwSweCSfrNJKqhQLYs2sVv9UasL59ZpqJ50fSC5w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] gpio: nct6116d: add new driver for several Nuvoton
+ super io chips
+To:     Henning Schild <henning.schild@siemens.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
         Tasanakorn Phaipool <tasanakorn@gmail.com>,
         Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Kuan-Wei Ho <cwho@nuvoton.com>
-Subject: Re: [PATCH v3 0/1] add device driver for Nuvoton SIO gpio function
-Message-ID: <20220713092027.56a60f1d@md1za8fc.ad001.siemens.net>
-In-Reply-To: <CAHp75VdyTRTwFBc3=RL4VHy6VW3zGwijsQM5W47vfqZWxbko2Q@mail.gmail.com>
-References: <20220712143237.13992-1-henning.schild@siemens.com>
-        <CAHp75VeYHi8XTf3Y6HMmitVvuvF2uiWdSzpiKFji5SfV20HqpQ@mail.gmail.com>
-        <20220712171602.1e7c49f4@md1za8fc.ad001.siemens.net>
-        <CAHp75VdyTRTwFBc3=RL4VHy6VW3zGwijsQM5W47vfqZWxbko2Q@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM5PR0201CA0020.eurprd02.prod.outlook.com
- (2603:10a6:203:3d::30) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:269::8)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0522cff1-d5ee-4782-b1b2-08da64a02a90
-X-MS-TrafficTypeDiagnostic: PRAPR10MB5422:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZKQfum+O0TxRfKGjMZ63voVjM+eQ/KTMT4t1rEdH3eg5X42tbDcXH4cvlkKQCi1IUJynRsf4+iIpaquFcj/EdOsUTC4UhkOpOMJ6uHpeR00yqK3iN54IB8DiNYMzIH40CkTusTXYs8ZXpDBa68vkfw2bpkoawEVucmGZE6+mR8r/HloBO/sbaDIOMU2+5TCoGl1NvtDQuzzEj0pQHF6yCKXuz1gn6YgSAs209A59gF0etEvY8Y308XttYa8sWc4CYpTdy/GydhVMvpPahjEaw7H0h514iVngsGxkHgHNBs1zxIiqoRTqkxEOhQ07QB0D+uoJ3xofwQSr4bAzAgN4lFlKa/Di6aq4+c3KBUk4zlFaIhaVsm2011UPK9bDjFHAL6ARGIi97Mtsoj9ikMQfPQAesUf3fPfgC347kl0DU0iMZ/NDks2APF/CXvvXpZwR4Mvt3F75xym3/AewPM79ptB1UN0K0yZiW3d3GDW/46AvM2uDCKuf8vbzLrs1N3MKul2Tqmb49Tkk9/l++LP4vVmuerWmoq5QSMINOjCE+DRK0DJKop8gTcfnyGDhv33KknV4+rQGq7KFruTksCJB3dJgJLm8Ep566SyhVRVKI6JxlW9LDwDMG2p6o+dlPyDN2tJqKDloDucsIi0LjQ6BAUC7AjO75kJBFDJSW/YiupV9SiKetg+wgjG7aKNVGUVggjd/4lCdYxIHxwWeJbfAbA+1yZR07KakLO8e9N17f0Ckbb7Mz2wmrIDyMElx0Lk/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(39860400002)(136003)(376002)(346002)(396003)(6666004)(316002)(6506007)(6486002)(53546011)(6916009)(41300700001)(54906003)(66476007)(2906002)(478600001)(8676002)(4326008)(66946007)(66556008)(8936002)(44832011)(5660300002)(4744005)(26005)(82960400001)(9686003)(86362001)(1076003)(6512007)(83380400001)(186003)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YSvJDd4+8EApxI5HQUFiu0OjbyanuVHhOofVOo2IkaaiKcNIQs0M3NZyWT9A?=
- =?us-ascii?Q?6fGh0AGU4RJfV3fxPMMyMh1mjgiHLBVPNobe9VJElRtyjykaEt6v925USXUm?=
- =?us-ascii?Q?ZUF14s2Zucs41XtblYASATm3UdVthMbQv/pRtO+AP35I+VC4pkeEVzgAWlav?=
- =?us-ascii?Q?+ztuKBlLmCTUrTKoUwFz2uisNS95f4pDfPdTB1apHjidAH6mv2ksv6D/ziS3?=
- =?us-ascii?Q?5H8d2+1tXdWCfMoYQiWgsjnS640ZeeLUDdwVOYDIAAWzkDCcPBlgHAe/K8hf?=
- =?us-ascii?Q?snFo9yGTXLzuIFM8ujYsx/YQZrFeLHds9ijfa9N0h7l4iISDNCEumTORxw3R?=
- =?us-ascii?Q?VR7C3dBSNFJC792dZ9D68PVFa29jPh+xB3KuKCrpHezh7WLg/rhfZ1jqHalz?=
- =?us-ascii?Q?cFyvgOVAxBdVCMCd6eqImaGRw9KVpEIpsfPMy43gBow/ovaoA3zx7t1NDI+g?=
- =?us-ascii?Q?jxi9Plk/TZQmIfr0zLpTqKYE+p733YIpVYpXiXNHD1LiqmPerOU7/xeXCBcP?=
- =?us-ascii?Q?aNSe3LfDD3og0+WUMJVBOoNnXAlsfihyFh/RV4bJ6BWqgAvnYvULSGVvPdUo?=
- =?us-ascii?Q?mseqXq1LsF8F7LorL9Bgx53R/wbpd6t25OXgOtJTt+7kQCuVGdlqpkyEtMJZ?=
- =?us-ascii?Q?7MA3NbqRpQ//9OiwLgZ2I2tFWTftuwQ7FEYjk8abNtPjlPyCguDwl1eP8gVN?=
- =?us-ascii?Q?hCxmT9vdAWgZxJuRdkgDPJd9gLxGKB1sK4rjo7WwjB7rSwbYBRJsHg+1LSuC?=
- =?us-ascii?Q?LPnUzKcmWc8CN1WMqs1LyE6pq+b36CSEf8/B0Dbb2lM058BFAdF1g9cFW+is?=
- =?us-ascii?Q?27CscoXbAN/kFCwzkfyp6dFl3wPqJkeUluqp0CVqjrL8Ivh0DNZCOXwINrWV?=
- =?us-ascii?Q?BKt4UOQy325gtl9Bb+fwnOA38OmYzq0JTKq6m693czVcYYX9ydbNaSRahN2B?=
- =?us-ascii?Q?m4fhA4sd6FWFStqzx2l1auZpYIjk6TTQeHvgyZknQVqbcyt8Gpw91yafRM0l?=
- =?us-ascii?Q?txK+eyx89URlukuGZb+GwdLKFCYQBBfVvq15eWbxUZlcMtKZuGkgnOz7pAj+?=
- =?us-ascii?Q?cm0HtmdJQ/5Jz/3Go3sD/WN91OWYLW/tXYfYFPU/B/uwRTyX1CpH4vDzIsLO?=
- =?us-ascii?Q?qe5pzePbX97EMv6zgOXNiTX3FE2Ph9g3JvX2Cwm9j4KLjmczdGM93YLJKsmS?=
- =?us-ascii?Q?DnL/+T5NPLRJe5SIOQgL/hweFgg69Jn5FPz+OECKjxiqWuIUzyXbxv0rkbjm?=
- =?us-ascii?Q?qTc62rXzCwJ0pg5RC8I7U6GgPlQb/GDZeNxFj++6CYf/cTuuw1ve00HkwtiD?=
- =?us-ascii?Q?81PC7DAQEhw1j8y92aqnSCzQoDu6HPfrM2c031b6vWSOKg8u+dBoFW9hWKFk?=
- =?us-ascii?Q?SB1o7ovQjfBekkc9ollXM+eaGaRAAuWH6f0VlaKsPS/kxNGSjmIFBJla1ZWT?=
- =?us-ascii?Q?FIiY3VSPaifFMQXdJMWnS6fyO+AhZmNg3E4xwx7fu0/OA8fEc195UpZ8UhGK?=
- =?us-ascii?Q?qX0JIdcDc7chefCcQ2slExqTd4u5xZrr+nJ1JF806Cs17is3kz7WdGOIn0AB?=
- =?us-ascii?Q?QxW7TbSzBBeovIoOAGUbTMVaIZf2lRA4mhv09EDXa3+yHnVOiQ1ovSBq85js?=
- =?us-ascii?Q?dQ=3D=3D?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0522cff1-d5ee-4782-b1b2-08da64a02a90
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2022 07:20:29.9266
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CGEIxzf+r7t/VfMWmnK+ZBB43s9qfcuD8z86vGv3Mtjaj7UipYL0Fxxb2Ft8RUJbBYrXvIddOLcSbqoXSxB9b83gx23fH0U/LBIdU/KTTwo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PRAPR10MB5422
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        Kuan-Wei Ho <cwho@nuvoton.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Tue, 12 Jul 2022 17:22:45 +0200
-schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+On Tue, Jul 12, 2022 at 4:32 PM Henning Schild
+<henning.schild@siemens.com> wrote:
+>
+> This patch adds gpio support for several Nuvoton NCTXXX chips. These
+> Super-I/O chips offer multiple functions of which several already have
+> drivers in the kernel, i.e. hwmon and watchdog.
+>
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/gpio/Kconfig         |   9 +
+>  drivers/gpio/Makefile        |   1 +
+>  drivers/gpio/gpio-nct6116d.c | 412 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 422 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-nct6116d.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index b01961999ced..1f1ec035f3c6 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -899,6 +899,15 @@ config GPIO_IT87
+>           To compile this driver as a module, choose M here: the module will
+>           be called gpio_it87.
+>
+> +config GPIO_NCT6116D
+> +       tristate "Nuvoton Super-I/O GPIO support"
+> +       help
+> +         This option enables support for GPIOs found on Nuvoton Super-I/O
+> +         chips NCT5104D, NCT6106D, NCT6116D, NCT6122D.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called gpio_nct6116d.
+> +
+>  config GPIO_SCH
+>         tristate "Intel SCH/TunnelCreek/Centerton/Quark X1000 GPIO"
+>         depends on (X86 || COMPILE_TEST) && ACPI
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 14352f6dfe8e..87f1b0a0cda2 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -107,6 +107,7 @@ obj-$(CONFIG_GPIO_MT7621)           += gpio-mt7621.o
+>  obj-$(CONFIG_GPIO_MVEBU)               += gpio-mvebu.o
+>  obj-$(CONFIG_GPIO_MXC)                 += gpio-mxc.o
+>  obj-$(CONFIG_GPIO_MXS)                 += gpio-mxs.o
+> +obj-$(CONFIG_GPIO_NCT6116D)            += gpio-nct6116d.o
+>  obj-$(CONFIG_GPIO_OCTEON)              += gpio-octeon.o
+>  obj-$(CONFIG_GPIO_OMAP)                        += gpio-omap.o
+>  obj-$(CONFIG_GPIO_PALMAS)              += gpio-palmas.o
+> diff --git a/drivers/gpio/gpio-nct6116d.c b/drivers/gpio/gpio-nct6116d.c
+> new file mode 100644
+> index 000000000000..2ff92f3e11aa
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-nct6116d.c
+> @@ -0,0 +1,412 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * GPIO driver for Nuvoton Super-I/O chips NCT5104D, NCT6106D, NCT6116D, NCT6122D
+> + *
+> + * Authors:
+> + *  Tasanakorn Phaipool <tasanakorn@gmail.com>
+> + *  Sheng-Yuan Huang <syhuang3@nuvoton.com>
+> + *  Kuan-Wei Ho <cwho@nuvoton.com>
+> + *  Henning Schild <henning.schild@siemens.com>
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +/*
+> + * Super-I/O registers
+> + */
+> +#define SIO_LDSEL              0x07    /* Logical device select */
+> +#define SIO_CHIPID             0x20    /* Chaip ID (2 bytes) */
+> +#define SIO_GPIO_ENABLE                0x30    /* GPIO enable */
+> +
+> +#define SIO_LD_GPIO            0x07    /* GPIO logical device */
+> +#define SIO_UNLOCK_KEY         0x87    /* Key to enable Super-I/O */
+> +#define SIO_LOCK_KEY           0xAA    /* Key to disable Super-I/O */
+> +
+> +#define SIO_ID_MASK            GENMASK(15, 4)
+> +#define SIO_NCT5104D_ID                0x1061
+> +#define SIO_NCT6106D_ID                0xC452
+> +#define SIO_NCT6116D_ID                0xD282
+> +#define SIO_NCT6122D_ID                0xD2A3
+> +
+> +enum chips {
+> +       nct5104d,
+> +       nct6106d,
+> +       nct6116d,
+> +       nct6122d,
+> +};
+> +
+> +static const char * const nct6116d_names[] = {
+> +       [nct5104d] = "nct5104d",
+> +       [nct6106d] = "nct6106d",
+> +       [nct6116d] = "nct6116d",
+> +       [nct6122d] = "nct6122d",
+> +};
+> +
+> +struct nct6116d_sio {
+> +       int addr;
+> +       enum chips type;
+> +};
+> +
+> +struct nct6116d_gpio_bank {
+> +       struct gpio_chip chip;
+> +       unsigned int regbase;
+> +       struct nct6116d_gpio_data *data;
+> +};
+> +
+> +struct nct6116d_gpio_data {
+> +       struct nct6116d_sio *sio;
+> +       int nr_bank;
+> +       struct nct6116d_gpio_bank *bank;
+> +};
+> +
+> +/*
+> + * Super-I/O functions.
+> + */
+> +
+> +static inline int superio_inb(int base, int reg)
+> +{
+> +       outb(reg, base);
+> +       return inb(base + 1);
+> +}
+> +
+> +static int superio_inw(int base, int reg)
+> +{
+> +       int val;
+> +
+> +       outb(reg++, base);
+> +       val = inb(base + 1) << 8;
+> +       outb(reg, base);
+> +       val |= inb(base + 1);
+> +
+> +       return val;
+> +}
+> +
+> +static inline void superio_outb(int base, int reg, int val)
+> +{
+> +       outb(reg, base);
+> +       outb(val, base + 1);
+> +}
+> +
+> +static inline int superio_enter(int base)
+> +{
+> +       /* Don't step on other drivers' I/O space by accident. */
+> +       if (!request_muxed_region(base, 2, KBUILD_MODNAME)) {
+> +               pr_err("I/O address 0x%04x already in use\n", base);
+> +               return -EBUSY;
+> +       }
+> +
+> +       /* According to the datasheet the key must be send twice. */
+> +       outb(SIO_UNLOCK_KEY, base);
+> +       outb(SIO_UNLOCK_KEY, base);
+> +
+> +       return 0;
+> +}
+> +
+> +static inline void superio_select(int base, int ld)
+> +{
+> +       outb(SIO_LDSEL, base);
+> +       outb(ld, base + 1);
+> +}
+> +
+> +static inline void superio_exit(int base)
+> +{
+> +       outb(SIO_LOCK_KEY, base);
+> +       release_region(base, 2);
+> +}
+> +
+> +/*
+> + * GPIO chip.
+> + */
+> +
+> +#define gpio_dir(base) ((base) + 0)
+> +#define gpio_data(base) ((base) + 1)
+> +
+> +static inline void *nct6116d_to_gpio_bank(struct gpio_chip *chip)
+> +{
+> +       return container_of(chip, struct nct6116d_gpio_bank, chip);
+> +}
+> +
+> +static int nct6116d_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct nct6116d_gpio_bank *bank = nct6116d_to_gpio_bank(chip);
+> +       struct nct6116d_sio *sio = bank->data->sio;
+> +       int err;
+> +       u8 dir;
+> +
+> +       err = superio_enter(sio->addr);
+> +       if (err)
+> +               return err;
+> +       superio_select(sio->addr, SIO_LD_GPIO);
+> +
+> +       dir = superio_inb(sio->addr, gpio_dir(bank->regbase));
+> +
+> +       superio_exit(sio->addr);
+> +
+> +       if (dir & 1 << offset)
+> +               return GPIO_LINE_DIRECTION_OUT;
+> +
+> +       return GPIO_LINE_DIRECTION_IN;
+> +}
+> +
+> +static int nct6116d_gpio_direction_in(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct nct6116d_gpio_bank *bank = nct6116d_to_gpio_bank(chip);
+> +       struct nct6116d_sio *sio = bank->data->sio;
+> +       int err;
+> +       u8 dir;
+> +
+> +       err = superio_enter(sio->addr);
+> +       if (err)
+> +               return err;
+> +       superio_select(sio->addr, SIO_LD_GPIO);
+> +
+> +       dir = superio_inb(sio->addr, gpio_dir(bank->regbase));
+> +       dir |= BIT(offset);
+> +       superio_outb(sio->addr, gpio_dir(bank->regbase), dir);
+> +
+> +       superio_exit(sio->addr);
+> +
+> +       return 0;
+> +}
+> +
+> +static int nct6116d_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct nct6116d_gpio_bank *bank = nct6116d_to_gpio_bank(chip);
+> +       struct nct6116d_sio *sio = bank->data->sio;
+> +       int err;
+> +       u8 data;
+> +
+> +       err = superio_enter(sio->addr);
+> +       if (err)
+> +               return err;
+> +       superio_select(sio->addr, SIO_LD_GPIO);
+> +
+> +       data = superio_inb(sio->addr, gpio_data(bank->regbase));
+> +
+> +       superio_exit(sio->addr);
+> +
+> +       return !!(data & BIT(offset));
+> +}
+> +
+> +static int nct6116d_gpio_direction_out(struct gpio_chip *chip,
+> +                                    unsigned int offset, int value)
+> +{
+> +       struct nct6116d_gpio_bank *bank = nct6116d_to_gpio_bank(chip);
+> +       struct nct6116d_sio *sio = bank->data->sio;
+> +       u8 dir, data_out;
+> +       int err;
+> +
+> +       err = superio_enter(sio->addr);
+> +       if (err)
+> +               return err;
+> +       superio_select(sio->addr, SIO_LD_GPIO);
+> +
+> +       data_out = superio_inb(sio->addr, gpio_data(bank->regbase));
+> +       if (value)
+> +               data_out |= BIT(offset);
+> +       else
+> +               data_out &= ~BIT(offset);
+> +       superio_outb(sio->addr, gpio_data(bank->regbase), data_out);
+> +
+> +       dir = superio_inb(sio->addr, gpio_dir(bank->regbase));
+> +       dir &= ~BIT(offset);
+> +       superio_outb(sio->addr, gpio_dir(bank->regbase), dir);
+> +
+> +       superio_exit(sio->addr);
+> +
+> +       return 0;
+> +}
+> +
+> +static void nct6116d_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> +{
+> +       struct nct6116d_gpio_bank *bank = nct6116d_to_gpio_bank(chip);
+> +       struct nct6116d_sio *sio = bank->data->sio;
+> +       u8 data_out;
+> +       int err;
+> +
+> +       err = superio_enter(sio->addr);
+> +       if (err)
+> +               return;
+> +       superio_select(sio->addr, SIO_LD_GPIO);
+> +
+> +       data_out = superio_inb(sio->addr, gpio_data(bank->regbase));
+> +       if (value)
+> +               data_out |= BIT(offset);
+> +       else
+> +               data_out &= ~BIT(offset);
+> +       superio_outb(sio->addr, gpio_data(bank->regbase), data_out);
+> +
+> +       superio_exit(sio->addr);
+> +}
+> +
+> +#define NCT6116D_GPIO_BANK(_base, _ngpio, _regbase, _label)                    \
+> +       {                                                                       \
+> +               .chip = {                                                       \
+> +                       .label            = _label,                             \
+> +                       .owner            = THIS_MODULE,                        \
+> +                       .get_direction    = nct6116d_gpio_get_direction,        \
+> +                       .direction_input  = nct6116d_gpio_direction_in,         \
+> +                       .get              = nct6116d_gpio_get,                  \
+> +                       .direction_output = nct6116d_gpio_direction_out,        \
+> +                       .set              = nct6116d_gpio_set,                  \
+> +                       .base             = _base,                              \
+> +                       .ngpio            = _ngpio,                             \
+> +                       .can_sleep        = false,                              \
+> +               },                                                              \
+> +               .regbase = _regbase,                                            \
+> +       }
+> +
+> +static struct nct6116d_gpio_bank nct6116d_gpio_bank[] = {
+> +       NCT6116D_GPIO_BANK(0, 8, 0xE0, KBUILD_MODNAME "-0"),
+> +       NCT6116D_GPIO_BANK(10, 8, 0xE4, KBUILD_MODNAME "-1"),
+> +       NCT6116D_GPIO_BANK(20, 8, 0xE8, KBUILD_MODNAME "-2"),
+> +       NCT6116D_GPIO_BANK(30, 8, 0xEC, KBUILD_MODNAME "-3"),
+> +       NCT6116D_GPIO_BANK(40, 8, 0xF0, KBUILD_MODNAME "-4"),
+> +};
+> +
+> +/*
+> + * Platform device and driver.
+> + */
+> +
+> +static int nct6116d_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct nct6116d_sio *sio = pdev->dev.platform_data;
+> +       struct nct6116d_gpio_data *data;
+> +       int err;
+> +       int i;
+> +
+> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       data->nr_bank = ARRAY_SIZE(nct6116d_gpio_bank);
+> +       data->bank = nct6116d_gpio_bank;
+> +       data->sio = sio;
+> +
+> +       platform_set_drvdata(pdev, data);
+> +
+> +       /* For each GPIO bank, register a GPIO chip. */
+> +       for (i = 0; i < data->nr_bank; i++) {
+> +               struct nct6116d_gpio_bank *bank = &data->bank[i];
+> +
+> +               bank->chip.parent = &pdev->dev;
+> +               bank->data = data;
+> +
+> +               err = devm_gpiochip_add_data(&pdev->dev, &bank->chip, bank);
+> +               if (err)
+> +                       return dev_err_probe(&pdev->dev, err,
+> +                               "Failed to register gpiochip %d\n", i);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int __init nct6116d_find(int addr, struct nct6116d_sio *sio)
+> +{
+> +       u16 devid;
+> +       int err;
+> +
+> +       err = superio_enter(addr);
+> +       if (err)
+> +               return err;
+> +
+> +       devid = superio_inw(addr, SIO_CHIPID);
+> +       superio_exit(addr);
+> +       switch (devid & SIO_ID_MASK) {
+> +       case SIO_NCT5104D_ID & SIO_ID_MASK:
+> +               sio->type = nct5104d;
+> +               break;
+> +       case SIO_NCT6106D_ID & SIO_ID_MASK:
+> +               sio->type = nct6106d;
+> +               break;
+> +       case SIO_NCT6116D_ID & SIO_ID_MASK:
+> +               sio->type = nct6116d;
+> +               break;
+> +       case SIO_NCT6122D_ID & SIO_ID_MASK:
+> +               sio->type = nct6122d;
+> +               break;
+> +       default:
+> +               pr_info("Unsupported device 0x%04x\n", devid);
+> +               return -ENODEV;
+> +       }
+> +       sio->addr = addr;
+> +
+> +       pr_info("Found %s at 0x%x chip id 0x%04x\n",
+> +               nct6116d_names[sio->type], addr, devid);
+> +       return 0;
+> +}
+> +
+> +static struct platform_device *nct6116d_gpio_pdev;
+> +
+> +static int __init
+> +nct6116d_gpio_device_add(const struct nct6116d_sio *sio)
+> +{
+> +       int err;
+> +
+> +       nct6116d_gpio_pdev = platform_device_alloc(KBUILD_MODNAME, -1);
+> +       if (!nct6116d_gpio_pdev)
+> +               return -ENOMEM;
+> +
+> +       err = platform_device_add_data(nct6116d_gpio_pdev, sio, sizeof(*sio));
+> +       if (err) {
+> +               pr_err("Platform data allocation failed\n");
+> +               goto err;
+> +       }
+> +
+> +       err = platform_device_add(nct6116d_gpio_pdev);
+> +       if (err) {
+> +               pr_err("Device addition failed\n");
+> +               goto err;
+> +       }
+> +
+> +       return 0;
+> +
+> +err:
+> +       platform_device_put(nct6116d_gpio_pdev);
+> +
+> +       return err;
+> +}
+> +
+> +static struct platform_driver nct6116d_gpio_driver = {
+> +       .driver = {
+> +               .name   = KBUILD_MODNAME,
+> +       },
+> +       .probe          = nct6116d_gpio_probe,
+> +};
+> +
+> +static int __init nct6116d_gpio_init(void)
+> +{
+> +       struct nct6116d_sio sio;
+> +       int err;
+> +
+> +       if (nct6116d_find(0x2e, &sio) &&
+> +           nct6116d_find(0x4e, &sio))
+> +               return -ENODEV;
+> +
+> +       err = platform_driver_register(&nct6116d_gpio_driver);
+> +       if (!err) {
+> +               err = nct6116d_gpio_device_add(&sio);
+> +               if (err)
+> +                       platform_driver_unregister(&nct6116d_gpio_driver);
+> +       }
+> +
+> +       return err;
+> +}
 
-> On Tue, Jul 12, 2022 at 5:16 PM Henning Schild
-> <henning.schild@siemens.com> wrote:
-> >
-> > Am Tue, 12 Jul 2022 16:42:46 +0200
-> > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:  
-> > > On Tue, Jul 12, 2022 at 4:32 PM Henning Schild
-> > > <henning.schild@siemens.com> wrote:  
-> 
-> > > JFYI: You have a strange subject. Had you used `git format-patch
-> > > --cover-letter ...`?  
-> >
-> > Yes, but i changed that subject. Took the old line and turned v2
-> > into v3. What is strange about it?  
-> 
-> The 0/1 while it has to be 0/3.
+I'm confused - have we not discussed removing this part?
 
-A right, copy/paste mistake.
+Bart
 
-Henning
+> +
+> +static void __exit nct6116d_gpio_exit(void)
+> +{
+> +       platform_device_unregister(nct6116d_gpio_pdev);
+> +       platform_driver_unregister(&nct6116d_gpio_driver);
+> +}
+> +module_init(nct6116d_gpio_init);
+> +module_exit(nct6116d_gpio_exit);
+> +
+> +MODULE_DESCRIPTION("GPIO driver for Nuvoton Super-I/O chips  NCT5104D, NCT6106D, NCT6116D, NCT6122D");
+> +MODULE_AUTHOR("Tasanakorn Phaipool <tasanakorn@gmail.com>");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.35.1
+>
