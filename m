@@ -2,160 +2,331 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B5635735C2
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 13:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 732075735EA
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Jul 2022 14:00:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234888AbiGMLrl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 07:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39588 "EHLO
+        id S235388AbiGMMAP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 08:00:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230270AbiGMLrk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 07:47:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B6810292A;
-        Wed, 13 Jul 2022 04:47:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D9465B81E41;
-        Wed, 13 Jul 2022 11:47:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C82AC34114;
-        Wed, 13 Jul 2022 11:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657712856;
-        bh=H8yyXEjn4YC4H+2gvA5SkNb8NVzX5EfAtKup6jSajrc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RMIk7Ni6nJuva8yeare1eE6EoMopz60CUWTkK8tNUxLT+S/+fWzDx4nEOZhNqpqjc
-         5Ju1TbIWKwsG6JJOxBRjxMGBnKeSHbca7/foqbcX+pi1wIQFgwj6ZD8rmlS2NJEfki
-         xf/SyKhSa1UXENoNxRf8PsXa+D7P+tj1ykbr0ojxHNoC1TCPppR8s1gFrKSPhthfNo
-         0Uegi6wV+2F44If+IC/mLIFGGk5dghZCPVDQauX/2TFB9W2FCos8mZROC3BmEYLCkd
-         xQ1oQ/fpqecnECxNHmZOjY0JR2WlNDvW0NtYcwpa5xSZUtV5TZVOh7gjUPwmzwH+t3
-         F6KT4xuf2ntww==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oBaq5-007CkN-VZ;
-        Wed, 13 Jul 2022 12:47:34 +0100
+        with ESMTP id S235669AbiGMMAK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 08:00:10 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A4FF54CD;
+        Wed, 13 Jul 2022 05:00:09 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-2ef5380669cso109754427b3.9;
+        Wed, 13 Jul 2022 05:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QqFcQmgGQGc7DUvpJqUQSaobZTRakvVtcLc5e1986Vg=;
+        b=KhrYSrsfk8B9x/UWggXcmUu32sbl1kCbFRyaN1DN5TzUwr96/dDlMsHnUkApLAl2/v
+         DRGra9Hj2Ww4eMIz2rOWnyKZUXh3lVVEQsMxP1R2+c4rHwOWvySRfl1b7g1X+MizOaep
+         /ieaGTJW0zRzov/nWOTU3ihjS9RqB4YvnhAGNWMqWrYYNNezRh8MM/bWxLXYHUiWxtr/
+         RK0JDk+rDbIU7z/WaARg1Jzg6XEjAeceLGBjNZgihUKHOy9wcwNPxdku5770oTw8NR+a
+         Olz8IVAUeC90C27gzlIptJK7gr/FVa4YSj1HBPZtgEgjw9L0PqTGhBWarpTxlZV0IFa2
+         wfiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QqFcQmgGQGc7DUvpJqUQSaobZTRakvVtcLc5e1986Vg=;
+        b=tdwCMgLrr0Bh5Q8JzYpHx+fKfNj1LL/h2d4CmX/POImjGMd1JsV7sSGIlcLCXCeDXt
+         Y2m8B8JPwGZl3UFDKKAe8qGCo2sa2KUac2zQ/FQxFgCmH0JPuETR15RdUg3+yi67csDs
+         dV77Q75+4i4DTvxcpt7OEGEAwV1pmj41S5nEhZr4/x17ArbnMHEVhlHkChjGVACpqii9
+         yFl16WKckptY8/riwUrH1Xf/MeIpatFsZvR+M+yHiOKxEPUOor7CyT7Z3TWOobaRL8Nv
+         TruXXTEQI4jhNkPSn7qwgOZGbGF30vW4BvYE5IGrV/ESo9vnuCLi1FsMjeJeyBQs3lsT
+         yUsw==
+X-Gm-Message-State: AJIora/XZY4iF4nrQsOmh6PggNJMoMHY26GYvYrnHnLUN7XF/e4OLw4s
+        JD34dVvARwwETNMfQjreHA78IVOdmKc1gth6LuE=
+X-Google-Smtp-Source: AGRyM1syQeK/8RcImkP0kJZa5KTMfWyLkuNxadGq7hNXN7TJYZiJaCWins20mzbQKrVOPZN5cWibsrXT/1Ly2VM5GmA=
+X-Received: by 2002:a81:4986:0:b0:31d:388b:d08d with SMTP id
+ w128-20020a814986000000b0031d388bd08dmr3630269ywa.185.1657713608712; Wed, 13
+ Jul 2022 05:00:08 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Wed, 13 Jul 2022 12:47:33 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
+References: <20220713105910.931983-1-lewis.hanly@microchip.com> <20220713105910.931983-2-lewis.hanly@microchip.com>
+In-Reply-To: <20220713105910.931983-2-lewis.hanly@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 Jul 2022 13:59:32 +0200
+Message-ID: <CAHp75VfGTd02jKYsFq94BF_Gqro2trk3iyyALBatS1Bps3HYhw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio: mpfs: add polarfire soc gpio support
+To:     lewis.hanly@microchip.com
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
-In-Reply-To: <CAOX2RU5RX+H=omuKGye2fBy9dOFmfC9HC_3pekeGMxDJuReCUw@mail.gmail.com>
-References: <20220624195112.894916-1-robimarko@gmail.com>
- <87edyq1ujr.wl-maz@kernel.org> <20220712124445.GC21746@workstation>
- <87czea1i2f.wl-maz@kernel.org>
- <CAOX2RU5RX+H=omuKGye2fBy9dOFmfC9HC_3pekeGMxDJuReCUw@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <d8912a0d811b5eb924b8c4136b099f72@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: robimarko@gmail.com, manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org, agross@kernel.org, linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Marc Zyngier <maz@kernel.org>, conor.dooley@microchip.com,
+        daire.mcnamara@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-07-13 12:08, Robert Marko wrote:
-> On Tue, 12 Jul 2022 at 17:12, Marc Zyngier <maz@kernel.org> wrote:
->> 
->> On Tue, 12 Jul 2022 13:44:45 +0100,
->> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
->> >
->> > On Tue, Jul 12, 2022 at 11:42:32AM +0100, Marc Zyngier wrote:
->> > > On Fri, 24 Jun 2022 20:51:12 +0100,
->> > > Robert Marko <robimarko@gmail.com> wrote:
->> > > >
->> > > > Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
->> > > > immutable") added a warning to indicate if the gpiolib is altering the
->> > > > internals of irqchips.
->> > > >
->> > > > Following this change the following warning is now observed for the SPMI
->> > > > PMIC pinctrl driver:
->> > > > gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
->> > > >
->> > > > Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
->> > > >
->> > > > Signed-off-by: Robert Marko <robimarko@gmail.com>
->> > > > ---
->> > > >  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 22 ++++++++++++----------
->> > > >  1 file changed, 12 insertions(+), 10 deletions(-)
->> > > >
->> > > > diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
->> > > > index c3255b0bece4..406ee0933d0b 100644
->> > > > --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
->> > > > +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
->> > > > @@ -171,7 +171,6 @@ struct pmic_gpio_state {
->> > > >   struct regmap   *map;
->> > > >   struct pinctrl_dev *ctrl;
->> > > >   struct gpio_chip chip;
->> > > > - struct irq_chip irq;
->> > > >   u8 usid;
->> > > >   u8 pid_base;
->> > > >  };
->> > > > @@ -988,6 +987,17 @@ static void *pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
->> > > >   return fwspec;
->> > > >  }
->> > > >
->> > > > +static const struct irq_chip spmi_gpio_irq_chip = {
->> > > > + .name           = "spmi-gpio",
->> > > > + .irq_ack        = irq_chip_ack_parent,
->> > > > + .irq_mask       = irq_chip_mask_parent,
->> > > > + .irq_unmask     = irq_chip_unmask_parent,
->> > >
->> > > No, this is wrong. Please look at the documentation to see how you
->> > > must now directly call into the gpiolib helpers for these two
->> > > callbacks.
->> > >
->> >
->> > IIUC, you are referring to gpiochip_disable_irq() and
->> > gpiochip_enable_irq() APIs.
->> 
->> I am indeed.
->> 
->> > These APIs are supposed to let the gpiolib know about that the IRQ
->> > usage of these GPIOs. But for the case of hierarchial IRQ domain,
->> > isn't the parent is going to do that?
->> 
->> Why would it? The parent has no clue about what sits above it. In a
->> hierarchical configuration, each level is responsible for its own
->> level, and the GPIO layer should be responsible for its own
->> management.
->> 
->> > Please correct me if I'm wrong.
->> 
->> I'm afraid you are, and this patch is a fairly obvious change in
->> behaviour, as the callbacks you mention above are not called anymore,
->> while they were before.
->> 
->> If they are not necessary (for reasons I can't fathom), then this
->> should be clearly explained.
-> 
-> Hi Marc,
-> I will look at IRQ GPIO docs, but in this case, then we have more
-> conversions that
-> are not correct.
+On Wed, Jul 13, 2022 at 1:00 PM <lewis.hanly@microchip.com> wrote:
+>
+> From: Lewis Hanly <lewis.hanly@microchip.com>
+>
+> Add a driver to support the Polarfire SoC gpio controller.
 
-Then please point them out.
+GPIO
 
-         M.
+...
+
+Below my comments, I have tried hard not to duplicate what Conor
+already mentioned. So consider this as additional part.
+
+...
+
+> +config GPIO_POLARFIRE_SOC
+> +       bool "Microchip FPGA GPIO support"
+
+Why not tristate?
+
+> +       depends on OF_GPIO
+
+Why?
+
+> +       select GPIOLIB_IRQCHIP
+> +       select IRQ_DOMAIN_HIERARCHY
+
+More naturally this line looks if put before GPIOLB_IRQCHIP one.
+
+> +       select GPIO_GENERIC
+> +       help
+> +         Say yes here to support the GPIO device on Microchip FPGAs.
+
+When allowing it to be a module, add a text that tells how the driver
+will be called.
+
+...
+
+> +/*
+> + * Microchip PolarFire SoC (MPFS) GPIO controller driver
+> + *
+> + * Copyright (c) 2018-2022 Microchip Technology Inc. and its subsidiaries
+> + *
+> + * Author: Lewis Hanly <lewis.hanly@microchip.com>
+
+> + *
+
+This line is not needed.
+
+> + */
+
+...
+
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+
+Why?
+
+Also don't forget mod_devicetable.h.
+
+...
+
+> +#define NUM_GPIO                       32
+> +#define BYTE_BOUNDARY                  0x04
+
+Without namespace?
+
+...
+
+> +       gpio_cfg = readl(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY));
+
+> +
+
+Unneeded line.
+
+> +       if (gpio_cfg & MPFS_GPIO_EN_IN)
+> +               return 1;
+> +
+> +       return 0;
+
+Don't we have specific definitions for the directions?
+
+...
+
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
+> +       int gpio_index = irqd_to_hwirq(data);
+> +       u32 interrupt_type;
+
+> +       struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
+
+This line naturally looks better before interrupt_type definition.
+Try to keep the "longest line first" everywhere in the driver.
+
+> +       u32 gpio_cfg;
+> +       unsigned long flags;
+
+...
+
+> +       switch (type) {
+> +       case IRQ_TYPE_EDGE_BOTH:
+> +               interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_BOTH;
+> +               break;
+
+> +
+
+Unneeded line here and everywhere in the similar cases in the entire code.
+
+> +       case IRQ_TYPE_EDGE_FALLING:
+> +               interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_NEG;
+> +               break;
+> +
+> +       case IRQ_TYPE_EDGE_RISING:
+> +               interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_POS;
+> +               break;
+> +
+> +       case IRQ_TYPE_LEVEL_HIGH:
+> +               interrupt_type = MPFS_GPIO_TYPE_INT_LEVEL_HIGH;
+> +               break;
+> +
+> +       case IRQ_TYPE_LEVEL_LOW:
+> +               interrupt_type = MPFS_GPIO_TYPE_INT_LEVEL_LOW;
+> +               break;
+> +       }
+
+...
+
+> +       mpfs_gpio_assign_bit(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY),
+> +                            MPFS_GPIO_EN_INT, 1);
+
+Too many parentheses.
+
+...
+
+> +       mpfs_gpio_assign_bit(mpfs_gpio->base + (gpio_index * BYTE_BOUNDARY),
+> +                            MPFS_GPIO_EN_INT, 0);
+
+Ditto.
+
+...
+
+> +static int mpfs_gpio_irq_set_affinity(struct irq_data *data,
+> +                                     const struct cpumask *dest,
+> +                                     bool force)
+> +{
+
+> +       if (data->parent_data)
+
+> +               return irq_chip_set_affinity_parent(data, dest, force);
+> +
+> +       return -EINVAL;
+> +}
+
+Why do you need this? Isn't it taken care of by the IRQ chip core?
+
+...
+
+> +       struct clk *clk;
+> +       struct device *dev = &pdev->dev;
+
+> +       struct device_node *node = pdev->dev.of_node;
+> +       struct device_node *irq_parent;
+
+Why do you need these?
+
+> +       struct gpio_irq_chip *girq;
+> +       struct irq_domain *parent;
+> +       struct mpfs_gpio_chip *mpfs_gpio;
+> +       int i, ret, ngpio;
+
+...
+
+> +       clk = devm_clk_get(&pdev->dev, NULL);
+> +       if (IS_ERR(clk)) {
+> +               dev_err(&pdev->dev, "devm_clk_get failed\n");
+> +               return PTR_ERR(clk);
+> +       }
+
+return dev_err_probe(...);
+
+It's not only convenient, but here it fixes a bug.
+
+> +       ret = clk_prepare_enable(clk);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to enable clock\n");
+> +               return ret;
+
+return dev_err_probe(...);
+
+> +       }
+
+Make it managed as well in addition to gpiochip_add_data(), otherwise
+you will have wrong ordering.
+
+...
+
+> +       ngpio = of_irq_count(node);
+> +       if (ngpio > NUM_GPIO) {
+
+> +               dev_err(dev, "Too many GPIO interrupts (max=%d)\n",
+> +                       NUM_GPIO);
+> +               ret = -ENXIO;
+> +               goto cleanup_clock;
+
+return dev_err_probe(...);
+
+> +       }
+> +
+> +       irq_parent = of_irq_find_parent(node);
+> +       if (!irq_parent) {
+> +               dev_err(dev, "no IRQ parent node\n");
+> +               ret = -ENODEV;
+> +               goto cleanup_clock;
+
+Ditto.
+
+> +       }
+> +       parent = irq_find_host(irq_parent);
+> +       if (!parent) {
+> +               dev_err(dev, "no IRQ parent domain\n");
+> +               ret = -ENODEV;
+> +               goto cleanup_clock;
+
+Ditto.
+
+> +       }
+
+Why do you need all these? Seems a copy'n'paste from gpio-sifive,
+which is the only GPIO driver using this pattern.
+
+...
+
+> +               mpfs_gpio_assign_bit(mpfs_gpio->base + (i * BYTE_BOUNDARY),
+> +                                    MPFS_GPIO_EN_INT, 0);
+
+Too many parentheses.
+
+
+> +       girq->fwnode = of_node_to_fwnode(node);
+
+This is an interesting way of
+
+    ...->fwnode = dev_fwnode(dev);
+
+
+...
+
+> +       dev_info(dev, "Microchip MPFS GPIO registered, ngpio=%d\n", ngpio);
+
+Noise.
+
+...
+
+> +               .of_match_table = of_match_ptr(mpfs_gpio_match),
+
+Please, avoid using of_match_ptr(). It brings more harm than usefulness.
+
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
