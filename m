@@ -2,64 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1964D57413B
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jul 2022 04:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26C1B5741BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jul 2022 05:10:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232359AbiGNCEz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Jul 2022 22:04:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52116 "EHLO
+        id S230074AbiGNDKp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Jul 2022 23:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232570AbiGNCEx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 22:04:53 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592A9237C2;
-        Wed, 13 Jul 2022 19:04:49 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id s21so1019538pjq.4;
-        Wed, 13 Jul 2022 19:04:49 -0700 (PDT)
+        with ESMTP id S229925AbiGNDKn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Jul 2022 23:10:43 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E182529A
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 20:10:42 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id g4so373461pgc.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Jul 2022 20:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EME9vXPWQYeTzNMZe7eXduyu6mIuulBInrr92ndX+U8=;
-        b=YE2UfkSXieEWKCyzEgRq5WWG/yywD3zSyNbjvGzDj0CR+8o9LdEQa+56M1Ro+BkOAI
-         Dt1ZnsGXLXSKZ2+l+6OIRAkxxbmQyvnS3KG3aNXilyTUcVnIB/QC5kkT3mzJeQKaJegv
-         dgXDZFUFB+p6EYvS8vLPNn+oSlGqSqU97pMNmzMvNajgcj1WN3n5CI0XU0l0+FbJZMM4
-         eNBcQLmvgLMZTid979PhY8m3D0rFRApbMm3yJn0brHChcbzuIx+UIeTHTliXNYektRhl
-         YBsW76xxatAVmymz+xgS0bW6Rc7g6LO6arsx+SAhokjkkOIT06aV/HqJhg6errVdLZ6c
-         fxDA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8u123ZzFD49Yi1IZfAVRHBY6WGWce8D6HDBmq6aCFCM=;
+        b=l3wkCWWeDRsB2aR3rU2PfQKKM1kn1oLN+v+zN8MyEiEQC6+BsJaB8uwFgUvsaF5teQ
+         Pzeo4wlqgFEM7OEK9UdCbHSJjy1zc1awvsfNh6WGuwqx6QJxf83lcOcEplC3K/obBnlq
+         rQuEbhX6DekrLZGcodbUlP9EvM6fShE2yb/NbU/B1hM5Yt0urDYvh3u44NqzT1Tu0j+W
+         xRVNpHs/HsRkT+HQsSlaqP27eb4asxogKXc7XX4743iPNATsSEkumFdhevCp+rpXu/CF
+         TLS7uECaS1nUNzeiGRpfcwIWytVuDm7BlSSeT/ZY24VRSKtH5qwor6ODqgDIdHj/KnOH
+         bkfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EME9vXPWQYeTzNMZe7eXduyu6mIuulBInrr92ndX+U8=;
-        b=4WOrq6Dvsaixouh/SuZKghMLEIr8glxr8TyWjqBgChtQm6HpNNc3ClX3MuYMFYHSdZ
-         SGFxyubiB8PxsCcYSOIgciJk02Y/MLZv1p/8U78ZzbDz8vC7zVyW3smP2nJ+iJEuNAhm
-         1vQ0xwjGvBtMROWXfvjfvOrQYoOT1mKth2CGvLRYT/uH0tk+8qvGustXm/YGN6g9BAW9
-         WsAPHtUtgrpO9YrBFkTjg0bhM2sUuf385wV/otgg2LX6r/UVIjn3YiIBHlBqu/1LrH/o
-         BjmqfHmweHfaHPoctrf7fx4yZAGlyeGFDkWM93/ANqVQ3lSzTRKPkUOkIE5TdHTYW9Gp
-         067g==
-X-Gm-Message-State: AJIora+Y2sUg9yePaMPwIsIre5UmuUFVq1mQhBzoqx7YrirUOvInpTEN
-        pN2h+i+syW6GexHjau+k+86QtEIMiAQ=
-X-Google-Smtp-Source: AGRyM1sm/bEaB3QFIxwPPsKczsNbzHMD1VnF3VJCH9SSqmo8CrK+ZdgXfWx51d5Y9P6UiLenPl4n6g==
-X-Received: by 2002:a17:90a:ba04:b0:1ee:e6b0:edff with SMTP id s4-20020a17090aba0400b001eee6b0edffmr6984226pjr.153.1657764288554;
-        Wed, 13 Jul 2022 19:04:48 -0700 (PDT)
-Received: from sol.home.arpa (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id i137-20020a62878f000000b0052542cbff9dsm230886pfe.99.2022.07.13.19.04.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8u123ZzFD49Yi1IZfAVRHBY6WGWce8D6HDBmq6aCFCM=;
+        b=b6ueQGN52ER6xtp0tKjo7GiBBbh3QDmXsw5jIzu1Mo0XpGX4yL7XdnuHAgK7/eqsDr
+         DdCP1cI4kRxW+nqJDBzsSCgQGwwlxhg7V8HayrMS2NLpAFOx7uOL5GZ2z80ySg1dfL1N
+         MEDbkOWQrl4IXgDduT1X8XutEPHlMeIQsueom8OxKe5yGPtFMtsYNAD4lKalB5K5wbzD
+         LlOPch6qb/Bcqbe4WKY3tc9gbBO5CnZpbABoJFL1hCNx4QAP1O2FaIbvcM0zCzaRoEnW
+         6v3/j3hjH/Vwj4W8pAVcsT3rfhvNubH8+fzc9A7LoOUEf61hYdEPlYxljkX5xqRD7xSW
+         2xXA==
+X-Gm-Message-State: AJIora/nAqA6/UtMhUEcK0HHYD4ZzEn1aQzfxm4d+ocMnJQbXgPWEcAK
+        x2LviFwAB7e6B4Z4umkm1C7SkGJKEMA=
+X-Google-Smtp-Source: AGRyM1tCdrG814n7N4vw9ma3/BSnTUX9vAkooAQss/aD5AcYDR5gRNe4YmW4JSAuOpWbQlg/Y5BDUg==
+X-Received: by 2002:a63:7843:0:b0:419:9285:fc92 with SMTP id t64-20020a637843000000b004199285fc92mr5050275pgc.196.1657768241564;
+        Wed, 13 Jul 2022 20:10:41 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id d3-20020a170903230300b0015ee985999dsm173542plh.97.2022.07.13.20.10.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Jul 2022 19:04:48 -0700 (PDT)
+        Wed, 13 Jul 2022 20:10:40 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 11:10:36 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        brgl@bgdev.pl, linus.walleij@linaro.org, dipenp@nvidia.com,
-        andy.shevchenko@gmail.com
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 6/6] gpiolib: cdev: compile out HTE unless CONFIG_HTE selected
-Date:   Thu, 14 Jul 2022 10:03:19 +0800
-Message-Id: <20220714020319.72952-7-warthog618@gmail.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220714020319.72952-1-warthog618@gmail.com>
-References: <20220714020319.72952-1-warthog618@gmail.com>
+To:     Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Subject: Re: libgpiod API v2 release
+Message-ID: <20220714031036.GA74086@sol>
+References: <CA+zEjCsqpAffGqJPJrsLJLeyrJJDch_-Qctb1Zxi+j5JU9Wg9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+zEjCsqpAffGqJPJrsLJLeyrJJDch_-Qctb1Zxi+j5JU9Wg9A@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -70,220 +68,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The majority of builds do not include HTE, so compile out hte
-functionality unless CONFIG_HTE is selected.
+On Tue, Jul 12, 2022 at 09:48:45AM +0200, Alexandre Ghiti wrote:
+> Hi,
+> 
+> Ubuntu kernels do not enable GPIO_CDEV_V1 as it is deprecated, but the
+> libgpiod package that we ship is still based on the latest version
+> 1.6.3 which does not implement the API v2. So I'd like to update
+> libgpiod, do you have any recommendations about what branch/sha1 I
+> should use? Do you plan to make a release that implements the API v2?
+> 
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 98 ++++++++++++++++++++++++-------------
- 1 file changed, 63 insertions(+), 35 deletions(-)
+Firstly, libgpiod is Bart's library so he is the authority, but this
+is my understanding...
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 01c76aa00701..7e4670a286b2 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -468,9 +468,7 @@ struct line {
- 	 * stale value.
- 	 */
- 	unsigned int level;
--	/*
--	 * -- hte specific fields --
--	 */
-+#ifdef CONFIG_HTE
- 	struct hte_ts_desc hdesc;
- 	/*
- 	 * HTE provider sets line level at the time of event. The valid
-@@ -487,6 +485,7 @@ struct line {
- 	 * last sequence number before debounce period expires.
- 	 */
- 	u32 last_seqno;
-+#endif /* CONFIG_HTE */
- };
- 
- /**
-@@ -572,7 +571,8 @@ static u64 line_event_timestamp(struct line *line)
- {
- 	if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &line->desc->flags))
- 		return ktime_get_real_ns();
--	else if (test_bit(FLAG_EVENT_CLOCK_HTE, &line->desc->flags))
-+	else if (IS_ENABLED(CONFIG_HTE) &&
-+		 test_bit(FLAG_EVENT_CLOCK_HTE, &line->desc->flags))
- 		return line->timestamp_ns;
- 
- 	return ktime_get_ns();
-@@ -584,6 +584,8 @@ static u32 line_event_id(int level)
- 		       GPIO_V2_LINE_EVENT_FALLING_EDGE;
- }
- 
-+#ifdef CONFIG_HTE
-+
- static enum hte_return process_hw_ts_thread(void *p)
- {
- 	struct line *line;
-@@ -667,6 +669,42 @@ static enum hte_return process_hw_ts(struct hte_ts_data *ts, void *p)
- 	return HTE_CB_HANDLED;
- }
- 
-+static int hte_edge_setup(struct line *line, u64 eflags)
-+{
-+	int ret;
-+	unsigned long flags = 0;
-+	struct hte_ts_desc *hdesc = &line->hdesc;
-+
-+	if (eflags & GPIO_V2_LINE_FLAG_EDGE_RISING)
-+		flags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
-+				 HTE_FALLING_EDGE_TS :
-+				 HTE_RISING_EDGE_TS;
-+	if (eflags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
-+		flags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
-+				 HTE_RISING_EDGE_TS :
-+				 HTE_FALLING_EDGE_TS;
-+
-+	line->total_discard_seq = 0;
-+
-+	hte_init_line_attr(hdesc, desc_to_gpio(line->desc), flags, NULL,
-+			   line->desc);
-+
-+	ret = hte_ts_get(NULL, hdesc, 0);
-+	if (ret)
-+		return ret;
-+
-+	return hte_request_ts_ns(hdesc, process_hw_ts, process_hw_ts_thread,
-+				 line);
-+}
-+
-+#else
-+
-+static int hte_edge_setup(struct line *line, u64 eflags)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_HTE */
-+
- static irqreturn_t edge_irq_thread(int irq, void *p)
- {
- 	struct line *line = p;
-@@ -766,10 +804,13 @@ static void debounce_work_func(struct work_struct *work)
- 	struct line *line = container_of(work, struct line, work.work);
- 	struct linereq *lr;
- 	u64 eflags, edflags = READ_ONCE(line->edflags);
--	int level = -1, diff_seqno;
-+	int level = -1;
-+#ifdef CONFIG_HTE
-+	int diff_seqno;
- 
- 	if (edflags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE)
- 		level = line->raw_level;
-+#endif
- 	if (level < 0)
- 		level = gpiod_get_raw_value_cansleep(line->desc);
- 	if (level < 0) {
-@@ -802,6 +843,7 @@ static void debounce_work_func(struct work_struct *work)
- 	lr = line->req;
- 	le.timestamp_ns = line_event_timestamp(line);
- 	le.offset = gpio_chip_hwgpio(line->desc);
-+#ifdef CONFIG_HTE
- 	if (edflags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE) {
- 		/* discard events except the last one */
- 		line->total_discard_seq -= 1;
-@@ -811,7 +853,9 @@ static void debounce_work_func(struct work_struct *work)
- 		le.line_seqno = line->line_seqno;
- 		le.seqno = (lr->num_lines == 1) ?
- 			le.line_seqno : atomic_add_return(diff_seqno, &lr->seqno);
--	} else {
-+	} else
-+#endif /* CONFIG_HTE */
-+	{
- 		line->line_seqno++;
- 		le.line_seqno = line->line_seqno;
- 		le.seqno = (lr->num_lines == 1) ?
-@@ -823,32 +867,6 @@ static void debounce_work_func(struct work_struct *work)
- 	linereq_put_event(lr, &le);
- }
- 
--static int hte_edge_setup(struct line *line, u64 eflags)
--{
--	int ret;
--	unsigned long flags = 0;
--	struct hte_ts_desc *hdesc = &line->hdesc;
--
--	if (eflags & GPIO_V2_LINE_FLAG_EDGE_RISING)
--		flags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
--				  HTE_FALLING_EDGE_TS : HTE_RISING_EDGE_TS;
--	if (eflags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
--		flags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
--				  HTE_RISING_EDGE_TS : HTE_FALLING_EDGE_TS;
--
--	line->total_discard_seq = 0;
--
--	hte_init_line_attr(hdesc, desc_to_gpio(line->desc), flags,
--			   NULL, line->desc);
--
--	ret = hte_ts_get(NULL, hdesc, 0);
--	if (ret)
--		return ret;
--
--	return hte_request_ts_ns(hdesc, process_hw_ts,
--				 process_hw_ts_thread, line);
--}
--
- static int debounce_setup(struct line *line, unsigned int debounce_period_us)
- {
- 	unsigned long irqflags;
-@@ -869,7 +887,8 @@ static int debounce_setup(struct line *line, unsigned int debounce_period_us)
- 		if (level < 0)
- 			return level;
- 
--		if (!test_bit(FLAG_EVENT_CLOCK_HTE, &line->desc->flags)) {
-+		if (!(IS_ENABLED(CONFIG_HTE) &&
-+		      test_bit(FLAG_EVENT_CLOCK_HTE, &line->desc->flags))) {
- 			irq = gpiod_to_irq(line->desc);
- 			if (irq < 0)
- 				return -ENXIO;
-@@ -927,8 +946,10 @@ static void edge_detector_stop(struct line *line)
- 		line->irq = 0;
- 	}
- 
-+#ifdef CONFIG_HTE
- 	if (READ_ONCE(line->edflags) & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE)
- 		hte_ts_put(&line->hdesc);
-+#endif
- 
- 	cancel_delayed_work_sync(&line->work);
- 	WRITE_ONCE(line->sw_debounced, 0);
-@@ -966,7 +987,8 @@ static int edge_detector_setup(struct line *line,
- 	if (!eflags || READ_ONCE(line->sw_debounced))
- 		return 0;
- 
--	if (edflags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE)
-+	if (IS_ENABLED(CONFIG_HTE) &&
-+	    (edflags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE))
- 		return hte_edge_setup(line, edflags);
- 
- 	irq = gpiod_to_irq(line->desc);
-@@ -1051,6 +1073,11 @@ static int gpio_v2_line_flags_validate(u64 flags)
- 	/* Return an error if an unknown flag is set */
- 	if (flags & ~GPIO_V2_LINE_VALID_FLAGS)
- 		return -EINVAL;
-+
-+	if (!IS_ENABLED(CONFIG_HTE) &&
-+	    (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE))
-+		return -EOPNOTSUPP;
-+
- 	/*
- 	 * Do not allow both INPUT and OUTPUT flags to be set as they are
- 	 * contradictory.
-@@ -1060,7 +1087,8 @@ static int gpio_v2_line_flags_validate(u64 flags)
- 		return -EINVAL;
- 
- 	/* Only allow one event clock source */
--	if ((flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME) &&
-+	if (IS_ENABLED(CONFIG_HTE) &&
-+	    (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME) &&
- 	    (flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE))
- 		return -EINVAL;
- 
--- 
-2.37.1
+TLDR: You should keep GPIO_CDEV_V1 enabled.
 
+v1 is deprecated from a development perspective, so all new feature
+development will occur on v2, and new applications should target v2.
+Existing apps targetting v1, be that directly or via libgpiod v1.6.3,
+will require GPIO_CDEV_V1 until they migrate to v2.
+The mainline kernel will continue to support v1 while userspace
+transitions.
+
+libgpiod v2 is in active development, and should reach its first release
+shortly.
+Note that it is NOT a plugin replacement for v1. It has a different API,
+for similar reasons to why we had to switch in the kernel, so apps will
+need to be actively migrated.
+
+I wouldn't suggest making any effort to package libgpiod v2 until Bart
+makes an official release.
+
+Cheers,
+Kent.
