@@ -2,48 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDBB95742C1
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jul 2022 06:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE0C05742FE
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jul 2022 06:29:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234729AbiGNE0S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Jul 2022 00:26:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50236 "EHLO
+        id S234296AbiGNE3Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Jul 2022 00:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234728AbiGNEZ3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jul 2022 00:25:29 -0400
+        with ESMTP id S236027AbiGNE2B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jul 2022 00:28:01 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059012AC56;
-        Wed, 13 Jul 2022 21:23:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8729A2F001;
+        Wed, 13 Jul 2022 21:24:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 678B0B82371;
-        Thu, 14 Jul 2022 04:23:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D49FCC34115;
-        Thu, 14 Jul 2022 04:23:25 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 36C9EB8237B;
+        Thu, 14 Jul 2022 04:24:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE9FC341C8;
+        Thu, 14 Jul 2022 04:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657772606;
-        bh=mlyiupWzoaqCGlzd2A4M2PlghwEdsgGXG2cqiizqiTs=;
+        s=k20201202; t=1657772673;
+        bh=I/S6MXKj+pJExOorvIiThOlDOL37GW0RHtgnBej/vcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHw/NmvbylW3ufXSvh3DZvn4SONR4q3JEYy4V/uLV+X2iXXjXGPlXExjlU2I2qOXj
-         Bjm8D9yN8SLNphyr2Wp5ZLwr3REN+DXmK7+QZhbwIJpemfiziDnALOVisRhTiojoHR
-         i9Oa2A+7Vut3i5IbcJ4YL377nMpFOIviwqTsm/wa7bZMnGJguuTm771YlKhaP09VKh
-         JIbCvCZu6HrbJnGgmp7q94ECk6clll2QzITVNybVTQrWf4TmyfvjvggZEVeP6zoRoL
-         G3S3UvPLq0bole5wLl0D/7q0Hk3PVBVbHQECLz8otziMbHZgprVaVVkgWMUiw/ZicH
-         nrugbjT2SUnwQ==
+        b=X8P3M3uEnLgnWojff1dqZv95K4Lvj0sabfbXK0e21g/yt3sZTKz1ZKJv1G5n3Uq4Z
+         qC0otvc3t3h+gfNATeG1zUh1IRjZvkWDEirtR6/y87KMfuSYMcMU36pvFZCHoM3qaL
+         0fEBAmJmvoPRFQT1yx1WrXMdCEygKLFQCrsJuDTRWK8xh4YJ3pQKb4GCEUbwFaiYZM
+         gW4//YvRhlukpXNoMNY0eSvG8qu+Dkz7NOjCBYhFN4bclmd6nds+dSzMuTTs5CNI9t
+         Wj4vZ38cvkgzRiujy0FEGj2OQKt+t77rfN1obatupTAC9zmHGJb0yXJfMmrzXDPkP3
+         WIZoDjLYVSvsQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacky Bai <ping.bai@nxp.com>,
+Cc:     Haowen Bai <baihaowen@meizu.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, aisheng.dong@nxp.com,
-        festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.18 27/41] pinctrl: imx: Add the zero base flag for imx93
-Date:   Thu, 14 Jul 2022 00:22:07 -0400
-Message-Id: <20220714042221.281187-27-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, andrew@aj.id.au,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.15 02/28] pinctrl: aspeed: Fix potential NULL dereference in aspeed_pinmux_set_mux()
+Date:   Thu, 14 Jul 2022 00:24:03 -0400
+Message-Id: <20220714042429.281816-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220714042221.281187-1-sashal@kernel.org>
-References: <20220714042221.281187-1-sashal@kernel.org>
+In-Reply-To: <20220714042429.281816-1-sashal@kernel.org>
+References: <20220714042429.281816-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,34 +59,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Jacky Bai <ping.bai@nxp.com>
+From: Haowen Bai <baihaowen@meizu.com>
 
-[ Upstream commit fbc24ebc65507feb9728dc38197f90486148dda0 ]
+[ Upstream commit 84a85d3fef2e75b1fe9fc2af6f5267122555a1ed ]
 
-On i.MX93, the pin mux reg offset is from 0x0,
-so need to add the 'ZERO_OFFSET_VALID' flag to make
-sure the pin at mux offset 0 can be found.
+pdesc could be null but still dereference pdesc->name and it will lead to
+a null pointer access. So we move a null check before dereference.
 
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-Link: https://lore.kernel.org/r/20220613031854.1571357-1-ping.bai@nxp.com
+Signed-off-by: Haowen Bai <baihaowen@meizu.com>
+Link: https://lore.kernel.org/r/1650508019-22554-1-git-send-email-baihaowen@meizu.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx93.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx93.c b/drivers/pinctrl/freescale/pinctrl-imx93.c
-index c0630f69e995..417e41b37a6f 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx93.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx93.c
-@@ -239,6 +239,7 @@ static const struct pinctrl_pin_desc imx93_pinctrl_pads[] = {
- static const struct imx_pinctrl_soc_info imx93_pinctrl_info = {
- 	.pins = imx93_pinctrl_pads,
- 	.npins = ARRAY_SIZE(imx93_pinctrl_pads),
-+	.flags = ZERO_OFFSET_VALID,
- 	.gpr_compatible = "fsl,imx93-iomuxc-gpr",
- };
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+index c94e24aadf92..83d47ff1cea8 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+@@ -236,11 +236,11 @@ int aspeed_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
+ 		const struct aspeed_sig_expr **funcs;
+ 		const struct aspeed_sig_expr ***prios;
  
+-		pr_debug("Muxing pin %s for %s\n", pdesc->name, pfunc->name);
+-
+ 		if (!pdesc)
+ 			return -EINVAL;
+ 
++		pr_debug("Muxing pin %s for %s\n", pdesc->name, pfunc->name);
++
+ 		prios = pdesc->prios;
+ 
+ 		if (!prios)
 -- 
 2.35.1
 
