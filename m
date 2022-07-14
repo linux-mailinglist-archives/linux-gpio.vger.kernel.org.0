@@ -2,173 +2,404 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C39574501
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jul 2022 08:19:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A78574526
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jul 2022 08:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233796AbiGNGTo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Jul 2022 02:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43948 "EHLO
+        id S232501AbiGNGlv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Jul 2022 02:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232073AbiGNGTm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jul 2022 02:19:42 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB601EED1;
-        Wed, 13 Jul 2022 23:19:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1657779580; x=1689315580;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=LgDNh+vkS22vWiUqbKTqhG8rBowmu0MTSj0P2jcSdoI=;
-  b=uzuizwv1KXV5p/7Qxc0obKqbjWgT9+q2kCvdJHCjs1HmChGNM4mzfynu
-   nX/5yGcfls8+Chf37VvADlg/bvDlmsjNGbIseDJgEi+vOMsEyT8oSD4AD
-   CsBJ02jyPrMCbROXGgqwTovXxTiQAzoyewYxv4iPv0Xw7QlIdRuZzeAU4
-   J7lsY4rtE4C2DvUDflo/f7BsgwR0LPnBnAm2wXiMO1yrTQMqqw+NxvI+W
-   wGAVrHHSK7oGQjLjnrjcXndJ8OxvClc2BzcwC9dSzoguwOmwQrN65WRMt
-   aO981rsGIjvMZES2JfKdDXy/PHIT2mC6hlE6JvCj5NUDuCwSC8DOULzgn
-   A==;
-X-IronPort-AV: E=Sophos;i="5.92,269,1650956400"; 
-   d="scan'208";a="182098211"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jul 2022 23:19:39 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Wed, 13 Jul 2022 23:19:39 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17 via Frontend Transport; Wed, 13 Jul 2022 23:19:39 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DebPixHtHR45N74osLnLucjZUptZMY4QGQAsaRF7sfPXQsJ4GiMKU2o8d9jFQHwMssMtzzQgSWpFQkNw0qJuMgnIQOxmwmhWhq4PTiHrjBXyoASEP7VqVS2mTfPJDT2mAR9aMyRgpuiizgCuCF1vmFPTU8MtgqytUl4pQz4vCBZoxnAmCQ4D8btaHA93BytEk+MQmNh4hVIJhkQxB8dmHAwPEK3z/JXi3g3tqbF9s6EUcDMHT8aOLvHEuktf2Wg1vs5fITT3fN0Agpo/tTEA+9fB5Hv6Y+/RF/QJLOQnexBKuHPKnAl5ndl+QYroXwjSfAEPodxHdB67eYdS49RtzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LgDNh+vkS22vWiUqbKTqhG8rBowmu0MTSj0P2jcSdoI=;
- b=B4ol3mLoCAzeEzsEt8FifO9NR0+xasdqHa04cxfQ5w8vCK/ltF69/6fFsquWeuJff56vZf43Xy9X0MmBFs6Dd8fhnhZjYvjCdjI3KatTcOkRUg91q1vQ0yCL+pVg3OJtIGbvntbo8g/8oRdZvaaEwgEkRvJNvnQQLZja73Dl7M47UWeaEnN6XntQHNaazBN/V4BCYYcR/jeHVTDRcS2STh1SpFnFHusY7xDkLHMu7gkkDLUDGWeej37r0lYGuYYy9x+QbFY6wcDdgh6V0Nkkb1CHtBlKeo2ib2MXvd3wN8Z3r49JiWvfwq272GR/wgQwAVkffj+i0FSBDPE7bL/p7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        with ESMTP id S230024AbiGNGlu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jul 2022 02:41:50 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3D11F2E7;
+        Wed, 13 Jul 2022 23:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LgDNh+vkS22vWiUqbKTqhG8rBowmu0MTSj0P2jcSdoI=;
- b=tqPLjeCVtlPXjxBSM2ZHCxeY0d/+N7F5GFgrX1LNjfLIGu/OXzBhcaLV1b5tYrRio7XvmGGd2Mbfg5thyp2i023qgmofsO797URyst74v92iuvc624hVOgKF10J3sllyEeIxngXsRfrcOor3f6T5Uk5LxZlmWClMMTtlVaF627w=
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
- by DM6PR11MB3547.namprd11.prod.outlook.com (2603:10b6:5:136::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.23; Thu, 14 Jul
- 2022 06:19:32 +0000
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::357a:acc9:829e:bf7b]) by CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::357a:acc9:829e:bf7b%7]) with mapi id 15.20.5438.014; Thu, 14 Jul 2022
- 06:19:32 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <Lewis.Hanly@microchip.com>
-CC:     <linux-riscv@lists.infradead.org>, <brgl@bgdev.pl>,
-        <andy.shevchenko@gmail.com>, <linux-gpio@vger.kernel.org>,
-        <linus.walleij@linaro.org>, <palmer@dabbelt.com>, <maz@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <Daire.McNamara@microchip.com>
-Subject: Re: [PATCH v2 1/1] gpio: mpfs: add polarfire soc gpio support
-Thread-Topic: [PATCH v2 1/1] gpio: mpfs: add polarfire soc gpio support
-Thread-Index: AQHYlqemVrcQOBoUV020qkXDgR8Pgq18MrcAgACSjICAABlAgIAAh5gA
-Date:   Thu, 14 Jul 2022 06:19:32 +0000
-Message-ID: <9107c441-73b7-fd7c-9c25-e8a31afbe563@microchip.com>
-References: <20220713105910.931983-1-lewis.hanly@microchip.com>
- <20220713105910.931983-2-lewis.hanly@microchip.com>
- <CAHp75VfGTd02jKYsFq94BF_Gqro2trk3iyyALBatS1Bps3HYhw@mail.gmail.com>
- <abdf389cfd049f60b951447c047bbd186fa19469.camel@microchip.com>
- <CAHp75VeX8p4m7Bi=9Zvk5=MRTOb=BTmcuDbtW1ZUOr_-1mHvyQ@mail.gmail.com>
-In-Reply-To: <CAHp75VeX8p4m7Bi=9Zvk5=MRTOb=BTmcuDbtW1ZUOr_-1mHvyQ@mail.gmail.com>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4dfdddf2-2b8d-4ff1-6efe-08da6560d13e
-x-ms-traffictypediagnostic: DM6PR11MB3547:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NfuV/4yJz4PId8TB/Fi5dmalcW3xOod53XYrhyLmEXUT2WaZYF1aHJ7dwUBvykF/DKG3tNxw6+lda+vrmpKeNiDQlw+R0h+r1CmBJc6yo0ZDv72IElm5EoXW6/4RHIg8+1YPGLuMAckm9IqKa9gwbVRmn/g1Fy6xMOFVUti+XCfmrF4ZX4b81eGHhZSbBs0CnLi/q9fsAwJPbXHKb7MqZj36MAacUjNc2oDZrOCwERFggDGlNSNPweZ3yKeswsD8MBjD3FkOLx433SsxseZT/2f4IDQEmBQKqyKWXgRC5/rBmWlXEMq9UvNOnLsclAJEI6bdpsnCGGV1AMI6MX3gwTcEIhlxW8baUsE9dL3zVnEjg6SwmVG0rG9zmgxWLqVFcJdzWddJ3DWftWG12CIQXBpJ3z+6iPVfDdL6QOCKNQAOyeGg1FEzg1puBlwTb2uUSQU4KUrsN/Iyc+OwWU4IjCkSLdoPN5ED0fZ4O4HFLCRD6Qcd6VlqneUYTYDPSDHSdQ/njgZLNSyFDnLJZvQbeTdKnJiVq45MKoLUOv58P9vx7iid7QW0epk7aeD3C3RuaaoQjTTp+I+Pa4ApkRYal+dn7erkvyiINeu3wBWCdB5O/3e39uaE7fsBHHlV0MTO2V91IdN3zsgVZZNaDltClLcCPuKrdeGtZRKMuJLe2BJgalHhDf/f94P0BE2Ymwno4/hDmEpeUwNc+H2xSLywlwcpqdxKFpCch1cBKpqIHnRF2oM7tUs0uIR2NhMgG8LUZxuFhh5+s2odjPDsaSA0x1DogtKWG273FVXx+Bhf9onTevfuRGp4V4zrNRKE18mWPIpRehogBooP6HCnuoCPUuqL7EvHM2GlEradfA0cn66RWE6yVwIKsdbpkZAn24Z4a5rO85yZGlWRzUZZB7Hs4FHbcpaziGqzyyjLWf6mIuc=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(136003)(366004)(376002)(396003)(39860400002)(91956017)(6862004)(122000001)(64756008)(76116006)(966005)(41300700001)(38070700005)(86362001)(6506007)(8676002)(66476007)(4326008)(2906002)(66556008)(6486002)(8936002)(66446008)(71200400001)(66946007)(5660300002)(36756003)(4744005)(6512007)(31696002)(6636002)(37006003)(31686004)(186003)(38100700002)(54906003)(2616005)(26005)(107886003)(316002)(53546011)(478600001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WTFmMk90Tm5KU1VGdUZtRHZpYmhac3JJd1pxZ1hUUnJIclFXUmExOXFzSG1U?=
- =?utf-8?B?T2lDNDd2RUtnUk9TTVRqR295cEN4YVEzcnBOUDQ5aUJjUGpmYXBDNWlteUIy?=
- =?utf-8?B?TlR6TUxpRGNrNGZWSDdKVXl2MXpxVnlONXJDMzdwUXpnRW5BQVlCUFVJbE1m?=
- =?utf-8?B?Tkdwa2puemxLaElKZWpzTVh1MXJCbUE5MmNZcmNldllTeENZSEVPSkRxVGZt?=
- =?utf-8?B?emI3R0o5NUpHOEVrcXRkNnRFc1JISFBPKzRQVVROV2JabDJrZ1RmNElJZ1Nr?=
- =?utf-8?B?WitrbUJLckNzeVlzbjdEbFBRbkhNSlNuOUIyak4yaDYxL0l0ZDZJSHpWQVNJ?=
- =?utf-8?B?akFhUWFIVFVZVXpjK1pjV1NxeVMwa29zTWVyMW5XSjZrakd0dHBoMzZkRFdz?=
- =?utf-8?B?WlVuamM0RzNuMUdvSXZKbTZRMUhHRkNXNDdmMnFzSHhCeUVWdFZCc2daUmZG?=
- =?utf-8?B?ODN4SnFVdFczM2gyaE8zd29lVDB6VDh3SkFRbk5uU1U1Y0FyRkgyNG0ybGNZ?=
- =?utf-8?B?LzFQSGh4VXI2UFFFVUtZTkJVMmNFdGdUNmlSU0VCcmxlTDZ4dkV1cExlTU9h?=
- =?utf-8?B?NUc0UnBXR3NnZSs2cE5namFrRmtQZHBZOXloUXhTWVhQbFJlOTdvZFF4Vk15?=
- =?utf-8?B?NEhWZm8wM1hHek1kampPWFF6a2t3ajFPMkQrSUFyVEdibFlEalF2dmxVQVY1?=
- =?utf-8?B?bXltZjYzVVhOd21qYm1FUHRkNkw2KzRHVGRRdjh0VlhOemZFdGR6Vzl0ZVd5?=
- =?utf-8?B?TGZYb005ZXFxRDUrajZoekVvbUQ2M1RxTE5uR0ljajJ5Yjh5blJQMlZJQlY2?=
- =?utf-8?B?bnlCbThzMG5zYllZVlRWTEdtR1RLL0IreVZhem9VQ09ZUFloRVJxMTZndjAw?=
- =?utf-8?B?a2ppcVVLQ0Mrc3B4V1gycWpjUzU3VC9GaVVlTjU5cS9KNngyNGlRanA2Q1dq?=
- =?utf-8?B?Ykt0R3JtZGlCdWZZb2xtRDZ6SVJCSDJKaTMrREYrb1ZVbUVtbHg5Q2VwTXV3?=
- =?utf-8?B?MnR0Z3FMUytqck12d2hWYTlvNW5DbnVGYXl0Tm9SYXhrVUlnNHNPRnNSbXRj?=
- =?utf-8?B?V0JuUTc4Zk1zYlZjcGdrbCsvazNscFhkM2ZZcmJDbmdjRlJzelRWS252M3RG?=
- =?utf-8?B?QU1zNjFLMlkvMGlVVFd1Tkx1dXNxWjZWTmM5VkRFNGhkbUdibytXUDVCMUVL?=
- =?utf-8?B?VGpNcjJwYkZtYVVIRW1GRmc2LzZxcWdJK2w5RXc0UUJ2cVZWNVhDc2FyQ1B2?=
- =?utf-8?B?RXQyQlpmUlorQS9zQ2VnWFdRMUxJOWtzd1VEYmsxKysxdVN3R1ZCMU9JQ2M0?=
- =?utf-8?B?R2ZqY0llVUJ6dExxNUlzbFlBQXdSbENmNDF2U2IvbUVFR21rRTE4eE51QURy?=
- =?utf-8?B?Y2FjS3FjUGVWUjVTR1hEdllGeXFhdXBPUXk2cU1TRjhxVTZQeHV3czROK2R4?=
- =?utf-8?B?bUNYT1FSUEpQMzlSZktjNjRnRk0zQWxEalJaQm1qMHRkZW9lUGJTYUhOZFVv?=
- =?utf-8?B?VDVRbGI1KzNEWGtyUWtVYzMvS2JZbE41d0YxdkFOYVoxL2d6ZmhsTmR2M3FM?=
- =?utf-8?B?V3YvZmRzeHJJTDk2L0c5L2RwMWg4YnZQZ0kwUXRsbkhsc1lyWGpnb1d6Rllv?=
- =?utf-8?B?UDl3V2o4aXU0cWNjLzhGN2xUWXY3cmNER0RVZlFVNHhFODJ3R3NxbGtpYVJw?=
- =?utf-8?B?L0Z6QStSV1pRcVJ4ZmdVQ2RBd2tQVmxlK1dkYnRMZkJIbjlSV2gzcTQ4bWF2?=
- =?utf-8?B?Qm8yMHZSSlZXK3VhenJ1UG5Gci9SYSt3YXRwTk12K3NMUXlmVjAvVE8yMmRU?=
- =?utf-8?B?Qm8vK0hhTVdWL2d0UDZ4L1JPd2MvUDgyelNVUmJoTmpxNFpzTnNHck9XY0tt?=
- =?utf-8?B?RGNLbnRFeDhtd0NuYVY4NHJxK1ZTdW5xRDdKVDZIU0lBRStOZFE2N21uKzlS?=
- =?utf-8?B?SUkzWGJ5Q0VNZytieE9SS0xTdWV3TUR4dEZpNHo1UFlLUVo0OUVQZThsZnJU?=
- =?utf-8?B?U0VKR1libnVXaE5lYnh5SE8xTkJobTBUM0JNUW5ZUVMvbUwvdEplL1BNMytY?=
- =?utf-8?B?NHlIUmlCU2NWdXFOZERlZ2s1OTd6ZnowaW96aFF0OWc5aisyK3cxMkFWYUVz?=
- =?utf-8?Q?B3OZbKOQZgrINd9m5prnyNrcW?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4E69EB3F6AA38441BEFD7FC52AA19479@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1657780908; x=1689316908;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=up1scXNMnYnQ0BHA0UZHK0Hve7fsYEf/AAW8bvkaxNw=;
+  b=bvnEoQlaUafDkEsuIjDL0cdb70cYbOkZORLnsZ6qILgniVWeFrI5lSER
+   /lwg4cazwucdMrX6RfcNDNaNgNDO6kQKUVJAeZYQn84OhZrn1rYz3R+3H
+   7MLeTAAC8Jej6HmHXeDnHCACIM89Nhmbvudukc5yNxiqR2WCdCpG/5XpP
+   SHJvHgNPA9iIXKnFPszMxY418t0KIDezdJCtMV0EB8Vwzp5HX9kqFQC8e
+   SvY54R6whPqG8XEYblkzulCp5MrFoqLXLJH9cvb4QCOUUgw1zR6whzR8x
+   fREz14VUZTSHJvDY4D1Hb5ZeL6fgOOXEVJ5X2xPTqFODrRsjuDlAvw2B1
+   w==;
+X-IronPort-AV: E=Sophos;i="5.92,269,1650924000"; 
+   d="scan'208";a="25040844"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 14 Jul 2022 08:41:45 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 14 Jul 2022 08:41:45 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 14 Jul 2022 08:41:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1657780905; x=1689316905;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=up1scXNMnYnQ0BHA0UZHK0Hve7fsYEf/AAW8bvkaxNw=;
+  b=TyVO8EWaHYG842SStZ0EQ8lyNPYUmgSoWOdLWMuJqy58k1I97h0lMRMc
+   7FEROs4Zzl3liZNM93RhI5sVS+BPjnMu4gQU3dqjd7FsALhQmiTISvRGI
+   a/+6dUXgTUmvU3IBSo6kTu1CfITh4t/JncO+QqFfQROcYcBnQrEdSBzEX
+   zRJTPHe2iTXgrDM/+yZWUcI13g+kqFopcbXJHkv6t/mQsEkciEdah+7Kj
+   YS0HvmYTpLH6K2vNOba2qkE8ChbFzO9zyzLuTNYv++ylsAYuzCWGngQvs
+   HYm9K69Mx/bEauTfR6OtROsrtD1aUNt091GL5GpRR0IgXWQZM1onYasf/
+   g==;
+X-IronPort-AV: E=Sophos;i="5.92,269,1650924000"; 
+   d="scan'208";a="25040843"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 14 Jul 2022 08:41:45 +0200
+Received: from steina-w.localnet (unknown [10.123.49.12])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 0FB97280056;
+        Thu, 14 Jul 2022 08:41:45 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Saravana Kannan <saravanak@google.com>, l.stach@pengutronix.de
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: Re: Re: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+Date:   Thu, 14 Jul 2022 08:41:42 +0200
+Message-ID: <1822575.tdWV9SEqCh@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <CAGETcx8-kx7RGTPhdyEHfFoxCyaojn5BnAr_f1==b=qeWZ6itQ@mail.gmail.com>
+References: <20220601070707.3946847-1-saravanak@google.com> <6079032.MhkbZ0Pkbq@steina-w> <CAGETcx8-kx7RGTPhdyEHfFoxCyaojn5BnAr_f1==b=qeWZ6itQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dfdddf2-2b8d-4ff1-6efe-08da6560d13e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2022 06:19:32.7985
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WIk1Z38zMBcCooIPoUmYPv7xnp4W2xx/6kQMa3r/6n2+0X98mFReXco00jhiMYN+GzQjgTz4aWCWZTBmCnFHk3G5PwvYsKePgQN/7H6JbLQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3547
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gMTMvMDcvMjAyMiAyMzoxNCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiBFWFRFUk5BTCBF
-TUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSBr
-bm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIFdlZCwgSnVsIDEzLCAyMDIyIGF0IDEw
-OjQ0IFBNIDxMZXdpcy5IYW5seUBtaWNyb2NoaXAuY29tPiB3cm90ZToNCj4+IE9uIFdlZCwgMjAy
-Mi0wNy0xMyBhdCAxMzo1OSArMDIwMCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPj4+IE9uIFdl
-ZCwgSnVsIDEzLCAyMDIyIGF0IDE6MDAgUE0gPGxld2lzLmhhbmx5QG1pY3JvY2hpcC5jb20+IHdy
-b3RlOg0KPj4+PiArICAgICAgIGlmIChncGlvX2NmZyAmIE1QRlNfR1BJT19FTl9JTikNCj4+Pj4g
-KyAgICAgICAgICAgICAgIHJldHVybiAxOw0KPj4+PiArDQo+Pj4+ICsgICAgICAgcmV0dXJuIDA7
-DQo+Pj4NCj4+PiBEb24ndCB3ZSBoYXZlIHNwZWNpZmljIGRlZmluaXRpb25zIGZvciB0aGUgZGly
-ZWN0aW9ucz8NCj4+IE5vIGRlZmluZXMgaW4gZmlsZS4NCj4gDQo+IFdlIGhhdmUuIFBsZWFzZSwg
-Y2hlY2sgYWdhaW4uDQoNCkkgc2FpZCB3aGF0IHRoZXkgd2VyZSBvbiBhbm90aGVyIHJlcGx5IExl
-d2lzOg0KaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvbGF0ZXN0L3NvdXJjZS9pbmNs
-dWRlL2xpbnV4L2dwaW8vZHJpdmVyLmgjTDI1DQo=
+Am Mittwoch, 13. Juli 2022, 02:45:06 CEST schrieb Saravana Kannan:
+> On Wed, Jul 6, 2022 at 6:02 AM Alexander Stein
+> <alexander.stein@ew.tq-group.com> wrote:
+> 
+> 
+> Thanks for testing all my patches and helping me debug this.
+> 
+> Btw, can you try to keep the subject the same please? Looks like
+> somewhere in your path [EXT] is added sometimes. lore.kernel.org keeps
+> the thread together, but my email client (gmail) gets confused.
+
+Sorry about that. Unfortunately [EXT] is inserted automatically and it is 
+tedious and error-prone to remove it manually...
+
+> > Am Dienstag, 5. Juli 2022, 03:24:33 CEST schrieb Saravana Kannan:
+> > > On Mon, Jul 4, 2022 at 12:07 AM Alexander Stein
+> > > 
+> > > <alexander.stein@ew.tq-group.com> wrote:
+> > > > Am Freitag, 1. Juli 2022, 09:02:22 CEST schrieb Saravana Kannan:
+> > > > > On Thu, Jun 30, 2022 at 11:02 PM Alexander Stein
+> > > > > 
+> > > > > <alexander.stein@ew.tq-group.com> wrote:
+> > > > > > Hi Saravana,
+> > > > > > 
+> > > > > > Am Freitag, 1. Juli 2022, 02:37:14 CEST schrieb Saravana Kannan:
+> > > > > > > On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
+> > > > > > > 
+> > > > > > > <alexander.stein@ew.tq-group.com> wrote:
+> > > > > > > > Hi,
+> > > > > > > > 
+> > > > > > > > Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony 
+Lindgren:
+> > > > > > > > > Hi,
+> > > > > > > > > 
+> > > > > > > > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
+> > > > > > > > > > Now that fw_devlink=on by default and fw_devlink supports
+> > > > > > > > > > "power-domains" property, the execution will never get to
+> > > > > > > > > > the
+> > > > > > > > > > point
+> > > > > > > > > > where driver_deferred_probe_check_state() is called before
+> > > > > > > > > > the
+> > > > > > > > > > supplier
+> > > > > > > > > > has probed successfully or before deferred probe timeout
+> > > > > > > > > > has
+> > > > > > > > > > expired.
+> > > > > > > > > > 
+> > > > > > > > > > So, delete the call and replace it with -ENODEV.
+> > > > > > > > > 
+> > > > > > > > > Looks like this causes omaps to not boot in Linux next. With
+> > > > > > > > > this
+> > > > > > > > > simple-pm-bus fails to probe initially as the power-domain
+> > > > > > > > > is
+> > > > > > > > > not
+> > > > > > > > > yet available. On platform_probe() genpd_get_from_provider()
+> > > > > > > > > returns
+> > > > > > > > > -ENOENT.
+> > > > > > > > > 
+> > > > > > > > > Seems like other stuff is potentially broken too, any ideas
+> > > > > > > > > on
+> > > > > > > > > how to fix this?
+> > > > > > > > 
+> > > > > > > > I think I'm hit by this as well, although I do not get a
+> > > > > > > > lockup.
+> > > > > > > > In my case I'm using
+> > > > > > > > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts and
+> > > > > > > > probing of
+> > > > > > > > 38320000.blk-ctrl fails as the power-domain is not (yet)
+> > > > > > > > registed.
+> > > > > > > 
+> > > > > > > Ok, took a look.
+> > > > > > > 
+> > > > > > > The problem is that there are two drivers for the same device
+> > > > > > > and
+> > > > > > > they
+> > > > > > > both initialize this device.
+> > > > > > > 
+> > > > > > >     gpc: gpc@303a0000 {
+> > > > > > >     
+> > > > > > >         compatible = "fsl,imx8mq-gpc";
+> > > > > > >     
+> > > > > > >     }
+> > > > > > > 
+> > > > > > > $ git grep -l "fsl,imx7d-gpc" -- drivers/
+> > > > > > > drivers/irqchip/irq-imx-gpcv2.c
+> > > > > > > drivers/soc/imx/gpcv2.c
+> > > > > > > 
+> > > > > > > IMHO, this is a bad/broken design.
+> > > > > > > 
+> > > > > > > So what's happening is that fw_devlink will block the probe of
+> > > > > > > 38320000.blk-ctrl until 303a0000.gpc is initialized. And it
+> > > > > > > stops
+> > > > > > > blocking the probe of 38320000.blk-ctrl as soon as the first
+> > > > > > > driver
+> > > > > > > initializes the device. In this case, it's the irqchip driver.
+> > > > > > > 
+> > > > > > > I'd recommend combining these drivers into one. Something like
+> > > > > > > the
+> > > > > > > patch I'm attaching (sorry for the attachment, copy-paste is
+> > > > > > > mangling
+> > > > > > > the tabs). Can you give it a shot please?
+> > > > > > 
+> > > > > > I tried this patch and it delayed the driver initialization (those
+> > > > > > of
+> > > > > > UART
+> > > > > > as
+> > > > > 
+> > > > > > well BTW). Unfortunately the driver fails the same way:
+> > > > > Thanks for testing the patch!
+> > > > > 
+> > > > > > > [    1.125253] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV:
+> > > > > > > failed
+> > > > > > > to
+> > > > > > 
+> > > > > > attach power domain "bus"
+> > > > > > 
+> > > > > > More than that it even introduced some more errors:
+> > > > > > > [    0.008160] irq: no irq domain found for gpc@303a0000 !
+> > > > > 
+> > > > > So the idea behind my change was that as long as the irqchip isn't
+> > > > > the
+> > > > > root of the irqdomain (might be using the terms incorrectly) like
+> > > > > the
+> > > > > gic, you can make it a platform driver. And I was trying to hack up
+> > > > > a
+> > > > > patch that's the equivalent of platform_irqchip_probe() (which just
+> > > > > ends up eventually calling the callback you use in
+> > > > > IRQCHIP_DECLARE().
+> > > > > I probably made some mistake in the quick hack that I'm sure if
+> > > > > fixable.
+> > > > > 
+> > > > > > > [    0.013251] Failed to map interrupt for
+> > > > > > > /soc@0/bus@30400000/timer@306a0000
+> > > > > 
+> > > > > However, this timer driver also uses TIMER_OF_DECLARE() which can't
+> > > > > handle failure to get the IRQ (because it's can't -EPROBE_DEFER).
+> > > > > So,
+> > > > > this means, the timer driver inturn needs to be converted to a
+> > > > > platform driver if it's supposed to work with the IRQCHIP_DECLARE()
+> > > > > being converted to a platform driver.
+> > > > > 
+> > > > > But that's a can of worms not worth opening. But then I remembered
+> > > > > this simpler workaround will work and it is pretty much a variant of
+> > > > > the workaround that's already in the gpc's irqchip driver to allow
+> > > > > two
+> > > > > drivers to probe the same device (people really should stop doing
+> > > > > that).
+> > > > > 
+> > > > > Can you drop my previous hack patch and try this instead please? I'm
+> > > > > 99% sure this will work.
+> > > > > 
+> > > > > diff --git a/drivers/irqchip/irq-imx-gpcv2.c
+> > > > > b/drivers/irqchip/irq-imx-gpcv2.c index b9c22f764b4d..8a0e82067924
+> > > > > 100644
+> > > > > --- a/drivers/irqchip/irq-imx-gpcv2.c
+> > > > > +++ b/drivers/irqchip/irq-imx-gpcv2.c
+> > > > > @@ -283,6 +283,7 @@ static int __init imx_gpcv2_irqchip_init(struct
+> > > > > device_node *node,
+> > > > > 
+> > > > >          * later the GPC power domain driver will not be skipped.
+> > > > >          */
+> > > > >         
+> > > > >         of_node_clear_flag(node, OF_POPULATED);
+> > > > > 
+> > > > > +       fwnode_dev_initialized(domain->fwnode, false);
+> > > > > 
+> > > > >         return 0;
+> > > > >  
+> > > > >  }
+> > > > 
+> > > > Just to be sure here, I tried this patch on top of next-20220701 but
+> > > > unfortunately this doesn't fix the original problem either. The timer
+> > > > errors are gone though.
+> > > 
+> > > To clarify, you had the timer issue only with my "combine drivers"
+> > > patch,
+> > > right?
+> > 
+> > That's correct.
+> > 
+> > > > The probe of imx8m-blk-ctrl got slightly delayed (from 0.74 to 0.90s
+> > > > printk
+> > > > time) but results in the identical error message.
+> > > 
+> > > My guess is that the probe attempt of blk-ctrl is delayed now till gpc
+> > > probes (because of the device links getting created with the
+> > > fwnode_dev_initialized() fix), but by the time gpc probe finishes, the
+> > > power domains aren't registered yet because of the additional level of
+> > > device addition and probing.
+> > > 
+> > > Can you try the attached patch please?
+> > 
+> > Sure, it needed some small fixes though. But the error still is present.
+> > 
+> > > And if that doesn't fix the issues, then enable the debug logs in the
+> > > following functions please and share the logs from boot till the
+> > > failure? If you can enable CONFIG_PRINTK_CALLER, that'd help too.
+> > > device_link_add()
+> > > fwnode_link_add()
+> > > fw_devlink_relax_cycle()
+> > 
+> > I switched fw_devlink_relax_cycle() for fw_devlink_relax_link() as the
+> > former has no debug output here.
+> > 
+> > For the record I added the following line to my kernel command line:
+> > > dyndbg="func device_link_add +p; func fwnode_link_add +p; func
+> > 
+> > fw_devlink_relax_link +p"
+> > 
+> > I attached the dmesg until the probe error to this mail. But I noticed the
+> > 
+> > following lines which seem interesting:
+> > > [    1.466620][    T8] imx-pgc imx-pgc-domain.5: Linked as a consumer to
+> > > regulator.8
+> > > [    1.466743][    T8] imx-pgc imx-pgc-domain.5: imx_pgc_domain_probe:
+> > > Probe> 
+> > succeeded
+> > 
+> > > [    1.474733][    T8] imx-pgc imx-pgc-domain.6: Linked as a consumer to
+> > 
+> > regulator.9
+> > 
+> > > [    1.474774][    T8] imx-pgc imx-pgc-domain.6: imx_pgc_domain_probe:
+> > > Probe> 
+> > succeeded
+> 
+> I'm guessing this happens after the probe error.
+> 
+> Ok, I looked at the dmesg logs and this pretty much confirms my
+> thought on why the probe ordering wasn't maintained.
+> 
+> The power domains lack a compatible property, so the blk-ctrl is
+> linked as a consumer of the gpc instead:
+> [    0.343905][    T1] blk-ctrl@38320000 Linked as a fwnode consumer
+> to gpc@303a0000
+> [    0.343943][    T1] blk-ctrl@38320000 Linked as a fwnode consumer
+> to clock-controller@30380000
+> This ^^ is the device tree parsing figuring out the dependencies
+> between the DT nodes.
+> 
+> [    0.368462][    T1] platform 38320000.blk-ctrl: Linked as a
+> consumer to 30380000.clock-controller
+> [    0.368542][    T1] platform 38320000.blk-ctrl: Linked as a
+> consumer to 303a0000.gpc
+> This ^^ is converting the DT node dependencies into device links.
+> 
+> So, the only real options are:
+> 1. Fix DT and add a compatible string to the DT nodes.
+> 2. Move the initcall level of the regulator driver so the powerdomain
+> probe doesn't get deferred. Not ideal that we are playing initcall
+> chicken to handle the feature meant to remove the need for initcall
+> chicken. But I see these "device, but won't have a compatible
+> property" as exceptions and feel it's okay to have to play with
+> initcall levels to handle those.
+> 3. Provide a helper function that driver that do this (creating
+> devices for child DT nodes without compatible property) can use to
+> move/copy their consumer device links to the child devices they add.
+> And then fix up the gpc driver so that it copies the gpc -- blk-ctrl
+> device link to the proper power domain.
+> 4. I have another idea for how I could fix that at a driver core
+> level, but I'm not sure it'll work yet and its definitely not
+> something I want to try and get in for 5.19 -- too late for that IMHO.
+> 
+> Want to give (2) a shot so that I can still try to keep the cleanup
+> series that caused this problem (that's the long term goal) while I
+> give (3) and (4) a shot for 5.20?
+
+Sure, I can give (2) a shot. Which initcall needs to be modified? You have a 
+diff snippet?
+BTW: this potentially affects all imx8m and imx7d as they have the same gpc 
+binding.
+
+Can't say much about (1). I added Lucas Stach to recipients, he did a lot on 
+this gpc driver.
+@Lucas: Do you have some input why the gpc power domains do not have a 
+compatible? Is it reasonable to add them?
+
+Best regards,
+Alexander
+
+> > regulator.8 and regulator.9 is the power sequencer, attached on I2C. This
+> > also makes perfectly sense if you look at [1]ff. These power domains are
+> > supplied by specific power supply rails. Several, if not all, imx8mq
+> > boards have this kind of setting.
+> 
+> Yeah, makes sense in terms of what's going on.
+> 
+> -Saravana
+> 
+> > > Btw, part of the reason I'm trying to make sure we fix it the right
+> > > way is that when we try to enable async boot by default, we don't run
+> > > into issues.
+> > 
+> > Sounds resonable.
+> > 
+> > Best regards,
+> > Alexander
+> > 
+> > [1]
+> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/
+> > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq.dtsi#n84
+
+
+
+
