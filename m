@@ -2,142 +2,223 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 730AD575EE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 11:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B303575F3B
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 12:18:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231414AbiGOJ6g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jul 2022 05:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39530 "EHLO
+        id S231564AbiGOKR6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jul 2022 06:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230407AbiGOJ6f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 05:58:35 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B28F242
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 02:58:33 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id n18so7049247lfq.1
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 02:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=C86CgKrohBVPLloJTNj8K1gKoORUDSvPyPt6pAAbawE=;
-        b=rB2JJqIJKnsqiT1A/XGVU3weneNMAbAsD19lOqlO4BK77X9Y5pQ+Y9s4KJxYJfHwzN
-         GhD5yehJDup82tAnvYfghosz6zSdx3xhIBIzBfxWqLI/9wbs28u5fNJ6L+Fz64Uslghu
-         OHn2hL3qgy7p1oIDWGNZMRYTxACVj7LGXRRWw2S3irhkHG+mYcpCjlf0fIPfScon5LEX
-         XfJqPdIE/wXPGgzguT5KfGzHVzJ4wtCd9Q3+GpvXxKGoegoPFf4xKGD6UUn7lYzn6J+2
-         119XHg581P5q58E0jHPHSPG5UjH0E274hWi5n/NrzKXvaPh53ULtGUTsPTYHqAWGuFzB
-         cgSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=C86CgKrohBVPLloJTNj8K1gKoORUDSvPyPt6pAAbawE=;
-        b=cJWVQs/pC6gJPZ3OKB2uaj35mzMOKuqFlL0FyaxqHhAx6i6HbDAG9pHdZfxoD1uX9O
-         GuyxK8lJ12x/jXfdltrhAKMFh9qcVicsnpW4X8DtyJd2nio7ahxKFz9lKv+co8EyKWka
-         cYSpIzvbhHSRxy0Ty4ULeU0uA0n+3Wrxp7CysVWFv34BamMlzre01BnZ/ltaJDZyyCpV
-         Ixzx9jK8NWJyxdFX2w+qEGq+pPIsJvNj1xL/Fvud1RXOuWFUDWqxR9QEVnGhAhpzCXgl
-         5oa5pHQvZRjY8c8afy4y9217yk51HNgptQ/Su0ZwiQstfCbGwAPXtXu4XBDLSQZ173o2
-         0FmA==
-X-Gm-Message-State: AJIora+eu7h3dCgQd4IIw/rtCcCUSY8QwbD8tEtW317m7UZnv8Z+WDbr
-        a+7ZsEOx4fu6f6h7kxchZFlgKQ==
-X-Google-Smtp-Source: AGRyM1uodWcLzFFFK1uWmceius5sVtz/pGn/o+DolxaBWDM14FBC42JSbj+uFYIlAYElSswdXZuxJQ==
-X-Received: by 2002:a05:6512:3b2c:b0:489:e66f:9de6 with SMTP id f44-20020a0565123b2c00b00489e66f9de6mr7443702lfv.304.1657879111687;
-        Fri, 15 Jul 2022 02:58:31 -0700 (PDT)
-Received: from [10.0.0.8] (fwa5da9-171.bb.online.no. [88.93.169.171])
-        by smtp.gmail.com with ESMTPSA id o25-20020ac24359000000b00478fc420ea6sm823062lfl.244.2022.07.15.02.58.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Jul 2022 02:58:30 -0700 (PDT)
-Message-ID: <24903621-358d-d380-76f4-6515c6313bbd@linaro.org>
-Date:   Fri, 15 Jul 2022 11:58:28 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
- binding
-Content-Language: en-US
-To:     Biju Das <biju.das.jz@bp.renesas.com>,
+        with ESMTP id S230258AbiGOKR5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 06:17:57 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2128.outbound.protection.outlook.com [40.107.113.128])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE7D823B2;
+        Fri, 15 Jul 2022 03:17:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=acJ7Kg9paI1m+ZhicQLMjT5KM21spfAeq+rr1UZapXNc4NO2mFaiT55l0erTQDJiZTK9ic0aOCOmk/9DHfi7LhvSS+P4IGJ9rVXAqWxLRpHbMMtEUxx6m9cmHk+Zo90tnPuG5+8MH8dnDvPPvc6kdXwTMh80ShIBCwZz10Pe23wz8SZ2Nvk8GOuMrlVZjSotck5tfaZanTDACbdLpai7u35+ACH414TVTFURbaXTdTP598yQouSQD/2LBLqOPUa1iAZi2/mIsvug9vcm1B9iCEtTNMmv7NG5KeQn70p8z4E01ijq7x+eMlog3niAFLOz8GpjsyiJhivPbnxd/XGWRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f61EvI+pBjHc8ZQpBzhEUxBUbj51rzKVznqgxoooHno=;
+ b=PvsSFcpmzZW59MrGfK75Xij+nYWZLXKy3KgnQP3FRw22H+79B65xmr0vC+xXaZpVpGoSb8hAPWY7CkabrTbEHl1iIE5cF9B8kFYiKYueydmGxVMIEYVJ/gUFesNzu+ODa+YLnpAeI6dVHTLJsyNvzouORZD0p8Jdy3L6zeOuPbQAfrmKHNK6wHglOCeviV+gjmORta3VIsjKv/Auw9xLko0mI7tD5kdkGrAU80vI4iAGZPE684D1ps1xmyha4S2mvNOPv7MLvc+YKg1TDa9XWXrY7hWVAA0bSW7GjYox03RHDQ5b2xCmEorw6+U1RCntWrxYuze3ixllk+n5AeBDaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f61EvI+pBjHc8ZQpBzhEUxBUbj51rzKVznqgxoooHno=;
+ b=mEz60wcRysjaxucSrluPv6c+f1OmoN2MZnn0flSMVMoQeU6n83ID4mRoJTNEAbfpBBPzF7zr7xGtKJ1NtNQQpn2LDaPYiNLvuzr/JMKr//+RyjZp7pvc6UQH/EyXHL6FqxVsSXfI5ys9Ev9wGdNpSz5Urz5D6iZyibW5r4Rd5mo=
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
+ by TYWPR01MB9608.jpnprd01.prod.outlook.com (2603:1096:400:19b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.25; Fri, 15 Jul
+ 2022 10:17:49 +0000
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::b046:d8a3:ac9c:75b5]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::b046:d8a3:ac9c:75b5%4]) with mapi id 15.20.5438.014; Fri, 15 Jul 2022
+ 10:17:49 +0000
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org,
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
+ binding
+Thread-Topic: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
+ binding
+Thread-Index: AQHYlsA8CcHBPp2Q3UiHwTGN6xabGq1/NVwAgAABOoA=
+Date:   Fri, 15 Jul 2022 10:17:49 +0000
+Message-ID: <OS0PR01MB5922CE20E15959AEF89C36D4868B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
 References: <20220713135528.1386594-1-biju.das.jz@bp.renesas.com>
  <20220713135528.1386594-2-biju.das.jz@bp.renesas.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220713135528.1386594-2-biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <24903621-358d-d380-76f4-6515c6313bbd@linaro.org>
+In-Reply-To: <24903621-358d-d380-76f4-6515c6313bbd@linaro.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4c33d6a0-d7ba-4cae-2b06-08da664b4556
+x-ms-traffictypediagnostic: TYWPR01MB9608:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gZcIAtXhJdw/x/H6Tp3dGE9B+biYrbjLE0J19CuLrYXhHV6eJwSgCPBgDM+ZeRrmjjILYfYfOe4cA23LFiZAaSmgssC7hRVbSQz49rEv+Q0hayNxHufULqPxQ2vfZV/V8SK6iu/z78G7HKO3uRHwPhziO+KlgCt3OlloGbvYfSHBlY4Y3W2L8Uu6oiknK8uA8mNXlucb5LJR/8lqJO2/CANdliGucjnUU9hWviyQXs4V769fYFt9iMW3PXlo4y/wpIZIUS8RHuWcNfPPx0bg+cwlMHz6EpMZvmGZ8lFiomaSsOggZq6oM9rw4gn1yqNRqrtCMb3ISxtRcDaGhLAmL2aASESf+MzapyorCgbkVnlXchA51QdlLD5swHkeNxHmZSLcej/D4p83+VBw0c5LYqyzyuXhyGyPAG+1rQwtvoSXd9GsCQVWc6se5bdwRIQuJsPK/RAW+vZygqxucWNsfKG7m0iL848Vc6LWl+v1E+lEQrpZwtvygAuHFdjFk+Tw4mLaDfIQWE5YCBGaw+vKVVxQH2fUgt4DjxODkXbXVV8sODr1xV3jHNPPiEh0yT0W+aVPqSbK3iUfA/GEDDVaCH4fasaZYhAaz9kbAQqvtmj8mAmsIRrnSzaALdm8e7Y6gaj9i3GPqshFRcblmxVy5mn0thKJXg4eCGoqFvx8Qjhyd70D5UQmEl8d1k+26SH8UCFzHm73TiA6xbXiN2kh8/wiMu+JWCZu9E7AbAMMFyU9DQLyC94V8kg5ZQyoKFp2S3p0sFOOsqZLZTu7RtmFjITYnHQFQTqQjWlB163n7zmXFhSDzaGrA6iwELvbXQWc4dyGioa43Z5qBUtshCWCAw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(136003)(366004)(39860400002)(396003)(4326008)(186003)(66946007)(38070700005)(66556008)(83380400001)(107886003)(2906002)(8936002)(52536014)(5660300002)(76116006)(33656002)(8676002)(66446008)(64756008)(66476007)(9686003)(55016003)(110136005)(71200400001)(966005)(316002)(6506007)(7696005)(53546011)(54906003)(26005)(122000001)(38100700002)(478600001)(41300700001)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?Nwo4HvpecO3Ax4KcSxQvsPMjdAAzL219kiTq8qGzQQDFKb8/gkRuvA0doi?=
+ =?iso-8859-1?Q?hAFLA9EiaOvUQx8zjFA4RM9SpLU/vsX/uR7Z8erkRS8hF6h8aVrhc7Xhwt?=
+ =?iso-8859-1?Q?oy93f7X6qiheay+xTasL1HE6BHvg4NujEVrZS7KwXyJVoPTOGNIgXCTETT?=
+ =?iso-8859-1?Q?Wf1VgZuVNyE7GyxrzuB/apqJn1tfwHLQk++qdVEEPUuJW38Yx3oarLkEb+?=
+ =?iso-8859-1?Q?WJxTEDkUG5MLxFB82uqwetR1ZIEJ3IMUW0oUzLRJYhTZnQiw/9P7CKoWc+?=
+ =?iso-8859-1?Q?WXUozuKIBbdWQhqghpqw8RMtzNNpdKAGCFBlbV5Conx728/l30qQIf8hur?=
+ =?iso-8859-1?Q?ggdSH86s+5ZaOl3a8ZJADJPZAM6+T2HZkNRuIuluxTp9ym11vaPBuCXCbK?=
+ =?iso-8859-1?Q?0cn3BMLFED0Bxo793HUcwQ3CMA/e64spxZEWWi2MNiT7BkqfOvvFtYUwio?=
+ =?iso-8859-1?Q?XMUTdmVQrR3QKrA63QmZfj1WoO88wNDuwTjz94J9IATeVxd9QO5xUqCeeK?=
+ =?iso-8859-1?Q?QuyNp1ZIbl4dLhqTY3riMb3zWPm02/8WsLDME04Nw6YnKfjj/inLHx9fR6?=
+ =?iso-8859-1?Q?xoMDGNEVEZ7M+dr2NmyBdgJe6ROv47eacKdmCvaH6awnjXJKL98On3b9nl?=
+ =?iso-8859-1?Q?aPGjdIue7vZeMG8gr5s0BHuV/zi8R+AoCczCh2vBz3pOK2R+Wgq6s7RY4n?=
+ =?iso-8859-1?Q?84Qc5qlxEzzOJs0Lt6qypzpip6GUPZUzU0w7J7himIoudDjv4IeJXkN7y7?=
+ =?iso-8859-1?Q?M/bOKyTA+VT8v2Zxj/11N7aPEYJGAyEKDzVcIXZzPxPv3F9F6SKmFFHQ/D?=
+ =?iso-8859-1?Q?igjPbwIkIB/4m7/klLKNV2JV+57+ykXpMnrere9z6HJCs3DEwQYBEAoCaP?=
+ =?iso-8859-1?Q?/eefSgP6SDGCYdwHbJ3Zkqgu3O5yABd6RQWvdTL5FFPN9fixzTsdlnvXxZ?=
+ =?iso-8859-1?Q?nTt5BcZrdBqbsXClOhwrP9hNi2hFHAsRI4ows3yfSrpSAx+9cWfcGy2DI9?=
+ =?iso-8859-1?Q?9vywF0viPkulp4Mw1BwkSJ2Eb/PE/x3NPb+CuI9p4kk0rZwlWBKwVyVxkG?=
+ =?iso-8859-1?Q?+eQk/J2DSK6kD5Gn3dbmMG+eMgMIbDlLMP42+1VzwO+2qYXLMCTzs2Yo/Q?=
+ =?iso-8859-1?Q?JkmJh73EJYtchkmLPyNx+y36ZZ2fuY9jtpfDQKh4Eb3PuVTgk1ybGKWdAb?=
+ =?iso-8859-1?Q?9klXZyMBhz6gVQPbm1FZcyOYBzgqspLPrIMPXjgc2R5gZT/XpniXDWkB49?=
+ =?iso-8859-1?Q?R4bQ8tqRiiJwBnxZrqi9gQNDuhzGN5RoHbspbbdBhdwFCBLKRUJATE8S5g?=
+ =?iso-8859-1?Q?zQY4iDI6kLfCIs6Tzke5CQTOXFyG2bOezj6qhaAUjBBPG9u2LkllebK66y?=
+ =?iso-8859-1?Q?hM+42kNbIZH/AeNYVTig6op0LGe+Q35PppV4ag2zUqucuELEnY08k7Zmei?=
+ =?iso-8859-1?Q?Gn5XL1Iok8HKxjY6ysXLNT6x83unpe6oVOJbyYapxioDdIfgbXH06cEPqU?=
+ =?iso-8859-1?Q?TRJIAOaKddvfxY+RTlV5WGiLvqSYENf7DOOebTDO2PBA1LPa7wjpF3sPC2?=
+ =?iso-8859-1?Q?dLRbRdRRzbSAyX58RsGRAMDXeeuLt3YYB2/Ow1FuMQPkjVxWiHiruR7vUF?=
+ =?iso-8859-1?Q?pNmmKAEr9o/sKJwrlOJvbix6D8Cvw4bQyRY1ji64E3sSG7JBzXVF6olw?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c33d6a0-d7ba-4cae-2b06-08da664b4556
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2022 10:17:49.7577
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A52itvE5PG3P0cHtOrtpUrYmBQzqeVcV1zoaixU7OlqweqWNimhOELfH6V09iTh5k8pgvZFmWR4ruLgK/BFQe705b4aaGgf0lgkYbcv3NUo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB9608
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/07/2022 15:55, Biju Das wrote:
-> Add device tree bindings for the RZ/G2L Port Output Enable for GPT (POEG).
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> REF->v1:
->  * Modelled as pincontrol as most of its configuration is intended to be
->    static.
->  * Updated reg size in example.
-> ---
->  .../bindings/pinctrl/renesas,rzg2l-poeg.yaml  | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
-> new file mode 100644
-> index 000000000000..7607dd87fa68
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/renesas,rzg2l-poeg.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/G2L Port Output Enable for GPT (POEG)
-> +
-> +maintainers:
-> +  - Biju Das <biju.das.jz@bp.renesas.com>
-> +
-> +description: |
-> +  The output pins of the general PWM timer (GPT) can be disabled by using
-> +  the port output enabling function for the GPT (POEG). Specifically,
-> +  either of the following ways can be used.
-> +  * Input level detection of the GTETRGA to GTETRGD pins.
-> +  * Output-disable request from the GPT.
+Hi Krzysztof Kozlowski,
 
-Shouldn't this all be part of GPT? Is this a real separate device in the
-SoC?
+Thanks for the feedback.
 
-> +  * Register settings.
+> Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
+> binding
+>=20
+> On 13/07/2022 15:55, Biju Das wrote:
+> > Add device tree bindings for the RZ/G2L Port Output Enable for GPT
+> (POEG).
+> >
+> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> > REF->v1:
+> >  * Modelled as pincontrol as most of its configuration is intended to
+> be
+> >    static.
+> >  * Updated reg size in example.
+> > ---
+> >  .../bindings/pinctrl/renesas,rzg2l-poeg.yaml  | 65
+> > +++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+> > b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+> > new file mode 100644
+> > index 000000000000..7607dd87fa68
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yam
+> > +++ l
+> > @@ -0,0 +1,65 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > +---
+> > +$id:
+> > +
+> > +title: Renesas RZ/G2L Port Output Enable for GPT (POEG)
+> > +
+> > +maintainers:
+> > +  - Biju Das <biju.das.jz@bp.renesas.com>
+> > +
+> > +description: |
+> > +  The output pins of the general PWM timer (GPT) can be disabled by
+> > +using
+> > +  the port output enabling function for the GPT (POEG). Specifically,
+> > +  either of the following ways can be used.
+> > +  * Input level detection of the GTETRGA to GTETRGD pins.
+> > +  * Output-disable request from the GPT.
+>=20
+> Shouldn't this all be part of GPT? Is this a real separate device in the
+> SoC?
 
-This is confusing... so you can use POEG to mess up registers of GPT
-independently, so GPT does not know it?
+No, It is separate IP block, having its own register block, interrupts and =
+resets.
 
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,r9a07g044-poeg  # RZ/G2{L,LC}
-> +          - renesas,r9a07g054-poeg  # RZ/V2L
-> +      - const: renesas,rzg2l-poeg
-> +
+Please see RFC discussion here[1]
 
-Best regards,
-Krzysztof
+[1] https://lore.kernel.org/linux-renesas-soc/20220517210407.GA1635524-robh=
+@kernel.org/
+
+>=20
+> > +  * Register settings.
+>=20
+> This is confusing... so you can use POEG to mess up registers of GPT
+> independently, so GPT does not know it?
+
+POEG does not mess up registers of GPT. It is basically for protection.
+
+Using POEG register, it is possible to disable GPT output without the knowl=
+edge of GPT, after configuring the Output disable source select in the GTIN=
+TAD (General PWM Timer Interrupt Output Setting Register) register present =
+in GPT.
+
+Cheers,
+Biju
+
+>=20
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - renesas,r9a07g044-poeg  # RZ/G2{L,LC}
+> > +          - renesas,r9a07g054-poeg  # RZ/V2L
+> > +      - const: renesas,rzg2l-poeg
+> > +
+>=20
+> Best regards,
+> Krzysztof
