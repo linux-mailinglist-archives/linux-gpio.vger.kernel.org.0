@@ -2,355 +2,382 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60885576769
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 21:33:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B6035769B9
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jul 2022 00:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231225AbiGOTck (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jul 2022 15:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34510 "EHLO
+        id S232822AbiGOWN4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jul 2022 18:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229905AbiGOTc2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 15:32:28 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278A17E82B
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 12:31:28 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id sz17so10640193ejc.9
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 12:31:28 -0700 (PDT)
+        with ESMTP id S232823AbiGOWNg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 18:13:36 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86EF13F5E
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 15:08:51 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-31df2545d87so36642477b3.10
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 15:08:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uSPAlJmmriHlDlb3vXTxChyWNuSFJl3lViR/KmDCEp0=;
-        b=mGQ/fC/afrlTfsP5AGy6ti26lz3ZJEevbJSIPBoI5ke1EdbM5NU4FiqqzwdhN7bXzq
-         80j2Hl0EdfAA/b0i0EhSldowE9lrZfEvZQNTVvqv7LvLegUQ4v7Qu3UoHXBMVWxu1x/4
-         HfhRrKFxk5XQ0zUluO2159GLvjRVy+PUbNvzpzrPu21KXgttTVP98xjkRYLdiHfI9IKU
-         fUm8A9lGorzcdsZk+LH+rBk/N8sI4ixR44DEj6QmS41t5EEM/06XonnAspBpwAjt1M3T
-         qvuMGdEvLbgE9yBAtm5bUdVLmmJ2sakdxJdiY7TQdsjyDmI9aSXF+Gr+kPxPTslKGCEU
-         h3Og==
+         :cc;
+        bh=izcD1HnHb6lJxMaZm59KAnOWoNAatpAmAKZnItVmAVs=;
+        b=ApKlwkDvFAtogzg5Em18xQHqDMazDxjj8wvfsl2QZ/FA85GqR2OHyB6bNXvnTqi/+a
+         nS5RDQln03OGLmxvD4R87jiBQoJqC/G1LUOr7J/BuD5QWpwRAhDhAlNXe/PPdCLfOeG9
+         ylk9j3M3Mc3fTEYVoAfyxKooSc+WoZsMas0XqG6q3rpiFMpuiynljbowF7PdC3Q8T7Nm
+         9jLCLyQXrNzX+kQbSrv8c32kD346RW13sSH14J+II30usTKOTRNt3c5LLOZA1ug2Sqi9
+         N8YbkELAKL0fCLJbuqOm6P1utw4OcsBjUjrbB+WM0tCDIUlW6mXrDJUEy2qgBOyIYyiX
+         GjQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uSPAlJmmriHlDlb3vXTxChyWNuSFJl3lViR/KmDCEp0=;
-        b=GerdlsoOtQKup/+XbG2ajSKx03C/haUCuvTZNWpsx+3GxFt2Gc8Wb8cv3vaaqCUCRk
-         BtaTG7n9YUWOH/433oQygyX7ocb693T2iK0MRo5AOxuAEdIU/BFc9cO8j1wqaxq6Nszi
-         GG2RnvkS3KUoJVTLItknxT5ggl5fP64KTChHPqvv/vvPnnlX4xm9HyQ86J7LTrl3OwRC
-         f45S898kyNolU/Lqs4VQ2sbmQj+0qw3rv565gie5NUm5bu/FhcRj9vnYvA5XQPyYFTNa
-         JED8++Ok4fmXrjyD9mwKxGgKIIjVqpufo9WJanCGXADTs/qhG6kLeq3cq+xsTeJ5yqHH
-         braw==
-X-Gm-Message-State: AJIora8dmB9D3dynetDmkquiyFMoD39yxSFuHdwhwPGBdZ5Fkbz+2B8/
-        4fqcdAe8whGWqmrfmLV1kiyHid6Gz5VZ9Qdo35u+4g==
-X-Google-Smtp-Source: AGRyM1uqQkQx8LQQMZrsiH9jK3cummGrCvx8epOPfvpKc8lsZKZ8p2R43vjWolVg90hTjkOjFDYhL4Ut7psKzBzMsXA=
-X-Received: by 2002:a17:907:87b0:b0:72b:9f0d:3f89 with SMTP id
- qv48-20020a17090787b000b0072b9f0d3f89mr13954400ejc.734.1657913483500; Fri, 15
- Jul 2022 12:31:23 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=izcD1HnHb6lJxMaZm59KAnOWoNAatpAmAKZnItVmAVs=;
+        b=kVJhigVBfFNbFDWsYFyJtH7C9o6kVVd2t5m+c5YHqS672bphFA50OhVf3oV7miS9or
+         bIf4LiQHbHRWU17JEMpmOKJRVjnRj44c+m1fRc6EVuow1xxWOGLT0WOBrzzSSC8z+9ZH
+         SituD9+C+hE11QNEAvt4a+1Cc9fJKdL19CVyk/MSWwFupAiZKOmltOFdPQQBTONiT89z
+         nj73KOYr3eoCdjF8H66EbhK/dpb9uVCxjRf3tcu9vq6tBGYnnRzZk/dPQlviNVHaqQpL
+         YGflvqcr8iX8YMUQeLZgumE+1/qb2tK9XuE8ypeEqw2knqvwPv6xknsnZ1TzYbPAjVu3
+         hZJQ==
+X-Gm-Message-State: AJIora/yC9TTsFHYl3sx3wpj+t0eWeGAR3QZaSO/3WvfML3+I/EjYvo6
+        BaWr79g8lyiB4s5AXRScr6WkJMzo/oN+f7jtipYJ6g==
+X-Google-Smtp-Source: AGRyM1s6lD3+S3MaeEqIv8ER+1Q/n5NS5AlYeg7rFAFlRdDaCxlbMW3MnyaB8Y3RCXdl1QCA2dgnEiqF7RumJd4RBXc=
+X-Received: by 2002:a0d:eb83:0:b0:31c:8741:a033 with SMTP id
+ u125-20020a0deb83000000b0031c8741a033mr18690024ywe.455.1657922924688; Fri, 15
+ Jul 2022 15:08:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220713131421.1527179-1-nuno.sa@analog.com> <YtAvHMmGay/3HACZ@smile.fi.intel.com>
- <e0638b02bdcd0ee452846b86ce83458173912ef1.camel@gmail.com>
- <YtBnIxh6rDJMwpEm@smile.fi.intel.com> <5d9f9272334177e3ea864467f50095a8709bc0d2.camel@gmail.com>
- <YtFYFbP+xqAUUHZa@smile.fi.intel.com> <88114aeb10f7316cf3c1396179949f2fc351ad8f.camel@gmail.com>
-In-Reply-To: <88114aeb10f7316cf3c1396179949f2fc351ad8f.camel@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 15 Jul 2022 21:31:12 +0200
-Message-ID: <CAMRc=Mdz+8yfrATQPJ=uY33k2Dwt29g6vZbP3mSjkB_VAzP5+A@mail.gmail.com>
-Subject: Re: [PATCH 0/4] add support for bias pull-disable
-To:     =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+References: <20220601070707.3946847-1-saravanak@google.com>
+ <6079032.MhkbZ0Pkbq@steina-w> <CAGETcx8-kx7RGTPhdyEHfFoxCyaojn5BnAr_f1==b=qeWZ6itQ@mail.gmail.com>
+ <1822575.tdWV9SEqCh@steina-w>
+In-Reply-To: <1822575.tdWV9SEqCh@steina-w>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 15 Jul 2022 15:08:08 -0700
+Message-ID: <CAGETcx_SNicqGG62y+n-jPH-peW4j6SB=bekTOs3KqEq8z0wSQ@mail.gmail.com>
+Subject: Re: Re: Re: Re: [PATCH v2 1/9] PM: domains: Delete usage of driver_deferred_probe_check_state()
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     l.stach@pengutronix.de, Tony Lindgren <tony@atomide.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 2:19 PM Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+On Wed, Jul 13, 2022 at 11:41 PM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
 >
-> On Fri, 2022-07-15 at 15:05 +0300, Andy Shevchenko wrote:
-> > On Fri, Jul 15, 2022 at 12:20:56PM +0200, Nuno S=C3=A1 wrote:
-> > > On Thu, 2022-07-14 at 21:57 +0300, Andy Shevchenko wrote:
-> > > > On Thu, Jul 14, 2022 at 05:43:41PM +0200, Nuno S=C3=A1 wrote:
-> > > > > On Thu, 2022-07-14 at 17:58 +0300, Andy Shevchenko wrote:
-> > > > > > On Wed, Jul 13, 2022 at 03:14:17PM +0200, Nuno S=C3=A1 wrote:
-> > > > > > > The gpio core looks at 'FLAG_BIAS_DISABLE' in preparation
+> Am Mittwoch, 13. Juli 2022, 02:45:06 CEST schrieb Saravana Kannan:
+> > On Wed, Jul 6, 2022 at 6:02 AM Alexander Stein
+> > <alexander.stein@ew.tq-group.com> wrote:
+> >
+> >
+> > Thanks for testing all my patches and helping me debug this.
+> >
+> > Btw, can you try to keep the subject the same please? Looks like
+> > somewhere in your path [EXT] is added sometimes. lore.kernel.org keeps
+> > the thread together, but my email client (gmail) gets confused.
+>
+> Sorry about that. Unfortunately [EXT] is inserted automatically and it is
+> tedious and error-prone to remove it manually...
+>
+> > > Am Dienstag, 5. Juli 2022, 03:24:33 CEST schrieb Saravana Kannan:
+> > > > On Mon, Jul 4, 2022 at 12:07 AM Alexander Stein
+> > > >
+> > > > <alexander.stein@ew.tq-group.com> wrote:
+> > > > > Am Freitag, 1. Juli 2022, 09:02:22 CEST schrieb Saravana Kannan:
+> > > > > > On Thu, Jun 30, 2022 at 11:02 PM Alexander Stein
+> > > > > >
+> > > > > > <alexander.stein@ew.tq-group.com> wrote:
+> > > > > > > Hi Saravana,
+> > > > > > >
+> > > > > > > Am Freitag, 1. Juli 2022, 02:37:14 CEST schrieb Saravana Kannan:
+> > > > > > > > On Thu, Jun 23, 2022 at 5:08 AM Alexander Stein
+> > > > > > > >
+> > > > > > > > <alexander.stein@ew.tq-group.com> wrote:
+> > > > > > > > > Hi,
+> > > > > > > > >
+> > > > > > > > > Am Dienstag, 21. Juni 2022, 09:28:43 CEST schrieb Tony
+> Lindgren:
+> > > > > > > > > > Hi,
+> > > > > > > > > >
+> > > > > > > > > > * Saravana Kannan <saravanak@google.com> [700101 02:00]:
+> > > > > > > > > > > Now that fw_devlink=on by default and fw_devlink supports
+> > > > > > > > > > > "power-domains" property, the execution will never get to
+> > > > > > > > > > > the
+> > > > > > > > > > > point
+> > > > > > > > > > > where driver_deferred_probe_check_state() is called before
+> > > > > > > > > > > the
+> > > > > > > > > > > supplier
+> > > > > > > > > > > has probed successfully or before deferred probe timeout
+> > > > > > > > > > > has
+> > > > > > > > > > > expired.
+> > > > > > > > > > >
+> > > > > > > > > > > So, delete the call and replace it with -ENODEV.
+> > > > > > > > > >
+> > > > > > > > > > Looks like this causes omaps to not boot in Linux next. With
+> > > > > > > > > > this
+> > > > > > > > > > simple-pm-bus fails to probe initially as the power-domain
+> > > > > > > > > > is
+> > > > > > > > > > not
+> > > > > > > > > > yet available. On platform_probe() genpd_get_from_provider()
+> > > > > > > > > > returns
+> > > > > > > > > > -ENOENT.
+> > > > > > > > > >
+> > > > > > > > > > Seems like other stuff is potentially broken too, any ideas
+> > > > > > > > > > on
+> > > > > > > > > > how to fix this?
+> > > > > > > > >
+> > > > > > > > > I think I'm hit by this as well, although I do not get a
+> > > > > > > > > lockup.
+> > > > > > > > > In my case I'm using
+> > > > > > > > > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx.dts and
+> > > > > > > > > probing of
+> > > > > > > > > 38320000.blk-ctrl fails as the power-domain is not (yet)
+> > > > > > > > > registed.
+> > > > > > > >
+> > > > > > > > Ok, took a look.
+> > > > > > > >
+> > > > > > > > The problem is that there are two drivers for the same device
+> > > > > > > > and
+> > > > > > > > they
+> > > > > > > > both initialize this device.
+> > > > > > > >
+> > > > > > > >     gpc: gpc@303a0000 {
+> > > > > > > >
+> > > > > > > >         compatible = "fsl,imx8mq-gpc";
+> > > > > > > >
+> > > > > > > >     }
+> > > > > > > >
+> > > > > > > > $ git grep -l "fsl,imx7d-gpc" -- drivers/
+> > > > > > > > drivers/irqchip/irq-imx-gpcv2.c
+> > > > > > > > drivers/soc/imx/gpcv2.c
+> > > > > > > >
+> > > > > > > > IMHO, this is a bad/broken design.
+> > > > > > > >
+> > > > > > > > So what's happening is that fw_devlink will block the probe of
+> > > > > > > > 38320000.blk-ctrl until 303a0000.gpc is initialized. And it
+> > > > > > > > stops
+> > > > > > > > blocking the probe of 38320000.blk-ctrl as soon as the first
+> > > > > > > > driver
+> > > > > > > > initializes the device. In this case, it's the irqchip driver.
+> > > > > > > >
+> > > > > > > > I'd recommend combining these drivers into one. Something like
+> > > > > > > > the
+> > > > > > > > patch I'm attaching (sorry for the attachment, copy-paste is
+> > > > > > > > mangling
+> > > > > > > > the tabs). Can you give it a shot please?
+> > > > > > >
+> > > > > > > I tried this patch and it delayed the driver initialization (those
 > > > > > > > of
-> > > > > > > calling the
-> > > > > > > gpiochip 'set_config()' hook. However, AFAICT, there's no
-> > > > > > > way
-> > > > > > > that
-> > > > > > > this
-> > > > > > > flag is set because there's no support for it in firwmare
-> > > > > > > code.
-> > > > > > > Moreover,
-> > > > > > > in 'gpiod_configure_flags()', only pull-ups and pull-downs
-> > > > > > > are
-> > > > > > > being
-> > > > > > > handled.
+> > > > > > > UART
+> > > > > > > as
+> > > > > >
+> > > > > > > well BTW). Unfortunately the driver fails the same way:
+> > > > > > Thanks for testing the patch!
+> > > > > >
+> > > > > > > > [    1.125253] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV:
+> > > > > > > > failed
+> > > > > > > > to
 > > > > > > >
-> > > > > > > On top of this, there are some users that are looking at
-> > > > > > > 'PIN_CONFIG_BIAS_DISABLE' in the 'set_config()' hook. So,
-> > > > > > > unless
-> > > > > > > I'm
-> > > > > > > missing something, it looks like this was never working for
-> > > > > > > these
-> > > > > > > chips.
+> > > > > > > attach power domain "bus"
 > > > > > > >
-> > > > > > > Note that the ACPI case is only compiled tested. At first
-> > > > > > > glance,
-> > > > > > > it seems
-> > > > > > > the current patch is enough but i'm not really sure...
+> > > > > > > More than that it even introduced some more errors:
+> > > > > > > > [    0.008160] irq: no irq domain found for gpc@303a0000 !
 > > > > > >
-> > > > > > So, I looked closer to the issue you are trying to describe
-> > > > > > here.
-> > > > > >
-> > > > > > As far as I understand we have 4 state of BIAS in the
-> > > > > > hardware:
-> > > > > > 1/ AS IS (defined by firnware)
-> > > > > > 2/ Disabled (neither PU, not PD)
-> > > > > > 3/ PU
-> > > > > > 4/ PD
-> > > > > >
-> > > > > > The case when the default of bias is not disabled (for
-> > > > > > example
-> > > > > > specific, and I
-> > > > > > think very special, hardware may reset it to PD or PU), it's
+> > > > > > So the idea behind my change was that as long as the irqchip isn't
+> > > > > > the
+> > > > > > root of the irqdomain (might be using the terms incorrectly) like
+> > > > > > the
+> > > > > > gic, you can make it a platform driver. And I was trying to hack up
 > > > > > > a
-> > > > > > hardware driver
-> > > > > > responsibility to inform the framework about the real state
-> > > > > > of
-> > > > > > the
-> > > > > > lines and
-> > > > > > synchronize it.
+> > > > > > patch that's the equivalent of platform_irqchip_probe() (which just
+> > > > > > ends up eventually calling the callback you use in
+> > > > > > IRQCHIP_DECLARE().
+> > > > > > I probably made some mistake in the quick hack that I'm sure if
+> > > > > > fixable.
 > > > > > >
-> > > > > > Another case is when the firmware sets the line in non-
-> > > > > > disabled
-> > > > > > state
-> > > > > > and
-> > > > > > by some reason you need to disable it. The question is, why?
-> > > > >
-> > > > > Not getting this point...
-> > > >
-> > > > I understand that in your case "firmware" is what DTB provides.
-> > > > So taking into account that the default of hardware is PU, it
-> > > > needs
-> > > > a mechanism to override that, correct?
-> > > >
-> > >
-> > > Exactly...
-> > >
-> > > > > > > As a side note, this came to my attention during this
-> > > > > > > patchset
-> > > > > > > [1]
-> > > > > > > (and, ofr OF,  was tested with it).
-> > > > > > >
-> > > > > > > [1]:
-> > > > > > > https://lore.kernel.org/linux-input/20220708093448.42617-5-nu=
-no.sa@analog.com/
+> > > > > > > > [    0.013251] Failed to map interrupt for
+> > > > > > > > /soc@0/bus@30400000/timer@306a0000
 > > > > > >
-> > > > > > Since this provides a GPIO chip, correct?, it's
-> > > > > > responsibility of
-> > > > > > the
-> > > > > > driver to
-> > > > > > synchronize it, no? Basically if you really don't trust
-> > > > > > firmware,
-> > > > > > you
-> > > > > > may
+> > > > > > However, this timer driver also uses TIMER_OF_DECLARE() which can't
+> > > > > > handle failure to get the IRQ (because it's can't -EPROBE_DEFER).
+> > > > > > So,
+> > > > > > this means, the timer driver inturn needs to be converted to a
+> > > > > > platform driver if it's supposed to work with the IRQCHIP_DECLARE()
+> > > > > > being converted to a platform driver.
+> > > > > >
+> > > > > > But that's a can of worms not worth opening. But then I remembered
+> > > > > > this simpler workaround will work and it is pretty much a variant of
+> > > > > > the workaround that's already in the gpc's irqchip driver to allow
+> > > > > > two
+> > > > > > drivers to probe the same device (people really should stop doing
+> > > > > > that).
+> > > > > >
+> > > > > > Can you drop my previous hack patch and try this instead please? I'm
+> > > > > > 99% sure this will work.
+> > > > > >
+> > > > > > diff --git a/drivers/irqchip/irq-imx-gpcv2.c
+> > > > > > b/drivers/irqchip/irq-imx-gpcv2.c index b9c22f764b4d..8a0e82067924
+> > > > > > 100644
+> > > > > > --- a/drivers/irqchip/irq-imx-gpcv2.c
+> > > > > > +++ b/drivers/irqchip/irq-imx-gpcv2.c
+> > > > > > @@ -283,6 +283,7 @@ static int __init imx_gpcv2_irqchip_init(struct
+> > > > > > device_node *node,
+> > > > > >
+> > > > > >          * later the GPC power domain driver will not be skipped.
+> > > > > >          */
+> > > > > >
+> > > > > >         of_node_clear_flag(node, OF_POPULATED);
+> > > > > >
+> > > > > > +       fwnode_dev_initialized(domain->fwnode, false);
+> > > > > >
+> > > > > >         return 0;
+> > > > > >
+> > > > > >  }
 > > > > >
-> > > > > What do you mean by synchronize?
+> > > > > Just to be sure here, I tried this patch on top of next-20220701 but
+> > > > > unfortunately this doesn't fix the original problem either. The timer
+> > > > > errors are gone though.
 > > > >
-> > > > Full duplex sync, i.e. setting flag to PU for the pins that
-> > > > should
-> > > > stay PU:ed
-> > > > and disabling bias for the ones, that want it to be disabled. (PD
-> > > > accordingly)
-> > > >
-> > > > > > go via all GPIO lines and switch them to the known (in
-> > > > > > software)
-> > > > > > state. This
-> > > > > > approach on the other hand is error prone, because firmware
-> > > > > > should
-> > > > > > know better
-> > > > > > which pin is used for which purpose, no? If you don't trust
-> > > > > > firwmare
-> > > > > > (in some
-> > > > > > cases), then it's a matter of buggy platform that has to be
-> > > > > > quirked
-> > > > > > out.
-> > > > >
-> > > > > I'm not getting what you mean by "firmware should know better"?
-> > > > > So,
-> > > > > basically, and let's take OF as example, you can request a GPIO
-> > > > > in
-> > > > > OF
-> > > > > by doing something like:
-> > > > >
-> > > > >         foo-gpios =3D <&gpio 1 GPIO_PULL_UP>;
-> > > > >
-> > > > > In this way, when the consumer driver gets the gpio, all the
-> > > > > flags
-> > > > > will
-> > > > > be properly set so that when we set a direction (for example)
-> > > > > the
-> > > > > gpiochip's 'set_config()' will be called and the driver does
-> > > > > what
-> > > > > it
-> > > > > needs to setup the pull-up. If we want BIAS_DISABLED on the
-> > > > > pin,
-> > > > > there's no way to the same as the above. So basically, this can
-> > > > > ever
-> > > > > happen:
-> > > > >
-> > > > > https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiol=
-ib.c#L2227
-> > > > >
-> > > > > (only possible from the gpiochip cdev interface)
-> > > > >
-> > > > > So, what I'm proposing is to be possible to do from OF:
-> > > > >
-> > > > >         foo-gpios =3D <&gpio 1 GPIO_PULL_DISABLE>;
-> > > > >
-> > > > > And then we will get into the gpiochip's 'set_config()' to
-> > > > > disable
-> > > > > the
-> > > > > pull-up or pull-down.
-> > > > >
-> > > > > As I said, my device is an input keymap that can export pins as
-> > > > > GPIOs
-> > > > > (to be consumed by gpio_keys). The pins by default have pull-
-> > > > > ups
-> > > > > that
-> > > > > can be disabled by doing a device i2c write. I'm just trying to
-> > > > > use
-> > > > > the
-> > > > > infrastructure that already exists in gpiolib (for pull-
-> > > > > up|down) to
-> > > > > accomplish this. There's no pinctrl driver controlling the
-> > > > > pins.
-> > > > > The
-> > > > > device itself controls them and having this device as a pinctrl
-> > > > > one
-> > > > > is
-> > > > > not really applicable.
-> > > >
-> > > > Yes, I have got it eventually. The root cause is that after reset
-> > > > you
-> > > > have a
-> > > > hardware that doesn't disable bias.
-> > > >
-> > > > Now, we have DT properties for PD and PU, correct?
-> > > > For each requested pin you decide either to leave the state as it
-> > > > is,
-> > > > or
-> > > > apply bias.
-> > > >
-> > > > in ->probe() of your GPIO you reset hardware and for each GPIO
-> > > > descriptor you
-> > > > set PU flag.
-> > > > In ->request(), don;t know the name by heart, you disable BIAS
-> > > > based
-> > > > on absence
-> > > > of flags, it can be done without an additional properties, purely
-> > > > in
-> > > > the GPIO
-> > > > OF code. Do I understand this correctly?
-> > > >
+> > > > To clarify, you had the timer issue only with my "combine drivers"
+> > > > patch,
+> > > > right?
 > > >
-> > > Alright, I think now you got it and we are on the same page. If I
-> > > understood your suggestion, users would just use GPIO_PULL_UP in
-> > > dtb if
-> > > wanting the default behavior. I would then use the gpiochip
-> > > 'request()'
-> > > callback to test the for pull-up flag right?
-> >
-> > Something like this, yes.
-> >
-> > > If I'm getting this right, there's a problem with it...
-> > > gpiod_configure_flags() is called after gpiod_request() which means
-> > > that the gpiod descriptor won't still have the BIAS flags set. And
-> > > I
-> > > don't think there's a way (at least clean and easy) to get the
-> > > firmware
-> > > lookup flags from the request callback?
+> > > That's correct.
 > > >
-> > > So, honestly the only option I see to do it without changing
-> > > gpioblib
-> > > would be to hook this change in output/input callbacks which is far
-> > > from being optimal...
+> > > > > The probe of imx8m-blk-ctrl got slightly delayed (from 0.74 to 0.90s
+> > > > > printk
+> > > > > time) but results in the identical error message.
+> > > >
+> > > > My guess is that the probe attempt of blk-ctrl is delayed now till gpc
+> > > > probes (because of the device links getting created with the
+> > > > fwnode_dev_initialized() fix), but by the time gpc probe finishes, the
+> > > > power domains aren't registered yet because of the additional level of
+> > > > device addition and probing.
+> > > >
+> > > > Can you try the attached patch please?
 > > >
-> > > So, in the end having this explicitly like this feels the best
-> > > option
-> > > to me. Sure, I can find some workaround in my driver but that does
-> > > not
-> > > change this...
-> >
-> > Ok, let me think about it. Meanwhile, maybe others have better ideas
-> > already?
-> >
->
-> Sure, I'm still thinking that having this extra property and explicitly
-> set it from OF is not that bad :)
->
-> > > "
-> > > git grep "PIN_CONFIG_BIAS_DISABLE" drivers/gpio/
-> >
-> > Hint: `git grep -lw "PIN_CONFIG_BIAS_DISABLE" -- drivers/gpio`
-> >
->
-> nice..
->
-> > > drivers/gpio/gpio-aspeed.c:963: else if (param =3D=3D
-> > > PIN_CONFIG_BIAS_DISABLE ||
-> > > drivers/gpio/gpio-merrifield.c:197:     if
-> > > ((pinconf_to_config_param(config) =3D=3D PIN_CONFIG_BIAS_DISABLE) ||
-> > > drivers/gpio/gpio-omap.c:903:   case PIN_CONFIG_BIAS_DISABLE:
-> > > drivers/gpio/gpio-pca953x.c:573:        if (config =3D=3D
-> > > PIN_CONFIG_BIAS_DISABLE)
-> > > drivers/gpio/gpio-pca953x.c:592:        case
-> > > PIN_CONFIG_BIAS_DISABLE:
-> > > "
+> > > Sure, it needed some small fixes though. But the error still is present.
 > > >
-> > > AFAICT, the only way this path is possible for these drivers is
-> > > through
-> > > gpiolib cdev which might not be what the authors of the drivers
-> > > were
-> > > expecting...
+> > > > And if that doesn't fix the issues, then enable the debug logs in the
+> > > > following functions please and share the logs from boot till the
+> > > > failure? If you can enable CONFIG_PRINTK_CALLER, that'd help too.
+> > > > device_link_add()
+> > > > fwnode_link_add()
+> > > > fw_devlink_relax_cycle()
+> > >
+> > > I switched fw_devlink_relax_cycle() for fw_devlink_relax_link() as the
+> > > former has no debug output here.
+> > >
+> > > For the record I added the following line to my kernel command line:
+> > > > dyndbg="func device_link_add +p; func fwnode_link_add +p; func
+> > >
+> > > fw_devlink_relax_link +p"
+> > >
+> > > I attached the dmesg until the probe error to this mail. But I noticed the
+> > >
+> > > following lines which seem interesting:
+> > > > [    1.466620][    T8] imx-pgc imx-pgc-domain.5: Linked as a consumer to
+> > > > regulator.8
+> > > > [    1.466743][    T8] imx-pgc imx-pgc-domain.5: imx_pgc_domain_probe:
+> > > > Probe>
+> > > succeeded
+> > >
+> > > > [    1.474733][    T8] imx-pgc imx-pgc-domain.6: Linked as a consumer to
+> > >
+> > > regulator.9
+> > >
+> > > > [    1.474774][    T8] imx-pgc imx-pgc-domain.6: imx_pgc_domain_probe:
+> > > > Probe>
+> > > succeeded
 > >
-> > gpio-merrifield is bad example, it has a pin control.
-> > gpio-pca953x as I said should effectively be a pin control driver.
+> > I'm guessing this happens after the probe error.
 > >
-> > For the two left it might be the case.
+> > Ok, I looked at the dmesg logs and this pretty much confirms my
+> > thought on why the probe ordering wasn't maintained.
 > >
+> > The power domains lack a compatible property, so the blk-ctrl is
+> > linked as a consumer of the gpc instead:
+> > [    0.343905][    T1] blk-ctrl@38320000 Linked as a fwnode consumer
+> > to gpc@303a0000
+> > [    0.343943][    T1] blk-ctrl@38320000 Linked as a fwnode consumer
+> > to clock-controller@30380000
+> > This ^^ is the device tree parsing figuring out the dependencies
+> > between the DT nodes.
+> >
+> > [    0.368462][    T1] platform 38320000.blk-ctrl: Linked as a
+> > consumer to 30380000.clock-controller
+> > [    0.368542][    T1] platform 38320000.blk-ctrl: Linked as a
+> > consumer to 303a0000.gpc
+> > This ^^ is converting the DT node dependencies into device links.
+> >
+> > So, the only real options are:
+> > 1. Fix DT and add a compatible string to the DT nodes.
+> > 2. Move the initcall level of the regulator driver so the powerdomain
+> > probe doesn't get deferred. Not ideal that we are playing initcall
+> > chicken to handle the feature meant to remove the need for initcall
+> > chicken. But I see these "device, but won't have a compatible
+> > property" as exceptions and feel it's okay to have to play with
+> > initcall levels to handle those.
+> > 3. Provide a helper function that driver that do this (creating
+> > devices for child DT nodes without compatible property) can use to
+> > move/copy their consumer device links to the child devices they add.
+> > And then fix up the gpc driver so that it copies the gpc -- blk-ctrl
+> > device link to the proper power domain.
+> > 4. I have another idea for how I could fix that at a driver core
+> > level, but I'm not sure it'll work yet and its definitely not
+> > something I want to try and get in for 5.19 -- too late for that IMHO.
+> >
+> > Want to give (2) a shot so that I can still try to keep the cleanup
+> > series that caused this problem (that's the long term goal) while I
+> > give (3) and (4) a shot for 5.20?
 >
-> Well the thing is that even if we have pinctrl like for example,
-> gpio-omap, it is still true that there's no way to get into
-> 'omap_gpio_set_config()' for 'PIN_CONFIG_BIAS_DISABLE' and call
-> 'gpiochip_generic_config()'.
->
-> (naturally in this case, one can directly use pinctrl properties to
-> control the pin but still...)
->
->
-> - Nuno S=C3=A1
->
+> Sure, I can give (2) a shot. Which initcall needs to be modified? You have a
+> diff snippet?
 
-Ideologically I don't have anything against adding this flag (except
-that it should be called BIAS_DISABLE not PULL_DISABLE IMO). Nuno is
-right in that the character device is the only way to set this mode
-ATM and. However I would like to see the first user added together
-with the series because adding features nobody uses in the mainline
-kernel tree is generally frowned upon and it's also not clear that
-anyone actually wants to use it.
+All initcall for all the regulator drivers that feed this gpc power domain.
 
-Bart
+> BTW: this potentially affects all imx8m and imx7d as they have the same gpc
+> binding.
+
+Good point. That's why I was asking for your help :) -- you have more
+context on these hardware.
+
+> Can't say much about (1). I added Lucas Stach to recipients, he did a lot on
+> this gpc driver.
+> @Lucas: Do you have some input why the gpc power domains do not have a
+> compatible? Is it reasonable to add them?
+
+It's generally frowned upon to update the kernel in a way that it
+breaks backwards compatibility with an older DT binary. That's why I
+didn't ask about (1).
+
+It's fairly trivial to get it to work if we (who is "we" here?) agree
+it's okay to add the compatible property and break DT backwards
+compatibility in this case.
+
+-Saravana
