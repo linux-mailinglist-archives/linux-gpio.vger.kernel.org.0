@@ -2,92 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 420DC576A8C
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jul 2022 01:20:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C46F0576AC8
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jul 2022 01:36:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbiGOXUo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jul 2022 19:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47336 "EHLO
+        id S231615AbiGOXgH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jul 2022 19:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229594AbiGOXUn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 19:20:43 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD64491CF7;
-        Fri, 15 Jul 2022 16:20:42 -0700 (PDT)
-Received: by mail-io1-f49.google.com with SMTP id p81so5030231iod.2;
-        Fri, 15 Jul 2022 16:20:42 -0700 (PDT)
+        with ESMTP id S229499AbiGOXgG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 19:36:06 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E3113E19;
+        Fri, 15 Jul 2022 16:36:02 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id e15so3436120wro.5;
+        Fri, 15 Jul 2022 16:36:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=HCNYGow5nVdiUj8HiGxZTHr1Lk6MTCK4vh2T29V1oIg=;
+        b=Qcc5wrLPF/njXC8FuWZ6W3lo5Yfu237T82ALxteoHtlauDWpJf9mTmfuvFydtfXyUR
+         5j/VqvGP85Iuj8OtgTKFj8mlsY8r50CFZOXru/fWv1qfgO7sK9tV7WmMirzpZsKN5UwW
+         7YkBP7bqVhRwZrq69mjlWG5WGuA4RPwp8XiJBt4s0bcOtZ6jlqcOMqo1sXGTpmLYP2KY
+         bIfR/2SPA93eQQtcc4Gh7fRITNkVQ97ryPgO7Li1VTqDl/MA//ohEdkjpYF3eOEjipTW
+         IPOCAHipK5LlpefuwnC5P5zGNaMWWyd8CW6pFOT+XnDtpIg5BfMqYmb5SctlyktLfMpk
+         MUSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=357WJpKqK4n072gUDP2xO7EDnU9lyZF13OaAt7W+XvU=;
-        b=2t71NgR3qCQ7mEg9vO0bZm0xoEmgVwYgvDYvOJOL81usXcQonEb/Nhn9ePoRqWLLgN
-         ZA4CPj7Fu3naAjgN+ohG+7eXJBm4paugOdCxqdcs0ypljFPoozSfrv61m8P7YCd6gp8x
-         BGeftFLZBOyftqo/jIlfuNTDa66VoChcUaPYOMpP+noOc9uNpcwl00U7YCVB0F5OPDyw
-         jin0hMhlQ9xXj3mSiWuroP631L+P7VNGi1R3LEzYBLUcZ4SLw2jANYqBjlRdRIp0HgRi
-         6lHfEB9+Y2wnmCiJ0D/7a3f6vdfs1S2e1oSEcsBd/mmr23CvdE6APylCq3O6C0vKdT+D
-         K71g==
-X-Gm-Message-State: AJIora9Y9iasRHZx5PIrjBIipFP7l/L1iCA/9KoLD2DTkE8poatBP5Zs
-        vaSym2XNsf8nXXNqnlf/HA==
-X-Google-Smtp-Source: AGRyM1tQ46xHJYDafNFQLDzbX9yaXJPf1IJ35ZWUtezEz3nl7DXHI+lRSk0NX8wn7O6/zhUIHiuMjg==
-X-Received: by 2002:a6b:ed14:0:b0:675:9593:483e with SMTP id n20-20020a6bed14000000b006759593483emr7665689iog.65.1657927241909;
-        Fri, 15 Jul 2022 16:20:41 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id k7-20020a02c767000000b003415545d938sm600126jao.166.2022.07.15.16.20.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=HCNYGow5nVdiUj8HiGxZTHr1Lk6MTCK4vh2T29V1oIg=;
+        b=1s/WivetxUagIamyd0t4CJw8Q+ausx4O0To25I298R0aikflXJiVU/4dLv4cOUVA7t
+         phRkqSKaFVC/oAjL+z51E42frRKSz1yLgN9z3w1oznJNkmj/LeS6PS4W+nd7+5gGjT9a
+         K3pbw5i/GRY6rfUQqnHZqDWqOLos6XVWBD1BMA8rVWKqHLKt5df7ryrmNv3PP+aQIAEP
+         uoQuzfSnaRjEPkOQ6fLXJ7+WjRxafQdqAPU4HA7I5ezXa9sBdqa38PxvS94/2EckD9UX
+         50w/Uo16fjRdz3QlwlF//lDUAmkoUgWOpgPA4SPhCBtvzyopOvxJgC4yPzi/Q7PILUu/
+         ayjA==
+X-Gm-Message-State: AJIora9T9PbJ6Dfam3J4HaaBofWuZvWWX6ABp5psv1oXuzTlSaj30gtn
+        cuSH/XF7kg3M/om+nJ8PBgQ=
+X-Google-Smtp-Source: AGRyM1vFZEEGxe0/NqO66n84cNHfCFwmZT4A06oMZkgd7GN++rMg200OBDIkjx2TmD6Xff0aOn1owA==
+X-Received: by 2002:adf:f705:0:b0:21d:74fa:c043 with SMTP id r5-20020adff705000000b0021d74fac043mr14989190wrp.77.1657928161014;
+        Fri, 15 Jul 2022 16:36:01 -0700 (PDT)
+Received: from debian (host-78-150-47-22.as13285.net. [78.150.47.22])
+        by smtp.gmail.com with ESMTPSA id m17-20020a05600c3b1100b003976fbfbf00sm8352791wms.30.2022.07.15.16.36.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Jul 2022 16:20:41 -0700 (PDT)
-Received: (nullmailer pid 1651421 invoked by uid 1000);
-        Fri, 15 Jul 2022 23:20:39 -0000
-Date:   Fri, 15 Jul 2022 17:20:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, sean.wang@mediatek.com,
-        matthias.bgg@gmail.com, nfraprado@collabora.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: Use
- drive-strength-microamp in examples
-Message-ID: <20220715232039.GA1648171-robh@kernel.org>
-References: <20220715103029.204500-1-angelogioacchino.delregno@collabora.com>
- <1657892575.852530.520283.nullmailer@robh.at.kernel.org>
+        Fri, 15 Jul 2022 16:36:00 -0700 (PDT)
+Date:   Sat, 16 Jul 2022 00:35:58 +0100
+From:   "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org
+Subject: build failure of next-20220715 due to "No rule to make target"
+Message-ID: <YtH53r9UcYwquxcx@debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1657892575.852530.520283.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 07:42:55AM -0600, Rob Herring wrote:
-> On Fri, 15 Jul 2022 12:30:29 +0200, AngeloGioacchino Del Regno wrote:
-> > The property mediatek,drive-strength-adv was deprecated: change the
-> > example for i2c0-pins to use drive-strength-microamp.
-> > 
-> > Fixes: b6d9af2c6b69 ("dt-bindings: pinctrl: mt8195: Add and use drive-strength-microamp")
-> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> > ---
-> >  Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> 
-> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
-> 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.example.dtb: pinctrl@10005000: i2c0-pins:pins: 'drive-strength-microamp' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+Hi All,
 
-Seems to be a false positive since commit b6d9af2c6b69 was not present 
-in the test.
+Not sure if it has been reported, builds of arm and arm64 allmodconfig
+have failed to build next-20220715 with the error:
 
-Acked-by: Rob Herring <robh@kernel.org>
+make[3]: *** No rule to make target 'drivers/pinctrl/sunxi/pinctrl-sun20i-d1.o', needed by 'drivers/pinctrl/sunxi/built-in.a'.  Stop.
+
+
+--
+Regards
+Sudip
