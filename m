@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12BE7576233
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 14:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00358576230
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 14:51:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232685AbiGOMvH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jul 2022 08:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34368 "EHLO
+        id S232981AbiGOMvG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jul 2022 08:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbiGOMvF (ORCPT
+        with ESMTP id S232685AbiGOMvF (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 08:51:05 -0400
 Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522963F33E;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A26F146DA0;
         Fri, 15 Jul 2022 05:51:04 -0700 (PDT)
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26FCiX5e011946;
-        Fri, 15 Jul 2022 08:50:59 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3h73h7ca5h-1
+        by mx0a-00128a01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26FBxuMO011643;
+        Fri, 15 Jul 2022 08:51:01 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3h73h7ca5q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Jul 2022 08:50:59 -0400
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 26FCowei062755
+        Fri, 15 Jul 2022 08:51:01 -0400
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 26FCp0TY062923
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 Jul 2022 08:50:58 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 15 Jul 2022 08:51:00 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 15 Jul
- 2022 08:50:57 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 15 Jul 2022 08:50:57 -0400
+ 2022 08:50:59 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 15 Jul 2022 08:50:59 -0400
 Received: from nsa.ad.analog.com ([10.44.3.55])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 26FCoXmO002053;
-        Fri, 15 Jul 2022 08:50:51 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 26FCoXmP002053;
+        Fri, 15 Jul 2022 08:50:53 -0400
 From:   =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
 To:     <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
         <devicetree@vger.kernel.org>
@@ -45,9 +45,9 @@ CC:     Linus Walleij <linus.walleij@linaro.org>,
         Michael Hennerich <michael.hennerich@analog.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: [PATCH v2 07/10] input: keyboard: adp5588-keys: fix coding style warnings
-Date:   Fri, 15 Jul 2022 14:51:35 +0200
-Message-ID: <20220715125138.378632-8-nuno.sa@analog.com>
+Subject: [PATCH v2 08/10] input: keyboard: adp5588-keys: add optional reset gpio
+Date:   Fri, 15 Jul 2022 14:51:36 +0200
+Message-ID: <20220715125138.378632-9-nuno.sa@analog.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220715125138.378632-1-nuno.sa@analog.com>
 References: <20220715125138.378632-1-nuno.sa@analog.com>
@@ -55,8 +55,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: L-Kpha9ZZZ-BqTj0EDvsumusjbbBAVI0
-X-Proofpoint-ORIG-GUID: L-Kpha9ZZZ-BqTj0EDvsumusjbbBAVI0
+X-Proofpoint-GUID: -4_pVWwbBtF9418pKFX73Tx6KFonQurb
+X-Proofpoint-ORIG-GUID: -4_pVWwbBtF9418pKFX73Tx6KFonQurb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-07-15_05,2022-07-15_01,2022-06-22_01
@@ -74,239 +74,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Just some code cleanup regarding coding style. With the introduction of
-the bits.h macros changes in the code are indeed introduced.
+Optionally reset the device during probe.
 
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/input/keyboard/adp5588-keys.c | 98 +++++++++++++--------------
- 1 file changed, 48 insertions(+), 50 deletions(-)
+ drivers/input/keyboard/adp5588-keys.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/input/keyboard/adp5588-keys.c b/drivers/input/keyboard/adp5588-keys.c
-index 2e0816c42b58..6a0b9f394960 100644
+index 6a0b9f394960..51871fec97f7 100644
 --- a/drivers/input/keyboard/adp5588-keys.c
 +++ b/drivers/input/keyboard/adp5588-keys.c
-@@ -8,6 +8,7 @@
-  * Copyright (C) 2008-2010 Analog Devices Inc.
-  */
- 
-+#include <linux/bits.h>
+@@ -11,6 +11,7 @@
+ #include <linux/bits.h>
  #include <linux/delay.h>
  #include <linux/errno.h>
++#include <linux/gpio/consumer.h>
  #include <linux/gpio/driver.h>
-@@ -29,16 +30,16 @@
- #define CFG 0x01		/* Configuration Register1 */
- #define INT_STAT 0x02		/* Interrupt Status Register */
- #define KEY_LCK_EC_STAT 0x03	/* Key Lock and Event Counter Register */
--#define Key_EVENTA 0x04		/* Key Event Register A */
--#define Key_EVENTB 0x05		/* Key Event Register B */
--#define Key_EVENTC 0x06		/* Key Event Register C */
--#define Key_EVENTD 0x07		/* Key Event Register D */
--#define Key_EVENTE 0x08		/* Key Event Register E */
--#define Key_EVENTF 0x09		/* Key Event Register F */
--#define Key_EVENTG 0x0A		/* Key Event Register G */
--#define Key_EVENTH 0x0B		/* Key Event Register H */
--#define Key_EVENTI 0x0C		/* Key Event Register I */
--#define Key_EVENTJ 0x0D		/* Key Event Register J */
-+#define KEY_EVENTA 0x04		/* Key Event Register A */
-+#define KEY_EVENTB 0x05		/* Key Event Register B */
-+#define KEY_EVENTC 0x06		/* Key Event Register C */
-+#define KEY_EVENTD 0x07		/* Key Event Register D */
-+#define KEY_EVENTE 0x08		/* Key Event Register E */
-+#define KEY_EVENTF 0x09		/* Key Event Register F */
-+#define KEY_EVENTG 0x0A		/* Key Event Register G */
-+#define KEY_EVENTH 0x0B		/* Key Event Register H */
-+#define KEY_EVENTI 0x0C		/* Key Event Register I */
-+#define KEY_EVENTJ 0x0D		/* Key Event Register J */
- #define KP_LCK_TMR 0x0E		/* Keypad Lock1 to Lock2 Timer */
- #define UNLOCK1 0x0F		/* Unlock Key1 */
- #define UNLOCK2 0x10		/* Unlock Key2 */
-@@ -66,9 +67,9 @@
- #define GPIO_INT_LVL1 0x26	/* GPIO Edge/Level Detect */
- #define GPIO_INT_LVL2 0x27	/* GPIO Edge/Level Detect */
- #define GPIO_INT_LVL3 0x28	/* GPIO Edge/Level Detect */
--#define Debounce_DIS1 0x29	/* Debounce Disable */
--#define Debounce_DIS2 0x2A	/* Debounce Disable */
--#define Debounce_DIS3 0x2B	/* Debounce Disable */
-+#define DEBOUNCE_DIS1 0x29	/* Debounce Disable */
-+#define DEBOUNCE_DIS2 0x2A	/* Debounce Disable */
-+#define DEBOUNCE_DIS3 0x2B	/* Debounce Disable */
- #define GPIO_PULL1 0x2C		/* GPIO Pull Disable */
- #define GPIO_PULL2 0x2D		/* GPIO Pull Disable */
- #define GPIO_PULL3 0x2E		/* GPIO Pull Disable */
-@@ -91,27 +92,27 @@
- #define ADP5588_DEVICE_ID_MASK	0xF
- 
-  /* Configuration Register1 */
--#define ADP5588_AUTO_INC	(1 << 7)
--#define ADP5588_GPIEM_CFG	(1 << 6)
--#define ADP5588_OVR_FLOW_M	(1 << 5)
--#define ADP5588_INT_CFG		(1 << 4)
--#define ADP5588_OVR_FLOW_IEN	(1 << 3)
--#define ADP5588_K_LCK_IM	(1 << 2)
--#define ADP5588_GPI_IEN		(1 << 1)
--#define ADP5588_KE_IEN		(1 << 0)
-+#define ADP5588_AUTO_INC	BIT(7)
-+#define ADP5588_GPIEM_CFG	BIT(6)
-+#define ADP5588_OVR_FLOW_M	BIT(5)
-+#define ADP5588_INT_CFG		BIT(4)
-+#define ADP5588_OVR_FLOW_IEN	BIT(3)
-+#define ADP5588_K_LCK_IM	BIT(2)
-+#define ADP5588_GPI_IEN		BIT(1)
-+#define ADP5588_KE_IEN		BIT(0)
- 
- /* Interrupt Status Register */
--#define ADP5588_CMP2_INT	(1 << 5)
--#define ADP5588_CMP1_INT	(1 << 4)
--#define ADP5588_OVR_FLOW_INT	(1 << 3)
--#define ADP5588_K_LCK_INT	(1 << 2)
--#define ADP5588_GPI_INT		(1 << 1)
--#define ADP5588_KE_INT		(1 << 0)
-+#define ADP5588_CMP2_INT	BIT(5)
-+#define ADP5588_CMP1_INT	BIT(4)
-+#define ADP5588_OVR_FLOW_INT	BIT(3)
-+#define ADP5588_K_LCK_INT	BIT(2)
-+#define ADP5588_GPI_INT		BIT(1)
-+#define ADP5588_KE_INT		BIT(0)
- 
- /* Key Lock and Event Counter Register */
--#define ADP5588_K_LCK_EN	(1 << 6)
-+#define ADP5588_K_LCK_EN	BIT(6)
- #define ADP5588_LCK21		0x30
--#define ADP5588_KEC		0xF
-+#define ADP5588_KEC		GENMASK(3, 0)
- 
- #define ADP5588_MAXGPIO		18
- #define ADP5588_BANK(offs)	((offs) >> 3)
-@@ -158,10 +159,10 @@
- #define ADP5588_GPIMAPSIZE_MAX (GPI_PIN_END - GPI_PIN_BASE + 1)
- 
- /* Key Event Register xy */
--#define KEY_EV_PRESSED		(1 << 7)
--#define KEY_EV_MASK		(0x7F)
-+#define KEY_EV_PRESSED		BIT(7)
-+#define KEY_EV_MASK		GENMASK(6, 0)
- 
--#define KP_SEL(x)		(0xFFFF >> (16 - x))	/* 2^x-1 */
-+#define KP_SEL(x)		(BIT(x) - 1)	/* 2^x-1 */
- 
- #define KEYP_MAX_EVENT		10
- 
-@@ -209,7 +210,7 @@ static int adp5588_write(struct i2c_client *client, u8 reg, u8 val)
- 	return i2c_smbus_write_byte_data(client, reg, val);
- }
- 
--static int adp5588_gpio_get_value(struct gpio_chip *chip, unsigned off)
-+static int adp5588_gpio_get_value(struct gpio_chip *chip, unsigned int off)
+ #include <linux/i2c.h>
+ #include <linux/input.h>
+@@ -710,6 +711,7 @@ static int adp5588_probe(struct i2c_client *client,
  {
- 	struct adp5588_kpad *kpad = gpiochip_get_data(chip);
- 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
-@@ -229,7 +230,7 @@ static int adp5588_gpio_get_value(struct gpio_chip *chip, unsigned off)
- }
- 
- static void adp5588_gpio_set_value(struct gpio_chip *chip,
--				   unsigned off, int val)
-+				   unsigned int off, int val)
- {
- 	struct adp5588_kpad *kpad = gpiochip_get_data(chip);
- 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
-@@ -242,8 +243,7 @@ static void adp5588_gpio_set_value(struct gpio_chip *chip,
- 	else
- 		kpad->dat_out[bank] &= ~bit;
- 
--	adp5588_write(kpad->client, GPIO_DAT_OUT1 + bank,
--			   kpad->dat_out[bank]);
-+	adp5588_write(kpad->client, GPIO_DAT_OUT1 + bank, kpad->dat_out[bank]);
- 
- 	mutex_unlock(&kpad->gpio_lock);
- }
-@@ -282,7 +282,7 @@ static int adp5588_gpio_set_config(struct gpio_chip *chip,  unsigned int off,
- 	return ret;
- }
- 
--static int adp5588_gpio_direction_input(struct gpio_chip *chip, unsigned off)
-+static int adp5588_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
- {
- 	struct adp5588_kpad *kpad = gpiochip_get_data(chip);
- 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
-@@ -300,7 +300,7 @@ static int adp5588_gpio_direction_input(struct gpio_chip *chip, unsigned off)
- }
- 
- static int adp5588_gpio_direction_output(struct gpio_chip *chip,
--					 unsigned off, int val)
-+					 unsigned int off, int val)
- {
- 	struct adp5588_kpad *kpad = gpiochip_get_data(chip);
- 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
-@@ -317,12 +317,11 @@ static int adp5588_gpio_direction_output(struct gpio_chip *chip,
- 		kpad->dat_out[bank] &= ~bit;
- 
- 	ret = adp5588_write(kpad->client, GPIO_DAT_OUT1 + bank,
--				 kpad->dat_out[bank]);
-+			    kpad->dat_out[bank]);
- 	if (ret)
- 		goto out_unlock;
- 
--	ret = adp5588_write(kpad->client, GPIO_DIR1 + bank,
--				 kpad->dir[bank]);
-+	ret = adp5588_write(kpad->client, GPIO_DIR1 + bank, kpad->dir[bank]);
- 
- out_unlock:
- 	mutex_unlock(&kpad->gpio_lock);
-@@ -519,7 +518,7 @@ static void adp5588_report_events(struct adp5588_kpad *kpad, int ev_cnt)
- 	int i;
- 
- 	for (i = 0; i < ev_cnt; i++) {
--		int key = adp5588_read(kpad->client, Key_EVENTA + i);
-+		int key = adp5588_read(kpad->client, KEY_EVENTA + i);
- 		int key_val = key & KEY_EV_MASK;
- 		int key_press = key & KEY_EV_PRESSED;
- 
-@@ -619,21 +618,20 @@ static int adp5588_setup(struct adp5588_kpad *kpad)
- 	}
- 
- 	for (i = 0; i < KEYP_MAX_EVENT; i++) {
--		ret = adp5588_read(client, Key_EVENTA);
-+		ret = adp5588_read(client, KEY_EVENTA);
- 		if (ret)
- 			return ret;
- 	}
- 
- 	ret = adp5588_write(client, INT_STAT,
--				ADP5588_CMP2_INT | ADP5588_CMP1_INT |
--				ADP5588_OVR_FLOW_INT | ADP5588_K_LCK_INT |
--				ADP5588_GPI_INT | ADP5588_KE_INT); /* Status is W1C */
-+			    ADP5588_CMP2_INT | ADP5588_CMP1_INT |
-+			    ADP5588_OVR_FLOW_INT | ADP5588_K_LCK_INT |
-+			    ADP5588_GPI_INT | ADP5588_KE_INT); /* Status is W1C */
- 	if (ret)
- 		return ret;
- 
- 	return adp5588_write(client, CFG, ADP5588_INT_CFG |
--					  ADP5588_OVR_FLOW_IEN |
--					  ADP5588_KE_IEN);
-+			     ADP5588_OVR_FLOW_IEN | ADP5588_KE_IEN);
- }
- 
- static int adp5588_fw_parse(struct adp5588_kpad *kpad)
-@@ -717,7 +715,7 @@ static int adp5588_probe(struct i2c_client *client,
+ 	struct adp5588_kpad *kpad;
+ 	struct input_dev *input;
++	struct gpio_desc *gpio;
+ 	unsigned int revid;
+ 	int ret;
  	int error;
+@@ -735,6 +737,16 @@ static int adp5588_probe(struct i2c_client *client,
+ 	if (error)
+ 		return error;
  
- 	if (!i2c_check_functionality(client->adapter,
--					I2C_FUNC_SMBUS_BYTE_DATA)) {
-+				     I2C_FUNC_SMBUS_BYTE_DATA)) {
- 		dev_err(&client->dev, "SMBUS Byte Data not Supported\n");
- 		return -EIO;
- 	}
-@@ -741,7 +739,7 @@ static int adp5588_probe(struct i2c_client *client,
++	gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(gpio))
++		return PTR_ERR(gpio);
++
++	if (gpio) {
++		fsleep(30);
++		gpiod_set_value_cansleep(gpio, 0);
++		fsleep(60);
++	}
++
+ 	ret = adp5588_read(client, DEV_ID);
  	if (ret < 0)
  		return ret;
- 
--	revid = (u8) ret & ADP5588_DEVICE_ID_MASK;
-+	revid = ret & ADP5588_DEVICE_ID_MASK;
- 	if (WA_DELAYED_READOUT_REVID(revid))
- 		kpad->delay = msecs_to_jiffies(WA_DELAYED_READOUT_TIME);
- 
 -- 
 2.37.1
 
