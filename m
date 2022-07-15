@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10EEC57673F
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 21:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9681957675C
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 21:27:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231172AbiGOTRO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Jul 2022 15:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52992 "EHLO
+        id S231180AbiGOT1N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Jul 2022 15:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbiGOTRO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 15:17:14 -0400
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119E760518
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 12:17:12 -0700 (PDT)
-Received: by mail-io1-xd35.google.com with SMTP id n138so3341944iod.4
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 12:17:12 -0700 (PDT)
+        with ESMTP id S230097AbiGOT1M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Jul 2022 15:27:12 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0FA047BAA
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 12:27:11 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id y12so3010385ilq.10
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Jul 2022 12:27:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7CtY+MK3bRa50uVEq170RamxPObgJKo/2DNHD6NQCe4=;
-        b=Gyloh7lxk+RAqgNSoPBgG4zniuAt++70jq8OeYOQ3zEnVLAm8VkehWKcm/WxdwnX0y
-         mQhTuKw9Nz3FUBuy5WIb/OvvVaWcq0PY8oS6Xi/evyWxUH4lJcRCWwyeIVaMBsCArOfC
-         imo3b256TvSP1+GrGxMCBTBi9aJnsdr2Zx4xbgqrGjWliTm3rY6oh5hB65oxywb2tQif
-         hEUMfeHRSirbgtZCLQX2Bvw0tzCMoYwyLseOU8Fv9bo35vv2MLr3aNexgBuLqEz7t6gt
-         mcPLwzV0dpiOCmbBK5PNNTr73LhRWqcYTcrIpR3LJcGbRabVZZlnhO4DdeOkzqtZA7uz
-         Nnyw==
+        bh=idHHjkJiq1jgqeWJ6bJ8JIRJnzSMmFStTGMvG94gimU=;
+        b=OBR95hb5VyYl3T47MmXFtq5gGnyHDeZkC4EtxGXqI1i++mzV2ns8IlbYaRVJyB8xtK
+         TQvba9i874GY3zbP66eqRK+fI4tzy8dFyLwFpq6nuzynwqSSDaX7rnb8a9mW/QqQp40s
+         2uClNila+qqnD61KGugtKe8d9WSvTh/bNHBgTTRdLWzBFxN68iGrB3V1G8C5lNCrjQvt
+         L7xfoowqyUxJ1m6T/wyRhZclvSkM61Em6spRlEZ4dvv43Rhobt0Snp4cZ948/gjImTo7
+         b+ZHT0RFQ2LbW7piH81Ym1xyv49RPqqht6EeRhog41iJqPq5qGXjVpzSMIFaQfoq7ma8
+         R34w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7CtY+MK3bRa50uVEq170RamxPObgJKo/2DNHD6NQCe4=;
-        b=MBpB5iXME23+4fvGfwpg2s224xyN6AZT5qvOuDTLGiiqBBWiHB0Wp9USoWAqm7hTli
-         Ir+FuWVJWiRpknegKEcfjp2jfVfZ+ELGVvRkPAMCpG1Ww/Hp88Z0TFrE3HCbn7+Yk1tL
-         uPkKT2JWxCMdYvIQPjaK19IzKLGoST82p9pdwPUEKQnkPxU9AHYYBCleyZXTmp/+yosm
-         sxIJE5A0q4WU3k73kU7w8lqfgM/C5En8vWaRilLpHDuhTYAHFsss+TJbpbqC1k6oAhW9
-         nYcOP9kTgD3gBFlQEMoPw2VGYqYmT4evCg2xlLlM6K+mOqKi8MG1GM04B3TX7ZR7PXge
-         fl/g==
-X-Gm-Message-State: AJIora/bCXfUaaTN7AIcNgdBnaGQatT3i53EOayYoHdj9O5jM2bg3dTo
-        SJUwHNQ8OUUK7NBKl1iKod8iTi5yUeLgoguiJFs=
-X-Google-Smtp-Source: AGRyM1sbMG7nSID6bM4gdtDmn79AAaGO3jXS3iaxBN0kMa30ILx8Dc9x5aaNL8rTmcfh2juVsJYWZWO+YNn48/63hu0=
-X-Received: by 2002:a05:6602:2a42:b0:678:84be:c9ec with SMTP id
- k2-20020a0566022a4200b0067884bec9ecmr7499514iov.64.1657912631515; Fri, 15 Jul
- 2022 12:17:11 -0700 (PDT)
+        bh=idHHjkJiq1jgqeWJ6bJ8JIRJnzSMmFStTGMvG94gimU=;
+        b=eZ4DCNomJDOeWIqfe2VReVn9PGmosESZDi0qJIvHsGGxtO9FlGWQh5KMZjn98frNzc
+         GVFjUhpsraAA5MplFgGC0aVKT4xH/fvFxxI88mLIeS07uK1+tKm2hdBR1yUQVgznS9bL
+         i09DnWywMgGomEj3yyTUIEKD3o43xg7VD3vF1ukjeXEg+MjeyYEFvEGtXwsjxfwBAh+G
+         KILul3tn/aXtIzFei9VlmZ1mGgRBaBv/IhsEQV/fp9jznCpZG1rYzuZ4RmKsI6vaNW9R
+         2N45vVBg7Wi1CD5US8mfAFXmAtGSPFvliQMf3MOuq+ohhLqyRvBstp26y0aEQVOCoYqj
+         Y2Bw==
+X-Gm-Message-State: AJIora+hvjLtBH090hx0n6so/fF6ut7rLz4o8zXlyayXzr6NSNHQ1zeJ
+        LMBScXoPpQyc0Z2wFNl1EYGnOm+KgEiZR+ihMmyjInOx9H52M2n4
+X-Google-Smtp-Source: AGRyM1sQLXIpBOoshkKU3MmhKo3CrLZohI5ILc4PyjwDKuUpMwcIg7fVWNaqIX/k4lJ24LH9hbKTrXvsVx1PJMMO2IA=
+X-Received: by 2002:a92:c54e:0:b0:2dc:83a7:169e with SMTP id
+ a14-20020a92c54e000000b002dc83a7169emr8127765ilj.72.1657913231448; Fri, 15
+ Jul 2022 12:27:11 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.1657279685.git.viresh.kumar@linaro.org> <CAMRc=MdLJ_uM_Dy=L5nb-5HVhMFcixaVpD3WQvrDgp8s2bUW9w@mail.gmail.com>
-In-Reply-To: <CAMRc=MdLJ_uM_Dy=L5nb-5HVhMFcixaVpD3WQvrDgp8s2bUW9w@mail.gmail.com>
+ <CANiq72mZM1OYb27z63aEtzNJ+7WuzL+EwBqqoj5xBeTfd1LT9w@mail.gmail.com>
+In-Reply-To: <CANiq72mZM1OYb27z63aEtzNJ+7WuzL+EwBqqoj5xBeTfd1LT9w@mail.gmail.com>
 From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 15 Jul 2022 21:17:00 +0200
-Message-ID: <CANiq72mZM1OYb27z63aEtzNJ+7WuzL+EwBqqoj5xBeTfd1LT9w@mail.gmail.com>
+Date:   Fri, 15 Jul 2022 21:27:00 +0200
+Message-ID: <CANiq72=sKvuaFeOpOwfcafeq81YG7paALPv3rU6=sO__O4zycA@mail.gmail.com>
 Subject: Re: [PATCH V4 0/8] libgpiod: Add Rust bindings
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
@@ -72,32 +73,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
-
-On Fri, Jul 15, 2022 at 9:08 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, Jul 15, 2022 at 9:17 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> Rust noob here: I have my cargo installed using rustup for my local
-> user but I can't run it via sudo or as root (to run tests) because I'm
-> seeing this:
+> If by "random script" you mean the rustup installer, you can always
+> download rustup on its own, or even directly a Rust "standalone
+> installer", which are signed and do not require rustup, from:
 >
->     error: no override and no default toolchain set
+>     https://forge.rust-lang.org/infra/other-installation-methods.html#standalone
 >
-> What is the right way to use cargo as root? I'm hesitant to just curl
-> a random script and pipe it to shell as root honestly.
+> However, since it appears that you have rustup installed, maybe you
+> don't mean that. In any case, if rustup is installed, maybe you can
+> try something like:
+>
+>     rustup default stable
+>
+> or similar to install a toolchain.
 
-If by "random script" you mean the rustup installer, you can always
-download rustup on its own, or even directly a Rust "standalone
-installer", which are signed and do not require rustup, from:
-
-    https://forge.rust-lang.org/infra/other-installation-methods.html#standalone
-
-However, since it appears that you have rustup installed, maybe you
-don't mean that. In any case, if rustup is installed, maybe you can
-try something like:
-
-    rustup default stable
-
-or similar to install a toolchain.
+Having said that, if building as a normal user is OK (should be), then
+you maybe can simply run the test binary as root (building it with
+something like `cargo --no-run` as a normal user).
 
 Cheers,
 Miguel
