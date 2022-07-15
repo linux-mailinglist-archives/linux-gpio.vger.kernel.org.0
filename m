@@ -2,70 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B26E575583
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Jul 2022 20:58:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79653575972
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Jul 2022 04:06:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236175AbiGNS55 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Jul 2022 14:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42158 "EHLO
+        id S232576AbiGOCG0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Jul 2022 22:06:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240904AbiGNS5r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jul 2022 14:57:47 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC3C6B761;
-        Thu, 14 Jul 2022 11:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657825065; x=1689361065;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=RBXA5YMni4ppfmOh6qTG6JfKVzyVRTHw2zW+lP6A+9E=;
-  b=WS5h96JwtXTzgMPfGzd/vvA8CkSzlrhoGqbI5aNGgkL/N8QohOs9C1n0
-   xNMqKD4pjRweSsPPnFtThPW9j5BGjBov9+ou7woQbbBzy0sLiHuwEeIxi
-   D+1RKj6z+2eAtaP4t3PbNUetBC33ciQlfUharJaIrYZinS2uRrCLexJL9
-   TiYkkrY+NTJKO8VMNymCbTlD3yloDEQWJqqg2y3UJthPeuagoZO7a/lsR
-   2Y6RRpJ16E3gE17U32W5VyR4Femml5Qrkqi1sRPn4N+IkZ/jYgDU1QQL3
-   Jb88Rcw0V5isDpyT+DFB2OGSE8wan3XRvVApDvXNfcrIaAcZXIBgs0Mg8
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="285629136"
-X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="285629136"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 11:57:44 -0700
-X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="698917092"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 11:57:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oC41r-001Dd3-1W;
-        Thu, 14 Jul 2022 21:57:39 +0300
-Date:   Thu, 14 Jul 2022 21:57:39 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/4] add support for bias pull-disable
-Message-ID: <YtBnIxh6rDJMwpEm@smile.fi.intel.com>
-References: <20220713131421.1527179-1-nuno.sa@analog.com>
- <YtAvHMmGay/3HACZ@smile.fi.intel.com>
- <e0638b02bdcd0ee452846b86ce83458173912ef1.camel@gmail.com>
+        with ESMTP id S232394AbiGOCGZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Jul 2022 22:06:25 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2058.outbound.protection.outlook.com [40.107.94.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4677774DD7;
+        Thu, 14 Jul 2022 19:06:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ne+fhdezxOUbiggDNATYYSypyHmemsEyBz1TQlIE8PhLWwWN+hN+6SqzhG/3l6M9dVmQcQUokjvQscHXoT3IEOYHmBeefIZVKvIBp9dfOjaG/ND5kVHqpusAko0qJKAvMMAHaLXpZ2s7oj75ysvb7x+e9+l9pW4da11c5398rUfjyE1UFuUMJPbYSn2XZ2f/Y9TcU7J8Ta0QMmS40BmAIN3fxMAa7uiumQIum1z5zAWy0xdhaBgWcj1Nhl2rne4dTmiEv0mR+nlqgl5K/dM26qkdwTw65Ai4TBQ2lD9t2ha1AGy/yqRH8+IrzeVdLUBS9kW1UMc+LJKmU52PpCDEQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6V3tViWSrXFNt9pOtNudz9fnSYSu5dA9WwBlUeLN7j0=;
+ b=KUqBvRhDPsXsL5SN3YmJ7X+iMSoWZdnpoFen4YJMHlt0P0aJJfM2htqyt9dmHsPulAWdp/m4kcpQbI4r4F60THYrfNGkF84yaVqicTe7iv6hOcQ7+mSE1k5F+HlMikvTqOV5g3OTMAbJwTmXmHpN4Fbgs0fibo9uvqWHoHT+rGrd+cjvHetrlTLI+6I2CuhBqi+p2CepBzvnJWXPoGzUoiiRWvwxouzOOrccgHiiS+oLI0hFYcMTomgPoB25j5Wx6D8dCezuAL5qaVL7LhPETx0NdfBcgczJUQf6cW/+1yqzoOZmnja3snq+vcFc7KBnp85ux9bg4N/57NoQj+F3zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6V3tViWSrXFNt9pOtNudz9fnSYSu5dA9WwBlUeLN7j0=;
+ b=OmHZR79hpmjHzuw/t/bs6k6xDfFTbF/t9gqMjyhuwu8l6V44FjwxYvIiLynf1TNvvtUxxKKgomfI9Z3AM6vsK6DbUU5w8H4ZRDjFgomI2fcrADpkunkDxqmX7TL64vmOQ1mv6Yzssb2CkPT+a+im0j6ItBq6CIu2IXo2KjMfOI2jgHlOd+13JffSLJ+XUetF7sNAIDNkQ2RktTV3XBOZkVDSXcNNPHnHGp1AUxLgK26Q8ZzK5ehTHOuMk7LuwTLyYnr4bmqg/9WN5uvbLBcwhwp5J6Bt3ls+UdnhR5KAGcU2iEtKLfpRzhLJR3VQZ+8rqHyxslfUNGF5zB5tnA3qUA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4116.namprd12.prod.outlook.com (2603:10b6:a03:210::13)
+ by SJ0PR12MB7036.namprd12.prod.outlook.com (2603:10b6:a03:483::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.14; Fri, 15 Jul
+ 2022 02:06:23 +0000
+Received: from BY5PR12MB4116.namprd12.prod.outlook.com
+ ([fe80::dda2:7b0a:3280:5365]) by BY5PR12MB4116.namprd12.prod.outlook.com
+ ([fe80::dda2:7b0a:3280:5365%7]) with mapi id 15.20.5438.015; Fri, 15 Jul 2022
+ 02:06:22 +0000
+Message-ID: <7277ef56-f425-493a-f148-8e4aaac37614@nvidia.com>
+Date:   Thu, 14 Jul 2022 19:06:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 0/6] gpiolib: cdev: code cleanup following hte integration
+Content-Language: en-US
+To:     Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org
+References: <20220713013721.68879-1-warthog618@gmail.com>
+X-Nvconfidentiality: public
+From:   Dipen Patel <dipenp@nvidia.com>
+In-Reply-To: <20220713013721.68879-1-warthog618@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR08CA0070.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::47) To BY5PR12MB4116.namprd12.prod.outlook.com
+ (2603:10b6:a03:210::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e0638b02bdcd0ee452846b86ce83458173912ef1.camel@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: df53d380-405e-477c-7517-08da66069dba
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB7036:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fTwIuDh1HLBvz5XxxugpkapXJ042n6Xzq0YslUWKFJMkgBBxw6CmOckzN6xggDq7mT2AtvuLmYI0KpJ8m7yOkys38NkYbffnrb9g8bB5sZKxfthar5r86y8rY7+rzHoLDYiIzQFiw98FS5EBZ09y35EREWBrqZ6Oq2vgE1A2bowXhwhq2LQEOIswaoKCZ8Z5TKwzxGVFZIDivVVfdo1tCpkkEtIF5d/UipmfxxeyziyIxl5bjw2H2sDnz+IH2P2ue0+JYua8z3ikQ0kp2Hy0GA/i+ICJ2YuhVctRbXhU4neL0nR5g/mpeh+IoohFvKY3kTfp/xRctX/S45y9lqnwrs4hALnfoIJRl27SXwdYH8HoQFL3/IY4XwE+fJDqeVevjRuRatUoXZbIPk1upM/KySELMOkVoQZpuwm/4E6PGqMH8OUV59zpjehXlDwGdO3P4XlwrSDjyvFY60H20p+GOeokRodfIOxCbysdgmxsdVI93vkf6z8eqlar6GYkVfE0622KQ+w3nKEf7xpfddwzWq9wobP/aCYpXP6foaZ9NSDUCr6CXjtm+N1kSIa3RzKfsd2btEWlsoTMULUHDtwUIUN/27YsgdGlp6AmbMpxwurp7KPYGW2XV9cdSRzqmjuW2VrlvCmI1d0+NwwyPxBuvfrETeoGgieCKKnWmi8q9C/T66shKYgDJ08mZ6GFHG29YDrefbPVX+AfZyWGwW565OBO6xj/jyoqAH9JtzZ4XkcC/gZTF9VoKuf+Fq+I6YyswtTLhwnmZhIi0TSAAoFUyd/c20qfwexyukkb7dJ+B0gFMfMMKEs+RgSFWCIZ1cKx3A875YKz1/Ea3vUSPNu9sXWBmRLuqCo1lIx7aIYzAsM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4116.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(136003)(396003)(39860400002)(366004)(376002)(66946007)(66476007)(66556008)(8676002)(316002)(31696002)(5660300002)(86362001)(8936002)(36756003)(2906002)(478600001)(38100700002)(83380400001)(6506007)(6666004)(6486002)(53546011)(31686004)(186003)(41300700001)(26005)(6512007)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RjVTOFh4cmR3TW1VVTZGdU43S0FCd0VwNy9NVU5CRzk4akt6S05KWGNRaTY5?=
+ =?utf-8?B?MDZKd29LRVdPQXVzKzN0TG5FenZrTW5TeXVtZU1vRzMydjBSZyswTGNOVnhz?=
+ =?utf-8?B?N0ROYkVub3ozKzVjSTB4alk1N25aaStJVzNVa3NRQ0pLYWNaVisrQUk0b3RR?=
+ =?utf-8?B?Q2t4cWMrbUptcm1OUUorUXgzSVN4MDhiV3Q2UmU3VzVvMWpodTQwVkVnL3V2?=
+ =?utf-8?B?TzlUeHBRb0EzWFp0WXkrTHdsdWRDdGt0MTVMZ0w2dWtWeHU2MGxMa0o3SjNT?=
+ =?utf-8?B?WDJQak9GUUFpcFF3NlA3RmlzR2hBOWdLQkd2TU1TWnc0SFN1S3VOMzlmWU1l?=
+ =?utf-8?B?Z1Zyc2NoSFd4R0xpSkYxWThuUFVDWVVkOEpQRW9ibnlFOXlST0k4OUJpRWtm?=
+ =?utf-8?B?cFFvUjlnY0wvaG9nTnBBNlBvMGdKN3pIeHV3cytCVHpRZmpPaXBwc0hZT3ZP?=
+ =?utf-8?B?MExraE5mTGkxSE5zaXZ1SjZvSGRrTlpDRGROSW11emg0OGx6bVFvSGpTcVpu?=
+ =?utf-8?B?aDZOenFHUHhTMlhER1U3THhpY2JOaHhOM01KQUVxV0s3MUJWbFpOemF5aW1L?=
+ =?utf-8?B?cHVqR2FjVXRlSi9LSkorUldHTkd3Z1p0Tld4YmM1Qk1XcWNuOW95djRHdXl5?=
+ =?utf-8?B?N2tjTTI3NkdBMmU1ZWFVRkRFbFd5WFZRbkNSWDh3OE1wM3pWL09Lc1VNamJG?=
+ =?utf-8?B?RkVTcVM0T1NHa2MrbXpsQ3hsTHRsQVg4ekkyWWFSK3k4bGRNa2JLQ2U5WjJY?=
+ =?utf-8?B?SVFGK2sydC9vWTA1Y0hqdjlEY3FOWnBwUElRUjFqTnJvaTNPN3lyVVQ5VlNK?=
+ =?utf-8?B?cTR1UXhoMS9LUTdKaVB1TWYyWlNOajVNdlhXYkFESjFmYk1LcnE4cHRFTmdR?=
+ =?utf-8?B?UlBmdGp3cDk2U2cvOFBMcGdqc0piNnBNTDhmMEtoQndtVjlkQVJsRVJRSXUw?=
+ =?utf-8?B?QmlGSkd0UGh0NTB4WjNTRlR0SkhyS1hhNTQrVGFYYmwxb3BoakZCWTJXYU9N?=
+ =?utf-8?B?emZUTlptOFhhNnlzWFpscnl3cW1UN1RtczluM2U0dXZNOHpkRUJMQWxaRmFN?=
+ =?utf-8?B?d0w4RkY4Qml2bFlYODBLcjh0MDRkUEZxdGUyVURFRUdCeW1MdkgyVEwzVmF4?=
+ =?utf-8?B?NWMvdDFxVkVGTnByT0pGVlhHeFlxTnJmSFduR29UTmpqNDdoczV0MTFGN0VS?=
+ =?utf-8?B?d1BDZU05WnlUYkk1eTJMQTdGeHpKQUY3TkpWLzF1NDBaMFZuS3JxcVBWTmlz?=
+ =?utf-8?B?UzB4QSs2dkJMNHMxVTM4c1p4NmZQTHZEV055ZUJzTkl6Mnh6cG9rV2Y1SGtL?=
+ =?utf-8?B?NmJaZGYwUS9wc1BRNkx4aUtDbEsxWmFpQTAyWXdUKzlZbDAwTnYxU1VScnRo?=
+ =?utf-8?B?c3NHU3IyVU1KZ2V4eHhvV29WTVlESFhrU2ZNMXF3Y1FxdTVjTGdCd2hodDVk?=
+ =?utf-8?B?WExuaVdaR2JYYVZIU0RLcktaVndNVStsN1I1Y2hkY09ncGlFekpoL2gwTTl1?=
+ =?utf-8?B?MHFlTm16Q1N1K1prRWdYWXB4a0Y4QlVXeDNwaUxvRXVjZ2UzNmZGSkpSMUtZ?=
+ =?utf-8?B?ZHhNQ2lMeUpVbmhWZ3dlTXJubWhuSnN3NUJETytPSmRrcHBLeHZZZEVWekND?=
+ =?utf-8?B?dlRhS0gzbFA5dXI0elpFVk1oTG5YMDFIMjhnOUxOVmRhU1lmQnFBQjN2WlVE?=
+ =?utf-8?B?WkhHYmdteG03OWdUTEZtb2txSzk2MWRma2xxckZkRzdOeWdPc0xRU3U4Y3k3?=
+ =?utf-8?B?bHpic2RhNXFzZGJBeVZodmM1Qk9pb3hvd3p0cGJodmdHdGlYZnVQbXN3RGhr?=
+ =?utf-8?B?RFoyK3N5bDhzM3JKQ0x2NmhvYnRHRFdxWWpOWjlSUnNDdEZyUXlEeWszZ3Ry?=
+ =?utf-8?B?MG42elR3RjBZd2d5QlFrK0ZDcGhONHB0Y1pzRklEUXJ0Mmw4MUthUzdxTFpO?=
+ =?utf-8?B?UUhjVE9FVWx6SGpqMitqVWt4OE1uL01mTVA4RHJNdlAzWDQ5d1NvQlBvajNC?=
+ =?utf-8?B?RjI4cmNUaUdvTXFRbmRwbnorS2dzd2NXckF2V0JVTmdDRExuRG1oYk9RSGt2?=
+ =?utf-8?B?cS81VTIzU2VHQzd4NlBrU3FFTVIzaHQ5TEpBTkIyS1JNTVJuNk5jUmY2OW9p?=
+ =?utf-8?Q?F4HlwqtyjjRAifXaTwDT5/u/D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df53d380-405e-477c-7517-08da66069dba
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4116.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2022 02:06:22.9519
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RQRfE2ryJeDmBNfAw8gqC3+XlKeN7M9RfHBhvoChP2zkbELM2VppC3/qzyDXu6c4njwyIbl868LUKgTUPklU9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7036
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,128 +125,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 05:43:41PM +0200, Nuno Sá wrote:
-> On Thu, 2022-07-14 at 17:58 +0300, Andy Shevchenko wrote:
-> > On Wed, Jul 13, 2022 at 03:14:17PM +0200, Nuno Sá wrote:
-> > > The gpio core looks at 'FLAG_BIAS_DISABLE' in preparation of
-> > > calling the
-> > > gpiochip 'set_config()' hook. However, AFAICT, there's no way that
-> > > this
-> > > flag is set because there's no support for it in firwmare code.
-> > > Moreover,
-> > > in 'gpiod_configure_flags()', only pull-ups and pull-downs are
-> > > being
-> > > handled.
-> > > 
-> > > On top of this, there are some users that are looking at
-> > > 'PIN_CONFIG_BIAS_DISABLE' in the 'set_config()' hook. So, unless
-> > > I'm
-> > > missing something, it looks like this was never working for these
-> > > chips.
-> > > 
-> > > Note that the ACPI case is only compiled tested. At first glance,
-> > > it seems
-> > > the current patch is enough but i'm not really sure...
-> > 
-> > So, I looked closer to the issue you are trying to describe here.
-> > 
-> > As far as I understand we have 4 state of BIAS in the hardware:
-> > 1/ AS IS (defined by firnware)
-> > 2/ Disabled (neither PU, not PD)
-> > 3/ PU
-> > 4/ PD
-> > 
-> > The case when the default of bias is not disabled (for example
-> > specific, and I
-> > think very special, hardware may reset it to PD or PU), it's a
-> > hardware driver
-> > responsibility to inform the framework about the real state of the
-> > lines and
-> > synchronize it.
-> > 
-> > Another case is when the firmware sets the line in non-disabled state
-> > and
-> > by some reason you need to disable it. The question is, why?
-> 
-> Not getting this point... 
-
-I understand that in your case "firmware" is what DTB provides.
-So taking into account that the default of hardware is PU, it needs
-a mechanism to override that, correct?
-
-> > > As a side note, this came to my attention during this patchset [1]
-> > > (and, ofr OF,  was tested with it).
-> > > 
-> > > [1]:
-> > > https://lore.kernel.org/linux-input/20220708093448.42617-5-nuno.sa@analog.com/
-> > 
-> > Since this provides a GPIO chip, correct?, it's responsibility of the
-> > driver to
-> > synchronize it, no? Basically if you really don't trust firmware, you
-> > may
-> 
-> What do you mean by synchronize?
-
-Full duplex sync, i.e. setting flag to PU for the pins that should stay PU:ed
-and disabling bias for the ones, that want it to be disabled. (PD accordingly)
-
-> > go via all GPIO lines and switch them to the known (in software)
-> > state. This
-> > approach on the other hand is error prone, because firmware should
-> > know better
-> > which pin is used for which purpose, no? If you don't trust firwmare
-> > (in some
-> > cases), then it's a matter of buggy platform that has to be quirked
-> > out.
-> 
-> I'm not getting what you mean by "firmware should know better"? So,
-> basically, and let's take OF as example, you can request a GPIO in OF
-> by doing something like:
-> 
-> 	foo-gpios = <&gpio 1 GPIO_PULL_UP>;
-> 
-> In this way, when the consumer driver gets the gpio, all the flags will
-> be properly set so that when we set a direction (for example) the
-> gpiochip's 'set_config()' will be called and the driver does what it
-> needs to setup the pull-up. If we want BIAS_DISABLED on the pin,
-> there's no way to the same as the above. So basically, this can ever
-> happen:
-> 
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib.c#L2227
-> 
-> (only possible from the gpiochip cdev interface)
-> 
-> So, what I'm proposing is to be possible to do from OF:
-> 
-> 	foo-gpios = <&gpio 1 GPIO_PULL_DISABLE>;
-> 
-> And then we will get into the gpiochip's 'set_config()' to disable the
-> pull-up or pull-down.
-> 
-> As I said, my device is an input keymap that can export pins as GPIOs
-> (to be consumed by gpio_keys). The pins by default have pull-ups that
-> can be disabled by doing a device i2c write. I'm just trying to use the
-> infrastructure that already exists in gpiolib (for pull-up|down) to
-> accomplish this. There's no pinctrl driver controlling the pins. The
-> device itself controls them and having this device as a pinctrl one is
-> not really applicable.
-
-Yes, I have got it eventually. The root cause is that after reset you have a
-hardware that doesn't disable bias.
-
-Now, we have DT properties for PD and PU, correct?
-For each requested pin you decide either to leave the state as it is, or
-apply bias.
-
-in ->probe() of your GPIO you reset hardware and for each GPIO descriptor you
-set PU flag.
-In ->request(), don;t know the name by heart, you disable BIAS based on absence
-of flags, it can be done without an additional properties, purely in the GPIO
-OF code. Do I understand this correctly?
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+On 7/12/22 6:37 PM, Kent Gibson wrote:
+> This patch series is a collection of improvements to simplify the
+> code, improve readability, and compile out unused code.
+> There are no functional changes.
+>
+> The first patch is a cleanup for my recent linereq_free() fix. I
+> noted then that the edge_detector_stop() could probably be safely
+> moved inside the line desc check block, but wanted to keep that
+> change minimal just in case.  It can be safely moved, and so here
+> it is.
+>
+> Patch 2 makes use of an existing macro to simplify a call.
+>
+> Patch 3 replaces some more if-else chains with switches, which is
+> more readable (YMMV).
+>
+> Patch 4 reorganizes the line identification code to share code
+> common to alternate paths.
+>
+> Patch 5 consolidates a number of separate flags into one.  This
+> reduces code complexity, simplifies any future edge source additions,
+> and makes patch 6 significantly simpler.
+>
+> Patch 6 totally compiles out the hte specific code when CONFIG_HTE
+> is not selected.
+>
+> I've based this series on gpio/for-current, as it requires the fix
+> patch -
+> commit c8e27a4a5136 ("gpiolib: cdev: fix null pointer dereference in linereq_free()")
+> Happy to rebase if that doesn't suit.
+>
+> Dipen, I don't have any HTE compatible hardware to test with, so
+> could you check that this still works for you?
+Sure, will do it by Tuesday next week.
+>
+>
+> Kent Gibson (6):
+>   gpiolib: cdev: simplify linereq_free
+>   gpiolib: cdev: simplify parameter in call to hte_edge_setup
+>   gpiolib: cdev: replace if-else chains with switches
+>   gpiolib: cdev: simplify line event identification
+>   gpiolib: cdev: consolidate edge detector configuration flags
+>   gpiolib: cdev: compile out HTE unless CONFIG_HTE selected
+>
+>  drivers/gpio/gpiolib-cdev.c | 286 +++++++++++++++++++-----------------
+>  1 file changed, 149 insertions(+), 137 deletions(-)
+>
+>
+> base-commit: 7329b071729645e243b6207e76bca2f4951c991b
 
 
