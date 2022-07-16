@@ -2,100 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B68576E5A
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jul 2022 15:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1631A576F18
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jul 2022 16:40:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbiGPN4N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Jul 2022 09:56:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55368 "EHLO
+        id S229501AbiGPOkr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Jul 2022 10:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbiGPN4M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Jul 2022 09:56:12 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E751F2EE;
-        Sat, 16 Jul 2022 06:56:11 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id a12so3809440ilp.13;
-        Sat, 16 Jul 2022 06:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V4FhIyepvRr1gXawjyEQpzIVadAC7ZxwCjKEzgRh/bc=;
-        b=KdWH1PfnFwqpPxd7W0PxapNamksI04N1J1pzzmASbjhZAa3HLxSSk5HwzaEAseuXpW
-         nNsgKAEAxGvztay7gho66xNc2QCxWwEyGXbCv5lAz3EAhFpFJfuIeY7K76/0vq1k3vCQ
-         2A4ZeWEkN4IZQH1TYyqAVV2R0ANWdmP2osXk1QbS92RBijpvBQo0R3fnlJ87Bav+p7xf
-         FSAfrCYfgPPgpP/Eo2QbIXBrRk5zd4AvPDHrzOq47USph/a5huS67TiBDFyW8noTS6Uh
-         Rr0qFvkmBG2Rj2WAofY8yIfRhbQByw8ah0SxA+yZ2h9GNamE5b2FqVNxaZBPSBZiccV0
-         aKAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V4FhIyepvRr1gXawjyEQpzIVadAC7ZxwCjKEzgRh/bc=;
-        b=OmqNJv4F79HDKtzmwqhBTenlD/euEtgNobwW+wx4fV4suX3whDRHJavCu8Clg7/Bjv
-         oQ/vo6f2efo/WEd6qOyufXnEhlAY4eMlYk+tsDNXMilShiuj6wvtWTxKCbKUsC4yVo3f
-         U5eqQnsH3TRUSdlp7xdBL3/dHthS9ee0r7bnZV9VCUSLvzonZmyhll8BCPhiuBzeOiKs
-         XIhuKGHQRM6ZQEt+7+6IKuSbgBkIISgPgJoNDobLbtKJfpHfRhwOupyiiecx+dlOVfH3
-         MOMGdC9xK4TiFubxMiQshLT+/q/RiaGjnXY1H+6cQgcILTngiTbuQ/vYZuA4915IBlFF
-         rnOw==
-X-Gm-Message-State: AJIora/8kkXUzBujRAWsrzQjiNnPsNm5ORPpe31GQ2tqYIeY2DcdtGyc
-        oJTCaaVEWcwq0bRDwwXd5pslV8Pv+n9c04/pwXRwI0N6RaQ=
-X-Google-Smtp-Source: AGRyM1tr+wIQ9WPj4ffi06adPAclHl6+H10vOy21nRYCi1+gt6eZYnfIg0TqG8PTuM+GqMyjQgVFJxK/0/WWZ5rGrRw=
-X-Received: by 2002:a05:6e02:1c2a:b0:2dc:621e:df15 with SMTP id
- m10-20020a056e021c2a00b002dc621edf15mr9816280ilh.151.1657979771086; Sat, 16
- Jul 2022 06:56:11 -0700 (PDT)
+        with ESMTP id S229538AbiGPOkq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Jul 2022 10:40:46 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4357175B2
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Jul 2022 07:40:45 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oCiy9-0001mp-Lg; Sat, 16 Jul 2022 16:40:33 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oCiy7-001Kfv-TI; Sat, 16 Jul 2022 16:40:31 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oCiy6-005ZA4-Rm; Sat, 16 Jul 2022 16:40:30 +0200
+Date:   Sat, 16 Jul 2022 16:40:28 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/4] ARM: dts: armada-38x: Fix compatible string for
+ gpios
+Message-ID: <20220716144028.rzwcn4wl5uyxepjd@pengutronix.de>
+References: <20220714115515.5748-1-pali@kernel.org>
+ <20220714183328.4137-1-pali@kernel.org>
+ <20220714183328.4137-3-pali@kernel.org>
 MIME-Version: 1.0
-References: <20220523020209.11810-1-ojeda@kernel.org> <20220716124214.329949-1-conor@kernel.org>
- <CANiq72nYRkHV6N2bGpTz3td=2Vto21apvZW0igTT-mV8TZtB2g@mail.gmail.com> <4a6240da-9003-cd74-cd47-f95ba2d9e7ae@microchip.com>
-In-Reply-To: <4a6240da-9003-cd74-cd47-f95ba2d9e7ae@microchip.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 16 Jul 2022 15:56:00 +0200
-Message-ID: <CANiq72nDcJLSB3pLhkdqGdLitfmqqCUVVfkY5EjP9AcwVv9B4A@mail.gmail.com>
-Subject: Re: [PATCH v7 00/25] Rust support
-To:     Conor.Dooley@microchip.com
-Cc:     Conor Dooley <conor@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-um@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        live-patching@vger.kernel.org,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zalewdgjudxxklrt"
+Content-Disposition: inline
+In-Reply-To: <20220714183328.4137-3-pali@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 16, 2022 at 3:51 PM <Conor.Dooley@microchip.com> wrote:
->
-> Ah right, sorry for the noise so. I checked the ml but didn't see a
-> report there.
 
-No apologies needed -- thanks to you for the report, instead! :)
+--zalewdgjudxxklrt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Thanks Miguel, good to know! I'll just wait around for a new version.
-> Just been trying to get my CI etc in order for when rust support lands,
-> but it sounds like I should be okay as it's a known problem & not some
-> only-broken-on-riscv thing.
+On Thu, Jul 14, 2022 at 08:33:27PM +0200, Pali Roh=E1r wrote:
+> Armada 38x supports per CPU interrupts for gpios, like Armada XP. Pre-XP
+> variants like Armada 370 do not support per CPU interrupts for gpios.
+>=20
+> So change compatible string for Armada 38x from "marvell,armada-370-gpio"
+> which indicates pre-XP variant to "marvell,armadaxp-gpio" which indicates
+> XP variant or new.
+>=20
+> Driver gpio-mvebu.c which handles both pre-XP and XP variants already
+> provides support for per CPU interrupts on XP and newer variants.
+>=20
+> Signed-off-by: Pali Roh=E1r <pali@kernel.org>
+> Fixes: 7cb2acb3fbae ("ARM: dts: mvebu: Add PWM properties for armada-38x")
+> ---
+>  arch/arm/boot/dts/armada-38x.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada=
+-38x.dtsi
+> index df3c8d1d8f64..9343de6947b3 100644
+> --- a/arch/arm/boot/dts/armada-38x.dtsi
+> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> @@ -292,7 +292,7 @@
+>  			};
+> =20
+>  			gpio0: gpio@18100 {
+> -				compatible =3D "marvell,armada-370-gpio",
+> +				compatible =3D "marvell,armadaxp-gpio",
+>  					     "marvell,orion-gpio";
 
-Yeah, it is a simple `bindgen` issue. Thanks a lot for making the
-effort to prepare your CI in advance!
+If you can treat the XP variant as 370 and everything that is supposed
+to work on 370 works then, then maybe the right incarnation is:
 
-Cheers,
-Miguel
+	compatible =3D "marvell,armadaxp-gpio", "marvell,armada-370-gpio", "marvel=
+l,orion-gpio";
+
+?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--zalewdgjudxxklrt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLSzdkACgkQwfwUeK3K
+7Akz2wf+JF6UmqztBz7omhK1mGfW33SmnWY7c88XTanbchqiMR/xEQSaimY4mLAo
+zad+Y0rz8FY7GhVlnp76zFnGkXKKBDy6PR/RUw4BA0PJPYi1UkYPXINES3PW5Hzj
+P1/i9jC6IGdcWTkwIl+wLWTXcLm4XaJuJEq63zDtPDEifeYIKpF7dcmh7py2Jd3l
+7V71pUvjMLBBGLHpHCMtn3EOfAjpHczxS6krmkadFLbG9YjDKH2t4Fdzn5n1HOUc
+ofA4Ei4OVgRiQ+pN0YdxEFxeJeW1ipk1DiFHZwhOUQWQV+LuWKHksHGme+w9xX6y
+C1ZEwTuTRFizN2nkb+imT79hdtgg2g==
+=XF96
+-----END PGP SIGNATURE-----
+
+--zalewdgjudxxklrt--
