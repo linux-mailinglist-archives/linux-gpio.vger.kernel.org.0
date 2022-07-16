@@ -2,88 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC4A576D2B
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jul 2022 11:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18956576D4E
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Jul 2022 12:33:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbiGPJnX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Jul 2022 05:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38104 "EHLO
+        id S229606AbiGPKdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Jul 2022 06:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229776AbiGPJnW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Jul 2022 05:43:22 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A755218E
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Jul 2022 02:43:18 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id n138so4337160iod.4
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Jul 2022 02:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=teF0yKuKH+aTEKWziJBN6Uk4uQ+VT+Ov4XQmliQLJ7Y=;
-        b=SmjQNEGg8DrWjdK/I4L14pWE2JWWKB7b7TJLctQ/ULV+DiiCrPnZ+hpea0h9lT7WpK
-         Zctm+bOJgid/biqdyvNHcADQn+SBQ+xXJQH/UOiF+vvh6CXkNezG+FP25ZI+qTBEGPrd
-         C9/A5Y8AlXDt4Xd34e8EIKRAsnvMZawp1+Ds/rt3Lg8zXcDbA03VBexaSTdNjbs30fre
-         hyPe7xaR5H8Zf/MuhVy0zmTNiGI06y1LRtEHvmSB87dA4lqDpymuQ+b1VyNBrRbjaLWj
-         4X/4i7D/IHCjJVx8jj2EeHYyoEBx+jX1SiKYbKTOJKE+ayPYLBGIZ+zJXqJjzx4ONRrU
-         XV4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=teF0yKuKH+aTEKWziJBN6Uk4uQ+VT+Ov4XQmliQLJ7Y=;
-        b=14o4ayeLRILi70WK3SCp53QeP8MEiQWJRGSJ1oOVOnjsD9mEYEGNXGiciR0KlmVNVR
-         f43TK1MXI7FKqx4gbL3M9ZFBjysGHvAYDVpBy7njt0uFviuaBBDPq7YEWtBFamHOX+5v
-         aP0CYf8bwHex9AyuQz0rsk2cxw5plJ1Z3aafNGhSM2wGbo/74oxqTkdxuUBvmHrRVgeP
-         Xpznpd6mqbDOgLBV+IF74rNi3QT24fu++FDG89QMiSuqicMoPQgHqbOy8z81YnmwRxdf
-         mKXQ8+FHi4Ozw4utttSIlYWlGjtu3KhZ5QNIR/P2tHmt4/+b3sX9neyilmS9DoAGtkN7
-         EI6Q==
-X-Gm-Message-State: AJIora9jSrynI95RM7Fp2K1uGbIF+cxnu/8C3Z8MFBWbLRRH3sS3t4+j
-        ThAvbHapCyD9QRUOscANeGPVF9/FHiIxb6INU28=
-X-Google-Smtp-Source: AGRyM1ufbCrUGd9sdOhLbkY9hMndpBkYhdAZmz0NMgns1ePzqNmr2/dh9ZjPDPOHRHDbx4n9lQZG8ca01TLOtRHkxLY=
-X-Received: by 2002:a05:6638:dd1:b0:341:5666:dd0a with SMTP id
- m17-20020a0566380dd100b003415666dd0amr1985309jaj.199.1657964598154; Sat, 16
- Jul 2022 02:43:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1657279685.git.viresh.kumar@linaro.org> <CAMRc=MdLJ_uM_Dy=L5nb-5HVhMFcixaVpD3WQvrDgp8s2bUW9w@mail.gmail.com>
- <CANiq72mZM1OYb27z63aEtzNJ+7WuzL+EwBqqoj5xBeTfd1LT9w@mail.gmail.com> <CANiq72=sKvuaFeOpOwfcafeq81YG7paALPv3rU6=sO__O4zycA@mail.gmail.com>
-In-Reply-To: <CANiq72=sKvuaFeOpOwfcafeq81YG7paALPv3rU6=sO__O4zycA@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 16 Jul 2022 11:43:07 +0200
-Message-ID: <CANiq72=9ARaKRdszvbfC4fr3BkYQz8r6tjTYzkOr9EsN5xma-A@mail.gmail.com>
-Subject: Re: [PATCH V4 0/8] libgpiod: Add Rust bindings
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229469AbiGPKdT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Jul 2022 06:33:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC2D6584;
+        Sat, 16 Jul 2022 03:33:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 94C6D60F9B;
+        Sat, 16 Jul 2022 10:33:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8ACAC34114;
+        Sat, 16 Jul 2022 10:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657967598;
+        bh=fb7zcFr0KnXxkQp0xpdk4Mcd+9GKD+xwhdHZmcfcxGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SFmHR5nFB+nKOqpu5Q04w6uop28XC7xK6cMvxDQaREF2HMd6r3jtvPck5KRlWzpPt
+         ZAqPYOh3GcX7t1x08di4o+ogeZcjpS5gbe7lLzRcDOXhNLhpqHuJmttXcT79B9TNU6
+         zip+sWCL1VN2i1A37PvY70STaJWY8ViWKU+cdVEfepMom4cXEGNe/yvbpIxu5k16f+
+         GkDkLw6B8ooc17oyg4WHKA5Gu9oQ0sphFtAEbIRRPX1jD+G7BQwzQZufSlvVfmeA4n
+         kGnzZ/L1Ln64G+T76u3rYxNu4QxL45rP36+edMzzWb+U+zyVoS4mCoOU1TFN3OJfnM
+         eQSH9r4o8AWSQ==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oCf6p-007rDL-Ga;
+        Sat, 16 Jul 2022 11:33:15 +0100
+Date:   Sat, 16 Jul 2022 11:33:08 +0100
+Message-ID: <87r12l4aaj.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     <lewis.hanly@microchip.com>
+Cc:     <linux-gpio@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <linux-kernel@vger.kernel.org>, <palmer@dabbelt.com>,
+        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>
+Subject: Re: [PATCH v3 1/1] gpio: mpfs: add polarfire soc gpio support
+In-Reply-To: <20220716071113.1646887-2-lewis.hanly@microchip.com>
+References: <20220716071113.1646887-1-lewis.hanly@microchip.com>
+        <20220716071113.1646887-2-lewis.hanly@microchip.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: lewis.hanly@microchip.com, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, linus.walleij@linaro.org, brgl@bgdev.pl, linux-kernel@vger.kernel.org, palmer@dabbelt.com, conor.dooley@microchip.com, daire.mcnamara@microchip.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 9:27 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> something like `cargo --no-run` as a normal user).
+On Sat, 16 Jul 2022 08:11:13 +0100,
+<lewis.hanly@microchip.com> wrote:
+> 
+> From: Lewis Hanly <lewis.hanly@microchip.com>
+> 
+> Add a driver to support the Polarfire SoC gpio controller.
+> 
+> Signed-off-by: Lewis Hanly <lewis.hanly@microchip.com>
 
-Sorry, that was intended to be `cargo test --no-run` (and the test
-binary will be in `target/debug/deps`). Also note that is only for the
-unit tests, though, not doctests. It can get more involved for those
-if you want to avoid to run Cargo/rustdoc as root.
+[...]
 
-Hope that helps!
+> +static int mpfs_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+> +					   unsigned int child,
+> +					   unsigned int child_type,
+> +					   unsigned int *parent,
+> +					   unsigned int *parent_type)
+> +{
+> +	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
+> +	struct irq_data *d = irq_get_irq_data(mpfs_gpio->irq_number[child]);
 
-Cheers,
-Miguel
+This looks totally wrong. It means that you have already instantiated
+part of the hierarchy, and it is likely that you will get multiple
+hierarchy sharing some levels, which isn't intended.
+
+> +	*parent_type = IRQ_TYPE_NONE;
+> +	*parent = irqd_to_hwirq(d);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mpfs_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct clk *clk;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct device_node *irq_parent;
+> +	struct gpio_irq_chip *girq;
+> +	struct irq_domain *parent;
+> +	struct mpfs_gpio_chip *mpfs_gpio;
+> +	int i, ret, ngpio;
+> +
+> +	mpfs_gpio = devm_kzalloc(dev, sizeof(*mpfs_gpio), GFP_KERNEL);
+> +	if (!mpfs_gpio)
+> +		return -ENOMEM;
+> +
+> +	mpfs_gpio->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(mpfs_gpio->base))
+> +		return dev_err_probe(dev, PTR_ERR(mpfs_gpio->clk), "input clock not found.\n");
+> +
+> +	clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "devm_clk_get failed\n");
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to enable clock\n");
+> +
+> +	mpfs_gpio->clk = clk;
+> +
+> +	ngpio = of_irq_count(node);
+> +	if (ngpio > NUM_GPIO) {
+> +		ret = -ENXIO;
+> +		goto cleanup_clock;
+> +	}
+> +
+> +	irq_parent = of_irq_find_parent(node);
+> +	if (!irq_parent) {
+> +		ret = -ENODEV;
+> +		goto cleanup_clock;
+> +	}
+> +	parent = irq_find_host(irq_parent);
+> +	if (!parent) {
+> +		ret = -ENODEV;
+> +		goto cleanup_clock;
+> +	}
+> +
+> +	/* Get the interrupt numbers. */
+> +	/* Clear/Disable All interrupts before enabling parent interrupts. */
+> +	for (i = 0; i < ngpio; i++) {
+> +		mpfs_gpio->irq_number[i] = platform_get_irq(pdev, i);
+
+Bingo. You are allocating the interrupt for the level below. You
+really shouldn't do that.
+
+If you need to retrieve the *hwirq* for the level below, you need to
+parse the DT without triggering an IRQ allocation (of_irq_parse_one()
+and co).
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
