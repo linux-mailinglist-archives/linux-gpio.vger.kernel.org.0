@@ -2,105 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDD335775BB
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Jul 2022 12:27:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 029F75776E8
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Jul 2022 17:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbiGQK1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Jul 2022 06:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
+        id S233162AbiGQPG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Jul 2022 11:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbiGQK1s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jul 2022 06:27:48 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29E013F6C;
-        Sun, 17 Jul 2022 03:27:46 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7278C1C0003; Sun, 17 Jul 2022 12:27:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1658053665;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3MVHf1qHPbwU04QPrugrK9rKDYYcr5uqSuRuIBZh6RU=;
-        b=E1wd2mR5U0P3hGWzxsehSHmMQgRyWJTSAWmvHc26G/G5mkxAEtvEy4BVpQYub/YXK0hYbL
-        gmW9mhrDbGEHoVivVOofSu0a+HUqTkuMdgM76XcH8SZq2pXnNX8d9RZSiwmbZcTmslAn0D
-        KJbRBbX8TLTBo1MJdd6AFEC9ra/P6L0=
-Date:   Sun, 17 Jul 2022 12:27:44 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        with ESMTP id S233140AbiGQPG0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jul 2022 11:06:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD2B13E1E;
+        Sun, 17 Jul 2022 08:06:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 107666123B;
+        Sun, 17 Jul 2022 15:06:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 76607C3411E;
+        Sun, 17 Jul 2022 15:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658070385;
+        bh=NZyPWJOLyN9oQRkPX94g86JN0Y1/kzbyriouw9vNRMg=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=L7XV0CB5/jYlEnHcO6rxl+s5D0m/vsEKKVLVxt9fAVb2RBsZOh9pnT8Xr2OUNvhAl
+         ZfvIGOqkE5K7Hduux115w7fBjqimz+5m1kkutD+kDusZd59Y5zoLhs2Jd79DW5nEpm
+         RYjma1kfymOJhk+6FD1m9G5uazDbgKpjsw6K3rOJ1DD/A7J4T/liy6G0QoSVJBic9P
+         e+UXojrRsb16l+EL9N3iLi7zxEeEiMKypg6r3dJs4vm3zZO2/17ZgidSTxhmV4KhS/
+         5U2RHkT5plVaqpWPu/dT8xdbr+LKaBnLF4sMQoCPewJhSwDnmoQ1KV8fv5jwFX+G9X
+         ZAGYvwtH4BUdw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5FB77E4521F;
+        Sun, 17 Jul 2022 15:06:25 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v5.19-rc7
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220717073602.4801-1-brgl@bgdev.pl>
+References: <20220717073602.4801-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220717073602.4801-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc7
+X-PR-Tracked-Commit-Id: 7329b071729645e243b6207e76bca2f4951c991b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2eccaca7b62b2836260c6fb22156a44e3d99a74a
+Message-Id: <165807038538.25191.15947983563428396889.pr-tracker-bot@kernel.org>
+Date:   Sun, 17 Jul 2022 15:06:25 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
-Message-ID: <20220717102744.GD14285@duo.ucw.cz>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
- <YqBS8I62YBPFC9iS@google.com>
- <20220714112656.GB16407@duo.ucw.cz>
- <YtAHyZ5WHDRbgOZe@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZARJHfwaSJQLOEUz"
-Content-Disposition: inline
-In-Reply-To: <YtAHyZ5WHDRbgOZe@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The pull request you sent on Sun, 17 Jul 2022 09:36:02 +0200:
 
---ZARJHfwaSJQLOEUz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc7
 
-Hi!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2eccaca7b62b2836260c6fb22156a44e3d99a74a
 
-> > > Can we just wait for Pavel's review, then merge them all at once?
-> >=20
-> > 10,12: Acked-by: Pavel Machek <pavel@ucw.cz>
->=20
-> Thanks Pavel.  I'll get that added.
+Thank you!
 
-Thank you, sorry for the delays.
-
-Best regards,
-							Pavel
-
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---ZARJHfwaSJQLOEUz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYtPkIAAKCRAw5/Bqldv6
-8shAAJ9XaR038+0wsZQKvKNF4Tgr3zzktwCcCU+9rZjRQhe2EMoVQr1ueJ71gO0=
-=4aTK
------END PGP SIGNATURE-----
-
---ZARJHfwaSJQLOEUz--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
