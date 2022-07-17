@@ -2,99 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D32D5774F9
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Jul 2022 09:36:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDD335775BB
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Jul 2022 12:27:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232823AbiGQHgK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Jul 2022 03:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57516 "EHLO
+        id S229935AbiGQK1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Jul 2022 06:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231515AbiGQHgK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jul 2022 03:36:10 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13831A3BC
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Jul 2022 00:36:07 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id z12so12711294wrq.7
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Jul 2022 00:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7w9i54EGf9yZrZAfY6N7mI7xz0lXHUja3CmKUzTVCns=;
-        b=VhunYHCAjPP2T+WTf1ZP44QgKs4Zf60fq5Kr4dY1/6NRwJEuV7fVU1o39vmfbIsErz
-         NyKDs6qFdEpp2tY504xEi43zIcEi8K+0r8OjP/xTEhPr4d+n6Nl7PfGKw092uCUr9pAH
-         IeRZWeVCxBGXn3RYz9gNwdVTa/hYsmZQgiIB+mXTeRQ0nLmRXmzNjUq8KgI5HYNSQEC3
-         XfygVJ4U/zb8BlVJEEIeM+5/rhnM6gBl4ppPNLIuh8UQbQ8tT2Lwk+cQxxoEHfGw2RV/
-         xeyudrp1uixo0vQkzitKKY4FRDB46/djmWaGHv+MwB29DA0QKux8TcXL7mWLJM14P4Dx
-         mGMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7w9i54EGf9yZrZAfY6N7mI7xz0lXHUja3CmKUzTVCns=;
-        b=gg0fKoA7PkLPzMkSiZcFKA1Zp183FH4wBMYu4B+7qv/rFliVU03Wg8P5l9VgWt9i06
-         gPl5wgWsuw3Ot4ObENzto5NuduK8Ss2GOq3A63FisqcAD8PIGJFfi0DSFwzJdSyfFtaQ
-         +MkQxuprrAUxhB8qRNOJSeWZiC5Mi35j6c4Yvfk097uiIm1Hf6JE/f4quDp7jHZqYbDj
-         vqBsVHiy4hYXisN02DUSA4KE3LRGbZ7T9Rzoev1wNIa0LzHP1lBNC/lPZHaBvgEtARqR
-         xM9JuxGYNSKKMzX9Z092gmDjBi93ExvMeC+MLuJ3lRafCsNrhZKmrxGvDriKKQlwwfIG
-         GBow==
-X-Gm-Message-State: AJIora/G9JokPzniASXcjRtwnlwIfsxGzcNBe0r6YhksMsbkS7dvJTAC
-        pOW4Gza226iiAfTcAY+wLH5wYA==
-X-Google-Smtp-Source: AGRyM1sX6tuRJLMH9vemB/T67Mb7se6fqe4Qy4Xq4gSW4x6bij0QVnr4gIHOAs09sq+PKtv5QGLstA==
-X-Received: by 2002:adf:ea50:0:b0:21d:6547:1154 with SMTP id j16-20020adfea50000000b0021d65471154mr17676760wrn.186.1658043366393;
-        Sun, 17 Jul 2022 00:36:06 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:6051:99a2:ab7f:63ce])
-        by smtp.gmail.com with ESMTPSA id i16-20020a5d5230000000b0021d9d13bf6csm7653757wra.97.2022.07.17.00.36.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jul 2022 00:36:06 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        with ESMTP id S229731AbiGQK1s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jul 2022 06:27:48 -0400
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29E013F6C;
+        Sun, 17 Jul 2022 03:27:46 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7278C1C0003; Sun, 17 Jul 2022 12:27:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+        t=1658053665;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3MVHf1qHPbwU04QPrugrK9rKDYYcr5uqSuRuIBZh6RU=;
+        b=E1wd2mR5U0P3hGWzxsehSHmMQgRyWJTSAWmvHc26G/G5mkxAEtvEy4BVpQYub/YXK0hYbL
+        gmW9mhrDbGEHoVivVOofSu0a+HUqTkuMdgM76XcH8SZq2pXnNX8d9RZSiwmbZcTmslAn0D
+        KJbRBbX8TLTBo1MJdd6AFEC9ra/P6L0=
+Date:   Sun, 17 Jul 2022 12:27:44 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.19-rc7
-Date:   Sun, 17 Jul 2022 09:36:02 +0200
-Message-Id: <20220717073602.4801-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <20220717102744.GD14285@duo.ucw.cz>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+ <YqBS8I62YBPFC9iS@google.com>
+ <20220714112656.GB16407@duo.ucw.cz>
+ <YtAHyZ5WHDRbgOZe@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZARJHfwaSJQLOEUz"
+Content-Disposition: inline
+In-Reply-To: <YtAHyZ5WHDRbgOZe@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
 
-Please pull the following fix for the gpio simulator for the next rc.
+--ZARJHfwaSJQLOEUz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!
-Bartosz Golaszewski
+Hi!
 
-The following changes since commit 32346491ddf24599decca06190ebca03ff9de7f8:
+> > > Can we just wait for Pavel's review, then merge them all at once?
+> >=20
+> > 10,12: Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> Thanks Pavel.  I'll get that added.
 
-  Linux 5.19-rc6 (2022-07-10 14:40:51 -0700)
+Thank you, sorry for the delays.
 
-are available in the Git repository at:
+Best regards,
+							Pavel
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc7
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
 
-for you to fetch changes up to 7329b071729645e243b6207e76bca2f4951c991b:
+--ZARJHfwaSJQLOEUz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  gpio: sim: fix the chip_name configfs item (2022-07-12 13:41:25 +0200)
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-gpio fixes for v5.19-rc7
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYtPkIAAKCRAw5/Bqldv6
+8shAAJ9XaR038+0wsZQKvKNF4Tgr3zzktwCcCU+9rZjRQhe2EMoVQr1ueJ71gO0=
+=4aTK
+-----END PGP SIGNATURE-----
 
-- fix a configfs attribute of the gpio-sim module
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      gpio: sim: fix the chip_name configfs item
-
- drivers/gpio/gpio-sim.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+--ZARJHfwaSJQLOEUz--
