@@ -2,419 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D46C578C42
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 22:57:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10257578BAF
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 22:22:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236182AbiGRU5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 16:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55700 "EHLO
+        id S233765AbiGRUWO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 16:22:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236069AbiGRU5D (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 16:57:03 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F0A326F1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 13:57:00 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id o16-20020a9d4110000000b0061cac66bd6dso1766535ote.11
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 13:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MaL6nUZp1qnzFg5lPX4aXiHwyJgQQ7FQ0456bzIqrd4=;
-        b=FjumPJRgFY5eeB5lGRtrx/X4WGR/RNXvsyxCmxHJGjWmWxjxX43Oy0h9WpbVs/G9Or
-         ++LnnUzMDM8N8WiAPGWENuyv5Ge8ng3s0C9MIWQJBIwePOUDvymCk63MTBmkp4IAkg/j
-         hF+eXYwEDIKVMRvbLEPtf3Cn1mQJhUImeG0A/Cacpl5VwDjJKp0cDJw+hX+5yIcoFNw9
-         DfGEGZ3qecfcqrN2NDwhv1m0FYtpyNlvIMRajW0azcLEgmC/dqMQFkyOByA2Z0UsnNi2
-         X7NY6L9CjaaV2eaWXNI7uXUX57pTXfHIfJ1+F560d5GcQzkUlB5F1+uYxnkzbcG9kMIV
-         u4Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MaL6nUZp1qnzFg5lPX4aXiHwyJgQQ7FQ0456bzIqrd4=;
-        b=S2TV9tLdirgFl9X4ejoJfCfIZWpOcFN5nwdqHa7RURovblSFNilQTnG42cbHs9qqjv
-         8Dp5oHwQceGvzjFkPf7cixkkTqkNNfFEqaoXF3Btsq2DeyBG2fJOyoBNONOuwC65W72K
-         wEUG+hjE6fFLhdDmt7FrKsBEDCxC6XiLGBhSKDg2g+9yxQ4erX1Xu4c3+y1pfuxFsEhn
-         /C1kkB1NMxwvlUSqk0UvjBW3EobOX2VQGWpiYdEn6WzwE9BRb2hJBUGAetg5va6l3i1f
-         sBGlD1khxY3sMVPvS/HcdgXfO8w3EGG1MNYCOG/KuuObHK3Wyh/UipDh9qYu8M71zROS
-         3s6A==
-X-Gm-Message-State: AJIora8bRY7hug7VnP7OdqB70MAuEHAzu9yefmWtlcdrrU/JIfnT23cq
-        eMat6YCWfX31vRwk2EOu7Ri0vQ==
-X-Google-Smtp-Source: AGRyM1v3ju4pWLaLyB7J9v+/Op4/p9RZ3pLizVgSCnsZE/a78N8riyvlWvFOIZs2qlRWVbAqriefDg==
-X-Received: by 2002:a9d:5a05:0:b0:61c:32a3:f402 with SMTP id v5-20020a9d5a05000000b0061c32a3f402mr11582713oth.107.1658177820213;
-        Mon, 18 Jul 2022 13:57:00 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id l8-20020a4ab2c8000000b0035eb4e5a6cbsm5252065ooo.33.2022.07.18.13.56.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jul 2022 13:57:00 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>,
-        Fred Eckert <Frede@cmslaser.com>
-Subject: [PATCH v3 6/6] gpio: gpio-mm: Implement and utilize register structures
-Date:   Fri, 15 Jul 2022 14:52:28 -0400
-Message-Id: <124fb6518c06db7ac5c6032c8d4fe429611ac3ed.1657907849.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <cover.1657907849.git.william.gray@linaro.org>
-References: <cover.1657907849.git.william.gray@linaro.org>
+        with ESMTP id S231248AbiGRUWN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 16:22:13 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087FE31223
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 13:22:11 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDXFo-0005Bj-HP; Mon, 18 Jul 2022 22:22:08 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDXFn-001mUe-K8; Mon, 18 Jul 2022 22:22:07 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDXFm-00623G-Qw; Mon, 18 Jul 2022 22:22:06 +0200
+Date:   Mon, 18 Jul 2022 22:22:05 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: Is a multiplexer using latches a gpio controller?
+Message-ID: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uv7c5tth75dupikf"
+Content-Disposition: inline
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Reduce magic numbers and improve code readability by implementing and
-utilizing named register data structures. The GPIO-MM device features an
-Intel 8255 compatible GPIO interface, so the i8255 GPIO module is
-selected and utilized as well.
 
-Tested-by: Fred Eckert <Frede@cmslaser.com>
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
-Changes in v3:
- - Include "gpio-i8255.h" instead of <linux/gpio/i8255.h>
- - Import I8255 symbol namespace
- - Define GPIOMM_NUM_PPI as the number of PPI (2)
- - Utilize i8255_state struct; replaces 'control_state' and 'lock' with
-   'ppi_state'
- - Call i8255_state_init() to initialize 'ppi_state'
+--uv7c5tth75dupikf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/gpio/Kconfig        |   1 +
- drivers/gpio/gpio-gpio-mm.c | 202 +++++++-----------------------------
- 2 files changed, 41 insertions(+), 162 deletions(-)
+Hello,
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 253a03ee3fa4..5202e3b6f2c6 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -889,6 +889,7 @@ config GPIO_GPIO_MM
- 	tristate "Diamond Systems GPIO-MM GPIO support"
- 	depends on PC104
- 	select ISA_BUS_API
-+	select GPIO_I8255
- 	help
- 	  Enables GPIO support for the Diamond Systems GPIO-MM and GPIO-MM-12.
- 
-diff --git a/drivers/gpio/gpio-gpio-mm.c b/drivers/gpio/gpio-gpio-mm.c
-index 097a06463d01..75b3ceeddbaf 100644
---- a/drivers/gpio/gpio-gpio-mm.c
-+++ b/drivers/gpio/gpio-gpio-mm.c
-@@ -6,7 +6,7 @@
-  * This driver supports the following Diamond Systems devices: GPIO-MM and
-  * GPIO-MM-12.
-  */
--#include <linux/bitmap.h>
-+#include <linux/bits.h>
- #include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/errno.h>
-@@ -17,7 +17,10 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
--#include <linux/spinlock.h>
-+
-+#include "gpio-i8255.h"
-+
-+MODULE_IMPORT_NS(I8255);
- 
- #define GPIOMM_EXTENT 8
- #define MAX_NUM_GPIOMM max_num_isa_dev(GPIOMM_EXTENT)
-@@ -27,32 +30,26 @@ static unsigned int num_gpiomm;
- module_param_hw_array(base, uint, ioport, &num_gpiomm, 0);
- MODULE_PARM_DESC(base, "Diamond Systems GPIO-MM base addresses");
- 
-+#define GPIOMM_NUM_PPI 2
-+
- /**
-  * struct gpiomm_gpio - GPIO device private data structure
-- * @chip:	instance of the gpio_chip
-- * @io_state:	bit I/O state (whether bit is set to input or output)
-- * @out_state:	output bits state
-- * @control:	Control registers state
-- * @lock:	synchronization lock to prevent I/O race conditions
-- * @base:	base port address of the GPIO device
-+ * @chip:		instance of the gpio_chip
-+ * @ppi_state:		Programmable Peripheral Interface group states
-+ * @ppi:		Programmable Peripheral Interface groups
-  */
- struct gpiomm_gpio {
- 	struct gpio_chip chip;
--	unsigned char io_state[6];
--	unsigned char out_state[6];
--	unsigned char control[2];
--	spinlock_t lock;
--	void __iomem *base;
-+	struct i8255_state ppi_state[GPIOMM_NUM_PPI];
-+	struct i8255 __iomem *ppi;
- };
- 
- static int gpiomm_gpio_get_direction(struct gpio_chip *chip,
- 	unsigned int offset)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int port = offset / 8;
--	const unsigned int mask = BIT(offset % 8);
- 
--	if (gpiommgpio->io_state[port] & mask)
-+	if (i8255_get_direction(gpiommgpio->ppi_state, offset))
- 		return GPIO_LINE_DIRECTION_IN;
- 
- 	return GPIO_LINE_DIRECTION_OUT;
-@@ -62,35 +59,8 @@ static int gpiomm_gpio_direction_input(struct gpio_chip *chip,
- 	unsigned int offset)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int io_port = offset / 8;
--	const unsigned int control_port = io_port / 3;
--	unsigned long flags;
--	unsigned int control;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	/* Check if configuring Port C */
--	if (io_port == 2 || io_port == 5) {
--		/* Port C can be configured by nibble */
--		if (offset % 8 > 3) {
--			gpiommgpio->io_state[io_port] |= 0xF0;
--			gpiommgpio->control[control_port] |= BIT(3);
--		} else {
--			gpiommgpio->io_state[io_port] |= 0x0F;
--			gpiommgpio->control[control_port] |= BIT(0);
--		}
--	} else {
--		gpiommgpio->io_state[io_port] |= 0xFF;
--		if (io_port == 0 || io_port == 3)
--			gpiommgpio->control[control_port] |= BIT(4);
--		else
--			gpiommgpio->control[control_port] |= BIT(1);
--	}
- 
--	control = BIT(7) | gpiommgpio->control[control_port];
--	iowrite8(control, gpiommgpio->base + 3 + control_port*4);
--
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
-+	i8255_direction_input(gpiommgpio->ppi, gpiommgpio->ppi_state, offset);
- 
- 	return 0;
- }
-@@ -99,44 +69,9 @@ static int gpiomm_gpio_direction_output(struct gpio_chip *chip,
- 	unsigned int offset, int value)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int io_port = offset / 8;
--	const unsigned int control_port = io_port / 3;
--	const unsigned int mask = BIT(offset % 8);
--	const unsigned int out_port = (io_port > 2) ? io_port + 1 : io_port;
--	unsigned long flags;
--	unsigned int control;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	/* Check if configuring Port C */
--	if (io_port == 2 || io_port == 5) {
--		/* Port C can be configured by nibble */
--		if (offset % 8 > 3) {
--			gpiommgpio->io_state[io_port] &= 0x0F;
--			gpiommgpio->control[control_port] &= ~BIT(3);
--		} else {
--			gpiommgpio->io_state[io_port] &= 0xF0;
--			gpiommgpio->control[control_port] &= ~BIT(0);
--		}
--	} else {
--		gpiommgpio->io_state[io_port] &= 0x00;
--		if (io_port == 0 || io_port == 3)
--			gpiommgpio->control[control_port] &= ~BIT(4);
--		else
--			gpiommgpio->control[control_port] &= ~BIT(1);
--	}
--
--	if (value)
--		gpiommgpio->out_state[io_port] |= mask;
--	else
--		gpiommgpio->out_state[io_port] &= ~mask;
--
--	control = BIT(7) | gpiommgpio->control[control_port];
--	iowrite8(control, gpiommgpio->base + 3 + control_port*4);
- 
--	iowrite8(gpiommgpio->out_state[io_port], gpiommgpio->base + out_port);
--
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
-+	i8255_direction_output(gpiommgpio->ppi, gpiommgpio->ppi_state, offset,
-+			       value);
- 
- 	return 0;
- }
-@@ -144,47 +79,16 @@ static int gpiomm_gpio_direction_output(struct gpio_chip *chip,
- static int gpiomm_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int port = offset / 8;
--	const unsigned int mask = BIT(offset % 8);
--	const unsigned int in_port = (port > 2) ? port + 1 : port;
--	unsigned long flags;
--	unsigned int port_state;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	/* ensure that GPIO is set for input */
--	if (!(gpiommgpio->io_state[port] & mask)) {
--		spin_unlock_irqrestore(&gpiommgpio->lock, flags);
--		return -EINVAL;
--	}
--
--	port_state = ioread8(gpiommgpio->base + in_port);
--
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
- 
--	return !!(port_state & mask);
-+	return i8255_get(gpiommgpio->ppi, offset);
- }
- 
--static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
--
- static int gpiomm_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
- 	unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	void __iomem *port_addr;
--	unsigned long port_state;
--
--	/* clear bits array to a clean slate */
--	bitmap_zero(bits, chip->ngpio);
- 
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		port_addr = gpiommgpio->base + ports[offset / 8];
--		port_state = ioread8(port_addr) & gpio_mask;
--
--		bitmap_set_value8(bits, port_state, offset);
--	}
-+	i8255_get_multiple(gpiommgpio->ppi, mask, bits, chip->ngpio);
- 
- 	return 0;
- }
-@@ -193,49 +97,17 @@ static void gpiomm_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	int value)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int port = offset / 8;
--	const unsigned int mask = BIT(offset % 8);
--	const unsigned int out_port = (port > 2) ? port + 1 : port;
--	unsigned long flags;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	if (value)
--		gpiommgpio->out_state[port] |= mask;
--	else
--		gpiommgpio->out_state[port] &= ~mask;
--
--	iowrite8(gpiommgpio->out_state[port], gpiommgpio->base + out_port);
- 
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
-+	i8255_set(gpiommgpio->ppi, gpiommgpio->ppi_state, offset, value);
- }
- 
- static void gpiomm_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	size_t index;
--	void __iomem *port_addr;
--	unsigned long bitmask;
--	unsigned long flags;
--
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		index = offset / 8;
--		port_addr = gpiommgpio->base + ports[index];
--
--		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
--
--		spin_lock_irqsave(&gpiommgpio->lock, flags);
- 
--		/* update output state data and set device gpio register */
--		gpiommgpio->out_state[index] &= ~gpio_mask;
--		gpiommgpio->out_state[index] |= bitmask;
--		iowrite8(gpiommgpio->out_state[index], port_addr);
--
--		spin_unlock_irqrestore(&gpiommgpio->lock, flags);
--	}
-+	i8255_set_multiple(gpiommgpio->ppi, gpiommgpio->ppi_state, mask, bits,
-+			   chip->ngpio);
- }
- 
- #define GPIOMM_NGPIO 48
-@@ -250,6 +122,21 @@ static const char *gpiomm_names[GPIOMM_NGPIO] = {
- 	"Port 2C2", "Port 2C3", "Port 2C4", "Port 2C5", "Port 2C6", "Port 2C7",
- };
- 
-+static void gpiomm_init_dio(struct i8255 __iomem *const ppi,
-+			    struct i8255_state *const ppi_state)
-+{
-+	const unsigned long ngpio = 24;
-+	const unsigned long mask = GENMASK(ngpio - 1, 0);
-+	const unsigned long bits = 0;
-+	unsigned long i;
-+
-+	/* Initialize all GPIO to output 0 */
-+	for (i = 0; i < GPIOMM_NUM_PPI; i++) {
-+		i8255_mode0_output(&ppi[i]);
-+		i8255_set_multiple(&ppi[i], &ppi_state[i], &mask, &bits, ngpio);
-+	}
-+}
-+
- static int gpiomm_probe(struct device *dev, unsigned int id)
- {
- 	struct gpiomm_gpio *gpiommgpio;
-@@ -266,8 +153,8 @@ static int gpiomm_probe(struct device *dev, unsigned int id)
- 		return -EBUSY;
- 	}
- 
--	gpiommgpio->base = devm_ioport_map(dev, base[id], GPIOMM_EXTENT);
--	if (!gpiommgpio->base)
-+	gpiommgpio->ppi = devm_ioport_map(dev, base[id], GPIOMM_EXTENT);
-+	if (!gpiommgpio->ppi)
- 		return -ENOMEM;
- 
- 	gpiommgpio->chip.label = name;
-@@ -284,7 +171,8 @@ static int gpiomm_probe(struct device *dev, unsigned int id)
- 	gpiommgpio->chip.set = gpiomm_gpio_set;
- 	gpiommgpio->chip.set_multiple = gpiomm_gpio_set_multiple;
- 
--	spin_lock_init(&gpiommgpio->lock);
-+	i8255_state_init(gpiommgpio->ppi_state, GPIOMM_NUM_PPI);
-+	gpiomm_init_dio(gpiommgpio->ppi, gpiommgpio->ppi_state);
- 
- 	err = devm_gpiochip_add_data(dev, &gpiommgpio->chip, gpiommgpio);
- 	if (err) {
-@@ -292,16 +180,6 @@ static int gpiomm_probe(struct device *dev, unsigned int id)
- 		return err;
- 	}
- 
--	/* initialize all GPIO as output */
--	iowrite8(0x80, gpiommgpio->base + 3);
--	iowrite8(0x00, gpiommgpio->base);
--	iowrite8(0x00, gpiommgpio->base + 1);
--	iowrite8(0x00, gpiommgpio->base + 2);
--	iowrite8(0x80, gpiommgpio->base + 7);
--	iowrite8(0x00, gpiommgpio->base + 4);
--	iowrite8(0x00, gpiommgpio->base + 5);
--	iowrite8(0x00, gpiommgpio->base + 6);
--
- 	return 0;
- }
- 
--- 
-2.36.1
+we have a customer board here that uses two 8 port latches to drive
+LEDs. The setup looks as follows:
 
+CLK0 ----------------------.        ,--------.
+CLK1 -------------------.  `--------|>    #0 |
+                        |           |        |
+IN0 -----------------+--|-----------|D0    Q0|-----|=E2=97=81
+IN1 ---------------+-|--|-----------|D1    Q1|-----|=E2=97=81
+IN2 -------------+-|-|--|-----------|D2    Q2|-----|=E2=97=81
+IN3 -----------+-|-|-|--|-----------|D3    Q3|-----|=E2=97=81
+IN4 ---------+-|-|-|-|--|-----------|D4    Q4|-----|=E2=97=81
+IN5 -------+-|-|-|-|-|--|-----------|D5    Q5|-----|=E2=97=81
+IN6 -----+-|-|-|-|-|-|--|-----------|D6    Q6|-----|=E2=97=81
+IN7 ---+-|-|-|-|-|-|-|--|-----------|D7    Q7|-----|=E2=97=81
+       | | | | | | | |  |           `--------'
+       | | | | | | | |  |
+       | | | | | | | |  |           ,--------.
+       | | | | | | | |  `-----------|>    #1 |
+       | | | | | | | |              |        |
+       | | | | | | | `--------------|D0    Q0|-----|=E2=97=81
+       | | | | | | `----------------|D1    Q1|-----|=E2=97=81
+       | | | | | `------------------|D2    Q2|-----|=E2=97=81
+       | | | | `--------------------|D3    Q3|-----|=E2=97=81
+       | | | `----------------------|D4    Q4|-----|=E2=97=81
+       | | `------------------------|D5    Q5|-----|=E2=97=81
+       | `--------------------------|D6    Q6|-----|=E2=97=81
+       `----------------------------|D7    Q7|-----|=E2=97=81
+                                    `--------'
+
+
+So to change output 2 of latch #1 you have to apply the changed level on
+IN2, apply the previous level on the other inputs (to keep the other
+outputs constant) and toggle CLK1 once.
+
+This way you can drive 16 LEDs (or in general outputs) using only 10
+GPIOs. (And with a higher number of latches the proportion becomes a bit
+more useful.)
+
+Actually this construct is a general GPO (no input :-) controller, and I
+wonder if you would accept a driver that models it as a gpio controller.
+
+The dt binding could look as follows:
+
+latch-gpo {
+	compatible =3D "latch-gpo";
+	pinctrl-0 =3D <...>;
+	pinctrl-names =3D <...>;
+
+	clk-gpios =3D /* CLK0 */ <...>, /* CLK1 */ <...>;
+	data-gpios =3D /* IN0 */ <...>, /* IN1 */ <...>, ...;
+};
+
+What do you think?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uv7c5tth75dupikf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLVwOkACgkQwfwUeK3K
+7AmImwgAmg1Ia5zpArkYOMurJrtXAkdVuV5IfZIzHFdnflFqgdJSEz/w9vbmhk9c
+DGDXujw7HHxdfPsF9WBH//mwAflak22LhaUePpEFPC/Twa+9n20YzDn96aJLMLKo
+CIYoqAywhlh7i3zl1+Zr1t+yHchdgcVaAEIXy35gYeRv6gpU8AgEyNwPPHE/bq9Z
+kIqMVfAeWCOnw1irqvWLwkgPLLLInUr1Qwd+/9durn3wyVRj6tgThuECvh5PRWYN
+PPN3BBpMidnG2LhkmRzPxSWA65ZQ8K5F85FYfzRXKZX4PqbBAQbqMgC5R6xSW14j
+/yxM0AV0dmYGP2xpG0nDk0M62Xovgg==
+=wWjt
+-----END PGP SIGNATURE-----
+
+--uv7c5tth75dupikf--
