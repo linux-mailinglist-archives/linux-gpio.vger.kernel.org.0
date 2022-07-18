@@ -2,92 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE19B57801C
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 12:48:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01EFC578017
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 12:48:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234405AbiGRKse (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 06:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54558 "EHLO
+        id S234299AbiGRKsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 06:48:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234244AbiGRKsd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 06:48:33 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68F01F2DD
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 03:48:24 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id oy13so20425123ejb.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 03:48:24 -0700 (PDT)
+        with ESMTP id S234305AbiGRKsV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 06:48:21 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EA301F2E2;
+        Mon, 18 Jul 2022 03:48:18 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id nd6so8432805qvb.6;
+        Mon, 18 Jul 2022 03:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4oRak+C2KluI48BtBgPjPXk/AjJSdRg3YOHC7j1IJKc=;
-        b=xCzpO+0vKd22GOhNS1gpEGBGfBEZxh6GUzkKqmPMQhJ67hvOqoR2/zJc88DP/6ChMG
-         h2DJL9SJMDPhUNWDfpFIl9pl3RvditxQW06A8rSrycYLo0YuvzMnR9xSh0xrG7vjfuun
-         3rZXgUni7hrSCJe8aTi2GnHOO6XrnwL4UGzXL53yMXrP+dEXJJlQyjnnvJ5D9tK6pwll
-         9dPJJyMUPEFGC8rkIp6SYXmpqnaop/gDPaMNgf9I5prw1zQwY1JgKviM1xC5SkAx/gU3
-         qzWgQ8fDM6CqpJopBJsI/g6wlk21hyiELyGfp79nJGDq8h5NxRsfZA24wEY7LZ74PYtO
-         l3fw==
+        d=gmail.com; s=20210112;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=odInwset3JtekyfvwHYQ7Zjgrovk0OVJ1s+jC7toYFw=;
+        b=LjW3HvpT+uww2s2o3355LRaTe3zeVKWpHflAEtPcwJkQt04/lqcHRGoDlLS08hwCk0
+         hWg15EuDX08T0uC6JlIM48KTXBafqnCr82QwSLf55QIonwrrE6J27rk2SoH5BOMHv+8B
+         TQJ9O6CKDjJN90uvXU2s8EQ0NYJ8m/PJNxBx92FA8yUxdR8Jd59bLUisXsqyFOnwjMU/
+         O03iwUEPR23CAo2yGI2Uq4Yrq6FlY8tyaFcuLOfMQOxteL6oC0g84m397Kt4fST3aA/x
+         7v2p1RYGYfN1zQdqQt3y9HScqM9kUBGxTCPxe/f1I8A3RpqLnFC2pVFLfLH3Om8v3Lc/
+         hJTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4oRak+C2KluI48BtBgPjPXk/AjJSdRg3YOHC7j1IJKc=;
-        b=Pxlp3FBYQLoNLvZNZAQwD65jBKW+7C+X4dqAZgPr/DTNNkxVc7lqc4EzUneGl43RuS
-         8+Tog/sG6hZqqc4SyZc+tYz09h+iKYl5/mqe1Pm+Hq5xIAiwkG+z6gx8LVb77eDgFwMJ
-         jFf/je2A0GP+qACiKbATvD2z/TAwolUDII9paELcHfr1Mc0r5XLn0I2SfubKavrBfWBR
-         TGk03GWGVVctmtu57M9AX4flKl1RIHKwa23rus/ujXOc3h0hkiIA2znvS4OTAkjyhAOn
-         pl42CFAyFVZaXOJ0LH7I6zhyloaqroJA4zUvjYD6yJywrj0XFgwuqfWbGyFCEjPban2Y
-         +dUQ==
-X-Gm-Message-State: AJIora95mPdnoILu/BTdR9hjW9MvuqZGByvl78KYzbh9Gtej32EAQnPl
-        716iphoWHQVEeig+EJnCFNnYcaqY/SiwTOek4yKkeg==
-X-Google-Smtp-Source: AGRyM1v58741g9YF1j3O3YhZhbaaALkEvMwjbuiSWX6eGAUC4RwB+foXNRxi9DundUhsUPDjhOqkyanAVMGdqiE8fM4=
-X-Received: by 2002:a17:907:a053:b0:72b:3051:b79b with SMTP id
- gz19-20020a170907a05300b0072b3051b79bmr23902331ejc.690.1658141303429; Mon, 18
- Jul 2022 03:48:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220713175950.964-1-mario.limonciello@amd.com>
-In-Reply-To: <20220713175950.964-1-mario.limonciello@amd.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jul 2022 12:48:11 +0200
-Message-ID: <CACRpkdbcP32Bi51pHOJQM6d-0NgaHxSmxwvEsxmk4PoO1R0Fqg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Don't allow PINCTRL_AMD to be a module
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Basavaraj.Natikar@amd.com, madcatx@atlas.cz,
-        jwrdegoede@fedoraproject.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=odInwset3JtekyfvwHYQ7Zjgrovk0OVJ1s+jC7toYFw=;
+        b=OzztLjVYSoy/qHJttKu7RBs66E54FVHh8XC62wKarVmtzU59fuOecXDJINmD/AIvLA
+         GghUeBiWYP70nbBpBTyNwVjnlVr5uHgpzeFD56/n2/FX2l0dfOi8V7CvjuKRMr83P4hk
+         F8s1hzqgbh0JcN9XN8kuQrNe3LGS4YQX9HpQlXVBLIeRZGtbyb6o0EKjwiSk/qIcOguw
+         DAeOZ6lbqb/+4JTHi7XnFfxxvU4fgU/dCYPOMRCtq3rNFASkozLdjTPfyoQ1FYNOACXJ
+         Zv3+WRohUlAHu3KX6HobA8BBClDxFsfAwZ9PT9srGnI5xtLKMJfEdKbOmeitIaCGThtn
+         ibCA==
+X-Gm-Message-State: AJIora//dXnACX9Ps2VKI5Rb63N2kFI1AUwyXpkdBe6EJSKvpFz/I1/s
+        tiG3rw1/VjnPtIrqkysRztIiKU4hXex/Ib3Z
+X-Google-Smtp-Source: AGRyM1vzwysDmuzG+cF+FcZfHt6F5DwRuJ9Qdt73Z2c6zAb0Fa+XaeXhNT+gqI+qSQGFCtB5lolBjA==
+X-Received: by 2002:ad4:5be3:0:b0:473:4914:d912 with SMTP id k3-20020ad45be3000000b004734914d912mr20247040qvc.0.1658141297735;
+        Mon, 18 Jul 2022 03:48:17 -0700 (PDT)
+Received: from p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de (p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de. [2003:f6:ef03:6f00:5de6:a4d0:d791:ed01])
+        by smtp.gmail.com with ESMTPSA id y7-20020a05622a164700b0031eeecd21d6sm2182327qtj.69.2022.07.18.03.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Jul 2022 03:48:17 -0700 (PDT)
+Message-ID: <8461b72ae951e4311952052c467fb1275ff9e58a.camel@gmail.com>
+Subject: Re: [PATCH 3/4] gpiolib: acpi: support bias pull disable
+From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc:     linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 18 Jul 2022 12:49:19 +0200
+In-Reply-To: <CACRpkdbitDErSCMbKFe0yZB63+uTGwt5ROMbEV_iAPck_RN7sg@mail.gmail.com>
+References: <20220713131421.1527179-1-nuno.sa@analog.com>
+         <20220713131421.1527179-4-nuno.sa@analog.com>
+         <CACRpkdbitDErSCMbKFe0yZB63+uTGwt5ROMbEV_iAPck_RN7sg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
+MIME-Version: 1.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 8:00 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+On Mon, 2022-07-18 at 12:32 +0200, Linus Walleij wrote:
+> On Wed, Jul 13, 2022 at 3:13 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+>=20
+> > On top of looking at PULL_UP and PULL_DOWN flags, also look at
+> > PULL_DISABLE and set the appropriate GPIO flag. The GPIO core will
+> > then
+> > pass down this to controllers that support it.
+> >=20
+> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+>=20
+> Do we have a semantic check that PULLDOWN and PULLUP
+> is not used in combination with NOPULL here?
+>=20
+> (We should also be checking that PULLDOWN and PULLUP
+> are not used simultaneously but that is an unrelated thing.)
 
-> It was observed that by allowing pinctrl_amd to be loaded
-> later in the boot process that interrupts sent to the GPIO
-> controller early in the boot are not serviced.  The kernel treats
-> these as a spurious IRQ and disables the IRQ.
->
-> This problem was exacerbated because it happened on a system with
-> an encrypted partition so the kernel object was not accesssible for
-> an extended period of time while waiting for a passphrase.
->
-> To avoid this situation from occurring, stop allowing pinctrl-amd
-> from being built as a module and instead require it to be built-in
-> or disabled.
->
-> Reported-by: madcatx@atlas.cz
-> Suggested-by: jwrdegoede@fedoraproject.org
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216230
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+I did extended this check:
 
-Patch applied for fixes!
-Excellent root causing.
+https://elixir.bootlin.com/linux/v5.19-rc7/source/drivers/gpio/gpiolib.c#L3=
+948
 
-Yours,
-Linus Walleij
+on patch 1 to make sure that PULLDOWN and PULLUP are not used with
+NOPULL. Is this what you have in mind or is it something else?
+
+- Nuno S=C3=A1
