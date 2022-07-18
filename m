@@ -2,62 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE8E0578DB3
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 00:47:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D3EC578DB7
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 00:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234596AbiGRWrA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 18:47:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
+        id S236016AbiGRWsA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 18:48:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232002AbiGRWrA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 18:47:00 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902612494B
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:46:59 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id i14so23588575yba.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:46:59 -0700 (PDT)
+        with ESMTP id S235692AbiGRWr7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 18:47:59 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDEC31376
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:47:58 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id l11so23505137ybu.13
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:47:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xQJVTZ5v7RU+QWK7eqra9kSzzqeCgRFsqsbR5Z4AZ7o=;
-        b=Df+S+nm/ultWgajStkadNGGsbckIEro6h+yfnCP5TKbUAGV71rp0DzSh00h0DIQVoZ
-         hAmEubPFgIKGGZ0negc8z/BwkzMgQeRZ+GmuTya9uN/+7JL/bWhG9imVMlbEwrYH8APH
-         Y1l3ZNjiciOm3+yN/I2I5dk+7EoBrnGG9yNjEog4SIDc4cwOiowpPcTZh+FtdAjRp8y9
-         7e5hForPc4VGiDEaSxcm9p6PkD2ifk0y9rYE8EfRP4gdlMYwL2h0M9aY2ewQrogVSdKP
-         p46zFl2GWH7tCnaZm2PmXChvs2or8zlwr2WHxlDLrn5to1crZ9CjgAplGe1qA10+PMjE
-         m+Jg==
+        bh=qolLFWuKdiYI62AFKCu974H8q25eVpSfVOUryfjouBM=;
+        b=Q7hsm8N9967oVOGqVd8UHRMKAjY9nrR933mY93k9vYBclm4xJN79WDlUUnnrDWiPtL
+         SXeBz12JkMmnoustrv+YTsDaeLfNQjh+FNnfHW8CDGZC1xl7Y1S+CoU7OdDem/pBoGfL
+         aEgxNNeSI2RVurzLJ0BknTkK16EsnH4AyaSN0n4sW0Cqr3e49SZeg9taiEn1Wp+5ol7V
+         h9nCCThs2bSLognyorwJka59JyyCVW4JxaIg2xBqaQdi7AXge4dhONPED75YONCpzBit
+         b509mp3LeI8/DQpTmvEs7UelEDbzEc6fE1haOoIzD0mkI30WbwH5u4h10CLmmwSXOeAx
+         DlgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xQJVTZ5v7RU+QWK7eqra9kSzzqeCgRFsqsbR5Z4AZ7o=;
-        b=oK0gv4TcHhfxe4N6VExu1dBzGs32/a/KdKkNr31h6QdDMaTzhsg+BQKTrMXGngdvxK
-         vJAHGN9zdr4NVPsBcj3eFzpdQByL+PsmSpPNBWUaTq0+xhvWZPH/f+F3vGRvJMBmP75n
-         UT5v340tTstHzRyhmLhwH6/au2KpbJaFxeFrXi9pbtEz608V+KImNRQjgkiLae/UFYyt
-         /ytkadhmDX8XI1ReOlVJyh0EVASR5m8HJMnBN/pRk4UX9Um0hS8kKXUMIZrV3FFfgVOC
-         gfaVmYrocXvh3ecWVISmNDssAuoBYjtwGRl6Z/oD4unB5OKBQJfWQgZK89W4XN9fKsoi
-         SVQg==
-X-Gm-Message-State: AJIora+2plXjd8KMGqbptwS2txxvKOkRsZXnm5DDsKmeLbZ/0jd+Xpdb
-        QTTZ7G72EZEZ9zhDGRUgVXby4EqHBDA2Utkf8F14+GGd4jhG3w==
-X-Google-Smtp-Source: AGRyM1upKT8DoHK9/hAXB2LaXysZKiUfoN4DANKDn581tq3jO8SbDNPhWd7P+SCZAnhOuFhNh+wn6oxO+TSGY2m7XVA=
-X-Received: by 2002:a5b:9c5:0:b0:66e:cbbf:2904 with SMTP id
- y5-20020a5b09c5000000b0066ecbbf2904mr27768238ybq.220.1658184418848; Mon, 18
- Jul 2022 15:46:58 -0700 (PDT)
+        bh=qolLFWuKdiYI62AFKCu974H8q25eVpSfVOUryfjouBM=;
+        b=HFLTIXxUdLZtyhdX0Ty+k95WbWUpggCYARJH+wyn4klKD1Bfgl1v1PdttLhg4xSC/Y
+         NFXzJ0Et7WsMSWJkUE4eZnY5z9QlsHizmjFV7mqXAiIuayF9O/EVz2wBa3I68KAOXmvO
+         ekJcwAxSfnkpJ0n/SBf/3e4ELfbvip5/MrK6eI36efhVO8fXSu78Xa5AML0T9Hh9+aB0
+         whOOHK3r+Tk2VJIZYcxlbGcQISCzkJAp6d+XJJ4WSVmdha3LFa4tmLNA3Tpe2zqGdG/X
+         bFLC0JI1sw3lq0FA5WoDkWK3lylyHdkl6BaSqLwfnTM9zFAKA3GmxyvsclWim5DhAwW8
+         bzpg==
+X-Gm-Message-State: AJIora/6k2u6HMjIEXhFP4EmJrkfN2rL8UchYUl4m1Qhf8f18jcf+XS4
+        fswLbF06rjRPmNubqRTYthuEvTnUEesRLirEFDClow==
+X-Google-Smtp-Source: AGRyM1tiaRSIdp3sBehsOn+o7ve/l74jiJVV6ahHPRdqNZAxJy5hvMS4ID9Zj3gM7addqOpdzsrohFqzWd05UXSewsw=
+X-Received: by 2002:a25:f508:0:b0:66f:3c5f:c39f with SMTP id
+ a8-20020a25f508000000b0066f3c5fc39fmr28146462ybe.374.1658184478277; Mon, 18
+ Jul 2022 15:47:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220718220252.16923-1-andriy.shevchenko@linux.intel.com> <20220718220252.16923-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220718220252.16923-2-andriy.shevchenko@linux.intel.com>
+References: <20220718220252.16923-1-andriy.shevchenko@linux.intel.com> <20220718220252.16923-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220718220252.16923-3-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Jul 2022 00:46:47 +0200
-Message-ID: <CACRpkda8GwRMoUY60sTLRfbJrN70hxDjzxaG=4Hqh48kUrE9kw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] gpio: 74xx-mmio: Check MMIO_74XX_DIR_IN flag in mmio_74xx_dir_in()
+Date:   Tue, 19 Jul 2022 00:47:46 +0200
+Message-ID: <CACRpkdb--xdd0RKZuuups6q7mC7oyEPSrW_F02RYr5UNT-QHWw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] gpio: 74xx-mmio: use bits.h macros for all masks
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -67,15 +68,10 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Jul 19, 2022 at 12:02 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> It's logically better to check the IN in ->direction_input() and
-> _OUT in ->direction_output().
->
-> While at it, replace ternary with plain if-conditional for the sake
-> of consistency with mmio_74xx_dir_out().
+> Make use of the GENMASK() (far less error-prone, far more concise).
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Yep this is better.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
