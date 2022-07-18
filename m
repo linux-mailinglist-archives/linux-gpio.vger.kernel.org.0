@@ -2,105 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01EFC578017
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 12:48:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B29757808C
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 13:19:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234299AbiGRKsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 06:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
+        id S234445AbiGRLR4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 07:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234305AbiGRKsV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 06:48:21 -0400
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EA301F2E2;
-        Mon, 18 Jul 2022 03:48:18 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id nd6so8432805qvb.6;
-        Mon, 18 Jul 2022 03:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :content-transfer-encoding:user-agent:mime-version;
-        bh=odInwset3JtekyfvwHYQ7Zjgrovk0OVJ1s+jC7toYFw=;
-        b=LjW3HvpT+uww2s2o3355LRaTe3zeVKWpHflAEtPcwJkQt04/lqcHRGoDlLS08hwCk0
-         hWg15EuDX08T0uC6JlIM48KTXBafqnCr82QwSLf55QIonwrrE6J27rk2SoH5BOMHv+8B
-         TQJ9O6CKDjJN90uvXU2s8EQ0NYJ8m/PJNxBx92FA8yUxdR8Jd59bLUisXsqyFOnwjMU/
-         O03iwUEPR23CAo2yGI2Uq4Yrq6FlY8tyaFcuLOfMQOxteL6oC0g84m397Kt4fST3aA/x
-         7v2p1RYGYfN1zQdqQt3y9HScqM9kUBGxTCPxe/f1I8A3RpqLnFC2pVFLfLH3Om8v3Lc/
-         hJTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:content-transfer-encoding:user-agent:mime-version;
-        bh=odInwset3JtekyfvwHYQ7Zjgrovk0OVJ1s+jC7toYFw=;
-        b=OzztLjVYSoy/qHJttKu7RBs66E54FVHh8XC62wKarVmtzU59fuOecXDJINmD/AIvLA
-         GghUeBiWYP70nbBpBTyNwVjnlVr5uHgpzeFD56/n2/FX2l0dfOi8V7CvjuKRMr83P4hk
-         F8s1hzqgbh0JcN9XN8kuQrNe3LGS4YQX9HpQlXVBLIeRZGtbyb6o0EKjwiSk/qIcOguw
-         DAeOZ6lbqb/+4JTHi7XnFfxxvU4fgU/dCYPOMRCtq3rNFASkozLdjTPfyoQ1FYNOACXJ
-         Zv3+WRohUlAHu3KX6HobA8BBClDxFsfAwZ9PT9srGnI5xtLKMJfEdKbOmeitIaCGThtn
-         ibCA==
-X-Gm-Message-State: AJIora//dXnACX9Ps2VKI5Rb63N2kFI1AUwyXpkdBe6EJSKvpFz/I1/s
-        tiG3rw1/VjnPtIrqkysRztIiKU4hXex/Ib3Z
-X-Google-Smtp-Source: AGRyM1vzwysDmuzG+cF+FcZfHt6F5DwRuJ9Qdt73Z2c6zAb0Fa+XaeXhNT+gqI+qSQGFCtB5lolBjA==
-X-Received: by 2002:ad4:5be3:0:b0:473:4914:d912 with SMTP id k3-20020ad45be3000000b004734914d912mr20247040qvc.0.1658141297735;
-        Mon, 18 Jul 2022 03:48:17 -0700 (PDT)
-Received: from p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de (p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de. [2003:f6:ef03:6f00:5de6:a4d0:d791:ed01])
-        by smtp.gmail.com with ESMTPSA id y7-20020a05622a164700b0031eeecd21d6sm2182327qtj.69.2022.07.18.03.48.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jul 2022 03:48:17 -0700 (PDT)
-Message-ID: <8461b72ae951e4311952052c467fb1275ff9e58a.camel@gmail.com>
-Subject: Re: [PATCH 3/4] gpiolib: acpi: support bias pull disable
-From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Cc:     linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Frank Rowand <frowand.list@gmail.com>,
+        with ESMTP id S234213AbiGRLRy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 07:17:54 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F73A201A6;
+        Mon, 18 Jul 2022 04:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658143073; x=1689679073;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DpqXmie6D9DsH9mDkAnCsfL2eLPGa6h9nC1O717sCwo=;
+  b=cURgWqaW9Lu9LegfsezxykDu/beK25EE3rbW0zMJcqSra9P939iuxMzp
+   0PcP0aOGZUWZyPIQIzTvSlFfkEPQtP/b+Swq40zFTICLPdm7MsFTCRpoq
+   FxlykXm/M79vT9CkFornHOeNs3nfESLH4hXCC5OvijSSk8/W4C0uganuw
+   ZneLsGIR8tddAZw8sD2/Qxv1mFDuOG6NpvQzNy6FUf5GybNIQ/kuU7CF2
+   IXC/zW7olnvselFsidhZCkbeTNxeX7yg33yUjKDotK3Kc2fNWRNYiPQIb
+   /i6BuUvIuRYCQ7erashf3Q3ZK1+VeHAx17M7adMoF6Vh0fVGHX/lIUtH8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="287342817"
+X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
+   d="scan'208";a="287342817"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:17:52 -0700
+X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
+   d="scan'208";a="686702470"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:17:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oDOkw-001O8N-2k;
+        Mon, 18 Jul 2022 14:17:42 +0300
+Date:   Mon, 18 Jul 2022 14:17:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 18 Jul 2022 12:49:19 +0200
-In-Reply-To: <CACRpkdbitDErSCMbKFe0yZB63+uTGwt5ROMbEV_iAPck_RN7sg@mail.gmail.com>
-References: <20220713131421.1527179-1-nuno.sa@analog.com>
-         <20220713131421.1527179-4-nuno.sa@analog.com>
-         <CACRpkdbitDErSCMbKFe0yZB63+uTGwt5ROMbEV_iAPck_RN7sg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YtVBViMLFIUfFpXa@smile.fi.intel.com>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2022-07-18 at 12:32 +0200, Linus Walleij wrote:
-> On Wed, Jul 13, 2022 at 3:13 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
->=20
-> > On top of looking at PULL_UP and PULL_DOWN flags, also look at
-> > PULL_DISABLE and set the appropriate GPIO flag. The GPIO core will
-> > then
-> > pass down this to controllers that support it.
-> >=20
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
-> Do we have a semantic check that PULLDOWN and PULLUP
-> is not used in combination with NOPULL here?
->=20
-> (We should also be checking that PULLDOWN and PULLUP
-> are not used simultaneously but that is an unrelated thing.)
+On Mon, Jun 06, 2022 at 07:41:26PM +0300, Andy Shevchenko wrote:
+> There are a few users that would like to utilize P2SB mechanism of hiding
+> and unhiding a device from the PCI configuration space.
+> 
+> Here is the series to consolidate p2sb handling code for existing users
+> and to provide a generic way for new comer(s).
+> 
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
+> 
+> The patch that brings the helper ("platform/x86/intel: Add Primary to
+> Sideband (P2SB) bridge support") has a commit message that sheds a light
+> on what the P2SB is and why this is needed.
+> 
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> The series is ready to be merged via MFD tree, but see below.
+> 
+> The series also includes updates for Simatic IPC drivers that partially
+> tagged by respective maintainers (the main question is if Pavel is okay
+> with the last three patches, since I believe Hans is okay with removing
+> some code under PDx86). Hence the first 8 patches can be merged right
+> away and the rest when Pavel does his review.
 
-I did extended this check:
+Kernel test bot seems found an issue with dependencies, because selection
+of P2SB is not enough.
 
-https://elixir.bootlin.com/linux/v5.19-rc7/source/drivers/gpio/gpiolib.c#L3=
-948
+There are two solutions that I can see now:
+1) move P2SB out of X86_PLATFORM_DEVICES section (like PMC_ATOM);
+2) add 'depends on X86_PLATFORM_DEVICES' to the affected drivers.
 
-on patch 1 to make sure that PULLDOWN and PULLUP are not used with
-NOPULL. Is this what you have in mind or is it something else?
+I think the first solution cleaner, because it would be strange to have
+the dependency on the drivers that quite unlikely be on server platforms
+(e.g. EDAC).
 
-- Nuno S=C3=A1
+In long term perhaps something like drivers/platform/x86/lib which is for
+platform libraries or so and independent on X86_PLATFORM_DEVICES?
+
+I will send a fix soon as per 1) above, feel free to comment here or there.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
