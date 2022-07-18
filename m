@@ -2,257 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 608125785D4
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 16:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A90657874A
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 18:25:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbiGROwA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 10:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
+        id S232739AbiGRQYj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 12:24:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234156AbiGROvz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 10:51:55 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 129581EAEE;
-        Mon, 18 Jul 2022 07:51:52 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id a5so17389907wrx.12;
-        Mon, 18 Jul 2022 07:51:51 -0700 (PDT)
+        with ESMTP id S235471AbiGRQYZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 12:24:25 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2095.outbound.protection.outlook.com [40.107.212.95])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7F32A26D;
+        Mon, 18 Jul 2022 09:24:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kDkT+blDJ6oTywGNdtD7H7PUl9tPNgK7SFdsMVPznjQzKLwMQ4brnST4R1Sq80rS29bzp3MJBuJYTrjocMQMa8DUPt8LczWDQalEonWrFj9RexTXWPkeIE9KeIMlYD7vaUTvFq3OXkeL+7M4hwuUMQtmKWVSTKQGZ4jj9LztipumiaSx8X9Qs0D/EvMsqHcVgVIQ82juD1M1VDqGXcIsYrh7bGl9pYl7wmnlL4jxCjOnODW3nGb1PvbadlqokC6ZMsHaKarOABBrFe2SrL13AA2L3CnUvsCsHypcoVx29MptOuHHHkvkcddRvMiezwwFIUNVhxX2KqHnZacWamGWYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tGpURPtgeQ8adeZTF5nacV0Jj83+vu26sBWqJkOKSPM=;
+ b=XEmbFzHt4te8i+2mNDW2tF6eEKaD5E0g0F9G7IWT/Fm1QW47y1KpZ+Hd2LE5OxleNnjj+8vfBOx7Ky/3Wa+3DdVTvGiXnjKtBD9zH53C0btFaG4ZDbro/+ICmAmxcmH9iotqA3wxfnwQd/d0ygfVjVOXC+i6e6Wz6I7nuxquQmjNNNXO6suSQ7v/PMWreAtKHMPFV3mbO5WmL+c9H6UP17HQ80TNbx9H08R2Zh6ffOac6tsgxh288bbaMcrHhSm0qyiClE/65UPgh9+hn9D6+90ebyS/e8vNJTgPPwWPLSP6Pw2KysICTOW+Q6oB1zaKLYScBeNY3xg8b5bMoyGY0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=in-advantage.com; dmarc=pass action=none
+ header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :content-transfer-encoding:user-agent:mime-version;
-        bh=Zwyzja49jTBt5v01ZmoYlLErXPaXS1ddpKN1QWHfErY=;
-        b=X8R5n11Ajs6cnyczw/D9MhsD5ziNbwIMfJESuWMeEpjGpWqW7E/TbA5uhDDbTZ3cZp
-         AZIOoC8IFjkkqvi7UzKzjim4Qc215+EmMOLe8J/JcBER3Zzbnp1G5rQeR8sHXI3rVtFH
-         pt+UJAd4ve5MXGi6579fLgs8a7WOfGHvFCr/Jf8eqx5fKvzbrn8xSWivKY+sP23LV+Zj
-         mh97p4XoaJGZ2lUS5Dm57RjOgkjOgpkgd9QruFWOm6ySADzbIb8m4JiMbEuTPo3zLPL7
-         EMKkJF5HlLlMkZ6ZJy4uBQhx6mBCJFl3gbGdgp3Kh4H0SgRZkIqdu1JKKbYPP/lPRE3d
-         H2ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:content-transfer-encoding:user-agent:mime-version;
-        bh=Zwyzja49jTBt5v01ZmoYlLErXPaXS1ddpKN1QWHfErY=;
-        b=o0RjKevkWXXTZLpRDRK7LZIijbf4USHA1tK5vuBRSAhiFxIKesT1/OR4UILJCv/sSl
-         tOvUlm/QGA+34NKERDlNkIwqc4cgUSKHu1R8CL4yUtAJkygFsFDzrOcYGP5lq20v6ZQg
-         g8C8sP1dqU9U7gxyLfIKsfpvO0XnATifK4bbDBuTdqsFKqi08JWqjqa1W5Dgt13B15bd
-         22oR++2+2G05FzdC4gWaePg9Xr3dNL9Et5OtaTtRNwZ3QF40H0sqAvCL0YPB8mOPdwnB
-         HLeKy3KH55+W33Ug7i2ZtaVAYpBhupd2lntm83tEJKkudL6+hAR2q5ltZKl7qWxpiGAL
-         H7eQ==
-X-Gm-Message-State: AJIora8D6+JAvTkSCmPc3IpuZ82Pqzg8O6uiugCxIO31rgQp3GrFiRVo
-        5RfOTcWo1YaI31t84PAPIXI=
-X-Google-Smtp-Source: AGRyM1v2WLaMnndYP3Zu5sgujhWallh4uHB0Gzu00kx1NdmLvZa4E7QpVt5I8lfA9wZU6Lt+YDfYBA==
-X-Received: by 2002:a5d:64ad:0:b0:21d:adb6:c266 with SMTP id m13-20020a5d64ad000000b0021dadb6c266mr24483156wrp.638.1658155910486;
-        Mon, 18 Jul 2022 07:51:50 -0700 (PDT)
-Received: from p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de (p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de. [2003:f6:ef03:6f00:5de6:a4d0:d791:ed01])
-        by smtp.gmail.com with ESMTPSA id r8-20020a5d52c8000000b0021d65e9d449sm11578377wrv.73.2022.07.18.07.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jul 2022 07:51:50 -0700 (PDT)
-Message-ID: <82ed44d4cb90a79109755e1e0b6b2de267462cc7.camel@gmail.com>
-Subject: Re: [PATCH v2 05/10] dt-bindings: input: adp5588-keys: add bindings
-From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+ d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tGpURPtgeQ8adeZTF5nacV0Jj83+vu26sBWqJkOKSPM=;
+ b=DTh90cEDEhW2WkUfhGe20YB1v+vkxnCd6ICECHK2pfyQMkuGQ2c2DSdFlAmIcNKusiQ6bGH/6fjXu60w1mvKeGzlI3tRbH/LqzvRzN79mnV4GzVjvQeFKEkaDhVkiRN//fuzq1spnBRYJ2uwcSGbHmP5fTaOKBWES2eXcy9C9qY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=in-advantage.com;
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37) by DM5PR10MB1642.namprd10.prod.outlook.com
+ (2603:10b6:4:b::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.21; Mon, 18 Jul
+ 2022 16:24:18 +0000
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::7451:2903:45de:3912]) by MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::7451:2903:45de:3912%7]) with mapi id 15.20.5438.020; Mon, 18 Jul 2022
+ 16:24:18 +0000
+Date:   Mon, 18 Jul 2022 09:24:12 -0700
+From:   Colin Foster <colin.foster@in-advantage.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Michael Hennerich <michael.hennerich@analog.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Date:   Mon, 18 Jul 2022 16:52:54 +0200
-In-Reply-To: <1c73fe9e-81f8-3ecd-edd1-60e6ddd548f3@linaro.org>
-References: <20220715125138.378632-1-nuno.sa@analog.com>
-         <20220715125138.378632-6-nuno.sa@analog.com>
-         <1c73fe9e-81f8-3ecd-edd1-60e6ddd548f3@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+        katie.morris@in-advantage.com
+Subject: Re: [PATCH v13 net-next 9/9] mfd: ocelot: add support for the
+ vsc7512 chip via spi
+Message-ID: <YtWJLIUepiKA4S4u@COLIN-DESKTOP1.localdomain>
+References: <20220705204743.3224692-1-colin.foster@in-advantage.com>
+ <20220705204743.3224692-10-colin.foster@in-advantage.com>
+ <YtVrtOHy3lAeKCRH@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YtVrtOHy3lAeKCRH@google.com>
+X-ClientProxiedBy: BYAPR05CA0054.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::31) To MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5926f836-c665-4490-233b-08da68d9f5c6
+X-MS-TrafficTypeDiagnostic: DM5PR10MB1642:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bo64p+qtI5VFfSgnG2oXYkzzjF5VudtfLa3LoRI3XWTJi+5yg0CjWVILtynddHG9WDqBVNNj7VnjxeTRD4CNDjG7ALr9HIM6eqNgPT9MAPTamSvxXSt9v5BmDjbZJptWdMC7iqWWt0v4Vy9XVVre+eZSA4NNPEac23ShI82mJHIwaPNH9ynlBJZPFFBDU8wQ15pZd591WwkPfqNcMgRXuGshWQaPoAk3kw51O9hDPVqv9OhwYVPPXXq/LwQDUAKKPTQ9txCyihm5jRx3nAuO7h2m79cd37FGtSomLn1t4p5vmibi0VAZU0ehNH7ETwlc6EybWfrSISy7lq2Gy/f2bMRDgH69H2K+voSSYb/7mXvZwjslx/1UbsuASvCD+xsHc4SdnnJdsQX5U17vyByXbDzfUY/6x7R+P2WDOua/8tSGBDw4RMjmVdv07i3mLrE4R4kErFgHqiAK53wlVXRxDoPvaarVDWuN5xMGgXW+hBQyg/Bkd1MRUJKjCsKBx3R0MvvU2ksZr6JxH2wxbS7iQsUvH5oJ/aXGsxoea/31YG7vDfl0B1BUr8Oxf471DMYJ+f49OlG2P4+54+CJTJt567Q9VwjVFs+ZtLLe4RRSZmbMUiRipP6V27frSqMoBFLfjopTb0R4w0OsPvL2CUXZC9bs7AXkLkrGWzv9DZ4y+DDarxvi3K1ZehGufDQIFB0u3LMhNWxeTRotuOh+Yc7GWSxtspOG2SiC2q9NqUmk/rGEuoZVOqY+TxzvrOmOJ9fQ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39830400003)(376002)(396003)(136003)(346002)(366004)(66556008)(66946007)(4326008)(66476007)(6512007)(478600001)(8676002)(107886003)(186003)(9686003)(6666004)(26005)(6486002)(8936002)(6506007)(41300700001)(316002)(7416002)(44832011)(5660300002)(6916009)(2906002)(38100700002)(54906003)(86362001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1HHpELiRfpe1edSw9fMcPcLgLcCKCdW13qiqYj9kPAolpCsLconjysTkutja?=
+ =?us-ascii?Q?1GocL0iCZi60vdGk/hHgehMFhilcQ++DqozRS7F+rEImAYV7WA1obgw496vG?=
+ =?us-ascii?Q?6uvK+fz1Kjb0E8+pOLnZ0xQlzvfnAtdXDDSMWfxiepd0gn3yO/e8fhyLtPRb?=
+ =?us-ascii?Q?kEqQNXPwpU/+/T1CnT2veEgbtA3wUo9zhYjRC2PXV6b0FyOinrsgFVp/p/1p?=
+ =?us-ascii?Q?aQlsMMQKTSJFQhkF9FU4OXxGLTw5jlZjSr6rlm7FxjXcXehbF/8QRD981GOs?=
+ =?us-ascii?Q?X3oFdtbWEJaI5wEe+wBEF/a0qk0YlAfqYX+p7cdpQIfjihY9Mj21vpcBYHnu?=
+ =?us-ascii?Q?tIzl/5EBpBsJ15vyUGmoghxRf7K6OR4k5ZwMHPnQjsmdmj21uf5u+Hpxkv/L?=
+ =?us-ascii?Q?GtXu6pg710+5nCJqyZyePcsfHRgixEqx6VpOR5UqdWVwoEiLRWXp0x9h6VQu?=
+ =?us-ascii?Q?bPXUZNN5W3/ILXAGPEaUP63a68WRNNnh2Hrorsau/VTqmbLlXdJ3ecOQU3rL?=
+ =?us-ascii?Q?XXq3FzsKgdB9s1tJ8dvb5g8fNE+Ax/uAdkq7gXKNG7KjasOreThCr6d9nm+L?=
+ =?us-ascii?Q?RWt0csWLdECTObYAJeJPOhS5y0gryVfKTD1aBRjBwh+s7EybcIJOHsYzU9GQ?=
+ =?us-ascii?Q?hvTjON+V587B+MPmjnIBvcaR+Mnw2WkXDR7R3oRu7+z6FG9r/CEb+bDIiRF4?=
+ =?us-ascii?Q?wBudLyZt7LOonk25+zIP8C/lfGXp8vKuEBxSD8+qXaQsmsqufDOTWuAn+SAw?=
+ =?us-ascii?Q?j/R3z+LSPuecYiFuNQqlYto2kdfcYSLva6fMl9g+USUPGnK1ZeObdNtmJ5rF?=
+ =?us-ascii?Q?8rnG52xZpMFZX4pNbUK0Asmq/3Q/zXZbSojD/xQBYEGPNt4XmtbG6X4ihU2X?=
+ =?us-ascii?Q?iy4qvwUObkqf2qPymSCju9SKJCFl7ZSZT8c+F7FayHa5wC3oi3+sjaFxs78a?=
+ =?us-ascii?Q?nWm7zhlhXCX0QLF9CajStQt2XOvE4JfWDMNQaHRIXsSAYNAav1YuyoxQtieB?=
+ =?us-ascii?Q?6H/m//Oeez1HihtcLII7vtMC1TqxzrAJ6K6Uo6cy7wZvNfwF64DU8M1K9RrC?=
+ =?us-ascii?Q?wT4tJDozXhQsUHSvZ7JcNs6D6dJgKXM2npzG7D6/xivz30xLhmgk1ae9g94I?=
+ =?us-ascii?Q?NPBT49VaipTruUP259pTXmXruC4iMUTsmh8PWenDycJShB2lNVcpNeO8LtE7?=
+ =?us-ascii?Q?QrpgvdkaJFJpAQXClurYLwjaoBob0Ex9x5Lg1uAuzT0to86zAWkM/TBxDBh+?=
+ =?us-ascii?Q?4WBLZIEUakaJpV3iMImpkl4CErQKCVKOORUtT9qesFG9azeyplU5aIxMwaXw?=
+ =?us-ascii?Q?2NPsWyaOZYFyTT3FNjMtTJWdxsJaGiQHGmKU7rUcIm/xoW/ScyEne96p6ptQ?=
+ =?us-ascii?Q?NbOGlU2JZQb1jPLGSgTzv2S3EYQHPV7hRtIfEKyEQTySkgSg3hZOh7CZS8JD?=
+ =?us-ascii?Q?U7hovDeTDNDgJbkRG+T8Mkr8n97xNdiLhi/2kdGk1LMHj+xVm/3Ei/hhdK/l?=
+ =?us-ascii?Q?YAuCeKlV/m6VH4YtehxMYg8BcnspkmBdEhrRFodUHIoEJyUefIWcKCbM7Zo5?=
+ =?us-ascii?Q?dxk/zQUm/ytYwCzQNkYwZzRgtROwSeslHH16wkpfrIlnMNpR3qHghGwaQjJo?=
+ =?us-ascii?Q?lQ=3D=3D?=
+X-OriginatorOrg: in-advantage.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5926f836-c665-4490-233b-08da68d9f5c6
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2022 16:24:18.3971
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4Lmbpc1cn3nFk/XoCPn+OfXy5vxNr7onseFWu8YfjmdkEDgnp/Y2LE1TqhMHHG6YAlXd5G9rlCGaI0DrO/mloXV8+LJUxZZPv4yoJAr4+sU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR10MB1642
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2022-07-18 at 16:27 +0200, Krzysztof Kozlowski wrote:
-> On 15/07/2022 14:51, Nuno S=C3=A1 wrote:
-> > Add device tree bindings for the adp5588-keys driver.
-> >=20
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+On Mon, Jul 18, 2022 at 03:18:28PM +0100, Lee Jones wrote:
+> On Tue, 05 Jul 2022, Colin Foster wrote:
+> 
+> > The VSC7512 is a networking chip that contains several peripherals. Many of
+> > these peripherals are currently supported by the VSC7513 and VSC7514 chips,
+> > but those run on an internal CPU. The VSC7512 lacks this CPU, and must be
+> > controlled externally.
+> > 
+> > Utilize the existing drivers by referencing the chip as an MFD. Add support
+> > for the two MDIO buses, the internal phys, pinctrl, and serial GPIO.
+> > 
+> > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
 > > ---
-> > =C2=A0.../bindings/input/adi,adp5588-keys.yaml=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 110
-> > ++++++++++++++++++
-> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0=C2=A0 1 +
-> > =C2=A02 files changed, 111 insertions(+)
-> > =C2=A0create mode 100644
-> > Documentation/devicetree/bindings/input/adi,adp5588-keys.yaml
->=20
-> Thank you for your patch. There is something to discuss/improve.
->=20
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/input/adi,adp5588-
-> > keys.yaml b/Documentation/devicetree/bindings/input/adi,adp5588-
-> > keys.yaml
-> > new file mode 100644
-> > index 000000000000..0d262b42150a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/adi,adp5588-keys.yaml
-> > @@ -0,0 +1,110 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/adi,adp5588-keys.yaml#
->=20
-> Is ADP5588 a multi-function device? If not, I propose to drop the
-> "keys"
-> suffix.
->=20
+> >  MAINTAINERS               |   1 +
+> >  drivers/mfd/Kconfig       |  21 +++
+> >  drivers/mfd/Makefile      |   3 +
+> >  drivers/mfd/ocelot-core.c | 169 ++++++++++++++++++++
+> >  drivers/mfd/ocelot-spi.c  | 317 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/mfd/ocelot.h      |  34 ++++
+> >  6 files changed, 545 insertions(+)
+> >  create mode 100644 drivers/mfd/ocelot-core.c
+> >  create mode 100644 drivers/mfd/ocelot-spi.c
+> >  create mode 100644 drivers/mfd/ocelot.h
+> 
+> Generally this is looking much better.
+> 
+> Almost ready for inclusion with just a few nits.
+> 
 
-I can do that. I just kept the same naming of the c file...
+Hi Lee,
 
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices ADP5588 Keypad Controller
-> > +
-> > +maintainers:
-> > +=C2=A0 - Nuno S=C3=A1 <nuno.sa@analog.com>
-> > +
-> > +description: |
-> > +=C2=A0 Analog Devices Mobile I/O Expander and QWERTY Keypad Controller
-> > +=C2=A0
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/ADP=
-5588.pdf
-> > +
-> > +allOf:
-> > +=C2=A0 - $ref: matrix-keymap.yaml#
-> > +=C2=A0 - $ref: input.yaml#
-> > +
-> > +properties:
-> > +=C2=A0 compatible:
-> > +=C2=A0=C2=A0=C2=A0 enum:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,adp5588
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,adp5587
->=20
-> Bring some order, like alphabetical.
->=20
-
-ack...
-
-> > +
-> > +=C2=A0 reg:
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > +
-> > +=C2=A0 vcc-supply:
-> > +=C2=A0=C2=A0=C2=A0 description: Supply Voltage Input
-> > +
-> > +=C2=A0 reset-gpios:
-> > +=C2=A0=C2=A0=C2=A0 description:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If specified, it will be asserted durin=
-g driver probe. As
-> > the line is
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 active low, it should be marked GPIO_AC=
-TIVE_LOW.
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > +
-> > +=C2=A0 interrupts:
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > +
-> > +=C2=A0 gpio-controller:
-> > +=C2=A0=C2=A0=C2=A0 description:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This property applies if either keypad,=
-num-rows lower than 8
-> > or
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 keypad,num-columns lower than 10.
-> > +
-> > +=C2=A0 '#gpio-cells':
-> > +=C2=A0=C2=A0=C2=A0 const: 2
-> > +
-> > +=C2=A0 interrupt-controller:
-> > +=C2=A0=C2=A0=C2=A0 description:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This property applies if either keypad,=
-num-rows lower than 8
-> > or
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 keypad,num-columns lower than 10.
-> > +
-> > +=C2=A0 '#interrupt-cells':
-> > +=C2=A0=C2=A0=C2=A0 const: 2
-> > +
-> > +=C2=A0 adi,unlock-keys:
-> > +=C2=A0=C2=A0=C2=A0 description:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Specifies a maximum of 2 keys that can =
-be used to unlock the
-> > keypad.
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If this property is set, the keyboard w=
-ill be locked and
-> > only unlocked
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 after these keys are pressed. If only o=
-ne key is set, a
-> > double click is
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 needed to unlock the keypad.
-> > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +=C2=A0=C2=A0=C2=A0 minItems: 1
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 2
->=20
-> What are the values/units? keycodes? If so, maybe "adi,unlock-
-> keycodes"
-> and add limit on values (like linux,keycodes).
->=20
-
-They are just key numbers on the matrix. In the driver there's actually
-a check so that the value cannot be >=3D keypad,num-rows * keypad,num-
-columns. Not sure if there's a way to express this but I can surely
-improve the description.
-
-(There's also a comment on the driver regarding why I'm doing this
-check).
-
-> > +
-> > +required:
-> > +=C2=A0 - compatible
-> > +=C2=A0 - reg
-> > +=C2=A0 - interrupts
-> > +=C2=A0 - keypad,num-rows
-> > +=C2=A0 - keypad,num-columns
-> > +=C2=A0 - linux,keymap
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +=C2=A0 - |
-> > +=C2=A0=C2=A0=C2=A0 #include <dt-bindings/interrupt-controller/irq.h>
-> > +=C2=A0=C2=A0=C2=A0 #include <dt-bindings/input/input.h>
-> > +=C2=A0=C2=A0=C2=A0 #include <dt-bindings/gpio/gpio.h>
-> > +=C2=A0=C2=A0=C2=A0 i2c {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =
-=3D <1>;
->=20
-> Wrong indentation. 4 spaces for DTS example.
->=20
-
-ack
-
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D=
- <0>;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 adp5588@34 {
->=20
-> Node names should be generic.
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-device=
-tree-basics.html#generic-names-recommendation
->=20
->=20
-
-ack
-
-- Nuno S=C3=A1
-
+Thanks for the feedback. I'll get these fixes done this week!
