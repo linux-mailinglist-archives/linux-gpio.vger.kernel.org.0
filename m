@@ -2,97 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 528EA578311
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 15:04:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DC77578308
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 15:03:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234385AbiGRNE0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 09:04:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
+        id S235053AbiGRNDl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 09:03:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235202AbiGRNEZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 09:04:25 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5C7BE34
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 06:04:23 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id t1so19159887lft.8
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 06:04:23 -0700 (PDT)
+        with ESMTP id S235158AbiGRNDj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 09:03:39 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8580EBF53
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 06:03:37 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id u19so10357676lfs.0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 06:03:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NgsGp3CFDo85Tmtcs8wcVcz72bTIf43vw/+Jn0TKZRI=;
-        b=qi45GmX6vvROA36d7gqESppzvdeW8dR0BTk5BAthUOH56NXyH6+VAB3juURHDMnqmH
-         HOtOeaXwY8TVe765OFn4KrlGD2zgDWSxrep0ETQlog0p95agQycRnjQCBg4dTrKWJKCa
-         adHSqP6f9S6HuEOgYx+RNzshO1E1EBGngKJG7Ag525MOwWXdMqURo1yQPwiq0rgFwDmk
-         gMYiqfIj8QOJff8KEqVItq5ayfvkQppvH5zuM6B4wwnaambwuJwWpkxu7EWgqxp9CbgC
-         buvfRzwt17D4jZ5K9+6Bm82nHOLpfIGms+8VjDJ1gLaoYXHqSc9qLNtVVlTuqp5v3ugV
-         qHTg==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=80XUMnISBGpN/g+0WtMKW/2KdDo4w9aenz6MZvdkjys=;
+        b=nhUIUkMzZLJekrgJbmvSAAiaS3lBg4K6kT/9o/IIMPBh1Iplb9MjatPZ61rYldru1q
+         TKKlWqE/dnRB2farHBR5nLxILFdnM820hx5P7lc0727qL7Buq9IFV0IlwO3CboHP+ggJ
+         IlfIbLgo2xyGH49yiiiZYdeMVoMaRkg+kZXOdXqvJs3gnQa9VPZMuGcgCzOdnZDZlkhX
+         l4IAtfp5Qa9up+9YyT1FA3EYkVL+SN4XvC+v7H52t4988ylhxwFdN5hfwKpgY6e5HD7t
+         rjNnHhZ6wB8o4E+OCNPxja4TxjQHJjnDnpWYU4ON8r/5W7JHcurcV5y2DTcQiQtqoSQ+
+         bkaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=NgsGp3CFDo85Tmtcs8wcVcz72bTIf43vw/+Jn0TKZRI=;
-        b=7L6wnVVZs0Ob3BcuWh8w5zaum3oQI1JiCzlZDPnWZMo7SDCUpJ6jXPH00FWp1D66fJ
-         hpuflv7seFODms9Q86NKq/AjU0hRsd9O7KnOlI0FngLPAsmwo0bBL9fGwyZrGXGdWFcw
-         dTCK+LpsEX483fGIwlr1JzYbrACIS2UBgb0iVRSyn2Obx/Vt5RxOEW/8fjvaGzb19Qat
-         0R81lpq+WUH/S4uYbtCSZ2c+aL08p297DhHk1kU+Z/mHEaT3Y7QijsA+tLszHizZ5lbX
-         V655KR7RqhOL6Q/Yy3H1id7xhhNiJbSGXwxXEndjlfIh3q4f8HDxMXLZUEFGLw4JL/Jh
-         Mx0g==
-X-Gm-Message-State: AJIora/uLsrCezCvPvVfcGM62kIrl9BpjunDAl2F2+eMyTgAAMj883R6
-        grB2s32NqJzAQDBcIKlTA3xZ99goxwGpZc3Y
-X-Google-Smtp-Source: AGRyM1s9zj97yokop0zW2EElk8EDeXs43bp789BikZEdjfc+P1xWSfWQ6pd5JQYqjwTx+S7GFAJKUA==
-X-Received: by 2002:a05:6512:3ca2:b0:48a:7f7:3a20 with SMTP id h34-20020a0565123ca200b0048a07f73a20mr15131185lfv.153.1658149461672;
-        Mon, 18 Jul 2022 06:04:21 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id e19-20020a05651236d300b00489b1876923sm2584001lfs.298.2022.07.18.06.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jul 2022 06:04:18 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH] dt-bindings: pinctrl: mt8195: Fix invalid example
-Date:   Mon, 18 Jul 2022 15:02:15 +0200
-Message-Id: <20220718130215.31547-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.36.1
+        bh=80XUMnISBGpN/g+0WtMKW/2KdDo4w9aenz6MZvdkjys=;
+        b=0UMUWEcHwDFPZE0lAd2J50xUx28d9mDrWAY7GjVCQnz0eVne67PHUfB0EdVeqhyDj6
+         LC9VbckxrbRh6DrIwwAqDmJOsMAa1GJgmjYpXaPvDom1rKM0zCbGIXtM4z3TLBXp2PKX
+         d3Taptexh6Vel8gGooOcMAOqHrtEAUYJqVrBGnE9CV5tGjP0tGsBuzi8AakCEg7+3ltF
+         kGnYSwfIWBvy+mNuTzzKm4rhTfwApwkbfh1dN+lqATX5k++xWElHooU9izZQ6q0hosLF
+         xl0ZAcUN2mEuvLXPAtPsuZnGNi8QHWU+JOo/yOdN4JlhGtcJKttvKTo/lmYcUnF6o/U1
+         UiSw==
+X-Gm-Message-State: AJIora9jvjNmljvO6Rh/gjj3IdrUvy4DX8PU7rG63xQzqxRX1ypyWaGJ
+        7EiTOtOiRHI1Pa/U0HwQkdxTnIvdc8GFYH4d
+X-Google-Smtp-Source: AGRyM1uWLpAKU6M48TF9Aap6DE7t0O0xppczTxzCbjd/1Rc2HdNP52LCXQYg9yPTRoM1zz+bQZyboQ==
+X-Received: by 2002:a05:6512:13a4:b0:477:a28a:2280 with SMTP id p36-20020a05651213a400b00477a28a2280mr14491105lfa.689.1658149415742;
+        Mon, 18 Jul 2022 06:03:35 -0700 (PDT)
+Received: from [192.168.115.193] (89-162-31-138.fiber.signal.no. [89.162.31.138])
+        by smtp.gmail.com with ESMTPSA id j10-20020a056512028a00b00481010eb312sm2584965lfp.295.2022.07.18.06.03.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jul 2022 06:03:35 -0700 (PDT)
+Message-ID: <1c96a873-81f7-02c4-56cc-f33a283329eb@linaro.org>
+Date:   Mon, 18 Jul 2022 15:03:33 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
+ binding
+Content-Language: en-US
+To:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20220713135528.1386594-1-biju.das.jz@bp.renesas.com>
+ <20220713135528.1386594-2-biju.das.jz@bp.renesas.com>
+ <24903621-358d-d380-76f4-6515c6313bbd@linaro.org>
+ <OS0PR01MB5922CE20E15959AEF89C36D4868B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <OS0PR01MB5922CE20E15959AEF89C36D4868B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit switching to use standard drive strength missed to update
-the example. I just put in something valid so we don't get the
-warnings from the DT bot.
+On 15/07/2022 12:17, Biju Das wrote:
+> Hi Krzysztof Kozlowski,
+> 
+> Thanks for the feedback.
+> 
+>> Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
+>> binding
+>>
+>> On 13/07/2022 15:55, Biju Das wrote:
+>>> Add device tree bindings for the RZ/G2L Port Output Enable for GPT
+>> (POEG).
+>>>
+>>> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+>>> ---
+>>> REF->v1:
+>>>  * Modelled as pincontrol as most of its configuration is intended to
+>> be
+>>>    static.
+>>>  * Updated reg size in example.
+>>> ---
+>>>  .../bindings/pinctrl/renesas,rzg2l-poeg.yaml  | 65
+>>> +++++++++++++++++++
+>>>  1 file changed, 65 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+>>> b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+>>> new file mode 100644
+>>> index 000000000000..7607dd87fa68
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yam
+>>> +++ l
+>>> @@ -0,0 +1,65 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+>>> +---
+>>> +$id:
+>>> +
+>>> +title: Renesas RZ/G2L Port Output Enable for GPT (POEG)
+>>> +
+>>> +maintainers:
+>>> +  - Biju Das <biju.das.jz@bp.renesas.com>
+>>> +
+>>> +description: |
+>>> +  The output pins of the general PWM timer (GPT) can be disabled by
+>>> +using
+>>> +  the port output enabling function for the GPT (POEG). Specifically,
+>>> +  either of the following ways can be used.
+>>> +  * Input level detection of the GTETRGA to GTETRGD pins.
+>>> +  * Output-disable request from the GPT.
+>>
+>> Shouldn't this all be part of GPT? Is this a real separate device in the
+>> SoC?
+> 
+> No, It is separate IP block, having its own register block, interrupts and resets.
+> 
+> Please see RFC discussion here[1]
+> 
+> [1] https://lore.kernel.org/linux-renesas-soc/20220517210407.GA1635524-robh@kernel.org/
+> 
+>>
+>>> +  * Register settings.
+>>
+>> This is confusing... so you can use POEG to mess up registers of GPT
+>> independently, so GPT does not know it?
+> 
+> POEG does not mess up registers of GPT. It is basically for protection.
+> 
+> Using POEG register, it is possible to disable GPT output without the knowledge of GPT, after configuring the Output disable source select in the GTINTAD (General PWM Timer Interrupt Output Setting Register) register present in GPT.
 
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reported-by: Rob Herring <robh+dt@kernel.org>
-Fixes: 1b3ab63e56f0 ("dt-bindings: pinctrl: mt8195: Add and use drive-strength-microamp")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Then what does it mean:
+"...following ways can be used. Register settings."
+I cannot parse it.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-index 85e96a5e1708..4be3e8671622 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-@@ -281,7 +281,7 @@ examples:
-           pinmux = <PINMUX_GPIO8__FUNC_SDA0>,
-                    <PINMUX_GPIO9__FUNC_SCL0>;
-           bias-disable;
--          mediatek,drive-strength-adv = <7>;
-+          drive-strength = <16>;
-         };
-       };
-     };
--- 
-2.36.1
 
+Best regards,
+Krzysztof
