@@ -2,66 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A728578098
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 13:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FDB85780EC
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 13:38:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230491AbiGRLUx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 07:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46514 "EHLO
+        id S234218AbiGRLi0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 07:38:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229799AbiGRLUw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 07:20:52 -0400
-Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE1AB4A5;
-        Mon, 18 Jul 2022 04:20:52 -0700 (PDT)
-Received: by mail-qv1-xf2f.google.com with SMTP id l11so8461412qvu.13;
-        Mon, 18 Jul 2022 04:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FTeMoAHtnCPt9zaBpC4a6d1gebz+vzJPv9Y27GinJbg=;
-        b=OYHy9I4Jf4Z/O9dNLuqv9E8TbczfHBclUfgxhCrXrmtkcbV3F9m4JX/AQROxDT/VWj
-         LQqOfdRgkmwqULlvunXTK96UGs3D6FfTCD+yDoWTxMpzCYSMjYhYWK06u1BcG+zvPl6w
-         ZS0WUjukvrHiU15GB1xBhwL+HMZOdZGYimKnUiwlDnIAOxRSPfH69jgb98iQS7dMsiHR
-         rVjJKTOp20O+KTz9onmRHUO5oMbMokQq3i77684N88AL41mpVGaaIfnDzL0sAbuO+JHD
-         CYOi6J16Q0NGOZM3gmhqQo9DQMqIbCFD5Lew4D3TLWnAjLYZBzA2Qa0fgtPdKoNR2NMW
-         VcdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FTeMoAHtnCPt9zaBpC4a6d1gebz+vzJPv9Y27GinJbg=;
-        b=jOlbIPkzMO0tdcWTbOMj39UnPj1MZAwkcTQfXadV7lVPSg8cH0iabkUCT94yAhrnSa
-         xSe0+5M7MZi2UhkpMmQXl/SPhXtNtJqyYUh+MzeDr9zA4JEPqQ4sOzk44EM7gyNvOHJM
-         oKFztWaAiEl48N5QP99XxkhMgBdRHQKkfBAIqdmx5k1Z4WaiOAI5em2hwqRzAYaOKj4i
-         o5djUnbp3GmT7EH02h+x3+zGy7jsXlUOgXJTkBpjX7svcMJG55tDivui7pv3qAsYYItA
-         kvJ1TxAAXnjtnnJLPGBInRPy6SiWeAYXkqJABs036bWwDMGLqr9yqsaTGKhvY0xhSst7
-         U1Gw==
-X-Gm-Message-State: AJIora/Nu5MGlYFWnUK5MHnhVFrK2zaeBl18GkEb1/KaaCmPd3M3QD54
-        6in66TncLEIoxQvi7lAxFvntofNjOXEiqIqthJ2FssrF
-X-Google-Smtp-Source: AGRyM1t670FYwMUy+rWS1sJ649OLE9CeHki8pcOKdf5K9r1zXsVH7iZO4iRZJMvBejkuhjDtI+nNH5YT2fFcicR38gc=
-X-Received: by 2002:a0c:eb4a:0:b0:472:f936:3ea0 with SMTP id
- c10-20020a0ceb4a000000b00472f9363ea0mr21197314qvq.43.1658143251297; Mon, 18
- Jul 2022 04:20:51 -0700 (PDT)
+        with ESMTP id S229783AbiGRLiZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 07:38:25 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8182182C;
+        Mon, 18 Jul 2022 04:38:23 -0700 (PDT)
+X-UUID: ddd4cd44320f4ca8a0f8f907a001f47a-20220718
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.8,REQID:b059e937-1c1c-4fd5-a755-4efd51b9c2f7,OB:0,LO
+        B:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACTI
+        ON:release,TS:0
+X-CID-META: VersionHash:0f94e32,CLOUDID:b8b8cad7-5d6d-4eaf-a635-828a3ee48b7c,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:0,File:nil
+        ,QS:nil,BEC:nil,COL:0
+X-UUID: ddd4cd44320f4ca8a0f8f907a001f47a-20220718
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+        (envelope-from <hui.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1571168612; Mon, 18 Jul 2022 19:38:17 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
+ Mon, 18 Jul 2022 19:38:16 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkmbs11n2.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.3 via Frontend
+ Transport; Mon, 18 Jul 2022 19:38:15 +0800
+From:   Hui Liu <hui.liu@mediatek.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <matthias.bgg@gmail.com>
+CC:     <srv_heupstream@mediatek.com>, <hui.liu@mediatek.com>,
+        <johnson.wang@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <sean.wang@mediatek.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] Mediatek pinctrl patches for mt8188
+Date:   Mon, 18 Jul 2022 19:38:10 +0800
+Message-ID: <20220718113813.23787-1-hui.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20220624195112.894916-1-robimarko@gmail.com> <CACRpkdZdccrfA4yHoVjzpsJesYshuP6PjtT=KTeEQgOdXR6_5w@mail.gmail.com>
- <CACRpkdZ5P-U19wTnzsOr9o_XWn1rKqVSxc+YrYnKNJLTmJyYTg@mail.gmail.com>
-In-Reply-To: <CACRpkdZ5P-U19wTnzsOr9o_XWn1rKqVSxc+YrYnKNJLTmJyYTg@mail.gmail.com>
-From:   Robert Marko <robimarko@gmail.com>
-Date:   Mon, 18 Jul 2022 13:20:40 +0200
-Message-ID: <CAOX2RU5QuApQxo3f12iM8FEr59UuT=BBE1PqAWnKwK1e=sqO8Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,33 +59,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 18 Jul 2022 at 11:59, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Sun, Jul 10, 2022 at 1:05 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Fri, Jun 24, 2022 at 9:51 PM Robert Marko <robimarko@gmail.com> wrote:
-> >
-> > > Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> > > immutable") added a warning to indicate if the gpiolib is altering the
-> > > internals of irqchips.
-> > >
-> > > Following this change the following warning is now observed for the SPMI
-> > > PMIC pinctrl driver:
-> > > gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
-> > >
-> > > Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
-> > >
-> > > Signed-off-by: Robert Marko <robimarko@gmail.com>
-> >
-> > Patch applied!
->
-> Jumping the gun too quick.
->
-> Reverted the patch following Marc's feedback.
+This series includes 3 patches:
+1. add mt8188 pinctrl binding document.
+2. add pinctrl pinmux definition for mt8188.
+3. add pinctrl driver for mt8188.
 
-Thanks for doing this, I was planning to send a revert patch.
+Hui.Liu (3):
+  dt-bindings: mediatek: add pinctrl definition for mt8188
+  dt-bindings: pinctrl: mt8188: add pinmux definition
+  pinctrl: add pinctrl driver for mt8188
 
-Regards,
-Robert
->
-> Yours,
-> Linus Walleij
+ .../bindings/pinctrl/pinctrl-mt8188.yaml      |  306 +++
+ drivers/pinctrl/mediatek/Kconfig              |   12 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8188.c     | 1666 ++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8188.h | 2260 +++++++++++++++++
+ include/dt-bindings/pinctrl/mt8188-pinfunc.h  | 1280 ++++++++++
+ 6 files changed, 5525 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8188.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8188.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8188.h
+ create mode 100644 include/dt-bindings/pinctrl/mt8188-pinfunc.h
+
+--
+2.18.0
+
+
