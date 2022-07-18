@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD5EA578DAF
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 00:44:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE8E0578DB3
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 00:47:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234908AbiGRWoY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 18:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45886 "EHLO
+        id S234596AbiGRWrA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 18:47:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234888AbiGRWoX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 18:44:23 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2336D248EE
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:44:23 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id r3so23558293ybr.6
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:44:23 -0700 (PDT)
+        with ESMTP id S232002AbiGRWrA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 18:47:00 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902612494B
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:46:59 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id i14so23588575yba.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 15:46:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Kwm8lRNyu/PQCems8jzAF0qMpwZBnlHnV+esZ+mc4PI=;
-        b=xHMVJiW17kc/mu3yiFaF5CT0LQKg3uVVjY2n9ySAg/TUMC3eOwMbwMHgzFe5+GTsQG
-         sYiQaBP5MCju+GpyScCTpNslS54BPcmPx5b7+OK/oBFPCozD8jIPkpkLnSWnIV8pdSn1
-         VJJ90G8bHsZD1LWPEWJRuEt4ohfhCNSFwLd+1qRIVKBctz8HswGaF4EQlZHOixGdxegM
-         QS6TZeUBA9WVYyLpcVGWm+uyei1h88TZzVc7mlu6qpVYJD/XQjjObNUFNLhLKc2t3RQd
-         t6uMyu+e8NTdc7kQf8o2WXzBg7R1wOl9hLX6AWLFBabx3bId+JuS/eU3N5dc9h6r3LiY
-         j5fg==
+        bh=xQJVTZ5v7RU+QWK7eqra9kSzzqeCgRFsqsbR5Z4AZ7o=;
+        b=Df+S+nm/ultWgajStkadNGGsbckIEro6h+yfnCP5TKbUAGV71rp0DzSh00h0DIQVoZ
+         hAmEubPFgIKGGZ0negc8z/BwkzMgQeRZ+GmuTya9uN/+7JL/bWhG9imVMlbEwrYH8APH
+         Y1l3ZNjiciOm3+yN/I2I5dk+7EoBrnGG9yNjEog4SIDc4cwOiowpPcTZh+FtdAjRp8y9
+         7e5hForPc4VGiDEaSxcm9p6PkD2ifk0y9rYE8EfRP4gdlMYwL2h0M9aY2ewQrogVSdKP
+         p46zFl2GWH7tCnaZm2PmXChvs2or8zlwr2WHxlDLrn5to1crZ9CjgAplGe1qA10+PMjE
+         m+Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Kwm8lRNyu/PQCems8jzAF0qMpwZBnlHnV+esZ+mc4PI=;
-        b=oYIv8c+J3+3/Aolt2D3lnCIcCz6GCRhqLp4Wq6i6FuATbvumpdO2zQu+kFO9xNCPXG
-         B8QtMZwktWUmFCuS+v3kQQK0VCrXQR/f7ehhKNaFl58ugULqEZfmHrDt/G1peBG73DYi
-         14ykakFldQmDQTiz8/S6jQya7j4msGH/qM1bOsDQcCUZppyp2BoSrAny+X8rUXV6ibTZ
-         dNj/19FPTfgBLFp1wZ5DQKBquJKd/KktE2I1VgurlD/LMvGvt8O8WyA6b/lFQZSqliFd
-         R7TobUCxRPB9pLKeofPBLqe/xEZB3Kph/RblOJRo+tsm9VSmEqyW0I22F1u9NMoPMU4Z
-         UiLw==
-X-Gm-Message-State: AJIora8TEoaeqLXJ6Zp+k3ImMPKSMPZedOcNAbZZMV94TLGTbEv5o657
-        0Trf7Y9Wz9lWiT6nDgM4JYq+V74HyV22i+6Rcb7bXnd15n7/Iw==
-X-Google-Smtp-Source: AGRyM1sqX+KncDnwZk5GSHFy14E33nQb7QJbSX02oMaKwgBtQQ6s/ChodXHcuRJ+CX3YJBO1TdaMEIxwvi6DIABMM40=
-X-Received: by 2002:a25:f508:0:b0:66f:3c5f:c39f with SMTP id
- a8-20020a25f508000000b0066f3c5fc39fmr28134532ybe.374.1658184262387; Mon, 18
- Jul 2022 15:44:22 -0700 (PDT)
+        bh=xQJVTZ5v7RU+QWK7eqra9kSzzqeCgRFsqsbR5Z4AZ7o=;
+        b=oK0gv4TcHhfxe4N6VExu1dBzGs32/a/KdKkNr31h6QdDMaTzhsg+BQKTrMXGngdvxK
+         vJAHGN9zdr4NVPsBcj3eFzpdQByL+PsmSpPNBWUaTq0+xhvWZPH/f+F3vGRvJMBmP75n
+         UT5v340tTstHzRyhmLhwH6/au2KpbJaFxeFrXi9pbtEz608V+KImNRQjgkiLae/UFYyt
+         /ytkadhmDX8XI1ReOlVJyh0EVASR5m8HJMnBN/pRk4UX9Um0hS8kKXUMIZrV3FFfgVOC
+         gfaVmYrocXvh3ecWVISmNDssAuoBYjtwGRl6Z/oD4unB5OKBQJfWQgZK89W4XN9fKsoi
+         SVQg==
+X-Gm-Message-State: AJIora+2plXjd8KMGqbptwS2txxvKOkRsZXnm5DDsKmeLbZ/0jd+Xpdb
+        QTTZ7G72EZEZ9zhDGRUgVXby4EqHBDA2Utkf8F14+GGd4jhG3w==
+X-Google-Smtp-Source: AGRyM1upKT8DoHK9/hAXB2LaXysZKiUfoN4DANKDn581tq3jO8SbDNPhWd7P+SCZAnhOuFhNh+wn6oxO+TSGY2m7XVA=
+X-Received: by 2002:a5b:9c5:0:b0:66e:cbbf:2904 with SMTP id
+ y5-20020a5b09c5000000b0066ecbbf2904mr27768238ybq.220.1658184418848; Mon, 18
+ Jul 2022 15:46:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220718220252.16923-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220718220252.16923-1-andriy.shevchenko@linux.intel.com>
+References: <20220718220252.16923-1-andriy.shevchenko@linux.intel.com> <20220718220252.16923-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220718220252.16923-2-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Jul 2022 00:44:10 +0200
-Message-ID: <CACRpkdZPPEWxkwRjtgEj9P+Mij_BEfE-X6fHpLL_GkpXYfw6CA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpio: 74xx-mmio: Make use of device properties
+Date:   Tue, 19 Jul 2022 00:46:47 +0200
+Message-ID: <CACRpkda8GwRMoUY60sTLRfbJrN70hxDjzxaG=4Hqh48kUrE9kw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] gpio: 74xx-mmio: Check MMIO_74XX_DIR_IN flag in mmio_74xx_dir_in()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <brgl@bgdev.pl>
@@ -67,13 +67,15 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Jul 19, 2022 at 12:02 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> Convert the module to be property provider agnostic and allow
-> it to be used on non-OF platforms.
+> It's logically better to check the IN in ->direction_input() and
+> _OUT in ->direction_output().
 >
-> Add mod_devicetable.h include.
+> While at it, replace ternary with plain if-conditional for the sake
+> of consistency with mmio_74xx_dir_out().
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Yep this is better.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
