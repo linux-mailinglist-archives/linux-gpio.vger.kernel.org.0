@@ -2,169 +2,421 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6984657793C
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 03:24:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77B32577CD2
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 09:50:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232951AbiGRBYb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Jul 2022 21:24:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58756 "EHLO
+        id S232604AbiGRHui (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 03:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232937AbiGRBYa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Jul 2022 21:24:30 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7730565FD;
-        Sun, 17 Jul 2022 18:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658107469; x=1689643469;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2EKYGRxFwOowb+2/VvkXh77NNCMzCGVW6f9edVohmqU=;
-  b=nWRymceehoIfS+fxc+k2dI1UQ+h654LpPDxZxEABr7rCHt2Qs2wNDjAB
-   VPXBxGtqJtC5go2YJWRTQ3jm7Ux173upVpu4aIgFxD4evxYqntHtztOss
-   3fZupdfP2WH5sNphfsBhbCCAKCzfS6NOOj3Wr8FYu2gFBe86TDYIkYvFL
-   yym0oHLJnCnxH/DMzC2JcTlpI5GbhNEZBRw9t4oX0j6c0/tUDkn/VMaeq
-   ShWQtQd2RbvssIa4a6+ku383CMDM3nnhmcdGALPizUmdIX5vApTLX9aU1
-   VNIwumFLa3dqTwQLHPoOFpDXvkpKJIkV+A5HUeJbMHu7FLEHcrNhvGknl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="286128173"
-X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
-   d="scan'208";a="286128173"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2022 18:24:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
-   d="scan'208";a="843105175"
-Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2022 18:24:25 -0700
-Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oDFUm-0003rU-Q9;
-        Mon, 18 Jul 2022 01:24:24 +0000
-Date:   Mon, 18 Jul 2022 09:24:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Tomer Maimon <tmaimon77@gmail.com>, avifishman70@gmail.com,
-        tali.perry1@gmail.com, joel@jms.id.au, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, j.neuschaefer@gmx.net,
-        zhengbin13@huawei.com
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO
- driver
-Message-ID: <202207180959.yy7mZtRy-lkp@intel.com>
-References: <20220714122322.63663-3-tmaimon77@gmail.com>
+        with ESMTP id S229711AbiGRHuh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 03:50:37 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5643817063;
+        Mon, 18 Jul 2022 00:50:36 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id g1so7376031qki.7;
+        Mon, 18 Jul 2022 00:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=kyf2Lrj0dr4yclxHalJ/mW9dNcqF8ckWZb/TY8+xlHs=;
+        b=ojYMAmJi6w0Lujykwek6FhXuxeiTLQeht0g1JcJlsIxZ7UVfdBxRN8fReg9105xUyr
+         bVl64svKIm3BKcOHso2Ef1DSq61rqtHMBWksnrxJ4CDztbvD5qQ2CM+Q+W4fYGhjHTNc
+         HKj9cPHkp36OvovDdr2YMhtcMQ0OrNT7eJZzClPoiZFAbVLodyNKU8dqhQJ0JvLt8DQr
+         Yb75o3USte5wYv8GH1/AqxkPClmG+Gm2gxnmPou9XLH6A9Ju911AdgY3CFk52AUvEEDI
+         G/iacVTjPg1fcYwOp5jhjO0OUhS4jIfpUYVeDb+SCgRqYBUasFrKvoi7fZ1CrqEQuToS
+         oJnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=kyf2Lrj0dr4yclxHalJ/mW9dNcqF8ckWZb/TY8+xlHs=;
+        b=t7bYRyWeaMQtbAukuFN788PFsNVZ6DE/4NA/ErVVA/VjlPYabpxVUyWN1S4R6djySP
+         VglsESFAUaYyWZWQGD0VDWck9anBoLrO2p3NP1wZcZxWTM70HtbJRI+IQ5tggRCvyurm
+         VTqDTUcA936gTcuUl+TQg0+ZwnMNBj21XY+fsQnAI77hoGwR4P9/RAzah8dEZsTtHjrQ
+         vWkSiHFGKQVKwPCLlJz2lJePcd6rolkeKkx/B/pQfvA7wOgglZaU8mhpHczwwbdBo+3S
+         mcnSCJvFSPCYu0WHpIeYaWaDkPMygz53kVlYxIXoaBpkuRMgV6kxCAujik2Q/FlCXcAB
+         LAiQ==
+X-Gm-Message-State: AJIora85Gq5/4j/gGWqIyDEl8Jh28j+ByuccIpibUJVG0KeaHpg5H1CQ
+        vG0/MzsW6LDVc3n5gQ27q0k=
+X-Google-Smtp-Source: AGRyM1uEHt2TgkRwzKqh/D1pcLJ1esr6iLt+PZyxgmHKKo1sg+fJe8G6JgCiIuw5ovqfTrjFw6EwhQ==
+X-Received: by 2002:ae9:f704:0:b0:6b2:42da:3ad with SMTP id s4-20020ae9f704000000b006b242da03admr16811109qkg.439.1658130635311;
+        Mon, 18 Jul 2022 00:50:35 -0700 (PDT)
+Received: from p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de (p200300f6ef036f005de6a4d0d791ed01.dip0.t-ipconnect.de. [2003:f6:ef03:6f00:5de6:a4d0:d791:ed01])
+        by smtp.gmail.com with ESMTPSA id l67-20020a37bb46000000b006b53fe19c41sm10942874qkf.14.2022.07.18.00.50.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Jul 2022 00:50:34 -0700 (PDT)
+Message-ID: <7aa6f7bc6c528fda0649888d282aef39f1d055d4.camel@gmail.com>
+Subject: Re: [PATCH 0/4] add support for bias pull-disable
+From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 Jul 2022 09:51:36 +0200
+In-Reply-To: <CAMRc=Mdz+8yfrATQPJ=uY33k2Dwt29g6vZbP3mSjkB_VAzP5+A@mail.gmail.com>
+References: <20220713131421.1527179-1-nuno.sa@analog.com>
+         <YtAvHMmGay/3HACZ@smile.fi.intel.com>
+         <e0638b02bdcd0ee452846b86ce83458173912ef1.camel@gmail.com>
+         <YtBnIxh6rDJMwpEm@smile.fi.intel.com>
+         <5d9f9272334177e3ea864467f50095a8709bc0d2.camel@gmail.com>
+         <YtFYFbP+xqAUUHZa@smile.fi.intel.com>
+         <88114aeb10f7316cf3c1396179949f2fc351ad8f.camel@gmail.com>
+         <CAMRc=Mdz+8yfrATQPJ=uY33k2Dwt29g6vZbP3mSjkB_VAzP5+A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220714122322.63663-3-tmaimon77@gmail.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Tomer,
+On Fri, 2022-07-15 at 21:31 +0200, Bartosz Golaszewski wrote:
+> On Fri, Jul 15, 2022 at 2:19 PM Nuno S=C3=A1 <noname.nuno@gmail.com>
+> wrote:
+> >=20
+> > On Fri, 2022-07-15 at 15:05 +0300, Andy Shevchenko wrote:
+> > > On Fri, Jul 15, 2022 at 12:20:56PM +0200, Nuno S=C3=A1 wrote:
+> > > > On Thu, 2022-07-14 at 21:57 +0300, Andy Shevchenko wrote:
+> > > > > On Thu, Jul 14, 2022 at 05:43:41PM +0200, Nuno S=C3=A1 wrote:
+> > > > > > On Thu, 2022-07-14 at 17:58 +0300, Andy Shevchenko wrote:
+> > > > > > > On Wed, Jul 13, 2022 at 03:14:17PM +0200, Nuno S=C3=A1 wrote:
+> > > > > > > > The gpio core looks at 'FLAG_BIAS_DISABLE' in
+> > > > > > > > preparation
+> > > > > > > > of
+> > > > > > > > calling the
+> > > > > > > > gpiochip 'set_config()' hook. However, AFAICT, there's
+> > > > > > > > no
+> > > > > > > > way
+> > > > > > > > that
+> > > > > > > > this
+> > > > > > > > flag is set because there's no support for it in
+> > > > > > > > firwmare
+> > > > > > > > code.
+> > > > > > > > Moreover,
+> > > > > > > > in 'gpiod_configure_flags()', only pull-ups and pull-
+> > > > > > > > downs
+> > > > > > > > are
+> > > > > > > > being
+> > > > > > > > handled.
+> > > > > > > >=20
+> > > > > > > > On top of this, there are some users that are looking
+> > > > > > > > at
+> > > > > > > > 'PIN_CONFIG_BIAS_DISABLE' in the 'set_config()' hook.
+> > > > > > > > So,
+> > > > > > > > unless
+> > > > > > > > I'm
+> > > > > > > > missing something, it looks like this was never working
+> > > > > > > > for
+> > > > > > > > these
+> > > > > > > > chips.
+> > > > > > > >=20
+> > > > > > > > Note that the ACPI case is only compiled tested. At
+> > > > > > > > first
+> > > > > > > > glance,
+> > > > > > > > it seems
+> > > > > > > > the current patch is enough but i'm not really sure...
+> > > > > > >=20
+> > > > > > > So, I looked closer to the issue you are trying to
+> > > > > > > describe
+> > > > > > > here.
+> > > > > > >=20
+> > > > > > > As far as I understand we have 4 state of BIAS in the
+> > > > > > > hardware:
+> > > > > > > 1/ AS IS (defined by firnware)
+> > > > > > > 2/ Disabled (neither PU, not PD)
+> > > > > > > 3/ PU
+> > > > > > > 4/ PD
+> > > > > > >=20
+> > > > > > > The case when the default of bias is not disabled (for
+> > > > > > > example
+> > > > > > > specific, and I
+> > > > > > > think very special, hardware may reset it to PD or PU),
+> > > > > > > it's
+> > > > > > > a
+> > > > > > > hardware driver
+> > > > > > > responsibility to inform the framework about the real
+> > > > > > > state
+> > > > > > > of
+> > > > > > > the
+> > > > > > > lines and
+> > > > > > > synchronize it.
+> > > > > > >=20
+> > > > > > > Another case is when the firmware sets the line in non-
+> > > > > > > disabled
+> > > > > > > state
+> > > > > > > and
+> > > > > > > by some reason you need to disable it. The question is,
+> > > > > > > why?
+> > > > > >=20
+> > > > > > Not getting this point...
+> > > > >=20
+> > > > > I understand that in your case "firmware" is what DTB
+> > > > > provides.
+> > > > > So taking into account that the default of hardware is PU, it
+> > > > > needs
+> > > > > a mechanism to override that, correct?
+> > > > >=20
+> > > >=20
+> > > > Exactly...
+> > > >=20
+> > > > > > > > As a side note, this came to my attention during this
+> > > > > > > > patchset
+> > > > > > > > [1]
+> > > > > > > > (and, ofr OF,=C2=A0 was tested with it).
+> > > > > > > >=20
+> > > > > > > > [1]:
+> > > > > > > > https://lore.kernel.org/linux-input/20220708093448.42617-5-=
+nuno.sa@analog.com/
+> > > > > > >=20
+> > > > > > > Since this provides a GPIO chip, correct?, it's
+> > > > > > > responsibility of
+> > > > > > > the
+> > > > > > > driver to
+> > > > > > > synchronize it, no? Basically if you really don't trust
+> > > > > > > firmware,
+> > > > > > > you
+> > > > > > > may
+> > > > > >=20
+> > > > > > What do you mean by synchronize?
+> > > > >=20
+> > > > > Full duplex sync, i.e. setting flag to PU for the pins that
+> > > > > should
+> > > > > stay PU:ed
+> > > > > and disabling bias for the ones, that want it to be disabled.
+> > > > > (PD
+> > > > > accordingly)
+> > > > >=20
+> > > > > > > go via all GPIO lines and switch them to the known (in
+> > > > > > > software)
+> > > > > > > state. This
+> > > > > > > approach on the other hand is error prone, because
+> > > > > > > firmware
+> > > > > > > should
+> > > > > > > know better
+> > > > > > > which pin is used for which purpose, no? If you don't
+> > > > > > > trust
+> > > > > > > firwmare
+> > > > > > > (in some
+> > > > > > > cases), then it's a matter of buggy platform that has to
+> > > > > > > be
+> > > > > > > quirked
+> > > > > > > out.
+> > > > > >=20
+> > > > > > I'm not getting what you mean by "firmware should know
+> > > > > > better"?
+> > > > > > So,
+> > > > > > basically, and let's take OF as example, you can request a
+> > > > > > GPIO
+> > > > > > in
+> > > > > > OF
+> > > > > > by doing something like:
+> > > > > >=20
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 foo-gpios =3D <&gpio=
+ 1 GPIO_PULL_UP>;
+> > > > > >=20
+> > > > > > In this way, when the consumer driver gets the gpio, all
+> > > > > > the
+> > > > > > flags
+> > > > > > will
+> > > > > > be properly set so that when we set a direction (for
+> > > > > > example)
+> > > > > > the
+> > > > > > gpiochip's 'set_config()' will be called and the driver
+> > > > > > does
+> > > > > > what
+> > > > > > it
+> > > > > > needs to setup the pull-up. If we want BIAS_DISABLED on the
+> > > > > > pin,
+> > > > > > there's no way to the same as the above. So basically, this
+> > > > > > can
+> > > > > > ever
+> > > > > > happen:
+> > > > > >=20
+> > > > > > https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpi=
+olib.c#L2227
+> > > > > >=20
+> > > > > > (only possible from the gpiochip cdev interface)
+> > > > > >=20
+> > > > > > So, what I'm proposing is to be possible to do from OF:
+> > > > > >=20
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 foo-gpios =3D <&gpio=
+ 1 GPIO_PULL_DISABLE>;
+> > > > > >=20
+> > > > > > And then we will get into the gpiochip's 'set_config()' to
+> > > > > > disable
+> > > > > > the
+> > > > > > pull-up or pull-down.
+> > > > > >=20
+> > > > > > As I said, my device is an input keymap that can export
+> > > > > > pins as
+> > > > > > GPIOs
+> > > > > > (to be consumed by gpio_keys). The pins by default have
+> > > > > > pull-
+> > > > > > ups
+> > > > > > that
+> > > > > > can be disabled by doing a device i2c write. I'm just
+> > > > > > trying to
+> > > > > > use
+> > > > > > the
+> > > > > > infrastructure that already exists in gpiolib (for pull-
+> > > > > > up|down) to
+> > > > > > accomplish this. There's no pinctrl driver controlling the
+> > > > > > pins.
+> > > > > > The
+> > > > > > device itself controls them and having this device as a
+> > > > > > pinctrl
+> > > > > > one
+> > > > > > is
+> > > > > > not really applicable.
+> > > > >=20
+> > > > > Yes, I have got it eventually. The root cause is that after
+> > > > > reset
+> > > > > you
+> > > > > have a
+> > > > > hardware that doesn't disable bias.
+> > > > >=20
+> > > > > Now, we have DT properties for PD and PU, correct?
+> > > > > For each requested pin you decide either to leave the state
+> > > > > as it
+> > > > > is,
+> > > > > or
+> > > > > apply bias.
+> > > > >=20
+> > > > > in ->probe() of your GPIO you reset hardware and for each
+> > > > > GPIO
+> > > > > descriptor you
+> > > > > set PU flag.
+> > > > > In ->request(), don;t know the name by heart, you disable
+> > > > > BIAS
+> > > > > based
+> > > > > on absence
+> > > > > of flags, it can be done without an additional properties,
+> > > > > purely
+> > > > > in
+> > > > > the GPIO
+> > > > > OF code. Do I understand this correctly?
+> > > > >=20
+> > > >=20
+> > > > Alright, I think now you got it and we are on the same page. If
+> > > > I
+> > > > understood your suggestion, users would just use GPIO_PULL_UP
+> > > > in
+> > > > dtb if
+> > > > wanting the default behavior. I would then use the gpiochip
+> > > > 'request()'
+> > > > callback to test the for pull-up flag right?
+> > >=20
+> > > Something like this, yes.
+> > >=20
+> > > > If I'm getting this right, there's a problem with it...
+> > > > gpiod_configure_flags() is called after gpiod_request() which
+> > > > means
+> > > > that the gpiod descriptor won't still have the BIAS flags set.
+> > > > And
+> > > > I
+> > > > don't think there's a way (at least clean and easy) to get the
+> > > > firmware
+> > > > lookup flags from the request callback?
+> > > >=20
+> > > > So, honestly the only option I see to do it without changing
+> > > > gpioblib
+> > > > would be to hook this change in output/input callbacks which is
+> > > > far
+> > > > from being optimal...
+> > > >=20
+> > > > So, in the end having this explicitly like this feels the best
+> > > > option
+> > > > to me. Sure, I can find some workaround in my driver but that
+> > > > does
+> > > > not
+> > > > change this...
+> > >=20
+> > > Ok, let me think about it. Meanwhile, maybe others have better
+> > > ideas
+> > > already?
+> > >=20
+> >=20
+> > Sure, I'm still thinking that having this extra property and
+> > explicitly
+> > set it from OF is not that bad :)
+> >=20
+> > > > "
+> > > > git grep "PIN_CONFIG_BIAS_DISABLE" drivers/gpio/
+> > >=20
+> > > Hint: `git grep -lw "PIN_CONFIG_BIAS_DISABLE" -- drivers/gpio`
+> > >=20
+> >=20
+> > nice..
+> >=20
+> > > > drivers/gpio/gpio-aspeed.c:963: else if (param =3D=3D
+> > > > PIN_CONFIG_BIAS_DISABLE ||
+> > > > drivers/gpio/gpio-merrifield.c:197:=C2=A0=C2=A0=C2=A0=C2=A0 if
+> > > > ((pinconf_to_config_param(config) =3D=3D PIN_CONFIG_BIAS_DISABLE)
+> > > > ||
+> > > > drivers/gpio/gpio-omap.c:903:=C2=A0=C2=A0 case PIN_CONFIG_BIAS_DISA=
+BLE:
+> > > > drivers/gpio/gpio-pca953x.c:573:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 if (config =3D=3D
+> > > > PIN_CONFIG_BIAS_DISABLE)
+> > > > drivers/gpio/gpio-pca953x.c:592:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 case
+> > > > PIN_CONFIG_BIAS_DISABLE:
+> > > > "
+> > > >=20
+> > > > AFAICT, the only way this path is possible for these drivers is
+> > > > through
+> > > > gpiolib cdev which might not be what the authors of the drivers
+> > > > were
+> > > > expecting...
+> > >=20
+> > > gpio-merrifield is bad example, it has a pin control.
+> > > gpio-pca953x as I said should effectively be a pin control
+> > > driver.
+> > >=20
+> > > For the two left it might be the case.
+> > >=20
+> >=20
+> > Well the thing is that even if we have pinctrl like for example,
+> > gpio-omap, it is still true that there's no way to get into
+> > 'omap_gpio_set_config()' for 'PIN_CONFIG_BIAS_DISABLE' and call
+> > 'gpiochip_generic_config()'.
+> >=20
+> > (naturally in this case, one can directly use pinctrl properties to
+> > control the pin but still...)
+> >=20
+> >=20
+> > - Nuno S=C3=A1
+> >=20
+>=20
+> Ideologically I don't have anything against adding this flag (except
+> that it should be called BIAS_DISABLE not PULL_DISABLE IMO). Nuno is
 
-I love your patch! Perhaps something to improve:
+It makes sense, yes.
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linus/master v5.19-rc7 next-20220715]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> right in that the character device is the only way to set this mode
+> ATM and. However I would like to see the first user added together
+> with the series because adding features nobody uses in the mainline
+> kernel tree is generally frowned upon and it's also not clear that
+> anyone actually wants to use it.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tomer-Maimon/pinctrl-nuvoton-add-pinmux-and-GPIO-driver-for-NPCM8XX/20220714-202424
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20220718/202207180959.yy7mZtRy-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 07022e6cf9b5b3baa642be53d0b3c3f1c403dbfd)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/0a5f158322b21ab2b71cc606adc2ee7573d8be0d
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Tomer-Maimon/pinctrl-nuvoton-add-pinmux-and-GPIO-driver-for-NPCM8XX/20220714-202424
-        git checkout 0a5f158322b21ab2b71cc606adc2ee7573d8be0d
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/media/i2c/ drivers/net/pcs/ drivers/pinctrl/nuvoton/ kernel/trace/
+Hmm, you mean something like a system's devicetree needing this flag?
+If so, I don't really have such a thing. I did all my testing on a rpi
+using overlays.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+- Nuno S=C3=A1 =20
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c:481:18: warning: unused variable 'smb14b_pins' [-Wunused-const-variable]
-   static const int smb14b_pins[] = { 32, 187 };
-                    ^
-   1 warning generated.
-
-
-vim +/smb14b_pins +481 drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-
-   439	
-   440	static const int smb0_pins[]  = { 115, 114 };
-   441	static const int smb0b_pins[] = { 195, 194 };
-   442	static const int smb0c_pins[] = { 202, 196 };
-   443	static const int smb0d_pins[] = { 198, 199 };
-   444	static const int smb0den_pins[] = { 197 };
-   445	static const int smb1_pins[]  = { 117, 116 };
-   446	static const int smb1b_pins[] = { 126, 127 };
-   447	static const int smb1c_pins[] = { 124, 125 };
-   448	static const int smb1d_pins[] = { 4, 5 };
-   449	static const int smb2_pins[]  = { 119, 118 };
-   450	static const int smb2b_pins[] = { 122, 123 };
-   451	static const int smb2c_pins[] = { 120, 121 };
-   452	static const int smb2d_pins[] = { 6, 7 };
-   453	static const int smb3_pins[]  = { 30, 31 };
-   454	static const int smb3b_pins[] = { 39, 40 };
-   455	static const int smb3c_pins[] = { 37, 38 };
-   456	static const int smb3d_pins[] = { 59, 60 };
-   457	static const int smb4_pins[]  = { 28, 29 };
-   458	static const int smb4b_pins[] = { 18, 19 };
-   459	static const int smb4c_pins[] = { 20, 21 };
-   460	static const int smb4d_pins[] = { 22, 23 };
-   461	static const int smb4den_pins[] = { 17 };
-   462	static const int smb5_pins[]  = { 26, 27 };
-   463	static const int smb5b_pins[] = { 13, 12 };
-   464	static const int smb5c_pins[] = { 15, 14 };
-   465	static const int smb5d_pins[] = { 94, 93 };
-   466	static const int smb6_pins[]  = { 172, 171 };
-   467	static const int smb6b_pins[] = { 2, 3 };
-   468	static const int smb6c_pins[]  = { 0, 1 };
-   469	static const int smb6d_pins[]  = { 10, 11 };
-   470	static const int smb7_pins[]  = { 174, 173 };
-   471	static const int smb7b_pins[]  = { 16, 141 };
-   472	static const int smb7c_pins[]  = { 24, 25 };
-   473	static const int smb7d_pins[]  = { 142, 143 };
-   474	static const int smb8_pins[]  = { 129, 128 };
-   475	static const int smb9_pins[]  = { 131, 130 };
-   476	static const int smb10_pins[] = { 133, 132 };
-   477	static const int smb11_pins[] = { 135, 134 };
-   478	static const int smb12_pins[] = { 221, 220 };
-   479	static const int smb13_pins[] = { 223, 222 };
-   480	static const int smb14_pins[] = { 22, 23 };
- > 481	static const int smb14b_pins[] = { 32, 187 };
-   482	static const int smb15_pins[] = { 20, 21 };
-   483	static const int smb15b_pins[] = { 192, 191 };
-   484	static const int smb16_pins[] = { 10, 11 };
-   485	static const int smb16b_pins[] = { 218, 219 };
-   486	static const int smb17_pins[] = { 3, 2 };
-   487	static const int smb18_pins[] = { 0, 1 };
-   488	static const int smb19_pins[] = { 60, 59 };
-   489	static const int smb20_pins[] = { 234, 235 };
-   490	static const int smb21_pins[] = { 169, 170 };
-   491	static const int smb22_pins[] = { 40, 39 };
-   492	static const int smb23_pins[] = { 38, 37 };
-   493	static const int smb23b_pins[] = { 134, 134 };
-   494	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
