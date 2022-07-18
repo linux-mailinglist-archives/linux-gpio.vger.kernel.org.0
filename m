@@ -2,82 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43657578E02
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 01:03:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85659578E19
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 01:12:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236410AbiGRXDH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 19:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60156 "EHLO
+        id S236474AbiGRXMR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 19:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236405AbiGRXDG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 19:03:06 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2491A3335C
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 16:03:05 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id g1so17321005edb.12
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 16:03:05 -0700 (PDT)
+        with ESMTP id S236379AbiGRXMQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 19:12:16 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F5E2CCA9
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 16:12:15 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id ez10so24021261ejc.13
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 16:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bCuV65AO3xjvo3XNNmdojm9svHgvfqPfeodDABzyyBE=;
-        b=kR7aR1HQxR0fwFVRuD2V30Hz1vbP5xF+IUONHdVl381RaIypdmjANYgjwMwNYiztQo
-         4Bk5NCbRdBF+b3CUsebO4F+F+dM5Ogbns93F7S84OlQqwbS2x56MN7yaXA13uVQ+ipPS
-         WjW/LwKzIoxMhiiC6NdfjaZKn2joO9PQou/I8hH2WaYNEiTiBkkIpnncpJ8mNzmiPTp+
-         qd5lybeDHjE+yHpVyko1068N4YIn4XR+OVCwVb34gI0sqNfxNhk8p3O9LvrVQXFiqOEq
-         eL80KFu4EDWDdaoeGo8SOb8cuTtT4R7iKVwsGO2C3jcDEYWcBzmnr4yILZVV0HDwryby
-         a+Jg==
+         :cc:content-transfer-encoding;
+        bh=YSnQ3rapD15ubKyo5bpVJrV5ccHUA2lXa55ZKSPiAcQ=;
+        b=Z/QbbtCgL1R/rvKX8GwhiCOpTlJVurn5orgpixFc7MZ3LgkpakJnbwVfdJE8nsNcDW
+         lqVxMLrcN5p85xSYovEH/aDn3Kkhi8by8CNztxJjodhsW7i5WmQP0rgAX6GF2XrCa20B
+         yGb+jbKUHcWl38ReLehKmCpC+7pcsZPoaiqmHxeN6Fy+SvLfCy9LFqTjpMMJymgDx5bI
+         bqcvBUXSkWJf1BXSspKxT1VF9ZHQpGvEkDcK/q1hbEvMm0/+J8YHikSzO8Ey+q8Sdh63
+         HnmmruvQ4MLr+LBBmGk/rTYekC64+5xbWa0+s7cvrhGjS0LJVUVezkwg8OG4jHYQJWSw
+         AbWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bCuV65AO3xjvo3XNNmdojm9svHgvfqPfeodDABzyyBE=;
-        b=YeSZ38wmRV1/aMVBKw/baQHCkuci+1fk2I7So7fyoCFMaoB7SlhUEzmQQxo/DPwC/W
-         6e89lu5TTa/5dHqOn8DzYPsF7kfOF1xpdWiyAv1GI3jZ/xs1564eNDUBQZDl7yMLhzss
-         JZHMRm40CExGJqgh7ABObBXFhDb0pTtF/2AoV+ywkx9lI0j0qr9mpryjhS8sWv6B2UuV
-         Idu5IyfERI01Xx3tD1YpiMkN684E1KewRVxn6kFebTI0rWka6T6Zenp8r2L0jPfVW1Y3
-         wcuyIvVRWEKRS16jreAN0eZFywobrSVO2AG8GL6CZpcfd6PcfYhKYX1EhlgftW4S1V0s
-         h53w==
-X-Gm-Message-State: AJIora9c/Ib/Xa9uDM7j9WQRu69SGVFULSCktnf6j/LXm2Y3Hls3iDck
-        Ob6336OpMxfTg2kUv7I5gDzSaOgG9P2q0eOOBj8b352uS4ZVUQ==
-X-Google-Smtp-Source: AGRyM1tcOjq2PV7D5Cf2k01aq9MpqaWCMGHYdZB9ytd/ZcVGEwSJYBapdwKkXVxQYPYI6yKi5fdOOCg/EWWc2tdPpqI=
-X-Received: by 2002:a05:6402:371a:b0:43a:ece9:ab8e with SMTP id
- ek26-20020a056402371a00b0043aece9ab8emr39311986edb.126.1658185383730; Mon, 18
- Jul 2022 16:03:03 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YSnQ3rapD15ubKyo5bpVJrV5ccHUA2lXa55ZKSPiAcQ=;
+        b=cLsKhepQkI1z9bgKzUbq7qrQlTvaxljM5bBu+n6fMlA7YlnPuMnOpvS1yAKQeomyMd
+         wkQQ6R5024d/OLNR9A3Wxs5oUC4kHj1Q1JL1QvJtGxwMhGITnVe6+un8VcN5AVrr9S30
+         3Z5jM0GT8Y6FLnPjgYUcY311KF9ymYKLz27w/AW8FSD1B3fb5tyc3W0jGhJLJstVI1Bm
+         v8R0x8xdVV6aU8h2DQFsNHZ3sCsHUvL+LG2U7t8HhGAPxf9e5likI9KiQKNUz7Zu84zn
+         1eMiBOKLIwjvzqjmojaeGXce+NauDe/3LGPQM+wgfzctcm+NSckmeivZ76PpcyIYAX+G
+         glVA==
+X-Gm-Message-State: AJIora8DvkuA1E2T4hHIafZ31NNANWr7AYjd8PXyQBOJ1UEKEpAx0ZjB
+        iyF62p3qZHf9Bj9mbxV3llOhrrfJxbKymQvoPUs=
+X-Google-Smtp-Source: AGRyM1stZ0RhzF/HMdIf5a64tnztumAuq4OccTGtUiHo2Ux4vHOKV9OCDQvnWU63LCBEav93w5bkMChYv8Roj3JEjK8=
+X-Received: by 2002:a17:907:2e0b:b0:72b:8720:487e with SMTP id
+ ig11-20020a1709072e0b00b0072b8720487emr27013999ejc.102.1658185934404; Mon, 18
+ Jul 2022 16:12:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1657907849.git.william.gray@linaro.org>
-In-Reply-To: <cover.1657907849.git.william.gray@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Jul 2022 01:02:52 +0200
-Message-ID: <CACRpkdbYriKi8QN-KrMN=teeqH=g2JwzB3qnCT1AaLcqTD=ssQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] gpio: Implement and utilize register structures
- for ISA drivers
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, John Hentges <jhentges@accesio.com>,
-        Jay Dolan <jay.dolan@accesio.com>,
-        Fred Eckert <Frede@cmslaser.com>,
-        Paul Demetrotion <pdemetrotion@winsystems.com>,
-        techsupport@winsystems.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de> <CACRpkdaBO=JzokGUF6uXZc7ASVD7LjqBxTLGwX-FShM=A9gw9A@mail.gmail.com>
+In-Reply-To: <CACRpkdaBO=JzokGUF6uXZc7ASVD7LjqBxTLGwX-FShM=A9gw9A@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 19 Jul 2022 01:11:37 +0200
+Message-ID: <CAHp75Ve44vigGk80xpFQ1BrwmA2n8LymKG=btw2ORuQFrM=hJQ@mail.gmail.com>
+Subject: Re: Is a multiplexer using latches a gpio controller?
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 10:56 PM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Tue, Jul 19, 2022 at 12:58 AM Linus Walleij <linus.walleij@linaro.org> w=
+rote:
+>
+> On Mon, Jul 18, 2022 at 10:22 PM Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
 
-> Changes in v3:
+...
 
-I'm happy with v3 from my POV, especially if also Andy's comments
-are also addressed in the next iteration.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> I would use the actual 74xx numbers for the TTL circuits in the compatibl=
+e.
+> I have actually merged this placeholder (without bindings nor driver):
+>
+>         /*
+>          * 74HC4094 which is used as a rudimentary GPIO expander
+>          * FIXME:
+>          * - Create device tree bindings for this as GPIO expander
+>          * - Write a pure DT GPIO driver using these bindings
+>          * - Support cascading in the style of gpio-74x164.c (cannot
+> be reused, very different)
+>          */
+>         gpio_74: gpio-74hc4094 {
+>                 compatible =3D "nxp,74hc4094";
+>                 cp-gpios =3D <&gpio0 0 GPIO_ACTIVE_HIGH>;
+>                 d-gpios =3D <&gpio0 1 GPIO_ACTIVE_HIGH>;
+>                 str-gpios =3D <&gpio0 2 GPIO_ACTIVE_HIGH>;
+>                 /* oe-gpios is optional */
+>                 gpio-controller;
+>                 #gpio-cells =3D <2>;
+>                 /* We are not cascaded */
+>                 registers-number =3D <1>;
+>                 gpio-line-names =3D "CONTROL_HSS0_CLK_INT",
+> "CONTROL_HSS1_CLK_INT", "CONTROL_HSS0_DTR_N",
+>                                 "CONTROL_HSS1_DTR_N", "CONTROL_EXT",
+> "CONTROL_AUTO_RESET",
+>                                 "CONTROL_PCI_RESET_N", "CONTROL_EEPROM_WC=
+_N";
+>         };
+>
+> What's nice with 74HC4094 is that it has a strobe (str) signal so you can=
+ send
+> out all the values and then strobe them out in one go. But your construct=
+ion
+> makes sense too!
 
-Yours,
-Linus Walleij
+But 4094 is SPI and covered by 74x164 driver, while Uwe's case is
+parallel drivers, which covered by
+74xx driver.
+
+--=20
+With Best Regards,
+Andy Shevchenko
