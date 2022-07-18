@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A83DA577F99
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 12:26:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35D47577FA7
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 12:29:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbiGRK0G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 06:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38532 "EHLO
+        id S234178AbiGRK3s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 06:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233880AbiGRK0F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 06:26:05 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C0B1ADA9
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 03:26:02 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id m16so14572918edb.11
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 03:26:02 -0700 (PDT)
+        with ESMTP id S234139AbiGRK3r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 06:29:47 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B791F1C93E
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 03:29:46 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id m13so4449276edc.5
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 03:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=dKtWhaBR01kOs5t5WfXdpceIgYotqV0N9c2snMDzhss=;
-        b=eCELGXkjvHTpXtFiONS0ZIaKrUr/5CzauZxqEEyEy3D7eaDEYpm1ZjZaMlh3e5KV17
-         0G/l0w2T63cSaQca04XnbyujUgSu71fNjvVIYf28TCD5JrkykpvdHk1yORyUPlczPOF7
-         Yvby5XaoYaaTBMTm/i2TS38nwb3haopn2n73FTpmVw1SoIP5iGwhEnWtAAaZ8lPJ3Dd/
-         xL9ldwA0LxH/CGxYxgFSxE1N+hOozkGjjIEYcWZ1j4YECHnRFQm7ezRHQ1A2Li7FPO0w
-         rtAtDc/LqCoQgrdfrxnHG0z8+axPgFjzhaT2nhP9stwoD+GYQR0zrJDyLIi4l9WPVqvu
-         4Hzg==
+        bh=sKM5awpHr7el0GeuVr26/+wwtxAG0q1PHjMwBcOjjts=;
+        b=rutmtYgUq+Ba2+Bv0EZdlEInayTULpWKgLgK1cRDVT4/jmKTMFpDnX0mr/Yt8qFu24
+         RASSdB8BiGTWF6uixdUvJTm1k3kS5IizXE0PZEHuHyJG+WwZrmLqPrfMgeGX3DoumiqF
+         ESargpIDPjE9pFbcu8JMw+TL7trxLKNn2UYsNR+F4IKDV2hNBmQY7KF1zo3thw5vJH3N
+         JqMzS1zRgjCUkJnVi2hpgZ8Yc01fai7/a4Do3+yH94njuU1w6irek2xiXGAe9BY0TREJ
+         DThjBP3p9XC45B1se7KotMA3rFKP0l77CzfU3fme1FBHrKwk3aSpjvATg7zhel1sMyk5
+         J0XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dKtWhaBR01kOs5t5WfXdpceIgYotqV0N9c2snMDzhss=;
-        b=Nfk0c+iGKDI9umE5vyn0gwGz8srvh4B0ZjJm7rlu+41qghpuer3EYjKbpZ2M3toHpW
-         z/OjrF9Zplb/F0A3bNO5xEKaedlPIABSqF6WBoX4g+ebubZOCfMIWl1Q1eV8JGXdrUVS
-         qa9mHAt75BTkpteEPv9yP+tyyHxu5hNxCMMPHTZ4qYPF5KAVBQYjHsyIPdhHzqRAnCOG
-         ZcdR2EQFtdnCWxD3nSNbOVidZi41Yjc+Z5X2NNrNzELz2ZHv+PU1oiPMj+DPgGXplEf8
-         hBUObMynRdTO3CAUbEsyxzjR2CwL/6j3xakg/JGC47xTcQJ1+oYQy4ZWJG86IyJkLDcw
-         khxA==
-X-Gm-Message-State: AJIora8HEvDrEL8X6xMKzY0bQ+RKQbYI3ZzoWUxXNQyZe33W9ebydFAE
-        L2JQJd4nrauz4zzM8iBy/L/AC2tgIC7tP8vVTU2f/A==
-X-Google-Smtp-Source: AGRyM1vt3WBOt5SUOQM8JApj4R0R+2atCLHZPl1/KIqBj7FYHEjjfhpRUAq+5DBM/3R/CqQ+qxJnWSE+o7moxkfGnB0=
-X-Received: by 2002:a05:6402:3307:b0:43a:826c:d8b4 with SMTP id
- e7-20020a056402330700b0043a826cd8b4mr36812978eda.32.1658139961475; Mon, 18
- Jul 2022 03:26:01 -0700 (PDT)
+        bh=sKM5awpHr7el0GeuVr26/+wwtxAG0q1PHjMwBcOjjts=;
+        b=ywmAMRL0WYRCa2C5bd4qrxU6oloJ1QHHKjvSd5JCJuSR15ZUq0ZoBJwK4qJ3Ecjbei
+         IZ+ydieSfal4mGDoG81n8v0oBk+sHO+sS3macvl1HTYz0AqVRRU4k2vKPi4vAkuL4rsp
+         pIZINFN1v6qYY4M7/q1a+CUHcq0lC+2TViAnF9sHnkAg6MW69BtNc1LGHT2CWADJGJRR
+         1/HzvpLEwnRsIHeldj9PLYiy1Xz5S1fD9F8Ckil9m2K7nFLyyfsF2UoMDOjayou98A9c
+         PZvrS4iXQBbu+SURDFpNlwahb6UTnQta/29FSj4bZI5ihzGTa+SySBObDp86ZerLkqG/
+         SlLQ==
+X-Gm-Message-State: AJIora/YywReCl2WdiTIrrBbxCRaZvzZZpbRnGVAzapJ/zm42MD67PlQ
+        lMzYYkhRRD9EXZZ7qLv2OylURpPjoTLs4whdMPSz1Q==
+X-Google-Smtp-Source: AGRyM1sQO2Si4Wai7llTNN0MLodyhtS3wCMM8NJdZjyYvK1VZyWIItNJRxT6FoP0UfHh060I+PUOTz/DTjycN3mTVz0=
+X-Received: by 2002:aa7:c0c4:0:b0:43a:20cf:3c68 with SMTP id
+ j4-20020aa7c0c4000000b0043a20cf3c68mr36444723edp.172.1658140185369; Mon, 18
+ Jul 2022 03:29:45 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220713131421.1527179-1-nuno.sa@analog.com> <YtAvHMmGay/3HACZ@smile.fi.intel.com>
  <e0638b02bdcd0ee452846b86ce83458173912ef1.camel@gmail.com>
  <YtBnIxh6rDJMwpEm@smile.fi.intel.com> <5d9f9272334177e3ea864467f50095a8709bc0d2.camel@gmail.com>
  <YtFYFbP+xqAUUHZa@smile.fi.intel.com> <88114aeb10f7316cf3c1396179949f2fc351ad8f.camel@gmail.com>
- <CAMRc=Mdz+8yfrATQPJ=uY33k2Dwt29g6vZbP3mSjkB_VAzP5+A@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdz+8yfrATQPJ=uY33k2Dwt29g6vZbP3mSjkB_VAzP5+A@mail.gmail.com>
+ <CAMRc=Mdz+8yfrATQPJ=uY33k2Dwt29g6vZbP3mSjkB_VAzP5+A@mail.gmail.com> <7aa6f7bc6c528fda0649888d282aef39f1d055d4.camel@gmail.com>
+In-Reply-To: <7aa6f7bc6c528fda0649888d282aef39f1d055d4.camel@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jul 2022 12:25:50 +0200
-Message-ID: <CACRpkda3dWd=MMA=5_eaqmhJQDgMem24maGWZ+W2A+AiFhrQtw@mail.gmail.com>
+Date:   Mon, 18 Jul 2022 12:29:34 +0200
+Message-ID: <CACRpkdaZTRwvWJkgSOaCE-281Mq5KXGS9pDaUKuF7O0Jje14CA@mail.gmail.com>
 Subject: Re: [PATCH 0/4] add support for bias pull-disable
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>,
+To:     =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
@@ -70,37 +70,34 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 9:31 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Fri, Jul 15, 2022 at 2:19 PM Nuno S=C3=A1 <noname.nuno@gmail.com> wrot=
-e:
+On Mon, Jul 18, 2022 at 9:50 AM Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-> Ideologically I don't have anything against adding this flag (except
+> > right in that the character device is the only way to set this mode
+> > ATM and. However I would like to see the first user added together
+> > with the series because adding features nobody uses in the mainline
+> > kernel tree is generally frowned upon and it's also not clear that
+> > anyone actually wants to use it.
+>
+> Hmm, you mean something like a system's devicetree needing this flag?
+> If so, I don't really have such a thing. I did all my testing on a rpi
+> using overlays.
 
-Ugh that sounds political :)
+I would assume a driver with a .set_config() responding to this flag?
 
-> that it should be called BIAS_DISABLE not PULL_DISABLE IMO). Nuno is
-> right in that the character device is the only way to set this mode
-> ATM and. However I would like to see the first user added together
-> with the series because adding features nobody uses in the mainline
-> kernel tree is generally frowned upon and it's also not clear that
-> anyone actually wants to use it.
+I actually think some gpio drivers using pin control as back-end
+such as
+drivers/pinctrl/bcm/pinctrl-bcm2835.c
+will do this out-of-the box after this patch but I may be wrong.
 
-I agree: makers and tinkerers definitely need this flag and it will further
-emplasize the transition to the character device and to the v2 character
-device interface (which, by the way, is looking awesome, especially when
-taken into the picture the libgpiod changes and the new language
-bindings for libgpiod).
-
-So we need to add this to become ever more appealing for one-offs
-such as industrial control.
+To me supporting this on the Rpi driver is a good enough demonstrator
+of the usefulness.
 
 Yours,
 Linus Walleij
