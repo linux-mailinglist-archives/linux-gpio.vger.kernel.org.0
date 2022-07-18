@@ -2,96 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBAA4578408
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 15:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 491D8578430
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Jul 2022 15:47:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234857AbiGRNne (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 09:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38256 "EHLO
+        id S232115AbiGRNrP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Jul 2022 09:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbiGRNnd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 09:43:33 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176FD248E9
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 06:43:32 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id x91so15363806ede.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 06:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hnfHfZxYNUZt/Px9ux9l14VbmfOCDnqYfPKEnB9z/no=;
-        b=AnHZKs0DXJjOJJ00mzghBpIrSTeMvfnlR9SpjD+0Ngy7A25lxpgsbgrTvYadxfFs3i
-         ekNFu09OZaRfC+OSxO0gfaj999gyBKfuM/LeR5If3pHoPFRtH4k1FZzxQy8nafE4J+13
-         1sOGaakvolq0P+RVcs1FvfHVBMtrxkF1vDqf8AtgQukbkKyygNZcQuIjluqtxl8uJn2T
-         UYvOqJCH7oWlseBBo5CXUoNga7xLCDXaMahcsx9QARuGoI40pngooYzijLG3ph1sCgqF
-         58neSor1L1qoO18p4hB3BdBt5Itakel5WNzZ1rNACC/791SYMzUDDsp3tYBr/9qUCSOJ
-         skMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hnfHfZxYNUZt/Px9ux9l14VbmfOCDnqYfPKEnB9z/no=;
-        b=pz4yww3hQOqXn/rG+z7oPKTtPX3qN8ZzD41JtQOP8DTz9M35O6YJZd8odda5yzgpr/
-         TUtC7Wpp9c8N9kOYhQeabnPZzkaGINTiJgCJkPmEFRDuKBa4DjWsKgt7z19+VZaw06Sr
-         oGKpTsYJRNrHwMQIQS+RrrEWh6qdoSsSlUoWBzY+xaTGHAo/2owp5ZDwahXVnwS7y3vi
-         X/60B7vuJBWe5qHw23L9icafYIOydYySwmpxyv3aKpCeQBIxwsvkLNlgGP6Im/kCrRNZ
-         doF6pSvGLr9fNhlQ4oY3CIbPclD00iGgsw8pm5Cx+9aPZyaz09NEcsTcooWSVTkDYfAo
-         8Ysg==
-X-Gm-Message-State: AJIora/qW/8nWbK9gRJitOuh3jLdnp6Jdo+Jf+AgsTOhm4hRRCzYrCDM
-        hNnvjWVeKWo8jCKfejhP67lJpc5DKUP13HTz32Ukhw==
-X-Google-Smtp-Source: AGRyM1tUllg8yDsJKjb0ainm4ebnVZKH+EWWmJB7x63T+CXhnVAYvvjjahiW31mzwxL9T/Uk9p27OBGYW7hbzKVa2Kg=
-X-Received: by 2002:a05:6402:34ce:b0:43a:a4bb:27a6 with SMTP id
- w14-20020a05640234ce00b0043aa4bb27a6mr36844792edc.158.1658151810702; Mon, 18
- Jul 2022 06:43:30 -0700 (PDT)
+        with ESMTP id S235441AbiGRNrC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 09:47:02 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8CDB1B7BC;
+        Mon, 18 Jul 2022 06:46:55 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id BD5E366015A2;
+        Mon, 18 Jul 2022 14:46:53 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1658152014;
+        bh=6W6w/V/cgC7i8dcLnR8Z1tgmXFyjXKpDCXUfV/w0+2c=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=YdS48N30Hps+3LGmWFkFB4fikJKuoYdrzAvLVEHRxUquGqm4k68AP27mMCJczodZn
+         95tmpuqcvKk2A1IsrYE6RWCLUFY1TinpdHHaVZw+wAIHJVtdXZuyxI9YCLGpn3DRFa
+         88o1fY2ybN9Cdm580ibkNjVmZ/S6f/2kYcoAxQlDqTkdnB1qvZ57O9Mmq9Wcj6r0rq
+         glEgQdfah3YCTHCL5ZSvezg0GGQPI0sLy/J/I7gIyqB/VB5A+//JyKekUZ2z4xyQ8e
+         MLV03qDJ9AYwJhExZBjBmNiTs/6g8nvGZuWTmUaXCOzsZNUP+iyJVw8xVmaRyxkLrA
+         EQq/7RcQsY/Og==
+Message-ID: <acfac038-3ac8-1748-1ffa-cb85771f2f6c@collabora.com>
+Date:   Mon, 18 Jul 2022 15:46:50 +0200
 MIME-Version: 1.0
-References: <20220716233745.1704677-1-vladimir.oltean@nxp.com>
-In-Reply-To: <20220716233745.1704677-1-vladimir.oltean@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jul 2022 15:43:19 +0200
-Message-ID: <CACRpkdZ4tdKwYBaTGzc4DX6H8Bsib1cDLkTnpTiipCL7uFquXQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fix kernel splats on boot with armada-37xx irqchip driver
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: Use drive-strength-microamp
+ in examples
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        matthias.bgg@gmail.com, sean.wang@mediatek.com,
+        nfraprado@collabora.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20220715103029.204500-1-angelogioacchino.delregno@collabora.com>
+ <CACRpkdYagmVAim68q=AOzrQfPw=fk5Q1z+B7X3nRDa-X4XukOw@mail.gmail.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <CACRpkdYagmVAim68q=AOzrQfPw=fk5Q1z+B7X3nRDa-X4XukOw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jul 17, 2022 at 1:38 AM Vladimir Oltean <vladimir.oltean@nxp.com> wrote:
+Il 18/07/22 15:35, Linus Walleij ha scritto:
+> On Fri, Jul 15, 2022 at 12:30 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+> 
+>> The property mediatek,drive-strength-adv was deprecated: change the
+>> example for i2c0-pins to use drive-strength-microamp.
+>>
+>> Fixes: b6d9af2c6b69 ("dt-bindings: pinctrl: mt8195: Add and use drive-strength-microamp")
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+> After finding this in my Inbox, drop my own uglyfix and apply this instead.
+> 
+> Yours,
+> Linus Walleij
 
-> Due to these splats on boot, lockdep disables itself on Armada 37xx and
-> we fail to see further useful information about real deadlocks.
->
-> For those in doubt, the approach to use raw spinlocks for irqchip
-> drivers has been previously discussed here and doesn't seem too
-> controversial.
-> https://lore.kernel.org/lkml/20210825205041.927788-1-vladimir.oltean@nxp.com/
->
-> Tested on the Turris MOX board.
->
-> Vladimir Oltean (2):
->   pinctrl: armada-37xx: make irq_lock a raw spinlock to avoid invalid
->     wait context
->   pinctrl: armada-37xx: use raw spinlocks for regmap to avoid invalid
->     wait context
-
-Patches applied for fixes so they get some rotation in linux-next.
-
-Reviewers have some days to react before I send this to Torvalds.
-
-Should these even be tagged for stable?
-
-Yours,
-Linus Walleij
+Thank you!
