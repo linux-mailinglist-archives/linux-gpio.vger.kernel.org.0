@@ -2,91 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27A0F57964E
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 11:29:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6247857967A
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 11:39:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236751AbiGSJ2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jul 2022 05:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
+        id S236607AbiGSJj6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jul 2022 05:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236028AbiGSJ2O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 05:28:14 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7310320BC7
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:28:13 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id z23so26031859eju.8
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:28:13 -0700 (PDT)
+        with ESMTP id S236527AbiGSJj5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 05:39:57 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EFD193EF
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:39:56 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id b11so26050611eju.10
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=i/7HApH+PR8w0pEKdojac5KuzIqTwfUj9SQA/gmxyxw=;
-        b=LefLhYBL4JrgNX/sxY+bupgnXlOeBrf+m4khsZIhHuM9DKD1RmZgkRKT+Okgnkfru9
-         Fw0iMIFjf1EW8AZKXKxcZvUY2k2cY3eq8C7+zsI6nYDWU1UihioGbvhrn1BpVrHfqWzw
-         ayRUuW2K5JqS7bBvO/xRt78vo4h03NpvhM0QP+imEtPp1KeOD8iHmfLmdlMjvGonPlAa
-         mJvhTpU5eXL6azKktPK/h24xLcS7Awi+oVwP0JU57SSVz/DlQk6zobFPhsSapmJzwXMv
-         snsDopgIsWajuhuU26eOqpUEd//FraZhBWoWAMxhJ1Ky2BgeqGQ0TmbCcGh6Yupj3F6u
-         Kb/Q==
+        bh=5DndlqaA0b5P7V8K0nn0nAB3Le3WzLS+1abdkdfA3oo=;
+        b=P/jGfw9dfIn9s6JombXuAjGvQDF7KcXmjJ4d+6Ifeq9/2USzPKmLqaeZWqUKfGzln8
+         ijamhG4b6HEdm+LH+cCJjLhOFG9rC/cQPhX/kWr/TvXfu9ZP55le7yCmDMBYIa3qvlaD
+         rIg6A1iNAQcATFJWK+qyrRGx6vfOXCASVyC3vviUeE4wbmdscpP7b9soWsI73ocoOzeJ
+         i/QBcEQ/UKWWwoUBT2xc+JB1/AzeVnH3kCporA3gTbtOawuR9yg34k7hvo/42IL4NW5c
+         EoW/DHb720Wtnhy4J7ixRYV2J5ssNJJ2C1aE79IugYcg2wePyCWuUuCZ6urikf1IvBiJ
+         rizA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=i/7HApH+PR8w0pEKdojac5KuzIqTwfUj9SQA/gmxyxw=;
-        b=nB14YnRN3MUvjCNn1/T86aSQb+8ZCYplHKFAmvFVf1Cpv+kOZ3eBxIfZnPUC2r38vl
-         HJdYuhSlG5hgsm3TTO8F1jW4/3+ivWFl9cKvDgFYuAZ4mTSXEkgwcjnEExEg0g9guU37
-         bEc+T33nxVetvs+emC5JQTY/sLKoa9kdV3CxnU+DdjxpNFhKufSF9R7Kx7X0dFyUa0a7
-         JwBpd3ATxwuAeW08OKOo+/s4gd8gmJ+s6L3ZFMSp1uD/GAPMy0IRCGDKITJq5dxH/fJv
-         W0rclX6CMiR+GRGLUWKcJRidmburGGYSW1+Ym6DKNqc82sIXJLCbreJZ3sVa6Us8cq+9
-         kBZA==
-X-Gm-Message-State: AJIora9FdZFC8yZdeK8Lrx7g0moVuh8gUMWY+JEK9ESjmOAvuU80Sjhn
-        IuvjrBddR44ed+RjA4aPAP36M/5veqsXnXC0o/6vfA==
-X-Google-Smtp-Source: AGRyM1uH3ecF4yDXkTHFnhirA/GVW6kvv65cnSZoUrbF7rWVUblE1QLvmtGbS+T3SGIxq2unxBX6nR90kOGotNmUuuk=
+        bh=5DndlqaA0b5P7V8K0nn0nAB3Le3WzLS+1abdkdfA3oo=;
+        b=IDMxCqKzBngmb+3s1pY7aKt7KCa+QBTIurmayIhNICBRIdjsiy5x5J2Eolg4J4Hqj3
+         ci6XWir0GX+T36ZewN9gPRaXFCKWbgT6n+yN1Oi5c4RsAoaryUy12nZ+deiAxlHwEaLZ
+         /4GI9/J1Ktv7owGcJAkNPmtwZZz5DE9cwxfnVkmSzmf4qml9NtxFMrQHq2Op6OiWcduH
+         5m0seJVl/cDFt/SQD88aeOtdhtE2proOGHO3CMDMte6+glRi/9C7XFdS9GdAsp78FkBv
+         3FkWH+fwZrVtz16+263xgpCLxVMtcx9GHD4QT9bmJCxdodq75AIlFVzYq/GwSmLqJgdZ
+         wuUQ==
+X-Gm-Message-State: AJIora/9onvghUjsYpwEE5dN1hLFKqi7BO8d3a8IW/pJjX9LhToXFOig
+        oe37uMET/Cx6K9EbzSwvwGPPghLV9md1IJwcWZS4FtPXjUE=
+X-Google-Smtp-Source: AGRyM1vFtK8TUGDMYBrRuEg8SZf4/xtpPIWPwFX2qAfgudgg/bOlvMyQLsdxgwrNDykyr7Z9TiT6g8vuOfCErrHlYQ8=
 X-Received: by 2002:a17:906:98c8:b0:72b:408f:f499 with SMTP id
- zd8-20020a17090698c800b0072b408ff499mr29608720ejb.736.1658222892051; Tue, 19
- Jul 2022 02:28:12 -0700 (PDT)
+ zd8-20020a17090698c800b0072b408ff499mr29650424ejb.736.1658223594794; Tue, 19
+ Jul 2022 02:39:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220715140729.136234-1-tsbogend@alpha.franken.de> <CAHp75VeCpUt1HVGnr1C3aKKgRFyo5qzW1aTiPyxSCdzFL=2EoA@mail.gmail.com>
-In-Reply-To: <CAHp75VeCpUt1HVGnr1C3aKKgRFyo5qzW1aTiPyxSCdzFL=2EoA@mail.gmail.com>
+References: <20220712143237.13992-1-henning.schild@siemens.com>
+ <20220712143237.13992-2-henning.schild@siemens.com> <CAMRc=Md7uVpwSweCSfrNJKqhQLYs2sVv9UasL59ZpqJ50fSC5w@mail.gmail.com>
+ <20220713123932.753367ec@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20220713123932.753367ec@md1za8fc.ad001.siemens.net>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 19 Jul 2022 11:28:01 +0200
-Message-ID: <CAMRc=Mfyz9f5hxt7Pb-9wzDqOYvrV6icuuH=KdW9oAvV-POQrg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: remove VR41XX related gpio driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Date:   Tue, 19 Jul 2022 11:39:44 +0200
+Message-ID: <CAMRc=McSXgCDB=1dX410BYPDw9skd5kRWC1SsoxkvFnrUnVdpA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] gpio: nct6116d: add new driver for several Nuvoton
+ super io chips
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Kuan-Wei Ho <cwho@nuvoton.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 9:06 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Wed, Jul 13, 2022 at 12:39 PM Henning Schild
+<henning.schild@siemens.com> wrote:
 >
-> On Fri, Jul 15, 2022 at 4:22 PM Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de> wrote:
-> >
-> > Commit d3164e2f3b0a ("MIPS: Remove VR41xx support") removed support
-> > for MIPS VR41xx platform, so remove exclusive drivers for this
-> > platform, too.
->
-> Removing code? This is always the best change ever!
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
-> (Also may be applied to the v3 of this patch)
->
-> --
-> With Best Regards,
-> Andy Shevchenko
 
-For some reason I don't have v3 in my inbox but fetched it from patchwork.
+[snip]
+
+> > > +
+> > > +static struct platform_driver nct6116d_gpio_driver = {
+> > > +       .driver = {
+> > > +               .name   = KBUILD_MODNAME,
+> > > +       },
+> > > +       .probe          = nct6116d_gpio_probe,
+> > > +};
+> > > +
+> > > +static int __init nct6116d_gpio_init(void)
+> > > +{
+> > > +       struct nct6116d_sio sio;
+> > > +       int err;
+> > > +
+> > > +       if (nct6116d_find(0x2e, &sio) &&
+> > > +           nct6116d_find(0x4e, &sio))
+> > > +               return -ENODEV;
+> > > +
+> > > +       err = platform_driver_register(&nct6116d_gpio_driver);
+> > > +       if (!err) {
+> > > +               err = nct6116d_gpio_device_add(&sio);
+> > > +               if (err)
+> > > +
+> > > platform_driver_unregister(&nct6116d_gpio_driver);
+> > > +       }
+> > > +
+> > > +       return err;
+> > > +}
+> >
+> > I'm confused - have we not discussed removing this part?
+>
+> Ah, i thought the problem was the use of subsys_initcall because the
+> comment was under that line.
+>
+> To he honest i do not know all the details since i really just received
+> that driver.
+>
+> What is happening here is that some init code goes and probes well
+> known ports to discover which chip might be connected there. Looking at
+> hwmon, watchdog and similar gpios ... that is the established pattern
+> for Super IOs.
+
+I just thought that you would use the simatic driver you mentioned to
+trigger the creation of the devices upon some event. This is what I
+got from your previous email. But that's fine - if there's a repeating
+pattern of doing it this way, then I won't object. I'm not an expert
+on Super IO kernel drivers.
+
+> Not DT or ACPI bindings. Something has to load that module to make it
+> init, where it will go and enumerate/poke around.
+>
+> While i could likely put a platform_device_register_simple("driver",
+> 0x42, "chip42") into the simatic platform, then the driver would be
+> pretty useless when not having ACPI (for there Super IOs in general!).
+> There already are hwmon and watchdog drivers for exactly that chip.
+>
+> watchdog/w83627hf_wdt.c
+> hwmon/nct6775*
+>
+> All are based on someone has to "know" and "modprobe", which will cause
+> "finding"
+>
+> The pattern we have here seems all copied from gpio/gpio-f7188x.c,
+> another super similar driver is gpio/gpio-winbond.c (which is param
+> based and not at all reusable in other drivers).
+>
+> Looking at hwmon or watchdog, Nuvoton/Fintek/Windbond are sometimes
+> called a family. But the driver landscape in the kernel is very spread
+> and a lot of copied around code. I did not even look into tty/serial or
+> whatever other functions these Super I/Os offer.
+>
+> Looking at the way Super IO chips are driven in the kernel, it seems
+> all about writing a driver for each sub-function (uart, hwmon, watchdog
+> ... and gpio). Where even very similar chips gets new drivers instead of
+> making existing drivers more generic.
+>
+> I am just observing this and proposing a "similar copy", which i did
+> not even write myself. At some point it might be better to rewrite all
+> that and make Super I/Os platforms that discover the chip once and then
+> register all the many devices they have. Where ressources are properly
+> reserved and not that really weird "superio_enter" with
+> "request_muxed_region(base, 2, DRVNAME)" which can be found all over
+> the place. But hey that allows a very smooth mix of in-tree and
+> out-of-tree.
+>
+
+A note on that: the kernel community explicitly has zero regard for
+out-of-tree code. :)
 
 Bart
+
+> When reviewing this driver i suggest to measure it against i.e. f7188
+> or winbond and maybe others.
+>
+> Say i would manage to make the nct6116d chip supported by f7188, would
+> that be acceptable? I would have the "init pattern" i need without
+> copying it. But i would add a Nuvoton chip to a Fintek driver ... might
+> be the same family ... no clue.
+>
+> Henning
+>
+> > Bart
+> >
+> > > +
+> > > +static void __exit nct6116d_gpio_exit(void)
+> > > +{
+> > > +       platform_device_unregister(nct6116d_gpio_pdev);
+> > > +       platform_driver_unregister(&nct6116d_gpio_driver);
+> > > +}
+> > > +module_init(nct6116d_gpio_init);
+> > > +module_exit(nct6116d_gpio_exit);
+> > > +
+> > > +MODULE_DESCRIPTION("GPIO driver for Nuvoton Super-I/O chips
+> > > NCT5104D, NCT6106D, NCT6116D, NCT6122D");
+> > > +MODULE_AUTHOR("Tasanakorn Phaipool <tasanakorn@gmail.com>");
+> > > +MODULE_LICENSE("GPL"); --
+> > > 2.35.1
+> > >
+>
