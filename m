@@ -2,206 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75E77578E40
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 01:27:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEC6A5793FC
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 09:19:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234074AbiGRX1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Jul 2022 19:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
+        id S235780AbiGSHTl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jul 2022 03:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234013AbiGRX1F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Jul 2022 19:27:05 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FF431227
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Jul 2022 16:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658186824; x=1689722824;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7R1IpoHSi7kye1OTFAtpUbej2Ddibdk9yZQjdRxsJqc=;
-  b=lBIVMbuFx4S7AxGAm2OBYF0JLXZJRknbEPZrXAef9gItrvXiVcjjkFGi
-   n0CJiNOFOOdNaO64oSNz+4LHacsT3EyGXQoMXYWodRJw0SYln2JOq4P+m
-   sX6OTrdZVrYBFDe+mSQfmxUVcuFGwTpZySEwmcirog/b0UofmISU/5chZ
-   Ca3d6IvVuxJU2XbosIbbdy6IIdSg07dtSBTTGmxKOUZ5rvIJxuoPEbwLm
-   E0yG5mCrk56SuZ5gqV/GPDfTB01WlNMu9xc0vr8Lk6avV96NPGK4Go6Y/
-   iCCT33k1yBybUUygaSG3rKayUnA97x+hCL6tm4oH73V8f9k51/r3fQ5Yz
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10412"; a="312029145"
-X-IronPort-AV: E=Sophos;i="5.92,282,1650956400"; 
-   d="scan'208";a="312029145"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 16:27:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,282,1650956400"; 
-   d="scan'208";a="547686566"
-Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 18 Jul 2022 16:27:02 -0700
-Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oDa8k-0004rU-9b;
-        Mon, 18 Jul 2022 23:27:02 +0000
-Date:   Tue, 19 Jul 2022 07:26:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 41ef3c1a6bb0fd4a3f81170dd17de3adbff80783
-Message-ID: <62d5ec30.UM/ZFjBLKmY3976Q%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S235808AbiGSHTk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 03:19:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9941A30564
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 00:19:39 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDhW5-0005qE-QX; Tue, 19 Jul 2022 09:19:37 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDhW4-001s0d-Gh; Tue, 19 Jul 2022 09:19:36 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDhW3-0067p2-Jb; Tue, 19 Jul 2022 09:19:35 +0200
+Date:   Tue, 19 Jul 2022 09:19:31 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: Is a multiplexer using latches a gpio controller?
+Message-ID: <20220719071931.lcbbwoei6nmd6kx5@pengutronix.de>
+References: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de>
+ <CAHp75VeRfguxwjf3y3qWSQCwQF=cOFvt7iP0KVJMnGwdyPvUnA@mail.gmail.com>
+ <CAHp75Vdx+2zJ_dNAgXHnRPhMn7csX=P-NPcvHWmMJ1iLZ_WYBg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wifb3h2noeqsijbd"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdx+2zJ_dNAgXHnRPhMn7csX=P-NPcvHWmMJ1iLZ_WYBg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 41ef3c1a6bb0fd4a3f81170dd17de3adbff80783  pinctrl: Don't allow PINCTRL_AMD to be a module
 
-elapsed time: 725m
+--wifb3h2noeqsijbd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 125
-configs skipped: 6
+On Tue, Jul 19, 2022 at 12:11:56AM +0200, Andy Shevchenko wrote:
+> On Tue, Jul 19, 2022 at 12:05 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Mon, Jul 18, 2022 at 10:27 PM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > Hello,
+> > >
+> > > we have a customer board here that uses two 8 port latches to drive
+> > > LEDs. The setup looks as follows:
+> > >
+> > > CLK0 ----------------------.        ,--------.
+> > > CLK1 -------------------.  `--------|>    #0 |
+> > >                         |           |        |
+> > > IN0 -----------------+--|-----------|D0    Q0|-----|=E2=97=81
+> > > IN1 ---------------+-|--|-----------|D1    Q1|-----|=E2=97=81
+> > > IN2 -------------+-|-|--|-----------|D2    Q2|-----|=E2=97=81
+> > > IN3 -----------+-|-|-|--|-----------|D3    Q3|-----|=E2=97=81
+> > > IN4 ---------+-|-|-|-|--|-----------|D4    Q4|-----|=E2=97=81
+> > > IN5 -------+-|-|-|-|-|--|-----------|D5    Q5|-----|=E2=97=81
+> > > IN6 -----+-|-|-|-|-|-|--|-----------|D6    Q6|-----|=E2=97=81
+> > > IN7 ---+-|-|-|-|-|-|-|--|-----------|D7    Q7|-----|=E2=97=81
+> > >        | | | | | | | |  |           `--------'
+> > >        | | | | | | | |  |
+> > >        | | | | | | | |  |           ,--------.
+> > >        | | | | | | | |  `-----------|>    #1 |
+> > >        | | | | | | | |              |        |
+> > >        | | | | | | | `--------------|D0    Q0|-----|=E2=97=81
+> > >        | | | | | | `----------------|D1    Q1|-----|=E2=97=81
+> > >        | | | | | `------------------|D2    Q2|-----|=E2=97=81
+> > >        | | | | `--------------------|D3    Q3|-----|=E2=97=81
+> > >        | | | `----------------------|D4    Q4|-----|=E2=97=81
+> > >        | | `------------------------|D5    Q5|-----|=E2=97=81
+> > >        | `--------------------------|D6    Q6|-----|=E2=97=81
+> > >        `----------------------------|D7    Q7|-----|=E2=97=81
+> > >                                     `--------'
+> > >
+> > >
+> > > So to change output 2 of latch #1 you have to apply the changed level=
+ on
+> > > IN2, apply the previous level on the other inputs (to keep the other
+> > > outputs constant) and toggle CLK1 once.
+> > >
+> > > This way you can drive 16 LEDs (or in general outputs) using only 10
+> > > GPIOs. (And with a higher number of latches the proportion becomes a =
+bit
+> > > more useful.)
+> > >
+> > > Actually this construct is a general GPO (no input :-) controller, an=
+d I
+> > > wonder if you would accept a driver that models it as a gpio controll=
+er.
+> > >
+> > > The dt binding could look as follows:
+> > >
+> > > latch-gpo {
+> > >         compatible =3D "latch-gpo";
+> > >         pinctrl-0 =3D <...>;
+> > >         pinctrl-names =3D <...>;
+> > >
+> > >         clk-gpios =3D /* CLK0 */ <...>, /* CLK1 */ <...>;
+> > >         data-gpios =3D /* IN0 */ <...>, /* IN1 */ <...>, ...;
+> > > };
+> > >
+> > > What do you think?
+> >
+> > Bart, what happened to the [1]? Is it abandoned, forgotten?
+> >
+> > Uwe, isn't it what you need?
+>=20
+> It needs "downstream" GPIO and ->get_direction(), etc should act accordin=
+gly.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+No, IIUC this is different. With a multiplexer there can always only be
+a single line that is controlled (or read) and the other lines are (I
+assume) high-z.
 
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                 randconfig-c001-20220718
-powerpc                     tqm8541_defconfig
-sh                          landisk_defconfig
-sh                          r7785rp_defconfig
-sh                            migor_defconfig
-powerpc                      tqm8xx_defconfig
-m68k                       m5249evb_defconfig
-nios2                            allyesconfig
-arm                           corgi_defconfig
-powerpc                 mpc834x_mds_defconfig
-arc                                 defconfig
-arm                        spear6xx_defconfig
-parisc                generic-32bit_defconfig
-sh                   sh7770_generic_defconfig
-xtensa                    xip_kc705_defconfig
-sh                           se7206_defconfig
-sparc                       sparc32_defconfig
-powerpc                  iss476-smp_defconfig
-sh                          sdk7786_defconfig
-arm                         axm55xx_defconfig
-arc                               allnoconfig
-arm                       omap2plus_defconfig
-arc                              alldefconfig
-m68k                          multi_defconfig
-mips                    maltaup_xpa_defconfig
-arm                        oxnas_v6_defconfig
-ia64                      gensparse_defconfig
-arm                            pleb_defconfig
-arm                        mini2440_defconfig
-sh                               alldefconfig
-arm                          lpd270_defconfig
-mips                       bmips_be_defconfig
-arc                           tb10x_defconfig
-arm                        keystone_defconfig
-powerpc                     stx_gp3_defconfig
-powerpc                      ppc6xx_defconfig
-arm                            qcom_defconfig
-m68k                       m5208evb_defconfig
-arm                       imx_v6_v7_defconfig
-m68k                        mvme16x_defconfig
-arm                             pxa_defconfig
-sh                   secureedge5410_defconfig
-xtensa                  audio_kc705_defconfig
-arm                           tegra_defconfig
-nios2                               defconfig
-powerpc                 mpc834x_itx_defconfig
-sh                           se7619_defconfig
-ia64                          tiger_defconfig
-arc                    vdk_hs38_smp_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-loongarch                           defconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-x86_64               randconfig-k001-20220718
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64               randconfig-a014-20220718
-x86_64               randconfig-a016-20220718
-x86_64               randconfig-a012-20220718
-x86_64               randconfig-a013-20220718
-x86_64               randconfig-a015-20220718
-x86_64               randconfig-a011-20220718
-i386                 randconfig-a015-20220718
-i386                 randconfig-a011-20220718
-i386                 randconfig-a012-20220718
-i386                 randconfig-a014-20220718
-i386                 randconfig-a016-20220718
-i386                 randconfig-a013-20220718
-s390                 randconfig-r044-20220718
-riscv                randconfig-r042-20220718
-arc                  randconfig-r043-20220718
-arc                  randconfig-r043-20220717
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
+The latch approach above is about 16 outputs and at all times the state
+off all 16 lines is fixed because the latches keep their state when the
+clk line is kept stable.
 
-clang tested configs:
-mips                        qi_lb60_defconfig
-arm                         bcm2835_defconfig
-powerpc                    ge_imp3a_defconfig
-arm                       aspeed_g4_defconfig
-mips                     loongson1c_defconfig
-mips                      bmips_stb_defconfig
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                 randconfig-a004-20220718
-i386                 randconfig-a001-20220718
-i386                 randconfig-a005-20220718
-i386                 randconfig-a006-20220718
-i386                 randconfig-a002-20220718
-i386                 randconfig-a003-20220718
-x86_64               randconfig-a001-20220718
-x86_64               randconfig-a005-20220718
-x86_64               randconfig-a003-20220718
-x86_64               randconfig-a002-20220718
-x86_64               randconfig-a006-20220718
-x86_64               randconfig-a004-20220718
-hexagon              randconfig-r041-20220717
-hexagon              randconfig-r045-20220717
-hexagon              randconfig-r041-20220718
-hexagon              randconfig-r045-20220718
+Best regards
+Uwe
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> > [1]: https://lore.kernel.org/linux-gpio/20220205215918.8924-1-maukka@ex=
+t.kapsi.fi/
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wifb3h2noeqsijbd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLWWwEACgkQwfwUeK3K
+7AkZ3QgAgnYtrl6iANT2kF3te5qFU66xc0nkBNL1ggEU07PJgTsbbds3D9gn+d5a
+eya9o75nO5iWp/EJS1C0e6uMP6Bmzm2hy9gxYdunWKlr3+oGVPINOQDeM1H6H/yP
+m1QyGR774f8bo+K6/DdyO7S28oNN1RlKSe6mzc0UYMaUiZxDmyB4ZkXAjcvxSBPa
+yHXX/7an+sxl7YJKbh8un3KRjj7Bynbd7K/8tuEGyBvpFL/tFqZ28gk8ti4lX7Ep
+cwN9oypE5ubX74sGZX18UlrzRbTOu/cjoZV20Rpj9HSoa9NJ1zbpRyyjg7nrScVX
+RWjwVq1fZkBRn/+JG9YaNf9psnyKXg==
+=TJj9
+-----END PGP SIGNATURE-----
+
+--wifb3h2noeqsijbd--
