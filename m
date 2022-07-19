@@ -2,78 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A661C57947E
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 09:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65B23579488
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 09:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234396AbiGSHr5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jul 2022 03:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38618 "EHLO
+        id S232757AbiGSHtZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jul 2022 03:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232085AbiGSHr5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 03:47:57 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B0222B34
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 00:47:56 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id 89-20020a17090a09e200b001ef7638e536so20491178pjo.3
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 00:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fZvYFTQVWADi8JgqnZ6cTCBLOf5nfyb++I9Q8W9P3TU=;
-        b=rS3eNboYNUbV5YTV7UweX1aBei0pk0eAjbMBOoeSTOyva/8H3/zLSPn56ETr1wTuSC
-         X6rxYkItGvztKmfuGsmTzcYEDWNfGqixq3CQ4N0QbotHVpvxiFu/rPgxCrXEcpcshs4q
-         A8lTmLGOfiwyxGIn6FYXNON0KE2dGL9DeXq+cGUz0j3vo/iaz5Ok+4k5yrVMmI0Iiprr
-         24mr6evwQ83HD1Z96mKhNqki/Gv9N0HMvI+dRdN3FEDQO+sZG9WfIOp480/W+j4uwjhB
-         UMxWHpd9BJnLQq5ukuFaHU0RqnZhIAJ5cDZYwTDELtxIi8coKNigJCVYhkaXpuR2oorY
-         GaOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fZvYFTQVWADi8JgqnZ6cTCBLOf5nfyb++I9Q8W9P3TU=;
-        b=iq21DNSlL+E9NwH6aClz48W2U5R9caFC2xo9CJ15ubWGAfUgypxa8Z/5hNDBWSbFD3
-         naU0F3T/9IsKMFIA7JG3S3HbL0SnURsKxSwoml3gYdAXsb5pj5vZ7Zm5Jn/N9JJHnzK4
-         3RNHtvU76u8Wb8BImXztLb6PCegAWm0/B5/6Pu1w2wsUFCxk0Jzehnltn8sm7yq2a7pK
-         KDCPjCxQo7QkmYpyUPuvVLrvQXaI/SXzsGS005whi7i1cHYtmXDIoDNnqbjWg/n1Gk1f
-         8yQk5FvxgVdet+NYgctPJnfHBy9g5QbgA3tTfnFzDAlt28jYdavujnyj16kRG+e1wznH
-         o+vw==
-X-Gm-Message-State: AJIora9fmaZboFH1BNyM4kw/9FDQtaMepNO/BULw/zrVJfWRzs70EE1W
-        xh1F2touLL64hS0EuUaLsx8D
-X-Google-Smtp-Source: AGRyM1vhGsYy0ZCs7uCK5IyNM/JATxHm5llih9735ndNReIUaUR4bNWVTvb8U7jYVVeY4XEkNie0Ug==
-X-Received: by 2002:a17:90a:590e:b0:1f1:afeb:996 with SMTP id k14-20020a17090a590e00b001f1afeb0996mr14350841pji.205.1658216875538;
-        Tue, 19 Jul 2022 00:47:55 -0700 (PDT)
-Received: from thinkpad ([117.217.180.99])
-        by smtp.gmail.com with ESMTPSA id y6-20020aa79e06000000b00528655cd6a6sm10697477pfq.53.2022.07.19.00.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jul 2022 00:47:55 -0700 (PDT)
-Date:   Tue, 19 Jul 2022 13:17:51 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
-Message-ID: <20220719074751.GA25065@thinkpad>
-References: <20220624195112.894916-1-robimarko@gmail.com>
- <87edyq1ujr.wl-maz@kernel.org>
- <20220712124445.GC21746@workstation>
- <87czea1i2f.wl-maz@kernel.org>
- <CAOX2RU5RX+H=omuKGye2fBy9dOFmfC9HC_3pekeGMxDJuReCUw@mail.gmail.com>
- <d8912a0d811b5eb924b8c4136b099f72@kernel.org>
- <CAOX2RU4MpyEQ0RtcrZ07VXRbB+SWWU=1zWfYUXhQFtvh=MCiDw@mail.gmail.com>
+        with ESMTP id S236971AbiGSHtY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 03:49:24 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B52523BEA
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 00:49:24 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDhys-0001pc-CT; Tue, 19 Jul 2022 09:49:22 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDhyr-001s4j-LM; Tue, 19 Jul 2022 09:49:21 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oDhyq-0067un-UC; Tue, 19 Jul 2022 09:49:20 +0200
+Date:   Tue, 19 Jul 2022 09:49:19 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        kernel@pengutronix.de
+Subject: Re: Is a multiplexer using latches a gpio controller?
+Message-ID: <20220719074919.uawwqoefcgi4rjvt@pengutronix.de>
+References: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de>
+ <CACRpkdaBO=JzokGUF6uXZc7ASVD7LjqBxTLGwX-FShM=A9gw9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dzsvlc56kvz37hvb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOX2RU4MpyEQ0RtcrZ07VXRbB+SWWU=1zWfYUXhQFtvh=MCiDw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <CACRpkdaBO=JzokGUF6uXZc7ASVD7LjqBxTLGwX-FShM=A9gw9A@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,124 +52,144 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 02:33:32PM +0200, Robert Marko wrote:
-> On Wed, 13 Jul 2022 at 13:47, Marc Zyngier <maz@kernel.org> wrote:
+
+--dzsvlc56kvz37hvb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 19, 2022 at 12:54:18AM +0200, Linus Walleij wrote:
+> On Mon, Jul 18, 2022 at 10:22 PM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+>=20
+> > we have a customer board here that uses two 8 port latches to drive
+> > LEDs. The setup looks as follows:
+>=20
+> Very nice drawing!
+>=20
+> > So to change output 2 of latch #1 you have to apply the changed level on
+> > IN2, apply the previous level on the other inputs (to keep the other
+> > outputs constant) and toggle CLK1 once.
 > >
-> > On 2022-07-13 12:08, Robert Marko wrote:
-> > > On Tue, 12 Jul 2022 at 17:12, Marc Zyngier <maz@kernel.org> wrote:
-> > >>
-> > >> On Tue, 12 Jul 2022 13:44:45 +0100,
-> > >> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > >> >
-> > >> > On Tue, Jul 12, 2022 at 11:42:32AM +0100, Marc Zyngier wrote:
-> > >> > > On Fri, 24 Jun 2022 20:51:12 +0100,
-> > >> > > Robert Marko <robimarko@gmail.com> wrote:
-> > >> > > >
-> > >> > > > Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> > >> > > > immutable") added a warning to indicate if the gpiolib is altering the
-> > >> > > > internals of irqchips.
-> > >> > > >
-> > >> > > > Following this change the following warning is now observed for the SPMI
-> > >> > > > PMIC pinctrl driver:
-> > >> > > > gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
-> > >> > > >
-> > >> > > > Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
-> > >> > > >
-> > >> > > > Signed-off-by: Robert Marko <robimarko@gmail.com>
-> > >> > > > ---
-> > >> > > >  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 22 ++++++++++++----------
-> > >> > > >  1 file changed, 12 insertions(+), 10 deletions(-)
-> > >> > > >
-> > >> > > > diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > >> > > > index c3255b0bece4..406ee0933d0b 100644
-> > >> > > > --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > >> > > > +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > >> > > > @@ -171,7 +171,6 @@ struct pmic_gpio_state {
-> > >> > > >   struct regmap   *map;
-> > >> > > >   struct pinctrl_dev *ctrl;
-> > >> > > >   struct gpio_chip chip;
-> > >> > > > - struct irq_chip irq;
-> > >> > > >   u8 usid;
-> > >> > > >   u8 pid_base;
-> > >> > > >  };
-> > >> > > > @@ -988,6 +987,17 @@ static void *pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
-> > >> > > >   return fwspec;
-> > >> > > >  }
-> > >> > > >
-> > >> > > > +static const struct irq_chip spmi_gpio_irq_chip = {
-> > >> > > > + .name           = "spmi-gpio",
-> > >> > > > + .irq_ack        = irq_chip_ack_parent,
-> > >> > > > + .irq_mask       = irq_chip_mask_parent,
-> > >> > > > + .irq_unmask     = irq_chip_unmask_parent,
-> > >> > >
-> > >> > > No, this is wrong. Please look at the documentation to see how you
-> > >> > > must now directly call into the gpiolib helpers for these two
-> > >> > > callbacks.
-> > >> > >
-> > >> >
-> > >> > IIUC, you are referring to gpiochip_disable_irq() and
-> > >> > gpiochip_enable_irq() APIs.
-> > >>
-> > >> I am indeed.
-> > >>
-> > >> > These APIs are supposed to let the gpiolib know about that the IRQ
-> > >> > usage of these GPIOs. But for the case of hierarchial IRQ domain,
-> > >> > isn't the parent is going to do that?
-> > >>
-> > >> Why would it? The parent has no clue about what sits above it. In a
-> > >> hierarchical configuration, each level is responsible for its own
-> > >> level, and the GPIO layer should be responsible for its own
-> > >> management.
-> > >>
-> > >> > Please correct me if I'm wrong.
-> > >>
-> > >> I'm afraid you are, and this patch is a fairly obvious change in
-> > >> behaviour, as the callbacks you mention above are not called anymore,
-> > >> while they were before.
-> > >>
-> > >> If they are not necessary (for reasons I can't fathom), then this
-> > >> should be clearly explained.
-> > >
-> > > Hi Marc,
-> > > I will look at IRQ GPIO docs, but in this case, then we have more
-> > > conversions that
-> > > are not correct.
+> > This way you can drive 16 LEDs (or in general outputs) using only 10
+> > GPIOs. (And with a higher number of latches the proportion becomes a bit
+> > more useful.)
 > >
-> > Then please point them out.
-> 
-> Oh, now I get the issue, I was misunderstanding it completely.
-> gpiochip_enable_irq and gpiochip_disable_irq are not being called
-> at all.
-> 
-> However, I dont see them being called before the conversion as well.
-> I am not really familiar with the PMIC IRQ-s, looked like an easy conversion
-> to get rid of the warning.
-> 
-> Manivannan can you shed some light on this?
-> 
+> > Actually this construct is a general GPO (no input :-) controller, and I
+> > wonder if you would accept a driver that models it as a gpio controller.
+>=20
+> In my opinion, yes.
 
-I hope you got the answer by now. When I looked into the conversion I saw that
-there were missing calls to gpiochip_{enable/disable}_irq APIs. But at that
-time I blindly assumed (yeah very bad of myself) that the parent irqchip will
-handle that :(
+ok, fine.
 
-Anyway, you should call these helpers from the mask/unmask callbacks as a part
-of the conversion patch. Let me know if you are onto it or not!
-
-Thanks,
-Mani
-
-> Regards,
-> Robert
-> 
-> 
-> 
-> 
-> 
+> > The dt binding could look as follows:
 > >
-> >          M.
-> > --
-> > Jazz is not dead. It just smells funny...
+> > latch-gpo {
+> >         compatible =3D "latch-gpo";
+> >         pinctrl-0 =3D <...>;
+> >         pinctrl-names =3D <...>;
+> >
+> >         clk-gpios =3D /* CLK0 */ <...>, /* CLK1 */ <...>;
+> >         data-gpios =3D /* IN0 */ <...>, /* IN1 */ <...>, ...;
+> > };
+> >
+> > What do you think?
+>=20
+> I would use the actual 74xx numbers for the TTL circuits in the compatibl=
+e.
 
--- 
-மணிவண்ணன் சதாசிவம்
+To be actually useful I need at least two latches. In my case their
+name is SN74LS273. (https://www.ti.com/lit/ds/symlink/sn74ls273.pdf)
+So I hesitate to call this "ti,sn74ls273" because that would suggest a
+single such chip?!
+
+> I have actually merged this placeholder (without bindings nor driver):
+>=20
+>         /*
+>          * 74HC4094 which is used as a rudimentary GPIO expander
+>          * FIXME:
+>          * - Create device tree bindings for this as GPIO expander
+>          * - Write a pure DT GPIO driver using these bindings
+>          * - Support cascading in the style of gpio-74x164.c (cannot
+> be reused, very different)
+>          */
+>         gpio_74: gpio-74hc4094 {
+>                 compatible =3D "nxp,74hc4094";
+>                 cp-gpios =3D <&gpio0 0 GPIO_ACTIVE_HIGH>;
+>                 d-gpios =3D <&gpio0 1 GPIO_ACTIVE_HIGH>;
+>                 str-gpios =3D <&gpio0 2 GPIO_ACTIVE_HIGH>;
+>                 /* oe-gpios is optional */
+>                 gpio-controller;
+>                 #gpio-cells =3D <2>;
+>                 /* We are not cascaded */
+>                 registers-number =3D <1>;
+>                 gpio-line-names =3D "CONTROL_HSS0_CLK_INT",
+> "CONTROL_HSS1_CLK_INT", "CONTROL_HSS0_DTR_N",
+>                                 "CONTROL_HSS1_DTR_N", "CONTROL_EXT",
+> "CONTROL_AUTO_RESET",
+>                                 "CONTROL_PCI_RESET_N", "CONTROL_EEPROM_WC=
+_N";
+>         };
+
+This is different (as Andy pointed out): With this chip you have to
+clock in the $n values serially while with my approach you have a
+parallel input.
+
+I think for the serial approach you don't even need to consider a
+register-number. IIUC a cascade just behaves like a single chip with
+more stages, right? Then I'd not specify a "registers-number" but a
+number of stages. And then that's just (as Andy pointed out) a spi
+device. I would represent that as follows:
+
+=09
+	spi {
+		compatible =3D "spi-gpio";
+		#address-cells =3D <0x1>;
+		#size-cells =3D <0x0>;
+
+		sck-gpios =3D <&gpio0 0 GPIO_ACTIVE_HIGH>;
+		//miso-gpios =3D ??
+		mosi-gpios =3D <&gpio0 1 GPIO_ACTIVE_HIGH>;
+		cs-gpios =3D <&gpio0 2 GPIO_ACTIVE_HIGH>;
+		num-chipselects =3D <1>;
+
+		gpio-74hc4094 {
+			compatible =3D "nxp,74hc4094";
+			reg =3D <0>;
+
+			oe-gpios =3D <...>; /* optional */
+			num-stages =3D <8>; /* =3D default value */
+
+			gpio-controller;
+			#gpio-cells =3D <2>;
+
+			gpio-line-names =3D ...;
+		};
+	}
+
+(And if you have a "native" spi bus, even better.) This way the
+nxp,74hc4094 driver becomes way easier.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--dzsvlc56kvz37hvb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLWYfwACgkQwfwUeK3K
+7AkJ+Qf8CxDiQXEZqpppQeZ3i5B2VM3eZlKnhqHK2Q/Olt0WsNj1WSL1WycywlZ3
+itPyy+kgzPITcr/+x1enDcjrDo2LO1LG32qPOp3mmAFsumJLOf0WhyWMs791t4az
+LF41F+hpsWdC51ZDh7koQr3nqO010JEa00VR3UxSE3iER6PyNLH3hFDolBW0e55r
+PQV/nD8BkojCKV4VIS44LH1/PEN5PGXgRyfALeTTnyHUddRPuoaY5kKwsLeRmy4V
+OneBtoGLmm1kPuWSb08jgIG5ou87zH7X3ZXwYo60pwUi+30ykQYshIoY7LHKscLg
+iwjqNPqw9PPIsSbGXEowg750KJBNLg==
+=s+4W
+-----END PGP SIGNATURE-----
+
+--dzsvlc56kvz37hvb--
