@@ -2,143 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06F6D5795E6
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 11:14:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67DC6579638
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Jul 2022 11:22:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236495AbiGSJO5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jul 2022 05:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44074 "EHLO
+        id S235378AbiGSJWY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Jul 2022 05:22:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236527AbiGSJOu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 05:14:50 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB3F26558
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:14:48 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id e15so18728787edj.2
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:14:48 -0700 (PDT)
+        with ESMTP id S237337AbiGSJWH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 05:22:07 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E5B2AD6
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:21:36 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id va17so26078644ejb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 02:21:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/ACTSpTsTqX7A3W4uLC3rV5eMlRf/qILnDAzAz4VXdI=;
-        b=d5D7ElkUQFzhtHOaEl/PtsmXs1fpH23EV43d/mkA4zlsjs4qkUl1933urX2GBWN35F
-         nXKg+moRX3k/RiKRqaAFbhrxekFy+2o210oBH0kl+YEAcKpWU60pcdcImFxDbd5WoOHl
-         MUySqWRBTNsIuvAsJgN6ZyQ8KflPOA3xWrNDw9O5cBMKzZJM+YwLX9HbSGzerb+1BmSI
-         bbEgATU5tfLrfsgQ1OHoDuZS3UrI7TMAJ+S9CAW51DqZA/YnBkKavHAA9wgyqfflFvKZ
-         MFtiD3Co16DqDhFDa2+BExkCZ5CgxCMtwZQXC1FMSAx8NCglskgyBOaH4kFoT63nyd4E
-         L1vg==
+         :cc;
+        bh=INTQjcWcr/QjOpY0vV/JrcllEZpH/ydbnWHRYlb2hBk=;
+        b=oIvQwQHV8n/DVNeqYe1ilxSLtuSa/X/RjjmdlF4ZGBd9+ibI3LqDxI2sf3aMW2HqS+
+         76QpIFw1c4ewp5ZePsl8BzBwx9xR0CoF1Cuwc7ZBJl2CHMC2ZLcwHvtTVGGmENxnQDfs
+         g0ecQvJHGJ2cRuX0O/Og8ImkS0JM4jTwIJjr8dlJNJL1ui4qM4iS1WBCSrNfQeRImh6X
+         55ipNWzUmfaAuy3Sjz+k67StakZy1MRt55NwbvMqLzWl9MMMdq0hBehE3M4toB0AH9CV
+         FeCr3kFUBpTsX4KMf5Zs3cGRYLGoO/wwmB7hAj0gkjuaUO/FElFdP24W2eCS0JMBJIer
+         vDvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/ACTSpTsTqX7A3W4uLC3rV5eMlRf/qILnDAzAz4VXdI=;
-        b=X8W0VoLTSFNJkfQjQPp0mhNbTDN6rCiC7Z9qj3yOehXHsxz2obRZWsIqPs30YHGvwc
-         cks5d0oMF/yWHkcLZtYQJqWFrLdJ4P1YMfQFbN3098SxFVNZzNKnLp8IiDFVJANPmnXV
-         HOBHu0EnbOZuYa3gYxpP3G17oS9TnMaMwOJDLkVDQJKIlW8RVtWelm4UspYjrXzfgfD4
-         OMW4stdvpUun4wI7imct4NnRRpfkxKKpfNmdsYyEWsj264WiGlSvO+EqRDob///Akidu
-         d+nMZobOv97KRH0IPcBBQle5iiPuGM/c0m2zsILq+q/4jh9OHMo7rmad2SARUfSs/DQI
-         nUtg==
-X-Gm-Message-State: AJIora99PBDlW5y2qn46VitREx17NLZSJzNxmIdHZtqXwMerhA1KbPyF
-        mzV/HRmoED2RfXoSj3wsKNzI6nXT1A039jah52BDNQ==
-X-Google-Smtp-Source: AGRyM1t15DGxlnJ8KDfBuNALNYBrQ/tIiuIFbbjsarwTCSGbhSYa64cau9lXmZT0YGKYCk+FR/ArnEPt0iEB0wCL5po=
-X-Received: by 2002:a05:6402:4c3:b0:43a:f612:179d with SMTP id
- n3-20020a05640204c300b0043af612179dmr42764636edw.422.1658222087537; Tue, 19
- Jul 2022 02:14:47 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=INTQjcWcr/QjOpY0vV/JrcllEZpH/ydbnWHRYlb2hBk=;
+        b=PGdTfxm9WGHTzH5lJSPQ63fLkV1rB7mG6mhRR/xD5pxb25QC5JGTQNK3idDR0BNB1M
+         mE/1mU2k5U4t8I4AaMRORO2bvF7m2oKpJWzHzYdIsOCAH30endycpubQKn9TaUzhn2wL
+         qImztT2CjG7EKs41Brq7sW3lpfGZ0tis/wYSLPBHcu4vo4g2BjgwXaFadBvPHTzS2gao
+         YVjMX3YNbKEzFZw3kXkT3hYI0pjwS9drtGSDj5jWr9hyLeQRiWD2Rxac3IVOdzbtRlN+
+         YX5czH+C1hBKnM+rZrWg5P4n3CTsGp9oLEhfvFmhoi2/moiv7qJOEmqGYpZu+1sbVcpH
+         Fv5g==
+X-Gm-Message-State: AJIora9nAqOafCzaIdPaKGKAfUK0PUm26MOcARvjaSyPQuXoVEU/NcID
+        oolRlPiULjl0H+4X5HodfaJhwnV4tM1K+ozl1oFvIA==
+X-Google-Smtp-Source: AGRyM1umShCcU+N4BdC2XPEI0GJtxWY0FLfFIxLPE8Nh7p2exqBv+S7XY5Ho/73OgSHc2ROySWMTNdGtGzxWjWMMywY=
+X-Received: by 2002:a17:907:2c4a:b0:72b:5b9b:9c50 with SMTP id
+ hf10-20020a1709072c4a00b0072b5b9b9c50mr30198936ejc.636.1658222494749; Tue, 19
+ Jul 2022 02:21:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220713131421.1527179-1-nuno.sa@analog.com> <CAMRc=Mf1w7DCGMAku0wPHAhTtDWoWkWOfvxkx=_b1pKp8U8yOg@mail.gmail.com>
- <14af555c630654d0a780dc3bf9ecca6f29dcf61a.camel@gmail.com>
-In-Reply-To: <14af555c630654d0a780dc3bf9ecca6f29dcf61a.camel@gmail.com>
+References: <1658133103-23394-1-git-send-email-haibo.chen@nxp.com>
+ <1658133103-23394-3-git-send-email-haibo.chen@nxp.com> <CAHp75VcCnHj+0kxTGUv35YHqt_bBFuoDaes4RyhSw6v64QBJ6w@mail.gmail.com>
+In-Reply-To: <CAHp75VcCnHj+0kxTGUv35YHqt_bBFuoDaes4RyhSw6v64QBJ6w@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 19 Jul 2022 11:14:36 +0200
-Message-ID: <CAMRc=Mcgydibw_GXNS_S6=gFZuojo5bBb8ELUc1tTQhbQ2V7hA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] add support for bias pull-disable
-To:     =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+Date:   Tue, 19 Jul 2022 11:21:24 +0200
+Message-ID: <CAMRc=MfTeTdwE3rW9iudh8=LPpridu7u9TEwUHiVjoEROWUzqA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: pca953x: use the correct register address when
+ regcache sync during init
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     BOUGH CHEN <haibo.chen@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+        dl-linux-imx <linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 19, 2022 at 10:51 AM Nuno S=C3=A1 <noname.nuno@gmail.com> wrote=
-:
+On Mon, Jul 18, 2022 at 2:00 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Tue, 2022-07-19 at 10:25 +0200, Bartosz Golaszewski wrote:
-> > On Wed, Jul 13, 2022 at 3:13 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote=
-:
-> > >
-> > > The gpio core looks at 'FLAG_BIAS_DISABLE' in preparation of
-> > > calling the
-> > > gpiochip 'set_config()' hook. However, AFAICT, there's no way that
-> > > this
-> > > flag is set because there's no support for it in firwmare code.
-> > > Moreover,
-> > > in 'gpiod_configure_flags()', only pull-ups and pull-downs are
-> > > being
-> > > handled.
-> > >
-> > > On top of this, there are some users that are looking at
-> > > 'PIN_CONFIG_BIAS_DISABLE' in the 'set_config()' hook. So, unless
-> > > I'm
-> > > missing something, it looks like this was never working for these
-> > > chips.
-> > >
-> > > Note that the ACPI case is only compiled tested. At first glance,
-> > > it seems
-> > > the current patch is enough but i'm not really sure...
-> > >
-> > > As a side note, this came to my attention during this patchset [1]
-> > > (and, ofr OF,  was tested with it).
-> > >
-> > > [1]:
-> > > https://lore.kernel.org/linux-input/20220708093448.42617-5-nuno.sa@an=
-alog.com/
-> > >
-> > > Nuno S=C3=A1 (4):
-> > >   gpiolib: add support for bias pull disable
-> > >   gpiolib: of: support bias pull disable
-> > >   gpiolib: acpi: support bias pull disable
-> > >   dt-bindings: gpio: add pull-disable flag
-> > >
-> > >  drivers/gpio/gpiolib-acpi.c     | 3 +++
-> > >  drivers/gpio/gpiolib-of.c       | 7 +++++++
-> > >  drivers/gpio/gpiolib.c          | 8 ++++++--
-> > >  include/dt-bindings/gpio/gpio.h | 3 +++
-> > >  include/linux/gpio/machine.h    | 1 +
-> > >  include/linux/of_gpio.h         | 1 +
-> > >  6 files changed, 21 insertions(+), 2 deletions(-)
-> > >
-> > > --
-> > > 2.37.0
-> > >
+> On Mon, Jul 18, 2022 at 10:56 AM <haibo.chen@nxp.com> wrote:
 > >
-> > Series applied, thanks!
+> > From: Haibo Chen <haibo.chen@nxp.com>
+> >
+> > For regcache_sync_region, need to use pca953x_recalc_addr() to get
 >
-> Hi Bart,
+> we need
 >
-> I was actually planning to spin a v2 with your suggestion for the
-> naming of the new define... Did you changed it while applying or should
-> I still send it? Or (last option), we just leave it like this :)?
+> > the real register address.
 >
-> - Nuno S=C3=A1
+> A couple of comments, here, otherwise you can add
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> to _all_three_ patches.
+>
+> > Fixes: ec82d1eba346 ("gpio: pca953x: Zap ad-hoc reg_output cache")
+> > Fixes: 0f25fda840a9 ("gpio: pca953x: Zap ad-hoc reg_direction cache")
+> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> > ---
+> >  drivers/gpio/gpio-pca953x.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> > index 18888ec24d04..1747b6a9d5bf 100644
+> > --- a/drivers/gpio/gpio-pca953x.c
+> > +++ b/drivers/gpio/gpio-pca953x.c
+> > @@ -910,14 +910,17 @@ static int device_pca95xx_init(struct pca953x_chip *chip, u32 invert)
+> >  {
+> >         DECLARE_BITMAP(val, MAX_LINE);
+> >         int ret;
+> > +       u8 regaddr;
+>
+> Please, keep it on "longest line first" order.
+>
+> > -       ret = regcache_sync_region(chip->regmap, chip->regs->output,
+> > -                                  chip->regs->output + NBANK(chip) - 1);
+> > +       regaddr = pca953x_recalc_addr(chip, chip->regs->output, 0);
+> > +       ret = regcache_sync_region(chip->regmap, regaddr,
+> > +                                  regaddr + NBANK(chip) - 1);
+> >         if (ret)
+> >                 goto out;
+> >
+> > -       ret = regcache_sync_region(chip->regmap, chip->regs->direction,
+> > -                                  chip->regs->direction + NBANK(chip) - 1);
+> > +       regaddr = pca953x_recalc_addr(chip, chip->regs->direction, 0);
+> > +       ret = regcache_sync_region(chip->regmap, regaddr,
+> > +                                  regaddr + NBANK(chip) - 1);
+> >         if (ret)
+> >                 goto out;
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Yeah, I'm alright with it how it is after a second though: uAPI uses
-the BIAS_PULL_UP/DOWN/DISABLE notation while the in-kernel API uses
-the same scheme but without the BIAS prefix. Unless you want to change
-something else - let's keep it as you first submitted it.
+I fixed those up locally and applied all three.
 
 Bart
