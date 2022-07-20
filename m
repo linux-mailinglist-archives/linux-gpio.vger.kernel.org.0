@@ -2,88 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17D9057B2B5
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 10:19:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4066D57B2D2
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 10:23:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231704AbiGTITs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jul 2022 04:19:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60470 "EHLO
+        id S229552AbiGTIXz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jul 2022 04:23:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232647AbiGTITr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 04:19:47 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79F045F52
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 01:19:45 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id h8so2295788wrw.1
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 01:19:45 -0700 (PDT)
+        with ESMTP id S229614AbiGTIXw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 04:23:52 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C6E06BC13
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 01:23:51 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id fy29so30563208ejc.12
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 01:23:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=H3cfWCLBlBYx1Erw4k3ViEzQD+OSmuEO+WWt3HWcPoA=;
-        b=rR6JZ+S7IixgYfovd+L1INMwl+54Px8Y0e+3XmVtikQZpCf5s9gkH9XepDR74CWKOZ
-         9JLTcSPGceYWc1eOO1jx2oXTj8YqOvqS+wG9p4hW9xU9asnbOrl0muhhwwYVM34sKjyS
-         rGNKO6m3k8yyWwgDgA44/wk7ypQ69ZOBiVbJOXplDd3cyZ4R2JYioguX7H/tVjlI2fGM
-         q7p8VdQq0WofPlTG8vZcUCZqagSXzBP8TgIbaBoy52M3B4BtUM57AKJhWQroXQr2u/Ik
-         Q2rYGF/IHqCPOuX/qRNGSq9ICsXBurc2g1nYPIlCV4spj2cX1em/XfRo3bW2bZ0s+rWq
-         tK5Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=61+HAl57NNJ+AyqL4XDMzT2BRHMKxs4Gs/zawTCQKxc=;
+        b=lClxztZ7ZDZHNqL66UZQSh0rQPxmxHyPuTvrZ9p9ueh306xQAJPEomTUD21Xlq7fAR
+         c+VWXpeSsojmS/qvhSPzXgcqAG27RIvK8Xm41MFRMYHguLhJifTC+N+qNU0SQR9VBYdl
+         jAXD3QkWO1vnEEXWdlq1tJ3QbDKYznKzny5KPdBvOQLZp0iR1AaNP3GXM4mducv2xpcc
+         lnc6opDLCODV+Q6WhJ1St3DAiNMdwfn86xIg40jjlj8aBxY2vAc+Vbx6XnrD+AEgJRQu
+         9jzYSRwI9+I+fC8xH7dITsLh0HuoGjMrt8Kqjko4aN/ZGRvgUSwig7duv5lZn9nk7GFF
+         r/MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=H3cfWCLBlBYx1Erw4k3ViEzQD+OSmuEO+WWt3HWcPoA=;
-        b=D5VaE579qTqUTURyhnqzxxbOQxq+L1JJGUxtLSLwGprGI8Gm/kKS0CHwHlufsnoqdg
-         r49sVdOOzAwBFUAbov2VfCMfWpTIlHHrz3yQc6f4pnmnHlYF6t+v9EDw9SFI8pt7xjZu
-         eYES2ZVqVu5R9iORx2ZB3nOEXMZMTA/VakoXu/vf7Wl22MbyCLqSwDEDEGdkLp1w2nnr
-         rPyHBUI09e4dkCUYtJQYca/KbTNDyaOBNEWAsga/1+NJ5iqoqa0mn5oMfDQhDSHlDY14
-         sx7oNSvPvtJLSnnqroT0lIAGxdc5XtuX+oV2vZTkc3bKdZd8FzyoGXQp2I8MPorZPDv/
-         DVyA==
-X-Gm-Message-State: AJIora9q1MS+ujddB4y+SJRE8RyXvGNqav1OISeiho7W0KaTGAjofdJ3
-        NyWQELuyK0Z84mjPvc3khEkQ/A==
-X-Google-Smtp-Source: AGRyM1tKM9yWRqu/6hb5ToXfPCjx8kO+ohEW+UULtwcZ7Bj7hyGH5XdN95owydZj/Z9UEhfe392XnQ==
-X-Received: by 2002:a5d:64c8:0:b0:21d:9873:bbf0 with SMTP id f8-20020a5d64c8000000b0021d9873bbf0mr29529081wri.150.1658305184429;
-        Wed, 20 Jul 2022 01:19:44 -0700 (PDT)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id bg42-20020a05600c3caa00b003a31b79dc0esm8936892wmb.1.2022.07.20.01.19.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jul 2022 01:19:43 -0700 (PDT)
-Date:   Wed, 20 Jul 2022 09:19:41 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        katie.morris@in-advantage.com
-Subject: Re: [PATCH v13 net-next 9/9] mfd: ocelot: add support for the
- vsc7512 chip via spi
-Message-ID: <Yte6nTJ3IMJhdLAp@google.com>
-References: <20220705204743.3224692-1-colin.foster@in-advantage.com>
- <20220705204743.3224692-10-colin.foster@in-advantage.com>
- <YtVrtOHy3lAeKCRH@google.com>
- <Ytbuj6qfUj1NOitS@euler>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=61+HAl57NNJ+AyqL4XDMzT2BRHMKxs4Gs/zawTCQKxc=;
+        b=4rXJ6fRwweNYwfV2DSm7rn2HlDhTQ7leOv6JEnUuo5MdWsEQ2ZrXxSsAYqIoxHtqwx
+         cSeTVmec9teXmTZrHXUdj2mYGBh70HvzCMb1H7qKNYBR+ANQbyfDlswUk8oMpM7dqb5Y
+         GwcFBj1u6jxNgjScpsYVzi1qZabVTFX3Do0KJSQ9sdnfWi1SohXLDqV6lcy9Jdb873ub
+         Qcqvb4ZcM3BMRpNCqLvdxbDIBfAWyc0boOF4lwe3xks+ZoGIyXkp0HMLOkRXaSg/s7N2
+         XGF/UFIodkLjJ/oYVII4QnLSgdEPdJr4/aixvDs1t5dsXz3Nho6SSOxOQSVZaJ7ZHb31
+         mlJw==
+X-Gm-Message-State: AJIora/nTLd6y2fkVLZxFhKSOfeW80s8iFEV6gB0SQSzulCIFNoE2NbW
+        J7hpWDiVvmB9ebCReg0hdZJF4Fpd3z1RrTCNox/DnA==
+X-Google-Smtp-Source: AGRyM1tTDy52jt9ItIo7/jbORdsPH5RCWRhc3rH9kY7laCOYVlxoqkqZG8QZlw03PUSPPQPYwu7AosxcbmlGRk96CHc=
+X-Received: by 2002:a17:907:1ddd:b0:72b:49ff:d39e with SMTP id
+ og29-20020a1709071ddd00b0072b49ffd39emr34912343ejc.500.1658305430071; Wed, 20
+ Jul 2022 01:23:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Ytbuj6qfUj1NOitS@euler>
+References: <CAEBpM+ZPZNpJNJAU=2iji8+dCnLEcordRLwH3-mKhYqWS_zr6Q@mail.gmail.com>
+In-Reply-To: <CAEBpM+ZPZNpJNJAU=2iji8+dCnLEcordRLwH3-mKhYqWS_zr6Q@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 20 Jul 2022 10:23:38 +0200
+Message-ID: <CACRpkdbVRm7SdCPm-RP7pD2v7ce+i+kSh05wdFsmMmBbDk+1YA@mail.gmail.com>
+Subject: Re: To write Java binding for libgpiod - need help with looking for references
+To:     Meena M <scientistartist@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -93,80 +63,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 19 Jul 2022, Colin Foster wrote:
+On Wed, Jul 20, 2022 at 9:04 AM Meena M <scientistartist@gmail.com> wrote:
 
-> On Mon, Jul 18, 2022 at 03:18:28PM +0100, Lee Jones wrote:
-> > On Tue, 05 Jul 2022, Colin Foster wrote:
-> > 
-> > > +MODULE_IMPORT_NS(MFD_OCELOT_SPI);
-> > > diff --git a/drivers/mfd/ocelot-spi.c b/drivers/mfd/ocelot-spi.c
-> > > new file mode 100644
-> > > index 000000000000..0c1c5215c706
-> > > --- /dev/null
-> > > +++ b/drivers/mfd/ocelot-spi.c
-> > > @@ -0,0 +1,317 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > > +/*
-> > > + * SPI core driver for the Ocelot chip family.
-> > > + *
-> > > + * This driver will handle everything necessary to allow for communication over
-> > > + * SPI to the VSC7511, VSC7512, VSC7513 and VSC7514 chips. The main functions
-> > > + * are to prepare the chip's SPI interface for a specific bus speed, and a host
-> > > + * processor's endianness. This will create and distribute regmaps for any
-> > > + * children.
-> > > + *
-> > > + * Copyright 2021, 2022 Innovative Advantage Inc.
-> > > + *
-> > > + * Author: Colin Foster <colin.foster@in-advantage.com>
-> > > + */
-> > > +
-> > > +#include <linux/ioport.h>
-> > > +#include <linux/kconfig.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/spi/spi.h>
-> > > +
-> > > +#include <asm/byteorder.h>
-> > > +
-> > > +#include "ocelot.h"
-> > > +
-> > > +#define REG_DEV_CPUORG_IF_CTRL		0x0000
-> > > +#define REG_DEV_CPUORG_IF_CFGSTAT	0x0004
-> > > +
-> > > +#define CFGSTAT_IF_NUM_VCORE		(0 << 24)
-> > > +#define CFGSTAT_IF_NUM_VRAP		(1 << 24)
-> > > +#define CFGSTAT_IF_NUM_SI		(2 << 24)
-> > > +#define CFGSTAT_IF_NUM_MIIM		(3 << 24)
-> > > +
-> > > +#define VSC7512_DEVCPU_ORG_RES_START	0x71000000
-> > > +#define VSC7512_DEVCPU_ORG_RES_SIZE	0x38
-> > > +
-> > > +#define VSC7512_CHIP_REGS_RES_START	0x71070000
-> > > +#define VSC7512_CHIP_REGS_RES_SIZE	0x14
-> > > +
-> > > +struct spi_device;
-> > 
-> > Why not just #include?
-> 
-> I mis-understood this to mean drivers/mfd/ocelot-spi.c when it meant
-> drivers/mfd/ocelot.h. Thanks.
-> 
-> https://patchwork.kernel.org/project/netdevbpf/patch/20220701192609.3970317-10-colin.foster@in-advantage.com/#24921057
-> 
-> """
-> You missed a lot of forward declarations that are used in this file.
-> 
-> Like
-> 
-> struct spi_device;
-> """
+> I need to write Java binding for GPIO library.
 
-spi_device is used in *this* file.
+That's interesting!
 
-You should explicitly add the include file.
+I would use the libgpiod2 branch for this because that is where active
+development
+is happening right now, with active language bindings for C++, Python and also
+Rust in the works, so clone and work on top of this branch:
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/log/?h=next/libgpiod-2.0
 
--- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Decided to go with JNI for the purpose.
+
+That's pretty much standard, right?
+
+> All of the references have examples with using standard C libraries with functions
+> such as printf or, from scientific library with method such as multiply. The library
+> for which I need to write Java binding has macros, structs, with types such as
+> __u32 which I am unable to see mapped to Java.
+
+It seems like you are trying to use
+/usr/include/linux/gpio.h, <linux/gpio.h> (the kernel header file) directly.
+
+Don't do that, use libgpiod2 inbetween instead and it will be much
+simpler. It has this friendly header instead:
+https://github.com/brgl/libgpiod/blob/master/include/gpiod.h
+
+> Until now have watched some
+> youtube videos, looking at JNI programmers's guide which was
+> recommended(but it is very old) and looking at an ibm documentation
+> on JNI https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/types.html
+> has not been very helpful.
+> https://github.com/java-native-access/jna/blob/master/www/Mappings.md has
+> mappings but in the library there are types such as __u32 for which there is
+> no corresponding Java type
+> https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/types.html,
+> even the official documentation has no mappingfor __u32 or unsigned 32/64 bit
+
+The __u32 etc are Linux kernel-to-userspace types. You certainly
+*can* use them directly if you absolutely want, but libgpiod is going
+to be so much better to use for this so please consider using that
+instead.
+
+> Is there any tools that can help me?
+
+Yeah use libgpiod2. Create bindings on top of that instead.
+
+> Where can I find a good reference for this?
+> Or am I approaching this completely wrong?
+
+libgpiod top README:
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/about/?h=next/libgpiod-2.0
+
+Bartosz talking about libgpiod etc:
+https://www.youtube.com/watch?v=0APvuY2eLkY
+
+> Should I go for JNA or some other option?
+
+Don't know much about Java since I haven't used it since I finished university
+in 2004, so you tell me :D
+
+Yours,
+Linus Walleij
