@@ -2,414 +2,202 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 504A657B7BD
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 15:46:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E535857BAB0
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 17:43:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236939AbiGTNq3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jul 2022 09:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38808 "EHLO
+        id S241390AbiGTPn3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jul 2022 11:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239484AbiGTNqU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 09:46:20 -0400
-Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8532D550CD
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 06:46:17 -0700 (PDT)
-Received: by mail-qv1-xf2f.google.com with SMTP id l11so13477594qvu.13
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 06:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YK2m0zUKGidqTcHmu1AnlUorqPw63e2Xchspxtij0bM=;
-        b=SlkC18sy7m2hgmNGirhP1Hxeg4ZPvIgj+6M+Q0iUEOAFH0Yfppym//mM6q2kP20OiE
-         O+3Uv+10rNR58PTkugcj1wLtGTT7d4nIwP/ASAF/o0E9XEIPDAfBP+Wxvk/ph1aX+h7K
-         lFIqQxIKqei/4zPe6+AASyC48FWpiYO7rD5aWmKw1H+PDpvQ3nGoPjDDhN+xuxWRJ5tR
-         xkv945QBRk4iNxYFHlQ5Jg/6+K39RKhvm1BLTPj/abTCpfL323lXIRUtsH081fKQnI2H
-         mYrkRQCD4oCuyil0AfUdveCIKtIHadzmqgb0oZRQ8PaC0R0eDNnbwOugVeAWkyw+wWUd
-         Mc5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YK2m0zUKGidqTcHmu1AnlUorqPw63e2Xchspxtij0bM=;
-        b=aW7K3MnBtKcFOhDZhR7x7jsqLLm9jbYo15YdjF/NioXF2s7/77EdA7LyworjSRMH+S
-         +t2gzAhGJhPFzrwhNPNoPn6q5/59HJV9oLFFrxgpSTG6Rjubu5b72zIabzdEJHi7Sqq1
-         ieyCO9B2Y/W4OYr/DGsvtTXjr/DVKUagpu1NjFXafWd2CrkG1WlMvzJ9fpc2FjgZFvnv
-         mzRqzOmz8I6IMPxc1SSMjkAefnmUb/Z56Ivo7TL7mYM8n1f38CH2SW2hfTxwLcgicZ16
-         MujqQajBdPsMjRExr3c3fFEHTmFee4MG25RAJDKqVAbeMZLkNeQSBBMXpgyXYdkiAV/N
-         kOIQ==
-X-Gm-Message-State: AJIora8l1DswetnXtLHFqjAsQg7Xn4nZci9T5ZZtVlA1QlzmCdN57Toa
-        vUA7rW3ACnRCc4QE+ohCTkw8zg==
-X-Google-Smtp-Source: AGRyM1tExfsP8xpOn3FeeCHHKnMWVXJdZOMIXRuHn+SnJoYhgBvSI94Xom11SoWYMpB97xF8xseoPw==
-X-Received: by 2002:a05:6214:20e9:b0:473:fee5:8f8d with SMTP id 9-20020a05621420e900b00473fee58f8dmr5612840qvk.122.1658324776311;
-        Wed, 20 Jul 2022 06:46:16 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id bl13-20020a05620a1a8d00b006b5f8f32a8fsm5289853qkb.114.2022.07.20.06.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jul 2022 06:46:16 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>,
-        Fred Eckert <Frede@cmslaser.com>
-Subject: [RESEND PATCH v4 6/6] gpio: gpio-mm: Implement and utilize register structures
-Date:   Wed, 20 Jul 2022 09:46:02 -0400
-Message-Id: <b5730889fff39dd50bddcc4341943752a46b5c8a.1658324498.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <cover.1658324498.git.william.gray@linaro.org>
-References: <cover.1658324498.git.william.gray@linaro.org>
-MIME-Version: 1.0
+        with ESMTP id S229592AbiGTPn3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 11:43:29 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2056.outbound.protection.outlook.com [40.107.100.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA5661B26;
+        Wed, 20 Jul 2022 08:43:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fnINRIhj/aV6WDjwTRUUDygQf140v6ZcaptGF1FH6j+4opKgJtm7JArW3CcQwJ7+UiGZssKrBgd1pjMZGgrjFb8KrhfFGINGMFcQz68ugsxFHawZm0scTJEHwhHve4gmHskPfATPmnnkwuCV2BrvA2QtfG9BfghYaWugV9QtdDxrh5wbEn38Gqx2qUJYcJ6Ug9Gpf1xZ/We0mAt2d//+htFw63HAt8XwNsjgMHwMzPLQ91v+dA2JZv3mEIKZo/re3M4jKmzQ9KeG/BIDpmRSYeX9FMeJkYQXLb5KDI8Y9FzkCLq2XbIH/CTNeFLXwZGlnFOD0DMqJHsK7QXMKbp/aA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZyHFjdsbywJAK360WedhDxOGjuEEg6wmVNdcDdfQK14=;
+ b=TUtYhb7XSJ3+ESNO6ch9bTO3M5r+XNWcJxl+YIKHKLx2QTeGLiLlUTWIM4sEznd1cmDveEqwUNWPatjgT9/rweFO5x23QkuZi5T5xjVmHXMoNybwXY46ndKegCAg7KpGtyeliVubDq4FHsQHjti3Ynz/gWWBliYGS+stFxnPmuKdho9I47fw+TD/t6DeC9QVQQPyS9s6mfiZkQskYBTqsLhKbWNzVdIdzNMdIR/hickfayZ/ArNEUtSvciSB4bj0h//q7xtFhlf04gG38weLzEgKy/bL2yPbNYoXCrXKEXxdebUfYDDb+7KU4K4/hOaZFojsGrYTaSdaWuilmypVlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZyHFjdsbywJAK360WedhDxOGjuEEg6wmVNdcDdfQK14=;
+ b=wIxR9EFKxcq/8DtMraXJrBWuhGZK/25xgJZRoAzrvS9CT+ncX5pi/H4IvE/6/WZBbqeki7zPDP4t1189PRI/A/10l9AZnws/YoE8YgJjDo2s6O8+XK+qp8VG6xkeCbPupoIFuj0+Ne04+qUXnbGAWroFcb+A1fKqG4keo43GrB4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH2PR12MB4085.namprd12.prod.outlook.com (2603:10b6:610:79::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.17; Wed, 20 Jul
+ 2022 15:43:25 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598%6]) with mapi id 15.20.5438.023; Wed, 20 Jul 2022
+ 15:43:25 +0000
+Message-ID: <12c1ef93-74d7-6e41-bb9b-f030ab20c97f@amd.com>
+Date:   Wed, 20 Jul 2022 10:43:23 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 2/2] gpiolib: acpi: Add a quirk for Asus UM325UAZ
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Krc <reg.krn@pkrc.net>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+References: <20220719142142.247-1-mario.limonciello@amd.com>
+ <20220719142142.247-2-mario.limonciello@amd.com>
+ <CAHp75VfWwDiPecBdP0Nm-henzZVMoyiu+nWuV=eUkuxLkqeViw@mail.gmail.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <CAHp75VfWwDiPecBdP0Nm-henzZVMoyiu+nWuV=eUkuxLkqeViw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH2PR05CA0009.namprd05.prod.outlook.com (2603:10b6:610::22)
+ To MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ee1216b7-4c8d-468d-f576-08da6a6695b1
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4085:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Duz/JU/eHk87JHAJrbcqAATha7OhjxM6yxeMGFyz0BcMhetHhAGUEABrd71pNOWOXQ/Z1+gpABW+G8P3yxe4/5XrwHnvYJxkRWUtCQWZtgEmrlkQFLRqDHWcyqFyBPR1358ISPHJf0yO+gHIW0ppOves7MLfqiQ1ln6X2TlWKhNa3IvxAqiEAaWVzRG3x7+41JIQ8LDgpV1ILWQfecf1WxaEv8gV7p4YGw0FSmM3MB7GFEN98B+mr6nw4ScLQlPUMsKN90qEAYEkBrZxGpjM7lLG43hLKk+WKlg6IgBQSPXRshajp0biT11Nn+FMpssJC53I60ZJMXgmPEQ5a6nfIGgtwzTYrCdEoFYYBYuLpSN2uh9ptYuaEDd4laWsKJPE5JbWpAF8yP0+2bZK5zU/xJpFY31ID2k4lmXbSv9aRJCOG2E1WcQ0RDKZbnX6ABO4nrsn8PzQGplLeMJbft7KvFtOGpQgNLw+hPabtdQ4eP6MRiLKGnBvgGRHJ178ZN5ndVEvBpzvOjq2qREltiK/AJN10kL4eTiRejC6pkwwBejGEhNtJxptFX8WTx4y1pBFgmYqq0m9+Q1OEf1LlaKY1+cyidzlZvRiXXxtI7+t4dPbhu5I1f+dKToNZ3rYwKJS+xPz2W6OkjBVv8oUf76Ew48/UDqIXWXg3ccHLbJi4tGoHBNXyWffxP7Ds9oGDN5Nllr7sxWtZMMc7lRNmiyFbd+RETFQR/tFeZUuie9ybyGPygo3z0UyFHUFNFfQXCTW3vqmB+ffH4o/peNhRH7hkBZDfYP259wMZOQTfIJ6rZKRjGHyvK2gsuri6QoGJKLMI7ckqRKH9Oa4RqRonlbypvOFCxiqn45emKrJILGNbAJpXPtCpr1wbmROOuo+tfsG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(39860400002)(136003)(366004)(376002)(4326008)(8676002)(6486002)(66556008)(7416002)(66476007)(66946007)(478600001)(86362001)(2616005)(966005)(83380400001)(5660300002)(36756003)(8936002)(31696002)(6512007)(53546011)(186003)(2906002)(26005)(6506007)(31686004)(45080400002)(6916009)(316002)(38100700002)(54906003)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U241TU1YcUwxZktuUlNDaUNhT1lPS1NBZHBjTGV2OEErWGt5VUUzMmJnK2Nr?=
+ =?utf-8?B?bUdJcGZFMzM4ZEljUWZSdlFQQVFaQ3UwL3ZNMG1YQ3BnWFMxOWduWUsxL3M2?=
+ =?utf-8?B?RnN1NDlUSFZVZklzcWFScCtxOUNSQStUZ1I3ekV3V0tqbjNwbVR0ejVyeFZL?=
+ =?utf-8?B?dDlYV3hrYVJKU3dsMlBYR0NFL2lRRjlQS1FmTERla0FaSWZzckNsMXFSbmxM?=
+ =?utf-8?B?eWNodjFLRnRIL05wNDJQTSttTUp6ckRkaUVINlBDYjFmQkczZlczWEdOTjVV?=
+ =?utf-8?B?WFdoRkwxSSsvaWNudndGY3MzdGNwSnJwWjFBZ3JZSEpOWk9rNHFVUmlzZmlN?=
+ =?utf-8?B?Q2VzU0h2UWVaZHVtK0FEaWNUM1p2SlNRc3YwcnFHNC9IMCs1Y1hFUk91ZnNS?=
+ =?utf-8?B?TUIxcys2QXYyUEI3VUNvOG5oVHV2eDRGV0habitPRWRBSHlMY3ptKzVtU3k4?=
+ =?utf-8?B?dU1MYzZtOHZaSXdtWXZ2ZmVBVW9rNFcxWTZzVjJWMVpmMTQ3U0lualIzRWdT?=
+ =?utf-8?B?WFBKR2FsMUlveVFCYUFSaHhES09FM1hVemJaV1RiUmhKamVzUzhVMEJHSktx?=
+ =?utf-8?B?UzUzbnZ5V2hpcExwMExSUk5DL29HbkVsdG8yZG11ejBUVFRxM0h4cUFYQXlD?=
+ =?utf-8?B?MTArTjBDWmlaY0Z4dHUxWTBCby9Xd0FaelMwbzl3cTdVZXh5MnF4L0RhUGRZ?=
+ =?utf-8?B?Vmd4Qk5PR3gybXp2YmF3blJFK2xIZm5xeThBRVRSRjFhWGU2OGVlekF6ZUNB?=
+ =?utf-8?B?VnBFc1l5MHNxOG4zVUlnNEZVVkNrR2xEa2g1bko2N0VBK0F3ejFGNGpQa0Y4?=
+ =?utf-8?B?VFRDMmZ3SHRCQkxUT1NUb1BCdWdpWXo3S3J6OW0rM1hOYzYza0ZEQTdGSVhS?=
+ =?utf-8?B?R2xpZ2VuVzd6b2t0OUxpNFVBSnV6cGt4QnRyc01FVlZNYmRQK29nOE1PN3BR?=
+ =?utf-8?B?aFZOYUxYYWd2NDhPeUNQSVZOQklXZTl1WFc5YjNPWmJmNGUwYThxV29wbS9y?=
+ =?utf-8?B?NWZkNmpKaVR3dHB5cStqdHJUQ3V3VnY0UkRrUGsxRmpXTStxSmg1V0w0eWtz?=
+ =?utf-8?B?R2g0VVRkZER2OWY0OEsrZVZVd0x1MElmMEVGdndPandXQ3NXa0pjT2JQQUdV?=
+ =?utf-8?B?ZU11aWwzeCswMnJaeFZYNm1NbFFCU1pTUkZsMzg2SXNJQ05ZUnRKTkc3M2NQ?=
+ =?utf-8?B?WVhMVFY1REpoTGx2WWFzV1hVdTRJRE0yT3pDS3FBSlQ4VTBpbzRZVU5YUEZ1?=
+ =?utf-8?B?bjMyWEdLMzJESEk4VmhtSkh1MytSZmRMSWVxOUNndmJIMTFPRWU3K1oxUWpQ?=
+ =?utf-8?B?S2kxZHB0bzl4bzRudUo4a0lrUFdXNE9aZHRLZ2ZRbDNsaXBCTkVBdkNLK0tH?=
+ =?utf-8?B?MHV3QWxkT0lWcUc5R1I1aWgrYVoyRFZWdDJJSWttTnV6R1pRM0FlYVg5RTBP?=
+ =?utf-8?B?cWYvR05OVVhyUVY1ejFrNWROdlE3aW55eFNRdGQ0ajNjMXE0aWJhVGRxeG5F?=
+ =?utf-8?B?akFkWU5KaWsyWmtHem1GcHBQaEE5MmRqaTRCOEJsekp2cDRDSEZ4VW51WXRq?=
+ =?utf-8?B?cTN5TnNSelZ2cThnMEVXcFlhaTd0d1dmQXZ3WlFCZnlKeUhoK3hKU3hCKzl3?=
+ =?utf-8?B?L0YyMXhFRWttUWRhYU1hM0ZuL3Y3ZlhEN3V5YVNlbUdwOGxENnpiY1Q1UmQ0?=
+ =?utf-8?B?aExKV283ZWJqR3VQVWJIUDlKWXFUTkczWElVdy9IbkV1U2lZU2crTWp0eFdw?=
+ =?utf-8?B?cFgxL2d3YTdYVFFKcEhlSktsSUdLcTdPc3k4d0N3OFozdGNVTlJodFNqbTdK?=
+ =?utf-8?B?akowa2RvVXl6cEx3NFRIV0IwSUpsSDBnYVpCZ2IwbHdJS0Vqb3ZPSzFvaW82?=
+ =?utf-8?B?L0U1a28xUW0zckVnc2REYTd3ODA5OWVXeGVUcTN4TkVDTmZzOWlSZERlTTBl?=
+ =?utf-8?B?akNHUmtoVjc2WTY3LzJndGI3UzdnZm9mNEZMK0xlMmIvemVsc3ZsMDU2aDlW?=
+ =?utf-8?B?REJLMFR5bkJwVGw3TzBsVURRNFp0ZUY0OGw4ZlYrSzQydTk5eWptcktjRmVn?=
+ =?utf-8?B?NTcxeWx0elVCVHR3Vm00b0x5ZGFYcG5kSjJHZ3VzQS8xTk5LaUE0QkhJeUF2?=
+ =?utf-8?Q?oudQW/24ZhEFFFdxMqeHp+vGJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee1216b7-4c8d-468d-f576-08da6a6695b1
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2022 15:43:25.8428
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FEvGXQYnd2XMVIm0lZ/U82RpPPSu33/EeZ8ElvVnEdfLjl/beh80jNe70bX3vqkkmC/wmtfW1nmGKNciyXsFrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4085
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Reduce magic numbers and improve code readability by implementing and
-utilizing named register data structures. The GPIO-MM device features an
-Intel 8255 compatible GPIO interface, so the i8255 GPIO module is
-selected and utilized as well.
+On 7/20/2022 08:57, Andy Shevchenko wrote:
+> I am on vacation (Mika also iirc), but I believe that Hans can review 
+> it, so resend with cc’ing him and add above as a comment to the change, 
+> or better cover letter.
 
-Tested-by: Fred Eckert <Frede@cmslaser.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
-Changes in v4:
- - Remove superfluous <linux/bitops.h> and <linux/bits.h> includes
+Thanks, I redirected the original messages to Hans.  Enjoy your vacation.
 
- drivers/gpio/Kconfig        |   1 +
- drivers/gpio/gpio-gpio-mm.c | 202 +++++++-----------------------------
- 2 files changed, 40 insertions(+), 163 deletions(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8f1d4d56f0aa..0642f579196f 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -886,6 +886,7 @@ config GPIO_GPIO_MM
- 	tristate "Diamond Systems GPIO-MM GPIO support"
- 	depends on PC104
- 	select ISA_BUS_API
-+	select GPIO_I8255
- 	help
- 	  Enables GPIO support for the Diamond Systems GPIO-MM and GPIO-MM-12.
- 
-diff --git a/drivers/gpio/gpio-gpio-mm.c b/drivers/gpio/gpio-gpio-mm.c
-index 097a06463d01..2689671b6b01 100644
---- a/drivers/gpio/gpio-gpio-mm.c
-+++ b/drivers/gpio/gpio-gpio-mm.c
-@@ -6,8 +6,6 @@
-  * This driver supports the following Diamond Systems devices: GPIO-MM and
-  * GPIO-MM-12.
-  */
--#include <linux/bitmap.h>
--#include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/gpio/driver.h>
-@@ -17,7 +15,10 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
--#include <linux/spinlock.h>
-+
-+#include "gpio-i8255.h"
-+
-+MODULE_IMPORT_NS(I8255);
- 
- #define GPIOMM_EXTENT 8
- #define MAX_NUM_GPIOMM max_num_isa_dev(GPIOMM_EXTENT)
-@@ -27,32 +28,26 @@ static unsigned int num_gpiomm;
- module_param_hw_array(base, uint, ioport, &num_gpiomm, 0);
- MODULE_PARM_DESC(base, "Diamond Systems GPIO-MM base addresses");
- 
-+#define GPIOMM_NUM_PPI 2
-+
- /**
-  * struct gpiomm_gpio - GPIO device private data structure
-- * @chip:	instance of the gpio_chip
-- * @io_state:	bit I/O state (whether bit is set to input or output)
-- * @out_state:	output bits state
-- * @control:	Control registers state
-- * @lock:	synchronization lock to prevent I/O race conditions
-- * @base:	base port address of the GPIO device
-+ * @chip:		instance of the gpio_chip
-+ * @ppi_state:		Programmable Peripheral Interface group states
-+ * @ppi:		Programmable Peripheral Interface groups
-  */
- struct gpiomm_gpio {
- 	struct gpio_chip chip;
--	unsigned char io_state[6];
--	unsigned char out_state[6];
--	unsigned char control[2];
--	spinlock_t lock;
--	void __iomem *base;
-+	struct i8255_state ppi_state[GPIOMM_NUM_PPI];
-+	struct i8255 __iomem *ppi;
- };
- 
- static int gpiomm_gpio_get_direction(struct gpio_chip *chip,
- 	unsigned int offset)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int port = offset / 8;
--	const unsigned int mask = BIT(offset % 8);
- 
--	if (gpiommgpio->io_state[port] & mask)
-+	if (i8255_get_direction(gpiommgpio->ppi_state, offset))
- 		return GPIO_LINE_DIRECTION_IN;
- 
- 	return GPIO_LINE_DIRECTION_OUT;
-@@ -62,35 +57,8 @@ static int gpiomm_gpio_direction_input(struct gpio_chip *chip,
- 	unsigned int offset)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int io_port = offset / 8;
--	const unsigned int control_port = io_port / 3;
--	unsigned long flags;
--	unsigned int control;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	/* Check if configuring Port C */
--	if (io_port == 2 || io_port == 5) {
--		/* Port C can be configured by nibble */
--		if (offset % 8 > 3) {
--			gpiommgpio->io_state[io_port] |= 0xF0;
--			gpiommgpio->control[control_port] |= BIT(3);
--		} else {
--			gpiommgpio->io_state[io_port] |= 0x0F;
--			gpiommgpio->control[control_port] |= BIT(0);
--		}
--	} else {
--		gpiommgpio->io_state[io_port] |= 0xFF;
--		if (io_port == 0 || io_port == 3)
--			gpiommgpio->control[control_port] |= BIT(4);
--		else
--			gpiommgpio->control[control_port] |= BIT(1);
--	}
- 
--	control = BIT(7) | gpiommgpio->control[control_port];
--	iowrite8(control, gpiommgpio->base + 3 + control_port*4);
--
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
-+	i8255_direction_input(gpiommgpio->ppi, gpiommgpio->ppi_state, offset);
- 
- 	return 0;
- }
-@@ -99,44 +67,9 @@ static int gpiomm_gpio_direction_output(struct gpio_chip *chip,
- 	unsigned int offset, int value)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int io_port = offset / 8;
--	const unsigned int control_port = io_port / 3;
--	const unsigned int mask = BIT(offset % 8);
--	const unsigned int out_port = (io_port > 2) ? io_port + 1 : io_port;
--	unsigned long flags;
--	unsigned int control;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	/* Check if configuring Port C */
--	if (io_port == 2 || io_port == 5) {
--		/* Port C can be configured by nibble */
--		if (offset % 8 > 3) {
--			gpiommgpio->io_state[io_port] &= 0x0F;
--			gpiommgpio->control[control_port] &= ~BIT(3);
--		} else {
--			gpiommgpio->io_state[io_port] &= 0xF0;
--			gpiommgpio->control[control_port] &= ~BIT(0);
--		}
--	} else {
--		gpiommgpio->io_state[io_port] &= 0x00;
--		if (io_port == 0 || io_port == 3)
--			gpiommgpio->control[control_port] &= ~BIT(4);
--		else
--			gpiommgpio->control[control_port] &= ~BIT(1);
--	}
--
--	if (value)
--		gpiommgpio->out_state[io_port] |= mask;
--	else
--		gpiommgpio->out_state[io_port] &= ~mask;
--
--	control = BIT(7) | gpiommgpio->control[control_port];
--	iowrite8(control, gpiommgpio->base + 3 + control_port*4);
- 
--	iowrite8(gpiommgpio->out_state[io_port], gpiommgpio->base + out_port);
--
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
-+	i8255_direction_output(gpiommgpio->ppi, gpiommgpio->ppi_state, offset,
-+			       value);
- 
- 	return 0;
- }
-@@ -144,47 +77,16 @@ static int gpiomm_gpio_direction_output(struct gpio_chip *chip,
- static int gpiomm_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int port = offset / 8;
--	const unsigned int mask = BIT(offset % 8);
--	const unsigned int in_port = (port > 2) ? port + 1 : port;
--	unsigned long flags;
--	unsigned int port_state;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	/* ensure that GPIO is set for input */
--	if (!(gpiommgpio->io_state[port] & mask)) {
--		spin_unlock_irqrestore(&gpiommgpio->lock, flags);
--		return -EINVAL;
--	}
--
--	port_state = ioread8(gpiommgpio->base + in_port);
--
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
- 
--	return !!(port_state & mask);
-+	return i8255_get(gpiommgpio->ppi, offset);
- }
- 
--static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
--
- static int gpiomm_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
- 	unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	void __iomem *port_addr;
--	unsigned long port_state;
--
--	/* clear bits array to a clean slate */
--	bitmap_zero(bits, chip->ngpio);
- 
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		port_addr = gpiommgpio->base + ports[offset / 8];
--		port_state = ioread8(port_addr) & gpio_mask;
--
--		bitmap_set_value8(bits, port_state, offset);
--	}
-+	i8255_get_multiple(gpiommgpio->ppi, mask, bits, chip->ngpio);
- 
- 	return 0;
- }
-@@ -193,49 +95,17 @@ static void gpiomm_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	int value)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	const unsigned int port = offset / 8;
--	const unsigned int mask = BIT(offset % 8);
--	const unsigned int out_port = (port > 2) ? port + 1 : port;
--	unsigned long flags;
--
--	spin_lock_irqsave(&gpiommgpio->lock, flags);
--
--	if (value)
--		gpiommgpio->out_state[port] |= mask;
--	else
--		gpiommgpio->out_state[port] &= ~mask;
--
--	iowrite8(gpiommgpio->out_state[port], gpiommgpio->base + out_port);
- 
--	spin_unlock_irqrestore(&gpiommgpio->lock, flags);
-+	i8255_set(gpiommgpio->ppi, gpiommgpio->ppi_state, offset, value);
- }
- 
- static void gpiomm_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	size_t index;
--	void __iomem *port_addr;
--	unsigned long bitmask;
--	unsigned long flags;
--
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		index = offset / 8;
--		port_addr = gpiommgpio->base + ports[index];
--
--		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
--
--		spin_lock_irqsave(&gpiommgpio->lock, flags);
- 
--		/* update output state data and set device gpio register */
--		gpiommgpio->out_state[index] &= ~gpio_mask;
--		gpiommgpio->out_state[index] |= bitmask;
--		iowrite8(gpiommgpio->out_state[index], port_addr);
--
--		spin_unlock_irqrestore(&gpiommgpio->lock, flags);
--	}
-+	i8255_set_multiple(gpiommgpio->ppi, gpiommgpio->ppi_state, mask, bits,
-+			   chip->ngpio);
- }
- 
- #define GPIOMM_NGPIO 48
-@@ -250,6 +120,21 @@ static const char *gpiomm_names[GPIOMM_NGPIO] = {
- 	"Port 2C2", "Port 2C3", "Port 2C4", "Port 2C5", "Port 2C6", "Port 2C7",
- };
- 
-+static void gpiomm_init_dio(struct i8255 __iomem *const ppi,
-+			    struct i8255_state *const ppi_state)
-+{
-+	const unsigned long ngpio = 24;
-+	const unsigned long mask = GENMASK(ngpio - 1, 0);
-+	const unsigned long bits = 0;
-+	unsigned long i;
-+
-+	/* Initialize all GPIO to output 0 */
-+	for (i = 0; i < GPIOMM_NUM_PPI; i++) {
-+		i8255_mode0_output(&ppi[i]);
-+		i8255_set_multiple(&ppi[i], &ppi_state[i], &mask, &bits, ngpio);
-+	}
-+}
-+
- static int gpiomm_probe(struct device *dev, unsigned int id)
- {
- 	struct gpiomm_gpio *gpiommgpio;
-@@ -266,8 +151,8 @@ static int gpiomm_probe(struct device *dev, unsigned int id)
- 		return -EBUSY;
- 	}
- 
--	gpiommgpio->base = devm_ioport_map(dev, base[id], GPIOMM_EXTENT);
--	if (!gpiommgpio->base)
-+	gpiommgpio->ppi = devm_ioport_map(dev, base[id], GPIOMM_EXTENT);
-+	if (!gpiommgpio->ppi)
- 		return -ENOMEM;
- 
- 	gpiommgpio->chip.label = name;
-@@ -284,7 +169,8 @@ static int gpiomm_probe(struct device *dev, unsigned int id)
- 	gpiommgpio->chip.set = gpiomm_gpio_set;
- 	gpiommgpio->chip.set_multiple = gpiomm_gpio_set_multiple;
- 
--	spin_lock_init(&gpiommgpio->lock);
-+	i8255_state_init(gpiommgpio->ppi_state, GPIOMM_NUM_PPI);
-+	gpiomm_init_dio(gpiommgpio->ppi, gpiommgpio->ppi_state);
- 
- 	err = devm_gpiochip_add_data(dev, &gpiommgpio->chip, gpiommgpio);
- 	if (err) {
-@@ -292,16 +178,6 @@ static int gpiomm_probe(struct device *dev, unsigned int id)
- 		return err;
- 	}
- 
--	/* initialize all GPIO as output */
--	iowrite8(0x80, gpiommgpio->base + 3);
--	iowrite8(0x00, gpiommgpio->base);
--	iowrite8(0x00, gpiommgpio->base + 1);
--	iowrite8(0x00, gpiommgpio->base + 2);
--	iowrite8(0x80, gpiommgpio->base + 7);
--	iowrite8(0x00, gpiommgpio->base + 4);
--	iowrite8(0x00, gpiommgpio->base + 5);
--	iowrite8(0x00, gpiommgpio->base + 6);
--
- 	return 0;
- }
- 
--- 
-2.36.1
+> 
+> On Tuesday, July 19, 2022, Mario Limonciello <mario.limonciello@amd.com 
+> <mailto:mario.limonciello@amd.com>> wrote:
+> 
+>     Asus UM325UAZ has GPIO 18 programmed as both an interrupt and a wake
+>     source, but confirmed with internal team on this design this pin is
+>     floating and shouldn't have been programmed. This causes lots of
+>     spurious IRQs on the system and horrendous battery life.
+> 
+>     Add a quirk to ignore attempts to program this pin on this system.
+> 
+>     Reported-and-tested-by: Pavel Krc <reg.krn@pkrc.net
+>     <mailto:reg.krn@pkrc.net>>
+>     Link: https://bugzilla.kernel.org/show_bug.cgi?id=216208
+>     <https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D216208&data=05%7C01%7Cmario.limonciello%40amd.com%7C2c67d6b468d44e177dbb08da6a57d2fd%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637939222681842692%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=INWMYURdKmQeTaFw1PT%2BEohTJGJSRRONYJCTw9klXu4%3D&reserved=0>
+>     Signed-off-by: Mario Limonciello <mario.limonciello@amd.com
+>     <mailto:mario.limonciello@amd.com>>
+>     ---
+>       drivers/gpio/gpiolib-acpi.c | 14 ++++++++++++++
+>       1 file changed, 14 insertions(+)
+> 
+>     diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+>     index 375942d92d6f..2149713ea8f1 100644
+>     --- a/drivers/gpio/gpiolib-acpi.c
+>     +++ b/drivers/gpio/gpiolib-acpi.c
+>     @@ -1586,6 +1586,20 @@ static const struct dmi_system_id
+>     gpiolib_acpi_quirks[] __initconst = {
+>                              .ignore_wake = "INT33FF:01@0",
+>                      },
+>              },
+>     +       {
+>     +               /*
+>     +                * Interrupt storm caused from edge triggered
+>     floating pin
+>     +                * Found in BIOS UX325UAZ.300
+>     +                *
+>     https://bugzilla.kernel.org/show_bug.cgi?id=216208
+>     <https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D216208&data=05%7C01%7Cmario.limonciello%40amd.com%7C2c67d6b468d44e177dbb08da6a57d2fd%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637939222681842692%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=INWMYURdKmQeTaFw1PT%2BEohTJGJSRRONYJCTw9klXu4%3D&reserved=0>
+>     +                */
+>     +               .matches = {
+>     +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER
+>     INC."),
+>     +                       DMI_MATCH(DMI_PRODUCT_NAME, "ZenBook
+>     UX325UAZ_UM325UAZ"),
+>     +               },
+>     +               .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+>     +                       .ignore_interrupt = "AMDI0030:00@18",
+>     +               },
+>     +       },
+>              {} /* Terminating entry */
+>       };
+> 
+>     -- 
+>     2.34.1
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
