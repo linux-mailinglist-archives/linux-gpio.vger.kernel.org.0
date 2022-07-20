@@ -2,132 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F21B57A99F
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 00:06:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18FD357B04D
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 07:25:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232225AbiGSWGi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Jul 2022 18:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
+        id S229832AbiGTFZd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jul 2022 01:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbiGSWGh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Jul 2022 18:06:37 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224CF39B9A
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 15:06:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658268397; x=1689804397;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ldZV69E7faWdJYPqj0vIraP/QgGqcT5Jg6SOut5aakI=;
-  b=L0/7g0JNz+N5h/ClGCv0cCfUEkWwzavAdxF1r2qSDXoxHJWtwMYMtgxm
-   OinnnvxGcUekrFQ8tPDaZth0FVBGFdXDQ7gI1kHvLV9/KLmuAbmuMWHvd
-   EjRoTgPS8JrfTIRqP2tLiuI0Gz9DehN1ljIHwiBeeSbbTXn8h4ejSOjDo
-   sIJFyLDBR1WUTjeED6AmRS1nUPqNBDKCPvHq65siUNInHjm91BfEvIcbi
-   ql5701qdDrgVhkO60FlIrUtnlwa6tGueeJnfyPy17Spv8Gj25Eal6RjDM
-   PCtNBjB0g5Z8sk8wUY9nWsvRWnquvDwAy/I2n5pJ0mQ+vYU3rNM4u7Uvy
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="266397122"
-X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
-   d="scan'208";a="266397122"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 15:06:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
-   d="scan'208";a="924966023"
-Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Jul 2022 15:06:35 -0700
-Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oDvMR-00069O-9L;
-        Tue, 19 Jul 2022 22:06:35 +0000
-Date:   Wed, 20 Jul 2022 06:06:25 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- b8c768ccdd8338504fb78370747728d5002b1b5a
-Message-ID: <62d72ae1.4WmLUgrJJyuq/Xe8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229441AbiGTFZc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 01:25:32 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B372065564
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 22:25:30 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oE2DA-0005ci-V2; Wed, 20 Jul 2022 07:25:29 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oE2D9-0023Qr-IN; Wed, 20 Jul 2022 07:25:27 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oE2D8-006JoD-PP; Wed, 20 Jul 2022 07:25:26 +0200
+Date:   Wed, 20 Jul 2022 07:25:24 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: Is a multiplexer using latches a gpio controller?
+Message-ID: <20220720052524.fnpukrakvbdq7ns4@pengutronix.de>
+References: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de>
+ <CACRpkdaBO=JzokGUF6uXZc7ASVD7LjqBxTLGwX-FShM=A9gw9A@mail.gmail.com>
+ <20220719074919.uawwqoefcgi4rjvt@pengutronix.de>
+ <CAHp75Vc=0qxzdD4Q3xG-1Ztf9tX+4Xb-KSpPE0MjCBfAPPSG+Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ultsglwvexxi6xjv"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc=0qxzdD4Q3xG-1Ztf9tX+4Xb-KSpPE0MjCBfAPPSG+Q@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: b8c768ccdd8338504fb78370747728d5002b1b5a  gpio: pca953x: use the correct register address when regcache sync during init
 
-elapsed time: 728m
+--ultsglwvexxi6xjv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 52
-configs skipped: 2
+Hello,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On Tue, Jul 19, 2022 at 11:13:11AM +0200, Andy Shevchenko wrote:
+> On Tue, Jul 19, 2022 at 9:50 AM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Tue, Jul 19, 2022 at 12:54:18AM +0200, Linus Walleij wrote:
+>=20
+> ...
+>=20
+> > (And if you have a "native" spi bus, even better.) This way the
+> > nxp,74hc4094 driver becomes way easier.
+>=20
+> Just to say (point out again?) that
+> 1) The SPI can be bitbanging in this case, so GPIO lines can be used;
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-ia64                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-sh                               allmodconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-m68k                             allyesconfig
-i386                                defconfig
-i386                             allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64               randconfig-a013-20220718
-x86_64               randconfig-a012-20220718
-x86_64               randconfig-a014-20220718
-x86_64               randconfig-a011-20220718
-x86_64               randconfig-a015-20220718
-x86_64               randconfig-a016-20220718
-i386                 randconfig-a011-20220718
-i386                 randconfig-a013-20220718
-i386                 randconfig-a012-20220718
-i386                 randconfig-a016-20220718
-i386                 randconfig-a015-20220718
-i386                 randconfig-a014-20220718
-arc                  randconfig-r043-20220718
-riscv                randconfig-r042-20220718
-s390                 randconfig-r044-20220718
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
+Yeah, in my example GPIO lines were used.
 
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                 randconfig-a003-20220718
-i386                 randconfig-a001-20220718
-i386                 randconfig-a002-20220718
-i386                 randconfig-a006-20220718
-i386                 randconfig-a004-20220718
-i386                 randconfig-a005-20220718
-hexagon              randconfig-r041-20220718
-hexagon              randconfig-r045-20220718
+> 2) We have a driver already, which is called gpio-74x164.
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+I'm also aware. My reply was on Linus's binding example which *only*
+supports bit-banging and which is different to what the 74x164 driver
+consumes.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ultsglwvexxi6xjv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLXkcEACgkQwfwUeK3K
+7AlEYggAgBZotOIPdw0cbkqdP8oQeBTG3plQD7EVYQkOsg58lJmn1p9g5vTHxfuo
+rBoK6JomYmvfL1DSqf7bhGazXhh4KOSBce8yAlZZUPesx9+HVI5FR9Z+AoptyqYL
+7ike6jPsEdS/E1Ns+TCXR3BbvskFa5m6EiXQfb9u5dJLpi4qJUH6LiiUp100Q9kR
+atVXCGu3O2i7wSq33cOvwx40XvvOUdy0WzOtIzI2tB7p1Fief3GFs/6mzdKt8Rh+
+9CE4wwsTf2EquHM6tMnmLk2tJu3fNOPP++0pUzSd8e50VCQv713KLATk+cUgeww9
+2l3hucqzJr3TW2qo9JJ1RHQBvhLcSg==
+=LxDD
+-----END PGP SIGNATURE-----
+
+--ultsglwvexxi6xjv--
