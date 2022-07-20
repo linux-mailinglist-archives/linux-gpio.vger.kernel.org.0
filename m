@@ -2,109 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3541D57B68D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 14:35:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 959B457B7B8
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 15:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240842AbiGTMfw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jul 2022 08:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40696 "EHLO
+        id S238818AbiGTNqO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jul 2022 09:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239519AbiGTMfw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 08:35:52 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47911B7AD
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 05:35:49 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id va17so32879439ejb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 05:35:49 -0700 (PDT)
+        with ESMTP id S231344AbiGTNqM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 09:46:12 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABFF56B8F
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 06:46:10 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id v28so12082532qkg.13
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 06:46:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WgbjDJxnlsoUvGqV3p0oq3wEGrVhwZfOQ07rixfBDyc=;
-        b=1EihxAR75uhhs1ZJzkLW6uPWyzjo+D4w/IX+hrrqPW1UvrLuGlCy+T4s8D45WUAH+d
-         y//V4H6j+WTcasvfNN5IJPqoQBmfGspRSqOxymhx+JOe3NqD5WM2PqJgcRVRYryXrqiH
-         x+yNbDrvnc0xfR6zaThLzILzBR0N/7RjT8PTWRpx+IN+mRcCzoeISWeVfgUO4SdcX0R4
-         S4qHDqIUCsQIiC4diVDCFQiUA54xQbam8k7HDl36rhrxitH0nEPhdJTmmd6rFAdN0+Yy
-         28QCqeZ/JJO1KtvztG2d3OwbwWEjiZ6sGehpgb5TMBeImgC85+KDBhwXt9x6aQQB36nM
-         Eh+A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NkZcG9iivUG9vrFb2DsGA3snDOdpHOroJRIEaOrOQYs=;
+        b=dEHT/6V8rFbWvXGx2zzlGqUi5hGeHONmuz/vP1ylpQdpo1M3qeQZpjLbig76xjayB+
+         tHPgm2e0IQghX32LTgDYaE4aMNrz0+JV85hUde6t+ZVL/aD71tAc8f5G2tzEiVp07MQx
+         5jILDZgBQmCTmYLRX9Hrt9PyDwZmvO91CC3OOjV28+lBsxxZWOWQ0sWQ1uQ0vAH25zBY
+         zuxurQbh2+ZXPcTaT8AhZwmjIFNLvfHSq57WXBCHNrecBnX8Oit7cri8OzrwFa+84uyV
+         AOV9oLuaxL2oV17Dv4asU9FsYW9aihEKGMqYogyPpxJK2d4iVFF2mtcsKTJTIH+WRC+x
+         U+2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WgbjDJxnlsoUvGqV3p0oq3wEGrVhwZfOQ07rixfBDyc=;
-        b=sUVWVyHXwP96k2tI9D2oyTgNiSoRhnpvcUyXyDALgSa2G0MYCQrQ1/Pc7is84WOznX
-         PU9ACmTBGK35lapBN4EKm8CyAMGrJTeRu6BsKltAApYlakxax/591u2jxFG5/nrQjPjK
-         XksLyg+C1r5B6LfHkSl3HZqSu0mvh0M9qTnyEHBc8eFQs7CKMVcS6SjYS3dz9ji3+6vc
-         yNkwRmb7bGDOKYh7EGL1uGc7yGwpkOvsEi9s1X9/VmSqRz/PPlr3yOZyb87d/+Viww4v
-         gAAc5+G1+hdbF9JJ5Id4OC2xfS1BHJmeD/M8lYev5AYU14gMfvj4nYU7o5HytnYy/1nQ
-         85VA==
-X-Gm-Message-State: AJIora9nq/jZMHltu7VxkXcdSCgB2pkPGblZpoAPp37bp74DPWnKKjfc
-        sRBTZJt0HahEvxUugnLoHdUa5MdvZmmHTtkDlT4zKg==
-X-Google-Smtp-Source: AGRyM1uhG4kCz0NJGlM2u+GQzufPCyNBBSU8Ghb0Zc+6Mta8PYJAw1xofFomiD6DS01G9Uyl4T6d+pzS+gPGTjlRoF0=
-X-Received: by 2002:a17:907:1b16:b0:72b:8c16:dac0 with SMTP id
- mp22-20020a1709071b1600b0072b8c16dac0mr34200884ejc.286.1658320548402; Wed, 20
- Jul 2022 05:35:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NkZcG9iivUG9vrFb2DsGA3snDOdpHOroJRIEaOrOQYs=;
+        b=OKgoQg/+enqfY1GbCDGdM3MXbVe2/JIUu+kwPxg1s1jwSi28Bmb0S2GN1rV9Lgb2NN
+         V71KqEwnyOVXmCu2+5kseOabmhOjYdXOxFiVPNu4knuCQ51685qBJcM6oQ5dvCKmd4/J
+         ecJ2VITPOUKvoR4sj/5/xyijY8bo2HemwPpSqH9m7ktVvfg1GDBxmPjscR6pMSPspBZT
+         YByrCxEq40AajXvJHmeGZ9UdPzrebwRCI5/wU2g8XJGUAj2Jbw/hhYgFrW/KN4u0Lmo5
+         x9o3COV+gsQ4HoMq6BxngdkyIz8f6EQGkGmNnYrkaraHYbEXtPb7k0UAv7/9LfEwqNgR
+         O1Eg==
+X-Gm-Message-State: AJIora+ZrNX2uZgtXIRnxaQsUYqz+2Y2MaHHb6ZQsAZFXYiSFJ3IPCiE
+        5xgUcQROsqs1ZBYii4jptk1NkqWimg9a9g==
+X-Google-Smtp-Source: AGRyM1uuD+e1QBk3GeuwgRXb4xpBUDg/YkfTEowvTKXr1LgAm1eFJWVvG7T1Yf8oqFEa9uQNs168fQ==
+X-Received: by 2002:a37:65c8:0:b0:6b6:de7:4366 with SMTP id z191-20020a3765c8000000b006b60de74366mr2292972qkb.776.1658324770039;
+        Wed, 20 Jul 2022 06:46:10 -0700 (PDT)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id bl13-20020a05620a1a8d00b006b5f8f32a8fsm5289853qkb.114.2022.07.20.06.46.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jul 2022 06:46:09 -0700 (PDT)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>,
+        John Hentges <jhentges@accesio.com>,
+        Jay Dolan <jay.dolan@accesio.com>,
+        Fred Eckert <Frede@cmslaser.com>,
+        Paul Demetrotion <pdemetrotion@winsystems.com>,
+        techsupport@winsystems.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [RESEND PATCH v4 0/6] gpio: Implement and utilize register structures for ISA drivers
+Date:   Wed, 20 Jul 2022 09:45:56 -0400
+Message-Id: <cover.1658324498.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220719110601.136474-1-warthog618@gmail.com>
-In-Reply-To: <20220719110601.136474-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 20 Jul 2022 14:35:37 +0200
-Message-ID: <CAMRc=McwEsmDw2SGfbf8EKm-sHpQCVoPcNj8QMuuAf-P59utnQ@mail.gmail.com>
-Subject: Re: [PATCH] selftests: gpio: fix include path to kernel headers for
- out of tree builds
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 19, 2022 at 1:06 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> When building selftests out of the kernel tree the gpio.h the include
-> path is incorrect and the build falls back to the system includes
-> which may be outdated.
->
-> Add the KHDR_INCLUDES to the CFLAGS to include the gpio.h from the
-> build tree.
->
-> Fixes: 4f4d0af7b2d9 ("selftests: gpio: restore CFLAGS options")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->
-> The test bot suggested
-> 4f4d0af7b2d9 ("selftests: gpio: restore CFLAGS options")
-> as the commit to be fixed, but the previous fix which turned out to be
-> incomplete seems more appropriate.
->
->  tools/testing/selftests/gpio/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
-> index 71b306602368..616ed4019655 100644
-> --- a/tools/testing/selftests/gpio/Makefile
-> +++ b/tools/testing/selftests/gpio/Makefile
-> @@ -3,6 +3,6 @@
->  TEST_PROGS := gpio-mockup.sh gpio-sim.sh
->  TEST_FILES := gpio-mockup-sysfs.sh
->  TEST_GEN_PROGS_EXTENDED := gpio-mockup-cdev gpio-chip-info gpio-line-name
-> -CFLAGS += -O2 -g -Wall -I../../../../usr/include/
-> +CFLAGS += -O2 -g -Wall -I../../../../usr/include/ $(KHDR_INCLUDES)
->
->  include ../lib.mk
-> --
-> 2.37.1
->
+Rebased onto the gpio/for-next branch.
 
-Queued for fixes, thanks!
+Changes in v4:
+ - Cleanup superfluous header includes from drivers
+ - Add note to CONFIG_GPIO_I8255 Kconfig that if built as a module the
+   name will be 'gpio-i8255'
+ - Remove 'const' from '__iomem' pointers
+ - Replace ambiguous 'group' terminology with more understandable 'bank'
+ - Use more natural '>= 4' expression to represent upper nibble
+ - Refactor i8255_set_port() to take more common pattern of mask and
+   bits
 
-Bart
+The PC104/ISA drivers were updated to use I/O memory accessor calls such
+as ioread8()/iowrite8() in a previous patch series [0]. This
+patchset is a continuation of the effort to improve the code readability
+and reduce magic numbers by implementing and utilizing named register
+data structures.
+
+One of the benefits is that we can now observe more easily similarities
+in devices that share similar interfaces; such as the i8255 interfaces
+used by the 104-DIO-48E, 104-IDI-48, and GPIO-MM drivers -- as well as
+the similar interface used by the 104-IDIO-16 and PCI-IDIO-16 drivers.
+
+A new module supporting the Intel 8255 interface is introduced to
+consolidate the common code found among the 104-DIO-48E, 104-IDI-48, and
+GPIO-MM drivers.
+
+[0] https://lore.kernel.org/all/cover.1652201921.git.william.gray@linaro.org/
+
+William Breathitt Gray (6):
+  gpio: ws16c48: Implement and utilize register structures
+  gpio: 104-idio-16: Implement and utilize register structures
+  gpio: i8255: Introduce the Intel 8255 interface library module
+  gpio: 104-dio-48e: Implement and utilize register structures
+  gpio: 104-idi-48: Implement and utilize register structures
+  gpio: gpio-mm: Implement and utilize register structures
+
+ MAINTAINERS                     |   6 +
+ drivers/gpio/Kconfig            |  15 ++
+ drivers/gpio/Makefile           |   1 +
+ drivers/gpio/gpio-104-dio-48e.c | 249 ++++++++-------------------
+ drivers/gpio/gpio-104-idi-48.c  | 143 +++++++---------
+ drivers/gpio/gpio-104-idio-16.c |  60 +++++--
+ drivers/gpio/gpio-gpio-mm.c     | 202 +++++-----------------
+ drivers/gpio/gpio-i8255.c       | 287 ++++++++++++++++++++++++++++++++
+ drivers/gpio/gpio-i8255.h       |  46 +++++
+ drivers/gpio/gpio-ws16c48.c     | 120 +++++++++----
+ 10 files changed, 654 insertions(+), 475 deletions(-)
+ create mode 100644 drivers/gpio/gpio-i8255.c
+ create mode 100644 drivers/gpio/gpio-i8255.h
+
+
+base-commit: c4371c56397340134c1827ab70dbf817dbb1b99b
+-- 
+2.36.1
+
