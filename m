@@ -2,53 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18FD357B04D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 07:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17D9057B2B5
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 10:19:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbiGTFZd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jul 2022 01:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45522 "EHLO
+        id S231704AbiGTITs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jul 2022 04:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiGTFZc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 01:25:32 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B372065564
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Jul 2022 22:25:30 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oE2DA-0005ci-V2; Wed, 20 Jul 2022 07:25:29 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oE2D9-0023Qr-IN; Wed, 20 Jul 2022 07:25:27 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oE2D8-006JoD-PP; Wed, 20 Jul 2022 07:25:26 +0200
-Date:   Wed, 20 Jul 2022 07:25:24 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        with ESMTP id S232647AbiGTITr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 04:19:47 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79F045F52
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 01:19:45 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id h8so2295788wrw.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 01:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=H3cfWCLBlBYx1Erw4k3ViEzQD+OSmuEO+WWt3HWcPoA=;
+        b=rR6JZ+S7IixgYfovd+L1INMwl+54Px8Y0e+3XmVtikQZpCf5s9gkH9XepDR74CWKOZ
+         9JLTcSPGceYWc1eOO1jx2oXTj8YqOvqS+wG9p4hW9xU9asnbOrl0muhhwwYVM34sKjyS
+         rGNKO6m3k8yyWwgDgA44/wk7ypQ69ZOBiVbJOXplDd3cyZ4R2JYioguX7H/tVjlI2fGM
+         q7p8VdQq0WofPlTG8vZcUCZqagSXzBP8TgIbaBoy52M3B4BtUM57AKJhWQroXQr2u/Ik
+         Q2rYGF/IHqCPOuX/qRNGSq9ICsXBurc2g1nYPIlCV4spj2cX1em/XfRo3bW2bZ0s+rWq
+         tK5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=H3cfWCLBlBYx1Erw4k3ViEzQD+OSmuEO+WWt3HWcPoA=;
+        b=D5VaE579qTqUTURyhnqzxxbOQxq+L1JJGUxtLSLwGprGI8Gm/kKS0CHwHlufsnoqdg
+         r49sVdOOzAwBFUAbov2VfCMfWpTIlHHrz3yQc6f4pnmnHlYF6t+v9EDw9SFI8pt7xjZu
+         eYES2ZVqVu5R9iORx2ZB3nOEXMZMTA/VakoXu/vf7Wl22MbyCLqSwDEDEGdkLp1w2nnr
+         rPyHBUI09e4dkCUYtJQYca/KbTNDyaOBNEWAsga/1+NJ5iqoqa0mn5oMfDQhDSHlDY14
+         sx7oNSvPvtJLSnnqroT0lIAGxdc5XtuX+oV2vZTkc3bKdZd8FzyoGXQp2I8MPorZPDv/
+         DVyA==
+X-Gm-Message-State: AJIora9q1MS+ujddB4y+SJRE8RyXvGNqav1OISeiho7W0KaTGAjofdJ3
+        NyWQELuyK0Z84mjPvc3khEkQ/A==
+X-Google-Smtp-Source: AGRyM1tKM9yWRqu/6hb5ToXfPCjx8kO+ohEW+UULtwcZ7Bj7hyGH5XdN95owydZj/Z9UEhfe392XnQ==
+X-Received: by 2002:a5d:64c8:0:b0:21d:9873:bbf0 with SMTP id f8-20020a5d64c8000000b0021d9873bbf0mr29529081wri.150.1658305184429;
+        Wed, 20 Jul 2022 01:19:44 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id bg42-20020a05600c3caa00b003a31b79dc0esm8936892wmb.1.2022.07.20.01.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jul 2022 01:19:43 -0700 (PDT)
+Date:   Wed, 20 Jul 2022 09:19:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: Is a multiplexer using latches a gpio controller?
-Message-ID: <20220720052524.fnpukrakvbdq7ns4@pengutronix.de>
-References: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de>
- <CACRpkdaBO=JzokGUF6uXZc7ASVD7LjqBxTLGwX-FShM=A9gw9A@mail.gmail.com>
- <20220719074919.uawwqoefcgi4rjvt@pengutronix.de>
- <CAHp75Vc=0qxzdD4Q3xG-1Ztf9tX+4Xb-KSpPE0MjCBfAPPSG+Q@mail.gmail.com>
+        Wolfram Sang <wsa@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        katie.morris@in-advantage.com
+Subject: Re: [PATCH v13 net-next 9/9] mfd: ocelot: add support for the
+ vsc7512 chip via spi
+Message-ID: <Yte6nTJ3IMJhdLAp@google.com>
+References: <20220705204743.3224692-1-colin.foster@in-advantage.com>
+ <20220705204743.3224692-10-colin.foster@in-advantage.com>
+ <YtVrtOHy3lAeKCRH@google.com>
+ <Ytbuj6qfUj1NOitS@euler>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ultsglwvexxi6xjv"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc=0qxzdD4Q3xG-1Ztf9tX+4Xb-KSpPE0MjCBfAPPSG+Q@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Ytbuj6qfUj1NOitS@euler>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,55 +93,80 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, 19 Jul 2022, Colin Foster wrote:
 
---ultsglwvexxi6xjv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Mon, Jul 18, 2022 at 03:18:28PM +0100, Lee Jones wrote:
+> > On Tue, 05 Jul 2022, Colin Foster wrote:
+> > 
+> > > +MODULE_IMPORT_NS(MFD_OCELOT_SPI);
+> > > diff --git a/drivers/mfd/ocelot-spi.c b/drivers/mfd/ocelot-spi.c
+> > > new file mode 100644
+> > > index 000000000000..0c1c5215c706
+> > > --- /dev/null
+> > > +++ b/drivers/mfd/ocelot-spi.c
+> > > @@ -0,0 +1,317 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > > +/*
+> > > + * SPI core driver for the Ocelot chip family.
+> > > + *
+> > > + * This driver will handle everything necessary to allow for communication over
+> > > + * SPI to the VSC7511, VSC7512, VSC7513 and VSC7514 chips. The main functions
+> > > + * are to prepare the chip's SPI interface for a specific bus speed, and a host
+> > > + * processor's endianness. This will create and distribute regmaps for any
+> > > + * children.
+> > > + *
+> > > + * Copyright 2021, 2022 Innovative Advantage Inc.
+> > > + *
+> > > + * Author: Colin Foster <colin.foster@in-advantage.com>
+> > > + */
+> > > +
+> > > +#include <linux/ioport.h>
+> > > +#include <linux/kconfig.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/spi/spi.h>
+> > > +
+> > > +#include <asm/byteorder.h>
+> > > +
+> > > +#include "ocelot.h"
+> > > +
+> > > +#define REG_DEV_CPUORG_IF_CTRL		0x0000
+> > > +#define REG_DEV_CPUORG_IF_CFGSTAT	0x0004
+> > > +
+> > > +#define CFGSTAT_IF_NUM_VCORE		(0 << 24)
+> > > +#define CFGSTAT_IF_NUM_VRAP		(1 << 24)
+> > > +#define CFGSTAT_IF_NUM_SI		(2 << 24)
+> > > +#define CFGSTAT_IF_NUM_MIIM		(3 << 24)
+> > > +
+> > > +#define VSC7512_DEVCPU_ORG_RES_START	0x71000000
+> > > +#define VSC7512_DEVCPU_ORG_RES_SIZE	0x38
+> > > +
+> > > +#define VSC7512_CHIP_REGS_RES_START	0x71070000
+> > > +#define VSC7512_CHIP_REGS_RES_SIZE	0x14
+> > > +
+> > > +struct spi_device;
+> > 
+> > Why not just #include?
+> 
+> I mis-understood this to mean drivers/mfd/ocelot-spi.c when it meant
+> drivers/mfd/ocelot.h. Thanks.
+> 
+> https://patchwork.kernel.org/project/netdevbpf/patch/20220701192609.3970317-10-colin.foster@in-advantage.com/#24921057
+> 
+> """
+> You missed a lot of forward declarations that are used in this file.
+> 
+> Like
+> 
+> struct spi_device;
+> """
 
-Hello,
+spi_device is used in *this* file.
 
-On Tue, Jul 19, 2022 at 11:13:11AM +0200, Andy Shevchenko wrote:
-> On Tue, Jul 19, 2022 at 9:50 AM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Jul 19, 2022 at 12:54:18AM +0200, Linus Walleij wrote:
->=20
-> ...
->=20
-> > (And if you have a "native" spi bus, even better.) This way the
-> > nxp,74hc4094 driver becomes way easier.
->=20
-> Just to say (point out again?) that
-> 1) The SPI can be bitbanging in this case, so GPIO lines can be used;
+You should explicitly add the include file.
 
-Yeah, in my example GPIO lines were used.
-
-> 2) We have a driver already, which is called gpio-74x164.
-
-I'm also aware. My reply was on Linus's binding example which *only*
-supports bit-banging and which is different to what the 74x164 driver
-consumes.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ultsglwvexxi6xjv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLXkcEACgkQwfwUeK3K
-7AlEYggAgBZotOIPdw0cbkqdP8oQeBTG3plQD7EVYQkOsg58lJmn1p9g5vTHxfuo
-rBoK6JomYmvfL1DSqf7bhGazXhh4KOSBce8yAlZZUPesx9+HVI5FR9Z+AoptyqYL
-7ike6jPsEdS/E1Ns+TCXR3BbvskFa5m6EiXQfb9u5dJLpi4qJUH6LiiUp100Q9kR
-atVXCGu3O2i7wSq33cOvwx40XvvOUdy0WzOtIzI2tB7p1Fief3GFs/6mzdKt8Rh+
-9CE4wwsTf2EquHM6tMnmLk2tJu3fNOPP++0pUzSd8e50VCQv713KLATk+cUgeww9
-2l3hucqzJr3TW2qo9JJ1RHQBvhLcSg==
-=LxDD
------END PGP SIGNATURE-----
-
---ultsglwvexxi6xjv--
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
