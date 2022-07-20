@@ -2,109 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5B2E57BAC4
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 17:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 590A057BCC7
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Jul 2022 19:37:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234668AbiGTPrv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Jul 2022 11:47:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
+        id S241210AbiGTRhX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Jul 2022 13:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231917AbiGTPru (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 11:47:50 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3622422D7
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 08:47:47 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id w12so24248359edd.13
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Jul 2022 08:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ayP9OITtlZ1Sfv3DXFuDs6ga9EFZSP50v8E/pG2VTJc=;
-        b=E9knl/VlfLTd2IbwDY32bAF+kgg3HA1KulcjPuas6rjhQy8DGJI7SZFw8Y4aNspZyN
-         FNEHKR4YQEoBTy3i4+CG4OK+xUgZpCEH2RdO9xz9wyk4SSbIyVbd3+A2TUZ/9udXN9Zu
-         gBwtsWvPAXR+W0/RfJ8eB3ttcy6ObVFy4UQ71HaO6NbLlsAurfPQgnmw+IGQGx9ovhoL
-         53g/WitqT3e4lxeBqNuRYc2yE1isAf3SpiGceM5pkLLFzggEfFCzz2zufW+l5B5Y3cCQ
-         8Lh2jPy+PCxNK/5n2n+xpqi/pGFV4h08Cxy+PA6u/mi4Pi0Eq6mr9VFssAkJg2H6xnHa
-         KXLw==
+        with ESMTP id S241392AbiGTRhV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Jul 2022 13:37:21 -0400
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9FF5D0F3;
+        Wed, 20 Jul 2022 10:37:20 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id g20-20020a9d6a14000000b0061c84e679f5so12002675otn.2;
+        Wed, 20 Jul 2022 10:37:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ayP9OITtlZ1Sfv3DXFuDs6ga9EFZSP50v8E/pG2VTJc=;
-        b=ruQWzIPPrkd57pTSvc4vhbgPrsNkw/1F9xPXLMbM+MBuHZGJnlMhgHfDCV5P4W9kmZ
-         mMzqMrEfhKEiCuj5eXhJ5lVgRJwRQ3WU91W9y77sHY64XYgx+DfP/NowU6veCkM0hUFQ
-         BdCzbLTP51tJJFNEYkBLarWFy4fVy+HRUQqd0m2E767hoFvvDZGPv2X1Gie4PkDcyBZx
-         jkXcUkXewdkmg+Iiin5T7YNcO3+D1KsqA2zutqcntqojZwB/cbkejXEmxmGoBDS1O/zl
-         KsgmShKclteA4f2jQVMJLLDYZNOOtHudZfZYgIt2RELzN8lSyOyYslhPXNfg6oYJsY59
-         N0fw==
-X-Gm-Message-State: AJIora9vqzWATdfq4UsFi8FeXviIeQ6EAI6ZsI96XokKOtMAae6ixqk4
-        9tZpk2d1SVndCMCu2NDv7xsJSvPh0OaE/F8EXmkRRg==
-X-Google-Smtp-Source: AGRyM1sAFrAYciyv+PMKNN2ctXQA73XSZ1h6i4SOsSame6eLarenMzNhZX0BAVBl1GQpEDOUqEpy5wkeUBkrD4iONcU=
-X-Received: by 2002:aa7:d8d4:0:b0:43b:bc29:de65 with SMTP id
- k20-20020aa7d8d4000000b0043bbc29de65mr2114508eds.82.1658332066375; Wed, 20
- Jul 2022 08:47:46 -0700 (PDT)
+        bh=u6J3sgJghVNNrzVGnT5K48UuGJ4l1PbhybPRZEBzs0E=;
+        b=3KqcPs8xLw9RVr8PUyvtV2BZDB18UdZi7DJO5dwMB7xlPfXLK++8KO7r7rUp1VZp4y
+         P26d2KVGg1lC062cvS8kLuw7gtiiGlYG2OcRrmh3BaxCuhXEeJhnDcvzHybXZIdIbF86
+         wp55/cvRZZrAVKxu7VFNT30/YO7vVureOHIrw5oAmV3YKaVqYhejqnJEwxYMqLqmIKEE
+         hJclyHhD/90cAjGOKBMSiS4Tn+7O1jcxx1Drcvw4ydbMlStBDZ51hqy+7oE9G8GEEe9o
+         E1al7c/nNL23JYS4hZoXo4sr+CG2VOHwTsKcIFTtWHbtFDyejLErNoupPdNMSQ7Cxy59
+         td+A==
+X-Gm-Message-State: AJIora8R9Z089RLwM8LxcYEf481RIP8kV3qRNgkyPUPGmv/Kyw8RC6aG
+        qbQAmHqXSX4WyBaTEDQu3LZoT604SOffBg==
+X-Google-Smtp-Source: AGRyM1uWUiRSYgmsaey0YHY1R3UkAoG51F5i1h90Z0ue23FKaAxTTOY2d97DvYFGRIMcfSpuPK62gw==
+X-Received: by 2002:a05:6830:268c:b0:618:5cc0:417d with SMTP id l12-20020a056830268c00b006185cc0417dmr15965672otu.196.1658338639544;
+        Wed, 20 Jul 2022 10:37:19 -0700 (PDT)
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com. [209.85.210.50])
+        by smtp.gmail.com with ESMTPSA id j21-20020a4a7515000000b0043565888e72sm7175234ooc.2.2022.07.20.10.37.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Jul 2022 10:37:19 -0700 (PDT)
+Received: by mail-ot1-f50.google.com with SMTP id by10-20020a056830608a00b0061c1ac80e1dso14651380otb.13;
+        Wed, 20 Jul 2022 10:37:19 -0700 (PDT)
+X-Received: by 2002:a05:6902:701:b0:66e:a06d:53d7 with SMTP id
+ k1-20020a056902070100b0066ea06d53d7mr36038192ybt.604.1658338272504; Wed, 20
+ Jul 2022 10:31:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1658324498.git.william.gray@linaro.org>
-In-Reply-To: <cover.1658324498.git.william.gray@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 20 Jul 2022 17:47:35 +0200
-Message-ID: <CAMRc=MfSap-FNM0zXEcRBD6KJRTE-yqYnjJ+X_MuKuKma=FSFQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v4 0/6] gpio: Implement and utilize register
- structures for ISA drivers
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+References: <20220601070707.3946847-1-saravanak@google.com> <20220601070707.3946847-7-saravanak@google.com>
+In-Reply-To: <20220601070707.3946847-7-saravanak@google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 20 Jul 2022 19:31:01 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVVgB7KZq7-u-pAC-cZvVLWkv5wM4HC_jW7WK_tz52+cg@mail.gmail.com>
+Message-ID: <CAMuHMdVVgB7KZq7-u-pAC-cZvVLWkv5wM4HC_jW7WK_tz52+cg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] Revert "driver core: Set default
+ deferred_probe_timeout back to 0."
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Ahern <dsahern@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Hentges <jhentges@accesio.com>,
-        Jay Dolan <jay.dolan@accesio.com>,
-        Fred Eckert <Frede@cmslaser.com>,
-        Paul Demetrotion <pdemetrotion@winsystems.com>,
-        techsupport@winsystems.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 3:46 PM William Breathitt Gray
-<william.gray@linaro.org> wrote:
->
-> Rebased onto the gpio/for-next branch.
->
-> Changes in v4:
->  - Cleanup superfluous header includes from drivers
->  - Add note to CONFIG_GPIO_I8255 Kconfig that if built as a module the
->    name will be 'gpio-i8255'
->  - Remove 'const' from '__iomem' pointers
->  - Replace ambiguous 'group' terminology with more understandable 'bank'
->  - Use more natural '>= 4' expression to represent upper nibble
->  - Refactor i8255_set_port() to take more common pattern of mask and
->    bits
->
-> The PC104/ISA drivers were updated to use I/O memory accessor calls such
-> as ioread8()/iowrite8() in a previous patch series [0]. This
-> patchset is a continuation of the effort to improve the code readability
-> and reduce magic numbers by implementing and utilizing named register
-> data structures.
->
-> One of the benefits is that we can now observe more easily similarities
-> in devices that share similar interfaces; such as the i8255 interfaces
-> used by the 104-DIO-48E, 104-IDI-48, and GPIO-MM drivers -- as well as
-> the similar interface used by the 104-IDIO-16 and PCI-IDIO-16 drivers.
->
-> A new module supporting the Intel 8255 interface is introduced to
-> consolidate the common code found among the 104-DIO-48E, 104-IDI-48, and
-> GPIO-MM drivers.
->
-> [0] https://lore.kernel.org/all/cover.1652201921.git.william.gray@linaro.org/
->
+Hi Saravana,
 
-Series applied, thanks!
+On Wed, Jun 1, 2022 at 9:45 AM Saravana Kannan <saravanak@google.com> wrote:
+> This reverts commit 11f7e7ef553b6b93ac1aa74a3c2011b9cc8aeb61.
+>
+> Let's take another shot at getting deferred_probe_timeout=10 to work.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 
-Bart
+Thanks for your patch, which is now commit f516d01b9df2782b
+("Revert "driver core: Set default deferred_probe_timeout
+back to 0."") in driver-core/driver-core-next.
+
+Wolfram found an issue on a Renesas board where disabling the IOMMU
+driver (CONFIG_IPMMU_VMSA=n) causes the system to fail to boot,
+and bisected this to a merge of driver-core/driver-core-next.
+After some trials, I managed to reproduce the issue, and bisected it
+further to commit f516d01b9df2782b.
+
+The affected config has:
+    CONFIG_MODULES=y
+    CONFIG_RCAR_DMAC=y
+    CONFIG_IPMMU_VMSA=n
+
+In arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb,
+e6e88000.serial links to a dmac, and the dmac links to an iommu,
+for which no driver is available.
+
+Playing with deferred_probe_timeout values doesn't help.
+
+However, the above options do not seem to be sufficient to trigger
+the issue, as I had other configs with those three options that do
+boot fine.
+
+After bisecting configs, I found the culprit: CONFIG_IP_PNP.
+As Wolfram was using an initramfs, CONFIG_IP_PNP was not needed.
+If CONFIG_IP_PNP=n, booting fails.
+If CONFIG_IP_PNP=y, booting succeeds.
+In fact, just disabling late_initcall(ip_auto_config) makes it fail,
+too.
+Reducing ip_auto_config(), it turns out the call to
+wait_for_init_devices_probe() is what is needed to unblock booting.
+
+So I guess wait_for_init_devices_probe() needs to be called (where?)
+if CONFIG_IP_PNP=n, too?
+
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -256,7 +256,12 @@ static int deferred_devs_show(struct seq_file *s, void *data)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(deferred_devs);
+>
+> +#ifdef CONFIG_MODULES
+> +int driver_deferred_probe_timeout = 10;
+> +#else
+>  int driver_deferred_probe_timeout;
+> +#endif
+> +
+>  EXPORT_SYMBOL_GPL(driver_deferred_probe_timeout);
+>
+>  static int __init deferred_probe_timeout_setup(char *str)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
