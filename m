@@ -2,147 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 302C257C707
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 11:00:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9882257C779
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 11:23:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230506AbiGUJAr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jul 2022 05:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34898 "EHLO
+        id S232672AbiGUJXC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jul 2022 05:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbiGUJAq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 05:00:46 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2790C2495F
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 02:00:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aNuZX6KRJNI/RNH9RZRAR56dWEGrgDVbY7Rj9dgIpijkHcVc1eKKNwutW63RtgGnGUZbz3nozwtGsWQTW0839UxgIc6f6HO9FKx0BJ9RP9rQdBv7CklIV02Une8pQuC1jFlYk/oYTHiqGEpvWAj8Q2evb6pquVCQJjNx8QwBapqQ1KOlVx71zFZiOJ5yEmJYaoovs6H37hYHZCZLaepsi8lmmFwJIr9n7v0tQEYkHtbX9kxTW9o+10WzfpU6uWMX5Cpn3iW2tEEn36w6BeJClHL6ZfAp41rHvrdJG70zLl2mCn3T8ACx3EwFONNXMxy5FhP2uEeXxRN5JhfIfk3MEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SrEry1aELx64LwJwov0FPUKGrQNwkqE0Zmi+J0U5Kh8=;
- b=kLYOGMFCa7IaL+lH1FxTbLach4U1MOOWQp9NrnTuPz2NTQHzgk7RaJA+KO25GQum/J/9kkw1kgk3H4zdcVuNBB/krsa3Tr7M68uC4rlHn6TGCAw3wXuzaxJf9xuKrvl0yjctyJC6ZohJEHi46rXAxAuL46w4jMvTSiCgrpP2uuZWZYZnDU2F8A1nMOjVdHYd1gnPmhFXwMscuDtSdoJU908yRCh9ZyE2jp55j7nzxvfGmOvyo2UUStyL2BQmq275xq64Qr5S08zH7d1nwdxTXs2wFMJEmRtd0CfezM037KuhALEVBJrjYD3/K7eVkcGXFWXoXjUUjBPNyV0Yb38LkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
+        with ESMTP id S232869AbiGUJXC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 05:23:02 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817B87F51C
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 02:23:00 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id n18so1845783lfq.1
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 02:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SrEry1aELx64LwJwov0FPUKGrQNwkqE0Zmi+J0U5Kh8=;
- b=bPNni67OOLo7w4Zk0Fd7cDQPjdXZL9VPQtmyAe+r00xA9lae8tA2FQQ2XJPFrRPQFV1ShgI89AYkrUoOvjniyWDvhC9xZDqmLM9odh5wRwIz1fA90dz5rkHH92Q+6FNpRJAJwLtXkfGCdCieFjOaNn4Kv38sVsQv26HOsfKe4lg=
-Received: from BN9PR03CA0427.namprd03.prod.outlook.com (2603:10b6:408:113::12)
- by PH7PR02MB9050.namprd02.prod.outlook.com (2603:10b6:510:1f2::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.23; Thu, 21 Jul
- 2022 09:00:42 +0000
-Received: from BN1NAM02FT007.eop-nam02.prod.protection.outlook.com
- (2603:10b6:408:113:cafe::a2) by BN9PR03CA0427.outlook.office365.com
- (2603:10b6:408:113::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.14 via Frontend
- Transport; Thu, 21 Jul 2022 09:00:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- BN1NAM02FT007.mail.protection.outlook.com (10.13.3.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5458.17 via Frontend Transport; Thu, 21 Jul 2022 09:00:41 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Thu, 21 Jul 2022 02:00:30 -0700
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Thu, 21 Jul 2022 02:00:30 -0700
-Envelope-to: linux-gpio@vger.kernel.org,
- brgl@bgdev.pl,
- shubhrajyoti.datta@amd.com,
- linus.walleij@linaro.org
-Received: from [10.140.6.59] (port=56810 helo=xhdshubhraj40.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1oES2h-0009LA-AF; Thu, 21 Jul 2022 02:00:23 -0700
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-To:     <linux-gpio@vger.kernel.org>, <brgl@bgdev.pl>
-CC:     <git-dev@xilinx.com>, <shubhrajyoti.datta@amd.com>,
-        <michal.simek@xilinx.com>, <linus.walleij@linaro.org>
-Subject: [PATCH v3] gpio: xilinx: add missing blank line after declarations
-Date:   Thu, 21 Jul 2022 14:30:21 +0530
-Message-ID: <20220721090021.17005-1-shubhrajyoti.datta@xilinx.com>
-X-Mailer: git-send-email 2.17.1
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=rSVG5RXgIgM5NvFYOzp6NmV4cF2lN0/Ef9ot41gAaRs=;
+        b=B4LLzm60t1rlt4QV36ZL3Qy4hANoL2STwfayVbO6iAwK/p2NlSCys/OGU/QYeDxGNR
+         faW/V/w1CXEK4qlqeYgputuTIGDFaQWHM0lCALr16CAd8cqhajRhBSZOWYvO9ajgtcCU
+         kf2mag4LqDklhmQC2sDqC+ZUbYbQzLla6QuiJif28PodirPI9qY8XNCvBpG7gmJdRskG
+         b30/3AOtn8paAvktFrCVh2M4rbTe+TY29Jiugt9liWHCHSCo7AxWOq1RKUFDZrEpvSaG
+         /0UU2a/h0ISQAFmY34OfhYd4UWi8GkbcJ+ltl1F8c8fcgVoxYo0Q9U6mHODrGxDLQUQM
+         mBgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=rSVG5RXgIgM5NvFYOzp6NmV4cF2lN0/Ef9ot41gAaRs=;
+        b=NrrPB+f7clyH3xAfFU2+IKVrGMfm4766vUDEMmcC4ETFpgaqRBPSocRwZD4SnWExo6
+         v901EnWjnjQtO/H27YK7jr18bR+0g8GQ64ig2WP6y5+J+iJ6Piv8eqhqTl/o/ja4cZBH
+         iH5ly4UGTdV/6n1uq0pD86xqa5LzM9pm7f38xoWjFVDl/AEUiDAZEGcycL5SRsgy1JZM
+         EOa+EOineIG3PpqxvJcvIvl2xB5i5nFFQ+BpLq1gwULhqUjtIBkyFuEDaUT3Jvcck+26
+         i6bkPWguK9sjElZSbEPk4K2WM7O/0BXhadGr4ewHsFVH42IIO41vEY5s2nLEby1t4GjV
+         canw==
+X-Gm-Message-State: AJIora8BLGtIzCUJE8upZ51j1R/7MOyS5qIa7qyFtZ24EFbVUnl03t0q
+        Dezdyq7sAA/zkbGMpSBgMGsYqQ==
+X-Google-Smtp-Source: AGRyM1u7eazfJf+qhDvnqRuzjsgcpGetJIrfeJnZOZ1R+WaUrZnXTWFfJyCPPnz6568ACBugGP8L4A==
+X-Received: by 2002:a05:6512:e83:b0:489:e7de:56ea with SMTP id bi3-20020a0565120e8300b00489e7de56eamr23820154lfb.591.1658395378678;
+        Thu, 21 Jul 2022 02:22:58 -0700 (PDT)
+Received: from [192.168.115.193] (89-162-31-138.fiber.signal.no. [89.162.31.138])
+        by smtp.gmail.com with ESMTPSA id g19-20020a2eb5d3000000b0025a739ce2b8sm373440ljn.29.2022.07.21.02.22.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Jul 2022 02:22:57 -0700 (PDT)
+Message-ID: <3b51e8c3-6ab4-373e-2c7d-29c02ffddfed@linaro.org>
+Date:   Thu, 21 Jul 2022 11:22:55 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cd674dcd-3be3-4b1c-b48b-08da6af77d65
-X-MS-TrafficTypeDiagnostic: PH7PR02MB9050:EE_
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TgcCiOdalM+KAZoFtWvxxJMevR7a/HGXpfOQ0qdOxCVwU+hL/9cYR/I+uaA8LrM1uG207DWKkyUlAjgYJIEPJDJSx+hlaT87ApOV9jX3vOi4JCZqMXaoGuiaiE9rEZB8xy+PJhKdvsiYGvkBkIf0RZGGoXoKVjUIerAooUMcGxgezzxV8/ivLe0khPRCrf11xrcwLfxobXbhzvQVvjHnxirx4fxO+5bClGtfwJeyyYkkq6EhY2aGixd3oRTbSdL26wYKiq4ODZCKxvCIhVTteEt6A9TOANr8LiOM3zFqjyo7N7bPG+yfasj1yEYJ/JlaKcpB3zBpKOLslyNOgEq3diP/1+de9Zw0ySkrEB3HS9nNSPStBzckIAguid05Xm7GGARbxjZniWwD8XQdZ0cvE2Z5Hu9JTwZRlOp1VI4DxOsT5RnZQr2P/WV3UEL196ob4bdyP3zys8+DMO2hM98uKMx6ACqCgtBpCV5zBtNohlPYGGe0jUhW+SeTFxwwJFIwDY8ZiWYH2iLaBH6U29Ww4HDKWDouLOIMHMsxd0dQVcip4EboznF6P1C2L5Z2dp9mUqsgS5Kgg8dzXS63PYoM0z4AdnhxAYhNf6quVWwQTQDmp/0RwNtIroKN5eceLPOXmXoNKpO19h90m0vCog/4YNOicHZMigjtKXMA0ShKXe5p/ymnIxGji0lmS7PP+1nRrLJnS4t6HY2/n/iAGElC9/Sa+664b8n1hpKLn3Fb8x0/qR/6I/U2Fj+RHAq7/Q6TjvGYvKyUBs8Kr+E9g3+fwv+oMHxm/hMk4qpqljew5xQ/x/Mh11u3UaB3Wk453eb8IvzuSvHW+E3WjesZEhKvLg==
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(136003)(376002)(396003)(46966006)(40470700004)(36840700001)(316002)(110136005)(40480700001)(83380400001)(356005)(8936002)(36756003)(82740400003)(7636003)(82310400005)(54906003)(44832011)(47076005)(2616005)(36860700001)(186003)(4326008)(70586007)(426003)(5660300002)(70206006)(1076003)(478600001)(41300700001)(8676002)(40460700003)(9786002)(7696005)(2906002)(336012)(26005)(102446001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2022 09:00:41.7911
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd674dcd-3be3-4b1c-b48b-08da6af77d65
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT007.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB9050
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
+ binding
+Content-Language: en-US
+To:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20220713135528.1386594-1-biju.das.jz@bp.renesas.com>
+ <20220713135528.1386594-2-biju.das.jz@bp.renesas.com>
+ <24903621-358d-d380-76f4-6515c6313bbd@linaro.org>
+ <OS0PR01MB5922CE20E15959AEF89C36D4868B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <1c96a873-81f7-02c4-56cc-f33a283329eb@linaro.org>
+ <OS0PR01MB5922CD0716DF83F92BA63B5F868C9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <OS0PR01MB5922CD0716DF83F92BA63B5F868C9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a missing blank line. No functional changes.
+On 18/07/2022 15:13, Biju Das wrote:
+> Hi Krzysztof Kozlowski,
+> 
+>> Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
+>> binding
+>>
+>> On 15/07/2022 12:17, Biju Das wrote:
+>>> Hi Krzysztof Kozlowski,
+>>>
+>>> Thanks for the feedback.
+>>>
+>>>> Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L
+>>>> POEG binding
+>>>>
+>>>> On 13/07/2022 15:55, Biju Das wrote:
+>>>>> Add device tree bindings for the RZ/G2L Port Output Enable for GPT
+>>>> (POEG).
+>>>>>
+>>>>> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+>>>>> ---
+>>>>> REF->v1:
+>>>>>  * Modelled as pincontrol as most of its configuration is intended
+>>>>> to
+>>>> be
+>>>>>    static.
+>>>>>  * Updated reg size in example.
+>>>>> ---
+>>>>>  .../bindings/pinctrl/renesas,rzg2l-poeg.yaml  | 65
+>>>>> +++++++++++++++++++
+>>>>>  1 file changed, 65 insertions(+)
+>>>>>  create mode 100644
+>>>>> Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+>>>>>
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+>>>>> b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..7607dd87fa68
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.y
+>>>>> +++ am
+>>>>> +++ l
+>>>>> @@ -0,0 +1,65 @@
+>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+>>>>> +---
+>>>>> +$id:
+>>>>> +
+>>>>> +title: Renesas RZ/G2L Port Output Enable for GPT (POEG)
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Biju Das <biju.das.jz@bp.renesas.com>
+>>>>> +
+>>>>> +description: |
+>>>>> +  The output pins of the general PWM timer (GPT) can be disabled by
+>>>>> +using
+>>>>> +  the port output enabling function for the GPT (POEG).
+>>>>> +Specifically,
+>>>>> +  either of the following ways can be used.
+>>>>> +  * Input level detection of the GTETRGA to GTETRGD pins.
+>>>>> +  * Output-disable request from the GPT.
+>>>>
+>>>> Shouldn't this all be part of GPT? Is this a real separate device in
+>>>> the SoC?
+>>>
+>>> No, It is separate IP block, having its own register block, interrupts
+>> and resets.
+>>>
+>>> Please see RFC discussion here[1]
+>>>
+>>> [1]
+>>>
+>>>>
+>>>>> +  * Register settings.
+>>>>
+>>>> This is confusing... so you can use POEG to mess up registers of GPT
+>>>> independently, so GPT does not know it?
+>>>
+>>> POEG does not mess up registers of GPT. It is basically for protection.
+>>>
+>>> Using POEG register, it is possible to disable GPT output without the
+>> knowledge of GPT, after configuring the Output disable source select in
+>> the GTINTAD (General PWM Timer Interrupt Output Setting Register)
+>> register present in GPT.
+>>
+>> Then what does it mean:
+>> "...following ways can be used. Register settings."
+>> I cannot parse it.
+> 
+> Threre 3 methods mentioned in chapter 19.3 of RZ/G2L HW manual for Output-Disable Control Operation. 
+> "Register settings" referred to the 3rd method as mentioned below.
+> 
+> 19.3 Output-Disable Control Operation
+> The output of the GTIOCxA and GTIOCxB pins can be disabled when any of the following conditions are satisfied.
+> 
+> 1) Input level or edge detection of the GTETRGn pins
+> 	When POEGGn.PIDE is 1, the POEGGn.PIDF flag is set to 1.
+> 
+> 2) Output-disable request from the GPT
+> When POEGGn.IOCE is 1, the POEGGn.IOCF flag is set to 1.
+> The output-disable requests enabled by GRPDTE, GRPABH, and GRPABL bits of the GTINTAD register in the
+> GPT are applied to the group selected by GRP[1:0] bits of the GTINTAD register.
+> 
+> 3) SSF bit setting
+> When POEGGn.SSF is set to 1.
+> 
+> The state of the GTIOCxA and the GTIOCxB pins when the output is disabled is controlled by the GPT module.
+> 
+> Please let me know if you need any info.
 
-WARNING: Missing a blank line after declarations
-128: FILE: drivers/gpio/gpio-xilinx.c:120:
-+       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-+       xgpio_set_value32(a, bit, xgpio_readreg(addr));
+Yes, more info is needed in your patch. The "...following ways can be
+used. (...) Register settings." does not explain anything.
 
-WARNING: Missing a blank line after declarations
-136: FILE: drivers/gpio/gpio-xilinx.c:126:
-+       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-+       xgpio_writereg(addr, xgpio_get_value32(a, bit));
-
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v2: Update commit message
-v3: No change
-
- drivers/gpio/gpio-xilinx.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index b6d3a57e27ed..7f129e7eae78 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -117,12 +117,14 @@ static inline int xgpio_regoffset(struct xgpio_instance *chip, int ch)
- static void xgpio_read_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
- {
- 	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-+
- 	xgpio_set_value32(a, bit, xgpio_readreg(addr));
- }
- 
- static void xgpio_write_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
- {
- 	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-+
- 	xgpio_writereg(addr, xgpio_get_value32(a, bit));
- }
- 
--- 
-2.17.1
-
+Best regards,
+Krzysztof
