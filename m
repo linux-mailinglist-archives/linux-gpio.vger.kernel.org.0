@@ -2,112 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9926D57CE00
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 16:44:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B93757D3EB
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 21:16:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229379AbiGUOor (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jul 2022 10:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58534 "EHLO
+        id S233648AbiGUTQK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jul 2022 15:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbiGUOoq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 10:44:46 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890FC868B9
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 07:44:44 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id r14so2100488ljp.2
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 07:44:44 -0700 (PDT)
+        with ESMTP id S232832AbiGUTPt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 15:15:49 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D0C59253
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 12:15:20 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id m10so1945251qvu.4
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 12:15:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=FMWEsxHpInJ1xz9Gs6AtvSkVM4GO31cBlC1zLGqoQzg=;
-        b=tjJLv/UGjfvQJpvCQ33RuE6X0s3x88e32Phfvp0hTB5CvyJTNfViQdQMJZjgJr95RJ
-         M1DhIFGCYV8S4RKnxt5Jv7SvnIEZJmZNYgPrSJSYnvCJtipTTNkSCqIzV3Bp/GXFc7bN
-         2bh1G4BvwlmBGppJk+Lew6rYmlR/nktEiX7S2AFfFdkM75T2xdwesadxT4Z2oXPm/XNh
-         asX65DPb616tMln9yU1TlNSpJ/csUBQleESxdeop7PVjkzFmMBtFgEVnXCWm+EL2C13n
-         TotNrFrbcYM19moIdyMenDbbNlC4VVh+lw07G+x/SN4yUze6MpNfqae1wt4ccQ4/KUOU
-         WgQQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ImhHJx4Vd1FevHdyjgSCSnH8Im71TSuXWWjTS8e9Dw=;
+        b=ByTDxhXX+luQEdOqug9WixagMCsnFlKEjeC/vn7w3OH293zYmsig3njMxuJ4eQ/z+d
+         7CF0ZDgG42cFl6lRfdRjq8MkZcMS8xYiJr5eKWfKonBZV1NG6BodczVkimLTZ10qyDQq
+         NjO6rlgUvnpMBOlVErMIuR26urBuALLU/yEBRYjkB+Au9X2pxwwIbsG9PSBGNMp85lo+
+         zKsHHjJhq/pdy/TAVM375T2i8PsMH7bc7pOIRBTNrG59M2gII9UbnJHjRptCvUKF5M8F
+         Ez91PKt8LGc/RD9HMfgHOURW7cfc32MzRKFgtELH0KMWu+tNnbO42gb4m0tXBSDpyHW0
+         YMBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=FMWEsxHpInJ1xz9Gs6AtvSkVM4GO31cBlC1zLGqoQzg=;
-        b=iA+pSZiCUhAWs22f/Amswzp/Y3kZr0xa+6Cm3w2QAWXRrWEtXZui1ObjSr+vl1kXdD
-         qs7xjp9zh4etbrH6Joomp7KZnuW0V6iGWaBwWwMeVQb49KR8gFWzPQWjg4FXhc4WedmE
-         CwZzNfc5s2W12yXi1s49xVSouhuPIaZTZodk8W87zrwhPz0CDidjc8CXyDz1E/oeKVue
-         oqYyitZ6OXU+6lUZn9LpIYIQ7XOST9zi1eTMqisNh0ROYUDg/vHEs1UgomRlDamnmuCp
-         m27TEjzrh1VzQ3C5WxStTlrOZqJHwZtZ5Oml5bSpvVeDZrii/wEaKVfTxZpKKbCturIP
-         vNDQ==
-X-Gm-Message-State: AJIora9wuHKf+6dML/rGVMfgZ7l7PHOEQlTi/hvO8ysqu9Fsx3rvAqqk
-        8bA0Az3GjLb0HYHVVA5GScZSPw979w+82Dg+
-X-Google-Smtp-Source: AGRyM1syJRz5lw19BNkewuiPYEzwKNI6nibJa7ejYlb/nifC90WR3tPIgHeEmuSlf60Y8XpXN5pc5A==
-X-Received: by 2002:a2e:bd89:0:b0:25a:86c8:93ca with SMTP id o9-20020a2ebd89000000b0025a86c893camr18419288ljq.419.1658414682866;
-        Thu, 21 Jul 2022 07:44:42 -0700 (PDT)
-Received: from [192.168.115.193] (89-162-31-138.fiber.signal.no. [89.162.31.138])
-        by smtp.gmail.com with ESMTPSA id i8-20020ac25228000000b0047fa02cd96csm479673lfl.162.2022.07.21.07.44.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jul 2022 07:44:42 -0700 (PDT)
-Message-ID: <35639a59-4a3d-5aa7-946c-22fbd2f25e89@linaro.org>
-Date:   Thu, 21 Jul 2022 16:44:40 +0200
+        bh=4ImhHJx4Vd1FevHdyjgSCSnH8Im71TSuXWWjTS8e9Dw=;
+        b=bMhEC4lH2w/26Bg9QP8mitJkA1S+yTwo47yTeve+icPu+nMq0Sl72NpLQgGNLggYWn
+         zgAXNfK9z4Qhk+K4MNbH38ivyBDOJ3ifVtalLaJuh7kedi0fI5WE0XqYOCOKsb07XjSu
+         xo5JgkuGlrwze4stq7aA2hdk1AeEtcg5KQYlyonRwjTAVuYnXnbOMqW7tHMAEoQfi+8e
+         kADnxcKXy6lmfy3JSs2dMCU9R/0j6D7eKSvC+oEXJxiVY9cxmbHmvvPtOTWOuuoCNROq
+         ScWB2VlLo5Z7F+qDYYHO8rTydioYmfcSgdDC3naH19wp1brenCb6whYkMJWuIeMPehaL
+         9h6Q==
+X-Gm-Message-State: AJIora/6WuMeLu4lXIPF27gXRmjxZLHNts2+N2M/E93WjZMc8oi8Ic6s
+        XB33XsiuxTZyKjqeVhauzLZEtg==
+X-Google-Smtp-Source: AGRyM1uMldStzbeoXJ5pl5+ljso5lKYS55h7lToGnX3Meln/qbMA1OHUzadtZOHL+Qut+UPmmVa5CQ==
+X-Received: by 2002:a05:6214:238b:b0:473:358:ddf4 with SMTP id fw11-20020a056214238b00b004730358ddf4mr35709438qvb.66.1658430919566;
+        Thu, 21 Jul 2022 12:15:19 -0700 (PDT)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id h20-20020ac85854000000b0031ef0081d77sm1897221qth.79.2022.07.21.12.15.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Jul 2022 12:15:19 -0700 (PDT)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>
+Subject: [PATCH] MAINTAINERS: Update Intel 8255 GPIO driver file list
+Date:   Thu, 21 Jul 2022 11:25:08 -0400
+Message-Id: <20220721152508.3661-1-william.gray@linaro.org>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 1/3] dt-bindings: mediatek: add pinctrl definition for
- mt8188
-Content-Language: en-US
-To:     "hui.liu" <hui.liu@mediatek.com>, linus.walleij@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        matthias.bgg@gmail.com
-Cc:     johnson.wang@mediatek.com, zhiyong.tao@mediatek.com,
-        sean.wang@mediatek.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20220718113813.23787-1-hui.liu@mediatek.com>
- <20220718113813.23787-2-hui.liu@mediatek.com>
- <b28dcbe5-d15f-1c4f-9b3d-650d5c39de6b@linaro.org>
- <08a7209fe198839093b3ef729fc97c1a950e1fbc.camel@mediatek.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <08a7209fe198839093b3ef729fc97c1a950e1fbc.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/07/2022 15:46, hui.liu wrote:
->>> +
->>> +          bias-disable: true
->>> +
->>> +          output-high: true
->>> +
->>> +          output-low: true
->>> +
->>> +          input-enable: true
->>> +
->>> +          input-disable: true
->>> +
->>> +          input-schmitt-enable: true
->>> +
->>> +          input-schmitt-disable: true
->>> +
->>> +        required:
->>> +          - pinmux
->>> +
->>> +allOf:
->>> +  - $ref: "pinctrl.yaml#"
->>
->> No need for quotes, especially that you use different here " than in
->> other places '.
+The drivers/gpio/gpio-i8255.h header file is also maintained.
 
-You quoted my entire email, where is the question?
+Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 960abc07304e..2bd82ce171ca 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9907,6 +9907,7 @@ M:	William Breathitt Gray <william.gray@linaro.org>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+ F:	drivers/gpio/gpio-i8255.c
++F:	drivers/gpio/gpio-i8255.h
+ 
+ INTEL ASoC DRIVERS
+ M:	Cezary Rojewski <cezary.rojewski@intel.com>
 
-Best regards,
-Krzysztof
+base-commit: 949506dc608f9820e0cee51b106c35fd3503bbb2
+-- 
+2.36.1
+
