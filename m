@@ -2,176 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5D157C696
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 10:40:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 302C257C707
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 11:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231911AbiGUIkq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jul 2022 04:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39392 "EHLO
+        id S230506AbiGUJAr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jul 2022 05:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230016AbiGUIkb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 04:40:31 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3046D4E613;
-        Thu, 21 Jul 2022 01:40:30 -0700 (PDT)
-Received: by mail-qk1-f172.google.com with SMTP id c3so803655qko.1;
-        Thu, 21 Jul 2022 01:40:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QvrjWjlD4kqRKdbG/mvxTTXUIQvY0KUhkxqPtqDf08Q=;
-        b=dnMPv8cq360u9u2mQLFK4HnWY/DYulnmOIUzg8A0wAArgG+2KlEeL3VUO+CO1aQBbY
-         8wHyc+SfD66k0h3CYBXvILhNcJad37x0d7TL2MXmZGyWnqvpsidVFJXEZqBEdGceX6Qt
-         8A0oR79MLYArTAxhJNi+Jx4yV12QoxkS4iCVFnzas2wh5V7MNHXflQnF8oQ3nhuhtCzl
-         fOeFn3WZwSGuQpqfUMopW+BriD3dGsdVtAN3BCS6v87FZixlqEkpoFU2y5aeHFxSydyE
-         XF0aNLGJV5DC0FPZDXW1XI56gXC+L5feyRMrOPP3F9S6tKQLgEsO3xCdHalLChtfXvQs
-         c9qw==
-X-Gm-Message-State: AJIora87MKa973xb4YlQyrHrM3+VRP5dSJFGl7OvU6BEPNteIuIzp1zQ
-        AC4kcx+hCQ1eDsR86YjgolNU2HP0kX4T8A==
-X-Google-Smtp-Source: AGRyM1tzE830A27JcgiMXxx71diSLL3TO0ytrKJM+Y31H9nYkMu9nx1FPiH5goLGfEYAKKf3C+Z1NQ==
-X-Received: by 2002:a05:620a:294e:b0:6a7:750b:abf8 with SMTP id n14-20020a05620a294e00b006a7750babf8mr26714409qkp.513.1658392829113;
-        Thu, 21 Jul 2022 01:40:29 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id d21-20020ac85ad5000000b0031ea1ad6c5asm965813qtd.75.2022.07.21.01.40.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jul 2022 01:40:28 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-31e67c46ba2so9924567b3.2;
-        Thu, 21 Jul 2022 01:40:27 -0700 (PDT)
-X-Received: by 2002:a81:84c1:0:b0:31e:4e05:e4f4 with SMTP id
- u184-20020a8184c1000000b0031e4e05e4f4mr15900153ywf.384.1658392826805; Thu, 21
- Jul 2022 01:40:26 -0700 (PDT)
+        with ESMTP id S229748AbiGUJAq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 05:00:46 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2790C2495F
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 02:00:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aNuZX6KRJNI/RNH9RZRAR56dWEGrgDVbY7Rj9dgIpijkHcVc1eKKNwutW63RtgGnGUZbz3nozwtGsWQTW0839UxgIc6f6HO9FKx0BJ9RP9rQdBv7CklIV02Une8pQuC1jFlYk/oYTHiqGEpvWAj8Q2evb6pquVCQJjNx8QwBapqQ1KOlVx71zFZiOJ5yEmJYaoovs6H37hYHZCZLaepsi8lmmFwJIr9n7v0tQEYkHtbX9kxTW9o+10WzfpU6uWMX5Cpn3iW2tEEn36w6BeJClHL6ZfAp41rHvrdJG70zLl2mCn3T8ACx3EwFONNXMxy5FhP2uEeXxRN5JhfIfk3MEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SrEry1aELx64LwJwov0FPUKGrQNwkqE0Zmi+J0U5Kh8=;
+ b=kLYOGMFCa7IaL+lH1FxTbLach4U1MOOWQp9NrnTuPz2NTQHzgk7RaJA+KO25GQum/J/9kkw1kgk3H4zdcVuNBB/krsa3Tr7M68uC4rlHn6TGCAw3wXuzaxJf9xuKrvl0yjctyJC6ZohJEHi46rXAxAuL46w4jMvTSiCgrpP2uuZWZYZnDU2F8A1nMOjVdHYd1gnPmhFXwMscuDtSdoJU908yRCh9ZyE2jp55j7nzxvfGmOvyo2UUStyL2BQmq275xq64Qr5S08zH7d1nwdxTXs2wFMJEmRtd0CfezM037KuhALEVBJrjYD3/K7eVkcGXFWXoXjUUjBPNyV0Yb38LkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SrEry1aELx64LwJwov0FPUKGrQNwkqE0Zmi+J0U5Kh8=;
+ b=bPNni67OOLo7w4Zk0Fd7cDQPjdXZL9VPQtmyAe+r00xA9lae8tA2FQQ2XJPFrRPQFV1ShgI89AYkrUoOvjniyWDvhC9xZDqmLM9odh5wRwIz1fA90dz5rkHH92Q+6FNpRJAJwLtXkfGCdCieFjOaNn4Kv38sVsQv26HOsfKe4lg=
+Received: from BN9PR03CA0427.namprd03.prod.outlook.com (2603:10b6:408:113::12)
+ by PH7PR02MB9050.namprd02.prod.outlook.com (2603:10b6:510:1f2::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.23; Thu, 21 Jul
+ 2022 09:00:42 +0000
+Received: from BN1NAM02FT007.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:408:113:cafe::a2) by BN9PR03CA0427.outlook.office365.com
+ (2603:10b6:408:113::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.14 via Frontend
+ Transport; Thu, 21 Jul 2022 09:00:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ BN1NAM02FT007.mail.protection.outlook.com (10.13.3.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5458.17 via Frontend Transport; Thu, 21 Jul 2022 09:00:41 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Thu, 21 Jul 2022 02:00:30 -0700
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Thu, 21 Jul 2022 02:00:30 -0700
+Envelope-to: linux-gpio@vger.kernel.org,
+ brgl@bgdev.pl,
+ shubhrajyoti.datta@amd.com,
+ linus.walleij@linaro.org
+Received: from [10.140.6.59] (port=56810 helo=xhdshubhraj40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <shubhrajyoti.datta@xilinx.com>)
+        id 1oES2h-0009LA-AF; Thu, 21 Jul 2022 02:00:23 -0700
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+To:     <linux-gpio@vger.kernel.org>, <brgl@bgdev.pl>
+CC:     <git-dev@xilinx.com>, <shubhrajyoti.datta@amd.com>,
+        <michal.simek@xilinx.com>, <linus.walleij@linaro.org>
+Subject: [PATCH v3] gpio: xilinx: add missing blank line after declarations
+Date:   Thu, 21 Jul 2022 14:30:21 +0530
+Message-ID: <20220721090021.17005-1-shubhrajyoti.datta@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20220601070707.3946847-1-saravanak@google.com>
- <20220601070707.3946847-7-saravanak@google.com> <CAMuHMdVVgB7KZq7-u-pAC-cZvVLWkv5wM4HC_jW7WK_tz52+cg@mail.gmail.com>
- <CAGETcx-5-241=CxaPsGTTHhCSAZuGb742J9Xrhbj56+2yG6OhQ@mail.gmail.com>
-In-Reply-To: <CAGETcx-5-241=CxaPsGTTHhCSAZuGb742J9Xrhbj56+2yG6OhQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 21 Jul 2022 10:40:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXqRQdQe+34KORCAPxPc4sywZBZ6a=+yzS5k+kJVHjWhw@mail.gmail.com>
-Message-ID: <CAMuHMdXqRQdQe+34KORCAPxPc4sywZBZ6a=+yzS5k+kJVHjWhw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/9] Revert "driver core: Set default
- deferred_probe_timeout back to 0."
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Ahern <dsahern@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cd674dcd-3be3-4b1c-b48b-08da6af77d65
+X-MS-TrafficTypeDiagnostic: PH7PR02MB9050:EE_
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TgcCiOdalM+KAZoFtWvxxJMevR7a/HGXpfOQ0qdOxCVwU+hL/9cYR/I+uaA8LrM1uG207DWKkyUlAjgYJIEPJDJSx+hlaT87ApOV9jX3vOi4JCZqMXaoGuiaiE9rEZB8xy+PJhKdvsiYGvkBkIf0RZGGoXoKVjUIerAooUMcGxgezzxV8/ivLe0khPRCrf11xrcwLfxobXbhzvQVvjHnxirx4fxO+5bClGtfwJeyyYkkq6EhY2aGixd3oRTbSdL26wYKiq4ODZCKxvCIhVTteEt6A9TOANr8LiOM3zFqjyo7N7bPG+yfasj1yEYJ/JlaKcpB3zBpKOLslyNOgEq3diP/1+de9Zw0ySkrEB3HS9nNSPStBzckIAguid05Xm7GGARbxjZniWwD8XQdZ0cvE2Z5Hu9JTwZRlOp1VI4DxOsT5RnZQr2P/WV3UEL196ob4bdyP3zys8+DMO2hM98uKMx6ACqCgtBpCV5zBtNohlPYGGe0jUhW+SeTFxwwJFIwDY8ZiWYH2iLaBH6U29Ww4HDKWDouLOIMHMsxd0dQVcip4EboznF6P1C2L5Z2dp9mUqsgS5Kgg8dzXS63PYoM0z4AdnhxAYhNf6quVWwQTQDmp/0RwNtIroKN5eceLPOXmXoNKpO19h90m0vCog/4YNOicHZMigjtKXMA0ShKXe5p/ymnIxGji0lmS7PP+1nRrLJnS4t6HY2/n/iAGElC9/Sa+664b8n1hpKLn3Fb8x0/qR/6I/U2Fj+RHAq7/Q6TjvGYvKyUBs8Kr+E9g3+fwv+oMHxm/hMk4qpqljew5xQ/x/Mh11u3UaB3Wk453eb8IvzuSvHW+E3WjesZEhKvLg==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(136003)(376002)(396003)(46966006)(40470700004)(36840700001)(316002)(110136005)(40480700001)(83380400001)(356005)(8936002)(36756003)(82740400003)(7636003)(82310400005)(54906003)(44832011)(47076005)(2616005)(36860700001)(186003)(4326008)(70586007)(426003)(5660300002)(70206006)(1076003)(478600001)(41300700001)(8676002)(40460700003)(9786002)(7696005)(2906002)(336012)(26005)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2022 09:00:41.7911
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd674dcd-3be3-4b1c-b48b-08da6af77d65
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT007.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB9050
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Saravana,
+Add a missing blank line. No functional changes.
 
-On Wed, Jul 20, 2022 at 9:02 PM Saravana Kannan <saravanak@google.com> wrote:
-> On Wed, Jul 20, 2022 at 10:31 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Wed, Jun 1, 2022 at 9:45 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > This reverts commit 11f7e7ef553b6b93ac1aa74a3c2011b9cc8aeb61.
-> > >
-> > > Let's take another shot at getting deferred_probe_timeout=10 to work.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >
-> > Thanks for your patch, which is now commit f516d01b9df2782b
-> > ("Revert "driver core: Set default deferred_probe_timeout
-> > back to 0."") in driver-core/driver-core-next.
-> >
-> > Wolfram found an issue on a Renesas board where disabling the IOMMU
-> > driver (CONFIG_IPMMU_VMSA=n) causes the system to fail to boot,
-> > and bisected this to a merge of driver-core/driver-core-next.
-> > After some trials, I managed to reproduce the issue, and bisected it
-> > further to commit f516d01b9df2782b.
-> >
-> > The affected config has:
-> >     CONFIG_MODULES=y
-> >     CONFIG_RCAR_DMAC=y
-> >     CONFIG_IPMMU_VMSA=n
-> >
-> > In arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb,
-> > e6e88000.serial links to a dmac, and the dmac links to an iommu,
-> > for which no driver is available.
->
-> Thanks for digging into this and giving more details.
->
-> Is e6e88000.serial being blocked the reason for the boot failure?
+WARNING: Missing a blank line after declarations
+128: FILE: drivers/gpio/gpio-xilinx.c:120:
++       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
++       xgpio_set_value32(a, bit, xgpio_readreg(addr));
 
-It doesn't seem to be.
+WARNING: Missing a blank line after declarations
+136: FILE: drivers/gpio/gpio-xilinx.c:126:
++       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
++       xgpio_writereg(addr, xgpio_get_value32(a, bit));
 
-> If so, can you give this a shot?
-> https://lore.kernel.org/lkml/20220701012647.2007122-1-saravanak@google.com/
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+v2: Update commit message
+v3: No change
 
-Thanks, but it doesn't make a difference.
+ drivers/gpio/gpio-xilinx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > After bisecting configs, I found the culprit: CONFIG_IP_PNP.
-> > As Wolfram was using an initramfs, CONFIG_IP_PNP was not needed.
-> > If CONFIG_IP_PNP=n, booting fails.
-> > If CONFIG_IP_PNP=y, booting succeeds.
-> > In fact, just disabling late_initcall(ip_auto_config) makes it fail,
-> > too.
-> > Reducing ip_auto_config(), it turns out the call to
-> > wait_for_init_devices_probe() is what is needed to unblock booting.
-> >
-> > So I guess wait_for_init_devices_probe() needs to be called (where?)
-> > if CONFIG_IP_PNP=n, too?
->
-> That function just unblocks all devices and allows them to try and
-> probe and then waits for all possible probes to finish before
-> returning. They problem with call it randomly/every time is that it
-> breaks functionality where an optional supplier will probe after a few
-> modules are loaded in the future.
->
-> I guess one possible issue with the timeout not helping is that once
-> the timeout expires, things are still being probed and nothing is
-> being blocked till they finish probing.
+diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+index b6d3a57e27ed..7f129e7eae78 100644
+--- a/drivers/gpio/gpio-xilinx.c
++++ b/drivers/gpio/gpio-xilinx.c
+@@ -117,12 +117,14 @@ static inline int xgpio_regoffset(struct xgpio_instance *chip, int ch)
+ static void xgpio_read_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
+ {
+ 	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
++
+ 	xgpio_set_value32(a, bit, xgpio_readreg(addr));
+ }
+ 
+ static void xgpio_write_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
+ {
+ 	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
++
+ 	xgpio_writereg(addr, xgpio_get_value32(a, bit));
+ }
+ 
+-- 
+2.17.1
 
-I'm not sure that it's a device that's missing.
-
-Calling wait_for_init_devices_probe() or not changes lots of little
-things in the probing order. But when comparing the sorted boot logs,
-there does not seem to be any difference in the list of devices that
-was probed successfully.
-It looks like the system is just blocked on something else?...
-
-I tried getting a list of all locks held using Magic SysRq + d,
-but Magic SysRq on the serial console does not work at this point
-(it does work in the booted kernel with CONFIG_IP_PNP=y).
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
