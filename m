@@ -2,118 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1125757C8AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 12:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3618357CA21
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 13:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232023AbiGUKNP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jul 2022 06:13:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43072 "EHLO
+        id S231878AbiGUL6o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Jul 2022 07:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232781AbiGUKNN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 06:13:13 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3490743E1;
-        Thu, 21 Jul 2022 03:13:12 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id bp15so2323800ejb.6;
-        Thu, 21 Jul 2022 03:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6f3mIWXiAzo1mJeZEybIuFn6qGgQI7G+EgnjKVOR7uU=;
-        b=ML8vUnPITuwwDOgosqSNiFGavktq7CUFvIlcrhoWxzLDzr83aED6K1RcCXQUGxNlgK
-         k9PreOcejk1nuPw/INF8fWpgAnru8i6IjPV6ZkIMsHUx9sF4HCqsW4SAYP/mStgcGDJx
-         UF6BFAUEZiR5xNSJ1SodYPFZnHG/Q9oUZ/pgZJaoqljcBxtYpwCNeaxXOo16yxBTzFl4
-         ihddgOpzD7ljgFbjORONV61OQFxbVBD9Yd3XW052cWwLmcMw6yPQcBglpaPDdptFYV1o
-         KPG+GuTX90IJmX4z8vhVWECE1qQjgoVrUpkR9wayHTwEk/RyAnzlutFa+3fTVdIPSEs/
-         6d2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6f3mIWXiAzo1mJeZEybIuFn6qGgQI7G+EgnjKVOR7uU=;
-        b=S/NvYcBrQ/fOrFgoxGAB67XyBwdi9eSaoUJluI42bDFrSD+KwzyWqGk4estZiFB2V9
-         0kevmAll8rI07vVtuKkIzY1eicJIXQnjrG7C+T3aTh1dHfU1vAu/CLoKqiqdWbwBd+U+
-         lCwX6cUYlj7yT70OmFLIsNqfvLOcxt39r6IidG/HyFxAVxiCuuK5zPqKYiU0PXYOvH3W
-         8sBmhXIrpoYCpsqFP0COBNBEATrl8OGlQ72IXiTco60Bv+gbd67NEFxGVvRW1rPfshG2
-         CxMhiJ2GskX/5Q5HPatqkhXvGKBF/k2XR6CkD3Hb9WTHU5yTMCme9PCm1lyovXmeIHgE
-         hAtw==
-X-Gm-Message-State: AJIora/EGM+oAsn9TwJ6yShm2K82Llib9QuiU7eRfkpbAsCNWSa7FTC4
-        Y6NcO6eSgnxw5+tvXTwsvB7MNLHboKY=
-X-Google-Smtp-Source: AGRyM1sQbUlMUHbftjmvExI1vm1+iVp2D2Sbn2momx6NlwErm5Nk2jpLynEyIjDajE60H8ooJhjHoA==
-X-Received: by 2002:a17:907:3d87:b0:72e:dcfb:5ca7 with SMTP id he7-20020a1709073d8700b0072edcfb5ca7mr35038381ejc.586.1658398391343;
-        Thu, 21 Jul 2022 03:13:11 -0700 (PDT)
-Received: from localhost (92.40.202.7.threembb.co.uk. [92.40.202.7])
-        by smtp.gmail.com with ESMTPSA id i8-20020aa7c9c8000000b0043bbf79b3ebsm722122edt.54.2022.07.21.03.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 03:13:10 -0700 (PDT)
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, michael@walle.cc
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH -next] gpio: sl28cpld: Replace irqchip mask_invert with unmask_base
-Date:   Thu, 21 Jul 2022 11:14:16 +0100
-Message-Id: <20220721101416.18129-1-aidanmacdonald.0x0@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231636AbiGUL6o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 07:58:44 -0400
+X-Greylist: delayed 333 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 Jul 2022 04:58:43 PDT
+Received: from mail.thorsis.com (mail.thorsis.com [92.198.35.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0DAC34A801;
+        Thu, 21 Jul 2022 04:58:42 -0700 (PDT)
+Date:   Thu, 21 Jul 2022 13:53:03 +0200
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpio: gpio-74x164: add support for CDx4HC4094
+Message-ID: <Ytk+H/w78QWov0nL@ada.ifak-system.com>
+Mail-Followup-To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Following recent changes in regmap-irq, unmask registers can now
-describe inverted mask registers where a '1' bit enables an IRQ.
-Because this implements the same functionality as mask_invert and
-is more straightforward, the mask_invert flag has been deprecated.
+Hello Marcus,
 
-Update the driver by replacing all uses of mask_base & mask_invert
-with unmask_base.
+Am Thu, Jul 21, 2022 at 11:34:21AM +0200 schrieb Marcus Folkesson:
+> 74hc4094 and 75hc4094 works similar to 74x164 but has an additional
+               ^^
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
----
-This patch depends on the "regmap-irq cleanups and refactoring" series
-which (at time of writing) is already in linux-next.
-Link: https://lore.kernel.org/lkml/20220623211420.918875-1-aidanmacdonald.0x0@gmail.com/
+That 75 is probably a typo, isn't it?
 
- drivers/gpio/gpio-sl28cpld.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Greets
+Alex
 
-diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
-index 52404736ac86..2195f88c2048 100644
---- a/drivers/gpio/gpio-sl28cpld.c
-+++ b/drivers/gpio/gpio-sl28cpld.c
-@@ -70,8 +70,7 @@ static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
- 	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
- 	irq_chip->num_regs = 1;
- 	irq_chip->status_base = base + GPIO_REG_IP;
--	irq_chip->mask_base = base + GPIO_REG_IE;
--	irq_chip->mask_invert = true;
-+	irq_chip->unmask_base = base + GPIO_REG_IE;
- 	irq_chip->ack_base = base + GPIO_REG_IP;
- 
- 	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
-
-base-commit: 353f7988dd8413c47718f7ca79c030b6fb62cfe5
-prerequisite-patch-id: a45db1cac7537769dc10087fc61f977dc150744c
-prerequisite-patch-id: cb8aa009c7bb7a6575eb05e3af65342dc8d0efa3
-prerequisite-patch-id: 8d32557e53b894d1fb17250d2d0eb3673f068d37
-prerequisite-patch-id: 5b293867ef81e3697892ac51b941bb53680a70dc
-prerequisite-patch-id: 8138d39a4817e804141bfe8c2ad37d9c55456a40
-prerequisite-patch-id: b01216129e887519d441cf556bbc75c397871773
-prerequisite-patch-id: b5dcf0c0609113c2d81bc557c1fc95ef23f40811
-prerequisite-patch-id: 622ca1c10e851b1889aaa567c1d2a0adf43cca44
-prerequisite-patch-id: d28c5187f9bf0e43f27b2f4aa8dcf7fd91842a03
-prerequisite-patch-id: d29d54b756be73304f844abeeaf9b46a5c0119d5
-prerequisite-patch-id: 5d405790ae89c0831b46a359f86e94bac5a67470
-prerequisite-patch-id: c90120e79acbb52ffa148bfedee1df9d35b5eced
-prerequisite-patch-id: 2e35247a5cfe5a28565c9272b85fc6835011b032
--- 
-2.35.1
-
+> storage latch associated with each stage for strobing data from the
+> serial input to parallell buffer tri-state output.
+> 
+> Add support for an optional strobe pin.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
+>  drivers/gpio/gpio-74x164.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+> index e00c33310517..4a1c4de358e4 100644
+> --- a/drivers/gpio/gpio-74x164.c
+> +++ b/drivers/gpio/gpio-74x164.c
+> @@ -21,6 +21,7 @@ struct gen_74x164_chip {
+>  	struct gpio_chip	gpio_chip;
+>  	struct mutex		lock;
+>  	struct gpio_desc	*gpiod_oe;
+> +	struct gpio_desc	*gpiod_strobe;
+>  	u32			registers;
+>  	/*
+>  	 * Since the registers are chained, every byte sent will make
+> @@ -66,6 +67,10 @@ static void gen_74x164_set_value(struct gpio_chip *gc,
+>  		chip->buffer[bank] &= ~(1 << pin);
+>  
+>  	__gen_74x164_write_config(chip);
+> +
+> +	/*  Latch data to output pins*/
+> +	gpiod_set_value_cansleep(chip->gpiod_strobe, 1);
+> +	gpiod_set_value_cansleep(chip->gpiod_strobe, 0);
+>  	mutex_unlock(&chip->lock);
+>  }
+>  
+> @@ -87,6 +92,10 @@ static void gen_74x164_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>  		chip->buffer[bank] |= bitmask;
+>  	}
+>  	__gen_74x164_write_config(chip);
+> +
+> +	/*  Latch data to output pins*/
+> +	gpiod_set_value_cansleep(chip->gpiod_strobe, 1);
+> +	gpiod_set_value_cansleep(chip->gpiod_strobe, 0);
+>  	mutex_unlock(&chip->lock);
+>  }
+>  
+> @@ -129,6 +138,12 @@ static int gen_74x164_probe(struct spi_device *spi)
+>  
+>  	gpiod_set_value_cansleep(chip->gpiod_oe, 1);
+>  
+> +	chip->gpiod_strobe = devm_gpiod_get_optional(&spi->dev, "strobe",
+> +			GPIOD_OUT_LOW);
+> +	if (IS_ERR(chip->gpiod_strobe))
+> +		return PTR_ERR(chip->gpiod_strobe);
+> +
+> +
+>  	spi_set_drvdata(spi, chip);
+>  
+>  	chip->gpio_chip.label = spi->modalias;
+> @@ -153,6 +168,10 @@ static int gen_74x164_probe(struct spi_device *spi)
+>  		goto exit_destroy;
+>  	}
+>  
+> +	/*  Latch data to output pins*/
+> +	gpiod_set_value_cansleep(chip->gpiod_strobe, 1);
+> +	gpiod_set_value_cansleep(chip->gpiod_strobe, 0);
+> +
+>  	ret = gpiochip_add_data(&chip->gpio_chip, chip);
+>  	if (!ret)
+>  		return 0;
+> @@ -182,6 +201,8 @@ MODULE_DEVICE_TABLE(spi, gen_74x164_spi_ids);
+>  static const struct of_device_id gen_74x164_dt_ids[] = {
+>  	{ .compatible = "fairchild,74hc595" },
+>  	{ .compatible = "nxp,74lvc594" },
+> +	{ .compatible = "ti,cd54hc4094" },
+> +	{ .compatible = "ti,cd74hc4094" },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, gen_74x164_dt_ids);
+> -- 
+> 2.36.1
+> 
