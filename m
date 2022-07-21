@@ -2,291 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7CAC57C62E
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 10:23:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECE0257C5A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Jul 2022 10:03:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232139AbiGUIXl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Jul 2022 04:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54796 "EHLO
+        id S229907AbiGUIDq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 21 Jul 2022 04:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231443AbiGUIXk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 04:23:40 -0400
-X-Greylist: delayed 2295 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 Jul 2022 01:23:38 PDT
-Received: from 9.mo583.mail-out.ovh.net (9.mo583.mail-out.ovh.net [178.32.96.204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7547E012
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 01:23:38 -0700 (PDT)
-Received: from player770.ha.ovh.net (unknown [10.111.208.246])
-        by mo583.mail-out.ovh.net (Postfix) with ESMTP id B606422A02
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Jul 2022 07:45:21 +0000 (UTC)
-Received: from RCM-web2.webmail.mail.ovh.net (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
-        (Authenticated sender: rafal@milecki.pl)
-        by player770.ha.ovh.net (Postfix) with ESMTPSA id 1AB9D2CDC81C6;
-        Thu, 21 Jul 2022 07:44:57 +0000 (UTC)
+        with ESMTP id S229703AbiGUIDp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Jul 2022 04:03:45 -0400
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CFD40BF3;
+        Thu, 21 Jul 2022 01:03:44 -0700 (PDT)
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26L6DCdo008132;
+        Thu, 21 Jul 2022 04:03:34 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3hbq679e45-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Jul 2022 04:03:33 -0400
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 26L83WPR039479
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Jul 2022 04:03:32 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 21 Jul
+ 2022 04:03:31 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 21 Jul 2022 04:03:31 -0400
+Received: from nsa.ad.analog.com ([10.44.3.68])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 26L83GIh028313;
+        Thu, 21 Jul 2022 04:03:19 -0400
+From:   =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
+To:     <linux-input@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH v3 00/10] adp5588-keys refactor and fw properties support
+Date:   Thu, 21 Jul 2022 10:04:13 +0200
+Message-ID: <20220721080423.156151-1-nuno.sa@analog.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Date:   Thu, 21 Jul 2022 09:44:57 +0200
-From:   =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-To:     William Zhang <william.zhang@broadcom.com>
-Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-        joel.peshkin@broadcom.com, dan.beygelman@broadcom.com,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [RESEND PATCH 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
- ARCH_BCMBCA
-In-Reply-To: <20220721000740.29624-1-william.zhang@broadcom.com>
-References: <20220721000740.29624-1-william.zhang@broadcom.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <eee8c85652e6dac69420a876d03f67c4@milecki.pl>
-X-Sender: rafal@milecki.pl
-X-Originating-IP: 194.187.74.233
-X-Webmail-UserID: rafal@milecki.pl
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 293015452666211156
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrudelkedgvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghffgfkgihitgfgsehtjehjtddtredvnecuhfhrohhmpeftrghfrghlpgfoihhlvggtkhhiuceorhgrfhgrlhesmhhilhgvtghkihdrphhlqeenucggtffrrghtthgvrhhnpeegvdffjeelvdeggeetheegveejieetgeeiiefggeelveejffehieekhfduueelhfenucfkpheptddrtddrtddrtddpudelgedrudekjedrjeegrddvfeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehplhgrhigvrhejjedtrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheprhgrfhgrlhesmhhilhgvtghkihdrphhlpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeef
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: UykDncHgrQGJbgE_fNcdt2FoKxxoXaK1
+X-Proofpoint-ORIG-GUID: UykDncHgrQGJbgE_fNcdt2FoKxxoXaK1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-20_12,2022-07-20_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ clxscore=1015 mlxscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2207210031
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-07-21 02:07, William Zhang wrote:
-> Replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
+The main goal of this patchset is to remove platform data and replace it by
+firmware properties. Original discussion in [1].
 
-This change will make symbols (and relevant drivers):
-1. MTD_OF_PARTS_BCM4908
-2. MTD_OF_PARTS_LINKSYS_NS
-3. BCM4908_ENET
-4. PINCTRL_BCM4908
-available on all BCA (sub)families.
+While in here, some refactor was done to the driver. The most noticeable one
+is to replace the GPIs events handling by irqchip support so that this gpi
+keys can be "consumed" by the gpio-keys driver (also as suggested in [1]).
+With this, the gpio-adp5588 can be removed. This change comes first so that
+we can already remove some platform data variables making it easier to
+completly replace it by firmware properties further down in the series.
 
-Above drivers are BCM4908 specific and I think they will never be needed
-for other BCA (sub)families. That list seems to be growing big:
-BCM47622, BCM4912 BCM63138, BCM63146, BCM63148, BCM63158, BCM63178,
-BCM6756, BCM6813, BCM6846, BCM6855, BCM6856, BCM6858, BCM6878.
+As there's no users of the platform data, I just replace it in a single
+patch as there's no point in having support for both (even though it might
+be harder to review the patch as-is).
 
-So I'm still wondering if dropping ARCH_BCM4908 makes sense. It seems to
-me we're saving 10 lines of clean Kconfig code while introducing a bit
-of mess to kernel config.
+Special note to the gpio-adp5588 driver removal. I'm aware of some changes
+to the driver in [2]. These changes are in the gpio tree and this patchset
+is naturally based on the input tree which means that patch 2 will
+not apply. So, I'm not really sure how to handle this. I guess in this
+case the conflict is easy to handle :) but just let me know on how to
+proceed in here if there's anything for me to do.
 
-If you take a look at Documentation/kbuild/kconfig-language.rst it says
-that symbols visibility should be limited to platform(s) (check the
-"Architecture and platform dependencies" part). There is there is
-however no clear documentation what platform should be.
+[1]: https://lore.kernel.org/linux-input/20220504084617.36844-1-u.kleine-koenig@pengutronix.de/
+[2]: https://lore.kernel.org/linux-gpio/20220628193906.36350-3-andriy.shevchenko@linux.intel.com/
 
-Personally I think I'd:
-1. Keep ARCH_BCM4908 for BCM4908 (BCM4906 too) specific stuff
-2. Use ARCH_BCMBCA for actual BCA-generic drivers (serial, WD, PMB)
+v2 changes:
 
-I'm happy to hear other maintainers opinions.
+[1/10]
+ * Turn hwirq signed so we can compare < 0;
+ * Replace WARN_ON with dev_warn();
+ * Do not set of_node on gpiochip;
+ * Moved to use a const irqchip within the gpiochip;
+ * Set default handler to 'handle_bad_irq()' and change it
+in irq_set_type;
 
+[4/10]
+ * Dropped "-keys" from compatible and added vendor prefix;
+ * Fix -Wformat complains;
+ * Don't use abbrev in comments (fw -> Firmware).
 
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
-> ---
-> 
->  drivers/i2c/busses/Kconfig            | 4 ++--
->  drivers/mtd/parsers/Kconfig           | 6 +++---
->  drivers/net/ethernet/broadcom/Kconfig | 4 ++--
->  drivers/pci/controller/Kconfig        | 2 +-
->  drivers/phy/broadcom/Kconfig          | 4 ++--
->  drivers/pinctrl/bcm/Kconfig           | 4 ++--
->  drivers/reset/Kconfig                 | 2 +-
->  drivers/soc/bcm/bcm63xx/Kconfig       | 4 ++--
->  drivers/tty/serial/Kconfig            | 4 ++--
->  drivers/watchdog/Kconfig              | 2 +-
->  10 files changed, 18 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 45a4e9f1b639..fd9a4dd01997 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -487,8 +487,8 @@ config I2C_BCM_KONA
-> 
->  config I2C_BRCMSTB
->  	tristate "BRCM Settop/DSL I2C controller"
-> -	depends on ARCH_BCM2835 || ARCH_BCM4908 || ARCH_BCMBCA || \
-> -		   ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-> +	depends on ARCH_BCM2835 || ARCH_BCMBCA || ARCH_BRCMSTB || \
-> +		   BMIPS_GENERIC || COMPILE_TEST
->  	default y
->  	help
->  	  If you say yes to this option, support will be included for the
-> diff --git a/drivers/mtd/parsers/Kconfig b/drivers/mtd/parsers/Kconfig
-> index b43df73927a0..d6db655a1d24 100644
-> --- a/drivers/mtd/parsers/Kconfig
-> +++ b/drivers/mtd/parsers/Kconfig
-> @@ -69,8 +69,8 @@ config MTD_OF_PARTS
-> 
->  config MTD_OF_PARTS_BCM4908
->  	bool "BCM4908 partitioning support"
-> -	depends on MTD_OF_PARTS && (ARCH_BCM4908 || COMPILE_TEST)
-> -	default ARCH_BCM4908
-> +	depends on MTD_OF_PARTS && (ARCH_BCMBCA || COMPILE_TEST)
-> +	default ARCH_BCMBCA
->  	help
->  	  This provides partitions parser for BCM4908 family devices
->  	  that can have multiple "firmware" partitions. It takes care of
-> @@ -78,7 +78,7 @@ config MTD_OF_PARTS_BCM4908
-> 
->  config MTD_OF_PARTS_LINKSYS_NS
->  	bool "Linksys Northstar partitioning support"
-> -	depends on MTD_OF_PARTS && (ARCH_BCM_5301X || ARCH_BCM4908 || 
-> COMPILE_TEST)
-> +	depends on MTD_OF_PARTS && (ARCH_BCM_5301X || ARCH_BCMBCA || 
-> COMPILE_TEST)
->  	default ARCH_BCM_5301X
->  	help
->  	  This provides partitions parser for Linksys devices based on 
-> Broadcom
-> diff --git a/drivers/net/ethernet/broadcom/Kconfig
-> b/drivers/net/ethernet/broadcom/Kconfig
-> index 56e0fb07aec7..f4e1ca68d831 100644
-> --- a/drivers/net/ethernet/broadcom/Kconfig
-> +++ b/drivers/net/ethernet/broadcom/Kconfig
-> @@ -53,8 +53,8 @@ config B44_PCI
-> 
->  config BCM4908_ENET
->  	tristate "Broadcom BCM4908 internal mac support"
-> -	depends on ARCH_BCM4908 || COMPILE_TEST
-> -	default y if ARCH_BCM4908
-> +	depends on ARCH_BCMBCA || COMPILE_TEST
-> +	default y if ARCH_BCMBCA
->  	help
->  	  This driver supports Ethernet controller integrated into Broadcom
->  	  BCM4908 family SoCs.
-> diff --git a/drivers/pci/controller/Kconfig 
-> b/drivers/pci/controller/Kconfig
-> index d1c5fcf00a8a..bfd9bac37e24 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -274,7 +274,7 @@ config VMD
-> 
->  config PCIE_BRCMSTB
->  	tristate "Broadcom Brcmstb PCIe host controller"
-> -	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM4908 || \
-> +	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCMBCA || \
->  		   BMIPS_GENERIC || COMPILE_TEST
->  	depends on OF
->  	depends on PCI_MSI_IRQ_DOMAIN
-> diff --git a/drivers/phy/broadcom/Kconfig 
-> b/drivers/phy/broadcom/Kconfig
-> index 93a6a8ee4716..1d89a2fd9b79 100644
-> --- a/drivers/phy/broadcom/Kconfig
-> +++ b/drivers/phy/broadcom/Kconfig
-> @@ -93,11 +93,11 @@ config PHY_BRCM_SATA
-> 
->  config PHY_BRCM_USB
->  	tristate "Broadcom STB USB PHY driver"
-> -	depends on ARCH_BCM4908 || ARCH_BRCMSTB || COMPILE_TEST
-> +	depends on ARCH_BCMBCA || ARCH_BRCMSTB || COMPILE_TEST
->  	depends on OF
->  	select GENERIC_PHY
->  	select SOC_BRCMSTB if ARCH_BRCMSTB
-> -	default ARCH_BCM4908 || ARCH_BRCMSTB
-> +	default ARCH_BCMBCA || ARCH_BRCMSTB
->  	help
->  	  Enable this to support the Broadcom STB USB PHY.
->  	  This driver is required by the USB XHCI, EHCI and OHCI
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index 8f4d89806fcb..35b51ce4298e 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -31,13 +31,13 @@ config PINCTRL_BCM2835
-> 
->  config PINCTRL_BCM4908
->  	tristate "Broadcom BCM4908 pinmux driver"
-> -	depends on OF && (ARCH_BCM4908 || COMPILE_TEST)
-> +	depends on OF && (ARCH_BCMBCA || COMPILE_TEST)
->  	select PINMUX
->  	select PINCONF
->  	select GENERIC_PINCONF
->  	select GENERIC_PINCTRL_GROUPS
->  	select GENERIC_PINMUX_FUNCTIONS
-> -	default ARCH_BCM4908
-> +	default ARCH_BCMBCA
->  	help
->  	  Driver for BCM4908 family SoCs with integrated pin controller.
-> 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index f9a7cee01659..7ae71535fe2a 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -201,7 +201,7 @@ config RESET_SCMI
-> 
->  config RESET_SIMPLE
->  	bool "Simple Reset Controller Driver" if COMPILE_TEST || EXPERT
-> -	default ARCH_ASPEED || ARCH_BCM4908 || ARCH_BITMAIN || ARCH_REALTEK
-> || ARCH_STM32 || (ARCH_INTEL_SOCFPGA && ARM64) || ARCH_SUNXI || ARC
-> +	default ARCH_ASPEED || ARCH_BCMBCA || ARCH_BITMAIN || ARCH_REALTEK
-> || ARCH_STM32 || (ARCH_INTEL_SOCFPGA && ARM64) || ARCH_SUNXI || ARC
->  	help
->  	  This enables a simple reset controller driver for reset lines that
->  	  that can be asserted and deasserted by toggling bits in a 
-> contiguous,
-> diff --git a/drivers/soc/bcm/bcm63xx/Kconfig 
-> b/drivers/soc/bcm/bcm63xx/Kconfig
-> index 9e501c8ac5ce..355c34482076 100644
-> --- a/drivers/soc/bcm/bcm63xx/Kconfig
-> +++ b/drivers/soc/bcm/bcm63xx/Kconfig
-> @@ -13,8 +13,8 @@ endif # SOC_BCM63XX
-> 
->  config BCM_PMB
->  	bool "Broadcom PMB (Power Management Bus) driver"
-> -	depends on ARCH_BCM4908 || (COMPILE_TEST && OF)
-> -	default ARCH_BCM4908
-> +	depends on ARCH_BCMBCA || (COMPILE_TEST && OF)
-> +	default ARCH_BCMBCA
->  	select PM_GENERIC_DOMAINS if PM
->  	help
->  	  This enables support for the Broadcom's PMB (Power Management Bus) 
-> that
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index e3279544b03c..f32bb01c3feb 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1100,8 +1100,8 @@ config SERIAL_TIMBERDALE
->  config SERIAL_BCM63XX
->  	tristate "Broadcom BCM63xx/BCM33xx UART support"
->  	select SERIAL_CORE
-> -	depends on ARCH_BCM4908 || ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
-> || COMPILE_TEST
-> -	default ARCH_BCM4908 || ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
-> +	depends on ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC || COMPILE_TEST
-> +	default ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
->  	help
->  	  This enables the driver for the onchip UART core found on
->  	  the following chipsets:
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 32fd37698932..1f85ec8a4b3b 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1798,7 +1798,7 @@ config BCM7038_WDT
->  	tristate "BCM63xx/BCM7038 Watchdog"
->  	select WATCHDOG_CORE
->  	depends on HAS_IOMEM
-> -	depends on ARCH_BCM4908 || ARCH_BRCMSTB || BMIPS_GENERIC || BCM63XX
-> || COMPILE_TEST
-> +	depends on ARCH_BCMBCA || ARCH_BRCMSTB || BMIPS_GENERIC || BCM63XX
-> || COMPILE_TEST
->  	help
->  	  Watchdog driver for the built-in hardware in Broadcom 7038 and
->  	  later SoCs used in set-top boxes.  BCM7038 was made public
+[5/10]
+ * Be consistent on $refs;
+ * Drop "-keys" from compatible.
+
+[7/10]
+ * Include bits.h;
+ * Use GENMASK();
+ * Use BIT() in KP_SEL();
+ * Reflect code changes in the commit message.
+
+[9/10]
+ * One line for regulator_disable action.
+
+v3 changes:
+
+[1/10]
+ * Use 'irqd_to_hwirq()' helper;
+ * Use INVALID_HWIRQ to signal hwirq not found;
+ * Just compare irq against 0 in 'irq_find_mapping()';
+ * Renamed irq_data *desc to *irqd to avoid confusion.
+
+[5/10]
+ * Dropped the -keys suffix on the filename;
+ * Compatible enum in alphabetical order;
+ * Improved 'adi,unlock-keys' description;
+ * 4 spaces indentation for dts example;
+ * Renamed device node to a generic name and fixed the
+compatible property in the example.
+
+Nuno Sá (10):
+  input: keyboard: adp5588-keys: support gpi key events as 'gpio keys'
+  gpio: gpio-adp5588: drop the driver
+  input: keyboard: adp5588-keys: bail out on returned error
+  input: keyboard: adp5588-keys: add support for fw properties
+  dt-bindings: input: adp5588: add bindings
+  input: keyboard: adp5588-keys: do not check for irq presence
+  input: keyboard: adp5588-keys: fix coding style warnings
+  input: keyboard: adp5588-keys: add optional reset gpio
+  input: keyboard: adp5588-keys: add regulator support
+  input: keyboard: adp5588-keys: Use new PM macros
+
+ .../bindings/input/adi,adp5588.yaml           | 111 +++
+ MAINTAINERS                                   |   2 +-
+ drivers/gpio/Kconfig                          |  14 -
+ drivers/gpio/Makefile                         |   1 -
+ drivers/gpio/gpio-adp5588.c                   | 452 -----------
+ drivers/input/keyboard/Kconfig                |   3 +
+ drivers/input/keyboard/adp5588-keys.c         | 719 ++++++++++++------
+ include/linux/platform_data/adp5588.h         | 171 -----
+ 8 files changed, 589 insertions(+), 884 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/adi,adp5588.yaml
+ delete mode 100644 drivers/gpio/gpio-adp5588.c
+ delete mode 100644 include/linux/platform_data/adp5588.h
+
+-- 
+2.37.1
+
