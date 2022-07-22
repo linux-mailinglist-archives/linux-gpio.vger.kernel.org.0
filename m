@@ -2,142 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0346957E65E
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 20:19:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66DD157E781
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 21:37:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235150AbiGVSTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jul 2022 14:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
+        id S233585AbiGVThn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jul 2022 15:37:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234693AbiGVSTe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 14:19:34 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C8274DC8
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 11:19:32 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id p6so6359260ljc.8
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 11:19:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=TZ89NCSHpZWO6mCiLEkZnsSyxqredp26c+bp6T/IeXs=;
-        b=HV2GeR6BqM1M0qBzVbeUKHIw4fCOt3RQzgcGZy1wqC6IiFpuwgMNPkh0g8Y/uMaKAH
-         OPH5AMoUcrCuZ6YLo/Ab1VxkoWQukq698ETcZCSPIdkWcbq7JYIwN09+aApa4lzffA9r
-         Bw0mz0Yow33Ut9oatcpEWxyS+qJOZ72yMzlMiouUcy9oQKS1QsCrYtji9b/rl0THTVQT
-         gbbAeLCjm0RHR6pxJwZ5uSbTWJuCDhIPDo94gY67qTUO6epy3MqdVwzFgzLqGdvyxe1v
-         zHDpKFnIKu4CeGxT84s6GCq3UWLhF70ryWeBAW99BThs4Eg8r1rw/tlGkerAtRCAgo88
-         k0MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=TZ89NCSHpZWO6mCiLEkZnsSyxqredp26c+bp6T/IeXs=;
-        b=6OS4gsS/22RhYwG2O2G26ivWBYCo9Kyp2H110q/ZPvjcjSpRKSMakEVhqbwfH0mO5B
-         qX58ussO20BbNJ1I6Pia6hQ0j0h+w2yByhzlTszxMbPWLKzxyd6OOeVUSlxthdbO/bBi
-         LGSKWc94aRSl8G1Qe5RNiDZLZctsJuGrYgZqsQWPMRFjiMVRgGL+6Y39GllNFF1No6e/
-         b16jZ3koIqa5m+0UbtWO7kLpKohbk3k9pxhYa/kF/VfnzeOSxA9ziaMJFvoNUxZqfMPG
-         325uMWx76BNJOSDbcA5fFHoikKg3uuCH25l4S0js+STMAjOa8uOClWsgtKXHSJa8xTUM
-         d/VQ==
-X-Gm-Message-State: AJIora9tY01cQnYB3tpi9NRJ9A4c3fc+xkEfk06AtXmIxb3HfcKSbYdC
-        H5yRjoIt/mZlwcJ2utqI6TvXng==
-X-Google-Smtp-Source: AGRyM1t9k6EuxFUL5jwICaF3I0/coOUkurh+jWMFDTooiNiiyxUpIROwoEbytIQYZDtIHnlMr6Elbg==
-X-Received: by 2002:a2e:3209:0:b0:25d:644e:b9d4 with SMTP id y9-20020a2e3209000000b0025d644eb9d4mr401270ljy.13.1658513971230;
-        Fri, 22 Jul 2022 11:19:31 -0700 (PDT)
-Received: from [192.168.10.173] (93.81-167-86.customer.lyse.net. [81.167.86.93])
-        by smtp.gmail.com with ESMTPSA id k2-20020a2ea262000000b0025d75995a07sm1259660ljm.24.2022.07.22.11.19.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Jul 2022 11:19:30 -0700 (PDT)
-Message-ID: <53d432e9-6715-05c4-d258-896ec38afa4f@linaro.org>
-Date:   Fri, 22 Jul 2022 20:19:27 +0200
+        with ESMTP id S236441AbiGVThi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 15:37:38 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA10528A8
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 12:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658518657; x=1690054657;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VYGNykbd0Bb/WAmBQV+BxrL1XZwweYnOMQxtzz/+HtE=;
+  b=FLQreRxix/2pDiDOA5WdbCg7kxMniji+4Rlh8RBeJRtmNmpxTLuo4Tk7
+   bw+yVH/Zk2o9Z6sSMmp6P3Afs6XYhGtJsEz66vF9OmnhiMrHDog2e/m+F
+   SW1i5fBX1jOivnsxO/ZAN2NF8ZKT2FlDJmQZ7SYsrCRyUnHcfX7AwJKJr
+   VZ/n5S0nQlkZo7inpWbcw+5+4F4bzplWJBSNmJSIuew9Je4gkm1YG30nG
+   UG759EJihahMeO7QtgQir/psa6iQlCIfYNbTunIK8p+UnuvIUjf8aGXIV
+   3pe6SpiVDSuOUtThFIEDpbhwFuIP9m0uNAjKqj+J5Tr1oJzYGJgxn9M27
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10416"; a="288147461"
+X-IronPort-AV: E=Sophos;i="5.93,186,1654585200"; 
+   d="scan'208";a="288147461"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2022 12:37:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,186,1654585200"; 
+   d="scan'208";a="725522185"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 22 Jul 2022 12:37:35 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oEySt-0001l9-0O;
+        Fri, 22 Jul 2022 19:37:35 +0000
+Date:   Sat, 23 Jul 2022 03:36:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ a0a2d10aad65afb1558d7b8ad5770dff75493d45
+Message-ID: <62dafc54.X4aKciokPrHOCAHv%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 1/3] dt-bindings: mediatek: add pinctrl definition for
- mt8188
-Content-Language: en-US
-To:     "hui.liu" <hui.liu@mediatek.com>, linus.walleij@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        matthias.bgg@gmail.com
-Cc:     johnson.wang@mediatek.com, zhiyong.tao@mediatek.com,
-        sean.wang@mediatek.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20220718113813.23787-1-hui.liu@mediatek.com>
- <20220718113813.23787-2-hui.liu@mediatek.com>
- <b28dcbe5-d15f-1c4f-9b3d-650d5c39de6b@linaro.org>
- <08a7209fe198839093b3ef729fc97c1a950e1fbc.camel@mediatek.com>
- <35639a59-4a3d-5aa7-946c-22fbd2f25e89@linaro.org>
- <ea7755e599ad8c06bc04b6249c2a6d0ab3b920f3.camel@mediatek.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <ea7755e599ad8c06bc04b6249c2a6d0ab3b920f3.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/07/2022 03:40, hui.liu wrote:
-> Hi, Krzysztof
-> 
-> That's the comment about reg and reg-names description:
->>> +  reg:
->>> +    description: |
->>> +      Physical address base for gpio base registers. There are 8
->>> GPIO
->>> +      physical address base in mt8188.
->>
->> Redundant description, skip it. You should list the instead and
->> describe
->> each of it.
->>
->>> +    maxItems: 8
->>> +
->>> +  reg-names:
->>> +    description: |
->>> +      Gpio base register names.
->>
->> Redundant description, skip it.
->>
->>> +    maxItems: 8
->>
->> You need to list the items instead.
-> 
-> I plan to update reg and reg-names as the following:
->   reg:
->     description: |
->       Physical address base for gpio base registers. There are 6
-> different GPIO physical address bases in mt8188.
->     minItems: 6
->     maxItems: 6
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: a0a2d10aad65afb1558d7b8ad5770dff75493d45  MAINTAINERS: Update Intel 8255 GPIO driver file list
 
-You should rather have here items with description:
-items:
- - description: what is it
- - description: what is it
- ....
+elapsed time: 722m
 
-> 
->   reg-names:
->     items:
->       - const: iocfg0
->       - const: iocfg_rm
->       - const: iocfg_lt
->       - const: iocfg_lm
->       - const: iocfg_rt
->       - const: eint
-> 
-> Is it right?
-> 
-> Thanks.
-> 
+configs tested: 111
+configs skipped: 2
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best regards,
-Krzysztof
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+powerpc              randconfig-c003-20220722
+sh                   sh7724_generic_defconfig
+csky                                defconfig
+powerpc                 mpc85xx_cds_defconfig
+mips                     loongson1b_defconfig
+sh                               j2_defconfig
+arc                          axs101_defconfig
+alpha                               defconfig
+mips                         cobalt_defconfig
+arm                      jornada720_defconfig
+m68k                             allyesconfig
+arm                        realview_defconfig
+m68k                          atari_defconfig
+parisc                              defconfig
+arc                      axs103_smp_defconfig
+sh                        apsh4ad0a_defconfig
+csky                             alldefconfig
+mips                           ip32_defconfig
+arm                            xcep_defconfig
+arm                           h5000_defconfig
+mips                         db1xxx_defconfig
+mips                            ar7_defconfig
+loongarch                           defconfig
+m68k                            mac_defconfig
+nios2                         10m50_defconfig
+sh                               alldefconfig
+powerpc                     tqm8555_defconfig
+powerpc                    amigaone_defconfig
+arm                     eseries_pxa_defconfig
+sh                        edosk7760_defconfig
+sh                          rsk7203_defconfig
+arc                        vdk_hs38_defconfig
+powerpc                   currituck_defconfig
+mips                      maltasmvp_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                              debian-10.3
+i386                   debian-10.3-kselftests
+loongarch                         allnoconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220721
+arm                  randconfig-c002-20220722
+ia64                             allmodconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+arc                  randconfig-r043-20220721
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+arm                         s3c2410_defconfig
+arm                          ixp4xx_defconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                          allyesconfig
+powerpc                     akebono_defconfig
+powerpc                    mvme5100_defconfig
+mips                      malta_kvm_defconfig
+arm                                 defconfig
+arm                           spitz_defconfig
+arm                          pxa168_defconfig
+i386                             allyesconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                          randconfig-a011
+hexagon              randconfig-r041-20220721
+s390                 randconfig-r044-20220721
+hexagon              randconfig-r045-20220721
+riscv                randconfig-r042-20220721
+hexagon              randconfig-r041-20220722
+hexagon              randconfig-r045-20220722
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
