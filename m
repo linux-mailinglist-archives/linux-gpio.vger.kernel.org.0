@@ -2,111 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C033757E3CF
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 17:33:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0346957E65E
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 20:19:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbiGVPdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jul 2022 11:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48926 "EHLO
+        id S235150AbiGVSTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jul 2022 14:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232331AbiGVPdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 11:33:50 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43556758F
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 08:33:48 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id bv24so7001057wrb.3
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 08:33:48 -0700 (PDT)
+        with ESMTP id S234693AbiGVSTe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 14:19:34 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C8274DC8
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 11:19:32 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id p6so6359260ljc.8
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 11:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IbHv1ilHVAOjIbmK59r3a9pxoIQSMjUu48FCOhQ1ewo=;
-        b=2D9K15O6AoQkwR7KGyFE/D8/n0fAeTgDR1hAIOed7PSfXtblS1VvfS3xqzShOQQaNR
-         l4xEec766GtTTGTLzNId0ImFMm60Vf9Iz+FGXsa8LebTW1yFE+5UbindLMnF2zea9+Ad
-         K8D/CuA/km7+VoIawiklt/CCB0ts8xzl/24SK9zJVWktOeTc9uVqqhhh5lv6ytX/ZPah
-         v2UW9qBdaudzKhA+NhXzN+JdG8mg1E2hlFNdv7L1DnLznWHgd2ljJFH0IzaGy5Z1zR94
-         g+oVySnS/1+yZq2cn6wpqJvIq4t3dTrCKhdLkx/rwicoG/VlU3Qltz1dX1Z3hNyIB7wH
-         y4YA==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=TZ89NCSHpZWO6mCiLEkZnsSyxqredp26c+bp6T/IeXs=;
+        b=HV2GeR6BqM1M0qBzVbeUKHIw4fCOt3RQzgcGZy1wqC6IiFpuwgMNPkh0g8Y/uMaKAH
+         OPH5AMoUcrCuZ6YLo/Ab1VxkoWQukq698ETcZCSPIdkWcbq7JYIwN09+aApa4lzffA9r
+         Bw0mz0Yow33Ut9oatcpEWxyS+qJOZ72yMzlMiouUcy9oQKS1QsCrYtji9b/rl0THTVQT
+         gbbAeLCjm0RHR6pxJwZ5uSbTWJuCDhIPDo94gY67qTUO6epy3MqdVwzFgzLqGdvyxe1v
+         zHDpKFnIKu4CeGxT84s6GCq3UWLhF70ryWeBAW99BThs4Eg8r1rw/tlGkerAtRCAgo88
+         k0MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=IbHv1ilHVAOjIbmK59r3a9pxoIQSMjUu48FCOhQ1ewo=;
-        b=u6jq0CNfBdNCN3WL1nxpNdFSsBePPUGyglpSc1Gmf1/6+96pKWW7vrIHd2LqpSJjq3
-         j7gO4KFCR0hqe2eJpXkFYSEK4t2FYnubbW8EDkDxPgZR8zc7RnU6A08XD0pbDba9Iwmv
-         1cgJn/wuOOkILeHW+oS7oalGyB3p1rLQ0qf+j4FpxnwDjz7zHuxawZlPN+3LbTbqNpTM
-         FxIGdhVKXYj0O4ocvPA/R0mqzHJD7ldgXLjpzi4KWE0dDZd6amGUC3A8R6fi5Xd9xI5D
-         or0TMtdTshWt+wCAj34zJkbtvdFIF2qVXHMP9x/1WXM0PkmKF8tBNNPLUoShtZPhPlFU
-         8E9w==
-X-Gm-Message-State: AJIora+saWZJlRaUeSyScow3QobD7QCKSF/9a2NqKlUHx1nAKY8D5UCY
-        hnqRvygzpa/uaf0FB6Zh348DcKaeOyHpuA==
-X-Google-Smtp-Source: AGRyM1vH0uHaF6qZmsswXb00Adkp+77isec24O4sHNHbQMpkDA6oVgFobfiPSyLqpyn0cI9tRaXP/g==
-X-Received: by 2002:a5d:638e:0:b0:21d:68bc:17c8 with SMTP id p14-20020a5d638e000000b0021d68bc17c8mr324423wru.467.1658504026741;
-        Fri, 22 Jul 2022 08:33:46 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:fb61:1204:cd3d:b6b6])
-        by smtp.gmail.com with ESMTPSA id y18-20020a056000109200b0021e61cd711bsm1781655wrw.100.2022.07.22.08.33.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Jul 2022 08:33:46 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.19-rc8
-Date:   Fri, 22 Jul 2022 17:33:44 +0200
-Message-Id: <20220722153344.151561-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        bh=TZ89NCSHpZWO6mCiLEkZnsSyxqredp26c+bp6T/IeXs=;
+        b=6OS4gsS/22RhYwG2O2G26ivWBYCo9Kyp2H110q/ZPvjcjSpRKSMakEVhqbwfH0mO5B
+         qX58ussO20BbNJ1I6Pia6hQ0j0h+w2yByhzlTszxMbPWLKzxyd6OOeVUSlxthdbO/bBi
+         LGSKWc94aRSl8G1Qe5RNiDZLZctsJuGrYgZqsQWPMRFjiMVRgGL+6Y39GllNFF1No6e/
+         b16jZ3koIqa5m+0UbtWO7kLpKohbk3k9pxhYa/kF/VfnzeOSxA9ziaMJFvoNUxZqfMPG
+         325uMWx76BNJOSDbcA5fFHoikKg3uuCH25l4S0js+STMAjOa8uOClWsgtKXHSJa8xTUM
+         d/VQ==
+X-Gm-Message-State: AJIora9tY01cQnYB3tpi9NRJ9A4c3fc+xkEfk06AtXmIxb3HfcKSbYdC
+        H5yRjoIt/mZlwcJ2utqI6TvXng==
+X-Google-Smtp-Source: AGRyM1t9k6EuxFUL5jwICaF3I0/coOUkurh+jWMFDTooiNiiyxUpIROwoEbytIQYZDtIHnlMr6Elbg==
+X-Received: by 2002:a2e:3209:0:b0:25d:644e:b9d4 with SMTP id y9-20020a2e3209000000b0025d644eb9d4mr401270ljy.13.1658513971230;
+        Fri, 22 Jul 2022 11:19:31 -0700 (PDT)
+Received: from [192.168.10.173] (93.81-167-86.customer.lyse.net. [81.167.86.93])
+        by smtp.gmail.com with ESMTPSA id k2-20020a2ea262000000b0025d75995a07sm1259660ljm.24.2022.07.22.11.19.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Jul 2022 11:19:30 -0700 (PDT)
+Message-ID: <53d432e9-6715-05c4-d258-896ec38afa4f@linaro.org>
+Date:   Fri, 22 Jul 2022 20:19:27 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 1/3] dt-bindings: mediatek: add pinctrl definition for
+ mt8188
+Content-Language: en-US
+To:     "hui.liu" <hui.liu@mediatek.com>, linus.walleij@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        matthias.bgg@gmail.com
+Cc:     johnson.wang@mediatek.com, zhiyong.tao@mediatek.com,
+        sean.wang@mediatek.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20220718113813.23787-1-hui.liu@mediatek.com>
+ <20220718113813.23787-2-hui.liu@mediatek.com>
+ <b28dcbe5-d15f-1c4f-9b3d-650d5c39de6b@linaro.org>
+ <08a7209fe198839093b3ef729fc97c1a950e1fbc.camel@mediatek.com>
+ <35639a59-4a3d-5aa7-946c-22fbd2f25e89@linaro.org>
+ <ea7755e599ad8c06bc04b6249c2a6d0ab3b920f3.camel@mediatek.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <ea7755e599ad8c06bc04b6249c2a6d0ab3b920f3.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+On 22/07/2022 03:40, hui.liu wrote:
+> Hi, Krzysztof
+> 
+> That's the comment about reg and reg-names description:
+>>> +  reg:
+>>> +    description: |
+>>> +      Physical address base for gpio base registers. There are 8
+>>> GPIO
+>>> +      physical address base in mt8188.
+>>
+>> Redundant description, skip it. You should list the instead and
+>> describe
+>> each of it.
+>>
+>>> +    maxItems: 8
+>>> +
+>>> +  reg-names:
+>>> +    description: |
+>>> +      Gpio base register names.
+>>
+>> Redundant description, skip it.
+>>
+>>> +    maxItems: 8
+>>
+>> You need to list the items instead.
+> 
+> I plan to update reg and reg-names as the following:
+>   reg:
+>     description: |
+>       Physical address base for gpio base registers. There are 6
+> different GPIO physical address bases in mt8188.
+>     minItems: 6
+>     maxItems: 6
 
-Please pull the following set of fixes for the upcoming rc.
+You should rather have here items with description:
+items:
+ - description: what is it
+ - description: what is it
+ ....
 
-Thanks!
-Bartosz Golaszewski
+> 
+>   reg-names:
+>     items:
+>       - const: iocfg0
+>       - const: iocfg_rm
+>       - const: iocfg_lt
+>       - const: iocfg_lm
+>       - const: iocfg_rt
+>       - const: eint
+> 
+> Is it right?
+> 
+> Thanks.
+> 
 
-The following changes since commit ff6992735ade75aae3e35d16b17da1008d753d28:
 
-  Linux 5.19-rc7 (2022-07-17 13:30:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc8
-
-for you to fetch changes up to 32c094a09d5829ad9b02cdf667569aefa8de0ea6:
-
-  gpio: gpio-xilinx: Fix integer overflow (2022-07-22 09:17:03 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.19-rc8
-
-- fix several regmap usage issues in gpio-pca953x
-- fix out-of-tree build for GPIO selftests
-- fix integer overflow in gpio-xilinx
-
-----------------------------------------------------------------
-Haibo Chen (3):
-      gpio: pca953x: only use single read/write for No AI mode
-      gpio: pca953x: use the correct range when do regmap sync
-      gpio: pca953x: use the correct register address when regcache sync during init
-
-Kent Gibson (1):
-      selftests: gpio: fix include path to kernel headers for out of tree builds
-
-Srinivas Neeli (1):
-      gpio: gpio-xilinx: Fix integer overflow
-
- drivers/gpio/gpio-pca953x.c           | 22 ++++++++++++++--------
- drivers/gpio/gpio-xilinx.c            |  2 +-
- tools/testing/selftests/gpio/Makefile |  2 +-
- 3 files changed, 16 insertions(+), 10 deletions(-)
+Best regards,
+Krzysztof
