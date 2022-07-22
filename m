@@ -2,97 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B89557DB1E
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 09:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A52A857DC23
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 10:20:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234007AbiGVHUE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jul 2022 03:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46110 "EHLO
+        id S234806AbiGVITb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jul 2022 04:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233417AbiGVHUD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 03:20:03 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9914B62
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 00:20:02 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id ez10so6988487ejc.13
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 00:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ouSSdITZq0FsaMVncH1X0sX6Yphj9Cjyf72zkTGekO0=;
-        b=bPYF3z0YzAGpQX9WgEBtgnp6WiDyVCcYK9pFLbm2x9uoNu4SrZJg153jrQrjKNwBLK
-         KnCjXGj4hxLR86UZDs8B1FF+a37Wd9Y2DWSooabAQgmz+Js2vAgLrdd1t06GTBAdFSyu
-         +9fhHvL8lPlBs/BcBn2LJv8Y8dlJwkoOYnx3w2lvOHCzhvc5/MOhcX6GHAFh22gcTlsJ
-         K/tS/fdrmn28u5U2xuNwNH9KjUs+9/zhA+jDHVEiLhiqG8ZgvHzf7onb+IGq0wn1xX9A
-         fFqlCw29sIdFMT1OHKBHN8ZorrcwqFBD9KaT74K/zqx6fIJaaG0J6dUO4IcU+cWP5UqN
-         PEnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ouSSdITZq0FsaMVncH1X0sX6Yphj9Cjyf72zkTGekO0=;
-        b=NA8SOMdQHBfKqXpJ45aX8jBkcSprlOmZDDGli98ER/hdo1fxbj7zvlfrt42trwnhJF
-         XYVV7mdAKT77liZMBn7ZYbJvgGAcpW4wo+MCHCsVbLm/fp4p8ed/Tv0sTpXigeZtqOjd
-         lbhDqGDCMDo9LUBtT7HxoFS7NQ3WFbcmTYjJY0WH3vB68zvViri1Xoe/ZbrHf4spCw2W
-         gBjqnOwwoxnAQwLx0xc+C4s0kLVkqJNPSYC7GEgMiwr43IROZ1LSVBbVaDoGjYQqEIJz
-         DNJfjH72OAfn5b/EJaYSXE3mWbp5mgq5xJPheCg2hQ1JgKAPJMP0nPCZKJpU3Zg9EsWa
-         SDbQ==
-X-Gm-Message-State: AJIora/kcZEB4k19z8MH3iD6/4pVH9tIbh3UYACWVfxUza4mv7NUCJvm
-        bCyqzrtWtfqFWbgAA1z365KVGz5LvwHPEp+qDhwN5A==
-X-Google-Smtp-Source: AGRyM1vaaCFD7cdmMQ6HjkruGEujivTRBWp8780hsCXuLcgaXUNWfcvbAmpbQv+nwnM7DI/pHZJH5TtPuyiXiEigPak=
-X-Received: by 2002:a17:907:1c0a:b0:72b:378f:2fa1 with SMTP id
- nc10-20020a1709071c0a00b0072b378f2fa1mr1969373ejc.492.1658474401450; Fri, 22
- Jul 2022 00:20:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220721152508.3661-1-william.gray@linaro.org>
-In-Reply-To: <20220721152508.3661-1-william.gray@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 22 Jul 2022 09:19:50 +0200
-Message-ID: <CAMRc=MfmykYAnBzhFO-XQd0j646gDHNqdUZyAivQbgFtwY5Dig@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Update Intel 8255 GPIO driver file list
-To:     William Breathitt Gray <william.gray@linaro.org>
+        with ESMTP id S233544AbiGVIT3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 04:19:29 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E369E296
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 01:19:27 -0700 (PDT)
+Received: from terra.. (unknown [IPv6:2a02:a03f:eaf9:8401:aa9f:5d01:1b2a:e3cd])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 0F8272FEE7F;
+        Fri, 22 Jul 2022 10:19:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1658477963;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1g5OIGIUtsg99dkkiWJOZEKAQyFblxgUZPyM/3d27nU=;
+        b=YsGfgAUTG3YRnkR8VrREGZ2ZRW3aLuCmYdQWfKjBaiMRzjFX6abqXg3/lsudR41+XPyn9z
+        VRGQ+kl94SWJe7smrx1O442nTdiSRIt0H675ViRfg74mcR6x7e6t9UEATQyktZZ5zQXZye
+        1kGcDbAu2QGVdFMHoDpfn4nr7BlL1xvmbtqQNb1ygstO4nRJ4GtrJLR9ugeDdmVNWwvVWR
+        SoNKpLpduWjkp8AYp4CRBXcqAIYJKHLS6RAKJbV7rr6KkIlai1/4tWynSC71CCjPr7le34
+        0xGetD7PYsL+lWm2Tn8+9y3sNiK5envuyteJTbXIuSEZ/iX/k3wCeaKQbQhIHA==
+From:   Sander Vanheule <sander@svanheule.net>
+To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        linux-kernel@vger.kernel.org, Bert Vermeulen <bert@biot.com>,
+        Sander Vanheule <sander@svanheule.net>
+Subject: [PATCH v1 0/2] gpio: update Realtek Otto documenentation
+Date:   Fri, 22 Jul 2022 10:19:15 +0200
+Message-Id: <cover.1658477809.git.sander@svanheule.net>
+X-Mailer: git-send-email 2.36.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 21, 2022 at 9:15 PM William Breathitt Gray
-<william.gray@linaro.org> wrote:
->
-> The drivers/gpio/gpio-i8255.h header file is also maintained.
->
-> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 960abc07304e..2bd82ce171ca 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9907,6 +9907,7 @@ M:        William Breathitt Gray <william.gray@linaro.org>
->  L:     linux-gpio@vger.kernel.org
->  S:     Maintained
->  F:     drivers/gpio/gpio-i8255.c
-> +F:     drivers/gpio/gpio-i8255.h
->
->  INTEL ASoC DRIVERS
->  M:     Cezary Rojewski <cezary.rojewski@intel.com>
->
-> base-commit: 949506dc608f9820e0cee51b106c35fd3503bbb2
-> --
-> 2.36.1
->
+Amend some driver documentation that was missing from recent changes,
+and add myself as maintainer for the driver, since that's pretty much
+the de facto situation.
 
-Applied, thanks!
+Sander Vanheule (2):
+  gpio: realtek-otto: amend ctrl struct docs
+  MAINTAINERS: add info for Realtek Otto GPIO
 
-Bart
+ MAINTAINERS                      |  7 +++++++
+ drivers/gpio/gpio-realtek-otto.c | 10 ++++++++++
+ 2 files changed, 17 insertions(+)
+
+-- 
+2.36.1
+
