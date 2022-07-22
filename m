@@ -2,89 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFFD357E1C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 14:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C033757E3CF
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Jul 2022 17:33:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233210AbiGVM7g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Jul 2022 08:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45016 "EHLO
+        id S229441AbiGVPdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Jul 2022 11:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiGVM7f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 08:59:35 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A50E167CC
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 05:59:34 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id b11so8387451eju.10
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 05:59:34 -0700 (PDT)
+        with ESMTP id S232331AbiGVPdu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Jul 2022 11:33:50 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43556758F
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 08:33:48 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id bv24so7001057wrb.3
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Jul 2022 08:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tvJj1tUkldyVjIP7ThgoGlAua0P9TBuVlSdTpGbTPPM=;
-        b=nerPTAzhfdo8L1KKvewWcLPJGeM8UMLkOmXyq4EwAra/XYbpoKum7TbBPpw7wR8ojE
-         jfNU91bsV4uBLCr3Zc+3c25Op1+GNLqEnC7aXwd0oKO4jPvtgwvixOD9vgFaEjhR2AwP
-         ynh5L8thXIztmLzZ2V4nuaXBo4iXzOakPJnOScls0W9QQ1BgSkHQ+G/NG0f9ecE6Zmcv
-         rCsRWkE8F/BeFJp0mzU99Pg3GvwXOkGw7pC1biTU8vp2L9yXqGl3ZfGpW4vMpf+y+CnO
-         xalTlJzhb9N86eFSlMslLVd/roLswrA+/QuANuPV0QtoSYBzELBI9vh7NhV8e0T+yjH3
-         EOoQ==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IbHv1ilHVAOjIbmK59r3a9pxoIQSMjUu48FCOhQ1ewo=;
+        b=2D9K15O6AoQkwR7KGyFE/D8/n0fAeTgDR1hAIOed7PSfXtblS1VvfS3xqzShOQQaNR
+         l4xEec766GtTTGTLzNId0ImFMm60Vf9Iz+FGXsa8LebTW1yFE+5UbindLMnF2zea9+Ad
+         K8D/CuA/km7+VoIawiklt/CCB0ts8xzl/24SK9zJVWktOeTc9uVqqhhh5lv6ytX/ZPah
+         v2UW9qBdaudzKhA+NhXzN+JdG8mg1E2hlFNdv7L1DnLznWHgd2ljJFH0IzaGy5Z1zR94
+         g+oVySnS/1+yZq2cn6wpqJvIq4t3dTrCKhdLkx/rwicoG/VlU3Qltz1dX1Z3hNyIB7wH
+         y4YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tvJj1tUkldyVjIP7ThgoGlAua0P9TBuVlSdTpGbTPPM=;
-        b=wxIaIZgcue2nRnCAaJTDapmjsYsaUkZ3PM5PALlYly5cHyJTPdr6pC9leYENAQJRrO
-         vkDAqjKhy3/k74pfjQhFBtP3COb8ZQw6z+j4dVfcKVMTZrOJSkk0cVt2n2Px3SkCBzJm
-         YvfvHSlvVselr4CpRB8SEUCjpLNY0pLf5TQKl5TvIot4n5fkG6WQ3/dHuweNMXB4w1pm
-         T6JWAEjdViTKEkeZw1tYr/sUvwiJv5G3dvwrFr+bQD8PCe1Lbxg51tsMBjwmfH5guSdS
-         KMPVlKVipa3YVM1w1xPhgKRxZd7qsYoHv2FLdVz9ovoFnMTFJjhiIWPCc7c/PY4z+kud
-         2TUg==
-X-Gm-Message-State: AJIora+42fLvgSjlXpfFv1UwU/ulQpdV1VjuURP70Y0dIWXQ0Ww95M7w
-        6Zz8a1Ug5kjNCgTBd7ppPFS3+uS3PR8MBbPk0BP57w==
-X-Google-Smtp-Source: AGRyM1spfKGz5y/Zx0Vo96zul1pRdccCoAxkucCGhodRFgTbybKpqnp8oAn9aB3PL0Y9KtI/p/bH+zlgNrFqHWr4EAY=
-X-Received: by 2002:a17:906:5a61:b0:72b:1468:7fac with SMTP id
- my33-20020a1709065a6100b0072b14687facmr405223ejc.440.1658494772847; Fri, 22
- Jul 2022 05:59:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IbHv1ilHVAOjIbmK59r3a9pxoIQSMjUu48FCOhQ1ewo=;
+        b=u6jq0CNfBdNCN3WL1nxpNdFSsBePPUGyglpSc1Gmf1/6+96pKWW7vrIHd2LqpSJjq3
+         j7gO4KFCR0hqe2eJpXkFYSEK4t2FYnubbW8EDkDxPgZR8zc7RnU6A08XD0pbDba9Iwmv
+         1cgJn/wuOOkILeHW+oS7oalGyB3p1rLQ0qf+j4FpxnwDjz7zHuxawZlPN+3LbTbqNpTM
+         FxIGdhVKXYj0O4ocvPA/R0mqzHJD7ldgXLjpzi4KWE0dDZd6amGUC3A8R6fi5Xd9xI5D
+         or0TMtdTshWt+wCAj34zJkbtvdFIF2qVXHMP9x/1WXM0PkmKF8tBNNPLUoShtZPhPlFU
+         8E9w==
+X-Gm-Message-State: AJIora+saWZJlRaUeSyScow3QobD7QCKSF/9a2NqKlUHx1nAKY8D5UCY
+        hnqRvygzpa/uaf0FB6Zh348DcKaeOyHpuA==
+X-Google-Smtp-Source: AGRyM1vH0uHaF6qZmsswXb00Adkp+77isec24O4sHNHbQMpkDA6oVgFobfiPSyLqpyn0cI9tRaXP/g==
+X-Received: by 2002:a5d:638e:0:b0:21d:68bc:17c8 with SMTP id p14-20020a5d638e000000b0021d68bc17c8mr324423wru.467.1658504026741;
+        Fri, 22 Jul 2022 08:33:46 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:fb61:1204:cd3d:b6b6])
+        by smtp.gmail.com with ESMTPSA id y18-20020a056000109200b0021e61cd711bsm1781655wrw.100.2022.07.22.08.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Jul 2022 08:33:46 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.19-rc8
+Date:   Fri, 22 Jul 2022 17:33:44 +0200
+Message-Id: <20220722153344.151561-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <CAEBpM+ZPZNpJNJAU=2iji8+dCnLEcordRLwH3-mKhYqWS_zr6Q@mail.gmail.com>
- <CACRpkdbVRm7SdCPm-RP7pD2v7ce+i+kSh05wdFsmMmBbDk+1YA@mail.gmail.com> <CAEBpM+ZDiCD7Y5au9ng4iaptbQEHMXwUFLY370_uVBKCjsR+EA@mail.gmail.com>
-In-Reply-To: <CAEBpM+ZDiCD7Y5au9ng4iaptbQEHMXwUFLY370_uVBKCjsR+EA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Jul 2022 14:59:21 +0200
-Message-ID: <CACRpkdZ139Dhonh82Zs_DGewb3KkocpU7yE5wuhukm=TfZBkOw@mail.gmail.com>
-Subject: Re: To write Java binding for libgpiod - need help with looking for references
-To:     Meena M <scientistartist@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 11:37 AM Meena M <scientistartist@gmail.com> wrote:
+Linus,
 
-> If I get to know more about JNA will share it, but going by what I have found online,
-> JNA is slower than JNI. I am very new to this too.
+Please pull the following set of fixes for the upcoming rc.
 
-Good way to learn!
+Thanks!
+Bartosz Golaszewski
 
-> At present I am going through JNI programmer's guide which was recommended in
-> a resource(a youtube video) which by itself is old(2017), the programmer guide even older.
+The following changes since commit ff6992735ade75aae3e35d16b17da1008d753d28:
 
-It's annoying. I would check the opensource Java git to check what is going on
-over at Oracle.
-https://github.com/openjdk/jdk/blob/master/src/java.base/share/native/include/jni.h
+  Linux 5.19-rc7 (2022-07-17 13:30:22 -0700)
 
-> I am getting a failure delivery message for linux-gpio@vger.kernel.org, how do
->  I get to mail everyone in the list?
+are available in the Git repository at:
 
-The email address is correct.
-Maybe it is because you're using HTML in your mailer?
-The list servers will reject any HTML-formatted mail.
-Make sure gmail is configured to use plaintext when sending mails.
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.19-rc8
 
-Yours,
-Linus Walleij
+for you to fetch changes up to 32c094a09d5829ad9b02cdf667569aefa8de0ea6:
+
+  gpio: gpio-xilinx: Fix integer overflow (2022-07-22 09:17:03 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.19-rc8
+
+- fix several regmap usage issues in gpio-pca953x
+- fix out-of-tree build for GPIO selftests
+- fix integer overflow in gpio-xilinx
+
+----------------------------------------------------------------
+Haibo Chen (3):
+      gpio: pca953x: only use single read/write for No AI mode
+      gpio: pca953x: use the correct range when do regmap sync
+      gpio: pca953x: use the correct register address when regcache sync during init
+
+Kent Gibson (1):
+      selftests: gpio: fix include path to kernel headers for out of tree builds
+
+Srinivas Neeli (1):
+      gpio: gpio-xilinx: Fix integer overflow
+
+ drivers/gpio/gpio-pca953x.c           | 22 ++++++++++++++--------
+ drivers/gpio/gpio-xilinx.c            |  2 +-
+ tools/testing/selftests/gpio/Makefile |  2 +-
+ 3 files changed, 16 insertions(+), 10 deletions(-)
