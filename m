@@ -2,139 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0769857F063
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Jul 2022 18:06:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE57157F08E
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Jul 2022 19:13:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238608AbiGWQG1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Jul 2022 12:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58716 "EHLO
+        id S237026AbiGWRNK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Jul 2022 13:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238409AbiGWQFz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Jul 2022 12:05:55 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2CC71A055;
-        Sat, 23 Jul 2022 09:05:42 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id h22so5471365qta.3;
-        Sat, 23 Jul 2022 09:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HHu8G218PxZ+Sh+oW/8wfgk5SyIyArOnxoBZLnzyMqw=;
-        b=JgZQUaG41TPYe1fXoXfnUQeRR7A+iKI3mbd+K+XIGcvqNHNJOtXcHcjPLSlyUOp8UH
-         Yr5NOLVqqg2swISs0RxWyJUwBdpgAochSvT2eb+8PuaxdP6zrJ8z2cp19yWvaV4R84ff
-         sp6+w/XGCRbXEglYdQ+iMN9ok2fNAOmtelOc9B58lHqzx/QxsE6xrArOrXdRfr+TSAOt
-         yapOpTxb8z6JpoNvXeFwpbgcRHFtK0FRpNfe6Ekd69ad4rSu4qKm7MHo7S79CNB8+36T
-         E7HPZDd68Yp5GwjuBHdv08FUBinhW6+Yekhaad51ZEgfDNJ8UiJARtZ25kNvkgChXGG8
-         03kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HHu8G218PxZ+Sh+oW/8wfgk5SyIyArOnxoBZLnzyMqw=;
-        b=NEWzffMQ0YmFb0yneiHlSlDlv0tq0vD8I+gbR5k5psTtxqjKZdzJ6UQvW3IHghnzMI
-         a5RUUUxoC6iJiTlNIWJjucqB6+nz8S3LYbSz5uht8CMuUift4Fy1lK9FqD9NsYUc4mWC
-         xfVWAkoMcsV1EuTbeRywNEdSyme7q79And11frIl3BcGT4AqB87qUC4zqX5RG5de0XEn
-         /KQ6FJ+s6dLoFbGBFInfXTorswmQXlN3gxLzbwCBd9xp3jdzg9YLXD4UzM1GqTGG3p4A
-         kMBAkm26NbfzriyEvH4w8/dXtEUoicjy5/QOoq2bvFydteGLwTl/i/R6rumOh1hATyMj
-         uUuQ==
-X-Gm-Message-State: AJIora8+ZXabWyfXmwS04MCyZyFlU4FSzlJDBi57qrjE12zSYG28NHbl
-        wJ01GSdUhaxFYD5hYM0Dkuk=
-X-Google-Smtp-Source: AGRyM1sty4J5XwW0ag/HITj7AIF93o93sOTihlZLsA/vbrWYDOL9pkU2KBAi8b1tZv8BQv2qmaeS3A==
-X-Received: by 2002:ac8:5a86:0:b0:31e:d114:1964 with SMTP id c6-20020ac85a86000000b0031ed1141964mr4297753qtc.572.1658592340969;
-        Sat, 23 Jul 2022 09:05:40 -0700 (PDT)
-Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id g4-20020ac87f44000000b0031eb3af3ffesm4935046qtk.52.2022.07.23.09.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Jul 2022 09:05:40 -0700 (PDT)
-From:   Jesse Taube <mr.bossman075@gmail.com>
-X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
-To:     linux-imx@nxp.com
-Cc:     robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, aisheng.dong@nxp.com, stefan@agner.ch,
-        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
-        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
-        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
-        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
-        cniedermaier@dh-electronics.com, Mr.Bossman075@gmail.com,
-        clin@suse.com, giulio.benetti@benettiengineering.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v5 12/12] ARM: imxrt_defconfig: Add i.MXRT1170
-Date:   Sat, 23 Jul 2022 12:05:13 -0400
-Message-Id: <20220723160513.271692-13-Mr.Bossman075@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220723160513.271692-1-Mr.Bossman075@gmail.com>
-References: <20220723160513.271692-1-Mr.Bossman075@gmail.com>
+        with ESMTP id S229562AbiGWRNJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Jul 2022 13:13:09 -0400
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DFD1D31F
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Jul 2022 10:13:08 -0700 (PDT)
+Received: from [IPv6:2a02:a03f:eaf9:8401:aa9f:5d01:1b2a:e3cd] (unknown [IPv6:2a02:a03f:eaf9:8401:aa9f:5d01:1b2a:e3cd])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id BB0842FFA4F;
+        Sat, 23 Jul 2022 19:13:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1658596385;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HKK7a1PN/YKYpUqDEeTRDDqS96t1AmDyA3VfF8HJIZw=;
+        b=Fpzxw9guAucICfENjFlgA4WWFQkQIDR1gadyhVbO5/FmbKnp6U6QF6wDgv94ob1JFo9qOp
+        +OVE/+r37OXJFWl0KCNogrtj5imlb6oJ/kqqII43fw61eo6XlDyCSLr8M1Jd+ChsmNHww2
+        YT5wSwJL4vcs8jGYpZxSbxOUIX+DxAgIhpD50wLKBDUYk53XPDFf0dxs79VjDtC6qIB6Ie
+        iJag+f8v4j9AaAoAzDLGuW45Ax/V5HalImqS3O8mLWL5Ne5fkZVDZZOs34nmpm3vIFq+Yy
+        AdmiJzBXY6ZRZUhv6TwySNbwTkld7fRv3Drwq8ntS/YNtpGsksjLVbNGAY7VWA==
+Message-ID: <684ad4afc66e6c6cdd1a3acc1ced3e78a4c00714.camel@svanheule.net>
+Subject: Re: [PATCH v1] gpio: realtek-otto: switch to 32-bit I/O
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Date:   Sat, 23 Jul 2022 19:13:02 +0200
+In-Reply-To: <CAHp75Vf2p_N=c0fg5aqkLgxE-E=NG5+Ui-sgB0_hPKJKOX84+Q@mail.gmail.com>
+References: <20220723094957.73880-1-sander@svanheule.net>
+         <CAHp75Vf2p_N=c0fg5aqkLgxE-E=NG5+Ui-sgB0_hPKJKOX84+Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add i.MXRT1170 pinctrl, clocks imxrt_defconfig.
-Add support for CHIPIDEA usb host and usb gadget and other usb drives.
+Hi Andy,
 
-Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
----
-V1 -> V2:
- - Remove USB_CONFIGFS*
-V2 -> V3:
- - Nothing done
-V3 -> V4:
- - Nothing done
-V4 -> V5:
- - Nothing done
----
- arch/arm/configs/imxrt_defconfig | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Looks like you sent your reply as HTML, so replying back in plaintext.
 
-diff --git a/arch/arm/configs/imxrt_defconfig b/arch/arm/configs/imxrt_defconfig
-index 52dba3762996..b3a013686255 100644
---- a/arch/arm/configs/imxrt_defconfig
-+++ b/arch/arm/configs/imxrt_defconfig
-@@ -17,7 +17,23 @@ CONFIG_SERIAL_FSL_LPUART=y
- CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
- CONFIG_SERIAL_DEV_BUS=y
- CONFIG_PINCTRL_IMXRT1050=y
-+CONFIG_PINCTRL_IMXRT1170=y
- CONFIG_GPIO_MXC=y
-+CONFIG_USB=y
-+CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
-+CONFIG_USB_DYNAMIC_MINORS=y
-+CONFIG_USB_OTG=y
-+CONFIG_USB_OTG_FSM=y
-+CONFIG_USB_EHCI_HCD=y
-+CONFIG_USB_EHCI_FSL=y
-+CONFIG_USB_EHCI_HCD_PLATFORM=y
-+CONFIG_USB_CHIPIDEA=y
-+CONFIG_USB_CHIPIDEA_UDC=y
-+CONFIG_USB_CHIPIDEA_HOST=y
-+CONFIG_NOP_USB_XCEIV=y
-+CONFIG_USB_MXS_PHY=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_MASS_STORAGE=y
- CONFIG_MMC=y
- CONFIG_MMC_SDHCI=y
- CONFIG_MMC_SDHCI_PLTFM=y
-@@ -25,6 +41,7 @@ CONFIG_MMC_SDHCI_ESDHC_IMX=y
- CONFIG_DMADEVICES=y
- CONFIG_FSL_EDMA=y
- CONFIG_CLK_IMXRT1050=y
-+CONFIG_CLK_IMXRT1170=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
- CONFIG_EXT4_FS_SECURITY=y
--- 
-2.36.1
+On Sat, 2022-07-23 at 18:07 +0200, Andy Shevchenko wrote:
+>=20
+>=20
+> On Saturday, July 23, 2022, Sander Vanheule <sander@svanheule.net> wrote:
+> > By using 16-bit I/O on the GPIO peripheral, which is apparently not saf=
+e
+> > on MIPS, the IMR can end up containing garbage. This then results in
+> > interrupt triggers for lines that don't have an interrupt source
+> > associated. The irq_desc lookup fails, and the ISR will not be cleared,
+> > keeping the CPU busy until reboot, or until another IMR operation
+> > restores the correct value. This situation appears to happen very
+> > rarely, in < 0.5% of IMR writes.
+> >=20
+> > Instead of using 8-bit or 16-bit I/O operations on the 32-bit memory
+> > mapped peripheral registers, switch to using 32-bit I/O only. This
+> > allows to put all the GPIO lines in-order for 8-bit port values. For
+> > 16-bit values, stick to manual (un)packing of per-port values.
+> >=20
+> > Cc: Paul Cercueil <paul@crapouillou.net>
+> > Signed-off-by: Sander Vanheule <sander@svanheule.net>
+> > ---
+> > =C2=A0drivers/gpio/gpio-realtek-otto.c | 122 ++++++++++++++++++--------=
+-----
+> > =C2=A01 file changed, 73 insertions(+), 49 deletions(-)
 
+[..]
+
+> > +static void realtek_gpio_port_write16be(void __iomem *reg, unsigned in=
+t
+> > port, u16 value)
+> > +{
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int shift =3D (port % 2) * 16;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 reg_val;
+> > +
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0reg +=3D 4 * (port / 2);
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0reg_val =3D ioread32be(reg) & ~(GENMASK(15,=
+ 0) << shift);
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0reg_val |=3D swab16(value) << shift;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0iowrite32be(reg_val, reg);
+> > =C2=A0}
+
+[..]
+
+> > +static void realtek_gpio_port_write16(void __iomem *reg, unsigned int =
+port,
+> > u16 value)
+> > +{
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int shift =3D (port % 2) * 16;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 reg_val;
+> > +
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0reg +=3D 4 * (port / 2);
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0reg_val =3D ioread32(reg) & ~(GENMASK(15, 0=
+) << shift);
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0reg_val |=3D value << shift;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0iowrite32(reg_val, reg);
+> > =C2=A0}
+> >=20
+> > +
+> > =C2=A0static void realtek_gpio_write_imr(struct realtek_gpio_ctrl *ctrl=
+,
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 unsigned int port, u16 irq_type, u16 irq_ma=
+sk)
+> > =C2=A0{
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0iowrite16(irq_type & irq_mask,
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ctrl->base + RE=
+ALTEK_GPIO_REG_IMR + ctrl-
+> > >port_offset_u16(port));
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0ctrl->port_write16(ctrl->base + REALTEK_GPI=
+O_REG_IMR, port, irq_type
+> > & irq_mask);
+> > =C2=A0}
+
+[..]
+
+> > @@ -307,16 +328,17 @@ static int realtek_gpio_irq_set_affinity(struct
+> > irq_data *data,
+> > =C2=A0static int realtek_gpio_irq_init(struct gpio_chip *gc)
+> > =C2=A0{
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct realtek_gpio_ctrl *ctrl =3D gpiochip=
+_get_data(gc);
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 mask_all =3D GENMASK(gc->ngpio, 0);
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 unsigned int port;
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 int cpu;
+> >=20
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0for (port =3D 0; (port * 8) < gc->ngpio; po=
+rt++) {
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0for (port =3D 0; (port * 8) < gc->ngpio; po=
+rt++)
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 realtek_gpio_wr=
+ite_imr(ctrl, port, 0, 0);
+> >=20
+>=20
+>=20
+> port++ ??? Is it correct code? Logically it seems you do 8 writes to the =
+same
+> port. Maybe this is the real issue?
+
+port will go up to at most 3, since there is a limit on ngpio of 32. For th=
+e
+initialisation, this means the driver will do at most 4 RMW operations inst=
+ead
+of 2 writes, but this way I can use realtek_gpio_write_imr() consistently f=
+or
+all IMR changes.
+
+The issue really is trying to use 16-bit (and 8-bit) writes on 32-bit MMIO
+registers. iowrite16() works most of the time though, which is why I didn't=
+ spot
+this issue initially. I've tested this by writing and reading back the IMR
+values many times. With 16-bit I/O, it fails for ~35 iterations out of 1000=
+0.
+With 32-bit I/O the IMR port-value comes back as what was written to it eve=
+ry
+single time. ioread16() seems to give correct results, but iowrite16() may =
+cause
+the other half of the register to turn into garbage.
+
+I've changed the IRQ operations on the four 8-bit port values into a single=
+ 32-
+bit operation, which is also what happens inside gpio-mmio for the gpio par=
+t.
+The IMR registers contain two bits per GPIO line, which why I've kept this
+different implementation, manipulating the 8-pin ports instead of the entir=
+e 32-
+pin bank in one go.
+
+We can discuss the way 32-bit I/O is implemented, but AFAICT the driver sim=
+ply
+cannot use iowrite16() reliably.
+
+Best,
+Sander
