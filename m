@@ -2,57 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3E7657F61E
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jul 2022 19:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 954E957F640
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jul 2022 19:50:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbiGXRR5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Jul 2022 13:17:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
+        id S229552AbiGXRuw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Jul 2022 13:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbiGXRR4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Jul 2022 13:17:56 -0400
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC32810543
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Jul 2022 10:17:55 -0700 (PDT)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        with ESMTP id S229542AbiGXRuu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Jul 2022 13:50:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 047E87679
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Jul 2022 10:50:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id A917684013;
-        Sun, 24 Jul 2022 19:17:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1658683074;
-        bh=WFsQYwBMhbATg/k4IjKX+jBIibh78S36xXkw3h0FggA=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=fvKSpda0jhFKSWp3LsKQ8u0GZ4cpcyrTkbMycy5YZCRtNtnv/zwhdQfr+H3oAgdka
-         Oi4fj5c/prmBDxMHOf86Uvihc8h9Xl9wPIQO+sLMHZjt1l812sT+bGiqwIpZwTqav6
-         XaMdwTQ76QMQ9fmmuv0jdUEshMVtLA67DYSsc4Dd5Y1sPI2uBq3JrbHouKF46G6/va
-         ChjxUAv4S1zBfskU+fk/AEAPeojmnEbNAtZZzGeAf+cx57L1Qh/dGsGr14Po3izH5j
-         /9hin7vCo+fkfcmWhz8tp9FJCcBOEJr0o7O+D3DMxHl8gnc8zBoIJQiUzR6yaP1GG5
-         EMPYj1t5Z4bgQ==
-Message-ID: <27386fc5-90a5-12ed-f819-977b11de641c@denx.de>
-Date:   Sun, 24 Jul 2022 19:17:53 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2] gpio: mxc: Always set GPIOs used as interrupt source
- to INPUT mode
-Content-Language: en-US
-To:     Marc Zyngier <maz@kernel.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D5986117C
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Jul 2022 17:50:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D48C3411E;
+        Sun, 24 Jul 2022 17:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658685049;
+        bh=iOtPCQTdQv0sAgzAPG97sT73/mczhENGL6zxUOdVa8M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D0cQNroQ2AA1c4y1ouqb5Fu2QHbC4upuvklfiN8XQYanm785ZghmyN7AII60Pp48t
+         zrDSqKg08UKnMkUF27M1u4GMikfoHicUtyVqRMLauZTMO9YJmQGnuj311QMMufO7lt
+         36EtJHF9oCYorIyCwUHh6RLIIpbY+CivBC/arfyUeuSWsbmCwjmPw9m+LvPOJBNYfg
+         6/Gr8aqikMsa/TAwJp/1f1u6hpuUfGKLA6/iyCA74SPR2PuP/X+4vGSAoIFVAp88dF
+         WWqLXXiyY6VxVgha/G3rEKPMJbS0iyCMoJWr8CdrcToKKcHY7bT7uEN/YI55dzGp9w
+         JL0QlPp6NW7yw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oFfkc-009hyk-Ir;
+        Sun, 24 Jul 2022 18:50:46 +0100
+Date:   Sun, 24 Jul 2022 18:50:46 +0100
+Message-ID: <87fsiqxuvd.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Marek Vasut <marex@denx.de>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>
-References: <20220724023418.441899-1-marex@denx.de>
- <878roidfm9.wl-maz@kernel.org>
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <878roidfm9.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        Loic Poulain <loic.poulain@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
+In-Reply-To: <20220724171057.18549-1-marex@denx.de>
+References: <20220724171057.18549-1-marex@denx.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: marex@denx.de, linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com, linus.walleij@linaro.org, loic.poulain@linaro.org, linux-imx@nxp.com, peng.fan@nxp.com, shawnguo@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,60 +68,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/24/22 11:28, Marc Zyngier wrote:
-> On Sun, 24 Jul 2022 03:34:18 +0100,
-> Marek Vasut <marex@denx.de> wrote:
->>
->> Always configure GPIO pins which are used as interrupt source as INPUTs.
->> In case the default pin configuration is OUTPUT, or the prior stage does
->> configure the pins as OUTPUT, then Linux will not reconfigure the pin as
->> INPUT and no interrupts are received.
->>
->> Always configure interrupt source GPIO pin as input to fix the above case.
->>
->> Signed-off-by: Marek Vasut <marex@denx.de>
->> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Loic Poulain <loic.poulain@linaro.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> ---
->> V2: Actually update and clear bits in GDIR register
->> ---
->>   drivers/gpio/gpio-mxc.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
->> index c871602fc5ba9..ed58441627d92 100644
->> --- a/drivers/gpio/gpio-mxc.c
->> +++ b/drivers/gpio/gpio-mxc.c
->> @@ -147,7 +147,7 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
->>   {
->>   	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
->>   	struct mxc_gpio_port *port = gc->private;
->> -	u32 bit, val;
->> +	u32 bit, val, dir;
->>   	u32 gpio_idx = d->hwirq;
->>   	int edge;
->>   	void __iomem *reg = port->base;
->> @@ -204,6 +204,10 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
->>   
->>   	writel(1 << gpio_idx, port->base + GPIO_ISR);
->>   
->> +	dir = readl(port->base + GPIO_GDIR);
->> +	dir &= ~BIT(gpio_idx);
->> +	writel(dir, port->base + GPIO_GDIR);
->> +
-> 
-> This is obviously extremely racy, as another CPU could be doing the
-> same thing in parallel for a line that shares the same register.
-> Looking at the driver, it is clear that it was all written at a time
-> when SMP was only a pretty distant concern (i.e. the authors never
-> considered it a possibility).
-> 
-> I'd be fine with it if there was no SMP platform using this, but there
-> is at least one (imx7d).
-> 
-> So please fix this first (placing all RMW sequences behind a lock),
-> and only then add this change.
+Where is the cover letter? If sending more than a single patch, please
+include one.
 
-Done in separate (new) patch for V3.
+On Sun, 24 Jul 2022 18:10:56 +0100,
+Marek Vasut <marex@denx.de> wrote:
+> 
+> The driver currently performs register read-modify-write without locking
+> in its irqchip part, this could lead to a race condition when configuring
+> interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
+> the register read-modify-write.
+> 
+> Fixes: 07bd1a6cc7cbb ("MXC arch: Add gpio support for the whole platform")
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Loic Poulain <loic.poulain@linaro.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: Peng Fan <peng.fan@nxp.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> ---
+> V3: New patch
+> ---
+>  drivers/gpio/gpio-mxc.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index c871602fc5ba9..74a50139c9202 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -147,6 +147,7 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+>  {
+>  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+>  	struct mxc_gpio_port *port = gc->private;
+> +	unsigned long flags;
+>  	u32 bit, val;
+>  	u32 gpio_idx = d->hwirq;
+>  	int edge;
+> @@ -185,6 +186,8 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+>  		return -EINVAL;
+>  	}
+>  
+> +	spin_lock_irqsave(&port->gc.bgpio_lock, flags);
+
+In my tree, bgpio is a raw spinlock, and has been since 3c938cc5cebcb.
+
+Now, looking a bit closer at this code, I have to withdraw my earlier
+comment about the lack of mutual exclusion in the existing code. All
+writes are of the form:
+
+	writel(single_bit_mask, some_addr + MXS_{SET,CLR});
+
+which indicates that the write side can be accessed with a hot-bit
+pattern, avoiding a RWM pattern and thus the need for a lock.
+
+Your second patch, however requires the lock. I'm not sure it is safe
+to do after the interrupt type has been configured though. You may
+want to refer to the TRM for this.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
