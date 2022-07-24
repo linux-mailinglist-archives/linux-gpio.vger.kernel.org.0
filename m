@@ -2,95 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 046D857F194
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Jul 2022 22:59:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5D7E57F2AE
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Jul 2022 04:34:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238821AbiGWU7h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Jul 2022 16:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55342 "EHLO
+        id S230176AbiGXCe3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Jul 2022 22:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238818AbiGWU7h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Jul 2022 16:59:37 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F065D183A6
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Jul 2022 13:59:35 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id b16so243033lfb.7
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Jul 2022 13:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=WwWq4pQq3KpAF4vZSyzfIHczd+yLMoGMXQMiyrcDtUo=;
-        b=RF56donK2hZgNer2URwSK6BpA2vX1NduJhbeN/Tmw5LTwWQ/Y/ejr5RYuNH9YoWv4Q
-         vI8VLjGbxeHH4JiQEeS+d5yYM50Pa6HLz7waHpadKZLKFhNGZhts4ODlaNuUAo5n4/8R
-         lo4/NYqQmGpIjnNNjVkJWpCr81LjKmJZKmcHLQfYza7cksgz5RFh0TF3FOOJDCHzJ6oP
-         WTcpUU2JrZkrUPGAUfaq9rE/80RhvyYgX9hmoJbqzud8rZdQ6bu5cDjyZFPyfAPLvjzV
-         fVR0L+QkDEpizMnUWZtYWEEJA2dR4+y/+fs1XdW9N2bimI+3GzYE24jfkSyRQ2uWcOPQ
-         fXCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=WwWq4pQq3KpAF4vZSyzfIHczd+yLMoGMXQMiyrcDtUo=;
-        b=uxCv/50mbc5FMtdy8lVg4V9lRc72E+w7SV9hKtmteF6DkMA/+3e+ms8ONItZxk7Jlf
-         J3g9XDEYqldBl7iZcW3coQJPuIRYJgqwLiKJKwzcIpVswPmxyTkr6PfS0oXuL4Nypppv
-         ZICRmr/gz4mc1AmH52nXclCgtIROS6nhmEOa/5v0JtupPtfIIDRje4NV9pOQ5as5znBQ
-         nrD14UAbUQ3Vg30lewgXXs4DdsJy5xynIEG8e27FAWANhgeuRKXFotVujSGMw29Lbai7
-         /R53Nh2TLGxATwkl3wKNOcpS+OXgp9TI/sbWVY3KyIcSxWZdT5G272yb503KIlfaqYhz
-         f3Zw==
-X-Gm-Message-State: AJIora/h/E57eSFBx9Jabx0JH894JthgSVmaIHbt1Bc93B8ZWy6iFeru
-        xSFWoJA5ku1mbGK9jVgAap/dWg==
-X-Google-Smtp-Source: AGRyM1uafTV4YGCtd1OGhpgkDgbBmgFk3KwI4+Zk90rtlplUCPn2aEMnuAqetuorS9sNWDI/QSWTNw==
-X-Received: by 2002:a05:6512:3d92:b0:487:5cea:a68b with SMTP id k18-20020a0565123d9200b004875ceaa68bmr2126962lfv.21.1658609974100;
-        Sat, 23 Jul 2022 13:59:34 -0700 (PDT)
-Received: from [192.168.10.173] (93.81-167-86.customer.lyse.net. [81.167.86.93])
-        by smtp.gmail.com with ESMTPSA id q9-20020a056512210900b0048646c0af5csm1813707lfr.263.2022.07.23.13.59.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Jul 2022 13:59:33 -0700 (PDT)
-Message-ID: <ddb20078-80d9-0c0d-8e20-4c1c3ee0b0ef@linaro.org>
-Date:   Sat, 23 Jul 2022 22:59:32 +0200
+        with ESMTP id S229602AbiGXCe3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Jul 2022 22:34:29 -0400
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B5F18361
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Jul 2022 19:34:27 -0700 (PDT)
+Received: from tr.lan (ip-86-49-12-201.bb.vodafone.cz [86.49.12.201])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id 3762A84003;
+        Sun, 24 Jul 2022 04:34:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1658630063;
+        bh=IvmPehRerHKL4Qoh9Ai1dbU9dTQyCSgMDS1MyWXEbYk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hqkD4T9rNmo//o438wb2TbxS4zCICUYPMsdYXG7Ax8bDMpebQlGKRhaATDfuhp12i
+         n45ZvXpgQwuRlByykL58Hgn/kzCmhKW0mY3mHWHShfOKL90J3ERzxj0BiI5GkS1l1m
+         f78d+XmJwktMblNtT8+7/TjoLUCd7U5cUdb2wFJMnaZcaXng++93Nbmibn78k119GB
+         btMmfeGGxI1wZUWeEjw+nLu/sFS4sUSKfNi+IITIxan3AWXz3rqUIGw9YYIqAb4qJ1
+         5U9uyHKqp2tu9wb1MrQIHcZnfdfrPUqAJcPwN9hGUrUnP7NfAHIPQiIT0yED9Wurjp
+         ZnCJT4ChlhD2Q==
+From:   Marek Vasut <marex@denx.de>
+To:     linux-gpio@vger.kernel.org
+Cc:     Marek Vasut <marex@denx.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v2] gpio: mxc: Always set GPIOs used as interrupt source to INPUT mode
+Date:   Sun, 24 Jul 2022 04:34:18 +0200
+Message-Id: <20220724023418.441899-1-marex@denx.de>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 06/22] dt-bindings: pinctrl: rockchip: Document RV1126
- pinctrl
-Content-Language: en-US
-To:     Jagan Teki <jagan@edgeble.ai>, Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kever Yang <kever.yang@rock-chips.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20220723204335.750095-1-jagan@edgeble.ai>
- <20220723204335.750095-7-jagan@edgeble.ai>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220723204335.750095-7-jagan@edgeble.ai>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/07/2022 22:43, Jagan Teki wrote:
-> Document dt-bindings for RV1126 SoC pinctrl support.
-> 
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Jagan Teki <jagan@edgeble.ai>
-> ---
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
+Always configure GPIO pins which are used as interrupt source as INPUTs.
+In case the default pin configuration is OUTPUT, or the prior stage does
+configure the pins as OUTPUT, then Linux will not reconfigure the pin as
+INPUT and no interrupts are received.
 
+Always configure interrupt source GPIO pin as input to fix the above case.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Loic Poulain <loic.poulain@linaro.org>
+Cc: Marc Zyngier <maz@kernel.org>
+---
+V2: Actually update and clear bits in GDIR register
+---
+ drivers/gpio/gpio-mxc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index c871602fc5ba9..ed58441627d92 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -147,7 +147,7 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct mxc_gpio_port *port = gc->private;
+-	u32 bit, val;
++	u32 bit, val, dir;
+ 	u32 gpio_idx = d->hwirq;
+ 	int edge;
+ 	void __iomem *reg = port->base;
+@@ -204,6 +204,10 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+ 
+ 	writel(1 << gpio_idx, port->base + GPIO_ISR);
+ 
++	dir = readl(port->base + GPIO_GDIR);
++	dir &= ~BIT(gpio_idx);
++	writel(dir, port->base + GPIO_GDIR);
++
+ 	return 0;
+ }
+ 
+-- 
+2.35.1
 
-Best regards,
-Krzysztof
