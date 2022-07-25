@@ -2,134 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77E5857F9AE
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 08:55:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1004157FC40
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 11:20:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232690AbiGYGzL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 02:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38278 "EHLO
+        id S232406AbiGYJUf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 05:20:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232177AbiGYGyx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 02:54:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87C912AF2
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Jul 2022 23:54:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 493836114D
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 06:54:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9944DC341CE;
-        Mon, 25 Jul 2022 06:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658732047;
-        bh=UFtD3GoQGq4MGujQq6IORpJ28F7R/QEABkIyQdIBtzU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UORK/F0krQDDSTfI4x6pm4yEpAkvCfDV2iPN8gWcNyA9poqQBiYH9dDdcZ2RUuU1p
-         pS5fF7CMmTHrtm/oS/BzaL96WBrhn2JXJdHdKsiElWm/+5FZT0pLH7O3sj8up4TOg2
-         P2IdbZaVHiBPnMbPY+R7j54nmKD1/FYuV+2UneP6pgncYKxXvk+k9Zzc/gbxSVh15q
-         lp73n72FqT36vsctZFffDGIiSJqECl59Ai/r+amvzhlb/E32504BDFrNWz6tyZEOAk
-         2MW02p5m5YXJekCPn5PRiw70LqDNa+sAZQzsUqMboVS3OcRTF4qaGW6A5qnWqeB4Cj
-         U/swKnWbyeMWQ==
-Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oFryf-009mAx-AP;
-        Mon, 25 Jul 2022 07:54:05 +0100
-Date:   Mon, 25 Jul 2022 07:53:59 +0100
-Message-ID: <871qu9d6ns.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        with ESMTP id S234461AbiGYJUd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 05:20:33 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29F0962C6
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 02:20:32 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id z23so19267134eju.8
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 02:20:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kaNd6PunDju54Ot7JCdvnvyXR6XKFTa01wTkyaQA44Q=;
+        b=I/Vurrzl6VQSz7Vruk0bl4/TXBuhACK2i9YyyLywCczKXBl1dv1Y4vz7oounhtcdSe
+         MZ4IU2m35FzsMn22ndpEIuLVVdcaIzAlvukUs+fQ0uy3ILx/Kga4m89cEpeR0L3pzA1F
+         xV9ZhRVoL3tA7wYdzjFDB1v6XMt3kVOrjxwIWIJ0FVue1IkPqNP7XJQBY9x6oH9l39FB
+         kIEDgkPAyY7auUnpOp+mbLj3bQk28IKl1y26RFQpOlJWqwHzOGVFpMm86jIGP2NnK5NU
+         /zBYFiPVSR3AZaZBGo9iWSnigDaeVzV/Vjce24GgHorElZPrCqqK1lNudNRpqpgAIGC9
+         rEcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kaNd6PunDju54Ot7JCdvnvyXR6XKFTa01wTkyaQA44Q=;
+        b=vTtXFeMnKvI4+YAUcSioY6NNBusfRFwKDPRYxFa13uRXWVGFhDZtsO+om+k22xObwq
+         tcRiconu2wQNcJjCoELc6fHL40zqfOzFnA/vZzK421CITVauObo3De7gjRimr2BXWHjr
+         RfBdChY++mPK+DjSOF2jrKUKLeDJOJj3VsKx6uKuIt2UlNHopEdIVIx1WuDquyQlOXS2
+         VISqEuzFVjprH+61nn+PKZlLOw/hjxQK3mWx5hqadpBaxcP2+hTgSJEdw+ocZCiA5NHO
+         esX7Y1xf3out1W/22USULFaj6VpiqUohtot4JDZ/LBEPIH9zdn/u2LIyjAA4lLfdcFiA
+         BCMw==
+X-Gm-Message-State: AJIora/HmHuP8bLtw727Cia4+f2ei+mZXzhOJ9gn5+OLO7c5Il93Yn16
+        0yQqMBFQucsJLZeArCIGNN/b/jn9jEMnkZ74eJ8=
+X-Google-Smtp-Source: AGRyM1sqTBY2yKi8qAwNR3YbZ/Y3xqzR+1FAcEmmc503HRQlYA8cXrk1L8ooAmULtIWfxlq2sLcXn9IfTXk4B0q+Ygo=
+X-Received: by 2002:a17:906:9b09:b0:72b:9612:d373 with SMTP id
+ eo9-20020a1709069b0900b0072b9612d373mr9116755ejc.606.1658740830680; Mon, 25
+ Jul 2022 02:20:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de>
+ <CAHp75VeRfguxwjf3y3qWSQCwQF=cOFvt7iP0KVJMnGwdyPvUnA@mail.gmail.com>
+ <CAHp75Vdx+2zJ_dNAgXHnRPhMn7csX=P-NPcvHWmMJ1iLZ_WYBg@mail.gmail.com> <20220719071931.lcbbwoei6nmd6kx5@pengutronix.de>
+In-Reply-To: <20220719071931.lcbbwoei6nmd6kx5@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Jul 2022 11:19:54 +0200
+Message-ID: <CAHp75VfLQujQx5pBJ_6rAjkoHD5nd5APqXXjDccNQ1fUiXXh0g@mail.gmail.com>
+Subject: Re: Is a multiplexer using latches a gpio controller?
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
-In-Reply-To: <fe022bcf-9ae2-8050-77fa-06eb12e35147@denx.de>
-References: <20220724171057.18549-1-marex@denx.de>
-        <87fsiqxuvd.wl-maz@kernel.org>
-        <fe022bcf-9ae2-8050-77fa-06eb12e35147@denx.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.104.136.29
-X-SA-Exim-Rcpt-To: marex@denx.de, linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com, linus.walleij@linaro.org, loic.poulain@linaro.org, linux-imx@nxp.com, peng.fan@nxp.com, shawnguo@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 24 Jul 2022 19:15:26 +0100,
-Marek Vasut <marex@denx.de> wrote:
-> 
-> On 7/24/22 19:50, Marc Zyngier wrote:
-> 
-> [...]
-> 
-> >> +++ b/drivers/gpio/gpio-mxc.c
-> >> @@ -147,6 +147,7 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
-> >>   {
-> >>   	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> >>   	struct mxc_gpio_port *port = gc->private;
-> >> +	unsigned long flags;
-> >>   	u32 bit, val;
-> >>   	u32 gpio_idx = d->hwirq;
-> >>   	int edge;
-> >> @@ -185,6 +186,8 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
-> >>   		return -EINVAL;
-> >>   	}
-> >>   +	spin_lock_irqsave(&port->gc.bgpio_lock, flags);
-> > 
-> > In my tree, bgpio is a raw spinlock, and has been since 3c938cc5cebcb.
-> > 
-> > Now, looking a bit closer at this code, I have to withdraw my earlier
-> > comment about the lack of mutual exclusion in the existing code. All
-> > writes are of the form:
-> > 
-> > 	writel(single_bit_mask, some_addr + MXS_{SET,CLR});
-> > 
-> > which indicates that the write side can be accessed with a hot-bit
-> > pattern, avoiding a RWM pattern and thus the need for a lock.
-> 
-> Only for the ISR/IMR, not for the GDIR register, that's why the locks
-> are added only around the RMW which don't have these "hot bits".
+On Tue, Jul 19, 2022 at 9:19 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Tue, Jul 19, 2022 at 12:11:56AM +0200, Andy Shevchenko wrote:
+> > On Tue, Jul 19, 2022 at 12:05 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Mon, Jul 18, 2022 at 10:27 PM Uwe Kleine-K=C3=B6nig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
 
-Only your patch adds any GDIR access.
+> > > > we have a customer board here that uses two 8 port latches to drive
+> > > > LEDs. The setup looks as follows:
+> > > >
+> > > > CLK0 ----------------------.        ,--------.
+> > > > CLK1 -------------------.  `--------|>    #0 |
+> > > >                         |           |        |
+> > > > IN0 -----------------+--|-----------|D0    Q0|-----|=E2=97=81
+> > > > IN1 ---------------+-|--|-----------|D1    Q1|-----|=E2=97=81
+> > > > IN2 -------------+-|-|--|-----------|D2    Q2|-----|=E2=97=81
+> > > > IN3 -----------+-|-|-|--|-----------|D3    Q3|-----|=E2=97=81
+> > > > IN4 ---------+-|-|-|-|--|-----------|D4    Q4|-----|=E2=97=81
+> > > > IN5 -------+-|-|-|-|-|--|-----------|D5    Q5|-----|=E2=97=81
+> > > > IN6 -----+-|-|-|-|-|-|--|-----------|D6    Q6|-----|=E2=97=81
+> > > > IN7 ---+-|-|-|-|-|-|-|--|-----------|D7    Q7|-----|=E2=97=81
+> > > >        | | | | | | | |  |           `--------'
+> > > >        | | | | | | | |  |
+> > > >        | | | | | | | |  |           ,--------.
+> > > >        | | | | | | | |  `-----------|>    #1 |
+> > > >        | | | | | | | |              |        |
+> > > >        | | | | | | | `--------------|D0    Q0|-----|=E2=97=81
+> > > >        | | | | | | `----------------|D1    Q1|-----|=E2=97=81
+> > > >        | | | | | `------------------|D2    Q2|-----|=E2=97=81
+> > > >        | | | | `--------------------|D3    Q3|-----|=E2=97=81
+> > > >        | | | `----------------------|D4    Q4|-----|=E2=97=81
+> > > >        | | `------------------------|D5    Q5|-----|=E2=97=81
+> > > >        | `--------------------------|D6    Q6|-----|=E2=97=81
+> > > >        `----------------------------|D7    Q7|-----|=E2=97=81
+> > > >                                     `--------'
+> > > >
+> > > >
+> > > > So to change output 2 of latch #1 you have to apply the changed lev=
+el on
+> > > > IN2, apply the previous level on the other inputs (to keep the othe=
+r
+> > > > outputs constant) and toggle CLK1 once.
+> > > >
+> > > > This way you can drive 16 LEDs (or in general outputs) using only 1=
+0
+> > > > GPIOs. (And with a higher number of latches the proportion becomes =
+a bit
+> > > > more useful.)
+> > > >
+> > > > Actually this construct is a general GPO (no input :-) controller, =
+and I
+> > > > wonder if you would accept a driver that models it as a gpio contro=
+ller.
+> > > >
+> > > > The dt binding could look as follows:
+> > > >
+> > > > latch-gpo {
+> > > >         compatible =3D "latch-gpo";
+> > > >         pinctrl-0 =3D <...>;
+> > > >         pinctrl-names =3D <...>;
+> > > >
+> > > >         clk-gpios =3D /* CLK0 */ <...>, /* CLK1 */ <...>;
+> > > >         data-gpios =3D /* IN0 */ <...>, /* IN1 */ <...>, ...;
+> > > > };
+> > > >
+> > > > What do you think?
+> > >
+> > > Bart, what happened to the [1]? Is it abandoned, forgotten?
+> > >
+> > > Uwe, isn't it what you need?
+> >
+> > It needs "downstream" GPIO and ->get_direction(), etc should act accord=
+ingly.
+>
+> No, IIUC this is different. With a multiplexer there can always only be
+> a single line that is controlled (or read) and the other lines are (I
+> assume) high-z.
 
-> > Your second patch, however requires the lock. I'm not sure it is safe
-> > to do after the interrupt type has been configured though. You may
-> > want to refer to the TRM for this.
-> 
-> There is in fact another unprotected RMW in gpio_set_irq_type() , look
-> for GPIO_EDGE_SEL, so the locks should be valid as they are now, right
-> ?
+I don't know the Linux mux framework implementation, but from a
+hardware perspective the mux is what you have. In the GPIO (mux)
+driver you need to be able to switch banks as you wish, the rest is
+the drivers' business. If gpio-cascade gives no possibility to do that
+due to broken mux in Linux, then indeed, it can't be accepted at all
+and I have to withdraw my tags from that.
 
-I seem to be confused with gpio-mxs.c, and gpio-mxc indeed needs the
-lock.
+> The latch approach above is about 16 outputs and at all times the state
+> off all 16 lines is fixed because the latches keep their state when the
+> clk line is kept stable.
 
-However, you have totally ignored my earlier comments in your v4:
+> > > [1]: https://lore.kernel.org/linux-gpio/20220205215918.8924-1-maukka@=
+ext.kapsi.fi/
 
-- This doesn't compile, as bgpio_lock has been changed to a *raw*
-  spinlock. You obviously haven't even bothered testing your patch.
-
-- I asked for a cover letter for any series with multiple patch.
-  That's not exactly a new requirement.
-
-So we got 4 versions in just over 24 hours, none of which actually
-work. Do you see the overarching problem?
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+--=20
+With Best Regards,
+Andy Shevchenko
