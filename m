@@ -2,61 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA27C58047F
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 21:34:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8DA45804EE
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 22:01:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230468AbiGYTeu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 15:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49792 "EHLO
+        id S236517AbiGYUBX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 16:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbiGYTet (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 15:34:49 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045161FCD3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 12:34:49 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id mf4so22480733ejc.3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 12:34:48 -0700 (PDT)
+        with ESMTP id S229586AbiGYUBW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 16:01:22 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215FFBC06;
+        Mon, 25 Jul 2022 13:01:21 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id w5so2939723edd.13;
+        Mon, 25 Jul 2022 13:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xh3UKl8Q5rAd0qWPy+oNZTzRQbMt625CogTHbG8NRII=;
-        b=M+gDrcjYWH7tIA8D5EWXm/6l6EMxYFPldTZRN5pPy9VC6CznCB5+sh1vFIpzGl0YPC
-         QrTiiZfTr3xsU9y4CrIopREBuN8KJZ4qh1nT06UOCabI/wm4cVYuvuRFxha1W6qkSbsc
-         KOkTNRarLskHX/QscocjY0xhfnIIzsf7MX3zXyUrJQS6exR5ifxGlvOhuToW0ilyLMra
-         TekIESuWREIhN2IBgnV44rdKW5vrglrPj2WZuM6uS8BrKyr8jb2wrOY/uNWRBBY72Rjp
-         cnH+wKuq5K+DnMD8wFfTitR1gSd6Glyjecu0fyjEyfbSpIKZ7tWbnnCOC+oey9O4DNCQ
-         GWcA==
+        bh=wNN4mVH/SyRJ4COePe/9hQsezCFR8p9Jr07EoPN/p4A=;
+        b=nfnsmf/qvqvc5ltskEbdtr6EvX8N2U/ovpyM+8utCHHbKQ7vEG8XXGxwwn8GOGZjIT
+         Qd1DlaQ1Maq+BHEd9wwsJKt2d5noQCpHMcOewHJPs4saWqV5dH8YzHXzd2kKAtfq2rh7
+         l4XGznfiy5VAfzymRVT3prJMShafPZKZNcTm2HRYt7L9ARq8hFX7V5gSguxVlU1b26Jm
+         ok8DTkQJrNKtINpqn62pnHNgjV1XNcH/pGUwfIN935p1uD6gcVA628+ZK+gJa/8957Pg
+         memaWLIe+wgYMPkHJJCVD+3J7nMKzEY3MVvDr9ET6P39Xp8qXvNiu94UuPtw7JTzEZXD
+         ZeuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xh3UKl8Q5rAd0qWPy+oNZTzRQbMt625CogTHbG8NRII=;
-        b=DQZSbAhshqe625uWDgRSsSckbVPXq91FtOFJJsIiYhNSpD46BpnLAgUNejj6/gg7am
-         fZoJVy6OA9K6vQaKE0NsBsGoJAGWGlmSnF79RCCqllg7xbN5DPjG2AkftNE9b8Z/EkVk
-         +Lct9oxUXZiTwG/Nr9uhV+NDNVJIPs0S7+j1D1c166Kok1OD/MT64158rt6cfbtdvunM
-         +6V3jNx4orYbudb1zqzj/IpO9BWpGp0X7LT3KMXNRhPSfHgNLEMLWmNi5uLqfjzi+HV4
-         drWcFgjBP4BmvZ60gswp091PYEQZppzr1pKBKFSRiXSfxA4PX2ljCTkFngOKMZVEOVq0
-         XPog==
-X-Gm-Message-State: AJIora9aFrvvRf3hRdtXcdUOVSCDx+Km0xAB+ZXC1Vb7C3DcB6qkGoyx
-        bsoTvD8akaX3ZuMta1lbc6uEZlRRODDFMryO01jqnKknolfrsA==
-X-Google-Smtp-Source: AGRyM1tv41lg9srpF1YUnJDvvAgxwpK0Bmvn3Ou3nSKtOHG5Gu/J5pW+uWc7AomYkQLfG5H4kv/x/s3hsaQbNNzhraI=
-X-Received: by 2002:a17:907:75da:b0:72b:3ce0:2524 with SMTP id
- jl26-20020a17090775da00b0072b3ce02524mr11283757ejc.394.1658777687258; Mon, 25
- Jul 2022 12:34:47 -0700 (PDT)
+        bh=wNN4mVH/SyRJ4COePe/9hQsezCFR8p9Jr07EoPN/p4A=;
+        b=cQh1ushUbYINen4pKH2EpXP9rOxG/cMAtuyTnE0HZdyL8dSaVTs8ilX0ZH3xM0dEJQ
+         MZ09OFN/E28A9G9wU70xvSRGq6JS+OGvFXHnertwiJV5qiUXd7ri3Q88rFtTIE63he4s
+         sRQ0Gwb1ez4BmrT/t6kbWqteKqU9LvVcT1TMApciIZhPsjEKNP4klMZPV84p2XrFBNSx
+         U29USmhux9qc4BH2jvHxVNj8fmThLMaPPulXpRri6+FAtxhevFfOS4Ig9JslT+JvjLi2
+         ePzzWUudScj9CuDre6SBWaZQtMIRKboJfAASLcvi/HkbB7bHt91yFic8TMbTz+bv/aEN
+         CGKQ==
+X-Gm-Message-State: AJIora+OseXzFO1fpC4dXhNHsmeynmjt139UcyoXKepI34zB7eEFbBMs
+        olles2YFTDSVOsX3IHZYIOuqKLVfffWxRrW752I=
+X-Google-Smtp-Source: AGRyM1uZYoYheybNUnbJ68eFBR+LM7u2yM88gm1gyLYXLPjJ7d6vPulcanpsEcwWbMnl8jaGTgIWuvQFYghYKGQ162M=
+X-Received: by 2002:a05:6402:d53:b0:43b:a0cf:d970 with SMTP id
+ ec19-20020a0564020d5300b0043ba0cfd970mr14532718edb.277.1658779279416; Mon, 25
+ Jul 2022 13:01:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAEBpM+ZPZNpJNJAU=2iji8+dCnLEcordRLwH3-mKhYqWS_zr6Q@mail.gmail.com>
- <CACRpkdbVRm7SdCPm-RP7pD2v7ce+i+kSh05wdFsmMmBbDk+1YA@mail.gmail.com>
- <CAEBpM+ZDiCD7Y5au9ng4iaptbQEHMXwUFLY370_uVBKCjsR+EA@mail.gmail.com> <CACRpkdZ139Dhonh82Zs_DGewb3KkocpU7yE5wuhukm=TfZBkOw@mail.gmail.com>
-In-Reply-To: <CACRpkdZ139Dhonh82Zs_DGewb3KkocpU7yE5wuhukm=TfZBkOw@mail.gmail.com>
+References: <20220722040609.91703-1-colin.foster@in-advantage.com> <20220722040609.91703-10-colin.foster@in-advantage.com>
+In-Reply-To: <20220722040609.91703-10-colin.foster@in-advantage.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Jul 2022 21:34:10 +0200
-Message-ID: <CAHp75VcTu5+Jb1La+Db=SM_Ec=cq9q4xn-p3KrM7HQF-k5u5Gg@mail.gmail.com>
-Subject: Re: To write Java binding for libgpiod - need help with looking for references
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Meena M <scientistartist@gmail.com>,
+Date:   Mon, 25 Jul 2022 22:00:42 +0200
+Message-ID: <CAHp75Ve-pqgb56punEL=p=PnEtjRnqTBSqgs+vVn1Zv8F94g9Q@mail.gmail.com>
+Subject: Re: [PATCH v14 mfd 9/9] mfd: ocelot: add support for the vsc7512 chip
+ via spi
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -68,42 +86,153 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 22, 2022 at 3:00 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Fri, Jul 22, 2022 at 6:06 AM Colin Foster
+<colin.foster@in-advantage.com> wrote:
 >
-> On Wed, Jul 20, 2022 at 11:37 AM Meena M <scientistartist@gmail.com> wrote:
+> The VSC7512 is a networking chip that contains several peripherals. Many of
+> these peripherals are currently supported by the VSC7513 and VSC7514 chips,
+> but those run on an internal CPU. The VSC7512 lacks this CPU, and must be
+> controlled externally.
 >
-> > If I get to know more about JNA will share it, but going by what I have found online,
-> > JNA is slower than JNI. I am very new to this too.
->
-> Good way to learn!
->
-> > At present I am going through JNI programmer's guide which was recommended in
-> > a resource(a youtube video) which by itself is old(2017), the programmer guide even older.
->
-> It's annoying. I would check the opensource Java git to check what is going on
-> over at Oracle.
-> https://github.com/openjdk/jdk/blob/master/src/java.base/share/native/include/jni.h
->
-> > I am getting a failure delivery message for linux-gpio@vger.kernel.org, how do
-> >  I get to mail everyone in the list?
->
-> The email address is correct.
-> Maybe it is because you're using HTML in your mailer?
-> The list servers will reject any HTML-formatted mail.
-> Make sure gmail is configured to use plaintext when sending mails.
->
-> Yours,
-> Linus Walleij
+> Utilize the existing drivers by referencing the chip as an MFD. Add support
+> for the two MDIO buses, the internal phys, pinctrl, and serial GPIO.
 
-Have you spoken to the authors of recent (to some extent) active projects on GH?
+...
 
-https://github.com/sgjava/java-periphery
-https://github.com/helins/linux-gpio.java
-https://github.com/NickZhang1024/java-periphery
++bits.h
 
-(Dunno if first and third have any relations, GH shows none)
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/ocelot.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/types.h>
 
+...
 
--- 
+> +#define VSC7512_MIIM_RES_SIZE          0x24
+> +#define VSC7512_PHY_RES_SIZE           0x4
+
+Can you make _SIZEs to be fixed width? Like 0x004 here.
+
+> +#define VSC7512_GPIO_RES_SIZE          0x6c
+
+> +#define VSC7512_SIO_CTRL_RES_SIZE      0x100
+
+...
+
+> +       ret = readx_poll_timeout(ocelot_gcb_chip_rst_status, ddata, val, !val,
+> +                                VSC7512_GCB_RST_SLEEP_US, VSC7512_GCB_RST_TIMEOUT_US);
+> +       return ret;
+
+return readx_poll_timeou(...);
+
+...
+
+> +static int ocelot_spi_regmap_bus_read(void *context, const void *reg, size_t reg_size,
+> +                                     void *val, size_t val_size)
+> +{
+> +       struct spi_transfer tx, padding, rx;
+> +       struct device *dev = context;
+> +       struct ocelot_ddata *ddata;
+> +       struct spi_device *spi;
+> +       struct spi_message msg;
+> +
+> +       ddata = dev_get_drvdata(dev);
+> +       spi = to_spi_device(dev);
+> +
+> +       spi_message_init(&msg);
+> +
+> +       memset(&tx, 0, sizeof(tx));
+> +
+> +       tx.tx_buf = reg;
+> +       tx.len = reg_size;
+> +
+> +       spi_message_add_tail(&tx, &msg);
+> +
+> +       if (ddata->spi_padding_bytes) {
+> +               memset(&padding, 0, sizeof(padding));
+> +
+> +               padding.len = ddata->spi_padding_bytes;
+> +               padding.tx_buf = ddata->dummy_buf;
+> +               padding.dummy_data = 1;
+> +
+> +               spi_message_add_tail(&padding, &msg);
+> +       }
+> +
+> +       memset(&rx, 0, sizeof(rx));
+> +       rx.rx_buf = val;
+> +       rx.len = val_size;
+> +
+> +       spi_message_add_tail(&rx, &msg);
+
+I'm wondering if you can use in both cases
+spi_message_init_with_transfers(). (Note you may explicitly as SPI
+core to toggle CS if needed)
+
+> +       return spi_sync(spi, &msg);
+> +}
+
+...
+
+> +static int ocelot_spi_regmap_bus_write(void *context, const void *data, size_t count)
+> +{
+> +       struct device *dev = context;
+> +       struct spi_device *spi;
+> +
+> +       spi = to_spi_device(dev);
+
+Can be unified with definition block above to save 2 LoCs.
+
+> +       return spi_write(spi, data, count);
+> +}
+
+...
+
+> +               ddata->spi_padding_bytes = 1 + (spi->max_speed_hz / 1000000 + 2) / 8;
+
+HZ_PER_MHZ ?
+
+...
+
+> +       /*
+> +        * A chip reset will clear the SPI configuration, so it needs to be done
+> +        * again before we can access any registers
+
+Missed period.
+
+> +        */
+
+...
+
+> +       err = ocelot_core_init(dev);
+> +       if (err < 0)
+
+Does ' < 0' part here and everywhere else bring any value?
+
+> +               return dev_err_probe(dev, err, "Error initializing Ocelot core\n");
+
+...
+
+> + * struct ocelot_ddata - Private data for an external Ocelot chip
+> + *
+
+No need for this and blank lines between field descriptions..
+
+> + * @gcb_regmap:                General Configuration Block regmap. Used for
+> + *                     operations like chip reset.
+> + *
+> + * @cpuorg_regmap:     CPU Device Origin Block regmap. Used for operations
+> + *                     like SPI bus configuration.
+> + *
+> + * @spi_padding_bytes: Number of padding bytes that must be thrown out before
+> + *                     read data gets returned. This is calculated during
+> + *                     initialization based on bus speed.
+> + *
+> + * @dummy_buf:         Zero-filled buffer of spi_padding_bytes size. The dummy
+> + *                     bytes that will be sent out between the address and
+> + *                     data of a SPI read operation.
+
+--
 With Best Regards,
 Andy Shevchenko
