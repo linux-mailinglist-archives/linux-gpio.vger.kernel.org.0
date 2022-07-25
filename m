@@ -2,66 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A08E758073D
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 00:22:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C6B9580762
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 00:30:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237173AbiGYWWd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 18:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60924 "EHLO
+        id S229901AbiGYWad (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 18:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236904AbiGYWWc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 18:22:32 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3221724BC8
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:22:31 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id b11so22992839eju.10
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:22:31 -0700 (PDT)
+        with ESMTP id S230320AbiGYWac (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 18:30:32 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CDC13E95
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:30:31 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id b11so23018208eju.10
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OfJ1ZIj7+bU5sV/7raydSeEf2mqO6FkBGPuruTLSHB8=;
-        b=fODJuDVU6D+SDS2q/F+l/X08BfH6k6TCxnJEsdUKX6J0NqPl2fLBZMPLOOGyutqZu5
-         Fxr0i674pMdM/W3P75tPF/Tym+Fa3rBFa6i5DAbJH6yp/gkibxQx7XnYRIXc/yaW2jEV
-         hnnPdE/vdcuDkfUG+brbU9gJU1DD7ngEobjeNzBt/Z9cPECKdycmTyih0mJ+VoAOlHaM
-         yxGs2d2SqR+gN3IUY/zjUk7xDeDHVwYmiv6T5Ov9v5Rcr3SYoXF/O6kr8hhMcKx/sETm
-         9joPs+HPuIc62BLSHDU+MnrFc/eGlJl+o6R6FDsTRrtPK2wBRI2NF7yybrjKxXfg5suD
-         5YbQ==
+        bh=pMRT6HLjy98DQ8uXQG4OLRi5mVqo0UDYq5RUWZsPoaY=;
+        b=EwqOfu0sPrnZjYl3aJrGc88DDlC22qrrsbq2XSy9eBi2fKvmDJdGukKrLXL+RqjuVa
+         tJql4zU9e/SSREleJzalM4FHbvmtzV/8pr2JRHQlly/wRBZsXChxiFs951tyzR1Hu5fA
+         IGBhyHTThFWpvKVD5miI1BEnlmsDSkyJPsimogscLRm3gSJMWrv0GpO7hhepMR/x5U9A
+         MRvETZ2UrPbsVQpbZQZ9SHkzuKJFvFhbCNUpf+35Blt3Et2e6mExS0g/oh6Hfcb12yp9
+         0bnZSBuc/aZz9aJjHTIMt2h6k0yzd9rWldKV64GhjFrGAPugncG5NbGFPAcdPht2mWeN
+         BWbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OfJ1ZIj7+bU5sV/7raydSeEf2mqO6FkBGPuruTLSHB8=;
-        b=YO4+ayLEpZPun7j9x8HpbzyAUkDTKE4RWOupZo7k4qLEAv42rzzqM1pFRWtFnR9rQm
-         2JEDTcmDgL0e+HoglDqPFja6nzY73nEWmq4IYG1Y17jA80h16CmeSfpTr77TWEheDen5
-         4pbnYmHS0pijzmxx7cVpEsD2OeDxV/DgVE1Zvag16BjUUVTjiW7sBqs4LTfFFodMuZEZ
-         ROqTyXgsxvz+zcWLURwEsxVIjF6ldnf/mCXKFzUkhXUWYHtAh0ctoEBesPFU17tDTnGO
-         Xa4zBecYiceenV6SZWRGGMFT1hItfh9ISkcIxgUOO8kH8Cf+mc4lrH3q6QFOcYxXfLJ6
-         CX/g==
-X-Gm-Message-State: AJIora8+zfqFdJDO74XH5Je+7I8Bprf+vFanEhvVtIBKAm330Jhrps0s
-        MIveefaYGsg4v2iclpvuUdSHjqSlRWTBUOg5QJuCtqT/kljzVQ==
-X-Google-Smtp-Source: AGRyM1sPpzasQVrKUvnOSqUPzsw2Lo2Bp+AJmvJzr+MjWG9dRwUvXpshqOSPRV70aCpQwrHv0rNTlsGDEYEXbfMv4sY=
+        bh=pMRT6HLjy98DQ8uXQG4OLRi5mVqo0UDYq5RUWZsPoaY=;
+        b=qLk6s7Zq6TgvvoDJ6Mgs/sOPkcpImmhZl1qpLdOfXjsMd4DoaKP5i6U6Pk1KWuWgBX
+         kLnIE18mh9IxkCjGDxJkP1PqwHFmgDfN94KoInBPZBKflMGRwm61Fbsi6zDRfRX7HJOA
+         XCYotf6v3OtpGmLt3pYnc4Ur6Q0XvxVinhiAgp4ufqlPiAz6Z6/aIaxoFW2xABY7FoSG
+         nAqDotK5FjMuDNdJaOMrx4NNkU4czvDDbph4+j9u2+IlJW9okFRUS9nbR6wy+sXeAuGm
+         F8VPLytbVPEiDARaPo3NSDLhfEwkxZi8u+lB4ewRWr+GS7qA6rpMLrBn4kEHguITKogh
+         cytA==
+X-Gm-Message-State: AJIora/TmF9qlbnMjBCuixl3oGMjof5b0uXC40ZGMkGJzuMp+HMagm1Y
+        J/C1OvOVKAOcWDSYtNH5yOGj7pAvmdbsp3c5/bkzrA==
+X-Google-Smtp-Source: AGRyM1uMc+aoB2qqdMYcBUZvUMANBbQ5OtYaG98HUeyskdK+JEwj4d/7iaPI8lIOaocsiZpU1pwNCjd3Z6EdrqY6cbI=
 X-Received: by 2002:a17:907:28c8:b0:72b:97cd:d628 with SMTP id
- en8-20020a17090728c800b0072b97cdd628mr11754787ejc.208.1658787749498; Mon, 25
- Jul 2022 15:22:29 -0700 (PDT)
+ en8-20020a17090728c800b0072b97cdd628mr11773984ejc.208.1658788229740; Mon, 25
+ Jul 2022 15:30:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
- <CAHp75VddBhc9peHXfNfTyTNni246kC8CyLqCrMFadn67LGDarQ@mail.gmail.com>
- <CACRpkdaczrU1tM5Yt7P-Q2h+ge8STOi6HvvYeTM-g+JwS8_gZw@mail.gmail.com> <CAHp75VfaExrFYto7LWa5Vnbm6JbiAqtutKmk0HzfeHmmi3PwOg@mail.gmail.com>
-In-Reply-To: <CAHp75VfaExrFYto7LWa5Vnbm6JbiAqtutKmk0HzfeHmmi3PwOg@mail.gmail.com>
+References: <20220724224943.294057-1-marex@denx.de> <CAHp75Ve0EQfee+eiDDG_pgzt8V3yoWeVfRZswG3EdFZZRyxa2A@mail.gmail.com>
+In-Reply-To: <CAHp75Ve0EQfee+eiDDG_pgzt8V3yoWeVfRZswG3EdFZZRyxa2A@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Jul 2022 00:22:17 +0200
-Message-ID: <CACRpkdYHgD-fmt_2PWJrmyGY=AOP0Z+4jTkH=n3wJ+a0aApqcg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: gpio-74x164: add support for CDx4HC4094
+Date:   Tue, 26 Jul 2022 00:30:18 +0200
+Message-ID: <CACRpkdZvjBBhNy_fQ2_dirSc1ddXCAO7dPg9OQW2eGDFWpn5rA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
+Cc:     Marek Vasut <marex@denx.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -72,90 +69,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 25, 2022 at 10:49 PM Andy Shevchenko
+On Mon, Jul 25, 2022 at 10:38 PM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
-> On Mon, Jul 25, 2022 at 3:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Mon, Jul 25, 2022 at 11:32 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Jul 21, 2022 at 11:32 AM Marcus Folkesson
-> > > <marcus.folkesson@gmail.com> wrote:
+> On Mon, Jul 25, 2022 at 12:51 AM Marek Vasut <marex@denx.de> wrote:
+> >
+> > The driver currently performs register read-modify-write without locking
+> > in its irqchip part, this could lead to a race condition when configuring
+> > interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
+> > the register read-modify-write.
 >
 > ...
 >
-> > > Sorry for my absence of understanding, but why?
-> > > SPI has MOSI, CLK, CS, where the last one is exactly for that. No?
-> >
-> > Forgive me if I misunderstand, but if you use CS that
-> > way, the way that the SPI framework works is to assert
-> > CS then transfer a few chunks over SPI (MOSI/CLK)
-> > then de-assert CS.
+> > +       spin_lock_irqsave(&port->gc.bgpio_lock, flags);
 >
-> No, CS here is used exactly for what it is designed for ("tell that
-> this message is *for me*"). Yes, hardware implementation here is a
-> latch register. Because otherwise ALL messages are "for me" which is
-> wrong. Is it wrong interpretation of the hardware and SPI?
+> To my surprise, is bgpio_lock not a raw spin lock?! How is it possible
+> to work on RT?
 
-I was under the impression that the shift register has no idea
-if the message is "for me", and that there can only be one shift register
-on the bus if using ordinary SPI to control it.
+It's a spinlock that is used both for the GPIO and irqchips, so if the
+GPIO doesn't have an irqchip it works fine, as only IRQs are
+problematic.
 
-I look at this data sheet:
-https://www.farnell.com/datasheets/2030250.pdf
+If the registers used by the irqchip are separate from the registers
+used by the GPIO access, I think it is wise to use a separate
+raw spinlock to just protect the IRQ registers.
 
-IIUC what you say is CS == STR?
+They really only need to share a spinlock if they use the same
+registers and the gpiochip and irqchip risk stepping on each
+others toes. That doesn't seem to be the case here?
 
-> > If CS is used for strobe, it is constantly asserted
-> > during transfer and the sequence will be latched
-> > out immediately as you write the SPI transfers and
-> > the data is clocked through the register, making the
-> > whole train of zeroes and ones flash across the
-> > output pins before they stabilize after the SPI
-> > transfer is finished.
->
-> I'm not sure I understand the stabilization issue here. It's how SPI
-> normally works and we have a lot of delays here and there related to
-> the phase of the CS in comparison to clock and data. We have a lot of
-> time to stabilize the outputs of the shift register before latching
-> it. Did I miss anything?
-
-STR (strobe) is latching out the data, and how is that happening
-when you connect it to CS? CS is asserted throughout the whole
-transaction...
-
-STR is supposed to be used like in the patch: to be toggled after
-the transfer is complete. CS does not behave like this at all.
-
-> > If you first do the SPI transfer, then strobe after
-> > finished, this will not happen.
->
-> I have hardware, I have tested it and I understand what you mean by
-> "stabilizing", but finishing transfer _is_ CS toggling for _this_
-> chip. No?
-
-Well it will work, because all values come out, however *during*
-the transfer, not *after* the transfer as intended with the
-STR signal.
-
-> > Then it should be a separate pin, so this doesn't
-> > happen, right?
->
-> I think no, you don't need it. I.o.w. either I'm missing something
-> very interesting about both this kind of chips and SPI basics (shame
-> on me in this case) or...?
-
-SPI will assert CS, then make the transfer i.e. toggle the clock
-a few times with new data on MOSI each clock cycle, then
-de-assert CS.
-
-STR is supposed to be toggled after all this happened to latch
-out the data to the outputs, just like the patch does.
-
-What happens if STR is connected to CS is that you will see
-the shift register contents change on the output. It will be
-fast so it will look fine if it is e.g. a LED. But if it is something
-more sensitive, there will be chaos.
-
-At least how I see it ...?
+Marek: could you see if the irqchip part of the driver could
+use its own raw spinlock?
 
 Yours,
 Linus Walleij
