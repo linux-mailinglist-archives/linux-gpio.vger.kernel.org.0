@@ -2,63 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BF46580238
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 17:50:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EE0B580376
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 19:23:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235437AbiGYPuk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 11:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
+        id S236271AbiGYRXb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 13:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234646AbiGYPuj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 11:50:39 -0400
+        with ESMTP id S234713AbiGYRXa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 13:23:30 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB49EB1C6
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 08:50:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA82214D18;
+        Mon, 25 Jul 2022 10:23:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6C338B80F96
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:50:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26697C341C6;
-        Mon, 25 Jul 2022 15:50:36 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 465B0B81023;
+        Mon, 25 Jul 2022 17:23:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D523DC341C6;
+        Mon, 25 Jul 2022 17:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658764236;
-        bh=4fD2GsOTOoJsMiGgDCif3nW5XxvCsnZN7eGmwDSBs1g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gW3zlJQ2oinhI3HYAmp9MIn+VRh38uwhWFxc7bjhhIpz0QkhIl9Nue1DQzeoxgsJE
-         RZB2DwFEJARnE9Umv0Prtu4G6eaghcW3ppgfw+HsMh71ySLiq9qe0h57gxzTx1Jl7+
-         jbgkJ815wVO5SIXwqzg7sA7B6jtQN19nm7ljf0FDYyVO7MVGqaTGJPtIsQrcZ4cARZ
-         xB8lE+Cl1HwY4fsBpIErsJNVraPkJi/8s6CT5iK0e3tHr+jP/rb3WVAmYbjhZNITZj
-         WOWObVmhRo9V1SrAdAtHOzmoU79cYqooje9t09NHBGaAfYDY49+ZUeYLURH4O9m3yw
-         oicK/v9nfsdCQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oG0Lp-009sJO-PU;
-        Mon, 25 Jul 2022 16:50:33 +0100
-Date:   Mon, 25 Jul 2022 16:50:33 +0100
-Message-ID: <87bktdxkc6.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        s=k20201202; t=1658769802;
+        bh=fchiwXgbBdTjI1tnnwCi+jTVEwh6cgK0qLJkFVlCACE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UqKK0uJQDwEvh2Vi54J+93uJuKGLM7IAOnAOwLCMCuksblRTIRvEgXkjLeUwqPW4N
+         5AlvtwsxU8J+i6CNRj/GwiuTygIy05ACwDSzeTQ+zvHZZeFsgMNuaEmyOq9f2QGPgo
+         jzadUidSTOzLEpy1Nhq2yX1MX85TEzM+PBpLT4HGtOXqtYBeAfqJkxRmMvfjDsm9aI
+         K/31R1brUtwHQtk8FOCFFXUBR+qLE9ofcMp7SDDnxR0K3xBtPT9c3I7y/tmztyWRFy
+         F7zgU4j4dUOu+92AJ19L5FXRwcSmVR2o1dhXqEDJi9+Ppq0vOBeD2FIAOdLMZ4hn+j
+         Y3FxR5pnKkL0w==
+Date:   Mon, 25 Jul 2022 19:23:14 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     William Zhang <william.zhang@broadcom.com>
+Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
+        kursad.oney@broadcom.com, rafal@milecki.pl,
+        krzysztof.kozlowski@linaro.org, Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v5 0/2] gpio: mxc: Locking and direction input fix
-In-Reply-To: <20220725103445.88674-1-marex@denx.de>
-References: <20220725103445.88674-1-marex@denx.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: marex@denx.de, linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com, linus.walleij@linaro.org, loic.poulain@linaro.org, linux-imx@nxp.com, peng.fan@nxp.com, shawnguo@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" 
+        <linux-mtd@lists.infradead.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
+ ARCH_BCMBCA
+Message-ID: <Yt7RgsTA/1TmMcbU@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        William Zhang <william.zhang@broadcom.com>,
+        Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
+        kursad.oney@broadcom.com, rafal@milecki.pl,
+        krzysztof.kozlowski@linaro.org, Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" <linux-mtd@lists.infradead.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
+References: <20220725055402.6013-1-william.zhang@broadcom.com>
+ <20220725055402.6013-7-william.zhang@broadcom.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cDMN9LvOKh7YHFAv"
+Content-Disposition: inline
+In-Reply-To: <20220725055402.6013-7-william.zhang@broadcom.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -68,32 +110,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 25 Jul 2022 11:34:43 +0100,
-Marek Vasut <marex@denx.de> wrote:
-> 
-> The irqchip callbacks in gpio-mxc perform register read-modify-write operations
-> without locking, which may lead to a race condition. Add the missing locking.
-> 
-> In case the GPIO is used as IRQ, make sure it is configured as input.
-> 
-> Marek Vasut (2):
->   gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
->   gpio: mxc: Always set GPIOs used as interrupt source to INPUT mode
-> 
->  drivers/gpio/gpio-mxc.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Loic Poulain <loic.poulain@linaro.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: Peng Fan <peng.fan@nxp.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+--cDMN9LvOKh7YHFAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	M.
+On Sun, Jul 24, 2022 at 10:53:59PM -0700, William Zhang wrote:
+> With Broadcom Broadband arch ARCH_BCMBCA supported in the kernel, this
+> patch series migrate the ARCH_BCM4908 symbol to ARCH_BCMBCA. Hence
+> replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
+>=20
+> Signed-off-by: William Zhang <william.zhang@broadcom.com>
+> Acked-by: Guenter Roeck <linux@roeck-us.net> (for watchdog)
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (for drivers/pci)
+>=20
 
--- 
-Without deviation from the norm, progress is not possible.
+Acked-by: Wolfram Sang <wsa@kernel.org> (for i2c)
+
+
+--cDMN9LvOKh7YHFAv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmLe0X0ACgkQFA3kzBSg
+KbYqKBAAh7tkSiVNXcYCzGYcFhSLUkuioAtbrLXR6vkeUJ6qMvd2WkG15238Ti4s
+KlFKMBOWT2L+reNiojNZlZ2QMc/U1f/itwXDlViRuwpHBsITqGK+vGE1DH8eiCFP
+A5cPFVTh/jXJwGPQmXVzmZ8+opgeBbDg/KJI4PlX0I7KtNhdeArtlCf1EXBZiiOi
+QePGA9J4JahuNyjo33zq5Xv1OtyaPFe6hFRtCKR4tsGIHtrJlRtDy/x0Av2hj4fz
+m5tju8M/szl7hFyO15x9gg98xif+hTcgOS1H01D29vK74y7iZ61ExKGZ4/4eHz23
+3DWL6bANwKiE0CHnJzS9TLPTBrZdv3FHjCATrzJPaVs1VloRBuF86Bo7RFl6Zoi8
+fX0j3twBJ8ZqMPEVE4Cw4zHZ2gbAMcQwupF5TTwkPoFrObQJ0Zgx9HrRhTK8HxlO
+SiHSdGUJ8LaQq/oZL1OrPJOYVOknOJCWtqfoksGRee+zAjK3muZSEqaJxOjiTawv
+xYXDrpbKTEpL+WiEAIvXB4ViWm4YFU7SyDLhizLDRxYQsX2SM1i+phxe/aF98VOb
+6CyTctT+bwk/4XZRk3AXLAQq5/haStsr0mf//sUaiJxbdutgWlnnztwHvtZX4hdJ
+6h2BPcjqESC3cUfMFPT44QPaa+XZ0YlkTZWyRUP4b+bJNgn2TII=
+=c2vg
+-----END PGP SIGNATURE-----
+
+--cDMN9LvOKh7YHFAv--
