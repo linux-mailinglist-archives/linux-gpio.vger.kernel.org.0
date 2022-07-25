@@ -2,81 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06593580504
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 22:07:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6218B58056B
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 22:21:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232288AbiGYUHp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 16:07:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
+        id S229901AbiGYUVj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 16:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiGYUHo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 16:07:44 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D70D3CE3B;
-        Mon, 25 Jul 2022 13:07:42 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id v130so9586240oie.13;
-        Mon, 25 Jul 2022 13:07:42 -0700 (PDT)
+        with ESMTP id S229589AbiGYUVj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 16:21:39 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329B721806;
+        Mon, 25 Jul 2022 13:21:38 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id ss3so22496338ejc.11;
+        Mon, 25 Jul 2022 13:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SKPPpp7Tp2WHUddh1HgYEbccv4hJ/81Ko8q9iKh7koA=;
+        b=GhwS8nqfltd/oDHfdoOH9F1CJGCSVLIEdKDa3fGGjB4Ruhodb/VcUtAloXCdDNrQE1
+         NaPvLjb2J7OyqF7RfnELsfrvnSHHNWBZbw4Q/ZU0MbxYGUo2rhg5kDoOB0HfLYwCViLY
+         cD4tcsChKk1sA2gPJ65j0h2Q9ty+kLHfelJZYDMBVyWIcpVuwX9HoBA0Gexk1miLKOHm
+         Vpm97FXMaMfQUuZBxXfrr6kREU/jsIOPMiHOyed/4dfWesbcKzbMCAkYRhJj9hOh1Apu
+         Cxq/sqHpF++ooE5gfcQ4llhES276hBbwRe4a7MLEDxMvhycU3NQxsR9zVCvB+aRXdCk3
+         I9dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4GWuWpoAhrVCWo1uur9iksaj/fTVZRC6odEtZowuyck=;
-        b=mHCRsQazEFxw5eYNf5UcFCOZ+DRL3i1xsFteXXnmqEUEXeAka0hmBKyT625N2pCRh3
-         rhZMG/D34A/SiNdZvp82e5odiMBS+gD9D7i82LF0mDELiX9bCxGWlZy5+S6wJOvMopoG
-         Aga2+LHPEn3AF+9ytsHZVuPA2TJpq1T2VA9CzLZ0tMXQFyrOD6P3SBpoGCDlYZSVPmFr
-         W+OBRTej4VR2lL1EqAtv6ynnBC06rxWHdTpzgmK3ueSFlSRh2hydYuUAL06TOvx6xjDW
-         iVWbrcF70RASqRt/qSMaPY4tCJwaaHkhTFhizXSGX6HpUE35TkPkLKlDAgWxBOnEwLga
-         b0wg==
-X-Gm-Message-State: AJIora+H2TealB+0aqg2sHOZuoaeoA3lulxl/hIcjH2BkwgDIPshcoKy
-        cwfB+5fPu6h7fqLzU7hyGg==
-X-Google-Smtp-Source: AGRyM1s9bFZXSzKFUySKHhgElYf8SWow+HiRmq7/Fd7H0J6JmYb+GfEYGWIS4ue0TpRPUdBZYB81vw==
-X-Received: by 2002:a05:6808:209d:b0:33a:8b99:f7a3 with SMTP id s29-20020a056808209d00b0033a8b99f7a3mr6336587oiw.119.1658779662190;
-        Mon, 25 Jul 2022 13:07:42 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id o31-20020a056870911f00b0010c7487aa73sm6473352oae.50.2022.07.25.13.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 13:07:41 -0700 (PDT)
-Received: (nullmailer pid 2625395 invoked by uid 1000);
-        Mon, 25 Jul 2022 20:07:40 -0000
-Date:   Mon, 25 Jul 2022 14:07:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, aisheng.dong@nxp.com, festevam@gmail.com,
-        ping.bai@nxp.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 0/9] dt-bindings: pinctrl: imx: use minItems
-Message-ID: <20220725200740.GA2610621-robh@kernel.org>
-References: <20220723094335.3577048-1-peng.fan@oss.nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SKPPpp7Tp2WHUddh1HgYEbccv4hJ/81Ko8q9iKh7koA=;
+        b=PB37LVpRwfReMpEPPcvvy5EFthuhcUMPVH1RjJni0yWWxncYLFZWUxjBnL+uFefo6m
+         9SP9MNPwXmaYukD7+4QMMZtYNe59BCGXyZQWkSYtQpljIL98h4p4I/nYJRVyVO7zG30c
+         bj1u2+994oiQxuhWamtaz7pPAmxNYfFiq4+ze/xTlEkjsUx10W4wXUWBCniUrEw/TMLZ
+         eIFtSSrzGWiqZ03uRne7iGE7ZBQ51nDUNl7/OyRFl7ZoejPscYRiiEcArJmqjW+UHgPo
+         XuEx1r4w++FlGuszEgwhdbKi2l0JiBxQ+BtBaOWDqKJ6UfWxs9FbuOZaWH4fNpolpa5S
+         IhHg==
+X-Gm-Message-State: AJIora+9iQcMz0P1oTi6DESxHOOlkwMm0Hug9PuwcaPDoGtmGW9E+9TH
+        R1ub7aNM5+YLIaDaWgl5dSldu0n/saPXEVbOhJk=
+X-Google-Smtp-Source: AGRyM1t0oBn/F44/T031na79bCXNwpyh8cyBQhS5/OyrxJ8LNapumWpF2v8YlEwlYl945vlAMoWY9Yhx0HNZo4V9kaw=
+X-Received: by 2002:a17:907:1c8d:b0:6f2:eb2:1cd6 with SMTP id
+ nb13-20020a1709071c8d00b006f20eb21cd6mr11196050ejc.568.1658780496634; Mon, 25
+ Jul 2022 13:21:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220723094335.3577048-1-peng.fan@oss.nxp.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20220721073909.23318-1-srinivas.neeli@xilinx.com>
+ <CAMRc=Mefhk4i8_1j2=JO63SwfHEb3TrRMj45+CC1i1DUr8VULw@mail.gmail.com> <CAHp75Vdr3yM_b_8bDgAhNLrHUuyoq2nkVcj84wdvTzvLLetkNg@mail.gmail.com>
+In-Reply-To: <CAHp75Vdr3yM_b_8bDgAhNLrHUuyoq2nkVcj84wdvTzvLLetkNg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Jul 2022 22:21:00 +0200
+Message-ID: <CAHp75VdWS9DKd=xs8Kitoo9GZCsiNf7gt5HjfZn-9zNXBdvMEg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-xilinx: Fix integer overflow
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        neelisrinivas18@gmail.com,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        srinivas.neeli@amd.com, Srinivas Goud <sgoud@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 23, 2022 at 05:43:26PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> There are many warnings when do dtbs_check: fsl,pins are too long,
-> so add minItems to address that.
+On Mon, Jul 25, 2022 at 10:04 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Jul 22, 2022 at 9:19 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Thu, Jul 21, 2022 at 9:39 AM Srinivas Neeli
+> > <srinivas.neeli@xilinx.com> wrote:
+> > >
+> > > Current implementation is not able to configure more than 32 pins
+> > > due to incorrect data type. So type casting with unsigned long
+> > > to avoid it.
+>
+> > > Fixes: 02b3f84d9080 ("xilinx: Switch to use bitmap APIs")
+>
+> It doesn't fix anything,  I already reject one such "fix" during
+> development of this patch. Thanks!
 
-A single cell is not valid though, right?
+Sorry, not my day, it was something else that time... See below.
 
-This particular property is problematic because each entry depending 
-on the platform has different number of cells (5, 6, etc.). A single 
-cell (minItems: 1) is not valid though, right?
+> ...
+>
+> > > @@ -99,7 +99,7 @@ c
+>
+> > Applied, thanks!
+>
+> False positive.
 
-There's a fix in dtschema min branch which should fix the warnings. 
-Unfortunately, it just strips any bounds checking.
+Reading again... You mean that
 
-Rob
+  unsigned long x = y << 32;
+
+wouldn't work?
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
