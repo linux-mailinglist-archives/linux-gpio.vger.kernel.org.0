@@ -2,61 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A453058067B
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 23:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A08E758073D
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 00:22:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237250AbiGYV0h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 17:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
+        id S237173AbiGYWWd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 18:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237221AbiGYV0g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 17:26:36 -0400
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EDDE23BF3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 14:26:35 -0700 (PDT)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 1B2D0845A3;
-        Mon, 25 Jul 2022 23:26:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1658784392;
-        bh=iCjtn/G7AX4XIwNgnXfmyaBooUCl2EhnZNody1Qhnxg=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=OHsTJsRa+jKe6iPJPCtYd3bST2tmXp+eOnAfjvHdxY/Jq9/TCvKrYwXolXWPcSsXl
-         uQUAAFjBNwV6jafcZzkO//E4g4caBo2Ii950SuMIhrc8tnxh3Ix+U0oilk7X1DhAqy
-         7QEysX59cO4KHQSc+jUJXMAKGtBN0fqGDOjKQ04mktAho0shDSuVEfsxqDHD0V3zRu
-         FJp917Cb7331s6NMNM1rFaQewZrjGdmzRTfv73EiU8b0dTS6xk1PH+jH2I6ftt+YtC
-         yTy7p+vUdRGeAT73Ew7lUtW3bHui9GNN0k4lfREORQ5lRTyq48jNFnLzmYBtqR8GqN
-         vpfGrrMjEDLYA==
-Message-ID: <222da8df-4e1f-7407-aa35-e94ac399d488@denx.de>
-Date:   Mon, 25 Jul 2022 23:26:31 +0200
+        with ESMTP id S236904AbiGYWWc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 18:22:32 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3221724BC8
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:22:31 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id b11so22992839eju.10
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OfJ1ZIj7+bU5sV/7raydSeEf2mqO6FkBGPuruTLSHB8=;
+        b=fODJuDVU6D+SDS2q/F+l/X08BfH6k6TCxnJEsdUKX6J0NqPl2fLBZMPLOOGyutqZu5
+         Fxr0i674pMdM/W3P75tPF/Tym+Fa3rBFa6i5DAbJH6yp/gkibxQx7XnYRIXc/yaW2jEV
+         hnnPdE/vdcuDkfUG+brbU9gJU1DD7ngEobjeNzBt/Z9cPECKdycmTyih0mJ+VoAOlHaM
+         yxGs2d2SqR+gN3IUY/zjUk7xDeDHVwYmiv6T5Ov9v5Rcr3SYoXF/O6kr8hhMcKx/sETm
+         9joPs+HPuIc62BLSHDU+MnrFc/eGlJl+o6R6FDsTRrtPK2wBRI2NF7yybrjKxXfg5suD
+         5YbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OfJ1ZIj7+bU5sV/7raydSeEf2mqO6FkBGPuruTLSHB8=;
+        b=YO4+ayLEpZPun7j9x8HpbzyAUkDTKE4RWOupZo7k4qLEAv42rzzqM1pFRWtFnR9rQm
+         2JEDTcmDgL0e+HoglDqPFja6nzY73nEWmq4IYG1Y17jA80h16CmeSfpTr77TWEheDen5
+         4pbnYmHS0pijzmxx7cVpEsD2OeDxV/DgVE1Zvag16BjUUVTjiW7sBqs4LTfFFodMuZEZ
+         ROqTyXgsxvz+zcWLURwEsxVIjF6ldnf/mCXKFzUkhXUWYHtAh0ctoEBesPFU17tDTnGO
+         Xa4zBecYiceenV6SZWRGGMFT1hItfh9ISkcIxgUOO8kH8Cf+mc4lrH3q6QFOcYxXfLJ6
+         CX/g==
+X-Gm-Message-State: AJIora8+zfqFdJDO74XH5Je+7I8Bprf+vFanEhvVtIBKAm330Jhrps0s
+        MIveefaYGsg4v2iclpvuUdSHjqSlRWTBUOg5QJuCtqT/kljzVQ==
+X-Google-Smtp-Source: AGRyM1sPpzasQVrKUvnOSqUPzsw2Lo2Bp+AJmvJzr+MjWG9dRwUvXpshqOSPRV70aCpQwrHv0rNTlsGDEYEXbfMv4sY=
+X-Received: by 2002:a17:907:28c8:b0:72b:97cd:d628 with SMTP id
+ en8-20020a17090728c800b0072b97cdd628mr11754787ejc.208.1658787749498; Mon, 25
+ Jul 2022 15:22:29 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v3 2/2] gpio: mxc: Always set GPIOs used as interrupt
- source to INPUT mode
-Content-Language: en-US
+References: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
+ <CAHp75VddBhc9peHXfNfTyTNni246kC8CyLqCrMFadn67LGDarQ@mail.gmail.com>
+ <CACRpkdaczrU1tM5Yt7P-Q2h+ge8STOi6HvvYeTM-g+JwS8_gZw@mail.gmail.com> <CAHp75VfaExrFYto7LWa5Vnbm6JbiAqtutKmk0HzfeHmmi3PwOg@mail.gmail.com>
+In-Reply-To: <CAHp75VfaExrFYto7LWa5Vnbm6JbiAqtutKmk0HzfeHmmi3PwOg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 26 Jul 2022 00:22:17 +0200
+Message-ID: <CACRpkdYHgD-fmt_2PWJrmyGY=AOP0Z+4jTkH=n3wJ+a0aApqcg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: gpio-74x164: add support for CDx4HC4094
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-References: <20220724171057.18549-1-marex@denx.de>
- <20220724171057.18549-2-marex@denx.de>
- <CAHp75VfW6s56uYdEBYD_gcX6_PoBMJXmDQWYT7rERqW75=XoOA@mail.gmail.com>
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <CAHp75VfW6s56uYdEBYD_gcX6_PoBMJXmDQWYT7rERqW75=XoOA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,24 +72,90 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/25/22 22:36, Andy Shevchenko wrote:
-> On Sun, Jul 24, 2022 at 7:21 PM Marek Vasut <marex@denx.de> wrote:
->>
->> Always configure GPIO pins which are used as interrupt source as INPUTs.
->> In case the default pin configuration is OUTPUT, or the prior stage does
->> configure the pins as OUTPUT, then Linux will not reconfigure the pin as
->> INPUT and no interrupts are received.
->>
->> Always configure interrupt source GPIO pin as input to fix the above case.
-> 
-> the interrupt
-> 
+On Mon, Jul 25, 2022 at 10:49 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Jul 25, 2022 at 3:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Mon, Jul 25, 2022 at 11:32 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Thu, Jul 21, 2022 at 11:32 AM Marcus Folkesson
+> > > <marcus.folkesson@gmail.com> wrote:
+>
 > ...
-> 
-> I'm wondering if it's configured as output (by who?) shouldn't you
-> issue a warning?
+>
+> > > Sorry for my absence of understanding, but why?
+> > > SPI has MOSI, CLK, CS, where the last one is exactly for that. No?
+> >
+> > Forgive me if I misunderstand, but if you use CS that
+> > way, the way that the SPI framework works is to assert
+> > CS then transfer a few chunks over SPI (MOSI/CLK)
+> > then de-assert CS.
+>
+> No, CS here is used exactly for what it is designed for ("tell that
+> this message is *for me*"). Yes, hardware implementation here is a
+> latch register. Because otherwise ALL messages are "for me" which is
+> wrong. Is it wrong interpretation of the hardware and SPI?
 
-Probably not, I can think of valid use-case where the pin can be 
-configured as output by the prior stage e.g. to operate an LED, but then 
-reconfigured as input by Linux to e.g. sample a button. There is 
-hardware which shares button and LED on the same GPIO line to my knowledge.
+I was under the impression that the shift register has no idea
+if the message is "for me", and that there can only be one shift register
+on the bus if using ordinary SPI to control it.
+
+I look at this data sheet:
+https://www.farnell.com/datasheets/2030250.pdf
+
+IIUC what you say is CS == STR?
+
+> > If CS is used for strobe, it is constantly asserted
+> > during transfer and the sequence will be latched
+> > out immediately as you write the SPI transfers and
+> > the data is clocked through the register, making the
+> > whole train of zeroes and ones flash across the
+> > output pins before they stabilize after the SPI
+> > transfer is finished.
+>
+> I'm not sure I understand the stabilization issue here. It's how SPI
+> normally works and we have a lot of delays here and there related to
+> the phase of the CS in comparison to clock and data. We have a lot of
+> time to stabilize the outputs of the shift register before latching
+> it. Did I miss anything?
+
+STR (strobe) is latching out the data, and how is that happening
+when you connect it to CS? CS is asserted throughout the whole
+transaction...
+
+STR is supposed to be used like in the patch: to be toggled after
+the transfer is complete. CS does not behave like this at all.
+
+> > If you first do the SPI transfer, then strobe after
+> > finished, this will not happen.
+>
+> I have hardware, I have tested it and I understand what you mean by
+> "stabilizing", but finishing transfer _is_ CS toggling for _this_
+> chip. No?
+
+Well it will work, because all values come out, however *during*
+the transfer, not *after* the transfer as intended with the
+STR signal.
+
+> > Then it should be a separate pin, so this doesn't
+> > happen, right?
+>
+> I think no, you don't need it. I.o.w. either I'm missing something
+> very interesting about both this kind of chips and SPI basics (shame
+> on me in this case) or...?
+
+SPI will assert CS, then make the transfer i.e. toggle the clock
+a few times with new data on MOSI each clock cycle, then
+de-assert CS.
+
+STR is supposed to be toggled after all this happened to latch
+out the data to the outputs, just like the patch does.
+
+What happens if STR is connected to CS is that you will see
+the shift register contents change on the output. It will be
+fast so it will look fine if it is e.g. a LED. But if it is something
+more sensitive, there will be chaos.
+
+At least how I see it ...?
+
+Yours,
+Linus Walleij
