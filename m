@@ -2,132 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B1B057FE38
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 13:20:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2520C57FF0E
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 14:36:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234523AbiGYLUW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 07:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55510 "EHLO
+        id S234970AbiGYMgZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 08:36:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbiGYLUV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 07:20:21 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485CD2AD7;
-        Mon, 25 Jul 2022 04:20:20 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id b16so5075083lfb.7;
-        Mon, 25 Jul 2022 04:20:20 -0700 (PDT)
+        with ESMTP id S234820AbiGYMgX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 08:36:23 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34CB810FC5
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 05:36:20 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id b21-20020a05600c4e1500b003a32bc8612fso6272640wmq.3
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 05:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1nXWYVScGrrgl5QUSeVrq++Y1dz2v1W+VupFYq9G2nU=;
-        b=l+gbL0eBM5wqoNTL6mU+nrtKXkIJ2wCFGRnv0j164oXGtbbjLxTdUex4a4H08B+Xxb
-         pWszEQ8HLZHD6CygmWDRj3ZS9EAwE7DMvRFUCh/ZjT8CPDMZ5wLwh47lzBlUDG7MRJDZ
-         UHTwX0+ReDGIDTrnfkvWE8ysZNmMN3N7Ci6wpAqqj1mp3f6QF4mUcpd9WzfCZQCk7Dg4
-         nf/BKpk5AfpOPfLNvaUDuOejJO2NXlEHuRz+7VzAHiABwXy2JsX91ROkusG7mKWzH7SL
-         qqa5A5jnA/DXLrZmuLftop7niajI1zbxKxykG4wxNk6AvgqlBbhO4E0hCBt0odwLKh3a
-         3D3Q==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=eR0GeLumhM91/TCzD0goe53MjMncNfAoNQMHeoEkQV8=;
+        b=x9mwngfikol7my2J8AreAMA61Jfh0SZy+MqkNIZ0E580llka84AcNAUgYfxeHRzMeu
+         MxeVRAtwmB6xZygLXJxkhw3QzbmskycEHylnjx0ZvM4fI/Fz+uQ6F/zQp3Dd9ehMIdIs
+         isz6x9bLsh0kuVCC5G/qkM0bSyxA7vwbSDUqVpvvqWlt6ZqcsJ2ZoJc+LWUDHTGqYxl4
+         N7fa8MQ3ylJ/GObIejynK33wt+Ck9d1rrPdvGKa7Uh68B1r3reP05BSy1CH4noZCFIXR
+         SW6tmTeb6TRnTRQL0QwYY9zzPpB14hI+Q9rP7KtTlSS8g5et7g/KbUNai+VTM4g+vYKC
+         U1ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1nXWYVScGrrgl5QUSeVrq++Y1dz2v1W+VupFYq9G2nU=;
-        b=EB725B654ix+dyOaSVJC4G/tIH/IECLvzOuwozVU6+EiyN8O4CuXrxQiGMPLag9aXt
-         LHI+ytWVvElMzFxPDwGuG4XQTo2xgnD+NZSRaaMrprRBtyfGTOwxWZ6eenXeIBqKeuwW
-         MeZ3FBSOYEaFg9aeLhuflRh6NNrxWSdGinJLoMzJ9el8oPM4TPzW1Mi1TlG6qSsb7BQ+
-         Lg8NIh7323790t/lVwxf6UzSZBht5LKn/nUNVavGtinpqlAMU6ISirAdhuRyZtt7YvBk
-         +rAPwHUyjW+ub4yu8DY2b2JVclljB6Rmm8+cbantezJLOYvClcv4tc5vxZnHJNT9CSkI
-         nyNw==
-X-Gm-Message-State: AJIora/Zgyj9O39kx+3Al7K8ZHsVPlYl7xHQJiRmWKH1iNKvc4oW8Kaf
-        53WukFYYa2CLu8IhEjLiXSxzmjZH9gvMOQ==
-X-Google-Smtp-Source: AGRyM1v6nkCkmmz3xiWYb1U+IEgV4y7BsBHxkT+qPwT/VDX3hlxyeTxLPogLvIsyiimxmX8OVi4/2Q==
-X-Received: by 2002:a05:6512:39d3:b0:48a:7ce3:512e with SMTP id k19-20020a05651239d300b0048a7ce3512emr4581238lfu.112.1658748018372;
-        Mon, 25 Jul 2022 04:20:18 -0700 (PDT)
-Received: from gmail.com (82-209-154-112.cust.bredband2.com. [82.209.154.112])
-        by smtp.gmail.com with ESMTPSA id g24-20020a2eb5d8000000b0025e0e9d2f1asm135093ljn.29.2022.07.25.04.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 04:20:17 -0700 (PDT)
-Date:   Mon, 25 Jul 2022 13:24:13 +0200
-From:   Marcus Folkesson <marcus.folkesson@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] gpio: gpio-74x164: add support for CDx4HC4094
-Message-ID: <Yt59XSTaJUvThJli@gmail.com>
-References: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
- <CAHp75VddBhc9peHXfNfTyTNni246kC8CyLqCrMFadn67LGDarQ@mail.gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=eR0GeLumhM91/TCzD0goe53MjMncNfAoNQMHeoEkQV8=;
+        b=Q7jsz24GaRGg5Gt9qp0jEvsrlrbPNwWM0GCdGgNSPCnz4/Zj66dQJVy0h9LIqFIbB0
+         R+XBFn083tSOrFinNV9CNRh/XuMzXsajCK+fZkR/G/SuzlbryfPGKaxzbzf+eme/fxQh
+         jGTM6+xUfCBa6wAaoLvN93L1rJzLbmC4UI/7ZnbzRkt+k71rN4tvMoMbzVrkO9kE+Lh9
+         Xn0jpntTNgr+3dx63+ecZHaLdbZT2teU0d23Sjk6N1DcewRR1UyYh3uKM+GvEPOpn8/h
+         rA641ESZOkBRAZYd8BaCd+XnWEPc4FRLYeMuG5/ByIzmFPpaJix3DUxIUNyy3qKueYy5
+         k1kA==
+X-Gm-Message-State: AJIora+RAEscSlXo9NszUn11mwJTaGeIU18zK7cGheRXnQaXwIKMTNLu
+        EL8nmvwpujCq4RsKgHYfgYpd7w==
+X-Google-Smtp-Source: AGRyM1s6geEfXSHGYaVDq14Sx9ppzfsFySaD/JaN0xkvki2bCUkGIZlt1FARgPm3BXG4IuShwYQXYg==
+X-Received: by 2002:a05:600c:2652:b0:3a3:2a3e:a2de with SMTP id 18-20020a05600c265200b003a32a3ea2demr19979264wmy.174.1658752578639;
+        Mon, 25 Jul 2022 05:36:18 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:1780:8e54:dd38:6668? ([2a05:6e02:1041:c10:1780:8e54:dd38:6668])
+        by smtp.googlemail.com with ESMTPSA id g18-20020a05600c4ed200b003a3199c243bsm24698309wmq.0.2022.07.25.05.36.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Jul 2022 05:36:18 -0700 (PDT)
+Message-ID: <f34c9583-7d00-0adc-1cb8-f4fe8a8dcae6@linaro.org>
+Date:   Mon, 25 Jul 2022 14:36:15 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TLJ8iEYt1e9qWIkZ"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VddBhc9peHXfNfTyTNni246kC8CyLqCrMFadn67LGDarQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v5 02/12] dt-bindings: timer: gpt: Add i.MXRT compatible
+ Documentation
+Content-Language: en-US
+To:     Jesse Taube <mr.bossman075@gmail.com>, linux-imx@nxp.com
+Cc:     robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, aisheng.dong@nxp.com, stefan@agner.ch,
+        linus.walleij@linaro.org, tglx@linutronix.de, arnd@arndb.de,
+        olof@lixom.net, soc@kernel.org, linux@armlinux.org.uk,
+        abel.vesa@nxp.com, dev@lynxeye.de, marcel.ziswiler@toradex.com,
+        tharvey@gateworks.com, leoyang.li@nxp.com,
+        sebastian.reichel@collabora.com, cniedermaier@dh-electronics.com,
+        clin@suse.com, giulio.benetti@benettiengineering.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+References: <20220723160513.271692-1-Mr.Bossman075@gmail.com>
+ <20220723160513.271692-3-Mr.Bossman075@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20220723160513.271692-3-Mr.Bossman075@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 23/07/2022 18:05, Jesse Taube wrote:
+> Both the i.MXRT1170 and 1050 have the same GPT timer as "fsl,imx6dl-gpt"
+> Add i.MXRT to the compatible list.
+> 
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
---TLJ8iEYt1e9qWIkZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-On Mon, Jul 25, 2022 at 11:32:16AM +0200, Andy Shevchenko wrote:
-> On Thu, Jul 21, 2022 at 11:32 AM Marcus Folkesson
-> <marcus.folkesson@gmail.com> wrote:
-> >
-> > 74hc4094 and 75hc4094 works similar to 74x164 but has an additional
-> > storage latch associated with each stage for strobing data from the
-> > serial input to parallell buffer tri-state output.
->=20
-> parallel
->=20
-> > Add support for an optional strobe pin.
->=20
-> Sorry for my absence of understanding, but why?
-> SPI has MOSI, CLK, CS, where the last one is exactly for that. No?
 
-You're right, I didn't think of that CS could be used for this.
-The additional compatible strings is then superfluous, so I will skip those.
+> ---
+> V1 -> V2:
+>   - Nothing done
+> V2 -> V3:
+>   - Nothing done
+> V3 -> V4:
+>   - Nothing done
+> V4 -> V5:
+>   - Nothing done
+> ---
+>   Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml b/Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml
+> index a4f51f46b7a1..716c6afcca1f 100644
+> --- a/Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml
+> +++ b/Documentation/devicetree/bindings/timer/fsl,imxgpt.yaml
+> @@ -31,6 +31,8 @@ properties:
+>             - enum:
+>                 - fsl,imx6sl-gpt
+>                 - fsl,imx6sx-gpt
+> +              - fsl,imxrt1050-gpt
+> +              - fsl,imxrt1170-gpt
+>             - const: fsl,imx6dl-gpt
+>   
+>     reg:
 
->=20
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
 
-Best regards
-Marcus Folkesson
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
---TLJ8iEYt1e9qWIkZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAmLefVkACgkQiIBOb1ld
-UjJImBAAq42Hldd+6vNfeKVKIBCQSyENS7qZdpjBM6KLFHnao8Blgtp/SwCNS1WY
-0tXK2+FvZUYppLgswbg7Y9ZpdTWg71ch3Ej5d+Qv+mq4GcRkPGcdUgsQlc17h6nm
-2Dgzj2jbNgvIDH1OtX1JPnyBXN7q32lZ5sryJCOFJO15HwkRZ7OCn0H8FtrHtlqe
-v2X3TTCPErCmfru4wMnoovzJdjshOZDPWnh3UiO4eyyREHhb5MUdXPCE+v3lteG1
-Guvsqv6gsVIApCa1MlB2voTpXUwOt1k7W+fgDCKgDVeG5W49OIbIGusaqSXQ/qrq
-MgTFvcEni/Iu8fEk0dX7pzYmZbxcLXDvQZVp86/F6Uiw2YYeTC1KL4ElT6Ts/qQt
-iFwY9efkjNocI5xQQKijMVvvOmDjnDO95Cwfit1xVejVa2u2maMaEcSTLFkIz575
-cpFuHd+LGD8GCbWDBTWYkPAb5MAT/TPcmWbAelrxRjEGwXTjDeiIU6/jbOJSbqE3
-yikHSMC/6jvAgC9+ir1rqAlwfA87ZZ8V3ScROHBdJ9cQVhx7UJmBrZqVocxpTnNE
-YIndne1pmxMuzWPwRQqdhjTkQEpS4Puxd/vsLWtK6lKy1ZZm6qVbK+UXqEirDbo5
-fsn5x/AcYBP/J/sWSq/pKmamB4Ln9GICzf73jp6VHRZPFEznLF8=
-=8pgl
------END PGP SIGNATURE-----
-
---TLJ8iEYt1e9qWIkZ--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
