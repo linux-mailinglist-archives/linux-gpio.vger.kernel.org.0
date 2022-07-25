@@ -2,237 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8DA45804EE
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 22:01:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF0AC5804F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 22:04:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236517AbiGYUBX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 16:01:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
+        id S232870AbiGYUEv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 16:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiGYUBW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 16:01:22 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215FFBC06;
-        Mon, 25 Jul 2022 13:01:21 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id w5so2939723edd.13;
-        Mon, 25 Jul 2022 13:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wNN4mVH/SyRJ4COePe/9hQsezCFR8p9Jr07EoPN/p4A=;
-        b=nfnsmf/qvqvc5ltskEbdtr6EvX8N2U/ovpyM+8utCHHbKQ7vEG8XXGxwwn8GOGZjIT
-         Qd1DlaQ1Maq+BHEd9wwsJKt2d5noQCpHMcOewHJPs4saWqV5dH8YzHXzd2kKAtfq2rh7
-         l4XGznfiy5VAfzymRVT3prJMShafPZKZNcTm2HRYt7L9ARq8hFX7V5gSguxVlU1b26Jm
-         ok8DTkQJrNKtINpqn62pnHNgjV1XNcH/pGUwfIN935p1uD6gcVA628+ZK+gJa/8957Pg
-         memaWLIe+wgYMPkHJJCVD+3J7nMKzEY3MVvDr9ET6P39Xp8qXvNiu94UuPtw7JTzEZXD
-         ZeuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wNN4mVH/SyRJ4COePe/9hQsezCFR8p9Jr07EoPN/p4A=;
-        b=cQh1ushUbYINen4pKH2EpXP9rOxG/cMAtuyTnE0HZdyL8dSaVTs8ilX0ZH3xM0dEJQ
-         MZ09OFN/E28A9G9wU70xvSRGq6JS+OGvFXHnertwiJV5qiUXd7ri3Q88rFtTIE63he4s
-         sRQ0Gwb1ez4BmrT/t6kbWqteKqU9LvVcT1TMApciIZhPsjEKNP4klMZPV84p2XrFBNSx
-         U29USmhux9qc4BH2jvHxVNj8fmThLMaPPulXpRri6+FAtxhevFfOS4Ig9JslT+JvjLi2
-         ePzzWUudScj9CuDre6SBWaZQtMIRKboJfAASLcvi/HkbB7bHt91yFic8TMbTz+bv/aEN
-         CGKQ==
-X-Gm-Message-State: AJIora+OseXzFO1fpC4dXhNHsmeynmjt139UcyoXKepI34zB7eEFbBMs
-        olles2YFTDSVOsX3IHZYIOuqKLVfffWxRrW752I=
-X-Google-Smtp-Source: AGRyM1uZYoYheybNUnbJ68eFBR+LM7u2yM88gm1gyLYXLPjJ7d6vPulcanpsEcwWbMnl8jaGTgIWuvQFYghYKGQ162M=
-X-Received: by 2002:a05:6402:d53:b0:43b:a0cf:d970 with SMTP id
- ec19-20020a0564020d5300b0043ba0cfd970mr14532718edb.277.1658779279416; Mon, 25
- Jul 2022 13:01:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220722040609.91703-1-colin.foster@in-advantage.com> <20220722040609.91703-10-colin.foster@in-advantage.com>
-In-Reply-To: <20220722040609.91703-10-colin.foster@in-advantage.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Jul 2022 22:00:42 +0200
-Message-ID: <CAHp75Ve-pqgb56punEL=p=PnEtjRnqTBSqgs+vVn1Zv8F94g9Q@mail.gmail.com>
-Subject: Re: [PATCH v14 mfd 9/9] mfd: ocelot: add support for the vsc7512 chip
- via spi
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
+        with ESMTP id S229525AbiGYUEv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 16:04:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EEA020BFD
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 13:04:50 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oG4Ji-0007t2-9D; Mon, 25 Jul 2022 22:04:38 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oG4Jg-003B0f-S5; Mon, 25 Jul 2022 22:04:36 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oG4Jg-007Uhh-4S; Mon, 25 Jul 2022 22:04:36 +0200
+Date:   Mon, 25 Jul 2022 22:04:17 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/4] ARM: dts: armada-38x: Fix compatible string for
+ gpios
+Message-ID: <20220725200417.nwthxzvdv2bzd5ej@pengutronix.de>
+References: <20220714115515.5748-1-pali@kernel.org>
+ <20220714183328.4137-1-pali@kernel.org>
+ <20220714183328.4137-3-pali@kernel.org>
+ <20220716144028.rzwcn4wl5uyxepjd@pengutronix.de>
+ <20220716145019.nps3oh4a22fsuzup@pali>
+ <20220716150751.6yaknmo3qwusyy5h@pengutronix.de>
+ <20220716160916.jp37siznitgzw6qf@pali>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n5kkir5uuei4mgh7"
+Content-Disposition: inline
+In-Reply-To: <20220716160916.jp37siznitgzw6qf@pali>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 22, 2022 at 6:06 AM Colin Foster
-<colin.foster@in-advantage.com> wrote:
->
-> The VSC7512 is a networking chip that contains several peripherals. Many of
-> these peripherals are currently supported by the VSC7513 and VSC7514 chips,
-> but those run on an internal CPU. The VSC7512 lacks this CPU, and must be
-> controlled externally.
->
-> Utilize the existing drivers by referencing the chip as an MFD. Add support
-> for the two MDIO buses, the internal phys, pinctrl, and serial GPIO.
 
-...
+--n5kkir5uuei4mgh7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+bits.h
+Hello Pali,
 
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/ocelot.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
+On Sat, Jul 16, 2022 at 06:09:16PM +0200, Pali Roh=E1r wrote:
+> On Saturday 16 July 2022 17:07:51 Uwe Kleine-K=F6nig wrote:
+> > On Sat, Jul 16, 2022 at 04:50:19PM +0200, Pali Roh=E1r wrote:
+> > > On Saturday 16 July 2022 16:40:28 Uwe Kleine-K=F6nig wrote:
+> > > > On Thu, Jul 14, 2022 at 08:33:27PM +0200, Pali Roh=E1r wrote:
+> > > > > Armada 38x supports per CPU interrupts for gpios, like Armada XP.=
+ Pre-XP
+> > > > > variants like Armada 370 do not support per CPU interrupts for gp=
+ios.
+> > > > >=20
+> > > > > So change compatible string for Armada 38x from "marvell,armada-3=
+70-gpio"
+> > > > > which indicates pre-XP variant to "marvell,armadaxp-gpio" which i=
+ndicates
+> > > > > XP variant or new.
+> > > > >=20
+> > > > > Driver gpio-mvebu.c which handles both pre-XP and XP variants alr=
+eady
+> > > > > provides support for per CPU interrupts on XP and newer variants.
+> > > > >=20
+> > > > > Signed-off-by: Pali Roh=E1r <pali@kernel.org>
+> > > > > Fixes: 7cb2acb3fbae ("ARM: dts: mvebu: Add PWM properties for arm=
+ada-38x")
+> > > > > ---
+> > > > >  arch/arm/boot/dts/armada-38x.dtsi | 4 ++--
+> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > >=20
+> > > > > diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dt=
+s/armada-38x.dtsi
+> > > > > index df3c8d1d8f64..9343de6947b3 100644
+> > > > > --- a/arch/arm/boot/dts/armada-38x.dtsi
+> > > > > +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> > > > > @@ -292,7 +292,7 @@
+> > > > >  			};
+> > > > > =20
+> > > > >  			gpio0: gpio@18100 {
+> > > > > -				compatible =3D "marvell,armada-370-gpio",
+> > > > > +				compatible =3D "marvell,armadaxp-gpio",
+> > > > >  					     "marvell,orion-gpio";
+> > > >=20
+> > > > If you can treat the XP variant as 370 and everything that is suppo=
+sed
+> > > > to work on 370 works then, then maybe the right incarnation is:
+> > > >=20
+> > > > 	compatible =3D "marvell,armadaxp-gpio", "marvell,armada-370-gpio",=
+ "marvell,orion-gpio";
+> > > >=20
+> > > > ?
+> > >=20
+> > > For pre-XP variants is "marvell,orion-gpio" enough and for XP + post-=
+XP
+> > > is needed "marvell,armadaxp-gpio" (with possible "marvell,orion-gpio"
+> > > for backward compatibility).
+> > >=20
+> > > So I do not see reason why to add "marvell,armada-370-gpio" nor what
+> > > value it brings.
+> >=20
+> > If you boot an older kernel (i.e. one that doesn't support
+> > marvell,armadaxp-gpio, but does support marvell,armada-370-gpio), it
+>=20
+> Is there such kernel version?
 
-...
+Ah, I thought you added "marvell,armadaxp-gpio" with this patch series.
 
-> +#define VSC7512_MIIM_RES_SIZE          0x24
-> +#define VSC7512_PHY_RES_SIZE           0x4
+> > will work better as there are relevant differences between
+> > marvell,orion-gpio and marvell,armada-370-gpio.
+>=20
+> And if yes, do we really need this in DTS files for new kernel
+> versions? I can imagine that such change can be relevant for old LTS
+> kernel version, but not for new versions.
+>=20
+> > For example some
+> > registers seem to have a different offset ...
+>=20
+> armada-370-gpio is mapped to MVEBU_GPIO_SOC_VARIANT_ORION, so it will
+> get same offsets as orion-gpio. So no change.
 
-Can you make _SIZEs to be fixed width? Like 0x004 here.
+OK, you're right, my assumptions were wrong. I'm convinced your change
+is fine now:
 
-> +#define VSC7512_GPIO_RES_SIZE          0x6c
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-> +#define VSC7512_SIO_CTRL_RES_SIZE      0x100
+Best regards
+Uwe
 
-...
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-> +       ret = readx_poll_timeout(ocelot_gcb_chip_rst_status, ddata, val, !val,
-> +                                VSC7512_GCB_RST_SLEEP_US, VSC7512_GCB_RST_TIMEOUT_US);
-> +       return ret;
+--n5kkir5uuei4mgh7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-return readx_poll_timeou(...);
+-----BEGIN PGP SIGNATURE-----
 
-...
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLe9zUACgkQwfwUeK3K
+7Ak/lAf9GbJU03sNT87u8d1+k2z6T3ReV3ntV5ZIhu/vzMB63UPufXkQpYfNC64R
+HiMeAfrVBmle3OOiz5SglqkdslWGVjAysLTo4AxaVpvJ323RKQdwzhIqKeXACsC2
+cQkbNq3mlbGJ70VZKdw06u0VHmGncSs3vd25mXIN57uvtOxRRqDaOZjuDI17SA0f
+87yboq8YS1PRVwK3NoW1uixpkda5qnyQbNvCt89BXrCf8YAi16JBDzFgNFKN1IrQ
+fH3ZWuGZL7tA1NkzDcVhATwIsUZtgqTlnVa+ShTFQeskq7OPDdzKSW1HkPm1erC4
+2alQnhUNBjI/4nC4OsOIUL+uHRv2Dw==
+=rPdh
+-----END PGP SIGNATURE-----
 
-> +static int ocelot_spi_regmap_bus_read(void *context, const void *reg, size_t reg_size,
-> +                                     void *val, size_t val_size)
-> +{
-> +       struct spi_transfer tx, padding, rx;
-> +       struct device *dev = context;
-> +       struct ocelot_ddata *ddata;
-> +       struct spi_device *spi;
-> +       struct spi_message msg;
-> +
-> +       ddata = dev_get_drvdata(dev);
-> +       spi = to_spi_device(dev);
-> +
-> +       spi_message_init(&msg);
-> +
-> +       memset(&tx, 0, sizeof(tx));
-> +
-> +       tx.tx_buf = reg;
-> +       tx.len = reg_size;
-> +
-> +       spi_message_add_tail(&tx, &msg);
-> +
-> +       if (ddata->spi_padding_bytes) {
-> +               memset(&padding, 0, sizeof(padding));
-> +
-> +               padding.len = ddata->spi_padding_bytes;
-> +               padding.tx_buf = ddata->dummy_buf;
-> +               padding.dummy_data = 1;
-> +
-> +               spi_message_add_tail(&padding, &msg);
-> +       }
-> +
-> +       memset(&rx, 0, sizeof(rx));
-> +       rx.rx_buf = val;
-> +       rx.len = val_size;
-> +
-> +       spi_message_add_tail(&rx, &msg);
-
-I'm wondering if you can use in both cases
-spi_message_init_with_transfers(). (Note you may explicitly as SPI
-core to toggle CS if needed)
-
-> +       return spi_sync(spi, &msg);
-> +}
-
-...
-
-> +static int ocelot_spi_regmap_bus_write(void *context, const void *data, size_t count)
-> +{
-> +       struct device *dev = context;
-> +       struct spi_device *spi;
-> +
-> +       spi = to_spi_device(dev);
-
-Can be unified with definition block above to save 2 LoCs.
-
-> +       return spi_write(spi, data, count);
-> +}
-
-...
-
-> +               ddata->spi_padding_bytes = 1 + (spi->max_speed_hz / 1000000 + 2) / 8;
-
-HZ_PER_MHZ ?
-
-...
-
-> +       /*
-> +        * A chip reset will clear the SPI configuration, so it needs to be done
-> +        * again before we can access any registers
-
-Missed period.
-
-> +        */
-
-...
-
-> +       err = ocelot_core_init(dev);
-> +       if (err < 0)
-
-Does ' < 0' part here and everywhere else bring any value?
-
-> +               return dev_err_probe(dev, err, "Error initializing Ocelot core\n");
-
-...
-
-> + * struct ocelot_ddata - Private data for an external Ocelot chip
-> + *
-
-No need for this and blank lines between field descriptions..
-
-> + * @gcb_regmap:                General Configuration Block regmap. Used for
-> + *                     operations like chip reset.
-> + *
-> + * @cpuorg_regmap:     CPU Device Origin Block regmap. Used for operations
-> + *                     like SPI bus configuration.
-> + *
-> + * @spi_padding_bytes: Number of padding bytes that must be thrown out before
-> + *                     read data gets returned. This is calculated during
-> + *                     initialization based on bus speed.
-> + *
-> + * @dummy_buf:         Zero-filled buffer of spi_padding_bytes size. The dummy
-> + *                     bytes that will be sent out between the address and
-> + *                     data of a SPI read operation.
-
---
-With Best Regards,
-Andy Shevchenko
+--n5kkir5uuei4mgh7--
