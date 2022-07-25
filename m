@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E09F75805DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 22:42:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A25F5805F1
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 22:49:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237172AbiGYUmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 16:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46116 "EHLO
+        id S237162AbiGYUtE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 16:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235916AbiGYUmL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 16:42:11 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A0E5639D;
-        Mon, 25 Jul 2022 13:42:09 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id c72so12589550edf.8;
-        Mon, 25 Jul 2022 13:42:09 -0700 (PDT)
+        with ESMTP id S237213AbiGYUtD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 16:49:03 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C191EEDB;
+        Mon, 25 Jul 2022 13:49:01 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id z23so22483513eju.8;
+        Mon, 25 Jul 2022 13:49:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CzlvqtZ4sW/ElEWpOjSICTJbEHD0aNQ9entd4nvbv7Y=;
-        b=kB7cXd7d/JNiJw4UHUCysp+SCyNBoKLAZbtLOINNgPIiTgSRGrS1D/B1btIP+jplUD
-         hLfdMsEBa6uw9G0hc/4wjTVCyiEZmU8GPJG6U0EgDCyYgbq/k4EX6AfbTnZ3vez6my/S
-         FjAdUeKOty6/PS30jBULBSk9jKE/DzPejB6hjxSWI16UhbMkGoqUy6fFJlMW5cxl7GDq
-         hdhGJ3sMyv1RP7LLux2UpX25pTDj0FEwd9nuxuLRYd3YIPWdqogqPeQbx5UR4GQybDw6
-         rPoTr9e3Ymeh8CsUpWvKGaV6wPrIfEh5jftOQnAOMUtGNfYSVUkMS4/Tfk+Qpb9uvmqP
-         kqHw==
+        bh=H1sQSHwWsz6Sfwn/nw5m5qGb/V8KmFsQdNiXy1s2J4A=;
+        b=W6LQBYpYc9r0gZTP+KjajSNtzgYjp0/W2wVeAlBo5qX18C2YIIAN+mkPZ2k25X0vQH
+         D5oLTPfisi9KkMr8vadRjvyneg4i1dl+sz7DXPqL0XaCuJk30rxo0H2aSea12gZy/4NR
+         IOJDxxSOzPwbkNiiCyLrjbHPhdhxQDq5E4kYKJLWVsd0aeAazrt0fOtbC4jQmTtdp3Qm
+         PYqpSLmGcz6URRVp1+olPkUVxFc4CtH47lxnyL6bUnnvBdD5M21q+kZI+2GEmZIC4Z59
+         4SicQIcK9zBuo6xVm/SHK9rNDeKI2Y7aiKF6PD38NwOEBeujYYYXEU72gHfrhP0UvkkA
+         yK+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CzlvqtZ4sW/ElEWpOjSICTJbEHD0aNQ9entd4nvbv7Y=;
-        b=mOeRTn9nRpWm53OqHw2Ul7pf4msH1B2E1OyhxPlz7KHEPQhgfmT4i+S0e+9UZattqm
-         2F+pD8PCKiLuykE4GPhPEzZ4AUxPy8o6rSvKq7cu7V/L8ggJw6pb69d2VRl34Og6CfmX
-         gA4z186sizg8Qircb+IFivf2nB+e9rw8lv6SlgYsXVit0swqigAQThc7TPIFWoUqWsbP
-         ks2Lx0H7qIQHT8vf9/5F7EclCc4OQV/RBxAgCYHBXhUuzQypt2nxc1om/h/OG9mAO77a
-         C7T21BcyTE5invgUtlKvqwTjtDZKsZpZdOt7p5XBUBaDxPErbeVNelvFt/LNM33Xi1sQ
-         23ig==
-X-Gm-Message-State: AJIora8kHzTtJb3ktwo+lS9yYJNhaDu4w8UDFEtz9sLZ7M0BzgdvdfRe
-        9Hyuiw9Fxyj2YJXO6jJ/umGZTCoGKpNYa2EEX5s=
-X-Google-Smtp-Source: AGRyM1sJVhjzVOjASQIpOG0za4qTj18ieNxKgJ9b/Q8r0g76G9F2hNLsedKENR4/v/5jin+j3fdwa6HLNrnYzJ7Ayg0=
-X-Received: by 2002:a05:6402:34c5:b0:43a:8f90:e643 with SMTP id
- w5-20020a05640234c500b0043a8f90e643mr15004477edc.88.1658781727930; Mon, 25
- Jul 2022 13:42:07 -0700 (PDT)
+        bh=H1sQSHwWsz6Sfwn/nw5m5qGb/V8KmFsQdNiXy1s2J4A=;
+        b=QXXGQTe/LXvHnK7ykNcvJfASj7iZz1jZh2m49Z06JXS3zojB3+fUYVXL7RN+k2GMe8
+         ZGnCwlz8lRxJ0OdLUatWRNk0AUvFgMBEYs0Nj/dT4AdjQmnRXWFRnx7/oYMDpcJGcxZH
+         WX+7y/8Qsbg0zmdeom/DkAtr8GUeHQ5oGzR5wmxUbv3k0s55L5BVM9dcDLvf/WpOzQYF
+         N7LIXFVDlVIlnl+qZy0NNkmqHtEK+UU5Z0sD5seslMugRSufiw18mbAPuu58lRaocLFz
+         sz4prN/DAroxpDvP3xlje515OXQr3HYDeJoZ0W1MkgUHC06XdzYCzzIBXB1PElc0DzRK
+         1VvQ==
+X-Gm-Message-State: AJIora/Ha4Pph7LpX9DoOKUWAQVAfA6149NONXY27GRTLvA1UV8M0/Cz
+        vPUOgTKAOunzkQ/zeXQYIplxutMYfoR5b7CLWH0CSLs2dcU=
+X-Google-Smtp-Source: AGRyM1v8uNsvvjdJ96eRk3dnw3sMBVwfFmLN8sslNZ3kPcNgk3WfNeienkmUBExxzF5QOMHyQ0VLaHIXE+p+WboqWSw=
+X-Received: by 2002:a17:906:9b09:b0:72b:9612:d373 with SMTP id
+ eo9-20020a1709069b0900b0072b9612d373mr11208248ejc.606.1658782139887; Mon, 25
+ Jul 2022 13:48:59 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
  <CAHp75VddBhc9peHXfNfTyTNni246kC8CyLqCrMFadn67LGDarQ@mail.gmail.com> <CACRpkdaczrU1tM5Yt7P-Q2h+ge8STOi6HvvYeTM-g+JwS8_gZw@mail.gmail.com>
 In-Reply-To: <CACRpkdaczrU1tM5Yt7P-Q2h+ge8STOi6HvvYeTM-g+JwS8_gZw@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Jul 2022 22:41:31 +0200
-Message-ID: <CAHp75Ve4+r14dL3poOF7dCPMRgAe8etLeuBPNay0tkyNf97UWg@mail.gmail.com>
+Date:   Mon, 25 Jul 2022 22:48:23 +0200
+Message-ID: <CAHp75VfaExrFYto7LWa5Vnbm6JbiAqtutKmk0HzfeHmmi3PwOg@mail.gmail.com>
 Subject: Re: [PATCH 1/2] gpio: gpio-74x164: add support for CDx4HC4094
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
@@ -73,20 +73,13 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, Jul 25, 2022 at 3:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
 > On Mon, Jul 25, 2022 at 11:32 AM Andy Shevchenko
 > <andy.shevchenko@gmail.com> wrote:
 > > On Thu, Jul 21, 2022 at 11:32 AM Marcus Folkesson
 > > <marcus.folkesson@gmail.com> wrote:
-> > >
-> > > 74hc4094 and 75hc4094 works similar to 74x164 but has an additional
-> > > storage latch associated with each stage for strobing data from the
-> > > serial input to parallell buffer tri-state output.
-> >
-> > parallel
-> >
-> > > Add support for an optional strobe pin.
-> >
+
+...
+
 > > Sorry for my absence of understanding, but why?
 > > SPI has MOSI, CLK, CS, where the last one is exactly for that. No?
 >
@@ -94,7 +87,12 @@ On Mon, Jul 25, 2022 at 3:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 > way, the way that the SPI framework works is to assert
 > CS then transfer a few chunks over SPI (MOSI/CLK)
 > then de-assert CS.
->
+
+No, CS here is used exactly for what it is designed for ("tell that
+this message is *for me*"). Yes, hardware implementation here is a
+latch register. Because otherwise ALL messages are "for me" which is
+wrong. Is it wrong interpretation of the hardware and SPI?
+
 > If CS is used for strobe, it is constantly asserted
 > during transfer and the sequence will be latched
 > out immediately as you write the SPI transfers and
@@ -102,16 +100,27 @@ On Mon, Jul 25, 2022 at 3:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 > whole train of zeroes and ones flash across the
 > output pins before they stabilize after the SPI
 > transfer is finished.
->
+
+I'm not sure I understand the stabilization issue here. It's how SPI
+normally works and we have a lot of delays here and there related to
+the phase of the CS in comparison to clock and data. We have a lot of
+time to stabilize the outputs of the shift register before latching
+it. Did I miss anything?
+
+
 > If you first do the SPI transfer, then strobe after
 > finished, this will not happen.
->
+
+I have hardware, I have tested it and I understand what you mean by
+"stabilizing", but finishing transfer _is_ CS toggling for _this_
+chip. No?
+
 > Then it should be a separate pin, so this doesn't
 > happen, right?
->
-> Yours,
-> Linus Walleij
 
+I think no, you don't need it. I.o.w. either I'm missing something
+very interesting about both this kind of chips and SPI basics (shame
+on me in this case) or...?
 
 
 -- 
