@@ -2,106 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 031C557FCF8
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 12:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BCF257FD96
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 12:35:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232179AbiGYKGb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 06:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35034 "EHLO
+        id S233824AbiGYKfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 06:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233423AbiGYKGb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 06:06:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD7C1EE05
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 03:06:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S232971AbiGYKfF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 06:35:05 -0400
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71E41835A
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 03:35:03 -0700 (PDT)
+Received: from tr.lan (ip-86-49-12-201.bb.vodafone.cz [86.49.12.201])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BCE1612D5
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 10:06:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C9C2C341C6;
-        Mon, 25 Jul 2022 10:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658743589;
-        bh=7JuMGMjeZuUeMXBmbpPBTPHTabt1zz6VmQpAurLLT3M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DZHq37U2XxvDL7T7WzmfwlBSX6pd7Vc7W17/pcS50AebSK+alHud+0hcoayLbuyn1
-         qkxEsFKeq3GaeDSpUocu/MvFVfs0G3WV2teFJdCD+Gjg9ytLvwyJ0ee2OYUNH6eCKg
-         uX4jOqNC96SFQKuVePg/j0soaUUCsFbHYRkeSLc8fNruAsLvd8s8cDhcsz6lsXlWRr
-         9Pvoyt0Lw83o+cmPob1BuJSOo7la1gMMJemUTeHry3hlIlrksyFV/mfEJZ5fqPdZHL
-         0Fic97SCESXEqddRc0dzSacoNERCT+KfB8f3DoyZ8vviMAAPP8wrNx0YrZ14RhMlYk
-         Jw1Pu47F976vA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oFuyp-009oTI-2E;
-        Mon, 25 Jul 2022 11:06:27 +0100
-Date:   Mon, 25 Jul 2022 11:06:26 +0100
-Message-ID: <87edy9y09p.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-gpio@vger.kernel.org,
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id 3905883E13;
+        Mon, 25 Jul 2022 12:35:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1658745301;
+        bh=Ghvhy6t0g4uvYYQwtUc1L/ONI3jPCNBQWx8N/Ln+9Qg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WCquqeLo2UbIpjxU2nq8R5ki0gBov8HdWSNbPRUecHyQJ7MOXk+QZM/gX5dczYOlK
+         JviAGj38rXWGjUBdIztnwEorxEJ3qt//UHIJDvSqPwruANKoHDm9xXrPduojGB4ZRX
+         SO8yBfZ1fy+1CtHAibqkb41mqKVlKNGke+8uMU4sT+MYHED12GBHWDn5khXYtAxIED
+         G6/5IhRbmEamg+j4FJskkVNtkDkBO+7QsS34khtOQ9Kae45mLXtRjzI9Ao526zAIs5
+         ke9iJvCnO5TMUps0QwGHcXV6dDTU4u8LAih4R6KRfqFPGCms35OmN09QKfoDq6YNUX
+         Ci+Ok3ckc7iWw==
+From:   Marek Vasut <marex@denx.de>
+To:     linux-gpio@vger.kernel.org
+Cc:     Marek Vasut <marex@denx.de>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Loic Poulain <loic.poulain@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
-In-Reply-To: <233aebcf-71a0-9738-2100-741ed602f075@denx.de>
-References: <20220724171057.18549-1-marex@denx.de>
-        <87fsiqxuvd.wl-maz@kernel.org>
-        <fe022bcf-9ae2-8050-77fa-06eb12e35147@denx.de>
-        <871qu9d6ns.wl-maz@kernel.org>
-        <233aebcf-71a0-9738-2100-741ed602f075@denx.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: marex@denx.de, linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com, linus.walleij@linaro.org, loic.poulain@linaro.org, linux-imx@nxp.com, peng.fan@nxp.com, shawnguo@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH v5 0/2] gpio: mxc: Locking and direction input fix
+Date:   Mon, 25 Jul 2022 12:34:43 +0200
+Message-Id: <20220725103445.88674-1-marex@denx.de>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 25 Jul 2022 10:57:32 +0100,
-Marek Vasut <marex@denx.de> wrote:
-> 
-> On 7/25/22 08:53, Marc Zyngier wrote:
-> > However, you have totally ignored my earlier comments in your v4:
-> > 
-> > - This doesn't compile, as bgpio_lock has been changed to a *raw*
-> >    spinlock. You obviously haven't even bothered testing your patch.
-> 
-> Yes indeed, I tested every single one on 5.18.y . I noticed the raw
-> spinlock change is only in next.
+The irqchip callbacks in gpio-mxc perform register read-modify-write operations
+without locking, which may lead to a race condition. Add the missing locking.
 
-$ git describe --contains 3c938cc5cebcb --match=v*
-v5.19-rc1~134^2~25
+In case the GPIO is used as IRQ, make sure it is configured as input.
 
-Only in -next? Not quite.
+Marek Vasut (2):
+  gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
+  gpio: mxc: Always set GPIOs used as interrupt source to INPUT mode
 
-> 
-> > - I asked for a cover letter for any series with multiple patch.
-> >    That's not exactly a new requirement.
-> > 
-> > So we got 4 versions in just over 24 hours, none of which actually
-> > work. Do you see the overarching problem?
-> 
-> Lemme rebase this on next and send v5.
+ drivers/gpio/gpio-mxc.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-Rebasing on -rc1 is the right thing to do. You should never base
-something on -next, as this is a moving target.
-
-	M.
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Loic Poulain <loic.poulain@linaro.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.35.1
+
