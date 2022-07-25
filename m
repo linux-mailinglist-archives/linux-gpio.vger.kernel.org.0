@@ -2,81 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4335580817
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 01:22:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42B64580882
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 01:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237387AbiGYXW5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 19:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49856 "EHLO
+        id S229784AbiGYXx6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 19:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231757AbiGYXW4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 19:22:56 -0400
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B8020BD2;
-        Mon, 25 Jul 2022 16:22:56 -0700 (PDT)
-Received: by mail-oo1-f47.google.com with SMTP id j1-20020a4ab1c1000000b0043576bcb9b1so2436910ooo.10;
-        Mon, 25 Jul 2022 16:22:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qnn8K18mvq88VYab55+0JoG29eJ64x7NZ09brZ97iMs=;
-        b=Wnm+0MTcfjc1l2GFXMyijHXAcO71v0TGbJs5TAP02iGE6V2GQUXGpS78Jy4ZGP22mK
-         A0Ehurg5b4A4oSe2ywQX/gyfJs13+bYFYcSfpxC4Ufq8thZAudR2DIv2LxHBgITsOzoa
-         VNRxCZlNr/TnBa9oO9kwmOYSmo638anlxZCNs3cL1LzakblmQZXYE5wJhkZcqXS4+JX1
-         fDcXFrYtg3Ae4K6ifTY8ul3LAzfOAjycufSytofgW3libaAKr7f8BO/EZwBm6ZCNXrRc
-         ke2NwEqhxfbVcwGkupymsgpv7FRw1eFquySNl9Q8yHbCv1cL6M/0pwLOHCoVogug9FyW
-         XvCg==
-X-Gm-Message-State: AJIora9qxQ/Pd5IMdPoKZ8zp9CHLRmSmhTGgSxjNzTRWPTNuJ+ks59ZK
-        N7NY2ZNjdOpU0Bmo6old2LcruehGDg==
-X-Google-Smtp-Source: AGRyM1sWz6zGppOlb8sjeJsLDzij2mDLJErZyrCFpYJJBGl27Fpm9cDgcuNW5I603e9dGuNzUkhz9Q==
-X-Received: by 2002:a4a:d621:0:b0:435:d6cc:b2e1 with SMTP id n1-20020a4ad621000000b00435d6ccb2e1mr4977300oon.88.1658791375666;
-        Mon, 25 Jul 2022 16:22:55 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id q17-20020a056830441100b00616e2d2204csm5585759otv.21.2022.07.25.16.22.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 16:22:55 -0700 (PDT)
-Received: (nullmailer pid 2946562 invoked by uid 1000);
-        Mon, 25 Jul 2022 23:22:53 -0000
-Date:   Mon, 25 Jul 2022 17:22:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     linux-imx@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, ping.bai@nxp.com,
-        Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, aisheng.dong@nxp.com,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, festevam@gmail.com
-Subject: Re: [PATCH 8/9] dt-bindings: pinctrl: imx: scu: correct example
-Message-ID: <20220725232253.GA2946504-robh@kernel.org>
-References: <20220723094335.3577048-1-peng.fan@oss.nxp.com>
- <20220723094335.3577048-9-peng.fan@oss.nxp.com>
+        with ESMTP id S229737AbiGYXx5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 19:53:57 -0400
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC4D27CF0
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 16:53:55 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id 670EB838BB;
+        Tue, 26 Jul 2022 01:53:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1658793232;
+        bh=USg2SBlbQoh16pBWxF3vDkzgcWzi//L1aTeRgEspIOg=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=jnUmTPkiFvGWNSwUQysuemtr3rkfn+/+W0Iuj5Glv6iJJ6cA3weVXMfe2oApK47Eo
+         tN0QkrkxKW/yK28BlHpVKbf1t5Zog+apRaD1nsWHqLl1T8vxMJt7YEtXTS49mIKPpD
+         jUkgHzGhfAg4yCJb/H7DNlzKfN3j7R4TMZXtGMZhm4McwZxiX8inBSE+Ao1/1m15LP
+         8DmxZEveUjS6IcpsUuY4OnAAx6aMfTvPCmqFbCh0IepNnOFlFMUTLnPeoAN1BYzC4v
+         e17Nx/TxnUK6d6kAxOjVm/cfgfv3eUWQMluWAC9gxSEn9YombSed8zHtsqjZeGwYjN
+         qPb5/lhGOsysA==
+Message-ID: <5a3addbd-505e-799c-78d2-3cd1fa8e2640@denx.de>
+Date:   Tue, 26 Jul 2022 01:53:51 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220723094335.3577048-9-peng.fan@oss.nxp.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v4 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio
+ spinlock
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+References: <20220724224943.294057-1-marex@denx.de>
+ <CAHp75Ve0EQfee+eiDDG_pgzt8V3yoWeVfRZswG3EdFZZRyxa2A@mail.gmail.com>
+ <CACRpkdZvjBBhNy_fQ2_dirSc1ddXCAO7dPg9OQW2eGDFWpn5rA@mail.gmail.com>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <CACRpkdZvjBBhNy_fQ2_dirSc1ddXCAO7dPg9OQW2eGDFWpn5rA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 23 Jul 2022 17:43:34 +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 7/26/22 00:30, Linus Walleij wrote:
+> On Mon, Jul 25, 2022 at 10:38 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Mon, Jul 25, 2022 at 12:51 AM Marek Vasut <marex@denx.de> wrote:
+>>>
+>>> The driver currently performs register read-modify-write without locking
+>>> in its irqchip part, this could lead to a race condition when configuring
+>>> interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
+>>> the register read-modify-write.
+>>
+>> ...
+>>
+>>> +       spin_lock_irqsave(&port->gc.bgpio_lock, flags);
+>>
+>> To my surprise, is bgpio_lock not a raw spin lock?! How is it possible
+>> to work on RT?
 > 
-> The fsl,pins use uint32-matrix type, but the example is uint32-array,
-> correct the example.
+> It's a spinlock that is used both for the GPIO and irqchips, so if the
+> GPIO doesn't have an irqchip it works fine, as only IRQs are
+> problematic.
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml       | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+> If the registers used by the irqchip are separate from the registers
+> used by the GPIO access, I think it is wise to use a separate
+> raw spinlock to just protect the IRQ registers.
 > 
+> They really only need to share a spinlock if they use the same
+> registers and the gpiochip and irqchip risk stepping on each
+> others toes. That doesn't seem to be the case here?
+> 
+> Marek: could you see if the irqchip part of the driver could
+> use its own raw spinlock?
 
-Acked-by: Rob Herring <robh@kernel.org>
+It cannot, because of the GDIR register which is shared between the 
+gpiochip and irqchip.
