@@ -2,199 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C91C580441
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 21:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA27C58047F
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Jul 2022 21:34:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbiGYTHb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 15:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
+        id S230468AbiGYTeu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 15:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231420AbiGYTHb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 15:07:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4BBDF47
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 12:07:30 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oG3QO-0001MM-Hi; Mon, 25 Jul 2022 21:07:28 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oG3QN-003AVt-Fd; Mon, 25 Jul 2022 21:07:27 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oG3QM-007Too-LA; Mon, 25 Jul 2022 21:07:26 +0200
-Date:   Mon, 25 Jul 2022 21:07:19 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: Is a multiplexer using latches a gpio controller?
-Message-ID: <20220725190719.hpahbo4uuqsu3nyf@pengutronix.de>
-References: <20220718202205.ssf3k2dqkuvc6bgm@pengutronix.de>
- <CAHp75VeRfguxwjf3y3qWSQCwQF=cOFvt7iP0KVJMnGwdyPvUnA@mail.gmail.com>
- <CAHp75Vdx+2zJ_dNAgXHnRPhMn7csX=P-NPcvHWmMJ1iLZ_WYBg@mail.gmail.com>
- <20220719071931.lcbbwoei6nmd6kx5@pengutronix.de>
- <CAHp75VfLQujQx5pBJ_6rAjkoHD5nd5APqXXjDccNQ1fUiXXh0g@mail.gmail.com>
+        with ESMTP id S229878AbiGYTet (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 15:34:49 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045161FCD3
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 12:34:49 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id mf4so22480733ejc.3
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 12:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xh3UKl8Q5rAd0qWPy+oNZTzRQbMt625CogTHbG8NRII=;
+        b=M+gDrcjYWH7tIA8D5EWXm/6l6EMxYFPldTZRN5pPy9VC6CznCB5+sh1vFIpzGl0YPC
+         QrTiiZfTr3xsU9y4CrIopREBuN8KJZ4qh1nT06UOCabI/wm4cVYuvuRFxha1W6qkSbsc
+         KOkTNRarLskHX/QscocjY0xhfnIIzsf7MX3zXyUrJQS6exR5ifxGlvOhuToW0ilyLMra
+         TekIESuWREIhN2IBgnV44rdKW5vrglrPj2WZuM6uS8BrKyr8jb2wrOY/uNWRBBY72Rjp
+         cnH+wKuq5K+DnMD8wFfTitR1gSd6Glyjecu0fyjEyfbSpIKZ7tWbnnCOC+oey9O4DNCQ
+         GWcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xh3UKl8Q5rAd0qWPy+oNZTzRQbMt625CogTHbG8NRII=;
+        b=DQZSbAhshqe625uWDgRSsSckbVPXq91FtOFJJsIiYhNSpD46BpnLAgUNejj6/gg7am
+         fZoJVy6OA9K6vQaKE0NsBsGoJAGWGlmSnF79RCCqllg7xbN5DPjG2AkftNE9b8Z/EkVk
+         +Lct9oxUXZiTwG/Nr9uhV+NDNVJIPs0S7+j1D1c166Kok1OD/MT64158rt6cfbtdvunM
+         +6V3jNx4orYbudb1zqzj/IpO9BWpGp0X7LT3KMXNRhPSfHgNLEMLWmNi5uLqfjzi+HV4
+         drWcFgjBP4BmvZ60gswp091PYEQZppzr1pKBKFSRiXSfxA4PX2ljCTkFngOKMZVEOVq0
+         XPog==
+X-Gm-Message-State: AJIora9aFrvvRf3hRdtXcdUOVSCDx+Km0xAB+ZXC1Vb7C3DcB6qkGoyx
+        bsoTvD8akaX3ZuMta1lbc6uEZlRRODDFMryO01jqnKknolfrsA==
+X-Google-Smtp-Source: AGRyM1tv41lg9srpF1YUnJDvvAgxwpK0Bmvn3Ou3nSKtOHG5Gu/J5pW+uWc7AomYkQLfG5H4kv/x/s3hsaQbNNzhraI=
+X-Received: by 2002:a17:907:75da:b0:72b:3ce0:2524 with SMTP id
+ jl26-20020a17090775da00b0072b3ce02524mr11283757ejc.394.1658777687258; Mon, 25
+ Jul 2022 12:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dbmxzw5mmzwx5zjt"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfLQujQx5pBJ_6rAjkoHD5nd5APqXXjDccNQ1fUiXXh0g@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <CAEBpM+ZPZNpJNJAU=2iji8+dCnLEcordRLwH3-mKhYqWS_zr6Q@mail.gmail.com>
+ <CACRpkdbVRm7SdCPm-RP7pD2v7ce+i+kSh05wdFsmMmBbDk+1YA@mail.gmail.com>
+ <CAEBpM+ZDiCD7Y5au9ng4iaptbQEHMXwUFLY370_uVBKCjsR+EA@mail.gmail.com> <CACRpkdZ139Dhonh82Zs_DGewb3KkocpU7yE5wuhukm=TfZBkOw@mail.gmail.com>
+In-Reply-To: <CACRpkdZ139Dhonh82Zs_DGewb3KkocpU7yE5wuhukm=TfZBkOw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Jul 2022 21:34:10 +0200
+Message-ID: <CAHp75VcTu5+Jb1La+Db=SM_Ec=cq9q4xn-p3KrM7HQF-k5u5Gg@mail.gmail.com>
+Subject: Re: To write Java binding for libgpiod - need help with looking for references
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Meena M <scientistartist@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Jul 22, 2022 at 3:00 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Wed, Jul 20, 2022 at 11:37 AM Meena M <scientistartist@gmail.com> wrote:
+>
+> > If I get to know more about JNA will share it, but going by what I have found online,
+> > JNA is slower than JNI. I am very new to this too.
+>
+> Good way to learn!
+>
+> > At present I am going through JNI programmer's guide which was recommended in
+> > a resource(a youtube video) which by itself is old(2017), the programmer guide even older.
+>
+> It's annoying. I would check the opensource Java git to check what is going on
+> over at Oracle.
+> https://github.com/openjdk/jdk/blob/master/src/java.base/share/native/include/jni.h
+>
+> > I am getting a failure delivery message for linux-gpio@vger.kernel.org, how do
+> >  I get to mail everyone in the list?
+>
+> The email address is correct.
+> Maybe it is because you're using HTML in your mailer?
+> The list servers will reject any HTML-formatted mail.
+> Make sure gmail is configured to use plaintext when sending mails.
+>
+> Yours,
+> Linus Walleij
 
---dbmxzw5mmzwx5zjt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Have you spoken to the authors of recent (to some extent) active projects on GH?
 
-On Mon, Jul 25, 2022 at 11:19:54AM +0200, Andy Shevchenko wrote:
-> On Tue, Jul 19, 2022 at 9:19 AM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Jul 19, 2022 at 12:11:56AM +0200, Andy Shevchenko wrote:
-> > > On Tue, Jul 19, 2022 at 12:05 AM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Mon, Jul 18, 2022 at 10:27 PM Uwe Kleine-K=C3=B6nig
-> > > > <u.kleine-koenig@pengutronix.de> wrote:
->=20
-> > > > > we have a customer board here that uses two 8 port latches to dri=
-ve
-> > > > > LEDs. The setup looks as follows:
-> > > > >
-> > > > > CLK0 ----------------------.        ,--------.
-> > > > > CLK1 -------------------.  `--------|>    #0 |
-> > > > >                         |           |        |
-> > > > > IN0 -----------------+--|-----------|D0    Q0|-----|=E2=97=81
-> > > > > IN1 ---------------+-|--|-----------|D1    Q1|-----|=E2=97=81
-> > > > > IN2 -------------+-|-|--|-----------|D2    Q2|-----|=E2=97=81
-> > > > > IN3 -----------+-|-|-|--|-----------|D3    Q3|-----|=E2=97=81
-> > > > > IN4 ---------+-|-|-|-|--|-----------|D4    Q4|-----|=E2=97=81
-> > > > > IN5 -------+-|-|-|-|-|--|-----------|D5    Q5|-----|=E2=97=81
-> > > > > IN6 -----+-|-|-|-|-|-|--|-----------|D6    Q6|-----|=E2=97=81
-> > > > > IN7 ---+-|-|-|-|-|-|-|--|-----------|D7    Q7|-----|=E2=97=81
-> > > > >        | | | | | | | |  |           `--------'
-> > > > >        | | | | | | | |  |
-> > > > >        | | | | | | | |  |           ,--------.
-> > > > >        | | | | | | | |  `-----------|>    #1 |
-> > > > >        | | | | | | | |              |        |
-> > > > >        | | | | | | | `--------------|D0    Q0|-----|=E2=97=81
-> > > > >        | | | | | | `----------------|D1    Q1|-----|=E2=97=81
-> > > > >        | | | | | `------------------|D2    Q2|-----|=E2=97=81
-> > > > >        | | | | `--------------------|D3    Q3|-----|=E2=97=81
-> > > > >        | | | `----------------------|D4    Q4|-----|=E2=97=81
-> > > > >        | | `------------------------|D5    Q5|-----|=E2=97=81
-> > > > >        | `--------------------------|D6    Q6|-----|=E2=97=81
-> > > > >        `----------------------------|D7    Q7|-----|=E2=97=81
-> > > > >                                     `--------'
-> > > > >
-> > > > >
-> > > > > So to change output 2 of latch #1 you have to apply the changed l=
-evel on
-> > > > > IN2, apply the previous level on the other inputs (to keep the ot=
-her
-> > > > > outputs constant) and toggle CLK1 once.
-> > > > >
-> > > > > This way you can drive 16 LEDs (or in general outputs) using only=
- 10
-> > > > > GPIOs. (And with a higher number of latches the proportion become=
-s a bit
-> > > > > more useful.)
-> > > > >
-> > > > > Actually this construct is a general GPO (no input :-) controller=
-, and I
-> > > > > wonder if you would accept a driver that models it as a gpio cont=
-roller.
-> > > > >
-> > > > > The dt binding could look as follows:
-> > > > >
-> > > > > latch-gpo {
-> > > > >         compatible =3D "latch-gpo";
-> > > > >         pinctrl-0 =3D <...>;
-> > > > >         pinctrl-names =3D <...>;
-> > > > >
-> > > > >         clk-gpios =3D /* CLK0 */ <...>, /* CLK1 */ <...>;
-> > > > >         data-gpios =3D /* IN0 */ <...>, /* IN1 */ <...>, ...;
-> > > > > };
-> > > > >
-> > > > > What do you think?
-> > > >
-> > > > Bart, what happened to the [1]? Is it abandoned, forgotten?
-> > > >
-> > > > Uwe, isn't it what you need?
-> > >
-> > > It needs "downstream" GPIO and ->get_direction(), etc should act acco=
-rdingly.
-> >
-> > No, IIUC this is different. With a multiplexer there can always only be
-> > a single line that is controlled (or read) and the other lines are (I
-> > assume) high-z.
->=20
-> I don't know the Linux mux framework implementation, but from a
-> hardware perspective the mux is what you have. In the GPIO (mux)
-> driver you need to be able to switch banks as you wish, the rest is
-> the drivers' business. If gpio-cascade gives no possibility to do that
-> due to broken mux in Linux, then indeed, it can't be accepted at all
-> and I have to withdraw my tags from that.
+https://github.com/sgjava/java-periphery
+https://github.com/helins/linux-gpio.java
+https://github.com/NickZhang1024/java-periphery
 
-I think you didn't understand what I said (or I didn't understand the
-problem you describe).
+(Dunno if first and third have any relations, GH shows none)
 
-The thing that is supported by gpio-mux-input is:
 
-	CTRL  ---.  .
-	          \/|
-	          / |
-	          | |---<-- INPUTA
-	GPIO --<--| |
-	          | |---<-- INPUTB
-	          \ |
-	           \|
-	            '
-
-This is about inputs. CTRL selects which of the inputs on the right is
-forwarded to GPIO and the other lines are tristated. Theoretically you
-can also drive one of the lines on the right side, but only one and only
-while no other line is read.
-
-The hardware construct I have is about outputs and there is no problem
-with highz lines, all lines are always driven.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---dbmxzw5mmzwx5zjt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLe6eMACgkQwfwUeK3K
-7AluwAf6At9NAIfwrvMwMdjAFMXlqb2GlnSaShbccMiOvkd2yzYCnuUn/pqEjqRP
-h8cOy92uDVzQIkPZdPvBWOu7rILTZax4JeUieZbWACrfgRLmQjd0TxhbVrD5zg9v
-ve9IbNaYHNxJI5tNIAAFp8auYZdjXpx8CAL3VUjV8I/Lr1P7Dh/kOqj9wpS1Zyu+
-lWqkufo0o1hMLzsuT3yHJdOMjahzbAC0l3wxR9VEOaYEqLPQcyoVAsRsMFpRlmxp
-0H36lm2fxRgN1wYBi0ofxBqhhUUXVv7MQf29/0hglaanLQIQGDF/zsUQwVSRk4Ys
-7j8WGnjJBmQUx01nk7R7XN9fsc9GvA==
-=ApID
------END PGP SIGNATURE-----
-
---dbmxzw5mmzwx5zjt--
+-- 
+With Best Regards,
+Andy Shevchenko
