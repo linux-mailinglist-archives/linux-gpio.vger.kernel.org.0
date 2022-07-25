@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C6B9580762
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 00:30:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1284B58076B
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 00:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbiGYWad (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Jul 2022 18:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38980 "EHLO
+        id S229943AbiGYWd5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Jul 2022 18:33:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbiGYWac (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 18:30:32 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CDC13E95
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:30:31 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id b11so23018208eju.10
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:30:31 -0700 (PDT)
+        with ESMTP id S237177AbiGYWd4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Jul 2022 18:33:56 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED93725C5C
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:33:54 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id u12so10700520edd.5
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 15:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pMRT6HLjy98DQ8uXQG4OLRi5mVqo0UDYq5RUWZsPoaY=;
-        b=EwqOfu0sPrnZjYl3aJrGc88DDlC22qrrsbq2XSy9eBi2fKvmDJdGukKrLXL+RqjuVa
-         tJql4zU9e/SSREleJzalM4FHbvmtzV/8pr2JRHQlly/wRBZsXChxiFs951tyzR1Hu5fA
-         IGBhyHTThFWpvKVD5miI1BEnlmsDSkyJPsimogscLRm3gSJMWrv0GpO7hhepMR/x5U9A
-         MRvETZ2UrPbsVQpbZQZ9SHkzuKJFvFhbCNUpf+35Blt3Et2e6mExS0g/oh6Hfcb12yp9
-         0bnZSBuc/aZz9aJjHTIMt2h6k0yzd9rWldKV64GhjFrGAPugncG5NbGFPAcdPht2mWeN
-         BWbg==
+        bh=ARaAMwQnof5N9U26EMBCbeLIKt/wib1YQjoJA6l5kqk=;
+        b=mECDc+NVp+r0z5Ce+f2tUiKo+zE0YKZOsdMCcebrJGqdrvIz1e/P5NJ3Paf0i57Phw
+         JT48hLRUGpP7yjgDeRnO4CVu7LBRVFaneM0HHkhrlDqi/0tNnKTcSeIaJddYsj25j2LG
+         pRct3BzjmNt/GKu5KT0H15aqJ8g5qr4QwBq+05gVAi3ukQlZIzvEOElebwfEbS7wJzec
+         xH9N7X846oJjcZBUcN67XIooudjPo+YTP1s4lSHumXS0c++EwyAQ6B4O40yqvIH1eML0
+         qsf03/fyf78o7vMNTKIjPllpmVDvjDVgjGugcLLHGUgd59laur60RZ2SxchWvCBDJdcJ
+         nbsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pMRT6HLjy98DQ8uXQG4OLRi5mVqo0UDYq5RUWZsPoaY=;
-        b=qLk6s7Zq6TgvvoDJ6Mgs/sOPkcpImmhZl1qpLdOfXjsMd4DoaKP5i6U6Pk1KWuWgBX
-         kLnIE18mh9IxkCjGDxJkP1PqwHFmgDfN94KoInBPZBKflMGRwm61Fbsi6zDRfRX7HJOA
-         XCYotf6v3OtpGmLt3pYnc4Ur6Q0XvxVinhiAgp4ufqlPiAz6Z6/aIaxoFW2xABY7FoSG
-         nAqDotK5FjMuDNdJaOMrx4NNkU4czvDDbph4+j9u2+IlJW9okFRUS9nbR6wy+sXeAuGm
-         F8VPLytbVPEiDARaPo3NSDLhfEwkxZi8u+lB4ewRWr+GS7qA6rpMLrBn4kEHguITKogh
-         cytA==
-X-Gm-Message-State: AJIora/TmF9qlbnMjBCuixl3oGMjof5b0uXC40ZGMkGJzuMp+HMagm1Y
-        J/C1OvOVKAOcWDSYtNH5yOGj7pAvmdbsp3c5/bkzrA==
-X-Google-Smtp-Source: AGRyM1uMc+aoB2qqdMYcBUZvUMANBbQ5OtYaG98HUeyskdK+JEwj4d/7iaPI8lIOaocsiZpU1pwNCjd3Z6EdrqY6cbI=
-X-Received: by 2002:a17:907:28c8:b0:72b:97cd:d628 with SMTP id
- en8-20020a17090728c800b0072b97cdd628mr11773984ejc.208.1658788229740; Mon, 25
- Jul 2022 15:30:29 -0700 (PDT)
+        bh=ARaAMwQnof5N9U26EMBCbeLIKt/wib1YQjoJA6l5kqk=;
+        b=W5FXsBprQ1V5Z7cOa1wd6GQAjfW5N8ddugBoz4A9NvRjaI+Fm+m2Qr5nUTf49p74Rx
+         AuzLsS75zflIxAI/ylUs0oWYgmBSglivF58JG/78mpysjFbn3mBu7IYMK8dz5aLhRuHC
+         pMlm/a4/8PsaMOQqxDY2FkVc2gugqfLTBA60qu2/oKbwsFyAZWWp4DzIUr+uHc/bfb6W
+         3ZfTDcJOnLflT7xMBxqSsHbgrJh3g8+N2W8/uTaPvVkWDNMltTz2XZ8BjxMI/0WwKjwH
+         N8XeGU3E/lmIA22xrapwoPIlRJN8mf0bqj8tuWV+ymhKXe4aSI39t154ItfKUBT6+EZT
+         GYag==
+X-Gm-Message-State: AJIora8PbCdiROW2rrmH8Z0Q4C1r/TtajmodbzIgQDvSfvX5cNaPPMUt
+        /tdKQ+V6iH3Z2FvzBlU7XrS1CatdW+Xi/651abkxmF3e8Jc=
+X-Google-Smtp-Source: AGRyM1vlZLLn1UPpjQoYnTrhb+BefGuHpBqo0P73R9gelhjmXRrvDfBEicovap9OwZKJZE573eSJEswAoH9b178y4LM=
+X-Received: by 2002:a05:6402:3685:b0:43b:dfd3:9487 with SMTP id
+ ej5-20020a056402368500b0043bdfd39487mr13771760edb.32.1658788433540; Mon, 25
+ Jul 2022 15:33:53 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220724224943.294057-1-marex@denx.de> <CAHp75Ve0EQfee+eiDDG_pgzt8V3yoWeVfRZswG3EdFZZRyxa2A@mail.gmail.com>
-In-Reply-To: <CAHp75Ve0EQfee+eiDDG_pgzt8V3yoWeVfRZswG3EdFZZRyxa2A@mail.gmail.com>
+ <CACRpkdZvjBBhNy_fQ2_dirSc1ddXCAO7dPg9OQW2eGDFWpn5rA@mail.gmail.com>
+In-Reply-To: <CACRpkdZvjBBhNy_fQ2_dirSc1ddXCAO7dPg9OQW2eGDFWpn5rA@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Jul 2022 00:30:18 +0200
-Message-ID: <CACRpkdZvjBBhNy_fQ2_dirSc1ddXCAO7dPg9OQW2eGDFWpn5rA@mail.gmail.com>
+Date:   Tue, 26 Jul 2022 00:33:42 +0200
+Message-ID: <CACRpkdZozTkGv5xcL_tVR-k2p9sgJZS5bMgJ7cYCZBZr_dj5+w@mail.gmail.com>
 Subject: Re: [PATCH v4 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Marek Vasut <marex@denx.de>,
@@ -69,36 +70,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 25, 2022 at 10:38 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Jul 25, 2022 at 12:51 AM Marek Vasut <marex@denx.de> wrote:
-> >
-> > The driver currently performs register read-modify-write without locking
-> > in its irqchip part, this could lead to a race condition when configuring
-> > interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
-> > the register read-modify-write.
->
-> ...
->
-> > +       spin_lock_irqsave(&port->gc.bgpio_lock, flags);
->
-> To my surprise, is bgpio_lock not a raw spin lock?! How is it possible
-> to work on RT?
+On Tue, Jul 26, 2022 at 12:30 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-It's a spinlock that is used both for the GPIO and irqchips, so if the
-GPIO doesn't have an irqchip it works fine, as only IRQs are
-problematic.
+> Marek: could you see if the irqchip part of the driver could
+> use its own raw spinlock?
 
-If the registers used by the irqchip are separate from the registers
-used by the GPIO access, I think it is wise to use a separate
-raw spinlock to just protect the IRQ registers.
+Oh I see v5 already does, great!
 
-They really only need to share a spinlock if they use the same
-registers and the gpiochip and irqchip risk stepping on each
-others toes. That doesn't seem to be the case here?
-
-Marek: could you see if the irqchip part of the driver could
-use its own raw spinlock?
-
-Yours,
-Linus Walleij
+Linus
