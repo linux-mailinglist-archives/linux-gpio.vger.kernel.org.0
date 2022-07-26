@@ -2,63 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E98580DD5
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 09:34:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0CDC580DFA
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 09:39:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232384AbiGZHeU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jul 2022 03:34:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48594 "EHLO
+        id S231466AbiGZHjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jul 2022 03:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238380AbiGZHd5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 03:33:57 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4E52CE3E
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:31:07 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id ez10so24448161ejc.13
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:31:06 -0700 (PDT)
+        with ESMTP id S238721AbiGZHj3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 03:39:29 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED67227
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:39:28 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id c72so13825747edf.8
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pbTApP5FjDQingRY/H/GZ1QffrBKNL73g1VJDFx7U7g=;
-        b=kzDyG1w1YeNT+Gs20iGw8yaOZDw46hsTfQVY+xW1dE9SN5RG6o7wcJQ+zoX9z5VmVb
-         fG9uiSIlA8Dr1rXmZR+wk01mrVTGAFafqmafD2YtQ+c2yBMlQ+s922XmXJ07sEXT6JSQ
-         o0xtHQpeICXcDnuz/ugrM26j04Pm6OONOs0nLRKF5XKPHavla4n1bMBwm3Ou2HLle3Gp
-         NqWX+SfELP2mkXhEcwD/cd1wiTCr8s3qhxfHrnLarLAPISyazwBDeKpDJnMi3aOKPzZ9
-         xGdQvqmSgmj6cxP5fGE8KzMz6UFuXQsvRLHXPR7w89xc5Sfgc+KAs840W6OJS4GnHT3v
-         rJ1A==
+        bh=qEjW3i53nKNwGgy6cdoU4iYrfg/JG+EZsIOg15Y2598=;
+        b=q08Ica0QN0KRMr7WSTZVZNIgnwVKvcIu3vY/44tuPF8ntRGYItJFz2s+mJ/7PEc1uz
+         NvJ8UXvxMVQ+puLSgjEgLumLHq91P5Yky9o4ran2MXCCEunJx2laVEtpNTQlByIupKjm
+         xL1Rr4GVtAosU0rrgYkWEMl/Nn9ZPFQ/LVDsgHTngj882rwfikDwyaGjH3Uc0+5C+fkU
+         SSmE/cLOBZVAr7pzFXyKtV9dnd+7DBb+/0nMwMXTEdv0xW44rbjGHyKYMLvc6CDEzUVN
+         sOnrdq8kMeLs4VFLNmvVZRvTieWUIMPlTcc7pDMzS+t6iVOElzYkkwy1OMGw3h2hjNS6
+         6Hog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pbTApP5FjDQingRY/H/GZ1QffrBKNL73g1VJDFx7U7g=;
-        b=GQcwcXLL0KEJT+voOEId1J4TBGhpepiQR/EGXmhRum68JQg4P3QJgH4XKje0tdTX4s
-         Y9G6EgGXeI79vApeLAelQXFmW6I5EjFtjgq+8r/AeQtSlyfpchuIgFTxfERyhYxDFrnE
-         eaAstEGhm3gBxIWKsELrwUQ1o//i6QUubm9ejs0K6nqT0c9wgh/+4KzlIlbZjj2XhBWt
-         O+k8XI/5SjilOCnmDpQbE+t/2ijRNoscImTJoCY2L5KmxkQQoFND9Qd8d48xeFrCuXdC
-         c2knseUtpsVO1j9ym56WVvFOyFUkISzA4F5XucENb2lTQpFJrTOjxFK+QO3EhlThTMv0
-         58ZQ==
-X-Gm-Message-State: AJIora+3NS8Q8xUDCVlgNyxOpQLRHxpiZx/04KiA4WmXqL1HmORXDjxV
-        xj7LaEhPwwknrPWzhlHup+Skb9KgN03NO9uzPuZzoA==
-X-Google-Smtp-Source: AGRyM1vZ1J+KCGDQDyAL70SvZC8MFvfMDNaLV76mBPoiaexxQ0HHhneER77kF7q2EcEPaqvNvF+4v1Xbdwpa4VQm6bA=
-X-Received: by 2002:a17:906:2ed7:b0:72f:d080:411 with SMTP id
- s23-20020a1709062ed700b0072fd0800411mr8344430eji.203.1658820665357; Tue, 26
- Jul 2022 00:31:05 -0700 (PDT)
+        bh=qEjW3i53nKNwGgy6cdoU4iYrfg/JG+EZsIOg15Y2598=;
+        b=48E9LTmOGyTy5ovYMB2HS7hC+49jHJBAp8b7pJl3r6luXVKCiwyMfsTIAl21CaViLK
+         1MMPfbz+z8EAgayn5T5LcDT78BViHNqfG919zZkcY85t+s9pw7YT+8YDdYWdlzyisYmc
+         BmRgsyu3vEEkM4M0+auqPF7mB+G9Y8F/Z35Z5CSOlwCL5H2Q0KX1NaltJkgskDook7cI
+         duNQxWnKFaP4ZlJx7NoWkdNLYlRxZDVXDfN/kcK29hkr9SIx1DX4EYC4HgMU9jCceGDj
+         jQYJdQ0BdnLBkH1BQ/9EP6aavG+TmVr9Yg7WilFufJFOuUom+MVxko421a0+/QfLKvZk
+         wACQ==
+X-Gm-Message-State: AJIora/Yu4QF27n9g2s0w34GimtkMsv8tyzBiLWyzRAkSeNZXgJ7sxoH
+        0vr8wmmqeylyHfOl70wd2w3R6Ykz7zKXmlXeZTQGEw==
+X-Google-Smtp-Source: AGRyM1v4yFM64+Nd541eqrpmfdVCkO23Y5SjKq/UnG9Ji1uBt6NgEII7NA9Jd0ck878HjBdPfQmUul5EWbbjG2P5R8w=
+X-Received: by 2002:a05:6402:5384:b0:431:6d84:b451 with SMTP id
+ ew4-20020a056402538400b004316d84b451mr17047458edb.46.1658821167280; Tue, 26
+ Jul 2022 00:39:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220716192900.454653-1-konrad.dybcio@somainline.org> <20220716192900.454653-2-konrad.dybcio@somainline.org>
-In-Reply-To: <20220716192900.454653-2-konrad.dybcio@somainline.org>
+References: <20220719182647.9038-1-gaoxin@cdjrlc.com>
+In-Reply-To: <20220719182647.9038-1-gaoxin@cdjrlc.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Jul 2022 09:30:54 +0200
-Message-ID: <CACRpkdYrJoWBKR0nEa23ObH2md3Bxr47T15zN0WR8vhuLqG-Ng@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SM6375 TLMM driver
-To:     Konrad Dybcio <konrad.dybcio@somainline.org>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, martin.botka@somainline.org,
-        angelogioacchino.delregno@somainline.org,
-        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+Date:   Tue, 26 Jul 2022 09:39:16 +0200
+Message-ID: <CACRpkdYPfszs9LTDjV1zmO2OcbfCF7CeNBSo5y8syK_C_+u_Lw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl:Missing a blank line after declarations.
+To:     Xin Gao <gaoxin@cdjrlc.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc:     sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com,
+        andrew@lunn.ch
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -69,19 +65,102 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 16, 2022 at 9:29 PM Konrad Dybcio
-<konrad.dybcio@somainline.org> wrote:
+Hi Xin!
 
-> Add a driver to control the TLMM block on SM6375. This is an adapted
-> version of msm-5.4's pinctrl-blair driver.
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+Top-posting because you missed to include the mailing list.
 
-Patch applied, we are getting close to the merge window and this needs
-to sit in linux-next. And it's nice to get it in for v5.20.
-
-If there are further review comments we can patch on top or I can even pull it
-out if necessary.
+The patch is fine though, so applied!
 
 Yours,
 Linus Walleij
+
+On Tue, Jul 19, 2022 at 8:27 PM Xin Gao <gaoxin@cdjrlc.com> wrote:
+
+> Missing a blank line after declarations.
+>
+> Signed-off-by: Xin Gao <gaoxin@cdjrlc.com>
+> ---
+>  drivers/pinctrl/mvebu/pinctrl-mvebu.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-mvebu.c b/drivers/pinctrl/mvebu/pinctrl-mvebu.c
+> index a1f93859e7ca..8ef0a97d2bf5 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-mvebu.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-mvebu.c
+> @@ -96,10 +96,12 @@ static struct mvebu_pinctrl_group *mvebu_pinctrl_find_group_by_name(
+>         struct mvebu_pinctrl *pctl, const char *name)
+>  {
+>         unsigned n;
+> +
+>         for (n = 0; n < pctl->num_groups; n++) {
+>                 if (strcmp(name, pctl->groups[n].name) == 0)
+>                         return &pctl->groups[n];
+>         }
+> +
+>         return NULL;
+>  }
+>
+> @@ -108,6 +110,7 @@ static struct mvebu_mpp_ctrl_setting *mvebu_pinctrl_find_setting_by_val(
+>         unsigned long config)
+>  {
+>         unsigned n;
+> +
+>         for (n = 0; n < grp->num_settings; n++) {
+>                 if (config == grp->settings[n].val) {
+>                         if (!pctl->variant || (pctl->variant &
+> @@ -115,6 +118,7 @@ static struct mvebu_mpp_ctrl_setting *mvebu_pinctrl_find_setting_by_val(
+>                                 return &grp->settings[n];
+>                 }
+>         }
+> +
+>         return NULL;
+>  }
+>
+> @@ -123,6 +127,7 @@ static struct mvebu_mpp_ctrl_setting *mvebu_pinctrl_find_setting_by_name(
+>         const char *name)
+>  {
+>         unsigned n;
+> +
+>         for (n = 0; n < grp->num_settings; n++) {
+>                 if (strcmp(name, grp->settings[n].name) == 0) {
+>                         if (!pctl->variant || (pctl->variant &
+> @@ -130,6 +135,7 @@ static struct mvebu_mpp_ctrl_setting *mvebu_pinctrl_find_setting_by_name(
+>                                 return &grp->settings[n];
+>                 }
+>         }
+> +
+>         return NULL;
+>  }
+>
+> @@ -137,6 +143,7 @@ static struct mvebu_mpp_ctrl_setting *mvebu_pinctrl_find_gpio_setting(
+>         struct mvebu_pinctrl *pctl, struct mvebu_pinctrl_group *grp)
+>  {
+>         unsigned n;
+> +
+>         for (n = 0; n < grp->num_settings; n++) {
+>                 if (grp->settings[n].flags &
+>                         (MVEBU_SETTING_GPO | MVEBU_SETTING_GPI)) {
+> @@ -145,6 +152,7 @@ static struct mvebu_mpp_ctrl_setting *mvebu_pinctrl_find_gpio_setting(
+>                                 return &grp->settings[n];
+>                 }
+>         }
+> +
+>         return NULL;
+>  }
+>
+> @@ -152,10 +160,12 @@ static struct mvebu_pinctrl_function *mvebu_pinctrl_find_function_by_name(
+>         struct mvebu_pinctrl *pctl, const char *name)
+>  {
+>         unsigned n;
+> +
+>         for (n = 0; n < pctl->num_functions; n++) {
+>                 if (strcmp(name, pctl->functions[n].name) == 0)
+>                         return &pctl->functions[n];
+>         }
+> +
+>         return NULL;
+>  }
+>
+> --
+> 2.30.2
+>
