@@ -2,99 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28016580AFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 08:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D95E580BF3
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 08:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbiGZGMQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jul 2022 02:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55394 "EHLO
+        id S230444AbiGZGz2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jul 2022 02:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231904AbiGZGMP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 02:12:15 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2058.outbound.protection.outlook.com [40.107.96.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF0A1F601
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Jul 2022 23:12:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P66+HdryaTL4RlKoV4lHs/TnsBKXbZMgOJorADb1j0tckUyHIZGqK375S7EiGI0B0e5DcEMuEO33MZEETL5h4odnufV7YAUU/7F3mTJEVIGyWAdSDd145L6Lf4/53ZzTdc10pSkhOvlYrtdRgfirUXNDTHWS+wd+aN3W3m4CmsOjJJQl/u35sOPv4l9DeXcaUiYNCOufuJUVP/iww5JCsSK9jz6PpmMxmVP405UWSYMY23c/s6umzRooxlr7HVqFn8/2rrsEzgMzs0KWRB0dUgXbVL3zjuGdryETttz6fY2CwCJVqgTobqcHIDwXjOW6NaArOhzcnq1RtpnfhFim+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fyWLdUjsSpjzG2vC6g4RfA5yHAhrjfpSIzkr/26Z+FA=;
- b=Do2tsfHuzVa588kGttkXm7OMjUFOltKPmD4tC1s0EmszkyD3z0AH7LpBFpOSuX1Uk6RQx8FKs8ELBDSJZW+By0Q19+4twhvkNQBVpsD5t4qkEeY+gQSIQSJACUdhDykQ4hw0Ap63EUQ1cDFD4B2P/r0TCzK2UwxYeQD3dJ+mjgYUYm2JoYQqFGbmwbI3+mUqvj3CktzA0uwaPPJo5p9cj198Had6QoIBv9uccgd4gNcUrsbMKPWeTr0aaZYGX7czhbfuWbnpJm11KgnEI7deNUamzAGQmHN3r+IdzSSkArC1asMlkC9MDTcm1hboLJbbjPF1FC/6dLYdFVhEPN5gNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=xilinx.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fyWLdUjsSpjzG2vC6g4RfA5yHAhrjfpSIzkr/26Z+FA=;
- b=OKSjqESdyWCeszpXLUaZfjZE29cRZDqESgNfDnzI8CGIhr+DMgvWQJCl57TTML347gODk27HUJ6mzpc79kT/P0SHBE3s0RnZ7taQ5mYNkpb0dhO9HzaSbpLgy1+v1GvuF1EQyuM2CuJDj5flHv5tY0J2Abt20VfT+N2Qs+qakM0=
-Received: from BN0PR02CA0013.namprd02.prod.outlook.com (2603:10b6:408:e4::18)
- by DS7PR12MB5933.namprd12.prod.outlook.com (2603:10b6:8:7c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.24; Tue, 26 Jul
- 2022 06:12:12 +0000
-Received: from BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:e4:cafe::2e) by BN0PR02CA0013.outlook.office365.com
- (2603:10b6:408:e4::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.21 via Frontend
- Transport; Tue, 26 Jul 2022 06:12:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT003.mail.protection.outlook.com (10.13.177.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5458.17 via Frontend Transport; Tue, 26 Jul 2022 06:12:12 +0000
-Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 26 Jul
- 2022 01:12:08 -0500
-Message-ID: <65cfe4d3-c342-fcd8-8177-68a930ec38c3@amd.com>
-Date:   Tue, 26 Jul 2022 08:12:06 +0200
+        with ESMTP id S229709AbiGZGzZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 02:55:25 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5A79586;
+        Mon, 25 Jul 2022 23:55:23 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id ss3so24348194ejc.11;
+        Mon, 25 Jul 2022 23:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=930q3AVQXe2SjvhskE2h093jn5RSLc/y4eCPbFMcgwM=;
+        b=ekU92XlLSz/QGh8I7Bjn0ZGOhEcdbXO4Etm4Y/NM7hgCklk8sWS3gdHTFIr0u6VxzV
+         Ti2nYfKCZBeJG5RIMb/VzaXtK2sjIpWpvSTCBSJgnoS4ZbtaWHUObMCeQI0xBGo6btpT
+         MbP7llPi+K/oT7KdXC5vWShkn782FcWxGzTiZlgbKVUwWfWZj4Sw6QLzKBA+IfGqYr4a
+         kBpPb8CovZ+MZSWlkeNWed0PAnlQ8iCcYpo+SB9TkZz+dhsyqP1r4C3tU7CDVXaHWcdk
+         s0XEK0OwXwupkqEFIV9J5ulwoFnc4oY2+ZkIVAN2r+bawwHmBq2qkeXKqc4/fgyxCv4G
+         Sn/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=930q3AVQXe2SjvhskE2h093jn5RSLc/y4eCPbFMcgwM=;
+        b=D9xD3su0dGAHljkLloIdCqT8trlfmiWJHHHEPIzAjcO6FSMyAM1Xk2PbBUlVUY9QSK
+         XcPzzqAocFrV7+Qn8WaicQD7lbZMR/BKZH1Fr3tqXWJ97eT5o81tTgsUZW6xBK5Ezo72
+         irbfqg10qqyz3l/fKgXGa1mDnCmPz2HCXLkUkWDn4C+e3NsXDs9W8d1PDTXEavUl0uBy
+         yFB9o77WcFNWFkLcJ24qyLhkPJ5L89gz1H/fpfp44TroC8qt+WG6d/+B+OA7IU6hZAkf
+         BNlkM7i7eNpKYeS9ubVXJbvTobKL4N0TokVQzBAv/1GjmGeL+ZP6mlwgRDW2Fn4zbfAS
+         tK+w==
+X-Gm-Message-State: AJIora9p2a8H60oTcg4K2gzMvEVvJalNnXATAazjFd9k4LiP+rBLNP6M
+        Vk7I1sjl5j+KZMoEt1P4rTc4nrGLk2u+S8VdSEo=
+X-Google-Smtp-Source: AGRyM1sApmuCde+BK/ozC9iYIpUHcgy151W8Z89r/tkh8MEbz3boKMRma1lkGDOq9cvYVQdSFwoSwNy1b3offj1r8dk=
+X-Received: by 2002:a17:907:a063:b0:72b:52f7:feea with SMTP id
+ ia3-20020a170907a06300b0072b52f7feeamr13071249ejc.740.1658818522212; Mon, 25
+ Jul 2022 23:55:22 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3] gpio: xilinx: add missing blank line after
- declarations
-Content-Language: en-US
-To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        <linux-gpio@vger.kernel.org>, <brgl@bgdev.pl>
-CC:     <git-dev@xilinx.com>, <shubhrajyoti.datta@amd.com>,
-        <michal.simek@xilinx.com>, <linus.walleij@linaro.org>
-References: <20220721090021.17005-1-shubhrajyoti.datta@xilinx.com>
-From:   Michal Simek <michal.simek@amd.com>
-In-Reply-To: <20220721090021.17005-1-shubhrajyoti.datta@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7b3c9d8a-7b7d-4668-7c03-08da6ecdc7c7
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5933:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hUVKO9izicXhcqCvc+VZf4Ah/106D4lzg+nSxcFoYGgmW0ENl8yRrCB25WpOoyoc0QjkbZSaml5DgsU+UxwP7s8MhmS+/JY59ZrBCeALnfy29SYmY+8zs28C4YcX74AHqFyG0fNVznwnc15RZJ5KjOjIaqxuXHaAc6+rsmswctgeJqXcVHM+sU14lj7w8bSBTKUlsxh2f+GVtJuVefqPUsl2+gE+NUV2FwK/UlnuG91YUhHeUXND0oz7yjoDXMOhAC7yFhFJ/dwjMOr3TzrqtlX2Jk8OXU1N78hQKtVhgrD3hcLdqZbLe+Ypsmq5ac8UdZcF9kc5w1aj0hEx7KGGed9JEQ7FHXCpoo4+XBUQ7FHcMnKqpH6n90GMnnHiJ3Svc3TcTjghQd/AU2BuFrNSDRMbyz9wMjrrVCRly1WiybEBR2/Iyd3r5pp1KtMAZHh5pngH1mHFacxz1GAs97+NVC1VFxxdZy6ZzOIEjkp6ZcDYPxXQ9RgSJL9kbw8LAmoiyYLOpFIyIWt5n9M1wvy7kli1iSSH/BcckBc3e3Z+2g93DPRn7nx/gohwyg5LrMj5JGzkLx2bapEMO+StME3Glt0zABWkSVnx40TGya54er0iAyzCvSPAXDfiQfdgQQtJJMxBfohRsDZS5FPzAlFi/bK5qwUL9xr+DPIo5zCVwkwgKYVZ9tpKnGej9bom1/C6xJXzA/zw8XV8f+sNZaqXRNSqzyVRwHKh+/jeytQUjT1O6kFDw76nTp6RA1EWqlBDg/u8I3C4jIeKjkajGmU0PmLeoAjNc4YgpKRUhgbcSSbt+sc11B85nTJvqCjdwJwYKLH/nH4TpNdFXsjXn/ZIFBqSV15agNEno+aYLhNfWihlqaLCcuH6oWYPWtNraH8n
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(376002)(346002)(136003)(40470700004)(46966006)(36840700001)(41300700001)(83380400001)(2906002)(40460700003)(31686004)(47076005)(16526019)(2616005)(86362001)(336012)(426003)(5660300002)(186003)(8936002)(16576012)(40480700001)(44832011)(36756003)(82740400003)(8676002)(110136005)(356005)(81166007)(4326008)(316002)(36860700001)(70586007)(54906003)(70206006)(26005)(31696002)(82310400005)(53546011)(478600001)(43740500002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2022 06:12:12.4811
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b3c9d8a-7b7d-4668-7c03-08da6ecdc7c7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5933
+References: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
+ <CAHp75VddBhc9peHXfNfTyTNni246kC8CyLqCrMFadn67LGDarQ@mail.gmail.com>
+ <CACRpkdaczrU1tM5Yt7P-Q2h+ge8STOi6HvvYeTM-g+JwS8_gZw@mail.gmail.com>
+ <CAHp75VfaExrFYto7LWa5Vnbm6JbiAqtutKmk0HzfeHmmi3PwOg@mail.gmail.com> <CACRpkdYHgD-fmt_2PWJrmyGY=AOP0Z+4jTkH=n3wJ+a0aApqcg@mail.gmail.com>
+In-Reply-To: <CACRpkdYHgD-fmt_2PWJrmyGY=AOP0Z+4jTkH=n3wJ+a0aApqcg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 26 Jul 2022 08:54:45 +0200
+Message-ID: <CAHp75Vf_aDSocdB7R6zKFwEOBRwq0w2m6GdCM-5ujKoz4bGiqQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: gpio-74x164: add support for CDx4HC4094
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -102,49 +74,121 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jul 26, 2022 at 12:22 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Jul 25, 2022 at 10:49 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Jul 25, 2022 at 3:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > On Mon, Jul 25, 2022 at 11:32 AM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Thu, Jul 21, 2022 at 11:32 AM Marcus Folkesson
+> > > > <marcus.folkesson@gmail.com> wrote:
+> >
+> > ...
+> >
+> > > > Sorry for my absence of understanding, but why?
+> > > > SPI has MOSI, CLK, CS, where the last one is exactly for that. No?
+> > >
+> > > Forgive me if I misunderstand, but if you use CS that
+> > > way, the way that the SPI framework works is to assert
+> > > CS then transfer a few chunks over SPI (MOSI/CLK)
+> > > then de-assert CS.
+> >
+> > No, CS here is used exactly for what it is designed for ("tell that
+> > this message is *for me*"). Yes, hardware implementation here is a
+> > latch register. Because otherwise ALL messages are "for me" which is
+> > wrong. Is it wrong interpretation of the hardware and SPI?
+>
+> I was under the impression that the shift register has no idea
+> if the message is "for me", and that there can only be one shift register
+> on the bus if using ordinary SPI to control it.
 
+Yes and no. Yes, the shift register in this HW is always 'for all'.
+No, there are as many shift registers as you have chip selects on the same bus.
 
-On 7/21/22 11:00, Shubhrajyoti Datta wrote:
-> Add a missing blank line. No functional changes.
-> 
-> WARNING: Missing a blank line after declarations
-> 128: FILE: drivers/gpio/gpio-xilinx.c:120:
-> +       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-> +       xgpio_set_value32(a, bit, xgpio_readreg(addr));
-> 
-> WARNING: Missing a blank line after declarations
-> 136: FILE: drivers/gpio/gpio-xilinx.c:126:
-> +       void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-> +       xgpio_writereg(addr, xgpio_get_value32(a, bit));
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
-> v2: Update commit message
-> v3: No change
-> 
->   drivers/gpio/gpio-xilinx.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index b6d3a57e27ed..7f129e7eae78 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -117,12 +117,14 @@ static inline int xgpio_regoffset(struct xgpio_instance *chip, int ch)
->   static void xgpio_read_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
->   {
->   	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-> +
->   	xgpio_set_value32(a, bit, xgpio_readreg(addr));
->   }
->   
->   static void xgpio_write_ch(struct xgpio_instance *chip, int reg, int bit, unsigned long *a)
->   {
->   	void __iomem *addr = chip->regs + reg + xgpio_regoffset(chip, bit / 32);
-> +
->   	xgpio_writereg(addr, xgpio_get_value32(a, bit));
->   }
->   
+> I look at this data sheet:
+> https://www.farnell.com/datasheets/2030250.pdf
+>
+> IIUC what you say is CS == STR?
 
-Reviewed-by: Michal Simek <michal.simek@amd.com>
+Yes.
 
-M
+> > > If CS is used for strobe, it is constantly asserted
+> > > during transfer and the sequence will be latched
+> > > out immediately as you write the SPI transfers and
+> > > the data is clocked through the register, making the
+> > > whole train of zeroes and ones flash across the
+> > > output pins before they stabilize after the SPI
+> > > transfer is finished.
+> >
+> > I'm not sure I understand the stabilization issue here. It's how SPI
+> > normally works and we have a lot of delays here and there related to
+> > the phase of the CS in comparison to clock and data. We have a lot of
+> > time to stabilize the outputs of the shift register before latching
+> > it. Did I miss anything?
+>
+> STR (strobe) is latching out the data, and how is that happening
+> when you connect it to CS? CS is asserted throughout the whole
+> transaction...
+
+Is it a problem? I consider it exactly what it's designed for, it
+tells the chip: "hey, there is something for you".
+
+> STR is supposed to be used like in the patch: to be toggled after
+> the transfer is complete. CS does not behave like this at all.
+
+How is CS different in this sense? Just longer? Who cares that it
+starts early and latches exactly at the time it must latch the data.
+
+> > > If you first do the SPI transfer, then strobe after
+> > > finished, this will not happen.
+> >
+> > I have hardware, I have tested it and I understand what you mean by
+> > "stabilizing", but finishing transfer _is_ CS toggling for _this_
+> > chip. No?
+>
+> Well it will work, because all values come out, however *during*
+> the transfer, not *after* the transfer as intended with the
+> STR signal.
+
+No. I think you missed one little but crucial detail. The strobe is
+edge, not level, while you consider CS as a level signal (only).
+
+> > > Then it should be a separate pin, so this doesn't
+> > > happen, right?
+> >
+> > I think no, you don't need it. I.o.w. either I'm missing something
+> > very interesting about both this kind of chips and SPI basics (shame
+> > on me in this case) or...?
+>
+> SPI will assert CS, then make the transfer i.e. toggle the clock
+> a few times with new data on MOSI each clock cycle, then
+> de-assert CS.
+
+Right.
+
+> STR is supposed to be toggled after all this happened to latch
+> out the data to the outputs, just like the patch does.
+
+So...
+
+> What happens if STR is connected to CS is that you will see
+> the shift register contents change on the output. It will be
+> fast so it will look fine if it is e.g. a LED. But if it is something
+> more sensitive, there will be chaos.
+
+See Figure 7 and Table 9 in the datasheet you linked to. When STR is
+low, the data is not changed. Maybe it's not clear in this datasheet,
+I found somewhere
+in a more clear table.
+
+> At least how I see it ...?
+
+If what you are saying is true, the hardware is totally broken and I
+wouldn't use it. I.o.w. if the strobe passes all data when it's at low
+level and latches at low-to-high, it's broken by definition in my
+point of view.
+
+-- 
+With Best Regards,
+Andy Shevchenko
