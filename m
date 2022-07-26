@@ -2,61 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A84E580E65
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 10:02:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E240580E70
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 10:05:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238100AbiGZICh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jul 2022 04:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50668 "EHLO
+        id S238192AbiGZIFC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jul 2022 04:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230370AbiGZICg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 04:02:36 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FB52D1FB
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 01:02:34 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id b11so24655394eju.10
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 01:02:34 -0700 (PDT)
+        with ESMTP id S237836AbiGZIFB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 04:05:01 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B78362D1FE
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 01:04:59 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id ss3so24619167ejc.11
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 01:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tqRCRe4eX+VkGHjaxOX6NtuRPCa/urbMxkt+QthVPS0=;
-        b=OWITSNRKHM8Fga2M8WOo5srtID0NrtHoyp47A1Ey1jYEfyBzDqOc8NsHA03D/MAFtn
-         iLdackwCJA9q49X5e1VXu0aOlU/R9e6gz1qT+KOIBIVzsr/3j54IwXb18J1BZ12AYy8Q
-         lPzXqW7MVb1oCnw3P6+llwraCJCuSTnYWWrJ61LTjl8Xy3UWoNX/avOpzlTHOFKOjyhr
-         ZjpYxuyuEOu8/LXS4xkxc6FAb732y1h8csYmfbolGsmNnCQmViIZQQ6Sjb3nSZO9oCQL
-         mfKDOXy1kRWb3mxiDXlj0BH2wnyST+SeyltucNcgl4ctzR3Lq+f3qylxWL+4iUaetFcP
-         0cfg==
+         :cc;
+        bh=KBehNnJT8GsO8upB51VneNbMYqsRg1ZW62nLqXxRwjs=;
+        b=ux3qmfJJzCRpmOIlz05amYZpcKjRQdQpSoXtp0phrhdyP/vH1mgjUHF3Cn6q1rAio9
+         sTifpvJhZaL/w1o15nmY3samMbq8yjVXooInCubRXzNUnweXBqGb7HBfR8Gj+zpCCOBp
+         oQ7iNJBYQZseKBKeQ5mv5+SZV5gcJDb6ePE8xWQSg9oGJIpFn/LFsmiSHs/FfYPc29x5
+         0ZrOfpuhyk+7WLYfptEqkETbazvrhXKGkhwVqtYEVIMrQRMiIeEN4MQ0GgqHsD+BL2ue
+         tHXVaL4vP+mJovTLoaaKe2LMP1LY8R2jrMJvrRSVa0fyYpGWxCHVYNgCm4cQAKXxNi/u
+         75LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tqRCRe4eX+VkGHjaxOX6NtuRPCa/urbMxkt+QthVPS0=;
-        b=YkoX8wuy6pRtOXWj/MnLl3rOS9h359jiL2JaEuxBzj+6TyAkZLjQcTk/YOEzD8NzKR
-         bEAkCQPiOPdn4H+J/j6LtPyuLrKNS8/QXR4Ja3betct984jIefTJKagGAxk0OWsVfHQ6
-         r/kwvCiMrp8AN2A+KAlD7jBzcdKel8rO57hl6dmXOcyitigrmBds0xnSb9qicyOuWB3x
-         ZeLO0hBTFxWlVEQmgCGZWMEVE8ZmrCfutul8F/AiHoLQjF0ROD50eENsh4KPsl8QCU3y
-         QiDes5YuynuCXnQ9u3jm+Hlk0TH3SDsQsh17bPgNXtC5nJf/yIlYgCX22On16IiBiv0a
-         2MlA==
-X-Gm-Message-State: AJIora9yESD9/vMaOD3ijH5EWOB4yRQQC3CiBb/dP/6hn1iAvJZuxS27
-        yvG9H08K7EbBm7RtIDkOBrm8JvfkhmXOQCnbnRn8kg==
-X-Google-Smtp-Source: AGRyM1usXww6QrDgVRlTV20uypXHuu5RtRCNDP8/S0/sCysg10uzzGGC0YEhdHtviVWo89ng+KSkTUQy5BgNPCfu3FE=
-X-Received: by 2002:a17:907:a053:b0:72b:3051:b79b with SMTP id
- gz19-20020a170907a05300b0072b3051b79bmr12564833ejc.690.1658822553187; Tue, 26
- Jul 2022 01:02:33 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=KBehNnJT8GsO8upB51VneNbMYqsRg1ZW62nLqXxRwjs=;
+        b=TKXBMYOvgCtdeq93aJM+uxM/rr+XFvNmsSpnjZXAmL+2bXu6hwRdlO5Vg3Sgss9eML
+         Wv+2y19y4c7fVDVa5vjOrlQAyOwzQHTkheEKwMqR9piHZPx3JAU2J9r+NwXeHOC7oyaa
+         zZTUnTM7UF6PTh2BZ8aPFk6DMMoSWovBVZpYGriYTYJ6exj8njKsLnRxovJpZQBpSkV9
+         ILcOrUPBy3qEt7+TlNmyImDYleOjiTaw+1mXaVUm7SvTlfVALPRBhLPHcO5jllAN+ko4
+         mWOOJ4UPheJKDICBOtY17jNr92HQg74DKuFlJXS0XqKFNlauQpJ6P5gOi/6ydXGBYk27
+         iT3A==
+X-Gm-Message-State: AJIora9yvPW0OmrMUGKuJYSmxUJ60oD0BXii6zA5DmH3nz7P5GlOqBBy
+        CdL2vUUN6+GFKL4SegionafetQfLUz2dUVsNsK9Ev7FRISy45Q==
+X-Google-Smtp-Source: AGRyM1vHhcGel5juigG9IuL9lnmZZvwbKcwgfiDrUj2uiwtNoJw8NVE9bwIMb2MaITVezVvKoTnq3AyC7k1VJmVf5x0=
+X-Received: by 2002:a17:906:5a61:b0:72b:1468:7fac with SMTP id
+ my33-20020a1709065a6100b0072b14687facmr13030328ejc.440.1658822698053; Tue, 26
+ Jul 2022 01:04:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220722220810.28894-1-mario.limonciello@amd.com> <20220722220810.28894-2-mario.limonciello@amd.com>
-In-Reply-To: <20220722220810.28894-2-mario.limonciello@amd.com>
+References: <20220723160513.271692-1-Mr.Bossman075@gmail.com> <20220723160513.271692-4-Mr.Bossman075@gmail.com>
+In-Reply-To: <20220723160513.271692-4-Mr.Bossman075@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Jul 2022 10:02:22 +0200
-Message-ID: <CACRpkdZ+2XCSJo336+=k_fxmPxu=M3KZJofKfY5JqPXGoKmnYw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: amd: Use unicode for debugfs output
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 26 Jul 2022 10:04:46 +0200
+Message-ID: <CACRpkdZMFdYDssk9B7R-MH7xG8Ukp+ZQpXCRVtPRCS=SFh34mA@mail.gmail.com>
+Subject: Re: [PATCH v5 03/12] dt-bindings: gpio: fsl-imx-gpio: Add i.MXRT compatibles
+To:     Jesse Taube <mr.bossman075@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-imx@nxp.com, robh+dt@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
+        stefan@agner.ch, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
+        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
+        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
+        cniedermaier@dh-electronics.com, clin@suse.com,
+        giulio.benetti@benettiengineering.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -67,32 +77,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 23, 2022 at 12:08 AM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+On Sat, Jul 23, 2022 at 6:05 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
 
-> The output is currently split across two lines making it more
-> difficult to parse unless the newlines are removed between pins
-> or it's read in by a parser like Libreoffice Calc or Google docs.
+> Both the i.MXRT1170 and 1050 have the same gpio controller as
+> "fsl,imx35-gpio". Add i.MXRT to the compatible list.
 >
-> To make it easier to follow to the naked eye in a terminal window:
-> * drop the newline in the middle of pin definitions
-> * shorten all output using unicode characters
-> * align all pipe delimitters
-> * output the same phrase even for disabled functions
->   (but with a =E2=88=85 character)
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-That's a bit unorthodox, what happens when someone uses their
-old VT100 terminal to look at this file?
-
-BIUT! It is a debugfs file, and you folks at AMD are going to be
-using this and I just assume that you folks have aligned internally
-that this is how you want things so I just applied this.
-
-We need testing in linux-next for this anyway, the merge window
-is close. If the other AMD people don't like it for some reason
-I can always pull it out.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Bartosz needs to apply this to the GPIO tree, I think it can just be applied
+directly without regard for the rest of the patches.
 
 Yours,
-Linus Walleij
+Linus Waleij
