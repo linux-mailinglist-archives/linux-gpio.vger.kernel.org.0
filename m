@@ -2,105 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 881CF580D32
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 09:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7162E580DD2
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Jul 2022 09:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238119AbiGZHYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jul 2022 03:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58246 "EHLO
+        id S238575AbiGZHdw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jul 2022 03:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238120AbiGZHXa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 03:23:30 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A57D2B619
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:23:21 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id z23so24327380eju.8
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:23:21 -0700 (PDT)
+        with ESMTP id S238519AbiGZHdh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 03:33:37 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F6A2B60B
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:29:41 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id c12so9319771ede.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 00:29:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DD0uadPhkaJ539aapAhTDeVFQH+XGwCWm7G+YfPh7fc=;
-        b=Kba4ZDV1A/AXRgz6iEbxRwn8EqVTv2R9yv+8Q2gRza9+ZIvQtXmDpHMJ+sUhFJFMZ0
-         7FbNc6d3/UoKdDqyTR5suL8w6TJ5Gn4/Kz3AtA2NjJTGAKHlcxyL3aJx4A7+/5TiUfQS
-         NxlzBAykIrKayHvDFOAKgU5Tiinpei2lR44V3d7wEJl+WEyIYRuRvQ9iG/c5gF30k3Zl
-         UFz7H/aJUp9D6Vjh3W9yMy72PrQ2Xxh5RoEOE3cP+U8zGqLPIIyi1AHwfcGI0gIcwimM
-         2dsoyOJLHp+5tVE6zpTC3LAoEK7Uku2f0P0wNfD7NWfh2JBiJ8ColgXgz/u4zr4EIrTZ
-         1Fsw==
+        bh=ERYnZjAmqURrPxvuGkteRUMsQNSwpIjr2yYOxhN4v2Q=;
+        b=O7TzWpi0xj6bpvrldwDThB5d/gjYTTMTVTUGLybnaeErIiSnX0YbL+nLFA3jwlYw0E
+         5AIA1897C+CZBfFXRL7et9zqCOFs5ucS+OwtB0RLvx2lC7cXunDzdsY5WkECsmbINc4r
+         jKxBTjBR8iNPnoUX+ms5ucm1QP0JDcZy3RJHx2/+hVdK/1f9JW0oOapO1JOJyowAU0C3
+         C1Tec08uGVo4ESKQHqt/qJFV2FiAvLAN70sMRe4J3tr433DFJIPVKal0iZ/pspuOOJ2H
+         Xk7JWRiqk4Tr4gNm3/nDSk+fXnWs3wYHUErkekewEmko8zPFoeH7Hb/BOWzC+ImylG7m
+         8FIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DD0uadPhkaJ539aapAhTDeVFQH+XGwCWm7G+YfPh7fc=;
-        b=Emi/7f1Ih4myYcxzorxDa//Kv68iiEiw2D6WOYj4txhqxi8aKEHRObMypuzj+mthRG
-         iqqIh8QRO2wmJVnCG1KTukasbWhSuojSGb/8WCuucNhVWQnN6oBo1XvlLtNUGkbFOLuh
-         6iiTBcdD5Pj5SQPtlbsWySFwBOE05yxYf+YsHFFUWYDAMPXTacbMqtJwfWNZmXRzK58Z
-         BFTPxu2yzVNo/N+7vw2XwsrrSGukyNe8oe7DdtYsD8YubFvMGtttcyKLmiZ10nnfpFXv
-         MxVRc6B6kerITXONEqxt+l/bpkN87BdoY6M/ZhjJFWvJX545ZtCU+Oc69mBVPwQqF9MK
-         fGYA==
-X-Gm-Message-State: AJIora+Ac/A0n+1ysxgdW8FNJ68nzKWPktfIxWOkI/ECYOnzmxFoIYbK
-        cG9hkhG94gmuxDRgIwPSEev3TaCOdYF4IE7QjbsxoWnO8cvSuQ==
-X-Google-Smtp-Source: AGRyM1tNXCKI2buHcvEhsS4ymiRcgoitpKwhQicSRzpI9ca8De/k6MNUhY31qEeF7NOfuZPg6YuHDk4sc/waM5l8O4g=
-X-Received: by 2002:a17:906:58c8:b0:6fe:91d5:18d2 with SMTP id
- e8-20020a17090658c800b006fe91d518d2mr13217132ejs.190.1658820199862; Tue, 26
- Jul 2022 00:23:19 -0700 (PDT)
+        bh=ERYnZjAmqURrPxvuGkteRUMsQNSwpIjr2yYOxhN4v2Q=;
+        b=7VpkpRyMpPm0EjtpANF1RCgjpn2lCJ4eh8cwkIXFD8huo1ADF3UVNmCj8icCFAtHnb
+         b8wMB2ZrdyblWFjOfUWFJpHDVGuBudU0qewIGasY9xLwoSRmwzJz+L2+yatqNwxWdfLd
+         3m8jaWXosIXZAwKsY9nSDPd8zo75ptIujob0ZsMCHLb0g7XgnCeyw1pGSS812h6ikWW7
+         ZkB1w6wFTlbMvwPOHyYe/P36jx9iq4XPBUZCWQ37jiC1KIDz6uxC7SzIWhoSII0IgOwT
+         xufN97kTCzSMJNs7dYIYBxyF4+rDgMfnDmMpm36wTdtstL15Ii31ef4qwQbo2Jyjd4Fa
+         yt4A==
+X-Gm-Message-State: AJIora8EYUmFdJSl/4Ky8f5eHbObKBJVONJLMQBZ0Y8jsahIeS04CJbP
+        Mfnb5kN1vbe22UqXxN3B/4ucPTi+/x4QpXTOU5QCtg==
+X-Google-Smtp-Source: AGRyM1vCl0qPyGCMLN1Hg2RlXB0kcD/KLy9QPtNqCBeoiRY0/Db5v7W/iINfCxVqz8rPtKUCoyRf96cvuacwUoXdwZo=
+X-Received: by 2002:aa7:cada:0:b0:43c:4f59:391a with SMTP id
+ l26-20020aa7cada000000b0043c4f59391amr2129348edt.172.1658820579738; Tue, 26
+ Jul 2022 00:29:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220721093422.2173982-1-marcus.folkesson@gmail.com>
- <CAHp75VddBhc9peHXfNfTyTNni246kC8CyLqCrMFadn67LGDarQ@mail.gmail.com>
- <CACRpkdaczrU1tM5Yt7P-Q2h+ge8STOi6HvvYeTM-g+JwS8_gZw@mail.gmail.com>
- <CAHp75VfaExrFYto7LWa5Vnbm6JbiAqtutKmk0HzfeHmmi3PwOg@mail.gmail.com>
- <CACRpkdYHgD-fmt_2PWJrmyGY=AOP0Z+4jTkH=n3wJ+a0aApqcg@mail.gmail.com> <CAHp75Vf_aDSocdB7R6zKFwEOBRwq0w2m6GdCM-5ujKoz4bGiqQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vf_aDSocdB7R6zKFwEOBRwq0w2m6GdCM-5ujKoz4bGiqQ@mail.gmail.com>
+References: <20220716192900.454653-1-konrad.dybcio@somainline.org>
+In-Reply-To: <20220716192900.454653-1-konrad.dybcio@somainline.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Jul 2022 09:23:08 +0200
-Message-ID: <CACRpkdbTypeq0M8VNb491GaZdBLyE9_TFpCDn5omnTe8D+BU7w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: gpio-74x164: add support for CDx4HC4094
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+Date:   Tue, 26 Jul 2022 09:29:28 +0200
+Message-ID: <CACRpkdYv4KGDtbQvW6J=RWuvOWg5wGB-L69_cOkjorzZjqSzAA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add DT schema for SM6375 TLMM
+To:     Konrad Dybcio <konrad.dybcio@somainline.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, martin.botka@somainline.org,
+        angelogioacchino.delregno@somainline.org,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 8:55 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Jul 26, 2022 at 12:22 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Sat, Jul 16, 2022 at 9:29 PM Konrad Dybcio
+<konrad.dybcio@somainline.org> wrote:
 
-> > Well it will work, because all values come out, however *during*
-> > the transfer, not *after* the transfer as intended with the
-> > STR signal.
+> Document the TLMM driver for SM6375.
 >
-> No. I think you missed one little but crucial detail. The strobe is
-> edge, not level, while you consider CS as a level signal (only).
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 
-Aha! Then it works :)
-
-> See Figure 7 and Table 9 in the datasheet you linked to. When STR is
-> low, the data is not changed. Maybe it's not clear in this datasheet,
-> I found somewhere
-> in a more clear table.
->
-> > At least how I see it ...?
->
-> If what you are saying is true, the hardware is totally broken and I
-> wouldn't use it. I.o.w. if the strobe passes all data when it's at low
-> level and latches at low-to-high, it's broken by definition in my
-> point of view.
-
-I have seen strobes that are level-active in my life, but if you
-say this one isn't then all is fine!
+Patch applied!
 
 Yours,
 Linus Walleij
