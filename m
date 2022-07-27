@@ -2,72 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35E47581DD6
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 04:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B3E581E16
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 05:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240193AbiG0C7R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jul 2022 22:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35132 "EHLO
+        id S240321AbiG0DQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jul 2022 23:16:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240168AbiG0C7Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 22:59:16 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FE8371B3
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 19:59:10 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id 70so14967252pfx.1
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 19:59:10 -0700 (PDT)
+        with ESMTP id S240278AbiG0DQL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 23:16:11 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D443DBD7;
+        Tue, 26 Jul 2022 20:15:53 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id b11so7527462qvo.11;
+        Tue, 26 Jul 2022 20:15:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OZi4c9wI8Wx3WKRLxE5DGAiHRs1pJAWSNEd2Tgsa7U8=;
-        b=cc4GO2giuJfzbv6nuIGVTs/5rOaRGNYTWvjV8rb8p1ehGhnHdFnCvFglGVjqopT5H2
-         jY+19UWyoABy2Mm54JTOKsUmLtcqKFceBptF784jgN78ROxHlIwmBJXFPx7SPpeEKkJE
-         ucXJQQSK6xtHtXcdZWIM9iJujkOm1KsNZ78PZYAr+ncEmV/xWtM1WaSApPPF946bHJ96
-         88ne/4w0RMbUwfDr03VfW7KEIX1EJxgVy8DzRFfsVYioXoOWvLHKlIw6XQ2m/AWi/m7N
-         cNFdChAG2OvBEqwI5oneFMDYOH9DtqvbtBRQVlVT73mwoewi6Zju1QMip/MzmoHpcRSj
-         GzkA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+bzNz23O5POP059NXGAFxBTvgq0VJPxoUFyJ+Zf+sF4=;
+        b=UDumRfitfDXkwxTCYroM9auAdxgh7zfPXcOozNvr7CHwzo3fFlRvTPLAzo9ts0lpE4
+         H5EvN8f8I2uANMvl+ZLCPB5wHb3i+7dJ1s2yoM0XURiqD/nvxP5WTnXnjBIb9nU1RYJw
+         3Cp2TNZkR5UmS5k6G7FOaaWeVcG6GxWYclTMiL6dyAMuuEpLyV5ReLUMgb3y8Ep4PxXS
+         vNGhe0gbIhnrqiU0ObxkSTn7g5aPTZVes3nEvcvOk1uV3Tf6p2UY80S1XyIEfrhQQX20
+         d4lEl7ge3IDUloHLOeS6oNk4Mf8txKZPGNcKWvE3jP97LK+rkC6dHN04uUaK/uEfEkTQ
+         rQeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OZi4c9wI8Wx3WKRLxE5DGAiHRs1pJAWSNEd2Tgsa7U8=;
-        b=smnJE/gWig8cbxLb0hjMldCmfQEoBJGWDUNNkWsG53+F/0rHgCLZ1ZudJ9SXofhIsP
-         B2yAFK+zkUzjiCuxlFq5+qRWhrIIFZfzsZvWDBJ2/7FUC2B4FGyKjaNfpLV9Sl0yCPB0
-         o3ZCIc7AV3mgZ1gFtgUfMC/Uv0bSJ5AXqCgBilxUn27QrHfdwbgXzVdCDsWDmF9c+pn8
-         H8NHA0YpfUkk2cBgXZST1UL/ZxPSNLkwRmOMpXkB0jQr76PsbIZjm3fRJNzYjBmdc0U2
-         ckDsYkpy6iD4if38XxFUDVlCbiWShGjy1h6ij04kURTSGYHeqC/HljSxqQkubO5U6N0x
-         Y5Ww==
-X-Gm-Message-State: AJIora8IGcC5PxK6T+/3jkP5mL+Ma0SIewhiWq2tuA0/nuLyTBD1lfPC
-        FHAsFQPgcaETMjgo+c0cZ2A=
-X-Google-Smtp-Source: AGRyM1v9zQRiHBvceHCwWIuay3gjqtCcNwxAL4LLhqhj6tqkwLcvm/WfjBR1FmKqskPpcLkvMXYung==
-X-Received: by 2002:a62:1a08:0:b0:52c:147:c517 with SMTP id a8-20020a621a08000000b0052c0147c517mr8964651pfa.85.1658890750031;
-        Tue, 26 Jul 2022 19:59:10 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id p16-20020a170902e75000b0016b81679c1fsm12510149plf.216.2022.07.26.19.59.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+bzNz23O5POP059NXGAFxBTvgq0VJPxoUFyJ+Zf+sF4=;
+        b=GrDQiZlHMbkq3ptJOCavw/5J1/EITPfi2EN6yzIePXDYov33rTPbAGQF/lKW2Q5ARY
+         zKRszQbZ6Lc0FnzJlxtTlqf8rs/wUnOYCTvXt4W2bdOqx8/wRudKgaI86GYV421jO7pb
+         KHzeNIeapc11zusy2W34okPCP8jvPKEcIfG4gFWzU4aCR1R+6PSU3e9ArkatxVQAVUJp
+         oDnBfkerASlUfrv+7c66KplHp4g5YeAHm4IB5sjkOc6i1KuLPoOU+VUWPK/mArhH69lB
+         pcXabtWYc5xinVqGhk5SgYMlV47Ho9am2A1kvwbiGVoNrFcnq1T/yAooJayscNRG6HOz
+         d09Q==
+X-Gm-Message-State: AJIora8bI0I7gLQRIOKVcNWa5uf0AfOFmv/MZTJ5tAu6SF5Z37/gmoXq
+        5zyUxwI0YB6GQj4akx1wlag=
+X-Google-Smtp-Source: AGRyM1t+vUxgJN+mx4u+5T5G83vTtc2ZbeXbJ64OlRvHoSc//1wcJ8a+5wCTXGgNBsHDFR5t20Gc0g==
+X-Received: by 2002:ad4:5ecd:0:b0:474:71ae:da8d with SMTP id jm13-20020ad45ecd000000b0047471aeda8dmr2197372qvb.114.1658891752116;
+        Tue, 26 Jul 2022 20:15:52 -0700 (PDT)
+Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id o21-20020a05620a2a1500b006b249cc505fsm13139981qkp.82.2022.07.26.20.15.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 19:59:09 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 10:59:03 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 8/8] libgpiod: Integrate building of rust bindings
- with make
-Message-ID: <20220727025903.GH88787@sol>
-References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <584910baf342bee3511361c3e486ad4f3e5437f2.1657279685.git.viresh.kumar@linaro.org>
+        Tue, 26 Jul 2022 20:15:46 -0700 (PDT)
+From:   Jesse Taube <mr.bossman075@gmail.com>
+X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
+To:     linux-imx@nxp.com
+Cc:     robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, aisheng.dong@nxp.com, stefan@agner.ch,
+        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
+        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
+        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
+        cniedermaier@dh-electronics.com, Mr.Bossman075@gmail.com,
+        clin@suse.com, giulio.benetti@benettiengineering.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v5 07/12] clk: imx: Update pllv3 to support i.MXRT1170
+Date:   Tue, 26 Jul 2022 23:15:41 -0400
+Message-Id: <20220727031541.227335-1-Mr.Bossman075@gmail.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <202207270909.VypZ4wfI-lkp@intel.com>
+References: <202207270909.VypZ4wfI-lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <584910baf342bee3511361c3e486ad4f3e5437f2.1657279685.git.viresh.kumar@linaro.org>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -78,180 +81,196 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 08, 2022 at 05:05:01PM +0530, Viresh Kumar wrote:
-> Lets make build rust bindings as well.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  README                    |  8 +++++---
->  TODO                      |  8 --------
->  bindings/Makefile.am      |  6 ++++++
->  bindings/rust/Makefile.am | 18 ++++++++++++++++++
->  configure.ac              | 16 ++++++++++++++++
->  5 files changed, 45 insertions(+), 11 deletions(-)
->  create mode 100644 bindings/rust/Makefile.am
-> 
-> diff --git a/README b/README
-> index 814a0f161fd2..68b5d69f9b66 100644
-> --- a/README
-> +++ b/README
-> @@ -119,9 +119,9 @@ TOOLS
->  BINDINGS
->  --------
->  
-> -High-level, object-oriented bindings for C++ and python3 are provided. They
-> -can be enabled by passing --enable-bindings-cxx and --enable-bindings-python
-> -arguments respectively to configure.
-> +High-level, object-oriented bindings for C++, python3 and Rust are provided.
-> +They can be enabled by passing --enable-bindings-cxx, --enable-bindings-python
-> +and --enable-bindings-rust arguments respectively to configure.
->  
->  C++ bindings require C++11 support and autoconf-archive collection if building
->  from git.
-> @@ -132,6 +132,8 @@ the PYTHON_CPPFLAGS and PYTHON_LIBS variables in order to point the build
->  system to the correct locations. During native builds, the configure script
->  can auto-detect the location of the development files.
->  
-> +Rust bindings require cargo support.
-> +
->  TESTING
->  -------
->  
-> diff --git a/TODO b/TODO
-> index 8bb4d8f3ad56..cf4fd7b4a962 100644
-> --- a/TODO
-> +++ b/TODO
-> @@ -28,14 +28,6 @@ and is partially functional.
->  
->  ----------
->  
-> -* implement rust bindings
-> -
-> -With Rust gaining popularity as a low-level system's language and the
-> -possibility of it making its way into the linux kernel, it's probably time to
-> -provide Rust bindings to libgpiod as part of the project.
-> -
-> -----------
-> -
->  * implement a simple daemon for controlling GPIOs in C together with a client
->    program
->  
-> diff --git a/bindings/Makefile.am b/bindings/Makefile.am
-> index 8f8c762f254f..004ae23dbc58 100644
-> --- a/bindings/Makefile.am
-> +++ b/bindings/Makefile.am
-> @@ -14,3 +14,9 @@ if WITH_BINDINGS_PYTHON
->  SUBDIRS += python
->  
->  endif
-> +
-> +if WITH_BINDINGS_RUST
-> +
-> +SUBDIRS += rust
-> +
-> +endif
-> diff --git a/bindings/rust/Makefile.am b/bindings/rust/Makefile.am
-> new file mode 100644
-> index 000000000000..79a52bc691ae
-> --- /dev/null
-> +++ b/bindings/rust/Makefile.am
-> @@ -0,0 +1,18 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
-> +
-> +command = cargo build --release --lib
-> +
-> +if WITH_TESTS
-> +command += --tests
-> +endif
-> +
-> +if WITH_EXAMPLES
-> +command += --examples
-> +endif
-> +
-> +all:
-> +	$(command)
-> +
-> +clean:
-> +	cargo clean
-> diff --git a/configure.ac b/configure.ac
-> index ab03673589e9..8458f734a606 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -211,6 +211,21 @@ then
->  		[AC_SUBST(PYTHON_LIBS, [`$PYTHON-config --libs`])])
->  fi
->  
-> +AC_ARG_ENABLE([bindings-rust],
-> +	[AS_HELP_STRING([--enable-bindings-rust],[enable rust bindings [default=no]])],
-> +	[if test "x$enableval" = xyes; then with_bindings_rust=true; fi],
-> +	[with_bindings_rust=false])
-> +AM_CONDITIONAL([WITH_BINDINGS_RUST], [test "x$with_bindings_rust" = xtrue])
-> +
-> +if test "x$with_bindings_rust" = xtrue
-> +then
-> +	AC_CHECK_PROG([has_cargo], [cargo], [true], [false])
-> +	if test "x$has_cargo" = xfalse
-> +	then
-> +		AC_MSG_ERROR([cargo not found - needed for rust bindings])
-> +	fi
-> +fi
-> +
->  AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
->  AM_CONDITIONAL([HAS_DOXYGEN], [test "x$has_doxygen" = xtrue])
->  if test "x$has_doxygen" = xfalse
-> @@ -245,6 +260,7 @@ AC_CONFIG_FILES([Makefile
->  		 bindings/python/Makefile
->  		 bindings/python/examples/Makefile
->  		 bindings/python/tests/Makefile
-> +		 bindings/rust/Makefile
->  		 man/Makefile])
->  
->  AC_OUTPUT
-> -- 
-> 2.31.1.272.g89b43f80a514
-> 
+The i.MXRT1170 has a pll that has the multiplier bits inverted and
+cannot be changed add IMX_PLLV3_GENERICV2.
 
-Wouldn't build for me on a Debian bullseye VM.
-Apparently bindgen requires clang to find the system headers [1][2], and
-there is no dep check or warning about that.
+The i.MXRT1170 also has the lock bit moved as well as the
+power bit inverted the power bit also is in different locations on each
+pll control register.
 
-Also not sure why the build wanted bindgen, as by default it uses the
-pre-generated bindings?
+Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+---
+V1 -> V2:
+ - Nothing done
+V2 -> V3:
+ - Nothing done
+V3 -> V4:
+ - Nothing done
+V4 -> V5:
+ - Add __imx_clk_hw_pllv3 to change power bit
+ - Add BM_PLL_POWER and imx_clk_hw_pllv3 to header
+ - Remove imx_clk_hw_pll3_powerbit
+---
+ drivers/clk/imx/clk-pllv3.c | 57 +++++++++++++++++++++++++++++++++----
+ drivers/clk/imx/clk.h       | 11 +++++--
+ 2 files changed, 60 insertions(+), 8 deletions(-)
 
-Anyway, for reference this was the build error without clang installed:
+diff --git a/drivers/clk/imx/clk-pllv3.c b/drivers/clk/imx/clk-pllv3.c
+index eea32f87c60a..68b1498cafe1 100644
+--- a/drivers/clk/imx/clk-pllv3.c
++++ b/drivers/clk/imx/clk-pllv3.c
+@@ -21,8 +21,8 @@
+ #define PLL_VF610_NUM_OFFSET	0x20
+ #define PLL_VF610_DENOM_OFFSET	0x30
+ 
+-#define BM_PLL_POWER		(0x1 << 12)
+ #define BM_PLL_LOCK		(0x1 << 31)
++#define BM_PLL_LOCK_V2		(0x1 << 29)
+ #define IMX7_ENET_PLL_POWER	(0x1 << 5)
+ #define IMX7_DDR_PLL_POWER	(0x1 << 20)
+ 
+@@ -34,6 +34,7 @@
+  * @base:	 base address of PLL registers
+  * @power_bit:	 pll power bit mask
+  * @powerup_set: set power_bit to power up the PLL
++ * @lock_bit:	 pll lock bit mask
+  * @div_mask:	 mask of divider bits
+  * @div_shift:	 shift of divider bits
+  * @ref_clock:	reference clock rate
+@@ -48,6 +49,7 @@ struct clk_pllv3 {
+ 	void __iomem	*base;
+ 	u32		power_bit;
+ 	bool		powerup_set;
++	u32		lock_bit;
+ 	u32		div_mask;
+ 	u32		div_shift;
+ 	unsigned long	ref_clock;
+@@ -65,7 +67,7 @@ static int clk_pllv3_wait_lock(struct clk_pllv3 *pll)
+ 	if ((pll->powerup_set && !val) || (!pll->powerup_set && val))
+ 		return 0;
+ 
+-	return readl_relaxed_poll_timeout(pll->base, val, val & BM_PLL_LOCK,
++	return readl_relaxed_poll_timeout(pll->base, val, val & pll->lock_bit,
+ 					  500, PLL_LOCK_TIMEOUT);
+ }
+ 
+@@ -101,7 +103,7 @@ static int clk_pllv3_is_prepared(struct clk_hw *hw)
+ {
+ 	struct clk_pllv3 *pll = to_clk_pllv3(hw);
+ 
+-	if (readl_relaxed(pll->base) & BM_PLL_LOCK)
++	if (readl_relaxed(pll->base) & pll->lock_bit)
+ 		return 1;
+ 
+ 	return 0;
+@@ -155,6 +157,39 @@ static const struct clk_ops clk_pllv3_ops = {
+ 	.set_rate	= clk_pllv3_set_rate,
+ };
+ 
++static int clk_pllv3_genericv2_set_rate(struct clk_hw *hw, unsigned long rate,
++		unsigned long parent_rate)
++{
++	struct clk_pllv3 *pll = to_clk_pllv3(hw);
++	u32 val, div;
++
++	div = (readl_relaxed(pll->base) >> pll->div_shift) & pll->div_mask;
++	val = (div == 0) ? parent_rate * 22 : parent_rate * 20;
++
++	if (rate == val)
++		return 0;
++
++	return -EINVAL;
++}
++
++static unsigned long clk_pllv3_genericv2_recalc_rate(struct clk_hw *hw,
++					   unsigned long parent_rate)
++{
++	struct clk_pllv3 *pll = to_clk_pllv3(hw);
++	u32 div = (readl_relaxed(pll->base) >> pll->div_shift)  & pll->div_mask;
++
++	return (div == 0) ? parent_rate * 22 : parent_rate * 20;
++}
++
++static const struct clk_ops clk_pllv3_genericv2_ops = {
++	.prepare	= clk_pllv3_prepare,
++	.unprepare	= clk_pllv3_unprepare,
++	.is_prepared	= clk_pllv3_is_prepared,
++	.recalc_rate	= clk_pllv3_genericv2_recalc_rate,
++	.round_rate	= clk_pllv3_round_rate,
++	.set_rate	= clk_pllv3_genericv2_set_rate,
++};
++
+ static unsigned long clk_pllv3_sys_recalc_rate(struct clk_hw *hw,
+ 					       unsigned long parent_rate)
+ {
+@@ -407,9 +442,9 @@ static const struct clk_ops clk_pllv3_enet_ops = {
+ 	.recalc_rate	= clk_pllv3_enet_recalc_rate,
+ };
+ 
+-struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
++struct clk_hw *__imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
+ 			  const char *parent_name, void __iomem *base,
+-			  u32 div_mask)
++			  u32 div_mask, u8 pwr_bit)
+ {
+ 	struct clk_pllv3 *pll;
+ 	const struct clk_ops *ops;
+@@ -421,11 +456,21 @@ struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
+ 	if (!pll)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	pll->power_bit = BM_PLL_POWER;
++	pll->power_bit = pwr_bit;
++	pll->lock_bit = BM_PLL_LOCK;
+ 	pll->num_offset = PLL_NUM_OFFSET;
+ 	pll->denom_offset = PLL_DENOM_OFFSET;
+ 
+ 	switch (type) {
++	case IMX_PLLV3_GENERICV2:
++		pll->lock_bit = BM_PLL_LOCK_V2;
++		pll->powerup_set = true;
++		ops = &clk_pllv3_genericv2_ops;
++		break;
++	case IMX_PLLV3_SYSV2:
++		pll->lock_bit = BM_PLL_LOCK_V2;
++		pll->powerup_set = true;
++		fallthrough;
+ 	case IMX_PLLV3_SYS:
+ 		ops = &clk_pllv3_sys_ops;
+ 		break;
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index 5061a06468df..2bf50c92fdfa 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -6,6 +6,8 @@
+ #include <linux/spinlock.h>
+ #include <linux/clk-provider.h>
+ 
++#define BM_PLL_POWER		BIT(12)
++
+ extern spinlock_t imx_ccm_lock;
+ extern bool mcore_booted;
+ 
+@@ -102,6 +104,9 @@ extern struct imx_fracn_gppll_clk imx_fracn_gppll;
+ 	to_clk(clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
+ 				cgr_val, cgr_mask, clk_gate_flags, lock, share_count))
+ 
++#define imx_clk_hw_pllv3(type, name, parent_name, base, div_mask) \
++	__imx_clk_hw_pllv3(type, name, parent_name, base, div_mask, 1)
++
+ #define imx_clk_pllv3(type, name, parent_name, base, div_mask) \
+ 	to_clk(imx_clk_hw_pllv3(type, name, parent_name, base, div_mask))
+ 
+@@ -242,6 +247,8 @@ struct clk_hw *imx_clk_hw_sscg_pll(const char *name,
+ 
+ enum imx_pllv3_type {
+ 	IMX_PLLV3_GENERIC,
++	IMX_PLLV3_GENERICV2,
++	IMX_PLLV3_SYSV2,
+ 	IMX_PLLV3_SYS,
+ 	IMX_PLLV3_USB,
+ 	IMX_PLLV3_USB_VF610,
+@@ -253,8 +260,8 @@ enum imx_pllv3_type {
+ 	IMX_PLLV3_AV_IMX7,
+ };
+ 
+-struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
+-		const char *parent_name, void __iomem *base, u32 div_mask);
++struct clk_hw *__imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
++		const char *parent_name, void __iomem *base, u32 div_mask, u8 pwr_bit);
+ 
+ #define PLL_1416X_RATE(_rate, _m, _p, _s)		\
+ 	{						\
+-- 
+2.36.1
 
-...
-   Compiling thiserror v1.0.31
-   Compiling libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)
-error: failed to run custom build command for `libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)`
-
-Caused by:
-  process didn't exit successfully: `/home/dev/libgpiod/bindings/rust/target/release/build/libgpiod-sys-0fb8ce8170c88d8f/build-script-build` (exit status: 101)
-  --- stdout
-  cargo:rerun-if-changed=wrapper.h
-  cargo:rerun-if-changed=../../../lib/chip.c
-  cargo:rerun-if-changed=../../../lib/chip-info.c
-  cargo:rerun-if-changed=../../../lib/edge-event.c
-  cargo:rerun-if-changed=../../../lib/info-event.c
-  cargo:rerun-if-changed=../../../lib/internal.c
-  cargo:rerun-if-changed=../../../lib/line-config.c
-  cargo:rerun-if-changed=../../../lib/line-info.c
-  cargo:rerun-if-changed=../../../lib/line-request.c
-  cargo:rerun-if-changed=../../../lib/misc.c
-  cargo:rerun-if-changed=../../../lib/request-config.c
-  cargo:rerun-if-changed=../../../tests/gpiosim/gpiosim.c
-  cargo:rerun-if-changed=gpiosim_wrapper.h
-  cargo:rustc-link-lib=kmod
-  cargo:rustc-link-lib=mount
-
-  --- stderr
-  /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found
-  /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found, err: true
-  thread 'main' panicked at 'Unable to generate bindings: ()', libgpiod-sys/build.rs:42:10
-
-Cheers,
-Kent.
-
-[1] https://rust-lang.github.io/rust-bindgen/requirements.html
-[2] https://github.com/rust-lang/rust-bindgen/issues/242
