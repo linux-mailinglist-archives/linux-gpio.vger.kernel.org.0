@@ -2,285 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9768C5826D2
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 14:38:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A12335826D8
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 14:41:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231667AbiG0Mie (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jul 2022 08:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
+        id S232521AbiG0MlB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jul 2022 08:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231494AbiG0Mie (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 08:38:34 -0400
-X-Greylist: delayed 374 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 27 Jul 2022 05:38:32 PDT
-Received: from 19.mo584.mail-out.ovh.net (19.mo584.mail-out.ovh.net [87.98.179.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B792AE11
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 05:38:32 -0700 (PDT)
-Received: from player692.ha.ovh.net (unknown [10.110.103.91])
-        by mo584.mail-out.ovh.net (Postfix) with ESMTP id 2FC39250DA
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 12:32:16 +0000 (UTC)
-Received: from RCM-web1.webmail.mail.ovh.net (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
-        (Authenticated sender: rafal@milecki.pl)
-        by player692.ha.ovh.net (Postfix) with ESMTPSA id 08DA82CE188E7;
-        Wed, 27 Jul 2022 12:31:45 +0000 (UTC)
-MIME-Version: 1.0
-Date:   Wed, 27 Jul 2022 14:31:45 +0200
-From:   =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-To:     William Zhang <william.zhang@broadcom.com>
-Cc:     Linux ARM List <linux-arm-kernel@lists.infradead.org>,
-        joel.peshkin@broadcom.com, f.fainelli@gmail.com,
-        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        dan.beygelman@broadcom.com, anand.gore@broadcom.com,
-        kursad.oney@broadcom.com, krzysztof.kozlowski@linaro.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S232141AbiG0MlA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 08:41:00 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1003C8F7
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 05:40:59 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id y141so15974186pfb.7
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 05:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=44LkliKARC1YczNwkxNEX4Gy32f5qk0VBqXWe0aoEKA=;
+        b=e9CSpsKyM7ls1cB6BzsSjFEmz6kYFaTRkQc6o9g13aQVSx5j8iVPebLFwO58nyNb1Z
+         mW/Zv314esAHFEOfkxoU9f3j7mhEl6gLcELrfSXCOjodKUcWxy5OPLZQcYv3vrqBe2vx
+         wk/mUD27gFfh2rdMnjkEevCgqrXS+2JhjxYYBkk/UnHDKkHQcHv6GxOsWmQ9yYXEJetm
+         lzqQS0irjoPF2dWsR+lmSZ5mcBRDWg09Tlcgz77I+fCYPikxKUpR91SOC5cIlZ0BAuA+
+         AlRrSkkelpc6sK13TB+BAu8RfwCfYD2/zM85SW5FQ/WBqhcy1iLheEbqDIlTyky/g1J0
+         MtGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=44LkliKARC1YczNwkxNEX4Gy32f5qk0VBqXWe0aoEKA=;
+        b=pp0X2wZf4fBgSKDMprtxSPhPx7Uj+0+/8np+Y3EspfDlnnBieLUcvegIhKxRxSXEKf
+         hTlLBK3kPDGNirYwD0+wUVmwoED44ozh4FkuUqwHug+PnJFk4xI+HFvem4Lo1Wn4xTRs
+         FvilMZrDSVTtgzcGPGFVJBjN6Mg/GYwm1QSCVNhOoxXxxFljwH6vFlPUG/hLTPnKziP8
+         yRprrPufoPxf9379P9bMltdcZ1uMQ1QURBaQ67Uiq5shiO/XWmUw/eLmfjdujcpCKPW5
+         5FGzNBnaq73iOR9Cls7k9B58llNMBis1NBLclwmyFg0SDaIa/5OscxaAfukqrbSGCxUx
+         Obiw==
+X-Gm-Message-State: AJIora9Bu6y9NUkBfbbd4toQTk7CmsWaDUM9H4seX9/Lw50onp1KiiGq
+        suOTY7RBcHjtPqa3ATLvOAxZwZi1RJo=
+X-Google-Smtp-Source: AGRyM1ucZk8VmjzlLSuZeaFXvSWjlnI6YXqGxRPSnsqjsDEWnHZzAM1M8BDoO011RbAlqSe04TD7mQ==
+X-Received: by 2002:a63:e002:0:b0:41b:323c:ea41 with SMTP id e2-20020a63e002000000b0041b323cea41mr4912181pgh.508.1658925658460;
+        Wed, 27 Jul 2022 05:40:58 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id s6-20020a17090aba0600b001f3095af6a9sm1629448pjr.38.2022.07.27.05.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Jul 2022 05:40:57 -0700 (PDT)
+Date:   Wed, 27 Jul 2022 20:40:51 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
- ARCH_BCMBCA
-In-Reply-To: <20220725055402.6013-7-william.zhang@broadcom.com>
-References: <20220725055402.6013-1-william.zhang@broadcom.com>
- <20220725055402.6013-7-william.zhang@broadcom.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <63797827553783061a0ad5e897ed6538@milecki.pl>
-X-Sender: rafal@milecki.pl
-X-Originating-IP: 194.187.74.233
-X-Webmail-UserID: rafal@milecki.pl
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 3481282513174571860
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrvdduvddgheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghffgfkgihitgfgsehtjehjtddtredvnecuhfhrohhmpeftrghfrghlpgfoihhlvggtkhhiuceorhgrfhgrlhesmhhilhgvtghkihdrphhlqeenucggtffrrghtthgvrhhnpeetgfekfeduveehuedvgeefhffhieevhfejteeggfefieevffdtueeukedugeelieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedtrddtrddtrddtpdduleegrddukeejrdejgedrvdeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepphhlrgihvghrieelvddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehrrghfrghlsehmihhlvggtkhhirdhplhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekge
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V4 4/8] libgpiod: Add rust wrapper crate
+Message-ID: <20220727124051.GA130052@sol>
+References: <cover.1657279685.git.viresh.kumar@linaro.org>
+ <c3bdcaa85e1ee4a227d11a9e113f40d0c92b0542.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025754.GD88787@sol>
+ <20220727090701.hfgv2thsd2w36wyg@vireshk-i7>
+ <20220727100809.GB117252@sol>
+ <CANiq72mXH2Z-5aOu6dz47-hDPZjNQZAqYeGPv1vu3fARHJUtuw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72mXH2Z-5aOu6dz47-hDPZjNQZAqYeGPv1vu3fARHJUtuw@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-07-25 07:53, William Zhang wrote:
-> With Broadcom Broadband arch ARCH_BCMBCA supported in the kernel, this
-> patch series migrate the ARCH_BCM4908 symbol to ARCH_BCMBCA. Hence
-> replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
+On Wed, Jul 27, 2022 at 01:06:28PM +0200, Miguel Ojeda wrote:
+> On Wed, Jul 27, 2022 at 12:08 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > It should never return NULL.  At the moment.
+> > I would prefer to have NULL checks for all cases, not assume anything
+> > about the C implementation, and to be consistent with other places
+> > where you do NULL checks.  As it stands when I see this I need to go check
+> > the C to see if this is a reasonable exception or not.  And I'm lazy.
 > 
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net> (for watchdog)
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (for drivers/pci)
+> Ideally the C side would document the guarantees explicitly instead,
+> and then the Rust side can rely on them.
+> 
 
-I still think it may be a bad idea for all below drivers. Please see my
-previous e-mail:
-Re: [RESEND PATCH 6/9] arm64: bcmbca: Make BCM4908 drivers depend on 
-ARCH_BCMBCA
-https://lore.kernel.org/linux-arm-kernel/eee8c85652e6dac69420a876d03f67c4@milecki.pl/
+Unfortunately the C header doesn't currently provide any guarantee -
+except in the cases where it CAN return NULL.
+But we can fix that.
 
-I think we should:
-1. Keep ARCH_BCM4908 for 4908 specific drivers (e.g. mtd, pinctrl, net)
-2. Use ARCH_BCMBCA for more generic drivers (e.g. I2C, PCI,serial, WD)
+> In any case, if a given C API never returned an invalid pointer and
+> suddenly it starts doing so in some cases, I would consider that a
+> breaking change in practice, which would likely break C users too.
+> 
 
+Not sure I'm onboard with that.  Unless the API has a contract not to
+return a NULL then it is free to at a later date. The user should
+always assume that NULL is a possibility, even if they have never seen
+one.
 
-> Changes in v2:
-> - Add Acked-by tags
-> - Update commit message with more details
+But in practice you are probably right.
+
+> A potential compromise meanwhile is `debug_assert!` to at least test
+> those assumptions.
 > 
->  drivers/i2c/busses/Kconfig            | 4 ++--
->  drivers/mtd/parsers/Kconfig           | 6 +++---
->  drivers/net/ethernet/broadcom/Kconfig | 4 ++--
->  drivers/pci/controller/Kconfig        | 2 +-
->  drivers/phy/broadcom/Kconfig          | 4 ++--
->  drivers/pinctrl/bcm/Kconfig           | 4 ++--
->  drivers/reset/Kconfig                 | 2 +-
->  drivers/soc/bcm/bcm63xx/Kconfig       | 4 ++--
->  drivers/tty/serial/Kconfig            | 4 ++--
->  drivers/watchdog/Kconfig              | 2 +-
->  10 files changed, 18 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 45a4e9f1b639..fd9a4dd01997 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -487,8 +487,8 @@ config I2C_BCM_KONA
-> 
->  config I2C_BRCMSTB
->  	tristate "BRCM Settop/DSL I2C controller"
-> -	depends on ARCH_BCM2835 || ARCH_BCM4908 || ARCH_BCMBCA || \
-> -		   ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-> +	depends on ARCH_BCM2835 || ARCH_BCMBCA || ARCH_BRCMSTB || \
-> +		   BMIPS_GENERIC || COMPILE_TEST
->  	default y
->  	help
->  	  If you say yes to this option, support will be included for the
-> diff --git a/drivers/mtd/parsers/Kconfig b/drivers/mtd/parsers/Kconfig
-> index b43df73927a0..d6db655a1d24 100644
-> --- a/drivers/mtd/parsers/Kconfig
-> +++ b/drivers/mtd/parsers/Kconfig
-> @@ -69,8 +69,8 @@ config MTD_OF_PARTS
-> 
->  config MTD_OF_PARTS_BCM4908
->  	bool "BCM4908 partitioning support"
-> -	depends on MTD_OF_PARTS && (ARCH_BCM4908 || COMPILE_TEST)
-> -	default ARCH_BCM4908
-> +	depends on MTD_OF_PARTS && (ARCH_BCMBCA || COMPILE_TEST)
-> +	default ARCH_BCMBCA
->  	help
->  	  This provides partitions parser for BCM4908 family devices
->  	  that can have multiple "firmware" partitions. It takes care of
-> @@ -78,7 +78,7 @@ config MTD_OF_PARTS_BCM4908
-> 
->  config MTD_OF_PARTS_LINKSYS_NS
->  	bool "Linksys Northstar partitioning support"
-> -	depends on MTD_OF_PARTS && (ARCH_BCM_5301X || ARCH_BCM4908 || 
-> COMPILE_TEST)
-> +	depends on MTD_OF_PARTS && (ARCH_BCM_5301X || ARCH_BCMBCA || 
-> COMPILE_TEST)
->  	default ARCH_BCM_5301X
->  	help
->  	  This provides partitions parser for Linksys devices based on 
-> Broadcom
-> diff --git a/drivers/net/ethernet/broadcom/Kconfig
-> b/drivers/net/ethernet/broadcom/Kconfig
-> index 56e0fb07aec7..f4e1ca68d831 100644
-> --- a/drivers/net/ethernet/broadcom/Kconfig
-> +++ b/drivers/net/ethernet/broadcom/Kconfig
-> @@ -53,8 +53,8 @@ config B44_PCI
-> 
->  config BCM4908_ENET
->  	tristate "Broadcom BCM4908 internal mac support"
-> -	depends on ARCH_BCM4908 || COMPILE_TEST
-> -	default y if ARCH_BCM4908
-> +	depends on ARCH_BCMBCA || COMPILE_TEST
-> +	default y if ARCH_BCMBCA
->  	help
->  	  This driver supports Ethernet controller integrated into Broadcom
->  	  BCM4908 family SoCs.
-> diff --git a/drivers/pci/controller/Kconfig 
-> b/drivers/pci/controller/Kconfig
-> index d1c5fcf00a8a..bfd9bac37e24 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -274,7 +274,7 @@ config VMD
-> 
->  config PCIE_BRCMSTB
->  	tristate "Broadcom Brcmstb PCIe host controller"
-> -	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM4908 || \
-> +	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCMBCA || \
->  		   BMIPS_GENERIC || COMPILE_TEST
->  	depends on OF
->  	depends on PCI_MSI_IRQ_DOMAIN
-> diff --git a/drivers/phy/broadcom/Kconfig 
-> b/drivers/phy/broadcom/Kconfig
-> index 93a6a8ee4716..1d89a2fd9b79 100644
-> --- a/drivers/phy/broadcom/Kconfig
-> +++ b/drivers/phy/broadcom/Kconfig
-> @@ -93,11 +93,11 @@ config PHY_BRCM_SATA
-> 
->  config PHY_BRCM_USB
->  	tristate "Broadcom STB USB PHY driver"
-> -	depends on ARCH_BCM4908 || ARCH_BRCMSTB || COMPILE_TEST
-> +	depends on ARCH_BCMBCA || ARCH_BRCMSTB || COMPILE_TEST
->  	depends on OF
->  	select GENERIC_PHY
->  	select SOC_BRCMSTB if ARCH_BRCMSTB
-> -	default ARCH_BCM4908 || ARCH_BRCMSTB
-> +	default ARCH_BCMBCA || ARCH_BRCMSTB
->  	help
->  	  Enable this to support the Broadcom STB USB PHY.
->  	  This driver is required by the USB XHCI, EHCI and OHCI
-> diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
-> index 8f4d89806fcb..35b51ce4298e 100644
-> --- a/drivers/pinctrl/bcm/Kconfig
-> +++ b/drivers/pinctrl/bcm/Kconfig
-> @@ -31,13 +31,13 @@ config PINCTRL_BCM2835
-> 
->  config PINCTRL_BCM4908
->  	tristate "Broadcom BCM4908 pinmux driver"
-> -	depends on OF && (ARCH_BCM4908 || COMPILE_TEST)
-> +	depends on OF && (ARCH_BCMBCA || COMPILE_TEST)
->  	select PINMUX
->  	select PINCONF
->  	select GENERIC_PINCONF
->  	select GENERIC_PINCTRL_GROUPS
->  	select GENERIC_PINMUX_FUNCTIONS
-> -	default ARCH_BCM4908
-> +	default ARCH_BCMBCA
->  	help
->  	  Driver for BCM4908 family SoCs with integrated pin controller.
-> 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index f9a7cee01659..7ae71535fe2a 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -201,7 +201,7 @@ config RESET_SCMI
-> 
->  config RESET_SIMPLE
->  	bool "Simple Reset Controller Driver" if COMPILE_TEST || EXPERT
-> -	default ARCH_ASPEED || ARCH_BCM4908 || ARCH_BITMAIN || ARCH_REALTEK
-> || ARCH_STM32 || (ARCH_INTEL_SOCFPGA && ARM64) || ARCH_SUNXI || ARC
-> +	default ARCH_ASPEED || ARCH_BCMBCA || ARCH_BITMAIN || ARCH_REALTEK
-> || ARCH_STM32 || (ARCH_INTEL_SOCFPGA && ARM64) || ARCH_SUNXI || ARC
->  	help
->  	  This enables a simple reset controller driver for reset lines that
->  	  that can be asserted and deasserted by toggling bits in a 
-> contiguous,
-> diff --git a/drivers/soc/bcm/bcm63xx/Kconfig 
-> b/drivers/soc/bcm/bcm63xx/Kconfig
-> index 9e501c8ac5ce..355c34482076 100644
-> --- a/drivers/soc/bcm/bcm63xx/Kconfig
-> +++ b/drivers/soc/bcm/bcm63xx/Kconfig
-> @@ -13,8 +13,8 @@ endif # SOC_BCM63XX
-> 
->  config BCM_PMB
->  	bool "Broadcom PMB (Power Management Bus) driver"
-> -	depends on ARCH_BCM4908 || (COMPILE_TEST && OF)
-> -	default ARCH_BCM4908
-> +	depends on ARCH_BCMBCA || (COMPILE_TEST && OF)
-> +	default ARCH_BCMBCA
->  	select PM_GENERIC_DOMAINS if PM
->  	help
->  	  This enables support for the Broadcom's PMB (Power Management Bus) 
-> that
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index e3279544b03c..f32bb01c3feb 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1100,8 +1100,8 @@ config SERIAL_TIMBERDALE
->  config SERIAL_BCM63XX
->  	tristate "Broadcom BCM63xx/BCM33xx UART support"
->  	select SERIAL_CORE
-> -	depends on ARCH_BCM4908 || ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
-> || COMPILE_TEST
-> -	default ARCH_BCM4908 || ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
-> +	depends on ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC || COMPILE_TEST
-> +	default ARCH_BCMBCA || BCM63XX || BMIPS_GENERIC
->  	help
->  	  This enables the driver for the onchip UART core found on
->  	  the following chipsets:
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 32fd37698932..1f85ec8a4b3b 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1798,7 +1798,7 @@ config BCM7038_WDT
->  	tristate "BCM63xx/BCM7038 Watchdog"
->  	select WATCHDOG_CORE
->  	depends on HAS_IOMEM
-> -	depends on ARCH_BCM4908 || ARCH_BRCMSTB || BMIPS_GENERIC || BCM63XX
-> || COMPILE_TEST
-> +	depends on ARCH_BCMBCA || ARCH_BRCMSTB || BMIPS_GENERIC || BCM63XX
-> || COMPILE_TEST
->  	help
->  	  Watchdog driver for the built-in hardware in Broadcom 7038 and
->  	  later SoCs used in set-top boxes.  BCM7038 was made public
+
+I'd be fine with that.
+I'd also be satisfied with a comment in the Rust that the C guarantees a
+non-NULL where that is the case.  That would at least demonstrate that the
+possibility has been duly considered.
+
+Cheers,
+Kent.
