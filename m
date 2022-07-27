@@ -2,149 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42076582016
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 08:26:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39B3658201E
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 08:31:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229594AbiG0G0H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jul 2022 02:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        id S229780AbiG0GbA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jul 2022 02:31:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229659AbiG0G0G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 02:26:06 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BBF51DA78
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:26:05 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id w185so15288954pfb.4
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aLGOqyPO/x+urXGUVpWB46qIn9W4Rib42ZRW8p8vwJU=;
-        b=IHpL1UE+PFmgylT2Tfr+1vQYou69u0OIn+LzD5KKBdBCHgXAZMdmFUBB5quVxjLlJf
-         NvjpN5wOof5hgqfSSxmfSM/UUDh2DNEbgY2t9j5DYKz7+tCh66LsyGahSnU6IqOM93px
-         UktE9J8zQmhHOKSzYYAPfakstHHb5SGxmmG35FE2G5iaQeBl7piFBbgyGV+Fac728Egl
-         +xnJQMfz6yLlHpvCPUtsoURvMEe11d1iNfsQkKtzZ90Y5qx4dRRMc4zkpozdXd8Rl+lS
-         6iqrKa+SD0ZsWmer3ZGC/r/V+HIYc4XUpunY5UjHcwQuEaWsICDWJx/xpPT7h1ixdSyF
-         mEhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aLGOqyPO/x+urXGUVpWB46qIn9W4Rib42ZRW8p8vwJU=;
-        b=2AEgCK1x4jRqqHRca24oLovOW2nClcDwSom9+DzbO664iY2uTuXOVDpbMbn0XEh2Mo
-         j9dkSZKIXwRyBcWjLBT5Rgj/SlI0rjwz9cAwsEjyq5y10OBMACj9PcMH0CZQgo8Hyp0M
-         eqxdcJLPNlhVGTrxH9lUdjKg8ey6X7o6AgZH9Bc37H6jwukRkqdNoArW3g48QLFc2vWN
-         ZKIHhytdzuvlWQJ+jCHq66t0CzDGa6rgwY3+g7U9wgh9cThipvwkCwjzuruOCnkX5QxH
-         /8Tudl7QS4XxoWT2PnJ8nvngHqxONYuIw81t1lkCmg3Re+5kVeuLNzilyzhpKlObBjeH
-         BnBw==
-X-Gm-Message-State: AJIora9CcnjVY9WhfzPL8MUKXAkACJ/wTCqacrCc3Yf5VrBQh7UwEG8c
-        J650nP3CEeN4QiX5fx43H0w=
-X-Google-Smtp-Source: AGRyM1ts2DGFDSILKSn2XD0dkpXhiXg0cvehc+B5qUE9Wz7wNgZU2uQX8Khbt06+wI0I5iogEYo3vQ==
-X-Received: by 2002:a63:1e10:0:b0:41a:ee1c:290a with SMTP id e16-20020a631e10000000b0041aee1c290amr11586875pge.196.1658903164500;
-        Tue, 26 Jul 2022 23:26:04 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id d17-20020a170902ced100b0016c59b38254sm5450834plg.127.2022.07.26.23.26.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 23:26:04 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 14:25:57 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 8/8] libgpiod: Integrate building of rust bindings
- with make
-Message-ID: <20220727062557.GA111905@sol>
-References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <584910baf342bee3511361c3e486ad4f3e5437f2.1657279685.git.viresh.kumar@linaro.org>
- <20220727025903.GH88787@sol>
- <20220727061824.lune6xhtv2hpgidv@vireshk-i7>
+        with ESMTP id S229766AbiG0Ga4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 02:30:56 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9412B7CD
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658903455; x=1690439455;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/2xRLB5pkGKy+2C6Nlr9BoHm9PaMnC3SrMFTUnenFso=;
+  b=JVcxpa1ZxgScoW40x3EhRe1YFlSuAygRrTfyzcK6FFiIlQELEbDqn2dS
+   cmL1xmCCsENkDbEQTvXO4tGrWF8BRd3bmMFgcJjbzznkDDJ4Es8JvXXYd
+   PM+AmBZ77uVMz8MiQ+MCPrGPyKHurBxtfBd8cUJ3BdyOul1IdgBvJ/2EL
+   Knpxo3+YQwK3S/c6PRcxnmbmFBQPZEQvyhvVP7CKVhhR6lPdytDYfr2m3
+   uiA6LXITMhYSRlCU5rlpzw0nr8Fdunq0kJg2jKze6vAekxUsfCjCxSoxf
+   zbPfaoQgxGU4ElwrhH6Xw2EBHumJyLDrwGVVQja00ekmmjB3gl4kOqxTE
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10420"; a="313934578"
+X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
+   d="scan'208";a="313934578"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2022 23:30:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
+   d="scan'208";a="742535861"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jul 2022 23:30:54 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oGaZJ-0008PQ-2A;
+        Wed, 27 Jul 2022 06:30:53 +0000
+Date:   Wed, 27 Jul 2022 14:30:06 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ f2a2f2c9aed21944095c2f867640a9089759c7e7
+Message-ID: <62e0db6e.iOUigg2RoOZ0WrxS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220727061824.lune6xhtv2hpgidv@vireshk-i7>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 27, 2022 at 11:48:24AM +0530, Viresh Kumar wrote:
-> On 27-07-22, 10:59, Kent Gibson wrote:
-> > Wouldn't build for me on a Debian bullseye VM.
-> > Apparently bindgen requires clang to find the system headers [1][2],
-> 
-> Right.
-> 
-> > and
-> > there is no dep check or warning about that.
-> 
-> Ahh, I need to add that somewhere then.
-> 
-> > Also not sure why the build wanted bindgen, as by default it uses the
-> > pre-generated bindings?
-> 
-> Did you enable tests as well ? That enables "gpiosim", which enables "generate"
-> and bindgen will be required.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: f2a2f2c9aed21944095c2f867640a9089759c7e7  gpio: xilinx: add missing blank line after declarations
 
-Ahh, yeah I do --enable-tests as well.
+elapsed time: 725m
 
-> 
-> I thought it will be better to build bindings everytime for tests.
-> 
+configs tested: 92
+configs skipped: 2
 
-So you can't run tests on those platforms where bindgen is problematic?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > Anyway, for reference this was the build error without clang installed:
-> 
-> Did it work for you after clang was installed ?
-> 
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+arc                        nsimosci_defconfig
+s390                             allmodconfig
+sh                          rsk7264_defconfig
+arm64                               defconfig
+arm                        spear6xx_defconfig
+sh                               j2_defconfig
+powerpc                  iss476-smp_defconfig
+mips                       capcella_defconfig
+powerpc                         ps3_defconfig
+arm                        keystone_defconfig
+m68k                       m5275evb_defconfig
+arm                        shmobile_defconfig
+mips                         mpc30x_defconfig
+powerpc                 mpc837x_rdb_defconfig
+nios2                            allyesconfig
+arc                          axs103_defconfig
+nios2                               defconfig
+m68k                         apollo_defconfig
+um                                  defconfig
+parisc                           allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+ia64                             allmodconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a002
+x86_64                        randconfig-a004
+x86_64                        randconfig-a006
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+s390                 randconfig-r044-20220724
+riscv                randconfig-r042-20220724
+arc                  randconfig-r043-20220724
+s390                 randconfig-r044-20220726
+riscv                randconfig-r042-20220726
+arc                  randconfig-r043-20220726
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-Yeah, all good once clang was installed.
+clang tested configs:
+arm                        multi_v5_defconfig
+powerpc                          allmodconfig
+mips                  cavium_octeon_defconfig
+powerpc               mpc834x_itxgp_defconfig
+powerpc                 mpc836x_rdk_defconfig
+mips                           rs90_defconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+hexagon              randconfig-r041-20220724
+hexagon              randconfig-r045-20220724
 
-Cheers,
-Kent.
-
-> > 
-> > ...
-> >    Compiling thiserror v1.0.31
-> >    Compiling libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)
-> > error: failed to run custom build command for `libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)`
-> > 
-> > Caused by:
-> >   process didn't exit successfully: `/home/dev/libgpiod/bindings/rust/target/release/build/libgpiod-sys-0fb8ce8170c88d8f/build-script-build` (exit status: 101)
-> >   --- stdout
-> >   cargo:rerun-if-changed=wrapper.h
-> >   cargo:rerun-if-changed=../../../lib/chip.c
-> >   cargo:rerun-if-changed=../../../lib/chip-info.c
-> >   cargo:rerun-if-changed=../../../lib/edge-event.c
-> >   cargo:rerun-if-changed=../../../lib/info-event.c
-> >   cargo:rerun-if-changed=../../../lib/internal.c
-> >   cargo:rerun-if-changed=../../../lib/line-config.c
-> >   cargo:rerun-if-changed=../../../lib/line-info.c
-> >   cargo:rerun-if-changed=../../../lib/line-request.c
-> >   cargo:rerun-if-changed=../../../lib/misc.c
-> >   cargo:rerun-if-changed=../../../lib/request-config.c
-> >   cargo:rerun-if-changed=../../../tests/gpiosim/gpiosim.c
-> >   cargo:rerun-if-changed=gpiosim_wrapper.h
-> >   cargo:rustc-link-lib=kmod
-> >   cargo:rustc-link-lib=mount
-> > 
-> >   --- stderr
-> >   /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found
-> >   /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found, err: true
-> >   thread 'main' panicked at 'Unable to generate bindings: ()', libgpiod-sys/build.rs:42:10
-> 
-> -- 
-> viresh
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
