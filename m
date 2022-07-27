@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9BF0581FFD
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 08:18:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90BDF582000
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 08:20:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbiG0GS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jul 2022 02:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36932 "EHLO
+        id S229524AbiG0GUO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jul 2022 02:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiG0GS3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 02:18:29 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE41402D0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:18:28 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id t2-20020a17090a4e4200b001f21572f3a4so1206657pjl.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:18:28 -0700 (PDT)
+        with ESMTP id S229493AbiG0GUN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 02:20:13 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BDEFF9
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:20:12 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id q22so9946311pgt.9
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:20:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=z1ju9hkv6KliBdMMf78zfJE2ka4ceX95a34zeGO4f3U=;
-        b=ooVQj6Oqy+gBO064fl+LSN0pb5mQ8WM9xs/vMKfOVMvHIFxCEzhRW/s0XKhqgqjoQ3
-         GzMZ7xQbsvtmH1kotlxIaYMBDO8hqtLkW7B7sSSK9plcV3l2anbodheOrfonVQdHpngy
-         01Yt5cH2Qe9Snf9FO+OxB1K1JAp+A1wqWQoxFVnpW7CPB1rJEoFGEt719QEN1hQ7HPYh
-         A2RFN/YAJ6IrJ4vjH4fHaO4xsZg/M9dURqdncdOFbpZVouHi2qkrGYe8uFdiomjS7gcQ
-         H70CXUNIAIcrMGJcIqp0W+4lTmXteEIK5q/oKQSszkRf5G4bPKgUImaDVJerIZTMbFjh
-         zNxQ==
+        bh=J4XgR/OTjcKwF4jFDksTbOEVq7B2pjp9eo4JEUL8Kwo=;
+        b=mSLVc19sYLV1KqbFsRlnlmoJcZBRVFp9yTRYBf9dTQMQxWdYi2N8BYxP58DVMcu1rG
+         Ygv9kVvB7IGc81H5XH/rYR3vL5AVsDPoitiSk3HJ+RABWKBdH7rsiUVVwTT9LIcGpFaE
+         +thA3qZZ/PLACPPfXTCqYzt9sK30ftRgQZjMf/QWysPCO+Hr/1zv32oszvQLlkSGW8H4
+         GaJSnSrvvOv5P6a9AjeiFtWpSXDEVT5AvLxQMxDZHhsbs90HJjYvnUkLQ/NZrEat5xCd
+         43DMqtg79ANI1EG1LKwU6b5RNrEgOPs8/QzFXP/sFU9sWb6/O3C3tjkCTnNF8ITnhdN5
+         SHSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=z1ju9hkv6KliBdMMf78zfJE2ka4ceX95a34zeGO4f3U=;
-        b=Y/bF99JDI4ZAhv9EVMbSA9+ttD+BWspR/L9+ZQHgTFIWRYVvbA5xcSCLE8oo4yZp5J
-         XMfrRKVPUoxlX//y9ix61St+DCHuAZ4+OuUmwU/AwLORImVlOf4p9g2ZGe55Lj75ql9I
-         rKzy0aRE9Erx3b6rWiBirTVPbj0qmVQn6qqK1MfMxa7IMrQLkxJOxAcl2wj7aHGeINBQ
-         2H6vcUbOwx14BTX2KMlOuHmhjfsyPEVvDKfyCQc4Ax2MF2Na5n6WyRk66XdJgsu5Qsw2
-         btMRZOhZfHuaX7A58zV9ZRIVhf3z4Ace9TDXplAWXeU/ATO7ST5BGO8ZG+xN6Iu8GlIR
-         xPaA==
-X-Gm-Message-State: AJIora8CON1nwEE30TKPYp57B6PSiLucLndZIp9mEgCx2kIas8hqH3SD
-        Fatux5M7IaDC3/nu0/XX4BuViA==
-X-Google-Smtp-Source: AGRyM1s3OhBxgoiYKLQMjnVFMoJ+l/IQmrbEIpoyrO4H+S6DurOK8yck35a9D0JfFQrP5f3m6+Ov/Q==
-X-Received: by 2002:a17:90b:b03:b0:1f3:6fb:bd20 with SMTP id bf3-20020a17090b0b0300b001f306fbbd20mr2496197pjb.38.1658902707982;
-        Tue, 26 Jul 2022 23:18:27 -0700 (PDT)
+        bh=J4XgR/OTjcKwF4jFDksTbOEVq7B2pjp9eo4JEUL8Kwo=;
+        b=AtqxI6u6E4PS2h0HytFUvfpRTD5ms5tK9hZgaiYV33d3osh2NMRqYBHUY2JrRoKDqI
+         /+Fq5S34beYOYamf+jdRWrVZ6z+kosrg1pzL5liUXOWONVMZ26irlkjsObIEjgOOZVdO
+         H6atiZRaSri/NtHoc+C8ca9PRt2sUYISBLfLAq9Y94OgX6AnhjDVITNM/QvWLHJKzL8q
+         WawBgibPMMb4qkVEoE32q8fNJcmCBLgm1VJFaNDbadXEc6pd0WAznhlLTsQ+3wMDfFhP
+         WLyWhrbKVpBltg7JJ5H9S8fjLYmDJLdcAdsuzCZSKc3VwBZb1BhyXH4x27rsMl36TUG7
+         gWsQ==
+X-Gm-Message-State: AJIora8cQzSqa5D3+8n/I6cKwCt6NHhjc1RuUmOze2WuzI82k7aDKSGb
+        1s2F+re/knyCq4kN9366r11IqQ==
+X-Google-Smtp-Source: AGRyM1veXwn5VHxnYOWDszYm/LVM6YwfMNOdFNITDcjh2l7kWfmh27JQNl69Z2/gAbo4EikZpMK3wg==
+X-Received: by 2002:a05:6a00:8cb:b0:510:9ec4:8f85 with SMTP id s11-20020a056a0008cb00b005109ec48f85mr20274882pfu.24.1658902811562;
+        Tue, 26 Jul 2022 23:20:11 -0700 (PDT)
 Received: from localhost ([122.171.18.80])
-        by smtp.gmail.com with ESMTPSA id s188-20020a625ec5000000b0050dc7628148sm12736177pfb.34.2022.07.26.23.18.26
+        by smtp.gmail.com with ESMTPSA id l9-20020a170902f68900b0016c1f05a8fasm9168211plg.182.2022.07.26.23.20.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 23:18:27 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 11:48:24 +0530
+        Tue, 26 Jul 2022 23:20:11 -0700 (PDT)
+Date:   Wed, 27 Jul 2022 11:50:09 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -59,16 +59,15 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
         stratos-dev@op-lists.linaro.org,
         Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 8/8] libgpiod: Integrate building of rust bindings
- with make
-Message-ID: <20220727061824.lune6xhtv2hpgidv@vireshk-i7>
+Subject: Re: [PATCH V4 6/8] libgpiod: Derive debug traits for few definitions
+Message-ID: <20220727062009.mry2z4phrft7aas7@vireshk-i7>
 References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <584910baf342bee3511361c3e486ad4f3e5437f2.1657279685.git.viresh.kumar@linaro.org>
- <20220727025903.GH88787@sol>
+ <490e4efc900d8173fb3e2f1373c97e1a20cb9ac3.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025832.GF88787@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220727025903.GH88787@sol>
+In-Reply-To: <20220727025832.GF88787@sol>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -78,58 +77,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 27-07-22, 10:59, Kent Gibson wrote:
-> Wouldn't build for me on a Debian bullseye VM.
-> Apparently bindgen requires clang to find the system headers [1][2],
-
-Right.
-
-> and
-> there is no dep check or warning about that.
-
-Ahh, I need to add that somewhere then.
-
-> Also not sure why the build wanted bindgen, as by default it uses the
-> pre-generated bindings?
-
-Did you enable tests as well ? That enables "gpiosim", which enables "generate"
-and bindgen will be required.
-
-I thought it will be better to build bindings everytime for tests.
-
-> Anyway, for reference this was the build error without clang installed:
-
-Did it work for you after clang was installed ?
-
+On 27-07-22, 10:58, Kent Gibson wrote:
+> On Fri, Jul 08, 2022 at 05:04:59PM +0530, Viresh Kumar wrote:
+> > These are required for tests, which will be added by a later commit.
+> > 
 > 
-> ...
->    Compiling thiserror v1.0.31
->    Compiling libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)
-> error: failed to run custom build command for `libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)`
+> Squash this patch into patch 4, as you know you will need them
+> eventually.  All public types should implement Debug[1].
 > 
-> Caused by:
->   process didn't exit successfully: `/home/dev/libgpiod/bindings/rust/target/release/build/libgpiod-sys-0fb8ce8170c88d8f/build-script-build` (exit status: 101)
->   --- stdout
->   cargo:rerun-if-changed=wrapper.h
->   cargo:rerun-if-changed=../../../lib/chip.c
->   cargo:rerun-if-changed=../../../lib/chip-info.c
->   cargo:rerun-if-changed=../../../lib/edge-event.c
->   cargo:rerun-if-changed=../../../lib/info-event.c
->   cargo:rerun-if-changed=../../../lib/internal.c
->   cargo:rerun-if-changed=../../../lib/line-config.c
->   cargo:rerun-if-changed=../../../lib/line-info.c
->   cargo:rerun-if-changed=../../../lib/line-request.c
->   cargo:rerun-if-changed=../../../lib/misc.c
->   cargo:rerun-if-changed=../../../lib/request-config.c
->   cargo:rerun-if-changed=../../../tests/gpiosim/gpiosim.c
->   cargo:rerun-if-changed=gpiosim_wrapper.h
->   cargo:rustc-link-lib=kmod
->   cargo:rustc-link-lib=mount
-> 
->   --- stderr
->   /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found
->   /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found, err: true
->   thread 'main' panicked at 'Unable to generate bindings: ()', libgpiod-sys/build.rs:42:10
+> They should also implement Clone, Eq, PartialEq and Default where
+> that makes sense.  And Copy if you are sure you wont add something
+> non-Copyable to them in the future.
+
+Sure, will define few more for all public structures.
 
 -- 
 viresh
