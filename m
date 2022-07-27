@@ -2,139 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC72E582773
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 15:15:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D0DA582804
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 15:55:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232704AbiG0NPi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jul 2022 09:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54174 "EHLO
+        id S233175AbiG0NzL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jul 2022 09:55:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233724AbiG0NPg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 09:15:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AFB33275C7
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 06:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658927731;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+U2SMjrAZx6a3vXMCUjxlR0K/3DAi/IYsuGYocVm8PM=;
-        b=BrtCn2yqmPK2MB4wJdxYVqz4Zzrf9V4ppgdbwt3quJ0HCwxLylHq4Sm36DZOVO2g4K+zce
-        wnbsGDFOk65K81sJApK4UpBxSXk8tCmYisryrbRza/RVhM+pENy3+k8d3l0hHVtQEokUvq
-        JrAh82wYsUVo8cx+FB1fO0Ret3Tf7Fw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-206-_ZMMFSvMPqGJFLcbiG0SUA-1; Wed, 27 Jul 2022 09:15:30 -0400
-X-MC-Unique: _ZMMFSvMPqGJFLcbiG0SUA-1
-Received: by mail-ej1-f70.google.com with SMTP id nb10-20020a1709071c8a00b006e8f89863ceso5152359ejc.18
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 06:15:30 -0700 (PDT)
+        with ESMTP id S232891AbiG0NzK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 09:55:10 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DA333364
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 06:55:05 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id p10so19709795lfd.9
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 06:55:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sdiNy+K85E6T6Q5Cx2+M4h0HkFCwZdyqW9o88JSTZPk=;
+        b=ouwOadP/hMPQTv7thHahdc2e7AKPdNrRyZIzuSCyE6KR79AcLZ1PgpjXmT9MMsFFe+
+         1zA+2ZTzeceEo5I43eLCqk2H6A2UNkkIWR1Ep1nEs2pSVxW15D9AJtlMxSubnfRudbeL
+         oh3nDontOF+AHAGff/Yfw9dGU+wytr6YSTkhz8ZAqI2ceTI3z6o6Ti+NKFXZA9LtRIw3
+         cOAFYT4cGMahOlgmJmmquCa03KI5Bu0PEFQ9bXriZjGWS3+bC84X2IYQAC4pJ30/IASp
+         XiqU9TEEtOyhGcOEcVk+G36+de7briY0Ic0XEgACqvi9cyLvpPbAMwAG0U6qVJe8dzz4
+         acjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+U2SMjrAZx6a3vXMCUjxlR0K/3DAi/IYsuGYocVm8PM=;
-        b=jvwsqBj7kYtcbcm4TFovyz8EuV4SgADFJYcrrqCPAwX7UFPY3/vu5y5rugoX7NTlFK
-         /KbGKcYzPv7/GJaszSNX6TXitIvYBVOaGPkGAOZfMJluaZwAciUeY1Z2sSKwnmANG0HW
-         70eykHYF+wa+WYFkMCZ616PsnU1IaP8nb1g0ZDCktI1S5zBPOvhpehMWqKS68BBAiDfF
-         Hbe78WC6Kw26IovFSXVZMI7u712apCkBG80Zfuq5NasCtNPb+G13+KHFmmAcFmvmKPjx
-         9QH60T/oPL02k8w+DyKCDlVK5zPDPFlhCo6MqkTpUIKuz6t0jmvhYTB9nMmc3f3h+Uxv
-         681g==
-X-Gm-Message-State: AJIora8z7RuzeKOT+HjPBo+Rz0gZalEsx+mPAwrWC1mwaHkVyDLbPQ/P
-        yYyADoZPbvXlFCayUiDU/lkUlNEWqb+y5T2eHWAo7OIkw/+f9nPJNf4FzIFjDeN43o/m07/fbv5
-        CNJvbr4iCpYJelsw+EnZ5ww==
-X-Received: by 2002:aa7:c599:0:b0:43b:b7c8:36ff with SMTP id g25-20020aa7c599000000b0043bb7c836ffmr23067783edq.110.1658927729163;
-        Wed, 27 Jul 2022 06:15:29 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uQBCa2+G+jTdUedn1Ozel7kHw3Vtt+HOUWRygOCweoJHcBFw76XKlCNA93hHF3POGePgt8YQ==
-X-Received: by 2002:aa7:c599:0:b0:43b:b7c8:36ff with SMTP id g25-20020aa7c599000000b0043bb7c836ffmr23067763edq.110.1658927729007;
-        Wed, 27 Jul 2022 06:15:29 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id u17-20020a1709061db100b0072aeda86ac3sm7689731ejh.149.2022.07.27.06.15.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jul 2022 06:15:28 -0700 (PDT)
-Message-ID: <9c7c86da-9114-8d68-38f0-ec8284b79af0@redhat.com>
-Date:   Wed, 27 Jul 2022 15:15:27 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sdiNy+K85E6T6Q5Cx2+M4h0HkFCwZdyqW9o88JSTZPk=;
+        b=eBCO9wtycf0aMBisqx95iuYWeP5bjV5b/4Rrp9riPybiG+wFRV+bbnpNLYTyuizKzF
+         ndfg6y/jCs0zXgDbwwnAfu5hQ063HUkl6GFOMPCvJDDIBuYV0BTLYCwTGlzv41zIsqNN
+         sT7PKU4rvMnDodsnXxjnEXS5c5CC8a1XvQ8MqpcDH7QcYYl7u6in3tln6iUMYRCKjzV2
+         JJGsNJM1C+KNUVuPf6DtF/+jOOtSsczMZZjS1Mfeav7Hdu3rDFQQobdrhzC+ObJqggZh
+         odfyl/g6l152HtQMWs+4hs31NY3VchMzKhprCo3V4x4+TvzeJVBX67DOZ5xMp/PkSK7W
+         ZXUQ==
+X-Gm-Message-State: AJIora8yM2xtYZt2TYeIyk2wSqgRFKrMFhgbkZowBjYjACPoR4cNKgR+
+        rBiTXiRJsIkeJHHI4/XVw7jyBlaBQNezYwZwmvjiUw==
+X-Google-Smtp-Source: AGRyM1sNAQoXPZGQGR853MTNOGh+Bg6eDRkS0Wih4mISvpT8XTjJxWzxG6yZi37ackDpTTd4Ki6S1sp/2dZXQtCrhIQ=
+X-Received: by 2002:a05:6512:1320:b0:488:8fcc:e196 with SMTP id
+ x32-20020a056512132000b004888fcce196mr8068316lfu.602.1658930103636; Wed, 27
+ Jul 2022 06:55:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 2/2] gpiolib: acpi: Add a quirk for Asus UM325UAZ
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20220727013349.3056826-1-saravanak@google.com>
+In-Reply-To: <20220727013349.3056826-1-saravanak@google.com>
+From:   Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Wed, 27 Jul 2022 16:54:52 +0300
+Message-ID: <CAPLW+4kwcE3itHaJZUt23_EUdbb3emXbfrcAjXvhm10d53oFCg@mail.gmail.com>
+Subject: Re: [PATCH v1] pinctrl: samsung: Finish initializing the gpios before
+ registering them
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Pavel Krc <reg.krn@pkrc.net>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220719142142.247-1-mario.limonciello@amd.com>
- <20220719142142.247-2-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220719142142.247-2-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 7/19/22 16:21, Mario Limonciello wrote:
-> Asus UM325UAZ has GPIO 18 programmed as both an interrupt and a wake
-> source, but confirmed with internal team on this design this pin is
-> floating and shouldn't have been programmed. This causes lots of
-> spurious IRQs on the system and horrendous battery life.
-> 
-> Add a quirk to ignore attempts to program this pin on this system.
-> 
-> Reported-and-tested-by: Pavel Krc <reg.krn@pkrc.net>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216208
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
+On Wed, 27 Jul 2022 at 04:33, Saravana Kannan <saravanak@google.com> wrote:
+>
+> As soon as a gpio is registered, it should be usable by a consumer. So,
+> do all the initialization before registering the gpios. Without this
+> change, a consumer can request a GPIO IRQ and have the gpio to IRQ
+> mapping fail.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 > ---
->  drivers/gpio/gpiolib-acpi.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 375942d92d6f..2149713ea8f1 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -1586,6 +1586,20 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
->  			.ignore_wake = "INT33FF:01@0",
->  		},
->  	},
-> +	{
-> +		/*
-> +		 * Interrupt storm caused from edge triggered floating pin
-> +		 * Found in BIOS UX325UAZ.300
-> +		 * https://bugzilla.kernel.org/show_bug.cgi?id=216208
-> +		 */
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "ZenBook UX325UAZ_UM325UAZ"),
-> +		},
-> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-> +			.ignore_interrupt = "AMDI0030:00@18",
-> +		},
-> +	},
->  	{} /* Terminating entry */
->  };
->  
 
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+
+>  drivers/pinctrl/samsung/pinctrl-samsung.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> index 26d309d2516d..a302b38a63a8 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> @@ -1168,15 +1168,15 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+>         if (ret)
+>                 goto err_put_banks;
+>
+> -       ret = samsung_gpiolib_register(pdev, drvdata);
+> -       if (ret)
+> -               goto err_unregister;
+> -
+>         if (ctrl->eint_gpio_init)
+>                 ctrl->eint_gpio_init(drvdata);
+>         if (ctrl->eint_wkup_init)
+>                 ctrl->eint_wkup_init(drvdata);
+>
+> +       ret = samsung_gpiolib_register(pdev, drvdata);
+> +       if (ret)
+> +               goto err_unregister;
+> +
+>         platform_set_drvdata(pdev, drvdata);
+>
+>         return 0;
+> --
+> 2.37.1.359.gd136c6c3e2-goog
+>
