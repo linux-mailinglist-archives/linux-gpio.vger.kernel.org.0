@@ -2,129 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C05A6581FD0
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 08:06:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9BF0581FFD
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 08:18:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbiG0GGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jul 2022 02:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
+        id S229576AbiG0GS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jul 2022 02:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbiG0GGo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 02:06:44 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF893F324
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:06:43 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id h132so15068661pgc.10
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:06:43 -0700 (PDT)
+        with ESMTP id S229501AbiG0GS3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 02:18:29 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE41402D0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:18:28 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id t2-20020a17090a4e4200b001f21572f3a4so1206657pjl.0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 23:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=CYT+RAnLT8l9VJ2gJRi7trKYrP24IbM1jQObs/oVyPQ=;
-        b=hmTfkvRFYNWG5lWduC++uOSJebFpELcBpNF4YuuWHhEX3s/zi0L3HOape8FQM00f+q
-         D+X/Ag+4E+UCti0AYY9NvKmh1xifaNEeLUtcwsTjbFmGhKDWYY0l0hKG39AO+B70bp8g
-         tP8InuPdsUdz5aeUlGJZJajUSIrdHb6xQXrYa+1PP5s1QZ24fXXX6PFvjSCkCX1wjQbX
-         Oo6nWKjYTiX24MBtL8cQW2vD7BN1y8BpMHaxwvHOXgJh42PB2XDNFn0/532qcTGrxuJK
-         d2M6zrc4MvYPpuEz4NOPXu/cncJ0q2NbvlqN34GmFCHVtRKY58UQQ+uCvSiCXIct663B
-         q2zA==
+        bh=z1ju9hkv6KliBdMMf78zfJE2ka4ceX95a34zeGO4f3U=;
+        b=ooVQj6Oqy+gBO064fl+LSN0pb5mQ8WM9xs/vMKfOVMvHIFxCEzhRW/s0XKhqgqjoQ3
+         GzMZ7xQbsvtmH1kotlxIaYMBDO8hqtLkW7B7sSSK9plcV3l2anbodheOrfonVQdHpngy
+         01Yt5cH2Qe9Snf9FO+OxB1K1JAp+A1wqWQoxFVnpW7CPB1rJEoFGEt719QEN1hQ7HPYh
+         A2RFN/YAJ6IrJ4vjH4fHaO4xsZg/M9dURqdncdOFbpZVouHi2qkrGYe8uFdiomjS7gcQ
+         H70CXUNIAIcrMGJcIqp0W+4lTmXteEIK5q/oKQSszkRf5G4bPKgUImaDVJerIZTMbFjh
+         zNxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=CYT+RAnLT8l9VJ2gJRi7trKYrP24IbM1jQObs/oVyPQ=;
-        b=kcFGotSJJE9SF98PMHbhs8Cb3Ll9EtOzRZkSukvdLuHkWWYxFUZo0luDbXBUrSdqSf
-         wWGuq5Yay0XZyHtsTbR6BnOyZ23kJXmarx5wB4h5mOCCtBKKaHETDBs3UsRkKl+hrmjm
-         pJEi+8MZE0QPFhFL5W3XjN0udYvupUWk/BVytJ8naPtxul5uL40FGfknqdDjlKmFQORk
-         4fI6K4gLhSqpzjolWGTrFJ5o3KEA9qSzp+w7aG59bMtmtu/tyX58KT5gErJbxRysu0uv
-         u7DP3A98hCNakGuwubkSPx8lUnB012K+RnXLKZIGr04ybSK6A1tYSiXS85Tvk0M+gnCf
-         kdfQ==
-X-Gm-Message-State: AJIora+QeOO8YAS3wiP5+KqOh7ABNhXFgiHhf4E06B0ww2pRTkBSqaf7
-        MbsyV7ADqnSYhaIoj5tWt4Y=
-X-Google-Smtp-Source: AGRyM1tkoINmbo1HCZlcT1H7dENddxXlMTV8eUW+TyBNV+DBh/Ojk2T19E7L9Z0eTxoFBsJklnkPEQ==
-X-Received: by 2002:a63:6c87:0:b0:419:b667:6622 with SMTP id h129-20020a636c87000000b00419b6676622mr17154960pgc.495.1658902002793;
-        Tue, 26 Jul 2022 23:06:42 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id n2-20020a170902d2c200b0016c2cdea409sm12707928plc.280.2022.07.26.23.06.38
+        bh=z1ju9hkv6KliBdMMf78zfJE2ka4ceX95a34zeGO4f3U=;
+        b=Y/bF99JDI4ZAhv9EVMbSA9+ttD+BWspR/L9+ZQHgTFIWRYVvbA5xcSCLE8oo4yZp5J
+         XMfrRKVPUoxlX//y9ix61St+DCHuAZ4+OuUmwU/AwLORImVlOf4p9g2ZGe55Lj75ql9I
+         rKzy0aRE9Erx3b6rWiBirTVPbj0qmVQn6qqK1MfMxa7IMrQLkxJOxAcl2wj7aHGeINBQ
+         2H6vcUbOwx14BTX2KMlOuHmhjfsyPEVvDKfyCQc4Ax2MF2Na5n6WyRk66XdJgsu5Qsw2
+         btMRZOhZfHuaX7A58zV9ZRIVhf3z4Ace9TDXplAWXeU/ATO7ST5BGO8ZG+xN6Iu8GlIR
+         xPaA==
+X-Gm-Message-State: AJIora8CON1nwEE30TKPYp57B6PSiLucLndZIp9mEgCx2kIas8hqH3SD
+        Fatux5M7IaDC3/nu0/XX4BuViA==
+X-Google-Smtp-Source: AGRyM1s3OhBxgoiYKLQMjnVFMoJ+l/IQmrbEIpoyrO4H+S6DurOK8yck35a9D0JfFQrP5f3m6+Ov/Q==
+X-Received: by 2002:a17:90b:b03:b0:1f3:6fb:bd20 with SMTP id bf3-20020a17090b0b0300b001f306fbbd20mr2496197pjb.38.1658902707982;
+        Tue, 26 Jul 2022 23:18:27 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id s188-20020a625ec5000000b0050dc7628148sm12736177pfb.34.2022.07.26.23.18.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 23:06:42 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 14:06:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
+        Tue, 26 Jul 2022 23:18:27 -0700 (PDT)
+Date:   Wed, 27 Jul 2022 11:48:24 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         linux-gpio@vger.kernel.org,
         Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
         stratos-dev@op-lists.linaro.org,
         Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 2/8] libgpiod: Add pre generated rust bindings
-Message-ID: <20220727060636.GA111005@sol>
+Subject: Re: [PATCH V4 8/8] libgpiod: Integrate building of rust bindings
+ with make
+Message-ID: <20220727061824.lune6xhtv2hpgidv@vireshk-i7>
 References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <07889ab056a7c69d30569fdd4b035691dd2d6248.1657279685.git.viresh.kumar@linaro.org>
- <20220727025723.GB88787@sol>
- <20220727051529.becrq3qecbild2iq@vireshk-i7>
- <20220727053138.GA108918@sol>
- <20220727060024.cuejt6qbs75afhuh@vireshk-i7>
+ <584910baf342bee3511361c3e486ad4f3e5437f2.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025903.GH88787@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220727060024.cuejt6qbs75afhuh@vireshk-i7>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220727025903.GH88787@sol>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 27, 2022 at 11:30:24AM +0530, Viresh Kumar wrote:
-> On 27-07-22, 13:31, Kent Gibson wrote:
-> > On Wed, Jul 27, 2022 at 10:45:29AM +0530, Viresh Kumar wrote:
-> > > On 27-07-22, 10:57, Kent Gibson wrote:
-> > > > On Fri, Jul 08, 2022 at 05:04:55PM +0530, Viresh Kumar wrote:
-> > > > > +## Updating bindings
-> > > > > +1. Clone the source from
-> > > > > +	<https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/>
-> > > > > +2. run `cd libgpiod/bindings/rust/libgpiod-sys/`
-> > > > > +2. run `cargo build --features generate`
-> > > > > +3. Commit changes in `src/bindings.rs`
-> > > > 
-> > > > Those instructions do not force the regeneration of the bindings.
-> > > 
-> > > It does, just that the new file that got generated lands somewhere like this:
-> > > 
-> > > target/debug/build/libgpiod-sys-769f98853e1c0550/out/bindings.rs
-> > > 
-> > > and the end user crate will use this instead of the one in src/.
-> > > 
-> > 
-> > But the instructions don't mention any of that, and the implication is
-> > that src/bindings.rs will be regenerated.
+On 27-07-22, 10:59, Kent Gibson wrote:
+> Wouldn't build for me on a Debian bullseye VM.
+> Apparently bindgen requires clang to find the system headers [1][2],
+
+Right.
+
+> and
+> there is no dep check or warning about that.
+
+Ahh, I need to add that somewhere then.
+
+> Also not sure why the build wanted bindgen, as by default it uses the
+> pre-generated bindings?
+
+Did you enable tests as well ? That enables "gpiosim", which enables "generate"
+and bindgen will be required.
+
+I thought it will be better to build bindings everytime for tests.
+
+> Anyway, for reference this was the build error without clang installed:
+
+Did it work for you after clang was installed ?
+
 > 
-> Something like this is okay ?
+> ...
+>    Compiling thiserror v1.0.31
+>    Compiling libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)
+> error: failed to run custom build command for `libgpiod-sys v0.1.0 (/home/dev/libgpiod/bindings/rust/libgpiod-sys)`
 > 
-> diff --git a/bindings/rust/libgpiod-sys/README.md b/bindings/rust/libgpiod-sys/README.md
-> index ea037d6d7803..7d4583519e87 100644
-> --- a/bindings/rust/libgpiod-sys/README.md
-> +++ b/bindings/rust/libgpiod-sys/README.md
-> @@ -7,4 +7,5 @@ Automatically generated Rust FFI bindings via
->         <https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/>
->  2. run `cd libgpiod/bindings/rust/libgpiod-sys/`
->  2. run `cargo build --features generate`
-> -3. Commit changes in `src/bindings.rs`
-> +3. Copy the bindings 'cp target/debug/build/libgpiod-sys-###/out/bindings.rs src/bindings.rs'
-> +4. Commit changes in `src/bindings.rs`
+> Caused by:
+>   process didn't exit successfully: `/home/dev/libgpiod/bindings/rust/target/release/build/libgpiod-sys-0fb8ce8170c88d8f/build-script-build` (exit status: 101)
+>   --- stdout
+>   cargo:rerun-if-changed=wrapper.h
+>   cargo:rerun-if-changed=../../../lib/chip.c
+>   cargo:rerun-if-changed=../../../lib/chip-info.c
+>   cargo:rerun-if-changed=../../../lib/edge-event.c
+>   cargo:rerun-if-changed=../../../lib/info-event.c
+>   cargo:rerun-if-changed=../../../lib/internal.c
+>   cargo:rerun-if-changed=../../../lib/line-config.c
+>   cargo:rerun-if-changed=../../../lib/line-info.c
+>   cargo:rerun-if-changed=../../../lib/line-request.c
+>   cargo:rerun-if-changed=../../../lib/misc.c
+>   cargo:rerun-if-changed=../../../lib/request-config.c
+>   cargo:rerun-if-changed=../../../tests/gpiosim/gpiosim.c
+>   cargo:rerun-if-changed=gpiosim_wrapper.h
+>   cargo:rustc-link-lib=kmod
+>   cargo:rustc-link-lib=mount
 > 
+>   --- stderr
+>   /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found
+>   /usr/include/string.h:33:10: fatal error: 'stddef.h' file not found, err: true
+>   thread 'main' panicked at 'Unable to generate bindings: ()', libgpiod-sys/build.rs:42:10
 
-Definitely clearer.
-
-Still not sure how all this is easier than just calling bindgen directly,
-but ok. I guess at least it specifies the appropriate-ish bindgen version.
-
-Cheers,
-Kent.
-
+-- 
+viresh
