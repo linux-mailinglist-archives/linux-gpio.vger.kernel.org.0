@@ -2,201 +2,283 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DF115820EF
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 09:19:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3585822C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 11:08:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbiG0HTu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Jul 2022 03:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55342 "EHLO
+        id S231744AbiG0JIZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jul 2022 05:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiG0HTt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 03:19:49 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7A532DBF;
-        Wed, 27 Jul 2022 00:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1658906388; x=1690442388;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=rTBt5N9MnHd5XeKra8KFD44Hyo7pw7KRLjsxQYVl4jE=;
-  b=KXYmzoixOgkjeK208s1JygPCXjY+W47kieHUbu6ufV/CqymOo/7r3Gzn
-   5xu1/xcCzQM/FZddvtp5g73JrYZOd3znAPcR+lyzUTx0Iir5LE7Rv+C/W
-   nUaTuqqilS+abcu07iUgBiWjxWBA5WGWbFLqgLNMHnyPGC7BMehw3XXOw
-   C3xVMx6eOxwZb0KmO+ipMr0zuG0OEGFiAZjfYTf3SR5cJEnLp3fb5x0dB
-   78qiuTyZIwbry0pHNRe9xqaHKV+xSrFxSlgd/Gi7aQWnudPKfRaZYWdeR
-   uWUkFmSjd+3SP/vdCHLfDOS9bhyhsTrbdlOFpHwF2RE6Q4/VCfnUStDxd
-   w==;
-X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
-   d="scan'208";a="106313205"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2022 00:19:46 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Wed, 27 Jul 2022 00:19:46 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28 via Frontend Transport; Wed, 27 Jul 2022 00:19:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OR1IbJAPLGUkLwjrjcw1/cvgV3ZY9XFVkvSBhB6lbmcLPCaa+YK0V7Oe+VC4NbFXNlYfobsPKd7ZiihWqSsLFzFdHu2Co4IAkddLFMUZDr1W3awSJMBV2xIXmEwcuZ8zakrNmbFOu4R8uJww4dIHW6KH7TFixnahZ89fRdKaBcz068wekuJtNGRznJgJXdEe/z+IxdqHogQLZiWHUk6tC9qc02xeiFjqgVXNeKuHV514cSW+jgSrTwBmk2jaeiq5uelYxZ+4O7jMMsdGcryF+NSJI25wkWO52OtzwR6tHuT+VID2jXcpPzbVOjYuR+NtCnq4ygD61IY6EIa+0Epdhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rTBt5N9MnHd5XeKra8KFD44Hyo7pw7KRLjsxQYVl4jE=;
- b=XOX9yp2o+RFFwRoPlo6WuRHGIzs0vu1wQM2O6xq2d5Os8Cf5MJwtDdy1rj0M8f2aQ4Lp7l6dh5K7I7WvAQ611aXIREdsN5uKhve5rrg0EOlamZE8vII497MRNSKSgU7Ug8qENdw5ubdnKcAYrAztU2u+JS0KPPyaVv49+1FJMPu1B05RTv0YLJApnc4+I1GzjhBSMmumMjnywWZ7w/NtkYxmBIFxlg5yRAA9u/Jm2Wsn9vtFMejKOcOuy0N4eVsGjl0OUT8dt82phnstufJ+SAtDnm2DZpa0ms64PsY69KyP1sGlp9Ab0HLK2qY7GgVAjnUvQsP/ybk+O869QRbCFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        with ESMTP id S231571AbiG0JHF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 05:07:05 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA97E47BA2
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 02:07:04 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id x1so13854199plb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Jul 2022 02:07:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rTBt5N9MnHd5XeKra8KFD44Hyo7pw7KRLjsxQYVl4jE=;
- b=JI8NfzrUrPgrpvBcAHZd+GY+8YIOdMLsa4F0pHNJgUFbgx9R89oir88B3VHjLP5aWbdU0kwp3g/EWYwTHc+Cp6zTtne3xV4hoq8AoHLmLw1jUlCaUS3A4pQ8etsU9ZqVZIDkI6tpa9grUib+tcdIvOyo1CqPzwrFe8GnXltuG4A=
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
- by SN7PR11MB6703.namprd11.prod.outlook.com (2603:10b6:806:268::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.18; Wed, 27 Jul
- 2022 07:19:35 +0000
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::ac89:75cd:26e0:51c3]) by CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::ac89:75cd:26e0:51c3%7]) with mapi id 15.20.5458.025; Wed, 27 Jul 2022
- 07:19:35 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <krzysztof.kozlowski@linaro.org>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
-        <atulkhare@rivosinc.com>, <sagar.kadam@sifive.com>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: sifive: add cache-set value of 2048
-Thread-Topic: [PATCH v3 1/2] dt-bindings: sifive: add cache-set value of 2048
-Thread-Index: AQHYoRJORxZFGGFwkky2Nc2hNdByz62Q6giAgAABE4CAAOOSAIAAAcEA
-Date:   Wed, 27 Jul 2022 07:19:35 +0000
-Message-ID: <a530d8c8-7dcb-9cc0-2be3-16567e1a99bc@microchip.com>
-References: <20220726170725.3245278-1-mail@conchuod.ie>
- <20220726170725.3245278-2-mail@conchuod.ie>
- <246f132a-a23d-7c53-38a7-2bcec50d65e5@linaro.org>
- <c77f34aa-ff29-b18a-a3a7-9d90145364a8@microchip.com>
- <bf470847-9e96-fc5e-0b82-d05068aaeb47@linaro.org>
-In-Reply-To: <bf470847-9e96-fc5e-0b82-d05068aaeb47@linaro.org>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: aceb0f2b-b88b-4078-91d7-08da6fa05be3
-x-ms-traffictypediagnostic: SN7PR11MB6703:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IY6YgU0jgpjTI4fglTL2iUUass1SZ3SfjTuZYLSDFZ2UVVMpH1NZ3OBx+Cuywm2DKHfbg/WzcLWCxNczbtoGOm95hKu5S4g1NUvSVEmkmU7oi97eGNdxdyHBhEyMwjWrJuHfx0tpuNzDn/q1mFgbegmUBNIAMaAcD3p10MMFg2So0R6RuecUP7pTPWRgxE/HBcU+KXrOnwQ9cDDFlBMeAaFfMdm0/SNzsHkpp8N1JssxxISNK6KVZWTiq+ewdFyg/adjDtShhRoBYD9L+CybVpQsbcixZoKTnEyPSFrKvuyGlKze89DeNYboJINgHkNRGrUn9Gu2YWQgXpue68ogbIKhbnV+WT66XA17BaYVVsO5gg226OnX0pobdQPm0R2RES4FPEbwjxylTI+H0WWtYUx86CN0o8yirEHvTlc1IedvRbX3ERdx7b7FspBa1ym3fLyhNE4cEQl0xX3Pct4f6PPmV2+rnv8mfPnswtzBXVZOJrf3CRzkTJE+WU9XZk+uYpHA5c6Ch62cllJWSV8kRX3NVCKMeGc/1VzKtmX77AuC0g83MGNSnPEn7IuMBNZvspxqwjStBT3UAbtg/iG2FpNw0mPNKV4gKnH+UyVhUbPYbpS3doiR5rNNcdTlJN2X6JU95Hcahu27TCIE05DtJ7UIJ1/TbFdVgwwkr2hnVotavGVU+lF9t5A7fimkxXzb81PWuFcpHUMx1re5RgVcQX+fr3NmJ4aXRdoElW8GEOoG/Xyx78BIbO9gWCfR0XjMBJXlXnoSKBFZp0F46AmWlgQGLSuI3r38iqZyRbwr6oRYbT04EsjRvQXw2RKkLn4ZZZxF5MC3xenaU8wmpCL2ssYg942oR50dhlwPiY3kJmP9QOzpvYRUjWanTwNj1mBOhLHKOHFm0ucQD1z2D/PvWjM6X9imhstSfel2NZ8Ge08=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(376002)(346002)(366004)(39860400002)(136003)(2616005)(26005)(53546011)(6506007)(6512007)(186003)(36756003)(31686004)(83380400001)(7416002)(8936002)(2906002)(41300700001)(122000001)(6486002)(66946007)(38070700005)(316002)(31696002)(38100700002)(966005)(86362001)(66556008)(71200400001)(110136005)(5660300002)(478600001)(8676002)(66446008)(64756008)(91956017)(4326008)(76116006)(921005)(54906003)(66476007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YVRiZ0JJWDRGY0NDQTVGNTJvZDl4Z1Q5R1llY0p4Z244cHpMNnp4OHdZek9v?=
- =?utf-8?B?Y0dxdHgwYTVOM1dWSi9Yd1o5WnllangvalRQalB0WXBuamtDc0RtMTJjcE43?=
- =?utf-8?B?U2t4YVF4cXJTTkJWTjJUMHlQaUFlWlB3L2RRTmtFczFwMUpORzEzS3EreGJT?=
- =?utf-8?B?ZFVFLy9EeXA3MGNuQVhtZ1MvVnNibkpLMDI2dk54Qzg3MzZGaG94a2wxMEYr?=
- =?utf-8?B?RFYrakNwaXRmZlVEdWUycU05dktneU9YbkZBcThPclgrS3BWbHdqQndVUEV4?=
- =?utf-8?B?bm10ZC9xWXNWM2tHUWtaUFlJdmUzTThiNFNlR2dTM0JlVlZvcjNiRnR3Y3or?=
- =?utf-8?B?bW1KMDNwYVhKYUJWdlFaMDRJMkg5bXVud0t6dm51OXpsdGxDYTkxYmx1QXZr?=
- =?utf-8?B?YlBadkl2dktzbUhXQXpsYnE4TnNUa0RHSzhQRWljTkwyM2FEUXUvQm8vclNE?=
- =?utf-8?B?end1Y1ZtYjgrTlpwdURZeWMxT0tqbURQOTBPd1NySDNTS2dHMzRaMU5ySFBv?=
- =?utf-8?B?amN6RStneloyT3g5N0NNT3ZLSXBhTExMM3I0VUlyclZ1WjNaV1FxNzFRN2hX?=
- =?utf-8?B?djR0eE1Ca3V2dEh5eGxMV1BpcEdjejZLV2trMHc3Zmh3VE9wK2NuSkVrQU85?=
- =?utf-8?B?VkZSTVUxbkhoYUUybkQvQjVkcFVrS1RsV2JpS3VIbmNZcnBmZEthNHlRbnJw?=
- =?utf-8?B?WXJobVdDODNzS1FWS051a3NaZVdyRXNpNm8yZHVEWWlHY2V4Wm9JaWhGdlBG?=
- =?utf-8?B?RFJ2eTJ0bmgwRkVzRXpnaFk3NXBvd1E1NWErOU5GNU9QaDJTbXhhV24yV0pL?=
- =?utf-8?B?eE5YM01Zb0lLOSsxbkxUSG5WekRYZjFDNVJFUFBrbHB6bDFGcEI5NkFkVDlC?=
- =?utf-8?B?TUlVZGNOYnc4RERDM1RvZlM3Mlg3VHFXRk5KcndmVmg3NGxWTFVrZUxBTURQ?=
- =?utf-8?B?bklVeCtuNExnU2FRZmc3MkQxMmV1MnFsVU9PbC9Dc2hiV1lnemhGNVZoUzgx?=
- =?utf-8?B?T2pNTXJZS3lEaG5ockxyMm55KzM1ajE3cEZUZStYcXB0L0t6MlMzRHN0b3pr?=
- =?utf-8?B?WG50VmxYdEYxS1UrZ1crdTlUYmx3enliODJmZTFFdGErcDRPQTZmdGk1L1hX?=
- =?utf-8?B?b0pVM3dBNTRScnJLVmNuSlFHY1V6VW10c04vRXJ1TmtYNGFlRGlCdy9YdXhH?=
- =?utf-8?B?dG5DQ1MyOER4UUQ3ZzhHRlBmYW9tT1lLeXFVbXZLUmExL3pMeDhvcVU1ejd0?=
- =?utf-8?B?VUlTYWgxM1FGUmc2K2JJanY5OEhOOS9WNTloSzRmUGw4MDZrQU5ScTNvNEFz?=
- =?utf-8?B?d0tBN1EwUUVHVVM3RUgwQXhlZWVXUGFNL1hqcXNQSFNrSXF1NzRrcFRIbEdV?=
- =?utf-8?B?RmE4amJSSG56czdiRTZPZSttcktLT3ZsZlYweXhwd210S29ZVy9KT2tRV1BL?=
- =?utf-8?B?WkhUZWNMQjd5QVk3WFBZR21MUjlLR3pGQTB4amtXYW9LcXRIWjA0Nm80dzZj?=
- =?utf-8?B?dzVKbG43NWFUc09wY0YxeURFZ2hLM04zYStkMWZJUE5RYVdibE1YeEdBZWsz?=
- =?utf-8?B?WVB4NTk1U3gzNjRyd29hckh5ZUVuK3FGZFBkMXZUYURrSXpYQWozV0I4TXpQ?=
- =?utf-8?B?eGt2WU5aN3ovaWJjcnhkeEI1Z0FEOVkvaU5RVGRocU5IcFhWaFpxMVJVa0sw?=
- =?utf-8?B?TEdVT0pQbWYrbUNvV3pScHdra3c1SHRsZUJTNWxjSkZkelhhajZiOG00TVFm?=
- =?utf-8?B?ellveEtHTmx3YW9HUUNZZHFiMzNPaGpqY0RZaHBJUFhwZ3FoYzRsZUtzNUt5?=
- =?utf-8?B?bG84QzE5QmNxcVVtUXlMYWthYmhYbkRlOVc1N3psQktLN0tIMTFRSWg0cWFG?=
- =?utf-8?B?MldIcWo1SkVlWHdtSVRNZU5LdVVZMWhVdlVZMEgxS245VGpVQXdkOTRoNkN1?=
- =?utf-8?B?ZzBmZ2gvRHpBZXdhdHZER3ZJK05paFRMZFpSQVBJQzJSVU96V0lCMzNPS1lj?=
- =?utf-8?B?VTV2elRXblk3V0owQUxLOFVwNWIvUVpBYTNSSnB3TXFIZkpLdXpNQjdoL0ho?=
- =?utf-8?B?Q3BMMDdFNW1teXY5aHJQMysvOGFtZzQycVltRGJDWndVZ3VhdzNJdkRWV3Rw?=
- =?utf-8?Q?UdLkCsc+D/nJbauyHhVcA7l2w?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5C6E17024C391440949B4BDA05760124@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W6Kij9igE04G9E1N2/2CnApgXjwZNhmoHvQNrIg3HbM=;
+        b=ToTuWsChQlwHpI+Sfy2WcJaYK6K816BdAKn4aS5YbJxZNykGlNaC7fAwBGgRCeA4DZ
+         3//hH85YPsnJ+HWfshpGMul1zlnJ/F52wRVPnb/X/CtipaLfRR3jVeIxQOnxm0zBXmXQ
+         IQZqaUj8LWwXdUCvKfLAQE5uapx1nu4oHf0E24wKFgrKylychlQMUT0fdr4E2gPkEFFf
+         lnRfJCy/tkUb4iiaFny9XCckz+57tNuqH7ASEgYP/f5MyYTevNiuDHsug/YyDAa+vY3A
+         8NFcr7BKdkBbMb1NzgvFxxPLEWMX4hiz7wy5kDVdvh1QXOA1XG3fA02QRR8wG99rJkLa
+         sXlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W6Kij9igE04G9E1N2/2CnApgXjwZNhmoHvQNrIg3HbM=;
+        b=Bcmpx31QLZX+7YGb1Hw0H5nY6OY3eZMJ/u7qvyZ0jE0xJoCPEYq+se98zRtgfuxN/q
+         eV0qRNJZR5H153OMLt7CtRx3wp1EPfpCPm88aiNmPb6IQfK0eRCRP5C+wcF9xjPdPmNA
+         MruQ33ARRhV8SApwR+1BN6QhrXEzJfibYfvhMqUAei7h3gDbX6dTINQbAx6Gojrly8yH
+         NxYHLjdU9nGwvdWnaW/oiZO/t+Me+n5IoR0hC7PMc1vVUnggGkbxwBMsVj72h43csAOu
+         Pm90TrkJsNsUzeiawQrgyFEl0pJoBa1FMAn9Vy+TG5029MBs4GGs2erasyRPzkstyexJ
+         XU5w==
+X-Gm-Message-State: AJIora83prJC1yPrnuirMzr1OPwcCLp72ZHJV34/9VKp7uy6QczUYVD+
+        4U4AdmSXTPLzqy2PIxS519UgFw==
+X-Google-Smtp-Source: AGRyM1vXKJdkUilxbcrylOJyYo5JOFlLkRYumhf6qG/TO8o6qZF5D57CbURS3P8YqGp9RkLePtZGmw==
+X-Received: by 2002:a17:90b:4c8d:b0:1f2:c360:5e6b with SMTP id my13-20020a17090b4c8d00b001f2c3605e6bmr3483587pjb.195.1658912824204;
+        Wed, 27 Jul 2022 02:07:04 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id y2-20020a17090a16c200b001f24dc56b72sm1129298pje.23.2022.07.27.02.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Jul 2022 02:07:03 -0700 (PDT)
+Date:   Wed, 27 Jul 2022 14:37:01 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V4 4/8] libgpiod: Add rust wrapper crate
+Message-ID: <20220727090701.hfgv2thsd2w36wyg@vireshk-i7>
+References: <cover.1657279685.git.viresh.kumar@linaro.org>
+ <c3bdcaa85e1ee4a227d11a9e113f40d0c92b0542.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025754.GD88787@sol>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aceb0f2b-b88b-4078-91d7-08da6fa05be3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2022 07:19:35.2968
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zmk/Ey9BXqG3hJJsU5mDSDpTCf8nU3CMxtH4MIXtcKoS1uJh/yp0W5VaLvCaXi1pqEE0tlWzdHOAc8Uo8yXdTGDlCINuCLeIgA6Ks8i3B70=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6703
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220727025754.GD88787@sol>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gMjcvMDcvMjAyMiAwODoxMywgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToNCj4gRVhURVJO
-QUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5
-b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBPbiAyNi8wNy8yMDIyIDE5OjM5LCBD
-b25vci5Eb29sZXlAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+DQo+Pg0KPj4gT24gMjYvMDcvMjAy
-MiAxODozNSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToNCj4+PiBPbiAyNi8wNy8yMDIyIDE5
-OjA3LCBDb25vciBEb29sZXkgd3JvdGU6DQo+Pj4+IEZyb206IEF0dWwgS2hhcmUgPGF0dWxraGFy
-ZUByaXZvc2luYy5jb20+DQo+Pj4+DQo+Pj4+IEZpeGVzIFJ1bm5pbmcgZGV2aWNlIHRyZWUgc2No
-ZW1hIHZhbGlkYXRpb24gZXJyb3IgbWVzc2FnZXMgbGlrZQ0KPj4+PiAnLi4uIGNhY2hlLXNldHM6
-MDowOiAxMDI0IHdhcyBleHBlY3RlZCcuDQo+Pj4+DQo+Pj4+IFRoZSBleGlzdGluZyBiaW5kaW5n
-cyBoYWQgYSBzaW5nbGUgZW51bWVyYXRlZCB2YWx1ZSBvZiAxMDI0LCB3aGljaA0KPj4+PiB0cmlw
-cyB1cCB0aGUgZHQtc2NoZW1hIGNoZWNrcy4gVGhlIElTQSBwZXJtaXRzIGFueSBhcmJpdHJhcnkg
-cG93ZXINCj4+Pj4gb2YgdHdvIGZvciB0aGUgY2FjaGUtc2V0cyB2YWx1ZSwgYnV0IHdlIGRlY2lk
-ZWQgdG8gYWRkIHRoZSBzaW5nbGUNCj4+Pj4gYWRkaXRpb25hbCB2YWx1ZSBvZiAyMDQ4IGJlY2F1
-c2Ugd2UgY291bGRuJ3Qgc3BvdCBhbiBvYnZpb3VzIHdheQ0KPj4+PiB0byBleHByZXNzIHRoZSBj
-b25zdHJhaW50IGluIHRoZSBzY2hlbWEuDQo+Pj4NCj4+PiBUaGVyZSBpcyBubyB3YXkgdG8gZXhw
-cmVzcyAicG93ZXIgb2YgdHdvIiBidXQgZW51bSBmb3IgbXVsdGlwbGUgdmFsdWVzDQo+Pj4gd291
-bGQgd29yay4gSXMgdGhlcmUgYSByZWFzb24gdG8gbGltaXQgb25seSB0byAyMDQ4Pw0KPj4NCj4+
-IENvcHkgcGFzdGluZyBmcm9tIHRoZSBjb3ZlcjoNCj4+PiBJIGRvbid0IHRoaW5rIHRoYXQgdGhl
-cmUncyB2YWx1ZSBpbiBzcGVjdWxhdGl2ZWx5IGFkZGluZyB2YWx1ZXMgdG8gdGhpcw0KPj4+IGVu
-dW0gZXNwZWNpYWxseSBhcyAoSSB0aGluayBhdCBsZWFzdCkgdGhlIHNjYWxhIGZvciB0aGlzIGNh
-Y2hlIElQIGhhcw0KPj4+IGJlZW4gcmVsZWFzZWQgcHVibGljbHk6DQo+Pj4gaHR0cHM6Ly9naXRo
-dWIuY29tL3NpZml2ZS9ibG9jay1pbmNsdXNpdmVjYWNoZS1zaWZpdmUvYmxvYi9tYXN0ZXIvZGVz
-aWduL2NyYWZ0L2luY2x1c2l2ZWNhY2hlL3NyYy9QYXJhbWV0ZXJzLnNjYWxhI0wzMg0KPj4+DQo+
-Pj4gVGhlIHR3byBjb21wYXRpYmxlcyBpbiB0aGUgZmlsZSBtYXRjaCBvbmx5IGFnYWluc3QgdHdv
-IHNwZWNpZmljIGNhY2hlDQo+Pj4gaW1wbGVtZW5hdGlvbnM6IHRoZSBmdTU0MCdzICYgdGhlIGZ1
-NzQwJ3MuIEkgd291bGQgc2VlbSB0byBtZSB0aGF0LCBpdA0KPj4+IHdvdWxkIGJlIGJldHRlciB0
-byBsb2NrIHRoaXMgdG8gYSBzaW5nbGUgdmFsdWUgcGVyIGNvbXBhdGlibGUgc2luY2UgdGhlDQo+
-Pj4gMTAyNCBhcHBsaWVzIHRvIHRoZSBmdTU0MCAmIHRoZSBuZXcgdmFsdWUgb2YgMjA0OCBhcHBs
-aWVzIG9ubHkgdG8gdGhlDQo+Pj4gZnU3NDAuDQo+Pj4NCj4+PiBJIGhhdmUgbm90IG1hZGUgdGhh
-dCBjaGFuZ2UsIEkgc2ltcGx5IHdhbnRlZCB0byByZXBhY2thZ2UgdGhpcyBzZXJpZXMNCj4+PiBp
-biBhIHdheSB0aGF0IGNvdWxkIGJlIG1vcmUgZWFzaWx5IGFwcGxpZWQgJiByZXN0YXJ0IHRoZSBk
-aXNjdXNzaW9uLg0KPj4NCj4+IFRMO0RSOiBJIHdvdWxkIGxpbWl0IGl0IHRvIDEwMjQgJiAyMDQ4
-IHRvIG1hdGNoIHRoZSBvbmx5IGltcGxlbWVudGF0aW9ucw0KPj4gYWx0aG91Z2ggbm90IGluIHRo
-ZSB3YXkgdGhpcyBwYXRjaCBkaWQgaXQuDQo+IA0KPiBUaGUgZXhwbGFuYXRpb24gaW4gY292ZXIg
-bGV0dGVyIGlzIGdvb2QsIGJ1dCBpdCB3b3VsZCBiZSBnb29kIHRvIGhhdmUNCj4gb25lIHNlbnRl
-bmNlIGxpa2UgdGhpcyBpbiB0aGUgY29tbWl0IG1zZy4gT3RoZXJ3aXNlIHlvdXIgY29tbWl0IGlz
-DQo+IGFjdHVhbGx5IGNvbmZ1c2luZyAtIHlvdSBtZW50aW9uIHRoYXQgeW91IHdhbnQgcG93ZXIg
-b2YgdHdvIGFuZCB0aGVuIHNldA0KPiBvbmx5IDFrICsgMmsuDQoNClllYWgsIEkganVzdCB0b29r
-IHRoZSBjb21taXRzIGZyb20gZXhpc3RpbmcgcGF0Y2hzZXQgYXMgdGhleSB3ZXJlLg0KSSdsbCBy
-ZXdyaXRlIHRoZSBjb21taXQgZm9yIHRoZSBuZXh0IHRpbWUuDQpUaGFua3MsDQpDb25vci4NCg0K
+On 27-07-22, 10:57, Kent Gibson wrote:
+> On Fri, Jul 08, 2022 at 05:04:57PM +0530, Viresh Kumar wrote:
+
+> > +    /// Get the path used to find the chip.
+> > +    pub fn get_path(&self) -> Result<&str> {
+> 
+> It seems absurd that a method that simply returns the path provided to
+> open() requires a Result, but that is a consequence of wrapping.
+> 
+> I was considering suggesting caching a copy in struct Chip, but all the
+> other methods require Results so at least this is consistent :-(.
+> 
+> Yay, more unwrapping than Xmas past.
+
+:)
+
+> > +        // SAFETY: The string returned by libgpiod is guaranteed to live as long
+> > +        // as the `struct Chip`.
+> > +        let path = unsafe { bindings::gpiod_chip_get_path(self.ichip.chip()) };
+> 
+> Trusting that it is never NULL?
+
+I believe we discussed that early on (few months back) and decided this will
+never be NULL and since the Rust wrappers are pretty much part of the same
+repository, we can take that as a guarantee. An out-of-this-repository user
+can't really assume that.
+
+> Add a null check to be sure.
+
+But I am fine with this as well.
+
+> > +    /// Wait for line status events on any of the watched lines on the chip.
+> > +    pub fn wait_info_event(&self, timeout: Duration) -> Result<()> {
+> 
+> Durations cannot be negative, so caller cannot make this block
+> indefinitely.  Make timeout an Option? (no timeout => block)
+
+I didn't know we want the always blocking capability as well. Yeah, Option
+sounds like the right approach.
+
+So in that case we just pass -1 to gpiod_chip_wait_info_event() ?
+
+> > +        let ret = unsafe {
+> > +            bindings::gpiod_chip_wait_info_event(self.ichip.chip(), timeout.as_nanos() as i64)
+> > +        };
+
+> > diff --git a/bindings/rust/src/chip_info.rs b/bindings/rust/src/chip_info.rs
+> > +/// GPIO chip Information
+> > +pub struct ChipInfo {
+> > +    info: *mut bindings::gpiod_chip_info,
+> > +}
+> > +
+> 
+> Consider modules and namespaces rather than lumping everything in
+> the gpiod space.
+> 
+> e.g. gpiod::ChipInfo -> gpiod::chip::Info
+
+The modules are already there, as file names. So what we really have is
+gpiod::chip_info::ChipInfo (yeah it isn't great for sure). But then it looked
+tougher/complex/unnecessary for end users to know the internals of a dependency
+and so I did this:
+
+pub use crate::chip::*;
+pub use crate::edge_event::*;
+pub use crate::event_buffer::*;
+pub use crate::info_event::*;
+pub use crate::line_config::*;
+pub use crate::line_info::*;
+pub use crate::line_request::*;
+pub use crate::request_config::*;
+
+which puts everything under gpiod::*. I think it is easier for users that way.
+The modules are fine for in-crate management, but for end user they shouldn't be
+visible.
+
+> > diff --git a/bindings/rust/src/lib.rs b/bindings/rust/src/lib.rs
+> > +/// Error codes for libgpiod operations
+> > +#[derive(Copy, Clone, Debug, PartialEq, ThisError)]
+> > +pub enum Error {
+
+> > +    #[error("Operation {0} Failed: {1}")]
+> > +    OperationFailed(&'static str, IoError),
+> 
+> Use an enum for the operation rather than a string?
+
+Not sure I understood this.
+
+> And if it returns an IoError it must be an IoOperation?
+> Else if the IoError is just an errno then call it that.
+> 
+> > +}
+
+> > diff --git a/bindings/rust/src/line_info.rs b/bindings/rust/src/line_info.rs
+> > +/// Line info
+> > +///
+> > +/// Exposes functions for retrieving kernel information about both requested and
+> > +/// free lines.  Line info object contains an immutable snapshot of a line's status.
+> > +///
+> > +/// The line info contains all the publicly available information about a
+> > +/// line, which does not include the line value.  The line must be requested
+> > +/// to access the line value.
+> > +
+> > +pub struct LineInfo {
+> > +    info: *mut bindings::gpiod_line_info,
+> > +    ichip: Option<Arc<ChipInternal>>,
+> > +    free: bool,
+> 
+> This flag makes no sense - the info always needs to be freed no matter
+> which path, watched or not, was taken to get it from the C API.
+
+Not the one created with gpiod_info_event_get_line_info(), else it will result
+in double free.
+
+> > +    /// Stop watching the line
+> > +    pub fn unwatch(&mut self) {
+> > +        if let Some(ichip) = &self.ichip {
+> > +            unsafe {
+> > +                bindings::gpiod_chip_unwatch_line_info(ichip.chip(), self.get_offset());
+> > +            }
+> > +            self.ichip = None;
+> > +        }
+> > +    }
+> > +
+> 
+> This should be a method of the chip, not the info.
+
+I think there were some issues with my understanding of the whole watch thing.
+Is there any existing example of gpiowatch somewhere ?
+
+> > +impl TryFrom<&InfoEvent> for LineInfo {
+> 
+> Is try_from appropriate for getting a contained object?
+> "from" normally refers to a type conversion.
+
+Not sure, but as most of new() is going away here, I will likely move this to
+info_event as well. No try-from with that.
+
+> > +impl Drop for LineInfo {
+> > +    fn drop(&mut self) {
+> > +        // We must not free the Line info object created from `struct InfoEvent` by calling
+> > +        // libgpiod API.
+> > +        if self.free {
+> > +            self.unwatch();
+> 
+> Why does dropping a LineInfo unwatch the line???
+
+Because I thought it is related to the Line's info and we won't wanna watch once
+line info is gone. Again, it is my wrong interpretation.
+
+> > +    /// Get values of a subset of lines associated with the request.
+> > +    pub fn get_values_subset(&self, offsets: &[u32], values: &mut Vec<i32>) -> Result<()> {
+> > +        if offsets.len() != values.len() {
+> > +            return Err(Error::OperationFailed(
+> > +                "Gpio LineRequest array size mismatch",
+> > +                IoError::new(EINVAL),
+> > +            ));
+> > +        }
+> > +
+> 
+> Returned values are awkward to use as the user has to index into them
+> using the index corresponding to the offset in offsets.
+> Provide a Values type that maps offset to value, e.g. using an IntMap,
+> and pass that in instead of separate offsets and values arrays.
+
+We would need to separate out the offsets then as that's what
+gpiod_line_request_get_values_subset() needs. Maybe take offsets, like now, as
+an argument and return Result<IntMap> ?
+
+> Same applies to set_values_subset().
+
+That would be fine here though.
+
+> > +    /// Set the size of the kernel event buffer for the request.
+> > +    ///
+> > +    /// The kernel may adjust the value if it's too high. If set to 0, the
+> > +    /// default value will be used.
+> > +    pub fn set_event_buffer_size(&self, size: u32) {
+> > +        unsafe {
+> > +            bindings::gpiod_request_config_set_event_buffer_size(self.config, size as c_ulong)
+> > +        }
+> > +    }
+> 
+> The kernel may adjust the value regardless - this value is a tentative
+> suggestion to the kernel (the kernel buffers have to be sized in 2^N, so
+> it generally rounds up to the next power of 2, within limits).
+> 
+> > +
+> > +    /// Get the edge event buffer size for the request config.
+> > +    pub fn get_event_buffer_size(&self) -> u32 {
+> > +        unsafe { bindings::gpiod_request_config_get_event_buffer_size(self.config) as u32 }
+> > +    }
+> 
+> You might want to note that this just reads the value from the config.
+> The actual value used by the kernel is not made available to user space.
+
+Do you want me to add these two comments for the above two routines ?
+
+Other comments, which I removed, look acceptable to me. Will try to incorporate
+all that in the next version.
+
+Thanks a lot for the very thorough review.
+
+-- 
+viresh
