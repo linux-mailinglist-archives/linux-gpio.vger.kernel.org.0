@@ -2,275 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22B3E581E16
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 05:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08476581F46
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 06:53:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240321AbiG0DQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jul 2022 23:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
+        id S233855AbiG0ExO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Jul 2022 00:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240278AbiG0DQL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 23:16:11 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D443DBD7;
-        Tue, 26 Jul 2022 20:15:53 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id b11so7527462qvo.11;
-        Tue, 26 Jul 2022 20:15:53 -0700 (PDT)
+        with ESMTP id S240509AbiG0Ew5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Jul 2022 00:52:57 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D593F309
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 21:52:02 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id p1so6670150plr.11
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 21:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+bzNz23O5POP059NXGAFxBTvgq0VJPxoUFyJ+Zf+sF4=;
-        b=UDumRfitfDXkwxTCYroM9auAdxgh7zfPXcOozNvr7CHwzo3fFlRvTPLAzo9ts0lpE4
-         H5EvN8f8I2uANMvl+ZLCPB5wHb3i+7dJ1s2yoM0XURiqD/nvxP5WTnXnjBIb9nU1RYJw
-         3Cp2TNZkR5UmS5k6G7FOaaWeVcG6GxWYclTMiL6dyAMuuEpLyV5ReLUMgb3y8Ep4PxXS
-         vNGhe0gbIhnrqiU0ObxkSTn7g5aPTZVes3nEvcvOk1uV3Tf6p2UY80S1XyIEfrhQQX20
-         d4lEl7ge3IDUloHLOeS6oNk4Mf8txKZPGNcKWvE3jP97LK+rkC6dHN04uUaK/uEfEkTQ
-         rQeA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Dil1kD3FBts00p2zWkXJQziwhOgVq6H3jEVx9TuQ7jk=;
+        b=AEN/CbMerYxFL9ISZ1gy1xe7YqnQRsleZRErksRQOLNHb1bsLz0QuoxQUaXjj/cD4/
+         9VZhvP+FpeciR1AVCtCD8zJURkNsUewkLo+G0gjNBcPBKVdTvLoxBfIQ6Z3ImgFP5mft
+         8egnKY5w+6siFc3NSbjfWCj/1TKn+iKGqgUGGvbs1fVJTCEMsYp8JzZq82n1+lEuolR0
+         5zZjrCjVYJG30Ir9pln29MGInJ93hDpeWgqMGTtpwBQCAkGl7Am757OmonnZUEBgI938
+         WkfNUR98MAZRxwIwHzypTsg/27oBkZhwzYWzSyQ9Fy6b+yltYmJRLuSD0HbwE92L/GQn
+         4x7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+bzNz23O5POP059NXGAFxBTvgq0VJPxoUFyJ+Zf+sF4=;
-        b=GrDQiZlHMbkq3ptJOCavw/5J1/EITPfi2EN6yzIePXDYov33rTPbAGQF/lKW2Q5ARY
-         zKRszQbZ6Lc0FnzJlxtTlqf8rs/wUnOYCTvXt4W2bdOqx8/wRudKgaI86GYV421jO7pb
-         KHzeNIeapc11zusy2W34okPCP8jvPKEcIfG4gFWzU4aCR1R+6PSU3e9ArkatxVQAVUJp
-         oDnBfkerASlUfrv+7c66KplHp4g5YeAHm4IB5sjkOc6i1KuLPoOU+VUWPK/mArhH69lB
-         pcXabtWYc5xinVqGhk5SgYMlV47Ho9am2A1kvwbiGVoNrFcnq1T/yAooJayscNRG6HOz
-         d09Q==
-X-Gm-Message-State: AJIora8bI0I7gLQRIOKVcNWa5uf0AfOFmv/MZTJ5tAu6SF5Z37/gmoXq
-        5zyUxwI0YB6GQj4akx1wlag=
-X-Google-Smtp-Source: AGRyM1t+vUxgJN+mx4u+5T5G83vTtc2ZbeXbJ64OlRvHoSc//1wcJ8a+5wCTXGgNBsHDFR5t20Gc0g==
-X-Received: by 2002:ad4:5ecd:0:b0:474:71ae:da8d with SMTP id jm13-20020ad45ecd000000b0047471aeda8dmr2197372qvb.114.1658891752116;
-        Tue, 26 Jul 2022 20:15:52 -0700 (PDT)
-Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id o21-20020a05620a2a1500b006b249cc505fsm13139981qkp.82.2022.07.26.20.15.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Dil1kD3FBts00p2zWkXJQziwhOgVq6H3jEVx9TuQ7jk=;
+        b=pT3gPDeBMjh/ZfUgi+D0D8s7dvU6xvdPAJJXNfMZP10GBZexXUu0Htq9WuVAxvTKE9
+         NFX/xGdYqbRK93GH49IHKsEgOLf6M6DJwM6bHI5qVJQtqBloYXtKQSnMIzpJv13h+tt7
+         hBv9Psaq2ZnE+JbiWYBVXb3wyNKOf2fPJXD/Vq7ytYzHmVeAq5CSeXokjzey0u0JCuVq
+         CgqfoKKcYK7KLY7VzdXQlWHFT2/nOvVFQORFleIbSJ1QUdRkF9ZV/ftYTK1wNLCjdrI/
+         NOwuToHB/jJZGdDn1M/O/eiO1jbnbIRqCgcHKTpjsTU4Ebqk5LKBFwIfCj2oD/3+S4EN
+         liyg==
+X-Gm-Message-State: AJIora/9oldD31SBYjL7d1LkUiamIcvmLdb0tIEiCw5cvMf2QpGrarXj
+        TsFgYLw3S8DTRThrYFHkIRd14w==
+X-Google-Smtp-Source: AGRyM1vOGLfFYFKCIZ2ItpZr+3hMgFWiEw+rB5yp65yRxytb8BYvkx5QWPFDa0aWAJCl6ex7Me/2sA==
+X-Received: by 2002:a17:903:22c8:b0:16c:4068:cd with SMTP id y8-20020a17090322c800b0016c406800cdmr19867523plg.59.1658897521090;
+        Tue, 26 Jul 2022 21:52:01 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id b2-20020a170902650200b0016c0b0fe1c6sm12693568plk.73.2022.07.26.21.52.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 20:15:46 -0700 (PDT)
-From:   Jesse Taube <mr.bossman075@gmail.com>
-X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
-To:     linux-imx@nxp.com
-Cc:     robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, aisheng.dong@nxp.com, stefan@agner.ch,
-        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
-        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
-        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
-        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
-        cniedermaier@dh-electronics.com, Mr.Bossman075@gmail.com,
-        clin@suse.com, giulio.benetti@benettiengineering.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v5 07/12] clk: imx: Update pllv3 to support i.MXRT1170
-Date:   Tue, 26 Jul 2022 23:15:41 -0400
-Message-Id: <20220727031541.227335-1-Mr.Bossman075@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <202207270909.VypZ4wfI-lkp@intel.com>
-References: <202207270909.VypZ4wfI-lkp@intel.com>
+        Tue, 26 Jul 2022 21:52:00 -0700 (PDT)
+Date:   Wed, 27 Jul 2022 10:21:58 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V4 1/8] libgpiod: Add libgpiod-sys rust crate
+Message-ID: <20220727045158.z72byax7pc7kokca@vireshk-i7>
+References: <cover.1657279685.git.viresh.kumar@linaro.org>
+ <44ee8c36d58049de2f653494e16cba04b198fb35.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025706.GA88787@sol>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220727025706.GA88787@sol>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The i.MXRT1170 has a pll that has the multiplier bits inverted and
-cannot be changed add IMX_PLLV3_GENERICV2.
+On 27-07-22, 10:57, Kent Gibson wrote:
+> On Fri, Jul 08, 2022 at 05:04:54PM +0530, Viresh Kumar wrote:
+> > +fn main() {
+> > +    let files = vec![
+> > +        "../../../lib/chip.c",
+> > +        "../../../lib/chip-info.c",
+> > +        "../../../lib/edge-event.c",
+> > +        "../../../lib/info-event.c",
+> > +        "../../../lib/internal.c",
+> > +        "../../../lib/line-config.c",
+> > +        "../../../lib/line-info.c",
+> > +        "../../../lib/line-request.c",
+> > +        "../../../lib/misc.c",
+> > +        "../../../lib/request-config.c",
+> > +    ];
+> > +
+> > +    #[cfg(feature = "generate")]
+> > +    generate_bindings(&files);
+> > +    build_gpiod(files);
+> > +}
+> 
+> Shouldn't bindings wrap libgpiod and dynamically link against it rather
+> than building and linking statically?
 
-The i.MXRT1170 also has the lock bit moved as well as the
-power bit inverted the power bit also is in different locations on each
-pll control register.
+There are few problems I faced, because of which I had to do it this way.
 
-Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
----
-V1 -> V2:
- - Nothing done
-V2 -> V3:
- - Nothing done
-V3 -> V4:
- - Nothing done
-V4 -> V5:
- - Add __imx_clk_hw_pllv3 to change power bit
- - Add BM_PLL_POWER and imx_clk_hw_pllv3 to header
- - Remove imx_clk_hw_pll3_powerbit
----
- drivers/clk/imx/clk-pllv3.c | 57 +++++++++++++++++++++++++++++++++----
- drivers/clk/imx/clk.h       | 11 +++++--
- 2 files changed, 60 insertions(+), 8 deletions(-)
+- I couldn't find a way to do a "Make" for libgpiod from here and then link to
+  the resultant library.
 
-diff --git a/drivers/clk/imx/clk-pllv3.c b/drivers/clk/imx/clk-pllv3.c
-index eea32f87c60a..68b1498cafe1 100644
---- a/drivers/clk/imx/clk-pllv3.c
-+++ b/drivers/clk/imx/clk-pllv3.c
-@@ -21,8 +21,8 @@
- #define PLL_VF610_NUM_OFFSET	0x20
- #define PLL_VF610_DENOM_OFFSET	0x30
- 
--#define BM_PLL_POWER		(0x1 << 12)
- #define BM_PLL_LOCK		(0x1 << 31)
-+#define BM_PLL_LOCK_V2		(0x1 << 29)
- #define IMX7_ENET_PLL_POWER	(0x1 << 5)
- #define IMX7_DDR_PLL_POWER	(0x1 << 20)
- 
-@@ -34,6 +34,7 @@
-  * @base:	 base address of PLL registers
-  * @power_bit:	 pll power bit mask
-  * @powerup_set: set power_bit to power up the PLL
-+ * @lock_bit:	 pll lock bit mask
-  * @div_mask:	 mask of divider bits
-  * @div_shift:	 shift of divider bits
-  * @ref_clock:	reference clock rate
-@@ -48,6 +49,7 @@ struct clk_pllv3 {
- 	void __iomem	*base;
- 	u32		power_bit;
- 	bool		powerup_set;
-+	u32		lock_bit;
- 	u32		div_mask;
- 	u32		div_shift;
- 	unsigned long	ref_clock;
-@@ -65,7 +67,7 @@ static int clk_pllv3_wait_lock(struct clk_pllv3 *pll)
- 	if ((pll->powerup_set && !val) || (!pll->powerup_set && val))
- 		return 0;
- 
--	return readl_relaxed_poll_timeout(pll->base, val, val & BM_PLL_LOCK,
-+	return readl_relaxed_poll_timeout(pll->base, val, val & pll->lock_bit,
- 					  500, PLL_LOCK_TIMEOUT);
- }
- 
-@@ -101,7 +103,7 @@ static int clk_pllv3_is_prepared(struct clk_hw *hw)
- {
- 	struct clk_pllv3 *pll = to_clk_pllv3(hw);
- 
--	if (readl_relaxed(pll->base) & BM_PLL_LOCK)
-+	if (readl_relaxed(pll->base) & pll->lock_bit)
- 		return 1;
- 
- 	return 0;
-@@ -155,6 +157,39 @@ static const struct clk_ops clk_pllv3_ops = {
- 	.set_rate	= clk_pllv3_set_rate,
- };
- 
-+static int clk_pllv3_genericv2_set_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long parent_rate)
-+{
-+	struct clk_pllv3 *pll = to_clk_pllv3(hw);
-+	u32 val, div;
-+
-+	div = (readl_relaxed(pll->base) >> pll->div_shift) & pll->div_mask;
-+	val = (div == 0) ? parent_rate * 22 : parent_rate * 20;
-+
-+	if (rate == val)
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static unsigned long clk_pllv3_genericv2_recalc_rate(struct clk_hw *hw,
-+					   unsigned long parent_rate)
-+{
-+	struct clk_pllv3 *pll = to_clk_pllv3(hw);
-+	u32 div = (readl_relaxed(pll->base) >> pll->div_shift)  & pll->div_mask;
-+
-+	return (div == 0) ? parent_rate * 22 : parent_rate * 20;
-+}
-+
-+static const struct clk_ops clk_pllv3_genericv2_ops = {
-+	.prepare	= clk_pllv3_prepare,
-+	.unprepare	= clk_pllv3_unprepare,
-+	.is_prepared	= clk_pllv3_is_prepared,
-+	.recalc_rate	= clk_pllv3_genericv2_recalc_rate,
-+	.round_rate	= clk_pllv3_round_rate,
-+	.set_rate	= clk_pllv3_genericv2_set_rate,
-+};
-+
- static unsigned long clk_pllv3_sys_recalc_rate(struct clk_hw *hw,
- 					       unsigned long parent_rate)
- {
-@@ -407,9 +442,9 @@ static const struct clk_ops clk_pllv3_enet_ops = {
- 	.recalc_rate	= clk_pllv3_enet_recalc_rate,
- };
- 
--struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
-+struct clk_hw *__imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
- 			  const char *parent_name, void __iomem *base,
--			  u32 div_mask)
-+			  u32 div_mask, u8 pwr_bit)
- {
- 	struct clk_pllv3 *pll;
- 	const struct clk_ops *ops;
-@@ -421,11 +456,21 @@ struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
- 	if (!pll)
- 		return ERR_PTR(-ENOMEM);
- 
--	pll->power_bit = BM_PLL_POWER;
-+	pll->power_bit = pwr_bit;
-+	pll->lock_bit = BM_PLL_LOCK;
- 	pll->num_offset = PLL_NUM_OFFSET;
- 	pll->denom_offset = PLL_DENOM_OFFSET;
- 
- 	switch (type) {
-+	case IMX_PLLV3_GENERICV2:
-+		pll->lock_bit = BM_PLL_LOCK_V2;
-+		pll->powerup_set = true;
-+		ops = &clk_pllv3_genericv2_ops;
-+		break;
-+	case IMX_PLLV3_SYSV2:
-+		pll->lock_bit = BM_PLL_LOCK_V2;
-+		pll->powerup_set = true;
-+		fallthrough;
- 	case IMX_PLLV3_SYS:
- 		ops = &clk_pllv3_sys_ops;
- 		break;
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index 5061a06468df..2bf50c92fdfa 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -6,6 +6,8 @@
- #include <linux/spinlock.h>
- #include <linux/clk-provider.h>
- 
-+#define BM_PLL_POWER		BIT(12)
-+
- extern spinlock_t imx_ccm_lock;
- extern bool mcore_booted;
- 
-@@ -102,6 +104,9 @@ extern struct imx_fracn_gppll_clk imx_fracn_gppll;
- 	to_clk(clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
- 				cgr_val, cgr_mask, clk_gate_flags, lock, share_count))
- 
-+#define imx_clk_hw_pllv3(type, name, parent_name, base, div_mask) \
-+	__imx_clk_hw_pllv3(type, name, parent_name, base, div_mask, 1)
-+
- #define imx_clk_pllv3(type, name, parent_name, base, div_mask) \
- 	to_clk(imx_clk_hw_pllv3(type, name, parent_name, base, div_mask))
- 
-@@ -242,6 +247,8 @@ struct clk_hw *imx_clk_hw_sscg_pll(const char *name,
- 
- enum imx_pllv3_type {
- 	IMX_PLLV3_GENERIC,
-+	IMX_PLLV3_GENERICV2,
-+	IMX_PLLV3_SYSV2,
- 	IMX_PLLV3_SYS,
- 	IMX_PLLV3_USB,
- 	IMX_PLLV3_USB_VF610,
-@@ -253,8 +260,8 @@ enum imx_pllv3_type {
- 	IMX_PLLV3_AV_IMX7,
- };
- 
--struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
--		const char *parent_name, void __iomem *base, u32 div_mask);
-+struct clk_hw *__imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
-+		const char *parent_name, void __iomem *base, u32 div_mask, u8 pwr_bit);
- 
- #define PLL_1416X_RATE(_rate, _m, _p, _s)		\
- 	{						\
+- libgpiod may not be automatically installed in the environment where the end
+  user of these Rust APIs exists. So I had to build it.
+
+- And then the API is changing a lot, maybe down the line once it is stable
+  enough we can change this to something else.
+
+> > diff --git a/bindings/rust/libgpiod-sys/src/lib.rs b/bindings/rust/libgpiod-sys/src/lib.rs
+> > new file mode 100644
+> > index 000000000000..3384863a567c
+> > --- /dev/null
+> > +++ b/bindings/rust/libgpiod-sys/src/lib.rs
+> > @@ -0,0 +1,20 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#[allow(
+> > +    clippy::all,
+> > +    deref_nullptr,
+> > +    dead_code,
+> > +    non_camel_case_types,
+> > +    non_upper_case_globals,
+> > +    non_snake_case,
+> > +    improper_ctypes
+> > +)]
+> > +
+> 
+> Are all these really necessary?
+
+Actually not, thanks for pointing this out.
+
+> Builds mostly clean for me with just:
+> 
+>  +    non_camel_case_types,
+>  +    non_upper_case_globals,
+> 
+> Both non_snake_case and deref_nullptr are only required for tests.
+
+and if you want to run sanity checks with "fmt" or "clippy".
+
+> The deref_nullptr masks several warnings like this:
+> 
+> warning: dereferencing a null pointer
+>    --> src/bindings.rs:121:14
+>     |
+> 121 |             &(*(::std::ptr::null::<max_align_t>())).__clang_max_align_nonce1 as *const _ as usize
+>     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this code causes undefined behavior when executed
+>     |
+>     = note: `#[warn(deref_nullptr)]` on by default
+> 
+> which is code generated by bindgen, which is a bit of a worry.
+> It is only used for alignment tests, but you'd think they would disable
+> the warning just around that code themselves.
+> 
+> Disabling deref_nullptr globally for all builds is at best poor form.
+
+Even with this these will get disabled only for the code present in libgpiod-sys
+crate, file bindgen.rs (the automatically generated one). This won't cause the
+warnings to be skipped for the libgpiod rust wrappers in the libgpiod crate.
+
+> Perhaps only disable it for test builds, i.e.
+> 
+> #[cfg_attr(test, allow(deref_nullptr, non_snake_case))]
+
+I also run following normally:
+
+cargo fmt --all -- --check; cargo clippy --workspace --bins --examples --benches --all-features -- -D warnings
+
+to do sanity checks, etc. And this will also generate warnings, not just tests.
+
+> > +mod bindings_raw {
+> > +    #[cfg(feature = "generate")]
+> > +    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+> > +
+> > +    #[cfg(not(feature = "generate"))]
+> > +    include!("bindings.rs");
+> > +}
+> > +pub use bindings_raw::*;
+> > diff --git a/bindings/rust/libgpiod-sys/wrapper.h b/bindings/rust/libgpiod-sys/wrapper.h
+> > new file mode 100644
+> > index 000000000000..7bc1158b7d90
+> > --- /dev/null
+> > +++ b/bindings/rust/libgpiod-sys/wrapper.h
+> > @@ -0,0 +1,2 @@
+> > +#include <string.h>
+> > +#include "../../../include/gpiod.h"
+> 
+> The string.h is just to provide strlen() for the wrapper crate??
+> (but also pulls in the other string functions)
+> The wrapper crate already depends on libc - why not use libc::strlen()
+> there and drop this include here?
+
+Right, done.
+
+> And then wrapper.h becomes redundant - call bindgen on gpiod.h directly.
+
+Rust documentation specifically suggests wrapper.h to be created [1], maybe it
+it is better to just keep it, even if we have a single entry in there.
+
 -- 
-2.36.1
+viresh
 
+[1] https://rust-lang.github.io/rust-bindgen/tutorial-2.html
