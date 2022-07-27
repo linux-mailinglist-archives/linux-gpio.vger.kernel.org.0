@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85CEE581DCB
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 04:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2165581DD3
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Jul 2022 04:58:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240154AbiG0C6Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Jul 2022 22:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        id S231410AbiG0C6m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Jul 2022 22:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240121AbiG0C6X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 22:58:23 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8423D371B3
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 19:58:22 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id q7-20020a17090a7a8700b001f300db8677so838033pjf.5
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 19:58:22 -0700 (PDT)
+        with ESMTP id S240168AbiG0C6l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Jul 2022 22:58:41 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022103C8E2
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 19:58:39 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id b7-20020a17090a12c700b001f20eb82a08so795259pjg.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Jul 2022 19:58:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=EpMaBkRlooaZ1gxgV0CxN+Ks2u5aOCBaoOEH4C5rKjw=;
-        b=OR/Tq4I9VkL2+3VYw9oWKZ4pg698IPd3pYVWlimSFBrqkO9qsMWVs1U2Y7GVep80Oe
-         44OY6rUKXx5uKjpb7K30Rw8Bs4YnCznOvs+Ce3dLxk/5bN4mw+3rbHsJoXgIqe39EOFW
-         uUzokwocMdI71hrNBxRIJ3Uz4h3bAfYVyOWhU/Z4DtYwK2BZ+DU+kNty2NAXvjXfbX3X
-         /1h08si0Fz2KING72qf7Q1mvlSCvgcL+1okJhOtU0pokaCIh4mkJYfKU+U+rkhmikxbQ
-         Qk3wtPngwIGxlvSrXCayLQp5BN0bTbX4/NqZNs1JA1K49M9d1gsu9a4ySYLsi7sI/VGn
-         aTIA==
+        bh=OMHGjGj70K/qPThpDcgUcjiBPAnF20y1MdHff1mj5gw=;
+        b=jW0nVBRIDt9RghIsXanO0M+kdZx07QSEdIXC8t1OBY1hhVO5g8qu3prTfFf7E79car
+         h3/0LNmcWq6Fj1vUb4ckPjLeP7Y0btTE0SxhOrwrfDxTH1jDFM7unqz5AFkGDG4ShHll
+         8+nQR4lEShJKX2+G1UCjDgY/lizBytiWszb5Qi3CkCE2zI4jBfqak4x1U/WgGCIsQHeY
+         6cZlhZK7EJBZNeMihjnpAERsg83mGvLJfq78rq3Pf1iISDU/N3uPuf2ZeZOBWDjLjGHY
+         XlgOGIXJMcgdUS6jWTfMuBgWO/+djQbadTPlx74H5XIqmJlLFvwkCiGuN9S11UgJZVHw
+         0+Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=EpMaBkRlooaZ1gxgV0CxN+Ks2u5aOCBaoOEH4C5rKjw=;
-        b=VlBtI1HE3OfWfA6nnYrMs9/I7P9KJkweFmdX8GuXyVvWehqKGkVeXwkPdGktNkD+D7
-         bZ/1GyRDxrkm0ArhQ1mjIidEBlWkxfaGoMAvavJVDg/PtCYGydw27+2Qf3p8IOHb1ob4
-         nRC94brx5KTuLTDevxZHuwjkSDrG6vrDu9R6w5B+3FntEuxhTZWGD3kgWk2CCTm5aFrO
-         SMb6r4138Vc5+ukn/pno2/Npl2f4wlfIaFOk1fTHdVSsXOwD3esoOrV9Ogc6RlWF5Cef
-         UnlpkgKJqB3ifGdXdYG23bZrygcqAUaxQPvLKb8voE6NZX5XXeG6W9nbKpiqeF2/ZpgZ
-         03Kg==
-X-Gm-Message-State: AJIora8FtYvl1ebmy0QIUITsjy0FJvfe/OCOPLw43PRh1n9UL4AtGVdh
-        /JX3tyhOv2E7F8Fcr/KvjzrJzbx2H08=
-X-Google-Smtp-Source: AGRyM1scBPEZYvMe3PaDju86+ZypMp0b2r3rd7tFn0WR3SpzOUz87C91i+WR+7MS0+S+bLA8s6R8uQ==
-X-Received: by 2002:a17:903:124e:b0:16b:e975:232f with SMTP id u14-20020a170903124e00b0016be975232fmr18599507plh.165.1658890701846;
-        Tue, 26 Jul 2022 19:58:21 -0700 (PDT)
+        bh=OMHGjGj70K/qPThpDcgUcjiBPAnF20y1MdHff1mj5gw=;
+        b=UQskfMuNBewdAfHcTxUZMu8atjzSY1Exe+zIjoGO7q5SnbhoEHwb/CFL5qnjtd+PG2
+         CvJOzxur7TOpeI+DTPem8/bTgpoKliBXUcYmW32yi6lwJc9f2zI+wUNZLFco8vvv8YPV
+         88dQovQ32CZiQzsTjiHwqK8f4k+0nMHf5/DGdkD5T3nNe7vmNpv23FCI2TKjCPhx+eQf
+         KMxKBxBLeFAO6/4vUdwnf3HyxpBx56nkRBQaRtbb++uCOoS2H49fNdz2vwrsIooNBRt2
+         3i7LWiurg7xf0WCykHv+jjvCz/0tSdP833SDeKwSGYxmOIVapHoSrQuGGFK1LZQbJ+sU
+         8NRg==
+X-Gm-Message-State: AJIora/xSnWPEa3tJakIaHLuWUKzBiumIBJv/T8IETOh43WY3/vwE52k
+        5Mv3w4MGs2/7z5ccvLZ/g40=
+X-Google-Smtp-Source: AGRyM1ua9lZ6lzPojMnSmjB/OXlSaiZK+uU0A8Bzbkm9pW7klCZuOEkBnkbzO8J54HI3zQmKJ8bEEQ==
+X-Received: by 2002:a17:902:b70a:b0:16c:f62c:43aa with SMTP id d10-20020a170902b70a00b0016cf62c43aamr19462860pls.8.1658890718449;
+        Tue, 26 Jul 2022 19:58:38 -0700 (PDT)
 Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id o6-20020a170902bcc600b0016d1c771031sm12248461pls.242.2022.07.26.19.58.17
+        by smtp.gmail.com with ESMTPSA id m3-20020a17090aab0300b001f21c635479sm329820pjq.40.2022.07.26.19.58.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 19:58:21 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 10:58:15 +0800
+        Tue, 26 Jul 2022 19:58:37 -0700 (PDT)
+Date:   Wed, 27 Jul 2022 10:58:32 +0800
 From:   Kent Gibson <warthog618@gmail.com>
 To:     Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -59,14 +59,14 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
         stratos-dev@op-lists.linaro.org,
         Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 5/8] libgpiod: Add rust examples
-Message-ID: <20220727025815.GE88787@sol>
+Subject: Re: [PATCH V4 6/8] libgpiod: Derive debug traits for few definitions
+Message-ID: <20220727025832.GF88787@sol>
 References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <acd12e70cfb30f04761f3c2efc868ec138c90c63.1657279685.git.viresh.kumar@linaro.org>
+ <490e4efc900d8173fb3e2f1373c97e1a20cb9ac3.1657279685.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <acd12e70cfb30f04761f3c2efc868ec138c90c63.1657279685.git.viresh.kumar@linaro.org>
+In-Reply-To: <490e4efc900d8173fb3e2f1373c97e1a20cb9ac3.1657279685.git.viresh.kumar@linaro.org>
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -77,444 +77,143 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 08, 2022 at 05:04:58PM +0530, Viresh Kumar wrote:
-> Add examples for the usage of the rust bindings, quite similar to the
-> ones in cxx bindings.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  bindings/rust/examples/gpiodetect.rs | 37 ++++++++++++
->  bindings/rust/examples/gpiofind.rs   | 42 +++++++++++++
->  bindings/rust/examples/gpioget.rs    | 42 +++++++++++++
->  bindings/rust/examples/gpioinfo.rs   | 89 ++++++++++++++++++++++++++++
->  bindings/rust/examples/gpiomon.rs    | 68 +++++++++++++++++++++
->  bindings/rust/examples/gpioset.rs    | 52 ++++++++++++++++
->  6 files changed, 330 insertions(+)
->  create mode 100644 bindings/rust/examples/gpiodetect.rs
->  create mode 100644 bindings/rust/examples/gpiofind.rs
->  create mode 100644 bindings/rust/examples/gpioget.rs
->  create mode 100644 bindings/rust/examples/gpioinfo.rs
->  create mode 100644 bindings/rust/examples/gpiomon.rs
->  create mode 100644 bindings/rust/examples/gpioset.rs
-> 
-> diff --git a/bindings/rust/examples/gpiodetect.rs b/bindings/rust/examples/gpiodetect.rs
-> new file mode 100644
-> index 000000000000..82307e4eecea
-> --- /dev/null
-> +++ b/bindings/rust/examples/gpiodetect.rs
-> @@ -0,0 +1,37 @@
-> +// SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
-> +//
-> +// Copyright 2022 Linaro Ltd. All Rights Reserved.
-> +//     Viresh Kumar <viresh.kumar@linaro.org>
-> +//
-> +// Simplified Rust implementation of gpiodetect tool.
-> +
-> +use std::env;
-> +use std::fs;
-> +use std::path::Path;
-> +
-> +use libgpiod::{gpiod_is_gpiochip_device, Chip};
-> +
-> +fn main() {
-> +    let args: Vec<String> = env::args().collect();
-> +    if args.len() > 1 {
-> +        println!("Usage: {}", args[0]);
-> +        return;
-> +    }
-> +
-> +    for entry in fs::read_dir(Path::new("/dev")).unwrap() {
-
-use .flatten() to have the iterator unwrap the entry so it is actually
-an entry, not a Result.
-
-> +        let pathbuf = entry.unwrap().path();
-> +        let path = pathbuf.to_str().unwrap();
-> +
-
-is_gpiochip_device() and Chip::open() (and ChipInternal) should accept
-anything that can be converted into a &Path, e.g. a PathBuf, so the path
-variable becomes redundant.
-
-e.g. 
-    pub(crate) fn open<P: AsRef<std::path::Path>>(path: &P) -> Result<Self> {
-        // Null-terminate the string
-        let path = path.as_ref().to_string_lossy() + "\0";
-        ...
-
-and then example code becomes:
-
-    for entry in fs::read_dir(Path::new("/dev")).unwrap().flatten() {
-        let path = entry.path();
-
-        if gpiod_is_gpiochip_device(&path) {
-            let chip = Chip::open(&path).unwrap();
-            ...
-
-(renaming pathbuf to path)
-
-Similarly other examples.
-
-> +        if gpiod_is_gpiochip_device(path) {
-> +            let chip = Chip::open(path).unwrap();
-> +            let ngpio = chip.get_num_lines();
-> +
-
-Why does ngpio get a variable, unlike name and label?
-
-> +            println!(
-> +                "{} [{}] ({})",
-> +                chip.get_name().unwrap(),
-> +                chip.get_label().unwrap(),
-> +                ngpio
-> +            );
-> +        }
-> +    }
-> +}
-
-Avoid using unwrap().  Have main return a Result and use ?.
-Not so important here, but below for helper functions returning
-Results allows the caller to determine how to handle the error.
-And it reads better.
-
-> diff --git a/bindings/rust/examples/gpiofind.rs b/bindings/rust/examples/gpiofind.rs
-> new file mode 100644
-> index 000000000000..bbbd7a87ece8
-> --- /dev/null
-> +++ b/bindings/rust/examples/gpiofind.rs
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
-> +//
-> +// Copyright 2022 Linaro Ltd. All Rights Reserved.
-> +//     Viresh Kumar <viresh.kumar@linaro.org>
-> +//
-> +// Simplified Rust implementation of gpiofind tool.
-> +
-> +use std::env;
-> +use std::fs;
-> +use std::path::Path;
-> +
-> +use libgpiod::{gpiod_is_gpiochip_device, Chip};
-> +
-> +fn main() {
-> +    let args: Vec<String> = env::args().collect();
-> +    if args.len() != 2 {
-> +        println!("Usage: {} <line-name>", args[0]);
-> +        return;
-> +    }
-> +
-> +    for entry in fs::read_dir(Path::new("/dev")).unwrap() {
-> +        let pathbuf = entry.unwrap().path();
-> +        let path = pathbuf.to_str().unwrap();
-> +
-> +        if gpiod_is_gpiochip_device(path) {
-
-Perhaps have the bindings provide an iterator that returns the paths of
-available gpiochips?
-
-> +            let chip = Chip::open(path).unwrap();
-> +
-> +            let offset = chip.find_line(&args[1]);
-> +            if offset.is_ok() {
-> +                println!(
-> +                    "Line {} found: Chip: {}, offset: {}",
-> +                    args[1],
-> +                    chip.get_name().unwrap(),
-> +                    offset.unwrap()
-> +                );
-> +                return;
-> +            }
-> +        }
-> +    }
-> +
-> +    println!("Failed to find line: {}", args[1]);
-> +}
-> diff --git a/bindings/rust/examples/gpioget.rs b/bindings/rust/examples/gpioget.rs
-> new file mode 100644
-> index 000000000000..c3bc35fcfdb6
-> --- /dev/null
-> +++ b/bindings/rust/examples/gpioget.rs
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
-> +//
-> +// Copyright 2022 Linaro Ltd. All Rights Reserved.
-> +//     Viresh Kumar <viresh.kumar@linaro.org>
-> +//
-> +// Simplified Rust implementation of gpioget tool.
-> +
-> +use std::env;
-> +
-> +use libgpiod::{Chip, Direction, LineConfig, RequestConfig};
-> +
-> +fn main() {
-> +    let args: Vec<String> = env::args().collect();
-> +    if args.len() < 3 {
-> +        println!("Usage: {} <chip> <line_offset0> ...", args[0]);
-> +        return;
-> +    }
-> +
-> +    let mut config = LineConfig::new().unwrap();
-> +    let mut offsets = Vec::<u32>::new();
-> +
-> +    for arg in &args[2..] {
-> +        let offset = arg.parse::<u32>().unwrap();
-> +
-> +        offsets.push(offset);
-> +        config.set_direction_override(Direction::Input, offset);
-> +    }
-> +
-> +    let path = format!("/dev/gpiochip{}", args[1]);
-> +    let chip = Chip::open(&path).unwrap();
-> +
-> +    let rconfig = RequestConfig::new().unwrap();
-> +    rconfig.set_consumer(&args[0]);
-> +    rconfig.set_offsets(&offsets);
-> +
-> +    let request = chip.request_lines(&rconfig, &config).unwrap();
-> +
-> +    let mut values: Vec<i32> = vec![0; offsets.len()];
-> +    request.get_values(&mut values).unwrap();
-> +
-> +    println!("{:?}", values);
-> +}
-> diff --git a/bindings/rust/examples/gpioinfo.rs b/bindings/rust/examples/gpioinfo.rs
-> new file mode 100644
-> index 000000000000..bd30d9096ce8
-> --- /dev/null
-> +++ b/bindings/rust/examples/gpioinfo.rs
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
-> +//
-> +// Copyright 2022 Linaro Ltd. All Rights Reserved.
-> +//     Viresh Kumar <viresh.kumar@linaro.org>
-> +//
-> +// Simplified Rust implementation of gpioinfo tool.
-> +
-> +use std::env;
-> +use std::fs;
-> +use std::path::Path;
-> +
-> +use libgpiod::{gpiod_is_gpiochip_device, Chip, Direction};
-> +
-> +fn line_info(chip: &Chip, offset: u32) {
-> +    let info = chip.line_info(offset).unwrap();
-> +    let off = info.get_offset();
-> +
-> +    let name = match info.get_name() {
-> +        Ok(name) => name,
-> +        _ => "unused",
-> +    };
-> +
-> +    let consumer = match info.get_consumer() {
-> +        Ok(name) => name,
-> +        _ => "unnamed",
-> +    };
-> +
-> +    let low = if info.is_active_low() {
-> +        "active-low"
-> +    } else {
-> +        "active-high"
-> +    };
-> +
-> +    let dir = match info.get_direction().unwrap() {
-> +        Direction::AsIs => "None",
-> +        Direction::Input => "Input",
-> +        Direction::Output => "Output",
-> +    };
-> +
-> +    println!(
-> +        "\tline {:>3}\
-> +              \t{:>10}\
-> +              \t{:>10}\
-> +              \t{:>6}\
-> +              \t{:>14}",
-> +        off, name, consumer, dir, low
-> +    );
-> +}
-> +
-> +fn chip_info(path: &str) {
-> +    if gpiod_is_gpiochip_device(path) {
-> +        let chip = Chip::open(path).unwrap();
-> +        let ngpio = chip.get_num_lines();
-> +
-> +        println!("GPIO Chip name: {}", chip.get_name().unwrap());
-> +        println!("\tlabel: {}", chip.get_label().unwrap());
-> +        println!("\tpath: {}", chip.get_path().unwrap());
-> +        println!("\tngpio: {}\n", ngpio);
-> +
-> +        println!("\tLine information:");
-> +
-> +        for offset in 0..ngpio {
-> +            line_info(&chip, offset);
-> +        }
-> +        println!("\n");
-> +    }
-> +}
-> +
-> +fn main() {
-> +    let args: Vec<String> = env::args().collect();
-> +    if args.len() > 2 {
-> +        println!("Usage: {}", args[0]);
-> +        return;
-> +    }
-> +
-> +    if args.len() == 1 {
-> +        for entry in fs::read_dir(Path::new("/dev")).unwrap() {
-> +            let pathbuf = entry.unwrap().path();
-> +            let path = pathbuf.to_str().unwrap();
-> +
-> +            chip_info(path);
-> +        }
-> +    } else {
-> +        let index = args[1].parse::<u32>().unwrap();
-> +        let path = format!("/dev/gpiochip{}", index);
-> +
-> +        chip_info(&path);
-> +    }
-> +}
-> diff --git a/bindings/rust/examples/gpiomon.rs b/bindings/rust/examples/gpiomon.rs
-> new file mode 100644
-> index 000000000000..872907b386f3
-> --- /dev/null
-> +++ b/bindings/rust/examples/gpiomon.rs
-> @@ -0,0 +1,68 @@
-> +// SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
-> +//
-> +// Copyright 2022 Linaro Ltd. All Rights Reserved.
-> +//     Viresh Kumar <viresh.kumar@linaro.org>
-> +//
-> +// Simplified Rust implementation of the gpiomon tool.
-> +
-> +use std::env;
-> +use std::time::Duration;
-> +
-> +use libgpiod::{Chip, Edge, EdgeEventBuffer, Error, LineConfig, LineEdgeEvent, RequestConfig};
-> +
-> +fn usage(name: &str) {
-> +    println!("Usage: {} <chip> <offset0> ...", name);
-> +}
-> +
-> +fn main() {
-> +    let args: Vec<String> = env::args().collect();
-> +    if args.len() < 3 {
-> +        usage(&args[0]);
-> +        return;
-> +    }
-> +
-> +    let mut config = LineConfig::new().unwrap();
-> +    let mut offsets = Vec::<u32>::new();
-> +
-> +    for arg in &args[2..] {
-> +        let offset = arg.parse::<u32>().unwrap();
-> +
-> +        offsets.push(offset);
-> +    }
-> +
-> +    config.set_edge_detection_default(Edge::Both);
-> +
-> +    let path = format!("/dev/gpiochip{}", args[1]);
-> +    let chip = Chip::open(&path).unwrap();
-> +
-> +    let rconfig = RequestConfig::new().unwrap();
-> +    rconfig.set_offsets(&offsets);
-> +
-> +    let buffer = EdgeEventBuffer::new(1).unwrap();
-> +    let request = chip.request_lines(&rconfig, &config).unwrap();
-> +
-> +    loop {
-> +        match request.wait_edge_event(Duration::new(1, 0)) {
-> +            Err(Error::OperationTimedOut) => continue,
-
-timeout/continue required as you can't (currently) block indefinitely?
-
-> +            Err(x) => {
-> +                println!("{:?}", x);
-> +                return;
-> +            }
-> +            Ok(()) => (),
-> +        }
-> +
-> +        let count = request.read_edge_event(&buffer, 1).unwrap();
-> +        if count == 1 {
-> +            let event = buffer.get_event(0).unwrap();
-> +            println!(
-> +                "line: {} type: {}, time: {:?}",
-> +                event.get_line_offset(),
-> +                match event.get_event_type().unwrap() {
-> +                    LineEdgeEvent::Rising => "Rising",
-> +                    LineEdgeEvent::Falling => "Falling",
-> +                },
-> +                event.get_timestamp()
-> +            );
-> +        }
-> +    }
-> +}
-> diff --git a/bindings/rust/examples/gpioset.rs b/bindings/rust/examples/gpioset.rs
-> new file mode 100644
-> index 000000000000..ef70e8edbaae
-> --- /dev/null
-> +++ b/bindings/rust/examples/gpioset.rs
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
-> +//
-> +// Copyright 2022 Linaro Ltd. All Rights Reserved.
-> +//     Viresh Kumar <viresh.kumar@linaro.org>
-> +//
-> +// Simplified Rust implementation of the gpioset tool.
-> +
-> +use std::env;
-> +
-> +use libgpiod::{Chip, Direction, LineConfig, RequestConfig};
-> +
-> +fn usage(name: &str) {
-> +    println!("Usage: {} <chip> <line_offset0>=<value0> ...", name);
-> +}
-> +
-> +fn main() {
-> +    let args: Vec<String> = env::args().collect();
-> +    if args.len() < 3 {
-> +        usage(&args[0]);
-> +        return;
-> +    }
-> +
-> +    let mut config = LineConfig::new().unwrap();
-> +    let mut offsets = Vec::<u32>::new();
-> +    let mut values = Vec::<i32>::new();
-> +
-> +    for arg in &args[2..] {
-> +        let pair: Vec<&str> = arg.split('=').collect();
-> +        if pair.len() != 2 {
-> +            usage(&args[0]);
-> +            return;
-> +        }
-> +
-> +        let offset = pair[0].parse::<u32>().unwrap();
-> +        let value = pair[1].parse::<u32>().unwrap();
-> +
-> +        offsets.push(offset);
-> +        values.push(value as i32);
-> +    }
-> +
-> +    config.set_direction_default(Direction::Output);
-> +    config.set_output_values(&offsets, &values).unwrap();
-> +
-> +    let path = format!("/dev/gpiochip{}", args[1]);
-> +    let chip = Chip::open(&path).unwrap();
-> +
-> +    let rconfig = RequestConfig::new().unwrap();
-> +    rconfig.set_consumer(&args[0]);
-> +    rconfig.set_offsets(&offsets);
-> +
-> +    chip.request_lines(&rconfig, &config).unwrap();
-
-Wait rather than exiting immediately?
-
-> +}
-> -- 
-> 2.31.1.272.g89b43f80a514
+On Fri, Jul 08, 2022 at 05:04:59PM +0530, Viresh Kumar wrote:
+> These are required for tests, which will be added by a later commit.
 > 
 
-And, as mentioned elsewhere, add a gpiowatch example.
+Squash this patch into patch 4, as you know you will need them
+eventually.  All public types should implement Debug[1].
+
+They should also implement Clone, Eq, PartialEq and Default where
+that makes sense.  And Copy if you are sure you wont add something
+non-Copyable to them in the future.
 
 Cheers,
 Kent.
+
+[1] https://rust-lang.github.io/api-guidelines/debuggability.html
+
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  bindings/rust/src/chip.rs      | 5 +++++
+>  bindings/rust/src/chip_info.rs | 1 +
+>  bindings/rust/src/lib.rs       | 8 +++++++-
+>  bindings/rust/src/line_info.rs | 1 +
+>  4 files changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/bindings/rust/src/chip.rs b/bindings/rust/src/chip.rs
+> index 50b5d6102f96..ecff4b003cd9 100644
+> --- a/bindings/rust/src/chip.rs
+> +++ b/bindings/rust/src/chip.rs
+> @@ -21,6 +21,7 @@ use super::{
+>  /// character device. It exposes basic information about the chip and allows
+>  /// callers to retrieve information about each line, watch lines for state
+>  /// changes and make line requests.
+> +#[derive(Debug)]
+>  pub(crate) struct ChipInternal {
+>      chip: *mut bindings::gpiod_chip,
+>  }
+> @@ -52,11 +53,15 @@ impl Drop for ChipInternal {
+>      }
+>  }
+>  
+> +#[derive(Debug)]
+>  pub struct Chip {
+>      ichip: Arc<ChipInternal>,
+>      info: ChipInfo,
+>  }
+>  
+> +unsafe impl Send for Chip {}
+> +unsafe impl Sync for Chip {}
+> +
+>  impl Chip {
+>      /// Find a chip by path.
+>      pub fn open(path: &str) -> Result<Self> {
+> diff --git a/bindings/rust/src/chip_info.rs b/bindings/rust/src/chip_info.rs
+> index 950368b54c6f..7188f91a92a6 100644
+> --- a/bindings/rust/src/chip_info.rs
+> +++ b/bindings/rust/src/chip_info.rs
+> @@ -11,6 +11,7 @@ use vmm_sys_util::errno::Error as IoError;
+>  use super::{bindings, ChipInternal, Error, Result};
+>  
+>  /// GPIO chip Information
+> +#[derive(Debug)]
+>  pub struct ChipInfo {
+>      info: *mut bindings::gpiod_chip_info,
+>  }
+> diff --git a/bindings/rust/src/lib.rs b/bindings/rust/src/lib.rs
+> index 2f2ac515d353..63b0b82281b7 100644
+> --- a/bindings/rust/src/lib.rs
+> +++ b/bindings/rust/src/lib.rs
+> @@ -59,6 +59,7 @@ pub enum Error {
+>  }
+>  
+>  /// Direction settings.
+> +#[derive(Debug, PartialEq)]
+>  pub enum Direction {
+>      /// Request the line(s), but don't change direction.
+>      AsIs,
+> @@ -88,6 +89,7 @@ impl Direction {
+>  }
+>  
+>  /// Internal bias settings.
+> +#[derive(Debug, PartialEq)]
+>  pub enum Bias {
+>      /// Don't change the bias setting when applying line config.
+>      AsIs,
+> @@ -125,6 +127,7 @@ impl Bias {
+>  }
+>  
+>  /// Drive settings.
+> +#[derive(Debug, PartialEq)]
+>  pub enum Drive {
+>      /// Drive setting is push-pull.
+>      PushPull,
+> @@ -154,6 +157,7 @@ impl Drive {
+>  }
+>  
+>  /// Edge detection settings.
+> +#[derive(Debug, PartialEq)]
+>  pub enum Edge {
+>      /// Line edge detection is disabled.
+>      None,
+> @@ -223,6 +227,7 @@ impl Config {
+>  }
+>  
+>  /// Event clock settings.
+> +#[derive(Debug, PartialEq)]
+>  pub enum EventClock {
+>      /// Line uses the monotonic clock for edge event timestamps.
+>      Monotonic,
+> @@ -248,6 +253,7 @@ impl EventClock {
+>  }
+>  
+>  /// Line status change event types.
+> +#[derive(Debug, PartialEq)]
+>  pub enum Event {
+>      /// Line has been requested.
+>      LineRequested,
+> @@ -268,7 +274,7 @@ impl Event {
+>      }
+>  }
+>  
+> -#[derive(Copy, Clone)]
+> +#[derive(Copy, Clone, Debug, PartialEq)]
+>  /// Edge event types.
+>  pub enum LineEdgeEvent {
+>      /// Rising edge event.
+> diff --git a/bindings/rust/src/line_info.rs b/bindings/rust/src/line_info.rs
+> index 70b6bd6a84bb..426bd16aa616 100644
+> --- a/bindings/rust/src/line_info.rs
+> +++ b/bindings/rust/src/line_info.rs
+> @@ -23,6 +23,7 @@ use super::{
+>  /// line, which does not include the line value.  The line must be requested
+>  /// to access the line value.
+>  
+> +#[derive(Debug)]
+>  pub struct LineInfo {
+>      info: *mut bindings::gpiod_line_info,
+>      ichip: Option<Arc<ChipInternal>>,
+> -- 
+> 2.31.1.272.g89b43f80a514
+> 
