@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F7235847C2
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jul 2022 23:34:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 058CD5847CA
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Jul 2022 23:42:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230312AbiG1VeQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Jul 2022 17:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54546 "EHLO
+        id S229747AbiG1VmM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Jul 2022 17:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231455AbiG1VeP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Jul 2022 17:34:15 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF3D7478C;
-        Thu, 28 Jul 2022 14:34:14 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id e15so3743799edj.2;
-        Thu, 28 Jul 2022 14:34:14 -0700 (PDT)
+        with ESMTP id S229556AbiG1VmL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Jul 2022 17:42:11 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31CD76069C;
+        Thu, 28 Jul 2022 14:42:10 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id bp15so5305991ejb.6;
+        Thu, 28 Jul 2022 14:42:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=sfhAPvUqiK+ahJIK5HzVSgFOB2P6RbW6XTzzWiwiFLw=;
-        b=fVyLD/jB/U3ZH4vlsOCCa7SAgidqs3WoGTs2yYuUbMkIx+VeSSE3CXlAWzZtkinn39
-         3JEx1p8BvOWurmVpxPUVm7pV11IpReVju3Qoc4NSYRiDOPYc4BzsjBV4JgAF9aVBgjKO
-         1MyfTkHU3WFl838onrI2rVHc8fh4ichxN0SFcJLvUwqrhXzyiAf7bzqWnQvAOEeO1CgQ
-         hkTTwUinZ3ikQVPt8i+1RyrkF9lNT/ADOghFK7LbY37/RJIwFHe4XlLR2h9tuGtHX+JS
-         QPVKqFi6g4A3ZaDnjz/IzGH0Rp7s5wEPsZEYz5082ADMizn24I/xOrGJ3s0iIkxJX+Iw
-         PHZA==
+        bh=GVWM8KDlgWl9FAw3nke74hvfEJOpdeYFEgFkcinpKNc=;
+        b=bysSJ6a9V5jE+Kbbhxd7/Duh4WyyGfYgBIt6fKo257mRk4kAlS1FSVxiFpzZ1O6foj
+         FCGQEdgTbFRrdYyuLhnuFRopOi7Q4Aoilm2gT6eyw4p4Us9w65LyRiNYNX7K+7mxshvn
+         r04cREj6q2StXzQ0cbaEF7ywJz3+C3ewjb3UiurB1aVOBzvShi7wX6cn6Dplg0BG2STm
+         WVVgvYsPwVFClI+loFKDHFUXy2Q1N+lzWMycla6BtWL/LULywnqBVMCcDXpMOr57derV
+         LPqCTATZiO0B9E4WrMjs3AqxSUmTt8OG3utczKDe/XuLloXktAbqMWNsau8P/Vhyux9b
+         8zJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=sfhAPvUqiK+ahJIK5HzVSgFOB2P6RbW6XTzzWiwiFLw=;
-        b=4SBDYvSeYw1GWmOrRre0sE+n4OKQGxEeUE55JhOiutobZovsYEi/pSaW72AeyDbfnI
-         0CMoFWH/h6nCiD5pBUpxifOjl9OLDFtFldS+fZbyzLsN4WlfnIkRUSoN5a8GVSHPHKVH
-         92PsbXiyH4+H4RlrgkzAQ8YdzdmgqX//WHHUzrEA6fqako0xfLWe+nDl0f37lY+HnSSD
-         e/E4o3mmBp7cI00ernfVfpjph9JklqBmUQ3SP52/dzVztUQtp6TqRJl9JYj6slZt91Vi
-         PvhRbECSwLI4mHgBiwLLl5AolehfoDCDVnxFoFaaruvC7izaAfQZVYpMR4bIQZMBv9eh
-         /lNg==
-X-Gm-Message-State: AJIora89RKe85sYjrefSruM1iauCTYr8EotZUThFgwVLKMYqReZONf2Z
-        kmdJ3NSv6gRZRFCtPH/mK6dClIitj2NSBKIRtJ8ay2dT
-X-Google-Smtp-Source: AGRyM1tuZx5fIO0oLk+zmQvpGf/QKNyFnnQBG0ztolnolC6QnxIT+cJzJdQ1cWR9KNG1NlR0S3OUZVjiL7+QnJaD/3o=
-X-Received: by 2002:a05:6402:280b:b0:43b:5d75:fcfa with SMTP id
- h11-20020a056402280b00b0043b5d75fcfamr863417ede.114.1659044052761; Thu, 28
- Jul 2022 14:34:12 -0700 (PDT)
+        bh=GVWM8KDlgWl9FAw3nke74hvfEJOpdeYFEgFkcinpKNc=;
+        b=sExhidFHGZZb6v4H6LQ5vD7muw6cjp1U8rkaZs7MsZcMDUMnbGHatzbRHK6rTbg+vh
+         VHBP4PvW/5yD71AUIpio/0b9E8sDlQhetDgW8dP9f1b/e2p/jWA2nCgSKoaaObw156SO
+         48a5Rc9vBYPqMs5ghxHpZ4Khn8+AAaniIx6nD1hwHe3KUIehPk0N3gJqBmxaoW1OwV2/
+         9CBzL3FUO7I7hydM+R9+6lE5tNFCuwBBZ1dSN8jkdC2GWzfBa/T5zBqUDgScwtlajlhd
+         jCGqjwZFQq3g7DXuAGSKFqmh7MTlOedG8R+1+JxlQw8wlf36DGDGp0RkMtshSmzt/No9
+         0JUg==
+X-Gm-Message-State: AJIora8y3ErWpGR7vM9Wuq8LttPmnpyKzpqmvT3mI9NSqfVUJVzhBamc
+        ZykPn1JTEqOGScbf4ZcgttOtVC9CFNFRskavjak=
+X-Google-Smtp-Source: AGRyM1vf5SSTXOummeDa1QN+YUdXQLIusj+2vV9QKJVTdhyMRmDU/OKDz3Nx1knVsYe6O/b0b0b+VICU8/Y4o6lAdrs=
+X-Received: by 2002:a17:907:9706:b0:72b:4b0d:86a2 with SMTP id
+ jg6-20020a170907970600b0072b4b0d86a2mr625974ejc.242.1659044528358; Thu, 28
+ Jul 2022 14:42:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220728155652.29516-1-henning.schild@siemens.com> <20220728155652.29516-2-henning.schild@siemens.com>
-In-Reply-To: <20220728155652.29516-2-henning.schild@siemens.com>
+References: <20220728155652.29516-1-henning.schild@siemens.com> <20220728155652.29516-4-henning.schild@siemens.com>
+In-Reply-To: <20220728155652.29516-4-henning.schild@siemens.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 Jul 2022 23:33:36 +0200
-Message-ID: <CAHp75VcOHxJDBpnLrMQOWRED-WfJebRrYPtJZ35-8_B6wHAi1w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+Date:   Thu, 28 Jul 2022 23:41:31 +0200
+Message-ID: <CAHp75VehvE1cN9kMAhkuRrgek9Tt9OExpYnkPYNqocGPEG6Tew@mail.gmail.com>
+Subject: Re: [PATCH 3/4] leds: simatic-ipc-leds-gpio: add new model 227G
 To:     Henning Schild <henning.schild@siemens.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -73,42 +73,34 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Thu, Jul 28, 2022 at 5:57 PM Henning Schild
 <henning.schild@siemens.com> wrote:
 >
-> Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO chips are
-> very similar to the ones from Fintek. In other subsystems they also
-> share drivers and are called a family of drivers.
->
-> For the GPIO subsystem the only difference is that the direction bit is
-> reversed and that there is only one data bit per pin. On the SuperIO
-> level the logical device is another one.
+> This adds support of the Siemens Simatic IPC227G. Its LEDs are connected
+> to GPIO pins provided by the gpio-f7188x module. We make sure that
+> gets loaded, if not enabled in the kernel config no LED support will be
+> available.
 
 ...
 
-> +#define SIO_GPIO_ENABLE                0x30    /* GPIO enable */
+> +       switch (plat->devmode) {
+> +       case SIMATIC_IPC_DEVICE_127E:
+> +               simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_127e;
+> +               break;
+> +       case SIMATIC_IPC_DEVICE_227G:
 
-I don't see how it's being utilized... (But okay, it might be good to
-have as a hint for a reader who has no access to the documentation).
+> +               if (!IS_ENABLED(CONFIG_GPIO_F7188X))
+> +                       return -ENODEV;
 
-...
+Hmm... What is the difference with the 127E model in the sense of the
+driver absence? Why do we need this check?
 
-> +       if (sio->device == SIO_LD_GPIO_NUVOTON) {
+> +               request_module("gpio-f7188x");
 
-Everywhere else you use `device == SIO_LD_GPIO_FINTEK`, perhaps here
-for consistency? However, I would rather see a field that clearly
-states that it's an inverted value. Then you can use
+I'm not sure why you need request_module().
 
-  if (sio->dir_inv)
-    ...do something...
-
-> +               if (dir & BIT(offset))
-> +                       return GPIO_LINE_DIRECTION_IN;
-> +
-> +               return GPIO_LINE_DIRECTION_OUT;
+> +               simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_227g;
+> +               break;
+> +       default:
+> +               return -ENODEV;
 > +       }
-> +
-> +       if (dir & BIT(offset))
->                 return GPIO_LINE_DIRECTION_OUT;
->
->         return GPIO_LINE_DIRECTION_IN;
 
 -- 
 With Best Regards,
