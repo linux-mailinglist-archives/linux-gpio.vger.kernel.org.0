@@ -2,96 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B05C3586D3E
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Aug 2022 16:49:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B59BD586E21
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Aug 2022 17:56:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232755AbiHAOt4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Aug 2022 10:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34570 "EHLO
+        id S231190AbiHAP4Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Aug 2022 11:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231352AbiHAOtz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Aug 2022 10:49:55 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2072.outbound.protection.outlook.com [40.107.244.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FFC3C8E7;
-        Mon,  1 Aug 2022 07:49:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ELroC6QQzNAmNh/ZNSvEYL5TbdetCCd6kycF9pwu7p9axVT50RaZcIIVxWuxtYTt+jk07TgXta3Im2ZHCsd4/S/6NYI6XKMyA7SFCttnJX9BJad5REhxtDUTMxQXXBoQ/fci/Ivt+xeQDDeifXDdRGCyoLIFNlr0jPgv7ZRf3oGgSXYLHheQk/E/YsrF8VAxpW2jUYmbYuGn/6fEvi4xxrZ1SO6fZHUP+lH4E1EjCapAokD9MOAxTkZ4kHdEqJ3XICCNVFyQAZhydtGX7PIbz4I7Usgvc5q0YkZ3W9X+f2Mnr1ZylzYqjA+wfWJ7WQwPIu+WWbwCncFXcfHVW1AGmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nrP2dtp8+WyUqggtfhy9tbd15iRfJ/Umtu6VxQjbocc=;
- b=d4mSbWtQMgBz9BDNDY4rGbOeA4/rrxEXg86v6TPX7BZhDVyzCERAsL/6hwp3I7TogtKJlEEP2U1OU4HyhNDwabJW286iouinJFsVgOYU6ttoDBXRYbEu8sQY57H6985E6Qic3WvqBaH8G0VeM4gewl+7Z0lQ8B5MuXB7UuARU22jPaf+2HOMqZfPWAWJjFmnt9+FFxtGuQY0boGYgmWsAPbw7iujtQUohOp152ldlKSCRqjeaQFvtL1MQWD7Ge5QcG4NdKeoVnss617E2wIvauzEPjiBqiWJuEHZqqnapnPJDYQtYAvVsiQilGoqAVeQvzHbbc9CpQ1euRmCeMt6Xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nrP2dtp8+WyUqggtfhy9tbd15iRfJ/Umtu6VxQjbocc=;
- b=0tKPFtKrpu06kRozAQVxyJfK3x8UgMrmkLJiZwVf4BuMFB+ONzP5qfPBj4KU5Q03gKI0/Imq26i6ynvKoNPviDzwPHPHWaTjlBEedqKYl5KNf43oCnb4Od2pTp4lOLdLfpO3Iqhh4qsIwgI5Zee5F/yD/gmCF0i8TRE0O9szciU=
-Received: from MW4PR04CA0034.namprd04.prod.outlook.com (2603:10b6:303:6a::9)
- by CY4PR12MB1686.namprd12.prod.outlook.com (2603:10b6:910:c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.11; Mon, 1 Aug
- 2022 14:49:52 +0000
-Received: from CO1NAM11FT038.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:6a:cafe::37) by MW4PR04CA0034.outlook.office365.com
- (2603:10b6:303:6a::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.23 via Frontend
- Transport; Mon, 1 Aug 2022 14:49:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT038.mail.protection.outlook.com (10.13.174.231) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5482.10 via Frontend Transport; Mon, 1 Aug 2022 14:49:52 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Mon, 1 Aug
- 2022 09:49:51 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     <mario.limonciello@amd.com>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     kernel test robot <lkp@intel.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] pinctrl: amd: Fix an unused variable
-Date:   Mon, 1 Aug 2022 09:49:52 -0500
-Message-ID: <20220801144952.141-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230229AbiHAP4Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Aug 2022 11:56:24 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DD72FFF3
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Aug 2022 08:56:23 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id q16so10055493pgq.6
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Aug 2022 08:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=H6hUgxKxbhxpiMPWoSWM47VALtS/yuWff3URm6iNcXU=;
+        b=n7cXhMeX4WlroFEQYNXgUYm+aMlY6En/B3pL46wSv0lunZ6zya2qbNISs8iw07Y0pn
+         Iv9Krx/CtZn0kVdCQJeMBRDBD0P8tHCKlv1SAxF6Xjxo47d5BR/c56mJw5N8HNZItYM3
+         EMr3852oHHq/TNlVLnYy4C6ult9Vv+likzXxUXxynWQHxRP/NcFNjLYrwlTwFyiPRnHu
+         L7Tn+7B3ixXRKvnSarPVpQpJb8Cl7ELlipgrhFKqKrg0kFE1Os6QlyToXxiEYpRrywRd
+         HQqpNdZrL0R5y4/g7p4xY96aERdLgXRwYtat4xa1867orYx8jlgOIFbSOi5t3aj+po2r
+         6+ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H6hUgxKxbhxpiMPWoSWM47VALtS/yuWff3URm6iNcXU=;
+        b=GIMqwvO/rNe0LXBLd0ZkdtXl0d6BN2GfL1AxLZrWsasVQcPPIxkILFMlnR1sHDpCbo
+         OE2h+WC645l8tYweBoLPb0VCRFOCuu3xNh4QcYbTMEXRo7DPFHIsrpV1JHRrjw7R5JyP
+         w1dzKZmkbVPbrYcYu0KzGVa9kLRJYGoQi9UucWLtfJYoRC7PhNaYgVgxwGK8C7ibH5e3
+         xVVPzLsEUlA8aC1k6B6et18DlVfT9GyDUMiR+RtvGrBCQc325fF3nZBv1QlLYTAd1JS2
+         x+WprKJy2AQywuVL6w4yfskAJ35ThbME2EoEVv4sHRGWuwYJQjtnfJ5DWSTrQX0xZdzr
+         txgA==
+X-Gm-Message-State: AJIora/sa5xbB6R6V6QlNEd5Rmp8uyZ7z2Y3aXH7PBHQPbY6UCw6QXdl
+        g0hjDXNYcDcsGhXRunIwS0Y=
+X-Google-Smtp-Source: AA6agR5QKtvy6bvoz6teLIGM6oJeMy4RV8r3i1F2DIrhSFvkyBSmzthRwqrikxGqRkkZRA0ombiFag==
+X-Received: by 2002:a63:f804:0:b0:41b:a3b4:4edc with SMTP id n4-20020a63f804000000b0041ba3b44edcmr11715339pgh.479.1659369383046;
+        Mon, 01 Aug 2022 08:56:23 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id b1-20020a170903228100b0016c06a10861sm9891610plh.74.2022.08.01.08.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Aug 2022 08:56:22 -0700 (PDT)
+Date:   Mon, 1 Aug 2022 23:56:15 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V4 1/8] libgpiod: Add libgpiod-sys rust crate
+Message-ID: <20220801155615.GA84978@sol>
+References: <cover.1657279685.git.viresh.kumar@linaro.org>
+ <44ee8c36d58049de2f653494e16cba04b198fb35.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025706.GA88787@sol>
+ <20220727045158.z72byax7pc7kokca@vireshk-i7>
+ <20220727051743.GA108225@sol>
+ <20220801121106.hc2mzippvby5ujg4@vireshk-i7>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 232d3863-fee6-4d40-ec50-08da73cd177b
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1686:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4cSml9cuix3AkUUMIlU8bTusp4jiP67G3x6PR1csbn/IWYe9a/cBnAL8CXMLcXHrGlcbi+YaHG+3IECtCzrZGN6ZodeYPfcN6Pr+VZDEjS8pue88dJbrURYwKJomiM3yL8TikNTwKRdgs/fA0pemhmfbqi3Z2D3HAxkv22Y3sOHWJ8DwyOrpKGqbtF9XqDDX1KXKAqXQq5fOakPxC6hMxthmwRmdXMTpfPCRSD6PElNTxVD//gFoVSfB42MNpkKEPOalOcMBrVf+tqUbXVQMabUOEJwcaDnfiYS3pExjpblF0ZmAOvCJdQHfOY6DC+2dznFHRTmUyp7zB7SkEL82f/ldDMcgHsbrXaJTdzu7LMOBFudHgB0e7kXX5gSJ2vBS55OP4unrNsNf2nym645jOtzALv1F3rRP+aGHSHWTUG9iJ3zZ/iYlP/ZpOfqOqsQJDacD9SKregz/bpQra4DfKXU2iQPz4VMHc5GQHrmBuTLzZwiTorbAkEqobEQg2FGKPhughtDBi+h5ZbLQftcaldFRnzVtOmtLbFvMK9qhmXBw8tmwm8uOuOuh45O5vQTGzxbAOx+mgyIdLqYTV52xc5s9pgXWCreI6xwIElyPFLfKKAdgPJ5DjZoQQfmkknLEcM7pmzAaO6fvgPJYshQaDYEZVjs5LLBrD6G+AqL57HpUkn7JXtNqBiH6QtAsdRY/IIaL0RdJJK8BAV+OOBzSFmvZVW1Ma8bLA3LuoKEsGqKWF2pmM+a2usxgIISRggQszdYFBfmFiNIaDNn4yEZMLFR7AHFl2ny2NRDI1IR0Xo0d8T6l1leO5WAyqRIPtqLemSVESUWPdXiw7Jpoa7OLzw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(376002)(396003)(39860400002)(46966006)(36840700001)(40470700004)(36756003)(2906002)(8936002)(82310400005)(40480700001)(81166007)(4326008)(70206006)(70586007)(110136005)(316002)(54906003)(478600001)(8676002)(40460700003)(86362001)(5660300002)(1076003)(41300700001)(82740400003)(336012)(426003)(83380400001)(7696005)(47076005)(16526019)(186003)(2616005)(26005)(36860700001)(44832011)(4744005)(356005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2022 14:49:52.3958
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 232d3863-fee6-4d40-ec50-08da73cd177b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT038.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1686
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220801121106.hc2mzippvby5ujg4@vireshk-i7>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -99,28 +81,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-`char *output_enable` is no longer used once switching to unicode
-output.
+On Mon, Aug 01, 2022 at 05:41:06PM +0530, Viresh Kumar wrote:
+> On 27-07-22, 13:17, Kent Gibson wrote:
+> > On Wed, Jul 27, 2022 at 10:21:58AM +0530, Viresh Kumar wrote:
+> > > On 27-07-22, 10:57, Kent Gibson wrote:
+> > > > On Fri, Jul 08, 2022 at 05:04:54PM +0530, Viresh Kumar wrote:
+> > > > > +fn main() {
+> > > > > +    let files = vec![
+> > > > > +        "../../../lib/chip.c",
+> > > > > +        "../../../lib/chip-info.c",
+> > > > > +        "../../../lib/edge-event.c",
+> > > > > +        "../../../lib/info-event.c",
+> > > > > +        "../../../lib/internal.c",
+> > > > > +        "../../../lib/line-config.c",
+> > > > > +        "../../../lib/line-info.c",
+> > > > > +        "../../../lib/line-request.c",
+> > > > > +        "../../../lib/misc.c",
+> > > > > +        "../../../lib/request-config.c",
+> > > > > +    ];
+> > > > > +
+> > > > > +    #[cfg(feature = "generate")]
+> > > > > +    generate_bindings(&files);
+> > > > > +    build_gpiod(files);
+> > > > > +}
+> > > > 
+> > > > Shouldn't bindings wrap libgpiod and dynamically link against it rather
+> > > > than building and linking statically?
+> > > 
+> > > There are few problems I faced, because of which I had to do it this way.
+> > > 
+> > > - I couldn't find a way to do a "Make" for libgpiod from here and then link to
+> > >   the resultant library.
+> > > 
+> > > - libgpiod may not be automatically installed in the environment where the end
+> > >   user of these Rust APIs exists. So I had to build it.
+> > > 
+> > > - And then the API is changing a lot, maybe down the line once it is stable
+> > >   enough we can change this to something else.
+> > > 
+> > 
+> > Sure, it is a problem, but static isn't the solution.
+> > You should be able to get the appropriate paths from autoconf, but I would
+> > refer you to Bart on that.
+> 
+> I am still looking for some help on how to link this dynamically.
+> 
+> FWIW, the problem is that the user crates, like vhost-device, will mention
+> libgpiod as a dependency crate and likely won't have libgpiod installed in
+> environment. So build.rs here needs to do some magic so the definitions are all
+> available to the users.
+> 
 
-Fixes: e8129a076a50 ("pinctrl: amd: Use unicode for debugfs output")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pinctrl/pinctrl-amd.c | 1 -
- 1 file changed, 1 deletion(-)
+The Rust bindings themselves should be building against the local build
+tree, so well known relative paths.
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 492b76f2c03e..4691a33bc374 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -216,7 +216,6 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
- 	char *pull_up_enable;
- 	char *pull_down_enable;
- 	char *orientation;
--	char *output_enable;
- 	char debounce_value[40];
- 	char *debounce_enable;
- 
--- 
-2.34.1
+For users, require they have libgpiod installed and use pkg_config to
+locate it?
+
+Is that what you mean?
+
+Else, how do other Rust crates wrapping dynamic C libraries do it?
+
+Cheers,
+Kent.
 
