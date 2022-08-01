@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEB92586B33
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Aug 2022 14:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABCCE586BD1
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Aug 2022 15:20:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235009AbiHAMrR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Aug 2022 08:47:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49402 "EHLO
+        id S230229AbiHANU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Aug 2022 09:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234970AbiHAMrA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Aug 2022 08:47:00 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47828BF46
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Aug 2022 05:38:14 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id b4so371522pji.4
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Aug 2022 05:38:14 -0700 (PDT)
+        with ESMTP id S229953AbiHANU0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Aug 2022 09:20:26 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2CAF1E
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Aug 2022 06:20:25 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id r186so9663042pgr.2
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Aug 2022 06:20:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=xQsl16AE0/Dt5xieUwGf0aLTBl7ZVzxSiEMFFObwpqM=;
-        b=lYOJfR7KIBlzWynG5+GfdTLiWHkLS9Ncxv/xEiQ+vY+3EzpCjtT1xT8QQRzLCUQiSQ
-         n2etievvwAs47kiZ4+lTjs6m/j3c8BHVCs21brysZ9mMb856YziwzkAjSWgKY+WhXQfO
-         f6xR6J9s4lpZgs1WlmWrtLpD8zrj3w5N/qrgn4mGMpCHlPZiEfbJ8VJ5L1gnckL7XD0m
-         qjL6EAmFHAHLcNEEVNf5otQWD+QJUyGlHCXT5OpDBrPKfHM8bXQD/EP4rdUV09YHiUns
-         WilFJPN5sM5sj8pD1mSNR6jKnxDWa4TxUOtiPo9StwyXvmoP9mIgxKXMDFFo7wzLBcWW
-         tVNg==
+        bh=zr/RftuxYY/kRlRnov6dnxuIygy/zCcsWl9vhTLfntY=;
+        b=IEqOGhP7NeoPXa4lwvBO/so19DHkBmw/HQf3w3UiP2TVPCdAchxTy8VYKBfj2PPoNC
+         OmfshLnsBXw2WYlETUE8FfSzyhKG34Pzd6oTRMct47Savt1Z0gIX2ss28jVVRItTU+e0
+         7x0TCRgJMhDJP7WcHTVkZJsSlrZX/u5aPIosO5jx2OfD5idi/qdrdK9wHDxyOn1Edt6z
+         XcWf3wagQ5heNfn7Z7OR7W+Jgmpqxt/g0EykyW0/rlq4ZOVPjwI3etMrFjNo3mlUThmL
+         xOYsZvmyxQ//0DP35U90KdwrnO4UCr0Cbr87D9bgxWy4UqSpmDxQO3xTniZuczqdxjET
+         JqTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xQsl16AE0/Dt5xieUwGf0aLTBl7ZVzxSiEMFFObwpqM=;
-        b=PUv3GoMjm6vnEqxjKcfdTDATHowl8DPRemHSuyjCKOt6lvT4FU1c5NKErIUw0rPFH9
-         bNWQUNZbIQnzHWX9ocKeBqOwcvRbti+m3dh4dsXO46/tS/LUWa7D1y8TMa3Dga1WDyI6
-         AO5YnPXsokp8uh4U1eMVioLx7i6P+tOGihO+ExwfziB7r/vs0dyprZmdj8UURD/tt8r6
-         w8MQvsoDCxEs+QAqG2XVRw0J9yV/gD7XwNiCoT9yPA5x5QTtdExz3yaX3jbcAZW582o6
-         ipsqiI2GhH1X24T7T2xe6as2A+yZS2NezsUHl68ktFgXpcGQODE2/UVn1ORX6cYO3TTN
-         eK1g==
-X-Gm-Message-State: ACgBeo1wVljc/rNuafRqetiavuNkwIf41lUflNDgcOr2TgEDBld2RqUS
-        5LJsmC5n1jVjxk6qieOu9e8=
-X-Google-Smtp-Source: AA6agR7kyfwGgBsDgchxp5qIUhMzBEi2tZTrc23VVYfMbeOKofJ3ohPa0hxVIMnzhg0/GE5Q+SmQgA==
-X-Received: by 2002:a17:903:1c5:b0:16e:e892:fa14 with SMTP id e5-20020a17090301c500b0016ee892fa14mr5321363plh.158.1659357493701;
-        Mon, 01 Aug 2022 05:38:13 -0700 (PDT)
+        bh=zr/RftuxYY/kRlRnov6dnxuIygy/zCcsWl9vhTLfntY=;
+        b=aKV932lev6/5HpHW7gTPYChGgYejhBP5flsJLQJhJ4FIqw1Pp6ncRgW12Qq2g3CLY7
+         kGjeG/9WNgW9w0qjkZxiHlDihrw+MhA8nL/qCtCSzGEyP5JK+8e+R7e8eqmIIhvC0brD
+         pKfigZDn/qRbL/htmMog5euH9zXxPOneBfdL1v4bsSSs70/bcgOLioaC20yN5vguxP2o
+         n+v8+CA3G2PdIt4kiEttezVsBS4zg5RjH1fsuovnLtf4i9RN9Uort3LOc/Ch9mWo7BRu
+         l6/IhF0Yk+yJJoWy3qOlGx6tkfNLyupe16Y/6JukmnRQaTQpDI1kjnBu8c7KldqpgXcy
+         ICCQ==
+X-Gm-Message-State: AJIora9hulPmKy0EN7D9fzL+69WMLZhxPh2Byjb9ilp/N95pWUoL+KsY
+        I5kRB+kd3tDkzNZpSleun56Y96WAUT4=
+X-Google-Smtp-Source: AGRyM1v6afhbb1EcW9fmXd1cAeg3UctjbYTYBwdM+qwoUAYKE9veMxuY09rLtdSbkTMpirIt8Px+OA==
+X-Received: by 2002:a63:fa0d:0:b0:41a:716c:6ac6 with SMTP id y13-20020a63fa0d000000b0041a716c6ac6mr13078769pgh.41.1659360024953;
+        Mon, 01 Aug 2022 06:20:24 -0700 (PDT)
 Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id 22-20020a630b16000000b0040ca587fe0fsm7256942pgl.63.2022.08.01.05.38.09
+        by smtp.gmail.com with ESMTPSA id t1-20020a170902e84100b0016d1b708729sm9718323plg.132.2022.08.01.06.20.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 05:38:13 -0700 (PDT)
-Date:   Mon, 1 Aug 2022 20:38:06 +0800
+        Mon, 01 Aug 2022 06:20:24 -0700 (PDT)
+Date:   Mon, 1 Aug 2022 21:20:17 +0800
 From:   Kent Gibson <warthog618@gmail.com>
 To:     Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -59,16 +59,18 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
         stratos-dev@op-lists.linaro.org,
         Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 7/8] libgpiod: Add rust tests
-Message-ID: <20220801123806.GA42433@sol>
+Subject: Re: [PATCH V4 4/8] libgpiod: Add rust wrapper crate
+Message-ID: <20220801132017.GA46663@sol>
 References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <78b3ee21dec2a66003c2eae2800e9699a8ecd180.1657279685.git.viresh.kumar@linaro.org>
- <20220727025847.GG88787@sol>
- <20220801115402.uk4gsptesrisohvk@vireshk-i7>
+ <c3bdcaa85e1ee4a227d11a9e113f40d0c92b0542.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025754.GD88787@sol>
+ <20220727090701.hfgv2thsd2w36wyg@vireshk-i7>
+ <20220727100809.GB117252@sol>
+ <20220801120506.46emxdk7qk2g2gmf@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220801115402.uk4gsptesrisohvk@vireshk-i7>
+In-Reply-To: <20220801120506.46emxdk7qk2g2gmf@vireshk-i7>
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -79,60 +81,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 01, 2022 at 05:24:02PM +0530, Viresh Kumar wrote:
-> On 27-07-22, 10:58, Kent Gibson wrote:
-> > > diff --git a/bindings/rust/tests/line_request.rs b/bindings/rust/tests/line_request.rs
-> > > +        #[test]
-> > > +        fn set_bias() {
-> > > +            let offsets = [3];
-> > > +            let mut config = TestConfig::new(NGPIO).unwrap();
-> > > +            config.rconfig(Some(&offsets));
-> > > +            config.lconfig(Some(Direction::Input), None, None, None, Some(Bias::PullUp));
-> > > +            config.request_lines().unwrap();
-> > > +            config.request();
-> > > +
-> > > +            // Set single value
-> > > +            assert_eq!(config.sim().val(3).unwrap(), GPIOSIM_VALUE_ACTIVE);
-> > > +        }
-> > > +    }
+On Mon, Aug 01, 2022 at 05:35:06PM +0530, Viresh Kumar wrote:
+> On 27-07-22, 18:08, Kent Gibson wrote:
+> > On Wed, Jul 27, 2022 at 02:37:01PM +0530, Viresh Kumar wrote:
+> > > On 27-07-22, 10:57, Kent Gibson wrote:
+> > > > On Fri, Jul 08, 2022 at 05:04:57PM +0530, Viresh Kumar wrote:
+> > > > Consider modules and namespaces rather than lumping everything in
+> > > > the gpiod space.
+> > > > 
+> > > > e.g. gpiod::ChipInfo -> gpiod::chip::Info
+> > > 
+> > > The modules are already there, as file names. So what we really have is
+> > > gpiod::chip_info::ChipInfo (yeah it isn't great for sure). But then it looked
+> > > tougher/complex/unnecessary for end users to know the internals of a dependency
+> > > and so I did this:
+> > > 
+> > > pub use crate::chip::*;
+> > > pub use crate::edge_event::*;
+> > > pub use crate::event_buffer::*;
+> > > pub use crate::info_event::*;
+> > > pub use crate::line_config::*;
+> > > pub use crate::line_info::*;
+> > > pub use crate::line_request::*;
+> > > pub use crate::request_config::*;
+> > > 
+> > > which puts everything under gpiod::*. I think it is easier for users that way.
+> > > The modules are fine for in-crate management, but for end user they shouldn't be
+> > > visible.
+> > > 
 > > 
-> > Test reconfigure() failure modes.
+> > The main problem I have with putting everything in the top level is the
+> > generated docs.  You get everything dumped on you, so all structs, enums
+> > and functions, and it isn't clear to the user what the logical starting
+> > point is.
+> > If things are tiered then you can introduce them more gradually, or keep
+> > them out of their way if they are unlikely to use them (e.g. ChipInfo,
+> > InfoEvent).
 > 
-> What are we specifically looking to test here ? I am not sure I understood which
-> failures modes I should target.
-> 
-
-reconfigure() can return E2BIG if the configuration is too complex to
-encode into uAPI structures.  There are only 10 attribute slots in the uAPI
-config, so more than 11 lines with distinct configs can't be encoded.
-You want to test that you propagate that error correctly.
-I typically test this by giving each line a different debounce value.
-
-> > Test you can reconfigure all values for all attributes (not all values
-> > for debounce obviously - just the flags).
-> 
-> This I have done now, with request.reconfigure_lines().
-> 
-> > Similarly for request_lines (ideally in chip.rs)
-> 
-> Isn't this same as the above one? I am not sure again what I should test here.
+> I am not sure what to do about this. I was suggested earlier to dump it all at
+> the top level namespace so it is easier/shorter for users, which also won't need
+> to know the internal namespaces/modules of libgpiod.
 > 
 
-The request_lines() could be considered sufficient to test
-the conversions for both request_config and line_config objects.
+libgpiod has no namespaces/modules - cos it is C.
+The users do need to understand how things fit together, and the flat
+namespace doesn't help there - everything is equal.
 
-But testing request_lines() and reconfigure_lines() doesn't just test
-those conversions, it checks that the functions don't mess with the
-config along the way.
-If you want to take that as a given then sure, just testing the
-config variants for request_lines() will do.
+True, "_" is shorter than "::".  Can't argue with that ;-).
+
+In Rust the user can rename the import whatever they want, so I'm not sure
+the "easier/shorter" argument holds much water.
+
+> Looking at structures, there are just 8 of them which are exposed in docs now,
+> which isn't a lot really. And then we have 12 enums now.
+> 
+
+This isn't a question of numbers, it is a question of whether to
+indicate structure, or to flatten everything.
+
+I find the structured approach both clearer and more idiomatic in Rust,
+so that gets my vote.
 
 Cheers,
 Kent.
-
-> I have pushed my current changes here, if it helps:
-> 
-> git@github.com:vireshk/libgpiod.git master
-> 
-> -- 
-> viresh
