@@ -2,78 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC3F5876DF
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 07:47:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27ED258794E
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 10:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232759AbiHBFrU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Aug 2022 01:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
+        id S235708AbiHBIrp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Aug 2022 04:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231804AbiHBFrS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 01:47:18 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BD619C23
-        for <linux-gpio@vger.kernel.org>; Mon,  1 Aug 2022 22:47:17 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id f65so11474002pgc.12
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Aug 2022 22:47:17 -0700 (PDT)
+        with ESMTP id S235400AbiHBIro (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 04:47:44 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748884AD68;
+        Tue,  2 Aug 2022 01:47:42 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id p5so16693768edi.12;
+        Tue, 02 Aug 2022 01:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DfCsR6KF8bgbXXbV10avlnLe+p1TMoNPoIp5imq2S20=;
-        b=YFT16QVrkwWsSHAQnL5/kZF6f/uc1qkcLoaPlMZdIbPHYFpmR6zGUKKVhm+TfWFIUs
-         W0RiedjzEcxfHlOJh6FWnrGuiyzPSBYuNJfc/6sbi0W6IXsV7QmmHd0XOE9JaZSDBL3S
-         /Xmue8/NmzzwEEJBNm8g4TwTJBorpTMIuIwWCKG5ifP/frGKnwRPSA5/Ge1sN5GRhQQn
-         +rQBoZJQudzR/sS4frPrlnHMk8a5JcBKqujCAwhQrxvxTfoOgR4DOlzykZXWqCi0JL48
-         W12moKusMgZsI9LZuGjpSAadoYUyln4vwUXK+r1rWidmVVqtSMA3KBSS924J3mc0hHIH
-         zDnw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=puv0wVuinbvGk6m24vnUVnaprr7raVy2FnF9iWxEgDg=;
+        b=fy5pI89/qCZ86uVbKjW1FbiRmxM4/rk48gHhb5LLNd4ecu1hOXK11Bu6Tqe56E8SCc
+         L+dn3ij2RF2voqhgeBbzUbxLQg7JN163YvlnaVDWvbcWnPQdF1TWTlyT8PXCuqH00Lvm
+         DrdI20Ny5s59MM5bja2VRJh7aCgXmoyjGp+yjUW1oGqUKfrLt/+d9v2zzWabwi1ahTcD
+         v2KEFubO/bSqP+pSSdA8l+JL2juWuynwaDJ9hLm9s73id+pzr7uz+4bfEykNpFdRY+Di
+         ARlOTr78VjUnYKOIsRrPOKKS8ciEY6GOh/Tg08sXeeh6BoVRjGlUJcA8w38BG6PDjgKV
+         LVIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DfCsR6KF8bgbXXbV10avlnLe+p1TMoNPoIp5imq2S20=;
-        b=7z+aYBMncHAMUvmARmq41aKZLHLVMU1bqY6ZTB0HSydRIZgr1bzC8Z8KAljitSM1BU
-         93y6Yx0eXyrGM/FX1tioaXQ1arWCDpE/FdbEKyIewTZCsOYUreGmucT10mYNq1z/AaP8
-         BbqZnWGr2b/l2nNk8oTAJsBDItNDre3SKn6BPtdhFatulwZDKWmjZZKPUynj7MLmu2Nc
-         TN3C7L8mE2iwJO99rSYRJ2uz04bOBFq1f80NYaVJeRAHruRKhWmJWHCJDegbxvQLLS6x
-         1s+REFGzmt/F1Qxvd9yg4M5Qjo1F503AyOEiy2wc1f+I+q8vn64Fcc7JMQYv5wzhCBqJ
-         pNzA==
-X-Gm-Message-State: AJIora+Q/fdDGrzoreSQFONyEKDFQlbPv3UgT5PSKPI3ZOm8kH+sfppE
-        GpStytnU6gwBME+MLWl/eDM=
-X-Google-Smtp-Source: AGRyM1uHbZumyd1gDo7BK+u49jSKA3blc0R07K0lTpcAXDNMOij0AkJPFhBK5I3ktsONtfeDH8t9ng==
-X-Received: by 2002:a63:6c06:0:b0:419:ab8e:e177 with SMTP id h6-20020a636c06000000b00419ab8ee177mr15388621pgc.188.1659419236478;
-        Mon, 01 Aug 2022 22:47:16 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id u3-20020a17090add4300b001f260b1954bsm10122274pjv.13.2022.08.01.22.47.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 22:47:15 -0700 (PDT)
-Date:   Tue, 2 Aug 2022 13:47:09 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 7/8] libgpiod: Add rust tests
-Message-ID: <20220802054709.GA22973@sol>
-References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <78b3ee21dec2a66003c2eae2800e9699a8ecd180.1657279685.git.viresh.kumar@linaro.org>
- <20220727025847.GG88787@sol>
- <20220801115402.uk4gsptesrisohvk@vireshk-i7>
- <20220801123806.GA42433@sol>
- <20220802054434.prvmgvv6hklilbfq@vireshk-i7>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=puv0wVuinbvGk6m24vnUVnaprr7raVy2FnF9iWxEgDg=;
+        b=WALBNPzd9Y/Of8T1l8uI9X/SI1skbkH/DJy3AqtdkcCCU7MVPwCa5eDfxocM9fNb6v
+         w7flqbzL8NSCQOxOCUOGFXSJHW4pykAe6d1G4OlVGOxrEW774FkF5ZjOtDst/IXlmFLf
+         7GqHP3swgYiupcFcJbzngeRvF0JRS/9Gi/+V+cdmCFoGRt2KSCFMpy9KuzwhgfqWR7eN
+         Ylr6U9ID6n5qUl/VA1HCidHbhrrb20IZ+da3jJqmERhcwRMLlsw43VpZrS9G4MdvMVqO
+         pGLLyEAvK9VJqpA0EQENfJMGmGLub066oEMBUSvcEuFoy8k06/0SdfTc72mSgSRWkutG
+         tWNA==
+X-Gm-Message-State: AJIora/aiYnoWCNbF/AJXY3bX4U53raq+tXCfZ6DTAHeueaSuKQzo4kh
+        W7b3faLnDL4Gk38jM5DdPrLCvkGFOCJ8QAtUXmc=
+X-Google-Smtp-Source: AGRyM1utu3QImD9qsURFVtD1OVuARwXFkxr7OiAFJHxCnYpy3UfDVTZIG13xhWJHGIVUaL4XC+zI1ao29MiGikA0TLE=
+X-Received: by 2002:a05:6402:84a:b0:426:262d:967e with SMTP id
+ b10-20020a056402084a00b00426262d967emr18807129edz.286.1659430060844; Tue, 02
+ Aug 2022 01:47:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220802054434.prvmgvv6hklilbfq@vireshk-i7>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20220722040609.91703-1-colin.foster@in-advantage.com>
+ <20220722040609.91703-10-colin.foster@in-advantage.com> <CAHp75Ve-pqgb56punEL=p=PnEtjRnqTBSqgs+vVn1Zv8F94g9Q@mail.gmail.com>
+ <YuiJLK8ncbHH3OhE@euler>
+In-Reply-To: <YuiJLK8ncbHH3OhE@euler>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Aug 2022 10:47:04 +0200
+Message-ID: <CAHp75VcHU+Rh2ROjMcK+Yuyu1Ty9C0Dcx2SjrnrM4BV9NuMZig@mail.gmail.com>
+Subject: Re: [PATCH v14 mfd 9/9] mfd: ocelot: add support for the vsc7512 chip
+ via spi
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,38 +88,102 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 02, 2022 at 11:14:34AM +0530, Viresh Kumar wrote:
-> On 01-08-22, 20:38, Kent Gibson wrote:
-> > The request_lines() could be considered sufficient to test
-> > the conversions for both request_config and line_config objects.
-> > 
-> > But testing request_lines() and reconfigure_lines() doesn't just test
-> > those conversions, it checks that the functions don't mess with the
-> > config along the way.
-> > If you want to take that as a given then sure, just testing the
-> > config variants for request_lines() will do.
-> 
-> Okay, so we want test setting various flag types in line_config and
-> then see if request_line() fails or not and verify (read) them later.
-> Right ?
-> 
+On Tue, Aug 2, 2022 at 4:17 AM Colin Foster
+<colin.foster@in-advantage.com> wrote:
 
-Right.
+...
 
-Cheers,
-Kent.
+> > I'm wondering if you can use in both cases
+> > spi_message_init_with_transfers().
+>
+> > > +static int ocelot_spi_regmap_bus_read(void *context, const void *reg, size_t reg_size,
+> > > +                                     void *val, size_t val_size)
+> > > +{
+> > > +       struct spi_transfer tx, padding, rx;
+>
+> struct spi_transfer xfers[3] = {0};
+> struct spi_transfer *xfer_tok = xfers;
 
-> Very similar to this is also done in tests/line_info now, where you
-> suggested:
-> 
-> "Test that you can read all supported values for all fields."
-> 
-> So I set all possible values for fields and then read them back.
-> 
-> Lets see after the next version, if they are sufficient or not. I will
-> happily add more if required then.
-> 
-> Thanks.
-> 
-> -- 
-> viresh
+unsigned int index;
+
+> > > +       struct device *dev = context;
+> > > +       struct ocelot_ddata *ddata;
+> > > +       struct spi_device *spi;
+> > > +       struct spi_message msg;
+> > > +
+> > > +       ddata = dev_get_drvdata(dev);
+> > > +       spi = to_spi_device(dev);
+> > > +
+> > > +       spi_message_init(&msg);
+> > > +
+> > > +       memset(&tx, 0, sizeof(tx));
+> > > +
+> > > +       tx.tx_buf = reg;
+> > > +       tx.len = reg_size;
+
+index = 0;
+
+> xfer_tok->tx_buf = reg;
+> xfer_tok->len = reg_size;
+
+tok[index] = ...;
+index++;
+
+> xfer_tok++;
+>
+> > > +       spi_message_add_tail(&tx, &msg);
+> > > +
+> > > +       if (ddata->spi_padding_bytes) {
+> > > +               memset(&padding, 0, sizeof(padding));
+> > > +
+> > > +               padding.len = ddata->spi_padding_bytes;
+> > > +               padding.tx_buf = ddata->dummy_buf;
+> > > +               padding.dummy_data = 1;
+>
+> xfer_tok->len
+> xfer_tok->tx_buf
+> xfer_tok->dummy_data
+
+tok[index] = ...
+
+> xfer_tok++;
+
+index++;
+
+> > > +               spi_message_add_tail(&padding, &msg);
+> > > +       }
+> > > +
+> > > +       memset(&rx, 0, sizeof(rx));
+> > > +       rx.rx_buf = val;
+> > > +       rx.len = val_size;
+>
+> xfer_tok->rx_buf
+> xfer_tok->len
+
+tok[index] = ...
+
+> xfer_tok++;
+
+index++;
+
+> > > +       spi_message_add_tail(&rx, &msg);
+>
+> spi_message_init_with_transfers(&msg, xfers, xfer_tok - xfers);
+
+..., index);
+
+> > I'm wondering if you can use in both cases
+> > spi_message_init_with_transfers().
+>
+> I could see that implementation getting the response of "what the heck
+> were you thinking" or "that looks alright" and I honestly have no idea
+> which pool it will fall into.
+
+See above. I.o.w. use index based assignments.
+
+> > > +       return spi_sync(spi, &msg);
+> > > +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
