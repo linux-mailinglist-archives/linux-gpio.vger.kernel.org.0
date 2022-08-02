@@ -2,101 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12A17587B3B
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 13:02:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6252587C2F
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 14:18:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236706AbiHBLCt convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 2 Aug 2022 07:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
+        id S233811AbiHBMSZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Aug 2022 08:18:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236701AbiHBLCp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 07:02:45 -0400
-Received: from de-smtp-delivery-113.mimecast.com (de-smtp-delivery-113.mimecast.com [194.104.111.113])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 26A1E46D84
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Aug 2022 04:02:42 -0700 (PDT)
-Received: from CHE01-ZR0-obe.outbound.protection.outlook.com
- (mail-zr0che01lp2106.outbound.protection.outlook.com [104.47.22.106]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-22-nzNAB157NrWfrGFQNkUXqA-2; Tue, 02 Aug 2022 13:02:37 +0200
-X-MC-Unique: nzNAB157NrWfrGFQNkUXqA-2
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8) by
- GV0P278MB0638.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:41::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5482.6; Tue, 2 Aug 2022 11:02:35 +0000
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::3510:6f55:f14a:380f]) by ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::3510:6f55:f14a:380f%7]) with mapi id 15.20.5482.016; Tue, 2 Aug 2022
- 11:02:35 +0000
-From:   Francesco Dolcini <francesco.dolcini@toradex.com>
-To:     Peng Fan <peng.fan@nxp.com>, linux-gpio@vger.kernel.org
-CC:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [RFC PATCH v1] pinctrl: imx8m: kconfig: Depends on SOC_IMX8M
-Date:   Tue,  2 Aug 2022 13:02:32 +0200
-Message-ID: <20220802110232.130758-1-francesco.dolcini@toradex.com>
-X-Mailer: git-send-email 2.25.1
-X-ClientProxiedBy: MR1P264CA0038.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:3e::32) To ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:2e::8)
+        with ESMTP id S236865AbiHBMSY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 08:18:24 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE334F6B9
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Aug 2022 05:18:19 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 12so12220642pga.1
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Aug 2022 05:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PTXnDqvXM6hhp9RNPTChfixjy4jkyWBITtOvPMvZnR4=;
+        b=iApGZBVRXbSeGZ0NNdpMXlmIkMZ8uMHoVuJEg4ZmIT48J/zMfY4WC3AhRljpdVGuLj
+         rBH5yjx9K0Xz9XeNmyBxco4iX10CAwzuj+ZJ9fkHwsnDnfO9YuAauAD1Mu65Fp+TmiZh
+         4ptcESLFTKcsQnHGhMefiyGy4BhsqDNluODTMis2xn0ajl+SBUCJGosZq1XR5kdkLYSK
+         IfW/mpfvLAvyhZYvbKVb3Vzhh0C4NPsWDtyJe9oPDQv3iHpucHgpPkfjgj7XwkNtS67/
+         +qP4xCsSaItNmxQ9ox0atxy3qA7WzHf4fiW0vJEVj7GhXZb2WT2bFRcXsLJV3mU0BYL0
+         mQfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PTXnDqvXM6hhp9RNPTChfixjy4jkyWBITtOvPMvZnR4=;
+        b=d/XCBPpTuDXrqzbgVMos+Fjo13qKUX+nh+XC8Ac3rhMY9NMzOKePRFj3EMbQjv4l4d
+         9SNMMNJifPfT9QlHdw05bUysFZtnRDYb9KuxiuJMSOaHM2usCY1Ep/kWu07qEqS9jNM6
+         bJLtBHKOGwVah+ge1BZ3JxRaJnhYvqdbm5jkWzPyHVA7pNpZ2GOI+wEYi8xYNyOWh1BY
+         cjQWc1/nbUjW8wJ5SklcIcqL6MDzBryEfv/FnJdSvJY9drGuhGMYO0BkDUsACDc6+OW1
+         1ewQKe+DiNAZqxpnvvoCGThu0NLmgMUJemstQvAAPyKePY/F7FIA6LVcxKBREuEVHHqv
+         pPvA==
+X-Gm-Message-State: AJIora/vvb39nb4Wt+Q2YXIoy5uIo340PG7M2QxC+xBBHSAsmkndwKy/
+        NhDE8Gut6PYi2f7LXLpzyvPrZw==
+X-Google-Smtp-Source: AGRyM1t3g94zgtT6bTHATndnwZuwW0cOPWfOynP30+eHHUGXE90oDhsT9XDBrlHJQKPwWuojpekJbw==
+X-Received: by 2002:a05:6a00:2312:b0:52b:928:99dd with SMTP id h18-20020a056a00231200b0052b092899ddmr20317232pfh.77.1659442698917;
+        Tue, 02 Aug 2022 05:18:18 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id v66-20020a622f45000000b005254535a2cfsm10671579pfv.136.2022.08.02.05.18.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Aug 2022 05:18:18 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: [PATCH V5 0/8] libgpiod: Add Rust bindings
+Date:   Tue,  2 Aug 2022 17:48:04 +0530
+Message-Id: <cover.1659442066.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ca12640d-b519-4d6e-f918-08da747681a0
-X-MS-TrafficTypeDiagnostic: GV0P278MB0638:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0
-X-Microsoft-Antispam-Message-Info: JkMZylmlUEYzyPyi4t2i+V9T8jLI5f+T5iaAL1mgI845OaE1Wehw9+4mrdEbqDZI0UkuYK0K05Dda9T8q5lfMrlkcDmU9YJb9OUhEIknEdnPfN7AqsJPgpv6laLR7A6MWzr5Y3Z6s5cpzeFNBCYIOXB+zZQfFvIKt8lLAS+UwtkOXyePRbn75+eg43yTjTS+ur5R9jygheklsN6fHT1JvJ5wMnVo/41lY9arRtqiPg9JlH/u3D5shJWbcDqBmgE3hwvQu3DgQpXOPYVxYTLhg4Kso3vt7FmDf+KfjQERgK8944r+YsRbxdpXnBz5NqX2ue+EPFwWOOLPSNlttJj0ZFTAGOB0yheVRjPUe2etT+DxH/qTR3HliitChNnnaYHXzvkC+lPItoLRDqrcIS7eUV2MKaAFixObkmZ9lUPQhZDlU9YROCcd/0o9sLl7fNcfMrNynZl2KqvulU8AuvLZBLFnHhnwQR6/S+RMLl1b+me1yoAOtTZCRFsoNyBibTw5MJMNqDQVdQ7qeYGErmKv/y/N8ogf3kpBZnKLRQ3zD3jtumkRKJP7G5D1JyGT25RlgFQFaSZd36yeVGnaM+IzBWIEy+QfpQasW8Dnk+dMODXblBC931VnQ97xfh5p9U+mtG0je79nmoaEUvCdvQJhACaSan9JRfw7cNCpjIV+sqVwxbWToVA1x2VAirxoMq6nCcV7mnC4B4xsH4gpO52CAyiC8ZAtC7++fCSGf2PI0ELXSapLkuJO7QkcjDX4GJEeESzE8WpHm9pW9TVnGzGlORAY9vgHARoRXnVGkD0u5dJUINltw3Dr+iR2CVEKZ1lZ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(39840400004)(376002)(136003)(366004)(396003)(66476007)(6486002)(66946007)(54906003)(66556008)(41300700001)(316002)(83380400001)(478600001)(2906002)(4326008)(8676002)(8936002)(6666004)(36756003)(26005)(6512007)(1076003)(6506007)(86362001)(186003)(5660300002)(44832011)(38350700002)(52116002)(38100700002)(2616005)(32563001);DIR:OUT;SFP:1102
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JTgJIeOdLsIhc15aoj8CIT+fbHZupeatjKL+EwuL5dzwAXVkT8R+qWGf9OVN?=
- =?us-ascii?Q?KhOmxD1U9muUw7XLa0Z9nrcaPVdwhrSE2yHxrEAx4DLarCt10Q9Bnr1y9szv?=
- =?us-ascii?Q?MSU3xCW/rnmDcCXfpdkYC5bVwbjNjrET47d/nV6UXCmlVgr12dY6icvqf2sX?=
- =?us-ascii?Q?vIZYxGhlBBspxpPEX8W34naaQzUILH0XgifpAH0CWqoK8g2l4rcyrKuUwH62?=
- =?us-ascii?Q?qDnnJs1GCD0uGeAVygv5egR4ew5bzb9MZPCNhriyMxxrzNRlL0S9fZyInxq0?=
- =?us-ascii?Q?rWOMVcrKS0ZLh5d3xC6dxpC4E2DW13ZJwM3ivGWN+UCaDLgrD7XUwca2wpeV?=
- =?us-ascii?Q?STXDGFlkQgX3lUvrXVHfloarZTiT4BNVMB3LVmBoJnRg21PBzA/Tm5fHk8yv?=
- =?us-ascii?Q?i1nrFx293HPRXcT1f8NIKNiIKjqiA1283EfBZJrQ1B1zscdgRi6I27ksgCCB?=
- =?us-ascii?Q?0Cj4+aIZBnTJ92QVIQHHj1hwk61UQ/+HuNR9P7uSvLI5UDXfTV68S/CS+cHx?=
- =?us-ascii?Q?mICxfBXtDDijOS7sORpA2ciVufeS5/dpPZMXNe3J8KxnpjJF9FhJitZ/d0zj?=
- =?us-ascii?Q?W1mAoFw9C99TmLOHtswwaywbvukCsaLuG9yJ4FFfImLPGkJFds9+I9QpxHUo?=
- =?us-ascii?Q?gbn82gZmkpnLWPWeyElib4BCEUrIqxfekILDl19Fya5S4Utd+FJmF1q9r/ZL?=
- =?us-ascii?Q?x04Y6OxJmOYFY2x4ZuEGkWozlhji07c7i4yIPUcJmJKS6IRN/GyF1k+63EIN?=
- =?us-ascii?Q?VCb7BlW4awTcluTLVqbrSZTr0kFjVlln2PLUm3QxvkngNxShZ0q8aUXa04Gx?=
- =?us-ascii?Q?nr5F/bxTxIYCJpDfWRNydBe9hDr/P0NrdWVTwBQVNam53+UQnfyHjotO0Hko?=
- =?us-ascii?Q?D/S26P5y1afPTipxF2ETkKEVhRhh9Cn6lu6JqouPIaCVXuDApunmzuA5LzWj?=
- =?us-ascii?Q?QgFqq15Gu1UK/tj1/5WSLcyGLYwd5IxUJxKR8zQII8PsOMrs2ogYrYSePxqX?=
- =?us-ascii?Q?B1hKL4hiB0m4DyCIpGXD+A7y/AOhQPkj6sHEXMeqTUnCWZGMckOdmhj25OhE?=
- =?us-ascii?Q?K/oaccRcefYj8TKluGjf2LVcXtt0yUuwdvOhKbLNURnuvVnulCP4VwoRTqT4?=
- =?us-ascii?Q?69ccNxuiwRGC/5K7z7ogUD6TJbFH01Ntizi8FNvSeFRL1nl8dCqqbyJAGsvL?=
- =?us-ascii?Q?kRozjUpTBqpmaxAivnJo3cm+tS1K5M/ilIn76fik680PG2F4raYMLMfRsykl?=
- =?us-ascii?Q?AOkpPs3Xh4UZnFyUutXoWW3TZbtMOmlEhJxZjaRu4rPG+Lccr8CuFhElHeeo?=
- =?us-ascii?Q?8G4oZNCiaUC6laq/lJK6GJ0WXu2j3t5g+xgjpy+/hmzjF6Eezg5WLIRKjEP3?=
- =?us-ascii?Q?wXy3Q0wRqLX8yNd4ibkni8uSZ9DIOSQar0VMlxAW6Pd5SmGrAmvE3jCm+0ic?=
- =?us-ascii?Q?rmLJuHs2B7fJQAz0Ns3EAD90kHJSZG1zNcXKQNij19YxBzmkEiqkVrqfEo0X?=
- =?us-ascii?Q?5NDGR16luBoCzwf5xqA7YLxqlblhopKrY6EIX35z8sNH/qds/joTQunGH4Gs?=
- =?us-ascii?Q?QsoeWUTdDs3XmFjdGd45jeqdMo5WmV76LR4tAPyP0cWSNQoxuGxO1pirW6Pb?=
- =?us-ascii?Q?0w=3D=3D?=
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca12640d-b519-4d6e-f918-08da747681a0
-X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2022 11:02:35.6744
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xn7hGz3hiFyYsp2pcAmQUt+bZoynaVm9QKiCvt3PXkKWqmYoMv/V+/jD0b0ZYDzde8ZDB4xlzeGlrr47oeUwgcZJWxXfKg5mlF51gPCkOVU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0638
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: toradex.com
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=WINDOWS-1252
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -104,62 +74,151 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change PINCTRL_IMX8M* dependency from just ARCH_MXC to SOC_IMX8M,
-likewise is done for other PINCTRL_IMX* kconfig. This avoid polluting
-the config when SOC_IMX8M is not enabled.
+Hello,
 
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
-A similar change would be needed for drivers/clk/imx/Kconfig,
-in addition to that the other pinctrl are selected by the SOC
-(config SOC_IMX7D -> select PINCTRL_IMX7D), while this is not true for
-IMX8M and these options.
+Here is another version of rust bindings for libgpiod v2.0, based of the
+next/libgpiod-2.0.
 
-Not sure what should we do exactly, therefore the RFC tag, I stumbled on this while
-slimming down the imx_v6_v7_defconfig for my own needs, and after disabling SOC_IMX8M
-all these options were still enabled.
----
+Pushed here:
 
- drivers/pinctrl/freescale/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+https://github.com/vireshk/libgpiod master
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index d96b1130efd3..365fcff8e470 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -119,28 +119,28 @@ config PINCTRL_IMX7ULP
- 
- config PINCTRL_IMX8MM
- 	tristate "IMX8MM pinctrl driver"
--	depends on ARCH_MXC
-+	depends on SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mm pinctrl driver
- 
- config PINCTRL_IMX8MN
- 	tristate "IMX8MN pinctrl driver"
--	depends on ARCH_MXC
-+	depends on SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mn pinctrl driver
- 
- config PINCTRL_IMX8MP
- 	tristate "IMX8MP pinctrl driver"
--	depends on ARCH_MXC
-+	depends on SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mp pinctrl driver
- 
- config PINCTRL_IMX8MQ
- 	tristate "IMX8MQ pinctrl driver"
--	depends on ARCH_MXC
-+	depends on SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mq pinctrl driver
+Kent, I hope I haven't missed any of your comments, there were too many of them.
+Thanks for your review.
+
+V4->V5:
+- Arrange as workspace with crates for libgpiod-sys, libgpiod, gpiosim.
+- Use static libgpiod and libgpiosim libraries instead of rebuilding again.
+- Arrange in modules instead of flattened approach.
+- New enums like Setting and SettingKind and new types based on them SettingMap
+  and SettingKindMap.
+- New property independent helpers for line_config, like set_prop_default().
+- Improved tests/examples, new example for gpiowatch.
+- Add pre-built bindings for gpiosim too.
+- Many other changes.
+
+V3->V4:
+- Rebased on top of new changes, and made changes accordingly.
+- Added rust integration tests with gpiosim.
+- Found a kernel bug with tests, sent a patch for that to LKML.
+
+V2->V3:
+- Remove naming redundancy, users just need to do this now
+  use libgpiod:{Chip, Direction, LineConfig} now (Bartosz);
+- Fix lifetime issues between event-buffer and edge-event modules, the event
+  buffer is released after the last edge-event reference is dropped (Bartosz).
+- Allow edge-event to be copied, and freed later (Bartosz).
+- Add two separate rust crates, sys and wrapper (Gerard).
+- Null-terminate the strings passed to libgpiod (Wedson).
+- Drop unnecessary checks to validate string returned from chip:name/label/path.
+- Fix SAFETY comments (Wedson).
+- Drop unnecessary clone() instances (Bartosz).
+
+V1->V2:
+- Added examples (I tested everything except gpiomon.rs, didn't have right
+  hardware/mock device to test).
+- Build rust bindings as part of Make, update documentation.
+
+Thanks.
+
+--
+Viresh
+
+Viresh Kumar (8):
+  libgpiod: Add libgpiod-sys rust crate
+  libgpiod-sys: Add pre generated rust bindings
+  libgpiod: Add rust wrapper crate
+  libgpiod: Add rust examples
+  libgpiod: Add gpiosim rust crate
+  gpiosim: Add pre generated rust bindings
+  libgpiod: Add rust tests
+  libgpiod: Integrate building of rust bindings with make
+
+ .gitignore                                    |    5 +
+ README                                        |    8 +-
+ TODO                                          |    8 -
+ bindings/Makefile.am                          |    6 +
+ bindings/rust/Cargo.toml                      |    7 +
+ bindings/rust/Makefile.am                     |   18 +
+ bindings/rust/gpiosim/Cargo.toml              |   18 +
+ bindings/rust/gpiosim/README.md               |   11 +
+ bindings/rust/gpiosim/build.rs                |   43 +
+ bindings/rust/gpiosim/src/bindings.rs         |  180 ++
+ bindings/rust/gpiosim/src/lib.rs              |   25 +
+ bindings/rust/gpiosim/src/sim.rs              |  323 ++++
+ bindings/rust/libgpiod-sys/Cargo.toml         |   15 +
+ bindings/rust/libgpiod-sys/README.md          |   11 +
+ bindings/rust/libgpiod-sys/build.rs           |   41 +
+ bindings/rust/libgpiod-sys/src/bindings.rs    | 1535 +++++++++++++++++
+ bindings/rust/libgpiod-sys/src/lib.rs         |   13 +
+ bindings/rust/libgpiod/Cargo.toml             |   16 +
+ bindings/rust/libgpiod/examples/gpiodetect.rs |   30 +
+ bindings/rust/libgpiod/examples/gpiofind.rs   |   35 +
+ bindings/rust/libgpiod/examples/gpioget.rs    |   44 +
+ bindings/rust/libgpiod/examples/gpioinfo.rs   |   95 +
+ bindings/rust/libgpiod/examples/gpiomon.rs    |   71 +
+ bindings/rust/libgpiod/examples/gpioset.rs    |   64 +
+ bindings/rust/libgpiod/examples/gpiowatch.rs  |   54 +
+ bindings/rust/libgpiod/src/chip.rs            |  253 +++
+ bindings/rust/libgpiod/src/edge_event.rs      |  102 ++
+ bindings/rust/libgpiod/src/event_buffer.rs    |   90 +
+ bindings/rust/libgpiod/src/info_event.rs      |   68 +
+ bindings/rust/libgpiod/src/lib.rs             |  477 +++++
+ bindings/rust/libgpiod/src/line_config.rs     |  586 +++++++
+ bindings/rust/libgpiod/src/line_info.rs       |  180 ++
+ bindings/rust/libgpiod/src/line_request.rs    |  246 +++
+ bindings/rust/libgpiod/src/request_config.rs  |  119 ++
+ bindings/rust/libgpiod/tests/chip.rs          |   97 ++
+ bindings/rust/libgpiod/tests/common/config.rs |  142 ++
+ bindings/rust/libgpiod/tests/common/mod.rs    |   10 +
+ bindings/rust/libgpiod/tests/edge_event.rs    |  294 ++++
+ bindings/rust/libgpiod/tests/info_event.rs    |  120 ++
+ bindings/rust/libgpiod/tests/line_config.rs   |  293 ++++
+ bindings/rust/libgpiod/tests/line_info.rs     |  272 +++
+ bindings/rust/libgpiod/tests/line_request.rs  |  473 +++++
+ .../rust/libgpiod/tests/request_config.rs     |   42 +
+ configure.ac                                  |   16 +
+ 44 files changed, 6545 insertions(+), 11 deletions(-)
+ create mode 100644 bindings/rust/Cargo.toml
+ create mode 100644 bindings/rust/Makefile.am
+ create mode 100644 bindings/rust/gpiosim/Cargo.toml
+ create mode 100644 bindings/rust/gpiosim/README.md
+ create mode 100644 bindings/rust/gpiosim/build.rs
+ create mode 100644 bindings/rust/gpiosim/src/bindings.rs
+ create mode 100644 bindings/rust/gpiosim/src/lib.rs
+ create mode 100644 bindings/rust/gpiosim/src/sim.rs
+ create mode 100644 bindings/rust/libgpiod-sys/Cargo.toml
+ create mode 100644 bindings/rust/libgpiod-sys/README.md
+ create mode 100644 bindings/rust/libgpiod-sys/build.rs
+ create mode 100644 bindings/rust/libgpiod-sys/src/bindings.rs
+ create mode 100644 bindings/rust/libgpiod-sys/src/lib.rs
+ create mode 100644 bindings/rust/libgpiod/Cargo.toml
+ create mode 100644 bindings/rust/libgpiod/examples/gpiodetect.rs
+ create mode 100644 bindings/rust/libgpiod/examples/gpiofind.rs
+ create mode 100644 bindings/rust/libgpiod/examples/gpioget.rs
+ create mode 100644 bindings/rust/libgpiod/examples/gpioinfo.rs
+ create mode 100644 bindings/rust/libgpiod/examples/gpiomon.rs
+ create mode 100644 bindings/rust/libgpiod/examples/gpioset.rs
+ create mode 100644 bindings/rust/libgpiod/examples/gpiowatch.rs
+ create mode 100644 bindings/rust/libgpiod/src/chip.rs
+ create mode 100644 bindings/rust/libgpiod/src/edge_event.rs
+ create mode 100644 bindings/rust/libgpiod/src/event_buffer.rs
+ create mode 100644 bindings/rust/libgpiod/src/info_event.rs
+ create mode 100644 bindings/rust/libgpiod/src/lib.rs
+ create mode 100644 bindings/rust/libgpiod/src/line_config.rs
+ create mode 100644 bindings/rust/libgpiod/src/line_info.rs
+ create mode 100644 bindings/rust/libgpiod/src/line_request.rs
+ create mode 100644 bindings/rust/libgpiod/src/request_config.rs
+ create mode 100644 bindings/rust/libgpiod/tests/chip.rs
+ create mode 100644 bindings/rust/libgpiod/tests/common/config.rs
+ create mode 100644 bindings/rust/libgpiod/tests/common/mod.rs
+ create mode 100644 bindings/rust/libgpiod/tests/edge_event.rs
+ create mode 100644 bindings/rust/libgpiod/tests/info_event.rs
+ create mode 100644 bindings/rust/libgpiod/tests/line_config.rs
+ create mode 100644 bindings/rust/libgpiod/tests/line_info.rs
+ create mode 100644 bindings/rust/libgpiod/tests/line_request.rs
+ create mode 100644 bindings/rust/libgpiod/tests/request_config.rs
+
 -- 
-2.25.1
+2.31.1.272.g89b43f80a514
 
