@@ -2,188 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27ED258794E
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 10:47:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BED3587953
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 10:50:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235708AbiHBIrp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Aug 2022 04:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
+        id S235114AbiHBIuO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Aug 2022 04:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235400AbiHBIro (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 04:47:44 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748884AD68;
-        Tue,  2 Aug 2022 01:47:42 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id p5so16693768edi.12;
-        Tue, 02 Aug 2022 01:47:42 -0700 (PDT)
+        with ESMTP id S234183AbiHBIuN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 04:50:13 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C865337
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Aug 2022 01:50:11 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id s206so11818443pgs.3
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Aug 2022 01:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=puv0wVuinbvGk6m24vnUVnaprr7raVy2FnF9iWxEgDg=;
-        b=fy5pI89/qCZ86uVbKjW1FbiRmxM4/rk48gHhb5LLNd4ecu1hOXK11Bu6Tqe56E8SCc
-         L+dn3ij2RF2voqhgeBbzUbxLQg7JN163YvlnaVDWvbcWnPQdF1TWTlyT8PXCuqH00Lvm
-         DrdI20Ny5s59MM5bja2VRJh7aCgXmoyjGp+yjUW1oGqUKfrLt/+d9v2zzWabwi1ahTcD
-         v2KEFubO/bSqP+pSSdA8l+JL2juWuynwaDJ9hLm9s73id+pzr7uz+4bfEykNpFdRY+Di
-         ARlOTr78VjUnYKOIsRrPOKKS8ciEY6GOh/Tg08sXeeh6BoVRjGlUJcA8w38BG6PDjgKV
-         LVIQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OnX1GqgjFfFvc7hMJFPmp1cPGnoy7UoxsZ5ByOjrZhI=;
+        b=lPt+pz8uF2WSASmljF0kXjXFSpu3206ZN7/48/EwFtMasVqJFPROuaCDVNoonm91qn
+         DAFPoQv/wUSitLSrkdAEnsVZN7HrC4ucRcFgufK+6zynchyq9HpLTq5/34XW0qN3sv04
+         A2aT/YlmUptsiBZXYIRXyRR8FhEdRz7BGb/dBU6Wz3LB0CQ6o6/sDqCk6WEGDWWTvAWH
+         NxBHtNfV4ssNfegNxhOaV8ZX3SFeCm/lVVAa29YOE/nKrp7aXYz8CTPqjvQ2FFB8koRp
+         G3vZLxnjAmGJCIizOuHMwgeJ/u6w49gna6N6belWGN24uhJ+i3eq/P7Z4OGuxE8DYo7b
+         i6TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=puv0wVuinbvGk6m24vnUVnaprr7raVy2FnF9iWxEgDg=;
-        b=WALBNPzd9Y/Of8T1l8uI9X/SI1skbkH/DJy3AqtdkcCCU7MVPwCa5eDfxocM9fNb6v
-         w7flqbzL8NSCQOxOCUOGFXSJHW4pykAe6d1G4OlVGOxrEW774FkF5ZjOtDst/IXlmFLf
-         7GqHP3swgYiupcFcJbzngeRvF0JRS/9Gi/+V+cdmCFoGRt2KSCFMpy9KuzwhgfqWR7eN
-         Ylr6U9ID6n5qUl/VA1HCidHbhrrb20IZ+da3jJqmERhcwRMLlsw43VpZrS9G4MdvMVqO
-         pGLLyEAvK9VJqpA0EQENfJMGmGLub066oEMBUSvcEuFoy8k06/0SdfTc72mSgSRWkutG
-         tWNA==
-X-Gm-Message-State: AJIora/aiYnoWCNbF/AJXY3bX4U53raq+tXCfZ6DTAHeueaSuKQzo4kh
-        W7b3faLnDL4Gk38jM5DdPrLCvkGFOCJ8QAtUXmc=
-X-Google-Smtp-Source: AGRyM1utu3QImD9qsURFVtD1OVuARwXFkxr7OiAFJHxCnYpy3UfDVTZIG13xhWJHGIVUaL4XC+zI1ao29MiGikA0TLE=
-X-Received: by 2002:a05:6402:84a:b0:426:262d:967e with SMTP id
- b10-20020a056402084a00b00426262d967emr18807129edz.286.1659430060844; Tue, 02
- Aug 2022 01:47:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OnX1GqgjFfFvc7hMJFPmp1cPGnoy7UoxsZ5ByOjrZhI=;
+        b=j5kQW0+5+zn/zGc6s843Px+c4P9cTLHCs44J7xJER66RA8FSvClidb++HleQwOKbQF
+         04gQZwG3kKr0Xw2FegNxCWR2s0Bax/JXmfs/JqZH9Wm/A3S/dx5WZe0hp6I/Nh9Sh+x2
+         yCa1dw9pSc2Z/fRJ5S7WZyKhM15gTYR42LAciriXFvsUPxxlAFCMgFYMbbUj7fahU6DC
+         bjmJ1MsJLWjPpoujszfgoU7bnOxMWAkvXm9MKeelcHAGvVCVOgGYshZIZeaxm9YSDHRd
+         3xtmzTmal6mv+Qt7F+OKo4wahjq1+1ejeZqk8Crr5VxdNNCSan3pPDkftHc/UpCyBGLU
+         4taQ==
+X-Gm-Message-State: AJIora9daKoVdWv41NocACXDrsaoTLBCp/fHm4kCuuK5XY0PXcJ1Nml5
+        9W+M3ns4U7z6iv5rUlDlG9nW+Q==
+X-Google-Smtp-Source: AGRyM1sjvubOiUuX39s1crLjnzQxUfdcsUG66CMnIPiINhCgYkh6hCOJmOuySeis5DuKmYX1ebU8JA==
+X-Received: by 2002:a05:6a00:1ac8:b0:52b:a671:2ea8 with SMTP id f8-20020a056a001ac800b0052ba6712ea8mr20558068pfv.16.1659430210825;
+        Tue, 02 Aug 2022 01:50:10 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id ft18-20020a17090b0f9200b001f2f64eada6sm10219764pjb.51.2022.08.02.01.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Aug 2022 01:50:10 -0700 (PDT)
+Date:   Tue, 2 Aug 2022 14:20:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V4 1/8] libgpiod: Add libgpiod-sys rust crate
+Message-ID: <20220802085008.evxb3mipx4rply76@vireshk-i7>
+References: <cover.1657279685.git.viresh.kumar@linaro.org>
+ <44ee8c36d58049de2f653494e16cba04b198fb35.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025706.GA88787@sol>
+ <20220727045158.z72byax7pc7kokca@vireshk-i7>
+ <20220727051743.GA108225@sol>
+ <20220801121106.hc2mzippvby5ujg4@vireshk-i7>
+ <20220801155615.GA84978@sol>
 MIME-Version: 1.0
-References: <20220722040609.91703-1-colin.foster@in-advantage.com>
- <20220722040609.91703-10-colin.foster@in-advantage.com> <CAHp75Ve-pqgb56punEL=p=PnEtjRnqTBSqgs+vVn1Zv8F94g9Q@mail.gmail.com>
- <YuiJLK8ncbHH3OhE@euler>
-In-Reply-To: <YuiJLK8ncbHH3OhE@euler>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Aug 2022 10:47:04 +0200
-Message-ID: <CAHp75VcHU+Rh2ROjMcK+Yuyu1Ty9C0Dcx2SjrnrM4BV9NuMZig@mail.gmail.com>
-Subject: Re: [PATCH v14 mfd 9/9] mfd: ocelot: add support for the vsc7512 chip
- via spi
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220801155615.GA84978@sol>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 2, 2022 at 4:17 AM Colin Foster
-<colin.foster@in-advantage.com> wrote:
+On 01-08-22, 23:56, Kent Gibson wrote:
+> The Rust bindings themselves should be building against the local build
+> tree, so well known relative paths.
 
-...
+Right, when we build everything with "make" we better use the already
+built library. I agree.
 
-> > I'm wondering if you can use in both cases
-> > spi_message_init_with_transfers().
->
-> > > +static int ocelot_spi_regmap_bus_read(void *context, const void *reg, size_t reg_size,
-> > > +                                     void *val, size_t val_size)
-> > > +{
-> > > +       struct spi_transfer tx, padding, rx;
->
-> struct spi_transfer xfers[3] = {0};
-> struct spi_transfer *xfer_tok = xfers;
+> For users, require they have libgpiod installed and use pkg_config to
+> locate it?
+> 
+> Is that what you mean?
 
-unsigned int index;
+Since we need the latest APIs, we can't trust the packages provided by
+distributions for now. i.e. "apt-get install libgpiod-dev" won't
+install the latest stuff we need.
 
-> > > +       struct device *dev = context;
-> > > +       struct ocelot_ddata *ddata;
-> > > +       struct spi_device *spi;
-> > > +       struct spi_message msg;
-> > > +
-> > > +       ddata = dev_get_drvdata(dev);
-> > > +       spi = to_spi_device(dev);
-> > > +
-> > > +       spi_message_init(&msg);
-> > > +
-> > > +       memset(&tx, 0, sizeof(tx));
-> > > +
-> > > +       tx.tx_buf = reg;
-> > > +       tx.len = reg_size;
+The only other option to get it working in environments like
+rust-vmm-containers (which tests the vhost-device crate currently) is
+to build / install libgpiod first. As I have understood, people don't
+really like it there (Maintainers of rust-vmm-containers) as this will
+have further dependencies and require more tools.
 
-index = 0;
+I even tried to generate the libgpiod-sys bindings on the fly first,
+but it required more tooling and there were issues with Musl build
+specifically. They suggested to use prebuild bindings as a solution,
+which I have now.
 
-> xfer_tok->tx_buf = reg;
-> xfer_tok->len = reg_size;
+What about we have two separate features:
 
-tok[index] = ...;
-index++;
+- "default" one will be used with "make" and will use prebuild library.
 
-> xfer_tok++;
->
-> > > +       spi_message_add_tail(&tx, &msg);
-> > > +
-> > > +       if (ddata->spi_padding_bytes) {
-> > > +               memset(&padding, 0, sizeof(padding));
-> > > +
-> > > +               padding.len = ddata->spi_padding_bytes;
-> > > +               padding.tx_buf = ddata->dummy_buf;
-> > > +               padding.dummy_data = 1;
->
-> xfer_tok->len
-> xfer_tok->tx_buf
-> xfer_tok->dummy_data
+- "generate" one will be used by user crates and we will build the
+  files there like it is done now.
 
-tok[index] = ...
+> Else, how do other Rust crates wrapping dynamic C libraries do it?
 
-> xfer_tok++;
-
-index++;
-
-> > > +               spi_message_add_tail(&padding, &msg);
-> > > +       }
-> > > +
-> > > +       memset(&rx, 0, sizeof(rx));
-> > > +       rx.rx_buf = val;
-> > > +       rx.len = val_size;
->
-> xfer_tok->rx_buf
-> xfer_tok->len
-
-tok[index] = ...
-
-> xfer_tok++;
-
-index++;
-
-> > > +       spi_message_add_tail(&rx, &msg);
->
-> spi_message_init_with_transfers(&msg, xfers, xfer_tok - xfers);
-
-..., index);
-
-> > I'm wondering if you can use in both cases
-> > spi_message_init_with_transfers().
->
-> I could see that implementation getting the response of "what the heck
-> were you thinking" or "that looks alright" and I honestly have no idea
-> which pool it will fall into.
-
-See above. I.o.w. use index based assignments.
-
-> > > +       return spi_sync(spi, &msg);
-> > > +}
+I think for standard libraries that are stable, the -sys crates just
+contain the pre-built bindings and wrappers and expect the library to
+be already installed.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+viresh
