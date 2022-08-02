@@ -2,219 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 873FE587580
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 04:17:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AABF5876DB
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 07:44:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235666AbiHBCR1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Aug 2022 22:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59988 "EHLO
+        id S231932AbiHBFon (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Aug 2022 01:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231986AbiHBCR0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Aug 2022 22:17:26 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2130.outbound.protection.outlook.com [40.107.223.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C725D43E74;
-        Mon,  1 Aug 2022 19:17:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bMNpXqZxFtly4/rQqyj+ZDoM845lEDBKte20o8Gjyvz8hweEf8sBkrm55Hn5uvauwY1Lckk2J8qrmB8puo2F2Iawk4FkOuHuA8TFPPAYCBVeN6lmqrs+js/tRF/DAcPQEG4nEifR5HU7cDmTvvgrXmuCXHsYeauoNxhU8ikUaVK91RBYHJgIthWaOBeSsvfa01wKr9Yh1imcdSYY4wf2wJv9mRzwblq6XEOwqrYC4+oPDSfpfCWtEKARvSw1+n0V/z3K6H4FIqCreqgIgQkFyiGHBhFwIwLCzJXB3hJzHEsuR06hN0HOQNphJbC7FV/wBkuTKDRY07RgyeyHnNLlRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OrIW3dBY5vbh0Y/itGbehrxSAFo7mQAP5sUZE7W9QvA=;
- b=NDOCaYqDhLrVr2zXc7m8wIMciA9QsmdZj1nO5VzWeFuAoJnsKzHoJmyqs6/mNe+oV0dbktXK/glWWMy1UpvbdAJs2q+UIwCYWxa9Slv3iK4uTn9R9FU604yMKRtXMnhCNWtwTZtztX7rc1xFTESbUk1jROS+jQ2xRy/gt7zcxsYIKFBV4ik8F42Q2WUE9DIsFAdvycMRaw7ghhzA0A9efgSuj08sZ3wLYY4ojJq99YeAVTtIUT+OL43PHo//a1EoAEbqj3jhfIiluoBeMlrsXm+QRN3dIaJvkkekHk5ebqinnP+FDOFhA+yNqXDNB4C+fbo3zOr3/Pj+Bk3Sk8G4rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+        with ESMTP id S231804AbiHBFol (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 01:44:41 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFAF47BA5
+        for <linux-gpio@vger.kernel.org>; Mon,  1 Aug 2022 22:44:39 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id h21-20020a17090aa89500b001f31a61b91dso14576363pjq.4
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Aug 2022 22:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OrIW3dBY5vbh0Y/itGbehrxSAFo7mQAP5sUZE7W9QvA=;
- b=HgKMig/9CQQHjiZk0hK8Lct7aGmBATDnhd0kxxpCoVSogDxox0QXZbdYE56EL9DGXa0h7WWkeNHXWDSA3AIB9DplXy81OvbwNSPwyAsjxQFzHM+5LUfjK6BFLgseZegnpfEHUR3kOivZiaLi7M8l4Ag61+mMRSeE+pM2McKa52g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by CO6PR10MB5585.namprd10.prod.outlook.com
- (2603:10b6:303:144::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.6; Tue, 2 Aug
- 2022 02:17:21 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::b869:6c52:7a8d:ddee]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::b869:6c52:7a8d:ddee%4]) with mapi id 15.20.5482.014; Tue, 2 Aug 2022
- 02:17:21 +0000
-Date:   Mon, 1 Aug 2022 19:17:16 -0700
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
-Subject: Re: [PATCH v14 mfd 9/9] mfd: ocelot: add support for the vsc7512
- chip via spi
-Message-ID: <YuiJLK8ncbHH3OhE@euler>
-References: <20220722040609.91703-1-colin.foster@in-advantage.com>
- <20220722040609.91703-10-colin.foster@in-advantage.com>
- <CAHp75Ve-pqgb56punEL=p=PnEtjRnqTBSqgs+vVn1Zv8F94g9Q@mail.gmail.com>
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bgQUIAIE3uDdkqWet+XH2lBp5btd5lOVdoV3a8qDbHw=;
+        b=yyaTmGjDDf28ocKgPi80oKjYSaxpWut73FZem7Q3Pa8EaIALQytcWhFbzukEbCDOXN
+         Z829SdjYx6nVCt5yeb9yJhE9IO5BDyedQHVvoY8P3cU8FRU+5I+S1HiUXqlI+5dzjRU5
+         tZYX+FP+uUVeLyAdsXAqoPMnYC/z0JP3JkHnkS4er4tth9yV2Jtdku4OB9uaKCgbrmzA
+         ManjoAkSvemg7eAwZZ1rNkD6xWgmhX7E9/AO1WRsF6oMPLLqMHwSI5Y4AgELyiNjVBRU
+         iILp+kQvNL+G+bBbD4WZBsAzppbl99FzELp1kZOV6fU5ODR1n6la99t9ggcSYu8Xsayx
+         ijLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bgQUIAIE3uDdkqWet+XH2lBp5btd5lOVdoV3a8qDbHw=;
+        b=6jQqJE1ZhtbGhimfK/WGA6+lhIaO4cOALZejY9AgMre9z8xMnG8jzwisjFcX3umA45
+         smhDJ6zOQSl8pklkdcLum1ml1nqHNRe9RC2a1yfURsDzIpo23MHdZzPIvfopLhifLGkM
+         7q/HqMXCdZhnx3kEWTkQRJFeoZfLBEGaSsPPKfnLVaOCOrw5Fna4iGVa4jB4Rm0oyJQr
+         mEh0m5VZ+OxW+GcTP9vjZNmJ5TCdXb2LIWI4CL35mK1c9MecA4JCLk2U6C4gt+zvUnAl
+         BVKbZfiuU3WpFiKIdPmSviIQpwL0w6zpR9RY3ILI2vH2PWoU/HDXxGkNSiSh32K3fc2X
+         excA==
+X-Gm-Message-State: ACgBeo1l0xkkAP8NWOJRPuOafjOYIhD/bevkaY3jebl71OUaaOwf2YVS
+        a0ZLvM41abgP7kI6f4IsbmRDrA==
+X-Google-Smtp-Source: AA6agR7MImCGe2ZAZDm0FlrsnMHK0nsLu3jglqLqtFNZls7XJHbpY6hBBHVj0TzWyttT+Qk3LYKeNQ==
+X-Received: by 2002:a17:903:2113:b0:16f:6ee:65f2 with SMTP id o19-20020a170903211300b0016f06ee65f2mr1204458ple.76.1659419079185;
+        Mon, 01 Aug 2022 22:44:39 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id w16-20020a1709029a9000b0016dd562430fsm8526331plp.120.2022.08.01.22.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Aug 2022 22:44:37 -0700 (PDT)
+Date:   Tue, 2 Aug 2022 11:14:34 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V4 7/8] libgpiod: Add rust tests
+Message-ID: <20220802054434.prvmgvv6hklilbfq@vireshk-i7>
+References: <cover.1657279685.git.viresh.kumar@linaro.org>
+ <78b3ee21dec2a66003c2eae2800e9699a8ecd180.1657279685.git.viresh.kumar@linaro.org>
+ <20220727025847.GG88787@sol>
+ <20220801115402.uk4gsptesrisohvk@vireshk-i7>
+ <20220801123806.GA42433@sol>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Ve-pqgb56punEL=p=PnEtjRnqTBSqgs+vVn1Zv8F94g9Q@mail.gmail.com>
-X-ClientProxiedBy: SJ0PR05CA0201.namprd05.prod.outlook.com
- (2603:10b6:a03:330::26) To MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 78e75a64-5c80-49e4-5e82-08da742d2135
-X-MS-TrafficTypeDiagnostic: CO6PR10MB5585:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: klp5zM0vszVPu7BI4/RchVrUGUb53+RQSGaaa4gxF+ND0Q1dIYrKXnGflJenSDWdIwDY6QHmJW9l5u6/s7kKK6N15HaJcXR1wyCiAPoyQ7EGrWcJC5+6rdyAVEqZLUlcUBYWhL8I9emgmfjaWDHQbD7x7qAqO5NGB8rOYJjxyM5rk4R+Few7UT5iP4kOV/yXbSstr3McjHopn4k0VRkvjnjmTnHbLRgmDtpjxeDGSKMpyxgXE+vob1pRbW6Pa0o0QpXRQrMdaJdvpyDF/ZDLO1LCFFKzgov+wQACrsNWQEXIY2ZZrfnyqDeowPzkPxeWJNF1Z1AAEbAEgzzGnM40utkklOnIIAjeBydqv/tTyeoLjvZkFAd6g3oH/h16rMrKfMmMHmmUOmlVyovkxYeKZlZsHk+tAtLB6ottfZMpAFgkJdbZZSPD+lR/KuRq4yZlGqhomRyy47nmL0JXxpXZfamjnu4oAe+Cj1SseleugnDolIlIVT4gMosVZX3ulKKVkAX4c54qov/AQP+/505nUmINihxQZ9pee4Zo6j5VoCGld03HaO8DIpPVXH62On1aGFinBXd/1M67X7CcT14kkYVy7getVs6A/vKGNgJxeVch3WpnqF3iPMoXwgnEV6A7HsD1NybboQsfiW1T+jpkX92NwnHvm18NK9SFeI9s936jxW86C61xqxlsHIJ54xjDSYTVzkhibUJmsA7YsN8za8WBmS4LL7Ck3Vv1uuYlY1M=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(346002)(376002)(39830400003)(366004)(396003)(136003)(26005)(6512007)(9686003)(6666004)(41300700001)(86362001)(6506007)(54906003)(6916009)(316002)(33716001)(6486002)(478600001)(38100700002)(107886003)(186003)(83380400001)(7416002)(5660300002)(8676002)(4326008)(66556008)(66476007)(66946007)(44832011)(8936002)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?02E6em1qquWDLHx1I8zebBgWIJ71uPDQqUqdS6iOF2paisFuQ4DFaNtzdXVT?=
- =?us-ascii?Q?H/zM+cywPOYEriChdY2rGFyjC/0ABscJDfOXiH6zo4jU7tUUUlgQVOjN0E/1?=
- =?us-ascii?Q?12Ow5r7nMOttHikZzauExU0jM/J7P/xgrYgYoLSeu4wimd/mG1mIaR2l1fx2?=
- =?us-ascii?Q?VObpbB/jtUFXs/5DekGsjjiJjRiQ3LAYe3DD11KcX7Me8SBcouLSZMHClPeC?=
- =?us-ascii?Q?T7e0qw5b45M8BUWzk6lQzmp8o5xJHTR8GzdRMGk2UoXJJjYzTGVK4oS6PPEZ?=
- =?us-ascii?Q?GDeYoUKTisKyFOv8nR/KMB7eJhnJzELdiTFLohHbjX3Hdy0t5yZ4Dtsww1m+?=
- =?us-ascii?Q?9SUz5qee4QuSPdx9Jg2U8JU6WllY9RLErx72i3KTu8BFrGDvNWqPawZ7bJJc?=
- =?us-ascii?Q?bGMUsDVqEX03qyBAtIBey74UmCQ8LNDAbgXiSl9DA4JEqvcikRRDGTSKKuZj?=
- =?us-ascii?Q?f70qPLQaqOeIoO7ZnpfhXwMBVCTvCDHat44/xr13izfE2yRDgcsIZo4rB/33?=
- =?us-ascii?Q?mia/KSAOzc3UV5WNbyfzMQweBJ8c8FhzJr5+cvdVRiqBupyy15Kc3T9hsdwA?=
- =?us-ascii?Q?BSvJLyusBp5dZv0MleLonw5DcISyOTuyDeEDzqJpzM0AXZa+CMxg2Vl2fIqn?=
- =?us-ascii?Q?tFpOqb88o4W6fPPI2RuxVtxHnZ2TCxwJHN8N36H5QfaYa4Hj98ocMZrNwbjl?=
- =?us-ascii?Q?CvFUD2bbZeLtafPnr1jXKe2tMTiLyXS79ML+FQiykrkpIgMbw2d+5lwTISgg?=
- =?us-ascii?Q?ZL+M0p6tsz4ZjP+RQhky4Z7BOzuS1xQrYD8tVdm3KY8jV/j9smPFxmeBmB8N?=
- =?us-ascii?Q?m9s73v2oE3nd5jpCsjA1yRvuTrp7hsDd9kexhnOsy3oPaWH3GsMe6ccgXBPz?=
- =?us-ascii?Q?jUtj/+jSvdwtkh0DHAeI8isf9oLkh/WNwM32XjLpHGeED0UY5XCuzOzrR3/m?=
- =?us-ascii?Q?yVtkG0lfkxcBpNJ/W4ytBj4hpTcD95CGUt3HaOypnOK8MwFr+CVkb6ZLkBOG?=
- =?us-ascii?Q?RKK1X1vH4VWC2T24M4qtr8cTecTwUotNAL3L28CMVpLFllFwXbTxkaa0FLh2?=
- =?us-ascii?Q?McU6HEmOWGryZItAKIzjg/gf/3Zh7zXB/24nyKN7XlKx9JoGjZ6aju1l8Dw0?=
- =?us-ascii?Q?npPq4aIrRz4/hX+1WcA3rALPUvxLTfzdxe5j+iOrEh9SdGUVyU9+yMHxCmRE?=
- =?us-ascii?Q?xeMtW9+7xkIhR53OXbJ32qiYP+PXU0DH8XVv2x54U3wbbFjHvCZ1A8xlPy6c?=
- =?us-ascii?Q?WQEnkJLVvizS5jgxFzTNNl7ccrGmts2IpD3HtbIYv9Brmsy2mC+W95f8ilRQ?=
- =?us-ascii?Q?oNB6A8xEuHkE0oU27w9SjljD2/ahLcne06r7nvcaAyZEMHY8eGiKcKVgsDuO?=
- =?us-ascii?Q?YKfH4Nbwz53gmNuPGL5zTkWUQN8D1CZBzOmczY0UcGBgq4Y4BmMkMqL11K81?=
- =?us-ascii?Q?tZw7DldN3or38Q1QUo6L2MjzFMnO9w/y0XqMQraxBNbky6Bgn3cYbrMwYGkW?=
- =?us-ascii?Q?H/sX5Syx35vkJShGCvHWW8hZdNG6n3vIQapHLi5mdNgQ9815Q9IbOW2KAhvH?=
- =?us-ascii?Q?kT8lViP6ckPvEYQwyOCxkiQ1eP4POQ7DSAWM8O5cx9UPy68M63f49rDdzHEL?=
- =?us-ascii?Q?nw=3D=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78e75a64-5c80-49e4-5e82-08da742d2135
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2022 02:17:21.0842
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pbrRDsrESAEjM8ofpt3L1PvpNd0f0Fzwhx9lxL4uZHDNJD6z+W/utVtb4JseaYA9tgXVIY7N/DZ/9h10VAJIFtzSENfBuaQY4S3Mm0cfFV0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5585
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220801123806.GA42433@sol>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
-
-Apologies for the late response. Everything seemed straightforward, but
-as I was implementing your suggestions one thing came out.
-
-I just want to make sure my implementation isn't horribly off before the
-next patch set.
-
-Specifically this question (copied from below):
-> I'm wondering if you can use in both cases
-> spi_message_init_with_transfers().
-
-> > +static int ocelot_spi_regmap_bus_read(void *context, const void *reg, size_t reg_size,
-> > +                                     void *val, size_t val_size)
-> > +{
-> > +       struct spi_transfer tx, padding, rx;
-
-struct spi_transfer xfers[3] = {0};
-struct spi_transfer *xfer_tok = xfers;
-
-> > +       struct device *dev = context;
-> > +       struct ocelot_ddata *ddata;
-> > +       struct spi_device *spi;
-> > +       struct spi_message msg;
-> > +
-> > +       ddata = dev_get_drvdata(dev);
-> > +       spi = to_spi_device(dev);
-> > +
-> > +       spi_message_init(&msg);
-> > +
-> > +       memset(&tx, 0, sizeof(tx));
-> > +
-> > +       tx.tx_buf = reg;
-> > +       tx.len = reg_size;
-
-xfer_tok->tx_buf = reg;
-xfer_tok->len = reg_size;
-xfer_tok++;
-
-> > +
-> > +       spi_message_add_tail(&tx, &msg);
-> > +
-> > +       if (ddata->spi_padding_bytes) {
-> > +               memset(&padding, 0, sizeof(padding));
-> > +
-> > +               padding.len = ddata->spi_padding_bytes;
-> > +               padding.tx_buf = ddata->dummy_buf;
-> > +               padding.dummy_data = 1;
-
-xfer_tok->len
-xfer_tok->tx_buf
-xfer_tok->dummy_data
-xfer_tok++;
-
-> > +
-> > +               spi_message_add_tail(&padding, &msg);
-> > +       }
-> > +
-> > +       memset(&rx, 0, sizeof(rx));
-> > +       rx.rx_buf = val;
-> > +       rx.len = val_size;
-
-xfer_tok->rx_buf
-xfer_tok->len
-xfer_tok++;
-
-> > +
-> > +       spi_message_add_tail(&rx, &msg);
-
-spi_message_init_with_transfers(&msg, xfers, xfer_tok - xfers);
-
+On 01-08-22, 20:38, Kent Gibson wrote:
+> The request_lines() could be considered sufficient to test
+> the conversions for both request_config and line_config objects.
 > 
-> I'm wondering if you can use in both cases
-> spi_message_init_with_transfers().
+> But testing request_lines() and reconfigure_lines() doesn't just test
+> those conversions, it checks that the functions don't mess with the
+> config along the way.
+> If you want to take that as a given then sure, just testing the
+> config variants for request_lines() will do.
 
-I could see that implementation getting the response of "what the heck
-were you thinking" or "that looks alright" and I honestly have no idea
-which pool it will fall into.
+Okay, so we want test setting various flag types in line_config and
+then see if request_line() fails or not and verify (read) them later.
+Right ?
 
-> 
-> > +       return spi_sync(spi, &msg);
-> > +}
-> 
+Very similar to this is also done in tests/line_info now, where you
+suggested:
+
+"Test that you can read all supported values for all fields."
+
+So I set all possible values for fields and then read them back.
+
+Lets see after the next version, if they are sufficient or not. I will
+happily add more if required then.
+
+Thanks.
+
+-- 
+viresh
