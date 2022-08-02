@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6252587C2F
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 14:18:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACFCC587C30
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 14:18:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233811AbiHBMSZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Aug 2022 08:18:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38698 "EHLO
+        id S236872AbiHBMS0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Aug 2022 08:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236865AbiHBMSY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 08:18:24 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE334F6B9
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Aug 2022 05:18:19 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 12so12220642pga.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Aug 2022 05:18:19 -0700 (PDT)
+        with ESMTP id S234024AbiHBMS0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 08:18:26 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E91594F18E
+        for <linux-gpio@vger.kernel.org>; Tue,  2 Aug 2022 05:18:21 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id h132so12187539pgc.10
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Aug 2022 05:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PTXnDqvXM6hhp9RNPTChfixjy4jkyWBITtOvPMvZnR4=;
-        b=iApGZBVRXbSeGZ0NNdpMXlmIkMZ8uMHoVuJEg4ZmIT48J/zMfY4WC3AhRljpdVGuLj
-         rBH5yjx9K0Xz9XeNmyBxco4iX10CAwzuj+ZJ9fkHwsnDnfO9YuAauAD1Mu65Fp+TmiZh
-         4ptcESLFTKcsQnHGhMefiyGy4BhsqDNluODTMis2xn0ajl+SBUCJGosZq1XR5kdkLYSK
-         IfW/mpfvLAvyhZYvbKVb3Vzhh0C4NPsWDtyJe9oPDQv3iHpucHgpPkfjgj7XwkNtS67/
-         +qP4xCsSaItNmxQ9ox0atxy3qA7WzHf4fiW0vJEVj7GhXZb2WT2bFRcXsLJV3mU0BYL0
-         mQfw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TwhuAp3W7cu4b7rXJywkLPtcj3qj9jo5db4QI6rcIPg=;
+        b=Vi+G8Z1LulR85fUuoO9Tov7kUe2wT+RhlbBhFf4JvlbDDzNyKfKZDIIHwwMrVRxFpN
+         r18UDfBnB6quabp7Jykcd92Mm7jcKl49ZZjLm+p32cXDsW1iboDNDo93zWyAD8U9mNpY
+         +d0jtmE9dGcYcc8WKhejQBRt8Xri3AQa9w8DYvSm4DT5ocN+Z6qe+31aMyQE3fbnvUVy
+         KzqB4mqlXEhfQXXORvue4HuAG5qx2neckHzYLs/G3LwlEmZnTiakb9Y3wud8XRmu+QlP
+         sqW/GdEunfwCBorWPetDrs1PfIa9rayHEnUoiJSZU41fk6TNHWXp8qN2LY98ZenrinYb
+         +EMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PTXnDqvXM6hhp9RNPTChfixjy4jkyWBITtOvPMvZnR4=;
-        b=d/XCBPpTuDXrqzbgVMos+Fjo13qKUX+nh+XC8Ac3rhMY9NMzOKePRFj3EMbQjv4l4d
-         9SNMMNJifPfT9QlHdw05bUysFZtnRDYb9KuxiuJMSOaHM2usCY1Ep/kWu07qEqS9jNM6
-         bJLtBHKOGwVah+ge1BZ3JxRaJnhYvqdbm5jkWzPyHVA7pNpZ2GOI+wEYi8xYNyOWh1BY
-         cjQWc1/nbUjW8wJ5SklcIcqL6MDzBryEfv/FnJdSvJY9drGuhGMYO0BkDUsACDc6+OW1
-         1ewQKe+DiNAZqxpnvvoCGThu0NLmgMUJemstQvAAPyKePY/F7FIA6LVcxKBREuEVHHqv
-         pPvA==
-X-Gm-Message-State: AJIora/vvb39nb4Wt+Q2YXIoy5uIo340PG7M2QxC+xBBHSAsmkndwKy/
-        NhDE8Gut6PYi2f7LXLpzyvPrZw==
-X-Google-Smtp-Source: AGRyM1t3g94zgtT6bTHATndnwZuwW0cOPWfOynP30+eHHUGXE90oDhsT9XDBrlHJQKPwWuojpekJbw==
-X-Received: by 2002:a05:6a00:2312:b0:52b:928:99dd with SMTP id h18-20020a056a00231200b0052b092899ddmr20317232pfh.77.1659442698917;
-        Tue, 02 Aug 2022 05:18:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TwhuAp3W7cu4b7rXJywkLPtcj3qj9jo5db4QI6rcIPg=;
+        b=470SACoBzlO4rm3rqMPS2i6cKTou/76NctXKH0bqA93VkVKHqHgXIFmKasLbPwP0QG
+         Ru1wDmx4tpiaHicjBqTbg/dAoVJyEhyx9WGmEE8L0kgBor2vrHx6RwL36u+KdUIK9bMM
+         +0dUqqczCYsw2kxMRjWweDDfqvPMHnRrdDdbyioI5LJS1ojlJpzGqs0PA8AURa+ltdU3
+         O+o8IDvAP3p7YNw1Z5fctAN+msFP8b7Cd+RIg55KoGhRIURQiT86vTk6Gp6kNEdQQIKY
+         8wVG7WazlvFO2eh/44x1em1sEPnw2QtvH6BsRvmTMtsZgN86WBwKDsgT+G03EBsFd1f4
+         Rh0w==
+X-Gm-Message-State: ACgBeo2SNGIcUjBHjl75OfaEK1qQI67Yva1RJCX/LKT8CFjiyqM+CtAd
+        2Bpsa9JSz9SdDR3m57HSzZzzkg==
+X-Google-Smtp-Source: AA6agR7CL4fHgojVnwug471JQITk02JMGCviWCRFVHdRbWFs3JHmeQ6LSV5v0ysoNd6iSyDHrraE4A==
+X-Received: by 2002:a05:6a00:2288:b0:52d:dbdf:318e with SMTP id f8-20020a056a00228800b0052ddbdf318emr2853737pfe.62.1659442701354;
+        Tue, 02 Aug 2022 05:18:21 -0700 (PDT)
 Received: from localhost ([122.171.18.80])
-        by smtp.gmail.com with ESMTPSA id v66-20020a622f45000000b005254535a2cfsm10671579pfv.136.2022.08.02.05.18.17
+        by smtp.gmail.com with ESMTPSA id h6-20020a17090a130600b001f4d711e165sm7084667pja.11.2022.08.02.05.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Aug 2022 05:18:18 -0700 (PDT)
+        Tue, 02 Aug 2022 05:18:21 -0700 (PDT)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -59,10 +59,12 @@ Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
         stratos-dev@op-lists.linaro.org,
         Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: [PATCH V5 0/8] libgpiod: Add Rust bindings
-Date:   Tue,  2 Aug 2022 17:48:04 +0530
-Message-Id: <cover.1659442066.git.viresh.kumar@linaro.org>
+Subject: [PATCH V5 1/8] libgpiod: Add libgpiod-sys rust crate
+Date:   Tue,  2 Aug 2022 17:48:05 +0530
+Message-Id: <5319a3efc633e15993ba339972d139d6ec376cc6.1659442066.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+In-Reply-To: <cover.1659442066.git.viresh.kumar@linaro.org>
+References: <cover.1659442066.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -74,151 +76,133 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+This adds libgpiod-sys rust crate, which provides FFI (foreign function
+interface) bindings for libgpiod APIs.
 
-Here is another version of rust bindings for libgpiod v2.0, based of the
-next/libgpiod-2.0.
-
-Pushed here:
-
-https://github.com/vireshk/libgpiod master
-
-Kent, I hope I haven't missed any of your comments, there were too many of them.
-Thanks for your review.
-
-V4->V5:
-- Arrange as workspace with crates for libgpiod-sys, libgpiod, gpiosim.
-- Use static libgpiod and libgpiosim libraries instead of rebuilding again.
-- Arrange in modules instead of flattened approach.
-- New enums like Setting and SettingKind and new types based on them SettingMap
-  and SettingKindMap.
-- New property independent helpers for line_config, like set_prop_default().
-- Improved tests/examples, new example for gpiowatch.
-- Add pre-built bindings for gpiosim too.
-- Many other changes.
-
-V3->V4:
-- Rebased on top of new changes, and made changes accordingly.
-- Added rust integration tests with gpiosim.
-- Found a kernel bug with tests, sent a patch for that to LKML.
-
-V2->V3:
-- Remove naming redundancy, users just need to do this now
-  use libgpiod:{Chip, Direction, LineConfig} now (Bartosz);
-- Fix lifetime issues between event-buffer and edge-event modules, the event
-  buffer is released after the last edge-event reference is dropped (Bartosz).
-- Allow edge-event to be copied, and freed later (Bartosz).
-- Add two separate rust crates, sys and wrapper (Gerard).
-- Null-terminate the strings passed to libgpiod (Wedson).
-- Drop unnecessary checks to validate string returned from chip:name/label/path.
-- Fix SAFETY comments (Wedson).
-- Drop unnecessary clone() instances (Bartosz).
-
-V1->V2:
-- Added examples (I tested everything except gpiomon.rs, didn't have right
-  hardware/mock device to test).
-- Build rust bindings as part of Make, update documentation.
-
-Thanks.
-
---
-Viresh
-
-Viresh Kumar (8):
-  libgpiod: Add libgpiod-sys rust crate
-  libgpiod-sys: Add pre generated rust bindings
-  libgpiod: Add rust wrapper crate
-  libgpiod: Add rust examples
-  libgpiod: Add gpiosim rust crate
-  gpiosim: Add pre generated rust bindings
-  libgpiod: Add rust tests
-  libgpiod: Integrate building of rust bindings with make
-
- .gitignore                                    |    5 +
- README                                        |    8 +-
- TODO                                          |    8 -
- bindings/Makefile.am                          |    6 +
- bindings/rust/Cargo.toml                      |    7 +
- bindings/rust/Makefile.am                     |   18 +
- bindings/rust/gpiosim/Cargo.toml              |   18 +
- bindings/rust/gpiosim/README.md               |   11 +
- bindings/rust/gpiosim/build.rs                |   43 +
- bindings/rust/gpiosim/src/bindings.rs         |  180 ++
- bindings/rust/gpiosim/src/lib.rs              |   25 +
- bindings/rust/gpiosim/src/sim.rs              |  323 ++++
- bindings/rust/libgpiod-sys/Cargo.toml         |   15 +
- bindings/rust/libgpiod-sys/README.md          |   11 +
- bindings/rust/libgpiod-sys/build.rs           |   41 +
- bindings/rust/libgpiod-sys/src/bindings.rs    | 1535 +++++++++++++++++
- bindings/rust/libgpiod-sys/src/lib.rs         |   13 +
- bindings/rust/libgpiod/Cargo.toml             |   16 +
- bindings/rust/libgpiod/examples/gpiodetect.rs |   30 +
- bindings/rust/libgpiod/examples/gpiofind.rs   |   35 +
- bindings/rust/libgpiod/examples/gpioget.rs    |   44 +
- bindings/rust/libgpiod/examples/gpioinfo.rs   |   95 +
- bindings/rust/libgpiod/examples/gpiomon.rs    |   71 +
- bindings/rust/libgpiod/examples/gpioset.rs    |   64 +
- bindings/rust/libgpiod/examples/gpiowatch.rs  |   54 +
- bindings/rust/libgpiod/src/chip.rs            |  253 +++
- bindings/rust/libgpiod/src/edge_event.rs      |  102 ++
- bindings/rust/libgpiod/src/event_buffer.rs    |   90 +
- bindings/rust/libgpiod/src/info_event.rs      |   68 +
- bindings/rust/libgpiod/src/lib.rs             |  477 +++++
- bindings/rust/libgpiod/src/line_config.rs     |  586 +++++++
- bindings/rust/libgpiod/src/line_info.rs       |  180 ++
- bindings/rust/libgpiod/src/line_request.rs    |  246 +++
- bindings/rust/libgpiod/src/request_config.rs  |  119 ++
- bindings/rust/libgpiod/tests/chip.rs          |   97 ++
- bindings/rust/libgpiod/tests/common/config.rs |  142 ++
- bindings/rust/libgpiod/tests/common/mod.rs    |   10 +
- bindings/rust/libgpiod/tests/edge_event.rs    |  294 ++++
- bindings/rust/libgpiod/tests/info_event.rs    |  120 ++
- bindings/rust/libgpiod/tests/line_config.rs   |  293 ++++
- bindings/rust/libgpiod/tests/line_info.rs     |  272 +++
- bindings/rust/libgpiod/tests/line_request.rs  |  473 +++++
- .../rust/libgpiod/tests/request_config.rs     |   42 +
- configure.ac                                  |   16 +
- 44 files changed, 6545 insertions(+), 11 deletions(-)
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ .gitignore                            |  5 ++++
+ bindings/rust/Cargo.toml              |  5 ++++
+ bindings/rust/libgpiod-sys/Cargo.toml | 15 ++++++++++
+ bindings/rust/libgpiod-sys/build.rs   | 41 +++++++++++++++++++++++++++
+ bindings/rust/libgpiod-sys/src/lib.rs | 13 +++++++++
+ 5 files changed, 79 insertions(+)
  create mode 100644 bindings/rust/Cargo.toml
- create mode 100644 bindings/rust/Makefile.am
- create mode 100644 bindings/rust/gpiosim/Cargo.toml
- create mode 100644 bindings/rust/gpiosim/README.md
- create mode 100644 bindings/rust/gpiosim/build.rs
- create mode 100644 bindings/rust/gpiosim/src/bindings.rs
- create mode 100644 bindings/rust/gpiosim/src/lib.rs
- create mode 100644 bindings/rust/gpiosim/src/sim.rs
  create mode 100644 bindings/rust/libgpiod-sys/Cargo.toml
- create mode 100644 bindings/rust/libgpiod-sys/README.md
  create mode 100644 bindings/rust/libgpiod-sys/build.rs
- create mode 100644 bindings/rust/libgpiod-sys/src/bindings.rs
  create mode 100644 bindings/rust/libgpiod-sys/src/lib.rs
- create mode 100644 bindings/rust/libgpiod/Cargo.toml
- create mode 100644 bindings/rust/libgpiod/examples/gpiodetect.rs
- create mode 100644 bindings/rust/libgpiod/examples/gpiofind.rs
- create mode 100644 bindings/rust/libgpiod/examples/gpioget.rs
- create mode 100644 bindings/rust/libgpiod/examples/gpioinfo.rs
- create mode 100644 bindings/rust/libgpiod/examples/gpiomon.rs
- create mode 100644 bindings/rust/libgpiod/examples/gpioset.rs
- create mode 100644 bindings/rust/libgpiod/examples/gpiowatch.rs
- create mode 100644 bindings/rust/libgpiod/src/chip.rs
- create mode 100644 bindings/rust/libgpiod/src/edge_event.rs
- create mode 100644 bindings/rust/libgpiod/src/event_buffer.rs
- create mode 100644 bindings/rust/libgpiod/src/info_event.rs
- create mode 100644 bindings/rust/libgpiod/src/lib.rs
- create mode 100644 bindings/rust/libgpiod/src/line_config.rs
- create mode 100644 bindings/rust/libgpiod/src/line_info.rs
- create mode 100644 bindings/rust/libgpiod/src/line_request.rs
- create mode 100644 bindings/rust/libgpiod/src/request_config.rs
- create mode 100644 bindings/rust/libgpiod/tests/chip.rs
- create mode 100644 bindings/rust/libgpiod/tests/common/config.rs
- create mode 100644 bindings/rust/libgpiod/tests/common/mod.rs
- create mode 100644 bindings/rust/libgpiod/tests/edge_event.rs
- create mode 100644 bindings/rust/libgpiod/tests/info_event.rs
- create mode 100644 bindings/rust/libgpiod/tests/line_config.rs
- create mode 100644 bindings/rust/libgpiod/tests/line_info.rs
- create mode 100644 bindings/rust/libgpiod/tests/line_request.rs
- create mode 100644 bindings/rust/libgpiod/tests/request_config.rs
 
+diff --git a/.gitignore b/.gitignore
+index 58e1c5fc7e00..9541482d5efb 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -33,3 +33,8 @@ stamp-h1
+ # profiling
+ *.gcda
+ *.gcno
++
++# Added by cargo
++
++target
++Cargo.lock
+diff --git a/bindings/rust/Cargo.toml b/bindings/rust/Cargo.toml
+new file mode 100644
+index 000000000000..d0b3a3c88ff1
+--- /dev/null
++++ b/bindings/rust/Cargo.toml
+@@ -0,0 +1,5 @@
++[workspace]
++
++members = [
++    "libgpiod-sys",
++]
+diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+new file mode 100644
+index 000000000000..77f82719d269
+--- /dev/null
++++ b/bindings/rust/libgpiod-sys/Cargo.toml
+@@ -0,0 +1,15 @@
++[package]
++name = "libgpiod-sys"
++version = "0.1.0"
++edition = "2018"
++
++# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
++
++[dependencies]
++
++[features]
++generate = [ "bindgen" ]
++
++[build-dependencies]
++bindgen = { version = "0.59.1", optional = true }
++cc = "1.0.46"
+diff --git a/bindings/rust/libgpiod-sys/build.rs b/bindings/rust/libgpiod-sys/build.rs
+new file mode 100644
+index 000000000000..98863686c7af
+--- /dev/null
++++ b/bindings/rust/libgpiod-sys/build.rs
+@@ -0,0 +1,41 @@
++#[cfg(feature = "generate")]
++extern crate bindgen;
++#[cfg(feature = "generate")]
++use std::env;
++#[cfg(feature = "generate")]
++use std::path::PathBuf;
++
++#[cfg(feature = "generate")]
++fn generate_bindings() {
++    // Tell cargo to invalidate the built crate whenever following files change
++    println!("cargo:rerun-if-changed=../../../include/gpiod.h");
++
++    // The bindgen::Builder is the main entry point
++    // to bindgen, and lets you build up options for
++    // the resulting bindings.
++    let bindings = bindgen::Builder::default()
++        // The input header we would like to generate
++        // bindings for.
++        .header("../../../include/gpiod.h")
++        // Tell cargo to invalidate the built crate whenever any of the
++        // included header files changed.
++        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
++        // Finish the builder and generate the bindings.
++        .generate()
++        // Unwrap the Result and panic on failure.
++        .expect("Unable to generate bindings");
++
++    // Write the bindings to the $OUT_DIR/bindings.rs file.
++    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
++    bindings
++        .write_to_file(out_path.join("bindings.rs"))
++        .expect("Couldn't write bindings!");
++}
++
++fn main() {
++    #[cfg(feature = "generate")]
++    generate_bindings();
++
++    println!("cargo:rustc-link-search=./../../lib/.libs/");
++    println!("cargo:rustc-link-lib=static=gpiod");
++}
+diff --git a/bindings/rust/libgpiod-sys/src/lib.rs b/bindings/rust/libgpiod-sys/src/lib.rs
+new file mode 100644
+index 000000000000..1ca355b5f5ac
+--- /dev/null
++++ b/bindings/rust/libgpiod-sys/src/lib.rs
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#[allow(non_camel_case_types, non_upper_case_globals)]
++#[cfg_attr(test, allow(deref_nullptr, non_snake_case))]
++
++mod bindings_raw {
++    #[cfg(feature = "generate")]
++    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
++
++    #[cfg(not(feature = "generate"))]
++    include!("bindings.rs");
++}
++pub use bindings_raw::*;
 -- 
 2.31.1.272.g89b43f80a514
 
