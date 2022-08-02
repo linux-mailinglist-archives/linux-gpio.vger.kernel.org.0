@@ -2,142 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47E295879EF
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 11:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 319F4587A19
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Aug 2022 11:53:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233188AbiHBJhH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Aug 2022 05:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
+        id S235668AbiHBJxS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Aug 2022 05:53:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232223AbiHBJhG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 05:37:06 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0ED119C15
-        for <linux-gpio@vger.kernel.org>; Tue,  2 Aug 2022 02:37:05 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id h28so6705109pfq.11
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Aug 2022 02:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1w2g8x1Wc3Bjh2xEKjuM9r3o0qYaf8+ObaTdeZFvmQE=;
-        b=mpA6/SpmI4wpxQVJ1HsG6CgmZ5dQm4z00d0tLyv5yLDWKiMEJ/vB+ssH/JsqWKdTji
-         d7dITU/Ow9n+DiSMK7YkX7ocFEhxYz/ZnPcYvRfaBZeokFXG/YsWuxZ2tFj9pXSJbQEA
-         gWIQC7VKBOB7WNVrlE/+Mo4rryEYi5vbd7PCWDpvwE3WuOPFxeYQUfE+IU+N6pfD5Hzb
-         uXB/MrrMN5wp+Of2mbmHdJ0Ukq/YhvBINKYaMN9qnmtFy+zHu7ooLqB7VT/GwfmXAl5N
-         v1hi/0m8dGMXRAzSUsQsX7UEgIiSlsTHkbq+wk9eS7q/hkLU3qg8dAiR+6sA/PrYla4J
-         p4uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1w2g8x1Wc3Bjh2xEKjuM9r3o0qYaf8+ObaTdeZFvmQE=;
-        b=3qYa+PBDE0rxxxjp0WskwDkYiJsWamKuMYsFJp8UuYMdxe7uXAcp/aN3SNkzVFyFYZ
-         0rQsOk6RLwqohohrCik5yWBvRkIC6qrwZpPQDZ3dQCrHOmYKlZDCBnqU0LDBz596fMsv
-         caELpsSwil7dlpUALZsxGN8ANszrK92WGWxFq/ndL4Rg61ZoguEM3Uxr6gO5tNgUdJYU
-         Xc1zB0JC0tugwlFisjCpyuvOBWLFP/4/y3JgdxwgLybXqXtNFmt2oRWUGVrNhU1z0jfS
-         TnTnOkspmBQSsDHNqJquL56JyDbSnKLc5A5JFLkIrpi48akxUj4ZTCFwfdsfI4Q0qKJC
-         tXeQ==
-X-Gm-Message-State: ACgBeo0UeulIi5TTka1rKODlmfdw25bbBbFatHaenrmd7XM8k/mUqOup
-        4dQO4+vfN7NhOr1G2HfKUTI=
-X-Google-Smtp-Source: AA6agR7QEjKzbclFgcbz66U/WaZdFM6vOd7svi4OnA6vjfG5RAEQo6m/eDYDVWZ8do2gVQ01FdnA9w==
-X-Received: by 2002:a65:4c0e:0:b0:41b:c11a:c006 with SMTP id u14-20020a654c0e000000b0041bc11ac006mr12129608pgq.299.1659433024940;
-        Tue, 02 Aug 2022 02:37:04 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id e5-20020a170902784500b0016d3d907146sm6448636pln.191.2022.08.02.02.37.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Aug 2022 02:37:04 -0700 (PDT)
-Date:   Tue, 2 Aug 2022 17:36:58 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V4 1/8] libgpiod: Add libgpiod-sys rust crate
-Message-ID: <20220802093658.GA28533@sol>
-References: <cover.1657279685.git.viresh.kumar@linaro.org>
- <44ee8c36d58049de2f653494e16cba04b198fb35.1657279685.git.viresh.kumar@linaro.org>
- <20220727025706.GA88787@sol>
- <20220727045158.z72byax7pc7kokca@vireshk-i7>
- <20220727051743.GA108225@sol>
- <20220801121106.hc2mzippvby5ujg4@vireshk-i7>
- <20220801155615.GA84978@sol>
- <20220802085008.evxb3mipx4rply76@vireshk-i7>
+        with ESMTP id S232762AbiHBJxS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 05:53:18 -0400
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43AE215833;
+        Tue,  2 Aug 2022 02:53:16 -0700 (PDT)
+Received: (Authenticated sender: foss@0leil.net)
+        by mail.gandi.net (Postfix) with ESMTPSA id 6151DFF811;
+        Tue,  2 Aug 2022 09:53:13 +0000 (UTC)
+From:   Quentin Schulz <foss+kernel@0leil.net>
+Cc:     linus.walleij@linaro.org, heiko@sntech.de,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Subject: [RFC PATCH 0/1] Making Rockchip IO domains dependency from other devices explicit
+Date:   Tue,  2 Aug 2022 11:52:51 +0200
+Message-Id: <20220802095252.2486591-1-foss+kernel@0leil.net>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220802085008.evxb3mipx4rply76@vireshk-i7>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 02, 2022 at 02:20:08PM +0530, Viresh Kumar wrote:
-> On 01-08-22, 23:56, Kent Gibson wrote:
-> > The Rust bindings themselves should be building against the local build
-> > tree, so well known relative paths.
-> 
-> Right, when we build everything with "make" we better use the already
-> built library. I agree.
-> 
-> > For users, require they have libgpiod installed and use pkg_config to
-> > locate it?
-> > 
-> > Is that what you mean?
-> 
-> Since we need the latest APIs, we can't trust the packages provided by
-> distributions for now. i.e. "apt-get install libgpiod-dev" won't
-> install the latest stuff we need.
-> 
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-For user builds with the Rust bindings you always require an appropriate
-version of libgpiod to be already installed, or it is the users problem
-to arrange that.
-For the time being that means it needs to be built and installed from
-source.  I don't see an alternative to that, or a problem with it.
-In the longer term it will be provided by the packaging system for the
-platform.
+This is a follow-up to the mail sent almost two months ago asking for
+guidance: https://lore.kernel.org/lkml/778790a4-1239-e9d9-0549-6760a8792ceb@theobroma-systems.com/
 
-I may well be missing something, but I don't see the problem, at least
-nothing that requires addressing.
+This is what I could come up with but I'm not too happy about it so feel
+free to give some ideas or other possible implementations that would
+have less downsides than this one.
+
+Some background on IO domains on Rockchip:
+
+On some Rockchip SoCs, some SoC pins are split in what are called IO
+domains.
+
+An IO domain is supplied power externally, by regulators from a PMIC for
+example. This external power supply is then used by the IO domain as
+"supply" for the IO pins if they are outputs.
+
+Each IO domain can configure which voltage the IO pins will be operating
+on (1.8V or 3.3V).
+
+There already exists an IO domain driver for Rockchip SoCs[1]. This
+driver allows to explicit the relationship between the external power
+supplies and IO domains[2]. This makes sure the regulators are enabled
+by the Linux kernel so the IO domains are supplied with power and
+correctly configured as per the supplied voltage.
+This driver is a regulator consumer and does not offer any other
+interface for device dependency.
+
+However, IO pins belonging to an IO domain need to have this IO domain
+correctly configured before they are being used otherwise they do not
+operate correctly (in our case, a pin configured as output clock was
+oscillating between 0 and 150mV instead of the expected 1V8).
+
+In order to make this dependency transparent to the consumer of those
+pins and not add Rockchip-specific code to third party drivers (a camera
+driver in our case), it is hooked into the pinctrl driver which is
+Rockchip-specific obviously.
+
+Unfortunately, the dependency is not about the ultimate presence of the
+io-domain devices but more that prior to being able to use pins,
+the io-domain devices need to be probed. However of_find_device_by_node
+does not provide this information, hence the check whether the
+platform_device actually has its drvdata structure set (it defaults to
+NULL until it is filled by the driver during the probe of the device).
+
+Moreover, this dependency needs to be explicit on a pinmux level
+and postponed after the probe of the pinctrl driver because a circular
+dependency is observed otherwise with the following:
+pinctrl device depends on the io-domain device which depends on
+regulators from a PMIC on i2c which requires the i2c bus pins to be
+muxed from the pinctrl device.
+Instead, the pinmux dependency on IO domain is checked in set_mux
+callback and returns EPROBE_DEFER if the IO domain device hasn't probed
+yet.
+
+I wanted to add the appropriate rockchip,io-domains DT property to
+existing pinmux DT node. However, *all* of PX30's belong to an IO
+domain, including the i2c bus on which the PMIC supplying the power to
+the IO domain is on. Since the PMIC can be virtually on any i2c bus, a
+specific pinmux cannot be omitted or ignored, therefore none are added
+and it's up to the board maintainers to add them themselves. This is
+also assumed only necessary for IO domain that are configured
+differently by the bootloader or by register defaults (3V3 for
+RK3399/PX30) than their expected values in Linux and whose supplied
+power is fixed (e.g. not expected to be able to change from 3V3 to 1V8).
+
+The hope is to not have to handle the io domain configuration in
+the bootloader as it is currently done, c.f.
+https://elixir.bootlin.com/u-boot/latest/source/board/theobroma-systems/puma_rk3399/puma-rk3399.c#L28
+(we'll need an additional IO domain configuration for a camera soon).
+
+However, this still relies on IO domains defaults or bootloader
+configuration to be able to omit some IO domain<->pinmux relationships
+to avoid circular dependencies.
+
+I don't know how well this RFC implementation would work with
+suspend/resume.
+
+[1] drivers/soc/rockchip/io-domain.c
+[2] Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
 
 Cheers,
-Kent.
+Quentin
 
-> The only other option to get it working in environments like
-> rust-vmm-containers (which tests the vhost-device crate currently) is
-> to build / install libgpiod first. As I have understood, people don't
-> really like it there (Maintainers of rust-vmm-containers) as this will
-> have further dependencies and require more tools.
-> 
-> I even tried to generate the libgpiod-sys bindings on the fly first,
-> but it required more tooling and there were issues with Musl build
-> specifically. They suggested to use prebuild bindings as a solution,
-> which I have now.
-> 
-> What about we have two separate features:
-> 
-> - "default" one will be used with "make" and will use prebuild library.
-> 
-> - "generate" one will be used by user crates and we will build the
->   files there like it is done now.
-> 
-> > Else, how do other Rust crates wrapping dynamic C libraries do it?
-> 
-> I think for standard libraries that are stable, the -sys crates just
-> contain the pre-built bindings and wrappers and expect the library to
-> be already installed.
-> 
-> -- 
-> viresh
+Quentin Schulz (1):
+  pinctrl: rockchip: add support for per-pinmux io-domain dependency
+
+ drivers/pinctrl/pinctrl-rockchip.c | 19 +++++++++++++++++++
+ drivers/pinctrl/pinctrl-rockchip.h |  1 +
+ 2 files changed, 20 insertions(+)
+
+-- 
+2.37.1
+
