@@ -2,196 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F9A588F16
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Aug 2022 17:07:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CED40588FD9
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Aug 2022 17:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236808AbiHCPHX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Aug 2022 11:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        id S229912AbiHCPzo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Aug 2022 11:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236662AbiHCPHW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Aug 2022 11:07:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8B6BE1CFDD
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Aug 2022 08:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659539239;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7lNGhxjjGu08FSGFBXhTH69Oxbw+MkSJTjAc38J6fuE=;
-        b=Gl+dhDWZQW/Gv6lN5+Tbtg6z84dP3DC+OyWAbk3hVKHbRvoS7LXHt8rgCzfSw4oaGzkHTd
-        NVJvCYGjqIhJMlQujZrX89T0jBEFQhdQjDYKqqu8xwqC4Wraop4XgF7y6BjN7w+taGh+1B
-        71SrjoeYogBAzH6+Paq1P52s0LSezwE=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-136-3n0FjkJdO3C5O-obwilLiA-1; Wed, 03 Aug 2022 11:07:18 -0400
-X-MC-Unique: 3n0FjkJdO3C5O-obwilLiA-1
-Received: by mail-ed1-f71.google.com with SMTP id j19-20020a05640211d300b0043ddce5c23aso4339428edw.14
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Aug 2022 08:07:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=7lNGhxjjGu08FSGFBXhTH69Oxbw+MkSJTjAc38J6fuE=;
-        b=wTc0DDEDAw1DEv7MaH/lZ62zZXsGxdGgnp+uK1MaEzQ6RH91GMRfVxzT1ilJ0ROrp4
-         UuP+UsU7lJVcggrwVLLuBnzDi2f08P2rX7cdeLxGFcQB2G1lAMzgdp9F7uZp1yLBKc8h
-         K6w4hcEZqUe4N39UnIYOeYPpWYYRKt1qoU+W2uEA+l8StyXlS0v+shulcSw+gg3QJWOB
-         /VwP8vLd8Ym6v+VdjpiqCGNM8phF8ZOAND2lvo0qVfeGQyKCjb9Os4nAEGIIQMdfW4Tp
-         UBbzSxUjkgLOcZHZ1OeMA4G4gpHi5wH4k5uUGuuOCTdWlTOLvxBPGPszvi96u8HCFGdI
-         U5kQ==
-X-Gm-Message-State: ACgBeo0nkPThrWipCP8sBsko/ilA4ngCYi3d4vsw4V4O3CjinR+Vacpi
-        /4kVg2vs6g80lIDs3ht/p+xaAdrDqV/HIkR516ap1ZGSILoKgVpFzCiKMJca/Rx6onUHMJCHvMF
-        vjdfID2p8/yUM/y90GNSppg==
-X-Received: by 2002:a17:907:2cf6:b0:730:6068:2ebb with SMTP id hz22-20020a1709072cf600b0073060682ebbmr14584709ejc.82.1659539237142;
-        Wed, 03 Aug 2022 08:07:17 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5/cp0xu71LITXglQORiwlvEXhNzF2RKntpmFpUmHGqrWzuSaYh6itFi0C/5awzknxs05iw2g==
-X-Received: by 2002:a17:907:2cf6:b0:730:6068:2ebb with SMTP id hz22-20020a1709072cf600b0073060682ebbmr14584691ejc.82.1659539236919;
-        Wed, 03 Aug 2022 08:07:16 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id kz25-20020a17090777d900b0073085243f3fsm3409392ejc.64.2022.08.03.08.07.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Aug 2022 08:07:16 -0700 (PDT)
-Message-ID: <efb83a0c-7617-894e-a34d-37280238d5aa@redhat.com>
-Date:   Wed, 3 Aug 2022 17:07:15 +0200
+        with ESMTP id S238277AbiHCPzS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Aug 2022 11:55:18 -0400
+Received: from relay06.th.seeweb.it (relay06.th.seeweb.it [IPv6:2001:4b7a:2000:18::167])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B6E73D5BD
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Aug 2022 08:53:30 -0700 (PDT)
+Received: from [192.168.1.101] (abxi232.neoplus.adsl.tpnet.pl [83.9.2.232])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 8BCDC3F759;
+        Wed,  3 Aug 2022 17:53:28 +0200 (CEST)
+Message-ID: <38d82563-12dd-3d74-efb7-7066c114f016@somainline.org>
+Date:   Wed, 3 Aug 2022 17:53:27 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v2 1/2] gpiolib: acpi: Add support to ignore programming
- an interrupt
+Subject: Re: [PATCH v1] pinctrl: qcom: sm8250: Fix PDC map
 Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+To:     Jianhua Lu <lujianhua000@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20220803042501.515-1-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220803042501.515-1-mario.limonciello@amd.com>
+References: <20220803015645.22388-1-lujianhua000@gmail.com>
+From:   Konrad Dybcio <konrad.dybcio@somainline.org>
+In-Reply-To: <20220803015645.22388-1-lujianhua000@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-On 8/3/22 06:24, Mario Limonciello wrote:
-> gpiolib-acpi already had support for ignoring a pin for wakeup, but
-> if an OEM configures a floating pin as an interrupt source then
-> stopping it from being a wakeup won't do much good to stop the
-> interrupt storm.
+
+On 3.08.2022 03:56, Jianhua Lu wrote:
+> Fix the PDC mapping for SM8250, gpio39 is mapped to irq73(not irq37).
 > 
-> Add support for a module parameter and quirk infrastructure to
-> ignore interrupts as well.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
+> Fixes: b41efeed507a("pinctrl: qcom: sm8250: Specify PDC map.")
+> Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
 > ---
-> v1->v2:
->  * Drop enum
->  * Drop Tested-by tag
 > 
->  drivers/gpio/gpiolib-acpi.c | 24 ++++++++++++++++++++----
->  1 file changed, 20 insertions(+), 4 deletions(-)
+> Changes in v1:
+Acutally, it should be v2 as the first send is assumed to be a v1.
+> - fixes typo error(mapped target is irq, not gpio).
 > 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index c2523ac26fac..f993f6f728ad 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -32,9 +32,16 @@ MODULE_PARM_DESC(ignore_wake,
->  		 "controller@pin combos on which to ignore the ACPI wake flag "
->  		 "ignore_wake=controller@pin[,controller@pin[,...]]");
->  
-> +static char *ignore_interrupt;
-> +module_param(ignore_interrupt, charp, 0444);
-> +MODULE_PARM_DESC(ignore_interrupt,
-> +		 "controller@pin combos on which to ignore interrupt "
-> +		 "ignore_interrupt=controller@pin[,controller@pin[,...]]");
-> +
->  struct acpi_gpiolib_dmi_quirk {
->  	bool no_edge_events_on_boot;
->  	char *ignore_wake;
-> +	char *ignore_interrupt;
->  };
->  
->  /**
-> @@ -317,14 +324,15 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
->  	return desc;
->  }
->  
-> -static bool acpi_gpio_in_ignore_list(const char *controller_in, unsigned int pin_in)
-> +static bool acpi_gpio_in_ignore_list(const char *ignore_list, const char *controller_in,
-> +				     unsigned int pin_in)
->  {
->  	const char *controller, *pin_str;
->  	unsigned int pin;
->  	char *endp;
->  	int len;
->  
-> -	controller = ignore_wake;
-> +	controller = ignore_list;
->  	while (controller) {
->  		pin_str = strchr(controller, '@');
->  		if (!pin_str)
-> @@ -348,7 +356,7 @@ static bool acpi_gpio_in_ignore_list(const char *controller_in, unsigned int pin
->  
->  	return false;
->  err:
-> -	pr_err_once("Error: Invalid value for gpiolib_acpi.ignore_wake: %s\n", ignore_wake);
-> +	pr_err_once("Error: Invalid value for gpiolib_acpi.ignore_...: %s\n", ignore_list);
->  	return false;
->  }
->  
-> @@ -360,7 +368,7 @@ static bool acpi_gpio_irq_is_wake(struct device *parent,
->  	if (agpio->wake_capable != ACPI_WAKE_CAPABLE)
->  		return false;
->  
-> -	if (acpi_gpio_in_ignore_list(dev_name(parent), pin)) {
-> +	if (acpi_gpio_in_ignore_list(ignore_wake, dev_name(parent), pin)) {
->  		dev_info(parent, "Ignoring wakeup on pin %u\n", pin);
->  		return false;
->  	}
-> @@ -427,6 +435,11 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
->  		goto fail_unlock_irq;
->  	}
->  
-> +	if (acpi_gpio_in_ignore_list(ignore_interrupt, dev_name(chip->parent), pin)) {
-> +		dev_info(chip->parent, "Ignoring interrupt on pin %u\n", pin);
-> +		return AE_OK;
-> +	}
-> +
->  	event = kzalloc(sizeof(*event), GFP_KERNEL);
->  	if (!event)
->  		goto fail_unlock_irq;
-> @@ -1582,6 +1595,9 @@ static int __init acpi_gpio_setup_params(void)
->  	if (ignore_wake == NULL && quirk && quirk->ignore_wake)
->  		ignore_wake = quirk->ignore_wake;
->  
-> +	if (ignore_interrupt == NULL && quirk && quirk->ignore_interrupt)
-> +		ignore_interrupt = quirk->ignore_interrupt;
-> +
->  	return 0;
->  }
->  
 
+The change looks in line with msm-4.19 though.
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+
+Konrad
+>  drivers/pinctrl/qcom/pinctrl-sm8250.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> index af144e724bd9..3bd7f9fedcc3 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
+> @@ -1316,7 +1316,7 @@ static const struct msm_pingroup sm8250_groups[] = {
+>  static const struct msm_gpio_wakeirq_map sm8250_pdc_map[] = {
+>  	{ 0, 79 }, { 1, 84 }, { 2, 80 }, { 3, 82 }, { 4, 107 }, { 7, 43 },
+>  	{ 11, 42 }, { 14, 44 }, { 15, 52 }, { 19, 67 }, { 23, 68 }, { 24, 105 },
+> -	{ 27, 92 }, { 28, 106 }, { 31, 69 }, { 35, 70 }, { 39, 37 },
+> +	{ 27, 92 }, { 28, 106 }, { 31, 69 }, { 35, 70 }, { 39, 73 },
+>  	{ 40, 108 }, { 43, 71 }, { 45, 72 }, { 47, 83 }, { 51, 74 }, { 55, 77 },
+>  	{ 59, 78 }, { 63, 75 }, { 64, 81 }, { 65, 87 }, { 66, 88 }, { 67, 89 },
+>  	{ 68, 54 }, { 70, 85 }, { 77, 46 }, { 80, 90 }, { 81, 91 }, { 83, 97 },
