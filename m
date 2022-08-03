@@ -2,99 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20128588597
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Aug 2022 03:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EBAF588679
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Aug 2022 06:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233263AbiHCB5d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Aug 2022 21:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34406 "EHLO
+        id S231183AbiHCEZm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Aug 2022 00:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235352AbiHCB5b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Aug 2022 21:57:31 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C882D564CC;
-        Tue,  2 Aug 2022 18:57:30 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id d7so10824617pgc.13;
-        Tue, 02 Aug 2022 18:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JvSizfg9rJurRHFe1HvtMoLl3ryLwF2DPEDaLcO0/zg=;
-        b=ivdtrHns+qdUJaUgXx3t2P7lZGTBdEX1hlhws6XHpUGBCfVMrXX7huC8Lv/xUAxtRp
-         AD1igNZ/8vDhAPBHlOUHD+QnVHiolcFmcHc3ICtLufr7q8IflijouagXnSv8dSvjjSQG
-         8UNCIOPvGJEAGq2t//QIkucSL1XTmuwyE8HZUFhvAVnDCpquuJZhl9Re47vGCY0pr1Ql
-         2J9kr5flMjtWdOAqng4egtK455H590P/Phb0vRyJ73dfEJX3QSS3M3X9OTg0uHxv4GtX
-         m6wypXfUKagVzdPCxt4V2zL4kQGOz/JS/RJJsCggRWWquHEFna6pi3qqpjgc0AOVsjWG
-         0ltA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JvSizfg9rJurRHFe1HvtMoLl3ryLwF2DPEDaLcO0/zg=;
-        b=VHLoj9VqFTfTY00gD6veEP5pUOUJCA1JYMBUa2QTVI9/k1N5tfGmq/q8LQObFeAImQ
-         EOMZ4HN/ila5v8Q5j3B+v4pXWkxG+SrLuHbfpn1LUHzD49VecMozTOTEjdA2v6CNU9fg
-         WIzJPZR5OCzW/CpFUGO1RBGLrsxwp2HjSxhO6pNR1JkBIMNApVbu3S23OJ+ph/z/jqYJ
-         9dsHdRB1K1oAlWb5Vk6cKkUC9hS9QZUg9l5XDpfiZWNS684FbsRT7qjOkSnOsf43rgP3
-         t1HF4r1w4IcRXEQ4Y1TIuaDO5AJ3nbzaai5eZUjjXKJR1bqeHT1B8NaWlnD36Ftmkq46
-         NU2g==
-X-Gm-Message-State: AJIora9jIFdrTNMpU/UHGYso+aMkwiqL33t3Arx0WR5mxbdqb3ma5Iy9
-        LanbxMm3nSZJMtNvKRdbOSs9CykjEpX6KWSwiGs=
-X-Google-Smtp-Source: AGRyM1sY77TjWlF1i2ByBC3xgp/87vLfOLXiuHQrp4k9tseD3xnMSO4Z83+L/NTDtMIkfSyHppRzZg==
-X-Received: by 2002:a63:4d65:0:b0:419:d6ae:27df with SMTP id n37-20020a634d65000000b00419d6ae27dfmr19545911pgl.179.1659491850275;
-        Tue, 02 Aug 2022 18:57:30 -0700 (PDT)
-Received: from localhost.localdomain ([170.178.188.167])
-        by smtp.gmail.com with ESMTPSA id b10-20020a170902650a00b0016a33177d3csm378157plk.160.2022.08.02.18.57.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Aug 2022 18:57:29 -0700 (PDT)
-From:   Jianhua Lu <lujianhua000@gmail.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jianhua Lu <lujianhua000@gmail.com>
-Subject: [PATCH v1] pinctrl: qcom: sm8250: Fix PDC map
-Date:   Wed,  3 Aug 2022 09:56:45 +0800
-Message-Id: <20220803015645.22388-1-lujianhua000@gmail.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S232173AbiHCEZm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Aug 2022 00:25:42 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2055.outbound.protection.outlook.com [40.107.96.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D907A56B89;
+        Tue,  2 Aug 2022 21:25:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hTSrg6GjFV+FqeXs2mnuNo7iyU0IK9eF//lHXwjOGhsiE2TwwA34i+zMyg+GCG3xctkYY2AYReB6JgEjZVWtUZ/I18CZJGXdE5bDw3XIXlkxItX0YV2e87G65pln7SakUW2w+YoRK6/TGQraxg8jrjxD5W5EJ415YxnPKNogNm1FjbivKQRk+YKqKEEJ8M28IXQ1MvE1oF4avXvu4NMRU1aYQ5NQMeM83znWz3ESD2sB13FlUh5nZTqw+5o+JeEGYUWESu6HyvLRVkDtXZW2lR6Nyzpi4aSuyiEMh2BKwrgtbPSfzV17PVCmj2HWYxA52LNz8kZE5OhXPDAyO0pJbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kbgNuDJ1Nh+Nso2OFUAHPVfNDB8oXbcyeEOid1fq2bQ=;
+ b=DZ7okwifEezIFrXn6sXaTcfSWUoYxwRj45frop1e3ejawOqRa9ckV86oubv+rh18Z7Sb+bmsw12hkK/A0iNZyLe0IS1YZYghhXqCfRoEkEv2LQPbkc0fZZSHNul9vbRyuM200t0KqDPW4OIq5tnierydPTafg04H8wgK+wNwlKGz7sMK+HUGG3K/gNzozdY1d4m+Jtg7O6ZLujbNFn8miN7zGoM17EENq/85cYv8avL2XUujd9Xkrb2Rd8dGmTQwg6I/HDLqCA0zOE1bUFJ5EzW9tV/8IEe8YGGWLpbGNEsTz4g8tf85yzSYx60RLkSueUgOOcli+X/nLC+zWAMKbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kbgNuDJ1Nh+Nso2OFUAHPVfNDB8oXbcyeEOid1fq2bQ=;
+ b=IY8DaShfaCPLuThw9VMwOxesuobnNi0JYSFOodfpiUBZDw1lDBDLgIQqkgPgcEiZyExkNFn1y1cQACn6wRIYmnDO0dc+4Iicar5NGIuyw3TDKDCfbDAbv0MdN0cYhqr7H8tNXZvSKCFRfAhfUbZWlFtRrTK/+6mCYUO8n9bw+Gw=
+Received: from MW4PR04CA0084.namprd04.prod.outlook.com (2603:10b6:303:6b::29)
+ by BN8PR12MB3603.namprd12.prod.outlook.com (2603:10b6:408:4a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Wed, 3 Aug
+ 2022 04:25:38 +0000
+Received: from CO1NAM11FT021.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:6b:cafe::88) by MW4PR04CA0084.outlook.office365.com
+ (2603:10b6:303:6b::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.19 via Frontend
+ Transport; Wed, 3 Aug 2022 04:25:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT021.mail.protection.outlook.com (10.13.175.51) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5504.14 via Frontend Transport; Wed, 3 Aug 2022 04:25:37 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 2 Aug
+ 2022 23:25:35 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Mario Limonciello <mario.limonciello@amd.com>,
+        <linux-gpio@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] gpiolib: acpi: Add support to ignore programming an interrupt
+Date:   Tue, 2 Aug 2022 23:24:59 -0500
+Message-ID: <20220803042501.515-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a9cac76a-dfd7-40f5-d66e-08da7508378e
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3603:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Z/wY/G3ZADbpgTe0b98cF+jKDnevHs/LL++4XDl5JHDKctt8pX1rVXOGTUZUd+2tmGdkIemE1v0E4cEITG9pPl7Ehg6erDLzfRVGxF5yiVKDcefPIJ0YTWmKrX0SRt18vACkt0eleNNEmooDgiUngqsEuBP55H2eQaIuEcx0qA1PUTxyua4nQov6JGpBeBmg6Eck7jUxvXPHq/nOA6zfHaFlbQiBZIOlka7UMBH+8XtPWjsQARRS5PzjJrJAg5NUbKbKMEY7r5dRV2MkpwuPgQ+bP4BUs86iqyCtWc2pXddD7jAf25cPAl1fEhvrRGO1KpMJc+jjEwdxz00tf9wHKp0XkPaKFDnLrajkAq1eQWGZ69ZJa7EylyC6ynrr4JV5zGfty/AzxjLdsoEEJIQ3QQ4JK3msHvpOHMnVTu0B4e4XiHQDFAu/OPTSeuchYybzOJTMfLxut2ackJ4Gcz8gYB2sipXMZtRNlkwf4WYxmFPb2+GrR28iGQ7TZYTXUCCHS66CBPWTNRBtZfUUc9uuqDXIIiEfgm84hJqq3naenM0kGHQ0fv1ZjQ8poeKtoSdIL1/0o7emmkugP94UAB5l4KjRC7yKoQYt9yngRZvVbOLmq2p8gCe2T9N6x1Wkvmkaxe6lqlprm1QHebds0emauvdE6IkOlDycaSe4QrBU5sPYjLBslAR9W42o9/ukqVpHPO1OYjngJoZuxpVyLCHs8yhA3UGiQ3b76HJcQBiKXFqWbZycXA9T9msPsVDVdMzQHjnAyyGQEpnjKVSnPitRoohnU6A99RuqGAy+2CooLyBZzaGA2E91qZhyy5DDaU5GmLjcJbRAR0otnDyOkiLEZQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(136003)(346002)(376002)(46966006)(36840700001)(40470700004)(6666004)(70586007)(70206006)(316002)(82740400003)(54906003)(4326008)(8676002)(5660300002)(1076003)(426003)(44832011)(336012)(47076005)(356005)(41300700001)(81166007)(8936002)(2906002)(83380400001)(86362001)(40480700001)(186003)(36756003)(478600001)(16526019)(40460700003)(26005)(110136005)(36860700001)(7696005)(2616005)(82310400005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2022 04:25:37.6767
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9cac76a-dfd7-40f5-d66e-08da7508378e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT021.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3603
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix the PDC mapping for SM8250, gpio39 is mapped to irq73(not irq37).
+gpiolib-acpi already had support for ignoring a pin for wakeup, but
+if an OEM configures a floating pin as an interrupt source then
+stopping it from being a wakeup won't do much good to stop the
+interrupt storm.
 
-Fixes: b41efeed507a("pinctrl: qcom: sm8250: Specify PDC map.")
-Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
+Add support for a module parameter and quirk infrastructure to
+ignore interrupts as well.
+
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
+v1->v2:
+ * Drop enum
+ * Drop Tested-by tag
 
-Changes in v1:
-- fixes typo error(mapped target is irq, not gpio).
+ drivers/gpio/gpiolib-acpi.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
- drivers/pinctrl/qcom/pinctrl-sm8250.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-index af144e724bd9..3bd7f9fedcc3 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-@@ -1316,7 +1316,7 @@ static const struct msm_pingroup sm8250_groups[] = {
- static const struct msm_gpio_wakeirq_map sm8250_pdc_map[] = {
- 	{ 0, 79 }, { 1, 84 }, { 2, 80 }, { 3, 82 }, { 4, 107 }, { 7, 43 },
- 	{ 11, 42 }, { 14, 44 }, { 15, 52 }, { 19, 67 }, { 23, 68 }, { 24, 105 },
--	{ 27, 92 }, { 28, 106 }, { 31, 69 }, { 35, 70 }, { 39, 37 },
-+	{ 27, 92 }, { 28, 106 }, { 31, 69 }, { 35, 70 }, { 39, 73 },
- 	{ 40, 108 }, { 43, 71 }, { 45, 72 }, { 47, 83 }, { 51, 74 }, { 55, 77 },
- 	{ 59, 78 }, { 63, 75 }, { 64, 81 }, { 65, 87 }, { 66, 88 }, { 67, 89 },
- 	{ 68, 54 }, { 70, 85 }, { 77, 46 }, { 80, 90 }, { 81, 91 }, { 83, 97 },
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index c2523ac26fac..f993f6f728ad 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -32,9 +32,16 @@ MODULE_PARM_DESC(ignore_wake,
+ 		 "controller@pin combos on which to ignore the ACPI wake flag "
+ 		 "ignore_wake=controller@pin[,controller@pin[,...]]");
+ 
++static char *ignore_interrupt;
++module_param(ignore_interrupt, charp, 0444);
++MODULE_PARM_DESC(ignore_interrupt,
++		 "controller@pin combos on which to ignore interrupt "
++		 "ignore_interrupt=controller@pin[,controller@pin[,...]]");
++
+ struct acpi_gpiolib_dmi_quirk {
+ 	bool no_edge_events_on_boot;
+ 	char *ignore_wake;
++	char *ignore_interrupt;
+ };
+ 
+ /**
+@@ -317,14 +324,15 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+ 	return desc;
+ }
+ 
+-static bool acpi_gpio_in_ignore_list(const char *controller_in, unsigned int pin_in)
++static bool acpi_gpio_in_ignore_list(const char *ignore_list, const char *controller_in,
++				     unsigned int pin_in)
+ {
+ 	const char *controller, *pin_str;
+ 	unsigned int pin;
+ 	char *endp;
+ 	int len;
+ 
+-	controller = ignore_wake;
++	controller = ignore_list;
+ 	while (controller) {
+ 		pin_str = strchr(controller, '@');
+ 		if (!pin_str)
+@@ -348,7 +356,7 @@ static bool acpi_gpio_in_ignore_list(const char *controller_in, unsigned int pin
+ 
+ 	return false;
+ err:
+-	pr_err_once("Error: Invalid value for gpiolib_acpi.ignore_wake: %s\n", ignore_wake);
++	pr_err_once("Error: Invalid value for gpiolib_acpi.ignore_...: %s\n", ignore_list);
+ 	return false;
+ }
+ 
+@@ -360,7 +368,7 @@ static bool acpi_gpio_irq_is_wake(struct device *parent,
+ 	if (agpio->wake_capable != ACPI_WAKE_CAPABLE)
+ 		return false;
+ 
+-	if (acpi_gpio_in_ignore_list(dev_name(parent), pin)) {
++	if (acpi_gpio_in_ignore_list(ignore_wake, dev_name(parent), pin)) {
+ 		dev_info(parent, "Ignoring wakeup on pin %u\n", pin);
+ 		return false;
+ 	}
+@@ -427,6 +435,11 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 		goto fail_unlock_irq;
+ 	}
+ 
++	if (acpi_gpio_in_ignore_list(ignore_interrupt, dev_name(chip->parent), pin)) {
++		dev_info(chip->parent, "Ignoring interrupt on pin %u\n", pin);
++		return AE_OK;
++	}
++
+ 	event = kzalloc(sizeof(*event), GFP_KERNEL);
+ 	if (!event)
+ 		goto fail_unlock_irq;
+@@ -1582,6 +1595,9 @@ static int __init acpi_gpio_setup_params(void)
+ 	if (ignore_wake == NULL && quirk && quirk->ignore_wake)
+ 		ignore_wake = quirk->ignore_wake;
+ 
++	if (ignore_interrupt == NULL && quirk && quirk->ignore_interrupt)
++		ignore_interrupt = quirk->ignore_interrupt;
++
+ 	return 0;
+ }
+ 
 -- 
-2.35.1
+2.34.1
 
