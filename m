@@ -2,267 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D888D589BC5
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Aug 2022 14:41:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 115B958A0C8
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Aug 2022 20:50:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233792AbiHDMlK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Aug 2022 08:41:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
+        id S239968AbiHDSuZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Aug 2022 14:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231982AbiHDMlJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Aug 2022 08:41:09 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CA62AE07
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Aug 2022 05:41:08 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id v131-20020a1cac89000000b003a4bb3f786bso2441799wme.0
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Aug 2022 05:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M3HxUVd+J6b5e1RKtCKXwJ8ESvmvi4D20YD7+DqzvWU=;
-        b=HJTyUv1WKqKebL/DNvtHmPk3fYTtFvz875MYeMaAM+l2l4vUlU27tNkvTYq7DlX6zw
-         pGgy1CXh9F3K8C/BJdrxlBSCglCSNJsy1CdEXlaqmfYYRpxvYhdN1VicSVpLEaEzCL8W
-         l56Kije2H6CXzLubY4fGtxCJSrMyTEaoiqjfKgjP/PWuJK9zJF+Maq5fEuCeYKrYwddF
-         ITCooxgHlMffdj3FcXSVUnoCW3lS7lTegahajS3VFkuaeekphwrR75Dbm2SG8h0xuBWQ
-         GdKc9EpsEk+EJTfyw6/UYGBmI64aYxMWUXkCWNNvW3v5U0s/dp2VPCPDwDNxy7ebFJkb
-         BijA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M3HxUVd+J6b5e1RKtCKXwJ8ESvmvi4D20YD7+DqzvWU=;
-        b=rUwvSa8+gyvDptC0B5auPUxYzJublD1JJKMaGPplGuMutO2n3CXsBUNsPtTu5xH+J2
-         d5FFix6pPunca5/icnbagurWZOPYP7D7/IKCsv01Ma9lIln9az4GE/s4AomLJ4iLAqWX
-         5avJUlvv8u8ybUI3ShQiPJ1+ZuzoXoKiJ9qPMREFO2027yR1ozN/3Xr0t/G3zhKbhprb
-         IWE/3jgT7g3XxK1AgueSvaMjA1ykURvEZpWVR2+B9mgNfxkZ23XMb4nLeT1VrPYRl0ch
-         N+l7rvP5CCV00i7r49HwBp1BKw5d3hLa70rHOHIj1A/0O3iQVKpIixwRW0p7t4HTz9L6
-         77tA==
-X-Gm-Message-State: ACgBeo18/6lF5S8Exsp8k8EUxeXQ/KpYM1UMWqvsEs5e5HLg7oalKAqC
-        wGVgu0tCkhoNOurQzrCAXi8hkA==
-X-Google-Smtp-Source: AA6agR74g5MncM7UBdkaMxZQWPbCGzHfQwwj0TKETK+1yjqjndLClzMo8tRpYPqRwDSchOAmj2793g==
-X-Received: by 2002:a05:600c:15d6:b0:3a4:f9f8:eba3 with SMTP id v22-20020a05600c15d600b003a4f9f8eba3mr5240837wmf.33.1659616866540;
-        Thu, 04 Aug 2022 05:41:06 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:ab4f:2a3a:99f1:7c84])
-        by smtp.gmail.com with ESMTPSA id p22-20020a05600c359600b003a31ca9dfb6sm2230766wmq.32.2022.08.04.05.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Aug 2022 05:41:05 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: updates for v6.0-rc1
-Date:   Thu,  4 Aug 2022 14:41:03 +0200
-Message-Id: <20220804124103.1088581-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        with ESMTP id S239742AbiHDSuY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Aug 2022 14:50:24 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60045.outbound.protection.outlook.com [40.107.6.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622CE140AC;
+        Thu,  4 Aug 2022 11:50:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J3Eu2hY1CQmS/3W1sFQWC6tIsjjspiTjkNogdEupgji5EWEtp3GdUwdx+z5cdubPDWz+sR7PDBK8Hj0lXFSNVRR8ver/x/02EdVk/Q/D1iGMv9aMYxZ7ipQuuVgkXdSHDBg97PGAYRxPn+9XcW0wevvC/8cZNuCpqcRa2T3OJOQVpPP28AS3tVJ97hwN5Bk103kGijtpF7J2wyc0xNPAVSZOy/aX+4A/X72tvHfvPFc2bZkeSL8t++eUWmjEldYxOQrD3hg2Ra6uAZwmiC4Q93/T1d7ZztJPJ7HrscABX34HKmF2fNHZwRu+6vniR7N39FJFlsU/gNLsy4kDBruTNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8m9ahOf+UEw5rIF5UfTdjyZuRFhKVV+ngALzJ0Ou6hs=;
+ b=h7Afzl5rFaIjZ4mYckEGfKoHIcJENJD4BAt13znXZa/wBH/EPDQEsxNaJFxrmz1M2OBZgtxrNTwTBeceZUw8+36dbZrpj3Catyx5Y/kgFP9M5BU4cXTGNAPgSxXUOluAd7pvTpUPcwH+71cLFZ8EbHgnW3W5VNin23otytuBT4nUNPY78n3jXnhYd5UeZBxHeCv9YGIbCmCBWJVmggyccvVvJFKy2nR6LNhgO/NqKgJbl2OF11Ce1JdKiwR9lKwamu9itpjYe8j5onJNH+KeW/ZqtsSDN42wmOdBu0I+mtQHM57aB1o6mL+/5zkA6DgNXEaTqIkPWQkQVeDeBVI0+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8m9ahOf+UEw5rIF5UfTdjyZuRFhKVV+ngALzJ0Ou6hs=;
+ b=YBUB+l15njP/h4ptaMSJef2682ZhGTUi4n/zfvTchHVPEXhVkQJj+xL+Nj5b6mW4jXHYZk+w+aG2BC+M+TB8xF5eC4ClVvdr34KPxvKtqLRb+7oRtwj+/QXeI/VIrcea1P3Ll2N1eBn4LFsD2F1DjfytJlCv0OY3Pfh8XJHyk1A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM9PR04MB8274.eurprd04.prod.outlook.com (2603:10a6:20b:3e8::23)
+ by AM6PR04MB3992.eurprd04.prod.outlook.com (2603:10a6:209:50::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.16; Thu, 4 Aug
+ 2022 18:50:18 +0000
+Received: from AM9PR04MB8274.eurprd04.prod.outlook.com
+ ([fe80::747c:397f:a003:dbca]) by AM9PR04MB8274.eurprd04.prod.outlook.com
+ ([fe80::747c:397f:a003:dbca%5]) with mapi id 15.20.5504.015; Thu, 4 Aug 2022
+ 18:50:17 +0000
+From:   Shenwei Wang <shenwei.wang@nxp.com>
+To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Shenwei Wang <shenwei.wang@nxp.com>
+Subject: [PATCH v1 0/3]  Add IMX8 SCU GPIO support
+Date:   Thu,  4 Aug 2022 13:49:05 -0500
+Message-Id: <20220804184908.470216-1-shenwei.wang@nxp.com>
+X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-ClientProxiedBy: BLAPR05CA0026.namprd05.prod.outlook.com
+ (2603:10b6:208:335::8) To AM9PR04MB8274.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3e8::23)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b2375a47-7ac8-4cbe-6fb3-08da764a2cbc
+X-MS-TrafficTypeDiagnostic: AM6PR04MB3992:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QH3m0cJH0OXIjsjaJ2ftzCS4zuk/yvh2FO/VmlnyykLBLnSapD7FwyM+4W/bALh5tNKOOQGmGXPwgh1dvGbSTpoUN7WW+93hRhwio1sgJXmcc3veM9cj0PCucnvJjxAfUZD0jWiMK1MyNSfCxxJNtxsL0ilJouMaxpRom93KOsiie2/Rf5tAA5KKEWgJx9yCILNijr/0HniBwypZAnywfCCnhpR3O+xMmseb1VcC85ybNPjAD9JzTi0RmWkBrpJ2viuvM3BiaL943Ya/y5mnc27xMOGGFk2js81v9fArn2o9F+y8X3P/YFo2m/A7yfmWWhB1+wJGwGlu8BDq55tWo/EsIPWkBV6gtgJalY3tDiX7WumG+4vVLKjfMe4gfUzXI4gQ8xAugLvw9ewTPt/qSR9lF1fFyt9lTIUMU8EjN5g3CYPXiUqEHSDCwHVr+UjcQXYSFagcOWL4RxqMTN43oJ5UAgDBj0j8zcm/SR/cIbHGHJUaKki8Ybsq/mBlj310Bcu2jAwPr3rZmlyESy0eXdAT5EcRcbI1mxpU5+mREATVe+FMB/eRb3l1CiYLmGxneAl0nypWf0mcn8L+XxcS8AEn9/vS6bbh2YQgLdw+pkPBB2ZEVNKGJo7EYo1Ci80pqnSOGFNeQpYK+aAkL6tIJihmiKRmMlYpRA8D7h5cBaqu/6BU3nW+nXaEGDJ0taddbk8M3E4wA6UtkjwsYB5/JcpbSLiu2x/S0DTyiNOR6m+naOqtAf18DLB3YYxUbzNf20dUwV8SucCIfoNgUf29uzC90j3WqDYZkFZS0BgfFO4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8274.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(2906002)(6636002)(36756003)(4326008)(8676002)(66946007)(38100700002)(66556008)(8936002)(316002)(66476007)(6486002)(38350700002)(6666004)(86362001)(52116002)(478600001)(6506007)(55236004)(26005)(6512007)(41300700001)(7416002)(5660300002)(44832011)(4744005)(2616005)(186003)(1076003)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JA9GHAU9Be71mZfdkZX8eT1+304+q1ZsuuMC24cdP3CcMR3UgyDQa1Li4zs6?=
+ =?us-ascii?Q?xPVaatq8pULlKzGhplHKLEWzU5PSPbkjhFTBLGMM1JrJZzStMY6NYvt3QNV2?=
+ =?us-ascii?Q?7UqtbZvHrTG2IaMnpG0G2r69ArKR8Uq0ND9OW1ctuBad9SWhJ5i/a4wkcmsx?=
+ =?us-ascii?Q?6Mfrwa+jhR8hPZLP4msLf/fMNq6mWsu1e/dMMpgF+jxIJzeGRS18N14ua4AJ?=
+ =?us-ascii?Q?A8mwrOdytpKN4XXGlMQvXCFLbR2/Au9YmSJv/oW30yWrmFSGxJslgsa5fYiw?=
+ =?us-ascii?Q?SyGVzZzu8a2BLFt0yZnvDdiorDKMNCaVzg3kDOJ1hypdn5Jw99ctT1zf2HzP?=
+ =?us-ascii?Q?vYaigNQCCExnv1lG22pRmRPTQNpLje9NWMhJDbbO+2XNsCH3467H4UdadhqI?=
+ =?us-ascii?Q?v8wUIxSRYYR7U4nts+qNmikUok8oUT3Ea+Ii/Xj0Fk3qYscHmKAIA/QGK1d4?=
+ =?us-ascii?Q?cb+LH93JKkJwUEne/xg8N3q0nQhcKM/TDWZ/iiev9L/+oPJ8g0tXt6uM5F6B?=
+ =?us-ascii?Q?QcmJTpicnJxzIUMjCbm16RVDHHE9/5dtsAx2vxmbg389jUH8bcUmExDW/2Vq?=
+ =?us-ascii?Q?CF4upm2IwT/Q858AX79Frz2v+Kpis3KCOA4sGt5/U8Ms4o+MHpaz+iHZCGt8?=
+ =?us-ascii?Q?Z3jpB9qVMT+Uxv3p5bimjFQbaOdbHSrj2GnTuJQXmoSNfexuimrUbnk0aiVR?=
+ =?us-ascii?Q?Rkqe7CRbuQsGMCW7KBZuTJuPuOo1NGt7CFtp68iNXGfKVTdPCU4DgQrCZTRL?=
+ =?us-ascii?Q?ueor2yM1mJl+QDqkT3UztHidcjZIk+7rfUTTK5snvW8yOhAL8s993cmNFODW?=
+ =?us-ascii?Q?MePLf9m/Zlw4g0eRFfU+uOfMou+0ZR5WwtlFgMYfZNso9t2uXe8WEdtDxStC?=
+ =?us-ascii?Q?1oUzSxWN3RkB+P1JUwxJMykfCLoXV8OLfJpvgBWUaz13LMBExiClWxVuWxih?=
+ =?us-ascii?Q?96MSnJ1id5rRt0l5+3g6Pjk7pGKiJ4+Aihw/bSdgHZBFNcqMcYHPDULQ1yu5?=
+ =?us-ascii?Q?kpBu3SqIHKflxC3W85nvASKJmCfvvLfAxONUuTSHPlq3eX+IavFrfe41aunL?=
+ =?us-ascii?Q?TJXKQjn4h+0tqBpdDary6uCWBD3VHhsoUvFBKtJsBcO8QFjPQd4Gx+oRMNho?=
+ =?us-ascii?Q?IAZTYOXAq6HULS1gAXcoSkG7d2m0N+D7SigV+nNWRWo4/287o2MklHhIhzz1?=
+ =?us-ascii?Q?zdxvcFJf5yMLFFYSKebNqIUHnbhQm5To6qYWZEgUg7lCvZLRvNdKfsuc1jxt?=
+ =?us-ascii?Q?iZuP4Ml7fipc0rGVrRMwwYTW7EGj4Afm3PJjCmCKvVyKmWYntYSR5H87yLPa?=
+ =?us-ascii?Q?5aZtwS3EH7WFX7Kpi0WzJd8OdxR7odHxZInYUgPKVmWWxzPBZ9xN2LAP8u5p?=
+ =?us-ascii?Q?wsrVOVw2Fq3LHnQUDB93dYXti0YrZYDVHQnHOnfmSkAjbAQ5MN6KR07dOAQ+?=
+ =?us-ascii?Q?aWwCRubBuuxr9hnTU6Ozp9PWNVBf/Mk+VGNsIbYO5BNOfnmrVoCiZd0bnNSr?=
+ =?us-ascii?Q?d9WsD8ByAkEI8Pm0PxIQ37IAWEPc98dbR8+Do5eNkw7RCuYd4NIvkJ9iC1WF?=
+ =?us-ascii?Q?Nqj6Ecf6Sn6Ur5A+GXtP0CLH9W9V/0Hi3NqGucTl?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2375a47-7ac8-4cbe-6fb3-08da764a2cbc
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8274.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2022 18:50:17.7956
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AqP8YQKesZd1+MDcRxWVAT2DSSV8La2ekNBpUZtRzsCuU6kUTIwUxVhgcLbRi9U/o8PdFRK8kqk1earQjPBtKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB3992
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+The system controller (SCU) is the central unit to manage the resources
+on i.MX8 platforms. The SCU firmware provides a set of APIs to access
+the GPIO PINs on the SCU domain.
 
-Here are the updates for this merge window from the GPIO subsystem. We have
-more lines removed than added thanks to dropping of a driver for a platform
-that's no longer supported. Otherwise the changes are pretty straightforward.
-We have support for some new models, various improvements to existing drivers,
-some tweaks to the core library code and DT bindings updates. Details are in
-the signed tag.
+This patch series implements the standard GPIO driver over the SCU
+firmware APIs, so that the GPIOs on the SCU domain could be accessed
+like a local GPIO PINs.
 
-Please pull!
-Bartosz Golaszewski
+Shenwei Wang (3):
+  dt-bindings: gpio: Add imx-scu gpio driver bindings
+  dt-bindings: firmware: imx: Add imx-scu gpio node
+  firmware: imx: add imx-scu GPIO driver
 
-The following changes since commit ff6992735ade75aae3e35d16b17da1008d753d28:
+ .../devicetree/bindings/firmware/fsl,scu.yaml |   5 +
+ .../bindings/gpio/fsl,imx8-scu-gpio.yaml      |  39 +++++
+ drivers/firmware/imx/Kconfig                  |   6 +
+ drivers/firmware/imx/Makefile                 |   1 +
+ drivers/firmware/imx/imx-scu-gpio.c           | 139 ++++++++++++++++++
+ 5 files changed, 190 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/fsl,imx8-scu-gpio.yaml
+ create mode 100644 drivers/firmware/imx/imx-scu-gpio.c
 
-  Linux 5.19-rc7 (2022-07-17 13:30:22 -0700)
+--
+2.25.1
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.0-rc1
-
-for you to fetch changes up to c4f0d16daa6d1c5d862d063379c03310387095d5:
-
-  dt-bindings: gpio: fsl-imx-gpio: Add i.MXRT compatibles (2022-07-28 15:49:49 +0200)
-
-----------------------------------------------------------------
-gpio: updates for v6.0-rc1
-
-- remove gpio-vr41xx driver as the only platform using it got dropped too
-- add support for suspend/resume to gpio-davinci
-- improvements to the GPIO character device code
-- add support for disabling bias for in-kernel users (up until now
-  only user-space could set it)
-- drop unused devm_gpio_free()
-- fix a refcount issue in gpiolib OF
-- use device match helpers where applicable
-- add support for a new model to gpio-rockchip
-- non-functional improvements in gpio-adp5588
-- improve and simplify teardown in gpio-twl4030 and gpio-ucb1400
-- modernize the gpio-74xx-mmio and gpio-adnp drivers
-- coding style improvements in gpio-xilinx, gpio-104-idi-48
-- support new model (pca9571) in gpio-pca9570
-- convert the DT bindings to YAML for gpio-mvebu and update the document
-- don't return error codes from remove() in gpio-brcmstb
-- add a library for the intel 8255 PPI interface and use it in drivers
-- reduce using magic numbers and improve code readability in several drivers
-- convert DT bindings to YAML for gpio-tpic2810
-- add new models to DT bindings for gpio-frl-imx
-- Kconfig improvements
-- other minor tweaks and improvements
-
-----------------------------------------------------------------
-Aakash Sen Sharma (1):
-      gpio: 104-idi-48: unsigned to unsigned int cleanup
-
-Andy Shevchenko (13):
-      gpio: pch: Use dev_err_probe()
-      gpio: pch: Change PCI device macros
-      gpiolib: devres: Get rid of unused devm_gpio_free()
-      gpio: adnp: use simple i2c probe function
-      gpio: adnp: Make use of device properties
-      gpio: adp5588: Switch from of headers to mod_devicetable.h
-      gpio: adp5588: Do not use defined value for driver name and compatible
-      gpio: adp5588: sort header inclusion alphabetically
-      gpiolib: of: Use device_match_of_node() helper
-      gpio: 74xx-mmio: Make use of device properties
-      gpio: 74xx-mmio: Check MMIO_74XX_DIR_IN flag in mmio_74xx_dir_in()
-      gpio: 74xx-mmio: use bits.h macros for all masks
-      gpio: 74xx-mmio: Use bits instead of plain numbers for flags
-
-Aparna M (1):
-      dt-bindings: gpio: Convert TI TPIC2810 GPIO Controller bindings to YAML
-
-Bartosz Golaszewski (1):
-      Merge tag 'intel-gpio-v5.20-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into TEST_MERGE
-
-Chris Packham (3):
-      dt-bindings: gpio: gpio-mvebu: convert txt binding to DT schema format
-      dt-bindings: gpio: gpio-mvebu: deprecate armadaxp-gpio
-      dt-bindings: gpio: gpio-mvebu: document offset and marvell,pwm-offset
-
-Devarsh Thakkar (1):
-      gpio: davinci: Add support for system suspend/resume PM
-
-Geert Uytterhoeven (2):
-      dt-bindings: gpio: renesas,rcar-gpio: R-Car V3U is R-Car Gen4
-      gpio: GPIO_SAMA5D2_PIOBU should depend on ARCH_AT91
-
-Jesse Taube (1):
-      dt-bindings: gpio: fsl-imx-gpio: Add i.MXRT compatibles
-
-Jianqun Xu (1):
-      gpio: rockchip: add support for rk3588
-
-Kent Gibson (6):
-      gpiolib: cdev: simplify linereq_free
-      gpiolib: cdev: simplify parameter in call to hte_edge_setup
-      gpiolib: cdev: replace if-else chains with switches
-      gpiolib: cdev: simplify line event identification
-      gpiolib: cdev: consolidate edge detector configuration flags
-      gpiolib: cdev: compile out HTE unless CONFIG_HTE selected
-
-Liang He (1):
-      gpio: gpiolib-of: Fix refcount bugs in of_mm_gpiochip_add_data()
-
-Lucas Stach (2):
-      gpio: pca9570: Add DT bindings for NXP PCA9571
-      gpio: pca9570: add pca9571 support
-
-Nuno Sá (4):
-      gpiolib: add support for bias pull disable
-      gpiolib: of: support bias pull disable
-      gpiolib: acpi: support bias pull disable
-      dt-bindings: gpio: add pull-disable flag
-
-Sebastian Reichel (1):
-      dt-bindings: gpio: rockchip: add gpio-ranges
-
-Shinyzenith (1):
-      gpio: lp3943: unsigned to unsigned int cleanup
-
-Shubhrajyoti Datta (1):
-      gpio: xilinx: add missing blank line after declarations
-
-Thomas Bogendoerfer (1):
-      gpio: remove VR41XX related gpio driver
-
-Uwe Kleine-König (5):
-      gpio: twl4030: Drop platform teardown callback
-      gpio: twl4030: Don't return an error after WARN in .remove
-      gpio: ucb1400: Remove platform setup and teardown support
-      gpio: brcmstb: Make .remove() obviously always return 0
-      gpio: xgs-iproc: Drop if with an always false condition
-
-William Breathitt Gray (7):
-      gpio: ws16c48: Implement and utilize register structures
-      gpio: 104-idio-16: Implement and utilize register structures
-      gpio: i8255: Introduce the Intel 8255 interface library module
-      gpio: 104-dio-48e: Implement and utilize register structures
-      gpio: 104-idi-48: Implement and utilize register structures
-      gpio: gpio-mm: Implement and utilize register structures
-      MAINTAINERS: Update Intel 8255 GPIO driver file list
-
- .../arm/marvell/ap80x-system-controller.txt        |   2 +-
- .../arm/marvell/cp110-system-controller.txt        |   2 +-
- .../devicetree/bindings/gpio/fsl-imx-gpio.yaml     |   2 +
- .../devicetree/bindings/gpio/gpio-mvebu.txt        |  93 ----
- .../devicetree/bindings/gpio/gpio-mvebu.yaml       | 146 ++++++
- .../devicetree/bindings/gpio/gpio-pca9570.yaml     |   1 +
- .../devicetree/bindings/gpio/gpio-tpic2810.txt     |  16 -
- .../devicetree/bindings/gpio/gpio-tpic2810.yaml    |  51 ++
- .../bindings/gpio/renesas,rcar-gpio.yaml           |   4 +-
- .../bindings/gpio/rockchip,gpio-bank.yaml          |   2 +
- Documentation/driver-api/driver-model/devres.rst   |   1 -
- MAINTAINERS                                        |   9 +-
- drivers/gpio/Kconfig                               |  22 +-
- drivers/gpio/Makefile                              |   2 +-
- drivers/gpio/gpio-104-dio-48e.c                    | 249 +++-------
- drivers/gpio/gpio-104-idi-48.c                     | 157 +++---
- drivers/gpio/gpio-104-idio-16.c                    |  60 ++-
- drivers/gpio/gpio-74xx-mmio.c                      |  19 +-
- drivers/gpio/gpio-adnp.c                           |  19 +-
- drivers/gpio/gpio-adp5588.c                        |  26 +-
- drivers/gpio/gpio-brcmstb.c                        |   9 +-
- drivers/gpio/gpio-davinci.c                        |  83 ++++
- drivers/gpio/gpio-gpio-mm.c                        | 202 ++------
- drivers/gpio/gpio-i8255.c                          | 287 +++++++++++
- drivers/gpio/gpio-i8255.h                          |  46 ++
- drivers/gpio/gpio-lp3943.c                         |  16 +-
- drivers/gpio/gpio-pca9570.c                        |   2 +
- drivers/gpio/gpio-pch.c                            |  43 +-
- drivers/gpio/gpio-rockchip.c                       |   3 +-
- drivers/gpio/gpio-twl4030.c                        |  18 +-
- drivers/gpio/gpio-ucb1400.c                        |  20 -
- drivers/gpio/gpio-vr41xx.c                         | 541 ---------------------
- drivers/gpio/gpio-ws16c48.c                        | 120 +++--
- drivers/gpio/gpio-xgs-iproc.c                      |   6 +-
- drivers/gpio/gpio-xilinx.c                         |   2 +
- drivers/gpio/gpiolib-acpi.c                        |   3 +
- drivers/gpio/gpiolib-cdev.c                        | 291 +++++------
- drivers/gpio/gpiolib-devres.c                      |  32 --
- drivers/gpio/gpiolib-of.c                          |  13 +-
- drivers/gpio/gpiolib.c                             |   8 +-
- drivers/mfd/ucb1400_core.c                         |   6 +-
- include/dt-bindings/gpio/gpio.h                    |   3 +
- include/linux/gpio.h                               |   6 -
- include/linux/gpio/machine.h                       |   1 +
- include/linux/mfd/twl.h                            |   2 -
- include/linux/of_gpio.h                            |   1 +
- include/linux/ucb1400.h                            |   2 -
- 47 files changed, 1197 insertions(+), 1452 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
- create mode 100644 drivers/gpio/gpio-i8255.c
- create mode 100644 drivers/gpio/gpio-i8255.h
- delete mode 100644 drivers/gpio/gpio-vr41xx.c
