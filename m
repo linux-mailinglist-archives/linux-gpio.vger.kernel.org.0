@@ -2,90 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A7BA589A90
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Aug 2022 12:49:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18C26589AB2
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Aug 2022 13:02:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231946AbiHDKte (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Aug 2022 06:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42290 "EHLO
+        id S239275AbiHDLAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Aug 2022 07:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238427AbiHDKta (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Aug 2022 06:49:30 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFCA3DF39
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Aug 2022 03:49:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 75C0DB82510
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Aug 2022 10:49:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E3AC43141;
-        Thu,  4 Aug 2022 10:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659610167;
-        bh=1rb6O8LRdwEcTR40sjSsN+WfgRWcVvhq+f42Fyg1OW8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vBTzW6oI6uguIyuzonnR/66G5d4XkxfKmdqY+HsKz0HP3J3iDgWTH1gwIwSozqSD4
-         W0olwUkNn2wXPdJHXXcBb2jw2YC5mDnnKiIUrqveYnTnwYQkIXOWDxsHsucGhc4/qG
-         SGaGDk2JoReERhEetWk3wa2llIAzdAKv+Kc7mPamUJovmtWRij4UyLNnrF+hxoFKZN
-         pUP07ZZfD7BusD9NJQ7RxSfF+FqiOtv/IHaKsws2h5wyQvL6Pc832Lc8yCuanFkWwB
-         He4scGy1E+cQJS134EVg9rpJVROaNvjx1SgLvE5ueJRcr9aYiAtzBcPOnPL4viFEgO
-         N1FIvFqdhOH1g==
-Received: by pali.im (Postfix)
-        id B7FFAB0F; Thu,  4 Aug 2022 12:49:24 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: [PATCH 4/4] pinctrl: armada-37xx: Remove unused macro PIN_GRP()
-Date:   Thu,  4 Aug 2022 12:49:15 +0200
-Message-Id: <20220804104915.23719-4-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220804104915.23719-1-pali@kernel.org>
-References: <20220804104915.23719-1-pali@kernel.org>
+        with ESMTP id S239251AbiHDLAh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Aug 2022 07:00:37 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F022F10FF1;
+        Thu,  4 Aug 2022 04:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1659610833; x=1691146833;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FcR3d8jHHEyu09i4b0k6HT4o5pB8ZX+bOopB6/B3OmU=;
+  b=vJdk8nxlx0acRWzJpoFeapR3VH14Zk9sUR4KKhtk3P7/7D1mgwrlPWLB
+   H+hbqwBa2bkF8lxDRiYcm5kfRb1gh+zHeMBkfHqNTT3A//eoRmQVavrdm
+   nyAJJym+9s2xcCI5dx5GCYpN5BYnsfKygZkf5uebXA2O2JntWkxNFfmFm
+   WNb9+8pAwA/OHkgJGPMc7lrGY1IIKaJfGWVt/qsw9gP8m86u7qUXitP/Q
+   H2itPaRxYidsgUGAzJrTIpfmbiLrB5YE3KZweiwHTF2C5gGgOrZzAugcq
+   9R0siw1bj86o53SwIZsnqk2uEErpkQXzQYnqDAJnVB5R4ned7oiKqNobX
+   g==;
+X-IronPort-AV: E=Sophos;i="5.93,215,1654585200"; 
+   d="scan'208";a="185080252"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Aug 2022 04:00:31 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Thu, 4 Aug 2022 04:00:27 -0700
+Received: from CHE-LT-UNGSOFTWARE.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2375.28 via Frontend Transport; Thu, 4 Aug 2022 04:00:24 -0700
+From:   Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
+To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <UNGLinuxDriver@microchip.com>, <gregkh@linuxfoundation.org>,
+        <arnd@arndb.de>, <dragan.cvetic@xilinx.com>,
+        <derek.kiernan@xilinx.com>
+Subject: [PATCH RFC char-misc-next 0/5] misc: microchip: pci1xxxx: Add auxiliary bus driver and the GPIO driver for PIO function of pci1xxxx.
+Date:   Thu, 4 Aug 2022 22:02:14 +0530
+Message-ID: <20220804163219.921640-1-kumaravel.thiagarajan@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Macro PIN_GRP() is not used, remove it.
+pci1xxxx is a PCIe switch with a multi-function endpoint on one of its
+downstream ports. PIO function is one of the functions in the
+multi-function endpoint. PIO function combines a GPIO controller and also
+an interface to program pci1xxxx'x OTP & EEPROM. This patch adds an
+auxiliary bus driver that enumerates separate child devices for gpio and
+OTP/EEPROM interface and the gpio controller driver for the first child.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 10 ----------
- 1 file changed, 10 deletions(-)
+Kumaravel Thiagarajan (5):
+  misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO
+    function in the multi-function endpoint of pci1xxxx device.
+  misc: microchip: pci1xxxx: load gpio driver for the gpio controller
+    auxiliary device enumerated by the auxiliary bus driver.
+  misc: microchip: pci1xxxx: Add functions to configure gpio pins as
+    input / output, get status, handle I/O for gpio pins.
+  misc: microchip: pci1xxxx: Add gpio irq handler and irq helper
+    functions irq_ack, irq_mask, irq_unmask and irq_set_type of
+    irq_chip.
+  misc: microchip: pci1xxxx: Add power management functions - suspend &
+    resume handlers.
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 8978e6c15905..1b48c4db2f28 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -112,16 +112,6 @@ struct armada_37xx_pinctrl {
- 	struct armada_37xx_pm_state	pm;
- };
- 
--#define PIN_GRP(_name, _start, _nr, _mask, _func1, _func2)	\
--	{					\
--		.name = _name,			\
--		.start_pin = _start,		\
--		.npins = _nr,			\
--		.reg_mask = _mask,		\
--		.val = {0, _mask},		\
--		.funcs = {_func1, _func2}	\
--	}
--
- #define PIN_GRP_GPIO_0(_name, _start, _nr)	\
- 	{					\
- 		.name = _name,			\
+ MAINTAINERS                                   |   9 +
+ drivers/misc/Kconfig                          |   1 +
+ drivers/misc/Makefile                         |   3 +-
+ drivers/misc/mchp_pci1xxxx/Kconfig            |  10 +
+ drivers/misc/mchp_pci1xxxx/Makefile           |   1 +
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 167 +++++++
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.h |  28 ++
+ .../misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c   | 438 ++++++++++++++++++
+ 8 files changed, 656 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/misc/mchp_pci1xxxx/Kconfig
+ create mode 100644 drivers/misc/mchp_pci1xxxx/Makefile
+ create mode 100644 drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+ create mode 100644 drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.h
+ create mode 100644 drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+
 -- 
-2.20.1
+2.25.1
 
