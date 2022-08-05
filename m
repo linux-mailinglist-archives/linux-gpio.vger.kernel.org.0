@@ -2,95 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF3558A192
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Aug 2022 21:51:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF21658A48E
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Aug 2022 03:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239285AbiHDTvb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Aug 2022 15:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
+        id S240754AbiHEBuG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Aug 2022 21:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239891AbiHDTvO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Aug 2022 15:51:14 -0400
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2EA316593;
-        Thu,  4 Aug 2022 12:50:45 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id h138so462509iof.12;
-        Thu, 04 Aug 2022 12:50:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:references:in-reply-to:cc:to:from
-         :x-gm-message-state:from:to:cc;
-        bh=VfcXQX2iRG7E6MWpE8aWtWjOWzDlHACnvOKDvtpAZuk=;
-        b=HROCspu8Cb9ilK7VMYe7Pl55gC5pDpNyEI8QELyf3KCPqz2JTzjpbNCJIpqED4yjLb
-         wtD8TW49gEvwpX6udPc9WTtP2Dk9HhKSJr9PJdEXpvpGfnLWYbJ4t3M4SQKR43WOnqzF
-         ZeV1y8h5VRuvMMqecmbVE8d5k5C8opZzkmvLb/Np1/9iD2CyBnDM25If9EAASptkLdYU
-         RvzVXDlLwNVKHumk4V4ehFzo9NvZFeKuf8lZpIntWoc61Hyg/Yi2psmOefbdl29KzB0f
-         WxYDQ+yekQolOnayE7gcTCgoyZimm3k67uxjxHUus1mLR6z7QYXbKz1WLFG4ccsYAWzB
-         vMww==
-X-Gm-Message-State: ACgBeo2JLHE24UpQLVHbBl3/eSOHfqJnKJMaivHnvmdnu37ys8bAuzef
-        anv/aISPa8+ILioJghiyxg==
-X-Google-Smtp-Source: AA6agR6uPDT96u8m5bxWMZ1urtuQfrAc4Xhd6x4d32l32wWs7f6kpjJA1wdL+wfyJNC/pu7a0igxng==
-X-Received: by 2002:a02:9408:0:b0:342:834c:6b1f with SMTP id a8-20020a029408000000b00342834c6b1fmr1535870jai.0.1659642643535;
-        Thu, 04 Aug 2022 12:50:43 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id q10-20020a02b04a000000b0033f4a1114a6sm805653jah.178.2022.08.04.12.50.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Aug 2022 12:50:43 -0700 (PDT)
-Received: (nullmailer pid 259298 invoked by uid 1000);
-        Thu, 04 Aug 2022 19:50:38 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Shenwei Wang <shenwei.wang@nxp.com>
-Cc:     shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
-        festevam@gmail.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, brgl@bgdev.pl, s.hauer@pengutronix.de,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-In-Reply-To: <20220804184908.470216-2-shenwei.wang@nxp.com>
-References: <20220804184908.470216-1-shenwei.wang@nxp.com> <20220804184908.470216-2-shenwei.wang@nxp.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: gpio: Add imx-scu gpio driver bindings
-Date:   Thu, 04 Aug 2022 13:50:38 -0600
-Message-Id: <1659642638.751216.259297.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S240749AbiHEBuF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Aug 2022 21:50:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEB272EC5;
+        Thu,  4 Aug 2022 18:50:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4DCD561884;
+        Fri,  5 Aug 2022 01:50:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C891C433B5;
+        Fri,  5 Aug 2022 01:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659664204;
+        bh=pmU8tjUJ9uZr3KXi6j2extww3mtUreJqOFcd09NjOM8=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=GSr1ZPYar7JtJ70Z8+uFfzw+q2qhPFmQj1vz7S2jZFpb5QJxAvs46i7Yp26jDKM6X
+         6w0leV5vcoVOHDpztUVHBw7UAEXOXI0jwZTyChmF7/+xAPn+lHWFbcfcsITHMTJfYC
+         Ph7xLN2eFIXyJZZBF7NrJuFEmqkp6JhA4bEvmOUUgdTPJXUVXIxX/nS57V6x/pKMzo
+         gfFCL9KhaA8nW1zZnTN3hxfajK5ZqXyyp+7ZObe5ThEffBbu548n4GAwv+iDmtASx2
+         RJLexZYpZOPA9W1ZxOvAqu4rlx2F2NBIjSt0etShAt6HgeLxv8DynRm5X6oZuu2qFs
+         Q19PK/3u+Q5OA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0B052C43142;
+        Fri,  5 Aug 2022 01:50:04 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: updates for v6.0-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220804124103.1088581-1-brgl@bgdev.pl>
+References: <20220804124103.1088581-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220804124103.1088581-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.0-rc1
+X-PR-Tracked-Commit-Id: c4f0d16daa6d1c5d862d063379c03310387095d5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 37644cac6e8297d0908aef054caabb439c467c7d
+Message-Id: <165966420402.23541.16954063899419724442.pr-tracker-bot@kernel.org>
+Date:   Fri, 05 Aug 2022 01:50:04 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 04 Aug 2022 13:49:06 -0500, Shenwei Wang wrote:
-> Add binding document for the imx-scu gpio driver.
-> 
-> Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
-> ---
->  .../bindings/gpio/fsl,imx8-scu-gpio.yaml      | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/fsl,imx8-scu-gpio.yaml
-> 
+The pull request you sent on Thu,  4 Aug 2022 14:41:03 +0200:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.0-rc1
 
-yamllint warnings/errors:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/37644cac6e8297d0908aef054caabb439c467c7d
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/gpio/fsl,imx8-scu-gpio.example.dts:18.18-22.11: Warning (unit_address_vs_reg): /example-0/gpio@scu: node has a unit name, but no reg or ranges property
+Thank you!
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
