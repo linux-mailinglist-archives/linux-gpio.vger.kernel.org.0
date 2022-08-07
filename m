@@ -2,51 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AF7858B9B6
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Aug 2022 07:40:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E099658BACF
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Aug 2022 14:27:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231955AbiHGFku (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Aug 2022 01:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52220 "EHLO
+        id S233552AbiHGM1H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Aug 2022 08:27:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231343AbiHGFku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Aug 2022 01:40:50 -0400
-X-Greylist: delayed 393 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 06 Aug 2022 22:40:48 PDT
-Received: from answer2001.creative-japan.org (unknown [116.80.41.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF0DD2AEF
-        for <linux-gpio@vger.kernel.org>; Sat,  6 Aug 2022 22:40:48 -0700 (PDT)
-Received: by answer2001.creative-japan.org (Postfix, from userid 10002)
-        id B97531F915; Sun,  7 Aug 2022 05:34:13 +0000 (UTC)
-To:     linux-gpio@vger.kernel.org
-Subject: =?ISO-2022-JP?B?GyRCJCpMZCQkOWckbyQ7JCIkaiQsJEgkJiQ0JDYkJCReJDckPyEjGyhCIkEgRklOQU5DSUFMIENSSVNJUyBDQU4gTUFLRSBZT1UgQSBNSUxMSU9OQUlSRSEi?=
-X-PHP-Originating-Script: 10002:class-phpmailer.php
-Date:   Sun, 7 Aug 2022 05:34:13 +0000
-From:   =?ISO-2022-JP?B?GyRCIVozdDwwMnE8UiVHJSMlaSUkJUghWxsoQg==?= 
-        <info@delight2011.com>
-Message-ID: <e4a88310889a5e30322401ba722f5c43@delight2011.com>
-X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+        with ESMTP id S232885AbiHGM1H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Aug 2022 08:27:07 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE513B7FA;
+        Sun,  7 Aug 2022 05:27:06 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id p8so6309454plq.13;
+        Sun, 07 Aug 2022 05:27:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=pPEFfXFS2bPZaC6r7fH0ix2vur9Xz7husL4v2aFGft0=;
+        b=jo+bxny5Oyn5mBeFoUIJCZiy0y/AO/CKcVw8w16GDfxHBhz1vVEOAXUxvoelgpQDgp
+         vEaWCmB041LzSNBdqJOUVRJ3ytatXLNziyxEGvZkFcbzkJO1qfs0YfHZJo/lL7pKgBKe
+         IezNbOvBuJlhwnfXnMClJ0aGM6d18ZiEY/6W5MfDUJNvJ2hPLkWk/YCWKds5HNW1+YxH
+         wfo+/xHNVuGlkkafpGHZxbDgrSeTBcnmR9ln8IGkYO7kGFDNiIIoUSiY5xhOWvJWYMz2
+         OjfrKN20/5aboFVAI0kP8fu0sbsBOBgdWt/C8Q+OfNMxqaqFjwFLnecAAVYlLXbx1yEc
+         ly9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=pPEFfXFS2bPZaC6r7fH0ix2vur9Xz7husL4v2aFGft0=;
+        b=nCsjG1DQkop/0kOZ547VDG/yM12CGpMTep8OgKxzm+qlYyuyA0VBiz2D8h/MU1FmlA
+         2+VXRoyCbUJyfe7qeHngH2Cf9dS2IZZdSTUvIXKMhfGZzMejlDFme3cSNbYmEGXrrqN7
+         3kw14qQ541OsC4sVKAAlSlZmczU5RBB1nN3YWBy+qVmARntQNY/Ysi8YYHiCcSXliFfg
+         68OkQMhSrRYoDONQT4bDA/u3P4anEhCi48VUNXMSnCWssS2NA2whltrqyb0Wu4BiqH+Y
+         4VE2FAi7keRFQ6AZ1h+6YZDlWQwitxWD4bXix3+UQWl3dqkn19mZq0g1AXRv8Cjt+Lky
+         Nigw==
+X-Gm-Message-State: ACgBeo32GjWwk8v1ipeEVsETuN5ZqBEiBYfQO9P7O+ooxviufvhBMkE8
+        578vVEfOCvNIRidLb4jOupjkaH/P5U8=
+X-Google-Smtp-Source: AA6agR4iukdOUa0v1dM83re2pWI5Y8w2PNlnocrTnoYLUpOOAHvkuoumSl/URvwvmLng8G87z3KzEQ==
+X-Received: by 2002:a17:902:ce0a:b0:16d:737b:feed with SMTP id k10-20020a170902ce0a00b0016d737bfeedmr14238837plg.152.1659875226254;
+        Sun, 07 Aug 2022 05:27:06 -0700 (PDT)
+Received: from Redmi-G.localdomain ([112.0.190.111])
+        by smtp.googlemail.com with ESMTPSA id n7-20020a170902e54700b0016c16648213sm6716709plf.20.2022.08.07.05.27.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Aug 2022 05:27:05 -0700 (PDT)
+From:   Molly Sophia <mollysophia379@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Molly Sophia <mollysophia379@gmail.com>
+Subject: [PATCH 0/2] Fix some typos in SC8180X pinctrl driver
+Date:   Sun,  7 Aug 2022 20:26:43 +0800
+Message-Id: <20220807122645.13830-1-mollysophia379@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,KHOP_HELO_FCRDNS,
-        PHP_ORIG_SCRIPT,RCVD_IN_VALIDITY_RPBL,SPF_FAIL,SPF_HELO_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-メッセージ本文:
-THE WORLD FINANCIAL CRISIS CAN MAKE YOU VERY RICH! https://telegra.ph/Cryptocurrency-makes-people-millionaires-at-15-people-per-hour---Page-162251-08-02
+There are some little mistakes in the sc8180x pinctrl
+driver. The following patches fix them.
 
+Molly Sophia (2):
+  pinctrl: qcom: sc8180x: Fix gpio_wakeirq_map
+  pinctrl: qcom: sc8180x: Fix wrong pin numbers
 
-お問い合わせありがとうございました。追って担当者よりご連絡をさせていただきますので、今しばらくお待ちくださいますよう宜しくお願い申し上げます。なお、3営業日が過ぎても当社より返信、返答がない場合は、お客様によりご入力いただいたメールアドレスに誤りがあるなどのトラブルの可能性があります。その際は、お手数ですが再度送信いただくか、お電話（03-6712-0960）までご連絡いただけますと幸いです。
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-株式会社ディライト
-担当　北川
-TEL 03-6712-0960
-H P http://delight2011.com/
-
-このメールは delight2011 (http://delight2011.com) のお問い合わせフォームから送信されました
+-- 
+2.25.1
 
