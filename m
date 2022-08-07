@@ -2,104 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE1C058BB4D
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Aug 2022 16:42:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA1958BB72
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Aug 2022 16:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233520AbiHGOmG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Aug 2022 10:42:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
+        id S234803AbiHGO4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Aug 2022 10:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233410AbiHGOmG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Aug 2022 10:42:06 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ACAB63E9
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Aug 2022 07:42:05 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id 13so5060021plo.12
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Aug 2022 07:42:05 -0700 (PDT)
+        with ESMTP id S234784AbiHGOzt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Aug 2022 10:55:49 -0400
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAA8B7F2
+        for <linux-gpio@vger.kernel.org>; Sun,  7 Aug 2022 07:55:33 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id s204so7797170oif.5
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Aug 2022 07:55:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=ZyrPJR4nEG5YZu/6NYAs0z+NXp1inPT3efyASxXGVEQ=;
-        b=qH9Zhl5vwXVRe5ihPLYYOENc72BjN8HglQ0RRPkqEDnGWAirRJi4WckpaU2zuBskkZ
-         vo73rf6Z/NyhPniMnoeZaDuzQj5j8aQT5FDu1W4PHmvgDLU/9t2dEhiqQ2Wkr0SzYtzG
-         DS//xZxuTUN8wmgR3EuMdOibs6GNSllgc5cW4SpjssKDFhCgu1rYyRiLr3ec59DuzWXr
-         HF/doEyuOXjFqS08u+DibtsI5yHwOdw3kIcPOrzSmG/zsCEUNI1S5oz9L9Ja5tXmqk6h
-         xwonOCaYopDFb66VFR8QRm+eB3u4bjGISDMFUIXrLqijh2v1H2/1vxwyvcygwf0n8SIF
-         yyaA==
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc;
+        bh=deUgeohbMGI8vydeJYthJS3B+b3JxxcGoLFAptaXSeI=;
+        b=KqeaW7svjIJ7P6IjX+wfqtYlpwKFuDxeJVRXEHW+DJUowExgq7tGyj+aVtxHhEcgTn
+         ZoV4ksMk65GJtfNfEuavZMkh7Ww+rJtC7RhIxSasiZvBnzgVSS8bFUGEBf469jNCYRuQ
+         g/jRUO02+8JpBPsguzgOHe47XiJWzxBVJRqgIFZaDtZMDTFMxDgag0lN/wdX7J601yH6
+         vku3VPIN+/xIyL598c0FH1Z3BnAYw5kIJWIpsUJyLlOhA7mdita8xZnmEOIMOtmfjpCA
+         8pgayE3JhMB3GCL6iMGpD7HK7E82v9YCTal3NCtPW4k7Q1mzCwmLsUGMW19Do4T3ztpw
+         2b1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=ZyrPJR4nEG5YZu/6NYAs0z+NXp1inPT3efyASxXGVEQ=;
-        b=ZXdZgUKxvldSe5yXP5bPhhNrq01mBgZNxnLdr+FmqbB00etYJD4jFgxHsZzq/hMt2+
-         ppb+9dEA5HQxkZ8+aHJoEIUeKGn8QVjlFsXW8l+rwHmXXUrZWxU6L2BmlELGEt3H29kx
-         Wi6KXBg+91GCwOqFF9T/mdRrC02N+FWIj3jy5gAfEGZMkn65ExYGZ10Q2kyizHrdPuT3
-         xXHZfSJ1e2/F1D6hluMJonV92jYIe5ViywtEIt9jJM8JommbiZRZ4GRwstRmxHrgipcy
-         Ox1ewgCpAcegkOSp7ki/FZW5QFIGvNzBEqB6dFTkJaNhJZdz765RDPc87+S1LqZx58Gp
-         dQew==
-X-Gm-Message-State: ACgBeo3Far6XJLBYV14vHM/uKphYeGpbk7OTbdsmE8Fx2wX+V2Uxl9pQ
-        WsFsNVErep8q8UiwuhatPtc=
-X-Google-Smtp-Source: AA6agR4BtGgw5pYdDBYYR3pXbGpgnqgEMjlkkZK9w4x/7LO8EMaoW3UScqggYm0owUi6TbqkjjZOBg==
-X-Received: by 2002:a17:90a:17e1:b0:1f2:2ff2:6cae with SMTP id q88-20020a17090a17e100b001f22ff26caemr24940396pja.196.1659883324826;
-        Sun, 07 Aug 2022 07:42:04 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id a16-20020aa79710000000b0052d40c4c06esm6660127pfg.39.2022.08.07.07.42.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Aug 2022 07:42:04 -0700 (PDT)
-Date:   Sun, 7 Aug 2022 22:41:58 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Robert Baumgartner <rbaumgar@redhat.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [libgpiod] How can I use PWM
-Message-ID: <20220807144158.GA42204@sol>
-References: <CAKdJ40QqZt3MbeLNZ1fuYRgaTqSJeDaDdHkQSx1-KWCW4BcJPg@mail.gmail.com>
- <CAHp75Vd2dh5QDxAY-9N0xu6D0ywBcYnRL6FF5ZoKdqnnkBtAyg@mail.gmail.com>
- <20220806134052.GA26217@sol>
- <CAHp75VcZ8UxNiGKEq=uU5UFx+XK-B8zOjfChNqM9P-+Tf=dJAQ@mail.gmail.com>
- <CAKdJ40QmeOgGdbscp06BorATN3d1gW0zraTB+FKSXqRbgowRQA@mail.gmail.com>
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc;
+        bh=deUgeohbMGI8vydeJYthJS3B+b3JxxcGoLFAptaXSeI=;
+        b=66YANWINeqvDl7drHCSrUd+JeCvVUKoEK/PLXIreAudA/d35OFVMGnIuQ5RbIjvd9I
+         wA5gy08IuCid5nKDjveKG+mJ54rbpAwlBzzUFfJkncwXBDeKJk9EQpynAyh6SjJ23eAw
+         pZNCHgRcgBuzJjybZS0Kco65snWbiQ3YsBLeMK1vaPC/PgmWc3+OVENTGmEuNuZVR8GD
+         A3ap4OuOHcR4Euk+m8xrGYL4Z7Pdy98PA04rVk1coPInxxXkT6h3kAL22CksPT2+T1kU
+         9tL7TxuZUpwo7ULI8Qm7URu06WaCiOCdKPbWMdwHcX9LyiCjzKpgI1DA52jTgV5Y/eBP
+         BsVA==
+X-Gm-Message-State: ACgBeo26mqhB/d9rebYZRHXXJt7AU05gmw4Z/SFXtZ44etJWe6SIQ5zS
+        eZI6HAB/SRZKMkEeEs9wOb6WtfrIn2g=
+X-Google-Smtp-Source: AA6agR4TCl44jmNiSDdYCwHCELDtjlWiqY7goly9JjEv0UAuuYCFOh2UosCwR5VI+hWm6cU727G54g==
+X-Received: by 2002:a05:6808:f03:b0:33a:a9b4:9847 with SMTP id m3-20020a0568080f0300b0033aa9b49847mr9509381oiw.9.1659884132902;
+        Sun, 07 Aug 2022 07:55:32 -0700 (PDT)
+Received: from [172.31.250.1] ([47.184.51.90])
+        by smtp.gmail.com with ESMTPSA id s4-20020a056870ea8400b0010be134ac60sm1814139oap.19.2022.08.07.07.55.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Aug 2022 07:55:32 -0700 (PDT)
+Message-ID: <d2c3cb8e-4042-13ad-4bb9-21b289ba773c@gmail.com>
+Date:   Sun, 7 Aug 2022 09:55:32 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKdJ40QmeOgGdbscp06BorATN3d1gW0zraTB+FKSXqRbgowRQA@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-US
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        kernelnewbies@kernelnewbies.org
+From:   Ian Pilcher <arequipeno@gmail.com>
+Subject: gpiod_get() - How to get GPIO from chip & offset?
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Aug 07, 2022 at 03:20:33PM +0200, Robert Baumgartner wrote:
-> Andy, Kent,
-> 
-> I believe I am on the right track.
-> 
-> I added following line to my config.txt
-> # enable pwm on pin 18
-> dtoverlay=pwm,pin=18,func=2
-> 
-> Now I have
-> # ls /sys/class/pwm/pwmchip0
-> device  export  npwm  power  subsystem  uevent  unexport
-> # lsmod|grep pwm
-> pwm_bcm2835            16384  0
-> 
+I am trying to figure out how to use gpiod_get(), or one of its
+variants, to get the descriptor (struct gpio_desc *) for a specific
+GPIO.  Getting a reference to the GPIO chip (struct gpio_chip *) is
+straightforward, and it provides a pointer to the device (.parent), but
+I absolutely cannot figure out what I am supposed to pass as the
+*con_id* argument.
 
-Excellent - if the hardware PWMs cover the lines you are interested in
-then that is certainly the way to go.
+I know the offset of the GPIO on the chip, but I can't figure out how to
+use that.
 
-> and an example I found is working
-> https://github.com/jdimpson/syspw
-> 
+Ultimately, my goal is to set the direction of the GPIO from within a
+"board setup" module.
 
-I believe that should be syspwm.
 
-Cheers,
-Kent.
+BACKGROUND
+
+I maintain an out-of-tree "board" module[1] that sets up the GPIOs and
+LEDs on my Thecus NAS.  I am in the process of upgrading the OS on the
+NAS, which will require me to change the user-space daemon from the old
+sysfs GPIO interface to the new (non-ancient?) gpiod interface.
+
+One significant difference between the sysfs and gpiod interfaces, is
+that the new interface does not seem to provide an easy way to set a
+GPIO's direction (input/output) from a shell script[2].  Thus, I would
+like the board module to do that, along with the other setup.
+
+[1] https://github.com/ipilcher/n5550/blob/master/modules/n5550_board.c
+
+[2] It may be possible to change a GPIO's direction from user space with
+     the C API, but doing it in the kernel module, which does all of the
+     other hardware configuration, seems like the most appropriate way.
+
+-- 
+========================================================================
+Google                                      Where SkyNet meets Idiocracy
+========================================================================
