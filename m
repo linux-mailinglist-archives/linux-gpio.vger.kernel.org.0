@@ -2,70 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7281358C24C
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Aug 2022 06:17:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7595558C46C
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Aug 2022 09:52:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232358AbiHHERA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Aug 2022 00:17:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
+        id S241832AbiHHHwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Aug 2022 03:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231263AbiHHERA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Aug 2022 00:17:00 -0400
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C4D11152
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Aug 2022 21:16:57 -0700 (PDT)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-10edfa2d57dso9387414fac.0
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Aug 2022 21:16:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=A1wQCN+G4M0V+6iscdY6rHphe27jvr6cvhQav4ATh4g=;
-        b=nhupKK7xasVVbtSVOhRdLJMsQ2LhjS6UtriAqRLXljpCMaLNKxLm8NpX8xPevInbmD
-         pVdMC1GqDlyaeV+VNvIjq8fboL0jdOEXkuvsXe/dScrW0lXzKTmzAH4VvmY2aIqrXYan
-         k+SuhI0S40GulBJFJ0jXzvSF8exODF8W2CtwxQ9dKlh8eHcGusyvLkMPWL93/FDVGgCx
-         KLEyw495xIr+KXgNqwYELDTbcjnCtcS3TgK1QXOmKPCzuC5dbOe37s2oiTFT/M8Aq9xV
-         j86eDiPl/1Dcq/JywF+/1xi3tojqYD2jCixmVnut0e8UyRWD7wVO6eb/WjNnkyLQoVOC
-         kaew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=A1wQCN+G4M0V+6iscdY6rHphe27jvr6cvhQav4ATh4g=;
-        b=f34UQyLt9JxVFVV7PSH7tFuWS+hdwrUzLqmF75VG4nILQ50Y6DHPE6oP/yScgFaMv3
-         ZmKQUD7BjAwLx9VKNXp+ZIXYUA0gdZkUCt70rBy1uv7Xb19bmo0kFZ6FgkzSI7+DfbEg
-         Tdx5XmwSYngEI03KN341yeW+CzFOEP5snhprAV5vGYfbLOM079qfYQE5+RpPRKSkju5W
-         ScopU5M1LOHjpvnptwn3HCuaECstwXeKb7pvLOdyJPKUTRvjwcHgSTYSsGR2Po/vhqgI
-         yj1zesDz4IDyLt5CPK4cc5Z9Q982dEaiOzhlTX045LrE3PLbQEuVfHBOM9hLFR73VLrT
-         grbQ==
-X-Gm-Message-State: ACgBeo0QxWBenpJHHyO3eUpHK2wwVU2WzhfV3I+iotcvtDuIUnlNGDb8
-        lo19tTzoJI2NJbODe4XphaCj+z5rb5IT/w==
-X-Google-Smtp-Source: AA6agR75dIdMIrCZ6M5BWdLYUfC/wGKyZq7QqmGYD5iCbAbL/Os4tkFoP8YSIGPlOY0u2bfkmwMNJw==
-X-Received: by 2002:a05:6870:a689:b0:10c:289b:78df with SMTP id i9-20020a056870a68900b0010c289b78dfmr7905740oam.25.1659932217063;
-        Sun, 07 Aug 2022 21:16:57 -0700 (PDT)
-Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id u11-20020a9d4d8b000000b00636d76b607bsm849528otk.30.2022.08.07.21.16.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Aug 2022 21:16:56 -0700 (PDT)
-Date:   Sun, 7 Aug 2022 21:19:37 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Molly Sophia <mollysophia379@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] pinctrl: qcom: sc8180x: Fix gpio_wakeirq_map
-Message-ID: <YvCO2SfpXtTfawW5@ripper>
-References: <20220807122645.13830-1-mollysophia379@gmail.com>
- <20220807122645.13830-2-mollysophia379@gmail.com>
+        with ESMTP id S241735AbiHHHwp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Aug 2022 03:52:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 970E9273E
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Aug 2022 00:52:44 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1oKxYk-0007h1-RS; Mon, 08 Aug 2022 09:52:22 +0200
+Received: from mfe by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1oKxYj-0005lW-J7; Mon, 08 Aug 2022 09:52:21 +0200
+Date:   Mon, 8 Aug 2022 09:52:21 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Shenwei Wang <shenwei.wang@nxp.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH v1 2/3] dt-bindings: firmware: imx: Add imx-scu
+ gpio node
+Message-ID: <20220808075221.hijtkvubgtw3wirf@pengutronix.de>
+References: <20220804184908.470216-1-shenwei.wang@nxp.com>
+ <20220804184908.470216-3-shenwei.wang@nxp.com>
+ <8e1ffa95-686b-ca4b-1a2b-b7115dc41c98@linaro.org>
+ <AM9PR04MB8274CE6735619BD6B8FB0143899E9@AM9PR04MB8274.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220807122645.13830-2-mollysophia379@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <AM9PR04MB8274CE6735619BD6B8FB0143899E9@AM9PR04MB8274.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,44 +66,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun 07 Aug 05:26 PDT 2022, Molly Sophia wrote:
-
-> Currently in the wakeirq_map, gpio36 and gpio37 have the same wakeirq
-> number, resulting in gpio37 being unable to trigger interrupts.
-> It looks like that this is a typo in the wakeirq map. So fix it.
+On 22-08-05, Shenwei Wang wrote:
 > 
+> 
+> > -----Original Message-----
+> > From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Sent: Friday, August 5, 2022 1:56 AM
+> > To: Shenwei Wang <shenwei.wang@nxp.com>; robh+dt@kernel.org;
+> > krzysztof.kozlowski+dt@linaro.org; linus.walleij@linaro.org; brgl@bgdev.pl;
+> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> > festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>
+> > Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> > Subject: [EXT] Re: [PATCH v1 2/3] dt-bindings: firmware: imx: Add imx-scu gpio
+> > node
+> > 
+> > Caution: EXT Email
+> > 
+> > On 04/08/2022 20:49, Shenwei Wang wrote:
+> > > Add the description for imx-scu gpio subnode.
+> > >
+> > > Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/firmware/fsl,scu.yaml | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/firmware/fsl,scu.yaml
+> > b/Documentation/devicetree/bindings/firmware/fsl,scu.yaml
+> > > index b40b0ef56978..080955b6edd8 100644
+> > > --- a/Documentation/devicetree/bindings/firmware/fsl,scu.yaml
+> > > +++ b/Documentation/devicetree/bindings/firmware/fsl,scu.yaml
+> > > @@ -30,6 +30,11 @@ properties:
+> > >        Clock controller node that provides the clocks controlled by the SCU
+> > >      $ref: /schemas/clock/fsl,scu-clk.yaml
+> > >
+> > > +  gpio:
+> > > +    description:
+> > > +      GPIO control over the SCU firmware APIs
+> > 
+> > I don't understand this description. How GPIO can control some API?
+> 
+> How about change to "Control the GPIO PINs on SCU domain over the firmware APIs"?
 
-Thank you for finding this, I've been scratching my head about the
-i2c-hid interrupts on this gpio for a while now. This indeed looks like
-a typo, and the documentation confirms that 44 is the correct PDC irq
-line.
-
-> Signed-off-by: Molly Sophia <mollysophia379@gmail.com>
-
-Fixes: 97423113ec4b ("pinctrl: qcom: Add sc8180x TLMM driver")
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+For linux it doesn't matter how the GPIOs are controlled. They can be
+controlled by a co-processor like this SCU or by an I2C expander or they
+are native, the list goes on. All those details are hidden.
 
 Regards,
-Bjorn
+  Marco
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> index 6bec7f143134..b4bf009fe23e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> @@ -1582,7 +1582,7 @@ static const int sc8180x_acpi_reserved_gpios[] = {
->  static const struct msm_gpio_wakeirq_map sc8180x_pdc_map[] = {
->  	{ 3, 31 }, { 5, 32 }, { 8, 33 }, { 9, 34 }, { 10, 100 }, { 12, 104 },
->  	{ 24, 37 }, { 26, 38 }, { 27, 41 }, { 28, 42 }, { 30, 39 }, { 36, 43 },
-> -	{ 37, 43 }, { 38, 45 }, { 39, 118 }, { 39, 125 }, { 41, 47 },
-> +	{ 37, 44 }, { 38, 45 }, { 39, 118 }, { 39, 125 }, { 41, 47 },
->  	{ 42, 48 }, { 46, 50 }, { 47, 49 }, { 48, 51 }, { 49, 53 }, { 50, 52 },
->  	{ 51, 116 }, { 51, 123 }, { 53, 54 }, { 54, 55 }, { 55, 56 },
->  	{ 56, 57 }, { 58, 58 }, { 60, 60 }, { 68, 62 }, { 70, 63 }, { 76, 86 },
-> -- 
-> 2.25.1
+> Thanks,
+> Shenwei
 > 
+> > 
+> > Best regards,
+> > Krzysztof
