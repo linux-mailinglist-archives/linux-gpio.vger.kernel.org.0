@@ -2,108 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFA2458C1E4
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Aug 2022 04:53:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9474C58C248
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Aug 2022 06:14:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233614AbiHHCxa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Aug 2022 22:53:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
+        id S231277AbiHHEOY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Aug 2022 00:14:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235284AbiHHCx1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Aug 2022 22:53:27 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F278388B;
-        Sun,  7 Aug 2022 19:53:26 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id f10so3051298uap.2;
-        Sun, 07 Aug 2022 19:53:26 -0700 (PDT)
+        with ESMTP id S230520AbiHHEOY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Aug 2022 00:14:24 -0400
+Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20692B7F4
+        for <linux-gpio@vger.kernel.org>; Sun,  7 Aug 2022 21:14:23 -0700 (PDT)
+Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-10ea7d8fbf7so9301471fac.7
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Aug 2022 21:14:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+pXr+XtINASTHtS2Vl6bIYsQmgt7hCm2Uk02zirBamE=;
-        b=DuIfbPNc/jD0VNTOP+g2ETrBj0e4lcoEJxt0+xWyNjjDJ38fFgmGqqOAlqzAbHD4Kd
-         c24UswnzFicvTMSOLtuwPo/5J9vWDYheAaCnP0jSi2rEVAjy1I42niESIVC1yPsq8/Jr
-         qa6cSQQ4lkesXFWjp2to05n2Ojnq2ONF6FAihQswTcaWaaNW8K0oc+KG5BHOHTxJvqee
-         QoyS6q23KuP+0Pvn68t7wiwX730lDXQpewZdUmFfE3E1b0nwRgh95/bwKMdooFCEngej
-         yMdQDfhF44abEobNk4NhCHW+mwcQxe+KdkbkQTa1Je59Di/IwaNkdKczhDmZQDdre69q
-         Safw==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=qmLBxFW+3s+rCmQcO8LAZd85qoQ4WtG1SRphg8cshdY=;
+        b=aQe40ynVPeQxBTcCJez+hV9n972g8nFlngA7qNiWeuOD7UL705xTobhQf5AK4kN3jK
+         zI9Wwrn475srTl53VcrJmgUpAEH73qUwwpDPzylyogm3CrhDy5U88ESEFyhOlWNiwybR
+         nsb6HQO0r1MEY67ropqdZgAQjxEg9rJeK+zvwQtrVdHPcQTNyyuGuI6be0sc1T26Jy9G
+         LVlJgHXpEWd72snf/DI35geV8DPBQ5GNaPMEDm0SZzIFDbTcXf3fy/NOs6/of04FYDq7
+         3qLTQ1RckM8nylEw1PHbPCmNvuXRsC8iuZXU8sH0Fxzxai7hwmHbuvrsLgP3HcOUkVYI
+         +jbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+pXr+XtINASTHtS2Vl6bIYsQmgt7hCm2Uk02zirBamE=;
-        b=0HJN2exEr2Km/BxMnY6E01+/lKTQSy+W3dqfZW50obBFKffyiyPLximtWUcgHYTYel
-         SGOjlSK5kmSkd4znWXAxGaX/DuhZT0gH7PoBda7nBoGE7GJ5Q+78N+TM9r8Zj+2UhEXQ
-         b3aSvkmuqbv8aLeW6IAFb8ec52E4n8vH2TVg/1+/VzzhyQ0+8NwmyUmL2JtP3J/VJuZT
-         UbgawzjjD5Z3MH1rGYm63dd/AYfGhkxcuZJxL6qGK6v2B5LCN6wDKChnjnoHY3Vk6SkL
-         jJTjMi7f1mss3sZsR0V7Glyn0oZqe9ev2Yo+1b6g5xVY77wvlV3KZSM+B/PNPD5KEa+N
-         MFKw==
-X-Gm-Message-State: ACgBeo1n+Vj0MQYyyE3TijBSv/rebj5HJOwskyW6MFXFPG6zFmtrRO4F
-        msckk0b7j9H/EhxN+Y6rlvw=
-X-Google-Smtp-Source: AA6agR6nrcGsVhmRrgD+6HWTXlPcSeQ6XmGOLfsFd/QFIsTf/jcpqbHZKwGVSQVCG1eWZYCMKT82zQ==
-X-Received: by 2002:a9f:35c9:0:b0:387:967a:fa31 with SMTP id u9-20020a9f35c9000000b00387967afa31mr6908438uad.70.1659927205668;
-        Sun, 07 Aug 2022 19:53:25 -0700 (PDT)
-Received: from bullseye-server.. (179-107-140-16.zamix.com.br. [179.107.140.16])
-        by smtp.gmail.com with ESMTPSA id w8-20020ab07288000000b00384293c4199sm8263979uao.23.2022.08.07.19.53.22
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=qmLBxFW+3s+rCmQcO8LAZd85qoQ4WtG1SRphg8cshdY=;
+        b=iJfQAd87GmznSzvpb6cqmq/1hq9XNtxLgYoy8rxfdTZTL4S2sE81P/DeVP5skIdVeC
+         hdq+tWZ5ruszlvGjQusJXhv9r5IhRAWqE+cBJNZbNBrEEReobRsGj63Fs2wx6CQyZnmn
+         iLPO8zokNfzcRum0ntL2v24KPAqf1M4ajJXGRxYNmsqasOq0lMIVhWDG5RW4qCPC/uJu
+         eXTR+luIfznhAg6sB40ATz3qF3Hz80+jTcUsXEBNZECiswlhBogzMbmG6aelCKcpzetI
+         VzNusPPtYpM2IdC54sUZ7Ff9XfAJumabRFmNUDOYsXewaV00JfJJ/+97vgFs+ldtPe1r
+         iT+g==
+X-Gm-Message-State: ACgBeo2cQLcVaHFi68L1O08tRkNjxcuzpXMHtVxB53CUtFTpehLOlwLn
+        l8Bg6v7QsdUw1o01q/GYlYRrvA==
+X-Google-Smtp-Source: AA6agR7eKw+LY/1AYw4Clvjj3N7KQ2qVzP8/QS88PQyLyxWL4cigwgsrj5QDPvrVAq1rFHRLHZkALA==
+X-Received: by 2002:a05:6870:32cb:b0:10c:289b:76ba with SMTP id r11-20020a05687032cb00b0010c289b76bamr11677580oac.72.1659932062441;
+        Sun, 07 Aug 2022 21:14:22 -0700 (PDT)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id n21-20020a9d7115000000b00636df4fd5eesm548322otj.34.2022.08.07.21.14.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Aug 2022 19:53:25 -0700 (PDT)
-From:   =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     Maya Matuszczyk <maccraft123mc@gmail.com>,
-        =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: rockchip: Enhance support for IRQ_TYPE_EDGE_BOTH
-Date:   Mon,  8 Aug 2022 02:51:20 +0000
-Message-Id: <20220808025121.110223-1-jhlspies@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        Sun, 07 Aug 2022 21:14:21 -0700 (PDT)
+Date:   Sun, 7 Aug 2022 21:17:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Molly Sophia <mollysophia379@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: qcom: sc8180x: Fix wrong pin numbers
+Message-ID: <YvCOPn85G3tKlc/l@ripper>
+References: <20220807122645.13830-1-mollysophia379@gmail.com>
+ <20220807122645.13830-3-mollysophia379@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220807122645.13830-3-mollysophia379@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Switching between falling/rising edges for IRQ_TYPE_EDGE_BOTH on pins that
-require debounce can cause the device to lose events due to a desync
-between pin state and irq type.
+On Sun 07 Aug 05:26 PDT 2022, Molly Sophia wrote:
 
-This problem is resolved by switching between IRQ_TYPE_LEVEL_LOW and
-IRQ_TYPE_LEVEL_HIGH instead.
+> The pin numbers for UFS_RESET and SDC2_* are not
+> consistent in the pinctrl driver for sc8180x.
+> So fix it.
+> 
+> Signed-off-by: Molly Sophia <mollysophia379@gmail.com>
 
-Fixes: 936ee26 ("gpio/rockchip: add driver for rockchip gpio")
-Signed-off-by: João H. Spies <jhlspies@gmail.com>
----
- drivers/gpio/gpio-rockchip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Fixes: 97423113ec4b ("pinctrl: qcom: Add sc8180x TLMM driver")
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 099e358d2491..48b948723077 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -417,11 +417,11 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
- 			goto out;
- 		} else {
- 			bank->toggle_edge_mode |= mask;
--			level |= mask;
-+			level &= ~mask;
- 
- 			/*
- 			 * Determine gpio state. If 1 next interrupt should be
--			 * falling otherwise rising.
-+			 * low otherwise high.
- 			 */
- 			data = readl(bank->reg_base + bank->gpio_regs->ext_port);
- 			if (data & mask)
--- 
-2.30.2
+Regards,
+Bjorn
 
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> index b4bf009fe23e..704a99d2f93c 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+> @@ -530,10 +530,10 @@ DECLARE_MSM_GPIO_PINS(187);
+>  DECLARE_MSM_GPIO_PINS(188);
+>  DECLARE_MSM_GPIO_PINS(189);
+>  
+> -static const unsigned int sdc2_clk_pins[] = { 190 };
+> -static const unsigned int sdc2_cmd_pins[] = { 191 };
+> -static const unsigned int sdc2_data_pins[] = { 192 };
+> -static const unsigned int ufs_reset_pins[] = { 193 };
+> +static const unsigned int ufs_reset_pins[] = { 190 };
+> +static const unsigned int sdc2_clk_pins[] = { 191 };
+> +static const unsigned int sdc2_cmd_pins[] = { 192 };
+> +static const unsigned int sdc2_data_pins[] = { 193 };
+>  
+>  enum sc8180x_functions {
+>  	msm_mux_adsp_ext,
+> -- 
+> 2.25.1
+> 
