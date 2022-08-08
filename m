@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9474C58C248
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Aug 2022 06:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7281358C24C
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Aug 2022 06:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231277AbiHHEOY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Aug 2022 00:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
+        id S232358AbiHHERA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Aug 2022 00:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbiHHEOY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Aug 2022 00:14:24 -0400
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20692B7F4
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Aug 2022 21:14:23 -0700 (PDT)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-10ea7d8fbf7so9301471fac.7
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Aug 2022 21:14:23 -0700 (PDT)
+        with ESMTP id S231263AbiHHERA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Aug 2022 00:17:00 -0400
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C4D11152
+        for <linux-gpio@vger.kernel.org>; Sun,  7 Aug 2022 21:16:57 -0700 (PDT)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-10edfa2d57dso9387414fac.0
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Aug 2022 21:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc;
-        bh=qmLBxFW+3s+rCmQcO8LAZd85qoQ4WtG1SRphg8cshdY=;
-        b=aQe40ynVPeQxBTcCJez+hV9n972g8nFlngA7qNiWeuOD7UL705xTobhQf5AK4kN3jK
-         zI9Wwrn475srTl53VcrJmgUpAEH73qUwwpDPzylyogm3CrhDy5U88ESEFyhOlWNiwybR
-         nsb6HQO0r1MEY67ropqdZgAQjxEg9rJeK+zvwQtrVdHPcQTNyyuGuI6be0sc1T26Jy9G
-         LVlJgHXpEWd72snf/DI35geV8DPBQ5GNaPMEDm0SZzIFDbTcXf3fy/NOs6/of04FYDq7
-         3qLTQ1RckM8nylEw1PHbPCmNvuXRsC8iuZXU8sH0Fxzxai7hwmHbuvrsLgP3HcOUkVYI
-         +jbA==
+        bh=A1wQCN+G4M0V+6iscdY6rHphe27jvr6cvhQav4ATh4g=;
+        b=nhupKK7xasVVbtSVOhRdLJMsQ2LhjS6UtriAqRLXljpCMaLNKxLm8NpX8xPevInbmD
+         pVdMC1GqDlyaeV+VNvIjq8fboL0jdOEXkuvsXe/dScrW0lXzKTmzAH4VvmY2aIqrXYan
+         k+SuhI0S40GulBJFJ0jXzvSF8exODF8W2CtwxQ9dKlh8eHcGusyvLkMPWL93/FDVGgCx
+         KLEyw495xIr+KXgNqwYELDTbcjnCtcS3TgK1QXOmKPCzuC5dbOe37s2oiTFT/M8Aq9xV
+         j86eDiPl/1Dcq/JywF+/1xi3tojqYD2jCixmVnut0e8UyRWD7wVO6eb/WjNnkyLQoVOC
+         kaew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=qmLBxFW+3s+rCmQcO8LAZd85qoQ4WtG1SRphg8cshdY=;
-        b=iJfQAd87GmznSzvpb6cqmq/1hq9XNtxLgYoy8rxfdTZTL4S2sE81P/DeVP5skIdVeC
-         hdq+tWZ5ruszlvGjQusJXhv9r5IhRAWqE+cBJNZbNBrEEReobRsGj63Fs2wx6CQyZnmn
-         iLPO8zokNfzcRum0ntL2v24KPAqf1M4ajJXGRxYNmsqasOq0lMIVhWDG5RW4qCPC/uJu
-         eXTR+luIfznhAg6sB40ATz3qF3Hz80+jTcUsXEBNZECiswlhBogzMbmG6aelCKcpzetI
-         VzNusPPtYpM2IdC54sUZ7Ff9XfAJumabRFmNUDOYsXewaV00JfJJ/+97vgFs+ldtPe1r
-         iT+g==
-X-Gm-Message-State: ACgBeo2cQLcVaHFi68L1O08tRkNjxcuzpXMHtVxB53CUtFTpehLOlwLn
-        l8Bg6v7QsdUw1o01q/GYlYRrvA==
-X-Google-Smtp-Source: AA6agR7eKw+LY/1AYw4Clvjj3N7KQ2qVzP8/QS88PQyLyxWL4cigwgsrj5QDPvrVAq1rFHRLHZkALA==
-X-Received: by 2002:a05:6870:32cb:b0:10c:289b:76ba with SMTP id r11-20020a05687032cb00b0010c289b76bamr11677580oac.72.1659932062441;
-        Sun, 07 Aug 2022 21:14:22 -0700 (PDT)
+        bh=A1wQCN+G4M0V+6iscdY6rHphe27jvr6cvhQav4ATh4g=;
+        b=f34UQyLt9JxVFVV7PSH7tFuWS+hdwrUzLqmF75VG4nILQ50Y6DHPE6oP/yScgFaMv3
+         ZmKQUD7BjAwLx9VKNXp+ZIXYUA0gdZkUCt70rBy1uv7Xb19bmo0kFZ6FgkzSI7+DfbEg
+         Tdx5XmwSYngEI03KN341yeW+CzFOEP5snhprAV5vGYfbLOM079qfYQE5+RpPRKSkju5W
+         ScopU5M1LOHjpvnptwn3HCuaECstwXeKb7pvLOdyJPKUTRvjwcHgSTYSsGR2Po/vhqgI
+         yj1zesDz4IDyLt5CPK4cc5Z9Q982dEaiOzhlTX045LrE3PLbQEuVfHBOM9hLFR73VLrT
+         grbQ==
+X-Gm-Message-State: ACgBeo0QxWBenpJHHyO3eUpHK2wwVU2WzhfV3I+iotcvtDuIUnlNGDb8
+        lo19tTzoJI2NJbODe4XphaCj+z5rb5IT/w==
+X-Google-Smtp-Source: AA6agR75dIdMIrCZ6M5BWdLYUfC/wGKyZq7QqmGYD5iCbAbL/Os4tkFoP8YSIGPlOY0u2bfkmwMNJw==
+X-Received: by 2002:a05:6870:a689:b0:10c:289b:78df with SMTP id i9-20020a056870a68900b0010c289b78dfmr7905740oam.25.1659932217063;
+        Sun, 07 Aug 2022 21:16:57 -0700 (PDT)
 Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id n21-20020a9d7115000000b00636df4fd5eesm548322otj.34.2022.08.07.21.14.21
+        by smtp.gmail.com with ESMTPSA id u11-20020a9d4d8b000000b00636d76b607bsm849528otk.30.2022.08.07.21.16.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Aug 2022 21:14:21 -0700 (PDT)
-Date:   Sun, 7 Aug 2022 21:17:02 -0700
+        Sun, 07 Aug 2022 21:16:56 -0700 (PDT)
+Date:   Sun, 7 Aug 2022 21:19:37 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Molly Sophia <mollysophia379@gmail.com>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -55,14 +55,14 @@ Cc:     Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: sc8180x: Fix wrong pin numbers
-Message-ID: <YvCOPn85G3tKlc/l@ripper>
+Subject: Re: [PATCH 1/2] pinctrl: qcom: sc8180x: Fix gpio_wakeirq_map
+Message-ID: <YvCO2SfpXtTfawW5@ripper>
 References: <20220807122645.13830-1-mollysophia379@gmail.com>
- <20220807122645.13830-3-mollysophia379@gmail.com>
+ <20220807122645.13830-2-mollysophia379@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220807122645.13830-3-mollysophia379@gmail.com>
+In-Reply-To: <20220807122645.13830-2-mollysophia379@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -75,41 +75,42 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Sun 07 Aug 05:26 PDT 2022, Molly Sophia wrote:
 
-> The pin numbers for UFS_RESET and SDC2_* are not
-> consistent in the pinctrl driver for sc8180x.
-> So fix it.
+> Currently in the wakeirq_map, gpio36 and gpio37 have the same wakeirq
+> number, resulting in gpio37 being unable to trigger interrupts.
+> It looks like that this is a typo in the wakeirq map. So fix it.
 > 
+
+Thank you for finding this, I've been scratching my head about the
+i2c-hid interrupts on this gpio for a while now. This indeed looks like
+a typo, and the documentation confirms that 44 is the correct PDC irq
+line.
+
 > Signed-off-by: Molly Sophia <mollysophia379@gmail.com>
 
 Fixes: 97423113ec4b ("pinctrl: qcom: Add sc8180x TLMM driver")
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
 
 > ---
->  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> index b4bf009fe23e..704a99d2f93c 100644
+> index 6bec7f143134..b4bf009fe23e 100644
 > --- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
 > +++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> @@ -530,10 +530,10 @@ DECLARE_MSM_GPIO_PINS(187);
->  DECLARE_MSM_GPIO_PINS(188);
->  DECLARE_MSM_GPIO_PINS(189);
->  
-> -static const unsigned int sdc2_clk_pins[] = { 190 };
-> -static const unsigned int sdc2_cmd_pins[] = { 191 };
-> -static const unsigned int sdc2_data_pins[] = { 192 };
-> -static const unsigned int ufs_reset_pins[] = { 193 };
-> +static const unsigned int ufs_reset_pins[] = { 190 };
-> +static const unsigned int sdc2_clk_pins[] = { 191 };
-> +static const unsigned int sdc2_cmd_pins[] = { 192 };
-> +static const unsigned int sdc2_data_pins[] = { 193 };
->  
->  enum sc8180x_functions {
->  	msm_mux_adsp_ext,
+> @@ -1582,7 +1582,7 @@ static const int sc8180x_acpi_reserved_gpios[] = {
+>  static const struct msm_gpio_wakeirq_map sc8180x_pdc_map[] = {
+>  	{ 3, 31 }, { 5, 32 }, { 8, 33 }, { 9, 34 }, { 10, 100 }, { 12, 104 },
+>  	{ 24, 37 }, { 26, 38 }, { 27, 41 }, { 28, 42 }, { 30, 39 }, { 36, 43 },
+> -	{ 37, 43 }, { 38, 45 }, { 39, 118 }, { 39, 125 }, { 41, 47 },
+> +	{ 37, 44 }, { 38, 45 }, { 39, 118 }, { 39, 125 }, { 41, 47 },
+>  	{ 42, 48 }, { 46, 50 }, { 47, 49 }, { 48, 51 }, { 49, 53 }, { 50, 52 },
+>  	{ 51, 116 }, { 51, 123 }, { 53, 54 }, { 54, 55 }, { 55, 56 },
+>  	{ 56, 57 }, { 58, 58 }, { 60, 60 }, { 68, 62 }, { 70, 63 }, { 76, 86 },
 > -- 
 > 2.25.1
 > 
