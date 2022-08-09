@@ -2,74 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 048ED58D375
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Aug 2022 08:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA6358D4E8
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Aug 2022 09:54:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbiHIGAM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Aug 2022 02:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
+        id S240049AbiHIHy0 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 9 Aug 2022 03:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231913AbiHIGAB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Aug 2022 02:00:01 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B69D1F601
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Aug 2022 23:00:00 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id p14-20020a17090a74ce00b001f4d04492faso11208703pjl.4
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Aug 2022 23:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=mFQC/N9cSWfgQ4UbI4s3F4LPxgg1eXu06ZSS3FaHZoM=;
-        b=MsDa8Az3S4KsVkdkorxxEDTI4WtAvOt9n5c+wXNMvDTwTmNWcf/rIDGZDntXFiWpve
-         CVUOAm6BUgAKo8n9tuZm27dTz8SEatfWgAYxv/JDMgDfMpkYN5E+7yMDckk9Ol8/eeyq
-         fL1MhegqGlDaPO5VmZFZN0KS+GaSntBd6l6EblfRUSLNnXE5FocSZoMuldkZAWZ2MOOw
-         JUXVAbJY2e6QT0jYOVN0dtS1v7CBLK8y6j5ouHj9IjJF4qsXxXLXrnvuvuSMLcprvnj/
-         zG1cKB5Uh5zQxvpkEjPmfiDpHUuqFPqt9ENXgzzK6yvXP/eI9e3azlIomwJOTgoX4tyW
-         5bdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=mFQC/N9cSWfgQ4UbI4s3F4LPxgg1eXu06ZSS3FaHZoM=;
-        b=hwOu0EMMA+G4rM7To1GZ400UYm5805GeXtcz5SrthbPyh3t9o9hpvEjw5i+Ar71bq9
-         TbwXEHh1e5f0T5we9yR4x6K6pwoGOJ1PcW6ju1hmVLJw64RTwWLG8H/EC9r+8wvfiSYu
-         dT/tXG89kNMatffaJLh4zVhEVNn9jYLqD2S+01e8lB8g1hfDRQx+slZBegfM3ZI9Pgzu
-         Kik3IEYCF9j0GjAf2xmfftilSj5tPljpRrefv40n3YyFCfVYinFqe07XIguLuhNwm897
-         CUrVs6OEbAja75eDQil5GJSC28SgrJA0Wg7HALiOTvqCOCjeewGPu6bwgxRPzgwUWG1a
-         mznQ==
-X-Gm-Message-State: ACgBeo0kNzL+kSFj9tNRQqEwIZZfXHZMi2qNELiAmTPYB5pE8UCtWP09
-        JkccSIWejNlVFhQ7OV8jQK+oUoVpwFHojw==
-X-Google-Smtp-Source: AA6agR7qQg58oLdSfqVgsKNy9KPUaC7JbU58UK7CpGVG5C2cCagc1UJDDggrD7cos++erwbBQIA/jA==
-X-Received: by 2002:a17:903:41cd:b0:16e:e0c0:96d1 with SMTP id u13-20020a17090341cd00b0016ee0c096d1mr21956020ple.169.1660024800120;
-        Mon, 08 Aug 2022 23:00:00 -0700 (PDT)
-Received: from localhost ([122.171.18.80])
-        by smtp.gmail.com with ESMTPSA id n2-20020a170902e54200b0016a058b7547sm8837951plf.294.2022.08.08.22.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Aug 2022 22:59:59 -0700 (PDT)
-Date:   Tue, 9 Aug 2022 11:29:57 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V5 0/8] libgpiod: Add Rust bindings
-Message-ID: <20220809055957.ujmhqodfz2lxj6hf@vireshk-i7>
-References: <cover.1659442066.git.viresh.kumar@linaro.org>
- <CAMRc=McD8ouds=t0GtOOUY6_F9ecqEKg=7XvU31=aZDL3+3u4g@mail.gmail.com>
+        with ESMTP id S234860AbiHIHyY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Aug 2022 03:54:24 -0400
+Received: from de-smtp-delivery-113.mimecast.com (de-smtp-delivery-113.mimecast.com [194.104.109.113])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CFDEB2127B
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Aug 2022 00:54:23 -0700 (PDT)
+Received: from CHE01-ZR0-obe.outbound.protection.outlook.com
+ (mail-zr0che01lp2113.outbound.protection.outlook.com [104.47.22.113]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-7-gq6XmYScMu-XZXBk43DfZQ-2; Tue, 09 Aug 2022 09:54:20 +0200
+X-MC-Unique: gq6XmYScMu-XZXBk43DfZQ-2
+Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8) by
+ ZR0P278MB0027.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1a::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5504.15; Tue, 9 Aug 2022 07:54:18 +0000
+Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::3510:6f55:f14a:380f]) by ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::3510:6f55:f14a:380f%8]) with mapi id 15.20.5504.020; Tue, 9 Aug 2022
+ 07:54:18 +0000
+Date:   Tue, 9 Aug 2022 09:54:16 +0200
+From:   Francesco Dolcini <francesco.dolcini@toradex.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-input@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v2 0/5] mfd: stmpe: Probe sub-function by compatible
+Message-ID: <20220809075416.GA7736@francesco-nb.int.toradex.com>
+References: <20220712163345.445811-1-francesco.dolcini@toradex.com>
+In-Reply-To: <20220712163345.445811-1-francesco.dolcini@toradex.com>
+X-ClientProxiedBy: MR2P264CA0032.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500::20)
+ To ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6ceb634a-9b5f-4b10-2e90-08da79dc5c97
+X-MS-TrafficTypeDiagnostic: ZR0P278MB0027:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: XtA9Yl/F9q26mjSNccKpCl2fLmTjduNkRAQS/KL6QcX+fJpKRPcalB8NFhPMyxpf+UjtnFKsyycLBumekZ4/UH5WbagPQYc2fT5Ed6/uor+TbiPy4+r8LcnsZYY/6erjjY3Kv1ZbrohXrKZeiHuamr6DwzMTrYGlN10bmeTsBYSW780gtGNjarGqzhB64fIYr0xrDpJYgxZ0JgfbzvEF/kInUmKInUOzp0FooRiEv1M0Kh0SCX5O6HMPJSJtfL5LuYLd60TCiE6nuzVlBwZuO/WgKjW8MFOvTyssQS464Rxzcetp0lJu+jp2TmXW36ncaJcYGv7NgieVQbFNc0eNzEHSYtY9iEbX+5p/i/TEtzUEYy+3+c+3XfKYAOUXfF/kX99X/IIM02ka7mQsHNWpXQxCLA1xf9bj9uE2tzd9PqGMq+Zz0TeZdNyzDK7xxFUY+7g0vkBmOk0Tx1PyJXOOD6RBVCOClooozprbPqAYVfJxWdU80bNKmyLRs3ODmfmE6TimdnkkFUI8uf0SEfPmwsXcR8jVdBPx2LH2qciYsxf3n54E7JpF2a2tzLyQ8aQlGZT7UmNvVdOFJs1cgTrX3aBFhLSbZhnCiGQjQVjEGgFkzNFJYP43qzOmGHlXvdDIo7e5L/MzWC6OXjn4fmJpLn7ygZ/cH6AO52kTEJ5x8qLPYbZpsMP4oBSbuSxa/EmRnBcQTxj/W3+J6wu3bJpRsAvWEGYgFscN4DQjEgl02fJ9xnpip1hF5ZLiVQFEn/oAuJCBKkcfM7LAJoK691A4V8aajIn/ursyBqf0nTlJoxM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(396003)(136003)(39840400004)(346002)(366004)(186003)(316002)(107886003)(1076003)(6512007)(26005)(54906003)(110136005)(4326008)(8676002)(86362001)(33656002)(66946007)(66556008)(66476007)(38100700002)(38350700002)(478600001)(6486002)(41300700001)(6506007)(83380400001)(52116002)(4744005)(44832011)(2906002)(7416002)(8936002)(5660300002);DIR:OUT;SFP:1102
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WTyKcGn21he3esUKip+IXOmstR1G+5u3MCjkH3P5uTGOBPT+Ik563qG7WIV8?=
+ =?us-ascii?Q?nXL6yQMOrueKLYOZGFrzO8f+X+hAN7ZiimQB8BL0UBWWAaCKuw0nCq+8XOoH?=
+ =?us-ascii?Q?wgfbCieUzJ+JBORj6NsL6rdZ3/DZ8MHeX4ysU3nHdHW86vVtgqjIKsvv7xpm?=
+ =?us-ascii?Q?NH19Y5gRtwYE3PPEZUCeboDrxQShIevdIWcyNZh20PDteOUDOQYUudk1U9YY?=
+ =?us-ascii?Q?OLU8AuyskQoKjHYQbbIcAKYcm2pCdceh7EDFZfqwpG8JmdVmI5hd3lnbgWPK?=
+ =?us-ascii?Q?eiLsoMRV7/o7dbBBMEEHjYYYaAmNPrl+X+88UQe+cTFLe9HnM0YU0ySdmK7Q?=
+ =?us-ascii?Q?4BmxUUmxu56Km6I//Cr86qa7t+oOQ7yB+ML7ZBFCmPzmkAihbIuMQdUuwOac?=
+ =?us-ascii?Q?6XmLT/0CAVzqE6zuAubkIfTAdcJG0pD8AkJeZYCCgpevgEZdoTZ3qWtJJFEl?=
+ =?us-ascii?Q?q9jfEph9Ew/DPXCX9u7hmHibwJR6LTJ+8CReSHYQzvwiC959Un/CmkwhsASk?=
+ =?us-ascii?Q?c6Il0aMiNbiTf2i5hN/ibDxUyPOrPlzvC0YbVnn1pAfAT8B3rsG9RNCZo5o4?=
+ =?us-ascii?Q?+BqPPgx4CZ7v4/R6bGMKZPf6EVMwJnY5xA9uEDyVnX9XPWbGC8nNtJxL4h+B?=
+ =?us-ascii?Q?geM03YIo+8fHRwd2Lx4KfSNObTBhnZXfsZyPDAyo++86uRrtM0VXaJkSBMyq?=
+ =?us-ascii?Q?5zmYtjluhq0hdUh1utcC9AdCvCSvO15lyJwwfna2hf/qCaBuHAvXw2LdpJIe?=
+ =?us-ascii?Q?aw7AQt5IAEPjhNwOQCQNBKyLlNa9B59snOAzdX43egk0m4G+CFmHYagwxxTr?=
+ =?us-ascii?Q?5Kr1N7Y0Ev6oPqrq7gE/Pg/Fil9TEth6oomO7jTB2jrkTwFfFF9PS24cTt5C?=
+ =?us-ascii?Q?Svb/o2/o4Tw2AW0Olph4BYQ0hlbPJmFMuF4U9xoHY3uxMvMPbyINPQDVFR8/?=
+ =?us-ascii?Q?uIvbkMlnhrEEl6615Ca/DWGCzzda5B5/fJI2UQL9eRLCCvDbgG3snPU9oamT?=
+ =?us-ascii?Q?nnpnNPBPj0znsg8+TzAp1KbpJfJjpHucVe+/3DTYyS+3yhzXp5RkpaDwd6mn?=
+ =?us-ascii?Q?RqCqw9PtxKNtLDQedAaZOxjdITHqGvzlz9l2TqTIJ1QuXa6JYYbkKJsAanhl?=
+ =?us-ascii?Q?m0ERFuKQjM7q9nYxd2xCLBFloXK+xH7qPsBrNI+XGEvvYTUcgiPG/KozeWb2?=
+ =?us-ascii?Q?x7XYlPMurl25Pd30Qhr/lv0T8iZCPIA1VDgcWPVrGOevCys9Nix7PlGasiXA?=
+ =?us-ascii?Q?wQSGmzZCF6FRy7+mDonZSMI6QaB01bQYh+pzznEugDxECFtpzoA5JeyRQGKy?=
+ =?us-ascii?Q?jkcQhpN/jpiz1UjBndQHim0KY+FEYKBKi5C2QhjcujA29+UO0pCG+ObGnAWp?=
+ =?us-ascii?Q?cjji+/abkcQ5nF6ijZgFRXgaoYO/4k/9nludH0y9GEITxq2/XEy0CJCV9PBK?=
+ =?us-ascii?Q?KjLFikzeBTs6WmZgLXyGVFKxZRd4yjWZY9KD6zqNL8G1doTvAlhPs7XC0ASO?=
+ =?us-ascii?Q?0PnVX4GllyrmSnJfP25KPV6gyhIYq0h331uhWmg6HRurI2b6YTOeWmFDCzef?=
+ =?us-ascii?Q?E+M9GGFnwJJ0YjBuYcOxPJWZ96JJDoTKvegoGDbf0n+D6G1Sz/w2X+g8unJB?=
+ =?us-ascii?Q?uw=3D=3D?=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ceb634a-9b5f-4b10-2e90-08da79dc5c97
+X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2022 07:54:18.0617
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VQTNtcqtQqAoiKFN3Z9xZZ3YqIhHoTY2l4waA8B+E253rARvr6YBpFZXUaTHjWejGVFiojUTlIGe6yG0AR7IGP67kSHkm/+25Saqg9TX0eo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB0027
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: toradex.com
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Disposition: inline
-In-Reply-To: <CAMRc=McD8ouds=t0GtOOUY6_F9ecqEKg=7XvU31=aZDL3+3u4g@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,67 +115,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 05-08-22, 16:25, Bartosz Golaszewski wrote:
-> Thank you for your hard work on that, we'll get it merged eventually. :)
+Hello Lee,
+thanks for picking up patches 1 and 2. What about the others, should you
+pick also those? 3 and 4 do have all the required acks, I'm not sure
+about 5 however that has the ack only from Krzysztof.
 
-:)
+Francesco
 
-> I'm just letting you know that I am following the discussion. I sadly
-> don't know Rust well enough to be able to review the patches in detail
-> but from looking at the code, I can tell that you followed the C++
-> bindings in how line-config works.
+On Tue, Jul 12, 2022 at 06:33:40PM +0200, Francesco Dolcini wrote:
+> Hi all,
+> This series update the STMPE MFD driver to use of_compatible to probe for
+> sub-functions instead of using hardcoded names.  Matching by name does not seems
+> in general a good idea, in this specific case it is even worst since the node
+> name are not compliant to the current naming convention (they are not generic
+> and they do include underscores), and because of that recently
+> we had a regression introduced [1].
 
-Not really. I wrote the wrappers based on include/gpiod.h only and
-didn't look at C++ bindings for them.
-
-The only point where I looked at C++ bindings was when I was writing
-examples and tests. I am not a Python guy, so the only thing left was
-C++ :)
-
-> Looking at how line configuration
-> works in C++ and Rust bindings and how I struggle to translate it well
-> to Python, I decided to take one step back and revisit the line config
-> in core C API.
-> 
-> My goal is to tweak the data model in a way that - while making the C
-> API slightly more complex - will allow high-level bindings to expose
-> more elegant interfaces using mutator chaining (like what is customary
-> in Rust and what is also possible and often used in C++ and Python)
-> while reducing the usage of quasi dynamic typing using std::any in
-> C++.
-
-Makes sense.
-
-> I wanted to post my work this week but didn't manage to finish it and
-> now I'm leaving for vacation. If you want to take a look, the C part
-> is done and available here:
-> https://github.com/brgl/libgpiod-private/tree/topic/rebuild-line-config.
-> C++ part is in progress.
-
-I did have a look at this yesterday. I would like make changes towards
-this once this is merged, so I don't need to do it again.
-
-> I hope you won't mind some more reworks to the Rust API
-
-Not at all.
-
-> but I'm sure
-> it will be much better in the end and more like what Rust libraries
-> typically look like.
-
-I think that the C API is still getting worked up at the moment and
-the modifications (at API level) won't stop after this too. We will
-see more improvements going forward, which is the right thing to do in
-order to get a robust and more user friendly API out of it.
-
-I worry if this will keep happening and keep pushing the Rust patches
-to be merged to libgpiod. I am fine to resend the patches on top of
-the rebuild-line-config changes as well though.
-
-FWIW, I will still be around after this is merged, to write/review
-Rust patches based on any changes to the C API. :)
-
-Enjoy your vacation.
-
--- 
-viresh
