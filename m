@@ -2,305 +2,354 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CCD058DA5D
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Aug 2022 16:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F5458DA9C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Aug 2022 16:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243862AbiHIOb7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Aug 2022 10:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53414 "EHLO
+        id S244049AbiHIO6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Aug 2022 10:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243509AbiHIObx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Aug 2022 10:31:53 -0400
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com (mail-eopbgr00047.outbound.protection.outlook.com [40.107.0.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7F8C1C903;
-        Tue,  9 Aug 2022 07:31:47 -0700 (PDT)
+        with ESMTP id S243505AbiHIO6J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Aug 2022 10:58:09 -0400
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-eopbgr150075.outbound.protection.outlook.com [40.107.15.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8156315A3F;
+        Tue,  9 Aug 2022 07:58:05 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I6w5ZVmjETE0CTALfu64EdIqOiUUM57l/Fdv6yfRi3cW0vOPfW//fsQgN3Myhh5Lg3dTHrCE/uDI+knyXRcYZNJgWoNbVorx33BB7R20PkoGRye6hEjKDCpuDkUmq8Kv8Dna3gxOc8pVFbRzRnuHRhbWpPEfJlHiuq+cGlBiia1oP1mpkGiC/p7X2wMlVW4Qom6dJ+nH95pQiedCUyR8kKe+nGOcV8ytqIzW2AoxLSClnl9xR4Yin/Rv/5ywr5a4sOd+PQ8BRDaXhRuVzB/w7upeKGbbpQJ3SReJipHFKTE+ki7GmSsp4Y6lbwOxj0If8clKhf4SY7LgtMF5M217Zw==
+ b=iGiDQ5ZyjEtapMJ1XfLL+76Vc7E64mkiPDPetGsaz0rB79+LEW43XJCA7p3TqOe7e8BhyZqBTKXdX3HkL1Ao41lTjx0izLuZfMy/dyaeNPDMhVkNuMpaDWufb1GMDqV6sOEIIwlogw1p43Oqd0Pz9Ur8t329CRuOeeYLvd2+ipffa2EPXlpjrTzE4IC+Pn4mF1xT2DcndlVwBsr6AnkPJcWWnY1DasYLYKoPdoWpr4uewxTmt+7hrdGuvsTCZjIfZ/RsFZn8f+vLlWEtuwxlVsH942xv44ltuesmkblLg0nIhegzLAVsWlyU2TcAiwnRWra63/gbIsYr3UMP/1YhjA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wxu/U9tqMOHp9+XNoADjX5mI6QN1TkJOQzcZtKHbtg4=;
- b=YEklJaZU7cR5FMc9r98DqEQjj8LossTlZM9bMWaGlPaMsPIbPU4wrdcOFuCU7jKw1AOSw7rOEz+4KDqIchMQ2UVvwwvCEyafpk2aDiC35mzAqK7f4n3XJQ/F3uKeqDI8qo2/wGbKEX5qjcHQkJvFewcaLEHp0IY9xBKG4D6SPz9MSSGD0YC45ud6bUmbZpORfk0KKf4ov/TsXJPM+Z4g30O/wcnwy4fgBgaB7uIQF1MF3ICgra6xOZFnVOgNUWIaIaqnQZQ9v0Ueo2YxN/astOq/dQifPUP65KIkSWJKMTUDDdMzaK3ew0v/Kp7HA9LSzbEODvNLobcrtw9/aR1WBQ==
+ bh=WwAQULlBSa6fXxOXQS3Rvc9fzDyHC2TgFhlcsljP5Jk=;
+ b=esq5MvgG8Kr4TSTBOuSUwSlf7tRZrw2y+TYsPBgwmW2ETOHSCrrr2Pq5fDHUglA8fD+IhDmtXkmti7O2n/gmXpXSZmp5imkdsXq+xC/5NBkW/z7udytTfafiwrxev8RGjpZqpgpuqHIjCHA6BjNYDY99Eqbch2sWcL3KO4WX9STO6ocmXn+qEfztDInryQg+LmA2YnIzmcuJqsUenLC2euTBv6MuUhZVGhRhR5pSwdhS/cz+gux/xKfQiDpREh+oq09kE+65RkyDwNthYT4EUhJhRJoUli7oHbRYcngxgJwmJgGPWoj5NzRIUrSzgM8777unbsRvB62kaa/Dp2n0Xw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxu/U9tqMOHp9+XNoADjX5mI6QN1TkJOQzcZtKHbtg4=;
- b=W8qho5OXyBj/CQp4zCo6LijpyVONMR7aBjnzQP9f1UcgQ9zLuCQsa6SgJK8rCVZujognHSq8vntvySiCmUTh4LxVTEnFFnhX7/Or6kWQuPoXRWxnd36QR3K7RZzjn7+atLc18Y0Rx18UBdWQbC3T4loU8vcDHz9TNDqHWGSzHEE=
+ bh=WwAQULlBSa6fXxOXQS3Rvc9fzDyHC2TgFhlcsljP5Jk=;
+ b=V5fLYr8TqTlt2ZsqiMpy996BYFuYcsDcjzZ8NRYLxMqfdBaNZRH4E73Inmdsxq8adsPH9v67toh8Hft6Xbt2OBVt/wynnJcqId4lalXiDNYY9Nz1rRdMAEA+dZ+UYzcTzQUH2kpvoPq/IbNDlXnOF1z544bEQESZRtaiip1fvviw5A6bIdD7QMkVq6RCpBhYC3rFUGDnCwB6AP9mtUqQHzKvUZgL0Tc0sREr3EUPrmGomscQUE9B/7+rj2eI9RwKDo0oonlSKUG09GPlzX9f7j+4RaixgrUlpX1ifHVqpDyOty7/3vSQf93Vs41dkIipmEHFogiObK8tdSflckwTPQ==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM9PR04MB8274.eurprd04.prod.outlook.com (2603:10a6:20b:3e8::23)
- by DB7PR04MB5226.eurprd04.prod.outlook.com (2603:10a6:10:21::18) with
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+ by DB4PR10MB6166.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:389::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.20; Tue, 9 Aug
- 2022 14:31:45 +0000
-Received: from AM9PR04MB8274.eurprd04.prod.outlook.com
- ([fe80::747c:397f:a003:dbca]) by AM9PR04MB8274.eurprd04.prod.outlook.com
- ([fe80::747c:397f:a003:dbca%5]) with mapi id 15.20.5525.010; Tue, 9 Aug 2022
- 14:31:45 +0000
-From:   Shenwei Wang <shenwei.wang@nxp.com>
-To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        imx@lists.linux.dev, Shenwei Wang <shenwei.wang@nxp.com>
-Subject: [PATCH v2 3/3] firmware: imx: add imx-scu GPIO driver
-Date:   Tue,  9 Aug 2022 09:31:05 -0500
-Message-Id: <20220809143105.17967-4-shenwei.wang@nxp.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220809143105.17967-1-shenwei.wang@nxp.com>
-References: <20220809143105.17967-1-shenwei.wang@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR07CA0082.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::23) To AM9PR04MB8274.eurprd04.prod.outlook.com
- (2603:10a6:20b:3e8::23)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Tue, 9 Aug
+ 2022 14:58:03 +0000
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b%3]) with mapi id 15.20.5504.021; Tue, 9 Aug 2022
+ 14:58:02 +0000
+Date:   Tue, 9 Aug 2022 16:57:55 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>
+Cc:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Kuan-Wei Ho <cwho@nuvoton.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/4] gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+Message-ID: <20220809165755.252f34d0@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20220728155652.29516-2-henning.schild@siemens.com>
+References: <20220728155652.29516-1-henning.schild@siemens.com>
+        <20220728155652.29516-2-henning.schild@siemens.com>
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR16CA0011.namprd16.prod.outlook.com
+ (2603:10b6:610:50::21) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:102:269::8)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b6d2521a-adc7-479d-a9f6-08da7a13e25e
-X-MS-TrafficTypeDiagnostic: DB7PR04MB5226:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97237726-bafb-4e86-f019-08da7a178ee8
+X-MS-TrafficTypeDiagnostic: DB4PR10MB6166:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gzkSqC1ztb7EBMb+qM2BSS8UVGNhH7Pm4BqiY/bJxPfUVaYw9e4O8SV1Z9b1/5EDAPGMeAXtYnxmM7NII7kYV7Woh7jnkbOBBzwAPWP/YLTbqQJnbpr6FvOj/lsMIXAELHcASiVNPXEzEG9cTVz6Px+a9n8B9uuXCDvuzEMDw70njAMo7WMgGCHTe+P7G4yL7oxhO9Wb6ER3Ea0V4iqCiGewlOdTGdZA+vI2iKU5bgYKgLheg8Tk1bXaPRkVAnINmD9NOsCobqcXfuueDsgN6aXQraOABji3zEoQ2/DirnWlWIOVNduhNKVjaNHWEAFViTc0gDBJtMKa0jXv8ogVn0AaC782lTXEYBInYlNSzWG3nbo0XwvImcPAN6t+h4IjM8clrK2Z6OUaIhY9dFwgSZCL/51mOyHpkFd7IDA1qu79fgf1GNlRqBRZkKBfEHB2YsoXRbHA5db/+yNVkkHNh5vi0pRD773GpNJb/Fh5RDfT9+NnuBaQaPUEsiDjtKERXJH2mLfO6RNIkprawVGolY0k67ix7cEeJruAXiMNC+GihFPsqOmVLLcRpWunhD72mf/RlYZzpZnirWjLz4+L9R82++24yxJSUVbTbUYEDNZ8zXrZl+XubobDMtln5khl1uy6AzZojHaebKHtm2tKdJaPpDiMvMsIh0Fz1imGsdyeQEM7ORLzMp/Da8nheqwvPiMGvfKTIlu1XYBOkqwTOCIzLbzFqUiEhO52tyKXG/5Zp+USbFxxGS28OF75hLCUJqCXmpetJXiccZ7mluXYqh3qZBNFwFJjPsaXc/Ap2co=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8274.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(6666004)(55236004)(2906002)(52116002)(26005)(6512007)(7416002)(6506007)(44832011)(8936002)(6486002)(41300700001)(478600001)(36756003)(86362001)(1076003)(2616005)(186003)(83380400001)(66946007)(5660300002)(6636002)(316002)(66556008)(66476007)(38350700002)(4326008)(8676002)(38100700002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: ZFxhGANjr/UPwOaqm23ldU+DTBA30nBLhhn1Tol4hTUyLc3EOhIuNqzNi9lvRxy19gkvDn3C2rPp/VIE/vo8T7abTunPrT+nAt+gzp5KjaKQOPRwvoazYQbVnQ4WWkGvYYx+oL9eGZsaWVtyJ988GfF6PRpx8E42e3g9lpz9/1PKGgWo6jRqFGubrMnD63FP+PKjRuIQSXBist1gqLksffAjGInHOMBT0ddR5VALx1ZeqrqsQDPj6vfh8OtcnPwsYhqnHvjFtORhL1g6oX/8i2HX1zf5c615xVJI/ktKEU07V+XnFMAqfFL178G6QqQEQyEKvPK3KeF8A3EvVoqwkspn+eiqixOdda+g30UJ8PMugQn/pfh42diptenr0VcYG//lkcBm0d2v0TBRQcv8qV7OhWQadWI8YVhmHcO0NqPzwAqhlgG2RsOFzQLU6hp+T0RDzM1OEA7/Q1YxcHl/+Shn4+9Em7+4XbYopBlg2Vwlc1ZcYnhI8iogObqF/0XqxqPwm90Ff/qtsp6exqwnu3g0XijdjGG4wIccTwrxkERlFWzgYRH2WUUIRFyQnzRHIxO3+NkZHX4cm9wAhE8wo0a4dTHm9Wn2zMAG7FWpyNdjkeGS1I6eeLLtAQDDvECS+GpFN15pJj9LHe/mpztPesXzUA4x4U2vjkId/8Mxud66hhD5ySsuhBv+mQTsJeiLwo3NhwD/dXzIq0YwRbeST7t6795fEH/ShD9tL8dhZzDd2FiQKO2r3LTzuTNPhZIi
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(66946007)(4326008)(66556008)(41300700001)(186003)(1076003)(9686003)(66476007)(6506007)(478600001)(316002)(6666004)(6486002)(6512007)(110136005)(86362001)(82960400001)(26005)(8676002)(2906002)(5660300002)(8936002)(83380400001)(38100700002)(54906003)(44832011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MozQllthrx5LRTwJvYQu1UlIdWmzbgz9nWq3YhBWF0Wnrp9vohO128Fvsc1Y?=
- =?us-ascii?Q?5cksQPslEqwAzGJvl72rzNJoo3GZqSfBjXejXVvHUUl3IXwZy1m+g2bqvNqu?=
- =?us-ascii?Q?4L///PZbbUdqlFXJ4u9lhYXGax7Rzwnb+kXPBqEXL2Pee2Fqr11VkkR4mKZ5?=
- =?us-ascii?Q?o8H11zTlcRK27im09tMQF7dwYb9gl0WUySmdvluRTRQgtKlcevEt0yd/N06J?=
- =?us-ascii?Q?I7C+CqcbNTbIp5UfsD75Ws+bMNRu9ubmzHErI5cR0FOdSLKbS8Jvu4cB2iq3?=
- =?us-ascii?Q?bDE461PWxkKfwTAQebaH3xWgYN3jlZbLa2HWq2g+9I6lzHrzgg8RGTQCkb7z?=
- =?us-ascii?Q?JpbEcrR5C8lNRHAN9OfFGetIVgW78ipJkF2W9dLZXueGdHYZbJXXk2chNt/H?=
- =?us-ascii?Q?h2JDcbzNpCSQLlRYHnoKNbkVmAxGdblrlZTE9GivfoSGWgKAKl5CsC59vFr2?=
- =?us-ascii?Q?Hj3oNVlHmLKYNw1Y2tXAwjw07G1qNfc+wSEn2DarB1g8+HQXglHiVAfyOYij?=
- =?us-ascii?Q?uL71T+Hme5iocE7c5m6MKXgI0GDVScFUwCh5xd4Jn3vIAExARCDdrarMOhPM?=
- =?us-ascii?Q?r67lHz1Sk1zvsN3w4eTSws5HISalusLLkCgu6ve4UqWc/Z3PpyfJL1Af65Z4?=
- =?us-ascii?Q?MPUy289ITJRXE0bGb48r+b5X98eM3oGvgJRVEEm9OVXDy6Aq33HVHHUDhd5h?=
- =?us-ascii?Q?j4o3mgzkawppXulPdKT+ml7xXdVAUrvQvqBrB/fcC/CtTGHgtpSZRoLUK8An?=
- =?us-ascii?Q?r1wc/OUW/ao+xTAuAYkYJJ8RBPTOebhyhskvmzicYGw9S1+JAabzPF+rXZvF?=
- =?us-ascii?Q?p+5WvCmVqqIIefCieAlOy6g8By6NKQgFbpsVDTDRMV7jRhtwZ4WTCdEzXJ9E?=
- =?us-ascii?Q?uesQ4F6g1xyIwVmHM3ntU+ThASyMQMf4C0Nz8MGdIS7HmypIfTw9UwdMSLF9?=
- =?us-ascii?Q?i4xKI33jBTGmVo8lP3ocQHQDZLF/fGHlpkXd9SLJ48WgH4NuBo8FGV2uwPSl?=
- =?us-ascii?Q?3hmj6dTmqmtyQHvi11D6u60SZwDLOq70Yr4Mza4PwWlAsiF6dLaobY6uE5I0?=
- =?us-ascii?Q?Bj187xDcDXkscxoqvpyXbJcHZJL8v64DZ7HZ0mGc1kqHgXYave92EqMvTXGV?=
- =?us-ascii?Q?Cm1/mvjefRkqDNdtQ1ST7jo2dA1br6aH996sEqrCKAAKoGagrnybpChzc73I?=
- =?us-ascii?Q?W/zCXmwLgDv5PJ38kgRHZ6MWzebVvTUWH7hNN5Uwl5gMp0sCzmNaZeyAXsVx?=
- =?us-ascii?Q?qWu9AYfdM3XSMqMWafihs6/lB7EQ2sdj0aJwyVRHJqj/RAdeR1a+47mYvC2L?=
- =?us-ascii?Q?F3srUyzNh15Xjw4Un7R8d8ABU0a3xppq5zhLqUukL0Re+Pb5IpsOuyscd/5D?=
- =?us-ascii?Q?6PaKSgSGPDR7LeCbB/SvSPNp55cpm46GVAEqInedifIDzx5efkRyjcYbSN/F?=
- =?us-ascii?Q?Dp/U83ztmERx2E2njqnYXNUOI4pudB60ZRhw5pisAQKPFbWNeM8GINdM/XUz?=
- =?us-ascii?Q?1uPe2wBlyB7A8o47WKyK/y9luwg5MpMWomPE3hMzjK+tZTEcBFmiXt5UBiOr?=
- =?us-ascii?Q?hf9FbR0ky3wciYaUBJdJA7hvX5OyP9b30T5034x1?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6d2521a-adc7-479d-a9f6-08da7a13e25e
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8274.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?O9p0qguYE6ZLQv5zLjivDJEB1nFKLd25MNjg6uRtJU73D1mCwrI/62rQWoq8?=
+ =?us-ascii?Q?0WH2YR8+mfUrXeXWpuPlOq/IhjWH3Sc6fzfqbUjSQvufymBdNF1tCdNJH4oc?=
+ =?us-ascii?Q?tiWhVZVNZVLGyi5qm4EdB2q769BB1osNoqHftB+KCoiDO5fZR4Dlx/83Y34p?=
+ =?us-ascii?Q?LtJ/ctZjdQgFEkUhDOEfdiYKeBjdMxOJQzgFu7nHDcHsL/SYQadT4HnDGoe6?=
+ =?us-ascii?Q?Bqncm4ZDP5EtoI2WRQSaX0H1Bg2mLgjZG0TSBPB36Bnl2Lu/a53NBo0d/HDY?=
+ =?us-ascii?Q?/SVPTNtYAlIb7LPJ6s6uejqED7WlwNVgl7/2H0edtXVLqN+91OExBJIiYRFp?=
+ =?us-ascii?Q?EmcwssuAmCgNfci26LZ7wmMMDKH7h/PsuHxmHigAZs8suNhywH+05NbSTw3U?=
+ =?us-ascii?Q?Yg3Jt7r9sDquGrR/R4xqhsV2Xnq5sGqrD22iDWiBR/YW1C9jHqhztbW2OxOz?=
+ =?us-ascii?Q?eGflCFrSK1HyacLYm6L8SZoYy4vXHl98KgLCo8tbfkaO6xPWiV1Hq9fkLjIf?=
+ =?us-ascii?Q?Bc8efgV/MYY1NkWVAfWlM97l9CrBrQLNLHLDOSe8jztNxWBIxSaLcx8gySm8?=
+ =?us-ascii?Q?OMWV/sMmHkBzPDb4RfQpnu0KCtqkVzcQjo6GuIxkOWMHQB+goKjc8wA3zPNu?=
+ =?us-ascii?Q?uJZAbYrxHpqb6TdYK8Xr8E8rI75srz1M7yqlsdycYcdVtlnU9B5tE9J3kNLq?=
+ =?us-ascii?Q?902SeX7Yvv00k3ANPJazz+MiBltNFKC2qOxWgaYhVwqILPj2m/TpEvNFE0RJ?=
+ =?us-ascii?Q?5d39AY2pLyUvN+SVcMAS/dpLglK7Zl1n/yZuHEczIOb9XIo9v/VDZjcVGR02?=
+ =?us-ascii?Q?ARzykkLR5VpEnMbZWHB2YVIWYQhinlfuZtD6QZ6Q9FMjXn7f3d5g6nFaIViG?=
+ =?us-ascii?Q?Nb9hBj7JE07elJUg/I+poeqwjCtBKCkGgtTuQxy/2Zbvb3nXm7hh0MSlmwGi?=
+ =?us-ascii?Q?g6+/iwp0Z1znk9LODrDvqS3mQSdpCqzIrCFRIkfNIipkV2APjuR9zzIVzllX?=
+ =?us-ascii?Q?a/oe9CYAjozSjTyUhqcFtBu3qRPtJB/P4/3XVqpP6JeijIdHZiTXhfgEgab8?=
+ =?us-ascii?Q?BGq0wObnk6HLlMoXTyZJKPNkipidI+sqhn/wZy45PSbVpGQAhSK7L/YzgHvg?=
+ =?us-ascii?Q?K8x4Vguu9qGHb/9sMhNmvDp+EnLu9VKbFJDa6RhhvtejA54LyoBsYOQzacHr?=
+ =?us-ascii?Q?iezsKFdZrfDkLfBMWhSvx2VuOyU9FIb/PAx+HcXH5fIX8tp3Blo4LFQe3SUE?=
+ =?us-ascii?Q?GpWiauHqjoruLZ+bTClWLMfL6t0jOiR2fNhzk9tBrkE10W7WNoXx/3kXJvyo?=
+ =?us-ascii?Q?yoczGNL0kqWOe37VI0HIzrnYiu6jyulXH5YAD2SERMoqn5SnxXZtrZzZt06w?=
+ =?us-ascii?Q?hpVT3EB0TqRJnwEnZluyEjNwr8Jqq0jd0BoYVkQvSfWY4pcKpwjKq4oWU5Du?=
+ =?us-ascii?Q?azqpXpugZKTbPDYxYz1a9rg4X7KMPfC+iS/Bid4m8jt9dqA8j9V0dMgkq6Xl?=
+ =?us-ascii?Q?YgBG8iwVAy3LMKEOyyvQv8cRLyzXE90lhZMJPZiUoPlvDtH1re92x0yLuxSu?=
+ =?us-ascii?Q?o7W526afD56BYAVQqIUszGoc3FzOm0TyURq6kWX4whrk8uzJpE/qKrb/G9nA?=
+ =?us-ascii?Q?hg=3D=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97237726-bafb-4e86-f019-08da7a178ee8
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2022 14:31:44.9355
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2022 14:58:02.8844
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YCv+aaNzsOQk5uVdHPhXh324Z18zTTG0aRi3Cy9YSUK0ypTXWcKlv3PyUxhkD32omWeUn1UdRaR/hV7HVejShQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5226
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: 42MqGZWSKaoaz+xNXyQMoxbVDv5rrTim5jCHue9yR1dOzWu4NP+7r6R/dIctegaEPkoDMQjruy2JQkBuDP1w6gpR7n5JqcNz6p31bMnH6Dg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR10MB6166
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The SCU firmware on i.MX8 platforms provides a set of APIs to
-control the GPIO PINs on the SCU domain. This patch implements the
-standard GPIO driver interface to access those PINs on the
-SCU domain over the SCU APIs.
+Am Thu, 28 Jul 2022 17:56:49 +0200
+schrieb Henning Schild <henning.schild@siemens.com>:
 
-Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
----
- drivers/gpio/Kconfig        |   4 ++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-imx-scu.c | 139 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 144 insertions(+)
- create mode 100644 drivers/gpio/gpio-imx-scu.c
+> Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO chips are
+> very similar to the ones from Fintek. In other subsystems they also
+> share drivers and are called a family of drivers.
+> 
+> For the GPIO subsystem the only difference is that the direction bit
+> is reversed and that there is only one data bit per pin. 
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 0499c2facbb0..b01310f6ebcc 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -341,6 +341,10 @@ config GPIO_ICH
- 
- 	  If unsure, say N.
- 
-+config GPIO_IMX_SCU
-+       def_bool y
-+       depends on IMX_SCU
-+
- config GPIO_IOP
- 	tristate "Intel IOP GPIO"
- 	depends on ARCH_IOP32X || COMPILE_TEST
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 3fa4f3f93d85..b39ab87793ec 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -70,6 +70,7 @@ obj-$(CONFIG_HTC_EGPIO)			+= gpio-htc-egpio.o
- obj-$(CONFIG_GPIO_I8255)		+= gpio-i8255.o
- obj-$(CONFIG_GPIO_ICH)			+= gpio-ich.o
- obj-$(CONFIG_GPIO_IDT3243X)		+= gpio-idt3243x.o
-+obj-$(CONFIG_GPIO_IMX_SCU)		+= gpio-imx-scu.o
- obj-$(CONFIG_GPIO_IOP)			+= gpio-iop.o
- obj-$(CONFIG_GPIO_IT87)			+= gpio-it87.o
- obj-$(CONFIG_GPIO_IXP4XX)		+= gpio-ixp4xx.o
-diff --git a/drivers/gpio/gpio-imx-scu.c b/drivers/gpio/gpio-imx-scu.c
-new file mode 100644
-index 000000000000..2f4a991a9ad6
---- /dev/null
-+++ b/drivers/gpio/gpio-imx-scu.c
-@@ -0,0 +1,139 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2021~2022 NXP
-+ *
-+ * The driver exports a standard gpiochip interface
-+ * to control the PIN resources on SCU domain.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/platform_device.h>
-+#include <linux/firmware/imx/svc/rm.h>
-+#include <dt-bindings/firmware/imx/rsrc.h>
-+
-+struct scu_gpio_priv {
-+	struct gpio_chip	chip;
-+	struct mutex		lock;
-+	struct device		*dev;
-+	struct imx_sc_ipc	*handle;
-+};
-+
-+static unsigned int scu_rsrc_arr[] = {
-+	IMX_SC_R_BOARD_R0,
-+	IMX_SC_R_BOARD_R1,
-+	IMX_SC_R_BOARD_R2,
-+	IMX_SC_R_BOARD_R3,
-+	IMX_SC_R_BOARD_R4,
-+	IMX_SC_R_BOARD_R5,
-+	IMX_SC_R_BOARD_R6,
-+	IMX_SC_R_BOARD_R7,
-+};
-+
-+static int imx_scu_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct scu_gpio_priv *priv = gpiochip_get_data(chip);
-+	int level;
-+	int err;
-+
-+	if (offset >= chip->ngpio)
-+		return -EINVAL;
-+
-+	mutex_lock(&priv->lock);
-+
-+	/* to read PIN state via scu api */
-+	err = imx_sc_misc_get_control(priv->handle,
-+			scu_rsrc_arr[offset], 0, &level);
-+	mutex_unlock(&priv->lock);
-+
-+	if (err) {
-+		dev_err(priv->dev, "SCU get failed: %d\n", err);
-+		return err;
-+	}
-+
-+	return level;
-+}
-+
-+static void imx_scu_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-+{
-+	struct scu_gpio_priv *priv = gpiochip_get_data(chip);
-+	int err;
-+
-+	if (offset >= chip->ngpio)
-+		return;
-+
-+	mutex_lock(&priv->lock);
-+
-+	/* to set PIN output level via scu api */
-+	err = imx_sc_misc_set_control(priv->handle,
-+			scu_rsrc_arr[offset], 0, value);
-+	mutex_unlock(&priv->lock);
-+
-+	if (err)
-+		dev_err(priv->dev, "SCU set (%d) failed: %d\n",
-+				scu_rsrc_arr[offset], err);
-+}
-+
-+static int imx_scu_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	if (offset >= chip->ngpio)
-+		return -EINVAL;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int imx_scu_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct scu_gpio_priv *priv;
-+	struct gpio_chip *gc;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	ret = imx_scu_get_handle(&priv->handle);
-+	if (ret)
-+		return ret;
-+
-+	priv->dev = dev;
-+	mutex_init(&priv->lock);
-+
-+	gc = &priv->chip;
-+	gc->base = -1;
-+	gc->parent = dev;
-+	gc->ngpio = sizeof(scu_rsrc_arr)/sizeof(unsigned int);
-+	gc->label = dev_name(dev);
-+	gc->get = imx_scu_gpio_get;
-+	gc->set = imx_scu_gpio_set;
-+	gc->get_direction = imx_scu_gpio_get_direction;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return devm_gpiochip_add_data(dev, gc, priv);
-+}
-+
-+static const struct of_device_id imx_scu_gpio_dt_ids[] = {
-+	{ .compatible = "fsl,imx8-scu-gpio" },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver imx_scu_gpio_driver = {
-+	.driver	= {
-+		.name = "gpio-imx-scu",
-+		.of_match_table = imx_scu_gpio_dt_ids,
-+	},
-+	.probe = imx_scu_gpio_probe,
-+};
-+
-+static int __init _imx_scu_gpio_init(void)
-+{
-+	return platform_driver_register(&imx_scu_gpio_driver);
-+}
-+
-+subsys_initcall_sync(_imx_scu_gpio_init);
-+
-+MODULE_AUTHOR("Shenwei Wang <shenwei.wang@nxp.com>");
-+MODULE_DESCRIPTION("NXP GPIO over IMX SCU API");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+In fact the modification of f7188x_gpio_get is missing in this patch,
+the function needs to be modified for this chip variant, where the
+given bit has another meaning. (value invert, not used in the driver)
+
+Will send a fixed version
+
+Henning
+
+> On the
+> SuperIO level the logical device is another one.
+> 
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/gpio/gpio-f7188x.c | 70
+> ++++++++++++++++++++++++++++---------- 1 file changed, 52
+> insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
+> index 18a3147f5a42..431ce2cda1d8 100644
+> --- a/drivers/gpio/gpio-f7188x.c
+> +++ b/drivers/gpio/gpio-f7188x.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   * GPIO driver for Fintek Super-I/O F71869, F71869A, F71882, F71889
+> and F81866
+> + * and Nuvoton Super-I/O NCT6116D
+>   *
+>   * Copyright (C) 2010-2013 LaCie
+>   *
+> @@ -22,13 +23,11 @@
+>  #define SIO_LDSEL		0x07	/* Logical device
+> select */ #define SIO_DEVID		0x20	/* Device ID
+> (2 bytes) */ #define SIO_DEVREV		0x22	/* Device
+> revision */ -#define SIO_MANID		0x23	/* Fintek
+> ID (2 bytes) */ 
+> -#define SIO_LD_GPIO		0x06	/* GPIO logical
+> device */ #define SIO_UNLOCK_KEY		0x87	/* Key to
+> enable Super-I/O */ #define SIO_LOCK_KEY		0xAA
+> /* Key to disable Super-I/O */ 
+> -#define SIO_FINTEK_ID		0x1934	/* Manufacturer
+> ID */ +#define SIO_LD_GPIO_FINTEK	0x06	/* GPIO logical
+> device */ #define SIO_F71869_ID		0x0814	/*
+> F71869 chipset ID */ #define SIO_F71869A_ID
+> 0x1007	/* F71869A chipset ID */ #define SIO_F71882_ID
+> 	0x0541	/* F71882 chipset ID */ @@ -38,6 +37,9 @@
+>  #define SIO_F81804_ID		0x1502  /* F81804 chipset ID,
+> same for f81966 */ #define SIO_F81865_ID		0x0704
+> /* F81865 chipset ID */ 
+> +#define SIO_LD_GPIO_NUVOTON	0x07	/* GPIO logical
+> device */ +#define SIO_NCT6116D_ID		0xD283  /* NCT6116D
+> chipset ID */ +#define SIO_GPIO_ENABLE		0x30	/*
+> GPIO enable */ 
+>  enum chips {
+>  	f71869,
+> @@ -48,6 +50,7 @@ enum chips {
+>  	f81866,
+>  	f81804,
+>  	f81865,
+> +	nct6116d,
+>  };
+>  
+>  static const char * const f7188x_names[] = {
+> @@ -59,10 +62,12 @@ static const char * const f7188x_names[] = {
+>  	"f81866",
+>  	"f81804",
+>  	"f81865",
+> +	"nct6116d",
+>  };
+>  
+>  struct f7188x_sio {
+>  	int addr;
+> +	int device;
+>  	enum chips type;
+>  };
+>  
+> @@ -254,6 +259,17 @@ static struct f7188x_gpio_bank
+> f81865_gpio_bank[] = { F7188X_GPIO_BANK(60, 5, 0x90),
+>  };
+>  
+> +static struct f7188x_gpio_bank nct6116d_gpio_bank[] = {
+> +	F7188X_GPIO_BANK(0, 8, 0xE0),
+> +	F7188X_GPIO_BANK(10, 8, 0xE4),
+> +	F7188X_GPIO_BANK(20, 8, 0xE8),
+> +	F7188X_GPIO_BANK(30, 8, 0xEC),
+> +	F7188X_GPIO_BANK(40, 8, 0xF0),
+> +	F7188X_GPIO_BANK(50, 8, 0xF4),
+> +	F7188X_GPIO_BANK(60, 8, 0xF8),
+> +	F7188X_GPIO_BANK(70, 1, 0xFC),
+> +};
+> +
+>  static int f7188x_gpio_get_direction(struct gpio_chip *chip,
+> unsigned offset) {
+>  	int err;
+> @@ -264,13 +280,20 @@ static int f7188x_gpio_get_direction(struct
+> gpio_chip *chip, unsigned offset) err = superio_enter(sio->addr);
+>  	if (err)
+>  		return err;
+> -	superio_select(sio->addr, SIO_LD_GPIO);
+> +	superio_select(sio->addr, sio->device);
+>  
+>  	dir = superio_inb(sio->addr, gpio_dir(bank->regbase));
+>  
+>  	superio_exit(sio->addr);
+>  
+> -	if (dir & 1 << offset)
+> +	if (sio->device == SIO_LD_GPIO_NUVOTON) {
+> +		if (dir & BIT(offset))
+> +			return GPIO_LINE_DIRECTION_IN;
+> +
+> +		return GPIO_LINE_DIRECTION_OUT;
+> +	}
+> +
+> +	if (dir & BIT(offset))
+>  		return GPIO_LINE_DIRECTION_OUT;
+>  
+>  	return GPIO_LINE_DIRECTION_IN;
+> @@ -286,10 +309,14 @@ static int f7188x_gpio_direction_in(struct
+> gpio_chip *chip, unsigned offset) err = superio_enter(sio->addr);
+>  	if (err)
+>  		return err;
+> -	superio_select(sio->addr, SIO_LD_GPIO);
+> +	superio_select(sio->addr, sio->device);
+>  
+>  	dir = superio_inb(sio->addr, gpio_dir(bank->regbase));
+> -	dir &= ~BIT(offset);
+> +
+> +	if (sio->device == SIO_LD_GPIO_FINTEK)
+> +		dir &= ~BIT(offset);
+> +	else
+> +		dir |= BIT(offset);
+>  	superio_outb(sio->addr, gpio_dir(bank->regbase), dir);
+>  
+>  	superio_exit(sio->addr);
+> @@ -307,7 +334,7 @@ static int f7188x_gpio_get(struct gpio_chip
+> *chip, unsigned offset) err = superio_enter(sio->addr);
+>  	if (err)
+>  		return err;
+> -	superio_select(sio->addr, SIO_LD_GPIO);
+> +	superio_select(sio->addr, sio->device);
+>  
+>  	dir = superio_inb(sio->addr, gpio_dir(bank->regbase));
+>  	dir = !!(dir & BIT(offset));
+> @@ -332,7 +359,7 @@ static int f7188x_gpio_direction_out(struct
+> gpio_chip *chip, err = superio_enter(sio->addr);
+>  	if (err)
+>  		return err;
+> -	superio_select(sio->addr, SIO_LD_GPIO);
+> +	superio_select(sio->addr, sio->device);
+>  
+>  	data_out = superio_inb(sio->addr,
+> gpio_data_out(bank->regbase)); if (value)
+> @@ -342,7 +369,10 @@ static int f7188x_gpio_direction_out(struct
+> gpio_chip *chip, superio_outb(sio->addr,
+> gpio_data_out(bank->regbase), data_out); 
+>  	dir = superio_inb(sio->addr, gpio_dir(bank->regbase));
+> -	dir |= BIT(offset);
+> +	if (sio->device == SIO_LD_GPIO_FINTEK)
+> +		dir |= BIT(offset);
+> +	else
+> +		dir &= ~BIT(offset);
+>  	superio_outb(sio->addr, gpio_dir(bank->regbase), dir);
+>  
+>  	superio_exit(sio->addr);
+> @@ -360,7 +390,7 @@ static void f7188x_gpio_set(struct gpio_chip
+> *chip, unsigned offset, int value) err = superio_enter(sio->addr);
+>  	if (err)
+>  		return;
+> -	superio_select(sio->addr, SIO_LD_GPIO);
+> +	superio_select(sio->addr, sio->device);
+>  
+>  	data_out = superio_inb(sio->addr,
+> gpio_data_out(bank->regbase)); if (value)
+> @@ -388,7 +418,7 @@ static int f7188x_gpio_set_config(struct
+> gpio_chip *chip, unsigned offset, err = superio_enter(sio->addr);
+>  	if (err)
+>  		return err;
+> -	superio_select(sio->addr, SIO_LD_GPIO);
+> +	superio_select(sio->addr, sio->device);
+>  
+>  	data = superio_inb(sio->addr, gpio_out_mode(bank->regbase));
+>  	if (param == PIN_CONFIG_DRIVE_OPEN_DRAIN)
+> @@ -449,6 +479,10 @@ static int f7188x_gpio_probe(struct
+> platform_device *pdev) data->nr_bank = ARRAY_SIZE(f81865_gpio_bank);
+>  		data->bank = f81865_gpio_bank;
+>  		break;
+> +	case nct6116d:
+> +		data->nr_bank = ARRAY_SIZE(nct6116d_gpio_bank);
+> +		data->bank = nct6116d_gpio_bank;
+> +		break;
+>  	default:
+>  		return -ENODEV;
+>  	}
+> @@ -485,12 +519,8 @@ static int __init f7188x_find(int addr, struct
+> f7188x_sio *sio) return err;
+>  
+>  	err = -ENODEV;
+> -	devid = superio_inw(addr, SIO_MANID);
+> -	if (devid != SIO_FINTEK_ID) {
+> -		pr_debug(DRVNAME ": Not a Fintek device at
+> 0x%08x\n", addr);
+> -		goto err;
+> -	}
+>  
+> +	sio->device = SIO_LD_GPIO_FINTEK;
+>  	devid = superio_inw(addr, SIO_DEVID);
+>  	switch (devid) {
+>  	case SIO_F71869_ID:
+> @@ -517,8 +547,12 @@ static int __init f7188x_find(int addr, struct
+> f7188x_sio *sio) case SIO_F81865_ID:
+>  		sio->type = f81865;
+>  		break;
+> +	case SIO_NCT6116D_ID:
+> +		sio->device = SIO_LD_GPIO_NUVOTON;
+> +		sio->type = nct6116d;
+> +		break;
+>  	default:
+> -		pr_info(DRVNAME ": Unsupported Fintek device
+> 0x%04x\n", devid);
+> +		pr_info(DRVNAME ": Unsupported device 0x%04x\n",
+> devid); goto err;
+>  	}
+>  	sio->addr = addr;
 
