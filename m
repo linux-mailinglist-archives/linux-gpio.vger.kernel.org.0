@@ -2,199 +2,348 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E682858E7EF
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Aug 2022 09:38:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A3F558EC2D
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Aug 2022 14:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230377AbiHJHij (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Aug 2022 03:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60724 "EHLO
+        id S231951AbiHJMlX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Aug 2022 08:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbiHJHii (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Aug 2022 03:38:38 -0400
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-eopbgr140055.outbound.protection.outlook.com [40.107.14.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63DE6AA2F;
-        Wed, 10 Aug 2022 00:38:36 -0700 (PDT)
+        with ESMTP id S231633AbiHJMlU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Aug 2022 08:41:20 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2061.outbound.protection.outlook.com [40.107.94.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B261B77541;
+        Wed, 10 Aug 2022 05:41:18 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D/R6wHDx/oZAajmFb0FPeYFH5othmLpEtJWQ0z028i8zht2J7ZArQnRh8yATH8Wu3P246BzXh+KMBPf+Ke1WpN+lbB11e8X4rDZ/xUQs44roTetZ6OregPfe5RbuAAtRokG2uwRWismxxolTAsg3ObwTKtXNYFrGNMa7BL8g42fbzzoMz+KgMHaHJJTkp/GY1BDhYXno7sQPPhv4x2wmAUlBA8jdru2olbPHdFAunOlCl2RGvAmYDv4KkSLZWYHb/sanuQXmWljBS0s7kLCZK6mv+Zjxx0nyYx7eGFQqozbd6KVJskBwaHffCb0PFD1+BhltO8keFnxafMDloBZyPQ==
+ b=BDaXnSUigW871b5v4Fp/X0X3AKZVZA0EQzb2Cb6VE3gVd4l7rnj1dFCgFXNH8qVn2/8Uu7KOFUn8tm4fhXHfpzG7baPwDFOcazhKouqI+xDpsOCoIZHwGMQBY+pv9kJQARQ+H55USby891eW4QS51YFSnKZSwIO6kR5emKRd+1YL/B+KxQx5xsFd1x48P4YkWqAJazdII8kHtHBzK46F3D8aAarjJu0HRlnd7173fmFlJ/m+3IQ5UnZVlU4nN7qU8NnVCNpLrvdryVKPkxIgwrajqnaW9dPJfcatzy2kpa1bsuHG9h/mhuJG2p97VtHxS80E/Ou1AQho7IcDIfuh9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fOoxyoMqcEwWkSjOWVFQ3ffQBahuzfZDU+4pYZpg34Q=;
- b=UTl0UfYaQTPK7G6qbet1+7ZkkyMrO2AmhPDDSQAvaZlmGA+F6Arh4y/36LmKWSLEr2BpAwSpKivb30ZC7kjsYwd77kmHcePsw67Zgy13dK0KeGxGs2ZzwAVPdf6pdiShbOF19mVS87MbMFUQN6a+Tl8iVfaSw/D0B1XqxUI9qbSLxf7M2gFeIMbC3FupJtpHJ7lwzJSPkP3LZPWd70NDyrc2jy1Ik4300w1SYxJfkG2GexGW+R9IOJ+32Ci5Fvmnf1wM1CORgxBEtgBrB+AhLFnUQBRfEhXxo7U+wh6am/zQZoIDHhOkuEjZeFNb40JErxaZhEXFsumBlWRNPDBsAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
+ bh=LdaGF3z1t4+RNuvhm1NIapr7dmuD7RGnH5o3ub/b7LY=;
+ b=Sy0ORUsbayAphzsPNUl13vAABBJgL+mTevUm11DIRQ6N5wxqZWVTvM1tG4ZrkAc5PvT7aScoWSq4XJgwlBhzYI7pYBrR4ji4oiftItHElSUnfc/1tOWlqqBWY93jnpvFXual9DOOQMidiz3R5zGD8mej1Mrh3EHk8g4OXPKNIe35ylYRty5sdRdNf5ZV/v5SS6VKxm+SqdBdJZFaEfNFbi4DUvnpvPvyVnLc+tyVlmciqAEHvDynmp9U2v8JumjGkjEBOGF0tfQpcStFiCoCX58FRvFOV8HOHHZAdOahCi1ptqhZ3H8qpqEiCNTgkWDF3/XiUlcSs1dxDr3c9T0IaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fOoxyoMqcEwWkSjOWVFQ3ffQBahuzfZDU+4pYZpg34Q=;
- b=HeT6XY8Gm5z0PrlNpJ30Tk+ZWPI9rNcIx52aMFNGZIOjTql2HlNGQUnq3qUDQaB65SkZrJ7Yc39tskAsbXAGxSGWyrETEHRno/IYtjErRfiBSxvSWn93w7GivJRUQ5SwSb3m3WgAdh5pkSwsoxUrMTcVykksghHPwPVw0RvRZBQ3S59APBTwEMt8p70Gim7PGl6H2D7y8qCcUniQwrkjacYnkxOYalVeBKtIEOkF1aTFFFCZo3uf1v7/ise+JcCZKyp39UWFKJoZyxwOzRtjW8qQCGFud5l7Go+GSsJWy6y8iBtXiWOUbUAo+BqvZbiAVB+dlIaqe/n4zYVEiQkfIw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
- by PAXPR10MB5382.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:286::14) with
+ bh=LdaGF3z1t4+RNuvhm1NIapr7dmuD7RGnH5o3ub/b7LY=;
+ b=cbOH0fCwPLy4iwdgfr7g97fywK7ePDEZNMHGUXkcgw2c2WqnM84Ophm8DjPPPHVEs3RvxrFLO72rzpWuqTu9kcoEqk/cvLo5A2D1OGk2m9cDq2nom0p5Jab/lSRyO6eI8IJ8Mm1a2LZ4g1eeLRC+3TFsM47LAMTCeRHSf1Zw7OI=
+Received: from BN0PR04CA0153.namprd04.prod.outlook.com (2603:10b6:408:eb::8)
+ by PH0PR02MB7493.namprd02.prod.outlook.com (2603:10b6:510:1a::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.16; Wed, 10 Aug
- 2022 07:38:34 +0000
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::75ee:d5d2:6b1d:150b]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::75ee:d5d2:6b1d:150b%3]) with mapi id 15.20.5525.010; Wed, 10 Aug 2022
- 07:38:34 +0000
-Date:   Wed, 10 Aug 2022 09:38:20 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
-Message-ID: <20220810093820.24ffd920@md1za8fc.ad001.siemens.net>
-In-Reply-To: <YtVBViMLFIUfFpXa@smile.fi.intel.com>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
-        <YtVBViMLFIUfFpXa@smile.fi.intel.com>
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR04CA0047.namprd04.prod.outlook.com
- (2603:10b6:610:77::22) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:269::8)
+ 2022 12:41:16 +0000
+Received: from BN1NAM02FT054.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:408:eb:cafe::8d) by BN0PR04CA0153.outlook.office365.com
+ (2603:10b6:408:eb::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.20 via Frontend
+ Transport; Wed, 10 Aug 2022 12:41:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ BN1NAM02FT054.mail.protection.outlook.com (10.13.2.162) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5525.11 via Frontend Transport; Wed, 10 Aug 2022 12:41:16 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Wed, 10 Aug 2022 05:41:15 -0700
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Wed, 10 Aug 2022 05:41:15 -0700
+Envelope-to: git@xilinx.com,
+ linus.walleij@linaro.org,
+ brgl@bgdev.pl,
+ robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org,
+ srinivas.neeli@amd.com,
+ linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ git@amd.com
+Received: from [172.23.66.193] (port=42314 helo=xhdsneeli40u.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1oLl1O-00019B-Ty; Wed, 10 Aug 2022 05:41:15 -0700
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     <shubhrajyoti.datta@xilinx.com>, <srinivas.neeli@xilinx.com>,
+        <michal.simek@xilinx.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <srinivas.neeli@amd.com>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <git@xilinx.com>, <git@amd.com>
+Subject: [PATCH V2] dt-bindings: gpio: gpio-xilinx: Convert Xilinx axi gpio binding to YAML
+Date:   Wed, 10 Aug 2022 18:11:09 +0530
+Message-ID: <20220810124109.34157-1-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2f72177-d797-40b4-258e-08da7aa35439
-X-MS-TrafficTypeDiagnostic: PAXPR10MB5382:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c0e93f9-0bfb-4f30-7cb5-08da7acd9e1f
+X-MS-TrafficTypeDiagnostic: PH0PR02MB7493:EE_
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RggTqx8SbSVSn3PGKMVm8L8MP5ossP9xO8o85XrJKsxhzfnbblKVtHG9K6jAHo222HQ8pWOAzXn12szotS9H7NPL61KNwB7foRzqV4UNSe/XHuiWUOC6yFN0UyGvIaHRFafP/gOqvGHDrRnGae4/8ETb7Ov++CdWtQn9e7WCvcqonw/N18eJu6olok8vLJEXMCuqbAjvtsSIHLw27hM0YkfYGRJQwGX+9uP7b9KpaDcpAGh/k0NuPzrAthGJVFMo70CQhBaNLS1w1EsYxicOyrjrtIKBbAiWUF6MB89jep1Eg8PGhnO8A+XVvBKe0osixkqSUFppt1wURcmkwDBmqRnqDYpiLRGRnRMERdhKkJxj3xRUTMdjFwRv+eZtkCFwzpGzaev+VoOs0yQfZ0/QGJwYL2lm8mcGrgNe9z16FKrkXGWLm0Lk/qL8oXrjma5dO3sZJ1itjpbhXvKAutwx21pCaxONEGounJq9zYNH9ahBJtEjyA+sNI8gHi4b1DBgsOLKn8hn77Y9q6JhGr+Luobxmix8uYhV5wBN2I85psdr4cdBo/nW3/xCR0egFUzEnaaVUCRtxERcohUAKHwkgCW25eCYhQvMaBkGGDf2QA5K3925yzWNZu14NOiFz2LZ8t+be5ipRSs9F80+5xaBWVQM/yaYwzSX9/5N8MTyM1e3mdGZZEEa9w4yWfu9sF1WQGbOezqHF3dZrRzR5Rdq3Mnum2vv3PXhgbY28982kT8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(5660300002)(44832011)(8676002)(66946007)(316002)(6916009)(4326008)(9686003)(66556008)(6512007)(7416002)(2906002)(38100700002)(66476007)(8936002)(1076003)(86362001)(54906003)(41300700001)(6486002)(478600001)(83380400001)(6506007)(82960400001)(26005)(6666004)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pYVB/0N2V0h1e8tFr1dYPd1zQrwlbnyu2Ue0GiR4xxgXkg4NO1JpFItfKGFl?=
- =?us-ascii?Q?d+lZUkjD+2iqTKs2QBEi2VAPY4hcUIifI2N2OusIZcyrSOYrKjprVyyWaDlT?=
- =?us-ascii?Q?tcW3jIzJXcAUaublDO/CLriqm9WhEuYP8OhJaoEbSG8QbK68WNYdZaJiTSaK?=
- =?us-ascii?Q?1cAlbOymzun8kqDzWxKUVRdcyvsfRkH83LYsb92Ln7s2HBUTEIqVoIi2kvYR?=
- =?us-ascii?Q?Xe6E1duPKuTevQdrD1VHvvWpL0yb2zJaozZZK1t+AdOiZ6t979n6t4euExmk?=
- =?us-ascii?Q?rtf64zqwi8il5v5Xq6rOsszS6u5bPzqPXHSc4rvbD+ydPkd/0hPZlNaCkSHJ?=
- =?us-ascii?Q?1dRFE1aBik9a7VuR0jdtbu+0MMzijiLPHjUWHS0Zc24G1DAWdO3eqlmXYl6s?=
- =?us-ascii?Q?uk+GknNO+Kb3ZrkHmJgmZhwZbyB5oozLC0LLYDZaCKB2bb+gvnNA2SYzj5lP?=
- =?us-ascii?Q?0HBR/5BGAqJItPo9QKXp3I9cOySXdNGUV9CNlKPKxOMoevskZFoy8MCd7Ls4?=
- =?us-ascii?Q?2TYm7ZbRyUFrpJy7VQxVPO0rkDZpSuK5piW0Kmkm4fua67Cpcydsz4cai2pB?=
- =?us-ascii?Q?k+5RK+WthlN85yWjn17t+tAPitszJ+kRMksbTGsXUBWNWMoZGqBrBVZVZQms?=
- =?us-ascii?Q?Y2Sh8mC2gXpS72LtNw1RdSj+xwFEIDR6GqfiRtAQ5KpDwnB/KMysDfb7JfqT?=
- =?us-ascii?Q?T7Mtm90bXwCmWWPmoUzsTfmCHAchWlqUCeIspNQEtjDrNN3Hlb6XjjxXcrph?=
- =?us-ascii?Q?1YwWiGziP73Dg0nFPh9QwmjTaxLQw2LeOD+wGlRA3/pIzYgMOTkbf63uo+gS?=
- =?us-ascii?Q?oiEzrOzzG3PqNy5qnlrJWeRVd45009pUorWTD5Ematy4sgV5jlfO+lT07OxB?=
- =?us-ascii?Q?rAm0DMBEAkd934z8QQ7MF8PCJeD247StgxxoCb/0kixO5N4OMmtvNCJT5yr7?=
- =?us-ascii?Q?mfWrccJkZ03JY/hjGa0PaqAEAslJ392XV/tqcD/IcUbZ/fdqpBSChiLIDbFB?=
- =?us-ascii?Q?zduHnOWos+8MCOEC82fYkXo4BUx2BpKrecidNCIDD1xj2dqXEC0JhSySgqKw?=
- =?us-ascii?Q?rXMIOX9MW//3qBSsi+9CNKjSaWX5JNXOMQjXJT+y3B2scH21cvQGUXLyiyrB?=
- =?us-ascii?Q?tBm6jC2BmVRWrB3i2Zdlp5n7+TopLc9cfioPPGQrQoA86IUXRP5F+aKI2CBK?=
- =?us-ascii?Q?Evk3fielETPl+XsnwT+q+hl6zvcHRHCOko4lgGB0LfuVrnlZCE8ZwpTKK+nF?=
- =?us-ascii?Q?PmGqrR2ESdk8VwTwT/JsBUfioMlaKG1kTIkZ+FY4oSg1oVFYopTw/GwrYmJI?=
- =?us-ascii?Q?8yoTQBgrPp+Rof8JLb+rb1RrEMDdPDQNIDRoP6DRNMtaqDIJfFri6xZvID7G?=
- =?us-ascii?Q?oC4Wg5ggoHdFmi9VMDjz8MO8GkhRdCavyT0cQqJS448bfvnj+YBPvlJ1KnPd?=
- =?us-ascii?Q?1mR+pDWo1U9dHN3T4jgEkbOxsUvFfYMx5e8HZmuNQfAt6R6ZO7OcnTgKPICW?=
- =?us-ascii?Q?CZ0KqSZ7aKSo5+hlbCTflKW5hMW0BrSpqnyIyixvBuybw+arF16Q1qv0bp5U?=
- =?us-ascii?Q?Q8Q4vCFgEwMM2fj/X1CTiPoXLrcB8dIDvhL4Zh5js9Fxc2p9/hgXo0CHJvHR?=
- =?us-ascii?Q?gA=3D=3D?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2f72177-d797-40b4-258e-08da7aa35439
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2022 07:38:33.9822
+X-Microsoft-Antispam-Message-Info: pY30ME6hXvawDPIBtgB2fNAL4zwsyMm+O1eJzw/0i1DlDXm7MaGeDnilepQILcCe+PSo3bZjyl1t0QKCOxpNc/u5lLDg+xDm/B9zfdRNH5pitItPBflrm1xLz0UDuRViIqcPO4qIzdrEZ3nyl6JAIAz/tjqM908D//C4sdQTFnBE8wFnqB2YzgGmMRVInJI2tj4O017r7laqEcWQZlO+CusZXIRMKdbDEX/5Vr8AAJyjKBe/VmB4BbNSt6SR7Ek+eIBdjyjYuNmGAe8XZkjP3sK2+/PQK34mhIIGBr1lfUYETERBBlU7roEC598joqJwchrjV/WmFZZMJRm0ShfHHCyelc+dpmP1eseo7JU/vfhKCXfKHF2/yFBSm3gI+RZGQMd6e5r879di89aPdQKOQ6zLbf/N8GO2hQTNsXsT4nNl47JB1XxPxAMv0JYSXfmIM0wcyiUmuoQbtK2bhMrsdCaptspCYit1JUllMpJ/9lXXGnaPM3VofJXdHttVbkyc2FHa+6vJSe+EwAIQYZrqUMRAIEdKn2PIxJmEhK6/4F3QHnzt+oK2zBzqa5gID4cn3ZSGqn3Bmn0ZSki9p+MpfbI58u22BuEtbnppMRuCT7i/6JMuFulwe7OUmNG0qZXme4yfegUAR4R2h4zm8S1RDYurV7YbgCWZCpa2XFX3xKORlNvdTgqLTGfqlzWLzeKZ1Z8vpAlkZ+/8fr9YGNc5/jgBTLjjIRL6KEeT4Id7a5PJCdliD225tioiWfkNaHkzqpvVP5iRyhLOecaLdidJsj4jVvo6gKdCQJzxjmJJY/QjRIUcy8IrrgMzMg3yj6JCtWR1Gwkl1GTkVYnI27R79t6rgUkPXhT3Xuw0qxvN86Otc+rtdNuzUK0DeZ2MW1dPiDmrkjbC+VvC9ITCZRYPCA==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230016)(4636009)(376002)(39860400002)(396003)(136003)(346002)(36840700001)(40470700004)(46966006)(336012)(2616005)(47076005)(1076003)(426003)(82740400003)(186003)(356005)(7636003)(83380400001)(5660300002)(8936002)(36860700001)(9786002)(7416002)(70206006)(44832011)(70586007)(4326008)(6666004)(82310400005)(40480700001)(966005)(2906002)(478600001)(40460700003)(26005)(7696005)(41300700001)(54906003)(36756003)(316002)(8676002)(110136005)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2022 12:41:16.4688
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OYIuC6p1FK3m68hpWRNCtlJk+ze+buKQLxwezKIoAMljmoXHKvydIygQq8CEoBuN6QMLdDZ39z74dKvRb2t422mpRS1F9iMebaPFXkF35XQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR10MB5382
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c0e93f9-0bfb-4f30-7cb5-08da7acd9e1f
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT054.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7493
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Mon, 18 Jul 2022 14:17:42 +0300
-schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+Convert Xilinx axi gpio binding documentation to YAML.
 
-> On Mon, Jun 06, 2022 at 07:41:26PM +0300, Andy Shevchenko wrote:
-> > There are a few users that would like to utilize P2SB mechanism of
-> > hiding and unhiding a device from the PCI configuration space.
-> > 
-> > Here is the series to consolidate p2sb handling code for existing
-> > users and to provide a generic way for new comer(s).
-> > 
-> > It also includes a patch to enable GPIO controllers on Apollo Lake
-> > when it's used with ABL bootloader w/o ACPI support.
-> > 
-> > The patch that brings the helper ("platform/x86/intel: Add Primary
-> > to Sideband (P2SB) bridge support") has a commit message that sheds
-> > a light on what the P2SB is and why this is needed.
-> > 
-> > I have tested this on Apollo Lake platform (I'm able to see SPI NOR
-> > and since we have an ACPI device for GPIO I do not see any attempts
-> > to recreate one).
-> > 
-> > The series is ready to be merged via MFD tree, but see below.
-> > 
-> > The series also includes updates for Simatic IPC drivers that
-> > partially tagged by respective maintainers (the main question is if
-> > Pavel is okay with the last three patches, since I believe Hans is
-> > okay with removing some code under PDx86). Hence the first 8
-> > patches can be merged right away and the rest when Pavel does his
-> > review.  
-> 
-> Kernel test bot seems found an issue with dependencies, because
-> selection of P2SB is not enough.
-> 
-> There are two solutions that I can see now:
-> 1) move P2SB out of X86_PLATFORM_DEVICES section (like PMC_ATOM);
-> 2) add 'depends on X86_PLATFORM_DEVICES' to the affected drivers.
-> 
-> I think the first solution cleaner, because it would be strange to
-> have the dependency on the drivers that quite unlikely be on server
-> platforms (e.g. EDAC).
-> 
-> In long term perhaps something like drivers/platform/x86/lib which is
-> for platform libraries or so and independent on X86_PLATFORM_DEVICES?
-> 
-> I will send a fix soon as per 1) above, feel free to comment here or
-> there.
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+---
+Changes in V2:
+- Updated mainter email with s-o-b.
+- Updated few constraints.
+- Addressed few other comments.
+---
+ .../devicetree/bindings/gpio/gpio-xilinx.txt  |  48 ------
+ .../bindings/gpio/xlnx,gpio-xilinx.yaml       | 154 ++++++++++++++++++
+ 2 files changed, 154 insertions(+), 48 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
 
-Hey Andy,
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+deleted file mode 100644
+index e506f30e1a95..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-Xilinx plb/axi GPIO controller
+-
+-Dual channel GPIO controller with configurable number of pins
+-(from 1 to 32 per channel). Every pin can be configured as
+-input/output/tristate. Both channels share the same global IRQ but
+-local interrupts can be enabled on channel basis.
+-
+-Required properties:
+-- compatible : Should be "xlnx,xps-gpio-1.00.a"
+-- reg : Address and length of the register set for the device
+-- #gpio-cells : Should be two. The first cell is the pin number and the
+-  second cell is used to specify optional parameters (currently unused).
+-- gpio-controller : Marks the device node as a GPIO controller.
+-
+-Optional properties:
+-- clocks : Input clock specifier. Refer to common clock bindings.
+-- interrupts : Interrupt mapping for GPIO IRQ.
+-- xlnx,all-inputs : if n-th bit is setup, GPIO-n is input
+-- xlnx,dout-default : if n-th bit is 1, GPIO-n default value is 1
+-- xlnx,gpio-width : gpio width
+-- xlnx,tri-default : if n-th bit is 1, GPIO-n is in tristate mode
+-- xlnx,is-dual : if 1, controller also uses the second channel
+-- xlnx,all-inputs-2 : as above but for the second channel
+-- xlnx,dout-default-2 : as above but the second channel
+-- xlnx,gpio2-width : as above but for the second channel
+-- xlnx,tri-default-2 : as above but for the second channel
+-
+-
+-Example:
+-gpio: gpio@40000000 {
+-	#gpio-cells = <2>;
+-	compatible = "xlnx,xps-gpio-1.00.a";
+-	clocks = <&clkc25>;
+-	gpio-controller ;
+-	interrupt-parent = <&microblaze_0_intc>;
+-	interrupts = < 6 2 >;
+-	reg = < 0x40000000 0x10000 >;
+-	xlnx,all-inputs = <0x0>;
+-	xlnx,all-inputs-2 = <0x0>;
+-	xlnx,dout-default = <0x0>;
+-	xlnx,dout-default-2 = <0x0>;
+-	xlnx,gpio-width = <0x2>;
+-	xlnx,gpio2-width = <0x2>;
+-	xlnx,interrupt-present = <0x1>;
+-	xlnx,is-dual = <0x1>;
+-	xlnx,tri-default = <0xffffffff>;
+-	xlnx,tri-default-2 = <0xffffffff>;
+-} ;
+diff --git a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+new file mode 100644
+index 000000000000..f333ee2288e7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+@@ -0,0 +1,154 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/xlnx,gpio-xilinx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx AXI GPIO controller
++
++maintainers:
++  - Neeli Srinivas <srinivas.neeli@xilinx.com>
++
++description:
++  The AXI GPIO design provides a general purpose input/output interface
++  to an AXI4-Lite interface. The AXI GPIO can be configured as either
++  a single or a dual-channel device. The width of each channel is
++  independently configurable. The channels can be configured to
++  generate an interrupt when a transition on any of their inputs occurs.
++
++properties:
++  compatible:
++    enum:
++      - xlnx,xps-gpio-1.00.a
++
++  reg:
++    maxItems: 1
++
++  "#gpio-cells":
++    const: 2
++
++  interrupts:
++    maxItems: 1
++
++  gpio-controller: true
++
++  gpio-line-names:
++    description: strings describing the names of each gpio line
++    minItems: 1
++    maxItems: 64
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  interrupt-names: true
++
++  xlnx,all-inputs:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This option sets this GPIO channel1 bits in input mode.
++
++  xlnx,all-inputs-2:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This option sets this GPIO channel2 bits in input mode.
++
++  xlnx,all-outputs:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This option sets this GPIO channel1 bits in output mode.
++
++  xlnx,all-outputs-2:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This option sets this GPIO channel2 bits in output mode.
++
++  xlnx,dout-default:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Sets the default value of all the enabled bits of
++                 channel1.
++    default: 0
++
++  xlnx,dout-default-2:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Sets the default value of all the enabled bits of
++                 channel2.
++    default: 0
++
++  xlnx,gpio-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: The value defines the bit width of the GPIO channel1.
++    minimum: 1
++    maximum: 32
++    default: 32
++
++  xlnx,gpio2-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: The value defines the bit width of the GPIO channel2.
++    minimum: 1
++    maximum: 32
++    default: 32
++
++  xlnx,interrupt-present:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This parameter enables interrupt control logic
++                 and interrupt registers in GPIO module.
++    minimum: 0
++    maximum: 1
++    default: 0
++
++  xlnx,is-dual:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This parameter enables a second GPIO channel (GPIO2).
++    minimum: 0
++    maximum: 1
++    default: 0
++
++  xlnx,tri-default:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This value configures the input or output mode
++                 of each bit of GPIO channel1.
++
++  xlnx,tri-default-2:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: This value configures the input or output mode
++                 of each bit of GPIO channel2.
++
++required:
++  - reg
++  - compatible
++  - gpio-controller
++  - "#gpio-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++        gpio@e000a000 {
++            compatible = "xlnx,xps-gpio-1.00.a";
++            reg = <0xa0020000 0x10000>;
++            #gpio-cells = <2>;
++            #interrupt-cells = <0x2>;
++            clocks = <&zynqmp_clk 71>;
++            gpio-controller;
++            interrupt-controller;
++            interrupt-names = "ip2intc_irpt";
++            interrupt-parent = <&gic>;
++            interrupts = <0 89 4>;
++            xlnx,all-inputs = <0x0>;
++            xlnx,all-inputs-2 = <0x0>;
++            xlnx,all-outputs = <0x0>;
++            xlnx,all-outputs-2 = <0x0>;
++            xlnx,dout-default = <0x0>;
++            xlnx,dout-default-2 = <0x0>;
++            xlnx,gpio-width = <0x20>;
++            xlnx,gpio2-width = <0x20>;
++            xlnx,interrupt-present = <0x1>;
++            xlnx,is-dual = <0x1>;
++            xlnx,tri-default = <0xFFFFFFFF>;
++            xlnx,tri-default-2 = <0xFFFFFFFF>;
++        };
++
++...
+-- 
+2.17.1
 
-is that one on the way already? I meanwhile also found a possible
-configuration issue in my patches you carry on top. And i suggest to
-include or squash
-[PATCH] leds: simatic-ipc-leds-gpio: make sure we have the GPIO
-providing driver
-
-in this series.
-
-I am also working on adding more models which have GPIO based LEDs. All
-the patches are based on this series because it is where i currently
-introduce GPIO based LEDs for simatic. I would not want to change the
-ordering but at the same time i would like to meet 5.20.
-
-regards,
-Henning
