@@ -2,221 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40BE858E705
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Aug 2022 08:02:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 279CC58E73F
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Aug 2022 08:20:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231273AbiHJGBe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Aug 2022 02:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60334 "EHLO
+        id S231348AbiHJGUC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Aug 2022 02:20:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231224AbiHJGBP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Aug 2022 02:01:15 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF2C9326C1
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Aug 2022 23:01:14 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id bu13-20020a056902090d00b00671743601f1so11336066ybb.0
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Aug 2022 23:01:14 -0700 (PDT)
+        with ESMTP id S231307AbiHJGTw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Aug 2022 02:19:52 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716B366A40
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Aug 2022 23:19:50 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id t1so19871937lft.8
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Aug 2022 23:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc;
-        bh=vx+dUbGYOv+iuawfVE7Ay+tk/KEU0DVIy9gKSjJSbfM=;
-        b=DHsiPm8AGi/hRuAdwy5HbH6s2r/Oy5+6hpbTVaZ+kokvPnDRVEbJgOyfLDYxmu38/4
-         6c/USgm4pyf2vbNHq2+wO1DqxDN5IleK1JLrmt4AmI8cQZgYb+f2P8+NrSaqXDmNELCn
-         CG/sox7zZCWs8YPB3eduZ7lrqv9LIN7coqgFfSQDtS+H7/JcQsLLKRN2VBjD4MmQ7DpP
-         V+5QayoprOrleKbfgiC/nxCDcHAwk4cSCm1cUXlQqVrZJZ//d/l82UMam/ZZEF7Q/FKj
-         9IuQ3rPDGmmZL1xAEzGgeod2tuD2Rqc7w2LAiEWL8rfN2QjYE28QmkM4/wTaMPoRbas6
-         UhAw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=cgxrceMRQO0vyuTZMziuSdvM9yTkOlxs43d6QtFjxCI=;
+        b=CgbB3UkMwQg8ANoP0fTaJtEtDOkZbc48FnUHQjkEEIIZOYkGOFzKrxe1ISuPlDr2kM
+         Sq+wuGZO95Je8y5L2yVzoPh8tKtpEtS/M6YhKFeG2DBO6J1s+Cdk/RVBK5F5hY8lOo1u
+         TiNAnuNpZEFcpLFc0Dm3HOfC+BzSu6x1nsSUNoqE0IVDVf0ttPVpx8pIH96KIcy2zsFW
+         vc9mEo5o1PEmia80LqJ3jwxPXziIyMhdEXPtgOr5eBnMQYRY3xeIDtPURpRMhPwzPK8f
+         W8tzHGPkKg63LmQhjxVXmezgGZIC8SoAVCV6zA2mjYUOSxgsIpYVty3tiYdmvMWcKyrf
+         e3jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc;
-        bh=vx+dUbGYOv+iuawfVE7Ay+tk/KEU0DVIy9gKSjJSbfM=;
-        b=SkP9IWUH+ig5z3PmQSgb39mXtlvVHidz0pq8uP1RSah8egk9Zhhr2h1LKNivcqe1b0
-         xn2Cu7W8n1N3furlXYilLuw9VvRNKUMgB59zCA1cVtrJaQLAiOrY+rOZLicXU5VWIwDD
-         BRps4u//hMMaKizP84ZXii1SYfLOMGgjTBfOsX/p7cMti1kGUv/O7gvN5Bcd4RYSftul
-         Kp4UfzlXDynLFIzf8VAw33ZntRmGTajzb1aP/ab9fe1oKbamLJL8iuGqO0EgvnJpCZL7
-         XTNGUSzIe9Sbq5g/dPufcETBOb+Dm/H18rlRRJntGiGRU0RfDt0+E/FzLueonRnrSiqH
-         W1XQ==
-X-Gm-Message-State: ACgBeo0J4i+J5sbvrlommb8O95kp3xPqAkM8m0/vvVaKB7P3RK7CPmCg
-        e5daF2DAZ88eQGIiLMW5CY+Oup5X2TS0Ej8=
-X-Google-Smtp-Source: AA6agR4Khze5AtD+WD0fh1ffw9yPithpzLXIHHaEEIY0YlMjElr9n+/FhIjncVMO9+wvqV/HHySsaIt/gn01T+Q=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:f21:76ca:766f:e0ab])
- (user=saravanak job=sendgmr) by 2002:a5b:b8e:0:b0:67c:237b:760b with SMTP id
- l14-20020a5b0b8e000000b0067c237b760bmr5624436ybq.627.1660111274504; Tue, 09
- Aug 2022 23:01:14 -0700 (PDT)
-Date:   Tue,  9 Aug 2022 23:00:38 -0700
-In-Reply-To: <20220810060040.321697-1-saravanak@google.com>
-Message-Id: <20220810060040.321697-10-saravanak@google.com>
-Mime-Version: 1.0
-References: <20220810060040.321697-1-saravanak@google.com>
-X-Mailer: git-send-email 2.37.1.559.g78731f0fdb-goog
-Subject: [PATCH v1 9/9] of: property: Simplify of_link_to_phandle()
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=cgxrceMRQO0vyuTZMziuSdvM9yTkOlxs43d6QtFjxCI=;
+        b=uAo03bb3uHvqAhIs4VmD/kop8bAvTGMBNFtXNYm2oteBii7Tt/c048Yh2RLoZCt2OW
+         HHpoxD66b6Iez0PbfpnNnrnQYDrdDB3myci1jSXNtHkeQYr7pxlfE8QAHEoFW62eIvCL
+         s/ctfS/hlaZnjEs0F8+5O8cuqZYZpJ/LQNgf6RWD8rlp3DITqwv6O6K+DVa1t2w1Cn0b
+         q9t8/Tjicu1507MbkJAobNWz8VmSAXYq7KgagPiXlnIvUv+WhfLep+WYy2uoq51FNpNq
+         dyIhqSvUGhlLjkuvtWFq+CDkDYoUH5mXrvBiV536WmlXaMf3M5f/HA72XhUukVQFwsng
+         ioqA==
+X-Gm-Message-State: ACgBeo0jR21uqqjszc79WgHNHvdTeV54L9Gq0dzxQEhutKMW8WY5vzp6
+        SPihG3BlI3C5Fe3zCeVTphRqiA==
+X-Google-Smtp-Source: AA6agR6xRoXCDUti2kiH9gODNIBvqPgqJLL+VHsxEBVldfU73KbukeOv6gFbxVV/UKnQN69ZqNyq7w==
+X-Received: by 2002:a05:6512:3ba8:b0:48a:f8e2:8ee8 with SMTP id g40-20020a0565123ba800b0048af8e28ee8mr8446438lfv.104.1660112388777;
+        Tue, 09 Aug 2022 23:19:48 -0700 (PDT)
+Received: from [192.168.1.39] ([83.146.140.105])
+        by smtp.gmail.com with ESMTPSA id v8-20020ac258e8000000b0048b3581eb7dsm211756lfo.260.2022.08.09.23.19.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Aug 2022 23:19:48 -0700 (PDT)
+Message-ID: <886604bf-6ff0-09cf-4271-b7d5669b8b3b@linaro.org>
+Date:   Wed, 10 Aug 2022 09:19:47 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,ipq6018: Fix example
+ 'gpio-ranges' size
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Sricharan R <sricharan@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220809214556.2489822-1-robh@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220809214556.2489822-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The driver core now:
-- Has the parent device of a supplier pick up the consumers if the
-  supplier never has a device created for it.
-- Ignores a supplier if the supplier has no parent device and will never
-  be probed by a driver
+On 10/08/2022 00:45, Rob Herring wrote:
+> 'gpio-ranges' entries have a fixed size of 1 phandle plus arg 3 cells.
+> The qcom,ipq6018-pinctrl example is a cell short:
+> 
+> Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.example.dtb: pinctrl@1000000: gpio-ranges:0: [1, 0, 80] is too short
+> 	From schema: /usr/local/lib/python3.10/dist-packages/dtschema/schemas/gpio/gpio.yaml
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please ack and I can send to Linus before rc1.
+> ---
 
-And already prevents creating a device link with the consumer as a
-supplier of a parent.
 
-So, we no longer need to find the "compatible" node of the supplier or
-do any other checks in of_link_to_phandle(). We simply need to make sure
-that the supplier is available in DT.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/property.c | 84 +++++++------------------------------------
- 1 file changed, 13 insertions(+), 71 deletions(-)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 967f79b59016..98ca0399a354 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1060,20 +1060,6 @@ of_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
- 	return of_device_get_match_data(dev);
- }
- 
--static bool of_is_ancestor_of(struct device_node *test_ancestor,
--			      struct device_node *child)
--{
--	of_node_get(child);
--	while (child) {
--		if (child == test_ancestor) {
--			of_node_put(child);
--			return true;
--		}
--		child = of_get_next_parent(child);
--	}
--	return false;
--}
--
- static struct device_node *of_get_compat_node(struct device_node *np)
- {
- 	of_node_get(np);
-@@ -1104,71 +1090,27 @@ static struct device_node *of_get_compat_node_parent(struct device_node *np)
- 	return node;
- }
- 
--/**
-- * of_link_to_phandle - Add fwnode link to supplier from supplier phandle
-- * @con_np: consumer device tree node
-- * @sup_np: supplier device tree node
-- *
-- * Given a phandle to a supplier device tree node (@sup_np), this function
-- * finds the device that owns the supplier device tree node and creates a
-- * device link from @dev consumer device to the supplier device. This function
-- * doesn't create device links for invalid scenarios such as trying to create a
-- * link with a parent device as the consumer of its child device. In such
-- * cases, it returns an error.
-- *
-- * Returns:
-- * - 0 if fwnode link successfully created to supplier
-- * - -EINVAL if the supplier link is invalid and should not be created
-- * - -ENODEV if struct device will never be create for supplier
-- */
--static int of_link_to_phandle(struct device_node *con_np,
-+static void of_link_to_phandle(struct device_node *con_np,
- 			      struct device_node *sup_np)
- {
--	struct device *sup_dev;
--	struct device_node *tmp_np = sup_np;
-+	struct device_node *tmp_np = of_node_get(sup_np);
- 
--	/*
--	 * Find the device node that contains the supplier phandle.  It may be
--	 * @sup_np or it may be an ancestor of @sup_np.
--	 */
--	sup_np = of_get_compat_node(sup_np);
--	if (!sup_np) {
--		pr_debug("Not linking %pOFP to %pOFP - No device\n",
--			 con_np, tmp_np);
--		return -ENODEV;
--	}
-+	/* Check that sup_np and its ancestors are available. */
-+	while (tmp_np) {
-+		if (of_fwnode_handle(tmp_np)->dev) {
-+			of_node_put(tmp_np);
-+			break;
-+		}
- 
--	/*
--	 * Don't allow linking a device node as a consumer of one of its
--	 * descendant nodes. By definition, a child node can't be a functional
--	 * dependency for the parent node.
--	 */
--	if (of_is_ancestor_of(con_np, sup_np)) {
--		pr_debug("Not linking %pOFP to %pOFP - is descendant\n",
--			 con_np, sup_np);
--		of_node_put(sup_np);
--		return -EINVAL;
--	}
-+		if (!of_device_is_available(tmp_np)) {
-+			of_node_put(tmp_np);
-+			return;
-+		}
- 
--	/*
--	 * Don't create links to "early devices" that won't have struct devices
--	 * created for them.
--	 */
--	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
--	if (!sup_dev &&
--	    (of_node_check_flag(sup_np, OF_POPULATED) ||
--	     sup_np->fwnode.flags & FWNODE_FLAG_NOT_DEVICE)) {
--		pr_debug("Not linking %pOFP to %pOFP - No struct device\n",
--			 con_np, sup_np);
--		of_node_put(sup_np);
--		return -ENODEV;
-+		tmp_np = of_get_next_parent(tmp_np);
- 	}
--	put_device(sup_dev);
- 
- 	fwnode_link_add(of_fwnode_handle(con_np), of_fwnode_handle(sup_np));
--	of_node_put(sup_np);
--
--	return 0;
- }
- 
- /**
--- 
-2.37.1.559.g78731f0fdb-goog
-
+Best regards,
+Krzysztof
