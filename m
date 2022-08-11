@@ -2,252 +2,212 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65F565906A3
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Aug 2022 21:07:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49A9A590788
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Aug 2022 22:46:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236120AbiHKSxj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Aug 2022 14:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34640 "EHLO
+        id S235711AbiHKUqK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Aug 2022 16:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236050AbiHKSxb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Aug 2022 14:53:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1DE5C9E129
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Aug 2022 11:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660244008;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ozah201mnfEEDkVFShrVs48byUP3DGG4fcUS7109nSU=;
-        b=MHR15G1PInDUWUMNmzmaSdZaH1ixrJ2LRE1mKO8Wde2jE7N4OxbrjpAiSbBry5B66H4r8v
-        qGFvhhLbRgE7Ogih2ANBnSJAsk/o+SsJd8NZdtdj+sVf90yBeh5wvfrywYS4uyFLvQcoUi
-        9/ZyHU5C3ugdGewgExzdie5iN0RgAOk=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-15-GETiXA0XOa2QImuqmhnG8A-1; Thu, 11 Aug 2022 14:53:26 -0400
-X-MC-Unique: GETiXA0XOa2QImuqmhnG8A-1
-Received: by mail-ej1-f71.google.com with SMTP id qk37-20020a1709077fa500b00730c2d975a0so5745836ejc.13
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Aug 2022 11:53:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=Ozah201mnfEEDkVFShrVs48byUP3DGG4fcUS7109nSU=;
-        b=XiCyfIr0Luuvg4US4DtJIw4XG0k8RRDbjBXQJbXnsJe6F6K83q1xz8Fb/w/h0CZptm
-         bwEPoOFwIIIJPuO/VDxLiM77VUuOfbWUbqvDnR5oVVup1npkC7WYY2ZKHK3r6GHcEMav
-         xf1CZbtuXm8+feRe1fAVyMYujKkmQBo7e6rZXnGWdPaX61L0xu7iAVUCz/pzA1g+GXCu
-         LwTKMKpn/oBWBNxLsyCIKBChKgNYmf+1jGh+I309nzTCj7gj/rDC9j6REE0D1Fx3ySHD
-         5nEnObGA5vWVpzU5REG42LkfmufzV/P/96uB7t8TBa14I+u2vJOr5195t0VtxiPeNB6/
-         YeeA==
-X-Gm-Message-State: ACgBeo17dBXlpTg6Jh7TH2s2ElTnJqJZeoFmu5/O0YM8ZaMUpwHVLWsv
-        y1Riy2xOQBISiG24f/xbf4re+gQuauGPsdpEG8iuJRtx9l5+OpXrXs8bF0Ced60uTDU+I1HXiyz
-        nMsFJpyIGTsqKHdSstK0OYw==
-X-Received: by 2002:a05:6402:538a:b0:43a:298e:bc2b with SMTP id ew10-20020a056402538a00b0043a298ebc2bmr407772edb.125.1660244005845;
-        Thu, 11 Aug 2022 11:53:25 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4Hf0C3qERg79013qKBqVwC7oHyWQmFquBERdgftTvV6Wvyxf06qOEovcWRBXcfm3s3neBGlw==
-X-Received: by 2002:a05:6402:538a:b0:43a:298e:bc2b with SMTP id ew10-20020a056402538a00b0043a298ebc2bmr407757edb.125.1660244005666;
-        Thu, 11 Aug 2022 11:53:25 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id f2-20020a17090660c200b007317ad29921sm3879701ejk.13.2022.08.11.11.53.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Aug 2022 11:53:25 -0700 (PDT)
-Message-ID: <23778397-8080-da39-fbde-22a10c820fbd@redhat.com>
-Date:   Thu, 11 Aug 2022 20:53:24 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v3 3/4] leds: simatic-ipc-leds-gpio: add new model 227G
-Content-Language: en-US
-To:     Henning Schild <henning.schild@siemens.com>,
+        with ESMTP id S233840AbiHKUqI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Aug 2022 16:46:08 -0400
+X-Greylist: delayed 2617 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 11 Aug 2022 13:46:07 PDT
+Received: from terminus.zytor.com (unknown [IPv6:2607:7c80:54:3::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7A58B9BA;
+        Thu, 11 Aug 2022 13:46:07 -0700 (PDT)
+Received: from [127.0.0.1] ([12.0.243.163])
+        (authenticated bits=0)
+        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 27BJvVcV569135
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 11 Aug 2022 12:57:32 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 27BJvVcV569135
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2022080501; t=1660247855;
+        bh=LZ5/i1TBlH5OS+iyknyKHVuU6iY8SydC5jqehDFiCrg=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=EbPAmL9QTPSIaBoTRMPStYWl+qU6Ug1qOfcvMRQWxRtrZGXKoJtzeiYyW6agNxxfr
+         T+HeWHmKTA4oczR30s6NcwYGQoGLPrmNdGwlDB8GC143sGVRAqHiUicdlg1dEXrH/m
+         NeXj6yevSlRpo2kNlCwoVQ4UO5JhlWJz1VaUsXsxzFoCjO+c27FV3y4Oq5+Cm9SXK8
+         0huM8v14WT3kPV2w4GWBjYztOsMlqJTGZx4j5C2BHthDuAmnPuIiQxlGLR4T6zC1fK
+         SIxc8fF/p0t7gK8qatwkBKYcVdKmiRDxO6C09i894SX6A4SUW4ZWFoASW7X7FZ+KWQ
+         Si+SZXjBwBMtQ==
+Date:   Thu, 11 Aug 2022 12:57:25 -0700
+From:   "H. Peter Anvin" <hpa@zytor.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-References: <20220811153908.31283-1-henning.schild@siemens.com>
- <20220811153908.31283-4-henning.schild@siemens.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220811153908.31283-4-henning.schild@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Jonathan Corbet <corbet@lwn.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH] gpio: Allow user to customise maximum number of GPIOs
+User-Agent: K-9 Mail for Android
+In-Reply-To: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
+References: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
+Message-ID: <C1886F9A-1799-4E3D-9153-579D31488695@zytor.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RDNS_NONE,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On August 9, 2022 3:40:38 AM PDT, Christophe Leroy <christophe=2Eleroy@csgr=
+oup=2Eeu> wrote:
+>At the time being, the default maximum number of GPIOs is set to 512
+>and can only get customised via an architecture specific
+>CONFIG_ARCH_NR_GPIO=2E
+>
+>The maximum number of GPIOs might be dependent on the number of
+>interface boards and is somewhat independent of architecture=2E
+>
+>Allow the user to select that maximum number outside of any
+>architecture configuration=2E To enable that, re-define a
+>core CONFIG_ARCH_NR_GPIO for architectures which don't already
+>define one=2E Guard it with a new hidden CONFIG_ARCH_HAS_NR_GPIO=2E
+>
+>Only two architectures will need CONFIG_ARCH_HAS_NR_GPIO: x86 and arm=2E
+>
+>On arm, do like x86 and set 512 as the default instead of 0, that
+>allows simplifying the logic in asm-generic/gpio=2Eh
+>
+>Signed-off-by: Christophe Leroy <christophe=2Eleroy@csgroup=2Eeu>
+>---
+> Documentation/driver-api/gpio/legacy=2Erst |  2 +-
+> arch/arm/Kconfig                         |  3 ++-
+> arch/arm/include/asm/gpio=2Eh              |  1 -
+> arch/x86/Kconfig                         |  1 +
+> drivers/gpio/Kconfig                     | 14 ++++++++++++++
+> include/asm-generic/gpio=2Eh               |  6 ------
+> 6 files changed, 18 insertions(+), 9 deletions(-)
+>
+>diff --git a/Documentation/driver-api/gpio/legacy=2Erst b/Documentation/d=
+river-api/gpio/legacy=2Erst
+>index 9b12eeb89170=2E=2E566b06a584cf 100644
+>--- a/Documentation/driver-api/gpio/legacy=2Erst
+>+++ b/Documentation/driver-api/gpio/legacy=2Erst
+>@@ -558,7 +558,7 @@ Platform Support
+> To force-enable this framework, a platform's Kconfig will "select" GPIOL=
+IB,
+> else it is up to the user to configure support for GPIO=2E
+>=20
+>-It may also provide a custom value for ARCH_NR_GPIOS, so that it better
+>+It may also provide a custom value for CONFIG_ARCH_NR_GPIO, so that it b=
+etter
+> reflects the number of GPIOs in actual use on that platform, without
+> wasting static table space=2E  (It should count both built-in/SoC GPIOs =
+and
+> also ones on GPIO expanders=2E
+>diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>index 53e6a1da9af5=2E=2Ee55b6560fe4f 100644
+>--- a/arch/arm/Kconfig
+>+++ b/arch/arm/Kconfig
+>@@ -14,6 +14,7 @@ config ARM
+> 	select ARCH_HAS_KCOV
+> 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+> 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>+	select ARCH_HAS_NR_GPIO
+> 	select ARCH_HAS_PTE_SPECIAL if ARM_LPAE
+> 	select ARCH_HAS_PHYS_TO_DMA
+> 	select ARCH_HAS_SETUP_DMA_OPS
+>@@ -1243,7 +1244,7 @@ config ARCH_NR_GPIO
+> 	default 352 if ARCH_VT8500
+> 	default 288 if ARCH_ROCKCHIP
+> 	default 264 if MACH_H4700
+>-	default 0
+>+	default 512
+> 	help
+> 	  Maximum number of GPIOs in the system=2E
+>=20
+>diff --git a/arch/arm/include/asm/gpio=2Eh b/arch/arm/include/asm/gpio=2E=
+h
+>index f3bb8a2bf788=2E=2E4ebbb58f06ea 100644
+>--- a/arch/arm/include/asm/gpio=2Eh
+>+++ b/arch/arm/include/asm/gpio=2Eh
+>@@ -2,7 +2,6 @@
+> #ifndef _ARCH_ARM_GPIO_H
+> #define _ARCH_ARM_GPIO_H
+>=20
+>-/* Note: this may rely upon the value of ARCH_NR_GPIOS set in mach/gpio=
+=2Eh */
+> #include <asm-generic/gpio=2Eh>
+>=20
+> /* The trivial gpiolib dispatchers */
+>diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>index f9920f1341c8=2E=2Ea8c956abc21e 100644
+>--- a/arch/x86/Kconfig
+>+++ b/arch/x86/Kconfig
+>@@ -82,6 +82,7 @@ config X86
+> 	select ARCH_HAS_MEM_ENCRYPT
+> 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+> 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>+	select ARCH_HAS_NR_GPIO
+> 	select ARCH_HAS_PMEM_API		if X86_64
+> 	select ARCH_HAS_PTE_DEVMAP		if X86_64
+> 	select ARCH_HAS_PTE_SPECIAL
+>diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+>index 0642f579196f=2E=2E250b50ed44e1 100644
+>--- a/drivers/gpio/Kconfig
+>+++ b/drivers/gpio/Kconfig
+>@@ -11,6 +11,9 @@ config ARCH_HAVE_CUSTOM_GPIO_H
+> 	  overriding the default implementations=2E  New uses of this are
+> 	  strongly discouraged=2E
+>=20
+>+config ARCH_HAS_NR_GPIO
+>+	bool
+>+
+> menuconfig GPIOLIB
+> 	bool "GPIO Support"
+> 	help
+>@@ -22,6 +25,17 @@ menuconfig GPIOLIB
+>=20
+> if GPIOLIB
+>=20
+>+config ARCH_NR_GPIO
+>+	int "Maximum number of GPIOs" if EXPERT
+>+	depends on !ARCH_HAS_NR_GPIO
+>+	default 512
+>+	help
+>+	  This allows the user to select the maximum number of GPIOs the
+>+	  kernel must support=2E When the architecture defines a number
+>+	  through CONFIG_ARCH_NR_GPIO, that value is taken and the user
+>+	  cannot change it=2E Otherwise it defaults to 512 and the user
+>+	  can change it when CONFIG_EXPERT is set=2E
+>+
+> config GPIOLIB_FASTPATH_LIMIT
+> 	int "Maximum number of GPIOs for fast path"
+> 	range 32 512
+>diff --git a/include/asm-generic/gpio=2Eh b/include/asm-generic/gpio=2Eh
+>index aea9aee1f3e9=2E=2Eee090f534ab8 100644
+>--- a/include/asm-generic/gpio=2Eh
+>+++ b/include/asm-generic/gpio=2Eh
+>@@ -24,13 +24,7 @@
+>  * actually an estimate of a board-specific value=2E
+>  */
+>=20
+>-#ifndef ARCH_NR_GPIOS
+>-#if defined(CONFIG_ARCH_NR_GPIO) && CONFIG_ARCH_NR_GPIO > 0
+> #define ARCH_NR_GPIOS CONFIG_ARCH_NR_GPIO
+>-#else
+>-#define ARCH_NR_GPIOS		512
+>-#endif
+>-#endif
+>=20
+> /*
+>  * "valid" GPIO numbers are nonnegative and may be passed to
 
-On 8/11/22 17:39, Henning Schild wrote:
-> This adds support of the Siemens Simatic IPC227G. Its LEDs are connected
-> to GPIO pins provided by the gpio-f7188x module. We make sure that
-> gets loaded, if not enabled in the kernel config no LED support will be
-> available.
-> 
-> Signed-off-by: Henning Schild <henning.schild@siemens.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 42 ++++++++++++++++---
->  drivers/platform/x86/simatic-ipc.c            |  4 +-
->  .../platform_data/x86/simatic-ipc-base.h      |  1 +
->  include/linux/platform_data/x86/simatic-ipc.h |  1 +
->  4 files changed, 42 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio.c b/drivers/leds/simple/simatic-ipc-leds-gpio.c
-> index 4c9e663a90ba..0d73dcbeec2d 100644
-> --- a/drivers/leds/simple/simatic-ipc-leds-gpio.c
-> +++ b/drivers/leds/simple/simatic-ipc-leds-gpio.c
-> @@ -13,28 +13,45 @@
->  #include <linux/leds.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/platform_data/x86/simatic-ipc-base.h>
->  
-> -static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
-> +struct gpiod_lookup_table *simatic_ipc_led_gpio_table;
-> +
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e = {
->  	.dev_id = "leds-gpio",
->  	.table = {
-> -		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL, 1, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53, NULL, 2, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 57, NULL, 3, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 4, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 5, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7, GPIO_ACTIVE_HIGH),
->  	},
->  };
->  
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
-> +	.dev_id = "leds-gpio",
-> +	.table = {
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 1, NULL, 1, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 2, NULL, 2, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 3, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 4, NULL, 4, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 5, NULL, 5, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-3", 7, NULL, 7, GPIO_ACTIVE_HIGH),
-> +	}
-> +};
-> +
->  static const struct gpio_led simatic_ipc_gpio_leds[] = {
-> -	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
->  	{ .name = "red:" LED_FUNCTION_STATUS "-1" },
->  	{ .name = "green:" LED_FUNCTION_STATUS "-1" },
->  	{ .name = "red:" LED_FUNCTION_STATUS "-2" },
->  	{ .name = "green:" LED_FUNCTION_STATUS "-2" },
->  	{ .name = "red:" LED_FUNCTION_STATUS "-3" },
-> +	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
->  };
->  
->  static const struct gpio_led_platform_data simatic_ipc_gpio_leds_pdata = {
-> @@ -46,7 +63,7 @@ static struct platform_device *simatic_leds_pdev;
->  
->  static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
->  {
-> -	gpiod_remove_lookup_table(&simatic_ipc_led_gpio_table);
-> +	gpiod_remove_lookup_table(simatic_ipc_led_gpio_table);
->  	platform_device_unregister(simatic_leds_pdev);
->  
->  	return 0;
-> @@ -54,10 +71,25 @@ static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
->  
->  static int simatic_ipc_leds_gpio_probe(struct platform_device *pdev)
->  {
-> +	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
->  	struct gpio_desc *gpiod;
->  	int err;
->  
-> -	gpiod_add_lookup_table(&simatic_ipc_led_gpio_table);
-> +	switch (plat->devmode) {
-> +	case SIMATIC_IPC_DEVICE_127E:
-> +		simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_127e;
-> +		break;
-> +	case SIMATIC_IPC_DEVICE_227G:
-> +		if (!IS_ENABLED(CONFIG_GPIO_F7188X))
-> +			return -ENODEV;
-> +		request_module("gpio-f7188x");
-> +		simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_227g;
-> +		break;
-> +	default:
-> +		return -ENODEV;
-> +	}
-> +
-> +	gpiod_add_lookup_table(simatic_ipc_led_gpio_table);
->  	simatic_leds_pdev = platform_device_register_resndata(NULL,
->  		"leds-gpio", PLATFORM_DEVID_NONE, NULL, 0,
->  		&simatic_ipc_gpio_leds_pdata,
-> diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
-> index ca3647b751d5..1825ef21a86d 100644
-> --- a/drivers/platform/x86/simatic-ipc.c
-> +++ b/drivers/platform/x86/simatic-ipc.c
-> @@ -41,6 +41,7 @@ static struct {
->  	{SIMATIC_IPC_IPC127E, SIMATIC_IPC_DEVICE_127E, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC227D, SIMATIC_IPC_DEVICE_227D, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC227E, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_227E},
-> +	{SIMATIC_IPC_IPC227G, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC277E, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227E},
->  	{SIMATIC_IPC_IPC427D, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC427E, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_427E},
-> @@ -65,7 +66,8 @@ static int register_platform_devices(u32 station_id)
->  	}
->  
->  	if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
-> -		if (ledmode == SIMATIC_IPC_DEVICE_127E)
-> +		if (ledmode == SIMATIC_IPC_DEVICE_127E ||
-> +		    ledmode == SIMATIC_IPC_DEVICE_227G)
->  			pdevname = KBUILD_MODNAME "_leds_gpio";
->  		platform_data.devmode = ledmode;
->  		ipc_led_platform_device =
-> diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h b/include/linux/platform_data/x86/simatic-ipc-base.h
-> index 39fefd48cf4d..57d6a10dfc9e 100644
-> --- a/include/linux/platform_data/x86/simatic-ipc-base.h
-> +++ b/include/linux/platform_data/x86/simatic-ipc-base.h
-> @@ -19,6 +19,7 @@
->  #define SIMATIC_IPC_DEVICE_427E 2
->  #define SIMATIC_IPC_DEVICE_127E 3
->  #define SIMATIC_IPC_DEVICE_227E 4
-> +#define SIMATIC_IPC_DEVICE_227G 5
->  
->  struct simatic_ipc_platform {
->  	u8	devmode;
-> diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
-> index f3b76b39776b..7a2e79f3be0b 100644
-> --- a/include/linux/platform_data/x86/simatic-ipc.h
-> +++ b/include/linux/platform_data/x86/simatic-ipc.h
-> @@ -31,6 +31,7 @@ enum simatic_ipc_station_ids {
->  	SIMATIC_IPC_IPC427E = 0x00000A01,
->  	SIMATIC_IPC_IPC477E = 0x00000A02,
->  	SIMATIC_IPC_IPC127E = 0x00000D01,
-> +	SIMATIC_IPC_IPC227G = 0x00000F01,
->  };
->  
->  static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
-
+This seems very odd to me=2E GPIOs can be, and often are, attached to peri=
+pheral buses which means that the *same system* can have anything from none=
+ to thousands of gpios =2E=2E
