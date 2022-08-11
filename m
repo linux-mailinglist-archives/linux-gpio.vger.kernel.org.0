@@ -2,61 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49A9A590788
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Aug 2022 22:46:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AE6F5907D5
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Aug 2022 23:08:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235711AbiHKUqK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Aug 2022 16:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
+        id S236373AbiHKVIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Aug 2022 17:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233840AbiHKUqI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Aug 2022 16:46:08 -0400
-X-Greylist: delayed 2617 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 11 Aug 2022 13:46:07 PDT
-Received: from terminus.zytor.com (unknown [IPv6:2607:7c80:54:3::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7A58B9BA;
-        Thu, 11 Aug 2022 13:46:07 -0700 (PDT)
-Received: from [127.0.0.1] ([12.0.243.163])
-        (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 27BJvVcV569135
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 11 Aug 2022 12:57:32 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 27BJvVcV569135
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2022080501; t=1660247855;
-        bh=LZ5/i1TBlH5OS+iyknyKHVuU6iY8SydC5jqehDFiCrg=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=EbPAmL9QTPSIaBoTRMPStYWl+qU6Ug1qOfcvMRQWxRtrZGXKoJtzeiYyW6agNxxfr
-         T+HeWHmKTA4oczR30s6NcwYGQoGLPrmNdGwlDB8GC143sGVRAqHiUicdlg1dEXrH/m
-         NeXj6yevSlRpo2kNlCwoVQ4UO5JhlWJz1VaUsXsxzFoCjO+c27FV3y4Oq5+Cm9SXK8
-         0huM8v14WT3kPV2w4GWBjYztOsMlqJTGZx4j5C2BHthDuAmnPuIiQxlGLR4T6zC1fK
-         SIxc8fF/p0t7gK8qatwkBKYcVdKmiRDxO6C09i894SX6A4SUW4ZWFoASW7X7FZ+KWQ
-         Si+SZXjBwBMtQ==
-Date:   Thu, 11 Aug 2022 12:57:25 -0700
-From:   "H. Peter Anvin" <hpa@zytor.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH] gpio: Allow user to customise maximum number of GPIOs
-User-Agent: K-9 Mail for Android
-In-Reply-To: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
-References: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
-Message-ID: <C1886F9A-1799-4E3D-9153-579D31488695@zytor.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RDNS_NONE,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        with ESMTP id S236608AbiHKVHx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Aug 2022 17:07:53 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FA5A061C
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Aug 2022 14:07:10 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id g13so11021988plo.6
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Aug 2022 14:07:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc;
+        bh=fYIwfWDqXvJTpIZp6wWu1QnQ1p5fYHmeOm5er300uW0=;
+        b=bCRcnoMd0iKE/9LgGvS5U9Khr9pMfS0mzU8SLvpNVACCVJqJPmsDOjWtSWl5n9N/yS
+         3JFou+HII01bQrn62nQVHgVrYehTqkwoV41tt8IRH+EhAQA8FXu4eaz635W9hKAyyBT1
+         85dX/QZz6Mfp8pA43pHm4uZF2LB9G58Bhmr80hx2nEcKlEnvd3wdo8BlqgCymspxvYFU
+         J1N38sMn+8GPiFZ7D5bCBr0Ia9e7/oizTh84yL2voY4yF8YBkfZEqZCyrgTduwQo0u5M
+         NYgqfBi5vLoTXmYF9Pp51zxNvyJgq91C8E0M7nVGDpEq7OLcEdpYQFjrWcbD+6SjsBI+
+         q/Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc;
+        bh=fYIwfWDqXvJTpIZp6wWu1QnQ1p5fYHmeOm5er300uW0=;
+        b=NplcSPahGowLv/zGFb6xi9l/tR29+IYKQ4uBYG8QaK17eQCJAEgbb4Gd2QrW4gYV36
+         r5+UuI07Nr+Ot4PdJ0eENWOUl31BZLsNGkRPUH4v+6hVinTsU5iAddk8f147a7MNFX2f
+         +eZi+EGyPA+vLsWWFN4fZQEmxRfw8ojz5QQh7BbFMmGSBMx+dm4JhIe//Dkr6h8djiSE
+         +VNCtMy5W5vwVQhBATYJXzR9rFu+gvhv9O0CUM/L00+tIevIpYBb7baXdKc4KlZQmWoN
+         3AE8rgBG8Sz97yTV4fwaXWdmUSSfVcd9UC7M7Rn3MxUuXUjMD11gZ7QVy0TQzDNZIxI5
+         KwHQ==
+X-Gm-Message-State: ACgBeo2fI3+hbdnwnnKW1nPP6oDf3NOqcNarKtJMG5Mq5+9wc7mhPntb
+        MgFcrKktsNiss0D2BuMFelhdOQ==
+X-Google-Smtp-Source: AA6agR593So6RKlwX2FqLk3gn4GVQrawLohvig5Nzam1xISqzzknSaCSE53kgSNdccIYbd1IrYZ1SQ==
+X-Received: by 2002:a17:90b:38cb:b0:1f5:2321:63cb with SMTP id nn11-20020a17090b38cb00b001f5232163cbmr10757573pjb.110.1660252021424;
+        Thu, 11 Aug 2022 14:07:01 -0700 (PDT)
+Received: from localhost ([50.221.140.186])
+        by smtp.gmail.com with ESMTPSA id x190-20020a6231c7000000b0052def2e20dasm122957pfx.167.2022.08.11.14.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Aug 2022 14:07:00 -0700 (PDT)
+Date:   Thu, 11 Aug 2022 14:07:00 -0700 (PDT)
+X-Google-Original-Date: Thu, 11 Aug 2022 14:00:19 PDT (-0700)
+Subject:     Re: [PATCH] dt-bindings: riscv: fix SiFive l2-cache's cache-sets
+In-Reply-To: <20220803185359.942928-1-mail@conchuod.ie>
+CC:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, conor.dooley@microchip.com,
+        atulkhare@rivosinc.com, sagar.kadam@sifive.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     mail@conchuod.ie
+Message-ID: <mhng-4240f01d-9505-4ae9-9406-4e44b772a551@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,150 +73,64 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On August 9, 2022 3:40:38 AM PDT, Christophe Leroy <christophe=2Eleroy@csgr=
-oup=2Eeu> wrote:
->At the time being, the default maximum number of GPIOs is set to 512
->and can only get customised via an architecture specific
->CONFIG_ARCH_NR_GPIO=2E
+On Wed, 03 Aug 2022 11:54:00 PDT (-0700), mail@conchuod.ie wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 >
->The maximum number of GPIOs might be dependent on the number of
->interface boards and is somewhat independent of architecture=2E
+> Fix device tree schema validation error messages for the SiFive
+> Unmatched: ' cache-sets:0:0: 1024 was expected'.
 >
->Allow the user to select that maximum number outside of any
->architecture configuration=2E To enable that, re-define a
->core CONFIG_ARCH_NR_GPIO for architectures which don't already
->define one=2E Guard it with a new hidden CONFIG_ARCH_HAS_NR_GPIO=2E
+> The existing bindings allow for just 1024 cache-sets but the fu740 on
+> Unmatched the has 2048 cache-sets. The ISA itself permits any arbitrary
+> power of two, however this is not supported by dt-schema. The RTL for
+> the IP, to which the number of cache-sets is a tunable parameter, has
+> been released publicly so speculatively adding a small number of
+> "reasonable" values seems unwise also.
 >
->Only two architectures will need CONFIG_ARCH_HAS_NR_GPIO: x86 and arm=2E
+> Instead, as the binding only supports two distinct controllers: add 2048
+> and explicitly lock it to the fu740's l2 cache while limiting 1024 to
+> the l2 cache on the fu540.
 >
->On arm, do like x86 and set 512 as the default instead of 0, that
->allows simplifying the logic in asm-generic/gpio=2Eh
+> Fixes: af951c3a113b ("dt-bindings: riscv: Update l2 cache DT documentation to add support for SiFive FU740")
+> Reported-by: Atul Khare <atulkhare@rivosinc.com>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> I split this off from the existing series as there is no dependancy
+> between this cache change and the gpio patch. The prior series can
+> be found at:
+> https://lore.kernel.org/all/20220726170725.3245278-2-mail@conchuod.ie/
+> ---
+>  .../devicetree/bindings/riscv/sifive-l2-cache.yaml          | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 >
->Signed-off-by: Christophe Leroy <christophe=2Eleroy@csgroup=2Eeu>
->---
-> Documentation/driver-api/gpio/legacy=2Erst |  2 +-
-> arch/arm/Kconfig                         |  3 ++-
-> arch/arm/include/asm/gpio=2Eh              |  1 -
-> arch/x86/Kconfig                         |  1 +
-> drivers/gpio/Kconfig                     | 14 ++++++++++++++
-> include/asm-generic/gpio=2Eh               |  6 ------
-> 6 files changed, 18 insertions(+), 9 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
+> index e2d330bd4608..69cdab18d629 100644
+> --- a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
+> @@ -46,7 +46,7 @@ properties:
+>      const: 2
 >
->diff --git a/Documentation/driver-api/gpio/legacy=2Erst b/Documentation/d=
-river-api/gpio/legacy=2Erst
->index 9b12eeb89170=2E=2E566b06a584cf 100644
->--- a/Documentation/driver-api/gpio/legacy=2Erst
->+++ b/Documentation/driver-api/gpio/legacy=2Erst
->@@ -558,7 +558,7 @@ Platform Support
-> To force-enable this framework, a platform's Kconfig will "select" GPIOL=
-IB,
-> else it is up to the user to configure support for GPIO=2E
->=20
->-It may also provide a custom value for ARCH_NR_GPIOS, so that it better
->+It may also provide a custom value for CONFIG_ARCH_NR_GPIO, so that it b=
-etter
-> reflects the number of GPIOs in actual use on that platform, without
-> wasting static table space=2E  (It should count both built-in/SoC GPIOs =
-and
-> also ones on GPIO expanders=2E
->diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->index 53e6a1da9af5=2E=2Ee55b6560fe4f 100644
->--- a/arch/arm/Kconfig
->+++ b/arch/arm/Kconfig
->@@ -14,6 +14,7 @@ config ARM
-> 	select ARCH_HAS_KCOV
-> 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-> 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->+	select ARCH_HAS_NR_GPIO
-> 	select ARCH_HAS_PTE_SPECIAL if ARM_LPAE
-> 	select ARCH_HAS_PHYS_TO_DMA
-> 	select ARCH_HAS_SETUP_DMA_OPS
->@@ -1243,7 +1244,7 @@ config ARCH_NR_GPIO
-> 	default 352 if ARCH_VT8500
-> 	default 288 if ARCH_ROCKCHIP
-> 	default 264 if MACH_H4700
->-	default 0
->+	default 512
-> 	help
-> 	  Maximum number of GPIOs in the system=2E
->=20
->diff --git a/arch/arm/include/asm/gpio=2Eh b/arch/arm/include/asm/gpio=2E=
-h
->index f3bb8a2bf788=2E=2E4ebbb58f06ea 100644
->--- a/arch/arm/include/asm/gpio=2Eh
->+++ b/arch/arm/include/asm/gpio=2Eh
->@@ -2,7 +2,6 @@
-> #ifndef _ARCH_ARM_GPIO_H
-> #define _ARCH_ARM_GPIO_H
->=20
->-/* Note: this may rely upon the value of ARCH_NR_GPIOS set in mach/gpio=
-=2Eh */
-> #include <asm-generic/gpio=2Eh>
->=20
-> /* The trivial gpiolib dispatchers */
->diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->index f9920f1341c8=2E=2Ea8c956abc21e 100644
->--- a/arch/x86/Kconfig
->+++ b/arch/x86/Kconfig
->@@ -82,6 +82,7 @@ config X86
-> 	select ARCH_HAS_MEM_ENCRYPT
-> 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-> 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->+	select ARCH_HAS_NR_GPIO
-> 	select ARCH_HAS_PMEM_API		if X86_64
-> 	select ARCH_HAS_PTE_DEVMAP		if X86_64
-> 	select ARCH_HAS_PTE_SPECIAL
->diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
->index 0642f579196f=2E=2E250b50ed44e1 100644
->--- a/drivers/gpio/Kconfig
->+++ b/drivers/gpio/Kconfig
->@@ -11,6 +11,9 @@ config ARCH_HAVE_CUSTOM_GPIO_H
-> 	  overriding the default implementations=2E  New uses of this are
-> 	  strongly discouraged=2E
->=20
->+config ARCH_HAS_NR_GPIO
->+	bool
->+
-> menuconfig GPIOLIB
-> 	bool "GPIO Support"
-> 	help
->@@ -22,6 +25,17 @@ menuconfig GPIOLIB
->=20
-> if GPIOLIB
->=20
->+config ARCH_NR_GPIO
->+	int "Maximum number of GPIOs" if EXPERT
->+	depends on !ARCH_HAS_NR_GPIO
->+	default 512
->+	help
->+	  This allows the user to select the maximum number of GPIOs the
->+	  kernel must support=2E When the architecture defines a number
->+	  through CONFIG_ARCH_NR_GPIO, that value is taken and the user
->+	  cannot change it=2E Otherwise it defaults to 512 and the user
->+	  can change it when CONFIG_EXPERT is set=2E
->+
-> config GPIOLIB_FASTPATH_LIMIT
-> 	int "Maximum number of GPIOs for fast path"
-> 	range 32 512
->diff --git a/include/asm-generic/gpio=2Eh b/include/asm-generic/gpio=2Eh
->index aea9aee1f3e9=2E=2Eee090f534ab8 100644
->--- a/include/asm-generic/gpio=2Eh
->+++ b/include/asm-generic/gpio=2Eh
->@@ -24,13 +24,7 @@
->  * actually an estimate of a board-specific value=2E
->  */
->=20
->-#ifndef ARCH_NR_GPIOS
->-#if defined(CONFIG_ARCH_NR_GPIO) && CONFIG_ARCH_NR_GPIO > 0
-> #define ARCH_NR_GPIOS CONFIG_ARCH_NR_GPIO
->-#else
->-#define ARCH_NR_GPIOS		512
->-#endif
->-#endif
->=20
-> /*
->  * "valid" GPIO numbers are nonnegative and may be passed to
+>    cache-sets:
+> -    const: 1024
+> +    enum: [1024, 2048]
+>
+>    cache-size:
+>      const: 2097152
+> @@ -84,6 +84,8 @@ then:
+>        description: |
+>          Must contain entries for DirError, DataError and DataFail signals.
+>        maxItems: 3
+> +    cache-sets:
+> +      const: 1024
+>
+>  else:
+>    properties:
+> @@ -91,6 +93,8 @@ else:
+>        description: |
+>          Must contain entries for DirError, DataError, DataFail, DirFail signals.
+>        minItems: 4
+> +    cache-sets:
+> +      const: 2048
+>
+>  additionalProperties: false
 
-This seems very odd to me=2E GPIOs can be, and often are, attached to peri=
-pheral buses which means that the *same system* can have anything from none=
- to thousands of gpios =2E=2E
+Thanks, this is on for-next.
