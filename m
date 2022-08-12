@@ -2,135 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AE6F5907D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Aug 2022 23:08:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD702590D68
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Aug 2022 10:30:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236373AbiHKVIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Aug 2022 17:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43642 "EHLO
+        id S231822AbiHLIa3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Aug 2022 04:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236608AbiHKVHx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Aug 2022 17:07:53 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FA5A061C
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Aug 2022 14:07:10 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id g13so11021988plo.6
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Aug 2022 14:07:10 -0700 (PDT)
+        with ESMTP id S231515AbiHLIa2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Aug 2022 04:30:28 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55FF1057E
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Aug 2022 01:30:26 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id x25so271098ljm.5
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Aug 2022 01:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc;
-        bh=fYIwfWDqXvJTpIZp6wWu1QnQ1p5fYHmeOm5er300uW0=;
-        b=bCRcnoMd0iKE/9LgGvS5U9Khr9pMfS0mzU8SLvpNVACCVJqJPmsDOjWtSWl5n9N/yS
-         3JFou+HII01bQrn62nQVHgVrYehTqkwoV41tt8IRH+EhAQA8FXu4eaz635W9hKAyyBT1
-         85dX/QZz6Mfp8pA43pHm4uZF2LB9G58Bhmr80hx2nEcKlEnvd3wdo8BlqgCymspxvYFU
-         J1N38sMn+8GPiFZ7D5bCBr0Ia9e7/oizTh84yL2voY4yF8YBkfZEqZCyrgTduwQo0u5M
-         NYgqfBi5vLoTXmYF9Pp51zxNvyJgq91C8E0M7nVGDpEq7OLcEdpYQFjrWcbD+6SjsBI+
-         q/Fw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=DiGq++8L+onGlbzyqSifDwiKR7o1FzZbcbbtnv3rVuA=;
+        b=SH+X5cbxpgc5TySGkww8khFDFEUxB5zO7WG2WO3wclK6Xr37YjEMpFPR6kM/Rh28za
+         RC9rgAnIGwRN/w9XlihbU4SqQHMAvkObAFCGSg3AySKx4AAIVaVoDkQdjOBFzEBJzoln
+         Ihqn2sgglfpekHM27kQwrF9ZME2ZKw6JzZ9+HjgRjImVPrdT+2J403VVCyqBXqdWcyI/
+         pEIFhMyZTcgJeTEskdQjL28eIHhuHJDsKDp/nI/Ro0acEV45QN4wSvu+lWMv9WPmeqXx
+         7BtiDoHQ3ZGHoAJXEC8DAW+FA3dAOPm6ohdyo0aCafaaO3qqjo61AXUKRefqYjw0Dw1m
+         qlyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc;
-        bh=fYIwfWDqXvJTpIZp6wWu1QnQ1p5fYHmeOm5er300uW0=;
-        b=NplcSPahGowLv/zGFb6xi9l/tR29+IYKQ4uBYG8QaK17eQCJAEgbb4Gd2QrW4gYV36
-         r5+UuI07Nr+Ot4PdJ0eENWOUl31BZLsNGkRPUH4v+6hVinTsU5iAddk8f147a7MNFX2f
-         +eZi+EGyPA+vLsWWFN4fZQEmxRfw8ojz5QQh7BbFMmGSBMx+dm4JhIe//Dkr6h8djiSE
-         +VNCtMy5W5vwVQhBATYJXzR9rFu+gvhv9O0CUM/L00+tIevIpYBb7baXdKc4KlZQmWoN
-         3AE8rgBG8Sz97yTV4fwaXWdmUSSfVcd9UC7M7Rn3MxUuXUjMD11gZ7QVy0TQzDNZIxI5
-         KwHQ==
-X-Gm-Message-State: ACgBeo2fI3+hbdnwnnKW1nPP6oDf3NOqcNarKtJMG5Mq5+9wc7mhPntb
-        MgFcrKktsNiss0D2BuMFelhdOQ==
-X-Google-Smtp-Source: AA6agR593So6RKlwX2FqLk3gn4GVQrawLohvig5Nzam1xISqzzknSaCSE53kgSNdccIYbd1IrYZ1SQ==
-X-Received: by 2002:a17:90b:38cb:b0:1f5:2321:63cb with SMTP id nn11-20020a17090b38cb00b001f5232163cbmr10757573pjb.110.1660252021424;
-        Thu, 11 Aug 2022 14:07:01 -0700 (PDT)
-Received: from localhost ([50.221.140.186])
-        by smtp.gmail.com with ESMTPSA id x190-20020a6231c7000000b0052def2e20dasm122957pfx.167.2022.08.11.14.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Aug 2022 14:07:00 -0700 (PDT)
-Date:   Thu, 11 Aug 2022 14:07:00 -0700 (PDT)
-X-Google-Original-Date: Thu, 11 Aug 2022 14:00:19 PDT (-0700)
-Subject:     Re: [PATCH] dt-bindings: riscv: fix SiFive l2-cache's cache-sets
-In-Reply-To: <20220803185359.942928-1-mail@conchuod.ie>
-CC:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, conor.dooley@microchip.com,
-        atulkhare@rivosinc.com, sagar.kadam@sifive.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     mail@conchuod.ie
-Message-ID: <mhng-4240f01d-9505-4ae9-9406-4e44b772a551@palmer-ri-x1c9>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=DiGq++8L+onGlbzyqSifDwiKR7o1FzZbcbbtnv3rVuA=;
+        b=YIRUoZRAn+GqHcSzVIqQdHeKItc6kDleAdpPCpBu4EAOGrGI37ENP2dsH5Gw4pey4B
+         Shehx6P3P1zL00a1KuVCV3VozXA2AeCx3s2EpfiBTWxLjgwI/TSVCOmKH0HAO3od3DJu
+         GtGLosutZz83MHK01VxLripeA7liSDWoUpzwBIaETsamWWWLB8U7tiUh8cxwIkzMO4bq
+         5KOOVG2v/uNYmvKX9QV+YMy7cdpVd5MTqL5YpBx97Rg4KbKoTQysO6N69fExNjuXSSnz
+         ho8zQ2PtAvJegNpaqVK9WNd05JNi6CcxO2ItzFcdK5gnYPL56+ESOIU5qmDAYYIuIUvp
+         oWXQ==
+X-Gm-Message-State: ACgBeo1EtShEblmvmUQqvCqWPQOfQty6vHg7ern0ExoXILnx05mX944D
+        uI5tGdzTUvxH6E5tdz6u0VxQne8/16ZicltP
+X-Google-Smtp-Source: AA6agR490Fje+0RZ9nk8vN+xnLWyRcUgRMfN6sb/V25nFrMySDrQMtC7bcbMjipBBsPw2gwOYHf0pg==
+X-Received: by 2002:a2e:a808:0:b0:25f:f326:f2ab with SMTP id l8-20020a2ea808000000b0025ff326f2abmr927859ljq.152.1660293025328;
+        Fri, 12 Aug 2022 01:30:25 -0700 (PDT)
+Received: from [192.168.1.39] ([83.146.140.105])
+        by smtp.gmail.com with ESMTPSA id m7-20020a056512014700b0048ad80a6d07sm132049lfo.170.2022.08.12.01.30.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Aug 2022 01:30:24 -0700 (PDT)
+Message-ID: <33877eba-1d59-8e3a-4486-751ab9f955e8@linaro.org>
+Date:   Fri, 12 Aug 2022 11:30:20 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [EXT] Re: [PATCH v4 1/3] dt-bindings: gpio: Add imx scu gpio
+ driver bindings
+Content-Language: en-US
+To:     Shenwei Wang <shenwei.wang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>
+References: <20220811124135.95299-1-shenwei.wang@nxp.com>
+ <20220811124135.95299-2-shenwei.wang@nxp.com>
+ <db3020ef-7321-e171-b5bc-9c1795c2cced@linaro.org>
+ <AM9PR04MB82741882E177387DB95AE3B589649@AM9PR04MB8274.eurprd04.prod.outlook.com>
+ <01c832c4-6631-4865-30b3-7f060e27a7ff@linaro.org>
+ <AM9PR04MB82747D7D07C481CC6981993189649@AM9PR04MB8274.eurprd04.prod.outlook.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <AM9PR04MB82747D7D07C481CC6981993189649@AM9PR04MB8274.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 03 Aug 2022 11:54:00 PDT (-0700), mail@conchuod.ie wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> Fix device tree schema validation error messages for the SiFive
-> Unmatched: ' cache-sets:0:0: 1024 was expected'.
->
-> The existing bindings allow for just 1024 cache-sets but the fu740 on
-> Unmatched the has 2048 cache-sets. The ISA itself permits any arbitrary
-> power of two, however this is not supported by dt-schema. The RTL for
-> the IP, to which the number of cache-sets is a tunable parameter, has
-> been released publicly so speculatively adding a small number of
-> "reasonable" values seems unwise also.
->
-> Instead, as the binding only supports two distinct controllers: add 2048
-> and explicitly lock it to the fu740's l2 cache while limiting 1024 to
-> the l2 cache on the fu540.
->
-> Fixes: af951c3a113b ("dt-bindings: riscv: Update l2 cache DT documentation to add support for SiFive FU740")
-> Reported-by: Atul Khare <atulkhare@rivosinc.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> I split this off from the existing series as there is no dependancy
-> between this cache change and the gpio patch. The prior series can
-> be found at:
-> https://lore.kernel.org/all/20220726170725.3245278-2-mail@conchuod.ie/
-> ---
->  .../devicetree/bindings/riscv/sifive-l2-cache.yaml          | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-> index e2d330bd4608..69cdab18d629 100644
-> --- a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-> @@ -46,7 +46,7 @@ properties:
->      const: 2
->
->    cache-sets:
-> -    const: 1024
-> +    enum: [1024, 2048]
->
->    cache-size:
->      const: 2097152
-> @@ -84,6 +84,8 @@ then:
->        description: |
->          Must contain entries for DirError, DataError and DataFail signals.
->        maxItems: 3
-> +    cache-sets:
-> +      const: 1024
->
->  else:
->    properties:
-> @@ -91,6 +93,8 @@ else:
->        description: |
->          Must contain entries for DirError, DataError, DataFail, DirFail signals.
->        minItems: 4
-> +    cache-sets:
-> +      const: 2048
->
->  additionalProperties: false
+On 11/08/2022 18:30, Shenwei Wang wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Sent: Thursday, August 11, 2022 10:11 AM
+>> To: Shenwei Wang <shenwei.wang@nxp.com>; robh+dt@kernel.org;
+>> krzysztof.kozlowski+dt@linaro.org; linus.walleij@linaro.org; brgl@bgdev.pl;
+>> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+>> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>
+>> Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>> gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev
+>> Subject: Re: [EXT] Re: [PATCH v4 1/3] dt-bindings: gpio: Add imx scu gpio driver
+>> bindings
+>>
+>> Caution: EXT Email
+>>
+>> On 11/08/2022 17:52, Shenwei Wang wrote:
+>>>
+>>>
+>>>> -----Original Message-----
+>>>> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>> Sent: Thursday, August 11, 2022 9:36 AM
+>>>> To: Shenwei Wang <shenwei.wang@nxp.com>; robh+dt@kernel.org;
+>>>> krzysztof.kozlowski+dt@linaro.org; linus.walleij@linaro.org;
+>>>> brgl@bgdev.pl; shawnguo@kernel.org; s.hauer@pengutronix.de;
+>>>> kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx
+>>>> <linux-imx@nxp.com>
+>>>> Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>>>> gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>>>> imx@lists.linux.dev
+>>>> Subject: [EXT] Re: [PATCH v4 1/3] dt-bindings: gpio: Add imx scu gpio
+>>>> driver bindings
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/gpio/fsl,imx-sc-gpio.yaml
+>>>>> b/Documentation/devicetree/bindings/gpio/fsl,imx-sc-gpio.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..a1b024cddc97
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/gpio/fsl,imx-sc-gpio.yaml
+>>>>> +description: |
+>>>>> +  This module provides the standard interface to control the
+>>>>> +  resource pins in SCU domain on i.MX8 platforms.
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    enum:
+>>>>> +      - fsl,imx8qxp-sc-gpio
+>>>>
+>>>> Now the filename does not match compatible. Use the same compatible
+>>>> as filename.
+>>>
+>>> The subnodes under fsl,scu.yaml have their own naming rule. For
+>>> example, the watchdog compatible is "fsl,imx-sc-wdt", but the file name is
+>> "fsl,scu-wdt.yaml".
+>>
+>> The other files have for example fsl,imx-sc-wdt, so they match compatible.
+> 
+> I don't see the file fsl,imx-sc-wdt you mentioned under the watchdog directory.
+> 
+> $ ls fsl*
+> fsl-imx7ulp-wdt.yaml  fsl-imx-wdt.yaml  fsl,scu-wdt.yaml
 
-Thanks, this is on for-next.
+Eh, they looked similar enough that I did not spot it during review.
+fsl,scu-wdt.yaml should be named fsl,imx-sc-wdt.yaml, of course.
+
+
+Best regards,
+Krzysztof
