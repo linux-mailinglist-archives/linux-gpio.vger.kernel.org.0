@@ -2,117 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7AEA59137C
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Aug 2022 18:07:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D9D75916FA
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Aug 2022 23:59:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239118AbiHLQGC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Aug 2022 12:06:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59666 "EHLO
+        id S233705AbiHLV7Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Aug 2022 17:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239106AbiHLQF5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Aug 2022 12:05:57 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481975A88E
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Aug 2022 09:05:55 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id t22so1407366pjy.1
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Aug 2022 09:05:55 -0700 (PDT)
+        with ESMTP id S230445AbiHLV7O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Aug 2022 17:59:14 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2755798D06;
+        Fri, 12 Aug 2022 14:59:13 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id e28so1788711qts.1;
+        Fri, 12 Aug 2022 14:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc;
-        bh=4OVNFUuImLLig/MGlX7vlR8weBzwek79DqD1BdLgOpk=;
-        b=hXdOxhnDhpBegqyCoNLEwbn81PWOhosp82gYxw3LUcdKmADMMMEvM8eJldJcSFhZE1
-         Z5dRCKke8PHj6jXb6TPIVae6NpQ54/qQzufcn2nzN6JWSGimbxBPyyA3bGN8+bDHuiuZ
-         XeAUdTST31jiYPcDve/nvcp4PlPjwnuX1fRImN+0pZMoqzp8SCqekeFVGnfAmKBcO8QB
-         UFLnIEZBmQQb9imQ/6qGNY70F1h+1Af98cCgt6qB3FyZg7H6g15ROmRG4ayeCxXeN5o4
-         vsFV5z50xf4BA2JPkDedx2vUoU2OOV0wrXqo2euDhmmMzobdlIeqJdzg6N/L0GOrN72k
-         mIeg==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=GjUDLuXzW1eUvP6FX/7o5Xq4pQ7lZJ0+fEeVLZ9I0Yw=;
+        b=FiZDuTxWWY5epmm1aNeA7myYoG9e2hWZqJmv3nk28e1h/8gYXgrzdQ3Q8dOen1XRUP
+         MR1FecG7Euhv2pE5x2tWoBnUPIY5yCKo+dYUFfoiLBAsRK81OQCf9f7TQSUQyd7gSkU/
+         Vzg+t5sT53Ocjl1eogRfHuWeE51IsRRFuydXQHJBP/o3cKFAtMCYLTuBZtAKeMA/bQI9
+         0pYQxuhVINLkzjAy2NuXAYY8EMvMz6+vQkoIxurrkYqljPYvzjG3C23jgwsa4Hvt+1Ml
+         h9ucs0yoy09BKH4aBzXFFzI0aR1A82xkq3Bxf+GBUwsO6GNVm2pVkJAQOZpu3OCArt91
+         81fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc;
-        bh=4OVNFUuImLLig/MGlX7vlR8weBzwek79DqD1BdLgOpk=;
-        b=qCnRhtaBzhs2veGB6e780t9AGo/tDuwlVKC8ucP7PwSNxPZYibKUJqvZlM/fMiCpVi
-         6j816/CHIpaia9UFeDiAjP9K1fp5RDPv5vll7EnfGm9WKrxdcji1lBg8VjSW318Du3lv
-         +WUUvX12wcDggXMJoxIeCTTtiMyTn3vGITzJ/kQ2Lg3OcFJHZ3I+588deoGE4YlMOqET
-         RPCM3fHBEpMbIxU6sCqtLVMCJenfKt4vMf6B6iO1thcIs1KZnFQoONd+wjGPHvvrS3ML
-         QfFQsGWoi/22mfqHSLAfja1lnXAV0xbCJQs4I8Kx8PTEn8yfQuk2Pxt1SA26UokCXCYg
-         Wgig==
-X-Gm-Message-State: ACgBeo0W1ir/+nJ+F9G6bpks/0X2RO9/8zvk3nL3iQRCxVW+i1ddLDqS
-        xsUz2lqILcU1ottjRmHeCBlyQQ==
-X-Google-Smtp-Source: AA6agR5/COUTRoAh0UyVgQkf61YCv93x/r8lJgd5f8JFsaDvoPs//RQJEaMQhT8zl7lBJEwuv/cQgQ==
-X-Received: by 2002:a17:90b:1e42:b0:1f3:297c:c65c with SMTP id pi2-20020a17090b1e4200b001f3297cc65cmr4993940pjb.208.1660320354716;
-        Fri, 12 Aug 2022 09:05:54 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id f6-20020a170902684600b0016d01c133e1sm1885809pln.248.2022.08.12.09.05.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 09:05:54 -0700 (PDT)
-Date:   Fri, 12 Aug 2022 09:05:54 -0700 (PDT)
-X-Google-Original-Date: Fri, 12 Aug 2022 09:00:14 PDT (-0700)
-Subject:     Re: [PATCH v4] dt-bindings: gpio: sifive: add gpio-line-names
-In-Reply-To: <20220803155539.800766-1-mail@conchuod.ie>
-CC:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, conor.dooley@microchip.com,
-        atulkhare@rivosinc.com, sagar.kadam@sifive.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     mail@conchuod.ie
-Message-ID: <mhng-5813099c-bd9f-4122-aec9-44adb5d280f5@palmer-mbp2014>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=GjUDLuXzW1eUvP6FX/7o5Xq4pQ7lZJ0+fEeVLZ9I0Yw=;
+        b=cx1GK4hDOQNDbty7IqTufNMEw0MVUF5UWDXXugFz/PejH8c686f2ZB5hVYAgFB3HvK
+         gkeM5mY/X++TopBNDlsR9SRSVMshy9GqRsGQiEsE9Uptk6I4mPGxbfJ3xbO7FDCiMN5/
+         lSXMGer5UPuNo59OSrM5S3NCR1XJDWZG/9UxnXWJ1oJM/p0htEGHal3EFw7SkYU/IQLc
+         Os3HxNhb/UgWb2tl92VCwHY1DArvYT9q0237SXs3v0dqkLfr/W+Gr8JKY3p3HOWj8NJA
+         YCOv9udPkuQgubFK0AY9feB+CpkA+upn1O+WXXgytpvkw43QZuMqQw5+vigl38Fntz9U
+         gfZg==
+X-Gm-Message-State: ACgBeo3jaBDAIN9GxhwSrmxkWuAKk4wrAfxLCzr+1NS/zZFo6ZxH+l5g
+        Z0c1+7+H6cZY0aLiZycoayjEvfE0pB7Maw7vqNM=
+X-Google-Smtp-Source: AA6agR4Jz1gAcQZX/oXxYMX2qzmwEI5SyMqu8DUMD2rPlXAwK7xmH3fsliqwwTuH5OTPr0DLHyLnH+xATRpJ37fIM8E=
+X-Received: by 2002:a05:622a:48f:b0:343:463:351a with SMTP id
+ p15-20020a05622a048f00b003430463351amr5361998qtx.61.1660341552210; Fri, 12
+ Aug 2022 14:59:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
+ <C1886F9A-1799-4E3D-9153-579D31488695@zytor.com>
+In-Reply-To: <C1886F9A-1799-4E3D-9153-579D31488695@zytor.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 13 Aug 2022 00:58:36 +0300
+Message-ID: <CAHp75VfFQe3Ce-Si1sax8CCG1-rq+Y=8JhwH=82d3XgytCAmOQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Allow user to customise maximum number of GPIOs
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 03 Aug 2022 08:55:40 PDT (-0700), mail@conchuod.ie wrote:
-> From: Atul Khare <atulkhare@rivosinc.com>
+On Thu, Aug 11, 2022 at 11:12 PM H. Peter Anvin <hpa@zytor.com> wrote:
 >
-> Fix device tree schema validation messages like 'gpio-line-names'
-> does not match any of the regexes: 'pinctrl-[0-9]+' From schema: ...
-> sifive,gpio.yaml'.
->
-> The bindings were missing the gpio-line-names element, which was
-> causing the dt-schema checker to trip-up.
->
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Atul Khare <atulkhare@rivosinc.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> Changes since v3[0]:
-> - Dropped patch 1 & the now unneeded cover letter
-> - Added Rob's Ack
-> - Changed the patch title to include the subsystem
->
-> 0 - https://lore.kernel.org/all/20220726170725.3245278-3-mail@conchuod.ie/
-> ---
->  Documentation/devicetree/bindings/gpio/sifive,gpio.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/sifive,gpio.yaml b/Documentation/devicetree/bindings/gpio/sifive,gpio.yaml
-> index 939e31c48081..fc095646adea 100644
-> --- a/Documentation/devicetree/bindings/gpio/sifive,gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/sifive,gpio.yaml
-> @@ -46,6 +46,10 @@ properties:
->      maximum: 32
->      default: 16
->
-> +  gpio-line-names:
-> +    minItems: 1
-> +    maxItems: 32
-> +
->    gpio-controller: true
->
->  required:
+> On August 9, 2022 3:40:38 AM PDT, Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+> >At the time being, the default maximum number of GPIOs is set to 512
+> >and can only get customised via an architecture specific
+> >CONFIG_ARCH_NR_GPIO.
+> >
+> >The maximum number of GPIOs might be dependent on the number of
+> >interface boards and is somewhat independent of architecture.
+> >
+> >Allow the user to select that maximum number outside of any
+> >architecture configuration. To enable that, re-define a
+> >core CONFIG_ARCH_NR_GPIO for architectures which don't already
+> >define one. Guard it with a new hidden CONFIG_ARCH_HAS_NR_GPIO.
+> >
+> >Only two architectures will need CONFIG_ARCH_HAS_NR_GPIO: x86 and arm.
+> >
+> >On arm, do like x86 and set 512 as the default instead of 0, that
+> >allows simplifying the logic in asm-generic/gpio.h
 
-Thanks, this is on for-next.
+...
+
+> This seems very odd to me. GPIOs can be, and often are, attached to peripheral buses which means that the *same system* can have anything from none to thousands of gpios ..
+
+Basically this setting should give us a *minimum* GPIO lines that are
+present on the system. And that is perfectly SoC dependent. The real
+issue is that the GPIO framework has these global arrays that (still?)
+can't be initialized from the heap due to too early initialization (is
+it the true reason?).
+
+-- 
+With Best Regards,
+Andy Shevchenko
