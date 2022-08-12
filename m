@@ -2,69 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48085590DE0
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Aug 2022 11:08:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F427590E59
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Aug 2022 11:47:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237040AbiHLJIW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Aug 2022 05:08:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51826 "EHLO
+        id S236899AbiHLJrR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Aug 2022 05:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231586AbiHLJIV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Aug 2022 05:08:21 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D766EA723D;
-        Fri, 12 Aug 2022 02:08:20 -0700 (PDT)
-Received: by mail-qt1-f180.google.com with SMTP id h4so320322qtj.11;
-        Fri, 12 Aug 2022 02:08:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=ESERLkLG3l6qeYhdj3kGjg5yZs+39sPAfuNqaDJii3o=;
-        b=y7Gsc1ZAtT6g09ReXTrPkPL9YjjsSLBAaPQcHWR4L+zaRnvU3S3Bs/xvpYLBsPc7la
-         AkW92CIL2URuIK/pZ8XBQeHnxNXlU0Hiidk6UhD2MCvihWRsHR34KfD8KODSjfACRn9D
-         iVzEOJkI06F4SITC8CXaGoCXfx7GOe3g+r8glozX7JFFjxuNRNhpv34SlBJuoQ5q/+WJ
-         jl02QEDyrygBUUaezxdU951RMT54EUVDbK9Zpt9oNpqXb7jkBqoWil+8m16LPygcQf04
-         h5gZF2GwRf7h3fLPiylVShzt9KJeV3P9/pLk0VcQdazTHVbmlmb4X0q8uolS0AMP77rI
-         uJNQ==
-X-Gm-Message-State: ACgBeo24Ouldul2q6hLij/5YAgSrCnypdtIJ3BgmfsVP3pJaoqCBZiSd
-        6AkdAeEx98Oo9aO96eLj2J5m3HM8Zo6FTw==
-X-Google-Smtp-Source: AA6agR6LoVrmrzg0XIwzkFerXt0mANGUHbterUUfp/R5IqCJx77WEJjAv2JNJ1zCi/S4jH6Q9cLD5w==
-X-Received: by 2002:a05:622a:8e:b0:31f:371f:e6a1 with SMTP id o14-20020a05622a008e00b0031f371fe6a1mr2658605qtw.565.1660295299921;
-        Fri, 12 Aug 2022 02:08:19 -0700 (PDT)
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
-        by smtp.gmail.com with ESMTPSA id o2-20020ac86982000000b0033a5048464fsm1329513qtq.11.2022.08.12.02.08.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Aug 2022 02:08:19 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id 204so574967yba.1;
-        Fri, 12 Aug 2022 02:08:19 -0700 (PDT)
-X-Received: by 2002:a25:880f:0:b0:67c:2727:7e3c with SMTP id
- c15-20020a25880f000000b0067c27277e3cmr2679433ybl.36.1660295299180; Fri, 12
- Aug 2022 02:08:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220726175315.1147-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220726175315.1147-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 12 Aug 2022 11:08:07 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWOL75DNP9NWfFpe4FkT56=p1e5qh7tfOy+hn=u9xeg=w@mail.gmail.com>
-Message-ID: <CAMuHMdWOL75DNP9NWfFpe4FkT56=p1e5qh7tfOy+hn=u9xeg=w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas: Document RZ/Five SoC
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S232876AbiHLJrQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Aug 2022 05:47:16 -0400
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D71B1321;
+        Fri, 12 Aug 2022 02:47:14 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9093080E1;
+        Fri, 12 Aug 2022 09:40:29 +0000 (UTC)
+Date:   Fri, 12 Aug 2022 12:47:12 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 9/9] of: property: Simplify of_link_to_phandle()
+Message-ID: <YvYhoGdemyKEx++d@atomide.com>
+References: <20220810060040.321697-1-saravanak@google.com>
+ <20220810060040.321697-10-saravanak@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220810060040.321697-10-saravanak@google.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,37 +59,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 7:53 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> RZ/Five SoC is pin compatible with RZ/G2UL (Type 1) SoC. This patch
-> updates the comment to include RZ/Five SoC so that we make it clear
-> "renesas,r9a07g043-pinctrl" compatible string will be used for RZ/Five
-> SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl-for-v6.1.
+* Saravana Kannan <saravanak@google.com> [220810 05:54]:
+> The driver core now:
+> - Has the parent device of a supplier pick up the consumers if the
+>   supplier never has a device created for it.
+> - Ignores a supplier if the supplier has no parent device and will never
+>   be probed by a driver
+> 
+> And already prevents creating a device link with the consumer as a
+> supplier of a parent.
+> 
+> So, we no longer need to find the "compatible" node of the supplier or
+> do any other checks in of_link_to_phandle(). We simply need to make sure
+> that the supplier is available in DT.
 
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> @@ -23,7 +23,7 @@ properties:
->      oneOf:
->        - items:
->            - enum:
-> -              - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2}
-> +              - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2} and RZ/Five
->                - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
->
->        - items:
+This patch fixes booting for me, so it should be applied as a fix and
+tagged with:
 
-Gr{oetje,eeting}s,
+Fixes: 5a46079a9645 ("PM: domains: Delete usage of driver_deferred_probe_check_state()")
 
-                        Geert
+If there are dependencies to the other patches in this series, it might
+make sense to revert commit 5a46079a9645 instead.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Anyways, thanks for fixing the issue, for this patch:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+
+For the process, looks like the earlier series got merged despite the
+issues reported. And we had non-booting Linux next for at least some SoCs
+for weeks. And now we are about to have a non-booting -rc1 unless things
+get fixed fast. Annoying glitches, sigh..
+
+Regards,
+
+Tony
+
