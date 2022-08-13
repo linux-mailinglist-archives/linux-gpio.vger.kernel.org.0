@@ -2,117 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 196A85917E2
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Aug 2022 02:52:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34B7D591B28
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Aug 2022 16:54:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236678AbiHMAwe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Aug 2022 20:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43730 "EHLO
+        id S239530AbiHMOym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 Aug 2022 10:54:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbiHMAwd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Aug 2022 20:52:33 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1147B2DF0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Aug 2022 17:52:32 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-3246910dac3so24407207b3.12
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Aug 2022 17:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=WbYPnHR9HxWi35dBvBrbYSupoHoVU6IHkJrer8aofZg=;
-        b=G36nprOTrr0PmY/r2BwuoDf4i3WasiJ4cZpmd9acCRnpeqyMKO2a6Fbu6B7C9Lp8BN
-         JqK+IWDfeW/cPhqLQW8MW2s+9+sK8RYowQwHglCVnXxkWP6Yla7w9T9f8gNmAMhtpArf
-         D13lz7D0k0zBYfPP3xccYAUJkJlvOKXVKawXgLHZ/uGJbp04DKf629ue/aX3iZCcMKMU
-         0gT1wKrlqfHWG0QUsgPuhcrD8YYbvIsZiJn8SeV0GcSvHaj6kiMpmr0q1C4THEnkSE3N
-         75aTb9x1yo2ooD5T2ctqo531ZpQqCzAFDLlXIJCZb1riOg3Flv8EKmVV9ltmbWPPFyve
-         ppwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=WbYPnHR9HxWi35dBvBrbYSupoHoVU6IHkJrer8aofZg=;
-        b=o8Ue1tVD3Rf5M36ZOpFinBNQ6Vrmc6ScnND0KX6KJ24wPL3FqjNr9lwAx4s4E1Z83o
-         3WFQgyRHHXVm2MP6gilSpVJkV8+8YJvxwqGS/la0+mTOF0Fj+n3ow2R7chHdKcRRHhhp
-         +u9xkSZpx/ZgQWQUmd0g8ggpWiypLjb8sH/KKhTLHW0QK2Sdjrd4hmypnYIeXezpz2ek
-         tZvc8SEqlj3tK9FFtaDlJXQ4PX2ckargdUXPvnwh5KSkZXdW54owhn8k45/L5/Nuh6Xk
-         d6PVoIeOS7U4k9B4gEOOni/atc1cfs+Px/ia5NPu3/Rk6CPnF3rjZfmKAGklXEX/hoqE
-         XG2w==
-X-Gm-Message-State: ACgBeo1gdYwolP1FCsjGgwYHNzzhloy7l7YIaOM1S1xAVtGbsDMOyvfU
-        c34f+5QetfcMebzJ4oIWuqgUxmrcbWhBrjr+Ceuf6w==
-X-Google-Smtp-Source: AA6agR6k6YUMLYwWVgKkXkzA9eQcDh7PvZyVqo7+64YRZILB50qMGsLs3wg/aVWSq5qiOyNQ+Uwd8c5jcYUTJUBcQ7k=
-X-Received: by 2002:a81:998c:0:b0:326:5dab:df3f with SMTP id
- q134-20020a81998c000000b003265dabdf3fmr6066292ywg.126.1660351951117; Fri, 12
- Aug 2022 17:52:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220810060040.321697-1-saravanak@google.com> <YvYiF36M09dX9ASm@atomide.com>
-In-Reply-To: <YvYiF36M09dX9ASm@atomide.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 12 Aug 2022 17:51:55 -0700
-Message-ID: <CAGETcx-t0O0B+5i0FWwm5w2=ccOD5zVAaUvgQoP8PT9SOT_btw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/9] fw_devlink improvements
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+        with ESMTP id S235340AbiHMOyl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 Aug 2022 10:54:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F56BF79;
+        Sat, 13 Aug 2022 07:54:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F1A960DEF;
+        Sat, 13 Aug 2022 14:54:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A87AC433D6;
+        Sat, 13 Aug 2022 14:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660402479;
+        bh=N4kjUi4PTo0aa0MQR9hcV00wsscIFyN4QydIKOaekVE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vEWAmtylEsAaz9sRfKNI1rrv/BMqyZ4ZJUF1H1orjJXnEyhYNUeE3pI3zpwCr1kTf
+         BmLuFWw3QxsmuiIgUibCYimqbg2pRi0hmXfK27e/S9yKgHbBJyNv51mJiueVzi2pGA
+         U04Lz/yNTfJ1h2u7GBohGoVlEyCHbdbWyAwFeCo1HitQxQgnkZFkNs+lEyjv3eKJkF
+         w2rzkXCU+06L7LJj75hdt5SdpYQjTJ1WUEfwNyWAVdLhR7ATMlyo2vbEfzvOa9jLsO
+         q2wO/uAKz7hjsHqnxzsBIMfc/DtXsmGrO/pyepz98F2HELOBVpaRSx4J4rNPsmiCCD
+         zdQRipfyv2FYg==
+Date:   Sat, 13 Aug 2022 16:05:06 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Francesco Dolcini <francesco.dolcini@toradex.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-input@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: iio: adc: stmpe: Remove node name
+ requirement
+Message-ID: <20220813160506.04be3760@jic23-huawei>
+In-Reply-To: <YvJ/N2zulizbiU6u@google.com>
+References: <20220712163345.445811-1-francesco.dolcini@toradex.com>
+        <20220712163345.445811-5-francesco.dolcini@toradex.com>
+        <20220809134607.GA44926@francesco-nb.int.toradex.com>
+        <YvJ/N2zulizbiU6u@google.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 12, 2022 at 2:49 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Saravana Kannan <saravanak@google.com> [220810 05:54]:
-> > Tony,
-> >
-> > This should handle the odd case of the child being the supplier of the
-> > parent. Can you please give this a shot? I want to make sure the cycle
-> > detection code handles this properly and treats it like it's NOT a cycle.
->
-> Yup, this series works for me, so feel free to add:
->
-> Tested-by: Tony Lindgren <tony@atomide.com>
+On Tue, 9 Aug 2022 16:37:27 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Thanks for testing!
+> On Tue, 09 Aug 2022, Francesco Dolcini wrote:
+> 
+> > Hello Jonathan, can you pick this? Patches 1 and 2 were applied to MFD
+> > tree.  
+> 
+> Sending out nags whilst the merge-window is open is seldom helpful.
 
-Btw, out of curiosity, how many different boards did you test this on?
-IIRC you had an issue only in one board, right? Not to say I didn't
-break anything else, I'm just trying to see how much confidence we
-have on this series so far. I'm hoping the rest of the folks I listed
-in the email will get around to testing this series.
+Agreed, next week would have been better.  I happen to be queuing stuff
+up ready for a rebase this cycle though so applied this one to what will
+be the togreg branch of iio.git after rc1 is available and I've rebased.
 
--Saravana
+Jonathan
 
-> I have some concerns though on how do we get a working -rc1 with the
-> earlier series applied? See the comments in the last patch of this
-> series.
+> 
+> Also, please refrain from top-posting.
+> 
+> Thanks.
+> 
+> > On Tue, Jul 12, 2022 at 06:33:44PM +0200, Francesco Dolcini wrote:  
+> > > STMPE driver does not require a specific node name anymore, only the
+> > > compatible is checked, update binding according to this.
+> > > 
+> > > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml
+> > > index 9049c699152f..333744a2159c 100644
+> > > --- a/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml
+> > > @@ -13,8 +13,7 @@ description:
+> > >    This ADC forms part of an ST microelectronics STMPE multifunction device .
+> > >    The ADC is shared with the STMPE touchscreen. As a result some ADC related
+> > >    settings are specified in the parent node.
+> > > -  The node name myst be stmpe_adc and should be a child node of the stmpe node
+> > > -  to which it belongs.
+> > > +  The node should be a child node of the stmpe node to which it belongs.
+> > >  
+> > >  properties:
+> > >    compatible:  
+> >   
+> 
 
-I tried to reply, but not sure if it helps. We'll continue the discussion there.
-
--Saravana
