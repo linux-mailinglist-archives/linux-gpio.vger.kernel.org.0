@@ -2,115 +2,205 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34B7D591B28
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Aug 2022 16:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B22D8591E92
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Aug 2022 07:59:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239530AbiHMOym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 Aug 2022 10:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46394 "EHLO
+        id S233965AbiHNF7q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 14 Aug 2022 01:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235340AbiHMOyl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 Aug 2022 10:54:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F56BF79;
-        Sat, 13 Aug 2022 07:54:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F1A960DEF;
-        Sat, 13 Aug 2022 14:54:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A87AC433D6;
-        Sat, 13 Aug 2022 14:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660402479;
-        bh=N4kjUi4PTo0aa0MQR9hcV00wsscIFyN4QydIKOaekVE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vEWAmtylEsAaz9sRfKNI1rrv/BMqyZ4ZJUF1H1orjJXnEyhYNUeE3pI3zpwCr1kTf
-         BmLuFWw3QxsmuiIgUibCYimqbg2pRi0hmXfK27e/S9yKgHbBJyNv51mJiueVzi2pGA
-         U04Lz/yNTfJ1h2u7GBohGoVlEyCHbdbWyAwFeCo1HitQxQgnkZFkNs+lEyjv3eKJkF
-         w2rzkXCU+06L7LJj75hdt5SdpYQjTJ1WUEfwNyWAVdLhR7ATMlyo2vbEfzvOa9jLsO
-         q2wO/uAKz7hjsHqnxzsBIMfc/DtXsmGrO/pyepz98F2HELOBVpaRSx4J4rNPsmiCCD
-         zdQRipfyv2FYg==
-Date:   Sat, 13 Aug 2022 16:05:06 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-input@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: iio: adc: stmpe: Remove node name
- requirement
-Message-ID: <20220813160506.04be3760@jic23-huawei>
-In-Reply-To: <YvJ/N2zulizbiU6u@google.com>
-References: <20220712163345.445811-1-francesco.dolcini@toradex.com>
-        <20220712163345.445811-5-francesco.dolcini@toradex.com>
-        <20220809134607.GA44926@francesco-nb.int.toradex.com>
-        <YvJ/N2zulizbiU6u@google.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+        with ESMTP id S229862AbiHNF7p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 14 Aug 2022 01:59:45 -0400
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9611F2E3
+        for <linux-gpio@vger.kernel.org>; Sat, 13 Aug 2022 22:59:40 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-3246910dac3so42567927b3.12
+        for <linux-gpio@vger.kernel.org>; Sat, 13 Aug 2022 22:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=5oLColQvmc38EgwYlwNaR7xBXm39Ucdba1pf+UlgEWM=;
+        b=q558+3KYcrL9bSgXbqgz+VMfCDEAs5hVJ5ccWO//m+mAokgegGdQBnpL3jxS+nIvOY
+         qEoMF5tpHG433ffy1Vr6SFeg8zDPLv/qwEbO7l1qL2HpplmRX8NDRJmzhkVJ9CbwwyZx
+         aJe6qOinM4F+sPLgPpwG5yh4iE7oE4HU+JmaENM/Dj05J+lWvcw5FESz2GzQ4s75YlFW
+         uWaueRVofMCpZUXjaI3zV1hB8/xifg2KyHvaLraJug1K1R0X17Ao7qB3vftV83DEutHS
+         8z5i2In2F71MzT2IvXtLy18B7lggPdaxaEm3cQoL2E978jXxBens3Xc9ct8HV1xQsM6U
+         bzsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=5oLColQvmc38EgwYlwNaR7xBXm39Ucdba1pf+UlgEWM=;
+        b=boc9/8b2eETC/N6kxZXY5k01GJFVo08XOR08+l2SC+TIDRXwnf/JMUakOhbmRP9GMi
+         QraWmRRMp5ZJmms7DTNrkthm3bG9zF78EPlzIqWN7Ii6WTl+kpyQuHfzLKHXj/R5e8ce
+         gl9AS8yw0OuqO/k1qYHtZzANMJv1GgCVJhzdltC1wW5e2/BX1HCcvOENtzECura3QWJm
+         nXUePTLLc0ESHCIxAIgz1ZapT1rIj5P3R/IMcoqzWTi7Fum3jzV3lC3+Du6JXGdDvHkO
+         uJaRdt5eudsU0zBTri5BG98NeYkRpqba4aLrTtekYOGSpx16/NuUvzB9noTIslmCtUuO
+         oYFg==
+X-Gm-Message-State: ACgBeo0o6py9pB3oI1gmkypSl8hWc73Pb4hH+puYcfwjfUCaSQY+IdUg
+        MWDblkwsrj7vQLc6r7FrmWSjpn9vltdsOqYK3Jp7Uw==
+X-Google-Smtp-Source: AA6agR4ruZp6kLLHNNcriPdt5yfdexRiAWfgjuySPdNmZUSR6mw/ugLvr7aOQkMBoJG00d4Yxeu6h7IlNmfH6rYiWRo=
+X-Received: by 2002:a0d:fd05:0:b0:329:3836:53ac with SMTP id
+ n5-20020a0dfd05000000b00329383653acmr9498030ywf.455.1660456779360; Sat, 13
+ Aug 2022 22:59:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220810060040.321697-1-saravanak@google.com>
+In-Reply-To: <20220810060040.321697-1-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Sat, 13 Aug 2022 22:59:04 -0700
+Message-ID: <CAGETcx_nVXbHzZ3+_aR4SZtSnSBU=Rfp8Qm2jOs7zGZRaH_88A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] fw_devlink improvements
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>
+Cc:     Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 9 Aug 2022 16:37:27 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
++Naresh Kamboju
 
-> On Tue, 09 Aug 2022, Francesco Dolcini wrote:
-> 
-> > Hello Jonathan, can you pick this? Patches 1 and 2 were applied to MFD
-> > tree.  
-> 
-> Sending out nags whilst the merge-window is open is seldom helpful.
+On Tue, Aug 9, 2022 at 11:00 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> This patch series improves fw_devlink in the following ways:
+>
+> 1. It no longer cares about a fwnode having a "compatible" property. It
+>    figures this our more dynamically. The only expectation is that
+>    fwnode that are converted to devices actually get probed by a driver
+>    for the dependencies to be enforced correctly.
+>
+> 2. Finer grained dependency tracking. fw_devlink will now create device
+>    links from the consumer to the actual resource's device (if it has one,
+>    Eg: gpio_device) instead of the parent supplier device. This improves
+>    things like async suspend/resume ordering, potentially remove the need
+>    for frameworks to create device links, more parallelized async probing,
+>    and better sync_state() tracking.
+>
+> 3. Handle hardware/software quirks where a child firmware node gets
+>    populated as a device before its parent firmware node AND actually
+>    supplies a non-optional resource to the parent firmware node's
+>    device.
+>
+> 4. Way more robust at cycle handling (see patch for the insane cases).
+>
+> 5. Stops depending on OF_POPULATED to figure out some corner cases.
+>
+> 6. Simplifies the work that needs to be done by the firmware specific
+>    code.
+>
+> This took way too long to get done due to typo bugs I had in my rewrite or
+> corner cases I had to find and handle. But it's fairly well tested at this
+> point and I expect this to work properly.
+>
+> Abel & Doug,
+>
+> This should fix your cyclic dependency issues with your display. Can you
+> give it a shot please?
+>
+> Alexander,
+>
+> This should fix your issue where the power domain device not having a
+> compatible property. Can you give it a shot please?
+>
+> Tony,
+>
+> This should handle the odd case of the child being the supplier of the
+> parent. Can you please give this a shot? I want to make sure the cycle
+> detection code handles this properly and treats it like it's NOT a cycle.
+>
+> Geert,
+>
+> Can you test the renesas stuff I changed please? They should continue
+> working like before. Any other sanity test on other hardware would be
+> great too.
+>
+> Sudeep,
+>
+> I don't think there are any unfixed issues you had reported in my other
+> patches that this series might fix, but it'll be nice if you could give
+> this a sanity test.
+>
+> Guenter,
+>
+> I don't think this will fix the issue you reported in the amba patch, but
+> it's worth a shot because it improves a bunch of corner case handling. So
+> it might be better at handling whatever corner cases you might have in the
+> qemu platforms.
 
-Agreed, next week would have been better.  I happen to be queuing stuff
-up ready for a rebase this cycle though so applied this one to what will
-be the togreg branch of iio.git after rc1 is available and I've rebased.
+Hi Naresh,
 
-Jonathan
+Thanks for testing these patches in the other thread. Mind giving your
+tested-by here? I know you tested these patches in X15, but were there
+also other boards these patches were tested on as part of the run?
 
-> 
-> Also, please refrain from top-posting.
-> 
-> Thanks.
-> 
-> > On Tue, Jul 12, 2022 at 06:33:44PM +0200, Francesco Dolcini wrote:  
-> > > STMPE driver does not require a specific node name anymore, only the
-> > > compatible is checked, update binding according to this.
-> > > 
-> > > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml
-> > > index 9049c699152f..333744a2159c 100644
-> > > --- a/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/st,stmpe-adc.yaml
-> > > @@ -13,8 +13,7 @@ description:
-> > >    This ADC forms part of an ST microelectronics STMPE multifunction device .
-> > >    The ADC is shared with the STMPE touchscreen. As a result some ADC related
-> > >    settings are specified in the parent node.
-> > > -  The node name myst be stmpe_adc and should be a child node of the stmpe node
-> > > -  to which it belongs.
-> > > +  The node should be a child node of the stmpe node to which it belongs.
-> > >  
-> > >  properties:
-> > >    compatible:  
-> >   
-> 
+Thanks,
+Saravana
 
+
+>
+> Thanks,
+> Saravana
+>
+> Cc: Abel Vesa <abel.vesa@linaro.org>
+> Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: John Stultz <jstultz@google.com>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+>
+> Saravana Kannan (9):
+>   driver core: fw_devlink: Don't purge child fwnode's consumer links
+>   driver core: fw_devlink: Improve check for fwnode with no
+>     device/driver
+>   soc: renesas: Move away from using OF_POPULATED for fw_devlink
+>   gpiolib: Clear the gpio_device's fwnode initialized flag before adding
+>   driver core: fw_devlink: Add DL_FLAG_CYCLE support to device links
+>   driver core: fw_devlink: Allow marking a fwnode link as being part of
+>     a cycle
+>   driver core: fw_devlink: Consolidate device link flag computation
+>   driver core: fw_devlink: Make cycle detection more robust
+>   of: property: Simplify of_link_to_phandle()
+>
+>  drivers/base/core.c             | 437 +++++++++++++++++++++-----------
+>  drivers/gpio/gpiolib.c          |   6 +
+>  drivers/of/property.c           |  84 +-----
+>  drivers/soc/renesas/rcar-sysc.c |   2 +-
+>  include/linux/device.h          |   1 +
+>  include/linux/fwnode.h          |  12 +-
+>  6 files changed, 323 insertions(+), 219 deletions(-)
+>
+> --
+> 2.37.1.559.g78731f0fdb-goog
+>
