@@ -2,96 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DDD3592EC7
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 14:16:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EEB5592F0E
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 14:39:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231468AbiHOMQY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Aug 2022 08:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58334 "EHLO
+        id S240452AbiHOMjb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Aug 2022 08:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230502AbiHOMQY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 08:16:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CB8101F3;
-        Mon, 15 Aug 2022 05:16:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S232239AbiHOMja (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 08:39:30 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511C2237DD;
+        Mon, 15 Aug 2022 05:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1660567167; x=1692103167;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZoeSgVqYecYa8dOXcwGrIo4k9Ip/Bxok4jHfP0iqk0s=;
+  b=RxRiPoIBIcCDT1kDI/YX1hV7vf8ExuPtme+aHhJIqCHSN8ma928khbT0
+   Eez9zl6oULI6EzEc1HCuHizcE+GVmv55luGurc9EbZ7aaPlBIjOysGqpU
+   K0TDS1l28lWsFi7tNBeVCKOwDp9uzgJdVd2sBxjhVQvA4IsSlqLFmxFKi
+   fSuMJjCIYbpIdkhUOo298dO4riLw/bMH6swlbwPo5Zr7+ckxEepLwxfo6
+   X8+2yFDghGyJZElnIjW8hvzznBoL2jke5nlQbGUn0py3/ptpTWXuopu39
+   ncLvisAFh8kMFtxWy0k1/8xxG6CFbGDqHe4aDHoEx36J4yQOckGtnQS8u
+   A==;
+X-IronPort-AV: E=Sophos;i="5.93,238,1654552800"; 
+   d="scan'208";a="25605305"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 15 Aug 2022 14:39:24 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 15 Aug 2022 14:39:24 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 15 Aug 2022 14:39:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1660567164; x=1692103164;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZoeSgVqYecYa8dOXcwGrIo4k9Ip/Bxok4jHfP0iqk0s=;
+  b=SRYuP5tro2Iq3C5Ct21jG0BwrComttqC0+848iBBB5Rxzj5oLDsXCf6s
+   JF4ghFCSvsmxuLGW+HEaie5rlZKfJbykLh2zr/AmAuAzLYPXuzbyhFC8c
+   gVFgpEOhr6GMabGQXphj25oizxKT7ZQSl5xHXv10/G2N7Zum0ngCeXUYZ
+   lwclTWC/9linzmcWvJdWWPLJW5J6c86I/hUkkZGJxOkWPNCEcb3lOsqqZ
+   Ja81xBdUzxOJ3b50lS6fahYhKG2h614sQKfCxRzqb5jM9n0H1BmEjivYd
+   x3YI1hJlrFdY9QQBKUFPSoSXGqhZOCT240LZiirg3gv82dbhYXSgcNs0U
+   g==;
+X-IronPort-AV: E=Sophos;i="5.93,238,1654552800"; 
+   d="scan'208";a="25605304"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 15 Aug 2022 14:39:24 +0200
+Received: from steina-w.localnet (unknown [10.123.49.11])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1CDCC6119B;
-        Mon, 15 Aug 2022 12:16:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B54AC433D6;
-        Mon, 15 Aug 2022 12:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660565782;
-        bh=nfbt+cMYBqWgl0fPp91G7ZvYuKe2jGdemUvUTgTKcck=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WOZiCy6Nd2UcpBAsjq8fyZyu5zousJCj2105E4SuqFOFlZLsN8TYWrddzmWZAwphg
-         jqVxMEOo/Ip8nIaMjGCCHgDmO/MM4E+fi/kNljYYeZKYsCYX0mF8R162H8aGki0Vn6
-         +4l9ntWb3zP3hoKT3/7bwqvoqyhGo87JcOLLUYDSjgYO8vNuylc8MMbYs8jcOWJzRA
-         cea79+GSP4DRX5pho4OyO6QlflqVOFPjdYs9+13nH5W0k6r9BmYob0MS/pxuXGnBmM
-         YkP211PE6LOWHrA4wQ6fVgdThadC1wCSPobjyQRmETrFx/Cu/yCt2+Kp++gwTfNh+y
-         JneIwD/T61Wow==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oNZ12-0034zE-5V;
-        Mon, 15 Aug 2022 13:16:20 +0100
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id DCF8A280056;
+        Mon, 15 Aug 2022 14:39:23 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 0/9] fw_devlink improvements
+Date:   Mon, 15 Aug 2022 14:39:23 +0200
+Message-ID: <3601760.iIbC2pHGDl@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20220810060040.321697-1-saravanak@google.com>
+References: <20220810060040.321697-1-saravanak@google.com>
 MIME-Version: 1.0
-Date:   Mon, 15 Aug 2022 13:16:19 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     lewis.hanly@microchip.com
-Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-kernel@vger.kernel.org, palmer@dabbelt.com,
-        conor.dooley@microchip.com, daire.mcnamara@microchip.com
-Subject: Re: [PATCH v6 0/1] Add Polarfire SoC GPIO support
-In-Reply-To: <20220815120834.1562544-1-lewis.hanly@microchip.com>
-References: <20220815120834.1562544-1-lewis.hanly@microchip.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <727f07f843a9d06d84c1c28c3b905a4c@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: lewis.hanly@microchip.com, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, linus.walleij@linaro.org, brgl@bgdev.pl, linux-kernel@vger.kernel.org, palmer@dabbelt.com, conor.dooley@microchip.com, daire.mcnamara@microchip.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-08-15 13:08, lewis.hanly@microchip.com wrote:
-> From: Lewis Hanly <lewis.hanly@microchip.com>
-> 
-> 
-> Add a driver to support the Polarfire SoC gpio controller.
-> Tested with latest 5.19 kernel.
-> 
-> MPFS gpio interrupts are connected to IOMUX configured by system
-> register GPIO_INTERRUPT_FAB_CR(31:0). Interrupt connection for
-> some GPIO's to the PLIC (Platform Level Interrupt Controller) can be
-> shared (not directly connected) or direct if connection is available.
-> 
-> previously upstreamed dt-bindings: gpio: microchip,mpfs-gpio.yaml
-> 
-> Changes in v6
-> Fixed typo causing compile issue with kernel 6.0-rc1
+Hello Saravana,
 
-3 versions in just over 5 hours. How about taking a step back
-and *wait* for people to review this code? It isn't like this
-is going to be merged tomorrow anyway...
+Am Mittwoch, 10. August 2022, 08:00:29 CEST schrieb Saravana Kannan:
+> Alexander,
+> 
+> This should fix your issue where the power domain device not having a
+> compatible property. Can you give it a shot please?
 
-The expected rate for new versions of a patch is about once
-a week (see Documentation/process/submitting-patches.rst).
+thanks for the update. Unfortunately this does not work:
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> [    0.774838] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@0
+> [    0.775100] imx-pgc imx-pgc-domain.1: __genpd_dev_pm_attach() failed to 
+find PM domain: -2
+> [    0.775324] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@2
+> [    0.775601] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@3
+> [    0.775842] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@4
+> [    0.776642] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@7
+> [    0.776897] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@8
+> [    0.777158] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@9
+> [    0.777405] PM: Added domain provider from /soc@0/bus@30000000/
+gpc@303a0000/pgc/power-domain@a
+> [    0.779342] genpd genpd:0:38320000.blk-ctrl: __genpd_dev_pm_attach() 
+failed to find PM domain: -2
+> [    0.779422] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV: failed to 
+attach power domain "bus"
+> [    0.848785] etnaviv-gpu 38000000.gpu: __genpd_dev_pm_attach() failed to 
+find PM domain: -2
+> [    1.114220] pfuze100-regulator 0-0008: Full layer: 2, Metal layer: 1
+> [    1.122267] pfuze100-regulator 0-0008: FAB: 0, FIN: 0
+> [    1.132970] pfuze100-regulator 0-0008: pfuze100 found.
+> [    1.157011] imx-gpcv2 303a0000.gpc: Failed to create device link with 
+0-0008
+> [    1.164094] imx-gpcv2 303a0000.gpc: Failed to create device link with 
+0-0008
+
+The required power-supply for the power domains is still not yet available.
+Does this series require some other patches as well?
+
+Whats worse, starting with commit 9/9 [of: property: Simplify 
+of_link_to_phandle()], other drivers fail to probe waiting for pinctrl to be 
+available.
+> $ cat /sys/kernel/debug/devices_deferred
+> gpio-leds       platform: wait for supplier gpioledgrp
+> extcon-usbotg0  platform: wait for supplier usb0congrp
+> gpio-keys       platform: wait for supplier gpiobuttongrp
+> regulator-otg-vbus      platform: wait for supplier reggotgvbusgrp
+> regulator-vdd-arm       platform: wait for supplier dvfsgrp
+
+Apparently for some reason they are not probed again, once the pinctrl driver 
+probed.
+
+Best reagrds,
+Alexander
+
+
+
