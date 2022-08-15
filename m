@@ -2,113 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74513592C9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 12:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69199592C26
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 12:51:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230321AbiHOJUG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Aug 2022 05:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44230 "EHLO
+        id S242240AbiHOJ5o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Aug 2022 05:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229761AbiHOJTe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 05:19:34 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9624722286
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 02:19:33 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id j1so8401422wrw.1
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 02:19:33 -0700 (PDT)
+        with ESMTP id S242222AbiHOJ5n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 05:57:43 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837671CFE8
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 02:57:41 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id fy5so12696266ejc.3
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 02:57:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=wrEhczNEpmqqq7VK32HILro+LXPMg7V+9Mu8TEubq68=;
-        b=X9dKLxsx5J6Y0Q5apGeawGDjpRu57kpRQUxeUJqf1KVbC6afNd9EmZrdIqucXBRsUv
-         6rsghCS7XYEqtlGxQXrxTtWqw/uz2JEoaWqT1ECMV5HYCkAlnAKFzjALqdPVhC0KY1/z
-         Q+xGiKLrDToOb61FRXLx3tHl0enxF7pyPr7IiRLVAbCXfa6AxP2s7vm9402+zmYmb+5X
-         qcUSsENWS41qJ3fg5J36gjQ4K9MPh6rneR5fMPlx0gOZn8s3PimkZHDGrPL42fPg8YEf
-         rfshze6qCi0rofBpzqi4qXFnrOQ1CwpjdZhEhdUgszLZE5uAsIu/n9Wh5nbOS3uhJLbh
-         4wCw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=r1NsrzieKJbz0xeysq9ijMttBXf0JDgLn0ohifJ6FV0=;
+        b=gFptx6rdf1WmUqIRWVe+56U/Fl2x7Vlevj+kn9aSdpUpmlTGT8zizF89evlAIXSLr0
+         qcp4N/y8VKls98M6J9BBaplfbsqSiDbFZuWf/4hACiKKSOAj6QuMMsxoRfyLjRCS5ynX
+         BWgAPx00uVspe9NbSXzukFJptl4K6fbbFVi56ECvPsX9N45wwEt6GA7TRgYueiGoIbMe
+         N4YA5FtvIMKaIU/XuIm+47VmJ99k7WMAhXmNwaVK1qMMcmUI18SymK23LPQ4RCIGRy2p
+         627xhWBGUoql2p8Lz/bjmhKdXNE6u+YdFOiEN7OT2QnaPqX9PwFExEDljV42PTk4A6EH
+         Nk/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=wrEhczNEpmqqq7VK32HILro+LXPMg7V+9Mu8TEubq68=;
-        b=zKtkkezGyc+8AEvEA2lImw+7mLF5FhuQpPiSssNXveQziWMf0zUkKPd9usXr7S0fYD
-         HgD01EK/mykh6+E3hSyCYNs+9hmrkY/FquQgnzXWLAAwoQkcB+GDnd4f4QdhOQRYi4Zy
-         2KY7k8SP46D6KjHn+ePe2V0qTY3dgvWuc0WEip6aHZn4g4I5WCcfrXzvbdMHTb+lvE9t
-         Fzr3RgDG49rPjvxECm/Zw52WEcC3nzjazoySYGBrwDVo/QOHxIO57hs399qcC7u9hRrS
-         KzL7CPFAkF+iPohMOp/eaCqXQ7r+snCnrz6W5J1Ijfnadj0LP4iCtq3tCn8N07el0641
-         XayA==
-X-Gm-Message-State: ACgBeo0RqmcvQvGSApmnqMegR+c7ss+aR/VRRsa2RtDFtEnYxQzhFunJ
-        kPnLRCBXX5gi0NqUIgOWEkTvrjgRifuxJw==
-X-Google-Smtp-Source: AA6agR7mMp/FaJHOcP3eNvxI6ohHw4X0eBa3uH6SugbJpC/+2RKXvZeOZjLBw9iy1OST3Aa3uGqvfw==
-X-Received: by 2002:a05:6000:120a:b0:21f:dfb:ff12 with SMTP id e10-20020a056000120a00b0021f0dfbff12mr7985664wrx.215.1660555172222;
-        Mon, 15 Aug 2022 02:19:32 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:84c4:662a:9629:cac6])
-        by smtp.gmail.com with ESMTPSA id p17-20020a5d48d1000000b0022159d92004sm6716993wrs.82.2022.08.15.02.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Aug 2022 02:19:31 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hulk Robot <hulkci@huawei.com>, Yuan Can <yuancan@huawei.com>
-Subject: [PATCH] gpio: pxa: use devres for the clock struct
-Date:   Mon, 15 Aug 2022 11:19:29 +0200
-Message-Id: <20220815091929.130547-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=r1NsrzieKJbz0xeysq9ijMttBXf0JDgLn0ohifJ6FV0=;
+        b=xjpKB27E6vwT1G6qRq/k5zJHsvW/pPWzm5HRPCZFl8FaL8lFm6a3TsoOvrv7LSjhwT
+         BP7AHVLd3McLcQlW5hfcIi1tYTS23hgPXlbvkwsyjF6akYnKbez/UzhH+Q+SRXy2e9jS
+         bOleF13fPjsff9Wwp3c7wjQGU8crNPSUO+8nICK7Dd5TUf8Ims0AE701oG5qZIsweucO
+         AQyFe/KY6wcemklb7mdsZghPJWbpFqT8Hp6sVx/7Xe/YZHWo/NPWhRQt1FJiZKBbj66x
+         +YaM7uub3IpmQlcIaiIg5/rTdQfnlxqCd/5tQV+slv2o0vovVgXaOci3pnJCS9MRlazY
+         JjWA==
+X-Gm-Message-State: ACgBeo2o2YaFIJtZCH/Dqou+8E/W+SPiRsX/0LNdt/23OpnhrSqIoo+H
+        t/7gLtX8hwOee1zDGBil4LxWWM8pBea/fNn5lnxhuw==
+X-Google-Smtp-Source: AA6agR42gGHsKm0sw1MEgLwBiUC1pxf/08kt1kKkLbCwyDpNq+KcaYcUtN0ZKxYuGENxjoXyk9gWqGn/QTO3a8wYKnE=
+X-Received: by 2002:a17:907:7254:b0:731:61c6:ecf9 with SMTP id
+ ds20-20020a170907725400b0073161c6ecf9mr10009999ejc.101.1660557460076; Mon, 15
+ Aug 2022 02:57:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220810060040.321697-1-saravanak@google.com> <20220810060040.321697-5-saravanak@google.com>
+In-Reply-To: <20220810060040.321697-5-saravanak@google.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 15 Aug 2022 11:57:29 +0200
+Message-ID: <CAMRc=Md=8TQf=EPKaTbOUF2=fuXVzC_dvV1SUo3Y2Tx-5hnzew@mail.gmail.com>
+Subject: Re: [PATCH v1 4/9] gpiolib: Clear the gpio_device's fwnode
+ initialized flag before adding
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The clock is never released after probe(). Use devres to not leak
-resources.
+On Wed, Aug 10, 2022 at 8:00 AM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Registering an irqdomain sets the flag for the fwnode. But having the
+> flag set when a device is added is interpreted by fw_devlink to mean the
+> device has already been initialized and will never probe. This prevents
+> fw_devlink from creating device links with the gpio_device as a
+> supplier. So, clear the flag before adding the device.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/gpio/gpiolib.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index cc9c0a12259e..1d57d6f24632 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -522,6 +522,12 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+>  {
+>         int ret;
+>
+> +       /*
+> +        * If fwnode doesn't belong to another device, it's safe to clear its
+> +        * initialized flag.
+> +        */
+> +       if (!gdev->dev.fwnode->dev)
+> +               fwnode_dev_initialized(gdev->dev.fwnode, false);
+>         ret = gcdev_register(gdev, gpio_devt);
+>         if (ret)
+>                 return ret;
+> --
+> 2.37.1.559.g78731f0fdb-goog
+>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Reported-by: Yuan Can <yuancan@huawei.com>
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
- drivers/gpio/gpio-pxa.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index c7fbfa3ae43b..1198ab0305d0 100644
---- a/drivers/gpio/gpio-pxa.c
-+++ b/drivers/gpio/gpio-pxa.c
-@@ -661,24 +661,17 @@ static int pxa_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(gpio_reg_base))
- 		return PTR_ERR(gpio_reg_base);
- 
--	clk = clk_get(&pdev->dev, NULL);
-+	clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(clk)) {
- 		dev_err(&pdev->dev, "Error %ld to get gpio clock\n",
- 			PTR_ERR(clk));
- 		return PTR_ERR(clk);
- 	}
--	ret = clk_prepare_enable(clk);
--	if (ret) {
--		clk_put(clk);
--		return ret;
--	}
- 
- 	/* Initialize GPIO chips */
- 	ret = pxa_init_gpio_chip(pchip, pxa_last_gpio + 1, gpio_reg_base);
--	if (ret) {
--		clk_put(clk);
-+	if (ret)
- 		return ret;
--	}
- 
- 	/* clear all GPIO edge detects */
- 	for_each_gpio_bank(gpio, c, pchip) {
--- 
-2.34.1
-
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
