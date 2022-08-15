@@ -2,119 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23A225933AB
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 18:58:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17A7B59392C
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 21:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232770AbiHOQ6A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Aug 2022 12:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46612 "EHLO
+        id S243220AbiHOSjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Aug 2022 14:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232889AbiHOQ5m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 12:57:42 -0400
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7FB275C1;
-        Mon, 15 Aug 2022 09:57:41 -0700 (PDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id b7so5761627qvq.2;
-        Mon, 15 Aug 2022 09:57:41 -0700 (PDT)
+        with ESMTP id S240754AbiHOSiv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 14:38:51 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8963D2E69F
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 11:23:47 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-324ec5a9e97so93471667b3.7
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 11:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=dT9Pg0cgomgnI0kkqHjm6eb1hxEl1p1LNNw04+pYAiw=;
-        b=UAbnyBq77vyYNRVvJhwDaocodBZTdW/rY26aTPJ3tUoVcG8kLbkvDeuHoCDVazGTqp
-         U3sWT1HisJNc/seNXOnderJHWURJq9o4MgfiwPF0JBbdfW64WPTclAeuu4L0OJZbxuLR
-         TcysGwk8ohcgr0uCvm6OGzo6qR8haErFewbD2I0+n3DaZN4NDE5GhwIJaJ5iAKsS7YjB
-         J67OCySu8M6iaLP6QU0K9qUMuaaQNz53rc7Mc+kihyUpk4ZXKxciQTtZMWWmzwdTR1iK
-         ylcJ2kUbrNKv0MWTDSbr31gytziDJYbVssAOt0Ez9SBA8elvqQr5y6onp0bOpYZVWs0k
-         Af3g==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=Db07G664QdLJL7hbwp7/beOMmf/kBhPqwkUaOy2LwyA=;
+        b=Di5ahuQuUij88dNg/KRUmAKM+aFc4DdrWzvkGo1ivcBnErb9f9it3ced1tX8E1HOnW
+         rLig4vd67w+IDyEGKnA/hiBFKa9SIJo5ovpK9oXEVP3+LRX4wdHl8OBPIMq1rc/4kQNy
+         rLg4IV9NvfkwSDqTHNxE49YD7M/s3X5ncxvBEWc9+/vl3EoxqEMe1PMLKgVLDHqstm4G
+         joJwp2cMBAozP1CUx+KJTNs7dLtt12cRxqdp9lmed/H3XsNHEmXKmwhjuo5TeIJHjYNH
+         eTAkc55YhPGHXbscGy9mPpSlEynn8yRw1Pw5EJDngyR94hoEJzRHIGRMOuHmABb4er0F
+         FE6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=dT9Pg0cgomgnI0kkqHjm6eb1hxEl1p1LNNw04+pYAiw=;
-        b=0YCUM/sxNd+XW1rz+aOEJFmU57WhC3pLKbfffXI+n+rlWZk/W6rfXokcDwTazXcrcX
-         GrAtRd2P5GGgLddw68da9ChN+9CKbg1BHAPEvRJgHQ0VFe1HiWEDPLDTwsFykjTDCLGL
-         HEji4/S47365BacyPSsIxbr5Irak2OkclqzoQy766AlbS/7tp0H4h7WUQbXZy5IIR8y2
-         KvPEU6TP3pLZ+bbYB/IY4zj0rHl+qBjvYvDZgl2uszYsiKn5QRqvTf+1d+KuDvs/1vzH
-         ulKQQjHs1HFVDk3PXBkMr/05Pr/cyRbqeG60jBRrIhZDtP+XIoPVZeFDjuXvWjcII6gR
-         tIRQ==
-X-Gm-Message-State: ACgBeo3DUcLc2Ozbkn9bG7AbqpJLfbvrnk3QCoU3BpvkIr4IkcAdHZAk
-        yFGtlHJ5BxNJWxby0g1qYnw=
-X-Google-Smtp-Source: AA6agR5+e4ITrllG9Zdjcav/qnQ/K77ki/+NPhNuFZ+FfibDMeCZLlBPNoSOkBpDKq1B9dRdFkv1qQ==
-X-Received: by 2002:a05:6214:62a:b0:476:858d:b2c8 with SMTP id a10-20020a056214062a00b00476858db2c8mr13917327qvx.65.1660582660417;
-        Mon, 15 Aug 2022 09:57:40 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id f8-20020ac84648000000b0033e51aea00esm8459756qto.25.2022.08.15.09.57.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Aug 2022 09:57:39 -0700 (PDT)
-Message-ID: <584ebb0e-2d55-348f-18f7-a555c3a359b9@gmail.com>
-Date:   Mon, 15 Aug 2022 09:57:30 -0700
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=Db07G664QdLJL7hbwp7/beOMmf/kBhPqwkUaOy2LwyA=;
+        b=U0559cO/Lai2UqxhJ0eO1OZXNPY+TaAeTIdlKStaBgDSHP0pb/XYuNS0NzzAG2qnvw
+         wko7/El6Q0qveTxASAHzXhCX9Zp72zqwO4pLNR/94wnkxvm38dQrmVo2f8HVnPVuF8IZ
+         tweFnDj7q0UDownxPoYEGWX05T7xWkLxVqoNf9dD9Shsxv1zq5x4j15ONvuQTupiY8Ex
+         bKIcG5HJee5PAtfTyupHEXaXfEXYFyClMrMQmwaOLgc5c2meJtlOqEuYL9+xdUYW3E3/
+         JfR9bib9YXDKhXL2G0d/DihdGbPgIofMI8Oa0TQDN5Eya3yW1eQe/afvHsMytID8XULc
+         8Oig==
+X-Gm-Message-State: ACgBeo1TwZ2GUroTTFwmux9/WlwMpD9Ky2yS4sXmqZwnqgJ58gNhoDs1
+        VA3YyHxY3n5/KeWXw502iHGPsRfC3elODWpVBdBgiA==
+X-Google-Smtp-Source: AA6agR4wzhsMjeR70OWMz+XaTgfrMhs+/iH3OP2Hd6MDBv3+PPxfDZUE0dnmuD2HQ3WDLtnmiP5GDkAha3prRqse7F4=
+X-Received: by 2002:a25:d353:0:b0:67b:7758:b051 with SMTP id
+ e80-20020a25d353000000b0067b7758b051mr11716143ybf.563.1660587826134; Mon, 15
+ Aug 2022 11:23:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3 6/9] arm64: bcmbca: Make BCM4908 drivers depend on
- ARCH_BCMBCA
-Content-Language: en-US
-To:     William Zhang <william.zhang@broadcom.com>,
-        Linux ARM List <linux-arm-kernel@lists.infradead.org>
-Cc:     Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        joel.peshkin@broadcom.com, dan.beygelman@broadcom.com,
-        f.fainelli@gmail.com, krzysztof.kozlowski@linaro.org,
-        rafal@milecki.pl, Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
+References: <20220810060040.321697-1-saravanak@google.com> <YvYiF36M09dX9ASm@atomide.com>
+ <CAGETcx-t0O0B+5i0FWwm5w2=ccOD5zVAaUvgQoP8PT9SOT_btw@mail.gmail.com> <Yvog4K0barAvvVeb@atomide.com>
+In-Reply-To: <Yvog4K0barAvvVeb@atomide.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 15 Aug 2022 11:23:09 -0700
+Message-ID: <CAGETcx-k+ca5uG42XvW5yiK8RWDYfeRs9va5boqnp33s45AGRg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] fw_devlink improvements
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY DEVICES (MTD)" 
-        <linux-mtd@lists.infradead.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <linux-mips@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:WATCHDOG DEVICE DRIVERS" <linux-watchdog@vger.kernel.org>
-References: <20220803175455.47638-1-william.zhang@broadcom.com>
- <20220803175455.47638-7-william.zhang@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20220803175455.47638-7-william.zhang@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 8/3/22 10:54, William Zhang wrote:
-> With Broadcom Broadband arch ARCH_BCMBCA supported in the kernel, this
-> patch series migrate the ARCH_BCM4908 symbol to ARCH_BCMBCA. Hence
-> replace ARCH_BCM4908 with ARCH_BCMBCA in subsystem Kconfig files.
-> 
-> Signed-off-by: William Zhang <william.zhang@broadcom.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net> (for watchdog)
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com> (for drivers/pci)
-> Acked-by: Wolfram Sang <wsa@kernel.org> (for i2c)
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de> (for reset)
+On Mon, Aug 15, 2022 at 3:33 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Saravana Kannan <saravanak@google.com> [220813 00:45]:
+> > On Fri, Aug 12, 2022 at 2:49 AM Tony Lindgren <tony@atomide.com> wrote:
+> > >
+> > > * Saravana Kannan <saravanak@google.com> [220810 05:54]:
+> > > > Tony,
+> > > >
+> > > > This should handle the odd case of the child being the supplier of the
+> > > > parent. Can you please give this a shot? I want to make sure the cycle
+> > > > detection code handles this properly and treats it like it's NOT a cycle.
+> > >
+> > > Yup, this series works for me, so feel free to add:
+> > >
+> > > Tested-by: Tony Lindgren <tony@atomide.com>
+> >
+> > Thanks for testing!
+> >
+> > Btw, out of curiosity, how many different boards did you test this on?
+> > IIRC you had an issue only in one board, right? Not to say I didn't
+> > break anything else, I'm just trying to see how much confidence we
+> > have on this series so far. I'm hoping the rest of the folks I listed
+> > in the email will get around to testing this series.
+>
+> Sorry if I was not clear earlier. The issue affects several generations
+> of TI 32-bit SoCs at least, not just one board.
 
-Applied to https://github.com/Broadcom/stblinux/commits/drivers/next, 
-thanks!
--- 
-Florian
+But this series fixes the issues for all of them or are you still
+seeing some broken boot with this series?
+
+-Saravana
+
+>
+> > > I have some concerns though on how do we get a working -rc1 with the
+> > > earlier series applied? See the comments in the last patch of this
+> > > series.
+> >
+> > I tried to reply, but not sure if it helps. We'll continue the discussion there.
+>
+> Ack.
+>
+> Tony
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
