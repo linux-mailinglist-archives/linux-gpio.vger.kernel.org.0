@@ -2,166 +2,996 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EEB5592F0E
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 14:39:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE0CA592F3F
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Aug 2022 14:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240452AbiHOMjb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Aug 2022 08:39:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49756 "EHLO
+        id S233690AbiHOM5O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Aug 2022 08:57:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232239AbiHOMja (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 08:39:30 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511C2237DD;
-        Mon, 15 Aug 2022 05:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1660567167; x=1692103167;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZoeSgVqYecYa8dOXcwGrIo4k9Ip/Bxok4jHfP0iqk0s=;
-  b=RxRiPoIBIcCDT1kDI/YX1hV7vf8ExuPtme+aHhJIqCHSN8ma928khbT0
-   Eez9zl6oULI6EzEc1HCuHizcE+GVmv55luGurc9EbZ7aaPlBIjOysGqpU
-   K0TDS1l28lWsFi7tNBeVCKOwDp9uzgJdVd2sBxjhVQvA4IsSlqLFmxFKi
-   fSuMJjCIYbpIdkhUOo298dO4riLw/bMH6swlbwPo5Zr7+ckxEepLwxfo6
-   X8+2yFDghGyJZElnIjW8hvzznBoL2jke5nlQbGUn0py3/ptpTWXuopu39
-   ncLvisAFh8kMFtxWy0k1/8xxG6CFbGDqHe4aDHoEx36J4yQOckGtnQS8u
-   A==;
-X-IronPort-AV: E=Sophos;i="5.93,238,1654552800"; 
-   d="scan'208";a="25605305"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 15 Aug 2022 14:39:24 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 15 Aug 2022 14:39:24 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 15 Aug 2022 14:39:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1660567164; x=1692103164;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZoeSgVqYecYa8dOXcwGrIo4k9Ip/Bxok4jHfP0iqk0s=;
-  b=SRYuP5tro2Iq3C5Ct21jG0BwrComttqC0+848iBBB5Rxzj5oLDsXCf6s
-   JF4ghFCSvsmxuLGW+HEaie5rlZKfJbykLh2zr/AmAuAzLYPXuzbyhFC8c
-   gVFgpEOhr6GMabGQXphj25oizxKT7ZQSl5xHXv10/G2N7Zum0ngCeXUYZ
-   lwclTWC/9linzmcWvJdWWPLJW5J6c86I/hUkkZGJxOkWPNCEcb3lOsqqZ
-   Ja81xBdUzxOJ3b50lS6fahYhKG2h614sQKfCxRzqb5jM9n0H1BmEjivYd
-   x3YI1hJlrFdY9QQBKUFPSoSXGqhZOCT240LZiirg3gv82dbhYXSgcNs0U
-   g==;
-X-IronPort-AV: E=Sophos;i="5.93,238,1654552800"; 
-   d="scan'208";a="25605304"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 15 Aug 2022 14:39:24 +0200
-Received: from steina-w.localnet (unknown [10.123.49.11])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id DCF8A280056;
-        Mon, 15 Aug 2022 14:39:23 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 0/9] fw_devlink improvements
-Date:   Mon, 15 Aug 2022 14:39:23 +0200
-Message-ID: <3601760.iIbC2pHGDl@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20220810060040.321697-1-saravanak@google.com>
-References: <20220810060040.321697-1-saravanak@google.com>
+        with ESMTP id S232091AbiHOM5O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Aug 2022 08:57:14 -0400
+Received: from out1.migadu.com (out1.migadu.com [91.121.223.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728F211A01;
+        Mon, 15 Aug 2022 05:57:11 -0700 (PDT)
+Date:   Mon, 15 Aug 2022 20:56:45 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1660568229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RC4eSBf993xSf/Tby2wC7gvcnOoCsNN1xGFbh5wMcvA=;
+        b=xExD0dOuw2QC1xb5GfqqP+U9UYvKsNyOqVHQTaxeulOMjHk9uSwFrX205erp/1/uZZOsQL
+        8B7VY8nACMTmSU+alnBVpagSrkgKfX36JCteW2dzlCqiRP1cbMiUCj/RcgelKfV3C+6lzp
+        ytjiH2ldfVKJFQ9fJR+YOFRqFwMxcfA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Wu XiangCheng <wu.xiangcheng@linux.dev>
+To:     Yanteng Si <siyanteng@loongson.cn>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, tekkamanninja@gmail.com,
+        corbet@lwn.net, alexs@kernel.org, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs/zh_CN: Update the translation of gpio to 6.0-rc1
+Message-ID: <YvpCjZoSR8GgjsrV@bobwxc.mipc>
+References: <20220815091357.2723152-1-siyanteng@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+KipKz6Md3qllVRd"
+Content-Disposition: inline
+In-Reply-To: <20220815091357.2723152-1-siyanteng@loongson.cn>
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Saravana,
 
-Am Mittwoch, 10. August 2022, 08:00:29 CEST schrieb Saravana Kannan:
-> Alexander,
-> 
-> This should fix your issue where the power domain device not having a
-> compatible property. Can you give it a shot please?
+--+KipKz6Md3qllVRd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks for the update. Unfortunately this does not work:
+Hi, Yanteng
 
-> [    0.774838] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@0
-> [    0.775100] imx-pgc imx-pgc-domain.1: __genpd_dev_pm_attach() failed to 
-find PM domain: -2
-> [    0.775324] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@2
-> [    0.775601] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@3
-> [    0.775842] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@4
-> [    0.776642] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@7
-> [    0.776897] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@8
-> [    0.777158] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@9
-> [    0.777405] PM: Added domain provider from /soc@0/bus@30000000/
-gpc@303a0000/pgc/power-domain@a
-> [    0.779342] genpd genpd:0:38320000.blk-ctrl: __genpd_dev_pm_attach() 
-failed to find PM domain: -2
-> [    0.779422] imx8m-blk-ctrl 38320000.blk-ctrl: error -ENODEV: failed to 
-attach power domain "bus"
-> [    0.848785] etnaviv-gpu 38000000.gpu: __genpd_dev_pm_attach() failed to 
-find PM domain: -2
-> [    1.114220] pfuze100-regulator 0-0008: Full layer: 2, Metal layer: 1
-> [    1.122267] pfuze100-regulator 0-0008: FAB: 0, FIN: 0
-> [    1.132970] pfuze100-regulator 0-0008: pfuze100 found.
-> [    1.157011] imx-gpcv2 303a0000.gpc: Failed to create device link with 
-0-0008
-> [    1.164094] imx-gpcv2 303a0000.gpc: Failed to create device link with 
-0-0008
+=E8=AF=9D=E8=AF=B4 Yanteng Si =E4=BA=8E 2022-08-15 (=E4=B8=80) 17:13:57 +08=
+00 =E6=9B=B0=E8=BF=87=EF=BC=9A
+> Update to commit 5513b411ea5b ("Documentation: rename pinctl to
+> pin-control")
+> Move .../zh_CN/gpio.txt to .../zh_CN/driver-api/gpio/legacy.rst
+> Translate .../driver-api/index.rst into Chinese.
+> Translate .../driver-api/gpio/index.rst into Chinese.
+>=20
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> ---
+>  .../zh_CN/driver-api/gpio/index.rst           |  69 ++++++
+>  .../{gpio.txt =3D> driver-api/gpio/legacy.rst}  | 221 ++++++++++++------
+>  .../translations/zh_CN/driver-api/index.rst   | 132 +++++++++++
+>  Documentation/translations/zh_CN/index.rst    |   2 +-
+>  4 files changed, 348 insertions(+), 76 deletions(-)
+>  create mode 100644 Documentation/translations/zh_CN/driver-api/gpio/inde=
+x.rst
+>  rename Documentation/translations/zh_CN/{gpio.txt =3D> driver-api/gpio/l=
+egacy.rst} (86%)
+>  create mode 100644 Documentation/translations/zh_CN/driver-api/index.rst
+>=20
+> diff --git a/Documentation/translations/zh_CN/driver-api/gpio/index.rst b=
+/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> new file mode 100644
+> index 000000000000..9ab64e94aced
+> --- /dev/null
+> +++ b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> @@ -0,0 +1,69 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +.. include:: ../../disclaimer-zh_CN.rst
+> +
+> +:Original: Documentation/driver-api/gpio/index.rst
+> +
+> +:=E7=BF=BB=E8=AF=91:
+> +
+> + =E5=8F=B8=E5=BB=B6=E8=85=BE Yanteng Si <siyanteng@loongson.cn>
+> +
+> +:=E6=A0=A1=E8=AF=91:
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +=E9=80=9A=E7=94=A8=E5=9E=8B=E8=BE=93=E5=85=A5/=E8=BE=93=E5=87=BA=EF=BC=
+=88GPIO=EF=BC=89
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +=E7=9B=AE=E5=BD=95:
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   legacy
+> +
+> +Todolist:
+> +
+> +*   intro
+> +*   using-gpio
+> +*   driver
+> +*   consumer
+> +*   board
+> +*   drivers-on-gpio
+> +*   bt8xxgpio
+> +
+> +=E6=A0=B8=E5=BF=83
+> +=3D=3D=3D=3D
+> +
+> +=E8=AF=A5API=E5=9C=A8=E4=BB=A5=E4=B8=8B=E5=86=85=E6=A0=B8=E4=BB=A3=E7=A0=
+=81=E4=B8=AD:
+> +
+> +include/linux/gpio/driver.h
+> +
+> +drivers/gpio/gpiolib.c
+> +
+> +ACPI=E6=94=AF=E6=8C=81
+> +=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +=E8=AF=A5API=E5=9C=A8=E4=BB=A5=E4=B8=8B=E5=86=85=E6=A0=B8=E4=BB=A3=E7=A0=
+=81=E4=B8=AD:
+> +
+> +drivers/gpio/gpiolib-acpi.c
+> +
+> +=E8=AE=BE=E5=A4=87=E6=A0=91=E6=94=AF=E6=8C=81
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +=E8=AF=A5API=E5=9C=A8=E4=BB=A5=E4=B8=8B=E5=86=85=E6=A0=B8=E4=BB=A3=E7=A0=
+=81=E4=B8=AD:
+> +
+> +drivers/gpio/gpiolib-of.c
+> +
+> +=E8=AE=BE=E5=A4=87=E7=AE=A1=E7=90=86=E6=94=AF=E6=8C=81
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +=E8=AF=A5API=E5=9C=A8=E4=BB=A5=E4=B8=8B=E5=86=85=E6=A0=B8=E4=BB=A3=E7=A0=
+=81=E4=B8=AD:
+> +
+> +drivers/gpio/gpiolib-devres.c
+> +
+> +sysfs=E5=B8=AE=E5=8A=A9=EF=BC=88=E5=87=BD=E6=95=B0=EF=BC=89
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +=E8=AF=A5API=E5=9C=A8=E4=BB=A5=E4=B8=8B=E5=86=85=E6=A0=B8=E4=BB=A3=E7=A0=
+=81=E4=B8=AD:
+> +
+> +drivers/gpio/gpiolib-sysfs.c
+> diff --git a/Documentation/translations/zh_CN/gpio.txt b/Documentation/tr=
+anslations/zh_CN/driver-api/gpio/legacy.rst
+> similarity index 86%
+> rename from Documentation/translations/zh_CN/gpio.txt
+> rename to Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+> index a23ee14fc927..7616569ed762 100644
+> --- a/Documentation/translations/zh_CN/gpio.txt
+> +++ b/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+> @@ -1,30 +1,19 @@
+> -Chinese translated version of Documentation/admin-guide/gpio
+> -
+> -If you have any comment or update to the content, please contact the
+> -original document maintainer directly.  However, if you have a problem
+> -communicating in English you can also ask the Chinese maintainer for
+> -help.  Contact the Chinese maintainer if this translation is outdated
+> -or if there is a problem with the translation.
+> -
+> -Maintainer: Grant Likely <grant.likely@secretlab.ca>
+> -		Linus Walleij <linus.walleij@linaro.org>
+> -Chinese maintainer: Fu Wei <tekkamanninja@gmail.com>
+> ----------------------------------------------------------------------
+> -Documentation/admin-guide/gpio =E7=9A=84=E4=B8=AD=E6=96=87=E7=BF=BB=E8=
+=AF=91
+> -
+> -=E5=A6=82=E6=9E=9C=E6=83=B3=E8=AF=84=E8=AE=BA=E6=88=96=E6=9B=B4=E6=96=B0=
+=E6=9C=AC=E6=96=87=E7=9A=84=E5=86=85=E5=AE=B9=EF=BC=8C=E8=AF=B7=E7=9B=B4=E6=
+=8E=A5=E8=81=94=E7=B3=BB=E5=8E=9F=E6=96=87=E6=A1=A3=E7=9A=84=E7=BB=B4=E6=8A=
+=A4=E8=80=85=E3=80=82=E5=A6=82=E6=9E=9C=E4=BD=A0=E4=BD=BF=E7=94=A8=E8=8B=B1=
+=E6=96=87
+> -=E4=BA=A4=E6=B5=81=E6=9C=89=E5=9B=B0=E9=9A=BE=E7=9A=84=E8=AF=9D=EF=BC=8C=
+=E4=B9=9F=E5=8F=AF=E4=BB=A5=E5=90=91=E4=B8=AD=E6=96=87=E7=89=88=E7=BB=B4=E6=
+=8A=A4=E8=80=85=E6=B1=82=E5=8A=A9=E3=80=82=E5=A6=82=E6=9E=9C=E6=9C=AC=E7=BF=
+=BB=E8=AF=91=E6=9B=B4=E6=96=B0=E4=B8=8D=E5=8F=8A=E6=97=B6=E6=88=96=E8=80=85=
+=E7=BF=BB
+> -=E8=AF=91=E5=AD=98=E5=9C=A8=E9=97=AE=E9=A2=98=EF=BC=8C=E8=AF=B7=E8=81=94=
+=E7=B3=BB=E4=B8=AD=E6=96=87=E7=89=88=E7=BB=B4=E6=8A=A4=E8=80=85=E3=80=82
+> -=E8=8B=B1=E6=96=87=E7=89=88=E7=BB=B4=E6=8A=A4=E8=80=85=EF=BC=9A Grant Li=
+kely <grant.likely@secretlab.ca>
+> -		Linus Walleij <linus.walleij@linaro.org>
+> -=E4=B8=AD=E6=96=87=E7=89=88=E7=BB=B4=E6=8A=A4=E8=80=85=EF=BC=9A =E5=82=
+=85=E7=82=9C Fu Wei <tekkamanninja@gmail.com>
+> -=E4=B8=AD=E6=96=87=E7=89=88=E7=BF=BB=E8=AF=91=E8=80=85=EF=BC=9A =E5=82=
+=85=E7=82=9C Fu Wei <tekkamanninja@gmail.com>
+> -=E4=B8=AD=E6=96=87=E7=89=88=E6=A0=A1=E8=AF=91=E8=80=85=EF=BC=9A =E5=82=
+=85=E7=82=9C Fu Wei <tekkamanninja@gmail.com>
+> -
+> -
+> -=E4=BB=A5=E4=B8=8B=E4=B8=BA=E6=AD=A3=E6=96=87
+> ----------------------------------------------------------------------
+> -GPIO =E6=8E=A5=E5=8F=A3
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +.. include:: ../../disclaimer-zh_CN.rst
+> +
+> +:Original: Documentation/driver-api/gpio/legacy.rst
+> +
+> +:=E7=BF=BB=E8=AF=91:
+> +
+> + =E5=82=85=E7=82=9C Fu Wei <tekkamanninja@gmail.com>
+> + =E5=8F=B8=E5=BB=B6=E8=85=BE Yanteng Si <siyanteng@loongson.cn>
+> +
+> +:=E6=A0=A1=E8=AF=91:
+> +
+> +
+> +=E4=BC=A0=E7=BB=9FGPIO=E6=8E=A5=E5=8F=A3
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  =E6=9C=AC=E6=96=87=E6=A1=A3=E6=8F=90=E4=BE=9B=E4=BA=86=E4=B8=80=E4=B8=AA=
+=E5=9C=A8Linux=E4=B8=8B=E8=AE=BF=E9=97=AEGPIO=E7=9A=84=E5=85=AC=E7=BA=A6=E6=
+=A6=82=E8=BF=B0=E3=80=82
+=20
+How about
+=E6=9C=AC=E6=96=87=E6=A1=A3=E6=A6=82=E8=BF=B0=E4=BA=86Linux=E4=B8=8B=E7=9A=
+=84GPIO=E8=AE=BF=E9=97=AE=E5=85=AC=E7=BA=A6=E3=80=82
+=20
+> =20
+> @@ -32,8 +21,8 @@ GPIO =E6=8E=A5=E5=8F=A3
+>  __gpio_* =E5=89=8D=E7=BC=80=E3=80=82
+> =20
+> =20
+> -=E4=BB=80=E4=B9=88=E6=98=AFGPIO?
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +=E4=BB=80=E4=B9=88=E6=98=AFGPIO=EF=BC=9F
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  "=E9=80=9A=E7=94=A8=E8=BE=93=E5=85=A5/=E8=BE=93=E5=87=BA=E5=8F=A3"(GPIO)=
+=E6=98=AF=E4=B8=80=E4=B8=AA=E7=81=B5=E6=B4=BB=E7=9A=84=E7=94=B1=E8=BD=AF=E4=
+=BB=B6=E6=8E=A7=E5=88=B6=E7=9A=84=E6=95=B0=E5=AD=97=E4=BF=A1=E5=8F=B7=E3=80=
+=82=E4=BB=96=E4=BB=AC=E5=8F=AF
+>  =E7=94=B1=E5=A4=9A=E7=A7=8D=E8=8A=AF=E7=89=87=E6=8F=90=E4=BE=9B,=E4=B8=
+=94=E5=AF=B9=E4=BA=8E=E4=BB=8E=E4=BA=8B=E5=B5=8C=E5=85=A5=E5=BC=8F=E5=92=8C=
+=E5=AE=9A=E5=88=B6=E7=A1=AC=E4=BB=B6=E7=9A=84 Linux =E5=BC=80=E5=8F=91=E8=
+=80=85=E6=9D=A5=E8=AF=B4=E6=98=AF
+>  =E6=AF=94=E8=BE=83=E7=86=9F=E6=82=89=E3=80=82=E6=AF=8F=E4=B8=AAGPIO =E9=
+=83=BD=E4=BB=A3=E8=A1=A8=E4=B8=80=E4=B8=AA=E8=BF=9E=E6=8E=A5=E5=88=B0=E7=89=
+=B9=E5=AE=9A=E5=BC=95=E8=84=9A=E6=88=96=E7=90=83=E6=A0=85=E9=98=B5=E5=88=97=
+(BGA)=E5=B0=81=E8=A3=85=E4=B8=AD
+> @@ -99,6 +88,7 @@ GPIO =E5=85=AC=E7=BA=A6
+> =20
+>  =E6=A0=87=E8=AF=86 GPIO
+>  ---------
+> +
+>  GPIO =E6=98=AF=E9=80=9A=E8=BF=87=E6=97=A0=E7=AC=A6=E5=8F=B7=E6=95=B4=E5=
+=9E=8B=E6=9D=A5=E6=A0=87=E8=AF=86=E7=9A=84,=E8=8C=83=E5=9B=B4=E6=98=AF 0 =
+=E5=88=B0 MAX_INT=E3=80=82=E4=BF=9D=E7=95=99=E2=80=9C=E8=B4=9F=E2=80=9D=E6=
+=95=B0
+>  =E7=94=A8=E4=BA=8E=E5=85=B6=E4=BB=96=E7=9B=AE=E7=9A=84,=E4=BE=8B=E5=A6=
+=82=E6=A0=87=E8=AF=86=E4=BF=A1=E5=8F=B7=E2=80=9C=E5=9C=A8=E8=BF=99=E4=B8=AA=
+=E6=9D=BF=E5=AD=90=E4=B8=8A=E4=B8=8D=E5=8F=AF=E7=94=A8=E2=80=9D=E6=88=96=E6=
+=8C=87=E7=A4=BA=E9=94=99=E8=AF=AF=E3=80=82=E6=9C=AA=E6=8E=A5=E8=A7=A6=E5=BA=
+=95=E5=B1=82
+>  =E7=A1=AC=E4=BB=B6=E7=9A=84=E4=BB=A3=E7=A0=81=E4=BC=9A=E5=BF=BD=E7=95=A5=
+=E8=BF=99=E4=BA=9B=E6=95=B4=E6=95=B0=E3=80=82
+> @@ -115,7 +105,7 @@ FPGA =E7=9A=84=E7=89=B9=E5=AE=9A=E6=9D=BF=E5=AD=90=E4=
+=B8=8A=E4=BD=BF=E7=94=A8 80-95=E3=80=82=E7=BC=96=E5=8F=B7=E4=B8=8D=E4=B8=80=
+=E5=AE=9A=E8=A6=81=E8=BF=9E=E7=BB=AD,=E9=82=A3=E4=BA=9B=E5=B9=B3=E5=8F=B0=
+=E4=B8=AD
+> =20
+>  =E5=A6=82=E6=9E=9C=E4=BD=A0=E8=A6=81=E5=88=9D=E5=A7=8B=E5=8C=96=E4=B8=80=
+=E4=B8=AA=E5=B8=A6=E6=9C=89=E6=97=A0=E6=95=88 GPIO =E7=BC=96=E5=8F=B7=E7=9A=
+=84=E7=BB=93=E6=9E=84=E4=BD=93,=E5=8F=AF=E4=BB=A5=E4=BD=BF=E7=94=A8=E4=B8=
+=80=E4=BA=9B=E8=B4=9F=E7=BC=96=E7=A0=81
+>  (=E5=A6=82"-EINVAL")=EF=BC=8C=E9=82=A3=E5=B0=86=E4=BD=BF=E5=85=B6=E6=B0=
+=B8=E8=BF=9C=E4=B8=8D=E4=BC=9A=E6=98=AF=E6=9C=89=E6=95=88=E3=80=82=E6=9D=A5=
+=E6=B5=8B=E8=AF=95=E8=BF=99=E6=A0=B7=E4=B8=80=E4=B8=AA=E7=BB=93=E6=9E=84=E4=
+=BD=93=E4=B8=AD=E7=9A=84=E7=BC=96=E5=8F=B7
+> -=E6=98=AF=E5=90=A6=E5=85=B3=E8=81=94=E4=B8=80=E4=B8=AA GPIO=EF=BC=8C=E4=
+=BD=A0=E5=8F=AF=E4=BD=BF=E7=94=A8=E4=BB=A5=E4=B8=8B=E6=96=AD=E8=A8=80:
+> +=E6=98=AF=E5=90=A6=E5=85=B3=E8=81=94=E4=B8=80=E4=B8=AA GPIO=EF=BC=8C=E4=
+=BD=A0=E5=8F=AF=E4=BD=BF=E7=94=A8=E4=BB=A5=E4=B8=8B=E6=96=AD=E8=A8=80::
+> =20
+>  	int gpio_is_valid(int number);
+> =20
+> @@ -128,11 +118,12 @@ FPGA =E7=9A=84=E7=89=B9=E5=AE=9A=E6=9D=BF=E5=AD=90=
+=E4=B8=8A=E4=BD=BF=E7=94=A8 80-95=E3=80=82=E7=BC=96=E5=8F=B7=E4=B8=8D=E4=B8=
+=80=E5=AE=9A=E8=A6=81=E8=BF=9E=E7=BB=AD,=E9=82=A3=E4=BA=9B=E5=B9=B3=E5=8F=
+=B0=E4=B8=AD
+> =20
+>  =E4=BD=BF=E7=94=A8 GPIO
+>  ---------
+> +
+>  =E5=AF=B9=E4=BA=8E=E4=B8=80=E4=B8=AA GPIO=EF=BC=8C=E7=B3=BB=E7=BB=9F=E5=
+=BA=94=E8=AF=A5=E5=81=9A=E7=9A=84=E7=AC=AC=E4=B8=80=E4=BB=B6=E4=BA=8B=E6=83=
+=85=E5=B0=B1=E6=98=AF=E9=80=9A=E8=BF=87 gpio_request()
+>  =E5=87=BD=E6=95=B0=E5=88=86=E9=85=8D=E5=AE=83=EF=BC=8C=E8=A7=81=E4=B8=8B=
+=E6=96=87=E3=80=82
+> =20
+>  =E6=8E=A5=E4=B8=8B=E6=9D=A5=E6=98=AF=E8=AE=BE=E7=BD=AEI/O=E6=96=B9=E5=90=
+=91=EF=BC=8C=E8=BF=99=E9=80=9A=E5=B8=B8=E6=98=AF=E5=9C=A8=E6=9D=BF=E7=BA=A7=
+=E5=90=AF=E5=8A=A8=E4=BB=A3=E7=A0=81=E4=B8=AD=E4=B8=BA=E6=89=80=E4=BD=BF=E7=
+=94=A8=E7=9A=84 GPIO =E8=AE=BE=E7=BD=AE
+> -platform_device =E6=97=B6=E5=AE=8C=E6=88=90=E3=80=82
+> +platform_device =E6=97=B6=E5=AE=8C=E6=88=90::
+> =20
+>  	/* =E8=AE=BE=E7=BD=AE=E4=B8=BA=E8=BE=93=E5=85=A5=E6=88=96=E8=BE=93=E5=
+=87=BA, =E8=BF=94=E5=9B=9E 0 =E6=88=96=E8=B4=9F=E7=9A=84=E9=94=99=E8=AF=AF=
+=E4=BB=A3=E7=A0=81 */
+>  	int gpio_direction_input(unsigned gpio);
+> @@ -157,12 +148,13 @@ get/set(=E8=8E=B7=E5=8F=96/=E8=AE=BE=E7=BD=AE)=E5=
+=87=BD=E6=95=B0=E8=B0=83=E7=94=A8=E6=B2=A1=E6=B3=95=E8=BF=94=E5=9B=9E=E9=94=
+=99=E8=AF=AF,=E4=B8=94=E6=9C=89=E5=8F=AF=E8=83=BD=E6=98=AF=E9=85=8D=E7=BD=
+=AE=E9=94=99=E8=AF=AF
+> =20
+> =20
+>  =E8=AE=BF=E9=97=AE=E8=87=AA=E6=97=8B=E9=94=81=E5=AE=89=E5=85=A8=E7=9A=84=
+ GPIO
+> --------------------
+> +---------------------
+> +
+>  =E5=A4=A7=E5=A4=9A=E6=95=B0 GPIO =E6=8E=A7=E5=88=B6=E5=99=A8=E5=8F=AF=E4=
+=BB=A5=E9=80=9A=E8=BF=87=E5=86=85=E5=AD=98=E8=AF=BB/=E5=86=99=E6=8C=87=E4=
+=BB=A4=E6=9D=A5=E8=AE=BF=E9=97=AE=E3=80=82=E8=BF=99=E4=BA=9B=E6=8C=87=E4=BB=
+=A4=E4=B8=8D=E4=BC=9A=E4=BC=91=E7=9C=A0,=E5=8F=AF=E4=BB=A5
+>  =E5=AE=89=E5=85=A8=E5=9C=B0=E5=9C=A8=E7=A1=AC(=E9=9D=9E=E7=BA=BF=E7=A8=
+=8B)=E4=B8=AD=E6=96=AD=E4=BE=8B=E7=A8=8B=E5=92=8C=E7=B1=BB=E4=BC=BC=E7=9A=
+=84=E4=B8=8A=E4=B8=8B=E6=96=87=E4=B8=AD=E5=AE=8C=E6=88=90=E3=80=82
+> =20
+>  =E5=AF=B9=E4=BA=8E=E9=82=A3=E4=BA=9B=E7=94=A8 gpio_cansleep()=E6=B5=8B=
+=E8=AF=95=E6=80=BB=E6=98=AF=E8=BF=94=E5=9B=9E=E5=A4=B1=E8=B4=A5=E7=9A=84 GP=
+IO(=E8=A7=81=E4=B8=8B=E6=96=87)=EF=BC=8C=E4=BD=BF=E7=94=A8
+> -=E4=BB=A5=E4=B8=8B=E7=9A=84=E5=87=BD=E6=95=B0=E8=AE=BF=E9=97=AE:
+> +=E4=BB=A5=E4=B8=8B=E7=9A=84=E5=87=BD=E6=95=B0=E8=AE=BF=E9=97=AE::
+> =20
+>  	/* GPIO =E8=BE=93=E5=85=A5:=E8=BF=94=E5=9B=9E=E9=9B=B6=E6=88=96=E9=9D=
+=9E=E9=9B=B6 */
+>  	int gpio_get_value(unsigned gpio);
+> @@ -188,17 +180,18 @@ GPIO=E5=80=BC=E6=98=AF=E5=B8=83=E5=B0=94=E5=80=BC=
+=EF=BC=8C=E9=9B=B6=E8=A1=A8=E7=A4=BA=E4=BD=8E=E7=94=B5=E5=B9=B3=EF=BC=8C=E9=
+=9D=9E=E9=9B=B6=E8=A1=A8=E7=A4=BA=E9=AB=98=E7=94=B5=E5=B9=B3=E3=80=82=E5=BD=
+=93=E8=AF=BB=E5=8F=96=E4=B8=80
+> =20
+> =20
+>  =E8=AE=BF=E9=97=AE=E5=8F=AF=E8=83=BD=E4=BC=91=E7=9C=A0=E7=9A=84 GPIO
+> ------------------
+> +-------------------
+> +
+>  =E6=9F=90=E4=BA=9B GPIO =E6=8E=A7=E5=88=B6=E5=99=A8=E5=BF=85=E9=A1=BB=E9=
+=80=9A=E8=BF=87=E5=9F=BA=E4=BA=8E=E6=80=BB=E7=BA=BF(=E5=A6=82 I2C =E6=88=96=
+ SPI)=E7=9A=84=E6=B6=88=E6=81=AF=E8=AE=BF=E9=97=AE=E3=80=82=E8=AF=BB=E6=88=
+=96=E5=86=99=E8=BF=99=E4=BA=9B
+>  GPIO =E5=80=BC=E7=9A=84=E5=91=BD=E4=BB=A4=E9=9C=80=E8=A6=81=E7=AD=89=E5=
+=BE=85=E5=85=B6=E4=BF=A1=E6=81=AF=E6=8E=92=E5=88=B0=E9=98=9F=E9=A6=96=E6=89=
+=8D=E5=8F=91=E9=80=81=E5=91=BD=E4=BB=A4=EF=BC=8C=E5=86=8D=E8=8E=B7=E5=BE=97=
+=E5=85=B6=E5=8F=8D=E9=A6=88=E3=80=82=E6=9C=9F=E9=97=B4=E9=9C=80=E8=A6=81
+>  =E4=BC=91=E7=9C=A0=EF=BC=8C=E8=BF=99=E4=B8=8D=E8=83=BD=E5=9C=A8 IRQ =E4=
+=BE=8B=E7=A8=8B(=E4=B8=AD=E6=96=AD=E4=B8=8A=E4=B8=8B=E6=96=87)=E4=B8=AD=E6=
+=89=A7=E8=A1=8C=E3=80=82
+> =20
+>  =E6=94=AF=E6=8C=81=E6=AD=A4=E7=B1=BB GPIO =E7=9A=84=E5=B9=B3=E5=8F=B0=E9=
+=80=9A=E8=BF=87=E4=BB=A5=E4=B8=8B=E5=87=BD=E6=95=B0=E8=BF=94=E5=9B=9E=E9=9D=
+=9E=E9=9B=B6=E5=80=BC=E6=9D=A5=E5=8C=BA=E5=88=86=E5=87=BA=E8=BF=99=E7=A7=8D=
+ GPIO=E3=80=82(=E6=AD=A4=E5=87=BD=E6=95=B0=E9=9C=80=E8=A6=81
+> -=E4=B8=80=E4=B8=AA=E4=B9=8B=E5=89=8D=E9=80=9A=E8=BF=87 gpio_request =E5=
+=88=86=E9=85=8D=E5=88=B0=E7=9A=84=E6=9C=89=E6=95=88 GPIO =E7=BC=96=E5=8F=B7=
+):
+> +=E4=B8=80=E4=B8=AA=E4=B9=8B=E5=89=8D=E9=80=9A=E8=BF=87 gpio_request =E5=
+=88=86=E9=85=8D=E5=88=B0=E7=9A=84=E6=9C=89=E6=95=88 GPIO =E7=BC=96=E5=8F=B7=
+)::
+> =20
+>  	int gpio_cansleep(unsigned gpio);
+> =20
+> -=E4=B8=BA=E4=BA=86=E8=AE=BF=E9=97=AE=E8=BF=99=E7=A7=8D GPIO,=E5=86=85=E6=
+=A0=B8=E5=AE=9A=E4=B9=89=E4=BA=86=E4=B8=80=E5=A5=97=E4=B8=8D=E5=90=8C=E7=9A=
+=84=E5=87=BD=E6=95=B0:
+> +=E4=B8=BA=E4=BA=86=E8=AE=BF=E9=97=AE=E8=BF=99=E7=A7=8D GPIO,=E5=86=85=E6=
+=A0=B8=E5=AE=9A=E4=B9=89=E4=BA=86=E4=B8=80=E5=A5=97=E4=B8=8D=E5=90=8C=E7=9A=
+=84=E5=87=BD=E6=95=B0::
+> =20
+>  	/* GPIO =E8=BE=93=E5=85=A5:=E8=BF=94=E5=9B=9E=E9=9B=B6=E6=88=96=E9=9D=
+=9E=E9=9B=B6 ,=E5=8F=AF=E8=83=BD=E4=BC=9A=E4=BC=91=E7=9C=A0 */
+>  	int gpio_get_value_cansleep(unsigned gpio);
+> @@ -214,25 +207,26 @@ GPIO =E5=80=BC=E7=9A=84=E5=91=BD=E4=BB=A4=E9=9C=80=
+=E8=A6=81=E7=AD=89=E5=BE=85=E5=85=B6=E4=BF=A1=E6=81=AF=E6=8E=92=E5=88=B0=E9=
+=98=9F=E9=A6=96=E6=89=8D=E5=8F=91=E9=80=81=E5=91=BD=E4=BB=A4=EF=BC=8C=E5=86=
+=8D=E8=8E=B7=E5=BE=97=E5=85=B6
+>  =E4=BA=8B=E5=AE=9E=EF=BC=8C=E8=BF=99=E4=BA=9B=E5=A4=84=E7=90=86=E4=BE=8B=
+=E7=A8=8B=E5=AE=9E=E9=99=85=E4=B8=8A=E5=92=8C=E8=87=AA=E6=97=8B=E9=94=81=E5=
+=AE=89=E5=85=A8=E7=9A=84=E5=87=BD=E6=95=B0=E6=98=AF=E4=B8=80=E6=A0=B7=E7=9A=
+=84=E3=80=82
+> =20
+>  ** =E9=99=A4=E6=AD=A4=E4=B9=8B=E5=A4=96 ** =E8=B0=83=E7=94=A8=E8=AE=BE=
+=E7=BD=AE=E5=92=8C=E9=85=8D=E7=BD=AE=E6=AD=A4=E7=B1=BB GPIO =E7=9A=84=E5=87=
+=BD=E6=95=B0=E4=B9=9F=E5=BF=85=E9=A1=BB=E5=9C=A8=E5=85=81=E8=AE=B8=E4=BC=91=
+=E7=9C=A0=E7=9A=84=E4=B8=8A=E4=B8=8B=E6=96=87=E4=B8=AD=EF=BC=8C
+> -=E5=9B=A0=E4=B8=BA=E5=AE=83=E4=BB=AC=E5=8F=AF=E8=83=BD=E4=B9=9F=E9=9C=80=
+=E8=A6=81=E8=AE=BF=E9=97=AE GPIO =E6=8E=A7=E5=88=B6=E5=99=A8=E8=8A=AF=E7=89=
+=87: (=E8=BF=99=E4=BA=9B=E8=AE=BE=E7=BD=AE=E5=87=BD=E6=95=B0=E9=80=9A=E5=B8=
+=B8=E5=9C=A8=E6=9D=BF=E7=BA=A7=E5=90=AF=E5=8A=A8=E4=BB=A3=E7=A0=81=E6=88=96=
+=E8=80=85
+> -=E9=A9=B1=E5=8A=A8=E6=8E=A2=E6=B5=8B/=E6=96=AD=E5=BC=80=E4=BB=A3=E7=A0=
+=81=E4=B8=AD=EF=BC=8C=E6=89=80=E4=BB=A5=E8=BF=99=E6=98=AF=E4=B8=80=E4=B8=AA=
+=E5=AE=B9=E6=98=93=E6=BB=A1=E8=B6=B3=E7=9A=84=E7=BA=A6=E6=9D=9F=E6=9D=A1=E4=
+=BB=B6=E3=80=82)
+> +=E5=9B=A0=E4=B8=BA=E5=AE=83=E4=BB=AC=E5=8F=AF=E8=83=BD=E4=B9=9F=E9=9C=80=
+=E8=A6=81=E8=AE=BF=E9=97=AE GPIO =E6=8E=A7=E5=88=B6=E5=99=A8=E8=8A=AF=E7=89=
+=87 (=E8=BF=99=E4=BA=9B=E8=AE=BE=E7=BD=AE=E5=87=BD=E6=95=B0=E9=80=9A=E5=B8=
+=B8=E5=9C=A8=E6=9D=BF=E7=BA=A7=E5=90=AF=E5=8A=A8=E4=BB=A3=E7=A0=81=E6=88=96=
+=E8=80=85
+> +=E9=A9=B1=E5=8A=A8=E6=8E=A2=E6=B5=8B/=E6=96=AD=E5=BC=80=E4=BB=A3=E7=A0=
+=81=E4=B8=AD=EF=BC=8C=E6=89=80=E4=BB=A5=E8=BF=99=E6=98=AF=E4=B8=80=E4=B8=AA=
+=E5=AE=B9=E6=98=93=E6=BB=A1=E8=B6=B3=E7=9A=84=E7=BA=A6=E6=9D=9F=E6=9D=A1=E4=
+=BB=B6=E3=80=82) ::
+> =20
 
-The required power-supply for the power domains is still not yet available.
-Does this series require some other patches as well?
+Indentation
+See: https://fars.ee/k-g0.png
 
-Whats worse, starting with commit 9/9 [of: property: Simplify 
-of_link_to_phandle()], other drivers fail to probe waiting for pinctrl to be 
-available.
-> $ cat /sys/kernel/debug/devices_deferred
-> gpio-leds       platform: wait for supplier gpioledgrp
-> extcon-usbotg0  platform: wait for supplier usb0congrp
-> gpio-keys       platform: wait for supplier gpiobuttongrp
-> regulator-otg-vbus      platform: wait for supplier reggotgvbusgrp
-> regulator-vdd-arm       platform: wait for supplier dvfsgrp
+> -	gpio_direction_input()
+> -	gpio_direction_output()
+> -	gpio_request()
+> +				gpio_direction_input()
+> +				gpio_direction_output()
+> +				gpio_request()
+> =20
+> -## 	gpio_request_one()
+> -##	gpio_request_array()
+> -## 	gpio_free_array()
+> +		## 	gpio_request_one()
+> +		##	gpio_request_array()
+> +		## 	gpio_free_array()
+> =20
+> -	gpio_free()
+> -	gpio_set_debounce()
+> +				gpio_free()
+> +				gpio_set_debounce()
+> =20
+> =20
+> =20
+>  =E5=A3=B0=E6=98=8E=E5=92=8C=E9=87=8A=E6=94=BE GPIO
+> -----------------------------
+> -=E4=B8=BA=E4=BA=86=E6=9C=89=E5=8A=A9=E4=BA=8E=E6=8D=95=E8=8E=B7=E7=B3=BB=
+=E7=BB=9F=E9=85=8D=E7=BD=AE=E9=94=99=E8=AF=AF,=E5=AE=9A=E4=B9=89=E4=BA=86=
+=E4=B8=A4=E4=B8=AA=E5=87=BD=E6=95=B0=E3=80=82
+> +----------------
+> +
+> +=E4=B8=BA=E4=BA=86=E6=9C=89=E5=8A=A9=E4=BA=8E=E6=8D=95=E8=8E=B7=E7=B3=BB=
+=E7=BB=9F=E9=85=8D=E7=BD=AE=E9=94=99=E8=AF=AF,=E5=AE=9A=E4=B9=89=E4=BA=86=
+=E4=B8=A4=E4=B8=AA=E5=87=BD=E6=95=B0::
+> =20
+>  	/* =E7=94=B3=E8=AF=B7 GPIO, =E8=BF=94=E5=9B=9E 0 =E6=88=96=E8=B4=9F=E7=
+=9A=84=E9=94=99=E8=AF=AF=E4=BB=A3=E7=A0=81.
+>  	 * =E9=9D=9E=E7=A9=BA=E6=A0=87=E7=AD=BE=E5=8F=AF=E8=83=BD=E6=9C=89=E5=
+=8A=A9=E4=BA=8E=E8=AF=8A=E6=96=AD.
+> @@ -278,7 +272,7 @@ gpio_request()=E5=89=8D=E5=B0=86=E8=BF=99=E7=B1=BB=E7=
+=BB=86=E8=8A=82=E9=85=8D=E7=BD=AE=E5=A5=BD=EF=BC=8C=E4=BE=8B=E5=A6=82=E4=BD=
+=BF=E7=94=A8 pinctrl =E5=AD=90=E7=B3=BB=E7=BB=9F=E7=9A=84=E6=98=A0
+> =20
+>  =E6=B3=A8=E6=84=8F:=E7=94=B3=E8=AF=B7=E4=B8=80=E4=B8=AA GPIO =E5=B9=B6=
+=E6=B2=A1=E6=9C=89=E4=BB=A5=E4=BB=BB=E4=BD=95=E6=96=B9=E5=BC=8F=E9=85=8D=E7=
+=BD=AE=E5=AE=83=EF=BC=8C=E5=8F=AA=E4=B8=8D=E8=BF=87=E6=A0=87=E8=AF=86=E9=82=
+=A3=E4=B8=AA GPIO =E5=A4=84=E4=BA=8E=E4=BD=BF=E7=94=A8
+>  =E7=8A=B6=E6=80=81=E3=80=82=E5=BF=85=E9=A1=BB=E6=9C=89=E5=8F=A6=E5=A4=96=
+=E7=9A=84=E4=BB=A3=E7=A0=81=E6=9D=A5=E5=A4=84=E7=90=86=E5=BC=95=E8=84=9A=E9=
+=85=8D=E7=BD=AE(=E5=A6=82=E6=8E=A7=E5=88=B6 GPIO =E4=BD=BF=E7=94=A8=E7=9A=
+=84=E5=BC=95=E8=84=9A=E3=80=81=E4=B8=8A=E6=8B=89/=E4=B8=8B=E6=8B=89)=E3=80=
+=82
+> -=E8=80=83=E8=99=91=E5=88=B0=E5=A4=A7=E5=A4=9A=E6=95=B0=E6=83=85=E5=86=B5=
+=E4=B8=8B=E5=A3=B0=E6=98=8E GPIO =E4=B9=8B=E5=90=8E=E5=B0=B1=E4=BC=9A=E7=AB=
+=8B=E5=8D=B3=E9=85=8D=E7=BD=AE=E5=AE=83=E4=BB=AC,=E6=89=80=E4=BB=A5=E5=AE=
+=9A=E4=B9=89=E4=BA=86=E4=BB=A5=E4=B8=8B=E4=B8=89=E4=B8=AA=E8=BE=85=E5=8A=A9=
+=E5=87=BD=E6=95=B0:
+> +=E8=80=83=E8=99=91=E5=88=B0=E5=A4=A7=E5=A4=9A=E6=95=B0=E6=83=85=E5=86=B5=
+=E4=B8=8B=E5=A3=B0=E6=98=8E GPIO =E4=B9=8B=E5=90=8E=E5=B0=B1=E4=BC=9A=E7=AB=
+=8B=E5=8D=B3=E9=85=8D=E7=BD=AE=E5=AE=83=E4=BB=AC,=E6=89=80=E4=BB=A5=E5=AE=
+=9A=E4=B9=89=E4=BA=86=E4=BB=A5=E4=B8=8B=E4=B8=89=E4=B8=AA=E8=BE=85=E5=8A=A9=
+=E5=87=BD=E6=95=B0::
+> =20
+>  	/* =E7=94=B3=E8=AF=B7=E4=B8=80=E4=B8=AA GPIO =E4=BF=A1=E5=8F=B7, =E5=90=
+=8C=E6=97=B6=E9=80=9A=E8=BF=87=E7=89=B9=E5=AE=9A=E7=9A=84'flags'=E5=88=9D=
+=E5=A7=8B=E5=8C=96=E9=85=8D=E7=BD=AE,
+>  	 * =E5=85=B6=E4=BB=96=E5=92=8C gpio_request()=E7=9A=84=E5=8F=82=E6=95=
+=B0=E5=92=8C=E8=BF=94=E5=9B=9E=E5=80=BC=E7=9B=B8=E5=90=8C
+> @@ -294,7 +288,7 @@ gpio_request()=E5=89=8D=E5=B0=86=E8=BF=99=E7=B1=BB=E7=
+=BB=86=E8=8A=82=E9=85=8D=E7=BD=AE=E5=A5=BD=EF=BC=8C=E4=BE=8B=E5=A6=82=E4=BD=
+=BF=E7=94=A8 pinctrl =E5=AD=90=E7=B3=BB=E7=BB=9F=E7=9A=84=E6=98=A0
+>  	 */
+>  	void gpio_free_array(struct gpio *array, size_t num);
+> =20
+> -=E8=BF=99=E9=87=8C 'flags' =E5=BD=93=E5=89=8D=E5=AE=9A=E4=B9=89=E5=8F=AF=
+=E6=8C=87=E5=AE=9A=E4=BB=A5=E4=B8=8B=E5=B1=9E=E6=80=A7:
+> +=E8=BF=99=E9=87=8C 'flags' =E5=BD=93=E5=89=8D=E5=AE=9A=E4=B9=89=E5=8F=AF=
+=E6=8C=87=E5=AE=9A=E4=BB=A5=E4=B8=8B=E5=B1=9E=E6=80=A7::
+=20
+Here is a list, not code block.
+=20
+> =20
+>  	* GPIOF_DIR_IN		- =E9=85=8D=E7=BD=AE=E6=96=B9=E5=90=91=E4=B8=BA=E8=BE=
+=93=E5=85=A5
+>  	* GPIOF_DIR_OUT		- =E9=85=8D=E7=BD=AE=E6=96=B9=E5=90=91=E4=B8=BA=E8=BE=
+=93=E5=87=BA
+> @@ -307,7 +301,7 @@ gpio_request()=E5=89=8D=E5=B0=86=E8=BF=99=E7=B1=BB=E7=
+=BB=86=E8=8A=82=E9=85=8D=E7=BD=AE=E5=A5=BD=EF=BC=8C=E4=BE=8B=E5=A6=82=E4=BD=
+=BF=E7=94=A8 pinctrl =E5=AD=90=E7=B3=BB=E7=BB=9F=E7=9A=84=E6=98=A0
+>  	* GPIOF_EXPORT_DIR_FIXED	- =E5=B0=86 gpio =E5=AF=BC=E5=87=BA=E5=88=B0 s=
+ysfs=EF=BC=8C=E5=B9=B6=E4=BF=9D=E6=8C=81=E6=96=B9=E5=90=91
+>  	* GPIOF_EXPORT_DIR_CHANGEABLE	- =E5=90=8C=E6=A0=B7=E6=98=AF=E5=AF=BC=E5=
+=87=BA, =E4=BD=86=E5=85=81=E8=AE=B8=E6=94=B9=E5=8F=98=E6=96=B9=E5=90=91
+> =20
+> -=E5=9B=A0=E4=B8=BA GPIOF_INIT_* =E4=BB=85=E6=9C=89=E5=9C=A8=E9=85=8D=E7=
+=BD=AE=E4=B8=BA=E8=BE=93=E5=87=BA=E7=9A=84=E6=97=B6=E5=80=99=E6=89=8D=E5=AD=
+=98=E5=9C=A8,=E6=89=80=E4=BB=A5=E6=9C=89=E6=95=88=E7=9A=84=E7=BB=84=E5=90=
+=88=E4=B8=BA:
+> +=E5=9B=A0=E4=B8=BA GPIOF_INIT_* =E4=BB=85=E6=9C=89=E5=9C=A8=E9=85=8D=E7=
+=BD=AE=E4=B8=BA=E8=BE=93=E5=87=BA=E7=9A=84=E6=97=B6=E5=80=99=E6=89=8D=E5=AD=
+=98=E5=9C=A8,=E6=89=80=E4=BB=A5=E6=9C=89=E6=95=88=E7=9A=84=E7=BB=84=E5=90=
+=88=E4=B8=BA::
+ =20
+Here is a list, not code block.
+=20
+>  	* GPIOF_IN		- =E9=85=8D=E7=BD=AE=E4=B8=BA=E8=BE=93=E5=85=A5
+>  	* GPIOF_OUT_INIT_LOW	- =E9=85=8D=E7=BD=AE=E4=B8=BA=E8=BE=93=E5=87=BA,=
+=E5=B9=B6=E5=88=9D=E5=A7=8B=E5=8C=96=E4=B8=BA=E4=BD=8E=E7=94=B5=E5=B9=B3
+> @@ -326,7 +320,7 @@ gpio_request()=E5=89=8D=E5=B0=86=E8=BF=99=E7=B1=BB=E7=
+=BB=86=E8=8A=82=E9=85=8D=E7=BD=AE=E5=A5=BD=EF=BC=8C=E4=BE=8B=E5=A6=82=E4=BD=
+=BF=E7=94=A8 pinctrl =E5=AD=90=E7=B3=BB=E7=BB=9F=E7=9A=84=E6=98=A0
+>  =E5=B0=86=E6=9D=A5=E8=BF=99=E4=BA=9B=E6=A0=87=E5=BF=97=E5=8F=AF=E8=83=BD=
+=E6=89=A9=E5=B1=95=E5=88=B0=E6=94=AF=E6=8C=81=E6=9B=B4=E5=A4=9A=E7=9A=84=E5=
+=B1=9E=E6=80=A7=E3=80=82
+> =20
+>  =E6=9B=B4=E8=BF=9B=E4=B8=80=E6=AD=A5,=E4=B8=BA=E4=BA=86=E6=9B=B4=E7=AE=
+=80=E5=8D=95=E5=9C=B0=E5=A3=B0=E6=98=8E/=E9=87=8A=E6=94=BE=E5=A4=9A=E4=B8=
+=AA GPIO,'struct gpio'=E8=A2=AB=E5=BC=95=E8=BF=9B=E6=9D=A5=E5=B0=81=E8=A3=
+=85=E6=89=80=E6=9C=89
+> -=E8=BF=99=E4=B8=89=E4=B8=AA=E9=A2=86=E5=9F=9F:
+> +=E8=BF=99=E4=B8=89=E4=B8=AA=E9=A2=86=E5=9F=9F::
+> =20
+>  	struct gpio {
+>  		unsigned	gpio;
+> @@ -334,7 +328,7 @@ gpio_request()=E5=89=8D=E5=B0=86=E8=BF=99=E7=B1=BB=E7=
+=BB=86=E8=8A=82=E9=85=8D=E7=BD=AE=E5=A5=BD=EF=BC=8C=E4=BE=8B=E5=A6=82=E4=BD=
+=BF=E7=94=A8 pinctrl =E5=AD=90=E7=B3=BB=E7=BB=9F=E7=9A=84=E6=98=A0
+>  		const char	*label;
+>  	};
+> =20
+> -=E4=B8=80=E4=B8=AA=E5=85=B8=E5=9E=8B=E7=9A=84=E7=94=A8=E4=BE=8B:
+> +=E4=B8=80=E4=B8=AA=E5=85=B8=E5=9E=8B=E7=9A=84=E7=94=A8=E4=BE=8B::
+> =20
+>  	static struct gpio leds_gpios[] =3D {
+>  		{ 32, GPIOF_OUT_INIT_HIGH, "Power LED" }, /* =E9=BB=98=E8=AE=A4=E5=BC=
+=80=E5=90=AF */
+> @@ -356,9 +350,10 @@ gpio_request()=E5=89=8D=E5=B0=86=E8=BF=99=E7=B1=BB=
+=E7=BB=86=E8=8A=82=E9=85=8D=E7=BD=AE=E5=A5=BD=EF=BC=8C=E4=BE=8B=E5=A6=82=E4=
+=BD=BF=E7=94=A8 pinctrl =E5=AD=90=E7=B3=BB=E7=BB=9F=E7=9A=84=E6=98=A0
+> =20
+> =20
+>  GPIO =E6=98=A0=E5=B0=84=E5=88=B0 IRQ
+> ---------------------
+> +----------------
+> +
+>  GPIO =E7=BC=96=E5=8F=B7=E6=98=AF=E6=97=A0=E7=AC=A6=E5=8F=B7=E6=95=B4=E6=
+=95=B0;IRQ =E7=BC=96=E5=8F=B7=E4=B9=9F=E6=98=AF=E3=80=82=E8=BF=99=E4=BA=9B=
+=E6=9E=84=E6=88=90=E4=BA=86=E4=B8=A4=E4=B8=AA=E9=80=BB=E8=BE=91=E4=B8=8A=E4=
+=B8=8D=E5=90=8C=E7=9A=84=E5=91=BD=E5=90=8D=E7=A9=BA=E9=97=B4
+> -(GPIO 0 =E4=B8=8D=E4=B8=80=E5=AE=9A=E4=BD=BF=E7=94=A8 IRQ 0)=E3=80=82=E4=
+=BD=A0=E5=8F=AF=E4=BB=A5=E9=80=9A=E8=BF=87=E4=BB=A5=E4=B8=8B=E5=87=BD=E6=95=
+=B0=E5=9C=A8=E5=AE=83=E4=BB=AC=E4=B9=8B=E9=97=B4=E5=AE=9E=E7=8E=B0=E6=98=A0=
+=E5=B0=84:
+> +(GPIO 0 =E4=B8=8D=E4=B8=80=E5=AE=9A=E4=BD=BF=E7=94=A8 IRQ 0)=E3=80=82=E4=
+=BD=A0=E5=8F=AF=E4=BB=A5=E9=80=9A=E8=BF=87=E4=BB=A5=E4=B8=8B=E5=87=BD=E6=95=
+=B0=E5=9C=A8=E5=AE=83=E4=BB=AC=E4=B9=8B=E9=97=B4=E5=AE=9E=E7=8E=B0=E6=98=A0=
+=E5=B0=84::
+> =20
+>  	/* =E6=98=A0=E5=B0=84 GPIO =E7=BC=96=E5=8F=B7=E5=88=B0 IRQ =E7=BC=96=E5=
+=8F=B7 */
+>  	int gpio_to_irq(unsigned gpio);
+> @@ -384,7 +379,8 @@ irq_to_gpio()=E8=BF=94=E5=9B=9E=E7=9A=84=E9=9D=9E=E9=
+=94=99=E8=AF=AF=E5=80=BC=E5=A4=A7=E5=A4=9A=E6=95=B0=E9=80=9A=E5=B8=B8=E5=8F=
+=AF=E4=BB=A5=E8=A2=AB gpio_get_value()=E6=89=80
+> =20
+> =20
+>  =E6=A8=A1=E6=8B=9F=E5=BC=80=E6=BC=8F=E4=BF=A1=E5=8F=B7
+> -----------------------------
+> +------------
+> +
+>  =E6=9C=89=E6=97=B6=E5=9C=A8=E5=8F=AA=E6=9C=89=E4=BD=8E=E7=94=B5=E5=B9=B3=
+=E4=BF=A1=E5=8F=B7=E4=BD=9C=E4=B8=BA=E5=AE=9E=E9=99=85=E9=A9=B1=E5=8A=A8=E7=
+=BB=93=E6=9E=9C(=E8=AF=91=E8=80=85=E6=B3=A8:=E5=A4=9A=E4=B8=AA=E8=BE=93=E5=
+=87=BA=E8=BF=9E=E6=8E=A5=E4=BA=8E=E4=B8=80=E7=82=B9=EF=BC=8C=E9=80=BB=E8=BE=
+=91=E7=94=B5=E5=B9=B3
+>  =E7=BB=93=E6=9E=9C=E4=B8=BA=E6=89=80=E6=9C=89=E8=BE=93=E5=87=BA=E7=9A=84=
+=E9=80=BB=E8=BE=91=E4=B8=8E)=E7=9A=84=E6=97=B6=E5=80=99,=E5=85=B1=E4=BA=AB=
+=E7=9A=84=E4=BF=A1=E5=8F=B7=E7=BA=BF=E9=9C=80=E8=A6=81=E4=BD=BF=E7=94=A8=E2=
+=80=9C=E5=BC=80=E6=BC=8F=E2=80=9D=E4=BF=A1=E5=8F=B7=E3=80=82(=E8=AF=A5=E6=
+=9C=AF=E8=AF=AD
+>  =E9=80=82=E7=94=A8=E4=BA=8E CMOS =E7=AE=A1=EF=BC=9B=E8=80=8C TTL =E7=94=
+=A8=E2=80=9C=E9=9B=86=E7=94=B5=E6=9E=81=E5=BC=80=E8=B7=AF=E2=80=9D=E3=80=82=
+)=E4=B8=80=E4=B8=AA=E4=B8=8A=E6=8B=89=E7=94=B5=E9=98=BB=E4=BD=BF=E4=BF=A1=
+=E5=8F=B7=E4=B8=BA=E9=AB=98=E7=94=B5=E5=B9=B3=E3=80=82=E8=BF=99
+> @@ -408,9 +404,44 @@ irq_to_gpio()=E8=BF=94=E5=9B=9E=E7=9A=84=E9=9D=9E=E9=
+=94=99=E8=AF=AF=E5=80=BC=E5=A4=A7=E5=A4=9A=E6=95=B0=E9=80=9A=E5=B8=B8=E5=8F=
+=AF=E4=BB=A5=E8=A2=AB gpio_get_value()=E6=89=80
+>  =E8=BF=99=E4=B8=8D=E4=B8=80=E5=AE=9A=E6=98=AF=E9=94=99=E8=AF=AF=E7=9A=84=
+=E3=80=82=E4=B8=80=E4=B8=AA=E5=B8=B8=E8=A7=81=E7=9A=84=E4=BE=8B=E5=AD=90=E5=
+=B0=B1=E6=98=AF I2C =E6=97=B6=E9=92=9F=E7=9A=84=E5=BB=B6=E9=95=BF=EF=BC=9A=
+=E4=B8=80=E4=B8=AA=E9=9C=80=E8=A6=81=E8=BE=83=E6=85=A2=E6=97=B6=E9=92=9F=E7=
+=9A=84
+>  =E4=BB=8E=E8=AE=BE=E5=A4=87=E5=BB=B6=E8=BF=9F SCK =E7=9A=84=E4=B8=8A=E5=
+=8D=87=E6=B2=BF=EF=BC=8C=E8=80=8C I2C =E4=B8=BB=E8=AE=BE=E5=A4=87=E7=9B=B8=
+=E5=BA=94=E5=9C=B0=E8=B0=83=E6=95=B4=E5=85=B6=E4=BF=A1=E5=8F=B7=E4=BC=A0=E8=
+=BE=93=E9=80=9F=E7=8E=87=E3=80=82
+> =20
+> +GPIO=E6=8E=A7=E5=88=B6=E5=99=A8=E5=92=8Cpinctrl=E5=AD=90=E7=B3=BB=E7=BB=
+=9F
+> +-------------------------
+> +
+> +SOC=E4=B8=8A=E7=9A=84GPIO=E6=8E=A7=E5=88=B6=E5=99=A8=E5=8F=AF=E8=83=BD=
+=E4=B8=8Epinctrl=E5=AD=90=E7=B3=BB=E7=BB=9F=E7=B4=A7=E5=AF=86=E7=BB=93=E5=
+=90=88=EF=BC=8C=E5=8D=B3=E5=BC=95=E8=84=9A=E5=8F=AF=E4=BB=A5=E4=B8=8E=E5=8F=
+=AF=E9=80=89=E7=9A=84gpio=E5=8A=9F
+=20
+So pinctrl =3D =E5=BC=95=E8=84=9A=E6=8E=A7=E5=88=B6
+=E6=8B=AC=E6=B3=A8=E6=88=96=E8=80=85=E7=BB=9F=E4=B8=80=E7=BF=BB=E8=AF=91
+=20
+> +=E8=83=BD=E4=B8=80=E8=B5=B7=E8=A2=AB=E5=85=B6=E4=BB=96=E5=8A=9F=E8=83=BD=
+=E4=BD=BF=E7=94=A8=E3=80=82=E6=88=91=E4=BB=AC=E5=B7=B2=E7=BB=8F=E6=B6=B5=E7=
+=9B=96=E4=BA=86=E8=BF=99=E6=A0=B7=E7=9A=84=E6=83=85=E5=86=B5=EF=BC=8C=E4=BE=
+=8B=E5=A6=82=E4=B8=80=E4=B8=AAGPIO=E6=8E=A7=E5=88=B6=E5=99=A8=E9=9C=80=E8=
+=A6=81=E4=BF=9D
+> +=E7=95=99=E4=B8=80=E4=B8=AA=E5=BC=95=E8=84=9A=E6=88=96=E9=80=9A=E8=BF=87=
+=E8=B0=83=E7=94=A8=E4=BB=A5=E4=B8=8B=E4=BB=BB=E4=BD=95=E4=B8=80=E4=B8=AA=E5=
+=BC=95=E8=84=9A=E6=9D=A5=E8=AE=BE=E7=BD=AE=E5=85=B6=E6=96=B9=E5=90=91::
+> +
+> +  pinctrl_gpio_request()
+> +  pinctrl_gpio_free()
+> +  pinctrl_gpio_direction_input()
+> +  pinctrl_gpio_direction_output()
+> +
+> +=E4=BD=86=E6=98=AF=EF=BC=8C=E5=BC=95=E8=84=9A=E6=8E=A7=E5=88=B6=E5=AD=90=
+=E7=B3=BB=E7=BB=9F=E6=98=AF=E5=A6=82=E4=BD=95=E5=B0=86GPIO=E5=8F=B7=E7=A0=
+=81=EF=BC=88=E8=BF=99=E6=98=AF=E4=B8=80=E4=B8=AA=E5=85=A8=E5=B1=80=E4=BA=8B=
+=E9=A1=B9=EF=BC=89=E4=B8=8E=E6=9F=90=E4=B8=AA=E5=BC=95=E8=84=9A=E6=8E=A7=E5=
+=88=B6=E5=99=A8
+> +=E4=B8=8A=E7=9A=84=E6=9F=90=E4=B8=AA=E5=BC=95=E8=84=9A=E4=BA=A4=E5=8F=89=
+=E5=85=B3=E8=81=94=E7=9A=84=EF=BC=9F
+> +
+> +=E8=BF=99=E6=98=AF=E9=80=9A=E8=BF=87=E6=B3=A8=E5=86=8C=E5=BC=95=E8=84=9A=
+=E7=9A=84=E2=80=9C=E8=8C=83=E5=9B=B4=E2=80=9D=E6=9D=A5=E5=AE=9E=E7=8E=B0=E7=
+=9A=84=EF=BC=8C=E8=BF=99=E5=9F=BA=E6=9C=AC=E4=B8=8A=E6=98=AF=E4=BA=A4=E5=8F=
+=89=E5=8F=82=E8=80=83=E8=A1=A8=E3=80=82=E8=BF=99=E4=BA=9B=E6=8F=8F=E8=BF=B0=
+=E6=98=AF=E5=9C=A8
+> +Documentation/driver-api/pin-control.rst
+> +
+> +=E8=99=BD=E7=84=B6=E5=BC=95=E8=84=9A=E5=88=86=E9=85=8D=E5=AE=8C=E5=85=A8=
+=E7=94=B1pinctrl=E5=AD=90=E7=B3=BB=E7=BB=9F=E7=AE=A1=E7=90=86=EF=BC=8C=E4=
+=BD=86gpio=EF=BC=88=E5=9C=A8gpiolib=E4=B8=8B=EF=BC=89=E4=BB=8D=E7=94=B1gpio=
+=E9=A9=B1=E5=8A=A8
+> +=E7=BB=B4=E6=8A=A4=E3=80=82=E5=8F=AF=E8=83=BD=E5=8F=91=E7=94=9F=E7=9A=84=
+=E6=83=85=E5=86=B5=E6=98=AF=EF=BC=8CSoC=E4=B8=AD=E7=9A=84=E4=B8=8D=E5=90=8C=
+=E5=BC=95=E8=84=9A=E8=8C=83=E5=9B=B4=E7=94=B1=E4=B8=8D=E5=90=8C=E7=9A=84gpi=
+o=E9=A9=B1=E5=8A=A8=E5=99=A8=E7=AE=A1=E7=90=86=E3=80=82
+> +
+> +=E8=BF=99=E4=BD=BF=E5=BE=97=E5=9C=A8=E8=B0=83=E7=94=A8 "pinctrl_gpio_req=
+uest" =E4=B9=8B=E5=89=8D=EF=BC=8C=E8=AE=A9gpio=E9=A9=B1=E5=8A=A8=E5=90=91pi=
+n ctrl=E5=AD=90=E7=B3=BB
+> +=E7=BB=9F=E5=AE=A3=E5=B8=83=E5=AE=83=E4=BB=AC=E7=9A=84=E5=BC=95=E8=84=9A=
+=E8=8C=83=E5=9B=B4=E6=98=AF=E5=90=88=E7=90=86=E7=9A=84=EF=BC=8C=E4=BB=A5=E4=
+=BE=BF=E5=9C=A8=E4=BD=BF=E7=94=A8=E4=BB=BB=E4=BD=95gpio=E4=B9=8B=E5=89=8D=
+=E8=A6=81=E6=B1=82pinctrl=E5=AD=90=E7=B3=BB=E7=BB=9F=E5=87=86
+> +=E5=A4=87=E7=9B=B8=E5=BA=94=E7=9A=84=E5=BC=95=E8=84=9A=E3=80=82
+> +
+> +=E4=B8=BA=E6=AD=A4=EF=BC=8Cgpio=E6=8E=A7=E5=88=B6=E5=99=A8=E5=8F=AF=E4=
+=BB=A5=E7=94=A8pinctrl=E5=AD=90=E7=B3=BB=E7=BB=9F=E6=B3=A8=E5=86=8C=E5=85=
+=B6=E5=BC=95=E8=84=9A=E8=8C=83=E5=9B=B4=E3=80=82=E7=9B=AE=E5=89=8D=E6=9C=89=
+=E4=B8=A4=E7=A7=8D=E6=96=B9=E6=B3=95=EF=BC=9A=E6=9C=89=E6=88=96
+> +=E6=97=A0DT=E3=80=82
+> +
+> +=E5=85=B3=E4=BA=8E=E5=AF=B9DT=E7=9A=84=E6=94=AF=E6=8C=81=EF=BC=8C=E8=AF=
+=B7=E5=8F=82=E8=80=83 Documentation/devicetree/bindings/gpio/gpio.txt.
+> +
+> +=E5=AF=B9=E4=BA=8E=E9=9D=9EDT=E6=94=AF=E6=8C=81=EF=BC=8C=E7=94=A8=E6=88=
+=B7=E5=8F=AF=E4=BB=A5=E7=94=A8=E9=80=82=E5=BD=93=E7=9A=84=E5=8F=82=E6=95=B0=
+=E8=B0=83=E7=94=A8gpiochip_add_pin_range()=EF=BC=8C=E5=B0=86=E4=B8=80
+> +=E7=B3=BB=E5=88=97=E7=9A=84gpio=E5=BC=95=E8=84=9A=E6=B3=A8=E5=86=8C=E5=
+=88=B0pinctrl=E9=A9=B1=E5=8A=A8=E4=B8=8A=E3=80=82=E4=B8=BA=E6=AD=A4=EF=BC=
+=8C=E5=BF=85=E9=A1=BB=E5=B0=86pinctrl=E8=AE=BE=E5=A4=87=E7=9A=84=E5=90=8D=
+=E7=A7=B0=E5=AD=97=E7=AC=A6=E4=B8=B2
+> +=E4=BD=9C=E4=B8=BA=E5=8F=82=E6=95=B0=E4=B9=8B=E4=B8=80=E4=BC=A0=E7=BB=99=
+=E8=BF=99=E4=B8=AA=E7=A8=8B=E5=BA=8F=E3=80=82
+> +
+> +
+> +=E8=BF=99=E4=BA=9B=E5=85=AC=E7=BA=A6=E5=BF=BD=E7=95=A5=E4=BA=86=E4=BB=80=
+=E4=B9=88=EF=BC=9F
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -=E8=BF=99=E4=BA=9B=E5=85=AC=E7=BA=A6=E5=BF=BD=E7=95=A5=E4=BA=86=E4=BB=80=
+=E4=B9=88?
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  =E8=BF=99=E4=BA=9B=E5=85=AC=E7=BA=A6=E5=BF=BD=E7=95=A5=E7=9A=84=E6=9C=80=
+=E5=A4=A7=E4=B8=80=E4=BB=B6=E4=BA=8B=E5=B0=B1=E6=98=AF=E5=BC=95=E8=84=9A=E5=
+=A4=8D=E7=94=A8=EF=BC=8C=E5=9B=A0=E4=B8=BA=E8=BF=99=E5=B1=9E=E4=BA=8E=E9=AB=
+=98=E5=BA=A6=E8=8A=AF=E7=89=87=E7=89=B9=E5=AE=9A=E7=9A=84=E5=B1=9E=E6=80=A7=
+=E4=B8=94
+>  =E6=B2=A1=E6=9C=89=E5=8F=AF=E7=A7=BB=E6=A4=8D=E6=80=A7=E3=80=82=E6=9F=90=
+=E4=B8=AA=E5=B9=B3=E5=8F=B0=E5=8F=AF=E8=83=BD=E4=B8=8D=E9=9C=80=E8=A6=81=E6=
+=98=8E=E7=A1=AE=E7=9A=84=E5=A4=8D=E7=94=A8=E4=BF=A1=E6=81=AF=EF=BC=9B=E6=9C=
+=89=E7=9A=84=E5=AF=B9=E4=BA=8E=E4=BB=BB=E6=84=8F=E7=BB=99=E5=AE=9A=E7=9A=84=
+=E5=BC=95=E8=84=9A
+>  =E5=8F=AF=E8=83=BD=E5=8F=AA=E6=9C=89=E4=B8=A4=E4=B8=AA=E5=8A=9F=E8=83=BD=
+=E9=80=89=E9=A1=B9=EF=BC=9B=E6=9C=89=E7=9A=84=E5=8F=AF=E8=83=BD=E6=AF=8F=E4=
+=B8=AA=E5=BC=95=E8=84=9A=E6=9C=89=E5=85=AB=E4=B8=AA=E5=8A=9F=E8=83=BD=E9=80=
+=89=E9=A1=B9=EF=BC=9B=E6=9C=89=E7=9A=84=E5=8F=AF=E8=83=BD=E5=8F=AF=E4=BB=A5=
+=E5=B0=86
+> @@ -433,8 +464,9 @@ Linux =E7=9A=84=E7=B3=BB=E7=BB=9F=E3=80=82)
+>  =E5=BD=93=E5=89=8D=EF=BC=8C=E5=8A=A8=E6=80=81=E5=AE=9A=E4=B9=89 GPIO =E5=
+=B9=B6=E4=B8=8D=E6=98=AF=E6=A0=87=E5=87=86=E7=9A=84=EF=BC=8C=E4=BE=8B=E5=A6=
+=82=E4=BD=9C=E4=B8=BA=E9=85=8D=E7=BD=AE=E4=B8=80=E4=B8=AA=E5=B8=A6=E6=9C=89=
+=E6=9F=90=E4=BA=9B GPIO =E6=89=A9=E5=B1=95=E5=99=A8=E7=9A=84
+>  =E9=99=84=E5=8A=A0=E7=94=B5=E8=B7=AF=E6=9D=BF=E7=9A=84=E5=89=AF=E4=BD=9C=
+=E7=94=A8=E3=80=82
+> =20
+> -GPIO =E5=AE=9E=E7=8E=B0=E8=80=85=E7=9A=84=E6=A1=86=E6=9E=B6 (=E5=8F=AF=
+=E9=80=89)
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +GPIO =E5=AE=9E=E7=8E=B0=E8=80=85=E7=9A=84=E6=A1=86=E6=9E=B6=EF=BC=88=E5=
+=8F=AF=E9=80=89=EF=BC=89
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> +
+>  =E5=89=8D=E9=9D=A2=E6=8F=90=E5=88=B0=E4=BA=86=EF=BC=8C=E6=9C=89=E4=B8=80=
+=E4=B8=AA=E5=8F=AF=E9=80=89=E7=9A=84=E5=AE=9E=E7=8E=B0=E6=A1=86=E6=9E=B6=EF=
+=BC=8C=E8=AE=A9=E5=B9=B3=E5=8F=B0=E4=BD=BF=E7=94=A8=E7=9B=B8=E5=90=8C=E7=9A=
+=84=E7=BC=96=E7=A8=8B=E6=8E=A5=E5=8F=A3=EF=BC=8C=E6=9B=B4=E5=8A=A0=E7=AE=80=
+=E5=8D=95=E5=9C=B0=E6=94=AF=E6=8C=81
+>  =E4=B8=8D=E5=90=8C=E7=A7=8D=E7=B1=BB=E7=9A=84 GPIO =E6=8E=A7=E5=88=B6=E5=
+=99=A8=E3=80=82=E8=BF=99=E4=B8=AA=E6=A1=86=E6=9E=B6=E7=A7=B0=E4=B8=BA"gpiol=
+ib"=E3=80=82
+> =20
+> @@ -444,15 +476,16 @@ GPIO =E5=AE=9E=E7=8E=B0=E8=80=85=E7=9A=84=E6=A1=86=
+=E6=9E=B6 (=E5=8F=AF=E9=80=89)
+> =20
+> =20
+>  =E6=8E=A7=E5=88=B6=E5=99=A8=E9=A9=B1=E5=8A=A8: gpio_chip
+> --------------------
+> +---------------------
+> +
+>  =E5=9C=A8=E6=A1=86=E6=9E=B6=E4=B8=AD=E6=AF=8F=E4=B8=AA GPIO =E6=8E=A7=E5=
+=88=B6=E5=99=A8=E9=83=BD=E5=8C=85=E8=A3=85=E4=B8=BA=E4=B8=80=E4=B8=AA "stru=
+ct gpio_chip"=EF=BC=8C=E4=BB=96=E5=8C=85=E5=90=AB=E4=BA=86
+> -=E8=AF=A5=E7=B1=BB=E5=9E=8B=E7=9A=84=E6=AF=8F=E4=B8=AA=E6=8E=A7=E5=88=B6=
+=E5=99=A8=E7=9A=84=E5=B8=B8=E7=94=A8=E4=BF=A1=E6=81=AF:
+> +=E8=AF=A5=E7=B1=BB=E5=9E=8B=E7=9A=84=E6=AF=8F=E4=B8=AA=E6=8E=A7=E5=88=B6=
+=E5=99=A8=E7=9A=84=E5=B8=B8=E7=94=A8=E4=BF=A1=E6=81=AF::
+> =20
+=20
+Also a list here, not code block.
+ =20
+> - - =E8=AE=BE=E7=BD=AE GPIO =E6=96=B9=E5=90=91=E7=9A=84=E6=96=B9=E6=B3=95
+> - - =E7=94=A8=E4=BA=8E=E8=AE=BF=E9=97=AE GPIO =E5=80=BC=E7=9A=84=E6=96=B9=
+=E6=B3=95
+> - - =E5=91=8A=E7=9F=A5=E8=B0=83=E7=94=A8=E5=85=B6=E6=96=B9=E6=B3=95=E6=98=
+=AF=E5=90=A6=E5=8F=AF=E8=83=BD=E4=BC=91=E7=9C=A0=E7=9A=84=E6=A0=87=E5=BF=97
+> - - =E5=8F=AF=E9=80=89=E7=9A=84 debugfs =E4=BF=A1=E6=81=AF=E5=AF=BC=E5=87=
+=BA=E6=96=B9=E6=B3=95 (=E6=98=BE=E7=A4=BA=E7=B1=BB=E4=BC=BC=E4=B8=8A=E6=8B=
+=89=E9=85=8D=E7=BD=AE=E4=B8=80=E6=A0=B7=E7=9A=84=E9=A2=9D=E5=A4=96=E7=8A=B6=
+=E6=80=81)
+> - - =E8=AF=8A=E6=96=AD=E6=A0=87=E7=AD=BE
+> +	=E8=AE=BE=E7=BD=AE GPIO =E6=96=B9=E5=90=91=E7=9A=84=E6=96=B9=E6=B3=95
+> +	=E7=94=A8=E4=BA=8E=E8=AE=BF=E9=97=AE GPIO =E5=80=BC=E7=9A=84=E6=96=B9=
+=E6=B3=95
+> +	=E5=91=8A=E7=9F=A5=E8=B0=83=E7=94=A8=E5=85=B6=E6=96=B9=E6=B3=95=E6=98=
+=AF=E5=90=A6=E5=8F=AF=E8=83=BD=E4=BC=91=E7=9C=A0=E7=9A=84=E6=A0=87=E5=BF=97
+> +	=E5=8F=AF=E9=80=89=E7=9A=84 debugfs =E4=BF=A1=E6=81=AF=E5=AF=BC=E5=87=
+=BA=E6=96=B9=E6=B3=95 (=E6=98=BE=E7=A4=BA=E7=B1=BB=E4=BC=BC=E4=B8=8A=E6=8B=
+=89=E9=85=8D=E7=BD=AE=E4=B8=80=E6=A0=B7=E7=9A=84=E9=A2=9D=E5=A4=96=E7=8A=B6=
+=E6=80=81)
+> +	=E8=AF=8A=E6=96=AD=E6=A0=87=E7=AD=BE
+>=20
+>  =E4=B9=9F=E5=8C=85=E5=90=AB=E4=BA=86=E6=9D=A5=E8=87=AA device.platform_d=
+ata =E7=9A=84=E6=AF=8F=E4=B8=AA=E5=AE=9E=E4=BE=8B=E7=9A=84=E6=95=B0=E6=8D=
+=AE=EF=BC=9A=E5=AE=83=E7=AC=AC=E4=B8=80=E4=B8=AA GPIO =E7=9A=84
+>  =E7=BC=96=E5=8F=B7=E5=92=8C=E5=AE=83=E5=8F=AF=E7=94=A8=E7=9A=84 GPIO =E7=
+=9A=84=E6=95=B0=E9=87=8F=E3=80=82
+> @@ -470,8 +503,36 @@ GPIO =E5=AE=9E=E7=8E=B0=E8=80=85=E7=9A=84=E6=A1=86=
+=E6=9E=B6 (=E5=8F=AF=E9=80=89)
+>  =E5=B0=B1=E8=BF=94=E5=9B=9E=E7=9B=B8=E5=85=B3=E7=9A=84=E6=A0=87=E7=AD=BE=
+=EF=BC=8C=E5=90=A6=E5=88=99=E8=BF=94=E5=9B=9E NULL=E3=80=82
+> =20
+> =20
+> +=E6=8E=A7=E5=88=B6=E5=99=A8=E9=A9=B1=E5=8A=A8=E7=A8=8B=E5=BA=8F=EF=BC=9A=
+gpio_chip
+> +-------------------------
+=20
+Duplicte?
+Two gpio_chip.
+=20
+> +
+> +=E5=9C=A8=E8=BF=99=E4=B8=AA=E6=A1=86=E6=9E=B6=E4=B8=AD=EF=BC=8C=E6=AF=8F=
+=E4=B8=AAGPIO=E6=8E=A7=E5=88=B6=E5=99=A8=E9=83=BD=E8=A2=AB=E6=89=93=E5=8C=
+=85=E6=88=90=E4=B8=80=E4=B8=AA "gpio_chip=E7=BB=93=E6=9E=84=E4=BD=93" =EF=
+=BC=8C=E5=85=B6=E4=B8=AD
+> +=E5=8C=85=E5=90=AB=E8=AF=A5=E7=B1=BB=E5=9E=8B=E7=9A=84=E6=AF=8F=E4=B8=AA=
+=E6=8E=A7=E5=88=B6=E5=99=A8=E7=9A=84=E9=80=9A=E7=94=A8=E4=BF=A1=E6=81=AF=E3=
+=80=82
+> +
+> + - =E5=BB=BA=E7=AB=8BGPIO=E6=96=B9=E5=90=91=E7=9A=84=E6=96=B9=E6=B3=95
+> + - =E7=94=A8=E4=BA=8E=E8=AE=BF=E9=97=AEGPIO=E5=80=BC=E7=9A=84=E6=96=B9=
+=E6=B3=95
+> + - =E8=A1=A8=E7=A4=BA=E5=AF=B9=E5=85=B6=E6=96=B9=E6=B3=95=E7=9A=84=E8=B0=
+=83=E7=94=A8=E6=98=AF=E5=90=A6=E5=8F=AF=E4=BB=A5=E4=BC=91=E7=9C=A0=E7=9A=84=
+=E6=A0=87=E5=BF=97
+> + - =E5=8F=AF=E9=80=89=E7=9A=84debugfs dump=E6=96=B9=E6=B3=95=EF=BC=88=E6=
+=98=BE=E7=A4=BA=E9=A2=9D=E5=A4=96=E7=9A=84=E7=8A=B6=E6=80=81=EF=BC=8C=E5=A6=
+=82=E4=B8=8A=E6=8B=89=E9=85=8D=E7=BD=AE=EF=BC=89=E3=80=82
+> + - =E7=94=A8=E4=BA=8E=E8=AF=8A=E6=96=AD=E7=9A=84=E6=A0=87=E7=AD=BE
+> +
+> +=E8=BF=98=E6=9C=89=E6=AF=8F=E4=B8=AA=E5=AE=9E=E4=BE=8B=E7=9A=84=E6=95=B0=
+=E6=8D=AE=EF=BC=8C=E5=8F=AF=E8=83=BD=E6=9D=A5=E8=87=AAdevice.platform_data=
+=EF=BC=9A=E5=AE=83=E7=9A=84=E7=AC=AC=E4=B8=80=E4=B8=AAGPIO=E7=9A=84
+> +=E7=BC=96=E5=8F=B7=EF=BC=8C=E4=BB=A5=E5=8F=8A=E5=AE=83=E6=9A=B4=E9=9C=B2=
+=E7=9A=84GPIO=E7=9A=84=E6=95=B0=E9=87=8F=E3=80=82
+> +
+> +=E5=AE=9E=E7=8E=B0gpio_chip=E7=9A=84=E4=BB=A3=E7=A0=81=E5=BA=94=E8=AF=A5=
+=E6=94=AF=E6=8C=81=E6=8E=A7=E5=88=B6=E5=99=A8=E7=9A=84=E5=A4=9A=E4=B8=AA=E5=
+=AE=9E=E4=BE=8B=EF=BC=8C=E5=8F=AF=E8=83=BD=E4=BD=BF=E7=94=A8=E9=A9=B1=E5=8A=
+=A8=E6=A8=A1=E5=9E=8B=E3=80=82 =E8=AF=A5=E4=BB=A3=E7=A0=81
+> +=E5=B0=86=E9=85=8D=E7=BD=AE=E6=AF=8F=E4=B8=AAgpio_chip=E5=B9=B6=E5=8F=91=
+=E5=87=BAgpiochip_add()=E3=80=82 =E7=A7=BB=E9=99=A4=E4=B8=80=E4=B8=AAGPIO=
+=E6=8E=A7=E5=88=B6=E5=99=A8=E5=BA=94=E8=AF=A5=E6=98=AF
+> +=E5=BE=88=E7=BD=95=E8=A7=81=E7=9A=84=EF=BC=9B=E5=BD=93=E5=AE=83=E4=B8=8D=
+=E5=8F=AF=E9=81=BF=E5=85=8D=E7=9A=84=E6=97=B6=E5=80=99=EF=BC=8C=E4=BD=BF=E7=
+=94=A8gpiochip_remove()=E3=80=82
+> +
+> +=E5=A4=A7=E5=A4=9A=E6=95=B0=E6=83=85=E5=86=B5=E4=B8=8B=EF=BC=8Cgpio_chip=
+=E6=98=AF=E4=B8=80=E4=B8=AA=E7=89=B9=E5=AE=9A=E5=AE=9E=E4=BE=8B=E7=BB=93=E6=
+=9E=84=E7=9A=84=E4=B8=80=E9=83=A8=E5=88=86=EF=BC=8C=E5=85=B7=E6=9C=89GPIO=
+=E6=8E=A5=E5=8F=A3=E6=B2=A1=E6=9C=89=E6=9A=B4
+> +=E9=9C=B2=E7=9A=84=E7=8A=B6=E6=80=81=EF=BC=8C=E5=A6=82=E5=AF=BB=E5=9D=80=
+=E3=80=81=E7=94=B5=E6=BA=90=E7=AE=A1=E7=90=86=E7=AD=89=E3=80=82 =E5=83=8F=
+=E7=BC=96=E8=A7=A3=E7=A0=81=E5=99=A8=E8=BF=99=E6=A0=B7=E7=9A=84=E8=8A=AF=E7=
+=89=87=E4=BC=9A=E6=9C=89=E5=A4=8D=E6=9D=82=E7=9A=84=E9=9D=9EGPIO=E7=8A=B6=
+=E6=80=81=E3=80=82
+> +
+> +=E4=BB=BB=E4=BD=95debugfs dump=E6=96=B9=E6=B3=95=E9=80=9A=E5=B8=B8=E5=BA=
+=94=E8=AF=A5=E5=BF=BD=E7=95=A5=E9=82=A3=E4=BA=9B=E6=B2=A1=E6=9C=89=E8=A2=AB=
+=E8=AF=B7=E6=B1=82=E4=B8=BAGPIO=E7=9A=84=E4=BF=A1=E5=8F=B7=E3=80=82 =E4=BB=
+=96=E4=BB=AC=E5=8F=AF=E4=BB=A5
+> +=E4=BD=BF=E7=94=A8gpiochip_is_requested()=EF=BC=8C=E5=AE=83=E8=BF=94=E5=
+=9B=9ENULL=E6=88=96=E4=B8=8E=E8=AF=A5GPIO=E7=9B=B8=E5=85=B3=E7=9A=84=E6=A0=
+=87=E7=AD=BE=EF=BC=8C=E5=BD=93=E5=AE=83
+> +=E8=A2=AB=E8=AF=B7=E6=B1=82=E6=97=B6=E3=80=82
+> +
+> +
+>  =E5=B9=B3=E5=8F=B0=E6=94=AF=E6=8C=81
+> --------
+> +--------
+> +
+>  =E4=B8=BA=E4=BA=86=E6=94=AF=E6=8C=81=E8=BF=99=E4=B8=AA=E6=A1=86=E6=9E=B6=
+=EF=BC=8C=E4=B8=80=E4=B8=AA=E5=B9=B3=E5=8F=B0=E7=9A=84 Kconfig =E6=96=87=E4=
+=BB=B6=E5=B0=86=E4=BC=9A "select"(=E9=80=89=E6=8B=A9)
+>  ARCH_REQUIRE_GPIOLIB =E6=88=96 ARCH_WANT_OPTIONAL_GPIOLIB=EF=BC=8C=E5=B9=
+=B6=E8=AE=A9=E5=AE=83=E7=9A=84
+>  <asm/gpio.h> =E5=8C=85=E5=90=AB <asm-generic/gpio.h>=EF=BC=8C=E5=90=8C=
+=E6=97=B6=E5=AE=9A=E4=B9=89=E4=B8=89=E4=B8=AA=E6=96=B9=E6=B3=95:
+> @@ -489,7 +550,7 @@ ARCH_WANT_OPTIONAL_GPIOLIB =E6=84=8F=E5=91=B3=E7=9D=
+=80 gpiolib =E6=A0=B8=E5=BF=83=E9=BB=98=E8=AE=A4=E5=85=B3=E9=97=AD,=E4=B8=
+=94=E7=94=A8=E6=88=B7=E5=8F=AF=E4=BB=A5
+>  =E5=A6=82=E6=9E=9C=E8=BF=99=E4=BA=9B=E9=80=89=E9=A1=B9=E9=83=BD=E6=B2=A1=
+=E8=A2=AB=E9=80=89=E6=8B=A9,=E8=AF=A5=E5=B9=B3=E5=8F=B0=E5=B0=B1=E4=B8=8D=
+=E9=80=9A=E8=BF=87 GPIO-lib =E6=94=AF=E6=8C=81 GPIO,=E4=B8=94=E4=BB=A3=E7=
+=A0=81=E4=B8=8D=E5=8F=AF=E4=BB=A5
+>  =E8=A2=AB=E7=94=A8=E6=88=B7=E4=BD=BF=E8=83=BD=E3=80=82
+> =20
+> -=E4=BB=A5=E4=B8=8B=E8=BF=99=E4=BA=9B=E6=96=B9=E6=B3=95=E7=9A=84=E5=AE=9E=
+=E7=8E=B0=E5=8F=AF=E4=BB=A5=E7=9B=B4=E6=8E=A5=E4=BD=BF=E7=94=A8=E6=A1=86=E6=
+=9E=B6=E4=BB=A3=E7=A0=81,=E5=B9=B6=E6=80=BB=E6=98=AF=E9=80=9A=E8=BF=87 gpio=
+_chip =E8=B0=83=E5=BA=A6:
+> +=E4=BB=A5=E4=B8=8B=E8=BF=99=E4=BA=9B=E6=96=B9=E6=B3=95=E7=9A=84=E5=AE=9E=
+=E7=8E=B0=E5=8F=AF=E4=BB=A5=E7=9B=B4=E6=8E=A5=E4=BD=BF=E7=94=A8=E6=A1=86=E6=
+=9E=B6=E4=BB=A3=E7=A0=81,=E5=B9=B6=E6=80=BB=E6=98=AF=E9=80=9A=E8=BF=87 gpio=
+_chip =E8=B0=83=E5=BA=A6::
+> =20
+>    #define gpio_get_value	__gpio_get_value
+>    #define gpio_set_value	__gpio_set_value
+> @@ -508,7 +569,8 @@ arch_initcall()=E6=88=96=E8=80=85=E6=9B=B4=E6=97=A9=
+=E7=9A=84=E5=9C=B0=E6=96=B9=E9=9B=86=E6=88=90=E8=BF=9B=E5=B9=B3=E5=8F=B0=E5=
+=88=9D=E5=A7=8B=E5=8C=96=E4=BB=A3=E7=A0=81=EF=BC=8C=E4=BD=BF=E8=BF=99=E4=BA=
+=9B G
+>  =E4=B8=94=E4=BB=96=E4=BB=AC=E9=80=9A=E5=B8=B8=E5=8F=AF=E4=BB=A5=E4=BD=9C=
+=E4=B8=BA IRQ =E4=BD=BF=E7=94=A8=E3=80=82
+> =20
+>  =E6=9D=BF=E7=BA=A7=E6=94=AF=E6=8C=81
+> --------
+> +--------
+> +
+>  =E5=AF=B9=E4=BA=8E=E5=A4=96=E9=83=A8 GPIO =E6=8E=A7=E5=88=B6=E5=99=A8(=
+=E4=BE=8B=E5=A6=82 I2C =E6=88=96 SPI =E6=89=A9=E5=B1=95=E5=99=A8=E3=80=81=
+=E4=B8=93=E7=94=A8=E8=8A=AF=E7=89=87=E3=80=81=E5=A4=9A=E5=8A=9F=E8=83=BD=E5=
+=99=A8=E4=BB=B6=E3=80=81FPGA
+>  =E6=88=96 CPLD)=EF=BC=8C=E5=A4=A7=E5=A4=9A=E6=95=B0=E5=B8=B8=E7=94=A8=E6=
+=9D=BF=E7=BA=A7=E7=89=B9=E5=AE=9A=E4=BB=A3=E7=A0=81=E9=83=BD=E5=8F=AF=E4=BB=
+=A5=E6=B3=A8=E5=86=8C=E6=8E=A7=E5=88=B6=E5=99=A8=E8=AE=BE=E5=A4=87=EF=BC=8C=
+=E5=B9=B6=E4=BF=9D=E8=AF=81=E4=BB=96=E4=BB=AC=E7=9A=84=E9=A9=B1=E5=8A=A8=E7=
+=9F=A5=E9=81=93
+>  gpiochip_add()=E6=89=80=E4=BD=BF=E7=94=A8=E7=9A=84 GPIO =E7=BC=96=E5=8F=
+=B7=E3=80=82=E4=BB=96=E4=BB=AC=E7=9A=84=E8=B5=B7=E5=A7=8B=E7=BC=96=E5=8F=B7=
+=E9=80=9A=E5=B8=B8=E8=B7=9F=E5=9C=A8=E5=B9=B3=E5=8F=B0=E7=89=B9=E5=AE=9A=E7=
+=9A=84 GPIO
+> @@ -526,8 +588,9 @@ GPIO =E5=8F=AF=E4=BB=A5=E5=B7=A5=E4=BD=9C=E4=B9=8B=E5=
+=90=8E=E6=89=8D=E5=8F=AF=E8=A2=AB=E6=B3=A8=E5=86=8C=E3=80=82=E8=A7=A3=E5=86=
+=B3=E8=BF=99=E7=B1=BB=E4=BE=9D=E8=B5=96=E7=9A=84=E7=9A=84=E4=B8=80=E7=A7=8D=
+=E6=96=B9=E6=B3=95=E6=98=AF
+>  =E8=AE=BE=E5=A4=87=E5=8F=98=E6=88=90=E6=97=A0=E6=95=88=E6=97=B6=E7=A7=BB=
+=E9=99=A4=E5=AE=83=E4=BB=AC=E3=80=82
+> =20
+> =20
+> -=E7=94=A8=E6=88=B7=E7=A9=BA=E9=97=B4=E7=9A=84 Sysfs =E6=8E=A5=E5=8F=A3(=
+=E5=8F=AF=E9=80=89)
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +=E7=94=A8=E6=88=B7=E7=A9=BA=E9=97=B4=E7=9A=84 Sysfs =E6=8E=A5=E5=8F=A3=
+=EF=BC=88=E5=8F=AF=E9=80=89=EF=BC=89
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> +
+>  =E4=BD=BF=E7=94=A8=E2=80=9Cgpiolib=E2=80=9D=E5=AE=9E=E7=8E=B0=E6=A1=86=
+=E6=9E=B6=E7=9A=84=E5=B9=B3=E5=8F=B0=E5=8F=AF=E4=BB=A5=E9=80=89=E6=8B=A9=E9=
+=85=8D=E7=BD=AE=E4=B8=80=E4=B8=AA GPIO =E7=9A=84 sysfs =E7=94=A8=E6=88=B7=
+=E6=8E=A5=E5=8F=A3=E3=80=82
+>  =E8=BF=99=E4=B8=8D=E5=90=8C=E4=BA=8E debugfs =E6=8E=A5=E5=8F=A3=EF=BC=8C=
+=E5=9B=A0=E4=B8=BA=E5=AE=83=E6=8F=90=E4=BE=9B=E7=9A=84=E6=98=AF=E5=AF=B9 GP=
+IO=E6=96=B9=E5=90=91=E5=92=8C=E5=80=BC=E7=9A=84=E6=8E=A7=E5=88=B6=EF=BC=8C=
+=E8=80=8C=E4=B8=8D=E5=8F=AA=E6=98=BE=E7=A4=BA
+>  =E4=B8=80=E4=B8=AAGPIO =E7=9A=84=E7=8A=B6=E6=80=81=E6=91=98=E8=A6=81=E3=
+=80=82=E6=AD=A4=E5=A4=96,=E5=AE=83=E5=8F=AF=E4=BB=A5=E5=87=BA=E7=8E=B0=E5=
+=9C=A8=E6=B2=A1=E6=9C=89=E8=B0=83=E8=AF=95=E6=94=AF=E6=8C=81=E7=9A=84=E4=BA=
+=A7=E5=93=81=E7=BA=A7=E7=B3=BB=E7=BB=9F=E4=B8=AD=E3=80=82
+> @@ -548,7 +611,8 @@ GPIO =E5=8F=AF=E4=BB=A5=E5=B7=A5=E4=BD=9C=E4=B9=8B=E5=
+=90=8E=E6=89=8D=E5=8F=AF=E8=A2=AB=E6=B3=A8=E5=86=8C=E3=80=82=E8=A7=A3=E5=86=
+=B3=E8=BF=99=E7=B1=BB=E4=BE=9D=E8=B5=96=E7=9A=84=E7=9A=84=E4=B8=80=E7=A7=8D=
+=E6=96=B9=E6=B3=95=E6=98=AF
+> =20
+>  Sysfs =E4=B8=AD=E7=9A=84=E8=B7=AF=E5=BE=84
+>  --------------
+> -=E5=9C=A8/sys/class/gpio =E4=B8=AD=E6=9C=89 3 =E7=B1=BB=E5=85=A5=E5=8F=
+=A3:
+> +
+> +=E5=9C=A8/sys/class/gpio =E4=B8=AD=E6=9C=89 3 =E7=B1=BB=E5=85=A5=E5=8F=
+=A3::
+=20
+list, not code.
 
-Apparently for some reason they are not probed again, once the pinctrl driver 
-probed.
+> =20
+>     -	=E7=94=A8=E4=BA=8E=E5=9C=A8=E7=94=A8=E6=88=B7=E7=A9=BA=E9=97=B4=E6=
+=8E=A7=E5=88=B6 GPIO =E7=9A=84=E6=8E=A7=E5=88=B6=E6=8E=A5=E5=8F=A3;
+> =20
+> @@ -625,8 +689,9 @@ GPIO =E6=8E=A7=E5=88=B6=E5=99=A8=E7=9A=84=E8=B7=AF=E5=
+=BE=84=E7=B1=BB=E4=BC=BC /sys/class/gpio/gpiochip42/ (=E5=AF=B9=E4=BA=8E=E4=
+=BB=8E#42 GPIO
+> =20
+> =20
 
-Best reagrds,
-Alexander
+Thanks,
+
+--=20
+Wu XiangCheng	0x32684A40BCA7AEA7
 
 
+--+KipKz6Md3qllVRd
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEERbo3U5kJpaCtFl1PtlsoEiKCsIUFAmL6QokACgkQtlsoEiKC
+sIXkYQwAzf3ECGL1uRAiA9dnB/kctQOey1Cx3DdwtaMr4aVYK/W3fNclCflpp7lx
+9djnhb1ejKYcWpK1E/Q40N5MloCc+N6yhY1hjjSk503A5JixRqzceHbLY4NwCkn2
+qPLp7ox2HClrdwHfwKqIur6cHWxNApeqNc8WBsCgdZUyOJJWAwvLz3EPI077AhHI
+CoIXi6kUqneK2NqRiokJ9OnDXbBk3V6nabGZyKYjiaJnnKentTTH0Egf8H9DADgz
+9UXQkELcRKc9ZX8Q6+qgjeCkzosqhpXl8y5/BvaLv6NgtBUHUvduohRSUE3WxBYr
+T1Y2VHtHJ6ln6P6uxPxAuw9w+PfrSNsZA1d0NmnnwsNHSZOyNRLjMUBLqknKa1AV
+HFAm6Oj8yhX5Bcjp2j5D1z7AFs7hwWkvmFsqwI+ouz5cuDKrdP0thAtNwilvjg+4
+AFrHFUqRPekcQXB5aUNHl9akQ+GQovAkbb3PqnGGx4DWhF89evhGxih6w7MUAd2Z
+IvkWJ8jS
+=GM/W
+-----END PGP SIGNATURE-----
+
+--+KipKz6Md3qllVRd--
