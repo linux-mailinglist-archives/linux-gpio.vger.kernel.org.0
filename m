@@ -2,73 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C55A1595D62
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Aug 2022 15:30:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD737595E65
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Aug 2022 16:34:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235770AbiHPNaq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Aug 2022 09:30:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46102 "EHLO
+        id S231737AbiHPOeY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Aug 2022 10:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235786AbiHPNa0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 09:30:26 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3624DB8F2A
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Aug 2022 06:30:24 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id v2so14934260lfi.6
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Aug 2022 06:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=rpFTAZjl2pleYfeFAlCfw7Z2JDn36v61i5OIVLO2w5I=;
-        b=uvTyRrDNC6QxEbZyA44Zxl3dL5k8aNXBoKjruHNBXGtk2zV6fnuu5vtZ4/2VwKy1/w
-         1JPKp2UYomYYlmfRq6xgSv65G3QbqSt8okEA9Zal7bs2g+N4DMft9up8OGlH4E6QA0Lt
-         gy6tWDnwimp4O8ZuTVeavEa2wTzOcaqmwRTDXQ+178hWWkkIYdpgmXZzNih2pdvWejUb
-         Y80rYquHbGE7znX/n+mmZRKoTN7NsS4gLtmmP2jqzK9V3KV4Jcm3WPaKdIWpppfwue8f
-         oRQfxNDbbIaNn2yyXcxDSeONpbGTpxdrECS+nJ5Z20pVahG3+E+mbhZS3/1UuAFSWG0r
-         Yr1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=rpFTAZjl2pleYfeFAlCfw7Z2JDn36v61i5OIVLO2w5I=;
-        b=krG0XvbA/xOfShKfVD5H7TRA7q/GlB3U7F+ft+Iex9D3hF6se1KTVrt1FmLYyQb3NJ
-         kY6vqOzyE6z8NbaDaph7sHLiLMINfO++WxurD7KLLD59oQBF/GFROUwcxGGv91XlSrKk
-         eeDcq0scF1OMKFSfLtRSR+FHYrJHHT6LU4ySNkARY1HutWEgu28av7Cl1EREjxTTU/sF
-         bFUNawC8c3/xNDXTiagYJdLI3U3ioaJpxjXH0LfH4+OEJaew0ZG/RbJj4aRK7K1aBt7x
-         XXYbrRNmh4HbbDIHU4Mjwq9BXoubgb9KwdoGbI8t87XHPkTORw5M3dhhyxcWw2HFGJiu
-         xaNw==
-X-Gm-Message-State: ACgBeo3D5icQtXOTx+jbAeC3oBt5cvCh/o4C0FkjP/pBfcNQzCOOxSbu
-        Rv6tqBF0JTlEXUMVN2b1XTrWlQ==
-X-Google-Smtp-Source: AA6agR4Goe1n8aiYtC29+SCFdUP5bbCFlxfNYNF/MgBrjfL/Ht7JGKQpdw+rOfy5V5n3hRIXo+LcWA==
-X-Received: by 2002:a05:6512:39c3:b0:48b:90c2:da4c with SMTP id k3-20020a05651239c300b0048b90c2da4cmr6806066lfu.282.1660656622369;
-        Tue, 16 Aug 2022 06:30:22 -0700 (PDT)
-Received: from krzk-bin.. (d15l54g8c71znbtrbzt-4.rev.dnainternet.fi. [2001:14bb:ae:539c:1782:dd68:b0c1:c1a4])
-        by smtp.gmail.com with ESMTPSA id k19-20020a2eb753000000b0025e42f8e771sm1816301ljo.34.2022.08.16.06.30.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 06:30:21 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
+        with ESMTP id S229978AbiHPOeW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 10:34:22 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFEB36B178;
+        Tue, 16 Aug 2022 07:34:20 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4M6YVX03k4zlWBx;
+        Tue, 16 Aug 2022 22:31:16 +0800 (CST)
+Received: from CHINA (10.175.102.38) by canpemm500009.china.huawei.com
+ (7.192.105.203) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 16 Aug
+ 2022 22:34:18 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Bamvor Jian Zhang <bamv2005@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Chanho Park <chanho61.park@samsung.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 2/2] dt-bindings: pinctrl: samsung: deprecate header with register constants
-Date:   Tue, 16 Aug 2022 16:30:16 +0300
-Message-Id: <20220816133016.77553-3-krzysztof.kozlowski@linaro.org>
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] gpio: mockup: remove gpio debugfs when remove device
+Date:   Tue, 16 Aug 2022 14:52:25 +0000
+Message-ID: <20220816145225.84283-1-weiyongjun1@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220816133016.77553-1-krzysztof.kozlowski@linaro.org>
-References: <20220816133016.77553-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.102.38]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,47 +47,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For convenience (less code duplication, some meaning added to raw
-number), the pin controller pin configuration register values
-were defined in the bindings header.  These are not some IDs or other
-abstraction layer but raw numbers used in the registers
+GPIO mockup debugfs is created in gpio_mockup_probe() but
+forgot to remove when remove device. This patch add a devm
+managed callback for removing them.
 
-These constants do not fit the purpose of bindings.  They do not provide
-any abstraction, any hardware and driver independent ID.  With minor
-exceptions, the Linux drivers actually do not use the bindings header at
-all.
-
-All of the constants were moved already to headers local to DTS
-(residing in DTS directory) and to Samsung pinctrl driver (where
-applicable), so remove any references to the bindings header and add a
-warning tha tit is deprecated.
-
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Chanho Park <chanho61.park@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- include/dt-bindings/pinctrl/samsung.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpio/gpio-mockup.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/include/dt-bindings/pinctrl/samsung.h b/include/dt-bindings/pinctrl/samsung.h
-index 950970634dfe..d1da5ff68d0c 100644
---- a/include/dt-bindings/pinctrl/samsung.h
-+++ b/include/dt-bindings/pinctrl/samsung.h
-@@ -10,6 +10,13 @@
- #ifndef __DT_BINDINGS_PINCTRL_SAMSUNG_H__
- #define __DT_BINDINGS_PINCTRL_SAMSUNG_H__
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 8943cea92764..1fdc444b093b 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -373,6 +373,13 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 	}
+ }
  
-+/*
-+ * These bindings are deprecated, because they do not match the actual
-+ * concept of bindings but rather contain pure register values.
-+ * Instead include the header in the DTS source directory.
-+ */
-+#warning "These bindings are deprecated. Instead use the header in the DTS source directory."
++static void gpio_mockup_debugfs_cleanup(void *data)
++{
++	struct gpio_mockup_chip *chip = data;
 +
- #define EXYNOS_PIN_PULL_NONE		0
- #define EXYNOS_PIN_PULL_DOWN		1
- #define EXYNOS_PIN_PULL_UP		3
++	debugfs_remove_recursive(chip->dbg_dir);
++}
++
+ static void gpio_mockup_dispose_mappings(void *data)
+ {
+ 	struct gpio_mockup_chip *chip = data;
+@@ -455,6 +462,10 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 
+ 	gpio_mockup_debugfs_setup(dev, chip);
+ 
++	rv = devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
++	if (rv)
++		return rv;
++
+ 	return 0;
+ }
+ 
 -- 
 2.34.1
 
