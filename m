@@ -2,141 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E250059519D
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Aug 2022 07:04:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F7FD59554E
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Aug 2022 10:31:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233264AbiHPFD7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Aug 2022 01:03:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43576 "EHLO
+        id S233082AbiHPIbt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Aug 2022 04:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232207AbiHPFDm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 01:03:42 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 032AFC6E99
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 14:01:34 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-332fc508d88so33737137b3.3
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 14:01:33 -0700 (PDT)
+        with ESMTP id S233487AbiHPIbC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 04:31:02 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFC9130692
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 22:49:58 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id y3so12129339eda.6
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Aug 2022 22:49:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=elGV48BlDszZRuy8S9+m13PY1kqIqtWfREXP+EXFmrg=;
-        b=r8NjbapBTS67+vpVF7+sCFfdYsvuzVpSbreXNSPasBnVSUXsEkW2Tdiy0vBzbOigcM
-         qkHezPAEwRYmAfuMzU7q6qw4S5wZy3KRTtCpEP69ti5057pFT/Te3P5tEFe+xNHwZC+m
-         Tf3GeanOn8C43ORFxDvYPY4oID2CctIoeScmjdwsfdlI5xtnUMR9bJ2JRxwTzOdhN6B/
-         Q2jJ//9GPDv5iPdQrFBgt1hXlMV7dlgnVz+CxBkfIXZqtN0HMa5iF1fqfIMMDJHs3IbN
-         gHVjl6QzTSIciKflXKOAYtOtwqyjwYxUfM2HGX2gXXOcMk2jxDLBXTVALHOUX/KDTSv6
-         vfmg==
+        d=9elements.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=5ijnosVd1DyjaZS2JH847SXKpSrhi2E7u0Gbv+lXuHQ=;
+        b=FPSJuUqLJHA+5sb2JYrTVJppGipcWn3Adh9TtEtku8dHSEb3+kLVWv6MhrS7EusS80
+         YWunlzx4YJFd/lt+SiLpPVN5a+kG/X/EY76Agzmq8hNlA59/7JNTWDzNGkzs1Zu5C95/
+         Un1PAINpCkqU08QF/Zp76ISm/oHQRCdyBaDVlB8W4v7D2/q/UbtqP/O6OIPgpJ2koKB0
+         qH2asvBD0mIxIAtuxnJ+j2ZV/WozEPSQ5zGifzXgP2oq6nDQtPPln71gE6lIdygNd4lW
+         q/d3SShr/tt6xMzqTOVyXTWve0wQAs6jQBXJDsrClEbNP9KAbypEYfxRd5InuvSPa6ye
+         CLgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=elGV48BlDszZRuy8S9+m13PY1kqIqtWfREXP+EXFmrg=;
-        b=S73BFoL67fsGzy5vmepTqiW7i/DR2ukMNhO0pnsWBd8tK3AZTNjzks3/6H79yV4K3J
-         NVvxldJ9JpWY3+vNonPbnW8tEZccxFGpW2icCY8mIc09VJNEAo9EwLAjYUkmVopwfgGV
-         XnxTB9HVmvxvSy3it6abzzfj7hAorwNyJnOJWxRz2sHrnDdadzF30OKWvC3iICWHSSr5
-         j22NlyHn0t+fpXki30CVuh0PYhkJSVsyuy+EJAm7L7ow8pifU1u8+xKWK5LnsQKM8Zm2
-         lIEOytnvp196fMJeAG2loTf3hTvzdVjdvJ7AdcbYMW8vxBbEMiwOXKGUIdm0GVMtqsOr
-         qzDA==
-X-Gm-Message-State: ACgBeo3gMYRyZyPv/gHSeOm7zBipzVfZSe3hpn91+xmlVf9bGIVrp3+u
-        gwuOvQQZmVpPtPv97jvIWtbNPJDnyMhjTyQA3/Nl1A==
-X-Google-Smtp-Source: AA6agR41q4yHanMi1A+gXLO08ia/kXxxT1OUdvxPqS+JZ3AYLwYDjl7erHXWMxbaY8NeTp1jebE8Ei5/XTiAHc+ZS+o=
-X-Received: by 2002:a25:6612:0:b0:670:7c81:3aa6 with SMTP id
- a18-20020a256612000000b006707c813aa6mr13305548ybc.530.1660597293043; Mon, 15
- Aug 2022 14:01:33 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=5ijnosVd1DyjaZS2JH847SXKpSrhi2E7u0Gbv+lXuHQ=;
+        b=k5wnws6czNTe6bIaW1ssW8SKo+A7lsZNpxKfbjNkybh4xgrosD06L5It6bqdWOS7fz
+         QL92ImJ+GowIifknYA0aMHTQl2r68ql47fHtnMW9ojVvbba3Bp8KbAx3Ako4vSCwfYCM
+         +eftmneBBvbx9u5/pagOP9EFewpv97hoDnGuP1RNVBb+wAX2vYpwJnzA/vSS3ffdPf9x
+         s1N+2QB6K4kbCmySd/K/f7E/5ZksKTyXi6puKMcLmvIvjG3VD5rbcHX4qaW6jlX0i60r
+         zndMdjcwv5oJq4gRhK2nlyZKTf1dotGmK1mMez49HJS3fCEX3xm5iavmd/fa74Bzq4zC
+         acDg==
+X-Gm-Message-State: ACgBeo2i+5OxAcfDes9/b4tR30sC3pT2Vk/H9tiBfnm7GIcXp9YRBh+W
+        hjGRGL48kbEPyeWY/D8VuRpY0w==
+X-Google-Smtp-Source: AA6agR4LYNdi2/YijS8dZKaMp/eFjD7ovaqrRxxz9mkwspujWGJ3V9LMg+7uUIKKPU0aPBFiMnbKxw==
+X-Received: by 2002:aa7:dbc5:0:b0:440:b0d6:7586 with SMTP id v5-20020aa7dbc5000000b00440b0d67586mr16828340edt.85.1660628996722;
+        Mon, 15 Aug 2022 22:49:56 -0700 (PDT)
+Received: from fedora.sec.9e.network (ip-088-153-019-247.um27.pools.vodafone-ip.de. [88.153.19.247])
+        by smtp.gmail.com with ESMTPSA id d20-20020aa7d5d4000000b0043c92c44c53sm7797054eds.93.2022.08.15.22.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Aug 2022 22:49:55 -0700 (PDT)
+From:   Patrick Rudolph <patrick.rudolph@9elements.com>
+To:     Patrick Rudolph <patrick.rudolph@9elements.com>,
+        linux-gpio@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] pinctrl: Add Cypress cy8c95x0
+Date:   Tue, 16 Aug 2022 07:49:13 +0200
+Message-Id: <20220816054917.7893-1-patrick.rudolph@9elements.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-References: <20220810060040.321697-1-saravanak@google.com> <20220810060040.321697-10-saravanak@google.com>
- <YvYhoGdemyKEx++d@atomide.com> <CAGETcx_SdxJKV56jGSx8GbmA4y_zaoP6z8n8xKZGZbCcmewvDQ@mail.gmail.com>
- <YvoglKDbsDLHq2S0@atomide.com>
-In-Reply-To: <YvoglKDbsDLHq2S0@atomide.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 15 Aug 2022 14:00:57 -0700
-Message-ID: <CAGETcx-wz0k13K2fOjTN9RfuMzUPti=UQqY5Mq9XYLK8vudYng@mail.gmail.com>
-Subject: Re: [PATCH v1 9/9] of: property: Simplify of_link_to_phandle()
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 15, 2022 at 3:31 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Saravana Kannan <saravanak@google.com> [220813 00:30]:
-> > On Fri, Aug 12, 2022 at 2:47 AM Tony Lindgren <tony@atomide.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > * Saravana Kannan <saravanak@google.com> [220810 05:54]:
-> > > > The driver core now:
-> > > > - Has the parent device of a supplier pick up the consumers if the
-> > > >   supplier never has a device created for it.
-> > > > - Ignores a supplier if the supplier has no parent device and will never
-> > > >   be probed by a driver
-> > > >
-> > > > And already prevents creating a device link with the consumer as a
-> > > > supplier of a parent.
-> > > >
-> > > > So, we no longer need to find the "compatible" node of the supplier or
-> > > > do any other checks in of_link_to_phandle(). We simply need to make sure
-> > > > that the supplier is available in DT.
-> > >
-> > > This patch fixes booting for me, so it should be applied as a fix and
-> > > tagged with:
-> > >
-> > > Fixes: 5a46079a9645 ("PM: domains: Delete usage of driver_deferred_probe_check_state()")
-> > >
-> > > If there are dependencies to the other patches in this series, it might
-> > > make sense to revert commit 5a46079a9645 instead.
-> >
-> > Yes, there are dependencies on the rest of the patches in this series.
-> > For linux-next, I think we should pick up this series once we get more
-> > Tested-bys.
-> >
-> >  So if 5a46079a9645 is causing any regression in stable branches, we
-> > should pick up the revert series [1] instead of this series we are
-> > replying to.
->
-> Agreed we should apply the reverts in [1] for v6.0-rc series. At least
-> several generations of the TI 32-bit ARM SoCs are failing to boot
-> otherwise.
+Add Cypress cy8c95x0 pinctrl support.
 
-Actually I wasn't clear in my earlier email. I meant to say "releases
-branches", as in 5.19.xxx and not "stable branches". So for 5.19.xxx
-we'd pick up these reverts.
+v3:
+ - Update DT binding
+ - Fix direction mask calculation in irq_bus_sync_unlock
+ - Set can_sleep to true
 
-And for v6.0-rc if my other patch series [1] fixes the issue, I'd
-rather apply [1] than this series. Because this series is meant to be
-temporary (I'll be reverting this in the future).
+v2:
+ - Update DT binding
+ - Support output pincfg through DT
+ - Always expose all GPIOs and ignore ngpios property
 
--Saravana
+Patrick Rudolph (2):
+  dt-binding: pinctrl: Add cypress,cy8c95x0
+  pinctrl: Add Cypress cy8c95x0 support
 
-[1] - https://lore.kernel.org/lkml/20220810060040.321697-1-saravanak@google.com/
+ .../bindings/pinctrl/cypress,cy8c95x0.yaml    |  134 ++
+ MAINTAINERS                                   |    6 +
+ drivers/pinctrl/Kconfig                       |   14 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-cy8c95x0.c            | 1381 +++++++++++++++++
+ 5 files changed, 1536 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-cy8c95x0.c
+
+-- 
+2.37.1
+
