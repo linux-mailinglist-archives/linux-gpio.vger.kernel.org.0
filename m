@@ -2,69 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 086B85961F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Aug 2022 20:07:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E33DA596293
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Aug 2022 20:39:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236871AbiHPSGT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Aug 2022 14:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36494 "EHLO
+        id S232297AbiHPSjq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Aug 2022 14:39:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236874AbiHPSF5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 14:05:57 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E260083063
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Aug 2022 11:05:50 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id bs25so13578722wrb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Aug 2022 11:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=0EH8YWXVhTja6VpUXkV3+tSqJXohPTyBO2pCckBiRnA=;
-        b=fj2M3QSqqwYqeKK+cbj3jmlhXz/7U0GnLppjNgpN462ATe6J0L01q3/aYaOG05AAqx
-         W8k3FYJ6rrPcEPFxCrKp6JXWOwmAZwNUlubPYjaxmXWd0h4kgaHOu1fKOMUPsOJA6UWV
-         AllVRaDmahJ6AT7mkOAA6TTIwS17IXpl4bcGvnOtYNJ6xQ5LnTrUKOBUpk9imvP8xZv3
-         nQTuduC9l+b1dskQbwfQ3jupMQyLFAsfOTXNP5+htC09qGM8LPjNrPRN055J70gunwGc
-         /JF0EMiLfhCgssS9LIlwV+w1+P+TeJI7JZ82QAtwD5OPtkaIZA33wEt++rrfGdr+rppC
-         lswg==
+        with ESMTP id S231193AbiHPSjq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 14:39:46 -0400
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDACF28E23;
+        Tue, 16 Aug 2022 11:39:44 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id o14so5803635ilt.2;
+        Tue, 16 Aug 2022 11:39:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=0EH8YWXVhTja6VpUXkV3+tSqJXohPTyBO2pCckBiRnA=;
-        b=iut9DkgCWDDUK4FxRw5sJksPg+0Nlr4ZyVAoGx93jXONN0pcGv9Xv+eYswolsl5QwE
-         LU67cnw6UhkHoG27Li1Dcg0osCUXeropPYP9cdTA8+ZiUvUQzpaEfmMAYOKPegxqQ6NW
-         Lh+i6pex/25jy+woFQBMZ7Wx/Y8/Rg74ZEvoEQ77I79l4GYZ0peH5M3dsH1EmSuwSYyJ
-         mPGTDlIxXrnUNsktwaTvgz83XyAEpRvpNAL0iMvyuvQ2LXrjH+4nNS3wLzaW/zwrkd1t
-         BoInqgTOQoyjv1TsuNsk05eQ1nEaCWR+IgPoa1WjiDg17NpAgIuirmgriieegIU148kH
-         Jv8A==
-X-Gm-Message-State: ACgBeo0b20gjxy3pG0kcbfAe2oZH1cY3wY0fmSoPApbfypkXCi+OIbHl
-        X6t2i7lX0Lfzp1Uwkuej+v6Wng==
-X-Google-Smtp-Source: AA6agR6Dj0iRrCOX6UFAkwT8WTLRmR93saZYaWMvVCyAn/pzi+L3oO/2DbBYoyiYdtLGaG7ALmQSFw==
-X-Received: by 2002:a05:6000:1548:b0:223:141:8a06 with SMTP id 8-20020a056000154800b0022301418a06mr12208908wry.153.1660673149373;
-        Tue, 16 Aug 2022 11:05:49 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
-        by smtp.gmail.com with ESMTPSA id e14-20020a05600c4e4e00b003a31ca9dfb6sm17510062wmq.32.2022.08.16.11.05.48
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=1Gx22ZxnAmnMwEfl5YlDrlXFX0Bj7DkuXh1bXl4r6lw=;
+        b=Im7+nxtLb2cNm/LC/hX+bHFB88UI0fCE2J8gqNgZPW+2iyfibZemr51GfrB1PEicQq
+         rX0B8tX6ufnlqnV1XbsUGnMh+m/n7mzcZg0Xrg7USKoiaitUK7o6v1WLLZn+ZASqLDSw
+         OJWgZOP8hSSqhwLiSe6YMFcp3WHHw68sKFZbT6wobFLJrWx8Vr0RRcd4xluqqSeZ1bm8
+         VatOHAGDTfZqF+3JUSsM9tSYzU/DZIasV3M7VcFK/DBZybNj3ywjts23krewzt5cfBjE
+         9TtLTkHWSdiZToMKWFGzEdEdxvlerztaHX7xXZafVLLrt3nZl7rHmnrvU2htGIiLh+fs
+         PV9Q==
+X-Gm-Message-State: ACgBeo3SbabxedJVJaGv45fN1yDvN1IbyR6emgOTuzbCAVpDTXMF4rSU
+        1SWjrlMX8itvjQp9/joObw==
+X-Google-Smtp-Source: AA6agR7E2rTGDXJIItDCaM5J7iKfWFaJQIPjX9CWRwfGAd3Pe8DUwZJclWfapqP077Ab+CQMrVxB2Q==
+X-Received: by 2002:a05:6e02:b26:b0:2de:b192:9dfc with SMTP id e6-20020a056e020b2600b002deb1929dfcmr10382551ilu.273.1660675183936;
+        Tue, 16 Aug 2022 11:39:43 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.248])
+        by smtp.googlemail.com with ESMTPSA id c23-20020a023317000000b00339ceeec5edsm4734843jae.12.2022.08.16.11.39.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 11:05:48 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org
-Cc:     konrad.dybcio@somainline.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: qcom: Add sc8280xp lpass lpi pinctrl driver
-Date:   Tue, 16 Aug 2022 19:05:38 +0100
-Message-Id: <20220816180538.9039-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20220816180538.9039-1-srinivas.kandagatla@linaro.org>
-References: <20220816180538.9039-1-srinivas.kandagatla@linaro.org>
+        Tue, 16 Aug 2022 11:39:43 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?q?Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC] dt-bindings: pinctrl: brcm: Ensure all child node properties are documented
+Date:   Tue, 16 Aug 2022 12:39:10 -0600
+Message-Id: <20220816183911.2517173-1-robh@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,276 +61,226 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pinctrl driver to support pin configuration for LPASS
-(Low Power Audio SubSystem) LPI (Low Power Island) pinctrl
-on SC8280XP.
+The Broadcom pinctrl bindings are incomplete for child nodes as they are
+missing 'unevaluatedProperties: false' to prevent unknown properties.
+Fixing this reveals many warnings including having grandchild nodes in some
+cases.
 
-This IP is an additional pin control block for Audio Pins on top the
-existing SoC Top level pin-controller.
-
-Hardware setup looks like:
-
-    TLMM GPIO[189 - 207] --> LPASS LPI GPIO [0 - 18]
-
-This pin controller has some similarities compared to Top level
-msm SoC Pin controller like 'each pin belongs to a single group'
-and so on. However this one is intended to control only audio
-pins in particular, which can not be configured/touched by the
-Top level SoC pin controller except setting them as gpios.
-Apart from this, slew rate is also available in this block for
-certain pins which are connected to SLIMbus or SoundWire Bus.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pinctrl/qcom/Kconfig                  |   9 +
- drivers/pinctrl/qcom/Makefile                 |   1 +
- .../pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c | 207 ++++++++++++++++++
- 3 files changed, 217 insertions(+)
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
+This recursive schema requires a fix not yet committed in dtschema.
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 35e59f940ddb..2961b5eb8e10 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -399,6 +399,15 @@ config PINCTRL_SM8450_LPASS_LPI
- 	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
- 	  (Low Power Island) found on the Qualcomm Technologies Inc SM8450 platform.
+I'm looking for feedback on whether group->pins or group->groups is the
+right fix here. There's more warnings with this change in the gpio-sysctl
+bindings.
+---
+ .../pinctrl/brcm,bcm6318-pinctrl.yaml         |  5 ++++
+ .../pinctrl/brcm,bcm63268-pinctrl.yaml        | 23 +++++++++++--------
+ .../pinctrl/brcm,bcm6328-pinctrl.yaml         |  5 ++++
+ .../pinctrl/brcm,bcm6358-pinctrl.yaml         |  1 +
+ .../pinctrl/brcm,bcm6362-pinctrl.yaml         |  7 +++++-
+ .../pinctrl/brcm,bcm6368-pinctrl.yaml         |  7 +++++-
+ 6 files changed, 37 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml
+index ab019a1998e8..1792d07e497d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml
+@@ -24,6 +24,7 @@ patternProperties:
+   '-pins$':
+     type: object
+     $ref: pinmux-node.yaml#
++    additionalProperties: false
  
-+config PINCTRL_SC8280XP_LPASS_LPI
-+	tristate "Qualcomm Technologies Inc SC8280XP LPASS LPI pin controller driver"
-+	depends on GPIOLIB
-+	depends on PINCTRL_LPASS_LPI
-+	help
-+	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
-+	  (Low Power Island) found on the Qualcomm Technologies Inc SC8280XP platform.
+     properties:
+       function:
+@@ -37,6 +38,10 @@ patternProperties:
+         enum: [ gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7,
+                 gpio8, gpio9, gpio10, gpio11, gpio12, gpio13, gpio40 ]
+ 
++    patternProperties:
++      '-pins$':
++        $ref: '#/patternProperties/-pins$'
 +
- config PINCTRL_LPASS_LPI
- 	tristate "Qualcomm Technologies Inc LPASS LPI pin controller driver"
- 	select PINMUX
-diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
-index 06e4cddbca68..8269a1db8794 100644
---- a/drivers/pinctrl/qcom/Makefile
-+++ b/drivers/pinctrl/qcom/Makefile
-@@ -46,4 +46,5 @@ obj-$(CONFIG_PINCTRL_SM8250_LPASS_LPI) += pinctrl-sm8250-lpass-lpi.o
- obj-$(CONFIG_PINCTRL_SM8350) += pinctrl-sm8350.o
- obj-$(CONFIG_PINCTRL_SM8450) += pinctrl-sm8450.o
- obj-$(CONFIG_PINCTRL_SM8450_LPASS_LPI) += pinctrl-sm8450-lpass-lpi.o
-+obj-$(CONFIG_PINCTRL_SC8280XP_LPASS_LPI) += pinctrl-sc8280xp-lpass-lpi.o
- obj-$(CONFIG_PINCTRL_LPASS_LPI) += pinctrl-lpass-lpi.o
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
-new file mode 100644
-index 000000000000..4b9c0beac32e
---- /dev/null
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2022 Linaro Ltd.
-+ */
+ allOf:
+   - $ref: "pinctrl.yaml#"
+ 
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml
+index 8c9d4668c8c4..7aa1b6738ebf 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml
+@@ -24,6 +24,7 @@ patternProperties:
+   '-pins$':
+     type: object
+     $ref: pinmux-node.yaml#
++    unevaluatedProperties: false
+ 
+     properties:
+       function:
+@@ -41,6 +42,10 @@ patternProperties:
+                 vdsl_phy_override_1_grp, vdsl_phy_override_2_grp,
+                 vdsl_phy_override_3_grp, dsl_gpio8, dsl_gpio9 ]
+ 
++    patternProperties:
++      '-pins$':
++        $ref: '#/patternProperties/-pins$'
 +
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
+ allOf:
+   - $ref: "pinctrl.yaml#"
+ 
+@@ -122,46 +127,46 @@ examples:
+ 
+       pinctrl_nand: nand-pins {
+         function = "nand";
+-        group = "nand_grp";
++        pins = "nand_grp";
+       };
+ 
+       pinctrl_gpio35_alt: gpio35_alt-pins {
+         function = "gpio35_alt";
+-        pin = "gpio35";
++        pins = "gpio35";
+       };
+ 
+       pinctrl_dectpd: dectpd-pins {
+         function = "dectpd";
+-        group = "dectpd_grp";
++        pins = "dectpd_grp";
+       };
+ 
+       pinctrl_vdsl_phy_override_0: vdsl_phy_override_0-pins {
+         function = "vdsl_phy_override_0";
+-        group = "vdsl_phy_override_0_grp";
++        pins = "vdsl_phy_override_0_grp";
+       };
+ 
+       pinctrl_vdsl_phy_override_1: vdsl_phy_override_1-pins {
+         function = "vdsl_phy_override_1";
+-        group = "vdsl_phy_override_1_grp";
++        pins = "vdsl_phy_override_1_grp";
+       };
+ 
+       pinctrl_vdsl_phy_override_2: vdsl_phy_override_2-pins {
+         function = "vdsl_phy_override_2";
+-        group = "vdsl_phy_override_2_grp";
++        pins = "vdsl_phy_override_2_grp";
+       };
+ 
+       pinctrl_vdsl_phy_override_3: vdsl_phy_override_3-pins {
+         function = "vdsl_phy_override_3";
+-        group = "vdsl_phy_override_3_grp";
++        pins = "vdsl_phy_override_3_grp";
+       };
+ 
+       pinctrl_dsl_gpio8: dsl_gpio8-pins {
+         function = "dsl_gpio8";
+-        group = "dsl_gpio8";
++        pins = "dsl_gpio8";
+       };
+ 
+       pinctrl_dsl_gpio9: dsl_gpio9-pins {
+         function = "dsl_gpio9";
+-        group = "dsl_gpio9";
++        pins = "dsl_gpio9";
+       };
+     };
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
+index a8e22ec02215..e42071abf282 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
+@@ -24,6 +24,7 @@ patternProperties:
+   '-pins$':
+     type: object
+     $ref: pinmux-node.yaml#
++    unevaluatedProperties: false
+ 
+     properties:
+       function:
+@@ -36,6 +37,10 @@ patternProperties:
+                 gpio20, gpio25, gpio26, gpio27, gpio28, hsspi_cs1,
+                 usb_port1 ]
+ 
++    patternProperties:
++      '-pins$':
++        $ref: '#/patternProperties/-pins$'
 +
-+#include "pinctrl-lpass-lpi.h"
+ allOf:
+   - $ref: "pinctrl.yaml#"
+ 
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
+index 35867355a47a..20dbb1a3c19b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
+@@ -24,6 +24,7 @@ patternProperties:
+   '-pins$':
+     type: object
+     $ref: pinmux-node.yaml#
++    unevaluatedProperties: false
+ 
+     properties:
+       function:
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml
+index b584d4b27223..ac0e775383b9 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml
+@@ -24,6 +24,7 @@ patternProperties:
+   '-pins$':
+     type: object
+     $ref: pinmux-node.yaml#
++    unevaluatedProperties: false
+ 
+     properties:
+       function:
+@@ -41,6 +42,10 @@ patternProperties:
+                 gpio15, gpio16, gpio17, gpio18, gpio19, gpio20, gpio21,
+                 gpio22, gpio23, gpio24, gpio25, gpio26, gpio27, nand_grp ]
+ 
++    patternProperties:
++      '-pins$':
++        $ref: '#/patternProperties/-pins$'
 +
-+enum lpass_lpi_functions {
-+	LPI_MUX_dmic1_clk,
-+	LPI_MUX_dmic1_data,
-+	LPI_MUX_dmic2_clk,
-+	LPI_MUX_dmic2_data,
-+	LPI_MUX_dmic3_clk,
-+	LPI_MUX_dmic3_data,
-+	LPI_MUX_dmic4_clk,
-+	LPI_MUX_dmic4_data,
-+	LPI_MUX_i2s1_clk,
-+	LPI_MUX_i2s1_data,
-+	LPI_MUX_i2s1_ws,
-+	LPI_MUX_i2s2_clk,
-+	LPI_MUX_i2s2_data,
-+	LPI_MUX_i2s2_ws,
-+	LPI_MUX_i2s3_clk,
-+	LPI_MUX_i2s3_data,
-+	LPI_MUX_i2s3_ws,
-+	LPI_MUX_qua_mi2s_data,
-+	LPI_MUX_qua_mi2s_sclk,
-+	LPI_MUX_qua_mi2s_ws,
-+	LPI_MUX_swr_rx_clk,
-+	LPI_MUX_swr_rx_data,
-+	LPI_MUX_swr_tx_clk,
-+	LPI_MUX_swr_tx_data,
-+	LPI_MUX_wsa_swr_clk,
-+	LPI_MUX_wsa_swr_data,
-+	LPI_MUX_wsa2_swr_clk,
-+	LPI_MUX_wsa2_swr_data,
-+	LPI_MUX_ext_mclk1_a,
-+	LPI_MUX_ext_mclk1_b,
-+	LPI_MUX_ext_mclk1_c,
-+	LPI_MUX_gpio,
-+	LPI_MUX__,
-+};
+ allOf:
+   - $ref: "pinctrl.yaml#"
+ 
+@@ -204,6 +209,6 @@ examples:
+ 
+       pinctrl_nand: nand-pins {
+         function = "nand";
+-        group = "nand_grp";
++        pins = "nand_grp";
+       };
+     };
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml
+index 229323d9237d..91f0ec45c871 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml
+@@ -24,6 +24,7 @@ patternProperties:
+   '-pins$':
+     type: object
+     $ref: pinmux-node.yaml#
++    unevaluatedProperties: false
+ 
+     properties:
+       function:
+@@ -42,6 +43,10 @@ patternProperties:
+                 gpio24, gpio25, gpio26, gpio27, gpio28, gpio29, gpio30,
+                 gpio31, uart1_grp ]
+ 
++    patternProperties:
++      '-pins$':
++        $ref: '#/patternProperties/-pins$'
 +
-+static int gpio0_pins[] = { 0 };
-+static int gpio1_pins[] = { 1 };
-+static int gpio2_pins[] = { 2 };
-+static int gpio3_pins[] = { 3 };
-+static int gpio4_pins[] = { 4 };
-+static int gpio5_pins[] = { 5 };
-+static int gpio6_pins[] = { 6 };
-+static int gpio7_pins[] = { 7 };
-+static int gpio8_pins[] = { 8 };
-+static int gpio9_pins[] = { 9 };
-+static int gpio10_pins[] = { 10 };
-+static int gpio11_pins[] = { 11 };
-+static int gpio12_pins[] = { 12 };
-+static int gpio13_pins[] = { 13 };
-+static int gpio14_pins[] = { 14 };
-+static int gpio15_pins[] = { 15 };
-+static int gpio16_pins[] = { 16 };
-+static int gpio17_pins[] = { 17 };
-+static int gpio18_pins[] = { 18 };
-+
-+static const struct pinctrl_pin_desc sc8280xp_lpi_pins[] = {
-+	PINCTRL_PIN(0, "gpio0"),
-+	PINCTRL_PIN(1, "gpio1"),
-+	PINCTRL_PIN(2, "gpio2"),
-+	PINCTRL_PIN(3, "gpio3"),
-+	PINCTRL_PIN(4, "gpio4"),
-+	PINCTRL_PIN(5, "gpio5"),
-+	PINCTRL_PIN(6, "gpio6"),
-+	PINCTRL_PIN(7, "gpio7"),
-+	PINCTRL_PIN(8, "gpio8"),
-+	PINCTRL_PIN(9, "gpio9"),
-+	PINCTRL_PIN(10, "gpio10"),
-+	PINCTRL_PIN(11, "gpio11"),
-+	PINCTRL_PIN(12, "gpio12"),
-+	PINCTRL_PIN(13, "gpio13"),
-+	PINCTRL_PIN(14, "gpio14"),
-+	PINCTRL_PIN(15, "gpio15"),
-+	PINCTRL_PIN(16, "gpio16"),
-+	PINCTRL_PIN(17, "gpio17"),
-+	PINCTRL_PIN(18, "gpio18"),
-+};
-+
-+static const char * const swr_tx_clk_groups[] = { "gpio0" };
-+static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio14" };
-+static const char * const swr_rx_clk_groups[] = { "gpio3" };
-+static const char * const swr_rx_data_groups[] = { "gpio4", "gpio5" };
-+static const char * const dmic1_clk_groups[] = { "gpio6" };
-+static const char * const dmic1_data_groups[] = { "gpio7" };
-+static const char * const dmic2_clk_groups[] = { "gpio8" };
-+static const char * const dmic2_data_groups[] = { "gpio9" };
-+static const char * const dmic4_clk_groups[] = { "gpio17" };
-+static const char * const dmic4_data_groups[] = { "gpio18" };
-+static const char * const i2s2_clk_groups[] = { "gpio10" };
-+static const char * const i2s2_ws_groups[] = { "gpio11" };
-+static const char * const dmic3_clk_groups[] = { "gpio12" };
-+static const char * const dmic3_data_groups[] = { "gpio13" };
-+static const char * const qua_mi2s_sclk_groups[] = { "gpio0" };
-+static const char * const qua_mi2s_ws_groups[] = { "gpio1" };
-+static const char * const qua_mi2s_data_groups[] = { "gpio2", "gpio3", "gpio4", "gpio5" };
-+static const char * const i2s1_clk_groups[] = { "gpio6" };
-+static const char * const i2s1_ws_groups[] = { "gpio7" };
-+static const char * const i2s1_data_groups[] = { "gpio8", "gpio9" };
-+static const char * const wsa_swr_clk_groups[] = { "gpio10" };
-+static const char * const wsa_swr_data_groups[] = { "gpio11" };
-+static const char * const wsa2_swr_clk_groups[] = { "gpio15" };
-+static const char * const wsa2_swr_data_groups[] = { "gpio16" };
-+static const char * const i2s2_data_groups[] = { "gpio15", "gpio16" };
-+static const char * const i2s3_clk_groups[] = { "gpio12"};
-+static const char * const i2s3_ws_groups[] = { "gpio13"};
-+static const char * const i2s3_data_groups[] = { "gpio17", "gpio18"};
-+static const char * const ext_mclk1_c_groups[] = { "gpio5" };
-+static const char * const ext_mclk1_b_groups[] = { "gpio9" };
-+static const char * const ext_mclk1_a_groups[] = { "gpio13" };
-+
-+static const struct lpi_pingroup sc8280xp_groups[] = {
-+	LPI_PINGROUP(0, 0, swr_tx_clk, qua_mi2s_sclk, _, _),
-+	LPI_PINGROUP(1, 2, swr_tx_data, qua_mi2s_ws, _, _),
-+	LPI_PINGROUP(2, 4, swr_tx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(3, 8, swr_rx_clk, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(4, 10, swr_rx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(5, 12, swr_rx_data, ext_mclk1_c, qua_mi2s_data, _),
-+	LPI_PINGROUP(6, LPI_NO_SLEW, dmic1_clk, i2s1_clk, _,  _),
-+	LPI_PINGROUP(7, LPI_NO_SLEW, dmic1_data, i2s1_ws, _, _),
-+	LPI_PINGROUP(8, LPI_NO_SLEW, dmic2_clk, i2s1_data, _, _),
-+	LPI_PINGROUP(9, LPI_NO_SLEW, dmic2_data, i2s1_data, ext_mclk1_b, _),
-+	LPI_PINGROUP(10, 16, i2s2_clk, wsa_swr_clk, _, _),
-+	LPI_PINGROUP(11, 18, i2s2_ws, wsa_swr_data, _, _),
-+	LPI_PINGROUP(12, LPI_NO_SLEW, dmic3_clk, i2s3_clk, _, _),
-+	LPI_PINGROUP(13, LPI_NO_SLEW, dmic3_data, i2s3_ws, ext_mclk1_a, _),
-+	LPI_PINGROUP(14, 6, swr_tx_data, _, _, _),
-+	LPI_PINGROUP(15, 20, i2s2_data, wsa2_swr_clk, _, _),
-+	LPI_PINGROUP(16, 22, i2s2_data, wsa2_swr_data, _, _),
-+	LPI_PINGROUP(17, LPI_NO_SLEW, dmic4_clk, i2s3_data, _, _),
-+	LPI_PINGROUP(18, LPI_NO_SLEW, dmic4_data, i2s3_data, _, _),
-+};
-+
-+static const struct lpi_function sc8280xp_functions[] = {
-+	LPI_FUNCTION(dmic1_clk),
-+	LPI_FUNCTION(dmic1_data),
-+	LPI_FUNCTION(dmic2_clk),
-+	LPI_FUNCTION(dmic2_data),
-+	LPI_FUNCTION(dmic3_clk),
-+	LPI_FUNCTION(dmic3_data),
-+	LPI_FUNCTION(dmic4_clk),
-+	LPI_FUNCTION(dmic4_data),
-+	LPI_FUNCTION(i2s1_clk),
-+	LPI_FUNCTION(i2s1_data),
-+	LPI_FUNCTION(i2s1_ws),
-+	LPI_FUNCTION(i2s2_clk),
-+	LPI_FUNCTION(i2s2_data),
-+	LPI_FUNCTION(i2s2_ws),
-+	LPI_FUNCTION(i2s3_clk),
-+	LPI_FUNCTION(i2s3_data),
-+	LPI_FUNCTION(i2s3_ws),
-+	LPI_FUNCTION(qua_mi2s_data),
-+	LPI_FUNCTION(qua_mi2s_sclk),
-+	LPI_FUNCTION(qua_mi2s_ws),
-+	LPI_FUNCTION(swr_rx_clk),
-+	LPI_FUNCTION(swr_rx_data),
-+	LPI_FUNCTION(swr_tx_clk),
-+	LPI_FUNCTION(swr_tx_data),
-+	LPI_FUNCTION(wsa_swr_clk),
-+	LPI_FUNCTION(wsa_swr_data),
-+	LPI_FUNCTION(wsa2_swr_clk),
-+	LPI_FUNCTION(wsa2_swr_data),
-+	LPI_FUNCTION(ext_mclk1_a),
-+	LPI_FUNCTION(ext_mclk1_b),
-+	LPI_FUNCTION(ext_mclk1_c),
-+};
-+
-+static const struct lpi_pinctrl_variant_data sc8280xp_lpi_data = {
-+	.pins = sc8280xp_lpi_pins,
-+	.npins = ARRAY_SIZE(sc8280xp_lpi_pins),
-+	.groups = sc8280xp_groups,
-+	.ngroups = ARRAY_SIZE(sc8280xp_groups),
-+	.functions = sc8280xp_functions,
-+	.nfunctions = ARRAY_SIZE(sc8280xp_functions),
-+};
-+
-+static const struct of_device_id lpi_pinctrl_of_match[] = {
-+	{
-+	       .compatible = "qcom,sc8280xp-lpass-lpi-pinctrl",
-+	       .data = &sc8280xp_lpi_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
-+
-+static struct platform_driver lpi_pinctrl_driver = {
-+	.driver = {
-+		   .name = "qcom-sc8280xp-lpass-lpi-pinctrl",
-+		   .of_match_table = lpi_pinctrl_of_match,
-+	},
-+	.probe = lpi_pinctrl_probe,
-+	.remove = lpi_pinctrl_remove,
-+};
-+
-+module_platform_driver(lpi_pinctrl_driver);
-+MODULE_DESCRIPTION("QTI SC8280XP LPI GPIO pin control driver");
-+MODULE_LICENSE("GPL");
+ allOf:
+   - $ref: "pinctrl.yaml#"
+ 
+@@ -215,6 +220,6 @@ examples:
+ 
+       pinctrl_uart1: uart1-pins {
+         function = "uart1";
+-        group = "uart1_grp";
++        pins = "uart1_grp";
+       };
+     };
 -- 
-2.21.0
+2.34.1
 
