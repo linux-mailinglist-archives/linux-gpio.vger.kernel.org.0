@@ -2,214 +2,202 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05F66596BC2
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Aug 2022 10:58:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1872C596D89
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Aug 2022 13:29:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbiHQI5u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Aug 2022 04:57:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
+        id S230211AbiHQL2t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Aug 2022 07:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230283AbiHQI5s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Aug 2022 04:57:48 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EDC8037F
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Aug 2022 01:57:46 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id k16so239962wrx.11
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Aug 2022 01:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=b0Hbu1BABi8Xh8b3bvkqzLWTDHQ7JLqil1MsktXkomc=;
-        b=H1rBkQzh9tCamdDvX5WJuSKYyliKjdA7gLziAw+J6QBIcwTgLqgRoWkR22Jd2qb7T5
-         UmPOZrVilaLP73T/OJRsQMK5piwYfLIHdiIT/Z4acOw794l4EVKoLhuHjLlvDkKPSxNI
-         /eo3MCpYoLdgjAT4VQncss0H1K50GzmPHPkeDMTCO2ZC62193OU0RlSIW2eAtzxE+H9P
-         XthKg3tC0PAZrTpbnlz3cOIA9DVy8ieiUV+ookr1xvDxqHjP43XJFTulS6ilZMobitqb
-         rePaXGJDyohQXWnqr+ta4OVLRzOCIdUt39XdQnkbxUqus2xS3uuugT6PKF11afCK0Y3d
-         NFIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=b0Hbu1BABi8Xh8b3bvkqzLWTDHQ7JLqil1MsktXkomc=;
-        b=RvwGrct1VGvBe+WahT84eZ3mJ/30gGyI6+ZPT5F4XbfvhdlyCF2glfzj810GRs81pU
-         5Pr84rZ/PfJ//3mfRuMSygmfOBCsd4cFxEUZm92xe36gRQ5sMKiILgoSoWEtDu79C9hH
-         Zmfn28s334IcjfmrnPf87Z9NzMcIASuSZaM7FoktJhulWYCsgTqMBxXmSdX/ZZdW5ygO
-         VLt4aFsXBZXrK9EaTsDEeNU9YGICjPhtCcu5avonqkCcq7ulmF72jYQ6t4cIRP66l6eS
-         kHy2fx6OIbgtllG73820hQorQLq2CoAdFJNQeln857+0Z2Uk+kZQRRWyzWo2qXxMXiTJ
-         kneQ==
-X-Gm-Message-State: ACgBeo16n+mTZllHhCfVdqrFxKdNpT5nfF+/AWQuJdo5QtgLCqn73I6E
-        Hud8c4O/OBNgiRfwWIhxXaM7og==
-X-Google-Smtp-Source: AA6agR6zSKE5SCy82IA9kzf8IZHR+bNgzhRgAvsv0F/4nTwzno5ASm/Orou2N5D+SI2pwvFqbD/7EA==
-X-Received: by 2002:a05:6000:82:b0:225:21ff:a389 with SMTP id m2-20020a056000008200b0022521ffa389mr1652992wrx.22.1660726664564;
-        Wed, 17 Aug 2022 01:57:44 -0700 (PDT)
-Received: from [192.168.86.238] (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
-        by smtp.googlemail.com with ESMTPSA id g9-20020a5d64e9000000b0021badf3cb26sm16861988wri.63.2022.08.17.01.57.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Aug 2022 01:57:44 -0700 (PDT)
-Message-ID: <44887e94-d3a6-12cb-01c5-d61e067ab791@linaro.org>
-Date:   Wed, 17 Aug 2022 09:57:42 +0100
+        with ESMTP id S230098AbiHQL2t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Aug 2022 07:28:49 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90DFF3ECE1;
+        Wed, 17 Aug 2022 04:28:47 -0700 (PDT)
+Received: from pan.home (unknown [IPv6:2a00:23c6:c311:3401:60d6:460b:e0dc:41ba])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: martyn)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 9DBDD66016B7;
+        Wed, 17 Aug 2022 12:28:45 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1660735725;
+        bh=UeD9LKoISKrO+nXV/BN1UsrQ0MC+VColES2tNfzcAwc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XG7/FagfRvq8yNoHni9iiKw2u8OlWaxRIrFWKENKLC3k5XplbMWUpUtvWjrMqYYEY
+         5MDOELZIQnwc6JvpvKouRxlcueoCSZAoFl+85wFlmOzGGd/3x1o2s0Emyt1l48W7XX
+         NJovL/7zI8IH7ah+RsLVGH3Kbc/HsEbgKeCHXpgA41X5pGelcLySknCqd1GHzXy9VX
+         jyJSnP9ELpvtvNwP3uvbvw29fvg6FkljnqKf167DH5EWPzl1419gv7ynPOBDCC5X8G
+         2Xi9dIluM9QtpaOrsDFlWsBUo9n10agkJargKMIUTrs3C/xUZONNd/9ryi1WPlNmZ/
+         c/XY3DlG1VVrw==
+From:   Martyn Welch <martyn.welch@collabora.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     kernel@collabora.com, Martyn Welch <martyn.welch@collabora.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] gpio: pca953x: Support for pcal6534
+Date:   Wed, 17 Aug 2022 12:28:17 +0100
+Message-Id: <20220817112818.787771-1-martyn.welch@collabora.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sc8280xp lpass lpi
- pinctrl bindings
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org
-Cc:     konrad.dybcio@somainline.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220816180538.9039-1-srinivas.kandagatla@linaro.org>
- <20220816180538.9039-2-srinivas.kandagatla@linaro.org>
- <6c283634-70b3-200f-a346-28eb4c428d39@linaro.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <6c283634-70b3-200f-a346-28eb4c428d39@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thanks Krzysztof,
+The pcal6534[1] is a 34-bit I/O expander with more than a passing
+resemblance to the pcal6524[2] currently supported by the gpio-pca953x
+driver, however whilst the registers seem to functionally match
+perfectly, the alignment of the register banks in the chips address
+space do not follow the pattern expected by the existing driver. For
+instance, as the chip provides 34 I/O, which requires bannks of 5 8-bit
+registers to provide input state, output state, etc. as do the 40 I/O
+variants, however the 40 I/O variants layout the banks of registers on
+8-byte boundaries, whilst the pcal6534 does not space out the banks at
+all. Additionally the extended functionality starts at 30h rather than
+40h and I suspect there will be other similar differences that I've not
+yet discovered.
 
-On 17/08/2022 07:05, Krzysztof Kozlowski wrote:
-> On 16/08/2022 21:05, Srinivas Kandagatla wrote:
->> Add device tree binding Documentation details for Qualcomm SC8280XP
->> LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> Thank you for your patch. There is something to discuss/improve.
-> 
->> +  gpio-ranges:
->> +    maxItems: 1
->> +
->> +#PIN CONFIGURATION NODES
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
-> 
-> Drop the quotes
-Will do that.
-.
-> 
->> +
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +        items:
->> +          pattern: "^gpio([0-1]|[0-8]])$"
-> 
-> error in pattern - double ]. If you have 19 GPIOs, this should be
-> probably: ^gpio([0-9]|1[0-8])$
-> 
-that is true..I did overlook  '|'
+I suspect that this may add some additional complexity to the driver and
+I'm not sure whether this will be welcome. I've done a few cursory
+searches to see if there are other chips which follow the pattern of the
+pcal6534 and have so far only found the pi4ioe5v6534q[3], which appears
+to be funcitonaly identical to the pcal6534.
 
->> +
->> +      function:
->> +        enum: [ swr_tx_clk, swr_tx_data, swr_rx_clk, swr_rx_data,
->> +                dmic1_clk, dmic1_data, dmic2_clk, dmic2_data, dmic4_clk,
->> +                dmic4_data, i2s2_clk, i2s2_ws, dmic3_clk, dmic3_data,
->> +                qua_mi2s_sclk, qua_mi2s_ws, qua_mi2s_data, i2s1_clk, i2s1_ws,
->> +                i2s1_data, wsa_swr_clk, wsa_swr_data, wsa2_swr_clk,
->> +                wsa2_swr_data, i2s2_data, i2s3_clk, i2s3_ws, i2s3_data,
->> +                ext_mclk1_c, ext_mclk1_b, ext_mclk1_a ]
->> +
-> 
-> Skip blank line (confuses with a new property).
-> 
-okay
+I'm currently wondering whether a submission to extend the pcal6534
+is likely to be deemed acceptable. If so whether something like the
+attached approach would be OK, or whether anyone has better ideas on how
+to achieve this. Alternatively I'd be happy to create a new driver to
+support the pcal6534 if that's deemed more appropriate.
 
->> +        description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +
->> +      drive-strength:
->> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
->> +        default: 2
->> +        description:
->> +          Selects the drive strength for the specified pins, in mA.
->> +
->> +      slew-rate:
->> +        enum: [0, 1, 2, 3]
->> +        default: 0
->> +        description: |
->> +          0: No adjustments
->> +          1: Higher Slew rate (faster edges)
->> +          2: Lower Slew rate (slower edges)
->> +          3: Reserved (No adjustments)
->> +
->> +      bias-pull-down: true
->> +
->> +      bias-pull-up: true
->> +
->> +      bias-disable: true
->> +
->> +      output-high: true
->> +
->> +      output-low: true
->> +
->> +    required:
->> +      - pins
->> +      - function
->> +
->> +    additionalProperties: false
->> +
->> +allOf:
->> +  - $ref: "pinctrl.yaml#"
-> 
-> Drop the quotes.
-> 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - gpio-controller
->> +  - '#gpio-cells'
->> +  - gpio-ranges
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/sound/qcom,q6afe.h>
->> +    lpi_tlmm: pinctrl@33c0000 {
-> 
-> Drop the label, not used anywhere here.
-> 
-makes sense, I will address all the comments and post next version.
-thanks,
-srini
->> +        compatible = "qcom,sc8280xp-lpass-lpi-pinctrl";
->> +        reg = <0x33c0000 0x20000>,
->> +              <0x3550000 0x10000>;
->> +        clocks = <&q6afecc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
->> +                 <&q6afecc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
->> +        clock-names = "core", "audio";
->> +        gpio-controller;
->> +        #gpio-cells = <2>;
->> +        gpio-ranges = <&lpi_tlmm 0 0 18>;
->> +    };
-> 
-> 
-> Best regards,
-> Krzysztof
+[1] https://www.nxp.com/docs/en/data-sheet/PCAL6534.pdf
+[2] https://www.nxp.com/docs/en/data-sheet/PCAL6524.pdf
+[3] https://www.diodes.com/assets/Datasheets/PI4IOE5V6534Q.pdf
+
+Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+---
+
+Just to note that I'm currently awaiting delivery if hardware, so the
+below patch is not just incomplete, it also untested.
+
+ drivers/gpio/gpio-pca953x.c | 46 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index ecd7d169470b..413bcda68935 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -68,6 +68,8 @@
+ #define PCA957X_TYPE		BIT(13)
+ #define PCA_TYPE_MASK		GENMASK(15, 12)
+ 
++#define PCAL6534_ALIGN		BIT(16)
++
+ #define PCA_CHIP_TYPE(x)	((x) & PCA_TYPE_MASK)
+ 
+ static const struct i2c_device_id pca953x_id[] = {
+@@ -91,6 +93,7 @@ static const struct i2c_device_id pca953x_id[] = {
+ 
+ 	{ "pcal6416", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
+ 	{ "pcal6524", 24 | PCA953X_TYPE | PCA_LATCH_INT, },
++	{ "pcal6534", 34 | PCA953X_TYPE | PCA_LATCH_INT | PCAL6534_ALIGN, },
+ 	{ "pcal9535", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
+ 	{ "pcal9554b", 8  | PCA953X_TYPE | PCA_LATCH_INT, },
+ 	{ "pcal9555a", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
+@@ -107,6 +110,8 @@ static const struct i2c_device_id pca953x_id[] = {
+ 	{ "tca9539", 16 | PCA953X_TYPE | PCA_INT, },
+ 	{ "tca9554", 8  | PCA953X_TYPE | PCA_INT, },
+ 	{ "xra1202", 8  | PCA953X_TYPE },
++
++	{ "pi4ioe5v6534q", 34 | PCA953X_TYPE | PCA_LATCH_INT | PCAL6534_ALIGN, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pca953x_id);
+@@ -266,10 +271,19 @@ static int pca953x_bank_shift(struct pca953x_chip *chip)
+ static bool pca953x_check_register(struct pca953x_chip *chip, unsigned int reg,
+ 				   u32 checkbank)
+ {
+-	int bank_shift = pca953x_bank_shift(chip);
+-	int bank = (reg & REG_ADDR_MASK) >> bank_shift;
+-	int offset = reg & (BIT(bank_shift) - 1);
++	int bank;
++	int offset;
++
++	if (chip->driver_data & PCAL6534_ALIGN) {
++		bank = (reg & REG_ADDR_MASK) / NBANK(chip);
++		offset = reg - (bank * NBANK(chip));
++	} else {
++		int bank_shift = pca953x_bank_shift(chip);
++		bank = (reg & REG_ADDR_MASK) >> bank_shift;
++		offset = reg & (BIT(bank_shift) - 1);
++	}
+ 
++	/* TODO: This needs looking at for PCAL6534 */
+ 	/* Special PCAL extended register check. */
+ 	if (reg & REG_ADDR_EXT) {
+ 		if (!(chip->driver_data & PCA_PCAL))
+@@ -381,10 +395,20 @@ static const struct regmap_config pca953x_ai_i2c_regmap = {
+ 
+ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off)
+ {
+-	int bank_shift = pca953x_bank_shift(chip);
+-	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
+-	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+-	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
++	int bank_shift;
++	int addr;
++	int pinctrl;
++	u8 regaddr;
++
++	if (chip->driver_data & PCAL6534_ALIGN) {
++		addr = (reg & PCAL_GPIO_MASK) * NBANK(chip);
++	} else {
++		bank_shift = pca953x_bank_shift(chip);
++		addr = (reg & PCAL_GPIO_MASK) << bank_shift;
++	}
++	/* TODO: Do we need to handle the pinctrl offset differently for pcal6534? */
++	pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
++	regaddr = pinctrl | addr | (off / BANK_SZ);
+ 
+ 	return regaddr;
+ }
+@@ -395,8 +419,11 @@ static int pca953x_write_regs(struct pca953x_chip *chip, int reg, unsigned long
+ 	u8 value[MAX_BANK];
+ 	int i, ret;
+ 
+-	for (i = 0; i < NBANK(chip); i++)
++	for (i = 0; i < NBANK(chip); i++) {
+ 		value[i] = bitmap_get_value8(val, i * BANK_SZ);
++		dev_err(&chip->client->dev, "value[%d] = %x\n", i, value[i]);
++	}
++	dev_err(&chip->client->dev, "regaddr: %x\n", regaddr);
+ 
+ 	ret = regmap_bulk_write(chip->regmap, regaddr, value, NBANK(chip));
+ 	if (ret < 0) {
+@@ -1239,6 +1266,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 
+ 	{ .compatible = "nxp,pcal6416", .data = OF_953X(16, PCA_LATCH_INT), },
+ 	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_LATCH_INT), },
++	{ .compatible = "nxp,pcal6534", .data = OF_953X(34, PCA_LATCH_INT | PCAL6534_ALIGN), },
+ 	{ .compatible = "nxp,pcal9535", .data = OF_953X(16, PCA_LATCH_INT), },
+ 	{ .compatible = "nxp,pcal9554b", .data = OF_953X( 8, PCA_LATCH_INT), },
+ 	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_LATCH_INT), },
+@@ -1261,6 +1289,8 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "onnn,pca9655", .data = OF_953X(16, PCA_INT), },
+ 
+ 	{ .compatible = "exar,xra1202", .data = OF_953X( 8, 0), },
++
++	{ .compatible = "diodes,pi4ioe5v6534q", .data = OF_953X(34, PCA_LATCH_INT | PCAL6534_ALIGN), },
+ 	{ }
+ };
+ 
+-- 
+2.35.1
+
