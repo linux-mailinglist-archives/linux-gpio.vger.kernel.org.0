@@ -2,379 +2,240 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CD0D596DB1
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Aug 2022 13:41:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19E73596F0B
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Aug 2022 15:07:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238728AbiHQLin (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Aug 2022 07:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
+        id S236526AbiHQNBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Aug 2022 09:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238347AbiHQLim (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Aug 2022 07:38:42 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB334507F
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Aug 2022 04:38:40 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id f8so2189715wru.13
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Aug 2022 04:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=TxQp+Eh5oPMEasDUM+PL0o4riMq+uOYkqYldbh4mgKI=;
-        b=Li9bp577Zm55Y9zB12b7I7saeigJ2LrUtL+OBUs3wSY7OQf4sKPX7c0l8Rrkh015wQ
-         9yb5rJ+izy/xvcBn5zr0mwrKrK8/tPeGhEa67yTFNtBMNaCRF6wGb5cdFEegCHh+LcQ9
-         mTjI6FCZbBT4lePERoOnKvybkf1PjD8upMT1PlSdoWJkt6nq4N9GwSj211gBtmkgJj03
-         /i3gf1kFs2xnrMmwpiqISUBlpGm0WPTkVFk+wuWkkFXNFcKhWLC2GqWemEjz2ibJ+QJb
-         EtqNPfyjEIjkMeH+4UgcxREzCheloSg3q1yv0cA/X+59r1KI6+eYfZGyeiOu/Mv06LcP
-         J2tQ==
+        with ESMTP id S236393AbiHQNBv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Aug 2022 09:01:51 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392E94DB6C;
+        Wed, 17 Aug 2022 06:01:50 -0700 (PDT)
+Received: by mail-qk1-f182.google.com with SMTP id a15so9833791qko.4;
+        Wed, 17 Aug 2022 06:01:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=TxQp+Eh5oPMEasDUM+PL0o4riMq+uOYkqYldbh4mgKI=;
-        b=RTujuv0hDVEQ2egnIL5Msex9AMbB9jgGD/jq4yQpek77lVDZpvFyvHlAcHAvvpQJHv
-         FOwLiaG17ZjgGT6jeLeW5OFbT5un6m0rgRIeDzPS6zjFMMUcNXczWbRHouQ0OMSQKUlX
-         faVm38QMqFEY58NxCUWwVKs0AI4rZwraDTktRk6XHN/+PCxK7aTBugWQJIzrOwCXoB62
-         D1Yxz1EhnEMTSyG2jE2ss1/H7UQlPicwotHvo2wbpaRt+4CAtwXcC0BzOCpKjz+1FGNb
-         WvC1IKiN7ttn/9zI/6izER6qUlBLtNMCFsQTL7drEuXvU8z0lxySsuKkgaAfwALX5rRg
-         y1ew==
-X-Gm-Message-State: ACgBeo02jpwmVrgv1F18cxSO1SVnpW1o5N9QVykwUF7T09g7cynJ4Iz4
-        yXnqja09fAcpldWGGCT/g+MKuw==
-X-Google-Smtp-Source: AA6agR5Irf0kMTaUg90xFoGl0nDSH50alBjk7CA16HQVHjyuB/hw1T/uQ0N5wlIFqMQhiOmN99YsOw==
-X-Received: by 2002:a05:6000:1a88:b0:222:ca4d:f0d2 with SMTP id f8-20020a0560001a8800b00222ca4df0d2mr14873735wry.610.1660736319110;
-        Wed, 17 Aug 2022 04:38:39 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
-        by smtp.gmail.com with ESMTPSA id a21-20020a05600c349500b003a60edc3a44sm2222695wmq.5.2022.08.17.04.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Aug 2022 04:38:38 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org
-Cc:     konrad.dybcio@somainline.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] pinctrl: qcom: Add sm8450 lpass lpi pinctrl driver
-Date:   Wed, 17 Aug 2022 12:38:33 +0100
-Message-Id: <20220817113833.9625-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20220817113833.9625-1-srinivas.kandagatla@linaro.org>
-References: <20220817113833.9625-1-srinivas.kandagatla@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=cH35DFRkJqtmVqNgkmmMsr/quu6SGsADZJqIlU2X9QA=;
+        b=RPZAEM0IgVPlanZSqYEaVnkRdO+cMBBYRmsCPW0u73UIywQRpu1zBFGVVKhHwxJJfE
+         3XTkHXN++hswmnvAgvtLxC62v6xNGrpmpyFkvdXUxnQ2LJ56Cqk8rDirjb4I+UBAoTgN
+         4yKZ7vIExuebAWWXZLLMC2Q6nvo3LvOm0+E1ctRQBhDaqOKjRNBRcD5lX90/pAQlzE4P
+         QGBF5wLLBi+MeLvpYGtnFNP2m3myW7Mp/QMg3gER7jT5lQpogoCoqcrWZBsHrjM7+Bug
+         u45muz8K9GObovMp5pw+eHcXm3ZGVJpaGNGNWUr6fFm+CvC08xzo6tAX2bZ95sGfroV+
+         Iitw==
+X-Gm-Message-State: ACgBeo3i0vOUCTPeMm5eLVGn9VHoZG+gDlcLz5rH8oXRPJ3+eSuvr5dc
+        oSFI6dlBc1wj6dYkI6JeRq/0MeRjiAPxjQ==
+X-Google-Smtp-Source: AA6agR4LAW7UhElE5/82gss2h5khbilqn+4NRSCW1xS5wiYXD4j9iSvrLUg2u7mkiKr+8sI2BNhn/w==
+X-Received: by 2002:a05:620a:705:b0:6bb:880a:9c85 with SMTP id 5-20020a05620a070500b006bb880a9c85mr2585035qkc.493.1660741308945;
+        Wed, 17 Aug 2022 06:01:48 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id k20-20020ac84754000000b003435f947d9fsm12518097qtp.74.2022.08.17.06.01.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Aug 2022 06:01:48 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-3246910dac3so228542667b3.12;
+        Wed, 17 Aug 2022 06:01:47 -0700 (PDT)
+X-Received: by 2002:a25:6890:0:b0:684:2c5c:1bd8 with SMTP id
+ d138-20020a256890000000b006842c5c1bd8mr15530630ybc.604.1660741307273; Wed, 17
+ Aug 2022 06:01:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20220810060040.321697-1-saravanak@google.com>
+In-Reply-To: <20220810060040.321697-1-saravanak@google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 17 Aug 2022 15:01:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUHg+HokA63Y74EJ8OUkb6Lbvf7Fa2MX5Vdtoz6ri-otg@mail.gmail.com>
+Message-ID: <CAMuHMdUHg+HokA63Y74EJ8OUkb6Lbvf7Fa2MX5Vdtoz6ri-otg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] fw_devlink improvements
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pinctrl driver to support pin configuration for LPASS
-(Low Power Audio SubSystem) LPI (Low Power Island) pinctrl
-on SM8450.
+Hi Saravana,
 
-This IP is an additional pin control block for Audio Pins on top the
-existing SoC Top level pin-controller.
+On Wed, Aug 10, 2022 at 8:00 AM Saravana Kannan <saravanak@google.com> wrote:
+> This patch series improves fw_devlink in the following ways:
+>
+> 1. It no longer cares about a fwnode having a "compatible" property. It
+>    figures this our more dynamically. The only expectation is that
+>    fwnode that are converted to devices actually get probed by a driver
+>    for the dependencies to be enforced correctly.
+>
+> 2. Finer grained dependency tracking. fw_devlink will now create device
+>    links from the consumer to the actual resource's device (if it has one,
+>    Eg: gpio_device) instead of the parent supplier device. This improves
+>    things like async suspend/resume ordering, potentially remove the need
+>    for frameworks to create device links, more parallelized async probing,
+>    and better sync_state() tracking.
+>
+> 3. Handle hardware/software quirks where a child firmware node gets
+>    populated as a device before its parent firmware node AND actually
+>    supplies a non-optional resource to the parent firmware node's
+>    device.
+>
+> 4. Way more robust at cycle handling (see patch for the insane cases).
+>
+> 5. Stops depending on OF_POPULATED to figure out some corner cases.
+>
+> 6. Simplifies the work that needs to be done by the firmware specific
+>    code.
+>
+> This took way too long to get done due to typo bugs I had in my rewrite or
+> corner cases I had to find and handle. But it's fairly well tested at this
+> point and I expect this to work properly.
+>
+> Abel & Doug,
+>
+> This should fix your cyclic dependency issues with your display. Can you
+> give it a shot please?
 
-Hardware setup looks like:
+Thanks for to your series!
 
-    TLMM GPIO[165 - 187] --> LPASS LPI GPIO [0 - 22]
+> Geert,
+>
+> Can you test the renesas stuff I changed please? They should continue
+> working like before. Any other sanity test on other hardware would be
+> great too.
 
-This pin controller has some similarities compared to Top level
-msm SoC Pin controller like 'each pin belongs to a single group'
-and so on. However this one is intended to control only audio
-pins in particular, which can not be configured/touched by the
-Top level SoC pin controller except setting them as gpios.
-Apart from this, slew rate is also available in this block for
-certain pins which are connected to SLIMbus or SoundWire Bus.
+At first, this series looked like a total disaster, introducing
+several regressions[1].
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/pinctrl/qcom/Kconfig                  |   9 +
- drivers/pinctrl/qcom/Makefile                 |   1 +
- .../pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c   | 240 ++++++++++++++++++
- 3 files changed, 250 insertions(+)
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+However, after applying the additional fix from
+https://lore.kernel.org/lkml/CAGETcx-JUV1nj8wBJrTPfyvM7=Mre5j_vkVmZojeiumUGG6QZQ@mail.gmail.com
+all regressions[1] went away, and /sys/kernel/debug/devices_deferred
+is empty again.
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index f415c13caae0..35e59f940ddb 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -390,6 +390,15 @@ config PINCTRL_SM8450
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
- 	  Technologies Inc SM8450 platform.
- 
-+config PINCTRL_SM8450_LPASS_LPI
-+	tristate "Qualcomm Technologies Inc SM8450 LPASS LPI pin controller driver"
-+	depends on GPIOLIB
-+	depends on PINCTRL_LPASS_LPI
-+	help
-+	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
-+	  (Low Power Island) found on the Qualcomm Technologies Inc SM8450 platform.
-+
- config PINCTRL_LPASS_LPI
- 	tristate "Qualcomm Technologies Inc LPASS LPI pin controller driver"
- 	select PINMUX
-diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
-index fbd64853a24d..06e4cddbca68 100644
---- a/drivers/pinctrl/qcom/Makefile
-+++ b/drivers/pinctrl/qcom/Makefile
-@@ -45,4 +45,5 @@ obj-$(CONFIG_PINCTRL_SM8250) += pinctrl-sm8250.o
- obj-$(CONFIG_PINCTRL_SM8250_LPASS_LPI) += pinctrl-sm8250-lpass-lpi.o
- obj-$(CONFIG_PINCTRL_SM8350) += pinctrl-sm8350.o
- obj-$(CONFIG_PINCTRL_SM8450) += pinctrl-sm8450.o
-+obj-$(CONFIG_PINCTRL_SM8450_LPASS_LPI) += pinctrl-sm8450-lpass-lpi.o
- obj-$(CONFIG_PINCTRL_LPASS_LPI) += pinctrl-lpass-lpi.o
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
-new file mode 100644
-index 000000000000..c3c8c34148f1
---- /dev/null
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
-@@ -0,0 +1,240 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2022 Linaro Ltd.
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include "pinctrl-lpass-lpi.h"
-+
-+enum lpass_lpi_functions {
-+	LPI_MUX_dmic1_clk,
-+	LPI_MUX_dmic1_data,
-+	LPI_MUX_dmic2_clk,
-+	LPI_MUX_dmic2_data,
-+	LPI_MUX_dmic3_clk,
-+	LPI_MUX_dmic3_data,
-+	LPI_MUX_dmic4_clk,
-+	LPI_MUX_dmic4_data,
-+	LPI_MUX_i2s1_clk,
-+	LPI_MUX_i2s1_data,
-+	LPI_MUX_i2s1_ws,
-+	LPI_MUX_i2s2_clk,
-+	LPI_MUX_i2s2_data,
-+	LPI_MUX_i2s2_ws,
-+	LPI_MUX_i2s3_clk,
-+	LPI_MUX_i2s3_data,
-+	LPI_MUX_i2s3_ws,
-+	LPI_MUX_i2s4_clk,
-+	LPI_MUX_i2s4_data,
-+	LPI_MUX_i2s4_ws,
-+	LPI_MUX_qua_mi2s_data,
-+	LPI_MUX_qua_mi2s_sclk,
-+	LPI_MUX_qua_mi2s_ws,
-+	LPI_MUX_swr_rx_clk,
-+	LPI_MUX_swr_rx_data,
-+	LPI_MUX_swr_tx_clk,
-+	LPI_MUX_swr_tx_data,
-+	LPI_MUX_wsa_swr_clk,
-+	LPI_MUX_wsa_swr_data,
-+	LPI_MUX_wsa2_swr_clk,
-+	LPI_MUX_wsa2_swr_data,
-+	LPI_MUX_slimbus_clk,
-+	LPI_MUX_slimbus_data,
-+	LPI_MUX_ext_mclk1_a,
-+	LPI_MUX_ext_mclk1_b,
-+	LPI_MUX_ext_mclk1_c,
-+	LPI_MUX_ext_mclk1_d,
-+	LPI_MUX_ext_mclk1_e,
-+	LPI_MUX_gpio,
-+	LPI_MUX__,
-+};
-+
-+static int gpio0_pins[] = { 0 };
-+static int gpio1_pins[] = { 1 };
-+static int gpio2_pins[] = { 2 };
-+static int gpio3_pins[] = { 3 };
-+static int gpio4_pins[] = { 4 };
-+static int gpio5_pins[] = { 5 };
-+static int gpio6_pins[] = { 6 };
-+static int gpio7_pins[] = { 7 };
-+static int gpio8_pins[] = { 8 };
-+static int gpio9_pins[] = { 9 };
-+static int gpio10_pins[] = { 10 };
-+static int gpio11_pins[] = { 11 };
-+static int gpio12_pins[] = { 12 };
-+static int gpio13_pins[] = { 13 };
-+static int gpio14_pins[] = { 14 };
-+static int gpio15_pins[] = { 15 };
-+static int gpio16_pins[] = { 16 };
-+static int gpio17_pins[] = { 17 };
-+static int gpio18_pins[] = { 18 };
-+static int gpio19_pins[] = { 19 };
-+static int gpio20_pins[] = { 20 };
-+static int gpio21_pins[] = { 21 };
-+static int gpio22_pins[] = { 22 };
-+
-+static const struct pinctrl_pin_desc sm8450_lpi_pins[] = {
-+	PINCTRL_PIN(0, "gpio0"),
-+	PINCTRL_PIN(1, "gpio1"),
-+	PINCTRL_PIN(2, "gpio2"),
-+	PINCTRL_PIN(3, "gpio3"),
-+	PINCTRL_PIN(4, "gpio4"),
-+	PINCTRL_PIN(5, "gpio5"),
-+	PINCTRL_PIN(6, "gpio6"),
-+	PINCTRL_PIN(7, "gpio7"),
-+	PINCTRL_PIN(8, "gpio8"),
-+	PINCTRL_PIN(9, "gpio9"),
-+	PINCTRL_PIN(10, "gpio10"),
-+	PINCTRL_PIN(11, "gpio11"),
-+	PINCTRL_PIN(12, "gpio12"),
-+	PINCTRL_PIN(13, "gpio13"),
-+	PINCTRL_PIN(14, "gpio14"),
-+	PINCTRL_PIN(15, "gpio15"),
-+	PINCTRL_PIN(16, "gpio16"),
-+	PINCTRL_PIN(17, "gpio17"),
-+	PINCTRL_PIN(18, "gpio18"),
-+	PINCTRL_PIN(19, "gpio19"),
-+	PINCTRL_PIN(20, "gpio20"),
-+	PINCTRL_PIN(21, "gpio21"),
-+	PINCTRL_PIN(22, "gpio22"),
-+};
-+
-+static const char * const swr_tx_clk_groups[] = { "gpio0" };
-+static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio14" };
-+static const char * const swr_rx_clk_groups[] = { "gpio3" };
-+static const char * const swr_rx_data_groups[] = { "gpio4", "gpio5", "gpio15" };
-+static const char * const dmic1_clk_groups[] = { "gpio6" };
-+static const char * const dmic1_data_groups[] = { "gpio7" };
-+static const char * const dmic2_clk_groups[] = { "gpio8" };
-+static const char * const dmic2_data_groups[] = { "gpio9" };
-+static const char * const dmic4_clk_groups[] = { "gpio17" };
-+static const char * const dmic4_data_groups[] = { "gpio18" };
-+static const char * const i2s2_clk_groups[] = { "gpio10" };
-+static const char * const i2s2_ws_groups[] = { "gpio11" };
-+static const char * const dmic3_clk_groups[] = { "gpio12" };
-+static const char * const dmic3_data_groups[] = { "gpio13" };
-+static const char * const qua_mi2s_sclk_groups[] = { "gpio0" };
-+static const char * const qua_mi2s_ws_groups[] = { "gpio1" };
-+static const char * const qua_mi2s_data_groups[] = { "gpio2", "gpio3", "gpio4", "gpio5" };
-+static const char * const i2s1_clk_groups[] = { "gpio6" };
-+static const char * const i2s1_ws_groups[] = { "gpio7" };
-+static const char * const i2s1_data_groups[] = { "gpio8", "gpio9" };
-+static const char * const wsa_swr_clk_groups[] = { "gpio10" };
-+static const char * const wsa_swr_data_groups[] = { "gpio11" };
-+static const char * const wsa2_swr_clk_groups[] = { "gpio15" };
-+static const char * const wsa2_swr_data_groups[] = { "gpio16" };
-+static const char * const i2s2_data_groups[] = { "gpio15", "gpio16" };
-+static const char * const i2s4_ws_groups[] = { "gpio13" };
-+static const char * const i2s4_clk_groups[] = { "gpio12" };
-+static const char * const i2s4_data_groups[] = { "gpio17", "gpio18" };
-+static const char * const slimbus_clk_groups[] = { "gpio19"};
-+static const char * const i2s3_clk_groups[] = { "gpio19"};
-+static const char * const i2s3_ws_groups[] = { "gpio20"};
-+static const char * const i2s3_data_groups[] = { "gpio21", "gpio22"};
-+static const char * const slimbus_data_groups[] = { "gpio20"};
-+static const char * const ext_mclk1_c_groups[] = { "gpio5" };
-+static const char * const ext_mclk1_b_groups[] = { "gpio9" };
-+static const char * const ext_mclk1_a_groups[] = { "gpio13" };
-+static const char * const ext_mclk1_d_groups[] = { "gpio14" };
-+static const char * const ext_mclk1_e_groups[] = { "gpio22" };
-+
-+static const struct lpi_pingroup sm8450_groups[] = {
-+	LPI_PINGROUP(0, 0, swr_tx_clk, qua_mi2s_sclk, _, _),
-+	LPI_PINGROUP(1, 2, swr_tx_data, qua_mi2s_ws, _, _),
-+	LPI_PINGROUP(2, 4, swr_tx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(3, 8, swr_rx_clk, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(4, 10, swr_rx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(5, 12, swr_rx_data, ext_mclk1_c, qua_mi2s_data, _),
-+	LPI_PINGROUP(6, LPI_NO_SLEW, dmic1_clk, i2s1_clk, _,  _),
-+	LPI_PINGROUP(7, LPI_NO_SLEW, dmic1_data, i2s1_ws, _, _),
-+	LPI_PINGROUP(8, LPI_NO_SLEW, dmic2_clk, i2s1_data, _, _),
-+	LPI_PINGROUP(9, LPI_NO_SLEW, dmic2_data, i2s1_data, ext_mclk1_b, _),
-+	LPI_PINGROUP(10, 16, i2s2_clk, wsa_swr_clk, _, _),
-+	LPI_PINGROUP(11, 18, i2s2_ws, wsa_swr_data, _, _),
-+	LPI_PINGROUP(12, LPI_NO_SLEW, dmic3_clk, i2s4_clk, _, _),
-+	LPI_PINGROUP(13, LPI_NO_SLEW, dmic3_data, i2s4_ws, ext_mclk1_a, _),
-+	LPI_PINGROUP(14, 6, swr_tx_data, ext_mclk1_d, _, _),
-+	LPI_PINGROUP(15, 20, i2s2_data, wsa2_swr_clk, _, _),
-+	LPI_PINGROUP(16, 22, i2s2_data, wsa2_swr_data, _, _),
-+	LPI_PINGROUP(17, LPI_NO_SLEW, dmic4_clk, i2s4_data, _, _),
-+	LPI_PINGROUP(18, LPI_NO_SLEW, dmic4_data, i2s4_data, _, _),
-+	LPI_PINGROUP(19, LPI_NO_SLEW, i2s3_clk, slimbus_clk, _, _),
-+	LPI_PINGROUP(20, LPI_NO_SLEW, i2s3_ws, slimbus_data, _, _),
-+	LPI_PINGROUP(21, LPI_NO_SLEW, i2s3_data, _, _, _),
-+	LPI_PINGROUP(22, LPI_NO_SLEW, i2s3_data, ext_mclk1_e, _, _),
-+};
-+
-+static const struct lpi_function sm8450_functions[] = {
-+	LPI_FUNCTION(dmic1_clk),
-+	LPI_FUNCTION(dmic1_data),
-+	LPI_FUNCTION(dmic2_clk),
-+	LPI_FUNCTION(dmic2_data),
-+	LPI_FUNCTION(dmic3_clk),
-+	LPI_FUNCTION(dmic3_data),
-+	LPI_FUNCTION(dmic4_clk),
-+	LPI_FUNCTION(dmic4_data),
-+	LPI_FUNCTION(i2s1_clk),
-+	LPI_FUNCTION(i2s1_data),
-+	LPI_FUNCTION(i2s1_ws),
-+	LPI_FUNCTION(i2s2_clk),
-+	LPI_FUNCTION(i2s2_data),
-+	LPI_FUNCTION(i2s2_ws),
-+	LPI_FUNCTION(i2s3_clk),
-+	LPI_FUNCTION(i2s3_data),
-+	LPI_FUNCTION(i2s3_ws),
-+	LPI_FUNCTION(i2s4_clk),
-+	LPI_FUNCTION(i2s4_data),
-+	LPI_FUNCTION(i2s4_ws),
-+	LPI_FUNCTION(qua_mi2s_data),
-+	LPI_FUNCTION(qua_mi2s_sclk),
-+	LPI_FUNCTION(qua_mi2s_ws),
-+	LPI_FUNCTION(swr_rx_clk),
-+	LPI_FUNCTION(swr_rx_data),
-+	LPI_FUNCTION(swr_tx_clk),
-+	LPI_FUNCTION(swr_tx_data),
-+	LPI_FUNCTION(slimbus_clk),
-+	LPI_FUNCTION(slimbus_data),
-+	LPI_FUNCTION(wsa_swr_clk),
-+	LPI_FUNCTION(wsa_swr_data),
-+	LPI_FUNCTION(wsa2_swr_clk),
-+	LPI_FUNCTION(wsa2_swr_data),
-+	LPI_FUNCTION(ext_mclk1_a),
-+	LPI_FUNCTION(ext_mclk1_b),
-+	LPI_FUNCTION(ext_mclk1_c),
-+	LPI_FUNCTION(ext_mclk1_d),
-+	LPI_FUNCTION(ext_mclk1_e),
-+};
-+
-+static const struct lpi_pinctrl_variant_data sm8450_lpi_data = {
-+	.pins = sm8450_lpi_pins,
-+	.npins = ARRAY_SIZE(sm8450_lpi_pins),
-+	.groups = sm8450_groups,
-+	.ngroups = ARRAY_SIZE(sm8450_groups),
-+	.functions = sm8450_functions,
-+	.nfunctions = ARRAY_SIZE(sm8450_functions),
-+};
-+
-+static const struct of_device_id lpi_pinctrl_of_match[] = {
-+	{
-+	       .compatible = "qcom,sm8450-lpass-lpi-pinctrl",
-+	       .data = &sm8450_lpi_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
-+
-+static struct platform_driver lpi_pinctrl_driver = {
-+	.driver = {
-+		   .name = "qcom-sm8450-lpass-lpi-pinctrl",
-+		   .of_match_table = lpi_pinctrl_of_match,
-+	},
-+	.probe = lpi_pinctrl_probe,
-+	.remove = lpi_pinctrl_remove,
-+};
-+
-+module_platform_driver(lpi_pinctrl_driver);
-+MODULE_DESCRIPTION("QTI SM8450 LPI GPIO pin control driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.0
+Note that the Ethernet PHY interrupt on Koelsch is not fixed, so the issue from
+https://lore.kernel.org/all/CAMuHMdWo_wRwV-i_iyTxVnEsf3Th9GBAG+wxUQMQGnw1t2ijTg@mail.gmail.com/
+is still present.
 
+Summary: while this series (+ the additional fix) doesn't seem to
+introduce any regressions on Renesas ARM platforms, it doesn't seem
+to fix anything for me neither.
+
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+[1]
+
+R-Mobile APE6 (ape6evm):
+    No "deferred probe pending" messages?
+
+    # cat /sys/kernel/debug/devices_deferred
+    ee120000.mmc platform: wait for supplier sd1
+    ee100000.mmc platform: wait for supplier sd0
+    ee200000.mmc platform: wait for supplier mmc0
+    keyboard platform: wait for supplier keyboard
+
+R-Mobile A1 (armadillo-800-eva):
+    No soundcards found.
+    platform backlight: deferred probe pending
+    i2c 0-0030: deferred probe pending (RTC)
+    platform sound: deferred probe pending
+    platform fe1f0000.sound: deferred probe pending
+    platform keyboard: deferred probe pending (gpio-keys)
+    platform e6850000.mmc: deferred probe pending (SDHI)
+    platform e6bd0000.mmc: deferred probe pending (SDHI)
+
+    # cat /sys/kernel/debug/devices_deferred
+    backlight platform: wait for supplier backlight
+    0-0030 i2c: wait for supplier rtc
+    sound asoc-simple-card: parse error
+    fe1f0000.sound platform: wait for supplier sounda
+    keyboard platform: wait for supplier keyboard
+    e6850000.mmc platform: wait for supplier sd0
+    e6bd0000.mmc platform: wait for supplier mmc0
+
+SH-Mobile AG5 (kzm9g):
+    No soundcards found.
+    platform sound: deferred probe pending
+    platform ec230000.sound: deferred probe pending
+
+    # cat /sys/kernel/debug/devices_deferred
+    sound asoc-simple-card: parse error
+    ec230000.sound platform: wait for supplier sounda
+
+    Note: This is the only board where gpio-keys still works!
+
+R-Car M2-W (koelsch):
+
+    i2c-demux-pinctrl i2c-12: failed to setup demux-adapter 0 (-19)
+    i2c-demux-pinctrl i2c-13: failed to setup demux-adapter 0 (-19)
+    i2c-demux-pinctrl i2c-14: failed to setup demux-adapter 0 (-19)
+
+    i2c-demux-pinctrl i2c-13: Failed to create device link with hdmi-in
+    i2c-demux-pinctrl i2c-13: Failed to create device link with hdmi-out
+
+    No soundcards found.
+
+    Some I2C-busses are missing, but not listed in
+/sys/kernel/debug/devices_deferred?
+    /devices/platform/soc/e6518000.i2c
+    /devices/platform/soc/e6530000.i2c
+    /devices/platform/soc/e6520000.i2c
+
+    platform keyboard: deferred probe pending
+    platform sound: deferred probe pending
+    platform feb00000.display: deferred probe pending
+
+    # cat /sys/kernel/debug/devices_deferred
+    keyboard platform: wait for supplier keyboard
+    sound asoc-simple-card: parse error
+    feb00000.display rcar-du: failed to initialize DRM/KMS
+
+R-Car Gen3 (Salvator-X(S), Ebisu)
+    platform keys: deferred probe pending (gpio-keys)
+
+    # cat /sys/kernel/debug/devices_deferred
+    keys platform: wait for supplier keys
+
+RZ/A (rskrza1, rza2mevb)
+    No "deferred probe pending" messages?
+    # cat /sys/kernel/debug/devices_deferred
+    keyboard platform: wait for supplier keyboard
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
