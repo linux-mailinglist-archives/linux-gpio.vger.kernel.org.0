@@ -2,108 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C810E59647F
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Aug 2022 23:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C68375966D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Aug 2022 03:38:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237568AbiHPVP7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Aug 2022 17:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55002 "EHLO
+        id S238361AbiHQBhk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Aug 2022 21:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237569AbiHPVPc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 17:15:32 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7592A79ED2
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Aug 2022 14:15:31 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id l10so11768059lje.7
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Aug 2022 14:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
-        bh=hnUM0lzwulX2q1QwimZooJGSc8HzCb0oOd/8o0YSo68=;
-        b=IUeXHYYzD9fxgVydFxSvCAsPki9LKTYwV3j5xnWVDH/ou7lqf7ebeF5CFefctOBVYA
-         bYBg34db1nLlG7TEoM2j89VjAY5t1KedRe/puyvrg3C9fxhwo4vS/VPB2GPncQUXO8gt
-         3ctZJJBmQBUQ3ZQg+KSUpo08ceoUSgwEFm9lFH63Yy6W6maaYPT7gmve2k5AZDAIG1DP
-         boXmhAgene/zqgStOQXo01Y8M0fsmT/SVMqB0tiM2Dng2bbF+aBArA07VXC4Y0BN/J9B
-         UyzAM9NPgcq8RO1Akobuu3j7H0TeJveld828f6SsGXyhHMxhblYsHx9H9wawUDSv4Hho
-         gyzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=hnUM0lzwulX2q1QwimZooJGSc8HzCb0oOd/8o0YSo68=;
-        b=6v6lIvC4vS2ZZPhnlxl18alGn3tWxsiihxX6mhu/qVEsvRndf+d8jplgmVaBy5ZCyS
-         2T9aujBVj+ub7x8WVYCli+KNV1sHceXdgTEfwXjF3CzYvEcPF8p9MRbTvcOeT5A3h83t
-         T/BtSB7ibibyDkKYFiHcCcI+FxI4nu2s2M9P+HNg26Agtixbkyyt9IdL2KPSCdiUTNmc
-         6WT8B01JeMzn4v17GnP1CUoDNwGNLowkP9FR2flTdDMwfeBeGIzIjLMCOW5yEm3DJZlx
-         vmhG59tnhpd6rWfaVUbiz+usfKQPEF409vY9EKtG+LI18sXpijYbsoWNiwuL5o2mzUlu
-         s3kA==
-X-Gm-Message-State: ACgBeo0WSrhR5OnDZOYIDKGBcs31fGFyQmDho6yT/NhrBrd+99HW3jlY
-        6BXpq9Ltw3ihH0amjsngHqXzRpfGn5GNYxkZUHY=
-X-Google-Smtp-Source: AA6agR777wjONcOHVQXu/YK6jFO3Uv9EV2a+mJcblQPRfhwEkFtM788BnsuLaNIYCyELyY+tWRU9a2mqXDker9gL7sY=
-X-Received: by 2002:a05:651c:14e:b0:25f:dbf7:8636 with SMTP id
- c14-20020a05651c014e00b0025fdbf78636mr7076171ljd.51.1660684529579; Tue, 16
- Aug 2022 14:15:29 -0700 (PDT)
+        with ESMTP id S238243AbiHQBhj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Aug 2022 21:37:39 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B111295696;
+        Tue, 16 Aug 2022 18:37:37 -0700 (PDT)
+Received: from [192.168.100.8] (unknown [112.20.110.237])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OFaRvxiggADAA--.16150S3;
+        Wed, 17 Aug 2022 09:37:31 +0800 (CST)
+Message-ID: <78472e8f-b7e8-3e72-d50b-b754cece819a@loongson.cn>
+Date:   Wed, 17 Aug 2022 09:37:30 +0800
 MIME-Version: 1.0
-Received: by 2002:a05:6504:410e:b0:1da:e5b8:73d with HTTP; Tue, 16 Aug 2022
- 14:15:28 -0700 (PDT)
-Reply-To: te463602@gmail.com
-From:   "Mr. Yakubu Abubakar," <yakubuabubakar1884@gmail.com>
-Date:   Tue, 16 Aug 2022 14:15:28 -0700
-Message-ID: <CANt38esOhrFSqFxVaaMBcAca-V05Hx_7zG7MCE6quZ21nYAp6Q@mail.gmail.com>
-Subject: Good Day,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:234 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [yakubuabubakar1884[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [yakubuabubakar1884[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [te463602[at]gmail.com]
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v2] docs/zh_CN: Update the translation of gpio to 6.0-rc1
+To:     Wu XiangCheng <wu.xiangcheng@linux.dev>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, tekkamanninja@gmail.com,
+        corbet@lwn.net, alexs@kernel.org, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20220816114025.4180328-1-siyanteng@loongson.cn>
+ <YvuXyKeF8MUf6vKh@bobwxc.mipc>
+From:   YanTeng Si <siyanteng@loongson.cn>
+In-Reply-To: <YvuXyKeF8MUf6vKh@bobwxc.mipc>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Bx5OFaRvxiggADAA--.16150S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZr48uFyxXFWDArWUJry8Grg_yoWDtrgEva
+        45KFWjyFn8G3W8Xw1Dua4kGa1kJr1rWr4vqr4xA3y7KFnIqF18trnIk390qa45Xr1UCrW3
+        uFZ7Way7WF4aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        c2xSY4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07
+        j1g4fUUUUU=
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-Hello,
-We the Board Directors believe you are in good health, doing great and
-with the hope that this mail will meet you in good condition, We are
-privileged and delighted to reach you via email" And we are urgently
-waiting to hear from you. and again your number is not connecting.
 
-My regards,
-Dr. Yakubu Abubakar..
+在 2022/8/16 21:12, Wu XiangCheng 写道:
+> 话说 Yanteng Si 于 2022-08-16 (二) 19:40:25 +0800 曰过：
+>
+>> @@ -444,15 +476,16 @@ GPIO 实现者的框架 (可选)
+>>   
+>>   
+>>   控制器驱动: gpio_chip
+>> --------------------
+>> +---------------------
+>> +
+>>   在框架中每个 GPIO 控制器都包装为一个 "struct gpio_chip"，他包含了
+>>   该类型的每个控制器的常用信息:
+>>   
+>> - - 设置 GPIO 方向的方法
+>> - - 用于访问 GPIO 值的方法
+>> - - 告知调用其方法是否可能休眠的标志
+>> - - 可选的 debugfs 信息导出方法 (显示类似上拉配置一样的额外状态)
+>> - - 诊断标签
+>> +	设置 GPIO 方向的方法
+>> +	用于访问 GPIO 值的方法
+>> +	告知调用其方法是否可能休眠的标志
+>> +	可选的 debugfs 信息导出方法 (显示类似上拉配置一样的额外状态)
+>> +	诊断标签
+> List style problem, please use '-' or '*', or all items will be put into
+> one <p></p>.
 
-Sincerely,
-Prof. Chin Guang
+I see, I will fix it in v3.
+
+
+Thanks,
+
+Yanteng
+
