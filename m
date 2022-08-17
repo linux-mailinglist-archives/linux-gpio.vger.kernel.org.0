@@ -2,240 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19E73596F0B
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Aug 2022 15:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45608597122
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Aug 2022 16:31:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236526AbiHQNBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Aug 2022 09:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36778 "EHLO
+        id S239317AbiHQO0G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Aug 2022 10:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236393AbiHQNBv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Aug 2022 09:01:51 -0400
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392E94DB6C;
-        Wed, 17 Aug 2022 06:01:50 -0700 (PDT)
-Received: by mail-qk1-f182.google.com with SMTP id a15so9833791qko.4;
-        Wed, 17 Aug 2022 06:01:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=cH35DFRkJqtmVqNgkmmMsr/quu6SGsADZJqIlU2X9QA=;
-        b=RPZAEM0IgVPlanZSqYEaVnkRdO+cMBBYRmsCPW0u73UIywQRpu1zBFGVVKhHwxJJfE
-         3XTkHXN++hswmnvAgvtLxC62v6xNGrpmpyFkvdXUxnQ2LJ56Cqk8rDirjb4I+UBAoTgN
-         4yKZ7vIExuebAWWXZLLMC2Q6nvo3LvOm0+E1ctRQBhDaqOKjRNBRcD5lX90/pAQlzE4P
-         QGBF5wLLBi+MeLvpYGtnFNP2m3myW7Mp/QMg3gER7jT5lQpogoCoqcrWZBsHrjM7+Bug
-         u45muz8K9GObovMp5pw+eHcXm3ZGVJpaGNGNWUr6fFm+CvC08xzo6tAX2bZ95sGfroV+
-         Iitw==
-X-Gm-Message-State: ACgBeo3i0vOUCTPeMm5eLVGn9VHoZG+gDlcLz5rH8oXRPJ3+eSuvr5dc
-        oSFI6dlBc1wj6dYkI6JeRq/0MeRjiAPxjQ==
-X-Google-Smtp-Source: AA6agR4LAW7UhElE5/82gss2h5khbilqn+4NRSCW1xS5wiYXD4j9iSvrLUg2u7mkiKr+8sI2BNhn/w==
-X-Received: by 2002:a05:620a:705:b0:6bb:880a:9c85 with SMTP id 5-20020a05620a070500b006bb880a9c85mr2585035qkc.493.1660741308945;
-        Wed, 17 Aug 2022 06:01:48 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id k20-20020ac84754000000b003435f947d9fsm12518097qtp.74.2022.08.17.06.01.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Aug 2022 06:01:48 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-3246910dac3so228542667b3.12;
-        Wed, 17 Aug 2022 06:01:47 -0700 (PDT)
-X-Received: by 2002:a25:6890:0:b0:684:2c5c:1bd8 with SMTP id
- d138-20020a256890000000b006842c5c1bd8mr15530630ybc.604.1660741307273; Wed, 17
- Aug 2022 06:01:47 -0700 (PDT)
+        with ESMTP id S236463AbiHQO0F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Aug 2022 10:26:05 -0400
+Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7125C63F35;
+        Wed, 17 Aug 2022 07:26:04 -0700 (PDT)
+Date:   Wed, 17 Aug 2022 22:25:32 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1660746362;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z8+5aIhcSmi0wPdPxRQlOAd4m4En2jwXZdUe8Xcm1YM=;
+        b=T9xn3JMtrV5zLp8RY5njHKqGWFEHljyH3vXQFYKo1Ld+tCc/S276Xbq65YFpX0DsQA/cEx
+        pEiCywATjSB23WsZ4qjAMAInU5h46AGkWOH2Yw5k6xkOkIitI0owW/qV61Yx+ojRN1NqdQ
+        7Tq5XOVbzlomN38uABCuh4erJbrxZ98=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Wu XiangCheng <wu.xiangcheng@linux.dev>
+To:     Yanteng Si <siyanteng@loongson.cn>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, tekkamanninja@gmail.com,
+        corbet@lwn.net, alexs@kernel.org, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3] docs/zh_CN: Update the translation of gpio to 6.0-rc1
+Message-ID: <Yvz6XLWEQ9RMvMLH@bobwxc.mipc>
+References: <20220817020830.799468-1-siyanteng@loongson.cn>
 MIME-Version: 1.0
-References: <20220810060040.321697-1-saravanak@google.com>
-In-Reply-To: <20220810060040.321697-1-saravanak@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 17 Aug 2022 15:01:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUHg+HokA63Y74EJ8OUkb6Lbvf7Fa2MX5Vdtoz6ri-otg@mail.gmail.com>
-Message-ID: <CAMuHMdUHg+HokA63Y74EJ8OUkb6Lbvf7Fa2MX5Vdtoz6ri-otg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/9] fw_devlink improvements
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220817020830.799468-1-siyanteng@loongson.cn>
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Saravana,
+话说 Yanteng Si 于 2022-08-17 (三) 10:08:30 +0800 曰过：
+> Update to commit 5513b411ea5b ("Documentation: rename pinctl to
+> pin-control")
+> Move .../zh_CN/gpio.txt to .../zh_CN/driver-api/gpio/legacy.rst
+> Translate .../driver-api/index.rst into Chinese.
+> Translate .../driver-api/gpio/index.rst into Chinese.
+> 
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> Reviewed-by: Alex Shi <alexs@kernel.org>
 
-On Wed, Aug 10, 2022 at 8:00 AM Saravana Kannan <saravanak@google.com> wrote:
-> This patch series improves fw_devlink in the following ways:
->
-> 1. It no longer cares about a fwnode having a "compatible" property. It
->    figures this our more dynamically. The only expectation is that
->    fwnode that are converted to devices actually get probed by a driver
->    for the dependencies to be enforced correctly.
->
-> 2. Finer grained dependency tracking. fw_devlink will now create device
->    links from the consumer to the actual resource's device (if it has one,
->    Eg: gpio_device) instead of the parent supplier device. This improves
->    things like async suspend/resume ordering, potentially remove the need
->    for frameworks to create device links, more parallelized async probing,
->    and better sync_state() tracking.
->
-> 3. Handle hardware/software quirks where a child firmware node gets
->    populated as a device before its parent firmware node AND actually
->    supplies a non-optional resource to the parent firmware node's
->    device.
->
-> 4. Way more robust at cycle handling (see patch for the insane cases).
->
-> 5. Stops depending on OF_POPULATED to figure out some corner cases.
->
-> 6. Simplifies the work that needs to be done by the firmware specific
->    code.
->
-> This took way too long to get done due to typo bugs I had in my rewrite or
-> corner cases I had to find and handle. But it's fairly well tested at this
-> point and I expect this to work properly.
->
-> Abel & Doug,
->
-> This should fix your cyclic dependency issues with your display. Can you
-> give it a shot please?
+Reviewed-by: Wu XiangCheng <bobwxc@email.cn>
 
-Thanks for to your series!
+> ---
+> v3:
+> * When restoring the list, I seem to forget
+>   to restore the symbol, so fix it.
+> 
+> v2:
+> * Modify some words under Xiangcheng's advice.
+> * pinctrl -> 引脚控制
+> * Restore some lists.
+>  .../zh_CN/driver-api/gpio/index.rst           |  69 +++++++
+>  .../{gpio.txt => driver-api/gpio/legacy.rst}  | 184 +++++++++++-------
+>  .../translations/zh_CN/driver-api/index.rst   | 132 +++++++++++++
+>  Documentation/translations/zh_CN/index.rst    |   2 +-
+>  4 files changed, 316 insertions(+), 71 deletions(-)
+>  create mode 100644 Documentation/translations/zh_CN/driver-api/gpio/index.rst
+>  rename Documentation/translations/zh_CN/{gpio.txt => driver-api/gpio/legacy.rst} (89%)
+>  create mode 100644 Documentation/translations/zh_CN/driver-api/index.rst
+> 
 
-> Geert,
->
-> Can you test the renesas stuff I changed please? They should continue
-> working like before. Any other sanity test on other hardware would be
-> great too.
+Thanks,
 
-At first, this series looked like a total disaster, introducing
-several regressions[1].
+-- 
+Wu XiangCheng	0x32684A40BCA7AEA7
 
-However, after applying the additional fix from
-https://lore.kernel.org/lkml/CAGETcx-JUV1nj8wBJrTPfyvM7=Mre5j_vkVmZojeiumUGG6QZQ@mail.gmail.com
-all regressions[1] went away, and /sys/kernel/debug/devices_deferred
-is empty again.
-
-Note that the Ethernet PHY interrupt on Koelsch is not fixed, so the issue from
-https://lore.kernel.org/all/CAMuHMdWo_wRwV-i_iyTxVnEsf3Th9GBAG+wxUQMQGnw1t2ijTg@mail.gmail.com/
-is still present.
-
-Summary: while this series (+ the additional fix) doesn't seem to
-introduce any regressions on Renesas ARM platforms, it doesn't seem
-to fix anything for me neither.
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-[1]
-
-R-Mobile APE6 (ape6evm):
-    No "deferred probe pending" messages?
-
-    # cat /sys/kernel/debug/devices_deferred
-    ee120000.mmc platform: wait for supplier sd1
-    ee100000.mmc platform: wait for supplier sd0
-    ee200000.mmc platform: wait for supplier mmc0
-    keyboard platform: wait for supplier keyboard
-
-R-Mobile A1 (armadillo-800-eva):
-    No soundcards found.
-    platform backlight: deferred probe pending
-    i2c 0-0030: deferred probe pending (RTC)
-    platform sound: deferred probe pending
-    platform fe1f0000.sound: deferred probe pending
-    platform keyboard: deferred probe pending (gpio-keys)
-    platform e6850000.mmc: deferred probe pending (SDHI)
-    platform e6bd0000.mmc: deferred probe pending (SDHI)
-
-    # cat /sys/kernel/debug/devices_deferred
-    backlight platform: wait for supplier backlight
-    0-0030 i2c: wait for supplier rtc
-    sound asoc-simple-card: parse error
-    fe1f0000.sound platform: wait for supplier sounda
-    keyboard platform: wait for supplier keyboard
-    e6850000.mmc platform: wait for supplier sd0
-    e6bd0000.mmc platform: wait for supplier mmc0
-
-SH-Mobile AG5 (kzm9g):
-    No soundcards found.
-    platform sound: deferred probe pending
-    platform ec230000.sound: deferred probe pending
-
-    # cat /sys/kernel/debug/devices_deferred
-    sound asoc-simple-card: parse error
-    ec230000.sound platform: wait for supplier sounda
-
-    Note: This is the only board where gpio-keys still works!
-
-R-Car M2-W (koelsch):
-
-    i2c-demux-pinctrl i2c-12: failed to setup demux-adapter 0 (-19)
-    i2c-demux-pinctrl i2c-13: failed to setup demux-adapter 0 (-19)
-    i2c-demux-pinctrl i2c-14: failed to setup demux-adapter 0 (-19)
-
-    i2c-demux-pinctrl i2c-13: Failed to create device link with hdmi-in
-    i2c-demux-pinctrl i2c-13: Failed to create device link with hdmi-out
-
-    No soundcards found.
-
-    Some I2C-busses are missing, but not listed in
-/sys/kernel/debug/devices_deferred?
-    /devices/platform/soc/e6518000.i2c
-    /devices/platform/soc/e6530000.i2c
-    /devices/platform/soc/e6520000.i2c
-
-    platform keyboard: deferred probe pending
-    platform sound: deferred probe pending
-    platform feb00000.display: deferred probe pending
-
-    # cat /sys/kernel/debug/devices_deferred
-    keyboard platform: wait for supplier keyboard
-    sound asoc-simple-card: parse error
-    feb00000.display rcar-du: failed to initialize DRM/KMS
-
-R-Car Gen3 (Salvator-X(S), Ebisu)
-    platform keys: deferred probe pending (gpio-keys)
-
-    # cat /sys/kernel/debug/devices_deferred
-    keys platform: wait for supplier keys
-
-RZ/A (rskrza1, rza2mevb)
-    No "deferred probe pending" messages?
-    # cat /sys/kernel/debug/devices_deferred
-    keyboard platform: wait for supplier keyboard
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
