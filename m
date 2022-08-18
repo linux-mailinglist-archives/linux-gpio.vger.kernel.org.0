@@ -2,143 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DA39598107
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 11:47:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB7AC598113
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 11:48:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242603AbiHRJo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 05:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49058 "EHLO
+        id S243712AbiHRJsR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 05:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243538AbiHRJo2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 05:44:28 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF49AFAD5
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 02:44:26 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id z20so1197267ljq.3
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 02:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=OK7eGNGvTiBFOz+xHoFXCFC0VXptGR5MkXefT6i3kvk=;
-        b=p9vVvGtnvUhf9WaIcA7rZjvLy3nfpPrZhRU0Fg+jKf4HXP4J02BcElAwttKpoa+/HO
-         aor5cJCLqyt3Jo/G4Zf+LnREiKhS7VyIai4ILAIpJ9OmpKrx49pbgU7KPRpvhpBGUhiF
-         r62TKv/ps5tEvKy7+3j3wvBuKKuxVVbpRCDcP4ERkowmuW0hGkMvyg30TlDMgdW+usKs
-         Dnz3wtWhWM2Ja9/OCg00vdS9jZtx1Y+nxhP0lwP9hVE2EctkPMQkYociMe7NbdZ1GTNH
-         9bLBcOqHMGPoF6WCFU0Zr6FamwunsXCh1bq9AYn7DgR5bc7fvlI9au26w3l6TDWVLSlP
-         sLqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=OK7eGNGvTiBFOz+xHoFXCFC0VXptGR5MkXefT6i3kvk=;
-        b=tQalapnxLSfguwcrReYEzIQkSaKYEI+4NwcTNeWWl1NBiwwgsIoERAiOvqIbQDBC/K
-         nl5CIlhAIP1sII4uLjfMXnPF6Vx+THvP+b/A9pu+OaNrjD1LiBhxQP1/KlSTyGkUltsU
-         1KALMdAOE9ELal2Mj3wCfuS5ECJRTIWAO6bnw73OUhwKpu7kRttOOFcMtNZ+ohxjIoA5
-         NBIafoEYDCWddsmlHInA05i6vvwBwI1ESB1F8IyfXQFr9igCYtQJPUHPIbgXrgPPxfIP
-         Lp1DPK8xVfM1jNS7MYIzvhe07zwDNiTVjhQJt4Vp5RAqCm/qHCQgIyjDbvedF5316CiY
-         Z6Dg==
-X-Gm-Message-State: ACgBeo03e8HBHqkzAwCk4hPjYE6pnmBPgRdaEqdNojGdkkY2AmM/mlth
-        utDzuQtZMY/WYJFCN+rEHogB1Q==
-X-Google-Smtp-Source: AA6agR474A8Rw48pmpjFkycbz4XeLad3Ix5GfZQZFbjPKa8Ar2ar+vFiP1dDNWRiriekSNCoDPc1Kw==
-X-Received: by 2002:a2e:a411:0:b0:25e:5ff0:469 with SMTP id p17-20020a2ea411000000b0025e5ff00469mr602703ljn.149.1660815864550;
-        Thu, 18 Aug 2022 02:44:24 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:ae:539c:53ab:2635:d4f2:d6d5? (d15l54z9nf469l8226z-4.rev.dnainternet.fi. [2001:14bb:ae:539c:53ab:2635:d4f2:d6d5])
-        by smtp.gmail.com with ESMTPSA id n18-20020a19d612000000b00492c2394ea5sm22413lfg.165.2022.08.18.02.44.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Aug 2022 02:44:24 -0700 (PDT)
-Message-ID: <5890df47-0740-7033-7b21-5b96bee01625@linaro.org>
-Date:   Thu, 18 Aug 2022 12:44:22 +0300
+        with ESMTP id S243699AbiHRJsP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 05:48:15 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A45F65C6;
+        Thu, 18 Aug 2022 02:48:13 -0700 (PDT)
+Received: from mail-ej1-f48.google.com ([209.85.218.48]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MKsSj-1o43VZ0ZRt-00LFLV; Thu, 18 Aug 2022 11:48:12 +0200
+Received: by mail-ej1-f48.google.com with SMTP id kb8so2256226ejc.4;
+        Thu, 18 Aug 2022 02:48:12 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3Y6LIhLufd6ui+RCDqzYDSpHbbfr09PKsC9WYrCdvpR02KjaS3
+        2vsRxUW4YhXjwtr/mo7odY8hb52K/1AhiXsA1CI=
+X-Google-Smtp-Source: AA6agR645rETuEE4VMhXAaKswHY7L5Q1Tk6UWcY1L316KwAlAp6lbpoTrasC+3YhaQ3U6q37ocvWef/Jh+4AqnpxUdA=
+X-Received: by 2002:a17:907:28d6:b0:731:5d0:4401 with SMTP id
+ en22-20020a17090728d600b0073105d04401mr1389787ejc.765.1660816091708; Thu, 18
+ Aug 2022 02:48:11 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: pca9570: Add compatible for
- slg7xl45106
-Content-Language: en-US
-To:     "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc:     "mans0n@gorani.run" <mans0n@gorani.run>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "shubhrajyoti.datta@gmail.com" <shubhrajyoti.datta@gmail.com>
-References: <20220817085550.18887-1-shubhrajyoti.datta@amd.com>
- <20220817085550.18887-2-shubhrajyoti.datta@amd.com>
- <107c5c93-ee6b-e464-1b74-55877068e788@linaro.org>
- <BY5PR12MB4902F07B4A12C51094786C5C816D9@BY5PR12MB4902.namprd12.prod.outlook.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <BY5PR12MB4902F07B4A12C51094786C5C816D9@BY5PR12MB4902.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
+ <CACRpkdY53c0qXx24Am1TMivXr-MV+fQ8B0CDjtGi6=+2tn4-7A@mail.gmail.com>
+In-Reply-To: <CACRpkdY53c0qXx24Am1TMivXr-MV+fQ8B0CDjtGi6=+2tn4-7A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 18 Aug 2022 11:47:55 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1Vh1Uehuin-u5QrTO5qh+t0aK_hA-QZwqc00Db_+MKcw@mail.gmail.com>
+Message-ID: <CAK8P3a1Vh1Uehuin-u5QrTO5qh+t0aK_hA-QZwqc00Db_+MKcw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Allow user to customise maximum number of GPIOs
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Qu+gtjF6iRfgG51X3I8WKus/80sjc+ma+ip40I5uAgSgDb0BTGO
+ TmFn0AU3ikFHSV4I9Ec3FQ9dAV0Z88se1kzFaPV08lpOg1XP5++JC1HfdsoScPzy7KITPvy
+ NmPvyZ9GZGz5qgXyk8l4vyLeLBcGJIm80XSBI43QjAhGoBz0DfqSeGZG/tUnSxP+jsii0qp
+ QG5mTzs0HgzuaGdF4ZLwg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VpH2Lv+xf5w=:aM/CNwGcX5Slxtx5waR3G4
+ 7Tpne+m8lwx2GQRxSnQiezYPR9OWTcCIW7FrDJoWRPYoyNRxBy1WaCywmApG+jHhFK+z+000s
+ Se3f8j5GO70OjLQs6j2qFrB8jQ/MwvTpXKiHyNjfhX9PEBu3uYfzd7Djl1t/nQrQz2DpqwayM
+ KBcEiiDysR5auhNB/3De0UbANOyeJhbNkaiyBPjKFc8y3J2zIAcFN8rwI0wcbf/nezOj6GBIo
+ gLPjN3U3rcFqarARQHBKBFduwUJC47zl9aEGsFiZm0CUUtJxSvVsbw1mJwIPe7sUUuAJOn1Nk
+ GEnFwRZ116/LKkToyI9XfyA8V9yQ4ODKGsjOyZ00oSQiprd11VwGT69JkMu7buwb8GTyqKW9+
+ 4K9SOUHpw1PEvCgiddEgfyH9oDouXKwFVxpXHl5xLLttjz8kf6gJSKiVunmlZ7Z5e1WO4hLvI
+ 7R7shfvl6CFaXcHF7yxQs0rmHR8aqprXugEc1iDWXqc/Tu36U+xh/txCpEEfU7CF8aM9nX3gA
+ I/+L04K4h/Sj8U+smwSsOv2B54CVQLg1H1cTqgcYfr74qESpb3vWCB8YW2QuETz4JdfxSnn6m
+ ncYQMrJB0zyeUviYI7GxVgS+I6khh8XfSxpINLcF7BDQgwWi2HrHFnMRR9cn6Xdiop/x6rzzv
+ 8RUQD/4SzoCuC8T81Q6G3dkum0mtZiq8wLqJMGTsVScIZOVuy/xOiF0Mq4v+62rXfwv90iq5i
+ MYvvQRSdH8x9lZ5uI61N0xQZxZUyDdjpGpsUXTCK1ah4zZRBq/4qumNvbkbmMc3BKOzbksO2i
+ l0RZfY6UdayMF2sg2w6kYiIHglc2osO6WF6GQVZD+DiAuzlTA0fnk5f2ptyy2qNEzZOkeOvkT
+ Ttyhsg4PyEVe/OMd6Kig==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 18/08/2022 12:30, Datta, Shubhrajyoti wrote:
-> [AMD Official Use Only - General]
-> 
-> 
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Sent: Thursday, August 18, 2022 2:14 PM
->> To: Datta, Shubhrajyoti <shubhrajyoti.datta@amd.com>; linux-
->> gpio@vger.kernel.org
->> Cc: git-dev (AMD-Xilinx) <git-dev@amd.com>; mans0n@gorani.run;
->> devicetree@vger.kernel.org; krzysztof.kozlowski+dt@linaro.org;
->> robh+dt@kernel.org; linus.walleij@linaro.org; brgl@bgdev.pl;
->> shubhrajyoti.datta@gmail.com
->> Subject: Re: [PATCH 1/2] dt-bindings: gpio: pca9570: Add compatible for
->> slg7xl45106
->>
->> [CAUTION: External Email]
->>
->> On 17/08/2022 11:55, Shubhrajyoti Datta wrote:
->>> This patch adds compatible string for the SLG7XL45106, I2C GPO
->>> expander.
->>>
->>> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
->>> ---
->>>  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
->>> b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
->>> index 338c5312a106..503cfcb7f7c9 100644
->>> --- a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
->>> @@ -13,6 +13,7 @@ properties:
->>>    compatible:
->>>      enum:
->>>        - nxp,pca9570
->>> +      - dlg,slg7xl45106
->>
->> First, this does not match tree, please rebase on some new Linux kernel.
->> Second, put them in alphabetical order.
->> Third, these are different manufacturers. Why do you think devices are
->> compatible?
-> 
-> Will rebase and resend.
-> There was a earlier discussion
-> https://lore.kernel.org/all/CAHp75Ve_mgam2jcyFG-NggziUScK3JBZ4fmtN+rjd+Vra=ixuw@mail.gmail.com/T/#me3fb70c782159b1c2aed9cc33d6eb4d31193e56e
-> 
-> Based on which I considered the pca.
+On Thu, Aug 18, 2022 at 11:33 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> The per-arch GPIO number only exist for one reason: embedded
+> GPIOs (think SoC:s) that refer to fixed numbers in numberspace in
+> the board support code. This makes it necessary to allocate
+> descriptors up front in some compiled-in GPIO chips.
 
-But none of these are explained here in commit msg...
+As I understood, the problem that Christophe ran into is that the
+dynamic registration of additional gpio chips is broken because
+it unregisters the chip if the number space is exhausted:
 
-BTW, your previous binding was not even sent to DT mailing list and DT
-maintainers. Always use scripts/get_maintainers.pl.
+                base = gpiochip_find_base(gc->ngpio);
+                if (base < 0) {
+                        ret = base;
+                        spin_unlock_irqrestore(&gpio_lock, flags);
+                        goto err_free_label;
+                }
 
-Best regards,
-Krzysztof
+From the git history, it looks like this error was never handled gracefully
+even if the intention was to keep going without a number assignment,
+so there are probably other bugs one runs into after changing this.
+
+        Arnd
