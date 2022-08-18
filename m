@@ -2,129 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 512525986B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 17:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CDC459876E
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 17:28:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343935AbiHRPAx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 11:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
+        id S1344298AbiHRP04 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 11:26:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343943AbiHRPAv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 11:00:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBFFB32BA4;
-        Thu, 18 Aug 2022 08:00:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4D302B821CE;
-        Thu, 18 Aug 2022 15:00:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E77C433D7;
-        Thu, 18 Aug 2022 15:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1660834846;
-        bh=w6/ETLvl6ZG2+0UlR1OeUzSwR5sjy2rVzbgpetE7Jao=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jyemUVkbI7r0kIO7aSwt8dj+8DwO9ot3ryBxDCUv3IuhyBu7QbX65Dj2DoBUJ1aRA
-         IfTgDRH5H5dfm0lkURf6lstrZgWK2sl1EOE9JhkVrS5pkqvYeaNAjcc/Bnorgjord9
-         ZMme4Z1TfbRACGT2vZdJ12ucPykQdtRzPaslvb/c=
-Date:   Thu, 18 Aug 2022 17:00:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 0/9] fw_devlink improvements
-Message-ID: <Yv5UHLOk9jh8KB6c@kroah.com>
-References: <20220810060040.321697-1-saravanak@google.com>
- <YvYiF36M09dX9ASm@atomide.com>
- <CAGETcx-t0O0B+5i0FWwm5w2=ccOD5zVAaUvgQoP8PT9SOT_btw@mail.gmail.com>
- <Yvog4K0barAvvVeb@atomide.com>
- <CAGETcx-k+ca5uG42XvW5yiK8RWDYfeRs9va5boqnp33s45AGRg@mail.gmail.com>
- <Yv3kqoMo3R/7onlw@atomide.com>
+        with ESMTP id S245405AbiHRP0z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 11:26:55 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB8FBFE88;
+        Thu, 18 Aug 2022 08:26:55 -0700 (PDT)
+Received: by mail-oi1-f180.google.com with SMTP id w197so1887067oie.5;
+        Thu, 18 Aug 2022 08:26:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=rbisoohMs3uPePAbaauwnn0BbSjctMh4z2DNTBqGzPQ=;
+        b=wpurvxFgaxi1v2Qa2k0jex7E0gRi0jh6SzSRXPiiE3y4HE1CCi5x/qgq6aznNd5bbI
+         75PUqHOYxf1NcapVkpknPYc7s7nE/3AmAGte/lW8/1OeMcoi3Xf7uXZ8ARHLAv1ff1Bm
+         9Me3o4roKHgDY7Q7hNdqu8crJnyBdQBMbRwBfDkNPM7rrWhzMYzjdP4WTnEnVWngjDFP
+         2zuJplgUWs/Nc0hF4NmT3hLgl15x0ULbnSPAq4Du9IqNa7IeW4rwKRD7hrpnenT4+ndq
+         qq3pMIz6jCh+N5aKH7oe/H9MApKqUjW+nigunLxlfcuc7fl93aG1mYSCKuYBGm7oG1ae
+         6FUA==
+X-Gm-Message-State: ACgBeo0klN3kyVGDwVCxOL1rj6XfOwGPyhkpnfbSJAuim3KVDQhEp85i
+        1FxgI5LNMys8Azz7ujI7fA==
+X-Google-Smtp-Source: AA6agR6nRlbimaon0C9gs4UjoLOSyrreNHuKdrI8XRsolBVK0h7tAf4Na97THJ2KUJwXo0Fkn3O8RQ==
+X-Received: by 2002:a05:6808:2009:b0:343:60b:6dec with SMTP id q9-20020a056808200900b00343060b6decmr1453407oiw.1.1660836414323;
+        Thu, 18 Aug 2022 08:26:54 -0700 (PDT)
+Received: from robh.at.kernel.org ([2607:fb90:5fe0:b4f5:6e22:4704:df60:73a3])
+        by smtp.gmail.com with ESMTPSA id 37-20020a9d0c28000000b00636c81d4109sm478058otr.46.2022.08.18.08.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Aug 2022 08:26:53 -0700 (PDT)
+Received: (nullmailer pid 1898912 invoked by uid 1000);
+        Thu, 18 Aug 2022 15:26:51 -0000
+Date:   Thu, 18 Aug 2022 09:26:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, konrad.dybcio@somainline.org,
+        krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add sc8280xp lpass
+ lpi pinctrl bindings
+Message-ID: <20220818152651.GM1829017-robh@kernel.org>
+References: <20220817113747.9111-1-srinivas.kandagatla@linaro.org>
+ <20220817113747.9111-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yv3kqoMo3R/7onlw@atomide.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220817113747.9111-2-srinivas.kandagatla@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 10:05:14AM +0300, Tony Lindgren wrote:
-> Hi,
+On Wed, Aug 17, 2022 at 12:37:46PM +0100, Srinivas Kandagatla wrote:
+> Add device tree binding Documentation details for Qualcomm SC8280XP
+> LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
 > 
-> * Saravana Kannan <saravanak@google.com> [220815 18:16]:
-> > On Mon, Aug 15, 2022 at 3:33 AM Tony Lindgren <tony@atomide.com> wrote:
-> > >
-> > > * Saravana Kannan <saravanak@google.com> [220813 00:45]:
-> > > > On Fri, Aug 12, 2022 at 2:49 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > > >
-> > > > > * Saravana Kannan <saravanak@google.com> [220810 05:54]:
-> > > > > > Tony,
-> > > > > >
-> > > > > > This should handle the odd case of the child being the supplier of the
-> > > > > > parent. Can you please give this a shot? I want to make sure the cycle
-> > > > > > detection code handles this properly and treats it like it's NOT a cycle.
-> > > > >
-> > > > > Yup, this series works for me, so feel free to add:
-> > > > >
-> > > > > Tested-by: Tony Lindgren <tony@atomide.com>
-> > > >
-> > > > Thanks for testing!
-> > > >
-> > > > Btw, out of curiosity, how many different boards did you test this on?
-> > > > IIRC you had an issue only in one board, right? Not to say I didn't
-> > > > break anything else, I'm just trying to see how much confidence we
-> > > > have on this series so far. I'm hoping the rest of the folks I listed
-> > > > in the email will get around to testing this series.
-> > >
-> > > Sorry if I was not clear earlier. The issue affects several generations
-> > > of TI 32-bit SoCs at least, not just one board.
-> > 
-> > But this series fixes the issues for all of them or are you still
-> > seeing some broken boot with this series?
-> 
-> Yes. However, I'm now getting confused what exactly you're proposing to fix
-> the regressions for v6.0-rc series.
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../qcom,sc8280xp-lpass-lpi-pinctrl.yaml      | 133 ++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-lpass-lpi-pinctrl.yaml
 
-So am I :(
-
-> I'd like to see just the fixes series for v6.0-rc series. With proper fixes
-> tags, and possibly reverts.
-
-Agreed, that would help out a lot here.
-
-> Then discussing patches for Linux next can be done based on the fixes :)
-
-Agreed.
-
-I'll drop this whole series from my queue now and wait for a new one.
-
-thanks,
-
-greg k-h
+Reviewed-by: Rob Herring <robh@kernel.org>
