@@ -2,67 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0560E598A37
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 19:21:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB718598A3C
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 19:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344949AbiHRRRC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 13:17:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
+        id S1344529AbiHRRT7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 13:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344929AbiHRRQb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 13:16:31 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB7410A3;
-        Thu, 18 Aug 2022 10:10:56 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:73:8b7:7001:c8aa:b65f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 5C441380;
-        Thu, 18 Aug 2022 17:10:56 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5C441380
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1660842656; bh=Q1ZVAe6F+SnZFsnconTKqkmi6I114B8fYAcl8zDe+as=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=q04am70KrC4gEkl3TrVnG/KvuZQ27ZpoHqPoO8zIkuVOEp7eRr4hoKDl4KyAd+nBZ
-         uoYDmoRY/IsbduKbEvWcAuQme0IOC0aDoyVRgpIXpNY6lc2nm/v52z/w41ZjnLa5c0
-         Z/2MeHiubeWFTGDaO5nYGFhcT2jiwWYkAu2jYCn+VppAUz/DBKWGXGTQQBbwPb6Ra5
-         yZkFu691RXPewWNfpx9DINC2DpjPxk2uVNdbAZtuAiCjdYvlH5XfCv1U9sP2nTVLvE
-         orb+WNx2M/Ke2NIgAmyONKjXhYuet/ZmcWajsLpuFPIezAJStDljAtKwQCvyCGuIKz
-         W4H8roMNmeIUg==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Yanteng Si <siyanteng@loongson.cn>, linus.walleij@linaro.org,
-        brgl@bgdev.pl, tekkamanninja@gmail.com
-Cc:     alexs@kernel.org, wu.xiangcheng@linux.dev,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        Yanteng Si <siyanteng@loongson.cn>
-Subject: Re: [PATCH v3] docs/zh_CN: Update the translation of gpio to 6.0-rc1
-In-Reply-To: <20220817020830.799468-1-siyanteng@loongson.cn>
-References: <20220817020830.799468-1-siyanteng@loongson.cn>
-Date:   Thu, 18 Aug 2022 11:10:55 -0600
-Message-ID: <87a681cw9s.fsf@meer.lwn.net>
+        with ESMTP id S1344490AbiHRRTm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 13:19:42 -0400
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412C55F22D
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 10:17:43 -0700 (PDT)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-3376851fe13so25551477b3.6
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 10:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=K9aCivmd3pOhXO+7wSe24RMSLcWBP61HE/hhO1yg1yw=;
+        b=JeS443bFeIB/dfnqs/dBKkKoyz6kZ6ySV0J0cpJqv5YH9w1POyGM5TR1Nwj57FqAT4
+         SvWgKiEmAF97qI5W/8pcR/UktlKsk/TDdEVgcTCFj39vzacBKZSATWFDL0wvclXleZDl
+         YFZiu7+rdKL4yYKsALFe7rkcyDlno/hkCqQFNkK0mILc3mNIcC+1c7spPES7nUrVbzPV
+         yk9MG1tvJV/boCEpDtjDQUosbCKPMXPA/zahdJfJ5bVDbNXvnifDFOSLzMss2LtJQk4S
+         yuvrtpTeupv6XmXtstzyqVy6rB1gh2gfkSaR/+zzUwO5b/+DjnTYrO1e37rbG2LCBdo6
+         noQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc;
+        bh=K9aCivmd3pOhXO+7wSe24RMSLcWBP61HE/hhO1yg1yw=;
+        b=YhjjjrRwdhg/tF8TsOR0ywwQTeZmd+bLSYBa/EUAzlaWwyXgKE+DMdvhHnvGqgogm2
+         P7hp3DqCJ+gX2RX/ZXM8jqc0cHbl9TUBgRlSIt5CtC/UNqk8PqfjJK5yj1X6XYZHrVeh
+         tsnGjxWpSCq0IrJqYx7wxnEnu+HxOTmDQNEqt0HGkMErrAG2CZ+XKQf+8OqI3dQdeYgY
+         p7g/ve1sfFWAFF37ZEYDgoF/tehbv34JbAL8J3+IsqE+wkJrw9t58hIG3pO4vxmqwdQu
+         zf9QSX9L0zVtEMoqeapLJ6JNB0j9syXX5MMKZt50ebHz8c9MO7S4jssrXHfBmXv/6Bjg
+         cYiw==
+X-Gm-Message-State: ACgBeo0xPkxW51opvtHcTfaJjJWu7xGS1/Xm1h9csTS2rjDStNX3GOSJ
+        m/9z0ST165KQtZ3wWNwd8l7PJ3tYIvWYEzzwm5o=
+X-Google-Smtp-Source: AA6agR7im46eo3l3aHfyQhKJUFeDwjOqcJ3oGYxNbtIhldfTCYmuKB6fqLIl9VVT7yq3yFLAF1ra1xGXrI77xAv/+5c=
+X-Received: by 2002:a25:7608:0:b0:694:220b:8bf6 with SMTP id
+ r8-20020a257608000000b00694220b8bf6mr2320378ybc.210.1660843061655; Thu, 18
+ Aug 2022 10:17:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Received: by 2002:a05:7010:3629:b0:2e8:c487:5b9d with HTTP; Thu, 18 Aug 2022
+ 10:17:41 -0700 (PDT)
+Reply-To: mr.abraham022@gmail.com
+From:   "Mr.Abraham" <kojofofone9@gmail.com>
+Date:   Thu, 18 Aug 2022 17:17:41 +0000
+Message-ID: <CAB2h49MoyUVQ1C_ZzPkbHWi4O=XyMCqErsSm=6FhjoHqD_kEaw@mail.gmail.com>
+Subject: Hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1130 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [kojofofone9[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [kojofofone9[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mr.abraham022[at]gmail.com]
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Yanteng Si <siyanteng@loongson.cn> writes:
-
-> Update to commit 5513b411ea5b ("Documentation: rename pinctl to
-> pin-control")
-> Move .../zh_CN/gpio.txt to .../zh_CN/driver-api/gpio/legacy.rst
-> Translate .../driver-api/index.rst into Chinese.
-> Translate .../driver-api/gpio/index.rst into Chinese.
->
-> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> Reviewed-by: Alex Shi <alexs@kernel.org>
-
-Applied, thanks.
-
-jon
+My Greeting, Did you receive the letter i sent to you. Please answer me.
+Best Regard,Mr.Abraham,
