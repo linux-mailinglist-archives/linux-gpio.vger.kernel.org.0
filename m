@@ -2,78 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8B4F598778
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 17:28:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0560E598A37
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 19:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344339AbiHRP15 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 11:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48702 "EHLO
+        id S1344949AbiHRRRC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 13:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242310AbiHRP1z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 11:27:55 -0400
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA82C04F1;
-        Thu, 18 Aug 2022 08:27:53 -0700 (PDT)
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-11cb3c811d9so490390fac.1;
-        Thu, 18 Aug 2022 08:27:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=jzS/xxmqPClvxlGlF65JWerijpK7L30Co5ggvmlz4L4=;
-        b=KNxQd1VVwbwrgQcE56JVxitCFndqhn3DHlVPvUj9s0c6NnXNaesBKQPT0PDWTjfVT3
-         xMcT0unc0myLnUqznjkzOqwaQJF4D8gKO4ohKgrZeqlGxEyslcwZqR/nJDIXHUvDakEI
-         QET3B8hM+ZPveRZrZR09/YuKzfbret4TqCr054n4ne4/dEnGXk44wq9FLqieXI92C/RY
-         lykxaho6ltqTYCC7JgdAnB1UOCyZN2KqKmI+GNTMUlC3uCQ0iRmjV7EyayjY4jR8z/DK
-         R6ZZkbhGyVgyS18OhnhAuBZikvTKYJRyLBAm0X2V/UJ7yUZRviumoKPi826rsUlvIZbD
-         6Jaw==
-X-Gm-Message-State: ACgBeo2jOgF/blFp3J81FygfDGWnC2DH7jvfBvPmCzvMEdGTBtKDzhRu
-        tiXmYYcHO46CNPZ/un/m0UIGdQJhsg==
-X-Google-Smtp-Source: AA6agR79Xb5ppP36+flNqhbBpw6WE0dpQ+DboWk9JqdKE4sl0qtWg0nngMvhcYxqeytWgL0Uwk4EQQ==
-X-Received: by 2002:a05:6870:a99e:b0:11c:5025:d1d0 with SMTP id ep30-20020a056870a99e00b0011c5025d1d0mr3941523oab.222.1660836472292;
-        Thu, 18 Aug 2022 08:27:52 -0700 (PDT)
-Received: from robh.at.kernel.org ([2607:fb90:5fe0:b4f5:6e22:4704:df60:73a3])
-        by smtp.gmail.com with ESMTPSA id p18-20020a4ad452000000b0041ba304546csm367108oos.1.2022.08.18.08.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 08:27:52 -0700 (PDT)
-Received: (nullmailer pid 1900162 invoked by uid 1000);
-        Thu, 18 Aug 2022 15:27:47 -0000
-Date:   Thu, 18 Aug 2022 09:27:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, konrad.dybcio@somainline.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: qcom: Add sm8450 lpass lpi
- pinctrl bindings
-Message-ID: <20220818152747.GN1829017-robh@kernel.org>
-References: <20220817113833.9625-1-srinivas.kandagatla@linaro.org>
- <20220817113833.9625-2-srinivas.kandagatla@linaro.org>
+        with ESMTP id S1344929AbiHRRQb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 13:16:31 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB7410A3;
+        Thu, 18 Aug 2022 10:10:56 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:281:8300:73:8b7:7001:c8aa:b65f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 5C441380;
+        Thu, 18 Aug 2022 17:10:56 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5C441380
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1660842656; bh=Q1ZVAe6F+SnZFsnconTKqkmi6I114B8fYAcl8zDe+as=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=q04am70KrC4gEkl3TrVnG/KvuZQ27ZpoHqPoO8zIkuVOEp7eRr4hoKDl4KyAd+nBZ
+         uoYDmoRY/IsbduKbEvWcAuQme0IOC0aDoyVRgpIXpNY6lc2nm/v52z/w41ZjnLa5c0
+         Z/2MeHiubeWFTGDaO5nYGFhcT2jiwWYkAu2jYCn+VppAUz/DBKWGXGTQQBbwPb6Ra5
+         yZkFu691RXPewWNfpx9DINC2DpjPxk2uVNdbAZtuAiCjdYvlH5XfCv1U9sP2nTVLvE
+         orb+WNx2M/Ke2NIgAmyONKjXhYuet/ZmcWajsLpuFPIezAJStDljAtKwQCvyCGuIKz
+         W4H8roMNmeIUg==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Yanteng Si <siyanteng@loongson.cn>, linus.walleij@linaro.org,
+        brgl@bgdev.pl, tekkamanninja@gmail.com
+Cc:     alexs@kernel.org, wu.xiangcheng@linux.dev,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        Yanteng Si <siyanteng@loongson.cn>
+Subject: Re: [PATCH v3] docs/zh_CN: Update the translation of gpio to 6.0-rc1
+In-Reply-To: <20220817020830.799468-1-siyanteng@loongson.cn>
+References: <20220817020830.799468-1-siyanteng@loongson.cn>
+Date:   Thu, 18 Aug 2022 11:10:55 -0600
+Message-ID: <87a681cw9s.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220817113833.9625-2-srinivas.kandagatla@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 17, 2022 at 12:38:32PM +0100, Srinivas Kandagatla wrote:
-> Add device tree binding Documentation details for Qualcomm SM8450
-> LPASS(Low Power Audio Sub System) LPI(Low Power Island) pinctrl driver.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 135 ++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+Yanteng Si <siyanteng@loongson.cn> writes:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Update to commit 5513b411ea5b ("Documentation: rename pinctl to
+> pin-control")
+> Move .../zh_CN/gpio.txt to .../zh_CN/driver-api/gpio/legacy.rst
+> Translate .../driver-api/index.rst into Chinese.
+> Translate .../driver-api/gpio/index.rst into Chinese.
+>
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> Reviewed-by: Alex Shi <alexs@kernel.org>
+
+Applied, thanks.
+
+jon
