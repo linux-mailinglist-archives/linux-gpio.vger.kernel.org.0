@@ -2,107 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13EAE597EE3
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 09:05:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38509597F86
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Aug 2022 09:52:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243767AbiHRHFT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 03:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48236 "EHLO
+        id S243225AbiHRHuZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 03:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243770AbiHRHFS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 03:05:18 -0400
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38E80876BF;
-        Thu, 18 Aug 2022 00:05:16 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id BA069807E;
-        Thu, 18 Aug 2022 06:58:18 +0000 (UTC)
-Date:   Thu, 18 Aug 2022 10:05:14 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 0/9] fw_devlink improvements
-Message-ID: <Yv3kqoMo3R/7onlw@atomide.com>
-References: <20220810060040.321697-1-saravanak@google.com>
- <YvYiF36M09dX9ASm@atomide.com>
- <CAGETcx-t0O0B+5i0FWwm5w2=ccOD5zVAaUvgQoP8PT9SOT_btw@mail.gmail.com>
- <Yvog4K0barAvvVeb@atomide.com>
- <CAGETcx-k+ca5uG42XvW5yiK8RWDYfeRs9va5boqnp33s45AGRg@mail.gmail.com>
+        with ESMTP id S229760AbiHRHuY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 03:50:24 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8654AEDB8;
+        Thu, 18 Aug 2022 00:50:22 -0700 (PDT)
+X-UUID: f4b565959cb54cf983c8fccf3b709810-20220818
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=vX2cKsWvqrnEhdZf9O25sP1+ldbSuDmn4Zp0hffNaYw=;
+        b=QwwstUszz1fDHp5xQxEZkxNKfd3bC4i5HgLWyctQSYz+uG1kSuKWe+hmZ/pi/xfViyV8MS3/0WIQPRshaYhZhykc/J1Qqt52k1TwnNPZb5pBbZ/cmCmlguYZRsRP/xCuA8QdJkXh+a/A356G6UNuvwoX4HOkmpYQpRIIO0qwQEU=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.10,REQID:b28166fc-59e6-46eb-a816-c7db45bb4653,OB:0,L
+        OB:0,IP:0,URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release
+        _Ham,ACTION:release,TS:-5
+X-CID-META: VersionHash:84eae18,CLOUDID:b2dfabfd-9e71-4a0f-ba6b-417998daea35,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:0,File:nil
+        ,Bulk:nil,QS:nil,BEC:nil,COL:0
+X-UUID: f4b565959cb54cf983c8fccf3b709810-20220818
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <hui.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1820611805; Thu, 18 Aug 2022 15:50:16 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Thu, 18 Aug 2022 15:50:14 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkmbs11n2.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.15 via Frontend
+ Transport; Thu, 18 Aug 2022 15:50:14 +0800
+From:   Hui Liu <hui.liu@mediatek.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <matthias.bgg@gmail.com>,
+        <angelogioacchino.delregno@collabora.com>, <wenst@google.com>
+CC:     <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <hui.liu@mediatek.com>, <jianguo.zhang@mediatek.com>,
+        <zhiyong.tao@mediatek.com>, <sean.wang@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 0/2] MediaTek pinctrl patch on mt8188
+Date:   Thu, 18 Aug 2022 15:50:10 +0800
+Message-ID: <20220818075012.20880-1-hui.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-k+ca5uG42XvW5yiK8RWDYfeRs9va5boqnp33s45AGRg@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+This series include 2 patches:
+1.Add pinmux definition file and pinctrl binding document for mt8188.
+2.Add pinctrl driver for mt8188.
 
-* Saravana Kannan <saravanak@google.com> [220815 18:16]:
-> On Mon, Aug 15, 2022 at 3:33 AM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Saravana Kannan <saravanak@google.com> [220813 00:45]:
-> > > On Fri, Aug 12, 2022 at 2:49 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > >
-> > > > * Saravana Kannan <saravanak@google.com> [220810 05:54]:
-> > > > > Tony,
-> > > > >
-> > > > > This should handle the odd case of the child being the supplier of the
-> > > > > parent. Can you please give this a shot? I want to make sure the cycle
-> > > > > detection code handles this properly and treats it like it's NOT a cycle.
-> > > >
-> > > > Yup, this series works for me, so feel free to add:
-> > > >
-> > > > Tested-by: Tony Lindgren <tony@atomide.com>
-> > >
-> > > Thanks for testing!
-> > >
-> > > Btw, out of curiosity, how many different boards did you test this on?
-> > > IIRC you had an issue only in one board, right? Not to say I didn't
-> > > break anything else, I'm just trying to see how much confidence we
-> > > have on this series so far. I'm hoping the rest of the folks I listed
-> > > in the email will get around to testing this series.
-> >
-> > Sorry if I was not clear earlier. The issue affects several generations
-> > of TI 32-bit SoCs at least, not just one board.
-> 
-> But this series fixes the issues for all of them or are you still
-> seeing some broken boot with this series?
+Changes in patch v6:
+1.Update driver file's coding style.
 
-Yes. However, I'm now getting confused what exactly you're proposing to fix
-the regressions for v6.0-rc series.
+Changes in patch v5:
+1.Move ref pincfg-node.yaml to the child '^pins' node in binding document.
 
-I'd like to see just the fixes series for v6.0-rc series. With proper fixes
-tags, and possibly reverts.
+Changes in patch v4:
+1.Add gpio-line-names in binding document.
+2.Fix typo in driver files.
 
-Then discussing patches for Linux next can be done based on the fixes :)
+Changes in patch v3:
+1.Fix binding document dt_binding_check fail issue.
 
-Regards,
+Changes in patch v2:
+1.Change pinmux definition file name to mediatek,mt8188-pinfunc.h.
+2.Change binding document name to mediatek,mt8188-pinctrl.yaml.
+3.Update yaml description.
 
-Tony
+Changes in patch v1:
+1.Add pinmux definition file.
+2.Add binding document.
+3.Add mt8188 pinctrl drivers.
+
+*** BLURB HERE ***
+
+Hui.Liu (2):
+  dt-bindings: pinctrl: mediatek: add support for mt8188
+  pinctrl: mediatek: add mt8188 driver
+
+ .../pinctrl/mediatek,mt8188-pinctrl.yaml      |  226 ++
+ drivers/pinctrl/mediatek/Kconfig              |   12 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8188.c     | 1673 ++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8188.h | 2259 +++++++++++++++++
+ .../pinctrl/mediatek,mt8188-pinfunc.h         | 1280 ++++++++++
+ 6 files changed, 5451 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8188-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8188.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8188.h
+ create mode 100644 include/dt-bindings/pinctrl/mediatek,mt8188-pinfunc.h
+
+--
+2.18.0
+
+
