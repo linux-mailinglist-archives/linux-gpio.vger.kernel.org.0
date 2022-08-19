@@ -2,228 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90C06599564
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 08:40:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A43D599C0C
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 14:35:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346285AbiHSGeo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Aug 2022 02:34:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54264 "EHLO
+        id S1348741AbiHSMfB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Aug 2022 08:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346239AbiHSGen (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Aug 2022 02:34:43 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BEBD2B15
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 23:34:42 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id g129so207476pfb.8
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 23:34:42 -0700 (PDT)
+        with ESMTP id S1348671AbiHSMe7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Aug 2022 08:34:59 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398FAE9912
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Aug 2022 05:34:57 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id i14so8538109ejg.6
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Aug 2022 05:34:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=4OLuDfjKcOo1vMBTKXZ3hrMvywIQsdm2SXucSyDEwJ0=;
-        b=qIBBWdyc4Zgce24Pj7nTw/NYLTLvXN6i1Dp4zvVlMa6QTgwi3kdb+/mBK5Tz8NQhbi
-         XSa3Au07vX5LoOLydU6PTeTmPe5IE6UVDoHaoY59iEhH/+FzjLB8xKVw5kb2sb0+vryb
-         NKy4ByHcELlLotIBBiVVocMbkki9oZ2gBzfs0EH8aUyOOEL9CuYLXtZPYokUTMvEtgim
-         jyrn/CB0044oza7Jr+yzSqtj4IsJzmaQxiyoNQDl97WMRn10icvTVzaJZQn87HgzAbnR
-         L1Eltf4Cfij1qJHmYvs0cf/kj1GqiiIcBIYptDnOO3zBPw0UCv3F4bJiSOm/vMuPHqDg
-         D4uw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=XZFDaDB8tTHmQs+ge0GoXWvB83xSHTtt9LztyWrp1tM=;
+        b=DEKkpJjZoN83asNH+cT99OF2dl2c3QRLw3RqCJ6SvhZEsaqEjFPGBoSSxd9E9Xv0Ge
+         MXMBp6wNlGdhr8n23P2iSkn1doBUGxR42OWDLvwAJ3hmARiowyPkAXfTXy0nF06ym/+O
+         9HBmNPKP0NtqQqjJfpJVAnhrQotKtj+MQQJTBjRq1HyPKUEkoe/bd5BNBHt1vCPCEhIN
+         nBxpDOVi4ooRpyvkZynuGa0ubm9pG36Tnt+Y2apE4+v/HfkxFHS6QQUwdK75r2RgsF3Z
+         ubEHzmZ8lEdKdBOuFQ7y8ceLMEIzWOxKt3zk7VMliyqi5LXOwhu1Udifz+Tp5eagnll9
+         McOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=4OLuDfjKcOo1vMBTKXZ3hrMvywIQsdm2SXucSyDEwJ0=;
-        b=i/NvdnuFlvxe1eBZyHzj9yZa+6R/jwQwZUQiSwvMZPKjn8yY9oAPR6nsCq0EPQ3A3e
-         K46ZZabau3phXjrS/l6JwK6cpb46G0q8/O5YjEA2N6ZT/F7qxCTk9K7b0Zr59ijIer3l
-         fF7ZhZahPr2H7lV0ynxCns7oOYXz0rDaF+G2PCuo9D0Xvw/IWk7qrEVeoonRsAlEQ4iy
-         io/I4nhPVtNBVqhRHCm2RnezHv67NSsGtB0Uc/4T/ONH5TplJ4DDbi9jB3DauPNLipC9
-         zNEoRPyQV812Rksvqy0oWBGTrQf2s1QTQqFFA1lp1GL7DU9MxQCkJw0Rb5+kzMim5UOe
-         XeYA==
-X-Gm-Message-State: ACgBeo161Ldg2cX/0YK342dGqSxF23kHAfZ2nQbtDWncsD2DyP/Cqf62
-        XWJqv499tjIrqyEztjzAdLfW
-X-Google-Smtp-Source: AA6agR53iYZO5eiuz8XH08JqN2NWzz4IwA61evU0H7MnN+3Vf1XfvYFNaf/JA7p6i55e95TstPIW4w==
-X-Received: by 2002:aa7:8096:0:b0:52d:d5f6:2ea6 with SMTP id v22-20020aa78096000000b0052dd5f62ea6mr6573057pff.0.1660890881699;
-        Thu, 18 Aug 2022 23:34:41 -0700 (PDT)
-Received: from thinkpad ([117.193.212.74])
-        by smtp.gmail.com with ESMTPSA id z16-20020a170903019000b001729bd62297sm2447929plg.3.2022.08.18.23.34.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 23:34:41 -0700 (PDT)
-Date:   Fri, 19 Aug 2022 12:04:33 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: make the irqchip immutable
-Message-ID: <20220819063433.GA215264@thinkpad>
-References: <20220624195112.894916-1-robimarko@gmail.com>
- <87edyq1ujr.wl-maz@kernel.org>
- <20220712124445.GC21746@workstation>
- <87czea1i2f.wl-maz@kernel.org>
- <CAOX2RU5RX+H=omuKGye2fBy9dOFmfC9HC_3pekeGMxDJuReCUw@mail.gmail.com>
- <d8912a0d811b5eb924b8c4136b099f72@kernel.org>
- <CAOX2RU4MpyEQ0RtcrZ07VXRbB+SWWU=1zWfYUXhQFtvh=MCiDw@mail.gmail.com>
- <20220719074751.GA25065@thinkpad>
- <CAOX2RU525OYLBb+Nek==84KA4a42ZTz89tgdMcgBCu=K8VzL9Q@mail.gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=XZFDaDB8tTHmQs+ge0GoXWvB83xSHTtt9LztyWrp1tM=;
+        b=TAgBPv+tjIzmAfKbiHQ+7ega2VWCSB3ZmKY7am2TSZSvjGfdPXkhRcpeNyUClcN8ZI
+         9wGtyFQ6WqI8b9WJW0N2FIPLOaNKHik0AZhexOKASXq8R3Di+MjcJty9OEVlYjp9lEg7
+         0URkZc7gtAGWE1G0w2wBY6flEkohSMQLYz/EoBbPprIcNkkIZJ36NpWgYZ6sKgKhnOKC
+         ARb9ytbsHPCYFF8qXSNbamSsmoLfPcTPXRQAhWFIa+TOsILMImaCBE6E6tzJh+rtXLfs
+         GFdoQMxduQ+v7B4zpZneWoHxKOCpEIuIYFeFu53TbXMUJhN2qE9rHqNdFLKiXmwiS2vm
+         64BA==
+X-Gm-Message-State: ACgBeo1pTbIFHSgD2TtWH5e2qTTFeoOk5UXHaoP56Z1PHT+aZtAMACDi
+        8e/mtgSZWNCIo+G//UVTGcr8vzIblZV3RCM7iNhRZMtqWEg=
+X-Google-Smtp-Source: AA6agR7Iz0vh/NqBU04llNk+iQe95LhnVouGyVj9cXHSEkzRKQCmdHCz3iLMfYGmqpJOkioJOXN0gEhAzdvYSU9mOSQ=
+X-Received: by 2002:a17:907:2722:b0:731:2aeb:7942 with SMTP id
+ d2-20020a170907272200b007312aeb7942mr4696285ejl.734.1660912495811; Fri, 19
+ Aug 2022 05:34:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOX2RU525OYLBb+Nek==84KA4a42ZTz89tgdMcgBCu=K8VzL9Q@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220816073952.31619-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20220816073952.31619-1-lukas.bulwahn@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 19 Aug 2022 14:34:45 +0200
+Message-ID: <CAMRc=Mehk8gH1yiE7rZF9P7qrjzkAvDg=_hZ_f+R9S-eZabyng@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: rectify entry for XILINX GPIO DRIVER
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 02:45:07PM +0200, Robert Marko wrote:
-> On Tue, 19 Jul 2022 at 09:47, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Wed, Jul 13, 2022 at 02:33:32PM +0200, Robert Marko wrote:
-> > > On Wed, 13 Jul 2022 at 13:47, Marc Zyngier <maz@kernel.org> wrote:
-> > > >
-> > > > On 2022-07-13 12:08, Robert Marko wrote:
-> > > > > On Tue, 12 Jul 2022 at 17:12, Marc Zyngier <maz@kernel.org> wrote:
-> > > > >>
-> > > > >> On Tue, 12 Jul 2022 13:44:45 +0100,
-> > > > >> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >> >
-> > > > >> > On Tue, Jul 12, 2022 at 11:42:32AM +0100, Marc Zyngier wrote:
-> > > > >> > > On Fri, 24 Jun 2022 20:51:12 +0100,
-> > > > >> > > Robert Marko <robimarko@gmail.com> wrote:
-> > > > >> > > >
-> > > > >> > > > Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
-> > > > >> > > > immutable") added a warning to indicate if the gpiolib is altering the
-> > > > >> > > > internals of irqchips.
-> > > > >> > > >
-> > > > >> > > > Following this change the following warning is now observed for the SPMI
-> > > > >> > > > PMIC pinctrl driver:
-> > > > >> > > > gpio gpiochip1: (200f000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
-> > > > >> > > >
-> > > > >> > > > Fix this by making the irqchip in the SPMI PMIC pinctrl driver immutable.
-> > > > >> > > >
-> > > > >> > > > Signed-off-by: Robert Marko <robimarko@gmail.com>
-> > > > >> > > > ---
-> > > > >> > > >  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 22 ++++++++++++----------
-> > > > >> > > >  1 file changed, 12 insertions(+), 10 deletions(-)
-> > > > >> > > >
-> > > > >> > > > diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > > > >> > > > index c3255b0bece4..406ee0933d0b 100644
-> > > > >> > > > --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > > > >> > > > +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > > > >> > > > @@ -171,7 +171,6 @@ struct pmic_gpio_state {
-> > > > >> > > >   struct regmap   *map;
-> > > > >> > > >   struct pinctrl_dev *ctrl;
-> > > > >> > > >   struct gpio_chip chip;
-> > > > >> > > > - struct irq_chip irq;
-> > > > >> > > >   u8 usid;
-> > > > >> > > >   u8 pid_base;
-> > > > >> > > >  };
-> > > > >> > > > @@ -988,6 +987,17 @@ static void *pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
-> > > > >> > > >   return fwspec;
-> > > > >> > > >  }
-> > > > >> > > >
-> > > > >> > > > +static const struct irq_chip spmi_gpio_irq_chip = {
-> > > > >> > > > + .name           = "spmi-gpio",
-> > > > >> > > > + .irq_ack        = irq_chip_ack_parent,
-> > > > >> > > > + .irq_mask       = irq_chip_mask_parent,
-> > > > >> > > > + .irq_unmask     = irq_chip_unmask_parent,
-> > > > >> > >
-> > > > >> > > No, this is wrong. Please look at the documentation to see how you
-> > > > >> > > must now directly call into the gpiolib helpers for these two
-> > > > >> > > callbacks.
-> > > > >> > >
-> > > > >> >
-> > > > >> > IIUC, you are referring to gpiochip_disable_irq() and
-> > > > >> > gpiochip_enable_irq() APIs.
-> > > > >>
-> > > > >> I am indeed.
-> > > > >>
-> > > > >> > These APIs are supposed to let the gpiolib know about that the IRQ
-> > > > >> > usage of these GPIOs. But for the case of hierarchial IRQ domain,
-> > > > >> > isn't the parent is going to do that?
-> > > > >>
-> > > > >> Why would it? The parent has no clue about what sits above it. In a
-> > > > >> hierarchical configuration, each level is responsible for its own
-> > > > >> level, and the GPIO layer should be responsible for its own
-> > > > >> management.
-> > > > >>
-> > > > >> > Please correct me if I'm wrong.
-> > > > >>
-> > > > >> I'm afraid you are, and this patch is a fairly obvious change in
-> > > > >> behaviour, as the callbacks you mention above are not called anymore,
-> > > > >> while they were before.
-> > > > >>
-> > > > >> If they are not necessary (for reasons I can't fathom), then this
-> > > > >> should be clearly explained.
-> > > > >
-> > > > > Hi Marc,
-> > > > > I will look at IRQ GPIO docs, but in this case, then we have more
-> > > > > conversions that
-> > > > > are not correct.
-> > > >
-> > > > Then please point them out.
-> > >
-> > > Oh, now I get the issue, I was misunderstanding it completely.
-> > > gpiochip_enable_irq and gpiochip_disable_irq are not being called
-> > > at all.
-> > >
-> > > However, I dont see them being called before the conversion as well.
-> > > I am not really familiar with the PMIC IRQ-s, looked like an easy conversion
-> > > to get rid of the warning.
-> > >
-> > > Manivannan can you shed some light on this?
-> > >
-> >
-> > I hope you got the answer by now. When I looked into the conversion I saw that
-> > there were missing calls to gpiochip_{enable/disable}_irq APIs. But at that
-> > time I blindly assumed (yeah very bad of myself) that the parent irqchip will
-> > handle that :(
-> >
-> > Anyway, you should call these helpers from the mask/unmask callbacks as a part
-> > of the conversion patch. Let me know if you are onto it or not!
-> 
-> Hi, I completely missed your reply.
-> Currently, I am pretty swamped with other work so I dont know when
-> will I be able
-> to look into this again.
-> 
+On Tue, Aug 16, 2022 at 9:40 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+>
+> Commit ba96b2e7974b ("dt-bindings: gpio: gpio-xilinx: Convert Xilinx axi
+> gpio binding to YAML") converts gpio-xilinx.txt to xlnx,gpio-xilinx.yaml,
+> but missed to adjust its reference in MAINTAINERS.
+>
+> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+> broken reference.
+>
+> Repair this file reference in XILINX GPIO DRIVER.
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f69a1c5212bd..7c20a1c9eb78 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22344,7 +22344,7 @@ M:      Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>  R:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+>  R:     Michal Simek <michal.simek@xilinx.com>
+>  S:     Maintained
+> -F:     Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+> +F:     Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+>  F:     Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
+>  F:     drivers/gpio/gpio-xilinx.c
+>  F:     drivers/gpio/gpio-zynq.c
+> --
+> 2.17.1
+>
 
-No worries! I will handle it.
+Queued for fixes.
 
-Thanks,
-Mani
-
-> Regards,
-> Robert
-> >
-> > Thanks,
-> > Mani
-> >
-> > > Regards,
-> > > Robert
-> > >
-> > >
-> > >
-> > >
-> > >
-> > > >
-> > > >          M.
-> > > > --
-> > > > Jazz is not dead. It just smells funny...
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
-
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks!
+Bart
