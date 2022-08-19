@@ -2,107 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADD85599101
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 01:12:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F2BE5991DA
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 02:41:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345606AbiHRXML (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 19:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47560 "EHLO
+        id S244397AbiHSAkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 20:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243789AbiHRXMD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 19:12:03 -0400
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB78D075E
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 16:12:03 -0700 (PDT)
-Received: by mail-qv1-xf35.google.com with SMTP id j1so2268296qvv.8
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Aug 2022 16:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=Qu2TGN9CjzD6yBI864XHlOsKzcqX8LEumSWv7yTr8E4=;
-        b=cTlnrtwCj7fKbVCMWOP/7ScYWUlMmukWmTTFb2XdY90Tz/AP4dF+ykyJzJ7/idgkd2
-         4aHh/bEcy4TIOIJYoXzJO/J3vkU9qH06467V+eRGumgqLs5YkNHeKz/o5kIWJVp+EgCk
-         0UaKfzjbcg7GV8YsKuJalVI1rUyrc1+Wef47/9RWH6jEJ00yaR6G1XJ4vR5leuYaeaTk
-         sPPqNb3pICpAzSW4xsrlb86cTligYLSUwhAwZZj6z3+X6/aXNTACOJis4R7mrLVBgbUx
-         26h8nVjIBsLhpfX28dw5LCewnIFXpj0FMlSmibtJUbHL0yKk0RUkComkY+oPSGVjpwBy
-         i+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=Qu2TGN9CjzD6yBI864XHlOsKzcqX8LEumSWv7yTr8E4=;
-        b=TozgGWMVvodw3Ki39IvHKy3qfWNOs5kxN9TQDobw48iz0TQVpXwDc88UXyvVpPcNY3
-         +IP3+PTRvoTc+ztN6jy7MmJKD2bDxN+tkDOhbNqRlFf127sLN/3avQQfAEwfHt9UKV/V
-         PRk6e73NsKS5zlw8nrs2dVzvbGx2FOD287ZbbgTGCBPjo/+5h5xWVuBvJYiukXPHWuky
-         EMFX6OF/X4PVHsTEcrXDxzYWRIqxEM2fnbFZBT8vWyiPoQJ3iMsA/mnJWkdlkdQIRek7
-         tgIN13N/vDTp8yxomkFAPpaPUVRMO/PKccEXMptPZUsWwmr1V3WGAHMPtA0LBB1gd6qC
-         YpVQ==
-X-Gm-Message-State: ACgBeo1+0QHX+DtbvaxWuopKfVMRNLjml0OjoxyFfPhFp/X+FXX95oQ2
-        PZ/vT+1BgMDNkcU9el1rEU2zIg==
-X-Google-Smtp-Source: AA6agR5h9prYuf/tQ2t5gzKdwitmkasVnnvFulc/++B9Z/rQtTvdgQnhTj9W8wGOHlcPPeACKF/J9A==
-X-Received: by 2002:a05:6214:19e1:b0:476:95b7:1dc9 with SMTP id q1-20020a05621419e100b0047695b71dc9mr4442306qvc.124.1660864322045;
-        Thu, 18 Aug 2022 16:12:02 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id h16-20020a05620a245000b006b5f06186aesm2864801qkn.65.2022.08.18.16.12.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 16:12:01 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     linux-iio@vger.kernel.or, linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        brgl@bgdev.pl, William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 6/6] gpio: ws16c48: Ensure number of irq matches number of base
-Date:   Thu, 18 Aug 2022 12:28:15 -0400
-Message-Id: <f90ee47388495677191edf3cfb94801cce09a6f6.1660839809.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <cover.1660839809.git.william.gray@linaro.org>
-References: <cover.1660839809.git.william.gray@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+        with ESMTP id S241426AbiHSAku (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 20:40:50 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8625FD806F;
+        Thu, 18 Aug 2022 17:40:47 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id E8BF05C004F;
+        Thu, 18 Aug 2022 20:40:45 -0400 (EDT)
+Received: from imap50 ([10.202.2.100])
+  by compute3.internal (MEProxy); Thu, 18 Aug 2022 20:40:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
+        :content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1660869645; x=1660956045; bh=hKTkgJE0Em
+        hoc0KV5we9aVtrEb2/1qqim2MoVzcgNlc=; b=e3KNLBFMzdrV5ln0JmwiYxzfz0
+        ApOZ4LAZ6OWcQk/D+QdrOpuNR2Z+Cooc2WqCGSLwNDD8kxrvhsdv5xAz4PllADPC
+        wM6bTRb+kNxC7J7An7JBHEsOD5aUBKajKWSe/tJeXk8F+vXQKvYaV+qSWudkKtQB
+        Q9VoBK7PfLv/WfaJWqZTQDIl7nUIlViLzphq0/jmIVVoYN6yFed+b2uQFr0gar41
+        hSDHIo1PE3gnt79Rsud/cSN8b/8WwL0DCljxyllGd7UGRWnJ3XZyFrRnvXdIUmJU
+        KCigc3NSBFzhvoNTUBN7VQSrEIBaYzFYWsKPXUzOsUqvn+sLQoN55pqT2U1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1660869645; x=1660956045; bh=hKTkgJE0Emhoc0KV5we9aVtrEb2/
+        1qqim2MoVzcgNlc=; b=g19ZwDjpwZXpIHfXWknm8aq9Hj+TwAhKOOiHU/lR7CtG
+        zAEvnj5oKFXct5/wpjL/FiZPv6q46oVM7/prf7W8p1Wwy2fmqFeieBUa9jSvphSc
+        Droaj3pzFKl12Ay1WcP7qlerWvyXOh9jYxQUweCHCIX7r7wuR48C5GLdHbZVLscL
+        EyRY+pi+2uGSmNhPa0iq7XszAJlpAr15KqMbT3oaud5QyeTcz1qLtnYYbdIzZcK5
+        9xo/o7zEXKLfEtq+8USRydVqJYNkhQVMWVtk7HtAhEU6rvWIETVEEp1aj7BrmH/t
+        TZIBLFNm25TNfX7gf1Sk9iizXtFwqnZE43WTAGsfJw==
+X-ME-Sender: <xms:Ddz-Ys0-ONHJpseK2y0wnQGeqI2jaAv3nWrptauIQCqO0bZ8U0sVMQ>
+    <xme:Ddz-YnEHUZCf2-AnEkql-bV7c-2yTxliygidanxhd5eLaitoi2bq8-eD4makMZNwm
+    _eJPWaJqtZPBebOnQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeitddgfeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhephefhfeekgfekudevheffheeihedujeefjeevjeefudfgfeeutdeuvdeh
+    hfevueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:Ddz-Yk4JvBCnbiGqQKoR1Dzu1dkvJJtUQJYdU6wADRjzzoQErJ1CSg>
+    <xmx:Ddz-Yl12N43ZaVw5U-tfGvS2THFrChJL4Z7w-GJk_xKyBYsApQWAyg>
+    <xmx:Ddz-YvG39PTDjnc58Umc1jsk_ANIC2uV5JV1Sj5XKtpPC32Eo7Sz2Q>
+    <xmx:Ddz-YgOpuE2nfaNANOws3Bi_Zgn2IMZoryaLn1FSe_nZAMA9avIn7Q>
+Feedback-ID: idfb84289:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 03D201700082; Thu, 18 Aug 2022 20:40:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
+Mime-Version: 1.0
+Message-Id: <6845561a-cb33-4939-a760-2a5722134851@www.fastmail.com>
+In-Reply-To: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
+References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
+Date:   Fri, 19 Aug 2022 10:10:23 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Billy Tsai" <billy_tsai@aspeedtech.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The ws16c48 module calls devm_request_irq() for each device. If the
-number of irq passed to the module does not match the number of base, a
-default value of 0 is passed to devm_request_irq(). IRQ 0 is probably
-not what the user wants, so utilize the module_isa_driver_with_irq macro
-to ensure the number of irq matches the number of base.
+Hi Billy,
 
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/gpio-ws16c48.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On Thu, 18 Aug 2022, at 19:48, Billy Tsai wrote:
+> When the driver want to disable the signal of the function, it doesn't
+> need to query the state of the mux function's signal on a pin. The
+> condition below will miss the disable of the signal:
+> Ball | Default | P0 Signal | P0 Expression               | Other
+> -----+---------+-----------+-----------------------------+----------
+>  E21   GPIOG0    SD2CLK      SCU4B4[16]=1 & SCU450[1]=1    GPIOG0
+> -----+---------+-----------+-----------------------------+----------
+>  B22   GPIOG1    SD2CMD      SCU4B4[17]=1 & SCU450[1]=1    GPIOG1
+> -----+---------+-----------+-----------------------------+----------
+> Assume the register status like below:
+> SCU4B4[16] == 1 & SCU4B4[17] == 1 & SCU450[1]==1
+> After the driver set the Ball E21 to the GPIOG0:
+> SCU4B4[16] == 0 & SCU4B4[17] == 1 & SCU450[1]==0
+> When the driver want to set the Ball B22 to the GPIOG1, the condition of
+> the SD2CMD will be false causing SCU4B4[17] not to be cleared.
+>
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>
+> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c 
+> b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> index 83d47ff1cea8..a30912a92f05 100644
+> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> @@ -92,19 +92,10 @@ static int aspeed_sig_expr_enable(struct 
+> aspeed_pinmux_data *ctx,
+>  static int aspeed_sig_expr_disable(struct aspeed_pinmux_data *ctx,
+>  				   const struct aspeed_sig_expr *expr)
+>  {
+> -	int ret;
+> -
+>  	pr_debug("Disabling signal %s for %s\n", expr->signal,
+>  		 expr->function);
+> 
+> -	ret = aspeed_sig_expr_eval(ctx, expr, true);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	if (ret)
+> -		return aspeed_sig_expr_set(ctx, expr, false);
+> -
+> -	return 0;
+> +	return aspeed_sig_expr_set(ctx, expr, false);
 
-diff --git a/drivers/gpio/gpio-ws16c48.c b/drivers/gpio/gpio-ws16c48.c
-index b098f2dc196b..88410da91aaf 100644
---- a/drivers/gpio/gpio-ws16c48.c
-+++ b/drivers/gpio/gpio-ws16c48.c
-@@ -27,7 +27,8 @@ module_param_hw_array(base, uint, ioport, &num_ws16c48, 0);
- MODULE_PARM_DESC(base, "WinSystems WS16C48 base addresses");
- 
- static unsigned int irq[MAX_NUM_WS16C48];
--module_param_hw_array(irq, uint, irq, NULL, 0);
-+static unsigned int num_irq;
-+module_param_hw_array(irq, uint, irq, &num_irq, 0);
- MODULE_PARM_DESC(irq, "WinSystems WS16C48 interrupt line numbers");
- 
- /**
-@@ -497,7 +498,7 @@ static struct isa_driver ws16c48_driver = {
- 	},
- };
- 
--module_isa_driver(ws16c48_driver, num_ws16c48);
-+module_isa_driver_with_irq(ws16c48_driver, num_ws16c48, num_irq);
- 
- MODULE_AUTHOR("William Breathitt Gray <vilhelm.gray@gmail.com>");
- MODULE_DESCRIPTION("WinSystems WS16C48 GPIO driver");
--- 
-2.37.2
+Okay, maybe I was short-circuiting things in a way that wasn't quite 
+right. However, I'm a little nervous that we'll end up whacking state 
+that we can't restore and give ourselves mux-request ordering problems. 
+The Aspeed pin controllers are such a complex sea of state. Hopefully 
+we get away without needing to fix the theory behind the driver's 
+implementation.
 
+This code is common to the 2400, 2500 and 2600, have you tested the 
+patch on platforms for each to get coverage for the various pin state 
+expressions we have?
+
+I also wonder if we can write kunit tests to build some confidence with 
+the expected SCU bit state patterns for a given set of desired mux 
+states. Is this something you've looked at (it would be handy if kunit 
+can intercept regmap accesses)?
+
+Andrew
