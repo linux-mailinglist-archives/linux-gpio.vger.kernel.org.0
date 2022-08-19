@@ -2,151 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F2BE5991DA
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 02:41:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2580F5992B9
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 03:47:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244397AbiHSAkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 20:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42122 "EHLO
+        id S239163AbiHSBr1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 21:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241426AbiHSAku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 20:40:50 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8625FD806F;
-        Thu, 18 Aug 2022 17:40:47 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E8BF05C004F;
-        Thu, 18 Aug 2022 20:40:45 -0400 (EDT)
-Received: from imap50 ([10.202.2.100])
-  by compute3.internal (MEProxy); Thu, 18 Aug 2022 20:40:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
-        :content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1660869645; x=1660956045; bh=hKTkgJE0Em
-        hoc0KV5we9aVtrEb2/1qqim2MoVzcgNlc=; b=e3KNLBFMzdrV5ln0JmwiYxzfz0
-        ApOZ4LAZ6OWcQk/D+QdrOpuNR2Z+Cooc2WqCGSLwNDD8kxrvhsdv5xAz4PllADPC
-        wM6bTRb+kNxC7J7An7JBHEsOD5aUBKajKWSe/tJeXk8F+vXQKvYaV+qSWudkKtQB
-        Q9VoBK7PfLv/WfaJWqZTQDIl7nUIlViLzphq0/jmIVVoYN6yFed+b2uQFr0gar41
-        hSDHIo1PE3gnt79Rsud/cSN8b/8WwL0DCljxyllGd7UGRWnJ3XZyFrRnvXdIUmJU
-        KCigc3NSBFzhvoNTUBN7VQSrEIBaYzFYWsKPXUzOsUqvn+sLQoN55pqT2U1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1660869645; x=1660956045; bh=hKTkgJE0Emhoc0KV5we9aVtrEb2/
-        1qqim2MoVzcgNlc=; b=g19ZwDjpwZXpIHfXWknm8aq9Hj+TwAhKOOiHU/lR7CtG
-        zAEvnj5oKFXct5/wpjL/FiZPv6q46oVM7/prf7W8p1Wwy2fmqFeieBUa9jSvphSc
-        Droaj3pzFKl12Ay1WcP7qlerWvyXOh9jYxQUweCHCIX7r7wuR48C5GLdHbZVLscL
-        EyRY+pi+2uGSmNhPa0iq7XszAJlpAr15KqMbT3oaud5QyeTcz1qLtnYYbdIzZcK5
-        9xo/o7zEXKLfEtq+8USRydVqJYNkhQVMWVtk7HtAhEU6rvWIETVEEp1aj7BrmH/t
-        TZIBLFNm25TNfX7gf1Sk9iizXtFwqnZE43WTAGsfJw==
-X-ME-Sender: <xms:Ddz-Ys0-ONHJpseK2y0wnQGeqI2jaAv3nWrptauIQCqO0bZ8U0sVMQ>
-    <xme:Ddz-YnEHUZCf2-AnEkql-bV7c-2yTxliygidanxhd5eLaitoi2bq8-eD4makMZNwm
-    _eJPWaJqtZPBebOnQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeitddgfeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhephefhfeekgfekudevheffheeihedujeefjeevjeefudfgfeeutdeuvdeh
-    hfevueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:Ddz-Yk4JvBCnbiGqQKoR1Dzu1dkvJJtUQJYdU6wADRjzzoQErJ1CSg>
-    <xmx:Ddz-Yl12N43ZaVw5U-tfGvS2THFrChJL4Z7w-GJk_xKyBYsApQWAyg>
-    <xmx:Ddz-YvG39PTDjnc58Umc1jsk_ANIC2uV5JV1Sj5XKtpPC32Eo7Sz2Q>
-    <xmx:Ddz-YgOpuE2nfaNANOws3Bi_Zgn2IMZoryaLn1FSe_nZAMA9avIn7Q>
-Feedback-ID: idfb84289:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 03D201700082; Thu, 18 Aug 2022 20:40:45 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
-Mime-Version: 1.0
-Message-Id: <6845561a-cb33-4939-a760-2a5722134851@www.fastmail.com>
-In-Reply-To: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
-References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
-Date:   Fri, 19 Aug 2022 10:10:23 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Billy Tsai" <billy_tsai@aspeedtech.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S238919AbiHSBr0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 21:47:26 -0400
+X-Greylist: delayed 354 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 18 Aug 2022 18:47:23 PDT
+Received: from mail-m11873.qiye.163.com (mail-m11873.qiye.163.com [115.236.118.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C186D5EB6;
+        Thu, 18 Aug 2022 18:47:23 -0700 (PDT)
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by mail-m11873.qiye.163.com (Hmail) with ESMTPA id E22AD900383;
+        Fri, 19 Aug 2022 09:41:27 +0800 (CST)
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     linus.walleij@linaro.org, jeffy.chen@rock-chips.com,
+        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH] gpio/rockchip: handle irq before toggle trigger for edge type irq
+Date:   Fri, 19 Aug 2022 09:41:26 +0800
+Message-Id: <20220819014126.1235390-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSxhLVk4aQ0geGUpCHklCQ1UTARMWGhIXJB
+        QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktITUpVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ojo6Thw*Fj0yGRdMMTkoM1YY
+        OitPCShVSlVKTU1LQ0xISUNDT01PVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
+        WU5DVUlJVUxVSkpPWVdZCAFZQUlMSkw3Bg++
+X-HM-Tid: 0a82b3c329b82eafkusne22ad900383
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Billy,
+The irq demux for rockchip gpio interrupts do real irq handle after loop
+over the bits from int status register. Some oldder SoCs such as RK3308
+has no both edge trigger type support, replaced by a soft both type
+which switch trigger type once a level type triggered.
 
-On Thu, 18 Aug 2022, at 19:48, Billy Tsai wrote:
-> When the driver want to disable the signal of the function, it doesn't
-> need to query the state of the mux function's signal on a pin. The
-> condition below will miss the disable of the signal:
-> Ball | Default | P0 Signal | P0 Expression               | Other
-> -----+---------+-----------+-----------------------------+----------
->  E21   GPIOG0    SD2CLK      SCU4B4[16]=1 & SCU450[1]=1    GPIOG0
-> -----+---------+-----------+-----------------------------+----------
->  B22   GPIOG1    SD2CMD      SCU4B4[17]=1 & SCU450[1]=1    GPIOG1
-> -----+---------+-----------+-----------------------------+----------
-> Assume the register status like below:
-> SCU4B4[16] == 1 & SCU4B4[17] == 1 & SCU450[1]==1
-> After the driver set the Ball E21 to the GPIOG0:
-> SCU4B4[16] == 0 & SCU4B4[17] == 1 & SCU450[1]==0
-> When the driver want to set the Ball B22 to the GPIOG1, the condition of
-> the SD2CMD will be false causing SCU4B4[17] not to be cleared.
->
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c 
-> b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> index 83d47ff1cea8..a30912a92f05 100644
-> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> @@ -92,19 +92,10 @@ static int aspeed_sig_expr_enable(struct 
-> aspeed_pinmux_data *ctx,
->  static int aspeed_sig_expr_disable(struct aspeed_pinmux_data *ctx,
->  				   const struct aspeed_sig_expr *expr)
->  {
-> -	int ret;
-> -
->  	pr_debug("Disabling signal %s for %s\n", expr->signal,
->  		 expr->function);
-> 
-> -	ret = aspeed_sig_expr_eval(ctx, expr, true);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	if (ret)
-> -		return aspeed_sig_expr_set(ctx, expr, false);
-> -
-> -	return 0;
-> +	return aspeed_sig_expr_set(ctx, expr, false);
+For example, a irq is set to a IRQ_TYPE_EDGE_BOTH trigger type, but the
+SoC not support really both edge trigger type, use a
+IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING instead.
 
-Okay, maybe I was short-circuiting things in a way that wasn't quite 
-right. However, I'm a little nervous that we'll end up whacking state 
-that we can't restore and give ourselves mux-request ordering problems. 
-The Aspeed pin controllers are such a complex sea of state. Hopefully 
-we get away without needing to fix the theory behind the driver's 
-implementation.
+        --------
+    ____|      |______
 
-This code is common to the 2400, 2500 and 2600, have you tested the 
-patch on platforms for each to get coverage for the various pin state 
-expressions we have?
+        ^      ^
+	|      |
+	|      [0] the falling edge come before irq ack set by driver !
+	|
+        rockchip_irq_demux set to EDGE_FALLING type
+	rockchip_irq_demux call generic_handle_irq
+	                          -> handle_edge_irq
+				    -> irq_gc_ack_set_bit
 
-I also wonder if we can write kunit tests to build some confidence with 
-the expected SCU bit state patterns for a given set of desired mux 
-states. Is this something you've looked at (it would be handy if kunit 
-can intercept regmap accesses)?
+The [0] irq will lost by software on board test.
 
-Andrew
+With this patch, the generic_handle_irq has been move ahead before
+trigger toggle to fix the [0] lost issue.
+
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+ drivers/gpio/gpio-rockchip.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+index f91e876fd969..952d628a6f7e 100644
+--- a/drivers/gpio/gpio-rockchip.c
++++ b/drivers/gpio/gpio-rockchip.c
+@@ -346,6 +346,7 @@ static void rockchip_irq_demux(struct irq_desc *desc)
+ 		}
+ 
+ 		dev_dbg(bank->dev, "handling irq %d\n", irq);
++		generic_handle_irq(virq);
+ 
+ 		/*
+ 		 * Triggering IRQ on both rising and falling edge
+@@ -377,8 +378,6 @@ static void rockchip_irq_demux(struct irq_desc *desc)
+ 						     bank->gpio_regs->ext_port);
+ 			} while ((data & BIT(irq)) != (data_old & BIT(irq)));
+ 		}
+-
+-		generic_handle_irq(virq);
+ 	}
+ 
+ 	chained_irq_exit(chip, desc);
+-- 
+2.25.1
+
