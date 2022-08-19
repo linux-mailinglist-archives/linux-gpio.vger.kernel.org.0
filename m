@@ -2,101 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2580F5992B9
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 03:47:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59FAF599322
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Aug 2022 04:47:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239163AbiHSBr1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Aug 2022 21:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35622 "EHLO
+        id S240632AbiHSCqZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Aug 2022 22:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238919AbiHSBr0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 21:47:26 -0400
-X-Greylist: delayed 354 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 18 Aug 2022 18:47:23 PDT
-Received: from mail-m11873.qiye.163.com (mail-m11873.qiye.163.com [115.236.118.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C186D5EB6;
-        Thu, 18 Aug 2022 18:47:23 -0700 (PDT)
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by mail-m11873.qiye.163.com (Hmail) with ESMTPA id E22AD900383;
-        Fri, 19 Aug 2022 09:41:27 +0800 (CST)
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     linus.walleij@linaro.org, jeffy.chen@rock-chips.com,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH] gpio/rockchip: handle irq before toggle trigger for edge type irq
-Date:   Fri, 19 Aug 2022 09:41:26 +0800
-Message-Id: <20220819014126.1235390-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S242618AbiHSCqY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Aug 2022 22:46:24 -0400
+Received: from out29-75.mail.aliyun.com (out29-75.mail.aliyun.com [115.124.29.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061515AC7C;
+        Thu, 18 Aug 2022 19:46:21 -0700 (PDT)
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3962243|-1;BR=01201311R191S52rulernew998_84748_2000303;CH=blue;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0462487-0.00114242-0.952609;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047203;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.OwdZ-kK_1660877148;
+Received: from SunxiBot.allwinnertech.com(mailfrom:michael@allwinnertech.com fp:SMTPD_---.OwdZ-kK_1660877148)
+          by smtp.aliyun-inc.com;
+          Fri, 19 Aug 2022 10:45:49 +0800
+From:   Michael Wu <michael@allwinnertech.com>
+To:     linus.walleij@linaro.org, wens@csie.org, jernej.skrabec@gmail.com,
+        samuel@sholland.org, mripard@kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: sunxi: Fix name for A100 R_PIO
+Date:   Fri, 19 Aug 2022 10:45:41 +0800
+Message-Id: <20220819024541.74191-1-michael@allwinnertech.com>
+X-Mailer: git-send-email 2.29.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSxhLVk4aQ0geGUpCHklCQ1UTARMWGhIXJB
-        QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktITUpVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ojo6Thw*Fj0yGRdMMTkoM1YY
-        OitPCShVSlVKTU1LQ0xISUNDT01PVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
-        WU5DVUlJVUxVSkpPWVdZCAFZQUlMSkw3Bg++
-X-HM-Tid: 0a82b3c329b82eafkusne22ad900383
-X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The irq demux for rockchip gpio interrupts do real irq handle after loop
-over the bits from int status register. Some oldder SoCs such as RK3308
-has no both edge trigger type support, replaced by a soft both type
-which switch trigger type once a level type triggered.
+The name of A100 R_PIO driver should be sun50i-a100-r-pinctrl,
+not sun50iw10p1-r-pinctrl.
 
-For example, a irq is set to a IRQ_TYPE_EDGE_BOTH trigger type, but the
-SoC not support really both edge trigger type, use a
-IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING instead.
+Fixes: 473436e7647d6 ("pinctrl: sunxi: add support for the Allwinner A100 pin controller")
 
-        --------
-    ____|      |______
-
-        ^      ^
-	|      |
-	|      [0] the falling edge come before irq ack set by driver !
-	|
-        rockchip_irq_demux set to EDGE_FALLING type
-	rockchip_irq_demux call generic_handle_irq
-	                          -> handle_edge_irq
-				    -> irq_gc_ack_set_bit
-
-The [0] irq will lost by software on board test.
-
-With this patch, the generic_handle_irq has been move ahead before
-trigger toggle to fix the [0] lost issue.
-
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+Signed-off-by: Michael Wu <michael@allwinnertech.com>
 ---
- drivers/gpio/gpio-rockchip.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index f91e876fd969..952d628a6f7e 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -346,6 +346,7 @@ static void rockchip_irq_demux(struct irq_desc *desc)
- 		}
- 
- 		dev_dbg(bank->dev, "handling irq %d\n", irq);
-+		generic_handle_irq(virq);
- 
- 		/*
- 		 * Triggering IRQ on both rising and falling edge
-@@ -377,8 +378,6 @@ static void rockchip_irq_demux(struct irq_desc *desc)
- 						     bank->gpio_regs->ext_port);
- 			} while ((data & BIT(irq)) != (data_old & BIT(irq)));
- 		}
--
--		generic_handle_irq(virq);
- 	}
- 
- 	chained_irq_exit(chip, desc);
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+index afc1f5df7545..b82ad135bf2a 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+@@ -99,7 +99,7 @@ MODULE_DEVICE_TABLE(of, a100_r_pinctrl_match);
+ static struct platform_driver a100_r_pinctrl_driver = {
+ 	.probe	= a100_r_pinctrl_probe,
+ 	.driver	= {
+-		.name		= "sun50iw10p1-r-pinctrl",
++		.name		= "sun50i-a100-r-pinctrl",
+ 		.of_match_table	= a100_r_pinctrl_match,
+ 	},
+ };
 -- 
-2.25.1
+2.29.0
 
