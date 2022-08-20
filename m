@@ -2,48 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF91259AD2A
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Aug 2022 12:17:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 080A459B083
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Aug 2022 22:47:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344474AbiHTKQr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Aug 2022 06:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
+        id S231712AbiHTUqM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Aug 2022 16:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbiHTKQq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Aug 2022 06:16:46 -0400
-X-Greylist: delayed 582 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 20 Aug 2022 03:16:45 PDT
-Received: from mail-m11885.qiye.163.com (mail-m11885.qiye.163.com [115.236.118.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FBB5CD0
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Aug 2022 03:16:45 -0700 (PDT)
-Received: from localhost (unknown [103.29.142.67])
-        by mail-m11885.qiye.163.com (Hmail) with ESMTPA id A28F04C0309;
-        Sat, 20 Aug 2022 18:07:02 +0800 (CST)
-From:   Jeffy Chen <jeffy.chen@rock-chips.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Doug Anderson <dianders@chromium.org>
-Cc:     Jeffy Chen <jeffy.chen@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
+        with ESMTP id S231430AbiHTUqH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Aug 2022 16:46:07 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAC9252A1
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Aug 2022 13:46:05 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id e20so8331193wri.13
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Aug 2022 13:46:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=conchuod.ie; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=7V3TE9A3eDfzAhMP7VTHkeTu4QJwwcdn1JqXWxvCTzw=;
+        b=VfaOebSwwfQ7KRRcTJsL6kl5KLWUW5wv3Jv0zhScBKzEkMyR3sT0bu4hZgoVSI+l4T
+         j+umuQByZQKVc5jHO+g4yY4YB92e6dWRAUobANP8QcdRJxbBWMrjLL/t6g3koW//JaC5
+         McbxUW9TGUufX0ZbFwGlWMCpxvLXZ2iyfRHp6Xfp/SQUlbVHgmmZft2w5kZXh8FjzIJj
+         aBbNQJNwIowOovg70FX+dJgyVUgtbNyHbGYM/AsIDfPFMPcp3wklG5RfY4nzqPr9zbXN
+         GpTs5rgJhOwv3lqbZSrrVxO9mMF0Gii9IxipCbGtr2QeHUVgnNb9WtXDAZY/JMwTTq9w
+         gJ6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=7V3TE9A3eDfzAhMP7VTHkeTu4QJwwcdn1JqXWxvCTzw=;
+        b=2wuAbtEGPYX38nMajvwYMd8vIwM39dekLnaqaSEfwYdBfHtV8EBdkUqPYcYncQiBch
+         P/emDrO49Wx+o05b44MdQEt4P8/NwidD7QxurTQmm5l0EICe3B46COcazsqJ3FPTI/49
+         d2EFcF+4EufmUS17jW6PBeDRWSppWe5AfnmSz7zZ73cND587/n0hzWWBL4Q5x4ORFMFc
+         XWFtlugDbAWyZszCohTKHXhR2ycXKZlj8Vsz/zV44hdcgRKLyL5l3vNccQfPBxWt+sQN
+         zgpMEmFBcz3S965Mh+PQ3Cjk+F77Ye1XfDyNHyyHIDjn867q8dm6lsYyPsSuLHqT9i+B
+         wx/A==
+X-Gm-Message-State: ACgBeo16spVKmpAVS+SRsi3bG/XFFYJjydQXmYmnXSlezBxhXCKP4oEi
+        cA+7ltaVEmgbkKfuVStsXtLf5g==
+X-Google-Smtp-Source: AA6agR4CzMyvNM98C0fTK1AQN8JhuOAP6Ylg/z1MAnuXL/CIJmtUcVVshPT1TfZQAQQ5xc5z1nXnRQ==
+X-Received: by 2002:adf:f881:0:b0:225:4f49:55dc with SMTP id u1-20020adff881000000b002254f4955dcmr807024wrp.414.1661028363613;
+        Sat, 20 Aug 2022 13:46:03 -0700 (PDT)
+Received: from henark71.. ([51.37.149.245])
+        by smtp.gmail.com with ESMTPSA id z6-20020a1cf406000000b003a2f2bb72d5sm14971194wma.45.2022.08.20.13.46.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Aug 2022 13:46:02 -0700 (PDT)
+From:   Conor Dooley <mail@conchuod.ie>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] gpio/rockchip: Toggle edge trigger mode after acking
-Date:   Sat, 20 Aug 2022 17:59:33 +0800
-Message-Id: <20220820095933.20234-2-jeffy.chen@rock-chips.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220820095933.20234-1-jeffy.chen@rock-chips.com>
-References: <20220820095933.20234-1-jeffy.chen@rock-chips.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor.dooley@microchip.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpio: mpfs-gpio: allow parsing of hog child nodes.
+Date:   Sat, 20 Aug 2022 21:41:32 +0100
+Message-Id: <20220820204130.1380270-1-mail@conchuod.ie>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHUNOVk0eH0pLSk5NTE5IH1UTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpLSFVJQlVKT0lVTUxZV1kWGg8SFR0UWUFZT0tIVUpISkJITVVLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OCI6Dxw4ST0rCRUyD1YzHAo#
-        ORkKC1ZVSlVKTU1LQkJLS0lISktPVTMWGhIXVREeHR0CVRgTHhU7CRQYEFYYExILCFUYFBZFWVdZ
-        EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUlOSUg3Bg++
-X-HM-Tid: 0a82bab864142eb9kusna28f04c0309
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,38 +71,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Otherwise the trigger mode might be out-of-sync when a level change
-occurred in between.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Fixes: 53b1bfc76df2 ("pinctrl: rockchip: Avoid losing interrupts when supporting both edges")
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+The SD card and eMMC on PolarFire SoC based dev boards are sometimes
+statically muxed using a GPIO. To facilitate this, enable gpio-hog
+child node properties.
+
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
+ .../bindings/gpio/microchip,mpfs-gpio.yaml     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
- drivers/gpio/gpio-rockchip.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index a98351cd6821..736b4d90f1ca 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -338,7 +338,7 @@ static void rockchip_irq_demux(struct irq_desc *desc)
- 		irq = __ffs(pend);
- 		pend &= ~BIT(irq);
+diff --git a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+index 110651eafa70..6704a7a52cd0 100644
+--- a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+@@ -44,6 +44,24 @@ properties:
  
--		dev_dbg(bank->dev, "handling irq %d\n", irq);
-+		generic_handle_domain_irq(bank->domain, irq);
+   gpio-controller: true
  
- 		/*
- 		 * Triggering IRQ on both rising and falling edge
-@@ -370,8 +370,6 @@ static void rockchip_irq_demux(struct irq_desc *desc)
- 						     bank->gpio_regs->ext_port);
- 			} while ((data & BIT(irq)) != (data_old & BIT(irq)));
- 		}
--
--		generic_handle_domain_irq(bank->domain, irq);
- 	}
- 
- 	chained_irq_exit(chip, desc);
++patternProperties:
++  "^.+-hog(?:-[0-9]+)?$":
++    type: object
++
++    properties:
++      gpio-hog: true
++      gpios: true
++      input: true
++      output-high: true
++      output-low: true
++      line-name: true
++
++    required:
++      - gpio-hog
++      - gpios
++
++    additionalProperties: false
++
+ required:
+   - compatible
+   - reg
 -- 
-2.20.1
+2.37.1
 
