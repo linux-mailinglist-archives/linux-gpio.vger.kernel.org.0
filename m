@@ -2,89 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9840B59B821
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Aug 2022 05:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7899F59B998
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Aug 2022 08:33:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbiHVDwb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Aug 2022 23:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60408 "EHLO
+        id S233125AbiHVGck (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Aug 2022 02:32:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232391AbiHVDwa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Aug 2022 23:52:30 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4860520F70;
-        Sun, 21 Aug 2022 20:52:29 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4M9yyh20Q2zkWVZ;
-        Mon, 22 Aug 2022 11:49:00 +0800 (CST)
-Received: from CHINA (10.175.102.38) by canpemm500009.china.huawei.com
- (7.192.105.203) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 22 Aug
- 2022 11:52:26 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] gpio: mockup: remove gpio debugfs when remove device
-Date:   Mon, 22 Aug 2022 04:10:25 +0000
-Message-ID: <20220822041025.3221406-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S233236AbiHVGc3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Aug 2022 02:32:29 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CC328707
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Aug 2022 23:32:20 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id bx38so9643006ljb.10
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Aug 2022 23:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=o31t8HDG7QptfeLJ+04Jkz8j9NFHlDWTE2XxPfy4mY4=;
+        b=FrYubPa5iRhzf+WrRPsmiY5vXh9yxeGqcT0p84Sdu/VMPFizo2ximY48tx9ylUHZED
+         mPTBYvFdQSWyQvZFeiwO+ZxRcjtLQByT4adG/DoNeZBMtMz8P1WBGCNUfwXOknCVageC
+         gOsO411NxXs0bFn/r4hWP6vZOvFFR4JKHsjmj17OEFnj3UyoPLJL3/F0BAPtvb3VrkKu
+         kt20y5+o7H2J6gAggdKUcj8w21Ihg/D6nYx+sWVa7eEOorpRHZwPseeMvJY9pUuIFhbk
+         K7EW0i+70qlXOgawP99bZ1X3czl9u7y6nzREE0Ep8RS/WLsefyESE2bvTvChiDPA3pa9
+         MIHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc;
+        bh=o31t8HDG7QptfeLJ+04Jkz8j9NFHlDWTE2XxPfy4mY4=;
+        b=bZkl4i7kKk1ADGTswd8bBri9g1xsj5PiJhHGhhObGJcJ6ok4q2dLMxxNgyMwl7gLdf
+         4YGsNhobpSczOmG5sKt9XMGgUqe9B1Co/gWnE/vnlDgEsYN61QqAWGymtvbpEn9Q+Fs5
+         e/BBiLYXfpXuQ0txSnR8jw5ESqdQ2bQZz9whbGRe18/7fFLzK/Pg5RZU6PB2/VsvcC2q
+         94QoGFmk9GywOkQ4Ljuxnm2XjLRGc0f30Iq/S++meVbESQNh0FYbAWTb5CZ7vZKqfhoF
+         +xqk29pb4zBx35aG4n4IulchaACj1yFK3RAnWZLBz1l2J3rZtC/FeVYiqj5gBNLLvns1
+         XppA==
+X-Gm-Message-State: ACgBeo1HkHFBk4mcGCZUaLWR3tfBdEW3PiwJnYHyaE3zxLIgSRHrJl6U
+        x3EQ3PyuR8Sjon0hP7nTtI++4gIiM8wjQsWWMCqexzwhIIrrHw==
+X-Google-Smtp-Source: AA6agR6NTSbaljBeT6nBHwpsZV+iFEjaf84R55z0GxoNRdmBRntcrfv1xOl7luJnB44WOhlEhx6CPLwQoMYUPfF5qd0=
+X-Received: by 2002:a5d:4ad2:0:b0:225:285e:3ec1 with SMTP id
+ y18-20020a5d4ad2000000b00225285e3ec1mr9924326wrs.24.1661149927923; Sun, 21
+ Aug 2022 23:32:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.102.38]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a5d:5444:0:0:0:0:0 with HTTP; Sun, 21 Aug 2022 23:32:07
+ -0700 (PDT)
+Reply-To: maddahabdwabbo@gmail.com
+From:   Abd-jaafari Maddah <sheishenalyeshmanbetovichu@gmail.com>
+Date:   Sun, 21 Aug 2022 23:32:07 -0700
+Message-ID: <CALX-7+0_G-U-D9doENGdbc90dSeV5o=VML+dqaJkbMJ9UiPshQ@mail.gmail.com>
+Subject: Why No Response Yet?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO mockup debugfs is created in gpio_mockup_probe() but
-forgot to remove when remove device. This patch add a devm
-managed callback for removing them.
-
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
-v1 -> v2: return from devm_add_xx directly as Bartosz's suggestion
----
- drivers/gpio/gpio-mockup.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 8943cea92764..a2e505a7545c 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -373,6 +373,13 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
- 	}
- }
- 
-+static void gpio_mockup_debugfs_cleanup(void *data)
-+{
-+	struct gpio_mockup_chip *chip = data;
-+
-+	debugfs_remove_recursive(chip->dbg_dir);
-+}
-+
- static void gpio_mockup_dispose_mappings(void *data)
- {
- 	struct gpio_mockup_chip *chip = data;
-@@ -455,7 +462,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 
- 	gpio_mockup_debugfs_setup(dev, chip);
- 
--	return 0;
-+	return devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
- }
- 
- static const struct of_device_id gpio_mockup_of_match[] = {
 -- 
-2.34.1
-
+Dear,
+I had sent you a mail but i don't think you received it that's why am writing
+you again,it's important we discuss.
+Am waiting,
+Abd-Jafaari Maddah
