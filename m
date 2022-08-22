@@ -2,67 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 107A759BC3D
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Aug 2022 11:05:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFCDA59BE3D
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Aug 2022 13:09:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234031AbiHVJFf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Aug 2022 05:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47762 "EHLO
+        id S233598AbiHVLJg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Aug 2022 07:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234144AbiHVJD2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Aug 2022 05:03:28 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E4A321
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Aug 2022 02:03:21 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id u6so7894613eda.12
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Aug 2022 02:03:21 -0700 (PDT)
+        with ESMTP id S233790AbiHVLJN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Aug 2022 07:09:13 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30072356C4
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Aug 2022 04:08:01 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id w10so1247208edc.3
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Aug 2022 04:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc;
-        bh=PfP60D9HcZlcTmmRkDILCGp84nMKR71wAxP/XLHNcOc=;
-        b=dcOe3X+PKAbEoSgP1SZmV125Z3qv1XttTwkArPyYcr4xSsp1l0HctYY2pv0uExaNHs
-         BSjz8aI9/G3YSdKhzFhH4CM26Cp3NbzkVihaziCi6knnGjVWDuodYzoqNDXyfNKbrhPb
-         UHDG2NBq7HvBzE/cVwbtE5cAhkXQhMN87foLuPRlelhuP82lAzr5Yde41DKpyBIzO+mN
-         HIVVXPLUopYlfKhEimJOiRXK27dIR5p0EdpWDotSbKPfnQzDABmMtGMYeN6kyfaZbYRN
-         0s61P20Acr+L1GVSLBYmoWZlAAvXC2NhF9tw6XT5iUBlLjrqMQ71IR+FoqGenpIcgCK0
-         3j0A==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=UBOByeB2MXYBWF0Ngo8u4UdkkfztEsDE7yNqsiJ1+80=;
+        b=BzsFOpc1/Mc0X9z223lsXWZS/tY4y0+joi4BEv5glMXwdMgLaEhyVlaoSyz0K3ya5T
+         Ik7dnernQfgtBGmb+OvhwETWQh2h1AZJR54hTZepWY1rjP3ebDuqzWjStEC3jbFZAaw8
+         K3gES4WqS6qJyzcuG97gJlbc1py4dUVk1Dm2de26RCPo8+VMeeWYLdPHDpYmZUAx9/uT
+         V6Th/pdzLwmss/lYVTMINZDV4WCGgQdDMtOtbeznxVHJbvPD3E7QhLY5CRFw9vGUoXgt
+         BPaaxk1C3EAsbeHb+beUDVIHdJo8ahLgoYZ8fLqanNhVk7TuErun4JI3xtOxsLTl5M6V
+         esLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=PfP60D9HcZlcTmmRkDILCGp84nMKR71wAxP/XLHNcOc=;
-        b=E6UwBrCYjVlZpe1DW+XKnBurVzZ/MTzj35NMU4UjyPojbITqQZqQCkY9pnYnAZpXCE
-         XVAdseVzfV45a9GWY4VvxErisv64p1Zx309javRmFvi2sa4abk/2BYAtBZ8YKYt5cDM7
-         qcX85KgC1uHhFUpCWEmgrAO6oVblCKssPF2Baf3oDLFFJUJq8VzruPy30+HD8d3l03ED
-         3kzjg6OQetK8uLuBMq2hISlHMBb4JwId6BBAvJ3t3L04eqwyDFLEK3upkh/vC60B4vCj
-         o+dH+QxBoBJTZOowCzZDpMF5E4F7E9mjlT9ZywAHj+4LINgS7lWDHfPB3rlwZ+PK3kHJ
-         JuAg==
-X-Gm-Message-State: ACgBeo2s1v3J/42Xwb/q6hH71w4deHgI0+VI4KIrRQBiVZxzCLz0FPI0
-        qLJJrYFU3CaT3go6ikRXdXzOqxbjkWi+p3DTckpStw==
-X-Google-Smtp-Source: AA6agR4jfiw9ukbwgaBM5kt0WK81+CDs8BDK8ocqBwlyo9nrKF50l8XJTQbKiqdo/xZ0koN9LAIfirRH7ThqRuR3Ic4=
-X-Received: by 2002:a05:6402:1f8c:b0:43e:8fab:76c with SMTP id
- c12-20020a0564021f8c00b0043e8fab076cmr15225219edc.126.1661158999829; Mon, 22
- Aug 2022 02:03:19 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=UBOByeB2MXYBWF0Ngo8u4UdkkfztEsDE7yNqsiJ1+80=;
+        b=XN+5FHX3EFMF0Pb/2ELc949sDErdI4U8TL7ZpGaRnjaPpwXM3HDvU7XAd1ECAJ1lkZ
+         m5q5aPB7pvs4FIzE33+6JP+R4MuTw5OAx+kC8gEg7FmZQWX9bL6Vxoqf5DTBathDWZBT
+         sekmoYmiGNUtEluyanryhZginG4wpQ/SKR2OjMmFtZ/70qGa6fCxh7Bw3qMxLRPuGUeV
+         pNxY+WdBiVddQ10qRvDRNQlPofuwnl8nPJRZ7aOv1B7YDjTwCRSWX5bz8C5Kz5IUmJ5V
+         EJoUK7H9icm4v7NTmHI7v3MMHPC6fuDagixnzLmPoWOTdiUOqsPZV6OzlUnHWr9lCYCy
+         yMKQ==
+X-Gm-Message-State: ACgBeo0lHUSaDyTXww12qD1ZfsLSaA0L3pSDjp1LazWTBdkp+hPg3AwT
+        /glxA9ZCa2MLNndsjFafjWHO7RgImLzV2T6IZPgd6xUIo2M=
+X-Google-Smtp-Source: AA6agR6I8GpDbmShK/nTtNn95EOVxEW+y17uLeMbs/P/mq4HbiEMfUtFHz3h1LT8uPmBbs95HSDU97bm3dLNTUXQr5A=
+X-Received: by 2002:a05:6402:641:b0:446:d:bd64 with SMTP id
+ u1-20020a056402064100b00446000dbd64mr16181153edx.32.1661166479741; Mon, 22
+ Aug 2022 04:07:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220808025121.110223-1-jhlspies@gmail.com>
-In-Reply-To: <20220808025121.110223-1-jhlspies@gmail.com>
+References: <20220809214556.2489822-1-robh@kernel.org>
+In-Reply-To: <20220809214556.2489822-1-robh@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 22 Aug 2022 11:03:08 +0200
-Message-ID: <CACRpkda6VoNjJfKY3+oCvdB+V6O_4cumKpjVSdBb9e8mEmHF6g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rockchip: Enhance support for IRQ_TYPE_EDGE_BOTH
-To:     =?UTF-8?B?Sm/Do28gSC4gU3BpZXM=?= <jhlspies@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 22 Aug 2022 13:07:48 +0200
+Message-ID: <CACRpkdbSycBG6ZiXfEHLquiyAMu=et81LAaGZbj38bhAccCSkw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,ipq6018: Fix example
+ 'gpio-ranges' size
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Sricharan R <sricharan@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,22 +71,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 8, 2022 at 4:53 AM Jo=C3=A3o H. Spies <jhlspies@gmail.com> wrot=
-e:
+On Tue, Aug 9, 2022 at 11:46 PM Rob Herring <robh@kernel.org> wrote:
 
-> Switching between falling/rising edges for IRQ_TYPE_EDGE_BOTH on pins tha=
-t
-> require debounce can cause the device to lose events due to a desync
-> between pin state and irq type.
+> 'gpio-ranges' entries have a fixed size of 1 phandle plus arg 3 cells.
+> The qcom,ipq6018-pinctrl example is a cell short:
 >
-> This problem is resolved by switching between IRQ_TYPE_LEVEL_LOW and
-> IRQ_TYPE_LEVEL_HIGH instead.
+> Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.example.dtb: pinctrl@1000000: gpio-ranges:0: [1, 0, 80] is too short
+>         From schema: /usr/local/lib/python3.10/dist-packages/dtschema/schemas/gpio/gpio.yaml
 >
-> Fixes: 936ee26 ("gpio/rockchip: add driver for rockchip gpio")
-> Signed-off-by: Jo=C3=A3o H. Spies <jhlspies@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please ack and I can send to Linus before rc1.
 
-No reaction from maintainers so I'm just gonna assume this fix is
-correct and applied for fixes.
+Sorry for delay, was on vacation :/
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+I think as binding maintainer you can just submit this kind of smaller stuff
+without any subsystem consent, if you have it acked by Krzysztof, even more so.
 
 Yours,
 Linus Walleij
