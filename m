@@ -2,116 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6672559B6D1
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Aug 2022 01:46:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9334E59B80A
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Aug 2022 05:40:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231322AbiHUXpf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Aug 2022 19:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        id S231851AbiHVDjg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Aug 2022 23:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231841AbiHUXpX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Aug 2022 19:45:23 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655E01FCEB
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Aug 2022 16:45:22 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id m21so3721957uab.13
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Aug 2022 16:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
-        bh=p6gJcrUcELHltuWyBaIieOc+0jaiE4THT4cA+0i1fDQ=;
-        b=Ih/4KZn1B4AopmI23+7UwdBlyerpiWDZTxupRGjHjlclDJaeOaCYyUtUUqPzDY6ejq
-         d2NdbbFRd4KwDraUczVBU0KAuicgECp7uSo9qMnYYXhZsLYlFulCRQVLGHENhd/WhsbQ
-         LqpB+lVnb086vJCCOR5PjSnIo/V4/dm6SYVCaH0VR4nFQ8lIM084jXAI0MmqSWcn/0Lv
-         7blEDWjmrAgQdX/Qg/epg7frKasghv3Gy0BUMIF6oLOIb9rTlPnjwSD0q9imG8/qKeMT
-         QH7BIbIXmhiz5ErYW8Knu0DEugndPKQXujWZpbUSp5f1XyLYQf1sivqR4H3WhVOZT/tW
-         xivg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=p6gJcrUcELHltuWyBaIieOc+0jaiE4THT4cA+0i1fDQ=;
-        b=aYHglaxcPRBgypgtv5WzPN8aqNIEMygiG0vauwrKyW7+EglipJKG+Do2Nnoy/dnK6d
-         /ycNw6lQXN1l0od+5asYAovKdi5Kv6IBcpD2R5uWnWqYN37evy1lXADbyy+yoy/uDLR0
-         BeR2o4W8Oxozsg5Fo7x9s4ZrPsoNayNQ6UqJIoyfmvJPaU/74dMmPOC/hRuDMXAiB1cM
-         C9/sG7zyfXTjgnHv5GK3lw/tqHJvAhuCouWEGQULAgQpMwUPvYyX7Ze7hM7R0mvUr2zt
-         QGfBFjN56iHr2S9w2Wz6fPXVPJY79t2zkoRjtO/hv2uf9xBUuwtkdLaw7UGXh2o/MQmv
-         DYeA==
-X-Gm-Message-State: ACgBeo0DqN/gDl7riXQGQLoLh/XKIr2B/hkLyajLBUyGj/fGpktASR81
-        1m0fGyJl95hq1V4aFJFBqfY95qx4aEqRTvkBBK8=
-X-Google-Smtp-Source: AA6agR4u903aCyijXQfq0EOGsmlYECYR20RtUeCzLdfvI3dvdb4k6D/KyA92Pc2sWcjkIOrvGoHSWoOpzXfj6/ggrL0=
-X-Received: by 2002:ab0:6515:0:b0:39e:f8fd:a772 with SMTP id
- w21-20020ab06515000000b0039ef8fda772mr1078050uam.33.1661125520959; Sun, 21
- Aug 2022 16:45:20 -0700 (PDT)
+        with ESMTP id S231994AbiHVDjc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Aug 2022 23:39:32 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4AE1248C3;
+        Sun, 21 Aug 2022 20:39:31 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4M9yj51spzznTbv;
+        Mon, 22 Aug 2022 11:37:13 +0800 (CST)
+Received: from [10.174.178.165] (10.174.178.165) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 22 Aug 2022 11:39:29 +0800
+Subject: Re: [PATCH -next] gpio: mockup: remove gpio debugfs when remove
+ device
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20220816145225.84283-1-weiyongjun1@huawei.com>
+ <CAMRc=McG5Pf4b5HymV1iaFAGqMMEtyYSQi23z9LmjvzmbF4rYg@mail.gmail.com>
+From:   "weiyongjun (A)" <weiyongjun1@huawei.com>
+Message-ID: <fe049f3e-6924-342b-a5ba-f460ddce436c@huawei.com>
+Date:   Mon, 22 Aug 2022 11:39:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Received: by 2002:a05:612c:2122:b0:2c9:ae23:f433 with HTTP; Sun, 21 Aug 2022
- 16:45:20 -0700 (PDT)
-Reply-To: oksr1l19@gmail.com
-From:   Richard <hassangilbert57@gmail.com>
-Date:   Mon, 22 Aug 2022 00:45:20 +0100
-Message-ID: <CAG3d5YvBTQvOXZmTmLwQaiW_RBTvCQO6A2-yuKMpCg=MNt3CHQ@mail.gmail.com>
-Subject: Letter of intent! and Please Read!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:92a listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5854]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [hassangilbert57[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [hassangilbert57[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [oksr1l19[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+In-Reply-To: <CAMRc=McG5Pf4b5HymV1iaFAGqMMEtyYSQi23z9LmjvzmbF4rYg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.165]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear,
 
-Are you in need of a business or personal loan? Or is your business
-struggling due to covid 19 pandemic, we are offering easy loans to
-meet your needs, our funding and loans have repayment plans of 10 to
-25 years' time for new and existing businesses, housing projects, and
-individual financing.
-
-We are willing to finance your request no matter where you are
-stationed or located, our financing is global once you're willing to
-meet the process and conditions. Your request will be processed and
-sent to your account within 24 hours after the process is completed.
-
-Kindly contact us in order for us to direct you to our procurement
-officer, If you are interested.
-
-Thank you in advance as we hope to meet your demand irrespective of
-the volume in need.
+On 2022/8/19 20:49, Bartosz Golaszewski wrote:
+> On Tue, Aug 16, 2022 at 4:34 PM Wei Yongjun <weiyongjun1@huawei.com> wrote:
+>> GPIO mockup debugfs is created in gpio_mockup_probe() but
+>> forgot to remove when remove device. This patch add a devm
+>> managed callback for removing them.
+>>
+> The tag -next is for patches that address issues that are in next but
+> not yet in master.
 
 
-Thanks & Regards
-Mr. Richard.
+Got it. Thanks.
+
+
+>
+>> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+>> ---
+>>   drivers/gpio/gpio-mockup.c | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+>> index 8943cea92764..1fdc444b093b 100644
+>> --- a/drivers/gpio/gpio-mockup.c
+>> +++ b/drivers/gpio/gpio-mockup.c
+>> @@ -373,6 +373,13 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+>>          }
+>>   }
+>>
+>> +static void gpio_mockup_debugfs_cleanup(void *data)
+>> +{
+>> +       struct gpio_mockup_chip *chip = data;
+>> +
+>> +       debugfs_remove_recursive(chip->dbg_dir);
+>> +}
+>> +
+>>   static void gpio_mockup_dispose_mappings(void *data)
+>>   {
+>>          struct gpio_mockup_chip *chip = data;
+>> @@ -455,6 +462,10 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+>>
+>>          gpio_mockup_debugfs_setup(dev, chip);
+>>
+>> +       rv = devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
+>> +       if (rv)
+>> +               return rv;
+>> +
+> Please return that function directly.
+
+
+Will fix it.
+
+
+>
+>>          return 0;
+>>   }
+>>
+>> --
+>> 2.34.1
+>>
+> This isn't very relevant as the module needs to be unloaded anyway in
+> order to reconfigure the simulated device but I'll apply it as it's
+> technically correct. Did you see we have a new one - gpio-sim - that
+> uses configfs?
+>
+
+gpio-mockup is used for testing other drivers with overlay dts, and 
+triggered
+
+this issue. I though gpio-sim not work with dts, but it should works well.
+
+I will have a try to using the new gpio-sim module.
+
+
