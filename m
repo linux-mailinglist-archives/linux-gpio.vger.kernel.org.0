@@ -2,236 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0339D59CD41
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 02:39:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B4559CEC2
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 04:50:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238558AbiHWAjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Aug 2022 20:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41540 "EHLO
+        id S239749AbiHWCuS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Aug 2022 22:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238614AbiHWAjT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Aug 2022 20:39:19 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280FD4BA5D
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Aug 2022 17:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661215159; x=1692751159;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZlU8T99LROfcR/HpvGcM7zLCg16ksF0hj2WCltfQoJk=;
-  b=HBrqL4fEJ5W3yUx070vtF2zfqzHMNJqVzHcRmgHl0p3CbHGIzUSj+UA+
-   49GwkDxLM9uddHK7ELrmSPz9aq43rMTeO5fWP/+3aFZQqt1eavnafrKOv
-   VbE5Ba1HmdFywm/yOO1mSjY0sv4JHpx3bvA+Sj+BouHyOcgsqFses1OXd
-   VGJvZJKkMz4HPMpNSs3YR2DUpDfiaJdegjoHd8puyogmZG5Kym4wMQ5fx
-   VzPjnDvErRqswTdUr6lzL+lU+74pKt46/AXPL1zSMEs78eLn+DdHJLDeY
-   GHv8mM8L6J92WFFPT/MfBHQFqQlnL3SWItDI5NBafJFD2njcEtqdnDKMd
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="294840088"
-X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
-   d="scan'208";a="294840088"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 17:39:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
-   d="scan'208";a="609155942"
-Received: from lkp-server01.sh.intel.com (HELO dd9b29378baa) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 22 Aug 2022 17:39:17 -0700
-Received: from kbuild by dd9b29378baa with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oQHwq-0000uQ-2w;
-        Tue, 23 Aug 2022 00:39:16 +0000
-Date:   Tue, 23 Aug 2022 08:38:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 27586b851bae62296b77687a58a8c92ab84d5274
-Message-ID: <6304219f.oiXSmcAyeFIMQNjx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S239737AbiHWCuS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Aug 2022 22:50:18 -0400
+Received: from mail-m11885.qiye.163.com (mail-m11885.qiye.163.com [115.236.118.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500135A3D4;
+        Mon, 22 Aug 2022 19:50:16 -0700 (PDT)
+Received: from [192.168.111.100] (unknown [58.22.7.114])
+        by mail-m11885.qiye.163.com (Hmail) with ESMTPA id D79B04C0485;
+        Tue, 23 Aug 2022 10:50:13 +0800 (CST)
+Message-ID: <5cb0a457-b667-76e5-d383-6e93457d5d12@rock-chips.com>
+Date:   Tue, 23 Aug 2022 10:50:16 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH 2/2] gpio/rockchip: Toggle edge trigger mode after acking
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Brian Norris <briannorris@chromium.org>
+References: <20220820095933.20234-1-jeffy.chen@rock-chips.com>
+ <20220820095933.20234-2-jeffy.chen@rock-chips.com>
+ <CAD=FV=X0qJ2OC1SrAmhSQ5YeKEwvsSCbfVGPh457YYEuPCbRtg@mail.gmail.com>
+Content-Language: en-US
+From:   Chen Jeffy <jeffy.chen@rock-chips.com>
+In-Reply-To: <CAD=FV=X0qJ2OC1SrAmhSQ5YeKEwvsSCbfVGPh457YYEuPCbRtg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSk9MVkgdHUofSh5PTE9KHVUTARMWGhIXJB
+        QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktITkhVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NDI6Qhw6Sj08AQkwShYuEjkN
+        QwMwCUJVSlVKTU1KSUlIS0pPTktLVTMWGhIXVREeHR0CVRgTHhU7CRQYEFYYExILCFUYFBZFWVdZ
+        EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFOQ01LNwY+
+X-HM-Tid: 0a82c89b8ecb2eb9kusnd79b04c0485
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 27586b851bae62296b77687a58a8c92ab84d5274  dt-bindings: pinctrl: aspeed: Add missing properties to examples
+Hi Doug,
 
-elapsed time: 724m
+It's been a long time, hope you're doing well :)
 
-configs tested: 155
-configs skipped: 2
+On 8/23 星期二 1:08, Doug Anderson wrote:
+> Hi,
+> 
+> On Sat, Aug 20, 2022 at 3:07 AM Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
+>>
+>> Otherwise the trigger mode might be out-of-sync when a level change
+>> occurred in between.
+>>
+>> Fixes: 53b1bfc76df2 ("pinctrl: rockchip: Avoid losing interrupts when supporting both edges")
+>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+>> ---
+>>
+>>   drivers/gpio/gpio-rockchip.c | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+>> index a98351cd6821..736b4d90f1ca 100644
+>> --- a/drivers/gpio/gpio-rockchip.c
+>> +++ b/drivers/gpio/gpio-rockchip.c
+>> @@ -338,7 +338,7 @@ static void rockchip_irq_demux(struct irq_desc *desc)
+>>                  irq = __ffs(pend);
+>>                  pend &= ~BIT(irq);
+>>
+>> -               dev_dbg(bank->dev, "handling irq %d\n", irq);
+>> +               generic_handle_domain_irq(bank->domain, irq);
+>>
+>>                  /*
+>>                   * Triggering IRQ on both rising and falling edge
+>> @@ -370,8 +370,6 @@ static void rockchip_irq_demux(struct irq_desc *desc)
+>>                                                       bank->gpio_regs->ext_port);
+>>                          } while ((data & BIT(irq)) != (data_old & BIT(irq)));
+>>                  }
+>> -
+>> -               generic_handle_domain_irq(bank->domain, irq);
+> 
+> I'm happy to let others say for sure, but from my point of view I'm
+> not convinced. It feels like with your new code you could lose edges.
+> 
+> The abstraction I always assume for edge triggered interrupts is that
+> multiple edges are coalesced into one IRQ but that if an edge comes in
+> after the first line of the IRQ handler starts executing then the IRQ
+> handler will run again. In other words:
+> 
+> - edge A
+> - edge B
+> - IRQ handler starts running (once for A/B)
+> - IRQ handler finishes running
+> - <idle>
+> - edge C
+> - IRQ handler starts running (for C)
+> - edge D
+> - edge E
+> - IRQ handler finishes running
+> - IRQ handler starts running (for D/E)
+> - IRQ handler finishes running
+> - <idle>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The thing is, we are currently toggling the trigger mode to make sure it 
+matches the current GPIO level (e.g. level low -> rising edge mode), 
+than ack it in gpio IRQ handler.
 
-gcc tested configs:
-powerpc                          allmodconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-sh                               allmodconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-sh                          rsk7201_defconfig
-powerpc                 canyonlands_defconfig
-arm                          badge4_defconfig
-i386                 randconfig-a015-20220822
-i386                 randconfig-a016-20220822
-i386                 randconfig-a011-20220822
-i386                 randconfig-a013-20220822
-i386                 randconfig-a014-20220822
-i386                 randconfig-a012-20220822
-x86_64                           rhel-8.3-kvm
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-sh                   sh7724_generic_defconfig
-sh                            titan_defconfig
-s390                             allmodconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64               randconfig-a013-20220822
-x86_64               randconfig-a014-20220822
-x86_64               randconfig-a011-20220822
-x86_64               randconfig-a016-20220822
-x86_64               randconfig-a012-20220822
-x86_64               randconfig-a015-20220822
-riscv                randconfig-r042-20220822
-s390                 randconfig-r044-20220822
-arc                  randconfig-r043-20220822
-arc                  randconfig-r043-20220821
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-loongarch                           defconfig
-loongarch                         allnoconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-sh                          rsk7264_defconfig
-arc                     haps_hs_smp_defconfig
-arm                          exynos_defconfig
-xtensa                  nommu_kc705_defconfig
-mips                            gpr_defconfig
-sh                   sh7770_generic_defconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-m68k                             allmodconfig
-arm                         lubbock_defconfig
-sh                                  defconfig
-parisc                generic-32bit_defconfig
-i386                          randconfig-c001
-arm                      footbridge_defconfig
-arm                         axm55xx_defconfig
-powerpc                 mpc85xx_cds_defconfig
-loongarch                 loongson3_defconfig
-mips                           xway_defconfig
-arc                              alldefconfig
-arc                                 defconfig
-sparc                               defconfig
-powerpc                      ppc6xx_defconfig
-sh                          rsk7269_defconfig
-ia64                            zx1_defconfig
-arm                        oxnas_v6_defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-powerpc                        cell_defconfig
-arm                             pxa_defconfig
-mips                    maltaup_xpa_defconfig
-mips                          rb532_defconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-powerpc                    amigaone_defconfig
-arc                           tb10x_defconfig
-arc                 nsimosci_hs_smp_defconfig
-m68k                          amiga_defconfig
-sh                               j2_defconfig
-powerpc                     taishan_defconfig
-arm                        cerfcube_defconfig
-powerpc                mpc7448_hpc2_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220823
-ia64                             allmodconfig
-s390                                defconfig
-alpha                               defconfig
-s390                             allyesconfig
-powerpc                    sam440ep_defconfig
-arm                  randconfig-c002-20220821
+So if an edge come in between, that new IRQ status would be 
+acked(cleared) in the following GPIO irq handler as well as the old one, 
+without triggering another IRQ demux() to toggle the trigger mode.
 
-clang tested configs:
-hexagon              randconfig-r045-20220821
-riscv                randconfig-r042-20220821
-hexagon              randconfig-r041-20220821
-s390                 randconfig-r044-20220821
-powerpc                      katmai_defconfig
-arm                        neponset_defconfig
-mips                      maltaaprp_defconfig
-arm                         s5pv210_defconfig
-powerpc                 mpc8315_rdb_defconfig
-arm                          moxart_defconfig
-arm                         bcm2835_defconfig
-i386                 randconfig-a002-20220822
-i386                 randconfig-a005-20220822
-i386                 randconfig-a001-20220822
-i386                 randconfig-a006-20220822
-i386                 randconfig-a003-20220822
-i386                 randconfig-a004-20220822
-x86_64               randconfig-a002-20220822
-x86_64               randconfig-a005-20220822
-x86_64               randconfig-a006-20220822
-x86_64               randconfig-a003-20220822
-x86_64               randconfig-a001-20220822
-x86_64               randconfig-a004-20220822
-x86_64                        randconfig-k001
-arm                     am200epdkit_defconfig
-powerpc                 mpc8313_rdb_defconfig
-powerpc                     mpc5200_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-powerpc                        fsp2_defconfig
-arm                          sp7021_defconfig
-powerpc                 mpc832x_mds_defconfig
-powerpc                    gamecube_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-arm                         palmz72_defconfig
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-powerpc                     tqm5200_defconfig
-arm                          pxa168_defconfig
-arm                          ixp4xx_defconfig
-arm                         socfpga_defconfig
-mips                malta_qemu_32r6_defconfig
-mips                           rs90_defconfig
-arm                         s3c2410_defconfig
+- rising edge
+- toggle to falling edge mode
+- GPIO high with falling edge mode <-- correct
+- falling edge
+- IRQ handler acked that IRQ
+- IRQ handler finished
+- GPIO low with falling edge mode <-- oops
+- rising edge <-- missed
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> 
+> For your new code I don't think that will necessarily be the case. I
+> think this can happen with your new code:
+> 
+> - rising edge
+> - IRQ handler starts running for rising edge
+> - IRQ handler finishes running for rising edge
+> - falling edge (not latched since we're looking for rising edges)
+> - notice that level is low
+> - keep it configured for rising edge
+> 
+> ...in other words an edge happened _after_ the IRQ handler ran but we
+> didn't call the IRQ handler again. I don't think this is right.
+> 
+
+Right, so guessing we could somehow move the IRQ ack into the toggling 
+flow to make sure that it would not clear the new IRQ?
+
+And it looks like there are quite a few drivers having this kind of 
+need, would it make sense to handle it in the framework?
+
+> 
+> What problem are you trying to solve?
+> 
+> -Doug
+> 
+
