@@ -2,295 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 167EF59E5CB
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 17:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7C9659E5E9
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 17:23:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236972AbiHWPOM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Aug 2022 11:14:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
+        id S240770AbiHWPXV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Aug 2022 11:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243704AbiHWPN5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 11:13:57 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8932C1423D9
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 03:21:51 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id u24so7484408lji.0
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 03:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=8WZ8bvGdjEwHX0IsEWXNGnSpkb8CjQdkE2OZtLeCvoE=;
-        b=nAox752ytXIOtyvq9boUZqYcNH0Pg2ZbNe1rrmm8xCN5RHw36ST/VKtdsWItKVmg8d
-         7NxzNJ4fCkFOYVemhalOiglPqDFMLMcFLcP4BfAec6/5afei1v0SPZFoTMW6tcXe1BXC
-         nRXYFUvjKhs33UYMZ2LUX5VDKwsks8jsQ7U+ysedfGJaM9/WiNDhVTdVWp9cilsBY1X7
-         mcToKp0+bZU+N2jFbdBe3D3yz6p5wPUZhl+Ayfxi/AI/jcy953lBBf82UkoCA+wWJ9sU
-         D2gTy0oE1rPLgKEfEOiNZoxzGs7NsuYhFhwMI2ha99u3kAZSIP7f5ZWuUO/UzCI3afYP
-         kS1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=8WZ8bvGdjEwHX0IsEWXNGnSpkb8CjQdkE2OZtLeCvoE=;
-        b=dXbTtVl/wLd9GN2nylsJtIct6+H6t+jh7RJZIq3cMVZByQWXc5mBXz89f11mN1GlYZ
-         LWfDZDoCMZO0h2wuvW4h1tuUsCu2KlrrbsXuG6ZoWS07eeQKqy3gBI8vg4XPMPG4cekC
-         9z32MdQpvUX2g5waU0Lbh7ON0EjyrDuo/sCSdawRZxRCG0AYbt9kx7TWVOxtbbmzUysC
-         Vu+4SbUsOcaOwosDeRGUuk+11AJPMO6h3GER7zanHCsGxs11FbGmc8eC08/6DpBrGaXq
-         oKweUuFprH8lkSpeZU/mE8Hg2pWBHcg0pO+y+6qTgZB8pmRCovMREBUoYXIxHrvPATyW
-         57bA==
-X-Gm-Message-State: ACgBeo1nILMB3mTyDn1aE3smkNcU6RA2FOiBrT2IjWFPIkkTdSW9etjN
-        E4T5QoA8CVI/JUeM/sOIAd8sTA==
-X-Google-Smtp-Source: AA6agR6wx7Fmfl9YYBFDWqXU/cbxwg6aYJ4+JO2KKwpgh+jC/v1pssmvIorF+DCc4ELSl9EbVmjY+w==
-X-Received: by 2002:a2e:8788:0:b0:261:9bfc:3ffd with SMTP id n8-20020a2e8788000000b002619bfc3ffdmr6885115lji.454.1661250065627;
-        Tue, 23 Aug 2022 03:21:05 -0700 (PDT)
-Received: from [192.168.0.11] (89-27-92-210.bb.dnainternet.fi. [89.27.92.210])
-        by smtp.gmail.com with ESMTPSA id o6-20020a05651205c600b00492c6ce35basm972313lfo.79.2022.08.23.03.21.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Aug 2022 03:21:05 -0700 (PDT)
-Message-ID: <6c89f254-185a-4046-2bf0-a9f85713858e@linaro.org>
-Date:   Tue, 23 Aug 2022 13:21:04 +0300
+        with ESMTP id S244651AbiHWPQB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 11:16:01 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70072.outbound.protection.outlook.com [40.107.7.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1501665B9;
+        Tue, 23 Aug 2022 03:33:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VfIrjBK1Ay25VnwiuVkeq5VbeyZmCqouyfkZgjt0GELQrqOPd3hCsRhNGDcSbNf+EGwKqCIEU3srba9qvtZUTxULnVnpu1TCYcRG8g6WHEfRmGi4kAmc6t7Ko9Qut8Cx8EjWLBIc9wbPh6ABVpakyJP2mJaRcSK9CdV6dpUlcjM5kedsKChNzs8JDYB3m4nvEC06DoAmzxZXwK3QbNegIS4Q8qyymm7QKFWIvKgRyhxYLoFwKHILyufEfsaB2T8OfVjULiZegFQiMHmd9YT6j8MaYBjn9sxRUqqplz6Vbk2Tz7A95XPqGKGc4IcplNMTe0zMWNByQE9WGBmlfpJVLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q/SIkLdlwCfAKaSHnpyBQjoFHswi4PZziFDzWcXh9Yo=;
+ b=VBJUZqEYWashTny5uuCO8svj5qfG0WOxnInOmxbmaTPopuihx9WGxjBHlBFt+IhF9zVg1Q9q1IwpLU0jTJ7OspXtjrI/PPrSXZM4gHZZ8JilD2MWJQVPtoSQGDWfmlrIeFMdKyeDgHXDjB4ifae4tQ3Mem1ztlqhwPwNhCvw+gT32aTbiVSrYO/i/1WTg7gbxJPZR2kCfq2002ZRyhY3H/Q/UyF8EKJsbYONL/RDng18Jbf/zDDvv5k6uamCJI02mAi3Kuok24s2tW7opg1kRZAliYCI7MLDUXECSsuM6PreYF+AJwjsivG8b+3DuMpM+xZEDhapWqGvS9GmHbxXBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 194.138.21.75) smtp.rcpttodomain=linaro.org smtp.mailfrom=siemens.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=siemens.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q/SIkLdlwCfAKaSHnpyBQjoFHswi4PZziFDzWcXh9Yo=;
+ b=qzJezurO6Gvp6kVORMpgYR6Euw/3NVBc/+bkcFVBf2cavrDZiENLHIF6p4rLFaarxxhOTrgg0S44Xxwp8MwM6if5cf29VKoPCrjcp8ZGVuBOxrc9iy3HokWGmSsch2IUubvOtdiZ7wKzGndwMYpG7lCWvcv+U7dq58Yye+t6Ll+OfiujNQLxV5O4V19Z0Wh+RyeE3fMBl7hzKEpvEH6CA8HLwplUrUqeAv5LC/8kClYT6+FAk3SCSgc9MaCg8djDLUMNu4jpoDo3jZiDpuhsWVPsk2rHjBXzN1uy4VbP38GHXFyWnrXPnaajQlhlLj8P+PSIz13OMWoHggNc832LdQ==
+Received: from GV3P280CA0058.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:9::28) by
+ DB9PR10MB4846.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:2c2::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5546.16; Tue, 23 Aug 2022 10:24:07 +0000
+Received: from HE1EUR01FT029.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:150:9:cafe::7) by GV3P280CA0058.outlook.office365.com
+ (2603:10a6:150:9::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11 via Frontend
+ Transport; Tue, 23 Aug 2022 10:24:07 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 194.138.21.75)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=siemens.com;
+Received-SPF: Fail (protection.outlook.com: domain of siemens.com does not
+ designate 194.138.21.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.75; helo=hybrid.siemens.com;
+Received: from hybrid.siemens.com (194.138.21.75) by
+ HE1EUR01FT029.mail.protection.outlook.com (10.152.0.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5546.15 via Frontend Transport; Tue, 23 Aug 2022 10:24:07 +0000
+Received: from DEMCHDC89XA.ad011.siemens.net (139.25.226.103) by
+ DEMCHDC8VRA.ad011.siemens.net (194.138.21.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.9; Tue, 23 Aug 2022 12:24:05 +0200
+Received: from md1za8fc.ad001.siemens.net (139.25.0.80) by
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.9; Tue, 23 Aug 2022 12:24:05 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+CC:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        <simon.guinot@sequanux.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH v4 4/5] platform/x86: simatic-ipc: enable watchdog for 227G
+Date:   Tue, 23 Aug 2022 12:23:43 +0200
+Message-ID: <20220823102344.17624-5-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220823102344.17624-1-henning.schild@siemens.com>
+References: <20220823102344.17624-1-henning.schild@siemens.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 4/4] arch: arm64: ti: Add support for J784s4 EVM board
-Content-Language: en-US
-To:     Apurva Nandan <a-nandan@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Hari Nagalla <hnagalla@ti.com>
-References: <20220819190054.31348-1-a-nandan@ti.com>
- <20220819190054.31348-5-a-nandan@ti.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220819190054.31348-5-a-nandan@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [139.25.0.80]
+X-ClientProxiedBy: DEMCHDC89XA.ad011.siemens.net (139.25.226.103) To
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103)
+X-TM-AS-Product-Ver: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-AS-Result: No-10--11.447500-8.000000
+X-TMASE-MatchedRID: L90KqhDWgfOUYAP3WXIsZ3Cm15xQGrnE2mwVXKpQ3BdHg88w74mNDktc
+        8DbogbSE31GU/N5W5BDT/pFzauZLmXEK4P8QtiVHs3gZaLIY9no/aaS8hrB/2J4CIKY/Hg3AaZG
+        o0EeYG97Gr09tQ7Cw/1BIVsvVu9ABIAcCikR3vq9vibMxAqYXjWHFPUyW8t4AX3DcTx0UaPNCEh
+        brM/bogi6eQ3HQcWnw
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--11.447500-8.000000
+X-TMASE-Version: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-SNTS-SMTP: 06510759FC19E0F5CCD4FBDB51AA4970CD0F36EA6E75AE5B40D375318C7AA1562000:8
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a25ec1f1-5b42-4212-908f-08da84f19c54
+X-MS-TrafficTypeDiagnostic: DB9PR10MB4846:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6xdsrH1gmrKCcNeGeKdMaFs6BX7eaMSt46g9aQ8vtrD75gcvqhAv5do4ki5AV5YEBPnv8brz7Vs87P6A3vl8gDrHR98an5eNxoiK027kRCmiJ0vjG4HGbgeINGe04cPguU5tcsPEZWXVT38JZE+zwCRAobs4OWgTTgvLeDP4u1+piYBPPWqkg+oXMWizfEZq/wW0OvNrgCSPXffVlrcCjCZ202I9mXIlf2VZ/CfxYaRz0ZI9WSjxGQK+asjRyHibLeOs8atpuDSjggy+A+aY28Poq2hmsY4IsoJCsaEwpgmESj9ZhX7cGe1WtDDOZNTcM2QHrgl1bTYpVgZLftITTYWukQ64jaoyHwIVXJ7D4zdtRKr98Av87elHkzs8CWdJ43+J5vpbWwXe5ieYXFLrZo2UgBWwd262zS8vz2mdXNUKW375nwImk64g5TlwrGeJ6vDFE1qK6va4MBSCWiEXgmXjje40Vk1o6G2VcTcJIlJKJmfgQRUxXuLBnVg1NWvU9a6yUeaj7+yba8vMeGQYCFoT3fVnk66Jenk7DZlRGhuF0rdffUcqHAmG9TR4MgxfrW4eDJSpNRbU+hp1t7PGD/Mq8HnLGJmVg1bgz2nUtNi8MrtjfCxQoec30GRZMrf/WJJo1QlnAOv0dYJc1P7gyf34Shxwo/70EDXaV743nS51R+f4jK6nPcXxAFv9bgha+IPelXjbr9LCdic6eLGbskSXYttEha7H/m7KVEsnzPWwAW+Wn9TzeHD0RjdLno5gY/I1xUW8Yc7LhajOofaKN6Sv4N5ipoVUuKkHBU0oUqMXe1T0xd3Ma5fYzYpFUq/CNQTSVvkULusSfFNoEBE3kMi4F5L7yvbgz/ye+5orpXBf6YyXOMsjx89vApVmCDRBkj+QvFkOZkrF32YREZqikQ==
+X-Forefront-Antispam-Report: CIP:194.138.21.75;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(136003)(376002)(39860400002)(36840700001)(46966006)(40470700004)(2906002)(36756003)(82310400005)(5660300002)(40480700001)(8676002)(4326008)(70586007)(70206006)(6666004)(316002)(107886003)(110136005)(54906003)(41300700001)(478600001)(26005)(82740400003)(81166007)(82960400001)(356005)(921005)(186003)(86362001)(16526019)(47076005)(336012)(956004)(2616005)(36860700001)(8936002)(7416002)(44832011)(4744005)(1076003)(34020700004)(83380400001)(40460700003)(36900700001)(83996005)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2022 10:24:07.0025
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a25ec1f1-5b42-4212-908f-08da84f19c54
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.75];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR01FT029.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB4846
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19/08/2022 22:00, Apurva Nandan wrote:
-> J784s4 EVM board is designed for TI J784s4 SoC. It supports the following
-> interfaces:
-> * 32 GB DDR4 RAM
-> * x2 Gigabit Ethernet interfaces capable of working in Switch and MAC mode
-> * x1 Input Audio Jack, x1 Output Audio Jack
-> * x1 USB2.0 Hub with two Type A host and x1 USB 3.1 Type-C Port
-> * x2 4L PCIe connector
-> * x1 UHS-1 capable micro-SD card slot
-> * 512 Mbit OSPI flash, 1 Gbit Octal NAND flash, 512 Mbit QSPI flash,
->   UFS flash.
-> * x6 UART through UART-USB bridge
-> * XDS110 for onboard JTAG debug using USB
-> * Temperature sensors, user push buttons and LEDs
-> * 40-pin User Expansion Connector
-> * x2 ENET Expansion Connector, x1 GESI expander, x2 Display connector
-> * x1 15-pin CSI header
-> * x6 MCAN instances
-> 
-> Add basic support for J784s4-EVM.
-> 
-> Schematics: https://www.ti.com/lit/zip/sprr458
+Just load the watchdog module, after having identified that machine.
+That watchdog module does not have any autoloading support.
 
-Use subject perfixes matching the subsystem (git log --oneline -- ...).
-For example:
-arm64: dts: ti:
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
+---
+ drivers/platform/x86/simatic-ipc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 
-> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> Signed-off-by: Apurva Nandan <a-nandan@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Matt Ranostay <mranostay@ti.com>
-> Signed-off-by: Rahul T R <r-ravikumar@ti.com>
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/Makefile          |   2 +
->  arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 602 +++++++++++++++++++++++
->  2 files changed, 604 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> 
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> index 02e5d80344d0..6381c458738a 100644
-> --- a/arch/arm64/boot/dts/ti/Makefile
-> +++ b/arch/arm64/boot/dts/ti/Makefile
-> @@ -19,6 +19,8 @@ dtb-$(CONFIG_ARCH_K3) += k3-j7200-common-proc-board.dtb
->  
->  dtb-$(CONFIG_ARCH_K3) += k3-j721s2-common-proc-board.dtb
->  
-> +dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
-> +
->  dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
->  dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
->  
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> new file mode 100644
-> index 000000000000..7ca08e115e67
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> @@ -0,0 +1,602 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
-> + *
-> + * Common Processor Board: https://www.ti.com/tool/J721EXCPXEVM
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/net/ti-dp83867.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "k3-j784s4.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,j784s4-evm", "ti,j784s4";
-> +	model = "Texas Instruments J784S4 EVM";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:115200n8";
-> +		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x2880000";
+diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
+index 1825ef21a86d..8dd686d1c9f1 100644
+--- a/drivers/platform/x86/simatic-ipc.c
++++ b/drivers/platform/x86/simatic-ipc.c
+@@ -96,6 +96,9 @@ static int register_platform_devices(u32 station_id)
+ 			 ipc_wdt_platform_device->name);
+ 	}
+ 
++	if (station_id == SIMATIC_IPC_IPC227G)
++		request_module("w83627hf_wdt");
++
+ 	if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
+ 	    wdtmode == SIMATIC_IPC_DEVICE_NONE) {
+ 		pr_warn("unsupported IPC detected, station id=%08x\n",
+-- 
+2.35.1
 
-earlycon is not a property of hardware. Console is defined in
-stdout-path, so please drop entire bootargs.
-
-> +	};
-> +
-> +	aliases {
-> +		serial2 = &main_uart8;
-> +		mmc0 = &main_sdhci0;
-> +		mmc1 = &main_sdhci1;
-> +		i2c0 = &main_i2c0;
-> +		can0 = &mcu_mcan0;
-> +		can1 = &mcu_mcan1;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		/* 32G RAM */
-> +		reg = <0x00 0x80000000 0x00 0x80000000>,
-> +		      <0x08 0x80000000 0x07 0x80000000>;
-> +	};
-> +
-> +	/* Reserving memory regions still pending */
-> +	reserved_memory: reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		secure_ddr: optee@9e800000 {
-> +			reg = <0x00 0x9e800000 0x00 0x01800000>;
-> +			alignment = <0x1000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	evm_12v0: fixedregulator-evm12v0 {
-
-Node name should be generic, so:
-regulator-evm12v0
-
-> +		/* main supply */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "evm_12v0";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vsys_3v3: fixedregulator-vsys3v3 {
-
-ditto
-
-> +		/* Output of LM5140 */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vsys_3v3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&evm_12v0>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vsys_5v0: fixedregulator-vsys5v0 {
-
-ditto
-
-> +		/* Output of LM5140 */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vsys_5v0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&evm_12v0>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vdd_mmc1: fixedregulator-sd {
-
-ditto
-
-> +		/* Output of TPS22918 */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd_mmc1";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		enable-active-high;
-> +		vin-supply = <&vsys_3v3>;
-> +		gpio = <&exp2 2 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	vdd_sd_dv: gpio-regulator-TLV71033 {
-
-ditto
-
-> +		/* Output of TLV71033 */
-> +		compatible = "regulator-gpio";
-> +		regulator-name = "tlv71033";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vdd_sd_dv_pins_default>;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		vin-supply = <&vsys_5v0>;
-> +		gpios = <&main_gpio0 8 GPIO_ACTIVE_HIGH>;
-> +		states = <1800000 0x0>,
-> +			 <3300000 0x1>;
-> +	};
-> +
-> +	transceiver1: can-phy1 {
-> +		compatible = "ti,tcan1042";
-> +		#phy-cells = <0>;
-> +		max-bitrate = <5000000>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&mcu_mcan0_gpio_pins_default>;
-> +		standby-gpios = <&wkup_gpio0 69 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	transceiver2: can-phy2 {
-> +		compatible = "ti,tcan1042";
-> +		#phy-cells = <0>;
-> +		max-bitrate = <5000000>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&mcu_mcan1_gpio_pins_default>;
-> +		standby-gpios = <&wkup_gpio0 2 GPIO_ACTIVE_HIGH>;
-> +	};
-
-
-
-Best regards,
-Krzysztof
