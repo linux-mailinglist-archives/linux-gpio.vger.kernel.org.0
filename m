@@ -2,136 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C082159ECCE
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 21:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F08859EE03
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 23:11:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233648AbiHWTrc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Aug 2022 15:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52166 "EHLO
+        id S230108AbiHWVLX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Aug 2022 17:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232471AbiHWTqy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 15:46:54 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC2B5E66F
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 11:50:36 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id 20so13592199plo.10
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 11:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=/6MgYQynlKjVO5yQ/ZXe7vd/aFxPZ1CaapAzvUa4a4g=;
-        b=ikM7qhdIpjbLzfr7suns0qY6EZit4upFDcclekoxK6tByYgIRc1jLEEPVb6RPqT83i
-         WoY7jYIligukD49jBrzQfVu2P37v2fwqfdnI/N4YOU0eaHNqobPJp/FngkZXXxZ0w/Ui
-         ScXFhPgIIHD/ZyfVsUanwCt3unLFIIDB8UGSo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=/6MgYQynlKjVO5yQ/ZXe7vd/aFxPZ1CaapAzvUa4a4g=;
-        b=XIeFui8VWNM08xLV2ldJPmW8GMmNUuPDFUo0EcNru+3UWOhq/kPZR0dH5IbkHsBo11
-         Q1l/ykNKM2H02lSjOQp0jnUVYn0DJ0KDgIYWirisHFoss1gS70iCanTyhPtI/XnPslOe
-         ziWtl+xmK6mjQzHEO6z/XMDiW+zIwtVcD7UHo4LtCSmHwtWPZ/DLqhu8hWu+x1XpaSZk
-         hUPJ5XtnrF0sETzFuSiDAeQ4//RiYz8ZFy/wP0690KB/K6KKRsnbNu5Q11EyrAbWBhOK
-         QaEMxvx9Kp45M0qnnJ4KfLd9cTTOlknZnQGiHBLWFeb1CSaxQ/DpADgcY/rFwGfcOPl3
-         iLqA==
-X-Gm-Message-State: ACgBeo1C2oYcHpp993s3fb/kUMyFWt0cqqqkW1FrygkmNSa6snYdKrLo
-        kUat/0v90P17uwJ6mfayHS2i/ehg4NpgoA==
-X-Google-Smtp-Source: AA6agR4PhBa4xTP/Cmb3RzX7gXe2wQgYBokWSWZsPSyAv0+QXeCgAXxsHtiwuqEXuxSK4dvlVmwU/g==
-X-Received: by 2002:a17:90b:3b4f:b0:1fb:5b03:6822 with SMTP id ot15-20020a17090b3b4f00b001fb5b036822mr4539924pjb.87.1661280636070;
-        Tue, 23 Aug 2022 11:50:36 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:34e2:c40e:42d3:27e0])
-        by smtp.gmail.com with ESMTPSA id e10-20020a17090301ca00b0016e8178aa9csm10928202plh.210.2022.08.23.11.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Aug 2022 11:50:35 -0700 (PDT)
-Date:   Tue, 23 Aug 2022 11:50:32 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Chen Jeffy <jeffy.chen@rock-chips.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] gpio/rockchip: Toggle edge trigger mode after acking
-Message-ID: <YwUheATnV+Iuhnl5@google.com>
-References: <20220820095933.20234-1-jeffy.chen@rock-chips.com>
- <20220820095933.20234-2-jeffy.chen@rock-chips.com>
- <CAD=FV=X0qJ2OC1SrAmhSQ5YeKEwvsSCbfVGPh457YYEuPCbRtg@mail.gmail.com>
- <5cb0a457-b667-76e5-d383-6e93457d5d12@rock-chips.com>
+        with ESMTP id S229539AbiHWVLV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 17:11:21 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B826327;
+        Tue, 23 Aug 2022 14:11:20 -0700 (PDT)
+Received: from notapiano (unknown [194.36.25.10])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: nfraprado)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id B87756601E70;
+        Tue, 23 Aug 2022 22:11:15 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1661289079;
+        bh=lLnMaZZflBxCYdoKWtTlOD8pDUrS+qFNIuEnJudAl7I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fKGcXcLUGm9OpaNnHVYXblbNVLHKqpXKQ4HYpuQOYiQhe0zZfuM7yBz78B6kMpuva
+         MEyrhO/RnO3E87SVhpJhHqd5qLt7LTo69EDkRNFLKg6Nb3P3zl5Xu+U0LgradLoWsf
+         sk+6X0Ol+vtT4jnHKjNfAHOWS75Le0aJLNrJrKVYdWljAUKUqH6FPiMywHlTok4HW7
+         0YpUUdD14TaearV9knf09rFY7fqbdO+Zf8zBk4Z+LJZbFaN/i3NictTM7hFyRMZA8s
+         /nfXRBtbj9odaeR+mq4KY1vUvd/dC8uSUDWZXPLHrgwI1VTpLYzy05Pit0aMifhnYU
+         tr5Div+4yA/tg==
+Date:   Tue, 23 Aug 2022 17:11:11 -0400
+From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado 
+        <nfraprado@collabora.com>
+To:     Hui Liu <hui.liu@mediatek.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, matthias.bgg@gmail.com,
+        angelogioacchino.delregno@collabora.com, wenst@google.com,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        jianguo.zhang@mediatek.com, zhiyong.tao@mediatek.com,
+        sean.wang@mediatek.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] pinctrl: mediatek: add mt8188 driver
+Message-ID: <20220823211111.k2ve5yceie7knyi7@notapiano>
+References: <20220818075012.20880-1-hui.liu@mediatek.com>
+ <20220818075012.20880-3-hui.liu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5cb0a457-b667-76e5-d383-6e93457d5d12@rock-chips.com>
-X-Spam-Status: No, score=1.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FSL_HELO_FAKE,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20220818075012.20880-3-hui.liu@mediatek.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Thu, Aug 18, 2022 at 03:50:12PM +0800, Hui Liu wrote:
+> From: "Hui.Liu" <hui.liu@mediatek.com>
+> 
+> Add pinctrl driver support for MediaTek SoC mt8188.
+> 
+> Signed-off-by: Hui.Liu <hui.liu@mediatek.com>
 
-On Tue, Aug 23, 2022 at 10:50:16AM +0800, Jeffy Chen wrote:
-> On 8/23 æ˜ŸæœŸäºŒ 1:08, Doug Anderson wrote:
-> > I'm happy to let others say for sure, but from my point of view I'm
-> > not convinced. It feels like with your new code you could lose edges.
+Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-I won't claim to know for sure either, but I'm trying to follow along,
-because we've dealt with various sorts of nasty logical errors in the
-gpio and/or irqchip areas here :)
-
-> > ...in other words an edge happened _after_ the IRQ handler ran but we
-> > didn't call the IRQ handler again. I don't think this is right.
-
-I believe Doug has identified one problem correctly -- that we can't
-handle the both-edge toggling entirely after the ack+dispatch.
-
-(out-of-order quote:)
-> So if an edge come in between, that new IRQ status would be acked(cleared)
-> in the following GPIO irq handler as well as the old one, without triggering
-> another IRQ demux() to toggle the trigger mode.
-
-I believe Jeffy has identified another -- that we can't handle the
-both-edge toggling entirely before the ack+dispatch.
-
-> Right, so guessing we could somehow move the IRQ ack into the toggling flow
-> to make sure that it would not clear the new IRQ?
-
-This sounds like we need the toggling to happen within the .irq_ack()
-callback, in between the ACK and the chain dispatch.
-
-I'm not sure I've fully walked through this yet, but would it suffice to
-move the 'toggle_edge_mode' loop into irq_ack(), right after writing the
-EOI register? That way we're in one of these cases within irq_ack():
-
-(1) no further edges occurred after the ACK/EIO write: the toggle-loop
-will toggle correctly, and then we dispatch the chained handler.
-
-(2) one or more additional edges occurred after the ACK/EIO write
-(possibly during the toggle-loop): the loop only exits when we're sure
-things have quiesced, so future edges will toggle correctly (i.e.,
-polarity is correct). We continue to dispatch the chained handler (which
-"handles" all these edge(s)). We may still have leave an IRQ pending (if
-many edges happen, racing with the toggle loop) and fire again shortly,
-but that's OK.
-
-Does this make sense to anyone else?
-
-> And it looks like there are quite a few drivers having this kind of need,
-> would it make sense to handle it in the framework?
-
-I suppose it would be possible to implement the above as a general
-irq_gc_ack*() helper, instead of open-coding it, although it might need
-the irqchip framework to gain a better understanding of a chip's
-polarity register.
-
-Brian
+Thanks,
+Nícolas
