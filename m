@@ -2,112 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A26A259E7FE
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 18:51:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B89F59E777
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 18:37:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245531AbiHWQs4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Aug 2022 12:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40878 "EHLO
+        id S243792AbiHWQgE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Aug 2022 12:36:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244524AbiHWQsc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 12:48:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507FDFCA1C
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 07:21:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 015D9B81E07
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 14:21:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF1CC433D6;
-        Tue, 23 Aug 2022 14:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661264459;
-        bh=ZIeN9tRV9MS5G+VTlpRplJ4Guun7YGJrDn4Zt1TTxVQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VlekC84KUXAbOlZYvGzrQM4a08qkjeUpaHKxdzCADnYbiCjUqZMLgwKkZpmY0ybrv
-         UB92PNt9DMEwa2RkXrQQ8OlmGSpmq+mAdMXWAuNl0S2bWYEhjABG8HqDL2tqQlPVgM
-         xf5CxbOWuoFQR+aJxvKa3OBVOoimquNWJsj3DbYemf4V9ibeX/ncIhvTeKhfSO9zSN
-         j2hALlumPiAWQndF7Q+akGU6I9Sy/cUCjWOUQcfpwDcVSFmVYCfPCUVBoaxXoeQpCS
-         UxejdiYCSfM8vmuaJ/P2uTehsCc4pY2yY+TyTOs/Rgylg8a/FNVLddPpPBOQ4PEh3T
-         gk2Gg1z3Pwp9w==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1oQUm1-005D36-Aq;
-        Tue, 23 Aug 2022 15:20:57 +0100
+        with ESMTP id S244991AbiHWQf3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 12:35:29 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9461D6F25D;
+        Tue, 23 Aug 2022 07:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661266066; x=1692802066;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/OQEUPblx8ZWr1PbZjofhsyr29E34e1HQ6mir9IbSOk=;
+  b=PULi/HT3akw28FknFLQ1n/mtWUkLbon/s3OICb/bBG/296MwXgbWLKVQ
+   RH4LCqEZLp2HMMma8c6qP06AmgJGRRIISU0AWLcms0gAnmlXvBgiFz3mz
+   xVAg28z+nHRzwzxN9D9FMosUC/M13xPQBPiCYnVDRpSlqgYVpexfFBPO/
+   yYD4PRWmnXkLxJKm47ojy698TailU5WkaJo80wIaK3ulsgzWoMERpfXCi
+   E0UyijNxBuh82ZBpXaz5brgLN0JMBRE/tH8HzOL1EY73tuf2Goi5HN1lg
+   CkUgna+n1GzrmIWO86dZl5wtCiPgMnwZ9bbohRKK/kpltafx+AezNTnAh
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10448"; a="294494394"
+X-IronPort-AV: E=Sophos;i="5.93,257,1654585200"; 
+   d="scan'208";a="294494394"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 07:47:45 -0700
+X-IronPort-AV: E=Sophos;i="5.93,257,1654585200"; 
+   d="scan'208";a="751707348"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 07:47:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oQVBq-002TwM-2I;
+        Tue, 23 Aug 2022 17:47:38 +0300
+Date:   Tue, 23 Aug 2022 17:47:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>, Lee Jones <lee@kernel.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        simon.guinot@sequanux.org
+Subject: Re: [PATCH v4 1/5] gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+Message-ID: <YwToilxquEZGqzQD@smile.fi.intel.com>
+References: <20220823102344.17624-1-henning.schild@siemens.com>
+ <20220823102344.17624-2-henning.schild@siemens.com>
 MIME-Version: 1.0
-Date:   Tue, 23 Aug 2022 15:20:56 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v5 0/2] gpio: mxc: Locking and direction input fix
-In-Reply-To: <8487c9a1-a14f-eb5d-7069-7e9527d146a6@denx.de>
-References: <20220725103445.88674-1-marex@denx.de>
- <87bktdxkc6.wl-maz@kernel.org>
- <8487c9a1-a14f-eb5d-7069-7e9527d146a6@denx.de>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <dfcf4297bdef79584095b87482de910b@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: marex@denx.de, linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com, linus.walleij@linaro.org, loic.poulain@linaro.org, linux-imx@nxp.com, peng.fan@nxp.com, shawnguo@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220823102344.17624-2-henning.schild@siemens.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-08-23 11:41, Marek Vasut wrote:
-> On 7/25/22 17:50, Marc Zyngier wrote:
->> On Mon, 25 Jul 2022 11:34:43 +0100,
->> Marek Vasut <marex@denx.de> wrote:
->>> 
->>> The irqchip callbacks in gpio-mxc perform register read-modify-write 
->>> operations
->>> without locking, which may lead to a race condition. Add the missing 
->>> locking.
->>> 
->>> In case the GPIO is used as IRQ, make sure it is configured as input.
->>> 
->>> Marek Vasut (2):
->>>    gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
->>>    gpio: mxc: Always set GPIOs used as interrupt source to INPUT mode
->>> 
->>>   drivers/gpio/gpio-mxc.c | 17 ++++++++++++++++-
->>>   1 file changed, 16 insertions(+), 1 deletion(-)
->>> 
->>> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> Cc: Linus Walleij <linus.walleij@linaro.org>
->>> Cc: Loic Poulain <loic.poulain@linaro.org>
->>> Cc: Marc Zyngier <maz@kernel.org>
->>> Cc: NXP Linux Team <linux-imx@nxp.com>
->>> Cc: Peng Fan <peng.fan@nxp.com>
->>> Cc: Shawn Guo <shawnguo@kernel.org>
->> 
->> Reviewed-by: Marc Zyngier <maz@kernel.org>
+On Tue, Aug 23, 2022 at 12:23:40PM +0200, Henning Schild wrote:
+> Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO chips are
+> very similar to the ones from Fintek. In other subsystems they also
+> share drivers and are called a family of drivers.
 > 
-> Can these two now be applied or is there something more to do ?
+> For the GPIO subsystem the only difference is that the direction bit is
+> reversed and that there is only one data bit per pin. On the SuperIO
+> level the logical device is another one.
+> 
+> On a chip level we do not have a manufacturer ID to check and also no
+> revision.
 
-That'd be question for Linus and Bartosz, I guess. From my
-own PoV, this is good to go.
+...
 
-Thanks,
+> - * GPIO driver for Fintek Super-I/O F71869, F71869A, F71882, F71889 and F81866
+> + * GPIO driver for Fintek and Nuvoton Super-I/O chips
 
-      M.
+I'm not sure it's good idea to drop it from here. It means reader has to get
+this info in a hard way.
+
+...
+
+> +#define gpio_dir_invert(type)	((type) == nct6116d)
+> +#define gpio_data_single(type)	((type) == nct6116d)
+
+What's prevents us to add a proper prefix to these? I don't like the idea of
+them having "gpio" prefix.
+
+...
+
+> +		pr_info(DRVNAME ": Unsupported device 0x%04x\n", devid);
+> +			pr_debug(DRVNAME ": Not a Fintek device at 0x%08x\n", addr);
+> +	pr_info(DRVNAME ": Found %s at %#x\n",
+> +		pr_info(DRVNAME ":   revision %d\n",
+
+Can we, please, utilize pr_fmt()?
+
+> +			(int)superio_inb(addr, SIO_FINTEK_DEVREV));
+
+Explicit casting in printf() means wrong specifier in 99% of cases.
+
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
+
+
