@@ -2,70 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF19659CD40
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 02:39:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0339D59CD41
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 02:39:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232069AbiHWAjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S238558AbiHWAjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 22 Aug 2022 20:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41538 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238589AbiHWAjT (ORCPT
+        with ESMTP id S238614AbiHWAjT (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Aug 2022 20:39:19 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E779C4BA5A
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Aug 2022 17:39:18 -0700 (PDT)
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280FD4BA5D
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Aug 2022 17:39:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661215158; x=1692751158;
+  t=1661215159; x=1692751159;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=x03RmmRUs/Im/E5l7MHnmkDwlrIBDY/8I8CVVone1Ao=;
-  b=FRHSbW4mvEFyTtjOb/G+yIh2569YP+Hx9bupsLbqmq73rPQiQ0aLMPIq
-   CFq9W+5vWXaX5JGiRbJEJjb009FNp7pexs9jou03Hyhr9d67Z+Kf2GOxX
-   k+55aHds0karPLfES2rSVgC1AhR0o/IeYJOUp4eF1ReoYTFgWMsY/NKi4
-   wFB/EvbsC2QmIpKWcLxiqJW9nvG9Q0YlsDQuPAu8CPdXSblzw+LBCwyQz
-   aXRJN5RYp4mIpIe5bXfi98N2bK1k7z6tCHcyiDSsDULPuHeMZvsd49Kx/
-   YhGGCf9VrjsWwDWY3vMvDym8oNfI0cDBimYD+gSN0gYHUvbhIFFgMkiQl
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="319595043"
+  bh=ZlU8T99LROfcR/HpvGcM7zLCg16ksF0hj2WCltfQoJk=;
+  b=HBrqL4fEJ5W3yUx070vtF2zfqzHMNJqVzHcRmgHl0p3CbHGIzUSj+UA+
+   49GwkDxLM9uddHK7ELrmSPz9aq43rMTeO5fWP/+3aFZQqt1eavnafrKOv
+   VbE5Ba1HmdFywm/yOO1mSjY0sv4JHpx3bvA+Sj+BouHyOcgsqFses1OXd
+   VGJvZJKkMz4HPMpNSs3YR2DUpDfiaJdegjoHd8puyogmZG5Kym4wMQ5fx
+   VzPjnDvErRqswTdUr6lzL+lU+74pKt46/AXPL1zSMEs78eLn+DdHJLDeY
+   GHv8mM8L6J92WFFPT/MfBHQFqQlnL3SWItDI5NBafJFD2njcEtqdnDKMd
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="294840088"
 X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
-   d="scan'208";a="319595043"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 17:39:18 -0700
+   d="scan'208";a="294840088"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 17:39:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
-   d="scan'208";a="612226961"
+   d="scan'208";a="609155942"
 Received: from lkp-server01.sh.intel.com (HELO dd9b29378baa) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Aug 2022 17:39:17 -0700
+  by orsmga002.jf.intel.com with ESMTP; 22 Aug 2022 17:39:17 -0700
 Received: from kbuild by dd9b29378baa with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oQHwq-0000uV-39;
+        id 1oQHwq-0000uQ-2w;
         Tue, 23 Aug 2022 00:39:16 +0000
-Date:   Tue, 23 Aug 2022 08:38:52 +0800
+Date:   Tue, 23 Aug 2022 08:38:55 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 64e4744ee1448e786e3cafd9121e22ef98a5f8ff
-Message-ID: <6304219c.0YGNXo9yZHQMOMn9%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 27586b851bae62296b77687a58a8c92ab84d5274
+Message-ID: <6304219f.oiXSmcAyeFIMQNjx%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 64e4744ee1448e786e3cafd9121e22ef98a5f8ff  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 27586b851bae62296b77687a58a8c92ab84d5274  dt-bindings: pinctrl: aspeed: Add missing properties to examples
 
-elapsed time: 723m
+elapsed time: 724m
 
 configs tested: 155
 configs skipped: 2
@@ -77,9 +77,9 @@ gcc tested configs:
 powerpc                          allmodconfig
 mips                             allyesconfig
 powerpc                           allnoconfig
-sh                               allmodconfig
-um                           x86_64_defconfig
 um                             i386_defconfig
+um                           x86_64_defconfig
+sh                               allmodconfig
 csky                              allnoconfig
 alpha                             allnoconfig
 arc                               allnoconfig
