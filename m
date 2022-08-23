@@ -2,41 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC9D59E44E
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 15:32:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8014D59E45E
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Aug 2022 15:32:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234053AbiHWM4k convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 23 Aug 2022 08:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39556 "EHLO
+        id S240762AbiHWNUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Aug 2022 09:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241404AbiHWM4M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 08:56:12 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29846F57D;
-        Tue, 23 Aug 2022 03:01:10 -0700 (PDT)
-Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1oQQi4-0003tG-BS; Tue, 23 Aug 2022 12:00:36 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     =?ISO-8859-1?Q?Jo=E3o_H=2E?= Spies <jhlspies@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: rockchip: Enhance support for IRQ_TYPE_EDGE_BOTH
-Date:   Tue, 23 Aug 2022 12:00:34 +0200
-Message-ID: <4242490.iIbC2pHGDl@diego>
-In-Reply-To: <CACRpkda6VoNjJfKY3+oCvdB+V6O_4cumKpjVSdBb9e8mEmHF6g@mail.gmail.com>
-References: <20220808025121.110223-1-jhlspies@gmail.com> <CACRpkda6VoNjJfKY3+oCvdB+V6O_4cumKpjVSdBb9e8mEmHF6g@mail.gmail.com>
+        with ESMTP id S241958AbiHWNUM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Aug 2022 09:20:12 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9AC140E9A
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 03:19:14 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id l19so9904905ljg.8
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Aug 2022 03:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=zsQrjzLlz1WwvkGgnIx2yqhoGVJPRWQAAvm1kJ/arH8=;
+        b=MRoulzA5Ch+EYpnMY32xtg51q2QEePLjf7GlsZywJBP/elkNXCYvcfv12YpmeDtSds
+         KeitN1Vw7Gs1cDEt0kGdoO9Pv1tIcFJUqTvFi8Xh8uizPJjhxUta7GRN/RAEoCDmak7y
+         PCYivdELVk56Br/VRL8MY0Kn6uND09aTzuV966cpxiiMOUh7MujafwoJHplLe2FiuTRu
+         PEd3fIkOd7DAE2g2z1OslDd7vO6MPXm+ggQi+WZQOccZgeEBjlGnPSKjbNeA1+FoEU/P
+         aFHjmsDNNTYmm4XuaLOxs4dYx7WGseTaFxDcZuheVhKGv0nIm40wHlfgn87GAPGitiWt
+         YXxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=zsQrjzLlz1WwvkGgnIx2yqhoGVJPRWQAAvm1kJ/arH8=;
+        b=ZhurF2HKNcnFSrDuTbVktQsXYjuBqZ9J7MSYmyNS2D3qyifyFdhHtnCJ9bxXNmoORs
+         zGA2h4Zl2Sj9EyEkrqaD4t9f6IWqBNfIpf93ou6hjvDoT3HIUEtKTFz2sRd1j7wYBsGI
+         nrMCpDMQXpDMc50tXwI8xPk0WAbssP3sxfQ8ec5/xIB+KrIcyuPOb53ICy2YvPtsrcEa
+         d/q4ahGLHOnooHPzJbgSDKewvgqwILfX8OZWlRopM1gEKpG1sYsHeaBRuhSLIhprE7qP
+         RYESiDtKme8y9IqS/1sqMsb0LMdd1fNezNAhc9cubKirJUuNUFM+kyxfCplfzLN7fE23
+         pWTA==
+X-Gm-Message-State: ACgBeo3163qD6K+TEhujsheHOAtdmo/0+fiBIS4PufkzEqVcliK/AvYI
+        kV2b/yGS8DcSWD1QOdiF/8/VcQ==
+X-Google-Smtp-Source: AA6agR6SStRV2Ym4CUUkrm3BT0NdS/bPaP1Ahl8puqMOULGHvQu0QkmzZ4yCqOreQsizM6DvzYFD0w==
+X-Received: by 2002:a2e:7309:0:b0:261:d14e:7af2 with SMTP id o9-20020a2e7309000000b00261d14e7af2mr2016553ljc.45.1661249897669;
+        Tue, 23 Aug 2022 03:18:17 -0700 (PDT)
+Received: from [192.168.0.11] (89-27-92-210.bb.dnainternet.fi. [89.27.92.210])
+        by smtp.gmail.com with ESMTPSA id g8-20020a2eb5c8000000b00261c6c80b38sm1503878ljn.75.2022.08.23.03.18.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Aug 2022 03:18:17 -0700 (PDT)
+Message-ID: <b572cfa0-a051-ee7f-c720-5f0ccbea8950@linaro.org>
+Date:   Tue, 23 Aug 2022 13:18:16 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 3/4] arm64: dts: ti: Add initial support for J784s4 SoC
+Content-Language: en-US
+To:     Apurva Nandan <a-nandan@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Hari Nagalla <hnagalla@ti.com>
+References: <20220819190054.31348-1-a-nandan@ti.com>
+ <20220819190054.31348-4-a-nandan@ti.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220819190054.31348-4-a-nandan@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -44,30 +81,124 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Montag, 22. August 2022, 11:03:08 CEST schrieb Linus Walleij:
-> On Mon, Aug 8, 2022 at 4:53 AM João H. Spies <jhlspies@gmail.com> wrote:
+On 19/08/2022 22:00, Apurva Nandan wrote:
+> The J784S4 SoC belongs to the K3 Multicore SoC architecture platform,
+> providing advanced system integration in automotive ADAS applications
+> and industrial applications requiring AI at the network edge. This SoC
+> extends the Jacinto 7 family of SoCs with focus on high performance
+> providing significant levels of processing power, graphics capability,
+> video and imaging processing, virtualization and coherent memory
+> support.
 > 
-> > Switching between falling/rising edges for IRQ_TYPE_EDGE_BOTH on pins that
-> > require debounce can cause the device to lose events due to a desync
-> > between pin state and irq type.
-> >
-> > This problem is resolved by switching between IRQ_TYPE_LEVEL_LOW and
-> > IRQ_TYPE_LEVEL_HIGH instead.
-> >
-> > Fixes: 936ee26 ("gpio/rockchip: add driver for rockchip gpio")
-> > Signed-off-by: João H. Spies <jhlspies@gmail.com>
-> 
-> No reaction from maintainers so I'm just gonna assume this fix is
-> correct and applied for fixes.
+> Some highlights of this SoC are:
 
-This plays with behavioral peculiarities of the gpio controller
-(using the level setting to hopefully prevent missing edge irqs),
-so doesn't follow
-
-So I guess it really is more of a wait-and-see. And I guess as João
-seems to have experienced that issue, that will hopefully work
-for others too.
-
-Heiko
+Thank you for your patch. There is something to discuss/improve.
 
 
+> +
+> +	main_gpio_intr: interrupt-controller@a00000 {
+> +		compatible = "ti,sci-intr";
+> +		reg = <0x00 0x00a00000 0x00 0x800>;
+
+0x0, not 0x00. Here and all other places.
+
+> +		ti,intr-trigger-type = <1>;
+> +		interrupt-controller;
+> +		interrupt-parent = <&gic500>;
+> +		#interrupt-cells = <1>;
+> +		ti,sci = <&sms>;
+> +		ti,sci-dev-id = <10>;
+> +		ti,interrupt-ranges = <8 360 56>;
+> +	};
+> +
+> +	main_pmx0: pinctrl@11c000 {
+> +		compatible = "pinctrl-single";
+> +		/* Proxy 0 addressing */
+> +		reg = <0x0 0x11c000 0x0 0x120>;
+> +		#pinctrl-cells = <1>;
+> +		pinctrl-single,register-width = <32>;
+> +		pinctrl-single,function-mask = <0xffffffff>;
+> +	};
+> +
+
+
+(...)
+
+> +
+> +		main_udmass_inta: msi-controller@33d00000 {
+> +			compatible = "ti,sci-inta";
+> +			reg = <0x00 0x33d00000 0x00 0x100000>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <0>;
+> +			interrupt-parent = <&main_navss_intr>;
+> +			msi-controller;
+> +			ti,sci = <&sms>;
+> +			ti,sci-dev-id = <321>;
+> +			ti,interrupt-ranges = <0 0 256>;
+> +		};
+> +
+> +		secure_proxy_main: mailbox@32c00000 {
+> +			compatible = "ti,am654-secure-proxy";
+> +			#mbox-cells = <1>;
+> +			reg-names = "target_data", "rt", "scfg";
+> +			reg = <0x00 0x32c00000 0x00 0x100000>,
+> +			      <0x00 0x32400000 0x00 0x100000>,
+> +			      <0x00 0x32800000 0x00 0x100000>;
+> +			interrupt-names = "rx_011";
+> +			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		hwspinlock: spinlock@30e00000 {
+
+Node name: hwlock
+(spinlock is Linux specific)
+
+> +			compatible = "ti,am654-hwspinlock";
+> +			reg = <0x00 0x30e00000 0x00 0x1000>;
+> +			#hwlock-cells = <1>;
+> +		};
+> +
+> +		mailbox0_cluster0: mailbox@31f80000 {
+> +			compatible = "ti,am654-mailbox";
+> +			reg = <0x00 0x31f80000 0x00 0x200>;
+> +			#mbox-cells = <1>;
+> +			ti,mbox-num-users = <4>;
+> +			ti,mbox-num-fifos = <16>;
+> +			interrupt-parent = <&main_navss_intr>;
+> +		};
+
+
+(...)
+
+
+> +
+> +	wkup_pmx0: pinctrl@4301c000 {
+> +		compatible = "pinctrl-single";
+> +		/* Proxy 0 addressing */
+> +		reg = <0x00 0x4301c000 0x00 0x178>;
+> +		#pinctrl-cells = <1>;
+> +		pinctrl-single,register-width = <32>;
+> +		pinctrl-single,function-mask = <0xffffffff>;
+> +	};
+> +
+> +	wkup_gpio_intr: interrupt-controller@42200000 {
+> +		compatible = "ti,sci-intr";
+> +		reg = <0x00 0x42200000 0x00 0x400>;
+> +		ti,intr-trigger-type = <1>;
+> +		interrupt-controller;
+> +		interrupt-parent = <&gic500>;
+> +		#interrupt-cells = <1>;
+> +		ti,sci = <&sms>;
+> +		ti,sci-dev-id = <177>;
+> +		ti,interrupt-ranges = <16 928 16>;
+> +	};
+> +
+> +	mcu_conf: syscon@40f00000 {
+> +		compatible = "syscon", "simple-mfd";
+
+You need device specific compatible. Alone this is not allowed.
+
+
+
+Best regards,
+Krzysztof
