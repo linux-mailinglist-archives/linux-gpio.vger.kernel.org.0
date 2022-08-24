@@ -2,209 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5916C59FD28
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Aug 2022 16:24:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7607B59FD93
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Aug 2022 16:54:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239149AbiHXOYy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Aug 2022 10:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41014 "EHLO
+        id S237012AbiHXOyh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Aug 2022 10:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239130AbiHXOYx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Aug 2022 10:24:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB7BBAB
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Aug 2022 07:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661351089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tQke1uAFyf+l+gfskjhrFENVwnZBGyDHLkVnYKpq0b8=;
-        b=YYuoG64R9s9BCMSss1h6DUJeArCbPfjyi4I1bLFpNak0qrtOsm7X+YikKc4P78/zEpBgwU
-        ssODGD4pEmMKBCYnzlkSlggN6cAkbEbgGb20kQrotRDVarXtRklzaktrmQNqoSZCjCPJ3f
-        kc921iPu+CmNfyMTJuRfbMDfjJcY0mo=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-644-QmuINGjHOk-Z_PC6amJviA-1; Wed, 24 Aug 2022 10:24:48 -0400
-X-MC-Unique: QmuINGjHOk-Z_PC6amJviA-1
-Received: by mail-ed1-f71.google.com with SMTP id y10-20020a056402358a00b00446da94e669so5249435edc.3
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Aug 2022 07:24:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=tQke1uAFyf+l+gfskjhrFENVwnZBGyDHLkVnYKpq0b8=;
-        b=AF4EoajCJ+P1cGO/sOhT1LBPavIgCMF3myYsU9xcHNOAGGvAa2ZFme4nmonGJrKicw
-         0j/t+/yGg3PDx1SLg8ICv9tFP1+w4gIPuOhi2/5Z8INKh9L0kMLwyfm1Ex5B2XxJipdD
-         uNb2UaVVWSVUguumY39qXhZlMK4rFWBi2NFr3Lmlt/oYXw6n2VHrtmg44Yv3vEglTzwx
-         Z41xurjTIli2+XjsVqCJgY2s2P4O+1f1fqipF/AV9sGACPUzkGXhHg4cwhl1r2bUtB/a
-         dkY32CZlOBo+LorMp1K6Q0duPg/gjbe3WKmibjE5Q0UQT3TVsFRt16vpemnvZhiFosgD
-         WDIA==
-X-Gm-Message-State: ACgBeo0W161O4gb+isE1GhidHkMKTtNvPXKbZvFimDZantfsl9jqsu/8
-        PXuFoBgwgUMQLCSfah/47l9vKAz9WYxTpfurAUDTisZupPZwcpbqFZiCMHcJthzk/ox20QSnWFU
-        qThZapRFpBmEUYPJg5+RimQ==
-X-Received: by 2002:a17:907:9625:b0:730:ad62:9c86 with SMTP id gb37-20020a170907962500b00730ad629c86mr3011141ejc.281.1661351087760;
-        Wed, 24 Aug 2022 07:24:47 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4bv/Po/N8M1a0SF9Ql41Lt+GukBkl+BsrHt2uxtwsEvwijMYkrGatSVB5OWU9bIY5pkkWNYQ==
-X-Received: by 2002:a17:907:9625:b0:730:ad62:9c86 with SMTP id gb37-20020a170907962500b00730ad629c86mr3011123ejc.281.1661351087546;
-        Wed, 24 Aug 2022 07:24:47 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id p7-20020a17090653c700b0073d68d2fc29sm1185239ejo.218.2022.08.24.07.24.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Aug 2022 07:24:46 -0700 (PDT)
-Message-ID: <3ec46cab-c775-824c-6bad-6fdddeea6e6a@redhat.com>
-Date:   Wed, 24 Aug 2022 16:24:46 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v4 1/5] gpio-f7188x: Add GPIO support for Nuvoton NCT6116
-Content-Language: en-US
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     simon.guinot@sequanux.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S236283AbiHXOyg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Aug 2022 10:54:36 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC7D6792EF;
+        Wed, 24 Aug 2022 07:54:35 -0700 (PDT)
+Received: from [10.3.2.12] (zone.collabora.co.uk [167.235.23.81])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: martyn)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 94B596601E78;
+        Wed, 24 Aug 2022 15:54:33 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1661352874;
+        bh=CVvG9u5fZgNaOo7ULIGJkLzIljQ//NxCzX6yHS/62rg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=NR7CNznfTPjbBb6Ysl26B0Dw9uhrILYohGczNHFHvapI7yJufzs8OtN84tqRAnA/G
+         6H9BUd7yACXyNZgjw6iGl+ukq0+5dDfO5ICfre3puaM6NKFBF6rBAWeDbnRHc18ndy
+         FCASu+2JCVK2RpNizY8Dmu+TTJN8qyADhHchH3pA/mIdLXVzAbnbA3pgOyS9vKaXc3
+         a0DeUsG6SejB8qoohy2Y3Kqny/JCkOi3lH7Ra90ttntGvYQACjXgM3IaiE1Hl8dGEi
+         AM441ay1cffjemUG1UE9Q6N+Y0kU+MRtQPz0JjSB5n8JKyxN/IUkt3jX+pptqIB1wW
+         sjR161ZHWLEzw==
+Message-ID: <8d8413be9ec10852ca40e091a26db19436d23b71.camel@collabora.com>
+Subject: Re: [RFC PATCH] gpio: pca953x: Support for pcal6534
+From:   Martyn Welch <martyn.welch@collabora.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>
-References: <20220823102344.17624-1-henning.schild@siemens.com>
- <20220823102344.17624-2-henning.schild@siemens.com>
- <YwToilxquEZGqzQD@smile.fi.intel.com>
- <20220823165459.143e1c30@md1za8fc.ad001.siemens.net>
- <YwYjXzsSHNe+J3aO@76cbfcf04d45>
- <20220824155038.5aa19495@md1za8fc.ad001.siemens.net>
- <a001efb5-95a3-d89d-32bd-557b6f11bb80@redhat.com>
- <20220824161757.4ca3bb97@md1za8fc.ad001.siemens.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220824161757.4ca3bb97@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        Collabora Kernel ML <kernel@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 24 Aug 2022 15:54:30 +0100
+In-Reply-To: <CAHp75Vc84yV40XwHdzHyWR7iM383iwvtQrxEXroJ6Lb41piCxA@mail.gmail.com>
+References: <20220817112818.787771-1-martyn.welch@collabora.com>
+         <CAHp75Vc1bnUGt66LYRAVuJP+OnhLTaU=AN1JdvfiH44O9_eO8g@mail.gmail.com>
+         <370beac7c85da4f1b57d8d78715d2a0676d19cf9.camel@collabora.com>
+         <CAHp75Vc84yV40XwHdzHyWR7iM383iwvtQrxEXroJ6Lb41piCxA@mail.gmail.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4-1+b1 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 8/24/22 16:17, Henning Schild wrote:
-> Am Wed, 24 Aug 2022 15:54:28 +0200
-> schrieb Hans de Goede <hdegoede@redhat.com>:
-> 
->> Hi Henning,
->>
->> On 8/24/22 15:50, Henning Schild wrote:
->>> Am Wed, 24 Aug 2022 15:10:55 +0200
->>> schrieb simon.guinot@sequanux.org:
->>>   
->>>> On Tue, Aug 23, 2022 at 04:54:59PM +0200, Henning Schild wrote:  
->>>>> Am Tue, 23 Aug 2022 17:47:38 +0300
->>>>> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:    
->>>>
->>>> Hi Andy,
->>>>
->>>> Thanks for this new version. It is looking good to me.
->>>>  
->>>>>     
->>>>>> On Tue, Aug 23, 2022 at 12:23:40PM +0200, Henning Schild wrote:
->>>>>>   
->>>>>>> Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO
->>>>>>> chips are very similar to the ones from Fintek. In other
->>>>>>> subsystems they also share drivers and are called a family of
->>>>>>> drivers.
->>>>>>>
->>>>>>> For the GPIO subsystem the only difference is that the direction
->>>>>>> bit is reversed and that there is only one data bit per pin. On
->>>>>>> the SuperIO level the logical device is another one.
->>>>>>>
->>>>>>> On a chip level we do not have a manufacturer ID to check and
->>>>>>> also no revision.      
->>>>>>
->>>>>> ...
->>>>>>     
->>>>>>> - * GPIO driver for Fintek Super-I/O F71869, F71869A, F71882,
->>>>>>> F71889 and F81866
->>>>>>> + * GPIO driver for Fintek and Nuvoton Super-I/O chips      
->>>>>>
->>>>>> I'm not sure it's good idea to drop it from here. It means reader
->>>>>> has to get this info in a hard way.
->>>>>>
->>>>>> ...    
->>>>>
->>>>> Let us see what others say. I wanted to keep this in line with
->>>>> what Kconfig says and the oneliner in the Kconfig was getting
->>>>> pretty longish. Hence i decided to shorten that. Other drivers
->>>>> also seem to not list all the possible chips in many places, it
->>>>> is all maint effort when a new chips is added and the list is in
->>>>> like 5 places.    
->>>>
->>>> I agree with you that we can drop this line. It was already
->>>> incomplete and the information is quite readable a few lines below
->>>> in both the define list and the chip enumeration.
->>>>  
->>>>>     
->>>>>>> +#define gpio_dir_invert(type)	((type) == nct6116d)
->>>>>>> +#define gpio_data_single(type)	((type) == nct6116d)
->>>>>>>  
->>>>>>
->>>>>> What's prevents us to add a proper prefix to these? I don't like
->>>>>> the idea of them having "gpio" prefix.
->>>>>>
->>>>>> ...
->>>>>>     
->>>>>>> +		pr_info(DRVNAME ": Unsupported device
->>>>>>> 0x%04x\n", devid);
->>>>>>> +			pr_debug(DRVNAME ": Not a Fintek
->>>>>>> device at 0x%08x\n", addr);
->>>>>>> +	pr_info(DRVNAME ": Found %s at %#x\n",
->>>>>>> +		pr_info(DRVNAME ":   revision %d\n",      
->>>>>>
->>>>>> Can we, please, utilize pr_fmt()?
->>>>>>     
->>>>>>> +			(int)superio_inb(addr,
->>>>>>> SIO_FINTEK_DEVREV));      
->>>>>>
->>>>>> Explicit casting in printf() means wrong specifier in 99% of
->>>>>> cases.   
->>>>>
->>>>> For all the other comments i will wait for a second opinion. I
->>>>> specifically did not change existing code for more than the
->>>>> functional changes needed. And a bit of checkpatch.pl fixing.
->>>>> Beautification could be done on the way but would only cause
->>>>> inconsistency. That driver is what it is, if someone wants to
->>>>> overhaul the style ... that should be another patch. One likely
->>>>> not coming from me.    
->>>>
->>>> About the int cast, I think you can drop it while you are updating
->>>> this line. It is unneeded.  
->>>
->>> Ok two voices for doing that one fix along the way. I will send a v5
->>> and hope nobody insists on me fixing the other findings in code i
->>> never wrote.  
->>
->> You did not write it, but you are using it to do hw-enablement for
->> your company's products. So being asked to also some touch-ups
->> left and right while you are at it really is not unexpected IMHO.
-> 
-> Sure thing. Dropping a few characters from a line i touch anyhow is
-> easy enough. But i.e a refactoring to pr_fmt would feel like asking too
-> much in my book. That feels like work of the author or maintainer.
-
-Right, but that assumes that the original author / maintainer is still
-around and actively contributing which unfortunately is not always
-the case.
-
-Regards,
-
-Hans
+T24gTW9uLCAyMDIyLTA4LTIyIGF0IDExOjU2ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
+Cj4gCj4gCj4gT24gTW9uZGF5LCBBdWd1c3QgMjIsIDIwMjIsIE1hcnR5biBXZWxjaCA8bWFydHlu
+LndlbGNoQGNvbGxhYm9yYS5jb20+Cj4gd3JvdGU6Cj4gPiBPbiBTYXQsIDIwMjItMDgtMjAgYXQg
+MDE6MzUgKzAzMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToKPiA+ID4gT24gV2VkLCBBdWcgMTcs
+IDIwMjIgYXQgMjoyOSBQTSBNYXJ0eW4gV2VsY2gKPiA+ID4gPG1hcnR5bi53ZWxjaEBjb2xsYWJv
+cmEuY29tPiB3cm90ZToKPiA+ID4gPiDCoAo+ID4gPiA+IC3CoMKgwqDCoMKgwqAgaW50IGJhbmtf
+c2hpZnQgPSBwY2E5NTN4X2Jhbmtfc2hpZnQoY2hpcCk7Cj4gPiA+ID4gLcKgwqDCoMKgwqDCoCBp
+bnQgYmFuayA9IChyZWcgJiBSRUdfQUREUl9NQVNLKSA+PiBiYW5rX3NoaWZ0Owo+ID4gPiA+IC3C
+oMKgwqDCoMKgwqAgaW50IG9mZnNldCA9IHJlZyAmIChCSVQoYmFua19zaGlmdCkgLSAxKTsKPiA+
+ID4gPiArwqDCoMKgwqDCoMKgIGludCBiYW5rOwo+ID4gPiA+ICvCoMKgwqDCoMKgwqAgaW50IG9m
+ZnNldDsKPiA+ID4gPiArCj4gPiA+ID4gK8KgwqDCoMKgwqDCoCBpZiAoY2hpcC0+ZHJpdmVyX2Rh
+dGEgJiBQQ0FMNjUzNF9BTElHTikgewo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGJhbmsgPSAocmVnICYgUkVHX0FERFJfTUFTSykgLyBOQkFOSyhjaGlwKTsKPiA+ID4gPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvZmZzZXQgPSByZWcgLSAoYmFuayAqIE5CQU5L
+KGNoaXApKTsKPiA+ID4gPiArwqDCoMKgwqDCoMKgIH0gZWxzZSB7Cj4gPiA+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgaW50IGJhbmtfc2hpZnQgPSBwY2E5NTN4X2Jhbmtfc2hpZnQo
+Y2hpcCk7Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYmFuayA9IChyZWcg
+JiBSRUdfQUREUl9NQVNLKSA+PiBiYW5rX3NoaWZ0Owo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIG9mZnNldCA9IHJlZyAmIChCSVQoYmFua19zaGlmdCkgLSAxKTsKPiA+ID4g
+PiArwqDCoMKgwqDCoMKgIH0KPiA+ID4gCj4gPiA+IEknbSB3b25kZXJpbmcgaWYgaXQgY2FuIGJl
+IG1vdmVkIHRvIGJhbmtfc2hpZnQoKcKgIGFuZCBwb3NzaWJseSBhCj4gPiA+IG5ldwo+ID4gPiBo
+ZWxwZXIgdG8gZ2V0IGFuIG9mZnNldC4KPiA+ID4gCj4gPiAKPiA+IER1ZSB0byB0aGUgZGlmZmVy
+ZW50IHJlZ2lzdGVyIHNwYWNpbmcsIEkgZG9uJ3QgdGhpbmsgdGhlc2UgY2hpcHMKPiA+IG9iZXkK
+PiA+IGFueSBvZmZzZXQgYmFzZWQgcnVsZXMuIEZvciB0aGUgcmVjb3JkLCBJJ3ZlIGRvbmUgYSBi
+aXQgbW9yZSB3b3JrCj4gPiBoZXJlCj4gPiB0byBnZXQgaXQgcmV0dXJuaW5nIHRoZSBjb3JyZWN0
+IHZhbHVlcyBmb3IgYWxsIHRoZSBleHRlbmRlZAo+ID4gcmVnaXN0ZXJzLgo+ID4gV2hhdCBJIGN1
+cnJlbnRseSBoYXZlIGlzIHRoaXMgKHdoaWNoIEkgZG9uJ3QgcGFydGljdWxhcmx5IGxpa2UgYW5k
+Cj4gPiB3b3VsZCBiZSBvcGVuIHRvIGFsdGVybmF0aXZlIGltcGxlbWVudGF0aW9ucyk6Cj4gPiAK
+PiA+IAo+ID4gwqBzdGF0aWMgdTggcGNhOTUzeF9yZWNhbGNfYWRkcihzdHJ1Y3QgcGNhOTUzeF9j
+aGlwICpjaGlwLCBpbnQgcmVnLAo+ID4gaW50Cj4gPiBvZmYpCj4gPiDCoHsKPiA+IC3CoCDCoCDC
+oCDCoGludCBiYW5rX3NoaWZ0ID0gcGNhOTUzeF9iYW5rX3NoaWZ0KGNoaXApOwo+ID4gLcKgIMKg
+IMKgIMKgaW50IGFkZHIgPSAocmVnICYgUENBTF9HUElPX01BU0spIDw8IGJhbmtfc2hpZnQ7Cj4g
+PiAtwqAgwqAgwqAgwqBpbnQgcGluY3RybCA9IChyZWcgJiBQQ0FMX1BJTkNUUkxfTUFTSykgPDwg
+MTsKPiA+IC3CoCDCoCDCoCDCoHU4IHJlZ2FkZHIgPSBwaW5jdHJsIHwgYWRkciB8IChvZmYgLyBC
+QU5LX1NaKTsKPiA+ICvCoCDCoCDCoCDCoGludCBiYW5rX3NoaWZ0Owo+ID4gK8KgIMKgIMKgIMKg
+aW50IGFkZHI7Cj4gPiArwqAgwqAgwqAgwqBpbnQgcGluY3RybDsKPiA+ICvCoCDCoCDCoCDCoHU4
+IHJlZ2FkZHI7Cj4gPiArCj4gPiArwqAgwqAgwqAgwqBpZiAoY2hpcC0+ZHJpdmVyX2RhdGEgJiBQ
+Q0FMNjUzNF9BTElHTikgewo+ID4gK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgYWRkciA9IChyZWcg
+JiBQQ0FMX0dQSU9fTUFTSykgKiBOQkFOSyhjaGlwKTsKPiA+ICsKPiA+ICvCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoHN3aXRjaChyZWcpIHsKPiA+ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNhc2Ug
+UENBTDk1M1hfT1VUX1NUUkVOR1RIOgo+ID4gK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY2FzZSBQ
+Q0FMOTUzWF9JTl9MQVRDSDoKPiA+ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNhc2UgUENBTDk1
+M1hfUFVMTF9FTjoKPiA+ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNhc2UgUENBTDk1M1hfUFVM
+TF9TRUw6Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjYXNlIFBDQUw5NTNYX0lOVF9NQVNL
+Ogo+ID4gK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY2FzZSBQQ0FMOTUzWF9JTlRfU1RBVDoKPiA+
+ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNhc2UgUENBTDk1M1hfT1VUX0NPTkY6Cj4gPiArwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBwaW5jdHJsID0gKChyZWcgJiBQQ0FMX1BJ
+TkNUUkxfTUFTSykgPj4gMSkKPiA+ICsKPiA+IDB4MjA7Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqBicmVhazsKPiA+ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNhc2Ug
+UENBTDY1MjRfSU5UX0VER0U6Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjYXNlIFBDQUw2
+NTI0X0lOVF9DTFI6Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjYXNlIFBDQUw2NTI0X0lO
+X1NUQVRVUzoKPiA+ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNhc2UgUENBTDY1MjRfT1VUX0lO
+RENPTkY6Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjYXNlIFBDQUw2NTI0X0RFQk9VTkNF
+Ogo+ID4gK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcGluY3RybCA9ICgocmVn
+ICYgUENBTF9QSU5DVFJMX01BU0spID4+IDEpCj4gPiArCj4gPiAweDFjOwo+ID4gK8KgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgYnJlYWs7Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqB9Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByZWdhZGRyID0gcGluY3RybCArIGFk
+ZHIgKyAob2ZmIC8gQkFOS19TWik7Cj4gPiArwqAgwqAgwqAgwqB9IGVsc2Ugewo+ID4gK8KgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgYmFua19zaGlmdCA9IHBjYTk1M3hfYmFua19zaGlmdChjaGlwKTsK
+PiA+ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGFkZHIgPSAocmVnICYgUENBTF9HUElPX01BU0sp
+IDw8IGJhbmtfc2hpZnQ7Cj4gPiArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBwaW5jdHJsID0gKHJl
+ZyAmIFBDQUxfUElOQ1RSTF9NQVNLKSA8PCAxOwo+ID4gK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+cmVnYWRkciA9IHBpbmN0cmwgfCBhZGRyIHwgKG9mZiAvIEJBTktfU1opOwo+ID4gK8KgIMKgIMKg
+IMKgfQo+ID4gCj4gPiDCoCDCoCDCoCDCoCByZXR1cm4gcmVnYWRkcjsKPiA+IMKgfQo+ID4gCj4g
+PiBBcyBJIHNhaWQsIHdoaWxzdCB0aGUgZnVuY3Rpb25hbGl0eSBvZiB0aGlzIGNoaXAgc2VlbXMg
+dG8gY2xvc2VseQo+ID4gbWF0Y2gKPiA+IHNvbWUgb2YgdGhlIG90aGVycyBkcml2ZW4gYnkgdGhp
+cyBkcml2ZXIsIHRoZSByZWdpc3RlciBvZmZzZXRzIGFyZQo+ID4gcXVpdGUgZGlmZmVyZW50IGFu
+ZCBoYXJkIHRvIGluY29ycG9yYXRlIGNsZWFubHkgaW4gdGhpcyBkcml2ZXIgZHVlCj4gPiB0bwo+
+ID4gdGhlIHdheSBpdCBkZXRlcm1pbmVzIHJlZ2lzdGVyIGxvY2F0aW9ucy4KPiA+IAo+IAo+IAo+
+IEkgdGhpbmsgaXQgY2FuIGJlIGRvbmUgbXVjaCBlYXNpZXIgd2l0aCB0aGUgc3BlY2lmaWMgcmVn
+bWFwIGNhbGxiYWNrcwo+IHNwZWNpZmljIHRvIHRoZXNlIGtpbmQgb2YgY2hpcHMuCj4gwqAKCkFy
+ZSB5b3UgdGhpbmtpbmcgb2YgZGVmaW5pbmcgZnVuY3Rpb25zIHZpYSBzdHJ1Y3QgcmVnbWFwX2J1
+cz8gwqBJZiBzbywKSSdtIG5vdCBzdXJlIGhvdyB0aGlzIGhlbHBzLiBVbmxlc3MgSSd2ZSBtaXNz
+IHVuZGVyc3Rvb2QgaG93IHRoYXQgd291bGQKd29yaywgdGhvc2Ugd291bGQgY29tZSBpbnRvIHBs
+YXkgYWZ0ZXIgcmVnbWFwX2J1bGtfd3JpdGUoKSwgZXRjIGFyZQpjYWxsZWQsIGJ5IHdoaWNoIHBv
+aW50IHRoZSBkZXNpcmVkIChhbmQgaW4gdGhpcyBjYXNlIHdyb25nKSBvZmZzZXQgd2lsbApoYXZl
+IGFscmVhZHkgYmVlbiBjYWxjdWxhdGVkIGluIHBjYTk1M3hfcmVjYWxjX2FkZHIoKS4KCkFtIEkg
+bWlzc2luZyBzb21ldGhpbmc/CgpNYXJ0eW4K
 
