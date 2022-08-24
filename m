@@ -2,93 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D90A59F2F5
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Aug 2022 07:07:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4283D59F317
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Aug 2022 07:33:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234494AbiHXFGl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Aug 2022 01:06:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
+        id S232414AbiHXFdc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Aug 2022 01:33:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234516AbiHXFGk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Aug 2022 01:06:40 -0400
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3429961108;
-        Tue, 23 Aug 2022 22:06:37 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 27O56SPS097804;
-        Wed, 24 Aug 2022 00:06:28 -0500
+        with ESMTP id S229926AbiHXFdb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Aug 2022 01:33:31 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEE17EFE7;
+        Tue, 23 Aug 2022 22:33:30 -0700 (PDT)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 27O5XMGM125374;
+        Wed, 24 Aug 2022 00:33:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1661317588;
-        bh=ZhIx6W5gSdIkSatnh1HyUFynm726IvCwwJYGUJZon84=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=YKxB/F/qweU0wktST5qfZN1PBAOHTeYir1nvofvFAcZDEvCIg0U2Sbn+kyi8KMyKx
-         ho6Dy9b8tDuauY7LRgqWp5HnRS1TIADwgOaHTYSZTJ7rFGGEFyUkX4uwg9OlcetLbO
-         Dq4HFlvYieSobU4WTyD9js41LMyQApPAeE8wyg4w=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 27O56Rte014566
+        s=ti-com-17Q1; t=1661319202;
+        bh=YlOmRucdsm6VdSMoXbTqjqPNGJYziMTxO/67cO+VbRc=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=HEujJQmi3BfdyCVoO0muOd/d67T7EkV+mzr3C5WPFHz4jE09Gj35CX8tPrKrJ8J8S
+         Lrc6uNi5fewxMK7iP1TZGOE5laK4Wo9NMNZROsJD6lr8rlBSKCOyyiYVSbeG5wiA8i
+         wcH5tMvL3+0pFSrxuAvZSDDo/S/h+61sKB5CN15Q=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 27O5XMmj042231
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Aug 2022 00:06:27 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 24 Aug 2022 00:33:22 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 24
- Aug 2022 00:06:27 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2022 00:33:22 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Wed, 24 Aug 2022 00:06:27 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 27O56RYG022877;
-        Wed, 24 Aug 2022 00:06:27 -0500
-Date:   Wed, 24 Aug 2022 00:06:27 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC:     Apurva Nandan <a-nandan@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
+ Frontend Transport; Wed, 24 Aug 2022 00:33:22 -0500
+Received: from [172.24.145.182] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 27O5XIur093181;
+        Wed, 24 Aug 2022 00:33:19 -0500
+Message-ID: <734b1e1c-2416-0684-287e-a96b86a416a2@ti.com>
+Date:   Wed, 24 Aug 2022 11:03:17 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 4/4] arch: arm64: ti: Add support for J784s4 EVM board
+Content-Language: en-US
+To:     Nishanth Menon <nm@ti.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC:     Apurva Nandan <a-nandan@ti.com>, Tero Kristo <kristo@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
-Subject: Re: [PATCH 4/4] arch: arm64: ti: Add support for J784s4 EVM board
-Message-ID: <20220824050627.nh7d4blrsfbxrvuh@clicker>
 References: <20220819190054.31348-1-a-nandan@ti.com>
  <20220819190054.31348-5-a-nandan@ti.com>
  <6c89f254-185a-4046-2bf0-a9f85713858e@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6c89f254-185a-4046-2bf0-a9f85713858e@linaro.org>
-User-Agent: NeoMutt/20171215
+ <20220824050627.nh7d4blrsfbxrvuh@clicker>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <20220824050627.nh7d4blrsfbxrvuh@clicker>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13:21-20220823, Krzysztof Kozlowski wrote:
-> > +
-> > +/ {
-> > +	compatible = "ti,j784s4-evm", "ti,j784s4";
-> > +	model = "Texas Instruments J784S4 EVM";
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial2:115200n8";
-> > +		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x2880000";
+Hi Krzysztof,
+
+On 24/08/22 10:36, Nishanth Menon wrote:
+> On 13:21-20220823, Krzysztof Kozlowski wrote:
+>>> +
+>>> +/ {
+>>> +	compatible = "ti,j784s4-evm", "ti,j784s4";
+>>> +	model = "Texas Instruments J784S4 EVM";
+>>> +
+>>> +	chosen {
+>>> +		stdout-path = "serial2:115200n8";
+>>> +		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x2880000";
+>>
+>> earlycon is not a property of hardware. Console is defined in
+
+earlycon is helpful for debugging early crashes. How is it any different
+from "console =" property as described in
+Documentation/devicetree/usage-model.rst?
+
+>> stdout-path, so please drop entire bootargs.
 > 
-> earlycon is not a property of hardware. Console is defined in
-> stdout-path, so please drop entire bootargs.
+> We will probably have to cleanup elsewhere as well - point noted.
+> 
 
-We will probably have to cleanup elsewhere as well - point noted.
+Whats the alternative to pass default bootargs to kernel if bootloader
+does not pass bootargs via cmdline? I see quite a few dts file use
+bootargs = "earlycon" at least
 
-[...]
+
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Regards
+Vignesh
