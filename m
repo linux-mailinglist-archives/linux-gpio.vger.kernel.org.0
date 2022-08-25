@@ -2,90 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 454675A0D76
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 12:02:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48DB15A0E15
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 12:42:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239042AbiHYKCk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Aug 2022 06:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47720 "EHLO
+        id S235195AbiHYKmy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Aug 2022 06:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239879AbiHYKCj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 06:02:39 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6E8A572B;
-        Thu, 25 Aug 2022 03:02:38 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id r6so5723446qtx.6;
-        Thu, 25 Aug 2022 03:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=lKG2VD/CmwRDDUko2A1+Os+gTODnKnEL/4GwwXIlyuE=;
-        b=O8Zv7uk/gaGlZoDO5+hS7iDMqlzmVgpEL5Mmf9ux9sxm9kjLKw31ZZs2ayjrGMVaSh
-         SfF6aUV7ivAaO07zZs2qq7mGT382S95gIk3AgdPTxwZybpDUW+bAtMr6DYgFk4018ApS
-         WB1tnotpDMbA31Oa43PGLT1MAEJt1Om55sZk3PB78HH1hQvgB1CxJACe9rxmPUVPFqKD
-         /1oa/0aVcOKfdWJ7/W9K7zzAxWd/YPXqOSaWTH8ctyz1z9WNwBWXr57iwDI61dp07AQD
-         2UE8Yg5qqG85Utxb9byWu/7FiJhNUYd/3X0y9MJpSn1MwU20C6tv02uftPsxN3Nh01I+
-         oZQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=lKG2VD/CmwRDDUko2A1+Os+gTODnKnEL/4GwwXIlyuE=;
-        b=lyJD/dPG3e2ovnDY5rwBW6lpG4DIzA/7cR7b1AkpDtQCJJ0luf50n7Ad1+tp+CqoHv
-         10ekaHdp6/gfPqBq4m0olndupUW+QlHGQLSF/PNI215LpIQA9sAg2ymbQldUh01iOyYg
-         ZpXCTatn44EPqN2qbMRQ2kzdRkaJUOJ30Mg/JtxPyyWkQEizVakjGXosFpJeJ6p8rAIA
-         ZjUVQlkCNkB0uz28+vuWkWUocCIb5Xt/LwlsJm4rVLNHtgb+xcC0drAcKnp/h2Gnt/Kw
-         pb+fHVfQzre93K0p7Ew6m+grljTDT7n7vggUp5Iz1Mf7owfW5MZpjskG/6Ut2HT0Fz8P
-         3TrA==
-X-Gm-Message-State: ACgBeo20H2sVql9ZQ83DfQpD3huv8C3aufGst1ApqP6qmJSOHCixctSJ
-        Rn+EO13DxvNa1q6e+WqUIwp78W43HiNU6Tz3ZgkAo/BLC1M=
-X-Google-Smtp-Source: AA6agR7QzZ1tQlk8lKFxEFJeIuJJ2TEwubLA2ON3ey1ujxxyR58HJk5zf41k2ui0W4d0rPvles79OmjzkemHW02+NAI=
-X-Received: by 2002:ac8:5786:0:b0:343:3051:170d with SMTP id
- v6-20020ac85786000000b003433051170dmr2761103qta.429.1661421757998; Thu, 25
- Aug 2022 03:02:37 -0700 (PDT)
+        with ESMTP id S236313AbiHYKmx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 06:42:53 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F39661D6B;
+        Thu, 25 Aug 2022 03:42:52 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1oRAK2-0007E0-V5; Thu, 25 Aug 2022 12:42:51 +0200
+Message-ID: <849a07ba-a53c-3f10-e2ec-25421c1e40ee@leemhuis.info>
+Date:   Thu, 25 Aug 2022 12:42:50 +0200
 MIME-Version: 1.0
-References: <20220816054917.7893-1-patrick.rudolph@9elements.com> <20220816054917.7893-3-patrick.rudolph@9elements.com>
-In-Reply-To: <20220816054917.7893-3-patrick.rudolph@9elements.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 25 Aug 2022 13:02:02 +0300
-Message-ID: <CAHp75Vde8BFZAtEUYxPE0GeU++9q=CcBEjB_m=-5RgVit9wdLw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: Add Cypress cy8c95x0 support
-To:     Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Naresh Solanki <naresh.solanki@9elements.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Content-Language: en-US
+Cc:     hi2@n101n.xyz,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: [Regression] Bug 216371 - acpi wake up with black screen with msg
+ "amd_gpio AMDI0030:00: failed to get iomux index"
+To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661424172;b4e53687;
+X-HE-SMSGID: 1oRAK2-0007E0-V5
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 11:32 AM Patrick Rudolph
-<patrick.rudolph@9elements.com> wrote:
->
-> Add support for cypress I2C GPIO expanders cy8c9520, cy8c9540 and
-> cy8c9560. The GPIO expanders feature a PWM mode, thus add it as
-> pinctrl driver.
->
-> The chip features multiple drive modes for each pin when configured
-> as output and multiple bias settings when configured as input.
->
-> Tested all three components and verified that all functionality
-> is fully working.
+Hi, this is your Linux kernel regression tracker.
 
-Thanks, I appreciated it!
+I noticed a regression report in bugzilla.kernel.org that afaics nobody
+acted upon since it was reported. That's why I decided to forward it by
+mail to those that afaics should handle this.
 
-Since Linus applied this, I will work on it instead of reviewing.
-Because it will be faster and more productive (and we do not have many
-weeks left in this cycle).
+To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216371 :
 
--- 
-With Best Regards,
-Andy Shevchenko
+>  neoe 2022-08-17 01:50:41 UTC
+> 
+> just upgrade from 5.18 to 6.0.0-rc1
+> 
+> `acpitool -s` 
+> to set to sleep, it seems a little slow.
+> 
+> then wake up, black screen,
+> 
+> everything works fine before.
+> 
+> AMD 3900X
+> 
+> [reply] [−] Comment 1 neoe 2022-08-22 02:39:12 UTC
+> 
+> dmesg
+> 
+> amd_gpio AMDI0030:00: failed to get iomux index
+See the ticket for details.
+
+Please look into the issue if you're among the main recipients of this
+mail (and not just CCed). I hope I picked the right people to sent this
+to, if not, just let everyone know (and apologies!). Basavaraj, unless
+my quick analysis of the situation went haywire it seems that you
+recently added code with the error message noticed by the reporter.
+
+Anyway, to ensure this is not forgotten lets get this tracked by the the
+Linux kernel regression tracking bot:
+
+#regzbot introduced: v5.19..v6.0-rc2
+https://bugzilla.kernel.org/show_bug.cgi?id=216371
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report in bugzilla, as the kernel's documentation calls
+for; above page explains why this is important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
