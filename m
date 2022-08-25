@@ -2,80 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 918205A0FCA
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 14:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDEF85A0FDC
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 14:03:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234778AbiHYMAA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Aug 2022 08:00:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36442 "EHLO
+        id S240817AbiHYMDZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Aug 2022 08:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241345AbiHYL7v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 07:59:51 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD28642E
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 04:59:48 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id bj12so22021242ejb.13
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 04:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=xm2IuzH5NkZjS+pGQICoXtNYf1UT8FOIbW5GvULWcoA=;
-        b=iu+0gpGpBjyb9eLSkk/hvanJB13scD0nbhXExD680dGqza8HhVPgAJ5dkatND3Ymqk
-         SgdNdX2oUTB2SrFjRUWQeS/j9TTOxuvpYFQ6PWrfjAfHwKIigl36OUNnvMukDYOe+6VT
-         dE63DGgnxZ+kAOa5Zt3UFs0uN4+ItKKtFqvmxPvxQOv6iFa6jEraOjmc81Tl6oJ/rD0J
-         btHWZAAXpjEYUm+nZeWQ6hXoimIt/Rnli9pM8h4rsKiOJwSamCh0p/CcHsC0mijAfCn5
-         E7kyXufUJdwKhg77NMbCdtwqAxHw6C0ZAbfQEC/07m11gj++xNHaTWxOMjOR+p6CsKti
-         Vulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=xm2IuzH5NkZjS+pGQICoXtNYf1UT8FOIbW5GvULWcoA=;
-        b=NMygAU5B8miSsC9RWL2u6gIoiG7wJHK3T11JHk0RgrDt5bjxnwVQ9LVGRGpdo+z9cK
-         g0MpP8QwFMYW1jT4UQZn9g/XxoCjn1l199vd0EghywG85vBxcaZ2rkRIieOcnxo4cD83
-         HQ83f5zniv/KcfO4JlJsC4I5DXiOZ3GW0oagXFMjyWNZEINn+Ei3vNUJIEPghwUYwxyl
-         NQU719CQ32ZyuovismE7lN/4KdRFO3nX2JSDflVq59jNZ+nSSmfjrgrzd0/jJlKfiy3W
-         NT74HvAThA2PcvCo3VOT6yvxVHYYdP6Zq3yAIIdkKihoagzVq7b74pRgPsrGOybY6Ybm
-         2MTw==
-X-Gm-Message-State: ACgBeo1vEydf8qYNbEVgVuQjSPb/cA/SHnGIxFri4WLkIqAJCe+LizVp
-        or/NjVlrIIBQQpwRsNuQ96VXyiDrZiQrh4AQQPGYJg==
-X-Google-Smtp-Source: AA6agR7mZ5xAEcHD76JxST+kccxcpJ3PWAeaLz5jXJFne317cGpVf3riJ/pYd4HZ5ibAHmPfHoKVmG+KaiO0PSVkxSo=
-X-Received: by 2002:a17:906:9b86:b0:73d:72cf:72af with SMTP id
- dd6-20020a1709069b8600b0073d72cf72afmr2330972ejc.440.1661428787087; Thu, 25
- Aug 2022 04:59:47 -0700 (PDT)
+        with ESMTP id S241021AbiHYMDW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 08:03:22 -0400
+Received: from vm3.sequanux.org (static.55.155.9.5.clients.your-server.de [5.9.155.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D1109F8E1;
+        Thu, 25 Aug 2022 05:03:20 -0700 (PDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by vm3.sequanux.org (Postfix) with ESMTP id 2343410880C;
+        Thu, 25 Aug 2022 14:02:58 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
+Received: from vm3.sequanux.org ([127.0.0.1])
+        by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id QeA1dTuyiUkp; Thu, 25 Aug 2022 14:02:20 +0200 (CEST)
+Received: from localhost (softwrestling.org [95.216.36.37])
+        by vm3.sequanux.org (Postfix) with ESMTPSA id 49FBF1086FC;
+        Thu, 25 Aug 2022 14:02:20 +0200 (CEST)
+Date:   Thu, 25 Aug 2022 14:02:06 +0200
+From:   simon.guinot@sequanux.org
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>
+Subject: Re: [PATCH v6 1/7] gpio-f7188x: switch over to using pr_fmt
+Message-ID: <Ywdkvu0VNWti1WTe@76cbfcf04d45>
+References: <20220825104422.14156-1-henning.schild@siemens.com>
+ <20220825104422.14156-2-henning.schild@siemens.com>
 MIME-Version: 1.0
-References: <20220621112904.65674-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220621112904.65674-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Aug 2022 13:59:35 +0200
-Message-ID: <CACRpkdYCduUyR-H1ztQ4iQ+Z+nMhFe6V2+Re1zQVM1Mk0hG+_w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] pinctrl: nomadik: Convert drivers to use struct
- pingroup and PINCTRL_PINGROUP()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8eVkuOeCNQZeK+6U"
+Content-Disposition: inline
+In-Reply-To: <20220825104422.14156-2-henning.schild@siemens.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 21, 2022 at 1:29 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
 
-> The pin control header provides struct pingroup and PINCTRL_PINGROUP() macro.
-> Utilize them instead of open coded variants in the driver.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--8eVkuOeCNQZeK+6U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied, was meaning to test it on target but was too ambitious
-about that and forgot it. If there is a problem I will notice anyway!
+On Thu, Aug 25, 2022 at 12:44:16PM +0200, Henning Schild wrote:
+> Subsequent patches will touch that file, apply some nice to have style
+> changes before actually adding functional changes.
+>=20
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
 
-Yours,
-Linus Walleij
+Acked-by: Simon Guinot <simon.guinot@sequanux.org>
+
+> ---
+>  drivers/gpio/gpio-f7188x.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
+> index 18a3147f5a42..fef539bbc03a 100644
+> --- a/drivers/gpio/gpio-f7188x.c
+> +++ b/drivers/gpio/gpio-f7188x.c
+> @@ -7,6 +7,9 @@
+>   * Author: Simon Guinot <simon.guinot@sequanux.org>
+>   */
+> =20
+> +#define DRVNAME "gpio-f7188x"
+> +#define pr_fmt(fmt) DRVNAME ": " fmt
+> +
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+> @@ -14,8 +17,6 @@
+>  #include <linux/gpio/driver.h>
+>  #include <linux/bitops.h>
+> =20
+> -#define DRVNAME "gpio-f7188x"
+> -
+>  /*
+>   * Super-I/O registers
+>   */
+> @@ -110,7 +111,7 @@ static inline int superio_enter(int base)
+>  {
+>  	/* Don't step on other drivers' I/O space by accident. */
+>  	if (!request_muxed_region(base, 2, DRVNAME)) {
+> -		pr_err(DRVNAME "I/O address 0x%04x already in use\n", base);
+> +		pr_err("I/O address 0x%04x already in use\n", base);
+>  		return -EBUSY;
+>  	}
+> =20
+> @@ -487,7 +488,7 @@ static int __init f7188x_find(int addr, struct f7188x=
+_sio *sio)
+>  	err =3D -ENODEV;
+>  	devid =3D superio_inw(addr, SIO_MANID);
+>  	if (devid !=3D SIO_FINTEK_ID) {
+> -		pr_debug(DRVNAME ": Not a Fintek device at 0x%08x\n", addr);
+> +		pr_debug("Not a Fintek device at 0x%08x\n", addr);
+>  		goto err;
+>  	}
+> =20
+> @@ -518,13 +519,13 @@ static int __init f7188x_find(int addr, struct f718=
+8x_sio *sio)
+>  		sio->type =3D f81865;
+>  		break;
+>  	default:
+> -		pr_info(DRVNAME ": Unsupported Fintek device 0x%04x\n", devid);
+> +		pr_info("Unsupported Fintek device 0x%04x\n", devid);
+>  		goto err;
+>  	}
+>  	sio->addr =3D addr;
+>  	err =3D 0;
+> =20
+> -	pr_info(DRVNAME ": Found %s at %#x, revision %d\n",
+> +	pr_info("Found %s at %#x, revision %d\n",
+>  		f7188x_names[sio->type],
+>  		(unsigned int) addr,
+>  		(int) superio_inb(addr, SIO_DEVREV));
+> @@ -548,13 +549,13 @@ f7188x_gpio_device_add(const struct f7188x_sio *sio)
+>  	err =3D platform_device_add_data(f7188x_gpio_pdev,
+>  				       sio, sizeof(*sio));
+>  	if (err) {
+> -		pr_err(DRVNAME "Platform data allocation failed\n");
+> +		pr_err("Platform data allocation failed\n");
+>  		goto err;
+>  	}
+> =20
+>  	err =3D platform_device_add(f7188x_gpio_pdev);
+>  	if (err) {
+> -		pr_err(DRVNAME "Device addition failed\n");
+> +		pr_err("Device addition failed\n");
+>  		goto err;
+>  	}
+> =20
+> --=20
+> 2.35.1
+
+--8eVkuOeCNQZeK+6U
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEXW8DgovlR3VS5hA0zyg/RDPmszoFAmMHZLoACgkQzyg/RDPm
+szpxxBAAmtKLLqa5vkTy0Ur+b3aTcHHH0Mb/j+RbTY1y+onlBpjc5i//1MCNBDiU
+w0AMTQFUBuvlGW/kvs8JoZTsnU2kMGjxwBCL+KbQVvNCmHb2A6J/+ccmJ5WAuNxx
+LKkwj3tjnsUxH34brPOp6CVJJkSJUhlwL/7AocQfC4KjvZ48FYjvp+ZQZIzrOLGc
+9YZpHD5ByjvRAoaDNqGpzPvCP+rUgA/OUF8UaTjv9ReV4wJqlpd1T0mQgocAcAx9
+wgibepOyck1koj5aW66uYYg+8EZ648yW8MV4mNdS5pBaRyOOZoln+LfSIlmPClbF
+sHULNz0tF6zOzULRbMDAG8J4X0hjzyeQSm7V6ieJ8HrfSrCM9yEoJELo1qezN8YK
++dS/ayy2mRCzbynr4/PorSAJbC7a0kZZ8teLLmbg6L40NFu3KbdRpLDUwh4cfntK
+1jBy+v2UMueJ7MhxhgRm6mi4RmS8OL0qt+1WivkSVtIFPM6UlsnEKanpxgoMg18m
+cgmX5XOnu8Ejx0KVNIAi8Rx0XmwsxIxx54M4C2jCXOqSAiashUKQfSoSqpLt1xfe
+NSgI9W/Q0hpAQZQw3KqA8mJfHJw19i2DF9vRq/4LX8smoNlnQwvQwo/xAljwwg2i
+QzL0SgK3MoykWb7vHZtWgF8+zSC5t+21POY57CleZsJYvV8ZggI=
+=6jNd
+-----END PGP SIGNATURE-----
+
+--8eVkuOeCNQZeK+6U--
