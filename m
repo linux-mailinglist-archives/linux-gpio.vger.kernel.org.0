@@ -2,200 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 968F05A13A1
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 16:31:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50B8E5A13B7
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 16:36:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241229AbiHYObM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Aug 2022 10:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54348 "EHLO
+        id S241991AbiHYOgS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Aug 2022 10:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241077AbiHYObL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 10:31:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5C95E64A
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 07:31:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661437869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D7VcBhHiv8IbbT8z6tWNMuI4PjjYorz2V+BoVVIIzj4=;
-        b=aVZTeXiQavB1E3yRZu2J93RRfFrAoHXVXKda4vD1IVmqs69Ux5ggf+VnR3gvaYzm7fn4io
-        SIaqwFJ2XcHdzV4jgNpSKnw0ZQrDLZi8YEi4U6fv+7cjqHkP1qm7ku1VaIfDA2cCLQaq7L
-        9YmPjU7XuLsHbZKGmCO3Ygv4ami7vts=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-18-puC_GnURNxeMNbDykb2DAg-1; Thu, 25 Aug 2022 10:31:03 -0400
-X-MC-Unique: puC_GnURNxeMNbDykb2DAg-1
-Received: by mail-ej1-f70.google.com with SMTP id hp36-20020a1709073e2400b0073d6bee146aso4372783ejc.20
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 07:31:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=D7VcBhHiv8IbbT8z6tWNMuI4PjjYorz2V+BoVVIIzj4=;
-        b=ZuMm2epTd0d1sXIBwFe5aDXU0dKNsvYUjvjboeL7DRJoq3JyZ/SKDxbXl4zwO2RrTm
-         K6QNheIPFGF8QxBFkkEJ1VDHaBLBnuTvHylLVfOb7a6mGRfydKtfdWA/qSYBNSJ7g3Zc
-         Ja1HVsk55nhFrVTWXOA/p/XG4Mb6+uC9DwsbQXpXS8AChLny5pixgZWl9MbsjX5QrINo
-         pCuK9tSDC3JjwAKU1dntzXKbUx9Tk0moycLMtuHYkwT0JGdcKAHJE0Bk8ZFsmQ2ZtiWa
-         x7eqHt9L7sr9QbQ6Nn22Jm84bzv6l/xYrr2zbxffjucSXfiWUi5mzHx7x8fOL0oCu59u
-         PPpg==
-X-Gm-Message-State: ACgBeo0pvsf+RyuCPw1Z5PS19fnLzWT/hYyrDjDZgS2TFepmv4U2mO83
-        eNVdYICdgjH8Nj1wF643c6PGLp4zsxKUbwzUniRc5bJm1kxdDiKqxh9rx9l+Kcz4T3F4Yw3h6Xm
-        ft/mPCjl3i2JWPQoKmBpkfg==
-X-Received: by 2002:a17:906:4fd2:b0:733:f44:c964 with SMTP id i18-20020a1709064fd200b007330f44c964mr2696490ejw.386.1661437862022;
-        Thu, 25 Aug 2022 07:31:02 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6b3DiS6kslr2dz1LOcQtM2Wg/5Z/QUKV4g1gbMzobKli0eVTgE8ZzahF/ObK591Ghk3vWQPQ==
-X-Received: by 2002:a17:906:4fd2:b0:733:f44:c964 with SMTP id i18-20020a1709064fd200b007330f44c964mr2696477ejw.386.1661437861817;
-        Thu, 25 Aug 2022 07:31:01 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id fj15-20020a0564022b8f00b0044657ecfbb5sm4932421edb.13.2022.08.25.07.31.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Aug 2022 07:31:01 -0700 (PDT)
-Message-ID: <89680041-c773-0edb-87d6-188bb6d217ad@redhat.com>
-Date:   Thu, 25 Aug 2022 16:31:00 +0200
+        with ESMTP id S241895AbiHYOgQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 10:36:16 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E56A61E1;
+        Thu, 25 Aug 2022 07:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1661438173; x=1692974173;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=phSuuXXl4YEtWyDnHAU+d+JU7bFN1Ijd9OinFLNU96s=;
+  b=UOEjSyjBhw9iSu9/awJsMlG+58Vjrzl4vohq68ySwFV1s5VoA+Bs0DXG
+   7uJEVI54vmjVaQoKzy7TpJ2/zklstknyvAtN+D32xuHNpNTlsuKVqwUUh
+   8UQmKa3InOR/4VzzJ51c2eGcTYXTX5nOFwbAiJrkpcAuWXNiq0XYY+yMb
+   iJlNnLMClh/IZ68qW1kJY+gn/bDZXYF977TBuSZSj4VlGiDWHLmosgf9t
+   js9Qf6YayiyJwzQd+V7OSaHTntM+YYVDJNC0SlXEiVw9GI1Sc8+lNOVtl
+   Pcj1C01Hn13/bG7hA65iK9PtiZMHyPEx1PG4qckVPkYx0ddlgKFuIsHEk
+   w==;
+X-IronPort-AV: E=Sophos;i="5.93,263,1654585200"; 
+   d="scan'208";a="110734230"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2022 07:36:12 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Thu, 25 Aug 2022 07:36:10 -0700
+Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
+ Transport; Thu, 25 Aug 2022 07:36:09 -0700
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     <brgl@bgdev.pl>, <krzysztof.kozlowski+dt@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v2] dt-bindings: gpio: mpfs-gpio: allow parsing of hog child nodes.
+Date:   Thu, 25 Aug 2022 15:35:23 +0100
+Message-ID: <20220825143522.3102546-1-conor.dooley@microchip.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v6 0/7] add support for another simatic board
-Content-Language: en-US
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-References: <20220825104422.14156-1-henning.schild@siemens.com>
- <34315356-f23e-34ff-98e6-a152b588f201@redhat.com>
- <20220825162910.6c8eab84@md1za8fc.ad001.siemens.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220825162910.6c8eab84@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+The SD card and eMMC on PolarFire SoC are sometimes muxed using a GPIO
+by the bootloader. Add a hog child property to facilitate this.
 
-On 8/25/22 16:29, Henning Schild wrote:
-> Am Thu, 25 Aug 2022 16:25:49 +0200
-> schrieb Hans de Goede <hdegoede@redhat.com>:
-> 
->> Hi,
->>
->> On 8/25/22 12:44, Henning Schild wrote:
->>> changes since v5:
->>>   - adding patch to convert to pr_fmt
->>>   - adding patch to prefix macros with "f7188x_"
->>>   - rebased p1v4 to be p3v5 and added tag
->>>
->>> changes since v4:
->>>   - remove int case from a printk in p1
->>>   - include tags into commit messages
->>>
->>> changes since v3:
->>>   - update Kconfig as well
->>>   - drop chip names from comment in driver header
->>>   - add manufacturer check for Fintek again, Nuvoton not possible
->>>   - drop revision printing for Nuvoton
->>>   - restructure defines again
->>>   - add new model 427G
->>>
->>> changes since v2: (p1 only)
->>>   - rename macros that change behavior
->>>   - use chip type not device id in the macros
->>>   - reorder defines a bit
->>>
->>> changes since v1:
->>>   - remove unused define
->>>   - fix bug where (base + 2) was used as second data bit
->>>   - add macros for "inverted" and "single data bit"
->>>
->>> The first two patches apply some style refactorings before actual
->>> functional changes are made.
->>>
->>> Later, This series enables a SuperIO GPIO driver to support a chip
->>> from the vendor Nuvoton, the driver is for Fintek devices but those
->>> just are very similar. And in watchdog and hwmon subsystems these
->>> SuperIO drivers also share code and are sometimes called a family.
->>>
->>> In another step the individual banks receive a label to tell them
->>> apart, a step which potentially changes an interface to legacy
->>> users that might rely on all banks having the same label, or an
->>> exact label. But since a later patch wants to use GPIO_LOOKUP
->>> unique labels are needed and i decided to assign them for all
->>> supported chips.
->>>
->>> In a following patch the Simatic GPIO LED driver is extended to
->>> provide LEDs in case that SuperIO GPIO driver can be loaded.
->>>
->>> Last but not least the watchdog module of that same SuperIO gets
->>> loaded on a best effort basis.
->>>
->>> The very last patch enables a second model of that same board type.
->>>
->>> Henning Schild (7):
->>>   gpio-f7188x: switch over to using pr_fmt
->>>   gpio-f7188x: add a prefix to macros to keep gpio namespace clean
->>>   gpio-f7188x: Add GPIO support for Nuvoton NCT6116
->>>   gpio-f7188x: use unique labels for banks/chips
->>>   leds: simatic-ipc-leds-gpio: add new model 227G
->>>   platform/x86: simatic-ipc: enable watchdog for 227G
->>>   platform/x86: simatic-ipc: add new model 427G  
->>
->> So it looks like all these patches are ready for merging now,
->> the only thing which is missing is an Ack from Pavel or
->> one of the other LED people for patch 5/7.
->>
->> Pavel can have your ack for merging this through another tree
->> please?
-> 
-> Would i need to send again and include the tags given on v6?
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+Changes since v1:
+- move addtionalProperties up under type:
+- drop the explicit match group syntax
+---
+ .../bindings/gpio/microchip,mpfs-gpio.yaml     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-No that is not necessary. The only reason for sending a new
-version would be if Pavel wants some changes to patch 5/7
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Henning
-> 
->> So what is the plan for merging this?
->>
->> I see 2 options:
->>
->> Option a:
->> 1. Merge the GPIO changes (patches 1-4) through the GPIO tree; and
->> 2. Merge the leds + pdx86 changes through the pdx86 tree
->>
->> Option b:
->> Merge everything through the pdx86 tree, and I will then provide
->> an immutable branch + signed tag for other subsystems to pull
->> (if they want to).
->>
->> Regards,
->>
->> Hans
->>
-> 
+diff --git a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+index 110651eafa70..fdc16822fd4b 100644
+--- a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+@@ -44,6 +44,24 @@ properties:
+ 
+   gpio-controller: true
+ 
++patternProperties:
++  "^.+-hog(-[0-9]+)?$":
++    type: object
++
++    additionalProperties: false
++
++    properties:
++      gpio-hog: true
++      gpios: true
++      input: true
++      output-high: true
++      output-low: true
++      line-name: true
++
++    required:
++      - gpio-hog
++      - gpios
++
+ required:
+   - compatible
+   - reg
+-- 
+2.36.1
 
