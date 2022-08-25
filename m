@@ -2,87 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9CD85A03EC
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 00:26:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D755A5A070B
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 03:59:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229742AbiHXW0K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Aug 2022 18:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
+        id S232064AbiHYB7Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Aug 2022 21:59:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbiHXW0J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Aug 2022 18:26:09 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4536E898
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Aug 2022 15:26:08 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id n7so18003791ejh.2
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Aug 2022 15:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=+ajTV7s62W1buFOBU//XnEVu0hO13KdLtqXDbl3tmPE=;
-        b=io0+e8FIXTSQk1g3wDnwByFBPdYF9s3ZfdaG/RVPfDS0+g1Cf8HeP05gu2l4YJx0s6
-         YZCxo5E0NzrIspU7PnlluB/jxieN42x24fvDfo/A6K/5tjdw627ED+XY74QfvAA/U+MX
-         VyjsfAxKdG7W8BC5sB6IgnC83poZeX1OhO2zzNpOISyodk4R5s2UkPdC4EoYtOfcfX4R
-         Lxzya/OdzuFbnZnbLNDRSMDHdjxAVP70Iqq5dr4HmbWJAXZo9n9bSs+0SGP5xpsQS98y
-         ScEdM5Mqyounm3LQ9JSMcQkTQT7X2W8+DewaPkmp2hPvf6J3rit/x2nSIKrdIGCWT9OY
-         dVtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=+ajTV7s62W1buFOBU//XnEVu0hO13KdLtqXDbl3tmPE=;
-        b=1qWTXuk51QEGxE7fS83RXA+H4zWGccz74sYU33YBi+udccnQOvdoVLpRegSpXTloRJ
-         z/EbMScvIWV7SMT4DFImZKaDj/Yo9DtqT6ZJBFhv9wy9fPyQSeP/UQ3nGuNFfjvaDNIW
-         oEZs2i3GiJII65ucycFNya21i79IPXcu4HweWGfc2AXkMcy9WULMyKyrKjfersCz1CUJ
-         1vodU4j3d+FtlHPYqOJ9eci+iEIZjWw+QrlJFwGaf3hlH8LqpKoxgjrYvOIUaQSgg/Zk
-         Ol95NqagIC84yodxWMPbLjYyfGcoLCGz3VfpDtE4ogCooeyzXWzCP7R38rsyr06mvLjl
-         Bl+Q==
-X-Gm-Message-State: ACgBeo0PXw3XljRg2Rc07m6/P1RypNErijxiJunY21QWKZPJaj2htVh2
-        sCIILE7/PgnpBPlgQ6XmbzHBSO7zMil2ZmgyCu/fEA==
-X-Google-Smtp-Source: AA6agR5p/xUIeIsNjIdgP8K8L1dDugg9o6K1q4VmFAeXWY2JRKLaX9si4wdK9/4rP+CDDJDtHdAgKonzsr/NdUZqeqU=
-X-Received: by 2002:a17:906:9b86:b0:73d:72cf:72af with SMTP id
- dd6-20020a1709069b8600b0073d72cf72afmr661185ejc.440.1661379966637; Wed, 24
- Aug 2022 15:26:06 -0700 (PDT)
+        with ESMTP id S236602AbiHYB7F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Aug 2022 21:59:05 -0400
+X-Greylist: delayed 125 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 24 Aug 2022 18:54:04 PDT
+Received: from bg5.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E58949AF98;
+        Wed, 24 Aug 2022 18:54:04 -0700 (PDT)
+X-QQ-mid: bizesmtp77t1661392164tspq557z
+Received: from localhost.localdomain ( [182.148.14.124])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Thu, 25 Aug 2022 09:49:21 +0800 (CST)
+X-QQ-SSF: 01000000000000B0B000000A0000000
+X-QQ-FEAT: wF64VgvUy+UPmdenfmPgcpMnG/bIuQR5LxITUxHsRnPRidiX7aAe4ASUhtDZI
+        M6DTRXNv4D9uXWp8gBj0o/jR7OSoaCbHI+eSpmh6AalhtNleztq1dxuz/5y1jgW9b0uF2YL
+        RyJ8+9oJaG1wwWGQhhvSD89CwlqqRmg2n586OIWYdG+xJUg6MFW+bp5CltWAtUILppkM3QS
+        9IWTYtmKQij7KoEHTPwla8OjTinML9D9t2LDRsMB9UOUkuqhe5dsrBuEeQEPl0aCQo+b3QJ
+        oAax4IdicnOxwwa8hxBVScBRuN8Ji3QlXF6m5jtoAJcPmLBB2EEDbNE7chgTJ3z+wVuNTze
+        l37oHm/IxFfz+60hCde6UbQJr7imORqaNktAJ/wd/WsWGQFwC8=
+X-QQ-GoodBg: 0
+From:   Shaomin Deng <dengshaomin@cdjrlc.com>
+To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com,
+        jgross@suse.com, sstabellini@kernel.org,
+        oleksandr_tyshchenko@epam.com,
+        Shaomin Deng <dengshaomin@cdjrlc.com>
+Subject: [PATCH] pinctrl: at91: Fix double word in comments
+Date:   Wed, 24 Aug 2022 21:49:21 -0400
+Message-Id: <20220825014921.6135-1-dengshaomin@cdjrlc.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220816054917.7893-1-patrick.rudolph@9elements.com> <20220816054917.7893-3-patrick.rudolph@9elements.com>
-In-Reply-To: <20220816054917.7893-3-patrick.rudolph@9elements.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Aug 2022 00:25:55 +0200
-Message-ID: <CACRpkdYc=KQo2dt_6NmQnbf-6VhYc4og0xm0mD-AVEE=K=BgpA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: Add Cypress cy8c95x0 support
-To:     Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc:     Naresh Solanki <naresh.solanki@9elements.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr4
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 7:50 AM Patrick Rudolph
-<patrick.rudolph@9elements.com> wrote:
+Delete the rebundant word "the" in comments.
 
-> Add support for cypress I2C GPIO expanders cy8c9520, cy8c9540 and
-> cy8c9560. The GPIO expanders feature a PWM mode, thus add it as
-> pinctrl driver.
->
-> The chip features multiple drive modes for each pin when configured
-> as output and multiple bias settings when configured as input.
->
-> Tested all three components and verified that all functionality
-> is fully working.
->
-> Datasheet: https://www.cypress.com/file/37971/download
-> Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
-> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+Signed-off-by: Shaomin Deng <dengshaomin@cdjrlc.com>
+---
+ drivers/pinctrl/pinctrl-at91.c        | 2 +-
+ drivers/xen/xen-pciback/pciback_ops.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Patch applied!
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index d91a010e65f5..f1234e719e58 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1748,7 +1748,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
+ 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
+ 
+ 	/*
+-	 * Let the generic code handle this edge IRQ, the the chained
++	 * Let the generic code handle this edge IRQ, the chained
+ 	 * handler will perform the actual work of handling the parent
+ 	 * interrupt.
+ 	 */
+diff --git a/drivers/xen/xen-pciback/pciback_ops.c b/drivers/xen/xen-pciback/pciback_ops.c
+index e38b43b5065e..52da75bf8485 100644
+--- a/drivers/xen/xen-pciback/pciback_ops.c
++++ b/drivers/xen/xen-pciback/pciback_ops.c
+@@ -160,7 +160,8 @@ int xen_pcibk_enable_msi(struct xen_pcibk_device *pdev,
+ 	}
+ 
+ 	/* The value the guest needs is actually the IDT vector, not the
+-	 * local domain's IRQ number. */
++	 * local domain's IRQ number.
++	 */
+ 
+ 	op->value = dev->irq ? xen_pirq_from_irq(dev->irq) : 0;
+ 
+-- 
+2.35.1
 
-Yours,
-Linus Walleij
