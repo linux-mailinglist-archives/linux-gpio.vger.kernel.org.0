@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C0D5A1BE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 00:07:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 494A05A1C25
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 00:20:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244281AbiHYWHT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Aug 2022 18:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35900 "EHLO
+        id S243657AbiHYWUw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Aug 2022 18:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241598AbiHYWHS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 18:07:18 -0400
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C7C7646F
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 15:07:16 -0700 (PDT)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-11c5505dba2so26691383fac.13
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 15:07:16 -0700 (PDT)
+        with ESMTP id S243374AbiHYWUu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 18:20:50 -0400
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1288BB7EDD
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 15:20:49 -0700 (PDT)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-11ba6e79dd1so26717248fac.12
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 15:20:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc;
-        bh=LJDGkNd1saKSRZjxxFx4ES1d+h7NRh/gzjZWxJL6sDs=;
-        b=XBayIBLNQk2JCRpcrMEkyckl1UFli9wEiNbPtjpODnJ5mqpDO5cm4PDj67nSzoZLA+
-         ttOIGtzgaCi0UruJ9NxssC4ROvm8fELvCQRyJ/6fsCyAQXsqyAPTCiumXIm9RWcbRMwT
-         x+g54/0uv8Fdzc0tNX69VMfqELadIyeH0qd+MrlhXh42B7ynq0KOa9LhihYO5C3C2H8F
-         Mxs2b7VmSm0KcKFBiDj15kWjn6tA9aGy4fWPFYgPiCqqJb+SDXKzD/Uo98oHn9qo4YpD
-         7kA/TtllU3UTgs9w9cnycpwIilFX6FwrpKQ1aucd33jxKKoyRoAYyu1AiCwdjdDOaI87
-         IXcw==
+        bh=hYB1ZQNpPY6X69YeIG/KjOq929HUz/m3ktl9NHX+xgw=;
+        b=Y7owmWiWdJd8sxFvDiLnCjuWi4kAUrlOstOZGLmRPxjaIXuOLBXCQPbix2hn+PK8AQ
+         +DoLzcP8br7tbcKvl0kOtoXYQOl9/p0Xj5ZEJDhJ/H9apJW5PlQy9ihDgR2j2D3HLu+z
+         +0BLvcBwiY7Ur0kK+FaHn3ttFaK5Br5gEbitJSo4LEHoyiIg+fQf1tQpKwOizi9RRNH8
+         X1cKx05p6oabdpBCCwJw7jJApw2v6fp4002MdGS4m751OWcr+1OV80/h4sr8KKrer7LJ
+         TYYQO8IxZ5RugXVuLr1i0eWo3uEiZn0AKe/wLnPjd96T9z6kuE3NcdvKObTzX1lITbQj
+         RRpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=LJDGkNd1saKSRZjxxFx4ES1d+h7NRh/gzjZWxJL6sDs=;
-        b=GHH4RjahPq2lkbbfJ6E893qHoQZQd10Iuy/IiCRmopXFrsrQ4umyFoShejnWsEWKFl
-         W1Ua1GFSIXQ5ll8I3tuq+dvvdCf3gWUtv3Tldbii6L4VmDk54jax2fzeLlP2eANhr73h
-         AueCKCL1ZD7Vmsr97/9IG1QzdTdGim/HVSeyiURIgzljnBxpBRXcD93/UoxSedb3T8aE
-         pxnDpkwSqvHe7sKuYcOCSwy8aDdjddEYeBSiH3PeiO6tTx93IcxWFWIu/gi6C3d35x0M
-         RJf+DbomCLirp1Uh+eT/yYApSUozJ5MRfF32CuVGBcxPcA5paRrOO8Ta6qQRlgMMsfFe
-         DHzQ==
-X-Gm-Message-State: ACgBeo1UpC2LyTxF7XYrkWcPTcPbKBTvdptBIDV627SDiOFW9QMGFCVI
-        DO2wsl7Omx2gcDoEaqqHT1P8p8FrBIV0HBd4s5kJxQ==
-X-Google-Smtp-Source: AA6agR6fH7oKdSEjBd5rNIefeioikiWansNx8EtpoHWK0SnsJgzqqKg78TYupWufjVQq/dBI10g65+QlPmCJW5//hfA=
+        bh=hYB1ZQNpPY6X69YeIG/KjOq929HUz/m3ktl9NHX+xgw=;
+        b=Pn/nsyt9eubxrSaGpljLpwZq6QwAFuB6+BcMFwuNqeShXez5pkwIGjPxlguiCvNROq
+         iEUiAxgXNSNl5zB9cxc+KBQcTa9MBWYtW/ULfLPK2hyC2BmAkmYsjr32feCXeE/gxOZZ
+         +Lv6dRRUglVnTgXxUhOK37ILoPS5jDbgRzrqccvQnAPiIMiZ7va0NXvfJelN/57jzvbk
+         VqDAEDvvBVJoT9fhNE3LyTkSG/xO7eZXdeFRtxG/MxgPOfLTUH31udkixeXROJpBIFi7
+         xn3lyj0bXGv3Rjm9oRo4wPZmC+LK/MTKGZFICErPEFAFMaR7v5lwik3OsdfHgyBAjdIx
+         NrCw==
+X-Gm-Message-State: ACgBeo3Z/chy1PMltJPrh9a3EvTLh7QjUEW6fEPYiD6ucjjlL5y/He4g
+        KQba99ka7Y3maDVdU8FpajnmGClxe0yjEMQm659aqQ==
+X-Google-Smtp-Source: AA6agR7Q3WUHyHCZjdPdx2wnwfam+Ba3cljIdQO4m6up/yUG6pP0Tu6DtKUJNnkipd41UHSNVd091AXNNW01JUJz4Dc=
 X-Received: by 2002:a05:6870:b694:b0:11e:63e7:37f4 with SMTP id
- cy20-20020a056870b69400b0011e63e737f4mr28893oab.217.1661465235889; Thu, 25
- Aug 2022 15:07:15 -0700 (PDT)
+ cy20-20020a056870b69400b0011e63e737f4mr47956oab.217.1661466048368; Thu, 25
+ Aug 2022 15:20:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220825104505.79718-1-etienne.carriere@linaro.org> <4a2a5eeb-aa65-2b33-e7ff-c1d318a9b76f@linaro.org>
-In-Reply-To: <4a2a5eeb-aa65-2b33-e7ff-c1d318a9b76f@linaro.org>
+References: <20220825104505.79718-1-etienne.carriere@linaro.org> <CAL_JsqLWQC-drkWdgiM4TnsZCa6h6vcMmCvrUC_E7z5=gYtcJw@mail.gmail.com>
+In-Reply-To: <CAL_JsqLWQC-drkWdgiM4TnsZCa6h6vcMmCvrUC_E7z5=gYtcJw@mail.gmail.com>
 From:   Etienne Carriere <etienne.carriere@linaro.org>
-Date:   Fri, 26 Aug 2022 00:07:05 +0200
-Message-ID: <CAN5uoS8uutDDHu9NEMWyPUop3TWqP=sX6QYV6EvfZx2z-VLe6A@mail.gmail.com>
+Date:   Fri, 26 Aug 2022 00:20:37 +0200
+Message-ID: <CAN5uoS9kLTjGinBOCsTHnV=1Jg-V_GwgZ4b1d5Gj3x_Npm6wRw@mail.gmail.com>
 Subject: Re: [PATCH] dt-binding: gpio: publish binding IDs under dual license
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Stephen Warren <swarren@nvidia.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
@@ -61,26 +63,31 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzystof,
+Hello Rob,
 
-On Thu, 25 Aug 2022 at 13:10, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Many thanks for the feedback.
+
+Regards,
+Etienne
+
+On Thu, 25 Aug 2022 at 18:05, Rob Herring <robh+dt@kernel.org> wrote:
 >
-> On 25/08/2022 13:45, Etienne Carriere wrote:
+> On Thu, Aug 25, 2022 at 5:45 AM Etienne Carriere
+> <etienne.carriere@linaro.org> wrote:
+> >
 > > Changes gpio.h DT binding header file to be published under GPLv2 or
 > > BSD-3-Clause license terms. This change allows these GPIO generic
 > > bindings header file to be used in software components as bootloaders
@@ -89,9 +96,20 @@ On Thu, 25 Aug 2022 at 13:10, Krzysztof Kozlowski
 > > All contributors to gpio.h file in copy.
 > >
 > > Cc: Stephen Warren <swarren@nvidia.com>
+>
+> We have NVIDIA permission for anything in bindings and NVIDIA
+> relicensed the irq headers, so I think it shouldn't be a problem.
+>
 > > Cc: Linus Walleij <linus.walleij@linaro.org>
+>
+> FYI, There is blanket approval from Linaro to relicense DT files.
+>
 > > Cc: Laxman Dewangan <ldewangan@nvidia.com>
 > > Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+>
+> I don't think a. blank line is copyrightable.
+
+>
 > > Cc: Andrew Jeffery <andrew@aj.id.au>
 > > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 > > Cc: Nuno S=C3=A1 <nuno.sa@analog.com>
@@ -103,24 +121,3 @@ On Thu, 25 Aug 2022 at 13:10, Krzysztof Kozlowski
 > > ---
 > >  include/dt-bindings/gpio/gpio.h | 2 +-
 > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio=
-/gpio.h
-> > index 5566e58196a2..f8df7511b8b4 100644
-> > --- a/include/dt-bindings/gpio/gpio.h
-> > +++ b/include/dt-bindings/gpio/gpio.h
-> > @@ -1,4 +1,4 @@
-> > -/* SPDX-License-Identifier: GPL-2.0 */
-> > +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
->
-> Why BSD-3 clause? Bindings are expected to be "OR BSD-2-Clause".
-
-Fair, 2-clause seems more used. Thanks.
-I'll send a v2.
-
-Br,
-etienne
-
->
-> Best regards,
-> Krzysztof
