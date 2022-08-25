@@ -2,86 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7EE85A1134
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 14:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A43B75A1274
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Aug 2022 15:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242033AbiHYMzA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Aug 2022 08:55:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52294 "EHLO
+        id S241787AbiHYNhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Aug 2022 09:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242084AbiHYMyx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 08:54:53 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6663BA
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 05:54:44 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id t5so25953184edc.11
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 05:54:44 -0700 (PDT)
+        with ESMTP id S241402AbiHYNhN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Aug 2022 09:37:13 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818F4B24BF
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 06:37:11 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id u9so10611075ejy.5
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Aug 2022 06:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=eTyJ5ysyBJphDxI681uzkkLxuflLaDMmY8laThwgM3s=;
-        b=ZZjLAnzUFfkR+G4v+IgfNQyxujKrroHVtRt6sLDmiBVTQl1pPP39LVWYfE+C14b7jy
-         drFFGtc6MLy9HT+qhNoOGpDmgp9Nboo9hsk8n/VBZknHf0aWOQQyO3nzK40UoyCG0HzW
-         fXNWZFVaOMNNvtkDmAdm9sA4YcRvMnM9SQnlAFfOo7DkBCBOSHh9X5DDisnwDiJP5v1w
-         3G2pmpLNsi239BmZHC5GmDihLNEHiBKMXvDnQlNHcRwVVh7BQdClm3jrRWHJhv5h6f0e
-         2nDWc2tbxe/8Dv5Tl/zjy2f33JnCJOxHzk2QC53ZDPcp/U36ngjXCxslQJEmi8JYCPPI
-         ow9w==
+        bh=dlm2famS8O5FqtaX9yCeRxscNO/EP4O+QRIK7hJkB2s=;
+        b=hTFwrfcekpPlwsKPKUDudDRoTVjcNhRXmh1WtgUK60PKUyBomYKetqdJodmXMyLiB0
+         dkyuV7K5eZsOuK963+nUWPUe7KCyXkJZONDwPCrivKsZT9PJDubk1TQqXKdDF6asiLn/
+         tKuc0x8bOBlRQRLCT3cu6Yw1wdke2dVeoukHTnpDK1KgGBp18+wj0ZvHkmzlWDm5xfBe
+         7fzo7likfMjdV90vpKunxdhJef3uuXRWyf+Ve8lXxcg9SOUlYCESKPN/0H+qXAmkBCTn
+         HkRXi4lc+hQbTfmsIQLyBi6byW3t6UFkkCoPxj3LYOq5bF2Nj0Yq+8g0crj8aP/TqJK5
+         Uo7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=eTyJ5ysyBJphDxI681uzkkLxuflLaDMmY8laThwgM3s=;
-        b=syvn4Vi2yI82+ZhwgytZm16JTLIHI/GF3la71LmiA96l5pZ7Bk+7Ocq5vfzE3HXmKQ
-         mEnTlAAoA1i2rK9sOLZn1+sE4jGG7UhDg0TRThdAi1Vmkt/vTaBDcY7V3FzBGUiPcWJp
-         +fFhbcNXsm42doXiLCXeOtNQhNt1Nrn14Cna+4QBuTP0EO2UeucuQ5aIVH6ytZOuJSxh
-         1Y2PcbOWBXTrLkFc5SleLVLReszZXfNa3XYp/cjJ0N9NY4uNSmdoY34v/tDXvIfsLMnT
-         RC2LVjsWFSrO9JrdEcfm/QcxvLJwX80XtCIEyS3ocTxeMwa8LfoDNSAgPxPVAplBaxhq
-         MXGQ==
-X-Gm-Message-State: ACgBeo0Q1InyVU8edoax0ECgL45XfOEPYkyOnnVVML+rbSMnt2YQBi2M
-        wUJbnDpHEox138Vo7ZsK0y8hHWwH5Gx6FSD8RA2Hmw==
-X-Google-Smtp-Source: AA6agR5gBoA+DyRoVe1dyTC0LYezrrsqDvXPMxIYYWdtzgEXrzgLMkOxOeINwsG5S/OWaW8sXg9+wvi2winSXMVBq2c=
-X-Received: by 2002:a05:6402:1f8c:b0:43e:8fab:76c with SMTP id
- c12-20020a0564021f8c00b0043e8fab076cmr3117148edc.126.1661432083303; Thu, 25
- Aug 2022 05:54:43 -0700 (PDT)
+        bh=dlm2famS8O5FqtaX9yCeRxscNO/EP4O+QRIK7hJkB2s=;
+        b=h4NV3sUqeBDKnF4t6sQNuPanZhj8a3MPI3y+CnNc94qqcodjz+X03ISJcwIeHVd+ty
+         2kb412ECmCguJH4ZmMxw0TyB2jF90x11cePCZDFVz0ChEBFWpWN27wV6ry6aB2AsRfBp
+         U79IrfUPJRubYjDB7JB1TlsGdDxBDXSD6K7IswvdqTtK2PLLKRLONJ55UKHBc4xAKk88
+         gqhCk+rbVJWyZJeiEtW/llAU77qg8EW2JEyqe9u5Dt+hTJhBFmPDhkD3GSyRlcvck8nE
+         7CV/ro0uqGOdvv6XRAeBAmNgS1hDG7L7deDvh4NYV9+c5do1wF2PB525DrGv6Czs6SaM
+         QR8Q==
+X-Gm-Message-State: ACgBeo0KnFprT1AeVvtKRFNGB6c8PvPOLFiIMvN9yZlD9vlEX6YhzfVf
+        iP74diirk8Ai+kR8i+GzWHQzvu+WBPaEux4pDnCOzw==
+X-Google-Smtp-Source: AA6agR6Be+IFNm9RQjAf6ZoJJ0Gv1gRLpqln7PaJkfZ2s1Nuu2OIJL74xQl9m77k4Ch3VEJMzJNEIiUBj3SnGR8MwxQ=
+X-Received: by 2002:a17:906:9b86:b0:73d:72cf:72af with SMTP id
+ dd6-20020a1709069b8600b0073d72cf72afmr2609925ejc.440.1661434630115; Thu, 25
+ Aug 2022 06:37:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220818075012.20880-1-hui.liu@mediatek.com>
-In-Reply-To: <20220818075012.20880-1-hui.liu@mediatek.com>
+References: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
+ <CACRpkdY53c0qXx24Am1TMivXr-MV+fQ8B0CDjtGi6=+2tn4-7A@mail.gmail.com>
+ <CAK8P3a1Vh1Uehuin-u5QrTO5qh+t0aK_hA-QZwqc00Db_+MKcw@mail.gmail.com>
+ <CACRpkdbhbwBe=jU5prifXCYUXPqULhst0se3ZRH+sWOh9XeoLQ@mail.gmail.com>
+ <CAK8P3a0j-54_OkXC7x3NSNaHhwJ+9umNgbpsrPxUB4dwewK63A@mail.gmail.com>
+ <CACRpkda0+iy8H0YmyowSDn8RbYgnVbC1k+o5F67inXg4Qb934Q@mail.gmail.com> <CAK8P3a0uuJ_z8wmNmQTW_qPNqzz7XoxZdHgqbzmK+ydtjraeHg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0uuJ_z8wmNmQTW_qPNqzz7XoxZdHgqbzmK+ydtjraeHg@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Aug 2022 14:54:32 +0200
-Message-ID: <CACRpkdbGjbd9Q9Chcnnc=3nD3XALsCdk7dz9mT3BfJdZs62xjA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] MediaTek pinctrl patch on mt8188
-To:     Hui Liu <hui.liu@mediatek.com>,
-        =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@collabora.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-        wenst@google.com,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        jianguo.zhang@mediatek.com, zhiyong.tao@mediatek.com,
-        sean.wang@mediatek.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Thu, 25 Aug 2022 15:36:58 +0200
+Message-ID: <CACRpkdb5ow4hD3td6agCuKWvuxptm5AV4rsCrcxNStNdXnBzrA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Allow user to customise maximum number of GPIOs
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexandre Courbot <gnurou@gmail.com>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 9:50 AM Hui Liu <hui.liu@mediatek.com> wrote:
+On Thu, Aug 18, 2022 at 2:46 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Aug 18, 2022 at 2:25 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> Changes in patch v6:
-> 1.Update driver file's coding style.
+> > git grep 'base = -1' yields these suspects:
+> >
+> > arch/arm/common/sa1111.c:       sachip->gc.base = -1;
+> > arch/arm/common/scoop.c:        devptr->gpio.base = -1;
+> > arch/powerpc/platforms/52xx/mpc52xx_gpt.c:      gpt->gc.base = -1;
+> > arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c: gc->base = -1;
+> >
+> > That's all! We could just calculate these to 512-ngpios and
+> > hardcode that instead.
+>
+> How do the consumers find the numbers for these four?
 
-No further comments on this version so patch applied. If Sean
-has further comments they can be addressed in-tree.
+For SA1111 the chip gets named "sa1111" and some consumers actually
+use proper machine descriptions, maybe all?
 
-Nicolas: thanks for helping out with review!
+arch/arm/mach-sa1100/jornada720.c:              GPIO_LOOKUP("sa1111",
+0, "s0-power", GPIO_ACTIVE_HIGH),
+arch/arm/mach-sa1100/jornada720.c:              GPIO_LOOKUP("sa1111",
+1, "s1-power", GPIO_ACTIVE_HIGH),
+(...)
+
+For Scoop it is conditionally overridden in the code. I guess always
+overridden.
+
+For powerpc these seem to be using (old but working) device tree
+lookups, so should not be an issue.
+
+Sadly I'm not 100% sure that there are no random hard-coded
+GPIO numbers referring to whatever the framework gave them
+at the time the code was written :(
+
+Another reason the base is assigned from above (usually
+from 512 and downward) is that the primary SoC GPIO usually
+want to be at base 0 and there is no guarantee that it will
+get probed first. So hard-coded GPIO bases go from 0 -> n
+and dynamically allocateed GPIO bases from n <- 512.
+
+Then we hope they don't meet and overlap in the middle...
+
+> > and in that case it is better to delete the use of this function
+> > altogether since it can not fail.
+>
+> S32_MAX might be a better upper bound. That allows to
+> just have no number assigned to a gpio chip. Any driver
+> code calling desc_to_gpio() could then get back -1
+> or a negative error code.
+>
+> Making the ones that are invalid today valid sounds like
+> a step backwards to me if the goal is to stop using
+> gpio numbers and most consumers no longer need them.
+
+OK I get it...
+
+Now: who wants to write this patch? :)
+
+Christophe? Will you take a stab at it?
 
 Yours,
 Linus Walleij
