@@ -2,64 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05A5E5A233F
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 10:39:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 941F85A2356
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 10:42:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343519AbiHZIi4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Aug 2022 04:38:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
+        id S244951AbiHZIlx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Aug 2022 04:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244972AbiHZIid (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 04:38:33 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53817D5DDA
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:38:09 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id m1so1233371edb.7
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:38:09 -0700 (PDT)
+        with ESMTP id S244694AbiHZIky (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 04:40:54 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5B0D3996
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:40:48 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id u9so1852229ejy.5
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=yIFcteN6sC/bfaP1WTd/RHoQds62wkqs1tJOKGjVr+0=;
-        b=TeZv4iLFDzDlcRMZdcxFYD8iBhkkl6ru8OscF0CczIJjoMszenrw8WXPQMojvZNMOK
-         yrAvVSDX9JVbS5BynSn+dLfRkI2zFiGvM0Oe6uKk7WyPVO9RJDVe9sqHugHczQfpCMDR
-         ewTeM6bWdEy+c/W+FBLIRWgyGjZ+hn85AjjApkYMhNowxNh4Am5N3s80e9FzA7pkCxNV
-         lI7T3WYv0MOOPYrSMD+bRtrut4zCc0dtxaV2bGCTh3VL/N5UfavBSYgyu6xT08ZKdnCf
-         dJtGcL1ZgCr1ZZfPa1GrAiGI8cd4GsttG4+r/CH5iYJs6K1jAgkud5zOone5CA+39eU7
-         sLiw==
+        bh=jlYyNInnTT1mkv0Udm5OWXfX4CzedH08un39TZKrJjA=;
+        b=M4VrV5Fsm6mJCTkD/X4MqIgpIpvlQiSs7VIgysc4pEx1PD5Yqu4U25+YqbB939+pQB
+         tjIDE+8XGNjao9z7I4noKipak2S2aTIsrqSLozIHoIOVcQfBWnkNQym/Gj5QfdfKdjPg
+         rZeinkN22uz4NEIwNpm3CFSyBgYBI6Tc1wKnQdIymw7EG6ETxCwKOXvrhiKcVnAFNztC
+         WDyyCVQ3WNJrB8xa7FeECOmuvu3vjBnBOEAabmY+h7VAJDOpnBT5iQE2/XmmMvROt+hm
+         eTqDq/3mIRGejab7+ChI9Lv/UpqEqlKISkYXeYyTxvV0Tek6oOmvgtPEJbCFAPRHrSFg
+         jGTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=yIFcteN6sC/bfaP1WTd/RHoQds62wkqs1tJOKGjVr+0=;
-        b=JlO8TLmxo6JghAHYfG6+llFHPMybQw+uv7V79QCogA1Xx/l+KxCQ7vUchv4iasW7ES
-         vR3sQih9OWS9GmAqK/XiwprTApie5u1s1KvzHf6VH5KXbKg+XoAdN6U6qoChaWw+3oxm
-         LKZo4N2sA5c+ZpnxsismChIHiUXlfJRkSMZRnrVKMHT2oSvu6fG03YR5nbz8oDwNdJ5L
-         /Ow4c8YkNMIc43OpU6z//ydaWA0bboa67J4f0xTDAItxEmc3UXohLvJ9fRC7+7b+cdNI
-         oV35uilZlvoAtjS29raSg640P78BgFJj/AZXz+OAdlqV46heiLKd1e+fA3GN6KswtN3v
-         vlmw==
-X-Gm-Message-State: ACgBeo0asFn6eEXNKjzqXz35aG+cy+aX95P1i8KTj2YN2Sz6C88El7dt
-        bSeXsbARzUpPLMlb7joB8xl1CZVMNAVL0zB/SOuosg==
-X-Google-Smtp-Source: AA6agR7ozWh1h3e0/Xth50fQGocQFY1NAJzq0Z5PFKq8ZMWLhAvNOdudXPHZBKkMRV1id5Oh5mABiceM7paZHMDcSNk=
-X-Received: by 2002:a05:6402:5384:b0:431:6d84:b451 with SMTP id
- ew4-20020a056402538400b004316d84b451mr5948537edb.46.1661503087619; Fri, 26
- Aug 2022 01:38:07 -0700 (PDT)
+        bh=jlYyNInnTT1mkv0Udm5OWXfX4CzedH08un39TZKrJjA=;
+        b=Z6Qv9eKVaUav4wDiAzcw2TmWY3iHT/okrBUuwGKZFMk63DgVbGH6MJiSqPwP7KG7Th
+         LmfgO6s5gpzGjJgcrKuMOqNQlzACe8BX1WKIQyFl8ZD4+/7AZYg5EhgqRMwyLwoHBqeI
+         YqmnAyH4hSAc6wOsvItei85zk7TdySTVuzrdAbE7zom2rMKRqsCI3B/TAPayNMgcM3nk
+         V5HZt5JCxrEoFUxnSlW/OR53qba0dMqkGND14CntCH8i01ECruEGmy0/kSuSg5nU1PjZ
+         T1bryZmKl6wWY9gt8+ZIrWT452VzP97g/HDfGaVNCO85nWnKpE2o8lbjOg1rT6EnHgF+
+         tXgw==
+X-Gm-Message-State: ACgBeo3IPTGW9vUsHDknA37XT7U31jC1TG+q8ArwVZZ8+w/evZZ8spLp
+        0wgy2DyKZcnj6XzJaIwAOZTIRkp9ESXJfeRmIhWkRA==
+X-Google-Smtp-Source: AA6agR5C1h2LNm5eSFogNkexqcdEDBe7+aKQIGVdVhW4BS/UpRdA81l0x44pMynHAT/+gSm6jQz2g99OpzwuMY9z5Yg=
+X-Received: by 2002:a17:907:6293:b0:73d:b27b:e594 with SMTP id
+ nd19-20020a170907629300b0073db27be594mr4952677ejc.526.1661503246271; Fri, 26
+ Aug 2022 01:40:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220819024541.74191-1-michael@allwinnertech.com>
-In-Reply-To: <20220819024541.74191-1-michael@allwinnertech.com>
+References: <20220725103445.88674-1-marex@denx.de>
+In-Reply-To: <20220725103445.88674-1-marex@denx.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 26 Aug 2022 10:37:56 +0200
-Message-ID: <CACRpkdbx+r8SLRAJKjMHGn1MzmcqmXhorXoPxouooMv6VJL89A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sunxi: Fix name for A100 R_PIO
-To:     Michael Wu <michael@allwinnertech.com>
-Cc:     wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
-        mripard@kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-kernel@vger.kernel.org
+Date:   Fri, 26 Aug 2022 10:40:35 +0200
+Message-ID: <CACRpkdYjRtitJsxTswaBcbOGDaaY_PW1wnFy6083eux+wEDP3A@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] gpio: mxc: Locking and direction input fix
+To:     Marek Vasut <marex@denx.de>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,16 +69,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 19, 2022 at 4:45 AM Michael Wu <michael@allwinnertech.com> wrote:
+On Mon, Jul 25, 2022 at 12:35 PM Marek Vasut <marex@denx.de> wrote:
 
-> The name of A100 R_PIO driver should be sun50i-a100-r-pinctrl,
-> not sun50iw10p1-r-pinctrl.
+> The irqchip callbacks in gpio-mxc perform register read-modify-write operations
+> without locking, which may lead to a race condition. Add the missing locking.
 >
-> Fixes: 473436e7647d6 ("pinctrl: sunxi: add support for the Allwinner A100 pin controller")
->
-> Signed-off-by: Michael Wu <michael@allwinnertech.com>
+> In case the GPIO is used as IRQ, make sure it is configured as input.
 
-Patch applied for fixes!
+Changes look good to me:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
