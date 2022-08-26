@@ -2,103 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1E8E5A26C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 13:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 004075A27AC
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 14:21:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241159AbiHZLW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Aug 2022 07:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
+        id S1344205AbiHZMTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Aug 2022 08:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbiHZLWz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 07:22:55 -0400
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A13DDAEE5;
-        Fri, 26 Aug 2022 04:22:52 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 27QBMXjO053966;
-        Fri, 26 Aug 2022 06:22:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1661512953;
-        bh=ePfG0EpOr92S+PbFmQ5kcqb6z6CZ0FlDegmJSjIPXS4=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=X1jqprEr5Ge3M5OAjXkoOT61Kl+0cQDUwmmHg9e8CfjE2SWtIZycC5Gz/trZ+j2BH
-         PCjYT+LI5MupgxV300uEAbu06/UJM8RSb8+mxND9RsegQOWKDxZwUB75LBEVCFaJPT
-         HlZik/MSp9FALpDmBb15ackyCrY8K5tbFyBWZgpI=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 27QBMXKf032353
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Aug 2022 06:22:33 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Fri, 26
- Aug 2022 06:22:32 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Fri, 26 Aug 2022 06:22:32 -0500
-Received: from [172.24.145.182] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 27QBMSws052231;
-        Fri, 26 Aug 2022 06:22:29 -0500
-Message-ID: <fd8bdb08-5ed3-8d97-c394-0cab5460df1c@ti.com>
-Date:   Fri, 26 Aug 2022 16:52:28 +0530
+        with ESMTP id S1343999AbiHZMSS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 08:18:18 -0400
+Received: from smtp.smtpout.orange.fr (smtp01.smtpout.orange.fr [80.12.242.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA20DDB6A
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 05:18:16 -0700 (PDT)
+Received: from [192.168.1.18] ([90.11.190.129])
+        by smtp.orange.fr with ESMTPA
+        id RYHromGHwsfCIRYHroCmxB; Fri, 26 Aug 2022 14:18:14 +0200
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 26 Aug 2022 14:18:14 +0200
+X-ME-IP: 90.11.190.129
+Message-ID: <e9991ab5-cb55-789a-dfa1-de10acb37842@wanadoo.fr>
+Date:   Fri, 26 Aug 2022 14:18:11 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: k3: Introduce pinmux
- definitions for J784s4
-Content-Language: en-US
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] gpio: pxa: use devres for the clock struct
+Content-Language: fr
 To:     Linus Walleij <linus.walleij@linaro.org>,
-        Apurva Nandan <a-nandan@ti.com>
-CC:     Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
-References: <20220819190054.31348-1-a-nandan@ti.com>
- <20220819190054.31348-3-a-nandan@ti.com>
- <CACRpkdaktinAJveF_nH9NYYk7mAvnResRzoyuVDVWpwKKq6JOQ@mail.gmail.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-In-Reply-To: <CACRpkdaktinAJveF_nH9NYYk7mAvnResRzoyuVDVWpwKKq6JOQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>, Yuan Can <yuancan@huawei.com>,
+        Kernel Janitors <kernel-janitors@vger.kernel.org>
+References: <20220815091929.130547-1-brgl@bgdev.pl>
+ <CAHp75Vc3dazcM1MLzjzPUmgMGNACUsOZ8aK4uauAJk0hzj9q-w@mail.gmail.com>
+ <CACRpkdZEcTD1A3tR=d4fDF89ECMDfchVPW921v6X6ARiPXHEMQ@mail.gmail.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <CACRpkdZEcTD1A3tR=d4fDF89ECMDfchVPW921v6X6ARiPXHEMQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Le 26/08/2022 à 10:20, Linus Walleij a écrit :
+> On Sat, Aug 20, 2022 at 12:15 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Mon, Aug 15, 2022 at 12:26 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>
+>>> The clock is never released after probe(). Use devres to not leak
+>>> resources.
+>>
+>> ...
+>>
+>>> -       clk = clk_get(&pdev->dev, NULL);
+>>> +       clk = devm_clk_get_enabled(&pdev->dev, NULL);
+>>>          if (IS_ERR(clk)) {
+>>>                  dev_err(&pdev->dev, "Error %ld to get gpio clock\n",
+>>>                          PTR_ERR(clk));
+>>>                  return PTR_ERR(clk);
+>>
+>> Shouldn't we fix a potential log saturation issue first (by switching
+>> to use dev_err_probe() helper)?
+> 
+> Can be a separate patch, the clock mem leak is a bigger problem
+> IMO so this should be applied first.
+> 
+> Hm isn't it possible to toss the task of fixing a gazillion
+> dev_err_probe() messages on Cocinelle scripts/coccinelle/? I bet it's something
+> the kernel janitors could fix all over the place.
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Not perfect and certainly incomplete, but gives an idea:
 
 
-On 26/08/22 13:59, Linus Walleij wrote:
-> On Fri, Aug 19, 2022 at 9:01 PM Apurva Nandan <a-nandan@ti.com> wrote:
-> 
->> Add pinctrl macros for J784s4 SoC. These macro definitions are
->> similar to that of J721s2, but adding new definitions to avoid
->> any naming confusions in the soc dts files.
->>
->> checkpatch insists the following error exists:
->> ERROR: Macros with complex values should be enclosed in parentheses
->>
->> However, we do not need parentheses enclosing the values for this
->> macro as we do intend it to generate two separate values as has been
->> done for other similar platforms.
->>
->> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->> Signed-off-by: Apurva Nandan <a-nandan@ti.com>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> I guess you will merge these patches together?
-> Tell me if you rather want that I apply this one patch to the pinctrl tree.
-> 
+@@
+expression x, dev, e, str;
+@@
+(
+	x = devm_clk_get(dev, e);
+|
+	x = clk_get(dev, e);
+)
+-	if (IS_ERR(x)) {
+-		dev_err(dev, str);
+-		return PTR_ERR(x);
+-	}
++	if (IS_ERR(x))
++		return dev_err_probe(dev, PTR_ERR(x), str);
 
-I will the patch via TI K3 SoC tree once other patches are in good shape.
-Thanks for the review!
--- 
-Regards
-Vignesh
+// This rule only: 291 files changed, 1233 insertions(+), 1634 deletions(-)
+
+
+// The output of this rule needs to be adjusted to fix the 'str'. The
+// error code and related text have to be manually removed
+@@
+expression x, dev, e, str;
+@@
+(
+	x = devm_clk_get(dev, e);
+|
+	x = clk_get(dev, e);
+)
+-	if (IS_ERR(x)) {
+-		dev_err(dev, str, PTR_ERR(x));
+-		return PTR_ERR(x);
+-	}
++	if (IS_ERR(x))
++		return dev_err_probe(dev, PTR_ERR(x), str);
+
+// Both rules: 316 files changed, 1321 insertions(+), 1774 deletions(-)
