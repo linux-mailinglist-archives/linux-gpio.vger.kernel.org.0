@@ -2,46 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BDFE5A2229
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 09:45:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B9455A2296
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 10:07:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245554AbiHZHpA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Aug 2022 03:45:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45538 "EHLO
+        id S1343534AbiHZIHA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Aug 2022 04:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245588AbiHZHoq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 03:44:46 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C401AC2EBB;
-        Fri, 26 Aug 2022 00:44:40 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MDWwd5bmdzkWYD;
-        Fri, 26 Aug 2022 15:41:05 +0800 (CST)
-Received: from CHINA (10.175.102.38) by canpemm500009.china.huawei.com
- (7.192.105.203) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 26 Aug
- 2022 15:44:38 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next 2/2] gpio: sim: make gpio simulator can be used as interrupt controller
-Date:   Fri, 26 Aug 2022 08:02:30 +0000
-Message-ID: <20220826080230.1712978-3-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220826080230.1712978-1-weiyongjun1@huawei.com>
-References: <20220826080230.1712978-1-weiyongjun1@huawei.com>
+        with ESMTP id S244973AbiHZIHA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 04:07:00 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D934D4758
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:06:57 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id cu2so1764140ejb.0
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=EFxNeR78FI3l0OC7HZl6P9i468zpQHaQ3saZGSwaod0=;
+        b=uFWdeiGlLmROCVF+abK6O/n+PsbMttVes6THDJ8y2LAohfjd6WA5TiVYxHj9GMiEz/
+         /o2V0PIbRDule0ccYIFRdZqGaS9X6IIiTK5sAY+4lr1s+PApBmbeMsf7OoMrRngJUAci
+         edcD4w4NCdSLmcDx6yybnDfSf6SiGAgoLVS/GZvRyKoMrkMjOKtyciatt+Ty2YNT8HGU
+         W2ZfCiIBS5BvuTIcEt6NeCnP+KlL1qfENeyWPlxMhtoJQoctwMLSzjoreyHbpHL1pS28
+         rkXNjwvoCskyZQU3peT9/0ORJnwuJxAG5hncEAo/N+YUhHmm+S22atJYioIyqr7giWqe
+         M0Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=EFxNeR78FI3l0OC7HZl6P9i468zpQHaQ3saZGSwaod0=;
+        b=K2LqeabnTRaUdM148vD348eX4W1KzutH7dQSmcsqKmXTXiLoi1ryw0TiefXa4+Q1zc
+         w9/wFZcAYvxGURNq2Os/kY+OPevmuyUW0sqnsfS7IuyvWREcnNza5i/mcftoM8SgLQTH
+         iDMPfDqlpXyEDOqVbHR47jYFLLehSiZou5pwTxVrO7is1TK+Al8h2wR/oRDDk6t96kOu
+         LKyv4hBLJQ/v9NhpUDgleDopsTKhv7guiH3qi0rF5hlG7OjP7EoNhe61m0xyalhhEttw
+         cRO+gtmOnZGbamSdNyvt1fBDq5SO7mimLM9X0/vsLufo2C8LedEiHCkVTQi59ZRWnF0W
+         R2pg==
+X-Gm-Message-State: ACgBeo2UAq5e74g590ENOur38KgjtJG/yvW/29XlIg0wpdrmlHVUjuAW
+        a1mc17FkDUgGecaINsGXVUUNQrrzQ7qN4XcJBlzQcw==
+X-Google-Smtp-Source: AA6agR7jN7XyheMHhzyh7YMEy8KcA8oU9ydIho7xiM2GGzQ4ny4ssMEayxNW/Er2QZsizb6/p3b/jGMLqTYIWr3h2tY=
+X-Received: by 2002:a17:906:478f:b0:73d:7919:b23 with SMTP id
+ cw15-20020a170906478f00b0073d79190b23mr4413839ejc.690.1661501216423; Fri, 26
+ Aug 2022 01:06:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.102.38]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <20220816133016.77553-1-krzysztof.kozlowski@linaro.org> <20220816133016.77553-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220816133016.77553-2-krzysztof.kozlowski@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 26 Aug 2022 10:06:45 +0200
+Message-ID: <CACRpkdYDAY-OA=YJU4J=-16PNmYb9LdnowFoMSbhQHKqNWxmVA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: samsung: stop using bindings
+ header with constants
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,28 +71,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some devices using GPIO as interrupt controller, such as mcp2515 CAN
-device. To mockup those devices, gpio simulator should extend to be
-used as interrupt controller form device tree.
+On Tue, Aug 16, 2022 at 3:30 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/gpio/gpio-sim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The bindings header with pin controller register values is being
+> deprecated and DTS already switched to a DTS-local header.
+>
+> Do not reference the bindings header in schema and replace the defines
+> with raw values.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 1020c2feb249..f3cf6cec6207 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -398,7 +398,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	if (!chip->pull_map)
- 		return -ENOMEM;
- 
--	chip->irq_sim = devm_irq_domain_create_sim(dev, NULL, num_lines);
-+	chip->irq_sim = devm_irq_domain_create_sim(dev, swnode, num_lines);
- 	if (IS_ERR(chip->irq_sim))
- 		return PTR_ERR(chip->irq_sim);
- 
--- 
-2.34.1
+Looks good to me:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
+I expect this to come to me with some pull request later.
+
+Yours,
+Linus Walleij
