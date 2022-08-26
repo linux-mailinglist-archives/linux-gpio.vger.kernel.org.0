@@ -2,106 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0358C5A239A
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 10:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1E8E5A26C7
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 13:22:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245534AbiHZIyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Aug 2022 04:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35752 "EHLO
+        id S241159AbiHZLW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Aug 2022 07:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229776AbiHZIyW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 04:54:22 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E60D5DCA
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:54:21 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id og21so1919493ejc.2
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:54:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=WalmlB4EN49W8PL0fcaiWMZot+zjYgZWStfQtsL0AgI=;
-        b=qwkHN+LuWi6f574jTt2roEdWyygA2QfKiSCTrbp87K7G4JVLFh0lgVm1CRPbtGqYAx
-         9nKM+5zJeJjT9k3UnxaN4OJ+5a+3CpddlFNzxa0o5GKFBmI+xbUI3AaErHI/H1nwEXwW
-         CsKz/cVEuHZowhCwHv6zBhWpbipqrfwh9Y1l5qlvI1VflxZCkteZf4wHWf2DxOr+trQA
-         yZyBu5WWHGbzz0pwWdAEi/ij4SNC5C4lfUiis6LB39sHk9DXV0L/zz9D6WKcGnjRvl2C
-         jzl7VQ1yIFwcl0/HgwVMBz5QIUqXkWWBlNJ1K4BC3O0Kwh8g7geFPUGgb04GZum/8bZf
-         7azA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=WalmlB4EN49W8PL0fcaiWMZot+zjYgZWStfQtsL0AgI=;
-        b=pAYUqpCgApgLjyflWM3H3GlnOyysI86I1yfeRasWdVZ6Fh6mHuMnOBqLRVIGX/15PR
-         38OwEIhJsUXKj6btG/8NExnK9p3cWmMTmFTNh+N7bYNM43bNmCD/8U3ZusSxmw/7aBbJ
-         nLIVI1VTAuFtZo8HZubjriR2wqoGg+w0KL7x6QiG9I/kt6kX69WMC3c8IHGBwxYDtKiK
-         T+sMUVfxyg1RW/2a6ZbEBu0HWo3v/Gsbx9pDj68PtD+b0RlP8qh/uyBe2tegsaZngJhv
-         HwajBY/KbNKZpMg2mvl1yGELEFE129C7NT6SRthy2rCwrxDTeSih3FKItL3mlfdaOOkQ
-         jFxg==
-X-Gm-Message-State: ACgBeo2twdXs34w3KYtvUIxqbEyrO3TcaMSSqKLF4lyUCvETR7pOOQJO
-        rXumiTEVvZy0a/MYWw8zYn38gYcwBNIILLwCsBTpAg==
-X-Google-Smtp-Source: AA6agR5mY4IzTZnOBmdMG5ApfDuP/zrM1AZzzp4ayXmEtVjtONhAK+SU1czh4Zr9AJXwYjKlSbIxw+414mLWAXkPXlY=
-X-Received: by 2002:a17:906:478f:b0:73d:7919:b23 with SMTP id
- cw15-20020a170906478f00b0073d79190b23mr4509164ejc.690.1661504059817; Fri, 26
- Aug 2022 01:54:19 -0700 (PDT)
+        with ESMTP id S230141AbiHZLWz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 07:22:55 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A13DDAEE5;
+        Fri, 26 Aug 2022 04:22:52 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 27QBMXjO053966;
+        Fri, 26 Aug 2022 06:22:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1661512953;
+        bh=ePfG0EpOr92S+PbFmQ5kcqb6z6CZ0FlDegmJSjIPXS4=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=X1jqprEr5Ge3M5OAjXkoOT61Kl+0cQDUwmmHg9e8CfjE2SWtIZycC5Gz/trZ+j2BH
+         PCjYT+LI5MupgxV300uEAbu06/UJM8RSb8+mxND9RsegQOWKDxZwUB75LBEVCFaJPT
+         HlZik/MSp9FALpDmBb15ackyCrY8K5tbFyBWZgpI=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 27QBMXKf032353
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Aug 2022 06:22:33 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Fri, 26
+ Aug 2022 06:22:32 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Fri, 26 Aug 2022 06:22:32 -0500
+Received: from [172.24.145.182] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 27QBMSws052231;
+        Fri, 26 Aug 2022 06:22:29 -0500
+Message-ID: <fd8bdb08-5ed3-8d97-c394-0cab5460df1c@ti.com>
+Date:   Fri, 26 Aug 2022 16:52:28 +0530
 MIME-Version: 1.0
-References: <20220820095933.20234-1-jeffy.chen@rock-chips.com>
- <20220820095933.20234-2-jeffy.chen@rock-chips.com> <CAD=FV=X0qJ2OC1SrAmhSQ5YeKEwvsSCbfVGPh457YYEuPCbRtg@mail.gmail.com>
- <5cb0a457-b667-76e5-d383-6e93457d5d12@rock-chips.com>
-In-Reply-To: <5cb0a457-b667-76e5-d383-6e93457d5d12@rock-chips.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 26 Aug 2022 10:54:08 +0200
-Message-ID: <CACRpkdY1jQH+-o6y84w0WtJT1erRnJzCcg0jjgRHVDUw4q97QQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio/rockchip: Toggle edge trigger mode after acking
-To:     Chen Jeffy <jeffy.chen@rock-chips.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Brian Norris <briannorris@chromium.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: k3: Introduce pinmux
+ definitions for J784s4
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Apurva Nandan <a-nandan@ti.com>
+CC:     Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
+References: <20220819190054.31348-1-a-nandan@ti.com>
+ <20220819190054.31348-3-a-nandan@ti.com>
+ <CACRpkdaktinAJveF_nH9NYYk7mAvnResRzoyuVDVWpwKKq6JOQ@mail.gmail.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <CACRpkdaktinAJveF_nH9NYYk7mAvnResRzoyuVDVWpwKKq6JOQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 23, 2022 at 4:50 AM Chen Jeffy <jeffy.chen@rock-chips.com> wrote:
 
-> The thing is, we are currently toggling the trigger mode to make sure it
-> matches the current GPIO level (e.g. level low -> rising edge mode),
-> than ack it in gpio IRQ handler.
 
-Yes this is an old trick, I don't know if I invented it again for Linux in
-commit cc890cd78acd7ab03442907d354b6af34e973cb3
-in 2011, surely the trick must be well known.
+On 26/08/22 13:59, Linus Walleij wrote:
+> On Fri, Aug 19, 2022 at 9:01 PM Apurva Nandan <a-nandan@ti.com> wrote:
+> 
+>> Add pinctrl macros for J784s4 SoC. These macro definitions are
+>> similar to that of J721s2, but adding new definitions to avoid
+>> any naming confusions in the soc dts files.
+>>
+>> checkpatch insists the following error exists:
+>> ERROR: Macros with complex values should be enclosed in parentheses
+>>
+>> However, we do not need parentheses enclosing the values for this
+>> macro as we do intend it to generate two separate values as has been
+>> done for other similar platforms.
+>>
+>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>> Signed-off-by: Apurva Nandan <a-nandan@ti.com>
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> I guess you will merge these patches together?
+> Tell me if you rather want that I apply this one patch to the pinctrl tree.
+> 
 
-Back then I did it like this:
-
-+       val = readl(U300_PIN_REG(offset, icr));
-+       /* Set mode depending on state */
-+       if (u300_gpio_get(&gpio->chip, offset)) {
-+               /* High now, let's trigger on falling edge next then */
-+               writel(val & ~U300_PIN_BIT(offset), U300_PIN_REG(offset, icr));
-+               dev_dbg(gpio->dev, "next IRQ on falling edge on pin %d\n",
-+                       offset);
-+       } else {
-+               /* Low now, let's trigger on rising edge next then */
-+               writel(val | U300_PIN_BIT(offset), U300_PIN_REG(offset, icr));
-+               dev_dbg(gpio->dev, "next IRQ on rising edge on pin %d\n",
-+                       offset);
-+       }
-
-Notice that I read the current level of the raw input to decide what the next
-trigger should be. The Rockchip driver does not do this, maybe that works
-better?
-
-Yours,
-Linus Walleij
+I will the patch via TI K3 SoC tree once other patches are in good shape.
+Thanks for the review!
+-- 
+Regards
+Vignesh
