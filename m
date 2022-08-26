@@ -2,73 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DDD85A230B
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 10:32:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05A5E5A233F
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Aug 2022 10:39:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343637AbiHZIcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Aug 2022 04:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48614 "EHLO
+        id S1343519AbiHZIi4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Aug 2022 04:38:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343613AbiHZIcC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 04:32:02 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE228D2E9E
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:32:00 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id og21so1826111ejc.2
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:32:00 -0700 (PDT)
+        with ESMTP id S244972AbiHZIid (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 04:38:33 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53817D5DDA
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:38:09 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id m1so1233371edb.7
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 01:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=O3a2ywKetAiTPlrs9lT8+YShy/yttp6DQHGKIy61pD0=;
-        b=Kq09X+u9u6zfdlCM2VAWNO0BBCZvzu2TxeBvYSWTLT7NI+B7hmI3SvzU7w355GY9RH
-         9Q46AsVFVbtQ2W96A1j7F/0LzlqEPMXi+wYhaZIjSgzHZMRvy9d3KSHx+QhDCcICDZMF
-         P74yYd/HLduNFacztnkz1dVz0kyR+KIYYLQXuvZ8pJg5MjEfFkNi9XBT1uqhKLrQ/WgF
-         kUI2Pfqvgc/iZ6hu6CKlHPvVPuFSQGzES4iMmO4IXWCICkOJob952iWdTkC9vM2wY7cp
-         n85umVjV8PGmGqUs4SMQw3DEDLfW6ij2CrjJrhG6ezu5RgZHCRtJNkwrzf+Y2gUyyq3X
-         V2+w==
+        bh=yIFcteN6sC/bfaP1WTd/RHoQds62wkqs1tJOKGjVr+0=;
+        b=TeZv4iLFDzDlcRMZdcxFYD8iBhkkl6ru8OscF0CczIJjoMszenrw8WXPQMojvZNMOK
+         yrAvVSDX9JVbS5BynSn+dLfRkI2zFiGvM0Oe6uKk7WyPVO9RJDVe9sqHugHczQfpCMDR
+         ewTeM6bWdEy+c/W+FBLIRWgyGjZ+hn85AjjApkYMhNowxNh4Am5N3s80e9FzA7pkCxNV
+         lI7T3WYv0MOOPYrSMD+bRtrut4zCc0dtxaV2bGCTh3VL/N5UfavBSYgyu6xT08ZKdnCf
+         dJtGcL1ZgCr1ZZfPa1GrAiGI8cd4GsttG4+r/CH5iYJs6K1jAgkud5zOone5CA+39eU7
+         sLiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=O3a2ywKetAiTPlrs9lT8+YShy/yttp6DQHGKIy61pD0=;
-        b=ygv5E10AhvAvtdBZN71CDQuQQ4UMZkX+/WKqRoM/0eRW7dG4nCaDNwXYJF/ASn7iNu
-         dP7Fdqz6C9hUjRHdZPwZFH0iqzEXGAo5JzLMPcyzIm1J8BcbANRVQjghOWXtB0gY6A7h
-         Lgz0teb9n+L7fQdmL2YawCBC5e80d964EJ7bf2+Fce+7S3tMCaSMbBav7dmUbtuUOvEn
-         WNzkWEANcj/6uKlzLMf/Mhy4HkOB7oZ0iJtMX5xtINNsBYSzWCW4SrXYYUdd3DBZiSzo
-         fYrwqinYGGw5AhFO+m3RHaHBJ8L8bxwRv/gfQAFNnqV6L3dHtTC2rIVetiW9BfeV6rT3
-         u7fA==
-X-Gm-Message-State: ACgBeo1RMGeURpODLXmSyiAKNax93eFD5RUt3K+PNGC0vBO2e7kk+zgl
-        31rE4ZQFFxankzFDe0z6c2MwJ/PBwhoxJB+LuK8XhA==
-X-Google-Smtp-Source: AA6agR4GOyrhcuahIpbw96Io6rSfYfT+CpDB61ITbseXVm8BFNhxgBy45DU3Tf7NEjhIlvx2NVjaMcRMmsD+Ya8kNGw=
-X-Received: by 2002:a17:906:58c8:b0:6fe:91d5:18d2 with SMTP id
- e8-20020a17090658c800b006fe91d518d2mr4921280ejs.190.1661502719056; Fri, 26
- Aug 2022 01:31:59 -0700 (PDT)
+        bh=yIFcteN6sC/bfaP1WTd/RHoQds62wkqs1tJOKGjVr+0=;
+        b=JlO8TLmxo6JghAHYfG6+llFHPMybQw+uv7V79QCogA1Xx/l+KxCQ7vUchv4iasW7ES
+         vR3sQih9OWS9GmAqK/XiwprTApie5u1s1KvzHf6VH5KXbKg+XoAdN6U6qoChaWw+3oxm
+         LKZo4N2sA5c+ZpnxsismChIHiUXlfJRkSMZRnrVKMHT2oSvu6fG03YR5nbz8oDwNdJ5L
+         /Ow4c8YkNMIc43OpU6z//ydaWA0bboa67J4f0xTDAItxEmc3UXohLvJ9fRC7+7b+cdNI
+         oV35uilZlvoAtjS29raSg640P78BgFJj/AZXz+OAdlqV46heiLKd1e+fA3GN6KswtN3v
+         vlmw==
+X-Gm-Message-State: ACgBeo0asFn6eEXNKjzqXz35aG+cy+aX95P1i8KTj2YN2Sz6C88El7dt
+        bSeXsbARzUpPLMlb7joB8xl1CZVMNAVL0zB/SOuosg==
+X-Google-Smtp-Source: AA6agR7ozWh1h3e0/Xth50fQGocQFY1NAJzq0Z5PFKq8ZMWLhAvNOdudXPHZBKkMRV1id5Oh5mABiceM7paZHMDcSNk=
+X-Received: by 2002:a05:6402:5384:b0:431:6d84:b451 with SMTP id
+ ew4-20020a056402538400b004316d84b451mr5948537edb.46.1661503087619; Fri, 26
+ Aug 2022 01:38:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220811153908.31283-1-henning.schild@siemens.com>
- <20220811153908.31283-3-henning.schild@siemens.com> <CAHp75VdWdzsT9wc9BNNKTJ3-eBn3uWdCFXqE2TT+CiJnoTOQYw@mail.gmail.com>
- <20220822152133.5e8f257e@md1za8fc.ad001.siemens.net> <CAHp75VfzOxW6KOW8ObSnqoFiaggkCWgWccrV9wV3x7BJFJR3fg@mail.gmail.com>
-In-Reply-To: <CAHp75VfzOxW6KOW8ObSnqoFiaggkCWgWccrV9wV3x7BJFJR3fg@mail.gmail.com>
+References: <20220819024541.74191-1-michael@allwinnertech.com>
+In-Reply-To: <20220819024541.74191-1-michael@allwinnertech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 26 Aug 2022 10:31:47 +0200
-Message-ID: <CACRpkdYiLuLCG=mCk0UwpTH-Z1iTeGjdqUd6c6e6COvEzRKO0Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] gpio-f7188x: use unique labels for banks/chips
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Henning Schild <henning.schild@siemens.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        "simon.guinot@sequanux.org" <simon.guinot@sequanux.org>
+Date:   Fri, 26 Aug 2022 10:37:56 +0200
+Message-ID: <CACRpkdbx+r8SLRAJKjMHGn1MzmcqmXhorXoPxouooMv6VJL89A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sunxi: Fix name for A100 R_PIO
+To:     Michael Wu <michael@allwinnertech.com>
+Cc:     wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        mripard@kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -80,30 +67,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 22, 2022 at 11:37 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Aug 22, 2022 at 4:21 PM Henning Schild
-> <henning.schild@siemens.com> wrote:
-> > Am Fri, 12 Aug 2022 10:39:08 +0200
-> > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
-> > > On Thursday, August 11, 2022, Henning Schild
-> > > <henning.schild@siemens.com> wrote:
-> > >
-> > > > So that drivers building on top can find those pins with GPIO_LOOKUP
-> > > > helpers.
-> > >
-> > > Missed given tag. Do we need to bother reviewing your patches?
-> >
-> > Sorry but i have no idea what you are talking about, please help me
-> > out. Whatever i did miss seems to be pretty relevant it seems.
->
-> If I remember correctly somebody gave you an Acked-by (or
-> Reviewed-by?) tag in previous versions of the series. I don't see it
-> included.
+On Fri, Aug 19, 2022 at 4:45 AM Michael Wu <michael@allwinnertech.com> wrote:
 
-I think I added a Reviewed-by but it came in probably after this
-version was posted due to me being slow on processing my
-inbox, so this one is likely on me.
+> The name of A100 R_PIO driver should be sun50i-a100-r-pinctrl,
+> not sun50iw10p1-r-pinctrl.
+>
+> Fixes: 473436e7647d6 ("pinctrl: sunxi: add support for the Allwinner A100 pin controller")
+>
+> Signed-off-by: Michael Wu <michael@allwinnertech.com>
+
+Patch applied for fixes!
 
 Yours,
 Linus Walleij
