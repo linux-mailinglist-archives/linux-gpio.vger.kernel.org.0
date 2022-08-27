@@ -2,158 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18B4A5A33DE
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Aug 2022 04:43:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE255A379D
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Aug 2022 14:35:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232298AbiH0Cng (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Aug 2022 22:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52148 "EHLO
+        id S232670AbiH0Mfq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 27 Aug 2022 08:35:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232279AbiH0Cng (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Aug 2022 22:43:36 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD72BE3991
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Aug 2022 19:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661568215; x=1693104215;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=i1/GyxPtGkuU+ez86aaNnKowfoClby6pRQd+lvrFTlQ=;
-  b=HQkIQtmlf0rtoIS6HI4TaE7rgeYTm7oDDTOCjqv3ivabo/fv4kTtiZ+8
-   owLE9OiYKLNB8dGRhkNq8HKJr+PNaYjNS3Fd8A7bhYDCSJcBDU8vawlFo
-   XWXJLgwo5K84qXOc0y/W78koV1SiW9S3JvBeLiVm+42w/Ro7xvXKyDZ2e
-   AKmvyTBnmXtr3PlYm4nCJRjHKceTuzGFl9EIWAZEF9wEcy9IcwvV65QQo
-   yOdbl1k83lZC0PO3Tw8Sj784muRwkAzScLocwN8kEX57vBdB6xQ8cak+Z
-   D2LKe2jIQbDxFES8LOd1T7tbEwWNvFFxCUPletZMCOPZNUsrvZMvsEtEJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="274380411"
-X-IronPort-AV: E=Sophos;i="5.93,267,1654585200"; 
-   d="scan'208";a="274380411"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 19:43:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,267,1654585200"; 
-   d="scan'208";a="753071980"
-Received: from lkp-server01.sh.intel.com (HELO 71b0d3b5b1bc) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2022 19:43:34 -0700
-Received: from kbuild by 71b0d3b5b1bc with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oRlnK-0000tY-04;
-        Sat, 27 Aug 2022 02:43:34 +0000
-Date:   Sat, 27 Aug 2022 10:43:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 1ebfe7e36182a658819e4ded44d38d4033c8bbfb
-Message-ID: <630984d2.x1xqOPqDP0dVjRaU%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S232678AbiH0Mfo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 Aug 2022 08:35:44 -0400
+Received: from smtp.smtpout.orange.fr (smtp08.smtpout.orange.fr [80.12.242.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622C411159
+        for <linux-gpio@vger.kernel.org>; Sat, 27 Aug 2022 05:35:43 -0700 (PDT)
+Received: from [192.168.1.18] ([90.11.190.129])
+        by smtp.orange.fr with ESMTPA
+        id Rv2JoJciNXFXxRv2KoYu3k; Sat, 27 Aug 2022 14:35:41 +0200
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 27 Aug 2022 14:35:41 +0200
+X-ME-IP: 90.11.190.129
+Message-ID: <06339802-8c3e-2a40-e4fd-6a8a774676fe@wanadoo.fr>
+Date:   Sat, 27 Aug 2022 14:35:39 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] gpio: pxa: use devres for the clock struct
+Content-Language: en-US
+From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>, Yuan Can <yuancan@huawei.com>,
+        Kernel Janitors <kernel-janitors@vger.kernel.org>
+References: <20220815091929.130547-1-brgl@bgdev.pl>
+ <CAHp75Vc3dazcM1MLzjzPUmgMGNACUsOZ8aK4uauAJk0hzj9q-w@mail.gmail.com>
+ <CACRpkdZEcTD1A3tR=d4fDF89ECMDfchVPW921v6X6ARiPXHEMQ@mail.gmail.com>
+ <e9991ab5-cb55-789a-dfa1-de10acb37842@wanadoo.fr>
+In-Reply-To: <e9991ab5-cb55-789a-dfa1-de10acb37842@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 1ebfe7e36182a658819e4ded44d38d4033c8bbfb  pinctrl: nuvoton: Use 'unsigned int' instead of just 'unsigned'.
 
-elapsed time: 722m
 
-configs tested: 77
-configs skipped: 3
+Le 26/08/2022 à 14:18, Christophe JAILLET a écrit :
+> Le 26/08/2022 à 10:20, Linus Walleij a écrit :
+>> On Sat, Aug 20, 2022 at 12:15 AM Andy Shevchenko
+>> <andy.shevchenko@gmail.com> wrote:
+>>> On Mon, Aug 15, 2022 at 12:26 PM Bartosz Golaszewski <brgl@bgdev.pl> 
+>>> wrote:
+>>>>
+>>>> The clock is never released after probe(). Use devres to not leak
+>>>> resources.
+>>>
+>>> ...
+>>>
+>>>> -       clk = clk_get(&pdev->dev, NULL);
+>>>> +       clk = devm_clk_get_enabled(&pdev->dev, NULL);
+>>>>          if (IS_ERR(clk)) {
+>>>>                  dev_err(&pdev->dev, "Error %ld to get gpio clock\n",
+>>>>                          PTR_ERR(clk));
+>>>>                  return PTR_ERR(clk);
+>>>
+>>> Shouldn't we fix a potential log saturation issue first (by switching
+>>> to use dev_err_probe() helper)?
+>>
+>> Can be a separate patch, the clock mem leak is a bigger problem
+>> IMO so this should be applied first.
+>>
+>> Hm isn't it possible to toss the task of fixing a gazillion
+>> dev_err_probe() messages on Cocinelle scripts/coccinelle/? I bet it's 
+>> something
+>> the kernel janitors could fix all over the place.
+>>
+>> Yours,
+>> Linus Walleij
+>>
+>
+> // Both rules: 316 files changed, 1321 insertions(+), 1774 deletions(-)
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-loongarch                         allnoconfig
-x86_64                              defconfig
-arc                                 defconfig
-loongarch                           defconfig
-x86_64                           allyesconfig
-alpha                               defconfig
-s390                                defconfig
-powerpc                           allnoconfig
-m68k                             allmodconfig
-s390                             allmodconfig
-x86_64                               rhel-8.3
-arm                                 defconfig
-s390                             allyesconfig
-i386                                defconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-arc                  randconfig-r043-20220823
-i386                          randconfig-a005
-sh                               allmodconfig
-x86_64                        randconfig-a015
-mips                             allyesconfig
-alpha                            allyesconfig
-i386                          randconfig-a014
-arc                  randconfig-r043-20220825
-x86_64                          rhel-8.3-func
-powerpc                          allmodconfig
-x86_64                        randconfig-a013
-x86_64                         rhel-8.3-kunit
-i386                          randconfig-a012
-x86_64                        randconfig-a011
-m68k                             allyesconfig
-x86_64                           rhel-8.3-kvm
-i386                          randconfig-a016
-arc                              allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-i386                             allyesconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-arm64                            allyesconfig
-arm                              allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-powerpc                          allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-ia64                             allmodconfig
+With an updated script, I spot:
+    503 files changed, 1962 insertions(+), 2622 deletions(-)
 
-clang tested configs:
-hexagon              randconfig-r041-20220825
-i386                          randconfig-a013
-hexagon              randconfig-r041-20220823
-i386                          randconfig-a002
-hexagon              randconfig-r045-20220825
-i386                          randconfig-a015
-i386                          randconfig-a006
-s390                 randconfig-r044-20220823
-riscv                randconfig-r042-20220825
-i386                          randconfig-a004
-s390                 randconfig-r044-20220825
-riscv                randconfig-r042-20220823
-x86_64                        randconfig-a014
-i386                          randconfig-a011
-hexagon              randconfig-r045-20220823
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-hexagon              randconfig-r045-20220827
-riscv                randconfig-r042-20220827
-hexagon              randconfig-r041-20220827
-s390                 randconfig-r044-20220827
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
+(and 150-200 still needs some manual check or script adjustment)
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+
+Does this really make sense to send SO many patches for it?
+
+If yes, should it be done on a per-system basis, or by driver basis?
+
+CJ
