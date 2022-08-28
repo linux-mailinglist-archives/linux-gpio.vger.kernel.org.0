@@ -2,127 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D31325A3D61
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Aug 2022 13:36:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5039D5A3D7A
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Aug 2022 14:06:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbiH1LgN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Aug 2022 07:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
+        id S229470AbiH1MGm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Aug 2022 08:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbiH1LgL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Aug 2022 07:36:11 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED5C43315
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Aug 2022 04:36:10 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id cu2so10760676ejb.0
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Aug 2022 04:36:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=OdQ+Q9qV3LedSJkQfbn2p7WBBrnXUtBV8MUOTrhaEAY=;
-        b=eeBB52Ce3r5kR9Dcp27QVPv61AMhihFpTZYjm3DkOv1VJWc6dejpSJHpOYakb68HeB
-         akvqHdPr6RxF7jBUDq/hyyx8Ub1PLDhFD6VA41pYOF5zCY08yz6bbSY4QqUY2VXPDykb
-         xFjRr29B2z700CCN8O0GJOAN29YA33B1RF54Vhm8aAY9vFQyOy+wSKiEAeTyaOH3wLg7
-         9l7lsS2WzkLlehfx9n6wRdq4L+5Wo5wLhI8erWLJYJZfl0hatDEgJGjjFdCBmAiP4VBc
-         7Bw+VqNTkYXGlAKQEd8bkrAKeig8lYdFPvJbEW/TdPfkpxjnjqqmlWSXuOEDhGhWR4Eq
-         zA9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=OdQ+Q9qV3LedSJkQfbn2p7WBBrnXUtBV8MUOTrhaEAY=;
-        b=fHneQcY+tNejnwCprXOhFayZMcpysMC3P/IQww/IZMOzMRho1Pp9a/jFM8i9xJSS/p
-         C5AvvWIATrkAy1EH1P3HB99r1oAVA7UgGztoijTWCjR9obn6Y1WTT2TU51XbZWNixP+1
-         nr0l90QoHlwhxFYabPZp0NrKjiR8hmPHG+Dn2rlQH/ySWtwDwIb8xNpJLLoX2k/gRrwb
-         cDOUCXmz4HAd1oZ4a+i47XPD9iLn7gEgT3ZQ3MD+tsgThgYTDmmjjX0z8na+aAbOlNrw
-         /R68d7ulmPdLCq2qWPCWUeRV2KDcUZm/+8R+7CxpMsMCASxVQ0hjkDVS3Gm/KGox/Zbb
-         Hodw==
-X-Gm-Message-State: ACgBeo04Dooycmt3gJHC9+phBUu2tzg1GiI4JOiV0gi//qvqSSnsf9DM
-        GVktAf6bW6M0AfUGfH9p2ClKxRVV+zfCBfkoq8msZw==
-X-Google-Smtp-Source: AA6agR7AmPxeYl/v4RcSVBl9iTpUGDHWyRcltexR6tY4uxIhIlTFbByhTuUZ07p3AOXBLqSGuwkccRVfPDLNHQeyuk8=
-X-Received: by 2002:a17:906:cc5a:b0:741:5240:d91a with SMTP id
- mm26-20020a170906cc5a00b007415240d91amr3390854ejb.500.1661686568986; Sun, 28
- Aug 2022 04:36:08 -0700 (PDT)
+        with ESMTP id S229945AbiH1MGf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Aug 2022 08:06:35 -0400
+X-Greylist: delayed 401 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 28 Aug 2022 05:06:31 PDT
+Received: from cloudhost-4892685.us-midwest-2.nxcli.net (cloudhost-4892685.us-midwest-2.nxcli.net [199.189.224.219])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146451FCED
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Aug 2022 05:06:30 -0700 (PDT)
+Received: (qmail 27447 invoked by uid 10062); 28 Aug 2022 11:59:48 +0000
+To:     linux-gpio@vger.kernel.org
+Subject: =?us-ascii?Q?Forbes:_Investieren_Sie_einmal_250_$_und_erhalt?=  =?us-ascii?Q?en_Sie_ab_1000_$_pro_Tag?=
+X-PHP-Originating-Script: 10062:PHPMailer.php
+Date:   Sun, 28 Aug 2022 11:59:48 +0000
+From:   Construction <info@yourdomain.com>
+Reply-To: info@yourdomain.com
+Message-ID: <W5YrgCYubrxTct8QDhCrsmMfi8dalxanIYkmEs@techrakers.com>
+X-Mailer: PHPMailer 6.6.0 (https://github.com/PHPMailer/PHPMailer)
 MIME-Version: 1.0
-References: <f31b818cf8d682de61c74b133beffcc8a8202478.1660041358.git.christophe.leroy@csgroup.eu>
- <CACRpkdY53c0qXx24Am1TMivXr-MV+fQ8B0CDjtGi6=+2tn4-7A@mail.gmail.com>
- <CAK8P3a1Vh1Uehuin-u5QrTO5qh+t0aK_hA-QZwqc00Db_+MKcw@mail.gmail.com>
- <CACRpkdbhbwBe=jU5prifXCYUXPqULhst0se3ZRH+sWOh9XeoLQ@mail.gmail.com>
- <CAK8P3a0j-54_OkXC7x3NSNaHhwJ+9umNgbpsrPxUB4dwewK63A@mail.gmail.com>
- <CACRpkda0+iy8H0YmyowSDn8RbYgnVbC1k+o5F67inXg4Qb934Q@mail.gmail.com>
- <CAK8P3a0uuJ_z8wmNmQTW_qPNqzz7XoxZdHgqbzmK+ydtjraeHg@mail.gmail.com>
- <CACRpkdb5ow4hD3td6agCuKWvuxptm5AV4rsCrcxNStNdXnBzrA@mail.gmail.com>
- <87f2ff4c-3426-201c-df86-2d06d3587a20@csgroup.eu> <CACRpkdYizQhiJXzXNHg7TXUVHzhkwXHFN5+e58kH4udGm1ziEA@mail.gmail.com>
- <f76dbc49-526f-6dc7-2ef1-558baea5848b@csgroup.eu> <CACRpkdZpwdP+1VitohznqRfhFGcLT2f+sQnmsRWwMBB3bobwAw@mail.gmail.com>
- <515364a9-33a1-fafa-fdce-dc7dbd5bb7fb@csgroup.eu>
-In-Reply-To: <515364a9-33a1-fafa-fdce-dc7dbd5bb7fb@csgroup.eu>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 28 Aug 2022 13:35:57 +0200
-Message-ID: <CACRpkdaTSRSGx=SjXJ93tdMEPFD=hb3wbUscGO2Exf709SL5Ow@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Allow user to customise maximum number of GPIOs
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alexandre Courbot <gnurou@gmail.com>,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=UTF-8
+X-Spam-Status: No, score=2.4 required=5.0 tests=BAYES_50,
+        HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,RCVD_IN_VALIDITY_RPBL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Aug 28, 2022 at 11:06 AM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
+Message Body:
+Millionen von Dollar in Kryptowahrung in nur wenigen Monaten http://usb-bitcoin-miner.tracemyvideo.com/dayli-news-6341
 
-> And I guess there might be other drivers like that (I found that one
-> because of its comment mentionning ARCH_NR_GPIOS.
+--
+This e-mail was sent from a contact form on Construction (http://yourdomain.com/)
 
-Yes there are a bunch of GPIO controllers with fixed base.
-
-These only exist because there is boardfile code that uses
-these fixed GPIO numbers.
-
-> Another solution could be to leave first GPIOs for static allocation,
-> and allocate dynamic ones from 256 or from 512 ?
->
-> Maybe in two steps:
-> - First step: Allocate dynamic from 256 upwards and add a pr_warn() for
-> all static allocations.
-
-OK that is reasonable.
-
-I thought that maybe we could assume the fixed bases to probe first
-and thus reserve the GPIO bases they want before we get to the
-dynamically allocated drivers.
-
-This could be a good first step.
-
-> - Second step later: Allocate dynamic from 0 and forbid static allocation.
-
-What needs to happen for doing that 100% safe is to get rid of all
-board files, mostly in arch/arm/mach* but also elsewhere, or to
-augment all boardfiles to use descriptor tables instead.
-
-But you're right, try the two step approach first.
-
-Yours,
-Linus Walleij
