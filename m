@@ -2,120 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 867445A6E63
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 22:21:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E55E5A6EA3
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 22:45:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231433AbiH3UV5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Aug 2022 16:21:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
+        id S229565AbiH3Upd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Aug 2022 16:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbiH3UV4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 16:21:56 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB8B52E46;
-        Tue, 30 Aug 2022 13:21:55 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id w28so9492908qtc.7;
-        Tue, 30 Aug 2022 13:21:55 -0700 (PDT)
+        with ESMTP id S229472AbiH3Upd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 16:45:33 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F1E4D143
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 13:45:32 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id x10so12610346ljq.4
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 13:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=GSwCSxkfswCTAr2W0z1p9wm8OPsGIVQ+vLw8r+QCbaI=;
-        b=n319MBFg0fYTSh7VP5cO10oaO8edZv/xWNrw7cy5VJI/79qfQEp9RdCxrEqW8qkiJG
-         brcnn03BWSCN55OFZOF+VAKsC8lbqcwMRTls8GozUjUDdipjjdahcGrj4OdUCrGV2xTv
-         m5Oflc3GWdKmZN21oyHOcEYrcGsrBrl0xxbYGtuNovusufG6XDfMA79gPLa2/IZTrJxq
-         qnUwiYFY3aHjJLkKTib/aIEby8FwdMMD8VcohEJ1j6Ndlj6AayluaWjbN1pH6s744ou8
-         /g+yXMBj7Nema420sJSOmode1xbhgIQehSWOY+U0GOXYTuT947QPPZXt2dsxPJSQO6fz
-         aSiQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=2mQItsya8Ub3MWvnmEA8OVjIz25Z0s6J5LlQpwiJ2qg=;
+        b=WgF4McWAq8iOxdyIYojNPVjvXqPLnki7zlCVXxHGTmmcCnXfkr8q6ec1vBrW7EfgJk
+         bSHqAbBEanXZBx9MwIN1bfoX7zq04SKsmV7Rx4q/Gig6JM9ZGOZJsXZmClcYSFCS2OM+
+         AnHzdy58k2shWLHPsdn9pWzDqBRz2Oc2yLbR5ZO+TaiMWB8z4CKhMzJgK23UsDC7ZOU5
+         i29P0HcYwZIhRmxBRpSuSgm9rw9t/jKqJFlZ/eMsilbBw1UAYbgMW1X3TivpLNTbgO79
+         3td0PDzG58Pn+5mI3gyG3OwgnQVjidfwkG/g97eDIFU60Ee8+p8orBtntwMVk5MpXwk7
+         Wt6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=GSwCSxkfswCTAr2W0z1p9wm8OPsGIVQ+vLw8r+QCbaI=;
-        b=HA3iBrGcY8tjAUkF9VkIQpLKZ/0z4kwVCz+YmJishqnys4KPI5fuklg7GYx3W45A+a
-         Pi9JthR/mKDrNspu9chjaJJ02YutWCWgC9Qg/cZLCqf/NIMpAyXgi69kk4SVlr37WCDk
-         zxd3Xh0q/uc9NdeWQzLRHhI45YqH+2pnmnzKN7iqZrbgrb9LObbeEMrOGHpPYnTAQJ2T
-         YBEwybkUHcZ4iOMMG0YZ3pkOAE44y5luQ8R35ECa9dYDtFooHg64hblB9AA9JyGoRoiW
-         jGioYIu0AlIH4w6N3uOAOEzibgoNqWVAg7XnnavuQuDYvStnXJ0LOBXh1ATaCkJl8nK0
-         0VYA==
-X-Gm-Message-State: ACgBeo211UXA9/kzijkZVspx5gXM/ZQP/aGyTyMOaErmscXBqhGvxEk0
-        sODUKOes4HUQrSTngkPJplWqGeC4bIy73Y8LL5A=
-X-Google-Smtp-Source: AA6agR5wtSa4e+dAhZJ/VjR9XzVzQcGJMQA0E4YnrC0fabueldGOqrkcSXmg1o/nKGytxwSARQloEsUQGHgtbRFOFXA=
-X-Received: by 2002:ac8:7f92:0:b0:344:8cd8:59a1 with SMTP id
- z18-20020ac87f92000000b003448cd859a1mr16713627qtj.384.1661890914718; Tue, 30
- Aug 2022 13:21:54 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=2mQItsya8Ub3MWvnmEA8OVjIz25Z0s6J5LlQpwiJ2qg=;
+        b=ZUhoSItPVb4FIAVd/Zt+deneZzNKLcB/h3K4QOYlqzXCEtplQmehuMHMUg+GqCjHOj
+         xynoJvTPZzQAyTOJArTqeC5HPRzhBBvuDK1FaVXhXNw6eQgwPQKAIQc6m1T73PDC4e6D
+         PlqZdQp96+eTpn2hv1kNpGmRg6i3gPdXXSxuEb7L0oq9bGYzQxFJtVTxo5Pzxoz4W38r
+         gOGr92XlIv/PKtxToAVbDbjCnwykJKGkNTvISk4nRaJh69HgCGGj810EbfRmeVrOMarL
+         FJQYk56zPjGlmGlRJQ0eVRxDABUmfPLH5/7CfTVm/3jcZwIPFnuJuaQHiMct5y4OZOSJ
+         +dTg==
+X-Gm-Message-State: ACgBeo1+RKU8pEP/oZePne+FIKnBlZKvDtjpbNyhPw9ezgwD8uumeC30
+        /BhT7rBiO+Ta91NxIiFggVZ7JQ==
+X-Google-Smtp-Source: AA6agR7+x1YpHcrioMaf6UiS9868phUOCMrS9u5uBH8/DZj1LMqp7M8K1C50mIwowoIVHD7xkGdP6Q==
+X-Received: by 2002:a05:651c:54c:b0:25f:dd42:5d06 with SMTP id q12-20020a05651c054c00b0025fdd425d06mr7986396ljp.161.1661892330571;
+        Tue, 30 Aug 2022 13:45:30 -0700 (PDT)
+Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
+        by smtp.gmail.com with ESMTPSA id l5-20020a2e99c5000000b00261cc67e9c2sm1921627ljj.131.2022.08.30.13.45.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Aug 2022 13:45:30 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nikita Shubin <nikita.shubin@maquefel.me>,
+        Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH] ARM: ep93xx: Convert to use descriptors for GPIO LEDs
+Date:   Tue, 30 Aug 2022 22:43:27 +0200
+Message-Id: <20220830204327.368284-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-References: <cover.1661789204.git.christophe.leroy@csgroup.eu> <CAHp75Vc5um3=gwnjoJNPxp+kbhFHT0Kp4gi1Qd+q5TL-y6-+oQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vc5um3=gwnjoJNPxp+kbhFHT0Kp4gi1Qd+q5TL-y6-+oQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 30 Aug 2022 23:21:18 +0300
-Message-ID: <CAHp75VeFbjRN7OE5MH0_bbx5aSerj+2F_vpBjRZhT3QQ+3wmng@mail.gmail.com>
-Subject: Re: [PATCH v1 0/8] gpio: Get rid of ARCH_NR_GPIOS (v1)
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 30, 2022 at 11:20 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Aug 29, 2022 at 7:17 PM Christophe Leroy
-> <christophe.leroy@csgroup.eu> wrote:
-> >
-> > Since commit 14e85c0e69d5 ("gpio: remove gpio_descs global array")
-> > there is no limitation on the number of GPIOs that can be allocated
-> > in the system since the allocation is fully dynamic.
-> >
-> > ARCH_NR_GPIOS is today only used in order to provide downwards
-> > gpiobase allocation from that value, while static allocation is
-> > performed upwards from 0. However that has the disadvantage of
-> > limiting the number of GPIOs that can be registered in the system.
-> >
-> > To overcome this limitation without requiring each and every
-> > platform to provide its 'best-guess' maximum number, rework the
-> > allocation to allocate from 256 upwards, allowing approx 2 millions
-> > of GPIOs.
-> >
-> > In the meantime, add a warning for drivers how are still doing
-> > static allocation, so that in the future the static allocation gets
-> > removed completely and dynamic allocation can start at base 0.
->
-> For non-commented (by me or others) patches
-> Reviewed-by: Andy Shevchenko <andy.shevchenko!gmail.com>
+This converts the EP93xx to use GPIO descriptors for the
+LEDs.
 
-Should be
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Lukasz Majewski <lukma@denx.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/arm/mach-ep93xx/core.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-> For the patch 1 if you are going to address as suggested by the author
-> of the driver, you may also add my tag.
-
-
-
+diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
+index 2d58e273c96d..1abd93b8a084 100644
+--- a/arch/arm/mach-ep93xx/core.c
++++ b/arch/arm/mach-ep93xx/core.c
+@@ -425,10 +425,8 @@ void __init ep93xx_register_spi(struct ep93xx_spi_info *info,
+ static const struct gpio_led ep93xx_led_pins[] __initconst = {
+ 	{
+ 		.name	= "platform:grled",
+-		.gpio	= EP93XX_GPIO_LINE_GRLED,
+ 	}, {
+ 		.name	= "platform:rdled",
+-		.gpio	= EP93XX_GPIO_LINE_RDLED,
+ 	},
+ };
+ 
+@@ -437,6 +435,16 @@ static const struct gpio_led_platform_data ep93xx_led_data __initconst = {
+ 	.leds		= ep93xx_led_pins,
+ };
+ 
++static struct gpiod_lookup_table ep93xx_leds_gpio_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		/* Use local offsets on gpiochip/port "E" */
++		GPIO_LOOKUP_IDX("E", 0, NULL, 0, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("E", 1,	NULL, 1, GPIO_ACTIVE_HIGH),
++		{ }
++	},
++};
++
+ /*************************************************************************
+  * EP93xx pwm peripheral handling
+  *************************************************************************/
+@@ -989,6 +997,7 @@ struct device __init *ep93xx_init_devices(void)
+ 	platform_device_register(&ep93xx_ohci_device);
+ 	platform_device_register(&ep93xx_wdt_device);
+ 
++	gpiod_add_lookup_table((&ep93xx_leds_gpio_table);
+ 	gpio_led_register_device(-1, &ep93xx_led_data);
+ 
+ 	return parent;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.37.2
+
