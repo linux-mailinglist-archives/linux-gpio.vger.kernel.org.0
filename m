@@ -2,177 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8EB45A711D
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 00:50:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F7FD5A716D
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 01:16:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbiH3Wun (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Aug 2022 18:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
+        id S231508AbiH3XQQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Aug 2022 19:16:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbiH3Wul (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 18:50:41 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F224CA3B;
-        Tue, 30 Aug 2022 15:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661899839; x=1693435839;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lkEb1S9O0cY1S5Nc3U5QQ2ryw9NN9aiDiTt1Riy+deM=;
-  b=L1JpZZn6NgHdyA3yOldaHnKFfFKHkJ6+rOBzIqCtm69InLSJCczgfP80
-   ibwOtLrrx4LtSIba3PbfJvvBfWdtN0ibEFu4UF48RSKPSVpDWw129ULf3
-   Y13WS/BG1rBsYqQJBWdyC4yA1XELdirVQB23NKY5TSxhXomczpJStYgQM
-   79KaZBU4G0A18PwxzCr1W1yn3QxlEkljER2xk8v5wELvizg26Mgqqsa8m
-   N4ZVZomix9SLkooAErEuF2DW+6vMvlQDxLAFiNlvgWnNAgH+O5nLpMCM9
-   I/GqHCfEi7FcRRnBcskf28G6mW9hXZWf28pdDqG2ay6xPrAOI3023TGE3
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="282297177"
-X-IronPort-AV: E=Sophos;i="5.93,276,1654585200"; 
-   d="scan'208";a="282297177"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 15:50:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,276,1654585200"; 
-   d="scan'208";a="645024235"
-Received: from lkp-server02.sh.intel.com (HELO 77b6d4e16fc5) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 30 Aug 2022 15:50:35 -0700
-Received: from kbuild by 77b6d4e16fc5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oTA43-0000hi-0r;
-        Tue, 30 Aug 2022 22:50:35 +0000
-Date:   Wed, 31 Aug 2022 06:50:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        with ESMTP id S229453AbiH3XQO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 19:16:14 -0400
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D977257200
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 16:16:11 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id b142so10578801iof.10
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 16:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=x69BqAPYkPfjWtjrw3LI9eH4GuXIZVGeRYFtXQ4qANk=;
+        b=GMh82kpsRbSMjNBdDIlyFF6p1LC0ASDp6rUqVioNXmfijJFe2BW6rlTrjMl3490xfu
+         FsDeEGa2CSG5Sb7He+I+7DWspwGGkWHTRm+dz2D0r8MKYB4nEAin7IEw97Wo2cGbzPAn
+         xwQSQy+YaXOV6Tqf3+qxjVDwQg364bAuTfusU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=x69BqAPYkPfjWtjrw3LI9eH4GuXIZVGeRYFtXQ4qANk=;
+        b=4MxwuA/1VyxH0yGEbyfFWQhaOEStWtDPk4QzbdVMmCpotjdna7nzlkxK8++iWs6fZ4
+         8MMxZdo10yw5+lnsg9OWiqn55Qb2OVPs+XCZkaVyMjqSiMNUw+Tzy3+ju/o/Q6Jppip1
+         I5OChAL0uyCKJP1ZDvkek46okuMuaMdWm1YwDzVDxkP8uu2gpTd6jefSqh75hx5BfKOr
+         N9YrOwD+NT4uXMTJN5lguS91C40ZDeSnHMML3QzEX8UFyTLl95OcP0riqCIXNM3idLih
+         f/C/CbT/tuMTp1yJxkxSrXaztdTad5VXhzEfcwlKWEvGdP9Q+VDZBXovk6wkNxRCqXAO
+         THnA==
+X-Gm-Message-State: ACgBeo2yaQG63IcxB4I9yHrYwbgRD58qYIO+NR+Ddjg7VuEZu3Ejk585
+        wWiO1QaWA89p1OXtBLLh2Fic3Q==
+X-Google-Smtp-Source: AA6agR5OcRQGYrRnCPUJPHTaVmS06dfSxPfnXE6Jpp9Ld2axdjlW1ZBJtBWb1Ys+GJKEYN1dk+TJSQ==
+X-Received: by 2002:a05:6602:2ac2:b0:689:f825:803a with SMTP id m2-20020a0566022ac200b00689f825803amr11968475iov.131.1661901371266;
+        Tue, 30 Aug 2022 16:16:11 -0700 (PDT)
+Received: from rrangel920.bld.corp.google.com (h24-56-189-219.arvdco.broadband.dynamic.tds.net. [24.56.189.219])
+        by smtp.gmail.com with ESMTPSA id z30-20020a056602081e00b0068b1858c81asm6165821iow.13.2022.08.30.16.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Aug 2022 16:16:10 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-acpi@vger.kernel.org, linux-input@vger.kernel.org
+Cc:     hdegoede@redhat.com, mario.limonciello@amd.com, timvp@google.com,
+        rafael@kernel.org, Raul E Rangel <rrangel@chromium.org>,
+        Alistair Francis <alistair@alistair23.me>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Angela Czubak <acz@semihalf.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] gpio: rockchip: Switch to use fwnode instead of
- of_node
-Message-ID: <202208310629.1JjkyeRu-lkp@intel.com>
-References: <20220830191939.56436-1-andriy.shevchenko@linux.intel.com>
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>, Len Brown <lenb@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Yang Li <yang.lee@linux.alibaba.com>,
+        "jingle.wu" <jingle.wu@emc.com.tw>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/8] acpi: i2c: Use SharedAndWake and ExclusiveAndWake to enable wake irq
+Date:   Tue, 30 Aug 2022 17:15:33 -0600
+Message-Id: <20220830231541.1135813-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220830191939.56436-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+Today, i2c drivers are making the assumption that their IRQs can also
+be used as wake IRQs. This isn't always the case and it can lead to
+spurious wakes. This has recently started to affect AMD Chromebooks.
+With the introduction of
+d62bd5ce12d7 ("pinctrl: amd: Implement irq_set_wake"), the AMD GPIO
+controller gained the capability to set the wake bit on each GPIO. The
+ACPI specification defines two ways to inform the system if a device is
+wake capable:
+1) The _PRW object defines the GPE that can be used to wake the system.
+2) Setting ExclusiveAndWake or SharedAndWake in the _CRS GpioInt.
 
-I love your patch! Yet something to improve:
+Currently only the first method is supported. The i2c drivers don't have
+any indication that the IRQ is wake capable, so they guess. This causes
+spurious interrupts, for example:
+* We have an ACPI HID device that has `_PR0` and `_PR3`. It doesn't have
+  `_PRW` or `ExclusiveAndWake` so that means the device can't wake the
+  system.
+* The IRQ line is active level low for this device and is pulled up by
+  the power resource defined in `_PR0`/`_PR3`.
+* The i2c driver will (incorrectly) arm the GPIO for wake by calling
+  `enable_irq_wake` as part of its suspend hook.
+* ACPI will power down the device since it doesn't have a wake GPE
+  associated with it.
+* When the device is powered down, the IRQ line will drop, and it will
+  trigger a wake event.
 
-[auto build test ERROR on rockchip/for-next]
-[also build test ERROR on linus/master v6.0-rc3 next-20220830]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+See the following debug log:
+[   42.335804] PM: Suspending system (s2idle)
+[   42.340186] amd_gpio AMD0030:00: RX: Setting wake for pin 89 to enable
+[   42.467736]     power-0416 __acpi_power_off      : Power resource [PR00] turned off
+[   42.467739] device_pm-0280 device_set_power      : Device [H05D] transitioned to D3cold
+[   42.475210] PM: pm_system_irq_wakeup: 11 triggered pinctrl_amd
+[   42.535293] PM: Wakeup unrelated to ACPI SCI
+[   42.535294] PM: resume from suspend-to-idle
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/gpio-rockchip-Switch-to-use-fwnode-instead-of-of_node/20220831-032131
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-config: hexagon-randconfig-r032-20220830 (https://download.01.org/0day-ci/archive/20220831/202208310629.1JjkyeRu-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project c7df82e4693c19e3fd2e25c83eb04d9deb7b7b59)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/678cf6450de6a016c041c3cd2ce58d1383d070e6
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Andy-Shevchenko/gpio-rockchip-Switch-to-use-fwnode-instead-of-of_node/20220831-032131
-        git checkout 678cf6450de6a016c041c3cd2ce58d1383d070e6
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/gpio/
+In order to fix this, we need to take into account the wake capable bit
+defined on the GpioInt. This is accomplished by:
+* Migrating some of the i2c drivers over to using the PM subsystem to
+  manage the wake IRQ. max8925-i2c, elants_i2c, and raydium_i2c_ts still
+  need to be migrated, I can do that depending on the feedback to this
+  patch series.
+* Expose the wake_capable bit from the ACPI GpioInt resource to the
+  i2c core.
+* Use the wake_capable bit in the i2c core to call
+  `dev_pm_set_wake_irq`. This reuses the existing device tree flow.
+* Make the i2c drivers stop calling `dev_pm_set_wake_irq` since it's now
+  handled by the i2c core.
+* Make the ACPI device PM system aware of the wake_irq. This is
+  necessary so the device doesn't incorrectly get powered down when a
+  wake_irq is enabled.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+I've tested this code with various combinations of having _PRW,
+ExclusiveAndWake and power resources all defined or not defined, but it
+would be great if others could test this out on their hardware.
 
-All errors (new ones prefixed by >>):
-
->> drivers/gpio/gpio-rockchip.c:614:8: error: use of undeclared identifier 'pctlnp'
-                   if (!pctlnp)
-                        ^
-   1 error generated.
+Thanks,
+Raul
 
 
-vim +/pctlnp +614 drivers/gpio/gpio-rockchip.c
+Raul E Rangel (8):
+  Input: elan_i2c - Use PM subsystem to manage wake irq
+  HID: i2c-hid: Use PM subsystem to manage wake irq
+  gpiolib: acpi: Add wake_capable parameter to acpi_dev_gpio_irq_get_by
+  i2c: acpi: Use ACPI GPIO wake capability bit to set wake_irq
+  HID: i2c-hid: acpi: Stop setting wakeup_capable
+  Input: elan_i2c - Don't set wake_irq when using ACPI
+  HID: i2c-hid: Don't set wake_irq when using ACPI
+  ACPI: PM: Take wake IRQ into consideration when entering
+    suspend-to-idle
 
-936ee2675eee1f Jianqun Xu      2021-08-16  579  
-936ee2675eee1f Jianqun Xu      2021-08-16  580  static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
-936ee2675eee1f Jianqun Xu      2021-08-16  581  {
-936ee2675eee1f Jianqun Xu      2021-08-16  582  	struct gpio_chip *gc;
-936ee2675eee1f Jianqun Xu      2021-08-16  583  	int ret;
-936ee2675eee1f Jianqun Xu      2021-08-16  584  
-936ee2675eee1f Jianqun Xu      2021-08-16  585  	bank->gpio_chip = rockchip_gpiolib_chip;
-936ee2675eee1f Jianqun Xu      2021-08-16  586  
-936ee2675eee1f Jianqun Xu      2021-08-16  587  	gc = &bank->gpio_chip;
-936ee2675eee1f Jianqun Xu      2021-08-16  588  	gc->base = bank->pin_base;
-936ee2675eee1f Jianqun Xu      2021-08-16  589  	gc->ngpio = bank->nr_pins;
-936ee2675eee1f Jianqun Xu      2021-08-16  590  	gc->label = bank->name;
-936ee2675eee1f Jianqun Xu      2021-08-16  591  	gc->parent = bank->dev;
-936ee2675eee1f Jianqun Xu      2021-08-16  592  
-936ee2675eee1f Jianqun Xu      2021-08-16  593  	ret = gpiochip_add_data(gc, bank);
-936ee2675eee1f Jianqun Xu      2021-08-16  594  	if (ret) {
-936ee2675eee1f Jianqun Xu      2021-08-16  595  		dev_err(bank->dev, "failed to add gpiochip %s, %d\n",
-936ee2675eee1f Jianqun Xu      2021-08-16  596  			gc->label, ret);
-936ee2675eee1f Jianqun Xu      2021-08-16  597  		return ret;
-936ee2675eee1f Jianqun Xu      2021-08-16  598  	}
-936ee2675eee1f Jianqun Xu      2021-08-16  599  
-936ee2675eee1f Jianqun Xu      2021-08-16  600  	/*
-936ee2675eee1f Jianqun Xu      2021-08-16  601  	 * For DeviceTree-supported systems, the gpio core checks the
-936ee2675eee1f Jianqun Xu      2021-08-16  602  	 * pinctrl's device node for the "gpio-ranges" property.
-936ee2675eee1f Jianqun Xu      2021-08-16  603  	 * If it is present, it takes care of adding the pin ranges
-936ee2675eee1f Jianqun Xu      2021-08-16  604  	 * for the driver. In this case the driver can skip ahead.
-936ee2675eee1f Jianqun Xu      2021-08-16  605  	 *
-936ee2675eee1f Jianqun Xu      2021-08-16  606  	 * In order to remain compatible with older, existing DeviceTree
-936ee2675eee1f Jianqun Xu      2021-08-16  607  	 * files which don't set the "gpio-ranges" property or systems that
-936ee2675eee1f Jianqun Xu      2021-08-16  608  	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-936ee2675eee1f Jianqun Xu      2021-08-16  609  	 */
-678cf6450de6a0 Andy Shevchenko 2022-08-30  610  	if (!fwnode_property_read_bool(bank->fwnode, "gpio-ranges")) {
-678cf6450de6a0 Andy Shevchenko 2022-08-30  611  		struct fwnode_handle *parent = fwnode_get_parent(bank->fwnode);
-936ee2675eee1f Jianqun Xu      2021-08-16  612  		struct pinctrl_dev *pctldev = NULL;
-936ee2675eee1f Jianqun Xu      2021-08-16  613  
-936ee2675eee1f Jianqun Xu      2021-08-16 @614  		if (!pctlnp)
-936ee2675eee1f Jianqun Xu      2021-08-16  615  			return -ENODATA;
-936ee2675eee1f Jianqun Xu      2021-08-16  616  
-678cf6450de6a0 Andy Shevchenko 2022-08-30  617  		pctldev = of_pinctrl_get(to_of_node(parent));
-936ee2675eee1f Jianqun Xu      2021-08-16  618  		if (!pctldev)
-936ee2675eee1f Jianqun Xu      2021-08-16  619  			return -ENODEV;
-936ee2675eee1f Jianqun Xu      2021-08-16  620  
-936ee2675eee1f Jianqun Xu      2021-08-16  621  		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
-936ee2675eee1f Jianqun Xu      2021-08-16  622  					     gc->base, gc->ngpio);
-936ee2675eee1f Jianqun Xu      2021-08-16  623  		if (ret) {
-936ee2675eee1f Jianqun Xu      2021-08-16  624  			dev_err(bank->dev, "Failed to add pin range\n");
-936ee2675eee1f Jianqun Xu      2021-08-16  625  			goto fail;
-936ee2675eee1f Jianqun Xu      2021-08-16  626  		}
-936ee2675eee1f Jianqun Xu      2021-08-16  627  	}
-936ee2675eee1f Jianqun Xu      2021-08-16  628  
-936ee2675eee1f Jianqun Xu      2021-08-16  629  	ret = rockchip_interrupts_register(bank);
-936ee2675eee1f Jianqun Xu      2021-08-16  630  	if (ret) {
-936ee2675eee1f Jianqun Xu      2021-08-16  631  		dev_err(bank->dev, "failed to register interrupt, %d\n", ret);
-936ee2675eee1f Jianqun Xu      2021-08-16  632  		goto fail;
-936ee2675eee1f Jianqun Xu      2021-08-16  633  	}
-936ee2675eee1f Jianqun Xu      2021-08-16  634  
-936ee2675eee1f Jianqun Xu      2021-08-16  635  	return 0;
-936ee2675eee1f Jianqun Xu      2021-08-16  636  
-936ee2675eee1f Jianqun Xu      2021-08-16  637  fail:
-936ee2675eee1f Jianqun Xu      2021-08-16  638  	gpiochip_remove(&bank->gpio_chip);
-936ee2675eee1f Jianqun Xu      2021-08-16  639  
-936ee2675eee1f Jianqun Xu      2021-08-16  640  	return ret;
-936ee2675eee1f Jianqun Xu      2021-08-16  641  }
-936ee2675eee1f Jianqun Xu      2021-08-16  642  
+ drivers/acpi/device_pm.c            | 19 +++++++++++++++--
+ drivers/gpio/gpio-pca953x.c         |  3 ++-
+ drivers/gpio/gpiolib-acpi.c         | 11 +++++++++-
+ drivers/gpio/gpiolib-acpi.h         |  2 ++
+ drivers/hid/i2c-hid/i2c-hid-acpi.c  |  5 -----
+ drivers/hid/i2c-hid/i2c-hid-core.c  | 33 +++++++++++------------------
+ drivers/i2c/i2c-core-acpi.c         |  8 +++++--
+ drivers/i2c/i2c-core-base.c         | 17 +++++++++------
+ drivers/i2c/i2c-core.h              |  4 ++--
+ drivers/input/mouse/elan_i2c_core.c | 14 +++++-------
+ include/linux/acpi.h                | 14 +++++++++---
+ 11 files changed, 78 insertions(+), 52 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.37.2.672.g94769d06f0-goog
+
