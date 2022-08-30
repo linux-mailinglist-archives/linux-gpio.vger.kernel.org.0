@@ -2,58 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83B7A5A70EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 00:40:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8EB45A711D
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 00:50:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbiH3Wkm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Aug 2022 18:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35956 "EHLO
+        id S229923AbiH3Wun (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Aug 2022 18:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231808AbiH3Wkm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 18:40:42 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500FB6113A;
-        Tue, 30 Aug 2022 15:40:38 -0700 (PDT)
+        with ESMTP id S230162AbiH3Wul (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 18:50:41 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F224CA3B;
+        Tue, 30 Aug 2022 15:50:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661899239; x=1693435239;
+  t=1661899839; x=1693435839;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=iai1vlWEA2pg8dROxxT4i9EYM8sBonRxpETPgAiBtNQ=;
-  b=mXxTxJAvkooot9pJKCWnERE+iiKVStpXMEzdO2Va1tHiS41yKfGhh9B4
-   tE+A/XjakmIm2CrM/FfWolV039FJ0ljxX04E5xs3PXWoFpggO7wQ0jzaB
-   RyDxEyBF0mAot47GzeJlMSVRHSJZWg5+Kkg1rAmqCbvKJkLeQs8E6xlNL
-   Qede8LNMrtJUeqwF3tHo+7mDlt89sadiiruJ9OExMZ4t4+GXBw2CeLYj3
-   m1MvsyAku17T46kCyXDx40QZnr7Up/OwKADhMZnFpze2s7Eo1cV8id0sr
-   ArUsJt83o/8/A3XIEoVylLhHOUXcooTfO+FvxAT0rOpdF/qe9BZ57rxhk
+  bh=lkEb1S9O0cY1S5Nc3U5QQ2ryw9NN9aiDiTt1Riy+deM=;
+  b=L1JpZZn6NgHdyA3yOldaHnKFfFKHkJ6+rOBzIqCtm69InLSJCczgfP80
+   ibwOtLrrx4LtSIba3PbfJvvBfWdtN0ibEFu4UF48RSKPSVpDWw129ULf3
+   Y13WS/BG1rBsYqQJBWdyC4yA1XELdirVQB23NKY5TSxhXomczpJStYgQM
+   79KaZBU4G0A18PwxzCr1W1yn3QxlEkljER2xk8v5wELvizg26Mgqqsa8m
+   N4ZVZomix9SLkooAErEuF2DW+6vMvlQDxLAFiNlvgWnNAgH+O5nLpMCM9
+   I/GqHCfEi7FcRRnBcskf28G6mW9hXZWf28pdDqG2ay6xPrAOI3023TGE3
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="359283598"
+X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="282297177"
 X-IronPort-AV: E=Sophos;i="5.93,276,1654585200"; 
-   d="scan'208";a="359283598"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 15:40:38 -0700
+   d="scan'208";a="282297177"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 15:50:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,276,1654585200"; 
-   d="scan'208";a="701170544"
+   d="scan'208";a="645024235"
 Received: from lkp-server02.sh.intel.com (HELO 77b6d4e16fc5) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Aug 2022 15:40:35 -0700
+  by orsmga001.jf.intel.com with ESMTP; 30 Aug 2022 15:50:35 -0700
 Received: from kbuild by 77b6d4e16fc5 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oT9uM-0000hO-2a;
-        Tue, 30 Aug 2022 22:40:34 +0000
-Date:   Wed, 31 Aug 2022 06:39:37 +0800
+        id 1oTA43-0000hi-0r;
+        Tue, 30 Aug 2022 22:50:35 +0000
+Date:   Wed, 31 Aug 2022 06:50:04 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Jianqun Xu <jay.xu@rock-chips.com>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Heiko Stuebner <heiko@sntech.de>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: Re: [PATCH v1 1/1] gpio: rockchip: Switch to use fwnode instead of
  of_node
-Message-ID: <202208310652.Xhve2TGB-lkp@intel.com>
+Message-ID: <202208310629.1JjkyeRu-lkp@intel.com>
 References: <20220830191939.56436-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,8 +62,8 @@ Content-Disposition: inline
 In-Reply-To: <20220830191939.56436-1-andriy.shevchenko@linux.intel.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -81,8 +82,8 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/gpio-rockchip-Switch-to-use-fwnode-instead-of-of_node/20220831-032131
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-config: arc-randconfig-r043-20220830 (https://download.01.org/0day-ci/archive/20220831/202208310652.Xhve2TGB-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 12.1.0
+config: hexagon-randconfig-r032-20220830 (https://download.01.org/0day-ci/archive/20220831/202208310629.1JjkyeRu-lkp@intel.com/config)
+compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project c7df82e4693c19e3fd2e25c83eb04d9deb7b7b59)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -92,18 +93,17 @@ reproduce (this is a W=1 build):
         git checkout 678cf6450de6a016c041c3cd2ce58d1383d070e6
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash drivers/gpio/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/gpio/
 
 If you fix the issue, kindly add following tag where applicable
 Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpiolib_register':
->> drivers/gpio/gpio-rockchip.c:614:22: error: 'pctlnp' undeclared (first use in this function)
-     614 |                 if (!pctlnp)
-         |                      ^~~~~~
-   drivers/gpio/gpio-rockchip.c:614:22: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/gpio/gpio-rockchip.c:614:8: error: use of undeclared identifier 'pctlnp'
+                   if (!pctlnp)
+                        ^
+   1 error generated.
 
 
 vim +/pctlnp +614 drivers/gpio/gpio-rockchip.c
