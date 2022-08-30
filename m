@@ -2,169 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 447A65A6001
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 11:59:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F40655A614B
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 13:06:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiH3J7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Aug 2022 05:59:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39906 "EHLO
+        id S229481AbiH3LFy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Aug 2022 07:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230009AbiH3J6l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 05:58:41 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC1A1E9241
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 02:57:21 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id b26so3859431ljk.12
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 02:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=kmj0Xve7PzhuEnAE0eUuSiLK/6HmDewHaNe2a46Ej6k=;
-        b=HCSqQVG4A1ntcdR+y9sZ9YccYIvP1a++XIv91E8zg0Xl0VhOEVmqogg6gzljVnco1W
-         JKBNQBAj1g4LxlihgxmTBlEZ1Q+ExpcpBMXP3E4qWEwRP5DvcETmexHLW1zNW1H3uTdp
-         T32xbvwKt89l+cI9Cm7JZeTFN2mEG7A35zDqLfy7BUna4TsNqK/7h4wEp+5ahQWhCroy
-         bICBIQcpTtlExRWSzlAgc9ntpH+iO9cVxAH+pvbtMiDJEID0Dc0WJ30lJDITplnA1DYl
-         XdrGKAPoF1zStH/9yIxDVj0O/t7tui51WOWgfdMBKqZcjVaXgViQuv2OcDfYmQsGCm7H
-         c7qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=kmj0Xve7PzhuEnAE0eUuSiLK/6HmDewHaNe2a46Ej6k=;
-        b=fKpACLMSDlg9O3ClA4deyr0lK1+hc1aZ3Bm3SmKky9ODTv/TqR+3uVlgxOm3cTcWk9
-         DPvvDhBz+eC9lEoGh+SF21Ij9Lm6dc7gbRsuR/G3tC9wBY8b3sGzwepH2CZ1DWGhQn7M
-         aoWBXmfyYZEkycS08IheG2aeXqBsmkzQ9LQ2BBRZIn7AwBIJSUo84zCzCZwGbpuuaeao
-         C5J5KKFlrjGzhd/VVr7F0ZGppPcD2S1HcQSXOraOPtN5wypoYtLNqQ7yoPqGvo+a8pVa
-         rnvW7UqfjpyCXGfqlgTg4MW+q6C9M993SQvkGtYpDc/GzOC1RsJsU36yvnPS/gDFdYYO
-         cMXA==
-X-Gm-Message-State: ACgBeo0iy35uDKTUljpu82uNqFbgX1gBaxRsiQPOSVYE4nrdF82MTD4i
-        K6V+GZAavq5YHn/DTQrpWzs06g==
-X-Google-Smtp-Source: AA6agR7wR03gXVIP4KGvGUJ6C9qZaYbod0zvUoe0O3SpvH36KlmnqJ695erWFGW5JyRyQ5Q7kUDC+A==
-X-Received: by 2002:a2e:1613:0:b0:267:8c60:148f with SMTP id w19-20020a2e1613000000b002678c60148fmr576335ljd.262.1661853439179;
-        Tue, 30 Aug 2022 02:57:19 -0700 (PDT)
-Received: from [192.168.28.124] (balticom-73-99-134.balticom.lv. [109.73.99.134])
-        by smtp.gmail.com with ESMTPSA id n25-20020a05651203f900b0048abf3a550asm1553056lfq.224.2022.08.30.02.57.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Aug 2022 02:57:18 -0700 (PDT)
-Message-ID: <323dc2e1-68fb-df0c-38b0-5af6d087248e@linaro.org>
-Date:   Tue, 30 Aug 2022 12:57:17 +0300
+        with ESMTP id S229551AbiH3LFx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 07:05:53 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2AA9AA3E1
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 04:05:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZmY6EM9svzkyCHcoiHoteh6GoAy9iz3Emt3I5B1ceGz/02Q2DZu4BpLKXIUcPehMHzigSlCCbv0isSa89MGpfXsNZw2vNWIcusQuWH9PvMmMjRSfsh8g/JuO4m6CsYgFBmmctowvyaAt6jXAoWYIoTvQWtygDj9IbBceW36DjzawV0uPOqPxsasSdSFOQgANgWfkbPzMcuCnI8sYjO6f4qj0lh/2V9OeCQXyxpvYfOmFCqhkOuICSolK4TKaVxllDYCfpkN+kvuK6AFCMDup2u+IuHdM3w5ixoZRrJJqSSZlgKoUqd3wGjmmyEeApWPyUUDzwPLNj4nMM0cnpJq8ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wruM3Alz15cuOCrCYPASsW4hwnhGFU35r4yeMuXV9hw=;
+ b=hTMlu7bO9o7hL5w8ABYQSHTuHg2Eldr50do7yPjev/BNHD00G1XEstIdo9w4vwzrjLsBpLZzN4udCJGAa38CVYM1RAfCvqIVRwsjCw6Hfq71RfNNn8D5nsjArPaWm39FRrVccCenXzn2i/Hcl2RhOD/nfL8MNKnnk7KdQQyI4IcEnF1MbP0+kLBBZoZv/XySAdlRV4zuHDVTw2bxFE5bb2x7CiVk7LA+RYkVEQhKh9qC9sDTL7OtGD1Ri54s2A4VLoj8WrxiTTli4iqJ8K6P0k9OBgidoOaYKXrRY49Avuzcl6smExouka6cNf/tPeMjtMUMkbcvce0OdLleby8+pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wruM3Alz15cuOCrCYPASsW4hwnhGFU35r4yeMuXV9hw=;
+ b=2MQv2ZoqJXdZFiZRDd4nMQ1MZihZPtynTIF7LhlWy8h86a6irZSwoCZepHH4e9hwUX3Vl41ZUq781DTYSoggbP6RsX2GXEbNQiUBxDIh1v731XorPEIRWGyMvdcSNTjE2egjkvMT0fljW6B9CAlYQGAll2RdP1/UxQySFYrN/Pg=
+Received: from BN8PR12CA0032.namprd12.prod.outlook.com (2603:10b6:408:60::45)
+ by DM6PR12MB4265.namprd12.prod.outlook.com (2603:10b6:5:211::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Tue, 30 Aug
+ 2022 11:05:48 +0000
+Received: from BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:60:cafe::3b) by BN8PR12CA0032.outlook.office365.com
+ (2603:10b6:408:60::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15 via Frontend
+ Transport; Tue, 30 Aug 2022 11:05:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT050.mail.protection.outlook.com (10.13.177.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5566.15 via Frontend Transport; Tue, 30 Aug 2022 11:05:48 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 30 Aug
+ 2022 06:05:44 -0500
+From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+To:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <Shyam-sundar.S-k@amd.com>
+CC:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: [PATCH] pinctrl: amd: change dev_warn to dev_dbg for additional feature support
+Date:   Tue, 30 Aug 2022 16:35:25 +0530
+Message-ID: <20220830110525.1933198-1-Basavaraj.Natikar@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH 4/4] arm64: dts: ti: Add support for AM62A7-SK
-Content-Language: en-US
-To:     Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bryan Brattlof <bb@ti.com>
-References: <20220829082200.241653-1-vigneshr@ti.com>
- <20220829082200.241653-5-vigneshr@ti.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220829082200.241653-5-vigneshr@ti.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f7198018-01f3-4df8-c7c9-08da8a77980f
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4265:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: X1fwT6lZFUgNN9YqA6dajgW4HlaoTOIM/LLxuw/BWW7/jy4Y4UO8LP1rIW5jCJur4wnCxmdcU4e+wg2RSsGYk4GGwVAP7jwwtqhY2krZKgvlRc+rT6rM23rHDAZfN04xf72Z5dmrU2BgwwpF+3E8UF/uuGW/iF/dFLehere5modDW4p/ESY0NPq6OuoVvWjIrrcCfzIhhPkm/q0zHbrwcQJhiZQksKNkF9GaexpRcwj5GEfoUOyLcMnfRor8p1KMKhLbc4fbCoGlgOklioFANyYrw7lholAW+aAk3YPxmMcuaD+SHmN0dXYVptVABT/BTO9L/zW+iWKOKJ0ivaIAHOojbqNLO878scwlDsHnMQV7shOkOgdQZ41ezIEesC4braI6yBIuVVghWGpyafJjzklsJBAyrv/wUJhKnyTTyAtZ7F2VgUTZEPbTA+60/5O0AJKt5XFP5sDbcIEIItCeNu7ZGoN1n3YczGXbelqf2xdhRsl6joSjHreu4OqKVXshIn+HHq87rsDT9JAfn/7TjRvWaCvl0wnwTlpzlIPp1wROH5uwftf4J8RWNuRg+X3Ko5j96gWemhYzRLbgxJYYFPcanUM6oJbkShmKiHEzXdVg0ZlWEL9Kqb8dBSJUM5PoxHrD1cbOiYxrTDvHNNWqesnWZ7pdWSRhHQUU5OVr3PHzi/7NEz/33jPqJ2nyLdAdHguflviu3yMlhjXhzsYQbouiwNLFrAeljz1ZI5x0G8Rj9ViJs8UFh44FXE3tHnVEjsQZnhh0ucMFnpH7t4C7FzdgvfcrkQ9Oh4xuEOUuh7i1QAjBeECLZuHkoiENPJN06gCgwUoT0XAC+D2g6odpHw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(376002)(136003)(396003)(46966006)(36840700001)(40470700004)(40460700003)(36860700001)(81166007)(82740400003)(36756003)(4744005)(8936002)(83380400001)(5660300002)(356005)(16526019)(2616005)(426003)(47076005)(4326008)(8676002)(478600001)(336012)(70206006)(70586007)(40480700001)(186003)(1076003)(82310400005)(6636002)(86362001)(2906002)(316002)(6666004)(7696005)(110136005)(26005)(41300700001)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2022 11:05:48.2633
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7198018-01f3-4df8-c7c9-08da8a77980f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4265
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/08/2022 11:22, Vignesh Raghavendra wrote:
-> AM62A StarterKit (SK) board is a low cost, small form factor board
-> designed for TI’s AM62A7 SoC. It supports the following interfaces:
-> * 2 GB LPDDR4 RAM
-> * x1 Gigabit Ethernet interface
-> * x1 HDMI Port with audio
-> * x1 Headphone Jack
-> * x1 USB2.0 Hub with two Type A host and x1 USB Type-C DRP Port
-> * x1 UHS-1 capable µSD card slot
-> * M.2 SDIO Wifi + UART slot
-> * 1Gb OSPI NAND flash
-> * x4 UART through UART-USB bridge
-> * XDS110 for onboard JTAG debug using USB
-> * Temperature sensors, user push buttons and LEDs
-> * 40-pin User Expansion Connector
-> * 24-pin header for peripherals in MCU island (I2C, UART, SPI, IO)
-> * 20-pin header for Programmable Realtime Unit (PRU) IO pins
-> * 40-pin CSI header
-> 
-> Add basic support for AM62A7-SK.
-> 
-> Schematics: https://www.ti.com/lit/zip/sprr459
-> 
-> Co-developed-by: Bryan Brattlof <bb@ti.com>
-> Signed-off-by: Bryan Brattlof <bb@ti.com>
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/Makefile         |   2 +
->  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 224 ++++++++++++++++++++++++
->  2 files changed, 226 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> 
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> index 02e5d80344d0..4555a5be2257 100644
-> --- a/arch/arm64/boot/dts/ti/Makefile
-> +++ b/arch/arm64/boot/dts/ti/Makefile
-> @@ -23,3 +23,5 @@ dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
->  dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
->  
->  dtb-$(CONFIG_ARCH_K3) += k3-am625-sk.dtb
-> +
-> +dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk.dtb
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> new file mode 100644
-> index 000000000000..994ed6865551
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> @@ -0,0 +1,224 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AM62A SK: https://www.ti.com/lit/zip/sprr459
-> + *
-> + * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/leds/common.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "k3-am62a7.dtsi"
-> +
-> +/ {
-> +	compatible =  "ti,am62a7-sk", "ti,am62a7";
-> +	model = "Texas Instruments AM62A7 SK";
-> +
-> +	aliases {
-> +		serial2 = &main_uart0;
-> +		mmc1 = &sdhci1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial2:115200n8";
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		/* 2G RAM */
-> +		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
-> +
+Use dev_dbg instead of dev_warn for additional support of pinmux
+feature.
 
-No need for blank line.
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+---
+ drivers/pinctrl/pinctrl-amd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-With that:
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 4691a33bc374..2a4b3efb7e12 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -1051,13 +1051,13 @@ static void amd_get_iomux_res(struct amd_gpio *gpio_dev)
+ 
+ 	index = device_property_match_string(dev, "pinctrl-resource-names",  "iomux");
+ 	if (index < 0) {
+-		dev_warn(dev, "failed to get iomux index\n");
++		dev_dbg(dev, "iomux not supported\n");
+ 		goto out_no_pinmux;
+ 	}
+ 
+ 	gpio_dev->iomux_base = devm_platform_ioremap_resource(gpio_dev->pdev, index);
+ 	if (IS_ERR(gpio_dev->iomux_base)) {
+-		dev_warn(dev, "Failed to get iomux %d io resource\n", index);
++		dev_dbg(dev, "iomux not supported %d io resource\n", index);
+ 		goto out_no_pinmux;
+ 	}
+ 
+-- 
+2.25.1
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
