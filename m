@@ -2,59 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8191E5A6CFF
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 21:19:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3702A5A6D7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 21:39:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbiH3TTj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Aug 2022 15:19:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
+        id S229629AbiH3Tj3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Aug 2022 15:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231370AbiH3TTc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 15:19:32 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E613786F2;
-        Tue, 30 Aug 2022 12:19:29 -0700 (PDT)
+        with ESMTP id S229565AbiH3Tj3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 15:39:29 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C54ED61DAC;
+        Tue, 30 Aug 2022 12:39:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661887169; x=1693423169;
+  t=1661888366; x=1693424366;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=uJOZWhccZ3us4fdCO9fKE4vmJtXRD4HlA06beGQNfHw=;
-  b=lb9nNXEax2LUVXAkkSfwUPVVLpM6HTCztnfvYy/b+zmTgcTX4sH/HuPj
-   oVFj1jctUUAUVa7hfP76OI8UWHnnIDm4YwXI9FFLQkjT10vpgVacIDXMH
-   BHT5Zm/x8XwGQrdbqmXIH0Uj7ukPQKJbFucyUTXZfsDKoFSg1082u5W5x
-   w4nbK6Bn4ZKXMV4v5hMTu2jh1ABOpaF7o58MmIQ7EqkV60nnoQtT2Zd5K
-   q6n/Obklyif9sXVx6wAETiNvTfZYj4PwufNaMuIhtGxJhZg8F8B/cs/jw
-   rZFLHrYuryoENQrbGFC2HrTQexSXWAx6RAVBrLx1ljO5RyFUdJgcXrI71
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="381577716"
+  bh=JKvvMq/mLlqICcCxCVbYCTexXCDs4IZR8YhKSAv4ZN4=;
+  b=aS0b9yS786bNNuhA5NBr42xWF0Tl7o6NFLARIipeSeLPq0BzHobHJBnc
+   vHOU5cVnRoqJqUD/Zk6alFchcSfB8mgRsUqj9t7cGn05MbBd2JUiiB7ay
+   8vjxV5YQWOHIeCMeO1QYUAiycwNmfSMUkIhvAdMNTz1YPxmLo2Bih9IKo
+   WkmfH+dFMb8GiGt2A6QBxbUgt+dlzkg8AZgYwvYHupxbK13qEkITNA4Dw
+   ERfS8MokNrZ8PqHmEIH3f0Psn9GvmcbybkYAutqsxLJwspLmkdJ/IcU/4
+   ta857IQXdlkKqUTz23R8AFPD2t4tM2D7f0ZDvdHuQrd7n3+lf7rqtD9tp
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="275033141"
 X-IronPort-AV: E=Sophos;i="5.93,275,1654585200"; 
-   d="scan'208";a="381577716"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 12:19:29 -0700
+   d="scan'208";a="275033141"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 12:39:26 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,275,1654585200"; 
-   d="scan'208";a="588745431"
+   d="scan'208";a="611842263"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 30 Aug 2022 12:19:26 -0700
+  by orsmga002.jf.intel.com with ESMTP; 30 Aug 2022 12:39:24 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6E6D0AD; Tue, 30 Aug 2022 22:19:41 +0300 (EEST)
+        id 7172BAD; Tue, 30 Aug 2022 22:39:39 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpio: rockchip: Switch to use fwnode instead of of_node
-Date:   Tue, 30 Aug 2022 22:19:39 +0300
-Message-Id: <20220830191939.56436-1-andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: pistachio: Switch to use fwnode instead of of_node
+Date:   Tue, 30 Aug 2022 22:39:38 +0300
+Message-Id: <20220830193938.56826-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -68,162 +64,85 @@ switch the driver to use it.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpio-rockchip.c       | 32 ++++++++++++++++--------------
- drivers/pinctrl/pinctrl-rockchip.h |  6 ++++--
- 2 files changed, 21 insertions(+), 17 deletions(-)
+ drivers/pinctrl/pinctrl-pistachio.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index bb50335239ac..6e847f326ff4 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -20,6 +20,7 @@
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index 5de691c630b4..02ef85e6261c 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -10,13 +10,13 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+-#include <linux/of.h>
+-#include <linux/of_irq.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/pinctrl/pinconf.h>
  #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/platform_device.h>
 +#include <linux/property.h>
- #include <linux/regmap.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
  
- #include "../pinctrl/core.h"
-@@ -518,7 +519,7 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
- 	struct irq_chip_generic *gc;
- 	int ret;
+@@ -1347,46 +1347,45 @@ static struct pistachio_gpio_bank pistachio_gpio_banks[] = {
  
--	bank->domain = irq_domain_add_linear(bank->of_node, 32,
-+	bank->domain = irq_domain_create_linear(bank->fwnode, 32,
- 					&irq_generic_chip_ops, NULL);
- 	if (!bank->domain) {
- 		dev_warn(bank->dev, "could not init irq domain for bank %s\n",
-@@ -606,14 +607,14 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
- 	 * files which don't set the "gpio-ranges" property or systems that
- 	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
- 	 */
--	if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
--		struct device_node *pctlnp = of_get_parent(bank->of_node);
-+	if (!fwnode_property_read_bool(bank->fwnode, "gpio-ranges")) {
-+		struct fwnode_handle *parent = fwnode_get_parent(bank->fwnode);
- 		struct pinctrl_dev *pctldev = NULL;
- 
- 		if (!pctlnp)
- 			return -ENODATA;
- 
--		pctldev = of_pinctrl_get(pctlnp);
-+		pctldev = of_pinctrl_get(to_of_node(parent));
- 		if (!pctldev)
- 			return -ENODEV;
- 
-@@ -641,10 +642,11 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
- 
- static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
+ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
  {
-+	struct device_node *node = to_of_node(bank->fwnode);
- 	struct resource res;
- 	int id = 0;
+-	struct device_node *node = pctl->dev->of_node;
+ 	struct pistachio_gpio_bank *bank;
+ 	unsigned int i;
+ 	int irq, ret = 0;
  
--	if (of_address_to_resource(bank->of_node, 0, &res)) {
-+	if (of_address_to_resource(node, 0, &res)) {
- 		dev_err(bank->dev, "cannot find IO resource for bank\n");
- 		return -ENOENT;
- 	}
-@@ -653,11 +655,11 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
- 	if (IS_ERR(bank->reg_base))
- 		return PTR_ERR(bank->reg_base);
+ 	for (i = 0; i < pctl->nbanks; i++) {
+ 		char child_name[sizeof("gpioXX")];
+-		struct device_node *child;
++		struct fwnode_handle *child;
+ 		struct gpio_irq_chip *girq;
  
--	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
-+	bank->irq = irq_of_parse_and_map(node, 0);
- 	if (!bank->irq)
- 		return -EINVAL;
+ 		snprintf(child_name, sizeof(child_name), "gpio%d", i);
+-		child = of_get_child_by_name(node, child_name);
++		child = device_get_named_child_node(dev, child_name);
+ 		if (!child) {
+ 			dev_err(pctl->dev, "No node for bank %u\n", i);
+ 			ret = -ENODEV;
+ 			goto err;
+ 		}
  
--	bank->clk = of_clk_get(bank->of_node, 0);
-+	bank->clk = of_clk_get(node, 0);
- 	if (IS_ERR(bank->clk))
- 		return PTR_ERR(bank->clk);
+-		if (!of_find_property(child, "gpio-controller", NULL)) {
++		if (!fwnode_property_present(child, "gpio-controller")) {
++			fwnode_handle_put(child);
+ 			dev_err(pctl->dev,
+ 				"No gpio-controller property for bank %u\n", i);
+-			of_node_put(child);
+ 			ret = -ENODEV;
+ 			goto err;
+ 		}
  
-@@ -668,7 +670,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
- 	if (id == GPIO_TYPE_V2 || id == GPIO_TYPE_V2_1) {
- 		bank->gpio_regs = &gpio_regs_v2;
- 		bank->gpio_type = GPIO_TYPE_V2;
--		bank->db_clk = of_clk_get(bank->of_node, 1);
-+		bank->db_clk = of_clk_get(node, 1);
- 		if (IS_ERR(bank->db_clk)) {
- 			dev_err(bank->dev, "cannot find debounce clk\n");
- 			clk_disable_unprepare(bank->clk);
-@@ -704,22 +706,22 @@ rockchip_gpio_find_bank(struct pinctrl_dev *pctldev, int id)
- static int rockchip_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node;
--	struct device_node *pctlnp = of_get_parent(np);
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
-+	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
- 	struct pinctrl_dev *pctldev = NULL;
- 	struct rockchip_pin_bank *bank = NULL;
- 	struct rockchip_pin_deferred *cfg;
- 	static int gpio;
- 	int id, ret;
+-		irq = irq_of_parse_and_map(child, 0);
+-		if (!irq) {
++		ret = fwnode_irq_get(child, 0);
++		if (ret < 0) {
++			fwnode_handle_put(child);
+ 			dev_err(pctl->dev, "No IRQ for bank %u\n", i);
+-			of_node_put(child);
+-			ret = -EINVAL;
+ 			goto err;
+ 		}
++		irq = ret;
  
--	if (!np || !pctlnp)
-+	if (!parent)
- 		return -ENODEV;
+ 		bank = &pctl->gpio_banks[i];
+ 		bank->pctl = pctl;
+ 		bank->base = pctl->base + GPIO_BANK_BASE(i);
  
--	pctldev = of_pinctrl_get(pctlnp);
-+	pctldev = of_pinctrl_get(to_of_node(parent));
- 	if (!pctldev)
- 		return -EPROBE_DEFER;
+ 		bank->gpio_chip.parent = pctl->dev;
+-		bank->gpio_chip.of_node = child;
++		bank->gpio_chip.fwnode = child;
  
--	id = of_alias_get_id(np, "gpio");
-+	id = of_alias_get_id(to_of_node(fwnode), "gpio");
- 	if (id < 0)
- 		id = gpio++;
- 
-@@ -728,7 +730,7 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 
- 	bank->dev = dev;
--	bank->of_node = np;
-+	bank->fwnode = fwnode;
- 
- 	raw_spin_lock_init(&bank->slock);
- 
-@@ -776,7 +778,7 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
- 	mutex_unlock(&bank->deferred_lock);
- 
- 	platform_set_drvdata(pdev, bank);
--	dev_info(dev, "probed %pOF\n", np);
-+	dev_info(dev, "probed %pfw\n", fwnode);
- 
- 	return 0;
- }
-diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
-index 4759f336941e..411ed6a09842 100644
---- a/drivers/pinctrl/pinctrl-rockchip.h
-+++ b/drivers/pinctrl/pinctrl-rockchip.h
-@@ -18,6 +18,8 @@
- #ifndef _PINCTRL_ROCKCHIP_H
- #define _PINCTRL_ROCKCHIP_H
- 
-+struct fwnode_handle;
-+
- #define RK_GPIO0_A0	0
- #define RK_GPIO0_A1	1
- #define RK_GPIO0_A2	2
-@@ -299,7 +301,7 @@ struct rockchip_drv {
-  * @drv: array describing the 4 drive strength sources of the bank
-  * @pull_type: array describing the 4 pull type sources of the bank
-  * @valid: is all necessary information present
-- * @of_node: dt node of this bank
-+ * @fwnode: firmware node of this bank
-  * @drvdata: common pinctrl basedata
-  * @domain: irqdomain of the gpio bank
-  * @gpio_chip: gpiolib chip
-@@ -327,7 +329,7 @@ struct rockchip_pin_bank {
- 	struct rockchip_drv		drv[4];
- 	enum rockchip_pin_pull_type	pull_type[4];
- 	bool				valid;
--	struct device_node		*of_node;
-+	struct fwnode_handle		*fwnode;
- 	struct rockchip_pinctrl		*drvdata;
- 	struct irq_domain		*domain;
- 	struct gpio_chip		gpio_chip;
+ 		girq = &bank->gpio_chip.irq;
+ 		girq->chip = &bank->irq_chip;
 -- 
 2.35.1
 
