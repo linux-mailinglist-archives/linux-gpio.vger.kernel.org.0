@@ -2,66 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75ED35A5F48
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 11:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 375545A5FD8
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Aug 2022 11:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbiH3JXw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Aug 2022 05:23:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51610 "EHLO
+        id S229611AbiH3Jw5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Aug 2022 05:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231816AbiH3JXP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 05:23:15 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9032811A0A
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 02:22:44 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id c2so10535535plo.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 02:22:44 -0700 (PDT)
+        with ESMTP id S229523AbiH3Jw4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Aug 2022 05:52:56 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891ECBFC48
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 02:52:55 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id y10so7617411ljq.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Aug 2022 02:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=+U60seGTOydiyz6oR/jREabSqhPquiKvw8g0tMTrRtQ=;
-        b=zIxXa2VH8ANmX3KY1/XhZRyRzuHTetN5tp0wgh8FcMfB9/B5snNt+j861IJKnJbBEA
-         eCFdx+aljfu0y4Y4yNucOfsPFYbSpn69PqjFuNsqYjOFY7CP1aRH8mLhPwdeC8ygX0LY
-         YsZqlIWu4ScClRyQ+TssKCAejiJGqiMh1x+o3zx/2X02cLisN3jP5UBk3BzfPw/1JiZr
-         LQOSQsVkc7dHSFHOBMfK/i4CoRTJuVyAUrumx/P9WrwDfNx33nPpDKNqYAzV5j6vtsI4
-         FpIFQ0o0YGrRvHJ3TIgwnBpBOjEH2b58hPMVHCbc21rXft153Xh0VDiisPr4Ssn3RVWb
-         pEMw==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=X4ivbhRWgyxT7Llsm52Y29ov7cWVmlpwCa1zS7A+iTI=;
+        b=BrUHgkIAA7hxrxeShkvcVe7ewUG8TegLxze05ZQy3NiTQchhEioyqbpdqvq0SS9bms
+         jpuhGh57J4IZFFXC1hTkrC4Lh1KbUXB2kl2n/5EsGznZrkv4vLGe9lrr+LgZA3M3CsFV
+         Lz7stAVUvk92hP4gKo9qNZjJ4NHmY7wY3U+mQeaR8QDoBlCn4qZIs2wVycl61eg3HZza
+         /o33ugK9TrsTlMXu9TOFEjFB1JqvleLD5CGkfX7/k2dYTx9NUPQM3b90lW3sOYaJgMzU
+         uhKpon6risOpRbEC9KewJ98+e3LNVIIntRmNo5WuL3CNPK0K2AOL5T1Cm4gVUbP/F+BT
+         FnNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=+U60seGTOydiyz6oR/jREabSqhPquiKvw8g0tMTrRtQ=;
-        b=NOov8N7/2YlAxzoF0fbrR/LU5q8gJLJJ+k642crFjYUe55pqzAYtmh5zCOGU/m0Fg3
-         gLNjXpUniIm+AI+60D1htw/jowjmucuHxAEdAze19yuu/pAnaaeEeHJE49Ar+kyF3nZU
-         J9oMWfwXGCBQXaaX8JtjhiWmzPri15nQKwOl+8YhYUMT/RHakZgHh1gSCbCP7akPmOh8
-         39N6hsIiHgwxZ1D1oApgw632m2MxtBkjCQX4EDOG0AxMzvIDifSj9IOLubgEkS1FRVHa
-         pFGy5V3pEBcvqH9HxhQDFog/LYYeomOz7i03o+defsTF9nZXgB3zAi3hUJUR7pAYREj0
-         yKtg==
-X-Gm-Message-State: ACgBeo1p80qEr0d29RebjfMwgjojBe+ornoLvgP2P2C0AR+AxZSp9PC3
-        yC62+uxldpxiCSLoOxXKfcR0
-X-Google-Smtp-Source: AA6agR5DWSeVAOgb/ctNGxABzCisuwfrKRzfZSHb7Bh07cx8KRIQ+4N8eJrXcWPL1CD/wBhawBtejA==
-X-Received: by 2002:a17:903:41c6:b0:174:3acf:8294 with SMTP id u6-20020a17090341c600b001743acf8294mr19851863ple.118.1661851364086;
-        Tue, 30 Aug 2022 02:22:44 -0700 (PDT)
-Received: from localhost.localdomain ([117.193.209.245])
-        by smtp.gmail.com with ESMTPSA id f17-20020a170902ab9100b0016dc78d0153sm9094488plr.296.2022.08.30.02.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Aug 2022 02:22:43 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     linus.walleij@linaro.org, bjorn.andersson@linaro.org
-Cc:     robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, johan+linaro@kernel.org, steev@kali.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3] pinctrl: qcom: spmi-gpio: Make irqchip immutable
-Date:   Tue, 30 Aug 2022 14:52:32 +0530
-Message-Id: <20220830092232.168561-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=X4ivbhRWgyxT7Llsm52Y29ov7cWVmlpwCa1zS7A+iTI=;
+        b=f3itdtSu3Y4dWoF8/NszvAmJ19Ltb64u91/sXqEtJYoOImWeBQg6NQyC7LcWuQZDx7
+         +7JX35Bsv+A6ildU8Yr9bQWP087oTVnS7vZ0x54aCTsNfA5ucv/jBzVVckD7s9s1mQtz
+         MWMeskE9TlALGMp0l5LIJZU85SA3gdJ1gNqDAeZiq0BhznH4GEzNZGLUM14cmVvtra4l
+         YXdbOIIRyZ95HExaJrqw9lRzNcJZ/OhA05MVpCsqnLe53ikovQIdPQi8X4efrMdN5DJg
+         lhQeKCx5An5hdOTIy+1KbBz5rwdyATi75SCdVeTpNR+bq8XROXF7ZIse6CMP05XOu+K0
+         iRvw==
+X-Gm-Message-State: ACgBeo3+xRJqCG20d5gCaEeWUvpWIYYYY+fKIn9RKov0WBfSF1YED/4/
+        wnc5H/rQYcavVWFTa7cX7vLTYA==
+X-Google-Smtp-Source: AA6agR6bxNa/mrr4BFpFfg6fe90+ux9IdJyCtMlNr9+Sq8EPuTBGmx2+ozMF88ZqYDXhKJyE1Xoh7g==
+X-Received: by 2002:a2e:8508:0:b0:265:a8f8:4f7b with SMTP id j8-20020a2e8508000000b00265a8f84f7bmr2325043lji.157.1661853173971;
+        Tue, 30 Aug 2022 02:52:53 -0700 (PDT)
+Received: from [192.168.28.124] (balticom-73-99-134.balticom.lv. [109.73.99.134])
+        by smtp.gmail.com with ESMTPSA id z22-20020a2e8e96000000b00261cf066d1csm809518ljk.130.2022.08.30.02.52.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Aug 2022 02:52:53 -0700 (PDT)
+Message-ID: <d7303503-70ef-7307-8cc0-1bc334c9e6af@linaro.org>
+Date:   Tue, 30 Aug 2022 12:52:52 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH 1/4] dt-bindings: arm: ti: Add bindings for AM62A7 SoC
+Content-Language: en-US
+To:     Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bryan Brattlof <bb@ti.com>
+References: <20220829082200.241653-1-vigneshr@ti.com>
+ <20220829082200.241653-2-vigneshr@ti.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220829082200.241653-2-vigneshr@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,95 +80,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The irqchip implementation used inside the gpiochips are not supposed to
-be changed during runtime. So let's make the one inside the spmi-gpio
-gpiochip immutable.
+On 29/08/2022 11:21, Vignesh Raghavendra wrote:
+> This adds bindings for TI's AM62A7 family of devices.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+> index 61c6ab4f52e2..28f6ea4c007e 100644
+> --- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
+> +++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+> @@ -65,6 +65,12 @@ properties:
+>                - ti,j721s2-evm
+>            - const: ti,j721s2
+>  
+> +      - description: K3 AM62A7 SoC
+> +        items:
+> +          - enum:
+> +              - ti,am62a7-sk
+> +          - const: ti,am62a7
 
-This fixes the below warning during boot:
-gpio gpiochip0: (c440000.spmi:pmic@0:gpio@c000): not an immutable chip, please consider fixing it!
+Is it possible to have some order in the file?
 
-Acked-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
-
-Changes in v3:
-
-* Added Ack from Marc
-* Removed the text that was mimicking the documentation
-
-Changes in v2:
-
-* Added new callbacks for irq_{mask/unmask} for masking/unmasking the parent
-  IRQ that was missing in v1. (Thanks to Marc)
-* Modified the commit message accordingly.
-
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 38 +++++++++++++++++-------
- 1 file changed, 28 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index ccaf40a9c0e6..d40e3b2d38cc 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -171,7 +171,6 @@ struct pmic_gpio_state {
- 	struct regmap	*map;
- 	struct pinctrl_dev *ctrl;
- 	struct gpio_chip chip;
--	struct irq_chip irq;
- 	u8 usid;
- 	u8 pid_base;
- };
-@@ -985,6 +984,33 @@ static int pmic_gpio_populate_parent_fwspec(struct gpio_chip *chip,
- 	return 0;
- }
- 
-+static void pmic_gpio_irq_mask(struct irq_data *data)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+
-+	irq_chip_mask_parent(data);
-+	gpiochip_disable_irq(gc, data->hwirq);
-+}
-+
-+static void pmic_gpio_irq_unmask(struct irq_data *data)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+
-+	irq_chip_unmask_parent(data);
-+	gpiochip_enable_irq(gc, data->hwirq);
-+}
-+
-+static const struct irq_chip spmi_gpio_irq_chip = {
-+	.name		= "spmi-gpio",
-+	.irq_ack	= irq_chip_ack_parent,
-+	.irq_mask	= pmic_gpio_irq_mask,
-+	.irq_unmask	= pmic_gpio_irq_unmask,
-+	.irq_set_type	= irq_chip_set_type_parent,
-+	.irq_set_wake	= irq_chip_set_wake_parent,
-+	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_MASK_ON_SUSPEND,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static int pmic_gpio_probe(struct platform_device *pdev)
- {
- 	struct irq_domain *parent_domain;
-@@ -1078,16 +1104,8 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 	if (!parent_domain)
- 		return -ENXIO;
- 
--	state->irq.name = "spmi-gpio",
--	state->irq.irq_ack = irq_chip_ack_parent,
--	state->irq.irq_mask = irq_chip_mask_parent,
--	state->irq.irq_unmask = irq_chip_unmask_parent,
--	state->irq.irq_set_type = irq_chip_set_type_parent,
--	state->irq.irq_set_wake = irq_chip_set_wake_parent,
--	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
--
- 	girq = &state->chip.irq;
--	girq->chip = &state->irq;
-+	gpio_irq_chip_set_chip(girq, &spmi_gpio_irq_chip);
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
- 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
--- 
-2.25.1
-
+Best regards,
+Krzysztof
