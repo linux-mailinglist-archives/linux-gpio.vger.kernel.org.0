@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B41D65A87C5
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 22:56:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D63A35A87D8
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 23:02:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbiHaU41 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 16:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
+        id S231874AbiHaVC4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 17:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229996AbiHaU41 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 16:56:27 -0400
-Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA5DD2E86;
-        Wed, 31 Aug 2022 13:56:26 -0700 (PDT)
-Received: by mail-qv1-xf2f.google.com with SMTP id f9so8367026qvw.11;
-        Wed, 31 Aug 2022 13:56:26 -0700 (PDT)
+        with ESMTP id S231863AbiHaVCz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 17:02:55 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E001EA309;
+        Wed, 31 Aug 2022 14:02:55 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id a15so11830877qko.4;
+        Wed, 31 Aug 2022 14:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=j8UxbtDew574grRc59F86ZudDhnKYJ7sEvH/yI7OmEs=;
-        b=pLlZHUsafseS+eCvZzo2JMww4kXTSN5Q009GbouFmh6rphSQFQvi1GE/RwHfiTJKMd
-         9migLuUKejEVPejkRaYRfP7/BIf5BciS+SYPx0hw2ASIXdnkmETO1wOs6NEhfl9bLOuB
-         CtPa7JYith5/ZdRSaQvBadQYpYozjdj30GtuP9HRhzxeOodxfE83lEYOPIZlhbySw81C
-         VW3tujh7TS6fEfmWuSENg9LnaCvMgwotDGbZ2iCUXXhPWsDXE4taQvChbTf6e9jmeunl
-         CODvVln7wyQeAhYIKqsBZkpYHMGw5v/LftrW3ugq9j6T8npLQqqiDIKD1GBLhdqttybf
-         tHdA==
+        bh=6xlRlzGJaVR2uzullj0MIDzmAYPuB68YjTQcaZFNI8g=;
+        b=lbaU/geU/NRB9KRdtjqIdxJ8HmOiSVcT5hPwQvCxbstjnnaab4inNB0ZkXx8WBZtsq
+         HXzoklo6Z/1ZRC3VuyXorjDZ7FHbhWS3DszT23X6t2sR6fyCW7Uk9KcIMWjWxAJYsQqV
+         gT4pWaeDolhkDVsiwXRvVexP+zvf76/17vh9jFFKJC8qDy73bOFxHDLWQOJlx9YhlUSQ
+         /tr8rDXdBQ1K3N6dy4uisYMhoSRJEjdzlOTADsuhIXlQi3sdQsw0KRx50FYD36JX0rTc
+         Yg+69eiRxhkwS+AfwWJIrYXbrgS9YFybSk7HcWYdQ8CjA3RM/+uLi8Jkad9YCQS1ZvqV
+         aNjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=j8UxbtDew574grRc59F86ZudDhnKYJ7sEvH/yI7OmEs=;
-        b=J/s9NmfiPYexWNaRGdMB6wvegF9yIrt47YwlxTHlPsAqwCmingqq68X5L5ut1Wl7vg
-         RjKknk86dMn+xtgsrjHuKrmvqoUBpR9sj8lKjPI55pdWV4WYsbjPqHvjORDAddB8ubwG
-         RbgzKe2kCASW9MpshwRPfSDAuzPOowCJcQFDwufXpY73/KaFuByhDPuf8F3YR5bHWLOV
-         /9ZGSmK5lCVnCxuB5+tHESXgXWKI7fgTYCJ6AB46O2tMo2R6akejFDbMKLcXTiPp0k6q
-         EOOJQFkmgr8YwmmMUyk6w6ZQUU4XiAkIa7NVsCnDMoDzLDklef5RAHY3PLSVxYhEm3wz
-         KeJA==
-X-Gm-Message-State: ACgBeo2qZxxzyg36f0jw0TGapbxWxh7JF5E8K3pXguyUED4LSJeYv0pL
-        C/W8VY9P9LZMfJGBG8qVcb/I+aWrRcN/X9E9pMW/Ffa+J7k=
-X-Google-Smtp-Source: AA6agR5Rx6JL/d53spayx5rkbH9OCbX4qUggQsXoOMq2Dsh8M4BdCXMWYm+Rx90QyjJ89vPJycmpDbRH1YmFQb8xBuo=
-X-Received: by 2002:a05:6214:27ca:b0:499:95f:6379 with SMTP id
- ge10-20020a05621427ca00b00499095f6379mr12263042qvb.82.1661979385373; Wed, 31
- Aug 2022 13:56:25 -0700 (PDT)
+        bh=6xlRlzGJaVR2uzullj0MIDzmAYPuB68YjTQcaZFNI8g=;
+        b=dGmPHUcjYew5NDI9vWG3ZD4smw2uVoK6yyXJejaz5m+x3cIG6NKjnTA4SGmErP5kkH
+         9DiFMzFmk39o9W7Cen+4o2EPl03LHdH17mTVAh80rxQKZf9nJeCaX3otkwjAit9fjrpg
+         dAYMHMhnLcqnZMFjUevRiCcq+q50sgDJakdFmiJ+RBUYwHAGVBPRltMrOfkcW+4DiD0I
+         tpYx8lRQH4Lu9yD/virmvqSvJ8V2V+sNMkk0mM4a6CzOnVwiQP8Q8kFGSgg84Q0EnlhU
+         niuI564hTRdub1pqSm8zUSPbLHgqTHkpUrRrRwEAnCjeDNLmQVDNSi455E/XFvR0556J
+         +Cmg==
+X-Gm-Message-State: ACgBeo0aBeAHHypqFIwUJu/9C0u/GlspiUQ/EHbVQwFhRfhlUj9rvmXk
+        kcgQ8IRlfKqzZBcvIa40Khuy1fE0gs8fww9MV2k=
+X-Google-Smtp-Source: AA6agR48wNqQfz2J4gpLSBsgA5I6SjIy5C7Yw8njxQJfNsfYsmiIEotjBn6HUedNHJOt4T00J8rlLV86PaeYl2utDfU=
+X-Received: by 2002:ae9:e311:0:b0:6ba:e711:fb27 with SMTP id
+ v17-20020ae9e311000000b006bae711fb27mr17219247qkf.320.1661979774149; Wed, 31
+ Aug 2022 14:02:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220829133923.1114555-1-martyn.welch@collabora.com> <20220829133923.1114555-4-martyn.welch@collabora.com>
-In-Reply-To: <20220829133923.1114555-4-martyn.welch@collabora.com>
+References: <20220829133923.1114555-1-martyn.welch@collabora.com> <20220829133923.1114555-5-martyn.welch@collabora.com>
+In-Reply-To: <20220829133923.1114555-5-martyn.welch@collabora.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 31 Aug 2022 23:55:49 +0300
-Message-ID: <CAHp75VcXR9=5WwZqe=juLBDT1CZnYfWHCGDb4Tp211sL2AA_Gw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] gpio: pca953x: Swap if statements to save later complexity
+Date:   Thu, 1 Sep 2022 00:02:18 +0300
+Message-ID: <CAHp75VfZmmDGJJ5wxM8-pbqo+npOSZrPtyJnQhuGadLUYod=3A@mail.gmail.com>
+Subject: Re: [PATCH 5/5] gpio: pca953x: Add support for PCAL6534 and compatible
 To:     Martyn Welch <martyn.welch@collabora.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -68,98 +68,147 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 29, 2022 at 4:43 PM Martyn Welch <martyn.welch@collabora.com> wrote:
+On Mon, Aug 29, 2022 at 4:52 PM Martyn Welch <martyn.welch@collabora.com> wrote:
 >
-> A later patch in the series adds support for a further chip type that
-> shares some similarity with the PCA953X_TYPE. In order to keep the logic
-> simple,
+> Add support for the NXP PCAL6534 and Diodes Inc. PI4IOE5V6534Q. These
+> devices, which have identical register layouts and features, are broadly a
+> 34-bit version of the PCAL6524.
+>
+> However, whilst the registers are broadly what you'd expect for a 34-bit
+> version of the PCAL6524, the spacing of the registers has been
+> compacted. This has the unfortunate effect of breaking the bit shift
+> based mechanism that is employed to work out register locations used by
+> the other chips supported by this driver, resulting in special handling
+> needing to be introduced in pca953x_recalc_addr() and
+> pca953x_check_register().
 
-If you say so...
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+This still needs an alternative deep review. I'll do my best to get
+into it sooner than later.
 
-> swap over the if and else portions where checks are made against
-> PCA953X_TYPE and instead check for PCA957X_TYPE.
->
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> ---
->  drivers/gpio/gpio-pca953x.c | 31 +++++++++++++++----------------
->  1 file changed, 15 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 41e7ff83a735..19a8eb94a629 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -293,13 +293,13 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
->         struct pca953x_chip *chip = dev_get_drvdata(dev);
->         u32 bank;
->
-> -       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
-> -               bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
-> -                      PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
-> -       } else {
-> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
->                 bank = PCA957x_BANK_INPUT | PCA957x_BANK_OUTPUT |
->                        PCA957x_BANK_POLARITY | PCA957x_BANK_CONFIG |
->                        PCA957x_BANK_BUSHOLD;
-> +       } else {
-> +               bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
-> +                      PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
->         }
->
->         if (chip->driver_data & PCA_PCAL) {
-> @@ -316,12 +316,12 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
->         struct pca953x_chip *chip = dev_get_drvdata(dev);
->         u32 bank;
->
-> -       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
-> -               bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
-> -                       PCA953x_BANK_CONFIG;
-> -       } else {
-> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
->                 bank = PCA957x_BANK_OUTPUT | PCA957x_BANK_POLARITY |
->                         PCA957x_BANK_CONFIG | PCA957x_BANK_BUSHOLD;
-> +       } else {
-> +               bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
-> +                       PCA953x_BANK_CONFIG;
->         }
->
->         if (chip->driver_data & PCA_PCAL)
-> @@ -336,10 +336,10 @@ static bool pca953x_volatile_register(struct device *dev, unsigned int reg)
->         struct pca953x_chip *chip = dev_get_drvdata(dev);
->         u32 bank;
->
-> -       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE)
-> -               bank = PCA953x_BANK_INPUT;
-> -       else
-> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE)
->                 bank = PCA957x_BANK_INPUT;
-> +       else
-> +               bank = PCA953x_BANK_INPUT;
->
->         if (chip->driver_data & PCA_PCAL)
->                 bank |= PCAL9xxx_BANK_IRQ_STAT;
-> @@ -1069,13 +1069,12 @@ static int pca953x_probe(struct i2c_client *client,
->         /* initialize cached registers from their original values.
->          * we can't share this chip with another i2c master.
->          */
-> -
-> -       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
-> -               chip->regs = &pca953x_regs;
-> -               ret = device_pca95xx_init(chip, invert);
-> -       } else {
-> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
->                 chip->regs = &pca957x_regs;
->                 ret = device_pca957x_init(chip, invert);
-> +       } else {
-> +               chip->regs = &pca953x_regs;
-> +               ret = device_pca95xx_init(chip, invert);
->         }
->         if (ret)
->                 goto err_exit;
-> --
-> 2.35.1
->
+...
 
+>  #define PCA953X_TYPE           BIT(12)
+>  #define PCA957X_TYPE           BIT(13)
+> +#define PCAL653X_TYPE          BIT(14)
+>  #define PCA_TYPE_MASK          GENMASK(15, 12)
+>
+> +
+
+Stray change.
+
+>  #define PCA_CHIP_TYPE(x)       ((x) & PCA_TYPE_MASK)
+
+...
+
+>  static bool pca953x_check_register(struct pca953x_chip *chip, unsigned int reg,
+>                                    u32 checkbank)
+>  {
+> -       int bank_shift = pca953x_bank_shift(chip);
+> -       int bank = (reg & REG_ADDR_MASK) >> bank_shift;
+> -       int offset = reg & (BIT(bank_shift) - 1);
+> +       int bank;
+> +       int offset;
+> +
+> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCAL653X_TYPE) {
+> +               if (reg > 0x2f) {
+> +                       /*
+> +                        * Reserved block between 14h and 2Fh does not align on
+> +                        * expected bank boundaries like other devices.
+> +                        */
+> +                       int temp = reg - 0x30;
+> +
+> +                       bank = temp / NBANK(chip);
+> +                       offset = temp - (bank * NBANK(chip));
+> +                       bank += 8;
+> +               } else if (reg > 0x53) {
+> +                       /* Handle lack of reserved registers after output port
+> +                        * configuration register to form a bank.
+> +                        */
+> +                       int temp = reg - 0x54;
+> +
+> +                       bank = temp / NBANK(chip);
+> +                       offset = temp - (bank * NBANK(chip));
+> +                       bank += 16;
+
+Can we rather put this into a separate function?
+
+> +               } else {
+> +                       bank = reg / NBANK(chip);
+> +                       offset = reg - (bank * NBANK(chip));
+> +               }
+> +       } else {
+> +               int bank_shift = pca953x_bank_shift(chip);
+>
+> -       /* Special PCAL extended register check. */
+> -       if (reg & REG_ADDR_EXT) {
+> -               if (!(chip->driver_data & PCA_PCAL))
+> -                       return false;
+> -               bank += 8;
+> +               bank = (reg & REG_ADDR_MASK) >> bank_shift;
+> +               offset = reg & (BIT(bank_shift) - 1);
+> +
+> +               /* Special PCAL extended register check. */
+> +               if (reg & REG_ADDR_EXT) {
+> +                       if (!(chip->driver_data & PCA_PCAL))
+> +                               return false;
+> +                       bank += 8;
+> +               }
+>         }
+
+All the same, split this to be like
+
+if (current)
+ do_current_things
+else
+ do_new_type
+
+...
+
+>  static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off)
+>  {
+> -       int bank_shift = pca953x_bank_shift(chip);
+> -       int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
+> -       int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+> -       u8 regaddr = pinctrl | addr | (off / BANK_SZ);
+> +       int addr;
+> +       int pinctrl;
+> +       u8 regaddr;
+> +
+> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCAL653X_TYPE) {
+> +               /* The PCAL6534 and compatible chips have altered bank alignment that doesn't
+> +                * fit within the bit shifting scheme used for other devices.
+> +                */
+> +               addr = (reg & PCAL_GPIO_MASK) * NBANK(chip);
+> +
+> +               switch (reg) {
+> +               case PCAL953X_OUT_STRENGTH:
+> +               case PCAL953X_IN_LATCH:
+> +               case PCAL953X_PULL_EN:
+> +               case PCAL953X_PULL_SEL:
+> +               case PCAL953X_INT_MASK:
+> +               case PCAL953X_INT_STAT:
+> +               case PCAL953X_OUT_CONF:
+> +                       pinctrl = ((reg & PCAL_PINCTRL_MASK) >> 1) + 0x20;
+> +                       break;
+> +               case PCAL6524_INT_EDGE:
+> +               case PCAL6524_INT_CLR:
+> +               case PCAL6524_IN_STATUS:
+> +               case PCAL6524_OUT_INDCONF:
+> +               case PCAL6524_DEBOUNCE:
+> +                       pinctrl = ((reg & PCAL_PINCTRL_MASK) >> 1) + 0x1c;
+> +                       break;
+> +               }
+> +               regaddr = pinctrl + addr + (off / BANK_SZ);
+> +       } else {
+> +               int bank_shift = pca953x_bank_shift(chip);
+> +
+> +               addr = (reg & PCAL_GPIO_MASK) << bank_shift;
+> +               pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+> +               regaddr = pinctrl | addr | (off / BANK_SZ);
+> +       }
+
+Looking at all these, why not add the callbacks for recalc_addr and
+check_reg and assign them in the ->probe()?
 
 -- 
 With Best Regards,
