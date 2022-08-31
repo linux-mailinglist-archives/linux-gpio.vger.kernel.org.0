@@ -2,114 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F115A871D
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 21:57:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81EB85A87BB
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 22:51:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232112AbiHaT5Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 15:57:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47708 "EHLO
+        id S229652AbiHaUv2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 16:51:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbiHaT5W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 15:57:22 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8C5E096B
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 12:57:20 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id kk26so30479866ejc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 12:57:20 -0700 (PDT)
+        with ESMTP id S229631AbiHaUv1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 16:51:27 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04182F14F0;
+        Wed, 31 Aug 2022 13:51:24 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id q8so12014044qvr.9;
+        Wed, 31 Aug 2022 13:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=3/C402UrLcFdr+55UasuTaaa+TRTdcGT9j3EBVa3jV4=;
-        b=4U2aNm2Bzl6sWFxYmpkLatmR/VIT9M4TC1wx0Hz6KqTkVCAaqUdhJHrXDM2HUeISWU
-         1gj3skkD3jlLf9mYWNLSCbFU5iqJnZUEzJRPLeBqgrWLPfK3DdFHW4F+uXR7U2I+h6Iq
-         LitD5cgW2roRNHIEh8XLMWtQ/h8iXF+zWOuHcYLxTMTT1Sa9Sf0eLeD2czf+5ijLTb3S
-         swZ2PvazSBanHogOiTiupHKA5oTBim4W05sNNoz0PS5RRM0lh1QI6rDxkjo73fQfdjW3
-         tTaXih8CgMoJ5VZwTjcjfyo0FsfiKKIgv90cljRY1FlGuaavwP93wqgZ/FfBX3lJhfyL
-         rZig==
+         :mime-version:from:to:cc:subject:date;
+        bh=F77ZSMjukIX1htEAuPVZavphrGy3kQNsKQQbF8+npDM=;
+        b=NXj8J5KNtB1xYx+f13xUMw7aGumHqDF3nK9EZZnacnmQhiz6vPl5kHqVXZbOydNbYJ
+         XMAQDyHyt6vKaRQeH+yV6z+K+eIC7id6NAB/7COEIkM1BTDOC9EjwwaNiuvW+wdAjY0l
+         dKpV1Tl5ChwADCOAyYBF9fvDKZQF0KTSWr91lW0h+BojNDMFuXYRFVTeBdL9UGbewrXn
+         hRxxKPBljR5zzZWuuGawiJRUH1S2we8mSEOHwmYMgPDM/v/+fm2mmMLGs6zOqwVgQ/qv
+         xktlK9j0x2zTy1I4ImVbXZU4U04FZovhERko4AFaBRjHK1rtDEyDSRbIJYBx/G3PIaGg
+         ut/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=3/C402UrLcFdr+55UasuTaaa+TRTdcGT9j3EBVa3jV4=;
-        b=zxnP7vQ3riajRaheVIRBGwev6+H0aEtHs+aX3aBAFOHY14Yr6vnQ4rq12LkLHBLRFO
-         ba3StJXK/d2iPsTngi0sbnBRWt5Ew4foyAMHdXm5jSsEuYy9k9w36BVq7DfmVN1eh6HG
-         S7c3XEXmop5MCOXqia0PQA6EqE6rmEkJsjIOhaiQPnC8btECFsU+okhowSFJd5fpYSgE
-         KsBmCD1QTb45n/IfZEEddo4VmnVnJmq6XvhDiFNfZ0OXBASIVEpFYYF26xufS5IyNC/A
-         FHrjiS6usGuX8S17+8/2wy9Z47fnbJuKD72rc14kOp4b8UW3YOx9+wxqF8+pTgXs8RQG
-         +NOw==
-X-Gm-Message-State: ACgBeo33siNYUbSGcUjCjCAsrVHTlq6vLVSTt1NUJbjJKGcuzPSji4ry
-        AUGq67rsLvE2VCVFmB3Tvnd7byf+hssH7nqNlEnNIA==
-X-Google-Smtp-Source: AA6agR4eCcEmRzF3NJLEVzxJ5LTDTqeQtu9d8ExuzstxWQae7oIVIV99F7ZjR94wAkhLZw8SM3jUdy/xwxuuxtIc+dk=
-X-Received: by 2002:a17:907:1c87:b0:741:8199:a59d with SMTP id
- nb7-20020a1709071c8700b007418199a59dmr11832796ejc.736.1661975839012; Wed, 31
- Aug 2022 12:57:19 -0700 (PDT)
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=F77ZSMjukIX1htEAuPVZavphrGy3kQNsKQQbF8+npDM=;
+        b=dIsZfId2qhHTBcQMxOr6qyVweYqS/fAAzvCyJTvfUQX2yXwLZUVVd0pBMN0i/nytJv
+         MNdlsyUe+k3XmEhL3j/cTMvk+P+GTIdHHtLC1CZgCMQf19uC0YV4yWIzf+r90LHx9RlG
+         3BlZ2L9cRdd2E9KrjclzHkg37Q22DwHRU+lKeS6n8ugGnTv1ao+9+SXjp/mm9YuSgJtJ
+         1ql4V7l/YQxl4EDVYMZjK11/b9YfGg9uWCpTalyt55k+XspHJJ3xWaeKPEYQqB8x6vha
+         Iz5YBHtJn3Hxe3o9nmuZaI/daDAR5czLgv92CnhhI+R6VJkggttJILiAmlZdBGa+DiYK
+         7gdQ==
+X-Gm-Message-State: ACgBeo1YZ0e9ASEh3DYafztgJiznc5WLaZEKOz3dJ7tcHRybKYji48fW
+        8NvwDNf+l/NqtrjqZDpEpbCGsxooIfZhD2eSWno=
+X-Google-Smtp-Source: AA6agR7jKZCSkySuQI5yd5EAlqxDIg6pm0Hq2U8udUCfBuUjwlEC5WO9UaPKj+mZJQ9RqKYBx79+LVIbtlBvEH9I9I4=
+X-Received: by 2002:a05:6214:27ca:b0:499:95f:6379 with SMTP id
+ ge10-20020a05621427ca00b00499095f6379mr12248607qvb.82.1661979083135; Wed, 31
+ Aug 2022 13:51:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220712163345.445811-1-francesco.dolcini@toradex.com>
- <20220712163345.445811-4-francesco.dolcini@toradex.com> <20220809134836.GB44926@francesco-nb.int.toradex.com>
-In-Reply-To: <20220809134836.GB44926@francesco-nb.int.toradex.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 31 Aug 2022 21:57:08 +0200
-Message-ID: <CAMRc=McqfBSb+ZoD_WT-rWBqxqTCpogKUhO2uJr2R8dctTA1CA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] dt-bindings: gpio: stmpe: Remove node name requirement
-To:     Francesco Dolcini <francesco.dolcini@toradex.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+References: <20220831055811.1936613-1-s.hauer@pengutronix.de> <20220831055811.1936613-2-s.hauer@pengutronix.de>
+In-Reply-To: <20220831055811.1936613-2-s.hauer@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 31 Aug 2022 23:50:47 +0300
+Message-ID: <CAHp75Vd6LCv1wcxV58Q3Pa=eBRdEK6XusbfeDQtm8+R0hAAyWg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: Add gpio latch driver
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 9, 2022 at 3:48 PM Francesco Dolcini
-<francesco.dolcini@toradex.com> wrote:
+On Wed, Aug 31, 2022 at 9:02 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
 >
-> Hello Bartosz, can you pick this? Patches 1 and 2 were applied to MFD
-> tree.
->
-> On Tue, Jul 12, 2022 at 06:33:43PM +0200, Francesco Dolcini wrote:
-> > STMPE driver does not require a specific node name anymore, only the
-> > compatible is checked, update binding according to this.
-> >
-> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > ---
-> >  Documentation/devicetree/bindings/gpio/gpio-stmpe.txt | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
-> > index a0e4cf885213..b33f8f02c0d7 100644
-> > --- a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
-> > @@ -8,8 +8,7 @@ Optional properties:
-> >   - st,norequest-mask: bitmask specifying which GPIOs should _not_ be requestable
-> >     due to different usage (e.g. touch, keypad)
-> >
-> > -Node name must be stmpe_gpio and should be child node of stmpe node to which it
-> > -belongs.
-> > +Node should be child node of stmpe node to which it belongs.
-> >
-> >  Example:
-> >       stmpe_gpio {
-> > --
-> > 2.25.1
-> >
->
+> This driver implements a GPIO multiplexer based on latches connected to
+> other GPIOs. A set of data GPIOs is connected to the data input of
+> multiple latches. The clock input of each latch is driven by another
+> set of GPIOs. With two 8-bit latches 10 GPIOs can be multiplexed into
+> 16 GPIOs. GPOs might be a better term as in fact the multiplexed pins
+> are output only.
 
-Sorry, I was off most of August and missed this one. Now applied.
+I'm still unsure it shouldn't be a part of the (not yet in upstream)
+driver that I have mentioned before. But let's leave this apart right
+now.
 
-Bart
+...
+
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of_device.h>
+
+Why?
+It seems you misplaced it instead of mod_devicetable.h.
+
+> +#include <linux/gpio/driver.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/consumer.h>
+
+Keep above sorted?
+
+...
+
+> +       struct mutex mutex;
+> +       spinlock_t spinlock;
+
+Checkpatch usually complains if locks are not commented. Looking at
+the below code, why it's not an (anonymous) union?
+
+...
+
+> +       if (val)
+> +               priv->shadow[latch] |= BIT(offset % priv->n_pins);
+> +       else
+> +               priv->shadow[latch] &= ~BIT(offset % priv->n_pins);
+
+I believe shadow should be defined as unsigned long * and hence normal
+bit operations can be applied. For example here is assign_bit().
+
+...
+
+> +       priv->shadow = devm_kcalloc(&pdev->dev, priv->n_ports, sizeof(*priv->shadow),
+> +                                   GFP_KERNEL);
+
+bitmap_zalloc()
+
+> +       if (!priv->shadow)
+> +               return -ENOMEM;
+
+...
+
+> +       priv->gc.parent = &pdev->dev;
+
+> +       priv->gc.of_node = pdev->dev.of_node;
+
+Redundant as repeating parent above.
+
+...
+
+> +static const struct of_device_id gpio_latch_ids[] = {
+> +       {
+> +               .compatible     = "gpio-latch",
+> +       }, {
+> +               /* sentinel */
+> +       }
+
+You may compress this to the 2 LoCs.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
