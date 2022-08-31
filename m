@@ -2,244 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1797D5A7551
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 06:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE8225A75CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 07:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231693AbiHaE7B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 00:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33548 "EHLO
+        id S229565AbiHaFjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 01:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiHaE7A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 00:59:00 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608E7B5E53;
-        Tue, 30 Aug 2022 21:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661921939; x=1693457939;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UXwZdL0jjh4vfwy9s4JYZLaz8covq172P8dUfve+MB0=;
-  b=WtRdO+SKEjuAChTW4lkCChgXeWokcq/jQNQa6UEQy8qB6hZsPfG5EEkM
-   v4lUPSlzT5OmX9a8mQgEUsEmXhaum6Fq/psK+L1D9sqic/4tDNtZFvg7M
-   BO5mJ1pSYu4rP8q6V6VqTl5mZIcxFUpPJrFih9GF0cW7reOwpRj3HQt7U
-   NLXqk2cNlvrhDhX0BwUWrBwJh4MRKZc4qiLM8dm6AW3gQpnB8MQpqjMvA
-   p5xviAd455J4osva9gwh0aAkaz3Ghi76ZhYK+XdkxY/lY5YzkksTSFCSV
-   q5eygzZ/x1zOQjtSBkPyJmlB7lXzoUyQ5Eq7hVm4fvTk1kIVRLUToxXYB
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="321510942"
-X-IronPort-AV: E=Sophos;i="5.93,276,1654585200"; 
-   d="scan'208";a="321510942"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 21:58:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,276,1654585200"; 
-   d="scan'208";a="562914998"
-Received: from lkp-server02.sh.intel.com (HELO 77b6d4e16fc5) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 30 Aug 2022 21:58:55 -0700
-Received: from kbuild by 77b6d4e16fc5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oTFoU-000111-0l;
-        Wed, 31 Aug 2022 04:58:54 +0000
-Date:   Wed, 31 Aug 2022 12:58:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Raul E Rangel <rrangel@chromium.org>, linux-acpi@vger.kernel.org,
-        linux-input@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, hdegoede@redhat.com,
-        mario.limonciello@amd.com, timvp@google.com, rafael@kernel.org,
-        Raul E Rangel <rrangel@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S229453AbiHaFjr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 01:39:47 -0400
+Received: from FRA01-PR2-obe.outbound.protection.outlook.com (mail-eopbgr120045.outbound.protection.outlook.com [40.107.12.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E48B99F6;
+        Tue, 30 Aug 2022 22:39:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NOX6EpZtUnWMYTxDhN1NwNjGSb4C12WcSsWfEIRLdaIDlzyHLQgf9i5eFIc5EwUowKUtuWgCBEvg3J599Q1I8CMd/pSYq2cIBkbYNcj9ViqUfNX5JLO6XSyQbfEorKLzZtzUECqvobGqNmHnUWOQOOPMouyT039Yn2+eoAc1xrPcWvn78Etvp559A9GhaoLkkCLcBI8X5Qf/YM3w1lQCLojVFen8CjoPzmHypdcnftsSBKR6xi6DJNfynN86CXEmAgAg5VpLIKGqU13USZ0F5qn8ZoNY/yEKO1gFeqvnwNBUg29nWiZkcch6wG20WUm+yfEEjCvgjdz9ZFjnZ4x1yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q0bZ2yAGp51k8nGHReN3js6BV/7yzCJTP4MVT5moiG8=;
+ b=Uyo3SSNZUw3HHzS/IPRt6Mwo7JhL4XmxEWtbABwmQU0Y16r8oY8HFvSZZ52eCUvsOS+7/Uz7HZlYo0X6KCq6fCvq/5ndWz6Wn4hb/Bb/oEfWGXo+DHoAdNw15IFA/kp5tEeEtr3VI8vFEviufWJuNlSHEeJHtlWaqHiZfVIOXJ5U1c2LYiKat+5J9Sm55ImRhrp6yrR94uN0Tk10ivUrwM9PSVJdCRVTSv0E3oVPR0QDpkikhM+16IXixIUuHNU0JvUuujejqUi64bvGqDFcvUFx8SZ8+zmygQv7dBI/tXT4M4iYX5eCVWZuKbxx7B5gLIasvHrzfh8RvUey8Jzg6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q0bZ2yAGp51k8nGHReN3js6BV/7yzCJTP4MVT5moiG8=;
+ b=Br0Sd4ls+KFChP6H+XCal7rHSuN05ruvST/EzkHZsX33OFGWhrCC+/bM18HnwznLHUST+L3DKD9gGrkirEvclKkSMse+vaPoDdaaJIRRSWJ1fYoCEOwEUzn27Rh6y+6o+QTicowcsnccdoZCHkKW4DohR9H62JdyOPJkMq9MCWKPxI8RkPltowf0ChF0knETNMGul9a9dGnhuf2sCQ7qDsQwduZ4qZRpp6oOjijit0h0ePHPo0vqUxDzEbFxjOsnCbQn2PwxvR/6nElUKB7ebDkHm420oFuVHsPGBj2A9lv3jDt/o6v7Lr/CEvdtaTrOR1C9tQQaF3bDm/+qYOaUoA==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by MR1P264MB4258.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:27::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10; Wed, 31 Aug
+ 2022 05:39:41 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::382a:ed3b:83d6:e5d8]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::382a:ed3b:83d6:e5d8%4]) with mapi id 15.20.5588.010; Wed, 31 Aug 2022
+ 05:39:41 +0000
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Len Brown <lenb@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] gpiolib: acpi: Add wake_capable parameter to
- acpi_dev_gpio_irq_get_by
-Message-ID: <202208311235.pxWOoHPE-lkp@intel.com>
-References: <20220830171332.3.I4ff95ba7e884a486d7814ee888bf864be2ebdef4@changeid>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 3/8] gpiolib: Warn on drivers still using static
+ gpiobase allocation
+Thread-Topic: [PATCH v1 3/8] gpiolib: Warn on drivers still using static
+ gpiobase allocation
+Thread-Index: AQHYu8KbMU3zGFPEjkivUBYIE3z1O63H4r6AgACd3IA=
+Date:   Wed, 31 Aug 2022 05:39:40 +0000
+Message-ID: <22c001c0-1109-5579-7420-2e37707688a9@csgroup.eu>
+References: <cover.1661789204.git.christophe.leroy@csgroup.eu>
+ <92aaf098d7039fd4040015b07ba1f99daf674f50.1661789204.git.christophe.leroy@csgroup.eu>
+ <CAHp75VesQgR9arwnvsBZKwm6-skOJQCc9xex5NZsE8cQG_1CwQ@mail.gmail.com>
+In-Reply-To: <CAHp75VesQgR9arwnvsBZKwm6-skOJQCc9xex5NZsE8cQG_1CwQ@mail.gmail.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0598020e-28c0-4848-b2c8-08da8b133375
+x-ms-traffictypediagnostic: MR1P264MB4258:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DtWr5Aywesys7xFlm53LzOphyxPY3HDZFiMjXqoZYCOU+xhh7hfq/Qwevo5a09fr9Gq86/XhCneNPF3bw/b8+vKzJheGed3nf9Hx8eu33MorulGG7oA/RA2zJyt7oj6Fi1O+sIvudHMbjApYi6LczNJoIXNoRKUQP+FS7FtqoqVpd9Azn/0Xkz0Mkic61Vtwl1IjqbHvRCxUP3yKMyxWOc/iHda5nPmkISYMBl9JBN0hKr3eb0jjTu9u3Y+EDawLzUBew5NxA7DXTbvRt2z5HMEnttsIcK1oWNbzWpJ95KSqsrY8/PhZophv0kkoZs4xVV0EBywLmxX3d8kGTXDC0z+tGC2CVDJqMR1w0pDec368qQ+78gLKWrhzB76eku/07PGQ0EbcvqECCd67rUNIcUj5tPWwIuKh0WWkodjQqRnVN0Q3jqdGikJIRT89ICWitKMLfOkkBElZQkmKw0U76b8L6CUMGz4nf4E8atxGiGx3ZqvWeeMCno01zGrNBqe06ltTAWUnncwjbB1YBuoMrLjI9/pbLsPtgUdZ29MHoiKxg+n9ifUaAAwhQIfCM4jUHawVzsAH+FpDyz2nSbNx6UN4gI/1hgxu8lhCZBssLslGk7HR3qdDzveewpVjU83bu3rVJGhEzrCTxbCGzlviApL2/VKxS9/ezhp3BNEtvnpAQn+flhMG1mDbgu4BdL94KAGFnf4w3aUdmLW3A5ZLH0o6WBVtBNQLekoYrjMWXxvJbjltNj55Z5pLSDEKnOvmA8Kdahd5netPuGIC2vF7L31F2w5OlBqawnfYSMx6kwz1hWuwf+ptv7gMJ2w498KqJa2VIAxtmglwxUpP/LEyDA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39850400004)(396003)(376002)(346002)(136003)(366004)(478600001)(6486002)(71200400001)(66476007)(76116006)(8676002)(64756008)(4326008)(66556008)(66446008)(66946007)(91956017)(316002)(6916009)(54906003)(38070700005)(186003)(2616005)(66574015)(83380400001)(6506007)(38100700002)(53546011)(41300700001)(122000001)(6512007)(26005)(7416002)(5660300002)(31696002)(44832011)(8936002)(2906002)(4744005)(86362001)(36756003)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SUVoV3ZOekJCZ1Y2VDBZRGtyanpMUlJFSTQ5Tmt5VVYvRWh3bjZGNXR2ckpE?=
+ =?utf-8?B?cHB6dk5qUDFwdGQzOGdPZ2JVbmlrUGt6MFQrU2VaMjVHcDB3bEt3VGNEMUwx?=
+ =?utf-8?B?bk0vOXlvdkt5SG1qd0hqMHM1dFRydTZycU1zWlVGaEhZZVBnVThEYnhnOTUz?=
+ =?utf-8?B?eDgrTHN2b3ZPSlZuQ2FrMzVqUHh5enArbk5KSWhrcFlkZnlxN09zejhoOEtL?=
+ =?utf-8?B?UkJtaklzc3RqZmF4WjhYOU5KQm5KNkRHOVJjaDBsZE1SRC9ZTUxBaXlkTmVz?=
+ =?utf-8?B?K0ZxdlpWMVlOd0dmcHRYMnQ3MFdMaDNlNlBuYmU2K3dOZkpjdDRaZXVDMXV3?=
+ =?utf-8?B?NHhFZklKRTRRL1c3MXdPTGhvYTEzTHFyUDNtUG5vTnBFaXphTTBzVVZwbHk3?=
+ =?utf-8?B?TlVLV2ZnaHFRTXBqOEFHdlN1aWpGOFd0anY4RTJ2Vjh6MUxKMXlmSFE1MmNG?=
+ =?utf-8?B?WTNka0ZVMjRhMGJsd0QrbzdXbEJvd2pMZyt6REl3WDBjZmRKQWpGT3VOemti?=
+ =?utf-8?B?a3BNOTdVT0ZMUjBSZnB4QU50ZnlRYThwcXhTajA1eWVXR2h3TXREM1hjRmQx?=
+ =?utf-8?B?blZja3J5TVBvMlpRTUtjakV3VHYrcCtJTjVPUmUvL1MwNFN2UzNwOVhWZlhU?=
+ =?utf-8?B?cmVGRlEwWmhkZkdkanB3ejF3UUx1S1NWcnN2QmdramRiVkdPY3BOaEdPQSsz?=
+ =?utf-8?B?ZkRyY09OOXN0TmRsVXpXdHBhZVdzelpCalFKQ2NBOUFrSnFFZEc2UGgvVG9P?=
+ =?utf-8?B?VGdDaVNpTm1yVldmcWxRWTZkc0hUdnlOai9vdzhZZXZLUUdiUGlXai9KVUpX?=
+ =?utf-8?B?bVpPVk9Zc1M1UnorZndwQkFFMXR3NmliV2VJcVI4TVpjYnpvcEg4UzFsaC9a?=
+ =?utf-8?B?eW5FcytuWkpPTGVxSEFzS3BrcXJtVEtwbUxTNjg1Rnhabm9vd1U0LzgrenBL?=
+ =?utf-8?B?dXBHS3V0L1U3WVZNd0c2Q1JTeHh2OWFoenRwcGVJWnNXdjJyYW1MRk0rZlBw?=
+ =?utf-8?B?ZVYycEdJLzNMdzEvYyt1bTRSS1BEUm10ZUw3dGF3ckNxS3o1UTJ3bkFiMTlt?=
+ =?utf-8?B?eXBYbjVWTGx6Nng5OEVaUEhLQXpOMHlKL0JKNDIxNjgyRFV0K1VVMU0rRjc4?=
+ =?utf-8?B?QW9RSkp2SzlvbXdOOGJ5QWJBWTd6Z3UvK0FjckpRN0tLQWsyQ2JzMis0bWNX?=
+ =?utf-8?B?VGs1NmhNbTNHSDNPdEJhYlNpanpqZVVuem8wbEQvbTkvVUREU2ZqbG9BQjV4?=
+ =?utf-8?B?MEZMVG10UGlQNTVaSWlkMXFaVHhhRnlJMWtoMU5LMlZDSmNUc003QmNUcURt?=
+ =?utf-8?B?R3Q2TWZZckxEeXFVNzBQL3FLR1VZWGF4b2RBN1BBQWpFTU9TSkd5VkJXUmov?=
+ =?utf-8?B?aU16K29yYng1TEJkK05Kd3B3cWMxbzNMeSsvaW5xV1VpSnpWVFlDRGw5VmYv?=
+ =?utf-8?B?WktMWnVmWUtkWDdWREIwRGc1N2w3YVhEQ0pkeG5wYzFnajJQaHd1cmVCWGlB?=
+ =?utf-8?B?UHRaSTJ1Wmx0UU1Sdm8wSGUrbTRwUDdyWUhrUkl5aHAvVFJZNUlHNm91TWQ4?=
+ =?utf-8?B?VXhUcXdhcEl1REJYbDgyUXRFN3hFT3ZKcnFIV2E0ZUVvKytkbUlRSGJWcGYr?=
+ =?utf-8?B?d3RIM3ZzcXpuN3BIbjRzUnFIYVBPVHlETU5NMTMwVTNJOCtjZ0VVWEZkRVBz?=
+ =?utf-8?B?aUtxOW1NZmhSTndNeDJWUGlZc2RVN1RreGJGUVlFc1h4UGFsRko5QUZ5TEhi?=
+ =?utf-8?B?MHpDWU1HZGptS0prQVJXYnZCN2w5S2M4U2JqS3REdjI2SWMzd1pEbXVwbmtS?=
+ =?utf-8?B?dWtFaUo4WFMyTDVNNVJlTXJBY3FCcGxTTFRXdW9URzRVVFZZNTJJL3dVSHhx?=
+ =?utf-8?B?T2RTaFdVVDdFM3Z2R0tFK3pYeDlmVjUyK3BERzloc1hjeFIzYWtvWmx6V1pQ?=
+ =?utf-8?B?ZXZLbE13dGV2R3JKL0pneXNIU253WUFQa3pXZlVwVWY0SkJmZDNSOU5GemtO?=
+ =?utf-8?B?MGN1b1IvZWdORzFTbHNESm5wRGdMZHRrcmR0SzZrQzlvb3dpVzlBa281ekVi?=
+ =?utf-8?B?U2l3SUs4c05INGVKV08xMHppVzJBbHUyM1hHblpVREtGR1BlekwwS2pidWZ6?=
+ =?utf-8?B?Z0tYQzZuWnJ5dDRuTHlQSGowK2Z4N1I5MldtL09wa0dFclRwdVRSU2VQYXFP?=
+ =?utf-8?B?T1E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5E23C35932F9E546899A3C821229686A@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220830171332.3.I4ff95ba7e884a486d7814ee888bf864be2ebdef4@changeid>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0598020e-28c0-4848-b2c8-08da8b133375
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2022 05:39:40.9868
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OXhUhghcNx8A8BOEvc5DqKNirYYPxEJmh3COs9GGk2nKXCPQ/oSZeJ3xvSklwZOfxacJ8BlZIA3VR+735+JXaUJZei0hEn/HBTy0fpDZovE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB4258
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Raul,
-
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on hid/for-next]
-[also build test ERROR on brgl/gpio/for-next rafael-pm/linux-next linus/master v6.0-rc3 next-20220830]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Raul-E-Rangel/acpi-i2c-Use-SharedAndWake-and-ExclusiveAndWake-to-enable-wake-irq/20220831-071916
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20220831/202208311235.pxWOoHPE-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/131a07025a591f4ca6d7540f1055bc03f8cf64af
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Raul-E-Rangel/acpi-i2c-Use-SharedAndWake-and-ExclusiveAndWake-to-enable-wake-irq/20220831-071916
-        git checkout 131a07025a591f4ca6d7540f1055bc03f8cf64af
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sh SHELL=/bin/bash drivers/net/ethernet/mellanox/mlxbf_gige/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c: In function 'mlxbf_gige_probe':
->> drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c:343:19: error: too few arguments to function 'acpi_dev_gpio_irq_get_by'
-     343 |         phy_irq = acpi_dev_gpio_irq_get_by(ACPI_COMPANION(&pdev->dev), "phy-gpios", 0);
-         |                   ^~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c:8:
-   include/linux/acpi.h:1212:19: note: declared here
-    1212 | static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev,
-         |                   ^~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/acpi_dev_gpio_irq_get_by +343 drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-
-f92e1869d74e1a David Thompson 2021-06-24  272  
-f92e1869d74e1a David Thompson 2021-06-24  273  static int mlxbf_gige_probe(struct platform_device *pdev)
-f92e1869d74e1a David Thompson 2021-06-24  274  {
-f92e1869d74e1a David Thompson 2021-06-24  275  	struct phy_device *phydev;
-f92e1869d74e1a David Thompson 2021-06-24  276  	struct net_device *netdev;
-f92e1869d74e1a David Thompson 2021-06-24  277  	struct mlxbf_gige *priv;
-f92e1869d74e1a David Thompson 2021-06-24  278  	void __iomem *llu_base;
-f92e1869d74e1a David Thompson 2021-06-24  279  	void __iomem *plu_base;
-f92e1869d74e1a David Thompson 2021-06-24  280  	void __iomem *base;
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  281  	int addr, phy_irq;
-f92e1869d74e1a David Thompson 2021-06-24  282  	u64 control;
-f92e1869d74e1a David Thompson 2021-06-24  283  	int err;
-f92e1869d74e1a David Thompson 2021-06-24  284  
-464a57281f29af Cai Huoqing    2021-08-31  285  	base = devm_platform_ioremap_resource(pdev, MLXBF_GIGE_RES_MAC);
-f92e1869d74e1a David Thompson 2021-06-24  286  	if (IS_ERR(base))
-f92e1869d74e1a David Thompson 2021-06-24  287  		return PTR_ERR(base);
-f92e1869d74e1a David Thompson 2021-06-24  288  
-464a57281f29af Cai Huoqing    2021-08-31  289  	llu_base = devm_platform_ioremap_resource(pdev, MLXBF_GIGE_RES_LLU);
-f92e1869d74e1a David Thompson 2021-06-24  290  	if (IS_ERR(llu_base))
-f92e1869d74e1a David Thompson 2021-06-24  291  		return PTR_ERR(llu_base);
-f92e1869d74e1a David Thompson 2021-06-24  292  
-464a57281f29af Cai Huoqing    2021-08-31  293  	plu_base = devm_platform_ioremap_resource(pdev, MLXBF_GIGE_RES_PLU);
-f92e1869d74e1a David Thompson 2021-06-24  294  	if (IS_ERR(plu_base))
-f92e1869d74e1a David Thompson 2021-06-24  295  		return PTR_ERR(plu_base);
-f92e1869d74e1a David Thompson 2021-06-24  296  
-f92e1869d74e1a David Thompson 2021-06-24  297  	/* Perform general init of GigE block */
-f92e1869d74e1a David Thompson 2021-06-24  298  	control = readq(base + MLXBF_GIGE_CONTROL);
-f92e1869d74e1a David Thompson 2021-06-24  299  	control |= MLXBF_GIGE_CONTROL_PORT_EN;
-f92e1869d74e1a David Thompson 2021-06-24  300  	writeq(control, base + MLXBF_GIGE_CONTROL);
-f92e1869d74e1a David Thompson 2021-06-24  301  
-f92e1869d74e1a David Thompson 2021-06-24  302  	netdev = devm_alloc_etherdev(&pdev->dev, sizeof(*priv));
-f92e1869d74e1a David Thompson 2021-06-24  303  	if (!netdev)
-f92e1869d74e1a David Thompson 2021-06-24  304  		return -ENOMEM;
-f92e1869d74e1a David Thompson 2021-06-24  305  
-f92e1869d74e1a David Thompson 2021-06-24  306  	SET_NETDEV_DEV(netdev, &pdev->dev);
-f92e1869d74e1a David Thompson 2021-06-24  307  	netdev->netdev_ops = &mlxbf_gige_netdev_ops;
-f92e1869d74e1a David Thompson 2021-06-24  308  	netdev->ethtool_ops = &mlxbf_gige_ethtool_ops;
-f92e1869d74e1a David Thompson 2021-06-24  309  	priv = netdev_priv(netdev);
-f92e1869d74e1a David Thompson 2021-06-24  310  	priv->netdev = netdev;
-f92e1869d74e1a David Thompson 2021-06-24  311  
-f92e1869d74e1a David Thompson 2021-06-24  312  	platform_set_drvdata(pdev, priv);
-f92e1869d74e1a David Thompson 2021-06-24  313  	priv->dev = &pdev->dev;
-f92e1869d74e1a David Thompson 2021-06-24  314  	priv->pdev = pdev;
-f92e1869d74e1a David Thompson 2021-06-24  315  
-f92e1869d74e1a David Thompson 2021-06-24  316  	spin_lock_init(&priv->lock);
-f92e1869d74e1a David Thompson 2021-06-24  317  
-f92e1869d74e1a David Thompson 2021-06-24  318  	/* Attach MDIO device */
-f92e1869d74e1a David Thompson 2021-06-24  319  	err = mlxbf_gige_mdio_probe(pdev, priv);
-f92e1869d74e1a David Thompson 2021-06-24  320  	if (err)
-f92e1869d74e1a David Thompson 2021-06-24  321  		return err;
-f92e1869d74e1a David Thompson 2021-06-24  322  
-f92e1869d74e1a David Thompson 2021-06-24  323  	priv->base = base;
-f92e1869d74e1a David Thompson 2021-06-24  324  	priv->llu_base = llu_base;
-f92e1869d74e1a David Thompson 2021-06-24  325  	priv->plu_base = plu_base;
-f92e1869d74e1a David Thompson 2021-06-24  326  
-f92e1869d74e1a David Thompson 2021-06-24  327  	priv->rx_q_entries = MLXBF_GIGE_DEFAULT_RXQ_SZ;
-f92e1869d74e1a David Thompson 2021-06-24  328  	priv->tx_q_entries = MLXBF_GIGE_DEFAULT_TXQ_SZ;
-f92e1869d74e1a David Thompson 2021-06-24  329  
-f92e1869d74e1a David Thompson 2021-06-24  330  	/* Write initial MAC address to hardware */
-f92e1869d74e1a David Thompson 2021-06-24  331  	mlxbf_gige_initial_mac(priv);
-f92e1869d74e1a David Thompson 2021-06-24  332  
-f92e1869d74e1a David Thompson 2021-06-24  333  	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-f92e1869d74e1a David Thompson 2021-06-24  334  	if (err) {
-f92e1869d74e1a David Thompson 2021-06-24  335  		dev_err(&pdev->dev, "DMA configuration failed: 0x%x\n", err);
-f92e1869d74e1a David Thompson 2021-06-24  336  		goto out;
-f92e1869d74e1a David Thompson 2021-06-24  337  	}
-f92e1869d74e1a David Thompson 2021-06-24  338  
-f92e1869d74e1a David Thompson 2021-06-24  339  	priv->error_irq = platform_get_irq(pdev, MLXBF_GIGE_ERROR_INTR_IDX);
-f92e1869d74e1a David Thompson 2021-06-24  340  	priv->rx_irq = platform_get_irq(pdev, MLXBF_GIGE_RECEIVE_PKT_INTR_IDX);
-f92e1869d74e1a David Thompson 2021-06-24  341  	priv->llu_plu_irq = platform_get_irq(pdev, MLXBF_GIGE_LLU_PLU_INTR_IDX);
-f92e1869d74e1a David Thompson 2021-06-24  342  
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15 @343  	phy_irq = acpi_dev_gpio_irq_get_by(ACPI_COMPANION(&pdev->dev), "phy-gpios", 0);
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  344  	if (phy_irq < 0) {
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  345  		dev_err(&pdev->dev, "Error getting PHY irq. Use polling instead");
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  346  		phy_irq = PHY_POLL;
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  347  	}
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  348  
-f92e1869d74e1a David Thompson 2021-06-24  349  	phydev = phy_find_first(priv->mdiobus);
-f92e1869d74e1a David Thompson 2021-06-24  350  	if (!phydev) {
-f92e1869d74e1a David Thompson 2021-06-24  351  		err = -ENODEV;
-f92e1869d74e1a David Thompson 2021-06-24  352  		goto out;
-f92e1869d74e1a David Thompson 2021-06-24  353  	}
-f92e1869d74e1a David Thompson 2021-06-24  354  
-f92e1869d74e1a David Thompson 2021-06-24  355  	addr = phydev->mdio.addr;
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  356  	priv->mdiobus->irq[addr] = phy_irq;
-6c2a6ddca76327 Asmaa Mnebhi   2021-10-15  357  	phydev->irq = phy_irq;
-f92e1869d74e1a David Thompson 2021-06-24  358  
-f92e1869d74e1a David Thompson 2021-06-24  359  	err = phy_connect_direct(netdev, phydev,
-f92e1869d74e1a David Thompson 2021-06-24  360  				 mlxbf_gige_adjust_link,
-f92e1869d74e1a David Thompson 2021-06-24  361  				 PHY_INTERFACE_MODE_GMII);
-f92e1869d74e1a David Thompson 2021-06-24  362  	if (err) {
-f92e1869d74e1a David Thompson 2021-06-24  363  		dev_err(&pdev->dev, "Could not attach to PHY\n");
-f92e1869d74e1a David Thompson 2021-06-24  364  		goto out;
-f92e1869d74e1a David Thompson 2021-06-24  365  	}
-f92e1869d74e1a David Thompson 2021-06-24  366  
-f92e1869d74e1a David Thompson 2021-06-24  367  	/* MAC only supports 1000T full duplex mode */
-f92e1869d74e1a David Thompson 2021-06-24  368  	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
-f92e1869d74e1a David Thompson 2021-06-24  369  	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_100baseT_Full_BIT);
-f92e1869d74e1a David Thompson 2021-06-24  370  	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_100baseT_Half_BIT);
-f92e1869d74e1a David Thompson 2021-06-24  371  	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Full_BIT);
-f92e1869d74e1a David Thompson 2021-06-24  372  	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Half_BIT);
-f92e1869d74e1a David Thompson 2021-06-24  373  
-f92e1869d74e1a David Thompson 2021-06-24  374  	/* Only symmetric pause with flow control enabled is supported so no
-f92e1869d74e1a David Thompson 2021-06-24  375  	 * need to negotiate pause.
-f92e1869d74e1a David Thompson 2021-06-24  376  	 */
-f92e1869d74e1a David Thompson 2021-06-24  377  	linkmode_clear_bit(ETHTOOL_LINK_MODE_Pause_BIT, phydev->advertising);
-f92e1869d74e1a David Thompson 2021-06-24  378  	linkmode_clear_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, phydev->advertising);
-f92e1869d74e1a David Thompson 2021-06-24  379  
-f92e1869d74e1a David Thompson 2021-06-24  380  	/* Display information about attached PHY device */
-f92e1869d74e1a David Thompson 2021-06-24  381  	phy_attached_info(phydev);
-f92e1869d74e1a David Thompson 2021-06-24  382  
-f92e1869d74e1a David Thompson 2021-06-24  383  	err = register_netdev(netdev);
-f92e1869d74e1a David Thompson 2021-06-24  384  	if (err) {
-f92e1869d74e1a David Thompson 2021-06-24  385  		dev_err(&pdev->dev, "Failed to register netdev\n");
-f92e1869d74e1a David Thompson 2021-06-24  386  		phy_disconnect(phydev);
-f92e1869d74e1a David Thompson 2021-06-24  387  		goto out;
-f92e1869d74e1a David Thompson 2021-06-24  388  	}
-f92e1869d74e1a David Thompson 2021-06-24  389  
-f92e1869d74e1a David Thompson 2021-06-24  390  	return 0;
-f92e1869d74e1a David Thompson 2021-06-24  391  
-f92e1869d74e1a David Thompson 2021-06-24  392  out:
-f92e1869d74e1a David Thompson 2021-06-24  393  	mlxbf_gige_mdio_remove(priv);
-f92e1869d74e1a David Thompson 2021-06-24  394  	return err;
-f92e1869d74e1a David Thompson 2021-06-24  395  }
-f92e1869d74e1a David Thompson 2021-06-24  396  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+DQoNCkxlIDMwLzA4LzIwMjIgw6AgMjI6MTQsIEFuZHkgU2hldmNoZW5rbyBhIMOpY3JpdMKgOg0K
+PiBPbiBNb24sIEF1ZyAyOSwgMjAyMiBhdCA3OjE4IFBNIENocmlzdG9waGUgTGVyb3kNCj4gPGNo
+cmlzdG9waGUubGVyb3lAY3Nncm91cC5ldT4gd3JvdGU6DQo+Pg0KPj4gSW4gdGhlIHByZXBhcmF0
+aW9uIG9mIGdldHRpbmcgY29tcGxldGVseSByaWQgb2Ygc3RhdGljIGdwaW9iYXNlDQo+PiBhbGxv
+Y2F0aW9uIGluIHRoZSBmdXR1cmUsIGVtaXQgYSB3YXJuaW5nIGluIGRyaXZlcnMgc3RpbGwgZG9p
+bmcgc28uDQo+IA0KPiAuLi4NCj4gDQo+PiArICAgICAgICAgICAgICAgZGV2X3dhcm4oJmdkZXYt
+PmRldiwgIlN0YXRpYyBhbGxvY2F0aW9uIG9mIEdQSU8gYmFzZSBpcyAiDQo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgImRlcHJlY2F0ZWQsIHVzZSBkeW5hbWljIGFsbG9j
+YXRpb24uIik7DQo+IA0KPiBGaXJzdCBvZiBhbGwsIGRvIG5vdCBzcGxpdCBzdHJpbmcgbGl0ZXJh
+bHMuIFNlY29uZCwgeW91IGZvcmdvdCAnXG4nLg0KPiANCg0KVGhlbiBJIGdldCBhIGxpbmUgbG9u
+Z2VyIHRoYW4gMTAwIGNoYXJzLCBpcyB0aGF0IGFjY2VwdGFibGUgPw0KDQpTaW5jZSBjb21taXQg
+NWZkMjlkNmNjYmM5ICgicHJpbnRrOiBjbGVhbiB1cCBoYW5kbGluZyBvZiBsb2ctbGV2ZWxzIGFu
+ZCANCm5ld2xpbmVzIiksICJcbiIgYXJlIGp1c3QgdmlzdWFsIHBvbGx1dGlvbiwgYXJlbid0IHRo
+ZXkgPw0KDQpDaHJpc3RvcGhl
