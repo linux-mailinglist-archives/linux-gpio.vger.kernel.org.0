@@ -2,62 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABD085A7D89
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 14:37:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A62FE5A7D8E
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 14:38:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231238AbiHaMhL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 08:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60568 "EHLO
+        id S231194AbiHaMh6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 08:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbiHaMhD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 08:37:03 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E03A2408F
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:36:49 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id a36so14381789edf.5
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:36:49 -0700 (PDT)
+        with ESMTP id S230288AbiHaMhz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 08:37:55 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59EA7ABF29
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:37:53 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id s11so18163012edd.13
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:37:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=p27ll8CtVSLpLMfWeALRUXdWHvLDiBdeF6arG5Pph7w=;
-        b=wiLhC7O9iv+1pUBo9BF+Qrb6OCleD/V+QE4yUpyNjMA6pJHXp+pO/FAmC43UHbWW/x
-         TJPDxakaNXWEAXeuNM0wXL4g8NB3WwsYB8EsuJ8aGlbIzR+OKC1Cae78kc/6t5ILvjHv
-         eSCJQB6AYmZTGHdyEBp12kP8lI0E1PbJMywlnQ/k9TTdgKHRkhKH8falcdITjkPZoPXw
-         v4uaqtxmbJXNErFTksjkmGWZd/2NdYmmmLu625O1VZV4V5s/zVdozurdB0R/aJOTpn8r
-         jK7KeQALpNlgj68hbdMl2HZRRYpAiHmS2nYFGC+BDB/mPDDgJJEgzEABxXURo1nJeOhb
-         TRug==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=Fuu2JI5A+wpqBRcbGTVNrKjUHyua0GPAJlLMkrI8qfM=;
+        b=DncXsye6bDUGM3ZIlLj8XaqyFahtrLvWtKE5nsSgLN9rz+zuBJr8w2nCpnng1T7Ull
+         HGATaLn6yjkxmIGp9wf1ULad1lWWo59GbeZV7/Xa4IWOtpa8AahuoTZltyQvyK4k5Kz3
+         qsXuN3+8mCqPoRtcd3cLOzs01jdB4GHRnNMHbJAt+bhPEP+0p8ABJfvoL63QGX1Tz8YF
+         G21U5UD92CSv9NIb6NAk41FKefscQhcq+CP4V/YabLsp0ux5sjk6kwXAhgwZ1T63MVd/
+         lw3sTwerL9dFL1hk0QymcSLvcY+bKvu9UZw3Z0V366w4964qiIdpDuylQEvmqfPe+9tU
+         j3jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=p27ll8CtVSLpLMfWeALRUXdWHvLDiBdeF6arG5Pph7w=;
-        b=qHQgOhUSqRtIoOKu4E1s3MB74r+K9mBFCb1QhiS6z8vPUD8R2GJF0O1uPGYtre6zID
-         Aa7piI3tKqM8w+UBwGsFNZIculCc4bdbcDsQnh7LT4MMs8h5kcz15HA5x53BJGZvM0xj
-         AJ7ryRf+u3yrQpWot4Iu6YIrLNMEPpi8cNAzWrsr/FNR7QuDxPLxBgqqn225drabJ8Cs
-         jmGQFOdl3DGkBnchphGDQFz9NlpG3j6jFAlrDcRZiRxhaeLK1hgYiu1DJH9hNQB7h2CM
-         UHIrb40K4S78aDw3p1zl6zZEpZ56LEYfqtY7Q//8CItqSONClE7ftDAyrJUgqapkz4yJ
-         Q+EA==
-X-Gm-Message-State: ACgBeo3G2rnPKsSOo1bYby2sGGtDM8RmJtPgjeO+T/s2G3YVfhFX7EX7
-        3VV1g+1hydGQ6FO2SlnlOGZ/WAU+WbGbhfR+aHcXC+PKAKI=
-X-Google-Smtp-Source: AA6agR54ninAXNMpIyo6FTmW+N42f5mTqy6RjeT5XkAHGh6UPTfWNqAS0AKjDeFW++mbyawDKUFpX1Kn3bAs2zrZmKI=
-X-Received: by 2002:a05:6402:1f8c:b0:43e:8fab:76c with SMTP id
- c12-20020a0564021f8c00b0043e8fab076cmr24187606edc.126.1661949407977; Wed, 31
- Aug 2022 05:36:47 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=Fuu2JI5A+wpqBRcbGTVNrKjUHyua0GPAJlLMkrI8qfM=;
+        b=ohIEsMhJap6RwTDTsfptF/quGeGnV7CmaAOBYN0IV4lideZQ7H7wx5gXmRnxpcuGaD
+         AH3o0QZ6e5Hz3Zo9S4faz2vgMtcfRIaOBYEQayexsGMGtbiaWxjnZlJp7kSvO3ekyo6v
+         2Am0sxR4SeR6OxOPKydgTaT1nY7o3IH1GxdLeoaJlV1nCIFlncmM/qkqWLD2IxJgcaCm
+         OcuTIqu/eHVjP4u7nMLiSMBaS4+TUUuQEiS2BlplmdPVK9MIvBhuQp/ot5ToPqOUJCVy
+         NHYBhBR+1MzEfToHA4hRgeqx2GuA7vYSUYf5HzaXCFqgxa5zrh6IWeE0H9MOvGYG4XFh
+         1bHw==
+X-Gm-Message-State: ACgBeo05mdODBcaBDICLQp7YNG6Zs86c/OiW90owvYugeEwVh2prjN0g
+        UO4PMg6iSpImO7lQO01lF0UntQ2B6TyTy3CHPIjL3Q==
+X-Google-Smtp-Source: AA6agR6omxyBZo7cfhMeYIlGj9RWba4kt4+v9Lqw1rabWR1KY7hd2NaWUKr76TcAnNwZ6YcyK7Qa6NIvNPVVvf0g0aQ=
+X-Received: by 2002:aa7:c84f:0:b0:446:2bfb:5a63 with SMTP id
+ g15-20020aa7c84f000000b004462bfb5a63mr24625165edt.172.1661949471929; Wed, 31
+ Aug 2022 05:37:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220829133923.1114555-1-martyn.welch@collabora.com> <20220829133923.1114555-4-martyn.welch@collabora.com>
-In-Reply-To: <20220829133923.1114555-4-martyn.welch@collabora.com>
+References: <20220829131553.690063-1-nuno.sa@analog.com> <20220829131553.690063-2-nuno.sa@analog.com>
+In-Reply-To: <20220829131553.690063-2-nuno.sa@analog.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 31 Aug 2022 14:36:37 +0200
-Message-ID: <CACRpkdaPa0CbF2r9RbDnC5oEVdt4vM7O9xg3Y30dekJs3wuwEA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] gpio: pca953x: Swap if statements to save later complexity
-To:     Martyn Welch <martyn.welch@collabora.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, kernel@collabora.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 31 Aug 2022 14:37:40 +0200
+Message-ID: <CACRpkdaxfgf6T4EcWKG8_y4LmZPggQHGjHcq6f_5YkgGWv5vcA@mail.gmail.com>
+Subject: Re: [PATCH v4 01/10] input: keyboard: adp5588-keys: support gpi key
+ events as 'gpio keys'
+To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
+Cc:     linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Hennerich <michael.hennerich@analog.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,15 +73,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 29, 2022 at 3:39 PM Martyn Welch <martyn.welch@collabora.com> wrote:
+On Mon, Aug 29, 2022 at 3:15 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
 
-> A later patch in the series adds support for a further chip type that
-> shares some similarity with the PCA953X_TYPE. In order to keep the logic
-> simple, swap over the if and else portions where checks are made against
-> PCA953X_TYPE and instead check for PCA957X_TYPE.
+> This change replaces the support for GPIs as key event generators.
+> Instead of reporting the events directly, we add a gpio based irqchip
+> so that these events can be consumed by keys defined in the gpio-keys
+> driver (as it's goal is indeed for keys on GPIOs capable of generating
+> interrupts). With this, the gpio-adp5588 driver can also be dropped.
 >
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> The basic idea is that all the pins that are not being used as part of
+> the keymap matrix can be possibly requested as GPIOs by gpio-keys
+> (it's also fine to use these pins as plain interrupts though that's not
+> really the point).
+>
+> Since the gpiochip now also has irqchip capabilities, we should only
+> remove it after we free the device interrupt (otherwise we could, in
+> theory, be handling GPIs interrupts while the gpiochip is concurrently
+> removed). Thus the call 'adp5588_gpio_add()' is moved and since the
+> setup phase also needs to come before making the gpios visible, we also
+> need to move 'adp5588_setup()'.
+>
+> While at it, always select GPIOLIB so that we don't need to use #ifdef
+> guards.
+>
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
+Makes the world simpler so:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
