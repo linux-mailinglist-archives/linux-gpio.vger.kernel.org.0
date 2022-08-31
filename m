@@ -2,101 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2214F5A8860
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 23:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D49355A893E
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 00:53:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbiHaVtI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 17:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
+        id S231700AbiHaWxu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 18:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232050AbiHaVtI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 17:49:08 -0400
-Received: from mail.gnudd.com (mail.gnudd.com [93.91.132.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559EDF72CB;
-        Wed, 31 Aug 2022 14:49:04 -0700 (PDT)
-Received: from dciminaghi by mail.gnudd.com with local (Exim 4.94.2)
-        (envelope-from <dciminaghi@arcana.gnudd.com>)
-        id 1oTVZO-0004bU-3K; Wed, 31 Aug 2022 23:48:22 +0200
-Date:   Wed, 31 Aug 2022 23:48:22 +0200
-From:   Davide Ciminaghi <ciminaghi@gnudd.com>
-Sender: ciminaghi@gnudd.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Alexandre Courbot <gnurou@gmail.com>,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>, Alessandro Rubini <rubini@gnudd.com>
-Subject: Re: [PATCH] gpio: Allow user to customise maximum number of GPIOs
-Message-ID: <Yw/XJstLR++AuULV@arcana.i.gnudd.com>
-References: <87f2ff4c-3426-201c-df86-2d06d3587a20@csgroup.eu>
- <CACRpkdYizQhiJXzXNHg7TXUVHzhkwXHFN5+e58kH4udGm1ziEA@mail.gmail.com>
- <f76dbc49-526f-6dc7-2ef1-558baea5848b@csgroup.eu>
- <CACRpkdZpwdP+1VitohznqRfhFGcLT2f+sQnmsRWwMBB3bobwAw@mail.gmail.com>
- <515364a9-33a1-fafa-fdce-dc7dbd5bb7fb@csgroup.eu>
- <CAK8P3a36qbRW8hd+1Uhi88kh+-KTjDMT-Zr8Jq9h_G3zQLfzgw@mail.gmail.com>
- <Yw3DKCuDoPkCaqxE@arcana.i.gnudd.com>
- <CACRpkdZeAAZYqV3ccd-X=ZwdnfSwRUdXchGETB-WTkgSZQL=Pw@mail.gmail.com>
- <Yw9sVCNtaLUjZH/F@arcana.i.gnudd.com>
- <CAHp75Vff0GUQXD8zstEFwXNcnbxKEc7Gqahoo_kZp69MyKWskg@mail.gmail.com>
+        with ESMTP id S231672AbiHaWxt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 18:53:49 -0400
+Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4DFDD764
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 15:53:48 -0700 (PDT)
+Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-11f34610d4aso16857922fac.9
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 15:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=Ai/qDI1gAj3tYkz4WQDadru3ljd+swz0ua3ixXVzhvs=;
+        b=d7rkRKF1yge7T3d/CaBhaUxI6X8fBbNXZzKR+EABybflE1qcfk0ui0karhj7XMZDuA
+         zBa5ca9jRXStBHygbuJ4i8pkoyWIaoQoXRDB4tlh8br7x+xfDgg9V1dytOe0n+XQDJfb
+         1pCQc3dQKUMkwqbucxgph5TjqerqFz2XFGuhFgSQ8YxkwkbUBTGZGJiULHy+YXzREDkM
+         KIJ9UvMC6YxTzE31MUGT5vpne7X9rRwRIbXCgbbQWXV9+7dz9FBQUUIsIYQbRA05iBVV
+         fIPmhq2drppIsCeb6b4kvdcVK5Etl9UV++2Frn8NijaZsn/i0Nn+J+0q52LxXaHIrxHO
+         w9oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=Ai/qDI1gAj3tYkz4WQDadru3ljd+swz0ua3ixXVzhvs=;
+        b=ExpnWj8dKfKfMIbFEDirR/m78l52tjItriR5nh7nToq7gZGOnI3Xu3ayeYtUxsN45s
+         XiGKtHLozUj3pC8pbLkfdBFpgTjZuiwCN7QvWv8YKGKJZvzAMGHUTd0g65Kz/+5lKRW4
+         vQw8Riu3mNtl461HzR5A22Bow+B8/qckDEScMXGrcQ23eZ/tfP9a8gy1XLb2jsKdxCgP
+         0R6kOu77OJIY7AFr1Q0ujlUyoRYkPuuwYI19SuY5UvczaQ0+nyxR2TN6mvyfD5ncRTlY
+         qTOEyfySdfC195RdhzqPLiHsWq9MRrUNV28AaODudX8XdKK5cUDgyr8MWw6bTqs7nR40
+         Wg/Q==
+X-Gm-Message-State: ACgBeo2AcUUbCK9y/ipBH0p5I+loHnPganoJl9cDyYoQcssUqNtwCoG3
+        V8VR7aO4tokHtFP1tvZ/2cL1pg==
+X-Google-Smtp-Source: AA6agR7UXP6hrN0BTjAnkF008IroTUYcqnNjgTe/ybUa/Z1HLHk3JedacrysZSojatJoi8+abUB2rA==
+X-Received: by 2002:a05:6871:154:b0:11e:33b7:ddf7 with SMTP id z20-20020a056871015400b0011e33b7ddf7mr2532013oab.116.1661986427451;
+        Wed, 31 Aug 2022 15:53:47 -0700 (PDT)
+Received: from ishi ([2600:1700:5668:ac50::42])
+        by smtp.gmail.com with ESMTPSA id 22-20020aca0f16000000b00344f28a7a4csm7880884oip.22.2022.08.31.15.53.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Aug 2022 15:53:46 -0700 (PDT)
+Date:   Wed, 31 Aug 2022 18:53:44 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     brgl@bgdev.pl
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/6] isa: Introduce the module_isa_driver_with_irq helper
+ macro
+Message-ID: <Yw/meB0ACIPsU6Tw@ishi>
+References: <cover.1660839809.git.william.gray@linaro.org>
+ <016c8d87cef87a1375e53f1c97c41d8b969f8d79.1660839809.git.william.gray@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BCnalRxsY6KmFLiL"
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vff0GUQXD8zstEFwXNcnbxKEc7Gqahoo_kZp69MyKWskg@mail.gmail.com>
-X-Face: #Q;A)@_4.#>0+_%y]7aBr:c"ndLp&#+2?]J;lkse\^)FP^Lr5@O0{)J;'nny4%74.fM'n)M
- >ISCj.KmsL/HTxz!:Ju'pnj'Gz&.
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <016c8d87cef87a1375e53f1c97c41d8b969f8d79.1660839809.git.william.gray@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 01, 2022 at 12:07:26AM +0300, Andy Shevchenko wrote:
-> On Wed, Aug 31, 2022 at 5:14 PM Davide Ciminaghi <ciminaghi@gnudd.com> wrote:
-> > On Wed, Aug 31, 2022 at 03:32:25PM +0200, Linus Walleij wrote:
-> > > On Tue, Aug 30, 2022 at 9:58 AM Davide Ciminaghi <ciminaghi@gnudd.com> wrote:
-> > >
-> > > > the sta2x11 was a chip containing AMBA peripherals and a PCIe to AMBA bridge
-> > > > (it is still in production as far as I know, but deprecated for new designs).
-> > > > It would typically be installed on x86 machines, so you needed to build and
-> > > > run AMBA drivers in an x86 environment. The original drivers we started from
-> > > > had platform data, but then we were told to switch to DTS.
-> > >
-> > > For the record I think that was bad advice, I hope it wasn't me.
-> > > But the world was different back then I suppose.
-> > > Adding DTS to x86 which is inherently ACPI is not a good idea.
-> > > Especially if you look at how SBSA ACPI UARTS were done
-> > > in drivers/tty/serial/amba-pl011.c.
-> > >
-> > now that I think of it, ACPI was also listed as a possible choice, but the
-> > problem was that we didn't know much about ACPI, and took the DTS way.
-> > So there was no bad advice, just fear of the unknown :-)
-> 
-> Feel free to ask, we have experts in the mailing list(s).
->
-Thanks ! I'll keep that in mind in case I need some ACPI advice.
-I'm afraid it's too late for the sta2x11, though. Its kernel is now a
-downstream one, and it's been freezed, as the SOC has been deprecated
-for new designs.
-As Alessandro said, we'll submit (or ack) patches for removal.
 
+--BCnalRxsY6KmFLiL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Aug 18, 2022 at 12:28:10PM -0400, William Breathitt Gray wrote:
+> Several ISA drivers feature IRQ support that can configured via an "irq"
+> array module parameter. This array typically matches directly with the
+> respective "base" array module parameter. To reduce code repetition, a
+> module_isa_driver_with_irq helper macro is introduced to provide a check
+> ensuring that the number of "irq" passed to the module matches with the
+> respective number of "base".
+>=20
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 
-Thanks again and regards
-Davide
+Acked-by: William Breathitt Gray <william.gray@linaro.org>
+
+--BCnalRxsY6KmFLiL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCYw/meAAKCRC1SFbKvhIj
+KzOuAP9e2bQgKC+JFuwpMWwwSxNb1PwBKPtuYdvrK261drQztgD/cPcq/jxWnvRp
+6CAo2OnoZv3Gx4/ZvlM6rPhUYNZ+BgU=
+=kiZB
+-----END PGP SIGNATURE-----
+
+--BCnalRxsY6KmFLiL--
