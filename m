@@ -2,151 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE5BB5A82B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 18:09:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 877FF5A833D
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 18:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbiHaQJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 12:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38220 "EHLO
+        id S231733AbiHaQaw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 12:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231194AbiHaQJH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 12:09:07 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA3B2C6EBA
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 09:09:05 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id e18so11507008edj.3
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 09:09:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=D7yrSuruo4s6Z23jqQyZUhfBAxCgqVkzY+scyb8Ze7Y=;
-        b=Ted5C+YR4oK+wxcyEHOLKj6FzsoImkMpRJuLUTQYnKgNH0dOcGYOFPS32XrXRNYkJi
-         GGEcItqqTSqrgKly5MLlB/AGOl21JifWWR4OiCBtY352EayXAhdSGL3pPzvBZm7tGt6Q
-         WXW2In0ruibGeyq7GjoaAAcbH9+mMSxYVFvUcQkUOF7CAEzxT5hb2ZULwLrHr+etRB5s
-         CE7zI4a0tbKTHYGwo5L2Rrg4YhmL62ULp8Vp/1lTaslvbuusgFG5hFhUvS3hU3sJnjuX
-         UZZN62GW4BShk0ONNVMjGu9BPyG+x8KRPq4Sa7f7F+61nL17mbhPJE7EmSZSdNzaiIFD
-         S+/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=D7yrSuruo4s6Z23jqQyZUhfBAxCgqVkzY+scyb8Ze7Y=;
-        b=i+irO2CG97511IX7vCOAuDcAEP29e8BOSnHx6eUrPb4olRPBiOp+YcGw/M5nc0uglX
-         VuUNJt2nC6RAt9SVYvO6lqmg1e4aCwgm3NZKwELbN1wVuVd3kuxLIcX8mGi5a+8a6NtW
-         xjOdfIMxdbQhsAPLnValAhkTJgW7MELJdBS748v0yLHGJkyn5p1zhzCRCG39BpaOM2zF
-         fjPOXUM5ZQrdglZcs+tt+lf0DsFp9YVZFpaKdbwL33ZwHPEsof+GxbRPQcuz4jSPXy2Q
-         PtxvLddGWQCHnumB4N/3bcxm0fVGWGtbZemUOqIeKyP4eQjgEM5nmTdProefbxww1//w
-         ln0A==
-X-Gm-Message-State: ACgBeo3LpqE488WGOrRHHqpKs/k9Z1PLWjoD2zgTrzq0xuRgPubbRO3S
-        8ihU17MFQAiu2uLVf9aJpbLAYNTervTy48gpNaPJBQ==
-X-Google-Smtp-Source: AA6agR6DdtjePB9gwvaF5LlCA7k+h+JVOH8EzgULLXXQVz0tsM+PlgJyv/B9XBmEZjlvBwuP83chUqc3STtbZzM+4b4=
-X-Received: by 2002:a05:6402:71a:b0:447:ebb2:18f2 with SMTP id
- w26-20020a056402071a00b00447ebb218f2mr20551185edx.408.1661962144262; Wed, 31
- Aug 2022 09:09:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220826080230.1712978-1-weiyongjun1@huawei.com>
-In-Reply-To: <20220826080230.1712978-1-weiyongjun1@huawei.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 31 Aug 2022 18:08:53 +0200
-Message-ID: <CAMRc=Mc-m7JfDqM3ALy43T+S9DdpV8boEy+J6ruQZjLkqbZHPw@mail.gmail.com>
-Subject: Re: [PATCH -next 0/2] allow gpio simulator be used as interrupt controller
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S232097AbiHaQat (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 12:30:49 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA8E82770;
+        Wed, 31 Aug 2022 09:30:41 -0700 (PDT)
+Received: from [IPv6:2a00:23c6:c311:3401:b599:df6:dba1:bdbb] (unknown [IPv6:2a00:23c6:c311:3401:b599:df6:dba1:bdbb])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: martyn)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id D41DB6600014;
+        Wed, 31 Aug 2022 17:30:39 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1661963440;
+        bh=8syKZc8lBVGRD02tm+lxMSpF6i+Oyf8Euvo5Tc3l7rA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=VmrWBYy5FTwJI/c8jQsshae6QZyu9MbkJuMGFRXvuSScZp1SmOJ2R0WPTGv/ff039
+         C2MCwPfQvY1kgV6nvA3qrWZJYTdvdv+Ze9QVN1nu6SNqEp3x10WbTrAXfOkA+PPriA
+         /1SKpkQhG/6ym/PbvdMFs9tkADDlilZM93IHFmcLu0wWzOYonP0SLOUJyIA85u5xwU
+         /SEyBwW8usD0/a0ckW3ocCBqzYVNbxkcM2wy7YLyoJtoGCGDuPGyqJJE9cIUvo0++x
+         1MLHGiNtlf6fKlh+Xd0WfgQGfy4hdUzXg6W2+dNvxaVFk76HUaJMZgwZKwY2fghj0i
+         IN0l3J6HEMNTg==
+Message-ID: <e89ccd1ecb675ab899dba0f08624a3dde195c970.camel@collabora.com>
+Subject: Re: [PATCH 5/5] gpio: pca953x: Add support for PCAL6534 and
+ compatible
+From:   Martyn Welch <martyn.welch@collabora.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, kernel@collabora.com,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 31 Aug 2022 17:30:38 +0100
+In-Reply-To: <CAMRc=McbNwLRq_OBo_=xwFJJ-_8C5VfjQt75dvSVC9SqUYTpFg@mail.gmail.com>
+References: <20220829133923.1114555-1-martyn.welch@collabora.com>
+         <20220829133923.1114555-5-martyn.welch@collabora.com>
+         <CAMRc=McbNwLRq_OBo_=xwFJJ-_8C5VfjQt75dvSVC9SqUYTpFg@mail.gmail.com>
+Organization: Collabora Ltd.
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-1+b1 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 9:44 AM Wei Yongjun <weiyongjun1@huawei.com> wrote:
->
-> This series allow gpio simulator be used as interrupt controller, the use
-> case is mockup some device which using GPIO as interrupt controller, such
-> as mcp2515 CAN device. With the dts [1], we can mockup a mcp2515 device,
-> and trigger irq by following commands:
->
->  $ echo pull-down > /sys/bus/gpio/devices/gpiochip0/sim_gpio0/pull
->  $ echo pull-up > /sys/bus/gpio/devices/gpiochip0/sim_gpio0/pull
->
->
-> --[1]---------------------------------------------------------
-> /dts-v1/;
->
-> #include <dt-bindings/interrupt-controller/irq.h>
->
-> / {
->         clk24m: clk24m {
->                 compatible = "fixed-clock";
->                 clock-output-names = "clk24m";
->                 clock-frequency = <24000000>;
->                 #clock-cells = <0>;
->         };
->
->         gpio-sim {
->                 compatible = "gpio-simulator";
->
->                 bank0: bank0 {
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         ngpios = <16>;
->
->                         interrupt-controller;
->                         #interrupt-cells = <2>;
->
->                         line_b-hog {
->                                 gpio-hog;
->                                 gpios = <0 1>;
->                                 input;
->                                 line-name = "irq-sim";
->                         };
+On Wed, 2022-08-31 at 13:57 +0200, Bartosz Golaszewski wrote:
+> On Mon, Aug 29, 2022 at 3:39 PM Martyn Welch
+> <martyn.welch@collabora.com> wrote:
+> >=20
+> > Add support for the NXP PCAL6534 and Diodes Inc. PI4IOE5V6534Q.
+> > These
+> > devices, which have identical register layouts and features, are
+> > broadly a
+> > 34-bit version of the PCAL6524.
+> >=20
+> > However, whilst the registers are broadly what you'd expect for a
+> > 34-bit
+> > version of the PCAL6524, the spacing of the registers has been
+> > compacted. This has the unfortunate effect of breaking the bit
+> > shift
+> > based mechanism that is employed to work out register locations
+> > used by
+> > the other chips supported by this driver, resulting in special
+> > handling
+> > needing to be introduced in pca953x_recalc_addr() and
+> > pca953x_check_register().
+> >=20
+> > Datasheet: https://www.nxp.com/docs/en/data-sheet/PCAL6534.pdf
+> > Datasheet:
+> > https://www.diodes.com/assets/Datasheets/PI4IOE5V6534Q.pdf
+> > Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> > ---
+>=20
+> Is this series complete? I don't have patch 1/5 in my inbox and
+> neither does patchwork.
+>=20
 
-Why do you need this hog? The GPIO will be marked as requested once
-the interrupt is taken by the driver.
+I used get_maintainers to generate the recipients, it's a patch for the
+binding documentation relating to the driver so didn't get sent to the
+same lists:
 
->                 };
->         };
->
->         spi: spi {
->                 compatible = "spi-mockup";
->
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->
->                 can0: can@1 {
->                         compatible = "microchip,mcp2515";
->                         reg = <1>;
->                         clocks = <&clk24m>;
->                         interrupt-parent = <&bank0>;
->                         interrupts = <0 IRQ_TYPE_EDGE_BOTH>;
->                 };
->
->         };
-> };
-> ------------------------------><-----------------------------
->
-> Wei Yongjun (2):
->   genirq/irq_sim: Allow both one and two cell bindings
->   gpio: sim: make gpio simulator can be used as interrupt controller
->
->  drivers/gpio/gpio-sim.c | 2 +-
->  kernel/irq/irq_sim.c    | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> --
-> 2.34.1
->
+https://lore.kernel.org/lkml/20220829133923.1114555-3-martyn.welch@collabor=
+a.com/T/
 
-Can you add some info about this to the documentation?
+Martyn
 
-Otherwise looks good.
+> Bart
 
-Bart
