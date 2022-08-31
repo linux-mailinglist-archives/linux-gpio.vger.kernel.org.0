@@ -2,102 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 877FF5A833D
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 18:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36DE45A8663
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 21:03:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231733AbiHaQaw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 12:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50324 "EHLO
+        id S229682AbiHaTDi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 15:03:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232097AbiHaQat (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 12:30:49 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA8E82770;
-        Wed, 31 Aug 2022 09:30:41 -0700 (PDT)
-Received: from [IPv6:2a00:23c6:c311:3401:b599:df6:dba1:bdbb] (unknown [IPv6:2a00:23c6:c311:3401:b599:df6:dba1:bdbb])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: martyn)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id D41DB6600014;
-        Wed, 31 Aug 2022 17:30:39 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1661963440;
-        bh=8syKZc8lBVGRD02tm+lxMSpF6i+Oyf8Euvo5Tc3l7rA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VmrWBYy5FTwJI/c8jQsshae6QZyu9MbkJuMGFRXvuSScZp1SmOJ2R0WPTGv/ff039
-         C2MCwPfQvY1kgV6nvA3qrWZJYTdvdv+Ze9QVN1nu6SNqEp3x10WbTrAXfOkA+PPriA
-         /1SKpkQhG/6ym/PbvdMFs9tkADDlilZM93IHFmcLu0wWzOYonP0SLOUJyIA85u5xwU
-         /SEyBwW8usD0/a0ckW3ocCBqzYVNbxkcM2wy7YLyoJtoGCGDuPGyqJJE9cIUvo0++x
-         1MLHGiNtlf6fKlh+Xd0WfgQGfy4hdUzXg6W2+dNvxaVFk76HUaJMZgwZKwY2fghj0i
-         IN0l3J6HEMNTg==
-Message-ID: <e89ccd1ecb675ab899dba0f08624a3dde195c970.camel@collabora.com>
-Subject: Re: [PATCH 5/5] gpio: pca953x: Add support for PCAL6534 and
- compatible
-From:   Martyn Welch <martyn.welch@collabora.com>
+        with ESMTP id S229992AbiHaTDe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 15:03:34 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FBEBD170;
+        Wed, 31 Aug 2022 12:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661972612; x=1693508612;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Oc5afPBJoiKAq9k8AffdBfDU/q/uf+1J66UG/80FFUk=;
+  b=MHTZ4Xeb4dGkuPCCxias8NyyXDdBA1OzOSllAph/1IzdWprvpuxrqMSf
+   t3qwD3OvSjs/HLvP7ET5AZHoSZsfrFhQ1FWPHG8fWODT9i1fq+RwtDWXh
+   3uc9ZKNAdECuuzhFC8rnb5DY2E3kfxVX1NXKga76Mqszlnr125yFK+3Q4
+   GRtYuLQEqYkyjJBaLn0GNhHxGnF7rbrqwfFvavILUh4nLZ0MmHN/jFNyl
+   iyM7dEbgk2A2vDqb4lUxoyWnZuGbMYxORc3sYJ2arqZ/OvXcYC28ywnas
+   lVu2VlSvjqIpUL68DD2gp+1hoZMqEkjMH7VUw9bDRLzsB2hAPtUIWUXBV
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="294263043"
+X-IronPort-AV: E=Sophos;i="5.93,278,1654585200"; 
+   d="scan'208";a="294263043"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 12:03:23 -0700
+X-IronPort-AV: E=Sophos;i="5.93,278,1654585200"; 
+   d="scan'208";a="680525696"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 12:03:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oTSze-006VQP-0a;
+        Wed, 31 Aug 2022 22:03:18 +0300
+Date:   Wed, 31 Aug 2022 22:03:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, kernel@collabora.com,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 31 Aug 2022 17:30:38 +0100
-In-Reply-To: <CAMRc=McbNwLRq_OBo_=xwFJJ-_8C5VfjQt75dvSVC9SqUYTpFg@mail.gmail.com>
-References: <20220829133923.1114555-1-martyn.welch@collabora.com>
-         <20220829133923.1114555-5-martyn.welch@collabora.com>
-         <CAMRc=McbNwLRq_OBo_=xwFJJ-_8C5VfjQt75dvSVC9SqUYTpFg@mail.gmail.com>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-1+b1 
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/1] gpio: rockchip: Switch to use fwnode instead of
+ of_node
+Message-ID: <Yw+wdUvRm8rIAK4G@smile.fi.intel.com>
+References: <20220831134516.78108-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdQiBHr3cDPWN_PRj2nGVoG-GJJyRNrHNwTaAUvz=35ew@mail.gmail.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdQiBHr3cDPWN_PRj2nGVoG-GJJyRNrHNwTaAUvz=35ew@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 2022-08-31 at 13:57 +0200, Bartosz Golaszewski wrote:
-> On Mon, Aug 29, 2022 at 3:39 PM Martyn Welch
-> <martyn.welch@collabora.com> wrote:
-> >=20
-> > Add support for the NXP PCAL6534 and Diodes Inc. PI4IOE5V6534Q.
-> > These
-> > devices, which have identical register layouts and features, are
-> > broadly a
-> > 34-bit version of the PCAL6524.
-> >=20
-> > However, whilst the registers are broadly what you'd expect for a
-> > 34-bit
-> > version of the PCAL6524, the spacing of the registers has been
-> > compacted. This has the unfortunate effect of breaking the bit
-> > shift
-> > based mechanism that is employed to work out register locations
-> > used by
-> > the other chips supported by this driver, resulting in special
-> > handling
-> > needing to be introduced in pca953x_recalc_addr() and
-> > pca953x_check_register().
-> >=20
-> > Datasheet: https://www.nxp.com/docs/en/data-sheet/PCAL6534.pdf
-> > Datasheet:
-> > https://www.diodes.com/assets/Datasheets/PI4IOE5V6534Q.pdf
-> > Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> > ---
->=20
-> Is this series complete? I don't have patch 1/5 in my inbox and
-> neither does patchwork.
->=20
+On Wed, Aug 31, 2022 at 05:11:36PM +0200, Bartosz Golaszewski wrote:
+> On Wed, Aug 31, 2022 at 3:45 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-I used get_maintainers to generate the recipients, it's a patch for the
-binding documentation relating to the driver so didn't get sent to the
-same lists:
+...
 
-https://lore.kernel.org/lkml/20220829133923.1114555-3-martyn.welch@collabor=
-a.com/T/
+> > -       bank->clk = of_clk_get(bank->of_node, 0);
+> > +       bank->clk = of_clk_get(np, 0);
+> 
+> Why did you stop above? Why not regular clk_get here?
 
-Martyn
+Indices... And there is no non-OF API for that.
 
-> Bart
+> >         if (IS_ERR(bank->clk))
+> >                 return PTR_ERR(bank->clk);
+> >
+> > @@ -668,7 +660,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
+> >         if (id == GPIO_TYPE_V2 || id == GPIO_TYPE_V2_1) {
+> >                 bank->gpio_regs = &gpio_regs_v2;
+> >                 bank->gpio_type = GPIO_TYPE_V2;
+> > -               bank->db_clk = of_clk_get(bank->of_node, 1);
+> > +               bank->db_clk = of_clk_get(np, 1);
+> 
+> Ah, the clocks don't have names in DT? That's unfortunate...
+
+Yeah...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
