@@ -2,58 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13A165A7F0E
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 15:39:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2B7C5A7F18
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 15:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbiHaNjn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 09:39:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57378 "EHLO
+        id S231216AbiHaNmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 09:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229607AbiHaNjm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 09:39:42 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D10A7AB4
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 06:39:41 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id lx1so28390349ejb.12
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 06:39:41 -0700 (PDT)
+        with ESMTP id S231285AbiHaNmK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 09:42:10 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFC3CCD62
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 06:42:08 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id nc14so23531198ejc.4
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 06:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=rOGk5hX84CURUj49iLqSy+bmWa6WKlqmHe61J/dW794=;
-        b=TMHv6HxdfbAk6yLITvArW5txbBPBrVJo795B2GZ7fOpZpMx5Fhr9Q5fEZ7zsGZOF08
-         UjAF7oyM350tPvHakj1oBWoaEXL1Ml5midEusN9rQ8OiR2TpeV2z209KHkHcHpcDvuYy
-         /SNVG/5tuSb8/7uvagudeSbCkeoYpT4CvUyDmwV4ixZs8Jlt+hPAyRDLwZ66btdD6ycc
-         //22vUMawkbANkYZ5lwkoFn0k7rkn528JhbKLHvx50eSMnyc8PRKTwY3MhbCWl2TPGUO
-         x/XNz3pPfSn4wglj/9p3OXyNxqKkadWMx0q2oVo/cSnD5r4csZSitPQV+UA7EPCijv9x
-         c+MA==
+        bh=DLKViM3P0G3GIwgCELmESwzcn0D7+PHGeO/uJOOqS4I=;
+        b=FGcizhzxebhqaA7TUKgWmh4OIuHcAVTWgaFqufK7XSbHmjMFTY6Acajv7HoqD6CtD4
+         QXF5vXbNqRwa2S9dD2dwDUA9GI8W9n2h9WRInpIWVrDShU0kWhU1hx/TRYs4jOWzJFLR
+         ObA/Tzpyy+aZ/E97tY3XwcGDoWy3A+PUmZvVA6pEJjAszZ1y5ppf2OiRGb1uRZQc/qnL
+         juvmHCeBYg2ggfLmu0PI9w5GohiLT2341HUq68fJcvObvDoh6Yz1PpoeKxrK5tQJ+bj0
+         EbeiC+SSYzuRtRMyA8L//1buPutYnYM274QpJM7CJNoHFf0kTiIPCayhstRO7U+ZktyQ
+         aG3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=rOGk5hX84CURUj49iLqSy+bmWa6WKlqmHe61J/dW794=;
-        b=3HgsujVLL6h/Ju1dp98H+pAjfNRRmn/IsxjwvN8LJQ5cF7WEx1G25y9EJwpK1KIRut
-         L4aV/eKGVNMvaLBjzRG05zq61NwXReC1AojQ47a/+a3nyTgotPb2sGFkg4HbIb0V6v+s
-         ivrtSWN406cD8G8ZcddHaKYt95knKrT+JC6SI8VoUYZwxUGaARRF1cKmcPIW1JVsruLT
-         16iUAtC54rDgooE9Fwy9YBKEUqSPpDqS2Vl883vYFzY55L6I2dKh5+TExJwR0B865UYw
-         IX3z02Nx5kFSjnd6KLcdM8IraWIyE+GfgLAuG/nAz0t/GWKN4c0r6UoLKuZjtnEhucjg
-         iJlQ==
-X-Gm-Message-State: ACgBeo0iqbtob8gta2C/AdXE3stZkzdFxECSJOCWDP8nVosZKPPUZtgK
-        JedjNEq+jlzVTzg3l1HtKemb66naIW8VsO9GMqZu1MQoEdM=
-X-Google-Smtp-Source: AA6agR7Rs2yWvJ4dkirQ2iu8CXvCl+EjQ9u8HJtGrU8+nyPlXQFXHrd/mbJYzcM3z9U1V8yAWn5k2hFiaGvyqRcRi9Q=
+        bh=DLKViM3P0G3GIwgCELmESwzcn0D7+PHGeO/uJOOqS4I=;
+        b=MhcHFbVOPgEfdEh7GcsNlv57H+u+2Q66UpxhToVCQ8yPApXkoellnSovvhyhcbRvly
+         do6s2jvQ54E5MAjQ6uZKXzMZOBjet0zgFMGR4jh7Imh3Uwo19i1xddDJYyF1qrfXT5Gu
+         DZJLsIq7hxxciK/muQtdOUql2Z75VWslkZt+wNTmY4fK2PYU3kCEWN6LkWuNcYuvOmNk
+         uv5ha1d+kPz5uhbPg3m9BUgFb/kgKjuS/arbH2D/w3/mgAoizxFyP2XiKzQ91ROp1BMi
+         gtf5qAXT394xeXNIuoVfWmxX/lQrAgrdkIwv0+bDk2/j0mKysa4xhWf4CJs8AJ1vjC/i
+         I6sw==
+X-Gm-Message-State: ACgBeo34mQHeh3zjuH6Zsf+3uP5pLGTgtkxenu9pGzNSK1p8fd/5w16E
+        dAkTMyQIibcFqXlsGEODjY9EyKW4UTD4tDhAsPeoRB8Y3GQ=
+X-Google-Smtp-Source: AA6agR6X994OZ8FtA14MD+fyVSnSVFfDmA39ewtBDSiDtGAu5gkPBTkF2l/7T4GuajGvXuZL2QXvnfFReBbtQPRmGzA=
 X-Received: by 2002:a17:907:1c89:b0:741:4453:75be with SMTP id
- nb9-20020a1709071c8900b00741445375bemr14463012ejc.208.1661953180187; Wed, 31
- Aug 2022 06:39:40 -0700 (PDT)
+ nb9-20020a1709071c8900b00741445375bemr14471102ejc.208.1661953326893; Wed, 31
+ Aug 2022 06:42:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220830110525.1933198-1-Basavaraj.Natikar@amd.com>
-In-Reply-To: <20220830110525.1933198-1-Basavaraj.Natikar@amd.com>
+References: <20220830142727.313080-1-francesco.dolcini@toradex.com>
+In-Reply-To: <20220830142727.313080-1-francesco.dolcini@toradex.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 31 Aug 2022 15:39:28 +0200
-Message-ID: <CACRpkdb8B+XP=_Fip4nwug2bfmJE_3AdEy6dnN5RdseQ5ED3OQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: change dev_warn to dev_dbg for additional
- feature support
-To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc:     linux-gpio@vger.kernel.org, Shyam-sundar.S-k@amd.com
+Date:   Wed, 31 Aug 2022 15:41:55 +0200
+Message-ID: <CACRpkdazNns-v5upE27xcW0OMDvQO=X6o1qLzdd4y0pPtTshjQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: imx8m: kconfig: Depends on SOC_IMX8M
+To:     Francesco Dolcini <francesco.dolcini@toradex.com>
+Cc:     Peng Fan <peng.fan@nxp.com>, linux-gpio@vger.kernel.org,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -65,13 +68,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 30, 2022 at 1:05 PM Basavaraj Natikar
-<Basavaraj.Natikar@amd.com> wrote:
+On Tue, Aug 30, 2022 at 4:27 PM Francesco Dolcini
+<francesco.dolcini@toradex.com> wrote:
 
-> Use dev_dbg instead of dev_warn for additional support of pinmux
-> feature.
+> Change PINCTRL_IMX8M* dependency from just ARCH_MXC to SOC_IMX8M,
+> likewise is done for other PINCTRL_IMX* kconfig. This avoid polluting
+> the config when SOC_IMX8M is not enabled.
 >
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
 Patch applied.
 
