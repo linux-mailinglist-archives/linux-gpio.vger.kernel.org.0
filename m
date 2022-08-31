@@ -2,93 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 751115A7F5A
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 15:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88D305A7F70
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 16:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbiHaNy4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 09:54:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54804 "EHLO
+        id S229449AbiHaOAl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 10:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231232AbiHaNyy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 09:54:54 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36EF5F3E;
-        Wed, 31 Aug 2022 06:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1661954090; x=1693490090;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EPcDBYeJU+l5J9XRw8iQR5txXkoz1uF+BFazkk+GgL4=;
-  b=WU3yzkJ6pxqkicY1/SV+fq4qpCtt5p92Un0RGmMtLZcBR7KUaoTIcR5F
-   oVbC3bLaYq/Xcru0yBncwT91e7WIx/0oi90YBLL/yLuyhHHosL9ZtkeoF
-   n33+nXHxpnboZTSlVml1nHaDqMYuCtZMNB7zPoSYaSk8HovfB9puBL6ym
-   a7OTLcH/IzIge9JnCaMscpium1uY0Y0AEf2/UnsALlnOG9pBMyWI1E7II
-   n/A/fthUS9CZzXMJfD9e0zfEHKW/iWoC9wQ/1XXZAUsFKbgxxAnrMwcK3
-   v0Ia+PO4AUWepsnQ39wjEph+ItSNElD/ynWVLjel/vZr4dizKpAx8UjJf
-   w==;
-X-IronPort-AV: E=Sophos;i="5.93,278,1654585200"; 
-   d="scan'208";a="178614949"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Aug 2022 06:54:48 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Wed, 31 Aug 2022 06:54:29 -0700
-Received: from localhost.localdomain (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Wed, 31 Aug 2022 06:54:27 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <linus.walleij@linaro.org>,
-        <linux@armlinux.org.uk>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 3/3] pinctrl: at91: use dev_dbg() instead of printk()
-Date:   Wed, 31 Aug 2022 16:56:36 +0300
-Message-ID: <20220831135636.3176406-4-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20220831135636.3176406-1-claudiu.beznea@microchip.com>
-References: <20220831135636.3176406-1-claudiu.beznea@microchip.com>
+        with ESMTP id S229981AbiHaOAk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 10:00:40 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384396E2F5
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 07:00:39 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id e18so11000449edj.3
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 07:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=6P2lNRWGpZ/wwTsS6VCxsNms7FDaVc457DP8/wjf4sI=;
+        b=52a+2IX0YGfnqz28f3UmFbBleYRk6kTKTLXnAGyUYgRMmVD1G3B2whwY8hGfSNj9tZ
+         4S96eLI7xh/bOk7Q2Sf3XdlDb4MhpYUPI04ZuvDxLZrWrCRDtQbWkc1cXvZ3aL1juPcM
+         6aBk499GW2+fpjSMJU4+uTjmx+9k9Le7RjgiPe3d4AeIGbZHzyyrTesZx4c1ZFgXML9F
+         yFYXWyJYY5+m3bRUFY5fW9ZHTmOoNiLRjoX3H3UaNfrFfxWYxsMf/4Qi/rCO5zYxVvXq
+         bFVzKPPxTNSQudB4bZBISfM4VLwMTTZ5AWFl321KoAsNhJADDmNTG15hFH3U63eab4/l
+         JR7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=6P2lNRWGpZ/wwTsS6VCxsNms7FDaVc457DP8/wjf4sI=;
+        b=EVbMTqp1KMK9lKNl7KNIp9xnwQ6mWO5edcw2nsEAJ30/xMyQ3sA2gamsizw6oHFc4N
+         64hM8LPh5Wp/ex3Sw/MpBt11sZctXRGE64WBlQmk5AXhbcLeCFgpKUUOAb82AeagAxVa
+         MCmr0sKAjruGhZOL9oAHvXDYm5qI6Bp+xI8LdIx/W0cIuO0C05R/9OxInuzoeHz5PrEg
+         4bHMkYnV+wq9Icf0TlXe2lNSsRtHxFcxDkGh53cUj+8+ROawY4tZLyJCi/yaUaHsETPI
+         3QTd694he2Ek0RET0SejcZMTDOkVGAjoRrdbtyBi49Z8L75/myp7KYfriPbAfHQAXUco
+         9zEg==
+X-Gm-Message-State: ACgBeo2TFMwdjBJMS4/YjNMRpXAQhJRmp9UVrglqQhbTGEYOu9yZKXjm
+        Rg9TBRzR0ORniDKRvFgBb4JxfNca2Dw3SM2MWaHMYA==
+X-Google-Smtp-Source: AA6agR6v2xfdp44q10zwuyuTtHUsTsSrbGtgUSYRAGCpH2+GAlWVbFFmwXd5cRLVHL5VvMA4Ov7vkQJOB7EHM3Bd32o=
+X-Received: by 2002:a05:6402:51c6:b0:43d:dd3a:196e with SMTP id
+ r6-20020a05640251c600b0043ddd3a196emr24908383edd.213.1661954437747; Wed, 31
+ Aug 2022 07:00:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <cover.1660839809.git.william.gray@linaro.org> <CAMRc=Md5Et-T++mZVw+jXnOWQS23o5hUOATYqs6b+pR1zr57Yw@mail.gmail.com>
+ <Yw9n+m26FhEyxbNs@ishi>
+In-Reply-To: <Yw9n+m26FhEyxbNs@ishi>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 31 Aug 2022 16:00:27 +0200
+Message-ID: <CAMRc=MeDZz9uK6o4dzL8YqvquepCeM6ZeL+2K0PLZYp50x-Wgg@mail.gmail.com>
+Subject: Re: [PATCH 0/6] isa: Ensure number of irq matches number of base
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use dev_dbg() instead of printk(KERN_DEBUG) to avoid the following
-checkpatch.pl warning:
-"Prefer [subsystem eg: netdev]_dbg([subsystem]dev, ... then
-dev_dbg(dev, ... then pr_debug(...  to printk(KERN_DEBUG ...".
+On Wed, Aug 31, 2022 at 3:54 PM William Breathitt Gray
+<william.gray@linaro.org> wrote:
+>
+> On Wed, Aug 31, 2022 at 02:35:51PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Aug 19, 2022 at 1:11 AM William Breathitt Gray
+> > <william.gray@linaro.org> wrote:
+> > >
+> > > Several ISA drivers support IRQ and call devm_request_irq() in their
+> > > device probe callbacks. These drivers typically provide an "irq" array
+> > > module parameter, which matches with the respective "base" array module
+> > > parameter, to specify what IRQ lines are used for each device. To reduce
+> > > code repetition, a module_isa_driver_with_irq helper macro is introduced
+> > > providing a check ensuring that the number of "irq" passed to the module
+> > > matches with the respective number of "base". The relevant ISA drivers
+> > > are updated accordingly to utilize the new module_isa_driver_with_irq
+> > > macro.
+> > >
+> > > William Breathitt Gray (6):
+> > >   isa: Introduce the module_isa_driver_with_irq helper macro
+> > >   counter: 104-quad-8: Ensure number of irq matches number of base
+> > >   gpio: 104-dio-48e: Ensure number of irq matches number of base
+> > >   gpio: 104-idi-48: Ensure number of irq matches number of base
+> > >   gpio: 104-idio-16: Ensure number of irq matches number of base
+> > >   gpio: ws16c48: Ensure number of irq matches number of base
+> > >
+> > >  drivers/counter/104-quad-8.c    |  5 ++--
+> > >  drivers/gpio/gpio-104-dio-48e.c |  5 ++--
+> > >  drivers/gpio/gpio-104-idi-48.c  |  5 ++--
+> > >  drivers/gpio/gpio-104-idio-16.c |  5 ++--
+> > >  drivers/gpio/gpio-ws16c48.c     |  5 ++--
+> > >  include/linux/isa.h             | 52 ++++++++++++++++++++++++++-------
+> > >  6 files changed, 57 insertions(+), 20 deletions(-)
+> > >
+> > >
+> > > base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+> > > --
+> > > 2.37.2
+> > >
+> >
+> > Looks good to me, do you send your PRs directly to Linus? Do you want
+> > me to take this through the GPIO tree?
+> >
+> > Bart
+>
+> Hi Bart,
+>
+> Would you take this through the GPIO tree? I'm planning on submitting
+> some more patches later for these GPIO drivers so it will be convenient
+> to keep all these changes within the same tree.
+>
+> Thanks,
+>
+> William Breathitt Gray
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/pinctrl/pinctrl-at91.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sure, just leave your Acks on the first two patches.
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 631a6289c2b6..81dbffab621f 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1659,8 +1659,8 @@ static int at91_gpio_suspend(struct device *dev)
- 	if (!at91_chip->wakeups)
- 		clk_disable_unprepare(at91_chip->clock);
- 	else
--		printk(KERN_DEBUG "GPIO-%c may wake for %08x\n",
--		       'A' + at91_chip->id, at91_chip->wakeups);
-+		dev_dbg(dev, "GPIO-%c may wake for %08x\n",
-+			'A' + at91_chip->id, at91_chip->wakeups);
- 
- 	return 0;
- }
--- 
-2.34.1
-
+Bart
