@@ -2,234 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E4545A80F4
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 17:11:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF9E5A810E
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 17:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230215AbiHaPLu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 11:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
+        id S231259AbiHaPTL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 11:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230151AbiHaPLt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 11:11:49 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB3DD39BC
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 08:11:48 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id h5so17450171ejb.3
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 08:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=wOCX4y8FzMJYgkjjoJS3gME0wgUGjFxqnmJfDos+UPM=;
-        b=YIzdWEFmARohc78qXTnCRvFCeJ63DJ4WKLpA/Fb5O6FBYg24YAqGcppsGttq71bjHN
-         OpLPyh/lgTqcuMXMUP7SQgXFCBEidwgoLtwSofpqi5CzweXv3qAZK+1Jth/1JR1VnXsi
-         ddMCFt3dl+1AdHvnJ3XJRw3XhoqhrYHdDQw5uIidozgYqZYplxCuiPKbIuZnDJgzz6jO
-         1DJkuGIF0moYUfXFXOEFsc0EP6QIL+DDDjwD32e3mRonyehjv0ZBMHZ5c2SXqXZHxzGZ
-         HR5wJ7xYaCg1S9+kcQFFBRO6jxeqX6J/ZmPBrf/pS7K1rWRlQQiSlStEHqGUpqVdb9lZ
-         Bprg==
+        with ESMTP id S231282AbiHaPTI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 11:19:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937C8D87C5
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 08:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661959144;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4Ujg0LqL4Zf7QSMNntgyL7zhBHA2KE0VEhGl9dm9Aa8=;
+        b=e8G3+XfObMLlbixQE9WG7buL5K5FL+tdzU029ovwh0vSDsh4IBoOQBNhdg5g0u2lwLg88a
+        kyoI6Oj4WlxK5XxdlxrOA3QY5PNUvmNxM8+4+ZpdVlzGCfXywAf3GijAk3yHAH22HT1q4s
+        lHTh0a2BmzpIk3y1XjmdDmG5orHx6kA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-182-KJ90BO_tPW-MIF5Z7iAZIw-1; Wed, 31 Aug 2022 11:19:02 -0400
+X-MC-Unique: KJ90BO_tPW-MIF5Z7iAZIw-1
+Received: by mail-ed1-f71.google.com with SMTP id x21-20020a05640226d500b0044856301c62so6719631edd.12
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 08:19:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=wOCX4y8FzMJYgkjjoJS3gME0wgUGjFxqnmJfDos+UPM=;
-        b=KKDALxl8hiz6SaWTi5UYerBqnP23MqMXfXWexPQuaeyTChTSVhnJbbyXIxCics0iMX
-         JPAbiqVv/uvzMTFhR0aJNC75//CE2Fs70fr1D+JeuE7kZy0MxJEMtSXShsH+9HTXlGaE
-         KdaqTOBzuv4ZxupR90M+9OYrWUmILIc7CJF4aOzsHb/VO8HylH+xdv25DDKNANCAYfwi
-         v9mrlkvvYXf0GD5h1LtG8QTAswME2bcaoOB9YxHfJ6aFeqa22GG82mKMUj9FkQeZbZgh
-         TbNDOwmbryn7v5wtNh+rfkNAsulceUrQ+SP5i1328SJmbUJoqXtweUT/wHsoBxHwX8nd
-         cUnQ==
-X-Gm-Message-State: ACgBeo3HWoKrQGyJSmVHrkVhICCmHt4o+R91vRCjlTPyei5zNhbbkFuF
-        d3pm0SDO1qMaXRtTkE6E1L5j5TvuxzRSKiaiIAYq4Q==
-X-Google-Smtp-Source: AA6agR6bv2tC4PXBKovvZ6XI4feX+mPDOiqadsDcBi7kPOxu80pi0rguDt2bMDC3QwFXaqcRDqJw0B0Q/R9+uA/6yUM=
-X-Received: by 2002:a17:906:8a4e:b0:730:9fcd:d988 with SMTP id
- gx14-20020a1709068a4e00b007309fcdd988mr20624187ejc.636.1661958706753; Wed, 31
- Aug 2022 08:11:46 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=4Ujg0LqL4Zf7QSMNntgyL7zhBHA2KE0VEhGl9dm9Aa8=;
+        b=mJkGYlspAdppT/whFordaNLtdMjAMeZsjDLFEZKxTkBUcBwDRPfKbH6ph+s9sB1EC/
+         6yx5NfABqUfvqVimZH91nlZUFAWV4/AgzP8rIZhCGsMMJ89RA8Te8LKSwNghmsaXdJOz
+         1i61sSQjiuIzvHa/LZVji97CtodWByaIj+q8Tc6Z04PoVb01qaiJotnLWD4o1POw2njY
+         JIEyjQwRRosIR3jyBBV29V6EKg8+hONHTep1Q4Q4XbSeS0kn01GUoi5PvxzHUkSyfrYT
+         ija6JVMU5xBf+a/p/vPnxHALnIX3pJsBh63hF7iWz3wwxLKD9edpeS1o715l6o7XcZ7I
+         1qxg==
+X-Gm-Message-State: ACgBeo0pGjMhva5hbo5fNtSMaRiX5IsUzvHzySl68p4f6osl1ddV470d
+        CVQDtwS4XsqbmZgeoHzPMfEObrmO22VF66jqUF4fUkU2erBITJn3a1Y4BSulOb4IhnK59Si0zev
+        WhA+MiDEjGqqFU1v2/qWOyw==
+X-Received: by 2002:a05:6402:1013:b0:448:dc53:752e with SMTP id c19-20020a056402101300b00448dc53752emr6030301edu.30.1661959141259;
+        Wed, 31 Aug 2022 08:19:01 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6FlKsO4zgVlNGD3cI2hGVtIC9Q8ir2eq28ILAW4L6wdIHEW/bWr5ocfIhSZ2PI7kbJ+ZZKOA==
+X-Received: by 2002:a05:6402:1013:b0:448:dc53:752e with SMTP id c19-20020a056402101300b00448dc53752emr6030275edu.30.1661959140988;
+        Wed, 31 Aug 2022 08:19:00 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id u16-20020a170906125000b0073d6093ac93sm7359153eja.16.2022.08.31.08.19.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Aug 2022 08:19:00 -0700 (PDT)
+Message-ID: <8aa159a1-f7e0-e54a-6a03-b76c563c62a6@redhat.com>
+Date:   Wed, 31 Aug 2022 17:18:59 +0200
 MIME-Version: 1.0
-References: <20220831134516.78108-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220831134516.78108-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 31 Aug 2022 17:11:36 +0200
-Message-ID: <CAMRc=MdQiBHr3cDPWN_PRj2nGVoG-GJJyRNrHNwTaAUvz=35ew@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio: rockchip: Switch to use fwnode instead of of_node
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 0/8] acpi: i2c: Use SharedAndWake and ExclusiveAndWake to
+ enable wake irq
+Content-Language: en-US
+To:     Raul Rangel <rrangel@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Tim Van Patten <timvp@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alistair Francis <alistair@alistair23.me>,
+        Angela Czubak <acz@semihalf.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>, Len Brown <lenb@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Yang Li <yang.lee@linux.alibaba.com>,
+        "jingle.wu" <jingle.wu@emc.com.tw>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20220830231541.1135813-1-rrangel@chromium.org>
+ <Yw9LdxWQMpnzgFe/@smile.fi.intel.com>
+ <CAHQZ30BemtpHiZHOh+Wvh3N9wz5SSD9VdoQHNbArKhZUmudkwQ@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHQZ30BemtpHiZHOh+Wvh3N9wz5SSD9VdoQHNbArKhZUmudkwQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 3:45 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> GPIO library now accepts fwnode as a firmware node, so
-> switch the driver to use it.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> v2: fixed compilation errors (LKP), replace some OF calls (Bart)
->  drivers/gpio/gpio-rockchip.c       | 38 +++++++++++-------------------
->  drivers/pinctrl/pinctrl-rockchip.h |  2 --
->  2 files changed, 14 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index bb50335239ac..e8fa99fd4c80 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -14,12 +14,11 @@
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_device.h>
-> -#include <linux/of_irq.h>
->  #include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
->
->  #include "../pinctrl/core.h"
-> @@ -518,7 +517,7 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
->         struct irq_chip_generic *gc;
->         int ret;
->
-> -       bank->domain = irq_domain_add_linear(bank->of_node, 32,
-> +       bank->domain = irq_domain_create_linear(dev_fwnode(bank->dev), 32,
->                                         &irq_generic_chip_ops, NULL);
->         if (!bank->domain) {
->                 dev_warn(bank->dev, "could not init irq domain for bank %s\n",
-> @@ -606,14 +605,10 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
->          * files which don't set the "gpio-ranges" property or systems that
->          * utilize ACPI the driver has to call gpiochip_add_pin_range().
->          */
-> -       if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
-> -               struct device_node *pctlnp = of_get_parent(bank->of_node);
-> +       if (!device_property_read_bool(bank->dev, "gpio-ranges")) {
->                 struct pinctrl_dev *pctldev = NULL;
->
-> -               if (!pctlnp)
-> -                       return -ENODATA;
-> -
-> -               pctldev = of_pinctrl_get(pctlnp);
-> +               pctldev = pinctrl_get(bank->dev->parent);
->                 if (!pctldev)
->                         return -ENODEV;
->
-> @@ -641,23 +636,20 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
->
->  static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
->  {
-> +       struct platform_device *pdev = to_platform_device(bank->dev);
-> +       struct device_node *np = bank->dev->of_node;
->         struct resource res;
->         int id = 0;
->
-> -       if (of_address_to_resource(bank->of_node, 0, &res)) {
-> -               dev_err(bank->dev, "cannot find IO resource for bank\n");
-> -               return -ENOENT;
-> -       }
-> -
-> -       bank->reg_base = devm_ioremap_resource(bank->dev, &res);
-> +       bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(bank->reg_base))
->                 return PTR_ERR(bank->reg_base);
->
-> -       bank->irq = irq_of_parse_and_map(bank->of_node, 0);
-> +       bank->irq = platform_get_irq(pdev, 0);
->         if (!bank->irq)
->                 return -EINVAL;
->
-> -       bank->clk = of_clk_get(bank->of_node, 0);
-> +       bank->clk = of_clk_get(np, 0);
+Hi,
 
-Why did you stop above? Why not regular clk_get here?
+On 8/31/22 16:37, Raul Rangel wrote:
+> Interesting... The patch series is here:
+> https://patchwork.kernel.org/project/linux-input/cover/20220830231541.1135813-1-rrangel@chromium.org/
+> 
+> I'll look into why you only got added to 2 of the emails.
 
->         if (IS_ERR(bank->clk))
->                 return PTR_ERR(bank->clk);
->
-> @@ -668,7 +660,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
->         if (id == GPIO_TYPE_V2 || id == GPIO_TYPE_V2_1) {
->                 bank->gpio_regs = &gpio_regs_v2;
->                 bank->gpio_type = GPIO_TYPE_V2;
-> -               bank->db_clk = of_clk_get(bank->of_node, 1);
-> +               bank->db_clk = of_clk_get(np, 1);
+FWIW I also received the full series without problems.
 
-Ah, the clocks don't have names in DT? That's unfortunate...
+I'll try to reply to this soon-ish, but I have a bit of
+a patch backlog to process and I'm trying to process
+the backlog in FIFO order and this is one of the last
+series in the backlog ...
 
-Bart
+Regards,
 
->                 if (IS_ERR(bank->db_clk)) {
->                         dev_err(bank->dev, "cannot find debounce clk\n");
->                         clk_disable_unprepare(bank->clk);
-> @@ -705,17 +697,16 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
->         struct device_node *np = dev->of_node;
-> -       struct device_node *pctlnp = of_get_parent(np);
->         struct pinctrl_dev *pctldev = NULL;
->         struct rockchip_pin_bank *bank = NULL;
->         struct rockchip_pin_deferred *cfg;
->         static int gpio;
->         int id, ret;
->
-> -       if (!np || !pctlnp)
-> +       if (!dev->parent)
->                 return -ENODEV;
->
-> -       pctldev = of_pinctrl_get(pctlnp);
-> +       pctldev = pinctrl_get(dev->parent);
->         if (!pctldev)
->                 return -EPROBE_DEFER;
->
-> @@ -728,7 +719,6 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
->                 return -EINVAL;
->
->         bank->dev = dev;
-> -       bank->of_node = np;
->
->         raw_spin_lock_init(&bank->slock);
->
-> @@ -776,7 +766,7 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
->         mutex_unlock(&bank->deferred_lock);
->
->         platform_set_drvdata(pdev, bank);
-> -       dev_info(dev, "probed %pOF\n", np);
-> +       dev_info(dev, "probed %pfw\n", dev_fwnode(dev));
->
->         return 0;
->  }
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
-> index 4759f336941e..37a0501bcc03 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.h
-> +++ b/drivers/pinctrl/pinctrl-rockchip.h
-> @@ -299,7 +299,6 @@ struct rockchip_drv {
->   * @drv: array describing the 4 drive strength sources of the bank
->   * @pull_type: array describing the 4 pull type sources of the bank
->   * @valid: is all necessary information present
-> - * @of_node: dt node of this bank
->   * @drvdata: common pinctrl basedata
->   * @domain: irqdomain of the gpio bank
->   * @gpio_chip: gpiolib chip
-> @@ -327,7 +326,6 @@ struct rockchip_pin_bank {
->         struct rockchip_drv             drv[4];
->         enum rockchip_pin_pull_type     pull_type[4];
->         bool                            valid;
-> -       struct device_node              *of_node;
->         struct rockchip_pinctrl         *drvdata;
->         struct irq_domain               *domain;
->         struct gpio_chip                gpio_chip;
-> --
-> 2.35.1
->
+Hans
+
+
+> 
+> On Wed, Aug 31, 2022 at 5:52 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>>
+>> On Tue, Aug 30, 2022 at 05:15:33PM -0600, Raul E Rangel wrote:
+>>> Today, i2c drivers are making the assumption that their IRQs can also
+>>> be used as wake IRQs. This isn't always the case and it can lead to
+>>> spurious wakes. This has recently started to affect AMD Chromebooks.
+>>> With the introduction of
+>>> d62bd5ce12d7 ("pinctrl: amd: Implement irq_set_wake"), the AMD GPIO
+>>> controller gained the capability to set the wake bit on each GPIO. The
+>>> ACPI specification defines two ways to inform the system if a device is
+>>> wake capable:
+>>> 1) The _PRW object defines the GPE that can be used to wake the system.
+>>> 2) Setting ExclusiveAndWake or SharedAndWake in the _CRS GpioInt.
+>>>
+>>> Currently only the first method is supported. The i2c drivers don't have
+>>> any indication that the IRQ is wake capable, so they guess. This causes
+>>> spurious interrupts, for example:
+>>> * We have an ACPI HID device that has `_PR0` and `_PR3`. It doesn't have
+>>>   `_PRW` or `ExclusiveAndWake` so that means the device can't wake the
+>>>   system.
+>>> * The IRQ line is active level low for this device and is pulled up by
+>>>   the power resource defined in `_PR0`/`_PR3`.
+>>> * The i2c driver will (incorrectly) arm the GPIO for wake by calling
+>>>   `enable_irq_wake` as part of its suspend hook.
+>>> * ACPI will power down the device since it doesn't have a wake GPE
+>>>   associated with it.
+>>> * When the device is powered down, the IRQ line will drop, and it will
+>>>   trigger a wake event.
+>>>
+>>> See the following debug log:
+>>> [   42.335804] PM: Suspending system (s2idle)
+>>> [   42.340186] amd_gpio AMD0030:00: RX: Setting wake for pin 89 to enable
+>>> [   42.467736]     power-0416 __acpi_power_off      : Power resource [PR00] turned off
+>>> [   42.467739] device_pm-0280 device_set_power      : Device [H05D] transitioned to D3cold
+>>> [   42.475210] PM: pm_system_irq_wakeup: 11 triggered pinctrl_amd
+>>> [   42.535293] PM: Wakeup unrelated to ACPI SCI
+>>> [   42.535294] PM: resume from suspend-to-idle
+>>>
+>>> In order to fix this, we need to take into account the wake capable bit
+>>> defined on the GpioInt. This is accomplished by:
+>>> * Migrating some of the i2c drivers over to using the PM subsystem to
+>>>   manage the wake IRQ. max8925-i2c, elants_i2c, and raydium_i2c_ts still
+>>>   need to be migrated, I can do that depending on the feedback to this
+>>>   patch series.
+>>> * Expose the wake_capable bit from the ACPI GpioInt resource to the
+>>>   i2c core.
+>>> * Use the wake_capable bit in the i2c core to call
+>>>   `dev_pm_set_wake_irq`. This reuses the existing device tree flow.
+>>> * Make the i2c drivers stop calling `dev_pm_set_wake_irq` since it's now
+>>>   handled by the i2c core.
+>>> * Make the ACPI device PM system aware of the wake_irq. This is
+>>>   necessary so the device doesn't incorrectly get powered down when a
+>>>   wake_irq is enabled.
+>>>
+>>> I've tested this code with various combinations of having _PRW,
+>>> ExclusiveAndWake and power resources all defined or not defined, but it
+>>> would be great if others could test this out on their hardware.
+>>
+>> I have got only cover letter and a single patch (#3). What's going on?
+>>
+>> Note: I'm also reviewer of I涎 DesignWare driver, you really have to
+>> fix your tools / submission process and try again. No review for this
+>> series.
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+>>
+>>
+> 
+
