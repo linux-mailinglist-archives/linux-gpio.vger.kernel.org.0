@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68CC25A86C1
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 21:31:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 312845A86ED
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 21:44:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231569AbiHaTba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 15:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
+        id S231947AbiHaToe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 15:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbiHaTb3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 15:31:29 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5991E86A2;
-        Wed, 31 Aug 2022 12:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661974287; x=1693510287;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yvh5Hf7vADVeYcVhEw21oWTTub2YF7Sisu+x+c8taZQ=;
-  b=QxsVdFlslxc9GvjYaVz8Buqi6BBS0kTDrm5Geq+ShMLSmhLRJUxIhs2J
-   XvNJ15xI+cmGBDBLOF5Jrkql/1Wlv2k1QnAh6hfEZh8fC6f8jQG6epDni
-   hwR9rQpNIB4KbqVVrW8ie1Ad2ebYHKUj4C/CtG3GAqlf1Tjo2dAEXnLeE
-   majv49LKkLoDb3wIw3kAHuXjP7DFL89lS6bD//jbFrCbJxWfDU5e9ZeY5
-   fLYOtL4yalvnz8ot3EXancxx7KD7pDtn5I3sd2s5vFp2wUaKGkJOgzBZL
-   9ePy9hJzi1Bm6CIfx2Q+lr4wCtqaHyMRUAoWMSBSyRnIB3GFdJjPkvX+x
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="321669893"
-X-IronPort-AV: E=Sophos;i="5.93,278,1654585200"; 
-   d="scan'208";a="321669893"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 12:31:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,278,1654585200"; 
-   d="scan'208";a="754528329"
-Received: from lkp-server02.sh.intel.com (HELO 811e2ceaf0e5) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 31 Aug 2022 12:31:24 -0700
-Received: from kbuild by 811e2ceaf0e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oTTQq-0000dG-0n;
-        Wed, 31 Aug 2022 19:31:24 +0000
-Date:   Thu, 1 Sep 2022 03:30:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] gpio: rockchip: Switch to use fwnode instead of
- of_node
-Message-ID: <202209010347.s5HFnZfF-lkp@intel.com>
-References: <20220831134516.78108-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229652AbiHaTod (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 15:44:33 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D562815A28
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 12:44:31 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id gb36so9597527ejc.10
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 12:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=VkN9kjUhyzdT4oetnRVdj6WFy3Q+ODyLNUTLMRrWCOU=;
+        b=jnoZz37Afx7vOS3iOdri3YbmU0nJL11sAICLa1IjRRdteBOcSQ5fX36C+GB7uY3uGu
+         too9RUznebC7dzqDpYIK3uXi/9G08AmaqAcLs8pe3WN9b6IJuUlgenI+VyBrjJjdEZVX
+         0ddZzfaG8Xzeeg2bfYcoEZM2lbICLrUl7G5ire3Y9SQkv/wu9j+i/FzJpJ0VY9rTKl3L
+         /7Rigmgjj5uv0du2sNg5piTTMDSAR76wW31GEitWfq39WHqqeYgH2F1YnJIg74MKvFIS
+         VQCL0nl5uNkT7xX1XLvTaCypGIvDgP98djxfCWKA9lSPQXDau+Z/4cXWwu0yxY25kybe
+         3Wdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=VkN9kjUhyzdT4oetnRVdj6WFy3Q+ODyLNUTLMRrWCOU=;
+        b=JOjTcVhghBcJ2obKpJUZxUZfhAMRjDum8bnCq5bg6YE2tDG/KucFE1lUiFy/obXMmQ
+         JBp5atNx3CvoZIpZWwB76QLk9lML0ix7SvtTTFeJfg/M4MT1oQPfhsi3t7R8atmRCApn
+         sp2wRfbO1jTAXSckypmR0FQ1TqdmAae7iTiXBwhvz8uj2tLRpbVaFjkoSOPecf+fZioU
+         t3y8/BPtMXgiVvFLEoseMJUMe7w77qrfn+pt6CtdLWr3M55LLZQ1xGnBv2kCYq1pN8+X
+         jqDZ9PDUusYcyiEE3GOCfWBnsr+p6CzaKtXd+oA45Q5UhaE84bSFLV4Vn/9urRQ+OGaM
+         bUSQ==
+X-Gm-Message-State: ACgBeo2cmG33FDjIPgNKW9KuhCcwJ054OhuzMdgi0GUWuJM9J0fHshCC
+        DI4aAOtx6ooKoxj+wCnjW0838e2gPqN+4KT7hRwZgg==
+X-Google-Smtp-Source: AA6agR5MTT/5X3Lj28oVpccvJJVfK2uwoHcuj+zttvxgOp9gs/MFWIZrWXRK1OSYY83eGMl2c3TmmiX4+nzizsps4Z4=
+X-Received: by 2002:a17:907:7254:b0:731:61c6:ecf9 with SMTP id
+ ds20-20020a170907725400b0073161c6ecf9mr21837260ejc.101.1661975070397; Wed, 31
+ Aug 2022 12:44:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220831134516.78108-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+References: <20220829133923.1114555-1-martyn.welch@collabora.com>
+ <20220829133923.1114555-5-martyn.welch@collabora.com> <CAMRc=McbNwLRq_OBo_=xwFJJ-_8C5VfjQt75dvSVC9SqUYTpFg@mail.gmail.com>
+ <e89ccd1ecb675ab899dba0f08624a3dde195c970.camel@collabora.com>
+In-Reply-To: <e89ccd1ecb675ab899dba0f08624a3dde195c970.camel@collabora.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 31 Aug 2022 21:44:19 +0200
+Message-ID: <CAMRc=MdKU0nWQnOqyMpMk-fwZ2svRhQJ+jgE_u20jLmRKCmPZw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] gpio: pca953x: Add support for PCAL6534 and compatible
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, kernel@collabora.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,198 +67,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Wed, Aug 31, 2022 at 6:30 PM Martyn Welch <martyn.welch@collabora.com> wrote:
+>
+> On Wed, 2022-08-31 at 13:57 +0200, Bartosz Golaszewski wrote:
+> > On Mon, Aug 29, 2022 at 3:39 PM Martyn Welch
+> > <martyn.welch@collabora.com> wrote:
+> > >
+> > > Add support for the NXP PCAL6534 and Diodes Inc. PI4IOE5V6534Q.
+> > > These
+> > > devices, which have identical register layouts and features, are
+> > > broadly a
+> > > 34-bit version of the PCAL6524.
+> > >
+> > > However, whilst the registers are broadly what you'd expect for a
+> > > 34-bit
+> > > version of the PCAL6524, the spacing of the registers has been
+> > > compacted. This has the unfortunate effect of breaking the bit
+> > > shift
+> > > based mechanism that is employed to work out register locations
+> > > used by
+> > > the other chips supported by this driver, resulting in special
+> > > handling
+> > > needing to be introduced in pca953x_recalc_addr() and
+> > > pca953x_check_register().
+> > >
+> > > Datasheet: https://www.nxp.com/docs/en/data-sheet/PCAL6534.pdf
+> > > Datasheet:
+> > > https://www.diodes.com/assets/Datasheets/PI4IOE5V6534Q.pdf
+> > > Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> > > ---
+> >
+> > Is this series complete? I don't have patch 1/5 in my inbox and
+> > neither does patchwork.
+> >
+>
+> I used get_maintainers to generate the recipients, it's a patch for the
+> binding documentation relating to the driver so didn't get sent to the
+> same lists:
+>
+> https://lore.kernel.org/lkml/20220829133923.1114555-3-martyn.welch@collabora.com/T/
+>
+> Martyn
+>
+> > Bart
+>
 
-I love your patch! Yet something to improve:
+Ah, ok. Just for completeness, please send the entire series to
+everyone unless it's lots of patches.
 
-[auto build test ERROR on rockchip/for-next]
-[also build test ERROR on linus/master v6.0-rc3 next-20220831]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/gpio-rockchip-Switch-to-use-fwnode-instead-of-of_node/20220831-214721
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-config: loongarch-buildonly-randconfig-r003-20220830 (https://download.01.org/0day-ci/archive/20220901/202209010347.s5HFnZfF-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/1adf1d7efa2837b148a47d10749922358e6f1b8f
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Andy-Shevchenko/gpio-rockchip-Switch-to-use-fwnode-instead-of-of_node/20220831-214721
-        git checkout 1adf1d7efa2837b148a47d10749922358e6f1b8f
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash drivers/gpio/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All error/warnings (new ones prefixed by >>):
-
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpiolib_register':
->> drivers/gpio/gpio-rockchip.c:611:27: error: implicit declaration of function 'pinctrl_get'; did you mean 'of_pinctrl_get'? [-Werror=implicit-function-declaration]
-     611 |                 pctldev = pinctrl_get(bank->dev->parent);
-         |                           ^~~~~~~~~~~
-         |                           of_pinctrl_get
->> drivers/gpio/gpio-rockchip.c:611:25: warning: assignment to 'struct pinctrl_dev *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     611 |                 pctldev = pinctrl_get(bank->dev->parent);
-         |                         ^
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_get_bank_data':
-   drivers/gpio/gpio-rockchip.c:639:40: error: implicit declaration of function 'to_platform_device' [-Werror=implicit-function-declaration]
-     639 |         struct platform_device *pdev = to_platform_device(bank->dev);
-         |                                        ^~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:639:40: warning: initialization of 'struct platform_device *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-   drivers/gpio/gpio-rockchip.c:644:26: error: implicit declaration of function 'devm_platform_ioremap_resource'; did you mean 'devm_ioremap_resource'? [-Werror=implicit-function-declaration]
-     644 |         bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                          devm_ioremap_resource
-   drivers/gpio/gpio-rockchip.c:644:24: warning: assignment to 'void *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     644 |         bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
-         |                        ^
-   drivers/gpio/gpio-rockchip.c:648:21: error: implicit declaration of function 'platform_get_irq'; did you mean 'platform_notify'? [-Werror=implicit-function-declaration]
-     648 |         bank->irq = platform_get_irq(pdev, 0);
-         |                     ^~~~~~~~~~~~~~~~
-         |                     platform_notify
-   drivers/gpio/gpio-rockchip.c:641:25: warning: unused variable 'res' [-Wunused-variable]
-     641 |         struct resource res;
-         |                         ^~~
-   drivers/gpio/gpio-rockchip.c: At top level:
-   drivers/gpio/gpio-rockchip.c:696:39: warning: 'struct platform_device' declared inside parameter list will not be visible outside of this definition or declaration
-     696 | static int rockchip_gpio_probe(struct platform_device *pdev)
-         |                                       ^~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_probe':
-   drivers/gpio/gpio-rockchip.c:698:35: error: invalid use of undefined type 'struct platform_device'
-     698 |         struct device *dev = &pdev->dev;
-         |                                   ^~
-   drivers/gpio/gpio-rockchip.c:709:17: warning: assignment to 'struct pinctrl_dev *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     709 |         pctldev = pinctrl_get(dev->parent);
-         |                 ^
-   drivers/gpio/gpio-rockchip.c:768:9: error: implicit declaration of function 'platform_set_drvdata' [-Werror=implicit-function-declaration]
-     768 |         platform_set_drvdata(pdev, bank);
-         |         ^~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c: At top level:
-   drivers/gpio/gpio-rockchip.c:774:40: warning: 'struct platform_device' declared inside parameter list will not be visible outside of this definition or declaration
-     774 | static int rockchip_gpio_remove(struct platform_device *pdev)
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_remove':
-   drivers/gpio/gpio-rockchip.c:776:42: error: implicit declaration of function 'platform_get_drvdata' [-Werror=implicit-function-declaration]
-     776 |         struct rockchip_pin_bank *bank = platform_get_drvdata(pdev);
-         |                                          ^~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:776:42: warning: initialization of 'struct rockchip_pin_bank *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-   drivers/gpio/gpio-rockchip.c: At top level:
-   drivers/gpio/gpio-rockchip.c:790:15: error: variable 'rockchip_gpio_driver' has initializer but incomplete type
-     790 | static struct platform_driver rockchip_gpio_driver = {
-         |               ^~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:791:10: error: 'struct platform_driver' has no member named 'probe'
-     791 |         .probe          = rockchip_gpio_probe,
-         |          ^~~~~
-   drivers/gpio/gpio-rockchip.c:791:27: warning: excess elements in struct initializer
-     791 |         .probe          = rockchip_gpio_probe,
-         |                           ^~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:791:27: note: (near initialization for 'rockchip_gpio_driver')
-   drivers/gpio/gpio-rockchip.c:792:10: error: 'struct platform_driver' has no member named 'remove'
-     792 |         .remove         = rockchip_gpio_remove,
-         |          ^~~~~~
-   drivers/gpio/gpio-rockchip.c:792:27: warning: excess elements in struct initializer
-     792 |         .remove         = rockchip_gpio_remove,
-         |                           ^~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:792:27: note: (near initialization for 'rockchip_gpio_driver')
-   drivers/gpio/gpio-rockchip.c:793:10: error: 'struct platform_driver' has no member named 'driver'
-     793 |         .driver         = {
-         |          ^~~~~~
-   drivers/gpio/gpio-rockchip.c:793:27: error: extra brace group at end of initializer
-     793 |         .driver         = {
-         |                           ^
-   drivers/gpio/gpio-rockchip.c:793:27: note: (near initialization for 'rockchip_gpio_driver')
-   drivers/gpio/gpio-rockchip.c:793:27: warning: excess elements in struct initializer
-   drivers/gpio/gpio-rockchip.c:793:27: note: (near initialization for 'rockchip_gpio_driver')
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_init':
-   drivers/gpio/gpio-rockchip.c:801:16: error: implicit declaration of function 'platform_driver_register' [-Werror=implicit-function-declaration]
-     801 |         return platform_driver_register(&rockchip_gpio_driver);
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_exit':
-   drivers/gpio/gpio-rockchip.c:807:9: error: implicit declaration of function 'platform_driver_unregister'; did you mean 'driver_unregister'? [-Werror=implicit-function-declaration]
-     807 |         platform_driver_unregister(&rockchip_gpio_driver);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-         |         driver_unregister
-   drivers/gpio/gpio-rockchip.c: At top level:
-   drivers/gpio/gpio-rockchip.c:790:31: error: storage size of 'rockchip_gpio_driver' isn't known
-     790 | static struct platform_driver rockchip_gpio_driver = {
-         |                               ^~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for PCI_LOONGSON
-   Depends on [n]: PCI [=y] && (MACH_LOONGSON64 [=y] || COMPILE_TEST [=y]) && (OF [=y] || ACPI [=y]) && PCI_QUIRKS [=n]
-   Selected by [y]:
-   - LOONGARCH [=y]
-
-
-vim +611 drivers/gpio/gpio-rockchip.c
-
-   577	
-   578	static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
-   579	{
-   580		struct gpio_chip *gc;
-   581		int ret;
-   582	
-   583		bank->gpio_chip = rockchip_gpiolib_chip;
-   584	
-   585		gc = &bank->gpio_chip;
-   586		gc->base = bank->pin_base;
-   587		gc->ngpio = bank->nr_pins;
-   588		gc->label = bank->name;
-   589		gc->parent = bank->dev;
-   590	
-   591		ret = gpiochip_add_data(gc, bank);
-   592		if (ret) {
-   593			dev_err(bank->dev, "failed to add gpiochip %s, %d\n",
-   594				gc->label, ret);
-   595			return ret;
-   596		}
-   597	
-   598		/*
-   599		 * For DeviceTree-supported systems, the gpio core checks the
-   600		 * pinctrl's device node for the "gpio-ranges" property.
-   601		 * If it is present, it takes care of adding the pin ranges
-   602		 * for the driver. In this case the driver can skip ahead.
-   603		 *
-   604		 * In order to remain compatible with older, existing DeviceTree
-   605		 * files which don't set the "gpio-ranges" property or systems that
-   606		 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-   607		 */
-   608		if (!device_property_read_bool(bank->dev, "gpio-ranges")) {
-   609			struct pinctrl_dev *pctldev = NULL;
-   610	
- > 611			pctldev = pinctrl_get(bank->dev->parent);
-   612			if (!pctldev)
-   613				return -ENODEV;
-   614	
-   615			ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
-   616						     gc->base, gc->ngpio);
-   617			if (ret) {
-   618				dev_err(bank->dev, "Failed to add pin range\n");
-   619				goto fail;
-   620			}
-   621		}
-   622	
-   623		ret = rockchip_interrupts_register(bank);
-   624		if (ret) {
-   625			dev_err(bank->dev, "failed to register interrupt, %d\n", ret);
-   626			goto fail;
-   627		}
-   628	
-   629		return 0;
-   630	
-   631	fail:
-   632		gpiochip_remove(&bank->gpio_chip);
-   633	
-   634		return ret;
-   635	}
-   636	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Bart
