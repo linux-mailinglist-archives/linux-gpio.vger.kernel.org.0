@@ -2,157 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C17C35A87BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 22:53:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B984B5A87C1
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 22:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231447AbiHaUxb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 16:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        id S230078AbiHaUzZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 16:55:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231210AbiHaUxa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 16:53:30 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74484F23FD;
-        Wed, 31 Aug 2022 13:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661979209; x=1693515209;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KKeRnnlsAo9bkSmskdePAcxdL6645n0Y/XUHlwuJx0o=;
-  b=SaKNiuPnojNzQGV2huqO/KUa1HGfF26G/27w006x6I/reBQtTinHZrvh
-   DWcgQPzAj1f1LZNZ9vNcDmIsvibIQNrS7lLT60TVejASsppspJ+rUcHpF
-   ZO9nkjdf5kbp59Jiy3sMAs/e1K09/rxcj0vXIpMFYSgShH6ITyk0QFe0c
-   CKooh9WkN3mmralYNPr1+rk5MEAIYwra3+eMXaMBRK6o7+vhkxnefbsD0
-   8mqjVyc5nPd+HG6iHqYpdveM79P7sJuK3bruXJprItfO8A14CXJ9J37Ze
-   10Kor8rgad3Yrapr5Th8vA15Yg4clkp5Y7YyygcckTkOfWd5LnYTtm4Ts
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="275944005"
-X-IronPort-AV: E=Sophos;i="5.93,279,1654585200"; 
-   d="scan'208";a="275944005"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 13:53:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,279,1654585200"; 
-   d="scan'208";a="680566751"
-Received: from lkp-server02.sh.intel.com (HELO 811e2ceaf0e5) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 31 Aug 2022 13:53:27 -0700
-Received: from kbuild by 811e2ceaf0e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oTUiE-0000hx-1r;
-        Wed, 31 Aug 2022 20:53:26 +0000
-Date:   Thu, 1 Sep 2022 04:52:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>, linux-gpio@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] gpio: Add gpio latch driver
-Message-ID: <202209010432.NKyeVosI-lkp@intel.com>
-References: <20220831055811.1936613-2-s.hauer@pengutronix.de>
+        with ESMTP id S229631AbiHaUzY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 16:55:24 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71DB4AD66;
+        Wed, 31 Aug 2022 13:55:22 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id f9so8365134qvw.11;
+        Wed, 31 Aug 2022 13:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=Lm/RZPLIEmhN/LnLDqED8T5kNeYPJ9ZE7keo9L2XblM=;
+        b=PmuB/9nTT9x1QYVnWHyg18mcUdWMq+Af9waq//SgtjYz9TkDLLBaA6WYAicusMS1l2
+         ldmx8FvWX1LREyEh8fTaH2lmFRpAi7mOsppLEA3Hl3h/1fjIGy6bWbL8/sT57Qz+OLoz
+         MEeBY7eFFKy8u6IQEyKX2VROVtCrzcq//48Y9EaF2OlHPo0jmW4UWU+Z+Zc+4/3oD7gH
+         JOa5yVc5Qr+eb7CVEvxBtfodvNhfKp3mXxtwzWHjnhSJxG/tq5b4DvGO+9LNnvDAQgDz
+         vC+HWRaAQMys9o83GviYRKEb6t+XFoaSe5LdIhpURT08Ff/DcPeNXYY8NAM5JbP9S3ca
+         hPNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=Lm/RZPLIEmhN/LnLDqED8T5kNeYPJ9ZE7keo9L2XblM=;
+        b=lE3kbPXYp4bnfbFLyMhgUHwKgkHB+j7MVWKRaRXe26OVRlLAK3gUSOE/Jzz0AT1niz
+         so7ApTBMqCF+vG6yuAtZ+ZextWI/YXeOOVz61NF5YZfDuiwoPEHGxgb4d9RO22g6WD1f
+         Em67RUwgSQ9A5hrQu21goVtP9mr5PwAB7FvUaLeA9kDqboFOmNNhfjwbAQG9xINgU3VD
+         03DNnZ6hiYJR0648QgxzvcI2FCNEL+ujO/dReshV+WfaA77xAKhmUSGpS1p0kXwPz5RN
+         Gu0WZhs2FmM6GJtBP70PNTN2ozJiMuWl2JUdc+sKmF4J5DP2AnFnKKh7f6cuvow6GSW/
+         REVA==
+X-Gm-Message-State: ACgBeo2YZfbz0pgRP2eBuL5/cSrE2G7u+/QnwEGnQMkj+eX1KYi8Tepi
+        Yd0Uz3i5zy5AwJjNJuZo7eMZCrTBDIFpsYXGPZM=
+X-Google-Smtp-Source: AA6agR5CkKmF6iqUxxVYPHLoNawf8bFL4OHB5qzVJVus5UWz/SM42C3Qr987VmKGeBKElY1Qf53dyrahNvRQ1/CEvYc=
+X-Received: by 2002:a05:6214:c8f:b0:499:21eb:ba3b with SMTP id
+ r15-20020a0562140c8f00b0049921ebba3bmr2933878qvr.97.1661979321767; Wed, 31
+ Aug 2022 13:55:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220831055811.1936613-2-s.hauer@pengutronix.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220829133923.1114555-1-martyn.welch@collabora.com> <20220829133923.1114555-3-martyn.welch@collabora.com>
+In-Reply-To: <20220829133923.1114555-3-martyn.welch@collabora.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 31 Aug 2022 23:54:45 +0300
+Message-ID: <CAHp75VfO2xc3RU1brxUnj5bXg4xid76YiwGJBwwwS+665GO-2Q@mail.gmail.com>
+Subject: Re: [PATCH 3/5] gpio: pca953x: Fix pca953x_gpio_set_pull_up_down()
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sascha,
+On Mon, Aug 29, 2022 at 4:43 PM Martyn Welch <martyn.welch@collabora.com> wrote:
+>
+> A previous fix (dc87f6dd058a gpio: pca953x: Fix pca953x_gpio_set_config)
 
-I love your patch! Yet something to improve:
+Format is wrong. Please read documentation on how to refer to the
+commits in the tree.
 
-[auto build test ERROR on brgl/gpio/for-next]
-[also build test ERROR on linus/master v6.0-rc3 next-20220830]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> identified that pinconf_to_config_param() needed to be used to isolate
+> the config_param from the pinconf in pca953x_gpio_set_config(). This fix
+> however did not consider that this would also be needed in
+> pca953x_gpio_set_pull_up_down() to which it passes this config.
+>
+> Perform a similar call in pca953x_gpio_set_pull_up_down() to isolate the
+> configuration parameter there as well, rather than passing it from
+> pca953x_gpio_set_config() as the configuration argument may also be needed
+> in pca953x_gpio_set_pull_up_down() at a later date.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sascha-Hauer/gpio-Add-gpio-latch-driver/20220831-135855
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-config: s390-randconfig-r021-20220831 (https://download.01.org/0day-ci/archive/20220901/202209010432.NKyeVosI-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/8fab8b8c35fd4faebb003751d6d34fc06093c19e
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Sascha-Hauer/gpio-Add-gpio-latch-driver/20220831-135855
-        git checkout 8fab8b8c35fd4faebb003751d6d34fc06093c19e
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash drivers/gpio/
+...
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+>         u8 pull_en_reg = pca953x_recalc_addr(chip, PCAL953X_PULL_EN, offset);
+>         u8 pull_sel_reg = pca953x_recalc_addr(chip, PCAL953X_PULL_SEL, offset);
+>         u8 bit = BIT(offset % BANK_SZ);
 
-All errors (new ones prefixed by >>):
+> +       enum pin_config_param param = pinconf_to_config_param(config);
 
-   drivers/gpio/gpio-latch.c: In function 'gpio_latch_probe':
->> drivers/gpio/gpio-latch.c:163:18: error: 'struct gpio_chip' has no member named 'of_node'; did you mean 'fwnode'?
-     163 |         priv->gc.of_node = pdev->dev.of_node;
-         |                  ^~~~~~~
-         |                  fwnode
+I would move it up before the u8 variable.
 
+The code looks good otherwise.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-vim +163 drivers/gpio/gpio-latch.c
-
-   123	
-   124	static int gpio_latch_probe(struct platform_device *pdev)
-   125	{
-   126		struct gpio_latch_priv *priv;
-   127	
-   128		priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-   129		if (!priv)
-   130			return -ENOMEM;
-   131	
-   132		priv->clk_gpios = devm_gpiod_get_array(&pdev->dev, "clk", GPIOD_OUT_LOW);
-   133		if (IS_ERR(priv->clk_gpios))
-   134			return PTR_ERR(priv->clk_gpios);
-   135	
-   136		priv->data_gpios = devm_gpiod_get_array(&pdev->dev, "data", GPIOD_OUT_LOW);
-   137		if (IS_ERR(priv->data_gpios))
-   138			return PTR_ERR(priv->data_gpios);
-   139	
-   140		priv->n_ports = priv->clk_gpios->ndescs;
-   141		priv->n_pins = priv->data_gpios->ndescs;
-   142	
-   143		priv->shadow = devm_kcalloc(&pdev->dev, priv->n_ports, sizeof(*priv->shadow),
-   144					    GFP_KERNEL);
-   145		if (!priv->shadow)
-   146			return -ENOMEM;
-   147	
-   148		if (gpio_latch_can_sleep(priv)) {
-   149			priv->gc.can_sleep = true;
-   150			priv->gc.set = gpio_latch_set_can_sleep;
-   151			mutex_init(&priv->mutex);
-   152		} else {
-   153			priv->gc.can_sleep = false;
-   154			priv->gc.set = gpio_latch_set;
-   155			spin_lock_init(&priv->spinlock);
-   156		}
-   157	
-   158		priv->gc.get_direction = gpio_latch_get_direction;
-   159		priv->gc.ngpio = priv->n_ports * priv->n_pins;
-   160		priv->gc.owner = THIS_MODULE;
-   161		priv->gc.base = -1;
-   162		priv->gc.parent = &pdev->dev;
- > 163		priv->gc.of_node = pdev->dev.of_node;
-   164	
-   165		platform_set_drvdata(pdev, priv);
-   166	
-   167		return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
-   168	}
-   169	
+Thanks for fixing this!
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+With Best Regards,
+Andy Shevchenko
