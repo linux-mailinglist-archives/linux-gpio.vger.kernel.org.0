@@ -2,69 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F8985A7D52
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 14:31:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C80515A7D7D
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Aug 2022 14:36:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbiHaMbN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 08:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49874 "EHLO
+        id S229837AbiHaMgY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 Aug 2022 08:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiHaMbL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 08:31:11 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4F2A830B
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:31:08 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id t5so18144254edc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:31:08 -0700 (PDT)
+        with ESMTP id S231222AbiHaMgQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 08:36:16 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3EC7268F
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:36:02 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id bj12so28026346ejb.13
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 05:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc;
-        bh=y4Iko6VOfqdALqNvGe8IGVmEMQm/yOwNp3t6l5nVKpM=;
-        b=KArPAOXPBne8d1PvagOV1OLuMcPiU5xdh98zr5jkpr3g/JY26DkqPeo0NCUhMQfwfN
-         SwMj3jgY6nLaSom8b3pvzB6cmfDzG6DCe/TfT/HOJ8fmXD0ZmY8JX0rpN3KpddEPlflx
-         6SBsKxPU+SmdSb5FoG/c8HNDo1qaO02GneUADXrLS76vO+50za/3htDAQMibgeOKq5a1
-         Xk5tCfdtHEBR5lWbzscJSab3H2AM+LUv7nmBxK6tx6PAWazzvJb7rS7TbRZL7+AY8THZ
-         G3ujWwFyPlpZxmwGx9/o5kHukuxcD4HeclBJRveIHl3/aHXgn1I95z1BU6iSoI//HIeu
-         Pn8A==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=mG/N9H7N7kGHmNYHeRjUkuKbANvcYiUIAR3Dr1Ezb9E=;
+        b=QWsmpfcrzS4uBY/x/y8ySg3Jngx/QQDEXIwqAsZZO/Jt+XFs1fbjzgMiPPhM7yBg8V
+         IMCm3RHBgHiJ18uTVo1Vy2TaELyt94v8D7h2gZQP6azY8qnRHiIbFqAP8xoTRK4+a919
+         J5ZgKoKlmfUNZHnPESVXPhfuUSUiUGCHbiYh7ZKrhi7V5dE8Jiyb0us4Te9cb/OaG9vF
+         Io01Xu1QVlhBEhITLo0xC+BHMslE6vi0IIly4+tq2a8tc069xtrC/t4e0zN+Pqn6K3YH
+         Qz0a5O44nnyufd+Faqe8mI7zI2AFp1yyZwmCQ0S+BAIaEgEhGHLguFQmj3nAiLBl1qap
+         rmBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=y4Iko6VOfqdALqNvGe8IGVmEMQm/yOwNp3t6l5nVKpM=;
-        b=SPX1h2euXadU4c0n3UFpA1KtHusBY/V8AFyvbMPD9SmpLRXKBgZyAA2Ke3e79OzPdB
-         RSp/G9qDLomZHzy8T6JWNKpLnaJfKwqnBhNyd7O9CLWZTQXwDq+ye2qclLs6xNVW7dLX
-         fl7IR/ktmr5cVTenMdupjb8W5tYB6eny7mcV2n66nasivNA5gdqH9PrIpLcbEAu22QPN
-         OyJY3iYv/lWQ5Blbw7ULklHU14NSV7XvIDPOTr5L8wCbGiYqeJnOucizieb3hLAxHJV0
-         x8NN91ieJzBpElJ9vuHhh1wCVQv5k4guOn6TGu0M4kvV/ea65bnXpSKcsq63fsbJVq/h
-         8n3Q==
-X-Gm-Message-State: ACgBeo314V4tr/b/vJrLFuZkpMrhFQ2DbaktnWpCKSxdR9QzGxRBxBI9
-        KzR7IQunrocx9gopcUXyndpuJpq9zWeS78K2t5UYF4yp9GI=
-X-Google-Smtp-Source: AA6agR6txhvb9leWWF1AGPDaJnHg1dC+M4a6DSiKjvOAQLe5QXSqRRpHss+5ThXkn9C2E8ZFyNoCDWJ6lDjEibTPcRA=
-X-Received: by 2002:aa7:c84f:0:b0:446:2bfb:5a63 with SMTP id
- g15-20020aa7c84f000000b004462bfb5a63mr24602948edt.172.1661949067558; Wed, 31
- Aug 2022 05:31:07 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=mG/N9H7N7kGHmNYHeRjUkuKbANvcYiUIAR3Dr1Ezb9E=;
+        b=A2/F0YitlxkNz2CEAwMewXuWowoWKJQ89Dc62hTw6Oh9xhaMF3NQt7lg8tt2cZOvKG
+         eW+/cmaSEaUHIgQZ5zzGKQquYhqVSRICwUp2vPWquH+RX1zjWHpOjN5o6bsq+JbiE5P8
+         oz2y/Kj37U+aeuyfip5Xhp/rg0oiozjkxzExipCYLXYY04K+XxCpaHwOVJcqf+XmHm34
+         QF/TJyDH7y2sfLFmNIVhUP735/EuYJmPxQje0sLlC0bmx/vitUsyYrFxiSv9CoSsSmKX
+         99lSOY/uyG0I+qWVhgyGYc4K6ZYmDXd/2H6f8igb0gcUIuezEIMta+FXx02UF0jy+GWF
+         pe0g==
+X-Gm-Message-State: ACgBeo0CCTQGHgD4MDUROYRGUqUYDypwEHmbOdiUT/ojYEDrSSrFfsnm
+        pAsvFufr5uR3QPJ34tx9qJTC+CTOKdVdpNYQ4ZYvmhCgNjo=
+X-Google-Smtp-Source: AA6agR5bN2Dbz0kVxrTp1GiCaSy9g8Pc2+zN/r+ZRXRxoNRuoOd/XtjzBVDMZlDP+39DxuZBJ6vHY6eriU1mq1q7g0k=
+X-Received: by 2002:a17:907:6293:b0:73d:b27b:e594 with SMTP id
+ nd19-20020a170907629300b0073db27be594mr20605961ejc.526.1661949360236; Wed, 31
+ Aug 2022 05:36:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220721080423.156151-1-nuno.sa@analog.com> <20220721080423.156151-2-nuno.sa@analog.com>
- <CACRpkdas=ENpdkQbc-1LOG_zRroo4dAFgMfmVzd4=ZK_6jRuRA@mail.gmail.com> <SJ0PR03MB67784611071F013DC8F904D199789@SJ0PR03MB6778.namprd03.prod.outlook.com>
-In-Reply-To: <SJ0PR03MB67784611071F013DC8F904D199789@SJ0PR03MB6778.namprd03.prod.outlook.com>
+References: <20220829133923.1114555-1-martyn.welch@collabora.com> <20220829133923.1114555-3-martyn.welch@collabora.com>
+In-Reply-To: <20220829133923.1114555-3-martyn.welch@collabora.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 31 Aug 2022 14:30:56 +0200
-Message-ID: <CACRpkdYAoSp_Sj=E-A8jEOgnse7ewYeoD_W-_rKYncjQVa9O9Q@mail.gmail.com>
-Subject: Re: [PATCH v3 01/10] input: keyboard: adp5588-keys: support gpi key
- events as 'gpio keys'
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Wed, 31 Aug 2022 14:35:49 +0200
+Message-ID: <CACRpkdYvPKfvoFdMQYCjOWZYXpygkc_nWNFV0-zCCbx7=xGcPA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] gpio: pca953x: Fix pca953x_gpio_set_pull_up_down()
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, kernel@collabora.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -75,71 +65,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 2:28 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
->
-> > From: Linus Walleij <linus.walleij@linaro.org>
-> > Sent: Wednesday, August 31, 2022 2:24 PM
-> > To: Sa, Nuno <Nuno.Sa@analog.com>
-> > Cc: linux-input@vger.kernel.org; linux-gpio@vger.kernel.org;
-> > devicetree@vger.kernel.org; Krzysztof Kozlowski
-> > <krzysztof.kozlowski+dt@linaro.org>; Hennerich, Michael
-> > <Michael.Hennerich@analog.com>; Bartosz Golaszewski
-> > <brgl@bgdev.pl>; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > Rob Herring <robh+dt@kernel.org>; Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com>
-> > Subject: Re: [PATCH v3 01/10] input: keyboard: adp5588-keys: support
-> > gpi key events as 'gpio keys'
-> >
-> > [External]
-> >
-> > On Thu, Jul 21, 2022 at 10:03 AM Nuno S=C3=A1 <nuno.sa@analog.com>
-> > wrote:
-> >
-> > > This change replaces the support for GPIs as key event generators.
-> > > Instead of reporting the events directly, we add a gpio based irqchip
-> > > so that these events can be consumed by keys defined in the gpio-
-> > keys
-> > > driver (as it's goal is indeed for keys on GPIOs capable of generatin=
-g
-> > > interrupts). With this, the gpio-adp5588 driver can also be dropped.
-> > >
-> > > The basic idea is that all the pins that are not being used as part o=
-f
-> > > the keymap matrix can be possibly requested as GPIOs by gpio-keys
-> > > (it's also fine to use these pins as plain interrupts though that's n=
-ot
-> > > really the point).
-> > >
-> > > Since the gpiochip now also has irqchip capabilities, we should only
-> > > remove it after we free the device interrupt (otherwise we could, in
-> > > theory, be handling GPIs interrupts while the gpiochip is concurrentl=
-y
-> > > removed). Thus the call 'adp5588_gpio_add()' is moved and since the
-> > > setup phase also needs to come before making the gpios visible, we
-> > also
-> > > need to move 'adp5588_setup()'.
-> > >
-> > > While at it, always select GPIOLIB so that we don't need to use #ifde=
-f
-> > > guards.
-> > >
-> > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> >
-> > Is there any input-related content in the driver after this or
-> > should the whole driver just be moved over to drivers/gpio
-> > and replace the old GPIO driver that you delete in patch
-> > 2?
-> >
->
-> Hi,
->
-> Yes there is... The main usage for the device is to use it as a
-> matrix keypad. However, all the keys that are not used will be then
-> exposed through a gpiochip to be consumed for example by gpio-keys
+On Mon, Aug 29, 2022 at 3:39 PM Martyn Welch <martyn.welch@collabora.com> wrote:
 
-OK then, just checking. Let's keep it here for now, consider the MFD
-approach suggested by Andy (splitting out the gpio chip and input
-parts in two files in drivers/gpio and drivers/input) for the long run.
+> A previous fix (dc87f6dd058a gpio: pca953x: Fix pca953x_gpio_set_config)
+> identified that pinconf_to_config_param() needed to be used to isolate
+> the config_param from the pinconf in pca953x_gpio_set_config(). This fix
+> however did not consider that this would also be needed in
+> pca953x_gpio_set_pull_up_down() to which it passes this config.
+>
+> Perform a similar call in pca953x_gpio_set_pull_up_down() to isolate the
+> configuration parameter there as well, rather than passing it from
+> pca953x_gpio_set_config() as the configuration argument may also be needed
+> in pca953x_gpio_set_pull_up_down() at a later date.
+>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
