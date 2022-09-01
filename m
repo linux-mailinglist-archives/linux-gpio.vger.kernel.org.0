@@ -2,59 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BBE45A915A
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 09:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 278DB5A91F8
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 10:21:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232661AbiIAH5U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 03:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
+        id S234155AbiIAIVW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 04:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233224AbiIAH5T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 03:57:19 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 784CFEA8A2
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 00:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662019038; x=1693555038;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=sYDKsL8Ygvl8zpqqocLQj344rlLPymhwTdr1AXlWeyc=;
-  b=WZYrOiIjHcSIBrJTagJx32w7R7z+aojEI/SRcPCe/chNW05772AMuwcj
-   OizZ568kV/7wvfNUurfX5opofX0sjQQkhRGEWw5uRPIpRGsjm7PmzlYB6
-   T5bRlODNmwr3Ow/EQQ/V2erA3iV7hwlSfU/DrZeY9M2to2DWPkI3/7xzw
-   bT0pJebu3CfJ7lYZWfIY1ZepvmTRZaGOQcG+yyBq72tVc2qECc/NB4HAD
-   EhYINLi1Dfdgs2/KLX3pO+SF8SO8AGkUQmaCM/8QcavcA2U5lZUSApJj1
-   nYJYOO/0FLgYArMbkah3h5qG4T8gMGuOnExhel4SjwEvQU12PI7mv7rNi
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="381942943"
-X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
-   d="scan'208";a="381942943"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 00:57:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
-   d="scan'208";a="612399919"
-Received: from lkp-server02.sh.intel.com (HELO b138c9e8658c) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 01 Sep 2022 00:57:16 -0700
-Received: from kbuild by b138c9e8658c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oTf4e-00005l-0L;
-        Thu, 01 Sep 2022 07:57:16 +0000
-Date:   Thu, 01 Sep 2022 15:56:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:davinci/for-next] BUILD SUCCESS
- ed61629e4a165adac7a68f8ee5f717f4f1fefe5b
-Message-ID: <631065ac.46jT03Ohd9cIqB7B%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234202AbiIAIVO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 04:21:14 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072665EDD8
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 01:20:20 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1oTfQw-0000UY-BP; Thu, 01 Sep 2022 10:20:18 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1oTfQv-0001tg-Ct; Thu, 01 Sep 2022 10:20:17 +0200
+Date:   Thu, 1 Sep 2022 10:20:17 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] gpio: Add gpio latch driver
+Message-ID: <20220901082017.GP24324@pengutronix.de>
+References: <20220831055811.1936613-1-s.hauer@pengutronix.de>
+ <20220831055811.1936613-2-s.hauer@pengutronix.de>
+ <CAHp75Vd6LCv1wcxV58Q3Pa=eBRdEK6XusbfeDQtm8+R0hAAyWg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vd6LCv1wcxV58Q3Pa=eBRdEK6XusbfeDQtm8+R0hAAyWg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,108 +58,84 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git davinci/for-next
-branch HEAD: ed61629e4a165adac7a68f8ee5f717f4f1fefe5b  ARM: davinci: fix repeated words in comments
+On Wed, Aug 31, 2022 at 11:50:47PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 31, 2022 at 9:02 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> >
+> > This driver implements a GPIO multiplexer based on latches connected to
+> > other GPIOs. A set of data GPIOs is connected to the data input of
+> > multiple latches. The clock input of each latch is driven by another
+> > set of GPIOs. With two 8-bit latches 10 GPIOs can be multiplexed into
+> > 16 GPIOs. GPOs might be a better term as in fact the multiplexed pins
+> > are output only.
+> 
+> I'm still unsure it shouldn't be a part of the (not yet in upstream)
+> driver that I have mentioned before. But let's leave this apart right
+> now.
 
-elapsed time: 721m
+I don't see how this could be done. The before mentioned driver depends
+on a gpio-mux which is a binary decoder. This doesn't have a
+correspondence in this driver.
 
-configs tested: 87
-configs skipped: 3
+> 
+> ...
+> 
+> > +#include <linux/err.h>
+> > +#include <linux/module.h>
+> 
+> > +#include <linux/of_device.h>
+> 
+> Why?
+> It seems you misplaced it instead of mod_devicetable.h.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Ok.
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                  randconfig-r043-20220831
-arc                              allyesconfig
-alpha                            allyesconfig
-riscv                randconfig-r042-20220831
-s390                 randconfig-r044-20220831
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                                defconfig
-x86_64                        randconfig-a013
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-sh                               allmodconfig
-arm                                 defconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-i386                             allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-arm                              allyesconfig
-arm64                            allyesconfig
-ia64                             allmodconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-sh                   sh7724_generic_defconfig
-sparc                       sparc32_defconfig
-arc                 nsimosci_hs_smp_defconfig
-sh                          rsk7203_defconfig
-sh                               alldefconfig
-arc                           tb10x_defconfig
-arm                       multi_v4t_defconfig
-parisc64                            defconfig
-powerpc                      cm5200_defconfig
-arm                            hisi_defconfig
-powerpc                      pcm030_defconfig
-sh                   rts7751r2dplus_defconfig
-powerpc                     rainier_defconfig
-arm                      jornada720_defconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-loongarch                           defconfig
-loongarch                         allnoconfig
-mips                         cobalt_defconfig
-mips                           xway_defconfig
-xtensa                         virt_defconfig
-powerpc                        warp_defconfig
-arm                        multi_v7_defconfig
-arm64                            alldefconfig
-i386                          randconfig-c001
-mips                      loongson3_defconfig
-sh                          r7780mp_defconfig
-sh                           se7705_defconfig
-sh                          lboxre2_defconfig
+> 
+> > +#include <linux/gpio/driver.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/gpio/consumer.h>
+> 
+> Keep above sorted?
+> 
+> ...
+> 
+> > +       struct mutex mutex;
+> > +       spinlock_t spinlock;
+> 
+> Checkpatch usually complains if locks are not commented. Looking at
+> the below code, why it's not an (anonymous) union?
 
-clang tested configs:
-hexagon              randconfig-r041-20220831
-hexagon              randconfig-r045-20220831
-i386                          randconfig-a002
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-i386                          randconfig-a006
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-arm                         socfpga_defconfig
-arm                        vexpress_defconfig
-x86_64                        randconfig-k001
+checkpatch only complains here when given a --subjective. Anyway,
+commenting it is a good thing, and a union can be used here.
+
+> 
+> ...
+> 
+> > +       if (val)
+> > +               priv->shadow[latch] |= BIT(offset % priv->n_pins);
+> > +       else
+> > +               priv->shadow[latch] &= ~BIT(offset % priv->n_pins);
+> 
+> I believe shadow should be defined as unsigned long * and hence normal
+> bit operations can be applied. For example here is assign_bit().
+
+Good point.
+
+> > +static const struct of_device_id gpio_latch_ids[] = {
+> > +       {
+> > +               .compatible     = "gpio-latch",
+> > +       }, {
+> > +               /* sentinel */
+> > +       }
+> 
+> You may compress this to the 2 LoCs.
+
+I usually prefer not doing that as it means that we have to reformat it
+once we initialize other fields as well, like here for example .data.
+
+Sascha
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
