@@ -2,152 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AF935A9B5C
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 17:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 845045A9B6B
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 17:20:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232994AbiIAPPx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 11:15:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47154 "EHLO
+        id S232790AbiIAPUP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 11:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbiIAPPw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 11:15:52 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B29402FC
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 08:15:49 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id g7so7940291lfe.11
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 08:15:49 -0700 (PDT)
+        with ESMTP id S233753AbiIAPUN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 11:20:13 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731141EAE0
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 08:20:11 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id y64so11230588ede.2
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 08:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=gyNVCFkaWNsKBaoIpibBhspi5hxPuuG/Dvrr/wS3a7I=;
-        b=wAubuwLzKPR6GV1qetXH4QaFJMWXbtjhYc0Kcr1CE6SfUMgea1gpwtfh1Y4ECyT54/
-         JX3Rpmt/dIf+WxH7n5FGocI+2bTUXw8EWWWki6+085uECpswC1nrlriZh1BcgRtUGstf
-         KGKqkZmuaK6XNYEXXL2BQNAQRJlYAh6K58+dDWeyHmbO2XXXfI/A3VWoEq/fDfZk2A/Z
-         +PUbJ7tKuL4krb8xJCjXQ7OSP+Gj/TzC0djScgtRqVAchUR2PwlBF8HCoVDCHjMiuM6q
-         48Evdh8MLPgTCQKgsTnfIAsBEgdwq/5vP4SJIpwxzvQOqZYMDgV+04LgPeT6fEK+n2Tk
-         c3fw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=Q6mBPFQpA06ZvWUnOEBda1D5SKhKuxvQbDfHBpf3uwc=;
+        b=Kw/EoRfWoshcdSsSEeJr6RNkQ3rmFQFy4BcuBRdDcXp9SQSg7EyYGf8Wv929UeL19E
+         46wzxNxWgMPlwMQOCBxq0/FEbjdwRZ1tW84RaosNaJFpZ0VIt38j4l2Lg5uJPZT90CiR
+         wgiRel239a1f0EJmYA/oSeM0+X6+hYVrmnAyELAit4wbh3wAd/QUjrq7M5yRXQ60GjvH
+         5fieFSd0Q8FhH+QKuO4o++KGJ7WSjzxpCPu4zlcPRV+0piF4P5MDOcKA+LvIWcZjuKSD
+         3o9httpKBNq2k0Q5ozGB5D3TdTH+jRiO/Kw+FKdZQk/elpH/M7zyVqcuIluE+C9YCvrT
+         p/YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=gyNVCFkaWNsKBaoIpibBhspi5hxPuuG/Dvrr/wS3a7I=;
-        b=SE2W88JLUVVTc+ClC8M5MSSKQhEx2RVcOTTuAL6ECUlHqVw1Yp1Ga58kUM1L2zTrKO
-         ku9+YAE0d3f98J4xij8s9TERrcBU6JQ4/IDwyT7diammqU5DI1MyFYl8VRJu+JEwoe5L
-         TZsC0SnwK5Q75V53+ZZ8t55TEQp8ODjfAc/clRKN+cpb9aNZ7XtwANDvjUbCGUuLd6Qp
-         0miy6deEddFBKAMM7Oi4Qq52hM6XP5ElVKdHByikGVBQ0x442tClOrXZMRKv+lHPguqr
-         0g3P4MhIoEe1NYZnrtqxlt+M5qnOQpxxgqARvpZpFEKVukxKU1Oe+ogv/iRCvSq5Sl99
-         xPhg==
-X-Gm-Message-State: ACgBeo0plJ/hcXCZEOSqf3YLCLVKjiqz1k/FLjigUo33yvx5tjZlDLrC
-        47lQy9/h1UniMKue1JQLByZxGg==
-X-Google-Smtp-Source: AA6agR5MpbukT/Tca+4lJmUDLkrqlKDBqgbUDBrUrfiqS8yHyVFbox6z5ZZ4tGsdTDAnNdH/MCg4zg==
-X-Received: by 2002:a05:6512:1312:b0:492:e14d:54d4 with SMTP id x18-20020a056512131200b00492e14d54d4mr10205963lfu.469.1662045347897;
-        Thu, 01 Sep 2022 08:15:47 -0700 (PDT)
-Received: from [192.168.28.124] (balticom-73-99-134.balticom.lv. [109.73.99.134])
-        by smtp.gmail.com with ESMTPSA id h1-20020a05651c124100b0026181a42284sm2059267ljh.88.2022.09.01.08.15.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 08:15:47 -0700 (PDT)
-Message-ID: <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
-Date:   Thu, 1 Sep 2022 18:15:46 +0300
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=Q6mBPFQpA06ZvWUnOEBda1D5SKhKuxvQbDfHBpf3uwc=;
+        b=zr0ffWVu2RoraLvLaQx9VgB6EYT8wJOVum8P1SId4ajk870dzcxuV4Drb7FCnh+055
+         6iy+Ew1UREJ/P4flwla4m419CmOjCkXWZCu9xBgxVnQUriYnYYmQfWn0L48/BAYI2KBm
+         EVjIdGMpYr6YyOj0g/9jSuNvwupgUVhovqEznIV2qDdT/axk9ifxbA6oLHpruDoYS6pS
+         xIjcNZ/dfJ7FBN5H3rtlqjxnjx5kJXyzv59AXq4FKb1ADXH+AUSXudBlQYZVqAyNWVIG
+         bOCrasEsL4kitD1dTqavuugmumEYNKlpoi74VzAel8ShRc5pAY5w88hg57OFsbApSDM8
+         bW0w==
+X-Gm-Message-State: ACgBeo1ANr4d7Uq/GoDiw/wLKP3KgHS4zc/t97uMxIs3BLKKp16XFetF
+        CVkDS+yPGIy0wylwASgsKZcFNptux9adeMuPl5NVAMqVSiI=
+X-Google-Smtp-Source: AA6agR5EiqW8yi4rig6EGzVf96EbDsC2nA3KamdLRmLfuxYLnfdyAOimOKpKepGbWdH7MVblW4fMOcn8lYH3DDQBXLs=
+X-Received: by 2002:a05:6402:71a:b0:447:ebb2:18f2 with SMTP id
+ w26-20020a056402071a00b00447ebb218f2mr24571735edx.408.1662045609686; Thu, 01
+ Sep 2022 08:20:09 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-Content-Language: en-US
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+References: <20220825104422.14156-1-henning.schild@siemens.com> <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
+In-Reply-To: <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 1 Sep 2022 17:19:58 +0200
+Message-ID: <CAMRc=McxL0KEb+KHTcTAW1NC91Jx8uNAt9AAaLrH97oAA_0SZA@mail.gmail.com>
+Subject: Re: [GIT PULL] Immutable branch with 6.0-rc1 + "[PATCH v6 0/7] add
+ support for another simatic board" series
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Henning Schild <henning.schild@siemens.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Sven Peter <sven@svenpeter.dev>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
- <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
- <426469c1-13cc-178b-4904-09439d7788e8@linaro.org>
- <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        simon.guinot@sequanux.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/09/2022 18:12, Russell King (Oracle) wrote:
->>> +  compatible:
->>> +    items:
->>> +      - enum:
->>> +        - apple,t8103-smc
->>
->> You miss two spaces of indentation on this level.
-> 
-> Should that be picked up by the dt checker?
+On Thu, Sep 1, 2022 at 4:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Dear GPIO and LED subsystem maintainers,
+>
+> Here is a pull-request for v6.0-rc1 + the
+> "[PATCH v6 0/7] add support for another simatic board" series
+> for merging into the gpio and leds subsystems.
+>
+> Regards,
+>
+> Hans
+>
+>
+> The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+>
+>   Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-simatec-1
+>
+> for you to fetch changes up to 8f5c9858c5db129359b5de2f60f5f034bf5d56c0:
+>
+>   platform/x86: simatic-ipc: add new model 427G (2022-09-01 16:15:03 +0200)
+>
+> ----------------------------------------------------------------
+> Tag (immutable branch) for:
+> v6.0-rc1 + "[PATCH v6 0/7] add support for another simatic board" series
+> for merging into the gpio, leds and pdx86 subsystems.
+>
+> ----------------------------------------------------------------
+> Henning Schild (7):
+>       gpio-f7188x: switch over to using pr_fmt
+>       gpio-f7188x: add a prefix to macros to keep gpio namespace clean
+>       gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+>       gpio-f7188x: use unique labels for banks/chips
+>       leds: simatic-ipc-leds-gpio: add new model 227G
+>       platform/x86: simatic-ipc: enable watchdog for 227G
+>       platform/x86: simatic-ipc: add new model 427G
+>
+>  drivers/gpio/Kconfig                               |   3 +-
+>  drivers/gpio/gpio-f7188x.c                         | 275 ++++++++++++---------
+>  drivers/leds/simple/simatic-ipc-leds-gpio.c        |  42 +++-
+>  drivers/platform/x86/simatic-ipc.c                 |  10 +-
+>  include/linux/platform_data/x86/simatic-ipc-base.h |   1 +
+>  include/linux/platform_data/x86/simatic-ipc.h      |   2 +
+>  6 files changed, 216 insertions(+), 117 deletions(-)
+>
 
-I think yamllint complains about it. It is not a hard-dependency, so
-maybe you don't have it installed.
+Pulled, thanks!
 
-> 
->>> +        - apple,t8112-smc
->>> +        - apple,t6000-smc
->>
->> Bring some order here - either alphabetical or by date of release (as in
->> other Apple schemas). I think t6000 was before t8112, so it's none of
->> that orders.
-> 
-> Ok.
-> 
->>> +      - const: apple,smc
->>> +
->>> +  reg:
->>> +    description: Two regions, one for the SMC area and one for the SRAM area.
->>
->> You need constraints for size/order, so in this context list with
->> described items.
-> 
-> How do I do that? I tried maxItems/minItems set to 2, but the dt checker
-> objected to it.
-
-One way:
-reg:
-  items:
-    - description: SMC area
-    - description: SRAM area
-
-but actually this is very similar what you wrote for reg-names - kind of
-obvious, so easier way:
-
-reg:
-  maxItems: 2
-
-
-> 
->>> +  reg-names:
->>> +    items:
->>> +      - const: smc
->>> +      - const: sram
->>> +
->>> +  mboxes:
->>> +    description:
->>> +      A phandle to the mailbox channel
->>
->> Missing maxItems
-> 
-> Ok. Would be helpful if the dt checker identified that.
-
-Patches are welcomed :)
-
-Best regards,
-Krzysztof
+Bart
