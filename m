@@ -2,159 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 521235A931D
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 11:29:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 497EB5A952E
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 12:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232786AbiIAJ3n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 05:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35732 "EHLO
+        id S234206AbiIAK5I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 06:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232762AbiIAJ3m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 05:29:42 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D884F12FDE2;
-        Thu,  1 Sep 2022 02:29:41 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id f12so16375808plb.11;
-        Thu, 01 Sep 2022 02:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=3Wz1KflW1ILG3Pq+DP9aZDEh0r6i7cgP45ZCq1Y8CGg=;
-        b=Hra04quTE6sUhn5Xr24EZxLwfH6GYmGsYSbr/mz4XmwAoPHjlFDBktkDeWfQREKUJu
-         qnEZBfAXinuimJIqeMDH/PbWTfRTEFqe+O1/vH0oUdP8RsD1zy2RRpUE2gx2JsauiNIY
-         9EnbcX+KreJ/zxVilb766L0sW4BcFoQZmnq4fwH5lXid4UE3CjLAe13FTzb4I3kCZ+/s
-         s7q6DRs2w9WGPeqtiWMpzJStbPuKVJegEqhimn697eIGuwFkZymso5aJ5feE9kYOVSTk
-         PvjC+FgYzIGFSmIQ+l3ZaVYtkJ+o2jBivVVFjkKtDX4rlkF6RxmRTk10uo+fDwpKvDH9
-         N3OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=3Wz1KflW1ILG3Pq+DP9aZDEh0r6i7cgP45ZCq1Y8CGg=;
-        b=lG4QqMbvi+sywWjxQc/HdU73k8/VU3OtAsu/+I2yu6Oj8ERp/OTkryjAEER/Y0TVYf
-         BwqF9iGWWvF5JDyZd2HGncy5U4UYlT1BRX9GQfYEOUgA2O43Yj4BaEax6S+312h+DpCL
-         PsSdG2LinvuSCMQr/JmQv7DcmVQfML8kFTk837v3GFxfp3dl7XkkpBbWgezfeNct9GdU
-         AFfNCZjI/fiZg1Qxd7LlbKcG6siWud8WUwUAhVLf92qARv/h1aseVciECLxh4v/mxvai
-         E48crmciqOsT617QPjmxrgbZJ9J6JBy69Pgjqtxn8feuA9eu/aIa41he/wbOH3YFDp8Q
-         0y5A==
-X-Gm-Message-State: ACgBeo3+fOhvHsvJKlp+T5aJxq8nlxuqvVOW9KdnNB12k4TOR2R1I7H2
-        Of5fgyZQuoNHTDTJBbRWsiY=
-X-Google-Smtp-Source: AA6agR5OXOMQCTWaZK2LXhyS/PxMY0gQAYq6ou0xC+YzIGeHi24Y3Dpz7zqzMjpxEA9BjiZ8PTfnrQ==
-X-Received: by 2002:a17:903:110e:b0:171:3afa:e68c with SMTP id n14-20020a170903110e00b001713afae68cmr29439655plh.12.1662024581136;
-        Thu, 01 Sep 2022 02:29:41 -0700 (PDT)
-Received: from harry-home.bne.opengear.com (193-116-86-5.tpgi.com.au. [193.116.86.5])
-        by smtp.gmail.com with ESMTPSA id i15-20020a17090a2a0f00b001fddb3a5481sm2820350pjd.49.2022.09.01.02.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Sep 2022 02:29:40 -0700 (PDT)
-From:   Qingtao Cao <qingtao.cao.au@gmail.com>
-Cc:     qingtao.cao.au@gmail.com, nathan@nathanrossi.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] gpio: exar: access MPIO registers on slave chips
-Date:   Thu,  1 Sep 2022 19:29:21 +1000
-Message-Id: <20220901092922.1024311-1-qingtao.cao.au@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S232791AbiIAK4o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 06:56:44 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D21395E6C
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 03:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662029798; x=1693565798;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/55kXPH/35nW22yt6zS7LqpsCnMiRLTPZONNGq5j5Ks=;
+  b=aXCke7bYZbB/HUDcLWm/5pBDCYgyBMI8yMABIY1aGDU5BRi71rMr4NiY
+   b/V1gW3E8gacs4NZCXKLefxszznJq8VVD3J4ClQDHi5aOxJDAF0+g2Q3p
+   4mAm4tPAKvbmvwwpTIPY/BsjjcjSYmVPh5V8cKVJgPkK75YvgVBQsi7Dn
+   dDUHnAG5qClPSU1aXv+Qyu5DnHf+tKLpuXKeGU0cYBnm4Ieu9SE0WSsIz
+   NiPnLUsgROY/mVCBZ5ZBVQF69ghLOMaFauiyr25UnCMN8DIerWiu+wpxg
+   4Ehv6YQ/y7FTwwztK2iPfBwkzgrEFyNMO/SrQEAUcHQx19P+KRt5fcXNy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="275431283"
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="275431283"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 03:56:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="701698550"
+Received: from lkp-server02.sh.intel.com (HELO b138c9e8658c) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Sep 2022 03:56:21 -0700
+Received: from kbuild by b138c9e8658c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oThrw-0000Bf-1u;
+        Thu, 01 Sep 2022 10:56:20 +0000
+Date:   Thu, 01 Sep 2022 18:56:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 0e056f414e5b1b797886a90e77f6576f121c2a09
+Message-ID: <63108fca.MXICk+y7sjQw31CR%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When EXAR xr17v35x chips are cascaded in order to access the MPIO registers
-(part of the Device Configuration Registers) of the slave chips, an offset
-needs to be applied based on the number of master chip's UART channels.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 0e056f414e5b1b797886a90e77f6576f121c2a09  dt-bindings: gpio: stmpe: Remove node name requirement
 
-Signed-off-by: Qingtao Cao <qingtao.cao.au@gmail.com>
----
- drivers/gpio/gpio-exar.c | 37 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 32 insertions(+), 5 deletions(-)
+elapsed time: 828m
 
-diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-index d37de78247a6..1110c8f92c58 100644
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -20,6 +20,7 @@
- #define EXAR_OFFSET_MPIOSEL_LO 0x93
- #define EXAR_OFFSET_MPIOLVL_HI 0x96
- #define EXAR_OFFSET_MPIOSEL_HI 0x99
-+#define EXAR_UART_CHANNEL_SIZE 0x400
- 
- #define DRIVER_NAME "gpio_exar"
- 
-@@ -31,26 +32,37 @@ struct exar_gpio_chip {
- 	int index;
- 	char name[20];
- 	unsigned int first_pin;
-+	/*
-+	 * The offset to the slave device's (if existing)
-+	 * Device Configuration Registers
-+	 */
-+	unsigned int slave_offset;
- };
- 
- static unsigned int
- exar_offset_to_sel_addr(struct exar_gpio_chip *exar_gpio, unsigned int offset)
- {
--	return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOSEL_HI
--						   : EXAR_OFFSET_MPIOSEL_LO;
-+	int addr;
-+
-+	addr = (offset % 16 + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOSEL_HI
-+							: EXAR_OFFSET_MPIOSEL_LO;
-+	return offset / 16 ? addr + exar_gpio->slave_offset : addr;
- }
- 
- static unsigned int
- exar_offset_to_lvl_addr(struct exar_gpio_chip *exar_gpio, unsigned int offset)
- {
--	return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOLVL_HI
--						   : EXAR_OFFSET_MPIOLVL_LO;
-+	int addr;
-+
-+	addr = (offset % 16 + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOLVL_HI
-+							: EXAR_OFFSET_MPIOLVL_LO;
-+	return offset / 16 ? addr + exar_gpio->slave_offset : addr;
- }
- 
- static unsigned int
- exar_offset_to_bit(struct exar_gpio_chip *exar_gpio, unsigned int offset)
- {
--	return (offset + exar_gpio->first_pin) % 8;
-+	return (offset % 16 + exar_gpio->first_pin) % 8;
- }
- 
- static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
-@@ -153,6 +165,21 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 	if (!exar_gpio)
- 		return -ENOMEM;
- 
-+	if (pcidev->device & 0xf000) {
-+		/*
-+		 * xr17v354 or xr17v358 slaves have the same amount of
-+		 * MPIOs as the master
-+		 */
-+		ngpios += ngpios;
-+
-+		/*
-+		 * The last 4 bits of the master's PCI Device ID is
-+		 * the number of its UART channels
-+		 */
-+		exar_gpio->slave_offset = (pcidev->device & 0xf) *
-+				EXAR_UART_CHANNEL_SIZE;
-+	}
-+
- 	/*
- 	 * We don't need to check the return values of mmio regmap operations (unless
- 	 * the regmap has a clock attached which is not the case here).
+configs tested: 53
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+arc                  randconfig-r043-20220831
+riscv                randconfig-r042-20220831
+s390                 randconfig-r044-20220831
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+powerpc                           allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+sh                               allmodconfig
+x86_64                        randconfig-a002
+x86_64                        randconfig-a013
+i386                          randconfig-a001
+i386                                defconfig
+x86_64                        randconfig-a011
+i386                          randconfig-a003
+i386                          randconfig-a014
+x86_64                        randconfig-a015
+x86_64                        randconfig-a006
+i386                          randconfig-a005
+x86_64                        randconfig-a004
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a012
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a016
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-syz
+i386                             allyesconfig
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+ia64                             allmodconfig
+
+clang tested configs:
+hexagon              randconfig-r041-20220831
+hexagon              randconfig-r045-20220831
+i386                          randconfig-a013
+x86_64                        randconfig-a005
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+i386                          randconfig-a015
+i386                          randconfig-a002
+x86_64                        randconfig-a001
+x86_64                        randconfig-a014
+x86_64                        randconfig-a003
+i386                          randconfig-a011
+i386                          randconfig-a006
+i386                          randconfig-a004
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
