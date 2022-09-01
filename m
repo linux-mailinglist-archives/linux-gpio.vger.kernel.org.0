@@ -2,337 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FE9D5A9FE2
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 21:27:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B54D15AA155
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 23:03:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234217AbiIAT1F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 15:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47348 "EHLO
+        id S233222AbiIAVCi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 17:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234221AbiIAT0y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 15:26:54 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1D779A4D
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 12:26:53 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id c20so14244956qtw.8
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 12:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=GwpDrpLxHphzM2y1BmvfF0fkc6vmYO6P4//roMJ5Xlo=;
-        b=GYhX1Vl/+JSq6BUxkOtP8ctOOINt6dbz71dV61BRJOuNshjDKMTdVSG9Cda7fi6F4m
-         H6jGdvVTWZFUkLtNzDb36YP1CfqmrISJmDnnrUGtXpT4YH7hWhltMLInrpt+Pl3OTWSL
-         4viVxDZunpDDNZ0PBpunoni02DkX91yozOuuKeLWpA28RGqTaj/4JqKlu7IeUf3N0cnJ
-         gUeV3fDALaleWZ9x+v4mzjx83djmMIO8QIvWleon+KY6kniszhuhHRR0w7fx4M5cU/TD
-         j7ZZFYnMlhsGfj7KvgzAPwrv0hbUeIp2H+9PztZbCcGwazqbRCBVrmoBpf8bpHkkzje9
-         6bxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=GwpDrpLxHphzM2y1BmvfF0fkc6vmYO6P4//roMJ5Xlo=;
-        b=tmpbr2OCfT4GdjWwtANPhJmvuVqEhjKb+CHsTDpbAXzqg1WrdehMO5UVf8504Gp4h6
-         w7mlR0STjgh50GGmKGKGAnfITIiDsoyyCnLSjIHyI94ADVWQsisl6i/QsPPH8Skj07sq
-         GWWpt8kUCGGM2IynVB0vD1Tp0eNdvOdB0rR/0OTwf4DJ7BWmoBL3ne4lSb+hoB1UkXnl
-         2oGgzrY1OQ6p53azNT2SYZVMGQOlciKmJ9FK2NrB5+uN9Zlj827tQOadv4tE0ZNEOKIz
-         CqPbMpm4zf1jw7zYzjEGnsUVdv0jDLO0n620te7fU5zH2dX6F3OpUSlb8UJfN+LbnGWa
-         zFhw==
-X-Gm-Message-State: ACgBeo1VQ5hHDS+DWsjtVBwNlRepzNKy9tIgRPKoAISY3x6+plpQtIq7
-        5vza7m7tCLWYEeBuRreQYiua9NQDkYxUZIF9GjM=
-X-Google-Smtp-Source: AA6agR50jQ30lfgMirgOaQB2+evO/PjdGtaha4+mW/zYPZaVoLc8nSkoHPVHYr+HqAT4LMRSE0IJpeYK5hBfL8sUnuM=
-X-Received: by 2002:ac8:7f92:0:b0:344:8cd8:59a1 with SMTP id
- z18-20020ac87f92000000b003448cd859a1mr25829693qtj.384.1662060412032; Thu, 01
- Sep 2022 12:26:52 -0700 (PDT)
+        with ESMTP id S234764AbiIAVCZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 17:02:25 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C522673;
+        Thu,  1 Sep 2022 14:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662066119; x=1693602119;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6CtZqoEW7JkL01E8OL8dqhLmQxJbdBw2knnKAl5jhTU=;
+  b=nLd/NdFUTpAMgYKosLbx/gY6tCWxCaBuqKDzQXajwA0An4/QPcJp4OMh
+   RN40zpunh2RpL5DiD7zY17Vllz5vChNneZUGk3fV7/bLepAFMvs3SWnf4
+   Rg/iPsjzSK+LIUXxT9MJ1+6sLrdQKRPDeeJ2KFrV1lij5KMFviAjrGYtU
+   IwQ0wgsQEio7JxdPZ2zfveiky8M/RtD+r+dtd6Y7kheYo3hy4r1HrsYVN
+   uyJH/1l3gLvlpcUp7DBzk0r+shb5vc2BgRqqgvZoagfbvFwLG3GMdGyaz
+   Rdmc2e6oH2rYbjtYL+xKeH87bmSkZHU0mzNtzKWPE6CPCpa1pXd+DLmR6
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="294567561"
+X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
+   d="scan'208";a="294567561"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 14:01:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
+   d="scan'208";a="615476370"
+Received: from lkp-server02.sh.intel.com (HELO b138c9e8658c) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Sep 2022 14:01:57 -0700
+Received: from kbuild by b138c9e8658c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oTrK1-0000lX-08;
+        Thu, 01 Sep 2022 21:01:57 +0000
+Date:   Fri, 2 Sep 2022 05:01:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] pinctrl: pistachio: Switch to use fwnode instead
+ of of_node
+Message-ID: <202209020416.0LCiignM-lkp@intel.com>
+References: <20220830193938.56826-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 1 Sep 2022 22:26:15 +0300
-Message-ID: <CAHp75Ve1ackTCOAkVar00OyDW-+BOPbRmsJRH3-z1bdNaukC+Q@mail.gmail.com>
-Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220830193938.56826-1-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 5:18 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
->
-> From: Hector Martin <marcan@marcan.st>
->
-> This driver implements support for the SMC (System Management
-> Controller) in Apple Macs. In contrast to the existing applesmc driver,
-> it uses pluggable backends that allow it to support different SMC
-> implementations, and uses the MFD subsystem to expose the core SMC
-> functionality so that specific features (gpio, hwmon, battery, etc.) can
-> be implemented by separate drivers in their respective downstream
-> subsystems.
->
-> The initial RTKit backend adds support for Apple Silicon Macs (M1 et
-> al). We hope a backend for T2 Macs will be written in the future
-> (since those are not supported by applesmc), and eventually an x86
-> backend would allow us to fully deprecate applesmc in favor of this
-> driver.
-
-...
-
->  drivers/platform/Kconfig           |   2 +
->  drivers/platform/Makefile          |   1 +
->  drivers/platform/apple/Kconfig     |  49 ++++
->  drivers/platform/apple/Makefile    |  11 +
-
-Are you going to collect the code from, e.g., PDx86 which supports
-some apple devices here?
-
-...
-
-
-> +EXPORT_SYMBOL(apple_smc_read);
-
-Can you from day 1 make it a namespaced variant? Ditto for the rest of
-the exported stuff.
-
-...
-
-> +#include <asm/unaligned.h>
-
-Usually we put asm/* after linux/*.
-
-Missed bits.h.
-
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/soc/apple/rtkit.h>
-
-...
-
-> +       smc->msg_id = (smc->msg_id + 1) & 0xf;
-
-% 16 will tell much cleaner of the purpose, no?
-
-...
-
-> +       while (smc->atomic_pending) {
-> +               ret = apple_rtkit_poll(smc->rtk);
-> +               if (ret < 0) {
-> +                       dev_err(smc->dev, "RTKit poll failed (%llx)", msg);
-> +                       return ret;
-> +               }
-> +               udelay(100);
-> +       }
-
-Something from iopoll.h to be utilised?
-
-...
-
-> +       if (FIELD_GET(SMC_ID, smc->cmd_ret) != smc->msg_id) {
-> +               dev_err(smc->dev, "Command sequence mismatch (expected %d, got %d)\n",
-> +                       smc->msg_id, (unsigned int)FIELD_GET(SMC_ID, smc->cmd_ret));
-
-Why casting?
-
-> +               return -EIO;
-> +       }
-
-...
-
-> +       result = FIELD_GET(SMC_RESULT, smc->cmd_ret);
-> +       if (result != 0)
-> +               return -result;
-
-And this is in Linux error numbering space?!
-
-...
-
-> +       smc->msg_id = (smc->msg_id + 1) & 0xf;
-
-See above. Perhaps you need a macro / inline helper for this to avoid dups.
-
-...
-
-> +       do {
-> +               if (wait_for_completion_timeout(&smc->cmd_done,
-> +                                               msecs_to_jiffies(SMC_RECV_TIMEOUT)) == 0) {
-> +                       dev_err(smc->dev, "Command timed out (%llx)", msg);
-> +                       return -ETIMEDOUT;
-> +               }
-> +               if (FIELD_GET(SMC_ID, smc->cmd_ret) == smc->msg_id)
-> +                       break;
-
-> +               dev_err(smc->dev, "Command sequence mismatch (expected %d, got %d)\n",
-> +                       smc->msg_id, (unsigned int)FIELD_GET(SMC_ID, smc->cmd_ret));
-
-Guaranteed to flood the logs...
-
-> +       } while(1);
-
-...with such a conditional.
-
-...
-
-> +       result = FIELD_GET(SMC_RESULT, smc->cmd_ret);
-> +       if (result != 0)
-> +               return -result;
-
-Linux error numbering space?
-
-...
-
-> +       if (size <= 4)
-> +               memcpy(buf, &rdata, size);
-> +       else
-> +               memcpy_fromio(buf, smc->shmem.iomem, size);
-
-This is unclear why plain memcpy() for the small size and what are the
-side effects of the memory. Maybe you wanted memremap() instead of
-ioremap() to begin with?
-
-...
-
-> +       *key = swab32(*key);
-
-swab32s()
-
-...
-
-> +       if (res.end < res.start || !resource_contains(smc->sram, &res)) {
-
-Is it a reimplementation of something like resource_intersect() and Co?
-
-> +               dev_err(smc->dev,
-> +                       "RTKit buffer request outside SRAM region: %pR", &res);
-> +               return -EFAULT;
-> +       }
-
-...
-
-> +       bfr->iomem = smc->sram_base + (res.start - smc->sram->start);
-
-Isn't it better to write as
-
-  res.start + (base - start)
-
-?
-
-...
-
-> +               if (smc->atomic_pending) {
-> +                       smc->atomic_pending = false;
-> +               } else {
-> +                       complete(&smc->cmd_done);
-> +               }
-
-Redundant {} in both cases.
-
-...
-
-> +       smc->sram = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sram");
-
-> +       if (!smc->sram)
-> +               return dev_err_probe(dev, EIO,
-> +                                    "No SRAM region");
-
-Dup, the below does this message for you.
-
-> +       smc->sram_base = devm_ioremap_resource(dev, smc->sram);
-> +       if (IS_ERR(smc->sram_base))
-> +               return dev_err_probe(dev, PTR_ERR(smc->sram_base),
-> +                                    "Failed to map SRAM region");
-
-Don't we have devm_platform_ioremap_resource_byname() ?
-
-...
-
-> +       ret = apple_rtkit_wake(smc->rtk);
-> +       if (ret != 0)
-
-Drop all these ' != 0'
-
-> +               return dev_err_probe(dev, ret,
-> +                                    "Failed to wake up SMC");
-
-Why not on one line?
-
-...
-
-> +static const struct of_device_id apple_smc_rtkit_of_match[] = {
-> +       { .compatible = "apple,smc" },
-
-> +       {},
-
-No comma for the terminator entry.
-
-> +};
-
-...
-
-> +static struct platform_driver apple_smc_rtkit_driver = {
-> +       .driver = {
-> +               .name = "macsmc-rtkit",
-
-> +               .owner = THIS_MODULE,
-
-Unneeded dup.
-
-> +               .of_match_table = apple_smc_rtkit_of_match,
-> +       },
-> +       .probe = apple_smc_rtkit_probe,
-> +       .remove = apple_smc_rtkit_remove,
-> +};
-
-...
-
-> +typedef u32 smc_key;
-
-Why?!
-
-...
-
-> +#define _SMC_KEY(s) (((s)[0] << 24) | ((s)[1] << 16) | ((s)[2] << 8) | (s)[3])
-
-If s is a byte buffer, the above is NIH get_unaligned_be32(). Or in
-case of alignment be32_to_cpu() with respective type (__be32) to be
-used.
-
-...
-
-> +static inline int apple_smc_read_flag(struct apple_smc *smc, smc_key key)
-> +{
-> +       u8 val;
-> +       int ret = apple_smc_read_u8(smc, key, &val);
-
-Split assignment and definition.
-
-> +       if (ret < 0)
-> +               return ret;
-> +       return val ? 1 : 0;
-> +}
-
-...
-
-> +#define apple_smc_write_flag apple_smc_write_u8
-
-Why is it needed?
+Hi Andy,
+
+I love your patch! Yet something to improve:
+
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linus/master v6.0-rc3 next-20220901]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-pistachio-Switch-to-use-fwnode-instead-of-of_node/20220831-034037
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+config: arm-randconfig-r006-20220901 (https://download.01.org/0day-ci/archive/20220902/202209020416.0LCiignM-lkp@intel.com/config)
+compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project c55b41d5199d2394dd6cdb8f52180d8b81d809d4)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/6802887aaf094f08bc139caf331767217f7318a4
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Andy-Shevchenko/pinctrl-pistachio-Switch-to-use-fwnode-instead-of-of_node/20220831-034037
+        git checkout 6802887aaf094f08bc139caf331767217f7318a4
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/pinctrl/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pinctrl/pinctrl-pistachio.c:1360:39: error: use of undeclared identifier 'dev'
+                   child = device_get_named_child_node(dev, child_name);
+                                                       ^
+   1 error generated.
+
+
+vim +/dev +1360 drivers/pinctrl/pinctrl-pistachio.c
+
+  1347	
+  1348	static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+  1349	{
+  1350		struct pistachio_gpio_bank *bank;
+  1351		unsigned int i;
+  1352		int irq, ret = 0;
+  1353	
+  1354		for (i = 0; i < pctl->nbanks; i++) {
+  1355			char child_name[sizeof("gpioXX")];
+  1356			struct fwnode_handle *child;
+  1357			struct gpio_irq_chip *girq;
+  1358	
+  1359			snprintf(child_name, sizeof(child_name), "gpio%d", i);
+> 1360			child = device_get_named_child_node(dev, child_name);
+  1361			if (!child) {
+  1362				dev_err(pctl->dev, "No node for bank %u\n", i);
+  1363				ret = -ENODEV;
+  1364				goto err;
+  1365			}
+  1366	
+  1367			if (!fwnode_property_present(child, "gpio-controller")) {
+  1368				fwnode_handle_put(child);
+  1369				dev_err(pctl->dev,
+  1370					"No gpio-controller property for bank %u\n", i);
+  1371				ret = -ENODEV;
+  1372				goto err;
+  1373			}
+  1374	
+  1375			ret = fwnode_irq_get(child, 0);
+  1376			if (ret < 0) {
+  1377				fwnode_handle_put(child);
+  1378				dev_err(pctl->dev, "No IRQ for bank %u\n", i);
+  1379				goto err;
+  1380			}
+  1381			irq = ret;
+  1382	
+  1383			bank = &pctl->gpio_banks[i];
+  1384			bank->pctl = pctl;
+  1385			bank->base = pctl->base + GPIO_BANK_BASE(i);
+  1386	
+  1387			bank->gpio_chip.parent = pctl->dev;
+  1388			bank->gpio_chip.fwnode = child;
+  1389	
+  1390			girq = &bank->gpio_chip.irq;
+  1391			girq->chip = &bank->irq_chip;
+  1392			girq->parent_handler = pistachio_gpio_irq_handler;
+  1393			girq->num_parents = 1;
+  1394			girq->parents = devm_kcalloc(pctl->dev, 1,
+  1395						     sizeof(*girq->parents),
+  1396						     GFP_KERNEL);
+  1397			if (!girq->parents) {
+  1398				ret = -ENOMEM;
+  1399				goto err;
+  1400			}
+  1401			girq->parents[0] = irq;
+  1402			girq->default_type = IRQ_TYPE_NONE;
+  1403			girq->handler = handle_level_irq;
+  1404	
+  1405			ret = gpiochip_add_data(&bank->gpio_chip, bank);
+  1406			if (ret < 0) {
+  1407				dev_err(pctl->dev, "Failed to add GPIO chip %u: %d\n",
+  1408					i, ret);
+  1409				goto err;
+  1410			}
+  1411	
+  1412			ret = gpiochip_add_pin_range(&bank->gpio_chip,
+  1413						     dev_name(pctl->dev), 0,
+  1414						     bank->pin_base, bank->npins);
+  1415			if (ret < 0) {
+  1416				dev_err(pctl->dev, "Failed to add GPIO range %u: %d\n",
+  1417					i, ret);
+  1418				gpiochip_remove(&bank->gpio_chip);
+  1419				goto err;
+  1420			}
+  1421		}
+  1422	
+  1423		return 0;
+  1424	err:
+  1425		for (; i > 0; i--) {
+  1426			bank = &pctl->gpio_banks[i - 1];
+  1427			gpiochip_remove(&bank->gpio_chip);
+  1428		}
+  1429		return ret;
+  1430	}
+  1431	
 
 -- 
-With Best Regards,
-Andy Shevchenko
+0-DAY CI Kernel Test Service
+https://01.org/lkp
