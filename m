@@ -2,161 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E38915A9F8B
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 21:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE5C95A9FA9
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 21:15:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231455AbiIATEa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 15:04:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36210 "EHLO
+        id S233521AbiIATPE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 15:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231133AbiIATE3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 15:04:29 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B6495F991;
-        Thu,  1 Sep 2022 12:04:28 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id j6so44424qkl.10;
-        Thu, 01 Sep 2022 12:04:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=W/qFFOOAdXUcatsqWYCMrmRU7POJYRljMGuVofmOMck=;
-        b=hkW+zBJPReWeLUB3DZtFBgm6zHDihFOEvnFqil+PeSGlnM2//BuVoLToJapTiC7G/t
-         qKErgmXdNqbsjaETG1oLE8jDMKA0kkJDFsesCFci6pxnYteU1A00bG0zV7FD6l/s6ZRn
-         My67PuzXtJVCgNQBDzrFI+1l6TabVFjDiFh6MndvGe9sQc7a7UCuH1xlDwjEwrQkfHCd
-         sWDpDfjMUMmQUZ9ywzhPcbVEizuhQgYHboo0UDteT7HXEYhcJCkDOenaNamvjBdz3ByE
-         ObBDTk4fSzp5xkU99HMyTa3binfrAC0uB8XhAvIoQ60lek1zr9FW+PAIceyh8iPd+C9U
-         ToCg==
+        with ESMTP id S233750AbiIATPA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 15:15:00 -0400
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FBF5DF18;
+        Thu,  1 Sep 2022 12:14:57 -0700 (PDT)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-11ee4649dfcso27546041fac.1;
+        Thu, 01 Sep 2022 12:14:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=W/qFFOOAdXUcatsqWYCMrmRU7POJYRljMGuVofmOMck=;
-        b=WeZ+UH57uSJapeI0jjaB9Da3JH3o5CvJFRughPxnRqwu6QhMDhbPT50ybVBgFd2xzj
-         89mLikLU474A2rKY24yuBsUHpjJ+xShrcsWbfFcTtif1S2+pw5kIUv9m5iCg9ItySO3v
-         +yXj8MOgxxW8335oEtXavBHgCDNWVXgCKaHovC7AmA3RwRx3mdQhFXZ9NZKDKC68S0Zd
-         I1eMqTxG6h1PY0aRtsTInw0GEMu0ILwf7pseKZHv2qlVerT3Mv38jWjtgen/eW6f+YRH
-         q3qctZHosOi+0bNz+3C82H6WuOtmq4nTkzPiv+juLIY7Uu0nHO19uBpmHyk1D4R1DUOQ
-         lC5Q==
-X-Gm-Message-State: ACgBeo2dNhoEGEcMxQ/o55KU0bFOUzK5BjuopOBq38u9FqPVMuF5110c
-        2x7J4qYaqtmcKIsxzkIfxNA1ItOGjTbnqwZ5rdIGCq7Q/hwDlQ==
-X-Google-Smtp-Source: AA6agR4WH37VH8nTA6WfWnnPnxk2D7IFWLwSOev+koVtMfhDbxoJpV8t9O5yUTzQCNy8XJxz2zTJ7rS8l6t76oVHZvQ=
-X-Received: by 2002:ae9:e311:0:b0:6ba:e711:fb27 with SMTP id
- v17-20020ae9e311000000b006bae711fb27mr20760737qkf.320.1662059067344; Thu, 01
- Sep 2022 12:04:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220901092922.1024311-1-qingtao.cao.au@gmail.com>
-In-Reply-To: <20220901092922.1024311-1-qingtao.cao.au@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 1 Sep 2022 22:03:51 +0300
-Message-ID: <CAHp75Vc9LiO=YMNHgq=M2vqvqS7sL_4C89E7wPzbF6TyLtmOVw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] gpio: exar: access MPIO registers on slave chips
-To:     Qingtao Cao <qingtao.cao.au@gmail.com>
-Cc:     nathan@nathanrossi.com, Linus Walleij <linus.walleij@linaro.org>,
+        h=message-id:date:subject:references:in-reply-to:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=fHpuoKiaP8gaOWB+xshWeNLH14khrnSZpoqLnYd2/sQ=;
+        b=2owWF9hLgbz3a4zEcRZL3fz/PRy/9WpFZ68bam1NmmJ5dzbrsMk/4okwZvmSXCa5rl
+         Wr800DcjuDH685JmByDiFX4+wcV6dCtaJ0xD+394Tnf/lPUyzkYCMw8nv6CFpqYs8wtj
+         nvsAE10sbA741metH7BVmwdD6vZRxXbALyAvArB58zDEb32+kcnRZb2af0ok140rVyo0
+         AmDePWWb8AKjCDDnRnKAfgNNcO4hc4bDz8EtEKX643tFdf0j8i3diIb12dJ0Chernws7
+         FSv5aqFFHAD/+6R8pueJGU4ZgX7oVHnpouP1WpL38DbIuwQPGoY9ZY/VW9NZ45olRHgt
+         HaqA==
+X-Gm-Message-State: ACgBeo15A8nmHdwk4gs/sics37vP0tdVGohV75anIO8qdScXYcxYO9JC
+        IOl7rbuMs/LtkcoQKP7SMw==
+X-Google-Smtp-Source: AA6agR5/5uzJNbiT4/9e04PK9Ypn0jZez6KHfkZ2dBJaXWmDx+E+aszkmLnMPoBglY+Uw6hAmCBZug==
+X-Received: by 2002:a05:6808:1294:b0:344:a101:39f6 with SMTP id a20-20020a056808129400b00344a10139f6mr297182oiw.119.1662059696344;
+        Thu, 01 Sep 2022 12:14:56 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id z17-20020a05687041d100b0011b98fa9ab5sm16155oac.50.2022.09.01.12.14.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Sep 2022 12:14:55 -0700 (PDT)
+Received: (nullmailer pid 2226881 invoked by uid 1000);
+        Thu, 01 Sep 2022 19:14:55 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lee Jones <lee@kernel.org>, asahi@lists.linux.dev,
+        devicetree@vger.kernel.org, Sven Peter <sven@svenpeter.dev>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hector Martin <marcan@marcan.st>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System Management Controller
+Date:   Thu, 01 Sep 2022 14:14:55 -0500
+Message-Id: <1662059695.085972.2226880.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 12:41 PM Qingtao Cao <qingtao.cao.au@gmail.com> wrote:
->
-> When EXAR xr17v35x chips are cascaded in order to access the MPIO registers
-> (part of the Device Configuration Registers) of the slave chips, an offset
-> needs to be applied based on the number of master chip's UART channels.
+On Thu, 01 Sep 2022 14:54:25 +0100, Russell King (Oracle) wrote:
+> Add a DT binding for the Apple Mac System Management Controller.
+> 
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+>  .../devicetree/bindings/mfd/apple,smc.yaml    | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
+> 
 
-...
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
->  #define EXAR_OFFSET_MPIOSEL_LO 0x93
->  #define EXAR_OFFSET_MPIOLVL_HI 0x96
->  #define EXAR_OFFSET_MPIOSEL_HI 0x99
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/mfd/apple,smc.yaml:20:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
 
-+ Blank line.
+dtschema/dtc warnings/errors:
 
-> +#define EXAR_UART_CHANNEL_SIZE 0x400
+doc reference errors (make refcheckdocs):
 
-Add a comment explaining what this does include, etc.
+See https://patchwork.ozlabs.org/patch/
 
-...
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-> +       /*
-> +        * The offset to the slave device's (if existing)
-> +        * Device Configuration Registers
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Always finish multi-line comments with a period. Applies to other
-comments in this patch.
+pip3 install dtschema --upgrade
 
-> +        */
+Please check and re-submit.
 
-...
-
->  {
-> -       return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOSEL_HI
-> -                                                  : EXAR_OFFSET_MPIOSEL_LO;
-> +       int addr;
-> +
-> +       addr = (offset % 16 + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOSEL_HI
-> +                                                       : EXAR_OFFSET_MPIOSEL_LO;
-> +       return offset / 16 ? addr + exar_gpio->slave_offset : addr;
-
-Can we rather have something like
-
-  unsigned int pin = exar->first_pin + (offset % 16);
-  unsigned int slave = offset / 16;
-
-  addr = pin / 8 ? ...;
-  return addr + (slave ? ... : 0);
-
-?
-
->  }
->
->  static unsigned int
->  exar_offset_to_lvl_addr(struct exar_gpio_chip *exar_gpio, unsigned int offset)
->  {
-> -       return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOLVL_HI
-> -                                                  : EXAR_OFFSET_MPIOLVL_LO;
-> +       int addr;
-> +
-> +       addr = (offset % 16 + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOLVL_HI
-> +                                                       : EXAR_OFFSET_MPIOLVL_LO;
-> +       return offset / 16 ? addr + exar_gpio->slave_offset : addr;
-
-In the similar way as above.
-
->  }
-
-...
-
-> +       if (pcidev->device & 0xf000) {
-
-GENMASK()
-
-> +               /*
-> +                * xr17v354 or xr17v358 slaves have the same amount of
-> +                * MPIOs as the master
-> +                */
-> +               ngpios += ngpios;
-> +
-> +               /*
-> +                * The last 4 bits of the master's PCI Device ID is
-> +                * the number of its UART channels
-> +                */
-> +               exar_gpio->slave_offset = (pcidev->device & 0xf) *
-
-GENMASK()
-
-> +                               EXAR_UART_CHANNEL_SIZE;
-> +       }
-
--- 
-With Best Regards,
-Andy Shevchenko
