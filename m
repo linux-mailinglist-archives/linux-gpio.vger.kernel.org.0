@@ -2,149 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27B975A8C35
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 06:12:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8CE5A8D5A
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 07:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232430AbiIAEMs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 00:12:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
+        id S233013AbiIAFbS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 01:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231737AbiIAEMm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 00:12:42 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176A0161294
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 21:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662005561; x=1693541561;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=o35k/CFrP8iFmV/VEZ+ygcRbTfK5g+H0/fbHxe+0grk=;
-  b=jTOFwv+gZp4eixEsF1mTLIpb52vzuder7OKtmWX+2Ke9C/Dg/12CteGS
-   Zj5A3yk/vSydeNWe1rwZS4ri57nWnIpQ4s3JsOrvUV1k2Vpyk5IWjspbm
-   hUGo0On3ljfC7M27/DKXiUJLhF4teT2BZV+W/He1yOKMKlokuqyssyA4h
-   pwW8fGReRaDeANu2hYx1WPhlXpin0ceonPe7ffX00rGahnMOOhQ1qAIbF
-   e/8umIWcVI0F0baPs4J6vq6742HyxzYQf1CrvTEfjopuFTYnGomWszw4k
-   m+LmG/uJyqiKUWrBz5XqCjrVnJkFQLusnFZtbmPZdr/6SiMkyZWkt6D1M
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="296395653"
-X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
-   d="scan'208";a="296395653"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 21:12:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
-   d="scan'208";a="940690027"
-Received: from lkp-server02.sh.intel.com (HELO 811e2ceaf0e5) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 31 Aug 2022 21:12:39 -0700
-Received: from kbuild by 811e2ceaf0e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oTbZG-00015e-3A;
-        Thu, 01 Sep 2022 04:12:38 +0000
-Date:   Thu, 01 Sep 2022 12:12:23 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- ee0175b3b44288c74d5292c2a9c2c154f6c0317e
-Message-ID: <63103127.goGautZ5IKplT67c%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S233025AbiIAFbN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 01:31:13 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E355E4B4A1;
+        Wed, 31 Aug 2022 22:30:34 -0700 (PDT)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2815UQii026785;
+        Thu, 1 Sep 2022 00:30:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1662010226;
+        bh=NqwbWXA2C23+c+6x6OFGJWJve438k2+PUlczUT3em5E=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=pdwP0a/X+u0NsWPBZiuSC8jJludGAIYVH3b1Ae2pz+V/hTh5tbAk3g2eHMUnSSRTc
+         63qFiZmgK4PSNpRqb3bZw1epAKM8pVxYEEUsvRdwrFuZWifNmbjUFjOvyFs6n3n9O5
+         8TcUI7igX/fA10dod0LHGuz79Fy5Yyr/M3DQCtc0=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2815UQlk013688
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 1 Sep 2022 00:30:26 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Thu, 1 Sep
+ 2022 00:30:25 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Thu, 1 Sep 2022 00:30:25 -0500
+Received: from [172.24.145.182] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2815ULEL018341;
+        Thu, 1 Sep 2022 00:30:22 -0500
+Message-ID: <8c5f6921-62c9-29d2-5c13-ce1932e1715c@ti.com>
+Date:   Thu, 1 Sep 2022 11:00:21 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH 1/4] dt-bindings: arm: ti: Add bindings for AM62A7 SoC
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, Bryan Brattlof <bb@ti.com>
+References: <20220829082200.241653-1-vigneshr@ti.com>
+ <20220829082200.241653-2-vigneshr@ti.com>
+ <d7303503-70ef-7307-8cc0-1bc334c9e6af@linaro.org>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <d7303503-70ef-7307-8cc0-1bc334c9e6af@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: ee0175b3b44288c74d5292c2a9c2c154f6c0317e  gpio: realtek-otto: switch to 32-bit I/O
 
-elapsed time: 720m
 
-configs tested: 68
-configs skipped: 2
+On 30/08/22 15:22, Krzysztof Kozlowski wrote:
+> On 29/08/2022 11:21, Vignesh Raghavendra wrote:
+>> This adds bindings for TI's AM62A7 family of devices.
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+>> index 61c6ab4f52e2..28f6ea4c007e 100644
+>> --- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+>> @@ -65,6 +65,12 @@ properties:
+>>                - ti,j721s2-evm
+>>            - const: ti,j721s2
+>>  
+>> +      - description: K3 AM62A7 SoC
+>> +        items:
+>> +          - enum:
+>> +              - ti,am62a7-sk
+>> +          - const: ti,am62a7
+> 
+> Is it possible to have some order in the file?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Nishanth has posted [1] for the same. Will rebase on top of that series.
 
-gcc tested configs:
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-um                           x86_64_defconfig
-um                             i386_defconfig
-i386                             allyesconfig
-i386                                defconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-arc                        nsim_700_defconfig
-parisc                generic-32bit_defconfig
-riscv             nommu_k210_sdcard_defconfig
-sh                          lboxre2_defconfig
-s390                 randconfig-r044-20220831
-arc                  randconfig-r043-20220831
-riscv                randconfig-r042-20220831
-loongarch                           defconfig
-loongarch                         allnoconfig
-xtensa                         virt_defconfig
-powerpc                        warp_defconfig
-arm                        multi_v7_defconfig
-arm64                            alldefconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-ia64                             allmodconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-c001
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-
-clang tested configs:
-powerpc                          allyesconfig
-arm                      pxa255-idp_defconfig
-hexagon              randconfig-r045-20220831
-hexagon              randconfig-r041-20220831
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-powerpc                     tqm8560_defconfig
-powerpc                 xes_mpc85xx_defconfig
+[1] https://lore.kernel.org/all/20220830160507.7726-3-nm@ti.com/
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Regards
+Vignesh
