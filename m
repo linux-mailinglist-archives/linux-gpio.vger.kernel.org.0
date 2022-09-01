@@ -2,103 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02CDC5A8ABF
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 03:31:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27B975A8C35
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 06:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229826AbiIABbI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 Aug 2022 21:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52232 "EHLO
+        id S232430AbiIAEMs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 00:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230101AbiIABbH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 Aug 2022 21:31:07 -0400
-Received: from mail-m11873.qiye.163.com (mail-m11873.qiye.163.com [115.236.118.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CFB6582A
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 18:31:06 -0700 (PDT)
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by mail-m11873.qiye.163.com (Hmail) with ESMTPA id 77B219004DA;
-        Thu,  1 Sep 2022 09:31:04 +0800 (CST)
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, heiko@sntech.de
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: rk356x add 'clock-names' for gpio nodes
-Date:   Thu,  1 Sep 2022 09:31:01 +0800
-Message-Id: <20220901013101.2634480-3-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220901013101.2634480-1-jay.xu@rock-chips.com>
-References: <20220901013101.2634480-1-jay.xu@rock-chips.com>
+        with ESMTP id S231737AbiIAEMm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 00:12:42 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176A0161294
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Aug 2022 21:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662005561; x=1693541561;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=o35k/CFrP8iFmV/VEZ+ygcRbTfK5g+H0/fbHxe+0grk=;
+  b=jTOFwv+gZp4eixEsF1mTLIpb52vzuder7OKtmWX+2Ke9C/Dg/12CteGS
+   Zj5A3yk/vSydeNWe1rwZS4ri57nWnIpQ4s3JsOrvUV1k2Vpyk5IWjspbm
+   hUGo0On3ljfC7M27/DKXiUJLhF4teT2BZV+W/He1yOKMKlokuqyssyA4h
+   pwW8fGReRaDeANu2hYx1WPhlXpin0ceonPe7ffX00rGahnMOOhQ1qAIbF
+   e/8umIWcVI0F0baPs4J6vq6742HyxzYQf1CrvTEfjopuFTYnGomWszw4k
+   m+LmG/uJyqiKUWrBz5XqCjrVnJkFQLusnFZtbmPZdr/6SiMkyZWkt6D1M
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="296395653"
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="296395653"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 21:12:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="940690027"
+Received: from lkp-server02.sh.intel.com (HELO 811e2ceaf0e5) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 31 Aug 2022 21:12:39 -0700
+Received: from kbuild by 811e2ceaf0e5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oTbZG-00015e-3A;
+        Thu, 01 Sep 2022 04:12:38 +0000
+Date:   Thu, 01 Sep 2022 12:12:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ ee0175b3b44288c74d5292c2a9c2c154f6c0317e
+Message-ID: <63103127.goGautZ5IKplT67c%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQx4YVk5NSh5DSkJCH01LTlUTARMWGhIXJB
-        QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6LBw6Mz09DU0tIQMWHDFN
-        CEsKCQhVSlVKTU1KQkJOQ01OSk1KVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
-        WU5DVUlJVUxVSkpPWVdZCAFZQUhJQ0s3Bg++
-X-HM-Tid: 0a82f6ac52992eafkusn77b219004da
-X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add 'clock-names' for gpio nodes on rk356x SoCs, after this patch, the
-gpio driver can get the clocks by a const char id, 'bus' for apb clock
-and 'db' for the debounce clock.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: ee0175b3b44288c74d5292c2a9c2c154f6c0317e  gpio: realtek-otto: switch to 32-bit I/O
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk356x.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+elapsed time: 720m
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-index 319981c3e9f7..66d038720e65 100644
---- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-@@ -1650,6 +1650,7 @@ gpio0: gpio@fdd60000 {
- 			compatible = "rockchip,gpio-bank";
- 			reg = <0x0 0xfdd60000 0x0 0x100>;
- 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "bus", "db";
- 			clocks = <&pmucru PCLK_GPIO0>, <&pmucru DBCLK_GPIO0>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -1661,6 +1662,7 @@ gpio1: gpio@fe740000 {
- 			compatible = "rockchip,gpio-bank";
- 			reg = <0x0 0xfe740000 0x0 0x100>;
- 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "bus", "db";
- 			clocks = <&cru PCLK_GPIO1>, <&cru DBCLK_GPIO1>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -1672,6 +1674,7 @@ gpio2: gpio@fe750000 {
- 			compatible = "rockchip,gpio-bank";
- 			reg = <0x0 0xfe750000 0x0 0x100>;
- 			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "bus", "db";
- 			clocks = <&cru PCLK_GPIO2>, <&cru DBCLK_GPIO2>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -1683,6 +1686,7 @@ gpio3: gpio@fe760000 {
- 			compatible = "rockchip,gpio-bank";
- 			reg = <0x0 0xfe760000 0x0 0x100>;
- 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "bus", "db";
- 			clocks = <&cru PCLK_GPIO3>, <&cru DBCLK_GPIO3>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -1694,6 +1698,7 @@ gpio4: gpio@fe770000 {
- 			compatible = "rockchip,gpio-bank";
- 			reg = <0x0 0xfe770000 0x0 0x100>;
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "bus", "db";
- 			clocks = <&cru PCLK_GPIO4>, <&cru DBCLK_GPIO4>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
+configs tested: 68
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+um                           x86_64_defconfig
+um                             i386_defconfig
+i386                             allyesconfig
+i386                                defconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+arc                        nsim_700_defconfig
+parisc                generic-32bit_defconfig
+riscv             nommu_k210_sdcard_defconfig
+sh                          lboxre2_defconfig
+s390                 randconfig-r044-20220831
+arc                  randconfig-r043-20220831
+riscv                randconfig-r042-20220831
+loongarch                           defconfig
+loongarch                         allnoconfig
+xtensa                         virt_defconfig
+powerpc                        warp_defconfig
+arm                        multi_v7_defconfig
+arm64                            alldefconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+ia64                             allmodconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-c001
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+
+clang tested configs:
+powerpc                          allyesconfig
+arm                      pxa255-idp_defconfig
+hexagon              randconfig-r045-20220831
+hexagon              randconfig-r041-20220831
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+powerpc                     tqm8560_defconfig
+powerpc                 xes_mpc85xx_defconfig
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
