@@ -2,72 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 845045A9B6B
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 17:20:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D18C75A9B80
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 17:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232790AbiIAPUP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 11:20:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
+        id S232689AbiIAPYa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 11:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233753AbiIAPUN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 11:20:13 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731141EAE0
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 08:20:11 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id y64so11230588ede.2
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 08:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=Q6mBPFQpA06ZvWUnOEBda1D5SKhKuxvQbDfHBpf3uwc=;
-        b=Kw/EoRfWoshcdSsSEeJr6RNkQ3rmFQFy4BcuBRdDcXp9SQSg7EyYGf8Wv929UeL19E
-         46wzxNxWgMPlwMQOCBxq0/FEbjdwRZ1tW84RaosNaJFpZ0VIt38j4l2Lg5uJPZT90CiR
-         wgiRel239a1f0EJmYA/oSeM0+X6+hYVrmnAyELAit4wbh3wAd/QUjrq7M5yRXQ60GjvH
-         5fieFSd0Q8FhH+QKuO4o++KGJ7WSjzxpCPu4zlcPRV+0piF4P5MDOcKA+LvIWcZjuKSD
-         3o9httpKBNq2k0Q5ozGB5D3TdTH+jRiO/Kw+FKdZQk/elpH/M7zyVqcuIluE+C9YCvrT
-         p/YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Q6mBPFQpA06ZvWUnOEBda1D5SKhKuxvQbDfHBpf3uwc=;
-        b=zr0ffWVu2RoraLvLaQx9VgB6EYT8wJOVum8P1SId4ajk870dzcxuV4Drb7FCnh+055
-         6iy+Ew1UREJ/P4flwla4m419CmOjCkXWZCu9xBgxVnQUriYnYYmQfWn0L48/BAYI2KBm
-         EVjIdGMpYr6YyOj0g/9jSuNvwupgUVhovqEznIV2qDdT/axk9ifxbA6oLHpruDoYS6pS
-         xIjcNZ/dfJ7FBN5H3rtlqjxnjx5kJXyzv59AXq4FKb1ADXH+AUSXudBlQYZVqAyNWVIG
-         bOCrasEsL4kitD1dTqavuugmumEYNKlpoi74VzAel8ShRc5pAY5w88hg57OFsbApSDM8
-         bW0w==
-X-Gm-Message-State: ACgBeo1ANr4d7Uq/GoDiw/wLKP3KgHS4zc/t97uMxIs3BLKKp16XFetF
-        CVkDS+yPGIy0wylwASgsKZcFNptux9adeMuPl5NVAMqVSiI=
-X-Google-Smtp-Source: AA6agR5EiqW8yi4rig6EGzVf96EbDsC2nA3KamdLRmLfuxYLnfdyAOimOKpKepGbWdH7MVblW4fMOcn8lYH3DDQBXLs=
-X-Received: by 2002:a05:6402:71a:b0:447:ebb2:18f2 with SMTP id
- w26-20020a056402071a00b00447ebb218f2mr24571735edx.408.1662045609686; Thu, 01
- Sep 2022 08:20:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220825104422.14156-1-henning.schild@siemens.com> <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
-In-Reply-To: <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 1 Sep 2022 17:19:58 +0200
-Message-ID: <CAMRc=McxL0KEb+KHTcTAW1NC91Jx8uNAt9AAaLrH97oAA_0SZA@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable branch with 6.0-rc1 + "[PATCH v6 0/7] add
- support for another simatic board" series
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Henning Schild <henning.schild@siemens.com>,
+        with ESMTP id S231290AbiIAPY3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 11:24:29 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C24861CE;
+        Thu,  1 Sep 2022 08:24:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=EM9unvrkq5KRXP4o9UGZIuXzbMhXAHieicgtIajlFio=; b=NVfxU3cQBDLMSI4eTEe+8zr9Xg
+        o3IdDia1gfpLSkNnfZRD3V5wNNifg9d+qVmtK+9T867ltBDd0lF+GRB6IUqVKCOoaTyxVdraED8DA
+        oCuT1pnvWBZlznrGb0McrrMigJJKVZQRy5IDzpGLAcWshX14Bw8uA+8u1mAls64KRsp8t+m6E8g1i
+        p3tUlqAPVN2TMQF5Gf5AVCsRlwjqWxRR+bkPAmlxTouHm0g/Y8N2VObbrb8w7dyAN/eS61S430U3I
+        x5JqsMJWzhGGASp9VlDe9a+zQQPubEizbaACCsTZ9bevCLvjrCHyqm8hEHkK1DnUjYkhP7niYp/Vq
+        1mi6wcxw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34044)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oTm3J-00069M-9M; Thu, 01 Sep 2022 16:24:21 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oTm3I-0003Z9-2M; Thu, 01 Sep 2022 16:24:20 +0100
+Date:   Thu, 1 Sep 2022 16:24:20 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Sven Peter <sven@svenpeter.dev>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
+Message-ID: <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+ <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
+ <426469c1-13cc-178b-4904-09439d7788e8@linaro.org>
+ <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
+ <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,55 +69,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 4:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Dear GPIO and LED subsystem maintainers,
->
-> Here is a pull-request for v6.0-rc1 + the
-> "[PATCH v6 0/7] add support for another simatic board" series
-> for merging into the gpio and leds subsystems.
->
-> Regards,
->
-> Hans
->
->
-> The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
->
->   Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-simatec-1
->
-> for you to fetch changes up to 8f5c9858c5db129359b5de2f60f5f034bf5d56c0:
->
->   platform/x86: simatic-ipc: add new model 427G (2022-09-01 16:15:03 +0200)
->
-> ----------------------------------------------------------------
-> Tag (immutable branch) for:
-> v6.0-rc1 + "[PATCH v6 0/7] add support for another simatic board" series
-> for merging into the gpio, leds and pdx86 subsystems.
->
-> ----------------------------------------------------------------
-> Henning Schild (7):
->       gpio-f7188x: switch over to using pr_fmt
->       gpio-f7188x: add a prefix to macros to keep gpio namespace clean
->       gpio-f7188x: Add GPIO support for Nuvoton NCT6116
->       gpio-f7188x: use unique labels for banks/chips
->       leds: simatic-ipc-leds-gpio: add new model 227G
->       platform/x86: simatic-ipc: enable watchdog for 227G
->       platform/x86: simatic-ipc: add new model 427G
->
->  drivers/gpio/Kconfig                               |   3 +-
->  drivers/gpio/gpio-f7188x.c                         | 275 ++++++++++++---------
->  drivers/leds/simple/simatic-ipc-leds-gpio.c        |  42 +++-
->  drivers/platform/x86/simatic-ipc.c                 |  10 +-
->  include/linux/platform_data/x86/simatic-ipc-base.h |   1 +
->  include/linux/platform_data/x86/simatic-ipc.h      |   2 +
->  6 files changed, 216 insertions(+), 117 deletions(-)
->
+On Thu, Sep 01, 2022 at 06:15:46PM +0300, Krzysztof Kozlowski wrote:
+> On 01/09/2022 18:12, Russell King (Oracle) wrote:
+> >>> +  compatible:
+> >>> +    items:
+> >>> +      - enum:
+> >>> +        - apple,t8103-smc
+> >>
+> >> You miss two spaces of indentation on this level.
+> > 
+> > Should that be picked up by the dt checker?
+> 
+> I think yamllint complains about it. It is not a hard-dependency, so
+> maybe you don't have it installed.
+> 
+> > 
+> >>> +        - apple,t8112-smc
+> >>> +        - apple,t6000-smc
+> >>
+> >> Bring some order here - either alphabetical or by date of release (as in
+> >> other Apple schemas). I think t6000 was before t8112, so it's none of
+> >> that orders.
+> > 
+> > Ok.
+> > 
+> >>> +      - const: apple,smc
+> >>> +
+> >>> +  reg:
+> >>> +    description: Two regions, one for the SMC area and one for the SRAM area.
+> >>
+> >> You need constraints for size/order, so in this context list with
+> >> described items.
+> > 
+> > How do I do that? I tried maxItems/minItems set to 2, but the dt checker
+> > objected to it.
+> 
+> One way:
+> reg:
+>   items:
+>     - description: SMC area
+>     - description: SRAM area
+> 
+> but actually this is very similar what you wrote for reg-names - kind of
+> obvious, so easier way:
+> 
+> reg:
+>   maxItems: 2
 
-Pulled, thanks!
+Doesn't work. With maxItems: 2, the example fails, yet it correctly lists
+two regs which are 64-bit address and 64-bit size - so in total 8 32-bit
+ints.
 
-Bart
+Documentation/devicetree/bindings/mfd/apple,smc.example.dtb: smc@23e400000: reg: [[2, 1044381696], [0, 16384], [2, 1071644672], [0, 1048576]] is too long
+        From schema: /home/rmk/git/linux-rmk/Documentation/devicetree/bindings/mfd/apple,smc.yaml
+
+Hence, I originally had maxItems: 2, and ended up deleting it because of
+the dt checker.
+
+With the two descriptions, it's the same failure.
+
+I think the problem is that the checker has no knowledge in the example
+of how big each address and size element of the reg property is. So,
+it's interpreting it as four entries of 32-bit address,size pairs
+instead of two entries of 64-bit address,size pairs. Yep, that's it,
+if I increase the number of "- description" entries to four then it's
+happy.
+
+So, what's the solution?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
