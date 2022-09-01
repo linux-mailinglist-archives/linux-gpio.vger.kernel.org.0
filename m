@@ -2,86 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29FCA5A9AE9
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 16:53:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0CD55A9B2B
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 17:06:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233448AbiIAOxf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 10:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
+        id S229892AbiIAPGX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 11:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233520AbiIAOxa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 10:53:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAB282F80
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 07:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662044009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A0g1blcGod6K82z7PHFW5jtZohl7FHhnQON5Wk+LVyQ=;
-        b=S3EV/+vPYAy1cW7/4C/yQ1rVTrB1E/2GV5Czy7Q8GXM8eMZGmxllsTvMC9inBOxxXFtjNA
-        zjsJBQ5QWNxNChqvMP1q7iHlHTLUnE+v1RABekj/FS2r44/vAtScVmX3dvteN+7+X2iHzV
-        TuedTHRwQMJeqK1+8JSfGXFdAJFAMss=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-619-WCccfuoePcmgGGtUzBMeew-1; Thu, 01 Sep 2022 10:53:28 -0400
-X-MC-Unique: WCccfuoePcmgGGtUzBMeew-1
-Received: by mail-ed1-f70.google.com with SMTP id z6-20020a05640240c600b0043e1d52fd98so12116747edb.22
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 07:53:27 -0700 (PDT)
+        with ESMTP id S229781AbiIAPGW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 11:06:22 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD38474343
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 08:06:20 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id by6so18196264ljb.11
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 08:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=KCbUSop3WQVL4RTWvtr+n/jabxyBXZUokjzZKHnU5M0=;
+        b=b2G44R7KnF5fTX88ReDvkLzm45zanEpaB49cNMjgDVVrz4TNOidDzAoCL2r4Cdeosl
+         AK20h571HggQWfg3sVDA65zRKZ6JIHxvZtXwviB4RzcyI0BPaUiA/XCT21nio9EzQvVr
+         iLbM/DmRnb1g5z3BGcKjJ4nXHAndFu0hlun63GghH3Elgkr8a5o24Iok+VtHo4htWedC
+         PNXwucC8haXd3P/32QCTWhQ4DQd06S5FhJVBmEfIakUHcAmtz5oSn4f6bAZLqmLALH3/
+         bKMmFKGLbGuflHGj3tV139uLu7gbH8pJr28PMOSitOChu39i7ikkJE9jdZ77dPjqGOKI
+         aJUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=A0g1blcGod6K82z7PHFW5jtZohl7FHhnQON5Wk+LVyQ=;
-        b=y5BJ4/ctJlN83KYbfyV41N9TtoknIYWaPFsU/uFyqiKjqPWMP9PC1QyDGfRrLXOaSR
-         x8Kyiky1G1Xvk/oHlRwkP2B2XHTgJvz5c/XsZUi7ktrSHZ7Tan6FMgPAiOGyIe70qBAa
-         aWTcdJJkAXOPuinXnoSR2KQlUXN4u/lkp9UPcqbiXFKEvOYiIQs1VosY13gY6QnmVmAZ
-         bniQTXBZlwN51NnmkrAhl3clce1GnHcANYgBoypLdy1yOfN3rZ0gv0yOdMr9YhAyXkPL
-         oz0SOprU0WMqzuxGqFgCo6OJYUBxMld/c+nZgkvMZ9fkbirjJT9R3j65mJUywwHHL7SU
-         YYUw==
-X-Gm-Message-State: ACgBeo3VxlzV8lw9LuFllal0XsDGSJ1bIbx/QIgmNI77n+TpRPVF1KWW
-        5yzC/kWxjdlAqYvNzjF9ux4P3TpN5WMZ+KNvhgbU00nu6ajeNtuVxyGigV4U1zB8Bnkfpg9ATqJ
-        ep9LptYxcxuA+TBguxvWfZw==
-X-Received: by 2002:a17:907:97d3:b0:73d:8b9b:a6c1 with SMTP id js19-20020a17090797d300b0073d8b9ba6c1mr23841555ejc.71.1662044006877;
-        Thu, 01 Sep 2022 07:53:26 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6A5xb5zxDdAmIlrBKOAQ/kfMCQXQVATSUFSS8Zk3+p7j3ebhCP6gZtK0drupcmwhEfsr5TTQ==
-X-Received: by 2002:a17:907:97d3:b0:73d:8b9b:a6c1 with SMTP id js19-20020a17090797d300b0073d8b9ba6c1mr23841540ejc.71.1662044006697;
-        Thu, 01 Sep 2022 07:53:26 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id vs23-20020a170907139700b0072ed9efc9dfsm8530465ejb.48.2022.09.01.07.53.25
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=KCbUSop3WQVL4RTWvtr+n/jabxyBXZUokjzZKHnU5M0=;
+        b=6gzq6HWFVXr44xxVFgpElACCsCUHSwOi0pSIdokB4x2MxYebydJm8InXPPikybLJDl
+         +rBCSbHJegH95VDsfcWbJeGJ9jAfne+VXVh7l5G/tWalAnMP5DF70C6BtOPcZPb6/swN
+         FVr1KcBfynE66J1YLTEJWY3AQ36rfKjlxcxKJKmnAn8AYH8bZpfE3Q4ECZmFneBefwEw
+         +E4V129rEGh9cRkwcYMKrvpKYUrM4ZjsXnoX/KQe7E3fZo94SUmwx48Gh6Y+SHFd14oK
+         NhVR4Ncmnx0Q17TUxxaDdrZ32cEDEHNRx8BQzowc/Un+I53ZgJZgm30dik3g5GFGgQg5
+         IsPg==
+X-Gm-Message-State: ACgBeo3vj/wPteU10iyZ9yu7erW538rXZ32kuVjPqxwc4ZHF2aFP9CtJ
+        ROfhE0s0qOHnsO7V6snjSqkF0g==
+X-Google-Smtp-Source: AA6agR4v82tzjRxzkl50GAILGvdU/4Z8/oNIC6ddy1jLimYFNB37TxV7X+A0H1YFvTJk0OU7i+85SQ==
+X-Received: by 2002:a05:651c:1993:b0:263:a41d:3d7b with SMTP id bx19-20020a05651c199300b00263a41d3d7bmr6374222ljb.63.1662044779237;
+        Thu, 01 Sep 2022 08:06:19 -0700 (PDT)
+Received: from [192.168.28.124] (balticom-73-99-134.balticom.lv. [109.73.99.134])
+        by smtp.gmail.com with ESMTPSA id 11-20020ac2482b000000b00492e2918a5asm1352324lft.269.2022.09.01.08.06.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 07:53:26 -0700 (PDT)
-Message-ID: <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
-Date:   Thu, 1 Sep 2022 16:53:25 +0200
+        Thu, 01 Sep 2022 08:06:18 -0700 (PDT)
+Message-ID: <426469c1-13cc-178b-4904-09439d7788e8@linaro.org>
+Date:   Thu, 1 Sep 2022 18:06:17 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] Immutable branch with 6.0-rc1 + "[PATCH v6 0/7] add
- support for another simatic board" series
-To:     Henning Schild <henning.schild@siemens.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-References: <20220825104422.14156-1-henning.schild@siemens.com>
+ Thunderbird/91.13.0
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
 Content-Language: en-US
-In-Reply-To: <20220825104422.14156-1-henning.schild@siemens.com>
+To:     "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>, asahi@lists.linux.dev,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Sven Peter <sven@svenpeter.dev>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+ <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,49 +84,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear GPIO and LED subsystem maintainers,
+On 01/09/2022 16:54, Russell King (Oracle) wrote:
+> Add a DT binding for the Apple Mac System Management Controller.
+> 
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Here is a pull-request for v6.0-rc1 + the
-"[PATCH v6 0/7] add support for another simatic board" series
-for merging into the gpio and leds subsystems.
+Thank you for your patch. There is something to discuss/improve.
 
-Regards,
+> +
+> +maintainers:
+> +  - Hector Martin <marcan@marcan.st>
+> +
+> +description:
+> +  Apple Mac System Management Controller implements various functions
+> +  such as GPIO, RTC, power, reboot.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - apple,t8103-smc
 
-Hans
+You miss two spaces of indentation on this level.
 
+> +        - apple,t8112-smc
+> +        - apple,t6000-smc
 
-The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+Bring some order here - either alphabetical or by date of release (as in
+other Apple schemas). I think t6000 was before t8112, so it's none of
+that orders.
 
-  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+> +      - const: apple,smc
+> +
+> +  reg:
+> +    description: Two regions, one for the SMC area and one for the SRAM area.
 
-are available in the Git repository at:
+You need constraints for size/order, so in this context list with
+described items.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-simatec-1
+> +
+> +  reg-names:
+> +    items:
+> +      - const: smc
+> +      - const: sram
+> +
+> +  mboxes:
+> +    description:
+> +      A phandle to the mailbox channel
 
-for you to fetch changes up to 8f5c9858c5db129359b5de2f60f5f034bf5d56c0:
+Missing maxItems
 
-  platform/x86: simatic-ipc: add new model 427G (2022-09-01 16:15:03 +0200)
-
-----------------------------------------------------------------
-Tag (immutable branch) for:
-v6.0-rc1 + "[PATCH v6 0/7] add support for another simatic board" series
-for merging into the gpio, leds and pdx86 subsystems.
-
-----------------------------------------------------------------
-Henning Schild (7):
-      gpio-f7188x: switch over to using pr_fmt
-      gpio-f7188x: add a prefix to macros to keep gpio namespace clean
-      gpio-f7188x: Add GPIO support for Nuvoton NCT6116
-      gpio-f7188x: use unique labels for banks/chips
-      leds: simatic-ipc-leds-gpio: add new model 227G
-      platform/x86: simatic-ipc: enable watchdog for 227G
-      platform/x86: simatic-ipc: add new model 427G
-
- drivers/gpio/Kconfig                               |   3 +-
- drivers/gpio/gpio-f7188x.c                         | 275 ++++++++++++---------
- drivers/leds/simple/simatic-ipc-leds-gpio.c        |  42 +++-
- drivers/platform/x86/simatic-ipc.c                 |  10 +-
- include/linux/platform_data/x86/simatic-ipc-base.h |   1 +
- include/linux/platform_data/x86/simatic-ipc.h      |   2 +
- 6 files changed, 216 insertions(+), 117 deletions(-)
-
+> +
+> +additionalProperties: false
+> +
+Best regards,
+Krzysztof
