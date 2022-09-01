@@ -2,149 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A614E5AA31D
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 00:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4913D5AA3E7
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 01:50:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233057AbiIAWdu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 18:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
+        id S233404AbiIAXue (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 19:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235059AbiIAWdr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 18:33:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72FF200;
-        Thu,  1 Sep 2022 15:33:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 49FA96201B;
-        Thu,  1 Sep 2022 22:33:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4362C433D7;
-        Thu,  1 Sep 2022 22:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662071625;
-        bh=JVBvlEBiOmHDg0DcOMfECbdzQXwhpcC54UdN/AtqjWo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZPVfMQ0a8z2yo7VG7Fxo5kVxNZ6K7rrfDo/aAlpY3aOAgCKGZL/5sYaYDVT2lsS9v
-         IMvV9Ysbn3Tpv9eXvaXih3f/on21G3SgnFEKTdc3rTpTDBtDjRohkzdpDjjIpudIn7
-         SBZem0lYwtAz5tmiVU4RnRhptT93mngtFZhreI1EHQlI9eSk9EgjuGVGI4sf1jzu43
-         b1ZYgRMRI5+kTJ6H9EK2yukdB/XwX0Ba3rPeh1BPAY92sJ7+/NOvlihI2mKsliPCTr
-         gPi5aN64izpfRJFyFwPa6OYwUQrl3KghiDKoTk+Uoc+ZEvMxpIkVtT5WpJlvDR4tIe
-         m4xZK2gZyKr4w==
-Received: by mail-pl1-f174.google.com with SMTP id d12so161014plr.6;
-        Thu, 01 Sep 2022 15:33:45 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1Ur110/c0+Bqy3EYFl7q6ggXj1xk7TMfi1LlCfeC/vm35akLos
-        N6pTSfbHY18tKMkVHzfu0FG8lrWsm0nuf1VDug==
-X-Google-Smtp-Source: AA6agR42ASWP/CdkWAsB45KeALFYih+dn+yvzlUdsO7wBNb4Q0XNeVIFC9eif6EAMJZELzBQOqErTEHGgIdN4pieNj4=
-X-Received: by 2002:a17:902:ef81:b0:174:445f:b88d with SMTP id
- iz1-20020a170902ef8100b00174445fb88dmr30127552plb.148.1662071625166; Thu, 01
- Sep 2022 15:33:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
- <426469c1-13cc-178b-4904-09439d7788e8@linaro.org> <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
- <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org> <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
- <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org> <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
- <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org> <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
-In-Reply-To: <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 1 Sep 2022 17:33:31 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
-Message-ID: <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+        with ESMTP id S229514AbiIAXub (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 19:50:31 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D882E68B;
+        Thu,  1 Sep 2022 16:50:29 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id r69so535012pgr.2;
+        Thu, 01 Sep 2022 16:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=w+DshR9yepFpBry9u7KXIFJ4eQkMqSk2K4thHoZXeSA=;
+        b=HkDAkuUjMRW1B5jk9Q3aOy8RCiHru8chEuvGCT1GQGJ5zK+KfUdVLWhAagu3uEKvWS
+         F5WHRk9jooOw8E2wmKCu4QyqfzEqkTVSLbvbnwOzDuO4sjxDucuWnQkRDZfQfTCpBONj
+         SbLDuRgfY2cc7+mLIS8gBvnzZP9hJO4x2+OBUzb6lmut+6FmfvvHZFWPRs8/88S2hH2w
+         TSgkYWfHy3A/NDfBJk3cG8DhLTzWw9BvaEtCFsEeuKG4nYc0MtGwz/YZDCfKuyQg9b2e
+         DIL7pe4I4mX3umqxFqQr4W4X5jPeQj359ZrYwxUUUkpHVkDytuHLEyDL1xUtkFsMRVs7
+         8w4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=w+DshR9yepFpBry9u7KXIFJ4eQkMqSk2K4thHoZXeSA=;
+        b=aTRj/oq/nBwc/LuQcu3P5ObWsrDSzqogBSLzolOVYpRT8cBSyW8iE15qwnDTxziU+t
+         tPWNxxgERfBAjS1hXGWlY9Xh2PtMbEgVT/Qq8wRYUWC2dIE1dmVsN9LH8WEY9r550Thb
+         1uawXPtDIdEJ2T3TuB5aWIAfiU927AEcLFwAna4XOr6/IPLufkA/qaaAw01vtnbrQIO/
+         HuOE3gkUmwZqdU7XdY4fc5Xbp7SqzNYido+q1uQ810nKkJfIHXyVeK7XtvpyU9yeR+xZ
+         U9QuqFt4iokTCULt94YKwOXtlW6m9aZG33qIAt0WGe7QvM2J+XKFGkZsUHR4HcyA9doU
+         qmHg==
+X-Gm-Message-State: ACgBeo2jDDArJZc5YKecWK3DyGPqjvtstedNG6FiXLft6mlVwdHF3rBZ
+        E4bNXF7FAA1y6YAHgaCqR18V9oxNzOngLg==
+X-Google-Smtp-Source: AA6agR4v91E9yc7a0UFqbDHnV7G/N2Zl5iQfl+SmbVZipNO7GfMpD1RqIHt2tThkG6+ceMCXHD8VPg==
+X-Received: by 2002:aa7:8393:0:b0:537:701d:e7f3 with SMTP id u19-20020aa78393000000b00537701de7f3mr33847297pfm.50.1662076229425;
+        Thu, 01 Sep 2022 16:50:29 -0700 (PDT)
+Received: from harry-home.bne.opengear.com (193-116-109-190.tpgi.com.au. [193.116.109.190])
+        by smtp.gmail.com with ESMTPSA id e16-20020aa798d0000000b005360da6b26bsm169986pfm.159.2022.09.01.16.50.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Sep 2022 16:50:29 -0700 (PDT)
+From:   Qingtao Cao <qingtao.cao.au@gmail.com>
+X-Google-Original-From: Qingtao Cao <qingtao.cao@digi.com>
+To:     andy.shevchenko@gmail.com
+Cc:     qingtao.cao.au@gmail.com, nathan@nathanrossi.com,
+        Qingtao Cao <qingtao.cao@digi.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [v2 PATCH 1/1] gpio: exar: access MPIO registers on slave chips
+Date:   Fri,  2 Sep 2022 09:50:03 +1000
+Message-Id: <20220901235003.20520-1-qingtao.cao@digi.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 11:47 AM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
->
-> On Thu, Sep 01, 2022 at 07:25:03PM +0300, Krzysztof Kozlowski wrote:
-> > On 01/09/2022 18:56, Russell King (Oracle) wrote:
-> > >
-> > > 8<===
-> > > From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> > > Subject: [PATCH] dt-bindings: mfd: add binding for Apple Mac System Management
-> > >  Controller
-> > >
-> > > Add a DT binding for the Apple Mac System Management Controller.
-> > >
-> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> >
-> > Yes, looks good.
-> >
-> > I won't add Reviewed-by tag, because I think it would confuse Patchwork,
-> > so please send a v2 at some point.
->
-> Thanks. Do you have any suggestions for patch 2? Should I merge the
-> description in patch 2 into this file?
->
-> The full dts for this series looks like this:
->
->                 smc: smc@23e400000 {
->                         compatible = "apple,t8103-smc", "apple,smc";
->                         reg = <0x2 0x3e400000 0x0 0x4000>,
->                                 <0x2 0x3fe00000 0x0 0x100000>;
->                         reg-names = "smc", "sram";
->                         mboxes = <&smc_mbox>;
->
->                         smc_gpio: gpio {
->                                 gpio-controller;
->                                 #gpio-cells = <2>;
->                         };
->                 };
->
-> but the fuller version in the asahi linux tree looks like:
->
->                 smc: smc@23e400000 {
->                         compatible = "apple,t8103-smc", "apple,smc";
->                         reg = <0x2 0x3e400000 0x0 0x4000>,
->                                 <0x2 0x3fe00000 0x0 0x100000>;
->                         reg-names = "smc", "sram";
->                         mboxes = <&smc_mbox>;
->
->                         smc_gpio: gpio {
->                                 gpio-controller;
->                                 #gpio-cells = <2>;
+When EXAR xr17v35x chips are cascaded in order to access the MPIO registers
+(part of the Device Configuration Registers) of the slave chips, an offset
+needs to be applied based on the number of master chip's UART channels.
 
-Only 2 properties doesn't really need its own schema doc. However, I
-would just move these to the parent node.
+Signed-off-by: Qingtao Cao <qingtao.cao@digi.com>
+---
+ drivers/gpio/gpio-exar.c | 40 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 35 insertions(+), 5 deletions(-)
 
->                         };
->
->                         smc_rtc: rtc {
->                                 nvmem-cells = <&rtc_offset>;
->                                 nvmem-cell-names = "rtc_offset";
->                         };
->
->                         smc_reboot: reboot {
->                                 nvmem-cells = <&shutdown_flag>, <&boot_stage>,
->                                         <&boot_error_count>, <&panic_count>, <&pm_setting>;
->                                 nvmem-cell-names = "shutdown_flag", "boot_stage",
->                                         "boot_error_count", "panic_count", "pm_setting";
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index d37de78247a6..d2ed2897fabb 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -21,6 +21,12 @@
+ #define EXAR_OFFSET_MPIOLVL_HI 0x96
+ #define EXAR_OFFSET_MPIOSEL_HI 0x99
+ 
++/*
++ * The Device Configuration and UART Configuration Registers
++ * for each UART channel take 1KB of memory address space.
++ */
++#define EXAR_UART_CHANNEL_SIZE 0x400
++
+ #define DRIVER_NAME "gpio_exar"
+ 
+ static DEFINE_IDA(ida_index);
+@@ -31,26 +37,39 @@ struct exar_gpio_chip {
+ 	int index;
+ 	char name[20];
+ 	unsigned int first_pin;
++	/*
++	 * The offset to the slave device's (if existing)
++	 * Device Configuration Registers.
++	 */
++	unsigned int slave_offset;
+ };
+ 
+ static unsigned int
+ exar_offset_to_sel_addr(struct exar_gpio_chip *exar_gpio, unsigned int offset)
+ {
+-	return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOSEL_HI
+-						   : EXAR_OFFSET_MPIOSEL_LO;
++	unsigned int pin = exar_gpio->first_pin + (offset % 16);
++	unsigned int slave = offset / 16;
++	unsigned int addr = pin / 8 ? EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
++
++	return addr + (slave ? exar_gpio->slave_offset : 0);
+ }
+ 
+ static unsigned int
+ exar_offset_to_lvl_addr(struct exar_gpio_chip *exar_gpio, unsigned int offset)
+ {
+-	return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOLVL_HI
+-						   : EXAR_OFFSET_MPIOLVL_LO;
++	unsigned int pin = exar_gpio->first_pin + (offset % 16);
++	unsigned int slave = offset / 16;
++	unsigned int addr = pin / 8 ? EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
++
++	return addr + (slave ? exar_gpio->slave_offset : 0);
+ }
+ 
+ static unsigned int
+ exar_offset_to_bit(struct exar_gpio_chip *exar_gpio, unsigned int offset)
+ {
+-	return (offset + exar_gpio->first_pin) % 8;
++	unsigned int pin = exar_gpio->first_pin + (offset % 16);
++
++	return pin % 8;
+ }
+ 
+ static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
+@@ -153,6 +172,17 @@ static int gpio_exar_probe(struct platform_device *pdev)
+ 	if (!exar_gpio)
+ 		return -ENOMEM;
+ 
++	/*
++	 * If cascaded, xr17v354 or xr17v358 slaves have the same amount
++	 * of MPIOs as their masters and the last 4 bits of the master's
++	 * PCI Device ID is the number of its UART channels.
++	 */
++	if (pcidev->device & GENMASK(15, 12)) {
++		ngpios += ngpios;
++		exar_gpio->slave_offset = (pcidev->device & GENMASK(3, 0)) *
++				EXAR_UART_CHANNEL_SIZE;
++	}
++
+ 	/*
+ 	 * We don't need to check the return values of mmio regmap operations (unless
+ 	 * the regmap has a clock attached which is not the case here).
+-- 
+2.34.1
 
-Not really much reason to split these up either because you can just
-fetch the entry you want by name.
-
-How confident are the asahi folks that this is a complete binding?
-
-Rob
