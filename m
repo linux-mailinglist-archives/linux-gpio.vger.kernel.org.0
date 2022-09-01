@@ -2,202 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 551575A9E90
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 20:04:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CB935A9F05
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 20:34:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233055AbiIASE2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 14:04:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46930 "EHLO
+        id S233934AbiIASdu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 14:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbiIASE1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 14:04:27 -0400
+        with ESMTP id S233907AbiIASds (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 14:33:48 -0400
 Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A84837287B
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 11:04:26 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id x5so14075605qtv.9
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 11:04:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E347E03E;
+        Thu,  1 Sep 2022 11:33:47 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id c20so14123231qtw.8;
+        Thu, 01 Sep 2022 11:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=Zv8zSKFq6bzQqKXYqWy0Qx4amMNXqj8LcRMKjpftT8k=;
-        b=KUOKej5nPOeGXo5nEfUAHYOLs5eyvNYlpPTgCZVwvX1z47fwyYmBooIcwdClVmNz/v
-         BRlsK21Dt9FO/arMv4k1bBH9kpHYhGlhCYiHWwSs7zcTWAS1o68a1rng8ufeVyq64mCt
-         p546eMwZIIcOP8bw44GqQ79ZHCkKG3OtwLGvXJ8UJulq9EvJ/SlNLAoghw4QreA9qeju
-         3+z4Yxdu9AcK3lIk8lLUAEA0Ts0X4QHz8YrmEABFlwU8pmOnUzx5OVD4tlF8JlFdgDWG
-         G+M+vJxEIoIdPawxcqf3xok6F/M0ttOpxReuVfdwkBWLnB/drLA8iRY22Wj87RvL3w+E
-         jGsQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=t4MOz4hyFM7udJrYf7fDh0BfCZhkVhHzgWpksUtpi5s=;
+        b=erTAgaZdSIzj2sCqSc9m32MKjOfn5KYlQQfGZKlS0tOKgOvXNpOYRvItMFB7gJoTxm
+         Et7RPS1etxX4HgAQpTeqJHU2ZEZOG0g9BC38gUsFbh553sbiDjqLCmJ4enAKjOc12lVx
+         O3xviAmhEHWAifpiUlj8tuZQogj2CgvT7AId/mFpcnJxM7v5fx8jmzKOHKuX6eterJtB
+         XCKdzzIu1gF5GKCdEm+X0ZNbCaRYYdCZzCg56R8PM7Dg4ME1mPEMLcZJXDQUSGFc0Q4k
+         B4T5w+e/biuFf+IRDH4nNDPHp5Vxgi7FeUvnFbTQyc/H3hH+E3KyHenEdJmYEjPHEZNg
+         VUcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Zv8zSKFq6bzQqKXYqWy0Qx4amMNXqj8LcRMKjpftT8k=;
-        b=BXWYhZbscGkjHxB4OB1CLiLurIDt7YoBhXlnnvbHgusGXVMFaZeEah8Dn3axDE5smi
-         YhL+/mE8gNOG9u76he0jwfljQN/O4qLrkdQoF9ZaY7422AleAA5uZ1INGQPqyH6NL5h4
-         xtaUClHf5iTdrayYNVhvmty4R+seGkzzpBT0EScEag6oJ9MWI1nPTNOMcjvj7dOZVTpV
-         R+oYPZvoI8gVBCFxlviIIR9DSqbBbomHLfGM82bEu/NhUasYENaWalDFV7Uw0LTfIgcz
-         xbkl2EccjTLXQwCbbDvofUXbY8BfYTfAOoA/VnX5r4KFliaKy5vHcFjzEs+UTeseM5t/
-         N8sA==
-X-Gm-Message-State: ACgBeo3QoJmCu5OsHJvbpkJqQLPNjEL9V38+uLzHInGS6KLRw9Lim/AB
-        zR2c46leXdIEKFZPl/oOhMfH4bNd5u/x3tPAVhI=
-X-Google-Smtp-Source: AA6agR62i/7z5gszNPxCHM2tUNT7IR0EnqVb391hZCNAMeUz4tSPO3zPDqa/NtagcRnkiNQJGORyj3nl76pLbZ0BL1M=
-X-Received: by 2002:ac8:7f92:0:b0:344:8cd8:59a1 with SMTP id
- z18-20020ac87f92000000b003448cd859a1mr25497299qtj.384.1662055465702; Thu, 01
- Sep 2022 11:04:25 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=t4MOz4hyFM7udJrYf7fDh0BfCZhkVhHzgWpksUtpi5s=;
+        b=sFJURSUE/atp9RZbJHN0ZeE3QTUJOTy98qbARGpCwW0WEkxxV5dpRKPyFZbgFmIEJU
+         cknfjeHIu/kles46e1b4gF9kWSHE8k7q+VxalV/H6jUBdFjWCxkoTE8bCZvtJ4DQaiMm
+         iL1WG5k42jScn3EPj0zY5b1JQM/AQNAyVE2hYmuLlW0na4U7vgP9IWOZ5p+UWSjWDtsq
+         2LWlYsYdQWa1bUN+5nWAmt7D/3naCYvUGCke/CE2HZI+79AFuieTIdRV8DAjOncA/75E
+         n6qBgKjk+qYsoYZPeUCNYgsHyzDN/p8uMsMOLk2KTa2fmhF6/HysduOVxWQ0q7+TT0R1
+         pz5Q==
+X-Gm-Message-State: ACgBeo1wcKOMPrFnf7IymdNcIUJyD6bMRIjEMVECXVkKHzVk+1e8Zo6i
+        6hySNL/NxIV4DgfQ2mogwwg=
+X-Google-Smtp-Source: AA6agR6xpDwOMPSvTKBAaMMhdvQUxT30aSC5TWYUPsxs76GlD60pP91bDsz2MOK3LAfdx0ZLpGnBMA==
+X-Received: by 2002:ac8:5b91:0:b0:344:55f7:da72 with SMTP id a17-20020ac85b91000000b0034455f7da72mr25122323qta.542.1662057226843;
+        Thu, 01 Sep 2022 11:33:46 -0700 (PDT)
+Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id u20-20020ac87514000000b00342e86b3bdasm10563343qtq.12.2022.09.01.11.33.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Sep 2022 11:33:45 -0700 (PDT)
+From:   Jesse Taube <mr.bossman075@gmail.com>
+X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
+To:     linux-imx@nxp.com
+Cc:     robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, aisheng.dong@nxp.com, stefan@agner.ch,
+        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
+        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
+        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
+        cniedermaier@dh-electronics.com, Mr.Bossman075@gmail.com,
+        clin@suse.com, giulio.benetti@benettiengineering.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v6 00/10]  Add support for i.MXRT1170-evk
+Date:   Thu,  1 Sep 2022 14:33:33 -0400
+Message-Id: <20220901183343.3188903-1-Mr.Bossman075@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeg-003t9k-Mc@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1oTkeg-003t9k-Mc@rmk-PC.armlinux.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 1 Sep 2022 21:03:49 +0300
-Message-ID: <CAHp75VfW7uj=+vwGRLsUJEjF-bQLL2EdVNfAnF6iDUqryksC+w@mail.gmail.com>
-Subject: Re: [PATCH 6/6] gpio: macsmc: Add IRQ support
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 5:18 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
->
-> From: Hector Martin <marcan@marcan.st>
->
-> Add IRQ support to the macsmc driver. This patch has updates from Joey
-> Gouly and Russell King.
+This patch continues support for the imxrt series now adding the imxrt1170
 
-...
+This patch contains:
+- Update to imxrt_defconfig
+- Devicetree
+- Clock driver
+- Pinctrl driver
+- New pll
 
-> +       u16 type = event >> 16;
-> +       u8 offset = (event >> 8) & 0xff;
+This patch also updates some documentation for both imxrt1170 an 1050.
 
-The ' & 0xff' part is redundant.
+The i.MXRT1170 has a vast array of features including two cores,
+2 Ethernet, 2 USB phy, and a 2d gpu.
 
-...
+It also is featured in a new google coral board
+https://coral.ai/products/dev-board-micro
+Not affiliated unfortunately.
 
-> +       return (ret == 0) ? NOTIFY_OK : NOTIFY_DONE;
+---
+V1 -> V2:
+ - Add 3 new commits in documentation
+ - Fix spelling
+---
 
-Parentheses and ' == 0' parts are redundant. You may swap ternary operands.
+Jesse Taube (10):
+  dt-bindings: arm: imx: Add i.MXRT compatible Documentation
+  dt-bindings: timer: gpt: Add i.MXRT compatible Documentation
+  dt-bindings: mmc: fsl-imx-esdhc: add i.MXRT1170 compatible
+  dt-bindings: serial: fsl-lpuart: add i.MXRT1170 compatible
+  ARM: mach-imx: Add support for i.MXRT1170
+  clk: imx: Update pllv3 to support i.MXRT1170
+  dt-bindings: imx: Add clock binding for i.MXRT1170
+  clk: imx: Add initial support for i.MXRT1170 clock driver
+  ARM: dts: imx: Add i.MXRT1170-EVK support
+  ARM: imxrt_defconfig: Add i.MXRT1170
 
-...
+ .../devicetree/bindings/arm/fsl.yaml          |  12 +
+ .../bindings/mmc/fsl-imx-esdhc.yaml           |   4 +
+ .../bindings/serial/fsl-lpuart.yaml           |   3 +
+ .../devicetree/bindings/timer/fsl,imxgpt.yaml |   2 +
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/imxrt1170-evk.dts           | 110 +++
+ arch/arm/boot/dts/imxrt1170.dtsi              | 276 +++++++
+ arch/arm/configs/imxrt_defconfig              |  17 +
+ arch/arm/mach-imx/mach-imxrt.c                |   1 +
+ drivers/clk/imx/Kconfig                       |   7 +
+ drivers/clk/imx/Makefile                      |   1 +
+ drivers/clk/imx/clk-imxrt1170.c               | 749 ++++++++++++++++++
+ drivers/clk/imx/clk-pllv3.c                   |  57 +-
+ drivers/clk/imx/clk.h                         |  11 +-
+ include/dt-bindings/clock/imxrt1170-clock.h   | 282 +++++++
+ 15 files changed, 1526 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imxrt1170-evk.dts
+ create mode 100644 arch/arm/boot/dts/imxrt1170.dtsi
+ create mode 100644 drivers/clk/imx/clk-imxrt1170.c
+ create mode 100644 include/dt-bindings/clock/imxrt1170-clock.h
 
-> +static void macsmc_gpio_irq_enable(struct irq_data *d)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-> +
-> +       gpiochip_enable_irq(gc, irqd_to_hwirq(d));
-> +       set_bit(irqd_to_hwirq(d), smcgp->irq_enable_shadow);
+-- 
+2.36.1
 
-You may use temporary variable for hwirq
-
-  irq_hw_number_t hwirq = irdq_to_hwirq(d);
-
-> +}
-> +
-> +static void macsmc_gpio_irq_disable(struct irq_data *d)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-> +
-> +       clear_bit(irqd_to_hwirq(d), smcgp->irq_enable_shadow);
-> +       gpiochip_disable_irq(gc, irqd_to_hwirq(d));
-
-Ditto.
-
-> +}
-> +
-> +static int macsmc_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-
-> +       int offset = irqd_to_hwirq(d);
-
-As above.
-
-
-> +       u32 mode;
-
-> +       if (!test_bit(offset, smcgp->irq_supported))
-> +               return -EINVAL;
-
-We have a valid mask for IRQs. Can it be used here instead?
-
-> +       switch (type & IRQ_TYPE_SENSE_MASK) {
-> +       case IRQ_TYPE_LEVEL_HIGH:
-> +               mode = IRQ_MODE_HIGH;
-> +               break;
-> +       case IRQ_TYPE_LEVEL_LOW:
-> +               mode = IRQ_MODE_LOW;
-> +               break;
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               mode = IRQ_MODE_RISING;
-> +               break;
-> +       case IRQ_TYPE_EDGE_FALLING:
-> +               mode = IRQ_MODE_FALLING;
-> +               break;
-> +       case IRQ_TYPE_EDGE_BOTH:
-> +               mode = IRQ_MODE_BOTH;
-> +               break;
-> +       default:
-> +               return -EINVAL;
->         }
->
-> +       smcgp->irq_mode_shadow[offset] = mode;
-
-Usually we want to have handle_bad_irq() handler by default and in
-->set_type() we lock a handler depending on the flags. Why is this not
-the case in this driver?
-
->         return 0;
->  }
-
-...
-
-> +static void macsmc_gpio_irq_bus_sync_unlock(struct irq_data *d)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-
-> +       smc_key key = macsmc_gpio_key(irqd_to_hwirq(d));
-> +       int offset = irqd_to_hwirq(d);
-
-As above.
-
-> +       bool val;
-> +
-> +       if (smcgp->irq_mode_shadow[offset] != smcgp->irq_mode[offset]) {
-> +               u32 cmd = CMD_IRQ_MODE | smcgp->irq_mode_shadow[offset];
-> +               if (apple_smc_write_u32(smcgp->smc, key, cmd) < 0)
-> +                       dev_err(smcgp->dev, "GPIO IRQ config failed for %p4ch = 0x%x\n", &key, cmd);
-> +               else
-> +                       smcgp->irq_mode_shadow[offset] = smcgp->irq_mode[offset];
-> +       }
-> +
-> +       val = test_bit(offset, smcgp->irq_enable_shadow);
-> +       if (test_bit(offset, smcgp->irq_enable) != val) {
-> +               if (apple_smc_write_u32(smcgp->smc, key, CMD_IRQ_ENABLE | val) < 0)
-> +                       dev_err(smcgp->dev, "GPIO IRQ en/disable failed for %p4ch\n", &key);
-> +               else
-> +                       change_bit(offset, smcgp->irq_enable);
-> +       }
-> +
-> +       mutex_unlock(&smcgp->irq_mutex);
-> +}
-
---
-With Best Regards,
-Andy Shevchenko
