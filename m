@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8A3A5A9978
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 15:55:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 323F75A997C
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 15:55:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234129AbiIANzA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 09:55:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48408 "EHLO
+        id S234223AbiIANzC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 09:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234065AbiIANy5 (ORCPT
+        with ESMTP id S233082AbiIANy5 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 09:54:57 -0400
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658B3264D
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 06:54:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E54AB1F9
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 06:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
         Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
         In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2fuVsbQwLxkQJrF6qSMmC/fAfsVOTp2AUDNLRkJKULw=; b=z22c9GGmE0qPc/xDDmjs0Iq0db
-        eU9JdnX+AWzNBLmcXoCLtaT4JA6RMWmrmKrjf4UCM8cyAk0eTuMS4AvELcWNFqEvXd6yaxqpwLPNe
-        PQ3WkHPsLMoCKM+tDzYETs6rR6Bhh3SmkqP6CTDL4BmJIxm5DPdYpYQg6l7pTMWFY1Ops7Y5KeLfG
-        YtKtA3SwSD0KVgOqP/DJGPRMnitMRQXQdgwoplHTaxlMQyvWRXe0z8ZxuQbIcTXVxE+n/J+tQVAaV
-        jDuzLcRxCWKsxKQiZ/cTgSRRlYB16Ptu2arx/5w3EXRw7nOPP8xANS2cy8KgDieUV8TFGP6lv+DmW
-        z6/cIJ+Q==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:57178 helo=rmk-PC.armlinux.org.uk)
+        bh=V7qqrniOW0arCXA9kaK4sYET3uazLTEmyJ7Mhh6OyFs=; b=Rg5/vUy13xXcN9eddiubbsYeOK
+        bKXBE6HTOS9Z1NKHO0eI/yZHFl7wlLDHMnTYOO8C1Xwxb9g7B48q5wai9y9pbnqtcgR6Czn6e2EnZ
+        7SARXilgTy4NJ6Vi6v+SahqX64GbGccq1ti+AhlefXVVV5y9aAwhLkdZjglkVfes6M3y3kWZO7LSK
+        WJnjcw+zJHnw3Ubi/vYpptQYkx2Q87FRH5ynRD2ewQz4/Mkex5aNe0/TfVkaC+m8G7KfZUv+46btd
+        5sUlG3uz1npdCfH34HQpiaRd9YIAlbMvAyFmt0nvRhPXssOr5ki0KoYu+YIDrz+xG2jvnn9PaV/HW
+        kIMW+gXg==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:57192 helo=rmk-PC.armlinux.org.uk)
         by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <rmk@armlinux.org.uk>)
-        id 1oTkeX-0005wr-26; Thu, 01 Sep 2022 14:54:41 +0100
+        id 1oTkec-0005x5-5x; Thu, 01 Sep 2022 14:54:46 +0100
 Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
         (envelope-from <rmk@rmk-PC.armlinux.org.uk>)
-        id 1oTkeW-003t9Y-Ey; Thu, 01 Sep 2022 14:54:40 +0100
+        id 1oTkeb-003t9e-Iy; Thu, 01 Sep 2022 14:54:45 +0100
 In-Reply-To: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
 References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
 From:   Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
@@ -44,14 +44,14 @@ Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>, asahi@lists.linux.dev,
         Hector Martin <marcan@marcan.st>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         Sven Peter <sven@svenpeter.dev>
-Subject: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
+Subject: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
 MIME-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk>
+Message-Id: <E1oTkeb-003t9e-Iy@rmk-PC.armlinux.org.uk>
 Sender: Russell King <rmk@armlinux.org.uk>
-Date:   Thu, 01 Sep 2022 14:54:40 +0100
+Date:   Thu, 01 Sep 2022 14:54:45 +0100
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -63,969 +63,306 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Hector Martin <marcan@marcan.st>
 
-This driver implements support for the SMC (System Management
-Controller) in Apple Macs. In contrast to the existing applesmc driver,
-it uses pluggable backends that allow it to support different SMC
-implementations, and uses the MFD subsystem to expose the core SMC
-functionality so that specific features (gpio, hwmon, battery, etc.) can
-be implemented by separate drivers in their respective downstream
-subsystems.
+This driver implements the GPIO service on top of the SMC framework
+on Apple Mac machines. In particular, these are the GPIOs present in the
+PMU IC which are used to control power to certain on-board devices.
 
-The initial RTKit backend adds support for Apple Silicon Macs (M1 et
-al). We hope a backend for T2 Macs will be written in the future
-(since those are not supported by applesmc), and eventually an x86
-backend would allow us to fully deprecate applesmc in favor of this
-driver.
+Although the underlying hardware supports various pin config settings
+(input/output, open drain, etc.), this driver does not implement that
+functionality and leaves it up to the firmware to configure things
+properly. We also don't yet support interrupts/events. This is
+sufficient for device power control, which is the only thing we need to
+support at this point. More features will be implemented when needed.
+
+To our knowledge, only Apple Silicon Macs implement this SMC feature.
 
 Signed-off-by: Hector Martin <marcan@marcan.st>
 Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 ---
- drivers/platform/Kconfig           |   2 +
- drivers/platform/Makefile          |   1 +
- drivers/platform/apple/Kconfig     |  49 ++++
- drivers/platform/apple/Makefile    |  11 +
- drivers/platform/apple/smc.h       |  28 ++
- drivers/platform/apple/smc_core.c  | 249 ++++++++++++++++
- drivers/platform/apple/smc_rtkit.c | 451 +++++++++++++++++++++++++++++
- include/linux/mfd/macsmc.h         |  86 ++++++
- 8 files changed, 877 insertions(+)
- create mode 100644 drivers/platform/apple/Kconfig
- create mode 100644 drivers/platform/apple/Makefile
- create mode 100644 drivers/platform/apple/smc.h
- create mode 100644 drivers/platform/apple/smc_core.c
- create mode 100644 drivers/platform/apple/smc_rtkit.c
- create mode 100644 include/linux/mfd/macsmc.h
+ drivers/gpio/Kconfig       |  11 ++
+ drivers/gpio/Makefile      |   1 +
+ drivers/gpio/gpio-macsmc.c | 238 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 250 insertions(+)
+ create mode 100644 drivers/gpio/gpio-macsmc.c
 
-diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
-index b437847b6237..5f8b9bcdb830 100644
---- a/drivers/platform/Kconfig
-+++ b/drivers/platform/Kconfig
-@@ -13,4 +13,6 @@ source "drivers/platform/olpc/Kconfig"
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 0642f579196f..9b87f5ebe1b9 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1292,6 +1292,17 @@ config GPIO_LP87565
+ 	  This driver can also be built as a module. If so, the module will be
+ 	  called gpio-lp87565.
  
- source "drivers/platform/surface/Kconfig"
- 
-+source "drivers/platform/apple/Kconfig"
-+
- source "drivers/platform/x86/Kconfig"
-diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
-index 4de08ef4ec9d..3e5d5039a28c 100644
---- a/drivers/platform/Makefile
-+++ b/drivers/platform/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_OLPC_EC)		+= olpc/
- obj-$(CONFIG_GOLDFISH)		+= goldfish/
- obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
- obj-$(CONFIG_SURFACE_PLATFORMS)	+= surface/
-+obj-$(CONFIG_APPLE_PLATFORMS)	+= apple/
-diff --git a/drivers/platform/apple/Kconfig b/drivers/platform/apple/Kconfig
-new file mode 100644
-index 000000000000..42525aa9fbbe
---- /dev/null
-+++ b/drivers/platform/apple/Kconfig
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Apple Platform-Specific Drivers
-+#
-+
-+menuconfig APPLE_PLATFORMS
-+	bool "Apple Mac Platform-Specific Device Drivers"
-+	default y
-+	help
-+	  Say Y here to get to see options for platform-specific device drivers
-+	  for Apple devices. This option alone does not add any kernel code.
-+
-+	  If you say N, all options in this submenu will be skipped and disabled.
-+
-+if APPLE_PLATFORMS
-+
-+config APPLE_SMC
-+	tristate "Apple SMC Driver"
-+	depends on ARCH_APPLE || COMPILE_TEST
-+	default ARCH_APPLE
-+	select MFD_CORE
-+	help
-+	  Build support for the Apple System Management Controller present in
-+	  Apple Macs. This driver currently supports the SMC in Apple Silicon
-+	  Macs. For x86 Macs, see the applesmc driver (SENSORS_APPLESMC).
-+
-+	  Say Y here if you have an Apple Silicon Mac.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called macsmc.
-+
-+if APPLE_SMC
-+
-+config APPLE_SMC_RTKIT
-+	tristate "RTKit (Apple Silicon) backend"
-+	depends on ARCH_APPLE || COMPILE_TEST
-+	depends on APPLE_RTKIT
++config GPIO_MACSMC
++	tristate "Apple Mac SMC GPIO"
++	depends on APPLE_SMC
 +	default ARCH_APPLE
 +	help
-+	  Build support for SMC communications via the RTKit backend. This is
-+	  required for Apple Silicon Macs.
++	  Support for GPIOs controlled by the SMC microcontroller on Apple Mac
++	  systems.
 +
-+	  Say Y here if you have an Apple Silicon Mac.
++	  This driver can also be built as a module. If so, the module will be
++	  called gpio-macsmc.
 +
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called macsmc-rtkit.
-+
-+endif
-+endif
-diff --git a/drivers/platform/apple/Makefile b/drivers/platform/apple/Makefile
+ config GPIO_MADERA
+ 	tristate "Cirrus Logic Madera class codecs"
+ 	depends on PINCTRL_MADERA
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index a0985d30f51b..a401a467c6f4 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -83,6 +83,7 @@ obj-$(CONFIG_GPIO_LP873X)		+= gpio-lp873x.o
+ obj-$(CONFIG_GPIO_LP87565)		+= gpio-lp87565.o
+ obj-$(CONFIG_GPIO_LPC18XX)		+= gpio-lpc18xx.o
+ obj-$(CONFIG_GPIO_LPC32XX)		+= gpio-lpc32xx.o
++obj-$(CONFIG_GPIO_MACSMC)		+= gpio-macsmc.o
+ obj-$(CONFIG_GPIO_MADERA)		+= gpio-madera.o
+ obj-$(CONFIG_GPIO_MAX3191X)		+= gpio-max3191x.o
+ obj-$(CONFIG_GPIO_MAX7300)		+= gpio-max7300.o
+diff --git a/drivers/gpio/gpio-macsmc.c b/drivers/gpio/gpio-macsmc.c
 new file mode 100644
-index 000000000000..79fac195398b
+index 000000000000..ff9950afb69a
 --- /dev/null
-+++ b/drivers/platform/apple/Makefile
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for linux/drivers/platform/apple
-+# Apple Platform-Specific Drivers
-+#
-+
-+macsmc-y				+= smc_core.o
-+macsmc-rtkit-y				+= smc_rtkit.o
-+
-+obj-$(CONFIG_APPLE_SMC)			+= macsmc.o
-+obj-$(CONFIG_APPLE_SMC_RTKIT)		+= macsmc-rtkit.o
-diff --git a/drivers/platform/apple/smc.h b/drivers/platform/apple/smc.h
-new file mode 100644
-index 000000000000..8ae51887b2c5
---- /dev/null
-+++ b/drivers/platform/apple/smc.h
-@@ -0,0 +1,28 @@
++++ b/drivers/gpio/gpio-macsmc.c
+@@ -0,0 +1,238 @@
 +// SPDX-License-Identifier: GPL-2.0-only OR MIT
 +/*
-+ * Apple SMC internal core definitions
-+ * Copyright (C) The Asahi Linux Contributors
++ * Apple SMC GPIO driver
++ * Copyright The Asahi Linux Contributors
++ *
++ * This driver implements basic SMC PMU GPIO support that can read inputs
++ * and write outputs. Mode changes and IRQ config are not yet implemented.
 + */
 +
-+#ifndef _SMC_H
-+#define _SMC_H
-+
++#include <linux/bitmap.h>
++#include <linux/device.h>
++#include <linux/gpio/driver.h>
++#include <linux/mfd/core.h>
 +#include <linux/mfd/macsmc.h>
 +
-+struct apple_smc_backend_ops {
-+	int (*read_key)(void *cookie, smc_key key, void *buf, size_t size);
-+	int (*write_key)(void *cookie, smc_key key, void *buf, size_t size);
-+	int (*write_key_atomic)(void *cookie, smc_key key, void *buf, size_t size);
-+	int (*rw_key)(void *cookie, smc_key key, void *wbuf, size_t wsize,
-+		      void *rbuf, size_t rsize);
-+	int (*get_key_by_index)(void *cookie, int index, smc_key *key);
-+	int (*get_key_info)(void *cookie, smc_key key, struct apple_smc_key_info *info);
-+};
++#define MAX_GPIO 64
 +
-+struct apple_smc *apple_smc_probe(struct device *dev, const struct apple_smc_backend_ops *ops,
-+				  void *cookie);
-+void *apple_smc_get_cookie(struct apple_smc *smc);
-+int apple_smc_remove(struct apple_smc *smc);
-+void apple_smc_event_received(struct apple_smc *smc, uint32_t event);
-+
-+#endif
-diff --git a/drivers/platform/apple/smc_core.c b/drivers/platform/apple/smc_core.c
-new file mode 100644
-index 000000000000..daf029cd072f
---- /dev/null
-+++ b/drivers/platform/apple/smc_core.c
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
 +/*
-+ * Apple SMC core framework
-+ * Copyright The Asahi Linux Contributors
++ * Commands 0-6 are, presumably, the intended API.
++ * Command 0xff lets you get/set the pin configuration in detail directly,
++ * but the bit meanings seem not to be stable between devices/PMU hardware
++ * versions.
++ *
++ * We're going to try to make do with the low commands for now.
++ * We don't implement pin mode changes at this time.
 + */
 +
-+#include <linux/device.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mutex.h>
-+#include <linux/notifier.h>
-+#include "smc.h"
++#define CMD_ACTION	(0 << 24)
++#define CMD_OUTPUT	(1 << 24)
++#define CMD_INPUT	(2 << 24)
++#define CMD_PINMODE	(3 << 24)
++#define CMD_IRQ_ENABLE	(4 << 24)
++#define CMD_IRQ_ACK	(5 << 24)
++#define CMD_IRQ_MODE	(6 << 24)
++#define CMD_CONFIG	(0xff << 24)
 +
-+struct apple_smc {
++#define MODE_INPUT	0
++#define MODE_OUTPUT	1
++#define MODE_VALUE_0	0
++#define MODE_VALUE_1	2
++
++#define IRQ_MODE_HIGH		0
++#define IRQ_MODE_LOW		1
++#define IRQ_MODE_RISING		2
++#define IRQ_MODE_FALLING	3
++#define IRQ_MODE_BOTH		4
++
++#define CONFIG_MASK	GENMASK(23, 16)
++#define CONFIG_VAL	GENMASK(7, 0)
++
++#define CONFIG_OUTMODE	GENMASK(7, 6)
++#define CONFIG_IRQMODE	GENMASK(5, 3)
++#define CONFIG_PULLDOWN	BIT(2)
++#define CONFIG_PULLUP	BIT(1)
++#define CONFIG_OUTVAL	BIT(0)
++
++/*
++ * output modes seem to differ depending on the PMU in use... ?
++ * j274 / M1 (Sera PMU):
++ *   0 = input
++ *   1 = output
++ *   2 = open drain
++ *   3 = disable
++ * j314 / M1Pro (Maverick PMU):
++ *   0 = input
++ *   1 = open drain
++ *   2 = output
++ *   3 = ?
++ */
++
++struct macsmc_gpio {
 +	struct device *dev;
++	struct apple_smc *smc;
++	struct gpio_chip gc;
 +
-+	void *be_cookie;
-+	const struct apple_smc_backend_ops *be;
-+
-+	struct mutex mutex;
-+
-+	u32 key_count;
-+	smc_key first_key;
-+	smc_key last_key;
-+
-+	struct blocking_notifier_head event_handlers;
++	int first_index;
 +};
 +
-+static const struct mfd_cell apple_smc_devs[] = {
-+	{
-+		.name = "macsmc-gpio",
-+	},
-+	{
-+		.name = "macsmc-hid",
-+	},
-+	{
-+		.name = "macsmc-power",
-+	},
-+	{
-+		.name = "macsmc-reboot",
-+	},
-+	{
-+		.name = "macsmc-rtc",
-+	},
-+};
-+
-+int apple_smc_read(struct apple_smc *smc, smc_key key, void *buf, size_t size)
++static int macsmc_gpio_nr(smc_key key)
 +{
-+	int ret;
++	int low = hex_to_bin(key & 0xff);
++	int high = hex_to_bin((key >> 8) & 0xff);
 +
-+	mutex_lock(&smc->mutex);
-+	ret = smc->be->read_key(smc->be_cookie, key, buf, size);
-+	mutex_unlock(&smc->mutex);
++	if (low < 0 || high < 0)
++		return -1;
 +
-+	return ret;
++	return low | (high << 4);
 +}
-+EXPORT_SYMBOL(apple_smc_read);
 +
-+int apple_smc_write(struct apple_smc *smc, smc_key key, void *buf, size_t size)
++static int macsmc_gpio_key(unsigned int offset)
 +{
-+	int ret;
-+
-+	mutex_lock(&smc->mutex);
-+	ret = smc->be->write_key(smc->be_cookie, key, buf, size);
-+	mutex_unlock(&smc->mutex);
-+
-+	return ret;
++	return _SMC_KEY("gP\0\0") | (hex_asc_hi(offset) << 8) | hex_asc_lo(offset);
 +}
-+EXPORT_SYMBOL(apple_smc_write);
 +
-+int apple_smc_write_atomic(struct apple_smc *smc, smc_key key, void *buf, size_t size)
++static int macsmc_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
 +{
++	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
++	smc_key key = macsmc_gpio_key(offset);
++	u32 val;
 +	int ret;
++
++	/* First try reading the explicit pin mode register */
++	ret = apple_smc_rw_u32(smcgp->smc, key, CMD_PINMODE, &val);
++	if (!ret)
++		return (val & MODE_OUTPUT) ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
 +
 +	/*
-+	 * Will fail if SMC is busy. This is only used by SMC reboot/poweroff
-+	 * final calls, so it doesn't really matter at that point.
++	 * Less common IRQ configs cause CMD_PINMODE to fail, and so does open drain mode.
++	 * Fall back to reading IRQ mode, which will only succeed for inputs.
 +	 */
-+	if (!mutex_trylock(&smc->mutex))
-+		return -EBUSY;
-+
-+	ret = smc->be->write_key_atomic(smc->be_cookie, key, buf, size);
-+	mutex_unlock(&smc->mutex);
-+
-+	return ret;
++	ret = apple_smc_rw_u32(smcgp->smc, key, CMD_IRQ_MODE, &val);
++	return (!ret) ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
 +}
-+EXPORT_SYMBOL(apple_smc_write_atomic);
 +
-+int apple_smc_rw(struct apple_smc *smc, smc_key key, void *wbuf, size_t wsize,
-+		 void *rbuf, size_t rsize)
++static int macsmc_gpio_get(struct gpio_chip *gc, unsigned int offset)
 +{
++	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
++	smc_key key = macsmc_gpio_key(offset);
++	u32 val;
 +	int ret;
 +
-+	mutex_lock(&smc->mutex);
-+	ret = smc->be->rw_key(smc->be_cookie, key, wbuf, wsize, rbuf, rsize);
-+	mutex_unlock(&smc->mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(apple_smc_rw);
-+
-+int apple_smc_get_key_by_index(struct apple_smc *smc, int index, smc_key *key)
-+{
-+	int ret;
-+
-+	mutex_lock(&smc->mutex);
-+	ret = smc->be->get_key_by_index(smc->be_cookie, index, key);
-+	mutex_unlock(&smc->mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(apple_smc_get_key_by_index);
-+
-+int apple_smc_get_key_info(struct apple_smc *smc, smc_key key, struct apple_smc_key_info *info)
-+{
-+	int ret;
-+
-+	mutex_lock(&smc->mutex);
-+	ret = smc->be->get_key_info(smc->be_cookie, key, info);
-+	mutex_unlock(&smc->mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(apple_smc_get_key_info);
-+
-+int apple_smc_find_first_key_index(struct apple_smc *smc, smc_key key)
-+{
-+	int start = 0, count = smc->key_count;
-+	int ret;
-+
-+	if (key <= smc->first_key)
-+		return 0;
-+	if (key > smc->last_key)
-+		return smc->key_count;
-+
-+	while (count > 1) {
-+		int pivot = start + ((count - 1) >> 1);
-+		smc_key pkey;
-+
-+		ret = apple_smc_get_key_by_index(smc, pivot, &pkey);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (pkey == key)
-+			return pivot;
-+
-+		pivot++;
-+
-+		if (pkey < key) {
-+			count -= pivot - start;
-+			start = pivot;
-+		} else {
-+			count = pivot - start;
-+		}
-+	}
-+
-+	return start;
-+}
-+EXPORT_SYMBOL(apple_smc_find_first_key_index);
-+
-+int apple_smc_get_key_count(struct apple_smc *smc)
-+{
-+	return smc->key_count;
-+}
-+EXPORT_SYMBOL(apple_smc_get_key_count);
-+
-+void apple_smc_event_received(struct apple_smc *smc, uint32_t event)
-+{
-+	dev_dbg(smc->dev, "Event: 0x%08x\n", event);
-+	blocking_notifier_call_chain(&smc->event_handlers, event, NULL);
-+}
-+EXPORT_SYMBOL(apple_smc_event_received);
-+
-+int apple_smc_register_notifier(struct apple_smc *smc, struct notifier_block *n)
-+{
-+	return blocking_notifier_chain_register(&smc->event_handlers, n);
-+}
-+EXPORT_SYMBOL(apple_smc_register_notifier);
-+
-+int apple_smc_unregister_notifier(struct apple_smc *smc, struct notifier_block *n)
-+{
-+	return blocking_notifier_chain_unregister(&smc->event_handlers, n);
-+}
-+EXPORT_SYMBOL(apple_smc_unregister_notifier);
-+
-+void *apple_smc_get_cookie(struct apple_smc *smc)
-+{
-+	return smc->be_cookie;
-+}
-+EXPORT_SYMBOL(apple_smc_get_cookie);
-+
-+struct apple_smc *apple_smc_probe(struct device *dev, const struct apple_smc_backend_ops *ops, void *cookie)
-+{
-+	struct apple_smc *smc;
-+	u32 count;
-+	int ret;
-+
-+	smc = devm_kzalloc(dev, sizeof(*smc), GFP_KERNEL);
-+	if (!smc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	smc->dev = dev;
-+	smc->be_cookie = cookie;
-+	smc->be = ops;
-+	mutex_init(&smc->mutex);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&smc->event_handlers);
-+
-+	ret = apple_smc_read_u32(smc, SMC_KEY(#KEY), &count);
-+	if (ret)
-+		return ERR_PTR(dev_err_probe(dev, ret, "Failed to get key count"));
-+	smc->key_count = be32_to_cpu(count);
-+
-+	ret = apple_smc_get_key_by_index(smc, 0, &smc->first_key);
-+	if (ret)
-+		return ERR_PTR(dev_err_probe(dev, ret, "Failed to get first key"));
-+
-+	ret = apple_smc_get_key_by_index(smc, smc->key_count - 1, &smc->last_key);
-+	if (ret)
-+		return ERR_PTR(dev_err_probe(dev, ret, "Failed to get last key"));
-+
-+	/* Enable notifications */
-+	apple_smc_write_flag(smc, SMC_KEY(NTAP), 1);
-+
-+	dev_info(dev, "Initialized (%d keys %p4ch..%p4ch)\n",
-+		 smc->key_count, &smc->first_key, &smc->last_key);
-+
-+	dev_set_drvdata(dev, smc);
-+
-+	ret = mfd_add_devices(dev, -1, apple_smc_devs, ARRAY_SIZE(apple_smc_devs), NULL, 0, NULL);
-+	if (ret)
-+		return ERR_PTR(dev_err_probe(dev, ret, "Subdevice initialization failed"));
-+
-+	return smc;
-+}
-+EXPORT_SYMBOL(apple_smc_probe);
-+
-+int apple_smc_remove(struct apple_smc *smc)
-+{
-+	mfd_remove_devices(smc->dev);
-+
-+	/* Disable notifications */
-+	apple_smc_write_flag(smc, SMC_KEY(NTAP), 1);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(apple_smc_remove);
-+
-+MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-+MODULE_LICENSE("Dual MIT/GPL");
-+MODULE_DESCRIPTION("Apple SMC core");
-diff --git a/drivers/platform/apple/smc_rtkit.c b/drivers/platform/apple/smc_rtkit.c
-new file mode 100644
-index 000000000000..5b7c4c475bbb
---- /dev/null
-+++ b/drivers/platform/apple/smc_rtkit.c
-@@ -0,0 +1,451 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Apple SMC RTKit backend
-+ * Copyright The Asahi Linux Contributors
-+ */
-+
-+#include <asm/unaligned.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/soc/apple/rtkit.h>
-+#include "smc.h"
-+
-+#define SMC_ENDPOINT			0x20
-+
-+/* Guess */
-+#define SMC_SHMEM_SIZE			0x1000
-+
-+#define SMC_MSG_READ_KEY		0x10
-+#define SMC_MSG_WRITE_KEY		0x11
-+#define SMC_MSG_GET_KEY_BY_INDEX	0x12
-+#define SMC_MSG_GET_KEY_INFO		0x13
-+#define SMC_MSG_INITIALIZE		0x17
-+#define SMC_MSG_NOTIFICATION		0x18
-+#define SMC_MSG_RW_KEY			0x20
-+
-+#define SMC_DATA			GENMASK(63, 32)
-+#define SMC_WSIZE			GENMASK(31, 24)
-+#define SMC_SIZE			GENMASK(23, 16)
-+#define SMC_ID				GENMASK(15, 12)
-+#define SMC_MSG				GENMASK(7, 0)
-+#define SMC_RESULT			SMC_MSG
-+
-+#define SMC_RECV_TIMEOUT		100
-+
-+struct apple_smc_rtkit {
-+	struct device *dev;
-+	struct apple_smc *core;
-+	struct apple_rtkit *rtk;
-+
-+	struct completion init_done;
-+	bool initialized;
-+	bool alive;
-+
-+	struct resource *sram;
-+	void __iomem *sram_base;
-+	struct apple_rtkit_shmem shmem;
-+
-+	unsigned int msg_id;
-+
-+	bool atomic_pending;
-+	struct completion cmd_done;
-+	u64 cmd_ret;
-+};
-+
-+static int apple_smc_rtkit_write_key_atomic(void *cookie, smc_key key, void *buf, size_t size)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+	int ret;
-+	u64 msg;
-+	u8 result;
-+
-+	if (size > SMC_SHMEM_SIZE || size == 0)
-+		return -EINVAL;
-+
-+	if (!smc->alive)
-+		return -EIO;
-+
-+	memcpy_toio(smc->shmem.iomem, buf, size);
-+	smc->msg_id = (smc->msg_id + 1) & 0xf;
-+	msg = (FIELD_PREP(SMC_MSG, SMC_MSG_WRITE_KEY) |
-+	       FIELD_PREP(SMC_SIZE, size) |
-+	       FIELD_PREP(SMC_ID, smc->msg_id) |
-+	       FIELD_PREP(SMC_DATA, key));
-+	smc->atomic_pending = true;
-+
-+	ret = apple_rtkit_send_message(smc->rtk, SMC_ENDPOINT, msg, NULL, true);
-+	if (ret < 0) {
-+		dev_err(smc->dev, "Failed to send command (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	while (smc->atomic_pending) {
-+		ret = apple_rtkit_poll(smc->rtk);
-+		if (ret < 0) {
-+			dev_err(smc->dev, "RTKit poll failed (%llx)", msg);
-+			return ret;
-+		}
-+		udelay(100);
-+	}
-+
-+	if (FIELD_GET(SMC_ID, smc->cmd_ret) != smc->msg_id) {
-+		dev_err(smc->dev, "Command sequence mismatch (expected %d, got %d)\n",
-+			smc->msg_id, (unsigned int)FIELD_GET(SMC_ID, smc->cmd_ret));
-+		return -EIO;
-+	}
-+
-+	result = FIELD_GET(SMC_RESULT, smc->cmd_ret);
-+	if (result != 0)
-+		return -result;
-+
-+	return FIELD_GET(SMC_SIZE, smc->cmd_ret);
-+}
-+
-+static int apple_smc_cmd(struct apple_smc_rtkit *smc, u64 cmd, u64 arg,
-+			 u64 size, u64 wsize, u32 *ret_data)
-+{
-+	int ret;
-+	u64 msg;
-+	u8 result;
-+
-+	if (!smc->alive)
-+		return -EIO;
-+
-+	reinit_completion(&smc->cmd_done);
-+
-+	smc->msg_id = (smc->msg_id + 1) & 0xf;
-+	msg = (FIELD_PREP(SMC_MSG, cmd) |
-+	       FIELD_PREP(SMC_SIZE, size) |
-+	       FIELD_PREP(SMC_WSIZE, wsize) |
-+	       FIELD_PREP(SMC_ID, smc->msg_id) |
-+	       FIELD_PREP(SMC_DATA, arg));
-+
-+	ret = apple_rtkit_send_message(smc->rtk, SMC_ENDPOINT, msg, NULL, false);
-+	if (ret < 0) {
-+		dev_err(smc->dev, "Failed to send command\n");
-+		return ret;
-+	}
-+
-+	do {
-+		if (wait_for_completion_timeout(&smc->cmd_done,
-+						msecs_to_jiffies(SMC_RECV_TIMEOUT)) == 0) {
-+			dev_err(smc->dev, "Command timed out (%llx)", msg);
-+			return -ETIMEDOUT;
-+		}
-+		if (FIELD_GET(SMC_ID, smc->cmd_ret) == smc->msg_id)
-+			break;
-+		dev_err(smc->dev, "Command sequence mismatch (expected %d, got %d)\n",
-+			smc->msg_id, (unsigned int)FIELD_GET(SMC_ID, smc->cmd_ret));
-+	} while(1);
-+
-+	result = FIELD_GET(SMC_RESULT, smc->cmd_ret);
-+	if (result != 0)
-+		return -result;
-+
-+	if (ret_data)
-+		*ret_data = FIELD_GET(SMC_DATA, smc->cmd_ret);
-+
-+	return FIELD_GET(SMC_SIZE, smc->cmd_ret);
-+}
-+
-+static int _apple_smc_rtkit_read_key(struct apple_smc_rtkit *smc, smc_key key,
-+				     void *buf, size_t size, size_t wsize)
-+{
-+	int ret;
-+	u32 rdata;
-+	u64 cmd;
-+
-+	if (size > SMC_SHMEM_SIZE || size == 0)
-+		return -EINVAL;
-+
-+	cmd = wsize ? SMC_MSG_RW_KEY : SMC_MSG_READ_KEY;
-+
-+	ret = apple_smc_cmd(smc, cmd, key, size, wsize, &rdata);
++	ret = macsmc_gpio_get_direction(gc, offset);
 +	if (ret < 0)
 +		return ret;
 +
-+	if (size <= 4)
-+		memcpy(buf, &rdata, size);
++	if (ret == GPIO_LINE_DIRECTION_OUT)
++		ret = apple_smc_rw_u32(smcgp->smc, key, CMD_OUTPUT, &val);
 +	else
-+		memcpy_fromio(buf, smc->shmem.iomem, size);
++		ret = apple_smc_rw_u32(smcgp->smc, key, CMD_INPUT, &val);
 +
-+	return ret;
-+}
-+
-+static int apple_smc_rtkit_read_key(void *cookie, smc_key key, void *buf, size_t size)
-+{
-+	return _apple_smc_rtkit_read_key(cookie, key, buf, size, 0);
-+}
-+
-+static int apple_smc_rtkit_write_key(void *cookie, smc_key key, void *buf, size_t size)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+
-+	if (size > SMC_SHMEM_SIZE || size == 0)
-+		return -EINVAL;
-+
-+	memcpy_toio(smc->shmem.iomem, buf, size);
-+	return apple_smc_cmd(smc, SMC_MSG_WRITE_KEY, key, size, 0, NULL);
-+}
-+
-+static int apple_smc_rtkit_rw_key(void *cookie, smc_key key,
-+				  void *wbuf, size_t wsize, void *rbuf, size_t rsize)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+
-+	if (wsize > SMC_SHMEM_SIZE || wsize == 0)
-+		return -EINVAL;
-+
-+	memcpy_toio(smc->shmem.iomem, wbuf, wsize);
-+	return _apple_smc_rtkit_read_key(smc, key, rbuf, rsize, wsize);
-+}
-+
-+static int apple_smc_rtkit_get_key_by_index(void *cookie, int index, smc_key *key)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+	int ret;
-+
-+	ret = apple_smc_cmd(smc, SMC_MSG_GET_KEY_BY_INDEX, index, 0, 0, key);
-+
-+	*key = swab32(*key);
-+	return ret;
-+}
-+
-+static int apple_smc_rtkit_get_key_info(void *cookie, smc_key key, struct apple_smc_key_info *info)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+	u8 key_info[6];
-+	int ret;
-+
-+	ret = apple_smc_cmd(smc, SMC_MSG_GET_KEY_INFO, key, 0, 0, NULL);
-+	if (ret >= 0 && info) {
-+		info->size = key_info[0];
-+		info->type_code = get_unaligned_be32(&key_info[1]);
-+		info->flags = key_info[5];
-+	}
-+	return ret;
-+}
-+
-+static const struct apple_smc_backend_ops apple_smc_rtkit_be_ops = {
-+	.read_key = apple_smc_rtkit_read_key,
-+	.write_key = apple_smc_rtkit_write_key,
-+	.write_key_atomic = apple_smc_rtkit_write_key_atomic,
-+	.rw_key = apple_smc_rtkit_rw_key,
-+	.get_key_by_index = apple_smc_rtkit_get_key_by_index,
-+	.get_key_info = apple_smc_rtkit_get_key_info,
-+};
-+
-+static void apple_smc_rtkit_crashed(void *cookie)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+
-+	dev_err(smc->dev, "SMC crashed! Your system will reboot in a few seconds...\n");
-+	smc->alive = false;
-+}
-+
-+static int apple_smc_rtkit_shmem_setup(void *cookie, struct apple_rtkit_shmem *bfr)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+	struct resource res = {
-+		.start = bfr->iova,
-+		.end = bfr->iova + bfr->size - 1,
-+		.name = "rtkit_map",
-+		.flags = smc->sram->flags,
-+	};
-+
-+	if (!bfr->iova) {
-+		dev_err(smc->dev, "RTKit wants a RAM buffer\n");
-+		return -EIO;
-+	}
-+
-+	if (res.end < res.start || !resource_contains(smc->sram, &res)) {
-+		dev_err(smc->dev,
-+			"RTKit buffer request outside SRAM region: %pR", &res);
-+		return -EFAULT;
-+	}
-+
-+	bfr->iomem = smc->sram_base + (res.start - smc->sram->start);
-+	bfr->is_mapped = true;
-+
-+	return 0;
-+}
-+
-+static void apple_smc_rtkit_shmem_destroy(void *cookie, struct apple_rtkit_shmem *bfr)
-+{
-+	// no-op
-+}
-+
-+static bool apple_smc_rtkit_recv_early(void *cookie, u8 endpoint, u64 message)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+
-+	if (endpoint != SMC_ENDPOINT) {
-+		dev_err(smc->dev, "Received message for unknown endpoint 0x%x\n", endpoint);
-+		return false;
-+	}
-+
-+	if (!smc->initialized) {
-+		int ret;
-+
-+		smc->shmem.iova = message;
-+		smc->shmem.size = SMC_SHMEM_SIZE;
-+		ret = apple_smc_rtkit_shmem_setup(smc, &smc->shmem);
-+		if (ret < 0)
-+			dev_err(smc->dev, "Failed to initialize shared memory\n");
-+		else
-+			smc->alive = true;
-+		smc->initialized = true;
-+		complete(&smc->init_done);
-+	} else if (FIELD_GET(SMC_MSG, message) == SMC_MSG_NOTIFICATION) {
-+		/* Handle these in the RTKit worker thread */
-+		return false;
-+	} else {
-+		smc->cmd_ret = message;
-+		if (smc->atomic_pending) {
-+			smc->atomic_pending = false;
-+		} else {
-+			complete(&smc->cmd_done);
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+static void apple_smc_rtkit_recv(void *cookie, u8 endpoint, u64 message)
-+{
-+	struct apple_smc_rtkit *smc = cookie;
-+
-+	if (endpoint != SMC_ENDPOINT) {
-+		dev_err(smc->dev, "Received message for unknown endpoint 0x%x\n", endpoint);
-+		return;
-+	}
-+
-+	if (FIELD_GET(SMC_MSG, message) != SMC_MSG_NOTIFICATION) {
-+		dev_err(smc->dev, "Received unknown message from worker: 0x%llx\n", message);
-+		return;
-+	}
-+
-+	apple_smc_event_received(smc->core, FIELD_GET(SMC_DATA, message));
-+}
-+
-+static const struct apple_rtkit_ops apple_smc_rtkit_ops = {
-+	.crashed = apple_smc_rtkit_crashed,
-+	.recv_message = apple_smc_rtkit_recv,
-+	.recv_message_early = apple_smc_rtkit_recv_early,
-+	.shmem_setup = apple_smc_rtkit_shmem_setup,
-+	.shmem_destroy = apple_smc_rtkit_shmem_destroy,
-+};
-+
-+static int apple_smc_rtkit_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct apple_smc_rtkit *smc;
-+	int ret;
-+
-+	smc = devm_kzalloc(dev, sizeof(*smc), GFP_KERNEL);
-+	if (!smc)
-+		return -ENOMEM;
-+
-+	smc->dev = dev;
-+
-+	smc->sram = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sram");
-+	if (!smc->sram)
-+		return dev_err_probe(dev, EIO,
-+				     "No SRAM region");
-+
-+	smc->sram_base = devm_ioremap_resource(dev, smc->sram);
-+	if (IS_ERR(smc->sram_base))
-+		return dev_err_probe(dev, PTR_ERR(smc->sram_base),
-+				     "Failed to map SRAM region");
-+
-+	smc->rtk =
-+		devm_apple_rtkit_init(dev, smc, NULL, 0, &apple_smc_rtkit_ops);
-+	if (IS_ERR(smc->rtk))
-+		return dev_err_probe(dev, PTR_ERR(smc->rtk),
-+				     "Failed to intialize RTKit");
-+
-+	ret = apple_rtkit_wake(smc->rtk);
-+	if (ret != 0)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to wake up SMC");
-+
-+	ret = apple_rtkit_start_ep(smc->rtk, SMC_ENDPOINT);
-+	if (ret != 0) {
-+		dev_err(dev, "Failed to start endpoint");
-+		goto cleanup;
-+	}
-+
-+	init_completion(&smc->init_done);
-+	init_completion(&smc->cmd_done);
-+
-+	ret = apple_rtkit_send_message(smc->rtk, SMC_ENDPOINT,
-+				       FIELD_PREP(SMC_MSG, SMC_MSG_INITIALIZE), NULL, false);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to send init message");
-+
-+	if (wait_for_completion_timeout(&smc->init_done,
-+					msecs_to_jiffies(SMC_RECV_TIMEOUT)) == 0) {
-+		ret = -ETIMEDOUT;
-+		dev_err(dev, "Timed out initializing SMC");
-+		goto cleanup;
-+	}
-+
-+	if (!smc->alive) {
-+		ret = -EIO;
-+		goto cleanup;
-+	}
-+
-+	smc->core = apple_smc_probe(dev, &apple_smc_rtkit_be_ops, smc);
-+	if (IS_ERR(smc->core)) {
-+		ret = PTR_ERR(smc->core);
-+		goto cleanup;
-+	}
-+
-+	return 0;
-+
-+cleanup:
-+	/* Try to shut down RTKit, if it's not completely wedged */
-+	if (apple_rtkit_is_running(smc->rtk))
-+		apple_rtkit_quiesce(smc->rtk);
-+
-+	return ret;
-+}
-+
-+static int apple_smc_rtkit_remove(struct platform_device *pdev)
-+{
-+	struct apple_smc *core = platform_get_drvdata(pdev);
-+	struct apple_smc_rtkit *smc = apple_smc_get_cookie(core);
-+
-+	apple_smc_remove(core);
-+
-+	if (apple_rtkit_is_running(smc->rtk))
-+		apple_rtkit_quiesce(smc->rtk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id apple_smc_rtkit_of_match[] = {
-+	{ .compatible = "apple,smc" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, apple_smc_rtkit_of_match);
-+
-+static struct platform_driver apple_smc_rtkit_driver = {
-+	.driver = {
-+		.name = "macsmc-rtkit",
-+		.owner = THIS_MODULE,
-+		.of_match_table = apple_smc_rtkit_of_match,
-+	},
-+	.probe = apple_smc_rtkit_probe,
-+	.remove = apple_smc_rtkit_remove,
-+};
-+module_platform_driver(apple_smc_rtkit_driver);
-+
-+MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-+MODULE_LICENSE("Dual MIT/GPL");
-+MODULE_DESCRIPTION("Apple SMC RTKit backend driver");
-diff --git a/include/linux/mfd/macsmc.h b/include/linux/mfd/macsmc.h
-new file mode 100644
-index 000000000000..39b4dc4ca881
---- /dev/null
-+++ b/include/linux/mfd/macsmc.h
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Apple SMC core definitions
-+ * Copyright (C) The Asahi Linux Contributors
-+ */
-+
-+#ifndef _LINUX_MFD_MACSMC_H
-+#define _LINUX_MFD_MACSMC_H
-+
-+struct apple_smc;
-+
-+typedef u32 smc_key;
-+
-+#define SMC_KEY(s) (smc_key)(_SMC_KEY(#s))
-+#define _SMC_KEY(s) (((s)[0] << 24) | ((s)[1] << 16) | ((s)[2] << 8) | (s)[3])
-+
-+#define APPLE_SMC_READABLE BIT(7)
-+#define APPLE_SMC_WRITABLE BIT(6)
-+#define APPLE_SMC_FUNCTION BIT(4)
-+
-+struct apple_smc_key_info {
-+	u8 size;
-+	u32 type_code;
-+	u8 flags;
-+};
-+
-+int apple_smc_read(struct apple_smc *smc, smc_key key, void *buf, size_t size);
-+int apple_smc_write(struct apple_smc *smc, smc_key key, void *buf, size_t size);
-+int apple_smc_write_atomic(struct apple_smc *smc, smc_key key, void *buf, size_t size);
-+int apple_smc_rw(struct apple_smc *smc, smc_key key, void *wbuf, size_t wsize,
-+		 void *rbuf, size_t rsize);
-+
-+int apple_smc_get_key_count(struct apple_smc *smc);
-+int apple_smc_find_first_key_index(struct apple_smc *smc, smc_key key);
-+int apple_smc_get_key_by_index(struct apple_smc *smc, int index, smc_key *key);
-+int apple_smc_get_key_info(struct apple_smc *smc, smc_key key, struct apple_smc_key_info *info);
-+
-+static inline bool apple_smc_key_exists(struct apple_smc *smc, smc_key key)
-+{
-+	return apple_smc_get_key_info(smc, key, NULL) >= 0;
-+}
-+
-+#define APPLE_SMC_TYPE_OPS(type) \
-+	static inline int apple_smc_read_##type(struct apple_smc *smc, smc_key key, type *p) \
-+	{ \
-+		int ret = apple_smc_read(smc, key, p, sizeof(*p)); \
-+		return (ret < 0) ? ret : ((ret != sizeof(*p)) ? -EINVAL : 0); \
-+	} \
-+	static inline int apple_smc_write_##type(struct apple_smc *smc, smc_key key, type p) \
-+	{ \
-+		return apple_smc_write(smc, key, &p, sizeof(p)); \
-+	} \
-+	static inline int apple_smc_write_##type##_atomic(struct apple_smc *smc, smc_key key, type p) \
-+	{ \
-+		return apple_smc_write_atomic(smc, key, &p, sizeof(p)); \
-+	} \
-+	static inline int apple_smc_rw_##type(struct apple_smc *smc, smc_key key, \
-+					      type w, type *r) \
-+	{ \
-+		int ret = apple_smc_rw(smc, key, &w, sizeof(w), r, sizeof(*r)); \
-+		return (ret < 0) ? ret : ((ret != sizeof(*r)) ? -EINVAL : 0); \
-+	}
-+
-+APPLE_SMC_TYPE_OPS(u64)
-+APPLE_SMC_TYPE_OPS(u32)
-+APPLE_SMC_TYPE_OPS(u16)
-+APPLE_SMC_TYPE_OPS(u8)
-+APPLE_SMC_TYPE_OPS(s64)
-+APPLE_SMC_TYPE_OPS(s32)
-+APPLE_SMC_TYPE_OPS(s16)
-+APPLE_SMC_TYPE_OPS(s8)
-+
-+static inline int apple_smc_read_flag(struct apple_smc *smc, smc_key key)
-+{
-+	u8 val;
-+	int ret = apple_smc_read_u8(smc, key, &val);
 +	if (ret < 0)
 +		return ret;
++
 +	return val ? 1 : 0;
 +}
-+#define apple_smc_write_flag apple_smc_write_u8
 +
-+int apple_smc_register_notifier(struct apple_smc *smc, struct notifier_block *n);
-+int apple_smc_unregister_notifier(struct apple_smc *smc, struct notifier_block *n);
++static void macsmc_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
++{
++	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
++	smc_key key = macsmc_gpio_key(offset);
++	int ret;
 +
-+#endif
++	value |= CMD_OUTPUT;
++	ret = apple_smc_write_u32(smcgp->smc, key, CMD_OUTPUT | value);
++	if (ret < 0)
++		dev_err(smcgp->dev, "GPIO set failed %p4ch = 0x%x\n", &key, value);
++}
++
++static int macsmc_gpio_init_valid_mask(struct gpio_chip *gc,
++				       unsigned long *valid_mask, unsigned int ngpios)
++{
++	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
++	int count = apple_smc_get_key_count(smcgp->smc) - smcgp->first_index;
++	int i;
++
++	if (count > MAX_GPIO)
++		count = MAX_GPIO;
++
++	bitmap_zero(valid_mask, ngpios);
++
++	for (i = 0; i < count; i++) {
++		smc_key key;
++		int gpio_nr;
++		int ret = apple_smc_get_key_by_index(smcgp->smc, smcgp->first_index + i, &key);
++
++		if (ret < 0)
++			return ret;
++
++		if (key > SMC_KEY(gPff))
++			break;
++
++		gpio_nr = macsmc_gpio_nr(key);
++		if (gpio_nr < 0 || gpio_nr > MAX_GPIO) {
++			dev_err(smcgp->dev, "Bad GPIO key %p4ch\n", &key);
++			continue;
++		}
++
++		set_bit(gpio_nr, valid_mask);
++	}
++
++	return 0;
++}
++
++static int macsmc_gpio_probe(struct platform_device *pdev)
++{
++	struct macsmc_gpio *smcgp;
++	struct apple_smc *smc = dev_get_drvdata(pdev->dev.parent);
++	smc_key key;
++	int ret;
++
++	smcgp = devm_kzalloc(&pdev->dev, sizeof(*smcgp), GFP_KERNEL);
++	if (!smcgp)
++		return -ENOMEM;
++
++	pdev->dev.of_node = of_get_child_by_name(pdev->dev.parent->of_node, "gpio");
++
++	smcgp->dev = &pdev->dev;
++	smcgp->smc = smc;
++	smcgp->first_index = apple_smc_find_first_key_index(smc, SMC_KEY(gP00));
++
++	if (smcgp->first_index >= apple_smc_get_key_count(smc))
++		return -ENODEV;
++
++	ret = apple_smc_get_key_by_index(smc, smcgp->first_index, &key);
++	if (ret < 0)
++		return ret;
++
++	if (key > macsmc_gpio_key(MAX_GPIO - 1))
++		return -ENODEV;
++
++	dev_info(smcgp->dev, "First GPIO key: %p4ch\n", &key);
++
++	smcgp->gc.label = "macsmc-pmu-gpio";
++	smcgp->gc.owner = THIS_MODULE;
++	smcgp->gc.get = macsmc_gpio_get;
++	smcgp->gc.set = macsmc_gpio_set;
++	smcgp->gc.get_direction = macsmc_gpio_get_direction;
++	smcgp->gc.init_valid_mask = macsmc_gpio_init_valid_mask;
++	smcgp->gc.can_sleep = true;
++	smcgp->gc.ngpio = MAX_GPIO;
++	smcgp->gc.base = -1;
++	smcgp->gc.parent = &pdev->dev;
++
++	return devm_gpiochip_add_data(&pdev->dev, &smcgp->gc, smcgp);
++}
++
++static struct platform_driver macsmc_gpio_driver = {
++	.driver = {
++		.name = "macsmc-gpio",
++	},
++	.probe = macsmc_gpio_probe,
++};
++module_platform_driver(macsmc_gpio_driver);
++
++MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
++MODULE_LICENSE("Dual MIT/GPL");
++MODULE_DESCRIPTION("Apple SMC GPIO driver");
++MODULE_ALIAS("platform:macsmc-gpio");
 -- 
 2.30.2
 
