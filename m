@@ -2,144 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F03A25A9D70
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 18:48:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F2DA5A9DA3
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 19:02:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233209AbiIAQrR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 12:47:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
+        id S235032AbiIARAt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 13:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233576AbiIAQrQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 12:47:16 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AB27B1D5;
-        Thu,  1 Sep 2022 09:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=W3O+xqsQoDS/3T7c0b2c2tsv+0Mvz/bo8Rn3y7uzjGI=; b=C/NeG9Wwc+f4CQtNRwJHx9O/5r
-        9rR6E+eKH9pnWdiSk1+xcF/h1mfmzlX+VOajEfaIfLLpxH3AggR08fcZ4t0qV3dm9CUA0JE7c1H3m
-        djKAQjTCzxmHxu2nohfLG6LtiGG+DfHf4Lt8osN0RVfCG68n3QZTRyeaxLk/bXeiToyJQ7+05jUZp
-        Gs+SAIaZnDqyi3+jpMw40Km2TSRSMtfuGLNmLEI0fv4XJSflI8aoP81xPadMEJ7hmpKoVEuru3NC8
-        y71Ulz5JkRZZ2q/r0vKORvpOQL7zX4k815j6eOIZf++l1HO4DQ+vA/eKsyC11Zg4Em9Kdge0zGgTA
-        HVWLu05Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34050)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1oTnLL-0006EO-IG; Thu, 01 Sep 2022 17:47:03 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1oTnLI-0003cg-GY; Thu, 01 Sep 2022 17:47:00 +0100
-Date:   Thu, 1 Sep 2022 17:47:00 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Sven Peter <sven@svenpeter.dev>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-Message-ID: <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
+        with ESMTP id S235059AbiIARAr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 13:00:47 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC4758B65
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 10:00:44 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 6B24932009AE;
+        Thu,  1 Sep 2022 13:00:39 -0400 (EDT)
+Received: from imap47 ([10.202.2.97])
+  by compute2.internal (MEProxy); Thu, 01 Sep 2022 13:00:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=cc:cc:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1662051638; x=1662138038; bh=P0
+        EYURgGEYV4/k5h0fO2XjErH1mwBxtZbyN06bfLMJU=; b=JZgBHRPUXi7NnInWKF
+        pd8UVoEh/aC+/iXXUhwiBKv2iPQAnvf60inOeW8ZQ2h7cRUSYy2IboBHatTJF5Ov
+        kr1rmCdk0kNrSsr6qF3YzGI+fRFobYm9F2qK2R5JZwIgBCudLpMQ7BBWY1z1tCJY
+        G4nfN0SqBZsGWwNKivaqyO+iBW+rPtj1eOkFCRDUXrMdo+Qjx9AkVm2+eQzOSAt8
+        JzgtP6EcyT6hd9ACW9OjY4JsHAvx9w5St7NA1P1QFeQT6qvTmm1W/EkzncectKTg
+        xTwR9CtopgvRddJM/qdG/TRz+dB7IcljBpaGMoiZAfxHVh3xJT0CLOd0yu36D42s
+        dytQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1662051638; x=1662138038; bh=P0EYURgGEYV4/k5h0fO2XjErH1mw
+        BxtZbyN06bfLMJU=; b=02aAASxornoa32bXR9ayTDbY+EMWVCuT7RG2j0YIetaZ
+        sHrw+REyf2Wh1goAVSMMbceAJsOAMHZ4dlRaHp1gJmr3MPTUtTFTXxohV8nWk2Pi
+        WPAy1MHVgMhUNXqW16ONqMP0JdVsAF2qllaXgAkRcyX8bBCW31ctJ/o+J4gaBgSv
+        yKmBZJCb2aVf8qhmedwHglE6LAEHZU+6AKH7Uo6B403jKewnaNx/vQdBX7/gYvKo
+        Xbb97SB3NY/2mSvYt5sNcexq8rgKK4EKGntBMhRwu5Ty9mPvH0viyLgIPfPRtvEL
+        AQ71GoQ4D6ZqYnk2M/ovPglgmgyNFxYUKpFwIVomgg==
+X-ME-Sender: <xms:NOUQYxdfz1idkHpU3R8ITDLdUF4oHKZTGMa1bxYt1zW7jozWD7omNA>
+    <xme:NOUQY_NC5AKAS3sStPUMeh0vte9k2--5d_j4D9sbNTff-NeB9J7fDqvrC4mjfL0kB
+    ugBKaumXVvtPcaW5bo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdekkedguddtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfu
+    vhgvnhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtf
+    frrghtthgvrhhnpeelvefggeffheevtdeivefhkeehfeettdejteduveeiheevveeilefg
+    hfeiveeiueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:NOUQY6gru7hEFNAK3mkumdyJXRwugl3-3k17RdLAi6_bcrRAcnSUsA>
+    <xmx:NOUQY6_yrQS8mj7jq9CIGfgpSlKss2LKTii9_GVScFK9ooAURALfeQ>
+    <xmx:NOUQY9tSsf3fXZ-sV_NHfhhY9npTJgskeYwAjGC3vzD6rcfBFYK1qA>
+    <xmx:NuUQY-9vAO3YRskbLzKcJfxiGZW5RlpSCZlHAx_kOokLXVTBqhjxHg>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 27050A60082; Thu,  1 Sep 2022 13:00:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
+Mime-Version: 1.0
+Message-Id: <93863660-2f44-49ce-9bf2-93fad4adfa2c@www.fastmail.com>
+In-Reply-To: <E1oTkeR-003t9R-BK@rmk-PC.armlinux.org.uk>
 References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
- <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
- <426469c1-13cc-178b-4904-09439d7788e8@linaro.org>
- <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
- <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
- <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
- <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org>
- <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
- <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+ <E1oTkeR-003t9R-BK@rmk-PC.armlinux.org.uk>
+Date:   Thu, 01 Sep 2022 19:00:14 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Russell King" <rmk+kernel@armlinux.org.uk>,
+        "Arnd Bergmann" <arnd@arndb.de>, "Lee Jones" <lee@kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "Alyssa Rosenzweig" <alyssa@rosenzweig.io>, asahi@lists.linux.dev,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Hector Martin" <marcan@marcan.st>,
+        linux-arm-kernel@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 3/6] soc: apple: rtkit: Add apple_rtkit_poll
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 01, 2022 at 07:25:03PM +0300, Krzysztof Kozlowski wrote:
-> On 01/09/2022 18:56, Russell King (Oracle) wrote:
-> > 
-> > 8<===
-> > From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> > Subject: [PATCH] dt-bindings: mfd: add binding for Apple Mac System Management
-> >  Controller
-> > 
-> > Add a DT binding for the Apple Mac System Management Controller.
-> > 
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> 
-> Yes, looks good.
-> 
-> I won't add Reviewed-by tag, because I think it would confuse Patchwork,
-> so please send a v2 at some point.
+On Thu, Sep 1, 2022, at 15:54, Russell King wrote:
+> From: Hector Martin <marcan@marcan.st>
+>
+> This allows a client to receive messages in atomic context, by polling.
+>
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Thanks. Do you have any suggestions for patch 2? Should I merge the
-description in patch 2 into this file?
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
 
-The full dts for this series looks like this:
 
-                smc: smc@23e400000 {
-                        compatible = "apple,t8103-smc", "apple,smc";
-                        reg = <0x2 0x3e400000 0x0 0x4000>,
-                                <0x2 0x3fe00000 0x0 0x100000>;
-                        reg-names = "smc", "sram";
-                        mboxes = <&smc_mbox>;
-
-                        smc_gpio: gpio {
-                                gpio-controller;
-                                #gpio-cells = <2>;
-                        };
-                };
-
-but the fuller version in the asahi linux tree looks like:
-
-		smc: smc@23e400000 {
-			compatible = "apple,t8103-smc", "apple,smc";
-			reg = <0x2 0x3e400000 0x0 0x4000>,
-				<0x2 0x3fe00000 0x0 0x100000>;
-			reg-names = "smc", "sram";
-			mboxes = <&smc_mbox>;
-
-			smc_gpio: gpio {
-				gpio-controller;
-				#gpio-cells = <2>;
-			};
-
-			smc_rtc: rtc {
-				nvmem-cells = <&rtc_offset>;
-				nvmem-cell-names = "rtc_offset";
-			};
-
-			smc_reboot: reboot {
-				nvmem-cells = <&shutdown_flag>, <&boot_stage>,
-					<&boot_error_count>, <&panic_count>, <&pm_setting>;
-				nvmem-cell-names = "shutdown_flag", "boot_stage",
-					"boot_error_count", "panic_count", "pm_setting";
-			};
-		};
-
-So whatever is decided for the gpio node would eventually also apply
-to the other nodes too.
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
