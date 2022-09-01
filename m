@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF1D95AA304
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 00:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A614E5AA31D
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 00:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234630AbiIAW3K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 18:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
+        id S233057AbiIAWdu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 18:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235427AbiIAW2i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 18:28:38 -0400
+        with ESMTP id S235059AbiIAWdr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 18:33:47 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B2D17E1D;
-        Thu,  1 Sep 2022 15:26:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72FF200;
+        Thu,  1 Sep 2022 15:33:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1D42462018;
-        Thu,  1 Sep 2022 22:26:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72607C43141;
-        Thu,  1 Sep 2022 22:26:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 49FA96201B;
+        Thu,  1 Sep 2022 22:33:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4362C433D7;
+        Thu,  1 Sep 2022 22:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662071192;
-        bh=bZrKkMHky4BQzJVVvsb02JmTiYQnJu9Lm6ukGG8Mg6w=;
+        s=k20201202; t=1662071625;
+        bh=JVBvlEBiOmHDg0DcOMfECbdzQXwhpcC54UdN/AtqjWo=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D/jb6WwQGPHXu1ZGTH90T4bn1t1YMRNjDDGtAqrsaTcVFMnCAzo8S55HGIl9J2Uup
-         rGHTjyn5A/PT1UV6iUJd465HLfcnsVLVR9eC+IhtYjUEFylLXme2QRCCo1XnNnkzID
-         KJMhNesNTnePUy+GvsMgpWC+mp0EGx7XlHtICX99kYr6suooeOY3uBnsx7boDCsX9a
-         F944tjUPUhNrAeQg+mbz5d6QmyJymcwCpr5kl6F3/IsGqRoi5uJyviUFhuG/XnFSmI
-         UwEzGtB8npiS6lvktSdbb9woLKmvwOwQfOmCw9bk5hd2ciL3ho0Wp8vzg6WEXftNSj
-         UVlHS/wnbL3JQ==
-Received: by mail-pl1-f175.google.com with SMTP id d12so147600plr.6;
-        Thu, 01 Sep 2022 15:26:32 -0700 (PDT)
-X-Gm-Message-State: ACgBeo34kPy22ZUwxHPLVHw6Gv6EkNscF4NCwpUtoQ/val399guFkolJ
-        XnI5pq4tVTx+P/U0raJI3bGsn1e5gXfkEofhqA==
-X-Google-Smtp-Source: AA6agR4PER6rS9o3wMnfpyVtUwmQLctyFI3dEgc26Wj20wwFX9hOPwoTXmT7dbdlf4AmgXN7lpMrCHLCT+7mP5FokSM=
-X-Received: by 2002:a17:90a:8689:b0:1fd:9ab8:bec2 with SMTP id
- p9-20020a17090a868900b001fd9ab8bec2mr1404684pjn.155.1662071191938; Thu, 01
- Sep 2022 15:26:31 -0700 (PDT)
+        b=ZPVfMQ0a8z2yo7VG7Fxo5kVxNZ6K7rrfDo/aAlpY3aOAgCKGZL/5sYaYDVT2lsS9v
+         IMvV9Ysbn3Tpv9eXvaXih3f/on21G3SgnFEKTdc3rTpTDBtDjRohkzdpDjjIpudIn7
+         SBZem0lYwtAz5tmiVU4RnRhptT93mngtFZhreI1EHQlI9eSk9EgjuGVGI4sf1jzu43
+         b1ZYgRMRI5+kTJ6H9EK2yukdB/XwX0Ba3rPeh1BPAY92sJ7+/NOvlihI2mKsliPCTr
+         gPi5aN64izpfRJFyFwPa6OYwUQrl3KghiDKoTk+Uoc+ZEvMxpIkVtT5WpJlvDR4tIe
+         m4xZK2gZyKr4w==
+Received: by mail-pl1-f174.google.com with SMTP id d12so161014plr.6;
+        Thu, 01 Sep 2022 15:33:45 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1Ur110/c0+Bqy3EYFl7q6ggXj1xk7TMfi1LlCfeC/vm35akLos
+        N6pTSfbHY18tKMkVHzfu0FG8lrWsm0nuf1VDug==
+X-Google-Smtp-Source: AA6agR42ASWP/CdkWAsB45KeALFYih+dn+yvzlUdsO7wBNb4Q0XNeVIFC9eif6EAMJZELzBQOqErTEHGgIdN4pieNj4=
+X-Received: by 2002:a17:902:ef81:b0:174:445f:b88d with SMTP id
+ iz1-20020a170902ef8100b00174445fb88dmr30127552plb.148.1662071625166; Thu, 01
+ Sep 2022 15:33:45 -0700 (PDT)
 MIME-Version: 1.0
 References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
  <426469c1-13cc-178b-4904-09439d7788e8@linaro.org> <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
  <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org> <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
  <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org> <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
-In-Reply-To: <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
+ <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org> <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
+In-Reply-To: <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 1 Sep 2022 17:26:18 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLXNVdEj3ZCA_Wnirv-7maCZATKmjS8fJYR0uLQ9OTQZQ@mail.gmail.com>
-Message-ID: <CAL_JsqLXNVdEj3ZCA_Wnirv-7maCZATKmjS8fJYR0uLQ9OTQZQ@mail.gmail.com>
+Date:   Thu, 1 Sep 2022 17:33:31 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
+Message-ID: <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
 Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
  Management Controller
 To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
@@ -74,146 +75,76 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 10:56 AM Russell King (Oracle)
+On Thu, Sep 1, 2022 at 11:47 AM Russell King (Oracle)
 <linux@armlinux.org.uk> wrote:
 >
-> On Thu, Sep 01, 2022 at 06:45:52PM +0300, Krzysztof Kozlowski wrote:
-> > On 01/09/2022 18:24, Russell King (Oracle) wrote:
-> > > On Thu, Sep 01, 2022 at 06:15:46PM +0300, Krzysztof Kozlowski wrote:
-> > >> On 01/09/2022 18:12, Russell King (Oracle) wrote:
-> > >>>>> +  compatible:
-> > >>>>> +    items:
-> > >>>>> +      - enum:
-> > >>>>> +        - apple,t8103-smc
-> > >>>>
-> > >>>> You miss two spaces of indentation on this level.
-> > >>>
-> > >>> Should that be picked up by the dt checker?
-
-I have a problem that Krzysztof is quicker. ;) Maybe I should stop
-screening the emails (for the times I break things mostly).
-
-> > >>
-> > >> I think yamllint complains about it. It is not a hard-dependency, so
-> > >> maybe you don't have it installed.
-> > >>
-> > >>>
-> > >>>>> +        - apple,t8112-smc
-> > >>>>> +        - apple,t6000-smc
-> > >>>>
-> > >>>> Bring some order here - either alphabetical or by date of release (as in
-> > >>>> other Apple schemas). I think t6000 was before t8112, so it's none of
-> > >>>> that orders.
-> > >>>
-> > >>> Ok.
-> > >>>
-> > >>>>> +      - const: apple,smc
-> > >>>>> +
-> > >>>>> +  reg:
-> > >>>>> +    description: Two regions, one for the SMC area and one for the SRAM area.
-> > >>>>
-> > >>>> You need constraints for size/order, so in this context list with
-> > >>>> described items.
-> > >>>
-> > >>> How do I do that? I tried maxItems/minItems set to 2, but the dt checker
-> > >>> objected to it.
-> > >>
-> > >> One way:
-> > >> reg:
-> > >>   items:
-> > >>     - description: SMC area
-> > >>     - description: SRAM area
-> > >>
-> > >> but actually this is very similar what you wrote for reg-names - kind of
-> > >> obvious, so easier way:
-> > >>
-> > >> reg:
-> > >>   maxItems: 2
+> On Thu, Sep 01, 2022 at 07:25:03PM +0300, Krzysztof Kozlowski wrote:
+> > On 01/09/2022 18:56, Russell King (Oracle) wrote:
 > > >
-> > > Doesn't work. With maxItems: 2, the example fails, yet it correctly lists
-> > > two regs which are 64-bit address and 64-bit size - so in total 8 32-bit
-> > > ints.
+> > > 8<===
+> > > From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+> > > Subject: [PATCH] dt-bindings: mfd: add binding for Apple Mac System Management
+> > >  Controller
 > > >
-> > > Documentation/devicetree/bindings/mfd/apple,smc.example.dtb: smc@23e400000: reg: [[2, 1044381696], [0, 16384], [2, 1071644672], [0, 1048576]] is too long
-> > >         From schema: /home/rmk/git/linux-rmk/Documentation/devicetree/bindings/mfd/apple,smc.yaml
+> > > Add a DT binding for the Apple Mac System Management Controller.
 > > >
-> > > Hence, I originally had maxItems: 2, and ended up deleting it because of
-> > > the dt checker.
-> > >
-> > > With the two descriptions, it's the same failure.
+> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 > >
-> > Yeah, they should create same result.
+> > Yes, looks good.
 > >
-> > >
-> > > I think the problem is that the checker has no knowledge in the example
-> > > of how big each address and size element of the reg property is. So,
-> > > it's interpreting it as four entries of 32-bit address,size pairs
-> > > instead of two entries of 64-bit address,size pairs. Yep, that's it,
-> > > if I increase the number of "- description" entries to four then it's
-> > > happy.
-> > >
-> > > So, what's the solution?
-> > >
-> >
-> > If you open generated DTS examples (in your
-> > kbuild-output/Documentation/devicetree/bindings/mfd/) you will see which
-> > address/size cells are expected. By default it is I think address/size
-> > cells=1, so you need a bus node setting it to 2.
+> > I won't add Reviewed-by tag, because I think it would confuse Patchwork,
+> > so please send a v2 at some point.
 >
-> Thanks, that works. The patch with all those points addressed now looks
-> like:
+> Thanks. Do you have any suggestions for patch 2? Should I merge the
+> description in patch 2 into this file?
 >
-> 8<===
-> From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> Subject: [PATCH] dt-bindings: mfd: add binding for Apple Mac System Management
->  Controller
+> The full dts for this series looks like this:
 >
-> Add a DT binding for the Apple Mac System Management Controller.
+>                 smc: smc@23e400000 {
+>                         compatible = "apple,t8103-smc", "apple,smc";
+>                         reg = <0x2 0x3e400000 0x0 0x4000>,
+>                                 <0x2 0x3fe00000 0x0 0x100000>;
+>                         reg-names = "smc", "sram";
+>                         mboxes = <&smc_mbox>;
 >
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
->  .../devicetree/bindings/mfd/apple,smc.yaml    | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
+>                         smc_gpio: gpio {
+>                                 gpio-controller;
+>                                 #gpio-cells = <2>;
+>                         };
+>                 };
 >
-> diff --git a/Documentation/devicetree/bindings/mfd/apple,smc.yaml b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> new file mode 100644
-> index 000000000000..168f237c2962
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/apple,smc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Apple Mac System Management Controller
-> +
-> +maintainers:
-> +  - Hector Martin <marcan@marcan.st>
-> +
-> +description:
-> +  Apple Mac System Management Controller implements various functions
-> +  such as GPIO, RTC, power, reboot.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - apple,t6000-smc
-> +          - apple,t8103-smc
-> +          - apple,t8112-smc
-> +      - const: apple,smc
-> +
-> +  reg:
-> +    items:
-> +      - description: SMC area
-> +      - description: SRAM area
+> but the fuller version in the asahi linux tree looks like:
+>
+>                 smc: smc@23e400000 {
+>                         compatible = "apple,t8103-smc", "apple,smc";
+>                         reg = <0x2 0x3e400000 0x0 0x4000>,
+>                                 <0x2 0x3fe00000 0x0 0x100000>;
+>                         reg-names = "smc", "sram";
+>                         mboxes = <&smc_mbox>;
+>
+>                         smc_gpio: gpio {
+>                                 gpio-controller;
+>                                 #gpio-cells = <2>;
 
-Based on the disjoint addresses, is this really one device? Perhaps
-the SRAM area should use mmio-sram binding? That already supports
-sub-dividing the sram for different uses. I'll comment more on the
-full example.
+Only 2 properties doesn't really need its own schema doc. However, I
+would just move these to the parent node.
+
+>                         };
+>
+>                         smc_rtc: rtc {
+>                                 nvmem-cells = <&rtc_offset>;
+>                                 nvmem-cell-names = "rtc_offset";
+>                         };
+>
+>                         smc_reboot: reboot {
+>                                 nvmem-cells = <&shutdown_flag>, <&boot_stage>,
+>                                         <&boot_error_count>, <&panic_count>, <&pm_setting>;
+>                                 nvmem-cell-names = "shutdown_flag", "boot_stage",
+>                                         "boot_error_count", "panic_count", "pm_setting";
+
+Not really much reason to split these up either because you can just
+fetch the entry you want by name.
+
+How confident are the asahi folks that this is a complete binding?
 
 Rob
