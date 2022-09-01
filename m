@@ -2,41 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D27B65A9B58
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 17:15:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AF935A9B5C
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Sep 2022 17:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233496AbiIAPOz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 11:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44646 "EHLO
+        id S232994AbiIAPPx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 11:15:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233651AbiIAPOx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 11:14:53 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04EEF1000;
-        Thu,  1 Sep 2022 08:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xHqXre1QGDVzhtqUaT+W1lDHw59VpATVwe7eic+GdBA=; b=yUvhqalbm6VqdZYwb4s0ZCIVNc
-        eYE+EGjnLNQWSyzZGPCkw3qMDhkzJ9gzoE9NS15gamlaHaSzeWK+c4Xc4jfJmJCHhl4b/DV9sxijE
-        vE/P66Q7pR37PDz4mPRSJ3TtCCp9mcuHNhBWfuh+zxPwM4nbmAK0cKFYcJSiG5B6gwaasSjGaBi/Q
-        rJXjonlSIXxd9jpkWwWsxw5uqkflXPV0nQFR3JvErR4ElL49nz8DvnHMIoxoTled90PZEmxCNa7l7
-        CqMa5Jtoy8A8eesmjHKNjX8lU6hi5wSdRnyQUPIC3y4ENgCLhv9jHZ6btiqOzZBFiDi7uGJpXBTbB
-        MeZvXgXA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34042)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1oTlu0-00067c-B5; Thu, 01 Sep 2022 16:14:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1oTltz-0003Yw-NU; Thu, 01 Sep 2022 16:14:43 +0100
-Date:   Thu, 1 Sep 2022 16:14:43 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229514AbiIAPPw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 11:15:52 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B29402FC
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Sep 2022 08:15:49 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id g7so7940291lfe.11
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Sep 2022 08:15:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=gyNVCFkaWNsKBaoIpibBhspi5hxPuuG/Dvrr/wS3a7I=;
+        b=wAubuwLzKPR6GV1qetXH4QaFJMWXbtjhYc0Kcr1CE6SfUMgea1gpwtfh1Y4ECyT54/
+         JX3Rpmt/dIf+WxH7n5FGocI+2bTUXw8EWWWki6+085uECpswC1nrlriZh1BcgRtUGstf
+         KGKqkZmuaK6XNYEXXL2BQNAQRJlYAh6K58+dDWeyHmbO2XXXfI/A3VWoEq/fDfZk2A/Z
+         +PUbJ7tKuL4krb8xJCjXQ7OSP+Gj/TzC0djScgtRqVAchUR2PwlBF8HCoVDCHjMiuM6q
+         48Evdh8MLPgTCQKgsTnfIAsBEgdwq/5vP4SJIpwxzvQOqZYMDgV+04LgPeT6fEK+n2Tk
+         c3fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=gyNVCFkaWNsKBaoIpibBhspi5hxPuuG/Dvrr/wS3a7I=;
+        b=SE2W88JLUVVTc+ClC8M5MSSKQhEx2RVcOTTuAL6ECUlHqVw1Yp1Ga58kUM1L2zTrKO
+         ku9+YAE0d3f98J4xij8s9TERrcBU6JQ4/IDwyT7diammqU5DI1MyFYl8VRJu+JEwoe5L
+         TZsC0SnwK5Q75V53+ZZ8t55TEQp8ODjfAc/clRKN+cpb9aNZ7XtwANDvjUbCGUuLd6Qp
+         0miy6deEddFBKAMM7Oi4Qq52hM6XP5ElVKdHByikGVBQ0x442tClOrXZMRKv+lHPguqr
+         0g3P4MhIoEe1NYZnrtqxlt+M5qnOQpxxgqARvpZpFEKVukxKU1Oe+ogv/iRCvSq5Sl99
+         xPhg==
+X-Gm-Message-State: ACgBeo0plJ/hcXCZEOSqf3YLCLVKjiqz1k/FLjigUo33yvx5tjZlDLrC
+        47lQy9/h1UniMKue1JQLByZxGg==
+X-Google-Smtp-Source: AA6agR5MpbukT/Tca+4lJmUDLkrqlKDBqgbUDBrUrfiqS8yHyVFbox6z5ZZ4tGsdTDAnNdH/MCg4zg==
+X-Received: by 2002:a05:6512:1312:b0:492:e14d:54d4 with SMTP id x18-20020a056512131200b00492e14d54d4mr10205963lfu.469.1662045347897;
+        Thu, 01 Sep 2022 08:15:47 -0700 (PDT)
+Received: from [192.168.28.124] (balticom-73-99-134.balticom.lv. [109.73.99.134])
+        by smtp.gmail.com with ESMTPSA id h1-20020a05651c124100b0026181a42284sm2059267ljh.88.2022.09.01.08.15.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Sep 2022 08:15:47 -0700 (PDT)
+Message-ID: <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
+Date:   Thu, 1 Sep 2022 18:15:46 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
+Content-Language: en-US
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
 Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
@@ -47,60 +68,86 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/6] dt-bindings: gpio: add binding for the GPIO block
- for Apple Mac SMC
-Message-ID: <YxDMY1R6kgb2X2hx@shell.armlinux.org.uk>
 References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
- <E1oTkeM-003t9G-7S@rmk-PC.armlinux.org.uk>
- <5ad90366-e7ac-1cae-77ee-cc084e5a69d3@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ad90366-e7ac-1cae-77ee-cc084e5a69d3@linaro.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+ <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
+ <426469c1-13cc-178b-4904-09439d7788e8@linaro.org>
+ <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 01, 2022 at 06:11:30PM +0300, Krzysztof Kozlowski wrote:
-> On 01/09/2022 16:54, Russell King (Oracle) wrote:
-> > Add the DT binding for the Apple Mac System Management Controller GPIOs.
-> > 
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  .../devicetree/bindings/gpio/gpio-macsmc.yaml | 28 +++++++++++++++++++
-> >  .../devicetree/bindings/mfd/apple,smc.yaml    |  4 +++
-> >  2 files changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml b/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
-> > new file mode 100644
-> > index 000000000000..ee620fe50ca8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
-> > @@ -0,0 +1,28 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/gpio-macsmc.yaml#
+On 01/09/2022 18:12, Russell King (Oracle) wrote:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +        - apple,t8103-smc
+>>
+>> You miss two spaces of indentation on this level.
 > 
-> filename based on the compatible... which is missing here, so this leads
-> to the question - why this is separate device/child node? It won't bind
-> to anything, won't be populated, right?
+> Should that be picked up by the dt checker?
 
-The node is a child of the apple,smc mfd device, and is referenced from
-that description. Should this be embedded in the DT description for the
-apple,smc device?
+I think yamllint complains about it. It is not a hard-dependency, so
+maybe you don't have it installed.
 
-It'll also have other nodes as well, for the RTC etc.
+> 
+>>> +        - apple,t8112-smc
+>>> +        - apple,t6000-smc
+>>
+>> Bring some order here - either alphabetical or by date of release (as in
+>> other Apple schemas). I think t6000 was before t8112, so it's none of
+>> that orders.
+> 
+> Ok.
+> 
+>>> +      - const: apple,smc
+>>> +
+>>> +  reg:
+>>> +    description: Two regions, one for the SMC area and one for the SRAM area.
+>>
+>> You need constraints for size/order, so in this context list with
+>> described items.
+> 
+> How do I do that? I tried maxItems/minItems set to 2, but the dt checker
+> objected to it.
 
-Thanks.
+One way:
+reg:
+  items:
+    - description: SMC area
+    - description: SRAM area
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+but actually this is very similar what you wrote for reg-names - kind of
+obvious, so easier way:
+
+reg:
+  maxItems: 2
+
+
+> 
+>>> +  reg-names:
+>>> +    items:
+>>> +      - const: smc
+>>> +      - const: sram
+>>> +
+>>> +  mboxes:
+>>> +    description:
+>>> +      A phandle to the mailbox channel
+>>
+>> Missing maxItems
+> 
+> Ok. Would be helpful if the dt checker identified that.
+
+Patches are welcomed :)
+
+Best regards,
+Krzysztof
