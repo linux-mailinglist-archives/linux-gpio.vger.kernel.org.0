@@ -2,60 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFBF95AB4E3
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 17:19:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D3055AB4EF
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 17:21:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236500AbiIBPTP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 11:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38492 "EHLO
+        id S236312AbiIBPVb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 11:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236943AbiIBPSt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 11:18:49 -0400
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8403147EB0;
-        Fri,  2 Sep 2022 07:51:52 -0700 (PDT)
-Received: by mail-qv1-xf32.google.com with SMTP id jy14so1559103qvb.12;
-        Fri, 02 Sep 2022 07:51:52 -0700 (PDT)
+        with ESMTP id S236357AbiIBPVM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 11:21:12 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C167A17AB7
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 07:54:02 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id l5so1558893qvs.13
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 07:54:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=CtCUtbyEWpfB5jQ909qB3n/ir4ZwsxY4gByY85AERlg=;
-        b=gPEEKL/tgOHnlyna/FNpmm347tjxzmF1a1IeVz42B6gF2Ujmh40FnFgpR8lzbZowW9
-         phZ5nq5VsyIZ2/mNdOIcqoZSh/WMD7qCfadrBWinnlIjAKGb3meAVAf8jJhQ9IeeH1tI
-         BCyP4+jmuWPI0/AiE3Wk+8xyuzuY1i2fhmGMFevw3w1cVGxmgrucmBxg8lLlhLTxW05c
-         Cdtga+tU25YiC8g24iGNZ4Iv++3FrpmMxybtKtHrj+//3W1GedmPYACqJYmihpZI2cK7
-         +l4PWWotJuCCMZtdXzvT7cSJs7JuWDjAyinnoDgA4R0r2YV0Ez96OC6ey0lJhBDdGwIR
-         5yqw==
+        bh=Z1FoDByrTZWQf8xOYstthBmZfghp9AbTB8bp4TVFvqE=;
+        b=djvHEyvX0810i2C3OIadD3Ac8GkGncpPI4h8WBwIdY4Vb03BTtsCtckMvnaaBaKW9n
+         XDejN62TR44iwMD4cKwRX29G07/UMNhFgdkinB7ol9dX0D/2N5Z/xORtTQ1lgua9rsz0
+         7TFP1scrofVPDw70Uj+3pQ1/g+aIsXunmk3uIYMz1IZTRJA7mIjNiQ2Zbi6MmhcK4fAL
+         Es/TKW2U/eiv35DLHz7nHPZMgx1GTy3+0tHSPK7VvsvmN/DuuZ/JlorO5EXhS0jLLCiY
+         I4mTk3Ss86rJML9us41OPdmcTN30isCF2PnoxU4QXzAHMcWPTu/hnHTSd6hkap83WWGh
+         AWWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=CtCUtbyEWpfB5jQ909qB3n/ir4ZwsxY4gByY85AERlg=;
-        b=PGPmqRflLlaLsyXy2Y1kyiuglR/WHTN8ZTrWYi1UUlgIniciOeTwnX9mTw6F0LnJcg
-         xvpDCWME6+j0/eQcWTsGfYhDKhnLllxg6yDQiE4xAV89zGjIqTY+dZ35yCl3Z7MAaJ/m
-         vB7/xU8gmmVCCgQ4hWdoz3R112Wnmo68ckqpZqCoRvUZ8DNdrD3pewiQLtEKJRmn24I7
-         /UbLYlQMkKmoHKdLacc/lyThFLYIiHm/D6FUoEy7K4cIea+cJ3qT2XtnMlbMg8748lyC
-         Iyz84xjmy7xBXEHanbMjFrk5aQudnIIogJqP+Pw6VT7kpgannS7jSofWLj98PiJ03pAr
-         TBhw==
-X-Gm-Message-State: ACgBeo1WyICsXosJRhoHXptihLuUDo0EW54hE57NBb1VvaEfKsB23MbO
-        Mub1y5Em+q255+tcIsO6D9PbRfnxtQFkNyAW6EI=
-X-Google-Smtp-Source: AA6agR7nJZO8ZswNlfltRIaeZ+DlNe0yYud3zZb6aTqIBYFpFDbIHe3ZrOAOLBr+6LqOY4mMXWntX61heZvB8ZT1cbg=
-X-Received: by 2002:a05:6214:27ca:b0:499:95f:6379 with SMTP id
- ge10-20020a05621427ca00b00499095f6379mr20131343qvb.82.1662130310778; Fri, 02
- Sep 2022 07:51:50 -0700 (PDT)
+        bh=Z1FoDByrTZWQf8xOYstthBmZfghp9AbTB8bp4TVFvqE=;
+        b=aWglRGO071O8oTcbCCr2G1E/aBSzga1M7mCNFqJGFQSa0u+5T9lj6qC99uqh9JNd4o
+         PbIipYiC6DCkYVPoUAD7uiJmEYzu4kXSR3u+gobGWgWuIiDO5r2ioAMAK6qevcqXxE9F
+         QNwS1I2CmA7dtT2xPkWBNJFW5Z7qjCZrFXiSoEW/VcRnJQ5vm02RFfBCiaQ+Ywtt9LDz
+         a/9s+wYO/ukPGb9LmpKiCeQGC3M9qDyrcKB1ssOP9GTyc5iKRSNqTsHaCPQjdT+bFKIv
+         coFqMzVjdh6VFmrKeuo3Zke+dkw81/wSAlXZNIp5F5q5GcjJzTkqbz3JsvdLNse3ZrBn
+         bQLA==
+X-Gm-Message-State: ACgBeo036VAbt6z2xSboVnINybZ93v98F9tuCxY/1hjb+B1ppT5u3HBX
+        Wyj8790B09eOQqieCzlp3r0HOazEG0hiYM9rSOA=
+X-Google-Smtp-Source: AA6agR7Wuy9szq8bHjZpsQQxogigYXgKA8UiUmgZN03dfUBr82HV3q1iyIocqv5H4Nb0EiZuwrSHjR6MCBxDmDydC1k=
+X-Received: by 2002:a05:6214:c8f:b0:499:21eb:ba3b with SMTP id
+ r15-20020a0562140c8f00b0049921ebba3bmr10744195qvr.97.1662130441457; Fri, 02
+ Sep 2022 07:54:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220902124354.630826-1-horatiu.vultur@microchip.com>
-In-Reply-To: <20220902124354.630826-1-horatiu.vultur@microchip.com>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeb-003t9e-Iy@rmk-PC.armlinux.org.uk>
+ <CAHp75VcG5E+yTH2hG2CbnArsm+ZJ-sWRMmM-wLks0xUJkwSgcg@mail.gmail.com>
+ <YxHVdjYPlIINZ/Wc@shell.armlinux.org.uk> <CAHp75VeO3gxypRTUc9Subvh+NZ7X4_RR=eFUZpPNwBeWk+_ipg@mail.gmail.com>
+ <YxHp6CNhlQ5Hx1m8@shell.armlinux.org.uk> <CAHp75Vd-hT3Z-TUCG3y872_Y7sPAW2QBGC28S7aimOf3WQHg6A@mail.gmail.com>
+ <YxIXPSZlEBcKYulW@shell.armlinux.org.uk>
+In-Reply-To: <YxIXPSZlEBcKYulW@shell.armlinux.org.uk>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 2 Sep 2022 17:51:14 +0300
-Message-ID: <CAHp75Ve7EkE3q3_nOvT_KLmpmnXzMw179nbOxYEYzUeLY0QRnw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: ocelot: Fix interrupt controller
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Fri, 2 Sep 2022 17:53:25 +0300
+Message-ID: <CAHp75VeTYSn+ODtoH27OB2U+XYVEphonm+QR3Z+NVs-nJ90w9w@mail.gmail.com>
+Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sven Peter <sven@svenpeter.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -67,132 +75,96 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 2, 2022 at 3:40 PM Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
+On Fri, Sep 2, 2022 at 5:46 PM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+> On Fri, Sep 02, 2022 at 04:39:16PM +0300, Andy Shevchenko wrote:
+> > On Fri, Sep 2, 2022 at 2:33 PM Russell King (Oracle)
+> > <linux@armlinux.org.uk> wrote:
+> > > On Fri, Sep 02, 2022 at 01:37:14PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Sep 2, 2022 at 1:05 PM Russell King (Oracle)
+> > > > <linux@armlinux.org.uk> wrote:
+> > > > > On Thu, Sep 01, 2022 at 09:55:23PM +0300, Andy Shevchenko wrote:
+> > > > > > > +static int macsmc_gpio_nr(smc_key key)
+> > > > > > > +{
+> > > > > > > +       int low = hex_to_bin(key & 0xff);
+> > > > > > > +       int high = hex_to_bin((key >> 8) & 0xff);
+> > > > > > > +
+> > > > > > > +       if (low < 0 || high < 0)
+> > > > > > > +               return -1;
+> > > > > > > +
+> > > > > > > +       return low | (high << 4);
+> > > > > > > +}
+> > > > > >
+> > > > > > NIH hex2bin().
+> > > > >
+> > > > > Is using hex2bin really better?
+> > > >
+> > > > Yes.
+> > > >
+> > > > > static int macsmc_gpio_nr(smc_key key)
+> > > > > {
+> > > > >         char k[2];
+> > > > >         u8 result;
+> > > > >         int ret;
+> > > > >
+> > > > >         k[0] = key;
+> > > > >         k[1] = key >> 8;
+> > > > >
+> > > > >         ret = hex2bin(&result, k, 2);
+> > > > >         if (ret < 0)
+> > > > >                 return ret;
+> > > > >
+> > > > >         return result;
+> > > > > }
+> > > > >
+> > > > > This looks to me like it consumes more CPU cycles - because we have to
+> > > > > write each "character" to the stack, then call a function, only to then
+> > > > > call the hex_to_bin() function. One can't just pass "key" into hex2bin
+> > > > > because that will bring with it endian issues.
+> > > >
+> > > > With one detail missed, why do you need all that if you can use
+> > > > byteorder helpers()? What's the stack? Just replace this entire
+> > > > function with the respectful calls to hex2bin().
+> > >
+> > > Sorry, I don't understand what you're suggesting, because it doesn't
+> > > make sense to me. The byteorder helpers do not give a char array, which
+> > > is what hex2bin() wants, so we end up with something like:
+> > >
+> > >         __le16 foo = cpu_to_le16(key);
+> > >         u8 result;
+> > >
+> > >         ret = hex2bin(&result, (char *)&foo, 1);
+> > >         if (ret < 0)
+> > >                 return ret;
+> > >
+> > >         return result;
+> > >
+> > > This to me looks like yucky code, It still results in "foo" having to
+> > > be on the stack, because the out-of-line hex2bin() requires a pointer
+> > > to be passed as the second argument.
+> > >
+> > > Maybe you could provide an example of what you're thinking of, because
+> > > I'm at a loss to understand what you're thinking this should look like.
+> >
+> > So, let's look into the real callers to see, oh wait, it's a single caller!
+> > Why can't you simply do
+> >
+> >          ret = hex2bin(&result, (char *)&cpu_to_le16(key), 1);
+> >          if (ret < 0)
+> >                  return ret;
+> >
+> > in-place there?
 >
-> When an external device generated a level based interrupt then the
-> interrupt controller could miss the interrupt. The reason is that the
-> interrupt controller can detect only link changes.
->
-> In the following example, if there is a PHY that generates an interrupt
-> then the following would be happen. The GPIO detected that the interrupt
+> This is not legal C.
 
-would happen
+I acknowledged this, sorry.
 
-> line changed, and then the 'ocelot_irq_handler' will be called. Here it
-> detects which GPIO line seen the change and for that will call the
-> following:
-> 1. irq_mask
-> 2. phy interrupt routine
-> 3. irq_eoi
-> 4. irq_unmask
->
-> And this works fine for simple cases, but if the PHY generates many
-> interrupts, for example when doing PTP timestamping, then the following
-> could happen. Again the function 'ocelot_irq_handler' will be called
-> and then from here the following could happen:
-> 1. irq_mask
-> 2. phy interrupt routine
-> 3. irq_eoi
-> 4. irq_unmask
->
-> Right before step 3(irq_eoi), the PHY will generate another interrupt.
-> Now the interrupt controller will acknowledge the change in the
-> interrupt line. So we miss the interrupt.
->
-> A solution will be to use 'handle_level_irq' instead of
-> 'handle_fasteoi_irq', because for this will change routine order of
-> handling the interrupt.
-> 1. irq_mask
-> 2. irq_ack
-> 3. phy interrupt routine
-> 4. irq_unmask
->
-> And now if the PHY will generate a new interrupt before irq_unmask, the
-> interrupt controller will detect this because it already acknowledge the
-> change in interrupt line at step 2(irq_ack).
->
-> But this is not the full solution because there is another issue. In
-> case there are 2 PHYs that shared the interrupt line. For example phy1
+> Please can we back up this discussion, and start
+> over with legal C suggestions. Thanks.
 
-share
-
-> generates an interruot, then the following can happen:
-
-interrupt
-
-> 1.irq_mask
-> 2.irq_ack
-> 3.phy0 interrupt routine
-> 4.phy1 interrupt routine
-> 5.irq_unmask
->
-> In case phy0 will generate an interrupt while clearing the interrupt
-> source in phy1, then the interrupt line will be kept down by phy0. So
-> the interrupt controller will not see any changes in the interrupt line.
-> The solution here is to update 'irq_unmask' such that it can detect if
-> the interrupt line is still active or not. And if it is active then call
-> again the procedure to clear the interrupts. But we don't want to do it
-> every time, only if we know that the interrupt controller have not seen
-> already that the interrupt line has changed.
->
-> While at this, add support also for IRQ_TYPE_LEVEL_LOW.
-
-...
-
-> +       /*
-> +        * It is enough to read only one action because the trigger level is the
-> +        * same for all of them.
-> +        */
-
-Hmm... this is interesting. How is the hardware supposed to work if
-the user asks for two contradictory levels for two different IRQs?
-
-...
-
-> +       /*
-> +        * Check if the interrupt controller has seen any changes in the
-> +        * interrupt line
-
-Missed period.
-
-> +        */
-
-...
-
-> +       /*
-> +        * In case the interrupt line is still active and the interrupt
-> +        * controller has not seen any changes in the interrupt line, then it
-> +        * means that there happen another interrupt while the line was active.
-> +        * So we missed that one, so we need to kick again the interrupt handler
-> +        */
-
-Ditto.
-
-...
-
-> +               struct ocelot_irq_work *work = kmalloc(sizeof(*work), GFP_ATOMIC);
-
-It's more visible what's going on if you split this to definition and
-assignment and move assignment closer to its first user.
-
-> +               if (!work)
-> +                       return;
-
-...
-
->         type &= IRQ_TYPE_SENSE_MASK;
-
-This seems redundant, see below.
-
-
-> -       if (!(type & (IRQ_TYPE_EDGE_BOTH | IRQ_TYPE_LEVEL_HIGH)))
-> +       if (type == IRQ_TYPE_NONE)
->                 return -EINVAL;
-
-Is it ever possible? IIRC the IRQ chip code, the set->type won't be
-called at all in such a case. Also type is already limited to the
-sense mask, no?
+Suggestion was given as well, let's create a helper used by apple
+stuff and later on we will consider the separate submission for the
+(new) specifier. Would it work for you?
 
 -- 
 With Best Regards,
