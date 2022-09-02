@@ -2,101 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 624855AAE05
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 14:03:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0664F5AB1EF
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 15:45:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235485AbiIBMA5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 08:00:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39872 "EHLO
+        id S237964AbiIBNpw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 09:45:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235614AbiIBMAw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 08:00:52 -0400
-Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBF932EE9;
-        Fri,  2 Sep 2022 05:00:48 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 05520580E63;
-        Fri,  2 Sep 2022 08:00:45 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Fri, 02 Sep 2022 08:00:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm1; t=1662120045; x=1662123645; bh=ZOo52ojNLD
-        +QQW1owuGlJGIJHO9inLm8ClF8VUiGMYc=; b=Q5LypI9JctwwOK78feEceNVi9z
-        mxfNcLR/Jr4MB9NTHeYJiHLefznX6HqRh6CiZvo1s/eRDzJ670NSZN2e2i+Fc7t/
-        ZdFzJtd0Ct06j6/lCrkdTQuc7BEdm0b726E16z+A38p/+rOnXKPeMSAnC7pozGyS
-        6LHwx11Ik1NmqfJlvPhWnbaw5ebEDvsbNdMkZN8g4WOrGEsqQWCRtu6Nc+KKLiho
-        MkqZpq7U0aQ2IjWx4UFJNZkc169bO+S4kLlj7u9QlxTpC3Q48s5HY7A4wJHVAWsN
-        uviiLlU190bmFHfBqdbNuWPA9Bl/oorH0qcnJRzDoDZTEOzV99ax1d6g+CXQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        i56a14606.fm1; t=1662120045; x=1662123645; bh=ZOo52ojNLD+QQW1owu
-        GlJGIJHO9inLm8ClF8VUiGMYc=; b=RiVPKGcUZp5HCdJHIyJkhIwH94i5ibwBiY
-        oIFBEtvkT5pEFqhCw8suvvo7zv+tFQylSuIgMGfzqvRjfMsr09J8LJ25TAG4A1Og
-        ZvgL5Yawofqm5gp1rqdKtCSfr5Y6feD3oZ+Xcs2wJcvV9YKY7FblBQlDZYdj18F+
-        ieBUJRAGKot6vy/iMUWaAxvCiXfr7dD2j3nweX3d+fo89N6tfjQufBXjRjzYiNr0
-        0swaOd8oblHwLSMK5LzNxEFrmHggOx0jKAYA/QZ0/nnsRPklrgz1CDkNYwUqhZ6h
-        D8bKPP++xX+JoFHh4uBKaHJJsbmr46Yeuoj//lmBLDDq0srXLCQQ==
-X-ME-Sender: <xms:avARY_2heRUfPqzyIL4IWlfH7Os1mu-7k3xmipOo1apEBOFrm-xOow>
-    <xme:avARY-FihW90435Acqlsl7wZZKrtjU8wiT0q7xaxcnUAkZrAyt6HpLLPkSJC6ooLC
-    mqW6FTXNKxnVPxQyG4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeltddggeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:avARY_6XbY9hs3wScqe1qqj7Xf1BthXQwtKpnCrpx_-P-A-QUs9BXA>
-    <xmx:avARY01XQy-i_4phqIgYyyKTukNtLkEINc--1WuLQR9mcTJtQQDpKA>
-    <xmx:avARYyEeWx3R73AJIrsgUSWMqyoneyLQ7lQOaM1kr4Pu7SL78CqP4g>
-    <xmx:bPARYyKt9OEaSeHAoGO_VplbOvjcsP71GId8kxYOMELNnqTZReQByw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 83F4AB60083; Fri,  2 Sep 2022 08:00:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
-Mime-Version: 1.0
-Message-Id: <254b7b9d-72b7-4b3a-821a-51a2745ebac5@www.fastmail.com>
-In-Reply-To: <CAHp75VfF78rWpC6+i2Hu6-PMULFeFMbqXhBVRkx5aFGFTU3U4A@mail.gmail.com>
-References: <cover.1661789204.git.christophe.leroy@csgroup.eu>
- <abb46a587b76d379ad32d53817d837d8a5fea8bd.1661789204.git.christophe.leroy@csgroup.eu>
- <CAHp75VcngRihpfUkeKs-g+TbPnpOsZ+-Q37zDVoWp8p_2GbSvQ@mail.gmail.com>
- <18cda49e-84f0-a806-566a-6e77705e98b3@csgroup.eu>
- <1d548a19-feec-42b9-944d-890d6dde2fb8@www.fastmail.com>
- <CAHp75VfF78rWpC6+i2Hu6-PMULFeFMbqXhBVRkx5aFGFTU3U4A@mail.gmail.com>
-Date:   Fri, 02 Sep 2022 14:00:21 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>,
-        =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Cc:     "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        Keerthy <j-keerthy@ti.com>,
-        "Russell King" <linux@armlinux.org.uk>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        with ESMTP id S236986AbiIBNpS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 09:45:18 -0400
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 566C612D515;
+        Fri,  2 Sep 2022 06:21:19 -0700 (PDT)
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+        by localhost (Postfix) with ESMTP id 4MJyHb0wlzz9slp;
+        Fri,  2 Sep 2022 14:42:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id t6fBFsb4UbyX; Fri,  2 Sep 2022 14:42:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4MJyHS0zPBz9sls;
+        Fri,  2 Sep 2022 14:42:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0C99A8B78C;
+        Fri,  2 Sep 2022 14:42:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id TIqipSHIuhEZ; Fri,  2 Sep 2022 14:42:43 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.232.39])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CDF5D8B78D;
+        Fri,  2 Sep 2022 14:42:42 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
+        by PO20335.IDSI0.si.c-s.fr (8.17.1/8.16.1) with ESMTPS id 282CgYdb2141515
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Fri, 2 Sep 2022 14:42:34 +0200
+Received: (from chleroy@localhost)
+        by PO20335.IDSI0.si.c-s.fr (8.17.1/8.17.1/Submit) id 282CgY0K2141514;
+        Fri, 2 Sep 2022 14:42:34 +0200
+X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "Linux Documentation List" <linux-doc@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 4/8] gpiolib: Get rid of ARCH_NR_GPIOS
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Davide Ciminaghi <ciminaghi@gnudd.com>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v2 5/9] gpiolib: Get rid of ARCH_NR_GPIOS
+Date:   Fri,  2 Sep 2022 14:42:05 +0200
+Message-Id: <97011204619556ecb3d8c9aaff2b58c28790fe8a.1662116601.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <cover.1662116601.git.christophe.leroy@csgroup.eu>
+References: <cover.1662116601.git.christophe.leroy@csgroup.eu>
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1662122527; l=5608; s=20211009; h=from:subject:message-id; bh=627tvaA946/n4BKkAs3Ap6n2Spr0bzlnkVDrEw1Weh4=; b=oK8L6x4YO0/Tfv1rrveqxWyPzUigpLkkcs3kpG/V0GCD1hH9rQwWg26uIXH5pm4hEOPy17HUWSCs RlrtLGZNAGwtNu+GH+gFces0cecHaH5Rk0+Fg/FbRiFpz6clOxDG
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -105,60 +79,161 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 2, 2022, at 12:52 PM, Andy Shevchenko wrote:
-> On Wed, Aug 31, 2022 at 11:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> ...
->
->> drivers/gpio/gpio-adp5520.c:    gc->base = pdata->gpio_start; // unused
->> drivers/gpio/gpio-adp5588.c:            gc->base = pdata->gpio_start; // unused
->> drivers/input/keyboard/adp5588-keys.c:  kpad->gc.base = gpio_data->gpio_start; // unused
->> drivers/input/keyboard/adp5589-keys.c:  kpad->gc.base = gpio_data->gpio_start; // unused
->
-> I believe we should convert them to -1.
+Since commit 14e85c0e69d5 ("gpio: remove gpio_descs global array")
+there is no limitation on the number of GPIOs that can be allocated
+in the system since the allocation is fully dynamic.
 
-This is probably something we should do separately, but a lot of the
-drivers currently don't have support for probing from DT or any other
-firmware interface but rely on platform_data definitions from a
-board file that was never part of the upstream kernel.
+ARCH_NR_GPIOS is today only used in order to provide downwards
+gpiobase allocation from that value, while static allocation is
+performed upwards from 0. However that has the disadvantage of
+limiting the number of GPIOs that can be registered in the system.
 
-We are going to remove a lot more board files early next year,
-and I was hoping to follow up with a treewide cleanup of such
-drivers and remove a lot of them entirely.
+To overcome this limitation without requiring each and every
+platform to provide its 'best-guess' maximum number, rework the
+allocation to allocate upwards, allowing approx 2 millions of
+GPIOs.
 
->> drivers/gpio/gpio-dwapb.c:      port->gc.base = pp->gpio_base; // from DT, deprecated
->
-> From board files, since some platforms expect a fixed number for it.
+In order to still allow static allocation for legacy drivers, define
+GPIO_DYNAMIC_BASE with the value 512 as the start for dynamic
+allocation. The 512 value is chosen because it is the end of
+the current default range so all current static allocations are
+expected to be below that value. Of course that's just a rough
+estimate based on the default value, but assuming static
+allocations come first, even if there are more static allocations
+it should fit under the 512 value.
 
->> drivers/gpio/gpio-pca953x.c:    gc->base = chip->gpio_start; // ???? used a lot
->
-> To answer this one needs to go via all board files (most of them ARM
-> 32-bit based) and look, but it means almost the same case as per Intel
-> above: 512-ngpios.
+In the future, it is expected that all static allocations go away
+and then dynamic allocation will be patched to start at 0.
 
-Right, I went through all the board files the other drivers,
-this one just happens to be used more than the others:
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+v2: Enhanced commit description and change from 256 to 512.
+---
+ arch/arm/include/asm/gpio.h |  1 -
+ drivers/gpio/gpiolib.c      | 10 +++----
+ include/asm-generic/gpio.h  | 55 ++++++++++++++-----------------------
+ 3 files changed, 26 insertions(+), 40 deletions(-)
 
-arch/arm/mach-davinci/board-da850-evm.c:#include <linux/platform_data/pca953x.h>
-arch/arm/mach-ep93xx/vision_ep9307.c:#include <linux/platform_data/pca953x.h>
-arch/arm/mach-mmp/ttc_dkb.c:#include <linux/platform_data/pca953x.h>
-arch/arm/mach-pxa/cm-x300.c:#include <linux/platform_data/pca953x.h>
-arch/arm/mach-pxa/spitz.c:#include <linux/platform_data/pca953x.h>
-arch/arm/mach-pxa/zeus.c:#include <linux/platform_data/pca953x.h>
-arch/arm/mach-pxa/zylonite_pxa300.c:#include <linux/platform_data/pca953x.h>
-arch/arm/mach-s3c/mach-crag6410.c:#include <linux/platform_data/pca953x.h>
+diff --git a/arch/arm/include/asm/gpio.h b/arch/arm/include/asm/gpio.h
+index f3bb8a2bf788..4ebbb58f06ea 100644
+--- a/arch/arm/include/asm/gpio.h
++++ b/arch/arm/include/asm/gpio.h
+@@ -2,7 +2,6 @@
+ #ifndef _ARCH_ARM_GPIO_H
+ #define _ARCH_ARM_GPIO_H
+ 
+-/* Note: this may rely upon the value of ARCH_NR_GPIOS set in mach/gpio.h */
+ #include <asm-generic/gpio.h>
+ 
+ /* The trivial gpiolib dispatchers */
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 4e2fcb7b0a01..1846f24971e3 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -183,14 +183,14 @@ EXPORT_SYMBOL_GPL(gpiod_to_chip);
+ static int gpiochip_find_base(int ngpio)
+ {
+ 	struct gpio_device *gdev;
+-	int base = ARCH_NR_GPIOS - ngpio;
++	int base = GPIO_DYNAMIC_BASE;
+ 
+-	list_for_each_entry_reverse(gdev, &gpio_devices, list) {
++	list_for_each_entry(gdev, &gpio_devices, list) {
+ 		/* found a free space? */
+-		if (gdev->base + gdev->ngpio <= base)
++		if (gdev->base >= base + ngpio)
+ 			break;
+-		/* nope, check the space right before the chip */
+-		base = gdev->base - ngpio;
++		/* nope, check the space right after the chip */
++		base = gdev->base + gdev->ngpio;
+ 	}
+ 
+ 	if (gpio_is_valid(base)) {
+diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+index aea9aee1f3e9..a7752cf152ce 100644
+--- a/include/asm-generic/gpio.h
++++ b/include/asm-generic/gpio.h
+@@ -11,40 +11,18 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/gpio/consumer.h>
+ 
+-/* Platforms may implement their GPIO interface with library code,
++/*
++ * Platforms may implement their GPIO interface with library code,
+  * at a small performance cost for non-inlined operations and some
+  * extra memory (for code and for per-GPIO table entries).
+- *
+- * While the GPIO programming interface defines valid GPIO numbers
+- * to be in the range 0..MAX_INT, this library restricts them to the
+- * smaller range 0..ARCH_NR_GPIOS-1.
+- *
+- * ARCH_NR_GPIOS is somewhat arbitrary; it usually reflects the sum of
+- * builtin/SoC GPIOs plus a number of GPIOs on expanders; the latter is
+- * actually an estimate of a board-specific value.
+  */
+ 
+-#ifndef ARCH_NR_GPIOS
+-#if defined(CONFIG_ARCH_NR_GPIO) && CONFIG_ARCH_NR_GPIO > 0
+-#define ARCH_NR_GPIOS CONFIG_ARCH_NR_GPIO
+-#else
+-#define ARCH_NR_GPIOS		512
+-#endif
+-#endif
+-
+ /*
+- * "valid" GPIO numbers are nonnegative and may be passed to
+- * setup routines like gpio_request().  only some valid numbers
+- * can successfully be requested and used.
+- *
+- * Invalid GPIO numbers are useful for indicating no-such-GPIO in
+- * platform data and other tables.
++ * At the end we want all GPIOs to be dynamically allocated from 0.
++ * However, some legacy drivers still perform fixed allocation.
++ * Until they are all fixed, leave 0-512 space for them.
+  */
+-
+-static inline bool gpio_is_valid(int number)
+-{
+-	return number >= 0 && number < ARCH_NR_GPIOS;
+-}
++#define GPIO_DYNAMIC_BASE	512
+ 
+ struct device;
+ struct gpio;
+@@ -140,12 +118,6 @@ static inline void gpio_unexport(unsigned gpio)
+ 
+ #include <linux/kernel.h>
+ 
+-static inline bool gpio_is_valid(int number)
+-{
+-	/* only non-negative numbers are valid */
+-	return number >= 0;
+-}
+-
+ /* platforms that don't directly support access to GPIOs through I2C, SPI,
+  * or other blocking infrastructure can use these wrappers.
+  */
+@@ -169,4 +141,19 @@ static inline void gpio_set_value_cansleep(unsigned gpio, int value)
+ 
+ #endif /* !CONFIG_GPIOLIB */
+ 
++/*
++ * "valid" GPIO numbers are nonnegative and may be passed to
++ * setup routines like gpio_request().  only some valid numbers
++ * can successfully be requested and used.
++ *
++ * Invalid GPIO numbers are useful for indicating no-such-GPIO in
++ * platform data and other tables.
++ */
++
++static inline bool gpio_is_valid(int number)
++{
++	/* only non-negative numbers are valid */
++	return number >= 0;
++}
++
+ #endif /* _ASM_GENERIC_GPIO_H */
+-- 
+2.37.1
 
-The only ones that have known users though are crag6410
-and vision_ep9307, the other ones will be removed.
-
-Vision-ep9307 has 128 GPIOs total, crag6410 is complicated because it
-many different GPIO controllers in various combinations.
-
->> drivers/pinctrl/renesas/gpio.c: gc->base = pfc->nr_gpio_pins; // ??? don't understand
->
-> I think, w/o looking into the code, that this just guarantees the
-> continuous numbering for all banks (chips) on the platform.
-
-Yes, that seems to be the idea most of the pinctrl drivers.
-
-      Arnd
