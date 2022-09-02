@@ -2,41 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4DA45AB9DA
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 23:10:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AA6A5ABA62
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 23:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230365AbiIBVKF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 17:10:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49510 "EHLO
+        id S229673AbiIBVzd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 17:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbiIBVKC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 17:10:02 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5024F50720
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 14:09:57 -0700 (PDT)
-Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1oUDvE-0006Uo-0g; Fri, 02 Sep 2022 23:09:52 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jianqun Xu <jay.xu@rock-chips.com>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v1 1/3] gpio: rockchip: make gpio work without cru module
-Date:   Fri, 02 Sep 2022 23:09:51 +0200
-Message-ID: <4679451.ZaRXLXkqSa@diego>
-In-Reply-To: <CAMdYzYrJWnkYneEuJ+dA0EU1QiTkBOkGz1+zn=H5rA-qfS88+Q@mail.gmail.com>
-References: <20220901012944.2634398-1-jay.xu@rock-chips.com> <20220901012944.2634398-3-jay.xu@rock-chips.com> <CAMdYzYrJWnkYneEuJ+dA0EU1QiTkBOkGz1+zn=H5rA-qfS88+Q@mail.gmail.com>
+        with ESMTP id S229566AbiIBVzc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 17:55:32 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C4DA199
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 14:55:31 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id h5so6376948ejb.3
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 14:55:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=ecq3QiIvTsmZshGckaqCIPLzVvmOLA8FmTGWudNQTA0=;
+        b=PedqGHFigr2YGOWASaF6IK1QRNXM7ZYMw1/SL2mOUzwsHaM9qTOtAkG489soN6gK6/
+         Tf/Ic5ws5v2v6+gLHmHcgaQuY8Q9PDG/S4pPvo3SV/FbKtHQqEfwvgYGo61s/f3B38XN
+         wXkXyjDFjYUwOKxAbkTmwn7yvIQPOBtWXP2YDocVnRzU+8GFEAgxiOUEz0ha+Lk9tPZo
+         XDX8msVJH+kCxqH9XeiFVt8ub33KfaNL9zo3wOWq4lTe3dp78qBdfosHyXniIq889kie
+         ZGPtD+lJEDDuhUcvcHu0C/47TiTTUTU7bCkDYTvwbKToTd64y0msrJmshFrTt1yWP6P1
+         6/Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=ecq3QiIvTsmZshGckaqCIPLzVvmOLA8FmTGWudNQTA0=;
+        b=ddltw/a+yxZJZP+SwwQ/BXHiLGxsLZ/mJlvqJ+nBEoJzVHhdiZAGo7PGM0pf/pT4YX
+         okJqaEOVvYSn9aOyoJhDr9uXtmll1WEos4gpJQOibr5DTQHIEZdPIjlccfKYDQkXILvv
+         IqATnz/bBigLjOt2wSuO3u5OuOOaOx/fRy+MKFVSQOyYsBCWBhsnAnt+HY6nBNgIldlX
+         5XtyVw7LyhS/tGZqWB6YEPslQOP6086O18KjJJ/UnBmuRdyvJMaQAi5pVzmT5aY3iuTd
+         zX16QCB4+thbM3NsZ7GaDNKePWsjfVUExiwN2cT68KMPUwQFIjj8JDjRoU5u9UaEALOt
+         qEnw==
+X-Gm-Message-State: ACgBeo2Wg5aGBslCa5ZY2GEpwyOlrS5mTXHRnl0fb38a3AH/8+TgHKof
+        3eJlCAsDdr7FLQXUUufJt+BM4gVdmgprbCqxyJODfB1oAYOBqg==
+X-Google-Smtp-Source: AA6agR45QkeSoBEZmUDyxCBa3vhjRQKSibpzgN/01XesHVGPtsB0vwRwtliEYYV0gW5NYkDniLcQKr/tSsNCysz1Dik=
+X-Received: by 2002:a17:907:7242:b0:741:770b:dfc6 with SMTP id
+ ds2-20020a170907724200b00741770bdfc6mr19731330ejc.203.1662155729809; Fri, 02
+ Sep 2022 14:55:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
+References: <20220418141416.27529-1-asmaa@nvidia.com> <CH2PR12MB3895A1FB2977B725ED92AB57D7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdY1uK=73zpEM5zUyXacm5xaUUFYkuKMxi_q6vwmOPy6tw@mail.gmail.com>
+ <CH2PR12MB389560A1873030472A7A371DD7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdZhW9XK3opXLLzdMiVLVkGQyJCf7RLZtRQLsmzv-aqwbA@mail.gmail.com>
+ <CH2PR12MB38953FF57D91FA75AB9CB102D7CB9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdbAhMa2CXvQra3E13n8WfiBxyHNqzEp4dW3qo5upr_=gw@mail.gmail.com>
+ <CH2PR12MB38958CD365876A2106712C3CD7CF9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdZp9hx2SHxsmjBm2oj7m3UT-4S+MKw5qqNME0PLjPNV2A@mail.gmail.com> <CH2PR12MB3895B4E89237E6D6F635F252D77A9@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB3895B4E89237E6D6F635F252D77A9@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 2 Sep 2022 23:55:17 +0200
+Message-ID: <CACRpkdaHuQhzqqQbayGaRqYAcnyv2rmocX7YhcR_qj0HRVHkgQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO controller
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -44,94 +74,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Freitag, 2. September 2022, 20:38:27 CEST schrieb Peter Geis:
-> On Wed, Aug 31, 2022 at 9:30 PM Jianqun Xu <jay.xu@rock-chips.com> wrote:
-> >
-> > In some case the system may has no builtin cru module, the gpio driver
-> > will fail to get periph clock and debounce clock.
-> >
-> > On rockchip SoCs, the pclk and dbg clk are default to be enabled and
-> > ungated, the gpio possible to work without cru module.
-> >
-> > This patch makes gpio work fine without cru module.
-> 
-> What happens if the cru probes later and these clocks become available
-> but aren't claimed so clk_disable_unused shuts them down?
+On Fri, Sep 2, 2022 at 5:55 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
 
-Also the clock controller for the soc is such a basic component, who
-in their right mind would build a kernel without it and expect anything
-to work.
+> During testing, I use the sysfs to change the gpio value as follows:
+> Cd /sys/class/gpio
+> echo 480 > export
+> When I do the export, I see that gpiochip_generic_request is being called which calls .gpio_request_enable = mlxbf_gpio_request_enable.
 
-My guess is that is simply hacking around that Android thingy with their
-common kernel but vendors being allowed to move all the "special" code
-to modules. We had this untested cru-module in mainline for a while
-before people found out that the module part seemingly never was
-tested ;-) .
+Yes but don't use the deprecated sysfs to test GPIO, use libgpiod
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
 
-The gpio driver is of course dependent on its clock supply, so hacking
-around that seems really like a very bad idea.
+> Is this how it also works in other driver? Or am I missing something?
 
+The gpio_chip usually works as a front end for pin control.
 
-Heiko
+> I wanted to disallow muxing from user space.
 
+If you ask for a GPIO then it will be muxed in if you implement
+.gpio_request_enable().
 
+If you want to make it impossible to use certain gpios alter
+.valid_mask.
 
-> 
-> >
-> > Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> > ---
-> >  drivers/gpio/gpio-rockchip.c | 14 +++++++++-----
-> >  1 file changed, 9 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> > index a4c4e4584f5b..1da0324445cc 100644
-> > --- a/drivers/gpio/gpio-rockchip.c
-> > +++ b/drivers/gpio/gpio-rockchip.c
-> > @@ -195,6 +195,9 @@ static int rockchip_gpio_set_debounce(struct gpio_chip *gc,
-> >         unsigned int cur_div_reg;
-> >         u64 div;
-> >
-> > +       if (!bank->db_clk)
-> > +               return -ENOENT;
-> > +
-> >         if (bank->gpio_type == GPIO_TYPE_V2 && !IS_ERR(bank->db_clk)) {
-> >                 div_debounce_support = true;
-> >                 freq = clk_get_rate(bank->db_clk);
-> > @@ -654,8 +657,10 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
-> >                 return -EINVAL;
-> >
-> >         bank->clk = of_clk_get(bank->of_node, 0);
-> > -       if (IS_ERR(bank->clk))
-> > -               return PTR_ERR(bank->clk);
-> > +       if (IS_ERR(bank->clk)) {
-> > +               bank->clk = NULL;
-> > +               dev_warn(bank->dev, "works without clk pm\n");
-> > +       }
-> >
-> >         clk_prepare_enable(bank->clk);
-> >         id = readl(bank->reg_base + gpio_regs_v2.version_id);
-> > @@ -666,9 +671,8 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
-> >                 bank->gpio_type = GPIO_TYPE_V2;
-> >                 bank->db_clk = of_clk_get(bank->of_node, 1);
-> >                 if (IS_ERR(bank->db_clk)) {
-> > -                       dev_err(bank->dev, "cannot find debounce clk\n");
-> > -                       clk_disable_unprepare(bank->clk);
-> > -                       return -EINVAL;
-> > +                       bank->db_clk = NULL;
-> > +                       dev_warn(bank->dev, "works without debounce clk pm\n");
-> >                 }
-> >         } else {
-> >                 bank->gpio_regs = &gpio_regs_v1;
-> > --
-> > 2.25.1
-> >
-> >
-> > _______________________________________________
-> > Linux-rockchip mailing list
-> > Linux-rockchip@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+If you don't want people to use the sysfs ABI (which by the
+way requires you to first select the "CONFIG_EXPERT"
+option) then do not compile it into the kernel. It is a big
+risk to use it in any case, so just don't.
 
+If you use the character device (which is enabled by default),
+you can set permissions on /dev/gpiochipN such that only
+privileged users can access it, just like you protect any
+other block/character device.
 
+> I would like that to be controlled by the ACPI table only.
 
+I don't know if it is possible to restrict GPIOs to just be
+used from ACPI.
 
+> For example, use devm_gpio_request from some other driver if needed.
+
+If you only want other kernel consumers to use GPIOs,
+the disable the sysfs ABI, and also disable the character
+device, then only the kernel can use GPIOs.
+
+Yours,
+Linus Walleij
