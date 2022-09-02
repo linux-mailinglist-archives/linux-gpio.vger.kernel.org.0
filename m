@@ -2,190 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE58E5AADC2
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 13:36:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10E365AADCD
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 13:40:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235376AbiIBLeX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 07:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54774 "EHLO
+        id S232815AbiIBLjz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 07:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232239AbiIBLeC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 07:34:02 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D8BD3E44
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 04:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Hq0LX13LwQpV6w1/cAA1LP3HNXbiwzvAT6ANsep3nts=; b=CJbiH0xvYlcm2D83VOgLMaNtJH
-        X/OfH+1YthtASPbyovJkUAw+MF6bzRW5I259qQxqFDn5pEYQMZdAxdLJtxoXziCbauLDEZFhISoYd
-        G+DyCIvJSD6UQ2AbEDUqhZyTSV67QjxRwnPmeahLCdMUfImC+c1HvjY55GW9TnoLyk96ZMkLKz7Lw
-        jUfu8/voWV761fziifwu7f8haQI9Ie9t5gExvQj3ddcyOfAK1F9JWPfu6hXqu1pPVFyS9YSPySIo0
-        +EgHUsuPGf9jzvUAiVoIwWlPMz1RauG5s7M8CoOTuNZtTiznycHB194Yq3p2yFxEQOcs4S1/nHku8
-        Gqrpn3jw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34062)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1oU4uy-0007OL-3s; Fri, 02 Sep 2022 12:33:00 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1oU4uv-0004Oa-0H; Fri, 02 Sep 2022 12:32:57 +0100
-Date:   Fri, 2 Sep 2022 12:32:56 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+        with ESMTP id S233262AbiIBLju (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 07:39:50 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C218D61;
+        Fri,  2 Sep 2022 04:39:48 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id n17so1960601wrm.4;
+        Fri, 02 Sep 2022 04:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date;
+        bh=BbNW3nWA9xoISgDnreRt3yDUZfE36fLGkaifLKvs7p8=;
+        b=TbB4Z1VjM/ogBtCUQS5J0Nde2hFGUx1Tx5pmdt/iUX4DLsQ7UQk0kpszVCw3Wwpf1v
+         9v/7yFR3H7HR7aUf13/9M2vKdVbNjPrMYqhEcS84Cq+2vgxNzUcPnsho1jRNRX0lf90s
+         Fbitx8g0js2Yipnba5uKZrknZBXIouv0vDp0SjQ5W6cLTEki90dIUQPaa32nWqHhjF13
+         jJTwAH2tcGEAeXDP8sxK5MoNDzarrGXbGN5cvnd+1ZpRs5XRZiNje5YchVOuZxt6t1Cg
+         BDuFRAvRIw5WUrjjtwGN9J4/GAcNCjjJNOYRQIsMtUxj3I7+ypq+e0moK5JtxJSx4YUn
+         mxrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=BbNW3nWA9xoISgDnreRt3yDUZfE36fLGkaifLKvs7p8=;
+        b=L0jqHrXACEZ60NuxRsa/sK3KgVGWlxX7i0KqdGViaR9q7OrMoxnw+tRAgTVyuUu0lw
+         CjZzWhwt+Ym7kVJ6ibxZIg2VxJ0KgCPpFeUrTKCQyQ0jcfdTRGJlFeq4Tzt8m9J5Kqz5
+         PWuGRUJaRFm0R5TIrii36H3Iafv5jsz65HWD8o39+zXfzVhfRRlSJrHJv8BSmoku3zjq
+         cRQoK9L39YxYzzY6UjSuSXaLXDS3rrpkabU6U/WUP32rM/Qq6IaJaSuG5kJzwvJcmyQX
+         0KSdQ0yW+9DN4P/CvRgfmwX6T9RWsLJiz0vz6HbcQwQVRJFfW9rFt/fzGbPQ0zZx4LRT
+         iIXA==
+X-Gm-Message-State: ACgBeo1VxrDVAz8NVrVTIOEnImaareyLRpGC3RRA7h2wSwoxD1lBS9DT
+        OHxwBxFf1jzInmBNBDJcp94=
+X-Google-Smtp-Source: AA6agR718If+mhK78grxGtOAsVSpfjTIku97uK9bbTkkxnoJ2hSLV74xT7AT4TmJ6nGzKObdg3FntQ==
+X-Received: by 2002:a5d:4b8c:0:b0:226:d4a9:d1b1 with SMTP id b12-20020a5d4b8c000000b00226d4a9d1b1mr15718741wrt.674.1662118786755;
+        Fri, 02 Sep 2022 04:39:46 -0700 (PDT)
+Received: from fedora.fritz.box ([2001:a61:2ade:3401:dc2b:c0fc:8a52:49ef])
+        by smtp.gmail.com with ESMTPSA id ba10-20020a0560001c0a00b00226fa6cf1d3sm1302973wrb.7.2022.09.02.04.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Sep 2022 04:39:45 -0700 (PDT)
+Message-ID: <a3de0d490ab28ebab45d4e7c4d4673d1d622335e.camel@gmail.com>
+Subject: Re: [PATCH v1 4/8] gpiolib: Get rid of ARCH_NR_GPIOS
+From:   Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
-Message-ID: <YxHp6CNhlQ5Hx1m8@shell.armlinux.org.uk>
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
- <E1oTkeb-003t9e-Iy@rmk-PC.armlinux.org.uk>
- <CAHp75VcG5E+yTH2hG2CbnArsm+ZJ-sWRMmM-wLks0xUJkwSgcg@mail.gmail.com>
- <YxHVdjYPlIINZ/Wc@shell.armlinux.org.uk>
- <CAHp75VeO3gxypRTUc9Subvh+NZ7X4_RR=eFUZpPNwBeWk+_ipg@mail.gmail.com>
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Date:   Fri, 02 Sep 2022 13:39:43 +0200
+In-Reply-To: <CAHp75VfF78rWpC6+i2Hu6-PMULFeFMbqXhBVRkx5aFGFTU3U4A@mail.gmail.com>
+References: <cover.1661789204.git.christophe.leroy@csgroup.eu>
+         <abb46a587b76d379ad32d53817d837d8a5fea8bd.1661789204.git.christophe.leroy@csgroup.eu>
+         <CAHp75VcngRihpfUkeKs-g+TbPnpOsZ+-Q37zDVoWp8p_2GbSvQ@mail.gmail.com>
+         <18cda49e-84f0-a806-566a-6e77705e98b3@csgroup.eu>
+         <1d548a19-feec-42b9-944d-890d6dde2fb8@www.fastmail.com>
+         <CAHp75VfF78rWpC6+i2Hu6-PMULFeFMbqXhBVRkx5aFGFTU3U4A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeO3gxypRTUc9Subvh+NZ7X4_RR=eFUZpPNwBeWk+_ipg@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 02, 2022 at 01:37:14PM +0300, Andy Shevchenko wrote:
-> On Fri, Sep 2, 2022 at 1:05 PM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> > On Thu, Sep 01, 2022 at 09:55:23PM +0300, Andy Shevchenko wrote:
-> > > > +static int macsmc_gpio_nr(smc_key key)
-> > > > +{
-> > > > +       int low = hex_to_bin(key & 0xff);
-> > > > +       int high = hex_to_bin((key >> 8) & 0xff);
-> > > > +
-> > > > +       if (low < 0 || high < 0)
-> > > > +               return -1;
-> > > > +
-> > > > +       return low | (high << 4);
-> > > > +}
-> > >
-> > > NIH hex2bin().
-> >
-> > Is using hex2bin really better?
+On Fri, 2022-09-02 at 13:52 +0300, Andy Shevchenko wrote:
+> (Nuno, one point below for you)
 > 
-> Yes.
+> On Wed, Aug 31, 2022 at 11:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
 > 
-> > static int macsmc_gpio_nr(smc_key key)
-> > {
-> >         char k[2];
-> >         u8 result;
-> >         int ret;
-> >
-> >         k[0] = key;
-> >         k[1] = key >> 8;
-> >
-> >         ret = hex2bin(&result, k, 2);
-> >         if (ret < 0)
-> >                 return ret;
-> >
-> >         return result;
-> > }
-> >
-> > This looks to me like it consumes more CPU cycles - because we have to
-> > write each "character" to the stack, then call a function, only to then
-> > call the hex_to_bin() function. One can't just pass "key" into hex2bin
-> > because that will bring with it endian issues.
+> ...
 > 
-> With one detail missed, why do you need all that if you can use
-> byteorder helpers()? What's the stack? Just replace this entire
-> function with the respectful calls to hex2bin().
-
-Sorry, I don't understand what you're suggesting, because it doesn't
-make sense to me. The byteorder helpers do not give a char array, which
-is what hex2bin() wants, so we end up with something like:
-
-	__le16 foo = cpu_to_le16(key);
-	u8 result;
-
-	ret = hex2bin(&result, (char *)&foo, 1);
-	if (ret < 0)
-		return ret;
-
-	return result;
-
-This to me looks like yucky code, It still results in "foo" having to
-be on the stack, because the out-of-line hex2bin() requires a pointer
-to be passed as the second argument.
-
-Maybe you could provide an example of what you're thinking of, because
-I'm at a loss to understand what you're thinking this should look like.
-
-> > > > +       /* First try reading the explicit pin mode register */
-> > > > +       ret = apple_smc_rw_u32(smcgp->smc, key, CMD_PINMODE, &val);
-> > > > +       if (!ret)
-> > > > +               return (val & MODE_OUTPUT) ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
-> > > > +
-> > > > +       /*
-> > > > +        * Less common IRQ configs cause CMD_PINMODE to fail, and so does open drain mode.
-> > > > +        * Fall back to reading IRQ mode, which will only succeed for inputs.
-> > > > +        */
-> > > > +       ret = apple_smc_rw_u32(smcgp->smc, key, CMD_IRQ_MODE, &val);
-> > > > +       return (!ret) ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-> > >
-> > > What is the meaning of val in this case?
-> >
-> > Reading the comment, it seems that "val" is irrelevant. I'm not sure that
-> > needs explaining given there's a comment that's already explaining what
-> > is going on here.
+> > drivers/gpio/gpio-adp5520.c:    gc->base = pdata->gpio_start; //
+> > unused
+> > drivers/gpio/gpio-adp5588.c:            gc->base = pdata-
+> > >gpio_start; // unused
+> > drivers/input/keyboard/adp5588-keys.c:  kpad->gc.base = gpio_data-
+> > >gpio_start; // unused
+> > drivers/input/keyboard/adp5589-keys.c:  kpad->gc.base = gpio_data-
+> > >gpio_start; // unused
 > 
-> OK.
-> Just convert then (!ret) --> ret.
-
-Already done, thanks.
-
-> > > > +       pdev->dev.of_node = of_get_child_by_name(pdev->dev.parent->of_node, "gpio");
-> > >
-> > > Can we use fwnode APIs instead?
-> > > Or do you really need this?
-> >
-> > Ouch, that's not nice. I can change this to:
+> I believe we should convert them to -1.
 > 
-> (Some background on why my eye caught this. We as GPIO SIG in the
-> kernel want to move the library to be fwnode one without looking into
-> the underneath property provider. This kind of lines makes driver look
-> a bit ugly from that perspective)
 
-I agree, I'd prefer it not to be there.
+Well, the adp5588-keys.c was already refactored [1] to use FW
+properties so that -1 will be used. In the process, gpio-adp5588.c
+was dropped.
 
-> >         fwnode = device_get_named_child_node(pdev->dev.parent, "gpio");
-> >         device_set_node(&pdev->dev, fwnode);
-> >
-> > but even that isn't _that_ nice. I'd like to hear comments from the Asahi
-> > folk about whether these sub-blocks of the SMC can have compatibles, so
-> > that the MFD layer can automatically fill in the firmware nodes on the
-> > struct device before the probe function gets called.
+For the adp5589-keys.c driver, we might also need to do a similar
+work as I suspect there's no platform making use of pdata. Hence,
+yes, I believe -1 is the way to go.
+
+Ditto for gpio-adp5520.c...
+
+[1]:
+https://lore.kernel.org/linux-input/Yw7hRIbsTqOWVeyJ@google.com/T/#m382bec5c587241010d453ce1000bea2d34b86380
+
+- Nuno Sá
 > 
-> > If not, then I think it would be reasonable to have a discussion with
-> > Lee about extending MFD to be able to have mfd cells name a child, so
-> > that MFD can do the above instead of having it littered amongst drivers.
-> 
-> MFD cells can be matched by compatible strings.
-
-Yes, that's what I meant in my preceeding paragraph above, but it needs
-involvement and decisions from the Asahi maintainers.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
