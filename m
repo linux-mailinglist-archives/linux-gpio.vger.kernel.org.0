@@ -2,68 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA6A5ABA62
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 23:55:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FDD15ABAA1
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Sep 2022 00:06:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbiIBVzd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 17:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
+        id S230206AbiIBWG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 18:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbiIBVzc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 17:55:32 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C4DA199
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 14:55:31 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id h5so6376948ejb.3
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 14:55:31 -0700 (PDT)
+        with ESMTP id S229983AbiIBWG1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 18:06:27 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4FAF8FC1
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 15:06:25 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id bn9so3559457ljb.6
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 15:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=ecq3QiIvTsmZshGckaqCIPLzVvmOLA8FmTGWudNQTA0=;
-        b=PedqGHFigr2YGOWASaF6IK1QRNXM7ZYMw1/SL2mOUzwsHaM9qTOtAkG489soN6gK6/
-         Tf/Ic5ws5v2v6+gLHmHcgaQuY8Q9PDG/S4pPvo3SV/FbKtHQqEfwvgYGo61s/f3B38XN
-         wXkXyjDFjYUwOKxAbkTmwn7yvIQPOBtWXP2YDocVnRzU+8GFEAgxiOUEz0ha+Lk9tPZo
-         XDX8msVJH+kCxqH9XeiFVt8ub33KfaNL9zo3wOWq4lTe3dp78qBdfosHyXniIq889kie
-         ZGPtD+lJEDDuhUcvcHu0C/47TiTTUTU7bCkDYTvwbKToTd64y0msrJmshFrTt1yWP6P1
-         6/Kg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=fEs1ZNTvqBOFiNaauD6/pokJy+n/Izie5bhXhLxN7MQ=;
+        b=viSMpK2H7CcEgw5Jz/YZtxG+8PC2mGS7fY2gx60Me/v5sEXY+cEeoMqq7fYwBxiATf
+         i/UxavUXTDHllgGHu99LcnTDx0qDSuTy4yqfys90tX9ksyH96GUSQEHucZLLl6RonaOQ
+         BBAqpPPmxW39n1J5ZXMctt2EYng+7xR9GhPQmxBvsNfAyVi4ZEaekqU9h4ePKb1RJ2hx
+         tOvwfd1faRP4QczHcVGty34ki6naF5CPG0GswqfdAWX0Uxbb20YmQel3gr7mEAERApCr
+         eFSB05Uyyrj/9wM30QmXu67RpepGOt7BSnVzpHl9w1kXwoFVz21gmdw2vPxqlH4ES3jo
+         psmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ecq3QiIvTsmZshGckaqCIPLzVvmOLA8FmTGWudNQTA0=;
-        b=ddltw/a+yxZJZP+SwwQ/BXHiLGxsLZ/mJlvqJ+nBEoJzVHhdiZAGo7PGM0pf/pT4YX
-         okJqaEOVvYSn9aOyoJhDr9uXtmll1WEos4gpJQOibr5DTQHIEZdPIjlccfKYDQkXILvv
-         IqATnz/bBigLjOt2wSuO3u5OuOOaOx/fRy+MKFVSQOyYsBCWBhsnAnt+HY6nBNgIldlX
-         5XtyVw7LyhS/tGZqWB6YEPslQOP6086O18KjJJ/UnBmuRdyvJMaQAi5pVzmT5aY3iuTd
-         zX16QCB4+thbM3NsZ7GaDNKePWsjfVUExiwN2cT68KMPUwQFIjj8JDjRoU5u9UaEALOt
-         qEnw==
-X-Gm-Message-State: ACgBeo2Wg5aGBslCa5ZY2GEpwyOlrS5mTXHRnl0fb38a3AH/8+TgHKof
-        3eJlCAsDdr7FLQXUUufJt+BM4gVdmgprbCqxyJODfB1oAYOBqg==
-X-Google-Smtp-Source: AA6agR45QkeSoBEZmUDyxCBa3vhjRQKSibpzgN/01XesHVGPtsB0vwRwtliEYYV0gW5NYkDniLcQKr/tSsNCysz1Dik=
-X-Received: by 2002:a17:907:7242:b0:741:770b:dfc6 with SMTP id
- ds2-20020a170907724200b00741770bdfc6mr19731330ejc.203.1662155729809; Fri, 02
- Sep 2022 14:55:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220418141416.27529-1-asmaa@nvidia.com> <CH2PR12MB3895A1FB2977B725ED92AB57D7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdY1uK=73zpEM5zUyXacm5xaUUFYkuKMxi_q6vwmOPy6tw@mail.gmail.com>
- <CH2PR12MB389560A1873030472A7A371DD7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdZhW9XK3opXLLzdMiVLVkGQyJCf7RLZtRQLsmzv-aqwbA@mail.gmail.com>
- <CH2PR12MB38953FF57D91FA75AB9CB102D7CB9@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdbAhMa2CXvQra3E13n8WfiBxyHNqzEp4dW3qo5upr_=gw@mail.gmail.com>
- <CH2PR12MB38958CD365876A2106712C3CD7CF9@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdZp9hx2SHxsmjBm2oj7m3UT-4S+MKw5qqNME0PLjPNV2A@mail.gmail.com> <CH2PR12MB3895B4E89237E6D6F635F252D77A9@CH2PR12MB3895.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB3895B4E89237E6D6F635F252D77A9@CH2PR12MB3895.namprd12.prod.outlook.com>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=fEs1ZNTvqBOFiNaauD6/pokJy+n/Izie5bhXhLxN7MQ=;
+        b=dSGBhAT7E20SiCwMMDzSDwPYrfMQK9Zcr/c/yNETIlRhrVJn+EUFzVrexfepOQGBAQ
+         pdggQgq1S+o4ggJmrpBl35FFozhDgxksZMBnyOQiYt/yU5p8mghjm793ECKGCGDnYI33
+         pL0XXzGw+/VhVesX5MMRK+2e6WF8OMQE4v+NX6dB0lgrzmnvojqvoN6E6UEBExEAx6Np
+         XHQ8/iLGhVQywE90GNlAC0V4NTo6fVgVHnhXWWr717HDh4wrr9kAf+19fvU+47QcGvMy
+         xF+ktg7PpxtQHQWvQHAMokpgT/wrwcU9Ybs3JsV477jFCaeZfnTcpJhP//tbL2ul8vO6
+         ZPRA==
+X-Gm-Message-State: ACgBeo1ESRYmtvlrc3iPPaJJhbLYsb3gLzhqWMlBD/RxzuMkSp7+u22g
+        pxXPHbkXFHz09hyJ0lCDoY6bcZEEQz157w==
+X-Google-Smtp-Source: AA6agR6K3RP/rSl9bwKgrRo0ZS8F2c+rv+cc7Q0CaAV7NKXGEwwfVVE8EkTXyo2PKkD/94BhyHZcfA==
+X-Received: by 2002:a2e:83c9:0:b0:24d:a95d:7b7a with SMTP id s9-20020a2e83c9000000b0024da95d7b7amr11487720ljh.254.1662156384324;
+        Fri, 02 Sep 2022 15:06:24 -0700 (PDT)
+Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
+        by smtp.gmail.com with ESMTPSA id b19-20020ac247f3000000b00492e6642937sm364152lfp.200.2022.09.02.15.06.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Sep 2022 15:06:23 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 2 Sep 2022 23:55:17 +0200
-Message-ID: <CACRpkdaHuQhzqqQbayGaRqYAcnyv2rmocX7YhcR_qj0HRVHkgQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO controller
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nikita Shubin <nikita.shubin@maquefel.me>,
+        Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v2] ARM: ep93xx: Convert to use descriptors for GPIO LEDs
+Date:   Sat,  3 Sep 2022 00:04:21 +0200
+Message-Id: <20220902220421.604516-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -74,48 +70,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 2, 2022 at 5:55 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
+This converts the EP93xx to use GPIO descriptors for the
+LEDs.
 
-> During testing, I use the sysfs to change the gpio value as follows:
-> Cd /sys/class/gpio
-> echo 480 > export
-> When I do the export, I see that gpiochip_generic_request is being called which calls .gpio_request_enable = mlxbf_gpio_request_enable.
+Cc: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Lukasz Majewski <lukma@denx.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Fix syntax error (doubled left parens)
+---
+ arch/arm/mach-ep93xx/core.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-Yes but don't use the deprecated sysfs to test GPIO, use libgpiod
-https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
+diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
+index 2d58e273c96d..318c09ee4723 100644
+--- a/arch/arm/mach-ep93xx/core.c
++++ b/arch/arm/mach-ep93xx/core.c
+@@ -425,10 +425,8 @@ void __init ep93xx_register_spi(struct ep93xx_spi_info *info,
+ static const struct gpio_led ep93xx_led_pins[] __initconst = {
+ 	{
+ 		.name	= "platform:grled",
+-		.gpio	= EP93XX_GPIO_LINE_GRLED,
+ 	}, {
+ 		.name	= "platform:rdled",
+-		.gpio	= EP93XX_GPIO_LINE_RDLED,
+ 	},
+ };
+ 
+@@ -437,6 +435,16 @@ static const struct gpio_led_platform_data ep93xx_led_data __initconst = {
+ 	.leds		= ep93xx_led_pins,
+ };
+ 
++static struct gpiod_lookup_table ep93xx_leds_gpio_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		/* Use local offsets on gpiochip/port "E" */
++		GPIO_LOOKUP_IDX("E", 0, NULL, 0, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("E", 1,	NULL, 1, GPIO_ACTIVE_HIGH),
++		{ }
++	},
++};
++
+ /*************************************************************************
+  * EP93xx pwm peripheral handling
+  *************************************************************************/
+@@ -989,6 +997,7 @@ struct device __init *ep93xx_init_devices(void)
+ 	platform_device_register(&ep93xx_ohci_device);
+ 	platform_device_register(&ep93xx_wdt_device);
+ 
++	gpiod_add_lookup_table(&ep93xx_leds_gpio_table);
+ 	gpio_led_register_device(-1, &ep93xx_led_data);
+ 
+ 	return parent;
+-- 
+2.37.2
 
-> Is this how it also works in other driver? Or am I missing something?
-
-The gpio_chip usually works as a front end for pin control.
-
-> I wanted to disallow muxing from user space.
-
-If you ask for a GPIO then it will be muxed in if you implement
-.gpio_request_enable().
-
-If you want to make it impossible to use certain gpios alter
-.valid_mask.
-
-If you don't want people to use the sysfs ABI (which by the
-way requires you to first select the "CONFIG_EXPERT"
-option) then do not compile it into the kernel. It is a big
-risk to use it in any case, so just don't.
-
-If you use the character device (which is enabled by default),
-you can set permissions on /dev/gpiochipN such that only
-privileged users can access it, just like you protect any
-other block/character device.
-
-> I would like that to be controlled by the ACPI table only.
-
-I don't know if it is possible to restrict GPIOs to just be
-used from ACPI.
-
-> For example, use devm_gpio_request from some other driver if needed.
-
-If you only want other kernel consumers to use GPIOs,
-the disable the sysfs ABI, and also disable the character
-device, then only the kernel can use GPIOs.
-
-Yours,
-Linus Walleij
